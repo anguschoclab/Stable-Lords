@@ -1,0 +1,506 @@
+[
+  {
+    "text": "lands a heavy blow to {{defender}}'s {{bodyPart}}",
+    "reason": "Consolidated at [root.strikes.generic]. Similar to: \"delivers a devastating blow to {{defender}}'s {{bodyPart}}\" (Score: 0.74)"
+  },
+  {
+    "text": "{{weapon}} sparks harmlessly against {{defender}}'s armor.",
+    "reason": "Consolidated at [root.strikes.slashing.glancing]. Similar to: \"{{weapon}} skates harmlessly off the edge of {{defender}}'s armor.\" (Score: 0.73)"
+  },
+  {
+    "text": "{{attacker}}'s thrust catches only the fabric of {{defender}}'s attire.",
+    "reason": "Consolidated at [root.strikes.piercing.glancing]. Similar to: \"{{attacker}}'s thrust catches only air and a piece of {{defender}}'s sleeve.\" (Score: 0.79)"
+  },
+  {
+    "text": "{{attacker}} lunges forward, sinking {{possessive}} {{weapon}} cleanly into {{defender}}'s {{bodyPart}}.",
+    "reason": "Consolidated at [root.strikes.piercing.solid]. Similar to: \"{{attacker}} lunges with sudden ferocity, {{possessive}} {{weapon}} finding {{defender}}'s {{bodyPart}}!\" (Score: 0.73)"
+  },
+  {
+    "text": "{{attacker}} throws a wild punch that barely clips {{defender}}.",
+    "reason": "Consolidated at [root.strikes.fist.glancing]. Similar to: \"{{attacker}} throws a wild punch that only clips {{defender}}'s shoulder.\" (Score: 0.79)"
+  },
+  {
+    "text": "{{attacker}} slips inside the guard to deliver a flawless, bone-breaking blow.",
+    "reason": "Consolidated at [root.strikes.fist.mastery]. Similar to: \"{{attacker}} slips inside the guard to deliver a textbook, staggering cross.\" (Score: 0.73)"
+  },
+  {
+    "text": "A devastating haymaker from {{attacker}} nearly takes {{defender}}'s head off!",
+    "reason": "Consolidated at [root.strikes.fist.critical]. Similar to: \"A devastating haymaker from {{attacker}} lands flush, rattling {{defender}}'s skull!\" (Score: 0.70)"
+  },
+  {
+    "text": "Panic flashes in {{name}}'s eyes.",
+    "reason": "Consolidated at [root.pbp.status_changes.desperate]. Similar to: \"Panic and pain mix in {{name}}'s eyes.\" (Score: 0.71)"
+  },
+  {
+    "text": "{{defender}} pirouettes away gracefully, mocking the clumsy attack.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.tier2_medium]. Similar to: \"{{defender}} pirouettes out of harm's way as the {{weapon}} whistles past.\" (Score: 0.43)"
+  },
+  {
+    "text": "With theatrical flair, {{defender}} pirouettes away from the deadly strike.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.tier3_high]. Similar to: \"{{defender}} pirouettes away from the strike, blowing a kiss to the jeering crowd.\" (Score: 0.28)"
+  },
+  {
+    "text": "{{defender}} sidesteps with a mocking smirk, barely exerting effort.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.confident]. Similar to: \"{{defender}} sidesteps the blow with a smirk, barely expending any effort.\" (Score: 0.73)"
+  },
+  {
+    "text": "With a knowing smirk, {{defender}} smoothly steps out of the weapon's path.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.confident]. Similar to: \"With a bored sigh, {{defender}} leans out of the weapon's path.\" (Score: 0.72)"
+  },
+  {
+    "text": "{{defender}} pirouettes away from the blow with a mocking bow.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.theatrical]. Similar to: \"With a dramatic flourish, {{defender}} pirouettes away from {{attacker}}'s heavy swing.\" (Score: 0.43)"
+  },
+  {
+    "text": "{{defender}} pirouettes away from the strike, cape or coat flaring.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.theatrical]. Similar to: \"With a dramatic flourish, {{defender}} pirouettes away from {{attacker}}'s heavy swing.\" (Score: 0.43)"
+  },
+  {
+    "text": "With a wink to the crowd, {{defender}} pirouettes away from certain death.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.theatrical]. Similar to: \"With a dramatic flourish, {{defender}} pirouettes away from {{attacker}}'s heavy swing.\" (Score: 0.60)"
+  },
+  {
+    "text": "With a dramatic pirouette, {{defender}} gracefully dances out of the way of the strike.",
+    "reason": "Consolidated at [root.pbp.defenses.dodge.theatrical]. Similar to: \"With a dramatic flourish, {{defender}} pirouettes away from {{attacker}}'s heavy swing.\" (Score: 0.47)"
+  },
+  {
+    "text": "A solid, authoritative block from {{defender}} halts the attack cold.",
+    "reason": "Consolidated at [root.pbp.defenses.parry.confident]. Similar to: \"A solid, authoritative block from {{defender}} leaves {{attacker}} reeling.\" (Score: 0.76)"
+  },
+  {
+    "text": "{{name}} stumbles backward, losing their footing and collapsing in a heap.",
+    "reason": "Consolidated at [root.pbp.knockdown.fall]. Similar to: \"{{name}} stumbles backward, feet tangling, and collapses into a heap.\" (Score: 0.72)"
+  },
+  {
+    "text": "The sheer force of the blow sends {{name}} tumbling to the sands.",
+    "reason": "Consolidated at [root.pbp.knockdown.fall]. Similar to: \"The sheer force of the blow sends {{name}} sprawling onto the arena sand.\" (Score: 0.81)"
+  },
+  {
+    "text": "{{defender}} hits the sand with a heavy, sickening thud.",
+    "reason": "Consolidated at [root.pbp.knockdown.pacing.slow]. Similar to: \"{{defender}} hits the ground with a heavy, drawn-out thud.\" (Score: 0.78)"
+  },
+  {
+    "text": "Our {{origin}}",
+    "reason": "Consolidated at [root.pbp.epithets.origin]. Similar to: \"The {{origin}}\" (Score: 0.79)"
+  },
+  {
+    "text": "Our {{style}}",
+    "reason": "Consolidated at [root.pbp.epithets.style]. Similar to: \"This {{style}}\" (Score: 0.71)"
+  },
+  {
+    "text": "the cunning trickster",
+    "reason": "Consolidated at [root.pbp.epithets.style]. Similar to: \"the cunning master\" (Score: 0.76)"
+  },
+  {
+    "text": "GRIX",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"BRIX\" (Score: 0.75)"
+  },
+  {
+    "text": "KAEL",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"FAEL\" (Score: 0.75)"
+  },
+  {
+    "text": "RASK",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"HASK\" (Score: 0.75)"
+  },
+  {
+    "text": "XAEL",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"FAEL\" (Score: 0.75)"
+  },
+  {
+    "text": "PYRE",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"PYKE\" (Score: 0.75)"
+  },
+  {
+    "text": "RAZE",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"HAZE\" (Score: 0.75)"
+  },
+  {
+    "text": "TUSK",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"DUSK\" (Score: 0.75)"
+  },
+  {
+    "text": "HAWK",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"HASK\" (Score: 0.75)"
+  },
+  {
+    "text": "PALE",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"GALE\" (Score: 0.75)"
+  },
+  {
+    "text": "TORN",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"SORN\" (Score: 0.75)"
+  },
+  {
+    "text": "DALE",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"GALE\" (Score: 0.75)"
+  },
+  {
+    "text": "KERN",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"FERN\" (Score: 0.75)"
+  },
+  {
+    "text": "MIRK",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"DIRK\" (Score: 0.75)"
+  },
+  {
+    "text": "TARN",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"CARN\" (Score: 0.75)"
+  },
+  {
+    "text": "VALE",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"VALK\" (Score: 0.75)"
+  },
+  {
+    "text": "Quaix",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quain\" (Score: 0.80)"
+  },
+  {
+    "text": "Haeic",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Taeic\" (Score: 0.80)"
+  },
+  {
+    "text": "Rylel",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Sylel\" (Score: 0.80)"
+  },
+  {
+    "text": "Haeos",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Haeus\" (Score: 0.80)"
+  },
+  {
+    "text": "Coren",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Loren\" (Score: 0.80)"
+  },
+  {
+    "text": "Aelyr",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Aelyn\" (Score: 0.80)"
+  },
+  {
+    "text": "Rylad",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Sylad\" (Score: 0.80)"
+  },
+  {
+    "text": "Fenis",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Fenic\" (Score: 0.80)"
+  },
+  {
+    "text": "Ithin",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Ithan\" (Score: 0.80)"
+  },
+  {
+    "text": "Phaia",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Phain\" (Score: 0.80)"
+  },
+  {
+    "text": "Sylix",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Sylis\" (Score: 0.80)"
+  },
+  {
+    "text": "Balan",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Balen\" (Score: 0.80)"
+  },
+  {
+    "text": "Othor",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Othar\" (Score: 0.80)"
+  },
+  {
+    "text": "Joren",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Loren\" (Score: 0.80)"
+  },
+  {
+    "text": "Lorar",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Lorad\" (Score: 0.80)"
+  },
+  {
+    "text": "Daeer",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Taeer\" (Score: 0.80)"
+  },
+  {
+    "text": "Sylus",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Sylis\" (Score: 0.80)"
+  },
+  {
+    "text": "Ithon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Ithan\" (Score: 0.80)"
+  },
+  {
+    "text": "Quaen",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quain\" (Score: 0.80)"
+  },
+  {
+    "text": "Quais",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quain\" (Score: 0.80)"
+  },
+  {
+    "text": "Balos",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Balis\" (Score: 0.80)"
+  },
+  {
+    "text": "Eryon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Eryan\" (Score: 0.80)"
+  },
+  {
+    "text": "Phaer",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Phayr\" (Score: 0.80)"
+  },
+  {
+    "text": "Lorel",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Loren\" (Score: 0.80)"
+  },
+  {
+    "text": "Phaan",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Phain\" (Score: 0.80)"
+  },
+  {
+    "text": "Eryyn",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Eryan\" (Score: 0.80)"
+  },
+  {
+    "text": "Quaia",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quain\" (Score: 0.80)"
+  },
+  {
+    "text": "Maelin",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Maelia\" (Score: 0.83)"
+  },
+  {
+    "text": "Sylar",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Sylad\" (Score: 0.80)"
+  },
+  {
+    "text": "Ither",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Ithor\" (Score: 0.80)"
+  },
+  {
+    "text": "Balyn",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Balen\" (Score: 0.80)"
+  },
+  {
+    "text": "Quaer",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quayr\" (Score: 0.80)"
+  },
+  {
+    "text": "Daeen",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Haeen\" (Score: 0.80)"
+  },
+  {
+    "text": "Quaox",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quaos\" (Score: 0.80)"
+  },
+  {
+    "text": "Nymen",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Nymon\" (Score: 0.80)"
+  },
+  {
+    "text": "Ithyn",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Othyn\" (Score: 0.80)"
+  },
+  {
+    "text": "Maelix",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Maelia\" (Score: 0.83)"
+  },
+  {
+    "text": "Galyn",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Galyr\" (Score: 0.80)"
+  },
+  {
+    "text": "Quaic",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Quain\" (Score: 0.80)"
+  },
+  {
+    "text": "Rylyr",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rylar\" (Score: 0.80)"
+  },
+  {
+    "text": "Rylan",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rylar\" (Score: 0.80)"
+  },
+  {
+    "text": "Maelen",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Maelel\" (Score: 0.83)"
+  },
+  {
+    "text": "Nymic",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Nymix\" (Score: 0.80)"
+  },
+  {
+    "text": "Ryler",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rylar\" (Score: 0.80)"
+  },
+  {
+    "text": "Maelon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Maelos\" (Score: 0.83)"
+  },
+  {
+    "text": "Loryr",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Loror\" (Score: 0.80)"
+  },
+  {
+    "text": "Haeyr",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Daeyr\" (Score: 0.80)"
+  },
+  {
+    "text": "Sylia",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Sylis\" (Score: 0.80)"
+  },
+  {
+    "text": "Corer",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Corel\" (Score: 0.80)"
+  },
+  {
+    "text": "Maelus",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Maelos\" (Score: 0.83)"
+  },
+  {
+    "text": "Eryix",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Eryox\" (Score: 0.80)"
+  },
+  {
+    "text": "Rylin",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rylic\" (Score: 0.80)"
+  },
+  {
+    "text": "Haeer",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Haeen\" (Score: 0.80)"
+  },
+  {
+    "text": "Phaix",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Phain\" (Score: 0.80)"
+  },
+  {
+    "text": "Eryar",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Eryan\" (Score: 0.80)"
+  },
+  {
+    "text": "Balyr",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Galyr\" (Score: 0.80)"
+  },
+  {
+    "text": "Galox",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Balox\" (Score: 0.80)"
+  },
+  {
+    "text": "Balus",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Balis\" (Score: 0.80)"
+  },
+  {
+    "text": "Haeon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Haeen\" (Score: 0.80)"
+  },
+  {
+    "text": "Taeor",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Taeer\" (Score: 0.80)"
+  },
+  {
+    "text": "Fenon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Fenen\" (Score: 0.80)"
+  },
+  {
+    "text": "Lorer",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Loren\" (Score: 0.80)"
+  },
+  {
+    "text": "Galic",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Galix\" (Score: 0.80)"
+  },
+  {
+    "text": "Haean",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Haeen\" (Score: 0.80)"
+  },
+  {
+    "text": "Kayion",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Kayson\" (Score: 0.83)"
+  },
+  {
+    "text": "Haralf",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Harald\" (Score: 0.83)"
+  },
+  {
+    "text": "Rhyston",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rhysoy\" (Score: 0.71)"
+  },
+  {
+    "text": "Aelton",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Aelson\" (Score: 0.83)"
+  },
+  {
+    "text": "Rolric",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rolriel\" (Score: 0.71)"
+  },
+  {
+    "text": "Gawson",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Gawion\" (Score: 0.83)"
+  },
+  {
+    "text": "Valvir",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Valrir\" (Score: 0.83)"
+  },
+  {
+    "text": "Rhysvan",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Rhysar\" (Score: 0.71)"
+  },
+  {
+    "text": "Ewazon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Ewagon\" (Score: 0.83)"
+  },
+  {
+    "text": "Torion",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Korion\" (Score: 0.83)"
+  },
+  {
+    "text": "Svenien",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Svenmon\" (Score: 0.71)"
+  },
+  {
+    "text": "Garvok",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Gawvok\" (Score: 0.83)"
+  },
+  {
+    "text": "Halgosh",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Langosh\" (Score: 0.71)"
+  },
+  {
+    "text": "Korvon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Korion\" (Score: 0.83)"
+  },
+  {
+    "text": "Leifrir",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Leifdar\" (Score: 0.71)"
+  },
+  {
+    "text": "Kayoy",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Kayay\" (Score: 0.80)"
+  },
+  {
+    "text": "Baelold",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Halold\" (Score: 0.71)"
+  },
+  {
+    "text": "Gwynor",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Gwynmar\" (Score: 0.71)"
+  },
+  {
+    "text": "Olafvir",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Olafur\" (Score: 0.71)"
+  },
+  {
+    "text": "Ithoy",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Ithor\" (Score: 0.80)"
+  },
+  {
+    "text": "Person",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Perzon\" (Score: 0.83)"
+  },
+  {
+    "text": "Aelxon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Aelson\" (Score: 0.83)"
+  },
+  {
+    "text": "Harzon",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Harson\" (Score: 0.83)"
+  },
+  {
+    "text": "Haroun",
+    "reason": "Consolidated at [root.recruitment.names]. Similar to: \"Harmund\" (Score: 0.71)"
+  }
+]

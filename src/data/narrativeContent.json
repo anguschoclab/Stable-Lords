@@ -4223,6 +4223,13 @@
       "newsletter": [
         "A hidden Midnight Market appeared behind the arena. {{name}} spent {{gold}} gold on strange elixirs and a whispered secret, gaining +20 XP and a new insight."
       ]
+    },
+    "moonlight_duel": {
+      "title": "Moonlight Duel",
+      "effectType": "moonlight_duel",
+      "newsletter": [
+        "{{name}} was challenged to an unsanctioned moonlight duel! They emerged victorious, proving their skill to a wealthy patron. (+{{gold}} Gold)"
+      ]
     }
   },
   "crowd_reactions": {

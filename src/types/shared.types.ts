@@ -583,6 +583,7 @@ export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert'; /**
  */
 export type WeatherType =
   | 'Clear'
+  | 'Moonlight Duel'
   | 'Crimson Snow'
   | 'Rainy'
   | 'Sweltering'
@@ -603,6 +604,7 @@ export type WeatherType =
   | 'Gravity Anomaly'
   | 'Ashfall'
   | 'Eldritch Eclipse'
+  | 'Moonlight Duel'
   | 'Acid Rain'
   | 'Mana Surge'
   | 'Rainbow'

@@ -58,7 +58,8 @@ interface OffseasonEventNarrative {
     | 'traveling_circus'
     | 'bounty_hunter_visit'
     | 'loyal_stray_dog'
-    | 'midnight_market';
+    | 'midnight_market'
+    | 'moonlight_duel';
   newsletter: string[];
 }
 
@@ -1305,6 +1306,35 @@ function handleMidnightMarket(
   }
 }
 
+function handleMoonlightDuel(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const gold = 150 + Math.floor(rng.next() * 150);
+      ctx.treasuryDelta += gold;
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold,
+      });
+      ctx.ledgerEntries.push({
+        id: rng.uuid('ledger') as LedgerEntryId,
+        week: nextWeek,
+        label: 'Moonlight Duel Winnings',
+        amount: gold,
+        category: 'other',
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1351,6 +1381,7 @@ const EVENT_HANDLERS: Record<
   bounty_hunter_visit: handleBountyHunterVisit,
   loyal_stray_dog: handleLoyalStrayDog,
   midnight_market: handleMidnightMarket,
+  moonlight_duel: handleMoonlightDuel,
 };
 
 /**

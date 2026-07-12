@@ -21,6 +21,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.2,
     description: 'An otherworldly eclipse that drives fighters to the brink of madness.',
   },
+  'Moonlight Duel': {
+    staminaMult: 1.1,
+    initiativeMod: +1,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A secret midnight challenge. 10% more stamina drain in combat.',
+  },
 
   Zephyr: {
     staminaMult: 0.85,
@@ -394,6 +401,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Eldritch Eclipse': 'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
+  'Moonlight Duel': 'The arena is silent save for the clash of steel under the pale moonlight.',
 
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   'Wild Magic': 'Crackling energy arcs through the arena. Magic is in the air.',

@@ -39,6 +39,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     extraClass: 'glow-neon-purple',
     description: 'An otherworldly eclipse that drives fighters to the brink of madness.',
   },
+  'Moonlight Duel': {
+    icon: Moon,
+    colorClass: 'text-arena-pop',
+    bgClass: 'bg-arena-pop/10',
+    borderClass: 'border-arena-pop/20',
+    description: 'A secret midnight challenge. 10% more stamina drain in combat.',
+  },
 
   Zephyr: {
     icon: Wind,

@@ -13,6 +13,7 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   'Wild Magic': 'UNPREDICTABLE SURGES | DAMAGE +10%',
   Clear: 'NORMAL VISIBILITY | ZERO DRAIN',
   'Eldritch Eclipse': 'STAMINA DRAIN 95% | INITIATIVE +2 | RIPOSTE +2 | DAMAGE +20%',
+  'Moonlight Duel': 'STAMINA DRAIN 110% | INITIATIVE +1',
   'Crimson Snow': 'STAMINA DRAIN 140% | INITIATIVE -3 | RIPOSTE +2 | DAMAGE +15%',
   Overcast: 'LOW VISIBILITY | STABLE ENDURANCE',
   Rainy: 'INITIATIVE -3 | RIPOSTE +5 | DAMAGE -10%',

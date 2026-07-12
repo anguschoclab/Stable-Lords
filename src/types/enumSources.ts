@@ -25,6 +25,7 @@ export const WEATHER_TYPES = [
   'Thunderstorm',
   'Ashfall',
   'Eldritch Eclipse',
+  'Moonlight Duel',
   'Acid Rain',
   'Mana Surge',
   'Rainbow',

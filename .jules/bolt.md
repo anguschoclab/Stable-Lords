@@ -8,6 +8,6 @@
 **Learning:** Using `useWorldState()` at the root level (like in `RootComponent` or components always mounted) causes the entire application to re-render whenever any state property changes, defeating React's reconciliation.
 **Action:** Always select only the specific state properties needed, especially in high-level components. Avoid `useWorldState()` outside of debug views.
 
-## 2024-07-12 - Re-renders caused by useShallow map pattern
-**Learning:** In Zustand's `useShallow`, constructing a new array with `.map()` inside the hook defeats memoization because it always returns a new array reference, which is seen as changed even if elements are identical primitives.
-**Action:** Use `useGameStore((s) => s.roster)` to get the original state property, and then compute mapped arrays using `useMemo` outside of the hook to prevent unnecessary re-renders.
+## 2026-07-12 - Backward Iteration for Chronological History
+**Learning:** `state.arenaHistory` is extremely large and chronologically sorted. Doing a forward loop to find the 5 most recent fights for a player means iterating the entire array of possibly thousands of bouts.
+**Action:** When searching for "recent" items in a chronologically appended array, iterate backwards (`for (let i = array.length - 1; i >= 0; i--)`) and break early to convert an O(N) scan into an O(K) operation.

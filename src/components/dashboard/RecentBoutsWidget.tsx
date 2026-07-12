@@ -11,7 +11,7 @@ import { BoutTableRow } from './BoutTableRow';
 import { EmptyBoutsState } from './EmptyBoutsState';
 
 /**
- *
+ * Displays recent bouts for the player's stable.
  */
 export function RecentBoutsWidget() {
   const state = useGameStore(
@@ -30,7 +30,9 @@ export function RecentBoutsWidget() {
     const history = state.arenaHistory || [];
     const results: FightSummary[] = [];
 
-    for (let i = 0; i < history.length; i++) {
+    // Optimization: Iterate backwards because arenaHistory is chronologically sorted,
+    // so the most recent bouts are at the end of the array. This allows us to break early.
+    for (let i = history.length - 1; i >= 0; i--) {
       const bout = history[i];
       if (bout && (bout.stableIdA === playerStableId || bout.stableIdD === playerStableId)) {
         results.push(bout);

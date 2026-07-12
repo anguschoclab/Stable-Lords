@@ -631,6 +631,19 @@ arenasModule.registerArena(
 );
 
 describe('describeArenaFit', () => {
+
+  it('cursed tag + riposte mod → tests THE_MEAT_GRINDER', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryRiposte, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const arena = makeArena({
+      id: 'the_meat_grinder',
+      size: 'cramped',
+      tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
+      surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: 1 },
+    });
+    // With broadsword (Striking idx 2) in cramped (maxIdx 2), it is within range and gets the riposte bonus.
+    expect(describeArenaFit(w, arena.id)).toBe('Counter-fighting venue — suits your style');
+  });
+
   it('range misfit → "Cramped — punishes your long spear"', () => {
     const w = makeWarrior({ equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' } });
     const arena = makeArena({ id: 'test_cramped', size: 'cramped' });

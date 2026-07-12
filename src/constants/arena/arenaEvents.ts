@@ -30,6 +30,8 @@ export const ARENA_EVENT_CONSTANTS = {
   BLOOD_MOON_LIGHTING_TRIGGER: 1,
   BLOOD_MOON_LIGHTING_DAMAGE: 1.3,
   GEYSER_ERUPTION_TRIGGER: 6,
+  SHADOW_TENDRIL_TRIGGER: 20,
+  SHADOW_TENDRIL_DRAIN: 5,
 } as const;
 
 export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
@@ -53,6 +55,18 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerCondition: 'random',
     triggerValue: 0.03, // 3% per exchange
     narrativeText: 'Chunks of stone fall from above, forcing both fighters to dodge!',
+  },
+
+
+  shadow_tendrils: {
+    id: 'shadow_tendrils',
+    name: 'Shadow Tendrils',
+    description: 'Cursed shadows lash out',
+    requiredTags: ['cursed'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_TRIGGER,
+    narrativeText: 'Shadow tendrils lash out from the darkness!',
+    mechanicalEffect: { type: 'endurance_drain', value: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_DRAIN }
   },
 
   // ─── Magical Events ─────────────────────────────────────────────────────

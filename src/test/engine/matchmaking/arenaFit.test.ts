@@ -637,7 +637,7 @@ describe('describeArenaFit', () => {
       tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
       surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: 1 },
     });
-    // With broadsword (Striking idx 2) in cramped (maxIdx 1), it is punished for range.
+    // With broadsword (Striking idx 2) in cramped (maxIdx 2), it is within range and gets the riposte bonus.
     expect(describeArenaFit(w, arena.id)).toBe('Counter-fighting venue — suits your style');
   });
 

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
-import { filterActive } from '@/utils/roster';
 import { ATTRIBUTE_LABELS, type TrainingAssignment, type Attributes } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/state.types';
@@ -280,7 +279,9 @@ export default function Training() {
             </Surface>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2">
-              {filterActive(state.roster).map((warrior: Warrior) => (
+              {state.roster
+                .filter((warrior: Warrior) => warrior.status === 'Active')
+                .map((warrior: Warrior) => (
                 <WarriorTrainingCard
                   key={warrior.id}
                   warrior={warrior}

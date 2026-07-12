@@ -7,6 +7,7 @@ import { processWeekBouts } from '@/engine/bout/services/boutProcessorService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from '@/engine/impacts';
 import { GameState, BoutOffer } from '@/types/state.types';
+import type { BoutOfferId } from '@/types/shared.types';
 
 describe('Contract System Cycle', () => {
   let state: GameState;
@@ -54,9 +55,7 @@ describe('Contract System Cycle', () => {
     let signedState = resolveImpacts(stateWithOffers, [impact]);
     impact = respondToBoutOffer(signedState, offer.id, w2, 'Accepted');
     signedState = resolveImpacts(signedState, [impact]);
-    expect(
-      signedState.boutOffers![offer.id as import('@/types/shared.types').BoutOfferId]!.status
-    ).toBe('Signed');
+    expect(signedState.boutOffers![offer.id as BoutOfferId]!.status).toBe('Signed');
   });
 
   it('should payout the purse upon bout resolution via processWeekBouts', () => {
@@ -84,15 +83,12 @@ describe('Contract System Cycle', () => {
     s = resolveImpacts(s, [
       {
         boutOffers: {
-          [offer.id as import('@/types/shared.types').BoutOfferId]: {
+          [offer.id as BoutOfferId]: {
             ...s.boutOffers![offer.id],
             boutWeek: s.week,
             status: 'Signed',
           },
-        } as Record<
-          import('@/types/shared.types').BoutOfferId,
-          import('@/types/state.types').BoutOffer
-        >,
+        } as Record<BoutOfferId, BoutOffer>,
       },
     ]);
 

@@ -299,6 +299,44 @@ describe('warriorCollection', () => {
       const state = makeState([w1], [], offers);
       expect(collectAvailableWarriors(state, 5)).toEqual([]);
     });
+
+    it('handles multiple signed offers for the same week', () => {
+      const w1 = makeWarrior('p1', { status: 'Active' });
+      const w2 = makeWarrior('p2', { status: 'Active' });
+      const w3 = makeWarrior('p3', { status: 'Active' });
+      const offers = {
+        o1: makeOffer('o1', ['p1'], 5, 'Signed'),
+        o2: makeOffer('o2', ['p2'], 5, 'Signed'),
+      };
+      const state = makeState([w1, w2, w3], [], offers);
+      const result = collectAvailableWarriors(state, 5);
+      expect(result).toHaveLength(1);
+      expect(result[0]!.id).toBe('p3');
+    });
+
+    it('handles mixed statuses with multiple offers for same week', () => {
+      const w1 = makeWarrior('p1', { status: 'Active' });
+      const w2 = makeWarrior('p2', { status: 'Active' });
+      const w3 = makeWarrior('p3', { status: 'Active' });
+      const offers = {
+        o1: makeOffer('o1', ['p1'], 5, 'Signed'),
+        o2: makeOffer('o2', ['p2'], 5, 'Proposed'),
+        o3: makeOffer('o3', ['p3'], 5, 'Rejected'),
+      };
+      const state = makeState([w1, w2, w3], [], offers);
+      const result = collectAvailableWarriors(state, 5);
+      expect(result).toHaveLength(2);
+      expect(result.map((w) => w.id).sort()).toEqual(['p2', 'p3']);
+    });
+
+    it('handles an offer with an empty warriorIds array', () => {
+      const w1 = makeWarrior('p1', { status: 'Active' });
+      const offers = {
+        o1: makeOffer('o1', [], 5, 'Signed'),
+      };
+      const state = makeState([w1], [], offers);
+      expect(collectAvailableWarriors(state, 5)).toHaveLength(1);
+    });
   });
 
   describe('countActiveWarriors', () => {

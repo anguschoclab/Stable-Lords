@@ -70,4 +70,50 @@ describe('checkBankruptcy', () => {
     // 0 + 0 + (-550) + 0 = -550 < -500 → true
     expect(checkBankruptcy(state, impacts)).toBe(true);
   });
+
+  it('large positive then large negative — net below threshold', () => {
+    const state = makeState(0);
+    const impacts: StateImpact[] = [
+      { treasuryDelta: 10000 },
+      { treasuryDelta: -10000 },
+      { treasuryDelta: -600 },
+    ];
+    // 0 + 10000 + (-10000) + (-600) = -600 < -500 → true
+    expect(checkBankruptcy(state, impacts)).toBe(true);
+  });
+
+  it('exact threshold boundary — -500 is not strictly < -500', () => {
+    const state = makeState(0);
+    const impacts: StateImpact[] = [{ treasuryDelta: -500 }];
+    // 0 + (-500) = -500, not strictly < -500 → false
+    expect(checkBankruptcy(state, impacts)).toBe(false);
+  });
+
+  it('all undefined deltas with treasury already below threshold', () => {
+    const state = makeState(-600);
+    const impacts: StateImpact[] = [{}, {}, {}];
+    // -600 + 0 + 0 + 0 = -600 < -500 → true
+    expect(checkBankruptcy(state, impacts)).toBe(true);
+  });
+
+  it('zero delta with treasury already below threshold', () => {
+    const state = makeState(-600);
+    const impacts: StateImpact[] = [{ treasuryDelta: 0 }];
+    // -600 + 0 = -600 < -500 → true
+    expect(checkBankruptcy(state, impacts)).toBe(true);
+  });
+
+  it('50 impacts of -10 each — sum exactly -500, not strictly < -500', () => {
+    const state = makeState(0);
+    const impacts: StateImpact[] = Array.from({ length: 50 }, () => ({ treasuryDelta: -10 }));
+    // 0 + 50 * (-10) = -500, not strictly < -500 → false
+    expect(checkBankruptcy(state, impacts)).toBe(false);
+  });
+
+  it('51 impacts of -10 each — sum -510 < -500', () => {
+    const state = makeState(0);
+    const impacts: StateImpact[] = Array.from({ length: 51 }, () => ({ treasuryDelta: -10 }));
+    // 0 + 51 * (-10) = -510 < -500 → true
+    expect(checkBankruptcy(state, impacts)).toBe(true);
+  });
 });

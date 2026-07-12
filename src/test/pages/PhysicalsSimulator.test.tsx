@@ -1,13 +1,12 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: () => ({ roster: [] }),
-  };
-});
+const mockStore = vi.hoisted(() => ({ roster: [] as any[] }));
+
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: (selector?: (state: any) => any) =>
+    selector ? selector(mockStore) : mockStore,
+}));
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';
 
@@ -58,5 +57,19 @@ describe('PhysicalsSimulator Page', () => {
     // Check that numeric stat values exist
     const numElements = screen.getAllByText(/\d+/);
     expect(numElements.length).toBeGreaterThan(0);
+  });
+});
+
+describe('PhysicalsSimulator active roster filtering', () => {
+  it('renders active warriors but not inactive warriors in selectors', () => {
+    const active = { id: 'active1', name: 'Active Warrior', status: 'Active' };
+    const dead = { id: 'dead1', name: 'Dead Warrior', status: 'Dead' };
+
+    mockStore.roster = [active, dead];
+
+    render(<PhysicalsSimulator />);
+
+    expect(screen.queryByText('Active Warrior')).toBeInTheDocument();
+    expect(screen.queryByText('Dead Warrior')).not.toBeInTheDocument();
   });
 });

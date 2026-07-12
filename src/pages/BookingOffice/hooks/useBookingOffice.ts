@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
+import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import { isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
 import { toast } from 'sonner';
@@ -119,9 +120,14 @@ export function useBookingOffice() {
       setSignedOfferIds((prev) => new Set(prev).add(offerId));
     }
     setState((s: GameStore) => {
-      const next = respondToBoutOffer(state, offerId, warriorId, response);
+      const next = respondToBoutOffer(
+        state,
+        offerId as BoutOfferId,
+        warriorId as WarriorId,
+        response
+      );
       if (next.boutOffers) {
-        s.boutOffers = next.boutOffers;
+        s.boutOffers = next.boutOffers as any;
       }
     });
     toast.success(`Bout ${response === 'Accepted' ? 'accepted' : 'declined'}.`);

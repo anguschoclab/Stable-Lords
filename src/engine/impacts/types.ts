@@ -32,7 +32,7 @@ import type {
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { PoolWarrior } from '@/engine/recruitment';
-import type { WarriorId, StableId, TournamentId } from '@/types/shared.types';
+import type { WarriorId, StableId, TournamentId, BoutOfferId } from '@/types/shared.types';
 
 // Re-export GameState for convenience
 export type { GameState };
@@ -71,7 +71,7 @@ export interface StateImpact {
   realmRankings?: Record<string, RankingEntry>;
 
   // Promoters
-  boutOffers?: Record<string, BoutOffer>;
+  boutOffers?: Record<BoutOfferId, BoutOffer>;
   promoters?: Record<string, Promoter>;
 
   // Tournaments

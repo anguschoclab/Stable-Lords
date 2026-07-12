@@ -1,5 +1,5 @@
 import { type GameState } from '@/types/state.types';
-import type { BoutOfferId } from '@/types/shared.types';
+import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
@@ -106,7 +106,7 @@ function processPlayerOffersScan(state: GameState): GameState {
     const playerWarriorId = offer.warriorIds.find((id) => playerIds.has(id));
     if (!playerWarriorId) return;
     if (offer.hype > 100 || offer.purse > 200) {
-      const impact = respondToBoutOffer(state, offer.id, playerWarriorId, 'Accepted');
+      const impact = respondToBoutOffer(state, offer.id, playerWarriorId as WarriorId, 'Accepted');
       state = resolveImpacts(state, [impact]);
     }
   });

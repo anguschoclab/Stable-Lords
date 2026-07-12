@@ -4,7 +4,6 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { filterActive } from '@/utils/roster';
 /**
  * Defines the shape of stable reputation.
  */
@@ -109,7 +108,8 @@ export function computeStableReputation(state: StableReputationInput): StableRep
   const activeWarriors: Warrior[] = [];
 
   // ⚡ Bolt: Single pass over roster to collect active warriors, total kills, and unique styles
-  for (const w of filterActive(state.roster)) {
+  for (const w of state.roster) {
+    if (w.status !== 'Active') continue;
     activeWarriors.push(w);
     uniqueStyles.add(w.style);
     totalKills += w.career?.kills || 0;
@@ -175,7 +175,8 @@ export function computeRivalReputation(roster: Warrior[]): StableReputation {
   const activeWarriors: Warrior[] = [];
 
   // ⚡ Bolt: Single pass over roster to compute stats instead of multiple filters and reduce
-  for (const w of filterActive(roster)) {
+  for (const w of roster) {
+    if (w.status !== 'Active') continue;
     activeWarriors.push(w);
     uniqueStyles.add(w.style);
   }

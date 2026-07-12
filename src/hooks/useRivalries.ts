@@ -111,14 +111,17 @@ export function useRivalriesList(
       }
     }
 
+    const result: DerivedRivalry[] = [];
     for (const r of map.values()) {
+      if (r.bouts === 0) continue;
       let intensity = 0;
       intensity += Math.min(r.kills.length * 2, 4);
       intensity += r.bouts >= 5 ? 1 : 0;
       r.intensity = Math.max(1, Math.min(5, intensity));
+      result.push(r);
     }
 
-    return [...map.values()].filter((r) => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
+    return result.sort((a, b) => b.intensity - a.intensity);
   }, [state, rosterIds, rivalWarriorStable]);
 }
 

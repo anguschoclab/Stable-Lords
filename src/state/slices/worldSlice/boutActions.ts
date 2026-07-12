@@ -1,7 +1,7 @@
 import type { GameStore } from '@/state/useGameStore';
 import type { BoutOffer, GameState } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
-import { respondToBoutOffer as engineRespondToBoutOffer } from '@/state/mutations/contractMutations';
+import { respondToBoutOffer as engineRespondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import type { WorldSlice } from './types';
 
 /**
@@ -28,14 +28,13 @@ export function createBoutActions(
       warriorId: WarriorId,
       response: 'Accepted' | 'Declined'
     ) => {
-      set(
-        (state) =>
-          engineRespondToBoutOffer(
-            state as unknown as GameState,
-            offerId,
-            warriorId,
-            response
-          ) as unknown as Partial<GameStore>
+      set((state) =>
+        engineRespondToBoutOffer(
+          state as unknown as GameState,
+          offerId,
+          warriorId,
+          response
+        ) as unknown as Partial<GameStore>
       );
     },
 

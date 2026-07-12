@@ -1,18 +1,17 @@
 import { GameState } from '@/types/state.types';
-import { StateImpact } from '@/engine/impacts'; /**
- * Respond to bout offer.
- */
+import { StateImpact } from '@/engine/impacts';
+import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 
 /**
  * Respond to bout offer.
  */
 export function respondToBoutOffer(
   state: GameState,
-  offerId: string,
-  warriorId: string,
+  offerId: BoutOfferId,
+  warriorId: WarriorId,
   response: 'Accepted' | 'Declined'
 ): StateImpact {
-  const offer = state.boutOffers[offerId as import('@/types/shared.types').BoutOfferId];
+  const offer = state.boutOffers[offerId];
   if (!offer) return {};
 
   const newResponses: Record<string, string> = {

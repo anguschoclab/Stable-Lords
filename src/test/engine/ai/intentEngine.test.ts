@@ -116,6 +116,39 @@ describe('pickWeeklyIntent', () => {
     const intent = pickWeeklyIntent(rival, state);
     expect(intent).toBe('CONSOLIDATION');
   });
+
+  it('returns EXPANSION when active roster is below threshold', () => {
+    const rival = createMockRival({
+      treasury: 1000,
+      roster: [
+        { id: 'w1', status: 'Active', style: 'BASHING ATTACK', injuries: [] },
+        { id: 'w2', status: 'Active', style: 'SLASHING ATTACK', injuries: [] },
+        { id: 'w3', status: 'Dead' },
+      ] as any,
+    });
+    const state = createMockState();
+    const intent = pickWeeklyIntent(rival, state);
+    expect(intent).toBe('EXPANSION');
+  });
+
+  it('does not count inactive warriors for EXPANSION threshold', () => {
+    const rival = createMockRival({
+      treasury: 1000,
+      roster: [
+        { id: 'w1', status: 'Active', style: 'BASHING ATTACK', injuries: [] },
+        { id: 'w2', status: 'Active', style: 'SLASHING ATTACK', injuries: [] },
+        { id: 'w3', status: 'Active', style: 'STRIKING ATTACK', injuries: [] },
+        { id: 'w4', status: 'Active', style: 'AIMED BLOW', injuries: [] },
+        { id: 'w5', status: 'Active', style: 'LUNGING ATTACK', injuries: [] },
+        { id: 'w6', status: 'Active', style: 'WALL OF STEEL', injuries: [] },
+        { id: 'w7', status: 'Dead' },
+        { id: 'w8', status: 'Retired' },
+      ] as any,
+    });
+    const state = createMockState();
+    const intent = pickWeeklyIntent(rival, state);
+    expect(intent).toBe('CONSOLIDATION');
+  });
 });
 
 describe('verifyIntentSkepticism', () => {
@@ -175,6 +208,38 @@ describe('verifyIntentSkepticism', () => {
     const rival = createMockRival({
       treasury: 500,
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 3 },
+    });
+    const state = createMockState();
+    const result = verifyIntentSkepticism(rival, state);
+    expect(result).toBe(false);
+  });
+
+  it('disproves VENDETTA when active roster is below 3, ignoring inactive warriors', () => {
+    const rival = createMockRival({
+      treasury: 500,
+      strategy: { intent: 'VENDETTA', planWeeksRemaining: 3 },
+      roster: [
+        { status: 'Active' },
+        { status: 'Active' },
+        { status: 'Dead' },
+        { status: 'Retired' },
+      ] as any,
+    });
+    const state = createMockState();
+    const result = verifyIntentSkepticism(rival, state);
+    expect(result).toBe(true);
+  });
+
+  it('does not disprove VENDETTA when active roster is exactly 3, ignoring inactive warriors', () => {
+    const rival = createMockRival({
+      treasury: 500,
+      strategy: { intent: 'VENDETTA', planWeeksRemaining: 3 },
+      roster: [
+        { status: 'Active' },
+        { status: 'Active' },
+        { status: 'Active' },
+        { status: 'Dead' },
+      ] as any,
     });
     const state = createMockState();
     const result = verifyIntentSkepticism(rival, state);

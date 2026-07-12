@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { verifyIntentSkepticism } from '@/engine/ai/intentEngine';
+import { consolidateAgentMemory } from '@/engine/ai/agentCore';
 import type { GameState, RivalStableData } from '@/types/state.types';
 
 describe('AI Agent Architecture - Skeptical Intent', () => {
@@ -46,6 +47,43 @@ describe('AI Agent Architecture - Skeptical Intent', () => {
     } as RivalStableData;
     const isDisproved = verifyIntentSkepticism(aggressiveRival, mockState);
     expect(isDisproved).toBe(true);
+  });
+});
+
+describe('AI Agent Architecture - Memory Consolidation', () => {
+  it('records active roster count at season boundary', () => {
+    const rival = {
+      owner: { id: 'r1' },
+      treasury: 500,
+      agentMemory: { lastTreasury: 500, burnRate: 0, metaAwareness: {}, knownRivals: [] },
+      roster: [
+        { status: 'Active' },
+        { status: 'Active' },
+        { status: 'Dead' },
+        { status: 'Retired' },
+      ],
+    } as any as RivalStableData;
+
+    const updated = consolidateAgentMemory(rival, 1);
+    expect(updated.agentMemory?.seasonRecord?.rosterSizeAtSeasonStart).toBe(2);
+  });
+
+  it('preserves season record when not at season boundary', () => {
+    const rival = {
+      owner: { id: 'r1' },
+      treasury: 500,
+      agentMemory: {
+        lastTreasury: 500,
+        burnRate: 0,
+        metaAwareness: {},
+        knownRivals: [],
+        seasonRecord: { wins: 0, losses: 0, kills: 0, rosterSizeAtSeasonStart: 5 },
+      },
+      roster: [{ status: 'Active' }],
+    } as any as RivalStableData;
+
+    const updated = consolidateAgentMemory(rival, 2);
+    expect(updated.agentMemory?.seasonRecord?.rosterSizeAtSeasonStart).toBe(5);
   });
 });
 

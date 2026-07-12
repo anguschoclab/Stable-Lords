@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useWorldState, useGameStore, useBookmarks } from '@/state/useGameStore';
-import { filterActive } from '@/utils/roster';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -70,7 +69,10 @@ export default function WorldOverview() {
       pLosses += w.career.losses;
       pKills += w.career.kills;
     }
-    const pActive = filterActive(state.roster).length;
+    let pActive = 0;
+    for (const w of state.roster) {
+      if (w.status === 'Active') pActive++;
+    }
     const pTotal = pWins + pLosses;
 
     rows.push({
@@ -92,12 +94,13 @@ export default function WorldOverview() {
       let rWins = 0;
       let rLosses = 0;
       let rKills = 0;
+      let rActive = 0;
       for (const w of r.roster) {
         rWins += w.career.wins;
         rLosses += w.career.losses;
         rKills += w.career.kills;
+        if (w.status === 'Active') rActive++;
       }
-      const rActive = filterActive(r.roster).length;
       const rTotal = rWins + rLosses;
       const tmpl = templates.find((t) => t.stableName === r.owner.stableName);
       rows.push({
@@ -160,17 +163,22 @@ export default function WorldOverview() {
       };
     };
 
-    const rows: WarriorRow[] = filterActive(state.roster).map((w) =>
-      mapWarrior(w, state.player.stableName, state.player.id, true)
-    );
+    const rows: WarriorRow[] = [];
+    for (const w of state.roster) {
+      if (w.status === 'Active') {
+        rows.push(mapWarrior(w, state.player.stableName, state.player.id, true));
+      }
+    }
 
     if (state.rivals) {
       for (const r of state.rivals) {
         const rRoster = r.roster;
         const rName = r.owner.stableName;
         const rId = r.owner.id;
-        for (const w of filterActive(rRoster)) {
-          rows.push(mapWarrior(w, rName, rId, false));
+        for (const w of rRoster) {
+          if (w.status === 'Active') {
+            rows.push(mapWarrior(w, rName, rId, false));
+          }
         }
       }
     }

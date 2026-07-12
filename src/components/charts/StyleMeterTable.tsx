@@ -46,12 +46,9 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
         wins,
         losses,
         winRate: wins + losses > 0 ? wins / (wins + losses) : 0,
+        abbrev: STYLE_ABBREV[style as keyof typeof STYLE_ABBREV] ?? style,
       }))
-      .sort((a, b) => b.winRate - a.winRate)
-      .map((stat) => ({
-        ...stat,
-        abbrev: STYLE_ABBREV[stat.style as keyof typeof STYLE_ABBREV] ?? stat.style,
-      }));
+      .sort((a, b) => b.winRate - a.winRate);
   }, [roster]);
 
   return (

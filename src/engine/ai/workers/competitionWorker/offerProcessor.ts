@@ -1,4 +1,5 @@
 import type { GameState, RivalStableData, WeatherType } from '@/types/state.types';
+import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { StateImpact } from '@/engine/impacts';
 import * as boutAcceptance from './boutAcceptance';
@@ -79,8 +80,8 @@ export function processAllRivalsBoutOffers(
           if (!acceptance.accepted) {
             const impact = respondToBoutOffer(
               { ...state, boutOffers: currentOffers },
-              offer.id,
-              rivalWarrior.id,
+              offer.id as BoutOfferId,
+              rivalWarrior.id as WarriorId,
               'Declined'
             );
             if (impact.boutOffers) {
@@ -104,8 +105,8 @@ export function processAllRivalsBoutOffers(
 
         const impact = respondToBoutOffer(
           { ...state, boutOffers: currentOffers },
-          offer.id,
-          rivalWarrior.id,
+          offer.id as BoutOfferId,
+          rivalWarrior.id as WarriorId,
           response
         );
         if (impact.boutOffers) {

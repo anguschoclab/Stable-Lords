@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
+import type { BoutOfferId } from '@/types/shared.types';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 
 /**
@@ -20,7 +21,7 @@ export interface DigestSummary {
 
 interface UseDigestSummaryOptions {
   arenaHistory: FightSummary[];
-  boutOffers: Record<string, BoutOffer>;
+  boutOffers: Record<BoutOfferId, BoutOffer>;
   currentWeek: number;
   playerWarriorIds: Set<WarriorId>;
 }

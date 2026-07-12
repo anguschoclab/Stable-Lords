@@ -3,7 +3,6 @@ import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from './injuries';
 import { getMatchupBonus } from '@/constants/combat';
-import { filterActive } from '@/utils/roster';
 import { getStablePairKey } from '@/utils/keyUtils';
 
 /**
@@ -131,7 +130,8 @@ export function scoreMatchup(
 function getEligibleRivals(state: GameState): { warrior: Warrior; stable: RivalStableData }[] {
   const rivals: { warrior: Warrior; stable: RivalStableData }[] = [];
   for (const stable of state.rivals ?? []) {
-    for (const warrior of filterActive(stable.roster)) {
+    for (const warrior of stable.roster) {
+      if (warrior.status !== 'Active') continue;
       if (!isTooInjuredToFight(warrior.injuries)) {
         rivals.push({ warrior, stable });
       }

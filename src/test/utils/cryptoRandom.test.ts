@@ -1,15 +1,31 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { cryptoRandom, cryptoRandomInt } from '@/utils/cryptoRandom';
 
 describe('cryptoRandom', () => {
-  it('cryptoRandom falls back to Math.random when crypto is not available', () => {
+  it('cryptoRandom throws when crypto is not available', () => {
     const originalCrypto = globalThis.crypto;
     Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true });
-    const mathSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5);
 
-    expect(cryptoRandom()).toBe(0.5);
+    expect(() => cryptoRandom()).toThrow(/Secure random/);
 
-    mathSpy.mockRestore();
+    Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
+  });
+
+  it('cryptoRandomInt throws when crypto is not available', () => {
+    const originalCrypto = globalThis.crypto;
+    Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true });
+
+    expect(() => cryptoRandomInt(1, 10)).toThrow(/Secure random/);
+
+    Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
+  });
+
+  it('cryptoRandom throws when crypto exists but getRandomValues is missing', () => {
+    const originalCrypto = globalThis.crypto;
+    Object.defineProperty(globalThis, 'crypto', { value: {}, configurable: true });
+
+    expect(() => cryptoRandom()).toThrow(/Secure random/);
+
     Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
   });
 

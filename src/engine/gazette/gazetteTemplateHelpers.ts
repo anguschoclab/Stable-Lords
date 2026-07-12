@@ -9,6 +9,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
+import { escapeHtml } from '@/utils/escapeHtml';
 
 /**
  * Mood_tone.
@@ -49,6 +50,6 @@ export function t(template: string | string[], data: TemplateData, rng?: IRNGSer
 
   return result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
     const val = Object.prototype.hasOwnProperty.call(data, key) ? data[key] : undefined;
-    return val !== undefined ? String(val) : match;
+    return val !== undefined ? escapeHtml(String(val)) : match;
   });
 }

@@ -32,21 +32,17 @@ interface AgingResult {
 }
 
 /**
- * Process aging and forced retirement check for a single warrior.
+ * Apply age tick and SP/DF penalty for a single warrior.
  */
-function processWarriorAging(
+export function applyAgePenalty(
   w: Warrior,
-  isPlayer: boolean,
-  _rivalId: string | undefined,
-  state: GameState,
-  rng: IRNGService,
-  isAgeTick: boolean
-): AgingResult {
+  isAgeTick: boolean,
+  isPlayer: boolean
+): { currentAge: number; update: Partial<Warrior>; ageEvent?: string } {
   let currentAge = w.age ?? 18;
   const update: Partial<Warrior> = {};
   let ageEvent: string | undefined;
 
-  // 1. Age tick
   if (isAgeTick) {
     currentAge += 1;
     update.age = currentAge;
@@ -68,35 +64,79 @@ function processWarriorAging(
     }
   }
 
-  // 2. Forced retirement check
-  let retired = false;
+  return { currentAge, update, ageEvent };
+}
+
+/**
+ * Check whether a warrior should be forcibly retired based on age and RNG.
+ */
+export function checkForcedRetirement(
+  currentAge: number,
+  isPlayer: boolean,
+  rng: IRNGService,
+  warriorName: string
+): { retired: boolean; ageEvent?: string } {
   if (currentAge >= FORCED_RETIRE_MAX) {
-    retired = true;
-    if (isPlayer) {
-      ageEvent = `${w.name} (age ${currentAge}) has been forced to retire — too old to fight.`;
-    }
-  } else if (currentAge >= FORCED_RETIRE_MIN) {
+    return {
+      retired: true,
+      ageEvent: isPlayer
+        ? `${warriorName} (age ${currentAge}) has been forced to retire — too old to fight.`
+        : undefined,
+    };
+  }
+
+  if (currentAge >= FORCED_RETIRE_MIN) {
     const retireChance =
       ((currentAge - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN)) * 0.15;
     if (rng.next() < retireChance) {
-      retired = true;
-      if (isPlayer) {
-        ageEvent = `${w.name} (age ${currentAge}) has decided to hang up the blade.`;
-      }
+      return {
+        retired: true,
+        ageEvent: isPlayer
+          ? `${warriorName} (age ${currentAge}) has decided to hang up the blade.`
+          : undefined,
+      };
     }
   }
 
+  return { retired: false };
+}
+
+/**
+ * Construct a retired warrior object from an active warrior.
+ */
+export function buildRetiredWarrior(w: Warrior, currentAge: number, week: number): Warrior {
+  return {
+    ...w,
+    age: currentAge,
+    status: 'Retired' as WarriorStatus,
+    retiredWeek: week,
+  };
+}
+
+/**
+ * Process aging and forced retirement check for a single warrior.
+ */
+function processWarriorAging(
+  w: Warrior,
+  isPlayer: boolean,
+  _rivalId: string | undefined,
+  state: GameState,
+  rng: IRNGService,
+  isAgeTick: boolean
+): AgingResult {
+  const { currentAge, update, ageEvent: penaltyEvent } = applyAgePenalty(w, isAgeTick, isPlayer);
+  const { retired, ageEvent: retireEvent } = checkForcedRetirement(currentAge, isPlayer, rng, w.name);
+
   if (retired) {
-    const retiredObj = {
-      ...w,
-      age: currentAge,
-      status: 'Retired' as WarriorStatus,
-      retiredWeek: state.week,
-    };
-    return { retired: true, retiredObj, ageEvent };
+    const retiredObj = buildRetiredWarrior(w, currentAge, state.week);
+    return { retired: true, retiredObj, ageEvent: retireEvent ?? penaltyEvent };
   }
 
-  return { retired: false, update: Object.keys(update).length > 0 ? update : undefined, ageEvent };
+  return {
+    retired: false,
+    update: Object.keys(update).length > 0 ? update : undefined,
+    ageEvent: penaltyEvent,
+  };
 }
 
 /**

@@ -113,6 +113,44 @@ describe('narrativePBPUtils', () => {
         expect(noRawTokens(interpolateTemplate(t, { attacker: 'A', defender: 'D' }))).toBe(true);
       }
     });
+
+    // ── XSS / HTML escaping tests ──────────────────────────────────────────
+
+    it('escapes HTML in {{attacker}} long-form token', () => {
+      expect(
+        interpolateTemplate('{{attacker}} strikes.', { attacker: '<script>alert(1)</script>' })
+      ).toBe('&lt;script&gt;alert(1)&lt;/script&gt; strikes.');
+    });
+
+    it('escapes HTML in %A short token', () => {
+      expect(interpolateTemplate('%A attacks.', { attacker: '<img src=x onerror=alert(1)>' })).toBe(
+        '&lt;img src=x onerror=alert(1)&gt; attacks.'
+      );
+    });
+
+    it('escapes HTML in %D short token', () => {
+      expect(interpolateTemplate('%D defends.', { defender: '<script>x</script>' })).toBe(
+        '&lt;script&gt;x&lt;/script&gt; defends.'
+      );
+    });
+
+    it('escapes HTML in {{name}} token', () => {
+      expect(interpolateTemplate('{{name}} fights.', { name: "<b>'evil'</b>" })).toBe(
+        '&lt;b&gt;&#39;evil&#39;&lt;/b&gt; fights.'
+      );
+    });
+
+    it('does not escape the template itself', () => {
+      expect(interpolateTemplate('{{attacker}} <b>wins</b>', { attacker: 'Thor' })).toBe(
+        'Thor <b>wins</b>'
+      );
+    });
+
+    it('does not break normal names with escaping', () => {
+      expect(interpolateTemplate('%A attacks %D.', { attacker: 'Thor', defender: 'Loki' })).toBe(
+        'Thor attacks Loki.'
+      );
+    });
   });
 
   describe('getFromArchive', () => {

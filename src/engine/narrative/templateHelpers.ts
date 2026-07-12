@@ -1,3 +1,5 @@
+import { escapeHtml } from '@/utils/escapeHtml';
+
 /**
  * Stable Lords — Narrative Template Helpers
  *
@@ -18,6 +20,6 @@
 export function interpolateData(template: string, data: Record<string, string | number>): string {
   return template.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
     const value = data[key];
-    return value !== undefined && Object.hasOwn(data, key) ? String(value) : match;
+    return value !== undefined && Object.hasOwn(data, key) ? escapeHtml(String(value)) : match;
   });
 }

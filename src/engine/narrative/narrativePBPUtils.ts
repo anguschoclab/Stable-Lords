@@ -5,6 +5,7 @@
 import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { escapeHtml } from '@/utils/escapeHtml';
 
 /**
  * Defines the shape of combat context.
@@ -31,15 +32,15 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
     if (shortKey) {
       switch (shortKey) {
         case 'A':
-          return ctx.attacker || ctx.name || 'The warrior';
+          return escapeHtml(ctx.attacker || ctx.name || 'The warrior');
         case 'D':
-          return ctx.defender || 'the opponent';
+          return escapeHtml(ctx.defender || 'the opponent');
         case 'W':
-          return ctx.weapon || 'weapon';
+          return escapeHtml(ctx.weapon || 'weapon');
         case 'BP':
-          return ctx.bodyPart || 'body';
+          return escapeHtml(ctx.bodyPart || 'body');
         case 'H':
-          return String(ctx.hits || '');
+          return escapeHtml(String(ctx.hits || ''));
         default:
           return match;
       }
@@ -50,28 +51,28 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
       // never leaks a raw {{token}} into the play-by-play.
       switch (longKey) {
         case 'attacker':
-          return String(ctx.attacker ?? ctx.name ?? 'The warrior');
+          return escapeHtml(String(ctx.attacker ?? ctx.name ?? 'The warrior'));
         case 'name':
-          return String(ctx.name ?? ctx.attacker ?? 'The warrior');
+          return escapeHtml(String(ctx.name ?? ctx.attacker ?? 'The warrior'));
         case 'defender':
-          return String(ctx.defender ?? 'the opponent');
+          return escapeHtml(String(ctx.defender ?? 'the opponent'));
         case 'weapon':
-          return String(ctx.weapon ?? 'weapon');
+          return escapeHtml(String(ctx.weapon ?? 'weapon'));
         case 'bodyPart':
-          return String(ctx.bodyPart ?? 'body');
+          return escapeHtml(String(ctx.bodyPart ?? 'body'));
         case 'winner':
-          return String((ctx as Record<string, unknown>).winner ?? 'the winner');
+          return escapeHtml(String((ctx as Record<string, unknown>).winner ?? 'the winner'));
         case 'loser':
-          return String((ctx as Record<string, unknown>).loser ?? 'the loser');
+          return escapeHtml(String((ctx as Record<string, unknown>).loser ?? 'the loser'));
         case 'possessive':
-          return String(ctx.possessive ?? 'their');
+          return escapeHtml(String(ctx.possessive ?? 'their'));
         case 'pronoun':
-          return String((ctx as Record<string, unknown>).pronoun ?? 'he');
+          return escapeHtml(String((ctx as Record<string, unknown>).pronoun ?? 'he'));
         case 'reflexive':
-          return String((ctx as Record<string, unknown>).reflexive ?? 'himself');
+          return escapeHtml(String((ctx as Record<string, unknown>).reflexive ?? 'himself'));
         default: {
           const value = ctx[longKey as keyof CombatContext];
-          return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;
+          return value !== undefined && Object.hasOwn(ctx, longKey) ? escapeHtml(String(value)) : match;
         }
       }
     }

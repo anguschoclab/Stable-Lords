@@ -291,30 +291,21 @@ export const FLAW_EXPOSURE_CHANCE = 0.02;
  *  Signature — rather than thinly. Floors the personality trainAppetite. Knob. */
 export const QUALIFIED_DEV_APPETITE = 0.5;
 
-/** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
-function performAITraining(
+/**
+ * Select which attribute the AI should train this week.
+ * Uses seasonal priority (Spring→CN, Summer→ST), falling back to the lowest trainable stat.
+ * Never selects SZ (untrainable). Returns undefined if no trainable stat is available.
+ */
+export function selectTrainingFocus(
   w: Warrior,
-  stable: RivalStableData,
-  season: Season | undefined,
-  seasonalGrowth: SeasonalGrowth[],
-  rng: IRNGService,
-  healingBonus: number = 0
-): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[]; chosen?: keyof Attributes } {
-  // 80% pre-gate — preserves the spec's AI-at-80%-effectiveness lever while
-  // still routing through the full pipeline on the weeks it attempts.
-  if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
-
-  // Total-attribute hard cap check — cheaper to short-circuit here than to
-  // recompute inside `processAttributeTraining` for every attribute.
-  const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + w.attributes[k], 0);
-  if (total >= TOTAL_CAP) return { warrior: w, seasonalGrowth };
-
-  // Focus selection — preserve the seasonal-priority heuristic the AI already
-  // used (Spring→CN, Summer→ST), falling back to the lowest trainable stat.
+  season: Season | undefined
+): keyof Attributes | undefined {
   const trainableKeys = ATTRIBUTE_KEYS.filter((k) => k !== 'SZ') as (keyof Attributes)[];
+
   let chosen: keyof Attributes | undefined;
   if (season === 'Spring') chosen = 'CN';
   else if (season === 'Summer') chosen = 'ST';
+
   if (!chosen || w.attributes[chosen] >= ATTRIBUTE_MAX) {
     const initialKey = trainableKeys[0];
     if (initialKey) {
@@ -324,11 +315,22 @@ function performAITraining(
       );
     }
   }
-  if (!chosen) return { warrior: w, seasonalGrowth };
 
-  // Adapter: `processAttributeTraining` expects a GameState for `season` and
-  // `trainers`. Rivals don't have a full GameState, so we feed a minimal shape
-  // with just the fields the pipeline reads.
+  return chosen;
+}
+
+/**
+ * Execute a single training attempt: state adapter + processAttributeTraining + injury roll + stat recompute.
+ */
+function executeTrainingAttempt(
+  w: Warrior,
+  chosen: keyof Attributes,
+  stable: RivalStableData,
+  season: Season | undefined,
+  seasonalGrowth: SeasonalGrowth[],
+  rng: IRNGService,
+  healingBonus: number
+): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[] } {
   const stateAdapter = {
     season: season ?? 'Spring',
     trainers: stable.trainers ?? [],
@@ -338,22 +340,41 @@ function performAITraining(
   let warrior = attemptResult.updatedWarrior ?? w;
   const nextSeasonalGrowth = attemptResult.updatedSeasonalGrowth ?? seasonalGrowth;
 
-  // Training injury roll — same chance formula the player hits, now using the
-  // rival's actual healing trainer bonus instead of a hardcoded 0.
   const injuryRoll = rollForTrainingInjury(warrior, healingBonus, rng);
   if (injuryRoll.injury) {
     warrior = { ...warrior, injuries: [...(warrior.injuries ?? []), injuryRoll.injury] };
   }
 
-  // Recompute derived stats if the underlying attributes changed via the
-  // pipeline (processAttributeTraining already does this, but injuries could
-  // also modify attributes in a future pass — safe to re-derive defensively).
   if (warrior !== w) {
     const { baseSkills, derivedStats } = computeWarriorStats(warrior.attributes, warrior.style);
     warrior = { ...warrior, baseSkills, derivedStats };
   }
 
-  return { warrior, seasonalGrowth: nextSeasonalGrowth, chosen };
+  return { warrior, seasonalGrowth: nextSeasonalGrowth };
+}
+
+/** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
+function performAITraining(
+  w: Warrior,
+  stable: RivalStableData,
+  season: Season | undefined,
+  seasonalGrowth: SeasonalGrowth[],
+  rng: IRNGService,
+  healingBonus: number = 0
+): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[]; chosen?: keyof Attributes } {
+  if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
+
+  const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + w.attributes[k], 0);
+  if (total >= TOTAL_CAP) return { warrior: w, seasonalGrowth };
+
+  const chosen = selectTrainingFocus(w, season);
+  if (!chosen) return { warrior: w, seasonalGrowth };
+
+  const { warrior, seasonalGrowth: nextGrowth } = executeTrainingAttempt(
+    w, chosen, stable, season, seasonalGrowth, rng, healingBonus
+  );
+
+  return { warrior, seasonalGrowth: nextGrowth, chosen };
 }
 
 /**

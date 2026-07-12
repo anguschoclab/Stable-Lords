@@ -1,7 +1,7 @@
 /**
  * Cryptographically secure random number generation utilities.
  * Uses crypto.getRandomValues() for all randomness.
- * Falls back to Math.random() only in environments where crypto is unavailable.
+ * Throws if crypto is unavailable.
  */
 
 function getCrypto(): Crypto | undefined {
@@ -16,7 +16,7 @@ function getCrypto(): Crypto | undefined {
 
 /**
  * Returns a cryptographically secure random float in [0, 1).
- * Falls back to Math.random() if crypto is unavailable.
+ * Throws if crypto is unavailable.
  */
 export function cryptoRandom(): number {
   const cryptoObj = getCrypto();
@@ -25,12 +25,12 @@ export function cryptoRandom(): number {
     cryptoObj.getRandomValues(arr);
     return arr[0]! / 4294967296;
   }
-  return Math.random();
+  throw new Error('Secure random number generator not available in this environment.');
 }
 
 /**
  * Returns a cryptographically secure random integer in [min, max] (inclusive).
- * Falls back to Math.random() if crypto is unavailable.
+ * Throws if crypto is unavailable.
  */
 export function cryptoRandomInt(min: number, max: number): number {
   return Math.floor(cryptoRandom() * (max - min + 1)) + min;

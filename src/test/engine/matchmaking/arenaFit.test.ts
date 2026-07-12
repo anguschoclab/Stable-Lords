@@ -69,7 +69,7 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
     const arena = makeArena({ size: 'standard' });
     // broadsword → Striking (idx2), standard startRange=Striking (idx2), distanceFromPref=0
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5, 5);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('close but offset → partial range score', () => {

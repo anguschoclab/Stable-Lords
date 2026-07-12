@@ -32,8 +32,8 @@ describe('weather registries — new weather types', () => {
       const mod = await import('@/components/widgets/WeatherWidget');
       const stats = (mod as any).WEATHER_STATS?.['Eldritch Eclipse' as WeatherType];
       expect(stats).toBeDefined();
-      expect(stats).toContain('1.2');
-      expect(stats).toContain('2');
+      expect(stats).toContain('95%');
+      expect(stats).toContain('+2');
     });
 
     it('Moonlight Duel stats string exists', async () => {

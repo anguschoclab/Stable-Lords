@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { getWeatherConfig } from '@/constants/arena/weather';
 import type { WeatherType } from '@/types/shared.types';
 
-const WEATHER_STATS: Record<WeatherType, string> = {
+export const WEATHER_STATS: Record<WeatherType, string> = {
   Zephyr: 'STAMINA CONSERVATION 15% | INITIATIVE +2',
   'Wild Magic': 'UNPREDICTABLE SURGES | DAMAGE +10%',
   Clear: 'NORMAL VISIBILITY | ZERO DRAIN',

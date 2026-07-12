@@ -11,7 +11,7 @@ interface WeatherAudioProps {
 }
 
 // Weather to ambient sound mapping
-const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
+export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Zephyr: 'ambience-wind-breezy',
   'Ember Rain': null,
   'Wild Magic': 'ambience-blood-moon',

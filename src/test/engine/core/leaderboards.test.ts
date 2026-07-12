@@ -321,11 +321,7 @@ describe('calculatePerArenaLeaderboards', () => {
   });
 
   it('returns empty topWarriors and topKillers for arena with no fight records', () => {
-    const result = calculatePerArenaLeaderboards(
-      [createMockWarrior('p1', 0)],
-      'Player Stable',
-      []
-    );
+    const result = calculatePerArenaLeaderboards([createMockWarrior('p1', 0)], 'Player Stable', []);
     const stdArena = result.find((a) => a.arenaId === STANDARD_ARENA.id);
     expect(stdArena!.topWarriors).toEqual([]);
     expect(stdArena!.topKillers).toEqual([]);

@@ -282,20 +282,20 @@ export default function Training() {
               {state.roster
                 .filter((warrior: Warrior) => warrior.status === 'Active')
                 .map((warrior: Warrior) => (
-                <WarriorTrainingCard
-                  key={warrior.id}
-                  warrior={warrior}
-                  assignment={assignmentMap.get(warrior.id)}
-                  seasonalGains={seasonalGainsMap.get(warrior.id) ?? {}}
-                  trainers={state.trainers ?? []}
-                  onAssign={(attr) => handleAssign(warrior.id, attr)}
-                  onAssignRecovery={() => handleAssignRecovery(warrior.id)}
-                  onClear={() => handleClear(warrior.id)}
-                  onAssignTraitTraining={(trainerId) =>
-                    handleAssignTraitTraining(warrior.id, trainerId)
-                  }
-                />
-              ))}
+                  <WarriorTrainingCard
+                    key={warrior.id}
+                    warrior={warrior}
+                    assignment={assignmentMap.get(warrior.id)}
+                    seasonalGains={seasonalGainsMap.get(warrior.id) ?? {}}
+                    trainers={state.trainers ?? []}
+                    onAssign={(attr) => handleAssign(warrior.id, attr)}
+                    onAssignRecovery={() => handleAssignRecovery(warrior.id)}
+                    onClear={() => handleClear(warrior.id)}
+                    onAssignTraitTraining={(trainerId) =>
+                      handleAssignTraitTraining(warrior.id, trainerId)
+                    }
+                  />
+                ))}
             </div>
           )}
         </div>

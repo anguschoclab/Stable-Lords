@@ -9,10 +9,7 @@ const w1 = 'w1' as WarriorId;
 const w2 = 'w2' as WarriorId;
 const w3 = 'w3' as WarriorId;
 
-function makeOffer(
-  warriorIds: WarriorId[],
-  responses: Record<string, string> = {}
-): BoutOffer {
+function makeOffer(warriorIds: WarriorId[], responses: Record<string, string> = {}): BoutOffer {
   return {
     id: offerId,
     promoterId: 'p1' as any,
@@ -22,9 +19,7 @@ function makeOffer(
     purse: 100,
     hype: 10,
     status: 'Proposed',
-    responses: Object.fromEntries(
-      warriorIds.map((w) => [w, responses[w] ?? 'Pending'])
-    ) as any,
+    responses: Object.fromEntries(warriorIds.map((w) => [w, responses[w] ?? 'Pending'])) as any,
   };
 }
 

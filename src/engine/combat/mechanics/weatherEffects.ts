@@ -367,7 +367,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -1,
     riposteMod: 2,
     damageMult: 0.95,
-    description: 'Strange voices carried by the wind distract fighters, slightly lowering initiative but heightening paranoia and riposte chances.',
+    description:
+      'Strange voices carried by the wind distract fighters, slightly lowering initiative but heightening paranoia and riposte chances.',
   },
   'Chaos Squall': {
     staminaMult: 0.85,
@@ -400,13 +401,15 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
-  'Eldritch Eclipse': 'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
+  'Eldritch Eclipse':
+    'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
   'Moonlight Duel': 'The arena is silent save for the clash of steel under the pale moonlight.',
 
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   'Wild Magic': 'Crackling energy arcs through the arena. Magic is in the air.',
   Clear: null,
-  'Crimson Snow': 'Blood-red snow falls silently, covering the arena in a thick, terrifying blanket of crimson.',
+  'Crimson Snow':
+    'Blood-red snow falls silently, covering the arena in a thick, terrifying blanket of crimson.',
   Overcast: null,
   Rainy: 'Rain slicks the sand — footwork will be treacherous today.',
   Sweltering: 'The air hangs thick and hot. Stamina will be the deciding factor.',
@@ -420,7 +423,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Blizzard: 'A brutal blizzard freezes the arena. Survival is the only goal.',
   'Dense Fog': 'A thick mist swallows the fighters. Every shadow is a threat.',
   Mist: 'A light mist rolls across the sand, clinging to the fighters.',
-  'Glittering Frost': 'A beautiful, sharp glittering frost covers the arena. The air bites the lungs.',
+  'Glittering Frost':
+    'A beautiful, sharp glittering frost covers the arena. The air bites the lungs.',
   Thunderstorm: 'Thunder shakes the ground while lightning splits the sky.',
   Ashfall: 'Gray ash falls like snow. The air itself tastes of death.',
   'Acid Rain': 'Hissing rain burns the skin. This fight will be short and brutal.',
@@ -461,7 +465,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'The sky darkens and an absurd, writhing rain of frogs begins to fall, confusing everyone.',
   'Chaos Storm':
     'A swirling vortex of raw chaos descends upon the arena. Reality itself seems to fracture as the storm intensifies.',
-  'Whispering Winds': 'Unseen voices murmur through the arena. The fighters glance around nervously.',
+  'Whispering Winds':
+    'Unseen voices murmur through the arena. The fighters glance around nervously.',
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
 };

@@ -1093,18 +1093,16 @@ describe('getAIPlan', () => {
       ],
     ]);
     const grudge = {
-        id: 'g1' as any,
-        ownerIdA: 'owner-rival' as any,
-        ownerIdB: PLAYER_ID,
-        intensity: 5,
-        reason: 'test',
-        startWeek: 1,
-        lastEscalation: 1,
-      };
+      id: 'g1' as any,
+      ownerIdA: 'owner-rival' as any,
+      ownerIdB: PLAYER_ID,
+      intensity: 5,
+      reason: 'test',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
     state.ownerGrudges = [grudge];
-    state.grudgeMap = new Map([
-      [getPairKey('owner-rival', PLAYER_ID), grudge],
-    ]);
+    state.grudgeMap = new Map([[getPairKey('owner-rival', PLAYER_ID), grudge]]);
 
     const plan = getAIPlan(state, w, FightingStyle.StrikingAttack, PLAYER_ID);
 

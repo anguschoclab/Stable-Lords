@@ -55,8 +55,16 @@ describe('StyleMeterTable', () => {
   it('renders style rows from roster with career data', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 6, losses: 4, kills: 0 } }),
-        makeWarrior({ id: 'w2' as WarriorId, style: FightingStyle.BashingAttack, career: { wins: 3, losses: 3, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 6, losses: 4, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w2' as WarriorId,
+          style: FightingStyle.BashingAttack,
+          career: { wins: 3, losses: 3, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -67,13 +75,21 @@ describe('StyleMeterTable', () => {
   it('sorts rows by winRate descending', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.BashingAttack, career: { wins: 3, losses: 3, kills: 0 } }),
-        makeWarrior({ id: 'w2' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 6, losses: 4, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.BashingAttack,
+          career: { wins: 3, losses: 3, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w2' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 6, losses: 4, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
-    const abbrevs = Array.from(container.querySelectorAll('.text-right.text-\\[9px\\]')).map(
-      (el) => el.textContent?.trim()
+    const abbrevs = Array.from(container.querySelectorAll('.text-right.text-\\[9px\\]')).map((el) =>
+      el.textContent?.trim()
     );
     // 60% (ST) should come before 50% (BA)
     expect(abbrevs.indexOf('ST')).toBeLessThan(abbrevs.indexOf('BA'));
@@ -82,8 +98,16 @@ describe('StyleMeterTable', () => {
   it('aggregates wins/losses per style', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 3, losses: 1, kills: 0 } }),
-        makeWarrior({ id: 'w2' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 2, losses: 2, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 3, losses: 1, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w2' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 2, losses: 2, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -95,7 +119,11 @@ describe('StyleMeterTable', () => {
   it('win rate calculation: 3W/1L → 75%', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 3, losses: 1, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 3, losses: 1, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -106,7 +134,11 @@ describe('StyleMeterTable', () => {
   it('zero bouts → 0%', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 0, losses: 0, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 0, losses: 0, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -117,7 +149,11 @@ describe('StyleMeterTable', () => {
   it('bar color — high win rate (≥60%) → bg-primary', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 6, losses: 4, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 6, losses: 4, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -128,7 +164,11 @@ describe('StyleMeterTable', () => {
   it('bar color — mid win rate (45–59%) → bg-arena-gold', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 5, losses: 6, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 5, losses: 6, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -139,7 +179,11 @@ describe('StyleMeterTable', () => {
   it('bar color — low win rate (<45%) → bg-destructive', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 0, losses: 3, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 0, losses: 3, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -150,7 +194,11 @@ describe('StyleMeterTable', () => {
   it('bar color boundary — 59% → bg-arena-gold (not primary)', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 59, losses: 41, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 59, losses: 41, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -161,7 +209,11 @@ describe('StyleMeterTable', () => {
   it('bar color boundary — 44% → bg-destructive (not gold)', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 44, losses: 56, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 44, losses: 56, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -172,7 +224,11 @@ describe('StyleMeterTable', () => {
   it('text color matches bar color — 75% → text-primary', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 3, losses: 1, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 3, losses: 1, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -184,7 +240,11 @@ describe('StyleMeterTable', () => {
   it('uses STYLE_ABBREV for label — StrikingAttack → "ST"', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 1, losses: 0, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -195,7 +255,11 @@ describe('StyleMeterTable', () => {
   it('unknown style falls back to style string', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: 'CustomStyle' as any, career: { wins: 1, losses: 0, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: 'CustomStyle' as any,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -205,7 +269,10 @@ describe('StyleMeterTable', () => {
   it('warrior missing career → defaults to 0/0', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack } as Partial<Warrior>),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+        } as Partial<Warrior>),
       ],
     };
     delete (mockState.roster[0] as any).career;
@@ -223,7 +290,11 @@ describe('StyleMeterTable', () => {
   it('bar width matches percentage', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 3, losses: 1, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 3, losses: 1, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);
@@ -235,11 +306,31 @@ describe('StyleMeterTable', () => {
   it('roster with 5+ styles → all rendered', () => {
     mockState = {
       roster: [
-        makeWarrior({ id: 'w1' as WarriorId, style: FightingStyle.StrikingAttack, career: { wins: 1, losses: 0, kills: 0 } }),
-        makeWarrior({ id: 'w2' as WarriorId, style: FightingStyle.BashingAttack, career: { wins: 1, losses: 0, kills: 0 } }),
-        makeWarrior({ id: 'w3' as WarriorId, style: FightingStyle.LungingAttack, career: { wins: 1, losses: 0, kills: 0 } }),
-        makeWarrior({ id: 'w4' as WarriorId, style: FightingStyle.ParryRiposte, career: { wins: 1, losses: 0, kills: 0 } }),
-        makeWarrior({ id: 'w5' as WarriorId, style: FightingStyle.AimedBlow, career: { wins: 1, losses: 0, kills: 0 } }),
+        makeWarrior({
+          id: 'w1' as WarriorId,
+          style: FightingStyle.StrikingAttack,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w2' as WarriorId,
+          style: FightingStyle.BashingAttack,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w3' as WarriorId,
+          style: FightingStyle.LungingAttack,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w4' as WarriorId,
+          style: FightingStyle.ParryRiposte,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
+        makeWarrior({
+          id: 'w5' as WarriorId,
+          style: FightingStyle.AimedBlow,
+          career: { wins: 1, losses: 0, kills: 0 },
+        }),
       ],
     };
     const { container } = render(<StyleMeterTable />);

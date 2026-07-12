@@ -2,11 +2,7 @@ import { useState, useCallback } from 'react';
 import { type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService, hashStr } from '@/utils/random';
-import {
-  fullRefreshPool,
-  type PoolWarrior,
-  REFRESH_COST,
-} from '@/engine/recruitment';
+import { fullRefreshPool, type PoolWarrior, REFRESH_COST } from '@/engine/recruitment';
 import { revealRecruitPotential, type PotentialScoutReport } from '@/engine/recruitScouting';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { FightingStyle, Attributes, WarriorId, Warrior } from '@/types/game';

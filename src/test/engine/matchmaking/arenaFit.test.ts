@@ -73,7 +73,9 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
   });
 
   it('close but offset → partial range score', () => {
-    const w = makeWarrior({ equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({ size: 'standard' });
     // short_sword → Tight (idx1), standard start=Striking (idx2), distanceFromPref=1
     const score = scoreArenaFitForWarrior(w, arena);
@@ -86,7 +88,11 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
     const plan = makePlan({ rangePreference: 'Grapple' });
     // Grapple (idx0), standard start=Striking (idx2), distanceFromPref=2
     const score = scoreArenaFitForWarrior(w, arena, plan);
-    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX - Math.min(ARENA_FIT.RANGE_FIT_MAX, 2 * ARENA_FIT.RANGE_DISTANCE_PENALTY), 5);
+    expect(score).toBeCloseTo(
+      ARENA_FIT.RANGE_FIT_MAX -
+        Math.min(ARENA_FIT.RANGE_FIT_MAX, 2 * ARENA_FIT.RANGE_DISTANCE_PENALTY),
+      5
+    );
   });
 
   it('max cap distance → partial range score', () => {
@@ -136,7 +142,9 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
   });
 
   it('unknown weapon → defaults to Striking', () => {
-    const w = makeWarrior({ equipment: { weapon: 'nonexistent', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      equipment: { weapon: 'nonexistent', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({ size: 'standard' });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
@@ -157,13 +165,21 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
     const plan = makePlan({ rangePreference: 'Grapple' });
     // Grapple (idx0), standard start=Striking (idx2), distanceFromPref=2
     const score = scoreArenaFitForWarrior(w, arena, plan);
-    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX - Math.min(ARENA_FIT.RANGE_FIT_MAX, 2 * ARENA_FIT.RANGE_DISTANCE_PENALTY), 5);
+    expect(score).toBeCloseTo(
+      ARENA_FIT.RANGE_FIT_MAX -
+        Math.min(ARENA_FIT.RANGE_FIT_MAX, 2 * ARENA_FIT.RANGE_DISTANCE_PENALTY),
+      5
+    );
   });
 
   it('equipment.weapon takes priority over favorites.weaponId', () => {
     const w = makeWarrior({
       equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' },
-      favorites: { weaponId: 'dagger', rhythm: { oe: 5, al: 5 }, discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 } },
+      favorites: {
+        weaponId: 'dagger',
+        rhythm: { oe: 5, al: 5 },
+        discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 },
+      },
     });
     const arena = makeArena({ size: 'standard' });
     // Should use long_spear (Extended, idx3), not dagger (Tight, idx1)
@@ -174,7 +190,11 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
 
   it('uses favorites.weaponId when no equipment', () => {
     const w = makeWarrior({
-      favorites: { weaponId: 'long_spear', rhythm: { oe: 5, al: 5 }, discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 } },
+      favorites: {
+        weaponId: 'long_spear',
+        rhythm: { oe: 5, al: 5 },
+        discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 },
+      },
     });
     const arena = makeArena({ size: 'standard' });
     // favorites.weaponId=long_spear → Extended (idx3), standard start=Striking (idx2), distanceFromPref=1
@@ -188,7 +208,9 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
 describe('scoreArenaFitForWarrior — Riposte Mod', () => {
   it('positive riposteMod → bonus', () => {
     const w = makeWarrior({ style: FightingStyle.ParryRiposte });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     // range(ARENA_FIT.RANGE_FIT_MAX) + riposte(2 * 0.2 = 0.4)
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 2 * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER, 5);
@@ -196,35 +218,45 @@ describe('scoreArenaFitForWarrior — Riposte Mod', () => {
 
   it('negative riposteMod → penalty', () => {
     const w = makeWarrior({ style: FightingStyle.ParryRiposte });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: -1 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: -1 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + (-1 * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER), 5);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + -1 * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER, 5);
   });
 
   it('zero riposteMod → no contribution', () => {
     const w = makeWarrior({ style: FightingStyle.ParryRiposte });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('ParryStrike gets riposte mod', () => {
     const w = makeWarrior({ style: FightingStyle.ParryStrike });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + ARENA_FIT.RIPOSTE_MOD_MULTIPLIER, 5);
   });
 
   it('WallOfSteel gets riposte mod', () => {
     const w = makeWarrior({ style: FightingStyle.WallOfSteel });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 3 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 3 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 3 * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER, 5);
   });
 
   it('non-riposte style ignores riposteMod', () => {
     const w = makeWarrior({ style: FightingStyle.StrikingAttack });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     // StrikingAttack is an initiative style, so no riposte contribution, but initiativeMod=0 → no initiative either
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
@@ -232,7 +264,9 @@ describe('scoreArenaFitForWarrior — Riposte Mod', () => {
 
   it('TotalParry ignores riposteMod', () => {
     const w = makeWarrior({ style: FightingStyle.TotalParry });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
@@ -243,7 +277,9 @@ describe('scoreArenaFitForWarrior — Riposte Mod', () => {
 describe('scoreArenaFitForWarrior — Initiative Mod', () => {
   it('positive initiativeMod → bonus', () => {
     const w = makeWarrior({ style: FightingStyle.LungingAttack });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 2, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 2, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     // range(ARENA_FIT.RANGE_FIT_MAX) + initiative(2 * 0.25 = 0.5)
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 0.5, 5);
@@ -251,28 +287,36 @@ describe('scoreArenaFitForWarrior — Initiative Mod', () => {
 
   it('negative initiativeMod → penalty', () => {
     const w = makeWarrior({ style: FightingStyle.LungingAttack });
-    const arena = makeArena({ surfaceMod: { initiativeMod: -2, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: -2, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + (-2 * 0.25), 5);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + -2 * 0.25, 5);
   });
 
   it('zero initiativeMod → no contribution', () => {
     const w = makeWarrior({ style: FightingStyle.StrikingAttack });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('SlashingAttack gets initiative mod', () => {
     const w = makeWarrior({ style: FightingStyle.SlashingAttack });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 1, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 1, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 0.25, 5);
   });
 
   it('non-initiative style ignores initiativeMod', () => {
     const w = makeWarrior({ style: FightingStyle.ParryRiposte });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 2, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 2, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     // ParryRiposte is not an initiative style → no initiative contribution
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
@@ -280,7 +324,9 @@ describe('scoreArenaFitForWarrior — Initiative Mod', () => {
 
   it('TotalParry ignores initiativeMod', () => {
     const w = makeWarrior({ style: FightingStyle.TotalParry });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 3, enduranceMult: 1.0, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 3, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
@@ -290,22 +336,37 @@ describe('scoreArenaFitForWarrior — Initiative Mod', () => {
 
 describe('scoreArenaFitForWarrior — Endurance Drain', () => {
   it('no drain (enduranceMult=1.0) → no penalty', () => {
-    const w = makeWarrior({ style: FightingStyle.BashingAttack, attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.BashingAttack,
+      attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('enduranceMult < 1.0 (buff) → no penalty (drainStress not > 0)', () => {
-    const w = makeWarrior({ style: FightingStyle.BashingAttack, attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 0.95, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.BashingAttack,
+      attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 0.95, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('high drain, low CN, high-agg → larger penalty', () => {
-    const w = makeWarrior({ style: FightingStyle.BashingAttack, attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.BashingAttack,
+      attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+    });
     // drainStress=0.25, cnRatio=(15-5)/15=0.6667, factor=1.5
     const expectedPenalty = 0.25 * 0.6667 * 1.5;
     const score = scoreArenaFitForWarrior(w, arena);
@@ -313,8 +374,13 @@ describe('scoreArenaFitForWarrior — Endurance Drain', () => {
   });
 
   it('high drain, low CN, non-agg → smaller penalty', () => {
-    const w = makeWarrior({ style: FightingStyle.ParryRiposte, attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.ParryRiposte,
+      attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+    });
     // drainStress=0.25, cnRatio=0.6667, factor=1.0
     const expectedPenalty = 0.25 * 0.6667 * 1.0;
     const score = scoreArenaFitForWarrior(w, arena);
@@ -322,22 +388,37 @@ describe('scoreArenaFitForWarrior — Endurance Drain', () => {
   });
 
   it('high drain, CN=15 → no penalty (cnRatio=0)', () => {
-    const w = makeWarrior({ style: FightingStyle.BashingAttack, attributes: { ST: 10, CN: 15, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.BashingAttack,
+      attributes: { ST: 10, CN: 15, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('high drain, CN=20 → no penalty (cnRatio clamped to 0)', () => {
-    const w = makeWarrior({ style: FightingStyle.BashingAttack, attributes: { ST: 10, CN: 20, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.BashingAttack,
+      attributes: { ST: 10, CN: 20, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+    });
     const score = scoreArenaFitForWarrior(w, arena);
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
   it('high drain, CN=3 (min), high-agg → maximum penalty', () => {
-    const w = makeWarrior({ style: FightingStyle.AimedBlow, attributes: { ST: 10, CN: 3, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.AimedBlow,
+      attributes: { ST: 10, CN: 3, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+    });
     // drainStress=0.25, cnRatio=(15-3)/15=0.8, factor=1.5
     const expectedPenalty = 0.25 * 0.8 * 1.5;
     const score = scoreArenaFitForWarrior(w, arena);
@@ -347,7 +428,9 @@ describe('scoreArenaFitForWarrior — Endurance Drain', () => {
   it('default CN fallback (no attributes) → CN=12', () => {
     const w = makeWarrior({ style: FightingStyle.BashingAttack } as Partial<Warrior>);
     delete (w as any).attributes;
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+    });
     // CN defaults to 12, cnRatio=(15-12)/15=0.2, factor=1.5
     const expectedPenalty = 0.25 * 0.2 * 1.5;
     const score = scoreArenaFitForWarrior(w, arena);
@@ -355,8 +438,13 @@ describe('scoreArenaFitForWarrior — Endurance Drain', () => {
   });
 
   it('moderate drain → smaller penalty', () => {
-    const w = makeWarrior({ style: FightingStyle.ParryRiposte, attributes: { ST: 10, CN: 10, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.ParryRiposte,
+      attributes: { ST: 10, CN: 10, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 },
+    });
     // drainStress=0.05, cnRatio=(15-10)/15=0.333, factor=1.0
     const expectedPenalty = 0.05 * 0.333 * 1.0;
     const score = scoreArenaFitForWarrior(w, arena);
@@ -364,8 +452,13 @@ describe('scoreArenaFitForWarrior — Endurance Drain', () => {
   });
 
   it('SlashingAttack is both initiative AND high-agg → gets both mods', () => {
-    const w = makeWarrior({ style: FightingStyle.SlashingAttack, attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 } });
-    const arena = makeArena({ surfaceMod: { initiativeMod: 2, enduranceMult: 1.25, riposteMod: 0 } });
+    const w = makeWarrior({
+      style: FightingStyle.SlashingAttack,
+      attributes: { ST: 10, CN: 5, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
+    });
+    const arena = makeArena({
+      surfaceMod: { initiativeMod: 2, enduranceMult: 1.25, riposteMod: 0 },
+    });
     // initiative: 2 * 0.25 = 0.5
     // endurance: drainStress=0.25, cnRatio=0.6667, factor=1.5 → penalty=0.25
     const expectedScore = ARENA_FIT.RANGE_FIT_MAX + 0.5 - 0.25 * 0.6667 * 1.5;
@@ -378,7 +471,9 @@ describe('scoreArenaFitForWarrior — Endurance Drain', () => {
 
 describe('scoreArenaFitForWarrior — Tag Scoring', () => {
   it('cramped tag + close weapon (Tight) → bonus', () => {
-    const w = makeWarrior({ equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({ size: 'cramped', tags: ['cramped'] });
     // short_sword → Tight (idx1) ≤ 1 → +0.3 * 1.0
     const score = scoreArenaFitForWarrior(w, arena);
@@ -418,7 +513,9 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
   });
 
   it('open tag + non-Extended weapon → no bonus', () => {
-    const w = makeWarrior({ equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({ size: 'open', tags: ['open'] });
     // short_sword → Tight, not Extended → no open bonus
     const score = scoreArenaFitForWarrior(w, arena);
@@ -478,8 +575,15 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
 
 describe('scoreArenaFitForWarrior — Integration', () => {
   it('determinism — same inputs produce same score', () => {
-    const w = makeWarrior({ style: FightingStyle.ParryRiposte, equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' } });
-    const arena = makeArena({ size: 'cramped', tags: ['cramped'], surfaceMod: { initiativeMod: 0, enduranceMult: 1.1, riposteMod: 1 } });
+    const w = makeWarrior({
+      style: FightingStyle.ParryRiposte,
+      equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' },
+    });
+    const arena = makeArena({
+      size: 'cramped',
+      tags: ['cramped'],
+      surfaceMod: { initiativeMod: 0, enduranceMult: 1.1, riposteMod: 1 },
+    });
     const s1 = scoreArenaFitForWarrior(w, arena);
     const s2 = scoreArenaFitForWarrior(w, arena);
     expect(s1).toBe(s2);
@@ -514,7 +618,10 @@ describe('scoreArenaFitForWarrior — Integration', () => {
     // endurance: 0.95 < 1.0 → drainStress=-0.05, not > 0 → no penalty
     // cramped tag: prefIdx=1 ≤ 1 → +0.3
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 2 * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER + 0.3, 5);
+    expect(score).toBeCloseTo(
+      ARENA_FIT.RANGE_FIT_MAX + 2 * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER + 0.3,
+      5
+    );
   });
 
   it('score falls roughly within 0–4 range', () => {
@@ -546,16 +653,28 @@ describe('selectArenaForMatchup', () => {
   });
 
   it('deterministic with same RNG and warriors', () => {
-    const w1 = makeWarrior({ name: 'A', equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' } });
-    const w2 = makeWarrior({ name: 'B', equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' } });
+    const w1 = makeWarrior({
+      name: 'A',
+      equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' },
+    });
+    const w2 = makeWarrior({
+      name: 'B',
+      equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' },
+    });
     const rng1 = makeRng(0.3);
     const rng2 = makeRng(0.3);
     expect(selectArenaForMatchup(w1, w2, rng1)).toBe(selectArenaForMatchup(w1, w2, rng2));
   });
 
   it('defaults favorWeight to ARENA_SELECTION.FAVOR_WEIGHT_DEFAULT', () => {
-    const w1 = makeWarrior({ name: 'A', equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' } });
-    const w2 = makeWarrior({ name: 'B', equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' } });
+    const w1 = makeWarrior({
+      name: 'A',
+      equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' },
+    });
+    const w2 = makeWarrior({
+      name: 'B',
+      equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' },
+    });
     const rng = makeRng(0.5);
     // Should not throw and return a valid arena id
     const result = selectArenaForMatchup(w1, w2, rng);
@@ -583,8 +702,14 @@ describe('selectArenaForMatchup', () => {
   });
 
   it('planA and planB are passed through to scoring', () => {
-    const w1 = makeWarrior({ name: 'A', equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' } });
-    const w2 = makeWarrior({ name: 'B', equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' } });
+    const w1 = makeWarrior({
+      name: 'A',
+      equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' },
+    });
+    const w2 = makeWarrior({
+      name: 'B',
+      equipment: { weapon: 'dagger', armor: '', shield: '', helm: '' },
+    });
     const planA = makePlan({ rangePreference: 'Extended' });
     const planB = makePlan({ rangePreference: 'Grapple' });
     const rng = makeRng(0.5);
@@ -621,19 +746,33 @@ describe('selectArenaForMatchup', () => {
 
 // Register custom test arenas for describeArenaFit (uses getArenaById registry lookup)
 arenasModule.registerArena(
-  makeArena({ id: 'test_cramped', size: 'cramped', surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 } })
+  makeArena({
+    id: 'test_cramped',
+    size: 'cramped',
+    surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 },
+  })
 );
 arenasModule.registerArena(
-  makeArena({ id: 'test_drain', size: 'standard', surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 } })
+  makeArena({
+    id: 'test_drain',
+    size: 'standard',
+    surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+  })
 );
 arenasModule.registerArena(
-  makeArena({ id: 'test_low_drain', size: 'standard', surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 } })
+  makeArena({
+    id: 'test_low_drain',
+    size: 'standard',
+    surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 },
+  })
 );
 
 describe('describeArenaFit', () => {
-
   it('cursed tag + riposte mod → tests THE_MEAT_GRINDER', () => {
-    const w = makeWarrior({ style: FightingStyle.ParryRiposte, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      style: FightingStyle.ParryRiposte,
+      equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({
       id: 'the_meat_grinder',
       size: 'cramped',
@@ -664,13 +803,18 @@ describe('describeArenaFit', () => {
   });
 
   it('cramped + close → "Tight quarters — suits your close game"', () => {
-    const w = makeWarrior({ equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      equipment: { weapon: 'short_sword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({ id: 'underpit_arena', size: 'cramped' });
     expect(describeArenaFit(w, arena.id)).toBe('Tight quarters — suits your close game');
   });
 
   it('riposte + positive mod → "Counter-fighting venue — suits your style"', () => {
-    const w = makeWarrior({ style: FightingStyle.ParryRiposte, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      style: FightingStyle.ParryRiposte,
+      equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({
       id: 'lantern_hall_arena',
       size: 'standard',
@@ -680,17 +824,25 @@ describe('describeArenaFit', () => {
   });
 
   it('riposte + negative mod → "Open brawling venue — less suited to your counters"', () => {
-    const w = makeWarrior({ style: FightingStyle.ParryRiposte, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      style: FightingStyle.ParryRiposte,
+      equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({
       id: 'mudpit_arena',
       size: 'standard',
       surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: -1 },
     });
-    expect(describeArenaFit(w, arena.id)).toBe('Open brawling venue — less suited to your counters');
+    expect(describeArenaFit(w, arena.id)).toBe(
+      'Open brawling venue — less suited to your counters'
+    );
   });
 
   it('initiative + positive mod → "Fast reads — favors your initiative"', () => {
-    const w = makeWarrior({ style: FightingStyle.LungingAttack, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      style: FightingStyle.LungingAttack,
+      equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({
       id: 'highplain_arena',
       size: 'open',
@@ -700,7 +852,10 @@ describe('describeArenaFit', () => {
   });
 
   it('initiative + negative mod → "Disruptive winds — slows your initiative"', () => {
-    const w = makeWarrior({ style: FightingStyle.LungingAttack, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const w = makeWarrior({
+      style: FightingStyle.LungingAttack,
+      equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' },
+    });
     const arena = makeArena({
       id: 'mudpit_arena',
       size: 'standard',

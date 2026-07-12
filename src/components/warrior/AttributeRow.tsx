@@ -81,9 +81,7 @@ export function AttributeRow({
           {/* Label & Value */}
           <div className="w-16 shrink-0">
             <div className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
-              {lockReason && !isSelected && (
-                <Lock className="h-2.5 w-2.5 opacity-60 shrink-0" />
-              )}
+              {lockReason && !isSelected && <Lock className="h-2.5 w-2.5 opacity-60 shrink-0" />}
               {key}
             </div>
             <div className="text-[10px] font-mono opacity-60">
@@ -148,9 +146,7 @@ export function AttributeRow({
               </div>
             ) : !disabled ? (
               <div className="flex items-center justify-end gap-1">
-                <span className="text-[10px] font-mono font-bold text-primary/80">
-                  {chance}%
-                </span>
+                <span className="text-[10px] font-mono font-bold text-primary/80">{chance}%</span>
                 <ArrowUpRight className="h-2.5 w-2.5 opacity-40 group-hover/row:opacity-100 transition-opacity" />
               </div>
             ) : null}
@@ -183,8 +179,7 @@ export function AttributeRow({
         <div className="space-y-1">
           {isSZ ? (
             <p className="text-[9px] leading-relaxed opacity-60 italic">
-              Physiological constants are immutable. Size remains fixed after
-              recruitment.
+              Physiological constants are immutable. Size remains fixed after recruitment.
             </p>
           ) : maxed ? (
             <p className="text-[9px] leading-relaxed text-primary italic">
@@ -192,39 +187,31 @@ export function AttributeRow({
             </p>
           ) : ceilingHit ? (
             <p className="text-[9px] leading-relaxed text-arena-gold italic">
-              Warrior has reached their potential ceiling for {key}. Scouts may reveal
-              if further growth is possible.
+              Warrior has reached their potential ceiling for {key}. Scouts may reveal if further
+              growth is possible.
             </p>
           ) : atCap ? (
             <p className="text-[9px] leading-relaxed text-destructive/80 italic">
-              Total stat pool (80) is full. Another attribute must decline before this
-              one can grow.
+              Total stat pool (80) is full. Another attribute must decline before this one can grow.
             </p>
           ) : seasonCapped ? (
             <p className="text-[9px] leading-relaxed text-arena-gold italic">
-              Warrior is exhausted. Rest required before further training to resume
-              growth.
+              Warrior is exhausted. Rest required before further training to resume growth.
             </p>
           ) : (
             <p className="text-[9px] leading-relaxed opacity-60">
               {isSelected
                 ? `Assigned to focus on ${ATTRIBUTE_LABELS[key]}. Progress roll executes at week end.`
                 : `Click to prioritize ${key} training this week.`}
-              {isRevealed &&
-                !nearCeiling &&
-                ' Room to grow before reaching natural limits.'}
-              {nearCeiling &&
-                !ceilingHit &&
-                ' Nearing natural limits. Diminishing returns ahead.'}
+              {isRevealed && !nearCeiling && ' Room to grow before reaching natural limits.'}
+              {nearCeiling && !ceilingHit && ' Nearing natural limits. Diminishing returns ahead.'}
             </p>
           )}
         </div>
         {chance > 0 && (
           <div className="pt-1 border-t border-white/5 flex items-center gap-1 opacity-40">
             <Zap className="h-2.5 w-2.5" />
-            <span className="text-[8px] uppercase tracking-widest">
-              Trainer bonuses active
-            </span>
+            <span className="text-[8px] uppercase tracking-widest">Trainer bonuses active</span>
           </div>
         )}
       </TooltipContent>

@@ -78,10 +78,7 @@ describe('Trait deduplication', () => {
   describe('no duplicate effects in generic positive Common/Notable pool', () => {
     it('no two generic positive Common/Notable traits share the same core effect', () => {
       const generic = Object.values(TRAITS).filter(
-        (t) =>
-          t.sign === 'positive' &&
-          !t.styles &&
-          (t.tier === 'Common' || t.tier === 'Notable')
+        (t) => t.sign === 'positive' && !t.styles && (t.tier === 'Common' || t.tier === 'Notable')
       );
 
       const effectHash = (effect: any) => {
@@ -93,9 +90,7 @@ describe('Trait deduplication', () => {
       for (const t of generic) {
         const hash = effectHash(t.effect);
         if (seen.has(hash)) {
-          throw new Error(
-            `Duplicate effect between "${seen.get(hash)}" and "${t.id}": ${hash}`
-          );
+          throw new Error(`Duplicate effect between "${seen.get(hash)}" and "${t.id}": ${hash}`);
         }
         seen.set(hash, t.id);
       }

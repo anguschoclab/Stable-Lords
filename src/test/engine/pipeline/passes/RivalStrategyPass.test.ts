@@ -13,11 +13,7 @@ import { SeededRNG } from '@/utils/random';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(
-  id: string,
-  name: string,
-  overrides: Partial<Warrior> = {}
-): Warrior {
+function makeWarrior(id: string, name: string, overrides: Partial<Warrior> = {}): Warrior {
   return {
     id: id as WarriorId,
     name,
@@ -213,7 +209,10 @@ describe('buildSuccessorIndex', () => {
   });
 
   it('warrior with fame undefined → NOT in Map (defensive || 0)', () => {
-    const w = makeWarrior('w1', 'Hero', { fame: undefined as any, stableId: 'stable-a' as StableId });
+    const w = makeWarrior('w1', 'Hero', {
+      fame: undefined as any,
+      stableId: 'stable-a' as StableId,
+    });
     const index = buildSuccessorIndex([w]);
     expect(index.size).toBe(0);
   });
@@ -337,9 +336,7 @@ describe('runRivalStrategyPass successor integration', () => {
     const impact = runRivalStrategyPass(state, 6, undefined as any, true);
 
     expect(impact.newsletterItems).toBeDefined();
-    const allGazetteText = (impact.newsletterItems || [])
-      .flatMap((n) => n.items)
-      .join(' ');
+    const allGazetteText = (impact.newsletterItems || []).flatMap((n) => n.items).join(' ');
     expect(allGazetteText).toContain('Legendary Fighter');
   });
 
@@ -362,9 +359,7 @@ describe('runRivalStrategyPass successor integration', () => {
     const impact = runRivalStrategyPass(state, 6, undefined as any, true);
 
     expect(impact.newsletterItems).toBeDefined();
-    const allGazetteText = (impact.newsletterItems || [])
-      .flatMap((n) => n.items)
-      .join(' ');
+    const allGazetteText = (impact.newsletterItems || []).flatMap((n) => n.items).join(' ');
     expect(allGazetteText).toContain('Lord Stable');
   });
 });

@@ -1,5 +1,4 @@
 import { updateEntityInList } from '@/utils/stateUtils';
-import { filterActive } from '@/utils/roster';
 import type {
   GameState,
   RivalStableData,
@@ -55,7 +54,7 @@ export function processRoster(
   const rngService = rng || new SeededRNGService(seed ?? currentWeek * 7919 + 101);
   let updatedRival = { ...rival };
   let seasonalGrowth: SeasonalGrowth[] = updatedRival.seasonalGrowth ?? [];
-  const activeRoster = filterActive(updatedRival.roster);
+  const activeRoster = updatedRival.roster.filter((w) => w.status === 'Active');
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
 
   // 0. Recovery — tick injuries for all active wounded warriors, applying any
@@ -186,7 +185,7 @@ export function processRoster(
   // 2. Equipment (High Risk)
   // Champions always get gear consideration regardless of intent (treasury gate only).
   // activeForGear is derived fresh (post-training) so gear candidates reflect current state.
-  const activeForGear = filterActive(updatedRival.roster);
+  const activeForGear = updatedRival.roster.filter((w) => w.status === 'Active');
   const champWarrior = activeForGear.find((w) => w.champion);
   if (champWarrior && updatedRival.treasury > 800) {
     const gearCost = 150;
@@ -371,7 +370,13 @@ function performAITraining(
   if (!chosen) return { warrior: w, seasonalGrowth };
 
   const { warrior, seasonalGrowth: nextGrowth } = executeTrainingAttempt(
-    w, chosen, stable, season, seasonalGrowth, rng, healingBonus
+    w,
+    chosen,
+    stable,
+    season,
+    seasonalGrowth,
+    rng,
+    healingBonus
   );
 
   return { warrior, seasonalGrowth: nextGrowth, chosen };

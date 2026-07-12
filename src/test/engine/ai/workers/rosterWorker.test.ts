@@ -17,7 +17,13 @@ function makeWarrior(
   overrides: Partial<Warrior> = {}
 ): Warrior {
   const fullAttrs: Attributes = {
-    ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10,
+    ST: 10,
+    CN: 10,
+    SZ: 10,
+    WT: 10,
+    WL: 10,
+    SP: 10,
+    DF: 10,
     ...attrs,
   };
   const { baseSkills, derivedStats } = computeWarriorStats(fullAttrs, FightingStyle.StrikingAttack);
@@ -93,7 +99,15 @@ describe('selectTrainingFocus', () => {
   });
 
   it('falls back when seasonal choice is at ATTRIBUTE_MAX', () => {
-    const w = makeWarrior('w1', { CN: ATTRIBUTE_MAX, ST: 15, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 });
+    const w = makeWarrior('w1', {
+      CN: ATTRIBUTE_MAX,
+      ST: 15,
+      SZ: 10,
+      WT: 14,
+      WL: 13,
+      SP: 16,
+      DF: 11,
+    });
     // Spring → CN, but CN is at max → fall back to lowest (DF=11)
     expect(selectTrainingFocus(w, 'Spring')).toBe('DF');
   });
@@ -119,16 +133,22 @@ describe('processRoster', () => {
   });
 
   it('processes recovery for injured warriors', () => {
-    const w = makeWarrior('w1', {}, {
-      injuries: [{
-        id: 'i1' as any,
-        name: 'Sprain',
-        description: 'Ouch',
-        severity: 'Minor',
-        weeksRemaining: 2,
-        penalties: {},
-      }],
-    });
+    const w = makeWarrior(
+      'w1',
+      {},
+      {
+        injuries: [
+          {
+            id: 'i1' as any,
+            name: 'Sprain',
+            description: 'Ouch',
+            severity: 'Minor',
+            weeksRemaining: 2,
+            penalties: {},
+          },
+        ],
+      }
+    );
     const rival = makeRivalStable({ roster: [w], treasury: 1000 });
     const result = processRoster(rival, 1, 'Spring', 42);
 

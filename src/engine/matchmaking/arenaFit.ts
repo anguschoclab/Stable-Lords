@@ -148,7 +148,6 @@ export function selectArenaForMatchup(
   const allAvailable = opts?.arenaPool ? opts.arenaPool.map(getArenaById) : getAllArenas();
   const arenas = allAvailable.filter((a) => !excludedIds.has(a.id));
 
-
   if (arenas.length === 0) return 'standard_arena';
 
   const scores = arenas.map((arena) => {

@@ -1,4 +1,3 @@
-
 /**
  * Combat Math — RNG, phase detection, skill/contest checks.
  * Single source of truth for combat math utilities used by simulate.ts.
@@ -61,4 +60,3 @@ export function contestCheck(
   const rollD = Math.floor(rng() * 20) + 1 + d + modD;
   return rollA > rollD;
 }
-

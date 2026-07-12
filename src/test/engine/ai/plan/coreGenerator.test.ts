@@ -10,15 +10,16 @@ vi.mock('@/engine/ai/plan/strategyValidator', () => ({
 }));
 
 describe('coreGenerator', () => {
-  const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior => ({
-    id: 'w1',
-    name: 'Test Warrior',
-    style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    skills: { INI: 10, ATT: 10, DEF: 10, PAR: 10, DMG: 10, DEC: 10, END: 10, HEA: 10 },
-    favorites: {},
-    ...overrides,
-  }) as unknown as Warrior;
+  const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+    ({
+      id: 'w1',
+      name: 'Test Warrior',
+      style: FightingStyle.StrikingAttack,
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      skills: { INI: 10, ATT: 10, DEF: 10, PAR: 10, DMG: 10, DEC: 10, END: 10, HEA: 10 },
+      favorites: {},
+      ...overrides,
+    }) as unknown as Warrior;
 
   describe('aiPlanForWarrior', () => {
     it('generates a base plan with personality and philosophy modifiers', () => {
@@ -48,7 +49,13 @@ describe('coreGenerator', () => {
       // total OE = 7+0+0-2 + 1 = 6
       // total AL = 5+0+0-1 + 0 = 4
       // total KD = 7+0+0-2 = 5
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced', undefined, 'RECOVERY');
+      const plan = aiPlanForWarrior(
+        w,
+        'Pragmatic' as OwnerPersonality,
+        'Balanced',
+        undefined,
+        'RECOVERY'
+      );
 
       expect(plan.OE).toBe(6);
       expect(plan.AL).toBe(4);
@@ -61,7 +68,13 @@ describe('coreGenerator', () => {
       // Intent VENDETTA -> AL +2, KD +2
       // total AL = 5+2 = 7
       // total KD = 7+2 = 9
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced', undefined, 'VENDETTA');
+      const plan = aiPlanForWarrior(
+        w,
+        'Pragmatic' as OwnerPersonality,
+        'Balanced',
+        undefined,
+        'VENDETTA'
+      );
 
       expect(plan.AL).toBe(7);
       expect(plan.killDesire).toBe(9);
@@ -73,7 +86,14 @@ describe('coreGenerator', () => {
       // grudgeIntensity 3 -> AL +1, KD +3
       // total AL = 5+1 = 6
       // total KD = 7+3 = 10
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced', undefined, undefined, 3);
+      const plan = aiPlanForWarrior(
+        w,
+        'Pragmatic' as OwnerPersonality,
+        'Balanced',
+        undefined,
+        undefined,
+        3
+      );
 
       expect(plan.AL).toBe(6);
       expect(plan.killDesire).toBe(10);
@@ -86,7 +106,12 @@ describe('coreGenerator', () => {
       // styleBias StrikingAttack -> OE +1, AL 0
       // total OE = 7+2+1 = 10
       // total KD = 7+1 = 8
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced', FightingStyle.WallOfSteel);
+      const plan = aiPlanForWarrior(
+        w,
+        'Pragmatic' as OwnerPersonality,
+        'Balanced',
+        FightingStyle.WallOfSteel
+      );
 
       expect(plan.OE).toBe(10);
       expect(plan.killDesire).toBe(8);
@@ -94,7 +119,14 @@ describe('coreGenerator', () => {
 
     it('clamps values correctly and integrates phase/desperate sub-plans', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Brute Force', undefined, 'VENDETTA', 10);
+      const plan = aiPlanForWarrior(
+        w,
+        'Aggressive' as OwnerPersonality,
+        'Brute Force',
+        undefined,
+        'VENDETTA',
+        10
+      );
 
       expect(plan.OE).toBeLessThanOrEqual(10);
       expect(plan.AL).toBeLessThanOrEqual(10);

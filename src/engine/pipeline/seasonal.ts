@@ -1214,7 +1214,6 @@ function handleChaosWeaverVisit(
   }
 }
 
-
 function handleBountyHunterVisit(
   state: GameState,
   nextWeek: number,
@@ -1266,7 +1265,6 @@ function handleLoyalStrayDog(
     }
   }
 }
-
 
 function handleMidnightMarket(
   state: GameState,

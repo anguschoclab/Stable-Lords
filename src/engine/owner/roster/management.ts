@@ -5,7 +5,6 @@ import { computeMetaDrift } from '../../metaDrift';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { META_RECRUIT_QUOTES } from '@/data/ownerData';
 import { SeededRNGService } from '@/utils/random';
-import { filterActive } from '@/utils/roster';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { generateAIRecruit } from './recruitGenerator';
 import { computeWarriorLiability } from '@/engine/warriorValue';
@@ -37,7 +36,10 @@ export function processAIRosterManagement(
     };
 
     const personality = r.owner.personality ?? 'Pragmatic';
-    const activeBeforeCulling = filterActive(r.roster).length;
+    let activeBeforeCulling = 0;
+    for (const w of r.roster) {
+      if (w.status === 'Active') activeBeforeCulling++;
+    }
 
     // 1) Retirement / Culling Logic
     let culledThisTick = 0;
@@ -58,8 +60,9 @@ export function processAIRosterManagement(
 
     // Methodical/Tactician owners cull underperformers
     if (personality === 'Methodical' || personality === 'Tactician') {
-      const candidates = filterActive(r.roster).filter(
+      const candidates = r.roster.filter(
         (w) =>
+          w.status === 'Active' &&
           w.career.wins + w.career.losses >= 5 &&
           w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
           (w.age ?? 18) >= 25 &&
@@ -77,8 +80,9 @@ export function processAIRosterManagement(
 
     // Aggressive owners cull warriors with 0 kills after many fights
     if (personality === 'Aggressive') {
-      const killless = filterActive(r.roster).filter(
+      const killless = r.roster.filter(
         (w) =>
+          w.status === 'Active' &&
           w.career.kills === 0 &&
           w.career.wins + w.career.losses >= 8 &&
           (w.age ?? 18) >= 24 &&
@@ -96,7 +100,8 @@ export function processAIRosterManagement(
 
     // Liability-based culling: release flaw-loaded warriors per personality threshold
     const traitPolicy = policyFor(r.owner.personality);
-    const liabilityCandidates = filterActive(r.roster).filter((w) => {
+    const liabilityCandidates = r.roster.filter((w) => {
+      if (w.status !== 'Active') return false;
       if (isOnWinStreak(w)) return false;
       const liability = computeWarriorLiability(w);
       return (
@@ -114,7 +119,7 @@ export function processAIRosterManagement(
     }
 
     // Age-based retirement
-    const elderly = filterActive(r.roster).filter((w) => (w.age ?? 18) >= 30);
+    const elderly = r.roster.filter((w) => w.status === 'Active' && (w.age ?? 18) >= 30);
     for (const old of elderly.slice(0, 1)) {
       if (rngSnapshot.next() < 0.15) {
         old.status = 'Retired';
@@ -126,7 +131,10 @@ export function processAIRosterManagement(
     }
 
     // 2) Recruitment Logic
-    const currentActive = filterActive(r.roster).length;
+    let currentActive = 0;
+    for (const w of r.roster) {
+      if (w.status === 'Active') currentActive++;
+    }
     const minRoster = personality === 'Aggressive' ? 8 : personality === 'Showman' ? 7 : 6;
     const recruitChance =
       currentActive < 4
@@ -175,7 +183,7 @@ export function processAIRosterManagement(
       }
     }
 
-    r.roster = filterActive(r.roster);
+    r.roster = r.roster.filter((w) => w.status === 'Active');
     return r;
   });
 

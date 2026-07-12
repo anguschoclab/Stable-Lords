@@ -23,7 +23,7 @@ describe('New Arenas System Integration', () => {
     let foundSky = false;
     let foundMisty = false;
 
-    promoters.forEach(p => {
+    promoters.forEach((p) => {
       if (p.arenaPool?.includes('glacial_rift')) foundGlacial = true;
       if (p.arenaPool?.includes('sky_platform')) foundSky = true;
       if (p.arenaPool?.includes('misty_valley')) foundMisty = true;

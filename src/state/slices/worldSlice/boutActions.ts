@@ -28,13 +28,14 @@ export function createBoutActions(
       warriorId: WarriorId,
       response: 'Accepted' | 'Declined'
     ) => {
-      set((state) =>
-        engineRespondToBoutOffer(
-          state as unknown as GameState,
-          offerId,
-          warriorId,
-          response
-        ) as unknown as Partial<GameStore>
+      set(
+        (state) =>
+          engineRespondToBoutOffer(
+            state as unknown as GameState,
+            offerId,
+            warriorId,
+            response
+          ) as unknown as Partial<GameStore>
       );
     },
 

@@ -89,7 +89,9 @@ describe('createAttributeInsights', () => {
       expect(ins.warriorId).toBe(warrior.id);
       expect(ins.discoveredWeek).toBe(5);
       expect(ATTRIBUTE_KEYS).toContain(ins.targetKey);
-      expect(ins.detail).toContain(ATTRIBUTE_LABELS[ins.targetKey as keyof typeof ATTRIBUTE_LABELS] ?? ins.targetKey);
+      expect(ins.detail).toContain(
+        ATTRIBUTE_LABELS[ins.targetKey as keyof typeof ATTRIBUTE_LABELS] ?? ins.targetKey
+      );
     });
   });
 
@@ -169,7 +171,12 @@ describe('createTraitInsights', () => {
   it('returns 2 Trait insights for 2 suspected traits', () => {
     const warrior = makeWarrior();
     const rng = new SeededRNGService(1);
-    const insights = createTraitInsights(['orphan_resilience', 'street_rat_cunning'], warrior, 5, rng);
+    const insights = createTraitInsights(
+      ['orphan_resilience', 'street_rat_cunning'],
+      warrior,
+      5,
+      rng
+    );
 
     expect(insights).toHaveLength(2);
     expect(insights[0]!.detail).toContain('orphan_resilience');

@@ -6,7 +6,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
-import { filterActive } from '@/utils/roster';
 import type { GameState, Warrior } from '@/types/game'; /**
  * Defines the shape of coach tip.
  */
@@ -50,7 +49,8 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'hub-recruit-more',
         message:
           '📢 Your stable is thin! Recruit more warriors to keep a healthy rotation and avoid burnout.',
-        condition: (s) => filterActive(s.roster).length === 1 && s.arenaHistory.length >= 2,
+        condition: (s) =>
+          s.roster.filter((w) => w.status === 'Active').length === 1 && s.arenaHistory.length >= 2,
       },
       {
         id: 'hub-tournament-ready',
@@ -139,7 +139,7 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'tournament-tip',
         message:
           '🏆 Tournaments run each season. Win to earn titles and major fame boosts for your stable.',
-        condition: (s) => filterActive(s.roster).length >= 2,
+        condition: (s) => s.roster.filter((w) => w.status === 'Active').length >= 2,
       },
     ],
   },
@@ -243,10 +243,7 @@ export function useCoachTip(pathname: string) {
   const ftueComplete = state.ftueComplete;
   const coachDismissed = state.coachDismissed;
   const roster = state.roster;
-  const rosterMap = useMemo(
-    () => new Map(roster.map((w) => [w.id, w])),
-    [roster]
-  );
+  const rosterMap = useMemo(() => new Map(roster.map((w) => [w.id, w])), [roster]);
   const stateRef = useRef(state);
   stateRef.current = state;
 

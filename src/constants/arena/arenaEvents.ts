@@ -22,7 +22,6 @@ export interface ArenaEventConfig {
   };
 }
 
-
 export const ARENA_EVENT_CONSTANTS = {
   COLLAPSING_PILLAR_TRIGGER: 15,
   CROWD_RIOT_TRIGGER: 15,
@@ -57,7 +56,6 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     narrativeText: 'Chunks of stone fall from above, forcing both fighters to dodge!',
   },
 
-
   shadow_tendrils: {
     id: 'shadow_tendrils',
     name: 'Shadow Tendrils',
@@ -66,7 +64,10 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerCondition: 'heavy_hit',
     triggerValue: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_TRIGGER,
     narrativeText: 'Shadow tendrils lash out from the darkness!',
-    mechanicalEffect: { type: 'endurance_drain', value: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_DRAIN }
+    mechanicalEffect: {
+      type: 'endurance_drain',
+      value: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_DRAIN,
+    },
   },
 
   // ─── Magical Events ─────────────────────────────────────────────────────
@@ -154,7 +155,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerCondition: 'heavy_hit',
     triggerValue: ARENA_EVENT_CONSTANTS.CROWD_RIOT_TRIGGER,
     narrativeText: 'The crowd riots in a frenzy, throwing debris into the arena!',
-    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.CROWD_RIOT_DAMAGE }
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.CROWD_RIOT_DAMAGE },
   },
 
   // ─── Blood Moon Lighting ─────────────────────────────────────────────
@@ -166,9 +167,8 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerCondition: 'weather_combo',
     triggerValue: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_TRIGGER, // With Blood Moon
     narrativeText: 'The blood moon illuminates the cursed ground, driving fighters mad!',
-    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_DAMAGE }
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_DAMAGE },
   },
-
 
   geyser_eruption: {
     id: 'geyser_eruption',

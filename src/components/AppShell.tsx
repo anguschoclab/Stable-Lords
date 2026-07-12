@@ -5,7 +5,6 @@ import { useShallow } from 'zustand/react/shallow';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
-import { filterActive } from '@/utils/roster';
 import { LeftNav } from '@/components/layout/LeftNav';
 import { DeathModal } from '@/components/modals/DeathModal';
 import { WinScreen } from '@/components/progression/WinScreen';
@@ -126,7 +125,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const exemptPaths = ['/welcome', '/stable/', '/admin', '/help'];
     if (exemptPaths.some((p) => activePath.startsWith(p))) return;
 
-    if (filterActive(roster).length < 3) {
+    if (roster.filter((w) => w.status === 'Active').length < 3) {
       navigate({ to: '/welcome' });
     }
   }, [roster, activePath, navigate]);

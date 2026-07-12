@@ -60,7 +60,23 @@ describe('TrainingCardHeader', () => {
   });
 
   it('renders injury badge when hasInjury is true', () => {
-    const { container } = renderHeader(makeWarrior({ injuries: [{ id: 'i1' as any, name: 'Bruised', description: 'Ouch', severity: 'Moderate', location: 'Right Arm', weeksRemaining: 1, penalties: {} }] }), 70, true);
+    const { container } = renderHeader(
+      makeWarrior({
+        injuries: [
+          {
+            id: 'i1' as any,
+            name: 'Bruised',
+            description: 'Ouch',
+            severity: 'Moderate',
+            location: 'Right Arm',
+            weeksRemaining: 1,
+            penalties: {},
+          },
+        ],
+      }),
+      70,
+      true
+    );
     expect(container.textContent).toContain('INJURED');
   });
 

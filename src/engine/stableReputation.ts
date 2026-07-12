@@ -67,10 +67,7 @@ export function computeFameScore(
     if (w) sum += w.fame;
   }
   const avgFame = topWarriors.length > 0 ? sum / topWarriors.length : 0;
-  return Math.min(
-    100,
-    Math.round(avgFame * 2.0 + gazetteMentions * 1.0 + stateFame * 0.85)
-  );
+  return Math.min(100, Math.round(avgFame * 2.0 + gazetteMentions * 1.0 + stateFame * 0.85));
 }
 
 /**

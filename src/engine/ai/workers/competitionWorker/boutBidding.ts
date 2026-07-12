@@ -4,7 +4,6 @@ import { type CrowdMood } from '@/engine/crowdMood';
 import { FightingStyle } from '@/types/shared.types';
 import { scoreMatchup } from '@/engine/schedulingAssistant';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
-import { filterActive } from '@/utils/roster';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { BoutBid } from './types';
@@ -22,7 +21,7 @@ export function generateBoutBids(
   rivals: RivalStableData[] = []
 ): { bids: BoutBid[]; updatedRival: RivalStableData } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
-  const activeRoster = filterActive(rival.roster);
+  const activeRoster = rival.roster.filter((w) => w.status === 'Active');
   const bids: BoutBid[] = [];
 
   // Build a mock state for matchup scoring
@@ -253,16 +252,19 @@ export function convertBidsToOffers(
       // VENDETTA: target a specific stable
       const targetRival = rivalMap.get(bid.targetStableId);
       if (targetRival) {
-        candidates = filterActive(targetRival.roster).map((w) => ({
-          warrior: w,
-          stableId: targetRival.id as string,
-        }));
+        candidates = targetRival.roster
+          .filter((w) => w.status === 'Active')
+          .map((w) => ({
+            warrior: w,
+            stableId: targetRival.id as string,
+          }));
       }
     } else {
       // All other intents: search all rival stables
       for (const rival of rivals) {
         if (rival.id === proposerStable.stableId) continue;
-        for (const w of filterActive(rival.roster)) {
+        for (const w of rival.roster) {
+          if (w.status !== 'Active') continue;
           candidates.push({ warrior: w, stableId: rival.id as string });
         }
       }

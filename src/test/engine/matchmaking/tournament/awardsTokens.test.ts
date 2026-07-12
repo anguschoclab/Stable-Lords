@@ -167,10 +167,30 @@ function makePlayerState(w1: Warrior, ...rivalWarriors: Warrior[]): GameState {
 
 function makeFourWarriors(playerIndex = 0): [Warrior, Warrior, Warrior, Warrior] {
   return [
-    makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, 0 === playerIndex ? PLAYER_ID : RIVAL_ID),
-    makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, 1 === playerIndex ? PLAYER_ID : RIVAL_ID),
-    makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, 2 === playerIndex ? PLAYER_ID : RIVAL_ID),
-    makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, 3 === playerIndex ? PLAYER_ID : RIVAL_ID),
+    makeTestWarrior(
+      'w1',
+      'Champ',
+      FightingStyle.StrikingAttack,
+      0 === playerIndex ? PLAYER_ID : RIVAL_ID
+    ),
+    makeTestWarrior(
+      'w2',
+      'Runner',
+      FightingStyle.StrikingAttack,
+      1 === playerIndex ? PLAYER_ID : RIVAL_ID
+    ),
+    makeTestWarrior(
+      'w3',
+      'Bronzer',
+      FightingStyle.StrikingAttack,
+      2 === playerIndex ? PLAYER_ID : RIVAL_ID
+    ),
+    makeTestWarrior(
+      'w4',
+      'Fourth',
+      FightingStyle.StrikingAttack,
+      3 === playerIndex ? PLAYER_ID : RIVAL_ID
+    ),
   ];
 }
 
@@ -215,7 +235,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('SILVER 1st place player receives 3 tokens: Weapon, Rhythm, Style', () => {
     const [w1, w2, w3, w4] = makeFourWarriors();
     const state = makePlayerState(w1, w2, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Silver', 't-silver-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Silver',
+      't-silver-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Weapon', 'Rhythm', 'Style']);
   });
@@ -223,7 +249,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('SILVER 2nd place player receives 1 token: Weapon', () => {
     const [w1, w2, w3, w4] = makeFourWarriors(1);
     const state = makePlayerState(w2, w1, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Silver', 't-silver-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Silver',
+      't-silver-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Weapon']);
   });
@@ -231,7 +263,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('SILVER 3rd place player receives 1 token: Style', () => {
     const [w1, w2, w3, w4] = makeFourWarriors(2);
     const state = makePlayerState(w3, w1, w2, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Silver', 't-silver-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Silver',
+      't-silver-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Style']);
   });
@@ -239,7 +277,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('BRONZE 1st place player receives 2 tokens: Weapon, Rhythm', () => {
     const [w1, w2, w3, w4] = makeFourWarriors();
     const state = makePlayerState(w1, w2, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Bronze', 't-bronze-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Bronze',
+      't-bronze-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Weapon', 'Rhythm']);
   });
@@ -247,7 +291,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('BRONZE 2nd place player receives 1 token: Style', () => {
     const [w1, w2, w3, w4] = makeFourWarriors(1);
     const state = makePlayerState(w2, w1, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Bronze', 't-bronze-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Bronze',
+      't-bronze-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Style']);
   });
@@ -255,7 +305,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('BRONZE 3rd place player receives 1 token: Rhythm', () => {
     const [w1, w2, w3, w4] = makeFourWarriors(2);
     const state = makePlayerState(w3, w1, w2, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Bronze', 't-bronze-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Bronze',
+      't-bronze-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Rhythm']);
   });
@@ -263,7 +319,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('IRON 1st place player receives 2 tokens: Weapon, Rhythm', () => {
     const [w1, w2, w3, w4] = makeFourWarriors();
     const state = makePlayerState(w1, w2, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Iron', 't-iron-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Iron',
+      't-iron-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Weapon', 'Rhythm']);
   });
@@ -271,7 +333,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('IRON 2nd place player receives 1 token: Style', () => {
     const [w1, w2, w3, w4] = makeFourWarriors(1);
     const state = makePlayerState(w2, w1, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Iron', 't-iron-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Iron',
+      't-iron-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual(['Style']);
   });
@@ -279,7 +347,13 @@ describe('awardTournamentPrizes — player token awards by tier/place', () => {
   it('IRON 3rd place player receives 0 tokens', () => {
     const [w1, w2, w3, w4] = makeFourWarriors(2);
     const state = makePlayerState(w3, w1, w2, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Iron', 't-iron-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Iron',
+      't-iron-spring-1'
+    );
     const updated = awardTournamentPrizes(tournament, state);
     expect(tokenTypesOf(updated)).toEqual([]);
   });
@@ -392,9 +466,7 @@ describe('awardTournamentPrizes — rival token effects', () => {
     const rivalRoster = updated.rivals[0]!.roster;
     const rivalW1 = rivalRoster.find((w) => w.id === 'w1')!;
     const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
-    const incremented = primaries.filter(
-      (k) => rivalW1.attributes[k] > (originalAttrs[k] ?? 10)
-    );
+    const incremented = primaries.filter((k) => rivalW1.attributes[k] > (originalAttrs[k] ?? 10));
     expect(incremented.length).toBe(1);
   });
 
@@ -402,7 +474,13 @@ describe('awardTournamentPrizes — rival token effects', () => {
     const [w1, w2, w3, w4] = makeFourWarriors();
     // w3 is rival, gets 3rd place in IRON → tokens: [] (empty)
     const state = makePlayerState(w1, w2, w3, w4);
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Iron', 't-iron-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      'Iron',
+      't-iron-spring-1'
+    );
     const originalWeapon = w3.favorites?.discovered.weapon;
     const originalRhythm = w3.favorites?.discovered.rhythm;
     const updated = awardTournamentPrizes(tournament, state);
@@ -561,7 +639,13 @@ describe('awardTournamentPrizes — edge cases', () => {
     const state = makePlayerState(w1, w2, w3, w4);
     state.treasury = 0;
     // ID = "t-unknown-spring-1" → tierId absent → split('-')[1] = "unknown" → IRON → 600
-    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', '', 't-unknown-spring-1');
+    const tournament = makeCompletedTournament(
+      [w1, w2, w3, w4],
+      'A',
+      'A',
+      '',
+      't-unknown-spring-1'
+    );
     tournament.tierId = '';
     const updated = awardTournamentPrizes(tournament, state);
     // 1st place IRON → 600

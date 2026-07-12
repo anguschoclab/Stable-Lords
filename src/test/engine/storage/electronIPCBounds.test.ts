@@ -45,9 +45,7 @@ describe('Electron IPC payload bounds', () => {
     };
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    await expect(
-      service.archiveHotState('slot1', {} as any)
-    ).resolves.toBeUndefined();
+    await expect(service.archiveHotState('slot1', {} as any)).resolves.toBeUndefined();
     expect(consoleSpy).toHaveBeenCalledWith(
       'Failed to archive hot state:',
       'State payload size exceeds limit'
@@ -67,9 +65,7 @@ describe('Electron IPC payload bounds', () => {
     };
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    await expect(
-      service.archiveBoutLog(1, 1, 'bout1', ['line'], true)
-    ).resolves.toBeUndefined();
+    await expect(service.archiveBoutLog(1, 1, 'bout1', ['line'], true)).resolves.toBeUndefined();
     expect(consoleSpy).toHaveBeenCalledWith(
       'Failed to archive bout log:',
       'Log data size exceeds limit'
@@ -101,9 +97,7 @@ describe('Electron IPC payload bounds', () => {
       }),
     };
 
-    await expect(
-      service.archiveHotState('slot1', { week: 1 } as any)
-    ).resolves.toBeUndefined();
+    await expect(service.archiveHotState('slot1', { week: 1 } as any)).resolves.toBeUndefined();
 
     await expect(
       service.archiveBoutLog(1, 1, 'bout1', ['line1', 'line2'], true)

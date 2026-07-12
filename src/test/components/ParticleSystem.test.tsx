@@ -21,9 +21,7 @@ describe('ParticleSystem design tokens', () => {
   });
 
   it('sweat particles use bg-arena-steel, not bg-blue-300', () => {
-    const { container } = render(
-      <ParticleSystem trigger="hit" sourceX={50} sourceY={50} />
-    );
+    const { container } = render(<ParticleSystem trigger="hit" sourceX={50} sourceY={50} />);
 
     // Check all rendered divs — none should have bg-blue-300
     const allDivs = container.querySelectorAll('div');
@@ -33,9 +31,7 @@ describe('ParticleSystem design tokens', () => {
   });
 
   it('blood particles use bg-arena-blood token', () => {
-    const { container } = render(
-      <ParticleSystem trigger="crit" sourceX={50} sourceY={50} />
-    );
+    const { container } = render(<ParticleSystem trigger="crit" sourceX={50} sourceY={50} />);
 
     // Particle divs have 'rounded-full' class
     const particles = container.querySelectorAll('[class*="rounded-full"]');
@@ -47,9 +43,7 @@ describe('ParticleSystem design tokens', () => {
   });
 
   it('spark particles use bg-arena-gold token', () => {
-    const { container } = render(
-      <ParticleSystem trigger="hit" sourceX={50} sourceY={50} />
-    );
+    const { container } = render(<ParticleSystem trigger="hit" sourceX={50} sourceY={50} />);
 
     const particles = container.querySelectorAll('[class*="rounded-full"]');
     expect(particles.length).toBeGreaterThan(0);

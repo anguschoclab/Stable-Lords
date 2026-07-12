@@ -15,13 +15,14 @@ const mockState = vi.hoisted(() => ({
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
+  ),
 }));
 
 vi.mock('@/state/useGameStore', () => ({
   useWorldState: () => mockState,
-  useGameStore: (selector?: (state: any) => any) =>
-    selector ? selector(mockState) : mockState,
+  useGameStore: (selector?: (state: any) => any) => (selector ? selector(mockState) : mockState),
 }));
 
 import Training from '@/pages/Training';

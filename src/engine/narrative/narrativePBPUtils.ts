@@ -72,7 +72,9 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
           return escapeHtml(String((ctx as Record<string, unknown>).reflexive ?? 'himself'));
         default: {
           const value = ctx[longKey as keyof CombatContext];
-          return value !== undefined && Object.hasOwn(ctx, longKey) ? escapeHtml(String(value)) : match;
+          return value !== undefined && Object.hasOwn(ctx, longKey)
+            ? escapeHtml(String(value))
+            : match;
         }
       }
     }

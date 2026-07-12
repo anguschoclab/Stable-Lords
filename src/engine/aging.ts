@@ -125,7 +125,12 @@ function processWarriorAging(
   isAgeTick: boolean
 ): AgingResult {
   const { currentAge, update, ageEvent: penaltyEvent } = applyAgePenalty(w, isAgeTick, isPlayer);
-  const { retired, ageEvent: retireEvent } = checkForcedRetirement(currentAge, isPlayer, rng, w.name);
+  const { retired, ageEvent: retireEvent } = checkForcedRetirement(
+    currentAge,
+    isPlayer,
+    rng,
+    w.name
+  );
 
   if (retired) {
     const retiredObj = buildRetiredWarrior(w, currentAge, state.week);

@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { computeWeeklyBreakdown } from '@/engine/economy';
-import { filterActive } from '@/utils/roster';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -378,7 +377,7 @@ export function TreasuryOverview() {
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.treasury ?? 0;
 
-  const activeWarriorsCount = filterActive(state.roster ?? []).length;
+  const activeWarriorsCount = (state.roster ?? []).filter((w) => w.status === 'Active').length;
 
   // ⚡ Bolt: Fast accumulation without allocating objects per iteration
   let totalWins = 0;

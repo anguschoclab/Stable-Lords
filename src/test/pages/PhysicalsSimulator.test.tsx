@@ -4,8 +4,7 @@ import { render, screen } from '@testing-library/react';
 const mockStore = vi.hoisted(() => ({ roster: [] as any[] }));
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: (state: any) => any) =>
-    selector ? selector(mockStore) : mockStore,
+  useGameStore: (selector?: (state: any) => any) => (selector ? selector(mockStore) : mockStore),
 }));
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';

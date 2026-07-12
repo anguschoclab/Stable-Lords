@@ -5,7 +5,8 @@ import '@testing-library/jest-dom';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 
 const mockRivalriesList = vi.fn<(state: unknown) => DerivedRivalry[]>();
-const mockMostWantedRival = vi.fn<(state: unknown) => { name: string; stable: string; wins: number; kills: number } | null>();
+const mockMostWantedRival =
+  vi.fn<(state: unknown) => { name: string; stable: string; wins: number; kills: number } | null>();
 
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: vi.fn((selector: (s: unknown) => unknown) =>

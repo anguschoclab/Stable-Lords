@@ -110,16 +110,19 @@ describe('computeWeeklyBreakdown — Full Integration', () => {
   it('should combine all expense sources in totalExpenses', () => {
     const state = makeState({
       weather: 'Blizzard',
-      roster: [
-        { id: 'w1', name: 'A', fame: 0 } as any,
-        { id: 'w2', name: 'B', fame: 20 } as any,
-      ],
+      roster: [{ id: 'w1', name: 'A', fame: 0 } as any, { id: 'w2', name: 'B', fame: 20 } as any],
       trainers: [
-        { id: 't1', name: 'T', tier: 'Novice', focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 5 } as any,
+        {
+          id: 't1',
+          name: 'T',
+          tier: 'Novice',
+          focus: 'Aggression',
+          fame: 1,
+          age: 40,
+          contractWeeksLeft: 5,
+        } as any,
       ],
-      trainingAssignments: [
-        { warriorId: 'w1' as any, type: 'attribute', attribute: 'ST' },
-      ],
+      trainingAssignments: [{ warriorId: 'w1' as any, type: 'attribute', attribute: 'ST' }],
     });
     const b = computeWeeklyBreakdown(state);
     // Verify each expense line exists

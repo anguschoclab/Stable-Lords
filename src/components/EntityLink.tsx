@@ -7,7 +7,14 @@ import { Link } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetDescription,
+} from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorDossier } from '@/components/WarriorDossier';
 import { StableDossier } from '@/components/StableDossier';
@@ -76,12 +83,8 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
           <p className="text-[10px] font-black uppercase tracking-widest">View Warrior Dossier</p>
         </TooltipContent>
       </Tooltip>
-      <SheetContent
-        className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md"
-      >
-        <SheetDescription className="sr-only">
-          Warrior details for {name}
-        </SheetDescription>
+      <SheetContent className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md">
+        <SheetDescription className="sr-only">Warrior details for {name}</SheetDescription>
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -184,12 +187,8 @@ export function StableLink({ name, className, children }: StableLinkProps) {
           <p className="text-[10px] font-black uppercase tracking-widest">View Stable Records</p>
         </TooltipContent>
       </Tooltip>
-      <SheetContent
-        className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md"
-      >
-        <SheetDescription className="sr-only">
-          Stable details for {name}
-        </SheetDescription>
+      <SheetContent className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md">
+        <SheetDescription className="sr-only">Stable details for {name}</SheetDescription>
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">

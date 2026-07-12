@@ -10,7 +10,13 @@ import { SeededRNGService } from '@/utils/random';
 
 function makeWarrior(id: string, age: number, attrs: Partial<Attributes> = {}): Warrior {
   const fullAttrs: Attributes = {
-    ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10,
+    ST: 10,
+    CN: 10,
+    SZ: 10,
+    WT: 10,
+    WL: 10,
+    SP: 10,
+    DF: 10,
     ...attrs,
   };
   const { baseSkills, derivedStats } = computeWarriorStats(fullAttrs, FightingStyle.StrikingAttack);

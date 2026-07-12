@@ -31,15 +31,11 @@ export function PotentialBadge({ potential }: PotentialBadgeProps) {
             color
           )}
         >
-          <span className="text-[8px] font-black uppercase tracking-widest opacity-60">
-            POT
-          </span>
+          <span className="text-[8px] font-black uppercase tracking-widest opacity-60">POT</span>
           <span className="text-[10px] font-mono font-black">{grade}</span>
         </div>
       </TooltipTrigger>
-      <TooltipContent>
-        Potential grade — ceiling for training gains.
-      </TooltipContent>
+      <TooltipContent>Potential grade — ceiling for training gains.</TooltipContent>
     </Tooltip>
   );
 }

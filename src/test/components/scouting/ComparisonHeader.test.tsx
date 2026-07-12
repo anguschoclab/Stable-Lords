@@ -7,13 +7,17 @@ import type { RivalStableData, Warrior } from '@/types/game';
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children, className }: any) => (
-    <div data-testid="surface" className={className}>{children}</div>
+    <div data-testid="surface" className={className}>
+      {children}
+    </div>
   ),
 }));
 
 vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children, className }: any) => (
-    <span data-testid="badge" className={className}>{children}</span>
+    <span data-testid="badge" className={className}>
+      {children}
+    </span>
   ),
 }));
 

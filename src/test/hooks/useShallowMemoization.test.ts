@@ -11,23 +11,18 @@ import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import '@/test/_setup/setup';
 
-let storeOverride: any = {};
-
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: (state: any) => any) => {
-      const state = { ...defaultStoreState, ...storeOverride };
-      return selector ? selector(state) : state;
-    },
-  };
-});
-
 const defaultStoreState = {
   roster: [] as Warrior[],
   ownerGrudges: [],
 };
+
+const mockStore = vi.hoisted(() => ({}) as any);
+
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: (selector?: (state: any) => any) => {
+    return selector ? selector(mockStore) : mockStore;
+  },
+}));
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
   return {
@@ -57,7 +52,7 @@ describe('useShallow memoization', () => {
         createMockWarrior('w1', { fame: 100 }),
         createMockWarrior('w2', { fame: 50 }),
       ];
-      storeOverride = { roster };
+      Object.assign(mockStore, defaultStoreState, { roster });
 
       const { result, rerender } = renderHook(() => useActiveRoster());
       const first = result.current;
@@ -69,7 +64,7 @@ describe('useShallow memoization', () => {
   describe('useAtRiskWarriors', () => {
     it('returns referentially stable result when roster is unchanged', () => {
       const roster = [createMockWarrior('w1', { fatigue: 80, injuries: [] })];
-      storeOverride = { roster };
+      Object.assign(mockStore, defaultStoreState, { roster });
 
       const { result, rerender } = renderHook(() => useAtRiskWarriors());
       const first = result.current;

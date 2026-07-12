@@ -15,10 +15,7 @@ import { SimulatorResults } from '@/components/stable/SimulatorResults';
  */
 export default function PhysicalsSimulator() {
   const roster = useGameStore((s) => s.roster);
-  const activeWarriors = useMemo(
-    () => roster.filter((w) => w.status === 'Active'),
-    [roster]
-  );
+  const activeWarriors = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
 
   const [styleA, setStyleA] = useState<FightingStyle>(FightingStyle.BashingAttack);
   const [styleB, setStyleB] = useState<FightingStyle>(FightingStyle.ParryRiposte);

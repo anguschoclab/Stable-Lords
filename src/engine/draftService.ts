@@ -3,7 +3,6 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { processRecruitment } from './ai/workers/recruitmentWorker';
 import { computeMetaDrift } from './metaDrift';
-import { filterActive } from '@/utils/roster';
 
 /**
  * AI Draft Service
@@ -30,8 +29,8 @@ export function aiDraftFromPool(
   // Priority 1: Fewest active warriors
   // Priority 2: Lowest treasury
   const sortedRivals = [...rivals].sort((a, b) => {
-    const aActive = filterActive(a.roster).length;
-    const bActive = filterActive(b.roster).length;
+    const aActive = a.roster.filter((w) => w.status === 'Active').length;
+    const bActive = b.roster.filter((w) => w.status === 'Active').length;
     if (aActive !== bActive) return aActive - bActive;
     return a.treasury - b.treasury;
   });

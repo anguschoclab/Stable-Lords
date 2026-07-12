@@ -20,7 +20,9 @@ function SideColumn({
 }) {
   return (
     <div className="text-center flex-1 relative z-10 space-y-4">
-      <h4 className={`text-[10px] font-black tracking-[0.4em] ${colorClass} uppercase leading-none opacity-60`}>
+      <h4
+        className={`text-[10px] font-black tracking-[0.4em] ${colorClass} uppercase leading-none opacity-60`}
+      >
         {label}
       </h4>
       <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">
@@ -32,8 +34,14 @@ function SideColumn({
 }
 
 export function ComparisonHeader(props: ComparisonHeaderProps) {
-  const leftTitle = props.kind === 'stable' ? props.rivalA.owner.stableName : (props.warriorA?.name || 'Not Selected');
-  const rightTitle = props.kind === 'stable' ? props.rivalB.owner.stableName : (props.warriorB?.name || 'Not Selected');
+  const leftTitle =
+    props.kind === 'stable'
+      ? props.rivalA.owner.stableName
+      : props.warriorA?.name || 'Not Selected';
+  const rightTitle =
+    props.kind === 'stable'
+      ? props.rivalB.owner.stableName
+      : props.warriorB?.name || 'Not Selected';
 
   return (
     <Surface

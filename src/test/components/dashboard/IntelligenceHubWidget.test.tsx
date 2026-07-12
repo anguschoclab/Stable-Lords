@@ -36,13 +36,21 @@ vi.mock('@/components/dashboard/IntelligenceHubHeader', () => ({
 
 vi.mock('@/components/dashboard/GazetteTab', () => ({
   GazetteTab: ({ stories }: { stories: GazetteStory[] }) => (
-    <div data-testid="gazette-tab" data-count={stories.length} data-first-id={stories[0]?.id ?? ''} />
+    <div
+      data-testid="gazette-tab"
+      data-count={stories.length}
+      data-first-id={stories[0]?.id ?? ''}
+    />
   ),
 }));
 
 vi.mock('@/components/dashboard/BriefingTab', () => ({
   BriefingTab: ({ reports }: { reports: NewsletterItem[] }) => (
-    <div data-testid="briefing-tab" data-count={reports.length} data-first-id={reports[0]?.id ?? ''} />
+    <div
+      data-testid="briefing-tab"
+      data-count={reports.length}
+      data-first-id={reports[0]?.id ?? ''}
+    />
   ),
 }));
 
@@ -51,12 +59,22 @@ vi.mock('@/components/dashboard/IntelligenceHubFooter', () => ({
 }));
 
 vi.mock('@/components/ui/tabs', () => ({
-  Tabs: ({ children, defaultValue }: any) => <div data-testid="tabs" data-default={defaultValue}>{children}</div>,
+  Tabs: ({ children, defaultValue }: any) => (
+    <div data-testid="tabs" data-default={defaultValue}>
+      {children}
+    </div>
+  ),
   TabsList: ({ children }: any) => <div data-testid="tabs-list">{children}</div>,
   TabsTrigger: ({ children, value, ...props }: any) => (
-    <button data-testid={`tab-trigger-${value}`} data-value={value} role="tab" {...props}>{children}</button>
+    <button data-testid={`tab-trigger-${value}`} data-value={value} role="tab" {...props}>
+      {children}
+    </button>
   ),
-  TabsContent: ({ children, value }: any) => <div data-testid={`tab-content-${value}`} data-value={value}>{children}</div>,
+  TabsContent: ({ children, value }: any) => (
+    <div data-testid={`tab-content-${value}`} data-value={value}>
+      {children}
+    </div>
+  ),
 }));
 
 import { IntelligenceHubWidget } from '@/components/dashboard/IntelligenceHubWidget';
@@ -84,7 +102,14 @@ function makeNewsletter(id: string, week: number): NewsletterItem {
 function makeRival(id: string): RivalStableData {
   return {
     id: id as any,
-    owner: { id: id as any, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+    owner: {
+      id: id as any,
+      name: 'Rival',
+      stableName: 'Rival Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
     fame: 0,
     roster: [],
     treasury: 0,

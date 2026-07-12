@@ -171,7 +171,7 @@ describe('Blood Rain Feature', () => {
 
   it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
     const rng = new SeededRNGService(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.90);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.9);
     const weather = rollWeather(rng, 'Spring');
     expect(weather).toBe('Blood Rain');
     mock.mockRestore();

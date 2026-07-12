@@ -105,7 +105,9 @@ export function WarriorSlots({
       <div
         role="button"
         tabIndex={0}
-        aria-label={isBye ? 'Bye' : `Select ${resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}`}
+        aria-label={
+          isBye ? 'Bye' : `Select ${resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}`
+        }
         className={cn(
           'flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           isDChosen

@@ -18,7 +18,11 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector: (s: unknown) => unknown) => selector(mockState),
 }));
 
-import { TreasurySparkline, buildWeeklyPoints, buildSparklinePath } from '@/components/charts/TreasurySparkline';
+import {
+  TreasurySparkline,
+  buildWeeklyPoints,
+  buildSparklinePath,
+} from '@/components/charts/TreasurySparkline';
 import type { Viewport } from '@/components/charts/TreasurySparkline';
 
 function makeLedger(entries: { week: number; amount: number }[]): LedgerEntry[] {

@@ -37,8 +37,9 @@ vi.mock('@/components/warrior/traits/TraitBadge', () => ({
 }));
 
 vi.mock('@/engine/potential', () => ({
-  potentialRating: vi.fn((p: Record<string, number>) =>
-    Object.values(p).reduce((a, b) => a + b, 0) / Object.keys(p).length
+  potentialRating: vi.fn(
+    (p: Record<string, number>) =>
+      Object.values(p).reduce((a, b) => a + b, 0) / Object.keys(p).length
   ),
   potentialGrade: vi.fn((rating: number) => {
     if (rating >= 20) return 'S';
@@ -137,7 +138,15 @@ describe('PotentialBadge', () => {
   });
 
   it('renders POT label and grade', () => {
-    const potential: AttributePotential = { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 };
+    const potential: AttributePotential = {
+      ST: 20,
+      CN: 20,
+      SZ: 10,
+      WT: 20,
+      WL: 20,
+      SP: 20,
+      DF: 20,
+    };
     const { container } = render(<PotentialBadge potential={potential} />);
     expect(container.textContent).toContain('POT');
     expect(container.textContent).toContain('S');
@@ -155,14 +164,30 @@ describe('PotentialBadge', () => {
 
   it('applies arena-gold class for S grade', () => {
     vi.mocked(potentialGrade).mockReturnValue('S');
-    const potential: AttributePotential = { ST: 25, CN: 25, SZ: 25, WT: 25, WL: 25, SP: 25, DF: 25 };
+    const potential: AttributePotential = {
+      ST: 25,
+      CN: 25,
+      SZ: 25,
+      WT: 25,
+      WL: 25,
+      SP: 25,
+      DF: 25,
+    };
     const { container } = render(<PotentialBadge potential={potential} />);
     expect(container.innerHTML).toContain('arena-gold');
   });
 
   it('applies primary class for A grade', () => {
     vi.mocked(potentialGrade).mockReturnValue('A');
-    const potential: AttributePotential = { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 };
+    const potential: AttributePotential = {
+      ST: 20,
+      CN: 20,
+      SZ: 10,
+      WT: 20,
+      WL: 20,
+      SP: 20,
+      DF: 20,
+    };
     const { container } = render(<PotentialBadge potential={potential} />);
     expect(container.innerHTML).toContain('primary');
   });
@@ -211,7 +236,10 @@ describe('LiabilityBadge', () => {
     vi.mocked(computeWarriorLiability).mockReturnValue({
       score: 10,
       recommendation: 'Release',
-      factors: [{ name: 'Age', weight: 5 }, { name: 'Injuries', weight: 3 }],
+      factors: [
+        { name: 'Age', weight: 5 },
+        { name: 'Injuries', weight: 3 },
+      ],
     });
     const warrior = makeWarrior();
     const { container } = render(<LiabilityBadge warrior={warrior} />);

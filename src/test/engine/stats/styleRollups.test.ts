@@ -407,8 +407,8 @@ describe('StyleRollups', () => {
       });
 
       // The retry setItem should have been called for the week key
-      const weekSetCalls = mockSetItem.mock.calls.filter(
-        (c) => (c[0] as string).startsWith('sl.styleRollups.week_15')
+      const weekSetCalls = mockSetItem.mock.calls.filter((c) =>
+        (c[0] as string).startsWith('sl.styleRollups.week_15')
       );
       // First call throws, retry succeeds → at least 2 calls for week_15
       expect(weekSetCalls.length).toBeGreaterThanOrEqual(2);
@@ -504,8 +504,7 @@ describe('StyleRollups', () => {
       // Should have called console.error with generic "Failed to save week" message
       const genericCall = consoleSpy.mock.calls.find(
         (call) =>
-          typeof call[0] === 'string' &&
-          call[0].includes('Failed to save week 10 style rollups')
+          typeof call[0] === 'string' && call[0].includes('Failed to save week 10 style rollups')
       );
       expect(genericCall).toBeDefined();
 

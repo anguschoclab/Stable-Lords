@@ -5,7 +5,9 @@ interface IconMedallionProps {
 
 export function IconMedallion({ icon, className }: IconMedallionProps) {
   return (
-    <div className={`flex items-center justify-center w-20 h-20 mx-auto relative ${className ?? ''}`}>
+    <div
+      className={`flex items-center justify-center w-20 h-20 mx-auto relative ${className ?? ''}`}
+    >
       <div
         className="absolute inset-0 rounded-full"
         style={{

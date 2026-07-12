@@ -12,36 +12,36 @@ Entire navigation hubs under `/command/` and `/ops/` are redirect-only stubs poi
 
 ### `/command/` hub (6 files — all redirect to `/stable/`)
 
-| Route file | Redirects to |
-|---|---|
-| `src/routes/command/index.tsx` | `/stable` |
-| `src/routes/command/arena.tsx` | `/stable/arena` |
-| `src/routes/command/combat.tsx` | `/stable/arena` |
-| `src/routes/command/roster.tsx` | `/stable/roster` |
+| Route file                        | Redirects to       |
+| --------------------------------- | ------------------ |
+| `src/routes/command/index.tsx`    | `/stable`          |
+| `src/routes/command/arena.tsx`    | `/stable/arena`    |
+| `src/routes/command/combat.tsx`   | `/stable/arena`    |
+| `src/routes/command/roster.tsx`   | `/stable/roster`   |
 | `src/routes/command/training.tsx` | `/stable/training` |
-| `src/routes/command/tactics.tsx` | `/stable/planner` |
+| `src/routes/command/tactics.tsx`  | `/stable/planner`  |
 
 ### `/ops/` hub (8 files — all redirect to `/stable/`)
 
-| Route file | Redirects to |
-|---|---|
-| `src/routes/ops/index.tsx` | `/stable` |
-| `src/routes/ops/overview.tsx` | `/stable/roster` |
-| `src/routes/ops/roster.tsx` | `/stable/roster` |
-| `src/routes/ops/recruit.tsx` | `/stable/recruit` |
-| `src/routes/ops/finance.tsx` | `/stable/finance` |
+| Route file                     | Redirects to        |
+| ------------------------------ | ------------------- |
+| `src/routes/ops/index.tsx`     | `/stable`           |
+| `src/routes/ops/overview.tsx`  | `/stable/roster`    |
+| `src/routes/ops/roster.tsx`    | `/stable/roster`    |
+| `src/routes/ops/recruit.tsx`   | `/stable/recruit`   |
+| `src/routes/ops/finance.tsx`   | `/stable/finance`   |
 | `src/routes/ops/equipment.tsx` | `/stable/equipment` |
-| `src/routes/ops/contracts.tsx` | `/stable/bouts` |
-| `src/routes/ops/personnel.tsx` | `/stable/trainers` |
+| `src/routes/ops/contracts.tsx` | `/stable/bouts`     |
+| `src/routes/ops/personnel.tsx` | `/stable/trainers`  |
 | `src/routes/ops/offseason.tsx` | `/stable/offseason` |
 | `src/routes/ops/promoters.tsx` | `/stable/promoters` |
 
 ### Other redirect stubs
 
-| Route file | Redirects to |
-|---|---|
+| Route file                          | Redirects to      |
+| ----------------------------------- | ----------------- |
 | `src/routes/world/intelligence.tsx` | `/world/scouting` |
-| `src/routes/run-round.tsx` | `/stable/arena` |
+| `src/routes/run-round.tsx`          | `/stable/arena`   |
 
 **Action**: Leave as-is. These are harmless URL aliases. The `HUBS` navigation config in `navigationShared.tsx` only exposes `stable`, `world`, and `bookmarks` hubs — `/command/` and `/ops/` are not surfaced to users.
 
@@ -69,9 +69,11 @@ Entire navigation hubs under `/command/` and `/ops/` are redirect-only stubs poi
 Two exported functions, **never imported in production code** (only in `test/engine/planBias.test.ts`):
 
 ### `autoTuneFromBias(plan, bias)`
+
 Maps a strategic "bias" string (`head-hunt`, `hamstring`, `gut`, `guard-break`, `balanced`) to fight plan adjustments (target zone, kill desire, OE/AL, tactic suggestions). This is **unique logic** — the AI plan generator (`coreGenerator.ts`) sets `target` via `getAITarget` in `levers.ts` using personality/intent, but has no concept of the bias presets. This could be surfaced as player-facing quick presets in the PlanBuilder UI.
 
 ### `reconcileGearTwoHanded(draft, equipment)`
+
 Removes shield when a two-handed weapon is equipped. This logic is **partially duplicated** inline in `EquipmentLoadout.tsx:55-58` (`handleSlotChange`), but `planBias.ts` version works on `Partial<FightPlan>` drafts rather than the loadout UI. The AI plan generator does NOT call this — AI plans could theoretically have shield + two-handed weapon conflicts.
 
 **Action**: Wire `autoTuneFromBias` into the AI plan generator as a post-processing step, and call `reconcileGearTwoHanded` in `coreGenerator.ts` to prevent invalid AI loadouts. Alternatively, surface `autoTuneFromBias` as UI quick-presets in PlanBuilder.
@@ -93,11 +95,13 @@ The telemetry calls themselves ARE wired in (`timeAdvance/service.ts` calls `tel
 ## 5. Audio Placeholder Stubs (Medium — components render null, no sound)
 
 ### `src/components/arena/audio/WeatherAudio.tsx`
+
 - Renders `null` — no audio playback
 - Two `useEffect` hooks contain `// Audio crossfade placeholder — implement actual playback here` and `// Volume update placeholder — implement actual playback here`
 - Has full weather→ambience sound mapping table (60+ weather types) but never plays anything
 
 ### `src/components/arena/audio/CrowdAudio.tsx`
+
 - Renders `null` — no audio playback
 - `useEffect` contains `// Audio placeholder — implement actual playback here`
 - Has crowd state→sound mapping table but never plays anything
@@ -149,12 +153,15 @@ Documented "catch-up scaffold" where startup rivals use `biasedAttrs` instead of
 ## 9. Temporary Test Harnesses (Low — not production code)
 
 ### `src/scripts/emergent-report.test.ts`
+
 Self-described as "Temporary deep-instrumentation harness: runs a long headless sim and prints an emergent-behavior report. Not a real test."
 
 ### `src/scripts/simulation.test.ts`
+
 Minimal test wrapper around `simulation-harness.ts`.
 
 ### `src/scripts/simulation-harness.ts`
+
 Used only by the above two test files and one slow integration test.
 
 **Action**: Leave as-is. These are dev/diagnostic tools, not shipped code.
@@ -164,6 +171,7 @@ Used only by the above two test files and one slow integration test.
 ## 10. Legacy/Backward-Compatibility Code (Non-issue)
 
 Several files contain "legacy" markers for backward compatibility:
+
 - `src/engine/autosim.ts:309` — `legacyOnProgress` parameter for old call signature
 - `src/engine/health.ts:11` — "extracted from the legacy pipeline"
 - `src/engine/warrior/careerUpdate.ts:116` — "Legacy-compatible function"
@@ -177,12 +185,12 @@ Several files contain "legacy" markers for backward compatibility:
 
 ## Priority Actions
 
-| # | Severity | Item | Action |
-|---|---|---|---|
-| 1 | Critical | `AIBoutService` dead code | Remove (fully duplicated) |
-| 2 | Critical | `planBias.ts` dead code | Wire into AI plan generator or PlanBuilder UI |
-| 3 | Critical | Fake "94.2%" metric in PlanBuilder | Remove hardcoded string |
-| 4 | Medium | Audio placeholder stubs | Implement or remove |
-| 5 | Low | Redirect route stubs | Leave as URL aliases |
-| 6 | Low | No-op telemetry | Leave as extensible infrastructure |
-| 7 | Low | Test harnesses | Leave as dev tools |
+| #   | Severity | Item                               | Action                                        |
+| --- | -------- | ---------------------------------- | --------------------------------------------- |
+| 1   | Critical | `AIBoutService` dead code          | Remove (fully duplicated)                     |
+| 2   | Critical | `planBias.ts` dead code            | Wire into AI plan generator or PlanBuilder UI |
+| 3   | Critical | Fake "94.2%" metric in PlanBuilder | Remove hardcoded string                       |
+| 4   | Medium   | Audio placeholder stubs            | Implement or remove                           |
+| 5   | Low      | Redirect route stubs               | Leave as URL aliases                          |
+| 6   | Low      | No-op telemetry                    | Leave as extensible infrastructure            |
+| 7   | Low      | Test harnesses                     | Leave as dev tools                            |

@@ -28,10 +28,7 @@ describe('checkBankruptcy', () => {
 
   it('sums multiple treasuryDeltas — returns true when combined drops below threshold', () => {
     const state = makeState(0);
-    const impacts: StateImpact[] = [
-      { treasuryDelta: -200 },
-      { treasuryDelta: -400 },
-    ];
+    const impacts: StateImpact[] = [{ treasuryDelta: -200 }, { treasuryDelta: -400 }];
     // 0 + (-200) + (-400) = -600 < -500 → true
     // Old .find() would only see first -200, giving -200 → false (bug)
     expect(checkBankruptcy(state, impacts)).toBe(true);
@@ -39,10 +36,7 @@ describe('checkBankruptcy', () => {
 
   it('sums mixed positive and negative treasuryDeltas', () => {
     const state = makeState(100);
-    const impacts: StateImpact[] = [
-      { treasuryDelta: 100 },
-      { treasuryDelta: -700 },
-    ];
+    const impacts: StateImpact[] = [{ treasuryDelta: 100 }, { treasuryDelta: -700 }];
     // 100 + 100 + (-700) = -500, not strictly < -500 → false
     expect(checkBankruptcy(state, impacts)).toBe(false);
   });

@@ -6,17 +6,13 @@ import { IconMedallion } from '@/components/ui/IconMedallion';
 
 describe('IconMedallion', () => {
   it('renders the provided icon element', () => {
-    const { container } = render(
-      <IconMedallion icon={<span data-testid="custom-icon">X</span>} />
-    );
+    const { container } = render(<IconMedallion icon={<span data-testid="custom-icon">X</span>} />);
     const icon = container.querySelector('[data-testid="custom-icon"]');
     expect(icon).toBeInTheDocument();
   });
 
   it('renders the conic-gradient ring div', () => {
-    const { container } = render(
-      <IconMedallion icon={<span>X</span>} />
-    );
+    const { container } = render(<IconMedallion icon={<span>X</span>} />);
     const ringDiv = container.querySelector('.absolute.inset-0.rounded-full');
     expect(ringDiv).toBeInTheDocument();
     const style = ringDiv?.getAttribute('style') || '';
@@ -24,9 +20,7 @@ describe('IconMedallion', () => {
   });
 
   it('renders the radial-gradient inner circle div', () => {
-    const { container } = render(
-      <IconMedallion icon={<span>X</span>} />
-    );
+    const { container } = render(<IconMedallion icon={<span>X</span>} />);
     const innerCircle = container.querySelector('.relative.z-10');
     expect(innerCircle).toBeInTheDocument();
     const style = innerCircle?.getAttribute('style') || '';

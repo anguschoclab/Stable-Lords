@@ -170,7 +170,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 
 // ─── Arena Event Constants ─────────────────────────────────────────────────
 
-
 // ─── Helper Functions ──────────────────────────────────────────────────────
 import type { FightingStyle, WeatherType } from '@/types/shared.types';
 

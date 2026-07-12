@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { filterActive } from '@/utils/roster';
 
 export function useTrainingPlanner() {
   const { roster, setState } = useGameStore(
     useShallow((s) => ({ roster: s.roster, setState: s.setState }))
   );
-  const activeWarriors = filterActive(roster);
+  const activeWarriors = roster.filter((w) => w.status === 'Active');
   const [selectedId, setSelectedId] = useState<string | null>(activeWarriors[0]?.id || null);
 
   const selectedWarrior = activeWarriors.find((w) => w.id === selectedId);

@@ -4,7 +4,6 @@ import { logAgentAction } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
-import { filterActive } from '@/utils/roster';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 
@@ -25,7 +24,10 @@ export function processRecruitment(
   const remainingPool = [...pool];
 
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
-  const activeCount = filterActive(updatedRival.roster).length;
+  let activeCount = 0;
+  for (const w of updatedRival.roster) {
+    if (w.status === 'Active') activeCount++;
+  }
 
   // 1. Check Recruitment Chance
   // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap

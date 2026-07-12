@@ -7,9 +7,9 @@ describe('getEligibleArenasForTournament', () => {
   it('excludes cramped arenas like gutter_pit for large brackets', () => {
     const eligible = getEligibleArenasForTournament({
       bracketSize: TOURNAMENT_ARENA_DEFAULTS.LARGE_BRACKET_THRESHOLD,
-      minTier: 1 // gutter_pit is tier 1
+      minTier: 1, // gutter_pit is tier 1
     });
-    const hasGutterPit = eligible.some(a => a.id === GUTTER_PIT.id);
+    const hasGutterPit = eligible.some((a) => a.id === GUTTER_PIT.id);
     expect(hasGutterPit).toBe(false);
   });
 });

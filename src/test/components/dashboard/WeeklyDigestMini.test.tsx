@@ -56,10 +56,7 @@ function setState(overrides: any = {}) {
     week: 5,
     arenaHistory: [],
     boutOffers: {},
-    roster: [
-      { id: 'wa' },
-      { id: 'wc' },
-    ],
+    roster: [{ id: 'wa' }, { id: 'wc' }],
     ...overrides,
   };
 }
@@ -106,9 +103,24 @@ describe('WeeklyDigestMini', () => {
     setState({
       week: 5,
       boutOffers: {
-        o1: makeOffer({ id: 'o1' as any, status: 'Proposed', boutWeek: 5, warriorIds: ['wa' as WarriorId] }),
-        o2: makeOffer({ id: 'o2' as any, status: 'Proposed', boutWeek: 5, warriorIds: ['wc' as WarriorId] }),
-        o3: makeOffer({ id: 'o3' as any, status: 'Proposed', boutWeek: 6, warriorIds: ['wa' as WarriorId] }),
+        o1: makeOffer({
+          id: 'o1' as any,
+          status: 'Proposed',
+          boutWeek: 5,
+          warriorIds: ['wa' as WarriorId],
+        }),
+        o2: makeOffer({
+          id: 'o2' as any,
+          status: 'Proposed',
+          boutWeek: 5,
+          warriorIds: ['wc' as WarriorId],
+        }),
+        o3: makeOffer({
+          id: 'o3' as any,
+          status: 'Proposed',
+          boutWeek: 6,
+          warriorIds: ['wa' as WarriorId],
+        }),
       },
     });
     render(<WeeklyDigestMini />);
@@ -133,7 +145,12 @@ describe('WeeklyDigestMini', () => {
     setState({
       week: 5,
       boutOffers: {
-        o1: makeOffer({ id: 'o1' as any, status: 'Proposed', boutWeek: 5, warriorIds: ['wa' as WarriorId] }),
+        o1: makeOffer({
+          id: 'o1' as any,
+          status: 'Proposed',
+          boutWeek: 5,
+          warriorIds: ['wa' as WarriorId],
+        }),
       },
     });
     render(<WeeklyDigestMini />);
@@ -144,9 +161,7 @@ describe('WeeklyDigestMini', () => {
   it('hides pending indicator when no pending offers but has fights', () => {
     setState({
       week: 5,
-      arenaHistory: [
-        makeFight({ id: 'f1' as any, winner: 'A', by: 'KO' }),
-      ],
+      arenaHistory: [makeFight({ id: 'f1' as any, winner: 'A', by: 'KO' })],
     });
     render(<WeeklyDigestMini />);
     expect(screen.getByText(/W:1/)).toBeInTheDocument();
@@ -167,8 +182,18 @@ describe('WeeklyDigestMini', () => {
         }),
       ],
       boutOffers: {
-        o1: makeOffer({ id: 'o1' as any, status: 'Proposed', boutWeek: 5, warriorIds: ['wa' as WarriorId] }),
-        o2: makeOffer({ id: 'o2' as any, status: 'Proposed', boutWeek: 6, warriorIds: ['wc' as WarriorId] }),
+        o1: makeOffer({
+          id: 'o1' as any,
+          status: 'Proposed',
+          boutWeek: 5,
+          warriorIds: ['wa' as WarriorId],
+        }),
+        o2: makeOffer({
+          id: 'o2' as any,
+          status: 'Proposed',
+          boutWeek: 6,
+          warriorIds: ['wc' as WarriorId],
+        }),
       },
     });
     render(<WeeklyDigestMini />);
@@ -182,9 +207,7 @@ describe('WeeklyDigestMini', () => {
     setState({
       week: 5,
       roster: [],
-      arenaHistory: [
-        makeFight({ id: 'f1' as any, winner: 'A', by: 'Kill' }),
-      ],
+      arenaHistory: [makeFight({ id: 'f1' as any, winner: 'A', by: 'Kill' })],
     });
     render(<WeeklyDigestMini />);
     expect(screen.getByText(/No activity/i)).toBeInTheDocument();

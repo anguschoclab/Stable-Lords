@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
-import { filterActive } from '@/utils/roster';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -119,7 +118,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
                 Roster
               </div>
               <div className="text-xl font-display font-black text-primary">
-                {filterActive(stable.roster).length}
+                {stable.roster.filter((w) => w.status === 'Active').length}
               </div>
             </CardContent>
           </Card>
@@ -131,20 +130,22 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
             <Users className="h-3 w-3 text-primary" /> Active Roster
           </h3>
           <div className="grid gap-2">
-            {filterActive(stable.roster).map((w) => (
-              <div
-                key={w.id}
-                className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
-              >
-                <div className="flex items-center gap-2">
-                  <StatBadge styleName={w.style} />
-                  <span className="text-sm font-medium">{w.name}</span>
+            {stable.roster
+              .filter((w) => w.status === 'Active')
+              .map((w) => (
+                <div
+                  key={w.id}
+                  className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <StatBadge styleName={w.style} />
+                    <span className="text-sm font-medium">{w.name}</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-muted-foreground">
+                    {w.career.wins}-{w.career.losses}
+                  </div>
                 </div>
-                <div className="text-[10px] font-mono text-muted-foreground">
-                  {w.career.wins}-{w.career.losses}
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import type { EventNarrative } from '@/types/narrative.types';
 import { rollRange } from '@/engine/core/rng/rollRange';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { makeNewsletterItem } from '@/engine/narrative/newsletterHelpers';
-import { filterActive, filterHealthy } from '@/utils/roster';
+import { filterHealthy } from '@/utils/roster';
 
 /**
  * Stable Lords — Random Event Pipeline Pass
@@ -70,7 +70,7 @@ export function runEventPass(
   // ☄️ Star-crossed Blessing Event
   const blessingChance = state.weather === 'Mana Surge' ? 0.25 : 0.03;
   if (brawlRng.next() < blessingChance && state.roster.length > 0) {
-    const youngWarriors = filterActive(state.roster).filter((w) => (w.age || 0) <= 25);
+    const youngWarriors = state.roster.filter((w) => w.status === 'Active' && (w.age || 0) <= 25);
     if (youngWarriors.length > 0) {
       const chosen = brawlRng.pick(youngWarriors);
       const e = events.celestial_blessing;
@@ -98,7 +98,7 @@ export function runEventPass(
 
   // 🏺 Lost Relic Discovery Event
   if (brawlRng.next() < 0.04 && state.roster.length > 0) {
-    const activeWarriors = filterActive(state.roster);
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.lost_relic;
@@ -146,7 +146,7 @@ export function runEventPass(
     (state.treasury || 0) + treasuryDelta >= 20 &&
     state.roster.length > 0
   ) {
-    const activeWarriors = filterActive(state.roster);
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.goblin_merchant;

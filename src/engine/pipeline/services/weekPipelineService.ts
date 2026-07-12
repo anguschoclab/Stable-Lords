@@ -161,10 +161,7 @@ function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
 }
 
 export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
-  const netTreasuryDelta = coreImpacts.reduce(
-    (sum, i) => sum + (i.treasuryDelta ?? 0),
-    0
-  );
+  const netTreasuryDelta = coreImpacts.reduce((sum, i) => sum + (i.treasuryDelta ?? 0), 0);
   return state.treasury + netTreasuryDelta < BANKRUPTCY_THRESHOLD;
 }
 

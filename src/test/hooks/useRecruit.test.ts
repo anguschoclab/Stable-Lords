@@ -48,7 +48,11 @@ function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
     lore: 'A young fighter.',
     traits: [],
     addedWeek: 1,
-    favorites: { weaponId: 'shortsword', rhythm: { oe: 5, al: 5 }, discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 } },
+    favorites: {
+      weaponId: 'shortsword',
+      rhythm: { oe: 5, al: 5 },
+      discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+    },
     luckfactor: { ...baseSkills },
     ...overrides,
   };
@@ -63,10 +67,38 @@ function loadState(partial?: Partial<GameState>) {
   state.treasury = 10000;
   state.roster = [];
   state.recruitPool = [
-    makePoolWarrior({ id: 'pw1', name: 'Alpha', tier: 'Common', cost: 50, age: 20, style: FightingStyle.StrikingAttack }),
-    makePoolWarrior({ id: 'pw2', name: 'Beta', tier: 'Promising', cost: 100, age: 22, style: FightingStyle.BashingAttack }),
-    makePoolWarrior({ id: 'pw3', name: 'Gamma', tier: 'Exceptional', cost: 200, age: 25, style: FightingStyle.StrikingAttack }),
-    makePoolWarrior({ id: 'pw4', name: 'Delta', tier: 'Prodigy', cost: 400, age: 18, style: FightingStyle.ParryRiposte }),
+    makePoolWarrior({
+      id: 'pw1',
+      name: 'Alpha',
+      tier: 'Common',
+      cost: 50,
+      age: 20,
+      style: FightingStyle.StrikingAttack,
+    }),
+    makePoolWarrior({
+      id: 'pw2',
+      name: 'Beta',
+      tier: 'Promising',
+      cost: 100,
+      age: 22,
+      style: FightingStyle.BashingAttack,
+    }),
+    makePoolWarrior({
+      id: 'pw3',
+      name: 'Gamma',
+      tier: 'Exceptional',
+      cost: 200,
+      age: 25,
+      style: FightingStyle.StrikingAttack,
+    }),
+    makePoolWarrior({
+      id: 'pw4',
+      name: 'Delta',
+      tier: 'Prodigy',
+      cost: 400,
+      age: 18,
+      style: FightingStyle.ParryRiposte,
+    }),
   ];
   Object.assign(state, partial);
   useGameStore.getState().loadGame('test-slot', state as GameState);
@@ -167,8 +199,14 @@ describe('useRecruitFilters', () => {
 
   it('sorts by potential-desc correctly', () => {
     const pool = [
-      makePoolWarrior({ id: 'a', potential: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } }),
-      makePoolWarrior({ id: 'b', potential: { ST: 25, CN: 25, SZ: 25, WT: 25, WL: 25, SP: 25, DF: 25 } }),
+      makePoolWarrior({
+        id: 'a',
+        potential: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      }),
+      makePoolWarrior({
+        id: 'b',
+        potential: { ST: 25, CN: 25, SZ: 25, WT: 25, WL: 25, SP: 25, DF: 25 },
+      }),
     ];
     const { result } = renderHook(() => useRecruitFilters(pool));
     act(() => result.current.setSortBy('potential-desc'));

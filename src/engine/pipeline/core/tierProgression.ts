@@ -5,7 +5,6 @@ import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment';
 import { StateImpact } from '@/engine/impacts';
-import { filterActive } from '@/utils/roster';
 
 interface TierStats {
   totalWins: number;
@@ -76,7 +75,7 @@ export function processTierProgression(
       stats.totalKills += w.career.kills;
       stats.totalFights += w.career.wins + w.career.losses;
     }
-    stats.activeCount = filterActive(r.roster).length;
+    stats.activeCount = r.roster.filter((w) => w.status === 'Active').length;
 
     const rules = tierRules[r.tier || 'Minor'];
     for (const rule of rules) {

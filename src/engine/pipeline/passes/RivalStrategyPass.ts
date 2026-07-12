@@ -191,9 +191,7 @@ export function runRivalStrategyPass(
  * Builds an index mapping stableId → first famous retired warrior (fame > 200).
  * Replaces per-rival O(N) find() scans with O(1) map lookups.
  */
-export function buildSuccessorIndex(
-  retired: Warrior[] | undefined
-): Map<StableId, Warrior> {
+export function buildSuccessorIndex(retired: Warrior[] | undefined): Map<StableId, Warrior> {
   const index = new Map<StableId, Warrior>();
   for (const w of retired || []) {
     if ((w.fame || 0) > 200 && w.stableId && !index.has(w.stableId)) {

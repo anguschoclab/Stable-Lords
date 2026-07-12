@@ -46,17 +46,35 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
 }
 
 const trainers: Trainer[] = [
-  { id: 't1', name: 'Coach Bob', tier: 'Novice', focus: 'Aggression', fame: 10, age: 45, contractWeeksLeft: 10 },
-  { id: 't2', name: 'Coach Alice', tier: 'Master', focus: 'Defense', fame: 50, age: 55, contractWeeksLeft: 10 },
+  {
+    id: 't1',
+    name: 'Coach Bob',
+    tier: 'Novice',
+    focus: 'Aggression',
+    fame: 10,
+    age: 45,
+    contractWeeksLeft: 10,
+  },
+  {
+    id: 't2',
+    name: 'Coach Alice',
+    tier: 'Master',
+    focus: 'Defense',
+    fame: 50,
+    age: 55,
+    contractWeeksLeft: 10,
+  },
 ];
 
-function renderSection(props: {
-  warrior?: Warrior;
-  assignment?: TrainingAssignment | undefined;
-  isRecovery?: boolean;
-  onAssignTraitTraining?: (trainerId: string) => void;
-  onClear?: () => void;
-} = {}) {
+function renderSection(
+  props: {
+    warrior?: Warrior;
+    assignment?: TrainingAssignment | undefined;
+    isRecovery?: boolean;
+    onAssignTraitTraining?: (trainerId: string) => void;
+    onClear?: () => void;
+  } = {}
+) {
   return render(
     <TooltipProvider>
       <TraitTrainingSection

@@ -27,9 +27,7 @@ const SHIELD_ID_SET = new Set<string>(SHIELD_ITEM_IDS);
 
 export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS];
 
-const ITEM_BY_ID = new Map<string, EquipmentItem>(
-  ALL_EQUIPMENT.map((item) => [item.id, item])
-);
+const ITEM_BY_ID = new Map<string, EquipmentItem>(ALL_EQUIPMENT.map((item) => [item.id, item]));
 
 const ITEM_BY_CODE = new Map<string, EquipmentItem>(
   ALL_EQUIPMENT.filter((item) => item.code !== '').map((item) => [item.code, item])

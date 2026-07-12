@@ -179,8 +179,11 @@ export function OfferCard({
                   {getArenaById(offer.arenaId).name}
                 </div>
                 <div className="flex gap-1 mt-1">
-                  {getArenaById(offer.arenaId).tags.map(tag => (
-                    <span key={tag} className="text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-sm border border-white/10 bg-white/5 text-muted-foreground">
+                  {getArenaById(offer.arenaId).tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-sm border border-white/10 bg-white/5 text-muted-foreground"
+                    >
                       {tag}
                     </span>
                   ))}
@@ -188,20 +191,23 @@ export function OfferCard({
 
                 {playerWarrior && (
                   <>
-                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-                    {describeArenaFit(
-                      playerWarrior,
-                      offer.arenaId,
-                      playerWarrior.plan ?? undefined
-                    )}
-                  </div>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {getArenaById(offer.arenaId).tags.map(tag => (
-                      <span key={tag} className="px-1.5 py-0.5 rounded-none bg-primary/10 text-primary text-[8px] uppercase tracking-wider font-bold">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
+                      {describeArenaFit(
+                        playerWarrior,
+                        offer.arenaId,
+                        playerWarrior.plan ?? undefined
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {getArenaById(offer.arenaId).tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-1.5 py-0.5 rounded-none bg-primary/10 text-primary text-[8px] uppercase tracking-wider font-bold"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </>
                 )}
               </div>

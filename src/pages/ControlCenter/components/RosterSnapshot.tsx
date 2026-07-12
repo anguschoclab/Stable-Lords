@@ -7,7 +7,6 @@ import { Surface } from '@/components/ui/Surface';
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { STYLE_ABBREV } from '@/types/shared.types';
 import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
-import { filterActive } from '@/utils/roster';
 import { Swords, ChevronRight } from 'lucide-react';
 
 /**
@@ -15,7 +14,7 @@ import { Swords, ChevronRight } from 'lucide-react';
  */
 export function RosterSnapshot() {
   const { roster } = useGameStore(useShallow((s) => ({ roster: s.roster })));
-  const active = useMemo(() => filterActive(roster), [roster]);
+  const active = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
 
   return (
     <div className="flex flex-col gap-3">

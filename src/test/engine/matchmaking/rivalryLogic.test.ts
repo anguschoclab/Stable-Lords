@@ -54,17 +54,13 @@ describe('updateRivalriesFromBouts', () => {
   });
 
   it('skips fights missing stableIdA', () => {
-    const fights: FightSummary[] = [
-      makeFight({ stableIdA: undefined as any }),
-    ];
+    const fights: FightSummary[] = [makeFight({ stableIdA: undefined as any })];
     const result = updateRivalriesFromBouts([], fights, 1, makeRng());
     expect(result).toHaveLength(0);
   });
 
   it('skips fights missing stableIdD', () => {
-    const fights: FightSummary[] = [
-      makeFight({ stableIdD: undefined as any }),
-    ];
+    const fights: FightSummary[] = [makeFight({ stableIdD: undefined as any })];
     const result = updateRivalriesFromBouts([], fights, 1, makeRng());
     expect(result).toHaveLength(0);
   });
@@ -121,9 +117,7 @@ describe('updateRivalriesFromBouts', () => {
   });
 
   it('preserves existing reason when no deaths or upsets in new fights', () => {
-    const existing: Rivalry[] = [
-      makeRivalry({ intensity: 2, reason: 'Original blood' }),
-    ];
+    const existing: Rivalry[] = [makeRivalry({ intensity: 2, reason: 'Original blood' })];
     const fights: FightSummary[] = [
       makeFight({
         title: 'Alice vs Bob',
@@ -156,9 +150,7 @@ describe('updateRivalriesFromBouts', () => {
   });
 
   it('does not push new entries into the input existingRivalries array', () => {
-    const existing: Rivalry[] = [
-      makeRivalry({ intensity: 1, reason: 'Original' }),
-    ];
+    const existing: Rivalry[] = [makeRivalry({ intensity: 1, reason: 'Original' })];
     const originalLength = existing.length;
 
     const fights: FightSummary[] = [
@@ -222,9 +214,7 @@ describe('updateRivalriesFromBouts', () => {
   });
 
   it('clamps existing rivalry intensity to max 5', () => {
-    const existing: Rivalry[] = [
-      makeRivalry({ intensity: 4, reason: 'Old feud' }),
-    ];
+    const existing: Rivalry[] = [makeRivalry({ intensity: 4, reason: 'Old feud' })];
     // Multiple kill bouts in one week to push intensity past 5
     const fights: FightSummary[] = [
       makeFight({ id: 'f1' as FightId, by: 'Kill', winner: 'A', fameA: 90, fameD: 95, week: 2 }),

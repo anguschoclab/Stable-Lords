@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { computeWeeklyBreakdown, computeEconomyImpact, type StableEconomyInput } from '@/engine/economy';
+import {
+  computeWeeklyBreakdown,
+  computeEconomyImpact,
+  type StableEconomyInput,
+} from '@/engine/economy';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior, WarriorId } from '@/types/game';
 import { FightingStyle, type FightSummary } from '@/types/game';
@@ -211,7 +215,9 @@ describe('Economy Engine', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
         weather: 'Mana Surge',
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'standard_arena' }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       expect(b.income.some((i) => i.label === 'Fight purses (1)')).toBe(true);
@@ -388,7 +394,9 @@ describe('Economy Engine', () => {
     it('should calculate exact fight purse for fame-0 tier-1 win', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'standard_arena' }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const purse = b.income.find((i) => i.label === 'Fight purses (1)');
@@ -400,7 +408,9 @@ describe('Economy Engine', () => {
     it('should calculate exact fight purse for fame-0 tier-1 loss', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'D', fameA: 0, arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'D', fameA: 0, arenaId: 'standard_arena' }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const purse = b.income.find((i) => i.label === 'Fight purses (1)');
@@ -414,7 +424,16 @@ describe('Economy Engine', () => {
           makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 }),
           makeTestWarrior({ id: 'w2' as WarriorId, fame: 0 }),
         ],
-        arenaHistory: [makeFight(5, { warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', fameA: 0, fameD: 0, arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(5, {
+            warriorIdA: 'w1',
+            warriorIdD: 'w2',
+            winner: 'A',
+            fameA: 0,
+            fameD: 0,
+            arenaId: 'standard_arena',
+          }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const purse = b.income.find((i) => i.label === 'Fight purses (2)');
@@ -426,7 +445,9 @@ describe('Economy Engine', () => {
       const input = makeEconomyInput({
         week: 5,
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
-        arenaHistory: [makeFight(4, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(4, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'standard_arena' }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       expect(b.income.some((i) => i.label.startsWith('Fight purses'))).toBe(false);
@@ -447,7 +468,14 @@ describe('Economy Engine', () => {
     it('should fallback fameD to 0 when missing', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
-        arenaHistory: [makeFight(5, { warriorIdA: 'e1', warriorIdD: 'p1', winner: 'D', arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(5, {
+            warriorIdA: 'e1',
+            warriorIdD: 'p1',
+            winner: 'D',
+            arenaId: 'standard_arena',
+          }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const purse = b.income.find((i) => i.label === 'Fight purses (1)');
@@ -494,7 +522,17 @@ describe('Economy Engine', () => {
     it('should exclude trainers with expired contracts (contractWeeksLeft=0)', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
-        trainers: [{ id: 't1', name: 'Trainer', tier: 'Novice', focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 0 }],
+        trainers: [
+          {
+            id: 't1',
+            name: 'Trainer',
+            tier: 'Novice',
+            focus: 'Aggression',
+            fame: 1,
+            age: 40,
+            contractWeeksLeft: 0,
+          },
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       expect(b.expenses.some((e) => e.label.startsWith('Trainer salaries'))).toBe(false);
@@ -503,7 +541,17 @@ describe('Economy Engine', () => {
     it('should use fallback salary 35 for unknown trainer tier', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
-        trainers: [{ id: 't1', name: 'Trainer', tier: 'Unknown' as any, focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 5 }],
+        trainers: [
+          {
+            id: 't1',
+            name: 'Trainer',
+            tier: 'Unknown' as any,
+            focus: 'Aggression',
+            fame: 1,
+            age: 40,
+            contractWeeksLeft: 5,
+          },
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const trainer = b.expenses.find((e) => e.label.startsWith('Trainer salaries'));
@@ -515,9 +563,33 @@ describe('Economy Engine', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
         trainers: [
-          { id: 't1', name: 'A', tier: 'Novice', focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 5 },
-          { id: 't2', name: 'B', tier: 'Seasoned', focus: 'Defense', fame: 3, age: 45, contractWeeksLeft: 5 },
-          { id: 't3', name: 'C', tier: 'Master', focus: 'Agility' as any, fame: 5, age: 50, contractWeeksLeft: 5 },
+          {
+            id: 't1',
+            name: 'A',
+            tier: 'Novice',
+            focus: 'Aggression',
+            fame: 1,
+            age: 40,
+            contractWeeksLeft: 5,
+          },
+          {
+            id: 't2',
+            name: 'B',
+            tier: 'Seasoned',
+            focus: 'Defense',
+            fame: 3,
+            age: 45,
+            contractWeeksLeft: 5,
+          },
+          {
+            id: 't3',
+            name: 'C',
+            tier: 'Master',
+            focus: 'Agility' as any,
+            fame: 5,
+            age: 50,
+            contractWeeksLeft: 5,
+          },
         ],
       });
       const b = computeWeeklyBreakdown(input);
@@ -556,7 +628,9 @@ describe('Economy Engine', () => {
     it('should fallback to tier 1 for unknown arenaId', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'nonexistent_arena' })],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: 'nonexistent_arena' }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const purse = b.income.find((i) => i.label === 'Fight purses (1)');
@@ -566,7 +640,9 @@ describe('Economy Engine', () => {
     it('should fallback to tier 1 for missing arenaId', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 0 })],
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: undefined })],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 0, arenaId: undefined }),
+        ],
       });
       const b = computeWeeklyBreakdown(input);
       const purse = b.income.find((i) => i.label === 'Fight purses (1)');
@@ -615,7 +691,9 @@ describe('Economy Engine', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 50 })],
         weather: 'Mana Surge',
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 50, arenaId: 'standard_arena' })],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 50, arenaId: 'standard_arena' }),
+        ],
       });
       const impact = computeEconomyImpact(input);
       const positiveEntries = impact.ledgerEntries!.filter((e) => e.amount > 0);
@@ -626,7 +704,17 @@ describe('Economy Engine', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
         weather: 'Blizzard',
-        trainers: [{ id: 't1', name: 'T', tier: 'Novice', focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 5 }],
+        trainers: [
+          {
+            id: 't1',
+            name: 'T',
+            tier: 'Novice',
+            focus: 'Aggression',
+            fame: 1,
+            age: 40,
+            contractWeeksLeft: 5,
+          },
+        ],
         trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
       const impact = computeEconomyImpact(input);
@@ -670,7 +758,9 @@ describe('Economy Engine', () => {
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
       });
       const impact = computeEconomyImpact(input);
-      expect(impact.ledgerEntries!.every((e) => typeof e.id === 'string' && e.id.length > 0)).toBe(true);
+      expect(impact.ledgerEntries!.every((e) => typeof e.id === 'string' && e.id.length > 0)).toBe(
+        true
+      );
     });
 
     it('should be deterministic with same default seed', () => {
@@ -748,8 +838,20 @@ describe('Economy Engine', () => {
         fame: 10,
         weather: 'Mana Surge',
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 50 })],
-        arenaHistory: [makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 50, arenaId: 'standard_arena' })],
-        trainers: [{ id: 't1', name: 'T', tier: 'Novice', focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 5 }],
+        arenaHistory: [
+          makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 50, arenaId: 'standard_arena' }),
+        ],
+        trainers: [
+          {
+            id: 't1',
+            name: 'T',
+            tier: 'Novice',
+            focus: 'Aggression',
+            fame: 1,
+            age: 40,
+            contractWeeksLeft: 5,
+          },
+        ],
         trainingAssignments: [{ warriorId: 'p1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
       const breakdown = computeWeeklyBreakdown(input);
@@ -772,7 +874,9 @@ describe('Economy Engine', () => {
       expect(expenseLabels).toContain('Training fees (1)');
 
       // Ledger count = income lines + expense lines
-      expect(impact.ledgerEntries!.length).toBe(breakdown.income.length + breakdown.expenses.length);
+      expect(impact.ledgerEntries!.length).toBe(
+        breakdown.income.length + breakdown.expenses.length
+      );
 
       // treasuryDelta = net
       expect(impact.treasuryDelta).toBe(breakdown.net);

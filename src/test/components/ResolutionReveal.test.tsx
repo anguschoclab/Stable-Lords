@@ -53,7 +53,9 @@ vi.mock('@/components/ui/card', () => ({
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }: any) => (
-    <button onClick={onClick} {...props}>{children}</button>
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
   ),
 }));
 
@@ -70,14 +72,18 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: any) => {
     // Simulate shallow selector behavior in tests
     if (selector && selector.name === 'useShallow') {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        return useTestStore ? useTestStore((s: any) => selector(s)) : undefined;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return useTestStore ? useTestStore((s: any) => selector(s)) : undefined;
     }
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTestStore ? (typeof selector === 'function' ? useTestStore(selector) : useTestStore()) : undefined;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTestStore
+      ? typeof selector === 'function'
+        ? useTestStore(selector)
+        : useTestStore()
+      : undefined;
   },
   useWorldState: () => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useTestStore ? useTestStore() : {};
   },
 }));
@@ -122,14 +128,16 @@ describe('ResolutionReveal narrowed selector', () => {
 
   it('renders when arenaHistory has pending resolution data', () => {
     useTestStore.setState({
-      arenaHistory: [{
-        pendingResolutionData: {
-          gazette: 'Test',
-          injuries: [],
-          deaths: [],
-          bouts: [],
+      arenaHistory: [
+        {
+          pendingResolutionData: {
+            gazette: 'Test',
+            injuries: [],
+            deaths: [],
+            bouts: [],
+          },
         },
-      }],
+      ],
       week: 2,
     });
 
@@ -139,14 +147,16 @@ describe('ResolutionReveal narrowed selector', () => {
 
   it('does NOT re-render when unrelated state (treasury) changes', async () => {
     useTestStore.setState({
-      arenaHistory: [{
-        pendingResolutionData: {
-          gazette: 'Test',
-          injuries: [],
-          deaths: [],
-          bouts: [],
+      arenaHistory: [
+        {
+          pendingResolutionData: {
+            gazette: 'Test',
+            injuries: [],
+            deaths: [],
+            bouts: [],
+          },
         },
-      }],
+      ],
       week: 2,
     });
 
@@ -171,14 +181,16 @@ describe('ResolutionReveal narrowed selector', () => {
 
   it('DOES re-render when arenaHistory changes', async () => {
     useTestStore.setState({
-      arenaHistory: [{
-        pendingResolutionData: {
-          gazette: 'Test',
-          injuries: [],
-          deaths: [],
-          bouts: [],
+      arenaHistory: [
+        {
+          pendingResolutionData: {
+            gazette: 'Test',
+            injuries: [],
+            deaths: [],
+            bouts: [],
+          },
         },
-      }],
+      ],
       week: 2,
     });
 

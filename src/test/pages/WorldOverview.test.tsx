@@ -7,6 +7,7 @@ import { FightingStyle } from '@/types/game';
 import type { Warrior, GameState } from '@/types/game';
 import '@/test/_setup/setup';
 
+const mockStore = vi.hoisted(() => ({}) as any);
 let storeOverride: any = {};
 
 const defaultStoreState = {
@@ -27,6 +28,8 @@ const defaultStoreState = {
   trainers: [],
   trainingAssignments: [],
   fame: 0,
+  bookmarks: [],
+  isBookmarked: () => false,
   player: {
     id: 'p1',
     name: 'Player',
@@ -38,17 +41,13 @@ const defaultStoreState = {
 };
 
 // Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: any) => {
-      const state = { ...defaultStoreState, ...storeOverride, isBookmarked: () => false };
-      return selector ? selector(state) : state;
-    },
-    useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
-  };
-});
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: (selector?: any) => {
+    return selector ? selector(mockStore) : mockStore;
+  },
+  useWorldState: () => mockStore,
+  useBookmarks: () => mockStore.bookmarks,
+}));
 
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({
@@ -113,6 +112,7 @@ describe('WorldOverview Component', () => {
 
   beforeEach(() => {
     storeOverride = {};
+    Object.assign(mockStore, defaultStoreState);
     mockState = createFreshState('test-seed');
 
     // Setup player stable
@@ -152,6 +152,7 @@ describe('WorldOverview Component', () => {
       player: mockState.player,
       fame: mockState.player.fame,
     };
+    Object.assign(mockStore, defaultStoreState, storeOverride);
   });
 
   it('renders stable rows correctly with aggregated stats', async () => {

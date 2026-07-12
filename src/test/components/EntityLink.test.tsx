@@ -28,7 +28,11 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 vi.mock('@/components/ui/sheet', () => ({
-  SheetDescription: ({ children, className }: any) => <div data-testid="sheet-description" className={className}>{children}</div>,
+  SheetDescription: ({ children, className }: any) => (
+    <div data-testid="sheet-description" className={className}>
+      {children}
+    </div>
+  ),
   Sheet: ({ children }: any) => <div data-testid="sheet">{children}</div>,
   SheetContent: ({ children, ...props }: any) => (
     <div data-testid="sheet-content" aria-describedby={props['aria-describedby']}>

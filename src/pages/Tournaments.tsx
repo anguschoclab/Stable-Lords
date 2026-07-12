@@ -6,7 +6,6 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import { filterActive } from '@/utils/roster';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -105,7 +104,7 @@ export default function Tournaments() {
     [tournaments, season]
   );
 
-  const activeWarriors = useMemo(() => filterActive(roster), [roster]);
+  const activeWarriors = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
 
   // Warriors belonging to the player that are in the active tournament
   const playerWarriorsInTournament = useMemo(() => {

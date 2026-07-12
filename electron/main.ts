@@ -369,7 +369,12 @@ function createTray() {
 function registerIPCHandlers() {
   // Validate slot ID format
   function validateSlotId(slotId: string): boolean {
-    return typeof slotId === 'string' && slotId.length > 0 && slotId.length <= 64 && /^[a-zA-Z0-9_-]+$/.test(slotId);
+    return (
+      typeof slotId === 'string' &&
+      slotId.length > 0 &&
+      slotId.length <= 64 &&
+      /^[a-zA-Z0-9_-]+$/.test(slotId)
+    );
   }
 
   // Validate season and week numbers
@@ -384,7 +389,12 @@ function registerIPCHandlers() {
 
   // Validate bout ID
   function validateBoutId(boutId: string): boolean {
-    return typeof boutId === 'string' && boutId.length > 0 && boutId.length <= 64 && /^[a-zA-Z0-9_-]+$/.test(boutId);
+    return (
+      typeof boutId === 'string' &&
+      boutId.length > 0 &&
+      boutId.length <= 64 &&
+      /^[a-zA-Z0-9_-]+$/.test(boutId)
+    );
   }
 
   ipcMain.handle('save-game', async (_event, slotId, state) => {
@@ -630,10 +640,18 @@ function registerIPCHandlers() {
     if (!options || typeof options !== 'object') {
       return { success: false, error: 'Invalid options' };
     }
-    if (typeof options.title !== 'string' || options.title.length === 0 || options.title.length > 255) {
+    if (
+      typeof options.title !== 'string' ||
+      options.title.length === 0 ||
+      options.title.length > 255
+    ) {
       return { success: false, error: 'Invalid notification title' };
     }
-    if (typeof options.body !== 'string' || options.body.length === 0 || options.body.length > 1000) {
+    if (
+      typeof options.body !== 'string' ||
+      options.body.length === 0 ||
+      options.body.length > 1000
+    ) {
       return { success: false, error: 'Invalid notification body' };
     }
     new Notification({

@@ -5,7 +5,6 @@ import { generatePairings } from '@/engine/bout/core/pairings';
 import type { RivalStableData } from '@/types/game';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
-import { filterActive } from '@/utils/roster';
 import { AutosimConsole } from '@/components/run-round/AutosimConsole';
 import { MatchCard } from '@/components/run-round/MatchCard';
 import { calculateStableStats } from '@/engine/stats/stableStats';
@@ -280,7 +279,7 @@ export default function ArenaHub() {
               variant="outline"
               className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
             >
-              {filterActive(roster).length} WARRIORS ACTIVE
+              {roster.filter((w) => w.status === 'Active').length} WARRIORS ACTIVE
             </Badge>
           </div>
         }

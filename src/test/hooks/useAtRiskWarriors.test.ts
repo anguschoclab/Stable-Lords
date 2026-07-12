@@ -9,10 +9,8 @@ import '@/test/_setup/setup';
 const mockStore = vi.hoisted(() => ({ roster: [] as Warrior[] }));
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: (state: any) => any) =>
-    selector ? selector(mockStore) : mockStore,
+  useGameStore: (selector?: (state: any) => any) => (selector ? selector(mockStore) : mockStore),
 }));
-
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
   return {
@@ -77,7 +75,11 @@ describe('useAtRiskWarriors', () => {
 
   it('does not return inactive warriors even if fatigued or injured', () => {
     mockStore.roster = [
-      createMockWarrior('w1', { status: 'Dead', fatigue: 80, injuries: [{ name: 'Wound' } as any] }),
+      createMockWarrior('w1', {
+        status: 'Dead',
+        fatigue: 80,
+        injuries: [{ name: 'Wound' } as any],
+      }),
       createMockWarrior('w2', { status: 'Retired', fatigue: 80, injuries: [] }),
       createMockWarrior('w3', { status: 'Active', fatigue: 80, injuries: [] }),
     ];
@@ -112,7 +114,11 @@ describe('useAtRiskWarriors', () => {
       createMockWarrior('exhausted', { fatigue: 80, injuries: [] }),
       createMockWarrior('injured', { fatigue: 20, injuries: [{ name: 'Cut' } as any] }),
       createMockWarrior('dead', { status: 'Dead', fatigue: 80, injuries: [] }),
-      createMockWarrior('retired', { status: 'Retired', fatigue: 20, injuries: [{ name: 'Scar' } as any] }),
+      createMockWarrior('retired', {
+        status: 'Retired',
+        fatigue: 20,
+        injuries: [{ name: 'Scar' } as any],
+      }),
     ];
     const { result } = renderHook(() => useAtRiskWarriors());
     expect(result.current).toHaveLength(2);

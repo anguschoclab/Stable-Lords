@@ -149,14 +149,7 @@ interface SparklineSVGProps {
   height: number;
 }
 
-function SparklineSVG({
-  pathD,
-  areaD,
-  points,
-  vp,
-  isUp,
-  height,
-}: SparklineSVGProps) {
+function SparklineSVG({ pathD, areaD, points, vp, isUp, height }: SparklineSVGProps) {
   const { H, W } = vp;
   const strokeColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
   const gradientColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';

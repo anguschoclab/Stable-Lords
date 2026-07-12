@@ -11,8 +11,7 @@ export function LiabilityBadge({ warrior }: LiabilityBadgeProps) {
   const liab = computeWarriorLiability(warrior);
   if (liab.recommendation === 'Keep') return null;
 
-  const label =
-    liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
+  const label = liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
   const color =
     liab.recommendation === 'Release'
       ? 'text-arena-gold border-arena-gold/40'
@@ -27,9 +26,7 @@ export function LiabilityBadge({ warrior }: LiabilityBadgeProps) {
             color
           )}
         >
-          <span className="text-[9px] font-black uppercase tracking-widest">
-            {label}
-          </span>
+          <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
         </div>
       </TooltipTrigger>
       <TooltipContent>

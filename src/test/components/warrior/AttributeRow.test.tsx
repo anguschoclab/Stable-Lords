@@ -16,9 +16,7 @@ vi.mock('@/engine/potential', () => ({
 }));
 
 vi.mock('@/components/ui/progress', () => ({
-  Progress: ({ value }: { value: number }) => (
-    <div data-testid="progress" data-value={value} />
-  ),
+  Progress: ({ value }: { value: number }) => <div data-testid="progress" data-value={value} />,
 }));
 
 vi.mock('@/components/ui/tooltip', () => ({

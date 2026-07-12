@@ -105,7 +105,8 @@ export const BRASS_RING: ArenaConfig = {
   tags: ['outdoor', 'cramped', 'uneven'],
   tier: 1,
   size: 'cramped',
-  description: 'A tiny, brutal ring with uneven stones that penalize lunging and favor close-quarters brawling.',
+  description:
+    'A tiny, brutal ring with uneven stones that penalize lunging and favor close-quarters brawling.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.1, riposteMod: 1 },
   startingZone: 'Center',
@@ -120,7 +121,8 @@ export const NARROW_BRIDGE: ArenaConfig = {
   tags: ['outdoor', 'cramped', 'elevated'],
   tier: 2,
   size: 'cramped',
-  description: 'A dizzying span where low endurance fighters struggle to breathe and long weapons are useless.',
+  description:
+    'A dizzying span where low endurance fighters struggle to breathe and long weapons are useless.',
   zoneDef: { Edge: -5, Corner: -6 },
   surfaceMod: { initiativeMod: 0, enduranceMult: 1.2, riposteMod: 0 },
   startingZone: 'Center',
@@ -357,7 +359,8 @@ export const GUTTER_PIT: ArenaConfig = {
   tags: ['outdoor', 'cramped', 'uneven'],
   tier: 1,
   size: 'cramped',
-  description: 'A miserable, uneven pit. Tight quarters and broken ground punish lungers and favor dirty fighting.',
+  description:
+    'A miserable, uneven pit. Tight quarters and broken ground punish lungers and favor dirty fighting.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, enduranceMult: 1.1, riposteMod: 0 },
   startingZone: 'Center',
@@ -370,12 +373,12 @@ export const STORMTOP_TERRACE: ArenaConfig = {
   tags: ['outdoor', 'elevated', 'open'],
   tier: 2,
   size: 'open',
-  description: 'An open terrace high above the city. The thin air and open space heavily penalize low-endurance fighters.',
+  description:
+    'An open terrace high above the city. The thin air and open space heavily penalize low-endurance fighters.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: 1, enduranceMult: 1.15, riposteMod: 0 },
   startingZone: 'Center',
 };
-
 
 export const GLACIAL_RIFT: ArenaConfig = {
   id: 'glacial_rift',
@@ -395,7 +398,8 @@ export const SKY_PLATFORM: ArenaConfig = {
   tags: ['outdoor', 'elevated', 'open'],
   tier: 3,
   size: 'open',
-  description: 'A floating stone platform high above the clouds. Thin air and high winds challenge stamina and precision.',
+  description:
+    'A floating stone platform high above the clouds. Thin air and high winds challenge stamina and precision.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: 1, enduranceMult: 1.2, riposteMod: 0 },
   startingZone: 'Center',
@@ -407,12 +411,12 @@ export const MISTY_VALLEY: ArenaConfig = {
   tags: ['outdoor', 'open', 'magical'],
   tier: 1,
   size: 'open',
-  description: 'A wide valley filled with shifting, magically infused mists. Perfect for those who rely on reflexes over raw sight.',
+  description:
+    'A wide valley filled with shifting, magically infused mists. Perfect for those who rely on reflexes over raw sight.',
   zoneDef: { Edge: -1, Corner: -3 },
   surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 },
   startingZone: 'Center',
 };
-
 
 export const THE_MEAT_GRINDER: ArenaConfig = {
   id: 'the_meat_grinder',
@@ -444,56 +448,64 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     arenaId: 'mudpit_arena',
     type: 'famous_death',
     title: 'The Drowning of Valerius',
-    narrative: 'In 981, Champion Valerius was not killed by a blade, but rather drowned in a particularly deep pocket of mud while pinned by a lesser gladiator.'
+    narrative:
+      'In 981, Champion Valerius was not killed by a blade, but rather drowned in a particularly deep pocket of mud while pinned by a lesser gladiator.',
   },
   {
     id: 'blood_pit_the_iron_rebellion',
     arenaId: 'gutter_pit',
     type: 'historical_battle',
     title: 'The Iron Rebellion',
-    narrative: 'In 948, a mass breakout attempt by chained gladiators was brutally suppressed here. The gouge marks from their rusted shackles can still be seen on the southern pillars.',
+    narrative:
+      'In 948, a mass breakout attempt by chained gladiators was brutally suppressed here. The gouge marks from their rusted shackles can still be seen on the southern pillars.',
   },
   {
     id: 'shattered_coliseum_falling_statue',
     arenaId: 'sundered_coliseum',
     type: 'famous_death',
     title: 'The Fall of Oros',
-    narrative: 'The legendary champion Oros the Unbroken met his end not by a blade, but when a crumbling stone gargoyle dislodged during a thunderous crowd cheer and crushed him instantly.',
+    narrative:
+      'The legendary champion Oros the Unbroken met his end not by a blade, but when a crumbling stone gargoyle dislodged during a thunderous crowd cheer and crushed him instantly.',
   },
   {
     id: 'flesh_gardens_the_crimson_bloom',
     arenaId: 'flesh_gardens',
     type: 'historical_battle',
     title: 'The Crimson Bloom',
-    narrative: 'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',
+    narrative:
+      'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',
   },
   {
     id: 'charnel_pits_plague_surge',
     arenaId: 'charnel_pits',
     type: 'historical_battle',
     title: 'The Plague Surge',
-    narrative: 'In 992, during a bout between two rival houses, a subterranean pipe burst and flooded the arena with toxic waste. The fighters ignored the danger, continuing the battle until both succumbed to the fumes.',
+    narrative:
+      'In 992, during a bout between two rival houses, a subterranean pipe burst and flooded the arena with toxic waste. The fighters ignored the danger, continuing the battle until both succumbed to the fumes.',
   },
   {
     id: 'lantern_hall_the_blind_champ',
     arenaId: 'lantern_hall_arena',
     type: 'famous_death',
     title: 'The Blind Champion',
-    narrative: 'A famous warrior known for fighting blindfolded was finally bested here when their opponent shattered a glass lantern, using the cacophony to mask their fatal strike.',
+    narrative:
+      'A famous warrior known for fighting blindfolded was finally bested here when their opponent shattered a glass lantern, using the cacophony to mask their fatal strike.',
   },
   {
     id: 'walled_court_hidden_grates',
     arenaId: 'walled_court_arena',
     type: 'architectural_quirk',
     title: 'The Whispering Grates',
-    narrative: 'Beneath the polished stone of the Walled Court lie ancient drainage grates. Fighters with sharp ears claim they can hear the murmurs of past champions warning them of unseen attacks from below.',
+    narrative:
+      'Beneath the polished stone of the Walled Court lie ancient drainage grates. Fighters with sharp ears claim they can hear the murmurs of past champions warning them of unseen attacks from below.',
   },
   {
     id: 'charnel_pits_the_last_stand_of_korr',
     arenaId: 'charnel_pits',
     type: 'famous_death',
     title: 'The Last Stand of Korr',
-    narrative: 'Korr the Unbroken met his end in the Charnel Pits, not by the blade of a foe, but when the unstable ground gave way beneath him, swallowing him into the toxic depths. His final defiant roar is said to still echo in the pits.',
+    narrative:
+      'Korr the Unbroken met his end in the Charnel Pits, not by the blade of a foe, but when the unstable ground gave way beneath him, swallowing him into the toxic depths. His final defiant roar is said to still echo in the pits.',
   },
   {
     id: 'flesh_gardens_thorny_path',

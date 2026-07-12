@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  getStyleSuitabilityBias,
-  getStyleMatchupMods,
-} from '@/engine/ai/matchup/styleMatcher';
+import { getStyleSuitabilityBias, getStyleMatchupMods } from '@/engine/ai/matchup/styleMatcher';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('styleMatcher', () => {

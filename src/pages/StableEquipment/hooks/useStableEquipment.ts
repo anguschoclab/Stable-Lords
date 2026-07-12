@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
-import { filterActive } from '@/utils/roster';
 import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
 import { toast } from 'sonner';
 
@@ -13,7 +12,7 @@ export function useStableEquipment() {
   const { roster, updateWarriorEquipment } = useGameStore(
     useShallow((s) => ({ roster: s.roster, updateWarriorEquipment: s.updateWarriorEquipment }))
   );
-  const activeWarriors = filterActive(roster);
+  const activeWarriors = roster.filter((w) => w.status === 'Active');
 
   const [selectedStyle, setSelectedStyle] = useState<FightingStyle>(
     activeWarriors[0]?.style ?? FightingStyle.StrikingAttack

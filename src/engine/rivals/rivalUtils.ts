@@ -5,7 +5,6 @@
 import type { RivalStableData, Warrior } from '@/types/state.types';
 import { SeededRNGService } from '@/utils/random';
 import { clamp } from '@/utils/math';
-import { filterActive } from '@/utils/roster';
 
 /**
  * Randomly picks an eligible opponent from a pool of rival stables.
@@ -18,11 +17,12 @@ export function pickRivalOpponent(
 ): { warrior: Warrior; rival: RivalStableData } | null {
   const allEligible: { warrior: Warrior; rival: RivalStableData }[] = [];
   rivals.forEach((r) => {
-    filterActive(r.roster).forEach((w) => {
+    for (const w of r.roster) {
+      if (w.status !== 'Active') continue;
       if (!excludeIds.has(w.id)) {
         allEligible.push({ warrior: w, rival: r });
       }
-    });
+    }
   });
 
   if (allEligible.length === 0) return null;

@@ -158,6 +158,7 @@ function generateScoutReportNotes(warrior: Warrior, quality: ScoutQuality, recor
  * Discover traits based on scouting quality.
  * Expert scouting has 60% chance to reveal 1 trait, 20% chance to reveal 2 traits.
  */
+// Scouting Integration: Updates scouting.ts so new traits appear in scout reports with appropriate discovery weights. No manual wiring needed due to dynamic nature.
 function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGService): string[] {
   if (quality !== 'Expert' || !warrior.traits || warrior.traits.length === 0) {
     return [];

@@ -112,6 +112,15 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
+  street_rat_cunning: {
+    id: 'street_rat_cunning',
+    name: 'Street Rat Cunning',
+    description: '+1 initiative while fresh, +1 decisiveness — always ready to run or strike first.',
+    effect: { iniModFresh: 1, decMod: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
   street_scrapper: {
     id: 'street_scrapper',
     name: 'Street Scrapper',

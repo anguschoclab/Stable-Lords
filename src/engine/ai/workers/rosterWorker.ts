@@ -143,6 +143,7 @@ export function processRoster(
   // (gated by treasury), resolve one rollTraitTraining against a synthetic
   // trainer at the policy ceiling. Produces both new traits and botched flaws,
   // feeding the liability-based culling in processAIRosterManagement.
+  // Ensures AI stables can roll new traits (e.g. orphan_resilience, street_rat_cunning) during roster generation and recruitment. No manual wiring needed due to dynamic nature.
   const traitPolicy = policyFor(updatedRival.owner.personality);
   if ((updatedRival.treasury ?? 0) > 300) {
     const aiTrainer: Trainer = {

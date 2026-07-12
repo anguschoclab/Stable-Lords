@@ -102,6 +102,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  asylum_born: {
+    id: 'asylum_born',
+    name: 'Asylum Born',
+    description: '+1 defense when at low HP — accustomed to surviving desperate situations.',
+    effect: { defModLowHp: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  street_scrapper: {
+    id: 'street_scrapper',
+    name: 'Street Scrapper',
+    description: '+1 defense in LATE phase — they excel when things get dirty.',
+    effect: { defModLate: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
   gutter_blood: {
     id: 'gutter_blood',
     name: 'Gutter Blood',

@@ -447,6 +447,20 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative: 'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',
   },
   {
+    id: 'charnel_pits_plague_surge',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Plague Surge',
+    narrative: 'In 992, during a bout between two rival houses, a subterranean pipe burst and flooded the arena with toxic waste. The fighters ignored the danger, continuing the battle until both succumbed to the fumes.',
+  },
+  {
+    id: 'lantern_hall_the_blind_champ',
+    arenaId: 'lantern_hall_arena',
+    type: 'famous_death',
+    title: 'The Blind Champion',
+    narrative: 'A famous warrior known for fighting blindfolded was finally bested here when their opponent shattered a glass lantern, using the cacophony to mask their fatal strike.',
+  },
+  {
     id: 'walled_court_hidden_grates',
     arenaId: 'walled_court_arena',
     type: 'architectural_quirk',

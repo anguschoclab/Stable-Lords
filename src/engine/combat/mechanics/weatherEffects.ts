@@ -15,10 +15,10 @@ export interface WeatherEffect {
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
   'Eldritch Eclipse': {
-    staminaMult: 0.9,
-    initiativeMod: 4,
-    riposteMod: 4,
-    damageMult: 1.4,
+    staminaMult: 0.95,
+    initiativeMod: 2,
+    riposteMod: 2,
+    damageMult: 1.2,
     description: 'An otherworldly eclipse that drives fighters to the brink of madness.',
   },
 

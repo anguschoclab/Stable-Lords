@@ -94,4 +94,76 @@ describe('Arena lore integrity', () => {
     expect(executioner!.title).toBeTruthy();
     expect(executioner!.narrative.length).toBeGreaterThan(20);
   });
+
+  it('charnel_pits_plague_surge IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('charnel_pits_plague_surge');
+  });
+
+  it('charnel_pits_plague_surge references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'charnel_pits_plague_surge');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('charnel_pits');
+  });
+
+  it('lantern_hall_the_blind_champ IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('lantern_hall_the_blind_champ');
+  });
+
+  it('lantern_hall_the_blind_champ references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'lantern_hall_the_blind_champ');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('lantern_hall_arena');
+  });
+
+  it('mudpit_arena_drowning IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('mudpit_arena_drowning');
+  });
+
+  it('mudpit_arena_drowning references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'mudpit_arena_drowning');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('mudpit_arena');
+  });
+
+  it('blood_pit_the_iron_rebellion IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('blood_pit_the_iron_rebellion');
+  });
+
+  it('blood_pit_the_iron_rebellion references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'blood_pit_the_iron_rebellion');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('gutter_pit');
+  });
+
+  it('shattered_coliseum_falling_statue IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('shattered_coliseum_falling_statue');
+  });
+
+  it('shattered_coliseum_falling_statue references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'shattered_coliseum_falling_statue');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('sundered_coliseum');
+  });
+
+  it('all 5 new lore entries have valid type, title, and narrative', () => {
+    const newIds = [
+      'charnel_pits_plague_surge',
+      'lantern_hall_the_blind_champ',
+      'mudpit_arena_drowning',
+      'blood_pit_the_iron_rebellion',
+      'shattered_coliseum_falling_statue',
+    ];
+    for (const id of newIds) {
+      const entry = ARENA_LORE.find((e) => e.id === id);
+      expect(entry, `missing lore entry: ${id}`).toBeDefined();
+      expect(entry!.type).toBeTruthy();
+      expect(entry!.title).toBeTruthy();
+      expect(entry!.narrative.length).toBeGreaterThan(20);
+    }
+  });
 });

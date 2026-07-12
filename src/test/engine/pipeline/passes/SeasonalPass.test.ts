@@ -945,4 +945,73 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems).toBeDefined();
     expect(impact.newsletterItems!.length).toBe(1);
   });
+
+  // ─── Midnight Market (PR #689) ──────────────────────────────────────────────
+
+  it('should trigger the midnight_market offseason event, deducting gold, awarding XP, and adding a Tactic insight token', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('midnight_market') +
+            0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-market' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'MarketGoer', status: 'Active' } as any],
+      newsletter: [],
+      treasury: 1000,
+    };
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+    expect(impact.treasuryDelta).toBe(-40);
+    const updates = impact.rosterUpdates?.get(warriorId);
+    expect(updates?.xp).toBe(20);
+    expect(impact.insightTokens?.length).toBe(1);
+    expect(impact.insightTokens![0]!.type).toBe('Tactic');
+    expect(impact.insightTokens![0]!.origin).toBe('Midnight Market');
+    expect(impact.newsletterItems?.[0]?.title).toBe('The Midnight Market');
+  });
+
+  // ─── Moonlight Duel (PR #687) ───────────────────────────────────────────────
+
+  it('should trigger the moonlight_duel offseason event, awarding gold and adding a ledger entry and newsletter', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('moonlight_duel') +
+            0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-duel' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Duelist', status: 'Active' } as any],
+      newsletter: [],
+      treasury: 1000,
+    };
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+    expect(impact.treasuryDelta).toBeGreaterThanOrEqual(150);
+    expect(impact.treasuryDelta).toBeLessThanOrEqual(300);
+    expect(impact.ledgerEntries).toBeDefined();
+    expect(impact.ledgerEntries!.length).toBeGreaterThanOrEqual(1);
+    expect(impact.newsletterItems).toBeDefined();
+    expect(impact.newsletterItems!.length).toBeGreaterThanOrEqual(1);
+    const newsletterTitle = impact.newsletterItems?.[0]?.title;
+    expect(newsletterTitle).toContain('Moonlight');
+  });
 });

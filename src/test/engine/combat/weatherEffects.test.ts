@@ -117,6 +117,8 @@ describe('weatherEffects', () => {
         'Whispering Winds',
         'Crimson Snow',
         'Glittering Frost',
+        'Eldritch Eclipse',
+        'Moonlight Duel',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -265,6 +267,8 @@ describe('weatherEffects', () => {
         'Whispering Winds',
         'Crimson Snow',
         'Glittering Frost',
+        'Eldritch Eclipse',
+        'Moonlight Duel',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);
@@ -281,6 +285,40 @@ describe('weatherEffects', () => {
 
     it('returns descriptive string for Chaos Squall', () => {
       const line = weatherOpeningLine('Chaos Squall' as WeatherType);
+      expect(line).not.toBeNull();
+      expect(typeof line).toBe('string');
+      expect(line!.length).toBeGreaterThan(0);
+    });
+
+    it('returns Eldritch Eclipse effect with toned-down values', () => {
+      const effect = getWeatherEffect('Eldritch Eclipse' as WeatherType);
+      expect(effect.staminaMult).toBe(0.95);
+      expect(effect.initiativeMod).toBe(2);
+      expect(effect.riposteMod).toBe(2);
+      expect(effect.damageMult).toBe(1.2);
+      expect(typeof effect.description).toBe('string');
+      expect(effect.description.length).toBeGreaterThan(0);
+    });
+
+    it('returns Moonlight Duel effect with correct values', () => {
+      const effect = getWeatherEffect('Moonlight Duel' as WeatherType);
+      expect(effect.staminaMult).toBe(1.1);
+      expect(effect.initiativeMod).toBe(1);
+      expect(effect.riposteMod).toBe(0);
+      expect(effect.damageMult).toBe(1.0);
+      expect(typeof effect.description).toBe('string');
+      expect(effect.description.length).toBeGreaterThan(0);
+    });
+
+    it('returns descriptive string for Eldritch Eclipse opening line', () => {
+      const line = weatherOpeningLine('Eldritch Eclipse' as WeatherType);
+      expect(line).not.toBeNull();
+      expect(typeof line).toBe('string');
+      expect(line!.length).toBeGreaterThan(0);
+    });
+
+    it('returns descriptive string for Moonlight Duel opening line', () => {
+      const line = weatherOpeningLine('Moonlight Duel' as WeatherType);
       expect(line).not.toBeNull();
       expect(typeof line).toBe('string');
       expect(line!.length).toBeGreaterThan(0);

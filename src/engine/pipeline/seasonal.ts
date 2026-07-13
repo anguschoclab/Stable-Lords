@@ -48,6 +48,7 @@ interface OffseasonEventNarrative {
     | 'underground_pit_fight'
     | 'rogue_alchemist'
     | 'tavern_brawl_surprise'
+    | 'chaos_spores'
     | 'dreamweaver_visit'
     | 'abyssal_bargain'
     | 'goblin_raid'
@@ -1304,6 +1305,37 @@ function handleMidnightMarket(
   }
 }
 
+function handleChaosSpores(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20 + Math.floor(rng.next() * 11);
+
+      const currentTraits = chosen.traits || [];
+      const newTraits = currentTraits.includes('spore_kissed')
+        ? currentTraits
+        : [...currentTraits, 'spore_kissed'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        traits: newTraits
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}
+
 function handleMoonlightDuel(
   state: GameState,
   nextWeek: number,
@@ -1380,6 +1412,7 @@ const EVENT_HANDLERS: Record<
   loyal_stray_dog: handleLoyalStrayDog,
   midnight_market: handleMidnightMarket,
   moonlight_duel: handleMoonlightDuel,
+  chaos_spores: handleChaosSpores,
 };
 
 /**

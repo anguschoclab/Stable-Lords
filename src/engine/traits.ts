@@ -103,6 +103,15 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  spore_kissed: {
+    id: 'spore_kissed',
+    name: 'Spore Kissed',
+    description: 'Inhaled chaos spores. Improved endurance and decisiveness.',
+    effect: { enduranceMult: 1.15, decMod: 1 },
+    tier: 'Signature',
+    sign: 'positive',
+    weight: 0.2,
+  },
   asylum_born: {
     id: 'asylum_born',
     name: 'Asylum Born',

@@ -209,7 +209,7 @@ describe('useDigestSummary', () => {
             boutWeek: 11,
             warriorIds: ['wc' as WarriorId],
           }),
-          'offer-3': makeOffer({
+          ['offer-3' as any]: makeOffer({
             status: 'Proposed',
             boutWeek: 9,
             warriorIds: ['wa' as WarriorId],

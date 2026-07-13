@@ -98,7 +98,7 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
       week: 5,
       weather: 'Rainy',
       boutOffers: {
-        'offer-1': makeOffer({
+        ['offer-1' as any]: makeOffer({
           warriorIds: [warrior.id, opponent.id],
           responses: { [warrior.id]: 'Pending', [opponent.id]: 'Pending' },
         }),
@@ -118,7 +118,7 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
 
     // verifyBoutAcceptance should have caused the LungingAttack warrior's offer
     // to be declined in Rainy weather (weather skepticism)
-    const offer = result.boutOffers?.['offer-1'];
+    const offer = result.boutOffers?.['offer-1' as BoutOfferId];
     expect(offer).toBeDefined();
     expect(offer!.responses[warrior.id]).toBe('Declined');
   });

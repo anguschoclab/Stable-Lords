@@ -671,7 +671,7 @@ describe('PromoterPass', () => {
       const result = runPromoterPass(state);
 
       // Signed offer should be preserved
-      const preservedOffer = result.boutOffers?.['signed_test'];
+      const preservedOffer = result.boutOffers?.['signed_test' as BoutOfferId];
       expect(preservedOffer).toBeDefined();
       if (preservedOffer) {
         expect(preservedOffer.status).toBe('Signed');

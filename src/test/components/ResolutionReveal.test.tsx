@@ -70,17 +70,13 @@ let useTestStore: any;
 // Mock useGameStore to use our test store
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: any) => {
-    // Simulate shallow selector behavior in tests
-    if (selector && selector.name === 'useShallow') {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useTestStore ? useTestStore((s: any) => selector(s)) : undefined;
-    }
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTestStore
-      ? typeof selector === 'function'
-        ? useTestStore(selector)
-        : useTestStore()
-      : undefined;
+    const storeState = useTestStore ? useTestStore() : undefined;
+    if (!storeState) return undefined;
+    if (selector && selector.name === 'useShallow') {
+      return selector(storeState);
+    }
+    return typeof selector === 'function' ? selector(storeState) : storeState;
   },
   useWorldState: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks

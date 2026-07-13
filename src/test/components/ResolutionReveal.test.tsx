@@ -68,25 +68,28 @@ vi.mock('@/components/ui/badge', () => ({
 let useTestStore: any;
 
 // Mock useGameStore to use our test store
-vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: any) => {
-    // Simulate shallow selector behavior in tests
-    if (selector && selector.name === 'useShallow') {
+vi.mock('@/state/useGameStore', () => {
+  return {
+    useGameStore: (selector?: any) => {
+      // Simulate shallow selector behavior in tests
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useTestStore ? useTestStore((s: any) => selector(s)) : undefined;
-    }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTestStore
-      ? typeof selector === 'function'
-        ? useTestStore(selector)
-        : useTestStore()
-      : undefined;
-  },
-  useWorldState: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTestStore ? useTestStore() : {};
-  },
-}));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const storeRes = useTestStore();
+      if (selector && selector.name === 'useShallow') {
+        return selector(storeRes);
+      }
+      if (typeof selector === 'function') {
+        return selector(storeRes);
+      }
+      return storeRes;
+    },
+    useWorldState: () => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      return useTestStore();
+    },
+  };
+});
 
 interface TestStore {
   arenaHistory: any[];

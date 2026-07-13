@@ -199,17 +199,17 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({
+          ['offer-1' as BoutOfferId]: makeOffer({
             status: 'Proposed',
             boutWeek: 10,
             warriorIds: ['wa' as WarriorId],
           }),
-          'offer-2': makeOffer({
+          ['offer-2' as BoutOfferId]: makeOffer({
             status: 'Proposed',
             boutWeek: 11,
             warriorIds: ['wc' as WarriorId],
           }),
-          'offer-3': makeOffer({
+          ['offer-3' as BoutOfferId]: makeOffer({
             status: 'Proposed',
             boutWeek: 9,
             warriorIds: ['wa' as WarriorId],
@@ -229,7 +229,7 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Proposed', boutWeek: 9 }),
+          ['offer-1' as BoutOfferId]: makeOffer({ status: 'Proposed', boutWeek: 9 }),
         },
         currentWeek,
         playerWarriorIds,
@@ -243,7 +243,7 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Signed', boutWeek: 10, warriorIds: ['wa' as WarriorId] }),
+          ['offer-1' as BoutOfferId]: makeOffer({ status: 'Signed', boutWeek: 10, warriorIds: ['wa' as WarriorId] }),
         },
         currentWeek,
         playerWarriorIds,
@@ -258,8 +258,8 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Signed', boutWeek: 12, warriorIds: ['wa' as WarriorId] }),
-          'offer-2': makeOffer({ status: 'Signed', boutWeek: 15, warriorIds: ['wa' as WarriorId] }),
+          ['offer-1' as BoutOfferId]: makeOffer({ status: 'Signed', boutWeek: 12, warriorIds: ['wa' as WarriorId] }),
+          ['offer-2' as BoutOfferId]: makeOffer({ status: 'Signed', boutWeek: 15, warriorIds: ['wa' as WarriorId] }),
         },
         currentWeek,
         playerWarriorIds,
@@ -274,9 +274,9 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          r: makeOffer({ status: 'Rejected' }),
-          c: makeOffer({ status: 'Canceled' }),
-          e: makeOffer({ status: 'Expired' }),
+          ['r' as BoutOfferId]: makeOffer({ status: 'Rejected' }),
+          ['c' as BoutOfferId]: makeOffer({ status: 'Canceled' }),
+          ['e' as BoutOfferId]: makeOffer({ status: 'Expired' }),
         },
         currentWeek,
         playerWarriorIds,
@@ -291,7 +291,7 @@ describe('useDigestSummary', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [makeFight()],
-        boutOffers: { o1: makeOffer() },
+        boutOffers: { ['o1' as BoutOfferId]: makeOffer() },
         currentWeek,
         playerWarriorIds,
       })
@@ -355,7 +355,7 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Signed', boutWeek: 9 }),
+          ['offer-1' as BoutOfferId]: makeOffer({ status: 'Signed', boutWeek: 9 }),
         },
         currentWeek,
         playerWarriorIds,

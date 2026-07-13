@@ -1,0 +1,38 @@
+[
+  {
+    "path": "pbp.attacks.bashing[15]",
+    "text": "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!"
+  },
+  {
+    "path": "pbp.hit_locations.abdomen[0]",
+    "text": "SOLAR PLEXUS"
+  },
+  {
+    "path": "pbp.status_changes.panic[X]",
+    "text": "{{name}} begins to panic and fights desperately!"
+  },
+  {
+    "path": "pbp.status_changes.panic[X]",
+    "text": "{{name}} fights with the cunning of desperation!"
+  },
+  {
+    "path": "pbp.status_changes.panic[X]",
+    "text": "{{name}} is becoming frantic!!!"
+  },
+  {
+    "path": "pbp.status_changes.panic[X]",
+    "text": "{{name}} appears DESPERATE!"
+  },
+  {
+    "path": "pbp.defenses.dodge.tier3_high[X]",
+    "text": "{{defender}} twists and narrowly pulls away from the path of the attack!"
+  },
+  {
+    "path": "pbp.defenses.dodge.tier3_high[X]",
+    "text": "{{defender}} curves snakelike away from the blow at the last instant!"
+  },
+  {
+    "path": "pbp.context.fame_great[6]",
+    "text": "The crowd chants {{name}}'s name in unison!"
+  }
+]

@@ -6,7 +6,8 @@ import {
   getChargeDescription,
   getCrestDescription,
 } from './crestGenerator';
-import type { CrestData } from '@/types/crest.types';
+import { CREST_COLORS } from '@/types/crest.types';
+import type { CrestData, CrestColorKey } from '@/types/crest.types';
 
 describe('crestGenerator', () => {
   describe('generateCrest', () => {
@@ -180,10 +181,68 @@ describe('crestGenerator', () => {
   });
 
   describe('getCrestColor', () => {
-    it('should return color hex for valid color keys', () => {
+    it('2.1 — all CREST_COLORS keys return correct hex', () => {
+      for (const [key, hex] of Object.entries(CREST_COLORS)) {
+        expect(getCrestColor(key as CrestColorKey)).toBe(hex);
+      }
+    });
+
+    it('2.2 — every returned value is a valid 6-digit hex string', () => {
+      for (const key of Object.keys(CREST_COLORS)) {
+        const result = getCrestColor(key as CrestColorKey);
+        expect(result).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      }
+    });
+
+    it('2.3 — spot-check representative colors from each color group', () => {
+      // Gules (reds)
       expect(getCrestColor('crimson')).toBe('#8B2323');
-      expect(getCrestColor('gold')).toBe('#D4AF37');
+      expect(getCrestColor('brick')).toBe('#A52A2A');
+      expect(getCrestColor('maroon')).toBe('#800000');
+      // Azure (blues)
+      expect(getCrestColor('royal')).toBe('#1E3A5F');
       expect(getCrestColor('navy')).toBe('#2C3E50');
+      // Vert (greens)
+      expect(getCrestColor('forest')).toBe('#228B22');
+      expect(getCrestColor('emerald')).toBe('#2E8B57');
+      // Purpure (purples)
+      expect(getCrestColor('royalPurple')).toBe('#4A0E4E');
+      expect(getCrestColor('wine')).toBe('#722F37');
+      // Sable (blacks/darks)
+      expect(getCrestColor('sable')).toBe('#1A1A1A');
+      expect(getCrestColor('charcoal')).toBe('#36454F');
+      // Metals
+      expect(getCrestColor('gold')).toBe('#D4AF37');
+      expect(getCrestColor('silver')).toBe('#C0C0C0');
+      // Or (yellows/golds)
+      expect(getCrestColor('ochre')).toBe('#CC7722');
+      expect(getCrestColor('amber')).toBe('#FFBF00');
+      // Argent (whites/silvers)
+      expect(getCrestColor('pearl')).toBe('#E8E8E8');
+      expect(getCrestColor('platinum')).toBe('#E5E4E2');
+      // Tenné (oranges/browns)
+      expect(getCrestColor('rust')).toBe('#8B4513');
+      expect(getCrestColor('bronze')).toBe('#CD7F32');
+      // Accent
+      expect(getCrestColor('blood')).toBe('#8A0303');
+      expect(getCrestColor('midnight')).toBe('#191970');
+      expect(getCrestColor('moss')).toBe('#4A5D23');
+    });
+
+    it('2.4 — invalid key returns undefined (no fallback)', () => {
+      expect(getCrestColor('nonexistent' as CrestColorKey)).toBeUndefined();
+      expect(getCrestColor('' as CrestColorKey)).toBeUndefined();
+    });
+
+    it('2.5 — function is a pure passthrough', () => {
+      expect(getCrestColor('gold')).toBe(CREST_COLORS.gold);
+    });
+
+    it('2.6 — all hex values are unique', () => {
+      const values = Object.keys(CREST_COLORS).map((key) =>
+        getCrestColor(key as CrestColorKey)
+      );
+      expect(new Set(values).size).toBe(values.length);
     });
   });
 

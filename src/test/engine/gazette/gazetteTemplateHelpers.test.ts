@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { t } from '@/engine/gazette/gazetteTemplateHelpers';
+import { t, styleName } from '@/engine/gazette/gazetteTemplateHelpers';
+import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 
 describe('gazetteTemplateHelpers — t()', () => {
   it('substitutes simple string values', () => {
@@ -76,5 +77,38 @@ describe('gazetteTemplateHelpers — t()', () => {
   it('escapes values in array templates too', () => {
     const result = t(['{{name}} wins'], { name: '<script>x</script>' });
     expect(result).toBe('&lt;script&gt;x&lt;/script&gt; wins');
+  });
+});
+
+describe('styleName', () => {
+  it('maps all 10 fighting styles to their display names', () => {
+    const styles = Object.values(FightingStyle);
+    for (const style of styles) {
+      expect(styleName(style)).toBe(STYLE_DISPLAY_NAMES[style]);
+    }
+    expect(styles).toHaveLength(10);
+  });
+
+  it('accepts raw enum string values (not just enum references)', () => {
+    expect(styleName('AIMED BLOW')).toBe('Aimed-Blow');
+    expect(styleName('BASHING ATTACK')).toBe('Basher');
+    expect(styleName('WALL OF STEEL')).toBe('Wall of Steel');
+  });
+
+  it('returns unknown style unchanged', () => {
+    expect(styleName('Unknown Style')).toBe('Unknown Style');
+  });
+
+  it('returns empty string for empty input', () => {
+    expect(styleName('')).toBe('');
+  });
+
+  it('is case-sensitive — lowercase does not match', () => {
+    expect(styleName('aimed blow')).toBe('aimed blow');
+    expect(styleName('aimed blow')).not.toBe('Aimed-Blow');
+  });
+
+  it('passes through numeric-looking strings unchanged', () => {
+    expect(styleName('123')).toBe('123');
   });
 });

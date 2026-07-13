@@ -5,7 +5,7 @@ import type { WarriorId, PromoterId, BoutOfferId } from '@/types/shared.types';
 
 function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
   return {
-    id: 'offer-default' as BoutOfferId,
+    id: 'offer-default' as any,
     promoterId: 'promoter-default' as PromoterId,
     warriorIds: [] as WarriorId[],
     boutWeek: 10,
@@ -63,7 +63,7 @@ describe('filterAndSortOffers', () => {
   it('includes offers involving player warriors', () => {
     const w1 = makeWarrior({ id: 'w1' as WarriorId });
     const offer = makeOffer({
-      id: 'o1' as BoutOfferId,
+      id: 'o1' as any,
       warriorIds: ['w1' as WarriorId, 'w2' as WarriorId],
       status: 'Proposed',
       boutWeek: 3,
@@ -76,7 +76,7 @@ describe('filterAndSortOffers', () => {
   it('excludes offers that only involve rival warriors', () => {
     const w1 = makeWarrior({ id: 'w1' as WarriorId });
     const offer = makeOffer({
-      id: 'o1' as BoutOfferId,
+      id: 'o1' as any,
       warriorIds: ['w2' as WarriorId, 'w3' as WarriorId],
       status: 'Proposed',
       boutWeek: 3,
@@ -91,35 +91,35 @@ describe('filterAndSortOffers', () => {
     const roster = [w1];
     const offers: Record<string, BoutOffer> = {
       proposed: makeOffer({
-        id: 'proposed' as BoutOfferId,
+        id: 'proposed' as any,
         promoterId: 'p1' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       signed: makeOffer({
-        id: 'signed' as BoutOfferId,
+        id: 'signed' as any,
         promoterId: 'p2' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Signed',
       }),
       rejected: makeOffer({
-        id: 'rejected' as BoutOfferId,
+        id: 'rejected' as any,
         promoterId: 'p3' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Rejected',
       }),
       expired: makeOffer({
-        id: 'expired' as BoutOfferId,
+        id: 'expired' as any,
         promoterId: 'p4' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Expired',
       }),
       canceled: makeOffer({
-        id: 'canceled' as BoutOfferId,
+        id: 'canceled' as any,
         promoterId: 'p5' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
@@ -141,13 +141,13 @@ describe('filterAndSortOffers', () => {
     const roster = [w1, w2];
     const offers: Record<string, BoutOffer> = {
       o1: makeOffer({
-        id: 'o1' as BoutOfferId,
+        id: 'o1' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       o2: makeOffer({
-        id: 'o2' as BoutOfferId,
+        id: 'o2' as any,
         warriorIds: ['w2' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
@@ -163,19 +163,19 @@ describe('filterAndSortOffers', () => {
     const roster = [w1];
     const offers: Record<string, BoutOffer> = {
       thisWeek: makeOffer({
-        id: 'thisWeek' as BoutOfferId,
+        id: 'thisWeek' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 5,
         status: 'Proposed',
       }),
       upcoming: makeOffer({
-        id: 'upcoming' as BoutOfferId,
+        id: 'upcoming' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 7,
         status: 'Proposed',
       }),
       past: makeOffer({
-        id: 'past' as BoutOfferId,
+        id: 'past' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 4,
         status: 'Proposed',
@@ -195,7 +195,7 @@ describe('filterAndSortOffers', () => {
     const pid = 'promoter1' as PromoterId;
     const offers: Record<string, BoutOffer> = {
       low: makeOffer({
-        id: 'low' as BoutOfferId,
+        id: 'low' as any,
         promoterId: pid,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
@@ -204,7 +204,7 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
       high: makeOffer({
-        id: 'high' as BoutOfferId,
+        id: 'high' as any,
         promoterId: pid,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
@@ -229,28 +229,28 @@ describe('filterAndSortOffers', () => {
     };
     const offers: Record<string, BoutOffer> = {
       local: makeOffer({
-        id: 'local' as BoutOfferId,
+        id: 'local' as any,
         promoterId: 'pLocal' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       regional: makeOffer({
-        id: 'regional' as BoutOfferId,
+        id: 'regional' as any,
         promoterId: 'pRegional' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       national: makeOffer({
-        id: 'national' as BoutOfferId,
+        id: 'national' as any,
         promoterId: 'pNational' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       legendary: makeOffer({
-        id: 'legendary' as BoutOfferId,
+        id: 'legendary' as any,
         promoterId: 'pLegendary' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
@@ -267,21 +267,21 @@ describe('filterAndSortOffers', () => {
     const roster = [w1];
     const offers: Record<string, BoutOffer> = {
       late: makeOffer({
-        id: 'late' as BoutOfferId,
+        id: 'late' as any,
         promoterId: 'p1' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 10,
         status: 'Proposed',
       }),
       mid: makeOffer({
-        id: 'mid' as BoutOfferId,
+        id: 'mid' as any,
         promoterId: 'p2' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 8,
         status: 'Proposed',
       }),
       early: makeOffer({
-        id: 'early' as BoutOfferId,
+        id: 'early' as any,
         promoterId: 'p3' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 6,
@@ -299,7 +299,7 @@ describe('filterAndSortOffers', () => {
     const roster = [w1, w2];
     const offers: Record<string, BoutOffer> = {
       o1: makeOffer({
-        id: 'o1' as BoutOfferId,
+        id: 'o1' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
@@ -324,14 +324,14 @@ describe('filterAndSortOffers', () => {
     const roster = [w1];
     const offers: Record<string, BoutOffer> = {
       low: makeOffer({
-        id: 'low' as BoutOfferId,
+        id: 'low' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         purse: 100,
         status: 'Proposed',
       }),
       high: makeOffer({
-        id: 'high' as BoutOfferId,
+        id: 'high' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 5,
         purse: 500,
@@ -350,14 +350,14 @@ describe('filterAndSortOffers', () => {
     };
     const offers: Record<string, BoutOffer> = {
       known: makeOffer({
-        id: 'known' as BoutOfferId,
+        id: 'known' as any,
         promoterId: 'p1' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       unknown: makeOffer({
-        id: 'unknown' as BoutOfferId,
+        id: 'unknown' as any,
         promoterId: 'ghost' as PromoterId,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
@@ -375,13 +375,13 @@ describe('filterAndSortOffers', () => {
     const roster = [w1];
     const offers: Record<string, BoutOffer> = {
       pending: makeOffer({
-        id: 'pending' as BoutOfferId,
+        id: 'pending' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       stale: makeOffer({
-        id: 'stale' as BoutOfferId,
+        id: 'stale' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
@@ -401,13 +401,13 @@ describe('filterAndSortOffers', () => {
     const offers: Record<string, BoutOffer> = {
       // w1 is in this-week offer, w2 is only in an upcoming offer
       thisWeek: makeOffer({
-        id: 'thisWeek' as BoutOfferId,
+        id: 'thisWeek' as any,
         warriorIds: ['w1' as WarriorId],
         boutWeek: 3,
         status: 'Proposed',
       }),
       upcoming: makeOffer({
-        id: 'upcoming' as BoutOfferId,
+        id: 'upcoming' as any,
         warriorIds: ['w2' as WarriorId],
         boutWeek: 10,
         status: 'Proposed',

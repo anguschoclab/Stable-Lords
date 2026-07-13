@@ -27,7 +27,7 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
   const responses = overrides.responses ?? { wa: 'Pending' };
 
   return {
-    id: 'offer-1' as BoutOfferId,
+    id: 'offer-1' as any,
     promoterId: 'promoter-1' as PromoterId,
     warriorIds,
     boutWeek: 10,
@@ -204,7 +204,7 @@ describe('useDigestSummary', () => {
             boutWeek: 10,
             warriorIds: ['wa' as WarriorId],
           }),
-          'offer-2': makeOffer({
+          ['offer-2' as any]: makeOffer({
             status: 'Proposed',
             boutWeek: 11,
             warriorIds: ['wc' as WarriorId],
@@ -259,7 +259,7 @@ describe('useDigestSummary', () => {
         arenaHistory: [],
         boutOffers: {
           ['offer-1' as any]: makeOffer({ status: 'Signed', boutWeek: 12, warriorIds: ['wa' as WarriorId] }),
-          'offer-2': makeOffer({ status: 'Signed', boutWeek: 15, warriorIds: ['wa' as WarriorId] }),
+          ['offer-2' as any]: makeOffer({ status: 'Signed', boutWeek: 15, warriorIds: ['wa' as WarriorId] }),
         },
         currentWeek,
         playerWarriorIds,

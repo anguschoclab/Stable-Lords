@@ -103,6 +103,16 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  cornered_rat: {
+    id: 'cornered_rat',
+    name: 'Cornered Rat',
+    description: '+1 attack and +1 defense in LATE phase — extremely dangerous when backed into a corner.',
+    effect: { attModLate: 1, defModLate: 1 },
+    weight: 0.6,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+
   asylum_born: {
     id: 'asylum_born',
     name: 'Asylum Born',

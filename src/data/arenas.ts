@@ -444,6 +444,23 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_orphan_riot',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Orphan Riot',
+    narrative:
+      'In a desperate bid for freedom, a group of young inductees rushed the guards during a training exercise. The sand was stained for weeks, a grim reminder that raw desperation cannot overcome disciplined steel.',
+  },
+  {
+    id: 'charnel_pits_widows_wail',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: "The Widow's Wail",
+    narrative:
+      'A specific arrangement of jagged stones near the eastern gate causes the wind to mimic a sorrowful weeping. Fighters often hesitate when passing it, unnerved by the ghostly chorus.',
+  },
+
+  {
     id: 'mudpit_arena_drowning',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

@@ -12,12 +12,12 @@ const VALID_VARIABLES = ['%A', '%D', '%W', '%BP', '%H'];
  * Strict Zod Schema for Narrative Templates.
  * Enforces allowed variables using .refine().
  */
-const templateStringSchema = z.string().refine(
+export const templateStringSchema = z.string().refine(
   (str) => {
     const foundVars = str.match(/%\w+/g) || [];
     return foundVars.every((v) => VALID_VARIABLES.includes(v));
   },
-  { message: 'String contains unauthorized % variables. Only %A, %D, %W, %BP are allowed.' }
+  { message: 'String contains unauthorized % variables. Only %A, %D, %W, %BP, %H are allowed.' }
 );
 
 const CategorySchema = z.object({
@@ -60,21 +60,21 @@ export const NarrativeSchema = z.object({
 
 type ValidatedJSON = z.infer<typeof NarrativeSchema>;
 
-// Initialize Gemini
-if (!process.env.GEMINI_API_KEY) {
-  console.error('GEMINI_API_KEY environment variable is required.');
-  process.exit(1);
+export const DRY_RUN = process.env.DRY_RUN === 'true';
+
+let model: ReturnType<GoogleGenerativeAI['getGenerativeModel']> | null = null;
+if (!DRY_RUN && process.env.GEMINI_API_KEY) {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  model = genAI.getGenerativeModel({
+    model: 'gemini-3-flash',
+    generationConfig: { responseMimeType: 'application/json' },
+  });
 }
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({
-  model: 'gemini-3-flash',
-  generationConfig: { responseMimeType: 'application/json' },
-});
 
 /**
  * Traverses the JSON and identifies paths where variety is low.
  */
-function fetch_narrative_deficits(data: ValidatedJSON): string[] {
+export function fetch_narrative_deficits(data: ValidatedJSON): string[] {
   const deficits: string[] = [];
 
   for (const [type, severities] of Object.entries(data.strikes)) {
@@ -99,12 +99,15 @@ function fetch_narrative_deficits(data: ValidatedJSON): string[] {
     'passives',
     'conclusions',
     'insights',
+    'promoters',
     'media',
     'persona',
     'recruitment',
     'memorials',
     'fanfare',
     'meta',
+    'blurbs',
+    'commentary',
   ];
   for (const cat of extraCategories) {
     if (typeof data[cat] !== 'object' || data[cat] === null) continue;
@@ -120,13 +123,18 @@ function fetch_narrative_deficits(data: ValidatedJSON): string[] {
     }
   }
 
+  // Handle flat array categories (recap)
+  if (data.recap.length < 12) {
+    deficits.push('recap');
+  }
+
   return deficits;
 }
 
 /**
  * Calls Gemini 1.5 Flash to generate new templates for a specific deficit path.
  */
-async function request_bardic_inspiration(
+export async function request_bardic_inspiration(
   deficitPath: string,
   context: string = ''
 ): Promise<string> {
@@ -138,7 +146,6 @@ STRICT RULE: You MUST ONLY use the following variables:
 - %D: The Defender / Passive Subject
 - %W: The Weapon / Tool / Entity
 - %BP: The Body Part (e.g., "head", "left arm", "chest")
-- %S: The Stable / Team Name
 
 TIER DEFINITIONS:
 - Standard (glancing/solid): Practical, gritty, and dirt-covered.
@@ -150,7 +157,7 @@ TIER DEFINITIONS:
 Format your response as a JSON object with a single key "new_templates" which is an array of 5 unique strings.
 Context: You are writing for ${deficitPath}. ${context}`;
 
-  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'mock-key') {
+  if (!DRY_RUN && model) {
     try {
       const result = await model.generateContent(
         `${systemPrompt}\n\nGenerate 3 new templates for ${deficitPath}.`
@@ -176,7 +183,7 @@ Context: You are writing for ${deficitPath}. ${context}`;
 /**
  * The Agentic Loop: Validates LLM output and retries with errors if necessary.
  */
-async function validate_with_retry(deficitPath: string, retries = 3): Promise<string[] | null> {
+export async function validate_with_retry(deficitPath: string, retries = 3): Promise<string[] | null> {
   let errorContext = '';
   for (let i = 0; i < retries; i++) {
     const rawResponse = await request_bardic_inspiration(deficitPath, errorContext);
@@ -203,7 +210,7 @@ async function validate_with_retry(deficitPath: string, retries = 3): Promise<st
 /**
  * Atomic merge and write to the archive.
  */
-async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
+export async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
   const rawData = (await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString();
   const data: ValidatedJSON = JSON.parse(rawData);
 
@@ -241,7 +248,7 @@ async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
 /**
  * Global deduplication sweep for the entire archive.
  */
-function deduplicate_full_archive(data: ValidatedJSON) {
+export function deduplicate_full_archive(data: ValidatedJSON) {
   for (const severities of Object.values(data.strikes)) {
     for (const sev of Object.keys(severities)) {
       (severities as any)[sev] = [...new Set((severities as any)[sev])]; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -264,6 +271,8 @@ function deduplicate_full_archive(data: ValidatedJSON) {
     'fanfare',
     'meta',
     'promoters',
+    'blurbs',
+    'commentary',
   ];
   for (const cat of extraCategories) {
     if (!data[cat]) continue;
@@ -280,9 +289,19 @@ function deduplicate_full_archive(data: ValidatedJSON) {
       }
     }
   }
+
+  // Deduplicate flat array categories (recap)
+  if (data.recap) {
+    data.recap = [...new Set(data.recap)];
+  }
 }
 
 async function main() {
+  if (!DRY_RUN && !process.env.GEMINI_API_KEY) {
+    console.error('GEMINI_API_KEY environment variable is required.');
+    process.exit(1);
+  }
+
   console.log('📜 The Bard of the Blood Sands is waking up...');
 
   const rawData = (await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString();
@@ -316,9 +335,15 @@ async function main() {
   // 4. Final Full-Sweep Cleanup (ensures even static/legacy duplicates are purged)
   const freshData = JSON.parse((await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString());
   deduplicate_full_archive(freshData);
+  // Deduplicate flat array categories
+  if (freshData.recap) {
+    freshData.recap = [...new Set(freshData.recap)];
+  }
   await fs.writeFile(NARRATIVE_FILE, JSON.stringify(freshData, null, 2), 'utf-8');
 
   console.log('✅ Bardic duties complete.');
 }
 
-main().catch(console.error);
+if (!process.env.VITEST) {
+  main().catch(console.error);
+}

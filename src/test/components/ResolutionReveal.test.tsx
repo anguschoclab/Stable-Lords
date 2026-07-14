@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /**
  * ResolutionReveal — verifies narrowed useShallow selector prevents
  * re-renders when unrelated store state changes.

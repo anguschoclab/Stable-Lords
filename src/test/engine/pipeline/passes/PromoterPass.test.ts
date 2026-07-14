@@ -637,7 +637,7 @@ describe('PromoterPass', () => {
         responses: {},
       };
 
-      (state as any).boutOffers = { expired_test: expiredOffer };
+      (state as any).boutOffers = { ['expired_test' as BoutOfferId]: expiredOffer };
 
       const result = runPromoterPass(state);
 
@@ -666,7 +666,7 @@ describe('PromoterPass', () => {
         },
       };
 
-      (state as any).boutOffers = { signed_test: signedOffer };
+      (state as any).boutOffers = { ['signed_test' as BoutOfferId]: signedOffer };
 
       const result = runPromoterPass(state);
 

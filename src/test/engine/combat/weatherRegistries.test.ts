@@ -10,6 +10,14 @@ import type { WeatherType } from '@/types/shared.types';
 
 describe('weather registries — new weather types', () => {
   describe('WEATHER_CONFIG', () => {
+    it('Prismatic Rain exists with icon, colorClass, description', () => {
+      const config = WEATHER_CONFIG['Prismatic Rain' as WeatherType];
+      expect(config).toBeDefined();
+      expect(config!.icon).toBeDefined();
+      expect(config!.colorClass).toBeTruthy();
+      expect(config!.description.length).toBeGreaterThan(5);
+    });
+
     it('Eldritch Eclipse exists with icon, colorClass, description', () => {
       const config = WEATHER_CONFIG['Eldritch Eclipse' as WeatherType];
       expect(config).toBeDefined();
@@ -28,6 +36,12 @@ describe('weather registries — new weather types', () => {
   });
 
   describe('WEATHER_STATS (WeatherWidget)', () => {
+    it('Prismatic Rain stats string exists', async () => {
+      const mod = await import('@/components/widgets/WeatherWidget');
+      const stats = (mod as any).WEATHER_STATS?.['Prismatic Rain' as WeatherType];
+      expect(stats).toBeDefined();
+    });
+
     it('Eldritch Eclipse stats string matches toned-down values', async () => {
       const mod = await import('@/components/widgets/WeatherWidget');
       const stats = (mod as any).WEATHER_STATS?.['Eldritch Eclipse' as WeatherType];
@@ -44,6 +58,12 @@ describe('weather registries — new weather types', () => {
   });
 
   describe('WEATHER_AMBIENCE (WeatherAudio)', () => {
+    it('Prismatic Rain has ambience entry', async () => {
+      const mod = await import('@/components/arena/audio/WeatherAudio');
+      const ambience = (mod as any).WEATHER_AMBIENCE?.['Prismatic Rain' as WeatherType];
+      expect(ambience).toBeDefined();
+    });
+
     it('Eldritch Eclipse has ambience entry', async () => {
       const mod = await import('@/components/arena/audio/WeatherAudio');
       const ambience = (mod as any).WEATHER_AMBIENCE?.['Eldritch Eclipse' as WeatherType];

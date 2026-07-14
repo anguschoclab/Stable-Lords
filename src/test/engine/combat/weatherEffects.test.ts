@@ -88,6 +88,7 @@ describe('weatherEffects', () => {
         'Gravity Anomaly',
         'Ashfall',
         'Eldritch Eclipse',
+        'Prismatic Rain',
         'Acid Rain',
         'Mana Surge',
         'Astral Dust',
@@ -119,6 +120,7 @@ describe('weatherEffects', () => {
         'Crimson Snow',
         'Glittering Frost',
         'Eldritch Eclipse',
+        'Prismatic Rain',
         'Moonlight Duel',
       ];
       for (const weather of allWeatherTypes) {
@@ -240,6 +242,7 @@ describe('weatherEffects', () => {
         'Gravity Anomaly',
         'Ashfall',
         'Eldritch Eclipse',
+        'Prismatic Rain',
         'Acid Rain',
         'Mana Surge',
         'Rainbow',
@@ -270,6 +273,7 @@ describe('weatherEffects', () => {
         'Crimson Snow',
         'Glittering Frost',
         'Eldritch Eclipse',
+        'Prismatic Rain',
         'Moonlight Duel',
       ];
       for (const weather of allWeatherTypes) {
@@ -292,6 +296,14 @@ describe('weatherEffects', () => {
       expect(line!.length).toBeGreaterThan(0);
     });
 
+    it('returns Prismatic Rain effect with correct values', () => {
+      const effect = getWeatherEffect('Prismatic Rain' as WeatherType);
+      expect(effect.staminaMult).toBe(1.15);
+      expect(effect.initiativeMod).toBe(1);
+      expect(effect.riposteMod).toBe(1);
+      expect(effect.damageMult).toBe(1.05);
+    });
+
     it('returns Eldritch Eclipse effect with toned-down values', () => {
       const effect = getWeatherEffect('Eldritch Eclipse' as WeatherType);
       expect(effect.staminaMult).toBe(0.95);
@@ -310,6 +322,11 @@ describe('weatherEffects', () => {
       expect(effect.damageMult).toBe(1.0);
       expect(typeof effect.description).toBe('string');
       expect(effect.description.length).toBeGreaterThan(0);
+    });
+
+    it('returns descriptive string for Prismatic Rain opening line', () => {
+      const line = weatherOpeningLine('Prismatic Rain' as WeatherType);
+      expect(line).toContain('iridescent rain');
     });
 
     it('returns descriptive string for Eldritch Eclipse opening line', () => {

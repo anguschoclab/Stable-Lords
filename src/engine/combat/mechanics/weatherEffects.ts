@@ -14,6 +14,13 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  'Prismatic Rain': {
+    staminaMult: 1.15,
+    initiativeMod: 1,
+    riposteMod: 1,
+    damageMult: 1.05,
+    description: 'Iridescent rain falls, strangely energizing the fighters.',
+  },
   'Eldritch Eclipse': {
     staminaMult: 0.95,
     initiativeMod: 2,
@@ -401,6 +408,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  'Prismatic Rain': 'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
   'Eldritch Eclipse':
     'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
   'Moonlight Duel': 'The arena is silent save for the clash of steel under the pale moonlight.',

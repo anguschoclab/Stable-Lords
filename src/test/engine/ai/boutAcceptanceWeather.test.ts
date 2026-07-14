@@ -118,7 +118,7 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
 
     // verifyBoutAcceptance should have caused the LungingAttack warrior's offer
     // to be declined in Rainy weather (weather skepticism)
-    const offer = result.boutOffers?.['offer-1'];
+    const offer = result.boutOffers?.['offer-1' as any];
     expect(offer).toBeDefined();
     expect(offer!.responses[warrior.id]).toBe('Declined');
   });

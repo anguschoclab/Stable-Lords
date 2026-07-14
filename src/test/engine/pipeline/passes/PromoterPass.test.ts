@@ -626,7 +626,7 @@ describe('PromoterPass', () => {
       if (!roster0 || !roster1) return;
 
       const expiredOffer = {
-        id: 'expired_test',
+        id: 'expired_test' as any,
         promoterId: 'p_local',
         warriorIds: [roster0.id, roster1.id],
         boutWeek: state.week - 1, // Past week
@@ -637,12 +637,12 @@ describe('PromoterPass', () => {
         responses: {},
       };
 
-      (state as any).boutOffers = { ['expired_test' as BoutOfferId]: expiredOffer };
+      (state as any).boutOffers = { ['expired_test' as any]: expiredOffer };
 
       const result = runPromoterPass(state);
 
       // Expired offer should be removed
-      expect(result.boutOffers!['expired_test']).toBeUndefined();
+      expect(result.boutOffers!['expired_test' as any]).toBeUndefined();
     });
 
     it('should preserve signed offers for current week', () => {
@@ -652,7 +652,7 @@ describe('PromoterPass', () => {
       if (!roster0b || !roster1b) return;
 
       const signedOffer = {
-        id: 'signed_test',
+        id: 'signed_test' as any,
         promoterId: 'p_local',
         warriorIds: [roster0b.id, roster1b.id],
         boutWeek: state.week,
@@ -666,12 +666,12 @@ describe('PromoterPass', () => {
         },
       };
 
-      (state as any).boutOffers = { ['signed_test' as BoutOfferId]: signedOffer };
+      (state as any).boutOffers = { ['signed_test' as any]: signedOffer };
 
       const result = runPromoterPass(state);
 
       // Signed offer should be preserved
-      const preservedOffer = result.boutOffers?.['signed_test'];
+      const preservedOffer = result.boutOffers?.['signed_test' as any];
       expect(preservedOffer).toBeDefined();
       if (preservedOffer) {
         expect(preservedOffer.status).toBe('Signed');

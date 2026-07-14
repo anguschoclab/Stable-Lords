@@ -98,7 +98,7 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
       week: 5,
       weather: 'Rainy',
       boutOffers: {
-        ['offer-1' as BoutOfferId]: makeOffer({
+        ['offer-1' as any]: makeOffer({
           warriorIds: [warrior.id, opponent.id],
           responses: { [warrior.id]: 'Pending', [opponent.id]: 'Pending' },
         }),

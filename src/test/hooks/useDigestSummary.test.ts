@@ -276,7 +276,7 @@ describe('useDigestSummary', () => {
         boutOffers: {
           ['r' as BoutOfferId]: makeOffer({ status: 'Rejected' }),
           ['c' as BoutOfferId]: makeOffer({ status: 'Canceled' }),
-          e: makeOffer({ status: 'Expired' }),
+          ['e' as BoutOfferId]: makeOffer({ status: 'Expired' }),
         },
         currentWeek,
         playerWarriorIds,

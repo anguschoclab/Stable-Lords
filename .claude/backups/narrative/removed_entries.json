@@ -1,0 +1,8 @@
+{
+  "strikes.fist.glancing": [
+    "{{attacker}} throws a wild punch that barely clips {{defender}}."
+  ],
+  "pbp.knockdown.fall": [
+    "The sheer force of the blow sends {{name}} tumbling to the sands."
+  ]
+}

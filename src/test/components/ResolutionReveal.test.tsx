@@ -73,12 +73,15 @@ vi.mock('@/state/useGameStore', () => ({
     // Simulate shallow selector behavior in tests
     if (selector && selector.name === 'useShallow') {
       // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       return useTestStore ? useTestStore((s: any) => selector(s)) : undefined;
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useTestStore
       ? typeof selector === 'function'
-        ? useTestStore(selector)
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        ? useTestStore(selector as any)
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         : useTestStore()
       : undefined;
   },

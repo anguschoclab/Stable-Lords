@@ -103,6 +103,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_blood: {
+    id: 'orphan_blood',
+    name: 'Orphan Blood',
+    description: 'Raised in the gutters. Inured to early punishment and fiercely defensive when wounded.',
+    effect: { defModEarly: 1, attModLowHp: 1, fightPlanMod: { minStaminaRsv: 15 } },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.3,
+  },
+  shadow_walker: {
+    id: 'shadow_walker',
+    name: 'Shadow Walker',
+    description: 'Learned to survive unseen. Swift reflexes and enhanced evasion when fresh.',
+    effect: { iniModFresh: 1, decMod: 1, fightPlanMod: { parryRate: 0.1 } },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.2,
+  },
   spore_kissed: {
     id: 'spore_kissed',
     name: 'Spore Kissed',

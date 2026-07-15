@@ -444,6 +444,22 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundered_coliseum_shattered_throne',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Shattered Throne',
+    narrative:
+      'A jagged chunk of marble, said to be part of the emperor’s original seat, juts from the sands. It forms a treacherous hazard where many fighters have been brutally pinned.',
+  },
+  {
+    id: 'charnel_pits_breath_of_ashes',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Breath of Ashes',
+    narrative:
+      'During the Long Drought, the toxic fumes ignited, turning the pit into a roaring inferno. Two rival champions fought amidst the flames, their charred remains now part of the arena\'s grim foundation.',
+  },
+  {
     id: 'standard_arena_orphan_riot',
     arenaId: 'standard_arena',
     type: 'historical_battle',

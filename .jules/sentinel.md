@@ -65,3 +65,8 @@
 **Vulnerability:** Unbounded IPC payloads from the renderer process in electron/main.ts could lead to DoS or memory exhaustion.
 **Learning:** Renderer inputs must be explicitly bounded before filesystem operations or store writes.
 **Prevention:** Added size checks to save-game, archive-bout-log, and store-set.
+
+## 2024-07-16 - Add missing input length limits in Orphanage IdentityStep
+**Vulnerability:** The text inputs for Owner Name and Stable Name in `IdentityStep.tsx` lacked `maxLength` attributes.
+**Learning:** Missing input length bounds can result in users entering excessively long strings which could break the UI, cause memory bloat on state updates, or trigger Denial of Service issues when saved or synced.
+**Prevention:** Always add `maxLength` properties to user text input fields, aligned with the database or storage limitations.

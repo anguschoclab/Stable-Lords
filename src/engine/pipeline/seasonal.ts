@@ -48,6 +48,7 @@ interface OffseasonEventNarrative {
     | 'underground_pit_fight'
     | 'rogue_alchemist'
     | 'tavern_brawl_surprise'
+    | 'chaos_spores'
     | 'dreamweaver_visit'
     | 'abyssal_bargain'
     | 'goblin_raid'
@@ -59,6 +60,7 @@ interface OffseasonEventNarrative {
     | 'bounty_hunter_visit'
     | 'loyal_stray_dog'
     | 'midnight_market'
+    | 'shadow_market_run'
     | 'moonlight_duel';
   newsletter: string[];
 }
@@ -260,6 +262,45 @@ function handleEpiphany(
     });
 
     pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name });
+  }
+}
+
+function handleShadowMarketRun(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const cost = 25 + Math.floor(rng.next() * 26);
+      ctx.treasuryDelta -= cost;
+      addLedger(ctx, rng, nextWeek, 'Shadow Market Excursion', -cost, 'other');
+
+      const fameGained = 15;
+      ctx.rosterUpdates.set(chosen.id, {
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'Discovered a hidden technique at the Shadow Market.',
+        origin: 'Shadow Market',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold: cost,
+        fame: fameGained,
+      });
+    }
   }
 }
 
@@ -1304,6 +1345,37 @@ function handleMidnightMarket(
   }
 }
 
+function handleChaosSpores(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20 + Math.floor(rng.next() * 11);
+
+      const currentTraits = chosen.traits || [];
+      const newTraits = currentTraits.includes('spore_kissed')
+        ? currentTraits
+        : [...currentTraits, 'spore_kissed'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        traits: newTraits,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}
+
 function handleMoonlightDuel(
   state: GameState,
   nextWeek: number,
@@ -1348,6 +1420,7 @@ const EVENT_HANDLERS: Record<
   winter_chill: handleWinterChill,
   merchant_blessing: handleMerchantBlessing,
   epiphany: handleEpiphany,
+  shadow_market_run: handleShadowMarketRun,
   tavern_brawl: handleTavernBrawl,
   bards_song: handleBardsSong,
   plague_outbreak: handlePlagueOutbreak,
@@ -1380,6 +1453,7 @@ const EVENT_HANDLERS: Record<
   loyal_stray_dog: handleLoyalStrayDog,
   midnight_market: handleMidnightMarket,
   moonlight_duel: handleMoonlightDuel,
+  chaos_spores: handleChaosSpores,
 };
 
 /**

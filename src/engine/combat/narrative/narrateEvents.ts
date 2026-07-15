@@ -98,11 +98,14 @@ export function narrateEvents(
         break;
 
       case 'KNOCKDOWN':
-        log.push({ minute, text: narrateKnockdown(rng, actorName) });
+        log.push({ minute, text: narrateKnockdown(rng, actorName, getSpeed(event.actor)) });
         break;
 
       case 'RECOVERY':
-        log.push({ minute, text: narrateRecovery(rng, actorName) });
+        log.push({
+          minute,
+          text: narrateRecovery(rng, actorName, getSpeed(event.actor), opponentName),
+        });
         break;
 
       case 'DEFENSE':

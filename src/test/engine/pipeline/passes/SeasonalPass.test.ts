@@ -1014,4 +1014,38 @@ describe('runSeasonalPass', () => {
     const newsletterTitle = impact.newsletterItems?.[0]?.title;
     expect(newsletterTitle).toContain('Moonlight');
   });
+
+  it('should trigger the shadow_market_run offseason event, deducting gold, awarding fame, and adding a Style insight token', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('shadow_market_run') +
+            0.5) /
+          eventCount
+        );
+      if (callCount === 2) return 0.0;
+      if (callCount === 3) return 0.5;
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-shadow' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'ShadowGoer', status: 'Active', fame: 10 } as any],
+      newsletter: [],
+      treasury: 1000,
+    };
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+    expect(impact.treasuryDelta).toBeLessThan(0);
+    const updates = impact.rosterUpdates?.get(warriorId);
+    expect(updates?.fame).toBe(25);
+    expect(impact.insightTokens?.length).toBe(1);
+    expect(impact.insightTokens![0]!.type).toBe('Style');
+    expect(impact.insightTokens![0]!.origin).toBe('Shadow Market');
+    expect(impact.newsletterItems?.[0]?.title).toBe('Shadow Market Run');
+  });
 });

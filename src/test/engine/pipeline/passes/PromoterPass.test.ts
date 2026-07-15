@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import type { BoutOfferId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateTestState } from '@/test/_setup/testHelpers';
 import { runPromoterPass, lowerBound, upperBound } from '@/engine/pipeline/passes/PromoterPass';
@@ -626,7 +627,7 @@ describe('PromoterPass', () => {
       if (!roster0 || !roster1) return;
 
       const expiredOffer = {
-        id: 'expired_test',
+        id: 'expired_test' as BoutOfferId,
         promoterId: 'p_local',
         warriorIds: [roster0.id, roster1.id],
         boutWeek: state.week - 1, // Past week
@@ -637,12 +638,12 @@ describe('PromoterPass', () => {
         responses: {},
       };
 
-      (state as any).boutOffers = { expired_test: expiredOffer };
+      (state as any).boutOffers = { ['expired_test' as BoutOfferId]: expiredOffer };
 
       const result = runPromoterPass(state);
 
       // Expired offer should be removed
-      expect(result.boutOffers!['expired_test']).toBeUndefined();
+      expect(result.boutOffers!['expired_test' as BoutOfferId]).toBeUndefined();
     });
 
     it('should preserve signed offers for current week', () => {
@@ -652,7 +653,7 @@ describe('PromoterPass', () => {
       if (!roster0b || !roster1b) return;
 
       const signedOffer = {
-        id: 'signed_test',
+        id: 'signed_test' as BoutOfferId,
         promoterId: 'p_local',
         warriorIds: [roster0b.id, roster1b.id],
         boutWeek: state.week,
@@ -666,12 +667,12 @@ describe('PromoterPass', () => {
         },
       };
 
-      (state as any).boutOffers = { signed_test: signedOffer };
+      (state as any).boutOffers = { ['signed_test' as BoutOfferId]: signedOffer };
 
       const result = runPromoterPass(state);
 
       // Signed offer should be preserved
-      const preservedOffer = result.boutOffers?.['signed_test'];
+      const preservedOffer = result.boutOffers?.['signed_test' as BoutOfferId];
       expect(preservedOffer).toBeDefined();
       if (preservedOffer) {
         expect(preservedOffer.status).toBe('Signed');

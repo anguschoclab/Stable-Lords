@@ -31,6 +31,13 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
+  'Prismatic Rain': {
+    icon: Sparkles,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: 'Iridescent rain falls, strangely energizing the fighters. 15% more stamina drain in combat.',
+  },
   'Eldritch Eclipse': {
     icon: Moon,
     colorClass: 'text-arena-fame',

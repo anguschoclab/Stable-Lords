@@ -302,6 +302,16 @@ describe('weatherEffects', () => {
       expect(effect.description.length).toBeGreaterThan(0);
     });
 
+    it('returns Prismatic Rain effect with correct values', () => {
+      const effect = getWeatherEffect('Prismatic Rain' as WeatherType);
+      expect(effect.staminaMult).toBe(1.15);
+      expect(effect.initiativeMod).toBe(1);
+      expect(effect.riposteMod).toBe(1);
+      expect(effect.damageMult).toBe(1.05);
+      expect(typeof effect.description).toBe('string');
+      expect(effect.description.length).toBeGreaterThan(0);
+    });
+
     it('returns Moonlight Duel effect with correct values', () => {
       const effect = getWeatherEffect('Moonlight Duel' as WeatherType);
       expect(effect.staminaMult).toBe(1.1);

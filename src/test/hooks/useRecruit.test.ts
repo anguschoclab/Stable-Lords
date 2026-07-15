@@ -222,8 +222,8 @@ describe('useRecruitFilters', () => {
 // ─── useRecruitActions ─────────────────────────────────────────────────────
 
 describe('useRecruitActions', () => {
-  let setState: ReturnType<typeof vi.fn>;
-  let deductFunds: ReturnType<typeof vi.fn>;
+  let setState: any;
+  let deductFunds: any;
 
   function renderActionsHook(overrides?: { rosterFull?: boolean }) {
     setState = vi.fn();

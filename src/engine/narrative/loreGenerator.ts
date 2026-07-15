@@ -1,6 +1,17 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Raised in the rat-infested underbelly of the Iron Cages Orphanage',
+  'Abandoned at the rusted iron doors of the Silent Brothers',
+  'Found shivering beneath the gallows in the central square',
+  'Sold to the pit masters by their starving parents for a handful of silver',
+  'Raised by feral dogs in the shadow of the colossal colosseum',
+  'Survived the grim culling of the Dross Wards by hiding among the dead',
+  'Found curled inside a shattered iron bell in the Cathedral of Ash',
+  'Raised by graverobbers in the sunken cemetery of Oakhaven',
+  'Abandoned in the blood-stained gutters of the Butcher’s Ward',
+  'Survived the Winter of Crows by hiding in a hollowed-out tree',
+  'Discovered half-drowned in the venomous swamps of the Lower Wastes',
   'Left wrapped in bloodied rags on the steps of the Silent Brothers monastery',
   'Found hiding inside a hollowed-out iron furnace during the Great Purge',
   'Raised in the hidden fighting rings beneath the Crying Slums',
@@ -85,7 +96,6 @@ const ORIGINS = [
   'A runaway from the deep mines, eyes unused to the sun',
   'Sole survivor of a cult sacrifice in the forgotten catacombs',
   "Raised in the shadow of the executioner's block",
-  'Found wandering the salt flats with no memory of their past',
   'Taken from a raided nomadic tribe in the far deserts',
   'A forgotten child of the Silent Order, marked by their shadow-brands',
   'Surviving the collapse of the Blackwater Sluice through sheer, grim stubbornness',
@@ -136,6 +146,13 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would catch and study the weak points of venomous centipedes',
+  'learned to read the mood of the room by the clinking of loose coins',
+  'slept clutching a sharpened spoon carved from stolen silver',
+  'was famous for slipping out of rusted shackles with dislocated thumbs',
+  'would meticulously collect the severed fingers of thieves for good luck',
+  'learned to mimic the death rattle of plague victims to scare off bullies',
+  'was caught sharpening human bone fragments into makeshift daggers',
   'learned to mask their fear by laughing manically when struck',
   'would systematically break the fingers of thieves who tried to steal their food',
   'perfected the art of striking from the shadows of the orphanage dormitories',
@@ -215,6 +232,12 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  "until they broke a slaver's nose with a singular, perfectly timed headbutt",
+  'now driven by a dark promise sworn in the silence of the orphan ward',
+  'waiting to turn the misery of their youth into a spectacle of vengeance',
+  'knowing that the arena sands are softer than the stone floors of their youth',
+  'until they garroted a corrupt slaver with a stolen rosary',
+  'realizing that mercy in the fighting pits is merely a slow suicide',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',
   'waiting for the day they could turn the arena sands into a river of red',

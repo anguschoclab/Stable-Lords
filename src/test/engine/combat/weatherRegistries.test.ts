@@ -25,6 +25,14 @@ describe('weather registries — new weather types', () => {
       expect(config!.colorClass).toBeTruthy();
       expect(config!.description.length).toBeGreaterThan(5);
     });
+
+    it('Prismatic Rain exists with icon, colorClass, description', () => {
+      const config = WEATHER_CONFIG['Prismatic Rain' as WeatherType];
+      expect(config).toBeDefined();
+      expect(config!.icon).toBeDefined();
+      expect(config!.colorClass).toBeTruthy();
+      expect(config!.description.length).toBeGreaterThan(5);
+    });
   });
 
   describe('WEATHER_STATS (WeatherWidget)', () => {
@@ -41,6 +49,12 @@ describe('weather registries — new weather types', () => {
       const stats = (mod as any).WEATHER_STATS?.['Moonlight Duel' as WeatherType];
       expect(stats).toBeDefined();
     });
+
+    it('Prismatic Rain stats string exists', async () => {
+      const mod = await import('@/components/widgets/WeatherWidget');
+      const stats = (mod as any).WEATHER_STATS?.['Prismatic Rain' as WeatherType];
+      expect(stats).toBeDefined();
+    });
   });
 
   describe('WEATHER_AMBIENCE (WeatherAudio)', () => {
@@ -54,6 +68,12 @@ describe('weather registries — new weather types', () => {
       const mod = await import('@/components/arena/audio/WeatherAudio');
       const ambience = (mod as any).WEATHER_AMBIENCE?.['Moonlight Duel' as WeatherType];
       expect(ambience).toBeNull();
+    });
+
+    it('Prismatic Rain has ambience entry', async () => {
+      const mod = await import('@/components/arena/audio/WeatherAudio');
+      const ambience = (mod as any).WEATHER_AMBIENCE?.['Prismatic Rain' as WeatherType];
+      expect(ambience).toBeDefined();
     });
   });
 
@@ -69,6 +89,13 @@ describe('weather registries — new weather types', () => {
       const mod = await import('@/components/arena/weather');
       const visual = (mod as any).WEATHER_VISUALS?.['Moonlight Duel' as WeatherType];
       expect(visual).toBeNull();
+    });
+
+    it('Prismatic Rain has a visual effect (function)', async () => {
+      const mod = await import('@/components/arena/weather');
+      const visual = (mod as any).WEATHER_VISUALS?.['Prismatic Rain' as WeatherType];
+      expect(visual).toBeDefined();
+      expect(typeof visual).toBe('function');
     });
   });
 });

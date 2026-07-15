@@ -103,6 +103,42 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  spore_kissed: {
+    id: 'spore_kissed',
+    name: 'Spore Kissed',
+    description: 'Inhaled chaos spores. Improved endurance and decisiveness.',
+    effect: { enduranceMult: 0.85, decMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  cornered_rat: {
+    id: 'cornered_rat',
+    name: 'Cornered Rat',
+    description: '+1 attack and +1 defense in LATE phase — extremely dangerous when backed into a corner.',
+    effect: { attModLate: 1, defModLate: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  orphan_fury: {
+    id: 'orphan_fury',
+    name: 'Orphan Fury',
+    description: '+1 attack and +1 initiative when bloodied — fueled by a lifetime of rage.',
+    effect: { attModLowHp: 1, iniMod: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  asylum_survivor: {
+    id: 'asylum_survivor',
+    name: 'Asylum Survivor',
+    description: '+1 defense and +1 initiative during early phase — hardened by years of survival.',
+    effect: { defModEarly: 1, iniMod: 1 },
+    weight: 0.8,
+    tier: 'Notable',
+    sign: 'positive',
+  },
   asylum_born: {
     id: 'asylum_born',
     name: 'Asylum Born',

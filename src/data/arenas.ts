@@ -444,6 +444,22 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_orphan_riot',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Orphan Riot',
+    narrative:
+      'In a desperate bid for freedom, a group of young inductees rushed the guards during a training exercise. The sand was stained for weeks, a grim reminder that raw desperation cannot overcome disciplined steel.',
+  },
+  {
+    id: 'charnel_pits_widows_wail',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: "The Widow's Wail",
+    narrative:
+      'A specific arrangement of jagged stones near the eastern gate causes the wind to mimic a sorrowful weeping. Fighters often hesitate when passing it, unnerved by the ghostly chorus.',
+  },
+  {
     id: 'mudpit_arena_drowning',
     arenaId: 'mudpit_arena',
     type: 'famous_death',
@@ -746,6 +762,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Blind Executioner',
     narrative:
       'A massive brute whose helm had fused to his face in a terrible accident fought his final battle here. Blinded, he relied entirely on the shrieking winds of the pits to locate his prey, culminating in a horrific double-decapitation of two agility fighters who failed to walk silently.',
+  },
+  {
+    id: 'gutter_pit_the_iron_rebellion_2',
+    arenaId: 'gutter_pit',
+    type: 'famous_death',
+    title: 'The Fall of the Iron King',
+    narrative:
+      'In 974, the notorious underground champion known as the Iron King was finally slain when a rookie gladiator impaled him on a rusted spike protruding from the southern wall.',
+  },
+  {
+    id: 'flesh_gardens_thorny_path_2',
+    arenaId: 'flesh_gardens',
+    type: 'architectural_quirk',
+    title: 'The Bleeding Vines',
+    narrative:
+      'Due to the mutated flora in the Flesh Gardens, the outer edges are laced with razor-sharp vines. It is said they actively crawl toward spilled blood during a long match.',
   },
 ];
 

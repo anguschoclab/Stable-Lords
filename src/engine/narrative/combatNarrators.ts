@@ -8,6 +8,7 @@ import {
   interpolateTemplate,
   richHitLocation,
   getStrikeSeverity,
+  peekArchive,
 } from './narrativePBPUtils';
 import { audioManager } from '@/lib/AudioManager';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -92,19 +93,48 @@ export function narrateDodge(
 }
 
 /**
- * Narrates a knockdown.
+ * Narrates a knockdown with optional SP-based speed tiering.
+ * When speed is provided, picks from pacing.fast or pacing.slow subsections;
+ * falls back to the main fall pool.
  */
-export function narrateKnockdown(rng: IRNGService, name: string): string {
-  const template = getFromArchive(rng, ['pbp', 'knockdown', 'fall']);
+export function narrateKnockdown(rng: IRNGService, name: string, speed?: number): string {
+  let tier: string | null = null;
+  if (speed !== undefined) {
+    tier = speed >= 19 ? 'fast' : 'slow';
+  }
+
+  const pool = tier
+    ? peekArchive(['pbp', 'knockdown', 'pacing', tier])
+    : null;
+  const template = pool
+    ? rng.pick(pool)
+    : getFromArchive(rng, ['pbp', 'knockdown', 'fall']);
   return interpolateTemplate(template, { name });
 }
 
 /**
- * Narrates a recovery from knockdown.
+ * Narrates a recovery from knockdown with optional SP-based speed tiering.
+ * When speed is provided, picks from pacing.recovery_fast or pacing.recovery_slow
+ * subsections; falls back to the main recovery pool.
  */
-export function narrateRecovery(rng: IRNGService, name: string): string {
-  const template = getFromArchive(rng, ['pbp', 'knockdown', 'recovery']);
-  return interpolateTemplate(template, { name });
+export function narrateRecovery(
+  rng: IRNGService,
+  name: string,
+  speed?: number,
+  opponentName?: string
+): string {
+  let tier: string | null = null;
+  if (speed !== undefined) {
+    tier = speed >= 19 ? 'recovery_fast' : 'recovery_slow';
+  }
+
+  const pool = tier
+    ? peekArchive(['pbp', 'knockdown', 'pacing', tier])
+    : null;
+  const template = pool
+    ? rng.pick(pool)
+    : getFromArchive(rng, ['pbp', 'knockdown', 'recovery']);
+  return interpolateTemplate(template, { name, attacker: opponentName });
 }
 
 /**

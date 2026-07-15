@@ -177,18 +177,73 @@ describe('combatNarrators', () => {
   });
 
   describe('narrateKnockdown', () => {
-    it('produces no-raw-token text', () => {
+    it('produces no-raw-token text without speed', () => {
       const rng = new SeededRNG(1);
       const result = narrateKnockdown(rng, 'Rex');
       expect(noRawTokens(result)).toBe(true);
     });
+
+    it('produces no-raw-token text for all SP tiers', () => {
+      const sps = [undefined, 5, 15, 22, 30];
+      for (const sp of sps) {
+        const rng = new SeededRNG(1);
+        const result = narrateKnockdown(rng, 'Rex', sp);
+        expect(noRawTokens(result)).toBe(true);
+      }
+    });
   });
 
   describe('narrateRecovery', () => {
-    it('produces no-raw-token text', () => {
+    it('produces no-raw-token text without speed', () => {
       const rng = new SeededRNG(1);
       const result = narrateRecovery(rng, 'Rex');
       expect(noRawTokens(result)).toBe(true);
+    });
+
+    it('produces no-raw-token text for all SP tiers with opponent', () => {
+      const sps = [undefined, 5, 15, 22, 30];
+      for (const sp of sps) {
+        const rng = new SeededRNG(1);
+        const result = narrateRecovery(rng, 'Rex', sp, 'Vellis');
+        expect(noRawTokens(result)).toBe(true);
+      }
+    });
+  });
+
+  describe('knockdown pacing subsections', () => {
+    it('pacing.slow has entries', () => {
+      const pool = peekArchive(['pbp', 'knockdown', 'pacing', 'slow']);
+      expect(pool).not.toBeNull();
+      expect(pool!.length).toBeGreaterThan(0);
+    });
+
+    it('pacing.fast has entries', () => {
+      const pool = peekArchive(['pbp', 'knockdown', 'pacing', 'fast']);
+      expect(pool).not.toBeNull();
+      expect(pool!.length).toBeGreaterThan(0);
+    });
+
+    it('pacing.recovery_slow has entries', () => {
+      const pool = peekArchive(['pbp', 'knockdown', 'pacing', 'recovery_slow']);
+      expect(pool).not.toBeNull();
+      expect(pool!.length).toBeGreaterThan(0);
+    });
+
+    it('pacing.recovery_fast has entries', () => {
+      const pool = peekArchive(['pbp', 'knockdown', 'pacing', 'recovery_fast']);
+      expect(pool).not.toBeNull();
+      expect(pool!.length).toBeGreaterThan(0);
+    });
+
+    it('pacing subsections contain no {{defender}} tokens', () => {
+      const subsections = ['slow', 'fast', 'recovery_slow', 'recovery_fast'] as const;
+      for (const sub of subsections) {
+        const pool = peekArchive(['pbp', 'knockdown', 'pacing', sub]);
+        expect(pool).not.toBeNull();
+        for (const entry of pool!) {
+          expect(entry).not.toContain('{{defender}}');
+        }
+      }
     });
   });
 

@@ -377,6 +377,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Strange voices carried by the wind distract fighters, slightly lowering initiative but heightening paranoia and riposte chances.',
   },
+  'Diamond Rain': {
+    staminaMult: 1.2,
+    initiativeMod: -2,
+    riposteMod: 0,
+    damageMult: 1.3,
+    description: 'Hard diamonds fall from the sky, causing minor cuts and testing stamina.',
+  },
   'Chaos Squall': {
     staminaMult: 0.85,
     initiativeMod: 3,
@@ -477,6 +484,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'Unseen voices murmur through the arena. The fighters glance around nervously.',
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
+  'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
 };
 
 /**

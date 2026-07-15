@@ -5394,6 +5394,13 @@
       "newsletter": [
         "A cloud of glowing chaos spores drifted through the barracks. {{name}} inhaled them and feels profoundly changed! (+{{xp}} XP, new Trait: Spore Kissed)"
       ]
+    },
+    "secret_fight_club": {
+      "title": "Secret Fight Club",
+      "effectType": "secret_fight_club",
+      "newsletter": [
+        "{{name}} snuck out to a secret fight club! They earned respect and learned a few tricks, but took some hits. (+{{xp}} XP, +{{fame}} Fame, Minor Injury)"
+      ]
     }
   },
   "crowd_reactions": {

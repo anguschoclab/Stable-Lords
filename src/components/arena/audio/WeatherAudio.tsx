@@ -63,6 +63,7 @@ export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Chaos Storm': 'ambience-arcane-storm',
   'Whispering Winds': 'ambience-wind-breezy',
   'Chaos Squall': 'ambience-arcane-storm',
+  'Diamond Rain': 'ambience-rain',
 }; /**
  * Weather audio.
  * @param - { weather, volume, enabled, arena id }.

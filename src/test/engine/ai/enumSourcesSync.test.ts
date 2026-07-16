@@ -58,7 +58,7 @@ describe('enumSources sync with WeatherType', () => {
     'Eldritch Eclipse',
     'Prismatic Rain',
     'Moonlight Duel',
-  'Diamond Rain',
+    'Diamond Rain',
   ]);
 
   it('WeatherTypeSchema has no duplicate entries', () => {

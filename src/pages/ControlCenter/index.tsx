@@ -32,7 +32,7 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
  *
  */
 export default function ControlCenter() {
-  const { activeTab, setActiveTab, player, week, season, arenaHistory, boutOffers, progression } =
+  const { activeTab, setActiveTab, player, week, absoluteWeek, season, arenaHistory, boutOffers, progression } =
     useControlCenter();
 
   return (
@@ -99,7 +99,7 @@ export default function ControlCenter() {
                     season={season}
                     arenaHistory={arenaHistory}
                     boutOffers={boutOffers ?? {}}
-                    currentWeek={week}
+                    currentWeek={absoluteWeek}
                   />
                   <div className="md:col-span-2">
                     <RecentBoutsWidget />

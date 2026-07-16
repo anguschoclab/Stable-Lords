@@ -183,11 +183,12 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
  * Promoter directory.
  */
 export default function PromoterDirectory() {
-  const { promoters, boutOffers, week, isBookmarked, bookmarks } = useGameStore(
+  const { promoters, boutOffers, week, absoluteWeek, isBookmarked, bookmarks } = useGameStore(
     useShallow((s) => ({
       promoters: s.promoters,
       boutOffers: s.boutOffers,
       week: s.week,
+      absoluteWeek: s.absoluteWeek,
       isBookmarked: s.isBookmarked,
       bookmarks: s.bookmarks,
     }))
@@ -325,8 +326,8 @@ export default function PromoterDirectory() {
           <PromoterCard
             key={promoter.id}
             promoter={promoter}
-            offers={boutOffers || {}}
-            currentWeek={week}
+            offers={boutOffers ?? {}}
+            currentWeek={absoluteWeek}
           />
         ))}
       </div>

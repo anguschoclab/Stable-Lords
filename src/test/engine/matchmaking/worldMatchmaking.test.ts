@@ -80,6 +80,7 @@ function makeTestState(rivals: RivalStableData[], week: number = 1): GameState {
     treasury: 1000,
     ledger: [],
     week,
+    absoluteWeek: week,
     year: 1,
     phase: 'planning',
     season: 'Spring',

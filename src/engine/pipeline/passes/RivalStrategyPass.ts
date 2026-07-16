@@ -77,7 +77,7 @@ export function runRivalStrategyPass(
     {} as any; // eslint-disable-line @typescript-eslint/no-explicit-any
   for (const key in boutOffersWithWorld) {
     const offer = boutOffersWithWorld[key as BoutOfferId];
-    if (offer && offer.expirationWeek >= nextWeek) {
+    if (offer && offer.expirationWeek >= state.absoluteWeek + 1) {
       newBoutOffersWithWorld[key as BoutOfferId] = offer;
     }
   }
@@ -97,7 +97,7 @@ export function runRivalStrategyPass(
   for (const rival of currentRivals) {
     const { bids } = generateBoutBids(
       rival,
-      nextWeek,
+      state.absoluteWeek + 1,
       state.weather ?? 'Clear',
       state.crowdMood ?? 'Calm',
       currentRivals

@@ -19,6 +19,7 @@ export function useControlCenter() {
   const {
     player,
     week,
+    absoluteWeek,
     season,
     arenaHistory,
     boutOffers,
@@ -32,6 +33,7 @@ export function useControlCenter() {
     useShallow((s) => ({
       player: s.player,
       week: s.week,
+      absoluteWeek: s.absoluteWeek,
       season: s.season,
       arenaHistory: s.arenaHistory,
       boutOffers: s.boutOffers,
@@ -72,6 +74,7 @@ export function useControlCenter() {
     setActiveTab,
     player,
     week,
+    absoluteWeek,
     season,
     arenaHistory,
     boutOffers,

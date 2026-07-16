@@ -35,6 +35,7 @@ export interface ArenaPreferences {
 export interface WorldSlice {
   year: number;
   week: number;
+  absoluteWeek: number;
   day: number;
   season: Season;
   weather: WeatherType;

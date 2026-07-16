@@ -21,7 +21,7 @@ export interface BoutPairing {
  * Generate pairings.
  */
 export function generatePairings(state: GameState): BoutPairing[] {
-  const currentWeek = state.week;
+  const currentWeek = state.absoluteWeek;
   const pairings: BoutPairing[] = [];
 
   // ⚡ Bolt: Use cached warriorMap if available, otherwise build it

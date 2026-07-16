@@ -80,7 +80,7 @@ export interface RivalWarriorMap {
 export function useBookingOffice() {
   const state = useWorldState();
   const setState = useGameStore((s) => s.setState);
-  const { promoters, boutOffers, roster, week, rivals } = state;
+  const { promoters, boutOffers, roster, week, absoluteWeek, rivals } = state;
   const [activeTab, setActiveTab] = useState('this-week');
   const [signedOfferIds, setSignedOfferIds] = useState<Set<string>>(new Set());
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
@@ -106,8 +106,8 @@ export function useBookingOffice() {
 
   const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(
     () =>
-      filterAndSortOffers(boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId),
-    [boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId]
+      filterAndSortOffers(boutOffers, roster, absoluteWeek, promoters, signedOfferIds, selectedWarriorId),
+    [boutOffers, roster, absoluteWeek, promoters, signedOfferIds, selectedWarriorId]
   );
 
   const handleResponse = (

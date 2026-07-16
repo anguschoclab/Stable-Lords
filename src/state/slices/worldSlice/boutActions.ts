@@ -47,7 +47,7 @@ export function createBoutActions(
         (Object.keys(newOffers) as BoutOfferId[]).forEach((id) => {
           const offer = newOffers[id];
           if (!offer) return;
-          if (offer.status === 'Proposed' && state.week >= offer.expirationWeek) {
+          if (offer.status === 'Proposed' && state.absoluteWeek >= offer.expirationWeek) {
             newOffers[id] = { ...offer, status: 'Expired' };
             changed = true;
           }

@@ -9,6 +9,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { BoutBid } from './types';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
+import { displayWeek } from '@/engine/core/absoluteWeek';
 
 /**
  *
@@ -35,7 +36,7 @@ export function generateBoutBids(
     popularity: rival.owner.renown,
     treasury: rival.treasury,
     ledger: [],
-    week: currentWeek,
+    week: displayWeek(currentWeek),
     year: 1,
     absoluteWeek: currentWeek,
     phase: 'planning',

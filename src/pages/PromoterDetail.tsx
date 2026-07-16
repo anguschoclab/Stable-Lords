@@ -12,20 +12,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  DollarSign,
-  Award,
-  AlertTriangle,
   Sparkles,
   Building2,
   ArrowLeft,
-  TrendingUp,
-  History,
-  Target,
   Calendar,
   Users,
   Coins,
   Crown,
+  History,
+  Target,
+  TrendingUp,
+  DollarSign,
+  Award,
+  AlertTriangle,
 } from 'lucide-react';
+import { displayWeek } from '@/engine/core/absoluteWeek';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
 
@@ -169,8 +170,8 @@ function calculateStats(
  */
 export default function PromoterDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
-  const { promoters, boutOffers, week } = useGameStore(
-    useShallow((s) => ({ promoters: s.promoters, boutOffers: s.boutOffers, week: s.week }))
+  const { promoters, boutOffers, absoluteWeek } = useGameStore(
+    useShallow((s) => ({ promoters: s.promoters, boutOffers: s.boutOffers, absoluteWeek: s.absoluteWeek }))
   );
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -180,8 +181,8 @@ export default function PromoterDetail() {
 
   const stats = useMemo(() => {
     if (!promoter) return null;
-    return calculateStats(promoter, boutOffers || {}, week);
-  }, [promoter, boutOffers, week]);
+    return calculateStats(promoter, boutOffers || {}, absoluteWeek);
+  }, [promoter, boutOffers, absoluteWeek]);
 
   const promoterOffers = useMemo(() => {
     if (!promoter) return [];
@@ -431,7 +432,7 @@ export default function PromoterDetail() {
                         </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Week {offer.boutWeek} • Expires Week {offer.expirationWeek}
+                        Week {displayWeek(offer.boutWeek)} • Expires Week {displayWeek(offer.expirationWeek || 0)}
                       </div>
                     </div>
                     <div className="text-right space-y-1">

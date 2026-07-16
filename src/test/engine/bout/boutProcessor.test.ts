@@ -9,6 +9,7 @@ describe('boutProcessor - generatePairings', () => {
   it('should generate pairings for player and rival', () => {
     const state: any = {
       week: 1,
+      absoluteWeek: 1,
       player: { id: 'p1', stableName: 'Player' },
       roster: [
         {

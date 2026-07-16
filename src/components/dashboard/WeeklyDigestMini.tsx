@@ -8,9 +8,10 @@ import { useDigestSummary } from '@/hooks/useDigestSummary';
  *
  */
 export function WeeklyDigestMini() {
-  const { week, arenaHistory, boutOffers, roster } = useGameStore(
+  const { week, absoluteWeek, arenaHistory, boutOffers, roster } = useGameStore(
     useShallow((s) => ({
       week: s.week,
+      absoluteWeek: s.absoluteWeek,
       arenaHistory: s.arenaHistory,
       boutOffers: s.boutOffers,
       roster: s.roster,
@@ -22,7 +23,7 @@ export function WeeklyDigestMini() {
   const summary = useDigestSummary({
     arenaHistory,
     boutOffers,
-    currentWeek: week,
+    currentWeek: absoluteWeek,
     playerWarriorIds,
   });
 

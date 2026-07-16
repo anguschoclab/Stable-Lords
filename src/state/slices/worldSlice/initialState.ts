@@ -26,6 +26,7 @@ export const defaultWorldState: Omit<
 > = {
   year: 1,
   week: 1,
+  absoluteWeek: 1,
   day: 0,
   season: 'Spring' as Season,
   weather: 'Clear' as WeatherType,

@@ -89,8 +89,9 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   for (const key in state.boutOffers) {
     const offer = state.boutOffers[key as BoutOfferId];
     if (!offer) continue;
-    const isPast = offer.boutWeek < state.week;
-    const isExpired = offer.expirationWeek < state.week && offer.status !== 'Signed';
+    const isPast = offer.boutWeek < state.absoluteWeek;
+    const isExpired = offer.expirationWeek < state.absoluteWeek && offer.status !== 'Signed';
+    
     if (!isPast && !isExpired) {
       newOffers[key as BoutOfferId] = offer;
     }
@@ -101,7 +102,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
   // ⚡ Bolt: Pre-compute available warriors to avoid repeated availability checks
   // Available = No SIGNED or PROPOSED bout for Week+2 or Week+3
-  const targetWeek = state.week + 2; // Forward booking
+  const targetWeek = state.absoluteWeek + 2; // Forward booking
   const unavailableWarriorIds = new Set<string>();
   Object.values(newOffers).forEach((o) => {
     const isBooked =
@@ -238,7 +239,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
           promoterId: promoter.id,
           warriorIds: [warriorA.id, opponentB.id],
           boutWeek: targetWeek,
-          expirationWeek: state.week + 1,
+          expirationWeek: state.absoluteWeek + 1,
           purse: finalPurse,
           hype,
           status: 'Proposed',

@@ -5,6 +5,7 @@
 import type { GameState } from '@/types/state.types';
 import type { GameStore } from './useGameStore';
 import { SAVE_STATE_VERSION } from '@/constants/core';
+import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Helper to strip non-serializable fields before worker transfer.
@@ -187,6 +188,7 @@ export function reconstructGameState(store: GameStore): GameState {
       createdAt: store.lastSavedAt || new Date().toISOString(),
     },
     ...currentValues,
+    absoluteWeek: deriveAbsoluteWeek(store.year, store.week),
     coachDismissed: store.coachDismissed || [],
     rivalries: store.rivalries || [],
     matchHistory: store.matchHistory || [],

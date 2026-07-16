@@ -59,6 +59,7 @@ function makeState(roster: Warrior[], rivals: RivalStableData[] = []): GameState
     ledger: [],
     week: 1,
     year: 1,
+    absoluteWeek: 1,
     phase: 'planning',
     season: 'Spring',
     weather: 'Clear',

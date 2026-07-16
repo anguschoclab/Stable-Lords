@@ -48,6 +48,7 @@ export function createFreshState(
     ledger: [],
     week: 1,
     year: 1,
+    absoluteWeek: 1,
     phase: 'planning',
     season: 'Spring',
     weather: 'Clear',

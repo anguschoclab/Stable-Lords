@@ -571,6 +571,9 @@ export interface GameState {
   ledger: LedgerEntry[];
   week: number;
   year: number; // 🌩️ Calendar Authority (v1.0)
+  /** Monotonic week counter — never resets at year rollover. All cross-week
+   *  scheduling math (offers, countdowns) uses this; `week` is display-only. */
+  absoluteWeek: number;
   phase: 'planning' | 'resolution';
   season: Season;
   weather: WeatherType;

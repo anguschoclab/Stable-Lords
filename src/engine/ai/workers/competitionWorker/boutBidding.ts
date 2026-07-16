@@ -37,6 +37,7 @@ export function generateBoutBids(
     ledger: [],
     week: currentWeek,
     year: 1,
+    absoluteWeek: currentWeek,
     phase: 'planning',
     season: 'Spring',
     weather,

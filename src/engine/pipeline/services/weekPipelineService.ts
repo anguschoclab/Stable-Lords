@@ -6,6 +6,7 @@ import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getStablePairKey } from '@/utils/keyUtils';
+import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Options for week advancement
@@ -195,6 +196,7 @@ function collectRemainingImpacts(
 function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
   state.week = ctx.nextWeek;
   state.year = ctx.nextYear;
+  state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
   state.day = 0;
   state.trainingAssignments = (state.trainingAssignments ?? [])
     .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
@@ -203,7 +205,7 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   // 🧹 Bout offer cleanup — single source of truth for offer pruning.
   if (state.boutOffers) {
     const cleanedOffers: Record<string, BoutOffer> = {};
-    const justFinishedWeek = ctx.nextWeek - 1;
+    const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
     Object.values(state.boutOffers).forEach((offer) => {
       if (offer.boutWeek <= justFinishedWeek) return;
       if (

@@ -22,6 +22,7 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
   return {
     id: 'fight-1' as FightId,
     week: 5,
+    absoluteWeek: 5,
     title: 'Test Fight',
     warriorIdA: 'wa' as WarriorId,
     warriorIdD: 'wd' as WarriorId,
@@ -54,6 +55,7 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
 function setState(overrides: any = {}) {
   mockState = {
     week: 5,
+    absoluteWeek: 5,
     arenaHistory: [],
     boutOffers: {},
     roster: [{ id: 'wa' }, { id: 'wc' }],
@@ -68,7 +70,7 @@ describe('WeeklyDigestMini', () => {
   });
 
   it('renders week number in badge', () => {
-    setState({ week: 7 });
+    setState({ week: 7, absoluteWeek: 7 });
     render(<WeeklyDigestMini />);
     expect(screen.getByText('7')).toBeInTheDocument();
   });
@@ -81,6 +83,7 @@ describe('WeeklyDigestMini', () => {
   it('shows W/L/K counts when player has fights', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       arenaHistory: [
         makeFight({ id: 'f1' as any, winner: 'A', by: 'Kill' }),
         makeFight({ id: 'f2' as any, winner: 'A', by: 'KO' }),
@@ -102,6 +105,7 @@ describe('WeeklyDigestMini', () => {
   it('shows pending offers count', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       boutOffers: {
         o1: makeOffer({
           id: 'o1' as any,
@@ -130,9 +134,11 @@ describe('WeeklyDigestMini', () => {
   it('only counts current week fights', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       arenaHistory: [
         makeFight({ id: 'f1' as any, week: 3, winner: 'A', by: 'Kill' }),
-        makeFight({ id: 'f2' as any, week: 5, winner: 'A', by: 'KO' }),
+        makeFight({ id: 'f2' as any, week: 5,
+    absoluteWeek: 5, winner: 'A', by: 'KO' }),
         makeFight({ id: 'f3' as any, week: 7, winner: 'D', by: 'KO' }),
       ],
     });
@@ -144,6 +150,7 @@ describe('WeeklyDigestMini', () => {
   it('hides W/L/K line when no fights but has pending offers', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       boutOffers: {
         o1: makeOffer({
           id: 'o1' as any,
@@ -161,6 +168,7 @@ describe('WeeklyDigestMini', () => {
   it('hides pending indicator when no pending offers but has fights', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       arenaHistory: [makeFight({ id: 'f1' as any, winner: 'A', by: 'KO' })],
     });
     render(<WeeklyDigestMini />);
@@ -171,6 +179,7 @@ describe('WeeklyDigestMini', () => {
   it('handles mixed: fights + pending offers', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       arenaHistory: [
         makeFight({ id: 'f1' as any, winner: 'A', by: 'Kill' }),
         makeFight({
@@ -206,6 +215,7 @@ describe('WeeklyDigestMini', () => {
   it('handles empty roster gracefully', () => {
     setState({
       week: 5,
+    absoluteWeek: 5,
       roster: [],
       arenaHistory: [makeFight({ id: 'f1' as any, winner: 'A', by: 'Kill' })],
     });

@@ -296,7 +296,6 @@ const DEFINING_MOMENTS = [
   'ready to carve their name into the annals of history with steel',
   'transforming years of quiet abuse into a singular, razor-sharp focus',
   'understanding that the world only respects the edge of a blade',
-  'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the moment the crowd screams a name that was once forbidden',
   'until the day they knocked out the orphanage bully with a single stone',
   'now seeking vengeance on the system that abandoned them',

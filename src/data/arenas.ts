@@ -444,6 +444,20 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_orphan_revolt',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Orphan Revolt',
+    narrative: 'A grim testament to the desperate. A group of child slaves seized weapons from the armory and fought off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
+  },
+  {
+    id: 'charnel_pits_silent_slaughter',
+    arenaId: 'charnel_pits',
+    type: 'famous_death',
+    title: 'The Silent Slaughter',
+    narrative: 'A legendary mute gladiator was finally brought down here, surrounded by the corpses of seven opponents. He never uttered a sound, even as the final blow was struck.',
+  },
+  {
     id: 'standard_arena_orphan_riot',
     arenaId: 'standard_arena',
     type: 'historical_battle',

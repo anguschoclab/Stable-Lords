@@ -143,6 +143,11 @@ const ORIGINS = [
   'Smuggled out of a besieged city in a barrel of salted meats, emerging hardened and starving',
   'A runaway from the dreaded salt mines, carrying the scars of the whip and a terrifying endurance',
   'Discovered abandoned in a ruined temple, playfully tossing the skulls of long-dead priests',
+  'Raised in the lightless cellars of the Blackwood Orphanage',
+  'Abandoned outside the fighting pits wrapped in a bloodied tunic',
+  'Survived the great fire of the Lower Wards by hiding in a cistern',
+  'Found wandering the ash-choked streets of the Foundry District',
+  'Raised by the grim overseers of the Iron Chain workhouse',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -202,7 +207,6 @@ const CHILDHOOD_TRAITS = [
   'would bite and claw older kids who tried to take their rations',
   'memorized the patrol routes of guards just for the challenge of evading them',
   'never flinched when the master raised a hand',
-  'was caught sharpening bone fragments into makeshift shivs',
   'could perfectly mimic the screams of dying men',
   'slept peacefully through the most deafening thunderstorms',
   'was known to stare unblinking at the flickering flames of the hearth',
@@ -229,6 +233,9 @@ const CHILDHOOD_TRAITS = [
   'was caught repeatedly catching scorpions with their bare hands',
   'would deliberately stand in the freezing rain for hours to test their resolve',
   'learned to perfectly throw jagged rocks with lethal, terrifying accuracy',
+  'developed a terrifyingly serene smile during the most brutal beatings',
+  'was known for carving the names of their enemies into their own flesh',
+  'would purposefully instigate fights just to study how different people bleed',
 ];
 
 const DEFINING_MOMENTS = [
@@ -308,6 +315,9 @@ const DEFINING_MOMENTS = [
   'carrying the heavy chains of their past not as a burden, but as a weapon',
   'now seeking the silence that only falls over the colosseum after a brutal execution',
   'realizing that pain is simply the currency demanded by the gods of the arena',
+  'waiting for the day they could paint the arena sands with the blood of their oppressors',
+  'until they strangled a cruel matron with a stolen rosary',
+  'now driven by a dark vow sworn over the grave of their only friend',
 ];
 
 /**

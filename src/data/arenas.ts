@@ -779,6 +779,27 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Due to the mutated flora in the Flesh Gardens, the outer edges are laced with razor-sharp vines. It is said they actively crawl toward spilled blood during a long match.',
   },
+  {
+    id: 'narrow_bridge_the_falling_king',
+    arenaId: 'narrow_bridge',
+    type: 'famous_death',
+    title: 'The Falling King',
+    narrative: 'A self-proclaimed king of the undercity was thrown from the bridge during his first bout, screaming the entire way down into the darkness. His crown was never found.'
+  },
+  {
+    id: 'misty_valley_hidden_blades',
+    arenaId: 'misty_valley',
+    type: 'architectural_quirk',
+    title: 'The Hidden Blades',
+    narrative: 'The thick mist not only obscures vision but dampens the sound of footfalls. Savvy fighters coat their weapons in charcoal to make them entirely invisible in the gray fog until it is too late.'
+  },
+  {
+    id: 'the_abyssal_pit_the_dark_descent',
+    arenaId: 'the_abyssal_pit',
+    type: 'historical_battle',
+    title: 'The Dark Descent',
+    narrative: 'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.'
+  }
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

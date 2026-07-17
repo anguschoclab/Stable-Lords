@@ -143,6 +143,13 @@ const ORIGINS = [
   'Smuggled out of a besieged city in a barrel of salted meats, emerging hardened and starving',
   'A runaway from the dreaded salt mines, carrying the scars of the whip and a terrifying endurance',
   'Discovered abandoned in a ruined temple, playfully tossing the skulls of long-dead priests',
+  'Raised in the sunless depths of the Weeping Undercroft',
+  'Abandoned near the slag heaps of the Black Iron Foundry',
+  'Found half-starved clutching a rusted nail in the Cinder Wards',
+  'Survived the Long Winter by hiding among the forgotten dead',
+  'Sold to the fighting pits to settle a drunkard\'s debt',
+  'Raised by feral hounds in the ruins of the Old Cathedral',
+  'Abandoned at the iron grates of the Silent Brothers\' sanctuary'
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -152,7 +159,6 @@ const CHILDHOOD_TRAITS = [
   'was famous for slipping out of rusted shackles with dislocated thumbs',
   'would meticulously collect the severed fingers of thieves for good luck',
   'learned to mimic the death rattle of plague victims to scare off bullies',
-  'was caught sharpening human bone fragments into makeshift daggers',
   'learned to mask their fear by laughing manically when struck',
   'would systematically break the fingers of thieves who tried to steal their food',
   'perfected the art of striking from the shadows of the orphanage dormitories',
@@ -229,6 +235,10 @@ const CHILDHOOD_TRAITS = [
   'was caught repeatedly catching scorpions with their bare hands',
   'would deliberately stand in the freezing rain for hours to test their resolve',
   'learned to perfectly throw jagged rocks with lethal, terrifying accuracy',
+  'would meticulously trace the structural flaws in stone walls',
+  'learned to perfectly mimic the sound of snapping bone',
+  'would systematically dismantle discarded clockwork toys',
+  'slept soundly only when the city\'s warning bells rang'
 ];
 
 const DEFINING_MOMENTS = [
@@ -308,6 +318,10 @@ const DEFINING_MOMENTS = [
   'carrying the heavy chains of their past not as a burden, but as a weapon',
   'now seeking the silence that only falls over the colosseum after a brutal execution',
   'realizing that pain is simply the currency demanded by the gods of the arena',
+  'until they drove a splintered chair leg through a slaver\'s hand',
+  'realizing that the only true currency in the undercity is pain',
+  'waiting for the moment the crowd screams a name they once forgot',
+  'carrying the cold certainty that everyone bleeds the same color'
 ];
 
 /**

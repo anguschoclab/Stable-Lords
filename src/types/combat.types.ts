@@ -226,6 +226,7 @@ export interface FightOutcome {
 export interface FightSummary {
   id: FightId;
   week: number;
+  absoluteWeek?: number;
   phase?: 'planning' | 'resolution';
   pendingResolutionData?: {
     gazette: NewsletterItem[];

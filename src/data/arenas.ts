@@ -444,6 +444,21 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+  id: 'standard_arena_first_blood',
+  arenaId: 'standard_arena',
+  type: 'famous_death',
+  title: 'The First Blood',
+  narrative: 'In the earliest days of the arena, an unnamed orphan defied a fully armored champion, turning a discarded shield into a lethal weapon before succumbing to his wounds. The crowd never forgot.',
+},
+{
+  id: 'charnel_pits_echoes',
+  arenaId: 'charnel_pits',
+  type: 'architectural_quirk',
+  title: 'Echoes of the Damned',
+  narrative: 'The lower stonework of the pit was laid with such peculiar angles that the screams of dying fighters echo endlessly, terrifying even veteran gladiators.',
+},
+
+  {
     id: 'standard_arena_orphan_riot',
     arenaId: 'standard_arena',
     type: 'historical_battle',

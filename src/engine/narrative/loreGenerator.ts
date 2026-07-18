@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Raised in the crumbling ruins of the forgotten Bleeding Heart Orphanage',
+  'Found abandoned amidst the bone dust of the lower charnel pits',
+  'Survived a brutal childhood in the shadow of the executioner\'s block',
+  'Raised on the violent streets of the Dross Wards by disgraced gladiators',
+  'Abandoned at the rusted gates of the Crying Mothers sanctuary',
   'Raised in the rat-infested underbelly of the Iron Cages Orphanage',
   'Abandoned at the rusted iron doors of the Silent Brothers',
   'Found shivering beneath the gallows in the central square',
@@ -146,6 +151,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would compulsively sharpen splinters of bone in the dark',
+  'learned to sleep with one eye open after surviving the orphanage riots',
+  'was known for an unnerving, silent stare that made the matrons flinch',
   'would catch and study the weak points of venomous centipedes',
   'learned to read the mood of the room by the clinking of loose coins',
   'slept clutching a sharpened spoon carved from stolen silver',
@@ -232,6 +240,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they garroted a cruel overseer and fled into the night',
+  'realizing that the only true escape from the gutters was carved in blood',
+  'waiting for the moment the iron portcullis of the arena would rise on their true destiny',
   "until they broke a slaver's nose with a singular, perfectly timed headbutt",
   'now driven by a dark promise sworn in the silence of the orphan ward',
   'waiting to turn the misery of their youth into a spectacle of vengeance',

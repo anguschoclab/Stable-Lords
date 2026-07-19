@@ -1,0 +1,17 @@
+[
+  {
+    "path": "strikes.fist.glancing",
+    "item": "{{attacker}} throws a wild punch that barely clips {{defender}}.",
+    "similar_to": "{{attacker}} throws a wild punch that only clips {{defender}}'s shoulder."
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "item": "The sheer force of the blow sends {{name}} tumbling to the sands.",
+    "similar_to": "The sheer force of the blow sends {{name}} sprawling onto the arena sand."
+  },
+  {
+    "path": "kill_text.execution",
+    "item": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s struggles.",
+    "similar_to": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation."
+  }
+]

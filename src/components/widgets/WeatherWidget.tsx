@@ -23,6 +23,7 @@ export const WEATHER_STATS: Record<WeatherType, string> = {
   'Blazing Sun': 'STAMINA DRAIN 140% | INITIATIVE -2 | DAMAGE +10%',
   Gale: 'STAMINA DRAIN 120% | INITIATIVE -5 | RIPOSTE +3',
   'Blood Moon': 'STAMINA CONSERVATION 10% | INITIATIVE +3 | DAMAGE +20%',
+  'Eclipse of Chaos': 'STAMINA DRAIN 140% | DAMAGE +25%',
   Eclipse: 'STAMINA CONSERVATION 20% | INITIATIVE +5 | RIPOSTE +5',
   Sandstorm: 'STAMINA DRAIN 120% | INITIATIVE -4',
   Tornado: 'STAMINA DRAIN 140% | INITIATIVE -6 | DAMAGE -20%',

@@ -55,6 +55,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Blazing Sun': () => <HeatEffect />,
   Gale: () => <WindEffect strong />,
   'Blood Moon': () => <BloodMoonEffect />,
+  'Eclipse of Chaos': () => <EclipseEffect />,
   'Blood Fog': () => <BloodFogEffect />,
   Eclipse: () => <EclipseEffect />,
   Sandstorm: () => <SandstormEffect />,

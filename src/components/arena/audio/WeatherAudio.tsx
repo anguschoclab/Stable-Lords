@@ -27,6 +27,7 @@ export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Blazing Sun': null,
   Gale: 'ambience-wind-gale',
   'Blood Moon': 'ambience-blood-moon',
+  'Eclipse of Chaos': 'ambience-eclipse',
   Eclipse: 'ambience-eclipse',
   Sandstorm: 'ambience-wind-gale',
   Tornado: 'ambience-wind-gale',

@@ -55,7 +55,7 @@ export function VeteranReassignmentDialog({
                     <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest rounded-none">
                       {preview.tier} Staff
                     </Badge>
-                    <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest italic">
+                    <span className="text-[10px] text-muted-foreground/80 uppercase tracking-widest italic">
                       Specialization: {preview.focus}
                     </span>
                   </div>

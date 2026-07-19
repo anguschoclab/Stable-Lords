@@ -77,7 +77,7 @@ export default function ActionButtons({
         variant="ghost"
         onClick={() => importRef.current?.click()}
         aria-label="Import Save File"
-        className="w-full flex items-center justify-center gap-2 h-9 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-muted-foreground/70 hover:bg-white/5 transition-colors duration-150"
+        className="w-full flex items-center justify-center gap-2 h-9 text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 hover:text-foreground hover:bg-white/5 transition-colors duration-150"
       >
         <Upload className="h-3.5 w-3.5" />
         IMPORT SAVE FILE

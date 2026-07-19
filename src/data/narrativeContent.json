@@ -4838,7 +4838,16 @@
       "Traesoo",
       "Opkau",
       "Iagiocr",
-      "Pijowbal"
+      "Pijowbal",
+      "ZORV",
+      "VRAX",
+      "THULL",
+      "KORV",
+      "JAXA",
+      "XEN",
+      "VYL",
+      "ZARN",
+      "MYRK"
     ],
     "rival_stable_names": [
       "Shadow Blades",
@@ -5393,6 +5402,14 @@
       "effectType": "chaos_spores",
       "newsletter": [
         "A cloud of glowing chaos spores drifted through the barracks. {{name}} inhaled them and feels profoundly changed! (+{{xp}} XP, new Trait: Spore Kissed)"
+      ]
+    },
+    "chaos_weavers_game": {
+      "title": "The Chaos Weaver's Game",
+      "effectType": "chaos_weavers_game",
+      "newsletter": [
+        "The Chaos Weaver appeared in the barracks, proposing a dangerous gamble. {{name}} accepted, gaining strange newfound power. (+25 XP)",
+        "The Chaos Weaver offered a game of chance. {{name}} played and lost, returning battered. (Minor Injury)"
       ]
     }
   },

@@ -61,7 +61,8 @@ interface OffseasonEventNarrative {
     | 'loyal_stray_dog'
     | 'midnight_market'
     | 'shadow_market_run'
-    | 'moonlight_duel';
+    | 'moonlight_duel'
+    | 'chaos_weavers_game';
   newsletter: string[];
 }
 
@@ -1345,6 +1346,57 @@ function handleMidnightMarket(
   }
 }
 
+
+function handleChaosWeaversGame(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      if (rng.next() > 0.5) {
+        // Win
+        const xpGained = 25;
+        ctx.rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+        });
+
+        // pushNarrative will randomly pick one of the newsletter items.
+        // It's a bit random which one it picks, but the effect is positive here.
+
+        pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, xp: xpGained });
+      } else {
+        // Lose
+        const newInjury = makeInjury(rng, {
+          name: 'Mystic Bruises',
+          description: 'A lingering supernatural bruise.',
+          severity: 'Minor',
+          weeksBase: 2,
+          weeksRange: 1,
+          penalties: { CN: -1 },
+        });
+        ctx.rosterUpdates.set(chosen.id, {
+          injuries: [...(chosen.injuries || []), newInjury],
+        });
+
+        // Manually push the exact narrative line to avoid rng picking the "Win" line
+        // We know e.newsletter[1] is the "Lose" line
+        const template = e.newsletter[1] || '';
+        ctx.newsletterItems.push({
+          id: rng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(template, { name: chosen.name })],
+        });
+      }
+    }
+  }
+}
+
 function handleChaosSpores(
   state: GameState,
   nextWeek: number,
@@ -1454,6 +1506,7 @@ const EVENT_HANDLERS: Record<
   midnight_market: handleMidnightMarket,
   moonlight_duel: handleMoonlightDuel,
   chaos_spores: handleChaosSpores,
+  chaos_weavers_game: handleChaosWeaversGame,
 };
 
 /**

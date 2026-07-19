@@ -106,6 +106,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.85,
     description: 'Gale-force winds disrupt attacks and reward counters.',
   },
+  'Eclipse of Chaos': {
+    staminaMult: 1.4,
+    initiativeMod: 0,
+    riposteMod: 0,
+    damageMult: 1.25,
+    description: 'An unearthly eclipse that saps the breath but fuels destructive strikes.',
+  },
   'Blood Moon': {
     staminaMult: 0.9,
     initiativeMod: +3,
@@ -424,6 +431,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Breezy: 'A cool breeze sweeps through the arena. The fighters look sharp.',
   'Blazing Sun': 'The sun beats down mercilessly. Heavy fighters will suffer.',
   Gale: 'Gale-force winds tear through the stands. Timing will be everything.',
+  'Eclipse of Chaos': 'The sky darkens as a chaotic eclipse sets in, filling the arena with unnatural tension.',
   'Blood Moon': 'A crimson moon hangs overhead. The crowd is already baying for blood.',
   Eclipse: 'Darkness falls mid-day. An eerie calm descends before the violence.',
   Sandstorm: 'A howling sandstorm blinds the arena. Every breath is a battle.',

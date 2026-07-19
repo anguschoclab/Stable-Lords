@@ -124,6 +124,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-pop/20',
     description: 'Fierce winds. 20% more stamina drain in combat.',
   },
+  'Eclipse of Chaos': {
+    icon: Circle,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A dark omen. Stamina drain increased, massive damage output.',
+  },
   'Blood Moon': {
     icon: Moon,
     colorClass: 'text-destructive',

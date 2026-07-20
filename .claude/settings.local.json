@@ -115,7 +115,8 @@
       "Bash(xargs wc -l)",
       "Bash(xargs head -40)",
       "PowerShell(npm run *)",
-      "Bash(git commit -m 'fix\\(traits\\): restore high-tier emergence after de-saturation *)"
+      "Bash(git commit -m 'fix\\(traits\\): restore high-tier emergence after de-saturation *)",
+      "Bash(git commit -q -m 'docs\\(plans\\): 5 implementation plans from the 2026-07-16 assessment *)"
     ]
   },
   "hooks": {

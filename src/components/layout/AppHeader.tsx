@@ -44,12 +44,12 @@ function HeaderLogo() {
   return (
     <Link
       to="/"
-      className="flex items-center gap-4 group active:scale-95 transition-all duration-300"
+      className="flex items-center gap-4 group active:scale-95 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300"
     >
       <ImperialRing
         size="md"
         variant="blood"
-        className="group-hover:rotate-[225deg] transition-all duration-700"
+        className="group-hover:rotate-[225deg] transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700"
       >
         <Swords className="w-5 h-5" />
       </ImperialRing>
@@ -179,7 +179,7 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
         </TooltipTrigger>
         <TooltipContent
           side="bottom"
-          className="bg-[#0C0806] border-white/10 p-3 max-w-[220px] rounded-none"
+          className="bg-background border-white/10 p-3 max-w-[220px] rounded-none"
         >
           <p className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-primary">
             Weather Effect
@@ -389,7 +389,7 @@ export function AppHeader({
   returnToTitle,
 }: AppHeaderProps) {
   return (
-    <header className="h-16 border-b border-white/5 bg-[#080604]/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
+    <header className="h-16 border-b border-white/5 bg-background/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-4">
           <MobileNav />

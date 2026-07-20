@@ -60,7 +60,7 @@ export function RosterWall() {
     <Surface variant="glass" padding="none" className="border-border/10 relative shadow-2xl">
       <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/40 via-arena-gold/40 to-primary/40 opacity-30" />
 
-      <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-neutral-900/40 backdrop-blur-md">
+      <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-background/90 backdrop-blur-md">
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
             <Users className="h-6 w-6 text-primary" />

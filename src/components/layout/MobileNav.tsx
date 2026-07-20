@@ -73,7 +73,7 @@ export function MobileNav({ className }: MobileNavProps) {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-72 bg-[#0C0806] border-r border-white/5 p-0">
+        <SheetContent side="left" className="w-72 bg-background border-r border-white/5 p-0">
           <SheetDescription className="sr-only">Details pane</SheetDescription>
           <SheetHeader className="p-4 border-b border-white/5">
             <SheetTitle className="font-display text-sm font-black uppercase tracking-widest text-foreground flex items-center gap-3">

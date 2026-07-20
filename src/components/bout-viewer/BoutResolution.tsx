@@ -62,7 +62,7 @@ export default function BoutResolution({
       {winner && (
         <div
           className={cn(
-            'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
+            'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 bg-background/90 backdrop-blur-3xl relative overflow-hidden',
             outcomeStyle.bgClasses
           )}
         >

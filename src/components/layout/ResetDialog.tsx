@@ -25,7 +25,7 @@ interface ResetDialogProps {
 export function ResetDialog({ open, onOpenChange, onConfirm }: ResetDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-neutral-900 border-destructive/20 scale-105">
+      <AlertDialogContent className="bg-background/90 border-destructive/20 scale-105">
         <AlertDialogHeader>
           <AlertDialogTitle className="font-display font-black text-2xl uppercase tracking-tighter text-destructive">
             Expunge the Record

@@ -41,7 +41,7 @@ function AttributeRangeRow({ attribute, range }: AttributeRangeRowProps) {
           {attribute}
         </span>
       </div>
-      <div className="flex-1 h-8 bg-neutral-900 rounded-none border border-white/5 px-4 flex items-center group-hover:border-primary/20 transition-all">
+      <div className="flex-1 h-8 bg-neutral-900 rounded-none border border-white/5 px-4 flex items-center group-hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none">
         <span className="text-xs font-mono font-black text-foreground">{range}</span>
         <div className="ml-auto flex gap-1 items-baseline">
           <div className="h-1.5 w-1 bg-primary/40 rounded-none" />

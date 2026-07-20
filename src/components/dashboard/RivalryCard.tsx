@@ -15,7 +15,7 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
   const r = rivalry;
 
   return (
-    <div className="space-y-4 p-4 bg-white/2 rounded-none border border-white/5 hover:border-destructive/20 transition-all group/item">
+    <div className="space-y-4 p-4 bg-white/2 rounded-none border border-white/5 hover:border-destructive/20 transition-all motion-reduce:transition-none motion-reduce:transform-none group/item">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-destructive transition-colors">
@@ -78,17 +78,17 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
             <div data-testid="h2h-bar" className="flex h-1 rounded-none overflow-hidden gap-px">
               <div
                 data-testid="h2h-player"
-                className="bg-primary transition-all duration-500"
+                className="bg-primary transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
                 style={{ width: `${playerPct}%` }}
               />
               <div
                 data-testid="h2h-draw"
-                className="bg-muted-foreground/20 transition-all duration-500"
+                className="bg-muted-foreground/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
                 style={{ width: `${drawPct}%` }}
               />
               <div
                 data-testid="h2h-rival"
-                className="bg-destructive transition-all duration-500"
+                className="bg-destructive transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
                 style={{ width: `${rivalPct}%` }}
               />
             </div>

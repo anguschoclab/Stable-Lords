@@ -35,7 +35,7 @@ export function LeftNav({ className }: LeftNavProps) {
     <nav
       className={cn(
         'w-52 flex-shrink-0 flex flex-col h-full',
-        'bg-[#0C0806] border-r border-white/5',
+        'bg-background border-r border-white/5',
         className
       )}
     >

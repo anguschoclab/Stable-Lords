@@ -40,7 +40,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                       ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]'
                       : r.owner.id === idB
                         ? 'border-white/5 opacity-10 cursor-not-allowed grayscale'
-                        : 'border-white/5 bg-neutral-900/60 hover:border-white/20 hover:bg-white/5'
+                        : 'border-white/5 bg-background/90 hover:border-white/20 hover:bg-white/5'
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                       ? 'border-accent bg-accent/10 shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]'
                       : r.owner.id === idA
                         ? 'border-white/5 opacity-10 cursor-not-allowed grayscale'
-                        : 'border-white/5 bg-neutral-900/60 hover:border-white/20 hover:bg-white/5'
+                        : 'border-white/5 bg-background/90 hover:border-white/20 hover:bg-white/5'
                   )}
                 >
                   <div className="flex items-center justify-between">

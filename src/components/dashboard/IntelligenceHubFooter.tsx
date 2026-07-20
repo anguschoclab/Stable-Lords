@@ -16,7 +16,7 @@ export function IntelligenceHubFooter() {
       <Link
         to="/world/scouting"
         title="Scout rivals before booking bouts"
-        className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-3 py-1.5 transition-all group"
+        className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-3 py-1.5 transition-all motion-reduce:transition-none motion-reduce:transform-none group"
       >
         <Target className="h-3 w-3 shrink-0" />
         Scout Rivals

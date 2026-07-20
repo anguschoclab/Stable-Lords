@@ -183,7 +183,7 @@ function StatItem({ icon: Icon, label, value, sublabel, variant }: StatItemProps
   const v = variantClasses[variant];
 
   return (
-    <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all">
+    <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all motion-reduce:transition-none motion-reduce:transform-none">
       <div className={`p-3 rounded-none ${v.bg} ${v.border} ${v.hoverBorder} transition-all`}>
         <Icon className={`h-5 w-5 ${v.text} ${v.hoverText} transition-colors`} />
       </div>
@@ -231,7 +231,7 @@ export function InsightVault() {
       {/* ─── The Insight Vault Header ─── */}
       <Surface
         variant="glass"
-        className="border-arena-gold/30 bg-neutral-900/40 relative overflow-hidden"
+        className="border-arena-gold/30 bg-background/90 relative overflow-hidden"
       >
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <Database className="h-32 w-32 text-arena-gold" />

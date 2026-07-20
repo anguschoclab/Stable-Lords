@@ -114,7 +114,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
 
       <button
         onClick={addCondition}
-        className="w-full flex items-center justify-center gap-2 border border-dashed border-white/10 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:border-arena-gold/40 hover:text-arena-gold transition-all"
+        className="w-full flex items-center justify-center gap-2 border border-dashed border-white/10 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:border-arena-gold/40 hover:text-arena-gold transition-all motion-reduce:transition-none motion-reduce:transform-none"
         aria-label="Add Condition"
       >
         <Plus className="w-3.5 h-3.5" />

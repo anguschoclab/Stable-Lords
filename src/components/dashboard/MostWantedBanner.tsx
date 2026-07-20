@@ -19,7 +19,7 @@ export function MostWantedBanner({ name, stable, wins, kills }: MostWantedBanner
           High Priority Target
         </span>
       </div>
-      <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-none group/wanted hover:bg-destructive/10 transition-all">
+      <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-none group/wanted hover:bg-destructive/10 transition-all motion-reduce:transition-none motion-reduce:transform-none">
         <div className="flex items-center gap-4">
           <div className="h-10 w-10 rounded-none bg-destructive/20 flex items-center justify-center border border-destructive/30">
             <Skull className="h-5 w-5 text-destructive animate-pulse" />

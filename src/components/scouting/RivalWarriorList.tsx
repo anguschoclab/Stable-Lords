@@ -71,7 +71,7 @@ export function RivalWarriorList({
                     variant={isSelected ? 'paper' : 'glass'}
                     padding="none"
                     className={cn(
-                      'transition-all border bg-neutral-900/60 overflow-hidden',
+                      'transition-all border bg-background/90 overflow-hidden',
                       isSelected
                         ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]'
                         : 'border-white/5 hover:border-white/20 hover:bg-white/5'
@@ -103,7 +103,7 @@ export function RivalWarriorList({
                         {isSelected ? (
                           <Target className="h-4 w-4 text-primary animate-pulse" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all" />
+                          <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
                         )}
                       </div>
                     </div>

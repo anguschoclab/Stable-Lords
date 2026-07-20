@@ -93,7 +93,7 @@ export default function NewGameForm({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative bg-[#0C0806]">
+    <div className="min-h-screen flex items-center justify-center p-4 relative bg-background">
       <div className="relative z-10 w-full max-w-xl space-y-6">
         <button
           onClick={onBack}
@@ -144,7 +144,7 @@ export default function NewGameForm({
             type="button"
             onClick={randomizeAll}
             title="Randomize everything"
-            className="w-full h-10 gap-2 border-[rgba(60,42,22,0.8)] bg-[#0A0705] hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
+            className="w-full h-10 gap-2 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
           >
             <Dices className="h-4 w-4 text-accent/70" />
             RANDOMIZE ALL
@@ -166,7 +166,7 @@ export default function NewGameForm({
                   onChange={(e) => setOwnerName(e.target.value)}
                   maxLength={24}
                   autoFocus
-                  className="flex-1 h-10 text-sm bg-[#0A0705] border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 "
+                  className="flex-1 h-10 text-sm bg-background border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 "
                 />
                 <Button
                   variant="outline"
@@ -175,7 +175,7 @@ export default function NewGameForm({
                   onClick={() => setOwnerName(randomOwnerName())}
                   title="Random name"
                   aria-label="Randomize your name"
-                  className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-[#0A0705] hover:border-accent/40 hover:bg-accent/5"
+                  className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
                 >
                   <Dices className="h-4 w-4 text-accent/70" />
                 </Button>
@@ -196,7 +196,7 @@ export default function NewGameForm({
                   value={stableName}
                   onChange={(e) => setStableName(e.target.value)}
                   maxLength={30}
-                  className="flex-1 h-10 text-sm bg-[#0A0705] border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 "
+                  className="flex-1 h-10 text-sm bg-background border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 "
                 />
                 <Button
                   variant="outline"
@@ -205,7 +205,7 @@ export default function NewGameForm({
                   onClick={() => setStableName(randomStableName())}
                   title="Random name"
                   aria-label="Randomize stable name"
-                  className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-[#0A0705] hover:border-accent/40 hover:bg-accent/5"
+                  className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
                 >
                   <Dices className="h-4 w-4 text-accent/70" />
                 </Button>
@@ -261,7 +261,7 @@ export default function NewGameForm({
                   onClick={randomizeCrest}
                   title="Randomize heraldry"
                   aria-label="Randomize your heraldic crest"
-                  className="h-9 px-4 gap-2 border-[rgba(60,42,22,0.8)] bg-[#0A0705] hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
+                  className="h-9 px-4 gap-2 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
                 >
                   <Dices className="h-4 w-4 text-accent/70" />
                   RANDOMIZE HERALDRY

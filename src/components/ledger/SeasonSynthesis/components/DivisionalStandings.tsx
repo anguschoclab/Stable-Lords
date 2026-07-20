@@ -12,7 +12,7 @@ interface DivisionalStandingsProps {
 export function DivisionalStandings({ rivals }: DivisionalStandingsProps) {
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
-      <div className="p-4 border-b border-white/5 bg-neutral-900/60 flex items-center gap-3">
+      <div className="p-4 border-b border-white/5 bg-background/90 flex items-center gap-3">
         <div className="p-1.5 rounded-none bg-arena-gold/10 border border-arena-gold/20">
           <Trophy className="h-3.5 w-3.5 text-arena-gold" />
         </div>

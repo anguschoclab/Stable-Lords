@@ -38,7 +38,7 @@ export function ImperialRing({
   };
 
   const variantClasses = {
-    bronze: 'border-white/10 bg-neutral-900/50 shadow-[inset_0_0_10px_rgba(180,140,100,0.1)]',
+    bronze: 'border-white/10 bg-background/90 shadow-[inset_0_0_10px_rgba(180,140,100,0.1)]',
     silver: 'border-white/20 bg-white/5 shadow-[inset_0_0_10px_rgba(200,200,200,0.1)]',
     gold: 'border-arena-gold/30 bg-arena-gold/5 shadow-[0_0_15px_rgba(255,215,0,0.15)]',
     blood: 'border-primary/40 bg-primary/5 shadow-[0_0_15px_rgba(135,34,40,0.2)]',

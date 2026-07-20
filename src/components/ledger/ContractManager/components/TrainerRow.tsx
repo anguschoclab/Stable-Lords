@@ -29,7 +29,7 @@ export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
       <TableCell className="py-5">
         <div className="flex items-center gap-2.5">
           <div className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors" />
-          <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all">
+          <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none">
             {t.focus}
           </span>
         </div>
@@ -39,7 +39,7 @@ export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
       </TableCell>
       <TableCell className="text-right pr-8 py-5">
         <div className="flex flex-col items-end">
-          <div className="flex items-center justify-end gap-2 text-sm font-mono font-black text-destructive/80 group-hover:text-destructive group-hover:drop-shadow-[0_0_5px_rgba(255,0,0,0.2)] transition-all">
+          <div className="flex items-center justify-end gap-2 text-sm font-mono font-black text-destructive/80 group-hover:text-destructive group-hover:drop-shadow-[0_0_5px_rgba(255,0,0,0.2)] transition-all motion-reduce:transition-none motion-reduce:transform-none">
             <span>{getSalary(t.tier)}</span>
             <Coins className="h-4 w-4 text-arena-gold opacity-60" />
           </div>

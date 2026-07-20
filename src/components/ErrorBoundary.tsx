@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <div className="h-screen w-screen bg-[#050506] flex flex-col items-center justify-center gap-6 font-mono text-center px-8">
+      <div className="h-screen w-screen bg-background flex flex-col items-center justify-center gap-6 font-mono text-center px-8">
         <div className="text-primary text-[10px] uppercase tracking-[0.5em] animate-pulse">
           System Failure
         </div>

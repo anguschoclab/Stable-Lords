@@ -53,9 +53,9 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
       <Surface
         variant="glass"
         padding="none"
-        className="border-border/10 hover:border-primary/30 transition-all duration-500 group overflow-hidden shadow-xl"
+        className="border-border/10 hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 group overflow-hidden shadow-xl"
       >
-        <div className="p-6 md:p-8 border-b border-white/5 bg-neutral-900/40 relative">
+        <div className="p-6 md:p-8 border-b border-white/5 bg-background/90 relative">
           <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
             <ScrollText className="h-20 w-20" />
           </div>
@@ -94,7 +94,7 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
             {item.items.map((entry, j) => (
               <li key={j} className="flex items-start gap-4 group/item">
                 <div className="mt-1.5 shrink-0 flex flex-col items-center gap-1 group/btn">
-                  <ChevronRight className="h-3 w-3 text-primary opacity-40 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all" />
+                  <ChevronRight className="h-3 w-3 text-primary opacity-40 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
                   <div className="w-0.5 h-full bg-white/5 min-h-[12px] group-hover/item:bg-primary/20 transition-colors" />
                 </div>
                 <span className="text-xs md:text-sm font-medium text-foreground/70 group-hover/item:text-foreground leading-relaxed transition-colors tracking-wide">
@@ -105,7 +105,7 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
           </ul>
         </div>
 
-        <div className="px-8 py-3 bg-neutral-900/40 border-t border-white/5 flex items-center justify-between opacity-40 group-hover:opacity-100 transition-opacity">
+        <div className="px-8 py-3 bg-background/90 border-t border-white/5 flex items-center justify-between opacity-40 group-hover:opacity-100 transition-opacity">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
               <Activity className="h-3 w-3 text-muted-foreground" />

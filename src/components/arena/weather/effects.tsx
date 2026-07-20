@@ -289,7 +289,7 @@ export function ThunderstormEffect() {
 export function AshfallEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute inset-0 bg-neutral-900/10 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-background/90 mix-blend-multiply" />
       {Array.from({ length: 40 }).map((_, i) => (
         <div
           key={i}
@@ -867,7 +867,7 @@ export function WildfireSmokeEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Dark smoky haze */}
-      <div className="absolute inset-0 bg-neutral-900/30 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-background/90 mix-blend-multiply" />
       {/* Billowing smoke clouds — large, slow, rising */}
       {Array.from({ length: 12 }).map((_, i) => (
         <div

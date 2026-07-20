@@ -444,6 +444,31 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'blood_pit_famous_death_butcher',
+    arenaId: 'gutter_pit',
+    type: 'famous_death',
+    title: 'The End of the Butcher',
+    narrative:
+      'In 992, the notorious enforcer known as the Gutter Butcher met a gruesome end when he slipped on a patch of slick entrails and impaled himself on his own rusted halberd.',
+  },
+  {
+    id: 'standard_arena_architectural_quirk_echo',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Silent Archway',
+    narrative:
+      'A design flaw in the northern archway creates an acoustic dead zone. Fighters cornered there often cannot hear the roar of the crowd, making their last moments eerily silent.',
+  },
+  {
+    id: 'flesh_gardens_historical_battle_beast',
+    arenaId: 'flesh_gardens',
+    type: 'historical_battle',
+    title: 'The Night of the Iron Maw',
+    narrative:
+      'A legendary bout in 985 saw an unarmed gladiator choke out a massive Iron Maw lizard. The beast\'s skull now adorns the promoter\'s private box.',
+  },
+
+  {
     id: 'standard_arena_orphan_riot',
     arenaId: 'standard_arena',
     type: 'historical_battle',

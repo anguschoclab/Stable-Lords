@@ -1,6 +1,13 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Born in the shadowed cellars of the Blackwood Workhouse',
+  'Raised among the soot and cinders of the lower forge district',
+  'Left in a rusted iron crib outside the Bloodless Saints Monastery',
+  'Found crawling through the charnel heaps of the plague wards',
+  'Sold to a fighting pit master for a handful of copper coins and a loaf of bread',
+  'Raised by scavengers in the drowned ruins of the Old City',
+  'Abandoned near the butcher’s row, surviving on discarded scraps',
   'Raised in the rat-infested underbelly of the Iron Cages Orphanage',
   'Abandoned at the rusted iron doors of the Silent Brothers',
   'Found shivering beneath the gallows in the central square',
@@ -30,7 +37,6 @@ const ORIGINS = [
   'Flogged daily at the Blackwood Boys Home until they learned to strike back',
   'Traded to a fighting pit master by the corrupt warden of the Iron Cage Orphanage',
   'Survived the Cinder Plague by hiding in the cathedral catacombs',
-  'Raised by feral dogs in the shadow of the Black Iron Foundry',
   'Sold for a handful of copper coins to a traveling beast-tamer',
   'Escaped the fighting pits of the Undercity during a bloody riot',
   'Born in the sunless depths of the Sunken Asylum',
@@ -146,6 +152,10 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would sit completely still for hours watching the fighting pit from the rafters',
+  'learned to predict a strike by watching the tension in a bully’s shoulders',
+  'was infamous for never crying out, no matter how severe the punishment',
+  'would map out the blind spots of the orphanage guards with obsessive precision',
   'would catch and study the weak points of venomous centipedes',
   'learned to read the mood of the room by the clinking of loose coins',
   'slept clutching a sharpened spoon carved from stolen silver',
@@ -202,7 +212,6 @@ const CHILDHOOD_TRAITS = [
   'would bite and claw older kids who tried to take their rations',
   'memorized the patrol routes of guards just for the challenge of evading them',
   'never flinched when the master raised a hand',
-  'was caught sharpening bone fragments into makeshift shivs',
   'could perfectly mimic the screams of dying men',
   'slept peacefully through the most deafening thunderstorms',
   'was known to stare unblinking at the flickering flames of the hearth',
@@ -232,6 +241,10 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they shattered a cruel overseer’s kneecap with a stolen hammer',
+  'realizing the arena was the only place where their rage was rewarded',
+  'knowing that blood on the sands washes away the dirt of the slums',
+  'waiting for the moment the iron gates would open to true freedom',
   "until they broke a slaver's nose with a singular, perfectly timed headbutt",
   'now driven by a dark promise sworn in the silence of the orphan ward',
   'waiting to turn the misery of their youth into a spectacle of vengeance',

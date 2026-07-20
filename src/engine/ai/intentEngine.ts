@@ -66,9 +66,16 @@ export function pickWeeklyIntent(
   }
 
   // 2. VENDETTA: If there is a high-intensity grudge, or the player is dominant
-  const hasGrudge = Array.from(state.grudgeMap?.values() ?? []).some(
-    (g) => (g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3
-  );
+  // ⚡ Bolt: Fast iterator search instead of O(N) intermediate array allocation.
+  let hasGrudge = false;
+  if (state.grudgeMap) {
+    for (const g of state.grudgeMap.values()) {
+      if ((g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3) {
+        hasGrudge = true;
+        break;
+      }
+    }
+  }
 
   const playerThreat = computePlayerThreatLevel(state);
   const playerThreatVendettaChance =
@@ -234,10 +241,17 @@ export function updateAIStrategy(
 
     let targetStableId = undefined;
     if (intent === 'VENDETTA') {
-      const g = Array.from(state.grudgeMap?.values() ?? []).find(
-        (g) => (g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3
-      );
-      targetStableId = g?.ownerIdA === rival.owner.id ? g?.ownerIdB : g?.ownerIdA;
+      // ⚡ Bolt: Fast iterator search instead of O(N) intermediate array allocation.
+      let grudgeTarget;
+      if (state.grudgeMap) {
+        for (const g of state.grudgeMap.values()) {
+          if ((g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3) {
+            grudgeTarget = g;
+            break;
+          }
+        }
+      }
+      targetStableId = grudgeTarget?.ownerIdA === rival.owner.id ? grudgeTarget?.ownerIdB : grudgeTarget?.ownerIdA;
       // If no grudge target but player triggered the vendetta, target the player stable
       if (!targetStableId) {
         targetStableId = state.player?.id;

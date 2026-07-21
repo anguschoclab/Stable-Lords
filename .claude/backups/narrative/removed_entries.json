@@ -1,0 +1,1227 @@
+[
+  {
+    "path": "strikes.fist.glancing",
+    "item": "{{attacker}} throws a wild punch that barely clips {{defender}}.",
+    "reason": "near_duplicate",
+    "kept": "{{attacker}} throws a wild punch that only clips {{defender}}'s shoulder.",
+    "similarity": 0.8759124087591241
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "item": "right hamstring",
+    "reason": "near_duplicate",
+    "kept": "RIGHT HAMSTRING",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "item": "outer right thigh",
+    "reason": "near_duplicate",
+    "kept": "OUTER RIGHT THIGH",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "item": "right knee joint",
+    "reason": "near_duplicate",
+    "kept": "RIGHT KNEE JOINT",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "item": "lower right calf",
+    "reason": "near_duplicate",
+    "kept": "LOWER RIGHT CALF",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "item": "right shinbone",
+    "reason": "near_duplicate",
+    "kept": "RIGHT SHINBONE",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "item": "upper right leg",
+    "reason": "near_duplicate",
+    "kept": "UPPER RIGHT LEG",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "item": "left hamstring",
+    "reason": "near_duplicate",
+    "kept": "LEFT HAMSTRING",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "item": "outer left thigh",
+    "reason": "near_duplicate",
+    "kept": "OUTER LEFT THIGH",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "item": "left knee joint",
+    "reason": "near_duplicate",
+    "kept": "LEFT KNEE JOINT",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "item": "lower left calf",
+    "reason": "near_duplicate",
+    "kept": "LOWER LEFT CALF",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "item": "left shinbone",
+    "reason": "near_duplicate",
+    "kept": "LEFT SHINBONE",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "item": "upper left leg",
+    "reason": "near_duplicate",
+    "kept": "UPPER LEFT LEG",
+    "similarity": 1.0
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "item": "The sheer force of the blow sends {{name}} tumbling to the sands.",
+    "reason": "near_duplicate",
+    "kept": "The sheer force of the blow sends {{name}} sprawling onto the arena sand.",
+    "similarity": 0.8695652173913043
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromgar",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grommak",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromtar",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromvar",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromdar",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromkar",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimmar",
+    "reason": "near_duplicate",
+    "kept": "Grommar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorgar",
+    "reason": "near_duplicate",
+    "kept": "Vorngar",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Branth",
+    "reason": "near_duplicate",
+    "kept": "Branthos",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Branth",
+    "reason": "near_duplicate",
+    "kept": "Brangath",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelgosh",
+    "reason": "near_duplicate",
+    "kept": "Baelgosh",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Dragath",
+    "reason": "near_duplicate",
+    "kept": "Drakgath",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Malgosh",
+    "reason": "near_duplicate",
+    "kept": "Halgosh",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Dramar",
+    "reason": "near_duplicate",
+    "kept": "Drakmar",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thortar",
+    "reason": "near_duplicate",
+    "kept": "Thorgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thorvar",
+    "reason": "near_duplicate",
+    "kept": "Thorgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thordar",
+    "reason": "near_duplicate",
+    "kept": "Thorgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thormar",
+    "reason": "near_duplicate",
+    "kept": "Thorgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thorkar",
+    "reason": "near_duplicate",
+    "kept": "Thorgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thargar",
+    "reason": "near_duplicate",
+    "kept": "Thorgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharmash",
+    "reason": "near_duplicate",
+    "kept": "Thormash",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thorrak",
+    "reason": "near_duplicate",
+    "kept": "Thorrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thornok",
+    "reason": "near_duplicate",
+    "kept": "Thorrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharrok",
+    "reason": "near_duplicate",
+    "kept": "Thorrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharthos",
+    "reason": "near_duplicate",
+    "kept": "Thorthos",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thorzor",
+    "reason": "near_duplicate",
+    "kept": "Thordor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thorkor",
+    "reason": "near_duplicate",
+    "kept": "Thordor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thardor",
+    "reason": "near_duplicate",
+    "kept": "Thordor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thargath",
+    "reason": "near_duplicate",
+    "kept": "Thorgath",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharmak",
+    "reason": "near_duplicate",
+    "kept": "Thormak",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thargosh",
+    "reason": "near_duplicate",
+    "kept": "Thorgosh",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharkan",
+    "reason": "near_duplicate",
+    "kept": "Thorkan",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thargorn",
+    "reason": "near_duplicate",
+    "kept": "Thorgorn",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thardran",
+    "reason": "near_duplicate",
+    "kept": "Thordran",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimmash",
+    "reason": "near_duplicate",
+    "kept": "Grommash",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromrak",
+    "reason": "near_duplicate",
+    "kept": "Gromrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromnok",
+    "reason": "near_duplicate",
+    "kept": "Gromrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimrok",
+    "reason": "near_duplicate",
+    "kept": "Gromrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimthos",
+    "reason": "near_duplicate",
+    "kept": "Gromthos",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromzor",
+    "reason": "near_duplicate",
+    "kept": "Gromdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Gromkor",
+    "reason": "near_duplicate",
+    "kept": "Gromdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimdor",
+    "reason": "near_duplicate",
+    "kept": "Gromdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimgath",
+    "reason": "near_duplicate",
+    "kept": "Gromgath",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimgosh",
+    "reason": "near_duplicate",
+    "kept": "Gromgosh",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimkan",
+    "reason": "near_duplicate",
+    "kept": "Gromkan",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimgorn",
+    "reason": "near_duplicate",
+    "kept": "Gromgorn",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimdran",
+    "reason": "near_duplicate",
+    "kept": "Gromdran",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baeltar",
+    "reason": "near_duplicate",
+    "kept": "Baelgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelvar",
+    "reason": "near_duplicate",
+    "kept": "Baelgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baeldar",
+    "reason": "near_duplicate",
+    "kept": "Baelgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelmar",
+    "reason": "near_duplicate",
+    "kept": "Baelgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelkar",
+    "reason": "near_duplicate",
+    "kept": "Baelgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelgar",
+    "reason": "near_duplicate",
+    "kept": "Baelgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelmash",
+    "reason": "near_duplicate",
+    "kept": "Baelmash",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelrak",
+    "reason": "near_duplicate",
+    "kept": "Baelrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelnok",
+    "reason": "near_duplicate",
+    "kept": "Baelrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelrok",
+    "reason": "near_duplicate",
+    "kept": "Baelrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelthos",
+    "reason": "near_duplicate",
+    "kept": "Baelthos",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelzor",
+    "reason": "near_duplicate",
+    "kept": "Baeldor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Baelkor",
+    "reason": "near_duplicate",
+    "kept": "Baeldor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaeldor",
+    "reason": "near_duplicate",
+    "kept": "Baeldor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelgath",
+    "reason": "near_duplicate",
+    "kept": "Baelgath",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelmak",
+    "reason": "near_duplicate",
+    "kept": "Baelmak",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelkan",
+    "reason": "near_duplicate",
+    "kept": "Baelkan",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelgorn",
+    "reason": "near_duplicate",
+    "kept": "Baelgorn",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaeldran",
+    "reason": "near_duplicate",
+    "kept": "Baeldran",
+    "similarity": 0.875
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Varmash",
+    "reason": "near_duplicate",
+    "kept": "Zarmash",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Varthos",
+    "reason": "near_duplicate",
+    "kept": "Zarthos",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vargath",
+    "reason": "near_duplicate",
+    "kept": "Zargath",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vargosh",
+    "reason": "near_duplicate",
+    "kept": "Zargosh",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vargorn",
+    "reason": "near_duplicate",
+    "kept": "Zargorn",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vardran",
+    "reason": "near_duplicate",
+    "kept": "Zardran",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelkor",
+    "reason": "near_duplicate",
+    "kept": "Kaelzor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelvar",
+    "reason": "near_duplicate",
+    "kept": "Kaeltar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaeldar",
+    "reason": "near_duplicate",
+    "kept": "Kaeltar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelmar",
+    "reason": "near_duplicate",
+    "kept": "Kaeltar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kaelkar",
+    "reason": "near_duplicate",
+    "kept": "Kaeltar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorntar",
+    "reason": "near_duplicate",
+    "kept": "Vorngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornvar",
+    "reason": "near_duplicate",
+    "kept": "Vorngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorndar",
+    "reason": "near_duplicate",
+    "kept": "Vorngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornmar",
+    "reason": "near_duplicate",
+    "kept": "Vorngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornkar",
+    "reason": "near_duplicate",
+    "kept": "Vorngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vormash",
+    "reason": "near_duplicate",
+    "kept": "Vornmash",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornrak",
+    "reason": "near_duplicate",
+    "kept": "Vornrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornnok",
+    "reason": "near_duplicate",
+    "kept": "Vornrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorrok",
+    "reason": "near_duplicate",
+    "kept": "Vornrok",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornok",
+    "reason": "near_duplicate",
+    "kept": "Vornrok",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorthos",
+    "reason": "near_duplicate",
+    "kept": "Vornthos",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornzor",
+    "reason": "near_duplicate",
+    "kept": "Vorndor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vornkor",
+    "reason": "near_duplicate",
+    "kept": "Vorndor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vordor",
+    "reason": "near_duplicate",
+    "kept": "Vorndor",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorgath",
+    "reason": "near_duplicate",
+    "kept": "Vorngath",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vormak",
+    "reason": "near_duplicate",
+    "kept": "Vornmak",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorgosh",
+    "reason": "near_duplicate",
+    "kept": "Vorngosh",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorkan",
+    "reason": "near_duplicate",
+    "kept": "Vornkan",
+    "similarity": 0.9230769230769231
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vorgorn",
+    "reason": "near_duplicate",
+    "kept": "Vorngorn",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Vordran",
+    "reason": "near_duplicate",
+    "kept": "Vorndran",
+    "similarity": 0.9333333333333333
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathtar",
+    "reason": "near_duplicate",
+    "kept": "Rathgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathvar",
+    "reason": "near_duplicate",
+    "kept": "Rathgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathdar",
+    "reason": "near_duplicate",
+    "kept": "Rathgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathmar",
+    "reason": "near_duplicate",
+    "kept": "Rathgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathkar",
+    "reason": "near_duplicate",
+    "kept": "Rathgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathrak",
+    "reason": "near_duplicate",
+    "kept": "Rathrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathnok",
+    "reason": "near_duplicate",
+    "kept": "Rathrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathzor",
+    "reason": "near_duplicate",
+    "kept": "Rathdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Rathkor",
+    "reason": "near_duplicate",
+    "kept": "Rathdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Draktar",
+    "reason": "near_duplicate",
+    "kept": "Drakgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakvar",
+    "reason": "near_duplicate",
+    "kept": "Drakgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakdar",
+    "reason": "near_duplicate",
+    "kept": "Drakgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakmar",
+    "reason": "near_duplicate",
+    "kept": "Drakgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakkar",
+    "reason": "near_duplicate",
+    "kept": "Drakgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakrak",
+    "reason": "near_duplicate",
+    "kept": "Drakrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Draknok",
+    "reason": "near_duplicate",
+    "kept": "Drakrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakzor",
+    "reason": "near_duplicate",
+    "kept": "Drakdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Drakkor",
+    "reason": "near_duplicate",
+    "kept": "Drakdor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimtar",
+    "reason": "near_duplicate",
+    "kept": "Grimgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimvar",
+    "reason": "near_duplicate",
+    "kept": "Grimgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimdar",
+    "reason": "near_duplicate",
+    "kept": "Grimgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimkar",
+    "reason": "near_duplicate",
+    "kept": "Grimgar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimrak",
+    "reason": "near_duplicate",
+    "kept": "Grimmak",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Grimkor",
+    "reason": "near_duplicate",
+    "kept": "Grimzor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharkor",
+    "reason": "near_duplicate",
+    "kept": "Tharzor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnzor",
+    "reason": "near_duplicate",
+    "kept": "Tharzor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharvar",
+    "reason": "near_duplicate",
+    "kept": "Thartar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Thardar",
+    "reason": "near_duplicate",
+    "kept": "Thartar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharmar",
+    "reason": "near_duplicate",
+    "kept": "Thartar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tharkar",
+    "reason": "near_duplicate",
+    "kept": "Thartar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnrak",
+    "reason": "near_duplicate",
+    "kept": "Tharrak",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnrok",
+    "reason": "near_duplicate",
+    "kept": "Tharnok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnnok",
+    "reason": "near_duplicate",
+    "kept": "Tharnok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kormash",
+    "reason": "near_duplicate",
+    "kept": "Gormash",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Korthos",
+    "reason": "near_duplicate",
+    "kept": "Gorthos",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Korgath",
+    "reason": "near_duplicate",
+    "kept": "Gorgath",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Korgosh",
+    "reason": "near_duplicate",
+    "kept": "Gorgosh",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Korgorn",
+    "reason": "near_duplicate",
+    "kept": "Gorgorn",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Kordran",
+    "reason": "near_duplicate",
+    "kept": "Gordran",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarntar",
+    "reason": "near_duplicate",
+    "kept": "Tarngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnvar",
+    "reason": "near_duplicate",
+    "kept": "Tarngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarndar",
+    "reason": "near_duplicate",
+    "kept": "Tarngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnmar",
+    "reason": "near_duplicate",
+    "kept": "Tarngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnkar",
+    "reason": "near_duplicate",
+    "kept": "Tarngar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Tarnkor",
+    "reason": "near_duplicate",
+    "kept": "Tarndor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Brantar",
+    "reason": "near_duplicate",
+    "kept": "Brangar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Branvar",
+    "reason": "near_duplicate",
+    "kept": "Brangar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Brandar",
+    "reason": "near_duplicate",
+    "kept": "Brangar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Branmar",
+    "reason": "near_duplicate",
+    "kept": "Brangar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Brankar",
+    "reason": "near_duplicate",
+    "kept": "Brangar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Branrak",
+    "reason": "near_duplicate",
+    "kept": "Branrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Brannok",
+    "reason": "near_duplicate",
+    "kept": "Branrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Branzor",
+    "reason": "near_duplicate",
+    "kept": "Brandor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Brankor",
+    "reason": "near_duplicate",
+    "kept": "Brandor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skartar",
+    "reason": "near_duplicate",
+    "kept": "Skargar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarvar",
+    "reason": "near_duplicate",
+    "kept": "Skargar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skardar",
+    "reason": "near_duplicate",
+    "kept": "Skargar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarmar",
+    "reason": "near_duplicate",
+    "kept": "Skargar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarkar",
+    "reason": "near_duplicate",
+    "kept": "Skargar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarrak",
+    "reason": "near_duplicate",
+    "kept": "Skarrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarnok",
+    "reason": "near_duplicate",
+    "kept": "Skarrok",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarzor",
+    "reason": "near_duplicate",
+    "kept": "Skardor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "recruitment.names",
+    "item": "Skarkor",
+    "reason": "near_duplicate",
+    "kept": "Skardor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": "kill_text.execution",
+    "item": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s struggles.",
+    "reason": "near_duplicate",
+    "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
+    "similarity": 0.8617021276595744
+  }
+]

@@ -160,6 +160,11 @@ const ORIGINS = [
   'Sold to the fighting pits to settle a drunkard\'s debt',
   'Raised by feral hounds in the ruins of the Old Cathedral',
   'Abandoned at the iron grates of the Silent Brothers\' sanctuary'
+  'Raised in the lightless cellars of the Blackwood Orphanage',
+  'Abandoned outside the fighting pits wrapped in a bloodied tunic',
+  'Survived the great fire of the Lower Wards by hiding in a cistern',
+  'Found wandering the ash-choked streets of the Foundry District',
+  'Raised by the grim overseers of the Iron Chain workhouse',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -224,7 +229,6 @@ const CHILDHOOD_TRAITS = [
   'would bite and claw older kids who tried to take their rations',
   'memorized the patrol routes of guards just for the challenge of evading them',
   'never flinched when the master raised a hand',
-  'was caught sharpening bone fragments into makeshift shivs',
   'could perfectly mimic the screams of dying men',
   'slept peacefully through the most deafening thunderstorms',
   'was known to stare unblinking at the flickering flames of the hearth',
@@ -255,6 +259,9 @@ const CHILDHOOD_TRAITS = [
   'learned to perfectly mimic the sound of snapping bone',
   'would systematically dismantle discarded clockwork toys',
   'slept soundly only when the city\'s warning bells rang'
+  'developed a terrifyingly serene smile during the most brutal beatings',
+  'was known for carving the names of their enemies into their own flesh',
+  'would purposefully instigate fights just to study how different people bleed',
 ];
 
 const DEFINING_MOMENTS = [
@@ -343,6 +350,9 @@ const DEFINING_MOMENTS = [
   'realizing that the only true currency in the undercity is pain',
   'waiting for the moment the crowd screams a name they once forgot',
   'carrying the cold certainty that everyone bleeds the same color'
+  'waiting for the day they could paint the arena sands with the blood of their oppressors',
+  'until they strangled a cruel matron with a stolen rosary',
+  'now driven by a dark vow sworn over the grave of their only friend',
 ];
 
 /**

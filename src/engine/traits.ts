@@ -148,6 +148,15 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+  gutter_born: {
+    id: 'gutter_born',
+    name: 'Gutter Born',
+    description: 'Forged in the merciless streets. Increased decisiveness and attack in early rounds.',
+    effect: { decMod: 1, attModEarly: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.5,
+  },
   spore_kissed: {
     id: 'spore_kissed',
     name: 'Spore Kissed',

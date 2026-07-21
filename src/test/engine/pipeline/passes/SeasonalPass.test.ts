@@ -1048,4 +1048,35 @@ describe('runSeasonalPass', () => {
     expect(impact.insightTokens![0]!.origin).toBe('Shadow Market');
     expect(impact.newsletterItems?.[0]?.title).toBe('Shadow Market Run');
   });
+  it('should trigger the secret_fight_club offseason event, awarding XP, fame, and applying injury', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('secret_fight_club') + 0.5) /
+          eventCount
+        );
+      if (callCount === 2) return 0.0;
+      if (callCount === 3) return 0.5;
+      if (callCount === 4) return 0.5;
+      if (callCount === 5) return 0.5;
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-club' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Fighter', status: 'Active', xp: 10, fame: 5, injuries: [] } as any],
+      newsletter: [],
+    };
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update?.xp).toBe(10 + 15 + Math.floor(0.5 * 11));
+    expect(update?.fame).toBe(5 + 10 + Math.floor(0.5 * 11));
+    expect(update?.injuries?.length).toBe(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Secret Fight Club');
+  });
 });

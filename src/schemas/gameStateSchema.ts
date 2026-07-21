@@ -95,6 +95,7 @@ export const WeatherTypeSchema = z.enum([
   'Rain of Frogs',
   'Chaos Storm',
   'Chaos Squall',
+  'Diamond Rain',
 ]);
 
 /**

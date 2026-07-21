@@ -1405,6 +1405,41 @@ function handleMoonlightDuel(
   }
 }
 
+function handleSecretFightClub(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15 + Math.floor(rng.next() * 11);
+      const fameGained = 10 + Math.floor(rng.next() * 11);
+      const newInjury = makeInjury(rng, {
+        name: 'Brawler Bruises',
+        description: 'Bruises from an unsanctioned underground brawl.',
+        severity: 'Minor',
+        weeksBase: 2,
+        weeksRange: 2,
+        penalties: { SP: -1 },
+      });
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+        fame: fameGained,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1454,6 +1489,7 @@ const EVENT_HANDLERS: Record<
   midnight_market: handleMidnightMarket,
   moonlight_duel: handleMoonlightDuel,
   chaos_spores: handleChaosSpores,
+  secret_fight_club: handleSecretFightClub,
 };
 
 /**

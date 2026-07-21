@@ -24,6 +24,7 @@ export function generateBoutBids(
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const activeRoster = rival.roster.filter((w) => w.status === 'Active');
   const bids: BoutBid[] = [];
+  const mockRivalMap = new Map(rivals.map(r => [r.id, r]));
 
   // Build a mock state for matchup scoring
   const mockState: GameState = {
@@ -158,7 +159,7 @@ export function generateBoutBids(
     let matchupModifier = -Infinity;
     let foundOpponent = false;
     if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
-      const targetRival = mockState.rivals.find((r) => r.id === rival.strategy?.targetStableId);
+      const targetRival = mockRivalMap.get(rival.strategy?.targetStableId);
       if (targetRival) {
         for (const opponent of targetRival.roster) {
           if (opponent.status === 'Active') {

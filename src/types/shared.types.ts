@@ -592,6 +592,7 @@ export type WeatherType =
   | 'Blazing Sun'
   | 'Gale'
   | 'Blood Moon'
+  | 'Eclipse of Chaos'
   | 'Eclipse'
   | 'Sandstorm'
   | 'Zephyr'

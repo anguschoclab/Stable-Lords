@@ -4838,7 +4838,16 @@
       "Traesoo",
       "Opkau",
       "Iagiocr",
-      "Pijowbal"
+      "Pijowbal",
+      "ZORV",
+      "VRAX",
+      "THULL",
+      "KORV",
+      "JAXA",
+      "XEN",
+      "VYL",
+      "ZARN",
+      "MYRK"
     ],
     "rival_stable_names": [
       "Shadow Blades",
@@ -5400,6 +5409,14 @@
       "effectType": "secret_fight_club",
       "newsletter": [
         "{{name}} snuck out to a secret fight club! They earned respect and learned a few tricks, but took some hits. (+{{xp}} XP, +{{fame}} Fame, Minor Injury)"
+      ]
+    },
+    "chaos_weavers_game": {
+      "title": "The Chaos Weaver's Game",
+      "effectType": "chaos_weavers_game",
+      "newsletter": [
+        "The Chaos Weaver appeared in the barracks, proposing a dangerous gamble. {{name}} accepted, gaining strange newfound power. (+25 XP)",
+        "The Chaos Weaver offered a game of chance. {{name}} played and lost, returning battered. (Minor Injury)"
       ]
     }
   },

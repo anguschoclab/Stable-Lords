@@ -14,6 +14,7 @@ describe('enumSources sync with WeatherType', () => {
     'Blazing Sun',
     'Gale',
     'Blood Moon',
+    'Eclipse of Chaos',
     'Eclipse',
     'Sandstorm',
     'Zephyr',
@@ -55,7 +56,6 @@ describe('enumSources sync with WeatherType', () => {
     'Crimson Snow',
     'Whispering Winds',
     'Glittering Frost',
-    'Eldritch Eclipse',
     'Prismatic Rain',
     'Moonlight Duel',
     'Diamond Rain',
@@ -67,12 +67,12 @@ describe('enumSources sync with WeatherType', () => {
     );
   });
 
-  it('WEATHER_TYPES count is 52 (48 original + 4 new)', () => {
-    expect(WEATHER_TYPES.length).toBe(52);
+  it('WEATHER_TYPES count is 53 (48 original + 5 new)', () => {
+    expect(WEATHER_TYPES.length).toBe(53);
   });
 
-  it('WeatherTypeSchema options count is 52', () => {
-    expect(schemaOptions.length).toBe(52);
+  it('WeatherTypeSchema options count is 53', () => {
+    expect(schemaOptions.length).toBe(53);
   });
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

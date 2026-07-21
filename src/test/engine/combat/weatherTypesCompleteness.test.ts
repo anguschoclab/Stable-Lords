@@ -22,7 +22,7 @@ describe('weather type registry completeness', () => {
   });
 
   it('WEATHER_TYPES matches WeatherTypeSchema entries', () => {
-    const weatherSet = new Set(WEATHER_TYPES as string[]);
+    const weatherSet = new Set(WEATHER_TYPES as readonly string[]);
     const schemaSet = new Set(schemaOptions);
     expect(weatherSet).toEqual(schemaSet);
   });
@@ -48,7 +48,7 @@ describe('weather type registry completeness', () => {
     }
   });
 
-  it('Weather count is 51 (pre-merge baseline)', () => {
-    expect(WEATHER_TYPES.length).toBe(51);
+  it('Weather count is 53 (post-merge with chaos weaver branches)', () => {
+    expect(WEATHER_TYPES.length).toBe(53);
   });
 });

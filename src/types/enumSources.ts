@@ -16,6 +16,7 @@ export const WEATHER_TYPES = [
   'Blazing Sun',
   'Gale',
   'Blood Moon',
+  'Eclipse of Chaos',
   'Eclipse',
   'Sandstorm',
   'Tornado',

@@ -66,6 +66,7 @@ export default function IdentityStep({
           <input
             id="owner-name"
             type="text"
+            maxLength={24}
             value={ownerInput}
             onChange={(e) => setOwnerInput(e.target.value)}
             className="w-full h-10 px-3 text-sm"
@@ -88,6 +89,7 @@ export default function IdentityStep({
           <input
             id="stable-name"
             type="text"
+            maxLength={30}
             value={stableInput}
             onChange={(e) => setStableInput(e.target.value)}
             className="w-full h-10 px-3 text-sm"

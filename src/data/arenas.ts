@@ -472,6 +472,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'architectural_quirk',
     title: 'Echoes of the Damned',
     narrative: 'The lower stonework of the pit was laid with such peculiar angles that the screams of dying fighters echo endlessly, terrifying even veteran gladiators.',
+  },
+  {
+    id: 'sundered_coliseum_fallen_emperor',
+    arenaId: 'sundered_coliseum',
+    type: 'famous_death',
+    title: 'The Fall of the Usurper',
+    narrative: 'It was upon these broken flagstones that the Usurper King met his end, dragged down by an alliance of peasant-gladiators who bypassed his guards and tore him apart.',
+  },
+  {
+    id: 'crystal_cavern_shattering_blow',
+    arenaId: 'crystal_cavern',
+    type: 'historical_battle',
+    title: 'The Shattering Blow',
+    narrative: 'A legendary brute once struck a crystalline pillar with such force that it shattered, showering the arena with razor-sharp shrapnel and ending the battle in a chaotic draw.',
+  },
+  {
     id: 'standard_arena_orphan_revolt',
     arenaId: 'standard_arena',
     type: 'historical_battle',

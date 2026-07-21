@@ -6,6 +6,23 @@ import { SeededRNGService } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
 
 /**
+ * Finds a high-intensity grudge (>= 3) involving the given owner.
+ * Uses fast iterator search with early break — no intermediate array allocation.
+ */
+function findGrudge(
+  grudgeMap: GameState['grudgeMap'],
+  ownerId: string
+): import('@/types/state.types').OwnerGrudge | undefined {
+  if (!grudgeMap) return undefined;
+  for (const g of grudgeMap.values()) {
+    if ((g.ownerIdA === ownerId || g.ownerIdB === ownerId) && g.intensity >= 3) {
+      return g;
+    }
+  }
+  return undefined;
+}
+
+/**
  * Determines the weekly strategic intent for an AI owner.
  * Intent impacts recruitment, training, and matchmaking choices.
  */
@@ -66,16 +83,7 @@ export function pickWeeklyIntent(
   }
 
   // 2. VENDETTA: If there is a high-intensity grudge, or the player is dominant
-  // ⚡ Bolt: Fast iterator search instead of O(N) intermediate array allocation.
-  let hasGrudge = false;
-  if (state.grudgeMap) {
-    for (const g of state.grudgeMap.values()) {
-      if ((g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3) {
-        hasGrudge = true;
-        break;
-      }
-    }
-  }
+  const hasGrudge = findGrudge(state.grudgeMap, rival.owner.id) !== undefined;
 
   const playerThreat = computePlayerThreatLevel(state);
   const playerThreatVendettaChance =
@@ -241,17 +249,10 @@ export function updateAIStrategy(
 
     let targetStableId = undefined;
     if (intent === 'VENDETTA') {
-      // ⚡ Bolt: Fast iterator search instead of O(N) intermediate array allocation.
-      let grudgeTarget;
-      if (state.grudgeMap) {
-        for (const g of state.grudgeMap.values()) {
-          if ((g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3) {
-            grudgeTarget = g;
-            break;
-          }
-        }
+      const grudgeTarget = findGrudge(state.grudgeMap, rival.owner.id);
+      if (grudgeTarget !== undefined) {
+        targetStableId = grudgeTarget.ownerIdA === rival.owner.id ? grudgeTarget.ownerIdB : grudgeTarget.ownerIdA;
       }
-      targetStableId = grudgeTarget?.ownerIdA === rival.owner.id ? grudgeTarget?.ownerIdB : grudgeTarget?.ownerIdA;
       // If no grudge target but player triggered the vendetta, target the player stable
       if (!targetStableId) {
         targetStableId = state.player?.id;

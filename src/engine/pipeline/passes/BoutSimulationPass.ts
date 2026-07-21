@@ -27,6 +27,7 @@ export function runBoutSimulationPass(
   const boutSummaries: FightSummary[] = results.map((r) => ({
     id: (r.contractId || generateId()) as FightId,
     week: state.week,
+    absoluteWeek: state.absoluteWeek || state.week,
     title: `${r.a.name} vs ${r.d.name}`,
     warriorIdA: r.a.id,
     warriorIdD: r.d.id,
@@ -48,6 +49,7 @@ export function runBoutSimulationPass(
   boutImpact.lastSimulationReport = {
     id: _rng.uuid() as SimulationReportId,
     week: state.week,
+    absoluteWeek: state.absoluteWeek || state.week,
     treasuryChange: 0,
     trainingGains: [],
     agingEvents: [],

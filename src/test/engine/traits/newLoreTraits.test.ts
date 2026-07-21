@@ -396,6 +396,47 @@ describe('new traits from lore expansion', () => {
     });
   });
 
+
+  describe('orphan_instinct', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.orphan_instinct).toBeDefined();
+    });
+
+    it('has correct metadata (tier Exceptional, sign positive, weight 0.8)', () => {
+      const t = TRAITS.orphan_instinct!;
+      expect(t.tier).toBe('Exceptional');
+      expect(t.sign).toBe('positive');
+      expect(t.weight).toBe(0.8);
+      expect(t.name).toBe('Orphan Instinct');
+    });
+
+    it('has effect defModEarly 1', () => {
+      expect(TRAITS.orphan_instinct!.effect.defModEarly).toBe(1);
+    });
+
+    it('getDynamicTraitMods returns defMod 1 when phase is OPENING', () => {
+      const ctx: DynamicTraitContext = {
+        phase: 'OPENING',
+        hpRatio: 1.0,
+        endRatio: 1.0,
+        consecutiveHits: 0,
+      };
+      const mods = getDynamicTraitMods(mockWarrior(['orphan_instinct']), ctx);
+      expect(mods.defMod).toBe(1);
+    });
+
+    it('getDynamicTraitMods returns defMod 0 when phase is MID', () => {
+      const ctx: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 1.0,
+        endRatio: 1.0,
+        consecutiveHits: 0,
+      };
+      const mods = getDynamicTraitMods(mockWarrior(['orphan_instinct']), ctx);
+      expect(mods.defMod).toBe(0);
+    });
+  });
+
   describe('removed duplicate traits', () => {
     it('pit_scarred is undefined (duplicate of asylum_born)', () => {
       expect(TRAITS.pit_scarred).toBeUndefined();

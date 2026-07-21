@@ -121,6 +121,15 @@ export const TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.2,
   },
+  orphan_instinct: {
+    id: 'orphan_instinct',
+    name: 'Orphan Instinct',
+    description: '+1 defense in early phase — years of running from danger have sharpened their reflexes.',
+    effect: { defModEarly: 1, iniMod: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
   spore_kissed: {
     id: 'spore_kissed',
     name: 'Spore Kissed',

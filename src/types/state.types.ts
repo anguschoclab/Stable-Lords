@@ -454,6 +454,7 @@ export interface HallEntry {
  * Defines the shape of simulation report.
  */
 export interface SimulationReport {
+  absoluteWeek?: number;
   id: SimulationReportId;
   week: number;
   treasuryChange: number;

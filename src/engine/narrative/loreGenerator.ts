@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Raised by the soot-stained wardens of the Cinder Keep',
+  'Abandoned in the rusted clockwork labyrinth of the Old City',
+  'Survived the grueling child-pits of the Salt Wastes',
+  'Found shivering among the feral hounds of the Black Market',
+  'Raised on the brutal streets of the Dross Wards by a disgraced gladiator',
   'Raised in the rat-infested underbelly of the Iron Cages Orphanage',
   'Abandoned at the rusted iron doors of the Silent Brothers',
   'Found shivering beneath the gallows in the central square',
@@ -146,14 +151,16 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would gnaw on discarded bones to strengthen their jaw',
+  'learned to predict strikes by watching the shadows of passing guards',
+  'developed a chillingly blank stare when faced with violence',
   'would catch and study the weak points of venomous centipedes',
   'learned to read the mood of the room by the clinking of loose coins',
   'slept clutching a sharpened spoon carved from stolen silver',
   'was famous for slipping out of rusted shackles with dislocated thumbs',
   'would meticulously collect the severed fingers of thieves for good luck',
   'learned to mimic the death rattle of plague victims to scare off bullies',
-  'was caught sharpening human bone fragments into makeshift daggers',
-  'learned to mask their fear by laughing manically when struck',
+    'learned to mask their fear by laughing manically when struck',
   'would systematically break the fingers of thieves who tried to steal their food',
   'perfected the art of striking from the shadows of the orphanage dormitories',
   'would meticulously collect and sharpen shattered glass from the streets',
@@ -232,6 +239,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they strangled a cruel taskmaster and embraced the arena’s call',
+  'now seeking to turn the brutality of their past into the roaring adoration of the crowd',
+  'waiting to prove that the blood of the slums burns hotter than the gold of kings',
   "until they broke a slaver's nose with a singular, perfectly timed headbutt",
   'now driven by a dark promise sworn in the silence of the orphan ward',
   'waiting to turn the misery of their youth into a spectacle of vengeance',

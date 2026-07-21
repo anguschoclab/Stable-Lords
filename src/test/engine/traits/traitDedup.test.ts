@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 108; // 100 baseline + 8 new traits
+const EXPECTED_COUNT = 110; // 100 baseline + 10 new traits
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
@@ -134,7 +134,7 @@ describe('Trait deduplication', () => {
   });
 
   describe('trait count matches expected baseline', () => {
-    it(`TRAITS has ${EXPECTED_COUNT} entries (baseline ${BASELINE_COUNT} + 8 new)`, () => {
+    it(`TRAITS has ${EXPECTED_COUNT} entries (baseline ${BASELINE_COUNT} + 10 new)`, () => {
       expect(Object.keys(TRAITS).length).toBe(EXPECTED_COUNT);
     });
   });

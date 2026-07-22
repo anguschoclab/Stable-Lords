@@ -61,6 +61,7 @@ export const WEATHER_STATS: Record<WeatherType, string> = {
   'Chaos Storm': 'STAMINA DRAIN 125% | INITIATIVE -5 | RIPOSTE +10 | DAMAGE +50%',
   'Whispering Winds': 'INITIATIVE -1 | RIPOSTE +2 | DAMAGE -5%',
   'Chaos Squall': 'STAMINA DRAIN 115% | INITIATIVE +3 | RIPOSTE -2 | DAMAGE +10%',
+  'Diamond Rain': 'STAMINA DRAIN 130% | DAMAGE +15%',
 }; /**
  * Weather widget.
  */

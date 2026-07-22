@@ -103,7 +103,7 @@ const TacticalLogEntry = memo(
         key={index}
         ref={entryRef}
         className={cn(
-          'flex items-start gap-2 py-1.5 px-2 border-l-2 text-xs transition-all duration-300',
+          'flex items-start gap-2 py-1.5 px-2 border-l-2 text-xs transition-all duration-300 motion-reduce:transition-none',
           getEventColor(type),
           isLatest && 'animate-in slide-in-from-left-2 duration-300',
           isLatest && type === 'crit' && 'animate-pulse',
@@ -239,7 +239,7 @@ export default function TacticalLogView({
             disabled={isAtStart}
             aria-label="Previous"
             className={cn(
-              'flex items-center justify-center h-8 w-8 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              'flex items-center justify-center h-8 w-8 transition-all motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
               isAtStart
                 ? 'opacity-30 cursor-not-allowed'
                 : 'text-muted-foreground hover:text-foreground hover:bg-white/5'

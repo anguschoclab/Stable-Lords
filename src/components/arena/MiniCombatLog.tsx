@@ -79,7 +79,7 @@ export default function MiniCombatLog({
   };
 
   return (
-    <div className={cn('absolute bottom-4 left-4 z-30', 'transition-all duration-300', className)}>
+    <div className={cn('absolute bottom-4 left-4 z-30', 'transition-all duration-300 motion-reduce:transition-none', className)}>
       {/* Header */}
       <div
         role="button"
@@ -155,7 +155,7 @@ export default function MiniCombatLog({
                     className={cn(
                       'px-3 py-1.5 flex items-start gap-2',
                       'transition-all duration-300',
-                      isLatest && 'bg-white/5'
+                      isLatest && 'bg-white/5 motion-reduce:transition-none'
                     )}
                   >
                     <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">

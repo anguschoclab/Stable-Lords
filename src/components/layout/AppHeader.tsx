@@ -179,7 +179,7 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
         </TooltipTrigger>
         <TooltipContent
           side="bottom"
-          className="bg-[#0C0806] border-white/10 p-3 max-w-[220px] rounded-none"
+          className="bg-background border-white/10 p-3 max-w-[220px] rounded-none"
         >
           <p className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-primary">
             Weather Effect
@@ -389,7 +389,7 @@ export function AppHeader({
   returnToTitle,
 }: AppHeaderProps) {
   return (
-    <header className="h-16 border-b border-white/5 bg-[#080604]/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
+    <header className="h-16 border-b border-white/5 bg-background/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-4">
           <MobileNav />

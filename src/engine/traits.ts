@@ -57,6 +57,7 @@ export interface TraitEffect {
   defModLowHp?: number; // defender HP < 0.5
   parModHighHp?: number; // own HP > 0.75
   defModEarly?: number; // OPENING phase
+  iniModEarly?: number; // OPENING phase
   attModEarly?: number; // OPENING phase
   defModLate?: number; // LATE phase
   attModLate?: number; // LATE phase
@@ -130,6 +131,15 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+  born_in_shadows: {
+    id: 'born_in_shadows',
+    name: 'Born in Shadows',
+    description: '+1 initiative in OPENING phase — used to striking before being seen.',
+    effect: { iniModEarly: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
   orphan_shadow: {
     id: 'orphan_shadow',
     name: 'Orphan Shadow',
@@ -156,6 +166,24 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
     weight: 0.5,
+  },
+  beast_blood: {
+    id: 'beast_blood',
+    name: 'Beast Blood',
+    description: '+1 attack when at low HP and +1 initiative while fresh — lashes out like a wounded animal but starts strong.',
+    effect: { attModLowHp: 1, iniModFresh: 1 },
+    weight: 0.7,
+    tier: 'Signature',
+    sign: 'positive',
+  },
+  rusted_resolve: {
+    id: 'rusted_resolve',
+    name: 'Rusted Resolve',
+    description: '+1 defense when bloodied and +1 defense in LATE phase — pain only hardens them further.',
+    effect: { defModLowHp: 1, defModLate: 1 },
+    weight: 0.7,
+    tier: 'Signature',
+    sign: 'positive',
   },
   spore_kissed: {
     id: 'spore_kissed',
@@ -823,6 +851,7 @@ export function getDynamicTraitMods(
     if (e.defModLowHp != null && ctx.hpRatio < 0.5) acc.defMod += e.defModLowHp;
     if (e.parModHighHp != null && ctx.hpRatio > 0.75) acc.parMod += e.parModHighHp;
     if (e.defModEarly != null && ctx.phase === 'OPENING') acc.defMod += e.defModEarly;
+    if (e.iniModEarly != null && ctx.phase === 'OPENING') acc.iniMod += e.iniModEarly;
     if (e.attModEarly != null && ctx.phase === 'OPENING') acc.attMod += e.attModEarly;
     if (e.attModLate != null && ctx.phase === 'LATE') acc.attMod += e.attModLate;
     if (e.defModLate != null && ctx.phase === 'LATE') acc.defMod += e.defModLate;

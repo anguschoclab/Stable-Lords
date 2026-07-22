@@ -154,8 +154,8 @@ export default function MiniCombatLog({
                     key={idx}
                     className={cn(
                       'px-3 py-1.5 flex items-start gap-2',
-                      'transition-all duration-300',
-                      isLatest && 'bg-white/5 motion-reduce:transition-none'
+                      'transition-all duration-300 motion-reduce:transition-none',
+                      isLatest && 'bg-white/5'
                     )}
                   >
                     <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">

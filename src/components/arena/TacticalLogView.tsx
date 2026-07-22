@@ -29,7 +29,7 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>) {
     case 'hit':
       return <Swords className="h-3 w-3 text-arena-gold" />;
     case 'crit':
-      return <Zap className="h-3.5 w-3.5 text-destructive animate-pulse" />;
+      return <Zap className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />;
     case 'death':
       return <Skull className="h-3.5 w-3.5 text-arena-blood" />;
     case 'ko':
@@ -105,8 +105,8 @@ const TacticalLogEntry = memo(
         className={cn(
           'flex items-start gap-2 py-1.5 px-2 border-l-2 text-xs transition-all duration-300 motion-reduce:transition-none',
           getEventColor(type),
-          isLatest && 'animate-in slide-in-from-left-2 duration-300',
-          isLatest && type === 'crit' && 'animate-pulse',
+          isLatest && 'animate-in slide-in-from-left-2 duration-300 motion-reduce:animate-none',
+          isLatest && type === 'crit' && 'animate-pulse motion-reduce:animate-none',
           isHighlighted && 'ring-1 ring-primary/40 bg-primary/5'
         )}
       >

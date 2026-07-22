@@ -6,6 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { pickWeeklyIntent, updateAIStrategy } from '@/engine/ai/intentEngine';
 import type { GameState, RivalStableData, OwnerGrudge } from '@/types/state.types';
+import { FightingStyle } from '@/types/shared.types';
 import type { GrudgeId } from '@/types/shared.types';
 
 function makeMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
@@ -167,10 +168,10 @@ describe('intentEngine performance optimization equivalence', () => {
     it('correctly identifies dominant style concentration', () => {
       const rival = makeMockRival({
         roster: [
-          { id: 'w1' as any, name: 'W1', style: 'BASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
-          { id: 'w2' as any, name: 'W2', style: 'BASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
-          { id: 'w3' as any, name: 'W3', style: 'BASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
-          { id: 'w4' as any, name: 'W4', style: 'SLASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
+          { id: 'w1', name: 'W1', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
+          { id: 'w2', name: 'W2', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
+          { id: 'w3', name: 'W3', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
+          { id: 'w4', name: 'W4', style: FightingStyle.SlashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
         ],
         owner: {
           ...makeMockRival().owner,
@@ -190,8 +191,8 @@ describe('intentEngine performance optimization equivalence', () => {
     it('does not trigger ROSTER_DIVERSITY when roster < 4', () => {
       const rival = makeMockRival({
         roster: [
-          { id: 'w1' as any, name: 'W1', style: 'BASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
-          { id: 'w2' as any, name: 'W2', style: 'BASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
+          { id: 'w1', name: 'W1', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
+          { id: 'w2', name: 'W2', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
         ],
       });
       const state = makeMockState();

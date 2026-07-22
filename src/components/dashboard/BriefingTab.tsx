@@ -22,7 +22,7 @@ export function BriefingTab({ reports }: BriefingTabProps) {
           {reports.map((report, i) => (
             <div
               key={`${report.title.slice(0, 30)}-${i}`}
-              className="group/report relative space-y-3 bg-white/[0.02] border border-white/5 rounded-none p-4 hover:border-arena-gold/30 transition-all"
+              className="group/report relative space-y-3 bg-white/[0.02] border border-white/5 rounded-none p-4 hover:border-arena-gold/30 transition-all motion-reduce:transition-none motion-reduce:transform-none"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">

@@ -51,11 +51,11 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
             {rivals.map((rival) => (
               <div
                 key={rival.owner.id}
-                className="p-5 hover:bg-white/[0.02] transition-all group relative overflow-hidden"
+                className="p-5 hover:bg-white/[0.02] transition-all motion-reduce:transition-none motion-reduce:transform-none group relative overflow-hidden"
               >
                 {/* Header row */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 shrink-0 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/30 transition-all">
+                  <div className="w-10 h-10 shrink-0 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none">
                     {rival.owner.stableName.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">

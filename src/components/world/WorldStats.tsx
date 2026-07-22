@@ -73,7 +73,7 @@ export function WorldStats({
                 : 'hover:border-white/10'
             )}
           >
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all group-hover:scale-110">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all motion-reduce:transition-none motion-reduce:transform-none group-hover:scale-110">
               <item.icon className={cn('h-12 w-12', item.color)} />
             </div>
             <div className="p-5 flex flex-col justify-center min-h-[90px] relative z-10">

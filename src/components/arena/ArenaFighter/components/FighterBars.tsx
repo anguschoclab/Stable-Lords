@@ -23,7 +23,7 @@ export function FighterBars({ hpPercent, fpPercent, isWinner }: FighterBarsProps
       </div>
       <div className="h-1 bg-black/50 rounded-none overflow-hidden">
         <div
-          className="h-full bg-accent transition-all duration-300"
+          className="h-full bg-accent transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300"
           style={{ width: `${fpPercent}%` }}
         />
       </div>

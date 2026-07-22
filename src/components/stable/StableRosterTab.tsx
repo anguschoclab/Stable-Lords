@@ -48,7 +48,7 @@ export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
             <Surface
               key={w.id}
               variant="glass"
-              className="p-0 border-white/5 overflow-hidden group hover:border-primary/20 transition-all duration-500"
+              className="p-0 border-white/5 overflow-hidden group hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between mb-6">

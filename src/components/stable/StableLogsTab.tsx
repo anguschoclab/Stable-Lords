@@ -32,7 +32,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
             return (
               <div
                 key={f.id}
-                className="p-6 flex items-center justify-between group hover:bg-white/[0.01] transition-all"
+                className="p-6 flex items-center justify-between group hover:bg-white/[0.01] transition-all motion-reduce:transition-none motion-reduce:transform-none"
               >
                 <div className="flex items-center gap-8">
                   <div

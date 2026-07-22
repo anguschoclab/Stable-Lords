@@ -43,7 +43,7 @@ function NameCell({ row }: { row: WarriorRow }) {
           <Link
             to="/warrior/$id"
             params={{ id: row.id }}
-            className="font-display font-black uppercase text-xs tracking-tight text-primary hover:text-foreground transition-all flex items-center gap-2"
+            className="font-display font-black uppercase text-xs tracking-tight text-primary hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none flex items-center gap-2"
           >
             {row.name}
             {row.officialRank === 1 && <Crown className="h-3 w-3 text-arena-gold" />}

@@ -55,7 +55,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
       <Surface
         variant="paper"
         padding="none"
-        className="flex flex-col md:flex-row items-stretch border border-white/5 bg-neutral-900/60 transition-all duration-500 group-hover:border-primary/40 group-hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
+        className="flex flex-col md:flex-row items-stretch border border-white/5 bg-background/90 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 group-hover:border-primary/40 group-hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
       >
         <RankStrip rankIndex={rankIndex} />
 
@@ -74,7 +74,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                 />
                 <div className="flex items-center gap-3">
                   <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all">
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none">
                     <Star
                       className={cn(
                         'h-3 w-3',
@@ -104,7 +104,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
 
               <div className="flex items-center gap-4">
                 <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
-                <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all">
+                <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all motion-reduce:transition-none motion-reduce:transform-none">
                   <div className="text-center">
                     <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
                       Victory

@@ -37,7 +37,7 @@ export function DeathModal() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="w-full max-w-2xl bg-[#0a0a0b] border-2 border-arena-blood/30 rounded-none shadow-[0_0_50px_rgba(var(--arena-blood-rgb),0.2)] overflow-hidden relative"
+        className="w-full max-w-2xl bg-background border-2 border-arena-blood/30 rounded-none shadow-[0_0_50px_rgba(var(--arena-blood-rgb),0.2)] overflow-hidden relative"
       >
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-arena-blood to-transparent" />

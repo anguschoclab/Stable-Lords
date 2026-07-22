@@ -24,7 +24,7 @@ export function GazetteTab({ stories }: GazetteTabProps) {
               key={`${story.headline.slice(0, 30)}-${i}`}
               className="group/story relative pl-12 border-l border-white/5 hover:border-primary/40 transition-colors py-1"
             >
-              <div className="absolute left-[-5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-800 border boder-white/10 group-hover/story:bg-primary group-hover/story:shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all" />
+              <div className="absolute left-[-5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-800 border boder-white/10 group-hover/story:bg-primary group-hover/story:shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all motion-reduce:transition-none motion-reduce:transform-none" />
 
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-[9px] font-mono font-black text-primary/60">

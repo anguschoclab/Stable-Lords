@@ -27,7 +27,7 @@ export function SummaryCard({
       variant="glass"
       padding="md"
       className={cn(
-        'bg-neutral-900/40 border-border/10 flex items-center gap-6 group transition-all',
+        'bg-background/90 border-border/10 flex items-center gap-6 group transition-all',
         borderClass
       )}
     >

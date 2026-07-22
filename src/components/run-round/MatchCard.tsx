@@ -25,7 +25,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
     <Surface
       variant="glass"
       padding="none"
-      className="border-white/5 hover:border-primary/40 transition-all overflow-hidden group"
+      className="border-white/5 hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none overflow-hidden group"
     >
       <div className="flex items-center justify-between px-4 py-2 bg-secondary/20 border-b border-white/5">
         <div className="flex items-center gap-3">

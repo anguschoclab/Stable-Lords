@@ -38,7 +38,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
     <Surface
       variant="glass"
       padding="none"
-      className="border-border/10 bg-neutral-900/40 overflow-hidden shadow-2xl group transition-all duration-700 hover:shadow-primary/5"
+      className="border-border/10 bg-background/90 overflow-hidden shadow-2xl group transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 hover:shadow-primary/5"
     >
       {/* ─── Masthead Branding ─── */}
       <div className="p-8 md:p-12 border-b border-white/5 relative overflow-hidden bg-black/40">
@@ -134,7 +134,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
               {issue.sideStories.map((story, i) => (
                 <div
                   key={`${story.slice(0, 30)}-${i}`}
-                  className="group/short space-y-3 relative pl-6 border-l border-white/5 hover:border-arena-gold/30 transition-all"
+                  className="group/short space-y-3 relative pl-6 border-l border-white/5 hover:border-arena-gold/30 transition-all motion-reduce:transition-none motion-reduce:transform-none"
                 >
                   <div className="absolute -left-0.5 top-0 w-1 h-3 bg-arena-gold opacity-0 group-hover/short:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
                   <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
             <Surface
               variant="paper"
               padding="sm"
-              className="bg-primary/5 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer group/cta"
+              className="bg-primary/5 border border-primary/20 hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none cursor-pointer group/cta"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">

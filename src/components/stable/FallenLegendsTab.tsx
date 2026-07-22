@@ -58,7 +58,7 @@ export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) 
           <Surface
             key={`${w.kind}-${w.name}-${i}`}
             variant="glass"
-            className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all"
+            className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all motion-reduce:transition-none motion-reduce:transform-none"
           >
             <div className="flex items-center gap-6">
               <div

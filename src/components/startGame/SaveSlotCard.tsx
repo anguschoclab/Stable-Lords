@@ -47,7 +47,7 @@ export default function SaveSlotCard({
           onLoad();
         }
       }}
-      className="group relative cursor-pointer transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="group relative cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       style={{
         background: 'linear-gradient(145deg, #150F08 0%, #110C07 50%, #140E08 100%)',
         border: '1px solid rgba(60, 42, 22, 0.8)',

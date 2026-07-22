@@ -32,12 +32,12 @@ export function FaceoffBar({ fighterA, fighterB, className }: FaceoffBarProps) {
         <div className="absolute inset-0 flex items-stretch">
           <div
             data-testid="faceoff-fill-a"
-            className="bg-primary transition-all duration-700 ease-out absolute right-1/2 top-0 bottom-0"
+            className="bg-primary transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 ease-out absolute right-1/2 top-0 bottom-0"
             style={{ width: `${pctA}%` }}
           />
           <div
             data-testid="faceoff-fill-b"
-            className="bg-destructive transition-all duration-700 ease-out absolute left-1/2 top-0 bottom-0"
+            className="bg-destructive transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 ease-out absolute left-1/2 top-0 bottom-0"
             style={{ width: `${pctB}%` }}
           />
         </div>

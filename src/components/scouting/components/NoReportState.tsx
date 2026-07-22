@@ -77,8 +77,8 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
         canAfford
           ? isExpert
             ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02]'
-            : 'bg-neutral-900/60 border-white/5 hover:border-primary/40 hover:bg-white/5'
-          : 'bg-neutral-900/40 border-white/5 opacity-50 cursor-not-allowed'
+            : 'bg-background/90 border-white/5 hover:border-primary/40 hover:bg-white/5'
+          : 'bg-background/90 border-white/5 opacity-50 cursor-not-allowed'
       )}
     >
       <div className="flex items-center gap-4">

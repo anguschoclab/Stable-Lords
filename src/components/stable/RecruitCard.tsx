@@ -121,7 +121,7 @@ export function RecruitCard({
   return (
     <Surface
       variant="glass"
-      className="group p-0 border-white/5 hover:border-primary/20 transition-all duration-500 overflow-hidden"
+      className="group p-0 border-white/5 hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 overflow-hidden"
     >
       <div className="p-8 space-y-8">
         {/* Header */}
@@ -176,7 +176,7 @@ export function RecruitCard({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 text-[9px] font-black uppercase tracking-widest border-white/10 hover:border-primary/50 transition-all rounded-none"
+              className="h-8 text-[9px] font-black uppercase tracking-widest border-white/10 hover:border-primary/50 transition-all motion-reduce:transition-none motion-reduce:transform-none rounded-none"
               disabled={!canAffordScout}
               onClick={() => onScout(warrior)}
             >
@@ -243,7 +243,7 @@ export function RecruitCard({
 
           <div className="flex items-center gap-3">
             <Button
-              className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all"
+              className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
               disabled={!canAfford || rosterFull}
               onClick={() => onRecruit(warrior, false)}
             >
@@ -252,7 +252,7 @@ export function RecruitCard({
             </Button>
             <Button
               variant="outline"
-              className="flex-1 sm:flex-none h-14 px-6 border-arena-gold/30 text-arena-gold font-black uppercase text-[10px] tracking-widest rounded-none hover:bg-arena-gold/5 transition-all"
+              className="flex-1 sm:flex-none h-14 px-6 border-arena-gold/30 text-arena-gold font-black uppercase text-[10px] tracking-widest rounded-none hover:bg-arena-gold/5 transition-all motion-reduce:transition-none motion-reduce:transform-none"
               disabled={!canAffordBonus || rosterFull}
               onClick={() => onRecruit(warrior, true)}
               title="Pay a 50g signing bonus — warrior arrives eager (+2 XP) and gets a gazette mention."

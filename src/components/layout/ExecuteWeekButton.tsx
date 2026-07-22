@@ -33,7 +33,7 @@ export function ExecuteWeekButton() {
       onClick={executeWeek}
       disabled={disabled}
       aria-label={label}
-      className="flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.2em] bg-primary text-primary-foreground rounded-none shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+      className="flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.2em] bg-primary text-primary-foreground rounded-none shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
     >
       {running ? (
         <Loader2 className="h-4 w-4 animate-spin" />

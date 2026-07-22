@@ -54,7 +54,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
   };
 
   return (
-    <Card className="bg-[#0a0a0b] border-arena-blood/20 shadow-2xl relative overflow-hidden">
+    <Card className="bg-background border-arena-blood/20 shadow-2xl relative overflow-hidden">
       {/* Decorative pulse */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-arena-blood/5 blur-[80px] rounded-full -mr-16 -mt-16" />
 

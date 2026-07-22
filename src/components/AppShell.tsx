@@ -30,7 +30,7 @@ function LoadingOverlay({ isInitialized }: LoadingOverlayProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute inset-0 z-50 bg-[#0C0806] flex items-center justify-center flex-col gap-4"
+          className="absolute inset-0 z-50 bg-background flex items-center justify-center flex-col gap-4"
         >
           <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
           <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse">
@@ -59,7 +59,7 @@ function EventLogRail({ eventLogOpen, children }: EventLogRailProps) {
           animate={{ width: 320, opacity: 1 }}
           exit={{ width: 0, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="flex-shrink-0 border-l border-white/10 bg-[#08090b] overflow-hidden flex flex-col"
+          className="flex-shrink-0 border-l border-white/10 bg-background overflow-hidden flex flex-col"
         >
           {children}
         </motion.aside>
@@ -145,7 +145,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, [activePath]);
 
   return (
-    <div className="min-h-screen bg-[#0C0806] flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
+    <div className="min-h-screen bg-background flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
       <AppHeader
         week={week}
         day={day}
@@ -167,7 +167,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* ─── Main Content Area ─── */}
-        <main className="flex-1 flex flex-col relative bg-[#0C0806] overflow-hidden">
+        <main className="flex-1 flex flex-col relative bg-background overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
 
           <ResultsBanner week={week} results={results} onDismiss={clearResults} />

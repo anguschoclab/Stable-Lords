@@ -50,7 +50,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   return (
     <Surface
       variant="glass"
-      className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
+      className="border-border/10 bg-background/90 relative overflow-hidden h-full"
     >
       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
         <Activity className="h-24 w-24 text-primary" />
@@ -165,7 +165,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
   return (
     <Surface
       variant="glass"
-      className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
+      className="border-border/10 bg-background/90 relative overflow-hidden h-full"
     >
       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
         <LayoutGrid className="h-24 w-24 text-arena-gold" />

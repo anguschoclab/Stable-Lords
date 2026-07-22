@@ -125,7 +125,7 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
     <Surface
       variant="glass"
       padding="none"
-      className="group relative border-border/40 overflow-hidden hover:border-destructive/40 transition-all duration-500 shadow-2xl h-full flex flex-col"
+      className="group relative border-border/40 overflow-hidden hover:border-destructive/40 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 shadow-2xl h-full flex flex-col"
     >
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive via-destructive/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
       <div className="p-8 flex-1 flex flex-col">

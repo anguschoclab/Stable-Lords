@@ -242,7 +242,7 @@ export function TournamentProgress({
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-primary to-arena-gold rounded-full transition-all duration-500"
+          className="h-full bg-gradient-to-r from-primary to-arena-gold rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>

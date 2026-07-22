@@ -44,12 +44,12 @@ function HeaderLogo() {
   return (
     <Link
       to="/"
-      className="flex items-center gap-4 group active:scale-95 transition-all duration-300"
+      className="flex items-center gap-4 group active:scale-95 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300"
     >
       <ImperialRing
         size="md"
         variant="blood"
-        className="group-hover:rotate-[225deg] transition-all duration-700"
+        className="group-hover:rotate-[225deg] transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700"
       >
         <Swords className="w-5 h-5" />
       </ImperialRing>

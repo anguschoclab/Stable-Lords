@@ -26,7 +26,7 @@ export function WinScreen() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="w-full max-w-2xl bg-[#0a0a0b] border-2 border-arena-gold/30 rounded-none shadow-[0_0_50px_rgba(212,175,55,0.2)] overflow-hidden relative"
+        className="w-full max-w-2xl bg-background border-2 border-arena-gold/30 rounded-none shadow-[0_0_50px_rgba(212,175,55,0.2)] overflow-hidden relative"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-arena-gold to-transparent" />
         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-arena-gold to-transparent" />

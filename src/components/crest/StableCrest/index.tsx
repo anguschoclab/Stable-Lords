@@ -98,7 +98,7 @@ export function StableCrest({
           width={pixelSize}
           height={pixelSize}
           aria-label={`Stable crest: ${crest.charge.name} on ${crest.fieldType} field`}
-          className="transition-all duration-200 group-hover:drop-shadow-lg"
+          className="transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 group-hover:drop-shadow-lg"
         >
           <defs>
             <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">

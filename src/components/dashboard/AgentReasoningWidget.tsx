@@ -81,7 +81,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
   const Icon = metric.icon;
 
   return (
-    <Card className="bg-[#0a0a0b] border-white/5 relative overflow-hidden group">
+    <Card className="bg-background border-white/5 relative overflow-hidden group">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50" />
 
       <CardHeader className="pb-4 relative">

@@ -90,7 +90,7 @@ interface RetiredWarriorRowProps {
 
 function RetiredWarriorRow({ warrior: w }: RetiredWarriorRowProps) {
   return (
-    <TableRow key={w.id} className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all group">
+    <TableRow key={w.id} className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all motion-reduce:transition-none motion-reduce:transform-none group">
       <TableCell className="pl-8 py-5">
         <div className="flex flex-col">
           <span>{w.name}</span>

@@ -868,7 +868,28 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Dark Descent',
     narrative: 'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.'
-  }
+  },
+  {
+    id: 'standard_arena_first_blood_v2',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The First Blood of the New Era',
+    narrative: 'The very first match held after the Great Rebuilding ended in exactly four seconds when a towering brute was instantly decapitated by an unknown lightweight, setting the brutal standard for the new age.',
+  },
+  {
+    id: 'mudpit_the_sinking_giant',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Sinking Giant',
+    narrative: 'A heavily armored champion slipped and became stuck in a particularly deep patch of mud. Their opponent simply walked away, letting the weight of the armor slowly drown the champion in the muck as the crowd watched in morbid fascination.',
+  },
+  {
+    id: 'sundered_coliseum_weeping_stones',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Weeping Stones',
+    narrative: 'During the humid summer months, the dark marble of the inner ring appears to bleed, weeping a red condensation that makes footing treacherous and coats the combatants in a rusty, crimson sheen.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

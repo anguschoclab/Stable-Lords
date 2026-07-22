@@ -9,7 +9,6 @@ const ORIGINS = [
   'Raised in the crumbling ruins of the forgotten Bleeding Heart Orphanage',
   'Found abandoned amidst the bone dust of the lower charnel pits',
   'Survived a brutal childhood in the shadow of the executioner\'s block',
-  'Raised on the violent streets of the Dross Wards by disgraced gladiators',
   'Abandoned at the rusted gates of the Crying Mothers sanctuary',
   'Born in the shadowed cellars of the Blackwood Workhouse',
   'Raised among the soot and cinders of the lower forge district',
@@ -34,7 +33,6 @@ const ORIGINS = [
   'Raised in the hidden fighting rings beneath the Crying Slums',
   'Abandoned at the iron grates of the Dross Orphanage during a thunderstorm',
   'Surviving the plague by sleeping among the dead in the open charnel pits',
-  'Abandoned at the rusted gates of the Weeping Mother Orphanage',
   'Abandoned in the dripping undercrofts of the Silent Sisters',
   'Raised by debt-collectors in the squalor of the Brass District',
   'Survived the Ashfall by hiding in a forgotten ossuary',
@@ -165,12 +163,18 @@ const ORIGINS = [
   'Survived the Long Winter by hiding among the forgotten dead',
   'Sold to the fighting pits to settle a drunkard\'s debt',
   'Raised by feral hounds in the ruins of the Old Cathedral',
-  'Abandoned at the iron grates of the Silent Brothers\' sanctuary',
   'Raised in the lightless cellars of the Blackwood Orphanage',
   'Abandoned outside the fighting pits wrapped in a bloodied tunic',
   'Survived the great fire of the Lower Wards by hiding in a cistern',
   'Found wandering the ash-choked streets of the Foundry District',
   'Raised by the grim overseers of the Iron Chain workhouse',
+  'Left in a woven basket on the blood-stained steps of the Hollow House',
+  'Raised by feral hounds in the ruins of the Old Colosseum',
+  'Traded to the fighting pits at age six to settle a father\'s gambling debt',
+  'Sole survivor of the Blackbone Parish massacre',
+  'Taught the geometry of murder by a blind assassin in the Undercity',
+  'Born in the sunless depths of the Salt Mines, knowing only the sting of the lash',
+  'Scavenged for armor plating among the dead in the Charnel Wastes',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -245,7 +249,6 @@ const CHILDHOOD_TRAITS = [
   'practiced the art of pain by holding hot coals without a sound',
   'would carve intricate tallies of imagined kills into the stone walls',
   'learned the anatomy of survival by dissecting rats in the alleyways',
-  'learned to sleep with one eye open after the workhouse riots',
   'would hoard sharp stones and broken glass under their mattress',
   'developed a terrifyingly silent footstep to evade the night watchmen',
   'was known for biting older children who tried to steal their rations',
@@ -272,6 +275,11 @@ const CHILDHOOD_TRAITS = [
   'developed a terrifyingly serene smile during the most brutal beatings',
   'was known for carving the names of their enemies into their own flesh',
   'would purposefully instigate fights just to study how different people bleed',
+  'would sit completely still for hours, tracking flies by sound alone',
+  'hoarded rusted nails to practice throwing at scurrying rats',
+  'learned to dislocate their own shoulders to slip out of chains',
+  'spit blood in the eye of any guard who dared to look them in the face',
+  'would trace imaginary kill strokes in the dirt with a splintered bone',
 ];
 
 const DEFINING_MOMENTS = [
@@ -296,7 +304,6 @@ const DEFINING_MOMENTS = [
   'waiting for the day they could turn the arena sands into a river of red',
   "until they drove a rusted spike through a slaver's boot and walked free",
   'knowing that the roar of the crowd was the only lullaby they ever needed',
-  'waiting for the moment the iron portcullis would rise on their destiny',
   'fought off three armed thugs with nothing but a rusted iron spike',
   'stole a discarded combat manual from a dead gladiator and memorized every stance',
   'strangled a corrupt guard with their own rusted chains to escape confinement',
@@ -306,7 +313,6 @@ const DEFINING_MOMENTS = [
   'until the day they dragged their abuser into the light and left them broken',
   'realizing that mercy in the undercity is just an invitation to be killed',
   'waiting for the moment the gates would close and the true test would begin',
-  'knowing that the only escape from the gutters was paved in blood',
   'realizing that the only true law of the streets was written in blood',
   'waiting for the moment the arena doors would open and swallow their past',
   "until the day they crushed a street enforcer's windpipe in a brawl over coppers",
@@ -362,11 +368,14 @@ const DEFINING_MOMENTS = [
   'realizing that pain is simply the currency demanded by the gods of the arena',
   'until they drove a splintered chair leg through a slaver\'s hand',
   'realizing that the only true currency in the undercity is pain',
-  'waiting for the moment the crowd screams a name they once forgot',
   'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
   'until they strangled a cruel matron with a stolen rosary',
   'now driven by a dark vow sworn over the grave of their only friend',
+  'until they tore the throat out of an enforcer with their bare teeth',
+  'realizing that a life without violence was merely waiting to die',
+  'waiting for the chance to bathe the sands in the blood of the privileged',
+  'now fighting not for glory, but to silence the screams in their head',
 ];
 
 /**

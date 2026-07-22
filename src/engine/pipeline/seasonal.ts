@@ -63,7 +63,8 @@ interface OffseasonEventNarrative {
     | 'shadow_market_run'
     | 'moonlight_duel'
     | 'chaos_weavers_game'
-    | 'secret_fight_club';
+    | 'secret_fight_club'
+    | 'wandering_mystic';
   newsletter: string[];
 }
 
@@ -1348,6 +1349,33 @@ function handleMidnightMarket(
 }
 
 
+function handleWanderingMystic(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const currentTraits = chosen.traits || [];
+      const newTraits = currentTraits.includes('chaos_touched')
+        ? currentTraits
+        : [...currentTraits, 'chaos_touched'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        traits: newTraits,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
 function handleChaosWeaversGame(
   state: GameState,
   nextWeek: number,
@@ -1549,6 +1577,7 @@ const EVENT_HANDLERS: Record<
   chaos_spores: handleChaosSpores,
   secret_fight_club: handleSecretFightClub,
   chaos_weavers_game: handleChaosWeaversGame,
+  wandering_mystic: handleWanderingMystic,
 };
 
 /**

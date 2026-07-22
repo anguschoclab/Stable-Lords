@@ -5369,6 +5369,13 @@
         "The Chaos Weaver appeared in the barracks, proposing a dangerous gamble. {{name}} accepted, gaining strange newfound power. (+25 XP)",
         "The Chaos Weaver offered a game of chance. {{name}} played and lost, returning battered. (Minor Injury)"
       ]
+    },
+    "wandering_mystic": {
+      "title": "Wandering Mystic",
+      "effectType": "wandering_mystic",
+      "newsletter": [
+        "A wandering mystic sought shelter with {{name}} over the winter, teaching them strange truths. (+Chaos Touched trait)"
+      ]
     }
   },
   "crowd_reactions": {

@@ -689,6 +689,15 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
+  chaos_touched: {
+    id: 'chaos_touched',
+    name: 'Chaos Touched',
+    description: 'Touched by strange forces, their strikes grow stronger and wilder as the fight drags on.',
+    effect: { dmgBonus: 1, attModLate: 1 },
+    weight: 0.1,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

@@ -31,7 +31,7 @@ function makeMockRNG(nextValue: number = 0.5): IRNGService {
     uuid: () => 'test-uuid',
     pick: <T>(arr: T[]) => arr[0],
     shuffle: <T>(arr: T[]) => arr,
-    int: (min: number, max: number) => min,
+    int: (min: number, _max: number) => min,
   } as any;
 }
 

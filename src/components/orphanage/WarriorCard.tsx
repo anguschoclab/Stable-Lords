@@ -37,7 +37,7 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
       aria-pressed={isSelected}
       onClick={canSelect ? onClick : undefined}
       onKeyDown={handleKeyDown}
-      className={`relative cursor-pointer transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black ${
+      className={`relative cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black ${
         !canSelect && !isSelected ? 'opacity-50 pointer-events-none' : ''
       }`}
       style={{

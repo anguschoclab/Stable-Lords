@@ -194,7 +194,7 @@ export function HubSwitcher({
             to={hub.to}
             className={cn(
               'relative flex items-center gap-2.5 px-3 py-2 rounded-none',
-              'text-[11px] font-black uppercase tracking-widest transition-all duration-150',
+              'text-[11px] font-black uppercase tracking-widest transition-all motion-reduce:transition-none motion-reduce:transform-none duration-150',
               isActive
                 ? 'text-primary bg-primary/10 border-l-2 border-primary'
                 : 'text-muted-foreground/60 hover:text-foreground hover:bg-white/5 border-l-2 border-transparent',
@@ -282,7 +282,7 @@ export function SubPageList({
                 to={page.to}
                 className={cn(
                   'relative flex items-center gap-2.5 px-3 py-1.5 rounded-none',
-                  'text-[10px] font-black uppercase tracking-wider transition-all duration-150 group',
+                  'text-[10px] font-black uppercase tracking-wider transition-all motion-reduce:transition-none motion-reduce:transform-none duration-150 group',
                   isActive
                     ? 'text-foreground bg-white/8'
                     : 'text-muted-foreground/50 hover:text-foreground/80 hover:bg-white/5',

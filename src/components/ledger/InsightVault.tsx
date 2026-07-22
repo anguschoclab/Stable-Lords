@@ -231,7 +231,7 @@ export function InsightVault() {
       {/* ─── The Insight Vault Header ─── */}
       <Surface
         variant="glass"
-        className="border-arena-gold/30 bg-background/90 relative overflow-hidden"
+        className="border-arena-gold/30 bg-neutral-900/40 relative overflow-hidden"
       >
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <Database className="h-32 w-32 text-arena-gold" />

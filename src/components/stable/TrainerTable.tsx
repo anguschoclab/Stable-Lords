@@ -44,7 +44,7 @@ export function TrainerTable() {
         <Button
           asChild
           variant="outline"
-          className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none border border-primary/20 bg-transparent h-auto"
+          className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all border border-primary/20 bg-transparent h-auto"
         >
           <Link to="/stable/trainers" aria-label="Manage Staff">
             Manage Staff
@@ -87,7 +87,7 @@ export function TrainerTable() {
                   key={t.id}
                   variant="paper"
                   padding="sm"
-                  className="bg-background/90 border border-white/5 hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none group"
+                  className="bg-neutral-900/60 border border-white/5 hover:border-primary/40 transition-all group"
                 >
                   <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
                     <div className="flex items-center gap-2">

@@ -82,7 +82,7 @@ export function EditableText({
           onKeyDown={handleKeyDown}
           onBlur={handleSave}
           className={cn(
-            'h-8 bg-background/90 border-primary/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]',
+            'h-8 bg-neutral-900/60 border-primary/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]',
             inputClassName
           )}
         />
@@ -118,7 +118,7 @@ export function EditableText({
       tabIndex={0}
       aria-label={`Edit ${label || value}`}
       className={cn(
-        'group relative flex items-center gap-2 cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
+        'group relative flex items-center gap-2 cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
         className
       )}
       onClick={() => setIsEditing(true)}

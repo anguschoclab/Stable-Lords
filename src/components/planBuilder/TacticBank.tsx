@@ -50,7 +50,7 @@ export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {})
             aria-label={`Select Tactic: ${t.id}`}
             onClick={() => handleClick(t)}
             className={cn(
-              'flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+              'flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
               plan &&
                 ((t.type === 'offensive' && plan.offensiveTactic === t.id) ||
                   (t.type === 'defensive' && plan.defensiveTactic === t.id))

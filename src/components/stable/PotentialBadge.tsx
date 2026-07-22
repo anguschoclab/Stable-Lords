@@ -27,7 +27,7 @@ export function PotentialBadge({ potential }: PotentialBadgeProps) {
       <TooltipTrigger asChild>
         <div
           className={cn(
-            'flex items-center gap-1 px-2 py-0.5 rounded-none bg-black border opacity-80 group-hover:opacity-100 transition-all',
+            'flex items-center gap-1 px-2 py-0.5 rounded-none bg-black border opacity-80 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none',
             color
           )}
         >

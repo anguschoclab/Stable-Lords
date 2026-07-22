@@ -35,7 +35,7 @@ export default function WarriorDossierStats({ warrior }: Props) {
               <div className="h-1 bg-white/5 rounded-none overflow-hidden">
                 <div
                   className={cn(
-                    'h-full transition-all duration-1000',
+                    'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
                     val >= 16 ? 'bg-primary' : val >= 12 ? 'bg-arena-gold' : 'bg-white/20'
                   )}
                   style={{ width: `${pct}%` }}

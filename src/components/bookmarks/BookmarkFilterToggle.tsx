@@ -17,7 +17,7 @@ export function BookmarkFilterToggle({ active, onToggle, count }: BookmarkFilter
       aria-label="Toggle bookmarked only filter"
       aria-pressed={active}
       className={cn(
-        'flex items-center gap-2 px-3 py-1.5 rounded-none border text-[10px] font-black uppercase tracking-widest transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+        'flex items-center gap-2 px-3 py-1.5 rounded-none border text-[10px] font-black uppercase tracking-widest transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
         active
           ? 'border-arena-gold/40 text-arena-gold bg-arena-gold/5'
           : 'border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20'

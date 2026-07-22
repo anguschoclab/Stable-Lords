@@ -42,7 +42,7 @@ export function TournamentRoundCard({
   return (
     <Card
       className={cn(
-        'overflow-hidden transition-all duration-300',
+        'overflow-hidden transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
         isComplete && 'border-primary/30',
         isCurrent && 'border-primary/50 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]'
       )}

@@ -59,7 +59,7 @@ export default function BoutControls({
   onSkipToEnd,
 }: BoutControlsProps) {
   return (
-    <div className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-background/90 backdrop-blur-xl">
+    <div className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-neutral-900/60 backdrop-blur-xl">
       <div className="flex items-center gap-4">
         {/* View Mode Toggle */}
         <ViewModeToggle mode={viewMode} onChange={onViewModeChange} disabled={isPlaying} />

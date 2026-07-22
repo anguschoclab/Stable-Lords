@@ -27,11 +27,11 @@ export function SummaryCard({
       variant="glass"
       padding="md"
       className={cn(
-        'bg-background/90 border-border/10 flex items-center gap-6 group transition-all',
+        'bg-neutral-900/40 border-border/10 flex items-center gap-6 group transition-all motion-reduce:transition-none motion-reduce:transform-none',
         borderClass
       )}
     >
-      <div className={cn('p-4 rounded-none border transition-all', iconClass)}>
+      <div className={cn('p-4 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none', iconClass)}>
         <Icon className="h-6 w-6" />
       </div>
       <div>

@@ -88,7 +88,7 @@ export default function MiniCombatLog({
         aria-label={isExpanded ? 'Collapse combat log' : 'Expand combat log'}
         className={cn(
           'flex items-center justify-between gap-2 px-3 py-2',
-          'bg-background/90 border border-white/10 backdrop-blur-md',
+          'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
           'rounded-none cursor-pointer hover:border-white/20 transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
         )}
@@ -133,7 +133,7 @@ export default function MiniCombatLog({
         <div
           className={cn(
             'w-64 max-h-48 overflow-y-auto',
-            'bg-background/90 border border-white/10 border-t-0',
+            'bg-neutral-950/90 border border-white/10 border-t-0',
             'backdrop-blur-md scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent'
           )}
         >

@@ -145,7 +145,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
                   onClick={() => handleTactic(t)}
                   aria-label={`Select Tactic: ${t.label}`}
                   className={cn(
-                    'flex items-center gap-2 p-3 text-xs font-bold uppercase tracking-wider border transition-all duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+                    'flex items-center gap-2 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
                     isActive
                       ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
                       : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground'

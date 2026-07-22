@@ -97,7 +97,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
             <div className="text-right">
               <div
                 className={cn(
-                  'text-3xl font-display font-black tracking-tighter leading-none transition-all',
+                  'text-3xl font-display font-black tracking-tighter leading-none transition-all motion-reduce:transition-none motion-reduce:transform-none',
                   getScoreColor(score)
                 )}
               >

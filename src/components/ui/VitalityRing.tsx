@@ -47,7 +47,7 @@ export function VitalityRing({ value, size = 40, strokeWidth = 4, className }: V
           cy={size / 2}
           r={radius}
           fill="none"
-          className={cn('transition-all duration-700', strokeClass)}
+          className={cn('transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700', strokeClass)}
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeLinecap="butt"

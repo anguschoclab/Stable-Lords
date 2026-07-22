@@ -50,7 +50,7 @@ export function BracketMatchNode({
 
       <div
         className={cn(
-          'w-64 rounded-none border transition-all duration-300 relative z-10',
+          'w-64 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 relative z-10',
           isPending
             ? 'bg-background/20 border-border/40'
             : 'bg-secondary/10 border-primary/30 shadow-[0_0_15px_-5px_rgba(0,0,0,0.5)]',

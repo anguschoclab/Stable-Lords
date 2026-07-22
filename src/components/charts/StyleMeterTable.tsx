@@ -80,7 +80,7 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
               </div>
               <div className="flex-1 h-1.5 bg-white/5 rounded-none overflow-hidden">
                 <div
-                  className={cn('h-full rounded-none transition-all duration-500', barColor)}
+                  className={cn('h-full rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500', barColor)}
                   style={{ width: `${pct}%` }}
                 />
               </div>

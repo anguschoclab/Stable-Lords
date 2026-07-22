@@ -30,7 +30,7 @@ export function KeyMetricsSection({
 }: KeyMetricsSectionProps) {
   return (
     <Surface variant="glass" className="border-border/40 overflow-hidden">
-      <div className="p-4 border-b border-white/5 bg-background/90 flex items-center gap-3">
+      <div className="p-4 border-b border-white/5 bg-neutral-900/60 flex items-center gap-3">
         <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
           <Trophy className="h-3.5 w-3.5 text-primary" />
         </div>
@@ -118,7 +118,7 @@ function MetricCard({ icon, label, value, maxValue, color }: MetricCardProps) {
       <div className="relative">
         <div className="h-8 bg-neutral-900 rounded-none border border-white/5 overflow-hidden">
           <div
-            className={cn('h-full transition-all', color.replace('text-', 'bg-'))}
+            className={cn('h-full transition-all motion-reduce:transition-none motion-reduce:transform-none', color.replace('text-', 'bg-'))}
             style={{ width: `${percentage}%` }}
           />
         </div>

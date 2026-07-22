@@ -127,7 +127,7 @@ function HighlightLog({ log, visibleCount }: Props) {
   if (highlights.length === 0) return null;
 
   return (
-    <div className="border-t border-white/5 bg-background/90 px-6 py-4">
+    <div className="border-t border-white/5 bg-neutral-950/60 px-6 py-4">
       <div className="flex items-center gap-3 mb-3">
         <div className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">
           Highlight_Reel

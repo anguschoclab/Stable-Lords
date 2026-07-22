@@ -69,7 +69,7 @@ export function AttributeRow({
           disabled={disabled}
           onClick={() => onAssign(key)}
           className={cn(
-            'group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all',
+            'group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all motion-reduce:transition-none motion-reduce:transform-none',
             isSelected
               ? 'bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]'
               : disabled

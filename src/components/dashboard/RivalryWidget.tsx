@@ -47,7 +47,7 @@ export function RivalryWidget() {
         <Flame className="h-48 w-48 text-destructive" />
       </div>
 
-      <div className="p-6 border-b border-white/5 bg-background/90 relative z-10 flex items-center justify-between">
+      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="p-2.5 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
             <Flame className="h-5 w-5 text-destructive" />

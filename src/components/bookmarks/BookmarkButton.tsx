@@ -53,7 +53,7 @@ export function BookmarkButton({
       title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       className={cn(
-        'p-1.5 rounded-none border transition-all duration-200 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+        'p-1.5 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
         isBookmarked
           ? 'text-arena-gold border-arena-gold/30 bg-arena-gold/5'
           : 'text-muted-foreground/40 border-white/5 hover:text-arena-gold hover:border-arena-gold/20',

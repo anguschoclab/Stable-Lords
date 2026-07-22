@@ -32,7 +32,7 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden relative">
       <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary via-border/20 to-accent" />
 
-      <div className="p-4 border-b border-white/5 bg-background/90 flex items-center justify-between">
+      <div className="p-4 border-b border-white/5 bg-neutral-900/60 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-1 px-2 rounded-none bg-arena-gold/10 border border-arena-gold/20">
             <History className="h-3.5 w-3.5 text-arena-gold" />

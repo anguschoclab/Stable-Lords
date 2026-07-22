@@ -53,7 +53,7 @@ export function ComparisonBar({ label, valA, valB, maxVal, colorA, colorB }: Com
               initial={{ width: 0 }}
               animate={{ width: `${pctA}%` }}
               className={cn(
-                'h-full rounded-full transition-all',
+                'h-full rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
                 colorA,
                 aWins && 'shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]'
               )}
@@ -67,7 +67,7 @@ export function ComparisonBar({ label, valA, valB, maxVal, colorA, colorB }: Com
               initial={{ width: 0 }}
               animate={{ width: `${pctB}%` }}
               className={cn(
-                'h-full rounded-full transition-all',
+                'h-full rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
                 colorB,
                 bWins && 'shadow-[0_0_8px_rgba(var(--accent-rgb),0.5)]'
               )}

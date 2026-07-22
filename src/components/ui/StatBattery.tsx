@@ -36,7 +36,7 @@ export const StatBattery = forwardRef<HTMLDivElement, StatBatteryProps>(function
       <div className="flex-1 relative">
         <Progress
           value={pct}
-          className={cn('h-[2px] bg-background/90 ring-1 ring-white/5', colorClass)}
+          className={cn('h-[2px] bg-neutral-950/40 ring-1 ring-white/5', colorClass)}
         />
       </div>
       <span className="text-[11px] font-mono font-black w-6 text-right text-foreground/80">

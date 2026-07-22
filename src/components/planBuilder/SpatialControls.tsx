@@ -79,7 +79,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
           <div className="h-1.5 w-full bg-white/5 rounded-none overflow-hidden">
             <div
               className={cn(
-                'h-full transition-all',
+                'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
                 warrior.attributes.WT >= 15 ? 'bg-arena-gold/60' : 'bg-white/10'
               )}
               style={{ width: `${((plan.feintTendency ?? 0) / 10) * 100}%` }}

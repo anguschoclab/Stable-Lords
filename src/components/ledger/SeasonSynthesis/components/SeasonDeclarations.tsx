@@ -13,7 +13,7 @@ export function SeasonDeclarations({ seasonGazette }: SeasonDeclarationsProps) {
 
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
-      <div className="p-4 border-b border-white/5 bg-background/90 flex items-center gap-3">
+      <div className="p-4 border-b border-white/5 bg-neutral-900/60 flex items-center gap-3">
         <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
           <ScrollText className="h-3.5 w-3.5 text-primary" />
         </div>

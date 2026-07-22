@@ -33,7 +33,7 @@ function ExpandToggleButton({ expanded, onToggleExpanded }: ExpandToggleButtonPr
         <TooltipTrigger asChild>
           <button
             onClick={onToggleExpanded}
-            className="p-2 rounded-none bg-neutral-900 border border-white/10 text-muted-foreground hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none hover:border-white/30"
+            className="p-2 rounded-none bg-neutral-900 border border-white/10 text-muted-foreground hover:text-foreground transition-all hover:border-white/30"
             aria-label={expanded ? 'Minimize battle log' : 'Reveal battle log'}
             aria-expanded={expanded}
           >
@@ -77,7 +77,7 @@ function FighterPanel({
         </h4>
         <h3
           className={cn(
-            'font-display font-black uppercase text-2xl tracking-tighter transition-all duration-700',
+            'font-display font-black uppercase text-2xl tracking-tighter transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700',
             isWinner
               ? cn(accentClass, 'scale-110', victorClass)
               : isLoser
@@ -205,7 +205,7 @@ export default function BoutHeader({
   onToggleExpanded,
 }: BoutHeaderProps) {
   return (
-    <div className="relative p-8 border-b border-white/5 bg-background/90 backdrop-blur-md">
+    <div className="relative p-8 border-b border-white/5 bg-neutral-900/40 backdrop-blur-md">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none" />
 
       <div className="relative">

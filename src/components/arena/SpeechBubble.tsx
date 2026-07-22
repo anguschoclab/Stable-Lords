@@ -27,7 +27,7 @@ export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: S
   const getBubbleStyles = (type: SpeechBubbleType['type']) => {
     switch (type) {
       case 'taunt':
-        return 'border-arena-gold/40 bg-background/90 text-arena-gold';
+        return 'border-arena-gold/40 bg-neutral-950/95 text-arena-gold';
       case 'crit':
         return 'border-destructive/50 bg-destructive/10 text-destructive shadow-[0_0_20px_rgba(var(--destructive-rgb),0.3)]';
       case 'death':
@@ -36,7 +36,7 @@ export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: S
         return 'border-primary/40 bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]';
       case 'hit':
       default:
-        return 'border-white/20 bg-background/90 text-foreground';
+        return 'border-white/20 bg-neutral-950/90 text-foreground';
     }
   };
 

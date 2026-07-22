@@ -46,7 +46,7 @@ export function TournamentHistory({
             variant={isCurrent ? 'gold' : 'glass'}
             padding="none"
             className={cn(
-              'transition-all duration-500 overflow-hidden relative group',
+              'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 overflow-hidden relative group',
               !isCurrent && 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'
             )}
           >

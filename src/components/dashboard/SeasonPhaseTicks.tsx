@@ -42,7 +42,7 @@ export function SeasonPhaseTicks({ currentWeek, className }: SeasonPhaseTicksPro
                 data-active={isActive ? 'true' : undefined}
                 data-past={isPast ? 'true' : undefined}
                 className={cn(
-                  'h-2 w-full rounded-none transition-all duration-300',
+                  'h-2 w-full rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
                   isActive
                     ? 'bg-primary shadow-[0_0_6px_rgba(var(--primary-rgb),0.8)]'
                     : isPast

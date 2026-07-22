@@ -23,7 +23,7 @@ export function MedicalAuditWidget() {
         <HeartPulse className="h-48 w-48 text-destructive" />
       </div>
 
-      <div className="p-6 border-b border-white/5 bg-background/90 relative z-10 flex items-center justify-between">
+      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="p-2.5 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all motion-reduce:transition-none motion-reduce:transform-none">
             <ShieldAlert

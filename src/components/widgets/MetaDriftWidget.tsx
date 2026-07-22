@@ -99,7 +99,7 @@ export function MetaDriftWidget() {
                 <div className="relative h-1 w-full bg-white/5 overflow-hidden">
                   <div
                     className={cn(
-                      'absolute h-full transition-all duration-1000',
+                      'absolute h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
                       isPositive
                         ? 'bg-primary right-1/2'
                         : isNeutral

@@ -45,13 +45,13 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
     <Surface
       variant="glass"
       padding="none"
-      className="border-border/10 bg-background/90 overflow-hidden shadow-2xl relative"
+      className="border-border/10 bg-neutral-900/40 overflow-hidden shadow-2xl relative"
     >
       <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
         <Trophy className="h-48 w-48 text-primary" />
       </div>
 
-      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-background/90 relative z-10">
+      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-neutral-900/60 relative z-10">
         <div className="flex items-center gap-4">
           <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
             <Award className="h-5 w-5 text-primary" />
@@ -173,7 +173,7 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
   return (
     <Surface
       variant="glass"
-      className="border-border/10 bg-background/90 relative overflow-hidden h-full"
+      className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
     >
       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
         <Swords className="h-24 w-24 text-arena-gold" />
@@ -237,7 +237,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
   return (
     <Surface
       variant="glass"
-      className="border-border/10 bg-background/90 relative overflow-hidden h-full"
+      className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
     >
       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
         <TrendingUp className="h-24 w-24 text-primary" />

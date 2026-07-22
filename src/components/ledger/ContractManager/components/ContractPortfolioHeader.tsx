@@ -15,7 +15,7 @@ export function ContractPortfolioHeader({
   expiringSoonCount,
 }: ContractPortfolioHeaderProps) {
   return (
-    <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-background/90 backdrop-blur-md">
+    <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-neutral-900/40 backdrop-blur-md">
       <div className="flex items-center gap-4">
         <div className="p-3 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
           <UserCheck className="h-6 w-6 text-primary" />

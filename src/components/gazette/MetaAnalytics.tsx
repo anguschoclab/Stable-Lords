@@ -50,7 +50,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   return (
     <Surface
       variant="glass"
-      className="border-border/10 bg-background/90 relative overflow-hidden h-full"
+      className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
     >
       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
         <Activity className="h-24 w-24 text-primary" />
@@ -108,7 +108,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
                 animate={{ width: `${s.rate}%` }}
                 transition={{ duration: 1, delay: idx * 0.1 }}
                 className={cn(
-                  'h-full transition-all duration-1000',
+                  'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
                   s.rate > 55
                     ? 'bg-arena-pop shadow-[0_0_10px_rgba(var(--arena-pop-rgb),0.4)]'
                     : s.rate > 45
@@ -165,7 +165,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
   return (
     <Surface
       variant="glass"
-      className="border-border/10 bg-background/90 relative overflow-hidden h-full"
+      className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
     >
       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
         <LayoutGrid className="h-24 w-24 text-arena-gold" />
@@ -221,7 +221,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
                         <TooltipTrigger asChild>
                           <div
                             className={cn(
-                              'h-10 w-full rounded-none border border-white/5 transition-all duration-500 cursor-help',
+                              'h-10 w-full rounded-none border border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 cursor-help',
                               isNeutral
                                 ? 'bg-white/[0.02] opacity-20'
                                 : rate > 65

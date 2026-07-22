@@ -84,7 +84,7 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
       <div className="h-1 w-full bg-white/5 overflow-hidden">
         <div
           className={cn(
-            'h-full transition-all duration-1000',
+            'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
             isWeaponDiscovered
               ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]'
               : 'bg-white/10'

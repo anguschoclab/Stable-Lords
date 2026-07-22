@@ -42,7 +42,7 @@ export function TournamentPrepDialog({
 }: TournamentPrepDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-background/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
+      <DialogContent className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
         <DialogTitle className="sr-only">Tournament Preparation</DialogTitle>
         <DialogDescription className="sr-only">Prepare for the tournament</DialogDescription>
         <div className="bg-secondary/20 p-6 border-b border-white/5 flex items-center gap-3">
@@ -63,7 +63,7 @@ export function TournamentPrepDialog({
                 key={w.id}
                 variant="glass"
                 padding="none"
-                className="group hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none border-white/5 bg-black/20"
+                className="group hover:border-primary/40 transition-all border-white/5 bg-black/20"
               >
                 <div className="p-4 border-b border-white/5 bg-secondary/10 flex items-center justify-between">
                   <WarriorNameTag id={w.id} name={w.name} isChampion={w.champion} />

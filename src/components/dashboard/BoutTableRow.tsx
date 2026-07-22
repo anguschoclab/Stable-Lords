@@ -41,7 +41,7 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
           <TooltipTrigger asChild>
             <div
               className={cn(
-                'inline-flex items-center gap-2 px-3 py-1 rounded-none border font-black text-[9px] tracking-[0.2em] uppercase transition-all',
+                'inline-flex items-center gap-2 px-3 py-1 rounded-none border font-black text-[9px] tracking-[0.2em] uppercase transition-all motion-reduce:transition-none motion-reduce:transform-none',
                 playerWon
                   ? 'bg-arena-pop/10 border-arena-pop/20 text-arena-pop'
                   : 'bg-destructive/10 border-destructive/20 text-destructive'

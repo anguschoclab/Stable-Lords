@@ -43,9 +43,9 @@ export function ConditionBattery({ value, className, showText = false }: Conditi
           </span>
         )}
       </div>
-      <div className="relative w-full h-[3px] bg-background/90 ring-1 ring-white/5 overflow-hidden">
+      <div className="relative w-full h-[3px] bg-neutral-950/40 ring-1 ring-white/5 overflow-hidden">
         <div
-          className={cn('h-full transition-all duration-700 ease-out', color, opacity)}
+          className={cn('h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 ease-out', color, opacity)}
           style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
         />
       </div>

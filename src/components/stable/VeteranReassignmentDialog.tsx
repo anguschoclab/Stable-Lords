@@ -26,7 +26,7 @@ export function VeteranReassignmentDialog({
 }: VeteranReassignmentDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background/90 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none">
+      <DialogContent className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none">
         <DialogTitle className="sr-only">Veteran Reassignment</DialogTitle>
         <DialogDescription className="sr-only">Assign veterans as staff</DialogDescription>
         <div className="p-10 border-b border-white/5 bg-primary/5">

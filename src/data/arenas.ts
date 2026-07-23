@@ -444,6 +444,27 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundered_coliseum_blood_spire',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Blood Spire',
+    narrative: 'A splintered marble pillar near the center of the arena has been stained so deeply over the centuries that it seemingly bleeds when it rains.',
+  },
+  {
+    id: 'charnel_pits_dance_of_blades',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Dance of Blades',
+    narrative: 'A gruesome exhibition where five master duelists fought simultaneously. The bout lasted hours, leaving the sands entirely saturated in red before a victor emerged.',
+  },
+  {
+    id: 'standard_arena_orphan_triumph',
+    arenaId: 'standard_arena',
+    type: 'famous_death',
+    title: 'The Orphan\'s Triumph',
+    narrative: 'An unknown child gladiator, armed only with a broken spear, managed to disarm and slay the crowd\'s favorite champion. The champion\'s pristine armor was left to rust in the pit as a stark warning.',
+  },
+  {
     id: 'sundered_coliseum_shattered_throne',
     arenaId: 'sundered_coliseum',
     type: 'architectural_quirk',

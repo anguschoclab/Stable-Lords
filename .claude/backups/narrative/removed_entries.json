@@ -1223,5 +1223,1050 @@
     "reason": "near_duplicate",
     "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
     "similarity": 0.8617021276595744
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} shifts away just enough, eyes cold and dead.",
+    "kept": "shifts away just enough, eyes cold and dead."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} evades silently, wasting no unnecessary movement.",
+    "kept": "evades silently, wasting no unnecessary movement."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} sidesteps the blow with a weary, joyless motion.",
+    "kept": "sidesteps the blow with a weary, joyless motion."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} slips the attack, staring through the opponent like a ghost.",
+    "kept": "slips the attack, staring through his opponent like a ghost."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} swats the attack away with dismissive ease.",
+    "kept": "swats the attack away with dismissive ease."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} meets the strike perfectly, barely yielding an inch.",
+    "kept": "meets the strike perfectly, barely yielding an inch."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} deflects the blow without breaking eye contact.",
+    "kept": "deflects the blow without breaking eye contact."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} coolly turns the blade aside with expert timing.",
+    "kept": "coolly turns the blade aside with expert timing."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} blocks the heavy strike with unwavering resolve.",
+    "kept": "blocks the heavy strike with unwavering resolve."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} shrugs off the attack with a textbook parry.",
+    "kept": "shrugs off the attack with a textbook parry."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} redirects the force effortlessly, standing tall.",
+    "kept": "redirects the force effortlessly, standing tall."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} pats the strike away as if brushing off a fly.",
+    "kept": "pats the strike away as if brushing off a fly."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} blocks the strike with a bone-jarring, humorless clang.",
+    "kept": "blocks the strike with a bone-jarring, humorless clang."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} parries heavily, as if carrying the weight of the world.",
+    "kept": "parries heavily, as if carrying the weight of the world."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} turns the blade aside with a slow, deliberate scrape.",
+    "kept": "turns the blade aside with a slow, deliberate scrape."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} meets the attack with a grim, unyielding block.",
+    "kept": "meets the attack with a grim, unyielding block."
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} deflects the blow with a flourish, striking back instantly!",
+    "kept": "deflects the blow with a flourish, striking back instantly!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} turns defense into a dazzling, crowd-pleasing counter-attack!",
+    "kept": "turns defense into a dazzling, crowd-pleasing counter-attack!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} spins off the parry to deliver a breathtaking riposte!",
+    "kept": "spins off the parry to deliver a breathtaking riposte!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} parries with a dramatic sweep before lunging in return!",
+    "kept": "parries with a dramatic sweep before lunging in return!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} wows the crowd with an acrobatic evasion into a sharp strike!",
+    "kept": "wows the crowd with an acrobatic evasion into a sharp strike!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} catches the blade, winks to the crowd, and counters!",
+    "kept": "catches the blade, winks to the crowd, and counters!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} makes a spectacle of the block, answering with a flashy counter!",
+    "kept": "makes a spectacle of the block, answering with a flashy counter!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} dances around the attack to deliver a magnificent riposte!",
+    "kept": "dances around the attack to deliver a magnificent riposte!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} turns a desperate defense into a glorious offensive flourish!",
+    "kept": "turns a desperate defense into a glorious offensive flourish!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is sent crashing into the dust!",
+    "kept": "{{name}} is sent crashing into the dust!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} loses footing and collapses to the arena floor!",
+    "kept": "{{name}} loses footing and collapses to the arena floor!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is swept off their feet, landing heavily!",
+    "kept": "{{name}} is swept off their feet, landing heavily!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} tumbles backward, hitting the ground hard!",
+    "kept": "{{name}} tumbles backward, hitting the ground hard!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} crumples under the pressure, falling to the dirt!",
+    "kept": "{{name}} crumples under the pressure, falling to the dirt!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} goes sprawling across the sands!",
+    "kept": "{{name}} goes sprawling across the sands!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is violently knocked to the canvas!",
+    "kept": "{{name}} is violently knocked to the canvas!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} trips and plummets face-first!",
+    "kept": "{{name}} trips and plummets face-first!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}}'s legs give out, bringing them crashing down!",
+    "kept": "{{name}}'s legs give out, bringing them crashing down!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is floored by the sheer impact!",
+    "kept": "{{name}} is floored by the sheer impact!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} scrambles back to a fighting stance!",
+    "kept": "{{name}} scrambles back to a fighting stance!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} rises quickly, shaking off the dirt.",
+    "kept": "{{name}} rises quickly, shaking off the dirt."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} leaps back to their feet with surprising agility!",
+    "kept": "{{name}} leaps back to their feet with surprising agility!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} pushes off the ground, eyes burning with defiance.",
+    "kept": "{{name}} pushes off the ground, eyes burning with defiance."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} regains their footing, though heavily winded.",
+    "kept": "{{name}} regains their footing, though heavily winded."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} slowly stands back up, spitting blood.",
+    "kept": "{{name}} slowly stands back up, spitting blood."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} springs upright, ready to continue the fight!",
+    "kept": "{{name}} springs upright, ready to continue the fight!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} manages to stand, swaying slightly on their feet.",
+    "kept": "{{name}} manages to stand, swaying slightly on their feet."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} claws their way back up from the dirt.",
+    "kept": "{{name}} claws their way back up from the dirt."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} rolls gracefully back into a standing position.",
+    "kept": "{{name}} rolls gracefully back into a standing position."
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} launches a vicious assault on {{defender}}.",
+    "kept": "launches a vicious assault on {{defender}}"
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} presses the advantage with a heavy strike.",
+    "kept": "presses the advantage with a heavy strike"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} delivers a shallow grazing cut with {{weapon}}.",
+    "kept": "delivers a shallow grazing cut with {{weapon}}"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} scores a minor superficial slice across {{defender}}'s guard.",
+    "kept": "scores a minor superficial slice across {{defender}}'s guard"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} leaves a thin scratch with a hurried swipe.",
+    "kept": "leaves a thin scratch with a hurried swipe"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} makes slight contact on a sweeping slash.",
+    "kept": "makes slight contact on a sweeping slash"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} grazes {{defender}} as the blade slips off.",
+    "kept": "grazes {{defender}} as the blade slips off"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} traces a shallow red line with {{weapon}}.",
+    "kept": "traces a shallow red line with {{weapon}}"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} hammers {{defender}} with a resounding concussive blow.",
+    "kept": "hammers {{defender}} with a resounding concussive blow"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} slams {{weapon}} squarely into {{defender}}.",
+    "kept": "slams {{weapon}} squarely into {{defender}}"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} connects heavily, knocking the wind from {{defender}}.",
+    "kept": "connects heavily, knocking the wind from {{defender}}"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} brings {{weapon}} down in a punishing arc.",
+    "kept": "brings {{weapon}} down in a punishing arc"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} bludgeons {{defender}} with a staggering hit.",
+    "kept": "bludgeons {{defender}} with a staggering hit"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} delivers a crushing strike that echoes across the arena.",
+    "kept": "delivers a crushing strike that echoes across the arena"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} batters {{defender}} with a relentless smash.",
+    "kept": "batters {{defender}} with a relentless smash"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} skewers {{defender}} with terrifying precision.",
+    "kept": "skewers {{defender}} with terrifying precision"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} threads the needle through {{defender}}'s defenses for a killing blow.",
+    "kept": "threads the needle through {{defender}}'s defenses for a killing blow"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} finds the gap in armor for a catastrophic puncture.",
+    "kept": "finds the gap in armor for a catastrophic puncture"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} delivers a mortal thrust straight to the core.",
+    "kept": "delivers a mortal thrust straight to the core"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} strikes a fatal blow, piercing flesh and bone alike.",
+    "kept": "strikes a fatal blow, piercing flesh and bone alike"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} executes a flawless combination of blinding strikes.",
+    "kept": "executes a flawless combination of blinding strikes"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} slips past the guard to land a perfectly timed uppercut.",
+    "kept": "slips past the guard to land a perfectly timed uppercut"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} demonstrates perfect form with a devastating one-two punch.",
+    "kept": "demonstrates perfect form with a devastating one-two punch"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} weaves through defenses for a clinical sequence of blows.",
+    "kept": "weaves through defenses for a clinical sequence of blows"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} showcases absolute striking mastery, battering the defenses.",
+    "kept": "showcases absolute striking mastery, battering the defenses"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} unleashes a masterful flurry of pinpoint punches.",
+    "kept": "unleashes a masterful flurry of pinpoint punches"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} finds every opening with surgical unarmed precision.",
+    "kept": "finds every opening with surgical unarmed precision"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} dominates the exchange with expert head movement and counter-punches.",
+    "kept": "dominates the exchange with expert head movement and counter-punches"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} lands a masterfully placed hook that rattles the skull.",
+    "kept": "lands a masterfully placed hook that rattles the skull"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} strikes with unmatched unarmed prowess and speed.",
+    "kept": "strikes with unmatched unarmed prowess and speed"
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} claims a grisly victory over the fallen.",
+    "kept": "claims a grisly victory over the fallen."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} stands victorious over a lifeless opponent.",
+    "kept": "stands victorious over a lifeless opponent."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} delivers the ultimate, fatal punishment.",
+    "kept": "delivers the ultimate, fatal punishment."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} secures a deadly triumph in the bloodstained sands.",
+    "kept": "secures a deadly triumph in the bloodstained sands."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} leaves no doubt, sealing the match with a kill.",
+    "kept": "leaves no doubt, sealing the match with a kill."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} achieves a merciless, bloody victory.",
+    "kept": "achieves a merciless, bloody victory."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} watches the life fade from the defeated foe.",
+    "kept": "watches the life fade from the defeated foe."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} stands tall as the final, lethal blow connects.",
+    "kept": "stands tall as the final, lethal blow connects."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} brings a violent and definitive end to the bout.",
+    "kept": "brings a violent and definitive end to the bout."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A merciless finish to a brutal bout.",
+    "kept": "A merciless finish to a brutal bout."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The crowd roars as the final blow is struck.",
+    "kept": "The crowd roars as the final blow is struck."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A clinical, unfeeling execution of the opponent.",
+    "kept": "A clinical, unfeeling execution of the opponent."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The arena falls silent at the sheer brutality of the kill.",
+    "kept": "The arena falls silent at the sheer brutality of the kill."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A darkly humorous end for a foolhardy challenger.",
+    "kept": "A darkly humorous end for a foolhardy challenger."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A grim and bleak conclusion to the struggle.",
+    "kept": "A grim and bleak conclusion to the struggle."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The victor shows no hesitation in the killing stroke.",
+    "kept": "The victor shows no hesitation in the killing stroke."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A theatrical and bloody curtain call.",
+    "kept": "A theatrical and bloody curtain call."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The sands drink the life of the defeated.",
+    "kept": "The sands drink the life of the defeated."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A horrific end, executed with chilling precision.",
+    "kept": "A horrific end, executed with chilling precision."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} shifts away just enough, eyes cold and dead.",
+    "kept": "shifts away just enough, eyes cold and dead."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} evades silently, wasting no unnecessary movement.",
+    "kept": "evades silently, wasting no unnecessary movement."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} sidesteps the blow with a weary, joyless motion.",
+    "kept": "sidesteps the blow with a weary, joyless motion."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} dodges grimly, a scowl etched on {{possessive}} face.",
+    "kept": "{{name}} dodges grimly, a scowl etched on {{possessive}} face."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "removed": "{{name}} slips the attack, staring through the opponent like a ghost.",
+    "kept": "slips the attack, staring through his opponent like a ghost."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} swats the attack away with dismissive ease.",
+    "kept": "swats the attack away with dismissive ease."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} meets the strike perfectly, barely yielding an inch.",
+    "kept": "meets the strike perfectly, barely yielding an inch."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} deflects the blow without breaking eye contact.",
+    "kept": "deflects the blow without breaking eye contact."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} coolly turns the blade aside with expert timing.",
+    "kept": "coolly turns the blade aside with expert timing."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} blocks the heavy strike with unwavering resolve.",
+    "kept": "blocks the heavy strike with unwavering resolve."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} catches the weapon on {{possessive}} guard with supreme confidence.",
+    "kept": "{{name}} catches the weapon on {{possessive}} guard with supreme confidence."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} shrugs off the attack with a textbook parry.",
+    "kept": "shrugs off the attack with a textbook parry."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} redirects the force effortlessly, standing tall.",
+    "kept": "redirects the force effortlessly, standing tall."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} pats the strike away as if brushing off a fly.",
+    "kept": "pats the strike away as if brushing off a fly."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "{{name}} parries cleanly, an expression of boredom on {{possessive}} face.",
+    "kept": "{{name}} parries cleanly, an expression of boredom on {{possessive}} face."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} blocks the strike with a bone-jarring, humorless clang.",
+    "kept": "blocks the strike with a bone-jarring, humorless clang."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} parries heavily, as if carrying the weight of the world.",
+    "kept": "parries heavily, as if carrying the weight of the world."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} turns the blade aside with a slow, deliberate scrape.",
+    "kept": "turns the blade aside with a slow, deliberate scrape."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} meets the attack with a grim, unyielding block.",
+    "kept": "meets the attack with a grim, unyielding block."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "{{name}} catches the blow, {{possessive}} expression dark and unrelenting.",
+    "kept": "{{name}} catches the blow, {{possessive}} expression dark and unrelenting."
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} deflects the blow with a flourish, striking back instantly!",
+    "kept": "deflects the blow with a flourish, striking back instantly!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} turns defense into a dazzling, crowd-pleasing counter-attack!",
+    "kept": "turns defense into a dazzling, crowd-pleasing counter-attack!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} spins off the parry to deliver a breathtaking riposte!",
+    "kept": "spins off the parry to deliver a breathtaking riposte!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} parries with a dramatic sweep before lunging in return!",
+    "kept": "parries with a dramatic sweep before lunging in return!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} wows the crowd with an acrobatic evasion into a sharp strike!",
+    "kept": "wows the crowd with an acrobatic evasion into a sharp strike!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} catches the blade, winks to the crowd, and counters!",
+    "kept": "catches the blade, winks to the crowd, and counters!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} makes a spectacle of the block, answering with a flashy counter!",
+    "kept": "makes a spectacle of the block, answering with a flashy counter!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} dances around the attack to deliver a magnificent riposte!",
+    "kept": "dances around the attack to deliver a magnificent riposte!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} twirls {{possessive}} weapon in a stunning display before countering!",
+    "kept": "{{name}} twirls {{possessive}} weapon in a stunning display before countering!"
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "removed": "{{name}} turns a desperate defense into a glorious offensive flourish!",
+    "kept": "turns a desperate defense into a glorious offensive flourish!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is sent crashing into the dust!",
+    "kept": "{{name}} is sent crashing into the dust!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} loses footing and collapses to the arena floor!",
+    "kept": "{{name}} loses footing and collapses to the arena floor!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is swept off their feet, landing heavily!",
+    "kept": "{{name}} is swept off their feet, landing heavily!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} tumbles backward, hitting the ground hard!",
+    "kept": "{{name}} tumbles backward, hitting the ground hard!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} crumples under the pressure, falling to the dirt!",
+    "kept": "{{name}} crumples under the pressure, falling to the dirt!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} goes sprawling across the sands!",
+    "kept": "{{name}} goes sprawling across the sands!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is violently knocked to the canvas!",
+    "kept": "{{name}} is violently knocked to the canvas!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} trips and plummets face-first!",
+    "kept": "{{name}} trips and plummets face-first!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}}'s legs give out, bringing them crashing down!",
+    "kept": "{{name}}'s legs give out, bringing them crashing down!"
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "{{name}} is floored by the sheer impact!",
+    "kept": "{{name}} is floored by the sheer impact!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} scrambles back to a fighting stance!",
+    "kept": "{{name}} scrambles back to a fighting stance!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} rises quickly, shaking off the dirt.",
+    "kept": "{{name}} rises quickly, shaking off the dirt."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} leaps back to their feet with surprising agility!",
+    "kept": "{{name}} leaps back to their feet with surprising agility!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} pushes off the ground, eyes burning with defiance.",
+    "kept": "{{name}} pushes off the ground, eyes burning with defiance."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} regains their footing, though heavily winded.",
+    "kept": "{{name}} regains their footing, though heavily winded."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} slowly stands back up, spitting blood.",
+    "kept": "{{name}} slowly stands back up, spitting blood."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} springs upright, ready to continue the fight!",
+    "kept": "{{name}} springs upright, ready to continue the fight!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} manages to stand, swaying slightly on their feet.",
+    "kept": "{{name}} manages to stand, swaying slightly on their feet."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} claws their way back up from the dirt.",
+    "kept": "{{name}} claws their way back up from the dirt."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} rolls gracefully back into a standing position.",
+    "kept": "{{name}} rolls gracefully back into a standing position."
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} launches a vicious assault on {{defender}}.",
+    "kept": "launches a vicious assault on {{defender}}"
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} strikes out wildly at the opponent.",
+    "kept": "{{attacker}} strikes out wildly at the opponent."
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} delivers a punishing sequence of blows.",
+    "kept": "{{attacker}} delivers a punishing sequence of blows."
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} attacks with relentless fury.",
+    "kept": "{{attacker}} attacks with relentless fury."
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "{{attacker}} presses the advantage with a heavy strike.",
+    "kept": "presses the advantage with a heavy strike"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} delivers a shallow grazing cut with {{weapon}}.",
+    "kept": "delivers a shallow grazing cut with {{weapon}}"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} scores a minor superficial slice across {{defender}}'s guard.",
+    "kept": "scores a minor superficial slice across {{defender}}'s guard"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} flicks {{possessive}} {{weapon}} in a quick, harmless slash.",
+    "kept": "{{attacker}} flicks {{possessive}} {{weapon}} in a quick, harmless slash."
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} drags {{possessive}} {{weapon}} lightly across {{defender}}'s armor.",
+    "kept": "{{attacker}} drags {{possessive}} {{weapon}} lightly across {{defender}}'s armor."
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} leaves a thin scratch with a hurried swipe.",
+    "kept": "leaves a thin scratch with a hurried swipe"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} skims {{defender}} with the edge of the blade.",
+    "kept": "{{attacker}} skims {{defender}} with the edge of the blade."
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} lands a glancing blow that barely bites.",
+    "kept": "{{attacker}} lands a glancing blow that barely bites."
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} makes slight contact on a sweeping slash.",
+    "kept": "makes slight contact on a sweeping slash"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} grazes {{defender}} as the blade slips off.",
+    "kept": "grazes {{defender}} as the blade slips off"
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}} traces a shallow red line with {{weapon}}.",
+    "kept": "traces a shallow red line with {{weapon}}"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} hammers {{defender}} with a resounding concussive blow.",
+    "kept": "hammers {{defender}} with a resounding concussive blow"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} crashes {{possessive}} {{weapon}} into {{defender}} with terrible force.",
+    "kept": "{{attacker}} crashes {{possessive}} {{weapon}} into {{defender}} with terrible force."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} drives the {{weapon}} home with a sickening thud.",
+    "kept": "{{attacker}} drives the {{weapon}} home with a sickening thud."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} slams {{weapon}} squarely into {{defender}}.",
+    "kept": "slams {{weapon}} squarely into {{defender}}"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} connects heavily, knocking the wind from {{defender}}.",
+    "kept": "connects heavily, knocking the wind from {{defender}}"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} brings {{weapon}} down in a punishing arc.",
+    "kept": "brings {{weapon}} down in a punishing arc"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} bludgeons {{defender}} with a staggering hit.",
+    "kept": "bludgeons {{defender}} with a staggering hit"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} delivers a crushing strike that echoes across the arena.",
+    "kept": "delivers a crushing strike that echoes across the arena"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} batters {{defender}} with a relentless smash.",
+    "kept": "batters {{defender}} with a relentless smash"
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "{{attacker}} lands a brutal, bone-jarring impact.",
+    "kept": "{{attacker}} lands a brutal, bone-jarring impact."
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} drives {{possessive}} {{weapon}} straight through {{defender}}'s vitals.",
+    "kept": "{{attacker}} drives {{possessive}} {{weapon}} straight through {{defender}}'s vitals."
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} puncturing {{defender}}'s heart with a devastating lunge.",
+    "kept": "{{attacker}} puncturing {{defender}}'s heart with a devastating lunge."
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} skewers {{defender}} with terrifying precision.",
+    "kept": "skewers {{defender}} with terrifying precision"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} buries {{possessive}} {{weapon}} deep into a vital organ.",
+    "kept": "{{attacker}} buries {{possessive}} {{weapon}} deep into a vital organ."
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} impales {{defender}} on a lethal thrust.",
+    "kept": "{{attacker}} impales {{defender}} on a lethal thrust."
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} threads the needle through {{defender}}'s defenses for a killing blow.",
+    "kept": "threads the needle through {{defender}}'s defenses for a killing blow"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} plunges the {{weapon}} deep into the chest cavity.",
+    "kept": "{{attacker}} plunges the {{weapon}} deep into the chest cavity."
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} finds the gap in armor for a catastrophic puncture.",
+    "kept": "finds the gap in armor for a catastrophic puncture"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} delivers a mortal thrust straight to the core.",
+    "kept": "delivers a mortal thrust straight to the core"
+  },
+  {
+    "path": "strikes.piercing.fatal",
+    "removed": "{{attacker}} strikes a fatal blow, piercing flesh and bone alike.",
+    "kept": "strikes a fatal blow, piercing flesh and bone alike"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} executes a flawless combination of blinding strikes.",
+    "kept": "executes a flawless combination of blinding strikes"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} slips past the guard to land a perfectly timed uppercut.",
+    "kept": "slips past the guard to land a perfectly timed uppercut"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} demonstrates perfect form with a devastating one-two punch.",
+    "kept": "demonstrates perfect form with a devastating one-two punch"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} weaves through defenses for a clinical sequence of blows.",
+    "kept": "weaves through defenses for a clinical sequence of blows"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} showcases absolute striking mastery, battering the defenses.",
+    "kept": "showcases absolute striking mastery, battering the defenses"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} unleashes a masterful flurry of pinpoint punches.",
+    "kept": "unleashes a masterful flurry of pinpoint punches"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} finds every opening with surgical unarmed precision.",
+    "kept": "finds every opening with surgical unarmed precision"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} dominates the exchange with expert head movement and counter-punches.",
+    "kept": "dominates the exchange with expert head movement and counter-punches"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} lands a masterfully placed hook that rattles the skull.",
+    "kept": "lands a masterfully placed hook that rattles the skull"
+  },
+  {
+    "path": "strikes.fist.mastery",
+    "removed": "{{attacker}} strikes with unmatched unarmed prowess and speed.",
+    "kept": "strikes with unmatched unarmed prowess and speed"
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} ends the fight with brutal finality.",
+    "kept": "{{attacker}} ends the fight with brutal finality."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} claims a grisly victory over the fallen.",
+    "kept": "claims a grisly victory over the fallen."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} stands victorious over a lifeless opponent.",
+    "kept": "stands victorious over a lifeless opponent."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} delivers the ultimate, fatal punishment.",
+    "kept": "delivers the ultimate, fatal punishment."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} secures a deadly triumph in the bloodstained sands.",
+    "kept": "secures a deadly triumph in the bloodstained sands."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} leaves no doubt, sealing the match with a kill.",
+    "kept": "leaves no doubt, sealing the match with a kill."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} achieves a merciless, bloody victory.",
+    "kept": "achieves a merciless, bloody victory."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} watches the life fade from the defeated foe.",
+    "kept": "watches the life fade from the defeated foe."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} stands tall as the final, lethal blow connects.",
+    "kept": "stands tall as the final, lethal blow connects."
+  },
+  {
+    "path": "conclusions.Kill",
+    "removed": "{{attacker}} brings a violent and definitive end to the bout.",
+    "kept": "brings a violent and definitive end to the bout."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A merciless finish to a brutal bout.",
+    "kept": "A merciless finish to a brutal bout."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The crowd roars as the final blow is struck.",
+    "kept": "The crowd roars as the final blow is struck."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A clinical, unfeeling execution of the opponent.",
+    "kept": "A clinical, unfeeling execution of the opponent."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The arena falls silent at the sheer brutality of the kill.",
+    "kept": "The arena falls silent at the sheer brutality of the kill."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A darkly humorous end for a foolhardy challenger.",
+    "kept": "A darkly humorous end for a foolhardy challenger."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A grim and bleak conclusion to the struggle.",
+    "kept": "A grim and bleak conclusion to the struggle."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The victor shows no hesitation in the killing stroke.",
+    "kept": "The victor shows no hesitation in the killing stroke."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A theatrical and bloody curtain call.",
+    "kept": "A theatrical and bloody curtain call."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "The sands drink the life of the defeated.",
+    "kept": "The sands drink the life of the defeated."
+  },
+  {
+    "path": "kill_text.execution",
+    "removed": "A horrific end, executed with chilling precision.",
+    "kept": "A horrific end, executed with chilling precision."
   }
 ]

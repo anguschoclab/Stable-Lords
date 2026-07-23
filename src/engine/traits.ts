@@ -104,6 +104,34 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_scars: {
+    id: 'orphan_scars',
+    name: 'Orphan Scars',
+    description: 'Bears the hardened marks of a brutal upbringing. More resilient early on.',
+    effect: { defModEarly: 1, enduranceMult: 0.9 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.3,
+  },
+  gutter_instinct: {
+    id: 'gutter_instinct',
+    name: 'Gutter Instinct',
+    description: 'Honed on the savage streets, reacting instinctively when desperate.',
+    effect: { iniMod: 1, attModLowHp: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.3,
+  },
+  blood_forged: {
+    id: 'blood_forged',
+    name: 'Blood Forged',
+    description: 'Conditioned by countless beatings. Shrugs off fatigue and punishes mistakes.',
+    effect: { ripMod: 1, enduranceMult: 0.9 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.2,
+  },
+
   orphan_blood: {
     id: 'orphan_blood',
     name: 'Orphan Blood',

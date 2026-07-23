@@ -384,6 +384,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Strange voices carried by the wind distract fighters, slightly lowering initiative but heightening paranoia and riposte chances.',
   },
+  'Stardust Gale': {
+    staminaMult: 1.15,
+    initiativeMod: 2,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
+  },
   'Diamond Rain': {
     staminaMult: 1.2,
     initiativeMod: -2,
@@ -492,6 +499,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'Unseen voices murmur through the arena. The fighters glance around nervously.',
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
+  'Stardust Gale': 'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
   'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
 };
 

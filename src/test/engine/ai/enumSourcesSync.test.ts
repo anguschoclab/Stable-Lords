@@ -59,6 +59,7 @@ describe('enumSources sync with WeatherType', () => {
     'Prismatic Rain',
     'Moonlight Duel',
     'Diamond Rain',
+    'Stardust Gale',
   ]);
 
   it('WeatherTypeSchema has no duplicate entries', () => {
@@ -67,12 +68,12 @@ describe('enumSources sync with WeatherType', () => {
     );
   });
 
-  it('WEATHER_TYPES count is 53 (48 original + 5 new)', () => {
-    expect(WEATHER_TYPES.length).toBe(53);
+  it('WEATHER_TYPES count is 54 (48 original + 6 new)', () => {
+    expect(WEATHER_TYPES.length).toBe(54);
   });
 
-  it('WeatherTypeSchema options count is 53', () => {
-    expect(schemaOptions.length).toBe(53);
+  it('WeatherTypeSchema options count is 54', () => {
+    expect(schemaOptions.length).toBe(54);
   });
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

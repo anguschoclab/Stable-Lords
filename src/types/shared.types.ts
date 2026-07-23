@@ -631,7 +631,7 @@ export type WeatherType =
   | 'Blood Fog'
   | 'Shimmering Heat'
   | 'Crystal Rain'
-  | 'Rain of Frogs'
+  | 'Rain of Frogs' | 'Stardust Gale'
   | 'Chaos Storm'
   | 'Chaos Squall'
   | 'Whispering Winds'

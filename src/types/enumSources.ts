@@ -9,6 +9,7 @@ export const CROWD_MOODS = ['Calm', 'Bloodthirsty', 'Theatrical', 'Solemn', 'Fes
 
 export const WEATHER_TYPES = [
   'Clear',
+  'Temporal Rift',
   'Rainy',
   'Sweltering',
   'Breezy',

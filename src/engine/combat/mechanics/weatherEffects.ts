@@ -14,6 +14,13 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  'Temporal Rift': {
+    staminaMult: 2.0,
+    initiativeMod: 10,
+    riposteMod: 5,
+    damageMult: 1.0,
+    description: 'Time fractures, heavily accelerating combat at the cost of immense stamina.',
+  },
   'Prismatic Rain': {
     staminaMult: 1.15,
     initiativeMod: 1,
@@ -422,6 +429,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  'Temporal Rift': 'Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters\' will.',
   'Prismatic Rain': 'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
   'Eldritch Eclipse':
     'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',

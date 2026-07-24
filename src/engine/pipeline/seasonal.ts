@@ -63,7 +63,8 @@ interface OffseasonEventNarrative {
     | 'shadow_market_run'
     | 'moonlight_duel'
     | 'chaos_weavers_game'
-    | 'secret_fight_club';
+    | 'secret_fight_club'
+    | 'temporal_anomaly';
   newsletter: string[];
 }
 
@@ -1348,6 +1349,47 @@ function handleMidnightMarket(
 }
 
 
+function handleTemporalAnomaly(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 35;
+      const currentTraits = chosen.traits || [];
+      const newTraits = [...currentTraits];
+      if (newTraits.length > 0) {
+        const removedTraitIndex = Math.floor(rng.next() * newTraits.length);
+        newTraits.splice(removedTraitIndex, 1);
+      }
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        traits: newTraits,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.',
+        origin: 'Temporal Anomaly',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
 function handleChaosWeaversGame(
   state: GameState,
   nextWeek: number,
@@ -1549,6 +1591,7 @@ const EVENT_HANDLERS: Record<
   chaos_spores: handleChaosSpores,
   secret_fight_club: handleSecretFightClub,
   chaos_weavers_game: handleChaosWeaversGame,
+  temporal_anomaly: handleTemporalAnomaly,
 };
 
 /**

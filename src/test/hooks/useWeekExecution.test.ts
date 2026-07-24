@@ -98,9 +98,25 @@ describe('useWeekExecution', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Restore store action mocks to working defaults after clearAllMocks wipes them
-    const store = useGameStore() as any;
+    const store = (useGameStore as any).getState();
     store.doAdvanceWeek.mockResolvedValue(undefined);
     store.doAdvanceDay.mockResolvedValue(undefined);
+    store.isTournamentWeek = false;
+    store.isSimulating = false;
+
+    vi.mocked(useGameStore).mockImplementation((selector?: any) => {
+      if (typeof selector === 'function') return selector(store);
+      return store;
+    });
+    vi.mocked(useWorldState).mockImplementation(() => ({
+      week: store.week,
+      day: store.day,
+      isTournamentWeek: store.isTournamentWeek,
+      roster: store.roster ?? [],
+      rivals: store.rivals ?? [],
+      boutOffers: store.boutOffers ?? {},
+      lastWeekBoutDisplay: store.lastWeekBoutDisplay,
+    }));
   });
 
   it('calls doAdvanceWeek when not tournament week', async () => {
@@ -114,13 +130,8 @@ describe('useWeekExecution', () => {
   });
 
   it('calls doAdvanceDay when isTournamentWeek=true', async () => {
-    const store = useGameStore() as any;
-    const tournamentState = { ...store, isTournamentWeek: true };
-    vi.mocked(useGameStore).mockImplementation((selector?: any) => {
-      if (typeof selector === 'function') return selector(tournamentState);
-      return tournamentState;
-    });
-    vi.mocked(useWorldState).mockReturnValue(tournamentState);
+    const store = (useGameStore as any).getState();
+    store.isTournamentWeek = true;
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();

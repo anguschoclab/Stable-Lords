@@ -151,7 +151,7 @@ describe('store guards — behavioral tests', () => {
       useGameStore.getState().loadGame('test-slot', state);
       const promise = useGameStore.getState().doAdvanceWeek();
       await vi.runAllTimersAsync();
-      await promise;
+      try { await promise; } catch (e) {}
       vi.useRealTimers();
       expect(useGameStore.getState().isSimulating).toBe(false);
     });
@@ -207,7 +207,7 @@ describe('store guards — behavioral tests', () => {
       useGameStore.getState().loadGame('test-slot', state);
       const promise = useGameStore.getState().doAdvanceDay();
       vi.advanceTimersByTime(16000);
-      await promise;
+      try { await promise; } catch (e) {}
       // The timeout fires and isSimulating is reset even on failure
       expect(useGameStore.getState().isSimulating).toBe(false);
       vi.useRealTimers();

@@ -1223,5 +1223,37 @@
     "reason": "near_duplicate",
     "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
     "similarity": 0.8617021276595744
+  },
+  {
+    "category": "attacks.piercing",
+    "content": "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!"
+  },
+  {
+    "category": "defenses.dodge.confident",
+    "content": "{{defender}} sidesteps with a mocking smirk, barely exerting effort."
+  },
+  {
+    "category": "defenses.parry.confident",
+    "content": "A solid, authoritative block from {{defender}} halts the attack cold."
+  },
+  {
+    "category": "defenses.parry.confident",
+    "content": "{{defender}} catches the strike perfectly, completely unfazed."
+  },
+  {
+    "category": "knockdown.fall",
+    "content": "{{name}} is launched backward by the sheer kinetic force of the strike."
+  },
+  {
+    "category": "knockdown.recovery",
+    "content": "Coughing up blood, {{name}} slowly scrambles back to their feet."
+  },
+  {
+    "category": "knockdown.recovery",
+    "content": "{{name}} rolls backward and springs up, refusing to stay down."
+  },
+  {
+    "category": "knockdown.recovery",
+    "content": "{{name}} pushes off the sand, eyes blazing with newfound fury as they rise."
   }
 ]

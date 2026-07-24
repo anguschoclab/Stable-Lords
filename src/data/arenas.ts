@@ -443,7 +443,25 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 };
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
+
   {
+    id: 'sundered_coliseum_blood_tide',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Blood Tide Rebellion',
+    description: 'A massacre where gladiators turned on their masters, painting the sand red.',
+    unlockRequirement: 'Win 50 matches',
+    discovered: false,
+  },
+  {
+    id: 'proving_grounds_iron_gate',
+    arenaId: 'proving_grounds',
+    type: 'architectural_quirk',
+    title: 'The Rusting Gate',
+    description: 'The main gate was forged from the weapons of fallen combatants.',
+    unlockRequirement: 'Participate in 10 matches',
+    discovered: false,
+  },  {
     id: 'sundered_coliseum_shattered_throne',
     arenaId: 'sundered_coliseum',
     type: 'architectural_quirk',

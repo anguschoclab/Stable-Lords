@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Born in the midnight shadows of the Bleeding Heart Orphanage',
+  'Survived the grueling child-pits of the Silent Brothers monastery',
+  'Left chained at the heavy iron doors of the Weeping Mother Sanctuary',
+  'Found shivering in the rusted cages of the Black Iron Workhouse',
+  'Raised in the sunless undercrofts of the Dross Wards',
   'Raised by the soot-stained wardens of the Cinder Keep',
   'Abandoned in the rusted clockwork labyrinth of the Old City',
   'Survived the grueling child-pits of the Salt Wastes',
@@ -9,7 +14,6 @@ const ORIGINS = [
   'Raised in the crumbling ruins of the forgotten Bleeding Heart Orphanage',
   'Found abandoned amidst the bone dust of the lower charnel pits',
   'Survived a brutal childhood in the shadow of the executioner\'s block',
-  'Raised on the violent streets of the Dross Wards by disgraced gladiators',
   'Abandoned at the rusted gates of the Crying Mothers sanctuary',
   'Born in the shadowed cellars of the Blackwood Workhouse',
   'Raised among the soot and cinders of the lower forge district',
@@ -174,6 +178,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would obsessively count the droplets of blood spilled in the local fighting rings',
+  'would obsessively catalog the weak points of venomous insects',
+  'learned to mimic the sounds of dying men to scare off bullies',
   'would gnaw on discarded bones to strengthen their jaw',
   'learned to predict strikes by watching the shadows of passing guards',
   'developed a chillingly blank stare when faced with violence',
@@ -195,7 +202,6 @@ const CHILDHOOD_TRAITS = [
   'perfected the art of striking from the shadows of the orphanage dormitories',
   'would meticulously collect and sharpen shattered glass from the streets',
   'learned to anticipate the exact moment a drunkard would throw a punch',
-  'was known for an unnerving, unblinking stare that made older boys back down',
   'would spend nights mapping the patrol routes of the city guard for fun',
   'would collect shattered teeth from the fighting pits as grim trophies',
   'would trace the flight paths of throwing knives with unsettling focus',
@@ -275,6 +281,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'waiting for the moment the crowd screams their true, forgotten name in terror',
+  'knowing the only crown they will ever wear is forged from shattered bone',
+  'until they dragged a corrupt slaver into the light and left them broken',
   'until they strangled a cruel taskmaster and embraced the arena’s call',
   'now seeking to turn the brutality of their past into the roaring adoration of the crowd',
   'waiting to prove that the blood of the slums burns hotter than the gold of kings',
@@ -306,7 +315,6 @@ const DEFINING_MOMENTS = [
   'until the day they dragged their abuser into the light and left them broken',
   'realizing that mercy in the undercity is just an invitation to be killed',
   'waiting for the moment the gates would close and the true test would begin',
-  'knowing that the only escape from the gutters was paved in blood',
   'realizing that the only true law of the streets was written in blood',
   'waiting for the moment the arena doors would open and swallow their past',
   "until the day they crushed a street enforcer's windpipe in a brawl over coppers",
@@ -362,7 +370,6 @@ const DEFINING_MOMENTS = [
   'realizing that pain is simply the currency demanded by the gods of the arena',
   'until they drove a splintered chair leg through a slaver\'s hand',
   'realizing that the only true currency in the undercity is pain',
-  'waiting for the moment the crowd screams a name they once forgot',
   'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
   'until they strangled a cruel matron with a stolen rosary',

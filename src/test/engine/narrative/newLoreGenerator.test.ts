@@ -69,7 +69,6 @@ describe('new loreGenerator entries', () => {
       'until the day they dragged their abuser into the light and left them broken',
       'realizing that mercy in the undercity is just an invitation to be killed',
       'waiting for the moment the gates would close and the true test would begin',
-      'knowing that the only escape from the gutters was paved in blood',
     ];
 
     for (const entry of newMoments) {

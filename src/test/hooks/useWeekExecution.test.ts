@@ -66,6 +66,7 @@ vi.mock('@/state/useGameStore', async () => {
   return {
     useGameStore,
     useWorldState: vi.fn(() => ({
+      ...store,
       week: store.week,
       day: store.day,
       isTournamentWeek: store.isTournamentWeek,
@@ -109,6 +110,7 @@ describe('useWeekExecution', () => {
       return store;
     });
     vi.mocked(useWorldState).mockImplementation(() => ({
+      ...store,
       week: store.week,
       day: store.day,
       isTournamentWeek: store.isTournamentWeek,

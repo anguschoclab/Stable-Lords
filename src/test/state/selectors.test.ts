@@ -1,7 +1,9 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { renderHook } from '@testing-library/react';
+
 import {
-  useWorldState,
   usePlayer,
   useRoster,
   useRivals,
@@ -14,9 +16,9 @@ import {
   useWarriorNameState,
   useStyleStats
 } from '@/state/selectors';
+
 import { useGameStore } from '@/state/useGameStore';
-import type { GameState } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
+
 
 describe('selectors', () => {
   const mockState = {
@@ -39,7 +41,7 @@ describe('selectors', () => {
     arenaPreferences: { bgm: true },
     bookmarks: ['w1', 'r1'],
     retired: []
-  } as unknown as GameState;
+  } as any;
 
   beforeEach(() => {
     vi.clearAllMocks();

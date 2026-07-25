@@ -1223,5 +1223,200 @@
     "reason": "near_duplicate",
     "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
     "similarity": 0.8617021276595744
+  },
+  {
+    "pbp.attacks.piercing": [
+      "{{attacker}} darts like a viper, sinking {{possessive}} {{weapon}} in a vicious, penetrating lunge.",
+      "With a fencer's cruel precision, {{attacker}} threads the needle, aiming a lethal thrust at {{defender}}.",
+      "{{attacker}} extends fully, channeling their entire body weight into a pinpoint strike with {{possessive}} {{weapon}}.",
+      "A blindingly fast jab from {{attacker}} threatens to skewer {{defender}} where they stand."
+    ],
+    "pbp.attacks.slashing": [
+      "{{attacker}} arcs {{possessive}} {{weapon}} in a sudden, blinding crescent toward {{defender}}'s throat.",
+      "With a savage roar, {{attacker}} sweeps {{possessive}} {{weapon}} in a wide, decapitating slash.",
+      "{{attacker}} feints a thrust before snapping {{possessive}} wrists into a blistering horizontal cut.",
+      "The edge of {{attacker}}'s {{weapon}} whistles a deadly tune as it cleaves the air toward {{defender}}."
+    ],
+    "pbp.attacks.bashing": [
+      "{{attacker}} heaves {{possessive}} {{weapon}} with the force of a collapsing mountain, aiming to crush {{defender}}.",
+      "Grunting with exertion, {{attacker}} swings {{possessive}} {{weapon}} in a bone-shattering arc.",
+      "{{attacker}} drives their {{weapon}} forward like a battering ram, intent on shattering {{defender}}'s guard.",
+      "With unrelenting brutality, {{attacker}} hammers down with {{possessive}} {{weapon}}."
+    ],
+    "pbp.attacks.fist": [
+      "{{attacker}} steps inside {{defender}}'s guard, unleashing a piston-like straight punch.",
+      "With raw, bare-knuckle savagery, {{attacker}} throws a crushing overhand right.",
+      "{{attacker}} drops their shoulder and rips a brutal uppercut aimed at {{defender}}'s jaw.",
+      "A flurry of heavy, unprotected blows rains down as {{attacker}} swarms {{defender}}."
+    ],
+    "pbp.defenses.dodge.desperate": [
+      "Eyes wide with terror, {{defender}} flings themselves backward, barely escaping the lethal blow.",
+      "{{defender}} scrambles wildly in the dirt, rolling just in time to avoid decapitation.",
+      "With a breathless gasp, {{defender}} contorts their body, the weapon whistling mere inches from their skin."
+    ],
+    "pbp.defenses.dodge.confident": [
+      "{{defender}} sidesteps with a dismissive smirk, letting the attack sail harmlessly past.",
+      "Moving with liquid grace, {{defender}} sways just out of reach, completely unbothered.",
+      "{{defender}} barely shifts their weight, reading the attack perfectly and dodging with arrogant ease."
+    ],
+    "pbp.defenses.dodge.theatrical": [
+      "{{defender}} executes a flawless, sweeping backflip, dodging the attack to the roar of the crowd.",
+      "With a mocking bow, {{defender}} twirls out of the weapon's path, treating the fight like a dance.",
+      "{{defender}} dramatically drops into a low crouch, the lethal strike passing over their head as they play to the stands."
+    ],
+    "pbp.defenses.dodge.grim": [
+      "{{defender}} shifts just enough to survive, their face a mask of cold, silent endurance.",
+      "With a sharp, necessary flinch, {{defender}} narrowly avoids the blow, their eyes never leaving {{attacker}}.",
+      "A bleak, mechanical dodge sees {{defender}} evade the strike, showing no emotion but the will to survive."
+    ],
+    "pbp.defenses.parry.desperate": [
+      "{{defender}} frantically throws up their guard, the jarring impact nearly dislocating their shoulder.",
+      "With a panicked cry, {{defender}} barely manages to intercept the blow, stumbling backward.",
+      "{{defender}}'s weapon trembles violently as they barely deflect the crushing strike."
+    ],
+    "pbp.defenses.parry.confident": [
+      "{{defender}} swats the attack aside with disdain, completely unfazed by the assault.",
+      "A sharp, practiced flick of the wrist from {{defender}} effortlessly turns the deadly strike away.",
+      "{{defender}} meets the blow head-on, their guard an unbreakable wall of steel."
+    ],
+    "pbp.defenses.parry.theatrical": [
+      "{{defender}} deflects the blow with a flourishing spin, winking at the crowd as sparks fly.",
+      "With a dramatic clash of steel, {{defender}} parries the strike and strikes a heroic pose.",
+      "{{defender}} catches the blow on their guard with a loud, ringing clash, turning it into a spectacle."
+    ],
+    "pbp.defenses.parry.grim": [
+      "{{defender}} mechanically intercepts the strike, the brutal vibration echoing their grim reality.",
+      "A cold, hard parry from {{defender}}, sacrificing the edge of their weapon to survive the exchange.",
+      "{{defender}} meets the blow with a stoic block, their expression entirely dead to the violence."
+    ],
+    "pbp.defenses.riposte.desperate": [
+      "Stumbling from the block, {{defender}} lashes out blindly in a panicked counter-strike.",
+      "{{defender}} frantically shoves the attack away and stabs wildly, desperate for breathing room."
+    ],
+    "pbp.defenses.riposte.confident": [
+      "{{defender}} smoothly redirects the attack and instantly snaps back a masterclass counter.",
+      "Having baited the strike, {{defender}} parries easily and delivers a punishing, arrogant riposte."
+    ],
+    "pbp.defenses.riposte.theatrical": [
+      "{{defender}} deflects the blow and immediately counters with a flashy, crowd-pleasing flourish.",
+      "With a sweeping motion, {{defender}} turns the parry into a dramatic, spinning counter-attack."
+    ],
+    "pbp.defenses.riposte.grim": [
+      "{{defender}} absorbs the shock and ruthlessly steps into a bleak, punishing counter-blow.",
+      "A mechanical block is followed instantly by a cold, calculating strike from {{defender}}."
+    ],
+    "pbp.knockdown.fall": [
+      "The sheer force of the blow sweeps {{name}} off their feet, crashing heavily into the bloody sands.",
+      "{{name}} crumples like a puppet with cut strings, collapsing into a heap on the arena floor.",
+      "A sickening thud echoes as {{name}} is blasted backward, sprawling awkwardly in the dirt."
+    ],
+    "pbp.knockdown.recovery": [
+      "Coughing up dust and blood, {{name}} agonizingly drags themselves back to a standing position.",
+      "{{name}} springs back up with terrifying speed, ignoring the pain to re-enter the fray.",
+      "Leaning heavily on their weapon, {{name}} staggers upright, swaying but unbowed."
+    ],
+    "kill_text.execution": [
+      "{{attacker}} steps past the mangled guard of {{defender}}, delivering a bleak, calculated execution that freezes the crowd.",
+      "With a chilling lack of emotion, {{attacker}} slides their weapon into {{defender}}'s heart, ending the misery.",
+      "The crowd goes dead silent as {{attacker}} calmly severs {{defender}}'s life thread with a single, surgical strike."
+    ]
+  },
+  {
+    "pbp.attacks.piercing": [
+      "{{attacker}} darts like a viper, sinking {{possessive}} {{weapon}} in a vicious, penetrating lunge.",
+      "With a fencer's cruel precision, {{attacker}} threads the needle, aiming a lethal thrust at {{defender}}.",
+      "{{attacker}} extends fully, channeling their entire body weight into a pinpoint strike with {{possessive}} {{weapon}}.",
+      "A blindingly fast jab from {{attacker}} threatens to skewer {{defender}} where they stand."
+    ],
+    "pbp.attacks.slashing": [
+      "{{attacker}} arcs {{possessive}} {{weapon}} in a sudden, blinding crescent toward {{defender}}'s throat.",
+      "With a savage roar, {{attacker}} sweeps {{possessive}} {{weapon}} in a wide, decapitating slash.",
+      "{{attacker}} feints a thrust before snapping {{possessive}} wrists into a blistering horizontal cut.",
+      "The edge of {{attacker}}'s {{weapon}} whistles a deadly tune as it cleaves the air toward {{defender}}."
+    ],
+    "pbp.attacks.bashing": [
+      "{{attacker}} heaves {{possessive}} {{weapon}} with the force of a collapsing mountain, aiming to crush {{defender}}.",
+      "Grunting with exertion, {{attacker}} swings {{possessive}} {{weapon}} in a bone-shattering arc.",
+      "{{attacker}} drives their {{weapon}} forward like a battering ram, intent on shattering {{defender}}'s guard.",
+      "With unrelenting brutality, {{attacker}} hammers down with {{possessive}} {{weapon}}."
+    ],
+    "pbp.attacks.fist": [
+      "{{attacker}} steps inside {{defender}}'s guard, unleashing a piston-like straight punch.",
+      "With raw, bare-knuckle savagery, {{attacker}} throws a crushing overhand right.",
+      "{{attacker}} drops their shoulder and rips a brutal uppercut aimed at {{defender}}'s jaw.",
+      "A flurry of heavy, unprotected blows rains down as {{attacker}} swarms {{defender}}."
+    ],
+    "pbp.defenses.dodge.desperate": [
+      "Eyes wide with terror, {{defender}} flings themselves backward, barely escaping the lethal blow.",
+      "{{defender}} scrambles wildly in the dirt, rolling just in time to avoid decapitation.",
+      "With a breathless gasp, {{defender}} contorts their body, the weapon whistling mere inches from their skin."
+    ],
+    "pbp.defenses.dodge.confident": [
+      "{{defender}} sidesteps with a dismissive smirk, letting the attack sail harmlessly past.",
+      "Moving with liquid grace, {{defender}} sways just out of reach, completely unbothered.",
+      "{{defender}} barely shifts their weight, reading the attack perfectly and dodging with arrogant ease."
+    ],
+    "pbp.defenses.dodge.theatrical": [
+      "{{defender}} executes a flawless, sweeping backflip, dodging the attack to the roar of the crowd.",
+      "With a mocking bow, {{defender}} twirls out of the weapon's path, treating the fight like a dance.",
+      "{{defender}} dramatically drops into a low crouch, the lethal strike passing over their head as they play to the stands."
+    ],
+    "pbp.defenses.dodge.grim": [
+      "{{defender}} shifts just enough to survive, their face a mask of cold, silent endurance.",
+      "With a sharp, necessary flinch, {{defender}} narrowly avoids the blow, their eyes never leaving {{attacker}}.",
+      "A bleak, mechanical dodge sees {{defender}} evade the strike, showing no emotion but the will to survive."
+    ],
+    "pbp.defenses.parry.desperate": [
+      "{{defender}} frantically throws up their guard, the jarring impact nearly dislocating their shoulder.",
+      "With a panicked cry, {{defender}} barely manages to intercept the blow, stumbling backward.",
+      "{{defender}}'s weapon trembles violently as they barely deflect the crushing strike."
+    ],
+    "pbp.defenses.parry.confident": [
+      "{{defender}} swats the attack aside with disdain, completely unfazed by the assault.",
+      "A sharp, practiced flick of the wrist from {{defender}} effortlessly turns the deadly strike away.",
+      "{{defender}} meets the blow head-on, their guard an unbreakable wall of steel."
+    ],
+    "pbp.defenses.parry.theatrical": [
+      "{{defender}} deflects the blow with a flourishing spin, winking at the crowd as sparks fly.",
+      "With a dramatic clash of steel, {{defender}} parries the strike and strikes a heroic pose.",
+      "{{defender}} catches the blow on their guard with a loud, ringing clash, turning it into a spectacle."
+    ],
+    "pbp.defenses.parry.grim": [
+      "{{defender}} mechanically intercepts the strike, the brutal vibration echoing their grim reality.",
+      "A cold, hard parry from {{defender}}, sacrificing the edge of their weapon to survive the exchange.",
+      "{{defender}} meets the blow with a stoic block, their expression entirely dead to the violence."
+    ],
+    "pbp.defenses.riposte.desperate": [
+      "Stumbling from the block, {{defender}} lashes out blindly in a panicked counter-strike.",
+      "{{defender}} frantically shoves the attack away and stabs wildly, desperate for breathing room."
+    ],
+    "pbp.defenses.riposte.confident": [
+      "{{defender}} smoothly redirects the attack and instantly snaps back a masterclass counter.",
+      "Having baited the strike, {{defender}} parries easily and delivers a punishing, arrogant riposte."
+    ],
+    "pbp.defenses.riposte.theatrical": [
+      "{{defender}} deflects the blow and immediately counters with a flashy, crowd-pleasing flourish.",
+      "With a sweeping motion, {{defender}} turns the parry into a dramatic, spinning counter-attack."
+    ],
+    "pbp.defenses.riposte.grim": [
+      "{{defender}} absorbs the shock and ruthlessly steps into a bleak, punishing counter-blow.",
+      "A mechanical block is followed instantly by a cold, calculating strike from {{defender}}."
+    ],
+    "pbp.knockdown.fall": [
+      "The sheer force of the blow sweeps {{name}} off their feet, crashing heavily into the bloody sands.",
+      "{{name}} crumples like a puppet with cut strings, collapsing into a heap on the arena floor.",
+      "A sickening thud echoes as {{name}} is blasted backward, sprawling awkwardly in the dirt."
+    ],
+    "pbp.knockdown.recovery": [
+      "Coughing up dust and blood, {{name}} agonizingly drags themselves back to a standing position.",
+      "{{name}} springs back up with terrifying speed, ignoring the pain to re-enter the fray.",
+      "Leaning heavily on their weapon, {{name}} staggers upright, swaying but unbowed."
+    ],
+    "kill_text.execution": [
+      "{{attacker}} steps past the mangled guard of {{defender}}, delivering a bleak, calculated execution that freezes the crowd.",
+      "With a chilling lack of emotion, {{attacker}} slides their weapon into {{defender}}'s heart, ending the misery.",
+      "The crowd goes dead silent as {{attacker}} calmly severs {{defender}}'s life thread with a single, surgical strike.",
+      "{{attacker}} gazes down at {{defender}} with bleak indifference before bringing the weapon down in a final, fatal chop."
+    ]
   }
 ]

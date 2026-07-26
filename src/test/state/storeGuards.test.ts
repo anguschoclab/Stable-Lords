@@ -22,7 +22,7 @@ import { StyleRollups } from '@/engine/stats/styleRollups';
 import { engineProxy } from '@/engine/workerProxy';
 import type { GameState } from '@/types/state.types';
 
-function makeMinimalState(overrides: Partial<GameState> = {}): GameState {
+function makeMinimalState(overrides: Partial<GameState> = { /* empty */ }): GameState {
   return {
     meta: { gameName: 'Test', version: 'test', createdAt: '2024-01-01' },
     treasury: 1000,
@@ -33,13 +33,13 @@ function makeMinimalState(overrides: Partial<GameState> = {}): GameState {
     recruitPool: [],
     insightTokens: [],
     arenaHistory: [],
-    player: { id: 'p1', name: 'Test', stableName: 'Test', crest: {} as any, generation: 0 },
+    player: { id: 'p1', name: 'Test', stableName: 'Test', crest: { /* empty */ } as any, generation: 0 },
     week: 1,
     day: 0,
     season: 'Spring',
     weather: 'Clear',
-    promoters: {},
-    boutOffers: {},
+    promoters: { /* empty */ },
+    boutOffers: { /* empty */ },
     rivals: [],
     gazettes: [],
     scoutReports: [],
@@ -51,7 +51,7 @@ function makeMinimalState(overrides: Partial<GameState> = {}): GameState {
     year: 1,
     popularity: 0,
     fame: 0,
-    realmRankings: {},
+    realmRankings: { /* empty */ },
     awards: [],
     trainers: [],
     hiringPool: [],
@@ -151,7 +151,7 @@ describe('store guards — behavioral tests', () => {
       useGameStore.getState().loadGame('test-slot', state);
       const promise = useGameStore.getState().doAdvanceWeek();
       await vi.runAllTimersAsync();
-      await promise;
+      try { await promise; } catch (_e) { /* ignore */ }
       vi.useRealTimers();
       expect(useGameStore.getState().isSimulating).toBe(false);
     });
@@ -202,12 +202,12 @@ describe('store guards — behavioral tests', () => {
   describe('#13 doAdvanceDay worker timeout', () => {
     it('resets isSimulating when worker stalls beyond 15s timeout', async () => {
       vi.useFakeTimers();
-      vi.mocked(engineProxy.advanceDay).mockImplementation(() => new Promise(() => {}));
+      vi.mocked(engineProxy.advanceDay).mockImplementation(() => new Promise(() => { /* intentionally empty to simulate hang */ }));
       const state = makeMinimalState({ week: 1 });
       useGameStore.getState().loadGame('test-slot', state);
       const promise = useGameStore.getState().doAdvanceDay();
       vi.advanceTimersByTime(16000);
-      await promise;
+      try { await promise; } catch (_e) { /* ignore */ }
       // The timeout fires and isSimulating is reset even on failure
       expect(useGameStore.getState().isSimulating).toBe(false);
       vi.useRealTimers();

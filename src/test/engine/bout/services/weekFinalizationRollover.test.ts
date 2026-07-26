@@ -36,8 +36,8 @@ describe('finalizeWeekSideEffectsToImpact — year boundary', () => {
       rivals: [],
       boutOffers: {},
       recruitPool: [],
-      crowdMood: 'Calm',
-      moodHistory: [],
+      crowdMood: 'Excited',
+      moodHistory: [{ week: absoluteWeek - 1, mood: 'Excited' }],
       gazettes: [],
       rivalries: [],
     } as unknown as GameState;

@@ -716,6 +716,27 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+  silent_killer: {
+    id: 'silent_killer',
+    name: 'Silent Killer',
+    description: '+2 kill window bonus, -1 defense in OPENING. They move without sound, striking fast when the enemy blinks.',
+    effect: { killWindowBonus: 2, defModEarly: -1, fightPlanMod: { killDesire: 3 } },
+    weight: 0.5,
+    synergy: ['cunning', 'agile'],
+    antiSynergy: ['tank', 'brutal'],
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  primal_instinct: {
+    id: 'primal_instinct',
+    name: 'Primal Instinct',
+    description: '+1 Initiative, +1 Damage, -2 Decisiveness. Guided by animalistic impulses rather than tactical thought.',
+    effect: { iniMod: 1, dmgBonus: 1, decMod: -2, fightPlanMod: { AL: 3, OE: 2 } },
+    weight: 0.6,
+    synergy: ['brutal'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

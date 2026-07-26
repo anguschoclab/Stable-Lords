@@ -14,6 +14,7 @@ import {
   Factory,
   Droplets,
   Sparkles,
+  Hourglass,
   type LucideIcon,
 } from 'lucide-react';
 import type { WeatherType } from '@/types/shared.types';
@@ -31,6 +32,13 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
+  'Temporal Rift': {
+    icon: Hourglass,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A fracture in time accelerates combat drastically. +10 Initiative, +5 Riposte, 200% Stamina drain.',
+  },
   'Prismatic Rain': {
     icon: Sparkles,
     colorClass: 'text-primary',

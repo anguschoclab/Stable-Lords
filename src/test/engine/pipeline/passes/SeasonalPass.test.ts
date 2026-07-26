@@ -1079,4 +1079,39 @@ describe('runSeasonalPass', () => {
     expect(update?.injuries?.length).toBe(1);
     expect(impact.newsletterItems?.[0]?.title).toBe('Secret Fight Club');
   });
+  it('should trigger the temporal_anomaly offseason event, awarding XP, removing a trait, and adding a Style insight token', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('temporal_anomaly') + 0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-temporal' as WarriorId;
+    const state = createFreshState('Player');
+    const warrior = {
+      id: warriorId,
+      name: 'Time Traveler',
+      status: 'Active',
+      xp: 0,
+      traits: ['quick', 'strong'],
+    } as Warrior;
+    state.roster = [warrior];
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    expect(impact.rosterUpdates).toBeDefined();
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update?.xp).toBe(35);
+    expect(update?.traits?.length).toBe(1);
+
+    expect(impact.insightTokens).toBeDefined();
+    expect(impact.insightTokens?.length).toBe(1);
+    expect(impact.insightTokens?.[0]?.type).toBe('Style');
+  });
 });

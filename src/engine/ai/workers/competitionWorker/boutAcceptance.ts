@@ -1,5 +1,6 @@
 import type { Warrior, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
+import { displayWeek } from '@/engine/core/absoluteWeek';
 
 /**
  *
@@ -116,8 +117,8 @@ export function evaluateBoutOffer(
     return 'Declined';
   }
 
-  // Tournament Hunger
-  const weeksUntilTournament = 13 - (currentWeek % 13);
+  // Tournament Hunger — use display week since tournaments are seasonal (every 13 display weeks)
+  const weeksUntilTournament = 13 - (displayWeek(currentWeek) % 13);
   const isTournamentHungry = weeksUntilTournament <= 4;
 
   // Inactivity Pressure

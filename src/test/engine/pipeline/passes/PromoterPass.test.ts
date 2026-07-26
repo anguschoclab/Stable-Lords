@@ -630,8 +630,8 @@ describe('PromoterPass', () => {
         id: 'expired_test' as BoutOfferId,
         promoterId: 'p_local',
         warriorIds: [roster0.id, roster1.id],
-        boutWeek: state.week - 1, // Past week
-        expirationWeek: state.week - 1,
+        boutWeek: state.absoluteWeek - 1, // Past week
+        expirationWeek: state.absoluteWeek - 1,
         purse: 100,
         hype: 100,
         status: 'Proposed' as const,

@@ -376,7 +376,7 @@ describe('planWorldBouts', () => {
     expect(offers[0]!.proposerStableId).toBe('r1');
   });
 
-  it('sets boutWeek and expirationWeek to state.week + 1', () => {
+  it('sets boutWeek and expirationWeek to state.absoluteWeek + 1', () => {
     const state = makeTestState(
       [
         makeTestRival('r1', [makeTestWarrior('w1', 100)]),

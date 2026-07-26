@@ -43,7 +43,7 @@ export function runBoutSimulationPass(
     popularityDeltaA: 0,
     popularityDeltaD: 0,
     transcript: r.outcome.log.map((e) => e.text),
-    createdAt: new Date(Date.UTC(2024, 0, 1 + state.week * 7)).toISOString(),
+    createdAt: new Date(Date.UTC(2024, 0, 1 + state.absoluteWeek * 7)).toISOString(),
   }));
 
   boutImpact.lastSimulationReport = {

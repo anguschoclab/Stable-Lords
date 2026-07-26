@@ -5521,6 +5521,20 @@
         "The Chaos Weaver appeared in the barracks, proposing a dangerous gamble. {{name}} accepted, gaining strange newfound power. (+25 XP)",
         "The Chaos Weaver offered a game of chance. {{name}} played and lost, returning battered. (Minor Injury)"
       ]
+    },
+    "temporal_anomaly": {
+      "title": "A Temporal Anomaly",
+      "effectType": "temporal_anomaly",
+      "newsletter": [
+        "A temporal anomaly ripped through the training grounds! {{name}} got caught in the distortion, rapidly gaining experience but losing a piece of their essence. (+35 XP, Insight Token, Lost Trait)"
+      ]
+    },
+    "wandering_mystic": {
+      "title": "Wandering Mystic",
+      "effectType": "wandering_mystic",
+      "newsletter": [
+        "A wandering mystic sought shelter with {{name}} over the winter, teaching them strange truths. (+Chaos Touched trait)"
+      ]
     }
   },
   "crowd_reactions": {

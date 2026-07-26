@@ -649,10 +649,10 @@ export const TRAITS: Record<string, TraitDef> = {
     name: 'Born in Blood',
     description:
       '+1 damage and +1 initiative when bloodied (HP < 50%) — their truest self emerges only amidst slaughter.',
-    effect: { damModLowHp: 1, iniModLowHp: 1, fightPlanMod: { bloodlust: 2 } },
+    effect: { attModLowHp: 1, iniMod: 1, fightPlanMod: { killDesire: 2 } },
     weight: 0.5,
     synergy: ['brutal'],
-    antiSynergy: ['tactical'],
+    antiSynergy: ['cunning'],
     tier: 'Signature',
     sign: 'positive',
   },

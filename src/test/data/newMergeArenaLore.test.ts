@@ -9,7 +9,7 @@ import { ARENA_LORE, getAllArenas } from '@/data/arenas';
 
 const NEW_ENTRY_IDS = [
   'sundered_coliseum_blood_tide',
-  'proving_grounds_iron_gate',
+  'standard_arena_iron_gate',
   'sundered_coliseum_blood_spire',
   'charnel_pits_dance_of_blades',
   'standard_arena_orphan_triumph',

@@ -13,7 +13,7 @@
 import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { WEAPONS, getAvailableItems } from '@/data/equipment';
+import { getAvailableItems, getItemById } from '@/data/equipment';
 
 // ─── Generation ─────────────────────────────────────────────────────────
 
@@ -115,7 +115,7 @@ export function checkDiscovery(
     if (r() < revealRoll) {
       fav.discovered.weapon = true;
       weaponRevealed = true;
-      const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
+      const weaponItem = getItemById(fav.weaponId); // Optimization: O(1) Map lookup instead of O(N) array scan
       const sparkLine = isUsingFav
         ? `EUREKA! ${warrior.name} has mastered the ${weaponItem?.name ?? fav.weaponId}!`
         : `Insight: ${warrior.name} realizes their true weapon preference is the ${weaponItem?.name ?? fav.weaponId}.`;
@@ -200,7 +200,7 @@ export function applyInsightToken(warrior: Warrior, type: 'weapon' | 'rhythm'): 
   if (type === 'weapon') {
     if (fav.discovered.weapon) return `${warrior.name} already knows their favorite weapon.`;
     fav.discovered.weapon = true;
-    const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
+    const weaponItem = getItemById(fav.weaponId); // Optimization: O(1) Map lookup instead of O(N) array scan
     return `Weapon Insight Token used! ${warrior.name}'s favorite weapon is the ${weaponItem?.name ?? fav.weaponId}.`;
   } else {
     if (fav.discovered.rhythm) return `${warrior.name} already knows their natural rhythm.`;

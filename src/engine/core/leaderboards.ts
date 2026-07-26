@@ -1,6 +1,33 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData } from '@/types/state.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
+
+// ─── Utility ────────────────────────────────────────────────────────────────
+
+/**
+ * Inserts an item into a sorted array, keeping its size bounded by `limit`.
+ * O(limit) per insertion, which is O(1) for small limits (e.g. 10).
+ * Prevents O(N log N) sorting of the entire dataset.
+ */
+function insertBounded<T>(
+  arr: T[],
+  limit: number,
+  item: T,
+  cmp: (a: T, b: T) => number
+) {
+  if (arr.length === limit && cmp(item, arr[limit - 1]) >= 0) {
+    return;
+  }
+  let i = arr.length - 1;
+  while (i >= 0 && cmp(item, arr[i]) < 0) {
+    i--;
+  }
+  arr.splice(i + 1, 0, item);
+  if (arr.length > limit) {
+    arr.pop();
+  }
+}
+
 // ─── Global Fame Leaderboard ────────────────────────────────────────────────
 
 /** A single ranked warrior row in the global arena leaderboard. */
@@ -45,31 +72,10 @@ export function calculateGlobalFameLeaderboard(
   if (limit <= 0) return [];
 
   const top: ArenaLeaderboardEntry[] = [];
-
-  const insert = (entry: ArenaLeaderboardEntry) => {
-    const fame = entry.warrior.fame;
-    const last = top[limit - 1];
-    if (top.length === limit && last && fame <= last.warrior.fame) {
-      return;
-    }
-
-    let i = top.length - 1;
-    while (i >= 0) {
-      const entry = top[i];
-      if (!entry || entry.warrior.fame >= fame) break;
-      i--;
-    }
-
-    top.splice(i + 1, 0, entry);
-    if (top.length > limit) {
-      top.pop();
-    }
-  };
-
   const allActive = collectActiveWarriorEntries(roster, playerStableName, rivals);
 
   for (const entry of allActive) {
-    insert(entry);
+    insertBounded(top, limit, entry, (a, b) => b.warrior.fame - a.warrior.fame);
   }
 
   return top;
@@ -117,6 +123,12 @@ function buildEntry(
   };
 }
 
+const cmpWarriors = (a: ArenaWarriorEntry, b: ArenaWarriorEntry) =>
+  b.wins - a.wins || b.winRate - a.winRate || b.kills - a.kills;
+
+const cmpKillers = (a: ArenaWarriorEntry, b: ArenaWarriorEntry) =>
+  b.kills - a.kills || b.wins - a.wins;
+
 /**
  * Builds per-arena top-warrior and top-killer leaderboards from cumulative
  * career.byArena counters (all-time accurate) across the full world roster.
@@ -136,27 +148,22 @@ export function calculatePerArenaLeaderboards(
   limit = 10
 ): ArenaLeaderboardData[] {
   const arenas = getAllArenas();
-
   const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
 
   return arenas.map((arena) => {
     const arenaId = arena.id;
-    const entries: ArenaWarriorEntry[] = [];
+    const topWarriors: ArenaWarriorEntry[] = [];
+    const topKillers: ArenaWarriorEntry[] = [];
+
     for (const { warrior, stableName, isPlayer } of allEntries) {
       const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
-      if (entry.wins + entry.losses > 0) entries.push(entry);
+      if (entry.wins + entry.losses > 0) {
+        insertBounded(topWarriors, limit, entry, cmpWarriors);
+        if (entry.kills > 0) {
+          insertBounded(topKillers, limit, entry, cmpKillers);
+        }
+      }
     }
-
-    // Top warriors: by wins then win-rate then kills
-    const topWarriors = [...entries]
-      .sort((a, b) => b.wins - a.wins || b.winRate - a.winRate || b.kills - a.kills)
-      .slice(0, limit);
-
-    // Top killers: by kills then wins
-    const topKillers = [...entries]
-      .filter((e) => e.kills > 0)
-      .sort((a, b) => b.kills - a.kills || b.wins - a.wins)
-      .slice(0, limit);
 
     return { arenaId, arenaName: arena.name, topWarriors, topKillers };
   });
@@ -175,20 +182,18 @@ export function calculateArenaLeaderboard(
   const arena = getArenaById(arenaId);
   const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
 
-  const entries: ArenaWarriorEntry[] = [];
+  const topWarriors: ArenaWarriorEntry[] = [];
+  const topKillers: ArenaWarriorEntry[] = [];
+
   for (const { warrior, stableName, isPlayer } of allEntries) {
     const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
-    if (entry.wins + entry.losses > 0) entries.push(entry);
+    if (entry.wins + entry.losses > 0) {
+      insertBounded(topWarriors, limit, entry, cmpWarriors);
+      if (entry.kills > 0) {
+        insertBounded(topKillers, limit, entry, cmpKillers);
+      }
+    }
   }
-
-  const topWarriors = [...entries]
-    .sort((a, b) => b.wins - a.wins || b.winRate - a.winRate || b.kills - a.kills)
-    .slice(0, limit);
-
-  const topKillers = [...entries]
-    .filter((e) => e.kills > 0)
-    .sort((a, b) => b.kills - a.kills || b.wins - a.wins)
-    .slice(0, limit);
 
   return {
     arenaId,

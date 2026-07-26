@@ -12,3 +12,6 @@
 
 **Learning:** In `src/engine/ai/workers/competitionWorker/boutBidding.ts`, `generateBoutBids` runs an outer loop over the entire active roster, and within this loop for VENDETTA intents, it searches `mockState.rivals` sequentially using `.find((r) => r.id === targetStableId)` for every single warrior. This causes an O(W * R) lookup where W is the number of warriors and R is the number of rivals, which unnecessarily consumes CPU cycles when a Map lookup (O(1)) would result in an O(W + R) cost. For heavy simulation steps across many teams and weeks, this compounds significantly.
 **Action:** When working with nested loops iterating over arrays, immediately consider building a `Map` structure for lookups by ID outside the inner loop to prevent redundant `O(N)` scans.
+## 2024-05-18 - [O(N) Bounded Insertion Sort]
+**Learning:** `sort(...).slice(0, limit)` is a common O(N log N) anti-pattern used frequently to get a "Top N" list, especially for leaderboards.
+**Action:** Replace `arr.sort(cmp).slice(0, limit)` with an O(N * limit) bounded insertion sort (where `limit` is a small constant, effectively O(N)) to skip full-array sorting. This also saves the allocation of a cloned array via `[...arr]` before sorting.

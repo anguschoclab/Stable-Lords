@@ -41,6 +41,8 @@ describe('chaos weaver event handlers', () => {
       'chaos_weaver_visit', 'traveling_circus', 'bounty_hunter_visit',
       'loyal_stray_dog', 'midnight_market', 'shadow_market_run',
       'moonlight_duel',
+      'temporal_anomaly',
+      'wandering_mystic',
     ] as const;
     // Each string must be a valid effectType
     for (const t of validEffectTypes) {

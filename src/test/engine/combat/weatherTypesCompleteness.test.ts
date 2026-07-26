@@ -9,6 +9,7 @@ import { WEATHER_TYPES } from '@/types/enumSources';
 import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
 import { getWeatherEffect, weatherOpeningLine } from '@/engine/combat/mechanics/weatherEffects';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
+import { WEATHER_STATS } from '@/components/widgets/WeatherWidget';
 
 describe('weather type registry completeness', () => {
   const schemaOptions = WeatherTypeSchema.options as string[];
@@ -48,7 +49,13 @@ describe('weather type registry completeness', () => {
     }
   });
 
-  it('Weather count is 53 (post-merge with chaos weaver branches)', () => {
-    expect(WEATHER_TYPES.length).toBe(53);
+  it('WEATHER_STATS has entry for every WEATHER_TYPES member', () => {
+    for (const w of WEATHER_TYPES) {
+      expect(WEATHER_STATS, `${w} missing from WEATHER_STATS`).toHaveProperty(w);
+    }
+  });
+
+  it('Weather count is 55 (post-merge with stardust gale + temporal rift)', () => {
+    expect(WEATHER_TYPES.length).toBe(55);
   });
 });

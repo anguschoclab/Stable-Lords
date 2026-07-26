@@ -13,29 +13,29 @@ import { getFightsForWeek } from '@/engine/core/historyUtils';
  */
 export function runNarrativePass(
   state: GameState,
-  currentWeek: number,
-  nextWeek: number,
+  _currentWeek: number,
+  _nextWeek: number,
   rootRng?: IRNGService
 ): StateImpact {
-  const rng = rootRng || new SeededRNGService(currentWeek * 9973 + 456);
+  const rng = rootRng || new SeededRNGService(state.absoluteWeek * 9973 + 456);
 
   // 1. Gazette generation
-  const weekFights = getFightsForWeek(state.arenaHistory, currentWeek);
+  const weekFights = getFightsForWeek(state.arenaHistory, state.absoluteWeek);
   const story = generateWeeklyGazette(
     weekFights,
     state.crowdMood,
-    currentWeek,
+    state.absoluteWeek,
     state.graveyard,
     state.arenaHistory,
     rng
   );
-  const gazettes = [...(state.gazettes || []), { ...story, week: currentWeek }].slice(-50);
+  const gazettes = [...(state.gazettes || []), { ...story, week: state.absoluteWeek }].slice(-50);
 
   // 2. Owner Grudges
   const { grudges, gazetteItems } = processOwnerGrudges(state, state.ownerGrudges || []);
 
   // 3. Rivalry Escalation
-  const rivalries = updateRivalriesFromBouts(state.rivalries || [], weekFights, nextWeek, rng);
+  const rivalries = updateRivalriesFromBouts(state.rivalries || [], weekFights, state.absoluteWeek, rng);
 
   const impact: StateImpact = {
     gazettes,
@@ -47,7 +47,7 @@ export function runNarrativePass(
     impact.newsletterItems = [
       {
         id: rng.uuid(),
-        week: nextWeek,
+        week: state.absoluteWeek + 1,
         title: 'Stable Rivalries & Grudges',
         items: gazetteItems,
       },

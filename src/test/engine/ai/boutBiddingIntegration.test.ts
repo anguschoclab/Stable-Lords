@@ -84,6 +84,7 @@ function makeMinimalState(rivals: RivalStableData[]): GameState {
     treasury: 1000,
     ledger: [],
     week: 5,
+    absoluteWeek: 5,
     year: 1,
     phase: 'planning',
     season: 'Spring',
@@ -149,7 +150,7 @@ describe('convertBidsToOffers', () => {
 
     const rng = new SeededRNGService(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, 6, new Set());
+    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -182,7 +183,7 @@ describe('convertBidsToOffers', () => {
 
     const rng = new SeededRNGService(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, 6, new Set());
+    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -217,7 +218,7 @@ describe('convertBidsToOffers', () => {
 
     const rng = new SeededRNGService(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB, rivalC], state, rng, 6, new Set());
+    const offers = convertBidsToOffers(allBids, [rivalA, rivalB, rivalC], state, rng, new Set());
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -243,7 +244,7 @@ describe('convertBidsToOffers', () => {
 
     // warriorA already has an offer — should not be paired again
     const existing = new Set<string>([warriorA.id]);
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, 6, existing);
+    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, existing);
 
     expect(offers.length).toBe(0);
   });
@@ -262,7 +263,7 @@ describe('convertBidsToOffers', () => {
     const { bids } = generateBoutBids(rivalA, 5, 'Clear', 'Calm', [rivalB]);
     const rng = new SeededRNGService(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, 6, new Set());
+    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;

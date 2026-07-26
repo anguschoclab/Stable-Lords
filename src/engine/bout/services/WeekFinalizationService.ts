@@ -29,15 +29,15 @@ export function finalizeWeekSideEffectsToImpact(
   const impact: StateImpact = {
     fameDelta: playerFameGain,
     crowdMood: newMood,
-    moodHistory: [...(state.moodHistory || []).slice(-19), { week: state.week, mood: newMood }],
+    moodHistory: [...(state.moodHistory || []).slice(-19), { week: state.absoluteWeek, mood: newMood }],
   };
 
   // Add mood change notification if mood changed significantly
   if (oldMood && oldMood !== newMood) {
     impact.newsletterItems = [
       {
-        id: `mood_change_${state.week}`,
-        week: state.week,
+        id: `mood_change_${state.absoluteWeek}`,
+        week: state.absoluteWeek,
         title: `Crowd Mood Shift: ${oldMood} → ${newMood}`,
         items: [
           `The arena atmosphere has shifted from ${oldMood} to ${newMood}. This will affect fame gains, kill probabilities, and gazette tone this week.`,
@@ -46,22 +46,22 @@ export function finalizeWeekSideEffectsToImpact(
     ];
   }
 
-  const weekFights = getFightsForWeek(state.arenaHistory, state.week);
-  const gazetteRng = new SeededRNGService(state.week * 9973 + 123);
+  const weekFights = getFightsForWeek(state.arenaHistory, state.absoluteWeek);
+  const gazetteRng = new SeededRNGService(state.absoluteWeek * 9973 + 123);
   impact.gazettes = [
     generateWeeklyGazette(
       weekFights,
       newMood,
-      state.week,
+      state.absoluteWeek,
       state.graveyard,
       state.arenaHistory,
       gazetteRng
     ),
   ];
-  const rng = new SeededRNGService(state.week * 13);
-  impact.rivalries = updateRivalriesFromBouts(state.rivalries || [], weekFights, state.week, rng);
+  const rng = new SeededRNGService(state.absoluteWeek * 13);
+  impact.rivalries = updateRivalriesFromBouts(state.rivalries || [], weekFights, state.absoluteWeek, rng);
 
-  NewsletterFeed.closeWeekToIssue(state.week);
+  NewsletterFeed.closeWeekToIssue(state.absoluteWeek);
 
   return impact;
 }

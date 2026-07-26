@@ -27,7 +27,7 @@ export function runRivalStrategyPass(
   rootRng?: IRNGService,
   headless?: boolean
 ): StateImpact {
-  const rng = rootRng || new SeededRNGService(nextWeek * 7919 + 13);
+  const rng = rootRng || new SeededRNGService(state.absoluteWeek * 7919 + 13);
   const impacts: StateImpact[] = [];
   const globalGazetteItems: string[] = [];
 
@@ -36,7 +36,7 @@ export function runRivalStrategyPass(
 
   // 1. Process Individual Rival Stables (Economy/Strategy)
   let currentRivals = (state.rivals || []).map((rival, index) => {
-    const strategySeed = nextWeek * 31 + index * 997 + (rival.owner.id || '').length;
+    const strategySeed = state.absoluteWeek * 31 + index * 997 + (rival.owner.id || '').length;
     const strategy = updateAIStrategy(rival, state, strategySeed);
 
     // 🎂 1.0 Hardening: Handle Aging & Succession
@@ -53,7 +53,7 @@ export function runRivalStrategyPass(
     globalGazetteItems.push(...gazetteItems);
 
     if (isBankrupt) {
-      const retirementSeed = nextWeek + index * 1000;
+      const retirementSeed = state.absoluteWeek + index * 1000;
       const generated = generateRivalStables(1, retirementSeed);
       const newStable = generated[0];
       if (newStable) {
@@ -122,7 +122,6 @@ export function runRivalStrategyPass(
     currentRivals,
     { ...state, boutOffers: boutOffersWithWorld },
     rng,
-    nextWeek,
     existingOfferWarriorIds
   );
 
@@ -139,7 +138,7 @@ export function runRivalStrategyPass(
   impacts.push({ recruitPool: draft.updatedPool });
 
   // 3. AI Roster Management (Recruitment/Retirement)
-  const rosterSeed = nextWeek * 13 + 7;
+  const rosterSeed = state.absoluteWeek * 13 + 7;
   const rosterRng = new SeededRNGService(rosterSeed);
   const { updatedRivals: finalizedRivals, gazetteItems: rosterGazette } = processAIRosterManagement(
     {

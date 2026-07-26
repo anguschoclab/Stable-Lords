@@ -40,7 +40,8 @@ export function handleReporting(
   _day: number = 0,
   rng?: IRNGService,
   arenaId?: string,
-  weather?: import('@/types/shared.types').WeatherType
+  weather?: import('@/types/shared.types').WeatherType,
+  absoluteWeek?: number
 ) {
   const safeRng = rng;
   const boutId = (safeRng ? safeRng.uuid() : generateId(undefined, 'bout')) as FightId;
@@ -72,12 +73,13 @@ export function handleReporting(
     popularityDeltaD: pD,
     transcript: outcome.log.map((e) => e.text),
     isRivalry,
+    absoluteWeek,
     createdAt: new Date(Date.UTC(2026, 0, 1) + (week - 1) * 7 * 24 * 60 * 60 * 1000).toISOString(),
   };
 
   // Side effects
   StyleRollups.addFight({
-    week,
+    week: absoluteWeek ?? week,
     styleA: wA.style,
     styleD: wD.style,
     winner: outcome.winner,

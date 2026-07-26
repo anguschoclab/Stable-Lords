@@ -10,9 +10,10 @@ export function getFightsForWeek(arenaHistory: FightSummary[], week: number): Fi
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
     const f = arenaHistory[i];
     if (!f) continue;
-    if (f.week === week) {
+    const fWeek = f.absoluteWeek ?? f.week;
+    if (fWeek === week) {
       result.push(f);
-    } else if (f.week < week) {
+    } else if (fWeek < week) {
       break; // History is chronological, no earlier items will match
     }
   }
@@ -29,7 +30,8 @@ export function getRecentFights(arenaHistory: FightSummary[], minWeek: number): 
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
     const f = arenaHistory[i];
     if (!f) continue;
-    if (f.week >= minWeek) {
+    const fWeek = f.absoluteWeek ?? f.week;
+    if (fWeek >= minWeek) {
       result.push(f);
     } else {
       break; // History is chronological, no earlier items will match

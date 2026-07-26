@@ -95,7 +95,7 @@ export function processAllRivalsBoutOffers(
           trackedOffer,
           owningRival,
           rivalWarrior,
-          state.week,
+          state.absoluteWeek,
           state.weather as WeatherType
         );
 

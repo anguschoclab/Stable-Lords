@@ -82,7 +82,8 @@ export interface BoutContext {
   rivalStable?: string;
   rivalStableId?: string;
   moodMods: ReturnType<typeof getMoodModifiers>;
-  week: number;
+  week: number;          // absoluteWeek for scheduling math
+  displayWeek: number;   // week 1-52 for display/reporting
   playerId: string;
   contract?: BoutOffer;
   headless?: boolean;
@@ -252,6 +253,26 @@ function collectBoutImpacts(
     handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, rng)
   );
 
+  // Track lastBoutWeek for both combatants using absoluteWeek (ctx.week is now absoluteWeek)
+  const rosterUpdates = new Map();
+  rosterUpdates.set(validCW.id, { lastBoutWeek: ctx.week });
+  rosterUpdates.set(validCO.id, { lastBoutWeek: ctx.week });
+  impacts.push({ rosterUpdates });
+  for (const rival of state.rivals || []) {
+    const hasCombatant = rival.roster.some((w) => w.id === validCW.id || w.id === validCO.id);
+    if (hasCombatant) {
+      const rivalRosterUpdates = new Map();
+      rivalRosterUpdates.set(rival.id, {
+        roster: rival.roster.map((w) =>
+          w.id === validCW.id || w.id === validCO.id
+            ? { ...w, lastBoutWeek: ctx.week }
+            : w
+        ),
+      });
+      impacts.push({ rivalsUpdates: rivalRosterUpdates });
+    }
+  }
+
   const resolvedArenaId = ctx.isTournamentBout
     ? 'bloodsands_arena'
     : (ctx.contract?.arenaId ?? undefined);
@@ -264,13 +285,14 @@ function collectBoutImpacts(
     popA,
     fameD,
     popD,
-    ctx.week,
+    ctx.displayWeek,
     ctx.rivalStableId,
     ctx.isRivalry,
     0,
     rng,
     resolvedArenaId,
-    state.weather
+    state.weather,
+    ctx.week
   );
   impacts.push({ arenaHistory: [summary] });
 
@@ -370,7 +392,8 @@ export function processWeekBouts(
       rivalStable: p.rivalStable,
       rivalStableId: p.rivalStableId,
       moodMods,
-      week: state.week,
+      week: state.absoluteWeek,
+      displayWeek: state.week,
       playerId: state.player.id,
       warriorMap,
       contract,

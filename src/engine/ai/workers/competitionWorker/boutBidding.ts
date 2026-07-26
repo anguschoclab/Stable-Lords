@@ -231,7 +231,6 @@ export function convertBidsToOffers(
   rivals: RivalStableData[],
   state: GameState,
   rng: IRNGService,
-  nextWeek: number,
   existingOfferWarriorIds: Set<string>
 ): BoutOffer[] {
   const sorted = [...allBids].sort((a, b) => b.bid.priority - a.bid.priority);
@@ -304,8 +303,8 @@ export function convertBidsToOffers(
       promoterId: BID_MATCHMAKING_ID,
       proposerStableId: proposerStable.stableId as any,
       warriorIds: [bid.proposingWarriorId as WarriorId, opponent.id as WarriorId],
-      boutWeek: nextWeek,
-      expirationWeek: nextWeek,
+      boutWeek: state.absoluteWeek + 1,
+      expirationWeek: state.absoluteWeek + 1,
       purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
       hype: Math.max(
         40,

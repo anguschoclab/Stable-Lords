@@ -15,6 +15,7 @@ function createMockFight(
     warriorIdA?: string;
     warriorIdD?: string;
     week?: number;
+    absoluteWeek?: number;
     arenaId?: string;
     tournamentId?: string | null;
   } = {}
@@ -29,6 +30,7 @@ function createMockFight(
     styleA: FightingStyle.StrikingAttack as string,
     styleD: FightingStyle.ParryRiposte as string,
     week: opts.week ?? 1,
+    absoluteWeek: opts.absoluteWeek,
     createdAt: new Date().toISOString(),
     transcript: [],
     arenaId: opts.arenaId,
@@ -166,6 +168,29 @@ describe('getFightsForWeek', () => {
     const result = getFightsForWeek(history, 0);
     expect(result).toHaveLength(1);
     expect(result[0]!.warriorIdA).toBe('Zero');
+  });
+
+  it('distinguishes fights across year boundary using absoluteWeek', () => {
+    // Year 1 week 52 = absoluteWeek 52, Year 2 week 1 = absoluteWeek 53
+    const history: FightSummary[] = [
+      createMockFight({ warriorIdA: 'Y1W52', week: 52, absoluteWeek: 52 }),
+      createMockFight({ warriorIdA: 'Y2W1', week: 1, absoluteWeek: 53 }),
+    ];
+    // Filtering by absoluteWeek 53 should return only the year-2 fight
+    const result = getFightsForWeek(history, 53);
+    expect(result).toHaveLength(1);
+    expect(result[0]!.warriorIdA).toBe('Y2W1');
+  });
+
+  it('does not collide year-1 week 1 with year-2 week 1 when absoluteWeek is set', () => {
+    const history: FightSummary[] = [
+      createMockFight({ warriorIdA: 'Y1W1', week: 1, absoluteWeek: 1 }),
+      createMockFight({ warriorIdA: 'Y2W1', week: 1, absoluteWeek: 53 }),
+    ];
+    // Filtering by absoluteWeek 1 should return only the year-1 fight
+    const result = getFightsForWeek(history, 1);
+    expect(result).toHaveLength(1);
+    expect(result[0]!.warriorIdA).toBe('Y1W1');
   });
 });
 

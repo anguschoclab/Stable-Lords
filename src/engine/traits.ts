@@ -104,6 +104,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  grim_orphan: {
+    id: 'grim_orphan',
+    name: 'Grim Orphan',
+    description: 'Forged in the darkest cellars of the Blackwood Workhouse, pain only makes them stronger in the end.',
+    effect: { attModLowHp: 1, defModLowHp: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
+  iron_will: {
+    id: 'iron_will',
+    name: 'Iron Will',
+    description: 'A survivor of the Salt Wastes child-pits, their determination peaks during the grueling final phases.',
+    effect: { defModLate: 1, attModLate: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   orphan_blood: {
     id: 'orphan_blood',
     name: 'Orphan Blood',

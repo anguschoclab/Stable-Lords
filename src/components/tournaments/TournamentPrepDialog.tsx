@@ -63,7 +63,7 @@ export function TournamentPrepDialog({
                 key={w.id}
                 variant="glass"
                 padding="none"
-                className="group hover:border-primary/40 transition-all border-white/5 bg-black/20"
+                className="group hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none border-white/5 bg-black/20"
               >
                 <div className="p-4 border-b border-white/5 bg-secondary/10 flex items-center justify-between">
                   <WarriorNameTag id={w.id} name={w.name} isChampion={w.champion} />

@@ -80,14 +80,14 @@ function GlobalTreasuryMatrix({
             <Surface
               variant={stat.variant}
               padding="md"
-              className="flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-all relative overflow-hidden h-32"
+              className="flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-all motion-reduce:transition-none motion-reduce:transform-none relative overflow-hidden h-32"
             >
               <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                 <stat.icon className="h-10 w-10" />
               </div>
               <stat.icon
                 className={cn(
-                  'h-5 w-5 mb-3 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
+                  'h-5 w-5 mb-3 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none duration-300',
                   stat.color
                 )}
               />
@@ -215,7 +215,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
         <Surface
           variant="paper"
           padding="sm"
-          className="bg-black/40 border border-white/5 flex justify-between items-center group hover:border-primary/30 transition-all"
+          className="bg-black/40 border border-white/5 flex justify-between items-center group hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none"
         >
           <div className="flex flex-col">
             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] opacity-40">
@@ -313,14 +313,14 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
                 >
                   <TableCell className="pl-8 py-4">
                     <div className="flex items-center gap-3">
-                      <span className="text-[9px] font-mono font-black text-muted-foreground opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all">
+                      <span className="text-[9px] font-mono font-black text-muted-foreground opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all motion-reduce:transition-none motion-reduce:transform-none">
                         WK {entry.week.toString().padStart(2, '0')}
                       </span>
                       <div className="h-1 w-1 rounded-full bg-white/5 group-hover:bg-primary transition-colors" />
                     </div>
                   </TableCell>
                   <TableCell className="py-4">
-                    <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all">
+                    <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none">
                       {entry.label}
                     </span>
                   </TableCell>

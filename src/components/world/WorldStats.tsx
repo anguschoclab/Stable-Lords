@@ -67,7 +67,7 @@ export function WorldStats({
             variant="glass"
             padding="none"
             className={cn(
-              'group overflow-hidden border-white/5 transition-all',
+              'group overflow-hidden border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none',
               isDominant && topStableId
                 ? 'hover:border-arena-gold/40 cursor-pointer'
                 : 'hover:border-white/10'

@@ -15,7 +15,7 @@ export function FighterBars({ hpPercent, fpPercent, isWinner }: FighterBarsProps
       <div className="h-1.5 bg-black/50 rounded-none mb-0.5 overflow-hidden">
         <div
           className={cn(
-            'h-full transition-all duration-300',
+            'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
             hpPercent > 50 ? 'bg-primary' : hpPercent > 25 ? 'bg-arena-gold' : 'bg-destructive'
           )}
           style={{ width: `${hpPercent}%` }}

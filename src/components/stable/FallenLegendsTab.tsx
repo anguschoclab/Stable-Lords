@@ -63,7 +63,7 @@ export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) 
             <div className="flex items-center gap-6">
               <div
                 className={cn(
-                  'p-3 border transition-all',
+                  'p-3 border transition-all motion-reduce:transition-none motion-reduce:transform-none',
                   w.kind === 'fallen'
                     ? 'bg-destructive/5 border-destructive/20 text-destructive'
                     : 'bg-white/5 border-white/10 text-muted-foreground/40'

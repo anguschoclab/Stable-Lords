@@ -79,7 +79,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
           <div className="h-1.5 w-full bg-white/5 rounded-none overflow-hidden">
             <div
               className={cn(
-                'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
+                'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none',
                 warrior.attributes.WT >= 15 ? 'bg-arena-gold/60' : 'bg-white/10'
               )}
               style={{ width: `${((plan.feintTendency ?? 0) / 10) * 100}%` }}
@@ -113,7 +113,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
                 aria-label={`Set Range Preference to ${r}`}
                 onClick={() => onPlanChange({ ...plan, rangePreference: r })}
                 className={cn(
-                  'py-1.5 text-[9px] font-black uppercase tracking-wider border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+                  'py-1.5 text-[9px] font-black uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
                   isSelected
                     ? 'bg-arena-steel/20 border-arena-steel/60 text-arena-steel'
                     : 'bg-black/40 border-white/10 text-muted-foreground hover:border-white/30'

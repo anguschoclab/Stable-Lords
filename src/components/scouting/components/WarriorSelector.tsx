@@ -113,7 +113,7 @@ function WarriorSelectionCard({
       onClick={onSelect}
       disabled={isDisabled}
       className={cn(
-        'w-full text-left p-3 rounded-none border transition-all relative group/selection outline-none',
+        'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/selection outline-none',
         isSelected
           ? cn(colors.bg, colors.border, colors.shadow)
           : isDisabled
@@ -125,7 +125,7 @@ function WarriorSelectionCard({
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              'h-8 w-8 flex items-center justify-center rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none',
+              'h-8 w-8 flex items-center justify-center rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none',
               isSelected
                 ? colors.bg + ' ' + colors.border + ' ' + colors.text
                 : 'bg-neutral-800 text-muted-foreground border-white/5'

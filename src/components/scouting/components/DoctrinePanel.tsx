@@ -68,7 +68,7 @@ export function DoctrinePanel({
                 <div className="flex-1 max-w-[120px]">
                   <div className="h-2 bg-neutral-900 rounded-none border border-white/5 overflow-hidden">
                     <div
-                      className={`h-full transition-all ${colors.bar}`}
+                      className={`h-full transition-all motion-reduce:transition-none motion-reduce:transform-none ${colors.bar}`}
                       style={{ width: `${percentage}%` }}
                     />
                   </div>

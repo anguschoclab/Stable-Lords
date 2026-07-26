@@ -89,7 +89,7 @@ export default function BoutControls({
           <button
             onClick={onTogglePlay}
             className={cn(
-              'flex items-center justify-center p-2.5 rounded-full transition-all active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              'flex items-center justify-center p-2.5 rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
               isPlaying
                 ? 'bg-foreground/10 text-foreground'
                 : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.6)] hover:bg-primary/90'
@@ -129,7 +129,7 @@ export default function BoutControls({
               key={s}
               onClick={() => setSpeed(s as 1 | 2 | 3)}
               className={cn(
-                'px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary hover:bg-white/5',
+                'px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary hover:bg-white/5',
                 speed === s
                   ? 'bg-foreground/10 text-foreground'
                   : 'text-muted-foreground/20 hover:text-muted-foreground/60'

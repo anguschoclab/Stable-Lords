@@ -37,7 +37,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
                 <div className="flex items-center gap-8">
                   <div
                     className={cn(
-                      'w-1 h-10 transition-all',
+                      'w-1 h-10 transition-all motion-reduce:transition-none motion-reduce:transform-none',
                       won
                         ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]'
                         : f.winner

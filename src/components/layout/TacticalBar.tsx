@@ -185,7 +185,7 @@ export function TacticalBar() {
       animate={{ y: 0 }}
       className={cn(
         'fixed bottom-0 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-t border-white/10',
-        'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300'
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none duration-300'
       )}
     >
       <TacticalBarHeader

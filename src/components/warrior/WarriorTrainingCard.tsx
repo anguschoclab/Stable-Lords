@@ -49,7 +49,7 @@ export function WarriorTrainingCard({
             variant="outline"
             onClick={isRecovery ? onClear : onAssignRecovery}
             className={cn(
-              'w-full h-10 gap-2 border-white/5 transition-all text-[10px] font-black uppercase tracking-[0.2em]',
+              'w-full h-10 gap-2 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none text-[10px] font-black uppercase tracking-[0.2em]',
               isRecovery
                 ? 'bg-destructive/20 text-destructive border-destructive/40 shadow-[0_0_15px_-5px_rgba(239,68,68,0.4)]'
                 : 'bg-white/5 hover:bg-white/10'

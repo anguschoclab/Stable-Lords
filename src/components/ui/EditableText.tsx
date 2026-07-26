@@ -118,7 +118,7 @@ export function EditableText({
       tabIndex={0}
       aria-label={`Edit ${label || value}`}
       className={cn(
-        'group relative flex items-center gap-2 cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
+        'group relative flex items-center gap-2 cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
         className
       )}
       onClick={() => setIsEditing(true)}

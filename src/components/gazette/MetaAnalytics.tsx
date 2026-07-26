@@ -108,7 +108,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
                 animate={{ width: `${s.rate}%` }}
                 transition={{ duration: 1, delay: idx * 0.1 }}
                 className={cn(
-                  'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
+                  'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none duration-1000',
                   s.rate > 55
                     ? 'bg-arena-pop shadow-[0_0_10px_rgba(var(--arena-pop-rgb),0.4)]'
                     : s.rate > 45
@@ -221,7 +221,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
                         <TooltipTrigger asChild>
                           <div
                             className={cn(
-                              'h-10 w-full rounded-none border border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 cursor-help',
+                              'h-10 w-full rounded-none border border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none motion-reduce:transition-none motion-reduce:transform-none duration-500 cursor-help',
                               isNeutral
                                 ? 'bg-white/[0.02] opacity-20'
                                 : rate > 65

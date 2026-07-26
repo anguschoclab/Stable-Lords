@@ -25,7 +25,7 @@ export function WarriorTargetCard({
       variant={isSelected ? 'gold' : 'glass'}
       padding="none"
       className={cn(
-        'transition-all border text-center overflow-hidden relative',
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none border text-center overflow-hidden relative',
         isSelected
           ? 'border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)] bg-primary/20'
           : isRevealed

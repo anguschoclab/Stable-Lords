@@ -78,13 +78,13 @@ function TokenCard({ token, config: { icon: Icon, textColor, dropShadowClass } }
     <Surface
       variant="paper"
       padding="sm"
-      className={`${textColor.replace('text-', 'bg-').replace('/60', '/5')} border ${textColor.replace('text-', 'border-').replace('/60', '/20')} ${textColor.replace('text-', 'hover:border-').replace('/60', '/50')} transition-all group cursor-default`}
+      className={`${textColor.replace('text-', 'bg-').replace('/60', '/5')} border ${textColor.replace('text-', 'border-').replace('/60', '/20')} ${textColor.replace('text-', 'hover:border-').replace('/60', '/50')} transition-all motion-reduce:transition-none motion-reduce:transform-none group cursor-default`}
     >
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2">
           <Icon className={`h-3 w-3 ${textColor} opacity-60`} />
           <span
-            className={`text-[11px] font-display font-black uppercase ${textColor} tracking-tight ${dropShadowClass} transition-all`}
+            className={`text-[11px] font-display font-black uppercase ${textColor} tracking-tight ${dropShadowClass} transition-all motion-reduce:transition-none motion-reduce:transform-none`}
           >
             {token.warriorName}
           </span>
@@ -184,7 +184,7 @@ function StatItem({ icon: Icon, label, value, sublabel, variant }: StatItemProps
 
   return (
     <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-      <div className={`p-3 rounded-none ${v.bg} ${v.border} ${v.hoverBorder} transition-all`}>
+      <div className={`p-3 rounded-none ${v.bg} ${v.border} ${v.hoverBorder} transition-all motion-reduce:transition-none motion-reduce:transform-none`}>
         <Icon className={`h-5 w-5 ${v.text} ${v.hoverText} transition-colors`} />
       </div>
       <div>

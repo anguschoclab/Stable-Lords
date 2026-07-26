@@ -169,7 +169,7 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
         <TooltipTrigger asChild>
           <span
             className={cn(
-              'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all hover:bg-white/10 uppercase tracking-widest',
+              'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all motion-reduce:transition-none motion-reduce:transform-none hover:bg-white/10 uppercase tracking-widest',
               config.colorClass
             )}
           >
@@ -264,7 +264,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
           variant="ghost"
           size="icon"
           className={cn(
-            'h-9 w-9 rounded-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black',
+            'h-9 w-9 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black',
             saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'
           )}
           aria-label={lastSavedAt ? `Auto-Saved at ${formatSaveTime(lastSavedAt)}` : 'Not Saved'}

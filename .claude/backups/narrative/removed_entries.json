@@ -1223,5 +1223,9 @@
     "reason": "near_duplicate",
     "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
     "similarity": 0.8617021276595744
+  },
+  {
+    "path": "recruitment.names",
+    "text": "XEN"
   }
 ]

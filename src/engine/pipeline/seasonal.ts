@@ -64,7 +64,8 @@ interface OffseasonEventNarrative {
     | 'moonlight_duel'
     | 'chaos_weavers_game'
     | 'secret_fight_club'
-    | 'temporal_anomaly';
+    | 'temporal_anomaly'
+    | 'wandering_mystic';
   newsletter: string[];
 }
 
@@ -1390,6 +1391,33 @@ function handleTemporalAnomaly(
   }
 }
 
+function handleWanderingMystic(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const currentTraits = chosen.traits || [];
+      const newTraits = currentTraits.includes('chaos_touched')
+        ? currentTraits
+        : [...currentTraits, 'chaos_touched'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        traits: newTraits,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
 function handleChaosWeaversGame(
   state: GameState,
   nextWeek: number,
@@ -1592,6 +1620,7 @@ const EVENT_HANDLERS: Record<
   secret_fight_club: handleSecretFightClub,
   chaos_weavers_game: handleChaosWeaversGame,
   temporal_anomaly: handleTemporalAnomaly,
+  wandering_mystic: handleWanderingMystic,
 };
 
 /**

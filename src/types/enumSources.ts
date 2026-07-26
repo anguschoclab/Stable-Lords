@@ -54,7 +54,7 @@ export const WEATHER_TYPES = [
   'Blood Fog',
   'Shimmering Heat',
   'Crystal Rain',
-  'Rain of Frogs',
+  'Rain of Frogs', 'Stardust Gale',
   'Chaos Storm',
   'Chaos Squall',
   'Crimson Snow',

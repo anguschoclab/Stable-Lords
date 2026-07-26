@@ -55,7 +55,7 @@ describe('weather type registry completeness', () => {
     }
   });
 
-  it('Weather count is 55 (post-merge with stardust gale + temporal rift)', () => {
-    expect(WEATHER_TYPES.length).toBe(55);
+  it('Weather count is 54 (post-merge with stardust gale)', () => {
+    expect(WEATHER_TYPES.length).toBe(54);
   });
 });

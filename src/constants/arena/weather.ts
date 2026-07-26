@@ -394,11 +394,18 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   },
   'Chaos Squall': {
     icon: Sparkles,
-    colorClass: 'text-purple-300',
-    bgClass: 'bg-purple-300/10',
-    borderClass: 'border-purple-300/20',
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
     description:
       'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
+  },
+  'Stardust Gale': {
+    icon: Sparkles,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
   'Diamond Rain': {
     icon: Sparkles,

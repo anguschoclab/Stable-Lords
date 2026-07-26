@@ -9,6 +9,7 @@ import {
   weatherOpeningLine,
 } from '@/engine/combat/mechanics/weatherEffects';
 import type { WeatherType } from '@/types/shared.types';
+import { WEATHER_TYPES } from '@/types/enumSources';
 
 describe('weatherEffects', () => {
   describe('getWeatherEffect', () => {
@@ -68,60 +69,7 @@ describe('weatherEffects', () => {
     });
 
     it('all weather types have required effect properties', () => {
-      const allWeatherTypes: WeatherType[] = [
-        'Clear',
-        'Rainy',
-        'Sweltering',
-        'Breezy',
-        'Overcast',
-        'Blazing Sun',
-        'Gale',
-        'Blood Moon',
-        'Eclipse',
-        'Sandstorm',
-        'Wild Magic',
-        'Tornado',
-        'Blizzard',
-        'Dense Fog',
-        'Mist',
-        'Thunderstorm',
-        'Gravity Anomaly',
-        'Ashfall',
-        'Eldritch Eclipse',
-        'Acid Rain',
-        'Mana Surge',
-        'Astral Dust',
-        'Scorching Wind',
-        'Spooky Night',
-        'Meteor Shower',
-        'Abyssal Gloom',
-        'Cursed Miasma',
-        'Hailstorm',
-        'Solar Flare',
-        'Arcane Storm',
-        'Blood Rain',
-        'Locust Swarm',
-        'Aurora Borealis',
-        'Chaotic Winds',
-        'Aether Storm',
-        'Mirage',
-        'Rainbow',
-        'Ember Rain',
-        'Zephyr',
-        'Wildfire Smoke',
-        'Blood Fog',
-        'Shimmering Heat',
-        'Crystal Rain',
-        'Rain of Frogs',
-        'Chaos Storm',
-        'Chaos Squall',
-        'Whispering Winds',
-        'Crimson Snow',
-        'Glittering Frost',
-        'Eldritch Eclipse',
-        'Moonlight Duel',
-      ];
-      for (const weather of allWeatherTypes) {
+      for (const weather of WEATHER_TYPES) {
         const effect = getWeatherEffect(weather);
         expect(effect).toHaveProperty('staminaMult');
         expect(effect).toHaveProperty('initiativeMod');
@@ -219,60 +167,7 @@ describe('weatherEffects', () => {
     });
 
     it('all defined weather types return strings or null', () => {
-      const allWeatherTypes: WeatherType[] = [
-        'Clear',
-        'Rainy',
-        'Sweltering',
-        'Breezy',
-        'Overcast',
-        'Blazing Sun',
-        'Gale',
-        'Blood Moon',
-        'Eclipse',
-        'Sandstorm',
-        'Wild Magic',
-        'Zephyr',
-        'Tornado',
-        'Blizzard',
-        'Dense Fog',
-        'Mist',
-        'Thunderstorm',
-        'Gravity Anomaly',
-        'Ashfall',
-        'Eldritch Eclipse',
-        'Acid Rain',
-        'Mana Surge',
-        'Rainbow',
-        'Astral Dust',
-        'Scorching Wind',
-        'Spooky Night',
-        'Meteor Shower',
-        'Solar Flare',
-        'Abyssal Gloom',
-        'Cursed Miasma',
-        'Hailstorm',
-        'Arcane Storm',
-        'Blood Rain',
-        'Locust Swarm',
-        'Aurora Borealis',
-        'Chaotic Winds',
-        'Aether Storm',
-        'Mirage',
-        'Ember Rain',
-        'Wildfire Smoke',
-        'Blood Fog',
-        'Shimmering Heat',
-        'Crystal Rain',
-        'Rain of Frogs',
-        'Chaos Storm',
-        'Chaos Squall',
-        'Whispering Winds',
-        'Crimson Snow',
-        'Glittering Frost',
-        'Eldritch Eclipse',
-        'Moonlight Duel',
-      ];
-      for (const weather of allWeatherTypes) {
+      for (const weather of WEATHER_TYPES) {
         const line = weatherOpeningLine(weather);
         expect(line === null || typeof line === 'string').toBe(true);
       }

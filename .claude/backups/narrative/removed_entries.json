@@ -1223,5 +1223,53 @@
     "reason": "near_duplicate",
     "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
     "similarity": 0.8617021276595744
+  },
+  {
+    "path": "strikes.generic",
+    "entry": "lands a heavy blow to {{defender}}'s {{bodyPart}}"
+  },
+  {
+    "path": "strikes.piercing.glancing",
+    "entry": "{{attacker}}'s thrust catches only the fabric of {{defender}}'s attire."
+  },
+  {
+    "path": "pbp.hit_locations.right arm",
+    "entry": "RIGHT TRICEP"
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "entry": "LEFT TRICEP"
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "entry": "RIGHT THIGH"
+  },
+  {
+    "path": "pbp.defenses.dodge.confident",
+    "entry": "{{defender}} sidesteps with a mocking smirk, barely exerting effort."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "entry": "A solid, authoritative block from {{defender}} halts the attack cold."
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "entry": "{{name}} is launched backward by the sheer kinetic force, slamming into the ground."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "entry": "{{name}} pushes off the blood-stained sand, their eyes burning with renewed fury as they rise."
+  },
+  {
+    "path": "pbp.epithets.race",
+    "entry": "the ancient"
+  },
+  {
+    "path": "pbp.epithets.style",
+    "entry": "the cunning trickster"
+  },
+  {
+    "path": "blurbs.neutral",
+    "entry": "%A defeated %D%H."
   }
 ]

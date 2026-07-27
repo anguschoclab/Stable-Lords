@@ -1,6 +1,7 @@
 import type { GameState, Warrior, TournamentEntry, InsightTokenType } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
+import { updateEntityInList } from '@/utils/stateUtils';
 import { findWarriorById } from './utils'; /**
  * Award tournament prizes.
  */
@@ -72,11 +73,12 @@ function processTournamentPlaceAward(
     }
   } else {
     // warrior.stableId is rival.id (StableId), not owner.id
-    updatedState.rivals = updatedState.rivals.map((r) =>
-      r.id === w.stableId
-        ? { ...r, treasury: r.treasury + prizeGold, fame: (r.fame || 0) + prizeFame }
-        : r
-    );
+    // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
+    updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId, (r) => ({
+      ...r,
+      treasury: r.treasury + prizeGold,
+      fame: (r.fame || 0) + prizeFame,
+    }));
     // Apply token effects directly to rival warriors (no pool — rivals don't manage tokens via UI)
     const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
     for (const tokenType of tokens) {
@@ -175,28 +177,23 @@ export function modifyWarrior(
   transform: (w: Warrior) => void
 ): GameState {
   const updatedState = { ...state };
-  let found = false;
 
-  updatedState.roster = updatedState.roster.map((w) => {
-    if (w.id === warriorId) {
-      found = true;
-      const draft = { ...w };
-      transform(draft);
-      return draft;
-    }
-    return w;
+  // ⚡ Bolt Optimization: Using updateEntityInList instead of .map() to avoid redundant cloning.
+  updatedState.roster = updateEntityInList(updatedState.roster, warriorId, (w) => {
+    const draft = { ...w };
+    transform(draft);
+    return draft;
   });
 
-  if (!found) {
+  // Since updateEntityInList creates a new array reference only if the item was found and updated,
+  // we can check if it changed to know if we need to search the rivals.
+  if (updatedState.roster === state.roster) {
     updatedState.rivals = updatedState.rivals.map((r) => ({
       ...r,
-      roster: r.roster.map((w) => {
-        if (w.id === warriorId) {
-          const draft = { ...w };
-          transform(draft);
-          return draft;
-        }
-        return w;
+      roster: updateEntityInList(r.roster, warriorId, (w) => {
+        const draft = { ...w };
+        transform(draft);
+        return draft;
       }),
     }));
   }

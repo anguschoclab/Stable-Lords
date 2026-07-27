@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Born in the sunless cells of the Deep Ward penitentiary',
+  'Found clutching a rusted blade in the ruins of the Ashwood Orphanage',
+  'Raised by the grim executioners of the High Court',
+  'Abandoned in the freezing canals of the Lower Dross',
+  'Survived the gruesome cullings of the Black Sun fighting pits',
   'Raised by the soot-stained wardens of the Cinder Keep',
   'Abandoned in the rusted clockwork labyrinth of the Old City',
   'Survived the grueling child-pits of the Salt Wastes',
@@ -174,6 +179,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would compulsively trace the veins of slaughtered livestock to learn anatomy',
+  'learned to mask their breath entirely when hiding from the night wardens',
+  'developed a bone-chilling hum before engaging in street brawls',
   'would gnaw on discarded bones to strengthen their jaw',
   'learned to predict strikes by watching the shadows of passing guards',
   'developed a chillingly blank stare when faced with violence',
@@ -245,7 +253,6 @@ const CHILDHOOD_TRAITS = [
   'practiced the art of pain by holding hot coals without a sound',
   'would carve intricate tallies of imagined kills into the stone walls',
   'learned the anatomy of survival by dissecting rats in the alleyways',
-  'learned to sleep with one eye open after the workhouse riots',
   'would hoard sharp stones and broken glass under their mattress',
   'developed a terrifyingly silent footstep to evade the night watchmen',
   'was known for biting older children who tried to steal their rations',
@@ -275,6 +282,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they shattered a warden’s jaw with a single, perfectly timed kick',
+  'knowing that only the roar of the colosseum could silence the screams of their past',
+  'waiting for the moment they could bathe the arena sands in the blood of their oppressors',
   'until they strangled a cruel taskmaster and embraced the arena’s call',
   'now seeking to turn the brutality of their past into the roaring adoration of the crowd',
   'waiting to prove that the blood of the slums burns hotter than the gold of kings',
@@ -296,7 +306,6 @@ const DEFINING_MOMENTS = [
   'waiting for the day they could turn the arena sands into a river of red',
   "until they drove a rusted spike through a slaver's boot and walked free",
   'knowing that the roar of the crowd was the only lullaby they ever needed',
-  'waiting for the moment the iron portcullis would rise on their destiny',
   'fought off three armed thugs with nothing but a rusted iron spike',
   'stole a discarded combat manual from a dead gladiator and memorized every stance',
   'strangled a corrupt guard with their own rusted chains to escape confinement',

@@ -444,6 +444,28 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'charnel_pits_screaming_winds_2',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Bleeding Stones',
+    narrative: 'The stones in the eastern corner are so saturated with gore that they weep blood on particularly humid days.'
+  },
+  {
+    id: 'bloodsands_massacre_thirty_2',
+    arenaId: 'bloodsands_arena',
+    type: 'historical_battle',
+    title: 'The Silent Reign',
+    narrative: 'A legendary mute gladiator once held the center of the sands against twenty challengers without uttering a single sound.'
+  },
+  {
+    id: 'flooded_vault_arena_death',
+    arenaId: 'flooded_vault_arena',
+    type: 'famous_death',
+    title: 'The Drowned King',
+    narrative: 'A former king, sold into slavery, met his end here when a heavy net dragged him beneath the dark waters of the vault.'
+  },
+
+  {
     id: 'sundered_coliseum_shattered_throne',
     arenaId: 'sundered_coliseum',
     type: 'architectural_quirk',

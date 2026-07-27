@@ -31,6 +31,13 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
+  'Searing Wind': {
+    icon: Wind,
+    colorClass: 'text-destructive',
+    bgClass: 'bg-destructive/10',
+    borderClass: 'border-destructive/20',
+    description: 'Hot, dry wind drains 25% more stamina in combat and makes fighters reckless.',
+  },
   'Prismatic Rain': {
     icon: Sparkles,
     colorClass: 'text-primary',

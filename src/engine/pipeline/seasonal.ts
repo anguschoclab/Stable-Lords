@@ -24,6 +24,7 @@ interface OffseasonEventNarrative {
   title: string;
   effectType:
     | 'chaos_rift'
+    | 'chaotic_weather_experiment'
     | 'fame_boost'
     | 'winter_chill'
     | 'merchant_blessing'
@@ -1498,6 +1499,40 @@ function handleSecretFightClub(
   }
 }
 
+
+function handleChaoticWeatherExperiment(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15 + Math.floor(rng.next() * 10);
+      const newInjury = makeInjury(rng, {
+        name: 'Magic Burns',
+        description: 'Minor burns from a wild weather experiment gone wrong.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { SP: -1 },
+      });
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1509,6 +1544,7 @@ const EVENT_HANDLERS: Record<
   ) => void
 > = {
   chaos_rift: handleChaosRift,
+  chaotic_weather_experiment: handleChaoticWeatherExperiment,
   fame_boost: handleFameBoost,
   winter_chill: handleWinterChill,
   merchant_blessing: handleMerchantBlessing,

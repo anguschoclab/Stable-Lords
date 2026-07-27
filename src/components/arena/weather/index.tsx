@@ -42,6 +42,7 @@ import {
  */
 // eslint-disable-next-line react-refresh/only-export-components -- intentional registry export consumed by tests
 export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = {
+  'Searing Wind': () => <HeatEffect />,
   'Wild Magic': () => <EclipseEffect />,
   Clear: null,
   'Prismatic Rain': () => <RainEffect />,

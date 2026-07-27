@@ -45,6 +45,7 @@ export const CrowdMoodTypeSchema = z.enum([
  */
 export const WeatherTypeSchema = z.enum([
   'Clear',
+  'Searing Wind',
   'Crimson Snow',
   'Rainy',
   'Sweltering',

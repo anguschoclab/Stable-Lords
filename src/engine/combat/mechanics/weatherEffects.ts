@@ -14,6 +14,13 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  'Searing Wind': {
+    staminaMult: 1.25,
+    initiativeMod: -2,
+    riposteMod: 0,
+    damageMult: 1.05,
+    description: 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
+  },
   'Prismatic Rain': {
     staminaMult: 1.15,
     initiativeMod: 1,
@@ -422,6 +429,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  'Searing Wind': 'A searing hot wind blasts across the arena, carrying the smell of ozone and burning sand.',
   'Prismatic Rain': 'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
   'Eldritch Eclipse':
     'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',

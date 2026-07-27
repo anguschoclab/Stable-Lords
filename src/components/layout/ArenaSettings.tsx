@@ -35,7 +35,7 @@ export default function ArenaSettings() {
         {/* Default View Mode */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label htmlFor="setting-default-view" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
               <ScrollText className="h-4 w-4" />
               Default View Mode
             </Label>
@@ -49,7 +49,7 @@ export default function ArenaSettings() {
               setArenaPreferences({ defaultViewMode: value })
             }
           >
-            <SelectTrigger className="w-40 rounded-none">
+            <SelectTrigger id="setting-default-view" className="w-40 rounded-none">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-none">
@@ -62,7 +62,7 @@ export default function ArenaSettings() {
         {/* Audio Enabled */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label htmlFor="setting-audio-enabled" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
               <Volume2 className="h-4 w-4" />
               Arena Audio
             </Label>
@@ -71,6 +71,7 @@ export default function ArenaSettings() {
             </p>
           </div>
           <Switch
+            id="setting-audio-enabled"
             checked={prefs.audioEnabled}
             onCheckedChange={(checked) => setArenaPreferences({ audioEnabled: checked })}
           />
@@ -79,7 +80,7 @@ export default function ArenaSettings() {
         {/* Volume Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label htmlFor="setting-audio-volume" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
               <Volume2 className="h-4 w-4" />
               Crowd Volume
             </Label>
@@ -88,6 +89,7 @@ export default function ArenaSettings() {
             </span>
           </div>
           <Slider
+            id="setting-audio-volume"
             value={[prefs.audioVolume]}
             min={0}
             max={1}
@@ -100,7 +102,7 @@ export default function ArenaSettings() {
         {/* Effects Enabled */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label htmlFor="setting-effects-enabled" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
               <Sparkles className="h-4 w-4" />
               Visual Effects
             </Label>
@@ -109,6 +111,7 @@ export default function ArenaSettings() {
             </p>
           </div>
           <Switch
+            id="setting-effects-enabled"
             checked={prefs.effectsEnabled}
             onCheckedChange={(checked) => setArenaPreferences({ effectsEnabled: checked })}
           />
@@ -117,7 +120,7 @@ export default function ArenaSettings() {
         {/* Screen Shake Intensity */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label htmlFor="setting-screen-shake" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
               <Activity className="h-4 w-4" />
               Screen Shake
             </Label>
@@ -129,7 +132,7 @@ export default function ArenaSettings() {
             }
             disabled={!prefs.effectsEnabled}
           >
-            <SelectTrigger className="w-full rounded-none">
+            <SelectTrigger id="setting-screen-shake" className="w-full rounded-none">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-none">

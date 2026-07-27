@@ -192,6 +192,25 @@ describe('getFightsForWeek', () => {
     expect(result).toHaveLength(1);
     expect(result[0]!.warriorIdA).toBe('Y1W1');
   });
+
+  it('early-break optimization works correctly with monotonically increasing absoluteWeek', () => {
+    // History sorted chronologically by absoluteWeek: 50, 51, 52, 53, 54
+    const history: FightSummary[] = [
+      createMockFight({ warriorIdA: 'W50', week: 50, absoluteWeek: 50 }),
+      createMockFight({ warriorIdA: 'W51', week: 51, absoluteWeek: 51 }),
+      createMockFight({ warriorIdA: 'W52', week: 52, absoluteWeek: 52 }),
+      createMockFight({ warriorIdA: 'Y2W1', week: 1, absoluteWeek: 53 }),
+      createMockFight({ warriorIdA: 'Y2W2', week: 2, absoluteWeek: 54 }),
+    ];
+    // Search for absoluteWeek 53 — early-break should stop at absoluteWeek 52 < 53
+    const result = getFightsForWeek(history, 53);
+    expect(result).toHaveLength(1);
+    expect(result[0]!.warriorIdA).toBe('Y2W1');
+    // Search for absoluteWeek 52 — should find W52 and early-break at W51 < 52
+    const result52 = getFightsForWeek(history, 52);
+    expect(result52).toHaveLength(1);
+    expect(result52[0]!.warriorIdA).toBe('W52');
+  });
 });
 
 describe('getRecentFights', () => {

@@ -83,7 +83,7 @@ export interface BoutContext {
   rivalStableId?: string;
   moodMods: ReturnType<typeof getMoodModifiers>;
   week: number;          // absoluteWeek for scheduling math
-  displayWeek: number;   // week 1-52 for display/reporting
+  displayWeek?: number;  // week 1-52 for display/reporting (defaults to week if not set)
   playerId: string;
   contract?: BoutOffer;
   headless?: boolean;
@@ -285,7 +285,7 @@ function collectBoutImpacts(
     popA,
     fameD,
     popD,
-    ctx.displayWeek,
+    ctx.displayWeek ?? ctx.week,
     ctx.rivalStableId,
     ctx.isRivalry,
     0,

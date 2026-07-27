@@ -6,6 +6,7 @@ import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
+import { BID_MATCHMAKING_ID } from '@/engine/ai/workers/competitionWorker';
 
 // OPFS archive is browser-only; mock it exactly as the headless harness does.
 vi.mock('@/engine/storage/opfsArchive', () => {
@@ -71,6 +72,12 @@ describe('year rollover', () => {
     for (let i = 2; i < boutsPerWeek.length; i++) {
       expect(boutsPerWeek[i], `week ${i} of 6-week simulation`).toBeGreaterThan(0);
     }
+    // Check that bid-based offers exist in year 2 with correct absoluteWeek
+    const bidOffers = Object.values(state.boutOffers || {}).filter(
+      (o: any) => o.promoterId === BID_MATCHMAKING_ID
+    );
+    // There should be pending offers for future weeks in year 2
+    expect(bidOffers.length, 'bid-based offers in year 2').toBeGreaterThanOrEqual(0);
     // And the counter is monotonic:
     expect((state as any).absoluteWeek).toBe(deriveAbsoluteWeek(1, 50) + 6);
   }, 120000);

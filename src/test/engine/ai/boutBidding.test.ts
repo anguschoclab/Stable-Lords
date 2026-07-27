@@ -345,6 +345,7 @@ describe('generateBoutBids is called from RivalStrategyPass', () => {
 
     const state = {
       week: 5,
+      absoluteWeek: 5,
       year: 1,
       season: 'Spring',
       weather: 'Clear',

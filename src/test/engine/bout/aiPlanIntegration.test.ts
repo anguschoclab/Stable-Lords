@@ -69,6 +69,7 @@ function makeBaseState(overrides: Partial<GameState> = {}): GameState {
   return {
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
     week: 5,
+    absoluteWeek: 5,
     year: 1,
     treasury: 1000,
     fame: 0,

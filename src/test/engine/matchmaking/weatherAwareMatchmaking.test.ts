@@ -67,6 +67,7 @@ function makeBaseState(overrides: Partial<GameState> = {}): GameState {
   return {
     meta: { gameName: '', version: '', createdAt: '' },
     week: 5,
+    absoluteWeek: 5,
     year: 1,
     season: 'Spring',
     weather: 'Clear',

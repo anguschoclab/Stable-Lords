@@ -136,10 +136,10 @@ describe('WeeklyDigestMini', () => {
       week: 5,
     absoluteWeek: 5,
       arenaHistory: [
-        makeFight({ id: 'f1' as any, week: 3, winner: 'A', by: 'Kill' }),
+        makeFight({ id: 'f1' as any, week: 3, absoluteWeek: 3, winner: 'A', by: 'Kill' }),
         makeFight({ id: 'f2' as any, week: 5,
     absoluteWeek: 5, winner: 'A', by: 'KO' }),
-        makeFight({ id: 'f3' as any, week: 7, winner: 'D', by: 'KO' }),
+        makeFight({ id: 'f3' as any, week: 7, absoluteWeek: 7, winner: 'D', by: 'KO' }),
       ],
     });
     render(<WeeklyDigestMini />);

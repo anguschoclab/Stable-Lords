@@ -152,7 +152,7 @@ export const NewsletterFeed = {
         topMovers: computeTopMovers(fights),
       },
       styleRollups: computeStyleRollups(fights),
-      createdAt: new Date(Date.UTC(2024, 0, 1 + week * 7)).toISOString(),
+      createdAt: new Date(Date.UTC(2024, 0, 1 + (week || 1) * 7)).toISOString(),
     };
   },
 };

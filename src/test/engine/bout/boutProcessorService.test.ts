@@ -27,6 +27,7 @@ function makeBaseState(): GameState {
   return {
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
     week: 1,
+    absoluteWeek: 1,
     year: 1,
     treasury: 1000,
     fame: 0,

@@ -74,7 +74,7 @@ function processTournamentPlaceAward(
   } else {
     // warrior.stableId is rival.id (StableId), not owner.id
     // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
-    updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId, (r) => ({
+    updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId as string, (r) => ({
       ...r,
       treasury: r.treasury + prizeGold,
       fame: (r.fame || 0) + prizeFame,

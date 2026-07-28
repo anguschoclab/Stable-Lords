@@ -73,7 +73,7 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
       disabled={!canAfford}
       onClick={onClick}
       className={cn(
-        'w-full flex items-center justify-between p-4 rounded-none border transition-all relative group/btn',
+        'w-full flex items-center justify-between p-4 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/btn',
         canAfford
           ? isExpert
             ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02]'

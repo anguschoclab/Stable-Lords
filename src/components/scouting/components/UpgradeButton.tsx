@@ -27,7 +27,7 @@ export function UpgradeButton({ currentQuality, onUpgrade }: UpgradeButtonProps)
     <button
       onClick={onUpgrade}
       className={cn(
-        'w-full flex items-center justify-between p-4 rounded-none border transition-all group',
+        'w-full flex items-center justify-between p-4 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none group',
         'bg-arena-gold/5 border-arena-gold/20 hover:bg-arena-gold/10 hover:border-arena-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset'
       )}
     >

@@ -34,7 +34,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
       padding="none"
       data-testid="trainer-card"
       className={cn(
-        'transition-all duration-300 group overflow-hidden border',
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 group overflow-hidden border',
         trainer.tier === 'Master'
           ? 'border-arena-gold/40 shadow-[0_0_30px_rgba(255,215,0,0.05)]'
           : 'border-white/5 hover:border-white/20'

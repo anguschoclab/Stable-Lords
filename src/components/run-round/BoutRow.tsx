@@ -47,7 +47,7 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
         variant="glass"
         padding="none"
         className={cn(
-          'border-white/5 transition-all overflow-hidden',
+          'border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none overflow-hidden',
           isExpanded
             ? 'border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]'
             : 'hover:border-white/20'

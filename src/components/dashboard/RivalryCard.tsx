@@ -55,7 +55,7 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
             <div
               key={i}
               className={cn(
-                'flex-1 rounded-none transition-all duration-500',
+                'flex-1 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500',
                 i <= r.intensity
                   ? cn(
                       intensityBgColor(i),

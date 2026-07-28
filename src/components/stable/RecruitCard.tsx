@@ -75,7 +75,7 @@ function StatBar({ label, value, max = 21 }: { label: string; value: number; max
       </span>
       <div className="flex-1 h-1 bg-white/5 rounded-none overflow-hidden relative">
         <div
-          className={cn('h-full transition-all duration-1000 ease-out', colorClass)}
+          className={cn('h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000 ease-out', colorClass)}
           style={{ width: `${pct}%` }}
         />
         {/* Threshold Markers */}

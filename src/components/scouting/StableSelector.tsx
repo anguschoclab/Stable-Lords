@@ -35,7 +35,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                   onClick={() => setIdA(r.owner.id === idA ? null : r.owner.id)}
                   disabled={r.owner.id === idB}
                   className={cn(
-                    'w-full text-left p-3 rounded-none border transition-all relative group/alpha outline-none',
+                    'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/alpha outline-none',
                     idA === r.owner.id
                       ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]'
                       : r.owner.id === idB
@@ -99,7 +99,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                   onClick={() => setIdB(r.owner.id === idB ? null : r.owner.id)}
                   disabled={r.owner.id === idA}
                   className={cn(
-                    'w-full text-left p-3 rounded-none border transition-all relative group/beta outline-none',
+                    'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/beta outline-none',
                     idB === r.owner.id
                       ? 'border-accent bg-accent/10 shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]'
                       : r.owner.id === idA

@@ -48,7 +48,7 @@ export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
                 onClick={() => onTabChange(tab.id)}
                 aria-current={activeTab === tab.id ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-2 px-4 py-4 text-xs font-black uppercase tracking-widest transition-all relative group',
+                  'flex items-center gap-2 px-4 py-4 text-xs font-black uppercase tracking-widest transition-all motion-reduce:transition-none motion-reduce:transform-none relative group',
                   activeTab === tab.id
                     ? 'text-foreground'
                     : 'text-muted-foreground hover:text-foreground/80'

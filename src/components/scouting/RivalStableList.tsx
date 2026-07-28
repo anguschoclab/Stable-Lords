@@ -52,7 +52,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                     variant={selectedRivalId === rival.owner.id ? 'paper' : 'glass'}
                     padding="none"
                     className={cn(
-                      'transition-all border bg-neutral-900/60 overflow-hidden',
+                      'transition-all motion-reduce:transition-none motion-reduce:transform-none border bg-neutral-900/60 overflow-hidden',
                       selectedRivalId === rival.owner.id
                         ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]'
                         : 'border-white/5 hover:border-white/20 hover:bg-white/5'
@@ -62,7 +62,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                       <div className="flex items-center gap-4 min-w-0">
                         <div
                           className={cn(
-                            'h-10 w-10 shrink-0 flex items-center justify-center rounded-none border transition-all overflow-hidden',
+                            'h-10 w-10 shrink-0 flex items-center justify-center rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none overflow-hidden',
                             selectedRivalId === rival.owner.id
                               ? 'border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]'
                               : 'border-white/10 group-hover:border-white/20'

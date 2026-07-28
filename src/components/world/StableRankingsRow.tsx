@@ -53,7 +53,7 @@ function NameCell({ row }: { row: StableRow }) {
                 <Link
                   to="/world/stable/$id"
                   params={{ id: row.id }}
-                  className="font-display font-black uppercase text-xs tracking-tight transition-all text-foreground hover:text-primary"
+                  className="font-display font-black uppercase text-xs tracking-tight transition-all motion-reduce:transition-none motion-reduce:transform-none text-foreground hover:text-primary"
                 >
                   {row.name}
                 </Link>

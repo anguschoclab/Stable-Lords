@@ -19,7 +19,7 @@ export function TokenCard({ token, isSelected, onSelect }: TokenCardProps) {
       variant={isSelected ? 'paper' : 'glass'}
       padding="none"
       className={cn(
-        'transition-all border overflow-hidden relative',
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none border overflow-hidden relative',
         isSelected
           ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] bg-primary/10'
           : 'border-white/5 hover:border-white/20'

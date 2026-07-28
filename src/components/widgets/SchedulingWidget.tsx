@@ -28,7 +28,7 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
     <Surface
       variant="glass"
       className={cn(
-        'p-4 border-white/5 transition-all group hover:bg-white/[0.02]',
+        'p-4 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none group hover:bg-white/[0.02]',
         isGood ? 'hover:border-primary/20' : 'hover:border-destructive/20'
       )}
     >

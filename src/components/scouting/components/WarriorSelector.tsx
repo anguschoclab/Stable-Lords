@@ -113,7 +113,7 @@ function WarriorSelectionCard({
       onClick={onSelect}
       disabled={isDisabled}
       className={cn(
-        'w-full text-left p-3 rounded-none border transition-all relative group/selection outline-none',
+        'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/selection outline-none',
         isSelected
           ? cn(colors.bg, colors.border, colors.shadow)
           : isDisabled

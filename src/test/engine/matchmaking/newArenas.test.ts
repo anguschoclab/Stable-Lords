@@ -33,4 +33,14 @@ describe('New Arenas System Integration', () => {
     expect(foundSky).toBe(true);
     expect(foundMisty).toBe(true);
   });
+
+  it('promoters should be able to generate offers in JUNGLE_RUINS', () => {
+    const promoters = generatePromoters(100, 12345);
+    let foundJungle = false;
+    promoters.forEach((p) => {
+      if (p.arenaPool?.includes('jungle_ruins')) foundJungle = true;
+    });
+    expect(foundJungle).toBe(true);
+  });
+
 });

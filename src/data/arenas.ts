@@ -430,6 +430,22 @@ export const THE_MEAT_GRINDER: ArenaConfig = {
   startingZone: 'Center',
 };
 
+
+export const JUNGLE_RUINS: ArenaConfig = {
+  id: 'jungle_ruins',
+  zoneDef: { Edge: -1, Corner: -2 },
+  name: 'Jungle Ruins',
+  description: 'Ancient stonework reclaimed by aggressive flora.',
+  tier: 2,
+  size: 'cramped',
+  tags: ['cramped', 'uneven', 'outdoor', 'ruins', 'living'],
+  surfaceMod: {
+    initiativeMod: -1,
+    riposteMod: 1,
+    enduranceMult: 1.1,
+  },
+};
+
 export const THE_ABYSSAL_PIT: ArenaConfig = {
   id: 'the_abyssal_pit',
   name: 'The Abyssal Pit',
@@ -919,4 +935,5 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   NARROW_BRIDGE,
   THE_MEAT_GRINDER,
   THE_ABYSSAL_PIT,
+  JUNGLE_RUINS,
 ].forEach(registerArena);

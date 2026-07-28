@@ -104,6 +104,25 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_vengeance: {
+    id: 'orphan_vengeance',
+    name: 'Orphan Vengeance',
+    description: 'Driven by a dark past. Gains brutal offensive capability in the late stages of a fight.',
+    effect: { attModLate: 2, killWindowBonus: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.2,
+  },
+  orphan_fragility: {
+    id: 'orphan_fragility',
+    name: 'Orphan Fragility',
+    description: 'Malnourished in youth. Susceptible to early damage.',
+    effect: { defModEarly: -1, enduranceMult: 0.9 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.1,
+  },
+
   orphan_blood: {
     id: 'orphan_blood',
     name: 'Orphan Blood',

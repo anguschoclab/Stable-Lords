@@ -118,6 +118,55 @@ describe('loreGenerator', () => {
     }
   });
 
+  it('ORIGINS contains new entries from narrative-content-expansion', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const origins = extractStringArray(source, 'ORIGINS');
+    const expectedNew = [
+      'Born in the sunless cells of the Deep Ward penitentiary',
+      'Found clutching a rusted blade in the ruins of the Ashwood Orphanage',
+      'Raised by the grim executioners of the High Court',
+      'Abandoned in the freezing canals of the Lower Dross',
+      'Survived the gruesome cullings of the Black Sun fighting pits',
+    ];
+    for (const entry of expectedNew) {
+      expect(origins, `missing origin: ${entry}`).toContain(entry);
+    }
+  });
+
+  it('CHILDHOOD_TRAITS contains new entries from narrative-content-expansion', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
+    const expectedNew = [
+      'would compulsively trace the veins of slaughtered livestock to learn anatomy',
+      'learned to mask their breath entirely when hiding from the night wardens',
+      'developed a bone-chilling hum before engaging in street brawls',
+    ];
+    for (const entry of expectedNew) {
+      expect(traits, `missing childhood trait: ${entry}`).toContain(entry);
+    }
+  });
+
+  it('DEFINING_MOMENTS contains new entries from narrative-content-expansion', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const moments = extractStringArray(source, 'DEFINING_MOMENTS');
+    const expectedNew = [
+      'until they shattered a warden\u2019s jaw with a single, perfectly timed kick',
+      'knowing that only the roar of the colosseum could silence the screams of their past',
+      'waiting for the moment they could bathe the arena sands in the blood of their oppressors',
+    ];
+    for (const entry of expectedNew) {
+      expect(moments, `missing defining moment: ${entry}`).toContain(entry);
+    }
+  });
+
+  it('removed entries are not in source arrays', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
+    const moments = extractStringArray(source, 'DEFINING_MOMENTS');
+    expect(traits).not.toContain('learned to sleep with one eye open after the workhouse riots');
+    expect(moments).not.toContain('waiting for the moment the iron portcullis would rise on their destiny');
+  });
+
   it('ORIGINS array entries are all valid string literals', () => {
     const source = fs.readFileSync(LORE_FILE, 'utf-8');
     const origins = extractStringArray(source, 'ORIGINS');

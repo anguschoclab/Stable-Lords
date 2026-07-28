@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 117; // 100 baseline + 17 new traits
+const EXPECTED_COUNT = 119; // 100 baseline + 19 new traits
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
@@ -134,8 +134,31 @@ describe('Trait deduplication', () => {
   });
 
   describe('trait count matches expected baseline', () => {
-    it(`TRAITS has ${EXPECTED_COUNT} entries (baseline ${BASELINE_COUNT} + 10 new)`, () => {
+    it(`TRAITS has ${EXPECTED_COUNT} entries (baseline ${BASELINE_COUNT} + 19 new)`, () => {
       expect(Object.keys(TRAITS).length).toBe(EXPECTED_COUNT);
+    });
+  });
+
+  describe('new traits from narrative-content-expansion', () => {
+    it('orphan_vengeance is defined with correct effect fields', () => {
+      expect(TRAITS.orphan_vengeance).toBeDefined();
+      expect(TRAITS.orphan_vengeance?.effect.attModLate).toBe(2);
+      expect(TRAITS.orphan_vengeance?.effect.killWindowBonus).toBe(1);
+      expect(TRAITS.orphan_vengeance?.tier).toBe('Exceptional');
+      expect(TRAITS.orphan_vengeance?.sign).toBe('positive');
+    });
+
+    it('orphan_fragility is defined with correct effect fields', () => {
+      expect(TRAITS.orphan_fragility).toBeDefined();
+      expect(TRAITS.orphan_fragility?.effect.defModEarly).toBe(-1);
+      expect(TRAITS.orphan_fragility?.effect.enduranceMult).toBeCloseTo(0.9);
+      expect(TRAITS.orphan_fragility?.tier).toBe('Flaw');
+      expect(TRAITS.orphan_fragility?.sign).toBe('negative');
+    });
+
+    it('orphan_vengeance and orphan_fragility are not in REMOVED_IDS', () => {
+      expect(REMOVED_IDS).not.toContain('orphan_vengeance');
+      expect(REMOVED_IDS).not.toContain('orphan_fragility');
     });
   });
 

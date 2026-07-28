@@ -30,7 +30,7 @@ export default function BackstoryPicker({ value, onChange, onRandomize }: Backst
           size="icon"
           type="button"
           onClick={onRandomize}
-          title="Randomize backstory"
+          tooltip="Randomize backstory"
           aria-label="Randomize backstory"
           className="h-8 w-8 shrink-0 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
         >

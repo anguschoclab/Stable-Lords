@@ -1223,5 +1223,357 @@
     "reason": "near_duplicate",
     "kept": "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
     "similarity": 0.8617021276595744
+  },
+  {
+    "path": "attacks.piercing",
+    "text": "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!"
+  },
+  {
+    "path": "attacks.piercing",
+    "text": "{{attacker}} stabs powerfully upward with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.piercing",
+    "text": "{{attacker}} drives {{possessive}} {{weapon}} straight at {{defender}}!"
+  },
+  {
+    "path": "attacks.slashing",
+    "text": "{{attacker}} makes a slashing attack wielding {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.bashing",
+    "text": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.bashing",
+    "text": "{{attacker}} swings {{possessive}} {{weapon}} in a wide, bone-breaking arc!"
+  },
+  {
+    "path": "attacks.bashing",
+    "text": "{{attacker}} bats murderously at {{defender}} with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.fist",
+    "text": "{{attacker}} pivots and throws a looping overhand punch."
+  },
+  {
+    "path": "hit_locations.right arm",
+    "text": "RIGHT TRICEP"
+  },
+  {
+    "path": "hit_locations.left arm",
+    "text": "LEFT TRICEP"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "OUTER RIGHT THIGH"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT HIP"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT CALF"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT SHIN"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT KNEE"
+  },
+  {
+    "path": "hit_locations.left leg",
+    "text": "LEFT SHINBONE"
+  },
+  {
+    "path": "hit_locations.left leg",
+    "text": "OUTER LEFT THIGH"
+  },
+  {
+    "path": "hit_locations.left leg",
+    "text": "LEFT HIP"
+  },
+  {
+    "path": "status_changes.desperate",
+    "text": "Panic flashes in {{name}}'s eyes."
+  },
+  {
+    "path": "defenses.counterstrike.success",
+    "text": "{{attacker}} overextends, and {{defender}} makes them pay with a lightning-fast counter."
+  },
+  {
+    "path": "defenses.dodge.confident",
+    "text": "With a knowing smirk, {{defender}} smoothly steps out of the weapon's path."
+  },
+  {
+    "path": "defenses.dodge.confident",
+    "text": "{{defender}} sidesteps with a mocking smirk, barely exerting effort."
+  },
+  {
+    "path": "defenses.parry.desperate",
+    "text": "{{defender}} barely manages to intercept the blow, their arms shaking from the terrible force."
+  },
+  {
+    "path": "defenses.parry.confident",
+    "text": "A solid, authoritative block from {{defender}} halts the attack cold."
+  },
+  {
+    "path": "defenses.parry.grim",
+    "text": "Eyes cold and dead, {{defender}} meets the strike with brutal efficiency."
+  },
+  {
+    "path": "defenses.shield.success",
+    "text": "{{defender}} blocks solidly with {{possessive}} shield."
+  },
+  {
+    "path": "defenses.riposte.desperate",
+    "text": "Stumbling from the block, {{defender}} throws a desperate, ragged return strike."
+  },
+  {
+    "path": "defenses.riposte.confident",
+    "text": "{{defender}} casually bats the weapon away and delivers a punishing riposte."
+  },
+  {
+    "path": "knockdown.fall",
+    "text": "{{name}} is launched backward by the sheer kinetic force, slamming into the ground."
+  },
+  {
+    "path": "knockdown.fall",
+    "text": "The overwhelming force of the blow sends {{name}} crashing violently onto the sands."
+  },
+  {
+    "path": "knockdown.fall",
+    "text": "{{name}} stumbles backward, losing their footing and collapsing in a heap."
+  },
+  {
+    "path": "knockdown.recovery",
+    "text": "{{name}} pushes off the blood-stained sand, their eyes burning with renewed fury as they rise."
+  },
+  {
+    "path": "knockdown.recovery",
+    "text": "{{name}} uses {{possessive}} weapon as a crutch, hauling {{reflexive}} stubbornly back up."
+  },
+  {
+    "path": "knockdown.pacing.slow",
+    "text": "{{name}} hits the sand with a heavy, sickening thud."
+  },
+  {
+    "path": "epithets.origin",
+    "text": "the child of {{origin}}"
+  },
+  {
+    "path": "epithets.origin",
+    "text": "the {{origin}} native"
+  },
+  {
+    "path": "epithets.origin",
+    "text": "Our {{origin}}"
+  },
+  {
+    "path": "epithets.race",
+    "text": "the true {{race}}"
+  },
+  {
+    "path": "epithets.race",
+    "text": "the resolute"
+  },
+  {
+    "path": "epithets.race",
+    "text": "the ancient"
+  },
+  {
+    "path": "epithets.style",
+    "text": "the cunning trickster"
+  },
+  {
+    "path": "pacing.tempo.equal",
+    "text": "The warriors appear equal in skill."
+  },
+  {
+    "path": "reactions.boo",
+    "text": "Jeers and boos rain down from the cheap seats."
+  },
+  {
+    "path": "taunts.rivalry_loser",
+    "text": "{{attacker}} dies hating {{defender}}!"
+  },
+  {
+    "path": "attacks.piercing",
+    "text": "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!"
+  },
+  {
+    "path": "attacks.piercing",
+    "text": "{{attacker}} stabs powerfully upward with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.piercing",
+    "text": "{{attacker}} drives {{possessive}} {{weapon}} straight at {{defender}}!"
+  },
+  {
+    "path": "attacks.slashing",
+    "text": "{{attacker}} makes a slashing attack wielding {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.bashing",
+    "text": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.bashing",
+    "text": "{{attacker}} swings {{possessive}} {{weapon}} in a wide, bone-breaking arc!"
+  },
+  {
+    "path": "attacks.bashing",
+    "text": "{{attacker}} bats murderously at {{defender}} with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "attacks.fist",
+    "text": "{{attacker}} pivots and throws a looping overhand punch."
+  },
+  {
+    "path": "hit_locations.right arm",
+    "text": "RIGHT TRICEP"
+  },
+  {
+    "path": "hit_locations.left arm",
+    "text": "LEFT TRICEP"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "OUTER RIGHT THIGH"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT HIP"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT CALF"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT SHIN"
+  },
+  {
+    "path": "hit_locations.right leg",
+    "text": "RIGHT KNEE"
+  },
+  {
+    "path": "hit_locations.left leg",
+    "text": "LEFT SHINBONE"
+  },
+  {
+    "path": "hit_locations.left leg",
+    "text": "OUTER LEFT THIGH"
+  },
+  {
+    "path": "hit_locations.left leg",
+    "text": "LEFT HIP"
+  },
+  {
+    "path": "status_changes.desperate",
+    "text": "Panic flashes in {{name}}'s eyes."
+  },
+  {
+    "path": "defenses.counterstrike.success",
+    "text": "{{attacker}} overextends, and {{defender}} makes them pay with a lightning-fast counter."
+  },
+  {
+    "path": "defenses.dodge.confident",
+    "text": "With a knowing smirk, {{defender}} smoothly steps out of the weapon's path."
+  },
+  {
+    "path": "defenses.dodge.confident",
+    "text": "{{defender}} sidesteps with a mocking smirk, barely exerting effort."
+  },
+  {
+    "path": "defenses.parry.desperate",
+    "text": "{{defender}} barely manages to intercept the blow, their arms shaking from the terrible force."
+  },
+  {
+    "path": "defenses.parry.confident",
+    "text": "A solid, authoritative block from {{defender}} halts the attack cold."
+  },
+  {
+    "path": "defenses.parry.grim",
+    "text": "Eyes cold and dead, {{defender}} meets the strike with brutal efficiency."
+  },
+  {
+    "path": "defenses.shield.success",
+    "text": "{{defender}} blocks solidly with {{possessive}} shield."
+  },
+  {
+    "path": "defenses.riposte.desperate",
+    "text": "Stumbling from the block, {{defender}} throws a desperate, ragged return strike."
+  },
+  {
+    "path": "defenses.riposte.confident",
+    "text": "{{defender}} casually bats the weapon away and delivers a punishing riposte."
+  },
+  {
+    "path": "knockdown.fall",
+    "text": "{{name}} is launched backward by the sheer kinetic force, slamming into the ground."
+  },
+  {
+    "path": "knockdown.fall",
+    "text": "The overwhelming force of the blow sends {{name}} crashing violently onto the sands."
+  },
+  {
+    "path": "knockdown.fall",
+    "text": "{{name}} stumbles backward, losing their footing and collapsing in a heap."
+  },
+  {
+    "path": "knockdown.recovery",
+    "text": "{{name}} pushes off the blood-stained sand, their eyes burning with renewed fury as they rise."
+  },
+  {
+    "path": "knockdown.recovery",
+    "text": "{{name}} uses {{possessive}} weapon as a crutch, hauling {{reflexive}} stubbornly back up."
+  },
+  {
+    "path": "knockdown.pacing.slow",
+    "text": "{{name}} hits the sand with a heavy, sickening thud."
+  },
+  {
+    "path": "epithets.origin",
+    "text": "the child of {{origin}}"
+  },
+  {
+    "path": "epithets.origin",
+    "text": "the {{origin}} native"
+  },
+  {
+    "path": "epithets.origin",
+    "text": "Our {{origin}}"
+  },
+  {
+    "path": "epithets.race",
+    "text": "the true {{race}}"
+  },
+  {
+    "path": "epithets.race",
+    "text": "the resolute"
+  },
+  {
+    "path": "epithets.race",
+    "text": "the ancient"
+  },
+  {
+    "path": "epithets.style",
+    "text": "the cunning trickster"
+  },
+  {
+    "path": "pacing.tempo.equal",
+    "text": "The warriors appear equal in skill."
+  },
+  {
+    "path": "reactions.boo",
+    "text": "Jeers and boos rain down from the cheap seats."
+  },
+  {
+    "path": "taunts.rivalry_loser",
+    "text": "{{attacker}} dies hating {{defender}}!"
   }
 ]

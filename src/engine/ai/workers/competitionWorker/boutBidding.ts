@@ -25,6 +25,16 @@ export function generateBoutBids(
   const activeRoster = rival.roster.filter((w) => w.status === 'Active');
   const bids: BoutBid[] = [];
 
+  // Pre-calculate vendetta target rival once outside the loop to prevent O(W * R) lookups
+  const targetRival = intent === 'VENDETTA' && rival.strategy?.targetStableId
+    ? rivals.find(r => r.id === rival.strategy.targetStableId)
+    : undefined;
+
+  // Pre-calculate active opponents for non-vendetta intents
+  const nonVendettaOpponents = intent !== 'VENDETTA' ? rivals
+    .filter(r => r.id !== rival.id)
+    .flatMap(r => r.roster.filter(w => w.status === 'Active')) : [];
+
   // Build a mock state for matchup scoring
   const mockState: GameState = {
     meta: { gameName: '', version: '', createdAt: '' },
@@ -158,8 +168,6 @@ export function generateBoutBids(
     let matchupModifier = -Infinity;
     let foundOpponent = false;
     if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
-      const mockRivalMap = new Map(rivals.map(r => [r.id, r]));
-      const targetRival = mockRivalMap.get(rival.strategy?.targetStableId);
       if (targetRival) {
         for (const opponent of targetRival.roster) {
           if (opponent.status === 'Active') {
@@ -171,16 +179,11 @@ export function generateBoutBids(
         }
       }
     } else if (intent !== 'VENDETTA') {
-      for (const otherRival of mockState.rivals) {
-        if (otherRival.id === rival.id) continue;
-        for (const opponent of otherRival.roster) {
-          if (opponent.status === 'Active') {
-            const matchupScore = scoreMatchup(warrior, opponent, mockState);
-            const score = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
-            matchupModifier = Math.max(matchupModifier, score);
-            foundOpponent = true;
-          }
-        }
+      for (const opponent of nonVendettaOpponents) {
+        const matchupScore = scoreMatchup(warrior, opponent, mockState);
+        const score = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
+        matchupModifier = Math.max(matchupModifier, score);
+        foundOpponent = true;
       }
     }
     if (!foundOpponent) matchupModifier = 0;

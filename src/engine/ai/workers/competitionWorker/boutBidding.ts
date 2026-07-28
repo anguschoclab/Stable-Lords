@@ -26,8 +26,9 @@ export function generateBoutBids(
   const bids: BoutBid[] = [];
 
   // Pre-calculate vendetta target rival once outside the loop to prevent O(W * R) lookups
-  const targetRival = intent === 'VENDETTA' && rival.strategy?.targetStableId
-    ? rivals.find(r => r.id === rival.strategy.targetStableId)
+  const targetStableId = rival.strategy?.targetStableId;
+  const targetRival = intent === 'VENDETTA' && targetStableId
+    ? rivals.find(r => r.id === targetStableId)
     : undefined;
 
   // Pre-calculate active opponents for non-vendetta intents

@@ -14,6 +14,14 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  'Cosmic Anomaly': {
+    staminaMult: 0.9,
+    initiativeMod: +5,
+    riposteMod: -2,
+    damageMult: 1.25,
+    description: 'The fabric of space tears open. Cosmic energies empower fighters but make them erratic.',
+  },
+
   'Prismatic Rain': {
     staminaMult: 1.15,
     initiativeMod: 1,
@@ -422,6 +430,8 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  'Cosmic Anomaly': 'A tear in the sky reveals the screaming void. Cosmic energies crackle across the sand.',
+
   'Prismatic Rain': 'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
   'Eldritch Eclipse':
     'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',

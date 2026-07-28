@@ -64,7 +64,8 @@ interface OffseasonEventNarrative {
     | 'shadow_market_run'
     | 'moonlight_duel'
     | 'chaos_weavers_game'
-    | 'secret_fight_club';
+    | 'secret_fight_club'
+    | 'chaos_weavers_gift';
   newsletter: string[];
 }
 
@@ -1533,6 +1534,41 @@ function handleChaoticWeatherExperiment(
   }
 }
 
+
+function handleChaosWeaversGift(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 30;
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Tactic',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'A chaotic revelation sparked a new combat tactic.',
+        origin: 'Chaos Weaver',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1584,6 +1620,7 @@ const EVENT_HANDLERS: Record<
   moonlight_duel: handleMoonlightDuel,
   chaos_spores: handleChaosSpores,
   secret_fight_club: handleSecretFightClub,
+  chaos_weavers_gift: handleChaosWeaversGift,
   chaos_weavers_game: handleChaosWeaversGame,
 };
 

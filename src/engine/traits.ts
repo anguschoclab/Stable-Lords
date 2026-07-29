@@ -104,6 +104,33 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  silent_stalker: {
+    id: 'silent_stalker',
+    name: 'Silent Stalker',
+    description: 'Learned to move without a sound in the slums. Increased initiative early.',
+    effect: { iniModEarly: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  gutters_edge: {
+    id: 'gutters_edge',
+    name: 'Gutter\'s Edge',
+    description: 'A desperate, wild fighting style born from alleyway brawls. Bonus damage but lowered early defense.',
+    effect: { dmgBonus: 1, defModEarly: -1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  feral_endurance: {
+    id: 'feral_endurance',
+    name: 'Feral Endurance',
+    description: 'Used to surviving on nothing but scraps and spite. Reduced endurance drain.',
+    effect: { enduranceMult: 0.9 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.8,
+  },
   orphan_vengeance: {
     id: 'orphan_vengeance',
     name: 'Orphan Vengeance',

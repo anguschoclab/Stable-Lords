@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { BookOpen } from 'lucide-react';
 import type { FightPlan, Warrior } from '@/types/game';
 import TempoSection from './TempoSection';
@@ -21,13 +22,13 @@ export default function StylePassives({ plan, warrior }: StylePassivesProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Label htmlFor="style-passives-switch" className="flex items-center gap-2 cursor-pointer">
           <BookOpen className="w-4 h-4 text-arena-gold" />
           <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
             Style Passives
           </span>
-        </div>
-        <Switch checked={showStylePassives} onCheckedChange={setShowStylePassives} />
+        </Label>
+        <Switch id="style-passives-switch" checked={showStylePassives} onCheckedChange={setShowStylePassives} />
       </div>
 
       {showStylePassives && (

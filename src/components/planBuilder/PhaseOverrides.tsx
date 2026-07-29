@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Timer } from 'lucide-react';
@@ -23,11 +24,11 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Label htmlFor="phase-overrides-switch" className="flex items-center gap-2 cursor-pointer">
           <Timer className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-widest">Phase Overrides</span>
-        </div>
-        <Switch checked={phaseMode} onCheckedChange={setPhaseMode} />
+        </Label>
+        <Switch id="phase-overrides-switch" checked={phaseMode} onCheckedChange={setPhaseMode} />
       </div>
 
       {phaseMode && (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { GitBranch } from 'lucide-react';
 import type { FightPlan, PlanCondition } from '@/types/game';
@@ -23,7 +24,7 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Label htmlFor="contingency-plans-switch" className="flex items-center gap-2 cursor-pointer">
           <GitBranch className="w-4 h-4 text-arena-pop" />
           <span className="text-[10px] font-black uppercase tracking-widest text-arena-pop">
             Contingency Plans
@@ -33,8 +34,8 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
               {plan.conditions?.length}
             </Badge>
           )}
-        </div>
-        <Switch checked={showConditions} onCheckedChange={setShowConditions} />
+        </Label>
+        <Switch id="contingency-plans-switch" checked={showConditions} onCheckedChange={setShowConditions} />
       </div>
 
       {showConditions && (

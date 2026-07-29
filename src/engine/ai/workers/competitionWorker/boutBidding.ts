@@ -80,6 +80,8 @@ export function generateBoutBids(
     progression: structuredClone(DEFAULT_PROGRESSION),
   };
 
+  const mockRivalMap = new Map(rivals.map(r => [r.id, r]));
+
   for (const warrior of activeRoster) {
     // Weather Predation & Caution
     let weatherModifier = 0;
@@ -158,7 +160,6 @@ export function generateBoutBids(
     let matchupModifier = -Infinity;
     let foundOpponent = false;
     if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
-      const mockRivalMap = new Map(rivals.map(r => [r.id, r]));
       const targetRival = mockRivalMap.get(rival.strategy?.targetStableId);
       if (targetRival) {
         for (const opponent of targetRival.roster) {

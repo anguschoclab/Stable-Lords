@@ -12,3 +12,6 @@
 
 **Learning:** In `src/engine/ai/workers/competitionWorker/boutBidding.ts`, `generateBoutBids` runs an outer loop over the entire active roster, and within this loop for VENDETTA intents, it searches `mockState.rivals` sequentially using `.find((r) => r.id === targetStableId)` for every single warrior. This causes an O(W * R) lookup where W is the number of warriors and R is the number of rivals, which unnecessarily consumes CPU cycles when a Map lookup (O(1)) would result in an O(W + R) cost. For heavy simulation steps across many teams and weeks, this compounds significantly.
 **Action:** When working with nested loops iterating over arrays, immediately consider building a `Map` structure for lookups by ID outside the inner loop to prevent redundant `O(N)` scans.
+## 2026-07-29 - O(N²) array lookups in deep nested loops for Competition Matchmaking Bidding
+**Learning:** In `src/engine/ai/workers/competitionWorker/boutBidding.ts`, `generateBoutBids` had an O(N²) lookup where `mockRivalMap` was created inside the loop that iterated over the active roster. This recreated the map on every iteration. Moving the map creation outside the loop optimizes the process from O(W*R) to O(W+R).
+**Action:** Always pre-compute Map indexes outside of loops when doing lookups inside.

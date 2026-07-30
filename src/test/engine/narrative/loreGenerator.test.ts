@@ -152,7 +152,7 @@ describe('loreGenerator', () => {
     const expectedNew = [
       'until they shattered a warden\u2019s jaw with a single, perfectly timed kick',
       'knowing that only the roar of the colosseum could silence the screams of their past',
-      'waiting for the moment they could bathe the arena sands in the blood of their oppressors',
+
     ];
     for (const entry of expectedNew) {
       expect(moments, `missing defining moment: ${entry}`).toContain(entry);

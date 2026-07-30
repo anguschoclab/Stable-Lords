@@ -444,6 +444,27 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundered_coliseum_obsidian_pillars',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Obsidian Pillars',
+    narrative: 'Three massive pillars of black glass dominate the western side. They are said to resonate with a low hum when a fatal blow is struck.'
+  },
+  {
+    id: 'charnel_pits_bone_avalanche',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Bone Avalanche',
+    narrative: 'A furious brawl caused the unstable eastern wall of the pit to collapse, burying a dozen combatants under tons of ancient, splintered bones.'
+  },
+  {
+    id: 'flesh_gardens_smiling_death',
+    arenaId: 'flesh_gardens',
+    type: 'famous_death',
+    title: 'The Smiling Corpse',
+    narrative: 'A famed poisoner met his end here when forced to swallow his own venom. His body was left for days, a frozen, grotesque smile plastered across his face.'
+  },
+  {
     id: 'charnel_pits_screaming_winds_2',
     arenaId: 'charnel_pits',
     type: 'architectural_quirk',

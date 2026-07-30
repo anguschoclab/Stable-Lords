@@ -31,6 +31,14 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
+  'Cosmic Anomaly': {
+    icon: Sparkles,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A terrifying cosmic rift empowers strikes but exhausts fighters.',
+  },
+
   'Prismatic Rain': {
     icon: Sparkles,
     colorClass: 'text-primary',

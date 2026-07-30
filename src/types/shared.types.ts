@@ -635,7 +635,8 @@ export type WeatherType =
   | 'Chaos Storm'
   | 'Chaos Squall'
   | 'Whispering Winds'
-  | 'Diamond Rain';
+  | 'Diamond Rain'
+  | 'Cosmic Anomaly';
 
 /**
  * Defines the shape of death event.

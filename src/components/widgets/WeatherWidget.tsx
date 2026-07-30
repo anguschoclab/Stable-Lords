@@ -9,6 +9,8 @@ import { getWeatherConfig } from '@/constants/arena/weather';
 import type { WeatherType } from '@/types/shared.types';
 
 export const WEATHER_STATS: Record<WeatherType, string> = {
+  'Cosmic Anomaly': 'STAMINA CONSERVATION 10% | INITIATIVE +5 | RIPOSTE -2 | DAMAGE +25%',
+
   Zephyr: 'STAMINA CONSERVATION 15% | INITIATIVE +2',
   'Wild Magic': 'UNPREDICTABLE SURGES | DAMAGE +10%',
   Clear: 'NORMAL VISIBILITY | ZERO DRAIN',

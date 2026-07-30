@@ -104,6 +104,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  gutter_ghost: {
+    id: 'gutter_ghost',
+    name: 'Gutter Ghost',
+    description: 'Moves unseen in the shadows of the arena. High evasion when healthy.',
+    effect: { defMod: 1, parModHighHp: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  workhouse_resilience: {
+    id: 'workhouse_resilience',
+    name: 'Workhouse Resilience',
+    description: 'Bones hardened by endless grueling labor. Better endurance and defense.',
+    effect: { defMod: 1, enduranceMult: 1.1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
   silent_stalker: {
     id: 'silent_stalker',
     name: 'Silent Stalker',

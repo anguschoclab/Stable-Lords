@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Raised in the haunted dormitories of the Blackbriar Orphanage',
+  'Abandoned in the soot-stained nursery of the Ashen Ward',
+  'Found shivering in the crypts of the Old Abbey',
+  'Survived the cruel discipline of the Iron Spire Orphanage',
+  'Sold to the fighting pits by the matrons of the Bleak House',
   'Abandoned in the haunted shadows of the Whispering Woods',
   'Raised by the grim grave-keepers of the Obsidian Cemetery',
   'Found clinging to life in the frozen gutters of the North Ward',
@@ -186,6 +191,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would silently endure beatings to learn how to absorb blows',
+  'learned to craft makeshift shivs from shattered porcelain bowls',
+  'was known for biting viciously when cornered by older urchins',
   'would endlessly practice disarming techniques on fellow street urchins',
   'learned to identify weaknesses by observing the limp of aging guards',
   'was known for an unnerving stillness before striking a blow',
@@ -294,7 +302,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
-  'knowing that the only escape from the gutters was paved in blood',
+  'until they turned a rusty nail into a weapon of freedom',
+  'realizing that the only family they had was the blade in their hand',
+  'waiting for the day they could make the nobility bleed in the sands',
   'until they strangled an abusive warden and stepped into the light',
   'realizing that true power was forged not in gold, but in bone and blood',
   'waiting for the moment they could finally unleash their fury on the colosseum floor',

@@ -460,6 +460,20 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'underpit_feral_ghouls',
+    arenaId: 'underpit_arena',
+    type: 'historical_battle',
+    title: 'Night of the Feral Ghouls',
+    narrative: 'A legendary bout where combatants had to fend off not only each other, but a swarm of feral mutants that breached the lower grates.'
+  },
+  {
+    id: 'lantern_hall_shattered_glass',
+    arenaId: 'lantern_hall_arena',
+    type: 'architectural_quirk',
+    title: 'The Shattered Skylight',
+    narrative: 'During a massive storm, the grand skylight shattered, raining glass onto the fighters. The arena floor still glints with embedded shards.'
+  },
+  {
     id: 'sundered_coliseum_obsidian_pillars',
     arenaId: 'sundered_coliseum',
     type: 'architectural_quirk',

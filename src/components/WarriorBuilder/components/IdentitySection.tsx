@@ -31,9 +31,10 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1.5">
-          <Label>Warrior Name</Label>
+          <Label htmlFor="warrior-name">Warrior Name</Label>
           <div className="flex gap-1.5">
             <Input
+              id="warrior-name"
               placeholder="Enter name (2+ characters)"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -54,9 +55,9 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label>Fighting Style</Label>
+          <Label htmlFor="fighting-style">Fighting Style</Label>
           <Select value={style} onValueChange={(v) => setStyle(v as FightingStyle)}>
-            <SelectTrigger>
+            <SelectTrigger id="fighting-style">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

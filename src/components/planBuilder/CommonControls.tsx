@@ -21,12 +21,16 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
       <div className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
+            <Label
+              htmlFor="plan-oe"
+              className="text-[10px] font-black uppercase tracking-widest text-arena-gold"
+            >
               Offensive Effort
             </Label>
             <span className="text-sm font-mono font-bold text-arena-gold">{plan.OE}</span>
           </div>
           <Slider
+            id="plan-oe"
             value={[plan.OE]}
             onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
             min={1}
@@ -36,12 +40,16 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
         </div>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
+            <Label
+              htmlFor="plan-al"
+              className="text-[10px] font-black uppercase tracking-widest text-arena-fame"
+            >
               Activity Level
             </Label>
             <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
           </div>
           <Slider
+            id="plan-al"
             value={[plan.AL ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
             min={1}
@@ -54,7 +62,10 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
       <div className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-destructive">
+            <Label
+              htmlFor="plan-kd"
+              className="text-[10px] font-black uppercase tracking-widest text-destructive"
+            >
               Kill Desire
             </Label>
             <span className="text-sm font-mono font-bold text-destructive">
@@ -62,6 +73,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
             </span>
           </div>
           <Slider
+            id="plan-kd"
             value={[plan.killDesire ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v })}
             min={1}

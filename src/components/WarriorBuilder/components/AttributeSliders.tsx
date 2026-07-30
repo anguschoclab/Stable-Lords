@@ -53,7 +53,7 @@ export function AttributeSliders({ attrs, updateAttr, total, remaining }: Attrib
         {ATTRIBUTE_KEYS.map((key) => (
           <div key={key} className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label className="text-sm flex items-center gap-1.5">
+              <Label htmlFor={`attr-${key}`} className="text-sm flex items-center gap-1.5">
                 {ATTR_ICONS[key]}
                 {ATTRIBUTE_LABELS[key]}
                 <span className="text-xs text-muted-foreground">({key})</span>
@@ -63,6 +63,7 @@ export function AttributeSliders({ attrs, updateAttr, total, remaining }: Attrib
               </Badge>
             </div>
             <Slider
+              id={`attr-${key}`}
               value={[attrs[key]]}
               onValueChange={([v]) => updateAttr(key, v ?? ATTRIBUTE_MIN)}
               min={ATTRIBUTE_MIN}

@@ -143,27 +143,27 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   // These stack with base weather effects
 
   'cursed:Blood Moon': {
-    damageMult: 1.1, // +10% in cursed arenas (stacks with base 1.2 = 1.32 total)
+    damageMult: WEATHER_PENALTIES.CURSED_BLOOD_MOON_DAMAGE, // +10% in cursed arenas (stacks with base 1.2 = 1.32 total)
     description: 'Cursed ground amplifies bloodlust',
   },
 
   'water:Rainy': {
-    initiativeMod: -1, // Extra -1 in water arenas during rain
+    initiativeMod: WEATHER_PENALTIES.WATER_RAINY_INITIATIVE, // Extra -1 in water arenas during rain
     description: 'Standing water deepens with fresh rain',
   },
 
   'uneven:Blizzard': {
-    initiativeMod: -2, // Extra slippery
+    initiativeMod: WEATHER_PENALTIES.UNEVEN_BLIZZARD_INITIATIVE, // Extra slippery
     description: 'Ice forms on broken ground',
   },
 
   'magical:Mana Surge': {
-    riposteMod: +3, // Crystal acoustics
+    riposteMod: WEATHER_PENALTIES.MAGICAL_MANA_SURGE_RIPOSTE, // Crystal acoustics
     description: 'Magical resonance aids riposte timing',
   },
 
   'living:Gale': {
-    initiativeMod: -2, // Branches whip in wind
+    initiativeMod: WEATHER_PENALTIES.LIVING_GALE_INITIATIVE, // Branches whip in wind
     description: 'The living forest writhes in the gale',
   },
 };

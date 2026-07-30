@@ -62,6 +62,7 @@ export function ResultsBanner({ week, results, onDismiss }: ResultsBannerProps) 
         <Button
           variant="ghost"
           size="icon"
+          tooltip="Dismiss results"
           aria-label="Dismiss results"
           onClick={onDismiss}
           className="h-6 w-6 rounded-none hover:bg-white/5"

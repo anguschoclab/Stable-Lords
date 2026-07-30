@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 import { ResultsBanner } from '@/components/layout/ResultsBanner';
 import type { BoutResult } from '@/engine/bout';
@@ -24,7 +25,11 @@ describe('ResultsBanner', () => {
   });
 
   it('renders null when results=[]', () => {
-    const { container } = render(<ResultsBanner week={3} results={[]} onDismiss={vi.fn()} />);
+    const { container } = render(
+      <TooltipProvider>
+        <ResultsBanner week={3} results={[]} onDismiss={vi.fn()} />
+      </TooltipProvider>
+    );
     expect(container.firstChild).toBeNull();
   });
 
@@ -33,7 +38,11 @@ describe('ResultsBanner', () => {
       makeResult({ outcome: { winner: 'w1', by: 'KO', rounds: 3 } as any }),
       makeResult({ outcome: { winner: 'w2', by: 'KO', rounds: 2 } as any }),
     ];
-    render(<ResultsBanner week={3} results={results} onDismiss={vi.fn()} />);
+    render(
+      <TooltipProvider>
+        <ResultsBanner week={3} results={results} onDismiss={vi.fn()} />
+      </TooltipProvider>
+    );
     expect(screen.getByText(/Week 3/i)).toBeTruthy();
     // 1 win (winner=w1=attacker), 1 loss (winner=w2=defender)
     expect(screen.getByText('1W')).toBeTruthy();
@@ -42,13 +51,21 @@ describe('ResultsBanner', () => {
 
   it('renders death names in red when deaths > 0', () => {
     const results = [makeResult({ outcome: { winner: 'w1', by: 'Kill', rounds: 5 } as any })];
-    render(<ResultsBanner week={5} results={results} onDismiss={vi.fn()} />);
+    render(
+      <TooltipProvider>
+        <ResultsBanner week={5} results={results} onDismiss={vi.fn()} />
+      </TooltipProvider>
+    );
     expect(screen.getByText(/Beta/i)).toBeTruthy();
   });
 
   it('auto-dismisses after 8 seconds', () => {
     const onDismiss = vi.fn();
-    render(<ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />);
+    render(
+      <TooltipProvider>
+        <ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />
+      </TooltipProvider>
+    );
     expect(onDismiss).not.toHaveBeenCalled();
     act(() => {
       vi.advanceTimersByTime(8000);
@@ -58,7 +75,11 @@ describe('ResultsBanner', () => {
 
   it('closes on X button click', () => {
     const onDismiss = vi.fn();
-    render(<ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />);
+    render(
+      <TooltipProvider>
+        <ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />
+      </TooltipProvider>
+    );
     const closeBtn = screen.getByRole('button', { name: /dismiss/i });
     fireEvent.click(closeBtn);
     expect(onDismiss).toHaveBeenCalledOnce();
@@ -66,7 +87,11 @@ describe('ResultsBanner', () => {
 
   it('onDismiss callback fires when dismissed', () => {
     const onDismiss = vi.fn();
-    render(<ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />);
+    render(
+      <TooltipProvider>
+        <ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />
+      </TooltipProvider>
+    );
     act(() => {
       vi.advanceTimersByTime(8000);
     });

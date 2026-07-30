@@ -97,7 +97,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-muted-foreground"
-                title="View full profile"
+                tooltip="View full profile"
                 aria-label="View full warrior profile"
               >
                 <Link to={`/warrior/$id`} params={{ id: resolvedId }}>
@@ -201,7 +201,7 @@ export function StableLink({ name, className, children }: StableLinkProps) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-muted-foreground"
-                title="View full stable"
+                tooltip="View full stable"
                 aria-label="View full stable"
               >
                 <Link to="/stable/roster">
@@ -214,7 +214,7 @@ export function StableLink({ name, className, children }: StableLinkProps) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-muted-foreground"
-                title="View full stable"
+                tooltip="View full stable"
                 aria-label="View full stable"
               >
                 <Link to="/world/stable/$id" params={{ id: stableId }}>

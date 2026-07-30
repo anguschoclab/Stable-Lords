@@ -173,7 +173,7 @@ export default function NewGameForm({
                   size="icon"
                   type="button"
                   onClick={() => setOwnerName(randomOwnerName())}
-                  title="Random name"
+                  tooltip="Random name"
                   aria-label="Randomize your name"
                   className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
                 >
@@ -203,7 +203,7 @@ export default function NewGameForm({
                   size="icon"
                   type="button"
                   onClick={() => setStableName(randomStableName())}
-                  title="Random name"
+                  tooltip="Random name"
                   aria-label="Randomize stable name"
                   className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
                 >

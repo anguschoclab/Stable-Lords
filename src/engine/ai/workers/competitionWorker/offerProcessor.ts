@@ -44,6 +44,9 @@ export function processAllRivalsBoutOffers(
     // Track warriors already committed this week
     const pickedWarriors = new Set<string>();
 
+    // ⚡ Bolt Optimization: Pre-compute Set for O(1) roster checks
+    const owningRosterIds = new Set(owningRival.roster.map((w) => w.id));
+
     const sortedOffers = [...rivalOffers].sort((a, b) => {
       const scoreA = a.hype * a.purse;
       const scoreB = b.hype * b.purse;
@@ -53,7 +56,7 @@ export function processAllRivalsBoutOffers(
     sortedOffers.forEach((offer) => {
       offer.warriorIds.forEach((wId) => {
         // Skip if warrior not owned by this rival
-        if (!owningRival.roster.some((w) => w.id === wId)) return;
+        if (!owningRosterIds.has(wId)) return;
 
         // Skip if warrior already committed this week
         if (pickedWarriors.has(wId)) return;

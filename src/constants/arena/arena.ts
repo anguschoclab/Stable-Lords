@@ -81,7 +81,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   // Rain penalizes lungers (slippery footing for lunges)
   'Rainy:LUNGING ATTACK': {
     initiativeMod: WEATHER_PENALTIES.RAIN_LUNGE_INITIATIVE,
-    damageMult: 1 + WEATHER_PENALTIES.RAIN_LUNGE_PENALTY,
+    damageMult: 1 - WEATHER_PENALTIES.RAIN_LUNGE_PENALTY,
     description: 'Rain-slicked sand hinders lunging footwork',
   },
 
@@ -97,7 +97,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 
   // Sandstorm penalizes aimed blows (can't aim)
   'Sandstorm:PARRY-RIPOSTE': {
-    damageMult: 1 + WEATHER_PENALTIES.DUST_RIPOSTE_PENALTY,
+    damageMult: 1 - WEATHER_PENALTIES.DUST_RIPOSTE_PENALTY,
     description: 'Dust in the eyes hampers counter-strikes',
   },
   'Sandstorm:AIMED BLOW': {

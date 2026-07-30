@@ -930,6 +930,29 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   }
 ];
 
+
+export const THE_BRAMBLE_RING: ArenaConfig = {
+  id: 'the_bramble_ring',
+  name: 'The Bramble Ring',
+  tags: ['cramped', 'uneven', 'outdoor', 'living'],
+  tier: 1,
+  size: 'cramped',
+  description: 'A tight clearing surrounded by dense, thorny overgrowth. Blood only encourages the roots.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.1 },
+};
+
+export const THUNDER_PEAK: ArenaConfig = {
+  id: 'thunder_peak',
+  name: 'Thunder Peak',
+  tags: ['open', 'elevated', 'outdoor'],
+  tier: 3,
+  size: 'open',
+  description: 'Atop the highest jagged spire, thin air and sheer drops test the stamina and nerves of any fighter.',
+  zoneDef: { Edge: -1, Corner: -5 },
+  surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.25 },
+};
+
 // ─── Auto-register ────────────────────────────────────────────────────────────
 [
   STANDARD_ARENA,
@@ -957,4 +980,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   THE_MEAT_GRINDER,
   THE_ABYSSAL_PIT,
   JUNGLE_RUINS,
+  THE_BRAMBLE_RING,
+  THUNDER_PEAK,
 ].forEach(registerArena);

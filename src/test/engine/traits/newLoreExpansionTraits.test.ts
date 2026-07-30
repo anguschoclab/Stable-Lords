@@ -54,23 +54,15 @@ describe('new lore expansion traits exist', () => {
 });
 
 describe('new lore expansion traits static mods', () => {
-  it('silent_stalker applies static modifiers via getStaticTraitMods', () => {
+  it('silent_stalker applies modifiers via getDynamicTraitMods in OPENING phase', () => {
     if (!TRAITS.silent_stalker) return;
     const warrior = makeWarriorWithTrait('silent_stalker');
-    const mods = getStaticTraitMods(warrior);
-    const baseMods = getStaticTraitMods({ ...warrior, traits: [] });
+    const ctx = { phase: 'OPENING' as const, hpRatio: 1.0, endRatio: 1.0, consecutiveHits: 0 };
+    const mods = getDynamicTraitMods(warrior, ctx);
+    const baseMods = getDynamicTraitMods({ ...warrior, traits: [] }, ctx);
 
-    // At least one modifier should differ from baseline
-    const anyDiff =
-      mods.attMod !== baseMods.attMod ||
-      mods.parMod !== baseMods.parMod ||
-      mods.defMod !== baseMods.defMod ||
-      mods.iniMod !== baseMods.iniMod ||
-      mods.ripMod !== baseMods.ripMod ||
-      mods.decMod !== baseMods.decMod ||
-      mods.dmgBonus !== baseMods.dmgBonus ||
-      mods.enduranceMult !== baseMods.enduranceMult;
-    expect(anyDiff).toBe(true);
+    // silent_stalker has iniModEarly: 1, which is a dynamic mod applied in OPENING phase
+    expect(mods.iniMod).toBe(baseMods.iniMod + 1);
   });
 
   it('gutters_edge applies static modifiers via getStaticTraitMods', () => {

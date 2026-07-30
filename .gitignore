@@ -38,7 +38,14 @@ fix_*.cjs
 Daily_Balance_Report.md
 
 # AI tool config directories (IDE-local)
+.jules/
+.Jules/
+.claude/backups/
 
+# Debug scripts at repo root
+test_*.cjs
+test_*.js
+review.txt
 
 # Backup files
 *.bak

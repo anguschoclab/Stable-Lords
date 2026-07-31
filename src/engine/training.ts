@@ -169,7 +169,10 @@ export function computeTrainingImpact(
   }
 
   const results: TrainingResult[] = [];
-  let currentRoster = new Map<WarriorId, Warrior>(state.roster.map((w) => [w.id, w]));
+  let currentRoster = new Map<WarriorId, Warrior>();
+  for (const w of state.roster) {
+    currentRoster.set(w.id, w);
+  }
   let seasonalGrowth = [...(state.seasonalGrowth ?? [])];
   const healingBonus = getHealingTrainerBonus(state.trainers ?? []);
 
@@ -265,7 +268,10 @@ export function trainingImpactToStateImpact(
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const seasonalGrowth = impact.updatedSeasonalGrowth ? [...impact.updatedSeasonalGrowth] : [];
 
-  const originalById = new Map<WarriorId, Warrior>(state.roster.map((r) => [r.id, r]));
+  const originalById = new Map<WarriorId, Warrior>();
+  for (const r of state.roster) {
+    originalById.set(r.id, r);
+  }
   impact.updatedRoster.forEach((w) => {
     const original = originalById.get(w.id);
     if (original && original !== w) {

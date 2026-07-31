@@ -116,8 +116,8 @@ export const TRAITS: Record<string, TraitDef> = {
   workhouse_resilience: {
     id: 'workhouse_resilience',
     name: 'Workhouse Resilience',
-    description: 'Bones hardened by endless grueling labor. Better endurance and defense.',
-    effect: { defMod: 1, enduranceMult: 1.1 },
+    description: 'Bones hardened by endless grueling labor. Better endurance, defense, and parry.',
+    effect: { defMod: 1, parMod: 1, enduranceMult: 0.9 },
     tier: 'Notable',
     sign: 'positive',
     weight: 0.6,

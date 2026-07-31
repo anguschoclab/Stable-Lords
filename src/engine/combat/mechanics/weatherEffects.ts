@@ -396,8 +396,22 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     staminaMult: 1.2,
     initiativeMod: -2,
     riposteMod: 0,
-    damageMult: 1.3,
-    description: 'Hard diamonds fall from the sky, causing minor cuts and testing stamina.',
+    damageMult: 1.15,
+    description: 'A bizarre rain of diamonds cuts flesh and armor alike.',
+  },
+  'Temporal Rift': {
+    staminaMult: 2.0,
+    initiativeMod: 10,
+    riposteMod: 5,
+    damageMult: 1.0,
+    description: 'Time fractures, heavily accelerating combat at the cost of immense stamina.',
+  },
+  'Stardust Gale': {
+    staminaMult: 1.15,
+    initiativeMod: 2,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
   'Chaos Squall': {
     staminaMult: 0.85,
@@ -503,6 +517,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
   'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
+  'Temporal Rift': 'Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters\' will.',
+  'Stardust Gale': 'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
 };
 
 /**

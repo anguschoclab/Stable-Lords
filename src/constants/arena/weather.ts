@@ -14,6 +14,7 @@ import {
   Factory,
   Droplets,
   Sparkles,
+  Hourglass,
   type LucideIcon,
 } from 'lucide-react';
 import type { WeatherType } from '@/types/shared.types';
@@ -413,7 +414,21 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-arena-fame',
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
-    description: 'Glittering diamonds fall from the sky, a rare and wondrous spectacle.',
+    description: 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
+  },
+  'Temporal Rift': {
+    icon: Hourglass,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A fracture in time accelerates combat drastically. +10 Initiative, +5 Riposte, 200% Stamina drain.',
+  },
+  'Stardust Gale': {
+    icon: Sparkles,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
 };
 

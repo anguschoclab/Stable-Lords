@@ -98,6 +98,8 @@ export const WeatherTypeSchema = z.enum([
   'Chaos Squall',
   'Diamond Rain',
   'Cosmic Anomaly',
+  'Temporal Rift',
+  'Stardust Gale',
 ]);
 
 /**

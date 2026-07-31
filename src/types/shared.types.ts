@@ -636,7 +636,9 @@ export type WeatherType =
   | 'Chaos Squall'
   | 'Whispering Winds'
   | 'Diamond Rain'
-  | 'Cosmic Anomaly';
+  | 'Cosmic Anomaly'
+  | 'Temporal Rift'
+  | 'Stardust Gale';
 
 /**
  * Defines the shape of death event.

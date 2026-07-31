@@ -65,7 +65,9 @@ interface OffseasonEventNarrative {
     | 'moonlight_duel'
     | 'chaos_weavers_game'
     | 'secret_fight_club'
-    | 'chaos_weavers_gift';
+    | 'chaos_weavers_gift'
+    | 'temporal_anomaly'
+    | 'wandering_mystic';
   newsletter: string[];
 }
 
@@ -1569,6 +1571,74 @@ function handleChaosWeaversGift(
   }
 }
 
+function handleTemporalAnomaly(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 35;
+      const currentTraits = chosen.traits || [];
+      const newTraits = [...currentTraits];
+      if (newTraits.length > 0) {
+        const removedTraitIndex = Math.floor(rng.next() * newTraits.length);
+        newTraits.splice(removedTraitIndex, 1);
+      }
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        traits: newTraits,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.',
+        origin: 'Temporal Anomaly',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
+function handleWanderingMystic(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const currentTraits = chosen.traits || [];
+      const newTraits = currentTraits.includes('chaos_touched')
+        ? currentTraits
+        : [...currentTraits, 'chaos_touched'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        traits: newTraits,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1622,6 +1692,8 @@ const EVENT_HANDLERS: Record<
   secret_fight_club: handleSecretFightClub,
   chaos_weavers_gift: handleChaosWeaversGift,
   chaos_weavers_game: handleChaosWeaversGame,
+  temporal_anomaly: handleTemporalAnomaly,
+  wandering_mystic: handleWanderingMystic,
 };
 
 /**

@@ -49,6 +49,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Aether Storm',
     'Wild Magic',
     'Astral Dust',
+    'Temporal Rift',
   ],
   Summer: [
     'Sweltering',
@@ -75,6 +76,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Blood Fog',
     'Rain of Frogs',
     'Whispering Winds',
+    'Stardust Gale',
   ],
   Winter: [
     'Blizzard',
@@ -110,6 +112,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   Clear: 25,
   Overcast: 15,
   'Wild Magic': 5,
+  'Temporal Rift': 0.5,
   // Rare (shared)
   'Blood Moon': 1.5,
   Eclipse: 0.5,
@@ -153,6 +156,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   'Spooky Night': 1.5,
   'Blood Fog': 1,
   'Rain of Frogs': 0.5,
+  'Stardust Gale': 3,
 
   // Winter-exclusive
   Blizzard: 15,

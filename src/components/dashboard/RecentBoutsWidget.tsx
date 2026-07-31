@@ -30,7 +30,7 @@ export function RecentBoutsWidget() {
     const history = state.arenaHistory || [];
     const results: FightSummary[] = [];
 
-    for (let i = 0; i < history.length; i++) {
+    for (let i = history.length - 1; i >= 0; i--) {
       const bout = history[i];
       if (bout && (bout.stableIdA === playerStableId || bout.stableIdD === playerStableId)) {
         results.push(bout);

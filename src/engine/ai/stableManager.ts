@@ -5,6 +5,7 @@ import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 
@@ -66,7 +67,7 @@ export function processAIStable(
     roster: updatedRival.roster,
     fame: updatedRival.fame ?? updatedRival.owner.fame ?? 0,
     weather: state.weather,
-    arenaHistory: state.arenaHistory.filter((f) => f.week === state.week),
+    arenaHistory: getFightsForWeek(state.arenaHistory, state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
     applyStipend: (state.rivals || []).length <= 45,

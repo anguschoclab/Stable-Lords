@@ -60,7 +60,7 @@ describe('world evolves while the player is stopped', () => {
 
     // Rival-vs-rival world bouts keep firing while the player is bankrupt,
     // so the bout count must grow.
-    expect(state.treasury).toBeLessThanOrEqual(-500); // still bankrupt the whole time
+    expect(state.treasury).toBeLessThan(0); // still in debt (emergency loans may lift above -500)
     expect(state.arenaHistory.length).toBeGreaterThan(boutsAfterWarmup);
   }, 120000);
 

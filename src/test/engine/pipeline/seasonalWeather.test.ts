@@ -58,6 +58,8 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Crimson Snow',
   'Whispering Winds',
   'Glittering Frost',
+  'Temporal Rift',
+  'Stardust Gale',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
@@ -171,7 +173,7 @@ describe('Blood Rain Feature', () => {
 
   it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
     const rng = new SeededRNGService(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.9);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.893);
     const weather = rollWeather(rng, 'Spring');
     expect(weather).toBe('Blood Rain');
     mock.mockRestore();

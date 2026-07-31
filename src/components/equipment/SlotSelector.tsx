@@ -82,7 +82,7 @@ export function SlotSelector({
     <div className="space-y-1.5">
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground">{icon}</span>
-        <span className="text-sm font-medium">{label}</span>
+        <label htmlFor={`slot-select-${slot}`} className="text-sm font-medium cursor-pointer">{label}</label>
         {selected && selected.weight > 0 && (
           <Badge variant="outline" className="text-xs ml-auto font-mono">
             {selected.weight} enc
@@ -91,7 +91,7 @@ export function SlotSelector({
         {isPreferred && <Star className="h-3.5 w-3.5 text-arena-gold fill-arena-gold" />}
       </div>
       <Select value={selectedId} onValueChange={onChange} disabled={disabled}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger id={`slot-select-${slot}`} className="w-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

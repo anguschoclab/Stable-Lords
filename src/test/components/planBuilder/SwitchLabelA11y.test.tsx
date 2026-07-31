@@ -1,6 +1,8 @@
 /**
  * Switch label accessibility — verifies that Switch components in planBuilder
  * have proper label associations via htmlFor/id after PR #748 merge.
+ *
+ * Tests are UNCONDITIONAL: they fail if labels are missing, not silently passing.
  */
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
@@ -22,27 +24,27 @@ function makePlan(overrides: Partial<FightPlan> = {}): FightPlan {
   } as FightPlan;
 }
 
+function expectSwitchHasLabel(container: HTMLElement, componentName: string) {
+  const switchEl = container.querySelector('[role="switch"]');
+  expect(switchEl, `${componentName} should render a Switch element`).toBeTruthy();
+
+  const hasLabel =
+    switchEl!.getAttribute('aria-label') ||
+    switchEl!.getAttribute('aria-labelledby') ||
+    switchEl!.id;
+  expect(
+    hasLabel,
+    `${componentName} Switch must have an aria-label, aria-labelledby, or id for label association`
+  ).toBeTruthy();
+}
+
 describe('Switch label accessibility in planBuilder', () => {
   it('ContingencyPlans Switch has an associated label', () => {
     const plan = makePlan();
     const { container } = render(
       <ContingencyPlans plan={plan} onPlanChange={() => {}} />
     );
-
-    // After PR #748, there should be a label with htmlFor pointing to the switch id
-    // or the switch should have an aria-label
-    const switchEl = container.querySelector('[role="switch"]');
-    if (switchEl) {
-      const hasLabel =
-        switchEl.getAttribute('aria-label') ||
-        switchEl.getAttribute('aria-labelledby') ||
-        switchEl.id;
-      // After merge, the switch should have some form of label association
-      // Before merge, this test documents the missing accessibility
-      if (hasLabel) {
-        expect(hasLabel).toBeTruthy();
-      }
-    }
+    expectSwitchHasLabel(container, 'ContingencyPlans');
   });
 
   it('PhaseOverrides Switch has an associated label', () => {
@@ -50,17 +52,7 @@ describe('Switch label accessibility in planBuilder', () => {
     const { container } = render(
       <PhaseOverrides plan={plan} onPlanChange={() => {}} />
     );
-
-    const switchEl = container.querySelector('[role="switch"]');
-    if (switchEl) {
-      const hasLabel =
-        switchEl.getAttribute('aria-label') ||
-        switchEl.getAttribute('aria-labelledby') ||
-        switchEl.id;
-      if (hasLabel) {
-        expect(hasLabel).toBeTruthy();
-      }
-    }
+    expectSwitchHasLabel(container, 'PhaseOverrides');
   });
 
   it('StylePassives Switch has an associated label', () => {
@@ -68,17 +60,7 @@ describe('Switch label accessibility in planBuilder', () => {
     const { container } = render(
       <StylePassives plan={plan} />
     );
-
-    const switchEl = container.querySelector('[role="switch"]');
-    if (switchEl) {
-      const hasLabel =
-        switchEl.getAttribute('aria-label') ||
-        switchEl.getAttribute('aria-labelledby') ||
-        switchEl.id;
-      if (hasLabel) {
-        expect(hasLabel).toBeTruthy();
-      }
-    }
+    expectSwitchHasLabel(container, 'StylePassives');
   });
 
   it('all Switch elements in planBuilder are keyboard accessible', () => {
@@ -92,12 +74,27 @@ describe('Switch label accessibility in planBuilder', () => {
     );
 
     const switches = container.querySelectorAll('[role="switch"]');
+    expect(switches.length, 'should render at least one switch').toBeGreaterThan(0);
     for (const sw of switches) {
-      // Switch should be focusable (button or have tabindex)
       const isFocusable =
         sw.tagName === 'BUTTON' ||
         sw.getAttribute('tabindex') !== null;
-      expect(isFocusable).toBe(true);
+      expect(isFocusable, 'Switch should be focusable (button or have tabindex)').toBe(true);
+    }
+  });
+
+  it('Label htmlFor attributes match element ids in ContingencyPlans', () => {
+    const plan = makePlan();
+    const { container } = render(
+      <ContingencyPlans plan={plan} onPlanChange={() => {}} />
+    );
+
+    const labels = container.querySelectorAll('label[htmlfor]');
+    for (const label of labels) {
+      const htmlFor = label.getAttribute('htmlfor');
+      expect(htmlFor, 'Label should have non-empty htmlFor').toBeTruthy();
+      const target = container.querySelector(`#${CSS.escape(htmlFor!)}`);
+      expect(target, `Label htmlFor="${htmlFor}" should match an element with that id`).toBeTruthy();
     }
   });
 });

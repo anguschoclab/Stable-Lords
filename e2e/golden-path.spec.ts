@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 
-const BASE_URL = 'http://localhost:8082';
+const BASE_URL = 'http://localhost:5173';
 
 /**
  * Golden path E2E test:

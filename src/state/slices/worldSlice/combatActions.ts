@@ -38,6 +38,7 @@ export function createCombatActions(set: (fn: (state: GameStore) => Partial<Game
 
           const nextRivals = [...state.rivals];
           const rival = nextRivals[rIndex];
+          if (!rival) return {};
           nextRivals[rIndex] = {
             ...rival,
             roster: updateEntityInList(rival.roster, warriorId, (w) => ({

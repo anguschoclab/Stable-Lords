@@ -15,7 +15,11 @@ export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Wa
   // Directly modify the roster without mapping if we only have a few updates
   // and the array is large, or just map if value has many updates
   if (value.size === 1) {
-    const [[id, update]] = Array.from(value.entries());
+    const entries = Array.from(value.entries());
+    if (!entries[0]) return;
+    const entry = entries[0];
+    const id = entry[0];
+    const update = entry[1];
     const index = state.roster.findIndex(w => w.id === id);
     if (index !== -1) {
       const nextRoster = [...state.roster];

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { ArrowLeft, Swords, Zap, Shield, Activity, Target, Flame, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -66,19 +67,20 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Offensive Effort Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
+            <Label htmlFor="plan-oe" className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
               Offensive Effort
-            </span>
+            </Label>
             <span className="text-sm font-mono font-bold text-arena-gold">{plan.OE}</span>
           </div>
           <Slider
+            id="plan-oe"
             value={[plan.OE]}
             onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
             min={1}
             max={10}
             step={1}
           />
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30" aria-hidden="true">
             <span>Cautious</span>
             <span>Reckless</span>
           </div>
@@ -87,19 +89,20 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Activity Level Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
+            <Label htmlFor="plan-al" className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
               Activity Level
-            </span>
+            </Label>
             <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
           </div>
           <Slider
+            id="plan-al"
             value={[plan.AL ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
             min={1}
             max={10}
             step={1}
           />
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30" aria-hidden="true">
             <span>Passive</span>
             <span>Active</span>
           </div>
@@ -108,21 +111,22 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Kill Desire Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-destructive">
+            <Label htmlFor="plan-kd" className="text-[10px] font-black uppercase tracking-widest text-destructive">
               Kill Desire
-            </span>
+            </Label>
             <span className="text-sm font-mono font-bold text-destructive">
               {plan.killDesire ?? 5}
             </span>
           </div>
           <Slider
+            id="plan-kd"
             value={[plan.killDesire ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v ?? 5 })}
             min={1}
             max={10}
             step={1}
           />
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30" aria-hidden="true">
             <span>Mercy</span>
             <span>Kill</span>
           </div>

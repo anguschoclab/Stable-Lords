@@ -145,6 +145,11 @@ function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): G
   (settledState.graveyard || []).forEach((w) => deadIds.add(w.id));
   invalidateDeadWarriors(settledState, deadIds);
 
+  // Rebuild rivalMap to reflect any roster changes from bout impacts (NF2 fix)
+  const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
+  (settledState.rivals || []).forEach((r) => rivalMap.set(r.id, r));
+  settledState.rivalMap = rivalMap;
+
   return settledState;
 }
 

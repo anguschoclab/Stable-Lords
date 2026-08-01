@@ -51,8 +51,8 @@ describe('createFreshState', () => {
       expect(state.meta.version).toBe(SAVE_STATE_VERSION);
     });
 
-    it('sets meta.createdAt to default param', () => {
-      expect(state.meta.createdAt).toBe('2024-01-01T00:00:00.000Z');
+    it('sets meta.createdAt to default param (dynamic ISO date)', () => {
+      expect(state.meta.createdAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
     });
 
     it('sets meta.createdAt to custom param', () => {
@@ -517,8 +517,9 @@ describe('createFreshState', () => {
 
   describe('determinism', () => {
     it('same seed produces deep-equal state', () => {
-      const s1 = createFreshState(SEED);
-      const s2 = createFreshState(SEED);
+      const fixedDate = '2025-01-01T00:00:00.000Z';
+      const s1 = createFreshState(SEED, fixedDate);
+      const s2 = createFreshState(SEED, fixedDate);
       expect(s1).toEqual(s2);
     });
 

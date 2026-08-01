@@ -3,6 +3,7 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
+import { truncateState } from '@/engine/storage/truncation';
 import { TimeAdvanceService, type SoftStopCondition } from './pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy'; /**
  * Defines the shape of autosim week summary.
@@ -176,6 +177,11 @@ async function runSequentialAutosim(
     // 3. Extract week summary
     weekSummaries.push(extractWeekSummary(state, state.week));
     weeksSimmed++;
+
+    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth
+    if (weeksSimmed % 50 === 0) {
+      state = truncateState(state);
+    }
 
     if (onProgress) {
       onProgress(weeksSimmed, weeksToSim);

@@ -19,7 +19,7 @@ import { SAVE_STATE_VERSION } from '@/constants/core';
  */
 export function createFreshState(
   seed: string,
-  createdAt: string = '2024-01-01T00:00:00.000Z'
+  createdAt: string = new Date().toISOString()
 ): GameState {
   const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const rng = new SeededRNGService(numericSeed);

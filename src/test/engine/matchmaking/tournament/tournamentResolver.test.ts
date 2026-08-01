@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import * as simulateMod from '@/engine/simulate';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
@@ -717,6 +718,51 @@ describe('TournamentResolver', () => {
 
       expect(updatedState.tournaments![0]!.completed).toBe(true);
       expect(updatedState.tournaments![0]!.champion).toBeDefined();
+    });
+  });
+
+  describe('deathWeek at year boundary', () => {
+    it('should set deathWeek to absoluteWeek (not display week) for tournament kills', () => {
+      const rng = new SeededRNGService(999);
+      const warriors = Array.from({ length: 2 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Boundary Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Boundary Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+
+      state.week = 1;
+      state.year = 2;
+      state.absoluteWeek = 53;
+      state.tournaments = [tournament];
+
+      vi.spyOn(simulateMod, 'simulateFight').mockReturnValue({
+        winner: 'A',
+        by: 'Kill',
+        minutes: 1,
+        log: [],
+        exchangeLog: [],
+        post: { tags: [] },
+      } as any);
+
+      const { impact } = resolveRound(state, tournament.id, 999);
+
+      expect(impact.graveyard).toBeDefined();
+      expect(impact.graveyard!.length).toBeGreaterThan(0);
+      expect(impact.graveyard![0]!.deathWeek).toBe(53);
     });
   });
 });

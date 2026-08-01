@@ -124,6 +124,7 @@ describe('pipeline/health', () => {
       } as InjuryData;
       const mockState = {
         week: 5,
+        absoluteWeek: 5,
         roster: [
           { id: 'w1', name: 'Warrior 1', injuries: [mockInjury] },
           { id: 'w2', name: 'Warrior 2', injuries: [] },
@@ -151,6 +152,40 @@ describe('pipeline/health', () => {
       expect(newState.newsletter?.length).toBe(1);
     });
 
+    it('should pass absoluteWeek (not display week) to clearExpiredRest at year boundary', () => {
+      const mockInjury = {
+        id: 'i1',
+        name: 'cut',
+        description: 'cut',
+        severity: 'Minor',
+        weeksRemaining: 2,
+        penalties: {},
+      } as InjuryData;
+      const mockState = {
+        week: 1,
+        absoluteWeek: 53,
+        roster: [{ id: 'w1', name: 'Warrior 1', injuries: [mockInjury] }],
+        restStates: [
+          { warriorId: 'w1' as any, restUntilWeek: 53 },
+          { warriorId: 'w2' as any, restUntilWeek: 54 },
+        ],
+        newsletter: [],
+      } as any as GameState;
+
+      vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
+        active: [],
+        healed: [],
+      });
+
+      vi.spyOn(matchmakingModule, 'clearExpiredRest').mockReturnValue([]);
+
+      applyHealthUpdates(mockState);
+
+      expect(matchmakingModule.clearExpiredRest).toHaveBeenCalledWith(mockState.restStates, 53);
+    });
+  });
+
+  describe('applyHealthUpdates — undefined restStates', () => {
     it('should handle state with undefined restStates and newsletter', () => {
       const mockInjury = {
         id: 'i1',
@@ -162,6 +197,7 @@ describe('pipeline/health', () => {
       } as InjuryData;
       const mockState = {
         week: 5,
+        absoluteWeek: 5,
         roster: [{ id: 'w1', name: 'Warrior 1', injuries: [mockInjury] }],
       } as any as GameState;
 

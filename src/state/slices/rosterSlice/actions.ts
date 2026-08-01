@@ -26,7 +26,7 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         const dead: Warrior = {
           ...victim,
           status: 'Dead',
-          deathWeek: state.week,
+          deathWeek: state.absoluteWeek ?? state.week,
           deathCause: cause,
           killedBy,
           deathEvent,

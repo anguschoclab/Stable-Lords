@@ -363,6 +363,37 @@ describe('createBoutSummary', () => {
   });
 });
 
+// ─── createFightSummary absoluteWeek (year rollover boundary) ─────────────────
+
+describe('createFightSummary absoluteWeek field', () => {
+  it('sets absoluteWeek when provided', () => {
+    const summary = createFightSummary({
+      warriorA: makeWarriorA(),
+      warriorD: makeWarriorD(),
+      outcome: makeOutcome(),
+      week: 1,
+      absoluteWeek: 53,
+      rng: { uuid: () => 'test-id' },
+    } as any);
+    expect(summary.absoluteWeek).toBe(53);
+  });
+
+  it('getFightsForWeek finds tournament fight by absoluteWeek at year boundary', async () => {
+    const { getFightsForWeek } = await import('@/engine/core/historyUtils');
+    const summary = createFightSummary({
+      warriorA: makeWarriorA(),
+      warriorD: makeWarriorD(),
+      outcome: makeOutcome(),
+      week: 1,
+      absoluteWeek: 53,
+      rng: { uuid: () => 'test-id' },
+    } as any);
+    const found = getFightsForWeek([summary], 53);
+    expect(found).toHaveLength(1);
+    expect(found[0]!.id).toBe(summary.id);
+  });
+});
+
 // ─── createMinimalFightSummary (previously untested) ──────────────────────────
 
 describe('createMinimalFightSummary', () => {

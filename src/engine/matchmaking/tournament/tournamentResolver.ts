@@ -270,6 +270,7 @@ function applyBoutResultsToImpact(
     warriorD: wD,
     outcome,
     week: state.week,
+    absoluteWeek: state.absoluteWeek,
     tournamentId: tId,
     tournamentName: tName,
     rng,
@@ -306,7 +307,7 @@ function applyBoutResultsToImpact(
 
   if (isKill) {
     const victim = winnerSide === 'D' ? wA : wD;
-    impact.graveyard = [{ ...victim, status: 'Dead', deathWeek: state.week }];
+    impact.graveyard = [{ ...victim, status: 'Dead', deathWeek: state.absoluteWeek ?? state.week }];
     // Mark as dead in roster updates
     const deadUpdate: Partial<Warrior> = { status: 'Dead' as const };
     rosterUpdates.set(victim.id, deadUpdate);

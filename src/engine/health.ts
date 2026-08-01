@@ -73,7 +73,7 @@ export const applyHealthUpdates: (state: GameState, rng?: IRNGService) => GameSt
   const s = {
     ...state,
     roster,
-    restStates: clearExpiredRest(state.restStates || [], state.week),
+    restStates: clearExpiredRest(state.restStates || [], state.absoluteWeek ?? state.week),
   };
 
   if (impact.newsletterItems && impact.newsletterItems.length > 0) {

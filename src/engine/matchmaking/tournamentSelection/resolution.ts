@@ -228,6 +228,7 @@ export function applyBoutResults(
     warriorD: wD,
     outcome,
     week: state.week,
+    absoluteWeek: state.absoluteWeek,
     tournamentId: tId,
     tournamentName: tName,
     rng,
@@ -261,7 +262,7 @@ export function applyBoutResults(
     const victim = winnerSide === 'D' ? wA : wD;
     updatedState.graveyard = [
       ...(updatedState.graveyard || []),
-      { ...victim, status: 'Dead', deathWeek: state.week },
+      { ...victim, status: 'Dead', deathWeek: state.absoluteWeek ?? state.week },
     ];
     updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
     updatedState.rivals = updatedState.rivals.map((r) => ({

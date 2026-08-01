@@ -34,7 +34,9 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
   // 2. Post-death pool bonus: each arena death this week draws one extra aspirant
   // into the pool (fame of mortal combat attracts more blood). Bounded so a slaughter
   // week doesn't flood the pool.
-  const deathsThisWeek = (state.graveyard ?? []).filter((w) => w.deathWeek === state.week).length;
+  const deathsThisWeek = (state.graveyard ?? []).filter(
+    (w) => w.deathWeek === (state.absoluteWeek ?? state.week)
+  ).length;
   const bonusCount = Math.min(3, deathsThisWeek);
   if (bonusCount > 0) {
     const poolNames = new Set(recruitPool.map((w) => w.name));

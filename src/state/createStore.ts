@@ -267,6 +267,7 @@ export const useGameStore = create<GameStore>()(
       },
 
       setState: (fn: (state: GameStore) => void) => {
+        clearReconstructionCache();
         set(fn);
       },
     }))

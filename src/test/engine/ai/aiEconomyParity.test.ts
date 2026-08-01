@@ -60,6 +60,7 @@ describe('AI Economy Parity', () => {
   it('AI base income matches player base income for fame-0 tier-1 fight', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       roster: [
         {
@@ -84,6 +85,7 @@ describe('AI Economy Parity', () => {
   it('AI scaled income exceeds base for fame-30 tier-3 fight', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       roster: [
         {
@@ -114,6 +116,7 @@ describe('AI Economy Parity', () => {
   it('AI upkeep formula matches player (*15 fame premium)', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       roster: [
         {
@@ -138,6 +141,7 @@ describe('AI Economy Parity', () => {
   it('AI gets Mana Surge income', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     state.weather = 'Mana Surge';
     const rival = makeRival();
 
@@ -150,6 +154,7 @@ describe('AI Economy Parity', () => {
   it('AI gets weather expenses (Sweltering)', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     state.weather = 'Sweltering';
     const rival = makeRival({
       roster: [
@@ -173,6 +178,7 @@ describe('AI Economy Parity', () => {
   it('AI gets weather expenses (Blizzard)', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     state.weather = 'Blizzard';
     const rival = makeRival({
       roster: [
@@ -196,6 +202,7 @@ describe('AI Economy Parity', () => {
   it('AI gets Noble Patronage for famous warriors', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       roster: [
         {
@@ -221,6 +228,7 @@ describe('AI Economy Parity', () => {
   it('AI only pays trainers with active contracts', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       trainers: [
         {
@@ -254,6 +262,7 @@ describe('AI Economy Parity', () => {
   it('AI generates ledger entries after economy tick', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       roster: [
         {
@@ -278,6 +287,7 @@ describe('AI Economy Parity', () => {
   it('AI training cost uses TRAINING_COST (20g) not old 35g', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     const rival = makeRival({
       roster: [
         {
@@ -301,6 +311,7 @@ describe('AI Economy Parity', () => {
   it('AI and player produce identical breakdowns for the same input', () => {
     const state = createFreshState('test');
     state.week = 5;
+    state.absoluteWeek = 5;
     state.weather = 'Clear';
     state.roster = [
       {

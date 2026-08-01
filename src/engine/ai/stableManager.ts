@@ -67,7 +67,7 @@ export function processAIStable(
     roster: updatedRival.roster,
     fame: updatedRival.fame ?? updatedRival.owner.fame ?? 0,
     weather: state.weather,
-    arenaHistory: getFightsForWeek(state.arenaHistory, state.week),
+    arenaHistory: getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
     applyStipend: (state.rivals || []).length <= 45,

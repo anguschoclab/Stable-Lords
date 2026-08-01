@@ -9,6 +9,7 @@ describe('processAIStable', () => {
     // Basic setup
     const state = createFreshState('test');
     state.week = 10;
+    state.absoluteWeek = 10;
 
     // Create a mock rival stable
     const rivalId = 'rival-stable-1' as any;
@@ -66,6 +67,64 @@ describe('processAIStable', () => {
     // Upkeep = 0 (empty roster).
     // So delta should be exactly FIGHT_PURSE + WIN_BONUS.
     // We don't know the exact constants unless we import them, but we know treasury should increase.
+
+    expect(result.updatedRival.treasury).toBeGreaterThan(1000);
+  });
+
+  it('should count fight income at year boundary (week 1, absoluteWeek 53)', () => {
+    const state = createFreshState('boundary');
+    state.week = 1;
+    state.year = 2;
+    state.absoluteWeek = 53;
+
+    const rivalId = 'rival-boundary' as any;
+    const rival: RivalStableData = {
+      id: rivalId,
+      owner: {
+        id: rivalId,
+        name: 'Boundary Owner',
+        stableName: 'Boundary Stable',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
+      fame: 0,
+      roster: [
+        {
+          id: 'warBoundary' as any,
+          name: 'Boundary Warrior',
+          style: FightingStyle.StrikingAttack,
+          fame: 0,
+          status: 'Active',
+          age: 20,
+          injuries: [],
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } as any,
+        } as any,
+      ],
+      treasury: 1000,
+      ledger: [],
+      trainingAssignments: [],
+    };
+
+    const fight: FightSummary = {
+      id: 'fight-boundary' as any,
+      week: 1,
+      absoluteWeek: 53,
+      title: 'Boundary Fight',
+      warriorIdA: 'warBoundary' as any,
+      warriorIdD: 'warOpp' as any,
+      stableIdA: rivalId,
+      stableIdD: 'other-stable' as any,
+      winner: 'A',
+      by: 'KO',
+      styleA: 'BRUTE',
+      styleD: 'AGILE',
+      createdAt: new Date().toISOString(),
+    };
+
+    state.arenaHistory = [fight];
+
+    const result = processAIStable(rival, state);
 
     expect(result.updatedRival.treasury).toBeGreaterThan(1000);
   });

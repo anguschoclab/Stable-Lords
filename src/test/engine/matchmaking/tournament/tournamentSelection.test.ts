@@ -41,6 +41,17 @@ vi.mock('@/engine/tokens/patronTokenService', () => ({
   },
 }));
 
+vi.mock('@/engine/matchmaking/tournament/tournamentStateMutator', () => ({
+  findWarriorById: vi.fn((state: GameState, id: string) => {
+    for (const w of state.roster) if (w.id === id) return w;
+    for (const r of state.rivals || [])
+      for (const w of r.roster) if (w.id === id) return w;
+    for (const t of state.tournaments || [])
+      for (const p of t.participants || []) if (p.id === id) return p;
+    return undefined;
+  }),
+}));
+
 // Import functions under test AFTER mocks are declared
 import {
   awardTournamentPrizes,
@@ -52,6 +63,7 @@ import {
   applyBoutResults,
 } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { getAIPlan, generateFreelancer } from '@/engine/matchmaking/tournamentSelection/utils';
+import { simulateFight } from '@/engine/simulate';
 
 // ─── Helpers ───
 
@@ -1282,5 +1294,52 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
     const updated = resolveCompleteTournament(state, tournament.id, 1);
     expect(updated.tournaments[0]!.completed).toBe(true);
     expect(updated.tournaments[0]!.champion).toBeDefined();
+  });
+});
+
+// ─── deathWeek at year boundary (tournamentSelection/resolution.ts) ─────────────
+
+describe('applyBoutResults — deathWeek at year boundary', () => {
+  it('should set deathWeek to absoluteWeek (not display week) for tournament kills', () => {
+    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.week = 1;
+    state.year = 2;
+    state.absoluteWeek = 53;
+    state.roster = [w1];
+    state.rivals = [
+      {
+        id: RIVAL_ID,
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        roster: [w2],
+        treasury: 500,
+        fame: 0,
+      } as any,
+    ];
+
+    vi.mocked(simulateFight).mockReturnValue({
+      winner: 'A',
+      by: 'Kill',
+      minutes: 1,
+      log: [],
+      exchangeLog: [],
+      post: { tags: [] },
+    } as any);
+
+    const rng = new SeededRNG(42);
+    const outcome = makeFightOutcome('A', 'Kill');
+    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+
+    expect(updated.graveyard.length).toBe(1);
+    expect(updated.graveyard[0]!.deathWeek).toBe(53);
   });
 });

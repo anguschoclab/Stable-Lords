@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -24,8 +25,6 @@ interface PlanStepProps {
   onBack: () => void;
   onNext: () => void;
 }
-
-import { useId } from 'react';
 
 export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }: PlanStepProps) {
   const oeId = useId();

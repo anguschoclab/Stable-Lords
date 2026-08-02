@@ -15,11 +15,13 @@ function insertBounded<T>(
   item: T,
   cmp: (a: T, b: T) => number
 ) {
-  if (arr.length === limit && cmp(item, arr[limit - 1]) >= 0) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  if (arr.length === limit && cmp(item, arr[limit - 1]!) >= 0) {
     return;
   }
   let i = arr.length - 1;
-  while (i >= 0 && cmp(item, arr[i]) < 0) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  while (i >= 0 && cmp(item, arr[i]!) < 0) {
     i--;
   }
   arr.splice(i + 1, 0, item);

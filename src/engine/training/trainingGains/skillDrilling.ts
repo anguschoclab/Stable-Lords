@@ -10,6 +10,7 @@ import {
   SKILL_TRAINER_FOCUS,
 } from './constants';
 import type { TrainingResult } from './types';
+import { clamp } from '@/utils/math';
 
 /**
  *
@@ -36,7 +37,7 @@ export function computeSkillDrillChance(
   // Diminishing returns: each point already drilled halves the marginal gain chance.
   const dr = Math.pow(0.6, current);
   const raw = (SKILL_DRILL_BASE_CHANCE + trainerBonus * 0.04 + wtBonus - agePenalty) * dr;
-  return Math.max(SKILL_DRILL_GAIN_MIN, Math.min(SKILL_DRILL_GAIN_MAX, raw));
+  return clamp(raw, SKILL_DRILL_GAIN_MIN, SKILL_DRILL_GAIN_MAX);
 }
 
 /**

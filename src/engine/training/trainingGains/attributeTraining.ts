@@ -15,6 +15,7 @@ import {
   TOTAL_CAP,
 } from './constants';
 import type { TrainingResult } from './types';
+import { clamp } from '@/utils/math';
 
 /**
  *
@@ -34,7 +35,7 @@ export function computeGainChance(
   const drFactor = diminishingReturnsFactor(warrior.attributes[attribute], potentialVal);
 
   const raw = (BASE_GAIN_CHANCE + trainerBonus + wtBonus - agePenalty - injuryPenalty) * drFactor;
-  return Math.max(GAIN_CHANCE_MIN, Math.min(GAIN_CHANCE_MAX, raw));
+  return clamp(raw, GAIN_CHANCE_MIN, GAIN_CHANCE_MAX);
 }
 
 /**

@@ -3,6 +3,7 @@ import type { GameState } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import type { DerivedRivalry } from '@/types/rivalry.types';
+import { clamp } from '@/utils/math';
 
 type RivalryStateSlice = Pick<
   GameState,
@@ -117,7 +118,7 @@ export function useRivalriesList(
       let intensity = 0;
       intensity += Math.min(r.kills.length * 2, 4);
       intensity += r.bouts >= 5 ? 1 : 0;
-      r.intensity = Math.max(1, Math.min(5, intensity));
+      r.intensity = clamp(intensity, 1, 5);
       result.push(r);
     }
 

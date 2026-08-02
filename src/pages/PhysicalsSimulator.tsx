@@ -9,13 +9,14 @@ import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { FighterConfigCard, type FighterStats } from '@/components/stable/FighterConfigCard';
 import { SimulatorResults } from '@/components/stable/SimulatorResults';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Physicals simulator.
  */
 export default function PhysicalsSimulator() {
   const roster = useGameStore((s) => s.roster);
-  const activeWarriors = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
+  const activeWarriors = useMemo(() => roster.filter((w) => isActive(w)), [roster]);
 
   const [styleA, setStyleA] = useState<FightingStyle>(FightingStyle.BashingAttack);
   const [styleB, setStyleB] = useState<FightingStyle>(FightingStyle.ParryRiposte);

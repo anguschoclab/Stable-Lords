@@ -1,6 +1,7 @@
 import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { Promoter } from '@/types/state.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
+import { isActive } from '@/engine/warriorStatus';
 
 const TIER_RANK: Record<string, number> = {
   Local: 0,
@@ -87,7 +88,7 @@ export function filterAndSortOffers(
   const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));
   const idle: Warrior[] = [];
   for (const w of roster) {
-    if (w.status === 'Active' && !warriorsWithOffers.has(w.id)) {
+    if (isActive(w) && !warriorsWithOffers.has(w.id)) {
       idle.push(w);
     }
   }

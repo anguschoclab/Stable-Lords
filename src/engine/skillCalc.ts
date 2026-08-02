@@ -13,6 +13,7 @@
 import { type Attributes } from '@/types/shared.types';
 import { FightingStyle, type BaseSkills, type DerivedStats } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { clamp } from '@/utils/math';
 import {
   computeHP as canonicalHP,
   computeDamageClass,
@@ -255,7 +256,7 @@ const SZ_PAR_MOD: Record<number, number> = {
 const SZ_DEF_MOD = SZ_PAR_MOD; // Identical
 
 function szMod(table: Record<number, number>, sz: number): number {
-  return table[Math.max(3, Math.min(21, sz))] ?? 0;
+  return table[clamp(sz, 3, 21)] ?? 0;
 }
 
 // ─── Style Penalty Table ──────────────────────────────────────────────────
@@ -323,12 +324,12 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
   const DEC_raw = bp(WT_DEC, WT) + bp(WL_DEC, WL) + bp(SP_DEC, SP) + pen[5];
 
   return {
-    ATT: Math.max(1, Math.min(20, ATT_raw)),
-    PAR: Math.max(1, Math.min(20, PAR_raw)),
-    DEF: Math.max(1, Math.min(20, DEF_raw)),
-    INI: Math.max(1, Math.min(20, INI_raw)),
-    RIP: Math.max(1, Math.min(20, RIP_raw)),
-    DEC: Math.max(1, Math.min(20, DEC_raw)),
+    ATT: clamp(ATT_raw, 1, 20),
+    PAR: clamp(PAR_raw, 1, 20),
+    DEF: clamp(DEF_raw, 1, 20),
+    INI: clamp(INI_raw, 1, 20),
+    RIP: clamp(RIP_raw, 1, 20),
+    DEC: clamp(DEC_raw, 1, 20),
   };
 }
 

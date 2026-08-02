@@ -5,7 +5,8 @@ import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
 /**
- *
+ * Creates roster-related actions for the game store, including managing warriors,
+ * insight tokens, equipment, and death acknowledgements.
  */
 export function createRosterActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {

@@ -1,6 +1,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData } from '@/types/state.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
+import { isActive } from '@/engine/warriorStatus';
 
 // ─── Utility ────────────────────────────────────────────────────────────────
 
@@ -44,13 +45,13 @@ function collectActiveWarriorEntries(
 ): ArenaLeaderboardEntry[] {
   const entries: ArenaLeaderboardEntry[] = [];
   for (const w of playerRoster) {
-    if (w.status === 'Active' && !w.isDead) {
+    if (isActive(w) && !w.isDead) {
       entries.push({ warrior: w, stableName: playerStableName, isPlayer: true });
     }
   }
   for (const r of rivals ?? []) {
     for (const w of r.roster) {
-      if (w.status === 'Active' && !w.isDead) {
+      if (isActive(w) && !w.isDead) {
         entries.push({ warrior: w, stableName: r.owner.stableName, isPlayer: false });
       }
     }

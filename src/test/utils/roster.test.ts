@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildWarriorMap,
+  buildActiveWarriorMap,
   updateRoster,
   removeFromRoster,
   filterActive,
@@ -42,7 +42,7 @@ describe('buildWarriorMap', () => {
       ],
       rivals: [],
     };
-    const map = buildWarriorMap(state as GameState);
+    const map = buildActiveWarriorMap(state as GameState);
     expect(map.size).toBe(2);
     expect(map.get('w1')).toBeDefined();
     expect(map.get('w2')).toBeDefined();
@@ -67,7 +67,7 @@ describe('buildWarriorMap', () => {
         } as any,
       ]!,
     };
-    const map = buildWarriorMap(state as GameState);
+    const map = buildActiveWarriorMap(state as GameState);
     expect(map.size).toBe(1);
     expect(map.get('w1')).toBeDefined();
   });
@@ -91,7 +91,7 @@ describe('buildWarriorMap', () => {
         } as any,
       ]!,
     };
-    const map = buildWarriorMap(state as GameState);
+    const map = buildActiveWarriorMap(state as GameState);
     expect(map.size).toBe(2);
     expect(map.get('w1')).toBeDefined();
     expect(map.get('w2')).toBeDefined();

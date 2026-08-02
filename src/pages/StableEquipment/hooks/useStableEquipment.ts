@@ -4,6 +4,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
 import { toast } from 'sonner';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  *
@@ -12,7 +13,7 @@ export function useStableEquipment() {
   const { roster, updateWarriorEquipment } = useGameStore(
     useShallow((s) => ({ roster: s.roster, updateWarriorEquipment: s.updateWarriorEquipment }))
   );
-  const activeWarriors = roster.filter((w) => w.status === 'Active');
+  const activeWarriors = roster.filter((w) => isActive(w));
 
   const [selectedStyle, setSelectedStyle] = useState<FightingStyle>(
     activeWarriors[0]?.style ?? FightingStyle.StrikingAttack

@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { StableCrest } from '@/components/crest';
+import { isActive } from '@/engine/warriorStatus';
 
 interface StableDossierProps {
   stableId?: string;
@@ -118,7 +119,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
                 Roster
               </div>
               <div className="text-xl font-display font-black text-primary">
-                {stable.roster.filter((w) => w.status === 'Active').length}
+                {stable.roster.filter((w) => isActive(w)).length}
               </div>
             </CardContent>
           </Card>
@@ -131,7 +132,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
           </h3>
           <div className="grid gap-2">
             {stable.roster
-              .filter((w) => w.status === 'Active')
+              .filter((w) => isActive(w))
               .map((w) => (
                 <div
                   key={w.id}

@@ -16,6 +16,7 @@ import { getInjuryPenalties } from '@/engine/injuries';
 import { applyLuckfactor } from '@/engine/skillCalc';
 import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { type FighterState } from '../combat/resolution/types';
+import { clamp } from '@/utils/math';
 
 /**
  * Calculates attribute and skill modifiers provided by a list of active trainers.
@@ -151,8 +152,8 @@ export function createFighterState(
   // plan each exchange) doesn't silently erase personality-driven behaviour.
   const aiMods = getTraitFightPlanMods(warrior);
   const traitPlan = { ...plan };
-  if (aiMods.OE != null) traitPlan.OE = Math.max(0, Math.min(10, traitPlan.OE + aiMods.OE));
-  if (aiMods.AL != null) traitPlan.AL = Math.max(0, Math.min(10, traitPlan.AL + aiMods.AL));
+  if (aiMods.OE != null) traitPlan.OE = clamp(traitPlan.OE + aiMods.OE, 0, 10);
+  if (aiMods.AL != null) traitPlan.AL = clamp(traitPlan.AL + aiMods.AL, 0, 10);
   if (aiMods.killDesire != null)
     traitPlan.killDesire = Math.max(
       0,

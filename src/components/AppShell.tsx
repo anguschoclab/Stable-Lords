@@ -15,6 +15,7 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';
 import { ResultsBanner } from '@/components/layout/ResultsBanner';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
+import { isActive } from '@/engine/warriorStatus';
 
 // ─── Loading Overlay Component ─────────────────────────────────────────────
 
@@ -125,7 +126,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const exemptPaths = ['/welcome', '/stable/', '/admin', '/help'];
     if (exemptPaths.some((p) => activePath.startsWith(p))) return;
 
-    if (roster.filter((w) => w.status === 'Active').length < 3) {
+    if (roster.filter((w) => isActive(w)).length < 3) {
       navigate({ to: '/welcome' });
     }
   }, [roster, activePath, navigate]);

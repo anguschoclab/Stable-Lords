@@ -33,6 +33,7 @@ import {
 } from '@/engine/training/trainingGains/traitCapacity';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import type { Trainer } from '@/types/shared.types';
+import { isActive } from '@/engine/warriorStatus';
 import {
   ATTRIBUTE_KEYS,
   ATTRIBUTE_MAX,
@@ -54,7 +55,7 @@ export function processRoster(
   const rngService = rng || new SeededRNGService(seed ?? currentWeek * 7919 + 101);
   let updatedRival = { ...rival };
   let seasonalGrowth: SeasonalGrowth[] = updatedRival.seasonalGrowth ?? [];
-  const activeRoster = updatedRival.roster.filter((w) => w.status === 'Active');
+  const activeRoster = updatedRival.roster.filter((w) => isActive(w));
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
 
   // 0. Recovery — tick injuries for all active wounded warriors, applying any
@@ -185,7 +186,7 @@ export function processRoster(
   // 2. Equipment (High Risk)
   // Champions always get gear consideration regardless of intent (treasury gate only).
   // activeForGear is derived fresh (post-training) so gear candidates reflect current state.
-  const activeForGear = updatedRival.roster.filter((w) => w.status === 'Active');
+  const activeForGear = updatedRival.roster.filter((w) => isActive(w));
   const champWarrior = activeForGear.find((w) => w.champion);
   if (champWarrior && updatedRival.treasury > 800) {
     const gearCost = 150;

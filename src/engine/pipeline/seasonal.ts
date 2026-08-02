@@ -14,6 +14,7 @@ import type { InsightToken } from '@/types/state.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Stable Lords — Seasonal Pipeline Pass (Offseason)
@@ -86,7 +87,7 @@ interface OffseasonEventContext {
 /** Active warriors, optionally restricted to those carrying no injuries. */
 function getActiveWarriors(state: GameState, healthyOnly = false): Warrior[] {
   return state.roster.filter(
-    (w) => w.status === 'Active' && (!healthyOnly || !w.injuries || w.injuries.length === 0)
+    (w) => isActive(w) && (!healthyOnly || !w.injuries || w.injuries.length === 0)
   );
 }
 
@@ -443,7 +444,7 @@ function handleWanderingHealer(
   addLedger(ctx, rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep');
 
   const activeInjured = state.roster.filter(
-    (w) => w.status === 'Active' && w.injuries && w.injuries.length > 0
+    (w) => isActive(w) && w.injuries && w.injuries.length > 0
   );
 
   const chosen = activeInjured.length > 0 ? rng.pick(activeInjured) : null;

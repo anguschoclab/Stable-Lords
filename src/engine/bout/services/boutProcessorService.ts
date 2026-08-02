@@ -23,7 +23,7 @@ import { handleReporting } from '../reportingHandler';
 import { generatePairings } from '../core/pairings';
 import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
-import { buildWarriorMap } from '@/utils/roster';
+import { buildActiveWarriorMap } from '@/utils/roster';
 import { getPairKey } from '@/utils/keyUtils';
 
 import { isFightReady } from '@/engine/warriorStatus';
@@ -360,7 +360,7 @@ export function processWeekBouts(
   results: BoutResult[];
   summary: WeekBoutSummary;
 } {
-  const warriorMap = state.warriorMap || buildWarriorMap(state);
+  const warriorMap = state.warriorMap || buildActiveWarriorMap(state);
 
   // Minimum Viable Arena: skip combat phase if fewer than 2 eligible warriors
   // exist across all stables. Economy, training, and aging still proceed.

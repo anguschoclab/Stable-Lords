@@ -433,7 +433,8 @@ export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[
 }
 
 /**
- *
+ * Returns the mechanical weather effect modifiers for a given weather type.
+ * Falls back to Clear (neutral) for unknown weather.
  */
 export function getWeatherEffect(weather: WeatherType): WeatherEffect {
   return WEATHER_EFFECTS[weather] ?? WEATHER_EFFECTS['Clear'];

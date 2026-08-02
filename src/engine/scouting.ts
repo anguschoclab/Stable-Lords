@@ -53,8 +53,8 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
   Detailed: 50,
   Expert: 100,
 }; /**
- * Get scout cost.
- */
+    * Get scout cost.
+    */
 
 /**
  * Get scout cost.
@@ -64,7 +64,7 @@ export function getScoutCost(quality: ScoutQuality): number {
 }
 
 /** Converts a numerical stat into a qualitative text description */
-export function getAttributeDescription(value: number): string {
+function getAttributeDescription(value: number): string {
   if (value <= 5) return 'Pathetic';
   if (value <= 8) return 'Weak';
   if (value <= 11) return 'Average';
@@ -75,7 +75,7 @@ export function getAttributeDescription(value: number): string {
 }
 
 /** Converts a stat range into a textual description */
-export function getAttributeRangeDescription(low: number, high: number): string {
+function getAttributeRangeDescription(low: number, high: number): string {
   const lowDesc = getAttributeDescription(low);
   const highDesc = getAttributeDescription(high);
 

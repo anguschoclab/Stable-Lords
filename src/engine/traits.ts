@@ -108,7 +108,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'ashen_ward_survivor',
     name: 'Ashen Ward Survivor',
     description: 'Hardened by the brutal orphanages, gains endurance and damage reduction when health is low.',
-    effect: { defModLate: 1, enduranceMult: 1.1 },
+    effect: { defModLate: 1, enduranceMult: 0.9 },
     sign: 'positive',
     tier: 'Notable',
     weight: 1

@@ -69,7 +69,7 @@ describe('WorldSlice', () => {
 
   it('should update bout offer status', () => {
     act(() => {
-      useTestStore.setState({ boutOffers: { 'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2', responses: {}, warriorIds: ['w1'] } as any } });
+      useTestStore.setState({ boutOffers: { 'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any } });
       useTestStore.getState().updateBoutOfferStatus('o1' as any, 'Accepted');
     });
     expect(useTestStore.getState().boutOffers['o1']?.status).toBe('Accepted');
@@ -91,7 +91,7 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         absoluteWeek: 5,
         boutOffers: {
-          'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2', responses: {}, warriorIds: ['w1'] } as any,
+          'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
           'o2': { id: 'o2', status: 'Proposed', week: 4, expirationWeek: 6, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
           'o3': { id: 'o3', status: 'Accepted', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
         }
@@ -225,13 +225,11 @@ describe('WorldSlice', () => {
     expect(promoters['p2']).toEqual(newPromoter);
   });
 
-
   it('should call updatePromoterHistory', () => {
     act(() => {
       useTestStore.setState({ promoters: { 'p1': { id: 'p1', history: { totalPursePaid: 0, notableBouts: [] } } as any } });
       useTestStore.getState().updatePromoterHistory('p1' as any, 100, 'f1' as any);
     });
-    // Asserting the engine function updated the state appropriately.
     expect(useTestStore.getState().promoters['p1']?.history.totalPursePaid).toBe(100);
     expect(useTestStore.getState().promoters['p1']?.history.notableBouts).toHaveLength(1);
   });
@@ -257,17 +255,14 @@ describe('WorldSlice', () => {
     expect(useTestStore.getState().boutOffers).toEqual({});
   });
 
-
   it('should call respondToBoutOffer', () => {
     act(() => {
       useTestStore.setState({ boutOffers: { 'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2', responses: {}, warriorIds: ['w1'] } as any } });
       useTestStore.getState().respondToBoutOffer('o1' as any, 'w1' as any, 'Accepted');
     });
-    // Validating the actual state update from the engine function.
     expect(useTestStore.getState().boutOffers['o1']?.responses['w1']).toBe('Accepted');
     expect(useTestStore.getState().boutOffers['o1']?.status).toBe('Signed');
   });
-
 
   it('should update player warrior status safely when fields are missing', () => {
     act(() => {
@@ -301,7 +296,6 @@ describe('WorldSlice', () => {
     expect(w.career?.kills).toBe(0);
   });
 
-
   it('should not throw if updateWarriorStatus targets non-existent rival stable', () => {
     act(() => {
       useTestStore.setState({ rivals: [] });
@@ -318,10 +312,8 @@ describe('WorldSlice', () => {
     expect(useTestStore.getState().rivals[0]!.roster).toEqual([]);
   });
 
-
   it('should not throw if f.transcript is undefined in appendFight', () => {
     act(() => {
-      // 21 items to trigger truncate logic
       useTestStore.setState({ arenaHistory: Array(21).fill({ id: 'f0' }) });
       useTestStore.getState().appendFight({ id: 'f1' } as any);
     });

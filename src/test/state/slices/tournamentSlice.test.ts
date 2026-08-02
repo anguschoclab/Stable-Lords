@@ -28,13 +28,14 @@ describe('TournamentSlice', () => {
     const tournaments: TournamentEntry[] = [
       {
         id: 't1' as import('@/types/shared.types').TournamentId,
-        tier: 1,
         week: 10,
         participants: [],
-        prize: 1000,
-        format: 'single-elimination',
-        region: 'Capital',
-      }
+        season: 'Spring',
+        tierId: 'Amateur',
+        name: 'Mock',
+        bracket: [],
+        completed: false
+      } as any
     ];
 
     act(() => {

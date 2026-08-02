@@ -215,7 +215,6 @@ describe('RosterSlice', () => {
     expect(useTestStore.getState().insightTokens).toHaveLength(1);
   });
 
-
   it('should update warrior equipment correctly', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);

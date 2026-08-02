@@ -107,38 +107,8 @@ describe('idUtils', () => {
     });
   });
 
-  describe('generateId crypto undefined check', () => {
-    it('uses fallback crypto if globalThis.crypto is undefined', () => {
-      // By overriding globalThis.crypto we check the typeof crypto check
-      const originalCrypto = globalThis.crypto;
-      let usedGlobalThis = false;
-      let usedCrypto = false;
-
-      Object.defineProperty(globalThis, 'crypto', {
-        value: undefined,
-        writable: true,
-        configurable: true,
-      });
-
-      // Node's environment has crypto defined if imported, but we mock the global behavior.
-      // Assuming 'crypto' is undefined in the test env too without an import, this will throw.
-      // But if there's a fallback window.crypto in jsdom, we might hit it.
-      // Our goal is just to hit the branches where globalThis is used or not.
-
-      try { generateId(); } catch (e) {}
-
-      Object.defineProperty(globalThis, 'crypto', {
-        value: originalCrypto,
-        writable: true,
-        configurable: true,
-      });
-    });
-  });
-
-
   describe('generateId crypto checks', () => {
     it('uses fallback when globalThis is undefined', () => {
-      const originalGlobalThis = globalThis;
       // We can't actually undefine globalThis in the test runner safely,
       // but we can check the cryptoObj fallback when getRandomValues isn't there
       const originalCrypto = globalThis.crypto;
@@ -157,7 +127,5 @@ describe('idUtils', () => {
       });
     });
   });
-
-
 
 });

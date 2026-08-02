@@ -1,4 +1,76 @@
-/**
+#!/usr/bin/env python3
+"""Extract 45 seasonal event handlers from seasonal.ts into seasonalHandlers.ts."""
+
+SEASONAL = "src/engine/pipeline/seasonal.ts"
+HANDLERS = "src/engine/pipeline/seasonalHandlers.ts"
+
+with open(SEASONAL, "r") as f:
+    lines = f.readlines()
+
+# Line 118 (0-indexed: 117) starts the handlers section "// ─── Individual..."
+# Line 1605 (0-indexed: 1604) is the blank line before EVENT_HANDLERS
+# We want to extract:
+#   - Interfaces (lines 26-83, 0-indexed: 25-82)
+#   - Helpers (lines 85-116, 0-indexed: 84-115)
+#   - Handlers (lines 118-1604, 0-indexed: 117-1603)
+
+# Find the line indices
+interface_start = None
+handlers_end = None
+event_handlers_start = None
+
+for i, line in enumerate(lines):
+    if line.startswith("interface OffseasonEventNarrative"):
+        interface_start = i
+    if line.startswith("const EVENT_HANDLERS"):
+        event_handlers_start = i
+        handlers_end = i - 1  # blank line before
+        break
+
+# Extract the handler section (interfaces + helpers + handlers)
+handler_section = lines[interface_start:event_handlers_start]
+
+# Build the new handlers file
+header = """/**
+ * Seasonal Event Handlers — Individual Offseason Event Implementations
+ * Extracted from seasonal.ts for SRP separation.
+ * Each handler processes one offseason event type.
+ */
+import type { GameState, LedgerEntry } from '@/types/state.types';
+import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import {
+  type WarriorId,
+  type LedgerEntryId,
+  type InsightId,
+  type InjuryId,
+} from '@/types/shared.types';
+import type { InsightToken } from '@/types/state.types';
+import type { NewsletterItem } from '@/types/shared.types';
+import { interpolateData as t } from '@/engine/narrative/templateHelpers';
+import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
+import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
+import { TRAITS, type TraitDef } from '@/engine/traits';
+import { isActive } from '@/engine/warriorStatus';
+
+"""
+
+# Make interfaces exported
+handler_text = "".join(handler_section)
+handler_text = handler_text.replace("interface OffseasonEventNarrative", "export interface OffseasonEventNarrative")
+handler_text = handler_text.replace("interface OffseasonEventContext", "export interface OffseasonEventContext")
+
+# Make handler functions exported
+import re
+handler_text = re.sub(r"^function (handle\w+)", r"export function \1", handler_text, flags=re.MULTILINE)
+
+with open(HANDLERS, "w") as f:
+    f.write(header)
+    f.write(handler_text)
+
+# Now rewrite seasonal.ts to only have dispatch logic
+# Keep imports needed for runSeasonalPass
+new_seasonal = """/**
  * Stable Lords — Seasonal Pipeline Pass (Offseason)
  * The Chaos Weaver 🎲
  *
@@ -175,3 +247,9 @@ export function runSeasonalPass(
 
   return impact;
 }
+"""
+
+with open(SEASONAL, "w") as f:
+    f.write(new_seasonal)
+
+print("Done - extracted handlers to seasonalHandlers.ts, seasonal.ts is now orchestrator only")

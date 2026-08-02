@@ -72,10 +72,11 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
 
               <div className="space-y-2">
                 <div className="flex justify-between text-[9px] uppercase font-bold text-muted-foreground/60">
-                  <span>OE</span>
+                  <Label htmlFor={`phase-${p}-oe`}>OE</Label>
                   <span>{plan.phases?.[p]?.OE ?? plan.OE}</span>
                 </div>
                 <Slider
+                  id={`phase-${p}-oe`}
                   value={[plan.phases?.[p]?.OE ?? plan.OE]}
                   onValueChange={([v]) => {
                     const next = { ...(plan.phases || {}) };

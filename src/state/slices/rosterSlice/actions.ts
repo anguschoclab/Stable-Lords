@@ -2,6 +2,7 @@ import type { GameStore } from '@/state/useGameStore';
 import { Warrior, InsightToken } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+import { formatWeek } from '@/utils/format';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
 /**
@@ -32,7 +33,7 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
           killedBy,
           deathEvent,
           isDead: true,
-          dateOfDeath: `Week ${state.week}, ${state.season}`,
+          dateOfDeath: formatWeek(state.week, state.season),
           causeOfDeath: cause,
         };
 

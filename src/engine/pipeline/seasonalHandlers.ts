@@ -3,20 +3,19 @@
  * Extracted from seasonal.ts for SRP separation.
  * Each handler processes one offseason event type.
  */
-import type { GameState, LedgerEntry } from '@/types/state.types';
-import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { GameState, LedgerEntry, InsightToken } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import {
   type WarriorId,
   type LedgerEntryId,
-  type InsightId,
-  type InjuryId,
 } from '@/types/shared.types';
-import type { InsightToken } from '@/types/state.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
+import { makeInjury } from '@/engine/injuries/utils';
+import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
 import { isActive } from '@/engine/warriorStatus';
 
@@ -90,28 +89,6 @@ function getActiveWarriors(state: GameState, healthyOnly = false): Warrior[] {
   );
 }
 
-/** Builds a minor/random-duration injury. Consumes one uuid then one next(). */
-function makeInjury(
-  rng: IRNGService,
-  params: {
-    name: string;
-    description: string;
-    severity: InjuryData['severity'];
-    weeksBase: number;
-    weeksRange: number;
-    penalties: InjuryData['penalties'];
-  }
-): InjuryData {
-  return {
-    id: rng.uuid('injury') as InjuryId,
-    name: params.name,
-    description: params.description,
-    severity: params.severity,
-    weeksRemaining: params.weeksBase + Math.floor(rng.next() * params.weeksRange),
-    penalties: params.penalties,
-  };
-}
-
 // ─── Individual Offseason Event Handlers ───
 
 export function handleChaosRift(
@@ -137,15 +114,7 @@ export function handleChaosRift(
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Style' as InsightToken['type'],
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Touched the raw essence of the Chaos Rift.',
-        origin: 'Chaos Rift',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Touched the raw essence of the Chaos Rift.', origin: 'Chaos Rift', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -217,16 +186,7 @@ export function handleEpiphany(
       xp: (chosen.xp || 0) + 15,
     });
 
-    ctx.insightTokens.push({
-      id: rng.uuid('insight') as InsightId,
-      type: 'Attribute',
-      targetKey: 'ST',
-      warriorId: chosen.id,
-      warriorName: chosen.name,
-      detail: 'Discovered a hidden reserve of strength during offseason meditation.',
-      origin: 'Epiphany',
-      discoveredWeek: nextWeek,
-    });
+    ctx.insightTokens.push(makeInsightToken(rng, { type: 'Attribute', targetKey: 'ST', warriorId: chosen.id, warriorName: chosen.name, detail: 'Discovered a hidden reserve of strength during offseason meditation.', origin: 'Epiphany', discoveredWeek: nextWeek }));
 
     pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name });
   }
@@ -252,15 +212,7 @@ export function handleShadowMarketRun(
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden technique at the Shadow Market.',
-        origin: 'Shadow Market',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Discovered a hidden technique at the Shadow Market.', origin: 'Shadow Market', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -819,15 +771,7 @@ export function handleDreamweaverVisit(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Style' as InsightToken['type'],
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Dreamweaver vision revealed hidden stylistic knowledge.',
-        origin: 'Dreamweaver',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Dreamweaver vision revealed hidden stylistic knowledge.', origin: 'Dreamweaver', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -945,15 +889,7 @@ export function handleFeyTrickster(
         ctx.rosterUpdates.set(chosen.id, {
           xp: (chosen.xp || 0) + xpGained,
         });
-        ctx.insightTokens.push({
-          id: rng.uuid('insight') as InsightId,
-          type: 'Style' as InsightToken['type'],
-          warriorId: chosen.id,
-          warriorName: chosen.name,
-          detail: 'A fey trickster taught them an impossible maneuver.',
-          origin: 'Fey Trickster',
-          discoveredWeek: nextWeek,
-        });
+        ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'A fey trickster taught them an impossible maneuver.', origin: 'Fey Trickster', discoveredWeek: nextWeek }));
         effectMsg = `They solved the riddle! They gain strange insights. (+${xpGained} XP, Insight Gained)`;
       } else {
         // Tricked
@@ -1081,15 +1017,7 @@ export function handleWanderingFortuneTeller(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden rhythm in their fighting style.',
-        origin: 'Wandering Fortune Teller',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Discovered a hidden rhythm in their fighting style.', origin: 'Wandering Fortune Teller', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -1203,15 +1131,7 @@ export function handleChaosWeaverVisit(
           traits: [...currentTraits, grantedTrait.id],
         });
 
-        ctx.insightTokens.push({
-          id: rng.uuid('insight') as InsightId,
-          type: 'Style' as InsightToken['type'],
-          warriorId: chosen.id,
-          warriorName: chosen.name,
-          detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
-          origin: 'Chaos Weaver',
-          discoveredWeek: nextWeek,
-        });
+        ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`, origin: 'Chaos Weaver', discoveredWeek: nextWeek }));
 
         pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
           name: chosen.name,
@@ -1294,15 +1214,7 @@ export function handleMidnightMarket(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Tactic',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Whispers from the Midnight Market revealed a new tactic.',
-        origin: 'Midnight Market',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Tactic', warriorId: chosen.id, warriorName: chosen.name, detail: 'Whispers from the Midnight Market revealed a new tactic.', origin: 'Midnight Market', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -1514,15 +1426,7 @@ export function handleChaosWeaversGift(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Tactic',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'A chaotic revelation sparked a new combat tactic.',
-        origin: 'Chaos Weaver',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Tactic', warriorId: chosen.id, warriorName: chosen.name, detail: 'A chaotic revelation sparked a new combat tactic.', origin: 'Chaos Weaver', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -1556,15 +1460,7 @@ export function handleTemporalAnomaly(
         traits: newTraits,
       });
 
-      ctx.insightTokens.push({
-        id: rng.uuid('insight') as InsightId,
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.',
-        origin: 'Temporal Anomaly',
-        discoveredWeek: nextWeek,
-      });
+      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.', origin: 'Temporal Anomaly', discoveredWeek: nextWeek }));
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,

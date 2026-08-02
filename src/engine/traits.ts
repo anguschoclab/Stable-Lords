@@ -108,7 +108,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'ashen_ward_survivor',
     name: 'Ashen Ward Survivor',
     description: 'Hardened by the brutal orphanages, gains endurance and damage reduction when health is low.',
-    effect: { defModLate: 1, hpMod: 2 },
+    effect: { defModLate: 1, enduranceMult: 1.1 },
     sign: 'positive',
     tier: 'Notable',
     weight: 1
@@ -117,7 +117,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'blackbriar_alumnus',
     name: 'Blackbriar Alumnus',
     description: 'Learned ruthless strikes from the matrons. Bonus attack in early rounds.',
-    effect: { attModEarly: 1, damageMod: 1 },
+    effect: { attModEarly: 1, dmgBonus: 1 },
     sign: 'positive',
     tier: 'Notable',
     weight: 1

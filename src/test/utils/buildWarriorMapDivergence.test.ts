@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { buildActiveWarriorMap as buildWarriorMapRoster } from '@/utils/roster';
-import { buildWarriorMap as buildWarriorMapCollection } from '@/utils/warriorCollection';
+import { buildWarriorMap as buildWarriorMapCollection } from '@/engine/core/warriorCollection';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 

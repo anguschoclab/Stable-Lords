@@ -13,6 +13,8 @@ import {
 import type { InsightToken } from '@/types/state.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
+import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
+import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
 import { isActive } from '@/engine/warriorStatus';
 
@@ -113,45 +115,6 @@ function makeInjury(
   };
 }
 
-/** Appends a treasury ledger entry. Consumes one uuid. */
-function addLedger(
-  ctx: OffseasonEventContext,
-  rng: IRNGService,
-  nextWeek: number,
-  label: string,
-  amount: number,
-  category: LedgerEntry['category']
-): void {
-  ctx.ledgerEntries.push({
-    id: rng.uuid('ledger') as LedgerEntryId,
-    week: nextWeek,
-    label,
-    amount,
-    category,
-  });
-}
-
-/**
- * Appends a newsletter item using a randomly-picked template line.
- * Consumes one uuid then one pick — matching the inlined object-literal order.
- */
-function pushNarrative(
-  ctx: OffseasonEventContext,
-  rng: IRNGService,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  data: Record<string, string | number>
-): void {
-  const id = rng.uuid('newsletter');
-  const template = rng.pick(e.newsletter) || '';
-  ctx.newsletterItems.push({
-    id,
-    week: nextWeek,
-    title: e.title,
-    items: [t(template, data)],
-  });
-}
-
 // ─── Individual Offseason Event Handlers ───
 
 function handleChaosRift(
@@ -170,7 +133,7 @@ function handleChaosRift(
       const goldGained = 150;
 
       ctx.treasuryDelta += goldGained;
-      addLedger(ctx, rng, nextWeek, 'Sold Chaos Crystal', goldGained, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Sold Chaos Crystal', goldGained, 'other'));
 
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,
@@ -187,7 +150,7 @@ function handleChaosRift(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
         fame: fameGained,
@@ -210,7 +173,7 @@ function handleFameBoost(
     ctx.rosterUpdates.set(chosen.id, {
       fame: (chosen.fame || 0) + 25,
     });
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, fame: 25 });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 25 });
   }
 }
 
@@ -223,8 +186,8 @@ function handleWinterChill(
 ) {
   const cost = 150 + Math.floor(rng.next() * 100);
   ctx.treasuryDelta -= cost;
-  addLedger(ctx, rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other');
-  pushNarrative(ctx, rng, nextWeek, e, { gold: cost });
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other'));
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: cost });
 }
 
 function handleMerchantBlessing(
@@ -236,8 +199,8 @@ function handleMerchantBlessing(
 ) {
   const gold = 200 + Math.floor(rng.next() * 200);
   ctx.treasuryDelta += gold;
-  addLedger(ctx, rng, nextWeek, 'Offseason Sponsorship', gold, 'other');
-  pushNarrative(ctx, rng, nextWeek, e, { gold });
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Offseason Sponsorship', gold, 'other'));
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
 }
 
 function handleEpiphany(
@@ -268,7 +231,7 @@ function handleEpiphany(
       discoveredWeek: nextWeek,
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name });
   }
 }
 
@@ -285,7 +248,7 @@ function handleShadowMarketRun(
     if (chosen) {
       const cost = 25 + Math.floor(rng.next() * 26);
       ctx.treasuryDelta -= cost;
-      addLedger(ctx, rng, nextWeek, 'Shadow Market Excursion', -cost, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Shadow Market Excursion', -cost, 'other'));
 
       const fameGained = 15;
       ctx.rosterUpdates.set(chosen.id, {
@@ -302,7 +265,7 @@ function handleShadowMarketRun(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         gold: cost,
         fame: fameGained,
@@ -338,7 +301,7 @@ function handleTavernBrawl(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
   }
 }
 
@@ -357,7 +320,7 @@ function handleBardsSong(
     ctx.rosterUpdates.set(chosen.id, {
       fame: (chosen.fame || 0) + fameGained,
     });
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
   }
 }
 
@@ -388,7 +351,7 @@ function handlePlagueOutbreak(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, fame: fameLost });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameLost });
   }
 }
 
@@ -402,10 +365,10 @@ function handleBlackMarketRaid(
   const activeWarriors = getActiveWarriors(state);
   const goldLost = 50 + Math.floor(rng.next() * 101);
   ctx.treasuryDelta -= goldLost;
-  addLedger(ctx, rng, nextWeek, 'Black Market Fines', -goldLost, 'other');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Black Market Fines', -goldLost, 'other'));
 
   const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
-  pushNarrative(ctx, rng, nextWeek, e, {
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
     name: chosen ? chosen.name : 'Someone',
     gold: goldLost,
   });
@@ -420,7 +383,7 @@ function handleGrandFeast(
 ) {
   const goldCost = 200 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta -= goldCost;
-  addLedger(ctx, rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other'));
 
   const activeWarriors = getActiveWarriors(state);
   for (const w of activeWarriors) {
@@ -429,7 +392,7 @@ function handleGrandFeast(
     });
   }
 
-  pushNarrative(ctx, rng, nextWeek, e, { gold: goldCost });
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldCost });
 }
 
 function handleWanderingHealer(
@@ -441,7 +404,7 @@ function handleWanderingHealer(
 ) {
   const goldCost = 50 + Math.floor(rng.next() * 51);
   ctx.treasuryDelta -= goldCost;
-  addLedger(ctx, rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep'));
 
   const activeInjured = state.roster.filter(
     (w) => isActive(w) && w.injuries && w.injuries.length > 0
@@ -491,7 +454,7 @@ function handleMysticVision(
       fame: (chosen.fame || 0) + 10,
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, xp: 15, fame: 10 });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 15, fame: 10 });
   }
 }
 
@@ -522,7 +485,7 @@ function handleWildAnimalAttack(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
   }
 }
 
@@ -544,7 +507,7 @@ function handleStrangeDream(
       xp: (chosen.xp || 0) + xpGained,
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name, xp: xpGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: xpGained });
   }
 }
 
@@ -557,7 +520,7 @@ function handleLoyalStray(
 ) {
   const cost = 25;
   ctx.treasuryDelta -= cost;
-  addLedger(ctx, rng, nextWeek, 'Dog Food & Treats', -cost, 'other');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Dog Food & Treats', -cost, 'other'));
 
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
@@ -568,7 +531,7 @@ function handleLoyalStray(
         fame: (chosen.fame || 0) + 5,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: 10,
         fame: 5,
@@ -593,7 +556,7 @@ function handleStreetPerformance(
       const goldGained = 50 + Math.floor(rng.next() * 50);
       ctx.treasuryDelta += goldGained;
 
-      addLedger(ctx, rng, nextWeek, 'Street Performance Tips', goldGained, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other'));
 
       const currentFlair = chosen.flair || [];
       const newFlair = currentFlair.includes('Local Hero')
@@ -605,7 +568,7 @@ function handleStreetPerformance(
         flair: newFlair,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         fame: fameGained,
         gold: goldGained,
@@ -676,9 +639,9 @@ function handleMysteriousPatron(
   const goldGained = 100 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta += goldGained;
 
-  addLedger(ctx, rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other'));
 
-  pushNarrative(ctx, rng, nextWeek, e, { gold: goldGained });
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldGained });
 }
 
 function handleMidnightFeast(
@@ -691,7 +654,7 @@ function handleMidnightFeast(
   const cost = 40 + Math.floor(rng.next() * 61);
   ctx.treasuryDelta -= cost;
 
-  addLedger(ctx, rng, nextWeek, 'Midnight Feast Tab', -cost, 'other');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Midnight Feast Tab', -cost, 'other'));
 
   const activeWarriors = getActiveWarriors(state);
   const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
@@ -704,14 +667,14 @@ function handleMidnightFeast(
       fame: (chosen.fame || 0) + fameGained,
     });
 
-    pushNarrative(ctx, rng, nextWeek, e, {
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
       name: chosen.name,
       xp: xpGained,
       fame: fameGained,
       gold: cost,
     });
   } else {
-    pushNarrative(ctx, rng, nextWeek, e, { name: 'Someone', xp: 0, fame: 0, gold: cost });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: 'Someone', xp: 0, fame: 0, gold: cost });
   }
 }
 
@@ -734,7 +697,7 @@ function handleShadowTraining(
         fame: Math.max(0, (chosen.fame || 0) - fameLost),
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
         fame: fameLost,
@@ -762,7 +725,7 @@ function handleGladiatorOlympics(
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
         fame: fameGained,
@@ -784,7 +747,7 @@ function handleGoblinRaid(
     if (chosen) {
       const goldLost = 20 + Math.floor(rng.next() * 31);
       ctx.treasuryDelta -= goldLost;
-      addLedger(ctx, rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other'));
 
       const newInjury = makeInjury(rng, {
         name: 'Goblin Scratch',
@@ -799,7 +762,7 @@ function handleGoblinRaid(
         injuries: [...(chosen.injuries || []), newInjury],
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         gold: goldLost,
       });
@@ -834,7 +797,7 @@ function handleUndergroundPitFight(
         injuries: [...(chosen.injuries || []), newInjury],
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         fame: fameGained,
       });
@@ -869,7 +832,7 @@ function handleDreamweaverVisit(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
       });
@@ -904,7 +867,7 @@ function handleTavernBrawlSurprise(
         injuries: [...(chosen.injuries || []), newInjury],
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         fame: fameGained,
       });
@@ -1091,7 +1054,7 @@ function handleMeteorShower(
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
         fame: fameGained,
@@ -1109,7 +1072,7 @@ function handleWanderingFortuneTeller(
 ) {
   const cost = 30;
   ctx.treasuryDelta -= cost;
-  addLedger(ctx, rng, nextWeek, 'Fortune Teller Reading', -cost, 'other');
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Fortune Teller Reading', -cost, 'other'));
 
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
@@ -1131,7 +1094,7 @@ function handleWanderingFortuneTeller(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         gold: cost,
       });
@@ -1206,14 +1169,14 @@ function handleTravelingCircus(
       const cost = 25;
 
       ctx.treasuryDelta -= cost;
-      addLedger(ctx, rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other'));
 
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
         fame: fameGained,
@@ -1253,7 +1216,7 @@ function handleChaosWeaverVisit(
           discoveredWeek: nextWeek,
         });
 
-        pushNarrative(ctx, rng, nextWeek, e, {
+        pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
           name: chosen.name,
           trait: grantedTrait.name,
         });
@@ -1275,14 +1238,14 @@ function handleBountyHunterVisit(
     if (chosen) {
       const goldGained = 150 + Math.floor(rng.next() * 101);
       ctx.treasuryDelta += goldGained;
-      addLedger(ctx, rng, nextWeek, 'Bounty Information Payout', goldGained, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bounty Information Payout', goldGained, 'other'));
 
       const fameGained = 10;
       ctx.rosterUpdates.set(chosen.id, {
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         gold: goldGained,
         fame: fameGained,
@@ -1307,7 +1270,7 @@ function handleLoyalStrayDog(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
       });
     }
@@ -1327,7 +1290,7 @@ function handleMidnightMarket(
     if (chosen) {
       const cost = 40;
       ctx.treasuryDelta -= cost;
-      addLedger(ctx, rng, nextWeek, 'Midnight Market Elixirs', -cost, 'other');
+      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Midnight Market Elixirs', -cost, 'other'));
 
       const xpGained = 20;
       ctx.rosterUpdates.set(chosen.id, {
@@ -1344,7 +1307,7 @@ function handleMidnightMarket(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         gold: cost,
       });
@@ -1431,7 +1394,7 @@ function handleChaosSpores(
         traits: newTraits,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
       });
@@ -1453,7 +1416,7 @@ function handleMoonlightDuel(
       const gold = 150 + Math.floor(rng.next() * 150);
       ctx.treasuryDelta += gold;
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         gold,
       });
@@ -1494,7 +1457,7 @@ function handleSecretFightClub(
         fame: (chosen.fame || 0) + fameGained,
         injuries: [...(chosen.injuries || []), newInjury],
       });
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
         fame: fameGained,
@@ -1529,7 +1492,7 @@ function handleChaoticWeatherExperiment(
         injuries: [...(chosen.injuries || []), newInjury],
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
       });
@@ -1564,7 +1527,7 @@ function handleChaosWeaversGift(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
         xp: xpGained,
       });
@@ -1606,7 +1569,7 @@ function handleTemporalAnomaly(
         discoveredWeek: nextWeek,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
       });
     }
@@ -1633,7 +1596,7 @@ function handleWanderingMystic(
         traits: newTraits,
       });
 
-      pushNarrative(ctx, rng, nextWeek, e, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
       });
     }

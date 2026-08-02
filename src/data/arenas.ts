@@ -460,6 +460,20 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'ashen_ward_massacre',
+    arenaId: 'underpit_arena',
+    type: 'historical_battle',
+    title: 'The Ashen Ward Massacre',
+    narrative: 'A grim night where the orphaned combatants turned their rage upon their overseers, staining the sands with rebellion.'
+  },
+  {
+    id: 'blackbriar_betrayal',
+    arenaId: 'lantern_hall_arena',
+    type: 'historical_battle',
+    title: 'The Blackbriar Betrayal',
+    narrative: 'A legendary bout where a renowned champion was brought low by a seemingly frail orphan of the Blackbriar House.'
+  },
+  {
     id: 'underpit_feral_ghouls',
     arenaId: 'underpit_arena',
     type: 'historical_battle',

@@ -1,8 +1,12 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Raised in the shadowed halls of the Ashen Ward Orphanage',
+  'Survived the brutal discipline of the Blackbriar Matrons',
+  'Found half-starved in the forgotten cellars of the Cinder Spire',
+  'Tossed into the fighting pits by the overseers of the Bleak House',
+  'Endured the cruel teachings of the Nightfall Sisters',
   'Raised in the haunted dormitories of the Blackbriar Orphanage',
-  'Abandoned in the soot-stained nursery of the Ashen Ward',
   'Found shivering in the crypts of the Old Abbey',
   'Survived the cruel discipline of the Iron Spire Orphanage',
   'Sold to the fighting pits by the matrons of the Bleak House',
@@ -191,6 +195,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'learned to sleep with one eye open to survive the night terrors',
+  'would instinctively duck when shadows moved too quickly',
+  'developed a terrifyingly silent footfall in the orphanage halls',
   'would silently endure beatings to learn how to absorb blows',
   'learned to craft makeshift shivs from shattered porcelain bowls',
   'was known for biting viciously when cornered by older urchins',
@@ -302,6 +309,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'understanding that survival meant striking before being struck',
+  'realizing that mercy in the pits was just a slower form of death',
+  'accepting that their only family was the cold iron in their hands',
   'until they turned a rusty nail into a weapon of freedom',
   'realizing that the only family they had was the blade in their hand',
   'waiting for the day they could make the nobility bleed in the sands',
@@ -316,7 +326,6 @@ const DEFINING_MOMENTS = [
   'now seeking to turn the brutality of their past into the roaring adoration of the crowd',
   'waiting to prove that the blood of the slums burns hotter than the gold of kings',
   'until they garroted a cruel overseer and fled into the night',
-  'realizing that the only true escape from the gutters was carved in blood',
   'waiting for the moment the iron portcullis of the arena would rise on their true destiny',
   'until they shattered a cruel overseer’s kneecap with a stolen hammer',
   'realizing the arena was the only place where their rage was rewarded',

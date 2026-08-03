@@ -37,7 +37,11 @@ export const ExpansionService = {
 
     const neededCount = targetCount - currentCount;
     const newStables: RivalStableData[] = [];
-    const rivalsById = new Map((state.rivals || []).map((r) => [r.id, r]));
+    // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
+    const rivalsById = new Map<string, RivalStableData>();
+    for (const r of state.rivals || []) {
+      rivalsById.set(r.id, r);
+    }
 
     for (let i = 0; i < neededCount; i++) {
       if (rng.next() < 0.3) {

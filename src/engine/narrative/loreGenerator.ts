@@ -1,6 +1,13 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+
+  'Raised in the lightless cellars of the Harrow-Home for Foundlings',
+  'Abandoned beneath the crumbling arches of the Weeping Aqueduct',
+  'Found swaddled in blood-stained rags at the gates of the Silent Order',
+  'Survived the brutal starvation of the Rat-Catcher Guilds',
+  'Sold to the under-barons of the Scab District for a handful of copper',
+  'Raised by the feral street-packs of the Warrens',
   'Raised in the haunted dormitories of the Blackbriar Orphanage',
   'Abandoned in the soot-stained nursery of the Ashen Ward',
   'Found shivering in the crypts of the Old Abbey',
@@ -191,6 +198,11 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+
+  'learned to sleep with one eye open to survive the night-terrors of the orphanage',
+  'would steal discarded training weapons from the arena trash heaps',
+  'was known for an eerie, unblinking stare that unsettled older children',
+  'learned to endure the pain of broken bones without making a sound',
   'would silently endure beatings to learn how to absorb blows',
   'learned to craft makeshift shivs from shattered porcelain bowls',
   'was known for biting viciously when cornered by older urchins',
@@ -302,6 +314,11 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+
+  'until they strangled a cruel matron with a stolen garrote',
+  'knowing that the arena is the only place their rage is rewarded',
+  'waiting for the day they could turn their tormentors into bloody pulp',
+  'until they survived the vicious culling of the Warrens',
   'until they turned a rusty nail into a weapon of freedom',
   'realizing that the only family they had was the blade in their hand',
   'waiting for the day they could make the nobility bleed in the sands',
@@ -399,7 +416,6 @@ const DEFINING_MOMENTS = [
   'waiting for the moment the crowd screams a name they once forgot',
   'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
-  'until they strangled a cruel matron with a stolen rosary',
   'now driven by a dark vow sworn over the grave of their only friend',
 ];
 

@@ -295,9 +295,9 @@ function handleChaosWeaversSurprise(
     });
 
     ctx.rosterUpdates.set(chosen.id, {
-      injury: newInjury,
+      fame: (chosen.fame || 0) + fameGained,
+      injuries: [...(chosen.injuries || []), newInjury],
     });
-    ctx.fameDelta += fameGained;
 
     pushNarrative(ctx, rng, nextWeek, e, {
       name: chosen.name,

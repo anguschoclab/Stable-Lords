@@ -67,7 +67,8 @@ interface OffseasonEventNarrative {
     | 'secret_fight_club'
     | 'chaos_weavers_gift'
     | 'temporal_anomaly'
-    | 'wandering_mystic';
+    | 'wandering_mystic'
+    | 'chaos_weavers_surprise';
   newsletter: string[];
 }
 
@@ -268,6 +269,40 @@ function handleEpiphany(
     });
 
     pushNarrative(ctx, rng, nextWeek, e, { name: chosen.name });
+  }
+}
+
+function handleChaosWeaversSurprise(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state, true);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    const fameGained = 20 + Math.floor(rng.next() * 15);
+
+    const newInjury = makeInjury(rng, {
+      name: 'Chaotic Scrapes',
+      description: 'Minor bruises from a bizarre brawl.',
+      severity: 'Minor',
+      weeksBase: 1,
+      weeksRange: 1,
+      penalties: { SP: -1 },
+    });
+
+    ctx.rosterUpdates.set(chosen.id, {
+      injury: newInjury,
+    });
+    ctx.fameDelta += fameGained;
+
+    pushNarrative(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -1694,6 +1729,7 @@ const EVENT_HANDLERS: Record<
   chaos_weavers_game: handleChaosWeaversGame,
   temporal_anomaly: handleTemporalAnomaly,
   wandering_mystic: handleWanderingMystic,
+  chaos_weavers_surprise: handleChaosWeaversSurprise,
 };
 
 /**

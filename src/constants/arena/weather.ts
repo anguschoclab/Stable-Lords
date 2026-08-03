@@ -430,6 +430,14 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
+  'Mana Storm': {
+    icon: Sparkles,
+    colorClass: 'text-purple-400',
+    bgClass: 'bg-purple-900/40',
+    borderClass: 'border-purple-600',
+    extraClass: 'animate-pulse drop-shadow-md',
+    description: 'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
+  },
 };
 
 /**

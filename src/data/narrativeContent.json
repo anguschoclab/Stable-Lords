@@ -5567,6 +5567,14 @@
       "newsletter": [
         "A wandering mystic sought shelter with {{name}} over the winter, teaching them strange truths. (+Chaos Touched trait)"
       ]
+    },
+    "chaos_weavers_surprise": {
+      "title": "A Chaos Weaver's Surprise",
+      "effectType": "chaos_weavers_surprise",
+      "newsletter": [
+        "{{name}} encountered a mysterious Chaos Weaver in the tavern. A brawl ensued, but the patrons loved the show! (+{{fame}} Fame, Minor Injury)",
+        "A rogue Chaos Weaver challenged {{name}} to an impromptu wrestling match in the market square. {{name}} took some scrapes, but won the crowd! (+{{fame}} Fame, Minor Injury)"
+      ]
     }
   },
   "crowd_reactions": {

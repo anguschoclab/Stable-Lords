@@ -15,12 +15,10 @@ import {
   ATTRIBUTE_KEYS,
 } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { generateScoutInsights } from './scoutInsights';
+import { generateScoutInsights, type ScoutQuality } from './scoutInsights';
 
-/**
- * Scout quality type.
- */
-export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';
+// Re-export ScoutQuality for backward compatibility
+export type { ScoutQuality };
 
 /**
  * Defines the shape of scout report.

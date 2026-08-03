@@ -10,7 +10,9 @@ import {
   type InsightId,
 } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { ScoutQuality } from './scouting';
+
+/** Scout quality level — controls how much information is revealed. */
+export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';
 
 /** Create the always-present Style insight token. */
 export function createStyleInsight(

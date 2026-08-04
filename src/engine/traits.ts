@@ -117,7 +117,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'gut_survivor',
     name: 'Gut Survivor',
     description: 'Learned to survive on nothing. Reduced endurance drain when wounded.',
-    effect: { enduranceMultLowHp: 0.85 },
+    effect: { enduranceMult: 0.85 },
     tier: 'Notable',
     sign: 'positive',
     weight: 0.7,

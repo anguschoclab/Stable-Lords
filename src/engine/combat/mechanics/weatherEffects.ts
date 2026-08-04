@@ -413,6 +413,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
+  'Shattered Sky': {
+    staminaMult: 1.15,
+    initiativeMod: -2,
+    riposteMod: 3,
+    damageMult: 1.15,
+    description: 'The sky seems to shatter like glass. Eerie light inspires both awe and terror.',
+  },
   'Chaos Squall': {
     staminaMult: 0.85,
     initiativeMod: 3,
@@ -519,6 +526,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
   'Temporal Rift': 'Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters\' will.',
   'Stardust Gale': 'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
+  'Shattered Sky': 'The sky seems to shatter like glass. The eerie light inspires both awe and terror.',
 };
 
 /**

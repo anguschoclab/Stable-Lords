@@ -638,7 +638,8 @@ export type WeatherType =
   | 'Diamond Rain'
   | 'Cosmic Anomaly'
   | 'Temporal Rift'
-  | 'Stardust Gale';
+  | 'Stardust Gale'
+  | 'Shattered Sky';
 
 /**
  * Defines the shape of death event.

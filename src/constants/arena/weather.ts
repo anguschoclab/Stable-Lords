@@ -430,6 +430,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
+  'Shattered Sky': {
+    icon: Sparkles,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'The sky seems to shatter like glass. Eerie light inspires both awe and terror.',
+  },
 };
 
 /**

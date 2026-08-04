@@ -64,6 +64,7 @@ export const WEATHER_TYPES = [
   'Cosmic Anomaly',
   'Temporal Rift',
   'Stardust Gale',
+  'Shattered Sky',
 ] as const;
 
 export const TRAINER_TIERS = ['Novice', 'Seasoned', 'Master'] as const;

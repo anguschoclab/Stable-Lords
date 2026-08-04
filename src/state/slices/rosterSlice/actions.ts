@@ -3,6 +3,7 @@ import { Warrior, InsightToken } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeWarriorStats } from '@/engine/skillCalc';
+import { updateEntityInList } from '@/utils/stateUtils';
 
 /**
  *
@@ -84,9 +85,8 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         const token = state.insightTokens?.find((t: InsightToken) => t.id === tokenId);
         if (!token) return state;
 
-        const nextRoster = state.roster.map((w: Warrior) => {
-          if (w.id !== warriorId) return w;
-
+        // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
+        const nextRoster = updateEntityInList(state.roster, warriorId, (w: Warrior) => {
           const draft = { ...w };
           if (!draft.favorites) {
             draft.favorites = {
@@ -137,18 +137,22 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       equipment: { weapon: string; armor: string; shield: string; helm: string }
     ) => {
       set((state) => {
-        const nextRoster = state.roster.map((w: Warrior) => {
-          if (w.id !== warriorId) return w;
-          return { ...w, equipment };
-        });
+        // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
+        const nextRoster = updateEntityInList(state.roster, warriorId, (w: Warrior) => ({
+          ...w,
+          equipment,
+        }));
         return { roster: nextRoster };
       });
     },
 
     renameWarrior: (warriorId: WarriorId, newName: string) => {
       set((state) => {
+        // ⚡ Bolt Optimization: Replaces .map() with updateEntityInList.
+        // This avoids allocating new array references for arrays that don't contain the warriorId,
+        // preventing unnecessary React re-renders.
         const updateList = (list: Warrior[]) =>
-          list.map((w) => (w.id === warriorId ? { ...w, name: newName } : w));
+          updateEntityInList(list, warriorId, (w: Warrior) => ({ ...w, name: newName }));
 
         return {
           roster: updateList(state.roster),

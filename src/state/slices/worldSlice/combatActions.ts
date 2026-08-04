@@ -1,7 +1,7 @@
 import type { GameStore } from '@/state/useGameStore';
 import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
-import { truncateArray } from '@/utils/stateUtils';
+import { truncateArray, updateEntityInList } from '@/utils/stateUtils';
 
 /**
  *
@@ -38,21 +38,18 @@ export function createCombatActions(set: (fn: (state: GameStore) => Partial<Game
               r.owner.id === rivalStableId
                 ? {
                     ...r,
-                    roster: r.roster.map((w) =>
-                      w.id === warriorId
-                        ? {
-                            ...w,
-                            fame: Math.max(0, (w.fame || 0) + fameDelta),
-                            popularity: Math.max(0, (w.popularity || 0) + popDelta),
-                            career: {
-                              ...w.career,
-                              wins: (w.career?.wins || 0) + (won ? 1 : 0),
-                              losses: (w.career?.losses || 0) + (won ? 0 : 1),
-                              kills: (w.career?.kills || 0) + (killed ? 1 : 0),
-                            },
-                          }
-                        : w
-                    ),
+                    // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
+                    roster: updateEntityInList(r.roster, warriorId, (w) => ({
+                      ...w,
+                      fame: Math.max(0, (w.fame || 0) + fameDelta),
+                      popularity: Math.max(0, (w.popularity || 0) + popDelta),
+                      career: {
+                        ...w.career,
+                        wins: (w.career?.wins || 0) + (won ? 1 : 0),
+                        losses: (w.career?.losses || 0) + (won ? 0 : 1),
+                        kills: (w.career?.kills || 0) + (killed ? 1 : 0),
+                      },
+                    })),
                   }
                 : r
             ),
@@ -60,21 +57,18 @@ export function createCombatActions(set: (fn: (state: GameStore) => Partial<Game
         }
 
         return {
-          roster: state.roster.map((w) =>
-            w.id === warriorId
-              ? {
-                  ...w,
-                  fame: Math.max(0, (w.fame || 0) + fameDelta),
-                  popularity: Math.max(0, (w.popularity || 0) + popDelta),
-                  career: {
-                    ...w.career,
-                    wins: (w.career?.wins || 0) + (won ? 1 : 0),
-                    losses: (w.career?.losses || 0) + (won ? 0 : 1),
-                    kills: (w.career?.kills || 0) + (killed ? 1 : 0),
-                  },
-                }
-              : w
-          ),
+          // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
+          roster: updateEntityInList(state.roster, warriorId, (w) => ({
+            ...w,
+            fame: Math.max(0, (w.fame || 0) + fameDelta),
+            popularity: Math.max(0, (w.popularity || 0) + popDelta),
+            career: {
+              ...w.career,
+              wins: (w.career?.wins || 0) + (won ? 1 : 0),
+              losses: (w.career?.losses || 0) + (won ? 0 : 1),
+              kills: (w.career?.kills || 0) + (killed ? 1 : 0),
+            },
+          })),
         };
       });
     },

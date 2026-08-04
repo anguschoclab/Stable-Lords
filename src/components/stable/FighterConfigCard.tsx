@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -37,13 +38,15 @@ export function FighterConfigCard({
   stats,
   setStats,
 }: FighterConfigCardProps) {
+  const idPrefix = useId();
+
   return (
     <Card>
       <CardHeader className="pb-4 border-b border-border">
         <CardTitle className="font-display text-lg flex items-center justify-between">
           {label}
           <Select value={style} onValueChange={(v) => setStyle(v as FightingStyle)}>
-            <SelectTrigger className="w-[180px] h-8 text-xs bg-background">
+            <SelectTrigger aria-label="Fighting Style" className="w-[180px] h-8 text-xs bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -60,10 +63,11 @@ export function FighterConfigCard({
         {Object.entries(stats).map(([key, value]) => (
           <div key={key} className="space-y-1.5">
             <div className="flex justify-between">
-              <Label className="capitalize text-xs text-muted-foreground">{key}</Label>
+              <Label htmlFor={`${idPrefix}-stat-${key}`} className="capitalize text-xs text-muted-foreground">{key}</Label>
               <span className="text-xs font-mono">{value}</span>
             </div>
             <Slider
+              id={`${idPrefix}-stat-${key}`}
               value={[value]}
               min={1}
               max={30}

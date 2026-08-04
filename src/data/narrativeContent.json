@@ -1372,7 +1372,8 @@
         "{{attacker}} launches a calculated, stinging jab.",
         "{{attacker}} spears forward in a quick, lethal lunge.",
         "{{attacker}} bores into {{defender}} with a rapid, penetrating stab.",
-        "{{attacker}} snaps a blinding jab aimed directly at {{defender}}'s throat."
+        "{{attacker}} snaps a blinding jab aimed directly at {{defender}}'s throat.",
+        "{{attacker}} lunges with needle-like precision."
       ],
       "slashing": [
         "{{attacker}} executes a brutal downward chop with {{possessive}} {{weapon}}, shearing through {{defender}}'s defense.",
@@ -1410,7 +1411,8 @@
         "{{attacker}} executes a masterful, sweeping cut.",
         "{{attacker}} whips their blade in a cruel, jagged arc.",
         "{{attacker}} delivers a wide, shearing strike.",
-        "{{attacker}} brings their edge around in a deadly, whistling crescent."
+        "{{attacker}} brings their edge around in a deadly, whistling crescent.",
+        "{{attacker}} sweeps their {{weapon}} low, seeking to hamstring the foe."
       ],
       "bashing": [
         "{{attacker}} unleashes a crushing swing, the sheer weight of {{possessive}} {{weapon}} bruising {{defender}} severely.",
@@ -1443,7 +1445,8 @@
         "{{attacker}} hammers forward, aiming to crush {{defender}}.",
         "{{attacker}} delivers a thunderous, weighty blow.",
         "{{attacker}} swings with the raw, blunt momentum of an avalanche.",
-        "{{attacker}} crushes inward with a relentless, heavy strike."
+        "{{attacker}} crushes inward with a relentless, heavy strike.",
+        "{{attacker}} swings their {{weapon}} wildly at the foe"
       ],
       "fist": [
         "{{attacker}} leaps forward with a flying strike, throwing their entire body weight behind the fist!",
@@ -1491,7 +1494,8 @@
         "{{attacker}} unloads a heavy, brawling haymaker.",
         "{{attacker}} steps in and hammers a brutal blow with their fist.",
         "A blistering combination of strikes from {{attacker}} seeks to overwhelm {{defender}}.",
-        "{{attacker}} steps inside, delivering a savage hook."
+        "{{attacker}} steps inside, delivering a savage hook.",
+        "{{attacker}} steps in close, unleashing a flurry of fast punches."
       ]
     },
     "hit_locations": {
@@ -1723,11 +1727,14 @@
           "{{defender}} masterfully avoids the blow and lands a devastating counter-blow!",
           "Turning defense into offense, {{defender}} lands a surprising counterstrike.",
           "A seamless block flows instantly into a punishing strike from {{defender}}.",
-          "{{defender}} absorbs the momentum and fires back a brutal counter-attack.",
           "{{defender}} slips past the guard and strikes back with vicious intent!",
           "A feint, a slip, and a punishing retaliatory strike from {{defender}}!",
           "A brilliant reversal by {{defender}}! They turn defense into offense!",
-          "{{defender}} deflects and instantly retaliates!"
+          "{{defender}} deflects and instantly retaliates!",
+          "{{defender}} absorbs the impact and lashes out with a brutal counterstrike.",
+          "Instead of retreating, {{defender}} pivots and delivers a punishing reprisal.",
+          "The attack is met not with a block, but a savage return blow from {{defender}}.",
+          "In a flash of defiance, {{defender}} turns defense into offense with a counterstrike."
         ]
       },
       "dodge": {
@@ -2263,7 +2270,11 @@
           "{{defender}} catches the blow on {{possessive}} shield rim.",
           "{{defender}} absorbs the impact with a sturdy shield block.",
           "{{defender}} interposes {{possessive}} shield flawlessly.",
-          "{{defender}} interposes {{possessive}} shield at the final moment, absorbing the impact with a heavy thud."
+          "{{defender}} interposes {{possessive}} shield at the final moment, absorbing the impact with a heavy thud.",
+          "{{defender}} brings their shield up in a flash, absorbing the blow harmlessly.",
+          "The strike meets only the sturdy face of {{defender}}'s shield.",
+          "A deafening clang echoes as {{defender}}'s shield stops the assault cold.",
+          "{{defender}} braces behind their shield, weathering the attack like a fortress."
         ]
       },
       "parry_break": [
@@ -2580,7 +2591,8 @@
         "{{name}} crashes into the dirt, the wind completely knocked out of them.",
         "{{name}} is sent crashing to the bloody sand.",
         "{{name}} is brutally upended, slamming hard onto the arena floor.",
-        "{{name}} hits the ground heavily, coughing up dust."
+        "{{name}} hits the ground heavily, coughing up dust.",
+        "{{name}} crashes heavily, dust billowing around them."
       ],
       "recovery": [
         "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight.",
@@ -3159,11 +3171,16 @@
         "{{attacker}} finds an opening, carving into {{defender}}'s {{bodyPart}} with their {{weapon}}.",
         "Blood sprays onto the sand as {{attacker}} lands a solid blow on {{defender}}'s {{bodyPart}}.",
         "{{attacker}} slips inside {{defender}}'s reach and punishes the {{bodyPart}} without mercy.",
-        "{{defender}} winces as {{attacker}}'s {{weapon}} scores a clean hit to the {{bodyPart}}.",
         "{{defender}} cannot stop the blow; {{attacker}}'s strike hammers the {{bodyPart}} hard.",
         "A sickening thud echoes as the {{weapon}} connects with {{defender}}'s {{bodyPart}}.",
         "The {{weapon}} lands with authority on {{defender}}'s {{bodyPart}} — a telling hit.",
-        "A sharp crack — {{attacker}}'s {{weapon}} finds {{defender}}'s {{bodyPart}} clean."
+        "{{attacker}} follows through with ruthless precision, scoring the {{bodyPart}}.",
+        "A shower of crimson erupts as {{attacker}}'s {{weapon}} sinks into {{defender}}'s {{bodyPart}}.",
+        "{{defender}} stumbles slightly as the {{weapon}} bites deep into their {{bodyPart}}.",
+        "The crowd roars as {{attacker}}'s strike finds its mark, hammering the {{bodyPart}}.",
+        "{{attacker}}'s assault proves overwhelming, punishing {{defender}}'s {{bodyPart}}.",
+        "{{defender}} fails to check the assault; {{attacker}}'s {{weapon}} tears into the {{bodyPart}}.",
+        "A brutal connection—{{attacker}}'s {{weapon}} forces {{defender}} back with a hit to the {{bodyPart}}."
       ]
     },
     "executions": [
@@ -5251,7 +5268,9 @@
       "{{defender}} collapses, the sheer trauma of the battle finally claiming their life.",
       "Unable to sustain the grevious wounds, {{defender}} falls still on the bloody sand.",
       "The accumulated damage is too much; {{defender}} breathes their last breath in the dirt.",
-      "{{defender}} succumbs to their horrific injuries, another soul claimed by the arena."
+      "{{defender}} succumbs to their horrific injuries, another soul claimed by the arena.",
+      "A final, gurgling breath escapes {{defender}} before the end.",
+      "{{defender}}'s eyes glass over as the arena claims another soul."
     ]
   },
   "offseason_events": {

@@ -51,7 +51,6 @@ const ORIGINS = [
   'Raised in the hidden fighting rings beneath the Crying Slums',
   'Abandoned at the iron grates of the Dross Orphanage during a thunderstorm',
   'Surviving the plague by sleeping among the dead in the open charnel pits',
-  'Abandoned at the rusted gates of the Weeping Mother Orphanage',
   'Abandoned in the dripping undercrofts of the Silent Sisters',
   'Raised by debt-collectors in the squalor of the Brass District',
   'Survived the Ashfall by hiding in a forgotten ossuary',
@@ -188,6 +187,12 @@ const ORIGINS = [
   'Survived the great fire of the Lower Wards by hiding in a cistern',
   'Found wandering the ash-choked streets of the Foundry District',
   'Raised by the grim overseers of the Iron Chain workhouse',
+  'Abandoned at the rusted gates of the Iron Maiden Orphanage',
+  'Raised by the blind seers of the Dust Ward',
+  'Survived the brutal cullings of the Copper Pit',
+  'Found weeping in the blood-stained alleys of the Red District',
+  'Sold by desperate parents to the debt collectors of the Lower Ring',
+  'Raised amidst the deafening roar of the Brass Forges'
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -217,7 +222,6 @@ const CHILDHOOD_TRAITS = [
   'slept clutching a sharpened spoon carved from stolen silver',
   'was famous for slipping out of rusted shackles with dislocated thumbs',
   'would meticulously collect the severed fingers of thieves for good luck',
-  'learned to mimic the death rattle of plague victims to scare off bullies',
   'learned to mask their fear by laughing manically when struck',
   'would systematically break the fingers of thieves who tried to steal their food',
   'perfected the art of striking from the shadows of the orphanage dormitories',
@@ -299,6 +303,10 @@ const CHILDHOOD_TRAITS = [
   'developed a terrifyingly serene smile during the most brutal beatings',
   'was known for carving the names of their enemies into their own flesh',
   'would purposefully instigate fights just to study how different people bleed',
+  'learned to identify the scent of cheap poison on a blade',
+  'would systematically map the blind spots of the wardens',
+  'developed a terrifying stillness when cornered by older children',
+  'learned to perfectly mimic the death rattle of a plague victim to scare off bullies'
 ];
 
 const DEFINING_MOMENTS = [
@@ -401,6 +409,9 @@ const DEFINING_MOMENTS = [
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
   'until they strangled a cruel matron with a stolen rosary',
   'now driven by a dark vow sworn over the grave of their only friend',
+  'until they shattered a debt collector\'s knee with a discarded cobblestone',
+  'realizing the arena sands offered more mercy than the workhouse matrons',
+  'waiting for the day they could make the high lords choke on their own laughter'
 ];
 
 /**

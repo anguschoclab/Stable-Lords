@@ -460,6 +460,27 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'narrow_bridge_blood_tide',
+    arenaId: 'narrow_bridge',
+    type: 'historical_battle',
+    title: 'The Blood Tide',
+    narrative: 'A legendary standoff where two champions fought for three days straight, turning the waters below crimson.'
+  },
+  {
+    id: 'brass_ring_molten_rain',
+    arenaId: 'brass_ring',
+    type: 'architectural_quirk',
+    title: 'The Molten Rain',
+    narrative: 'When the nearby forges vent, a shower of harmless but terrifying sparks rains down upon the combatants.'
+  },
+  {
+    id: 'mudpit_arena_suffocation',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Suffocation of Brunt',
+    narrative: 'A hulking behemoth who was drowned in the mud by a much smaller, nimbler opponent who simply refused to let go.'
+  },
+  {
     id: 'underpit_feral_ghouls',
     arenaId: 'underpit_arena',
     type: 'historical_battle',

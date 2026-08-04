@@ -104,6 +104,33 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_fury: {
+    id: 'orphan_fury',
+    name: 'Orphan Fury',
+    description: 'Years of abuse have distilled into a pure, white-hot rage. Increased attack but lowered defense.',
+    effect: { attMod: 1, defMod: -1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.7,
+  },
+  gut_survivor: {
+    id: 'gut_survivor',
+    name: 'Gut Survivor',
+    description: 'Learned to survive on nothing. Reduced endurance drain when wounded.',
+    effect: { enduranceMultLowHp: 0.85 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.7,
+  },
+  street_specter: {
+    id: 'street_specter',
+    name: 'Street Specter',
+    description: 'Impossible to pin down. High evasion and initiative.',
+    effect: { iniMod: 1, defMod: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   gutter_ghost: {
     id: 'gutter_ghost',
     name: 'Gutter Ghost',
@@ -265,15 +292,6 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { attModLate: 1, defModLate: 1 },
     weight: 0.7,
     tier: 'Notable',
-    sign: 'positive',
-  },
-  orphan_fury: {
-    id: 'orphan_fury',
-    name: 'Orphan Fury',
-    description: '+1 attack and +1 initiative when bloodied — fueled by a lifetime of rage.',
-    effect: { attModLowHp: 1, iniMod: 1 },
-    weight: 0.8,
-    tier: 'Exceptional',
     sign: 'positive',
   },
   asylum_survivor: {

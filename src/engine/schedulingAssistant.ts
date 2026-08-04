@@ -229,6 +229,31 @@ function getMatchupNotes(
   return notes;
 }
 
+function buildMatchupScore(
+  playerWarrior: Warrior,
+  r: { warrior: Warrior; stable: RivalStableData },
+  state: GameState
+): MatchupScore {
+  const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
+  const fameDiff = playerWarrior.fame - r.warrior.fame;
+  const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
+  const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
+  const rankDiff =
+    playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+  const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
+  return {
+    playerWarriorId: playerWarrior.id,
+    rivalWarrior: r.warrior,
+    rivalStableName: r.stable.owner.stableName,
+    score: scoreMatchup(playerWarrior, r.warrior, state),
+    styleAdvantage,
+    fameDiff,
+    notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
+    rankDiff,
+    headToHead,
+  };
+}
+
 /**
  * Recommends the best potential challenges for a player warrior.
  * Uses bounded insertion sort for O(N) performance on large rival lists.
@@ -248,49 +273,14 @@ export function getRecommendedChallenges(
 
   // Bolt Optimization: Bounded Insertion Sort (O(N) instead of O(N log N))
   // Prevents allocating and sorting a massive array when we only need the top K items
-  // Additionally saves execution time by lazy-evaluating getMatchupNotes
   for (const r of eligibleRivals) {
     const score = scoreMatchup(playerWarrior, r.warrior, state);
 
     if (topScores.length < limit) {
-      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
-      const fameDiff = playerWarrior.fame - r.warrior.fame;
-      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
-      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff =
-        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
-      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
-      topScores.push({
-        playerWarriorId: playerWarrior.id,
-        rivalWarrior: r.warrior,
-        rivalStableName: r.stable.owner.stableName,
-        score,
-        styleAdvantage,
-        fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
-        rankDiff,
-        headToHead,
-      });
+      topScores.push(buildMatchupScore(playerWarrior, r, state));
       topScores.sort((a, b) => b.score - a.score);
     } else if (score > (topScores[limit - 1]?.score ?? -Infinity)) {
-      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
-      const fameDiff = playerWarrior.fame - r.warrior.fame;
-      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
-      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff =
-        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
-      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
-      topScores[limit - 1] = {
-        playerWarriorId: playerWarrior.id,
-        rivalWarrior: r.warrior,
-        rivalStableName: r.stable.owner.stableName,
-        score,
-        styleAdvantage,
-        fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
-        rankDiff,
-        headToHead,
-      };
+      topScores[limit - 1] = buildMatchupScore(playerWarrior, r, state);
       topScores.sort((a, b) => b.score - a.score);
     }
   }
@@ -316,49 +306,14 @@ export function getMatchupsToAvoid(
 
   // Bolt Optimization: Bounded Insertion Sort (O(N) instead of O(N log N))
   // Prevents allocating and sorting a massive array when we only need the top K items
-  // Additionally saves execution time by lazy-evaluating getMatchupNotes
   for (const r of eligibleRivals) {
     const score = scoreMatchup(playerWarrior, r.warrior, state);
 
     if (bottomScores.length < limit) {
-      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
-      const fameDiff = playerWarrior.fame - r.warrior.fame;
-      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
-      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff =
-        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
-      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
-      bottomScores.push({
-        playerWarriorId: playerWarrior.id,
-        rivalWarrior: r.warrior,
-        rivalStableName: r.stable.owner.stableName,
-        score,
-        styleAdvantage,
-        fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
-        rankDiff,
-        headToHead,
-      });
+      bottomScores.push(buildMatchupScore(playerWarrior, r, state));
       bottomScores.sort((a, b) => a.score - b.score);
     } else if (score < (bottomScores[limit - 1]?.score ?? Infinity)) {
-      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
-      const fameDiff = playerWarrior.fame - r.warrior.fame;
-      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
-      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff =
-        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
-      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
-      bottomScores[limit - 1] = {
-        playerWarriorId: playerWarrior.id,
-        rivalWarrior: r.warrior,
-        rivalStableName: r.stable.owner.stableName,
-        score,
-        styleAdvantage,
-        fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
-        rankDiff,
-        headToHead,
-      };
+      bottomScores[limit - 1] = buildMatchupScore(playerWarrior, r, state);
       bottomScores.sort((a, b) => a.score - b.score);
     }
   }

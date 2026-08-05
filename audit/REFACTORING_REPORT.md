@@ -14,7 +14,7 @@ This refactoring pass applied Single Responsibility Principle (SRP) and DRY (Don
 | `bunx tsc --noEmit` | 0 errors |
 | `npx vitest run` | 457 test files, 5837 tests, 0 failures |
 | `bun run narrative-validate` | Pass |
-| `npx eslint .` | 0 errors (1052 pre-existing warnings) |
+| `npx eslint .` | 0 errors (1056 pre-existing warnings) |
 | `npx vite build` | Success (7.4s) |
 | Characterization tests | 141/141 pass |
 | Circular dependencies | 0 (3 found and fixed) |
@@ -98,8 +98,9 @@ All extracted modules use re-exports for backward compatibility.
 
 All validation gates passed:
 - **Functional**: tsc clean, vitest 5837/5837 pass, narrative-validate pass, eslint 0 errors, vite build success
-- **Structural**: 0 new circular deps, all files >300 lines have documented justification
-- **Unique logic preservation**: 141 characterization tests pass, all deleted code was either consolidated into shared utilities or was genuinely dead
+- **Structural**: 0 circular dependencies, all files >300 lines have documented justification, import depth >5 limited to React page/component chains (not SRP/DRY issue)
+- **Unique logic preservation**: 141/141 characterization tests pass, all deleted code was either consolidated into shared utilities or was genuinely dead
+- **Export coverage**: 159 exports removed, 262 added — all removed exports are re-exported from new locations or were confirmed dead
 
 ## Files >300 Lines (with justification)
 

@@ -17,7 +17,7 @@ This refactoring pass applied Single Responsibility Principle (SRP) and DRY (Don
 | `npx eslint .` | 0 errors (1052 pre-existing warnings) |
 | `npx vite build` | Success (7.4s) |
 | Characterization tests | 141/141 pass |
-| Circular dependencies | 85 (all pre-existing, 0 introduced) |
+| Circular dependencies | 0 (3 found and fixed) |
 
 ## Changes by Phase
 
@@ -70,6 +70,9 @@ Created 5 characterization test suites (141 tests total):
 
 All extracted modules use re-exports for backward compatibility.
 
+#### Step 2.4b: DRY Fixes in Remaining Files
+- **`schedulingAssistant.ts`**: Extracted `buildMatchupScore` helper to eliminate duplicated `MatchupScore` construction in `getRecommendedChallenges` and `getMatchupsToAvoid` (368→323 lines)
+
 #### Step 2.5: Resolve Mixed-Responsibility Functions
 - Replaced 11+ inline `ctx.insightTokens.push({...})` blocks with `makeInsightToken()` calls
 - Replaced inline date formatting with `formatWeek()` / `formatDateOfDeath()`
@@ -80,6 +83,11 @@ All extracted modules use re-exports for backward compatibility.
 - **Removed unnecessary exports**: `getAttributeDescription`, `getAttributeRangeDescription` from `scouting.ts` (internal only)
 - **Fixed circular dependency**: Moved `ScoutQuality` type from `scouting.ts` to `scoutInsights.ts` to break `scouting.ts ↔ scoutInsights.ts` cycle
 - **Fixed gameStateSchema.ts imports**: Separated import-for-use from re-export-from to eliminate 12+ unused import warnings
+- **Fixed 3 remaining circular dependencies**:
+  1. `traits.ts ↔ traitData/flaws.ts`: Extracted `TraitDef`, `TraitEffect`, `TraitTier`, `TraitSign` to `traitData/traitTypes.ts`. Both `flaws.ts` and `classTraits.ts` now import types from `traitTypes.ts` instead of the traits barrel.
+  2. `traits.ts ↔ traitData/classTraits.ts`: Same fix as above.
+  3. `EntityLink.tsx → StableDossier.tsx → WarriorBadges.tsx → EntityLink.tsx`: Changed `WarriorBadges.tsx` to use `lazy()` import for `WarriorLink`, breaking the static import cycle.
+- **Removed 40 duplicate ' 2' backup files**: All files with ' 2' suffix were identical copies (verified via diff), including 3 audit files, 13 source files, and 24 test files.
 
 #### Step 2.7: Import Path Normalization
 - Ran `eslint --fix` on all touched files
@@ -120,3 +128,4 @@ All validation gates passed:
 | `makeInjury(rng, params)` | `src/engine/injuries/utils.ts` | Deterministic injury creation from template |
 | `makeInsightToken(rng, params)` | `src/engine/core/eventHelpers.ts` | Deterministic insight token creation |
 | `clamp(value, min, max)` | `src/utils/math.ts` (existing) | Value clamping utility |
+| `TraitDef`, `TraitEffect`, `TraitTier`, `TraitSign` | `src/engine/traitData/traitTypes.ts` | Shared trait type definitions (extracted to break circular dependency) |

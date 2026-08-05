@@ -14,8 +14,8 @@ This refactoring pass applied Single Responsibility Principle (SRP) and DRY (Don
 | `bunx tsc --noEmit` | 0 errors |
 | `npx vitest run` | 457 test files, 5837 tests, 0 failures |
 | `bun run narrative-validate` | Pass |
-| `npx eslint .` | 0 errors (1056 pre-existing warnings) |
-| `npx vite build` | Success (7.4s) |
+| `npx eslint .` | 0 errors (pre-existing warnings only) |
+| `npx vite build` | Success (7.1s) |
 | Characterization tests | 141/141 pass |
 | Circular dependencies | 0 (3 found and fixed) |
 
@@ -62,11 +62,14 @@ Created 5 characterization test suites (141 tests total):
 | `src/engine/scouting.ts` | 343 lines | 237 lines | `src/engine/scoutInsights.ts` (125 lines) |
 | `src/engine/combat/mechanics/weatherEffects.ts` | 531 lines | 444 lines | `src/engine/combat/mechanics/weatherOpeningLines.ts` (95 lines) |
 | `src/engine/traits.ts` | 992 lines | ~100 lines | `src/engine/traitDefs.ts` (771), `src/engine/traitGeneration.ts` (81), `src/engine/traitMods.ts` (133) |
-| `src/engine/combat/resolution/resolution.ts` | ~1100 lines | ~550 lines | `src/engine/combat/resolution/phaseResolvers.ts` (569) |
-| `src/schemas/gameStateSchema.ts` | ~1500 lines | ~140 lines | `src/schemas/schemaEnums.ts` (440), `src/schemas/schemaObjects.ts` (880) |
+| `src/engine/combat/resolution/resolution.ts` | ~1100 lines | ~190 lines | `src/engine/combat/resolution/exchangePrep.ts` (191), `src/engine/combat/resolution/styleRiposteBonus.ts` (61) |
+| `src/engine/combat/resolution/phaseResolvers.ts` | 569 lines | 11 lines | `src/engine/combat/resolution/initiativePhase.ts` (106), `src/engine/combat/resolution/offenseDefense.ts` (438) |
+| `src/schemas/gameStateSchema.ts` | ~1500 lines | ~140 lines | `src/schemas/schemaEnums.ts` (440), `src/schemas/schemaObjects.ts` (880) → `src/schemas/warriorSchemas.ts` (378), `src/schemas/fightSchemas.ts` (347), `src/schemas/economySchemas.ts` (377) |
 | `src/components/arena/weather/effects.tsx` | 995 lines | deleted | `src/components/arena/weather/effects/` (8 themed files + barrel index) |
 | `src/engine/narrative/loreGenerator.ts` | 425 lines | 31 lines | `src/engine/narrative/lore/loreData.ts` (407 lines) |
 | `src/engine/skillCalc.ts` | 472 lines | 213 lines | `src/engine/skillBreakpoints.ts` (260 lines) |
+| `src/engine/ai/workers/rosterWorker.ts` | 441 lines | 185 lines | `src/engine/ai/workers/rosterWorkerTraining.ts` (246), `src/engine/ai/workers/rosterWorkerEquipment.ts` (42) |
+| `src/engine/bout/services/boutProcessorService.ts` | 410 lines | 80 lines | `src/engine/bout/services/boutProcessorTypes.ts` (59), `src/engine/bout/services/boutResolution.ts` (278) |
 
 All extracted modules use re-exports for backward compatibility.
 
@@ -106,19 +109,21 @@ All validation gates passed:
 
 | File | Lines | Justification |
 |---|---|---|
-| `seasonalHandlers.ts` | 1498 | 46 independent event handlers — single responsibility (offseason events) |
-| `effects/` (8 files) | ~120 each | Themed weather effect components — pure presentational |
-| `schemaObjects.ts` | 880 | Zod schema definitions (data, not logic) |
+| `seasonalHandlers.ts` | 68 (barrel) | Re-export barrel for offseasonEvents/ directory |
+| `schemaObjects.ts` | 880 (barrel) | Re-export barrel for warriorSchemas/fightSchemas/economySchemas |
 | `traitDefs.ts` | 771 | Trait definitions (data, not logic) |
-| `phaseResolvers.ts` | 569 | Combat phase resolvers (already extracted from resolution.ts) |
+| `phaseResolvers.ts` | 11 (barrel) | Re-export barrel for initiativePhase/offenseDefense |
 | `classTraits.ts` | 516 | Class trait data (data, not logic) |
 | `chargePaths.ts` | 498 | SVG path data (data, not logic) |
 | `combat.ts` (constants) | 476 | Combat constants (data, not logic) |
-| `skillBreakpoints.ts` | 260 | Breakpoint tables + style penalties (data, not logic) |
 | `weather.ts` (constants) | 463 | Weather constants (data, not logic) |
 | `weatherEffects.ts` | 444 | Weather effect data + lookup functions |
-| `rosterWorker.ts` | 441 | AI roster management — cohesive |
+| `offenseDefense.ts` | 438 | Combat offense/defense resolution — cohesive single responsibility |
 | `loreData.ts` | 407 | Lore data arrays (ORIGINS, CHILDHOOD_TRAITS, DEFINING_MOMENTS) |
+| `chaosHandlers.ts` | 421 | Chaos offseason event handlers — single responsibility |
+| `socialHandlers.ts` | 385 | Social offseason event handlers — single responsibility |
+| `combatNarrators.ts` | 355 | 15 cohesive pure narration functions — single domain |
+| `recruitment.ts` | 350 | Recruitment generation + pool management — cohesive |
 
 ## New Utilities Created
 

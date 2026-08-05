@@ -15,6 +15,9 @@ import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import type { FighterState, ResolutionContext } from './types';
 
+/**
+ * Resolve the initiative phase — determines which fighter attacks first.
+ */
 export function resolveInitiativePhase(
   ctx: ResolutionContext,
   fA: FighterState,

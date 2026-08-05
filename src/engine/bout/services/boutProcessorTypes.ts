@@ -8,6 +8,9 @@ import type { WeatherType } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { getMoodModifiers } from '@/engine/crowdMood';
 
+/**
+ * Defines the shape of bout result.
+ */
 export interface BoutResult {
   a: Warrior;
   d: Warrior;
@@ -20,6 +23,9 @@ export interface BoutResult {
   weather?: WeatherType;
 }
 
+/**
+ * Defines the shape of bout impact.
+ */
 export interface BoutImpact {
   impact: StateImpact;
   result: BoutResult;
@@ -32,6 +38,9 @@ export interface BoutImpact {
   };
 }
 
+/**
+ * Defines the shape of week bout summary.
+ */
 export interface WeekBoutSummary {
   bouts: number;
   deaths: number;
@@ -42,6 +51,9 @@ export interface WeekBoutSummary {
   hadRivalryEscalation: boolean;
 }
 
+/**
+ * Defines the shape of bout context.
+ */
 export interface BoutContext {
   warriorMap: Map<string, Warrior>;
   warrior: Warrior;

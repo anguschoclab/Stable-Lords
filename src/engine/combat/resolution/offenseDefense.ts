@@ -23,7 +23,6 @@ import {
   MOMENTUM_FLOOR,
   MOMENTUM_INI_MULT,
 } from '@/constants/combat';
-import type { CommitLevel } from '@/types/shared.types';
 import {
   type OffensiveMods,
   type DefensiveMods,

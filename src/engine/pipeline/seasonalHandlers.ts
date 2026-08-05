@@ -1,25 +1,61 @@
 /**
- * Seasonal Event Handlers — Individual Offseason Event Implementations
- * Extracted from seasonal.ts for SRP separation.
- * Each handler processes one offseason event type.
+ * Seasonal Event Handlers — Re-export barrel
+ * Handler implementations have been split into thematic sub-modules under offseasonEvents/.
+ * This file preserves backward compatibility for existing imports.
  */
-import type { GameState, LedgerEntry, InsightToken } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import {
-  type WarriorId,
-  type LedgerEntryId,
-} from '@/types/shared.types';
-import type { NewsletterItem } from '@/types/shared.types';
-import { interpolateData as t } from '@/engine/narrative/templateHelpers';
-import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
-import { makeInjury } from '@/engine/injuries/utils';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
-import { TRAITS, type TraitDef } from '@/engine/traits';
-import { isActive } from '@/engine/warriorStatus';
+export {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+  handleChaosRift,
+  handleChaoticWeatherExperiment,
+  handleFameBoost,
+  handleWinterChill,
+  handleMerchantBlessing,
+  handleEpiphany,
+  handleShadowMarketRun,
+  handleTavernBrawl,
+  handleBardsSong,
+  handlePlagueOutbreak,
+  handleBlackMarketRaid,
+  handleGrandFeast,
+  handleWanderingHealer,
+  handleMysticVision,
+  handleWildAnimalAttack,
+  handleStrangeDream,
+  handleLoyalStray,
+  handleStreetPerformance,
+  handleChaoticSpells,
+  handleMysteriousPatron,
+  handleMidnightFeast,
+  handleShadowTraining,
+  handleGladiatorOlympics,
+  handleUndergroundPitFight,
+  handleMeteorShower,
+  handleRogueAlchemist,
+  handleDreamweaverVisit,
+  handleAbyssalBargain,
+  handleTavernBrawlSurprise,
+  handleGoblinRaid,
+  handleFeyTrickster,
+  handleShadowTournament,
+  handleWanderingFortuneTeller,
+  handleChaosWeaverVisit,
+  handleTravelingCircus,
+  handleBountyHunterVisit,
+  handleLoyalStrayDog,
+  handleMidnightMarket,
+  handleMoonlightDuel,
+  handleChaosSpores,
+  handleSecretFightClub,
+  handleChaosWeaversGift,
+  handleChaosWeaversGame,
+  handleTemporalAnomaly,
+  handleWanderingMystic,
+} from './offseasonEvents';
 
-export interface OffseasonEventNarrative {
+// === REMOVED CONTENT BELOW (to be cleaned up) ===
+export interface OffseasonEventNarrative_REMOVED {
   title: string;
   effectType:
     | 'chaos_rift'

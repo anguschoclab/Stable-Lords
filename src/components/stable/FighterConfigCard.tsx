@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -37,6 +38,8 @@ export function FighterConfigCard({
   stats,
   setStats,
 }: FighterConfigCardProps) {
+  const baseId = useId();
+
   return (
     <Card>
       <CardHeader className="pb-4 border-b border-border">
@@ -60,10 +63,11 @@ export function FighterConfigCard({
         {Object.entries(stats).map(([key, value]) => (
           <div key={key} className="space-y-1.5">
             <div className="flex justify-between">
-              <Label className="capitalize text-xs text-muted-foreground">{key}</Label>
+              <Label htmlFor={`${baseId}-${key}`} className="capitalize text-xs text-muted-foreground cursor-pointer">{key}</Label>
               <span className="text-xs font-mono">{value}</span>
             </div>
             <Slider
+              id={`${baseId}-${key}`}
               value={[value]}
               min={1}
               max={30}

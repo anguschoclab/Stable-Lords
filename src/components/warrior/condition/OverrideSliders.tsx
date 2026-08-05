@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -12,14 +13,17 @@ interface OverrideSlidersProps {
  *
  */
 export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) {
+  const baseId = useId();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* OE override */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label
+            htmlFor={`${baseId}-oe`}
             className={cn(
-              'text-[9px] font-black uppercase tracking-widest',
+              'text-[9px] font-black uppercase tracking-widest cursor-pointer',
               cond.override.OE !== undefined ? 'text-arena-gold' : 'text-muted-foreground/40'
             )}
           >
@@ -45,6 +49,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         </div>
         {cond.override.OE !== undefined && (
           <Slider
+            id={`${baseId}-oe`}
             value={[cond.override.OE]}
             onValueChange={([v]) => onSliderChange('OE', v)}
             min={1}
@@ -58,8 +63,9 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label
+            htmlFor={`${baseId}-al`}
             className={cn(
-              'text-[9px] font-black uppercase tracking-widest',
+              'text-[9px] font-black uppercase tracking-widest cursor-pointer',
               cond.override.AL !== undefined ? 'text-arena-fame' : 'text-muted-foreground/40'
             )}
           >
@@ -85,6 +91,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         </div>
         {cond.override.AL !== undefined && (
           <Slider
+            id={`${baseId}-al`}
             value={[cond.override.AL]}
             onValueChange={([v]) => onSliderChange('AL', v)}
             min={1}
@@ -98,8 +105,9 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label
+            htmlFor={`${baseId}-kd`}
             className={cn(
-              'text-[9px] font-black uppercase tracking-widest',
+              'text-[9px] font-black uppercase tracking-widest cursor-pointer',
               cond.override.killDesire !== undefined
                 ? 'text-destructive'
                 : 'text-muted-foreground/40'
@@ -127,6 +135,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         </div>
         {cond.override.killDesire !== undefined && (
           <Slider
+            id={`${baseId}-kd`}
             value={[cond.override.killDesire]}
             onValueChange={([v]) => onSliderChange('killDesire', v)}
             min={1}

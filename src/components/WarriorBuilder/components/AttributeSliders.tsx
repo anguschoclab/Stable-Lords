@@ -53,7 +53,7 @@ export function AttributeSliders({ attrs, updateAttr, total, remaining }: Attrib
         {ATTRIBUTE_KEYS.map((key) => (
           <div key={key} className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor={`attr-${key}`} className="text-sm flex items-center gap-1.5">
+              <Label htmlFor={`attr-${key}`} className="text-sm flex items-center gap-1.5 cursor-pointer">
                 {ATTR_ICONS[key]}
                 {ATTRIBUTE_LABELS[key]}
                 <span className="text-xs text-muted-foreground">({key})</span>

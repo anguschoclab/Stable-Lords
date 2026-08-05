@@ -15,12 +15,18 @@ function insertBounded<T>(
   item: T,
   cmp: (a: T, b: T) => number
 ) {
-  if (arr.length === limit && cmp(item, arr[limit - 1]!) >= 0) {
+  const lastItem = arr[limit - 1];
+  if (arr.length === limit && lastItem !== undefined && cmp(item, lastItem) >= 0) {
     return;
   }
   let i = arr.length - 1;
-  while (i >= 0 && cmp(item, arr[i]!) < 0) {
-    i--;
+  while (i >= 0) {
+    const currentItem = arr[i];
+    if (currentItem !== undefined && cmp(item, currentItem) < 0) {
+      i--;
+    } else {
+      break;
+    }
   }
   arr.splice(i + 1, 0, item);
   if (arr.length > limit) {

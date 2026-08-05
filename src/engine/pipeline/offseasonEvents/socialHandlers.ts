@@ -10,6 +10,7 @@ import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { type LedgerEntryId } from '@/types/shared.types';
 import { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+import { isActive } from '@/engine/warriorStatus';
 
 export function handleShadowMarketRun(
   state: GameState,

@@ -73,7 +73,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { getCounterstrikeAttBonus } from './counterstrike';
 import { tickBleed } from './bleed';
-import { styleRiposteBonus } from './resolution';
+import { styleRiposteBonus } from './styleRiposteBonus';
 
 export function resolveInitiativePhase(
   ctx: ResolutionContext,

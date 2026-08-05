@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-08-02T00:12:00Z",
+  "branch": "refactor/srp-dry-audit",
+  "tag": "pre-audit-baseline",
+  "tsc": "clean (0 errors)",
+  "vitest": {
+    "testFiles": 452,
+    "passed": 5696,
+    "skipped": 8,
+    "failed": 0
+  },
+  "narrativeValidate": "passed",
+  "sourceFiles": {
+    "count": 849,
+    "totalLines": 94903,
+    "testFileCount": 456
+  },
+  "largestFiles": [
+    { "file": "src/engine/pipeline/seasonal.ts", "lines": 1753 },
+    { "file": "src/schemas/gameStateSchema.ts", "lines": 1429 },
+    { "file": "src/data/arenas.ts", "lines": 999 },
+    { "file": "src/components/arena/weather/effects.tsx", "lines": 995 },
+    { "file": "src/engine/traits.ts", "lines": 964 },
+    { "file": "src/engine/combat/resolution/resolution.ts", "lines": 901 },
+    { "file": "src/data/names/warriorNames.ts", "lines": 744 },
+    { "file": "src/types/shared.types.ts", "lines": 674 },
+    { "file": "src/types/state.types.ts", "lines": 638 },
+    { "file": "src/data/equipment/weapons.ts", "lines": 600 },
+    { "file": "src/types/narrative.types.ts", "lines": 569 },
+    { "file": "src/engine/combat/mechanics/weatherEffects.ts", "lines": 530 },
+    { "file": "src/engine/traitData/classTraits.ts", "lines": 516 },
+    { "file": "src/engine/crest/chargePaths.ts", "lines": 498 },
+    { "file": "src/constants/combat/combat.ts", "lines": 476 },
+    { "file": "src/engine/skillCalc.ts", "lines": 471 },
+    { "file": "src/pages/PromoterDetail.tsx", "lines": 463 },
+    { "file": "src/constants/arena/weather.ts", "lines": 463 },
+    { "file": "src/types/crest.types.ts", "lines": 458 }
+  ]
+}

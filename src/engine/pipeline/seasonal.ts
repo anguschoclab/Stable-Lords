@@ -67,7 +67,8 @@ interface OffseasonEventNarrative {
     | 'secret_fight_club'
     | 'chaos_weavers_gift'
     | 'temporal_anomaly'
-    | 'wandering_mystic';
+    | 'wandering_mystic'
+    | 'cursed_treasure_discovery';
   newsletter: string[];
 }
 
@@ -1639,6 +1640,47 @@ function handleWanderingMystic(
   }
 }
 
+
+function handleCursedTreasureDiscovery(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const goldGained = 300 + Math.floor(rng.next() * 201);
+      const fameLost = 10 + Math.floor(rng.next() * 11);
+
+      ctx.treasuryDelta += goldGained;
+      addLedger(ctx, rng, nextWeek, 'Cursed Treasure Gained', goldGained, 'other');
+
+      const newInjury = makeInjury(rng, {
+        name: 'Curse of Greed',
+        description: 'A lingering mystical sickness from cursed gold.',
+        severity: 'Moderate',
+        weeksBase: 3,
+        weeksRange: 2,
+        penalties: { WL: -2, CN: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        fame: Math.max(0, (chosen.fame || 0) - fameLost),
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold: goldGained,
+        fame: fameLost,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1694,6 +1736,7 @@ const EVENT_HANDLERS: Record<
   chaos_weavers_game: handleChaosWeaversGame,
   temporal_anomaly: handleTemporalAnomaly,
   wandering_mystic: handleWanderingMystic,
+  cursed_treasure_discovery: handleCursedTreasureDiscovery,
 };
 
 /**

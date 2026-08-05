@@ -5567,6 +5567,13 @@
       "newsletter": [
         "A wandering mystic sought shelter with {{name}} over the winter, teaching them strange truths. (+Chaos Touched trait)"
       ]
+    },
+    "cursed_treasure_discovery": {
+      "title": "Cursed Treasure Discovery",
+      "effectType": "cursed_treasure_discovery",
+      "newsletter": [
+        "While digging out a new training pit, {{name}} unearthed a cursed chest! The stable gained a hoard of gold, but the gladiator suffered a lingering magical affliction and public suspicion. (+{{gold}} Gold, -{{fame}} Fame, Moderate Injury)"
+      ]
     }
   },
   "crowd_reactions": {

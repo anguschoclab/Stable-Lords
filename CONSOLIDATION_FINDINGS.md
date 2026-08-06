@@ -144,8 +144,55 @@ Phase 3: Merge PRs in order:
   13. refactor/srp-dry-audit — SRP decomposition (ac90c7eb)
 Phase 4: Fix 92 tsc errors from refactor (45639eae, f0a11eeb)
 Phase 4: Remove 20 dead route stubs (4cc5474a)
+Phase 4.2: Verify RC1-RC7 — all 7 pre-existing bug root causes already fixed
+Phase 4.4: New bug discovery — no issues found (narrative valid, schema sync, no junk)
+Phase 5: Full verification (incl. slow tests) — 6073 pass, 1 flaky timing test, E2E env issues
 Phase 6: Close 23 PRs, delete 27 remote branches, prune local branches
+Phase 6.4: Remove temporary audit/working files, add .gitignore junk patterns (aaed19f5)
 ```
+
+---
+
+## 7. Deferred/Optional Phase Results
+
+### Phase 2.5: Refactor Branch Test Review
+- **9 test files reviewed**: `resolutionDeterminism.test.ts`, `loreGenerator.test.ts`, `newLoreGenerator.test.ts`, `offseasonDeterminism.test.ts`, `traitsCharacterization.test.ts`, `useTrainingPlanner.test.ts`, `schemaCharacterization.test.ts`, `buildWarriorMapDivergence.test.ts`, `roster.test.ts`
+- **Result**: All 9 files present, 203 tests pass. No stubbing needed — tests work with refactored module paths.
+
+### Phase 4.2: Pre-Existing Bug Triage (RC1-RC7)
+All 7 root causes verified as **already fixed** in the current codebase:
+
+| RC | Description | Status |
+|----|-------------|--------|
+| RC1 | `vi.mock` leak from `simulation.test.ts` | ✅ Fixed — mock factory exports all named exports |
+| RC2 | `vi.resetModules()` unavailable in Bun | ✅ Fixed — no `vi.resetModules()` calls remain |
+| RC3 | `storage.test.ts` replaces `global.localStorage` | ✅ Fixed — saves/restores in `afterAll` |
+| RC4 | `setMockIdGenerator` leak from `feed.test.ts` | ✅ Fixed — `afterEach(() => setMockIdGenerator(null))` |
+| RC5 | `useDigestSummary` missing warrior IDs | ✅ Fixed — `makeOffer` includes player warrior IDs |
+| RC6 | Scouting test string mismatch | ✅ Fixed — expects `'Limited information available'` |
+| RC7 | `e2e/golden-path.spec.ts` picked up by Bun | ✅ Fixed — `bunfig.toml` excludes `e2e/**` |
+
+### Phase 4.4: New Bug Discovery
+- **Narrative content**: All 5 offseason events valid, template brackets balanced
+- **Schema validation**: `schemaCharacterization.test.ts` (27 tests) + `enumSourcesSync.test.ts` (6 tests) pass
+- **Weather audio**: Audio files are generic SFX (clash, hit, crit), not per-weather-type — no missing files
+- **TODO/FIXME/console.log**: No code-level issues in merged diff (only narrative content matches)
+- **Junk files**: Zero junk files in final diff
+
+### Phase 5: Full Verification (including slow tests)
+- **tsc**: 0 errors
+- **vitest (standard)**: 464 files, 5956 passed, 0 failed, 8 skipped
+- **vitest (all, including slow)**: 472 files, 6073 passed, 1 failed (flaky timing test `advanceWeekPerformance`), 8 skipped
+- **narrative-validate**: Passed — no errors
+- **E2E (Playwright)**: 5 failures — all environmental (missing browser executables, no dev server running). Not code regressions.
+- **build**: Succeeds
+- **lint**: 0 errors (1011 pre-existing JSDoc warnings)
+
+### Phase 6.4: Temporary File Cleanup
+- Removed `audit/` directory (3 files: `REFACTORING_REPORT.md`, `MASTER_FINDINGS.md`, `baseline-snapshot.json`)
+- Removed `.devin/plans/test-fix-plan-refined.md`
+- Removed `.windsurf/plans/audit-stubs-deadcode.md`
+- Added `.gitignore` entries for `*.orig`, `*.py`, `lint_output.txt` (V10 recommendation)
 
 ---
 

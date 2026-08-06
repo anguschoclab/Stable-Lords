@@ -104,6 +104,33 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  starving_dog: {
+    id: 'starving_dog',
+    name: 'Starving Dog',
+    description: 'Fights like a cornered animal when heavily wounded. Bonus attack when at low health.',
+    effect: { attModLowHp: 2, defModLowHp: -1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  iron_knuckles: {
+    id: 'iron_knuckles',
+    name: 'Iron Knuckles',
+    description: 'Calloused fists from countless street brawls. Bonus to unarmed strikes and disarms.',
+    effect: { attModEarly: 1, ripMod: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  jumpy: {
+    id: 'jumpy',
+    name: 'Jumpy',
+    description: 'Always expects a knife in the back. Better defense and parry, but lower attack.',
+    effect: { defMod: 1, parMod: 1, attMod: -1 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.7,
+  },
   gutter_ghost: {
     id: 'gutter_ghost',
     name: 'Gutter Ghost',

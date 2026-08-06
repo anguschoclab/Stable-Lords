@@ -66,12 +66,13 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Offensive Effort Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
+            <label htmlFor="plan-step-oe" className="text-[10px] font-black uppercase tracking-widest text-arena-gold cursor-pointer">
               Offensive Effort
-            </span>
+            </label>
             <span className="text-sm font-mono font-bold text-arena-gold">{plan.OE}</span>
           </div>
           <Slider
+            id="plan-step-oe"
             value={[plan.OE]}
             onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
             min={1}
@@ -87,12 +88,13 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Activity Level Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
+            <label htmlFor="plan-step-al" className="text-[10px] font-black uppercase tracking-widest text-arena-fame cursor-pointer">
               Activity Level
-            </span>
+            </label>
             <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
           </div>
           <Slider
+            id="plan-step-al"
             value={[plan.AL ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
             min={1}
@@ -108,14 +110,15 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Kill Desire Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-destructive">
+            <label htmlFor="plan-step-kd" className="text-[10px] font-black uppercase tracking-widest text-destructive cursor-pointer">
               Kill Desire
-            </span>
+            </label>
             <span className="text-sm font-mono font-bold text-destructive">
               {plan.killDesire ?? 5}
             </span>
           </div>
           <Slider
+            id="plan-step-kd"
             value={[plan.killDesire ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v ?? 5 })}
             min={1}

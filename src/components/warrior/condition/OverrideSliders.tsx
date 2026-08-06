@@ -18,6 +18,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label
+            htmlFor={`override-oe-${cond.id}`}
             className={cn(
               'text-[9px] font-black uppercase tracking-widest',
               cond.override.OE !== undefined ? 'text-arena-gold' : 'text-muted-foreground/40'
@@ -45,6 +46,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         </div>
         {cond.override.OE !== undefined && (
           <Slider
+            id={`override-oe-${cond.id}`}
             value={[cond.override.OE]}
             onValueChange={([v]) => onSliderChange('OE', v)}
             min={1}
@@ -58,6 +60,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label
+            htmlFor={`override-al-${cond.id}`}
             className={cn(
               'text-[9px] font-black uppercase tracking-widest',
               cond.override.AL !== undefined ? 'text-arena-fame' : 'text-muted-foreground/40'
@@ -85,6 +88,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         </div>
         {cond.override.AL !== undefined && (
           <Slider
+            id={`override-al-${cond.id}`}
             value={[cond.override.AL]}
             onValueChange={([v]) => onSliderChange('AL', v)}
             min={1}
@@ -98,6 +102,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label
+            htmlFor={`override-kd-${cond.id}`}
             className={cn(
               'text-[9px] font-black uppercase tracking-widest',
               cond.override.killDesire !== undefined
@@ -127,6 +132,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         </div>
         {cond.override.killDesire !== undefined && (
           <Slider
+            id={`override-kd-${cond.id}`}
             value={[cond.override.killDesire]}
             onValueChange={([v]) => onSliderChange('killDesire', v)}
             min={1}

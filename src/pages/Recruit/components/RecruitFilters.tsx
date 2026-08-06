@@ -84,14 +84,14 @@ export function RecruitFilters({
 
         {/* Style */}
         <div className="space-y-4">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+          <label htmlFor="recruit-style-select" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
             Fighting Style
           </label>
           <Select
             value={activeStyle}
             onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}
           >
-            <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
+            <SelectTrigger id="recruit-style-select" className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
               <SelectValue placeholder="All Styles" />
             </SelectTrigger>
             <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
@@ -107,7 +107,7 @@ export function RecruitFilters({
 
         {/* Sort */}
         <div className="space-y-4">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+          <label htmlFor="recruit-sort-select" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
             Sort By
           </label>
           <Select
@@ -116,7 +116,7 @@ export function RecruitFilters({
               setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc')
             }
           >
-            <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
+            <SelectTrigger id="recruit-sort-select" className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-neutral-950 border-white/10 rounded-none">

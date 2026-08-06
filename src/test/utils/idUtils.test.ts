@@ -106,4 +106,26 @@ describe('idUtils', () => {
       });
     });
   });
+
+  describe('generateId crypto checks', () => {
+    it('uses fallback when globalThis is undefined', () => {
+      // We can't actually undefine globalThis in the test runner safely,
+      // but we can check the cryptoObj fallback when getRandomValues isn't there
+      const originalCrypto = globalThis.crypto;
+      Object.defineProperty(globalThis, 'crypto', {
+        value: { randomUUID: undefined, getRandomValues: undefined },
+        writable: true,
+        configurable: true,
+      });
+
+      expect(() => generateId()).toThrow('Secure random number generator not available in this environment.');
+
+      Object.defineProperty(globalThis, 'crypto', {
+        value: originalCrypto,
+        writable: true,
+        configurable: true,
+      });
+    });
+  });
+
 });

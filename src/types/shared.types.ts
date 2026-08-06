@@ -424,6 +424,7 @@ export type ConditionTriggerType =
  * Defines the shape of plan condition.
  */
 export interface PlanCondition {
+  id?: string;
   trigger: { type: ConditionTriggerType; value: number | string };
   override: Partial<
     Pick<FightPlan, 'OE' | 'AL' | 'killDesire' | 'offensiveTactic' | 'defensiveTactic'>

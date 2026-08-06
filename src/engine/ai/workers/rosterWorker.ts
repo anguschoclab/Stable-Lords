@@ -211,7 +211,7 @@ export function processRoster(
     if (budgetReport.isAffordable && activeForGear.length > 0) {
       // ⚡ TSA: Role-Based Gearing (Prioritize Champion or the 'Muddy' Basher for rain insurance)
       const gearCandidate =
-        activeForGear.find((w) => w.champion) ??
+        champWarrior ??
         activeForGear.find((w) => w.style === FightingStyle.BashingAttack) ??
         rngService.pick(activeForGear);
 

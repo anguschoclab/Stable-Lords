@@ -2,7 +2,7 @@
  * Warrior-related Zod schemas (attributes, skills, injuries, equipment, plans, rivalries).
  */
 import { z } from 'zod';
-import { FightingStyleSchema, SeasonSchema, CrowdMoodTypeSchema, WeatherTypeSchema, TrainerTierSchema, TrainerFocusSchema, TrainerSpecialtySchema, ScoutQualitySchema, WarriorStatusSchema, InjurySeveritySchema, InjuryLocationSchema, PromoterPersonalitySchema, PromoterTierSchema, OwnerPersonalitySchema, MetaAdaptationSchema, AttackTargetSchema, ProtectTargetSchema, OffensiveTacticSchema, DefensiveTacticSchema, ConditionTriggerTypeSchema, PsychStateSchema, DistanceRangeSchema, ArenaZoneSchema, CommitLevelSchema, ArenaTagSchema, ShieldShapeSchema, FieldTypeSchema, MetalColorSchema, ChargeTypeSchema, BeastPostureSchema, ArmorWeightSchema, WeaponTypeSchema, EquipmentSlotSchema, BoutOfferStatusSchema, BoutOfferResponseSchema, FightOutcomeBySchema, CombatEventTypeSchema, DeathCauseBucketSchema, AIIntentSchema, AnnualAwardTypeSchema } from './schemaEnums';
+import { FightingStyleSchema, WarriorStatusSchema, InjurySeveritySchema, InjuryLocationSchema, OwnerPersonalitySchema, AttackTargetSchema, ProtectTargetSchema, OffensiveTacticSchema, DefensiveTacticSchema, ConditionTriggerTypeSchema, DistanceRangeSchema } from './schemaEnums';
 
 
 /**

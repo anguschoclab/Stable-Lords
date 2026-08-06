@@ -2,7 +2,7 @@
  * Fight and combat Zod schemas (bouts, tournaments, outcomes, analysis, gazette).
  */
 import { z } from 'zod';
-import { FightingStyleSchema, SeasonSchema, CrowdMoodTypeSchema, WeatherTypeSchema, TrainerTierSchema, TrainerFocusSchema, TrainerSpecialtySchema, ScoutQualitySchema, WarriorStatusSchema, InjurySeveritySchema, InjuryLocationSchema, PromoterPersonalitySchema, PromoterTierSchema, OwnerPersonalitySchema, MetaAdaptationSchema, AttackTargetSchema, ProtectTargetSchema, OffensiveTacticSchema, DefensiveTacticSchema, ConditionTriggerTypeSchema, PsychStateSchema, DistanceRangeSchema, ArenaZoneSchema, CommitLevelSchema, ArenaTagSchema, ShieldShapeSchema, FieldTypeSchema, MetalColorSchema, ChargeTypeSchema, BeastPostureSchema, ArmorWeightSchema, WeaponTypeSchema, EquipmentSlotSchema, BoutOfferStatusSchema, BoutOfferResponseSchema, FightOutcomeBySchema, CombatEventTypeSchema, DeathCauseBucketSchema, AIIntentSchema, AnnualAwardTypeSchema } from './schemaEnums';
+import { FightingStyleSchema, SeasonSchema, CrowdMoodTypeSchema, WeatherTypeSchema, BoutOfferStatusSchema, BoutOfferResponseSchema, FightOutcomeBySchema, CombatEventTypeSchema, DeathCauseBucketSchema, AnnualAwardTypeSchema } from './schemaEnums';
 import { WarriorSchema, DeathEventSchema } from './warriorSchemas';
 
 /**

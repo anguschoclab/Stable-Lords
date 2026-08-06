@@ -11,10 +11,27 @@ import type { WarriorId } from '@/types/shared.types';
  */
 export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
   if (value.size === 0) return;
-  state.roster = state.roster.map((w) => {
-    const update = value.get(w.id);
-    return update ? { ...w, ...update } : w;
-  });
+
+  // Directly modify the roster without mapping if we only have a few updates
+  // and the array is large, or just map if value has many updates
+  if (value.size === 1) {
+    const entries = Array.from(value.entries());
+    if (!entries[0]) return;
+    const entry = entries[0];
+    const id = entry[0];
+    const update = entry[1];
+    const index = state.roster.findIndex(w => w.id === id);
+    if (index !== -1) {
+      const nextRoster = [...state.roster];
+      nextRoster[index] = { ...nextRoster[index], ...update } as Warrior;
+      state.roster = nextRoster;
+    }
+  } else {
+    state.roster = state.roster.map((w) => {
+      const update = value.get(w.id);
+      return update ? { ...w, ...update } as Warrior : w;
+    });
+  }
 };
 
 /**

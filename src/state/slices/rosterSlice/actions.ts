@@ -3,6 +3,7 @@ import { Warrior, InsightToken } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeWarriorStats } from '@/engine/skillCalc';
+import { updateEntityInList } from '@/utils/stateUtils';
 
 /**
  *
@@ -26,7 +27,7 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         const dead: Warrior = {
           ...victim,
           status: 'Dead',
-          deathWeek: state.absoluteWeek ?? state.week,
+          deathWeek: state.week,
           deathCause: cause,
           killedBy,
           deathEvent,
@@ -84,9 +85,7 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         const token = state.insightTokens?.find((t: InsightToken) => t.id === tokenId);
         if (!token) return state;
 
-        const nextRoster = state.roster.map((w: Warrior) => {
-          if (w.id !== warriorId) return w;
-
+        const nextRoster = updateEntityInList(state.roster, warriorId, (w) => {
           const draft = { ...w };
           if (!draft.favorites) {
             draft.favorites = {
@@ -136,19 +135,15 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       warriorId: WarriorId,
       equipment: { weapon: string; armor: string; shield: string; helm: string }
     ) => {
-      set((state) => {
-        const nextRoster = state.roster.map((w: Warrior) => {
-          if (w.id !== warriorId) return w;
-          return { ...w, equipment };
-        });
-        return { roster: nextRoster };
-      });
+      set((state) => ({
+        roster: updateEntityInList(state.roster, warriorId, (w) => ({ ...w, equipment })),
+      }));
     },
 
     renameWarrior: (warriorId: WarriorId, newName: string) => {
       set((state) => {
         const updateList = (list: Warrior[]) =>
-          list.map((w) => (w.id === warriorId ? { ...w, name: newName } : w));
+          updateEntityInList(list, warriorId, (w) => ({ ...w, name: newName }));
 
         return {
           roster: updateList(state.roster),

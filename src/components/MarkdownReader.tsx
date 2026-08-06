@@ -17,7 +17,21 @@ export function MarkdownReader({ content }: MarkdownReaderProps) {
     <div
       className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-primary prose-a:text-arena-blue hover:prose-a:text-arena-gold prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded prose-pre:bg-secondary prose-pre:border prose-pre:border-border"
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          a: ({ node, ...props }) => {
+            const isExternal = props.href?.startsWith('http');
+            return isExternal ? (
+              <a target="_blank" rel="noopener noreferrer" {...props} />
+            ) : (
+              <a {...props} />
+            );
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
     </div>
   );
 }

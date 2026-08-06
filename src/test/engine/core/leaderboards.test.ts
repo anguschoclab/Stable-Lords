@@ -204,6 +204,43 @@ describe('calculateGlobalFameLeaderboard', () => {
     expect(result[3]!.warrior.id).toBe('w46');
     expect(result[4]!.warrior.id).toBe('w45');
   });
+
+  it('insertBounded edge: inserts into empty array with limit > 0', () => {
+    const result = calculateGlobalFameLeaderboard([createMockWarrior('solo', 42)], undefined, 'Test', 10);
+    expect(result).toHaveLength(1);
+    expect(result[0]!.warrior.id).toBe('solo');
+  });
+
+  it('insertBounded edge: rejects item worse than last when at capacity', () => {
+    const roster = [
+      createMockWarrior('top', 100),
+      createMockWarrior('mid', 50),
+      createMockWarrior('low', 10),
+    ];
+    const result = calculateGlobalFameLeaderboard(roster, undefined, 'Test', 2);
+    expect(result).toHaveLength(2);
+    expect(result[0]!.warrior.id).toBe('top');
+    expect(result[1]!.warrior.id).toBe('mid');
+  });
+
+  it('insertBounded edge: replaces last item when better item arrives at capacity', () => {
+    const roster = [
+      createMockWarrior('a', 10),
+      createMockWarrior('b', 20),
+      createMockWarrior('c', 15),
+    ];
+    const result = calculateGlobalFameLeaderboard(roster, undefined, 'Test', 2);
+    expect(result).toHaveLength(2);
+    expect(result[0]!.warrior.id).toBe('b');
+    expect(result[1]!.warrior.id).toBe('c');
+  });
+
+  it('insertBounded edge: handles single-element array at capacity=1', () => {
+    const roster = [createMockWarrior('low', 10), createMockWarrior('high', 50)];
+    const result = calculateGlobalFameLeaderboard(roster, undefined, 'Test', 1);
+    expect(result).toHaveLength(1);
+    expect(result[0]!.warrior.id).toBe('high');
+  });
 });
 
 function createArenaWarrior(

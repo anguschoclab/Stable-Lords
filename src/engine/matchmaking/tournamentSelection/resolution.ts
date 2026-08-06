@@ -13,6 +13,7 @@ import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
+import { updateEntityInList } from '@/utils/stateUtils';
 import { findCurrentRoundBouts } from '../tournament/bracketUtils'; /**
  * Resolve round.
  */
@@ -165,8 +166,7 @@ export function resolveRound(
   const champion = isComplete ? winners[0]?.name : undefined;
 
   let updatedTournament: TournamentEntry | undefined;
-  updatedState.tournaments = (updatedState.tournaments || []).map((t) => {
-    if (t.id !== tournamentId) return t;
+  updatedState.tournaments = updateEntityInList(updatedState.tournaments || [], tournamentId, (t) => {
     updatedTournament = { ...t, bracket, completed: isComplete, champion };
     return updatedTournament;
   });
@@ -249,24 +249,17 @@ export function applyBoutResults(
   // 🔒 Tournament fatigue exemption: No fatigue accrual for tournament participants during tournament week
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
-  updatedState.roster = updatedState.roster.map((w) => {
-    if (w.id === wA.id)
-      return updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue);
-    if (w.id === wD.id)
-      return updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue);
-    return w;
-  });
+  updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) => updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue));
+  updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) => updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue));
 
-  updatedState.rivals = updatedState.rivals.map((r) => ({
-    ...r,
-    roster: r.roster.map((w) => {
-      if (w.id === wA.id)
-        return updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue);
-      if (w.id === wD.id)
-        return updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue);
-      return w;
-    }),
-  }));
+  if (wA.stableId || wD.stableId) {
+    updatedState.rivals = updatedState.rivals.map((r) => {
+      let rRoster = r.roster;
+      if (r.id === wA.stableId) rRoster = updateEntityInList(rRoster, wA.id, (w) => updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue));
+      if (r.id === wD.stableId) rRoster = updateEntityInList(rRoster, wD.id, (w) => updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue));
+      return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
+    });
+  }
 
   if (isKill) {
     const victim = winnerSide === 'D' ? wA : wD;

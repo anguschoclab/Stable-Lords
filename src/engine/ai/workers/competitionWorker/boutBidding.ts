@@ -239,7 +239,11 @@ export function convertBidsToOffers(
 ): BoutOffer[] {
   const sorted = [...allBids].sort((a, b) => b.bid.priority - a.bid.priority);
   const paired = new Set<string>(existingOfferWarriorIds);
-  const rivalMap = new Map(rivals.map((r) => [r.id as string, r]));
+  // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
+  const rivalMap = new Map<string, RivalStableData>();
+  for (const r of rivals) {
+    rivalMap.set(r.id as string, r);
+  }
   const offers: BoutOffer[] = [];
 
   for (const { bid } of sorted) {

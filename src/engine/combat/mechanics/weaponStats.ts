@@ -12,7 +12,10 @@ import type { FightingStyle } from '@/types/shared.types';
 import { WEAPONS } from '@/data/equipment/weapons';
 import { getWeaponSuitability, weaponSuitabilityDamageMod } from '@/engine/weaponSuitability';
 
-const WEAPON_BY_ID = new Map(WEAPONS.map((w) => [w.id, w]));
+const WEAPON_BY_ID = new Map<string, typeof WEAPONS[0]>();
+for (const w of WEAPONS) {
+  WEAPON_BY_ID.set(w.id, w);
+}
 
 /**
  * Flat damage-class bonus from the weapon: heft (weight-driven) plus the canonical

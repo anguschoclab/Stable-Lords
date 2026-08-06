@@ -149,7 +149,11 @@ export function pickWeeklyIntent(
   // 6. EXPANSION: If roster is thin — boosted if a known rival has grown recently
   const minSize = personality === 'Aggressive' ? 8 : personality === 'Methodical' ? 5 : 6;
   const knownRivals = rival.agentMemory?.knownRivals ?? [];
-  const rivalsByOwnerId = new Map((state.rivals || []).map((rv) => [rv.owner.id, rv]));
+  // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
+  const rivalsByOwnerId = new Map<string, RivalStableData>();
+  for (const rv of state.rivals || []) {
+    rivalsByOwnerId.set(rv.owner.id, rv);
+  }
   const rivalExpanding = knownRivals.some((rivalId) => {
     const r = rivalsByOwnerId.get(rivalId);
     if (!r || !r.agentMemory?.seasonRecord) return false;

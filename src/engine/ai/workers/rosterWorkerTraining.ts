@@ -2,7 +2,7 @@
  * AI roster training logic — attribute training, skill drilling, trait development.
  * Extracted from rosterWorker.ts for SRP separation.
  */
-import type { GameState, RivalStableData, SeasonalGrowth } from '@/types/state.types';
+import type { GameState, RivalStableData, SeasonalGrowth, OwnerPersonality } from '@/types/state.types';
 import type { Attributes, Season, BaseSkills } from '@/types/shared.types';
 import { FightingStyle, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -204,7 +204,7 @@ export function performAISkillDrill(w: Warrior, stable: RivalStableData, rng: IR
 export function processTraitDevelopment(
   roster: Warrior[],
   treasury: number,
-  ownerPersonality: string,
+  ownerPersonality: OwnerPersonality | undefined,
   rng: IRNGService
 ): Warrior[] {
   const traitPolicy = policyFor(ownerPersonality);

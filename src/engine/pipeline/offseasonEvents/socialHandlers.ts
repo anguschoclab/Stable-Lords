@@ -5,7 +5,6 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
-import { makeInjury } from '@/engine/injuries/utils';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { type LedgerEntryId } from '@/types/shared.types';

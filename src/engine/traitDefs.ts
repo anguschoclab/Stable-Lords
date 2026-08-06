@@ -16,10 +16,8 @@
  *
  * Generation: each warrior rolls 0-2 traits at creation, weighted toward 1.
  */
-import type { Warrior } from '@/types/warrior.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { Archetype } from '@/data/names/archetypeNames';
 import type { FightingStyle } from '@/types/shared.types';
+import type { Archetype } from '@/data/names/archetypeNames';
 
 /**
  *
@@ -29,14 +27,7 @@ export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Fl
  *
  */
 export type TraitSign = 'positive' | 'negative';
-import {
-  TRAIT_SYNERGY_MULTIPLIER,
-  TRAIT_ANTI_SYNERGY_MULTIPLIER,
-  BIRTH_BLANK_CHANCE,
-  BIRTH_FLAW_CHANCE,
-} from '@/constants/combat/combat'; /**
- * Defines the shape of trait effect.
- */
+export type TraitId = string;
 
 /**
  * Defines the shape of trait effect.
@@ -104,6 +95,33 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  starving_dog: {
+    id: 'starving_dog',
+    name: 'Starving Dog',
+    description: 'Fights like a cornered animal when heavily wounded. Bonus attack when at low health.',
+    effect: { attModLowHp: 2, defModLowHp: -1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  iron_knuckles: {
+    id: 'iron_knuckles',
+    name: 'Iron Knuckles',
+    description: 'Calloused fists from countless street brawls. Bonus to unarmed strikes and disarms.',
+    effect: { attModEarly: 1, ripMod: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  jumpy: {
+    id: 'jumpy',
+    name: 'Jumpy',
+    description: 'Always expects a knife in the back. Better defense and parry, but lower attack.',
+    effect: { defMod: 1, parMod: 1, attMod: -1 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.7,
+  },
   gutter_ghost: {
     id: 'gutter_ghost',
     name: 'Gutter Ghost',

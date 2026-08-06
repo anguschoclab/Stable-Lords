@@ -3,7 +3,6 @@
  * Extracted from traits.ts for SRP separation.
  */
 import type { Warrior } from '@/types/warrior.types';
-import type { FightPlan } from '@/types/shared.types';
 import { TRAITS } from './traitDefs';
 
 /**

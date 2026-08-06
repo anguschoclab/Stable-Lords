@@ -11,7 +11,7 @@ import {
   BIRTH_BLANK_CHANCE,
   BIRTH_FLAW_CHANCE,
 } from '@/constants/combat/combat';
-import { TRAITS, type TraitDef, type TraitTier, type TraitId } from './traitDefs';
+import { TRAITS, type TraitDef, type TraitTier } from './traitDefs';
 
 /** Class traits available to a given fighting style. */
 export function traitsForStyle(style: FightingStyle): TraitDef[] {

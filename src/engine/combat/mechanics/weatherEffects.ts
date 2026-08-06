@@ -421,6 +421,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Unpredictable bursts of raw energy whip through the arena, empowering strikes but punishing mistakes.',
   },
+  'Mana Storm': {
+    staminaMult: 1.5,
+    initiativeMod: 4,
+    riposteMod: 1,
+    damageMult: 1.1,
+    description: 'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
+  },
 };
 
 /**

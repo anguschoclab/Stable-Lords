@@ -49,3 +49,8 @@ review.txt
 
 # Backup files
 *.bak
+*.orig
+
+# PR junk patterns (per consolidation findings V10)
+*.py
+lint_output.txt

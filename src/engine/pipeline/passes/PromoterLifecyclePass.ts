@@ -31,8 +31,7 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): S
   const WEEKS_PER_YEAR = 52;
   const isAgingWeek = state.week % WEEKS_PER_YEAR === 0;
 
-  for (const id in newPromoters) {
-    const p = newPromoters[id];
+  for (const [id, p] of Object.entries(newPromoters)) {
     if (!p) continue;
     let currentAge = p.age ?? 45;
     if (isAgingWeek) currentAge++;

@@ -866,6 +866,66 @@ describe('resolveCompleteTournament', () => {
 
     expect(updated.tournaments[0]!.completed).toBe(true);
   });
+
+  it('resolveCompleteTournament produces identical results across calls (golden output)', () => {
+    const makeWarriors = (): Warrior[] => {
+      const ws: Warrior[] = [];
+      for (let i = 0; i < 8; i++) {
+        ws.push(
+          makeTestWarrior(
+            `gw${i}`,
+            `Golden Warrior ${i}`,
+            FightingStyle.StrikingAttack,
+            i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+          )
+        );
+      }
+      return ws;
+    };
+
+    const setupState = (warriors: Warrior[]): GameState => {
+      const s = makeBaseState();
+      s.roster = warriors.filter((_, i) => i % 2 === 0);
+      s.rivals = [
+        {
+          id: RIVAL_ID,
+          owner: {
+            id: RIVAL_ID,
+            name: 'Rival',
+            stableName: 'Rival Stable',
+            fame: 0,
+            renown: 0,
+            titles: 0,
+          },
+          roster: warriors.filter((_, i) => i % 2 === 1),
+          treasury: 500,
+          fame: 0,
+        } as any,
+      ];
+      s.tournaments = [makeTournamentWithR1(warriors)];
+      return s;
+    };
+
+    const state1 = setupState(makeWarriors());
+    const state2 = setupState(makeWarriors());
+
+    const updated1 = resolveCompleteTournament(state1, state1.tournaments[0]!.id, 42);
+    const updated2 = resolveCompleteTournament(state2, state2.tournaments[0]!.id, 42);
+
+    // Champion must be identical
+    expect(updated1.tournaments[0]!.champion).toBe(updated2.tournaments[0]!.champion);
+    // Completed flag must match
+    expect(updated1.tournaments[0]!.completed).toBe(updated2.tournaments[0]!.completed);
+    // Bracket length must match
+    expect(updated1.tournaments[0]!.bracket.length).toBe(updated2.tournaments[0]!.bracket.length);
+    // Every bout winner must match
+    const b1 = updated1.tournaments[0]!.bracket;
+    const b2 = updated2.tournaments[0]!.bracket;
+    for (let i = 0; i < b1.length; i++) {
+      expect(b1[i]!.winner).toBe(b2[i]!.winner);
+      expect(b1[i]!.by).toBe(b2[i]!.by);
+    }
+  });
 });
 
 // ─── applyBoutResults ───
@@ -1294,6 +1354,73 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
     const updated = resolveCompleteTournament(state, tournament.id, 1);
     expect(updated.tournaments[0]!.completed).toBe(true);
     expect(updated.tournaments[0]!.champion).toBeDefined();
+  });
+});
+
+// ─── resolveRound — updatedTournament return field ─────────────────────────────
+
+describe('resolveRound — updatedTournament return field (tournamentSelection)', () => {
+  it('returns updatedTournament with updated bracket after round resolution', () => {
+    const warriors: Warrior[] = [];
+    for (let i = 0; i < 4; i++) {
+      warriors.push(
+        makeTestWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
+      );
+    }
+
+    const state = makeBaseState();
+    state.roster = warriors.filter((_, i) => i % 2 === 0);
+    state.rivals = [
+      {
+        id: RIVAL_ID,
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        roster: warriors.filter((_, i) => i % 2 === 1),
+        treasury: 500,
+        fame: 0,
+      } as any,
+    ];
+
+    const tournament = makeTournamentWithR1(warriors);
+    state.tournaments = [tournament];
+
+    const result = resolveRound(state, tournament.id, 1);
+
+    expect(result.updatedTournament).toBeDefined();
+    expect(result.updatedTournament!.id).toBe(tournament.id);
+    const r1Bouts = result.updatedTournament!.bracket.filter(
+      (b: TournamentBout) => b.round === 1
+    );
+    expect(r1Bouts.every((b: TournamentBout) => b.winner !== undefined)).toBe(true);
+  });
+
+  it('returns updatedTournament as undefined when tournament not found', () => {
+    const state = makeBaseState();
+    const result = resolveRound(state, 'nonexistent', 1);
+    expect(result.updatedTournament).toBeUndefined();
+  });
+
+  it('returns updatedTournament as undefined when tournament already completed', () => {
+    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    const tournament = makeCompletedTournament([w1, w2, w1, w2]);
+    state.tournaments = [tournament];
+
+    const result = resolveRound(state, tournament.id, 1);
+    expect(result.updatedTournament).toBeUndefined();
   });
 });
 

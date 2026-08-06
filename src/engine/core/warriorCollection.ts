@@ -4,7 +4,6 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { BoutOfferId } from '@/types/shared.types';
 import { isActive } from '@/engine/warriorStatus';
 
 /**
@@ -51,8 +50,7 @@ export function collectAvailableWarriors(state: GameState, targetWeek: number): 
 
   const offers = state.boutOffers;
   if (offers) {
-    for (const id in offers) {
-      const offer = offers[id as BoutOfferId];
+    for (const offer of Object.values(offers)) {
       if (!offer) continue;
       if (offer.status === 'Signed' && offer.boutWeek === targetWeek) {
         for (const warriorId of offer.warriorIds || []) {

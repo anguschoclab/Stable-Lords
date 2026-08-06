@@ -719,6 +719,156 @@ describe('TournamentResolver', () => {
       expect(updatedState.tournaments![0]!.completed).toBe(true);
       expect(updatedState.tournaments![0]!.champion).toBeDefined();
     });
+
+    it('resolveCompleteTournament produces identical results across calls (golden output)', () => {
+      const makeWarriors = () => {
+        const rng = new SeededRNGService(99999);
+        return Array.from({ length: 64 }, (_, i) =>
+          makeWarrior(
+            undefined,
+            `Golden Warrior ${i}`,
+            FightingStyle.StrikingAttack,
+            { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+            {},
+            rng
+          )
+        );
+      };
+
+      const makeTournament = (warriors: ReturnType<typeof makeWarriors>) =>
+        buildTournament({
+          tierId: 'Gold',
+          tierName: 'Golden Cup',
+          warriors,
+          week: 1,
+          season: 'Spring',
+          rng: new SeededRNGService(99999),
+        } as any);
+
+      const state1 = { ...state, tournaments: [makeTournament(makeWarriors())] };
+      const state2 = { ...state, tournaments: [makeTournament(makeWarriors())] };
+
+      const impact1 = resolveCompleteTournament(state1, state1.tournaments[0]!.id, 777);
+      const result1 = resolveImpacts(state1, [impact1]);
+
+      const impact2 = resolveCompleteTournament(state2, state2.tournaments[0]!.id, 777);
+      const result2 = resolveImpacts(state2, [impact2]);
+
+      // Champion must be identical
+      expect(result1.tournaments![0]!.champion).toBe(result2.tournaments![0]!.champion);
+      // Completed flag must match
+      expect(result1.tournaments![0]!.completed).toBe(result2.tournaments![0]!.completed);
+      // Bracket length must match
+      expect(result1.tournaments![0]!.bracket.length).toBe(result2.tournaments![0]!.bracket.length);
+      // Every bout winner must match
+      const b1 = result1.tournaments![0]!.bracket;
+      const b2 = result2.tournaments![0]!.bracket;
+      for (let i = 0; i < b1.length; i++) {
+        expect(b1[i]!.winner).toBe(b2[i]!.winner);
+        expect(b1[i]!.by).toBe(b2[i]!.by);
+      }
+    });
+  });
+
+  describe('resolveRound — updatedTournament return field', () => {
+    it('returns updatedTournament with updated bracket after round resolution', () => {
+      const rng = new SeededRNGService(12345);
+      const warriors = Array.from({ length: 64 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Test Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+
+      state.tournaments = [tournament];
+
+      const result = resolveRound(state, tournament.id, 12345);
+
+      expect(result.updatedTournament).toBeDefined();
+      expect(result.updatedTournament!.id).toBe(tournament.id);
+      const round1Matches = result.updatedTournament!.bracket.filter(
+        (b: TournamentBout) => b.round === 1
+      );
+      expect(round1Matches.every((b: TournamentBout) => b.winner !== undefined)).toBe(true);
+    });
+
+    it('returns updatedTournament with completed=true and champion when isComplete', () => {
+      const rng = new SeededRNGService(12345);
+      const warriors = Array.from({ length: 2 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Test Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+
+      state.tournaments = [tournament];
+
+      const result = resolveRound(state, tournament.id, 12345);
+
+      expect(result.updatedTournament).toBeDefined();
+      expect(result.updatedTournament!.completed).toBe(true);
+      expect(result.updatedTournament!.champion).toBeDefined();
+    });
+
+    it('returns updatedTournament as undefined when tournament not found', () => {
+      const result = resolveRound(state, 'nonexistent-id', 12345);
+      expect(result.updatedTournament).toBeUndefined();
+    });
+
+    it('returns updatedTournament as undefined when tournament already completed', () => {
+      const rng = new SeededRNGService(12345);
+      const warriors = Array.from({ length: 64 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Test Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+      tournament.completed = true;
+
+      state.tournaments = [tournament];
+
+      const result = resolveRound(state, tournament.id, 12345);
+      expect(result.updatedTournament).toBeUndefined();
+    });
   });
 
   describe('deathWeek at year boundary', () => {

@@ -143,6 +143,91 @@ export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
   }
 }
 
+function computeExtraDefPenalty(s: OffenseDefenseCtx): number {
+  const { ctx, def } = s;
+  const zonePenalty =
+    ctx.pushedFighter === def.label ? Math.abs(getZonePenalty(ctx.zone, ctx.arenaConfig)) : 0;
+  const defRangePenalty = Math.max(0, -s.defWeaponRangeMod);
+  return (
+    zonePenalty -
+    s.defCommit.defPenalty +
+    s.feintDefBonus +
+    defRangePenalty -
+    s.defDynTraitPar -
+    s.defDynTraitDef +
+    (def.parDegrade ?? 0)
+  );
+}
+
+function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
+  const { ctx, aGoesFirst, att, def, attLabel, defLabel, events } = s;
+  const { rng } = ctx;
+
+  const prevDefMomParry = def.momentum;
+  const prevAttMomParry = att.momentum;
+  def.momentum = Math.min(MOMENTUM_CAP, def.momentum + 1);
+  att.momentum = Math.max(MOMENTUM_FLOOR, att.momentum - 1);
+  if (def.momentum !== prevDefMomParry || att.momentum !== prevAttMomParry) {
+    events.push({
+      type: 'MOMENTUM_SHIFT',
+      actor: defLabel,
+      value: def.momentum,
+      metadata: {
+        prev: prevDefMomParry,
+        reason: 'PARRY',
+        attPrev: prevAttMomParry,
+        attNew: att.momentum,
+      },
+    });
+  }
+  // PS win condition: a successful parry primes a counterstrike on PS's next attack.
+  if (def.style === FightingStyle.ParryStrike) {
+    def.counterstrikePrimed = true;
+  }
+  const styleRip = styleRiposteBonus(def, att, {
+    afterParry: true,
+    attCommitLevel: s.attCommit.level,
+    riposteStreak: def.riposteStreak ?? 0,
+  });
+  const styleWeatherRipMod = getStyleWeatherModifier(
+    def.style,
+    ctx.weather,
+    ctx.arenaConfig.tags
+  ).riposteMod;
+  const ripPostParry = performRiposteCheck(
+    rng,
+    def,
+    aGoesFirst ? ctx.matchupD : ctx.matchupA,
+    aGoesFirst ? s.fatD : s.fatA,
+    (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
+      ctx.weatherEffect.riposteMod +
+      styleRip.ripBonus +
+      styleWeatherRipMod,
+    aGoesFirst ? s.passD : s.passA,
+    undefined
+  );
+  const specRiposteMult = aGoesFirst
+    ? (ctx.trainerModsD.riposteDamageMult ?? 1.0)
+    : (ctx.trainerModsA.riposteDamageMult ?? 1.0);
+  if (def.style === FightingStyle.ParryRiposte) {
+    def.riposteStreak = ripPostParry ? (def.riposteStreak ?? 0) + 1 : 0;
+  }
+  if (ripPostParry) {
+    executeRiposte(
+      events,
+      rng,
+      att,
+      def,
+      aGoesFirst ? s.tactD : s.tactA,
+      aGoesFirst ? s.passD : s.passA,
+      attLabel,
+      defLabel,
+      specRiposteMult,
+      styleRip.dmgBonus
+    );
+  }
+}
+
 /** Handles a landed attack: defender's defense check, then parry/riposte or hit. */
 export function resolveContestedDefense(s: OffenseDefenseCtx): void {
   const { ctx, aGoesFirst, att, def, attLabel, defLabel, events } = s;
@@ -169,17 +254,7 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
     (aGoesFirst ? s.tactD : s.tactA).defTactic
   );
 
-  const zonePenalty =
-    ctx.pushedFighter === def.label ? Math.abs(getZonePenalty(ctx.zone, ctx.arenaConfig)) : 0;
-  const defRangePenalty = Math.max(0, -s.defWeaponRangeMod);
-  const extraDefPenalty =
-    zonePenalty -
-    s.defCommit.defPenalty +
-    s.feintDefBonus +
-    defRangePenalty -
-    s.defDynTraitPar -
-    s.defDynTraitDef +
-    (def.parDegrade ?? 0);
+  const extraDefPenalty = computeExtraDefPenalty(s);
 
   const defCheck = performDefenseCheck(
     rng,
@@ -202,69 +277,7 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
   if (defCheck.success) {
     events.push({ type: 'DEFENSE', actor: defLabel, result: defCheck.type });
     if (!isDodge) {
-      const prevDefMomParry = def.momentum;
-      const prevAttMomParry = att.momentum;
-      def.momentum = Math.min(MOMENTUM_CAP, def.momentum + 1);
-      att.momentum = Math.max(MOMENTUM_FLOOR, att.momentum - 1);
-      if (def.momentum !== prevDefMomParry || att.momentum !== prevAttMomParry) {
-        events.push({
-          type: 'MOMENTUM_SHIFT',
-          actor: defLabel,
-          value: def.momentum,
-          metadata: {
-            prev: prevDefMomParry,
-            reason: 'PARRY',
-            attPrev: prevAttMomParry,
-            attNew: att.momentum,
-          },
-        });
-      }
-      // PS win condition: a successful parry primes a counterstrike on PS's next attack.
-      if (def.style === FightingStyle.ParryStrike) {
-        def.counterstrikePrimed = true;
-      }
-      const styleRip = styleRiposteBonus(def, att, {
-        afterParry: true,
-        attCommitLevel: s.attCommit.level,
-        riposteStreak: def.riposteStreak ?? 0,
-      });
-      const styleWeatherRipMod = getStyleWeatherModifier(
-        def.style,
-        ctx.weather,
-        ctx.arenaConfig.tags
-      ).riposteMod;
-      const ripPostParry = performRiposteCheck(
-        rng,
-        def,
-        aGoesFirst ? ctx.matchupD : ctx.matchupA,
-        aGoesFirst ? s.fatD : s.fatA,
-        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
-          ctx.weatherEffect.riposteMod +
-          styleRip.ripBonus +
-          styleWeatherRipMod,
-        curPassD,
-        undefined
-      );
-      const specRiposteMult = aGoesFirst
-        ? (ctx.trainerModsD.riposteDamageMult ?? 1.0)
-        : (ctx.trainerModsA.riposteDamageMult ?? 1.0);
-      if (def.style === FightingStyle.ParryRiposte) {
-        def.riposteStreak = ripPostParry ? (def.riposteStreak ?? 0) + 1 : 0;
-      }
-      if (ripPostParry) {
-        executeRiposte(
-          events,
-          rng,
-          att,
-          def,
-          aGoesFirst ? s.tactD : s.tactA,
-          aGoesFirst ? s.passD : s.passA,
-          attLabel,
-          defLabel,
-          specRiposteMult,
-          styleRip.dmgBonus
-        );
-      }
+      handleSuccessfulDefense(s);
     }
     att.consecutiveHits = 0;
   } else {
@@ -291,6 +304,48 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
       curPassD
     );
   }
+}
+
+function computeAttackBonuses(
+  ctx: ResolutionContext,
+  aGoesFirst: boolean,
+  att: FighterState,
+  def: FighterState,
+  psychA: PsychStateMod,
+  psychD: PsychStateMod,
+  dynTraitsA: DynamicTraitMods,
+  dynTraitsD: DynamicTraitMods,
+): {
+  momentumBonus: number;
+  psychMod: number;
+  weaponRangeMod: number;
+  dynTraitAtt: number;
+  counterstrikeAtt: number;
+  defWeaponRangeMod: number;
+  defDynTraitPar: number;
+  defDynTraitDef: number;
+} {
+  const attMomentumBonus = att.momentum * MOMENTUM_INI_MULT;
+  const attPsychMod = aGoesFirst ? psychA.attMod : psychD.attMod;
+  const attWeaponRangeMod = getWeaponRangeMod(att.weaponId, ctx.range);
+  const defWeaponRangeMod = getWeaponRangeMod(def.weaponId, ctx.range);
+  const attDynTraitAtt = aGoesFirst ? dynTraitsA.attMod : dynTraitsD.attMod;
+
+  const counterstrikeAtt = getCounterstrikeAttBonus(att);
+  att.counterstrikePrimed = false;
+  const defDynTraitPar = aGoesFirst ? dynTraitsD.parMod : dynTraitsA.parMod;
+  const defDynTraitDef = aGoesFirst ? dynTraitsD.defMod : dynTraitsA.defMod;
+
+  return {
+    momentumBonus: attMomentumBonus,
+    psychMod: attPsychMod,
+    weaponRangeMod: attWeaponRangeMod,
+    dynTraitAtt: attDynTraitAtt,
+    counterstrikeAtt,
+    defWeaponRangeMod,
+    defDynTraitPar,
+    defDynTraitDef,
+  };
 }
 
 /**
@@ -353,17 +408,9 @@ export function resolveCombatOffenseDefense(
     : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD);
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
 
-  const attMomentumBonus = att.momentum * MOMENTUM_INI_MULT;
-  const attPsychMod = aGoesFirst ? psychA.attMod : psychD.attMod;
-  const attWeaponRangeMod = getWeaponRangeMod(att.weaponId, ctx.range);
-  const defWeaponRangeMod = getWeaponRangeMod(def.weaponId, ctx.range);
-  const attDynTraitAtt = aGoesFirst ? dynTraitsA.attMod : dynTraitsD.attMod;
-
-  // PS win condition: spend the primed counterstrike on this attack (hit or miss).
-  const counterstrikeAtt = getCounterstrikeAttBonus(att);
-  att.counterstrikePrimed = false; // window lapses on the attempt
-  const defDynTraitPar = aGoesFirst ? dynTraitsD.parMod : dynTraitsA.parMod;
-  const defDynTraitDef = aGoesFirst ? dynTraitsD.defMod : dynTraitsA.defMod;
+  const bonuses = computeAttackBonuses(
+    ctx, aGoesFirst, att, def, psychA, psychD, dynTraitsA, dynTraitsD
+  );
 
   const attSucc = performAttackCheck(
     rng,
@@ -377,14 +424,14 @@ export function resolveCombatOffenseDefense(
     curBiasAtt,
     overAtt,
     curAttWepReq,
-    attMomentumBonus +
-      attPsychMod +
+    bonuses.momentumBonus +
+      bonuses.psychMod +
       (aGoesFirst ? es.rangeModA : es.rangeModD) +
       attCommit.attBonus +
       feintAttBonus +
-      attWeaponRangeMod +
-      attDynTraitAtt +
-      counterstrikeAtt
+      bonuses.weaponRangeMod +
+      bonuses.dynTraitAtt +
+      bonuses.counterstrikeAtt
   );
 
   const s: OffenseDefenseCtx = {
@@ -424,9 +471,9 @@ export function resolveCombatOffenseDefense(
     curAttAL,
     curOffMods,
     curPassA,
-    defWeaponRangeMod,
-    defDynTraitPar,
-    defDynTraitDef,
+    defWeaponRangeMod: bonuses.defWeaponRangeMod,
+    defDynTraitPar: bonuses.defDynTraitPar,
+    defDynTraitDef: bonuses.defDynTraitDef,
   };
 
   if (!attSucc) {

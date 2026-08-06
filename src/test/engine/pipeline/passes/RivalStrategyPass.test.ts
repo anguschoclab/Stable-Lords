@@ -363,3 +363,87 @@ describe('runRivalStrategyPass successor integration', () => {
     expect(allGazetteText).toContain('Lord Stable');
   });
 });
+
+// ─── Suite 4: Expired offer purge ──────────────────────────────────────────
+
+describe('runRivalStrategyPass — expired offer purge', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function makeOffer(
+    id: string,
+    expirationWeek: number,
+    status: 'Proposed' | 'Signed' | 'Declined' = 'Proposed'
+  ) {
+    return {
+      id,
+      promoterId: 'test-promoter',
+      warriorIds: ['w1', 'w2'],
+      boutWeek: expirationWeek + 1,
+      expirationWeek,
+      purse: 100,
+      hype: 50,
+      status,
+      responses: {},
+    } as any;
+  }
+
+  it('purges offers with expirationWeek < state.absoluteWeek + 1', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+    state.recruitPool = [];
+    state.absoluteWeek = 10;
+    state.boutOffers = {
+      'expired-offer': makeOffer('expired-offer', 5),
+      'valid-offer': makeOffer('valid-offer', 12),
+    } as any;
+
+    const impact = runRivalStrategyPass(state, 11, undefined as any, true);
+    const resultOffers = impact.boutOffers as Record<string, any>;
+
+    expect(resultOffers['expired-offer']).toBeUndefined();
+  });
+
+  it('preserves offers with expirationWeek >= state.absoluteWeek + 1', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+    state.recruitPool = [];
+    state.absoluteWeek = 10;
+    state.boutOffers = {
+      'valid-offer': makeOffer('valid-offer', 11),
+    } as any;
+
+    const impact = runRivalStrategyPass(state, 11, undefined as any, true);
+    const resultOffers = impact.boutOffers as Record<string, any>;
+
+    expect(resultOffers['valid-offer']).toBeDefined();
+  });
+
+  it('purges only expired offers, keeping valid ones', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+    state.recruitPool = [];
+    state.absoluteWeek = 10;
+    state.boutOffers = {
+      'keep-1': makeOffer('keep-1', 15),
+      'keep-2': makeOffer('keep-2', 11),
+      'purge-1': makeOffer('purge-1', 5),
+      'purge-2': makeOffer('purge-2', 9),
+    } as any;
+
+    const impact = runRivalStrategyPass(state, 11, undefined as any, true);
+    const resultOffers = impact.boutOffers as Record<string, any>;
+
+    expect(resultOffers['purge-1']).toBeUndefined();
+    expect(resultOffers['purge-2']).toBeUndefined();
+    expect(resultOffers['keep-1']).toBeDefined();
+    expect(resultOffers['keep-2']).toBeDefined();
+  });
+});

@@ -27,6 +27,7 @@ export interface RoundResolutionResult {
   impact: StateImpact;
   roundResults: string[];
   isComplete: boolean;
+  updatedTournament?: TournamentEntry;
 }
 
 /**
@@ -177,9 +178,12 @@ export function resolveRound(
   const isComplete = winners.length <= 1;
   const champion = isComplete && winners.length > 0 ? winners[0]?.name : undefined;
 
-  const updatedTournaments = (state.tournaments || []).map((t) =>
-    t.id === tournamentId ? { ...t, bracket, completed: isComplete, champion } : t
-  );
+  let updatedTournament: TournamentEntry | undefined;
+  const updatedTournaments = (state.tournaments || []).map((t) => {
+    if (t.id !== tournamentId) return t;
+    updatedTournament = { ...t, bracket, completed: isComplete, champion };
+    return updatedTournament;
+  });
   impacts.push({ tournaments: updatedTournaments });
 
   const mergedImpact = mergeImpacts(impacts);
@@ -190,6 +194,7 @@ export function resolveRound(
         ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`]
         : [],
     isComplete,
+    updatedTournament,
   };
 }
 
@@ -206,8 +211,8 @@ export function resolveCompleteTournament(
   let currentState = state;
   let safety = 0;
 
+  let tour = (state.tournaments || []).find((t) => t.id === tournamentId);
   while (safety < 10) {
-    const tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
     if (!tour || tour.completed) break;
 
     const result = resolveRound(currentState, tournamentId, seed + safety, undefined, tour);
@@ -215,6 +220,7 @@ export function resolveCompleteTournament(
 
     // Apply impact to state for next round
     currentState = resolveImpacts(currentState, [result.impact]);
+    tour = result.updatedTournament;
 
     if (result.isComplete) break;
     safety++;

@@ -75,8 +75,7 @@ export function runRivalStrategyPass(
   // 🧹 1.6 Hardening: Purge Expired Offers (Prevent state bloat)
   const newBoutOffersWithWorld: Record<BoutOfferId, (typeof boutOffersWithWorld)[BoutOfferId]> =
     {} as Record<BoutOfferId, (typeof boutOffersWithWorld)[BoutOfferId]>;
-  for (const key in boutOffersWithWorld) {
-    const offer = boutOffersWithWorld[key as BoutOfferId];
+  for (const [key, offer] of Object.entries(boutOffersWithWorld)) {
     if (offer && offer.expirationWeek >= state.absoluteWeek + 1) {
       newBoutOffersWithWorld[key as BoutOfferId] = offer;
     }

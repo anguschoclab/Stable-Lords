@@ -26,7 +26,7 @@ export function resolveRound(
   seed: number,
   headless?: boolean,
   tournament?: TournamentEntry
-): { updatedState: GameState; roundResults: string[]; isComplete: boolean } {
+): { updatedState: GameState; roundResults: string[]; isComplete: boolean; updatedTournament?: TournamentEntry } {
   const rng = new SeededRNG(seed);
   let updatedState = { ...state };
   const resolvedTournament =
@@ -159,9 +159,12 @@ export function resolveRound(
   const isComplete = winners.length <= 1 && currentRound >= 7;
   const champion = isComplete ? winners[0]?.name : undefined;
 
-  updatedState.tournaments = (updatedState.tournaments || []).map((t) =>
-    t.id === tournamentId ? { ...t, bracket, completed: isComplete, champion } : t
-  );
+  let updatedTournament: TournamentEntry | undefined;
+  updatedState.tournaments = (updatedState.tournaments || []).map((t) => {
+    if (t.id !== tournamentId) return t;
+    updatedTournament = { ...t, bracket, completed: isComplete, champion };
+    return updatedTournament;
+  });
 
   if (isComplete && champion) {
     updatedState = awardTournamentPrizes(resolvedTournament, updatedState);
@@ -174,6 +177,7 @@ export function resolveRound(
         ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`]
         : [],
     isComplete,
+    updatedTournament,
   };
 } /**
  * Resolve complete tournament.
@@ -190,11 +194,12 @@ export function resolveCompleteTournament(
 ): GameState {
   let current = { ...state };
   let safety = 0;
+  let tour = (current.tournaments || []).find((t) => t.id === tournamentId);
   while (safety < 10) {
-    const tour = (current.tournaments || []).find((t) => t.id === tournamentId);
     if (!tour || tour.completed) break;
     const result = resolveRound(current, tournamentId, seed + safety, headless, tour);
     current = result.updatedState;
+    tour = result.updatedTournament;
     if (result.isComplete) break;
     safety++;
   }

@@ -125,4 +125,51 @@ describe('narrativeContent.json', () => {
       }
     }
   });
+
+  it('all template brackets {{...}} are balanced across all string values', () => {
+    function checkBrackets(str: string, path: string) {
+      let depth = 0;
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === '{' && str[i + 1] === '{') {
+          depth++;
+          i++;
+        } else if (str[i] === '}' && str[i + 1] === '}') {
+          depth--;
+          i++;
+          if (depth < 0) {
+            throw new Error(`Unmatched closing }} at position ${i} in ${path}`);
+          }
+        }
+      }
+      if (depth > 0) {
+        throw new Error(`Unclosed template bracket (depth ${depth}) in ${path}`);
+      }
+    }
+
+    function walk(obj: unknown, path: string) {
+      if (typeof obj === 'string') {
+        checkBrackets(obj, path);
+      } else if (Array.isArray(obj)) {
+        obj.forEach((item, i) => walk(item, `${path}[${i}]`));
+      } else if (obj && typeof obj === 'object') {
+        for (const [k, v] of Object.entries(obj)) {
+          walk(v, `${path}.${k}`);
+        }
+      }
+    }
+
+    walk(narrativeContent, 'root');
+  });
+
+  it('all required top-level keys are present', () => {
+    const requiredKeys = [
+      'ux_metadata', 'persona', 'strikes', 'pbp', 'conclusions',
+      'blurbs', 'commentary', 'recap', 'events', 'gazette',
+      'fanfare', 'memorials', 'recruitment', 'meta', 'passives',
+      'kill_text', 'offseason_events', 'crowd_reactions',
+    ];
+    for (const key of requiredKeys) {
+      expect((narrativeContent as any)[key]).toBeDefined();
+    }
+  });
 });

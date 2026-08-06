@@ -5,9 +5,10 @@ import '@testing-library/jest-dom';
 import '@/test/_setup/setup';
 import { RecruitFilters } from '@/pages/Recruit/components/RecruitFilters';
 import { FightingStyle } from '@/types/shared.types';
+import type { RecruitTier } from '@/engine/recruitment';
 
 const defaultProps = {
-  activeTiers: new Set(['Common', 'Promising']),
+  activeTiers: new Set<RecruitTier>(['Common', 'Promising']),
   toggleTier: vi.fn(),
   activeStyle: 'all' as FightingStyle | 'all',
   setActiveStyle: vi.fn(),

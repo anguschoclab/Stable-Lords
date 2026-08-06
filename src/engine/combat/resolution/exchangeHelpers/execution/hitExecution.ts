@@ -50,79 +50,63 @@ import {
   getExecuteBonus,
 } from '../../strikingAttack';
 
-/**
- * Execute hit.
- */
-export function executeHit(
+function handleSurvivalStrike(
   events: CombatEvent[],
   rng: () => number,
   attacker: FighterState,
   defender: FighterState,
   attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  attOffMods: ReturnType<typeof getOffensiveTacticMods>,
-  attPassive: ReturnType<typeof getStylePassive>,
+  defPassive: ReturnType<typeof getStylePassive> | undefined,
   attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D',
-  stylePhase: StylePhase,
-  phase: string,
-  attKD: number,
-  attOE: number,
-  attAL: number,
-  attMatchup: number,
-  ctx?: ResolutionContext,
-  defPassive?: ReturnType<typeof getStylePassive>
-) {
-  // ── Survival Strike: defender has earned a free counter — skip this attack ──
-  if (defender.survivalStrike) {
-    defender.survivalStrike = false;
-    // Defender fires back as a free riposte — re-use executeRiposte logic inline
-    const freeRipLoc = rollHitLocation(rng, attTactics.target, attacker.activePlan.protect);
-    let freeRipDmg = computeHitDamage(
-      rng,
-      defender.derived.damage +
-        (defPassive?.dmgBonus ?? 0) +
-        weaponDamageBonus(defender.weaponId, defender.style),
-      freeRipLoc
-    );
-    freeRipDmg = applyArmorTypeMod(freeRipDmg, defender.weaponId, attacker.armorId);
-    freeRipDmg = applyProtectMod(freeRipDmg, freeRipLoc, attacker.activePlan.protect);
-    events.push({ type: 'DEFENSE', actor: defLabel, result: 'RIPOSTE' });
+  defLabel: 'A' | 'D'
+): boolean {
+  if (!defender.survivalStrike) return false;
+  defender.survivalStrike = false;
+  const freeRipLoc = rollHitLocation(rng, attTactics.target, attacker.activePlan.protect);
+  let freeRipDmg = computeHitDamage(
+    rng,
+    defender.derived.damage +
+      (defPassive?.dmgBonus ?? 0) +
+      weaponDamageBonus(defender.weaponId, defender.style),
+    freeRipLoc
+  );
+  freeRipDmg = applyArmorTypeMod(freeRipDmg, defender.weaponId, attacker.armorId);
+  freeRipDmg = applyProtectMod(freeRipDmg, freeRipLoc, attacker.activePlan.protect);
+  events.push({ type: 'DEFENSE', actor: defLabel, result: 'RIPOSTE' });
+  events.push({
+    type: 'HIT',
+    actor: defLabel,
+    target: attLabel,
+    location: freeRipLoc,
+    value: freeRipDmg,
+    metadata: { appliedDamage: freeRipDmg },
+  });
+  attacker.hp -= freeRipDmg;
+  attacker.hitsTaken++;
+  defender.hitsLanded++;
+  if (attacker.hp <= 0) {
     events.push({
-      type: 'HIT',
+      type: 'BOUT_END',
       actor: defLabel,
-      target: attLabel,
-      location: freeRipLoc,
-      value: freeRipDmg,
-      // survival strike has no shield/protect mitigation, so raw = applied
-      metadata: { appliedDamage: freeRipDmg },
+      result: 'KO',
+      metadata: { location: freeRipLoc, cause: 'SURVIVAL_STRIKE' },
     });
-    attacker.hp -= freeRipDmg;
-    attacker.hitsTaken++;
-    defender.hitsLanded++;
-    if (attacker.hp <= 0) {
-      events.push({
-        type: 'BOUT_END',
-        actor: defLabel,
-        result: 'KO',
-        metadata: { location: freeRipLoc, cause: 'SURVIVAL_STRIKE' },
-      });
-    }
-    return;
   }
+  return true;
+}
 
-  // ── Commit mechanic: attacker at low HP with high kill desire commits ──
-  const kdForCommit = attacker.activePlan.killDesire ?? attKD;
-  const isAtLowHp = attacker.hp / attacker.maxHp < COMMIT_HP_THRESHOLD;
-  if (!attacker.committed && isAtLowHp && kdForCommit >= COMMIT_KILL_DESIRE) {
-    attacker.committed = true;
-    events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
-  }
+function computePreArmorDamage(
+  rng: () => number,
+  attacker: FighterState,
+  defender: FighterState,
+  attTactics: ReturnType<typeof resolveEffectiveTactics>,
+  attOffMods: ReturnType<typeof getOffensiveTacticMods>,
+  attPassive: ReturnType<typeof getStylePassive>
+): { hitLoc: HitLocation; preArmor: number } {
+  let hitLoc: HitLocation = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
 
-  let hitLoc = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
-
-  // AB: precision targeting — shift one step toward higher-value locations (head side)
   if (attacker.style === FightingStyle.AimedBlow) {
-    const locIdx = HIT_LOCATIONS.indexOf(hitLoc as HitLocation);
+    const locIdx = HIT_LOCATIONS.indexOf(hitLoc);
     if (locIdx > 0) hitLoc = HIT_LOCATIONS[locIdx - 1] as HitLocation;
   }
 
@@ -135,24 +119,28 @@ export function executeHit(
     hitLoc
   );
 
-  // Tempo: LU momentum damage — negated when the defender is Wall of Steel (immovable)
   preArmor += getMomentumDamageBonus(attacker.style, attacker.momentum, defender.style);
-  // WS: immovable — steady attrition floor so the brick still closes fights
   preArmor += getWsAttritionBonus(attacker.style);
 
-  // BA: guard-break — each landed hit erodes the defender's guard for the rest of the fight
   if (attacker.style === FightingStyle.BashingAttack) {
     defender.parDegrade = accumulateGuardBreak(defender.parDegrade ?? 0);
   }
 
-  // SL: flurry of cuts — each landed hit stacks bleed (damage-over-time) on the defender
   if (attacker.style === FightingStyle.SlashingAttack) {
     defender.bleedStacks = accumulateBleed(defender.bleedStacks ?? 0);
   }
 
+  return { hitLoc, preArmor };
+}
+
+function applyDamageMultipliers(
+  preArmor: number,
+  attacker: FighterState,
+  defender: FighterState,
+  ctx: ResolutionContext | undefined
+): number {
   const postArmor = applyArmorTypeMod(preArmor, attacker.weaponId, defender.armorId);
 
-  // AB: armor bypass — ignore DF-scaled fraction of armor mitigation
   let rawDamage: number;
   if (attacker.style === FightingStyle.AimedBlow) {
     const bypass = Math.max(
@@ -164,10 +152,7 @@ export function executeHit(
     rawDamage = postArmor;
   }
 
-  // Apply weather damage multiplier
   const weatherDamageMult = ctx?.weatherEffect?.damageMult ?? 1.0;
-
-  // Apply style-weather and arena-tag damage multipliers
   const styleWeatherMod = ctx?.arenaConfig
     ? getStyleWeatherModifier(attacker.style, ctx.weather, ctx.arenaConfig.tags)
     : { damageMult: 1.0 };
@@ -175,12 +160,10 @@ export function executeHit(
   const totalDamageMult = weatherDamageMult * styleWeatherMod.damageMult;
   rawDamage = Math.round(rawDamage * totalDamageMult);
 
-  // Commit: +20% damage
   if (attacker.committed) {
     rawDamage = Math.round(rawDamage * COMMIT_DAMAGE_MULT);
   }
 
-  // Apply specialty damage received reduction on the defender
   const defSpecDamageMult = ctx
     ? defender.label === 'A'
       ? (ctx.trainerModsA.damageReceivedMult ?? 1.0)
@@ -188,20 +171,29 @@ export function executeHit(
     : 1.0;
   rawDamage = Math.round(rawDamage * defSpecDamageMult);
 
-  // ST front-load: early-exchange damage multiplier that decays over the fight
   rawDamage = Math.round(rawDamage * getFrontloadMult(attacker.style, ctx?.exchange ?? 0));
-  // ST execute: bonus damage to finish a wounded target
   rawDamage += getExecuteBonus(attacker.style, defender.hp, defender.maxHp);
 
+  return rawDamage;
+}
+
+function applyHitAndCounters(
+  events: CombatEvent[],
+  rng: () => number,
+  rawDamage: number,
+  hitLoc: HitLocation,
+  attacker: FighterState,
+  defender: FighterState,
+  attPassive: ReturnType<typeof getStylePassive>,
+  attLabel: 'A' | 'D',
+  defLabel: 'A' | 'D'
+): { damage: number; isCrit: boolean; rawDamage: number } {
   const effectiveCritChance = attPassive.critChance + getStCritChanceBonus(attacker.style);
   const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
   if (isCrit) {
     rawDamage = Math.round(rawDamage * (CRIT_DAMAGE_MULT + getStCritDamageBonus(attacker.style)));
   }
 
-  // Shield-zone mitigation is applied AFTER the event is pushed so that
-  // event.value always reflects the raw (pre-mitigation) hit — used for
-  // visual severity. The post-mitigation figure is in metadata.appliedDamage.
   const defShieldCov =
     SHIELD_COVERAGE[defender.shieldId ?? ''] ?? SHIELD_COVERAGE[defender.weaponId ?? ''];
   const postShieldDamage = applyShieldZoneMod(rawDamage, hitLoc, defShieldCov);
@@ -235,7 +227,16 @@ export function executeHit(
   if (hitLoc.includes('arm')) defender.armHits++;
   if (hitLoc.includes('leg')) defender.legHits++;
 
-  // ── Knockdown check: heavy hits can knock the defender down ──
+  return { damage, isCrit, rawDamage };
+}
+
+function checkKnockdown(
+  events: CombatEvent[],
+  rng: () => number,
+  defender: FighterState,
+  damage: number,
+  defLabel: 'A' | 'D'
+): void {
   const hpRatioAfterHit = defender.hp / defender.maxHp;
   const damageRatio = damage / defender.maxHp;
   if (
@@ -248,8 +249,15 @@ export function executeHit(
     defender.knockedDown = true;
     events.push({ type: 'KNOCKDOWN', actor: defLabel });
   }
+}
 
-  // ── Momentum: hit shifts momentum toward attacker ──
+function applyMomentumShift(
+  events: CombatEvent[],
+  attacker: FighterState,
+  defender: FighterState,
+  attLabel: 'A' | 'D',
+  defLabel: 'A' | 'D'
+): void {
   const prevAttMom = attacker.momentum;
   const prevDefMom = defender.momentum;
   attacker.momentum = Math.min(MOMENTUM_CAP, attacker.momentum + 1);
@@ -263,22 +271,25 @@ export function executeHit(
       metadata: { prev: prevAttMom, oppPrev: prevDefMom, oppNew: defender.momentum },
     });
   }
+}
 
-  // ── Survival Strike: committed attacker who doesn't kill enables defender counter ──
-  if (attacker.committed && defender.hp > 0) {
-    defender.survivalStrike = true;
-    events.push({ type: 'STATE_CHANGE', actor: defLabel, result: 'SURVIVAL_STRIKE' });
-  }
-
-  if (damage > 0 && rng() < INSIGHT_CHANCE) {
-    const attrs = ['ST', 'SP', 'DF', 'WL'];
-    events.push({
-      type: 'INSIGHT',
-      actor: attLabel,
-      metadata: { attribute: attrs[Math.floor(rng() * attrs.length)] },
-    });
-  }
-
+function checkKillWindow(
+  events: CombatEvent[],
+  rng: () => number,
+  attacker: FighterState,
+  defender: FighterState,
+  ctx: ResolutionContext | undefined,
+  hitLoc: HitLocation,
+  rawDamage: number,
+  attTactics: ReturnType<typeof resolveEffectiveTactics>,
+  attLabel: 'A' | 'D',
+  stylePhase: StylePhase,
+  phase: string,
+  attKD: number,
+  attOE: number,
+  attAL: number,
+  attMatchup: number
+): void {
   const killMech = getKillMechanic(attacker.style, {
     phase: stylePhase,
     hitsLanded: attacker.hitsLanded,
@@ -350,4 +361,63 @@ export function executeHit(
       });
     }
   }
+}
+
+/**
+ * Execute hit.
+ */
+export function executeHit(
+  events: CombatEvent[],
+  rng: () => number,
+  attacker: FighterState,
+  defender: FighterState,
+  attTactics: ReturnType<typeof resolveEffectiveTactics>,
+  attOffMods: ReturnType<typeof getOffensiveTacticMods>,
+  attPassive: ReturnType<typeof getStylePassive>,
+  attLabel: 'A' | 'D',
+  defLabel: 'A' | 'D',
+  stylePhase: StylePhase,
+  phase: string,
+  attKD: number,
+  attOE: number,
+  attAL: number,
+  attMatchup: number,
+  ctx?: ResolutionContext,
+  defPassive?: ReturnType<typeof getStylePassive>
+) {
+  if (handleSurvivalStrike(events, rng, attacker, defender, attTactics, defPassive, attLabel, defLabel)) {
+    return;
+  }
+
+  // ── Commit mechanic: attacker at low HP with high kill desire commits ──
+  const kdForCommit = attacker.activePlan.killDesire ?? attKD;
+  const isAtLowHp = attacker.hp / attacker.maxHp < COMMIT_HP_THRESHOLD;
+  if (!attacker.committed && isAtLowHp && kdForCommit >= COMMIT_KILL_DESIRE) {
+    attacker.committed = true;
+    events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
+  }
+
+  const { hitLoc, preArmor } = computePreArmorDamage(rng, attacker, defender, attTactics, attOffMods, attPassive);
+  const rawDamagePreCrit = applyDamageMultipliers(preArmor, attacker, defender, ctx);
+  const { damage, rawDamage } = applyHitAndCounters(events, rng, rawDamagePreCrit, hitLoc, attacker, defender, attPassive, attLabel, defLabel);
+
+  checkKnockdown(events, rng, defender, damage, defLabel);
+  applyMomentumShift(events, attacker, defender, attLabel, defLabel);
+
+  // ── Survival Strike: committed attacker who doesn't kill enables defender counter ──
+  if (attacker.committed && defender.hp > 0) {
+    defender.survivalStrike = true;
+    events.push({ type: 'STATE_CHANGE', actor: defLabel, result: 'SURVIVAL_STRIKE' });
+  }
+
+  if (damage > 0 && rng() < INSIGHT_CHANCE) {
+    const attrs = ['ST', 'SP', 'DF', 'WL'];
+    events.push({
+      type: 'INSIGHT',
+      actor: attLabel,
+      metadata: { attribute: attrs[Math.floor(rng() * attrs.length)] },
+    });
+  }
+
+  checkKillWindow(events, rng, attacker, defender, ctx, hitLoc, rawDamage, attTactics, attLabel, stylePhase, phase, attKD, attOE, attAL, attMatchup);
 }

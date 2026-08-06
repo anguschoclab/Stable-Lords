@@ -49,6 +49,7 @@ import { IntelligenceHubWidget } from '@/components/dashboard/IntelligenceHubWid
 import { NextBoutWidget } from '@/components/widgets/NextBoutWidget';
 import { MetaDriftWidget } from '@/components/widgets/MetaDriftWidget';
 import { WeatherWidget } from '@/components/widgets/WeatherWidget';
+import { isActive } from '@/engine/warriorStatus';
 
 // ─── Crowd Mood Meter ──────────────────────────────────────────────────────
 
@@ -279,7 +280,7 @@ export default function ArenaHub() {
               variant="outline"
               className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
             >
-              {roster.filter((w) => w.status === 'Active').length} WARRIORS ACTIVE
+              {roster.filter((w) => isActive(w)).length} WARRIORS ACTIVE
             </Badge>
           </div>
         }

@@ -6,9 +6,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
-import type { GameState, Warrior } from '@/types/game'; /**
- * Defines the shape of coach tip.
- */
+import type { GameState, Warrior } from '@/types/game';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Defines the shape of coach tip.
@@ -50,7 +49,7 @@ const COACH_ROUTES: RouteEntry[] = [
         message:
           '📢 Your stable is thin! Recruit more warriors to keep a healthy rotation and avoid burnout.',
         condition: (s) =>
-          s.roster.filter((w) => w.status === 'Active').length === 1 && s.arenaHistory.length >= 2,
+          s.roster.filter((w) => isActive(w)).length === 1 && s.arenaHistory.length >= 2,
       },
       {
         id: 'hub-tournament-ready',
@@ -139,7 +138,7 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'tournament-tip',
         message:
           '🏆 Tournaments run each season. Win to earn titles and major fame boosts for your stable.',
-        condition: (s) => s.roster.filter((w) => w.status === 'Active').length >= 2,
+        condition: (s) => s.roster.filter((w) => isActive(w)).length >= 2,
       },
     ],
   },

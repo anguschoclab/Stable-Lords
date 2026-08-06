@@ -21,6 +21,7 @@ import { TRAITS, generateTraits } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
+import { clamp } from '@/utils/math';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 /**
@@ -298,7 +299,7 @@ export function partialRefreshPool(
     return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rng, meta, legacyCandidates);
 
   const sorted = [...currentPool].sort((a, b) => a.addedWeek - b.addedWeek);
-  const removeCount = Math.min(4, Math.max(2, Math.floor(currentPool.length * 0.3)));
+  const removeCount = clamp(Math.floor(currentPool.length * 0.3), 2, 4);
   const remaining = sorted.slice(removeCount);
 
   // Rebuild used names from remaining

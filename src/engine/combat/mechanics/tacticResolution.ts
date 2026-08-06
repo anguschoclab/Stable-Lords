@@ -6,6 +6,7 @@ import {
   getDefensiveSuitability,
 } from '../../tacticSuitability';
 import { OE_ATT_SCALING, OE_DEF_SCALING, AL_INI_SCALING } from '@/constants/combat';
+import { clamp } from '@/utils/math';
 
 /**
  * Stable Lords — Tactic & Attr Scaling Resolution
@@ -216,7 +217,7 @@ export function calculateFinalOEAL(
     fallAL = -2;
   }
 
-  const finalOE = Math.max(1, Math.min(10, effOE + openOE + fallOE));
-  const finalAL = Math.max(1, Math.min(10, effAL + openAL + fallAL));
+  const finalOE = clamp(effOE + openOE + fallOE, 1, 10);
+  const finalAL = clamp(effAL + openAL + fallAL, 1, 10);
   return [finalOE, finalAL];
 }

@@ -7,6 +7,7 @@ import type {
 } from '@/types/state.types';
 import { hashStr } from '../../utils/random';
 import { computeMetaDrift } from '../metaDrift';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * LeadAgent Orchestrator
@@ -116,7 +117,7 @@ export function consolidateAgentMemory(
         losses: 0,
         kills: 0,
         rosterSizeAtSeasonStart: rival.roster.reduce(
-          (count, w) => (w.status === 'Active' ? count + 1 : count),
+          (count, w) => (isActive(w) ? count + 1 : count),
           0
         ),
       }

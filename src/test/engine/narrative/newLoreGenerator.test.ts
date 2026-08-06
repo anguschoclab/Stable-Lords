@@ -10,10 +10,10 @@ import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const LORE_FILE = path.resolve(__dirname, '../../../engine/narrative/loreGenerator.ts');
+const LORE_FILE = path.resolve(__dirname, '../../../engine/narrative/lore/loreData.ts');
 
 function extractStringArray(source: string, varName: string): string[] {
-  const regex = new RegExp(`const ${varName} = \\[([\\s\\S]*?)\\];`);
+  const regex = new RegExp(`(?:export )?const ${varName}.*?= \\[([\\s\\S]*?)\\];`);
   const m = regex.exec(source);
   if (!m || !m[1]) throw new Error(`Could not find ${varName} in loreGenerator.ts`);
   const items = m[1].match(/'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g);

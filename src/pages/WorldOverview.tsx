@@ -12,6 +12,7 @@ import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { getStableTemplates } from '@/engine/rivals';
 import type { Warrior } from '@/types/game';
 import type { StableRow, WarriorRow } from '@/types/leaderboard';
+import { isActive } from '@/engine/warriorStatus';
 
 type SortField =
   | 'rank'
@@ -71,7 +72,7 @@ export default function WorldOverview() {
     }
     let pActive = 0;
     for (const w of state.roster) {
-      if (w.status === 'Active') pActive++;
+      if (isActive(w)) pActive++;
     }
     const pTotal = pWins + pLosses;
 
@@ -99,7 +100,7 @@ export default function WorldOverview() {
         rWins += w.career.wins;
         rLosses += w.career.losses;
         rKills += w.career.kills;
-        if (w.status === 'Active') rActive++;
+        if (isActive(w)) rActive++;
       }
       const rTotal = rWins + rLosses;
       const tmpl = templates.find((t) => t.stableName === r.owner.stableName);
@@ -165,7 +166,7 @@ export default function WorldOverview() {
 
     const rows: WarriorRow[] = [];
     for (const w of state.roster) {
-      if (w.status === 'Active') {
+      if (isActive(w)) {
         rows.push(mapWarrior(w, state.player.stableName, state.player.id, true));
       }
     }
@@ -176,7 +177,7 @@ export default function WorldOverview() {
         const rName = r.owner.stableName;
         const rId = r.owner.id;
         for (const w of rRoster) {
-          if (w.status === 'Active') {
+          if (isActive(w)) {
             rows.push(mapWarrior(w, rName, rId, false));
           }
         }

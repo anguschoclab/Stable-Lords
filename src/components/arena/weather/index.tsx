@@ -33,7 +33,7 @@ import {
   WildfireSmokeEffect,
   BloodFogEffect,
   RainbowEffect,
-} from './effects';
+} from './effects/index';
 
 /**
  * Exhaustive map of weather type → overlay renderer. `null` means the weather

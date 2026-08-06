@@ -4,6 +4,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Finds a high-intensity grudge (>= 3) involving the given owner.
@@ -158,7 +159,7 @@ export function pickWeeklyIntent(
     const r = rivalsByOwnerId.get(rivalId);
     if (!r || !r.agentMemory?.seasonRecord) return false;
     return (
-      r.roster.reduce((count, w) => (w.status === 'Active' ? count + 1 : count), 0) >
+      r.roster.reduce((count, w) => (isActive(w) ? count + 1 : count), 0) >
       r.agentMemory.seasonRecord.rosterSizeAtSeasonStart + 1
     );
   });
@@ -186,7 +187,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 
   // Skepticism Tier 2: Roster Depletion
   const activeCount = rival.roster.reduce(
-    (count, w) => (w.status === 'Active' ? count + 1 : count),
+    (count, w) => (isActive(w) ? count + 1 : count),
     0
   );
   if (strategy.intent === 'VENDETTA' && activeCount < 3) return true;
@@ -210,7 +211,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   ].includes(state.weather ?? 'Clear');
   let precisionHeavy = false;
   for (const w of rival.roster) {
-    if (w.status === 'Active' && w.style === 'LUNGING ATTACK') {
+    if (isActive(w) && w.style === 'LUNGING ATTACK') {
       precisionHeavy = true;
       break;
     }

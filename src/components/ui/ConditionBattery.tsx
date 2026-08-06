@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { BATTERY_THRESHOLDS } from '@/constants/core/ui';
+import { clamp } from '@/utils/math';
 
 interface ConditionBatteryProps {
   value: number; // 0-100
@@ -46,7 +47,7 @@ export function ConditionBattery({ value, className, showText = false }: Conditi
       <div className="relative w-full h-[3px] bg-neutral-950/40 ring-1 ring-white/5 overflow-hidden">
         <div
           className={cn('h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 ease-out', color, opacity)}
-          style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
+          style={{ width: `${clamp(value, 0, 100)}%` }}
         />
       </div>
     </div>

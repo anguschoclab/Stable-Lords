@@ -10,6 +10,7 @@ import {
   type Attributes,
 } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
+import { clamp } from '@/utils/math';
 
 interface UseWarriorBuilderStateDeps {
   onCreateWarrior: (data: { name: string; style: FightingStyle; attributes: Attributes }) => void;
@@ -45,7 +46,7 @@ export function useWarriorBuilderState({
 
   const updateAttr = useCallback((key: keyof Attributes, value: number) => {
     setAttrs((prev) => {
-      const clamped = Math.max(ATTRIBUTE_MIN, Math.min(ATTRIBUTE_MAX, value));
+      const clamped = clamp(value, ATTRIBUTE_MIN, ATTRIBUTE_MAX);
       return { ...prev, [key]: clamped };
     });
   }, []);

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { clamp } from '@/utils/math';
 
 export interface FighterHp {
   hp: number;
@@ -19,8 +20,8 @@ interface FaceoffBarProps {
 export function FaceoffBar({ fighterA, fighterB, className }: FaceoffBarProps) {
   const { hp: hpA, max: maxA, label: labelA = 'A' } = fighterA;
   const { hp: hpB, max: maxB, label: labelB = 'B' } = fighterB;
-  const pctA = maxA > 0 ? Math.min(50, Math.max(0, (hpA / maxA) * 50)) : 0;
-  const pctB = maxB > 0 ? Math.min(50, Math.max(0, (hpB / maxB) * 50)) : 0;
+  const pctA = maxA > 0 ? clamp((hpA / maxA) * 50, 0, 50) : 0;
+  const pctB = maxB > 0 ? clamp((hpB / maxB) * 50, 0, 50) : 0;
 
   return (
     <div className={cn('space-y-2', className)}>

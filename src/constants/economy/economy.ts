@@ -2,6 +2,7 @@
  * Centralized Economy Constants for Stable Lords
  * Ensures parity between Player and AI economic calculations
  */
+import { clamp } from '@/utils/math';
 
 // ─── Base Economy ─────────────────────────────────────────────────────────
 /**
@@ -173,7 +174,7 @@ export function computeFightEconomics(input: FightEconomicsInput): {
   purse: number;
   winBonus: number;
 } {
-  const cappedFame = Math.min(Math.max(input.fame, 0), FAME_PURSE_CAP);
+  const cappedFame = clamp(input.fame, 0, FAME_PURSE_CAP);
   const fameMult = 1 + cappedFame / FAME_PURSE_DIVISOR;
   const tierMult = ARENA_TIER_PURSE_MULT[input.arenaTier] ?? 1.0;
   const purse = Math.round(FIGHT_PURSE * fameMult * tierMult);

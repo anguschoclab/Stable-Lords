@@ -4,6 +4,7 @@
 
 import { KILL_WINDOW_ENDURANCE } from '@/constants/combat';
 import { LOCATION_DAMAGE_MULT, LOCATION_KILL_MULT, type HitLocation } from './hitLocation';
+import { clamp } from '@/utils/math';
 
 const DAMAGE_BASE_MIN = 4;
 const DAMAGE_VARIANCE_MIN = 0.7;
@@ -66,5 +67,5 @@ export function calculateKillWindow(
   threshold += specialtyBonus;
   threshold += crowdKillBonus;
 
-  return Math.max(0, Math.min(0.04, threshold));
+  return clamp(threshold, 0, 0.04);
 }

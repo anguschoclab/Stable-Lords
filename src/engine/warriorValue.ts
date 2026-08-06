@@ -1,5 +1,6 @@
 import type { Warrior } from '@/types/warrior.types';
 import { TRAITS, type TraitTier, type TraitDef } from '@/engine/traits';
+import { clamp } from '@/utils/math';
 
 /**
  *
@@ -54,7 +55,7 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
   if (ageBurden) factors.push({ name: 'age', weight: ageBurden });
 
   const raw = flawBurden + ageBurden - traitValue - recordValue - fameValue;
-  const score = Math.max(0, Math.min(100, raw + 20)); // baseline 20 so a clean warrior sits low-but-nonzero
+  const score = clamp(raw + 20, 0, 100); // baseline 20 so a clean warrior sits low-but-nonzero
 
   const recommendation: LiabilityResult['recommendation'] =
     flaws.length >= 2 && score > 55

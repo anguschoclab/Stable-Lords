@@ -1,3 +1,4 @@
+import { clamp } from '@/utils/math';
 /**
  * Stable Lords — Canonical Terrablood Charts
  * HP, Endurance, Damage, Encumbrance lookup tables from Terrablood's Duel II archives.
@@ -66,8 +67,8 @@ const WL_MOD_HP: Record<number, number> = {
  * Compute hp.
  */
 export function computeHP(cn: number, sz: number, wl: number): number {
-  const szMod = SZ_MOD[Math.min(21, Math.max(3, sz))] ?? 0;
-  const wlMod = WL_MOD_HP[Math.min(25, Math.max(3, wl))] ?? 0;
+  const szMod = SZ_MOD[clamp(sz, 3, 21)] ?? 0;
+  const wlMod = WL_MOD_HP[clamp(wl, 3, 25)] ?? 0;
   return cn * 2 + szMod + wlMod;
 } /**
  * Hp rating type.
@@ -165,8 +166,8 @@ const DMG_TABLE: number[][] = [
  * Compute damage class.
  */
 export function computeDamageClass(st: number, sz: number): number {
-  const stIdx = Math.min(22, Math.max(0, st - 3));
-  const szIdx = Math.min(18, Math.max(0, sz - 3));
+  const stIdx = clamp(st - 3, 0, 22);
+  const szIdx = clamp(sz - 3, 0, 18);
   return DMG_TABLE[stIdx]?.[szIdx] ?? 2;
 } /**
  * Get damage rating.
@@ -176,7 +177,7 @@ export function computeDamageClass(st: number, sz: number): number {
  * Get damage rating.
  */
 export function getDamageRating(damageClass: number): DamageRating {
-  return DMG_LABELS[Math.min(8, Math.max(0, damageClass - 1))] ?? 'Normal';
+  return DMG_LABELS[clamp(damageClass - 1, 0, 8)] ?? 'Normal';
 } /**
  * Encumbrance class type.
  */
@@ -257,8 +258,8 @@ const ENC_CLASSES: EncumbranceClass[] = ['A', 'B', 'C', 'D', 'E', 'F']; /**
  * Compute encumbrance class.
  */
 export function computeEncumbranceClass(st: number, cn: number): EncumbranceClass {
-  const stIdx = Math.min(22, Math.max(0, st - 3));
-  const cnIdx = Math.min(22, Math.max(0, cn - 3));
+  const stIdx = clamp(st - 3, 0, 22);
+  const cnIdx = clamp(cn - 3, 0, 22);
   const classIdx = ENC_TABLE[stIdx]?.[cnIdx] ?? 2;
   return ENC_CLASSES[classIdx] ?? 'C';
 } /**

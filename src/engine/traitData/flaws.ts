@@ -1,4 +1,4 @@
-import type { TraitDef } from '@/engine/traits';
+import type { TraitDef } from '@/engine/traitData/traitTypes';
 
 /** New negative traits — the botch/bad-start pool. Each has a tooltip. */
 export const NEW_FLAWS: Record<string, TraitDef> = {

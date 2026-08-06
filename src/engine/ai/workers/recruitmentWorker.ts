@@ -4,6 +4,7 @@ import { logAgentAction } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
+import { isActive } from '@/engine/warriorStatus';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 
@@ -26,7 +27,7 @@ export function processRecruitment(
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
   let activeCount = 0;
   for (const w of updatedRival.roster) {
-    if (w.status === 'Active') activeCount++;
+    if (isActive(w)) activeCount++;
   }
 
   // 1. Check Recruitment Chance

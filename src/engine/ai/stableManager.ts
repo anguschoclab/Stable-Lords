@@ -8,6 +8,7 @@ import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/econom
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
@@ -33,7 +34,7 @@ export function processAIStable(
   // ── Fatigue Decay & HP Recovery for AI Warriors ──
   updatedRival.roster = updatedRival.roster.map((w): Warrior => {
     // Intentional deviation: single-item status check inside map
-    if (w.status === 'Active') {
+    if (isActive(w)) {
       const fatigue = Math.max(0, (w.fatigue || 0) - 25);
       const currentHP = w.derivedStats?.hp ?? 100;
       const hp = Math.min(100, currentHP + 20); // Passive heal +20%

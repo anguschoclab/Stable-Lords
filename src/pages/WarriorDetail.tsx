@@ -2,22 +2,14 @@
  * Stable Lords — Warrior Detail
  * Deep dive into a single warrior's stats, history, and equipment.
  */
-import { useCallback, useMemo, useState } from 'react';
-import { useParams, useNavigate, Link } from '@tanstack/react-router';
-import { obfuscateWarrior } from '@/lib/obfuscation';
-import { useShallow } from 'zustand/react/shallow';
-import { useGameStore } from '@/state/useGameStore';
-import { buildWarriorMap } from '@/utils/warriorCollection';
-import { type FightPlan } from '@/types/game';
-import type { Warrior } from '@/types/state.types';
+import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { isActive } from '@/engine/warriorStatus';
-import { DEFAULT_LOADOUT, type EquipmentLoadout } from '@/data/equipment';
-import { toast } from 'sonner';
+import { DEFAULT_LOADOUT } from '@/data/equipment';
 import { type SubNavTab } from '@/components/layout/SubNav';
 import { Separator } from '@/components/ui/separator';
 import { Trophy, Users } from 'lucide-react';
@@ -25,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { useWarriorDetail } from '@/pages/WarriorDetail/hooks/useWarriorDetail';
 
 // Modularized Warrior Components
 import { WarriorHeroHeader } from '@/components/warrior/WarriorHeroHeader';
@@ -43,88 +36,20 @@ const TABS: SubNavTab[] = [
  * Warrior detail.
  */
 
-/**
- * Warrior detail.
- */
 export default function WarriorDetail() {
-  const { id } = useParams({ strict: false }) as { id: string };
-  const navigate = useNavigate();
-
   const {
-    roster,
-    graveyard,
-    retired,
-    rivals,
+    id,
+    warrior,
+    displayWarrior,
+    isPlayerOwned,
+    activeTab,
+    setActiveTab,
     arenaHistory,
     insightTokens,
-    setState,
-    retireWarrior,
-  } = useGameStore(
-    useShallow((s) => ({
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
-      arenaHistory: s.arenaHistory,
-      insightTokens: s.insightTokens,
-      setState: s.setState,
-      retireWarrior: s.retireWarrior,
-    }))
-  );
-
-  const [activeTab, setActiveTab] = useState('biometrics');
-
-  // Single-pass Map lookup across all warrior pools
-  const { warrior, isPlayerOwned } = useMemo(() => {
-    const allMap = buildWarriorMap({ roster, graveyard, retired, rivals });
-    const playerIds = new Set<string>();
-    for (const w of roster) playerIds.add(w.id);
-    for (const w of graveyard) playerIds.add(w.id);
-    for (const w of retired) playerIds.add(w.id);
-
-    const found = allMap.get(id);
-    return { warrior: found, isPlayerOwned: found ? playerIds.has(id) : false };
-  }, [id, roster, graveyard, retired, rivals]);
-
-  const displayWarrior = useMemo(() => {
-    if (!warrior) return null;
-    return obfuscateWarrior(warrior, insightTokens, isPlayerOwned);
-  }, [warrior, insightTokens, isPlayerOwned]);
-
-  const handlePlanChange = useCallback(
-    (newPlan: FightPlan) => {
-      if (!warrior) return;
-      setState((draft) => {
-        const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
-        const found = draft.roster[index];
-        if (found) {
-          found.plan = newPlan;
-        }
-      });
-    },
-    [warrior, setState]
-  );
-
-  const handleRetire = useCallback(() => {
-    if (!warrior) return;
-    retireWarrior(warrior.id);
-    toast.success(`${warrior.name} has been granted the rudis — free at last.`);
-    navigate({ to: '/' });
-  }, [warrior, retireWarrior, navigate]);
-
-  const handleEquipmentChange = useCallback(
-    (newLoadout: EquipmentLoadout) => {
-      if (!warrior) return;
-      setState((draft) => {
-        const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
-        const found = draft.roster[index];
-        if (found) {
-          found.equipment = newLoadout;
-        }
-      });
-    },
-    [warrior, setState]
-  );
+    handlePlanChange,
+    handleRetire,
+    handleEquipmentChange,
+  } = useWarriorDetail();
 
   if (!warrior || !displayWarrior) {
     return (

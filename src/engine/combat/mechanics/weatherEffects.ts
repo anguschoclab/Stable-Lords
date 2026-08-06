@@ -421,6 +421,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Unpredictable bursts of raw energy whip through the arena, empowering strikes but punishing mistakes.',
   },
+  'Mana Storm': {
+    staminaMult: 1.5,
+    initiativeMod: 4,
+    riposteMod: 1,
+    damageMult: 1.1,
+    description: 'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
+  },
 };
 
 /**
@@ -519,6 +526,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
   'Temporal Rift': 'Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters\' will.',
   'Stardust Gale': 'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
+  'Mana Storm': 'The air crackles with violent purple energy. A Mana Storm has begun!',
 };
 
 /**

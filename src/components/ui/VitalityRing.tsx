@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { BATTERY_THRESHOLDS } from '@/constants/core/ui';
+import { clamp } from '@/utils/math';
 
 interface VitalityRingProps {
   value: number;
@@ -13,7 +14,7 @@ interface VitalityRingProps {
  * Colors: stroke-primary (>70), stroke-arena-gold (30–70), stroke-destructive (<30).
  */
 export function VitalityRing({ value, size = 40, strokeWidth = 4, className }: VitalityRingProps) {
-  const clamped = Math.min(100, Math.max(0, value));
+  const clamped = clamp(value, 0, 100);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (clamped / 100) * circumference;

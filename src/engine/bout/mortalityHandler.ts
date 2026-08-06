@@ -6,6 +6,7 @@ import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
+import { formatDateOfDeath } from '@/utils/format';
 import { StateImpact } from '@/engine/impacts'; /**
  * Handle death.
  * @param rivalStableId - Rival stable id. (optional)
@@ -84,7 +85,7 @@ export function handleDeath(
     isDead: true,
     killedBy: outcome.winner === 'A' ? wA.name : wD.name,
     causeOfDeath: causeBucket,
-    dateOfDeath: `Week ${week}, Season ${s.season}`,
+    dateOfDeath: formatDateOfDeath(week, s.season),
     deathEvent: { ...event, causeBucket } as typeof event & { causeBucket: string },
   };
 

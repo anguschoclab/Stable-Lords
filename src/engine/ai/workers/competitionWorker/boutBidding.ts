@@ -10,6 +10,8 @@ import type { BoutBid } from './types';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
 import { displayWeek } from '@/engine/core/absoluteWeek';
+import { clamp } from '@/utils/math';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  *
@@ -22,7 +24,7 @@ export function generateBoutBids(
   rivals: RivalStableData[] = []
 ): { bids: BoutBid[]; updatedRival: RivalStableData } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
-  const activeRoster = rival.roster.filter((w) => w.status === 'Active');
+  const activeRoster = rival.roster.filter((w) => isActive(w));
   const bids: BoutBid[] = [];
 
   // Pre-calculate vendetta target rival once outside the loop to prevent O(W * R) lookups
@@ -34,7 +36,7 @@ export function generateBoutBids(
   // Pre-calculate active opponents for non-vendetta intents
   const nonVendettaOpponents = intent !== 'VENDETTA' ? rivals
     .filter(r => r.id !== rival.id)
-    .flatMap(r => r.roster.filter(w => w.status === 'Active')) : [];
+    .flatMap(r => r.roster.filter(w => isActive(w))) : [];
 
   // Build a mock state for matchup scoring
   const mockState: GameState = {
@@ -171,9 +173,9 @@ export function generateBoutBids(
     if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
       if (targetRival) {
         for (const opponent of targetRival.roster) {
-          if (opponent.status === 'Active') {
+          if (isActive(opponent)) {
             const matchupScore = scoreMatchup(warrior, opponent, mockState);
-            const score = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
+            const score = clamp((matchupScore - 100) / 20, -5, 5);
             matchupModifier = Math.max(matchupModifier, score);
             foundOpponent = true;
           }
@@ -182,7 +184,7 @@ export function generateBoutBids(
     } else if (intent !== 'VENDETTA') {
       for (const opponent of nonVendettaOpponents) {
         const matchupScore = scoreMatchup(warrior, opponent, mockState);
-        const score = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
+        const score = clamp((matchupScore - 100) / 20, -5, 5);
         matchupModifier = Math.max(matchupModifier, score);
         foundOpponent = true;
       }
@@ -239,7 +241,11 @@ export function convertBidsToOffers(
 ): BoutOffer[] {
   const sorted = [...allBids].sort((a, b) => b.bid.priority - a.bid.priority);
   const paired = new Set<string>(existingOfferWarriorIds);
-  const rivalMap = new Map(rivals.map((r) => [r.id as string, r]));
+  // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
+  const rivalMap = new Map<string, RivalStableData>();
+  for (const r of rivals) {
+    rivalMap.set(r.id as string, r);
+  }
   const offers: BoutOffer[] = [];
 
   for (const { bid } of sorted) {
@@ -259,7 +265,7 @@ export function convertBidsToOffers(
       const targetRival = rivalMap.get(bid.targetStableId);
       if (targetRival) {
         candidates = targetRival.roster
-          .filter((w) => w.status === 'Active')
+          .filter((w) => isActive(w))
           .map((w) => ({
             warrior: w,
             stableId: targetRival.id as string,

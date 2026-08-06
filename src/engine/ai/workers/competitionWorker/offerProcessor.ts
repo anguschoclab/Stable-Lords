@@ -1,5 +1,5 @@
 import type { GameState, RivalStableData, WeatherType } from '@/types/state.types';
-import type { BoutOfferId, WarriorId } from '@/types/shared.types';
+import type { BoutOfferId, WarriorId, StableId } from '@/types/shared.types';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { StateImpact } from '@/engine/impacts';
 import * as boutAcceptance from './boutAcceptance';
@@ -36,9 +36,13 @@ export function processAllRivalsBoutOffers(
   });
 
   // Process each rival's slate
-  const rivalMap = new Map(rivals.map((r) => [r.id, r]));
+  // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
+  const rivalMap = new Map<StableId | string, RivalStableData>();
+  for (const r of rivals) {
+    rivalMap.set(r.id, r);
+  }
   offersByRival.forEach((rivalOffers, rivalId) => {
-    const owningRival = rivalMap.get(rivalId as import('@/types/shared.types').StableId);
+    const owningRival = rivalMap.get(rivalId as StableId);
     if (!owningRival) return;
 
     // Track warriors already committed this week

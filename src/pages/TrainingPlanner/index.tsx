@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -10,23 +9,10 @@ import { useTrainingPlanner } from './hooks/useTrainingPlanner';
 import { WarriorSelector } from './components/WarriorSelector';
 import PlanBuilder from '@/components/PlanBuilder';
 import { defaultPlanForWarrior } from '@/engine/simulate';
-import type { FightPlan, Warrior } from '@/types/game';
 
 export default function TrainingPlanner() {
-  const { activeWarriors, selectedId, setSelectedId, selectedWarrior, setState, plansSetCount } =
+  const { activeWarriors, selectedId, setSelectedId, selectedWarrior, plansSetCount, handlePlanChange } =
     useTrainingPlanner();
-
-  const handlePlanChange = useCallback(
-    (newPlan: FightPlan) => {
-      if (!selectedWarrior) return;
-      setState((draft) => {
-        const index = draft.roster.findIndex((w: Warrior) => w.id === selectedWarrior.id);
-        const found = draft.roster[index];
-        if (found) found.plan = newPlan;
-      });
-    },
-    [selectedWarrior, setState]
-  );
 
   return (
     <PageFrame>

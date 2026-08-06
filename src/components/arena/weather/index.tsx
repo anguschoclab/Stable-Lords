@@ -33,7 +33,7 @@ import {
   WildfireSmokeEffect,
   BloodFogEffect,
   RainbowEffect,
-} from './effects';
+} from './effects/index';
 
 /**
  * Exhaustive map of weather type → overlay renderer. `null` means the weather
@@ -99,6 +99,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Diamond Rain': () => <RainEffect />,
   'Temporal Rift': () => <ArcaneStormEffect />,
   'Stardust Gale': () => <WindEffect strong={false} />,
+  'Mana Storm': () => <ArcaneStormEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

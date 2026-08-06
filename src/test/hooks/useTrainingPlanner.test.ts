@@ -87,12 +87,12 @@ describe('useTrainingPlanner', () => {
     expect(result.current.selectedWarrior?.name).toBe('Beta');
   });
 
-  it('returns setState function from store', () => {
+  it('returns handlePlanChange function from store', () => {
     const w1 = makeTestWarrior('w1', 'Alpha');
     loadState([w1]);
 
     const { result } = renderHook(() => useTrainingPlanner());
-    expect(typeof result.current.setState).toBe('function');
+    expect(typeof result.current.handlePlanChange).toBe('function');
   });
 
   it('plansSetCount = 0 when no warriors have plans', () => {

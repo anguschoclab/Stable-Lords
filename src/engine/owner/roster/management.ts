@@ -9,6 +9,7 @@ import { getStablePairKey } from '@/utils/keyUtils';
 import { generateAIRecruit } from './recruitGenerator';
 import { computeWarriorLiability } from '@/engine/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
@@ -38,7 +39,7 @@ export function processAIRosterManagement(
     const personality = r.owner.personality ?? 'Pragmatic';
     let activeBeforeCulling = 0;
     for (const w of r.roster) {
-      if (w.status === 'Active') activeBeforeCulling++;
+      if (isActive(w)) activeBeforeCulling++;
     }
 
     // 1) Retirement / Culling Logic
@@ -62,7 +63,7 @@ export function processAIRosterManagement(
     if (personality === 'Methodical' || personality === 'Tactician') {
       const candidates = r.roster.filter(
         (w) =>
-          w.status === 'Active' &&
+          isActive(w) &&
           w.career.wins + w.career.losses >= 5 &&
           w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
           (w.age ?? 18) >= 25 &&
@@ -82,7 +83,7 @@ export function processAIRosterManagement(
     if (personality === 'Aggressive') {
       const killless = r.roster.filter(
         (w) =>
-          w.status === 'Active' &&
+          isActive(w) &&
           w.career.kills === 0 &&
           w.career.wins + w.career.losses >= 8 &&
           (w.age ?? 18) >= 24 &&
@@ -119,7 +120,7 @@ export function processAIRosterManagement(
     }
 
     // Age-based retirement
-    const elderly = r.roster.filter((w) => w.status === 'Active' && (w.age ?? 18) >= 30);
+    const elderly = r.roster.filter((w) => isActive(w) && (w.age ?? 18) >= 30);
     for (const old of elderly.slice(0, 1)) {
       if (rngSnapshot.next() < 0.15) {
         old.status = 'Retired';
@@ -133,7 +134,7 @@ export function processAIRosterManagement(
     // 2) Recruitment Logic
     let currentActive = 0;
     for (const w of r.roster) {
-      if (w.status === 'Active') currentActive++;
+      if (isActive(w)) currentActive++;
     }
     const minRoster = personality === 'Aggressive' ? 8 : personality === 'Showman' ? 7 : 6;
     const recruitChance =
@@ -183,7 +184,7 @@ export function processAIRosterManagement(
       }
     }
 
-    r.roster = r.roster.filter((w) => w.status === 'Active');
+    r.roster = r.roster.filter((w) => isActive(w));
     return r;
   });
 

@@ -75,7 +75,43 @@ export function countActiveWarriors(state: GameState): number {
 }
 
 /**
- * Collects only healthy active warriors (status === "Active" and no injuries)
+ * Collects all known warriors across player roster, graveyard, retired,
+ * and rival stables into a single flat array.
+ */
+export function collectAllKnownWarriors(state: {
+  roster: Warrior[];
+  graveyard: Warrior[];
+  retired: Warrior[];
+  rivals: { roster: Warrior[] }[];
+}): Warrior[] {
+  return [
+    ...state.roster,
+    ...state.graveyard,
+    ...state.retired,
+    ...(state.rivals ?? []).flatMap((r) => r.roster),
+  ];
+}
+
+/**
+ * Builds a Map of warrior id → warrior for fast lookups.
+ * Includes all warriors (roster, graveyard, retired, rivals).
+ * Later entries overwrite earlier ones.
+ */
+export function buildWarriorMap(state: {
+  roster: Warrior[];
+  graveyard: Warrior[];
+  retired: Warrior[];
+  rivals: { roster: Warrior[] }[];
+}): Map<string, Warrior> {
+  const map = new Map<string, Warrior>();
+  for (const w of collectAllKnownWarriors(state)) {
+    map.set(w.id, w);
+  }
+  return map;
+}
+
+/**
+ * Collects healthy active warriors (status === "Active" and no injuries)
  */
 export function collectHealthyWarriors(state: GameState): Warrior[] {
   return collectAllWarriors(state, (w) => isActive(w) && (!w.injuries || w.injuries.length === 0));

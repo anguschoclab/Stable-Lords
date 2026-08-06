@@ -460,6 +460,27 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'blood_pit_rat_king',
+    arenaId: 'gutter_pit',
+    type: 'architectural_quirk',
+    title: 'The Rat King\'s Nest',
+    narrative: 'A massive nest of tangled bones and iron wire sits high in the rafters, rumored to be built by the legendary Rat King.'
+  },
+  {
+    id: 'sun_temple_solar_flare',
+    arenaId: 'sunken_temple',
+    type: 'historical_battle',
+    title: 'The Solar Flare Bout',
+    narrative: 'A fight that ended when a blinding reflection from the temple\'s golden mirrors permanently blinded both combatants.'
+  },
+  {
+    id: 'iron_ring_rust_rot',
+    arenaId: 'brass_ring',
+    type: 'famous_death',
+    title: 'The Rust-Rot Execution',
+    narrative: 'A champion was impaled on a rusted spike and left to rot for three days as a warning to those who defy the arena masters.'
+  },
+  {
     id: 'underpit_feral_ghouls',
     arenaId: 'underpit_arena',
     type: 'historical_battle',

@@ -8,13 +8,14 @@ import { FormSparkline } from '@/components/charts/FormSparkline';
 import { STYLE_ABBREV } from '@/types/shared.types';
 import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { Swords, ChevronRight } from 'lucide-react';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  *
  */
 export function RosterSnapshot() {
   const { roster } = useGameStore(useShallow((s) => ({ roster: s.roster })));
-  const active = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
+  const active = useMemo(() => roster.filter((w) => isActive(w)), [roster]);
 
   return (
     <div className="flex flex-col gap-3">

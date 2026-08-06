@@ -23,9 +23,8 @@ import { Surface } from '@/components/ui/Surface';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining'; /**
- * Training.
- */
+import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Training.
@@ -280,7 +279,7 @@ export default function Training() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2">
               {state.roster
-                .filter((warrior: Warrior) => warrior.status === 'Active')
+                .filter((warrior: Warrior) => isActive(warrior))
                 .map((warrior: Warrior) => (
                   <WarriorTrainingCard
                     key={warrior.id}

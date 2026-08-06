@@ -4,6 +4,7 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import { clamp } from '@/utils/math';
 /**
  * Defines the shape of stable reputation.
  */
@@ -95,7 +96,7 @@ function calculateNotoriety(totalKills: number, graveyardKills: number, killBout
  */
 function calculateHonor(cleanBouts: number, totalKills: number): number {
   const honorRaw = 50 + cleanBouts * 0.5 - totalKills * 5;
-  return Math.min(100, Math.max(0, Math.round(honorRaw)));
+  return clamp(Math.round(honorRaw), 0, 100);
 }
 
 /**
@@ -214,7 +215,7 @@ export function computeRivalReputation(roster: Warrior[]): StableReputation {
   const fame = Math.min(100, Math.round(avgFame * 2.0));
 
   const notoriety = Math.min(100, Math.round(totalKills * 8));
-  const honor = Math.min(100, Math.max(0, Math.round(50 + cleanBouts * 0.3 - totalKills * 5)));
+  const honor = clamp(Math.round(50 + cleanBouts * 0.3 - totalKills * 5), 0, 100);
 
   const adaptability = Math.min(100, Math.round(uniqueStyles.size * 10));
 

@@ -1,6 +1,7 @@
 import type { CommitLevel } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from './types';
+import { clamp } from '@/utils/math';
 import {
   contestDistance,
   transitionZone,
@@ -112,7 +113,7 @@ export function runFeint(rng: () => number, att: FighterState, def: FighterState
   const defAL = def.activePlan.AL;
   const defWT = def.attributes.WT;
   const roll = wt + feintTendency - defAL - defWT * 0.5;
-  const threshold = Math.max(0.05, Math.min(0.95, roll / 20));
+  const threshold = clamp(roll / 20, 0.05, 0.95);
   const succeeded = rng() < threshold;
 
   const events: CombatEvent[] = [
@@ -187,12 +188,12 @@ export function runRecovery(
 ): void {
   // Write recovery debt
   if (debtToWriteA > 0) {
-    fA.recoveryDebt = Math.min(3, Math.max(fA.recoveryDebt, debtToWriteA));
+    fA.recoveryDebt = clamp(debtToWriteA, fA.recoveryDebt, 3);
   } else {
     fA.recoveryDebt = Math.max(0, fA.recoveryDebt - 1);
   }
   if (debtToWriteD > 0) {
-    fD.recoveryDebt = Math.min(3, Math.max(fD.recoveryDebt, debtToWriteD));
+    fD.recoveryDebt = clamp(debtToWriteD, fD.recoveryDebt, 3);
   } else {
     fD.recoveryDebt = Math.max(0, fD.recoveryDebt - 1);
   }

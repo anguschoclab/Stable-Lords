@@ -1,3 +1,4 @@
+import { clamp } from '@/utils/math';
 /**
  * Combat Math — RNG, phase detection, skill/contest checks.
  * Single source of truth for combat math utilities used by simulate.ts.
@@ -39,7 +40,7 @@ export function pickText(rng: () => number, texts: string[]): string {
  */
 export function skillCheck(rng: () => number, skill: number, modifier: number = 0): boolean {
   const roll = Math.floor(rng() * 20) + 1;
-  const target = Math.max(1, Math.min(19, Math.floor(skill) + modifier));
+  const target = clamp(Math.floor(skill) + modifier, 1, 19);
   const success = roll === 1 || (roll !== 20 && roll <= target);
   return success;
 } /**

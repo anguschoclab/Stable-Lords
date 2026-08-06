@@ -25,6 +25,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TreasurySparkline } from '@/components/charts/TreasurySparkline';
+import { isActive } from '@/engine/warriorStatus';
 
 interface GlobalTreasuryMatrixProps {
   gold: number;
@@ -377,7 +378,7 @@ export function TreasuryOverview() {
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.treasury ?? 0;
 
-  const activeWarriorsCount = (state.roster ?? []).filter((w) => w.status === 'Active').length;
+  const activeWarriorsCount = (state.roster ?? []).filter((w) => isActive(w)).length;
 
   // ⚡ Bolt: Fast accumulation without allocating objects per iteration
   let totalWins = 0;

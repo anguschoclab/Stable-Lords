@@ -72,7 +72,7 @@ export function applyRecords(
   } else if (rivalStableId) {
     const rival =
       s.rivalMap?.get(rivalStableId as StableId) ??
-      new Map((s.rivals || []).map((r) => [r.owner.id, r])).get(rivalStableId as StableId);
+      (s.rivals || []).find((r) => r.owner.id === rivalStableId);
     if (rival) {
       const updatedRoster = updateEntityInList(rival.roster, wD.id, (w) =>
         updateWarriorAfterBout(

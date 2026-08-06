@@ -1,3 +1,4 @@
+import { clamp } from '@/utils/math';
 /**
  * Arena utility functions for calculations and data transformations.
  */
@@ -10,7 +11,7 @@
  */
 export function calculatePercent(current: number, max: number): number {
   if (max <= 0) return 0;
-  return Math.max(0, Math.min(100, (current / max) * 100));
+  return clamp((current / max) * 100, 0, 100);
 }
 
 /**

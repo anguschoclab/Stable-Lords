@@ -1,8 +1,7 @@
 import { forwardRef } from 'react';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils'; /**
- * Defines the shape of stat battery props.
- */
+import { cn } from '@/lib/utils';
+import { clamp } from '@/utils/math';
 
 /**
  * Defines the shape of stat battery props.
@@ -25,7 +24,7 @@ export const StatBattery = forwardRef<HTMLDivElement, StatBatteryProps>(function
   { label, value, max = 100, labelValue, colorClass, className },
   ref
 ) {
-  const pct = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
+  const pct = max > 0 ? clamp((value / max) * 100, 0, 100) : 0;
   const displayValue = labelValue !== undefined ? labelValue : value;
 
   return (

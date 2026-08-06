@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -10,7 +11,10 @@ import {
   type StatBadgeProps,
   type WarriorNameTagProps,
 } from '@/types/game';
-import { WarriorLink } from '@/components/EntityLink';
+
+const WarriorLink = lazy(() =>
+  import('@/components/EntityLink').then((m) => ({ default: m.WarriorLink }))
+);
 
 // ─── TagBadge ─────────────────────────────────────────────────────────────
 
@@ -144,9 +148,11 @@ export function WarriorNameTag({
         className={`font-display font-semibold text-sm truncate ${isDead ? 'text-muted-foreground line-through' : ''}`}
       >
         {id ? (
-          <WarriorLink name={name} id={id}>
-            {name}
-          </WarriorLink>
+          <Suspense fallback={name}>
+            <WarriorLink name={name} id={id}>
+              {name}
+            </WarriorLink>
+          </Suspense>
         ) : (
           name
         )}

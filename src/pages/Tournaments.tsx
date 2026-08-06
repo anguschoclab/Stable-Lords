@@ -23,6 +23,7 @@ import { toast } from 'sonner';
 import { FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
 
 // Modular Components
+import { isActive } from '@/engine/warriorStatus';
 import {
   TournamentBracket,
   TournamentHistory,
@@ -104,7 +105,7 @@ export default function Tournaments() {
     [tournaments, season]
   );
 
-  const activeWarriors = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
+  const activeWarriors = useMemo(() => roster.filter((w) => isActive(w)), [roster]);
 
   // Warriors belonging to the player that are in the active tournament
   const playerWarriorsInTournament = useMemo(() => {

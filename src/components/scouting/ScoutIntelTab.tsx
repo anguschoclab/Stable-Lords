@@ -5,6 +5,7 @@ import { RivalStableList } from './RivalStableList';
 import { RivalWarriorList } from './RivalWarriorList';
 import { ScoutReportDetails } from './ScoutReportDetails';
 import { Surface } from '@/components/ui/Surface';
+import { isActive } from '@/engine/warriorStatus';
 
 interface ScoutIntelTabProps {
   rivals: RivalStableData[];
@@ -97,7 +98,7 @@ export function ScoutIntelTab({
       />
 
       <RivalWarriorList
-        warriors={activeRival ? activeRival.roster.filter((w) => w.status === 'Active') : []}
+        warriors={activeRival ? activeRival.roster.filter((w) => isActive(w)) : []}
         selectedWarriorId={selectedWarriorId}
         onSelectWarrior={onSelectWarrior}
         reports={reports}

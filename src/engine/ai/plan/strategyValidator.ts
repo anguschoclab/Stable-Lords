@@ -5,6 +5,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
 import { computeStrategyScore } from '@/engine/strategyAnalysis';
+import { clamp } from '@/utils/math';
 
 const MIN_SCORE = 50;
 const MAX_RETRIES = 3;
@@ -37,8 +38,8 @@ export function validateAndAdjustPlan(plan: FightPlan, warrior: Warrior): number
     // Adjust towards balanced effort
     else {
       const avgEffort = Math.floor(totalEffort / 2);
-      plan.OE = Math.max(1, Math.min(10, avgEffort));
-      plan.AL = Math.max(1, Math.min(10, avgEffort));
+      plan.OE = clamp(avgEffort, 1, 10);
+      plan.AL = clamp(avgEffort, 1, 10);
     }
 
     score = computeStrategyScore(plan, warrior);

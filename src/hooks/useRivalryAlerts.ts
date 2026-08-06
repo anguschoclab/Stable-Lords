@@ -8,6 +8,7 @@ import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import type { WarriorId } from '@/types/shared.types';
 import { toast } from '@/hooks/use-toast';
+import { clamp } from '@/utils/math';
 
 interface RivalrySnapshot {
   stableName: string;
@@ -160,7 +161,7 @@ export function useRivalryAlerts() {
 
     return result.map((r) => {
       let intensity = Math.min(r.kills * 2, 4) + (r.bouts >= 5 ? 1 : 0);
-      intensity = Math.max(1, Math.min(5, intensity));
+      intensity = clamp(intensity, 1, 5);
       return { stableName: r.stableName, intensity };
     });
   }, [state.arenaHistory, allRosterIds, rivalWarriorStable]);

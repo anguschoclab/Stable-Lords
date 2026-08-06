@@ -1,7 +1,5 @@
 import { GameState, Warrior } from '@/types/state.types';
-import { buildWarriorMap } from '@/utils/roster'; /**
- * Defines the shape of bout pairing.
- */
+import { buildActiveWarriorMap } from '@/utils/roster';
 
 /**
  * Defines the shape of bout pairing.
@@ -25,7 +23,7 @@ export function generatePairings(state: GameState): BoutPairing[] {
   const pairings: BoutPairing[] = [];
 
   // ⚡ Bolt: Use cached warriorMap if available, otherwise build it
-  const warriorMap = state.warriorMap || buildWarriorMap(state);
+  const warriorMap = state.warriorMap || buildActiveWarriorMap(state);
 
   // 2. Derive pairings from Signed Contracts for this week
   const allOffers = Object.values(state.boutOffers || {});

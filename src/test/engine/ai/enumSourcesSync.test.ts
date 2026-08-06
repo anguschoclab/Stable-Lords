@@ -62,6 +62,7 @@ describe('enumSources sync with WeatherType', () => {
     'Cosmic Anomaly',
     'Temporal Rift',
     'Stardust Gale',
+    'Mana Storm',
   ]);
   it('WeatherTypeSchema has no duplicate entries', () => {
     expect(schemaOptions.length, 'WeatherTypeSchema has duplicate entries').toBe(
@@ -69,12 +70,12 @@ describe('enumSources sync with WeatherType', () => {
     );
   });
 
-  it('WEATHER_TYPES count is 56 (48 original + 8 new)', () => {
-    expect(WEATHER_TYPES.length).toBe(56);
+  it('WEATHER_TYPES count is 57 (48 original + 9 new)', () => {
+    expect(WEATHER_TYPES.length).toBe(57);
   });
 
-  it('WeatherTypeSchema options count is 56', () => {
-    expect(schemaOptions.length).toBe(56);
+  it('WeatherTypeSchema options count is 57', () => {
+    expect(schemaOptions.length).toBe(57);
   });
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

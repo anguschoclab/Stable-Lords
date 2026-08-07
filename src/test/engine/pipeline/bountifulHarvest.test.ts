@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { handleBountifulHarvest } from '@/engine/pipeline/offseasonEvents/economicHandlers';
 import { type GameState } from '@/types/state.types';
 import { type OffseasonEventNarrative, type OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
@@ -28,8 +28,8 @@ describe('Bountiful Harvest Offseason Event', () => {
 
     expect(ctx.treasuryDelta).toBe(200);
     expect(ctx.ledgerEntries).toHaveLength(1);
-    expect(ctx.ledgerEntries[0].label).toBe('Bountiful Harvest');
-    expect(ctx.ledgerEntries[0].amount).toBe(200);
+    expect(ctx.ledgerEntries[0]?.label).toBe('Bountiful Harvest');
+    expect(ctx.ledgerEntries[0]?.amount).toBe(200);
     expect(ctx.newsletterItems).toHaveLength(1);
   });
 });

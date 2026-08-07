@@ -12,7 +12,7 @@ import {
 } from './types';
 
 export function handleWinterChill(
-  _state: GameState,
+  __state: GameState,
   nextWeek: number,
   e: OffseasonEventNarrative,
   rng: IRNGService,
@@ -27,7 +27,7 @@ export function handleWinterChill(
 }
 
 export function handleMerchantBlessing(
-  _state: GameState,
+  __state: GameState,
   nextWeek: number,
   e: OffseasonEventNarrative,
   rng: IRNGService,
@@ -40,13 +40,13 @@ export function handleMerchantBlessing(
 }
 
 export function handleBlackMarketRaid(
-  state: GameState,
+  _state: GameState,
   nextWeek: number,
   e: OffseasonEventNarrative,
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
+  const activeWarriors = getActiveWarriors(_state);
   const goldLost = 50 + Math.floor(rng.next() * 101);
   ctx.treasuryDelta -= goldLost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Black Market Fines', -goldLost, 'other'));
@@ -59,7 +59,7 @@ export function handleBlackMarketRaid(
 }
 
 export function handleMysteriousPatron(
-  _state: GameState,
+  __state: GameState,
   nextWeek: number,
   e: OffseasonEventNarrative,
   rng: IRNGService,
@@ -78,7 +78,7 @@ export function handleMysteriousPatron(
 }
 
 export function handleBountifulHarvest(
-  state: GameState,
+  _state: GameState,
   nextWeek: number,
   e: OffseasonEventNarrative,
   rng: IRNGService,

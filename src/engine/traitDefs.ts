@@ -95,6 +95,38 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+
+  shadow_watcher: {
+    id: 'shadow_watcher',
+    name: 'Shadow Watcher',
+    description: 'Always keeps an eye on the unseen. Improved defense early in the fight.',
+    effect: { defModEarly: 2, resistStun: 0.1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 1,
+    tags: ['defensive'],
+  },
+  knife_juggler: {
+    id: 'knife_juggler',
+    name: 'Knife Juggler',
+    description: 'Uncanny hand-eye coordination from youth.',
+    effect: { critChanceMod: 0.05 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 1,
+    tags: ['offensive'],
+  },
+  stone_skin_orphan: {
+    id: 'stone_skin_orphan',
+    name: 'Stone Skin',
+    description: 'Beatings hardened their flesh.',
+    effect: { enduranceMult: 0.95 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 1,
+    tags: ['defensive'],
+  },
+
   starving_dog: {
     id: 'starving_dog',
     name: 'Starving Dog',

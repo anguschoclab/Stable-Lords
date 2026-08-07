@@ -530,6 +530,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'The stones in the eastern corner are so saturated with gore that they weep blood on particularly humid days.',
   },
+
   {
     id: 'bloodsands_massacre_thirty_2',
     arenaId: 'bloodsands_arena',
@@ -587,6 +588,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A grim testament to the desperate. A group of child slaves seized weapons from the armory and fought off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
   },
+
   {
     id: 'charnel_pits_silent_slaughter',
     arenaId: 'charnel_pits',
@@ -660,14 +662,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'The legendary champion Oros the Unbroken met his end not by a blade, but when a crumbling stone gargoyle dislodged during a thunderous crowd cheer and crushed him instantly.',
   },
-  {
-    id: 'flesh_gardens_the_crimson_bloom',
-    arenaId: 'flesh_gardens',
-    type: 'historical_battle',
-    title: 'The Crimson Bloom',
-    narrative:
-      'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',
-  },
+
   {
     id: 'charnel_pits_plague_surge',
     arenaId: 'charnel_pits',
@@ -796,14 +791,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Three hundred warriors died in a single day when a riot broke out during a mass execution bout. The sand was so saturated with blood that arena workers had to replace it three times.',
   },
-  {
-    id: 'underpit_whispering_stones',
-    arenaId: 'underpit_arena',
-    type: 'architectural_quirk',
-    title: 'The Whispering Stones',
-    narrative:
-      'Ancient limestone walls carry sound in impossible ways. Fighters report hearing confessions from warriors long dead echoing from the stones during quiet moments.',
-  },
+
   {
     id: 'flooded_drowning_seat',
     arenaId: 'flooded_vault_arena',
@@ -940,14 +928,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A massive brute whose helm had fused to his face in a terrible accident fought his final battle here. Blinded, he relied entirely on the shrieking winds of the pits to locate his prey, culminating in a horrific double-decapitation of two agility fighters who failed to walk silently.',
   },
-  {
-    id: 'gutter_pit_the_iron_rebellion_2',
-    arenaId: 'gutter_pit',
-    type: 'famous_death',
-    title: 'The Fall of the Iron King',
-    narrative:
-      'In 974, the notorious underground champion known as the Iron King was finally slain when a rookie gladiator impaled him on a rusted spike protruding from the southern wall.',
-  },
+
   {
     id: 'flesh_gardens_thorny_path_2',
     arenaId: 'flesh_gardens',
@@ -1013,6 +994,27 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Day of the Red Wind',
     narrative: 'A freak tornado swept through the high plains during a mid-summer tournament, carrying the blood of twenty fallen fighters into the sky and raining it down on the screaming spectators.'
+  },
+  {
+    id: 'underpit_feral_uprising',
+    arenaId: 'underpit_arena',
+    type: 'historical_battle',
+    title: 'The Feral Uprising',
+    narrative: 'A band of unsanctioned child fighters managed to collapse the main portcullis, holding off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
+  },
+  {
+    id: 'gutter_pit_the_blind_orphan',
+    arenaId: 'gutter_pit',
+    type: 'famous_death',
+    title: 'The Blind Orphan',
+    narrative: 'A legendary rogue who fought entirely by sound met their end here when the crowd unexpectedly went completely silent in awe, leaving them entirely deaf to a fatal stab.',
+  },
+  {
+    id: 'sundered_coliseum_orphans_echo',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Orphan\'s Echo',
+    narrative: 'A crack in the western wall perfectly catches the wind, emitting a sound remarkably like a child weeping. Opponents of high empathy often find their morale broken here.',
   }
 ];
 

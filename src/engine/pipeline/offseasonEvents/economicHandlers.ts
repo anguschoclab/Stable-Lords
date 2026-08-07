@@ -76,3 +76,16 @@ export function handleMysteriousPatron(
     gold: goldGained,
   });
 }
+
+export function handleBountifulHarvest(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const gold = 200;
+  ctx.treasuryDelta += gold;
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bountiful Harvest', gold, 'other'));
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
+}

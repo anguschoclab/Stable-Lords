@@ -54,4 +54,5 @@ export {
   handleChaosWeaversProphecy,
   handleCursedTreasureDiscovery,
   handleWanderingMystic,
+  handleBountifulHarvest,
 } from './offseasonEvents';

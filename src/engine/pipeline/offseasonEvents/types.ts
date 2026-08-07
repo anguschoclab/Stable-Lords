@@ -55,7 +55,8 @@ export interface OffseasonEventNarrative {
     | 'chaos_weavers_gift'
     | 'temporal_anomaly'
     | 'chaos_weavers_prophecy'
-    | 'wandering_mystic';
+    | 'wandering_mystic'
+    | 'bountiful_harvest';
   newsletter: string[];
 }
 

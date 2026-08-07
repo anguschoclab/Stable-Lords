@@ -100,21 +100,19 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'shadow_watcher',
     name: 'Shadow Watcher',
     description: 'Always keeps an eye on the unseen. Improved defense early in the fight.',
-    effect: { defModEarly: 2, resistStun: 0.1 },
+    effect: { defModEarly: 1, defMod: 1 },
     tier: 'Notable',
     sign: 'positive',
     weight: 1,
-    tags: ['defensive'],
   },
   knife_juggler: {
     id: 'knife_juggler',
     name: 'Knife Juggler',
     description: 'Uncanny hand-eye coordination from youth.',
-    effect: { critChanceMod: 0.05 },
+    effect: { attMod: 1 },
     tier: 'Common',
     sign: 'positive',
     weight: 1,
-    tags: ['offensive'],
   },
   stone_skin_orphan: {
     id: 'stone_skin_orphan',
@@ -124,7 +122,6 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
     weight: 1,
-    tags: ['defensive'],
   },
 
   starving_dog: {

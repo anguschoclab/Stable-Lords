@@ -57,6 +57,16 @@ export default function EventLog() {
     return [...names];
   }, [state.roster, state.graveyard, state.retired, state.rivals]);
 
+  // Collect all known stable names for linkification
+  const allStableNames = useMemo(() => {
+    const names = new Set<string>();
+    if (state.player?.stableName) names.add(state.player.stableName);
+    for (const r of state.rivals ?? []) {
+      if (r.owner?.stableName) names.add(r.owner.stableName);
+    }
+    return [...names];
+  }, [state.player, state.rivals]);
+
   const events = useMemo(() => {
     const all: GameEvent[] = [
       ...processFightEvents(state.arenaHistory),
@@ -103,6 +113,7 @@ export default function EventLog() {
                     key={event.id}
                     event={event}
                     allWarriorNames={allWarriorNames}
+                    allStableNames={allStableNames}
                     onClick={() => navigate({ to: event.linkTo })}
                   />
                 ))}

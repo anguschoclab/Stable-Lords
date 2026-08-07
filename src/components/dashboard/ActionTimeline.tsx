@@ -1,5 +1,9 @@
+import { useMemo } from 'react';
 import { History } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { LinkifiedText } from '@/components/ui/LinkifiedText';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 
 interface ActionEvent {
   week: number;
@@ -15,6 +19,36 @@ interface ActionTimelineProps {
  *
  */
 export function ActionTimeline({ events }: ActionTimelineProps) {
+  const state = useGameStore(
+    useShallow((s: any) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      player: s.player,
+    }))
+  );
+
+  const warriorNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const w of state.roster ?? []) names.add(w.name);
+    for (const w of state.graveyard ?? []) names.add(w.name);
+    for (const w of state.retired ?? []) names.add(w.name);
+    for (const r of state.rivals ?? []) {
+      for (const w of r.roster) names.add(w.name);
+    }
+    return [...names];
+  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+
+  const stableNames = useMemo(() => {
+    const names = new Set<string>();
+    if (state.player?.stableName) names.add(state.player.stableName);
+    for (const r of state.rivals ?? []) {
+      if (r.owner?.stableName) names.add(r.owner.stableName);
+    }
+    return [...names];
+  }, [state.player, state.rivals]);
+
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 text-muted-foreground/40 px-1">
@@ -32,7 +66,7 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
               <span className="text-[8px] font-mono text-primary mt-0.5">W{event.week}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-medium text-foreground truncate">
-                  {event.description}
+                  <LinkifiedText text={event.description} names={warriorNames} stableNames={stableNames} />
                 </p>
                 <div className="flex items-center gap-2 mt-1">
                   <span

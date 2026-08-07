@@ -1,5 +1,9 @@
+import { useMemo } from 'react';
 import { Quote, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { LinkifiedText } from '@/components/ui/LinkifiedText';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import type { GazetteStory } from '@/types/state.types';
 
 interface GazetteTabProps {
@@ -10,6 +14,36 @@ interface GazetteTabProps {
  *
  */
 export function GazetteTab({ stories }: GazetteTabProps) {
+  const state = useGameStore(
+    useShallow((s: any) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      player: s.player,
+    }))
+  );
+
+  const warriorNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const w of state.roster ?? []) names.add(w.name);
+    for (const w of state.graveyard ?? []) names.add(w.name);
+    for (const w of state.retired ?? []) names.add(w.name);
+    for (const r of state.rivals ?? []) {
+      for (const w of r.roster) names.add(w.name);
+    }
+    return [...names];
+  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+
+  const stableNames = useMemo(() => {
+    const names = new Set<string>();
+    if (state.player?.stableName) names.add(state.player.stableName);
+    for (const r of state.rivals ?? []) {
+      if (r.owner?.stableName) names.add(r.owner.stableName);
+    }
+    return [...names];
+  }, [state.player, state.rivals]);
+
   return (
     <ScrollArea className="h-72 px-6">
       {stories.length === 0 ? (
@@ -31,14 +65,14 @@ export function GazetteTab({ stories }: GazetteTabProps) {
                   WK {story.week.toString().padStart(2, '0')}
                 </span>
                 <h4 className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/story:text-foreground transition-colors italic">
-                  {story.headline}
+                  <LinkifiedText text={story.headline} names={warriorNames} stableNames={stableNames} />
                 </h4>
               </div>
 
               <div className="relative">
                 <Quote className="absolute -left-6 top-0 h-4 w-4 text-primary/10" />
                 <p className="text-[11px] text-muted-foreground/70 group-hover/story:text-muted-foreground leading-relaxed italic line-clamp-3">
-                  {story.body}
+                  <LinkifiedText text={story.body} names={warriorNames} stableNames={stableNames} />
                 </p>
               </div>
             </div>

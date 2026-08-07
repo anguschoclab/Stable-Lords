@@ -6,13 +6,14 @@ import type { GameEvent } from '@/types/eventLog';
 interface EventListItemProps {
   event: GameEvent;
   allWarriorNames: string[];
+  allStableNames?: string[];
   onClick: () => void;
 }
 
 /**
  *
  */
-export function EventListItem({ event, allWarriorNames, onClick }: EventListItemProps) {
+export function EventListItem({ event, allWarriorNames, allStableNames, onClick }: EventListItemProps) {
   const Icon = event.icon;
 
   return (
@@ -38,11 +39,11 @@ export function EventListItem({ event, allWarriorNames, onClick }: EventListItem
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-xs font-medium text-foreground leading-tight truncate">
-          <LinkifiedText text={event.title} names={event.entityNames ?? allWarriorNames} />
+          <LinkifiedText text={event.title} names={event.entityNames ?? allWarriorNames} stableNames={allStableNames} />
         </div>
         {event.subtitle && (
           <div className="text-[11px] text-muted-foreground leading-tight mt-0.5 truncate">
-            <LinkifiedText text={event.subtitle} names={event.entityNames ?? allWarriorNames} />
+            <LinkifiedText text={event.subtitle} names={event.entityNames ?? allWarriorNames} stableNames={allStableNames} />
           </div>
         )}
       </div>

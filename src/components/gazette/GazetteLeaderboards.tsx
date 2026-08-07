@@ -20,6 +20,7 @@ import {
   Award,
   ShieldCheck,
 } from 'lucide-react';
+import { WarriorLink } from '@/components/EntityLink';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   calculateLeaderboardData,
@@ -105,9 +106,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
                     <span className="text-xs font-mono font-black text-foreground/20">
                       #{idx + 1}
                     </span>
-                    <span className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors">
-                      {w.name}
-                    </span>
+                    <WarriorLink name={w.name} className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors" />
                   </div>
                 </TableCell>
                 <TableCell className="py-5">
@@ -206,9 +205,7 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-1">
                   {d.style}
                 </span>
-                <span className="text-xs font-display font-black uppercase text-foreground group-hover:text-arena-gold transition-colors">
-                  {d.name}
-                </span>
+                <WarriorLink name={d.name} className="text-xs font-display font-black uppercase text-foreground group-hover:text-arena-gold transition-colors" />
               </div>
               <div className="flex flex-col items-end">
                 <div className="flex items-center gap-1.5 text-arena-gold">
@@ -272,9 +269,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
             >
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                  <span className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors">
-                    {s.name}
-                  </span>
+                  <WarriorLink name={s.name} className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors" />
                   <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                     Joined Week {s.firstWeek}
                   </span>

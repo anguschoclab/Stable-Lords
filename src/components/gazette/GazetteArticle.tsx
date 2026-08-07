@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,9 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { MarkdownReader } from '@/components/MarkdownReader';
+import { LinkifiedText } from '@/components/ui/LinkifiedText';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 
 interface GazetteIssue {
   week: number;
@@ -34,6 +38,36 @@ interface GazetteArticleProps {
  * @param - { issue, season }.
  */
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {
+  const state = useGameStore(
+    useShallow((s: any) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      player: s.player,
+    }))
+  );
+
+  const warriorNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const w of state.roster ?? []) names.add(w.name);
+    for (const w of state.graveyard ?? []) names.add(w.name);
+    for (const w of state.retired ?? []) names.add(w.name);
+    for (const r of state.rivals ?? []) {
+      for (const w of r.roster) names.add(w.name);
+    }
+    return [...names];
+  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+
+  const stableNames = useMemo(() => {
+    const names = new Set<string>();
+    if (state.player?.stableName) names.add(state.player.stableName);
+    for (const r of state.rivals ?? []) {
+      if (r.owner?.stableName) names.add(r.owner.stableName);
+    }
+    return [...names];
+  }, [state.player, state.rivals]);
+
   return (
     <Surface
       variant="glass"
@@ -57,7 +91,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                 Season {season}
               </span>
             </div>
-            <h2>{issue.mainHeadline.replace('_', ' ')}</h2>
+            <h2><LinkifiedText text={issue.mainHeadline.replace('_', ' ')} names={warriorNames} stableNames={stableNames} /></h2>
           </div>
 
           <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity">
@@ -87,7 +121,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
               </span>
             </div>
 
-            <MarkdownReader content={issue.mainStory} />
+            <MarkdownReader content={issue.mainStory} warriorNames={warriorNames} stableNames={stableNames} />
 
             <div className="pt-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -144,7 +178,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                     </span>
                   </div>
                   <div className="text-[11px] md:text-xs text-muted-foreground group-hover/short:text-foreground transition-colors leading-relaxed font-medium">
-                    <MarkdownReader content={story} />
+                    <MarkdownReader content={story} warriorNames={warriorNames} stableNames={stableNames} />
                   </div>
                 </div>
               ))}

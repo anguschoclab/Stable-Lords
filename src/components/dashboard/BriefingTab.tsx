@@ -1,5 +1,9 @@
+import { useMemo } from 'react';
 import { Info, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { LinkifiedText } from '@/components/ui/LinkifiedText';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import type { NewsletterItem } from '@/types/state.types';
 
 interface BriefingTabProps {
@@ -10,6 +14,36 @@ interface BriefingTabProps {
  *
  */
 export function BriefingTab({ reports }: BriefingTabProps) {
+  const state = useGameStore(
+    useShallow((s: any) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      player: s.player,
+    }))
+  );
+
+  const warriorNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const w of state.roster ?? []) names.add(w.name);
+    for (const w of state.graveyard ?? []) names.add(w.name);
+    for (const w of state.retired ?? []) names.add(w.name);
+    for (const r of state.rivals ?? []) {
+      for (const w of r.roster) names.add(w.name);
+    }
+    return [...names];
+  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+
+  const stableNames = useMemo(() => {
+    const names = new Set<string>();
+    if (state.player?.stableName) names.add(state.player.stableName);
+    for (const r of state.rivals ?? []) {
+      if (r.owner?.stableName) names.add(r.owner.stableName);
+    }
+    return [...names];
+  }, [state.player, state.rivals]);
+
   return (
     <ScrollArea className="h-72 px-6">
       {reports.length === 0 ? (
@@ -36,7 +70,7 @@ export function BriefingTab({ reports }: BriefingTabProps) {
               </div>
 
               <h4 className="text-xs font-black uppercase tracking-tight text-arena-gold/80 group-hover/report:text-arena-gold transition-colors">
-                {report.title}
+                <LinkifiedText text={report.title} names={warriorNames} stableNames={stableNames} />
               </h4>
 
               <ul className="space-y-2">
@@ -46,7 +80,9 @@ export function BriefingTab({ reports }: BriefingTabProps) {
                     className="flex gap-3 text-[10px] text-muted-foreground leading-relaxed"
                   >
                     <span className="text-arena-gold/40 font-mono mt-0.5">[{j + 1}]</span>
-                    <span className="flex-1">{item}</span>
+                    <span className="flex-1">
+                      <LinkifiedText text={item} names={warriorNames} stableNames={stableNames} />
+                    </span>
                   </li>
                 ))}
               </ul>

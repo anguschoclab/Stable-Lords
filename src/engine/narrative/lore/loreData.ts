@@ -197,6 +197,11 @@ export const ORIGINS: string[] = [
   'Survived the great fire of the Lower Wards by hiding in a cistern',
   'Found wandering the ash-choked streets of the Foundry District',
   'Raised by the grim overseers of the Iron Chain workhouse',
+  'Born in the ash-choked slums of the Lower Wards, raised on moldy bread and broken promises',
+  'Abandoned at the steps of the Silent Sisters, learning early that tears earn only beatings',
+  'Survived the Black Fever that wiped out their entire block, leaving them alone in a house of corpses',
+  'Raised in the fighting pits beneath the butcher\'s quarter, trading copper for their own blood',
+  'Cast out by a fallen noble house, forced to scavenge among the very peasants they once ruled'
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
@@ -312,11 +317,14 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed a terrifyingly serene smile during the most brutal beatings',
   'was known for carving the names of their enemies into their own flesh',
   'would purposefully instigate fights just to study how different people bleed',
+  'always watched the shadows instead of the sun',
+  'practiced throwing rusted spoons with lethal accuracy',
+  'learned to sleep with one eye open and a knife in hand',
+  'never cried out when the overseer\'s lash fell'
 ];
 
 export const DEFINING_MOMENTS: string[] = [
-  'until they strangled a cruel matron with a stolen garrote',
-  'knowing that the arena is the only place their rage is rewarded',
+    'knowing that the arena is the only place their rage is rewarded',
   'waiting for the day they could turn their tormentors into bloody pulp',
   'until they survived the vicious culling of the Warrens',
   'until they turned a rusty nail into a weapon of freedom',
@@ -418,4 +426,8 @@ export const DEFINING_MOMENTS: string[] = [
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
   'until they strangled a cruel matron with a stolen rosary',
   'now driven by a dark vow sworn over the grave of their only friend',
+  'until they realized the arena was the only family they needed',
+  'waiting for the day they could turn their scars into a spectacle',
+  'knowing that the roar of the crowd was the only god left to them',
+  'until they drove a shattered bottle into their tormentor\'s eye and fled'
 ];

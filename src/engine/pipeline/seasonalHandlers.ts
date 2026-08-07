@@ -53,4 +53,5 @@ export {
   handleTemporalAnomaly,
   handleCursedTreasureDiscovery,
   handleWanderingMystic,
+  handleBountifulHarvest,
 } from './offseasonEvents';

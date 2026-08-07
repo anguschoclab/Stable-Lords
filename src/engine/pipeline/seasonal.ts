@@ -59,7 +59,9 @@ import {
   handleChaosWeaversGift,
   handleChaosWeaversGame,
   handleTemporalAnomaly,
+  handleBountifulHarvest,
   handleWanderingMystic,
+
   handleCursedTreasureDiscovery,
 } from './seasonalHandlers';
 
@@ -118,6 +120,8 @@ const EVENT_HANDLERS: Record<
   chaos_weavers_game: handleChaosWeaversGame,
   temporal_anomaly: handleTemporalAnomaly,
   wandering_mystic: handleWanderingMystic,
+
+  bountiful_harvest: handleBountifulHarvest,
   cursed_treasure_discovery: handleCursedTreasureDiscovery,
 };
 

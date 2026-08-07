@@ -5593,6 +5593,13 @@
       "newsletter": [
         "While digging out a new training pit, {{name}} unearthed a cursed chest! The stable gained a hoard of gold, but the gladiator suffered a lingering magical affliction and public suspicion. (+{{gold}} Gold, -{{fame}} Fame, Moderate Injury)"
       ]
+    },
+    "bountiful_harvest": {
+      "title": "A Bountiful Harvest",
+      "effectType": "bountiful_harvest",
+      "newsletter": [
+        "A local village celebrated a surprisingly bountiful harvest and shared their excess crops with the stable. The gladiators enjoyed the feast! (+{{gold}} Gold)"
+      ]
     }
   },
   "crowd_reactions": {

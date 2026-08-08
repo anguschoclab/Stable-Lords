@@ -41,7 +41,13 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
   }, [rivals, playerRoster]);
 
   const warriorMap = useMemo(
-    () => new Map(allWarriors.map((e) => [e.warrior.id as string, e])),
+    () => {
+      const map = new Map();
+      for (const e of allWarriors) {
+        map.set(e.warrior.id as string, e);
+      }
+      return map;
+    },
     [allWarriors]
   );
 

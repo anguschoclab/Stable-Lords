@@ -52,7 +52,13 @@ export default function Scouting() {
   const bookmarkedCount = allReports.filter((r) => isBookmarked('scoutReport', r.id)).length;
 
   const rivalMap = useMemo(
-    () => new Map((rivals ?? []).map((r) => [r.owner.id as string, r])),
+    () => {
+      const map = new Map();
+      for (const r of rivals ?? []) {
+        map.set(r.owner.id as string, r);
+      }
+      return map;
+    },
     [rivals]
   );
 

@@ -57,7 +57,13 @@ export default function StableDetail() {
   const [activeTab, setActiveTab] = useState<'OVERVIEW' | 'ROSTER' | 'LOGS'>('OVERVIEW');
 
   const rivalMap = useMemo(
-    () => new Map((state.rivals ?? []).map((r) => [r.owner.id as string, r])),
+    () => {
+      const map = new Map();
+      for (const r of state.rivals ?? []) {
+        map.set(r.owner.id as string, r);
+      }
+      return map;
+    },
     [state.rivals]
   );
 

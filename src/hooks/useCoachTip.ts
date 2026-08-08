@@ -242,7 +242,13 @@ export function useCoachTip(pathname: string) {
   const ftueComplete = state.ftueComplete;
   const coachDismissed = state.coachDismissed;
   const roster = state.roster;
-  const rosterMap = useMemo(() => new Map(roster.map((w) => [w.id, w])), [roster]);
+  const rosterMap = useMemo(() => {
+    const map = new Map();
+    for (const w of roster) {
+      map.set(w.id, w);
+    }
+    return map;
+  }, [roster]);
   const stateRef = useRef(state);
   stateRef.current = state;
 

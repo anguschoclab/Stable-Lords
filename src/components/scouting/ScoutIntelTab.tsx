@@ -54,7 +54,7 @@ export function ScoutIntelTab({
   onScout,
 }: ScoutIntelTabProps) {
   const rivalMap = useMemo(() => {
-    const map = new Map();
+    const map = new Map<string, any>();
     for (const r of rivals) {
       map.set(r.owner.id as string, r);
     }
@@ -67,7 +67,7 @@ export function ScoutIntelTab({
   );
 
   const activeWarrior = useMemo(
-    () => activeRival?.roster.find((w) => w.id === selectedWarriorId),
+    () => activeRival?.roster.find((w: any) => w.id === selectedWarriorId),
     [activeRival, selectedWarriorId]
   );
 
@@ -104,7 +104,7 @@ export function ScoutIntelTab({
       />
 
       <RivalWarriorList
-        warriors={activeRival ? activeRival.roster.filter((w) => isActive(w)) : []}
+        warriors={activeRival ? activeRival.roster.filter((w: any) => isActive(w)) : []}
         selectedWarriorId={selectedWarriorId}
         onSelectWarrior={onSelectWarrior}
         reports={reports}

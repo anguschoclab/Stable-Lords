@@ -32,7 +32,7 @@ export const HallOfFights: React.FC = () => {
   // Build fight lookup from game state
   const fightMap = useMemo(
     () => {
-      const map = new Map();
+      const map = new Map<string, any>();
       for (const f of state.arenaHistory) {
         map.set(f.id, f);
       }
@@ -160,7 +160,7 @@ export const HallOfFights: React.FC = () => {
                           <WarriorLink name={nameD} className="text-sm font-medium" />
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2 ml-6 sm:ml-0 flex-wrap">
-                          {f.flashyTags?.map((t) => (
+                          {f.flashyTags?.map((t: string) => (
                             <Badge key={t} variant="secondary" className="text-[10px]">
                               {t}
                             </Badge>
@@ -216,7 +216,7 @@ export const HallOfFights: React.FC = () => {
                     })()}
                     {f.flashyTags && f.flashyTags.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
-                        {f.flashyTags.map((t) => (
+                        {f.flashyTags.map((t: string) => (
                           <Badge key={t} variant="secondary" className="text-xs">
                             {t}
                           </Badge>

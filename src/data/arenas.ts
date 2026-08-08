@@ -962,6 +962,20 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Dark Descent',
     narrative: 'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.'
+  },
+  {
+    id: 'sun_baked_plateau_madness',
+    arenaId: 'sun_baked_plateau',
+    type: 'historical_battle',
+    title: 'The Midday Madness',
+    narrative: 'A grueling two-hour bout where both fighters eventually succumbed to heat exhaustion and the cursed whispers of the plateau, ending in a mutual draw as they lay motionless in the sand.'
+  },
+  {
+    id: 'ancient_aqueduct_drowning',
+    arenaId: 'ancient_aqueduct',
+    type: 'famous_death',
+    title: 'The Deep Channel',
+    narrative: 'A famed riposter wearing heavy plate was shoved into a deep channel and drowned before the match could officially conclude.'
   }
 ];
 
@@ -986,6 +1000,29 @@ export const THUNDER_PEAK: ArenaConfig = {
   description: 'Atop the highest jagged spire, thin air and sheer drops test the stamina and nerves of any fighter.',
   zoneDef: { Edge: -1, Corner: -5 },
   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.25 },
+};
+
+
+export const SUN_BAKED_PLATEAU: ArenaConfig = {
+  id: 'sun_baked_plateau',
+  name: 'Sun-Baked Plateau',
+  tags: ['open', 'elevated', 'outdoor', 'cursed'],
+  tier: 2,
+  size: 'open',
+  description: 'A desolate, cursed high plateau bathed in relentless sunlight. Stamina is heavily tested.',
+  zoneDef: { Edge: -1, Corner: -3 },
+  surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.3 },
+};
+
+export const ANCIENT_AQUEDUCT: ArenaConfig = {
+  id: 'ancient_aqueduct',
+  name: 'Ancient Aqueduct',
+  tags: ['water', 'ruins', 'cramped'],
+  tier: 1,
+  size: 'cramped',
+  description: 'Cramped, flooded stone corridors that punish long weapons and footwork.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.15 },
 };
 
 // ─── Auto-register ────────────────────────────────────────────────────────────
@@ -1017,4 +1054,6 @@ export const THUNDER_PEAK: ArenaConfig = {
   JUNGLE_RUINS,
   THE_BRAMBLE_RING,
   THUNDER_PEAK,
+  SUN_BAKED_PLATEAU,
+  ANCIENT_AQUEDUCT,
 ].forEach(registerArena);

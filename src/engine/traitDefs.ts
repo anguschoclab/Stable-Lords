@@ -95,6 +95,44 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+// 5 New Personality/Lore Traits
+
+  guttersnipe_cunning: {
+    id: 'guttersnipe_cunning',
+    name: 'Guttersnipe Cunning',
+    description: 'Fights dirty and unpredictable. Harder to pin down in prolonged engagements.',
+    effect: { defModLate: 1, iniMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  iron_stomach: {
+    id: 'iron_stomach',
+    name: 'Iron Stomach',
+    description: 'Raised on garbage and sour water. Shrugs off stamina loss slightly better than most.',
+    effect: { enduranceMult: 0.95 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  ashen_lung: {
+    id: 'ashen_lung',
+    name: 'Ashen Lung',
+    description: 'Breathed the soot of the forges too long. Prone to coughing fits when exhausted.',
+    effect: { enduranceMult: 1.1, attModLate: -1 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.4,
+  },
+  wild_instinct: {
+    id: 'wild_instinct',
+    name: 'Wild Instinct',
+    description: 'Reacts purely on survival instinct. Fast off the mark, but reckless.',
+    effect: { iniMod: 2, parMod: -1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   starving_dog: {
     id: 'starving_dog',
     name: 'Starving Dog',

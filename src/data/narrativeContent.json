@@ -5593,6 +5593,13 @@
       "newsletter": [
         "While digging out a new training pit, {{name}} unearthed a cursed chest! The stable gained a hoard of gold, but the gladiator suffered a lingering magical affliction and public suspicion. (+{{gold}} Gold, -{{fame}} Fame, Moderate Injury)"
       ]
+    },
+    "chaos_weavers_prophecy": {
+      "title": "The Chaos Weaver's Prophecy",
+      "effectType": "chaos_weavers_prophecy",
+      "newsletter": [
+        "The Chaos Weaver whispered dark prophecies in {{name}}'s ear. They awoke forever changed. (+{{xp}} XP, Minor Injury)"
+      ]
     }
   },
   "crowd_reactions": {

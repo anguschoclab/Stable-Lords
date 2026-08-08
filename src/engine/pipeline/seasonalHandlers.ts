@@ -51,6 +51,7 @@ export {
   handleChaosWeaversGift,
   handleChaosWeaversGame,
   handleTemporalAnomaly,
+  handleChaosWeaversProphecy,
   handleCursedTreasureDiscovery,
   handleWanderingMystic,
 } from './offseasonEvents';

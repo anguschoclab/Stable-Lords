@@ -48,3 +48,4 @@ export { handleMidnightMarket } from './socialHandlers';
 export { handleWanderingFortuneTeller } from './socialHandlers';
 export { handleMoonlightDuel } from './socialHandlers';
 export { handleDreamweaverVisit } from './socialHandlers';
+export { handleChaosWeaversProphecy } from './chaosHandlers';

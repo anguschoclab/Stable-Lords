@@ -459,3 +459,45 @@ export function handleCursedTreasureDiscovery(
     }
   }
 }
+
+export function handleChaosWeaversProphecy(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 50;
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      const newInjury = makeInjury(rng, {
+        name: 'Prophetic Madness',
+        description: 'The Chaos Weaver shared a prophecy. The mind reels.',
+        severity: 'Minor',
+        weeksBase: 2,
+        weeksRange: 1,
+        penalties: { CN: -1 },
+      });
+
+      const currentUpdates = ctx.rosterUpdates.get(chosen.id) || {};
+      ctx.rosterUpdates.set(chosen.id, {
+        ...currentUpdates,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      const template = e.newsletter[0] || '';
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(template, { name: chosen.name, xp: xpGained })],
+      });
+    }
+  }
+}

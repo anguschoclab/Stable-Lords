@@ -962,6 +962,27 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Dark Descent',
     narrative: 'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.'
+  },
+  {
+    id: 'underpit_arena_crushing_dark',
+    arenaId: 'underpit_arena',
+    type: 'architectural_quirk',
+    title: 'The Crushing Dark',
+    narrative: 'Because the Underpit relies on braziers for illumination, one fighter famously kicked dirt into every fire during a match, forcing their opponent into an utter, suffocating darkness before delivering the final blow.'
+  },
+  {
+    id: 'brass_ring_molten_tomb',
+    arenaId: 'brass_ring',
+    type: 'famous_death',
+    title: 'The Molten Tomb',
+    narrative: 'A legendary heavily armored knight was slowly melted alive after being grappled and pinned against the outer heating coils for five agonizing minutes.'
+  },
+  {
+    id: 'highplain_arena_red_wind',
+    arenaId: 'highplain_arena',
+    type: 'historical_battle',
+    title: 'The Day of the Red Wind',
+    narrative: 'A freak tornado swept through the high plains during a mid-summer tournament, carrying the blood of twenty fallen fighters into the sky and raining it down on the screaming spectators.'
   }
 ];
 

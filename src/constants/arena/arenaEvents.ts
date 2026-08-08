@@ -1,3 +1,4 @@
+import { ARENA_EVENT_CONSTANTS } from '@/constants/arenaEvents';
 /**
  * Arena Events — Environmental occurrences during combat
  * Narrative-only for v1; mechanical effects for v2
@@ -21,17 +22,6 @@ export interface ArenaEventConfig {
     value: number;
   };
 }
-
-export const ARENA_EVENT_CONSTANTS = {
-  COLLAPSING_PILLAR_TRIGGER: 15,
-  CROWD_RIOT_TRIGGER: 15,
-  CROWD_RIOT_DAMAGE: 2,
-  BLOOD_MOON_LIGHTING_TRIGGER: 1,
-  BLOOD_MOON_LIGHTING_DAMAGE: 1.3,
-  GEYSER_ERUPTION_TRIGGER: 6,
-  SHADOW_TENDRIL_TRIGGER: 20,
-  SHADOW_TENDRIL_DRAIN: 5,
-} as const;
 
 export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
   // ─── Ruins Events ─────────────────────────────────────────────────────────

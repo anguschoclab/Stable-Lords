@@ -14,8 +14,8 @@ export const ARENA_TAG_WEIGHTS = {
   magical: { weight: 0.9, description: 'Arcane resonance aids counters' },
   living: { weight: 0.95, description: 'Reactive environment affects movement' },
   cursed: { weight: 0.85, description: 'Dark energy amplifies lethality' },
-  water: { weight: 0.9, description: 'Wet conditions slow footwork' },
-  elevated: { weight: 1.05, description: 'High altitude affects stamina' },
+  water: { weight: 0.85, description: 'Wet conditions slow footwork' },
+  elevated: { weight: 1.1, description: 'High altitude affects stamina' },
   outdoor: { weight: 1.0, description: 'Exposed to weather effects' },
   indoor: { weight: 1.0, description: 'Sheltered from weather' },
   premium: { weight: 1.2, description: 'Prestigious venue' },
@@ -165,6 +165,16 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   'living:Gale': {
     initiativeMod: WEATHER_PENALTIES.LIVING_GALE_INITIATIVE, // Branches whip in wind
     description: 'The living forest writhes in the gale',
+  },
+
+  'Acid Rain:SLASHING ATTACK': {
+    damageMult: WEATHER_PENALTIES.ACID_RAIN_SLASHING_DAMAGE,
+    description: 'Acid rain corrodes armor and weakens defenses against blades',
+  },
+
+  'cursed:Eclipse': {
+    damageMult: 1 + WEATHER_PENALTIES.ECLIPSE_STRIKING_BONUS,
+    description: 'Unearthly darkness enhances the power of striking weapons on cursed ground',
   },
 };
 

@@ -4,7 +4,8 @@
  * Pre-merge test: will FAIL on main because new events don't exist yet.
  */
 import { describe, it, expect } from 'vitest';
-import { ARENA_EVENTS, ARENA_EVENT_CONSTANTS } from '@/constants/arena/arenaEvents';
+import { ARENA_EVENTS } from '@/constants/arena/arenaEvents';
+import { ARENA_EVENT_CONSTANTS } from '@/constants/arenaEvents';
 
 describe('arena events — new entries', () => {
   describe('geyser_eruption', () => {

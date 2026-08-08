@@ -57,7 +57,7 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
         <div className="space-y-1.5">
           <Label htmlFor="fighting-style">Fighting Style</Label>
           <Select value={style} onValueChange={(v) => setStyle(v as FightingStyle)}>
-            <SelectTrigger id="fighting-style">
+            <SelectTrigger id="fighting-style" aria-label="Fighting Style">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

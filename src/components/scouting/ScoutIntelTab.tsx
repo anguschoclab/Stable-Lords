@@ -53,7 +53,13 @@ export function ScoutIntelTab({
   treasury,
   onScout,
 }: ScoutIntelTabProps) {
-  const rivalMap = useMemo(() => new Map(rivals.map((r) => [r.owner.id as string, r])), [rivals]);
+  const rivalMap = useMemo(() => {
+    const map = new Map();
+    for (const r of rivals) {
+      map.set(r.owner.id as string, r);
+    }
+    return map;
+  }, [rivals]);
 
   const activeRival = useMemo(
     () => (selectedRivalId ? rivalMap.get(selectedRivalId) : undefined),

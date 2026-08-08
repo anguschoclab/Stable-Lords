@@ -53,7 +53,13 @@ export default function Training() {
   const assignments = state.trainingAssignments ?? [];
 
   const rosterNameMap = useMemo(
-    () => new Map((state.roster ?? []).map((w: Warrior) => [w.id, w.name])),
+    () => {
+      const map = new Map();
+      for (const w of state.roster ?? []) {
+        map.set(w.id, w.name);
+      }
+      return map;
+    },
     [state.roster]
   );
 

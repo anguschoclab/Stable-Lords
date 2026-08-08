@@ -31,7 +31,13 @@ export const HallOfFights: React.FC = () => {
 
   // Build fight lookup from game state
   const fightMap = useMemo(
-    () => new Map(state.arenaHistory.map((f) => [f.id, f])),
+    () => {
+      const map = new Map();
+      for (const f of state.arenaHistory) {
+        map.set(f.id, f);
+      }
+      return map;
+    },
     [state.arenaHistory]
   );
 

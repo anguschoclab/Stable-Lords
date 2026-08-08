@@ -73,6 +73,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           </div>
           <Slider
             id="plan-step-oe"
+            aria-label="Offensive Effort"
             value={[plan.OE]}
             onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
             min={1}
@@ -95,6 +96,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           </div>
           <Slider
             id="plan-step-al"
+            aria-label="Activity Level"
             value={[plan.AL ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
             min={1}
@@ -119,6 +121,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           </div>
           <Slider
             id="plan-step-kd"
+            aria-label="Kill Desire"
             value={[plan.killDesire ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v ?? 5 })}
             min={1}

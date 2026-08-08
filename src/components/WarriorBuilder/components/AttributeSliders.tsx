@@ -67,6 +67,7 @@ export function AttributeSliders({ attrs, updateAttr, total, remaining }: Attrib
             </div>
             <Slider
               id={`attr-${key}`}
+              aria-label={`${key} Attribute`}
               value={[attrs[key]]}
               onValueChange={([v]) => updateAttr(key, v ?? ATTRIBUTE_MIN)}
               min={ATTRIBUTE_MIN}

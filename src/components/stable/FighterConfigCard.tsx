@@ -67,6 +67,7 @@ export function FighterConfigCard({
             </div>
             <Slider
               id={`${idPrefix}-stat-slider-${key}`}
+              aria-label={`${key} Statistic`}
               value={[value]}
               min={1}
               max={30}

@@ -47,6 +47,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         {cond.override.OE !== undefined && (
           <Slider
             id={`override-oe-${cond.id}`}
+            aria-label="Override Offensive Effort"
             value={[cond.override.OE]}
             onValueChange={([v]) => onSliderChange('OE', v)}
             min={1}
@@ -89,6 +90,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         {cond.override.AL !== undefined && (
           <Slider
             id={`override-al-${cond.id}`}
+            aria-label="Override Activity Level"
             value={[cond.override.AL]}
             onValueChange={([v]) => onSliderChange('AL', v)}
             min={1}
@@ -133,6 +135,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         {cond.override.killDesire !== undefined && (
           <Slider
             id={`override-kd-${cond.id}`}
+            aria-label="Override Kill Desire"
             value={[cond.override.killDesire]}
             onValueChange={([v]) => onSliderChange('killDesire', v)}
             min={1}

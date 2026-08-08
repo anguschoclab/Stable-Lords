@@ -93,7 +93,7 @@ export function SlotSelector({
         {isPreferred && <Star className="h-3.5 w-3.5 text-arena-gold fill-arena-gold" />}
       </div>
       <Select value={selectedId} onValueChange={onChange} disabled={disabled}>
-        <SelectTrigger id={`slot-select-${slot}`} className="w-full">
+        <SelectTrigger id={`slot-select-${slot}`} aria-label={`${label} Selection`} className="w-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

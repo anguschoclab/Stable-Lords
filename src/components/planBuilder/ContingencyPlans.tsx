@@ -43,6 +43,7 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
           checked={showConditions}
           onCheckedChange={setShowConditions}
         />
+        <Switch id="contingency-plans-switch" aria-label="Contingency Plans" checked={showConditions} onCheckedChange={setShowConditions} />
       </div>
 
       {showConditions && (

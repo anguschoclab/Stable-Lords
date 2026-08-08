@@ -31,6 +31,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
           </div>
           <Slider
             id="plan-oe"
+            aria-label="Offensive Effort"
             value={[plan.OE]}
             onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
             min={1}
@@ -50,6 +51,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
           </div>
           <Slider
             id="plan-al"
+            aria-label="Activity Level"
             value={[plan.AL ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
             min={1}
@@ -74,6 +76,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
           </div>
           <Slider
             id="plan-kd"
+            aria-label="Kill Desire"
             value={[plan.killDesire ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v })}
             min={1}

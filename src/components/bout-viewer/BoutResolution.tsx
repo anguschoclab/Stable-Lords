@@ -62,7 +62,7 @@ export default function BoutResolution({
       {winner && (
         <div
           className={cn(
-            'p-8 border-t flex flex-col items-center gap-6 animate-in motion-reduce:animate-none slide-in-from-bottom-8 duration-1000 bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
+            'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 motion-reduce:animate-none motion-reduce:transform-none bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
             outcomeStyle.bgClasses
           )}
         >
@@ -113,7 +113,7 @@ export default function BoutResolution({
       )}
 
       {!winner && (
-        <div className="p-12 border-t border-white/5 flex flex-col items-center gap-4 bg-neutral-900 animate-in motion-reduce:animate-none slide-in-from-bottom-8 duration-1000">
+        <div className="p-12 border-t border-white/5 flex flex-col items-center gap-4 bg-neutral-900 animate-in slide-in-from-bottom-8 duration-1000 motion-reduce:animate-none motion-reduce:transform-none">
           <Crosshair className="h-10 w-10 text-muted-foreground opacity-40 mb-2" />
           <h2 className="font-display font-black text-3xl uppercase tracking-tighter italic text-muted-foreground/60">
             MUTUAL_DEPLETION_DRAW

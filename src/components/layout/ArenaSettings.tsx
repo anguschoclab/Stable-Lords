@@ -52,7 +52,7 @@ export default function ArenaSettings() {
               setArenaPreferences({ defaultViewMode: value })
             }
           >
-            <SelectTrigger id="setting-default-view" className="w-40 rounded-none">
+            <SelectTrigger id="setting-default-view" aria-label="Default View Mode" className="w-40 rounded-none">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-none">
@@ -78,6 +78,7 @@ export default function ArenaSettings() {
           </div>
           <Switch
             id="setting-audio-enabled"
+            aria-label="Enable Arena Audio"
             checked={prefs.audioEnabled}
             onCheckedChange={(checked) => setArenaPreferences({ audioEnabled: checked })}
           />
@@ -99,6 +100,7 @@ export default function ArenaSettings() {
           </div>
           <Slider
             id="setting-audio-volume"
+            aria-label="Crowd Volume"
             value={[prefs.audioVolume]}
             min={0}
             max={1}
@@ -124,6 +126,7 @@ export default function ArenaSettings() {
           </div>
           <Switch
             id="setting-effects-enabled"
+            aria-label="Enable Visual Effects"
             checked={prefs.effectsEnabled}
             onCheckedChange={(checked) => setArenaPreferences({ effectsEnabled: checked })}
           />
@@ -147,7 +150,7 @@ export default function ArenaSettings() {
             }
             disabled={!prefs.effectsEnabled}
           >
-            <SelectTrigger id="setting-screen-shake" className="w-full rounded-none">
+            <SelectTrigger id="setting-screen-shake" aria-label="Screen Shake Intensity" className="w-full rounded-none">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-none">

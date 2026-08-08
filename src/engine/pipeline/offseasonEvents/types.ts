@@ -54,6 +54,7 @@ export interface OffseasonEventNarrative {
     | 'secret_fight_club'
     | 'chaos_weavers_gift'
     | 'temporal_anomaly'
+    | 'chaos_weavers_prophecy'
     | 'wandering_mystic';
   newsletter: string[];
 }

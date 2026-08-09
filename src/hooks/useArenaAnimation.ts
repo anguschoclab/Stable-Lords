@@ -75,6 +75,7 @@ export function useArenaAnimation(
     if (visibleCount > 0 && visibleCount <= log.length) {
       const event = log[visibleCount - 1];
       if (event) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- event-driven animation state update
         processEvent(event, visibleCount - 1);
       }
     }
@@ -83,6 +84,7 @@ export function useArenaAnimation(
   // Handle completion - set victory poses
   useEffect(() => {
     if (isComplete && winner) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- victory pose is completion-driven
       setState((prev) => ({
         ...prev,
         fighterA: {

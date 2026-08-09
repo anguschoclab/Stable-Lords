@@ -81,18 +81,18 @@ describe('useGameStore Optimization (Epic 4)', () => {
   });
 
   it('requires useShallow for object-returning selectors to avoid extra renders', async () => {
-    const renderCountWithShallow = { current: 0 };
+    const renderCountWithShallowRef = { current: 0 };
     const selector = (s: any) => ({ treasury: s.treasury, week: s.week });
 
     const WithShallow = () => {
       const val = useTestStore(useShallow(selector));
-      renderCountWithShallow.current++;
+      renderCountWithShallowRef.current++;
       return <div>{val.treasury}</div>;
     };
 
     render(<WithShallow />);
 
-    expect(renderCountWithShallow.current).toBe(1);
+    expect(renderCountWithShallowRef.current).toBe(1);
 
     await act(async () => {
       useTestStore.getState().setState((draft: any) => {
@@ -101,7 +101,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
     });
 
     // WithShallow should NOT re-render because the returned object is shallowly equal
-    expect(renderCountWithShallow.current).toBe(1);
+    expect(renderCountWithShallowRef.current).toBe(1);
 
     await act(async () => {
       useTestStore.getState().setState((draft: any) => {
@@ -110,6 +110,6 @@ describe('useGameStore Optimization (Epic 4)', () => {
     });
 
     // WithShallow SHOULD re-render when selected values change
-    expect(renderCountWithShallow.current).toBe(2);
+    expect(renderCountWithShallowRef.current).toBe(2);
   });
 });

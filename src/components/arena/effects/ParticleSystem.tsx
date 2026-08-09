@@ -78,6 +78,7 @@ export default function ParticleSystem({
       });
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- particle generation is trigger-driven
     setParticles((prev) => [...prev, ...newParticles]);
   }, [trigger, sourceX, sourceY]);
 

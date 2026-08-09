@@ -244,7 +244,10 @@ export function useCoachTip(pathname: string) {
   const roster = state.roster;
   const rosterMap = useMemo(() => new Map(roster.map((w) => [w.id, w])), [roster]);
   const stateRef = useRef(state);
-  stateRef.current = state;
+
+  useEffect(() => {
+    stateRef.current = state;
+  });
 
   useEffect(() => {
     if (!ftueComplete) return;

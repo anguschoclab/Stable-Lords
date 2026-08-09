@@ -61,6 +61,7 @@ export function useBoutPlayback(log: MinuteEvent[]) {
       }, speedMs);
     }
     if (isComplete && isPlaying) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- stop playback on completion
       setIsPlaying(false);
     }
     return () => {

@@ -2,7 +2,7 @@
  * Shared navigation components and utilities
  * Eliminates duplication between LeftNav and MobileNav
  */
-import { useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -114,10 +114,13 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const onStableSection = location.pathname.startsWith('/stable');
 
   // Track the week when user last visited each section — badge only shows for newer weeks
-  const lastSeenStableWeek = useRef(trackWeek && onStableSection ? week : -1);
+  const [lastSeenStableWeek, setLastSeenStableWeek] = useState(
+    trackWeek && onStableSection ? week : -1
+  );
 
   useEffect(() => {
-    if (trackWeek && onStableSection) lastSeenStableWeek.current = week;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync last seen week when user visits stable section
+    if (trackWeek && onStableSection) setLastSeenStableWeek(week);
   }, [onStableSection, week, trackWeek]);
 
   // Extract counts from tactical alerts
@@ -131,7 +134,7 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const showStableAlert = trackWeek
     ? (untrainedCount > 0 || pendingOffers > 0) &&
       !onStableSection &&
-      week > lastSeenStableWeek.current
+      week > lastSeenStableWeek
     : untrainedCount > 0 || pendingOffers > 0;
 
   return {

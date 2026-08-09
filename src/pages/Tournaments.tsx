@@ -133,6 +133,7 @@ export default function Tournaments() {
   React.useEffect(() => {
     const hasAlreadyStarted = currentTournament?.bracket.some((b) => b.winner !== undefined);
     if (isTournamentReadyToStart && !hasShownPrep && !hasAlreadyStarted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- auto-open prep dialog when tournament is ready
       setIsPrepOpen(true);
       setHasShownPrep(true);
       audioManager.play('clash'); // Thematic entrance sound

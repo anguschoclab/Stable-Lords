@@ -42,9 +42,9 @@ interface TestStore {
 }
 
 // Minimal test component that mirrors RootComponent's selector pattern
-let testRenderCount = { current: 0 };
+let testRenderCountRef = { current: 0 };
 function TestRootComponent() {
-  testRenderCount.current++;
+  testRenderCountRef.current++;
   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;
 
@@ -87,34 +87,34 @@ describe('RootComponent narrowed selector', () => {
   it('does NOT re-render when unrelated state (treasury) changes', async () => {
     useTestStore.setState({ ftueComplete: true, atTitleScreen: false });
 
-    testRenderCount = { current: 0 };
+    testRenderCountRef = { current: 0 };
 
     render(<TestRootComponent />);
-    expect(testRenderCount.current).toBe(1);
+    expect(testRenderCountRef.current).toBe(1);
 
     await act(async () => {
       useTestStore.setState({ treasury: 100 });
     });
 
     // treasury is not in the narrowed selector, so no re-render
-    expect(testRenderCount.current).toBe(1);
+    expect(testRenderCountRef.current).toBe(1);
   });
 
   it('DOES re-render when ftueComplete changes', async () => {
     useTestStore.setState({ ftueComplete: false, atTitleScreen: false });
 
-    testRenderCount = { current: 0 };
+    testRenderCountRef = { current: 0 };
 
     const { getByTestId } = render(<TestRootComponent />);
     expect(getByTestId('orphanage')).toBeInTheDocument();
-    expect(testRenderCount.current).toBe(1);
+    expect(testRenderCountRef.current).toBe(1);
 
     await act(async () => {
       useTestStore.setState({ ftueComplete: true });
     });
 
     // ftueComplete is in the narrowed selector, so it should re-render
-    expect(testRenderCount.current).toBe(2);
+    expect(testRenderCountRef.current).toBe(2);
     expect(getByTestId('app-shell')).toBeInTheDocument();
   });
 });

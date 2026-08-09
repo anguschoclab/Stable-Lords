@@ -243,6 +243,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
 
   useEffect(() => {
     if (!lastSavedAt) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- timer-based flash animation
     setSaveFlash(true);
     const t = setTimeout(() => setSaveFlash(false), 1500);
     return () => clearTimeout(t);

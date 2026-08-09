@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { CrowdState } from '../crowd/CrowdReactions';
 
 interface CrowdAudioProps {
@@ -27,10 +27,9 @@ const CROWD_SOUNDS: Record<CrowdState, string | null> = {
  */
 export default function CrowdAudio({ state, volume, enabled }: CrowdAudioProps) {
   const lastStateRef = useRef<CrowdState>('idle');
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (!enabled || !isInitialized) return;
+    if (!enabled) return;
 
     // Play one-shot for state transitions
     if (state !== lastStateRef.current) {
@@ -42,13 +41,7 @@ export default function CrowdAudio({ state, volume, enabled }: CrowdAudioProps) 
       }
       lastStateRef.current = state;
     }
-  }, [state, volume, enabled, isInitialized]);
-
-  useEffect(() => {
-    if (enabled) {
-      setIsInitialized(true);
-    }
-  }, [enabled]);
+  }, [state, volume, enabled]);
 
   // This is a logic component - no visual output
   return null;

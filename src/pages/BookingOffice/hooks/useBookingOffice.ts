@@ -88,6 +88,7 @@ export function useBookingOffice() {
 
   useEffect(() => {
     if (week !== trackedWeek) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset state on week change
       setTrackedWeek(week);
       setSignedOfferIds(new Set());
       setSelectedWarriorId(null);

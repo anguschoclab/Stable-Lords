@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { classifyEvent } from '@/lib/boutUtils';
 import type { MinuteEvent } from '@/types/combat.types';
 import type { CrowdState } from '@/components/arena/crowd/CrowdReactions';
@@ -8,19 +8,15 @@ import type { CrowdState } from '@/components/arena/crowd/CrowdReactions';
  * Extracts event classification logic from ArenaView.
  */
 export function useLastEventType(log: MinuteEvent[], visibleCount: number): string | null {
-  const [lastEventType, setLastEventType] = useState<string | null>(null);
-
-  useEffect(() => {
+  return useMemo(() => {
     if (visibleCount > 0 && visibleCount <= log.length) {
       const event = log[visibleCount - 1];
       if (event) {
-        const type = classifyEvent(event);
-        setLastEventType(type);
+        return classifyEvent(event);
       }
     }
+    return null;
   }, [visibleCount, log]);
-
-  return lastEventType;
 }
 
 /**

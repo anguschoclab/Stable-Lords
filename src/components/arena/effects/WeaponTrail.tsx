@@ -43,6 +43,7 @@ export default function WeaponTrail({
 
   useEffect(() => {
     if (trigger) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- timer-based state reset is intentional
       setShowTrail(true);
       const timer = setTimeout(() => setShowTrail(false), 200);
       return () => clearTimeout(timer);

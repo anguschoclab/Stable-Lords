@@ -79,6 +79,7 @@ export default function StartGame() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data loading on mount
     refreshSlots();
   }, [refreshSlots]);
 

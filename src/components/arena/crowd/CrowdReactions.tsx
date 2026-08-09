@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 import type { ArenaTier } from '../ArenaBackground'; /**
@@ -23,13 +22,7 @@ interface CrowdReactionsProps {
  * Crowd reactions.
  * @param - { tier, state, class name }.
  */
-export default function CrowdReactions({ tier, state, className }: CrowdReactionsProps) {
-  const [currentState, setCurrentState] = useState<CrowdState>('idle');
-
-  useEffect(() => {
-    setCurrentState(state);
-  }, [state]);
-
+export default function CrowdReactions({ tier, state: currentState, className }: CrowdReactionsProps) {
   // No crowd for training tier
   if (tier === 'training') return null;
 

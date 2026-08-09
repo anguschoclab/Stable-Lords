@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 
 describe('buildConfigIntegrity', () => {
   const projectRoot = path.resolve(__dirname, '../..');
@@ -40,5 +41,73 @@ describe('buildConfigIntegrity', () => {
   it('stripWorkerRefresh plugin is defined in vite config', () => {
     const viteConfig = fs.readFileSync(path.join(projectRoot, 'vite.config.ts'), 'utf-8');
     expect(viteConfig).toContain('stripWorkerRefresh');
+  });
+});
+
+describe('tsconfig reference graph', () => {
+  const projectRoot = path.resolve(__dirname, '../..');
+
+  function readJson(filePath: string): Record<string, any> {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  }
+
+  it('root tsconfig.json references all 4 build projects', () => {
+    const root = readJson(path.join(projectRoot, 'tsconfig.json'));
+    const refs = (root.references as Array<{ path: string }>) ?? [];
+    const refPaths = refs.map((r) => r.path);
+    expect(refPaths).toContain('./tsconfig.app.json');
+    expect(refPaths).toContain('./tsconfig.node.json');
+    expect(refPaths).toContain('./electron/tsconfig.json');
+    expect(refPaths).toContain('./tsconfig.e2e.json');
+  });
+
+  it('electron/tsconfig.json is composite for --build graph membership', () => {
+    const electronTsconfig = readJson(path.join(projectRoot, 'electron', 'tsconfig.json'));
+    expect(electronTsconfig.compilerOptions?.composite).toBe(true);
+  });
+
+  it('tsconfig.e2e.json exists and is composite for --build graph membership', () => {
+    const e2eTsconfigPath = path.join(projectRoot, 'tsconfig.e2e.json');
+    expect(fs.existsSync(e2eTsconfigPath)).toBe(true);
+    const e2eTsconfig = readJson(e2eTsconfigPath);
+    expect(e2eTsconfig.compilerOptions?.composite).toBe(true);
+  });
+
+  it('tsc --build --force exits with code 0 from root', () => {
+    expect(() => {
+      execSync('bunx tsc --build --force', {
+        cwd: projectRoot,
+        stdio: 'pipe',
+        timeout: 120000,
+      });
+    }).not.toThrow();
+  });
+});
+
+describe('CI and package.json scripts', () => {
+  const projectRoot = path.resolve(__dirname, '../..');
+
+  function readJson(filePath: string): Record<string, any> {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  }
+
+  it('package.json type-check script uses tsc --build', () => {
+    const pkg = readJson(path.join(projectRoot, 'package.json'));
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts['type-check']).toContain('tsc --build');
+  });
+
+  it('ci.yml has a type-check job running tsc --build', () => {
+    const ciPath = path.join(projectRoot, '.github', 'workflows', 'ci.yml');
+    const ci = fs.readFileSync(ciPath, 'utf-8');
+    expect(ci).toContain('type-check');
+    expect(ci).toContain('tsc --build');
+  });
+
+  it('ci.yml has a build job running vite build', () => {
+    const ciPath = path.join(projectRoot, '.github', 'workflows', 'ci.yml');
+    const ci = fs.readFileSync(ciPath, 'utf-8');
+    expect(ci).toMatch(/build:/);
+    expect(ci).toContain('vite build');
   });
 });

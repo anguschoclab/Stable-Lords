@@ -48,7 +48,10 @@ describe('tsconfig reference graph', () => {
   const projectRoot = path.resolve(__dirname, '../..');
 
   function readJson(filePath: string): Record<string, any> {
-    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    // Strip JSON5-style comments (// and /* */) for tsconfig files
+    const stripped = raw.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+    return JSON.parse(stripped);
   }
 
   it('root tsconfig.json references all 4 build projects', () => {
@@ -64,6 +67,16 @@ describe('tsconfig reference graph', () => {
   it('electron/tsconfig.json is composite for --build graph membership', () => {
     const electronTsconfig = readJson(path.join(projectRoot, 'electron', 'tsconfig.json'));
     expect(electronTsconfig.compilerOptions?.composite).toBe(true);
+  });
+
+  it('tsconfig.app.json is composite for --build graph membership', () => {
+    const appTsconfig = readJson(path.join(projectRoot, 'tsconfig.app.json'));
+    expect(appTsconfig.compilerOptions?.composite).toBe(true);
+  });
+
+  it('tsconfig.node.json is composite for --build graph membership', () => {
+    const nodeTsconfig = readJson(path.join(projectRoot, 'tsconfig.node.json'));
+    expect(nodeTsconfig.compilerOptions?.composite).toBe(true);
   });
 
   it('tsconfig.e2e.json exists and is composite for --build graph membership', () => {
@@ -88,7 +101,9 @@ describe('CI and package.json scripts', () => {
   const projectRoot = path.resolve(__dirname, '../..');
 
   function readJson(filePath: string): Record<string, any> {
-    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    const stripped = raw.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+    return JSON.parse(stripped);
   }
 
   it('package.json type-check script uses tsc --build', () => {
@@ -109,5 +124,10 @@ describe('CI and package.json scripts', () => {
     const ci = fs.readFileSync(ciPath, 'utf-8');
     expect(ci).toMatch(/build:/);
     expect(ci).toContain('vite build');
+  });
+
+  it('.gitignore excludes *.tsbuildinfo files', () => {
+    const gitignore = fs.readFileSync(path.join(projectRoot, '.gitignore'), 'utf-8');
+    expect(gitignore).toContain('*.tsbuildinfo');
   });
 });

@@ -485,7 +485,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   {
     id: 'sunken_vault_echo',
     arenaId: 'the_sunken_vault',
-    type: 'environmental_hazard',
+    type: 'architectural_quirk',
     title: "Whispers of the Deep",
     narrative:
       'Fighters swear they hear the whispers of drowned kings echoing off the submerged walls.',

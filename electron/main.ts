@@ -70,8 +70,14 @@ function saveConfig() {
   }, 500); // Debounce for 500ms
 }
 
-let mainWindow = null;
-let tray = null;
+let mainWindow: BrowserWindow | null = null;
+let tray: Tray | null = null;
+
+// Test helpers — exported for behavioral unit tests. No runtime behavior change.
+export function _getMainWindow() { return mainWindow; }
+export function _setMainWindow(win: BrowserWindow | null) { mainWindow = win; }
+export function _getTray() { return tray; }
+export function _setTray(t: Tray | null) { tray = t; }
 
 // Get platform-specific save directory
 function getSaveDirectory() {
@@ -108,7 +114,7 @@ async function ensureSaveDirectory() {
   );
 }
 
-function createWindow() {
+export function createWindow() {
   mainWindow = new BrowserWindow({
     width: store.get('windowBounds.width') || 1400,
     height: store.get('windowBounds.height') || 900,
@@ -188,7 +194,7 @@ function createWindow() {
   });
 }
 
-function createMenu() {
+export function createMenu() {
   const template = [
     ...(process.platform === 'darwin'
       ? [
@@ -308,7 +314,7 @@ function createMenu() {
   Menu.setApplicationMenu(menu);
 }
 
-function createTray() {
+export function createTray() {
   const iconPath = path.join(__dirname, '../public/icons/icon-192.png');
   const image = nativeImage.createFromPath(iconPath);
 

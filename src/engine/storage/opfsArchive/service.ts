@@ -301,7 +301,6 @@ export class OPFSArchiveService implements ArchiveService {
       if (!dirHandle) return [];
 
       const boutIds: string[] = [];
-      // @ts-expect-error - async iterator type issue
       for await (const entry of dirHandle.values()) {
         if (entry.kind === 'file' && entry.name.endsWith('.json')) {
           boutIds.push(entry.name.replace('.json', ''));

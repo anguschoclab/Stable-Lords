@@ -28,7 +28,7 @@ function stripWorkerRefresh(): Plugin {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ _mode }) => ({
+export default defineConfig({
   server: {
     host: '::',
     port: 8080,
@@ -62,7 +62,7 @@ export default defineConfig(({ _mode }) => ({
             path.resolve(__dirname, './src/engine/impacts/index.ts'),
             path.resolve(__dirname, './src/engine/recruitment.ts'),
           ],
-        },
+        } as Record<string, string[]>,
       },
     },
     chunkSizeWarningLimit: 600,
@@ -70,4 +70,4 @@ export default defineConfig(({ _mode }) => ({
   define: {
     'global.HowlerGlobal': '{}',
   },
-}));
+});

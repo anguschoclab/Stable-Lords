@@ -110,6 +110,13 @@ describe('electron/main.ts behavioral tests', () => {
     _setMainWindow(null);
     _setTray(null);
     vi.clearAllMocks();
+    // Re-establish mock return values after clearAllMocks
+    mockState.browserWindowInstance.loadURL.mockResolvedValue(undefined);
+    mockState.browserWindowInstance.loadFile.mockResolvedValue(undefined);
+    mockState.browserWindowInstance.isVisible.mockReturnValue(true);
+    mockState.browserWindowInstance.webContents.executeJavaScript.mockResolvedValue('preload loaded');
+    mockState.dialogShowSave.mockResolvedValue({ canceled: true, filePath: '' });
+    mockState.dialogShowOpen.mockResolvedValue({ canceled: true, filePaths: [] });
   });
 
   describe('createWindow', () => {

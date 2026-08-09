@@ -2,12 +2,14 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
+    "composite": true,
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
     "noEmit": true,
+    "declaration": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -24,5 +26,5 @@
     "types": ["vitest/globals"],
     "useDefineForClassFields": true
   },
-  "include": ["src"]
+  "include": ["src", "electron/main.ts"]
 }

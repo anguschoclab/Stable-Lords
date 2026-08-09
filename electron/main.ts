@@ -59,7 +59,7 @@ function saveConfig() {
       return;
     }
     try {
-      const data = {};
+      const data: Record<string, unknown> = {};
       store.forEach((value, key) => {
         data[key] = value;
       });
@@ -148,7 +148,7 @@ export function createWindow() {
   }
 
   // Log any loading errors
-  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+  mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
     console.error('Failed to load:', errorCode, errorDescription, validatedURL);
   });
 
@@ -156,20 +156,22 @@ export function createWindow() {
     console.log('Page loaded successfully');
   });
 
-  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+  mainWindow.webContents.on('console-message', (_event, level, message, line, sourceId) => {
     console.log(`Renderer [${level}]: ${message} (${sourceId}:${line})`);
   });
 
-  mainWindow.webContents.on('render-process-gone', (event, details) => {
+  mainWindow.webContents.on('render-process-gone', (_event, details) => {
     console.error('Renderer process gone:', details);
   });
 
   // Check if preload script loaded
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents
+    const win = mainWindow;
+    if (!win) return;
+    win.webContents
       .executeJavaScript('window.electronAPI ? "preload loaded" : "preload NOT loaded"')
-      .then((result) => console.log('Preload script status:', result))
-      .catch((err) => console.error('Failed to check preload:', err));
+      .then((result: string) => console.log('Preload script status:', result))
+      .catch((err: Error) => console.error('Failed to check preload:', err));
   });
 
   // Save window bounds on resize/move
@@ -242,6 +244,7 @@ export function createMenu() {
         {
           label: 'Export Save',
           click: async () => {
+            if (!mainWindow) return;
             const result = await dialog.showSaveDialog(mainWindow, {
               defaultPath: `stablelords-save-${Date.now()}.json`,
               filters: [{ name: 'JSON Files', extensions: ['json'] }],
@@ -254,6 +257,7 @@ export function createMenu() {
         {
           label: 'Import Save',
           click: async () => {
+            if (!mainWindow) return;
             const result = await dialog.showOpenDialog(mainWindow, {
               filters: [{ name: 'JSON Files', extensions: ['json'] }],
             });
@@ -669,7 +673,7 @@ function registerIPCHandlers() {
 }
 app.whenReady().then(async () => {
   // Deny arbitrary permission requests by default to reduce attack surface
-  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+  session.defaultSession.setPermissionRequestHandler((_webContents, permission, callback) => {
     console.warn(`Blocked permission request for: ${permission}`);
     callback(false);
   });
@@ -691,7 +695,7 @@ app.whenReady().then(async () => {
   });
 });
 
-app.on('web-contents-created', (event, contents) => {
+app.on('web-contents-created', (_event, contents) => {
   contents.on('will-navigate', (event, navigationUrl) => {
     const parsedUrl = new URL(navigationUrl);
 

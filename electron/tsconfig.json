@@ -14,7 +14,11 @@
     "strictPropertyInitialization": false,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "outDir": "."
+    "composite": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force"
   },
   "include": ["*.ts"],
   "exclude": ["node_modules"]

@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
-import { type ScoutReportData, type Warrior } from '@/types/game';
+import { type ScoutReportData, type Warrior, type RivalStableData } from '@/types/game';
 import { Radio } from 'lucide-react';
 import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';
@@ -53,7 +53,7 @@ export default function Scouting() {
 
   const rivalMap = useMemo(
     () => {
-      const map = new Map();
+      const map = new Map<string, RivalStableData>();
       for (const r of rivals ?? []) {
         map.set(r.owner.id as string, r);
       }

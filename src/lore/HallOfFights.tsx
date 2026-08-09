@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Trophy, Swords, Skull, Sparkles, ScrollText, Zap, Newspaper } from 'lucide-react';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
+import type { FightSummary } from '@/types/state.types';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { WarriorLink } from '@/components/EntityLink';
@@ -32,7 +33,7 @@ export const HallOfFights: React.FC = () => {
   // Build fight lookup from game state
   const fightMap = useMemo(
     () => {
-      const map = new Map<string, any>();
+      const map = new Map<string, FightSummary>();
       for (const f of state.arenaHistory) {
         map.set(f.id, f);
       }

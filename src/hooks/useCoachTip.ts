@@ -243,7 +243,7 @@ export function useCoachTip(pathname: string) {
   const coachDismissed = state.coachDismissed;
   const roster = state.roster;
   const rosterMap = useMemo(() => {
-    const map = new Map();
+    const map = new Map<string, Warrior>();
     for (const w of roster) {
       map.set(w.id, w);
     }

@@ -25,6 +25,7 @@ import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { cn } from '@/lib/utils';
+import type { RivalStableData } from '@/types/game';
 import { StableRosterTab } from '@/components/stable/StableRosterTab';
 import { StableLogsTab } from '@/components/stable/StableLogsTab';
 
@@ -58,7 +59,7 @@ export default function StableDetail() {
 
   const rivalMap = useMemo(
     () => {
-      const map = new Map<string, any>();
+      const map = new Map<string, RivalStableData>();
       for (const r of state.rivals ?? []) {
         map.set(r.owner.id as string, r);
       }
@@ -101,7 +102,7 @@ export default function StableDetail() {
     losses: totalLosses,
     kills: totalKills,
   } = rival.roster.reduce(
-    (acc: any, w: any) => ({
+    (acc, w) => ({
       wins: acc.wins + w.career.wins,
       losses: acc.losses + w.career.losses,
       kills: acc.kills + w.career.kills,
@@ -118,7 +119,7 @@ export default function StableDetail() {
       text: 'text-muted-foreground',
     };
 
-  const stableWarriorIds = new Set<string>(rival.roster.map((w: any) => w.id));
+  const stableWarriorIds = new Set<string>(rival.roster.map((w) => w.id));
   const recentBouts = state.arenaHistory
     .filter((f) => stableWarriorIds.has(f.warriorIdA) || stableWarriorIds.has(f.warriorIdD))
     .slice(-12)
@@ -307,7 +308,7 @@ export default function StableDetail() {
                   <div className="mt-8">
                     {deadWarriors.length > 0 ? (
                       <div className="flex flex-wrap gap-3">
-                        {deadWarriors.map((w: any) => (
+                        {deadWarriors.map((w) => (
                           <Badge
                             key={w.id}
                             variant="outline"

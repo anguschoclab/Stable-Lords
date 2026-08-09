@@ -54,7 +54,7 @@ export default function Training() {
 
   const rosterNameMap = useMemo(
     () => {
-      const map = new Map();
+      const map = new Map<string, string>();
       for (const w of state.roster ?? []) {
         map.set(w.id, w.name);
       }

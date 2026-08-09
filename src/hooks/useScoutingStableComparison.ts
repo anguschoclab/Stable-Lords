@@ -32,7 +32,7 @@ export function useStableComparison(rivals: RivalStableData[]) {
   const ownerGrudges = ownerGrudgesRaw ?? [];
 
   const rivalMap = useMemo(() => {
-    const map = new Map();
+    const map = new Map<string, RivalStableData>();
     for (const r of rivals) {
       map.set(r.owner.id as string, r);
     }

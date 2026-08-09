@@ -161,7 +161,7 @@ export function TrainerTable() {
                         <span
                           className={cn(
                             'text-[10px] font-mono font-black',
-                            isExpiring ? 'text-destructive animate-pulse' : 'text-muted-foreground'
+                            isExpiring ? 'text-destructive animate-pulse motion-reduce:animate-none' : 'text-muted-foreground'
                           )}
                         >
                           {weeksLeft}W

@@ -18,7 +18,7 @@ export function HeatEffect() {
 export function SolarFlareEffect() {
   return (
     <div
-      className="absolute inset-0 pointer-events-none animate-pulse-slow"
+      className="absolute inset-0 pointer-events-none animate-pulse-slow motion-reduce:animate-none"
       style={{
         background:
           'radial-gradient(ellipse at top, rgba(255,240,180,0.25) 0%, rgba(255,200,80,0.08) 40%, transparent 75%)',

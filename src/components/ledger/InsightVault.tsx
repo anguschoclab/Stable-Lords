@@ -123,7 +123,7 @@ function TokenSection({ config, tokens }: TokenSectionProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-3">
-          <div className={`h-2 w-2 rounded-full ${config.pulseColor} animate-pulse`} />
+          <div className={`h-2 w-2 rounded-full ${config.pulseColor} animate-pulse motion-reduce:animate-none`} />
           <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
             {config.title}
           </h4>
@@ -227,7 +227,7 @@ export function InsightVault() {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       {/* ─── The Insight Vault Header ─── */}
       <Surface
         variant="glass"
@@ -299,7 +299,7 @@ export function InsightVault() {
               Status
             </span>
             <div className="flex items-center gap-3">
-              <Unlocked className="h-4 w-4 text-primary animate-pulse" />
+              <Unlocked className="h-4 w-4 text-primary animate-pulse motion-reduce:animate-none" />
               <span className="text-xs font-black uppercase tracking-widest text-primary drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.3)]">
                 Awaiting Discovery
               </span>

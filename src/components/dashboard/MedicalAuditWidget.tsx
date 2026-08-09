@@ -27,7 +27,7 @@ export function MedicalAuditWidget() {
         <div className="flex items-center gap-4">
           <div className="p-2.5 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all motion-reduce:transition-none motion-reduce:transform-none">
             <ShieldAlert
-              className={cn('h-5 w-5 text-destructive', criticalCount > 0 && 'animate-pulse')}
+              className={cn('h-5 w-5 text-destructive', criticalCount > 0 && 'animate-pulse motion-reduce:animate-none')}
             />
           </div>
           <div>
@@ -42,7 +42,7 @@ export function MedicalAuditWidget() {
         {criticalCount > 0 && (
           <Badge
             variant="destructive"
-            className="text-[8px] font-mono font-black h-5 px-2 animate-bounce"
+            className="text-[8px] font-mono font-black h-5 px-2 animate-bounce motion-reduce:animate-none"
           >
             CRITICAL
           </Badge>

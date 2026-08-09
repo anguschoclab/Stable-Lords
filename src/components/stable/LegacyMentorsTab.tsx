@@ -38,7 +38,7 @@ export function LegacyMentorsTab({ currentTrainers }: LegacyMentorsTabProps) {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       <SectionDivider label="Legacy Mentors" variant="gold" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {ranked.map(({ t, score }, i) => (

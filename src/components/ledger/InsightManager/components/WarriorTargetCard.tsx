@@ -52,7 +52,7 @@ export function WarriorTargetCard({
       </button>
       {isSelected && (
         <div className="absolute top-0 right-0 p-1">
-          <Target className="h-3 w-3 text-primary animate-pulse" />
+          <Target className="h-3 w-3 text-primary animate-pulse motion-reduce:animate-none" />
         </div>
       )}
     </Surface>

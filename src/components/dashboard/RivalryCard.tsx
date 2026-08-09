@@ -26,7 +26,7 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
               className={cn(
                 'h-1 w-1 rounded-none',
                 intensityBgColor(r.intensity),
-                r.intensity >= 4 && 'animate-pulse'
+                r.intensity >= 4 && 'animate-pulse motion-reduce:animate-none'
               )}
             />
             <span

@@ -89,7 +89,7 @@ export function TournamentPrepDialog({
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
-                              <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse" />
+                              <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />
                             </TooltipTrigger>
                             <TooltipContent>Near Retirement Age</TooltipContent>
                           </Tooltip>

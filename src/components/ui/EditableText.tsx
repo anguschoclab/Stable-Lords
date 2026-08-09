@@ -71,7 +71,7 @@ export function EditableText({
     return (
       <div
         className={cn(
-          'flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200',
+          'flex items-center gap-2 animate-in motion-reduce:animate-none fade-in zoom-in-95 duration-200',
           className
         )}
       >
@@ -131,7 +131,7 @@ export function EditableText({
     >
       <span className="relative z-10">{value}</span>
       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <Edit2 className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary animate-pulse-slow" />
+        <Edit2 className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary animate-pulse-slow motion-reduce:animate-none" />
       </div>
 
       {/* Subtle hover background effect */}

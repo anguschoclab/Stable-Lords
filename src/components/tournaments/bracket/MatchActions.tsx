@@ -30,7 +30,7 @@ export function MatchActions({
       {isExpanded ? (
         <ChevronUp className="h-3 w-3" />
       ) : (
-        <ChevronDown className="h-3 w-3 text-primary animate-pulse" />
+        <ChevronDown className="h-3 w-3 text-primary animate-pulse motion-reduce:animate-none" />
       )}
     </button>
   );

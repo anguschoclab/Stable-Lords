@@ -33,8 +33,8 @@ function LoadingOverlay({ isInitialized }: LoadingOverlayProps) {
           exit={{ opacity: 0 }}
           className="absolute inset-0 z-50 bg-background flex items-center justify-center flex-col gap-4"
         >
-          <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
-          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse">
+          <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin motion-reduce:animate-none" />
+          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse motion-reduce:animate-none">
             Unsealing the Archive...
           </div>
         </motion.div>

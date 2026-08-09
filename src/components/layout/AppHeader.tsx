@@ -83,7 +83,7 @@ function CycleStatus({ week, day, isTournamentWeek, isSimulating }: CycleStatusP
       <div className="flex items-center gap-2">
         <span className="font-display font-black text-xs text-foreground uppercase tracking-tight">
           {isSimulating ? (
-            <span className="animate-pulse opacity-40 italic">Simulating...</span>
+            <span className="animate-pulse motion-reduce:animate-none opacity-40 italic">Simulating...</span>
           ) : (
             `Week ${week} · ${isTournamentWeek ? `Day ${day + 1}` : 'Planning Phase'}`
           )}
@@ -209,7 +209,7 @@ function MuteButton() {
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Arena Settings"
           className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           onClick={toggleMute}
           aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
@@ -262,7 +262,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Mute Audio"
           className={cn(
             'h-9 w-9 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black',
             saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'

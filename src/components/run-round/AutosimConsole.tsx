@@ -72,14 +72,14 @@ export function AutosimConsole({
         {isSimulating && progress && (
           <div className="space-y-4">
             <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
-              <span className="text-accent animate-pulse">
+              <span className="text-accent animate-pulse motion-reduce:animate-none">
                 Processing Cycle {progress.current} of {progress.total}
               </span>
               <span className="text-foreground">{percent}%</span>
             </div>
             <Progress value={percent} className="h-2 bg-accent/10" />
             {progress.lastSummary && (
-              <div className="bg-background/40 p-3 rounded-none border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-bottom-2">
+              <div className="bg-background/40 p-3 rounded-none border border-accent/20 flex items-center justify-between animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-2">
                 <div className="flex items-center gap-3">
                   <Activity className="h-3.5 w-3.5 text-accent" />
                   <span className="text-[10px] font-mono text-muted-foreground uppercase">
@@ -100,7 +100,7 @@ export function AutosimConsole({
         )}
 
         {result && (
-          <div className="space-y-4 animate-in zoom-in-95 duration-300">
+          <div className="space-y-4 animate-in motion-reduce:animate-none zoom-in-95 duration-300">
             <div
               className={cn(
                 'p-4 rounded-none border flex items-start gap-4',

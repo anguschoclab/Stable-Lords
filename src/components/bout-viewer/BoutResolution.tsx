@@ -62,7 +62,7 @@ export default function BoutResolution({
       {winner && (
         <div
           className={cn(
-            'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
+            'p-8 border-t flex flex-col items-center gap-6 animate-in motion-reduce:animate-none slide-in-from-bottom-8 duration-1000 bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
             outcomeStyle.bgClasses
           )}
         >
@@ -113,7 +113,7 @@ export default function BoutResolution({
       )}
 
       {!winner && (
-        <div className="p-12 border-t border-white/5 flex flex-col items-center gap-4 bg-neutral-900 animate-in slide-in-from-bottom-8 duration-1000">
+        <div className="p-12 border-t border-white/5 flex flex-col items-center gap-4 bg-neutral-900 animate-in motion-reduce:animate-none slide-in-from-bottom-8 duration-1000">
           <Crosshair className="h-10 w-10 text-muted-foreground opacity-40 mb-2" />
           <h2 className="font-display font-black text-3xl uppercase tracking-tighter italic text-muted-foreground/60">
             MUTUAL_DEPLETION_DRAW
@@ -127,7 +127,7 @@ export default function BoutResolution({
       {/* Comms Link Overlay */}
       {announcement && (
         <div className="px-8 py-6 border-t border-white/5 bg-black relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-full h-px bg-arena-gold/30 animate-pulse" />
+          <div className="absolute top-0 left-0 w-full h-px bg-arena-gold/30 animate-pulse motion-reduce:animate-none" />
           <div className="relative z-10 flex items-start gap-4">
             <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 shrink-0">
               <Activity className="h-4 w-4 text-arena-gold" />

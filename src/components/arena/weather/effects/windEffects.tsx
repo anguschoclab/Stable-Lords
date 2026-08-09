@@ -29,7 +29,7 @@ export function TornadoEffect() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Swirling funnel */}
       <div
-        className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-2/3 animate-spin-slow opacity-30"
+        className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-2/3 animate-spin-slow motion-reduce:animate-none opacity-30"
         style={{
           background:
             'conic-gradient(from 0deg at 50% 60%, rgba(120,120,130,0) 0deg, rgba(160,160,170,0.28) 90deg, rgba(120,120,130,0) 180deg, rgba(160,160,170,0.28) 270deg, rgba(120,120,130,0) 360deg)',
@@ -109,7 +109,7 @@ export function ChaoticWindsEffect() {
 
       {/* Swirling vortex hint - subtle center disturbance */}
       <div
-        className="absolute left-1/2 top-1/4 -translate-x-1/2 h-1/2 w-1/2 animate-spin-slow opacity-20"
+        className="absolute left-1/2 top-1/4 -translate-x-1/2 h-1/2 w-1/2 animate-spin-slow motion-reduce:animate-none opacity-20"
         style={{
           background:
             'conic-gradient(from 0deg at 50% 50%, rgba(180,120,50,0) 0deg, rgba(160,140,100,0.2) 90deg, rgba(180,120,50,0) 180deg, rgba(160,140,100,0.2) 270deg, rgba(180,120,50,0) 360deg)',

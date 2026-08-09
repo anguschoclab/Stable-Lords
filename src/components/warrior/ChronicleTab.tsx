@@ -20,7 +20,7 @@ interface ChronicleTabProps {
  */
 export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
   return (
-    <div className="grid gap-12 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="grid gap-12 lg:grid-cols-12 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       <div className="lg:col-span-4 space-y-12">
         <div className="space-y-8">
           <SectionDivider label="Path of Blood" />

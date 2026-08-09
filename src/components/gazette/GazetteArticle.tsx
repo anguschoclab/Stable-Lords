@@ -161,7 +161,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40">
                 In Brief
               </h4>
-              <div className="h-1.5 w-1.5 rounded-full bg-arena-gold animate-pulse" />
+              <div className="h-1.5 w-1.5 rounded-full bg-arena-gold animate-pulse motion-reduce:animate-none" />
             </div>
 
             <div className="space-y-8">

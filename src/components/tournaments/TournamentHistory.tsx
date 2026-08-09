@@ -52,7 +52,7 @@ export function TournamentHistory({
           >
             {isCurrent && (
               <div className="absolute top-0 right-0 p-3">
-                <div className="h-2 w-2 rounded-full bg-arena-gold animate-ping" />
+                <div className="h-2 w-2 rounded-full bg-arena-gold animate-ping motion-reduce:animate-none" />
               </div>
             )}
             <div className="p-4 border-b border-white/5 bg-secondary/5 flex items-center gap-3">

@@ -114,7 +114,7 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
       </div>
 
       {isExpert && canAfford && (
-        <div className="absolute inset-0 bg-white/5 animate-pulse rounded-none pointer-events-none" />
+        <div className="absolute inset-0 bg-white/5 animate-pulse motion-reduce:animate-none rounded-none pointer-events-none" />
       )}
     </button>
   );

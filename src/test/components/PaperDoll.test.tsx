@@ -22,13 +22,13 @@ describe('PaperDoll', () => {
     render(<PaperDoll healthMap={{ Torso: 10 }} />);
     const torso = screen.getByTestId('body-part-torso');
     // We expect a red fill class or style when health is < 20%
-    expect(torso).toHaveClass('fill-red-600');
+    expect(torso).toHaveClass('fill-destructive');
   });
 
   it('applies yellow color for moderate health', () => {
     render(<PaperDoll healthMap={{ Head: 50 }} />);
     const head = screen.getByTestId('body-part-head');
-    expect(head).toHaveClass('fill-yellow-500');
+    expect(head).toHaveClass('fill-arena-gold');
   });
 
   it('applies green color for full health', () => {

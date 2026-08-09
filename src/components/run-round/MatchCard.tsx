@@ -35,7 +35,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
           </span>
         </div>
         {isRivalryBout && (
-          <Badge className="bg-destructive/10 text-destructive border-none shadow-[0_0_10px_rgba(239,68,68,0.3)] animate-pulse gap-1.5 h-5 px-2 font-black text-[8px] tracking-widest uppercase">
+          <Badge className="bg-destructive/10 text-destructive border-none shadow-[0_0_10px_rgba(239,68,68,0.3)] animate-pulse motion-reduce:animate-none gap-1.5 h-5 px-2 font-black text-[8px] tracking-widest uppercase">
             <Flame className="h-2.5 w-2.5" /> STABLE VENDETTA
           </Badge>
         )}

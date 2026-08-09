@@ -28,7 +28,7 @@ export function TrainingCardHeader({ warrior, total, hasInjury }: TrainingCardHe
           {hasInjury && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="bg-destructive/20 text-destructive px-2 py-0.5 rounded-none text-[9px] font-black uppercase tracking-widest flex items-center gap-1 border border-destructive/20 animate-pulse cursor-help">
+                <div className="bg-destructive/20 text-destructive px-2 py-0.5 rounded-none text-[9px] font-black uppercase tracking-widest flex items-center gap-1 border border-destructive/20 animate-pulse motion-reduce:animate-none cursor-help">
                   <AlertTriangle className="h-2.5 w-2.5" /> INJURED
                 </div>
               </TooltipTrigger>

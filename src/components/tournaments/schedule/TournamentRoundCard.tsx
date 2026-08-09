@@ -63,7 +63,7 @@ export function TournamentRoundCard({
                 isComplete
                   ? 'bg-primary/20 text-primary'
                   : isCurrent
-                    ? 'bg-primary/20 text-primary animate-pulse'
+                    ? 'bg-primary/20 text-primary animate-pulse motion-reduce:animate-none'
                     : 'bg-muted text-muted-foreground'
               )}
             >

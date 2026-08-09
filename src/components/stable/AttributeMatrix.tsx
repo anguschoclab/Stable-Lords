@@ -22,9 +22,9 @@ export function AttributeMatrix({ attributes }: AttributeMatrixProps) {
                 max={ATTRIBUTE_TRAINING.MAX_VALUE}
                 colorClass={
                   val >= ATTRIBUTE_UI_THRESHOLDS.EXCELLENT
-                    ? 'bg-arena-gold shadow-[0_0_10px_rgba(255,215,0,0.5)] group-hover:animate-pulse'
+                    ? 'bg-arena-gold shadow-[0_0_10px_rgba(255,215,0,0.5)] group-hover:animate-pulse motion-reduce:animate-none'
                     : val >= ATTRIBUTE_UI_THRESHOLDS.GOOD
-                      ? 'bg-primary group-hover:animate-pulse'
+                      ? 'bg-primary group-hover:animate-pulse motion-reduce:animate-none'
                       : 'bg-neutral-800'
                 }
               />

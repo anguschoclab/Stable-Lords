@@ -27,7 +27,7 @@ export function FighterBars({ hpPercent, fpPercent, isWinner }: FighterBarsProps
           style={{ width: `${fpPercent}%` }}
         />
       </div>
-      {isWinner && <div className="absolute -inset-1 bg-arena-gold/30 blur-sm animate-pulse" />}
+      {isWinner && <div className="absolute -inset-1 bg-arena-gold/30 blur-sm animate-pulse motion-reduce:animate-none" />}
     </div>
   );
 }

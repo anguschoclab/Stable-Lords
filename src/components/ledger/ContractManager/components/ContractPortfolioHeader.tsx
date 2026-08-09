@@ -28,7 +28,7 @@ export function ContractPortfolioHeader({
             <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
               Active Contracts: {activeCount}
             </span>
-            <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+            <div className="h-1 w-1 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@ export function ContractPortfolioHeader({
               Expiring Soon
             </span>
             <div className="flex items-center gap-2 font-mono font-black text-destructive text-lg">
-              <AlertTriangle className="h-4 w-4 animate-bounce" />
+              <AlertTriangle className="h-4 w-4 animate-bounce motion-reduce:animate-none" />
               {expiringSoonCount}
             </div>
           </div>

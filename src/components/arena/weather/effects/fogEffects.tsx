@@ -65,7 +65,7 @@ export function BloodFogEffect() {
       ))}
       {/* Ominous red glow pulse */}
       <div
-        className="absolute inset-0 animate-pulse-slow"
+        className="absolute inset-0 animate-pulse-slow motion-reduce:animate-none"
         style={{
           background: 'radial-gradient(ellipse at 50% 50%, rgba(139,0,0,0.1) 0%, transparent 70%)',
         }}

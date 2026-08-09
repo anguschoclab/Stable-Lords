@@ -34,7 +34,7 @@ export function ResultsBanner({ week, results, onDismiss }: ResultsBannerProps) 
   return (
     <div
       role="status"
-      className="flex items-center gap-4 px-6 py-3 bg-primary/10 border-b border-primary/20 text-[10px] font-black uppercase tracking-[0.15em] animate-in slide-in-from-top-2 duration-400"
+      className="flex items-center gap-4 px-6 py-3 bg-primary/10 border-b border-primary/20 text-[10px] font-black uppercase tracking-[0.15em] animate-in motion-reduce:animate-none slide-in-from-top-2 duration-400"
     >
       <Swords className="h-3.5 w-3.5 text-primary shrink-0" />
 

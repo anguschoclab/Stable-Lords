@@ -136,7 +136,7 @@ export function ChampionDisplay({
     >
       <div className="p-8 text-center space-y-4">
         <div className="flex flex-col items-center gap-4">
-          <Crown className="h-16 w-16 text-arena-gold animate-bounce" />
+          <Crown className="h-16 w-16 text-arena-gold animate-bounce motion-reduce:animate-none" />
           <div className="space-y-2">
             <p className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground font-black">
               Tournament Supreme Champion

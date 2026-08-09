@@ -71,7 +71,7 @@ export function RosterWall() {
               <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
                 Warriors: {sortedRoster.length}
               </span>
-              <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+              <div className="h-1 w-1 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
               {sortedRoster.length > 0 && (
                 <StyleCompositionDonut
                   styles={rosterStyles}

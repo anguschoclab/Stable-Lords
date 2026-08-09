@@ -57,7 +57,7 @@ export function AcidRainEffect() {
         />
       ))}
       {/* Acid sizzle glow on floor */}
-      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-arena-pop/5 blur-xl animate-pulse" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-arena-pop/5 blur-xl animate-pulse motion-reduce:animate-none" />
     </div>
   );
 }

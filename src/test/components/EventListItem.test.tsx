@@ -8,7 +8,11 @@ import { ScrollText } from 'lucide-react';
 
 vi.mock('@/components/EntityLink', () => ({
   WarriorLink: ({ name }: { name: string }) => (
-    <span data-testid="warrior-link" data-name={name} aria-label={`Open details for warrior ${name}`}>
+    <span
+      data-testid="warrior-link"
+      data-name={name}
+      aria-label={`Open details for warrior ${name}`}
+    >
       {name}
     </span>
   ),

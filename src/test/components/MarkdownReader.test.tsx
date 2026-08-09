@@ -6,7 +6,11 @@ import '@testing-library/jest-dom';
 
 vi.mock('@/components/EntityLink', () => ({
   WarriorLink: ({ name }: { name: string }) => (
-    <span data-testid="warrior-link" data-name={name} aria-label={`Open details for warrior ${name}`}>
+    <span
+      data-testid="warrior-link"
+      data-name={name}
+      aria-label={`Open details for warrior ${name}`}
+    >
       {name}
     </span>
   ),
@@ -52,7 +56,10 @@ describe('MarkdownReader', () => {
 
   it('with warriorNames prop, warrior names in content become WarriorLink', () => {
     render(
-      <MarkdownReader content="Brutus defeated Cassius in the arena" warriorNames={['Brutus', 'Cassius']} />
+      <MarkdownReader
+        content="Brutus defeated Cassius in the arena"
+        warriorNames={['Brutus', 'Cassius']}
+      />
     );
     expect(screen.getAllByTestId('warrior-link').length).toBeGreaterThan(0);
   });

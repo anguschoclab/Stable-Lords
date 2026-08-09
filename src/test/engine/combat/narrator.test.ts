@@ -324,7 +324,14 @@ describe('narrator', () => {
     it('appends CRITICAL HIT line when metadata.crit is true', () => {
       const ctx = createMockContext();
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 10, location: 'head', metadata: { crit: true } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 10,
+          location: 'head',
+          metadata: { crit: true },
+        },
       ];
       const result = narrateEvents(events, ctx, 1);
       const hasCritLine = result.log.some((e) => e.text.includes('CRITICAL HIT'));
@@ -411,7 +418,14 @@ describe('narrator', () => {
         maxHpD: 100,
       });
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 20, location: 'chest', metadata: { appliedDamage: 25 } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 20,
+          location: 'chest',
+          metadata: { appliedDamage: 25 },
+        },
       ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log.length).toBeGreaterThan(0);
@@ -420,7 +434,14 @@ describe('narrator', () => {
     it('marks isSuperFlashy when mastery + crit', () => {
       const ctx = createMockContext();
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 10, location: 'head', metadata: { isMastery: true, crit: true } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 10,
+          location: 'head',
+          metadata: { isMastery: true, crit: true },
+        },
       ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log.length).toBeGreaterThan(0);
@@ -429,7 +450,14 @@ describe('narrator', () => {
     it('marks isSuperFlashy when mastery + value > 5', () => {
       const ctx = createMockContext();
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 8, location: 'head', metadata: { isMastery: true } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 8,
+          location: 'head',
+          metadata: { isMastery: true },
+        },
       ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log.length).toBeGreaterThan(0);
@@ -438,7 +466,14 @@ describe('narrator', () => {
     it('marks isSuperFlashy when mastery + BOUT_END exists in events', () => {
       const ctx = createMockContext();
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 3, location: 'head', metadata: { isMastery: true } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 3,
+          location: 'head',
+          metadata: { isMastery: true },
+        },
         { type: 'BOUT_END', actor: 'A' },
       ];
       const result = narrateEvents(events, ctx, 1);
@@ -448,7 +483,14 @@ describe('narrator', () => {
     it('isFatal from metadata.lethal sets emphasis', () => {
       const ctx = createMockContext();
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 5, location: 'head', metadata: { lethal: true } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 5,
+          location: 'head',
+          metadata: { lethal: true },
+        },
       ];
       const result = narrateEvents(events, ctx, 1);
       const hasEmphasis = result.log.some((e) => e.emphasis === true);
@@ -596,9 +638,7 @@ describe('narrator', () => {
 
     it('defaults prevMom to 0 when metadata.prev is undefined', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [
-        { type: 'MOMENTUM_SHIFT', actor: 'A', value: 3 },
-      ];
+      const events: CombatEvent[] = [{ type: 'MOMENTUM_SHIFT', actor: 'A', value: 3 }];
       const result = narrateEvents(events, ctx, 1);
       // newMom=3 >= 3 → dominant text
       expect(result.log.length).toBeGreaterThan(0);
@@ -616,7 +656,9 @@ describe('narrator', () => {
 
     it('produces SURVIVAL_STRIKE text', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [{ type: 'STATE_CHANGE', actor: 'A', result: 'SURVIVAL_STRIKE' }];
+      const events: CombatEvent[] = [
+        { type: 'STATE_CHANGE', actor: 'A', result: 'SURVIVAL_STRIKE' },
+      ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log.length).toBeGreaterThan(0);
       expect(result.log[0]!.text).toContain('survives');
@@ -632,7 +674,9 @@ describe('narrator', () => {
 
     it('produces PSYCH_ INTHEZONE text (gated by rng < 0.5)', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [{ type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_INTHEZONE' }];
+      const events: CombatEvent[] = [
+        { type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_INTHEZONE' },
+      ];
       const result = narrateEvents(events, ctx, 1);
       // May or may not produce depending on rng
       expect(result.log).toBeDefined();
@@ -647,14 +691,18 @@ describe('narrator', () => {
 
     it('produces PSYCH_ DESPERATE text (gated by rng < 0.5)', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [{ type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_DESPERATE' }];
+      const events: CombatEvent[] = [
+        { type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_DESPERATE' },
+      ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log).toBeDefined();
     });
 
     it('produces PSYCH_ CRUISING text (gated by rng < 0.5)', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [{ type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_CRUISING' }];
+      const events: CombatEvent[] = [
+        { type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_CRUISING' },
+      ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log).toBeDefined();
     });
@@ -718,7 +766,9 @@ describe('narrator', () => {
   describe('ZONE_SHIFT events', () => {
     it('produces zone shift narration when result and target are present', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [{ type: 'ZONE_SHIFT', actor: 'A', target: 'D', result: 'Corner' }];
+      const events: CombatEvent[] = [
+        { type: 'ZONE_SHIFT', actor: 'A', target: 'D', result: 'Corner' },
+      ];
       const result = narrateEvents(events, ctx, 1);
       expect(result.log.length).toBeGreaterThan(0);
     });
@@ -822,7 +872,14 @@ describe('narrator', () => {
         maxHpD: 100,
       });
       const events: CombatEvent[] = [
-        { type: 'HIT', actor: 'A', target: 'D', value: 30, location: 'chest', metadata: { appliedDamage: 40 } },
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 30,
+          location: 'chest',
+          metadata: { appliedDamage: 40 },
+        },
       ];
       // Should use appliedDamage=40: max(0, 1.0 - 40/100) = 0.6
       expect(() => narrateEvents(events, ctx, 1)).not.toThrow();

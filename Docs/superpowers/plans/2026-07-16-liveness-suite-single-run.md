@@ -11,6 +11,7 @@
 **Scope:** One test file rewritten. Zero production code changes. All existing assertions are preserved verbatim — only the plumbing changes. Baseline measured 2026-07-16: 6 tests × ~73s = 445.53s total; the `[vitest-worker]: Timeout calling "onTaskUpdate"` unhandled-error noise comes from the repeated long-running tests and disappears with the single run.
 
 **Grounded facts (do not re-derive):**
+
 - File: `src/test/engine/sim/worldLiveness.integration.test.ts` (~146 lines, two `describe` blocks, six tests). Each test independently calls `runSimulation` and a `beforeEach(reset)` re-seeds `setMockIdGenerator`, clears `engineEventBus` and `NewsletterFeed`.
 - `runSimulation` (`src/scripts/simulation-harness.ts`) is synchronous and deterministic given `seed`; `logFrequency: N` pushes a pulse every N weeks, so `logFrequency: 2` is a strict superset of the pulses `logFrequency: 4` produces (assertions only index `pulses[mid]`/`pulses[length-1]`, which remain valid).
 - The OPFS mock block at the top of the file is required (browser-only API) — keep it untouched.
@@ -26,6 +27,7 @@
 ## Task 1: Rewrite the suite around one shared run
 
 **Files:**
+
 - Modify: `src/test/engine/sim/worldLiveness.integration.test.ts`
 
 - [ ] **Step 1: Capture the current green baseline**
@@ -123,7 +125,7 @@ describe('world liveness over a long sim (104 weeks, single shared run)', () => 
 
 Also update the vitest import at the top: replace `beforeEach` with `beforeAll` in the `import { describe, it, expect, vi, beforeEach } from 'vitest';` line (i.e. `import { describe, it, expect, vi, beforeAll } from 'vitest';`).
 
-> Why the assertions survive the `logFrequency` change from 4 → 2: pulses double in count, but every assertion indexes relatively (`mid`, `length - 1`) or aggregates (`Math.max`), so more samples only make the freeze/multi-flaw guards *stricter*, never looser.
+> Why the assertions survive the `logFrequency` change from 4 → 2: pulses double in count, but every assertion indexes relatively (`mid`, `length - 1`) or aggregates (`Math.max`), so more samples only make the freeze/multi-flaw guards _stricter_, never looser.
 
 - [ ] **Step 3: Run — expect 6 green, dramatically faster**
 
@@ -135,6 +137,7 @@ If the multi-flaw or Signature assertion fails where it passed before, the RNG d
 - [ ] **Step 4: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/test/engine/sim/worldLiveness.integration.test.ts"
 git commit -m "perf(test): liveness suite shares one 104-week sim run (445s -> ~80s)"
@@ -162,7 +165,7 @@ git add -A && git commit -m "test: verify suite green after liveness single-run 
 ## Self-Review Notes
 
 - **Zero assertion drift.** Every `expect` is copied verbatim; only the run-sharing plumbing changed. The suite's meaning as the balance gate is untouched.
-- **Determinism is the enabler.** `runSimulation` is seeded and synchronous; six identical runs were pure waste. If any test ever needs a *different* config (different weeks/seed), give it its own run — do not bend the shared one.
+- **Determinism is the enabler.** `runSimulation` is seeded and synchronous; six identical runs were pure waste. If any test ever needs a _different_ config (different weeks/seed), give it its own run — do not bend the shared one.
 - **`logFrequency: 2` is the superset.** Finer sampling only strengthens the peak-based multi-flaw guard.
 
 ## Verification

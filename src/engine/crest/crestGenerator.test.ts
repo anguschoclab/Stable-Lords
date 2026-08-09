@@ -239,9 +239,7 @@ describe('crestGenerator', () => {
     });
 
     it('2.6 — all hex values are unique', () => {
-      const values = Object.keys(CREST_COLORS).map((key) =>
-        getCrestColor(key as CrestColorKey)
-      );
+      const values = Object.keys(CREST_COLORS).map((key) => getCrestColor(key as CrestColorKey));
       expect(new Set(values).size).toBe(values.length);
     });
   });

@@ -2,8 +2,19 @@
  * Warrior-related Zod schemas (attributes, skills, injuries, equipment, plans, rivalries).
  */
 import { z } from 'zod';
-import { FightingStyleSchema, WarriorStatusSchema, InjurySeveritySchema, InjuryLocationSchema, OwnerPersonalitySchema, AttackTargetSchema, ProtectTargetSchema, OffensiveTacticSchema, DefensiveTacticSchema, ConditionTriggerTypeSchema, DistanceRangeSchema } from './schemaEnums';
-
+import {
+  FightingStyleSchema,
+  WarriorStatusSchema,
+  InjurySeveritySchema,
+  InjuryLocationSchema,
+  OwnerPersonalitySchema,
+  AttackTargetSchema,
+  ProtectTargetSchema,
+  OffensiveTacticSchema,
+  DefensiveTacticSchema,
+  ConditionTriggerTypeSchema,
+  DistanceRangeSchema,
+} from './schemaEnums';
 
 /**
  * Attributes schema with range validation (3-25)

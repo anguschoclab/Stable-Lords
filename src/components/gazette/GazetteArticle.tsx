@@ -28,10 +28,7 @@ interface GazetteIssue {
 interface GazetteArticleProps {
   issue: GazetteIssue;
   season: string;
-} /**
- * Gazette article.
- * @param - { issue, season }.
- */
+}
 
 /**
  * Gazette article.
@@ -39,7 +36,7 @@ interface GazetteArticleProps {
  */
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {
   const state = useGameStore(
-    useShallow((s: any) => ({
+    useShallow((s) => ({
       roster: s.roster,
       graveyard: s.graveyard,
       retired: s.retired,
@@ -91,7 +88,13 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                 Season {season}
               </span>
             </div>
-            <h2><LinkifiedText text={issue.mainHeadline.replace('_', ' ')} names={warriorNames} stableNames={stableNames} /></h2>
+            <h2>
+              <LinkifiedText
+                text={issue.mainHeadline.replace('_', ' ')}
+                names={warriorNames}
+                stableNames={stableNames}
+              />
+            </h2>
           </div>
 
           <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity">
@@ -121,7 +124,11 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
               </span>
             </div>
 
-            <MarkdownReader content={issue.mainStory} warriorNames={warriorNames} stableNames={stableNames} />
+            <MarkdownReader
+              content={issue.mainStory}
+              warriorNames={warriorNames}
+              stableNames={stableNames}
+            />
 
             <div className="pt-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -178,7 +185,11 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                     </span>
                   </div>
                   <div className="text-[11px] md:text-xs text-muted-foreground group-hover/short:text-foreground transition-colors leading-relaxed font-medium">
-                    <MarkdownReader content={story} warriorNames={warriorNames} stableNames={stableNames} />
+                    <MarkdownReader
+                      content={story}
+                      warriorNames={warriorNames}
+                      stableNames={stableNames}
+                    />
                   </div>
                 </div>
               ))}

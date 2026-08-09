@@ -84,20 +84,14 @@ function makeState(): GameState {
 describe('impactMergeOrder', () => {
   it('two impacts with treasuryDelta should accumulate (not replace)', () => {
     const state = makeState();
-    const impacts: StateImpact[] = [
-      { treasuryDelta: 100 },
-      { treasuryDelta: 200 },
-    ];
+    const impacts: StateImpact[] = [{ treasuryDelta: 100 }, { treasuryDelta: 200 }];
     resolveImpacts(state, impacts);
     expect(state.treasury).toBe(1300); // 1000 + 100 + 200
   });
 
   it('two impacts with season should use last-wins (replace)', () => {
     const state = makeState();
-    const impacts: StateImpact[] = [
-      { season: 'Summer' as any },
-      { season: 'Winter' as any },
-    ];
+    const impacts: StateImpact[] = [{ season: 'Summer' as any }, { season: 'Winter' as any }];
     resolveImpacts(state, impacts);
     expect(state.season).toBe('Winter');
   });
@@ -110,10 +104,7 @@ describe('impactMergeOrder', () => {
     map2.set('w1' as WarriorId, { age: 25 });
     map2.set('w2' as WarriorId, { fame: 5 });
 
-    const impacts: StateImpact[] = [
-      { rosterUpdates: map1 },
-      { rosterUpdates: map2 },
-    ];
+    const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
     resolveImpacts(state, impacts);
 
     const w1 = state.roster.find((w) => w.id === 'w1')!;
@@ -136,18 +127,12 @@ describe('impactMergeOrder', () => {
   });
 
   it('mergeImpacts with treasuryDelta should accumulate', () => {
-    const merged = mergeImpacts([
-      { treasuryDelta: 100 },
-      { treasuryDelta: 250 },
-    ]);
+    const merged = mergeImpacts([{ treasuryDelta: 100 }, { treasuryDelta: 250 }]);
     expect(merged.treasuryDelta).toBe(350);
   });
 
   it('mergeImpacts with replace strategy uses last value', () => {
-    const merged = mergeImpacts([
-      { season: 'Spring' as any },
-      { season: 'Fall' as any },
-    ]);
+    const merged = mergeImpacts([{ season: 'Spring' as any }, { season: 'Fall' as any }]);
     expect(merged.season).toBe('Fall');
   });
 

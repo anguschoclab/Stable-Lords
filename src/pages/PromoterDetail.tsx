@@ -171,7 +171,11 @@ function calculateStats(
 export default function PromoterDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const { promoters, boutOffers, absoluteWeek } = useGameStore(
-    useShallow((s) => ({ promoters: s.promoters, boutOffers: s.boutOffers, absoluteWeek: s.absoluteWeek }))
+    useShallow((s) => ({
+      promoters: s.promoters,
+      boutOffers: s.boutOffers,
+      absoluteWeek: s.absoluteWeek,
+    }))
   );
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -432,7 +436,8 @@ export default function PromoterDetail() {
                         </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Week {displayWeek(offer.boutWeek)} • Expires Week {displayWeek(offer.expirationWeek || 0)}
+                        Week {displayWeek(offer.boutWeek)} • Expires Week{' '}
+                        {displayWeek(offer.expirationWeek || 0)}
                       </div>
                     </div>
                     <div className="text-right space-y-1">

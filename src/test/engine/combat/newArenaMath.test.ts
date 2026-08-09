@@ -16,6 +16,6 @@ describe('New Arenas and Modifiers', () => {
     expect(modLungeRain.damageMult).toBe(1 - 0.15); // Testing our updated RAIN_LUNGE_PENALTY
 
     const modRiposteDust = getStyleWeatherModifier(FightingStyle.ParryRiposte, 'Sandstorm', []);
-    expect(modRiposteDust.damageMult).toBe(1 - 0.10); // Testing our updated DUST_RIPOSTE_PENALTY
+    expect(modRiposteDust.damageMult).toBe(1 - 0.1); // Testing our updated DUST_RIPOSTE_PENALTY
   });
 });

@@ -33,7 +33,9 @@ describe('narrative content validation', () => {
     for (const [key, entry] of Object.entries(events)) {
       const newsletter = (entry as any).newsletter as string[];
       const uniqueTemplates = new Set(newsletter);
-      expect(uniqueTemplates.size, `Event "${key}" has duplicate newsletter templates`).toBe(newsletter.length);
+      expect(uniqueTemplates.size, `Event "${key}" has duplicate newsletter templates`).toBe(
+        newsletter.length
+      );
     }
   });
 });

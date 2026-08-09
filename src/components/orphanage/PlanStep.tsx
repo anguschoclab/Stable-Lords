@@ -66,7 +66,10 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Offensive Effort Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label htmlFor="plan-step-oe" className="text-[10px] font-black uppercase tracking-widest text-arena-gold cursor-pointer">
+            <label
+              htmlFor="plan-step-oe"
+              className="text-[10px] font-black uppercase tracking-widest text-arena-gold cursor-pointer"
+            >
               Offensive Effort
             </label>
             <span className="text-sm font-mono font-bold text-arena-gold">{plan.OE}</span>
@@ -88,7 +91,10 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Activity Level Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label htmlFor="plan-step-al" className="text-[10px] font-black uppercase tracking-widest text-arena-fame cursor-pointer">
+            <label
+              htmlFor="plan-step-al"
+              className="text-[10px] font-black uppercase tracking-widest text-arena-fame cursor-pointer"
+            >
               Activity Level
             </label>
             <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
@@ -110,7 +116,10 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         {/* Kill Desire Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label htmlFor="plan-step-kd" className="text-[10px] font-black uppercase tracking-widest text-destructive cursor-pointer">
+            <label
+              htmlFor="plan-step-kd"
+              className="text-[10px] font-black uppercase tracking-widest text-destructive cursor-pointer"
+            >
               Kill Desire
             </label>
             <span className="text-sm font-mono font-bold text-destructive">

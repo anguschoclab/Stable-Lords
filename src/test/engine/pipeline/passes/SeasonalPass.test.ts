@@ -1056,7 +1056,8 @@ describe('runSeasonalPass', () => {
       callCount++;
       if (callCount === 1)
         return (
-          (Object.keys((narrativeContent as any).offseason_events).indexOf('secret_fight_club') + 0.5) /
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('secret_fight_club') +
+            0.5) /
           eventCount
         );
       if (callCount === 2) return 0.0;
@@ -1069,7 +1070,9 @@ describe('runSeasonalPass', () => {
     const warriorId = 'w-club' as WarriorId;
     const state: Partial<GameState> = {
       year: 1,
-      roster: [{ id: warriorId, name: 'Fighter', status: 'Active', xp: 10, fame: 5, injuries: [] } as any],
+      roster: [
+        { id: warriorId, name: 'Fighter', status: 'Active', xp: 10, fame: 5, injuries: [] } as any,
+      ],
       newsletter: [],
     };
     const impact = runSeasonalPass(state as GameState, 1, rng);
@@ -1088,7 +1091,8 @@ describe('runSeasonalPass', () => {
       callCount++;
       if (callCount === 1)
         return (
-          (Object.keys((narrativeContent as any).offseason_events).indexOf('temporal_anomaly') + 0.5) /
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('temporal_anomaly') +
+            0.5) /
           eventCount
         );
       return originalNext();

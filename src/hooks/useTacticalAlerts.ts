@@ -6,7 +6,7 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
-import { isActive, isFightReady} from '@/engine/warriorStatus'
+import { isActive, isFightReady } from '@/engine/warriorStatus';
 import { Dumbbell, ScrollText, Swords, Trophy } from 'lucide-react';
 
 /**

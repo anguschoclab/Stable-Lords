@@ -25,8 +25,9 @@ describe('coverage gap report', () => {
       .filter((f) => !f.endsWith('.d.ts') && !f.endsWith('.test.ts'))
       .map((f) => path.relative(engineDir, f).replace(/\.ts$/, ''));
 
-    const testFiles = readDirRecursive(testDir, '.ts')
-      .map((f) => path.relative(testDir, f).replace(/\.test\.ts$/, ''));
+    const testFiles = readDirRecursive(testDir, '.ts').map((f) =>
+      path.relative(testDir, f).replace(/\.test\.ts$/, '')
+    );
 
     // Find engine modules without any matching test file
     const untested: string[] = [];

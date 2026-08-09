@@ -20,7 +20,7 @@ export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Wa
     const entry = entries[0];
     const id = entry[0];
     const update = entry[1];
-    const index = state.roster.findIndex(w => w.id === id);
+    const index = state.roster.findIndex((w) => w.id === id);
     if (index !== -1) {
       const nextRoster = [...state.roster];
       nextRoster[index] = { ...nextRoster[index], ...update } as Warrior;
@@ -29,7 +29,7 @@ export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Wa
   } else {
     state.roster = state.roster.map((w) => {
       const update = value.get(w.id);
-      return update ? { ...w, ...update } as Warrior : w;
+      return update ? ({ ...w, ...update } as Warrior) : w;
     });
   }
 };

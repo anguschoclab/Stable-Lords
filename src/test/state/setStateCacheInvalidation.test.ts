@@ -67,6 +67,8 @@ describe('NF4: setState stale cache bug', () => {
     });
 
     const result2 = reconstructGameState(useGameStore.getState());
-    expect(result2.roster.length, 'roster should reflect setState mutation').toBe(initialRosterLen + 1);
+    expect(result2.roster.length, 'roster should reflect setState mutation').toBe(
+      initialRosterLen + 1
+    );
   });
 });

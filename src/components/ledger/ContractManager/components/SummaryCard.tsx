@@ -31,7 +31,12 @@ export function SummaryCard({
         borderClass
       )}
     >
-      <div className={cn('p-4 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none', iconClass)}>
+      <div
+        className={cn(
+          'p-4 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none',
+          iconClass
+        )}
+      >
         <Icon className="h-6 w-6" />
       </div>
       <div>

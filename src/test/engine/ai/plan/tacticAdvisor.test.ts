@@ -4,10 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import {
-  getBestOffensiveTactic,
-  getBestDefensiveTactic,
-} from '@/engine/ai/plan/tacticAdvisor';
+import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 
 describe('tacticAdvisor — getBestOffensiveTactic', () => {
   it('returns Slash for AimedBlow (WS for Slash)', () => {

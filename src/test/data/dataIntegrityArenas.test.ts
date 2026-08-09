@@ -41,7 +41,9 @@ describe('dataIntegrityArenas', () => {
         for (const key of Object.keys(sm)) {
           const val = sm[key];
           if (typeof val === 'number') {
-            expect(Number.isFinite(val), `Arena ${arena.id} surfaceMod.${key} is not finite`).toBe(true);
+            expect(Number.isFinite(val), `Arena ${arena.id} surfaceMod.${key} is not finite`).toBe(
+              true
+            );
           }
         }
       }

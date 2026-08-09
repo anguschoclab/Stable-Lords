@@ -47,11 +47,7 @@ function makeTrainer(overrides?: Partial<Trainer>): Trainer {
   };
 }
 
-function makeRNG(
-  nextVal: number,
-  pickIdx?: number,
-  rollVal?: number
-): IRNGService {
+function makeRNG(nextVal: number, pickIdx?: number, rollVal?: number): IRNGService {
   return {
     next: () => nextVal,
     pick: <T>(arr: T[]): T => {
@@ -231,10 +227,7 @@ describe('assessBurnRisks', () => {
 
   describe('warning stacking', () => {
     it('at ceiling + age > 30 → 2 warnings for same attr', () => {
-      const w = makeWarrior(
-        { ...defaultAttrs, ST: 18 },
-        { potential: defaultPot, age: 35 }
-      );
+      const w = makeWarrior({ ...defaultAttrs, ST: 18 }, { potential: defaultPot, age: 35 });
       const warnings = assessBurnRisks(w, []);
       const stWarnings = warnings.filter((x) => x.attribute === 'ST');
       const ceiling = stWarnings.find((x) => x.reason.includes('At potential ceiling'));
@@ -246,10 +239,7 @@ describe('assessBurnRisks', () => {
     });
 
     it('near ceiling + age > 30 → 3 warnings for same attr', () => {
-      const w = makeWarrior(
-        { ...defaultAttrs, ST: 17 },
-        { potential: defaultPot, age: 35 }
-      );
+      const w = makeWarrior({ ...defaultAttrs, ST: 17 }, { potential: defaultPot, age: 35 });
       const warnings = assessBurnRisks(w, []);
       const stWarnings = warnings.filter((x) => x.attribute === 'ST');
       const ceiling = stWarnings.find((x) => x.reason.includes('1 point from ceiling'));
@@ -261,10 +251,7 @@ describe('assessBurnRisks', () => {
     });
 
     it('at ceiling + low chance + age > 30 → 3 warnings for same attr', () => {
-      const w = makeWarrior(
-        { ...defaultAttrs, ST: 18 },
-        { potential: defaultPot, age: 35 }
-      );
+      const w = makeWarrior({ ...defaultAttrs, ST: 18 }, { potential: defaultPot, age: 35 });
       const warnings = assessBurnRisks(w, []);
       const stWarnings = warnings.filter((x) => x.attribute === 'ST');
       const ceiling = stWarnings.find((x) => x.reason.includes('At potential ceiling'));
@@ -336,10 +323,7 @@ describe('computeTrainability', () => {
 
   it('SZ at ceiling does not affect score (always skipped)', () => {
     const w1 = makeWarrior(defaultAttrs, { potential: defaultPot });
-    const w2 = makeWarrior(
-      { ...defaultAttrs, SZ: 15 },
-      { potential: { ...defaultPot, SZ: 15 } }
-    );
+    const w2 = makeWarrior({ ...defaultAttrs, SZ: 15 }, { potential: { ...defaultPot, SZ: 15 } });
     expect(computeTrainability(w1, [])).toBe(computeTrainability(w2, []));
   });
 

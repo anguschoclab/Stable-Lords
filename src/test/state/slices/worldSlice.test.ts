@@ -69,7 +69,19 @@ describe('WorldSlice', () => {
 
   it('should update bout offer status', () => {
     act(() => {
-      useTestStore.setState({ boutOffers: { 'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any } });
+      useTestStore.setState({
+        boutOffers: {
+          o1: {
+            id: 'o1',
+            status: 'Proposed',
+            week: 1,
+            expirationWeek: 2,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+        },
+      });
       useTestStore.getState().updateBoutOfferStatus('o1' as any, 'Accepted');
     });
     expect(useTestStore.getState().boutOffers['o1']?.status).toBe('Accepted');
@@ -91,10 +103,34 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         absoluteWeek: 5,
         boutOffers: {
-          'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
-          'o2': { id: 'o2', status: 'Proposed', week: 4, expirationWeek: 6, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
-          'o3': { id: 'o3', status: 'Accepted', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
-        }
+          o1: {
+            id: 'o1',
+            status: 'Proposed',
+            week: 1,
+            expirationWeek: 2,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+          o2: {
+            id: 'o2',
+            status: 'Proposed',
+            week: 4,
+            expirationWeek: 6,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+          o3: {
+            id: 'o3',
+            status: 'Accepted',
+            week: 1,
+            expirationWeek: 2,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+        },
       });
       useTestStore.getState().clearExpiredOffers();
     });
@@ -110,8 +146,16 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         absoluteWeek: 1,
         boutOffers: {
-          'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
-        }
+          o1: {
+            id: 'o1',
+            status: 'Proposed',
+            week: 1,
+            expirationWeek: 2,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+        },
       });
     });
     const stateBefore = useTestStore.getState();
@@ -124,7 +168,9 @@ describe('WorldSlice', () => {
   it('should update player warrior status', () => {
     act(() => {
       useTestStore.setState({
-        roster: [{ id: 'w1', fame: 10, popularity: 10, career: { wins: 1, losses: 1, kills: 1 } } as any]
+        roster: [
+          { id: 'w1', fame: 10, popularity: 10, career: { wins: 1, losses: 1, kills: 1 } } as any,
+        ],
       });
       useTestStore.getState().updateWarriorStatus('w1' as any, true, true, 5, 5);
     });
@@ -140,7 +186,7 @@ describe('WorldSlice', () => {
   it('should update player warrior status (loss, no kill)', () => {
     act(() => {
       useTestStore.setState({
-        roster: [{ id: 'w1' } as any]
+        roster: [{ id: 'w1' } as any],
       });
       useTestStore.getState().updateWarriorStatus('w1' as any, false, false, -5, -5);
     });
@@ -164,7 +210,19 @@ describe('WorldSlice', () => {
   it('should update rival warrior status', () => {
     act(() => {
       useTestStore.setState({
-        rivals: [{ owner: { id: 'r1' }, roster: [{ id: 'rw1', fame: 10, popularity: 10, career: { wins: 1, losses: 1, kills: 1 } } as any] } as any]
+        rivals: [
+          {
+            owner: { id: 'r1' },
+            roster: [
+              {
+                id: 'rw1',
+                fame: 10,
+                popularity: 10,
+                career: { wins: 1, losses: 1, kills: 1 },
+              } as any,
+            ],
+          } as any,
+        ],
       });
       useTestStore.getState().updateWarriorStatus('rw1' as any, true, true, 5, 5, 'r1' as any);
     });
@@ -217,7 +275,7 @@ describe('WorldSlice', () => {
     const oldPromoter = { id: 'p1', name: 'Old' } as any;
     const newPromoter = { id: 'p2', name: 'New' } as any;
     act(() => {
-      useTestStore.setState({ promoters: { 'p1': oldPromoter } });
+      useTestStore.setState({ promoters: { p1: oldPromoter } });
       useTestStore.getState().replacePromoter('p1' as any, newPromoter);
     });
     const promoters = useTestStore.getState().promoters;
@@ -227,7 +285,9 @@ describe('WorldSlice', () => {
 
   it('should call updatePromoterHistory', () => {
     act(() => {
-      useTestStore.setState({ promoters: { 'p1': { id: 'p1', history: { totalPursePaid: 0, notableBouts: [] } } as any } });
+      useTestStore.setState({
+        promoters: { p1: { id: 'p1', history: { totalPursePaid: 0, notableBouts: [] } } as any },
+      });
       useTestStore.getState().updatePromoterHistory('p1' as any, 100, 'f1' as any);
     });
     expect(useTestStore.getState().promoters['p1']?.history.totalPursePaid).toBe(100);
@@ -239,8 +299,16 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         absoluteWeek: 1,
         boutOffers: {
-          'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 5, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2' } as any,
-        }
+          o1: {
+            id: 'o1',
+            status: 'Proposed',
+            week: 1,
+            expirationWeek: 5,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+        },
       });
       useTestStore.getState().clearExpiredOffers();
     });
@@ -257,7 +325,21 @@ describe('WorldSlice', () => {
 
   it('should call respondToBoutOffer', () => {
     act(() => {
-      useTestStore.setState({ boutOffers: { 'o1': { id: 'o1', status: 'Proposed', week: 1, expirationWeek: 2, purse: 100, rivalStableId: 'r1', rivalWarriorId: 'w2', responses: {}, warriorIds: ['w1'] } as any } });
+      useTestStore.setState({
+        boutOffers: {
+          o1: {
+            id: 'o1',
+            status: 'Proposed',
+            week: 1,
+            expirationWeek: 2,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+            responses: {},
+            warriorIds: ['w1'],
+          } as any,
+        },
+      });
       useTestStore.getState().respondToBoutOffer('o1' as any, 'w1' as any, 'Accepted');
     });
     expect(useTestStore.getState().boutOffers['o1']?.responses['w1']).toBe('Accepted');
@@ -267,7 +349,7 @@ describe('WorldSlice', () => {
   it('should update player warrior status safely when fields are missing', () => {
     act(() => {
       useTestStore.setState({
-        roster: [{ id: 'w1' } as any]
+        roster: [{ id: 'w1' } as any],
       });
       useTestStore.getState().updateWarriorStatus('w1' as any, true, true, 5, 5);
     });
@@ -283,7 +365,7 @@ describe('WorldSlice', () => {
   it('should update rival warrior status safely when fields are missing', () => {
     act(() => {
       useTestStore.setState({
-        rivals: [{ owner: { id: 'r1' }, roster: [{ id: 'rw1' } as any] } as any]
+        rivals: [{ owner: { id: 'r1' }, roster: [{ id: 'rw1' } as any] } as any],
       });
       useTestStore.getState().updateWarriorStatus('rw1' as any, false, false, -5, -5, 'r1' as any);
     });
@@ -319,5 +401,4 @@ describe('WorldSlice', () => {
     });
     expect(useTestStore.getState().arenaHistory).toHaveLength(22);
   });
-
 });

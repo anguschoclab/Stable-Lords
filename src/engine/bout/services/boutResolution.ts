@@ -193,9 +193,7 @@ function collectBoutImpacts(
       const rivalRosterUpdates = new Map();
       rivalRosterUpdates.set(rival.id, {
         roster: rival.roster.map((w) =>
-          w.id === validCW.id || w.id === validCO.id
-            ? { ...w, lastBoutWeek: ctx.week }
-            : w
+          w.id === validCW.id || w.id === validCO.id ? { ...w, lastBoutWeek: ctx.week } : w
         ),
       });
       impacts.push({ rivalsUpdates: rivalRosterUpdates });

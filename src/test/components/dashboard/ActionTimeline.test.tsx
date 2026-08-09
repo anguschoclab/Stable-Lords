@@ -15,7 +15,11 @@ vi.mock('zustand/react/shallow', () => ({
 
 vi.mock('@/components/EntityLink', () => ({
   WarriorLink: ({ name }: { name: string }) => (
-    <span data-testid="warrior-link" data-name={name} aria-label={`Open details for warrior ${name}`}>
+    <span
+      data-testid="warrior-link"
+      data-name={name}
+      aria-label={`Open details for warrior ${name}`}
+    >
       {name}
     </span>
   ),
@@ -42,9 +46,7 @@ describe('ActionTimeline', () => {
   it('warrior names in event.description render as WarriorLink', () => {
     render(
       <ActionTimeline
-        events={[
-          { week: 1, description: 'Signed warrior Brutus for 100g', riskTier: 'Low' },
-        ]}
+        events={[{ week: 1, description: 'Signed warrior Brutus for 100g', riskTier: 'Low' }]}
       />
     );
     expect(screen.getAllByTestId('warrior-link').length).toBeGreaterThan(0);
@@ -53,9 +55,7 @@ describe('ActionTimeline', () => {
   it('stable names in event.description render as StableLink', () => {
     render(
       <ActionTimeline
-        events={[
-          { week: 1, description: "Dragon's Hearth raided rivals", riskTier: 'High' },
-        ]}
+        events={[{ week: 1, description: "Dragon's Hearth raided rivals", riskTier: 'High' }]}
       />
     );
     expect(screen.getAllByTestId('stable-link').length).toBeGreaterThan(0);

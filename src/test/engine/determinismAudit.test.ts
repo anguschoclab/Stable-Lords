@@ -42,7 +42,8 @@ describe('determinism audit', () => {
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf-8');
       // Check if the test uses any form of seeded RNG or mocks or fixtures
-      const hasSeed = content.includes('SeededRNGService') ||
+      const hasSeed =
+        content.includes('SeededRNGService') ||
         content.includes('hashStr') ||
         content.includes('seed') ||
         content.includes('mock') ||

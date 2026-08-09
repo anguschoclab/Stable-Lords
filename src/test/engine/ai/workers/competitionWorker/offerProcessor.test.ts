@@ -10,7 +10,11 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
 
-function makeWarrior(id: string, name: string, style: FightingStyle = FightingStyle.StrikingAttack): Warrior {
+function makeWarrior(
+  id: string,
+  name: string,
+  style: FightingStyle = FightingStyle.StrikingAttack
+): Warrior {
   return {
     id: id as WarriorId,
     name,
@@ -50,11 +54,7 @@ function makeRival(id: string, roster: Warrior[]): RivalStableData {
   } as RivalStableData;
 }
 
-function makeOffer(
-  id: string,
-  warriorIds: string[],
-  opts: Partial<BoutOffer> = {}
-): BoutOffer {
+function makeOffer(id: string, warriorIds: string[], opts: Partial<BoutOffer> = {}): BoutOffer {
   return {
     id: id as BoutOfferId,
     promoterId: 'prom-1' as any,

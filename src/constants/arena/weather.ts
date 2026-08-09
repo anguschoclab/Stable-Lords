@@ -45,7 +45,8 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-primary',
     bgClass: 'bg-primary/10',
     borderClass: 'border-primary/20',
-    description: 'Iridescent rain falls, strangely energizing the fighters. 15% more stamina drain in combat.',
+    description:
+      'Iridescent rain falls, strangely energizing the fighters. 15% more stamina drain in combat.',
   },
   'Eldritch Eclipse': {
     icon: Moon,
@@ -421,7 +422,8 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-arena-fame',
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
-    description: 'A fracture in time accelerates combat drastically. +10 Initiative, +5 Riposte, 200% Stamina drain.',
+    description:
+      'A fracture in time accelerates combat drastically. +10 Initiative, +5 Riposte, 200% Stamina drain.',
   },
   'Stardust Gale': {
     icon: Sparkles,
@@ -436,7 +438,8 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     bgClass: 'bg-purple-900/40',
     borderClass: 'border-purple-600',
     extraClass: 'animate-pulse drop-shadow-md',
-    description: 'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
+    description:
+      'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
   },
 };
 
@@ -458,7 +461,7 @@ export const WEATHER_PENALTIES = {
   BLIZZARD_STRIKING_INITIATIVE: -2,
   MANA_SURGE_AIMED_DAMAGE: 1.15,
   RAIN_LUNGE_PENALTY: 0.15,
-  DUST_RIPOSTE_PENALTY: 0.10,
+  DUST_RIPOSTE_PENALTY: 0.1,
   MIST_BASHING_DAMAGE: 0.9,
   GALE_LUNGE_INITIATIVE: -3,
   RAIN_SLASHING_PENALTY: -0.1,

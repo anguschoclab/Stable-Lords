@@ -35,7 +35,12 @@ export function runNarrativePass(
   const { grudges, gazetteItems } = processOwnerGrudges(state, state.ownerGrudges || []);
 
   // 3. Rivalry Escalation
-  const rivalries = updateRivalriesFromBouts(state.rivalries || [], weekFights, state.absoluteWeek, rng);
+  const rivalries = updateRivalriesFromBouts(
+    state.rivalries || [],
+    weekFights,
+    state.absoluteWeek,
+    rng
+  );
 
   const impact: StateImpact = {
     gazettes,

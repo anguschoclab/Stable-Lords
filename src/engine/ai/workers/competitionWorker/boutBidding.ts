@@ -29,14 +29,16 @@ export function generateBoutBids(
 
   // Pre-calculate vendetta target rival once outside the loop to prevent O(W * R) lookups
   const targetStableId = rival.strategy?.targetStableId;
-  const targetRival = intent === 'VENDETTA' && targetStableId
-    ? rivals.find(r => r.id === targetStableId)
-    : undefined;
+  const targetRival =
+    intent === 'VENDETTA' && targetStableId
+      ? rivals.find((r) => r.id === targetStableId)
+      : undefined;
 
   // Pre-calculate active opponents for non-vendetta intents
-  const nonVendettaOpponents = intent !== 'VENDETTA' ? rivals
-    .filter(r => r.id !== rival.id)
-    .flatMap(r => r.roster.filter(w => isActive(w))) : [];
+  const nonVendettaOpponents =
+    intent !== 'VENDETTA'
+      ? rivals.filter((r) => r.id !== rival.id).flatMap((r) => r.roster.filter((w) => isActive(w)))
+      : [];
 
   // Build a mock state for matchup scoring
   const mockState: GameState = {

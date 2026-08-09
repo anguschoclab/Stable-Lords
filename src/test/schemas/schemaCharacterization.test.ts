@@ -27,9 +27,16 @@ describe('schema characterization', () => {
   describe('enum schemas accept valid values', () => {
     it('FightingStyleSchema accepts all fighting styles', () => {
       const styles = [
-        'AIMED BLOW', 'BASHING ATTACK', 'LUNGING ATTACK', 'PARRY-LUNGE',
-        'PARRY-RIPOSTE', 'PARRY-STRIKE', 'SLASHING ATTACK', 'STRIKING ATTACK',
-        'TOTAL PARRY', 'WALL OF STEEL',
+        'AIMED BLOW',
+        'BASHING ATTACK',
+        'LUNGING ATTACK',
+        'PARRY-LUNGE',
+        'PARRY-RIPOSTE',
+        'PARRY-STRIKE',
+        'SLASHING ATTACK',
+        'STRIKING ATTACK',
+        'TOTAL PARRY',
+        'WALL OF STEEL',
       ];
       for (const s of styles) {
         expect(FightingStyleSchema.safeParse(s).success, `${s} should be valid`).toBe(true);
@@ -89,7 +96,24 @@ describe('schema characterization', () => {
     });
 
     it('CombatEventTypeSchema accepts valid event types', () => {
-      const types = ['INITIATIVE', 'ATTACK', 'DEFENSE', 'HIT', 'CONTEST', 'ENDURANCE', 'FATIGUE', 'STATE_CHANGE', 'BOUT_END', 'PASSIVE', 'INSIGHT', 'MOMENTUM_SHIFT', 'RANGE_SHIFT', 'FEINT_SUCCESS', 'FEINT_FAIL', 'ZONE_SHIFT'];
+      const types = [
+        'INITIATIVE',
+        'ATTACK',
+        'DEFENSE',
+        'HIT',
+        'CONTEST',
+        'ENDURANCE',
+        'FATIGUE',
+        'STATE_CHANGE',
+        'BOUT_END',
+        'PASSIVE',
+        'INSIGHT',
+        'MOMENTUM_SHIFT',
+        'RANGE_SHIFT',
+        'FEINT_SUCCESS',
+        'FEINT_FAIL',
+        'ZONE_SHIFT',
+      ];
       for (const t of types) {
         expect(CombatEventTypeSchema.safeParse(t).success, `${t} should be valid`).toBe(true);
       }
@@ -102,13 +126,28 @@ describe('schema characterization', () => {
     });
 
     it('AIIntentSchema accepts valid intents', () => {
-      for (const i of ['EXPANSION', 'CONSOLIDATION', 'VENDETTA', 'RECOVERY', 'SURVIVAL', 'WEALTH_ACCUMULATION', 'AGGRESSIVE_EXPANSION', 'ROSTER_DIVERSITY']) {
+      for (const i of [
+        'EXPANSION',
+        'CONSOLIDATION',
+        'VENDETTA',
+        'RECOVERY',
+        'SURVIVAL',
+        'WEALTH_ACCUMULATION',
+        'AGGRESSIVE_EXPANSION',
+        'ROSTER_DIVERSITY',
+      ]) {
         expect(AIIntentSchema.safeParse(i).success, `${i} should be valid`).toBe(true);
       }
     });
 
     it('AnnualAwardTypeSchema accepts valid award types', () => {
-      for (const a of ['WARRIOR_OF_YEAR', 'KILLER_OF_YEAR', 'STABLE_OF_YEAR', 'CLASS_MVP', 'TOURNAMENT_RANK']) {
+      for (const a of [
+        'WARRIOR_OF_YEAR',
+        'KILLER_OF_YEAR',
+        'STABLE_OF_YEAR',
+        'CLASS_MVP',
+        'TOURNAMENT_RANK',
+      ]) {
         expect(AnnualAwardTypeSchema.safeParse(a).success, `${a} should be valid`).toBe(true);
       }
     });
@@ -121,13 +160,23 @@ describe('schema characterization', () => {
     });
 
     it('AttributesSchema rejects out-of-range values', () => {
-      expect(AttributesSchema.safeParse({ ST: 2, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 }).success).toBe(false);
-      expect(AttributesSchema.safeParse({ ST: 26, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 }).success).toBe(false);
+      expect(
+        AttributesSchema.safeParse({ ST: 2, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 })
+          .success
+      ).toBe(false);
+      expect(
+        AttributesSchema.safeParse({ ST: 26, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 })
+          .success
+      ).toBe(false);
     });
 
     it('BaseSkillsSchema accepts non-negative values', () => {
-      expect(BaseSkillsSchema.safeParse({ ATT: 0, PAR: 10, DEF: 5, INI: 3, RIP: 0, DEC: 2 }).success).toBe(true);
-      expect(BaseSkillsSchema.safeParse({ ATT: -1, PAR: 10, DEF: 5, INI: 3, RIP: 0, DEC: 2 }).success).toBe(false);
+      expect(
+        BaseSkillsSchema.safeParse({ ATT: 0, PAR: 10, DEF: 5, INI: 3, RIP: 0, DEC: 2 }).success
+      ).toBe(true);
+      expect(
+        BaseSkillsSchema.safeParse({ ATT: -1, PAR: 10, DEF: 5, INI: 3, RIP: 0, DEC: 2 }).success
+      ).toBe(false);
     });
 
     it('NewsletterItemSchema accepts valid item', () => {
@@ -137,38 +186,62 @@ describe('schema characterization', () => {
 
     it('InjuryDataSchema accepts valid injury', () => {
       const injury = {
-        id: 'inj-1', name: 'Broken Arm', description: 'Ouch',
-        severity: 'Severe', weeksRemaining: 3, penalties: { ATT: -2 },
+        id: 'inj-1',
+        name: 'Broken Arm',
+        description: 'Ouch',
+        severity: 'Severe',
+        weeksRemaining: 3,
+        penalties: { ATT: -2 },
       };
       expect(InjuryDataSchema.safeParse(injury).success).toBe(true);
     });
 
     it('InsightTokenSchema accepts valid token', () => {
       const token = {
-        id: 'tok-1', type: 'Style', warriorId: 'w-1', warriorName: 'Alice',
-        detail: 'Found a style insight', discoveredWeek: 5,
+        id: 'tok-1',
+        type: 'Style',
+        warriorId: 'w-1',
+        warriorName: 'Alice',
+        detail: 'Found a style insight',
+        discoveredWeek: 5,
       };
       expect(InsightTokenSchema.safeParse(token).success).toBe(true);
     });
 
     it('InsightTokenSchema rejects invalid type', () => {
       const token = {
-        id: 'tok-1', type: 'Invalid', warriorId: 'w-1', warriorName: 'Alice',
-        detail: 'Bad', discoveredWeek: 5,
+        id: 'tok-1',
+        type: 'Invalid',
+        warriorId: 'w-1',
+        warriorName: 'Alice',
+        detail: 'Bad',
+        discoveredWeek: 5,
       };
       expect(InsightTokenSchema.safeParse(token).success).toBe(false);
     });
 
     it('TrainerSchema accepts valid trainer', () => {
       const trainer = {
-        id: 't-1', name: 'Bob', tier: 'Master', focus: 'Defense',
-        fame: 50, age: 45, contractWeeksLeft: 12,
+        id: 't-1',
+        name: 'Bob',
+        tier: 'Master',
+        focus: 'Defense',
+        fame: 50,
+        age: 45,
+        contractWeeksLeft: 12,
       };
       expect(TrainerSchema.safeParse(trainer).success).toBe(true);
     });
 
     it('SaveSlotMetaSchema accepts valid meta', () => {
-      const meta = { id: 'slot-1', name: 'Save 1', week: 10, year: 2, timestamp: '2024-01-01T00:00:00Z', version: '1.0' };
+      const meta = {
+        id: 'slot-1',
+        name: 'Save 1',
+        week: 10,
+        year: 2,
+        timestamp: '2024-01-01T00:00:00Z',
+        version: '1.0',
+      };
       expect(SaveSlotMetaSchema.safeParse(meta).success).toBe(true);
     });
   });
@@ -180,7 +253,10 @@ describe('schema characterization', () => {
       // This is a pre-existing mismatch — document it as current behavior.
       const { absoluteWeek, ...rest } = state;
       const result = GameStateSchema.safeParse(rest);
-      expect(result.success, result.success ? '' : JSON.stringify(result.error.issues, null, 2)).toBe(true);
+      expect(
+        result.success,
+        result.success ? '' : JSON.stringify(result.error.issues, null, 2)
+      ).toBe(true);
     });
 
     it('createFreshState includes absoluteWeek (pre-existing schema mismatch documented)', () => {

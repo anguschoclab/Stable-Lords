@@ -103,12 +103,8 @@ export function narrateKnockdown(rng: IRNGService, name: string, speed?: number)
     tier = speed >= 19 ? 'fast' : 'slow';
   }
 
-  const pool = tier
-    ? peekArchive(['pbp', 'knockdown', 'pacing', tier])
-    : null;
-  const template = pool
-    ? rng.pick(pool)
-    : getFromArchive(rng, ['pbp', 'knockdown', 'fall']);
+  const pool = tier ? peekArchive(['pbp', 'knockdown', 'pacing', tier]) : null;
+  const template = pool ? rng.pick(pool) : getFromArchive(rng, ['pbp', 'knockdown', 'fall']);
   return interpolateTemplate(template, { name });
 }
 
@@ -128,12 +124,8 @@ export function narrateRecovery(
     tier = speed >= 19 ? 'recovery_fast' : 'recovery_slow';
   }
 
-  const pool = tier
-    ? peekArchive(['pbp', 'knockdown', 'pacing', tier])
-    : null;
-  const template = pool
-    ? rng.pick(pool)
-    : getFromArchive(rng, ['pbp', 'knockdown', 'recovery']);
+  const pool = tier ? peekArchive(['pbp', 'knockdown', 'pacing', tier]) : null;
+  const template = pool ? rng.pick(pool) : getFromArchive(rng, ['pbp', 'knockdown', 'recovery']);
   return interpolateTemplate(template, { name, attacker: opponentName });
 }
 

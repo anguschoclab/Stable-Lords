@@ -11,6 +11,7 @@
 **Scope:** Engine + one UI surface. **Non-goals:** changing how player trait-training assignments work (System 3 flow untouched), rival AI trainer synthesis (the AI's synthetic coach has no `teachableTraits` and behaves exactly as before), combat math (`balance.test.ts` stays green).
 
 **Grounded facts (do not re-derive):**
+
 - `runWarriorPass` legacy block: retirees with `w.fame > 500` get a `rng.next() < 0.1` chance to `convertRetiredToTrainer(w)` and are pushed into `state.hiringPool` (`WarriorPass.ts:25–41`).
 - `convertRetiredToTrainer` lives in `src/engine/trainers.ts` (sets `retiredFromWarrior: warrior.name` at ~line 195). Read the whole function before editing.
 - `Trainer` interface (`src/types/shared.types.ts:655`): `id, name, tier, focus, fame, age, contractWeeksLeft, retiredFromWarrior?, retiredFromStyle?, styleBonusStyle?, legacyWins?, legacyKills?, specialty?`.
@@ -36,6 +37,7 @@
 ## Task 1: Conversion carries the champion's traits (TDD)
 
 **Files:**
+
 - Modify: `src/types/shared.types.ts`
 - Modify: `src/engine/trainers.ts`
 - Create: `src/test/engine/legacyTrainer.test.ts`
@@ -61,7 +63,11 @@ import type { Warrior } from '@/types/warrior.types';
 
 const retiree = (traits: string[]): Warrior =>
   ({
-    id: 'w9', name: 'Old Iron', fame: 600, age: 34, status: 'Retired',
+    id: 'w9',
+    name: 'Old Iron',
+    fame: 600,
+    age: 34,
+    status: 'Retired',
     career: { wins: 30, losses: 8, kills: 5 },
     attributes: { WT: 14, WL: 14, ST: 12, SP: 10, DF: 12, AG: 10 },
     traits,
@@ -110,6 +116,7 @@ git commit -m "feat(trainers): legacy trainers snapshot their positive traits as
 ## Task 2: Legacy traits join the training pool above the ceiling (TDD)
 
 **Files:**
+
 - Modify: `src/engine/training/trainingGains/traitTraining.ts`
 - Modify: `src/test/engine/training/traitTraining.test.ts`
 
@@ -122,8 +129,13 @@ describe('traitTrainingPool — legacy teachable traits', () => {
   it('a legacy trainer offers their own former trait even above their tier ceiling', () => {
     // Novice ceiling = Notable, but the legend personally carried a Signature.
     const legacyNovice = {
-      id: 't9', name: 'Old Iron', tier: 'Novice', focus: 'Mind',
-      fame: 100, age: 40, contractWeeksLeft: 10,
+      id: 't9',
+      name: 'Old Iron',
+      tier: 'Novice',
+      focus: 'Mind',
+      fame: 100,
+      age: 40,
+      contractWeeksLeft: 10,
       retiredFromWarrior: 'Old Iron',
       teachableTraits: ['living_wall'], // WS Signature class trait
     } as unknown as Trainer;
@@ -135,8 +147,13 @@ describe('traitTrainingPool — legacy teachable traits', () => {
 
   it('legacy traits still respect style restriction', () => {
     const legacyNovice = {
-      id: 't9', name: 'Old Iron', tier: 'Novice', focus: 'Mind',
-      fame: 100, age: 40, contractWeeksLeft: 10,
+      id: 't9',
+      name: 'Old Iron',
+      tier: 'Novice',
+      focus: 'Mind',
+      fame: 100,
+      age: 40,
+      contractWeeksLeft: 10,
       teachableTraits: ['living_wall'],
     } as unknown as Trainer;
     // A non-WallOfSteel warrior cannot learn the WS class trait, legacy or not.
@@ -187,6 +204,7 @@ git commit -m "feat(traits): legacy trainers teach their own former traits above
 ## Task 3: Make legacy conversion actually occur (named knobs)
 
 **Files:**
+
 - Modify: `src/engine/pipeline/passes/WarriorPass.ts`
 
 The current gate (`fame > 500` AND 10%) is likely near-never in practice. Convert to named knobs and loosen modestly so the feature is observable; the liveness diagnostic is the measurement.
@@ -223,6 +241,7 @@ git commit -m "tune(trainers): named legacy-conversion knobs; observable convers
 ## Task 4: Show teachable traits on the trainer UI
 
 **Files:**
+
 - Modify: the trainer card component (locate first)
 
 - [ ] **Step 1: Locate the surface**
@@ -235,13 +254,15 @@ Pick the component that renders individual trainer cards (likely `src/pages/Trai
 In the trainer card, where trainer metadata (tier/focus/fame) renders, add:
 
 ```tsx
-{trainer.teachableTraits && trainer.teachableTraits.length > 0 && (
-  <div className="flex flex-wrap gap-1 mt-1" title="Traits this legend can personally teach">
-    {trainer.teachableTraits.map((id) => (
-      <TraitBadge key={id} traitId={id} />
-    ))}
-  </div>
-)}
+{
+  trainer.teachableTraits && trainer.teachableTraits.length > 0 && (
+    <div className="flex flex-wrap gap-1 mt-1" title="Traits this legend can personally teach">
+      {trainer.teachableTraits.map((id) => (
+        <TraitBadge key={id} traitId={id} />
+      ))}
+    </div>
+  );
+}
 ```
 
 with `import { TraitBadge } from '@/components/warrior/traits/TraitBadge';`. Apply the same block in the trait-trainer selector in `WarriorTrainingCard.tsx` so the player sees the legacy pool when assigning trait training.
@@ -269,7 +290,7 @@ git commit -m "feat(ui): trainer cards show a legend's teachable traits"
 ## Self-Review Notes
 
 - **Extend, don't rebuild.** The conversion pipeline, legacy discount, and hiring pool all exist; this plan adds one field, one pool clause, two knobs, and badges. Measured before writing: `teachableTraits` appears **nowhere** in the codebase today.
-- **Scarcity is preserved by two real gates:** the trait must have been *carried* by the retiree, and class traits remain style-locked for the learner. The ceiling bypass only widens *which trainer* can teach a high tier — not who can learn it (`canAcquireTrait` + `rollTraitTraining` difficulty unchanged, so a Signature is still a hard roll).
+- **Scarcity is preserved by two real gates:** the trait must have been _carried_ by the retiree, and class traits remain style-locked for the learner. The ceiling bypass only widens _which trainer_ can teach a high tier — not who can learn it (`canAcquireTrait` + `rollTraitTraining` difficulty unchanged, so a Signature is still a hard roll).
 - **AI unaffected.** The rival synthetic coach never has `teachableTraits`, so `legacy.has(t.id)` is always false on that path — behavior-identical.
 - **Emotional loop closes.** Death/retirement (permadeath tone) now feeds the training economy: your fallen champion's identity persists as the only source of their Signature.
 

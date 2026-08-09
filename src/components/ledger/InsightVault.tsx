@@ -184,7 +184,9 @@ function StatItem({ icon: Icon, label, value, sublabel, variant }: StatItemProps
 
   return (
     <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-      <div className={`p-3 rounded-none ${v.bg} ${v.border} ${v.hoverBorder} transition-all motion-reduce:transition-none motion-reduce:transform-none`}>
+      <div
+        className={`p-3 rounded-none ${v.bg} ${v.border} ${v.hoverBorder} transition-all motion-reduce:transition-none motion-reduce:transform-none`}
+      >
         <Icon className={`h-5 w-5 ${v.text} ${v.hoverText} transition-colors`} />
       </div>
       <div>

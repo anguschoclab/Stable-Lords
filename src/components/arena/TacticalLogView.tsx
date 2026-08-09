@@ -29,7 +29,9 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>) {
     case 'hit':
       return <Swords className="h-3 w-3 text-arena-gold" />;
     case 'crit':
-      return <Zap className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />;
+      return (
+        <Zap className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />
+      );
     case 'death':
       return <Skull className="h-3.5 w-3.5 text-arena-blood" />;
     case 'ko':

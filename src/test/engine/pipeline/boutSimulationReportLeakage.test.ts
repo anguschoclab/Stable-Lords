@@ -140,7 +140,10 @@ describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
     const { impact } = runBoutSimulationPass(state, rng, true);
 
     const report = impact.lastSimulationReport as any;
-    expect(report.treasuryChange, 'treasuryChange should be 0 for week 2, not 500 from week 1').toBe(0);
+    expect(
+      report.treasuryChange,
+      'treasuryChange should be 0 for week 2, not 500 from week 1'
+    ).toBe(0);
   });
 
   it('week 2 report bouts should be empty (no eligible warriors)', () => {

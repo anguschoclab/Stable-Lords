@@ -2,7 +2,27 @@
  * Economy, progression, and miscellaneous Zod schemas (owners, AI, training, ledger, arena config).
  */
 import { z } from 'zod';
-import { FightingStyleSchema, SeasonSchema, WeatherTypeSchema, TrainerTierSchema, TrainerFocusSchema, TrainerSpecialtySchema, ScoutQualitySchema, PromoterPersonalitySchema, PromoterTierSchema, OwnerPersonalitySchema, MetaAdaptationSchema, ArenaZoneSchema, ArenaTagSchema, ShieldShapeSchema, FieldTypeSchema, MetalColorSchema, ChargeTypeSchema, BeastPostureSchema, AIIntentSchema } from './schemaEnums';
+import {
+  FightingStyleSchema,
+  SeasonSchema,
+  WeatherTypeSchema,
+  TrainerTierSchema,
+  TrainerFocusSchema,
+  TrainerSpecialtySchema,
+  ScoutQualitySchema,
+  PromoterPersonalitySchema,
+  PromoterTierSchema,
+  OwnerPersonalitySchema,
+  MetaAdaptationSchema,
+  ArenaZoneSchema,
+  ArenaTagSchema,
+  ShieldShapeSchema,
+  FieldTypeSchema,
+  MetalColorSchema,
+  ChargeTypeSchema,
+  BeastPostureSchema,
+  AIIntentSchema,
+} from './schemaEnums';
 import { WarriorSchema } from './warriorSchemas';
 
 /**

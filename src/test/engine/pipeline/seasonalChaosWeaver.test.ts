@@ -35,19 +35,48 @@ describe('chaos weaver event handlers', () => {
   it('OffseasonEventNarrative effectType union includes all current handler keys', () => {
     // Type-level test: if this compiles, the union is correct
     const validEffectTypes = [
-      'chaos_rift', 'fame_boost', 'winter_chill', 'merchant_blessing',
-      'epiphany', 'tavern_brawl', 'bards_song', 'plague_outbreak',
-      'black_market_raid', 'grand_feast', 'wandering_healer', 'mystic_vision',
-      'wild_animal_attack', 'strange_dream', 'street_performance',
-      'chaotic_spells', 'mysterious_patron', 'loyal_stray', 'midnight_feast',
-      'shadow_training', 'gladiator_olympics', 'meteor_shower',
-      'underground_pit_fight', 'rogue_alchemist', 'tavern_brawl_surprise',
-      'chaos_spores', 'dreamweaver_visit', 'abyssal_bargain', 'goblin_raid',
-      'fey_trickster', 'shadow_tournament', 'wandering_fortune_teller',
-      'chaos_weaver_visit', 'traveling_circus', 'bounty_hunter_visit',
-      'loyal_stray_dog', 'midnight_market', 'shadow_market_run',
-      'moonlight_duel', 'chaotic_weather_experiment',
-      'chaos_weavers_game', 'secret_fight_club',
+      'chaos_rift',
+      'fame_boost',
+      'winter_chill',
+      'merchant_blessing',
+      'epiphany',
+      'tavern_brawl',
+      'bards_song',
+      'plague_outbreak',
+      'black_market_raid',
+      'grand_feast',
+      'wandering_healer',
+      'mystic_vision',
+      'wild_animal_attack',
+      'strange_dream',
+      'street_performance',
+      'chaotic_spells',
+      'mysterious_patron',
+      'loyal_stray',
+      'midnight_feast',
+      'shadow_training',
+      'gladiator_olympics',
+      'meteor_shower',
+      'underground_pit_fight',
+      'rogue_alchemist',
+      'tavern_brawl_surprise',
+      'chaos_spores',
+      'dreamweaver_visit',
+      'abyssal_bargain',
+      'goblin_raid',
+      'fey_trickster',
+      'shadow_tournament',
+      'wandering_fortune_teller',
+      'chaos_weaver_visit',
+      'traveling_circus',
+      'bounty_hunter_visit',
+      'loyal_stray_dog',
+      'midnight_market',
+      'shadow_market_run',
+      'moonlight_duel',
+      'chaotic_weather_experiment',
+      'chaos_weavers_game',
+      'secret_fight_club',
     ] as const;
     // Each string must be a valid effectType
     for (const t of validEffectTypes) {
@@ -58,14 +87,16 @@ describe('chaos weaver event handlers', () => {
   it('chaotic_weather_experiment handler grants XP and adds injury', () => {
     const state = createFreshState('test-seed');
     const warriorId = 'w-weather-test' as WarriorId;
-    state.roster = [{
-      id: warriorId,
-      name: 'TestWarrior',
-      status: 'Active',
-      xp: 0,
-      fame: 0,
-      injuries: [],
-    } as any];
+    state.roster = [
+      {
+        id: warriorId,
+        name: 'TestWarrior',
+        status: 'Active',
+        xp: 0,
+        fame: 0,
+        injuries: [],
+      } as any,
+    ];
     state.year = 1;
 
     const rng = new SeededRNGService(42);

@@ -41,25 +41,19 @@ function expectSwitchHasLabel(container: HTMLElement, componentName: string) {
 describe('Switch label accessibility in planBuilder', () => {
   it('ContingencyPlans Switch has an associated label', () => {
     const plan = makePlan();
-    const { container } = render(
-      <ContingencyPlans plan={plan} onPlanChange={() => {}} />
-    );
+    const { container } = render(<ContingencyPlans plan={plan} onPlanChange={() => {}} />);
     expectSwitchHasLabel(container, 'ContingencyPlans');
   });
 
   it('PhaseOverrides Switch has an associated label', () => {
     const plan = makePlan();
-    const { container } = render(
-      <PhaseOverrides plan={plan} onPlanChange={() => {}} />
-    );
+    const { container } = render(<PhaseOverrides plan={plan} onPlanChange={() => {}} />);
     expectSwitchHasLabel(container, 'PhaseOverrides');
   });
 
   it('StylePassives Switch has an associated label', () => {
     const plan = makePlan();
-    const { container } = render(
-      <StylePassives plan={plan} />
-    );
+    const { container } = render(<StylePassives plan={plan} />);
     expectSwitchHasLabel(container, 'StylePassives');
   });
 
@@ -76,25 +70,24 @@ describe('Switch label accessibility in planBuilder', () => {
     const switches = container.querySelectorAll('[role="switch"]');
     expect(switches.length, 'should render at least one switch').toBeGreaterThan(0);
     for (const sw of switches) {
-      const isFocusable =
-        sw.tagName === 'BUTTON' ||
-        sw.getAttribute('tabindex') !== null;
+      const isFocusable = sw.tagName === 'BUTTON' || sw.getAttribute('tabindex') !== null;
       expect(isFocusable, 'Switch should be focusable (button or have tabindex)').toBe(true);
     }
   });
 
   it('Label htmlFor attributes match element ids in ContingencyPlans', () => {
     const plan = makePlan();
-    const { container } = render(
-      <ContingencyPlans plan={plan} onPlanChange={() => {}} />
-    );
+    const { container } = render(<ContingencyPlans plan={plan} onPlanChange={() => {}} />);
 
     const labels = container.querySelectorAll('label[htmlfor]');
     for (const label of labels) {
       const htmlFor = label.getAttribute('htmlfor');
       expect(htmlFor, 'Label should have non-empty htmlFor').toBeTruthy();
       const target = container.querySelector(`#${CSS.escape(htmlFor!)}`);
-      expect(target, `Label htmlFor="${htmlFor}" should match an element with that id`).toBeTruthy();
+      expect(
+        target,
+        `Label htmlFor="${htmlFor}" should match an element with that id`
+      ).toBeTruthy();
     }
   });
 });

@@ -157,9 +157,7 @@ describe('runWarriorPass', () => {
   });
 
   it('seasonalGrowth from training impact is propagated', () => {
-    const mockGrowth = [
-      { warriorId: 'w1' as any, season: 'Spring' as any, gains: { ST: 1 } },
-    ];
+    const mockGrowth = [{ warriorId: 'w1' as any, season: 'Spring' as any, gains: { ST: 1 } }];
     mockTrainingImpactToStateImpact.mockReturnValue({
       impact: {},
       seasonalGrowth: mockGrowth,

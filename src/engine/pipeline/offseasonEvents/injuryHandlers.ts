@@ -6,7 +6,11 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { makeInjury } from '@/engine/injuries/utils';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+import {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+} from './types';
 
 export function handleTavernBrawl(
   state: GameState,
@@ -35,7 +39,10 @@ export function handleTavernBrawl(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -66,7 +73,10 @@ export function handlePlagueOutbreak(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameLost });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameLost,
+    });
   }
 }
 
@@ -97,7 +107,10 @@ export function handleWildAnimalAttack(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -114,7 +127,9 @@ export function handleGoblinRaid(
     if (chosen) {
       const goldLost = 20 + Math.floor(rng.next() * 31);
       ctx.treasuryDelta -= goldLost;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other')
+      );
 
       const newInjury = makeInjury(rng, {
         name: 'Goblin Scratch',

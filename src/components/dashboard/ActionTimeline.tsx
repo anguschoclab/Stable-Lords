@@ -66,7 +66,11 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
               <span className="text-[8px] font-mono text-primary mt-0.5">W{event.week}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-medium text-foreground truncate">
-                  <LinkifiedText text={event.description} names={warriorNames} stableNames={stableNames} />
+                  <LinkifiedText
+                    text={event.description}
+                    names={warriorNames}
+                    stableNames={stableNames}
+                  />
                 </p>
                 <div className="flex items-center gap-2 mt-1">
                   <span

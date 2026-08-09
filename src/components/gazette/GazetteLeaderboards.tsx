@@ -30,10 +30,7 @@ import {
 
 interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];
-} /**
- * Gazette leaderboard.
- * @param - { all fights }.
- */
+}
 
 /**
  * Gazette leaderboard.
@@ -106,7 +103,10 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
                     <span className="text-xs font-mono font-black text-foreground/20">
                       #{idx + 1}
                     </span>
-                    <WarriorLink name={w.name} className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors" />
+                    <WarriorLink
+                      name={w.name}
+                      className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors"
+                    />
                   </div>
                 </TableCell>
                 <TableCell className="py-5">
@@ -153,10 +153,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
       </div>
     </Surface>
   );
-} /**
- * Best by style.
- * @param - { all fights }.
- */
+}
 
 /**
  * Best by style.
@@ -205,7 +202,10 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-1">
                   {d.style}
                 </span>
-                <WarriorLink name={d.name} className="text-xs font-display font-black uppercase text-foreground group-hover:text-arena-gold transition-colors" />
+                <WarriorLink
+                  name={d.name}
+                  className="text-xs font-display font-black uppercase text-foreground group-hover:text-arena-gold transition-colors"
+                />
               </div>
               <div className="flex flex-col items-end">
                 <div className="flex items-center gap-1.5 text-arena-gold">
@@ -219,10 +219,7 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
       </div>
     </Surface>
   );
-} /**
- * Rising stars.
- * @param - { all fights }.
- */
+}
 
 /**
  * Rising stars.
@@ -269,7 +266,10 @@ export function RisingStars({ allFights }: LeaderboardProps) {
             >
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                  <WarriorLink name={s.name} className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors" />
+                  <WarriorLink
+                    name={s.name}
+                    className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors"
+                  />
                   <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                     Joined Week {s.firstWeek}
                   </span>

@@ -17,7 +17,14 @@ describe('finalizeWeekSideEffectsToImpact — year boundary', () => {
     const week = ((absoluteWeek - 1) % 52) + 1;
     const year = Math.floor((absoluteWeek - 1) / 52) + 1;
     return {
-      player: { id: 'player', name: 'Player', stableName: 'Player Stable', fame: 0, renown: 0, titles: 0 },
+      player: {
+        id: 'player',
+        name: 'Player',
+        stableName: 'Player Stable',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
       fame: 0,
       popularity: 0,
       treasury: 1000,

@@ -34,8 +34,8 @@ describe('TournamentSlice', () => {
         tierId: 'Amateur',
         name: 'Mock',
         bracket: [],
-        completed: false
-      } as any
+        completed: false,
+      } as any,
     ];
 
     act(() => {
@@ -59,7 +59,9 @@ describe('TournamentSlice', () => {
 
   it('should set active tournament', () => {
     act(() => {
-      useTestStore.getState().setActiveTournament('t1' as import('@/types/shared.types').TournamentId);
+      useTestStore
+        .getState()
+        .setActiveTournament('t1' as import('@/types/shared.types').TournamentId);
     });
     expect(useTestStore.getState().activeTournamentId).toBe('t1');
 

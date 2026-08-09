@@ -79,7 +79,13 @@ export default function MiniCombatLog({
   };
 
   return (
-    <div className={cn('absolute bottom-4 left-4 z-30', 'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300', className)}>
+    <div
+      className={cn(
+        'absolute bottom-4 left-4 z-30',
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
+        className
+      )}
+    >
       {/* Header */}
       <div
         role="button"

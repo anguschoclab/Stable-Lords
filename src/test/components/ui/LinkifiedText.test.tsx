@@ -6,12 +6,22 @@ import { LinkifiedText } from '@/components/ui/LinkifiedText';
 
 vi.mock('@/components/EntityLink', () => ({
   WarriorLink: ({ name, className }: { name: string; className?: string }) => (
-    <span data-testid="warrior-link" data-name={name} className={className} aria-label={`Open details for warrior ${name}`}>
+    <span
+      data-testid="warrior-link"
+      data-name={name}
+      className={className}
+      aria-label={`Open details for warrior ${name}`}
+    >
       {name}
     </span>
   ),
   StableLink: ({ name, className }: { name: string; className?: string }) => (
-    <span data-testid="stable-link" data-name={name} className={className} aria-label={`Open details for stable ${name}`}>
+    <span
+      data-testid="stable-link"
+      data-name={name}
+      className={className}
+      aria-label={`Open details for stable ${name}`}
+    >
       {name}
     </span>
   ),
@@ -67,10 +77,7 @@ describe('LinkifiedText', () => {
 
   it('longest-first matching: "Marcus Aurelius" matched before "Marcus"', () => {
     render(
-      <LinkifiedText
-        text="Marcus Aurelius won the bout"
-        names={['Marcus', 'Marcus Aurelius']}
-      />
+      <LinkifiedText text="Marcus Aurelius won the bout" names={['Marcus', 'Marcus Aurelius']} />
     );
     const links = screen.getAllByTestId('warrior-link');
     expect(links).toHaveLength(1);

@@ -21,7 +21,9 @@ describe('styleMatchupSymmetry', () => {
         const sumAl = ab.al + ba.al;
         const sumKd = ab.kd + ba.kd;
         if (sumOe !== 0 || sumAl !== 0 || sumKd !== 0) {
-          asymmetricPairs.push(`${styleA} vs ${styleB}: oe=${ab.oe}/${ba.oe} al=${ab.al}/${ba.al} kd=${ab.kd}/${ba.kd}`);
+          asymmetricPairs.push(
+            `${styleA} vs ${styleB}: oe=${ab.oe}/${ba.oe} al=${ab.al}/${ba.al} kd=${ab.kd}/${ba.kd}`
+          );
         }
       }
     }
@@ -33,9 +35,18 @@ describe('styleMatchupSymmetry', () => {
     for (const styleA of allStyles) {
       for (const styleB of allStyles) {
         const mods = getStyleMatchupMods(styleA, styleB);
-        expect(Math.abs(mods.oe), `OE out of bounds for ${styleA} vs ${styleB}`).toBeLessThanOrEqual(5);
-        expect(Math.abs(mods.al), `AL out of bounds for ${styleA} vs ${styleB}`).toBeLessThanOrEqual(5);
-        expect(Math.abs(mods.kd), `KD out of bounds for ${styleA} vs ${styleB}`).toBeLessThanOrEqual(5);
+        expect(
+          Math.abs(mods.oe),
+          `OE out of bounds for ${styleA} vs ${styleB}`
+        ).toBeLessThanOrEqual(5);
+        expect(
+          Math.abs(mods.al),
+          `AL out of bounds for ${styleA} vs ${styleB}`
+        ).toBeLessThanOrEqual(5);
+        expect(
+          Math.abs(mods.kd),
+          `KD out of bounds for ${styleA} vs ${styleB}`
+        ).toBeLessThanOrEqual(5);
       }
     }
   });

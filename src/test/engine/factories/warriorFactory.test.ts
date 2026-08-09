@@ -120,35 +120,70 @@ describe('warriorFactory — makeWarrior (rng-less path)', () => {
 describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   it('generates a warrior with seeded rng', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior(undefined, 'SeededWarrior', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      undefined,
+      'SeededWarrior',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.name).toBe('SeededWarrior');
     expect(w.id).toBeTruthy();
   });
 
   it('generates luckfactor when rng is provided', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.luckfactor).toBeDefined();
     expect(typeof w.luckfactor?.ATT).toBe('number');
   });
 
   it('generates traits when rng is provided (and no override)', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.traits).toBeDefined();
     expect(Array.isArray(w.traits)).toBe(true);
   });
 
   it('generates trainability in range [0.4, 0.9) when rng is provided', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.trainability).toBeGreaterThanOrEqual(0.4);
     expect(w.trainability).toBeLessThan(0.9);
   });
 
   it('generates age in range [18, 25] when rng is provided', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.age).toBeGreaterThanOrEqual(18);
     expect(w.age).toBeLessThanOrEqual(25);
   });
@@ -156,16 +191,44 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   it('generates favorites deterministically with same seed', () => {
     const rng1 = new SeededRNGService(42);
     const rng2 = new SeededRNGService(42);
-    const w1 = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng1);
-    const w2 = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng2);
+    const w1 = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng1
+    );
+    const w2 = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng2
+    );
     expect(w1.favorites).toEqual(w2.favorites);
   });
 
   it('generates different favorites with different seeds', () => {
     const rng1 = new SeededRNGService(42);
     const rng2 = new SeededRNGService(999);
-    const w1 = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng1);
-    const w2 = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng2);
+    const w1 = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng1
+    );
+    const w2 = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng2
+    );
     // Very likely different with different seeds
     expect(w1).toBeDefined();
     expect(w2).toBeDefined();
@@ -173,14 +236,28 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
 
   it('generates id via rng.uuid() when id is undefined', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior(undefined, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      undefined,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.id).toBeTruthy();
     expect(typeof w.id).toBe('string');
   });
 
   it('uses provided id even when rng is present', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior('custom-id' as any, 'Test', FightingStyle.StrikingAttack, baseAttrs, undefined, rng);
+    const w = makeWarrior(
+      'custom-id' as any,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      undefined,
+      rng
+    );
     expect(w.id).toBe('custom-id');
   });
 });
@@ -188,9 +265,16 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
 describe('warriorFactory — overrides', () => {
   it('overrides traits when provided', () => {
     const rng = new SeededRNGService(42);
-    const w = makeWarrior('w1' as any, 'Test', FightingStyle.StrikingAttack, baseAttrs, {
-      traits: ['Berserker', 'Patient'],
-    }, rng);
+    const w = makeWarrior(
+      'w1' as any,
+      'Test',
+      FightingStyle.StrikingAttack,
+      baseAttrs,
+      {
+        traits: ['Berserker', 'Patient'],
+      },
+      rng
+    );
     expect(w.traits).toEqual(['Berserker', 'Patient']);
   });
 
@@ -202,7 +286,12 @@ describe('warriorFactory — overrides', () => {
   });
 
   it('overrides equipment when provided', () => {
-    const customEquip = { weapon: 'custom_weapon', armor: 'custom_armor', shield: null, helm: null } as any;
+    const customEquip = {
+      weapon: 'custom_weapon',
+      armor: 'custom_armor',
+      shield: null,
+      helm: null,
+    } as any;
     const w = makeWarrior('w1' as any, 'Test', FightingStyle.StrikingAttack, baseAttrs, {
       equipment: customEquip,
     });

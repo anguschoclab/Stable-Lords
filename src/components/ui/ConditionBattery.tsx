@@ -46,7 +46,11 @@ export function ConditionBattery({ value, className, showText = false }: Conditi
       </div>
       <div className="relative w-full h-[3px] bg-neutral-950/40 ring-1 ring-white/5 overflow-hidden">
         <div
-          className={cn('h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 ease-out', color, opacity)}
+          className={cn(
+            'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700 ease-out',
+            color,
+            opacity
+          )}
           style={{ width: `${clamp(value, 0, 100)}%` }}
         />
       </div>

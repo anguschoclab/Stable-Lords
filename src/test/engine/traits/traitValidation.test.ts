@@ -15,7 +15,10 @@ describe('trait validation', () => {
       const fpm = trait.effect.fightPlanMod;
       if (!fpm) continue;
       for (const key of Object.keys(fpm)) {
-        expect(KNOWN_INVALID_KEYS, `Trait "${id}" has invalid fightPlanMod key: "${key}"`).not.toContain(key);
+        expect(
+          KNOWN_INVALID_KEYS,
+          `Trait "${id}" has invalid fightPlanMod key: "${key}"`
+        ).not.toContain(key);
       }
     }
   });

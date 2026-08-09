@@ -68,7 +68,9 @@ describe('StartGame', () => {
       onload: null,
     };
 
-    window.FileReader = vi.fn().mockImplementation(function() { return mockFileReader; }) as any;
+    window.FileReader = vi.fn().mockImplementation(function () {
+      return mockFileReader;
+    }) as any;
 
     render(<StartGame />);
 

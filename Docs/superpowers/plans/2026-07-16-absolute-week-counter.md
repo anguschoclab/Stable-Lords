@@ -11,11 +11,13 @@
 **Scope:** The offer subsystem only (creators + comparators) plus the counter itself. There are ~125 `state.week`-ish reads across the engine; most are within-week, display, or modulo-based (`week % 52` aging ticks) and are **explicitly out of scope** — migrate only what this plan lists. **Non-goal:** changing season/aging math or UI copy.
 
 **The rollover bug, concretely (read before coding):**
+
 1. Week 52: `planWorldBouts` (`src/engine/matchmaking/worldMatchmaking.ts:96–97`) books `boutWeek: state.week + 1 = 53`, `expirationWeek: 53`.
 2. Week 1 (year+1): `generatePairings` (`src/engine/bout/core/pairings.ts:32–34`) filters `o.boutWeek === currentWeek` → `53 === 1` is false → **the bout never fights**.
 3. Pruning (`weekPipelineService.ts` `finalizeState`, lines ~172–187) computes `justFinishedWeek = ctx.nextWeek − 1 = 0` at rollover → `boutWeek <= 0` is false → zombie offers linger until the `expirationWeek` clause catches them.
 
 **Grounded facts (do not re-derive):**
+
 - Rollover: `prepareWeekContext` — `let nextWeek = currentWeek + 1; if (nextWeek > 52) { nextWeek = 1; nextYear++; }` (`weekPipelineService.ts:49–61`).
 - `finalizeState` sets `state.week = ctx.nextWeek; state.year = ctx.nextYear;` (`weekPipelineService.ts:163–166`).
 - Offer creators: `src/engine/matchmaking/worldMatchmaking.ts` (world bouts) and `src/engine/pipeline/passes/PromoterPass.ts` (promoter offers). Offer comparators: `src/engine/bout/core/pairings.ts`, `finalizeState` pruning, `RivalStrategyPass.ts` purge (`offer.expirationWeek >= nextWeek`, lines ~68–77), `PromoterPass.ts` expiry (`offer.expirationWeek < state.week`, line ~55), `src/engine/core/warriorCollection.ts:52` (`boutWeek === targetWeek`), plus the headless harness auto-accept in `src/scripts/simulation-harness.ts` and `useDigestSummary` (UI, compares `boutWeek` to `currentWeek`).
@@ -40,6 +42,7 @@
 ## Task 1: Pure helpers (TDD)
 
 **Files:**
+
 - Create: `src/engine/core/absoluteWeek.ts`
 - Create: `src/test/engine/core/absoluteWeek.test.ts`
 
@@ -113,6 +116,7 @@ git commit -m "feat(core): absoluteWeek helpers (monotonic week + display round-
 ## Task 2: Failing rollover regression test
 
 **Files:**
+
 - Create: `src/test/engine/pipeline/yearRollover.integration.test.ts`
 
 - [ ] **Step 1: Write the failing test**
@@ -171,6 +175,7 @@ git commit -m "test(pipeline): failing rollover regression — world bouts must 
 ## Task 3: Add the field — type, init, increment, save derivation
 
 **Files:**
+
 - Modify: `src/types/state.types.ts`
 - Modify: `src/engine/factories/gameStateFactory.ts`
 - Modify: `src/engine/pipeline/services/weekPipelineService.ts`
@@ -181,9 +186,9 @@ git commit -m "test(pipeline): failing rollover regression — world bouts must 
 In `src/types/state.types.ts`, in the `GameState` interface directly under `year: number;`:
 
 ```typescript
-  /** Monotonic week counter — never resets at year rollover. All cross-week
-   *  scheduling math (offers, countdowns) uses this; `week` is display-only. */
-  absoluteWeek: number;
+/** Monotonic week counter — never resets at year rollover. All cross-week
+ *  scheduling math (offers, countdowns) uses this; `week` is display-only. */
+absoluteWeek: number;
 ```
 
 - [ ] **Step 2: Fresh-state init**
@@ -199,7 +204,7 @@ In `src/engine/factories/gameStateFactory.ts`, find where `week: 1` (and `year: 
 In `weekPipelineService.ts` `finalizeState` (lines ~163–166), directly after `state.year = ctx.nextYear;` add:
 
 ```typescript
-  state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
+state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
 ```
 
 with `import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';` at the top. (Deriving from the context rather than `+1` keeps it self-healing even if a caller hand-edits `week`/`year`, as tests do.)
@@ -209,9 +214,9 @@ with `import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';` at the t
 In `src/state/serialization.ts`, find the deserialization path where a loaded `GameState` is returned/hydrated, and patch:
 
 ```typescript
-  if (typeof loaded.absoluteWeek !== 'number' || loaded.absoluteWeek < 1) {
-    loaded.absoluteWeek = deriveAbsoluteWeek(loaded.year, loaded.week);
-  }
+if (typeof loaded.absoluteWeek !== 'number' || loaded.absoluteWeek < 1) {
+  loaded.absoluteWeek = deriveAbsoluteWeek(loaded.year, loaded.week);
+}
 ```
 
 (Adapt the variable name to the file's actual hydration code — read the file first; the patch goes wherever the parsed state object exists before being handed to the store.)
@@ -233,6 +238,7 @@ git commit -m "feat(core): GameState.absoluteWeek — monotonic counter with sav
 ## Task 4: Migrate the offer subsystem to absolute weeks
 
 **Files:**
+
 - Modify: `src/engine/matchmaking/worldMatchmaking.ts`
 - Modify: `src/engine/pipeline/passes/PromoterPass.ts`
 - Modify: `src/engine/bout/core/pairings.ts`
@@ -269,13 +275,13 @@ to
 `weekPipelineService.ts` `finalizeState` pruning (~lines 172–187): `justFinishedWeek` must be absolute. Change
 
 ```typescript
-    const justFinishedWeek = ctx.nextWeek - 1;
+const justFinishedWeek = ctx.nextWeek - 1;
 ```
 
 to
 
 ```typescript
-    const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
+const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
 ```
 
 `RivalStrategyPass.ts` purge (~lines 68–77): the function receives `nextWeek` (in-year). Find where `runRivalStrategyPass` is called (`collectRemainingImpacts`, `weekPipelineService.ts:~174–181`) and what it passes; change the purge comparison to use the state's absolute week instead: `offer.expirationWeek >= state.absoluteWeek + 1`. If `nextWeek` is threaded through several helpers, prefer computing `const nextAbsoluteWeek = state.absoluteWeek + 1;` locally inside the pass from `state` rather than re-plumbing parameters.
@@ -286,7 +292,7 @@ to
 
 - [ ] **Step 3: Display + harness**
 
-`useDigestSummary.ts`: it compares `boutWeek` against a current week for pending/signed/upcoming buckets. Swap the current-week source to `absoluteWeek` (the hook reads from the store; use the state's `absoluteWeek`). Any place a `boutWeek` is *rendered* as "Week N" should render `displayWeek(offer.boutWeek)`.
+`useDigestSummary.ts`: it compares `boutWeek` against a current week for pending/signed/upcoming buckets. Swap the current-week source to `absoluteWeek` (the hook reads from the store; use the state's `absoluteWeek`). Any place a `boutWeek` is _rendered_ as "Week N" should render `displayWeek(offer.boutWeek)`.
 
 `src/scripts/simulation-harness.ts`: the auto-accept block filters offers by status only (no week compare) — verify with a read; if any week comparison exists, migrate it the same way.
 

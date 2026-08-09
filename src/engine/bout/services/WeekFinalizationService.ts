@@ -29,7 +29,10 @@ export function finalizeWeekSideEffectsToImpact(
   const impact: StateImpact = {
     fameDelta: playerFameGain,
     crowdMood: newMood,
-    moodHistory: [...(state.moodHistory || []).slice(-19), { week: state.absoluteWeek, mood: newMood }],
+    moodHistory: [
+      ...(state.moodHistory || []).slice(-19),
+      { week: state.absoluteWeek, mood: newMood },
+    ],
   };
 
   // Add mood change notification if mood changed significantly
@@ -59,7 +62,12 @@ export function finalizeWeekSideEffectsToImpact(
     ),
   ];
   const rng = new SeededRNGService(state.absoluteWeek * 13);
-  impact.rivalries = updateRivalriesFromBouts(state.rivalries || [], weekFights, state.absoluteWeek, rng);
+  impact.rivalries = updateRivalriesFromBouts(
+    state.rivalries || [],
+    weekFights,
+    state.absoluteWeek,
+    rng
+  );
 
   NewsletterFeed.closeWeekToIssue(state.absoluteWeek);
 

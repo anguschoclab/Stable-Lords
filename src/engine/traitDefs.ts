@@ -98,7 +98,8 @@ export const TRAITS: Record<string, TraitDef> = {
   starving_dog: {
     id: 'starving_dog',
     name: 'Starving Dog',
-    description: 'Fights like a cornered animal when heavily wounded. Bonus attack when at low health.',
+    description:
+      'Fights like a cornered animal when heavily wounded. Bonus attack when at low health.',
     effect: { attModLowHp: 2, defModLowHp: -1 },
     tier: 'Notable',
     sign: 'positive',
@@ -107,7 +108,8 @@ export const TRAITS: Record<string, TraitDef> = {
   iron_knuckles: {
     id: 'iron_knuckles',
     name: 'Iron Knuckles',
-    description: 'Calloused fists from countless street brawls. Bonus to unarmed strikes and disarms.',
+    description:
+      'Calloused fists from countless street brawls. Bonus to unarmed strikes and disarms.',
     effect: { attModEarly: 1, ripMod: 1 },
     tier: 'Common',
     sign: 'positive',
@@ -151,8 +153,9 @@ export const TRAITS: Record<string, TraitDef> = {
   },
   gutters_edge: {
     id: 'gutters_edge',
-    name: 'Gutter\'s Edge',
-    description: 'A desperate, wild fighting style born from alleyway brawls. Bonus damage but lowered early defense.',
+    name: "Gutter's Edge",
+    description:
+      'A desperate, wild fighting style born from alleyway brawls. Bonus damage but lowered early defense.',
     effect: { dmgBonus: 1, defModEarly: -1 },
     tier: 'Exceptional',
     sign: 'positive',
@@ -170,7 +173,8 @@ export const TRAITS: Record<string, TraitDef> = {
   orphan_vengeance: {
     id: 'orphan_vengeance',
     name: 'Orphan Vengeance',
-    description: 'Driven by a dark past. Gains brutal offensive capability in the late stages of a fight.',
+    description:
+      'Driven by a dark past. Gains brutal offensive capability in the late stages of a fight.',
     effect: { attModLate: 2, killWindowBonus: 1 },
     tier: 'Exceptional',
     sign: 'positive',
@@ -189,7 +193,8 @@ export const TRAITS: Record<string, TraitDef> = {
   orphan_blood: {
     id: 'orphan_blood',
     name: 'Orphan Blood',
-    description: 'Raised in the gutters. Inured to early punishment and fiercely defensive when wounded.',
+    description:
+      'Raised in the gutters. Inured to early punishment and fiercely defensive when wounded.',
     effect: { defModEarly: 1, attModLowHp: 1 },
     tier: 'Exceptional',
     sign: 'positive',
@@ -207,7 +212,8 @@ export const TRAITS: Record<string, TraitDef> = {
   orphan_instinct: {
     id: 'orphan_instinct',
     name: 'Orphan Instinct',
-    description: '+1 defense in early phase — years of running from danger have sharpened their reflexes.',
+    description:
+      '+1 defense in early phase — years of running from danger have sharpened their reflexes.',
     effect: { defModEarly: 1, iniMod: 1 },
     weight: 0.8,
     tier: 'Exceptional',
@@ -225,7 +231,8 @@ export const TRAITS: Record<string, TraitDef> = {
   orphan_shadow: {
     id: 'orphan_shadow',
     name: 'Orphan Shadow',
-    description: '+1 initiative and +1 decisiveness — forged in the darkest corners of the undercity.',
+    description:
+      '+1 initiative and +1 decisiveness — forged in the darkest corners of the undercity.',
     effect: { iniMod: 1, decMod: 1 },
     weight: 0.8,
     tier: 'Exceptional',
@@ -243,7 +250,8 @@ export const TRAITS: Record<string, TraitDef> = {
   gutter_born: {
     id: 'gutter_born',
     name: 'Gutter Born',
-    description: 'Forged in the merciless streets. Increased decisiveness and attack in early rounds.',
+    description:
+      'Forged in the merciless streets. Increased decisiveness and attack in early rounds.',
     effect: { decMod: 1, attModEarly: 1 },
     tier: 'Exceptional',
     sign: 'positive',
@@ -252,7 +260,8 @@ export const TRAITS: Record<string, TraitDef> = {
   beast_blood: {
     id: 'beast_blood',
     name: 'Beast Blood',
-    description: '+1 attack when at low HP and +1 initiative while fresh — lashes out like a wounded animal but starts strong.',
+    description:
+      '+1 attack when at low HP and +1 initiative while fresh — lashes out like a wounded animal but starts strong.',
     effect: { attModLowHp: 1, iniModFresh: 1 },
     weight: 0.7,
     tier: 'Signature',
@@ -261,7 +270,8 @@ export const TRAITS: Record<string, TraitDef> = {
   rusted_resolve: {
     id: 'rusted_resolve',
     name: 'Rusted Resolve',
-    description: '+1 defense when bloodied and +1 defense in LATE phase — pain only hardens them further.',
+    description:
+      '+1 defense when bloodied and +1 defense in LATE phase — pain only hardens them further.',
     effect: { defModLowHp: 1, defModLate: 1 },
     weight: 0.7,
     tier: 'Signature',
@@ -279,7 +289,8 @@ export const TRAITS: Record<string, TraitDef> = {
   cornered_rat: {
     id: 'cornered_rat',
     name: 'Cornered Rat',
-    description: '+1 attack and +1 defense in LATE phase — extremely dangerous when backed into a corner.',
+    description:
+      '+1 attack and +1 defense in LATE phase — extremely dangerous when backed into a corner.',
     effect: { attModLate: 1, defModLate: 1 },
     weight: 0.7,
     tier: 'Notable',
@@ -774,7 +785,8 @@ export const TRAITS: Record<string, TraitDef> = {
   chaos_touched: {
     id: 'chaos_touched',
     name: 'Chaos Touched',
-    description: 'Touched by strange forces, their strikes grow stronger and wilder as the fight drags on.',
+    description:
+      'Touched by strange forces, their strikes grow stronger and wilder as the fight drags on.',
     effect: { dmgBonus: 1, attModLate: 1 },
     weight: 0.1,
     tier: 'Exceptional',

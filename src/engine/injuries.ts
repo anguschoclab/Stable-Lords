@@ -224,4 +224,3 @@ export function isTooInjuredToFight(injuries: InjuryData[]): boolean {
       i.weeksRemaining > 2
   );
 }
-

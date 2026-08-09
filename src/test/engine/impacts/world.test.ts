@@ -21,7 +21,14 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
     meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
     ftueComplete: true,
     coachDismissed: [],
-    player: { id: 'p1', name: 'Player', stableName: 'Player Stable', fame: 0, renown: 0, titles: 0 },
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: 'Player Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
     fame: 0,
     popularity: 0,
     treasury: 1000,
@@ -198,10 +205,7 @@ describe('world impacts — recruitPool', () => {
     const state = createMockState({
       recruitPool: [{ id: 'old' } as PoolWarrior],
     });
-    const newPool: PoolWarrior[] = [
-      { id: 'new1' } as PoolWarrior,
-      { id: 'new2' } as PoolWarrior,
-    ];
+    const newPool: PoolWarrior[] = [{ id: 'new1' } as PoolWarrior, { id: 'new2' } as PoolWarrior];
     recruitPool(state, newPool);
     expect(state.recruitPool).toBe(newPool);
     expect(state.recruitPool).toHaveLength(2);
@@ -262,7 +266,10 @@ describe('world impacts — realmRankings', () => {
 
   it('replaces existing realmRankings', () => {
     const state = createMockState({
-      realmRankings: { old: { overallRank: 10, classRank: 5, compositeScore: 50 } } as Record<string, RankingEntry>,
+      realmRankings: { old: { overallRank: 10, classRank: 5, compositeScore: 50 } } as Record<
+        string,
+        RankingEntry
+      >,
     });
     const newRankings: Record<string, RankingEntry> = {
       new1: { overallRank: 1, classRank: 1, compositeScore: 100 },

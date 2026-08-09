@@ -121,9 +121,21 @@ describe('RosterSlice', () => {
   it('should update warrior equipment', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);
-      useTestStore.getState().updateWarriorEquipment('w1' as any, { weapon: 'sword', armor: 'mail', shield: 'kite', helm: 'pot' });
+      useTestStore
+        .getState()
+        .updateWarriorEquipment('w1' as any, {
+          weapon: 'sword',
+          armor: 'mail',
+          shield: 'kite',
+          helm: 'pot',
+        });
     });
-    expect(useTestStore.getState().roster[0]!.equipment).toEqual({ weapon: 'sword', armor: 'mail', shield: 'kite', helm: 'pot' });
+    expect(useTestStore.getState().roster[0]!.equipment).toEqual({
+      weapon: 'sword',
+      armor: 'mail',
+      shield: 'kite',
+      helm: 'pot',
+    });
   });
 
   it('should rename warrior in roster, graveyard, and retired', () => {
@@ -173,7 +185,11 @@ describe('RosterSlice', () => {
 
   it('should consume insight token of type Style', () => {
     act(() => {
-      const w = { ...mockWarrior, baseSkills: { ATT: 10, DEF: 10, PHY: 10, MEN: 10 }, derivedStats: { HP: 10 } };
+      const w = {
+        ...mockWarrior,
+        baseSkills: { ATT: 10, DEF: 10, PHY: 10, MEN: 10 },
+        derivedStats: { HP: 10 },
+      };
       useTestStore.getState().addWarrior(w as any);
       useTestStore.setState({ insightTokens: [{ id: 't1', type: 'Style' }] as any });
       useTestStore.getState().consumeInsightToken('t1' as any, 'w1' as any);
@@ -218,9 +234,15 @@ describe('RosterSlice', () => {
   it('should update warrior equipment correctly', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);
-      useTestStore.getState().updateWarriorEquipment('w2' as any, { weapon: 'sword', armor: 'mail', shield: 'kite', helm: 'pot' });
+      useTestStore
+        .getState()
+        .updateWarriorEquipment('w2' as any, {
+          weapon: 'sword',
+          armor: 'mail',
+          shield: 'kite',
+          helm: 'pot',
+        });
     });
     expect(useTestStore.getState().roster[0]!.equipment).toBeUndefined(); // w1 doesn't get w2's equip
   });
-
 });

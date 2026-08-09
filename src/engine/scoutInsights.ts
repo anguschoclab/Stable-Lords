@@ -4,11 +4,7 @@
  */
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import {
-  ATTRIBUTE_KEYS,
-  ATTRIBUTE_LABELS,
-  type InsightId,
-} from '@/types/shared.types';
+import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type InsightId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /** Scout quality level — controls how much information is revealed. */

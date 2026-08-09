@@ -5,7 +5,11 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
-import { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+import {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+} from './types';
 
 export function handleFameBoost(
   state: GameState,
@@ -21,7 +25,10 @@ export function handleFameBoost(
     ctx.rosterUpdates.set(chosen.id, {
       fame: (chosen.fame || 0) + 25,
     });
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 25 });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: 25,
+    });
   }
 }
 
@@ -42,9 +49,21 @@ export function handleEpiphany(
       xp: (chosen.xp || 0) + 15,
     });
 
-    ctx.insightTokens.push(makeInsightToken(rng, { type: 'Attribute', targetKey: 'ST', warriorId: chosen.id, warriorName: chosen.name, detail: 'Discovered a hidden reserve of strength during offseason meditation.', origin: 'Epiphany', discoveredWeek: nextWeek }));
+    ctx.insightTokens.push(
+      makeInsightToken(rng, {
+        type: 'Attribute',
+        targetKey: 'ST',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'Discovered a hidden reserve of strength during offseason meditation.',
+        origin: 'Epiphany',
+        discoveredWeek: nextWeek,
+      })
+    );
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+    });
   }
 }
 
@@ -63,7 +82,10 @@ export function handleBardsSong(
     ctx.rosterUpdates.set(chosen.id, {
       fame: (chosen.fame || 0) + fameGained,
     });
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -84,7 +106,11 @@ export function handleMysticVision(
       fame: (chosen.fame || 0) + 10,
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 15, fame: 10 });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      xp: 15,
+      fame: 10,
+    });
   }
 }
 
@@ -106,7 +132,10 @@ export function handleStrangeDream(
       xp: (chosen.xp || 0) + xpGained,
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: xpGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      xp: xpGained,
+    });
   }
 }
 
@@ -263,7 +292,16 @@ export function handleChaosWeaversGift(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Tactic', warriorId: chosen.id, warriorName: chosen.name, detail: 'A chaotic revelation sparked a new combat tactic.', origin: 'Chaos Weaver', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Tactic',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'A chaotic revelation sparked a new combat tactic.',
+          origin: 'Chaos Weaver',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,

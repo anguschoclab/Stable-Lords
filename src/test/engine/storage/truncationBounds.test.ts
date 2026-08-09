@@ -50,7 +50,7 @@ describe('truncationBounds', () => {
 
   it('newsletter is truncated to 100 entries', () => {
     const state = createFreshState('truncation-newsletter-test');
-    state.newsletter = Array.from({ length: 200 }, (_, i) => ({ week: i + 1 } as any));
+    state.newsletter = Array.from({ length: 200 }, (_, i) => ({ week: i + 1 }) as any);
 
     const truncated = truncateState(state);
     expect(truncated.newsletter!.length).toBe(100);
@@ -58,7 +58,10 @@ describe('truncationBounds', () => {
 
   it('ledger is truncated to 500 entries', () => {
     const state = createFreshState('truncation-ledger-test');
-    state.ledger = Array.from({ length: 1000 }, (_, i) => ({ id: `l${i}`, amount: 100, week: i + 1, type: 'income' } as any));
+    state.ledger = Array.from(
+      { length: 1000 },
+      (_, i) => ({ id: `l${i}`, amount: 100, week: i + 1, type: 'income' }) as any
+    );
 
     const truncated = truncateState(state);
     expect(truncated.ledger!.length).toBe(500);
@@ -66,7 +69,10 @@ describe('truncationBounds', () => {
 
   it('graveyard is truncated to 200 entries', () => {
     const state = createFreshState('truncation-graveyard-test');
-    state.graveyard = Array.from({ length: 300 }, (_, i) => ({ id: `g${i}`, name: `Warrior${i}`, isDead: true } as any));
+    state.graveyard = Array.from(
+      { length: 300 },
+      (_, i) => ({ id: `g${i}`, name: `Warrior${i}`, isDead: true }) as any
+    );
 
     const truncated = truncateState(state);
     expect(truncated.graveyard!.length).toBe(200);

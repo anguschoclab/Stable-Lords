@@ -4,22 +4,27 @@
 
 **Goal:** Give `WarriorLineage` real mechanical weight — an heir can **inherit a parent's trait**, and `pedigree` grants a **starting-fame edge** — so the graveyard feeds recruitment and a dead champion's identity echoes in their descendant instead of being flavor text.
 
-**Architecture:** Lineage generation already exists and already fires: `RecruitmentPass` collects `legacyCandidates` from `graveyard + retired` (`fame > 1000`), and `generateRecruit` gives a 5% chance to produce an heir who **inherits the parent's fighting style** plus a `lineage` record. What's missing is any *consequence*: a grep proves `pedigree` is read by **zero** engine systems, and the heir's traits come from a plain `generateTraits` call with no parental link. We add a pure `lineageEffects.ts` (inheritance roll + pedigree fame table), call it from `generateRecruit`, and surface lineage in the dossier.
+**Architecture:** Lineage generation already exists and already fires: `RecruitmentPass` collects `legacyCandidates` from `graveyard + retired` (`fame > 1000`), and `generateRecruit` gives a 5% chance to produce an heir who **inherits the parent's fighting style** plus a `lineage` record. What's missing is any _consequence_: a grep proves `pedigree` is read by **zero** engine systems, and the heir's traits come from a plain `generateTraits` call with no parental link. We add a pure `lineageEffects.ts` (inheritance roll + pedigree fame table), call it from `generateRecruit`, and surface lineage in the dossier.
 
 **Tech Stack:** TypeScript, React 18, Tailwind + shadcn/ui, Bun (`bun`/`bunx` — never npm/node), Vitest + Testing Library.
 
-**Scope:** Recruitment-time effects + one UI surface. **Non-goals:** changing `generateTraits` itself (the sparse-starts contract and its tests stay untouched — inheritance is applied *after*, in `generateRecruit`), attribute inheritance, breeding/pairing mechanics, or combat math (`balance.test.ts` stays green).
+**Scope:** Recruitment-time effects + one UI surface. **Non-goals:** changing `generateTraits` itself (the sparse-starts contract and its tests stay untouched — inheritance is applied _after_, in `generateRecruit`), attribute inheritance, breeding/pairing mechanics, or combat math (`balance.test.ts` stays green).
 
 **Grounded facts (measured — do not re-derive):**
+
 - `WarriorLineage` (`src/types/warrior.types.ts`): `{ parentId?, stableId?, generation, pedigree: 'Commoner'|'Second Generation'|'Legacy'|'Noble Blood'|'Exiled Legend', mentorName? }`.
 - `generateRecruit(rng, usedNames, week, forceTier?, meta?, legacyCandidates = [])` — `src/engine/recruitment.ts:133–139`. Legacy branch at lines ~146–156:
   ```typescript
   const isLegacy = rng.next() < 0.05 && legacyCandidates.length > 0;
   if (isLegacy) {
     const parent = rng.pick(legacyCandidates);
-    style = parent.style;                       // heir inherits the STYLE already
-    lineage = { parentId: parent.id, generation: (parent.lineage?.generation ?? 1) + 1,
-                pedigree: parent.fame > 2000 ? 'Noble Blood' : 'Legacy', mentorName: parent.name };
+    style = parent.style; // heir inherits the STYLE already
+    lineage = {
+      parentId: parent.id,
+      generation: (parent.lineage?.generation ?? 1) + 1,
+      pedigree: parent.fame > 2000 ? 'Noble Blood' : 'Legacy',
+      mentorName: parent.name,
+    };
   }
   ```
 - Traits are assigned later in the same function: `const traits = generateTraits(rng, archetype);` (line ~175), then personality `attrBonus` is applied (lines ~177–178), and `traits` lands in the returned object (~line 217).
@@ -44,6 +49,7 @@
 ## Task 1: Pure lineage effects (TDD)
 
 **Files:**
+
 - Create: `src/engine/lineage/lineageEffects.ts`
 - Create: `src/test/engine/lineage/lineageEffects.test.ts`
 
@@ -179,6 +185,7 @@ git commit -m "feat(lineage): pure inheritance roll + pedigree fame table"
 ## Task 2: Wire inheritance and pedigree into recruitment (TDD)
 
 **Files:**
+
 - Modify: `src/engine/recruitment.ts`
 - Create: `src/test/engine/lineage/heirRecruit.test.ts`
 
@@ -195,7 +202,9 @@ import type { Warrior } from '@/types/warrior.types';
 
 const legend = (): Warrior =>
   ({
-    id: 'legend1', name: 'Old Iron', fame: 2500,
+    id: 'legend1',
+    name: 'Old Iron',
+    fame: 2500,
     style: FightingStyle.WallOfSteel,
     traits: ['quick'], // a plain Notable so inheritance is observable
     lineage: undefined,
@@ -238,26 +247,26 @@ describe('heir recruits', () => {
 
 Three edits in `src/engine/recruitment.ts`:
 
-**(a) Stamp non-heirs as Commoner.** In the legacy branch (~lines 146–156), add an `else` so every recruit carries a meaningful pedigree. Directly after the existing `if (isLegacy) { … }` block's closing brace — but *before* the `else if (meta)` style-selection branch, which is a separate concern — set a default. The cleanest placement is right after the whole style/lineage selection completes:
+**(a) Stamp non-heirs as Commoner.** In the legacy branch (~lines 146–156), add an `else` so every recruit carries a meaningful pedigree. Directly after the existing `if (isLegacy) { … }` block's closing brace — but _before_ the `else if (meta)` style-selection branch, which is a separate concern — set a default. The cleanest placement is right after the whole style/lineage selection completes:
 
 ```typescript
-  // Every recruit carries a pedigree; commoners are the baseline.
-  if (!lineage) {
-    lineage = { generation: 1, pedigree: 'Commoner' };
-  }
+// Every recruit carries a pedigree; commoners are the baseline.
+if (!lineage) {
+  lineage = { generation: 1, pedigree: 'Commoner' };
+}
 ```
 
-**(b) Inherit a parent trait.** Immediately after `const traits = generateTraits(rng, archetype);` (~line 175), and *before* the personality `attrBonus` loop that follows (so an inherited personality trait's bonus is applied too):
+**(b) Inherit a parent trait.** Immediately after `const traits = generateTraits(rng, archetype);` (~line 175), and _before_ the personality `attrBonus` loop that follows (so an inherited personality trait's bonus is applied too):
 
 ```typescript
-  // 🧬 Bloodline: an heir may inherit one of the parent's traits. Applied after
-  // generateTraits so the sparse-starts contract for ordinary recruits is intact.
-  if (isLegacy && legacyParent) {
-    const inherited = rollInheritedTrait(legacyParent, rng);
-    if (inherited && !traits.includes(inherited)) {
-      traits.push(inherited);
-    }
+// 🧬 Bloodline: an heir may inherit one of the parent's traits. Applied after
+// generateTraits so the sparse-starts contract for ordinary recruits is intact.
+if (isLegacy && legacyParent) {
+  const inherited = rollInheritedTrait(legacyParent, rng);
+  if (inherited && !traits.includes(inherited)) {
+    traits.push(inherited);
   }
+}
 ```
 
 This requires capturing the picked parent. In the legacy branch, change `const parent = rng.pick(legacyCandidates);` so the reference survives — declare `let legacyParent: import('@/types/warrior.types').Warrior | undefined;` next to the `let lineage` declaration (~line 144) and assign `legacyParent = parent;` inside the branch.
@@ -290,6 +299,7 @@ git commit -m "feat(lineage): heirs inherit a parent trait; pedigree grants star
 ## Task 3: Make bloodlines observable (named knob + measurement)
 
 **Files:**
+
 - Modify: `src/engine/pipeline/passes/RecruitmentPass.ts`
 
 The legacy pool requires `fame > 1000`, and heirs are a flat 5% of draws. If almost no warrior reaches fame 1000, the whole system is dormant. Name the knob and measure.
@@ -306,9 +316,9 @@ export const LEGACY_PARENT_FAME_THRESHOLD = 600;
 and change the filter (lines ~20–23) to:
 
 ```typescript
-  const legacyCandidates = [...(state.graveyard || []), ...(state.retired || [])].filter(
-    (w) => w.fame >= LEGACY_PARENT_FAME_THRESHOLD
-  );
+const legacyCandidates = [...(state.graveyard || []), ...(state.retired || [])].filter(
+  (w) => w.fame >= LEGACY_PARENT_FAME_THRESHOLD
+);
 ```
 
 - [ ] **Step 2: Measure over a real world**
@@ -332,6 +342,7 @@ git commit -m "tune(lineage): named legacy-parent fame knob so bloodlines actual
 ## Task 4: Surface lineage in the dossier
 
 **Files:**
+
 - Modify: the warrior dossier (locate first)
 
 Pedigree is currently invisible to the player — a mechanic nobody can see is a mechanic that doesn't exist.
@@ -345,13 +356,15 @@ Run: `ls src/components/warrior/dossier/` and pick the header/identity component
 Add, guarded so commoners show nothing:
 
 ```tsx
-{warrior.lineage && warrior.lineage.pedigree !== 'Commoner' && (
-  <p className="text-[11px] text-muted-foreground">
-    <span className="font-semibold text-arena-gold">{warrior.lineage.pedigree}</span>
-    {warrior.lineage.mentorName && <> — heir of {warrior.lineage.mentorName}</>}
-    {warrior.lineage.generation > 1 && <> · generation {warrior.lineage.generation}</>}
-  </p>
-)}
+{
+  warrior.lineage && warrior.lineage.pedigree !== 'Commoner' && (
+    <p className="text-[11px] text-muted-foreground">
+      <span className="font-semibold text-arena-gold">{warrior.lineage.pedigree}</span>
+      {warrior.lineage.mentorName && <> — heir of {warrior.lineage.mentorName}</>}
+      {warrior.lineage.generation > 1 && <> · generation {warrior.lineage.generation}</>}
+    </p>
+  );
+}
 ```
 
 Every value maps to real lineage data — no invented flavor. (`arena-gold` is an existing token used elsewhere in the dossier.)
@@ -379,10 +392,10 @@ git commit -m "feat(ui): dossier shows pedigree and parent for heirs"
 
 ## Self-Review Notes
 
-- **Activates dormant data.** Lineage generation, style inheritance, and the legacy-candidate pipeline already existed; `pedigree` had *zero* consumers. This plan adds consequences, not scaffolding.
-- **Sparse-starts stays intact.** Inheritance is applied in `generateRecruit` *after* `generateTraits`, so `generateTraits.test.ts`'s "never Exceptional/Signature/class at birth" contract is untouched — heirs are the deliberate, rare exception, and Signature is *still* excluded from inheritance so the top tier is always earned.
+- **Activates dormant data.** Lineage generation, style inheritance, and the legacy-candidate pipeline already existed; `pedigree` had _zero_ consumers. This plan adds consequences, not scaffolding.
+- **Sparse-starts stays intact.** Inheritance is applied in `generateRecruit` _after_ `generateTraits`, so `generateTraits.test.ts`'s "never Exceptional/Signature/class at birth" contract is untouched — heirs are the deliberate, rare exception, and Signature is _still_ excluded from inheritance so the top tier is always earned.
 - **Class traits are safe to inherit** precisely because heirs already inherit the parent's style, so the `styles` restriction holds by construction.
-- **Rarity preserved.** 5% legacy draw × 35% inheritance ≈ under 2% of recruits carry a parent's trait — special, not routine. The knob raised is the *fame threshold* (which decides whether legends exist at all), never the heir rate.
+- **Rarity preserved.** 5% legacy draw × 35% inheritance ≈ under 2% of recruits carry a parent's trait — special, not routine. The knob raised is the _fame threshold_ (which decides whether legends exist at all), never the heir rate.
 - **Closes the emotional loop.** Graveyard → recruit pool → an heir with the family gift and a name the crowd already knows.
 
 ## Verification

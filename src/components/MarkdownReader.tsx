@@ -12,11 +12,7 @@ interface MarkdownReaderProps {
  * Pre-processes markdown content to wrap entity names in markdown links.
  * Entity links use the format `[Name](#entity:warrior:Name)` or `[Name](#entity:stable:Name)`.
  */
-function linkifyMarkdown(
-  content: string,
-  warriorNames?: string[],
-  stableNames?: string[]
-): string {
+function linkifyMarkdown(content: string, warriorNames?: string[], stableNames?: string[]): string {
   if (!warriorNames?.length && !stableNames?.length) return content;
 
   const stableSet = new Set(stableNames ?? []);
@@ -43,9 +39,7 @@ export function MarkdownReader({ content, warriorNames, stableNames }: MarkdownR
   const processedContent = linkifyMarkdown(content, warriorNames, stableNames);
 
   return (
-    <div
-      className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-primary prose-a:text-arena-blue hover:prose-a:text-arena-gold prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded prose-pre:bg-secondary prose-pre:border prose-pre:border-border"
-    >
+    <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-primary prose-a:text-arena-blue hover:prose-a:text-arena-gold prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded prose-pre:bg-secondary prose-pre:border prose-pre:border-border">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

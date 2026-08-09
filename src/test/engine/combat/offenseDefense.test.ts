@@ -3,18 +3,23 @@
  * pins current behavior before refactoring. Tests run against unrefactored code.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  resolveCombatOffenseDefense,
-} from '@/engine/combat/resolution/offenseDefense';
+import { resolveCombatOffenseDefense } from '@/engine/combat/resolution/offenseDefense';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import { FightingStyle } from '@/types/shared.types';
 import type { WeatherType, PsychState, DistanceRange, ArenaZone } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import { resolveEffectiveTactics } from '@/engine/combat/resolution/tactics';
-import { getOffensiveTacticMods, getDefensiveTacticMods } from '@/engine/combat/mechanics/tacticResolution';
+import {
+  getOffensiveTacticMods,
+  getDefensiveTacticMods,
+} from '@/engine/combat/mechanics/tacticResolution';
 import { getStylePassive } from '@/engine/stylePassives';
 import { getDynamicTraitMods } from '@/engine/traits';
-import { makeExchangeState, runCommit, type ExchangeState } from '@/engine/combat/resolution/exchangeSubPhases';
+import {
+  makeExchangeState,
+  runCommit,
+  type ExchangeState,
+} from '@/engine/combat/resolution/exchangeSubPhases';
 
 function makeFighter(overrides: Partial<FighterState> = {}): FighterState {
   return {
@@ -106,12 +111,14 @@ interface SetupResult {
   biasDefD: number;
 }
 
-function setupExchange(overrides: {
-  fA?: Partial<FighterState>;
-  fD?: Partial<FighterState>;
-  ctx?: Partial<ResolutionContext>;
-  aGoesFirst?: boolean;
-} = {}): SetupResult {
+function setupExchange(
+  overrides: {
+    fA?: Partial<FighterState>;
+    fD?: Partial<FighterState>;
+    ctx?: Partial<ResolutionContext>;
+    aGoesFirst?: boolean;
+  } = {}
+): SetupResult {
   const fA = makeFighter({ ...overrides.fA });
   const fD = makeFighter({ label: 'D', style: FightingStyle.ParryRiposte, ...overrides.fD });
   const ctx = makeCtx(overrides.ctx);
@@ -181,11 +188,33 @@ function setupExchange(overrides: {
   es.recoveryDebtToWriteD = defCommit.debtToWrite;
 
   return {
-    ctx, fA, fD, es, events,
-    tactA, tactD, offModsA, offModsD, defModsA, defModsD,
-    passA, passD, dynTraitsA, dynTraitsD, psychA, psychD,
-    OE_A, AL_A, OE_D, AL_D, fatA, fatD,
-    biasAttA, biasDefA, biasAttD, biasDefD,
+    ctx,
+    fA,
+    fD,
+    es,
+    events,
+    tactA,
+    tactD,
+    offModsA,
+    offModsD,
+    defModsA,
+    defModsD,
+    passA,
+    passD,
+    dynTraitsA,
+    dynTraitsD,
+    psychA,
+    psychD,
+    OE_A,
+    AL_A,
+    OE_D,
+    AL_D,
+    fatA,
+    fatD,
+    biasAttA,
+    biasDefA,
+    biasAttD,
+    biasDefD,
   };
 }
 
@@ -253,8 +282,14 @@ describe('resolveCombatOffenseDefense — attack success path', () => {
 
   it('can produce HIT events on successful attack + failed defense', () => {
     const s = setupExchange({
-      fA: { style: FightingStyle.StrikingAttack, skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } },
-      fD: { style: FightingStyle.WallOfSteel, skills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 } },
+      fA: {
+        style: FightingStyle.StrikingAttack,
+        skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+      },
+      fD: {
+        style: FightingStyle.WallOfSteel,
+        skills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+      },
       ctx: { rng: () => 0.01 },
     });
     callResolveCombatOffenseDefense(s, true);
@@ -278,8 +313,16 @@ describe('resolveCombatOffenseDefense — counterstrike spending', () => {
 describe('resolveCombatOffenseDefense — momentum shift on hit', () => {
   it('attacker and defender momentum change from initial 0 on a landed hit', () => {
     const s = setupExchange({
-      fA: { style: FightingStyle.StrikingAttack, skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 }, momentum: 0 },
-      fD: { style: FightingStyle.WallOfSteel, skills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 }, momentum: 0 },
+      fA: {
+        style: FightingStyle.StrikingAttack,
+        skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+        momentum: 0,
+      },
+      fD: {
+        style: FightingStyle.WallOfSteel,
+        skills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+        momentum: 0,
+      },
       ctx: { rng: () => 0.01 },
     });
     callResolveCombatOffenseDefense(s, true);
@@ -296,8 +339,14 @@ describe('resolveCombatOffenseDefense — momentum shift on hit', () => {
 describe('resolveCombatOffenseDefense — successful defense (parry)', () => {
   it('pushes DEFENSE event on successful parry', () => {
     const s = setupExchange({
-      fA: { style: FightingStyle.StrikingAttack, skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } },
-      fD: { style: FightingStyle.ParryRiposte, skills: { ATT: 5, PAR: 20, DEF: 20, INI: 10, RIP: 20, DEC: 10 } },
+      fA: {
+        style: FightingStyle.StrikingAttack,
+        skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+      },
+      fD: {
+        style: FightingStyle.ParryRiposte,
+        skills: { ATT: 5, PAR: 20, DEF: 20, INI: 10, RIP: 20, DEC: 10 },
+      },
       ctx: { rng: () => 0.01 }, // low rng → attacker succeeds, defender also succeeds with high PAR
     });
     callResolveCombatOffenseDefense(s, true);
@@ -309,8 +358,14 @@ describe('resolveCombatOffenseDefense — successful defense (parry)', () => {
 describe('resolveCombatOffenseDefense — PS counterstrike priming', () => {
   it('primes counterstrikePrimed on successful PS parry', () => {
     const s = setupExchange({
-      fA: { style: FightingStyle.StrikingAttack, skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } },
-      fD: { style: FightingStyle.ParryStrike, skills: { ATT: 5, PAR: 25, DEF: 25, INI: 10, RIP: 25, DEC: 10 } },
+      fA: {
+        style: FightingStyle.StrikingAttack,
+        skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+      },
+      fD: {
+        style: FightingStyle.ParryStrike,
+        skills: { ATT: 5, PAR: 25, DEF: 25, INI: 10, RIP: 25, DEC: 10 },
+      },
       ctx: { rng: () => 0.01 },
     });
     callResolveCombatOffenseDefense(s, true);
@@ -325,8 +380,14 @@ describe('resolveCombatOffenseDefense — PS counterstrike priming', () => {
 describe('resolveCombatOffenseDefense — PR riposte streak', () => {
   it('updates riposteStreak on ParryRiposte after riposte check', () => {
     const s = setupExchange({
-      fA: { style: FightingStyle.StrikingAttack, skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } },
-      fD: { style: FightingStyle.ParryRiposte, skills: { ATT: 5, PAR: 25, DEF: 25, INI: 10, RIP: 25, DEC: 10 } },
+      fA: {
+        style: FightingStyle.StrikingAttack,
+        skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+      },
+      fD: {
+        style: FightingStyle.ParryRiposte,
+        skills: { ATT: 5, PAR: 25, DEF: 25, INI: 10, RIP: 25, DEC: 10 },
+      },
       ctx: { rng: () => 0.01 },
     });
     callResolveCombatOffenseDefense(s, true);

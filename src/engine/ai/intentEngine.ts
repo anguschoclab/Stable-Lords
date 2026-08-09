@@ -186,10 +186,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   if (strategy.intent !== 'RECOVERY' && rival.treasury < 150) return true;
 
   // Skepticism Tier 2: Roster Depletion
-  const activeCount = rival.roster.reduce(
-    (count, w) => (isActive(w) ? count + 1 : count),
-    0
-  );
+  const activeCount = rival.roster.reduce((count, w) => (isActive(w) ? count + 1 : count), 0);
   if (strategy.intent === 'VENDETTA' && activeCount < 3) return true;
 
   // Skepticism Tier 3: Meta Hostility (Methodical/Tactician agents only)
@@ -256,7 +253,8 @@ export function updateAIStrategy(
     if (intent === 'VENDETTA') {
       const grudgeTarget = findGrudge(state.grudgeMap, rival.owner.id);
       if (grudgeTarget !== undefined) {
-        targetStableId = grudgeTarget.ownerIdA === rival.owner.id ? grudgeTarget.ownerIdB : grudgeTarget.ownerIdA;
+        targetStableId =
+          grudgeTarget.ownerIdA === rival.owner.id ? grudgeTarget.ownerIdB : grudgeTarget.ownerIdA;
       }
       // If no grudge target but player triggered the vendetta, target the player stable
       if (!targetStableId) {

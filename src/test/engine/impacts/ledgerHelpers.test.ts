@@ -5,7 +5,9 @@ import type { LedgerEntry } from '@/types/state.types';
 
 function makeMockRng(): IRNGService {
   return {
-    uuid: vi.fn().mockImplementation((prefix?: string) => (prefix ? `${prefix}-mock-id` : 'mock-id')),
+    uuid: vi
+      .fn()
+      .mockImplementation((prefix?: string) => (prefix ? `${prefix}-mock-id` : 'mock-id')),
     next: vi.fn().mockReturnValue(0),
     pick: vi.fn().mockImplementation(<T>(arr: T[]) => arr[0] as T),
     roll: vi.fn().mockReturnValue(0),

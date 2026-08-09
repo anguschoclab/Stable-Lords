@@ -34,7 +34,10 @@ describe('useShallow stability audit', () => {
         violations.push(path.basename(file));
       }
     }
-    expect(violations, `Files with .map() inside useShallow: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Files with .map() inside useShallow: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 
   it('no useShallow selector creates new arrays via Array.from() inside selector', () => {
@@ -51,7 +54,10 @@ describe('useShallow stability audit', () => {
         violations.push(path.basename(file));
       }
     }
-    expect(violations, `Files with Array.from() inside useShallow: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Files with Array.from() inside useShallow: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 
   it('all useShallow selectors return either direct state or object of state slices', () => {

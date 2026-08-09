@@ -2,7 +2,18 @@
  * Fight and combat Zod schemas (bouts, tournaments, outcomes, analysis, gazette).
  */
 import { z } from 'zod';
-import { FightingStyleSchema, SeasonSchema, CrowdMoodTypeSchema, WeatherTypeSchema, BoutOfferStatusSchema, BoutOfferResponseSchema, FightOutcomeBySchema, CombatEventTypeSchema, DeathCauseBucketSchema, AnnualAwardTypeSchema } from './schemaEnums';
+import {
+  FightingStyleSchema,
+  SeasonSchema,
+  CrowdMoodTypeSchema,
+  WeatherTypeSchema,
+  BoutOfferStatusSchema,
+  BoutOfferResponseSchema,
+  FightOutcomeBySchema,
+  CombatEventTypeSchema,
+  DeathCauseBucketSchema,
+  AnnualAwardTypeSchema,
+} from './schemaEnums';
 import { WarriorSchema, DeathEventSchema } from './warriorSchemas';
 
 /**

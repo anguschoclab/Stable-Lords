@@ -37,11 +37,16 @@ describe('UI polish — no duplicate motion-reduce classes', () => {
         const cls = match[1] || '';
         const count = (cls.match(/motion-reduce:transition-none/g) || []).length;
         if (count > 1) {
-          violations.push(`${path.relative(COMPONENTS_DIR, file)}: ${count}x motion-reduce:transition-none`);
+          violations.push(
+            `${path.relative(COMPONENTS_DIR, file)}: ${count}x motion-reduce:transition-none`
+          );
         }
       }
     }
-    expect(violations, `Duplicate motion-reduce:transition-none found:\n${violations.join('\n')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Duplicate motion-reduce:transition-none found:\n${violations.join('\n')}`
+    ).toHaveLength(0);
   });
 
   it('no className string has duplicate motion-reduce:transform-none', () => {
@@ -53,10 +58,15 @@ describe('UI polish — no duplicate motion-reduce classes', () => {
         const cls = match[1] || '';
         const count = (cls.match(/motion-reduce:transform-none/g) || []).length;
         if (count > 1) {
-          violations.push(`${path.relative(COMPONENTS_DIR, file)}: ${count}x motion-reduce:transform-none`);
+          violations.push(
+            `${path.relative(COMPONENTS_DIR, file)}: ${count}x motion-reduce:transform-none`
+          );
         }
       }
     }
-    expect(violations, `Duplicate motion-reduce:transform-none found:\n${violations.join('\n')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Duplicate motion-reduce:transform-none found:\n${violations.join('\n')}`
+    ).toHaveLength(0);
   });
 });

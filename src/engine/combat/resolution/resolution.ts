@@ -15,10 +15,7 @@ import {
   runRecovery,
 } from './exchangeSubPhases';
 import { tickBleed } from './bleed';
-import {
-  resolveInitiativePhase,
-  resolveCombatOffenseDefense,
-} from './phaseResolvers';
+import { resolveInitiativePhase, resolveCombatOffenseDefense } from './phaseResolvers';
 import { prepareExchange } from './exchangePrep';
 import type { FighterState, ResolutionContext } from './types';
 import { type Phase as StylePhase } from '../../stylePassives';
@@ -29,7 +26,12 @@ export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 export { DECISION_HIT_MARGIN, getMatchupBonus } from '@/constants/combat';
 export { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 export { applySpecialtyMods } from './specialtyMods';
-export { resolveInitiativePhase, resolveWhiffRiposte, resolveContestedDefense, resolveCombatOffenseDefense } from './phaseResolvers';
+export {
+  resolveInitiativePhase,
+  resolveWhiffRiposte,
+  resolveContestedDefense,
+  resolveCombatOffenseDefense,
+} from './phaseResolvers';
 export type { OffenseDefenseCtx } from './phaseResolvers';
 export { styleRiposteBonus } from './styleRiposteBonus';
 

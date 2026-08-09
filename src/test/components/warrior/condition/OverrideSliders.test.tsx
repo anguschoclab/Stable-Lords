@@ -35,10 +35,7 @@ describe('OverrideSliders', () => {
 
   it('shows "clear" button when override is defined', () => {
     render(
-      <OverrideSliders
-        cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })}
-        onSliderChange={vi.fn()}
-      />
+      <OverrideSliders cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })} onSliderChange={vi.fn()} />
     );
     expect(screen.getByRole('button', { name: 'Clear OE override' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Clear AL override' })).toBeInTheDocument();
@@ -47,10 +44,7 @@ describe('OverrideSliders', () => {
 
   it('renders sliders only for defined overrides', () => {
     const { container } = render(
-      <OverrideSliders
-        cond={makeCond({ OE: 5 })}
-        onSliderChange={vi.fn()}
-      />
+      <OverrideSliders cond={makeCond({ OE: 5 })} onSliderChange={vi.fn()} />
     );
     const sliders = container.querySelectorAll('[role="slider"]');
     expect(sliders).toHaveLength(1);
@@ -58,10 +52,7 @@ describe('OverrideSliders', () => {
 
   it('renders all 3 sliders when all overrides are defined', () => {
     const { container } = render(
-      <OverrideSliders
-        cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })}
-        onSliderChange={vi.fn()}
-      />
+      <OverrideSliders cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })} onSliderChange={vi.fn()} />
     );
     const sliders = container.querySelectorAll('[role="slider"]');
     expect(sliders).toHaveLength(3);
@@ -69,10 +60,7 @@ describe('OverrideSliders', () => {
 
   it('displays current override values in labels', () => {
     render(
-      <OverrideSliders
-        cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })}
-        onSliderChange={vi.fn()}
-      />
+      <OverrideSliders cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })} onSliderChange={vi.fn()} />
     );
     expect(screen.getByText(/OE.*5/)).toBeInTheDocument();
     expect(screen.getByText(/AL.*3/)).toBeInTheDocument();
@@ -88,12 +76,7 @@ describe('OverrideSliders', () => {
 
   it('calls onSliderChange with undefined when clear button clicked', () => {
     const onSliderChange = vi.fn();
-    render(
-      <OverrideSliders
-        cond={makeCond({ OE: 5 })}
-        onSliderChange={onSliderChange}
-      />
-    );
+    render(<OverrideSliders cond={makeCond({ OE: 5 })} onSliderChange={onSliderChange} />);
     fireEvent.click(screen.getByRole('button', { name: 'Clear OE override' }));
     expect(onSliderChange).toHaveBeenCalledWith('OE', undefined);
   });
@@ -113,10 +96,7 @@ describe('OverrideSliders', () => {
 
   it('renders with correct slider range (min=1, max=10)', () => {
     const { container } = render(
-      <OverrideSliders
-        cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })}
-        onSliderChange={vi.fn()}
-      />
+      <OverrideSliders cond={makeCond({ OE: 5, AL: 3, killDesire: 7 })} onSliderChange={vi.fn()} />
     );
     const sliders = container.querySelectorAll('[role="slider"]');
     for (const slider of sliders) {

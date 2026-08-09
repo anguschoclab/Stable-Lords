@@ -11,8 +11,14 @@ import PlanBuilder from '@/components/PlanBuilder';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 
 export default function TrainingPlanner() {
-  const { activeWarriors, selectedId, setSelectedId, selectedWarrior, plansSetCount, handlePlanChange } =
-    useTrainingPlanner();
+  const {
+    activeWarriors,
+    selectedId,
+    setSelectedId,
+    selectedWarrior,
+    plansSetCount,
+    handlePlanChange,
+  } = useTrainingPlanner();
 
   return (
     <PageFrame>

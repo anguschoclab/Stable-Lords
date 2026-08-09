@@ -24,7 +24,10 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label htmlFor="contingency-plans-switch" className="flex items-center gap-2 cursor-pointer">
+        <Label
+          htmlFor="contingency-plans-switch"
+          className="flex items-center gap-2 cursor-pointer"
+        >
           <GitBranch className="w-4 h-4 text-arena-pop" />
           <span className="text-[10px] font-black uppercase tracking-widest text-arena-pop">
             Contingency Plans
@@ -35,7 +38,11 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
             </Badge>
           )}
         </Label>
-        <Switch id="contingency-plans-switch" checked={showConditions} onCheckedChange={setShowConditions} />
+        <Switch
+          id="contingency-plans-switch"
+          checked={showConditions}
+          onCheckedChange={setShowConditions}
+        />
       </div>
 
       {showConditions && (

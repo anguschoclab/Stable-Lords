@@ -23,7 +23,11 @@ import {
 import { applyGearUpgrade } from './rosterWorkerEquipment';
 
 // Re-export public symbols for backward compatibility
-export { selectTrainingFocus, FLAW_EXPOSURE_CHANCE, QUALIFIED_DEV_APPETITE } from './rosterWorkerTraining';
+export {
+  selectTrainingFocus,
+  FLAW_EXPOSURE_CHANCE,
+  QUALIFIED_DEV_APPETITE,
+} from './rosterWorkerTraining';
 
 /**
  * RosterWorker: Handles training and equipment.
@@ -182,4 +186,3 @@ export function processRoster(
 
   return updatedRival;
 }
-

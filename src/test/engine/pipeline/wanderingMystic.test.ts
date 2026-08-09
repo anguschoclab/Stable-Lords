@@ -14,7 +14,11 @@ describe('runSeasonalPass - wandering_mystic', () => {
     rng.next = () => {
       callCount++;
       if (callCount === 1) {
-        return (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_mystic') + 0.5) / eventCount;
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_mystic') +
+            0.5) /
+          eventCount
+        );
       }
       return 0.5;
     };

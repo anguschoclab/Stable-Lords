@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { renderHook } from '@testing-library/react';
@@ -14,11 +13,10 @@ import {
   useArenaPreferences,
   useBookmarks,
   useWarriorNameState,
-  useStyleStats
+  useStyleStats,
 } from '@/state/selectors';
 
 import { useGameStore } from '@/state/useGameStore';
-
 
 describe('selectors', () => {
   const mockState = {
@@ -26,7 +24,7 @@ describe('selectors', () => {
     roster: [
       { id: 'w1', name: 'Warrior 1', style: 'Gladiator', career: { wins: 5, losses: 0 } },
       { id: 'w2', name: 'Warrior 2', style: 'Retiarius', career: { wins: 2, losses: 2 } },
-      { id: 'w3', name: 'Warrior 3', style: 'Gladiator', career: { wins: 0, losses: 5 } }
+      { id: 'w3', name: 'Warrior 3', style: 'Gladiator', career: { wins: 0, losses: 5 } },
     ],
     rivals: [{ id: 'r1', name: 'Rival Stable' }],
     treasury: 1500,
@@ -40,7 +38,7 @@ describe('selectors', () => {
     trainers: [],
     arenaPreferences: { bgm: true },
     bookmarks: ['w1', 'r1'],
-    retired: []
+    retired: [],
   } as any;
 
   beforeEach(() => {
@@ -88,7 +86,7 @@ describe('selectors', () => {
       player: mockState.player,
       fame: mockState.fame,
       trainingAssignments: mockState.trainingAssignments,
-      trainers: mockState.trainers
+      trainers: mockState.trainers,
     });
   });
 
@@ -109,7 +107,7 @@ describe('selectors', () => {
       roster: mockState.roster,
       graveyard: mockState.graveyard,
       retired: mockState.retired,
-      rivals: mockState.rivals
+      rivals: mockState.rivals,
     });
   });
 
@@ -122,20 +120,14 @@ describe('selectors', () => {
     expect(result.current.length).toBe(2);
     // Since winRate is the same, order depends on Array.from(Map) iteration order which is insertion order
     // "Gladiator" is inserted first
-    expect(result.current).toContainEqual(
-      { style: 'Gladiator', wins: 5, losses: 5, winRate: 0.5 }
-    );
-    expect(result.current).toContainEqual(
-      { style: 'Retiarius', wins: 2, losses: 2, winRate: 0.5 }
-    );
+    expect(result.current).toContainEqual({ style: 'Gladiator', wins: 5, losses: 5, winRate: 0.5 });
+    expect(result.current).toContainEqual({ style: 'Retiarius', wins: 2, losses: 2, winRate: 0.5 });
   });
 
   it('useStyleStats handles warriors with no career safely', () => {
     useGameStore.setState({
       ...mockState,
-      roster: [
-        { id: 'w4', name: 'Warrior 4', style: 'Dimachaerus', career: undefined as any }
-      ]
+      roster: [{ id: 'w4', name: 'Warrior 4', style: 'Dimachaerus', career: undefined as any }],
     });
 
     const { result } = renderHook(() => useStyleStats());

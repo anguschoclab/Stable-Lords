@@ -42,5 +42,4 @@ describe('New Arenas System Integration', () => {
     });
     expect(foundJungle).toBe(true);
   });
-
 });

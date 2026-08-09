@@ -23,10 +23,7 @@ import {
   MOMENTUM_FLOOR,
   MOMENTUM_INI_MULT,
 } from '@/constants/combat';
-import {
-  type OffensiveMods,
-  type DefensiveMods,
-} from '../mechanics/tacticResolution';
+import { type OffensiveMods, type DefensiveMods } from '../mechanics/tacticResolution';
 import type { CommitResult, ExchangeState } from './exchangeSubPhases';
 import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';
 import { getStyleWeatherModifier } from '@/constants/arena';
@@ -314,7 +311,7 @@ function computeAttackBonuses(
   psychA: PsychStateMod,
   psychD: PsychStateMod,
   dynTraitsA: DynamicTraitMods,
-  dynTraitsD: DynamicTraitMods,
+  dynTraitsD: DynamicTraitMods
 ): {
   momentumBonus: number;
   psychMod: number;
@@ -409,7 +406,14 @@ export function resolveCombatOffenseDefense(
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
 
   const bonuses = computeAttackBonuses(
-    ctx, aGoesFirst, att, def, psychA, psychD, dynTraitsA, dynTraitsD
+    ctx,
+    aGoesFirst,
+    att,
+    def,
+    psychA,
+    psychD,
+    dynTraitsA,
+    dynTraitsD
   );
 
   const attSucc = performAttackCheck(

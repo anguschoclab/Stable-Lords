@@ -19,7 +19,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: +5,
     riposteMod: -2,
     damageMult: 1.25,
-    description: 'The fabric of space tears open. Cosmic energies empower fighters but make them erratic.',
+    description:
+      'The fabric of space tears open. Cosmic energies empower fighters but make them erratic.',
   },
 
   'Prismatic Rain': {
@@ -426,7 +427,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: 4,
     riposteMod: 1,
     damageMult: 1.1,
-    description: 'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
+    description:
+      'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
   },
 };
 

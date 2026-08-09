@@ -152,7 +152,6 @@ describe('loreGenerator', () => {
     const expectedNew = [
       'until they shattered a warden\u2019s jaw with a single, perfectly timed kick',
       'knowing that only the roar of the colosseum could silence the screams of their past',
-
     ];
     for (const entry of expectedNew) {
       expect(moments, `missing defining moment: ${entry}`).toContain(entry);
@@ -164,7 +163,9 @@ describe('loreGenerator', () => {
     const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
     const moments = extractStringArray(source, 'DEFINING_MOMENTS');
     expect(traits).not.toContain('learned to sleep with one eye open after the workhouse riots');
-    expect(moments).not.toContain('waiting for the moment the iron portcullis would rise on their destiny');
+    expect(moments).not.toContain(
+      'waiting for the moment the iron portcullis would rise on their destiny'
+    );
   });
 
   it('ORIGINS array entries are all valid string literals', () => {

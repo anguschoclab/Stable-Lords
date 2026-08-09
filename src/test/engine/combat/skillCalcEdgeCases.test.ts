@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { computeBaseSkills, computeHP, computeEndurance, computeDamage, computeDerivedStats } from '@/engine/skillCalc';
+import {
+  computeBaseSkills,
+  computeHP,
+  computeEndurance,
+  computeDamage,
+  computeDerivedStats,
+} from '@/engine/skillCalc';
 import { FightingStyle } from '@/types/shared.types';
 import type { Attributes } from '@/types/shared.types';
 
@@ -28,7 +34,9 @@ describe('skillCalcEdgeCases', () => {
     // All skills should be integers (no floating point)
     const skills = computeBaseSkills(midAttrs, FightingStyle.TotalParry);
     for (const key of Object.keys(skills) as (keyof typeof skills)[]) {
-      expect(Number.isInteger(skills[key]), `${key} should be an integer, got ${skills[key]}`).toBe(true);
+      expect(Number.isInteger(skills[key]), `${key} should be an integer, got ${skills[key]}`).toBe(
+        true
+      );
     }
   });
 

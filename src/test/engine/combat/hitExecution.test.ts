@@ -122,8 +122,20 @@ function callExecuteHit(opts: CallOpts = {}): {
   const rng = opts.rng ?? (() => 0.5);
   const tactA = resolveEffectiveTactics(attacker.activePlan, 'opening');
   const offModsA = getOffensiveTacticMods(tactA.offTactic, attacker.style);
-  const passA = getPassive(attacker.style, attacker.hp, attacker.maxHp, attacker.endurance, attacker.maxEndurance);
-  const passD = getPassive(defender.style, defender.hp, defender.maxHp, defender.endurance, defender.maxEndurance);
+  const passA = getPassive(
+    attacker.style,
+    attacker.hp,
+    attacker.maxHp,
+    attacker.endurance,
+    attacker.maxEndurance
+  );
+  const passD = getPassive(
+    defender.style,
+    defender.hp,
+    defender.maxHp,
+    defender.endurance,
+    defender.maxEndurance
+  );
 
   executeHit(
     events,
@@ -177,7 +189,10 @@ describe('executeHit — survival strike path', () => {
   it('pushes BOUT_END KO when attacker HP drops to 0 from survival strike', () => {
     const { events } = callExecuteHit({
       attacker: { hp: 1, maxHp: 100 },
-      defender: { survivalStrike: true, derived: { hp: 100, endurance: 100, damage: 50, encumbrance: 0 } },
+      defender: {
+        survivalStrike: true,
+        derived: { hp: 100, endurance: 100, damage: 50, encumbrance: 0 },
+      },
     });
     const boutEnd = events.filter((e) => e.type === 'BOUT_END' && e.result === 'KO');
     expect(boutEnd.length).toBe(1);
@@ -189,7 +204,9 @@ describe('executeHit — survival strike path', () => {
       defender: { survivalStrike: true },
     });
     // No normal HIT from attacker to defender
-    const normalHits = events.filter((e) => e.type === 'HIT' && e.actor === 'A' && e.target === 'D');
+    const normalHits = events.filter(
+      (e) => e.type === 'HIT' && e.actor === 'A' && e.target === 'D'
+    );
     expect(normalHits.length).toBe(0);
     // Defender HP unchanged
     expect(defender.hp).toBe(100);
@@ -200,7 +217,16 @@ describe('executeHit — commit mechanic', () => {
   it('sets committed=true when attacker HP < threshold and killDesire >= threshold', () => {
     const hp = Math.floor(COMMIT_HP_THRESHOLD * 100) - 1; // 34
     const { attacker, events } = callExecuteHit({
-      attacker: { hp, maxHp: 100, activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: COMMIT_KILL_DESIRE } as any },
+      attacker: {
+        hp,
+        maxHp: 100,
+        activePlan: {
+          style: FightingStyle.StrikingAttack,
+          OE: 5,
+          AL: 5,
+          killDesire: COMMIT_KILL_DESIRE,
+        } as any,
+      },
     });
     expect(attacker.committed).toBe(true);
     expect(events.some((e) => e.type === 'STATE_CHANGE' && e.result === 'COMMIT')).toBe(true);
@@ -209,14 +235,22 @@ describe('executeHit — commit mechanic', () => {
   it('does not commit when killDesire is below threshold', () => {
     const hp = Math.floor(COMMIT_HP_THRESHOLD * 100) - 1;
     const { attacker } = callExecuteHit({
-      attacker: { hp, maxHp: 100, activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 3 } as any },
+      attacker: {
+        hp,
+        maxHp: 100,
+        activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 3 } as any,
+      },
     });
     expect(attacker.committed).toBe(false);
   });
 
   it('does not commit when HP is above threshold', () => {
     const { attacker } = callExecuteHit({
-      attacker: { hp: 80, maxHp: 100, activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 10 } as any },
+      attacker: {
+        hp: 80,
+        maxHp: 100,
+        activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 10 } as any,
+      },
     });
     expect(attacker.committed).toBe(false);
   });
@@ -224,7 +258,17 @@ describe('executeHit — commit mechanic', () => {
   it('does not re-commit if already committed', () => {
     const hp = Math.floor(COMMIT_HP_THRESHOLD * 100) - 1;
     const { events } = callExecuteHit({
-      attacker: { hp, maxHp: 100, committed: true, activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: COMMIT_KILL_DESIRE } as any },
+      attacker: {
+        hp,
+        maxHp: 100,
+        committed: true,
+        activePlan: {
+          style: FightingStyle.StrikingAttack,
+          OE: 5,
+          AL: 5,
+          killDesire: COMMIT_KILL_DESIRE,
+        } as any,
+      },
     });
     // No second STATE_CHANGE COMMIT event
     const commitEvents = events.filter((e) => e.type === 'STATE_CHANGE' && e.result === 'COMMIT');
@@ -277,7 +321,25 @@ describe('executeHit — hit counters', () => {
     // Run multiple hits to accumulate arm hits
     const attacker = makeFighter({ style: FightingStyle.StrikingAttack });
     for (let i = 0; i < 20; i++) {
-      executeHit(events, rng, { ...attacker, hitsLanded: i, consecutiveHits: 0 }, defender, tactA, offModsA, passA, 'A', 'D', 'OPENING', 'OPENING', 5, 5, 5, 0, ctx, passD);
+      executeHit(
+        events,
+        rng,
+        { ...attacker, hitsLanded: i, consecutiveHits: 0 },
+        defender,
+        tactA,
+        offModsA,
+        passA,
+        'A',
+        'D',
+        'OPENING',
+        'OPENING',
+        5,
+        5,
+        5,
+        0,
+        ctx,
+        passD
+      );
       if (defender.armHits > 0) break;
     }
     // With 20 hits, at least one should hit an arm
@@ -323,7 +385,11 @@ describe('executeHit — knockdown', () => {
   it('can knock down defender when HP ratio is low and damage is high', () => {
     // Need a high-damage hit to trigger knockdown
     const { defender, events } = callExecuteHit({
-      attacker: { style: FightingStyle.BashingAttack, derived: { hp: 100, endurance: 100, damage: 30, encumbrance: 0 }, attributes: { ST: 20, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } },
+      attacker: {
+        style: FightingStyle.BashingAttack,
+        derived: { hp: 100, endurance: 100, damage: 30, encumbrance: 0 },
+        attributes: { ST: 20, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      },
       defender: { hp: 20, maxHp: 100, style: FightingStyle.WallOfSteel },
       rng: () => 0.01, // low rng for knockdown check
     });
@@ -348,16 +414,33 @@ describe('executeHit — survival strike priming', () => {
   it('primes defender survivalStrike when attacker is committed and defender survives', () => {
     const hp = Math.floor(COMMIT_HP_THRESHOLD * 100) - 1;
     const { defender, events } = callExecuteHit({
-      attacker: { hp, maxHp: 100, committed: true, activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: COMMIT_KILL_DESIRE } as any },
+      attacker: {
+        hp,
+        maxHp: 100,
+        committed: true,
+        activePlan: {
+          style: FightingStyle.StrikingAttack,
+          OE: 5,
+          AL: 5,
+          killDesire: COMMIT_KILL_DESIRE,
+        } as any,
+      },
       defender: { hp: 50, maxHp: 100 },
     });
     expect(defender.survivalStrike).toBe(true);
-    expect(events.some((e) => e.type === 'STATE_CHANGE' && e.result === 'SURVIVAL_STRIKE')).toBe(true);
+    expect(events.some((e) => e.type === 'STATE_CHANGE' && e.result === 'SURVIVAL_STRIKE')).toBe(
+      true
+    );
   });
 
   it('does not prime survivalStrike when defender HP drops to 0', () => {
     const { defender } = callExecuteHit({
-      attacker: { hp: 30, maxHp: 100, committed: true, derived: { hp: 100, endurance: 100, damage: 200, encumbrance: 0 } },
+      attacker: {
+        hp: 30,
+        maxHp: 100,
+        committed: true,
+        derived: { hp: 100, endurance: 100, damage: 200, encumbrance: 0 },
+      },
       defender: { hp: 1, maxHp: 100 },
     });
     expect(defender.survivalStrike).toBe(false);
@@ -442,11 +525,23 @@ describe('executeHit — no crash without ctx', () => {
     const passD = getPassive(defender.style);
 
     executeHit(
-      events, rng, attacker, defender,
-      tactA, offModsA, passA,
-      'A', 'D', 'OPENING', 'OPENING',
-      5, 5, 5, 0,
-      undefined, passD
+      events,
+      rng,
+      attacker,
+      defender,
+      tactA,
+      offModsA,
+      passA,
+      'A',
+      'D',
+      'OPENING',
+      'OPENING',
+      5,
+      5,
+      5,
+      0,
+      undefined,
+      passD
     );
     expect(events.length).toBeGreaterThan(0);
   });

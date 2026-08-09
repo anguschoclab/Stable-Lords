@@ -138,9 +138,7 @@ describe('resolveImpactsCoverage', () => {
     ]);
     expect(state.boutOffers!['offer1' as any]).toBeDefined();
 
-    resolveImpacts(state, [
-      { boutOffers: { offer2: { id: 'offer2', status: 'Signed' } } as any },
-    ]);
+    resolveImpacts(state, [{ boutOffers: { offer2: { id: 'offer2', status: 'Signed' } } as any }]);
     expect(state.boutOffers!['offer2' as any]).toBeDefined();
     expect(state.boutOffers!['offer1' as any]).toBeDefined();
   });

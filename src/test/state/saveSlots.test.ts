@@ -6,15 +6,11 @@ import {
   loadFromSlot,
   deleteSlot,
   exportSlot,
-  importSaveToNewSlot
+  importSaveToNewSlot,
 } from '@/state/saveSlots';
 import { archiveService } from '@/engine/storage/archiveService';
 import { STORE_KEYS } from '@/constants/core/storeKeys';
 import type { GameState } from '@/types/state.types';
-
-
-
-
 
 vi.mock('@/schemas/gameStateSchema', async (importOriginal) => {
   const actual = await importOriginal<any>();
@@ -25,18 +21,17 @@ vi.mock('@/schemas/gameStateSchema', async (importOriginal) => {
         if (data.invalid) throw new Error('Invalid');
         if (!data.meta) data.meta = { version: '1.0' };
         return data;
-      })
-    }
+      }),
+    },
   };
 });
-
 
 vi.mock('@/engine/storage/archiveService', () => ({
   archiveService: {
     archiveHotState: vi.fn(),
     retrieveHotState: vi.fn(),
     deleteHotState: vi.fn(),
-  }
+  },
 }));
 
 describe('saveSlots', () => {
@@ -73,7 +68,9 @@ describe('saveSlots', () => {
     });
 
     it('returns saved meta from local storage', async () => {
-      const metas = [{ id: 'slot_1', name: 'Test', week: 1, year: 1, timestamp: '123', version: '1' }];
+      const metas = [
+        { id: 'slot_1', name: 'Test', week: 1, year: 1, timestamp: '123', version: '1' },
+      ];
       localStorage.setItem(STORE_KEYS.SAVE_SLOTS, JSON.stringify(metas));
       const slots = await listSaveSlots();
       expect(slots).toEqual(metas);
@@ -93,7 +90,10 @@ describe('saveSlots', () => {
       expect(metas[0].year).toBe(2);
       expect(metas[0].version).toBe('1.0');
 
-      expect(archiveService.archiveHotState).toHaveBeenCalledWith('slot_1', expect.objectContaining(state));
+      expect(archiveService.archiveHotState).toHaveBeenCalledWith(
+        'slot_1',
+        expect.objectContaining(state)
+      );
     });
   });
 
@@ -112,7 +112,7 @@ describe('saveSlots', () => {
     it('removes slot meta from storage and deletes hot state', async () => {
       const metas = [
         { id: 'slot_1', name: 'Test', week: 1, year: 1, timestamp: '123', version: '1' },
-        { id: 'slot_2', name: 'Test2', week: 2, year: 1, timestamp: '123', version: '1' }
+        { id: 'slot_2', name: 'Test2', week: 2, year: 1, timestamp: '123', version: '1' },
       ];
       localStorage.setItem(STORE_KEYS.SAVE_SLOTS, JSON.stringify(metas));
 
@@ -138,7 +138,7 @@ describe('saveSlots', () => {
         player: {},
         roster: [],
         rivals: [],
-        meta: {}
+        meta: {},
       } as unknown as GameState;
       vi.mocked(archiveService.retrieveHotState).mockResolvedValue(mockState);
 

@@ -75,7 +75,18 @@ function resolveTacticsAndBias(
     fD.activePlan.phases?.[phaseKey]?.aggressionBias ?? fD.activePlan.aggressionBias ?? 5
   );
 
-  return { tactA, tactD, offModsA, defModsA, offModsD, defModsD, biasAttA, biasDefA, biasAttD, biasDefD };
+  return {
+    tactA,
+    tactD,
+    offModsA,
+    defModsA,
+    offModsD,
+    defModsD,
+    biasAttA,
+    biasDefA,
+    biasAttD,
+    biasDefD,
+  };
 }
 
 function resolveOEAL(
@@ -158,7 +169,10 @@ function resolveDynamicTraits(
   fA: FighterState,
   fD: FighterState,
   stylePhase: StylePhase
-): { dynTraitsA: ReturnType<typeof getDynamicTraitMods>; dynTraitsD: ReturnType<typeof getDynamicTraitMods> } {
+): {
+  dynTraitsA: ReturnType<typeof getDynamicTraitMods>;
+  dynTraitsD: ReturnType<typeof getDynamicTraitMods>;
+} {
   const traitCtxA: DynamicTraitContext = {
     phase: stylePhase,
     hpRatio: fA.hp / fA.maxHp,
@@ -185,7 +199,8 @@ export function prepareExchange(
 ): ExchangeSetup {
   const { rng, phase, exchange } = ctx;
   const stylePhase = phase as StylePhase;
-  const phaseKey: 'opening' | 'mid' | 'late' = phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
+  const phaseKey: 'opening' | 'mid' | 'late' =
+    phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
 
   // ── Recovery from knockdown ──
   if (fA.knockedDown) {
@@ -230,14 +245,30 @@ export function prepareExchange(
     psychD.defMod +
     psychD.parMod;
 
-  const { passA, passD } = resolveStylePassives(rng, fA, fD, stylePhase, exchange, tac.tactA, tac.tactD, events);
+  const { passA, passD } = resolveStylePassives(
+    rng,
+    fA,
+    fD,
+    stylePhase,
+    exchange,
+    tac.tactA,
+    tac.tactD,
+    events
+  );
   const { dynTraitsA, dynTraitsD } = resolveDynamicTraits(fA, fD, stylePhase);
 
   return {
-    condResultA, condResultD,
+    condResultA,
+    condResultD,
     ...tac,
     ...oal,
-    fatA, fatD, passA, passD,
-    dynTraitsA, dynTraitsD, psychA, psychD,
+    fatA,
+    fatD,
+    passA,
+    passD,
+    dynTraitsA,
+    dynTraitsD,
+    psychA,
+    psychD,
   };
 }

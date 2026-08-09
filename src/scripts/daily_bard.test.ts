@@ -222,7 +222,9 @@ describe('daily_bard', () => {
       expect(written.blurbs.neutral).toContain('Existing template.');
       expect(written.blurbs.neutral).toContain('New unique template.');
       // Deduped: only one instance of the duplicate
-      expect(written.blurbs.neutral.filter((x: string) => x === '%A defeated %D%H.').length).toBe(1);
+      expect(written.blurbs.neutral.filter((x: string) => x === '%A defeated %D%H.').length).toBe(
+        1
+      );
     });
 
     it('handles empty newTemplatesMap without writing', async () => {

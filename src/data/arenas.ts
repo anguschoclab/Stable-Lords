@@ -430,7 +430,6 @@ export const THE_MEAT_GRINDER: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
 export const JUNGLE_RUINS: ArenaConfig = {
   id: 'jungle_ruins',
   zoneDef: { Edge: -1, Corner: -2 },
@@ -463,78 +462,89 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     id: 'blood_pit_rat_king',
     arenaId: 'gutter_pit',
     type: 'architectural_quirk',
-    title: 'The Rat King\'s Nest',
-    narrative: 'A massive nest of tangled bones and iron wire sits high in the rafters, rumored to be built by the legendary Rat King.'
+    title: "The Rat King's Nest",
+    narrative:
+      'A massive nest of tangled bones and iron wire sits high in the rafters, rumored to be built by the legendary Rat King.',
   },
   {
     id: 'sun_temple_solar_flare',
     arenaId: 'sunken_temple',
     type: 'historical_battle',
     title: 'The Solar Flare Bout',
-    narrative: 'A fight that ended when a blinding reflection from the temple\'s golden mirrors permanently blinded both combatants.'
+    narrative:
+      "A fight that ended when a blinding reflection from the temple's golden mirrors permanently blinded both combatants.",
   },
   {
     id: 'iron_ring_rust_rot',
     arenaId: 'brass_ring',
     type: 'famous_death',
     title: 'The Rust-Rot Execution',
-    narrative: 'A champion was impaled on a rusted spike and left to rot for three days as a warning to those who defy the arena masters.'
+    narrative:
+      'A champion was impaled on a rusted spike and left to rot for three days as a warning to those who defy the arena masters.',
   },
   {
     id: 'underpit_feral_ghouls',
     arenaId: 'underpit_arena',
     type: 'historical_battle',
     title: 'Night of the Feral Ghouls',
-    narrative: 'A legendary bout where combatants had to fend off not only each other, but a swarm of feral mutants that breached the lower grates.'
+    narrative:
+      'A legendary bout where combatants had to fend off not only each other, but a swarm of feral mutants that breached the lower grates.',
   },
   {
     id: 'lantern_hall_shattered_glass',
     arenaId: 'lantern_hall_arena',
     type: 'architectural_quirk',
     title: 'The Shattered Skylight',
-    narrative: 'During a massive storm, the grand skylight shattered, raining glass onto the fighters. The arena floor still glints with embedded shards.'
+    narrative:
+      'During a massive storm, the grand skylight shattered, raining glass onto the fighters. The arena floor still glints with embedded shards.',
   },
   {
     id: 'sundered_coliseum_obsidian_pillars',
     arenaId: 'sundered_coliseum',
     type: 'architectural_quirk',
     title: 'The Obsidian Pillars',
-    narrative: 'Three massive pillars of black glass dominate the western side. They are said to resonate with a low hum when a fatal blow is struck.'
+    narrative:
+      'Three massive pillars of black glass dominate the western side. They are said to resonate with a low hum when a fatal blow is struck.',
   },
   {
     id: 'charnel_pits_bone_avalanche',
     arenaId: 'charnel_pits',
     type: 'historical_battle',
     title: 'The Bone Avalanche',
-    narrative: 'A furious brawl caused the unstable eastern wall of the pit to collapse, burying a dozen combatants under tons of ancient, splintered bones.'
+    narrative:
+      'A furious brawl caused the unstable eastern wall of the pit to collapse, burying a dozen combatants under tons of ancient, splintered bones.',
   },
   {
     id: 'flesh_gardens_smiling_death',
     arenaId: 'flesh_gardens',
     type: 'famous_death',
     title: 'The Smiling Corpse',
-    narrative: 'A famed poisoner met his end here when forced to swallow his own venom. His body was left for days, a frozen, grotesque smile plastered across his face.'
+    narrative:
+      'A famed poisoner met his end here when forced to swallow his own venom. His body was left for days, a frozen, grotesque smile plastered across his face.',
   },
   {
     id: 'charnel_pits_screaming_winds_2',
     arenaId: 'charnel_pits',
     type: 'architectural_quirk',
     title: 'The Bleeding Stones',
-    narrative: 'The stones in the eastern corner are so saturated with gore that they weep blood on particularly humid days.'
+    narrative:
+      'The stones in the eastern corner are so saturated with gore that they weep blood on particularly humid days.',
   },
   {
     id: 'bloodsands_massacre_thirty_2',
     arenaId: 'bloodsands_arena',
     type: 'historical_battle',
     title: 'The Silent Reign',
-    narrative: 'A legendary mute gladiator once held the center of the sands against twenty challengers without uttering a single sound.'
+    narrative:
+      'A legendary mute gladiator once held the center of the sands against twenty challengers without uttering a single sound.',
   },
   {
     id: 'flooded_vault_arena_death',
     arenaId: 'flooded_vault_arena',
     type: 'famous_death',
     title: 'The Drowned King',
-    narrative: 'A former king, sold into slavery, met his end here when a heavy net dragged him beneath the dark waters of the vault.'
+    narrative:
+      'A former king, sold into slavery, met his end here when a heavy net dragged him beneath the dark waters of the vault.',
   },
 
   {
@@ -543,7 +553,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'architectural_quirk',
     title: 'The Shattered Throne',
     narrative:
-      'A jagged chunk of marble, said to be part of the emperor\'s original seat, juts from the sands. It forms a treacherous hazard where many fighters have been brutally pinned.',
+      "A jagged chunk of marble, said to be part of the emperor's original seat, juts from the sands. It forms a treacherous hazard where many fighters have been brutally pinned.",
   },
   {
     id: 'charnel_pits_breath_of_ashes',
@@ -551,35 +561,39 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Breath of Ashes',
     narrative:
-      'During the Long Drought, the toxic fumes ignited, turning the pit into a roaring inferno. Two rival champions fought amidst the flames, their charred remains now part of the arena\'s grim foundation.',
+      "During the Long Drought, the toxic fumes ignited, turning the pit into a roaring inferno. Two rival champions fought amidst the flames, their charred remains now part of the arena's grim foundation.",
   },
   {
     id: 'standard_arena_first_blood_reckoning',
     arenaId: 'standard_arena',
     type: 'famous_death',
     title: 'The First Blood',
-    narrative: 'In the earliest days of the arena, an unnamed orphan defied a fully armored champion, turning a discarded shield into a lethal weapon before succumbing to his wounds. The crowd never forgot.',
+    narrative:
+      'In the earliest days of the arena, an unnamed orphan defied a fully armored champion, turning a discarded shield into a lethal weapon before succumbing to his wounds. The crowd never forgot.',
   },
   {
     id: 'charnel_pits_echoes',
     arenaId: 'charnel_pits',
     type: 'architectural_quirk',
     title: 'Echoes of the Damned',
-    narrative: 'The lower stonework of the pit was laid with such peculiar angles that the screams of dying fighters echo endlessly, terrifying even veteran gladiators.',
+    narrative:
+      'The lower stonework of the pit was laid with such peculiar angles that the screams of dying fighters echo endlessly, terrifying even veteran gladiators.',
   },
   {
     id: 'standard_arena_orphan_revolt',
     arenaId: 'standard_arena',
     type: 'historical_battle',
     title: 'The Orphan Revolt',
-    narrative: 'A grim testament to the desperate. A group of child slaves seized weapons from the armory and fought off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
+    narrative:
+      'A grim testament to the desperate. A group of child slaves seized weapons from the armory and fought off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
   },
   {
     id: 'charnel_pits_silent_slaughter',
     arenaId: 'charnel_pits',
     type: 'famous_death',
     title: 'The Silent Slaughter',
-    narrative: 'A legendary mute gladiator was finally brought down here, surrounded by the corpses of seven opponents. He never uttered a sound, even as the final blow was struck.',
+    narrative:
+      'A legendary mute gladiator was finally brought down here, surrounded by the corpses of seven opponents. He never uttered a sound, even as the final blow was struck.',
   },
   {
     id: 'blood_pit_famous_death_butcher',
@@ -603,7 +617,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Night of the Iron Maw',
     narrative:
-      'A legendary bout in 985 saw an unarmed gladiator choke out a massive Iron Maw lizard. The beast\'s skull now adorns the promoter\'s private box.',
+      "A legendary bout in 985 saw an unarmed gladiator choke out a massive Iron Maw lizard. The beast's skull now adorns the promoter's private box.",
   },
 
   {
@@ -947,24 +961,26 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     arenaId: 'narrow_bridge',
     type: 'famous_death',
     title: 'The Falling King',
-    narrative: 'A self-proclaimed king of the undercity was thrown from the bridge during his first bout, screaming the entire way down into the darkness. His crown was never found.'
+    narrative:
+      'A self-proclaimed king of the undercity was thrown from the bridge during his first bout, screaming the entire way down into the darkness. His crown was never found.',
   },
   {
     id: 'misty_valley_hidden_blades',
     arenaId: 'misty_valley',
     type: 'architectural_quirk',
     title: 'The Hidden Blades',
-    narrative: 'The thick mist not only obscures vision but dampens the sound of footfalls. Savvy fighters coat their weapons in charcoal to make them entirely invisible in the gray fog until it is too late.'
+    narrative:
+      'The thick mist not only obscures vision but dampens the sound of footfalls. Savvy fighters coat their weapons in charcoal to make them entirely invisible in the gray fog until it is too late.',
   },
   {
     id: 'the_abyssal_pit_the_dark_descent',
     arenaId: 'the_abyssal_pit',
     type: 'historical_battle',
     title: 'The Dark Descent',
-    narrative: 'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.'
-  }
+    narrative:
+      'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.',
+  },
 ];
-
 
 export const THE_BRAMBLE_RING: ArenaConfig = {
   id: 'the_bramble_ring',
@@ -972,7 +988,8 @@ export const THE_BRAMBLE_RING: ArenaConfig = {
   tags: ['cramped', 'uneven', 'outdoor', 'living'],
   tier: 1,
   size: 'cramped',
-  description: 'A tight clearing surrounded by dense, thorny overgrowth. Blood only encourages the roots.',
+  description:
+    'A tight clearing surrounded by dense, thorny overgrowth. Blood only encourages the roots.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.1 },
 };
@@ -983,7 +1000,8 @@ export const THUNDER_PEAK: ArenaConfig = {
   tags: ['open', 'elevated', 'outdoor'],
   tier: 3,
   size: 'open',
-  description: 'Atop the highest jagged spire, thin air and sheer drops test the stamina and nerves of any fighter.',
+  description:
+    'Atop the highest jagged spire, thin air and sheer drops test the stamina and nerves of any fighter.',
   zoneDef: { Edge: -1, Corner: -5 },
   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.25 },
 };

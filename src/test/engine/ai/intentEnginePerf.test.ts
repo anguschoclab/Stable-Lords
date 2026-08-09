@@ -23,9 +23,36 @@ function makeMockRival(overrides: Partial<RivalStableData> = {}): RivalStableDat
       favoredStyles: [],
     },
     roster: [
-      { id: 'w1' as any, name: 'W1', style: 'BASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
-      { id: 'w2' as any, name: 'W2', style: 'SLASHING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
-      { id: 'w3' as any, name: 'W3', style: 'STRIKING ATTACK', status: 'Active', injuries: [], attributes: {} as any, baseSkills: {}, derivedStats: {} },
+      {
+        id: 'w1' as any,
+        name: 'W1',
+        style: 'BASHING ATTACK',
+        status: 'Active',
+        injuries: [],
+        attributes: {} as any,
+        baseSkills: {},
+        derivedStats: {},
+      },
+      {
+        id: 'w2' as any,
+        name: 'W2',
+        style: 'SLASHING ATTACK',
+        status: 'Active',
+        injuries: [],
+        attributes: {} as any,
+        baseSkills: {},
+        derivedStats: {},
+      },
+      {
+        id: 'w3' as any,
+        name: 'W3',
+        style: 'STRIKING ATTACK',
+        status: 'Active',
+        injuries: [],
+        attributes: {} as any,
+        baseSkills: {},
+        derivedStats: {},
+      },
     ],
     treasury: 1000,
     fame: 100,
@@ -47,11 +74,7 @@ function makeMockState(overrides: Partial<GameState> = {}): GameState {
   } as GameState;
 }
 
-function makeGrudge(
-  ownerIdA: string,
-  ownerIdB: string,
-  intensity: number = 3
-): OwnerGrudge {
+function makeGrudge(ownerIdA: string, ownerIdB: string, intensity: number = 3): OwnerGrudge {
   return {
     id: `grudge-${ownerIdA}-${ownerIdB}` as GrudgeId,
     ownerIdA: ownerIdA as any,
@@ -68,9 +91,7 @@ describe('intentEngine performance optimization equivalence', () => {
     it('returns true when a matching grudge with intensity >= 3 exists', () => {
       const rival = makeMockRival();
       const state = makeMockState({
-        grudgeMap: new Map([
-          ['g1', makeGrudge('owner-1', 'owner-2', 3)],
-        ]),
+        grudgeMap: new Map([['g1', makeGrudge('owner-1', 'owner-2', 3)]]),
       });
       const intent = pickWeeklyIntent(rival, state, 42);
       // With a grudge and seed 42, VENDETTA should be possible (rng-dependent)
@@ -81,9 +102,7 @@ describe('intentEngine performance optimization equivalence', () => {
     it('returns false when no grudge matches the rival owner', () => {
       const rival = makeMockRival();
       const state = makeMockState({
-        grudgeMap: new Map([
-          ['g1', makeGrudge('owner-99', 'owner-88', 5)],
-        ]),
+        grudgeMap: new Map([['g1', makeGrudge('owner-99', 'owner-88', 5)]]),
       });
       const intent = pickWeeklyIntent(rival, state, 42);
       expect(intent).not.toBe('VENDETTA');
@@ -99,9 +118,7 @@ describe('intentEngine performance optimization equivalence', () => {
     it('returns false when grudge intensity < 3', () => {
       const rival = makeMockRival();
       const state = makeMockState({
-        grudgeMap: new Map([
-          ['g1', makeGrudge('owner-1', 'owner-2', 2)],
-        ]),
+        grudgeMap: new Map([['g1', makeGrudge('owner-1', 'owner-2', 2)]]),
       });
       const intent = pickWeeklyIntent(rival, state, 42);
       expect(intent).not.toBe('VENDETTA');
@@ -114,9 +131,7 @@ describe('intentEngine performance optimization equivalence', () => {
         strategy: { intent: 'VENDETTA', planWeeksRemaining: 0 },
       });
       const state = makeMockState({
-        grudgeMap: new Map([
-          ['g1', makeGrudge('owner-1', 'owner-target', 5)],
-        ]),
+        grudgeMap: new Map([['g1', makeGrudge('owner-1', 'owner-target', 5)]]),
       });
       const result = updateAIStrategy(rival, state, 42);
       // Strategy expired, will pick new intent. If VENDETTA, target should be owner-target
@@ -131,9 +146,7 @@ describe('intentEngine performance optimization equivalence', () => {
         strategy: { intent: 'VENDETTA', planWeeksRemaining: 0 },
       });
       const state = makeMockState({
-        grudgeMap: new Map([
-          ['g1', makeGrudge('owner-1', 'owner-2', 5)],
-        ]),
+        grudgeMap: new Map([['g1', makeGrudge('owner-1', 'owner-2', 5)]]),
       });
       const result = updateAIStrategy(rival, state, 42);
       if (result.intent === 'VENDETTA') {
@@ -168,10 +181,46 @@ describe('intentEngine performance optimization equivalence', () => {
     it('correctly identifies dominant style concentration', () => {
       const rival = makeMockRival({
         roster: [
-          { id: 'w1', name: 'W1', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
-          { id: 'w2', name: 'W2', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
-          { id: 'w3', name: 'W3', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
-          { id: 'w4', name: 'W4', style: FightingStyle.SlashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
+          {
+            id: 'w1',
+            name: 'W1',
+            style: FightingStyle.BashingAttack,
+            status: 'Active',
+            injuries: [],
+            attributes: {},
+            baseSkills: {},
+            derivedStats: {},
+          } as any,
+          {
+            id: 'w2',
+            name: 'W2',
+            style: FightingStyle.BashingAttack,
+            status: 'Active',
+            injuries: [],
+            attributes: {},
+            baseSkills: {},
+            derivedStats: {},
+          } as any,
+          {
+            id: 'w3',
+            name: 'W3',
+            style: FightingStyle.BashingAttack,
+            status: 'Active',
+            injuries: [],
+            attributes: {},
+            baseSkills: {},
+            derivedStats: {},
+          } as any,
+          {
+            id: 'w4',
+            name: 'W4',
+            style: FightingStyle.SlashingAttack,
+            status: 'Active',
+            injuries: [],
+            attributes: {},
+            baseSkills: {},
+            derivedStats: {},
+          } as any,
         ],
         owner: {
           ...makeMockRival().owner,
@@ -191,8 +240,26 @@ describe('intentEngine performance optimization equivalence', () => {
     it('does not trigger ROSTER_DIVERSITY when roster < 4', () => {
       const rival = makeMockRival({
         roster: [
-          { id: 'w1', name: 'W1', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
-          { id: 'w2', name: 'W2', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: {}, baseSkills: {}, derivedStats: {} } as any,
+          {
+            id: 'w1',
+            name: 'W1',
+            style: FightingStyle.BashingAttack,
+            status: 'Active',
+            injuries: [],
+            attributes: {},
+            baseSkills: {},
+            derivedStats: {},
+          } as any,
+          {
+            id: 'w2',
+            name: 'W2',
+            style: FightingStyle.BashingAttack,
+            status: 'Active',
+            injuries: [],
+            attributes: {},
+            baseSkills: {},
+            derivedStats: {},
+          } as any,
         ],
       });
       const state = makeMockState();

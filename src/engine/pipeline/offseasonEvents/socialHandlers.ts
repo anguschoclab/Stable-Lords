@@ -8,7 +8,11 @@ import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { type LedgerEntryId } from '@/types/shared.types';
-import { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+import {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+} from './types';
 import { isActive } from '@/engine/warriorStatus';
 
 export function handleShadowMarketRun(
@@ -24,14 +28,25 @@ export function handleShadowMarketRun(
     if (chosen) {
       const cost = 25 + Math.floor(rng.next() * 26);
       ctx.treasuryDelta -= cost;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Shadow Market Excursion', -cost, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Shadow Market Excursion', -cost, 'other')
+      );
 
       const fameGained = 15;
       ctx.rosterUpdates.set(chosen.id, {
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Discovered a hidden technique at the Shadow Market.', origin: 'Shadow Market', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Style',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'Discovered a hidden technique at the Shadow Market.',
+          origin: 'Shadow Market',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -51,7 +66,9 @@ export function handleGrandFeast(
 ) {
   const goldCost = 200 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta -= goldCost;
-  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other')
+  );
 
   const activeWarriors = getActiveWarriors(state);
   for (const w of activeWarriors) {
@@ -150,7 +167,9 @@ export function handleStreetPerformance(
       const goldGained = 50 + Math.floor(rng.next() * 50);
       ctx.treasuryDelta += goldGained;
 
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other')
+      );
 
       const currentFlair = chosen.flair || [];
       const newFlair = currentFlair.includes('Local Hero')
@@ -201,7 +220,12 @@ export function handleMidnightFeast(
       gold: cost,
     });
   } else {
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: 'Someone', xp: 0, fame: 0, gold: cost });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: 'Someone',
+      xp: 0,
+      fame: 0,
+      gold: cost,
+    });
   }
 }
 
@@ -221,7 +245,9 @@ export function handleTravelingCircus(
       const cost = 25;
 
       ctx.treasuryDelta -= cost;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
+      );
 
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,
@@ -250,7 +276,9 @@ export function handleBountyHunterVisit(
     if (chosen) {
       const goldGained = 150 + Math.floor(rng.next() * 101);
       ctx.treasuryDelta += goldGained;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bounty Information Payout', goldGained, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Bounty Information Payout', goldGained, 'other')
+      );
 
       const fameGained = 10;
       ctx.rosterUpdates.set(chosen.id, {
@@ -279,14 +307,25 @@ export function handleMidnightMarket(
     if (chosen) {
       const cost = 40;
       ctx.treasuryDelta -= cost;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Midnight Market Elixirs', -cost, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Midnight Market Elixirs', -cost, 'other')
+      );
 
       const xpGained = 20;
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Tactic', warriorId: chosen.id, warriorName: chosen.name, detail: 'Whispers from the Midnight Market revealed a new tactic.', origin: 'Midnight Market', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Tactic',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'Whispers from the Midnight Market revealed a new tactic.',
+          origin: 'Midnight Market',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -317,7 +356,16 @@ export function handleWanderingFortuneTeller(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Discovered a hidden rhythm in their fighting style.', origin: 'Wandering Fortune Teller', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Style',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'Discovered a hidden rhythm in their fighting style.',
+          origin: 'Wandering Fortune Teller',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -373,7 +421,16 @@ export function handleDreamweaverVisit(
         xp: (chosen.xp || 0) + xpGained,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Dreamweaver vision revealed hidden stylistic knowledge.', origin: 'Dreamweaver', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Style',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'Dreamweaver vision revealed hidden stylistic knowledge.',
+          origin: 'Dreamweaver',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,

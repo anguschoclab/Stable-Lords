@@ -438,4 +438,3 @@ export const AnnualAwardTypeSchema = z.enum([
   'CLASS_MVP',
   'TOURNAMENT_RANK',
 ]);
-

@@ -42,7 +42,9 @@ describe('Cosmic Anomaly weather type', () => {
 
   it('Cosmic Anomaly has a WEATHER_CONFIG entry', () => {
     // After merge, WEATHER_CONFIG should have this key
-    const config = (WEATHER_CONFIG as Record<string, typeof WEATHER_CONFIG[keyof typeof WEATHER_CONFIG]>)['Cosmic Anomaly'];
+    const config = (
+      WEATHER_CONFIG as Record<string, (typeof WEATHER_CONFIG)[keyof typeof WEATHER_CONFIG]>
+    )['Cosmic Anomaly'];
     if (config) {
       expect(config.icon).toBeDefined();
       expect(config.description).toBeTruthy();

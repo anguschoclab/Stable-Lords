@@ -65,7 +65,11 @@ export function GazetteTab({ stories }: GazetteTabProps) {
                   WK {story.week.toString().padStart(2, '0')}
                 </span>
                 <h4 className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/story:text-foreground transition-colors italic">
-                  <LinkifiedText text={story.headline} names={warriorNames} stableNames={stableNames} />
+                  <LinkifiedText
+                    text={story.headline}
+                    names={warriorNames}
+                    stableNames={stableNames}
+                  />
                 </h4>
               </div>
 

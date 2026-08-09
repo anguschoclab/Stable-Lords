@@ -28,7 +28,8 @@ export interface FightSummaryParams {
  * Used by both tournament resolution systems to ensure consistency
  */
 export function createFightSummary(params: FightSummaryParams): FightSummary {
-  const { warriorA, warriorD, outcome, week, absoluteWeek, tournamentId, tournamentName, rng } = params;
+  const { warriorA, warriorD, outcome, week, absoluteWeek, tournamentId, tournamentName, rng } =
+    params;
 
   // Generate unique ID
   const id = (

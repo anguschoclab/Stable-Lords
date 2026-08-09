@@ -32,8 +32,17 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
  *
  */
 export default function ControlCenter() {
-  const { activeTab, setActiveTab, player, week, absoluteWeek, season, arenaHistory, boutOffers, progression } =
-    useControlCenter();
+  const {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    progression,
+  } = useControlCenter();
 
   return (
     <PageFrame maxWidth="xl" className="pb-32">

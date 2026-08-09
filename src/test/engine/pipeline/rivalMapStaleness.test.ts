@@ -149,9 +149,7 @@ describe('NF2: rivalMap staleness after bout phase', () => {
     const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
     rivalsUpdates.set('rival-1' as StableId, { roster: [] });
 
-    resolveImpacts(state, [
-      { rivalsUpdates, graveyard: [{ ...rivalWarrior, isDead: true }] },
-    ]);
+    resolveImpacts(state, [{ rivalsUpdates, graveyard: [{ ...rivalWarrior, isDead: true }] }]);
 
     // CORRECT behavior: rivalMap should not contain the dead warrior
     // This currently FAILS because rivalMap is not rebuilt.

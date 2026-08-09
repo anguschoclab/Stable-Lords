@@ -51,7 +51,10 @@ export default function StableEquipment() {
             </div>
 
             <div className="space-y-3">
-              <label htmlFor="style-select" className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">
+              <label
+                htmlFor="style-select"
+                className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60"
+              >
                 Select Style
               </label>
               <Select
@@ -60,7 +63,10 @@ export default function StableEquipment() {
                   handleStyleChange(v as import('@/types/shared.types').FightingStyle)
                 }
               >
-                <SelectTrigger id="style-select" className="h-10 bg-black/40 border-white/10 font-black text-[10px] uppercase tracking-widest px-4">
+                <SelectTrigger
+                  id="style-select"
+                  className="h-10 bg-black/40 border-white/10 font-black text-[10px] uppercase tracking-widest px-4"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-neutral-900 border-white/10">

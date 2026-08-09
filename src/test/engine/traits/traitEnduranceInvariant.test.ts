@@ -25,9 +25,7 @@ describe('trait enduranceMult invariant', () => {
   });
 
   it('no positive trait has enduranceMult > 1.0 (inversion bug)', () => {
-    const inversions = positiveTraitsWithEnduranceMult.filter(
-      (t) => t.effect.enduranceMult! > 1.0
-    );
+    const inversions = positiveTraitsWithEnduranceMult.filter((t) => t.effect.enduranceMult! > 1.0);
     expect(
       inversions.map((t) => `${t.id}=${t.effect.enduranceMult}`),
       `Found positive traits with enduranceMult > 1.0: ${inversions.map((t) => t.id).join(', ')}`

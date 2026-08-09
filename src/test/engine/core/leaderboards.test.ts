@@ -206,7 +206,12 @@ describe('calculateGlobalFameLeaderboard', () => {
   });
 
   it('insertBounded edge: inserts into empty array with limit > 0', () => {
-    const result = calculateGlobalFameLeaderboard([createMockWarrior('solo', 42)], undefined, 'Test', 10);
+    const result = calculateGlobalFameLeaderboard(
+      [createMockWarrior('solo', 42)],
+      undefined,
+      'Test',
+      10
+    );
     expect(result).toHaveLength(1);
     expect(result[0]!.warrior.id).toBe('solo');
   });

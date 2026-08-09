@@ -385,7 +385,18 @@ export function executeHit(
   ctx?: ResolutionContext,
   defPassive?: ReturnType<typeof getStylePassive>
 ) {
-  if (handleSurvivalStrike(events, rng, attacker, defender, attTactics, defPassive, attLabel, defLabel)) {
+  if (
+    handleSurvivalStrike(
+      events,
+      rng,
+      attacker,
+      defender,
+      attTactics,
+      defPassive,
+      attLabel,
+      defLabel
+    )
+  ) {
     return;
   }
 
@@ -397,9 +408,26 @@ export function executeHit(
     events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
   }
 
-  const { hitLoc, preArmor } = computePreArmorDamage(rng, attacker, defender, attTactics, attOffMods, attPassive);
+  const { hitLoc, preArmor } = computePreArmorDamage(
+    rng,
+    attacker,
+    defender,
+    attTactics,
+    attOffMods,
+    attPassive
+  );
   const rawDamagePreCrit = applyDamageMultipliers(preArmor, attacker, defender, ctx);
-  const { damage, rawDamage } = applyHitAndCounters(events, rng, rawDamagePreCrit, hitLoc, attacker, defender, attPassive, attLabel, defLabel);
+  const { damage, rawDamage } = applyHitAndCounters(
+    events,
+    rng,
+    rawDamagePreCrit,
+    hitLoc,
+    attacker,
+    defender,
+    attPassive,
+    attLabel,
+    defLabel
+  );
 
   checkKnockdown(events, rng, defender, damage, defLabel);
   applyMomentumShift(events, attacker, defender, attLabel, defLabel);
@@ -419,5 +447,21 @@ export function executeHit(
     });
   }
 
-  checkKillWindow(events, rng, attacker, defender, ctx, hitLoc, rawDamage, attTactics, attLabel, stylePhase, phase, attKD, attOE, attAL, attMatchup);
+  checkKillWindow(
+    events,
+    rng,
+    attacker,
+    defender,
+    ctx,
+    hitLoc,
+    rawDamage,
+    attTactics,
+    attLabel,
+    stylePhase,
+    phase,
+    attKD,
+    attOE,
+    attAL,
+    attMatchup
+  );
 }

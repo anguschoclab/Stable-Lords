@@ -10,10 +10,7 @@
  */
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import {
-  STYLE_DISPLAY_NAMES,
-  ATTRIBUTE_KEYS,
-} from '@/types/shared.types';
+import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateScoutInsights, type ScoutQuality } from './scoutInsights';
 
@@ -51,8 +48,8 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
   Detailed: 50,
   Expert: 100,
 }; /**
-    * Get scout cost.
-    */
+ * Get scout cost.
+ */
 
 /**
  * Get scout cost.

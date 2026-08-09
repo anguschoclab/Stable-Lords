@@ -35,7 +35,10 @@ export default function ArenaSettings() {
         {/* Default View Mode */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label htmlFor="setting-default-view" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label
+              htmlFor="setting-default-view"
+              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+            >
               <ScrollText className="h-4 w-4" />
               Default View Mode
             </Label>
@@ -62,7 +65,10 @@ export default function ArenaSettings() {
         {/* Audio Enabled */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label htmlFor="setting-audio-enabled" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label
+              htmlFor="setting-audio-enabled"
+              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+            >
               <Volume2 className="h-4 w-4" />
               Arena Audio
             </Label>
@@ -80,7 +86,10 @@ export default function ArenaSettings() {
         {/* Volume Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label htmlFor="setting-audio-volume" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label
+              htmlFor="setting-audio-volume"
+              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+            >
               <Volume2 className="h-4 w-4" />
               Crowd Volume
             </Label>
@@ -102,7 +111,10 @@ export default function ArenaSettings() {
         {/* Effects Enabled */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label htmlFor="setting-effects-enabled" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label
+              htmlFor="setting-effects-enabled"
+              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+            >
               <Sparkles className="h-4 w-4" />
               Visual Effects
             </Label>
@@ -120,7 +132,10 @@ export default function ArenaSettings() {
         {/* Screen Shake Intensity */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label htmlFor="setting-screen-shake" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+            <Label
+              htmlFor="setting-screen-shake"
+              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+            >
               <Activity className="h-4 w-4" />
               Screen Shake
             </Label>

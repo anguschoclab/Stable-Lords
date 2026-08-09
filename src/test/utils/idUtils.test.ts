@@ -118,7 +118,9 @@ describe('idUtils', () => {
         configurable: true,
       });
 
-      expect(() => generateId()).toThrow('Secure random number generator not available in this environment.');
+      expect(() => generateId()).toThrow(
+        'Secure random number generator not available in this environment.'
+      );
 
       Object.defineProperty(globalThis, 'crypto', {
         value: originalCrypto,
@@ -127,5 +129,4 @@ describe('idUtils', () => {
       });
     });
   });
-
 });

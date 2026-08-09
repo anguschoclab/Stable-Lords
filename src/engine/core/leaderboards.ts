@@ -10,12 +10,7 @@ import { isActive } from '@/engine/warriorStatus';
  * O(limit) per insertion, which is O(1) for small limits (e.g. 10).
  * Prevents O(N log N) sorting of the entire dataset.
  */
-function insertBounded<T>(
-  arr: T[],
-  limit: number,
-  item: T,
-  cmp: (a: T, b: T) => number
-) {
+function insertBounded<T>(arr: T[], limit: number, item: T, cmp: (a: T, b: T) => number) {
   if (arr.length === limit && cmp(item, arr[limit - 1] as T) >= 0) {
     return;
   }

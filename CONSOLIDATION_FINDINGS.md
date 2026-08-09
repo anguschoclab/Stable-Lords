@@ -11,32 +11,32 @@
 
 ## 1. Per-PR Disposition Table
 
-| PR # | Title | Category | Verdict | Commit | Rationale |
-|------|-------|----------|---------|--------|-----------|
-| #757 | A11y Select/Slider labels | a11y | CHERRY-PICK | `8861aa87` | Broadest a11y PR (6 files); used as base for a11y consolidation |
-| #758 | Bolt O(N) array reallocs | perf | MERGED | `de6fc6ca` | O(N) array realloc fixes for roster/training/state slices |
-| #759 | Curate narrativeContent | narrative | MERGED | `8c342a7d` | Unique narrative entries kept; `lint_output.txt` excluded |
-| #760 | A11y Radix labels | a11y | SUPERSEDED | — | Superseded by #757 (overlaps on PlanStep + FighterConfigCard) |
-| #761 | Test coverage expansion | test | MERGED | `e08b8e6e` | Tests pass post-leaderboards fix; valuable coverage expansion |
-| #762 | Curate narrative content | narrative | DISAPPROVED | — | Trivial (2+ / 2− to leaderboards.ts only); no-op after Phase 0 fix |
-| #763 | Curate narrative content | narrative | SUPERSEDED | — | Content subsumed by #774 + #759 consolidation |
-| #764 | Orphanage narrative | narrative | SUPERSEDED | — | Near-duplicate of #769; #769 selected as best of group |
-| #765 | A11y Slider labels | a11y | CHERRY-PICK | `bb7837a8` | Unique `PhaseOverrides.tsx` file not in #757 |
-| #766 | Bolt Map refactor | perf | MERGED | `5b87853a` | Independent (6 engine/ai files); safe to merge |
-| #767 | Chaos Weaver + Mana Storm | feature | MERGED | `b6b6b8fc` | Largest PR; supersedes #773; schema tests written first |
-| #768 | Combat narrative variation | narrative | SUPERSEDED | — | Content subsumed by #774 consolidation |
-| #769 | Lore, arenas, traits | narrative | MERGED | `846e82cc` | Best of #764/#769/#772 group; `fix_leaderboards.py` excluded |
-| #770 | A11y OverrideSliders | a11y | SUPERSEDED | — | OverrideSliders changes already covered by #757 |
-| #771 | A11y FighterConfigCard | a11y | SUPERSEDED | — | FighterConfigCard changes already covered by #757 |
-| #772 | Narrative + trait expansion | narrative | SUPERSEDED | — | Near-duplicate of #769; `fix_type.py` excluded |
-| #773 | Bolt Shattered Sky weather | perf/feature | DISAPPROVED | — | Strict subset of #767 (V2); adds only `fix_leaderboards.py` junk |
-| #774 | Combat Chronicler fix | narrative | MERGED | `3f64cfa2` | Most structured narrative fix; `leaderboards.ts.orig` excluded |
-| #775 | Bolt updateEntityInList | perf | SUPERSEDED | — | Pattern subsumed by #758 + refactor branch DRY codemods |
-| #776 | Palette accessible sliders | a11y | CHERRY-PICK | `3900bdb4` | Added cursor-pointer to AttributeSliders labels |
-| #777 | Bolt rosterWorker find | perf | MERGED | `d662b5df` | Optimize duplicate find call in rosterWorker |
-| #778 | Sentinel secure links | security | MERGED | `a7367f8c` | Secure external Markdown links against reverse tabnabbing |
-| #780 | Cursed treasure event | feature | MERGED | `1af58efc` | Add cursed treasure discovery offseason event |
-| refactor/srp-dry-audit | SRP/DRY decomposition | refactor | MERGED | `ac90c7eb` | 131 files; merged after all PRs; 92 tsc errors fixed post-merge |
+| PR #                   | Title                       | Category     | Verdict     | Commit     | Rationale                                                          |
+| ---------------------- | --------------------------- | ------------ | ----------- | ---------- | ------------------------------------------------------------------ |
+| #757                   | A11y Select/Slider labels   | a11y         | CHERRY-PICK | `8861aa87` | Broadest a11y PR (6 files); used as base for a11y consolidation    |
+| #758                   | Bolt O(N) array reallocs    | perf         | MERGED      | `de6fc6ca` | O(N) array realloc fixes for roster/training/state slices          |
+| #759                   | Curate narrativeContent     | narrative    | MERGED      | `8c342a7d` | Unique narrative entries kept; `lint_output.txt` excluded          |
+| #760                   | A11y Radix labels           | a11y         | SUPERSEDED  | —          | Superseded by #757 (overlaps on PlanStep + FighterConfigCard)      |
+| #761                   | Test coverage expansion     | test         | MERGED      | `e08b8e6e` | Tests pass post-leaderboards fix; valuable coverage expansion      |
+| #762                   | Curate narrative content    | narrative    | DISAPPROVED | —          | Trivial (2+ / 2− to leaderboards.ts only); no-op after Phase 0 fix |
+| #763                   | Curate narrative content    | narrative    | SUPERSEDED  | —          | Content subsumed by #774 + #759 consolidation                      |
+| #764                   | Orphanage narrative         | narrative    | SUPERSEDED  | —          | Near-duplicate of #769; #769 selected as best of group             |
+| #765                   | A11y Slider labels          | a11y         | CHERRY-PICK | `bb7837a8` | Unique `PhaseOverrides.tsx` file not in #757                       |
+| #766                   | Bolt Map refactor           | perf         | MERGED      | `5b87853a` | Independent (6 engine/ai files); safe to merge                     |
+| #767                   | Chaos Weaver + Mana Storm   | feature      | MERGED      | `b6b6b8fc` | Largest PR; supersedes #773; schema tests written first            |
+| #768                   | Combat narrative variation  | narrative    | SUPERSEDED  | —          | Content subsumed by #774 consolidation                             |
+| #769                   | Lore, arenas, traits        | narrative    | MERGED      | `846e82cc` | Best of #764/#769/#772 group; `fix_leaderboards.py` excluded       |
+| #770                   | A11y OverrideSliders        | a11y         | SUPERSEDED  | —          | OverrideSliders changes already covered by #757                    |
+| #771                   | A11y FighterConfigCard      | a11y         | SUPERSEDED  | —          | FighterConfigCard changes already covered by #757                  |
+| #772                   | Narrative + trait expansion | narrative    | SUPERSEDED  | —          | Near-duplicate of #769; `fix_type.py` excluded                     |
+| #773                   | Bolt Shattered Sky weather  | perf/feature | DISAPPROVED | —          | Strict subset of #767 (V2); adds only `fix_leaderboards.py` junk   |
+| #774                   | Combat Chronicler fix       | narrative    | MERGED      | `3f64cfa2` | Most structured narrative fix; `leaderboards.ts.orig` excluded     |
+| #775                   | Bolt updateEntityInList     | perf         | SUPERSEDED  | —          | Pattern subsumed by #758 + refactor branch DRY codemods            |
+| #776                   | Palette accessible sliders  | a11y         | CHERRY-PICK | `3900bdb4` | Added cursor-pointer to AttributeSliders labels                    |
+| #777                   | Bolt rosterWorker find      | perf         | MERGED      | `d662b5df` | Optimize duplicate find call in rosterWorker                       |
+| #778                   | Sentinel secure links       | security     | MERGED      | `a7367f8c` | Secure external Markdown links against reverse tabnabbing          |
+| #780                   | Cursed treasure event       | feature      | MERGED      | `1af58efc` | Add cursed treasure discovery offseason event                      |
+| refactor/srp-dry-audit | SRP/DRY decomposition       | refactor     | MERGED      | `ac90c7eb` | 131 files; merged after all PRs; 92 tsc errors fixed post-merge    |
 
 **Summary**: 12 PRs merged, 3 cherry-picked, 8 superseded/disapproved, 1 refactor branch merged.
 
@@ -45,6 +45,7 @@
 ## 2. Category-Level Summaries
 
 ### Narrative Content (8 PRs → 3 merged, 1 disapproved, 4 superseded)
+
 - **Consolidation approach**: #774 as base + #759 unique entries + #769 best-of-group
 - #762 DISAPPROVED (trivial, no-op after leaderboards fix)
 - #763, #768, #772 superseded (content subsumed by #774 + #759)
@@ -53,12 +54,14 @@
 - Quality: tone consistent, no duplicate phrases, design bible aligned
 
 ### Accessibility (5 PRs → 1 merged, 2 cherry-picked, 2 superseded)
+
 - **Consolidation approach**: #757 as base (broadest, 6 files) + #765 (PhaseOverrides) + #776 (cursor-pointer)
 - #760, #770, #771 superseded by #757
 - Final a11y coverage: FighterConfigCard, OverrideSliders, SlotSelector, PhaseOverrides, RecruitFilters, PlanStep, StableEquipment
 - Tests written FIRST (Phase 2.1): 5 new test files for zero-coverage components
 
 ### Performance (4 PRs → 2 merged, 1 disapproved, 1 superseded)
+
 - #773 DISAPPROVED (strict subset of #767)
 - #758 MERGED (O(N) array realloc fixes)
 - #766 MERGED (Map refactor, independent)
@@ -66,13 +69,16 @@
 - #777 MERGED (rosterWorker find optimization)
 
 ### Test Coverage (1 PR)
+
 - #761 MERGED — tests pass post-leaderboards fix; valuable coverage for store slices and utils
 
 ### Feature (2 PRs)
+
 - #767 MERGED — Chaos Weaver surprise, Mana Storm weather, expanded gladiator names
 - #780 MERGED — Cursed treasure discovery offseason event
 
 ### Refactoring (1 branch)
+
 - `refactor/srp-dry-audit` MERGED — 131 files, +9671/−7763
 - Decomposition quality: excellent (seasonalHandlers 1498→modular, schemaObjects 880→60, phaseResolvers 569→11)
 - 92 tsc errors introduced, all fixed post-merge
@@ -107,19 +113,19 @@
 
 ## 4. Metrics Summary
 
-| Metric | Before | After | Delta |
-|--------|--------|-------|-------|
-| Test files | 460 | 468 | +8 |
-| Test pass count | ~5,900 | 5,956 | +56 |
-| Test fail/error count | 0 | 0 | 0 |
-| Type errors | 0 | 0 | 0 |
-| Lint errors | 0 | 0 | 0 |
-| Open PRs | 23 | 0 | −23 |
-| Remote branches (excl. main) | 27 | 0 | −27 |
-| Total lines of code | ~186K | 187,230 | +1K (net, despite −7.7K from refactor) |
-| Dead route files | 20 | 0 | −20 |
-| Junk files in repo | 8+ | 0 | −8+ |
-| Build | Pass | Pass | — |
+| Metric                       | Before | After   | Delta                                  |
+| ---------------------------- | ------ | ------- | -------------------------------------- |
+| Test files                   | 460    | 468     | +8                                     |
+| Test pass count              | ~5,900 | 5,956   | +56                                    |
+| Test fail/error count        | 0      | 0       | 0                                      |
+| Type errors                  | 0      | 0       | 0                                      |
+| Lint errors                  | 0      | 0       | 0                                      |
+| Open PRs                     | 23     | 0       | −23                                    |
+| Remote branches (excl. main) | 27     | 0       | −27                                    |
+| Total lines of code          | ~186K  | 187,230 | +1K (net, despite −7.7K from refactor) |
+| Dead route files             | 20     | 0       | −20                                    |
+| Junk files in repo           | 8+     | 0       | −8+                                    |
+| Build                        | Pass   | Pass    | —                                      |
 
 ---
 
@@ -156,23 +162,26 @@ Phase 6.4: Remove temporary audit/working files, add .gitignore junk patterns (a
 ## 7. Deferred/Optional Phase Results
 
 ### Phase 2.5: Refactor Branch Test Review
+
 - **9 test files reviewed**: `resolutionDeterminism.test.ts`, `loreGenerator.test.ts`, `newLoreGenerator.test.ts`, `offseasonDeterminism.test.ts`, `traitsCharacterization.test.ts`, `useTrainingPlanner.test.ts`, `schemaCharacterization.test.ts`, `buildWarriorMapDivergence.test.ts`, `roster.test.ts`
 - **Result**: All 9 files present, 203 tests pass. No stubbing needed — tests work with refactored module paths.
 
 ### Phase 4.2: Pre-Existing Bug Triage (RC1-RC7)
+
 All 7 root causes verified as **already fixed** in the current codebase:
 
-| RC | Description | Status |
-|----|-------------|--------|
-| RC1 | `vi.mock` leak from `simulation.test.ts` | ✅ Fixed — mock factory exports all named exports |
-| RC2 | `vi.resetModules()` unavailable in Bun | ✅ Fixed — no `vi.resetModules()` calls remain |
-| RC3 | `storage.test.ts` replaces `global.localStorage` | ✅ Fixed — saves/restores in `afterAll` |
-| RC4 | `setMockIdGenerator` leak from `feed.test.ts` | ✅ Fixed — `afterEach(() => setMockIdGenerator(null))` |
-| RC5 | `useDigestSummary` missing warrior IDs | ✅ Fixed — `makeOffer` includes player warrior IDs |
-| RC6 | Scouting test string mismatch | ✅ Fixed — expects `'Limited information available'` |
-| RC7 | `e2e/golden-path.spec.ts` picked up by Bun | ✅ Fixed — `bunfig.toml` excludes `e2e/**` |
+| RC  | Description                                      | Status                                                 |
+| --- | ------------------------------------------------ | ------------------------------------------------------ |
+| RC1 | `vi.mock` leak from `simulation.test.ts`         | ✅ Fixed — mock factory exports all named exports      |
+| RC2 | `vi.resetModules()` unavailable in Bun           | ✅ Fixed — no `vi.resetModules()` calls remain         |
+| RC3 | `storage.test.ts` replaces `global.localStorage` | ✅ Fixed — saves/restores in `afterAll`                |
+| RC4 | `setMockIdGenerator` leak from `feed.test.ts`    | ✅ Fixed — `afterEach(() => setMockIdGenerator(null))` |
+| RC5 | `useDigestSummary` missing warrior IDs           | ✅ Fixed — `makeOffer` includes player warrior IDs     |
+| RC6 | Scouting test string mismatch                    | ✅ Fixed — expects `'Limited information available'`   |
+| RC7 | `e2e/golden-path.spec.ts` picked up by Bun       | ✅ Fixed — `bunfig.toml` excludes `e2e/**`             |
 
 ### Phase 4.4: New Bug Discovery
+
 - **Narrative content**: All 5 offseason events valid, template brackets balanced
 - **Schema validation**: `schemaCharacterization.test.ts` (27 tests) + `enumSourcesSync.test.ts` (6 tests) pass
 - **Weather audio**: Audio files are generic SFX (clash, hit, crit), not per-weather-type — no missing files
@@ -180,6 +189,7 @@ All 7 root causes verified as **already fixed** in the current codebase:
 - **Junk files**: Zero junk files in final diff
 
 ### Phase 5: Full Verification (including slow tests)
+
 - **tsc**: 0 errors
 - **vitest (standard)**: 464 files, 5956 passed, 0 failed, 8 skipped
 - **vitest (all, including slow)**: 472 files, 6073 passed, 1 failed (flaky timing test `advanceWeekPerformance`), 8 skipped
@@ -189,6 +199,7 @@ All 7 root causes verified as **already fixed** in the current codebase:
 - **lint**: 0 errors (1011 pre-existing JSDoc warnings)
 
 ### Phase 6.4: Temporary File Cleanup
+
 - Removed `audit/` directory (3 files: `REFACTORING_REPORT.md`, `MASTER_FINDINGS.md`, `baseline-snapshot.json`)
 - Removed `.devin/plans/test-fix-plan-refined.md`
 - Removed `.windsurf/plans/audit-stubs-deadcode.md`
@@ -198,15 +209,15 @@ All 7 root causes verified as **already fixed** in the current codebase:
 
 ## 6. Validation Findings Reference
 
-| ID | Finding | Disposition | Confirmed |
-|----|---------|-------------|-----------|
-| V1 | ALL 19 PRs touch leaderboards.ts with same fix | Fixed on main first (Phase 0) | ✅ |
-| V2 | PR #767 is strict superset of #773 | #773 DISAPPROVED | ✅ |
-| V3 | PRs #764/#769/#772 are near-duplicates | #769 selected as best | ✅ |
-| V4 | 18 dead route stubs (not 14) | 20 removed in Phase 4.3 | ✅ (count was 20) |
-| V5 | 460 test files (not 246) | Updated count in metrics | ✅ (468 final) |
-| V6 | Tests were scheduled after integration | Restructured with test-first Phase 2 | ✅ |
-| V7 | 5 a11y components have ZERO tests | Tests written in Phase 2.1 | ✅ |
-| V8 | gameStateSchema.ts has ZERO tests | 21 tests written in Phase 2.3 | ✅ |
-| V9 | Refactor branch overlaps 10 PR files | Merged after all PRs | ✅ |
-| V10 | 8 PRs contain junk files | All excluded during cherry-pick | ✅ |
+| ID  | Finding                                        | Disposition                          | Confirmed         |
+| --- | ---------------------------------------------- | ------------------------------------ | ----------------- |
+| V1  | ALL 19 PRs touch leaderboards.ts with same fix | Fixed on main first (Phase 0)        | ✅                |
+| V2  | PR #767 is strict superset of #773             | #773 DISAPPROVED                     | ✅                |
+| V3  | PRs #764/#769/#772 are near-duplicates         | #769 selected as best                | ✅                |
+| V4  | 18 dead route stubs (not 14)                   | 20 removed in Phase 4.3              | ✅ (count was 20) |
+| V5  | 460 test files (not 246)                       | Updated count in metrics             | ✅ (468 final)    |
+| V6  | Tests were scheduled after integration         | Restructured with test-first Phase 2 | ✅                |
+| V7  | 5 a11y components have ZERO tests              | Tests written in Phase 2.1           | ✅                |
+| V8  | gameStateSchema.ts has ZERO tests              | 21 tests written in Phase 2.3        | ✅                |
+| V9  | Refactor branch overlaps 10 PR files           | Merged after all PRs                 | ✅                |
+| V10 | 8 PRs contain junk files                       | All excluded during cherry-pick      | ✅                |

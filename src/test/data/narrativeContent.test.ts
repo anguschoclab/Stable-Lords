@@ -163,10 +163,24 @@ describe('narrativeContent.json', () => {
 
   it('all required top-level keys are present', () => {
     const requiredKeys = [
-      'ux_metadata', 'persona', 'strikes', 'pbp', 'conclusions',
-      'blurbs', 'commentary', 'recap', 'events', 'gazette',
-      'fanfare', 'memorials', 'recruitment', 'meta', 'passives',
-      'kill_text', 'offseason_events', 'crowd_reactions',
+      'ux_metadata',
+      'persona',
+      'strikes',
+      'pbp',
+      'conclusions',
+      'blurbs',
+      'commentary',
+      'recap',
+      'events',
+      'gazette',
+      'fanfare',
+      'memorials',
+      'recruitment',
+      'meta',
+      'passives',
+      'kill_text',
+      'offseason_events',
+      'crowd_reactions',
     ];
     for (const key of requiredKeys) {
       expect((narrativeContent as any)[key]).toBeDefined();

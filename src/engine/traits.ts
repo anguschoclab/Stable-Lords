@@ -15,11 +15,7 @@ export {
   type TraitId,
 } from './traitDefs';
 
-export {
-  traitsForStyle,
-  traitsByTier,
-  generateTraits,
-} from './traitGeneration';
+export { traitsForStyle, traitsByTier, generateTraits } from './traitGeneration';
 
 export {
   getStaticTraitMods,

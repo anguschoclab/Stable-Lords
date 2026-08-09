@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { stripNonSerializable, reconstructGameState, clearReconstructionCache } from '@/state/serialization';
+import {
+  stripNonSerializable,
+  reconstructGameState,
+  clearReconstructionCache,
+} from '@/state/serialization';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('serializationRoundTrip', () => {

@@ -44,7 +44,8 @@ describe('testQualityAudit', () => {
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i]!.trim();
         // Skip comments and mock setup
-        if (line.startsWith('//') || line.startsWith('*') || line.includes('mockResolvedValue')) continue;
+        if (line.startsWith('//') || line.startsWith('*') || line.includes('mockResolvedValue'))
+          continue;
         // Flag Date.now() used in expect() or variable assignments for test data
         if (line.includes('Date.now()') && !line.includes('mock') && !line.includes('Mock')) {
           violations.push(`${path.basename(file)}:${i + 1}`);

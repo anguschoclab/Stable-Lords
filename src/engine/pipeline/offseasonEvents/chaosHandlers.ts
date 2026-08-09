@@ -9,7 +9,11 @@ import { makeInjury } from '@/engine/injuries/utils';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
-import { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+import {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+} from './types';
 
 export function handleChaosRift(
   state: GameState,
@@ -27,14 +31,25 @@ export function handleChaosRift(
       const goldGained = 150;
 
       ctx.treasuryDelta += goldGained;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Sold Chaos Crystal', goldGained, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Sold Chaos Crystal', goldGained, 'other')
+      );
 
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,
         fame: (chosen.fame || 0) + fameGained,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'Touched the raw essence of the Chaos Rift.', origin: 'Chaos Rift', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Style',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'Touched the raw essence of the Chaos Rift.',
+          origin: 'Chaos Rift',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -170,7 +185,16 @@ export function handleFeyTrickster(
         ctx.rosterUpdates.set(chosen.id, {
           xp: (chosen.xp || 0) + xpGained,
         });
-        ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'A fey trickster taught them an impossible maneuver.', origin: 'Fey Trickster', discoveredWeek: nextWeek }));
+        ctx.insightTokens.push(
+          makeInsightToken(rng, {
+            type: 'Style',
+            warriorId: chosen.id,
+            warriorName: chosen.name,
+            detail: 'A fey trickster taught them an impossible maneuver.',
+            origin: 'Fey Trickster',
+            discoveredWeek: nextWeek,
+          })
+        );
         effectMsg = `They solved the riddle! They gain strange insights. (+${xpGained} XP, Insight Gained)`;
       } else {
         // Tricked
@@ -376,7 +400,16 @@ export function handleChaosWeaverVisit(
           traits: [...currentTraits, grantedTrait.id],
         });
 
-        ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`, origin: 'Chaos Weaver', discoveredWeek: nextWeek }));
+        ctx.insightTokens.push(
+          makeInsightToken(rng, {
+            type: 'Style',
+            warriorId: chosen.id,
+            warriorName: chosen.name,
+            detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
+            origin: 'Chaos Weaver',
+            discoveredWeek: nextWeek,
+          })
+        );
 
         pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
           name: chosen.name,
@@ -411,7 +444,16 @@ export function handleTemporalAnomaly(
         traits: newTraits,
       });
 
-      ctx.insightTokens.push(makeInsightToken(rng, { type: 'Style', warriorId: chosen.id, warriorName: chosen.name, detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.', origin: 'Temporal Anomaly', discoveredWeek: nextWeek }));
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Style',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.',
+          origin: 'Temporal Anomaly',
+          discoveredWeek: nextWeek,
+        })
+      );
 
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
@@ -435,7 +477,9 @@ export function handleCursedTreasureDiscovery(
       const fameLost = 10 + Math.floor(rng.next() * 11);
 
       ctx.treasuryDelta += goldGained;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Cursed Treasure Gained', goldGained, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Cursed Treasure Gained', goldGained, 'other')
+      );
 
       const newInjury = makeInjury(rng, {
         name: 'Curse of Greed',

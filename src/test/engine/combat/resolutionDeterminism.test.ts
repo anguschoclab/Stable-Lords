@@ -12,8 +12,10 @@ const STYLE_PAIRS: Array<[FightingStyle, FightingStyle]> = [
   [FightingStyle.BashingAttack, FightingStyle.ParryLunge],
 ];
 
-const SEEDS = [1, 7, 42, 99, 123, 777, 1234, 5555, 9999, 31337,
-               100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+const SEEDS = [
+  1, 7, 42, 99, 123, 777, 1234, 5555, 9999, 31337, 100, 200, 300, 400, 500, 600, 700, 800, 900,
+  1000,
+];
 
 describe('combat resolution determinism characterization', () => {
   for (const [styleA, styleD] of STYLE_PAIRS) {
@@ -35,16 +37,39 @@ describe('combat resolution determinism characterization', () => {
 
   it('headless and narrated produce identical mechanical outcomes', () => {
     for (const seed of SEEDS) {
-      const A = makeWarrior(undefined, 'A', FightingStyle.StrikingAttack, ATTRS, undefined, undefined);
+      const A = makeWarrior(
+        undefined,
+        'A',
+        FightingStyle.StrikingAttack,
+        ATTRS,
+        undefined,
+        undefined
+      );
       const D = makeWarrior(undefined, 'D', FightingStyle.TotalParry, ATTRS, undefined, undefined);
 
       const narrated = simulateFight(
-        defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D,
-        seed, undefined, 'Clear', 'standard_arena', undefined, false
+        defaultPlanForWarrior(A),
+        defaultPlanForWarrior(D),
+        A,
+        D,
+        seed,
+        undefined,
+        'Clear',
+        'standard_arena',
+        undefined,
+        false
       );
       const headless = simulateFight(
-        defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D,
-        seed, undefined, 'Clear', 'standard_arena', undefined, true
+        defaultPlanForWarrior(A),
+        defaultPlanForWarrior(D),
+        A,
+        D,
+        seed,
+        undefined,
+        'Clear',
+        'standard_arena',
+        undefined,
+        true
       );
 
       expect(
@@ -57,7 +82,14 @@ describe('combat resolution determinism characterization', () => {
   it('different seeds produce varied outcomes (not all same winner)', () => {
     const winners = new Set<string>();
     for (const seed of SEEDS) {
-      const A = makeWarrior(undefined, 'A', FightingStyle.StrikingAttack, ATTRS, undefined, undefined);
+      const A = makeWarrior(
+        undefined,
+        'A',
+        FightingStyle.StrikingAttack,
+        ATTRS,
+        undefined,
+        undefined
+      );
       const D = makeWarrior(undefined, 'D', FightingStyle.TotalParry, ATTRS, undefined, undefined);
       const result = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed);
       winners.add(result.winner ?? 'draw');
@@ -68,7 +100,14 @@ describe('combat resolution determinism characterization', () => {
 
   it('exchange log structure is stable for same seed', () => {
     for (const seed of [1, 42, 99]) {
-      const A = makeWarrior(undefined, 'A', FightingStyle.LungingAttack, ATTRS, undefined, undefined);
+      const A = makeWarrior(
+        undefined,
+        'A',
+        FightingStyle.LungingAttack,
+        ATTRS,
+        undefined,
+        undefined
+      );
       const D = makeWarrior(undefined, 'D', FightingStyle.WallOfSteel, ATTRS, undefined, undefined);
 
       const run1 = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed);

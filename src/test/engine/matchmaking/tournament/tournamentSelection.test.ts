@@ -44,8 +44,7 @@ vi.mock('@/engine/tokens/patronTokenService', () => ({
 vi.mock('@/engine/matchmaking/tournament/tournamentStateMutator', () => ({
   findWarriorById: vi.fn((state: GameState, id: string) => {
     for (const w of state.roster) if (w.id === id) return w;
-    for (const r of state.rivals || [])
-      for (const w of r.roster) if (w.id === id) return w;
+    for (const r of state.rivals || []) for (const w of r.roster) if (w.id === id) return w;
     for (const t of state.tournaments || [])
       for (const p of t.participants || []) if (p.id === id) return p;
     return undefined;
@@ -1399,9 +1398,7 @@ describe('resolveRound — updatedTournament return field (tournamentSelection)'
 
     expect(result.updatedTournament).toBeDefined();
     expect(result.updatedTournament!.id).toBe(tournament.id);
-    const r1Bouts = result.updatedTournament!.bracket.filter(
-      (b: TournamentBout) => b.round === 1
-    );
+    const r1Bouts = result.updatedTournament!.bracket.filter((b: TournamentBout) => b.round === 1);
     expect(r1Bouts.every((b: TournamentBout) => b.winner !== undefined)).toBe(true);
   });
 

@@ -1,7 +1,11 @@
 /**
  * Offseason event handlers — re-exported from thematic sub-modules.
  */
-export { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+export {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+} from './types';
 export { handleWinterChill } from './economicHandlers';
 export { handleMerchantBlessing } from './economicHandlers';
 export { handleBlackMarketRaid } from './economicHandlers';

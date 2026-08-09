@@ -5,7 +5,11 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
-import { type OffseasonEventNarrative, type OffseasonEventContext, getActiveWarriors } from './types';
+import {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+  getActiveWarriors,
+} from './types';
 
 export function handleWinterChill(
   _state: GameState,
@@ -16,7 +20,9 @@ export function handleWinterChill(
 ) {
   const cost = 150 + Math.floor(rng.next() * 100);
   ctx.treasuryDelta -= cost;
-  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other')
+  );
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: cost });
 }
 
@@ -62,7 +68,11 @@ export function handleMysteriousPatron(
   const goldGained = 100 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta += goldGained;
 
-  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other')
+  );
 
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldGained });
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+    gold: goldGained,
+  });
 }

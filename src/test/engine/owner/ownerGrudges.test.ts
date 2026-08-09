@@ -144,9 +144,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
   it('should skip rivals with undefined personality', () => {
     const state: any = {
       week: 10,
-      arenaHistory: [
-        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'Kill' },
-      ],
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'Kill' }],
       rivals: [
         { owner: { id: 'o1', personality: undefined, stableName: 'A' }, roster: [{ id: 'w1' }] },
         { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },
@@ -160,9 +158,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     // Aggressive vs Pragmatic — no clash in PERSONALITY_CLASH
     const state: any = {
       week: 10,
-      arenaHistory: [
-        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'Kill' },
-      ],
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'Kill' }],
       rivals: [
         { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
         { owner: { id: 'o2', personality: 'Pragmatic', stableName: 'B' }, roster: [{ id: 'w2' }] },
@@ -177,9 +173,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
   it('should not create new grudge on cross-fight without kill', () => {
     const state: any = {
       week: 10,
-      arenaHistory: [
-        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'KO' },
-      ],
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'KO' }],
       rivals: [
         { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
         { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },
@@ -203,9 +197,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     };
     const state: any = {
       week: 10,
-      arenaHistory: [
-        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'KO' },
-      ],
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', by: 'KO' }],
       rivals: [
         { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
         { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },
@@ -221,9 +213,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     // Fight exists but warriors don't belong to the clashing stables
     const state: any = {
       week: 10,
-      arenaHistory: [
-        { id: 'f1', week: 9, warriorIdA: 'wX', warriorIdD: 'wY', by: 'Kill' },
-      ],
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'wX', warriorIdD: 'wY', by: 'Kill' }],
       rivals: [
         { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
         { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },
@@ -385,9 +375,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     // Use week=30, fight at week=10 -> 30-13=17, week 10 < 17 -> excluded
     const state: any = {
       week: 30,
-      arenaHistory: [
-        { id: 'f1', week: 10, warriorIdA: 'w1', warriorIdD: 'w2', by: 'Kill' },
-      ],
+      arenaHistory: [{ id: 'f1', week: 10, warriorIdA: 'w1', warriorIdD: 'w2', by: 'Kill' }],
       rivals: [
         { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
         { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },

@@ -9,7 +9,13 @@ import {
   consolidateAgentMemory,
   computePlayerThreatLevel,
 } from '@/engine/ai/agentCore';
-import type { GameState, RivalStableData, AIAgentMemory, AIEvent, RankingEntry } from '@/types/state.types';
+import type {
+  GameState,
+  RivalStableData,
+  AIAgentMemory,
+  AIEvent,
+  RankingEntry,
+} from '@/types/state.types';
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return {
@@ -37,7 +43,14 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
     meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
     ftueComplete: true,
     coachDismissed: [],
-    player: { id: 'p1', name: 'Player', stableName: 'Player Stable', fame: 0, renown: 0, titles: 0 },
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: 'Player Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
     fame: 0,
     popularity: 0,
     treasury: 1000,
@@ -199,7 +212,10 @@ describe('agentCore — computePlayerThreatLevel', () => {
   it('returns Neutral when no player warriors are in rankings', () => {
     const state = createMockState({
       roster: [{ id: 'w1' as any, status: 'Active' } as any],
-      realmRankings: { w_other: { overallRank: 1, classRank: 1, compositeScore: 100 } } as Record<string, RankingEntry>,
+      realmRankings: { w_other: { overallRank: 1, classRank: 1, compositeScore: 100 } } as Record<
+        string,
+        RankingEntry
+      >,
     });
     expect(computePlayerThreatLevel(state)).toBe('Neutral');
   });
@@ -207,7 +223,10 @@ describe('agentCore — computePlayerThreatLevel', () => {
   it('returns Neutral when roster is empty', () => {
     const state = createMockState({
       roster: [],
-      realmRankings: { w1: { overallRank: 1, classRank: 1, compositeScore: 100 } } as Record<string, RankingEntry>,
+      realmRankings: { w1: { overallRank: 1, classRank: 1, compositeScore: 100 } } as Record<
+        string,
+        RankingEntry
+      >,
     });
     expect(computePlayerThreatLevel(state)).toBe('Neutral');
   });

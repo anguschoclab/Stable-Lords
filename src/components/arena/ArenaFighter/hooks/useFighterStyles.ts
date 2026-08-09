@@ -30,7 +30,10 @@ interface UseFighterStylesParams {
  *
  */
 export function useFighterStyles({ pose, isDead, isActive, className }: UseFighterStylesParams) {
-  const containerClassName = cn('absolute transition-all duration-300 motion-reduce:transition-none motion-reduce:transform-none', className);
+  const containerClassName = cn(
+    'absolute transition-all duration-300 motion-reduce:transition-none motion-reduce:transform-none',
+    className
+  );
 
   const containerStyle = {
     left: `${pose.x}%`,

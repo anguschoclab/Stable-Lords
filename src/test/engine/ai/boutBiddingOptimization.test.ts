@@ -253,8 +253,6 @@ describe('boutBidding optimization — edge cases', () => {
     // W2's best is also BashingAttack if WallOfSteel vs BashingAttack is positive.
     // If both get same priority, they still each get their own bid — verify count and IDs
     expect(bids.length).toBe(2);
-    expect(bids.map((b) => b.proposingWarriorId).sort()).toEqual(
-      [w1.id, w2.id].sort()
-    );
+    expect(bids.map((b) => b.proposingWarriorId).sort()).toEqual([w1.id, w2.id].sort());
   });
 });

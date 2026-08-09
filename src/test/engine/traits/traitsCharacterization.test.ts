@@ -24,7 +24,9 @@ describe('trait generation determinism characterization', () => {
       const traits = generateTraits(rng);
       for (const traitId of traits) {
         expect(TRAITS[traitId], `seed ${seed} generated unknown trait ${traitId}`).toBeDefined();
-        expect(TRAIT_IDS.includes(traitId), `seed ${seed} trait ${traitId} not in TRAIT_IDS`).toBe(true);
+        expect(TRAIT_IDS.includes(traitId), `seed ${seed} trait ${traitId} not in TRAIT_IDS`).toBe(
+          true
+        );
       }
     }
   });

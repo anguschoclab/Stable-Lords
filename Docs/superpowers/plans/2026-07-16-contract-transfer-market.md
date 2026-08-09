@@ -11,6 +11,7 @@
 **Scope:** Selling only (player → rival). **Non-goals:** buying rival warriors, rival-to-rival trades, negotiation/counter-offers, and any combat-math change (`balance.test.ts` stays green). Rivals' own roster caps are respected (no bid from a full stable).
 
 **Grounded facts (do not re-derive):**
+
 - `computeWarriorLiability(warrior): { score: 0–100, factors, recommendation: 'Keep'|'Monitor'|'Release' }` — `src/engine/warriorValue.ts`. Positive-trait value tiers inside it: Common 6 / Notable 10 / Exceptional 16 / Signature 24.
 - `TRAIT_POLICY: Record<OwnerPersonality, { cutLiabilityThreshold, trainAppetite, ceiling }>` and `policyFor(personality?)` — `src/engine/ai/traitPolicy.ts`. Personalities: `Aggressive | Methodical | Showman | Pragmatic | Tactician`.
 - `TRAITS[id]` exposes `tier` and `styles` — `src/engine/traits.ts`.
@@ -36,6 +37,7 @@
 ## Task 1: Pure bid computation (TDD)
 
 **Files:**
+
 - Create: `src/engine/market/contractMarket.ts`
 - Create: `src/test/engine/market/contractMarket.test.ts`
 
@@ -51,19 +53,33 @@ import type { RivalStableData } from '@/types/state.types';
 
 const warrior = (over: Partial<Warrior> = {}): Warrior =>
   ({
-    id: 'w1', name: 'Vex', fame: 40,
+    id: 'w1',
+    name: 'Vex',
+    fame: 40,
     career: { wins: 10, losses: 4, kills: 2 },
-    traits: ['quick'], status: 'Active', age: 24,
+    traits: ['quick'],
+    status: 'Active',
+    age: 24,
     attributes: { WT: 12, WL: 12, ST: 12, SP: 12, DF: 12, AG: 12 },
   }) as unknown as Warrior;
 
 const rival = (personality: string, over: Partial<RivalStableData> = {}): RivalStableData =>
   ({
     id: `s_${personality}`,
-    owner: { id: `s_${personality}`, name: 'Owner', stableName: `${personality} Hall`,
-             fame: 0, renown: 0, titles: 0, personality },
-    fame: 0, treasury: 5000, roster: new Array(6).fill(null).map((_, i) => ({ id: `r${i}` })),
-    ledger: [], trainingAssignments: [],
+    owner: {
+      id: `s_${personality}`,
+      name: 'Owner',
+      stableName: `${personality} Hall`,
+      fame: 0,
+      renown: 0,
+      titles: 0,
+      personality,
+    },
+    fame: 0,
+    treasury: 5000,
+    roster: new Array(6).fill(null).map((_, i) => ({ id: `r${i}` })),
+    ledger: [],
+    trainingAssignments: [],
     ...over,
   }) as unknown as RivalStableData;
 
@@ -76,8 +92,11 @@ describe('computeContractBid', () => {
 
   it('refuses to bid on a Release-grade washout', () => {
     // 2 flaws + losing record → liability recommendation Release → no buyer.
-    const washout = warrior({ traits: ['fragile', 'slow'], fame: 2,
-                              career: { wins: 1, losses: 9, kills: 0 } });
+    const washout = warrior({
+      traits: ['fragile', 'slow'],
+      fame: 2,
+      career: { wins: 1, losses: 9, kills: 0 },
+    });
     expect(computeContractBid(washout, rival('Aggressive'))).toBeNull();
   });
 
@@ -133,12 +152,20 @@ export interface ContractBid {
 export const BUYER_ROSTER_CAP = 11;
 
 const TRAIT_MARKET_VALUE: Record<TraitTier, number> = {
-  Common: 40, Notable: 80, Exceptional: 160, Signature: 320, Flaw: 0,
+  Common: 40,
+  Notable: 80,
+  Exceptional: 160,
+  Signature: 320,
+  Flaw: 0,
 };
 
 /** Personality temperament multipliers on the base valuation. */
 const PERSONALITY_MULT: Record<string, number> = {
-  Aggressive: 1.15, Showman: 1.2, Tactician: 1.0, Methodical: 0.95, Pragmatic: 0.8,
+  Aggressive: 1.15,
+  Showman: 1.2,
+  Tactician: 1.0,
+  Methodical: 0.95,
+  Pragmatic: 0.8,
 };
 
 function baseValuation(w: Warrior): number {
@@ -198,7 +225,7 @@ export function collectContractBids(w: Warrior, rivals: RivalStableData[]): Cont
 }
 ```
 
-- [ ] **Step 4: Run + typecheck.** Test → PASS (tune `TRAIT_MARKET_VALUE`/multipliers if an ordering case is off — they are knobs; the *ordering* assertions are the contract). `bunx tsc … | grep -c "error TS"` → `0`.
+- [ ] **Step 4: Run + typecheck.** Test → PASS (tune `TRAIT_MARKET_VALUE`/multipliers if an ordering case is off — they are knobs; the _ordering_ assertions are the contract). `bunx tsc … | grep -c "error TS"` → `0`.
 
 - [ ] **Step 5: Commit**
 
@@ -212,6 +239,7 @@ git commit -m "feat(market): personality-driven contract bids from liability + t
 ## Task 2: The `sellWarriorContract` store action (TDD)
 
 **Files:**
+
 - Modify: `src/state/slices/rosterSlice/types.ts`
 - Modify: `src/state/slices/rosterSlice/actions.ts`
 - Create: `src/test/state/sellWarriorContract.test.ts`
@@ -308,6 +336,7 @@ git commit -m "feat(market): sellWarriorContract store action — transfer warri
 ## Task 3: The sell dialog + roster entry point
 
 **Files:**
+
 - Create: `src/components/stable/SellContractDialog.tsx`
 - Modify: `src/components/stable/RosterWarriorRow.tsx`
 
@@ -418,7 +447,7 @@ git commit -m "feat(market): sell-contract dialog with top rival bids on the ros
 - **Both AI halves were free.** Valuation reuses `computeWarriorLiability`; temperament reuses the personality policy. The feature is mostly plumbing, which is why it's the highest value-per-effort item.
 - **The market is honest.** Washouts (`Release`) find no buyer — you cannot dump your 2-flaw liability for gold; that preserves the churn system's teeth. Liability still discounts sub-Release warriors.
 - **No new economy loop-holes.** Buyer treasury is debited and roster-capped, so the player can't farm infinite gold selling to one rich rival.
-- **Knobs are named** (`TRAIT_MARKET_VALUE`, `PERSONALITY_MULT`, `BUYER_ROSTER_CAP`) and the tests pin *orderings* (Showman > Pragmatic for stars), not exact prices, so tuning won't churn tests.
+- **Knobs are named** (`TRAIT_MARKET_VALUE`, `PERSONALITY_MULT`, `BUYER_ROSTER_CAP`) and the tests pin _orderings_ (Showman > Pragmatic for stars), not exact prices, so tuning won't churn tests.
 
 ## Verification
 

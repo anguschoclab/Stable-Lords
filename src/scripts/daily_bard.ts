@@ -183,7 +183,10 @@ Context: You are writing for ${deficitPath}. ${context}`;
 /**
  * The Agentic Loop: Validates LLM output and retries with errors if necessary.
  */
-export async function validate_with_retry(deficitPath: string, retries = 3): Promise<string[] | null> {
+export async function validate_with_retry(
+  deficitPath: string,
+  retries = 3
+): Promise<string[] | null> {
   let errorContext = '';
   for (let i = 0; i < retries; i++) {
     const rawResponse = await request_bardic_inspiration(deficitPath, errorContext);

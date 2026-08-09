@@ -319,7 +319,9 @@ describe('createFreshState', () => {
     });
 
     it('sets each owner.personality to a valid value', () => {
-      expect(state.rivals.every((r) => VALID_PERSONALITIES.includes(r.owner.personality!))).toBe(true);
+      expect(state.rivals.every((r) => VALID_PERSONALITIES.includes(r.owner.personality!))).toBe(
+        true
+      );
     });
 
     it('sets each owner.backstoryId to a valid BackstoryId', () => {
@@ -396,7 +398,9 @@ describe('createFreshState', () => {
     });
 
     it('sets each lore to the origin[0] string', () => {
-      expect(pool.every((r) => r.lore === 'Found fighting for scraps in the pit districts.')).toBe(true);
+      expect(pool.every((r) => r.lore === 'Found fighting for scraps in the pit districts.')).toBe(
+        true
+      );
     });
 
     it('assigns a valid fighting style from the 6 initial styles', () => {
@@ -502,7 +506,14 @@ describe('createFreshState', () => {
     });
 
     it('sets career to {wins:0, losses:0, kills:0} for each recruit', () => {
-      expect(pool.every((r) => (r as any).career.wins === 0 && (r as any).career.losses === 0 && (r as any).career.kills === 0)).toBe(true);
+      expect(
+        pool.every(
+          (r) =>
+            (r as any).career.wins === 0 &&
+            (r as any).career.losses === 0 &&
+            (r as any).career.kills === 0
+        )
+      ).toBe(true);
     });
 
     it('generates an equipment object for each recruit', () => {

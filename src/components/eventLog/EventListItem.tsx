@@ -13,7 +13,12 @@ interface EventListItemProps {
 /**
  *
  */
-export function EventListItem({ event, allWarriorNames, allStableNames, onClick }: EventListItemProps) {
+export function EventListItem({
+  event,
+  allWarriorNames,
+  allStableNames,
+  onClick,
+}: EventListItemProps) {
   const Icon = event.icon;
 
   return (
@@ -39,11 +44,19 @@ export function EventListItem({ event, allWarriorNames, allStableNames, onClick 
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-xs font-medium text-foreground leading-tight truncate">
-          <LinkifiedText text={event.title} names={event.entityNames ?? allWarriorNames} stableNames={allStableNames} />
+          <LinkifiedText
+            text={event.title}
+            names={event.entityNames ?? allWarriorNames}
+            stableNames={allStableNames}
+          />
         </div>
         {event.subtitle && (
           <div className="text-[11px] text-muted-foreground leading-tight mt-0.5 truncate">
-            <LinkifiedText text={event.subtitle} names={event.entityNames ?? allWarriorNames} stableNames={allStableNames} />
+            <LinkifiedText
+              text={event.subtitle}
+              names={event.entityNames ?? allWarriorNames}
+              stableNames={allStableNames}
+            />
           </div>
         )}
       </div>

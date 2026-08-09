@@ -12,14 +12,7 @@ import {
 import { CHARGE_DEFINITIONS } from '@/types/crest.types';
 import type { ChargeType } from '@/types/crest.types';
 
-const ALL_TYPES: ChargeType[] = [
-  'beast',
-  'weapon',
-  'symbol',
-  'nature',
-  'celestial',
-  'mythical',
-];
+const ALL_TYPES: ChargeType[] = ['beast', 'weapon', 'symbol', 'nature', 'celestial', 'mythical'];
 
 const EXPECTED_COUNTS: Record<ChargeType, number> = {
   beast: 14,

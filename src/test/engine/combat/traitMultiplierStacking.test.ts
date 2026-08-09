@@ -4,9 +4,7 @@ import { TRAITS } from '@/engine/traits';
 describe('traitMultiplierStacking', () => {
   it('multiple traits with enduranceMult should stack multiplicatively (not additively)', () => {
     // Collect all traits with enduranceMult
-    const traitsWithEndMult = Object.values(TRAITS).filter(
-      (t) => t.effect.enduranceMult != null
-    );
+    const traitsWithEndMult = Object.values(TRAITS).filter((t) => t.effect.enduranceMult != null);
 
     // If two traits each give 0.9 enduranceMult, combined should be 0.81 (multiplicative)
     // not 0.8 (additive: 1.0 - 0.1 - 0.1)
@@ -25,20 +23,18 @@ describe('traitMultiplierStacking', () => {
   });
 
   it('trait enduranceMult values should not push stats below 0', () => {
-    const traitsWithEndMult = Object.values(TRAITS).filter(
-      (t) => t.effect.enduranceMult != null
-    );
+    const traitsWithEndMult = Object.values(TRAITS).filter((t) => t.effect.enduranceMult != null);
 
     for (const trait of traitsWithEndMult) {
       const mult = trait.effect.enduranceMult!;
-      expect(mult, `Trait "${trait.id}" has enduranceMult ${mult} which is <= 0`).toBeGreaterThan(0);
+      expect(mult, `Trait "${trait.id}" has enduranceMult ${mult} which is <= 0`).toBeGreaterThan(
+        0
+      );
     }
   });
 
   it('trait enduranceMult values should not produce NaN or Infinity', () => {
-    const traitsWithEndMult = Object.values(TRAITS).filter(
-      (t) => t.effect.enduranceMult != null
-    );
+    const traitsWithEndMult = Object.values(TRAITS).filter((t) => t.effect.enduranceMult != null);
 
     for (const trait of traitsWithEndMult) {
       const mult = trait.effect.enduranceMult!;
@@ -50,15 +46,16 @@ describe('traitMultiplierStacking', () => {
   it('edge case: warrior with 0 attributes should not produce NaN from traits', () => {
     // Traits apply multipliers to endurance cost. A warrior with 0 attributes
     // should still get a valid (non-NaN) endurance multiplier from traits.
-    const traitsWithEndMult = Object.values(TRAITS).filter(
-      (t) => t.effect.enduranceMult != null
-    );
+    const traitsWithEndMult = Object.values(TRAITS).filter((t) => t.effect.enduranceMult != null);
 
     for (const trait of traitsWithEndMult) {
       const mult = trait.effect.enduranceMult!;
       // Even with 0 base endurance, multiplying by the trait mult should be finite
       const result = 0 * mult;
-      expect(Number.isFinite(result), `Trait "${trait.id}" produces non-finite result with 0 base`).toBe(true);
+      expect(
+        Number.isFinite(result),
+        `Trait "${trait.id}" produces non-finite result with 0 base`
+      ).toBe(true);
     }
   });
 });

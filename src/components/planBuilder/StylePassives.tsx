@@ -28,7 +28,11 @@ export default function StylePassives({ plan, warrior }: StylePassivesProps) {
             Style Passives
           </span>
         </Label>
-        <Switch id="style-passives-switch" checked={showStylePassives} onCheckedChange={setShowStylePassives} />
+        <Switch
+          id="style-passives-switch"
+          checked={showStylePassives}
+          onCheckedChange={setShowStylePassives}
+        />
       </div>
 
       {showStylePassives && (

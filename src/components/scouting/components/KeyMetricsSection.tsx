@@ -118,7 +118,10 @@ function MetricCard({ icon, label, value, maxValue, color }: MetricCardProps) {
       <div className="relative">
         <div className="h-8 bg-neutral-900 rounded-none border border-white/5 overflow-hidden">
           <div
-            className={cn('h-full transition-all motion-reduce:transition-none motion-reduce:transform-none', color.replace('text-', 'bg-'))}
+            className={cn(
+              'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
+              color.replace('text-', 'bg-')
+            )}
             style={{ width: `${percentage}%` }}
           />
         </div>

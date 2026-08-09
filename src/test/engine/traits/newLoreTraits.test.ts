@@ -396,7 +396,6 @@ describe('new traits from lore expansion', () => {
     });
   });
 
-
   describe('orphan_instinct', () => {
     it('is registered in TRAITS', () => {
       expect(TRAITS.orphan_instinct).toBeDefined();

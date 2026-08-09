@@ -9,8 +9,13 @@ import type { Trainer } from '@/types/shared.types';
 
 function createMockTrainer(overrides: Partial<Trainer> = {}): Trainer {
   return {
-    id: 't1', name: 'Test Trainer', tier: 'Novice', focus: 'Aggression',
-    fame: 0, age: 30, contractWeeksLeft: 10,
+    id: 't1',
+    name: 'Test Trainer',
+    tier: 'Novice',
+    focus: 'Aggression',
+    fame: 0,
+    age: 30,
+    contractWeeksLeft: 10,
     ...overrides,
   } as Trainer;
 }
@@ -43,7 +48,14 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
     meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
     ftueComplete: true,
     coachDismissed: [],
-    player: { id: 'p1', name: 'Player', stableName: 'Player Stable', fame: 0, renown: 0, titles: 0 },
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: 'Player Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
     fame: 0,
     popularity: 0,
     treasury: 1000,

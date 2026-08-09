@@ -18,13 +18,36 @@ function createMockFighter(overrides: Partial<FighterState> = {}): FighterState 
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
     derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 10 },
-    plan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5, target: 'Any' } as any,
-    activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5, target: 'Any' } as any,
+    plan: {
+      style: FightingStyle.StrikingAttack,
+      OE: 5,
+      AL: 5,
+      killDesire: 5,
+      target: 'Any',
+    } as any,
+    activePlan: {
+      style: FightingStyle.StrikingAttack,
+      OE: 5,
+      AL: 5,
+      killDesire: 5,
+      target: 'Any',
+    } as any,
     psychState: 'CRUISING' as any,
-    hp: 100, maxHp: 100, endurance: 100, maxEndurance: 100,
-    hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
-    armHits: 0, legHits: 0, totalFights: 0,
-    momentum: 0, committed: false, survivalStrike: false, recoveryDebt: 0,
+    hp: 100,
+    maxHp: 100,
+    endurance: 100,
+    maxEndurance: 100,
+    hitsLanded: 0,
+    hitsTaken: 0,
+    ripostes: 0,
+    consecutiveHits: 0,
+    armHits: 0,
+    legHits: 0,
+    totalFights: 0,
+    momentum: 0,
+    committed: false,
+    survivalStrike: false,
+    recoveryDebt: 0,
     ...overrides,
   } as FighterState;
 }
@@ -47,38 +70,47 @@ describe('attackCheck — performAttackCheck', () => {
   it('returns a boolean result', () => {
     const att = createMockFighter();
     const rng = () => 0.5;
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(typeof result).toBe('boolean');
   });
 
   it('auto-succeeds on roll of 1 (rng returns ~0.0)', () => {
-    const att = createMockFighter({ skills: { ATT: 1, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } });
+    const att = createMockFighter({
+      skills: { ATT: 1, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    });
     let callCount = 0;
-    const rng = () => { callCount++; return 0.0; }; // floor(0 * 20) + 1 = 1 → auto-success
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const rng = () => {
+      callCount++;
+      return 0.0;
+    }; // floor(0 * 20) + 1 = 1 → auto-success
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(result).toBe(true);
   });
 
   it('auto-fails on roll of 20 (rng returns ~0.95)', () => {
-    const att = createMockFighter({ skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } });
+    const att = createMockFighter({
+      skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    });
     const rng = () => 0.95; // floor(0.95 * 20) + 1 = 20 → auto-fail
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(result).toBe(false);
   });
 
   it('succeeds when skill + modifier >= roll', () => {
-    const att = createMockFighter({ skills: { ATT: 15, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } });
+    const att = createMockFighter({
+      skills: { ATT: 15, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    });
     // With high ATT and neutral modifiers, mid-range rolls should succeed
     const rng = () => 0.3; // floor(0.3 * 20) + 1 = 7
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     // skill=15, modifier includes oeAttMod(5,StrikingAttack)=floor(0*0.85)+1=1, +INITIATIVE_PRESS_BONUS=1, +GLOBAL_ATT_BONUS=2.5
     // total modifier ≈ 1 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 4.5
     // target = clamp(floor(15 + 4.5), 1, 19) = 19 → roll 7 ≤ 19 → success
@@ -97,11 +129,31 @@ describe('attackCheck — performAttackCheck', () => {
     const rng = () => 0.5; // floor(0.5 * 20) + 1 = 11
     // Without commit: skill=5, mod≈4.5, target=clamp(floor(9.5),1,19)=9 → roll 11 > 9 → fail
     const resultNormal = performAttackCheck(
-      rng, attNormal, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      attNormal,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     // With commit: skill=5, mod≈14.5, target=clamp(floor(19.5),1,19)=19 → roll 11 ≤ 19 → success
     const resultCommitted = performAttackCheck(
-      rng, attCommitted, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      attCommitted,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     expect(resultNormal).toBe(false);
     expect(resultCommitted).toBe(true);
@@ -119,11 +171,31 @@ describe('attackCheck — performAttackCheck', () => {
     const rng = () => 0.5; // roll = 11
     // Without armHits: target = clamp(floor(10 + 4.5), 1, 19) = 14 → 11 ≤ 14 → success
     const resultNoArm = performAttackCheck(
-      rng, attNoArmHits, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      attNoArmHits,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     // With armHits=5: modifier = 4.5 - 5 = -0.5, target = clamp(floor(9.5), 1, 19) = 9 → 11 > 9 → fail
     const resultArm = performAttackCheck(
-      rng, attWithArmHits, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      attWithArmHits,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     expect(resultNoArm).toBe(true);
     expect(resultArm).toBe(false);
@@ -136,11 +208,32 @@ describe('attackCheck — performAttackCheck', () => {
     const rng = () => 0.5; // roll = 11
     // Without extraBonus: target=clamp(floor(5+4.5),1,19)=9 → 11 > 9 → fail
     const withoutExtra = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     // With extraBonus=10: target=clamp(floor(5+14.5),1,19)=19 → 11 ≤ 19 → success
     const withExtra = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }, 10
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 },
+      10
     );
     expect(withoutExtra).toBe(false);
     expect(withExtra).toBe(true);
@@ -153,11 +246,31 @@ describe('attackCheck — performAttackCheck', () => {
     const rng = () => 0.5; // roll = 11
     // Without penalty: target=14 → 11 ≤ 14 → success
     const noPenalty = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     // attPenalty is added to modifier, so -10 simulates a penalty: modifier = 4.5 + (-10) = -5.5, target=4 → fail
     const withPenalty = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: -10 }
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: -10 }
     );
     expect(noPenalty).toBe(true);
     expect(withPenalty).toBe(false);
@@ -169,12 +282,22 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without overAtt: target=14 → success
-    const noOver = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const noOver = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     // With overAtt=10: modifier = 4.5 - 10 = -5.5, target=4 → fail
     const withOver = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 10, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      10,
+      { attPenalty: 0 }
     );
     expect(noOver).toBe(true);
     expect(withOver).toBe(false);
@@ -186,12 +309,22 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without bias: target=9 → fail
-    const noBias = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const noBias = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     // With bias=10: target=clamp(floor(5+14.5),1,19)=19 → success
     const withBias = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 10, 0, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      10,
+      0,
+      { attPenalty: 0 }
     );
     expect(noBias).toBe(false);
     expect(withBias).toBe(true);
@@ -203,12 +336,22 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without fatigue: target=14 → success
-    const noFat = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const noFat = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     // With fatigue=-10: modifier = 4.5 - 10 = -5.5, target=4 → fail
     const withFat = performAttackCheck(
-      rng, att, 5, 0, -10, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      0,
+      -10,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     expect(noFat).toBe(true);
     expect(withFat).toBe(false);
@@ -221,11 +364,31 @@ describe('attackCheck — performAttackCheck', () => {
     const rng = () => 0.5; // roll = 11
     // Without matchup: target=9 → fail
     const noMatchup = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     // With matchup=10: target=clamp(floor(5+14.5),1,19)=19 → success
     const withMatchup = performAttackCheck(
-      rng, att, 5, 10, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      5,
+      10,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     expect(noMatchup).toBe(false);
     expect(withMatchup).toBe(true);
@@ -237,9 +400,9 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // skill=18, modifier≈4.5, target=clamp(floor(22.5),1,19)=19 → 11 ≤ 19 → success
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(result).toBe(true);
   });
 
@@ -254,7 +417,17 @@ describe('attackCheck — performAttackCheck', () => {
     // modifier = 5 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 8.5
     // target = clamp(floor(5+8.5), 1, 19) = 13 → 11 ≤ 13 → success
     const result = performAttackCheck(
-      rng, att, 10, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      10,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     expect(result).toBe(true);
   });
@@ -270,7 +443,17 @@ describe('attackCheck — performAttackCheck', () => {
     // modifier = 4 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 7.5
     // target = clamp(floor(5+7.5), 1, 19) = 12 → 11 ≤ 12 → success
     const result = performAttackCheck(
-      rng, att, 10, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
+      rng,
+      att,
+      10,
+      0,
+      0,
+      zeroOffMods,
+      zeroPass,
+      zeroAntiSyn,
+      0,
+      0,
+      { attPenalty: 0 }
     );
     expect(result).toBe(true);
   });
@@ -284,9 +467,9 @@ describe('attackCheck — performAttackCheck', () => {
     // Lunge for StrikingAttack (WS, mult=1.0): attBonus=2
     // modifier = 1 + 0 + 0 + 2 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 6.5
     // target = clamp(floor(5+6.5), 1, 19) = 11 → 11 ≤ 11 → success
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, offMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, offMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(result).toBe(true);
   });
 
@@ -300,9 +483,9 @@ describe('attackCheck — performAttackCheck', () => {
     const mockPass = { ...zeroPass, attBonus: 10 };
     // modifier = 1 + 0 + 0 + 0 + 10 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 14.5
     // target = clamp(floor(5+14.5), 1, 19) = 19 → 11 ≤ 19 → success
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, mockPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, mockPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(result).toBe(true);
   });
 
@@ -316,9 +499,9 @@ describe('attackCheck — performAttackCheck', () => {
     // modifier = 1 + 0 + 0 + 0 + 0 + (-3) + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 1.5
     // target = clamp(floor(10+1.5), 1, 19) = 11 → 11 ≤ 11 → success
     const badAntiSyn = { offMult: 0.3, defMult: 1.0 };
-    const result = performAttackCheck(
-      rng, att, 5, 0, 0, zeroOffMods, zeroPass, badAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const result = performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, badAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(result).toBe(true);
   });
 
@@ -332,12 +515,12 @@ describe('attackCheck — performAttackCheck', () => {
     const att = createMockFighter();
     const rng1 = () => 0.5;
     const rng2 = () => 0.5;
-    const r1 = performAttackCheck(
-      rng1, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
-    const r2 = performAttackCheck(
-      rng2, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, { attPenalty: 0 }
-    );
+    const r1 = performAttackCheck(rng1, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
+    const r2 = performAttackCheck(rng2, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+      attPenalty: 0,
+    });
     expect(r1).toBe(r2);
   });
 });

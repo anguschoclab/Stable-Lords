@@ -16,7 +16,11 @@ vi.mock('zustand/react/shallow', () => ({
 
 vi.mock('@/components/EntityLink', () => ({
   WarriorLink: ({ name }: { name: string }) => (
-    <span data-testid="warrior-link" data-name={name} aria-label={`Open details for warrior ${name}`}>
+    <span
+      data-testid="warrior-link"
+      data-name={name}
+      aria-label={`Open details for warrior ${name}`}
+    >
       {name}
     </span>
   ),
@@ -46,7 +50,10 @@ function makeReport(overrides: Partial<NewsletterItem> = {}): NewsletterItem {
 describe('BriefingTab', () => {
   beforeEach(() => {
     mockState = {
-      roster: [{ id: 'w1', name: 'Brutus' }, { id: 'w2', name: 'Cassius' }],
+      roster: [
+        { id: 'w1', name: 'Brutus' },
+        { id: 'w2', name: 'Cassius' },
+      ],
       graveyard: [],
       retired: [],
       rivals: [{ owner: { stableName: 'Wolf Pack' }, roster: [] }],

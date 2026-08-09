@@ -25,7 +25,9 @@ function makeMockRng(targetEventKey: string, baseSeed: number) {
   return rng;
 }
 
-function makeState(warriors: { id: string; name: string; status?: string; injuries?: unknown[] }[]): Partial<GameState> {
+function makeState(
+  warriors: { id: string; name: string; status?: string; injuries?: unknown[] }[]
+): Partial<GameState> {
   return {
     year: 1,
     roster: warriors.map((w) => ({
@@ -66,7 +68,9 @@ describe('offseason determinism characterization', () => {
         const impact1 = runSeasonalPass(state as GameState, 1, rng1);
         const impact2 = runSeasonalPass(state as GameState, 1, rng2);
 
-        expect(JSON.stringify(impact1), `seed ${seed} for ${eventKey} diverged`).toBe(JSON.stringify(impact2));
+        expect(JSON.stringify(impact1), `seed ${seed} for ${eventKey} diverged`).toBe(
+          JSON.stringify(impact2)
+        );
       }
     });
 
@@ -102,10 +106,18 @@ describe('offseason determinism characterization', () => {
       for (let i = 0; i < shapes.length; i++) {
         const s = shapes[i];
         if (!s) continue;
-        expect(s.newsletterCount, `seed ${SEEDS[i]} newsletter count differs`).toBe(first.newsletterCount);
-        expect(s.insightTokenCount, `seed ${SEEDS[i]} insight token count differs`).toBe(first.insightTokenCount);
-        expect(s.ledgerEntryCount, `seed ${SEEDS[i]} ledger entry count differs`).toBe(first.ledgerEntryCount);
-        expect(s.rosterUpdateCount, `seed ${SEEDS[i]} roster update count differs`).toBe(first.rosterUpdateCount);
+        expect(s.newsletterCount, `seed ${SEEDS[i]} newsletter count differs`).toBe(
+          first.newsletterCount
+        );
+        expect(s.insightTokenCount, `seed ${SEEDS[i]} insight token count differs`).toBe(
+          first.insightTokenCount
+        );
+        expect(s.ledgerEntryCount, `seed ${SEEDS[i]} ledger entry count differs`).toBe(
+          first.ledgerEntryCount
+        );
+        expect(s.rosterUpdateCount, `seed ${SEEDS[i]} roster update count differs`).toBe(
+          first.rosterUpdateCount
+        );
       }
     });
   }
@@ -123,7 +135,9 @@ describe('offseason determinism characterization', () => {
       const impact1 = runSeasonalPass(state as GameState, 1, rng1);
       const impact2 = runSeasonalPass(state as GameState, 1, rng2);
 
-      expect(JSON.stringify(impact1), `seed ${seed} should be identical`).toBe(JSON.stringify(impact2));
+      expect(JSON.stringify(impact1), `seed ${seed} should be identical`).toBe(
+        JSON.stringify(impact2)
+      );
     }
   });
 
@@ -151,7 +165,11 @@ describe('offseason determinism characterization', () => {
   it('no-op when no offseason_events in narrative content', () => {
     const rng = new SeededRNGService(42);
     // Year 0 with no events — should still work since the guard is on nextWeek
-    const impact = runSeasonalPass({ year: 0, roster: [], rivals: [], graveyard: [], retired: [] } as unknown as GameState, 1, rng);
+    const impact = runSeasonalPass(
+      { year: 0, roster: [], rivals: [], graveyard: [], retired: [] } as unknown as GameState,
+      1,
+      rng
+    );
     // Should produce some impact (year 0 * 999 + 1 = 1 as seed)
     expect(impact).toBeDefined();
   });

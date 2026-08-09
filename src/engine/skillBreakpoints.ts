@@ -256,7 +256,10 @@ export function szMod(table: Record<number, number>, sz: number): number {
 // each style's relative identity.
 //
 // Format: [ATT, PAR, DEF, INI, RIP, DEC]
-export const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, number, number]> = {
+export const STYLE_PENALTIES: Record<
+  FightingStyle,
+  [number, number, number, number, number, number]
+> = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
   [FightingStyle.AimedBlow]: /*AB*/ [-15, -7, -11, -8, -6, +1], // deepened: -40 → -45 to bring 59.9% toward 50%

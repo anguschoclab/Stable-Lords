@@ -15,13 +15,36 @@ function createMockFighter(overrides: Partial<FighterState> = {}): FighterState 
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
     derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 10 },
-    plan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5, target: 'Any' } as any,
-    activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5, target: 'Any' } as any,
+    plan: {
+      style: FightingStyle.StrikingAttack,
+      OE: 5,
+      AL: 5,
+      killDesire: 5,
+      target: 'Any',
+    } as any,
+    activePlan: {
+      style: FightingStyle.StrikingAttack,
+      OE: 5,
+      AL: 5,
+      killDesire: 5,
+      target: 'Any',
+    } as any,
     psychState: 'CRUISING' as any,
-    hp: 100, maxHp: 100, endurance: 100, maxEndurance: 100,
-    hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
-    armHits: 0, legHits: 0, totalFights: 0,
-    momentum: 0, committed: false, survivalStrike: false, recoveryDebt: 0,
+    hp: 100,
+    maxHp: 100,
+    endurance: 100,
+    maxEndurance: 100,
+    hitsLanded: 0,
+    hitsTaken: 0,
+    ripostes: 0,
+    consecutiveHits: 0,
+    armHits: 0,
+    legHits: 0,
+    totalFights: 0,
+    momentum: 0,
+    committed: false,
+    survivalStrike: false,
+    recoveryDebt: 0,
     ...overrides,
   } as FighterState;
 }
@@ -29,25 +52,37 @@ function createMockFighter(overrides: Partial<FighterState> = {}): FighterState 
 function createMockCtx(overrides: Partial<ResolutionContext> = {}): ResolutionContext {
   return {
     rng: () => 0.5,
-    phase: 'OPENING', exchange: 0,
-    weather: 'Clear', weatherEffect: {} as any,
-    matchupA: 0, matchupD: 0,
+    phase: 'OPENING',
+    exchange: 0,
+    weather: 'Clear',
+    weatherEffect: {} as any,
+    matchupA: 0,
+    matchupD: 0,
     trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
     trainerModsD: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
     weaponReqA: { endurancePenalty: 0, attPenalty: 0 },
     weaponReqD: { endurancePenalty: 0, attPenalty: 0 },
-    tacticStreakA: 0, tacticStreakD: 0,
-    range: 'Striking', zone: 'Center',
-    arenaConfig: {} as any, surfaceMod: {} as any,
-    maxRange: 'Extended', zoneStepBias: 0,
+    tacticStreakA: 0,
+    tacticStreakD: 0,
+    range: 'Striking',
+    zone: 'Center',
+    arenaConfig: {} as any,
+    surfaceMod: {} as any,
+    maxRange: 'Extended',
+    zoneStepBias: 0,
     ...overrides,
   } as unknown as ResolutionContext;
 }
 
 function createMockTrainer(overrides: Partial<Trainer> = {}): Trainer {
   return {
-    id: 't1', name: 'Test Trainer', tier: 'Novice', focus: 'Aggression',
-    fame: 0, age: 30, contractWeeksLeft: 10,
+    id: 't1',
+    name: 'Test Trainer',
+    tier: 'Novice',
+    focus: 'Aggression',
+    fame: 0,
+    age: 30,
+    contractWeeksLeft: 10,
     ...overrides,
   } as Trainer;
 }
@@ -79,7 +114,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 5, parMod: 2, defMod: 1, iniMod: 3, decMod: 0, endMod: 0, healMod: 1 },
+      trainerModsA: {
+        attMod: 5,
+        parMod: 2,
+        defMod: 1,
+        iniMod: 3,
+        decMod: 0,
+        endMod: 0,
+        healMod: 1,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 30, maxHp: 100 });
@@ -93,7 +136,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsD: { attMod: 3, parMod: 1, defMod: 4, iniMod: 0, decMod: 2, endMod: 1, healMod: 0 },
+      trainerModsD: {
+        attMod: 3,
+        parMod: 1,
+        defMod: 4,
+        iniMod: 0,
+        decMod: 2,
+        endMod: 1,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 30, maxHp: 100 });
@@ -106,7 +157,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 5, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
+      trainerModsA: {
+        attMod: 5,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 30, maxHp: 100 });
@@ -122,7 +181,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 5, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
+      trainerModsA: {
+        attMod: 5,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 30, maxHp: 100 }); // HP < 40% triggers KillerInstinct
@@ -137,7 +204,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 7 },
+      trainerModsA: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 7,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 30, maxHp: 100 });
@@ -149,7 +224,16 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0, killWindowBonus: 99 },
+      trainerModsA: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+        killWindowBonus: 99,
+      },
     } as any);
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 30, maxHp: 100 });
@@ -162,7 +246,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'IronGuard', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
+      trainerModsA: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter({ endurance: 50, maxEndurance: 100 });
     const fD = createMockFighter();
@@ -176,7 +268,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'CounterFighter', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
+      trainerModsA: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter({ ripostes: 1 });
     const fD = createMockFighter();
@@ -189,7 +289,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'RopeADope', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
+      trainerModsA: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter();
@@ -203,8 +311,24 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
-      trainerModsD: { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, decMod: 0, endMod: 0, healMod: 0 },
+      trainerModsA: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
+      trainerModsD: {
+        attMod: 0,
+        parMod: 0,
+        defMod: 0,
+        iniMod: 0,
+        decMod: 0,
+        endMod: 0,
+        healMod: 0,
+      },
     });
     const fA = createMockFighter({ hp: 100, maxHp: 100 });
     const fD = createMockFighter({ hp: 30, maxHp: 100 }); // fD HP < 40% → specA gets killWindowBonus
@@ -240,7 +364,15 @@ describe('specialtyMods — applySpecialtyMods', () => {
     const trainers = [createMockTrainer({ specialty: 'KillerInstinct', tier: 'Master' })];
     const ctx = createMockCtx({
       trainers,
-      trainerModsA: { attMod: 3, parMod: 7, defMod: 2, iniMod: 1, decMod: 4, endMod: 6, healMod: 8 },
+      trainerModsA: {
+        attMod: 3,
+        parMod: 7,
+        defMod: 2,
+        iniMod: 1,
+        decMod: 4,
+        endMod: 6,
+        healMod: 8,
+      },
     });
     const fA = createMockFighter();
     const fD = createMockFighter({ hp: 100, maxHp: 100 }); // Full HP → KillerInstinct doesn't trigger

@@ -26,7 +26,12 @@ export function resolveRound(
   seed: number,
   headless?: boolean,
   tournament?: TournamentEntry
-): { updatedState: GameState; roundResults: string[]; isComplete: boolean; updatedTournament?: TournamentEntry } {
+): {
+  updatedState: GameState;
+  roundResults: string[];
+  isComplete: boolean;
+  updatedTournament?: TournamentEntry;
+} {
   const rng = new SeededRNG(seed);
   let updatedState = { ...state };
   const resolvedTournament =

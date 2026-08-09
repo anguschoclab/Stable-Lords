@@ -69,7 +69,15 @@ describe('weather registry synchronization', () => {
         const isSecondWeather = weatherSet.has(second);
         // At least one part should be a weather type (for style:weather or tag:weather)
         // Tag+weather combos like "cursed:Blood Moon" are also valid
-        expect(isFirstWeather || isSecondWeather || first === 'cursed' || first === 'water' || first === 'uneven' || first === 'magical' || first === 'living').toBe(true);
+        expect(
+          isFirstWeather ||
+            isSecondWeather ||
+            first === 'cursed' ||
+            first === 'water' ||
+            first === 'uneven' ||
+            first === 'magical' ||
+            first === 'living'
+        ).toBe(true);
       }
     }
   });

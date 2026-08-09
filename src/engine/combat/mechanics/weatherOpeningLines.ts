@@ -9,9 +9,11 @@ import type { WeatherType } from '@/types/shared.types';
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
-  'Cosmic Anomaly': 'A tear in the sky reveals the screaming void. Cosmic energies crackle across the sand.',
+  'Cosmic Anomaly':
+    'A tear in the sky reveals the screaming void. Cosmic energies crackle across the sand.',
 
-  'Prismatic Rain': 'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
+  'Prismatic Rain':
+    'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
   'Eldritch Eclipse':
     'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
   'Moonlight Duel': 'The arena is silent save for the clash of steel under the pale moonlight.',
@@ -27,7 +29,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Breezy: 'A cool breeze sweeps through the arena. The fighters look sharp.',
   'Blazing Sun': 'The sun beats down mercilessly. Heavy fighters will suffer.',
   Gale: 'Gale-force winds tear through the stands. Timing will be everything.',
-  'Eclipse of Chaos': 'The sky darkens as a chaotic eclipse sets in, filling the arena with unnatural tension.',
+  'Eclipse of Chaos':
+    'The sky darkens as a chaotic eclipse sets in, filling the arena with unnatural tension.',
   'Blood Moon': 'A crimson moon hangs overhead. The crowd is already baying for blood.',
   Eclipse: 'Darkness falls mid-day. An eerie calm descends before the violence.',
   Sandstorm: 'A howling sandstorm blinds the arena. Every breath is a battle.',
@@ -82,9 +85,12 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
   'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
-  'Temporal Rift': 'Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters\' will.',
-  'Stardust Gale': 'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
-  'Mana Storm': 'Raw mana erupts across the arena in crackling waves. The fighters\' eyes glow with arcane fire.',
+  'Temporal Rift':
+    "Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters' will.",
+  'Stardust Gale':
+    'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
+  'Mana Storm':
+    "Raw mana erupts across the arena in crackling waves. The fighters' eyes glow with arcane fire.",
 };
 
 /**

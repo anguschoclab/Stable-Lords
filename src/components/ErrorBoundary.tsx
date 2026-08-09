@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
 
     return (
       <div className="h-screen w-screen bg-background flex flex-col items-center justify-center gap-6 font-mono text-center px-8">
-        <div className="text-primary text-[10px] uppercase tracking-[0.5em] animate-pulse">
+        <div className="text-primary text-[10px] uppercase tracking-[0.5em] animate-pulse motion-reduce:animate-none">
           System Failure
         </div>
         <h1>Critical System Failure</h1>

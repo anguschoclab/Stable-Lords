@@ -83,7 +83,7 @@ export function WeatherWidget() {
   return (
     <Surface
       variant="glass"
-      className="h-full flex flex-col p-5 border-l-4 border-l-primary animate-in fade-in zoom-in-95 duration-500 delay-100"
+      className="h-full flex flex-col p-5 border-l-4 border-l-primary animate-in motion-reduce:animate-none fade-in zoom-in-95 duration-500 delay-100"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">

@@ -14,7 +14,7 @@ export function EclipseEffect() {
 export function BloodMoonEffect() {
   return (
     <div
-      className="absolute inset-0 pointer-events-none animate-pulse-slow"
+      className="absolute inset-0 pointer-events-none animate-pulse-slow motion-reduce:animate-none"
       style={{
         background: 'radial-gradient(ellipse at top, rgba(139,0,0,0.3) 0%, transparent 80%)',
         boxShadow: 'inset 0 0 100px rgba(139,0,0,0.15)',
@@ -27,7 +27,7 @@ export function BloodMoonEffect() {
 export function SpookyNightEffect() {
   return (
     <div
-      className="absolute inset-0 pointer-events-none animate-pulse-slow"
+      className="absolute inset-0 pointer-events-none animate-pulse-slow motion-reduce:animate-none"
       style={{
         background: 'radial-gradient(ellipse at top, rgba(75,0,130,0.4) 0%, transparent 80%)',
         boxShadow: 'inset 0 0 100px rgba(75,0,130,0.15)',

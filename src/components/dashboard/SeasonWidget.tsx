@@ -93,7 +93,7 @@ export function SeasonWidget() {
           </div>
 
           {isOffseason && latestOffseasonEvent && (
-            <div className="flex items-center gap-3 p-3 bg-arena-gold/10 border border-arena-gold/20 rounded-none animate-in fade-in slide-in-from-top-2 duration-700">
+            <div className="flex items-center gap-3 p-3 bg-arena-gold/10 border border-arena-gold/20 rounded-none animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
               <PartyPopper className="h-5 w-5 text-arena-gold" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">

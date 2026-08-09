@@ -29,7 +29,7 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
         </div>
 
         <div className="flex items-center gap-4 mb-6">
-          <Heart className="h-5 w-5 text-primary animate-pulse" />
+          <Heart className="h-5 w-5 text-primary animate-pulse motion-reduce:animate-none" />
           <h3 className="text-lg font-display font-black uppercase tracking-tight text-foreground">
             Bonded with{' '}
             {(warrior as Warrior & { soulBond?: { partnerName: string } }).soulBond?.partnerName}

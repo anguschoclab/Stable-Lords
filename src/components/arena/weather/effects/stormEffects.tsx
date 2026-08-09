@@ -7,7 +7,7 @@ export function ThunderstormEffect() {
     <div className="absolute inset-0 pointer-events-none">
       <div className="absolute inset-0 bg-arena-steel/20" />
       {/* Lightning strike simulation */}
-      <div className="absolute inset-0 animate-pulse-slow opacity-10 bg-white" />
+      <div className="absolute inset-0 animate-pulse-slow motion-reduce:animate-none opacity-10 bg-white" />
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
@@ -38,7 +38,7 @@ export function ArcaneStormEffect() {
         }}
       />
       {/* Lightning flashes */}
-      <div className="absolute inset-0 bg-primary/10 animate-pulse" />
+      <div className="absolute inset-0 bg-primary/10 animate-pulse motion-reduce:animate-none" />
       {/* Crackling arcane sparks */}
       {Array.from({ length: 35 }).map((_, i) => (
         <div
@@ -75,7 +75,7 @@ export function AetherStormEffect() {
       />
       {/* Energy pulses - faster flash rate */}
       <div
-        className="absolute inset-0 bg-arena-pop/15 animate-pulse"
+        className="absolute inset-0 bg-arena-pop/15 animate-pulse motion-reduce:animate-none"
         style={{ animationDuration: '1.5s' }}
       />
       {/* Aether particles - more numerous and chaotic than Arcane Storm */}

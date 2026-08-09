@@ -150,7 +150,7 @@ export function RecruitCard({
 
         {/* Intelligence Overlay */}
         {isScouted ? (
-          <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-700">
+          <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Eye className="h-4 w-4 text-primary" />

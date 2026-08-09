@@ -28,8 +28,8 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
   const getPartColor = (part: BodyPart) => {
     const hp = healthMap[part] ?? 100;
     if (hp <= 0) return 'fill-neutral-900';
-    if (hp < 20) return 'fill-red-600';
-    if (hp <= 50) return 'fill-yellow-500';
+    if (hp < 20) return 'fill-destructive';
+    if (hp <= 50) return 'fill-arena-gold';
     return 'fill-green-500';
   };
 

@@ -38,7 +38,7 @@ export function TargetSummary({ warrior, canReveal, isRevealing, onReveal }: Tar
         className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.2)] group"
       >
         {isRevealing ? (
-          <RotateCw className="h-4 w-4 mr-2 animate-spin" />
+          <RotateCw className="h-4 w-4 mr-2 animate-spin motion-reduce:animate-none" />
         ) : (
           <Zap className="h-4 w-4 mr-2 group-hover:scale-125 transition-transform" />
         )}

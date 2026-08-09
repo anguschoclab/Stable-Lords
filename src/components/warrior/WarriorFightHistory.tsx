@@ -144,7 +144,7 @@ export function WarriorFightHistory({
               </button>
 
               {isExpanded && hasTranscript && (
-                <div className="p-4 border-t border-white/5 animate-fade-in">
+                <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
                   <BoutViewer
                     nameA={n.a}
                     nameD={n.d}

@@ -43,7 +43,7 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
     >
       {/* Timeline Marker */}
       <div className="absolute -left-[41px] md:-left-[57px] top-6 flex items-center justify-center">
-        <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full animate-pulse" />
+        <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full animate-pulse motion-reduce:animate-none" />
         <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-black border-2 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center relative z-10">
           <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary" />
         </div>
@@ -142,7 +142,7 @@ export function Chronicle() {
   const news = useMemo(() => [...(newsletter || [])].reverse().slice(0, 50), [newsletter]);
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-4">
           <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
@@ -159,7 +159,7 @@ export function Chronicle() {
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/10 to-transparent mx-8 hidden md:block" />
         <div className="flex items-center gap-2">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+          <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
           <span className="text-[9px] font-black uppercase tracking-widest text-primary opacity-60">
             LIVE_DATA_STREAM
           </span>

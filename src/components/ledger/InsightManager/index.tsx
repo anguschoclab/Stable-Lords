@@ -36,7 +36,7 @@ export function InsightManager() {
   } = useInsightManager({ consumeInsightToken, insightTokens, roster });
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center gap-4 px-1">
         <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] text-primary">
           <Search className="h-5 w-5" />

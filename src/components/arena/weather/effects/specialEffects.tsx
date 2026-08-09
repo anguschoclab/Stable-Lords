@@ -26,7 +26,7 @@ export function AuroraBorealisEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={`star-${i}`}
-          className="absolute w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse-slow"
+          className="absolute w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse-slow motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: `${cryptoRandom() * 40}%`,
@@ -44,7 +44,7 @@ export function GravityAnomalyEffect() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Warped reality tint */}
       <div
-        className="absolute inset-0 animate-pulse-slow"
+        className="absolute inset-0 animate-pulse-slow motion-reduce:animate-none"
         style={{
           background:
             'radial-gradient(ellipse at 50% 50%, rgba(100,50,200,0.15) 0%, rgba(50,0,100,0.08) 50%, transparent 100%)',
@@ -71,7 +71,7 @@ export function GravityAnomalyEffect() {
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={`ring-${i}`}
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-arena-fame/20 animate-pulse-slow"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-arena-fame/20 animate-pulse-slow motion-reduce:animate-none"
           style={{
             width: `${100 + i * 80}px`,
             height: `${100 + i * 80}px`,
@@ -116,7 +116,7 @@ export function RainbowEffect() {
       ))}
       {/* Soft golden glow at the horizon */}
       <div
-        className="absolute bottom-0 inset-x-0 h-1/3 animate-pulse-slow"
+        className="absolute bottom-0 inset-x-0 h-1/3 animate-pulse-slow motion-reduce:animate-none"
         style={{
           background:
             'radial-gradient(ellipse at 50% 100%, rgba(255,215,0,0.08) 0%, transparent 80%)',

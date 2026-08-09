@@ -45,7 +45,7 @@ export function MissionControlTab({
   onEquipmentChange,
 }: MissionControlTabProps) {
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-12 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       <div>
         <SectionDivider label="Pre-Fight Orders" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">

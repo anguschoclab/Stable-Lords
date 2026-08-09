@@ -88,7 +88,7 @@ export default function SaveSlotCard({
         <div className="flex items-center gap-0.5 shrink-0">
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Download Save"
             className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150"
             onClick={(e) => {
               e.stopPropagation();
@@ -101,7 +101,7 @@ export default function SaveSlotCard({
           </Button>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Delete Save"
             className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150"
             onClick={(e) => {
               e.stopPropagation();

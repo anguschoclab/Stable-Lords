@@ -28,14 +28,14 @@ interface BiometricsTabProps {
  */
 export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (
-    <div className="grid gap-8 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="grid gap-8 lg:grid-cols-12 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       <div className="lg:col-span-4 space-y-8">
         <SectionDivider label="Physique" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="p-8">
             <Suspense
               fallback={
-                <div className="w-full aspect-square max-w-md mx-auto animate-pulse rounded-none bg-white/5" />
+                <div className="w-full aspect-square max-w-md mx-auto animate-pulse motion-reduce:animate-none rounded-none bg-white/5" />
               }
             >
               <WarriorRadarChart warrior={warrior} />

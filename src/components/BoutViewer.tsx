@@ -133,7 +133,7 @@ export default function BoutViewer({
       />
 
       {expanded && (
-        <div className="animate-in fade-in slide-in-from-top-2 duration-700">
+        <div className="animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
           {/* Simulation Controls */}
           <BoutControls
             viewMode={viewMode}

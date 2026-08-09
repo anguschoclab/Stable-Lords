@@ -82,7 +82,7 @@ export function RivalWarriorList({
                         <div className="flex items-center gap-3">
                           <WarriorNameTag id={w.id} name={w.name} useCrown={false} />
                           {hasReport && (
-                            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse">
+                            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse motion-reduce:animate-none">
                               <Eye className="h-2.5 w-2.5" /> INTEL
                             </div>
                           )}
@@ -101,7 +101,7 @@ export function RivalWarriorList({
                       <div className="flex items-center gap-2">
                         <BookmarkButton entityType="warrior" entityId={w.id} size="sm" />
                         {isSelected ? (
-                          <Target className="h-4 w-4 text-primary animate-pulse" />
+                          <Target className="h-4 w-4 text-primary animate-pulse motion-reduce:animate-none" />
                         ) : (
                           <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
                         )}

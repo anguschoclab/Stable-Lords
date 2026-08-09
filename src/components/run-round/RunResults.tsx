@@ -28,7 +28,7 @@ export function RunResults({ results, expandedId, onToggleExpand }: RunResultsPr
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       <RunResultsSummary deaths={deaths} KOs={KOs} />
       <div className="grid grid-cols-1 gap-3">
         {results.map((res, idx) => {

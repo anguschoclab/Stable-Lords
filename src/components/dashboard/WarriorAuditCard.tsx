@@ -33,7 +33,7 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
           {isInjured && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Skull className="h-3.5 w-3.5 text-destructive animate-pulse cursor-help" />
+                <Skull className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none cursor-help" />
               </TooltipTrigger>
               <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest text-destructive">
                 Injured

@@ -21,10 +21,10 @@ export function TrainerTenureCell({ weeksLeft }: TrainerTenureCellProps) {
             value={pct}
             max={100}
             labelValue={`${weeksLeft}W`}
-            colorClass={isExpiring ? 'bg-destructive animate-pulse' : 'bg-primary'}
+            colorClass={isExpiring ? 'bg-destructive animate-pulse motion-reduce:animate-none' : 'bg-primary'}
           />
           {isExpiring && (
-            <span className="text-[8px] font-black uppercase text-destructive tracking-[0.2em] animate-pulse text-center">
+            <span className="text-[8px] font-black uppercase text-destructive tracking-[0.2em] animate-pulse motion-reduce:animate-none text-center">
               Critical_End_Notice
             </span>
           )}

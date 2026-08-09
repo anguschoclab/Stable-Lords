@@ -111,7 +111,7 @@ export default function MiniCombatLog({
           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             Combat Log
           </span>
-          {isPlaying && <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />}
+          {isPlaying && <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />}
         </div>
         <div className="flex items-center gap-1">
           {isExpanded ? (

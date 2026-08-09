@@ -10,13 +10,13 @@ const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
 >(({ className, id, ...props }, ref) => (
-  <SliderPrimitive.Root
+  <SliderPrimitive.Root id={id}
     ref={ref}
     className={cn('relative flex w-full touch-none select-none items-center', className)}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-none bg-secondary">
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
+    <SliderPrimitive.Track id={id ? `${id}-track` : undefined} className="relative h-2 w-full grow overflow-hidden rounded-none bg-secondary">
+      <SliderPrimitive.Range id={id ? `${id}-range` : undefined} className="absolute h-full bg-primary" />
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb
       id={id}

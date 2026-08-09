@@ -98,7 +98,7 @@ function FighterPanel({
         {isWinner && (
           <div
             className={cn(
-              'flex items-center gap-2 text-[10px] font-black tracking-[0.2em] animate-pulse',
+              'flex items-center gap-2 text-[10px] font-black tracking-[0.2em] animate-pulse motion-reduce:animate-none',
               accentClass
             )}
           >
@@ -118,7 +118,7 @@ function TacticalInterlink({ isRivalry }: TacticalInterlinkProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 shrink-0">
       <div className="relative">
-        <div className="absolute inset-0 bg-arena-gold/20 blur-xl rounded-full animate-pulse" />
+        <div className="absolute inset-0 bg-arena-gold/20 blur-xl rounded-full animate-pulse motion-reduce:animate-none" />
         <div className="w-14 h-14 rounded-full border-2 border-white/10 bg-neutral-900 flex items-center justify-center relative z-10 shadow-[inner_0_0_15px_rgba(0,0,0,0.5)]">
           <Swords className="h-6 w-6 text-arena-gold" />
         </div>
@@ -128,7 +128,7 @@ function TacticalInterlink({ isRivalry }: TacticalInterlinkProps) {
           <TagBadge
             tag="BLOOD FEUD"
             type="injury"
-            className="animate-pulse shadow-[0_0_10px_rgba(var(--destructive-rgb),0.3)]"
+            className="animate-pulse motion-reduce:animate-none shadow-[0_0_10px_rgba(var(--destructive-rgb),0.3)]"
           />
           <span className="text-[7px] font-black text-destructive uppercase tracking-widest opacity-40">
             Rivalry
@@ -166,7 +166,7 @@ function ProgressTimeline({ minutes, totalEvents, visibleCount }: ProgressTimeli
           className="h-full bg-gradient-to-r from-primary to-arena-gold rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
           style={{ width: `${pct}%` }}
         >
-          <div className="absolute right-0 top-0 h-full w-4 bg-white/40 blur-sm animate-pulse" />
+          <div className="absolute right-0 top-0 h-full w-4 bg-white/40 blur-sm animate-pulse motion-reduce:animate-none" />
         </div>
       </div>
     </div>

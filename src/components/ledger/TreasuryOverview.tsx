@@ -275,7 +275,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-1 w-1 rounded-full bg-arena-gold animate-pulse" />
+          <div className="h-1 w-1 rounded-full bg-arena-gold animate-pulse motion-reduce:animate-none" />
           <span className="text-[8px] font-black uppercase tracking-widest text-arena-gold opacity-60">
             Verified by Scribes
           </span>
@@ -396,7 +396,7 @@ export function TreasuryOverview() {
   const totalLedgerEntries = state.ledger?.length ?? 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
       {/* ─── Treasury Trend Sparkline ─── */}
       <TreasurySparkline height={52} />
 

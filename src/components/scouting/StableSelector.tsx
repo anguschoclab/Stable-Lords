@@ -65,7 +65,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                       </span>
                     </div>
                     {idA === r.owner.id && (
-                      <Hexagon className="h-3 w-3 text-primary animate-pulse" />
+                      <Hexagon className="h-3 w-3 text-primary animate-pulse motion-reduce:animate-none" />
                     )}
                   </div>
                 </button>
@@ -129,7 +129,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                       </span>
                     </div>
                     {idB === r.owner.id && (
-                      <Hexagon className="h-3 w-3 text-accent animate-pulse" />
+                      <Hexagon className="h-3 w-3 text-accent animate-pulse motion-reduce:animate-none" />
                     )}
                   </div>
                 </button>

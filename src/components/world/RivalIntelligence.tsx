@@ -111,7 +111,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                     <div className="flex items-center gap-2">
                       <div
                         className={cn(
-                          'h-1.5 w-1.5 rounded-full shrink-0 animate-pulse',
+                          'h-1.5 w-1.5 rounded-full shrink-0 animate-pulse motion-reduce:animate-none',
                           rival.treasury < 150
                             ? 'bg-destructive'
                             : rival.treasury < 500

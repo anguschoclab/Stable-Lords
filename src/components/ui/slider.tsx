@@ -19,7 +19,7 @@ const Slider = React.forwardRef<
       <SliderPrimitive.Range id={id ? `${id}-range` : undefined} className="absolute h-full bg-primary" />
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb
-      id={id}
+      id={id ? `${id}-thumb` : undefined}
       className="block h-5 w-5 rounded-none border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
     />
   </SliderPrimitive.Root>

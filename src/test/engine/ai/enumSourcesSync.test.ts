@@ -60,6 +60,7 @@ describe('enumSources sync with WeatherType', () => {
     'Moonlight Duel',
     'Diamond Rain',
     'Cosmic Anomaly',
+    'Abyssal Tempest',
     'Temporal Rift',
     'Stardust Gale',
     'Mana Storm',
@@ -70,7 +71,7 @@ describe('enumSources sync with WeatherType', () => {
     );
   });
 
-  it('WEATHER_TYPES count is 58 (48 original + 9 new)', () => {
+  it('WEATHER_TYPES count is 58 (48 original + 10 new)', () => {
     expect(WEATHER_TYPES.length).toBe(58);
   });
 

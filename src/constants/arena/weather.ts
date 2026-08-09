@@ -44,6 +44,7 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-purple-600',
     bgClass: 'bg-purple-900/20',
     borderClass: 'border-purple-500/20',
+    description: 'A violent tear into the abyss that heavily drains stamina and unnerves the combatants.',
   },
 
   'Prismatic Rain': {

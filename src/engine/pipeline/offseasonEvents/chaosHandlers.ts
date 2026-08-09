@@ -523,7 +523,7 @@ export function handleAbyssalTempestRitual(
         severity: 'Minor',
         weeksBase: 1,
         weeksRange: 2,
-        penalties: { SP: -1, END: -1 },
+        penalties: { SP: -1, CN: -1 },
       });
 
       ctx.rosterUpdates.set(chosen.id, {

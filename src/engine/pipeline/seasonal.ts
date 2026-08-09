@@ -61,6 +61,7 @@ import {
   handleTemporalAnomaly,
   handleWanderingMystic,
   handleCursedTreasureDiscovery,
+  handleAbyssalTempestRitual,
 } from './seasonalHandlers';
 
 const EVENT_HANDLERS: Record<

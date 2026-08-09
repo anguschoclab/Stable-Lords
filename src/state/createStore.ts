@@ -15,6 +15,8 @@ import {
 import type { GameStore } from './store.types';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
+import type { UseBoundStore, StoreApi } from 'zustand';
+
 // ─── Slices ────────────────────────────────────────────────────────────────
 import { createEconomySlice } from './slices/economySlice';
 import { createRosterSlice } from './slices/rosterSlice';
@@ -24,7 +26,7 @@ import { createBookmarksSlice } from './slices/bookmarksSlice';
 import { createProgressionSlice } from './slices/progressionSlice';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 
-export const useGameStore = create<GameStore>()(
+export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore>()(
   subscribeWithSelector(
     immer((set, get, ...args) => ({
       // ─── Sub-Slices ───

@@ -47,7 +47,7 @@ vi.mock('electron', () => ({
     }),
     quit: vi.fn(),
   },
-  BrowserWindow: vi.fn(() => mockState.browserWindowInstance),
+  BrowserWindow: vi.fn(function () { return mockState.browserWindowInstance; }),
   ipcMain: { handle: vi.fn() },
   Menu: {
     buildFromTemplate: vi.fn((template: any[]) => {
@@ -66,7 +66,7 @@ vi.mock('electron', () => ({
     showOpenDialog: mockState.dialogShowOpen,
   },
   shell: { openExternal: vi.fn() },
-  Tray: vi.fn(() => mockState.trayInstance),
+  Tray: vi.fn(function () { return mockState.trayInstance; }),
   nativeImage: { createFromPath: vi.fn().mockReturnValue({}) },
   Notification: vi.fn().mockImplementation(() => ({ show: vi.fn() })),
   session: {

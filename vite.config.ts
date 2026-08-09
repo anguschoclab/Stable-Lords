@@ -54,15 +54,25 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-core': ['react', 'react-dom', 'framer-motion'],
-          'vendor-ui': ['lucide-react', 'date-fns'],
-          'engine-core': [
-            path.resolve(__dirname, './src/engine/simulate.ts'),
-            path.resolve(__dirname, './src/engine/impacts/index.ts'),
-            path.resolve(__dirname, './src/engine/recruitment.ts'),
-          ],
-        } as Record<string, string[]>,
+        manualChunks: (id: string) => {
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/framer-motion/')
+          )
+            return 'vendor-core';
+          if (
+            id.includes('node_modules/lucide-react/') ||
+            id.includes('node_modules/date-fns/')
+          )
+            return 'vendor-ui';
+          if (
+            id.includes('src/engine/simulate.ts') ||
+            id.includes('src/engine/impacts/index.ts') ||
+            id.includes('src/engine/recruitment.ts')
+          )
+            return 'engine-core';
+        },
       },
     },
     chunkSizeWarningLimit: 600,

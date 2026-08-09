@@ -4,9 +4,7 @@ import { assertSafeFileNamePart } from './validation';
 import type { ArchiveService } from './types';
 import { isPlausibleGameState } from './plausibility';
 
-/**
- *
- */
+/** OPFS-based archive service implementing the ArchiveService interface for persistent storage. */
 export class OPFSArchiveService implements ArchiveService {
   private writeQueue: Promise<void> = Promise.resolve();
 
@@ -16,9 +14,7 @@ export class OPFSArchiveService implements ArchiveService {
     return p;
   }
 
-  /**
-   *
-   */
+  /** Checks whether the Origin Private File System (OPFS) API is available in the current environment. */
   isSupported(): boolean {
     return (
       typeof navigator !== 'undefined' &&
@@ -62,9 +58,7 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  /**
-   *
-   */
+  /** Persists a hot-state game save to OPFS under the given slot ID. */
   async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
     return this.enqueue(async () => {
       assertSafeFileNamePart(slotId, 'slotId');
@@ -99,9 +93,7 @@ export class OPFSArchiveService implements ArchiveService {
     });
   }
 
-  /**
-   *
-   */
+  /** Retrieves and validates a hot-state game save from OPFS by slot ID. */
   async retrieveHotState(slotId: string): Promise<GameState | null> {
     assertSafeFileNamePart(slotId, 'slotId');
     try {
@@ -136,9 +128,7 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  /**
-   *
-   */
+  /** Archives a bout log to OPFS, optionally overwriting an existing entry. */
   async archiveBoutLog(
     year: number,
     season: number,
@@ -200,9 +190,7 @@ export class OPFSArchiveService implements ArchiveService {
     });
   }
 
-  /**
-   *
-   */
+  /** Retrieves a bout log from OPFS by year, season, and bout ID. */
   async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     assertSafeFileNamePart(boutId, 'boutId');
     try {
@@ -228,9 +216,7 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  /**
-   *
-   */
+  /** Archives a gazette markdown document to OPFS by season and week. */
   async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
     return this.enqueue(async () => {
       assertSafeFileNamePart(String(week), 'week');
@@ -266,9 +252,7 @@ export class OPFSArchiveService implements ArchiveService {
     });
   }
 
-  /**
-   *
-   */
+  /** Retrieves a gazette markdown document from OPFS by season and week. */
   async retrieveGazette(season: number, week: number): Promise<string | null> {
     assertSafeFileNamePart(String(week), 'week');
     try {
@@ -292,9 +276,7 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  /**
-   *
-   */
+  /** Lists all archived bout IDs for a given season from OPFS. */
   async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     try {
       const dirHandle = await this.getDirectory(season, 'bouts');

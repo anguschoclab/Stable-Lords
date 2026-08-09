@@ -54,3 +54,6 @@ review.txt
 # PR junk patterns (per consolidation findings V10)
 *.py
 lint_output.txt
+
+# TypeScript composite build info
+*.tsbuildinfo

@@ -29,7 +29,7 @@
     "e2e:ui": "playwright test --ui",
     "e2e:headed": "playwright test --headed",
     "e2e:debug": "playwright test --debug",
-    "type-check": "tsc --noEmit --project tsconfig.app.json",
+    "type-check": "tsc --build --force",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "oracle:daily": "bun run src/scripts/daily_oracle.ts",
     "bard:daily": "bunx tsx src/scripts/daily_bard.ts",

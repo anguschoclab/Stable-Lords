@@ -100,7 +100,7 @@ describe('store guards — behavioral tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useGameStore.getState().setSimulating(false);
-    useGameStore.setState((s) => {
+    useGameStore.getState().setState((s) => {
       s.atTitleScreen = true;
       s.activeSlotId = null;
       s.week = 1;
@@ -130,7 +130,7 @@ describe('store guards — behavioral tests', () => {
   // #7 — returnToTitle must await saveCurrentState before clearing
   describe('#7 returnToTitle awaits saveCurrentState', () => {
     it('sets atTitleScreen=true and clears activeSlotId after save completes', async () => {
-      useGameStore.setState((s) => {
+      useGameStore.getState().setState((s) => {
         s.activeSlotId = 'test-slot';
         s.atTitleScreen = false;
       });

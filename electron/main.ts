@@ -73,10 +73,18 @@ function saveConfig() {
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 
-// Test helpers — exported for behavioral unit tests. No runtime behavior change.
+/** Test helpers — exported for behavioral unit tests. No runtime behavior change. */
+
+/** Returns the current main BrowserWindow instance (or null). */
 export function _getMainWindow() { return mainWindow; }
+
+/** Sets the current main BrowserWindow instance. */
 export function _setMainWindow(win: BrowserWindow | null) { mainWindow = win; }
+
+/** Returns the current Tray instance (or null). */
 export function _getTray() { return tray; }
+
+/** Sets the current Tray instance. */
 export function _setTray(t: Tray | null) { tray = t; }
 
 // Get platform-specific save directory
@@ -114,6 +122,7 @@ async function ensureSaveDirectory() {
   );
 }
 
+/** Creates and configures the main application BrowserWindow, loading dev or prod content. */
 export function createWindow() {
   mainWindow = new BrowserWindow({
     width: store.get('windowBounds.width') || 1400,
@@ -196,6 +205,7 @@ export function createWindow() {
   });
 }
 
+/** Builds and sets the application menu bar with File, Edit, View, and Help menus. */
 export function createMenu() {
   const template = [
     ...(process.platform === 'darwin'
@@ -318,6 +328,7 @@ export function createMenu() {
   Menu.setApplicationMenu(menu);
 }
 
+/** Creates the system tray icon with context menu for show/new/load/quit actions. */
 export function createTray() {
   const iconPath = path.join(__dirname, '../public/icons/icon-192.png');
   const image = nativeImage.createFromPath(iconPath);

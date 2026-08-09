@@ -4,6 +4,7 @@ import { SeededRNGService } from '@/utils/random';
 import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import type { WarriorId } from '@/types/shared.types';
 
 describe('Seasonal Chaos Weavers Prophecy', () => {
   it('picks a warrior, grants xp, gives madness injury and logs newsletter', () => {
@@ -39,13 +40,13 @@ describe('Seasonal Chaos Weavers Prophecy', () => {
 
     handleChaosWeaversProphecy(state, 1, eventData, rng, ctx);
 
-    const update = ctx.rosterUpdates.get('w1');
+    const update = ctx.rosterUpdates.get('w1' as WarriorId);
     expect(update).toBeDefined();
     expect(update!.xp).toBe(150); // 100 + 50
     expect(update!.injuries?.length).toBe(1);
-    expect(update!.injuries![0].name).toBe('Prophetic Madness');
+    expect(update!.injuries?.[0]?.name).toBe('Prophetic Madness');
 
     expect(ctx.newsletterItems.length).toBe(1);
-    expect(ctx.newsletterItems[0].items[0]).toContain('Prophecy Target');
+    expect(ctx.newsletterItems[0]?.items[0]).toContain('Prophecy Target');
   });
 });

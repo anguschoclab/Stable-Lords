@@ -8,13 +8,7 @@ import { describe, it, expect } from 'vitest';
 
 describe('ARENA_EVENT_CONSTANTS migration to @/constants/arenaEvents', () => {
   it('ARENA_EVENT_CONSTANTS is importable from @/constants/arenaEvents', async () => {
-    try {
-      // @ts-expect-error — module doesn't exist on main yet; created by PR #791
-      const mod = await import('@/constants/arenaEvents');
-      expect(mod.ARENA_EVENT_CONSTANTS).toBeDefined();
-    } catch (e) {
-      // Expected to fail on main — the module doesn't exist yet
-      expect(e).toBeDefined();
-    }
+    const mod = await import('@/constants/arenaEvents');
+    expect(mod.ARENA_EVENT_CONSTANTS).toBeDefined();
   });
 });

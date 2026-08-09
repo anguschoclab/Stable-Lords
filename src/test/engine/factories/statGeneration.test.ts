@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { generateArchetypeAttrs, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
-import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/shared.types';
+import { generateArchetypeAttrs } from '@/engine/factories/statGeneration';
+import { FightingStyle, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 
 describe('statGeneration', () => {

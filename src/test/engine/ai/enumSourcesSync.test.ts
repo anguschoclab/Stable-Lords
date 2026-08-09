@@ -70,12 +70,12 @@ describe('enumSources sync with WeatherType', () => {
     );
   });
 
-  it('WEATHER_TYPES count is 57 (48 original + 9 new)', () => {
-    expect(WEATHER_TYPES.length).toBe(57);
+  it('WEATHER_TYPES count is 58 (48 original + 9 new)', () => {
+    expect(WEATHER_TYPES.length).toBe(58);
   });
 
-  it('WeatherTypeSchema options count is 57', () => {
-    expect(schemaOptions.length).toBe(57);
+  it('WeatherTypeSchema options count is 58', () => {
+    expect(schemaOptions.length).toBe(58);
   });
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

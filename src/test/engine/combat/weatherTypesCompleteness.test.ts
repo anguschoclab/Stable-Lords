@@ -48,7 +48,7 @@ describe('weather type registry completeness', () => {
     }
   });
 
-  it('Weather count is 57 (post-merge with chaos weaver branches)', () => {
-    expect(WEATHER_TYPES.length).toBe(57);
+  it('Weather count is 58 (post-merge with chaos weaver branches)', () => {
+    expect(WEATHER_TYPES.length).toBe(58);
   });
 });

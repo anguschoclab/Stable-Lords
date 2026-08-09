@@ -39,6 +39,12 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'A terrifying cosmic rift empowers strikes but exhausts fighters.',
   },
+  'Abyssal Tempest': {
+    icon: Flame,
+    colorClass: 'text-purple-600',
+    bgClass: 'bg-purple-900/20',
+    borderClass: 'border-purple-500/20',
+  },
 
   'Prismatic Rain': {
     icon: Sparkles,

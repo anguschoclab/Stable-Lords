@@ -503,3 +503,37 @@ export function handleCursedTreasureDiscovery(
     }
   }
 }
+
+export function handleAbyssalTempestRitual(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 25;
+
+      const newInjury = makeInjury(rng, {
+        name: 'Abyssal Gaze',
+        description: 'Stared too deeply into the void.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 2,
+        penalties: { SP: -1, END: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}

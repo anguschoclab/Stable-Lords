@@ -11,6 +11,8 @@ import type { WeatherType } from '@/types/shared.types';
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Cosmic Anomaly':
     'A tear in the sky reveals the screaming void. Cosmic energies crackle across the sand.',
+  'Abyssal Tempest':
+    'An abyssal vortex rips across the arena, plunging the fighters into agonizing gloom.',
 
   'Prismatic Rain':
     'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',

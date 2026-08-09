@@ -22,6 +22,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'The fabric of space tears open. Cosmic energies empower fighters but make them erratic.',
   },
+  'Abyssal Tempest': {
+    staminaMult: 1.6,
+    initiativeMod: -2,
+    riposteMod: -2,
+    damageMult: 1.1,
+    description: 'A violent tear into the abyss that heavily drains stamina and unnerves the combatants.',
+  },
 
   'Prismatic Rain': {
     staminaMult: 1.15,

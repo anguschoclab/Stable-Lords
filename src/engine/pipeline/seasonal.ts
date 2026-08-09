@@ -119,6 +119,7 @@ const EVENT_HANDLERS: Record<
   temporal_anomaly: handleTemporalAnomaly,
   wandering_mystic: handleWanderingMystic,
   cursed_treasure_discovery: handleCursedTreasureDiscovery,
+  abyssal_tempest_ritual: handleAbyssalTempestRitual,
 };
 
 /**

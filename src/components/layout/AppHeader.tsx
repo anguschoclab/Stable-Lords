@@ -209,7 +209,7 @@ function MuteButton() {
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
-          size="icon" aria-label="Arena Settings"
+          size="icon"
           className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           onClick={toggleMute}
           aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
@@ -262,7 +262,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
-          size="icon" aria-label="Mute Audio"
+          size="icon"
           className={cn(
             'h-9 w-9 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black',
             saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'

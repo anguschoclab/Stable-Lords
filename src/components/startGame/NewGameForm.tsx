@@ -170,7 +170,7 @@ export default function NewGameForm({
                 />
                 <Button
                   variant="outline"
-                  size="icon" aria-label="Randomize Stable Name"
+                  size="icon"
                   type="button"
                   onClick={() => setOwnerName(randomOwnerName())}
                   tooltip="Random name"
@@ -200,7 +200,7 @@ export default function NewGameForm({
                 />
                 <Button
                   variant="outline"
-                  size="icon" aria-label="Randomize Patron Name"
+                  size="icon"
                   type="button"
                   onClick={() => setStableName(randomStableName())}
                   tooltip="Random name"

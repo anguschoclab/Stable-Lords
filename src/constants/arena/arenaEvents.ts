@@ -31,6 +31,9 @@ export const ARENA_EVENT_CONSTANTS = {
   GEYSER_ERUPTION_TRIGGER: 6,
   SHADOW_TENDRIL_TRIGGER: 20,
   SHADOW_TENDRIL_DRAIN: 5,
+  THORN_BARBS_TRIGGER: 10,
+  SHIFTING_ROOTS_TRIGGER: 3,
+  DEEPENING_MUCK_TRIGGER: 4,
 } as const;
 
 export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
@@ -119,7 +122,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     description: 'The flora lashes out at retreating fighters',
     requiredTags: ['living'],
     triggerCondition: 'heavy_hit',
-    triggerValue: 10,
+    triggerValue: ARENA_EVENT_CONSTANTS.THORN_BARBS_TRIGGER,
     narrativeText: 'Thorny vines whip at the fighters as they move!',
   },
 
@@ -129,7 +132,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     description: 'The ground itself seems to move',
     requiredTags: ['living', 'uneven'],
     triggerCondition: 'exchange_interval',
-    triggerValue: 3,
+    triggerValue: ARENA_EVENT_CONSTANTS.SHIFTING_ROOTS_TRIGGER,
     narrativeText: 'Roots writhe beneath the sand, tangling footwork!',
   },
 
@@ -186,7 +189,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     description: 'Waterlogged ground becomes more treacherous',
     requiredTags: ['water'],
     triggerCondition: 'exchange_interval',
-    triggerValue: 4,
+    triggerValue: ARENA_EVENT_CONSTANTS.DEEPENING_MUCK_TRIGGER,
     narrativeText: 'The waterlogged ground sucks at boots, slowing movement!',
   },
 };

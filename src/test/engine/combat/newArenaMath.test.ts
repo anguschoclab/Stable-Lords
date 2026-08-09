@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { THE_BRAMBLE_RING, THUNDER_PEAK } from '@/data/arenas';
+import { THE_BRAMBLE_RING, THUNDER_PEAK, THE_SUNKEN_VAULT, IRON_FORGE } from '@/data/arenas';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { FightingStyle } from '@/types/shared.types';
 
@@ -17,5 +17,17 @@ describe('New Arenas and Modifiers', () => {
 
     const modRiposteDust = getStyleWeatherModifier(FightingStyle.ParryRiposte, 'Sandstorm', []);
     expect(modRiposteDust.damageMult).toBe(1 - 0.1); // Testing our updated DUST_RIPOSTE_PENALTY
+  });
+
+  it('should correctly register and retrieve Sunken Vault and Iron Forge', () => {
+    expect(THE_SUNKEN_VAULT.id).toBe('the_sunken_vault');
+    expect(IRON_FORGE.id).toBe('iron_forge');
+    expect(THE_SUNKEN_VAULT.tags).toContain('water');
+    expect(IRON_FORGE.tags).toContain('premium');
+  });
+
+  it('should apply new acid rain style weather modifier', () => {
+    const modAcidRain = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Acid Rain', ['indoor']);
+    expect(modAcidRain.damageMult).toBe(1.1); // Testing our updated ACID_RAIN_LUNGE_DAMAGE
   });
 });

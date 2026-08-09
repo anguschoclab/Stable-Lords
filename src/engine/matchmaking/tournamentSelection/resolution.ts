@@ -10,6 +10,7 @@ import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
 import { findWarriorById, getAIPlan } from './utils';
 import { awardTournamentPrizes } from './awards';
+import { updateEntityInList } from '@/utils/stateUtils';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
@@ -249,23 +250,25 @@ export function applyBoutResults(
   // 🔒 Tournament fatigue exemption: No fatigue accrual for tournament participants during tournament week
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
-  updatedState.roster = updatedState.roster.map((w) => {
-    if (w.id === wA.id)
-      return updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue);
-    if (w.id === wD.id)
-      return updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue);
-    return w;
-  });
+  // ⚡ Bolt Optimization: Use updateEntityInList for O(N) array modification instead of map
+  updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
+    updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue)
+  );
+  updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
+    updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue)
+  );
 
-  updatedState.rivals = updatedState.rivals.map((r) => ({
+  updatedState.rivals = updateEntityInList(updatedState.rivals, wA.stableId as string, (r) => ({
     ...r,
-    roster: r.roster.map((w) => {
-      if (w.id === wA.id)
-        return updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue);
-      if (w.id === wD.id)
-        return updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue);
-      return w;
-    }),
+    roster: updateEntityInList(r.roster, wA.id, (w) =>
+      updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue)
+    )
+  }));
+  updatedState.rivals = updateEntityInList(updatedState.rivals, wD.stableId as string, (r) => ({
+    ...r,
+    roster: updateEntityInList(r.roster, wD.id, (w) =>
+      updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue)
+    )
   }));
 
   if (isKill) {

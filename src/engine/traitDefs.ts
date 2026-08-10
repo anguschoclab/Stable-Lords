@@ -156,12 +156,11 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'stone_skin_orphan',
     name: 'Stone Skin',
     description: 'Beatings hardened their flesh.',
-    effect: { enduranceMult: 0.95 },
+    effect: { defMod: 0.95 },
     tier: 'Notable',
     sign: 'positive',
     weight: 1,
   },
-
   starving_dog: {
     id: 'starving_dog',
     name: 'Starving Dog',

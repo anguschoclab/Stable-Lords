@@ -285,22 +285,28 @@ export const StyleRollups = {
     Object.keys(rolling).forEach((s) => {
       const styleData = rolling[s];
       if (!styleData) return;
-      const agg = styleData.reduce(
-        (a: RollingBucket, b: RollingBucket) => ({
-          W: a.W + b.W,
-          L: a.L + b.L,
-          K: a.K + b.K,
-          fights: a.fights + b.fights,
-        }),
-        { W: 0, L: 0, K: 0, fights: 0 }
-      );
+      // ⚡ Bolt: Replaced Object-allocating `.reduce()` with a mutable for-loop.
+      // This prevents the creation of N intermediate `RollingBucket` objects per style,
+      // significantly reducing garbage collection pressure during frequent rollups.
+      let W = 0;
+      let L = 0;
+      let K = 0;
+      let fights = 0;
+      for (let i = 0; i < styleData.length; i++) {
+        const b = styleData[i];
+        if (!b) continue;
+        W += b.W;
+        L += b.L;
+        K += b.K;
+        fights += b.fights;
+      }
       rows.push({
         style: s,
-        W: agg.W,
-        L: agg.L,
-        K: agg.K,
-        P: agg.fights ? Math.round((agg.W / agg.fights) * 100) : 0,
-        fights: agg.fights,
+        W,
+        L,
+        K,
+        P: fights ? Math.round((W / fights) * 100) : 0,
+        fights,
       });
     });
     return rows.sort((a, b) => b.P - a.P);

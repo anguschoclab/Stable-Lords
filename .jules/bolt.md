@@ -1,3 +1,6 @@
 ## 2024-05-18 - [Optimize Map Initialization from Arrays]
  **Learning:** Initializing Maps from arrays using `new Map(array.map(item => [key, value]))` creates unnecessary intermediate tuple arrays, leading to memory allocation overhead and increased garbage collection pressure. This is a common anti-pattern, especially within `useMemo` blocks where performance is critical.
  **Action:** Always use a `for...of` loop and `map.set()` to populate a Map directly from an array instead of using `.map()` to create an intermediate array of tuples.
+## 2024-05-19 - Avoid Array.prototype.reduce() with Object Accumulators in Hot Paths
+ **Learning:** Using `Array.prototype.reduce()` to accumulate objects (e.g., `(acc, item) => ({ W: acc.W + item.W })`) creates a new intermediate object on *every single iteration*. In frequently called simulation paths or rollups (like `StyleRollups.last10()`), this introduces O(N) object allocations per array, significantly increasing garbage collection pressure and reducing execution speed.
+ **Action:** In hot loops, always replace object-allocating `.reduce()` calls with standard `for` loops that mutate local scalar variables, allocating the final object only once at the end.

@@ -5653,6 +5653,13 @@
       "newsletter": [
         "A local village celebrated a surprisingly bountiful harvest and shared their excess crops with the stable. The gladiators enjoyed the feast! (+{{gold}} Gold)"
       ]
+    },
+    "abyssal_tempest_ritual": {
+      "title": "Abyssal Tempest Ritual",
+      "effectType": "abyssal_tempest_ritual",
+      "newsletter": [
+        "A swirling vortex of dark energy appeared in the stable during the off-season. {{name}} stared into it and emerged stronger, yet changed... (+25 XP, Minor Injury)"
+      ]
     }
   },
   "crowd_reactions": {

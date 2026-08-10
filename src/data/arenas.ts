@@ -457,7 +457,47 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
   startingZone: 'Center',
 };
 
+export const THE_SUNKEN_VAULT: ArenaConfig = {
+  id: 'the_sunken_vault',
+  name: 'The Sunken Vault',
+  tags: ['water', 'indoor', 'magical'],
+  tier: 2,
+  size: 'cramped',
+  description:
+    'A submerged treasure room where ancient magic and knee-deep water slow movement.',
+  zoneDef: { Edge: -1, Corner: -3 },
+  surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: 1 },
+};
+
+export const IRON_FORGE: ArenaConfig = {
+  id: 'iron_forge',
+  name: 'Iron Forge',
+  tags: ['cramped', 'indoor', 'premium'],
+  tier: 3,
+  size: 'cramped',
+  description:
+    'An intense, claustrophobic forge reserved for the elite. Sparks fly with every clash.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: 1, enduranceMult: 1.3, riposteMod: 0 },
+};
+
 export const ARENA_LORE: ArenaLoreEntry[] = [
+  {
+    id: 'sunken_vault_echo',
+    arenaId: 'the_sunken_vault',
+    type: 'architectural_quirk',
+    title: "Whispers of the Deep",
+    narrative:
+      'Fighters swear they hear the whispers of drowned kings echoing off the submerged walls.',
+  },
+  {
+    id: 'iron_forge_heat',
+    arenaId: 'iron_forge',
+    type: 'architectural_quirk',
+    title: "The Bellows",
+    narrative:
+      'Massive subterranean bellows pump hot air through the grates, searing the lungs of the exhausted.',
+  },
   {
     id: 'blood_pit_rat_king',
     arenaId: 'gutter_pit',
@@ -1096,4 +1136,6 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   THUNDER_PEAK,
   SUN_BAKED_PLATEAU,
   ANCIENT_AQUEDUCT,
+  THE_SUNKEN_VAULT,
+  IRON_FORGE,
 ].forEach(registerArena);

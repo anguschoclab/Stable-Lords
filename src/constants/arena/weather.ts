@@ -39,6 +39,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'A terrifying cosmic rift empowers strikes but exhausts fighters.',
   },
+  'Abyssal Tempest': {
+    icon: Flame,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A violent tear into the abyss that heavily drains stamina and unnerves the combatants.',
+  },
 
   'Prismatic Rain': {
     icon: Sparkles,
@@ -473,4 +480,6 @@ export const WEATHER_PENALTIES = {
   LIVING_GALE_INITIATIVE: -2,
   ACID_RAIN_SLASHING_DAMAGE: 1.1,
   ECLIPSE_STRIKING_BONUS: 0.20,
+  ACID_RAIN_LUNGE_DAMAGE: 1.1,
+  SPARK_FORGE_RIPOSTE: 2,
 } as const;

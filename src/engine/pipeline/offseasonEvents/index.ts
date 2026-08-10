@@ -54,3 +54,4 @@ export { handleWanderingFortuneTeller } from './socialHandlers';
 export { handleMoonlightDuel } from './socialHandlers';
 export { handleDreamweaverVisit } from './socialHandlers';
 export { handleChaosWeaversProphecy } from './chaosHandlers';
+export { handleAbyssalTempestRitual } from './chaosHandlers';

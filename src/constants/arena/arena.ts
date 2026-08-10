@@ -11,8 +11,8 @@ export const ARENA_TAG_WEIGHTS = {
   open: { weight: 1.0, description: 'Open ground favors reach weapons' },
   uneven: { weight: 0.95, description: 'Uneven footing penalizes lungers' },
   ruins: { weight: 1.0, description: 'Ancient structures may shift' },
-  magical: { weight: 0.9, description: 'Arcane resonance aids counters' },
-  living: { weight: 0.95, description: 'Reactive environment affects movement' },
+  magical: { weight: 0.95, description: 'Arcane resonance aids counters' },
+  living: { weight: 0.98, description: 'Reactive environment affects movement' },
   cursed: { weight: 0.85, description: 'Dark energy amplifies lethality' },
   water: { weight: 0.85, description: 'Wet conditions slow footwork' },
   elevated: { weight: 1.1, description: 'High altitude affects stamina' },
@@ -165,6 +165,15 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   'living:Gale': {
     initiativeMod: WEATHER_PENALTIES.LIVING_GALE_INITIATIVE, // Branches whip in wind
     description: 'The living forest writhes in the gale',
+  },
+
+  'indoor:Acid Rain': {
+    damageMult: WEATHER_PENALTIES.ACID_RAIN_LUNGE_DAMAGE,
+    description: 'Acid rain leaking through the roof burns the skin',
+  },
+  'premium:Ember Rain': {
+    riposteMod: WEATHER_PENALTIES.SPARK_FORGE_RIPOSTE,
+    description: 'The forge sparks blind the attacker, aiding a counter',
   },
 
   'Acid Rain:SLASHING ATTACK': {

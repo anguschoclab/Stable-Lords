@@ -55,4 +55,5 @@ export {
   handleCursedTreasureDiscovery,
   handleWanderingMystic,
   handleBountifulHarvest,
+  handleAbyssalTempestRitual,
 } from './offseasonEvents';

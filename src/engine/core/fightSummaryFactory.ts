@@ -8,6 +8,7 @@ import type { FightSummary } from '@/types/state.types';
 import type { FightId, TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
+import { weekToTimestamp } from '@/constants';
 
 /**
  * Defines the shape of fight summary params.
@@ -81,7 +82,7 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
     styleD: warriorD.style,
     transcript,
     analysis,
-    createdAt: new Date(Date.UTC(2026, 0, 1) + (week - 1) * 7 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: weekToTimestamp(week),
   };
 }
 
@@ -134,6 +135,6 @@ export function createMinimalFightSummary(
     styleA: warriorA.style,
     styleD: warriorD.style,
     transcript: [],
-    createdAt: new Date(Date.UTC(2026, 0, 1) + (week - 1) * 7 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: weekToTimestamp(week),
   };
 }

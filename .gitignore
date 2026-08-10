@@ -57,3 +57,6 @@ lint_output.txt
 
 # TypeScript composite build info
 *.tsbuildinfo
+
+# npm lockfile (project uses bun)
+package-lock.json

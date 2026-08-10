@@ -45,6 +45,7 @@ export function truncateState(state: GameState): GameState {
     rivals: (state.rivals || []).slice(-50),
     unacknowledgedDeaths: (state.unacknowledgedDeaths || []).slice(-100),
     deferredBoutLogs: (state.deferredBoutLogs || []).slice(-200),
+    awards: (state.awards || []).slice(-100),
     lastWeekBoutDisplay: undefined,
   };
 }

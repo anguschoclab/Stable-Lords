@@ -43,9 +43,8 @@ describe('NF7: hardcoded year 2024', () => {
         }
       }
     }
-    // gameStateFactory.ts has one known instance: createdAt default = '2024-01-01'
-    // This test documents it. The fix would use a dynamic date.
-    expect(violations.length).toBeLessThanOrEqual(3);
+    // No hardcoded 2024 dates should remain in engine source files
+    expect(violations.length).toBe(0);
   });
 
   it('gameStateFactory no longer hardcodes 2024-01-01 (NF7 fixed)', () => {

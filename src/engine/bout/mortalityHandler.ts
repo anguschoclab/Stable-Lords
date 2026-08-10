@@ -7,7 +7,8 @@ import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { formatDateOfDeath } from '@/utils/format';
-import { StateImpact } from '@/engine/impacts'; /**
+import { StateImpact } from '@/engine/impacts';
+import { weekToTimestamp } from '@/constants'; /**
  * Handle death.
  * @param rivalStableId - Rival stable id. (optional)
  */
@@ -48,7 +49,7 @@ export function handleDeath(
       transcript: [],
       title: `${wA.name} vs ${wD.name}`,
       phase: 'resolution',
-      createdAt: '2026-01-01T00:00:00Z',
+      createdAt: weekToTimestamp(week),
     } as unknown as FightSummary,
     s.crowdMood
   );

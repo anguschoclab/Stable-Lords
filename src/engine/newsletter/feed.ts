@@ -1,7 +1,8 @@
 /**
  * Newsletter feed — collects fight cards per week and generates issues.
  */
-import type { FightSummary } from '@/types/combat.types'; /**
+import type { FightSummary } from '@/types/combat.types';
+import { weekToTimestamp } from '@/constants'; /**
  * Defines the shape of fight card.
  */
 
@@ -152,7 +153,7 @@ export const NewsletterFeed = {
         topMovers: computeTopMovers(fights),
       },
       styleRollups: computeStyleRollups(fights),
-      createdAt: new Date(Date.UTC(2024, 0, 1 + (week || 1) * 7)).toISOString(),
+      createdAt: weekToTimestamp(week),
     };
   },
 };

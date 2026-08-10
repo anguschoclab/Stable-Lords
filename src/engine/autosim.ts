@@ -253,6 +253,11 @@ async function runBatchAutosim(
     weeksSimmed += result.weeksCompleted;
     state = result.state;
 
+    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth
+    if (weeksSimmed % 50 === 0) {
+      state = truncateState(state);
+    }
+
     // Process any player offers that accumulated during the quarter
     // Note: This is approximate - offers are processed at quarter end, not per-week
     state = processPlayerOffers(state);

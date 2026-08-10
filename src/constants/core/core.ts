@@ -4,7 +4,7 @@
  */
 
 // ─── Temporal ───────────────────────────────────────────────────────────
-export const ERA_START_YEAR = 2026;
+// Date/time constants moved to ./dates.ts
 
 /**
  * Save state version — used as a tripwire in isPlausibleGameState and stamped into meta.version.

@@ -8,21 +8,16 @@ describe('NF3: autosim memory growth', () => {
     const state = createFreshState('autosim-memory-test');
     const initialArenaLength = (state.arenaHistory || []).length;
 
-    // Run 20 weeks of sequential autosim
-    return runAutosim(state, { weeksToSim: 20 }).then((result) => {
+    // Run 100 weeks of sequential autosim — crosses two truncation points (50, 100)
+    return runAutosim(state, { weeksToSim: 100 }).then((result) => {
       const finalArenaLength = (result.finalState.arenaHistory || []).length;
 
-      // After 20 weeks, arena history should not have grown by more than ~20 entries
-      // (some weeks may have bouts, some may not). But it should NOT be 0 either.
-      // The key issue: truncateState is never called in sequential autosim,
-      // so arenaHistory grows without bound. After 20 weeks it's small, but
-      // after 500 weeks it would be huge.
-      expect(finalArenaLength).toBeGreaterThanOrEqual(initialArenaLength);
+      expect(result.weeksSimmed).toBe(100);
 
-      // This test documents the bug: after many weeks, arenaHistory grows
-      // without truncation. The fix would call truncateState periodically.
-      // For now, just verify it doesn't crash.
-      expect(result.weeksSimmed).toBe(20);
+      // With truncateState called every 50 weeks (capping arenaHistory at 500),
+      // and week 100 being a truncation point, arenaHistory must be ≤500.
+      expect(finalArenaLength).toBeLessThanOrEqual(500);
+      expect(finalArenaLength).toBeGreaterThanOrEqual(initialArenaLength);
     });
   });
 

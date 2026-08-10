@@ -9,6 +9,7 @@ import {
 } from '@/engine/bout/services/boutProcessorService';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
+import { gameYearWeekToTimestamp } from '@/constants';
 
 /**
  * Stable Lords — Bout Simulation Pipeline Pass
@@ -43,9 +44,7 @@ export function runBoutSimulationPass(
     popularityDeltaA: 0,
     popularityDeltaD: 0,
     transcript: r.outcome.log.map((e) => e.text),
-    createdAt: new Date(
-      Date.UTC(2024 + (state.year || 1) - 1, 0, 1 + (state.week - 1) * 7)
-    ).toISOString(),
+    createdAt: gameYearWeekToTimestamp(state.year || 1, state.week),
   }));
 
   boutImpact.lastSimulationReport = {

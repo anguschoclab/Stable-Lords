@@ -8,7 +8,8 @@ import { ArenaHistory } from '@/engine/history/arenaHistory';
 import { LoreArchive } from '@/lore/LoreArchive';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
-import { SeededRNGService } from '@/utils/random'; /**
+import { SeededRNGService } from '@/utils/random';
+import { weekToTimestamp } from '@/constants'; /**
  * Handle reporting.
  * @param _rivalStableId - _rival stable id. (optional)
  * @param isRivalry - Is rivalry. (optional)
@@ -74,7 +75,7 @@ export function handleReporting(
     transcript: outcome.log.map((e) => e.text),
     isRivalry,
     absoluteWeek,
-    createdAt: new Date(Date.UTC(2026, 0, 1) + (week - 1) * 7 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: weekToTimestamp(week),
   };
 
   // Side effects

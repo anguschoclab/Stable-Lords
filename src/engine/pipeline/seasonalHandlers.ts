@@ -8,6 +8,7 @@ export {
   type OffseasonEventContext,
   getActiveWarriors,
   handleChaosRift,
+  handleUnexplainedMonolith,
   handleChaoticWeatherExperiment,
   handleFameBoost,
   handleWinterChill,

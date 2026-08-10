@@ -579,3 +579,52 @@ export function handleAbyssalTempestRitual(
     }
   }
 }
+
+export function handleUnexplainedMonolith(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15;
+      const fameGained = 10;
+
+      const newInjury = makeInjury(rng, {
+        name: 'Monolith Fatigue',
+        description: 'Exhausted from touching the unknown.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { SP: -1 },
+      });
+
+
+
+      const existingUpdate = ctx.rosterUpdates.get(chosen.id) || {};
+
+      const currentXp = existingUpdate.xp ?? chosen.xp ?? 0;
+      const currentFame = existingUpdate.fame ?? chosen.fame ?? 0;
+      const currentInjuries = existingUpdate.injuries ?? chosen.injuries ?? [];
+      const currentTraits = existingUpdate.traits ?? chosen.traits ?? [];
+
+      const newTraits = currentTraits.includes('precise') ? currentTraits : [...currentTraits, 'precise'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        ...existingUpdate,
+        xp: currentXp + xpGained,
+        fame: currentFame + fameGained,
+        injuries: [...currentInjuries, newInjury],
+        traits: newTraits,
+      });
+
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}

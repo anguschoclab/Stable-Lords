@@ -16,6 +16,7 @@ import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
   handleChaosRift,
+  handleUnexplainedMonolith,
   handleChaoticWeatherExperiment,
   handleFameBoost,
   handleWinterChill,
@@ -78,6 +79,7 @@ const EVENT_HANDLERS: Record<
   ) => void
 > = {
   chaos_rift: handleChaosRift,
+  unexplained_monolith: handleUnexplainedMonolith,
   chaotic_weather_experiment: handleChaoticWeatherExperiment,
   fame_boost: handleFameBoost,
   winter_chill: handleWinterChill,

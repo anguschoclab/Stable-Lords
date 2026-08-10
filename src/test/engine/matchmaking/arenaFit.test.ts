@@ -1026,8 +1026,8 @@ describe('arena balance constants', () => {
     expect(ARENA_FIT.RIPOSTE_MOD_MULTIPLIER).toBe(0.2);
   });
 
-  it('ARENA_TAG_WEIGHTS.magical is 0.9', () => {
-    expect(ARENA_TAG_WEIGHTS.magical.weight).toBe(0.9);
+  it('ARENA_TAG_WEIGHTS.magical is 0.95', () => {
+    expect(ARENA_TAG_WEIGHTS.magical.weight).toBe(0.95);
   });
 
   it('ARENA_TAG_WEIGHTS.cursed is 0.85', () => {

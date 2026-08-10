@@ -13,6 +13,7 @@ interface WeatherAudioProps {
 // Weather to ambient sound mapping
 export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Cosmic Anomaly': 'ambience-mana-surge',
+  'Abyssal Tempest': 'ambience-mana-surge',
 
   Zephyr: 'ambience-wind-breezy',
   'Ember Rain': null,

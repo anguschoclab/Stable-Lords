@@ -638,6 +638,7 @@ export type WeatherType =
   | 'Whispering Winds'
   | 'Diamond Rain'
   | 'Cosmic Anomaly'
+  | 'Abyssal Tempest'
   | 'Temporal Rift'
   | 'Stardust Gale'
   | 'Mana Storm';

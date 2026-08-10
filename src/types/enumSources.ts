@@ -62,6 +62,7 @@ export const WEATHER_TYPES = [
   'Glittering Frost',
   'Diamond Rain',
   'Cosmic Anomaly',
+  'Abyssal Tempest',
   'Temporal Rift',
   'Stardust Gale',
   'Mana Storm',

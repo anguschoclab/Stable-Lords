@@ -21,10 +21,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, tooltip, tooltipSide = 'top', ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     const title = props.title;
+    const ariaLabel = props['aria-label'];
 
     // If tooltip is provided, or title is provided, we wrap in Tooltip
     // We suppress the native title if we're showing a custom tooltip
     const tooltipContent = tooltip || title;
+
+    const effectiveAriaLabel = ariaLabel || (typeof tooltipContent === 'string' ? tooltipContent : undefined);
 
     const button = (
       <Comp
@@ -32,6 +35,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
         title={tooltipContent ? undefined : title}
+        aria-label={effectiveAriaLabel}
       />
     );
 

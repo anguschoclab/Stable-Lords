@@ -162,6 +162,12 @@ describe('warriorLookup', () => {
       expect(findWarriorById(state, 'p1', tournament)).toBe(rosterW);
     });
 
+    it('falls through to cache when tournament provided but is undefined', () => {
+      const rosterW = makeWarrior('p1', 'Roster Warrior');
+      const state = makeState([rosterW]);
+      expect(findWarriorById(state, 'p1', undefined)).toBe(rosterW);
+    });
+
     it('handles state.rivals being undefined', () => {
       const w = makeWarrior('p1');
       const state = makeState([w]);

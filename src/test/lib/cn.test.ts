@@ -16,7 +16,8 @@ describe('cn() utility — tailwind-merge compatibility', () => {
   });
 
   it('handles conditional classes', () => {
-    expect(cn('base', false && 'hidden', 'visible')).toBe('base visible');
+    const isHidden = false;
+    expect(cn('base', isHidden && 'hidden', 'visible')).toBe('base visible');
   });
 
   it('handles undefined and null inputs', () => {

@@ -4,14 +4,14 @@
  * (ACID_RAIN_SLASHING_DAMAGE, ECLIPSE_STRIKING_BONUS) don't exist yet.
  */
 import { describe, it, expect } from 'vitest';
-import { STYLE_WEATHER_MODIFIERS } from '@/constants/arena/arena';
+import { WEATHER_PENALTIES } from '@/constants/arena/weather';
 
 describe('arena weather modifiers — new entries from PR #791', () => {
-  it('ACID_RAIN_SLASHING_DAMAGE exists in STYLE_WEATHER_MODIFIERS', () => {
-    expect(STYLE_WEATHER_MODIFIERS.ACID_RAIN_SLASHING_DAMAGE).toBeDefined();
+  it('ACID_RAIN_SLASHING_DAMAGE exists in WEATHER_PENALTIES', () => {
+    expect(WEATHER_PENALTIES.ACID_RAIN_SLASHING_DAMAGE).toBeDefined();
   });
 
-  it('ECLIPSE_STRIKING_BONUS exists in STYLE_WEATHER_MODIFIERS', () => {
-    expect(STYLE_WEATHER_MODIFIERS.ECLIPSE_STRIKING_BONUS).toBeDefined();
+  it('ECLIPSE_STRIKING_BONUS exists in WEATHER_PENALTIES', () => {
+    expect(WEATHER_PENALTIES.ECLIPSE_STRIKING_BONUS).toBeDefined();
   });
 });

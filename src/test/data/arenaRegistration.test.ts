@@ -8,22 +8,22 @@ import { getArenaById, getAllArenas } from '@/data/arenas';
 
 describe('arena registration — new arenas from PR #791', () => {
   it('SUN_BAKED_PLATEAU is registered', () => {
-    const arena = getArenaById('SUN_BAKED_PLATEAU');
-    expect(arena.id).toBe('SUN_BAKED_PLATEAU');
+    const arena = getArenaById('sun_baked_plateau');
+    expect(arena.id).toBe('sun_baked_plateau');
   });
 
   it('ANCIENT_AQUEDUCT is registered', () => {
-    const arena = getArenaById('ANCIENT_AQUEDUCT');
-    expect(arena.id).toBe('ANCIENT_AQUEDUCT');
+    const arena = getArenaById('ancient_aqueduct');
+    expect(arena.id).toBe('ancient_aqueduct');
   });
 
   it('getAllArenas includes SUN_BAKED_PLATEAU', () => {
     const all = getAllArenas();
-    expect(all.some((a) => a.id === 'SUN_BAKED_PLATEAU')).toBe(true);
+    expect(all.some((a) => a.id === 'sun_baked_plateau')).toBe(true);
   });
 
   it('getAllArenas includes ANCIENT_AQUEDUCT', () => {
     const all = getAllArenas();
-    expect(all.some((a) => a.id === 'ANCIENT_AQUEDUCT')).toBe(true);
+    expect(all.some((a) => a.id === 'ancient_aqueduct')).toBe(true);
   });
 });

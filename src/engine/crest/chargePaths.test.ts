@@ -19,7 +19,7 @@ const EXPECTED_COUNTS: Record<ChargeType, number> = {
   weapon: 13,
   symbol: 14,
   nature: 14,
-  celestial: 8,
+  celestial: 10,
   mythical: 12,
 };
 
@@ -93,13 +93,10 @@ describe('getChargePathsByType', () => {
     for (const key of Object.keys(CELESTIAL_PATHS)) {
       expect(celestialNames).toContain(key);
     }
-    // Known data inconsistency: 'sun' and 'moon' are in CHARGE_DEFINITIONS.celestial.names
-    // but NOT in CELESTIAL_PATHS. This is not a runtime bug — selectCharge picks from
-    // Object.keys(chargePaths), not from CHARGE_DEFINITIONS.names.
     expect(celestialNames).toContain('sun');
     expect(celestialNames).toContain('moon');
-    expect(CELESTIAL_PATHS).not.toHaveProperty('sun');
-    expect(CELESTIAL_PATHS).not.toHaveProperty('moon');
+    expect(CELESTIAL_PATHS).toHaveProperty('sun');
+    expect(CELESTIAL_PATHS).toHaveProperty('moon');
   });
 
   it('1.9 — entry counts match expected values', () => {
@@ -157,7 +154,7 @@ describe('getRandomCharge', () => {
   });
 
   it('1.16 — seed = 0.999 returns last key', () => {
-    // CELESTIAL_PATHS has 8 keys; Math.floor(0.999 * 8) = 7 → last key
+    // CELESTIAL_PATHS has 10 keys; Math.floor(0.999 * 10) = 9 → last key
     const result = getRandomCharge('celestial', 0.999);
     const keys = Object.keys(CELESTIAL_PATHS);
     const lastKey = keys[keys.length - 1];

@@ -20,6 +20,10 @@ function buildNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
   return map;
 }
 
+export function useNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
+  return useMemo(() => buildNameResolver(state), [state.roster, state.graveyard, state.rivals]);
+}
+
 // Custom Hook to gather player roster IDs
 /**
  *
@@ -60,10 +64,10 @@ export function useRivalWarriorStable(
 export function useRivalriesList(
   state: RivalryStateSlice,
   rosterIds: Set<WarriorId>,
-  rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>
+  rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>,
+  nameResolver: Map<WarriorId, string>
 ): DerivedRivalry[] {
   return useMemo(() => {
-    const nameResolver = buildNameResolver(state);
     const map = new Map<string, DerivedRivalry>();
     const recentHistory = getRecentFights(state.arenaHistory || [], Math.max(1, state.week - 13));
 
@@ -123,7 +127,7 @@ export function useRivalriesList(
     }
 
     return result.sort((a, b) => b.intensity - a.intensity);
-  }, [state, rosterIds, rivalWarriorStable]);
+  }, [state.arenaHistory, state.week, rosterIds, rivalWarriorStable, nameResolver]);
 }
 
 // Custom Hook to calculate the most wanted rival
@@ -133,10 +137,10 @@ export function useRivalriesList(
 export function useMostWantedRival(
   state: RivalryStateSlice,
   rosterIds: Set<WarriorId>,
-  rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>
+  rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>,
+  nameResolver: Map<WarriorId, string>
 ) {
   return useMemo(() => {
-    const nameResolver = buildNameResolver(state);
     const winCounts = new Map<
       WarriorId,
       { name: string; stable: string; wins: number; kills: number }
@@ -172,5 +176,5 @@ export function useMostWantedRival(
       }
     }
     return maxEntry;
-  }, [state, rosterIds, rivalWarriorStable]);
+  }, [state.arenaHistory, state.week, rosterIds, rivalWarriorStable, nameResolver]);
 }

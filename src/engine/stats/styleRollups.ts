@@ -2,6 +2,8 @@
  * Style rollup tracking — records win/loss/kill rates per style over time.
  * Consolidated: also serves as the style meter (formerly src/metrics/StyleMeter.ts).
  */
+import { BucketSchema, RollingBucketSchema } from '@/schemas/statsSchemas';
+
 const KEY_WEEK = 'sl.styleRollups.week';
 const KEY_ROLLING = 'sl.metrics.style.week10';
 const KEY_TOUR = 'sl.metrics.style.tournaments';
@@ -15,36 +17,13 @@ type RollingBucket = { W: number; L: number; K: number; fights: number };
 
 // ── Validation ────────────────────────────────────────────────────────────
 
-function isBucket(o: unknown): o is Bucket {
-  return (
-    !!o &&
-    (o as Bucket).w !== undefined &&
-    typeof (o as Bucket).w === 'number' &&
-    typeof (o as Bucket).l === 'number' &&
-    typeof (o as Bucket).k === 'number' &&
-    typeof (o as Bucket).pct === 'number' &&
-    typeof (o as Bucket).fights === 'number'
-  );
-}
-
-function isRollingBucket(o: unknown): o is RollingBucket {
-  return (
-    !!o &&
-    (o as RollingBucket).W !== undefined &&
-    typeof (o as RollingBucket).W === 'number' &&
-    typeof (o as RollingBucket).L === 'number' &&
-    typeof (o as RollingBucket).K === 'number' &&
-    typeof (o as RollingBucket).fights === 'number'
-  );
-}
-
 function validateWeekRecord(o: unknown): Record<string, Bucket> {
   if (!o || typeof o !== 'object' || Array.isArray(o)) return {};
   const res: Record<string, Bucket> = {};
   const obj = o as Record<string, unknown>;
   for (const key in obj) {
-    const value = obj[key];
-    if (isBucket(value)) res[key] = value;
+    const result = BucketSchema.safeParse(obj[key]);
+    if (result.success) res[key] = result.data;
   }
   return res;
 }
@@ -56,7 +35,10 @@ function validateRollingRecord(o: unknown): Record<string, RollingBucket[]> {
   for (const key in obj) {
     const value = obj[key];
     if (Array.isArray(value)) {
-      const arr = value.filter(isRollingBucket);
+      const arr = value
+        .map((item) => RollingBucketSchema.safeParse(item))
+        .filter((r) => r.success)
+        .map((r) => (r as { success: true; data: RollingBucket }).data);
       if (arr.length > 0) res[key] = arr;
     }
   }
@@ -73,8 +55,8 @@ function validateTourRecord(o: unknown): Record<string, Record<string, RollingBu
       const validWeeks: Record<string, RollingBucket> = {};
       const tourObj = tourData as Record<string, unknown>;
       for (const weekId in tourObj) {
-        const weekData = tourObj[weekId];
-        if (isRollingBucket(weekData)) validWeeks[weekId] = weekData;
+        const result = RollingBucketSchema.safeParse(tourObj[weekId]);
+        if (result.success) validWeeks[weekId] = result.data;
       }
       if (Object.keys(validWeeks).length > 0) res[tourId] = validWeeks;
     }

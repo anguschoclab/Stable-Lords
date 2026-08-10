@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useRivalriesList, useRivalWarriorStable } from '@/hooks/useRivalries';
+import { useRivalriesList, useRivalWarriorStable, useNameResolver } from '@/hooks/useRivalries';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
 
@@ -61,7 +61,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = new Map();
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current).toEqual([]);
   });
 
@@ -85,7 +86,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current).toEqual([]);
   });
 
@@ -106,7 +108,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current).toHaveLength(1);
     expect(result.current[0]!.playerWins).toBe(1);
     expect(result.current[0]!.playerLosses).toBe(1);
@@ -127,7 +130,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current[0]!.intensity).toBe(1);
   });
 
@@ -148,7 +152,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current[0]!.intensity).toBe(4); // 2 kills * 2 = 4, min clamp 1, max 5
   });
 
@@ -168,7 +173,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current[0]!.intensity).toBe(5); // 5 kills * 2 = 10 capped to 4, +1 for bouts >= 5, total 5
   });
 
@@ -188,7 +194,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current[0]!.intensity).toBe(1); // 0 kills + 1 for bouts >= 5, clamped to [1,5]
   });
 
@@ -215,7 +222,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id, state.roster[1]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current).toHaveLength(2);
     expect(result.current[0]!.stableName).toBe('Steel Lions'); // intensity 4 (kill 2*2) vs 2 (bouts >=5)
     expect(result.current[1]!.stableName).toBe('Iron Wolves');
@@ -243,7 +251,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current[0]!.kills).toHaveLength(1);
     expect(result.current[0]!.kills[0]).toEqual({
       killer: 'PlayerOne',
@@ -266,7 +275,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = new Map(); // empty
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current).toEqual([]);
   });
 
@@ -284,7 +294,8 @@ describe('useRivalriesList', () => {
     const rosterIds = new Set([state.roster[0]!.id]);
     const rivalWarriorStable = useRivalWarriorStableResult(state);
 
-    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable));
+    const nameResolver = useNameResolverResult(state);
+    const { result } = renderHook(() => useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver));
     expect(result.current.every((r) => r.bouts > 0)).toBe(true);
   });
 });
@@ -293,6 +304,14 @@ function useRivalWarriorStableResult(state: RivalryStateSlice) {
   const { result } = renderHook(() =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useRivalWarriorStable(state)
+  );
+  return result.current;
+}
+
+function useNameResolverResult(state: RivalryStateSlice) {
+  const { result } = renderHook(() =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useNameResolver(state)
   );
   return result.current;
 }

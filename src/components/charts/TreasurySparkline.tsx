@@ -208,9 +208,12 @@ export function TreasurySparkline({
   // Build weekly treasury snapshots from ledger entries in chronological order
   const points = useMemo(() => buildWeeklyPoints(ledger, week, treasury), [ledger, treasury, week]);
 
-  const values = points.map((p) => p.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
+  let min = Infinity;
+  let max = -Infinity;
+  for (const p of points) {
+    if (p.value < min) min = p.value;
+    if (p.value > max) max = p.value;
+  }
   const range = max - min || 1;
   const W = 200;
   const H = height;
@@ -227,8 +230,8 @@ export function TreasurySparkline({
     ? `${pathD} L ${(PAD + (W - PAD * 2)).toFixed(1)} ${(H - PAD).toFixed(1)} L ${PAD} ${(H - PAD).toFixed(1)} Z`
     : '';
 
-  const last = values[values.length - 1] ?? 0;
-  const prev = values[values.length - 2] ?? last;
+  const last = points.length ? points[points.length - 1]!.value : 0;
+  const prev = points.length >= 2 ? points[points.length - 2]!.value : last;
   const delta = last - prev;
   const isUp = delta >= 0;
 

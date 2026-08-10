@@ -337,6 +337,16 @@ export const NATURE_PATHS: Record<string, ChargePath> = {
  * Celestial_paths.
  */
 export const CELESTIAL_PATHS: Record<string, ChargePath> = {
+  sun: {
+    path: 'M50,50m-20,0a20,20,0,1,0,40,0a20,20,0,1,0,-40,0z M50,10v8 M50,82v8 M10,50h8 M82,50h8 M22,22l6,6 M72,72l6,6 M78,22l-6,6 M28,72l-6,6',
+    viewBox: '0 0 100 100',
+    name: 'Sun',
+  },
+  moon: {
+    path: 'M65,20c-15,0-28,13-28,30s13,30,28,30c-12,0-22-13-22-30s10-30,22-30z M55,30c-5,5-8,12-8,20s3,15,8,20c-8-3-14-12-14-20s6-17,14-20z',
+    viewBox: '0 0 100 100',
+    name: 'Moon',
+  },
   star: {
     path: 'M50,10L60,35L85,40L68,58L73,85L50,72L27,85L32,58L15,40L40,35L50,10z M50,25L55,40L70,42L60,52L63,68L50,60L37,68L40,52L30,42L45,40L50,25z',
     viewBox: '0 0 100 100',

@@ -241,14 +241,14 @@ export default function StableDetail() {
         <div className="lg:col-span-8 space-y-8">
           {/* Dossier Tabs */}
           <div className="flex items-center gap-8 border-b border-white/5 -mt-4">
-            {[
+            {([
               { id: 'OVERVIEW', icon: LayoutDashboard },
               { id: 'ROSTER', icon: FileText },
               { id: 'LOGS', icon: History },
-            ].map((tab) => (
+            ] as const).map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
+                onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative',
                   activeTab === tab.id

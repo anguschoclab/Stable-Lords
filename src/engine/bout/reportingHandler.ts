@@ -75,7 +75,7 @@ export function handleReporting(
     transcript: outcome.log.map((e) => e.text),
     isRivalry,
     absoluteWeek,
-    createdAt: weekToTimestamp(week),
+    createdAt: weekToTimestamp(absoluteWeek ?? week),
   };
 
   // Side effects

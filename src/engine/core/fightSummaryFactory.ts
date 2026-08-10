@@ -82,7 +82,7 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
     styleD: warriorD.style,
     transcript,
     analysis,
-    createdAt: weekToTimestamp(week),
+    createdAt: weekToTimestamp(absoluteWeek ?? week),
   };
 }
 
@@ -115,7 +115,8 @@ export function createMinimalFightSummary(
   winner: 'A' | 'D' | null,
   by: FightOutcome['by'],
   week: number,
-  rng: { uuid: (prefix?: string) => string } | IRNGService
+  rng: { uuid: (prefix?: string) => string } | IRNGService,
+  absoluteWeek?: number
 ): FightSummary {
   const id = (
     typeof rng.uuid === 'function' ? rng.uuid('bout') : (rng as IRNGService).uuid()
@@ -135,6 +136,6 @@ export function createMinimalFightSummary(
     styleA: warriorA.style,
     styleD: warriorD.style,
     transcript: [],
-    createdAt: weekToTimestamp(week),
+    createdAt: weekToTimestamp(absoluteWeek ?? week),
   };
 }

@@ -138,8 +138,6 @@ export function processAIStable(
   rivalsUpdates.set(rival.id, updatedRival);
   impacts.push({ rivalsUpdates });
 
-  // console.log(`[AIStable] ${updatedRival.owner.stableName} | Pop: ${updatedRival.roster.length} | T: ${updatedRival.treasury}`);
-
   return {
     updatedRival,
     isBankrupt,

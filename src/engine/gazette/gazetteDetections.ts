@@ -31,30 +31,95 @@ export interface GazetteDetections {
 }
 
 /**
- * Detect warriors making their debut this week — i.e. warriors who appear in
- * `weekFights` but have no earlier appearance in `allFights`. `allFights` is
- * assumed to be ordered chronologically, with `weekFights` forming its tail.
+ * Pre-computed fight analysis context shared across detection functions.
+ * Built in a single pass over `allFights` by `computeFightAnalysis`.
  */
-export function detectDebuts(weekFights: FightSummary[], allFights: FightSummary[]): string[] {
+export interface FightAnalysisContext {
+  streaks: Map<WarriorId, number>;
+  priorWarriorIds: Set<WarriorId>;
+  warriorStats: Map<WarriorId, { total: number; wins: number }>;
+  pairCounts: Map<string, number>;
+}
+
+/**
+ * Compute all fight analysis structures in a single pass over `allFights`.
+ * `allFights` is assumed to be ordered chronologically, with `weekFights` forming its tail.
+ */
+export function computeFightAnalysis(
+  weekFights: FightSummary[],
+  allFights: FightSummary[]
+): FightAnalysisContext {
   const priorCount = Math.max(0, allFights.length - weekFights.length);
-  const priorIds = new Set<WarriorId>();
-  for (let i = 0; i < priorCount; i++) {
+  const streaks = new Map<WarriorId, number>();
+  const priorWarriorIds = new Set<WarriorId>();
+  const warriorStats = new Map<WarriorId, { total: number; wins: number }>();
+  const pairCounts = new Map<string, number>();
+
+  for (let i = 0; i < allFights.length; i++) {
     const f = allFights[i];
     if (!f) continue;
-    priorIds.add(f.warriorIdA);
-    priorIds.add(f.warriorIdD);
+
+    // priorWarriorIds: only from fights before the week's tail
+    if (i < priorCount) {
+      priorWarriorIds.add(f.warriorIdA);
+      priorWarriorIds.add(f.warriorIdD);
+    }
+
+    // streaks: identical logic to computeStreaks
+    if (f.winner === 'A') {
+      const aStreak = streaks.get(f.warriorIdA) ?? 0;
+      const dStreak = streaks.get(f.warriorIdD) ?? 0;
+      streaks.set(f.warriorIdA, aStreak >= 0 ? aStreak + 1 : 1);
+      streaks.set(f.warriorIdD, dStreak <= 0 ? dStreak - 1 : -1);
+    } else if (f.winner === 'D') {
+      const aStreak = streaks.get(f.warriorIdA) ?? 0;
+      const dStreak = streaks.get(f.warriorIdD) ?? 0;
+      streaks.set(f.warriorIdD, dStreak >= 0 ? dStreak + 1 : 1);
+      streaks.set(f.warriorIdA, aStreak <= 0 ? aStreak - 1 : -1);
+    } else {
+      streaks.set(f.warriorIdA, 0);
+      streaks.set(f.warriorIdD, 0);
+    }
+
+    // warriorStats: total fights and wins per warrior
+    const aStats = warriorStats.get(f.warriorIdA);
+    if (aStats) {
+      aStats.total++;
+      if (f.winner === 'A') aStats.wins++;
+    } else {
+      warriorStats.set(f.warriorIdA, { total: 1, wins: f.winner === 'A' ? 1 : 0 });
+    }
+    const dStats = warriorStats.get(f.warriorIdD);
+    if (dStats) {
+      dStats.total++;
+      if (f.winner === 'D') dStats.wins++;
+    } else {
+      warriorStats.set(f.warriorIdD, { total: 1, wins: f.winner === 'D' ? 1 : 0 });
+    }
+
+    // pairCounts: normalized min||max key
+    const key =
+      f.warriorIdA < f.warriorIdD
+        ? `${f.warriorIdA}||${f.warriorIdD}`
+        : `${f.warriorIdD}||${f.warriorIdA}`;
+    pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
   }
-  const debutIds = new Set<WarriorId>();
-  for (const f of weekFights) {
-    if (!priorIds.has(f.warriorIdA)) debutIds.add(f.warriorIdA);
-    if (!priorIds.has(f.warriorIdD)) debutIds.add(f.warriorIdD);
-  }
-  // Resolve IDs back to names using title for display
+
+  return { streaks, priorWarriorIds, warriorStats, pairCounts };
+}
+
+/**
+ * Detect warriors making their debut this week — i.e. warriors who appear in
+ * `weekFights` but have no earlier appearance in `allFights`. Uses pre-computed
+ * `priorWarriorIds` from `FightAnalysisContext`.
+ */
+export function detectDebuts(weekFights: FightSummary[], ctx: FightAnalysisContext): string[] {
   const names = new Set<string>();
   for (const f of weekFights) {
+    if (!f) continue;
     const n = getNamesFromTitle(f.title);
-    if (debutIds.has(f.warriorIdA)) names.add(n.a);
-    if (debutIds.has(f.warriorIdD)) names.add(n.d);
+    if (!ctx.priorWarriorIds.has(f.warriorIdA)) names.add(n.a);
+    if (!ctx.priorWarriorIds.has(f.warriorIdD)) names.add(n.d);
   }
   return [...names];
 }
@@ -88,45 +153,12 @@ export function computeStreaks(allFights: FightSummary[]): Map<WarriorId, number
 
 /**
  * Detect if any fight this week involves warriors who have faced each other 3+ times.
+ * Uses pre-computed `pairCounts` from `FightAnalysisContext`.
  */
 export function detectRivalryMatchup(
   weekFights: FightSummary[],
-  allFights: FightSummary[]
+  ctx: FightAnalysisContext
 ): { a: string; b: string; count: number } | null {
-  const candidatePairs = new Set<string>();
-  const ids = new Set<WarriorId>();
-  for (let i = 0; i < weekFights.length; i++) {
-    const f = weekFights[i];
-    if (!f) continue;
-    candidatePairs.add(
-      f.warriorIdA < f.warriorIdD
-        ? `${f.warriorIdA}||${f.warriorIdD}`
-        : `${f.warriorIdD}||${f.warriorIdA}`
-    );
-    ids.add(f.warriorIdA);
-    ids.add(f.warriorIdD);
-  }
-
-  const pairCounts = new Map<string, number>();
-  for (const key of candidatePairs) {
-    pairCounts.set(key, 0);
-  }
-
-  for (let i = 0; i < allFights.length; i++) {
-    const f = allFights[i];
-    if (!f) continue;
-    if (ids.has(f.warriorIdA) && ids.has(f.warriorIdD)) {
-      const key =
-        f.warriorIdA < f.warriorIdD
-          ? `${f.warriorIdA}||${f.warriorIdD}`
-          : `${f.warriorIdD}||${f.warriorIdA}`;
-      const currentCount = pairCounts.get(key);
-      if (currentCount !== undefined) {
-        pairCounts.set(key, currentCount + 1);
-      }
-    }
-  }
-
   let best: { a: string; b: string; count: number } | null = null;
   for (let i = 0; i < weekFights.length; i++) {
     const f = weekFights[i];
@@ -135,7 +167,7 @@ export function detectRivalryMatchup(
       f.warriorIdA < f.warriorIdD
         ? `${f.warriorIdA}||${f.warriorIdD}`
         : `${f.warriorIdD}||${f.warriorIdA}`;
-    const count = pairCounts.get(key) ?? 0;
+    const count = ctx.pairCounts.get(key) ?? 0;
     if (count >= 3 && (!best || count > best.count)) {
       const n = getNamesFromTitle(f.title);
       best = { a: n.a, b: n.d, count };
@@ -187,10 +219,11 @@ export function detectHotStreakers(
 
 /**
  * Detect rising stars (3-0 warriors).
+ * Uses pre-computed `warriorStats` from `FightAnalysisContext`.
  */
-export function detectRisingStars(fights: FightSummary[], allFights: FightSummary[]): string[] {
+export function detectRisingStars(fights: FightSummary[], ctx: FightAnalysisContext): string[] {
   const risingStars: string[] = [];
-  if (!allFights || fights.length === 0) return risingStars;
+  if (fights.length === 0) return risingStars;
 
   const candidates = new Set<WarriorId>();
   for (const f of fights) {
@@ -199,32 +232,10 @@ export function detectRisingStars(fights: FightSummary[], allFights: FightSummar
     }
   }
 
-  const stats = new Map<WarriorId, { total: number; wins: number }>();
-  for (const c of candidates) {
-    stats.set(c, { total: 0, wins: 0 });
-  }
-
-  for (const af of allFights) {
-    if (candidates.has(af.warriorIdA)) {
-      const s = stats.get(af.warriorIdA);
-      if (s) {
-        s.total++;
-        if (af.winner === 'A') s.wins++;
-      }
-    }
-    if (candidates.has(af.warriorIdD)) {
-      const s = stats.get(af.warriorIdD);
-      if (s) {
-        s.total++;
-        if (af.winner === 'D') s.wins++;
-      }
-    }
-  }
-
   // Resolve rising star IDs back to names using fights from the week
   const risingIds = new Set<WarriorId>();
   for (const c of candidates) {
-    const s = stats.get(c);
+    const s = ctx.warriorStats.get(c);
     if (s && s.total === 3 && s.wins === 3) {
       risingIds.add(c);
     }

@@ -89,6 +89,27 @@ describe('StyleRollups', () => {
         Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
       });
     });
+
+    it('strips unknown extra fields from valid buckets', () => {
+      const data = {
+        Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1, evil: 'inject' },
+      };
+      mockGetItem.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.getWeekRollup(1);
+      expect(result.Sword).toBeDefined();
+      expect(result.Sword).not.toHaveProperty('evil');
+    });
+
+    it('filters out buckets with NaN values', () => {
+      const data = {
+        Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
+        Axe: { w: NaN, l: 0, k: 0, pct: 0, fights: 0 },
+      };
+      mockGetItem.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.getWeekRollup(1);
+      expect(result.Sword).toBeDefined();
+      expect(result.Axe).toBeUndefined();
+    });
   });
 
   describe('loadRolling (via last10)', () => {
@@ -185,6 +206,27 @@ describe('StyleRollups', () => {
       expect(result).toHaveLength(1);
       expect(result[0]!.style).toBe('Sword');
       expect(result[0]!.fights).toBe(1);
+    });
+
+    it('strips unknown extra fields from valid rolling buckets', () => {
+      const data = {
+        Sword: [{ W: 1, L: 0, K: 0, fights: 1, evil: 'inject' }],
+      };
+      mockGetItem2.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.last10();
+      expect(result).toHaveLength(1);
+      expect(result[0]!.fights).toBe(1);
+    });
+
+    it('omits key entirely when array contains only invalid entries', () => {
+      const data = {
+        Sword: [{ W: 1, L: 0, K: 0, fights: 1 }],
+        Axe: [{ invalid: 'data' }, { W: 'x', L: 0, K: 0, fights: 1 }],
+      };
+      mockGetItem2.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.last10();
+      expect(result).toHaveLength(1);
+      expect(result[0]!.style).toBe('Sword');
     });
   });
 
@@ -284,6 +326,19 @@ describe('StyleRollups', () => {
       const result = StyleRollups.tournament('tour1');
       expect(result).toHaveLength(1);
       expect(result[0]!.style).toBe('Sword');
+    });
+
+    it('strips unknown extra fields from valid tour week data', () => {
+      const data = {
+        tour1: {
+          Sword: { W: 1, L: 0, K: 0, fights: 1, evil: 'inject' },
+        },
+      };
+      mockGetItem3.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.tournament('tour1');
+      expect(result).toHaveLength(1);
+      expect(result[0]!.style).toBe('Sword');
+      expect(result[0]!.fights).toBe(1);
     });
   });
 

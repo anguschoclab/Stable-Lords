@@ -3,7 +3,13 @@
  * Verifies trait generation, static mod summing, and conditional mod evaluation.
  */
 import { describe, it, expect } from 'vitest';
-import { TRAITS, generateTraits, getStaticTraitMods, getDynamicTraitMods } from '@/engine/traits';
+import {
+  TRAITS,
+  generateTraits,
+  getStaticTraitMods,
+  getDynamicTraitMods,
+  getTraitFightPlanMods,
+} from '@/engine/traits';
 import { SeededRNGService } from '@/utils/random';
 import type { Warrior } from '@/types/warrior.types';
 
@@ -134,6 +140,60 @@ describe('Warrior Traits', () => {
     it('returns the zero-mods accumulator for undefined input', () => {
       const mods = getDynamicTraitMods(undefined, baseCtx);
       expect(mods).toEqual({ attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 });
+    });
+  });
+
+  describe('getTraitFightPlanMods', () => {
+    it('returns empty object for undefined warrior', () => {
+      const mods = getTraitFightPlanMods(undefined);
+      expect(mods).toEqual({});
+    });
+
+    it('returns empty object for a warrior with no traits', () => {
+      const mods = getTraitFightPlanMods(mockWarrior([]));
+      expect(mods).toEqual({});
+    });
+
+    it('returns empty object for a warrior whose traits have no fightPlanMod', () => {
+      const mods = getTraitFightPlanMods(mockWarrior(['quick', 'agile']));
+      expect(mods).toEqual({});
+    });
+
+    it('Aggressive: +4 OE, -1 AL, +5 killDesire', () => {
+      const mods = getTraitFightPlanMods(mockWarrior(['aggressive']));
+      expect(mods.OE).toBe(4);
+      expect(mods.AL).toBe(-1);
+      expect(mods.killDesire).toBe(5);
+    });
+
+    it('stacks multiple fightPlanMod traits additively', () => {
+      const mods = getTraitFightPlanMods(mockWarrior(['aggressive', 'disciplined_mind']));
+      // aggressive: OE +4, AL -1, killDesire +5
+      // disciplined_mind: AL +3, OE -1, feintTendency +5
+      expect(mods.OE).toBe(3); // 4 + (-1)
+      expect(mods.AL).toBe(2); // -1 + 3
+      expect(mods.killDesire).toBe(5); // only aggressive
+      expect(mods.feintTendency).toBe(5); // only disciplined_mind
+    });
+
+    it('ignores unknown trait ids gracefully', () => {
+      const mods = getTraitFightPlanMods(mockWarrior(['no_such_trait', 'aggressive']));
+      expect(mods.OE).toBe(4);
+      expect(mods.AL).toBe(-1);
+    });
+
+    it('Brutal: +8 OE, -5 AL, +5 killDesire', () => {
+      const mods = getTraitFightPlanMods(mockWarrior(['brutal']));
+      expect(mods.OE).toBe(8);
+      expect(mods.AL).toBe(-5);
+      expect(mods.killDesire).toBe(5);
+    });
+
+    it('Cunning: +10 feintTendency, +2 AL, -2 killDesire', () => {
+      const mods = getTraitFightPlanMods(mockWarrior(['cunning']));
+      expect(mods.feintTendency).toBe(10);
+      expect(mods.AL).toBe(2);
+      expect(mods.killDesire).toBe(-2);
     });
   });
 });

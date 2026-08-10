@@ -188,19 +188,15 @@ export function computeRivalReputation(roster: Warrior[]): StableReputation {
   const uniqueStyles = new Set<string>();
   const activeWarriors: Warrior[] = [];
 
-  // ⚡ Bolt: Single pass over roster to compute stats instead of multiple filters and reduce
+  // Single pass over roster to compute stats instead of multiple filters and reduce
   for (const w of roster) {
-    if (w.status !== 'Active') continue;
-    activeWarriors.push(w);
-    uniqueStyles.add(w.style);
-  }
-  for (let i = 0; i < roster.length; i++) {
-    const w = roster[i];
-    if (w) {
-      // Total kills and clean bouts uses full roster, not just active
-      totalKills += w.career?.kills || 0;
-      cleanBouts += (w.career?.wins || 0) + (w.career?.losses || 0) - (w.career?.kills || 0);
+    if (w.status === 'Active') {
+      activeWarriors.push(w);
+      uniqueStyles.add(w.style);
     }
+    // Total kills and clean bouts uses full roster, not just active
+    totalKills += w.career?.kills || 0;
+    cleanBouts += (w.career?.wins || 0) + (w.career?.losses || 0) - (w.career?.kills || 0);
   }
 
   const topFame = getTopFameWarriors(activeWarriors);

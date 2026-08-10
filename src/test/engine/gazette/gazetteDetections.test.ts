@@ -3,6 +3,7 @@ import {
   detectUpsets,
   detectDebuts,
   computeStreaks,
+  computeFightAnalysis,
   detectRivalryMatchup,
   detectGazetteTags,
   detectHotStreakers,
@@ -103,16 +104,12 @@ describe('detectDebuts', () => {
       createFight({ id: 'f2', a: 'Alice', d: 'Charlie' }), // Charlie debut
       createFight({ id: 'f3', a: 'Dave', d: 'Alice' }), // Dave debut
     ];
-    // allFights has f1, f2. weekFights are f2, f3.
-    // priorCount = 3 - 2 = 1.
-    // priorNames = {Alice, Bob} from f1.
-    // weekFights: f2(Alice, Charlie), f3(Dave, Alice).
-    // debuts: Charlie, Dave.
-
-    const debuts = detectDebuts(weekFights, [
+    const fullAllFights = [
       ...allFights,
       createFight({ id: 'f3', a: 'Dave', d: 'Alice' }),
-    ]);
+    ];
+    const ctx = computeFightAnalysis(weekFights, fullAllFights);
+    const debuts = detectDebuts(weekFights, ctx);
     expect(debuts).toContain('Charlie');
     expect(debuts).toContain('Dave');
     expect(debuts).not.toContain('Alice');
@@ -124,7 +121,8 @@ describe('detectDebuts', () => {
       createFight({ id: 'f1', a: 'Alice', d: 'Bob' }),
       createFight({ id: 'f2', a: 'Charlie', d: 'Dave' }),
     ];
-    const debuts = detectDebuts(weekFights, weekFights);
+    const ctx = computeFightAnalysis(weekFights, weekFights);
+    const debuts = detectDebuts(weekFights, ctx);
     expect(debuts).toHaveLength(4);
     expect(debuts).toContain('Alice');
     expect(debuts).toContain('Bob');
@@ -134,7 +132,8 @@ describe('detectDebuts', () => {
 
   it('returns an empty array when weekFights is empty', () => {
     const allFights = [createFight({ id: 'f1', a: 'Alice', d: 'Bob' })];
-    const debuts = detectDebuts([], allFights);
+    const ctx = computeFightAnalysis([], allFights);
+    const debuts = detectDebuts([], ctx);
     expect(debuts).toHaveLength(0);
   });
 
@@ -144,7 +143,9 @@ describe('detectDebuts', () => {
       createFight({ id: 'f2', a: 'Charlie', d: 'Dave' }),
       createFight({ id: 'f3', a: 'Charlie', d: 'Eve' }),
     ];
-    const debuts = detectDebuts(weekFights, [...allFights, ...weekFights]);
+    const fullAllFights = [...allFights, ...weekFights];
+    const ctx = computeFightAnalysis(weekFights, fullAllFights);
+    const debuts = detectDebuts(weekFights, ctx);
     expect(debuts).toHaveLength(3);
     expect(debuts).toContain('Charlie');
     expect(debuts).toContain('Dave');
@@ -159,8 +160,9 @@ describe('detectDebuts', () => {
       null as any as FightSummary,
     ];
     const weekFights = [createFight({ id: 'f2', a: 'Alice', d: 'Charlie' })];
-    // Ensure allFights length includes the undefined/nulls to test loop logic properly
-    const debuts = detectDebuts(weekFights, [...allFights, ...weekFights]);
+    const fullAllFights = [...allFights, ...weekFights];
+    const ctx = computeFightAnalysis(weekFights, fullAllFights);
+    const debuts = detectDebuts(weekFights, ctx);
     expect(debuts).toHaveLength(1);
     expect(debuts).toContain('Charlie');
   });
@@ -268,7 +270,8 @@ describe('detectRivalryMatchup', () => {
     const allFights = [f1, f2, f3];
     const weekFights = [f3];
 
-    const rivalry = detectRivalryMatchup(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const rivalry = detectRivalryMatchup(weekFights, ctx);
     expect(rivalry).toEqual({ a: 'Alice', b: 'Bob', count: 3 });
   });
 
@@ -278,7 +281,8 @@ describe('detectRivalryMatchup', () => {
     const allFights = [f1, f2];
     const weekFights = [f2];
 
-    const rivalry = detectRivalryMatchup(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const rivalry = detectRivalryMatchup(weekFights, ctx);
     expect(rivalry).toBeNull();
   });
 
@@ -289,7 +293,8 @@ describe('detectRivalryMatchup', () => {
     const allFights = [f1, f2, f3];
     const weekFights = [f3];
 
-    const rivalry = detectRivalryMatchup(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const rivalry = detectRivalryMatchup(weekFights, ctx);
     expect(rivalry).toEqual({ a: 'Alice', b: 'Bob', count: 3 });
   });
 
@@ -308,7 +313,8 @@ describe('detectRivalryMatchup', () => {
     const allFights = [ab1, ab2, ab3, cd1, cd2, cd3, cd4];
     const weekFights = [ab3, cd4];
 
-    const rivalry = detectRivalryMatchup(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const rivalry = detectRivalryMatchup(weekFights, ctx);
     // Should pick Charlie/Dave because count is 4 > 3
     expect(rivalry).toEqual({ a: 'Charlie', b: 'Dave', count: 4 });
   });
@@ -322,7 +328,8 @@ describe('detectRivalryMatchup', () => {
     const allFights = [f1, null, f2, undefined, f3] as any as FightSummary[];
     const weekFights = [null, f3] as any as FightSummary[];
 
-    const rivalry = detectRivalryMatchup(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const rivalry = detectRivalryMatchup(weekFights, ctx);
     expect(rivalry).toEqual({ a: 'Alice', b: 'Bob', count: 3 });
   });
 });
@@ -352,7 +359,8 @@ describe('detectRisingStars', () => {
     const allFights = [f1, f2, f3];
     const weekFights = [f3];
 
-    const stars = detectRisingStars(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const stars = detectRisingStars(weekFights, ctx);
     expect(stars).toContain('Alice');
   });
 
@@ -363,8 +371,118 @@ describe('detectRisingStars', () => {
     const allFights = [f1, f2, f3];
     const weekFights = [f3];
 
-    const stars = detectRisingStars(weekFights, allFights);
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    const stars = detectRisingStars(weekFights, ctx);
     expect(stars).toHaveLength(0);
+  });
+});
+
+describe('computeFightAnalysis', () => {
+  it('returns empty maps/sets for empty inputs', () => {
+    const ctx = computeFightAnalysis([], []);
+    expect(ctx.streaks.size).toBe(0);
+    expect(ctx.priorWarriorIds.size).toBe(0);
+    expect(ctx.warriorStats.size).toBe(0);
+    expect(ctx.pairCounts.size).toBe(0);
+  });
+
+  it('skips null/undefined entries in allFights gracefully', () => {
+    const allFights = [
+      createFight({ a: 'Alice', d: 'Bob', winner: 'A' }),
+      null as any,
+      undefined as any,
+      createFight({ a: 'Alice', d: 'Charlie', winner: 'A' }),
+    ];
+    const ctx = computeFightAnalysis([], allFights);
+    expect(ctx.streaks.get('w-alice' as WarriorId)).toBe(2);
+    expect(ctx.streaks.get('w-bob' as WarriorId)).toBe(-1);
+    expect(ctx.streaks.get('w-charlie' as WarriorId)).toBe(-1);
+  });
+
+  it('streaks output matches computeStreaks exactly (behavioral equivalence)', () => {
+    const fights = [
+      createFight({ a: 'Alice', d: 'Bob', winner: 'A' }),
+      createFight({ a: 'Alice', d: 'Charlie', winner: 'A' }),
+      createFight({ a: 'Dave', d: 'Alice', winner: 'D' }),
+      createFight({ a: 'Alice', d: 'Eve', winner: null }),
+      createFight({ a: 'Bob', d: 'Charlie', winner: 'D' }),
+    ];
+    const ctx = computeFightAnalysis([], fights);
+    const standalone = computeStreaks(fights);
+    expect(ctx.streaks.size).toBe(standalone.size);
+    for (const [key, val] of standalone) {
+      expect(ctx.streaks.get(key)).toBe(val);
+    }
+  });
+
+  it('priorWarriorIds contains warriors from [0..priorCount-1] only', () => {
+    const allFights = [
+      createFight({ a: 'Alice', d: 'Bob' }),
+      createFight({ a: 'Charlie', d: 'Dave' }),
+      createFight({ a: 'Eve', d: 'Frank' }),
+    ];
+    const weekFights = [allFights[2]!]; // Only the 3rd fight is this week
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    // priorCount = 3 - 1 = 2, so prior fights are index 0 and 1
+    expect(ctx.priorWarriorIds.has('w-alice' as WarriorId)).toBe(true);
+    expect(ctx.priorWarriorIds.has('w-bob' as WarriorId)).toBe(true);
+    expect(ctx.priorWarriorIds.has('w-charlie' as WarriorId)).toBe(true);
+    expect(ctx.priorWarriorIds.has('w-dave' as WarriorId)).toBe(true);
+    // Eve and Frank are in the week fight, not prior
+    expect(ctx.priorWarriorIds.has('w-eve' as WarriorId)).toBe(false);
+    expect(ctx.priorWarriorIds.has('w-frank' as WarriorId)).toBe(false);
+  });
+
+  it('priorWarriorIds is empty when allFights === weekFights (first week)', () => {
+    const weekFights = [
+      createFight({ a: 'Alice', d: 'Bob' }),
+      createFight({ a: 'Charlie', d: 'Dave' }),
+    ];
+    const ctx = computeFightAnalysis(weekFights, weekFights);
+    expect(ctx.priorWarriorIds.size).toBe(0);
+  });
+
+  it('warriorStats counts total fights and wins per warrior across all allFights', () => {
+    const allFights = [
+      createFight({ a: 'Alice', d: 'Bob', winner: 'A' }), // Alice: 1W, Bob: 1L
+      createFight({ a: 'Charlie', d: 'Alice', winner: 'D' }), // Alice: 2T (wins as D), Charlie: 1L
+      createFight({ a: 'Alice', d: 'Bob', winner: null }), // Alice: 3T, Bob: 2T
+    ];
+    const ctx = computeFightAnalysis([], allFights);
+    const aliceStats = ctx.warriorStats.get('w-alice' as WarriorId)!;
+    expect(aliceStats.total).toBe(3);
+    expect(aliceStats.wins).toBe(2); // Won as A in f1, won as D in f2
+    const bobStats = ctx.warriorStats.get('w-bob' as WarriorId)!;
+    expect(bobStats.total).toBe(2);
+    expect(bobStats.wins).toBe(0);
+    const charlieStats = ctx.warriorStats.get('w-charlie' as WarriorId)!;
+    expect(charlieStats.total).toBe(1);
+    expect(charlieStats.wins).toBe(0);
+  });
+
+  it('pairCounts uses normalized min||max keys, counts all pair occurrences', () => {
+    const allFights = [
+      createFight({ a: 'Alice', d: 'Bob' }),
+      createFight({ a: 'Bob', d: 'Alice' }), // Same pair, reversed order
+      createFight({ a: 'Alice', d: 'Charlie' }),
+    ];
+    const ctx = computeFightAnalysis([], allFights);
+    const aliceBobKey = 'w-alice||w-bob'; // alice < bob alphabetically
+    const aliceCharlieKey = 'w-alice||w-charlie';
+    expect(ctx.pairCounts.get(aliceBobKey)).toBe(2);
+    expect(ctx.pairCounts.get(aliceCharlieKey)).toBe(1);
+  });
+
+  it('tracks a single warrior appearing as both A and D across fights', () => {
+    const allFights = [
+      createFight({ a: 'Alice', d: 'Bob', winner: 'A' }),
+      createFight({ a: 'Charlie', d: 'Alice', winner: 'D' }), // Alice wins as D
+    ];
+    const ctx = computeFightAnalysis([], allFights);
+    const aliceStats = ctx.warriorStats.get('w-alice' as WarriorId)!;
+    expect(aliceStats.total).toBe(2);
+    expect(aliceStats.wins).toBe(2);
+    expect(ctx.streaks.get('w-alice' as WarriorId)).toBe(2);
   });
 });
 

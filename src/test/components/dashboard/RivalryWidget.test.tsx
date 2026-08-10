@@ -18,6 +18,7 @@ vi.mock('@/state/useGameStore', () => ({
 vi.mock('@/hooks/useRivalries', () => ({
   usePlayerRosterIds: vi.fn(() => new Set()),
   useRivalWarriorStable: vi.fn(() => new Map()),
+  useNameResolver: vi.fn(() => new Map()),
   useRivalriesList: (...args: unknown[]) => mockRivalriesList(args[0]),
   useMostWantedRival: (...args: unknown[]) => mockMostWantedRival(args[0]),
 }));

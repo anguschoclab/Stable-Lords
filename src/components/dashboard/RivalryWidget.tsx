@@ -10,6 +10,7 @@ import {
   useRivalWarriorStable,
   useRivalriesList,
   useMostWantedRival,
+  useNameResolver,
 } from '@/hooks/useRivalries';
 import { RivalryCard } from './RivalryCard';
 import { MostWantedBanner } from './MostWantedBanner';
@@ -34,8 +35,9 @@ export function RivalryWidget() {
     [state.roster]
   );
   const rivalWarriorStable = useRivalWarriorStable(state);
-  const rivalries = useRivalriesList(state, rosterIds, rivalWarriorStable);
-  const mostWanted = useMostWantedRival(state, rosterIds, rivalWarriorStable);
+  const nameResolver = useNameResolver(state);
+  const rivalries = useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver);
+  const mostWanted = useMostWantedRival(state, rosterIds, rivalWarriorStable, nameResolver);
 
   return (
     <Surface

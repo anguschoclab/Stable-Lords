@@ -14,14 +14,9 @@ export const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<Riv
     const update = value.get(r.id);
     return update ? { ...r, ...update } : r;
   });
-  // NF2 fix: keep rivalMap cache in sync with rivals array
+  // Rebuild rivalMap cache from the updated rivals array to guarantee sync
   if (state.rivalMap) {
-    for (const [id, update] of value) {
-      const cached = state.rivalMap.get(id);
-      if (cached) {
-        state.rivalMap.set(id, { ...cached, ...update });
-      }
-    }
+    state.rivalMap = new Map(state.rivals.map((r) => [r.id, r] as const));
   }
 };
 

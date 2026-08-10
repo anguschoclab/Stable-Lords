@@ -30,13 +30,14 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
   );
 
   const warriorNames = useMemo(() => {
-    const names = new Set<string>();
-    for (const w of state.roster ?? []) names.add(w.name);
-    for (const w of state.graveyard ?? []) names.add(w.name);
-    for (const w of state.retired ?? []) names.add(w.name);
-    for (const r of state.rivals ?? []) {
-      for (const w of r.roster) names.add(w.name);
-    }
+    const names = new Set<string>(
+      [
+        ...(state.roster ?? []),
+        ...(state.graveyard ?? []),
+        ...(state.retired ?? []),
+        ...(state.rivals ?? []).flatMap((r: any) => r.roster),
+      ].map((w) => w.name)
+    );
     return [...names];
   }, [state.roster, state.graveyard, state.retired, state.rivals]);
 

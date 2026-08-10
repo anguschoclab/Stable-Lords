@@ -10,7 +10,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { MOOD_TONE } from './gazetteTemplateHelpers';
 import {
-  computeStreaks,
+  computeFightAnalysis,
   detectRivalryMatchup,
   detectGazetteTags,
   detectHotStreakers,
@@ -37,15 +37,13 @@ export function generateWeeklyGazette(
   const moodKey = mood && MOOD_TONE[mood] ? mood : 'Calm';
   const tone = MOOD_TONE[moodKey];
 
-  // Run all detections
-  const streaks = allFights
-    ? computeStreaks(allFights)
-    : new Map<import('@/types/shared.types').WarriorId, number>();
-  const hotStreakers = detectHotStreakers(fights, streaks);
-  const rivalryPair = detectRivalryMatchup(fights, allFights ?? []);
-  const risingStars = detectRisingStars(fights, allFights ?? []);
+  // Run all detections — single pass over allFights via computeFightAnalysis
+  const ctx = allFights ? computeFightAnalysis(fights, allFights) : null;
+  const hotStreakers = detectHotStreakers(fights, ctx?.streaks ?? new Map());
+  const rivalryPair = ctx ? detectRivalryMatchup(fights, ctx) : null;
+  const risingStars = ctx ? detectRisingStars(fights, ctx) : [];
   const upsets = detectUpsets(fights);
-  const debuts = allFights ? detectDebuts(fights, allFights) : [];
+  const debuts = ctx ? detectDebuts(fights, ctx) : [];
 
   const detections: GazetteDetections = {
     tags: [],

@@ -58,3 +58,5 @@ export { TrainerSchema } from './economySchemas';
 export { SurfaceModSchema } from './economySchemas';
 export { ArenaWeatherModSchema } from './economySchemas';
 export { ArenaConfigSchema } from './economySchemas';
+export { BucketSchema } from './statsSchemas';
+export { RollingBucketSchema } from './statsSchemas';

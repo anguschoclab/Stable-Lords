@@ -40,15 +40,18 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
       entry.losses += w.career?.losses ?? 0;
       map.set(w.style, entry);
     }
-    return Array.from(map.entries())
-      .map(([style, { wins, losses }]) => ({
+    const result: StyleRow[] = [];
+    for (const [style, { wins, losses }] of map) {
+      result.push({
         style,
         wins,
         losses,
         winRate: wins + losses > 0 ? wins / (wins + losses) : 0,
         abbrev: STYLE_ABBREV[style as keyof typeof STYLE_ABBREV] ?? style,
-      }))
-      .sort((a, b) => b.winRate - a.winRate);
+      });
+    }
+    result.sort((a, b) => b.winRate - a.winRate);
+    return result;
   }, [roster]);
 
   return (

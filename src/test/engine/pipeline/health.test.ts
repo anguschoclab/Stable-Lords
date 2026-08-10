@@ -24,10 +24,10 @@ function makeMockRNG(uuidValue: string = 'test-uuid'): IRNGService {
   return {
     next: () => 0.5,
     uuid: () => uuidValue,
-    pick: <T>(arr: T[]): T => arr[0],
+    pick: <T>(arr: T[]): T => arr[0]!,
     roll: (min: number): number => min,
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0],
+    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (): boolean => true,
   } as any;
 }
@@ -45,7 +45,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.get('w1' as WarriorId)?.fatigue).toBe(25);
+      expect(impact.rosterUpdates!.get('w1' as WarriorId)?.fatigue).toBe(25);
     });
 
     it('floors fatigue at 0', () => {
@@ -56,7 +56,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.get('w1' as WarriorId)?.fatigue).toBe(0);
+      expect(impact.rosterUpdates!.get('w1' as WarriorId)?.fatigue).toBe(0);
     });
 
     it('fatigue exactly 25 drops to 0', () => {
@@ -67,7 +67,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.get('w1' as WarriorId)?.fatigue).toBe(0);
+      expect(impact.rosterUpdates!.get('w1' as WarriorId)?.fatigue).toBe(0);
     });
 
     it('no update when fatigue is 0', () => {
@@ -78,7 +78,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.size).toBe(0);
+      expect(impact.rosterUpdates!.size).toBe(0);
     });
 
     it('no update when fatigue is undefined', () => {
@@ -89,7 +89,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.size).toBe(0);
+      expect(impact.rosterUpdates!.size).toBe(0);
     });
 
     it('no update when fatigue is negative', () => {
@@ -100,7 +100,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.size).toBe(0);
+      expect(impact.rosterUpdates!.size).toBe(0);
     });
   });
 
@@ -117,7 +117,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      const update = impact.rosterUpdates.get('w1' as WarriorId);
+      const update = impact.rosterUpdates!.get('w1' as WarriorId);
       expect(update?.injuries).toHaveLength(1);
       expect(update?.injuries?.[0]?.weeksRemaining).toBe(2);
     });
@@ -130,7 +130,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.size).toBe(0);
+      expect(impact.rosterUpdates!.size).toBe(0);
       expect(impact.newsletterItems).toEqual([]);
     });
 
@@ -145,7 +145,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.size).toBe(0);
+      expect(impact.rosterUpdates!.size).toBe(0);
       expect(impact.newsletterItems).toEqual([]);
     });
 
@@ -206,7 +206,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      const update = impact.rosterUpdates.get('w1' as WarriorId);
+      const update = impact.rosterUpdates!.get('w1' as WarriorId);
       expect(update?.fatigue).toBe(25);
       expect(update?.injuries).toHaveLength(1);
       expect(update?.injuries?.[0]?.weeksRemaining).toBe(1);
@@ -220,7 +220,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      const update = impact.rosterUpdates.get('w1' as WarriorId);
+      const update = impact.rosterUpdates!.get('w1' as WarriorId);
       expect(update?.fatigue).toBe(25);
       expect(update?.injuries).toBeUndefined();
     });
@@ -279,7 +279,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state);
 
-      expect(impact.rosterUpdates.size).toBe(0);
+      expect(impact.rosterUpdates!.size).toBe(0);
       expect(impact.newsletterItems).toEqual([]);
     });
 
@@ -296,7 +296,7 @@ describe('pipeline/health', () => {
 
       const impact = computeHealthImpact(state, makeMockRNG());
 
-      expect(impact.rosterUpdates.size).toBe(2);
+      expect(impact.rosterUpdates!.size).toBe(2);
       expect(impact.newsletterItems).toHaveLength(1);
       expect(impact.newsletterItems?.[0]?.items).toEqual(['Healer recovered from Bruised Ribs.']);
     });
@@ -317,7 +317,7 @@ describe('pipeline/health', () => {
 
       const newState = applyHealthUpdates(state);
 
-      expect(newState.roster[0].fatigue).toBe(25);
+      expect(newState.roster[0]!.fatigue).toBe(25);
     });
 
     it('applies injury updates to roster', () => {
@@ -332,8 +332,8 @@ describe('pipeline/health', () => {
 
       const newState = applyHealthUpdates(state);
 
-      expect(newState.roster[0].injuries).toHaveLength(1);
-      expect(newState.roster[0].injuries[0].weeksRemaining).toBe(1);
+      expect(newState.roster[0]!.injuries).toHaveLength(1);
+      expect(newState.roster[0]!.injuries[0]!.weeksRemaining).toBe(1);
     });
 
     it('unchanged warriors retain reference equality; roster array is new', () => {
@@ -493,8 +493,8 @@ describe('pipeline/health', () => {
 
       applyHealthUpdates(state);
 
-      expect(state.roster[0].fatigue).toBe(50);
-      expect(state.roster[0].injuries[0].weeksRemaining).toBe(2);
+      expect(state.roster[0]!.fatigue).toBe(50);
+      expect(state.roster[0]!.injuries[0]!.weeksRemaining).toBe(2);
       expect(state.restStates).toBe(originalRestStates);
       expect(state.restStates).toHaveLength(1);
       expect(state.newsletter).toBe(originalNewsletter);

@@ -458,6 +458,8 @@ export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
 }
 
 export const WEATHER_PENALTIES = {
+  MIST_SHROUDED_DEFENSE_PENALTY: 0.9,
+  GALLOWS_CURSE_DAMAGE: 1.15,
   RAIN_LUNGE_INITIATIVE: -2,
   DENSE_FOG_RIPOSTE_BONUS: 3,
   DENSE_FOG_LUNGE_BONUS: 2,

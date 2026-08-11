@@ -579,3 +579,49 @@ export function handleAbyssalTempestRitual(
     }
   }
 }
+
+export function handleHauntedTrainingDummy(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 25;
+      const injuries = chosen.injuries || [];
+      const isInjured = rng.next() < 0.5;
+
+      let newInjuries = [...injuries];
+      if (isInjured) {
+        const newInjury = makeInjury(rng, {
+          name: 'Splintered Knuckles',
+          description: 'Punched a wooden dummy that punched back.',
+          severity: 'Minor',
+          weeksBase: 1,
+          weeksRange: 1,
+          penalties: { SP: -1, CN: -1 },
+        });
+        newInjuries.push(newInjury);
+      }
+
+      const currentUpdates = ctx.rosterUpdates.get(chosen.id) || {};
+      ctx.rosterUpdates.set(chosen.id, {
+        ...currentUpdates,
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: newInjuries,
+      });
+
+      const template = e.newsletter[0] || '';
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(template, { name: chosen.name })],
+      });
+    }
+  }
+}

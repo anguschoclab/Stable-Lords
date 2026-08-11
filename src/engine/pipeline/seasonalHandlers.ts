@@ -56,4 +56,5 @@ export {
   handleWanderingMystic,
   handleBountifulHarvest,
   handleAbyssalTempestRitual,
+  handleHauntedTrainingDummy,
 } from './offseasonEvents';

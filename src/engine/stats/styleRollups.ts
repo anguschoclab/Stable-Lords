@@ -285,15 +285,15 @@ export const StyleRollups = {
     Object.keys(rolling).forEach((s) => {
       const styleData = rolling[s];
       if (!styleData) return;
-      const agg = styleData.reduce(
-        (a: RollingBucket, b: RollingBucket) => ({
-          W: a.W + b.W,
-          L: a.L + b.L,
-          K: a.K + b.K,
-          fights: a.fights + b.fights,
-        }),
-        { W: 0, L: 0, K: 0, fights: 0 }
-      );
+      let aggW = 0, aggL = 0, aggK = 0, aggFights = 0;
+      for (let i = 0; i < styleData.length; i++) {
+        const b = styleData[i];
+        aggW += b.W;
+        aggL += b.L;
+        aggK += b.K;
+        aggFights += b.fights;
+      }
+      const agg = { W: aggW, L: aggL, K: aggK, fights: aggFights };
       rows.push({
         style: s,
         W: agg.W,

@@ -116,7 +116,19 @@
       "Bash(xargs head -40)",
       "PowerShell(npm run *)",
       "Bash(git commit -m 'fix\\(traits\\): restore high-tier emergence after de-saturation *)",
-      "Bash(git commit -q -m 'docs\\(plans\\): 5 implementation plans from the 2026-07-16 assessment *)"
+      "Bash(git commit -q -m 'docs\\(plans\\): 5 implementation plans from the 2026-07-16 assessment *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(echo \"TYPECHECK_EXIT=$?\")",
+      "Bash(node -e \"const ts=require\\('typescript'\\); console.log\\('versionMajorMinor=',ts.versionMajorMinor,'version=',ts.version,'keys=',Object.keys\\(ts\\).length\\)\")",
+      "Bash(gh run *)",
+      "Bash(gh api *)",
+      "Bash(git check-ignore *)",
+      "Bash(awk '{print $2}')",
+      "Bash(md5 public/audio/*.mp3)",
+      "Bash(awk '{print $NF, $2}')",
+      "Bash(md5 -q public/audio/*.mp3)",
+      "Bash(cd \"/Users/amauricia/Documents/GitHub/stable-lords\" && echo \"=== total dist js ===\" && find dist/assets -name \"*.js\" | wc -l && du -sh dist/assets && echo \"=== eager vs lazy: what index pulls ===\" && grep -c \"\" /dev/null; echo \"=== e2e specs ===\" && find e2e -type f | head -20 && echo \"=== e2e test count ===\" && grep -rn \"test\\(\\\\|it\\(\" e2e 2>/dev/null | wc -l)"
     ]
   },
   "hooks": {

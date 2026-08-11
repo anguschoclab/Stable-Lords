@@ -62,9 +62,9 @@ export default function ScreenShake({
   }, [trigger, intensity, disabled]);
 
   const shakeClass = {
-    low: 'animate-shake-low',
-    medium: 'animate-shake-medium',
-    high: 'animate-shake-high',
+    low: 'animate-shake-low motion-reduce:animate-none',
+    medium: 'animate-shake-medium motion-reduce:animate-none',
+    high: 'animate-shake-high motion-reduce:animate-none',
   }[intensity];
 
   return (

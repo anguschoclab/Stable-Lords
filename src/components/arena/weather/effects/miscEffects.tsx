@@ -23,7 +23,7 @@ export function AshfallEffect() {
       {Array.from({ length: 40 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-neutral-500/40 animate-ash-fall"
+          className="absolute w-1 h-1 bg-neutral-500/40 animate-ash-fall motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 5}s`,
@@ -51,7 +51,7 @@ export function ManaSurgeEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark"
+          className="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -75,7 +75,7 @@ export function LocustSwarmEffect() {
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,

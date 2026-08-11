@@ -67,7 +67,7 @@ describe('rivalWarriorFactory', () => {
       const warrior = createRivalWarrior(
         'w1',
         'Rival Bob',
-        FightingStyle.BRAWLER,
+        FightingStyle.StrikingAttack,
         attrs,
         's1',
         [10, 20],
@@ -76,7 +76,7 @@ describe('rivalWarriorFactory', () => {
 
       expect(warrior.id).toBe('w1');
       expect(warrior.name).toBe('Rival Bob');
-      expect(warrior.style).toBe(FightingStyle.BRAWLER);
+      expect(warrior.style).toBe(FightingStyle.StrikingAttack);
       expect(warrior.attrs).toBe(attrs);
       expect(warrior.info.stableId).toBe('s1');
       // Fame is rng.next() * (20 - 10 + 1) + 10 => 0.5 * 11 + 10 = 15.5 => 15
@@ -86,28 +86,28 @@ describe('rivalWarriorFactory', () => {
 
     it('rngWrapper.pick throws on empty array', () => {
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.BRAWLER, attrs, 's1', [10, 20], mockRNG) as any;
+      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
       expect(() => warrior._rngMocked.pick([])).toThrow('Cannot pick from empty array');
     });
 
     it('rngWrapper.pick selects correctly', () => {
       mockRNG.next.mockReturnValueOnce(0.5);
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.BRAWLER, attrs, 's1', [10, 20], mockRNG) as any;
+      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
       expect(warrior._rngMocked.pick(['a', 'b', 'c'])).toBe('b');
     });
 
     it('rngWrapper.roll rolls correctly', () => {
       mockRNG.next.mockReturnValueOnce(0.5);
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.BRAWLER, attrs, 's1', [10, 20], mockRNG) as any;
+      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
       expect(warrior._rngMocked.roll(1, 10)).toBe(6);
     });
 
     it('rngWrapper.shuffle shuffles correctly', () => {
       mockRNG.next.mockReturnValue(0.5);
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.BRAWLER, attrs, 's1', [10, 20], mockRNG) as any;
+      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
       const shuffled = warrior._rngMocked.shuffle(['a', 'b', 'c']);
       expect(shuffled.length).toBe(3);
       expect(shuffled).toContain('a');
@@ -118,7 +118,7 @@ describe('rivalWarriorFactory', () => {
     it('rngWrapper.pickWeighted handles standard cases', () => {
       mockRNG.next.mockReturnValueOnce(0.2); // total weight is 10, random is 2. it should pick first element.
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.BRAWLER, attrs, 's1', [10, 20], mockRNG) as any;
+      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
       expect(warrior._rngMocked.pickWeighted(['a', 'b'], [5, 5])).toBe('a');
     });
 
@@ -126,7 +126,7 @@ describe('rivalWarriorFactory', () => {
       // Mock random to be slightly higher than cumulative total to force fallback
       mockRNG.next.mockReturnValueOnce(1.0);
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.BRAWLER, attrs, 's1', [10, 20], mockRNG) as any;
+      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
       expect(warrior._rngMocked.pickWeighted(['a', 'b'], [5, 5])).toBe('b');
     });
   });

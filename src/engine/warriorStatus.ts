@@ -4,6 +4,7 @@
  * Import these instead of checking `.status === "Dead"` manually.
  */
 import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { RestState, TrainingAssignment } from '@/types/state.types';
 import { isTooInjuredToFight } from '@/engine/injuries';
 import { isExhausted } from '@/engine/core/fatigueUtils';
 
@@ -35,4 +36,22 @@ export function isFightReady(w: Warrior, isTournament: boolean = false): boolean
 
   const injObjs = (w.injuries || []).filter((i): i is InjuryData => typeof i !== 'string');
   return !isTooInjuredToFight(injObjs);
+}
+
+export function isBookable(
+  w: Warrior,
+  opts: {
+    restStates: RestState[];
+    trainingAssignments: TrainingAssignment[];
+    targetWeek: number;
+  }
+): boolean {
+  if (!isActive(w)) return false;
+  if (w.isDead) return false;
+  if (opts.restStates.some((r) => r.warriorId === w.id && r.restUntilWeek > opts.targetWeek))
+    return false;
+  const injObjs = (w.injuries || []).filter((i): i is InjuryData => typeof i !== 'string');
+  if (isTooInjuredToFight(injObjs)) return false;
+  if (opts.trainingAssignments.some((a) => a.warriorId === w.id)) return false;
+  return true;
 }

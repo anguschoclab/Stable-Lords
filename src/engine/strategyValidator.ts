@@ -5,9 +5,9 @@
  */
 import type { FightPlan, PhaseStrategy } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle } from '@/types/shared.types'; /**
- * Warning severity type.
- */
+import { FightingStyle } from '@/types/shared.types';
+import { getPhaseByMinute } from '@/engine/combat/phase';
+import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
 
 /**
  * Warning severity type.
@@ -116,22 +116,38 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
 /**
  * Per-minute endurance-burn estimate used by the stamina curve preview.
  * Deterministic, decoupled from the full sim: intended as a UI heuristic only.
+ * Defaults to 10 minutes to match the engine's MAX_EXCHANGES / EXCHANGES_PER_MINUTE.
  */
-export function estimateStaminaCurve(plan: FightPlan, warrior?: Warrior, minutes = 20): number[] {
+export function estimateStaminaCurve(plan: FightPlan, warrior?: Warrior, minutes = 10): number[] {
   const wt = warrior?.attributes?.WT ?? 10;
   const max = 50 + wt * 2;
   let cur = max;
   const out: number[] = [cur];
   const phases = plan.phases ?? {};
   for (let m = 1; m <= minutes; m++) {
-    const phaseKey = m <= 5 ? 'opening' : m <= 14 ? 'mid' : 'late';
+    const phaseKey = getPhaseByMinute(m, MAX_EXCHANGES, EXCHANGES_PER_MINUTE);
     const ps = (phases as Record<string, PhaseStrategy | undefined>)[phaseKey];
     const OE = ps?.OE ?? plan.OE ?? 5;
     const AL = ps?.AL ?? plan.AL ?? 5;
-    // Baseline burn: scales with combined effort, softened by WT.
-    const burn = 0.6 + (OE + AL) * 0.18 - Math.max(0, (wt - 10) * 0.04);
+    // Engine fatigue: oe * 0.18 + al * 0.09 per exchange, 3 exchanges per minute
+    const burn = EXCHANGES_PER_MINUTE * (OE * 0.18 + AL * 0.09);
     cur = Math.max(0, cur - burn);
     out.push(cur);
   }
   return out;
+}
+
+/**
+ * Returns the first minute (1-based) where stamina drops below thresholdRatio * max,
+ * or null if stamina never crosses the threshold.
+ */
+export function predictedCollapseMinute(curve: number[], thresholdRatio = 0.2): number | null {
+  const max = curve[0];
+  if (max === undefined || max <= 0) return null;
+  const threshold = max * thresholdRatio;
+  for (let i = 1; i < curve.length; i++) {
+    const v = curve[i];
+    if (v !== undefined && v < threshold) return i;
+  }
+  return null;
 }

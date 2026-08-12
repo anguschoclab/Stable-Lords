@@ -5,7 +5,10 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { FIGHT_PURSE } from '@/constants/economy';
-import { collectAllActiveWarriors } from '@/engine/core/warriorCollection';
+import { collectAllWarriors } from '@/engine/core/warriorCollection';
+import { isBookable } from '@/engine/warriorStatus';
+import { buildRecentFightPairs } from '@/engine/core/historyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 import {
   TIER_MULTIPLIERS,
   RANK_REQUIREMENTS,
@@ -97,12 +100,18 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     }
   }
 
-  // 1. Gather all active warriors using utility
-  const allWarriors = collectAllActiveWarriors(state);
+  // 1. Gather all bookable warriors (active, not resting, not too injured, not training)
+  const targetWeek = state.absoluteWeek + 2; // Forward booking
+  const allWarriors = collectAllWarriors(state, (w) =>
+    isBookable(w, {
+      restStates: state.restStates || [],
+      trainingAssignments: state.trainingAssignments || [],
+      targetWeek,
+    })
+  );
 
   // ⚡ Bolt: Pre-compute available warriors to avoid repeated availability checks
   // Available = No SIGNED or PROPOSED bout for Week+2 or Week+3
-  const targetWeek = state.absoluteWeek + 2; // Forward booking
   const unavailableWarriorIds = new Set<string>();
   Object.values(newOffers).forEach((o) => {
     const isBooked =
@@ -134,6 +143,9 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
   // Pre-build a set of player warrior ids for arena-selection favour weighting
   const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+
+  // Repeat-opponent avoidance: build set of warrior pairs that fought within last 4 weeks
+  const recentFightPairs = buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4);
 
   // 2. Iterate through Promoters
   Object.values(state.promoters || []).forEach((promoter) => {
@@ -185,6 +197,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         if (!candidate) continue;
         if (candidate.id === warriorA.id) continue;
         if (matchedIds.has(candidate.id)) continue;
+        if (recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) continue;
 
         const scoreB = sortedScores[i];
         if (scoreB === undefined) continue;

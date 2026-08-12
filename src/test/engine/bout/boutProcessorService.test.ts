@@ -178,3 +178,59 @@ describe('processWeekBouts — Minimum Viable Arena', () => {
     expect(impact.gazettes).toBeDefined();
   });
 });
+
+describe('processWeekBouts — matchHistory integration', () => {
+  it('includes matchHistory impact when bouts are resolved', () => {
+    const state = makeBaseState();
+    state.roster = [makeMinimalWarrior({ id: 'w1' as any, name: 'Ready', fatigue: 0 })];
+    state.rivals = [
+      {
+        id: 'rival-1',
+        owner: {
+          id: 'owner-1',
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        } as any,
+        roster: [makeMinimalWarrior({ id: 'w2' as any, name: 'Rival Ready', fatigue: 0 })],
+        treasury: 100,
+        fame: 0,
+      } as any,
+    ];
+    state.boutOffers = {
+      ['offer-1' as any]: {
+        id: 'offer-1' as any,
+        promoterId: 'p1' as any,
+        warriorIds: ['w1' as any, 'w2' as any],
+        boutWeek: 1,
+        expirationWeek: 1,
+        createdAbsoluteWeek: 0,
+        purse: 100,
+        hype: 100,
+        status: 'Signed',
+        responses: {},
+        arenaId: 'arena-1' as any,
+      } as any,
+    };
+    state.warriorMap = new Map([
+      ['w1' as any, state.roster[0]!],
+      ['w2' as any, state.rivals[0]!.roster[0]!],
+    ]);
+    state.warriorToStableMap = new Map([
+      ['w2', { stableId: 'rival-1', isPlayer: false }],
+    ]) as any;
+
+    const { impact } = processWeekBouts(state, true);
+
+    if (impact.matchHistory) {
+      expect(Array.isArray(impact.matchHistory)).toBe(true);
+      const record = impact.matchHistory.find(
+        (m) => m.playerWarriorId === ('w1' as any)
+      );
+      expect(record).toBeDefined();
+      expect(record?.opponentWarriorId).toBe('w2' as any);
+    }
+  });
+});

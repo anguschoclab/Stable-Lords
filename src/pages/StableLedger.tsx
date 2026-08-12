@@ -39,7 +39,7 @@ export default function StableLedger() {
   const { season, week, treasury } = useGameStore(
     useShallow((s) => ({ season: s.season, week: s.week, treasury: s.treasury }))
   );
-  const breakdown = computeWeeklyBreakdown(gameState);
+  const breakdown = computeWeeklyBreakdown({ ...gameState, isPlayer: true });
   const runway = breakdown.totalExpenses > 0 ? Math.floor(treasury / breakdown.totalExpenses) : 99;
   const isEmergency = runway < 4;
 

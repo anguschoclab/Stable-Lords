@@ -1,4 +1,5 @@
 import type { FightSummary } from '@/types/combat.types';
+import { getPairKey } from '@/utils/keyUtils';
 
 /**
  * Extracts fights from a specific week using an optimized backward loop.
@@ -117,4 +118,23 @@ export function getFightsForTournament(
     }
   }
   return result.reverse(); // Reverse to maintain chronological order
+}
+
+export function buildRecentFightPairs(
+  arenaHistory: FightSummary[],
+  currentWeek: number,
+  windowWeeks: number
+): Set<string> {
+  const pairs = new Set<string>();
+  const minWeek = currentWeek - windowWeeks;
+  for (let i = arenaHistory.length - 1; i >= 0; i--) {
+    const f = arenaHistory[i];
+    if (!f) continue;
+    const fWeek = f.absoluteWeek ?? f.week;
+    if (fWeek < minWeek) break;
+    if (f.warriorIdA && f.warriorIdD) {
+      pairs.add(getPairKey(f.warriorIdA, f.warriorIdD));
+    }
+  }
+  return pairs;
 }

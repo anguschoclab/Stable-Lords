@@ -158,8 +158,8 @@ describe('convertBidsToOffers', () => {
     expect(offer.warriorIds).toContain(warriorA.id);
     expect(offer.warriorIds).toContain(warriorB.id);
     expect(offer.status).toBe('Proposed');
-    expect(offer.boutWeek).toBe(6);
-    expect(offer.expirationWeek).toBe(6);
+    expect(offer.boutWeek).toBe(7); // displayWeek(5 + 2) = 7
+    expect(offer.expirationWeek).toBe(6); // displayWeek(5 + 1) = 6
   });
 
   it('VENDETTA bid creates offer targeting the specified stable', () => {

@@ -5,6 +5,7 @@ import { resolveEffectiveTactics } from '../combat/resolution/resolution';
 import { resolveExchange } from '../combat/resolution/resolution';
 import { narrateEvents, NarrationContext } from '../combat/narrative/narrator';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
+import { getPhaseByExchange, type PhaseKey } from '@/engine/combat/phase';
 import type { FighterState, ResolutionContext } from '../combat/resolution/types';
 import type {
   MinuteEvent,
@@ -20,14 +21,8 @@ import { minuteStatusLine, tacticStreakLine, narrateBoutEnd } from '../narrative
 
 type Phase = 'OPENING' | 'MID' | 'LATE';
 
-/**
- * Maps exchange index to a combat phase.
- */
-function getPhase(exchange: number, maxExchanges: number): Phase {
-  const p = Math.floor((exchange / maxExchanges) * 3);
-  if (p === 0) return 'OPENING';
-  if (p === 1) return 'MID';
-  return 'LATE';
+function toPhase(key: PhaseKey): Phase {
+  return key === 'opening' ? 'OPENING' : key === 'mid' ? 'MID' : 'LATE';
 }
 
 /**
@@ -76,7 +71,7 @@ export function runSimulationLoop(
   for (let ex = 0; ex < MAX_EXCHANGES; ex++) {
     const min = Math.floor(ex / EXCHANGES_PER_MINUTE) + 1;
     currentMinute = min;
-    const phase = getPhase(ex, MAX_EXCHANGES);
+    const phase = toPhase(getPhaseByExchange(ex, MAX_EXCHANGES));
     resCtx.phase = phase;
     resCtx.exchange = ex;
 

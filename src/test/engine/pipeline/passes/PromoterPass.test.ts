@@ -995,3 +995,158 @@ describe('Edge cases for optimized matching', () => {
     expect(offers.length).toBeLessThanOrEqual(250);
   });
 });
+
+describe('PromoterPass — eligibility gating', () => {
+  let state: GameState;
+
+  beforeEach(() => {
+    state = createFreshState('test-seed');
+    state = populateTestState(state);
+    const rankingsImpact = runRankingsPass(state);
+    state = resolveImpacts(state, [rankingsImpact]);
+  });
+
+  it('excludes resting warriors from generated offers', () => {
+    const restingWarrior = makeWarrior(
+      generateId(undefined, 'warrior') as WarriorId,
+      'Resting Fighter',
+      FightingStyle.StrikingAttack,
+      { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      { fame: 50 }
+    );
+    restingWarrior.id = 'resting_warrior' as WarriorId;
+    state.roster = [...state.roster, restingWarrior];
+    state.restStates = [{ warriorId: 'resting_warrior' as WarriorId, restUntilWeek: 999 }];
+    runRankingsPass(state);
+
+    (state as any).promoters = {
+      local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {});
+    const allIds = offers.flatMap((o) => o.warriorIds);
+    expect(allIds).not.toContain('resting_warrior');
+  });
+
+  it('excludes severely injured warriors from generated offers', () => {
+    const injuredWarrior = makeWarrior(
+      generateId(undefined, 'warrior') as WarriorId,
+      'Injured Fighter',
+      FightingStyle.StrikingAttack,
+      { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      { fame: 50 }
+    );
+    injuredWarrior.id = 'severely_injured' as WarriorId;
+    injuredWarrior.injuries = [
+      {
+        id: generateId(undefined, 'injury') as InjuryId,
+        name: 'Broken Arm',
+        severity: 'Severe',
+        location: 'Right Arm',
+        description: 'Broken arm',
+        weeksRemaining: 5,
+        penalties: { ST: -2, CN: -1 },
+      },
+    ];
+    state.roster = [...state.roster, injuredWarrior];
+    runRankingsPass(state);
+
+    (state as any).promoters = {
+      local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {});
+    const allIds = offers.flatMap((o) => o.warriorIds);
+    expect(allIds).not.toContain('severely_injured');
+  });
+
+  it('excludes warriors with active training assignments from generated offers', () => {
+    const trainingWarrior = makeWarrior(
+      generateId(undefined, 'warrior') as WarriorId,
+      'Training Fighter',
+      FightingStyle.StrikingAttack,
+      { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      { fame: 50 }
+    );
+    trainingWarrior.id = 'training_warrior' as WarriorId;
+    state.roster = [...state.roster, trainingWarrior];
+    state.trainingAssignments = [
+      { warriorId: 'training_warrior' as WarriorId, type: 'trait', weeksRemaining: 3 },
+    ];
+    runRankingsPass(state);
+
+    (state as any).promoters = {
+      local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {});
+    const allIds = offers.flatMap((o) => o.warriorIds);
+    expect(allIds).not.toContain('training_warrior');
+  });
+
+  it('still generates offers for healthy warriors', () => {
+    (state as any).promoters = {
+      local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {});
+    expect(offers.length).toBeGreaterThan(0);
+  });
+
+  it('does not pair warriors who fought each other within the last 4 weeks', () => {
+    const w1 = makeWarrior(
+      'rematch_w1' as WarriorId,
+      'Rematch One',
+      FightingStyle.StrikingAttack,
+      { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      { fame: 50 }
+    );
+    const w2 = makeWarrior(
+      'rematch_w2' as WarriorId,
+      'Rematch Two',
+      FightingStyle.StrikingAttack,
+      { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      { fame: 50 }
+    );
+    state.roster = [...state.roster, w1, w2];
+    state.arenaHistory = [
+      {
+        id: 'fight-1' as any,
+        week: state.week,
+        absoluteWeek: state.absoluteWeek - 2,
+        title: 'w1 vs w2',
+        warriorIdA: 'rematch_w1' as WarriorId,
+        warriorIdD: 'rematch_w2' as WarriorId,
+        winner: 'A',
+        by: 'KO',
+        styleA: FightingStyle.StrikingAttack,
+        styleD: FightingStyle.StrikingAttack,
+        flashyTags: [],
+        fameDeltaA: 0,
+        fameDeltaD: 0,
+        fameA: 50,
+        fameD: 50,
+        popularityDeltaA: 0,
+        popularityDeltaD: 0,
+        transcript: [],
+        createdAt: '',
+      },
+    ];
+    runRankingsPass(state);
+
+    (state as any).promoters = {
+      local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {});
+    const rematchOffer = offers.find(
+      (o) => o.warriorIds.includes('rematch_w1' as WarriorId) && o.warriorIds.includes('rematch_w2' as WarriorId)
+    );
+    expect(rematchOffer).toBeUndefined();
+  });
+});

@@ -290,7 +290,7 @@ describe('resolveImpacts', () => {
     expect(newState.hallOfFame[0]?.id).toBe('h1');
   });
 
-  it('handles matchHistory - appends match records', () => {
+  it('handles matchHistory - replaces match records', () => {
     const state = makeInitialState();
     const matchRecord: MatchRecord = {
       week: 1,

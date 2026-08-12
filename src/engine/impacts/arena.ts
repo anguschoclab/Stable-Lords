@@ -23,7 +23,7 @@ export const hallOfFame = (state: GameState, value: HallEntry[]) => {
  * Apply match history to state.
  */
 export const matchHistory = (state: GameState, value: MatchRecord[]) => {
-  state.matchHistory = [...(state.matchHistory || []), ...value];
+  state.matchHistory = value;
 };
 
 /**

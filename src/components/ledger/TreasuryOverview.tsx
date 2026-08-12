@@ -375,7 +375,7 @@ export function TreasuryOverview() {
       ledger: s.ledger,
     }))
   );
-  const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
+  const breakdown = useMemo(() => computeWeeklyBreakdown({ ...state, isPlayer: true }), [state]);
   const gold = state.treasury ?? 0;
 
   const activeWarriorsCount = (state.roster ?? []).filter((w) => isActive(w)).length;

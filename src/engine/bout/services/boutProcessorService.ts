@@ -13,6 +13,7 @@ import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildActiveWarriorMap } from '@/utils/roster';
 import { isFightReady } from '@/engine/warriorStatus';
 import { resolveBout } from './boutResolution';
+import { addMatchRecord } from '@/engine/matchmaking/historyLogic';
 import type { BoutResult, WeekBoutSummary } from './boutProcessorTypes';
 
 // Re-export types and resolveBout for backward compatibility
@@ -76,5 +77,36 @@ export function processWeekBouts(
   });
 
   impacts.push(finalizeWeekSideEffectsToImpact(state, results));
+
+  // Build match records for player warriors for repeat-opponent avoidance
+  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+  let updatedMatchHistory = state.matchHistory || [];
+  for (const res of results) {
+    const aIsPlayer = playerWarriorIds.has(res.a.id);
+    const dIsPlayer = playerWarriorIds.has(res.d.id);
+    if (aIsPlayer && !dIsPlayer) {
+      const stableInfo = state.warriorToStableMap?.get(res.d.id);
+      updatedMatchHistory = addMatchRecord(
+        updatedMatchHistory,
+        res.a.id,
+        res.d.id,
+        stableInfo?.stableId || '',
+        state.absoluteWeek
+      );
+    } else if (dIsPlayer && !aIsPlayer) {
+      const stableInfo = state.warriorToStableMap?.get(res.a.id);
+      updatedMatchHistory = addMatchRecord(
+        updatedMatchHistory,
+        res.d.id,
+        res.a.id,
+        stableInfo?.stableId || '',
+        state.absoluteWeek
+      );
+    }
+  }
+  if (results.length > 0) {
+    impacts.push({ matchHistory: updatedMatchHistory });
+  }
+
   return { impact: mergeImpacts(impacts), results, summary };
 }

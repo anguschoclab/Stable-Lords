@@ -79,7 +79,7 @@ const MERGE_CONFIG: MergeConfig = {
   ledgerEntries: { strategy: 'append', defaultValue: [] },
   graveyard: { strategy: 'append', defaultValue: [] },
   arenaHistory: { strategy: 'append', defaultValue: [] },
-  matchHistory: { strategy: 'append', defaultValue: [] },
+  matchHistory: { strategy: 'replace', defaultValue: [] },
   restStates: { strategy: 'append', defaultValue: [] },
   insightTokens: { strategy: 'append', defaultValue: [] },
   awards: { strategy: 'append', defaultValue: [] },

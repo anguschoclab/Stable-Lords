@@ -7,6 +7,7 @@ import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { getMatchupBonus } from '@/constants/combat';
 import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
 import { autoTuneFromBias, type Bias } from '@/engine/planBias';
+import { getStylePresets } from '@/engine/bout/stylePresets';
 import TacticBank from './planBuilder/TacticBank';
 import CommonControls from './planBuilder/CommonControls';
 import SpatialControls from './planBuilder/SpatialControls';
@@ -14,7 +15,7 @@ import PhaseOverrides from './planBuilder/PhaseOverrides';
 import StylePassives from './planBuilder/StylePassives';
 import ContingencyPlans from './planBuilder/ContingencyPlans';
 import StaminaCurve from './planBuilder/StaminaCurve';
-import { validateStrategy } from '@/engine/strategyValidator';
+import { validateStrategy, estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
 
 /* ── Sub-components ─────────────────────────────────────── */
 
@@ -40,6 +41,27 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
 
   const score = useMemo(() => computeStrategyScore(plan, warrior), [plan, warrior]);
   const warnings = useMemo(() => validateStrategy(plan, warrior), [plan, warrior]);
+
+  const stylePresets = useMemo(() => getStylePresets(plan.style), [plan.style]);
+
+  const collapseWarning = useMemo(() => {
+    const curve = estimateStaminaCurve(plan, warrior);
+    const collapse = predictedCollapseMinute(curve);
+    if (collapse !== null && collapse < 10) {
+      return {
+        code: 'PREDICTED_COLLAPSE',
+        severity: 'warn' as const,
+        message: `Warrior predicted to collapse at minute ${collapse}. Reduce OE/AL or add phase overrides.`,
+      };
+    }
+    return null;
+  }, [plan, warrior]);
+
+  const allWarnings = collapseWarning ? [...warnings, collapseWarning] : warnings;
+
+  const applyPreset = (presetPlan: FightPlan) => {
+    onPlanChange({ ...presetPlan });
+  };
 
   const biasPresets: { label: string; bias: Bias }[] = [
     { label: 'HEAD-HUNT', bias: 'head-hunt' },
@@ -115,9 +137,9 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
       <CardContent className="pt-6 space-y-8">
         <div className="flex flex-wrap items-start justify-between gap-6 pb-4 border-b border-white/5">
           <StaminaCurve plan={plan} warrior={warrior} />
-          {warnings.length > 0 && (
+          {allWarnings.length > 0 && (
             <ul className="flex-1 min-w-60 space-y-1">
-              {warnings.map((w) => (
+              {allWarnings.map((w) => (
                 <li
                   key={w.code}
                   className={cn(
@@ -154,7 +176,21 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
         <div className="pt-6 border-t border-white/5 space-y-4">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mr-2">
-              Presets
+              Style Presets
+            </span>
+            {stylePresets.map((preset) => (
+              <button
+                key={preset.name}
+                onClick={() => applyPreset(preset.plan)}
+                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors"
+              >
+                {preset.name}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mr-2">
+              Targeting
             </span>
             {biasPresets.map((preset) => (
               <button

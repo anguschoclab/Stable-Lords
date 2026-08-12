@@ -473,3 +473,102 @@ describe('planWorldBouts', () => {
     }
   });
 });
+
+describe('planWorldBouts — eligibility gating', () => {
+  let rng: IRNGService;
+
+  beforeEach(() => {
+    rng = new SeededRNGService(42);
+  });
+
+  it('excludes resting warriors from pairing', () => {
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 100)]),
+    ]);
+    state.restStates = [{ warriorId: 'w1' as WarriorId, restUntilWeek: 999 }];
+    const offers = planWorldBouts(state, rng);
+    const allIds = offers.flatMap((o) => o.warriorIds);
+    expect(allIds).not.toContain('w1');
+  });
+
+  it('excludes severely injured warriors from pairing', () => {
+    const injuredWarrior = makeTestWarrior('w2', 100, 0, {
+      injuries: [
+        {
+          id: 'inj1' as any,
+          name: 'Broken Arm',
+          severity: 'Severe',
+          location: 'Right Arm',
+          description: 'Broken arm',
+          weeksRemaining: 5,
+          penalties: {},
+        } as any,
+      ],
+    });
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+      makeTestRival('r2', [injuredWarrior]),
+    ]);
+    const offers = planWorldBouts(state, rng);
+    const allIds = offers.flatMap((o) => o.warriorIds);
+    expect(allIds).not.toContain('w2');
+  });
+
+  it('excludes warriors with training assignments from pairing', () => {
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 100)]),
+    ]);
+    state.trainingAssignments = [
+      { warriorId: 'w1' as WarriorId, type: 'trait', weeksRemaining: 3 },
+    ];
+    const offers = planWorldBouts(state, rng);
+    const allIds = offers.flatMap((o) => o.warriorIds);
+    expect(allIds).not.toContain('w1');
+  });
+
+  it('still pairs healthy warriors without rest/training/injury', () => {
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 100)]),
+    ]);
+    const offers = planWorldBouts(state, rng);
+    expect(offers.length).toBe(1);
+  });
+
+  it('does not pair warriors who fought each other within the last 4 weeks', () => {
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 100)]),
+    ]);
+    state.arenaHistory = [
+      {
+        id: 'fight-1' as any,
+        week: 1,
+        absoluteWeek: state.absoluteWeek - 2,
+        title: 'w1 vs w2',
+        warriorIdA: 'w1' as WarriorId,
+        warriorIdD: 'w2' as WarriorId,
+        winner: 'A',
+        by: 'KO',
+        styleA: FightingStyle.StrikingAttack,
+        styleD: FightingStyle.StrikingAttack,
+        flashyTags: [],
+        fameDeltaA: 0,
+        fameDeltaD: 0,
+        fameA: 100,
+        fameD: 100,
+        popularityDeltaA: 0,
+        popularityDeltaD: 0,
+        transcript: [],
+        createdAt: '',
+      } as any,
+    ];
+    const offers = planWorldBouts(state, rng);
+    const rematchOffer = offers.find(
+      (o) => o.warriorIds.includes('w1' as WarriorId) && o.warriorIds.includes('w2' as WarriorId)
+    );
+    expect(rematchOffer).toBeUndefined();
+  });
+});

@@ -4,6 +4,9 @@ import { type BoutOfferId, type PromoterId } from '@/types/shared.types';
 import { selectArenaForMatchup } from './arenaFit';
 import { weekToTimestamp } from '@/constants';
 import { displayWeek } from '@/engine/core/absoluteWeek';
+import { isBookable } from '@/engine/warriorStatus';
+import { buildRecentFightPairs } from '@/engine/core/historyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 
 const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
 
@@ -20,18 +23,24 @@ const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
  * @param rng - RNG service.
  */
 export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
+  const targetWeek = state.absoluteWeek + 1;
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
-      if (warrior.status !== 'Active') continue;
-      if (!warrior.isDead) {
+      if (isBookable(warrior, {
+        restStates: state.restStates || [],
+        trainingAssignments: state.trainingAssignments || [],
+        targetWeek,
+      })) {
         eligibleWarriors.push({ warrior, stable: rival });
       }
     }
   });
 
   if (eligibleWarriors.length < 2) return [];
+
+  const recentFightPairs = buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4);
 
   const offers: BoutOffer[] = [];
   const pairedIds = new Set<string>();
@@ -67,6 +76,7 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
       const entryD = pool[j];
       if (!entryD || pairedIds.has(entryD.warrior.id)) continue;
       if (entryA.stable.id === entryD.stable.id) continue;
+      if (recentFightPairs.has(getPairKey(entryA.warrior.id, entryD.warrior.id))) continue;
 
       const fameGap = Math.abs((entryA.warrior.fame || 0) - (entryD.warrior.fame || 0));
 

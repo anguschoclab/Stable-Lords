@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { skillCheck, getPhase, pickText, contestCheck } from '@/engine/combat/mechanics/combatMath';
+import { skillCheck, pickText, contestCheck } from '@/engine/combat/mechanics/combatMath';
 
 describe('combatMath engine', () => {
   describe('skillCheck', () => {
@@ -37,36 +37,6 @@ describe('combatMath engine', () => {
     });
   });
 
-  describe('getPhase', () => {
-    it("returns 'opening' when maxExchanges is 0 or negative", () => {
-      expect(getPhase(5, 0)).toBe('opening');
-      expect(getPhase(5, -5)).toBe('opening');
-    });
-    it("returns 'opening' when exchange is negative", () => {
-      expect(getPhase(-2, 10)).toBe('opening');
-    });
-    it("returns 'late' when exchange is greater than maxExchanges", () => {
-      expect(getPhase(15, 10)).toBe('late');
-    });
-    it("returns 'opening' when ratio is exactly the threshold (0.25)", () => {
-      expect(getPhase(2.5, 10)).toBe('opening');
-    });
-    it("returns 'opening' when ratio is below the threshold (< 0.25)", () => {
-      expect(getPhase(2, 10)).toBe('opening');
-      expect(getPhase(0, 10)).toBe('opening');
-    });
-    it("returns 'mid' when ratio is exactly the mid threshold (0.65)", () => {
-      expect(getPhase(6.5, 10)).toBe('mid');
-    });
-    it("returns 'mid' when ratio is between opening and mid thresholds", () => {
-      expect(getPhase(3, 10)).toBe('mid');
-      expect(getPhase(5, 10)).toBe('mid');
-    });
-    it("returns 'late' when ratio is above the mid threshold (> 0.65)", () => {
-      expect(getPhase(7, 10)).toBe('late');
-      expect(getPhase(10, 10)).toBe('late');
-    });
-  });
   describe('pickText', () => {
     it('returns empty string when array is empty', () => {
       const rng = vi.fn().mockReturnValue(0.5);
@@ -119,18 +89,7 @@ describe('combatMath engine', () => {
     });
   });
 
-  // ─── Phase 4: Edge cases ─────────────────────────────────────────────────────
-
-  describe('getPhase edge cases', () => {
-    it("returns 'opening' for exchange = 0", () => {
-      expect(getPhase(0, 10)).toBe('opening');
-    });
-
-    it("returns 'late' for maxExchanges = 1 with exchange = 1", () => {
-      // ratio = 1/1 = 1.0 > 0.65 → late
-      expect(getPhase(1, 1)).toBe('late');
-    });
-  });
+  // ─── Edge cases ─────────────────────────────────────────────────────────────
 
   describe('skillCheck edge cases', () => {
     it('clamps target to 1 when skill = 0 and no modifier', () => {

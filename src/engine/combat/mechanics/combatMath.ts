@@ -1,27 +1,7 @@
 import { clamp } from '@/utils/math';
 /**
- * Combat Math — RNG, phase detection, skill/contest checks.
- * Single source of truth for combat math utilities used by simulate.ts.
- */
-
-type Phase = 'opening' | 'mid' | 'late';
-
-const PHASE_OPENING_THRESHOLD = 0.25;
-const PHASE_MID_THRESHOLD = 0.65; /**
- * Get phase.
- */
-
-/**
- * Get phase.
- */
-export function getPhase(exchange: number, maxExchanges: number): Phase {
-  if (maxExchanges <= 0) return 'opening';
-  const ratio = exchange / maxExchanges;
-  if (ratio <= PHASE_OPENING_THRESHOLD) return 'opening';
-  if (ratio <= PHASE_MID_THRESHOLD) return 'mid';
-  return 'late';
-} /**
- * Pick text.
+ * Combat Math — RNG, skill/contest checks.
+ * Phase detection has moved to @/engine/combat/phase.ts (canonical module).
  */
 
 /**

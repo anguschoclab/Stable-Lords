@@ -7,6 +7,7 @@ import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { deriveAbsoluteWeek, boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 
 /**
  * Options for week advancement
@@ -206,6 +207,9 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   state.trainingAssignments = (state.trainingAssignments ?? [])
     .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
     .map((a) => ({ ...a, weeksRemaining: (a.weeksRemaining ?? 0) - 1 }));
+
+  // Prune expired rest states so warriors become bookable again after KO recovery
+  state.restStates = clearExpiredRest(state.restStates || [], state.absoluteWeek);
 
   // 🧹 Bout offer cleanup — single source of truth for offer pruning.
   if (state.boutOffers) {

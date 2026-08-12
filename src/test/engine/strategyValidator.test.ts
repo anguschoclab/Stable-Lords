@@ -3,7 +3,7 @@
  * Comprehensive test coverage for validateStrategy and estimateStaminaCurve
  */
 import { describe, it, expect } from 'vitest';
-import { validateStrategy, estimateStaminaCurve } from '@/engine/strategyValidator';
+import { validateStrategy, estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
 import { FightingStyle, type FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
@@ -614,10 +614,10 @@ describe('validateStrategy', () => {
 
 describe('estimateStaminaCurve', () => {
   describe('Basic Functionality', () => {
-    it('returns array of length minutes + 1', () => {
+    it('returns array of length minutes + 1 (default 10 minutes)', () => {
       const plan = createMockFightPlan(FightingStyle.StrikingAttack, 5, 5);
       const curve = estimateStaminaCurve(plan);
-      expect(curve).toHaveLength(21); // 20 minutes + initial value
+      expect(curve).toHaveLength(11); // 10 minutes + initial value
     });
 
     it('initial value = 50 + WT * 2', () => {
@@ -712,7 +712,7 @@ describe('estimateStaminaCurve', () => {
   });
 
   describe('Phase Overrides', () => {
-    it('opening phase (minutes 1-5) uses phase OE/AL if defined', () => {
+    it('opening phase (minutes 1-3) uses phase OE/AL if defined', () => {
       const plan: FightPlan = {
         ...createMockFightPlan(FightingStyle.StrikingAttack, 5, 5),
         phases: {
@@ -720,14 +720,14 @@ describe('estimateStaminaCurve', () => {
         },
       };
       const curve = estimateStaminaCurve(plan);
-      // First few minutes should deplete faster due to high opening phase effort
+      // First 3 minutes should deplete faster due to high opening phase effort
       const baseline = estimateStaminaCurve(
         createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
       );
-      expect(curve[5] ?? 0).toBeLessThan(baseline[5] ?? 0);
+      expect(curve[3] ?? 0).toBeLessThan(baseline[3] ?? 0);
     });
 
-    it('mid phase (minutes 6-14) uses phase OE/AL if defined', () => {
+    it('mid phase (minutes 4-7) uses phase OE/AL if defined', () => {
       const plan: FightPlan = {
         ...createMockFightPlan(FightingStyle.StrikingAttack, 5, 5),
         phases: {
@@ -735,14 +735,14 @@ describe('estimateStaminaCurve', () => {
         },
       };
       const curve = estimateStaminaCurve(plan);
-      // Minutes 6-14 should deplete faster
+      // Minutes 4-7 should deplete faster
       const baseline = estimateStaminaCurve(
         createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
       );
-      expect(curve[14] ?? 0).toBeLessThan(baseline[14] ?? 0);
+      expect(curve[7] ?? 0).toBeLessThan(baseline[7] ?? 0);
     });
 
-    it('late phase (minutes 15-20) uses phase OE/AL if defined', () => {
+    it('late phase (minutes 8-10) uses phase OE/AL if defined', () => {
       const plan: FightPlan = {
         ...createMockFightPlan(FightingStyle.StrikingAttack, 5, 5),
         phases: {
@@ -750,11 +750,11 @@ describe('estimateStaminaCurve', () => {
         },
       };
       const curve = estimateStaminaCurve(plan);
-      // Minutes 15-20 should deplete faster
+      // Minutes 8-10 should deplete faster
       const baseline = estimateStaminaCurve(
         createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
       );
-      expect(curve[20] ?? 0).toBeLessThan(baseline[20] ?? 0);
+      expect(curve[10] ?? 0).toBeLessThan(baseline[10] ?? 0);
     });
 
     it('falls back to plan OE/AL if phase not defined', () => {
@@ -765,13 +765,12 @@ describe('estimateStaminaCurve', () => {
         },
       };
       const curve = estimateStaminaCurve(plan);
-      // After opening phase, should use plan OE/AL (5, 5) - depletion rate slows but continues
-      // The curve should continue decreasing, just at a slower rate
-      expect(curve[6] ?? 0).toBeLessThan(curve[5] ?? 0); // Still depleting
-      // But the depletion from minute 5 to 6 should be less than from minute 4 to 5
-      const drop5to6 = (curve[5] ?? 0) - (curve[6] ?? 0);
-      const drop4to5 = (curve[4] ?? 0) - (curve[5] ?? 0);
-      expect(drop5to6).toBeLessThan(drop4to5);
+      // After opening phase (min 1-3), should use plan OE/AL (5, 5) — depletion rate slows
+      expect(curve[4] ?? 0).toBeLessThan(curve[3] ?? 0); // Still depleting
+      // But the depletion from minute 3 to 4 should be less than from minute 2 to 3
+      const drop3to4 = (curve[3] ?? 0) - (curve[4] ?? 0);
+      const drop2to3 = (curve[2] ?? 0) - (curve[3] ?? 0);
+      expect(drop3to4).toBeLessThan(drop2to3);
     });
 
     it('all three phases with different values', () => {
@@ -785,11 +784,11 @@ describe('estimateStaminaCurve', () => {
       };
       const curve = estimateStaminaCurve(plan);
       // Should have different depletion rates in each phase
-      expect(curve[5] ?? 0).toBeLessThan(curve[0] ?? 0); // Opening depletes fast
-      // Mid phase depletes very slowly, so the drop from minute 5 to 14 should be small
-      const drop5to14 = (curve[5] ?? 0) - (curve[14] ?? 0);
-      const drop0to5 = (curve[0] ?? 0) - (curve[5] ?? 0);
-      expect(drop5to14).toBeLessThan(drop0to5); // Mid depletes slower than opening
+      expect(curve[3] ?? 0).toBeLessThan(curve[0] ?? 0); // Opening depletes fast
+      // Mid phase depletes very slowly, so the drop from minute 3 to 7 should be small
+      const drop3to7 = (curve[3] ?? 0) - (curve[7] ?? 0);
+      const drop0to3 = (curve[0] ?? 0) - (curve[3] ?? 0);
+      expect(drop3to7).toBeLessThan(drop0to3); // Mid depletes slower than opening
     });
   });
 
@@ -841,7 +840,7 @@ describe('estimateStaminaCurve', () => {
       };
       const curve = estimateStaminaCurve(plan);
       // Should not throw error
-      expect(curve).toHaveLength(21);
+      expect(curve).toHaveLength(11);
     });
 
     it('custom minutes parameter', () => {
@@ -874,5 +873,37 @@ describe('estimateStaminaCurve', () => {
       const curve2 = estimateStaminaCurve(plan, warrior);
       expect(curve1).toEqual(curve2);
     });
+  });
+});
+
+describe('predictedCollapseMinute', () => {
+  it('returns null when stamina stays above threshold', () => {
+    const plan = createMockFightPlan(FightingStyle.StrikingAttack, 1, 1);
+    const warrior = createMockWarrior(FightingStyle.StrikingAttack, 25);
+    const curve = estimateStaminaCurve(plan, warrior);
+    expect(predictedCollapseMinute(curve)).toBeNull();
+  });
+
+  it('returns the first minute where stamina drops below 20% of max', () => {
+    const plan = createMockFightPlan(FightingStyle.StrikingAttack, 10, 10);
+    const curve = estimateStaminaCurve(plan);
+    const collapse = predictedCollapseMinute(curve);
+    expect(collapse).not.toBeNull();
+    expect(collapse).toBeGreaterThan(0);
+    expect(collapse).toBeLessThanOrEqual(10);
+  });
+
+  it('returns null for an all-zero curve (edge case)', () => {
+    expect(predictedCollapseMinute([0, 0, 0])).toBeNull();
+  });
+
+  it('uses 0.2 as default threshold ratio', () => {
+    const plan = createMockFightPlan(FightingStyle.StrikingAttack, 10, 10);
+    const curve = estimateStaminaCurve(plan);
+    const max = curve[0]!;
+    const collapse = predictedCollapseMinute(curve);
+    if (collapse !== null) {
+      expect(curve[collapse]).toBeLessThan(max * 0.2);
+    }
   });
 });

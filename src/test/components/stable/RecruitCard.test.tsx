@@ -27,6 +27,13 @@ vi.mock('@/components/ui/badge', () => ({
   ),
 }));
 
+vi.mock('@/components/ui/tooltip', () => ({
+  Tooltip: ({ children }: any) => children,
+  TooltipTrigger: ({ children }: any) => children,
+  TooltipContent: ({ children }: any) => <div>{children}</div>,
+  TooltipProvider: ({ children }: any) => children,
+}));
+
 import { RecruitCard } from '@/components/stable/RecruitCard';
 
 const baseAttrs: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };

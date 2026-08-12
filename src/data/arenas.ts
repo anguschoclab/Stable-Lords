@@ -96,6 +96,29 @@ export const STANDARD_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
+
+export const MIST_SHROUDED_RUINS: ArenaConfig = {
+  id: 'mist_shrouded_ruins',
+  name: 'Mist-Shrouded Ruins',
+  tags: ['ruins', 'magical', 'outdoor'],
+  tier: 2,
+  description: 'Ancient, crumbling walls obscured by an unnatural fog.',
+  size: 'open',
+  zoneDef: { Edge: -2 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.0 },
+};
+
+export const THE_GALLOWS_TREE: ArenaConfig = {
+  id: 'the_gallows_tree',
+  name: 'The Gallows Tree',
+  tags: ['outdoor', 'cursed', 'uneven'],
+  tier: 1,
+  description: 'A cursed fighting pit dug around the roots of a hanging tree.',
+  size: 'cramped',
+  zoneDef: { Corner: -4 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.1 },
+};
+
 /**
  * Tiny, brutal ring with uneven stones. Penalizes lunging and favors close-quarters brawling.
  */
@@ -335,7 +358,7 @@ export const FLESH_GARDENS: ArenaConfig = {
 /**
  * Arena lore entry type.
  */
-export type ArenaLoreType = 'historical_battle' | 'famous_death' | 'architectural_quirk';
+export type ArenaLoreType = 'historical_battle' | 'famous_death' | 'architectural_quirk' | 'hazard';
 
 /**
  * Defines the shape of arena lore entry.
@@ -481,6 +504,20 @@ export const IRON_FORGE: ArenaConfig = {
 };
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
+  {
+    id: 'mist_shrouded_ruins_echoes',
+    arenaId: 'mist_shrouded_ruins',
+    type: 'architectural_quirk',
+    title: 'Echoes of the Ancients',
+    narrative: 'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
+  },
+  {
+    id: 'the_gallows_tree_roots',
+    arenaId: 'the_gallows_tree',
+    type: 'hazard',
+    title: 'Grasping Roots',
+    narrative: 'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
+  },
   {
     id: 'sunken_vault_echo',
     arenaId: 'the_sunken_vault',
@@ -1146,4 +1183,6 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   ANCIENT_AQUEDUCT,
   THE_SUNKEN_VAULT,
   IRON_FORGE,
+  MIST_SHROUDED_RUINS,
+  THE_GALLOWS_TREE
 ].forEach(registerArena);

@@ -3,6 +3,7 @@ import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
+import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  *
@@ -66,11 +67,11 @@ export function useDigestSummary({
         const playerAwaitingResponse = o.warriorIds.some(
           (id) => playerWarriorIds.has(id) && (o.responses[id] === 'Pending' || !o.responses[id])
         );
-        if (o.status === 'Proposed' && o.boutWeek >= currentWeek && playerAwaitingResponse)
+        if (o.status === 'Proposed' && boutOfferAbsoluteWeek(o) > currentWeek && playerAwaitingResponse)
           acc.pending++;
         const involvesPlayer = o.warriorIds.some((id) => playerWarriorIds.has(id));
-        if (o.status === 'Signed' && o.boutWeek === currentWeek && involvesPlayer) acc.signed++;
-        if (o.status === 'Signed' && o.boutWeek > currentWeek && involvesPlayer) acc.upcoming++;
+        if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) === currentWeek + 1 && involvesPlayer) acc.signed++;
+        if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) > currentWeek + 1 && involvesPlayer) acc.upcoming++;
         return acc;
       },
       { pending: 0, signed: 0, upcoming: 0 }

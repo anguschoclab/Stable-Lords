@@ -5,6 +5,7 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { isActive } from '@/engine/warriorStatus';
+import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Collects all warriors from player roster and rival stables
@@ -52,7 +53,7 @@ export function collectAvailableWarriors(state: GameState, targetWeek: number): 
   if (offers) {
     for (const offer of Object.values(offers)) {
       if (!offer) continue;
-      if (offer.status === 'Signed' && offer.boutWeek === targetWeek) {
+      if (offer.status === 'Signed' && boutOfferAbsoluteWeek(offer) === targetWeek) {
         for (const warriorId of offer.warriorIds || []) {
           bookedWarriorIds.add(warriorId);
         }

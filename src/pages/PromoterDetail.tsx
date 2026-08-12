@@ -26,7 +26,7 @@ import {
   Award,
   AlertTriangle,
 } from 'lucide-react';
-import { displayWeek } from '@/engine/core/absoluteWeek';
+import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
 
@@ -134,7 +134,7 @@ function calculateStats(
         acc.totalPurse += o.purse;
         if (o.status === 'Signed') {
           acc.signedOffers.push(o);
-          if (o.boutWeek === currentWeek) acc.thisWeekBouts.push(o);
+          if (boutOfferAbsoluteWeek(o) === currentWeek) acc.thisWeekBouts.push(o);
         }
         if (o.status === 'Proposed') acc.proposedOffers.push(o);
         return acc;
@@ -192,7 +192,7 @@ export default function PromoterDetail() {
     if (!promoter) return [];
     return Object.values(boutOffers || {})
       .filter((o) => o.promoterId === promoter.id)
-      .sort((a, b) => a.boutWeek - b.boutWeek);
+      .sort((a, b) => boutOfferAbsoluteWeek(a) - boutOfferAbsoluteWeek(b));
   }, [promoter, boutOffers]);
 
   if (!promoter || !stats) {
@@ -436,8 +436,8 @@ export default function PromoterDetail() {
                         </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Week {displayWeek(offer.boutWeek)} • Expires Week{' '}
-                        {displayWeek(offer.expirationWeek || 0)}
+                        Week {offer.boutWeek} • Expires Week{' '}
+                        {offer.expirationWeek || 0}
                       </div>
                     </div>
                     <div className="text-right space-y-1">

@@ -42,8 +42,9 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
     id: 'offer-1' as BoutOfferId,
     promoterId: 'promoter-1' as PromoterId,
     warriorIds,
-    boutWeek: 5,
-    expirationWeek: 6,
+    boutWeek: 6,
+    expirationWeek: 5,
+    createdAbsoluteWeek: 5,
     purse: 100,
     hype: 50,
     status: 'Proposed',
@@ -110,19 +111,19 @@ describe('WeeklyDigestMini', () => {
         o1: makeOffer({
           id: 'o1' as any,
           status: 'Proposed',
-          boutWeek: 5,
+          boutWeek: 6,
           warriorIds: ['wa' as WarriorId],
         }),
         o2: makeOffer({
           id: 'o2' as any,
           status: 'Proposed',
-          boutWeek: 5,
+          boutWeek: 6,
           warriorIds: ['wc' as WarriorId],
         }),
         o3: makeOffer({
           id: 'o3' as any,
           status: 'Proposed',
-          boutWeek: 6,
+          boutWeek: 7,
           warriorIds: ['wa' as WarriorId],
         }),
       },
@@ -154,7 +155,7 @@ describe('WeeklyDigestMini', () => {
         o1: makeOffer({
           id: 'o1' as any,
           status: 'Proposed',
-          boutWeek: 5,
+          boutWeek: 6,
           warriorIds: ['wa' as WarriorId],
         }),
       },
@@ -193,7 +194,7 @@ describe('WeeklyDigestMini', () => {
         o1: makeOffer({
           id: 'o1' as any,
           status: 'Proposed',
-          boutWeek: 5,
+          boutWeek: 7,
           warriorIds: ['wa' as WarriorId],
         }),
         o2: makeOffer({

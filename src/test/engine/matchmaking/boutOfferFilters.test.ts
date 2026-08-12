@@ -8,8 +8,8 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
     id: 'offer-default' as BoutOfferId,
     promoterId: 'promoter-default' as PromoterId,
     warriorIds: [] as WarriorId[],
-    boutWeek: 10,
-    expirationWeek: 11,
+    boutWeek: 2,
+    expirationWeek: 1,
     purse: 100,
     hype: 50,
     status: 'Proposed',
@@ -66,7 +66,7 @@ describe('filterAndSortOffers', () => {
       id: 'o1' as BoutOfferId,
       warriorIds: ['w1' as WarriorId, 'w2' as WarriorId],
       status: 'Proposed',
-      boutWeek: 3,
+      boutWeek: 2,
     });
     const result = filterAndSortOffers(
       { ['o1' as BoutOfferId]: offer },
@@ -86,7 +86,7 @@ describe('filterAndSortOffers', () => {
       id: 'o1' as BoutOfferId,
       warriorIds: ['w2' as WarriorId, 'w3' as WarriorId],
       status: 'Proposed',
-      boutWeek: 3,
+      boutWeek: 2,
     });
     const result = filterAndSortOffers(
       { ['o1' as BoutOfferId]: offer },
@@ -108,35 +108,35 @@ describe('filterAndSortOffers', () => {
         id: 'proposed' as BoutOfferId,
         promoterId: 'p1' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       signed: makeOffer({
         id: 'signed' as BoutOfferId,
         promoterId: 'p2' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Signed',
       }),
       rejected: makeOffer({
         id: 'rejected' as BoutOfferId,
         promoterId: 'p3' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Rejected',
       }),
       expired: makeOffer({
         id: 'expired' as BoutOfferId,
         promoterId: 'p4' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Expired',
       }),
       canceled: makeOffer({
         id: 'canceled' as BoutOfferId,
         promoterId: 'p5' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Canceled',
       }),
     };
@@ -157,13 +157,13 @@ describe('filterAndSortOffers', () => {
       ['o1' as BoutOfferId]: makeOffer({
         id: 'o1' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       ['o2' as BoutOfferId]: makeOffer({
         id: 'o2' as BoutOfferId,
         warriorIds: ['w2' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
     };
@@ -172,14 +172,14 @@ describe('filterAndSortOffers', () => {
     expect(result.thisWeekOffers[0]!.id).toBe('o1');
   });
 
-  it('splits offers into thisWeek (week+2) and upcoming (>week+2)', () => {
+  it('splits offers into thisWeek (week+1) and upcoming (>week+1)', () => {
     const w1 = makeWarrior({ id: 'w1' as WarriorId });
     const roster = [w1];
     const offers: Record<string, BoutOffer> = {
       thisWeek: makeOffer({
         id: 'thisWeek' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 5,
+        boutWeek: 4,
         status: 'Proposed',
       }),
       upcoming: makeOffer({
@@ -191,7 +191,7 @@ describe('filterAndSortOffers', () => {
       past: makeOffer({
         id: 'past' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 4,
+        boutWeek: 3,
         status: 'Proposed',
       }),
     };
@@ -212,7 +212,7 @@ describe('filterAndSortOffers', () => {
         id: 'low' as BoutOfferId,
         promoterId: pid,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         purse: 100,
         hype: 10,
         status: 'Proposed',
@@ -221,7 +221,7 @@ describe('filterAndSortOffers', () => {
         id: 'high' as BoutOfferId,
         promoterId: pid,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         purse: 200,
         hype: 20,
         status: 'Proposed',
@@ -246,28 +246,28 @@ describe('filterAndSortOffers', () => {
         id: 'local' as BoutOfferId,
         promoterId: 'pLocal' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       regional: makeOffer({
         id: 'regional' as BoutOfferId,
         promoterId: 'pRegional' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       national: makeOffer({
         id: 'national' as BoutOfferId,
         promoterId: 'pNational' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       legendary: makeOffer({
         id: 'legendary' as BoutOfferId,
         promoterId: 'pLegendary' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
     };
@@ -315,7 +315,7 @@ describe('filterAndSortOffers', () => {
       ['o1' as BoutOfferId]: makeOffer({
         id: 'o1' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
     };
@@ -340,7 +340,7 @@ describe('filterAndSortOffers', () => {
       low: makeOffer({
         id: 'low' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         purse: 100,
         status: 'Proposed',
       }),
@@ -367,14 +367,14 @@ describe('filterAndSortOffers', () => {
         id: 'known' as BoutOfferId,
         promoterId: 'p1' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       unknown: makeOffer({
         id: 'unknown' as BoutOfferId,
         promoterId: 'ghost' as PromoterId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
     };
@@ -391,13 +391,13 @@ describe('filterAndSortOffers', () => {
       pending: makeOffer({
         id: 'pending' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       stale: makeOffer({
         id: 'stale' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
     };
@@ -417,7 +417,7 @@ describe('filterAndSortOffers', () => {
       thisWeek: makeOffer({
         id: 'thisWeek' as BoutOfferId,
         warriorIds: ['w1' as WarriorId],
-        boutWeek: 3,
+        boutWeek: 2,
         status: 'Proposed',
       }),
       upcoming: makeOffer({

@@ -8,6 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import type { Promoter, BoutOffer, PromoterPersonality } from '@/types/state.types';
+import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -35,7 +36,7 @@ function calculatePromoterStats(
     (acc, o) => {
       if (o.promoterId !== promoterId) return acc;
       acc.totalOffers++;
-      if (o.boutWeek === currentWeek && o.status === 'Signed') acc.activeThisWeek++;
+      if (boutOfferAbsoluteWeek(o) === currentWeek && o.status === 'Signed') acc.activeThisWeek++;
       if (o.status === 'Proposed') acc.pendingProposals++;
       return acc;
     },

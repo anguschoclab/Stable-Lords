@@ -17,6 +17,7 @@ import {
 } from '@/engine/promoters/personalityScoring';
 import { calculateHype } from '@/engine/promoters/hypeCalculator';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
+import { displayWeek, boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Binary search: returns the first index where arr[index] >= target.
@@ -88,8 +89,8 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   const newOffers: typeof state.boutOffers = {};
   for (const [key, offer] of Object.entries(state.boutOffers)) {
     if (!offer) continue;
-    const isPast = offer.boutWeek < state.absoluteWeek;
-    const isExpired = offer.expirationWeek < state.absoluteWeek && offer.status !== 'Signed';
+    const isPast = boutOfferAbsoluteWeek(offer) < state.absoluteWeek;
+    const isExpired = boutOfferExpirationAbsoluteWeek(offer) < state.absoluteWeek && offer.status !== 'Signed';
 
     if (!isPast && !isExpired) {
       newOffers[key as BoutOfferId] = offer;
@@ -106,7 +107,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   Object.values(newOffers).forEach((o) => {
     const isBooked =
       (o.status === 'Signed' || o.status === 'Proposed') &&
-      (o.boutWeek === targetWeek || o.boutWeek === targetWeek + 1);
+      (boutOfferAbsoluteWeek(o) === targetWeek || boutOfferAbsoluteWeek(o) === targetWeek + 1);
     if (isBooked) {
       o.warriorIds.forEach((id) => unavailableWarriorIds.add(id));
     }
@@ -237,8 +238,9 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
           id: typedOfferId,
           promoterId: promoter.id,
           warriorIds: [warriorA.id, opponentB.id],
-          boutWeek: targetWeek,
-          expirationWeek: state.absoluteWeek + 1,
+          boutWeek: displayWeek(state.absoluteWeek + 2),
+          expirationWeek: displayWeek(state.absoluteWeek + 1),
+          createdAbsoluteWeek: state.absoluteWeek,
           purse: finalPurse,
           hype,
           status: 'Proposed',

@@ -1,5 +1,6 @@
 import { GameState, Warrior } from '@/types/state.types';
 import { buildActiveWarriorMap } from '@/utils/roster';
+import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Defines the shape of bout pairing.
@@ -28,7 +29,7 @@ export function generatePairings(state: GameState): BoutPairing[] {
   // 2. Derive pairings from Signed Contracts for this week
   const allOffers = Object.values(state.boutOffers || {});
   const currentOffers = allOffers.filter(
-    (o) => o.status === 'Signed' && o.boutWeek === currentWeek
+    (o) => o.status === 'Signed' && boutOfferAbsoluteWeek(o) === currentWeek
   );
 
   currentOffers.forEach((offer) => {

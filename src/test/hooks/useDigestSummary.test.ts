@@ -194,24 +194,24 @@ describe('useDigestSummary', () => {
     expect(result.current.wins).toBe(1);
   });
 
-  it('counts Proposed offers with boutWeek >= currentWeek as pending', () => {
+  it('counts Proposed offers with boutWeek > currentWeek as pending', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
           ['offer-1' as any]: makeOffer({
             status: 'Proposed',
-            boutWeek: 10,
+            boutWeek: 11,
             warriorIds: ['wa' as WarriorId],
           }),
           ['offer-2' as any]: makeOffer({
             status: 'Proposed',
-            boutWeek: 11,
+            boutWeek: 12,
             warriorIds: ['wc' as WarriorId],
           }),
           ['offer-3' as any]: makeOffer({
             status: 'Proposed',
-            boutWeek: 9,
+            boutWeek: 10,
             warriorIds: ['wa' as WarriorId],
           }),
         },
@@ -224,12 +224,12 @@ describe('useDigestSummary', () => {
     expect(result.current.upcomingBouts).toBe(0);
   });
 
-  it('ignores Proposed offers with boutWeek < currentWeek', () => {
+  it('ignores Proposed offers with boutWeek <= currentWeek', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          ['offer-1' as any]: makeOffer({ status: 'Proposed', boutWeek: 9 }),
+          ['offer-1' as any]: makeOffer({ status: 'Proposed', boutWeek: 10 }),
         },
         currentWeek,
         playerWarriorIds,
@@ -238,14 +238,14 @@ describe('useDigestSummary', () => {
     expect(result.current.pendingOffers).toBe(0);
   });
 
-  it('counts Signed offers with boutWeek === currentWeek as signed', () => {
+  it('counts Signed offers with boutWeek === currentWeek + 1 as signed', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
           ['offer-1' as any]: makeOffer({
             status: 'Signed',
-            boutWeek: 10,
+            boutWeek: 11,
             warriorIds: ['wa' as WarriorId],
           }),
         },
@@ -257,7 +257,7 @@ describe('useDigestSummary', () => {
     expect(result.current.upcomingBouts).toBe(0);
   });
 
-  it('counts Signed offers with boutWeek > currentWeek as upcoming', () => {
+  it('counts Signed offers with boutWeek > currentWeek + 1 as upcoming', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [],
@@ -362,12 +362,12 @@ describe('useDigestSummary', () => {
     expect(result.current.kills).toBe(0);
   });
 
-  it('ignores Signed offers with boutWeek < currentWeek', () => {
+  it('ignores Signed offers with boutWeek <= currentWeek', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          ['offer-1' as any]: makeOffer({ status: 'Signed', boutWeek: 9 }),
+          ['offer-1' as any]: makeOffer({ status: 'Signed', boutWeek: 10 }),
         },
         currentWeek,
         playerWarriorIds,

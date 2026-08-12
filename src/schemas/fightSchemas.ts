@@ -48,6 +48,7 @@ export const BoutOfferSchema = z.object({
   conditions: z.array(z.string()).optional(),
   createdAt: z.string().optional(),
   arenaId: z.string().optional(),
+  createdAbsoluteWeek: z.number().optional(),
 });
 
 /**

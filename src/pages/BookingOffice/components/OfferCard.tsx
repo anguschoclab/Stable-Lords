@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
-import { displayWeek } from '@/engine/core/absoluteWeek';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import type { BoutOffer, PromoterPersonality } from '@/types/state.types';
 import type { Warrior } from '@/types/state.types';
@@ -161,7 +160,7 @@ export function OfferCard({
               Fight Week
             </span>
             <div className="text-[11px] font-display font-black uppercase">
-              Week {displayWeek(offer.boutWeek)}
+              Week {offer.boutWeek}
             </div>
           </div>
           <div className="space-y-1 text-right">

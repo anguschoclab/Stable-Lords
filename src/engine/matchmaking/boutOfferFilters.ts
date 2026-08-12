@@ -2,6 +2,7 @@ import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { Promoter } from '@/types/state.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
 import { isActive } from '@/engine/warriorStatus';
+import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 const TIER_RANK: Record<string, number> = {
   Local: 0,
@@ -63,8 +64,8 @@ export function filterAndSortOffers(
   // Split into this week and upcoming
   const { thisWeek: thisWeekRaw, upcoming: upcomingRaw } = filtered.reduce(
     (acc, o) => {
-      if (o.boutWeek === week + 2) acc.thisWeek.push(o);
-      if (o.boutWeek > week + 2) acc.upcoming.push(o);
+      if (boutOfferAbsoluteWeek(o) === week + 1) acc.thisWeek.push(o);
+      if (boutOfferAbsoluteWeek(o) > week + 1) acc.upcoming.push(o);
       return acc;
     },
     { thisWeek: [] as BoutOffer[], upcoming: [] as BoutOffer[] }
@@ -81,8 +82,8 @@ export function filterAndSortOffers(
       (TIER_RANK[promoters[a.promoterId]?.tier ?? ''] ?? 0)
   );
 
-  // Sort upcoming by bout week
-  upcoming.sort((a, b) => a.boutWeek - b.boutWeek);
+  // Sort upcoming by absolute bout week
+  upcoming.sort((a, b) => boutOfferAbsoluteWeek(a) - boutOfferAbsoluteWeek(b));
 
   // Find idle warriors (active but no offers)
   const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));

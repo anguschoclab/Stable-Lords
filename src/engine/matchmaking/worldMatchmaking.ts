@@ -3,6 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { type BoutOfferId, type PromoterId } from '@/types/shared.types';
 import { selectArenaForMatchup } from './arenaFit';
 import { weekToTimestamp } from '@/constants';
+import { displayWeek } from '@/engine/core/absoluteWeek';
 
 const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
 
@@ -94,8 +95,9 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
         promoterId: WORLD_MATCHMAKING,
         proposerStableId: entryA.stable.id,
         warriorIds: [entryA.warrior.id, bestOpponent.warrior.id],
-        boutWeek: state.absoluteWeek + 1,
-        expirationWeek: state.absoluteWeek + 1,
+        boutWeek: displayWeek(state.absoluteWeek + 2),
+        expirationWeek: displayWeek(state.absoluteWeek + 1),
+        createdAbsoluteWeek: state.absoluteWeek,
         purse: 300 + Math.floor(rng.next() * 200), // Variable purses
         hype: 100 + Math.floor(rng.next() * 100),
         status: 'Proposed',

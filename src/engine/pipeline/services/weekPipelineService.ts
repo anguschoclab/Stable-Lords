@@ -6,7 +6,7 @@ import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getStablePairKey } from '@/utils/keyUtils';
-import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { deriveAbsoluteWeek, boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Options for week advancement
@@ -212,11 +212,11 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
     const cleanedOffers: Record<string, BoutOffer> = {};
     const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
     Object.values(state.boutOffers).forEach((offer) => {
-      if (offer.boutWeek <= justFinishedWeek) return;
+      if (boutOfferAbsoluteWeek(offer) <= justFinishedWeek) return;
       if (
         offer.status !== 'Signed' &&
         offer.expirationWeek != null &&
-        offer.expirationWeek <= justFinishedWeek
+        boutOfferExpirationAbsoluteWeek(offer) <= justFinishedWeek
       ) {
         return;
       }

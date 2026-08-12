@@ -95,6 +95,9 @@ export interface BoutOffer {
   createdAt?: string;
   /** Arena where this bout will take place. Absent only for legacy/tournament offers. */
   arenaId?: string;
+  /** Absolute week when this offer was created. Disambiguates boutWeek/expirationWeek
+   *  which are stored as display weeks (1–52). Legacy saves omit this field. */
+  createdAbsoluteWeek?: number;
 } /**
  * Promoter personality type.
  */

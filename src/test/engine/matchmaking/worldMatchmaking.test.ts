@@ -376,7 +376,7 @@ describe('planWorldBouts', () => {
     expect(offers[0]!.proposerStableId).toBe('r1');
   });
 
-  it('sets boutWeek and expirationWeek to state.absoluteWeek + 1', () => {
+  it('sets boutWeek and expirationWeek as display weeks with createdAbsoluteWeek', () => {
     const state = makeTestState(
       [
         makeTestRival('r1', [makeTestWarrior('w1', 100)]),
@@ -385,8 +385,9 @@ describe('planWorldBouts', () => {
       5
     );
     const offers = planWorldBouts(state, rng);
-    expect(offers[0]!.boutWeek).toBe(6);
-    expect(offers[0]!.expirationWeek).toBe(6);
+    expect(offers[0]!.boutWeek).toBe(7); // displayWeek(5 + 2) = 7
+    expect(offers[0]!.expirationWeek).toBe(6); // displayWeek(5 + 1) = 6
+    expect(offers[0]!.createdAbsoluteWeek).toBe(5);
   });
 
   it('sets both warrior responses to Pending', () => {

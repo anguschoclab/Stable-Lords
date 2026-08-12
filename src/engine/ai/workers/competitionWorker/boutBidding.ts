@@ -315,8 +315,9 @@ export function convertBidsToOffers(
       promoterId: BID_MATCHMAKING_ID,
       proposerStableId: proposerStable.stableId as any,
       warriorIds: [bid.proposingWarriorId as WarriorId, opponent.id as WarriorId],
-      boutWeek: state.absoluteWeek + 1,
-      expirationWeek: state.absoluteWeek + 1,
+      boutWeek: displayWeek(state.absoluteWeek + 2),
+      expirationWeek: displayWeek(state.absoluteWeek + 1),
+      createdAbsoluteWeek: state.absoluteWeek,
       purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
       hype: Math.max(
         40,

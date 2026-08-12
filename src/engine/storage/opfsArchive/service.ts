@@ -111,6 +111,14 @@ export class OPFSArchiveService implements ArchiveService {
           return null;
         }
         if (parsed.meta.version !== SAVE_STATE_VERSION) {
+          try {
+            const bakHandle = await dirHandle.getFileHandle(`${slotId}.json.bak`, { create: true });
+            const bakWritable = await bakHandle.createWritable();
+            await bakWritable.write(text);
+            await bakWritable.close();
+          } catch (bakError) {
+            console.error('Failed to write .bak backup:', bakError);
+          }
           console.error(
             `incompatible save version: expected ${SAVE_STATE_VERSION}, got ${parsed.meta.version}`,
             { slotId }

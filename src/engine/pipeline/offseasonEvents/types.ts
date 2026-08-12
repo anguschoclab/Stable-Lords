@@ -7,9 +7,7 @@ import { type WarriorId } from '@/types/shared.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { isActive } from '@/engine/warriorStatus';
 
-/**
- *
- */
+/** Narrative definition for an offseason event — title, effect type, and newsletter text. */
 export interface OffseasonEventNarrative {
   title: string;
   effectType:
@@ -65,9 +63,7 @@ export interface OffseasonEventNarrative {
   newsletter: string[];
 }
 
-/**
- *
- */
+/** Context object passed to offseason event handlers — accumulates roster updates, newsletter items, ledger entries, and treasury changes. */
 export interface OffseasonEventContext {
   rosterUpdates: Map<WarriorId, Partial<Warrior>>;
   newsletterItems: NewsletterItem[];

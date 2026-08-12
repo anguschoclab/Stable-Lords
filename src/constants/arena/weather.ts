@@ -19,9 +19,7 @@ import {
 } from 'lucide-react';
 import type { WeatherType } from '@/types/shared.types';
 
-/**
- *
- */
+/** Visual configuration for a weather type — icon, color, background, and border classes. */
 export interface WeatherConfig {
   icon: LucideIcon;
   colorClass: string;
@@ -451,9 +449,7 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   },
 };
 
-/**
- *
- */
+/** Returns the weather config for a given weather type, falling back to Clear. */
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
   return WEATHER_CONFIG[weather as WeatherType] ?? WEATHER_CONFIG.Clear;
 }

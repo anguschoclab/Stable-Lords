@@ -15,9 +15,7 @@ import {
   getActiveWarriors,
 } from './types';
 
-/**
- *
- */
+/** Handler for the Chaos Rift offseason event — grants XP, fame, and gold from a chaos crystal. */
 export function handleChaosRift(
   state: GameState,
   nextWeek: number,
@@ -63,9 +61,7 @@ export function handleChaosRift(
   }
 }
 
-/**
- *
- */
+/** Handler for the Chaotic Spells offseason event — random magical effects on active warriors. */
 export function handleChaoticSpells(
   state: GameState,
   nextWeek: number,
@@ -118,9 +114,7 @@ export function handleChaoticSpells(
   }
 }
 
-/**
- *
- */
+/** Handler for the Abyssal Bargain offseason event — trades gold for warrior power at a cost. */
 export function handleAbyssalBargain(
   state: GameState,
   nextWeek: number,
@@ -174,9 +168,7 @@ export function handleAbyssalBargain(
   }
 }
 
-/**
- *
- */
+/** Handler for the Fey Trickster offseason event — random boon or bane from a fey visitor. */
 export function handleFeyTrickster(
   state: GameState,
   nextWeek: number,
@@ -235,9 +227,7 @@ export function handleFeyTrickster(
   }
 }
 
-/**
- *
- */
+/** Handler for the Rogue Alchemist offseason event — offers experimental potions with side effects. */
 export function handleRogueAlchemist(
   state: GameState,
   nextWeek: number,
@@ -288,9 +278,7 @@ export function handleRogueAlchemist(
   }
 }
 
-/**
- *
- */
+/** Handler for the Shadow Tournament offseason event — unsanctioned fights with injury risk. */
 export function handleShadowTournament(
   state: GameState,
   nextWeek: number,
@@ -342,9 +330,7 @@ export function handleShadowTournament(
   }
 }
 
-/**
- *
- */
+/** Handler for the Chaos Weaver's Game offseason event — gambles warrior traits for rewards. */
 export function handleChaosWeaversGame(
   state: GameState,
   nextWeek: number,
@@ -400,9 +386,7 @@ export function handleChaosWeaversGame(
   }
 }
 
-/**
- *
- */
+/** Handler for the Chaos Weaver Visit offseason event — bestows or removes traits. */
 export function handleChaosWeaverVisit(
   state: GameState,
   nextWeek: number,
@@ -444,9 +428,7 @@ export function handleChaosWeaverVisit(
   }
 }
 
-/**
- *
- */
+/** Handler for the Temporal Anomaly offseason event — time distortion affecting warrior age and stats. */
 export function handleTemporalAnomaly(
   state: GameState,
   nextWeek: number,
@@ -489,9 +471,7 @@ export function handleTemporalAnomaly(
   }
 }
 
-/**
- *
- */
+/** Handler for the Cursed Treasure Discovery offseason event — gold with a curse side effect. */
 export function handleCursedTreasureDiscovery(
   state: GameState,
   nextWeek: number,
@@ -534,9 +514,7 @@ export function handleCursedTreasureDiscovery(
   }
 }
 
-/**
- *
- */
+/** Handler for the Chaos Weaver's Prophecy offseason event — foretells a warrior's destiny. */
 export function handleChaosWeaversProphecy(
   state: GameState,
   nextWeek: number,
@@ -579,9 +557,7 @@ export function handleChaosWeaversProphecy(
   }
 }
 
-/**
- *
- */
+/** Handler for the Abyssal Tempest Ritual offseason event — storm ritual granting power at injury risk. */
 export function handleAbyssalTempestRitual(
   state: GameState,
   nextWeek: number,
@@ -616,6 +592,7 @@ export function handleAbyssalTempestRitual(
   }
 }
 
+/** Handler for the Unexplained Monolith offseason event — grants XP and fame at injury risk. */
 export function handleUnexplainedMonolith(
   state: GameState,
   nextWeek: number,

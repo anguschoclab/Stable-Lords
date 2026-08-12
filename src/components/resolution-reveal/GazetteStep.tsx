@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Newspaper } from 'lucide-react';
 import type { NewsletterItem } from '@/types/shared.types';
-import narrativeContent from '@/data/narrativeContent.json';
+import uiMeta from '@/data/narrative/uiMeta.json';
 
 interface GazetteStepProps {
   gazette: NewsletterItem[];
@@ -52,7 +52,7 @@ export function GazetteStep({ gazette }: GazetteStepProps) {
           </div>
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground italic">
-            {narrativeContent.fanfare.gazette_empty}
+            {(uiMeta as any).fanfare.gazette_empty}
           </div>
         )}
       </ScrollArea>

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import {
   interpolateTemplate,
   getFromArchive,
@@ -7,10 +7,12 @@ import {
   getStrikeSeverity,
 } from '@/engine/narrative/narrativePBPUtils';
 import { SeededRNG } from '@/utils/random';
+import { loadCombatNarrative } from '@/data/narrative';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 
 describe('narrativePBPUtils', () => {
+  beforeAll(async () => { await loadCombatNarrative(); });
   describe('interpolateTemplate', () => {
     it('replaces %A with attacker name', () => {
       expect(interpolateTemplate('%A attacks.', { attacker: 'Thor' })).toBe('Thor attacks.');

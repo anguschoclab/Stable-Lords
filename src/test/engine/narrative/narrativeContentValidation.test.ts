@@ -3,7 +3,7 @@
  * including name dedup, placeholder usage, and event handler coverage.
  */
 import { describe, it, expect } from 'vitest';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 
 describe('narrative content validation', () => {
   it('no duplicate entries in recruitment.names', () => {

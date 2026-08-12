@@ -82,7 +82,7 @@ describe('Week Advancement Integration', () => {
       expect(state.roster[0]!.id).toBe(originalId);
     });
 
-    it('should not mutate the input state', () => {
+    it('should not mutate the input state', async () => {
       const originalWeek = initialState.week;
       const originalRosterLength = initialState.roster.length;
 

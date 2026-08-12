@@ -2,7 +2,7 @@ import type { GameState, NewsletterItem, LedgerEntry } from '@/types/state.types
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import { StateImpact } from '@/engine/impacts';
 import { type WarriorId, type InjuryId } from '@/types/shared.types';
 import type { EventNarrative } from '@/types/narrative.types';
@@ -30,7 +30,7 @@ export function runEventPass(
   const newsletterItems: NewsletterItem[] = [];
   let treasuryDelta = 0;
   const ledgerEntries: LedgerEntry[] = [];
-  const events = narrativeContent.events as Record<string, EventNarrative>;
+  const events = narrativeContent.events as unknown as Record<string, EventNarrative>;
 
   // 🍺 Tavern Brawl Event
   if (brawlRng.next() < 0.05 && state.roster.length > 0) {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import {
   templateStringSchema,
@@ -212,6 +212,7 @@ describe('daily_bard', () => {
     it('merges and deduplicates new templates', async () => {
       const existing: any = makeValidData();
       existing.blurbs.neutral = ['%A defeated %D%H.', 'Existing template.'];
+      // Mock returns full data for every readFile call (both readMerged and writeSplit)
       mockReadFile.mockResolvedValue(JSON.stringify(existing));
       mockWriteFile.mockResolvedValue(undefined);
 
@@ -219,9 +220,12 @@ describe('daily_bard', () => {
         'blurbs.neutral': ['%A defeated %D%H.', 'New unique template.'],
       });
 
-      const writeCall = mockWriteFile.mock.calls[0];
-      expect(writeCall).toBeDefined();
-      const written = JSON.parse(writeCall![1] as string);
+      // writeSplitNarrative writes to multiple domain files; find the announcer write
+      const announcerWrite = mockWriteFile.mock.calls.find(
+        (call: any[]) => typeof call[0] === 'string' && call[0].includes('announcer.json')
+      );
+      expect(announcerWrite).toBeDefined();
+      const written = JSON.parse(announcerWrite![1] as string);
       expect(written.blurbs.neutral).toContain('Existing template.');
       expect(written.blurbs.neutral).toContain('New unique template.');
       // Deduped: only one instance of the duplicate
@@ -287,13 +291,20 @@ describe('daily_bard', () => {
     });
   });
 
-  // I. Real data validation — validates actual narrativeContent.json against schema
+  // I. Real data validation — validates actual narrative domain files against schema
   describe('I. Real data validation', () => {
-    const dataPath = resolve(__dirname, '../data/narrativeContent.json');
-    const rawData = readFileSync(dataPath, 'utf-8');
-    const parsed = JSON.parse(rawData);
+    const narrativeDir = resolve(__dirname, '../data/narrative');
+    const files = readdirSync(narrativeDir).filter((f: string) => f.endsWith('.json'));
+    const parsed: Record<string, unknown> = {};
+    for (const file of files) {
+      const raw = readFileSync(resolve(narrativeDir, file), 'utf-8');
+      const data = JSON.parse(raw);
+      for (const [key, val] of Object.entries(data)) {
+        parsed[key] = val;
+      }
+    }
 
-    it('NarrativeSchema.parse() accepts actual narrativeContent.json without error', () => {
+    it('NarrativeSchema.parse() accepts merged domain files without error', () => {
       expect(() => NarrativeSchema.parse(parsed)).not.toThrow();
     });
 

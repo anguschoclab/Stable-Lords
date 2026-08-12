@@ -1,9 +1,8 @@
 import { BaseSkills } from '@/types/shared.types';
 import { computeCoordination, computeActivityRating } from './terrabloodCharts';
-import narrativeContent from './narrativeContent.json';
-import type { NarrativeContent } from '@/types/narrative.types'; /**
- * Defines the shape of warrior overview statements.
- */
+import uiMeta from '@/data/narrative/uiMeta.json';
+
+const persona = (uiMeta as any).persona;
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -109,7 +108,7 @@ export function generateWarriorStatements(
   skills: BaseSkills
 ): WarriorOverviewStatements {
   const isGoodWit = wt > 7;
-  const p = (narrativeContent as NarrativeContent).persona;
+  const p = persona;
 
   function getStatement(skillKey: string, baseValue: number, highThreshold: number): string {
     const witKey = isGoodWit ? 'good' : 'bad';

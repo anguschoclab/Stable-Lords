@@ -22,7 +22,7 @@ vi.mock('@/lib/AudioManager', () => ({
 }));
 
 // Mock narrative content
-vi.mock('@/data/narrativeContent.json', () => ({
+vi.mock('@/data/narrative/uiMeta.json', () => ({
   default: {
     fanfare: {
       resolution_title: 'Results',
@@ -33,10 +33,8 @@ vi.mock('@/data/narrativeContent.json', () => ({
     memorials: {
       tributes: ['The arena grows colder with the loss of {{name}}.'],
     },
-    crowd_reactions: {
-      Bloodthirsty: ['The crowd howls for blood!'],
-      Theatrical: ['The crowd gasps in awe!'],
-    },
+    meta: { flair: {}, title: {}, injury: {}, status: {} },
+    persona: { good: {}, bad: {}, descriptors: { coordination: {} } },
   },
 }));
 

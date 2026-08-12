@@ -1,22 +1,17 @@
-import combatPbp from './combatPbp.json';
-import combatStrikes from './combatStrikes.json';
-import combatKillText from './combatKillText.json';
-import combatConclusions from './combatConclusions.json';
-import combatPassives from './combatPassives.json';
+import type { NarrativeContent } from '@/types/narrative.types';
+
+// Non-combat files are eagerly imported (small, needed at startup)
 import gazetteData from './gazette.json';
 import recruitmentData from './recruitment.json';
 import offseasonData from './offseason.json';
 import announcerData from './announcer.json';
 import uiMetaData from './uiMeta.json';
-import type { NarrativeContent } from '@/types/narrative.types';
+
+// Combat files are lazy-loaded via loadCombatNarrative()
+let combatCache: Promise<void> | null = null;
 
 export const narrativeContent: NarrativeContent = {
-  pbp: (combatPbp as any).pbp,
-  strikes: (combatStrikes as any).strikes,
-  kill_text: (combatKillText as any).kill_text,
-  conclusions: (combatConclusions as any).conclusions,
-  passives: (combatPassives as any).passives,
-  crowd_reactions: (combatPbp as any).crowd_reactions,
+  // Non-combat data (available immediately)
   gazette: (gazetteData as any).gazette,
   ux_metadata: (gazetteData as any).ux_metadata,
   recruitment: (recruitmentData as any).recruitment,
@@ -29,8 +24,32 @@ export const narrativeContent: NarrativeContent = {
   meta: (uiMetaData as any).meta,
   persona: (uiMetaData as any).persona,
   memorials: (uiMetaData as any).memorials,
+  // Combat data (undefined until loadCombatNarrative() resolves)
+  pbp: undefined as any,
+  strikes: undefined as any,
+  conclusions: undefined as any,
+  passives: undefined as any,
+  kill_text: undefined as any,
+  crowd_reactions: undefined as any,
 };
 
-export async function loadCombatNarrative(): Promise<void> {
-  // Stub — real lazy-loading implemented in Phase 3
+export function loadCombatNarrative(): Promise<void> {
+  if (combatCache) return combatCache;
+  combatCache = (async () => {
+    const [pbpData, strikesData, killTextData, conclusionsData, passivesData] =
+      await Promise.all([
+        import('./combatPbp.json'),
+        import('./combatStrikes.json'),
+        import('./combatKillText.json'),
+        import('./combatConclusions.json'),
+        import('./combatPassives.json'),
+      ]);
+    narrativeContent.pbp = (pbpData as any).default.pbp;
+    narrativeContent.crowd_reactions = (pbpData as any).default.crowd_reactions;
+    narrativeContent.strikes = (strikesData as any).default.strikes;
+    narrativeContent.kill_text = (killTextData as any).default.kill_text;
+    narrativeContent.conclusions = (conclusionsData as any).default.conclusions;
+    narrativeContent.passives = (passivesData as any).default.passives;
+  })();
+  return combatCache;
 }

@@ -3,7 +3,7 @@
  * after merging PR #752 (curate-combat-narrative) and PR #747 (cosmic-anomaly).
  */
 import { describe, it, expect } from 'vitest';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 
 describe('narrative content integrity', () => {
   it('narrativeContent is a valid object', () => {

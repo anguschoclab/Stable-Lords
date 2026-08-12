@@ -1,17 +1,17 @@
 /**
  * Narrative content validation script.
- * Validates narrativeContent.json for structural integrity:
+ * Validates split domain JSON files for structural integrity:
  * - Valid JSON
  * - All template brackets {{...}} are balanced
  * - No duplicate entries within arrays
  * - Required top-level keys present
  */
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CONTENT_PATH = resolve(__dirname, '../src/data/narrativeContent.json');
+const NARRATIVE_DIR = resolve(__dirname, '../src/data/narrative');
 
 interface ValidationError {
   path: string;
@@ -70,8 +70,16 @@ function walkStrings(obj: unknown, path: string): void {
 }
 
 try {
-  const raw = readFileSync(CONTENT_PATH, 'utf-8');
-  const data = JSON.parse(raw);
+  // Read and merge all domain files
+  const files = readdirSync(NARRATIVE_DIR).filter(f => f.endsWith('.json'));
+  const data: Record<string, unknown> = {};
+  for (const file of files) {
+    const raw = readFileSync(resolve(NARRATIVE_DIR, file), 'utf-8');
+    const parsed = JSON.parse(raw);
+    for (const [key, val] of Object.entries(parsed)) {
+      data[key] = val;
+    }
+  }
 
   const REQUIRED_KEYS = ['ux_metadata', 'meta', 'offseason_events', 'kill_text'];
   for (const key of REQUIRED_KEYS) {
@@ -83,7 +91,7 @@ try {
   walkStrings(data, '');
 
   if (errors.length === 0) {
-    console.log('narrativeContent.json validation passed — no errors found.');
+    console.log('narrative domain files validation passed — no errors found.');
     process.exit(0);
   } else {
     console.error(`Validation failed with ${errors.length} error(s):`);
@@ -93,6 +101,6 @@ try {
     process.exit(1);
   }
 } catch (err) {
-  console.error('Failed to parse narrativeContent.json:', err);
+  console.error('Failed to parse narrative domain files:', err);
   process.exit(1);
 }

@@ -33,7 +33,7 @@ jobs:
         run: |
           git config --global user.name "The Bard"
           git config --global user.email "bard@blood-sands.sl"
-          git add src/data/narrativeContent.json
+          git add src/data/narrative/
           git add Daily_Bard_Report.md
           git commit -m "📜 Bardic Expansion: [$(date +'%Y-%m-%d')] — Transcribing more combat lore" || echo "No changes to commit"
           git push

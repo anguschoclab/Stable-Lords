@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Skull } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import type { Warrior } from '@/types/warrior.types';
-import narrativeContent from '@/data/narrativeContent.json';
+import uiMeta from '@/data/narrative/uiMeta.json';
 import { hashStr } from '@/utils/random';
 
 interface MemorialStepProps {
@@ -10,7 +10,7 @@ interface MemorialStepProps {
 }
 
 function pickTribute(name: string): string | null {
-  const tributes = (narrativeContent as any).memorials?.tributes;
+  const tributes = (uiMeta as any).memorials?.tributes;
   if (!tributes || !Array.isArray(tributes) || tributes.length === 0) return null;
   const idx = hashStr(name) % tributes.length;
   const template = tributes[idx];
@@ -31,7 +31,7 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
       <div className="z-10 flex flex-col items-center max-w-full">
         <Skull className="h-16 w-16 mb-4 text-muted-foreground animate-pulse motion-reduce:animate-none drop-shadow-[0_0_15px_rgba(200,0,0,0.3)]" />
         <h2 className="text-3xl font-display text-center mb-8 uppercase tracking-widest text-foreground">
-          {narrativeContent.fanfare.memorial_title}
+          {(uiMeta as any).fanfare.memorial_title}
         </h2>
         <div className="flex gap-6 overflow-x-auto pb-4 max-w-[100%]">
           {deadWarriors.map((w) => {
@@ -51,7 +51,7 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
                   </p>
                 )}
                 <p className="text-sm text-muted-foreground mb-4 italic leading-relaxed">
-                  {w.deathCause || narrativeContent.fanfare.memorial_default}
+                  {w.deathCause || (uiMeta as any).fanfare.memorial_default}
                 </p>
                 <Separator className="bg-border mb-4" />
                 <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground text-left">

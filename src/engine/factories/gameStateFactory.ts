@@ -4,7 +4,7 @@
  */
 import type { GameState, OwnerPersonality, RivalStableData } from '@/types/state.types';
 import { type PoolWarrior } from '@/engine/recruitment';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';

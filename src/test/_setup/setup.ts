@@ -4,8 +4,12 @@ import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
+import { loadCombatNarrative } from '@/data/narrative';
 
 enableMapSet();
+
+// Eagerly load combat narrative data for all tests
+beforeAll(async () => { await loadCombatNarrative(); });
 
 /**
  * Mock localStorage implementation for Bun/Vitest environment.

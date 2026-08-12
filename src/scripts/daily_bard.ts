@@ -3,8 +3,45 @@ import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { z } from 'zod';
 
-const NARRATIVE_FILE = path.join(process.cwd(), 'src/data/narrativeContent.json');
+const NARRATIVE_DIR = path.join(process.cwd(), 'src/data/narrative');
 const REPORT_FILE = path.join(process.cwd(), 'Daily_Bard_Report.md');
+
+// Domain file → keys mapping (must match src/data/narrative/index.ts)
+const DOMAIN_FILES: Record<string, string[]> = {
+  combatPbp: ['pbp', 'crowd_reactions'],
+  combatStrikes: ['strikes'],
+  combatKillText: ['kill_text'],
+  combatConclusions: ['conclusions'],
+  combatPassives: ['passives'],
+  gazette: ['gazette', 'ux_metadata'],
+  recruitment: ['recruitment'],
+  offseason: ['offseason_events', 'events'],
+  announcer: ['blurbs', 'commentary', 'recap'],
+  uiMeta: ['fanfare', 'meta', 'persona', 'memorials'],
+};
+
+async function readMergedNarrative(): Promise<Record<string, unknown>> {
+  const merged: Record<string, unknown> = {};
+  for (const [file, keys] of Object.entries(DOMAIN_FILES)) {
+    const filePath = path.join(NARRATIVE_DIR, `${file}.json`);
+    const raw = JSON.parse((await fs.readFile(filePath, 'utf-8')).toString());
+    for (const key of keys) {
+      if (raw[key] !== undefined) merged[key] = raw[key];
+    }
+  }
+  return merged;
+}
+
+async function writeSplitNarrative(data: Record<string, unknown>): Promise<void> {
+  for (const [file, keys] of Object.entries(DOMAIN_FILES)) {
+    const filePath = path.join(NARRATIVE_DIR, `${file}.json`);
+    const existing = JSON.parse((await fs.readFile(filePath, 'utf-8')).toString());
+    for (const key of keys) {
+      if (data[key] !== undefined) existing[key] = data[key];
+    }
+    await fs.writeFile(filePath, JSON.stringify(existing, null, 2), 'utf-8');
+  }
+}
 
 const VALID_VARIABLES = ['%A', '%D', '%W', '%BP', '%H'];
 
@@ -221,8 +258,8 @@ export async function validate_with_retry(
  * Atomic merge and write to the archive.
  */
 export async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
-  const rawData = (await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString();
-  const data: ValidatedJSON = JSON.parse(rawData);
+  const rawData = await readMergedNarrative();
+  const data: ValidatedJSON = JSON.parse(JSON.stringify(rawData));
 
   let report = '# Daily Bard Report\n\n';
   let addedCount = 0;
@@ -247,7 +284,7 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
   }
 
   if (addedCount > 0) {
-    await fs.writeFile(NARRATIVE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    await writeSplitNarrative(data as unknown as Record<string, unknown>);
     await fs.writeFile(REPORT_FILE, report, 'utf-8');
     console.log(`Successfully added ${addedCount} new templates.`);
   } else {
@@ -322,8 +359,8 @@ async function main() {
 
   console.log('📜 The Bard of the Blood Sands is waking up...');
 
-  const rawData = (await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString();
-  const data: ValidatedJSON = NarrativeSchema.parse(JSON.parse(rawData));
+  const rawData = await readMergedNarrative();
+  const data: ValidatedJSON = NarrativeSchema.parse(rawData);
 
   // 1. Deficit Detection
   const deficits = fetch_narrative_deficits(data);
@@ -351,13 +388,14 @@ async function main() {
   await commit_to_archive(newTemplatesMap);
 
   // 4. Final Full-Sweep Cleanup (ensures even static/legacy duplicates are purged)
-  const freshData = JSON.parse((await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString());
+  const freshRaw = await readMergedNarrative();
+  const freshData = JSON.parse(JSON.stringify(freshRaw));
   deduplicate_full_archive(freshData);
   // Deduplicate flat array categories
   if (freshData.recap) {
     freshData.recap = [...new Set(freshData.recap)];
   }
-  await fs.writeFile(NARRATIVE_FILE, JSON.stringify(freshData, null, 2), 'utf-8');
+  await writeSplitNarrative(freshData);
 
   console.log('✅ Bardic duties complete.');
 }

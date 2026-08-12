@@ -7,7 +7,7 @@
  * and PASS after the jules-narrative-pool branch is merged.
  */
 import { describe, it, expect } from 'vitest';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import { interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);

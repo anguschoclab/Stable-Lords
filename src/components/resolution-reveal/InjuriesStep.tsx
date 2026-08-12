@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Activity, Skull } from 'lucide-react';
-import narrativeContent from '@/data/narrativeContent.json';
+import uiMeta from '@/data/narrative/uiMeta.json';
 
 interface InjuriesStepProps {
   injuries: string[];
@@ -25,7 +25,7 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
     >
       <div className="flex items-center gap-2">
         <Activity className="h-6 w-6 text-arena-gold" />
-        <h3 className="text-xl font-semibold">{narrativeContent.fanfare.report_medical}</h3>
+        <h3 className="text-xl font-semibold">{(uiMeta as any).fanfare.report_medical}</h3>
       </div>
 
       {deaths.length > 0 && (

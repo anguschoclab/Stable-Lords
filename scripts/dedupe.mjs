@@ -1,17 +1,24 @@
 #!/usr/bin/env node
 /**
  * Deduplicate narrative content arrays.
- * Scans narrativeContent.json for duplicate strings within each array
+ * Scans narrative domain JSON files for duplicate strings within each array
  * and reports/removes them.
  */
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CONTENT_PATH = resolve(__dirname, '../src/data/narrativeContent.json');
+const NARRATIVE_DIR = resolve(__dirname, '../src/data/narrative');
 
-const data = JSON.parse(readFileSync(CONTENT_PATH, 'utf-8'));
+const files = readdirSync(NARRATIVE_DIR).filter(f => f.endsWith('.json'));
+const data = {};
+for (const file of files) {
+  const parsed = JSON.parse(readFileSync(resolve(NARRATIVE_DIR, file), 'utf-8'));
+  for (const [key, val] of Object.entries(parsed)) {
+    data[key] = val;
+  }
+}
 
 let totalRemoved = 0;
 
@@ -67,7 +74,27 @@ if (data.meta) {
 if (totalRemoved === 0) {
   console.log('No duplicates found.');
 } else {
-  writeFileSync(CONTENT_PATH, JSON.stringify(data, null, 2) + '\n', 'utf-8');
+  // Write back to domain files
+  const DOMAIN_FILES = {
+    combatPbp: ['pbp', 'crowd_reactions'],
+    combatStrikes: ['strikes'],
+    combatKillText: ['kill_text'],
+    combatConclusions: ['conclusions'],
+    combatPassives: ['passives'],
+    gazette: ['gazette', 'ux_metadata'],
+    recruitment: ['recruitment'],
+    offseason: ['offseason_events', 'events'],
+    announcer: ['blurbs', 'commentary', 'recap'],
+    uiMeta: ['fanfare', 'meta', 'persona', 'memorials'],
+  };
+  for (const [file, keys] of Object.entries(DOMAIN_FILES)) {
+    const filePath = resolve(NARRATIVE_DIR, `${file}.json`);
+    const existing = JSON.parse(readFileSync(filePath, 'utf-8'));
+    for (const key of keys) {
+      if (data[key] !== undefined) existing[key] = data[key];
+    }
+    writeFileSync(filePath, JSON.stringify(existing, null, 2) + '\n', 'utf-8');
+  }
   console.log(`Total duplicates removed: ${totalRemoved}`);
-  console.log('File updated.');
+  console.log('Domain files updated.');
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
 import { SeededRNGService } from '@/utils/random';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';

@@ -127,7 +127,7 @@ describe('chaos_weavers_gift offseason event', () => {
   });
 
   it('narrativeContent.json contains chaos_weavers_gift event after merge', async () => {
-    const content = await import('@/data/narrativeContent.json');
+    const content = await import('@/data/narrative');
     const events = (content as any).default?.offseason_events || (content as any).offseason_events;
     if (events && events.chaos_weavers_gift) {
       expect(events.chaos_weavers_gift.title).toBeTruthy();

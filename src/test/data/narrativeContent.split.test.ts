@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { getFromArchive, peekArchive, richHitLocation } from '@/engine/narrative/narrativePBPUtils';
 import { SeededRNG } from '@/utils/random';
-import narrativeContent from '@/data/narrativeContent.json';
+import { loadCombatNarrative } from '@/data/narrative';
 
 // Domain file imports — these will fail until Phase 2B creates them
 import combatPbp from '@/data/narrative/combatPbp.json';
@@ -16,6 +16,8 @@ import announcer from '@/data/narrative/announcer.json';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
 import { narrativeContent as assembledContent } from '@/data/narrative';
+
+beforeAll(async () => { await loadCombatNarrative(); });
 
 const ORIGINAL_KEYS = [
   'blurbs',
@@ -105,28 +107,28 @@ describe('narrativeContent split — assembled object', () => {
     expect(keys).toEqual([...ORIGINAL_KEYS].sort());
   });
 
-  it('assembled pbp deep-equals original pbp', () => {
-    expect(assembledContent.pbp).toEqual((narrativeContent as any).pbp);
+  it('assembled pbp deep-equals combatPbp.json pbp', () => {
+    expect(assembledContent.pbp).toEqual((combatPbp as any).pbp);
   });
 
-  it('assembled strikes deep-equals original strikes', () => {
-    expect(assembledContent.strikes).toEqual((narrativeContent as any).strikes);
+  it('assembled strikes deep-equals combatStrikes.json strikes', () => {
+    expect(assembledContent.strikes).toEqual((combatStrikes as any).strikes);
   });
 
-  it('assembled gazette deep-equals original gazette', () => {
-    expect(assembledContent.gazette).toEqual((narrativeContent as any).gazette);
+  it('assembled gazette deep-equals gazette.json gazette', () => {
+    expect(assembledContent.gazette).toEqual((gazette as any).gazette);
   });
 
-  it('assembled fanfare deep-equals original fanfare', () => {
-    expect(assembledContent.fanfare).toEqual((narrativeContent as any).fanfare);
+  it('assembled fanfare deep-equals uiMeta.json fanfare', () => {
+    expect(assembledContent.fanfare).toEqual((uiMeta as any).fanfare);
   });
 
-  it('assembled recruitment deep-equals original recruitment', () => {
-    expect(assembledContent.recruitment).toEqual((narrativeContent as any).recruitment);
+  it('assembled recruitment deep-equals recruitment.json recruitment', () => {
+    expect(assembledContent.recruitment).toEqual((recruitment as any).recruitment);
   });
 
-  it('assembled memorials deep-equals original memorials', () => {
-    expect(assembledContent.memorials).toEqual((narrativeContent as any).memorials);
+  it('assembled memorials deep-equals uiMeta.json memorials', () => {
+    expect(assembledContent.memorials).toEqual((uiMeta as any).memorials);
   });
 });
 

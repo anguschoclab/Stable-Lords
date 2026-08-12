@@ -3,7 +3,7 @@
  * and correct structure for expanded content.
  */
 import { describe, it, expect } from 'vitest';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 
 function collectEntries(
   obj: any,

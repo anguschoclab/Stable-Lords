@@ -31,21 +31,26 @@ vi.mock('@/engine/narrative/fightAnalysis', () => ({
   buildFightAnalysis: () => ({ summary: 'test' }),
 }));
 
-vi.mock('@/data/narrativeContent.json', () => ({
+vi.mock('@/data/narrative/uiMeta.json', () => ({
   default: {
     fanfare: {
+      report_math: 'Math Report',
+      report_combat: 'Combat Report',
+      report_combat_empty: 'No bouts this week.',
       report_medical: 'Medical Report',
-      report_treasury: 'Treasury Report',
+      gazette_empty: 'Nothing to report.',
+      resolution_title: 'Week Results',
+      btn_honor: 'Honor the Fallen',
+      btn_planning: 'Planning Phase',
+      btn_next: 'Next',
       memorial_title: 'In Memoriam',
       memorial_default: 'Fallen in combat.',
     },
     memorials: {
       tributes: ['The arena grows colder with the loss of {{name}}.'],
     },
-    crowd_reactions: {
-      Bloodthirsty: ['The crowd howls for blood!'],
-      Theatrical: ['The crowd gasps in awe!'],
-    },
+    meta: { flair: {}, title: {}, injury: {}, status: {} },
+    persona: { good: {}, bad: {}, descriptors: { coordination: {} } },
   },
 }));
 

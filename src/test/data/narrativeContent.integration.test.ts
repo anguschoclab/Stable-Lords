@@ -3,7 +3,7 @@ import { getFromArchive, interpolateTemplate } from '@/engine/narrative/narrativ
 import { crowdReaction } from '@/engine/narrative/narrativeStatus';
 import { SeededRNG } from '@/utils/random';
 import { hashStr } from '@/utils/random';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 
 const nc = narrativeContent as unknown as NarrativeContent & {

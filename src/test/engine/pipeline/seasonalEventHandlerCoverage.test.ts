@@ -3,7 +3,7 @@
  * has a handler and every handler has JSON data (except fey_trickster).
  */
 import { describe, it, expect } from 'vitest';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 
 describe('seasonal event handler coverage', () => {
   const jsonEvents = Object.keys(narrativeContent.offseason_events);

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Activity } from 'lucide-react';
-import narrativeContent from '@/data/narrativeContent.json';
+import uiMeta from '@/data/narrative/uiMeta.json';
 import type { GameState } from '@/types/state.types';
 
 interface MathStepProps {
@@ -28,7 +28,7 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
     >
       <div className="flex items-center gap-2">
         <Activity className="h-6 w-6 text-muted-foreground" />
-        <h3 className="text-xl font-semibold">{narrativeContent.fanfare.report_math}</h3>
+        <h3 className="text-xl font-semibold">{(uiMeta as any).fanfare.report_math}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

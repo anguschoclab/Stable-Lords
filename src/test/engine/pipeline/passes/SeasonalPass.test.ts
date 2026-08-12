@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 const eventCount = Object.keys((narrativeContent as any).offseason_events).length;
 import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/utils/random';

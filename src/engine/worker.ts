@@ -6,6 +6,10 @@ import { TournamentSelectionService } from './matchmaking/tournamentSelection';
 import { TickOrchestrator } from './pipeline/tick/TickOrchestrator';
 import { runAutosim } from './autosim';
 import { processWeekBouts } from './bout/services/boutProcessorService';
+import { loadCombatNarrative } from '@/data/narrative';
+
+// Fire-and-forget: start loading combat data when worker initializes
+loadCombatNarrative();
 
 /**
  * Stable Lords — Engine Worker

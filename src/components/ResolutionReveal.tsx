@@ -8,7 +8,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { audioManager } from '@/lib/AudioManager';
 import type { FightSummary } from '@/types/combat.types';
-import narrativeContent from '@/data/narrativeContent.json';
+import uiMeta from '@/data/narrative/uiMeta.json';
 
 import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
 
@@ -76,7 +76,7 @@ export default function ResolutionReveal() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-display font-bold">
-                {narrativeContent.fanfare.resolution_title}
+                {(uiMeta as any).fanfare.resolution_title}
               </CardTitle>
               <CardDescription>Week {state.week - 1} Results</CardDescription>
             </div>
@@ -119,10 +119,10 @@ export default function ResolutionReveal() {
             variant={step === 'memorial' ? 'destructive' : 'default'}
           >
             {step === 'math' && data.deaths.length > 0
-              ? narrativeContent.fanfare.btn_honor
+              ? (uiMeta as any).fanfare.btn_honor
               : step === 'math' || step === 'memorial'
-                ? narrativeContent.fanfare.btn_planning
-                : narrativeContent.fanfare.btn_next}
+                ? (uiMeta as any).fanfare.btn_planning
+                : (uiMeta as any).fanfare.btn_next}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

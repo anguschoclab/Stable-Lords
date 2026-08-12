@@ -3,7 +3,7 @@
  * Centralized constants for recruitment pool management and tier generation
  */
 
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 
 // ─── Tier Probabilities ─────────────────────────────────────────────────────

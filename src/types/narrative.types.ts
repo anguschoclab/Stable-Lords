@@ -554,16 +554,16 @@ export interface KillText {
 export interface NarrativeContent {
   ux_metadata: UxMetadata;
   persona: Persona;
-  strikes: StrikesCollection;
-  pbp: PbpNarratives;
-  conclusions: Conclusions;
+  strikes?: StrikesCollection;
+  pbp?: PbpNarratives;
+  conclusions?: Conclusions;
   events: Events;
   gazette: GazetteNarratives;
   fanfare: Fanfare;
   memorials: Memorials;
   recruitment: Recruitment;
   meta: Meta;
-  passives: Passives;
+  passives?: Passives;
   kill_text?: KillText;
   crowd_reactions?: Record<string, string[]>;
   blurbs?: Record<string, string[]>;

@@ -152,6 +152,7 @@ export function getFromArchive(rng: IRNGService, path: string[]): string {
  * Gets rich hit location description.
  */
 export function richHitLocation(rng: IRNGService, location: string): string {
+  if (!narrativeContent.pbp) return location.toUpperCase();
   const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
   const key = location.toLowerCase() as keyof typeof hitLocations;
   const variants = hitLocations[key];

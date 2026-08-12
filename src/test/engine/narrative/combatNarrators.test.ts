@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import {
   narrateAttack,
   narratePassive,
@@ -18,10 +18,12 @@ import {
 import { peekArchive } from '@/engine/narrative/narrativePBPUtils';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
+import { loadCombatNarrative } from '@/data/narrative';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 
 describe('combatNarrators', () => {
+  beforeAll(async () => { await loadCombatNarrative(); });
   describe('narrateAttack', () => {
     it('produces no-raw-token text', () => {
       const rng = new SeededRNG(1);

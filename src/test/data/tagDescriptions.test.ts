@@ -1,30 +1,30 @@
 import { describe, it, expect } from 'vitest';
 import { getTagDescription } from '@/data/tagDescriptions';
-import narrativeContent from '@/data/narrativeContent.json';
+import uiMeta from '@/data/narrative/uiMeta.json';
 
 describe('getTagDescription', () => {
   it('should return the correct description for flair tags', () => {
     const tag = 'Flashy';
-    const expected = narrativeContent.meta.flair.Flashy;
+    const expected = (uiMeta as any).meta.flair.Flashy;
     expect(getTagDescription(tag)).toBe(expected);
   });
 
   it('should return the correct description for title tags', () => {
     const tag = 'Champion';
-    const expected = narrativeContent.meta.title.Champion;
+    const expected = (uiMeta as any).meta.title.Champion;
     expect(getTagDescription(tag)).toBe(expected);
   });
 
   it('should return the correct description for injury tags', () => {
     const tag = 'Broken Arm';
-    const expected = narrativeContent.meta.injury['Broken Arm'];
+    const expected = (uiMeta as any).meta.injury['Broken Arm'];
     expect(getTagDescription(tag)).toBe(expected);
   });
 
   it('should return the correct description for status tags', () => {
-    const activeExpected = (narrativeContent.meta as any).status.Active;
-    const deadExpected = (narrativeContent.meta as any).status.Dead;
-    const retiredExpected = (narrativeContent.meta as any).status.Retired;
+    const activeExpected = (uiMeta as any).meta.status.Active;
+    const deadExpected = (uiMeta as any).meta.status.Dead;
+    const retiredExpected = (uiMeta as any).meta.status.Retired;
 
     expect(getTagDescription('Active')).toBe(activeExpected);
     expect(getTagDescription('Dead')).toBe(deadExpected);

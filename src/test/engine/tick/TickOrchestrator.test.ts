@@ -27,7 +27,7 @@ describe('TickOrchestrator', () => {
     vi.clearAllMocks();
     spyAdvanceWeek = vi
       .spyOn(weekPipelineService, 'advanceWeek')
-      .mockImplementation((state: any) => ({
+      .mockImplementation(async (state: any) => ({
         ...state,
         treasury: 999,
       }));
@@ -40,11 +40,11 @@ describe('TickOrchestrator', () => {
   });
 
   describe('advanceDay', () => {
-    it('should advance to the next day when not day 6 and not tournament', () => {
+    it('should advance to the next day when not day 6 and not tournament', async () => {
       mockState.day = 0;
       mockState.isTournamentWeek = false;
 
-      const nextState = TickOrchestrator.advanceDay(mockState);
+      const nextState = await TickOrchestrator.advanceDay(mockState);
 
       expect(nextState.day).toBe(1);
       expect(nextState.isTournamentWeek).toBe(false);
@@ -52,11 +52,11 @@ describe('TickOrchestrator', () => {
       expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();
     });
 
-    it('should trigger advanceWeek when advancing past day 6', () => {
+    it('should trigger advanceWeek when advancing past day 6', async () => {
       mockState.day = 6;
       mockState.isTournamentWeek = false;
 
-      const nextState = TickOrchestrator.advanceDay(mockState);
+      const nextState = await TickOrchestrator.advanceDay(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(mockState);
       expect(nextState.day).toBe(0);
@@ -65,13 +65,13 @@ describe('TickOrchestrator', () => {
       expect(nextState.treasury).toBe(999);
     });
 
-    it('should resolve tournament round when isTournamentWeek and activeTournamentId are set', () => {
+    it('should resolve tournament round when isTournamentWeek and activeTournamentId are set', async () => {
       mockState.day = 2;
       mockState.isTournamentWeek = true;
       mockState.activeTournamentId =
         'test-tournament' as import('@/types/shared.types').TournamentId;
 
-      const nextState = TickOrchestrator.advanceDay(mockState);
+      const nextState = await TickOrchestrator.advanceDay(mockState);
 
       expect(TournamentSelectionService.resolveRound).toHaveBeenCalledWith(
         mockState,
@@ -90,11 +90,11 @@ describe('TickOrchestrator', () => {
   });
 
   describe('skipToWeekEnd', () => {
-    it('should advance week immediately for standard week', () => {
+    it('should advance week immediately for standard week', async () => {
       mockState.day = 1;
       mockState.isTournamentWeek = false;
 
-      const nextState = TickOrchestrator.skipToWeekEnd(mockState);
+      const nextState = await TickOrchestrator.skipToWeekEnd(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(mockState);
       expect(nextState.day).toBe(0);
@@ -102,7 +102,7 @@ describe('TickOrchestrator', () => {
       expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();
     });
 
-    it('should resolve remaining tournament rounds before advancing week', () => {
+    it('should resolve remaining tournament rounds before advancing week', async () => {
       mockState.day = 3;
       mockState.isTournamentWeek = true;
       mockState.activeTournamentId =
@@ -119,9 +119,9 @@ describe('TickOrchestrator', () => {
         }
       );
 
-      spyAdvanceWeek.mockImplementation((state: any) => state);
+      spyAdvanceWeek.mockImplementation(async (state: any) => state);
 
-      const nextState = TickOrchestrator.skipToWeekEnd(mockState);
+      const nextState = await TickOrchestrator.skipToWeekEnd(mockState);
 
       // Should loop from currentDay + 1 (4) to 6 -> 3 iterations
       expect(TournamentSelectionService.resolveRound).toHaveBeenCalledTimes(3);

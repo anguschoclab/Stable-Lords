@@ -49,7 +49,7 @@ describe('Headless Simulation Harness', () => {
     resetGlobalState();
   }, 120000);
 
-  test('runs a long-term balance check (52 weeks)', () => {
+  test('runs a long-term balance check (52 weeks)', async () => {
     const seed = 999;
     const config = {
       weeks: 52,
@@ -58,7 +58,7 @@ describe('Headless Simulation Harness', () => {
     };
 
     console.log(`\n[Sim] Starting 52-week balance check with seed: ${seed}`);
-    runSimulation(config);
+    await runSimulation(config);
 
     console.log('SUCCESS');
   }, 300000);

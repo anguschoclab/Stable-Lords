@@ -7,7 +7,7 @@ describe('rival trait AI (integration)', () => {
   it(
     'over a season, rival rosters acquire traits and churn without crashing',
     { timeout: 120000 },
-    () => {
+    async () => {
       let state = populateInitialWorld(createFreshState('rival-ai'), 12345);
       const before = state.rivals
         .flatMap((r) => r.roster)

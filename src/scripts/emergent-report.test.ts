@@ -78,7 +78,7 @@ const pct = (n: number, d: number) => (d ? ((100 * n) / d).toFixed(1) : '0.0') +
 describe('Emergent behavior report', () => {
   beforeEach(resetGlobalState, 120000);
 
-  test('1-year headless sim', () => {
+  test('1-year headless sim', async () => {
     const WEEKS = 52;
     const seed = 4242;
     let state = populateInitialWorld(createFreshState(seed.toString()), seed);
@@ -106,7 +106,7 @@ describe('Emergent behavior report', () => {
         }
       });
 
-      state = advanceWeek(state);
+      state = await advanceWeek(state);
 
       // keep player alive so the sim doesn't stall (auto-recruit on empty)
       if (state.roster.length === 0 && state.recruitPool.length > 0) {

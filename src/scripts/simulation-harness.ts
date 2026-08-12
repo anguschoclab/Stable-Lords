@@ -30,7 +30,7 @@ export interface SimulationResult {
  * Run a headless simulation loop.
  * Synchronous and deterministic.
  */
-export function runSimulation(config: SimulationConfig): SimulationResult {
+export async function runSimulation(config: SimulationConfig): Promise<SimulationResult> {
   const { weeks, seed, logFrequency = 1 } = config;
 
   // 1. Initialize State
@@ -66,7 +66,7 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
     });
 
     // B. Advance Week
-    state = advanceWeek(state);
+    state = await advanceWeek(state);
 
     let totalWarriors = 0;
     state.rivals.forEach((r) => (totalWarriors += r.roster.length));

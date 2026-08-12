@@ -6,9 +6,13 @@
  * Pre-merge test: size assertions will FAIL on main (pools are smaller)
  * and PASS after the jules-narrative-pool branch is merged.
  */
-import { describe, it, expect } from 'vitest';
-import { narrativeContent } from '@/data/narrative';
+import { describe, it, expect, beforeAll } from 'vitest';
+import { narrativeContent, loadCombatNarrative } from '@/data/narrative';
 import { interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
+
+beforeAll(async () => {
+  await loadCombatNarrative();
+});
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 

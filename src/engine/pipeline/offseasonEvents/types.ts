@@ -14,6 +14,7 @@ export interface OffseasonEventNarrative {
   title: string;
   effectType:
     | 'chaos_rift'
+    | 'unexplained_monolith'
     | 'chaotic_weather_experiment'
     | 'fame_boost'
     | 'winter_chill'

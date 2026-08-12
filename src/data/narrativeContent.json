@@ -5445,6 +5445,13 @@
         "A bizarre, swirling rift opened temporarily in the training yard. {{name}} bravely stepped inside and returned moments later, holding a glowing crystal and speaking in riddles. (+150 Gold, +25 XP, +15 Fame, Chaotic Insight)"
       ]
     },
+    "unexplained_monolith": {
+      "title": "The Unexplained Monolith",
+      "effectType": "unexplained_monolith",
+      "newsletter": [
+        "A perfectly smooth black monolith appeared overnight in the training yard. {{name}} touched it, stared blankly for an hour, and now fights with unnatural focus but lingering fatigue. (+15 XP, +10 Fame, 'Precise' trait, Minor Fatigue)"
+      ]
+    },
     "tavern_brawl_surprise": {
       "title": "A Spontaneous Tavern Brawl",
       "effectType": "tavern_brawl_surprise",

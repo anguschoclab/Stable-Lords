@@ -129,7 +129,10 @@
       "Bash(awk '{print $NF, $2}')",
       "Bash(md5 -q public/audio/*.mp3)",
       "Bash(cd \"/Users/amauricia/Documents/GitHub/stable-lords\" && echo \"=== total dist js ===\" && find dist/assets -name \"*.js\" | wc -l && du -sh dist/assets && echo \"=== eager vs lazy: what index pulls ===\" && grep -c \"\" /dev/null; echo \"=== e2e specs ===\" && find e2e -type f | head -20 && echo \"=== e2e test count ===\" && grep -rn \"test\\(\\\\|it\\(\" e2e 2>/dev/null | wc -l)",
-      "Bash(node -e \"const p=require\\('./package.json'\\);for\\(const k of ['zustand','@tanstack/react-router','comlink','howler','immer']\\)console.log\\(k, p.dependencies[k]?'dependencies':\\(p.devDependencies[k]?'devDependencies':'MISSING'\\)\\)\")"
+      "Bash(node -e \"const p=require\\('./package.json'\\);for\\(const k of ['zustand','@tanstack/react-router','comlink','howler','immer']\\)console.log\\(k, p.dependencies[k]?'dependencies':\\(p.devDependencies[k]?'devDependencies':'MISSING'\\)\\)\")",
+      "Bash(echo \"rc=$?\")",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('packageManager:',p.packageManager\\); console.log\\('main:',p.main\\); console.log\\('--- scripts ---'\\); for\\(const[k,v] of Object.entries\\(p.scripts||{}\\)\\)console.log\\(k,'=',v\\); console.log\\('--- build block ---', JSON.stringify\\(p.build,null,1\\)\\); console.log\\('--- overrides ---', JSON.stringify\\(p.overrides,null,1\\)\\); console.log\\('--- resolutions ---', JSON.stringify\\(p.resolutions,null,1\\)\\);\")",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('=== dependencies ==='\\); for\\(const[k,v] of Object.entries\\(p.dependencies||{}\\)\\)console.log\\(k,v\\); console.log\\('=== devDependencies ==='\\); for\\(const[k,v] of Object.entries\\(p.devDependencies||{}\\)\\)console.log\\(k,v\\);\")"
     ]
   },
   "hooks": {

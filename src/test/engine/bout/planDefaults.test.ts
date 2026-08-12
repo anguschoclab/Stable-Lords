@@ -46,7 +46,7 @@ describe('defaultPlanForWarrior', () => {
         expect(plan.defensiveTactic).toBe(presetPlan.defensiveTactic);
         expect(plan.target).toBe(presetPlan.target);
         expect(plan.protect).toBe(presetPlan.protect);
-        expect(plan.phases).toEqual(presetPlan.phases);
+        expect(plan.phases).toBeUndefined();
       }
     });
 

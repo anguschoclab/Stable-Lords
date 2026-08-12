@@ -14,7 +14,6 @@ import { getWeaponSuitability, type WeaponSuitability } from '@/engine/weaponSui
 import {
   getEncumbranceRatio,
   getEncumbranceTier,
-  getEncumbrancePenalties,
 } from '@/data/equipment/encumbrance';
 
 /**

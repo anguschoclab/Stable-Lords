@@ -14,8 +14,9 @@ export function defaultPlanForWarrior(warrior: Warrior): FightPlan {
   const feintTendency =
     warrior.attributes.WT >= 15 ? Math.min(10, Math.floor((warrior.attributes.WT - 14) * 1.5)) : 0;
 
+  const { phases, ...basePlan } = presetPlan;
   return {
-    ...presetPlan,
+    ...basePlan,
     feintTendency,
   };
 }

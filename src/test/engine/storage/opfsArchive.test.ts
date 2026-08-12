@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { ArchiveConflictError } from '@/engine/storage/ArchiveConflictError';
 import { setMockOPFSError, setMockOPFSFileText } from '@/test/_setup/setup';
+import { SAVE_STATE_VERSION } from '@/constants/core';
 
 describe('OPFS Archival System', () => {
   beforeEach(() => {
@@ -308,7 +309,7 @@ describe('OPFS Archival System', () => {
 
   describe('Suite 13: retrieveHotState with plausibility check', () => {
     const minimalState = {
-      meta: { gameName: 'Test', version: '1.0', createdAt: '2024-01-01T00:00:00.000Z' },
+      meta: { gameName: 'Test', version: SAVE_STATE_VERSION, createdAt: '2024-01-01T00:00:00.000Z' },
       ftueComplete: true,
       isFTUE: false,
       isTournamentWeek: false,
@@ -408,6 +409,22 @@ describe('OPFS Archival System', () => {
       const result = await service.retrieveHotState('slot-bad-json-13');
       expect(result).toBeNull();
       expect(consoleSpy).toHaveBeenCalledWith('Error retrieving hot state:', expect.any(Error));
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 13.5: Version mismatch writes .bak backup and returns null', async () => {
+      const service = new OPFSArchiveService();
+      const oldState = { ...minimalState, meta: { ...minimalState.meta, version: '0.9.0-old' } };
+      setMockOPFSFileText(JSON.stringify(oldState));
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot-version-mismatch');
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('incompatible save version'),
+        expect.objectContaining({ slotId: 'slot-version-mismatch' })
+      );
 
       consoleSpy.mockRestore();
     });

@@ -18,6 +18,9 @@ import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 import type { FighterState, ResolutionContext } from './types';
 
+/**
+ *
+ */
 export interface ExchangeSetup {
   condResultA: ReturnType<typeof evaluateConditions>;
   condResultD: ReturnType<typeof evaluateConditions>;
@@ -191,6 +194,9 @@ function resolveDynamicTraits(
   };
 }
 
+/**
+ *
+ */
 export function prepareExchange(
   ctx: ResolutionContext,
   fA: FighterState,

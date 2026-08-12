@@ -206,7 +206,12 @@ export function createFighterState(
     traits: warrior?.traits,
     staticEnduranceMult: traitMods.enduranceMult,
     totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
-    encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, defPenalty: encumbranceDefPenalty, parPenalty: encumbranceParPenalty, enduranceMult: encumbranceEndMult },
+    encumbrancePenalty: {
+      iniPenalty: encumbranceIniPenalty,
+      defPenalty: encumbranceDefPenalty,
+      parPenalty: encumbranceParPenalty,
+      enduranceMult: encumbranceEndMult,
+    },
     weaponId: equip.weapon,
     armorId: equip.armor,
     shieldId: equip.shield,

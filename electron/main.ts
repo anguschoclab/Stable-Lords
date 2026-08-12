@@ -419,6 +419,9 @@ export function createTray() {
   });
 }
 
+/**
+ *
+ */
 export function registerIPCHandlers() {
   // Validate slot ID format
   function validateSlotId(slotId: string): boolean {

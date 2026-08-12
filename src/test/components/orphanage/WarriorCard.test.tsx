@@ -58,17 +58,23 @@ const baseCardProps = { isSelected: false, canSelect: true };
 
 describe('WarriorCard', () => {
   it('does not render a POT grade label', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).not.toMatch(/\bPOT\b/);
   });
 
   it('does not render any potential grade letter (S/A/B/C/D) as a standalone grade', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).not.toMatch(/POT\s*:?\s*[SABCDE]/i);
   });
 
   it('does not render grade-legend tooltip content', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).not.toMatch(/85\+/);
     expect(container.textContent).not.toMatch(/near-maximum ceiling/i);
     expect(container.textContent).not.toMatch(/70.?84/);
@@ -77,33 +83,45 @@ describe('WarriorCard', () => {
   });
 
   it('renders HP value', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).toContain('100');
   });
 
   it('renders the warrior name', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).toContain('TestWarrior');
   });
 
   it('renders the trait name', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).toContain('Test Trait');
   });
 
   it('renders the origin', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).toContain('Highland');
   });
 
   it('renders the lore', () => {
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={vi.fn()} />
+    );
     expect(container.textContent).toContain('mysterious fighter');
   });
 
   it('calls onClick when clicked', () => {
     const onClick = vi.fn();
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={onClick} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={onClick} />
+    );
     const card = container.querySelector('[role="button"]') || container.firstElementChild;
     fireEvent.click(card!);
     expect(onClick).toHaveBeenCalled();
@@ -111,7 +129,9 @@ describe('WarriorCard', () => {
 
   it('calls onClick on Enter key press', () => {
     const onClick = vi.fn();
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={onClick} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={onClick} />
+    );
     const card = container.querySelector('[role="button"]') || container.firstElementChild;
     fireEvent.keyDown(card!, { key: 'Enter' });
     expect(onClick).toHaveBeenCalled();
@@ -119,7 +139,9 @@ describe('WarriorCard', () => {
 
   it('calls onClick on Space key press', () => {
     const onClick = vi.fn();
-    const { container } = render(<WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={onClick} />);
+    const { container } = render(
+      <WarriorCard {...baseCardProps} warrior={makeOrphan()} onClick={onClick} />
+    );
     const card = container.querySelector('[role="button"]') || container.firstElementChild;
     fireEvent.keyDown(card!, { key: ' ' });
     expect(onClick).toHaveBeenCalled();

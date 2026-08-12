@@ -10,6 +10,9 @@ import { WarriorSelector } from './components/WarriorSelector';
 import PlanBuilder from '@/components/PlanBuilder';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 
+/**
+ *
+ */
 export default function TrainingPlanner() {
   const {
     activeWarriors,

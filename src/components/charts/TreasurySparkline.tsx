@@ -16,6 +16,9 @@ interface TreasurySparklineProps {
   showLabel?: boolean;
 }
 
+/**
+ *
+ */
 export interface Viewport {
   min: number;
   range: number;
@@ -26,6 +29,9 @@ export interface Viewport {
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
+/**
+ *
+ */
 export function buildWeeklyPoints(
   ledger: LedgerEntry[],
   week: number,
@@ -62,6 +68,9 @@ export function buildWeeklyPoints(
   return series.slice(-12); // last 12 weeks
 }
 
+/**
+ *
+ */
 export function buildSparklinePath(
   points: { week: number; value: number }[],
   vp: Viewport
@@ -230,8 +239,8 @@ export function TreasurySparkline({
     ? `${pathD} L ${(PAD + (W - PAD * 2)).toFixed(1)} ${(H - PAD).toFixed(1)} L ${PAD} ${(H - PAD).toFixed(1)} Z`
     : '';
 
-  const last = points.length ? points[points.length - 1]?.value ?? 0 : 0;
-  const prev = points.length >= 2 ? points[points.length - 2]?.value ?? last : last;
+  const last = points.length ? (points[points.length - 1]?.value ?? 0) : 0;
+  const prev = points.length >= 2 ? (points[points.length - 2]?.value ?? last) : last;
   const delta = last - prev;
   const isUp = delta >= 0;
 

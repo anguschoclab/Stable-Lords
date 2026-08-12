@@ -36,6 +36,9 @@ const TABS: SubNavTab[] = [
  * Warrior detail.
  */
 
+/**
+ *
+ */
 export default function WarriorDetail() {
   const {
     id,

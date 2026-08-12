@@ -218,17 +218,13 @@ describe('processWeekBouts — matchHistory integration', () => {
       ['w1' as any, state.roster[0]!],
       ['w2' as any, state.rivals[0]!.roster[0]!],
     ]);
-    state.warriorToStableMap = new Map([
-      ['w2', { stableId: 'rival-1', isPlayer: false }],
-    ]) as any;
+    state.warriorToStableMap = new Map([['w2', { stableId: 'rival-1', isPlayer: false }]]) as any;
 
     const { impact } = processWeekBouts(state, true);
 
     if (impact.matchHistory) {
       expect(Array.isArray(impact.matchHistory)).toBe(true);
-      const record = impact.matchHistory.find(
-        (m) => m.playerWarriorId === ('w1' as any)
-      );
+      const record = impact.matchHistory.find((m) => m.playerWarriorId === ('w1' as any));
       expect(record).toBeDefined();
       expect(record?.opponentWarriorId).toBe('w2' as any);
     }

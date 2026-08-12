@@ -49,7 +49,12 @@ export interface FighterState {
    *  per-exchange endurance cost in applyEnduranceCosts. Defaults to 1. */
   staticEnduranceMult?: number;
   totalFights: number;
-  encumbrancePenalty?: { iniPenalty: number; defPenalty: number; parPenalty: number; enduranceMult: number };
+  encumbrancePenalty?: {
+    iniPenalty: number;
+    defPenalty: number;
+    parPenalty: number;
+    enduranceMult: number;
+  };
   weaponId?: string;
   armorId?: string;
   shieldId?: string;

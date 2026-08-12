@@ -57,16 +57,13 @@ export default function StableDetail() {
   );
   const [activeTab, setActiveTab] = useState<'OVERVIEW' | 'ROSTER' | 'LOGS'>('OVERVIEW');
 
-  const rivalMap = useMemo(
-    () => {
-      const map = new Map<string, RivalStableData>();
-      for (const r of state.rivals ?? []) {
-        map.set(r.owner.id as string, r);
-      }
-      return map;
-    },
-    [state.rivals]
-  );
+  const rivalMap = useMemo(() => {
+    const map = new Map<string, RivalStableData>();
+    for (const r of state.rivals ?? []) {
+      map.set(r.owner.id as string, r);
+    }
+    return map;
+  }, [state.rivals]);
 
   const rival = useMemo(() => (id ? rivalMap.get(id) : undefined), [rivalMap, id]);
 
@@ -241,11 +238,13 @@ export default function StableDetail() {
         <div className="lg:col-span-8 space-y-8">
           {/* Dossier Tabs */}
           <div className="flex items-center gap-8 border-b border-white/5 -mt-4">
-            {([
-              { id: 'OVERVIEW', icon: LayoutDashboard },
-              { id: 'ROSTER', icon: FileText },
-              { id: 'LOGS', icon: History },
-            ] as const).map((tab) => (
+            {(
+              [
+                { id: 'OVERVIEW', icon: LayoutDashboard },
+                { id: 'ROSTER', icon: FileText },
+                { id: 'LOGS', icon: History },
+              ] as const
+            ).map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}

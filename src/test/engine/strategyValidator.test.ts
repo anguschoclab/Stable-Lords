@@ -3,7 +3,11 @@
  * Comprehensive test coverage for validateStrategy and estimateStaminaCurve
  */
 import { describe, it, expect } from 'vitest';
-import { validateStrategy, estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
+import {
+  validateStrategy,
+  estimateStaminaCurve,
+  predictedCollapseMinute,
+} from '@/engine/strategyValidator';
 import { FightingStyle, type FightPlan } from '@/types/shared.types';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import type { Warrior } from '@/types/warrior.types';

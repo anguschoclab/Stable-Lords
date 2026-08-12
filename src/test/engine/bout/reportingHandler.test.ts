@@ -133,9 +133,7 @@ describe('reportingHandler', () => {
 
       const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
       handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
-      const arenaHistoryWrites = setItemSpy.mock.calls.filter(
-        ([key]) => key === 'sl.arenaHistory'
-      );
+      const arenaHistoryWrites = setItemSpy.mock.calls.filter(([key]) => key === 'sl.arenaHistory');
       expect(arenaHistoryWrites).toHaveLength(0);
       setItemSpy.mockRestore();
     });

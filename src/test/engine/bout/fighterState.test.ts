@@ -16,7 +16,12 @@ describe('fighterState', () => {
       attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
       injuries: [],
-      equipment: { weapon: 'broadsword', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+      equipment: {
+        weapon: 'broadsword',
+        armor: 'leather',
+        helm: 'none_helm',
+        shield: 'none_shield',
+      },
       derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
       ...overrides,
     }) as Warrior;
@@ -100,7 +105,12 @@ describe('fighterState', () => {
 
     it('applies equipment modifiers', () => {
       const warrior = createMockWarrior({
-        equipment: { weapon: 'short_spear', armor: 'chain_mail', helm: 'none_helm', shield: 'none_shield' },
+        equipment: {
+          weapon: 'short_spear',
+          armor: 'chain_mail',
+          helm: 'none_helm',
+          shield: 'none_shield',
+        },
       });
       const plan = createMockPlan();
 
@@ -137,7 +147,12 @@ describe('fighterState', () => {
     it('applies weapon requirement penalties when skill too low', () => {
       const warrior = createMockWarrior({
         baseSkills: { ATT: 5, DEF: 5, INI: 5, PAR: 5, RIP: 5, DEC: 5 },
-        equipment: { weapon: 'halberd', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+        equipment: {
+          weapon: 'halberd',
+          armor: 'leather',
+          helm: 'none_helm',
+          shield: 'none_shield',
+        },
       });
       const plan = createMockPlan();
 
@@ -259,10 +274,20 @@ describe('fighterState', () => {
   describe('equipment defenseMod integration', () => {
     it('armor defenseMod raises effSkills.DEF', () => {
       const base = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'none_armor', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'none_armor',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
       });
       const armored = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
       });
       const plan = createMockPlan();
       const rBase = createFighterState('A', plan, base);
@@ -273,7 +298,12 @@ describe('fighterState', () => {
 
     it('helm defenseMod raises effSkills.DEF further', () => {
       const noHelm = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
       });
       const withHelm = createMockWarrior({
         equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'helm' },
@@ -292,12 +322,22 @@ describe('fighterState', () => {
       // halberd weight=8, plate_mail weight=12, large_shield weight=6, full_helm weight=4 = 30 total
       // carryCap (encumbrance) = 30 → ratio = 1.0 → HEAVY
       const heavy = createMockWarrior({
-        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        equipment: {
+          weapon: 'halberd',
+          armor: 'plate_mail',
+          shield: 'large_shield',
+          helm: 'full_helm',
+        },
         derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 30 },
       });
       // Same loadout but with carry cap well above weight → NONE tier
       const unencumbered = createMockWarrior({
-        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        equipment: {
+          weapon: 'halberd',
+          armor: 'plate_mail',
+          shield: 'large_shield',
+          helm: 'full_helm',
+        },
         derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 100 },
       });
       const plan = createMockPlan();
@@ -313,11 +353,21 @@ describe('fighterState', () => {
     it('OVER encumbrance has larger penalties than HEAVY', () => {
       // Same heavy loadout (weight 30), carryCap = 20 → ratio = 1.5 → OVER
       const over = createMockWarrior({
-        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        equipment: {
+          weapon: 'halberd',
+          armor: 'plate_mail',
+          shield: 'large_shield',
+          helm: 'full_helm',
+        },
         derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 20 },
       });
       const heavy = createMockWarrior({
-        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        equipment: {
+          weapon: 'halberd',
+          armor: 'plate_mail',
+          shield: 'large_shield',
+          helm: 'full_helm',
+        },
         derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 30 },
       });
       const plan = createMockPlan();
@@ -331,11 +381,21 @@ describe('fighterState', () => {
       // broadsword weight=4, leather weight=4, none_shield=0, none_helm=0 = 8 total
       // carryCap = 12 → ratio = 0.667 → LIGHT
       const light = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
         derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 12 },
       });
       const none = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
         derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 100 },
       });
       const plan = createMockPlan();
@@ -351,10 +411,20 @@ describe('fighterState', () => {
   describe('shield slot wiring', () => {
     it('shield in shield slot raises PAR and DEF', () => {
       const noShield = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
       });
       const withShield = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'small_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'small_shield',
+          helm: 'none_helm',
+        },
       });
       const plan = createMockPlan();
       const rNo = createFighterState('A', plan, noShield);
@@ -367,11 +437,21 @@ describe('fighterState', () => {
 
     it('shield in weapon slot raises PAR and DEF and applies ATT penalty', () => {
       const noShield = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
       });
       // large_shield in weapon slot: shieldParryBonus=3, shieldAttPenalty=-1
       const withWeaponShield = createMockWarrior({
-        equipment: { weapon: 'large_shield', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'large_shield',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
       });
       const plan = createMockPlan();
       const rNo = createFighterState('A', plan, noShield);
@@ -387,10 +467,20 @@ describe('fighterState', () => {
 
     it('dual-slot shields stack PAR and DEF bonuses', () => {
       const singleSlot = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'small_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'small_shield',
+          helm: 'none_helm',
+        },
       });
       const dualSlot = createMockWarrior({
-        equipment: { weapon: 'small_shield', armor: 'leather', shield: 'medium_shield', helm: 'none_helm' },
+        equipment: {
+          weapon: 'small_shield',
+          armor: 'leather',
+          shield: 'medium_shield',
+          helm: 'none_helm',
+        },
       });
       const plan = createMockPlan();
       const rSingle = createFighterState('A', plan, singleSlot);

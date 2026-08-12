@@ -28,7 +28,9 @@ vi.mock('@/state/useGameStore', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
+      <div {...props}>{children}</div>
+    ),
   },
 }));
 

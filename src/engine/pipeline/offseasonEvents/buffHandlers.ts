@@ -11,6 +11,9 @@ import {
   getActiveWarriors,
 } from './types';
 
+/**
+ *
+ */
 export function handleFameBoost(
   state: GameState,
   nextWeek: number,
@@ -32,6 +35,9 @@ export function handleFameBoost(
   }
 }
 
+/**
+ *
+ */
 export function handleEpiphany(
   state: GameState,
   nextWeek: number,
@@ -67,6 +73,9 @@ export function handleEpiphany(
   }
 }
 
+/**
+ *
+ */
 export function handleBardsSong(
   state: GameState,
   nextWeek: number,
@@ -89,6 +98,9 @@ export function handleBardsSong(
   }
 }
 
+/**
+ *
+ */
 export function handleMysticVision(
   state: GameState,
   nextWeek: number,
@@ -114,6 +126,9 @@ export function handleMysticVision(
   }
 }
 
+/**
+ *
+ */
 export function handleStrangeDream(
   state: GameState,
   nextWeek: number,
@@ -139,6 +154,9 @@ export function handleStrangeDream(
   }
 }
 
+/**
+ *
+ */
 export function handleMeteorShower(
   state: GameState,
   nextWeek: number,
@@ -167,6 +185,9 @@ export function handleMeteorShower(
   }
 }
 
+/**
+ *
+ */
 export function handleGladiatorOlympics(
   state: GameState,
   nextWeek: number,
@@ -195,6 +216,9 @@ export function handleGladiatorOlympics(
   }
 }
 
+/**
+ *
+ */
 export function handleLoyalStrayDog(
   state: GameState,
   nextWeek: number,
@@ -218,6 +242,9 @@ export function handleLoyalStrayDog(
   }
 }
 
+/**
+ *
+ */
 export function handleWanderingMystic(
   state: GameState,
   nextWeek: number,
@@ -245,6 +272,9 @@ export function handleWanderingMystic(
   }
 }
 
+/**
+ *
+ */
 export function handleChaosSpores(
   state: GameState,
   nextWeek: number,
@@ -276,6 +306,9 @@ export function handleChaosSpores(
   }
 }
 
+/**
+ *
+ */
 export function handleChaosWeaversGift(
   state: GameState,
   nextWeek: number,
@@ -311,6 +344,9 @@ export function handleChaosWeaversGift(
   }
 }
 
+/**
+ *
+ */
 export function handleShadowTraining(
   state: GameState,
   nextWeek: number,

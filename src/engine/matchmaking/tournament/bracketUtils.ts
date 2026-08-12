@@ -1,5 +1,8 @@
 import type { TournamentBout } from '@/types/state.types';
 
+/**
+ *
+ */
 export function findCurrentRoundBouts(bracket: TournamentBout[]): {
   currentRound: number | null;
   roundBouts: TournamentBout[];

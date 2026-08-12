@@ -11,6 +11,9 @@ import {
   getActiveWarriors,
 } from './types';
 
+/**
+ *
+ */
 export function handleWinterChill(
   __state: GameState,
   nextWeek: number,
@@ -26,6 +29,9 @@ export function handleWinterChill(
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: cost });
 }
 
+/**
+ *
+ */
 export function handleMerchantBlessing(
   __state: GameState,
   nextWeek: number,
@@ -39,6 +45,9 @@ export function handleMerchantBlessing(
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
 }
 
+/**
+ *
+ */
 export function handleBlackMarketRaid(
   _state: GameState,
   nextWeek: number,
@@ -58,6 +67,9 @@ export function handleBlackMarketRaid(
   });
 }
 
+/**
+ *
+ */
 export function handleMysteriousPatron(
   __state: GameState,
   nextWeek: number,
@@ -77,6 +89,9 @@ export function handleMysteriousPatron(
   });
 }
 
+/**
+ *
+ */
 export function handleBountifulHarvest(
   _state: GameState,
   nextWeek: number,

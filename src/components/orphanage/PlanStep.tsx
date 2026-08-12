@@ -24,6 +24,9 @@ interface PlanStepProps {
   onNext: () => void;
 }
 
+/**
+ *
+ */
 export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }: PlanStepProps) {
   const handleTactic = (t: (typeof PLAN_TACTICS)[number]) => {
     if (t.type === 'offensive') {

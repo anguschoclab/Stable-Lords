@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+/**
+ *
+ */
 export function useColumns(): 1 | 2 | 3 {
   const [columns, setColumns] = useState<1 | 2 | 3>(1);
 

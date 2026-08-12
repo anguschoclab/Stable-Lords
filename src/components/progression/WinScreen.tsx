@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { Crown, Trophy, Check, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ *
+ */
 export function WinScreen() {
   const { progression, fame, roster, acknowledgeWin, doReset } = useGameStore(
     useShallow((s) => ({

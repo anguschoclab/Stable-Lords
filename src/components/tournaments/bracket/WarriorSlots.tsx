@@ -72,7 +72,9 @@ export function WarriorSlots({
           </span>
           {isBye && <StepForward className="h-3 w-3 text-muted-foreground/50" />}
         </div>
-        {isAChosen && championship && <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />}
+        {isAChosen && championship && (
+          <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />
+        )}
         {isAChosen && !championship && (
           <Trophy className="h-3 w-3 animate-bounce motion-reduce:animate-none shadow-glow text-arena-gold" />
         )}
@@ -136,7 +138,9 @@ export function WarriorSlots({
             {isBye ? '(bye)' : resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
           </span>
         </div>
-        {isDChosen && championship && <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />}
+        {isDChosen && championship && (
+          <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />
+        )}
         {isDChosen && !championship && (
           <Trophy className="h-3 w-3 animate-bounce motion-reduce:animate-none shadow-glow text-arena-gold" />
         )}

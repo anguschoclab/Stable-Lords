@@ -52,16 +52,13 @@ export default function Training() {
 
   const assignments = state.trainingAssignments ?? [];
 
-  const rosterNameMap = useMemo(
-    () => {
-      const map = new Map<string, string>();
-      for (const w of state.roster ?? []) {
-        map.set(w.id, w.name);
-      }
-      return map;
-    },
-    [state.roster]
-  );
+  const rosterNameMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const w of state.roster ?? []) {
+      map.set(w.id, w.name);
+    }
+    return map;
+  }, [state.roster]);
 
   const handleAssign = (warriorId: WarriorId, attribute: keyof Attributes) => {
     if (attribute === 'SZ') return;

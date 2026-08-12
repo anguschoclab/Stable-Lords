@@ -478,11 +478,7 @@ export interface SimulationReport {
  * Annual award type type.
  */
 export type AnnualAwardType =
-  | 'WARRIOR_OF_YEAR'
-  | 'KILLER_OF_YEAR'
-  | 'STABLE_OF_YEAR'
-  | 'CLASS_MVP'
-  | 'TOURNAMENT_RANK'; /**
+  'WARRIOR_OF_YEAR' | 'KILLER_OF_YEAR' | 'STABLE_OF_YEAR' | 'CLASS_MVP' | 'TOURNAMENT_RANK'; /**
  * Defines the shape of annual award.
  */
 
@@ -501,13 +497,15 @@ export interface AnnualAward {
   reason: string;
 }
 
+/**
+ *
+ */
 export type ObjectiveId =
-  | 'TOP_10_STABLE'
-  | 'TOP_3_STABLE'
-  | 'FIRST_TOURNAMENT_WIN'
-  | 'HALL_OF_FAMER'
-  | 'REALM_CHAMPION';
+  'TOP_10_STABLE' | 'TOP_3_STABLE' | 'FIRST_TOURNAMENT_WIN' | 'HALL_OF_FAMER' | 'REALM_CHAMPION';
 
+/**
+ *
+ */
 export interface ProgressionObjective {
   id: ObjectiveId;
   label: string;
@@ -517,8 +515,14 @@ export interface ProgressionObjective {
   completedYear?: number;
 }
 
+/**
+ *
+ */
 export type ProgressionStatus = 'active' | 'won' | 'continued';
 
+/**
+ *
+ */
 export interface ProgressionState {
   status: ProgressionStatus;
   stableStanding: number;

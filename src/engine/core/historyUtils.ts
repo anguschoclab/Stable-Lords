@@ -120,6 +120,9 @@ export function getFightsForTournament(
   return result.reverse(); // Reverse to maintain chronological order
 }
 
+/**
+ *
+ */
 export function buildRecentFightPairs(
   arenaHistory: FightSummary[],
   currentWeek: number,

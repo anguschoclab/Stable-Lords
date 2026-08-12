@@ -166,10 +166,14 @@ export function resolveRound(
   const champion = isComplete ? winners[0]?.name : undefined;
 
   let updatedTournament: TournamentEntry | undefined;
-  updatedState.tournaments = updateEntityInList(updatedState.tournaments || [], tournamentId, (t) => {
-    updatedTournament = { ...t, bracket, completed: isComplete, champion };
-    return updatedTournament;
-  });
+  updatedState.tournaments = updateEntityInList(
+    updatedState.tournaments || [],
+    tournamentId,
+    (t) => {
+      updatedTournament = { ...t, bracket, completed: isComplete, champion };
+      return updatedTournament;
+    }
+  );
 
   if (isComplete && champion) {
     updatedState = awardTournamentPrizes(resolvedTournament, updatedState);
@@ -249,14 +253,24 @@ export function applyBoutResults(
   // 🔒 Tournament fatigue exemption: No fatigue accrual for tournament participants during tournament week
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
-  updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) => updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue));
-  updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) => updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue));
+  updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
+    updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue)
+  );
+  updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
+    updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue)
+  );
 
   if (wA.stableId || wD.stableId) {
     updatedState.rivals = updatedState.rivals.map((r) => {
       let rRoster = r.roster;
-      if (r.id === wA.stableId) rRoster = updateEntityInList(rRoster, wA.id, (w) => updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue));
-      if (r.id === wD.stableId) rRoster = updateEntityInList(rRoster, wD.id, (w) => updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue));
+      if (r.id === wA.stableId)
+        rRoster = updateEntityInList(rRoster, wA.id, (w) =>
+          updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue)
+        );
+      if (r.id === wD.stableId)
+        rRoster = updateEntityInList(rRoster, wD.id, (w) =>
+          updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue)
+        );
       return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
     });
   }

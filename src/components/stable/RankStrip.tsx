@@ -5,6 +5,9 @@ interface RankStripProps {
   rankIndex: number;
 }
 
+/**
+ *
+ */
 export function RankStrip({ rankIndex }: RankStripProps) {
   return (
     <div
@@ -29,7 +32,9 @@ export function RankStrip({ rankIndex }: RankStripProps) {
       >
         {rankIndex + 1}
       </span>
-      {rankIndex === 0 && <Crown className="h-4 w-4 mt-1 text-arena-gold animate-bounce motion-reduce:animate-none" />}
+      {rankIndex === 0 && (
+        <Crown className="h-4 w-4 mt-1 text-arena-gold animate-bounce motion-reduce:animate-none" />
+      )}
     </div>
   );
 }

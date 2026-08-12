@@ -13,6 +13,9 @@ interface StableEntry {
   titles: number;
 }
 
+/**
+ *
+ */
 export function runProgressionPass(
   state: GameState,
   nextWeek: number,

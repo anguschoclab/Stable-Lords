@@ -93,11 +93,7 @@ export default function EquipmentLoadoutUI({
           </div>
         )}
 
-        <EncumbranceBar
-          totalWeight={totalWeight}
-          carryCap={carryCap}
-          loadout={loadout}
-        />
+        <EncumbranceBar totalWeight={totalWeight} carryCap={carryCap} loadout={loadout} />
 
         {/* Slots */}
         <div className="grid gap-4 sm:grid-cols-2">

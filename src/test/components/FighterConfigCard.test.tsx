@@ -10,10 +10,7 @@ import path from 'path';
 
 describe('FighterConfigCard DOM ID uniqueness', () => {
   it('FighterConfigCard uses useId for unique DOM IDs', () => {
-    const filePath = path.resolve(
-      process.cwd(),
-      'src/components/stable/FighterConfigCard.tsx'
-    );
+    const filePath = path.resolve(process.cwd(), 'src/components/stable/FighterConfigCard.tsx');
     const content = readFileSync(filePath, 'utf-8');
 
     // After PR #781, FighterConfigCard should import and use React's useId
@@ -21,10 +18,7 @@ describe('FighterConfigCard DOM ID uniqueness', () => {
   });
 
   it('FighterConfigCard does not use hardcoded stat-slider IDs without useId', () => {
-    const filePath = path.resolve(
-      process.cwd(),
-      'src/components/stable/FighterConfigCard.tsx'
-    );
+    const filePath = path.resolve(process.cwd(), 'src/components/stable/FighterConfigCard.tsx');
     const content = readFileSync(filePath, 'utf-8');
 
     // If useId is present, the hardcoded IDs should be prefixed with the unique id

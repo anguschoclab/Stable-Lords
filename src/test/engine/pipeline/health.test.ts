@@ -179,9 +179,7 @@ describe('pipeline/health', () => {
       const injury2 = makeInjury('Sprained Wrist', 1);
       const state = {
         week: 5,
-        roster: [
-          { id: 'w1' as WarriorId, name: 'A', injuries: [injury1, injury2] },
-        ],
+        roster: [{ id: 'w1' as WarriorId, name: 'A', injuries: [injury1, injury2] }],
       } as any as GameState;
 
       const impact = computeHealthImpact(state, makeMockRNG());
@@ -283,7 +281,7 @@ describe('pipeline/health', () => {
       expect(impact.newsletterItems).toEqual([]);
     });
 
-    it('multiple warriors: some heal, some don\'t — newsletter contains only healed entries', () => {
+    it("multiple warriors: some heal, some don't — newsletter contains only healed entries", () => {
       const healingInjury = makeInjury('Bruised Ribs', 1);
       const activeInjury = makeInjury('Broken Arm', 5);
       const state = {
@@ -341,10 +339,7 @@ describe('pipeline/health', () => {
       const state = {
         week: 5,
         absoluteWeek: 5,
-        roster: [
-          { id: 'w1' as WarriorId, name: 'A', fatigue: 50 },
-          unchangedWarrior,
-        ],
+        roster: [{ id: 'w1' as WarriorId, name: 'A', fatigue: 50 }, unchangedWarrior],
         restStates: [],
         newsletter: [],
       } as any as GameState;
@@ -403,9 +398,7 @@ describe('pipeline/health', () => {
 
       const newState = applyHealthUpdates(state);
 
-      expect(newState.restStates).toEqual([
-        { warriorId: 'w2' as WarriorId, restUntilWeek: 54 },
-      ]);
+      expect(newState.restStates).toEqual([{ warriorId: 'w2' as WarriorId, restUntilWeek: 54 }]);
     });
 
     it('falls back to week when absoluteWeek is undefined', () => {

@@ -9,6 +9,9 @@
 import { FightingStyle, type FightPlan, type PhaseStrategy } from '@/types/shared.types';
 import { getAITactics } from '@/engine/ai/plan/levers';
 
+/**
+ *
+ */
 export interface StylePreset {
   name: string;
   description: string;
@@ -17,7 +20,11 @@ export interface StylePreset {
 
 type PhaseVals = { OE: number; AL: number; KD: number };
 
-function makePhases(opening: PhaseVals, mid: PhaseVals, late: PhaseVals): {
+function makePhases(
+  opening: PhaseVals,
+  mid: PhaseVals,
+  late: PhaseVals
+): {
   opening: PhaseStrategy;
   mid: PhaseStrategy;
   late: PhaseStrategy;
@@ -61,14 +68,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Patient Surgeon',
       'Conservative opening, ramping precision through mid and late phases.',
       { OE: 6, AL: 5, KD: 5 },
-      { opening: { OE: 4, AL: 5, KD: 3 }, mid: { OE: 6, AL: 5, KD: 5 }, late: { OE: 7, AL: 4, KD: 7 } }
+      {
+        opening: { OE: 4, AL: 5, KD: 3 },
+        mid: { OE: 6, AL: 5, KD: 5 },
+        late: { OE: 7, AL: 4, KD: 7 },
+      }
     ),
     makePreset(
       FightingStyle.AimedBlow,
       'Aggressive Precision',
       'Higher activity early, finishing with maximum kill desire late.',
       { OE: 6, AL: 5, KD: 6 },
-      { opening: { OE: 6, AL: 6, KD: 5 }, mid: { OE: 7, AL: 5, KD: 6 }, late: { OE: 5, AL: 3, KD: 8 } }
+      {
+        opening: { OE: 6, AL: 6, KD: 5 },
+        mid: { OE: 7, AL: 5, KD: 6 },
+        late: { OE: 5, AL: 3, KD: 8 },
+      }
     ),
   ],
 
@@ -78,14 +93,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Steamroller',
       'Overwhelming aggression early, fading to defensive late-game finish.',
       { OE: 7, AL: 4, KD: 7 },
-      { opening: { OE: 8, AL: 5, KD: 6 }, mid: { OE: 7, AL: 4, KD: 7 }, late: { OE: 5, AL: 3, KD: 9 } }
+      {
+        opening: { OE: 8, AL: 5, KD: 6 },
+        mid: { OE: 7, AL: 4, KD: 7 },
+        late: { OE: 5, AL: 3, KD: 9 },
+      }
     ),
     makePreset(
       FightingStyle.BashingAttack,
       'Measured Brute',
       'Paced aggression that escalates through the bout for a late kill.',
       { OE: 7, AL: 4, KD: 6 },
-      { opening: { OE: 6, AL: 4, KD: 4 }, mid: { OE: 7, AL: 5, KD: 6 }, late: { OE: 8, AL: 3, KD: 8 } }
+      {
+        opening: { OE: 6, AL: 4, KD: 4 },
+        mid: { OE: 7, AL: 5, KD: 6 },
+        late: { OE: 8, AL: 3, KD: 8 },
+      }
     ),
   ],
 
@@ -95,14 +118,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Blitz',
       'All-out opening assault, conserving energy for a late finish.',
       { OE: 6, AL: 6, KD: 6 },
-      { opening: { OE: 8, AL: 8, KD: 5 }, mid: { OE: 6, AL: 6, KD: 6 }, late: { OE: 4, AL: 4, KD: 7 } }
+      {
+        opening: { OE: 8, AL: 8, KD: 5 },
+        mid: { OE: 6, AL: 6, KD: 6 },
+        late: { OE: 4, AL: 4, KD: 7 },
+      }
     ),
     makePreset(
       FightingStyle.LungingAttack,
       'Sustained Pressure',
       'Even tempo throughout, wearing the opponent down steadily.',
       { OE: 6, AL: 6, KD: 5 },
-      { opening: { OE: 6, AL: 7, KD: 4 }, mid: { OE: 6, AL: 6, KD: 5 }, late: { OE: 5, AL: 5, KD: 6 } }
+      {
+        opening: { OE: 6, AL: 7, KD: 4 },
+        mid: { OE: 6, AL: 6, KD: 5 },
+        late: { OE: 5, AL: 5, KD: 6 },
+      }
     ),
   ],
 
@@ -112,14 +143,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Counter-Strike',
       'Defensive opening, transitioning to aggressive lunges in mid and late.',
       { OE: 6, AL: 5, KD: 5 },
-      { opening: { OE: 4, AL: 5, KD: 3 }, mid: { OE: 6, AL: 6, KD: 5 }, late: { OE: 7, AL: 5, KD: 7 } }
+      {
+        opening: { OE: 4, AL: 5, KD: 3 },
+        mid: { OE: 6, AL: 6, KD: 5 },
+        late: { OE: 7, AL: 5, KD: 7 },
+      }
     ),
     makePreset(
       FightingStyle.ParryLunge,
       'Explosive Opener',
       'High-tempo opening, settling into a measured mid-late game.',
       { OE: 5, AL: 5, KD: 5 },
-      { opening: { OE: 7, AL: 7, KD: 5 }, mid: { OE: 5, AL: 5, KD: 5 }, late: { OE: 4, AL: 4, KD: 6 } }
+      {
+        opening: { OE: 7, AL: 7, KD: 5 },
+        mid: { OE: 5, AL: 5, KD: 5 },
+        late: { OE: 4, AL: 4, KD: 6 },
+      }
     ),
   ],
 
@@ -129,14 +168,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Classic Counter',
       'Pure counter-punching: low effort early, escalating through the bout.',
       { OE: 4, AL: 4, KD: 4 },
-      { opening: { OE: 3, AL: 4, KD: 3 }, mid: { OE: 4, AL: 5, KD: 4 }, late: { OE: 5, AL: 4, KD: 6 } }
+      {
+        opening: { OE: 3, AL: 4, KD: 3 },
+        mid: { OE: 4, AL: 5, KD: 4 },
+        late: { OE: 5, AL: 4, KD: 6 },
+      }
     ),
     makePreset(
       FightingStyle.ParryRiposte,
       'Aggressive Riposte',
       'More active counter style with consistent pressure and late kill focus.',
       { OE: 5, AL: 5, KD: 5 },
-      { opening: { OE: 5, AL: 5, KD: 4 }, mid: { OE: 5, AL: 5, KD: 5 }, late: { OE: 6, AL: 4, KD: 7 } }
+      {
+        opening: { OE: 5, AL: 5, KD: 4 },
+        mid: { OE: 5, AL: 5, KD: 5 },
+        late: { OE: 6, AL: 4, KD: 7 },
+      }
     ),
   ],
 
@@ -146,14 +193,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Measured Defense',
       'Balanced defense with gradual escalation toward a late finish.',
       { OE: 5, AL: 5, KD: 5 },
-      { opening: { OE: 5, AL: 5, KD: 3 }, mid: { OE: 5, AL: 5, KD: 5 }, late: { OE: 6, AL: 4, KD: 7 } }
+      {
+        opening: { OE: 5, AL: 5, KD: 3 },
+        mid: { OE: 5, AL: 5, KD: 5 },
+        late: { OE: 6, AL: 4, KD: 7 },
+      }
     ),
     makePreset(
       FightingStyle.ParryStrike,
       'Quick Finish',
       'Aggressive opening and mid, going for an early-to-mid kill.',
       { OE: 6, AL: 5, KD: 6 },
-      { opening: { OE: 6, AL: 6, KD: 5 }, mid: { OE: 7, AL: 5, KD: 6 }, late: { OE: 5, AL: 3, KD: 8 } }
+      {
+        opening: { OE: 6, AL: 6, KD: 5 },
+        mid: { OE: 7, AL: 5, KD: 6 },
+        late: { OE: 5, AL: 3, KD: 8 },
+      }
     ),
   ],
 
@@ -163,14 +218,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Pressure Cutter',
       'Relentless pressure with high activity, finishing strong.',
       { OE: 7, AL: 6, KD: 6 },
-      { opening: { OE: 7, AL: 6, KD: 5 }, mid: { OE: 7, AL: 6, KD: 6 }, late: { OE: 6, AL: 4, KD: 7 } }
+      {
+        opening: { OE: 7, AL: 6, KD: 5 },
+        mid: { OE: 7, AL: 6, KD: 6 },
+        late: { OE: 6, AL: 4, KD: 7 },
+      }
     ),
     makePreset(
       FightingStyle.SlashingAttack,
       'Cautious Slasher',
       'Measured opening, ramping up through mid for a late kill.',
       { OE: 6, AL: 6, KD: 5 },
-      { opening: { OE: 5, AL: 5, KD: 3 }, mid: { OE: 6, AL: 6, KD: 5 }, late: { OE: 7, AL: 5, KD: 7 } }
+      {
+        opening: { OE: 5, AL: 5, KD: 3 },
+        mid: { OE: 6, AL: 6, KD: 5 },
+        late: { OE: 7, AL: 5, KD: 7 },
+      }
     ),
   ],
 
@@ -180,14 +243,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Fast Finish',
       'Aggressive from the start, going for a quick kill.',
       { OE: 7, AL: 5, KD: 7 },
-      { opening: { OE: 7, AL: 6, KD: 6 }, mid: { OE: 7, AL: 5, KD: 7 }, late: { OE: 6, AL: 3, KD: 9 } }
+      {
+        opening: { OE: 7, AL: 6, KD: 6 },
+        mid: { OE: 7, AL: 5, KD: 7 },
+        late: { OE: 6, AL: 3, KD: 9 },
+      }
     ),
     makePreset(
       FightingStyle.StrikingAttack,
       'Technical Striker',
       'Measured approach with consistent tempo and late escalation.',
       { OE: 6, AL: 5, KD: 5 },
-      { opening: { OE: 5, AL: 5, KD: 4 }, mid: { OE: 6, AL: 5, KD: 5 }, late: { OE: 6, AL: 4, KD: 7 } }
+      {
+        opening: { OE: 5, AL: 5, KD: 4 },
+        mid: { OE: 6, AL: 5, KD: 5 },
+        late: { OE: 6, AL: 4, KD: 7 },
+      }
     ),
   ],
 
@@ -197,14 +268,22 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Endurance Wall',
       'Minimal effort throughout, outlasting the opponent for a late opening.',
       { OE: 3, AL: 3, KD: 2 },
-      { opening: { OE: 2, AL: 3, KD: 1 }, mid: { OE: 3, AL: 3, KD: 2 }, late: { OE: 4, AL: 3, KD: 4 } }
+      {
+        opening: { OE: 2, AL: 3, KD: 1 },
+        mid: { OE: 3, AL: 3, KD: 2 },
+        late: { OE: 4, AL: 3, KD: 4 },
+      }
     ),
     makePreset(
       FightingStyle.TotalParry,
       'Opportunistic',
       'Slightly more active parry style, looking for counter opportunities.',
       { OE: 4, AL: 4, KD: 4 },
-      { opening: { OE: 3, AL: 4, KD: 2 }, mid: { OE: 4, AL: 4, KD: 4 }, late: { OE: 5, AL: 4, KD: 6 } }
+      {
+        opening: { OE: 3, AL: 4, KD: 2 },
+        mid: { OE: 4, AL: 4, KD: 4 },
+        late: { OE: 5, AL: 4, KD: 6 },
+      }
     ),
   ],
 
@@ -214,22 +293,36 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       'Iron Curtain',
       'Defensive wall with high activity, gradually reducing effort.',
       { OE: 5, AL: 5, KD: 4 },
-      { opening: { OE: 5, AL: 6, KD: 3 }, mid: { OE: 5, AL: 5, KD: 4 }, late: { OE: 4, AL: 4, KD: 5 } }
+      {
+        opening: { OE: 5, AL: 6, KD: 3 },
+        mid: { OE: 5, AL: 5, KD: 4 },
+        late: { OE: 4, AL: 4, KD: 5 },
+      }
     ),
     makePreset(
       FightingStyle.WallOfSteel,
       'Aggressive Wall',
       'Active wall style with consistent pressure and kill intent.',
       { OE: 6, AL: 6, KD: 5 },
-      { opening: { OE: 6, AL: 7, KD: 5 }, mid: { OE: 6, AL: 6, KD: 5 }, late: { OE: 5, AL: 5, KD: 6 } }
+      {
+        opening: { OE: 6, AL: 7, KD: 5 },
+        mid: { OE: 6, AL: 6, KD: 5 },
+        late: { OE: 5, AL: 5, KD: 6 },
+      }
     ),
   ],
 };
 
+/**
+ *
+ */
 export function getStylePresets(style: FightingStyle): StylePreset[] {
   return STYLE_PRESETS[style] ?? [];
 }
 
+/**
+ *
+ */
 export function defaultStylePreset(style: FightingStyle): StylePreset {
   return STYLE_PRESETS[style]?.[0] ?? STYLE_PRESETS[FightingStyle.StrikingAttack][0]!;
 }

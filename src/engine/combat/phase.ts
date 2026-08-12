@@ -3,6 +3,9 @@
  * All other modules must use these functions instead of defining their own.
  */
 
+/**
+ *
+ */
 export type PhaseKey = 'opening' | 'mid' | 'late';
 
 /**

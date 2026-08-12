@@ -463,8 +463,7 @@ export const THE_SUNKEN_VAULT: ArenaConfig = {
   tags: ['water', 'indoor', 'magical'],
   tier: 2,
   size: 'cramped',
-  description:
-    'A submerged treasure room where ancient magic and knee-deep water slow movement.',
+  description: 'A submerged treasure room where ancient magic and knee-deep water slow movement.',
   zoneDef: { Edge: -1, Corner: -3 },
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: 1 },
 };
@@ -486,7 +485,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     id: 'sunken_vault_echo',
     arenaId: 'the_sunken_vault',
     type: 'architectural_quirk',
-    title: "Whispers of the Deep",
+    title: 'Whispers of the Deep',
     narrative:
       'Fighters swear they hear the whispers of drowned kings echoing off the submerged walls.',
   },
@@ -494,7 +493,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     id: 'iron_forge_heat',
     arenaId: 'iron_forge',
     type: 'architectural_quirk',
-    title: "The Bellows",
+    title: 'The Bellows',
     narrative:
       'Massive subterranean bellows pump hot air through the grates, searing the lungs of the exhausted.',
   },
@@ -998,64 +997,73 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     arenaId: 'the_abyssal_pit',
     type: 'historical_battle',
     title: 'The Dark Descent',
-    narrative: 'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.'
+    narrative:
+      'In 988, a massive brawl broke out involving twenty fighters. The sheer weight of the combatants collapsed the central platform, sending everyone plummeting into the abyss. There were no survivors.',
   },
   {
     id: 'sun_baked_plateau_madness',
     arenaId: 'sun_baked_plateau',
     type: 'historical_battle',
     title: 'The Midday Madness',
-    narrative: 'A grueling two-hour bout where both fighters eventually succumbed to heat exhaustion and the cursed whispers of the plateau, ending in a mutual draw as they lay motionless in the sand.'
+    narrative:
+      'A grueling two-hour bout where both fighters eventually succumbed to heat exhaustion and the cursed whispers of the plateau, ending in a mutual draw as they lay motionless in the sand.',
   },
   {
     id: 'ancient_aqueduct_drowning',
     arenaId: 'ancient_aqueduct',
     type: 'famous_death',
     title: 'The Deep Channel',
-    narrative: 'A famed riposter wearing heavy plate was shoved into a deep channel and drowned before the match could officially conclude.'
+    narrative:
+      'A famed riposter wearing heavy plate was shoved into a deep channel and drowned before the match could officially conclude.',
   },
   {
     id: 'underpit_arena_crushing_dark',
     arenaId: 'underpit_arena',
     type: 'architectural_quirk',
     title: 'The Crushing Dark',
-    narrative: 'Because the Underpit relies on braziers for illumination, one fighter famously kicked dirt into every fire during a match, forcing their opponent into an utter, suffocating darkness before delivering the final blow.'
+    narrative:
+      'Because the Underpit relies on braziers for illumination, one fighter famously kicked dirt into every fire during a match, forcing their opponent into an utter, suffocating darkness before delivering the final blow.',
   },
   {
     id: 'brass_ring_molten_tomb',
     arenaId: 'brass_ring',
     type: 'famous_death',
     title: 'The Molten Tomb',
-    narrative: 'A legendary heavily armored knight was slowly melted alive after being grappled and pinned against the outer heating coils for five agonizing minutes.'
+    narrative:
+      'A legendary heavily armored knight was slowly melted alive after being grappled and pinned against the outer heating coils for five agonizing minutes.',
   },
   {
     id: 'highplain_arena_red_wind',
     arenaId: 'highplain_arena',
     type: 'historical_battle',
     title: 'The Day of the Red Wind',
-    narrative: 'A freak tornado swept through the high plains during a mid-summer tournament, carrying the blood of twenty fallen fighters into the sky and raining it down on the screaming spectators.'
+    narrative:
+      'A freak tornado swept through the high plains during a mid-summer tournament, carrying the blood of twenty fallen fighters into the sky and raining it down on the screaming spectators.',
   },
   {
     id: 'underpit_feral_uprising',
     arenaId: 'underpit_arena',
     type: 'historical_battle',
     title: 'The Feral Uprising',
-    narrative: 'A band of unsanctioned child fighters managed to collapse the main portcullis, holding off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
+    narrative:
+      'A band of unsanctioned child fighters managed to collapse the main portcullis, holding off the guards for three hours. The stains on the eastern wall are said to be from their final stand.',
   },
   {
     id: 'gutter_pit_the_blind_orphan',
     arenaId: 'gutter_pit',
     type: 'famous_death',
     title: 'The Blind Orphan',
-    narrative: 'A legendary rogue who fought entirely by sound met their end here when the crowd unexpectedly went completely silent in awe, leaving them entirely deaf to a fatal stab.',
+    narrative:
+      'A legendary rogue who fought entirely by sound met their end here when the crowd unexpectedly went completely silent in awe, leaving them entirely deaf to a fatal stab.',
   },
   {
     id: 'sundered_coliseum_orphans_echo',
     arenaId: 'sundered_coliseum',
     type: 'architectural_quirk',
-    title: 'The Orphan\'s Echo',
-    narrative: 'A crack in the western wall perfectly catches the wind, emitting a sound remarkably like a child weeping. Opponents of high empathy often find their morale broken here.',
-  }
+    title: "The Orphan's Echo",
+    narrative:
+      'A crack in the western wall perfectly catches the wind, emitting a sound remarkably like a child weeping. Opponents of high empathy often find their morale broken here.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {
@@ -1082,14 +1090,14 @@ export const THUNDER_PEAK: ArenaConfig = {
   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.25 },
 };
 
-
 export const SUN_BAKED_PLATEAU: ArenaConfig = {
   id: 'sun_baked_plateau',
   name: 'Sun-Baked Plateau',
   tags: ['open', 'elevated', 'outdoor', 'cursed'],
   tier: 2,
   size: 'open',
-  description: 'A desolate, cursed high plateau bathed in relentless sunlight. Stamina is heavily tested.',
+  description:
+    'A desolate, cursed high plateau bathed in relentless sunlight. Stamina is heavily tested.',
   zoneDef: { Edge: -1, Corner: -3 },
   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.3 },
 };

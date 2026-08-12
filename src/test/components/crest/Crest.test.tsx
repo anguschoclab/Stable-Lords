@@ -35,7 +35,11 @@ describe('getFieldPattern', () => {
   });
 
   it('renders fess pattern', () => {
-    const result = getFieldPattern('fess', { primary: '#ff0000', secondary: '#00ff00', metal: '#D4AF37' });
+    const result = getFieldPattern('fess', {
+      primary: '#ff0000',
+      secondary: '#00ff00',
+      metal: '#D4AF37',
+    });
     expect(result).toBeDefined();
   });
 

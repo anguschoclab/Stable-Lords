@@ -8,7 +8,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('@/components/arena', () => ({
   ViewModeToggle: ({ mode, onChange }: { mode: string; onChange: (m: string) => void }) => (
-    <div data-testid="view-mode-toggle" onClick={() => onChange('text')}>{mode}</div>
+    <div data-testid="view-mode-toggle" onClick={() => onChange('text')}>
+      {mode}
+    </div>
   ),
 }));
 

@@ -15,9 +15,7 @@ describe('cn', () => {
   });
 
   it('handles conditional classes via objects', () => {
-    expect(cn('base', { 'text-red-500': false, 'text-blue-500': true })).toBe(
-      'base text-blue-500',
-    );
+    expect(cn('base', { 'text-red-500': false, 'text-blue-500': true })).toBe('base text-blue-500');
   });
 
   it('handles arrays of classes', () => {
@@ -39,7 +37,7 @@ describe('cn', () => {
 
   it('handles mixed inputs with conflicts', () => {
     expect(cn('px-2', ['py-1', 'px-4'], { 'text-center': true, 'text-left': false })).toBe(
-      'py-1 px-4 text-center',
+      'py-1 px-4 text-center'
     );
   });
 });

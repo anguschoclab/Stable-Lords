@@ -253,7 +253,7 @@ describe('Equipment Optimizer', () => {
       const tankRec = recs[0];
       expect(tankRec?.loadout.armor).toBe('plate_armor');
       const armorItem = tankRec?.breakdown.armor.item;
-      expect((armorItem?.mitigation ?? 0)).toBeGreaterThanOrEqual(8);
+      expect(armorItem?.mitigation ?? 0).toBeGreaterThanOrEqual(8);
     });
 
     it('tank profile prefers helm with higher mitigation', () => {
@@ -261,7 +261,7 @@ describe('Equipment Optimizer', () => {
       const tankRec = recs[0];
       expect(tankRec?.loadout.helm).toBe('full_helm');
       const helmItem = tankRec?.breakdown.helm.item;
-      expect((helmItem?.mitigation ?? 0)).toBeGreaterThan(0);
+      expect(helmItem?.mitigation ?? 0).toBeGreaterThan(0);
     });
 
     it('speed profile avoids high enduranceCostMod armor', () => {
@@ -270,7 +270,7 @@ describe('Equipment Optimizer', () => {
       const speedRec = recs[0];
       const armorItem = speedRec?.breakdown.armor.item;
       // Speed should pick light armor (none_armor or padded) with enduranceCostMod <= 1.1
-      expect((armorItem?.enduranceCostMod ?? 1.0)).toBeLessThanOrEqual(1.1);
+      expect(armorItem?.enduranceCostMod ?? 1.0).toBeLessThanOrEqual(1.1);
     });
 
     it('synergy score penalizes over-encumbered loadouts', () => {
@@ -298,7 +298,7 @@ describe('Equipment Optimizer', () => {
       // But the shield slot should also have a real shield with parry bonus
       if (tankRec?.loadout.shield !== 'none_shield') {
         const shieldItem = tankRec?.breakdown.shield.item;
-        expect((shieldItem?.shieldParryBonus ?? 0)).toBeGreaterThan(0);
+        expect(shieldItem?.shieldParryBonus ?? 0).toBeGreaterThan(0);
       }
     });
   });

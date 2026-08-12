@@ -25,6 +25,9 @@ interface AttributeRowProps {
   onAssign: (attr: keyof Attributes) => void;
 }
 
+/**
+ *
+ */
 export function AttributeRow({
   warrior,
   attributeKey: key,

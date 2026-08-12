@@ -22,7 +22,11 @@ interface CrowdReactionsProps {
  * Crowd reactions.
  * @param - { tier, state, class name }.
  */
-export default function CrowdReactions({ tier, state: currentState, className }: CrowdReactionsProps) {
+export default function CrowdReactions({
+  tier,
+  state: currentState,
+  className,
+}: CrowdReactionsProps) {
   // No crowd for training tier
   if (tier === 'training') return null;
 

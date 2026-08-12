@@ -160,21 +160,23 @@ export function RecruitCard({
                 "{scoutReport.summary}"
               </p>
             )}
-            {scoutReport && scoutReport.revealed && Object.keys(scoutReport.revealed).length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2">
-                {Object.entries(scoutReport.revealed)
-                  .sort((a, b) => (b[1] as number) - (a[1] as number))
-                  .map(([key, val]) => (
-                    <Badge
-                      key={key}
-                      variant="outline"
-                      className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
-                    >
-                      {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
-                    </Badge>
-                  ))}
-              </div>
-            )}
+            {scoutReport &&
+              scoutReport.revealed &&
+              Object.keys(scoutReport.revealed).length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {Object.entries(scoutReport.revealed)
+                    .sort((a, b) => (b[1] as number) - (a[1] as number))
+                    .map(([key, val]) => (
+                      <Badge
+                        key={key}
+                        variant="outline"
+                        className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
+                      >
+                        {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
+                      </Badge>
+                    ))}
+                </div>
+              )}
           </div>
         ) : (
           <div className="bg-white/[0.02] border border-white/5 p-6 flex items-center justify-between group/scout">

@@ -4,6 +4,9 @@ import { useGameStore } from '@/state/useGameStore';
 import { isActive } from '@/engine/warriorStatus';
 import type { FightPlan, Warrior } from '@/types/game';
 
+/**
+ *
+ */
 export function useTrainingPlanner() {
   const { roster, setState } = useGameStore(
     useShallow((s) => ({ roster: s.roster, setState: s.setState }))

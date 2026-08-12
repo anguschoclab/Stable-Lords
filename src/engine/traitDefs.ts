@@ -27,6 +27,9 @@ export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Fl
  *
  */
 export type TraitSign = 'positive' | 'negative';
+/**
+ *
+ */
 export type TraitId = string;
 
 /**
@@ -95,7 +98,7 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
-// 5 New Personality/Lore Traits
+  // 5 New Personality/Lore Traits
 
   guttersnipe_cunning: {
     id: 'guttersnipe_cunning',
@@ -109,7 +112,8 @@ export const TRAITS: Record<string, TraitDef> = {
   iron_stomach: {
     id: 'iron_stomach',
     name: 'Iron Stomach',
-    description: 'Raised on garbage and sour water. Shrugs off stamina loss slightly better than most.',
+    description:
+      'Raised on garbage and sour water. Shrugs off stamina loss slightly better than most.',
     effect: { enduranceMult: 0.95 },
     tier: 'Common',
     sign: 'positive',

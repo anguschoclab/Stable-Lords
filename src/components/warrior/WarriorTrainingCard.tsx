@@ -14,6 +14,9 @@ import { AttributeRow } from './AttributeRow';
 import { TraitTrainingSection } from './TraitTrainingSection';
 import type { Trainer } from '@/types/shared.types';
 
+/**
+ *
+ */
 export function WarriorTrainingCard({
   warrior,
   assignment,

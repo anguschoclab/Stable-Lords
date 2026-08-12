@@ -1,6 +1,9 @@
 import { FightingStyle, type Warrior, type FightPlan, type WarriorId } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
+/**
+ *
+ */
 export function makeWarrior(
   name: string,
   style: FightingStyle,
@@ -30,10 +33,16 @@ export function makeWarrior(
   };
 }
 
+/**
+ *
+ */
 export function makePlan(style: FightingStyle, overrides: Partial<FightPlan> = {}): FightPlan {
   return { style, OE: 7, AL: 6, killDesire: 5, target: 'Any', ...overrides };
 }
 
+/**
+ *
+ */
 export function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);

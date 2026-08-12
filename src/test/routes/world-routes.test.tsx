@@ -1,5 +1,9 @@
 import { describe, it, vi } from 'vitest';
-import { expectRouteDefinition, expectRouteComponent, renderRouteComponent } from './_helpers/routeTestHelper';
+import {
+  expectRouteDefinition,
+  expectRouteComponent,
+  renderRouteComponent,
+} from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/WorldOverview', () => ({
   default: () => <div data-testid="world-overview">WorldOverview</div>,
@@ -28,12 +32,20 @@ vi.mock('@/pages/StableDetail', () => ({
 
 const routes = [
   { name: 'world/index', path: '/world/', importPath: '@/routes/world/index' },
-  { name: 'world/arena-leaderboards', path: '/world/arena-leaderboards', importPath: '@/routes/world/arena-leaderboards' },
+  {
+    name: 'world/arena-leaderboards',
+    path: '/world/arena-leaderboards',
+    importPath: '@/routes/world/arena-leaderboards',
+  },
   { name: 'world/chronicle', path: '/world/chronicle', importPath: '@/routes/world/chronicle' },
   { name: 'world/graveyard', path: '/world/graveyard', importPath: '@/routes/world/graveyard' },
   { name: 'world/history', path: '/world/history', importPath: '@/routes/world/history' },
   { name: 'world/scouting', path: '/world/scouting', importPath: '@/routes/world/scouting' },
-  { name: 'world/tournaments', path: '/world/tournaments', importPath: '@/routes/world/tournaments' },
+  {
+    name: 'world/tournaments',
+    path: '/world/tournaments',
+    importPath: '@/routes/world/tournaments',
+  },
   { name: 'world/stable/$id', path: '/world/stable/$id', importPath: '@/routes/world/stable/$id' },
 ];
 

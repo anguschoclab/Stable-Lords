@@ -20,6 +20,9 @@ function buildNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
   return map;
 }
 
+/**
+ *
+ */
 export function useNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
   return useMemo(() => buildNameResolver(state), [state.roster, state.graveyard, state.rivals]);
 }

@@ -40,16 +40,13 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
     return list;
   }, [rivals, playerRoster]);
 
-  const warriorMap = useMemo(
-    () => {
-      const map = new Map<string, { warrior: Warrior; stable: string }>();
-      for (const e of allWarriors) {
-        map.set(e.warrior.id as string, e);
-      }
-      return map;
-    },
-    [allWarriors]
-  );
+  const warriorMap = useMemo(() => {
+    const map = new Map<string, { warrior: Warrior; stable: string }>();
+    for (const e of allWarriors) {
+      map.set(e.warrior.id as string, e);
+    }
+    return map;
+  }, [allWarriors]);
 
   const entryA = useMemo(() => (wIdA ? warriorMap.get(wIdA) : undefined), [warriorMap, wIdA]);
   const entryB = useMemo(() => (wIdB ? warriorMap.get(wIdB) : undefined), [warriorMap, wIdB]);

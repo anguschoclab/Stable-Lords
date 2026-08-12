@@ -19,6 +19,9 @@ import {
 } from '@/constants/combat';
 import type { FighterState } from './types';
 
+/**
+ *
+ */
 export function styleRiposteBonus(
   def: FighterState,
   att: FighterState,

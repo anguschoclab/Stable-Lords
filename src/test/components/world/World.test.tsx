@@ -67,7 +67,15 @@ describe('StableRankings', () => {
 
   it('renders with rows', () => {
     const rows: StableRow[] = [
-      { id: 's1', name: 'Stable A', fame: 100, wins: 10, losses: 5, warriors: 5, rank: 1 } as unknown as StableRow,
+      {
+        id: 's1',
+        name: 'Stable A',
+        fame: 100,
+        wins: 10,
+        losses: 5,
+        warriors: 5,
+        rank: 1,
+      } as unknown as StableRow,
     ];
     const { container } = render(
       <StableRankings rows={rows} sort={{ field: 'fame', dir: 'desc' }} onSort={vi.fn()} />
@@ -83,14 +91,26 @@ vi.mock('@tanstack/react-router', () => ({
 describe('WorldStats', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <WorldStats stableCount={10} warriorCount={50} killCount={5} topStable="Champions" topStableId="s1" />
+      <WorldStats
+        stableCount={10}
+        warriorCount={50}
+        killCount={5}
+        topStable="Champions"
+        topStableId="s1"
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders without top stable', () => {
     const { container } = render(
-      <WorldStats stableCount={10} warriorCount={50} killCount={5} topStable="—" topStableId={null} />
+      <WorldStats
+        stableCount={10}
+        warriorCount={50}
+        killCount={5}
+        topStable="—"
+        topStableId={null}
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -128,13 +148,21 @@ describe('WarriorLeaderboardFilters', () => {
 describe('WarriorLeaderboardRow', () => {
   it('renders without crashing', () => {
     const row: WarriorRow = {
-      id: 'w1', name: 'TestWarrior', stableName: 'StableA', stableId: 's1',
-      fame: 50, wins: 10, losses: 5, kills: 3, winRate: 0.67,
-      style: 'Bashing Attack', isPlayer: true, officialRank: 1, compositeScore: 100,
+      id: 'w1',
+      name: 'TestWarrior',
+      stableName: 'StableA',
+      stableId: 's1',
+      fame: 50,
+      wins: 10,
+      losses: 5,
+      kills: 3,
+      winRate: 0.67,
+      style: 'Bashing Attack',
+      isPlayer: true,
+      officialRank: 1,
+      compositeScore: 100,
     };
-    const { container } = render(
-      <WarriorLeaderboardRow row={row} index={0} isFiltered={false} />
-    );
+    const { container } = render(<WarriorLeaderboardRow row={row} index={0} isFiltered={false} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 });

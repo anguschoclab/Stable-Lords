@@ -8,7 +8,9 @@ import { BoutsStep } from '@/components/resolution-reveal/BoutsStep';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
+      <div {...props}>{children}</div>
+    ),
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
@@ -48,9 +50,7 @@ describe('GazetteStep', () => {
 
 describe('MathStep', () => {
   it('renders without crashing with null report', () => {
-    const { container } = render(
-      <MathStep lastSimulationReport={undefined} />
-    );
+    const { container } = render(<MathStep lastSimulationReport={undefined} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 });

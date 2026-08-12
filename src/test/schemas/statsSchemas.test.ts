@@ -39,7 +39,11 @@ describe('BucketSchema', () => {
 
   it('strips unknown extra fields', () => {
     const result = BucketSchema.safeParse({
-      w: 1, l: 0, k: 0, pct: 1, fights: 1,
+      w: 1,
+      l: 0,
+      k: 0,
+      pct: 1,
+      fights: 1,
       evil: 'inject',
     });
     expect(result.success).toBe(true);
@@ -93,7 +97,10 @@ describe('RollingBucketSchema', () => {
 
   it('strips unknown extra fields', () => {
     const result = RollingBucketSchema.safeParse({
-      W: 1, L: 0, K: 0, fights: 1,
+      W: 1,
+      L: 0,
+      K: 0,
+      fights: 1,
       evil: 'inject',
     });
     expect(result.success).toBe(true);

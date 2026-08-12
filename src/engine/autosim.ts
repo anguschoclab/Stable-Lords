@@ -124,6 +124,9 @@ function getNamesFromTitle(title: string): { a: string; d: string } {
   return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }
 
+/**
+ *
+ */
 export function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
   const boutSummaries = state.lastSimulationReport?.bouts ?? [];
   const deathNames: string[] = [];

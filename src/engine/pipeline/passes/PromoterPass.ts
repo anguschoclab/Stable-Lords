@@ -20,7 +20,11 @@ import {
 } from '@/engine/promoters/personalityScoring';
 import { calculateHype } from '@/engine/promoters/hypeCalculator';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
-import { displayWeek, boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import {
+  displayWeek,
+  boutOfferAbsoluteWeek,
+  boutOfferExpirationAbsoluteWeek,
+} from '@/engine/core/absoluteWeek';
 
 /**
  * Binary search: returns the first index where arr[index] >= target.
@@ -93,7 +97,8 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   for (const [key, offer] of Object.entries(state.boutOffers)) {
     if (!offer) continue;
     const isPast = boutOfferAbsoluteWeek(offer) < state.absoluteWeek;
-    const isExpired = boutOfferExpirationAbsoluteWeek(offer) < state.absoluteWeek && offer.status !== 'Signed';
+    const isExpired =
+      boutOfferExpirationAbsoluteWeek(offer) < state.absoluteWeek && offer.status !== 'Signed';
 
     if (!isPast && !isExpired) {
       newOffers[key as BoutOfferId] = offer;

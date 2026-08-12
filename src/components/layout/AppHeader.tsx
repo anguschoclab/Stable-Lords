@@ -83,7 +83,9 @@ function CycleStatus({ week, day, isTournamentWeek, isSimulating }: CycleStatusP
       <div className="flex items-center gap-2">
         <span className="font-display font-black text-xs text-foreground uppercase tracking-tight">
           {isSimulating ? (
-            <span className="animate-pulse motion-reduce:animate-none opacity-40 italic">Simulating...</span>
+            <span className="animate-pulse motion-reduce:animate-none opacity-40 italic">
+              Simulating...
+            </span>
           ) : (
             `Week ${week} · ${isTournamentWeek ? `Day ${day + 1}` : 'Planning Phase'}`
           )}

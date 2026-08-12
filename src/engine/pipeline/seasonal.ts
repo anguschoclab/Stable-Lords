@@ -63,7 +63,6 @@ import {
   handleBountifulHarvest,
   handleWanderingMystic,
   handleAbyssalTempestRitual,
-
   handleCursedTreasureDiscovery,
 } from './seasonalHandlers';
 

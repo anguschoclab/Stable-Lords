@@ -1,5 +1,9 @@
 import { describe, it, vi } from 'vitest';
-import { expectRouteDefinition, expectRouteComponent, renderRouteComponent } from './_helpers/routeTestHelper';
+import {
+  expectRouteDefinition,
+  expectRouteComponent,
+  renderRouteComponent,
+} from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/ControlCenter', () => ({
   default: () => <div data-testid="control-center">ControlCenter</div>,
@@ -50,7 +54,11 @@ const routes = [
   { name: 'stable/offseason', path: '/stable/offseason', importPath: '@/routes/stable/offseason' },
   { name: 'stable/planner', path: '/stable/planner', importPath: '@/routes/stable/planner' },
   { name: 'stable/promoters', path: '/stable/promoters', importPath: '@/routes/stable/promoters' },
-  { name: 'stable/promoter/$id', path: '/stable/promoter/$id', importPath: '@/routes/stable/promoter.$id' },
+  {
+    name: 'stable/promoter/$id',
+    path: '/stable/promoter/$id',
+    importPath: '@/routes/stable/promoter.$id',
+  },
   { name: 'stable/recruit', path: '/stable/recruit', importPath: '@/routes/stable/recruit' },
   { name: 'stable/roster', path: '/stable/roster', importPath: '@/routes/stable/roster' },
   { name: 'stable/trainers', path: '/stable/trainers', importPath: '@/routes/stable/trainers' },

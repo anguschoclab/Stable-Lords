@@ -42,6 +42,9 @@ export const rosterRemovals = (state: GameState, value: WarriorId[]) => {
   state.roster = state.roster.filter((w) => !value.includes(w.id));
 };
 
+/**
+ *
+ */
 export const rosterAdditions = (state: GameState, value: Warrior[]) => {
   state.roster = [...state.roster, ...value];
 };

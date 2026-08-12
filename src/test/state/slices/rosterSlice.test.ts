@@ -121,14 +121,12 @@ describe('RosterSlice', () => {
   it('should update warrior equipment', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);
-      useTestStore
-        .getState()
-        .updateWarriorEquipment('w1' as any, {
-          weapon: 'sword',
-          armor: 'mail',
-          shield: 'kite',
-          helm: 'pot',
-        });
+      useTestStore.getState().updateWarriorEquipment('w1' as any, {
+        weapon: 'sword',
+        armor: 'mail',
+        shield: 'kite',
+        helm: 'pot',
+      });
     });
     expect(useTestStore.getState().roster[0]!.equipment).toEqual({
       weapon: 'sword',
@@ -234,14 +232,12 @@ describe('RosterSlice', () => {
   it('should update warrior equipment correctly', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);
-      useTestStore
-        .getState()
-        .updateWarriorEquipment('w2' as any, {
-          weapon: 'sword',
-          armor: 'mail',
-          shield: 'kite',
-          helm: 'pot',
-        });
+      useTestStore.getState().updateWarriorEquipment('w2' as any, {
+        weapon: 'sword',
+        armor: 'mail',
+        shield: 'kite',
+        helm: 'pot',
+      });
     });
     expect(useTestStore.getState().roster[0]!.equipment).toBeUndefined(); // w1 doesn't get w2's equip
   });

@@ -118,7 +118,11 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
  * Deterministic, decoupled from the full sim: intended as a UI heuristic only.
  * Defaults to BOUT_DURATION_MINUTES (MAX_EXCHANGES / EXCHANGES_PER_MINUTE).
  */
-export function estimateStaminaCurve(plan: FightPlan, warrior?: Warrior, minutes = BOUT_DURATION_MINUTES): number[] {
+export function estimateStaminaCurve(
+  plan: FightPlan,
+  warrior?: Warrior,
+  minutes = BOUT_DURATION_MINUTES
+): number[] {
   const wt = warrior?.attributes?.WT ?? 10;
   const max = warrior?.derivedStats?.endurance ?? 50 + wt * 2;
   let cur = max;

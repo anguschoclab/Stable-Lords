@@ -63,7 +63,6 @@ vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children }: any) => <span>{children}</span>,
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line prefer-const
 let useTestStore: any;
 
@@ -72,7 +71,7 @@ vi.mock('@/state/useGameStore', () => {
   return {
     useGameStore: (selector?: any) => {
       // Simulate shallow selector behavior in tests
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
       const storeRes = useTestStore();
       if (selector && selector.name === 'useShallow') {
         return selector(storeRes);
@@ -83,8 +82,6 @@ vi.mock('@/state/useGameStore', () => {
       return storeRes;
     },
     useWorldState: () => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       return useTestStore();
     },
   };

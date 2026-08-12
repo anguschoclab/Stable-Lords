@@ -23,7 +23,9 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
 
 vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children, className }: any) => (
-    <span data-testid="badge" className={className}>{children}</span>
+    <span data-testid="badge" className={className}>
+      {children}
+    </span>
   ),
 }));
 
@@ -85,7 +87,12 @@ describe('RecruitCard', () => {
 
   it('disables Scout button when canAffordScout is false', () => {
     const { container } = render(
-      <RecruitCard {...baseProps} warrior={makePoolWarrior()} isScouted={false} canAffordScout={false} />
+      <RecruitCard
+        {...baseProps}
+        warrior={makePoolWarrior()}
+        isScouted={false}
+        canAffordScout={false}
+      />
     );
     const scoutBtn = Array.from(container.querySelectorAll('button')).find((b) =>
       b.textContent?.includes('Scout')
@@ -108,12 +115,7 @@ describe('RecruitCard', () => {
       summary: 'Scouts confirm a ST ceiling of 20 (+1 more noted).',
     };
     const { container } = render(
-      <RecruitCard
-        {...baseProps}
-        warrior={makePoolWarrior()}
-        isScouted
-        scoutReport={scoutReport}
-      />
+      <RecruitCard {...baseProps} warrior={makePoolWarrior()} isScouted scoutReport={scoutReport} />
     );
     expect(container.textContent).not.toMatch(/POTENTIAL:\s*[SABCDE]/i);
   });
@@ -126,12 +128,7 @@ describe('RecruitCard', () => {
       summary: 'Scouts confirm a ST ceiling of 20 (+1 more noted).',
     };
     const { container } = render(
-      <RecruitCard
-        {...baseProps}
-        warrior={makePoolWarrior()}
-        isScouted
-        scoutReport={scoutReport}
-      />
+      <RecruitCard {...baseProps} warrior={makePoolWarrior()} isScouted scoutReport={scoutReport} />
     );
     expect(container.textContent).toContain('Scouts confirm a ST ceiling of 20');
   });
@@ -144,12 +141,7 @@ describe('RecruitCard', () => {
       summary: 'Scouts confirm a ST ceiling of 22 (+1 more noted).',
     };
     const { container } = render(
-      <RecruitCard
-        {...baseProps}
-        warrior={makePoolWarrior()}
-        isScouted
-        scoutReport={scoutReport}
-      />
+      <RecruitCard {...baseProps} warrior={makePoolWarrior()} isScouted scoutReport={scoutReport} />
     );
     expect(container.textContent).toContain('ST');
     expect(container.textContent).toContain('22');
@@ -160,7 +152,12 @@ describe('RecruitCard', () => {
   it('renders Sign button and calls onRecruit with bonus=false', () => {
     const onRecruit = vi.fn();
     const { container } = render(
-      <RecruitCard {...baseProps} onRecruit={onRecruit} warrior={makePoolWarrior()} isScouted={false} />
+      <RecruitCard
+        {...baseProps}
+        onRecruit={onRecruit}
+        warrior={makePoolWarrior()}
+        isScouted={false}
+      />
     );
     const signBtn = Array.from(container.querySelectorAll('button')).find((b) =>
       b.textContent?.includes('Sign')
@@ -173,7 +170,12 @@ describe('RecruitCard', () => {
   it('renders + Bonus [50G] button and calls onRecruit with bonus=true', () => {
     const onRecruit = vi.fn();
     const { container } = render(
-      <RecruitCard {...baseProps} onRecruit={onRecruit} warrior={makePoolWarrior()} isScouted={false} />
+      <RecruitCard
+        {...baseProps}
+        onRecruit={onRecruit}
+        warrior={makePoolWarrior()}
+        isScouted={false}
+      />
     );
     const bonusBtn = Array.from(container.querySelectorAll('button')).find((b) =>
       b.textContent?.includes('Bonus')

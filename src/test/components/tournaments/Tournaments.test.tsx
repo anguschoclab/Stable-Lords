@@ -17,7 +17,9 @@ import type { TournamentEntry, TournamentBout } from '@/types/game';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
+      <div {...props}>{children}</div>
+    ),
   },
 }));
 
@@ -123,14 +125,24 @@ const mockTournament = {
 describe('TournamentBracket', () => {
   it('renders without crashing with empty bracket', () => {
     const { container } = render(
-      <TournamentBracket bouts={[]} arenaHistory={[]} expandedBout={null} onToggleExpand={vi.fn()} />
+      <TournamentBracket
+        bouts={[]}
+        arenaHistory={[]}
+        expandedBout={null}
+        onToggleExpand={vi.fn()}
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders without crashing with bouts', () => {
     const { container } = render(
-      <TournamentBracket bouts={[]} arenaHistory={[]} expandedBout={null} onToggleExpand={vi.fn()} />
+      <TournamentBracket
+        bouts={[]}
+        arenaHistory={[]}
+        expandedBout={null}
+        onToggleExpand={vi.fn()}
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -138,7 +150,9 @@ describe('TournamentBracket', () => {
 
 describe('TournamentSchedule', () => {
   it('renders without crashing', () => {
-    const { container } = render(<TournamentSchedule tournament={mockTournament} currentWeek={5} />);
+    const { container } = render(
+      <TournamentSchedule tournament={mockTournament} currentWeek={5} />
+    );
     expect(container.firstChild).toBeInTheDocument();
   });
 });
@@ -187,7 +201,12 @@ describe('TournamentPrepDialog', () => {
 describe('TournamentHistory', () => {
   it('renders without crashing with empty history', () => {
     const { container } = render(
-      <TournamentHistory pastTournaments={[]} seasonIcons={{}} seasonNames={{}} currentSeason="Spring" />
+      <TournamentHistory
+        pastTournaments={[]}
+        seasonIcons={{}}
+        seasonNames={{}}
+        currentSeason="Spring"
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -197,7 +216,12 @@ describe('TournamentHistory', () => {
       { id: 't1', week: 1, bracket: [], completed: true, seasonName: 'Winter', winner: 'Alice' },
     ] as unknown as TournamentEntry[];
     const { container } = render(
-      <TournamentHistory pastTournaments={pastTournaments} seasonIcons={{ Winter: 'snow' }} seasonNames={{ Winter: 'Winter Cup' }} currentSeason="Spring" />
+      <TournamentHistory
+        pastTournaments={pastTournaments}
+        seasonIcons={{ Winter: 'snow' }}
+        seasonNames={{ Winter: 'Winter Cup' }}
+        currentSeason="Spring"
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -236,7 +260,12 @@ describe('ConnectionLines', () => {
 describe('MatchActions', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <MatchActions hasTranscript={true} isExpanded={false} boutKey="r1-m0" onToggleExpand={vi.fn()} />
+      <MatchActions
+        hasTranscript={true}
+        isExpanded={false}
+        boutKey="r1-m0"
+        onToggleExpand={vi.fn()}
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -283,7 +312,12 @@ describe('MatchViewer', () => {
       isRivalry: false,
     } as never;
     const { container } = render(
-      <MatchViewer bout={mockBout} fightSummary={fightSummary} gameState={mockGameState} onToggleExpand={vi.fn()} />
+      <MatchViewer
+        bout={mockBout}
+        fightSummary={fightSummary}
+        gameState={mockGameState}
+        onToggleExpand={vi.fn()}
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -303,7 +337,12 @@ describe('TournamentStatsHeader', () => {
 describe('TournamentFilterBar', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <TournamentFilterBar filter="all" setFilter={vi.fn()} expandAll={vi.fn()} collapseAll={vi.fn()} />
+      <TournamentFilterBar
+        filter="all"
+        setFilter={vi.fn()}
+        expandAll={vi.fn()}
+        collapseAll={vi.fn()}
+      />
     );
     expect(container.firstChild).toBeInTheDocument();
   });

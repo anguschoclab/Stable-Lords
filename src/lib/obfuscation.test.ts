@@ -31,7 +31,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
 function makeInsight(
   type: InsightToken['type'],
   warriorId: string,
-  targetKey?: string,
+  targetKey?: string
 ): InsightToken {
   return {
     id: `ins-${type}-${warriorId}-${targetKey ?? ''}` as InsightToken['id'],
@@ -186,10 +186,7 @@ describe('obfuscateWarrior', () => {
     });
 
     it('reveals multiple attributes with multiple insights', () => {
-      const insights = [
-        makeInsight('Attribute', 'w1', 'ST'),
-        makeInsight('Attribute', 'w1', 'DF'),
-      ];
+      const insights = [makeInsight('Attribute', 'w1', 'ST'), makeInsight('Attribute', 'w1', 'DF')];
       const r = obfuscateWarrior(warrior, insights, false);
       expect(r.attributes.ST).toBe(15);
       expect(r.attributes.DF).toBe(22);

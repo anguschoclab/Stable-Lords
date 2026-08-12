@@ -5,8 +5,31 @@ import UpsetsList, { type UpsetEntry } from '@/components/awards/UpsetsList';
 import type { FightSummary } from '@/types/game';
 
 const mockFights: FightSummary[] = [
-  { id: 'f1' as never, title: 'Alice vs Bob', winner: 'A', by: 'KO', week: 1, flashyTags: ['Upset'], warriorIdA: 'w1' as never, warriorIdD: 'w2' as never, styleA: 'Bashing Attack', styleD: 'Parry', createdAt: '2024-01-01' },
-  { id: 'f2' as never, title: 'Carol vs Dave', winner: 'D', by: 'Kill', week: 2, warriorIdA: 'w3' as never, warriorIdD: 'w4' as never, styleA: 'Striking Attack', styleD: 'Evasion', createdAt: '2024-01-02' },
+  {
+    id: 'f1' as never,
+    title: 'Alice vs Bob',
+    winner: 'A',
+    by: 'KO',
+    week: 1,
+    flashyTags: ['Upset'],
+    warriorIdA: 'w1' as never,
+    warriorIdD: 'w2' as never,
+    styleA: 'Bashing Attack',
+    styleD: 'Parry',
+    createdAt: '2024-01-01',
+  },
+  {
+    id: 'f2' as never,
+    title: 'Carol vs Dave',
+    winner: 'D',
+    by: 'Kill',
+    week: 2,
+    warriorIdA: 'w3' as never,
+    warriorIdD: 'w4' as never,
+    styleA: 'Striking Attack',
+    styleD: 'Evasion',
+    createdAt: '2024-01-02',
+  },
 ];
 
 const mockUpsets: UpsetEntry[] = [

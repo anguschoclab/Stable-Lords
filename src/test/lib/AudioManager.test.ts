@@ -110,7 +110,15 @@ describe('AudioManager', () => {
     // After the fix, arena_ambient should not be in the SfxType union
     // This test verifies the type system excludes it
     type ValidSfxTypes = 'ui_click' | 'hit' | 'crit' | 'clash' | 'death' | 'recovery' | 'coin';
-    const validTypes: ValidSfxTypes[] = ['ui_click', 'hit', 'crit', 'clash', 'death', 'recovery', 'coin'];
+    const validTypes: ValidSfxTypes[] = [
+      'ui_click',
+      'hit',
+      'crit',
+      'clash',
+      'death',
+      'recovery',
+      'coin',
+    ];
     expect(validTypes).not.toContain('arena_ambient');
   });
 });

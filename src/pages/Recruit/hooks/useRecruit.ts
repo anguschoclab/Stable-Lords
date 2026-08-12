@@ -7,6 +7,9 @@ import { canTransact } from '@/engine/economy/utils';
 import { useRecruitFilters } from './useRecruitFilters';
 import { useRecruitActions } from './useRecruitActions';
 
+/**
+ *
+ */
 export function useRecruit() {
   const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds, week } = useGameStore(
     useShallow((s) => ({

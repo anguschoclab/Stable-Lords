@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { handleChaosWeaversProphecy } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
 import { SeededRNGService } from '@/utils/random';
-import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import type {
+  OffseasonEventNarrative,
+  OffseasonEventContext,
+} from '@/engine/pipeline/offseasonEvents/types';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -26,7 +29,7 @@ describe('Seasonal Chaos Weavers Prophecy', () => {
       title: "The Chaos Weaver's Prophecy",
       effectType: 'chaos_weavers_prophecy',
       newsletter: [
-        "The Chaos Weaver whispered dark prophecies in {{name}}'s ear. They awoke forever changed. (+{{xp}} XP, Minor Injury)"
+        "The Chaos Weaver whispered dark prophecies in {{name}}'s ear. They awoke forever changed. (+{{xp}} XP, Minor Injury)",
       ],
     };
 

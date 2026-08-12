@@ -13,7 +13,6 @@ import { render, act } from '@testing-library/react';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useTestStore: any = create<TestStore>()(
   immer((set) => ({
     ftueComplete: false,

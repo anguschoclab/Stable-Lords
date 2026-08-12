@@ -1,6 +1,9 @@
 import { cn } from '@/lib/utils';
 import { clamp } from '@/utils/math';
 
+/**
+ *
+ */
 export interface FighterHp {
   hp: number;
   max: number;

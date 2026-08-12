@@ -67,11 +67,17 @@ export function useDigestSummary({
         const playerAwaitingResponse = o.warriorIds.some(
           (id) => playerWarriorIds.has(id) && (o.responses[id] === 'Pending' || !o.responses[id])
         );
-        if (o.status === 'Proposed' && boutOfferAbsoluteWeek(o) > currentWeek && playerAwaitingResponse)
+        if (
+          o.status === 'Proposed' &&
+          boutOfferAbsoluteWeek(o) > currentWeek &&
+          playerAwaitingResponse
+        )
           acc.pending++;
         const involvesPlayer = o.warriorIds.some((id) => playerWarriorIds.has(id));
-        if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) === currentWeek + 1 && involvesPlayer) acc.signed++;
-        if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) > currentWeek + 1 && involvesPlayer) acc.upcoming++;
+        if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) === currentWeek + 1 && involvesPlayer)
+          acc.signed++;
+        if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) > currentWeek + 1 && involvesPlayer)
+          acc.upcoming++;
         return acc;
       },
       { pending: 0, signed: 0, upcoming: 0 }

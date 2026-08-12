@@ -56,10 +56,7 @@ export function EncumbranceBar({ totalWeight, carryCap, loadout }: EncumbranceBa
           {totalWeight} / {carryCap} · {TIER_LABELS[tier]}
         </span>
       </div>
-      <Progress
-        value={encPct}
-        className={`h-2.5 [&>div]:${TIER_COLORS[tier]}`}
-      />
+      <Progress value={encPct} className={`h-2.5 [&>div]:${TIER_COLORS[tier]}`} />
       {hasPenalties && (
         <div className="space-y-1 mt-2">
           <div className={`flex items-center gap-1.5 text-xs ${TIER_TEXT[tier]} font-semibold`}>
@@ -67,20 +64,28 @@ export function EncumbranceBar({ totalWeight, carryCap, loadout }: EncumbranceBa
             {TIER_LABELS[tier]} — combat penalties apply:
           </div>
           <div className="grid grid-cols-3 gap-2 pl-5 text-[10px] font-mono">
-            <div className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}>
+            <div
+              className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}
+            >
               {penalties.iniPenalty} INI
             </div>
             {penalties.defPenalty !== 0 && (
-              <div className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}>
+              <div
+                className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}
+              >
                 {penalties.defPenalty} DEF
               </div>
             )}
             {penalties.parPenalty !== 0 && (
-              <div className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}>
+              <div
+                className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}
+              >
                 {penalties.parPenalty} PAR
               </div>
             )}
-            <div className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}>
+            <div
+              className={`${TIER_TEXT[tier]}/10 ${TIER_TEXT[tier]} p-1 rounded-none border border-current/20 text-center`}
+            >
               +{Math.round((penalties.enduranceMult - 1) * 100)}% END
             </div>
           </div>

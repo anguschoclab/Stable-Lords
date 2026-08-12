@@ -160,7 +160,16 @@ export default function Orphanage() {
 
     // Navigate to the Stable hub after FTUE
     navigate({ to: '/stable' });
-  }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState, navigate, state.ftueComplete]);
+  }, [
+    state,
+    setState,
+    selectedWarriors,
+    boutResult,
+    poolSeedValue,
+    saveCurrentState,
+    navigate,
+    state.ftueComplete,
+  ]);
 
   // ─── Shell ──────────────────────────────────────────────────────────────────
 

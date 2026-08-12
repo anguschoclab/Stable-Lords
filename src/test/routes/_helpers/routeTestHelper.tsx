@@ -8,6 +8,9 @@ interface RouteLike {
   component?: ComponentType;
 }
 
+/**
+ *
+ */
 export function expectRouteDefinition(route: RouteLike, expectedPath: string) {
   expect(route).toBeDefined();
   if (route.id !== undefined) {
@@ -15,12 +18,18 @@ export function expectRouteDefinition(route: RouteLike, expectedPath: string) {
   }
 }
 
+/**
+ *
+ */
 export function expectRouteComponent(route: RouteLike) {
   const component = route.options?.component ?? route.component;
   expect(component).toBeDefined();
   expect(typeof component).toBe('function');
 }
 
+/**
+ *
+ */
 export function renderRouteComponent(route: RouteLike) {
   const Component = (route.options?.component ?? route.component) as ComponentType;
   expect(Component).toBeDefined();

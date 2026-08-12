@@ -83,7 +83,8 @@ function scoreArmor(item: EquipmentItem, profile: BuildProfile): number {
   let score = 0;
   if (profile === 'speed') score = item.weight <= 1 ? 30 : item.weight <= 2 ? 15 : 0;
   else if (profile === 'damage') score = item.weight <= 3 ? 20 : 10;
-  else if (profile === 'tank') score = item.weight >= 5 ? 20 + item.weight : item.weight >= 3 ? 20 : 5;
+  else if (profile === 'tank')
+    score = item.weight >= 5 ? 20 + item.weight : item.weight >= 3 ? 20 : 5;
   else score = item.weight >= 2 && item.weight <= 4 ? 15 + item.weight : 5;
   // Mitigation bonus — tank values it most, speed values it least
   const mit = item.mitigation ?? 0;

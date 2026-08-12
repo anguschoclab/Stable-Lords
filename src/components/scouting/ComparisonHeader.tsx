@@ -33,6 +33,9 @@ function SideColumn({
   );
 }
 
+/**
+ *
+ */
 export function ComparisonHeader(props: ComparisonHeaderProps) {
   const leftTitle =
     props.kind === 'stable'

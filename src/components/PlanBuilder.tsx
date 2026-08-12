@@ -16,7 +16,11 @@ import PhaseOverrides from './planBuilder/PhaseOverrides';
 import StylePassives from './planBuilder/StylePassives';
 import ContingencyPlans from './planBuilder/ContingencyPlans';
 import StaminaCurve from './planBuilder/StaminaCurve';
-import { validateStrategy, estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
+import {
+  validateStrategy,
+  estimateStaminaCurve,
+  predictedCollapseMinute,
+} from '@/engine/strategyValidator';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 
 /* ── Sub-components ─────────────────────────────────────── */

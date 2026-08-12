@@ -436,8 +436,7 @@ export default function PromoterDetail() {
                         </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Week {offer.boutWeek} • Expires Week{' '}
-                        {offer.expirationWeek || 0}
+                        Week {offer.boutWeek} • Expires Week {offer.expirationWeek || 0}
                       </div>
                     </div>
                     <div className="text-right space-y-1">

@@ -7,7 +7,11 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-router')>();
   return {
     ...actual,
-    Navigate: ({ to }: { to: string }) => <div data-testid="navigate" data-to={to}>Navigate</div>,
+    Navigate: ({ to }: { to: string }) => (
+      <div data-testid="navigate" data-to={to}>
+        Navigate
+      </div>
+    ),
   };
 });
 

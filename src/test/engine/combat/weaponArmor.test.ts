@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { WEAPON_DAMAGE_TYPE, applyArmorTypeMod, applyFlatMitigation } from '@/engine/combat/mechanics/weaponArmor';
+import {
+  WEAPON_DAMAGE_TYPE,
+  applyArmorTypeMod,
+  applyFlatMitigation,
+} from '@/engine/combat/mechanics/weaponArmor';
 
 describe('weaponArmor', () => {
   describe('applyArmorTypeMod', () => {

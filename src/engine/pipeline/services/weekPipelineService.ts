@@ -6,7 +6,11 @@ import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getStablePairKey } from '@/utils/keyUtils';
-import { deriveAbsoluteWeek, boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import {
+  deriveAbsoluteWeek,
+  boutOfferAbsoluteWeek,
+  boutOfferExpirationAbsoluteWeek,
+} from '@/engine/core/absoluteWeek';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 
 /**
@@ -167,6 +171,9 @@ function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
   ];
 }
 
+/**
+ *
+ */
 export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
   const netTreasuryDelta = coreImpacts.reduce((sum, i) => sum + (i.treasuryDelta ?? 0), 0);
   return state.treasury + netTreasuryDelta < BANKRUPTCY_THRESHOLD;

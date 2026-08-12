@@ -19,6 +19,9 @@ interface TraitTrainingSectionProps {
   onClear?: () => void;
 }
 
+/**
+ *
+ */
 export function TraitTrainingSection({
   warrior,
   assignment,

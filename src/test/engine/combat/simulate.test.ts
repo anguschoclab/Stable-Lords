@@ -1001,7 +1001,11 @@ describe('simulateFight — yield mechanic', () => {
       fallbackCondition: 'YIELD',
     });
 
-    const warriorA = makeWarrior('Striker', FightingStyle.StrikingAttack, { ST: 10, CN: 15, SP: 15 });
+    const warriorA = makeWarrior('Striker', FightingStyle.StrikingAttack, {
+      ST: 10,
+      CN: 15,
+      SP: 15,
+    });
     const warriorD = makeWarrior('Yielder', FightingStyle.ParryRiposte, { CN: 15, ST: 3, DF: 3 });
 
     let foundYield = false;

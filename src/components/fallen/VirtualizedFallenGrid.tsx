@@ -17,6 +17,9 @@ interface VirtualizedFallenGridProps {
   emptyDesc: string;
 }
 
+/**
+ *
+ */
 export function VirtualizedFallenGrid({
   warriors,
   season,

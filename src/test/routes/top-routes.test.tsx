@@ -1,5 +1,9 @@
 import { describe, it, vi } from 'vitest';
-import { expectRouteDefinition, expectRouteComponent, renderRouteComponent } from './_helpers/routeTestHelper';
+import {
+  expectRouteDefinition,
+  expectRouteComponent,
+  renderRouteComponent,
+} from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/AdminTools', () => ({
   default: () => <div data-testid="admin-tools">AdminTools</div>,
@@ -32,8 +36,16 @@ const routes = [
   { name: 'bookmarks', path: '/bookmarks', importPath: '@/routes/bookmarks' },
   { name: 'help', path: '/help', importPath: '@/routes/help' },
   { name: 'welcome', path: '/welcome', importPath: '@/routes/welcome' },
-  { name: 'lore/hall-of-fights', path: '/lore/hall-of-fights', importPath: '@/routes/lore/hall-of-fights' },
-  { name: 'tools/physicals-simulator', path: '/tools/physicals-simulator', importPath: '@/routes/tools/physicals-simulator' },
+  {
+    name: 'lore/hall-of-fights',
+    path: '/lore/hall-of-fights',
+    importPath: '@/routes/lore/hall-of-fights',
+  },
+  {
+    name: 'tools/physicals-simulator',
+    path: '/tools/physicals-simulator',
+    importPath: '@/routes/tools/physicals-simulator',
+  },
   { name: 'warrior/$id', path: '/warrior/$id', importPath: '@/routes/warrior/$id' },
 ];
 

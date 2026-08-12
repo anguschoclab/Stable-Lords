@@ -124,7 +124,15 @@ describe('AutosimConsole', () => {
       <AutosimConsole
         isSimulating={false}
         progress={null}
-        result={{ stopReason: 'max_weeks', stopDetail: 'Done', weeksSimmed: 13, weekSummaries: [{ week: 1, bouts: 3, deaths: 0, injuries: 0, deathNames: [], injuryNames: [] }], finalState: null as never }}
+        result={{
+          stopReason: 'max_weeks',
+          stopDetail: 'Done',
+          weeksSimmed: 13,
+          weekSummaries: [
+            { week: 1, bouts: 3, deaths: 0, injuries: 0, deathNames: [], injuryNames: [] },
+          ],
+          finalState: null as never,
+        }}
         onStart={vi.fn()}
       />
     );

@@ -7,6 +7,9 @@ import { type WarriorId } from '@/types/shared.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { isActive } from '@/engine/warriorStatus';
 
+/**
+ *
+ */
 export interface OffseasonEventNarrative {
   title: string;
   effectType:
@@ -61,6 +64,9 @@ export interface OffseasonEventNarrative {
   newsletter: string[];
 }
 
+/**
+ *
+ */
 export interface OffseasonEventContext {
   rosterUpdates: Map<WarriorId, Partial<Warrior>>;
   newsletterItems: NewsletterItem[];

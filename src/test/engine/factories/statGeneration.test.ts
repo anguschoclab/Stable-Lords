@@ -48,16 +48,16 @@ describe('statGeneration', () => {
     const rng = new SeededRNGService(42);
 
     for (let i = 0; i < 50; i++) {
-        const style = rng.pick(Object.values(FightingStyle));
-        const attrs = generateArchetypeAttrs(style, rng);
+      const style = rng.pick(Object.values(FightingStyle));
+      const attrs = generateArchetypeAttrs(style, rng);
 
-        let total = 0;
-        for (const key of ATTRIBUTE_KEYS) {
-            total += attrs[key];
-        }
+      let total = 0;
+      for (const key of ATTRIBUTE_KEYS) {
+        total += attrs[key];
+      }
 
-        expect(total).toBeGreaterThanOrEqual(68);
-        expect(total).toBeLessThanOrEqual(74);
+      expect(total).toBeGreaterThanOrEqual(68);
+      expect(total).toBeLessThanOrEqual(74);
     }
   });
 });

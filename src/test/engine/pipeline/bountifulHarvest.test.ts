@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { handleBountifulHarvest } from '@/engine/pipeline/offseasonEvents/economicHandlers';
 import { type GameState } from '@/types/state.types';
-import { type OffseasonEventNarrative, type OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import {
+  type OffseasonEventNarrative,
+  type OffseasonEventContext,
+} from '@/engine/pipeline/offseasonEvents/types';
 import { SeededRNGService } from '@/utils/random';
 
 describe('Bountiful Harvest Offseason Event', () => {
@@ -11,7 +14,7 @@ describe('Bountiful Harvest Offseason Event', () => {
     const narrative: OffseasonEventNarrative = {
       title: 'A Bountiful Harvest',
       effectType: 'bountiful_harvest',
-      newsletter: ['A local village celebrated... (+{{gold}} Gold)']
+      newsletter: ['A local village celebrated... (+{{gold}} Gold)'],
     };
 
     const ctx: OffseasonEventContext = {
@@ -19,7 +22,7 @@ describe('Bountiful Harvest Offseason Event', () => {
       newsletterItems: [],
       ledgerEntries: [],
       insightTokens: [],
-      treasuryDelta: 0
+      treasuryDelta: 0,
     };
 
     const rng = new SeededRNGService(123);

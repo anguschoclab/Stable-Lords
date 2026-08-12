@@ -13,10 +13,7 @@ import type { EquipmentLoadout } from '@/data/equipment';
 
 const ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 
-function makeWarriorWithLoadout(
-  style: FightingStyle,
-  loadout: EquipmentLoadout
-) {
+function makeWarriorWithLoadout(style: FightingStyle, loadout: EquipmentLoadout) {
   const w = makeWarrior(undefined, 'A', style, ATTRS, undefined, undefined);
   return { ...w, equipment: loadout };
 }

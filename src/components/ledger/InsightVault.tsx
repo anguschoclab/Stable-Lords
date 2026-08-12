@@ -123,7 +123,9 @@ function TokenSection({ config, tokens }: TokenSectionProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-3">
-          <div className={`h-2 w-2 rounded-full ${config.pulseColor} animate-pulse motion-reduce:animate-none`} />
+          <div
+            className={`h-2 w-2 rounded-full ${config.pulseColor} animate-pulse motion-reduce:animate-none`}
+          />
           <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
             {config.title}
           </h4>

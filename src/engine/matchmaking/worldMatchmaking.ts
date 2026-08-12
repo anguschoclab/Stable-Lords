@@ -28,11 +28,13 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
-      if (isBookable(warrior, {
-        restStates: state.restStates || [],
-        trainingAssignments: state.trainingAssignments || [],
-        targetWeek,
-      })) {
+      if (
+        isBookable(warrior, {
+          restStates: state.restStates || [],
+          trainingAssignments: state.trainingAssignments || [],
+          targetWeek,
+        })
+      ) {
         eligibleWarriors.push({ warrior, stable: rival });
       }
     }

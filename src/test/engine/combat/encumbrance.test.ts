@@ -64,7 +64,7 @@ describe('getEncumbranceTier boundary tests', () => {
   });
 
   it('ratio 0.60 → LIGHT', () => {
-    expect(getEncumbranceTier(0.60)).toBe('LIGHT' as EncumbranceTier);
+    expect(getEncumbranceTier(0.6)).toBe('LIGHT' as EncumbranceTier);
   });
 
   it('ratio 0.799 → LIGHT', () => {
@@ -72,7 +72,7 @@ describe('getEncumbranceTier boundary tests', () => {
   });
 
   it('ratio 0.80 → MEDIUM', () => {
-    expect(getEncumbranceTier(0.80)).toBe('MEDIUM' as EncumbranceTier);
+    expect(getEncumbranceTier(0.8)).toBe('MEDIUM' as EncumbranceTier);
   });
 
   it('ratio 0.999 → MEDIUM', () => {
@@ -80,7 +80,7 @@ describe('getEncumbranceTier boundary tests', () => {
   });
 
   it('ratio 1.00 → HEAVY', () => {
-    expect(getEncumbranceTier(1.00)).toBe('HEAVY' as EncumbranceTier);
+    expect(getEncumbranceTier(1.0)).toBe('HEAVY' as EncumbranceTier);
   });
 
   it('ratio 1.199 → HEAVY', () => {
@@ -88,7 +88,7 @@ describe('getEncumbranceTier boundary tests', () => {
   });
 
   it('ratio 1.20 → OVER', () => {
-    expect(getEncumbranceTier(1.20)).toBe('OVER' as EncumbranceTier);
+    expect(getEncumbranceTier(1.2)).toBe('OVER' as EncumbranceTier);
   });
 
   it('ratio 0 → NONE', () => {

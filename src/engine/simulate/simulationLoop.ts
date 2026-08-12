@@ -116,14 +116,9 @@ export function runSimulationLoop(
       by = 'Yield';
       winner = 'D';
       if (!headless) {
-        const boutEndLines = narrateBoutEnd(
-          flavorRng,
-          'Yield',
-          nameD,
-          nameA,
-          weaponD,
-          { mood: crowdMood }
-        );
+        const boutEndLines = narrateBoutEnd(flavorRng, 'Yield', nameD, nameA, weaponD, {
+          mood: crowdMood,
+        });
         boutEndLines.forEach((line) => log.push({ minute: min, text: line, emphasis: true }));
       }
       break;
@@ -136,14 +131,9 @@ export function runSimulationLoop(
       by = 'Yield';
       winner = 'A';
       if (!headless) {
-        const boutEndLines = narrateBoutEnd(
-          flavorRng,
-          'Yield',
-          nameA,
-          nameD,
-          weaponA,
-          { mood: crowdMood }
-        );
+        const boutEndLines = narrateBoutEnd(flavorRng, 'Yield', nameA, nameD, weaponA, {
+          mood: crowdMood,
+        });
         boutEndLines.forEach((line) => log.push({ minute: min, text: line, emphasis: true }));
       }
       break;

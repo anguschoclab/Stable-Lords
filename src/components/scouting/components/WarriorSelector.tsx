@@ -150,7 +150,13 @@ function WarriorSelectionCard({
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-mono text-muted-foreground/40">{warrior.age}y</span>
           {isSelected && (
-            <div className={cn('w-2 h-2 rounded-full animate-pulse motion-reduce:animate-none', colors.bg, colors.text)} />
+            <div
+              className={cn(
+                'w-2 h-2 rounded-full animate-pulse motion-reduce:animate-none',
+                colors.bg,
+                colors.text
+              )}
+            />
           )}
         </div>
       </div>

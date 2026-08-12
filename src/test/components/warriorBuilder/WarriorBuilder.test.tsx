@@ -19,7 +19,11 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 vi.mock('@/components/warrior/WarriorStats', () => ({
-  SkillBar: ({ label, value }: { label: string; value: number }) => <div>{label}: {value}</div>,
+  SkillBar: ({ label, value }: { label: string; value: number }) => (
+    <div>
+      {label}: {value}
+    </div>
+  ),
 }));
 
 vi.mock('@/components/ui/tooltip', () => ({
@@ -51,17 +55,23 @@ vi.mock('@/engine/skillCalc', () => ({
 
 describe('CreateButton', () => {
   it('renders without crashing', () => {
-    const { container } = render(<CreateButton onClick={vi.fn()} disabled={false} status="valid" remaining={0} />);
+    const { container } = render(
+      <CreateButton onClick={vi.fn()} disabled={false} status="valid" remaining={0} />
+    );
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders disabled state', () => {
-    const { container } = render(<CreateButton onClick={vi.fn()} disabled={true} status="invalid" remaining={5} />);
+    const { container } = render(
+      <CreateButton onClick={vi.fn()} disabled={true} status="invalid" remaining={5} />
+    );
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders roster-full status', () => {
-    const { container } = render(<CreateButton onClick={vi.fn()} disabled={true} status="roster-full" remaining={0} />);
+    const { container } = render(
+      <CreateButton onClick={vi.fn()} disabled={true} status="roster-full" remaining={0} />
+    );
     expect(container.firstChild).toBeInTheDocument();
   });
 });

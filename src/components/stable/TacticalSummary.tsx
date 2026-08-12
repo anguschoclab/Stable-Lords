@@ -5,6 +5,9 @@ interface TacticalSummaryProps {
   injuryCount: number;
 }
 
+/**
+ *
+ */
 export function TacticalSummary({ injuryCount }: TacticalSummaryProps) {
   return (
     <div className="w-full md:w-32 shrink-0 flex flex-col justify-center gap-1 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-8">

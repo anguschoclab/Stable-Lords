@@ -76,18 +76,48 @@ export function processContractPayouts(
   if (winnerId === currentWId) {
     if (!rivalA) {
       impacts.push({ treasuryDelta: purse });
-      impacts.push({ ledgerEntries: [{ id: generateId(undefined, 'ledger') as LedgerEntryId, week: state.week, label: `Purse — ${contract.id}`, amount: purse, category: 'fight' as const }] });
+      impacts.push({
+        ledgerEntries: [
+          {
+            id: generateId(undefined, 'ledger') as LedgerEntryId,
+            week: state.week,
+            label: `Purse — ${contract.id}`,
+            amount: purse,
+            category: 'fight' as const,
+          },
+        ],
+      });
     }
   } else if (winnerId === currentOId) {
     if (!rivalA) {
       impacts.push({ treasuryDelta: showFee });
-      impacts.push({ ledgerEntries: [{ id: generateId(undefined, 'ledger') as LedgerEntryId, week: state.week, label: `Show fee — ${contract.id}`, amount: showFee, category: 'fight' as const }] });
+      impacts.push({
+        ledgerEntries: [
+          {
+            id: generateId(undefined, 'ledger') as LedgerEntryId,
+            week: state.week,
+            label: `Show fee — ${contract.id}`,
+            amount: showFee,
+            category: 'fight' as const,
+          },
+        ],
+      });
     }
   } else {
     // Draw
     if (!rivalA) {
       impacts.push({ treasuryDelta: showFee });
-      impacts.push({ ledgerEntries: [{ id: generateId(undefined, 'ledger') as LedgerEntryId, week: state.week, label: `Show fee (draw) — ${contract.id}`, amount: showFee, category: 'fight' as const }] });
+      impacts.push({
+        ledgerEntries: [
+          {
+            id: generateId(undefined, 'ledger') as LedgerEntryId,
+            week: state.week,
+            label: `Show fee (draw) — ${contract.id}`,
+            amount: showFee,
+            category: 'fight' as const,
+          },
+        ],
+      });
     }
   }
 

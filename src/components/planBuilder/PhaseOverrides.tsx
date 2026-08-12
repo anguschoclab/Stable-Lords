@@ -28,7 +28,12 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
           <Timer className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-widest">Phase Overrides</span>
         </Label>
-        <Switch id="phase-overrides-switch" aria-label="Phase Overrides" checked={phaseMode} onCheckedChange={setPhaseMode} />
+        <Switch
+          id="phase-overrides-switch"
+          aria-label="Phase Overrides"
+          checked={phaseMode}
+          onCheckedChange={setPhaseMode}
+        />
       </div>
 
       {phaseMode && (

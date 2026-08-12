@@ -28,6 +28,9 @@ const COLUMNS = [
   { key: 'bookmark', label: '', className: 'w-10 text-center' },
 ];
 
+/**
+ *
+ */
 export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardProps) {
   const {
     classes,

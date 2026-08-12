@@ -7,6 +7,9 @@ interface LiabilityBadgeProps {
   warrior: Warrior;
 }
 
+/**
+ *
+ */
 export function LiabilityBadge({ warrior }: LiabilityBadgeProps) {
   const liab = computeWarriorLiability(warrior);
   if (liab.recommendation === 'Keep') return null;

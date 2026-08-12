@@ -15,6 +15,9 @@ import {
 } from './types';
 import { isActive } from '@/engine/warriorStatus';
 
+/**
+ *
+ */
 export function handleShadowMarketRun(
   state: GameState,
   nextWeek: number,
@@ -57,6 +60,9 @@ export function handleShadowMarketRun(
   }
 }
 
+/**
+ *
+ */
 export function handleGrandFeast(
   state: GameState,
   nextWeek: number,
@@ -80,6 +86,9 @@ export function handleGrandFeast(
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldCost });
 }
 
+/**
+ *
+ */
 export function handleWanderingHealer(
   state: GameState,
   nextWeek: number,
@@ -122,6 +131,9 @@ export function handleWanderingHealer(
   }
 }
 
+/**
+ *
+ */
 export function handleLoyalStray(
   state: GameState,
   nextWeek: number,
@@ -152,6 +164,9 @@ export function handleLoyalStray(
   }
 }
 
+/**
+ *
+ */
 export function handleStreetPerformance(
   state: GameState,
   nextWeek: number,
@@ -190,6 +205,9 @@ export function handleStreetPerformance(
   }
 }
 
+/**
+ *
+ */
 export function handleMidnightFeast(
   state: GameState,
   nextWeek: number,
@@ -229,6 +247,9 @@ export function handleMidnightFeast(
   }
 }
 
+/**
+ *
+ */
 export function handleTravelingCircus(
   state: GameState,
   nextWeek: number,
@@ -263,6 +284,9 @@ export function handleTravelingCircus(
   }
 }
 
+/**
+ *
+ */
 export function handleBountyHunterVisit(
   state: GameState,
   nextWeek: number,
@@ -294,6 +318,9 @@ export function handleBountyHunterVisit(
   }
 }
 
+/**
+ *
+ */
 export function handleMidnightMarket(
   state: GameState,
   nextWeek: number,
@@ -335,6 +362,9 @@ export function handleMidnightMarket(
   }
 }
 
+/**
+ *
+ */
 export function handleWanderingFortuneTeller(
   state: GameState,
   nextWeek: number,
@@ -375,6 +405,9 @@ export function handleWanderingFortuneTeller(
   }
 }
 
+/**
+ *
+ */
 export function handleMoonlightDuel(
   state: GameState,
   nextWeek: number,
@@ -404,6 +437,9 @@ export function handleMoonlightDuel(
   }
 }
 
+/**
+ *
+ */
 export function handleDreamweaverVisit(
   state: GameState,
   nextWeek: number,

@@ -132,9 +132,7 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const pendingOffers = offersAlert ? parseInt(offersAlert.message.match(/\d+/)?.[0] || '0') : 0;
 
   const showStableAlert = trackWeek
-    ? (untrainedCount > 0 || pendingOffers > 0) &&
-      !onStableSection &&
-      week > lastSeenStableWeek
+    ? (untrainedCount > 0 || pendingOffers > 0) && !onStableSection && week > lastSeenStableWeek
     : untrainedCount > 0 || pendingOffers > 0;
 
   return {

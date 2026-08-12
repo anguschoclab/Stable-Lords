@@ -13,8 +13,14 @@
 import type { EquipmentLoadout } from './equipment.types';
 import { getLoadoutWeight } from './equipment.utils';
 
+/**
+ *
+ */
 export type EncumbranceTier = 'NONE' | 'LIGHT' | 'MEDIUM' | 'HEAVY' | 'OVER';
 
+/**
+ *
+ */
 export interface EncumbrancePenalties {
   iniPenalty: number;
   defPenalty: number;
@@ -23,10 +29,10 @@ export interface EncumbrancePenalties {
 }
 
 const TIER_THRESHOLDS: { tier: EncumbranceTier; min: number }[] = [
-  { tier: 'OVER', min: 1.20 },
-  { tier: 'HEAVY', min: 1.00 },
-  { tier: 'MEDIUM', min: 0.80 },
-  { tier: 'LIGHT', min: 0.60 },
+  { tier: 'OVER', min: 1.2 },
+  { tier: 'HEAVY', min: 1.0 },
+  { tier: 'MEDIUM', min: 0.8 },
+  { tier: 'LIGHT', min: 0.6 },
   { tier: 'NONE', min: 0.0 },
 ];
 
@@ -38,11 +44,17 @@ const TIER_PENALTIES: Record<EncumbranceTier, EncumbrancePenalties> = {
   OVER: { iniPenalty: -4, defPenalty: -2, parPenalty: -2, enduranceMult: 1.5 },
 };
 
+/**
+ *
+ */
 export function getEncumbranceRatio(loadout: EquipmentLoadout, carryCap: number): number {
   if (carryCap <= 0) return Infinity;
   return getLoadoutWeight(loadout) / carryCap;
 }
 
+/**
+ *
+ */
 export function getEncumbranceTier(ratio: number): EncumbranceTier {
   for (const { tier, min } of TIER_THRESHOLDS) {
     if (ratio >= min) return tier;
@@ -50,6 +62,9 @@ export function getEncumbranceTier(ratio: number): EncumbranceTier {
   return 'NONE';
 }
 
+/**
+ *
+ */
 export function getEncumbrancePenalties(tier: EncumbranceTier): EncumbrancePenalties {
   return TIER_PENALTIES[tier];
 }

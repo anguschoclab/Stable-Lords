@@ -1145,7 +1145,9 @@ describe('PromoterPass — eligibility gating', () => {
     const result = runPromoterPass(state);
     const offers = Object.values(result.boutOffers || {});
     const rematchOffer = offers.find(
-      (o) => o.warriorIds.includes('rematch_w1' as WarriorId) && o.warriorIds.includes('rematch_w2' as WarriorId)
+      (o) =>
+        o.warriorIds.includes('rematch_w1' as WarriorId) &&
+        o.warriorIds.includes('rematch_w2' as WarriorId)
     );
     expect(rematchOffer).toBeUndefined();
   });

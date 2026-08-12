@@ -7,6 +7,9 @@ interface PotentialBadgeProps {
   potential?: AttributePotential | null;
 }
 
+/**
+ *
+ */
 export function PotentialBadge({ potential }: PotentialBadgeProps) {
   if (!potential) return null;
 

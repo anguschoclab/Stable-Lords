@@ -27,7 +27,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -2,
     riposteMod: -2,
     damageMult: 1.1,
-    description: 'A violent tear into the abyss that heavily drains stamina and unnerves the combatants.',
+    description:
+      'A violent tear into the abyss that heavily drains stamina and unnerves the combatants.',
   },
 
   'Prismatic Rain': {

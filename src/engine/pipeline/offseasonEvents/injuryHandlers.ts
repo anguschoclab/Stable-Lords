@@ -12,6 +12,9 @@ import {
   getActiveWarriors,
 } from './types';
 
+/**
+ *
+ */
 export function handleTavernBrawl(
   state: GameState,
   nextWeek: number,
@@ -46,6 +49,9 @@ export function handleTavernBrawl(
   }
 }
 
+/**
+ *
+ */
 export function handlePlagueOutbreak(
   state: GameState,
   nextWeek: number,
@@ -80,6 +86,9 @@ export function handlePlagueOutbreak(
   }
 }
 
+/**
+ *
+ */
 export function handleWildAnimalAttack(
   state: GameState,
   nextWeek: number,
@@ -114,6 +123,9 @@ export function handleWildAnimalAttack(
   }
 }
 
+/**
+ *
+ */
 export function handleGoblinRaid(
   state: GameState,
   nextWeek: number,
@@ -152,6 +164,9 @@ export function handleGoblinRaid(
   }
 }
 
+/**
+ *
+ */
 export function handleUndergroundPitFight(
   state: GameState,
   nextWeek: number,
@@ -187,6 +202,9 @@ export function handleUndergroundPitFight(
   }
 }
 
+/**
+ *
+ */
 export function handleTavernBrawlSurprise(
   state: GameState,
   nextWeek: number,
@@ -222,6 +240,9 @@ export function handleTavernBrawlSurprise(
   }
 }
 
+/**
+ *
+ */
 export function handleSecretFightClub(
   state: GameState,
   nextWeek: number,
@@ -257,6 +278,9 @@ export function handleSecretFightClub(
   }
 }
 
+/**
+ *
+ */
 export function handleChaoticWeatherExperiment(
   state: GameState,
   nextWeek: number,

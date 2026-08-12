@@ -38,6 +38,9 @@ export function isFightReady(w: Warrior, isTournament: boolean = false): boolean
   return !isTooInjuredToFight(injObjs);
 }
 
+/**
+ *
+ */
 export function isBookable(
   w: Warrior,
   opts: {

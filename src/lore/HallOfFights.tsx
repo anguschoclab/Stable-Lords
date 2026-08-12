@@ -31,16 +31,13 @@ export const HallOfFights: React.FC = () => {
   }, [state.week]);
 
   // Build fight lookup from game state
-  const fightMap = useMemo(
-    () => {
-      const map = new Map<string, FightSummary>();
-      for (const f of state.arenaHistory) {
-        map.set(f.id, f);
-      }
-      return map;
-    },
-    [state.arenaHistory]
-  );
+  const fightMap = useMemo(() => {
+    const map = new Map<string, FightSummary>();
+    for (const f of state.arenaHistory) {
+      map.set(f.id, f);
+    }
+    return map;
+  }, [state.arenaHistory]);
 
   // Recent fights grouped by week
   const fightsByWeek = useMemo(() => {

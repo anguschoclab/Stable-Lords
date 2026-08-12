@@ -3,6 +3,9 @@ import { useGameStore } from '@/state/useGameStore';
 import { Check, Circle, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ *
+ */
 export function ObjectivesWidget() {
   const progression = useGameStore((s) => s.progression);
 

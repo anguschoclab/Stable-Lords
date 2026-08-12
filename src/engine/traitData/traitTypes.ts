@@ -1,9 +1,18 @@
 import type { Archetype } from '@/data/names/archetypeNames';
 import type { FightingStyle } from '@/types/shared.types';
 
+/**
+ *
+ */
 export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Flaw';
+/**
+ *
+ */
 export type TraitSign = 'positive' | 'negative';
 
+/**
+ *
+ */
 export interface TraitEffect {
   attMod?: number;
   parMod?: number;
@@ -29,6 +38,9 @@ export interface TraitEffect {
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
 }
 
+/**
+ *
+ */
 export interface TraitDef {
   id: string;
   name: string;

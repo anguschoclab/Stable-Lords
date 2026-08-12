@@ -12,6 +12,9 @@ import {
 } from '@/engine/trainers';
 import { toast } from 'sonner';
 
+/**
+ *
+ */
 export function useTrainers(showBookmarkedOnly: boolean) {
   const {
     trainers,

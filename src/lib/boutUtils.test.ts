@@ -108,9 +108,7 @@ describe('classifyEvent', () => {
       const event: MinuteEvent = {
         minute: 2,
         text: 'A strikes B',
-        events: [
-          { type: 'ATTACK', actor: 'A', target: 'D', metadata: { critical: true } },
-        ],
+        events: [{ type: 'ATTACK', actor: 'A', target: 'D', metadata: { critical: true } }],
       };
       expect(classifyEvent(event)).toBe('crit');
     });
@@ -119,9 +117,7 @@ describe('classifyEvent', () => {
       const event: MinuteEvent = {
         minute: 2,
         text: 'A strikes B',
-        events: [
-          { type: 'ATTACK', actor: 'A', target: 'D', metadata: { lethal: true } },
-        ],
+        events: [{ type: 'ATTACK', actor: 'A', target: 'D', metadata: { lethal: true } }],
       };
       expect(classifyEvent(event)).toBe('crit');
     });
@@ -130,9 +126,7 @@ describe('classifyEvent', () => {
       const event: MinuteEvent = {
         minute: 2,
         text: 'A kills B',
-        events: [
-          { type: 'ATTACK', actor: 'A', target: 'D', metadata: { critical: true } },
-        ],
+        events: [{ type: 'ATTACK', actor: 'A', target: 'D', metadata: { critical: true } }],
       };
       expect(classifyEvent(event)).toBe('crit');
     });
@@ -141,9 +135,7 @@ describe('classifyEvent', () => {
       const event: MinuteEvent = {
         minute: 2,
         text: 'A kills B',
-        events: [
-          { type: 'ATTACK', actor: 'A', target: 'D', metadata: { critical: false } },
-        ],
+        events: [{ type: 'ATTACK', actor: 'A', target: 'D', metadata: { critical: false } }],
       };
       expect(classifyEvent(event)).toBe('death');
     });

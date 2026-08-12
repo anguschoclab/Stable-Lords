@@ -104,10 +104,7 @@ describe('detectDebuts', () => {
       createFight({ id: 'f2', a: 'Alice', d: 'Charlie' }), // Charlie debut
       createFight({ id: 'f3', a: 'Dave', d: 'Alice' }), // Dave debut
     ];
-    const fullAllFights = [
-      ...allFights,
-      createFight({ id: 'f3', a: 'Dave', d: 'Alice' }),
-    ];
+    const fullAllFights = [...allFights, createFight({ id: 'f3', a: 'Dave', d: 'Alice' })];
     const ctx = computeFightAnalysis(weekFights, fullAllFights);
     const debuts = detectDebuts(weekFights, ctx);
     expect(debuts).toContain('Charlie');

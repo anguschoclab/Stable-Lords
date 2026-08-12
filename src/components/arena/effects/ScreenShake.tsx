@@ -46,7 +46,6 @@ export default function ScreenShake({
 
     // Only shake on crit or death
     if (trigger === 'crit' || trigger === 'death') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- timer-based state reset is intentional
       setIsShaking(true);
       const duration = intensity === 'high' ? 500 : intensity === 'medium' ? 400 : 300;
 

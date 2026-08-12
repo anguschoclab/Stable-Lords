@@ -84,6 +84,9 @@ export function populateTestState(state: GameState): GameState {
   return newState;
 }
 
+/**
+ *
+ */
 export function makeAutosimWarrior(
   id: string,
   name: string,

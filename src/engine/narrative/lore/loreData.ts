@@ -210,13 +210,13 @@ export const ORIGINS: string[] = [
   'Born in the ash-choked slums of the Lower Wards, raised on moldy bread and broken promises',
   'Abandoned at the steps of the Silent Sisters, learning early that tears earn only beatings',
   'Survived the Black Fever that wiped out their entire block, leaving them alone in a house of corpses',
-  'Raised in the fighting pits beneath the butcher\'s quarter, trading copper for their own blood',
-  'Cast out by a fallen noble house, forced to scavenge among the very peasants they once ruled'
+  "Raised in the fighting pits beneath the butcher's quarter, trading copper for their own blood",
+  'Cast out by a fallen noble house, forced to scavenge among the very peasants they once ruled',
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
   'used to meticulously trace the structural flaws in stone walls',
-  'slept soundly only when the city\'s warning bells rang',
+  "slept soundly only when the city's warning bells rang",
   'was known for carving the names of their enemies into their own flesh',
   'would purposefully endure beatings to learn how different bones break',
   'developed a terrifying habit of laughing whenever they drew blood',
@@ -330,21 +330,21 @@ export const CHILDHOOD_TRAITS: string[] = [
   'always watched the shadows instead of the sun',
   'practiced throwing rusted spoons with lethal accuracy',
   'learned to sleep with one eye open and a knife in hand',
-  'never cried out when the overseer\'s lash fell'
+  "never cried out when the overseer's lash fell",
 ];
 
 export const DEFINING_MOMENTS: string[] = [
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',
-  'until they shattered a merciless overseer\'s hand and seized their freedom',
+  "until they shattered a merciless overseer's hand and seized their freedom",
   'knowing that the roar of the arena is the only justice they will ever see',
   'until they shattered a warden’s jaw with a single, perfectly timed kick',
   'knowing that only the roar of the colosseum could silence the screams of their past',
   'until they strangled a cruel taskmaster and embraced the arena’s call',
   'until they strangled a cruel matron with a stolen garrote',
   'knowing that the arena is the only place their rage is rewarded',
-    'waiting for the day they could turn their tormentors into bloody pulp',
+  'waiting for the day they could turn their tormentors into bloody pulp',
   'until they survived the vicious culling of the Warrens',
   'until they turned a rusty nail into a weapon of freedom',
   'realizing that the only family they had was the blade in their hand',
@@ -439,5 +439,5 @@ export const DEFINING_MOMENTS: string[] = [
   'until they realized the arena was the only family they needed',
   'waiting for the day they could turn their scars into a spectacle',
   'knowing that the roar of the crowd was the only god left to them',
-  'until they drove a shattered bottle into their tormentor\'s eye and fled'
+  "until they drove a shattered bottle into their tormentor's eye and fled",
 ];

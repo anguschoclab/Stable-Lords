@@ -9,6 +9,9 @@ import type { Warrior } from '@/types/state.types';
 import type { EquipmentLoadout } from '@/data/equipment';
 import { toast } from 'sonner';
 
+/**
+ *
+ */
 export function useWarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();

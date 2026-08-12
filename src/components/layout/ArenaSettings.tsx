@@ -52,7 +52,11 @@ export default function ArenaSettings() {
               setArenaPreferences({ defaultViewMode: value })
             }
           >
-            <SelectTrigger id="setting-default-view" aria-label="Default View Mode" className="w-40 rounded-none">
+            <SelectTrigger
+              id="setting-default-view"
+              aria-label="Default View Mode"
+              className="w-40 rounded-none"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-none">
@@ -150,7 +154,11 @@ export default function ArenaSettings() {
             }
             disabled={!prefs.effectsEnabled}
           >
-            <SelectTrigger id="setting-screen-shake" aria-label="Screen Shake Intensity" className="w-full rounded-none">
+            <SelectTrigger
+              id="setting-screen-shake"
+              aria-label="Screen Shake Intensity"
+              className="w-full rounded-none"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-none">

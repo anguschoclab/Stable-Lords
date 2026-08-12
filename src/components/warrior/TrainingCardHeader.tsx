@@ -9,6 +9,9 @@ interface TrainingCardHeaderProps {
   hasInjury: boolean;
 }
 
+/**
+ *
+ */
 export function TrainingCardHeader({ warrior, total, hasInjury }: TrainingCardHeaderProps) {
   return (
     <div className="p-4 bg-white/5 border-b border-white/5">

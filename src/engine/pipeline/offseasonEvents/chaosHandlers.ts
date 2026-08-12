@@ -15,6 +15,9 @@ import {
   getActiveWarriors,
 } from './types';
 
+/**
+ *
+ */
 export function handleChaosRift(
   state: GameState,
   nextWeek: number,
@@ -60,6 +63,9 @@ export function handleChaosRift(
   }
 }
 
+/**
+ *
+ */
 export function handleChaoticSpells(
   state: GameState,
   nextWeek: number,
@@ -112,6 +118,9 @@ export function handleChaoticSpells(
   }
 }
 
+/**
+ *
+ */
 export function handleAbyssalBargain(
   state: GameState,
   nextWeek: number,
@@ -165,6 +174,9 @@ export function handleAbyssalBargain(
   }
 }
 
+/**
+ *
+ */
 export function handleFeyTrickster(
   state: GameState,
   nextWeek: number,
@@ -223,6 +235,9 @@ export function handleFeyTrickster(
   }
 }
 
+/**
+ *
+ */
 export function handleRogueAlchemist(
   state: GameState,
   nextWeek: number,
@@ -273,6 +288,9 @@ export function handleRogueAlchemist(
   }
 }
 
+/**
+ *
+ */
 export function handleShadowTournament(
   state: GameState,
   nextWeek: number,
@@ -324,6 +342,9 @@ export function handleShadowTournament(
   }
 }
 
+/**
+ *
+ */
 export function handleChaosWeaversGame(
   state: GameState,
   nextWeek: number,
@@ -379,6 +400,9 @@ export function handleChaosWeaversGame(
   }
 }
 
+/**
+ *
+ */
 export function handleChaosWeaverVisit(
   state: GameState,
   nextWeek: number,
@@ -420,6 +444,9 @@ export function handleChaosWeaverVisit(
   }
 }
 
+/**
+ *
+ */
 export function handleTemporalAnomaly(
   state: GameState,
   nextWeek: number,
@@ -462,6 +489,9 @@ export function handleTemporalAnomaly(
   }
 }
 
+/**
+ *
+ */
 export function handleCursedTreasureDiscovery(
   state: GameState,
   nextWeek: number,
@@ -504,6 +534,9 @@ export function handleCursedTreasureDiscovery(
   }
 }
 
+/**
+ *
+ */
 export function handleChaosWeaversProphecy(
   state: GameState,
   nextWeek: number,
@@ -546,6 +579,9 @@ export function handleChaosWeaversProphecy(
   }
 }
 
+/**
+ *
+ */
 export function handleAbyssalTempestRitual(
   state: GameState,
   nextWeek: number,

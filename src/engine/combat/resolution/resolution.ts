@@ -35,6 +35,9 @@ export {
 export type { OffenseDefenseCtx } from './phaseResolvers';
 export { styleRiposteBonus } from './styleRiposteBonus';
 
+/**
+ *
+ */
 export function resolveExchange(
   ctx: ResolutionContext,
   fA: FighterState,

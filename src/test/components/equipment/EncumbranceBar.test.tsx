@@ -43,7 +43,7 @@ describe('EncumbranceBar', () => {
   it('shows Light tier label for LIGHT tier', () => {
     const weight = getLoadoutWeight(mediumLoadout);
     // carryCap chosen so ratio lands in LIGHT (0.60–0.80)
-    const carryCap = Math.ceil(weight / 0.70);
+    const carryCap = Math.ceil(weight / 0.7);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
     expect(screen.getByText(/Light/)).toBeInTheDocument();
   });
@@ -51,7 +51,7 @@ describe('EncumbranceBar', () => {
   it('shows Medium tier label for MEDIUM tier', () => {
     const weight = getLoadoutWeight(mediumLoadout);
     // carryCap chosen so ratio lands in MEDIUM (0.80–1.00)
-    const carryCap = Math.ceil(weight / 0.90);
+    const carryCap = Math.ceil(weight / 0.9);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
     expect(screen.getByText(/Medium/)).toBeInTheDocument();
   });
@@ -59,7 +59,7 @@ describe('EncumbranceBar', () => {
   it('shows Heavy tier label for HEAVY tier', () => {
     const weight = getLoadoutWeight(heavyLoadout);
     // carryCap chosen so ratio lands in HEAVY (1.00–1.20)
-    const carryCap = Math.ceil(weight / 1.10);
+    const carryCap = Math.ceil(weight / 1.1);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={heavyLoadout} />);
     // The tier label appears in the header: "weight / carryCap · Heavy"
     expect(screen.getByText(new RegExp(`${weight} / ${carryCap}.*Heavy`))).toBeInTheDocument();
@@ -68,10 +68,12 @@ describe('EncumbranceBar', () => {
   it('shows Over-encumbered tier label for OVER tier', () => {
     const weight = getLoadoutWeight(heavyLoadout);
     // carryCap chosen so ratio >= 1.20
-    const carryCap = Math.floor(weight / 1.30);
+    const carryCap = Math.floor(weight / 1.3);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={heavyLoadout} />);
     // The tier label appears in the header: "weight / carryCap · Over-encumbered"
-    expect(screen.getByText(new RegExp(`${weight} / ${carryCap}.*Over-encumbered`))).toBeInTheDocument();
+    expect(
+      screen.getByText(new RegExp(`${weight} / ${carryCap}.*Over-encumbered`))
+    ).toBeInTheDocument();
   });
 
   it('does not render penalty details for NONE tier', () => {
@@ -81,14 +83,14 @@ describe('EncumbranceBar', () => {
 
   it('does not render penalty details for LIGHT tier', () => {
     const weight = getLoadoutWeight(mediumLoadout);
-    const carryCap = Math.ceil(weight / 0.70);
+    const carryCap = Math.ceil(weight / 0.7);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
     expect(screen.queryByText(/combat penalties apply/)).not.toBeInTheDocument();
   });
 
   it('renders penalty details for HEAVY tier with INI, DEF, PAR, and END values', () => {
     const weight = getLoadoutWeight(heavyLoadout);
-    const carryCap = Math.ceil(weight / 1.10);
+    const carryCap = Math.ceil(weight / 1.1);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={heavyLoadout} />);
     expect(screen.getByText(/combat penalties apply/)).toBeInTheDocument();
     // HEAVY penalties: iniPenalty=-3, defPenalty=-1, parPenalty=-1, enduranceMult=1.3
@@ -100,7 +102,7 @@ describe('EncumbranceBar', () => {
 
   it('renders penalty details for OVER tier with larger penalties', () => {
     const weight = getLoadoutWeight(heavyLoadout);
-    const carryCap = Math.floor(weight / 1.30);
+    const carryCap = Math.floor(weight / 1.3);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={heavyLoadout} />);
     expect(screen.getByText(/combat penalties apply/)).toBeInTheDocument();
     // OVER penalties: iniPenalty=-4, defPenalty=-2, parPenalty=-2, enduranceMult=1.5
@@ -112,7 +114,7 @@ describe('EncumbranceBar', () => {
 
   it('does not render penalty details for MEDIUM tier (only HEAVY/OVER show penalties)', () => {
     const weight = getLoadoutWeight(mediumLoadout);
-    const carryCap = Math.ceil(weight / 0.90);
+    const carryCap = Math.ceil(weight / 0.9);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
     // Component only shows penalty details for HEAVY and OVER tiers
     expect(screen.queryByText(/combat penalties apply/)).not.toBeInTheDocument();

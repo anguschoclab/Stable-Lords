@@ -21,6 +21,9 @@ interface UseRecruitActionsParams {
   navigate: (opts: { to: string }) => void;
 }
 
+/**
+ *
+ */
 export function useRecruitActions({
   rosterFull,
   setState,

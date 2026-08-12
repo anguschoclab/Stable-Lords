@@ -8,6 +8,9 @@ interface AttributeMatrixProps {
   attributes: Attributes;
 }
 
+/**
+ *
+ */
 export function AttributeMatrix({ attributes }: AttributeMatrixProps) {
   return (
     <div className="grid grid-cols-7 gap-2 pt-2">

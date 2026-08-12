@@ -35,7 +35,10 @@ export function WeaponRequirementBadge({ reqResult }: WeaponRequirementBadgeProp
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge variant="destructive" className="text-[10px] py-0 px-1 gap-0.5 animate-pulse motion-reduce:animate-none">
+          <Badge
+            variant="destructive"
+            className="text-[10px] py-0 px-1 gap-0.5 animate-pulse motion-reduce:animate-none"
+          >
             <XCircle className="h-2.5 w-2.5" /> {reqResult.failures.length} req
             {reqResult.failures.length > 1 ? 's' : ''} failed
           </Badge>

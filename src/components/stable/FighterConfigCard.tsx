@@ -45,7 +45,11 @@ export function FighterConfigCard({
         <CardTitle className="font-display text-lg flex items-center justify-between">
           {label}
           <Select value={style} onValueChange={(v) => setStyle(v as FightingStyle)}>
-            <SelectTrigger id={`${idPrefix}-fighter-style-select`} aria-label="Fighting Style" className="w-[180px] h-8 text-xs bg-background">
+            <SelectTrigger
+              id={`${idPrefix}-fighter-style-select`}
+              aria-label="Fighting Style"
+              className="w-[180px] h-8 text-xs bg-background"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -62,7 +66,12 @@ export function FighterConfigCard({
         {Object.entries(stats).map(([key, value]) => (
           <div key={key} className="space-y-1.5">
             <div className="flex justify-between">
-              <Label htmlFor={`${idPrefix}-stat-slider-${key}`} className="capitalize text-xs text-muted-foreground">{key}</Label>
+              <Label
+                htmlFor={`${idPrefix}-stat-slider-${key}`}
+                className="capitalize text-xs text-muted-foreground"
+              >
+                {key}
+              </Label>
               <span className="text-xs font-mono">{value}</span>
             </div>
             <Slider

@@ -14,6 +14,9 @@ export const CAPACITY_T1 = 0.52; // below → capacity 0 (never develops)
 export const CAPACITY_T2 = 0.66; // below → capacity 1
 export const CAPACITY_T3 = 0.8; // below → capacity 2, else 3
 
+/**
+ *
+ */
 export function traitCapacity(w: Warrior): number {
   const t = w.trainability ?? 0.65;
   if (t < CAPACITY_T1) return 0;
@@ -26,6 +29,9 @@ export function traitCapacity(w: Warrior): number {
 export const WINS_FOR_MERIT = 1;
 export const FAME_FOR_MERIT = 5;
 
+/**
+ *
+ */
 export function meritsTraitDevelopment(w: Warrior): boolean {
   const wins = w.career?.wins ?? 0;
   const losses = w.career?.losses ?? 0;
@@ -33,6 +39,9 @@ export function meritsTraitDevelopment(w: Warrior): boolean {
   return (wins >= WINS_FOR_MERIT && wins >= losses) || fame >= FAME_FOR_MERIT;
 }
 
+/**
+ *
+ */
 export function countFlaws(w: Warrior): number {
   return (w.traits ?? []).filter((id) => TRAITS[id]?.tier === 'Flaw').length;
 }

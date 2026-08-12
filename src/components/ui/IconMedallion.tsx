@@ -3,6 +3,9 @@ interface IconMedallionProps {
   className?: string;
 }
 
+/**
+ *
+ */
 export function IconMedallion({ icon, className }: IconMedallionProps) {
   return (
     <div

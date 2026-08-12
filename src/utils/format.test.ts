@@ -33,8 +33,6 @@ describe('formatDateOfDeath', () => {
   });
 
   it('preserves season string as-is', () => {
-    expect(formatDateOfDeath(7, 'Late Summer')).toBe(
-      'Week 7, Season Late Summer',
-    );
+    expect(formatDateOfDeath(7, 'Late Summer')).toBe('Week 7, Season Late Summer');
   });
 });

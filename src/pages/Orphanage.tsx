@@ -50,6 +50,7 @@ export default function Orphanage() {
     useShallow((s) => ({
       player: s.player,
       graveyard: s.graveyard,
+      ftueComplete: s.ftueComplete,
       initializeStable: s.initializeStable,
       setState: s.setState,
       returnToTitle: s.returnToTitle,
@@ -130,6 +131,11 @@ export default function Orphanage() {
   }, [selectedWarriors, playerPlan, boutSeed]);
 
   const finishFTUE = useCallback(() => {
+    if (state.ftueComplete) {
+      navigate({ to: '/stable' });
+      return;
+    }
+
     const result = buildFTUEInitialState(
       state as unknown as GameState,
       selectedWarriors,
@@ -154,7 +160,7 @@ export default function Orphanage() {
 
     // Navigate to the Stable hub after FTUE
     navigate({ to: '/stable' });
-  }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState, navigate]);
+  }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState, navigate, state.ftueComplete]);
 
   // ─── Shell ──────────────────────────────────────────────────────────────────
 

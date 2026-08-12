@@ -1,10 +1,11 @@
 import { GameState, Warrior, BoutOffer } from '@/types/state.types';
-import type { StableId, FightId } from '@/types/shared.types';
+import type { StableId, FightId, LedgerEntryId } from '@/types/shared.types';
 import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
 import { fameFromTags } from '@/engine/fame';
 import { isActive } from '@/engine/warriorStatus';
+import { generateId } from '@/utils/idUtils';
 
 /**
  * Validate bout combatants.
@@ -73,12 +74,21 @@ export function processContractPayouts(
   // rivalsUpdates' mapMerge would also lose payouts here, so the canonical
   // path is stableManager only.
   if (winnerId === currentWId) {
-    if (!rivalA) impacts.push({ treasuryDelta: purse });
+    if (!rivalA) {
+      impacts.push({ treasuryDelta: purse });
+      impacts.push({ ledgerEntries: [{ id: generateId(undefined, 'ledger') as LedgerEntryId, week: state.week, label: `Purse — ${contract.id}`, amount: purse, category: 'fight' as const }] });
+    }
   } else if (winnerId === currentOId) {
-    if (!rivalA) impacts.push({ treasuryDelta: showFee });
+    if (!rivalA) {
+      impacts.push({ treasuryDelta: showFee });
+      impacts.push({ ledgerEntries: [{ id: generateId(undefined, 'ledger') as LedgerEntryId, week: state.week, label: `Show fee — ${contract.id}`, amount: showFee, category: 'fight' as const }] });
+    }
   } else {
     // Draw
-    if (!rivalA) impacts.push({ treasuryDelta: showFee });
+    if (!rivalA) {
+      impacts.push({ treasuryDelta: showFee });
+      impacts.push({ ledgerEntries: [{ id: generateId(undefined, 'ledger') as LedgerEntryId, week: state.week, label: `Show fee (draw) — ${contract.id}`, amount: showFee, category: 'fight' as const }] });
+    }
   }
 
   if (rivalsUpdates.size > 0) {

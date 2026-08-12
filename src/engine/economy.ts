@@ -61,6 +61,7 @@ export interface StableEconomyInput {
   trainers: Trainer[];
   trainingAssignments: TrainingAssignment[];
   applyStipend?: boolean;
+  isPlayer?: boolean;
 }
 
 /**
@@ -93,6 +94,10 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     const f = input.arenaHistory[i];
     if (!f) break;
     if (f.week !== week) break;
+
+    // Player contract bouts are paid via processContractPayouts (treasuryDelta + ledger).
+    // Skip them here to avoid double-counting income from the same fight.
+    if (input.isPlayer && f.contractId) continue;
 
     const aIsStable = stableWarriorIds.has(f.warriorIdA);
     const dIsStable = stableWarriorIds.has(f.warriorIdD);

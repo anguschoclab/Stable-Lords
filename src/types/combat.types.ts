@@ -259,6 +259,7 @@ export interface FightSummary {
   isRivalry?: boolean;
   arenaId?: string;
   weather?: import('./shared.types').WeatherType;
+  contractId?: string;
   /** Compact, persisted explanation of why the fight went the way it did.
    *  Built by buildFightAnalysis() at resolution time. */
   analysis?: import('@/engine/narrative/fightAnalysis').FightAnalysis;

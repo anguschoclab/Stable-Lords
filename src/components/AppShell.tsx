@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,7 +15,6 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';
 import { ResultsBanner } from '@/components/layout/ResultsBanner';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
-import { isActive } from '@/engine/warriorStatus';
 
 // ─── Loading Overlay Component ─────────────────────────────────────────────
 
@@ -108,8 +107,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       initialize: s.initialize,
     }))
   );
-  const roster = useGameStore(useShallow((s: GameStore) => s.roster));
-  const navigate = useNavigate();
   const location = useLocation();
   const activePath = location.pathname;
   const [resetOpen, setResetOpen] = useState(false);
@@ -120,16 +117,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     initialize();
   }, [initialize]);
-
-  useEffect(() => {
-    // Only check for "Orphan" status if we are in the main game loops
-    const exemptPaths = ['/welcome', '/stable/', '/admin', '/help'];
-    if (exemptPaths.some((p) => activePath.startsWith(p))) return;
-
-    if (roster.filter((w) => isActive(w)).length < 3) {
-      navigate({ to: '/welcome' });
-    }
-  }, [roster, activePath, navigate]);
 
   useEffect(() => {
     // Strategic Route-Aware Event Log Toggling

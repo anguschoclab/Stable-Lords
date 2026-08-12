@@ -42,7 +42,8 @@ export function handleReporting(
   rng?: IRNGService,
   arenaId?: string,
   weather?: import('@/types/shared.types').WeatherType,
-  absoluteWeek?: number
+  absoluteWeek?: number,
+  contractId?: string
 ) {
   const safeRng = rng;
   const boutId = (safeRng ? safeRng.uuid() : generateId(undefined, 'bout')) as FightId;
@@ -75,6 +76,7 @@ export function handleReporting(
     transcript: outcome.log.map((e) => e.text),
     isRivalry,
     absoluteWeek,
+    contractId,
     createdAt: weekToTimestamp(absoluteWeek ?? week),
   };
 

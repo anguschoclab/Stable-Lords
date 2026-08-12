@@ -219,7 +219,8 @@ function collectBoutImpacts(
     rng,
     resolvedArenaId,
     state.weather,
-    ctx.week
+    ctx.week,
+    ctx.contract?.id
   );
   impacts.push({ arenaHistory: [summary] });
 

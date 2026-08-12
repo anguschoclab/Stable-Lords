@@ -14,9 +14,8 @@ import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 import { updateEntityInList } from '@/utils/stateUtils';
-import { findCurrentRoundBouts } from '../tournament/bracketUtils'; /**
- * Resolve round.
- */
+import { findCurrentRoundBouts } from '../tournament/bracketUtils';
+import { selectArenaForTournamentBout } from '../tournament/tournamentArenaSelection';
 
 /**
  * Resolve round.
@@ -75,6 +74,7 @@ export function resolveRound(
     const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
     const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
 
+    const arenaId = selectArenaForTournamentBout(() => rng.next());
     const outcome = simulateFight(
       planA,
       planD,
@@ -82,8 +82,8 @@ export function resolveRound(
       wD,
       rng.roll(0, 1000000),
       updatedState.trainers,
-      'Clear',
-      'bloodsands_arena',
+      updatedState.weather ?? 'Clear',
+      arenaId,
       updatedState.crowdMood,
       headless
     );

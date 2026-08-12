@@ -447,3 +447,42 @@ describe('runRivalStrategyPass — expired offer purge', () => {
     expect(resultOffers['keep-2']).toBeDefined();
   });
 });
+
+// ─── Suite 5: Tournament creation (no resolution) ──────────────────────────
+
+describe('runRivalStrategyPass — tournament week', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('creates tournaments without resolving them when nextWeek % 13 === 0', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+
+    const rival = makeRival({
+      roster: [
+        makeWarrior('w1', 'Fighter 1', { fame: 50, stableId: 'rival-1' as StableId }),
+        makeWarrior('w2', 'Fighter 2', { fame: 50, stableId: 'rival-1' as StableId }),
+      ],
+    });
+    const state = makeMinimalState([rival]);
+    state.recruitPool = [];
+    state.absoluteWeek = 12;
+    state.week = 12;
+
+    const impact = runRivalStrategyPass(state, 13, undefined as any, true);
+
+    expect(impact.isTournamentWeek).toBe(true);
+    expect(impact.activeTournamentId).toBeDefined();
+    expect(impact.day).toBe(0);
+    const tournaments = impact.tournaments as any[];
+    expect(tournaments).toBeDefined();
+    expect(tournaments.length).toBeGreaterThan(0);
+    for (const tour of tournaments) {
+      expect(tour.completed).toBe(false);
+    }
+    // No graveyard/arenaHistory/rosterRemovals from tournament resolution
+    expect(impact.graveyard).toBeUndefined();
+    expect(impact.arenaHistory).toBeUndefined();
+    expect(impact.rosterRemovals).toBeUndefined();
+  });
+});

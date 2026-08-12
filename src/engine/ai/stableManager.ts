@@ -72,6 +72,7 @@ export function processAIStable(
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
     applyStipend: (state.rivals || []).length <= 45,
+    isPlayer: false,
   };
 
   const breakdown = computeWeeklyBreakdown(economyInput);

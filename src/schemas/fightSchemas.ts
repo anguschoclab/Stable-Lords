@@ -312,6 +312,7 @@ export const FightSummarySchema = z.object({
   isRivalry: z.boolean().optional(),
   arenaId: z.string().optional(),
   weather: WeatherTypeSchema.optional(),
+  contractId: z.string().optional(),
   analysis: fightAnalysisSchema.optional(),
 });
 

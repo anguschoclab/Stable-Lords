@@ -8,5 +8,5 @@ import { StateImpact } from '@/engine/impacts';
  * Handles weekly income and expenses for the player's stable.
  */
 export function runEconomyPass(state: GameState, _rng: IRNGService): StateImpact {
-  return computeEconomyImpact(state);
+  return computeEconomyImpact({ ...state, isPlayer: true });
 }

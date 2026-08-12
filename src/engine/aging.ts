@@ -24,6 +24,7 @@ import { WEEKS_PER_YEAR } from '@/constants/core/core';
 // 25-year stress test was missing entirely.
 const FORCED_RETIRE_MIN = WARRIOR_AGING.FORCED_RETIREMENT_MIN;
 const FORCED_RETIRE_MAX = WARRIOR_AGING.FORCED_RETIREMENT_MAX;
+const PENALTY_INTERVAL = WARRIOR_AGING.PENALTY_INTERVAL;
 
 interface AgingResult {
   retired: boolean;
@@ -49,7 +50,7 @@ export function applyAgePenalty(
     update.age = currentAge;
 
     if (currentAge > AGING_PENALTY_START) {
-      const penalty = Math.floor((currentAge - AGING_PENALTY_START) / 3);
+      const penalty = Math.floor((currentAge - AGING_PENALTY_START) / PENALTY_INTERVAL);
       if (penalty > 0) {
         const newAttrs = {
           ...w.attributes,

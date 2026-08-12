@@ -8,6 +8,8 @@ on:
 jobs:
   expand-narrative:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
@@ -16,6 +18,8 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
 
       - name: Install Dependencies
         run: bun install

@@ -31,6 +31,11 @@ export const FAME_DIVIDEND = 0.5;
 export const WARRIOR_UPKEEP_BASE = 60;
 
 /**
+ * Fame premium multiplier for upkeep (gold per fame point)
+ */
+export const FAME_UPKEEP_MULTIPLIER = 1.5;
+
+/**
  * Training cost per session
  */
 export const TRAINING_COST = 20;
@@ -78,8 +83,6 @@ export const WEATHER_ECONOMICS = {
   PATRONAGE_THRESHOLD: 40,
   PATRONAGE_DIVISOR: 10,
   PATRONAGE_MULTIPLIER: 25,
-  FAME_PREMIUM_DIVISOR: 10,
-  FAME_PREMIUM_MULTIPLIER: 15,
   SWELTERING_PREMIUM: 5,
   BLIZZARD_PREMIUM: 10,
 } as const;
@@ -128,6 +131,11 @@ export const TRAINER_WEEKLY_SALARY: Record<string, number> = {
   Seasoned: 25,
   Master: 75,
 };
+
+/**
+ * Fallback salary when trainer tier is not found in TRAINER_WEEKLY_SALARY
+ */
+export const TRAINER_SALARY_FALLBACK = 35;
 
 // ─── Income Scaling ────────────────────────────────────────────────────────
 /**

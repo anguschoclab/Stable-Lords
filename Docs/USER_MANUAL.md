@@ -524,21 +524,25 @@ Injuries occur in combat and (less commonly) during training. They are tracked p
 
 Seasonal tournaments offer prestige, glory, and prize money beyond regular bouts.
 
-### Tournament Types
+### Tournament Tiers
 
-- **Seasonal Grand Melee** — all-comers bracket tournament
-- **Divisional Championships** — tiered by ranking
-- **Invitational Bouts** — promoter-curated prestige events
+Tournaments are structured in four tiers based on warrior ranking:
+
+- **Imperial Gold Cup** — ranks 1–64, highest prestige and prize purses
+- **Proconsul Silver Plate** — ranks 65–128
+- **Steel Bronze Gauntlet** — ranks 129–192
+- **Foundry Iron Trials** — ranks 193–256, entry-level competition
 
 ### Awards
 
-At year end, **annual medallions** are awarded based on performance:
+At year end, **annual awards** are given based on performance:
 
-- **Gold Medallion** — best record in division
-- **Silver Medallion** — second place
-- **Bronze Medallion** — notable achievement
+- **Warrior of the Year** — best overall record
+- **Killer of the Year** — most kills in the arena
+- **Class MVP** — top performer in each fighting style class
+- **Stable of the Year** — most successful stable by aggregate record
 
-Medallion counts contribute to a warrior's legacy and the **Hall of Fame** rankings.
+Tournament medal counts (gold/silver/bronze) contribute to a warrior's legacy and the **Hall of Fame** rankings.
 
 ### Promotion & Relegation
 
@@ -659,7 +663,7 @@ Your stable's Hall of Fame entries contribute to long-term legacy and prestige.
 
 ## 17. Dashboard & UI Overview
 
-The **Dashboard** is your command centre. It consists of **18+ modular widgets** that can be rearranged to suit your playstyle.
+The **Dashboard** is your command centre. It consists of modular widgets displaying key information about your stable.
 
 ### Core Widgets
 
@@ -676,7 +680,7 @@ The **Dashboard** is your command centre. It consists of **18+ modular widgets**
 | Tournament Bubble | Your warriors' position relative to promotion/relegation      |
 | Meta Overview     | Current style popularity and trend direction                  |
 
-Widgets can be **dragged and reordered**. Focus your dashboard on what matters most at your current stage of the game.
+Widgets are displayed in a fixed layout. Focus on the information most relevant to your current stage of the game.
 
 ### Other Pages
 

@@ -1,6 +1,22 @@
 # Daily Bard Report
 
-### Added to blurbs.neutral (2 new unique templates)
-
-- %A defeated %D%H.
-- New unique template.
+### Added to passives.AIMED BLOW (3 new unique templates)
+- %A drives their %W into %D's %BP with a sickening crunch. (Mock 1)
+- A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)
+- %D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)
+### Added to passives.BASHING ATTACK (3 new unique templates)
+- %A drives their %W into %D's %BP with a sickening crunch. (Mock 1)
+- A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)
+- %D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)
+### Added to passives.LUNGING ATTACK (3 new unique templates)
+- %A drives their %W into %D's %BP with a sickening crunch. (Mock 1)
+- A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)
+- %D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)
+### Added to passives.PARRY-LUNGE (3 new unique templates)
+- %A drives their %W into %D's %BP with a sickening crunch. (Mock 1)
+- A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)
+- %D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)
+### Added to passives.PARRY-RIPOSTE (3 new unique templates)
+- %A drives their %W into %D's %BP with a sickening crunch. (Mock 1)
+- A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)
+- %D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)

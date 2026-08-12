@@ -11,10 +11,11 @@
  * out-tanking their prime selves. Keep it < 1.0.
  */
 import { AGING_PENALTY_START, VETERAN_WISDOM_FACTOR } from '@/constants/combat/combat';
+import { WARRIOR_AGING } from '@/constants/aging';
 
 /** SP+DF points lost to aging at a given age (matches aging.ts penalty). */
 function agingAttributeLoss(age: number): number {
-  const penalty = Math.max(0, Math.floor((age - AGING_PENALTY_START) / 3));
+  const penalty = Math.max(0, Math.floor((age - AGING_PENALTY_START) / WARRIOR_AGING.PENALTY_INTERVAL));
   return penalty * 2; // applied to both SP and DF
 }
 

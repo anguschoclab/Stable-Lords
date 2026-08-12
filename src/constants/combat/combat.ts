@@ -5,6 +5,7 @@
 
 import { FightingStyle } from '@/types/shared.types';
 import type { CommitLevel } from '@/types/shared.types';
+import { WARRIOR_AGING } from '@/constants/aging';
 
 // ─── Global Combat Modifiers ────────────────────────────────────────────────
 /**
@@ -224,8 +225,9 @@ export const TRAIT_SELECTION_THRESHOLDS = {
 // ─── Aging & Veteran Compensation ─────────────────────────────────────────────
 /**
  * Age at which aging penalties begin (SP/DF loss)
+ * Sourced from WARRIOR_AGING.PENALTY_START to ensure a single source of truth.
  */
-export const AGING_PENALTY_START = 25;
+export const AGING_PENALTY_START = WARRIOR_AGING.PENALTY_START;
 
 /**
  * DEF gained per attribute-point-lost × WL/15 for veteran compensation

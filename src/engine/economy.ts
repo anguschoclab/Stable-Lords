@@ -24,9 +24,12 @@ import { SeededRNGService } from '@/utils/random';
 import {
   FAME_DIVIDEND,
   WARRIOR_UPKEEP_BASE,
+  FAME_UPKEEP_MULTIPLIER,
   TRAINING_COST,
   TRAINER_WEEKLY_SALARY,
+  TRAINER_SALARY_FALLBACK,
   IDLE_STIPEND,
+  WEATHER_ECONOMICS,
   computeFightEconomics,
 } from '@/constants/economy';
 import { getArenaById } from '@/data/arenas';
@@ -141,13 +144,13 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
 
   // 🌩️ Weather Impact: Mana Surge Gift
   if (input.weather === 'Mana Surge') {
-    income.push({ label: 'Celestial Gift (Mana Surge)', amount: 250 });
+    income.push({ label: 'Celestial Gift (Mana Surge)', amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT });
   }
 
   // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
   const patronageIncome = input.roster.reduce((sum, w) => {
-    if ((w.fame || 0) > 40) {
-      return sum + Math.floor(((w.fame || 0) - 40) / 10) * 25;
+    if ((w.fame || 0) > WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) {
+      return sum + Math.floor(((w.fame || 0) - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
     }
     return sum;
   }, 0);
@@ -158,17 +161,17 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
   if (input.roster.length > 0) {
     // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
     const rosterUpkeep = input.roster.reduce((sum, w) => {
-      const famePremium = Math.round((w.fame || 0) * 1.5); // 1.5g per fame point
+      const famePremium = Math.round((w.fame || 0) * FAME_UPKEEP_MULTIPLIER);
       return sum + WARRIOR_UPKEEP_BASE + famePremium;
     }, 0);
     expenses.push({ label: `Warrior upkeep (${input.roster.length})`, amount: rosterUpkeep });
 
     // Weather-specific ledger labels for clarity
     if (input.weather === 'Sweltering') {
-      expenses.push({ label: 'Cooling & Ventilation Overhead', amount: input.roster.length * 5 });
+      expenses.push({ label: 'Cooling & Ventilation Overhead', amount: input.roster.length * WEATHER_ECONOMICS.SWELTERING_PREMIUM });
     }
     if (input.weather === 'Blizzard') {
-      expenses.push({ label: 'Insulation & Fuel Overhead', amount: input.roster.length * 10 });
+      expenses.push({ label: 'Insulation & Fuel Overhead', amount: input.roster.length * WEATHER_ECONOMICS.BLIZZARD_PREMIUM });
     }
   }
 
@@ -176,7 +179,7 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     (acc, t) => {
       if (t.contractWeeksLeft > 0) {
         acc.activeTrainerCount++;
-        acc.trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? 35;
+        acc.trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? TRAINER_SALARY_FALLBACK;
       }
       return acc;
     },

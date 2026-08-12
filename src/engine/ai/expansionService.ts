@@ -5,6 +5,7 @@ import { generateRivalStables } from '../rivals';
 import { inheritCrest } from '../crest/crestGenerator';
 import { BACKSTORIES } from '@/data/backstories';
 import type { FightingStyle } from '@/types/shared.types';
+import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
 
 /**
  * ExpansionService - Handles stable expansion.
@@ -19,7 +20,7 @@ export const ExpansionService = {
   processExpansion(
     state: GameState,
     rng: IRNGService,
-    targetCount: number = 8,
+    targetCount: number = INITIAL_RIVAL_COUNT,
     legacyCandidates?: {
       name: string;
       stableName: string;

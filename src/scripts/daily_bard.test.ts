@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import {
   templateStringSchema,
+  NarrativeSchema,
   fetch_narrative_deficits,
   request_bardic_inspiration,
   validate_with_retry,
@@ -281,6 +284,49 @@ describe('daily_bard', () => {
   describe('H. DRY_RUN env var', () => {
     it('DRY_RUN is a boolean', () => {
       expect(typeof DRY_RUN).toBe('boolean');
+    });
+  });
+
+  // I. Real data validation — validates actual narrativeContent.json against schema
+  describe('I. Real data validation', () => {
+    const dataPath = resolve(__dirname, '../data/narrativeContent.json');
+    const rawData = readFileSync(dataPath, 'utf-8');
+    const parsed = JSON.parse(rawData);
+
+    it('NarrativeSchema.parse() accepts actual narrativeContent.json without error', () => {
+      expect(() => NarrativeSchema.parse(parsed)).not.toThrow();
+    });
+
+    it('parsed result preserves unknown keys (ux_metadata, pbp, events, etc.)', () => {
+      const result = NarrativeSchema.parse(parsed);
+      expect(result).toHaveProperty('ux_metadata');
+      expect(result).toHaveProperty('pbp');
+      expect(result).toHaveProperty('events');
+      expect(result).toHaveProperty('gazette');
+      expect(result).toHaveProperty('kill_text');
+      expect(result).toHaveProperty('offseason_events');
+      expect(result).toHaveProperty('crowd_reactions');
+    });
+
+    it('fetch_narrative_deficits does not produce bogus array-index paths for flat-array strikes', () => {
+      const validated = NarrativeSchema.parse(parsed);
+      const deficits = fetch_narrative_deficits(validated);
+      const bogusPaths = deficits.filter((d) => /^strikes\.\w+\.\d+$/.test(d));
+      expect(bogusPaths).toHaveLength(0);
+    });
+
+    it('deduplicate_full_archive does not corrupt flat-array strikes (strings remain strings)', () => {
+      const validated = NarrativeSchema.parse(parsed);
+      const beforeGeneric = JSON.stringify(validated.strikes.generic);
+      deduplicate_full_archive(validated);
+      const afterGeneric = validated.strikes.generic as unknown as unknown[];
+      // Should still be an array of strings, not array of character arrays
+      expect(Array.isArray(afterGeneric)).toBe(true);
+      for (const item of afterGeneric) {
+        expect(typeof item).toBe('string');
+      }
+      // Content should be the same (deduped)
+      expect(JSON.stringify(afterGeneric)).toBe(beforeGeneric);
     });
   });
 });

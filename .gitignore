@@ -34,9 +34,6 @@ playwright/.cache/
 # One-off fix scripts
 fix_*.cjs
 
-# Daily Automated Reports
-Daily_Balance_Report.md
-
 # AI tool config directories (IDE-local)
 .jules/
 .Jules/

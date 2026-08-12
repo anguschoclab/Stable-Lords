@@ -190,6 +190,8 @@ All 7 root causes verified as **already fixed** in the current codebase:
 
 ### Phase 5: Full Verification (including slow tests)
 
+> **Note:** Metrics below are point-in-time snapshots from the consolidation date, not continuously verified. Run `bunx tsc --noEmit` and `bun run lint` for current status.
+
 - **tsc**: 0 errors
 - **vitest (standard)**: 464 files, 5956 passed, 0 failed, 8 skipped
 - **vitest (all, including slow)**: 472 files, 6073 passed, 1 failed (flaky timing test `advanceWeekPerformance`), 8 skipped

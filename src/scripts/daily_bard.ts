@@ -32,31 +32,31 @@ const CategorySchema = z.object({
 const DefenseSchema = z.object({
   success: z.array(templateStringSchema),
   stumbling: z.array(templateStringSchema),
-}); /**
- * Narrative schema.
- */
+});
 
 /**
  * Narrative schema.
  */
-export const NarrativeSchema = z.object({
-  strikes: z.record(z.string(), CategorySchema),
-  defenses: z.record(z.string(), DefenseSchema),
-  attacks: z.record(z.string(), z.array(templateStringSchema)),
-  passives: z.record(z.string(), z.array(templateStringSchema)),
-  conclusions: z.record(z.string(), z.array(templateStringSchema)),
-  insights: z.record(z.string(), z.array(templateStringSchema)),
-  promoters: z.record(z.string(), z.record(z.string(), z.array(templateStringSchema))), // promoter.[personality].pitch
-  media: z.record(z.string(), z.array(templateStringSchema)), // media.[type]
-  persona: z.record(z.string(), z.array(templateStringSchema)), // persona.[trait]
-  recruitment: z.record(z.string(), z.array(templateStringSchema)), // recruitment.[origin/blurb]
-  memorials: z.record(z.string(), z.array(templateStringSchema)), // memorials.[epigraph]
-  fanfare: z.record(z.string(), z.array(templateStringSchema)), // fanfare.[victory]
-  meta: z.record(z.string(), z.array(templateStringSchema)), // meta.[tooltip]
-  recap: z.array(templateStringSchema), // Generic recap templates
-  commentary: z.record(z.string(), z.array(templateStringSchema)), // commentary.[KO/Kill/Flashy/Upset]
-  blurbs: z.record(z.string(), z.array(templateStringSchema)), // blurbs.[neutral/hype/grim]
-});
+export const NarrativeSchema = z
+  .object({
+    strikes: z.record(z.string(), z.union([CategorySchema, z.array(templateStringSchema)])),
+    defenses: z.record(z.string(), DefenseSchema).optional(),
+    attacks: z.record(z.string(), z.array(templateStringSchema)).optional(),
+    passives: z.record(z.string(), z.array(templateStringSchema)),
+    conclusions: z.record(z.string(), z.array(templateStringSchema)),
+    insights: z.record(z.string(), z.array(templateStringSchema)).optional(),
+    promoters: z.record(z.string(), z.record(z.string(), z.array(templateStringSchema))).optional(),
+    media: z.record(z.string(), z.array(templateStringSchema)).optional(),
+    persona: z.record(z.string(), z.any()),
+    recruitment: z.record(z.string(), z.any()),
+    memorials: z.record(z.string(), z.array(templateStringSchema)),
+    fanfare: z.record(z.string(), z.any()),
+    meta: z.record(z.string(), z.any()),
+    recap: z.array(templateStringSchema),
+    commentary: z.record(z.string(), z.array(templateStringSchema)),
+    blurbs: z.record(z.string(), z.array(templateStringSchema)),
+  })
+  .passthrough();
 
 type ValidatedJSON = z.infer<typeof NarrativeSchema>;
 
@@ -78,18 +78,25 @@ export function fetch_narrative_deficits(data: ValidatedJSON): string[] {
   const deficits: string[] = [];
 
   for (const [type, severities] of Object.entries(data.strikes)) {
+    if (Array.isArray(severities)) {
+      if (severities.length < 15) {
+        deficits.push(`strikes.${type}`);
+      }
+      continue;
+    }
     for (const [sev, templates] of Object.entries(severities)) {
       if (templates.length < 15) {
-        // Increased target variety
         deficits.push(`strikes.${type}.${sev}`);
       }
     }
   }
 
-  for (const [type, outcomes] of Object.entries(data.defenses)) {
-    for (const [outcome, templates] of Object.entries(outcomes)) {
-      if (templates.length < 12) {
-        deficits.push(`defenses.${type}.${outcome}`);
+  if (data.defenses) {
+    for (const [type, outcomes] of Object.entries(data.defenses)) {
+      for (const [outcome, templates] of Object.entries(outcomes)) {
+        if (templates.length < 12) {
+          deficits.push(`defenses.${type}.${outcome}`);
+        }
       }
     }
   }
@@ -253,13 +260,21 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
  */
 export function deduplicate_full_archive(data: ValidatedJSON) {
   for (const severities of Object.values(data.strikes)) {
+    if (Array.isArray(severities)) {
+      const deduped = [...new Set(severities)];
+      severities.length = 0;
+      severities.push(...deduped);
+      continue;
+    }
     for (const sev of Object.keys(severities)) {
       (severities as any)[sev] = [...new Set((severities as any)[sev])]; // eslint-disable-line @typescript-eslint/no-explicit-any
     }
   }
-  for (const outcomes of Object.values(data.defenses)) {
-    for (const outcome of Object.keys(outcomes)) {
-      (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  if (data.defenses) {
+    for (const outcomes of Object.values(data.defenses)) {
+      for (const outcome of Object.keys(outcomes)) {
+        (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      }
     }
   }
   const extraCategories: (keyof ValidatedJSON)[] = [

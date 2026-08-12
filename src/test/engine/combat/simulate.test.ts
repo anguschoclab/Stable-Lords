@@ -988,19 +988,21 @@ describe('spatial system integration', () => {
 
 describe('simulateFight — yield mechanic', () => {
   it('produces Yield outcome when a fighter with YIELD fallback is below 15% HP and endurance', () => {
-    // Attacker: high OE/AL for endurance drain, low killDesire, moderate ST.
-    // Defender: ParryRiposte (enduranceMult 1.04), low CN (small endurance pool),
-    // moderate ST/DF (HP drops gradually, not instantly to 0).
-    const planA = makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10, killDesire: 1 });
+    // Defender: CN=15 (large endurance pool ~40-50), OE=7/AL=7 (moderate burn
+    // ~1.5/exchange, won't skip the 15% window), ST=3/DF=3 (low HP, takes damage).
+    // Attacker: ST=10 (high damage), OE=5/AL=5, killDesire=1 (won't kill).
+    // Over ~28 exchanges, defender endurance drops below 15% (~6) without
+    // hitting 0 in one step, and HP should also be below 15% by then.
+    const planA = makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1 });
     const planD = makePlan(FightingStyle.ParryRiposte, {
-      OE: 1,
-      AL: 1,
+      OE: 7,
+      AL: 7,
       killDesire: 1,
       fallbackCondition: 'YIELD',
     });
 
-    const warriorA = makeWarrior('Striker', FightingStyle.StrikingAttack, { ST: 3, CN: 15, SP: 15 });
-    const warriorD = makeWarrior('Yielder', FightingStyle.ParryRiposte, { CN: 10, ST: 3, DF: 3 });
+    const warriorA = makeWarrior('Striker', FightingStyle.StrikingAttack, { ST: 10, CN: 15, SP: 15 });
+    const warriorD = makeWarrior('Yielder', FightingStyle.ParryRiposte, { CN: 15, ST: 3, DF: 3 });
 
     let foundYield = false;
     const outcomes: Record<string, number> = {};

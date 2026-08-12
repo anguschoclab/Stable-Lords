@@ -27,20 +27,28 @@ export interface SimPulse {
  */
 export function collectPulse(state: GameState): SimPulse {
   const activeRivals = state.rivals || [];
+  let totalTreasury = 0;
+  for (const r of activeRivals) {
+    totalTreasury += r.treasury;
+  }
   const avgRivalTreasury =
-    activeRivals.length > 0
-      ? activeRivals.reduce((sum, r) => sum + r.treasury, 0) / activeRivals.length
-      : 0;
+    activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
 
   // World-wide trait accounting: player roster + every rival roster.
-  const allWarriors = [...state.roster, ...activeRivals.flatMap((r) => r.roster ?? [])];
+  function* iterWarriors() {
+    yield* state.roster;
+    for (const r of activeRivals) {
+      if (r.roster) yield* r.roster;
+    }
+  }
+
   let traitedWarriors = 0;
   let totalTraits = 0;
   let flawInstances = 0;
   let multiFlawWarriors = 0;
   let classTraitInstances = 0;
   let signatureInstances = 0;
-  for (const w of allWarriors) {
+  for (const w of iterWarriors()) {
     const ids = w.traits ?? [];
     if (ids.length > 0) traitedWarriors++;
     totalTraits += ids.length;

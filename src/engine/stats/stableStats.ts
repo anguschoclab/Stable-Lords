@@ -22,7 +22,7 @@ export interface StableStats {
  * Used across Scouting, Dashboard, and Global Rankings to ensure a single source of truth.
  */
 export function calculateStableStats(roster: Warrior[]): StableStats {
-  const active: Warrior[] = [];
+  let activeCount = 0;
   let totalWins = 0;
   let totalLosses = 0;
   let totalKills = 0;
@@ -35,7 +35,7 @@ export function calculateStableStats(roster: Warrior[]): StableStats {
   for (const w of roster) {
     if (w.status !== 'Active') continue;
 
-    active.push(w);
+    activeCount++;
     totalWins += w.career?.wins ?? 0;
     totalLosses += w.career?.losses ?? 0;
     totalKills += w.career?.kills ?? 0;
@@ -52,7 +52,6 @@ export function calculateStableStats(roster: Warrior[]): StableStats {
     }
   }
 
-  const activeCount = active.length;
   const avgFame = activeCount > 0 ? Math.round(totalFame / activeCount) : 0;
   const totalBouts = totalWins + totalLosses;
   const winRate = totalBouts > 0 ? Math.round((totalWins / totalBouts) * 100) : 0;

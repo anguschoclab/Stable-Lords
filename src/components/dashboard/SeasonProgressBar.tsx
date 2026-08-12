@@ -25,7 +25,7 @@ export function SeasonProgressBar({ progress }: SeasonProgressBarProps) {
           transition={{ duration: 1.2, ease: 'easeOut' }}
           className="h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)] relative"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)] animate-shimmer" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)] animate-shimmer motion-reduce:animate-none" />
         </motion.div>
       </div>
     </div>

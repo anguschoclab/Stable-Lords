@@ -8,7 +8,7 @@ export function BlizzardEffect() {
       {Array.from({ length: 80 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-white/60 rounded-full animate-snow"
+          className="absolute w-1 h-1 bg-white/60 rounded-full animate-snow motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: `${cryptoRandom() * 100}%`,
@@ -30,7 +30,7 @@ export function HailstormEffect() {
       {Array.from({ length: 70 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1.5 bg-arena-pop/70 animate-hail"
+          className="absolute w-1 h-1.5 bg-arena-pop/70 animate-hail motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: '-5%',

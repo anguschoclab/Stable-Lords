@@ -71,6 +71,7 @@
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "typescript": "5.6.3",
     "zod": "^4.4.3"
   },
   "overrides": {
@@ -111,7 +112,6 @@
     "prettier": "^3.9.6",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.12",
-    "typescript": "7.0.2",
     "typescript-eslint": "^8.66.0",
     "typescript7": "npm:typescript@7.0.2",
     "vite": "^8.2.1",

@@ -230,8 +230,11 @@ export function TreasurySparkline({
     ? `${pathD} L ${(PAD + (W - PAD * 2)).toFixed(1)} ${(H - PAD).toFixed(1)} L ${PAD} ${(H - PAD).toFixed(1)} Z`
     : '';
 
-  const last = points.length && points[points.length - 1] ? points[points.length - 1].value : 0;
-  const prev = points.length >= 2 && points[points.length - 2] ? points[points.length - 2].value : last;
+  const lastItem = points[points.length - 1];
+  const prevItem = points[points.length - 2];
+
+  const last = points.length && lastItem ? lastItem.value : 0;
+  const prev = points.length >= 2 && prevItem ? prevItem.value : last;
   const delta = last - prev;
   const isUp = delta >= 0;
 

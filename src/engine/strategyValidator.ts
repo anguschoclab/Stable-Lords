@@ -120,7 +120,7 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
  */
 export function estimateStaminaCurve(plan: FightPlan, warrior?: Warrior, minutes = 10): number[] {
   const wt = warrior?.attributes?.WT ?? 10;
-  const max = 50 + wt * 2;
+  const max = warrior?.derivedStats?.endurance ?? 50 + wt * 2;
   let cur = max;
   const out: number[] = [cur];
   const phases = plan.phases ?? {};

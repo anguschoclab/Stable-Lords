@@ -1,16 +1,16 @@
 import { useState, useMemo, useCallback } from 'react';
-import { potentialRating } from '@/engine/potential';
+import { shuffled, SeededRNG } from '@/utils/random';
 import { type PoolWarrior, type RecruitTier } from '@/engine/recruitment';
 import type { FightingStyle } from '@/types/game';
 
-type SortBy = 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc';
+type SortBy = 'cost-asc' | 'cost-desc' | 'random' | 'age-asc';
 
-export function useRecruitFilters(recruitPool: PoolWarrior[] | undefined) {
+export function useRecruitFilters(recruitPool: PoolWarrior[] | undefined, seed?: number) {
   const [activeTiers, setActiveTiers] = useState<Set<RecruitTier>>(
     new Set(['Common', 'Promising', 'Exceptional', 'Prodigy'])
   );
   const [activeStyle, setActiveStyle] = useState<FightingStyle | 'all'>('all');
-  const [sortBy, setSortBy] = useState<SortBy>('potential-desc');
+  const [sortBy, setSortBy] = useState<SortBy>('random');
 
   const filteredPool = useMemo(() => {
     let pool = [...(recruitPool ?? [])];
@@ -18,22 +18,24 @@ export function useRecruitFilters(recruitPool: PoolWarrior[] | undefined) {
     if (activeStyle !== 'all') {
       pool = pool.filter((w: PoolWarrior) => w.style === activeStyle);
     }
-    pool.sort((a: PoolWarrior, b: PoolWarrior) => {
-      switch (sortBy) {
-        case 'cost-asc':
-          return a.cost - b.cost;
-        case 'cost-desc':
-          return b.cost - a.cost;
-        case 'potential-desc':
-          return potentialRating(b.potential) - potentialRating(a.potential);
-        case 'age-asc':
-          return a.age - b.age;
-        default:
-          return 0;
-      }
-    });
+    if (sortBy === 'random') {
+      pool = shuffled(pool, new SeededRNG(seed ?? 0));
+    } else {
+      pool.sort((a: PoolWarrior, b: PoolWarrior) => {
+        switch (sortBy) {
+          case 'cost-asc':
+            return a.cost - b.cost;
+          case 'cost-desc':
+            return b.cost - a.cost;
+          case 'age-asc':
+            return a.age - b.age;
+          default:
+            return 0;
+        }
+      });
+    }
     return pool;
-  }, [recruitPool, activeTiers, activeStyle, sortBy]);
+  }, [recruitPool, activeTiers, activeStyle, sortBy, seed]);
 
   const toggleTier = useCallback((tier: RecruitTier) => {
     setActiveTiers((prev) => {

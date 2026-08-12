@@ -159,7 +159,7 @@ describe('useRecruitFilters', () => {
 
   it('setSortBy updates the sort mode', () => {
     const { result } = renderHook(() => useRecruitFilters([]));
-    expect(result.current.sortBy).toBe('potential-desc');
+    expect(result.current.sortBy).toBe('random');
     act(() => result.current.setSortBy('cost-asc'));
     expect(result.current.sortBy).toBe('cost-asc');
   });
@@ -197,7 +197,32 @@ describe('useRecruitFilters', () => {
     expect(result.current.filteredPool.map((w: PoolWarrior) => w.id)).toEqual(['b', 'c', 'a']);
   });
 
-  it('sorts by potential-desc correctly', () => {
+  it('defaults to random sort', () => {
+    const pool = [
+      makePoolWarrior({ id: 'a' }),
+      makePoolWarrior({ id: 'b' }),
+      makePoolWarrior({ id: 'c' }),
+    ];
+    const { result } = renderHook(() => useRecruitFilters(pool, 5));
+    expect(result.current.sortBy).toBe('random');
+    expect(result.current.filteredPool).toHaveLength(3);
+  });
+
+  it('produces the same random order for the same seed across renders', () => {
+    const pool = [
+      makePoolWarrior({ id: 'a' }),
+      makePoolWarrior({ id: 'b' }),
+      makePoolWarrior({ id: 'c' }),
+      makePoolWarrior({ id: 'd' }),
+    ];
+    const { result, rerender } = renderHook(() => useRecruitFilters(pool, 7));
+    const firstOrder = result.current.filteredPool.map((w) => w.id);
+    rerender();
+    const secondOrder = result.current.filteredPool.map((w) => w.id);
+    expect(secondOrder).toEqual(firstOrder);
+  });
+
+  it('does not order recruits by hidden potential when random is active', () => {
     const pool = [
       makePoolWarrior({
         id: 'a',
@@ -205,12 +230,21 @@ describe('useRecruitFilters', () => {
       }),
       makePoolWarrior({
         id: 'b',
+        potential: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+      }),
+      makePoolWarrior({
+        id: 'c',
+        potential: { ST: 20, CN: 20, SZ: 20, WT: 20, WL: 20, SP: 20, DF: 20 },
+      }),
+      makePoolWarrior({
+        id: 'd',
         potential: { ST: 25, CN: 25, SZ: 25, WT: 25, WL: 25, SP: 25, DF: 25 },
       }),
     ];
-    const { result } = renderHook(() => useRecruitFilters(pool));
-    act(() => result.current.setSortBy('potential-desc'));
-    expect(result.current.filteredPool[0]!.id).toBe('b');
+    const { result } = renderHook(() => useRecruitFilters(pool, 3));
+    const ids = result.current.filteredPool.map((w) => w.id);
+    // potential-desc order would be ['d', 'c', 'b', 'a']; random should not match
+    expect(ids).not.toEqual(['d', 'c', 'b', 'a']);
   });
 
   it('handles undefined recruitPool defensively', () => {

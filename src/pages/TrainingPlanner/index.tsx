@@ -8,7 +8,7 @@ import { Dumbbell, Target } from 'lucide-react';
 import { useTrainingPlanner } from './hooks/useTrainingPlanner';
 import { WarriorSelector } from './components/WarriorSelector';
 import PlanBuilder from '@/components/PlanBuilder';
-import { defaultPlanForWarrior } from '@/engine/simulate';
+import { defaultStylePreset } from '@/engine/bout/stylePresets';
 
 export default function TrainingPlanner() {
   const {
@@ -75,7 +75,7 @@ export default function TrainingPlanner() {
           {selectedWarrior ? (
             <PlanBuilder
               warrior={selectedWarrior}
-              plan={selectedWarrior.plan ?? defaultPlanForWarrior(selectedWarrior)}
+              plan={selectedWarrior.plan ?? defaultStylePreset(selectedWarrior.style).plan}
               onPlanChange={handlePlanChange}
             />
           ) : (

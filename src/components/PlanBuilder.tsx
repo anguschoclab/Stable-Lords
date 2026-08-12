@@ -8,6 +8,7 @@ import { getMatchupBonus } from '@/constants/combat';
 import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
 import { autoTuneFromBias, type Bias } from '@/engine/planBias';
 import { getStylePresets } from '@/engine/bout/stylePresets';
+import { defaultPlanForWarrior } from '@/engine/simulate';
 import TacticBank from './planBuilder/TacticBank';
 import CommonControls from './planBuilder/CommonControls';
 import SpatialControls from './planBuilder/SpatialControls';
@@ -61,6 +62,12 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
 
   const applyPreset = (presetPlan: FightPlan) => {
     onPlanChange({ ...presetPlan });
+  };
+
+  const restoreDefault = () => {
+    if (warrior) {
+      onPlanChange(defaultPlanForWarrior(warrior));
+    }
   };
 
   const biasPresets: { label: string; bias: Bias }[] = [
@@ -187,6 +194,14 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
                 {preset.name}
               </button>
             ))}
+            {warrior && (
+              <button
+                onClick={restoreDefault}
+                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors"
+              >
+                Restore Default
+              </button>
+            )}
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mr-2">

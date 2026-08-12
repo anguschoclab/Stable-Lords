@@ -6,7 +6,7 @@ import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { defaultPlanForWarrior } from '@/engine/simulate';
+import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { isActive } from '@/engine/warriorStatus';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
@@ -64,7 +64,7 @@ export default function WarriorDetail() {
     );
   }
 
-  const currentPlan = warrior.plan ?? defaultPlanForWarrior(warrior);
+  const currentPlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
   const currentLoadout = warrior.equipment ?? DEFAULT_LOADOUT;
   const record = `${displayWarrior.career.wins}W - ${displayWarrior.career.losses}L - ${displayWarrior.career.kills}K`;
 

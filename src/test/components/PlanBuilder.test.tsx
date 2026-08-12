@@ -122,3 +122,159 @@ describe('PlanBuilder Bias Presets', () => {
     expect(screen.queryByText(/Simulation Accuracy/)).not.toBeInTheDocument();
   });
 });
+
+describe('PlanBuilder Style Presets', () => {
+  const mockPlan = {
+    style: FightingStyle.AimedBlow,
+    OE: 5,
+    AL: 5,
+    killDesire: 5,
+    target: 'Any' as any,
+    offensiveTactic: 'none' as any,
+    defensiveTactic: 'none' as any,
+  };
+
+  it('renders style-specific preset buttons for AimedBlow', () => {
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText('Patient Surgeon')).toBeInTheDocument();
+    expect(screen.getByText('Aggressive Precision')).toBeInTheDocument();
+  });
+
+  it('renders style-specific preset buttons for StrikingAttack', () => {
+    const strikerPlan = { ...mockPlan, style: FightingStyle.StrikingAttack };
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={strikerPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText('Fast Finish')).toBeInTheDocument();
+    expect(screen.getByText('Technical Striker')).toBeInTheDocument();
+  });
+
+  it('calls onPlanChange when a style preset is clicked', () => {
+    const onPlanChange = vi.fn();
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={onPlanChange} />
+      </TooltipProvider>
+    );
+
+    screen.getByText('Patient Surgeon').click();
+    expect(onPlanChange).toHaveBeenCalledTimes(1);
+    const updated = onPlanChange.mock.calls[0]![0];
+    expect(updated.style).toBe(FightingStyle.AimedBlow);
+    expect(updated.phases).toBeDefined();
+    expect(updated.phases.opening).toBeDefined();
+    expect(updated.phases.mid).toBeDefined();
+    expect(updated.phases.late).toBeDefined();
+  });
+
+  it('renders Restore Default button when warrior is provided', () => {
+    const warrior = {
+      id: 'test-id',
+      name: 'Test Warrior',
+      style: FightingStyle.AimedBlow,
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      fame: 0,
+      popularity: 0,
+      titles: [],
+      injuries: [],
+      flair: [],
+      career: { wins: 0, losses: 0, kills: 0 },
+      champion: false,
+      status: 'Active',
+      traits: [],
+    } as any;
+
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} warrior={warrior} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText('Restore Default')).toBeInTheDocument();
+  });
+
+  it('does not render Restore Default button when no warrior is provided', () => {
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.queryByText('Restore Default')).not.toBeInTheDocument();
+  });
+});
+
+describe('PlanBuilder Stamina Curve', () => {
+  const mockPlan = {
+    style: FightingStyle.StrikingAttack,
+    OE: 5,
+    AL: 5,
+    killDesire: 5,
+    target: 'Any' as any,
+    offensiveTactic: 'none' as any,
+    defensiveTactic: 'none' as any,
+  };
+
+  it('renders @minute 10 label (not @minute 20)', () => {
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText('@minute 10')).toBeInTheDocument();
+    expect(screen.queryByText('@minute 20')).not.toBeInTheDocument();
+  });
+
+  it('renders Stamina Curve label', () => {
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText('Stamina Curve')).toBeInTheDocument();
+  });
+
+  it('renders collapse warning for high-burn plan', () => {
+    const highBurnPlan = {
+      ...mockPlan,
+      OE: 10,
+      AL: 10,
+      killDesire: 10,
+    };
+
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={highBurnPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText(/Collapse @min/)).toBeInTheDocument();
+  });
+
+  it('does not render collapse warning for low-burn plan', () => {
+    const lowBurnPlan = {
+      ...mockPlan,
+      OE: 1,
+      AL: 1,
+      killDesire: 1,
+    };
+
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={lowBurnPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.queryByText(/Collapse @min/)).not.toBeInTheDocument();
+  });
+});

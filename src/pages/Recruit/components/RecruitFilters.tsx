@@ -18,8 +18,8 @@ interface RecruitFiltersProps {
   toggleTier: (tier: RecruitTier) => void;
   activeStyle: FightingStyle | 'all';
   setActiveStyle: (style: FightingStyle | 'all') => void;
-  sortBy: 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc';
-  setSortBy: (sort: 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc') => void;
+  sortBy: 'cost-asc' | 'cost-desc' | 'random' | 'age-asc';
+  setSortBy: (sort: 'cost-asc' | 'cost-desc' | 'random' | 'age-asc') => void;
   onRefresh: () => void;
   canRefresh: boolean;
 }
@@ -122,7 +122,7 @@ export function RecruitFilters({
           <Select
             value={sortBy}
             onValueChange={(v) =>
-              setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc')
+              setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'random' | 'age-asc')
             }
           >
             <SelectTrigger
@@ -132,7 +132,7 @@ export function RecruitFilters({
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
-              <SelectItem value="potential-desc">POTENTIAL: HIGH TO LOW</SelectItem>
+              <SelectItem value="random">ORDER: RANDOM</SelectItem>
               <SelectItem value="cost-asc">VALUE: LOW TO HIGH</SelectItem>
               <SelectItem value="cost-desc">VALUE: HIGH TO LOW</SelectItem>
               <SelectItem value="age-asc">AGE: YOUNGEST FIRST</SelectItem>

@@ -1,7 +1,6 @@
 import { type PoolWarrior, type RecruitTier, TIER_STARS } from '@/engine/recruitment';
 import { type PotentialScoutReport } from '@/engine/recruitScouting';
-import { potentialRating, potentialGrade } from '@/engine/potential';
-import { ATTRIBUTE_KEYS } from '@/types/game';
+import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/game';
 import { Badge } from '@/components/ui/badge';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Button } from '@/components/ui/button';
@@ -118,7 +117,6 @@ export function RecruitCard({
   canAffordBonus,
   scoutReport,
 }: RecruitCardProps) {
-  const grade = potentialGrade(potentialRating(warrior.potential));
   const config = TIER_CONFIG[warrior.tier];
 
   return (
@@ -151,21 +149,31 @@ export function RecruitCard({
         {/* Intelligence Overlay */}
         {isScouted ? (
           <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Eye className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                  Scouted
-                </span>
-              </div>
-              <Badge className="bg-primary text-primary-foreground font-black text-[10px] rounded-none px-3">
-                POTENTIAL: {grade}
-              </Badge>
+            <div className="flex items-center gap-3">
+              <Eye className="h-4 w-4 text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                Scouted
+              </span>
             </div>
             {scoutReport && (
               <p className="text-[11px] text-muted-foreground italic leading-relaxed">
                 "{scoutReport.summary}"
               </p>
+            )}
+            {scoutReport && scoutReport.revealed && Object.keys(scoutReport.revealed).length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {Object.entries(scoutReport.revealed)
+                  .sort((a, b) => (b[1] as number) - (a[1] as number))
+                  .map(([key, val]) => (
+                    <Badge
+                      key={key}
+                      variant="outline"
+                      className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
+                    >
+                      {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
+                    </Badge>
+                  ))}
+              </div>
             )}
           </div>
         ) : (

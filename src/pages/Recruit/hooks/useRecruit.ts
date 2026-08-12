@@ -24,7 +24,7 @@ export function useRecruit() {
   const rosterFull = roster.length >= MAX_ROSTER;
   const canRefresh = canTransact(treasury, REFRESH_COST);
 
-  const filters = useRecruitFilters(recruitPool);
+  const filters = useRecruitFilters(recruitPool, week);
   const actions = useRecruitActions({
     rosterFull,
     setState,

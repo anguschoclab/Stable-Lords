@@ -12,7 +12,7 @@ const defaultProps = {
   toggleTier: vi.fn(),
   activeStyle: 'all' as FightingStyle | 'all',
   setActiveStyle: vi.fn(),
-  sortBy: 'potential-desc' as const,
+  sortBy: 'random' as const,
   setSortBy: vi.fn(),
   onRefresh: vi.fn(),
   canRefresh: true,
@@ -86,6 +86,6 @@ describe('RecruitFilters', () => {
 
   it('renders sort option labels', () => {
     render(<RecruitFilters {...defaultProps} />);
-    expect(screen.getByText(/potential: high to low/i)).toBeInTheDocument();
+    expect(screen.getByText(/order: random/i)).toBeInTheDocument();
   });
 });

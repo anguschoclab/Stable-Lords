@@ -60,15 +60,15 @@ export default defineConfig({
   ],
 
   /*
-   * Note: You need to start the dev server manually before running e2e tests:
+   * Note: For local development, you can start the dev server manually before running e2e tests:
    * bun run dev
    *
-   * For CI environments, uncomment the webServer config below:
+   * The webServer config below automatically starts the dev server in CI and reuses an existing one locally.
    */
-  // webServer: {
-  //   command: 'bun run dev',
-  //   url: 'http://localhost:5173',
-  //   reuseExistingServer: !process.env.CI,
-  //   timeout: 120 * 1000,
-  // },
+  webServer: {
+    command: 'bun run dev',
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });

@@ -13,6 +13,7 @@ export default defineConfig({
     testTimeout: 600000,
     hookTimeout: 30000,
     pool: 'threads',
+    fileParallelism: false,
     dir: './src',
     include: ['src/test/**/*.slow.test.ts'],
     exclude: ['node_modules/', '**/e2e/**'],

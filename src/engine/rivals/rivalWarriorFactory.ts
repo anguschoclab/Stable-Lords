@@ -36,8 +36,8 @@ export function biasedAttrs(
     }
     const add = Math.min(pool, 25 - currentVal, Math.floor(rng() * 4) + 1);
     if (add <= 0) {
-      const allMaxed = weighted.every((k) => (attrs[k] ?? 0) >= 25);
-      if (allMaxed) break;
+      weighted.splice(idx, 1);
+      if (weighted.length === 0) break;
       continue;
     }
     attrs[key] = currentVal + add;

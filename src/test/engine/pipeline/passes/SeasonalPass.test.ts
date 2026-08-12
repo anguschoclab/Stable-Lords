@@ -1119,33 +1119,4 @@ describe('runSeasonalPass', () => {
     expect(impact.insightTokens?.length).toBe(1);
     expect(impact.insightTokens?.[0]?.type).toBe('Style');
   });
-
-  it('should trigger the haunted_training_dummy offseason event, adding XP and potentially a minor injury', () => {
-    const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
-    let callCount = 0;
-    const mockNext = () => {
-      callCount++;
-      if (callCount === 1)
-        return (
-          (Object.keys((narrativeContent as any).offseason_events).indexOf('haunted_training_dummy') + 0.5) /
-          eventCount
-        );
-      if (callCount === 2) return 0.2; // Trigger injury (< 0.5)
-      return originalNext();
-    };
-    rng.next = mockNext;
-    const warriorId = 'w-haunted' as WarriorId;
-    const state: Partial<GameState> = {
-      year: 1,
-      roster: [{ id: warriorId, name: 'Dummy Fighter', status: 'Active' } as any],
-      newsletter: [],
-    };
-    const impact = runSeasonalPass(state as GameState, 1, rng);
-    const updates = impact.rosterUpdates?.get(warriorId);
-    expect(updates?.xp).toBe(25);
-    expect(updates?.injuries?.length).toBe(1);
-    expect(updates?.injuries?.[0]?.name).toBe('Splintered Knuckles');
-    expect(impact.newsletterItems?.[0]?.title).toBe('Haunted Training Dummy');
-  });
 });

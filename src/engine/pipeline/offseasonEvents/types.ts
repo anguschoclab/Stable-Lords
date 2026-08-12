@@ -57,8 +57,7 @@ export interface OffseasonEventNarrative {
     | 'chaos_weavers_prophecy'
     | 'wandering_mystic'
     | 'bountiful_harvest'
-    | 'abyssal_tempest_ritual'
-    | 'haunted_training_dummy';
+    | 'abyssal_tempest_ritual';
   newsletter: string[];
 }
 

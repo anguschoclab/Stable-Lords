@@ -53,8 +53,7 @@ describe('combatMath engine', () => {
     });
     it('returns empty string when array contains undefined', () => {
       const rng = vi.fn().mockReturnValue(0.5);
-      // @ts-expect-error testing invalid input
-      expect(pickText(rng, [undefined])).toBe('');
+      expect(pickText(rng, [undefined] as unknown as string[])).toBe('');
     });
   });
 

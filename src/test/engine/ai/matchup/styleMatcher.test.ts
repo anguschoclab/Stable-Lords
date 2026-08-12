@@ -23,8 +23,7 @@ describe('styleMatcher', () => {
     });
 
     it('returns { oe: 0, al: 0 } for unknown styles', () => {
-      // @ts-expect-error testing invalid enum
-      const bias = getStyleSuitabilityBias('UnknownStyle');
+      const bias = getStyleSuitabilityBias('UnknownStyle' as FightingStyle);
       expect(bias.oe).toBe(0);
       expect(bias.al).toBe(0);
     });
@@ -116,8 +115,7 @@ describe('styleMatcher', () => {
     });
 
     it('returns { oe: 0, al: 0, kd: 0 } for unmapped matchers', () => {
-      // @ts-expect-error testing invalid enum
-      const mods = getStyleMatchupMods('UnknownStyle', FightingStyle.BashingAttack);
+      const mods = getStyleMatchupMods('UnknownStyle' as FightingStyle, FightingStyle.BashingAttack);
       expect(mods.oe).toBe(0);
       expect(mods.al).toBe(0);
       expect(mods.kd).toBe(0);

@@ -62,8 +62,7 @@ describe('simulationMetrics', () => {
     });
 
     it('should gracefully handle undefined rivals array', () => {
-      // @ts-expect-error - testing defense against runtime undefined
-      mockState.rivals = undefined;
+      (mockState as Partial<GameState>).rivals = undefined;
 
       const pulse = collectPulse(mockState);
 

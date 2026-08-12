@@ -27,9 +27,7 @@ describe('typeSafetyAudit', () => {
         violations.push(file);
       }
     }
-    // Known pre-existing: opfsArchive/service.ts has one @ts-ignore
-    // This should be fixed over time. For now, document it.
-    expect(violations.length).toBeLessThanOrEqual(2);
+    expect(violations.length).toBe(0);
   });
 
   it('enumerates all "as any" in engine source files', () => {

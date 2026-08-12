@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import type { FightSummary, FightOutcomeBy } from '@/types/game';
-import type { FightId, WarriorId } from '@/types/shared.types';
+import type { FightId, WarriorId, CrowdMoodType } from '@/types/shared.types';
 
 describe('computeStreaks', () => {
   const createFight = (
@@ -201,8 +201,7 @@ describe('generateFightNarrative', () => {
 
   it('handles missing mood gracefully by falling back to Calm', () => {
     const fight = createFight('A', 'KO');
-    // @ts-expect-error - testing fallback behavior
-    const narrative = generateFightNarrative(fight, 'InvalidMood');
+    const narrative = generateFightNarrative(fight, 'InvalidMood' as CrowdMoodType);
     expect(narrative).toBeDefined();
     expect(typeof narrative).toBe('string');
   });

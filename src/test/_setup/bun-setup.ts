@@ -3,7 +3,6 @@
  * Initializes jsdom and all vitest setup mocks so `bun test` behaves like `bun run test`.
  * Loaded automatically via bunfig.toml [test] preload.
  */
-// @ts-expect-error — jsdom has no declaration file; loaded from node_modules at runtime
 import { JSDOM } from 'jsdom';
 import { vi } from 'vitest';
 

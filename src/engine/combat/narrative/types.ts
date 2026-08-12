@@ -34,4 +34,5 @@ export interface NarrationContext {
   spD?: number;
   originA?: string;
   originD?: string;
+  crowdMood?: string;
 }

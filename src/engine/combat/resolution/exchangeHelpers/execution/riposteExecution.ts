@@ -10,6 +10,7 @@ import {
   rollHitLocation,
   applyProtectMod,
   applyArmorTypeMod,
+  applyFlatMitigation,
 } from '../../../mechanics/combatDamage';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { MOMENTUM_CAP, MOMENTUM_FLOOR } from '@/constants/combat';
@@ -38,6 +39,7 @@ export function executeRiposte(
     ripLoc
   );
   ripDmgRaw = applyArmorTypeMod(ripDmgRaw, defender.weaponId, attacker.armorId);
+  ripDmgRaw = applyFlatMitigation(ripDmgRaw, attacker.armorId, attacker.helmId);
   ripDmgRaw = Math.round(ripDmgRaw * specialtyRiposteMult);
   const ripDmg =
     applyProtectMod(ripDmgRaw, ripLoc, attacker.activePlan.protect) + Math.round(extraDmg);

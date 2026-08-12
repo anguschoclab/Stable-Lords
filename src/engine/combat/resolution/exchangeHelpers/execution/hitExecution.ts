@@ -14,6 +14,7 @@ import {
   rollHitLocation,
   applyProtectMod,
   applyArmorTypeMod,
+  applyFlatMitigation,
   applyShieldZoneMod,
   calculateKillWindow,
   HIT_LOCATIONS,
@@ -140,6 +141,7 @@ function applyDamageMultipliers(
   ctx: ResolutionContext | undefined
 ): number {
   const postArmor = applyArmorTypeMod(preArmor, attacker.weaponId, defender.armorId);
+  const postFlat = applyFlatMitigation(postArmor, defender.armorId, defender.helmId);
 
   let rawDamage: number;
   if (attacker.style === FightingStyle.AimedBlow) {
@@ -147,9 +149,9 @@ function applyDamageMultipliers(
       0,
       Math.min(AB_ARMOR_BYPASS_MAX, attacker.attributes.DF / AB_ARMOR_BYPASS_DF_DIVISOR)
     );
-    rawDamage = Math.round(postArmor + bypass * (preArmor - postArmor));
+    rawDamage = Math.round(postFlat + bypass * (preArmor - postFlat));
   } else {
-    rawDamage = postArmor;
+    rawDamage = postFlat;
   }
 
   const weatherDamageMult = ctx?.weatherEffect?.damageMult ?? 1.0;

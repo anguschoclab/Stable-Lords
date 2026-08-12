@@ -8,6 +8,7 @@ import { enduranceCost } from '../../../mechanics/combatFatigue';
 import { PSYCH_STATE_MODS } from '../../../mechanics/conditionEngine';
 import { getEnduranceMult } from '@/engine/stylePassives';
 import { DEFENDER_ENDURANCE_DISCOUNT } from '@/constants/combat';
+import { getItemById } from '@/data/equipment/equipment.utils';
 
 /**
  * Apply endurance costs.
@@ -36,11 +37,20 @@ export function applyEnduranceCosts(
   const traitEndMultAtt = att.staticEnduranceMult ?? 1;
   const traitEndMultDef = def.staticEnduranceMult ?? 1;
 
+  // Equipment endurance cost modifiers (armor + helm)
+  const attArmor = att.armorId ? getItemById(att.armorId) : undefined;
+  const attHelm = att.helmId ? getItemById(att.helmId) : undefined;
+  const attEquipEndMult = (attArmor?.enduranceCostMod ?? 1.0) * (attHelm?.enduranceCostMod ?? 1.0);
+  const defArmor = def.armorId ? getItemById(def.armorId) : undefined;
+  const defHelm = def.helmId ? getItemById(def.helmId) : undefined;
+  const defEquipEndMult = (defArmor?.enduranceCostMod ?? 1.0) * (defHelm?.enduranceCostMod ?? 1.0);
+
   att.endurance -= Math.round(
     enduranceCost(curAttOE, curAttAL, ctx.weather) *
       getEnduranceMult(att.style) *
       curAttWepReq.endurancePenalty *
       (att.encumbrancePenalty?.enduranceMult ?? 1) *
+      attEquipEndMult *
       arenaEndMult *
       (aGoesFirst ? psychEndMultA : psychEndMultD) *
       traitEndMultAtt
@@ -54,6 +64,7 @@ export function applyEnduranceCosts(
         getEnduranceMult(def.style) *
         curDefWepReq.endurancePenalty *
         (def.encumbrancePenalty?.enduranceMult ?? 1) *
+        defEquipEndMult *
         arenaEndMult *
         (aGoesFirst ? psychEndMultD : psychEndMultA) *
         traitEndMultDef

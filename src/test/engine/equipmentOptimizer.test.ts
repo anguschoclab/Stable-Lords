@@ -242,4 +242,64 @@ describe('Equipment Optimizer', () => {
       }
     });
   });
+
+  // ─── T8: Mitigation / defenseMod / encumbrance tier scoring ──────────────────
+
+  describe('T8: mitigation and defenseMod scoring', () => {
+    it('tank profile prefers armor with higher mitigation when weights are equal', () => {
+      // TotalParry tank: plate_armor (mitigation=10, weight=12) vs chain_mail (mitigation=6, weight=8)
+      // Tank already prefers heavier armor, but mitigation should reinforce plate_armor
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0];
+      expect(tankRec?.loadout.armor).toBe('plate_armor');
+      const armorItem = tankRec?.breakdown.armor.item;
+      expect((armorItem?.mitigation ?? 0)).toBeGreaterThanOrEqual(8);
+    });
+
+    it('tank profile prefers helm with higher mitigation', () => {
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0];
+      expect(tankRec?.loadout.helm).toBe('full_helm');
+      const helmItem = tankRec?.breakdown.helm.item;
+      expect((helmItem?.mitigation ?? 0)).toBeGreaterThan(0);
+    });
+
+    it('speed profile avoids high enduranceCostMod armor', () => {
+      // Speed profile should prefer light armor with low enduranceCostMod
+      const recs = generateRecommendations(FightingStyle.AimedBlow, 10);
+      const speedRec = recs[0];
+      const armorItem = speedRec?.breakdown.armor.item;
+      // Speed should pick light armor (none_armor or padded) with enduranceCostMod <= 1.1
+      expect((armorItem?.enduranceCostMod ?? 1.0)).toBeLessThanOrEqual(1.1);
+    });
+
+    it('synergy score penalizes over-encumbered loadouts', () => {
+      // Same style, low carry cap → over-encumbered → lower synergy
+      const lowCap = generateRecommendations(FightingStyle.TotalParry, 5);
+      const highCap = generateRecommendations(FightingStyle.TotalParry, 40);
+      // The tank rec with low carry cap should have lower synergy than with high carry cap
+      expect(lowCap[0]?.synergy).toBeLessThanOrEqual(highCap[0]?.synergy ?? 100);
+    });
+
+    it('synergy score rewards staying under LIGHT encumbrance tier', () => {
+      // With very high carry cap, loadout should be well under LIGHT threshold
+      const recs = generateRecommendations(FightingStyle.ParryRiposte, 100);
+      for (const rec of recs) {
+        // With carryCap=100, even the heaviest loadout should be under 0.6 ratio → NONE tier
+        expect(rec.synergy).toBeGreaterThanOrEqual(60);
+      }
+    });
+
+    it('shield scoring factors in shieldParryBonus', () => {
+      // TotalParry tank should prefer larger shields (higher shieldParryBonus)
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0];
+      // TotalParry can use shields as weapons, so the weapon slot may be a shield
+      // But the shield slot should also have a real shield with parry bonus
+      if (tankRec?.loadout.shield !== 'none_shield') {
+        const shieldItem = tankRec?.breakdown.shield.item;
+        expect((shieldItem?.shieldParryBonus ?? 0)).toBeGreaterThan(0);
+      }
+    });
+  });
 });

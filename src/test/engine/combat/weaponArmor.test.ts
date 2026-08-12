@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { WEAPON_DAMAGE_TYPE, applyArmorTypeMod } from '@/engine/combat/mechanics/weaponArmor';
+import { WEAPON_DAMAGE_TYPE, applyArmorTypeMod, applyFlatMitigation } from '@/engine/combat/mechanics/weaponArmor';
 
 describe('weaponArmor', () => {
   describe('applyArmorTypeMod', () => {
@@ -129,6 +129,53 @@ describe('weaponArmor', () => {
     it('returns unmodified damage for bash vs chain_mail (no bash entry)', () => {
       // chain_mail has pierce: 0.8 and slash: 1.1, but no bash entry → defaults to 1.0
       expect(applyArmorTypeMod(100, 'mace', 'chain_mail')).toBe(100);
+    });
+  });
+
+  describe('applyFlatMitigation', () => {
+    it('armor-only mitigation reduces damage by armor mitigation value', () => {
+      // leather mitigation = 2, helm = none_helm (mitigation 0)
+      expect(applyFlatMitigation(20, 'leather', 'none_helm')).toBe(18);
+    });
+
+    it('helm-only mitigation reduces damage by helm mitigation value', () => {
+      // steel_cap mitigation = 2, armor = none_armor (mitigation 0)
+      expect(applyFlatMitigation(20, 'none_armor', 'steel_cap')).toBe(18);
+    });
+
+    it('armor + helm mitigation stack additively', () => {
+      // chain_mail mitigation = 6, full_helm mitigation = 4 → total 10
+      expect(applyFlatMitigation(20, 'chain_mail', 'full_helm')).toBe(10);
+    });
+
+    it('floors damage at 1 (never reduces to 0)', () => {
+      // plate_armor mitigation = 10, full_helm mitigation = 4 → total 14
+      // damage 5 → 5 - 14 = -9 → floored at 1
+      expect(applyFlatMitigation(5, 'plate_armor', 'full_helm')).toBe(1);
+    });
+
+    it('damage of 0 stays 0 (no negative floor for zero input)', () => {
+      expect(applyFlatMitigation(0, 'plate_armor', 'full_helm')).toBe(0);
+    });
+
+    it('undefined armorId is treated as 0 mitigation', () => {
+      expect(applyFlatMitigation(20, undefined, 'steel_cap')).toBe(18);
+    });
+
+    it('undefined helmId is treated as 0 mitigation', () => {
+      expect(applyFlatMitigation(20, 'leather', undefined)).toBe(18);
+    });
+
+    it('both undefined ids result in no mitigation', () => {
+      expect(applyFlatMitigation(20, undefined, undefined)).toBe(20);
+    });
+
+    it('unknown armor/helm ids are treated as 0 mitigation', () => {
+      expect(applyFlatMitigation(20, 'unknown_armor', 'unknown_helm')).toBe(20);
+    });
+
+    it('none_armor and none_helm result in no mitigation', () => {
+      expect(applyFlatMitigation(20, 'none_armor', 'none_helm')).toBe(20);
     });
   });
 });

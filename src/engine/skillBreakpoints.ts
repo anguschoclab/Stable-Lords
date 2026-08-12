@@ -262,9 +262,9 @@ export const STYLE_PENALTIES: Record<
 > = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
-  [FightingStyle.AimedBlow]: /*AB*/ [-15, -7, -11, -8, -6, +1], // deepened: -40 → -45 to bring 59.9% toward 50%
+  [FightingStyle.AimedBlow]: /*AB*/ [-15, -7, -11, -7, -6, +1], // re-ratchet: lightened INI -8→-7 to lift 39.9% into 40%+ band
   [FightingStyle.ParryRiposte]: /*PR*/ [-12, -6, -13, -6, -1, -1], // lightened: -49 → -39 to lift 29.0% toward 40%
-  [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -7, -3, 0], // lightened: -44 → -35 to lift 29.7% toward 40%
+  [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -5, -3, 0], // re-ratchet: lightened INI -7→-5 to offset encumbrance INI penalty from equipment changes
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
 
   // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
@@ -272,10 +272,10 @@ export const STYLE_PENALTIES: Record<
   [FightingStyle.SlashingAttack]: /*SL*/ [-12, -14, -15, -4, -7, -2], // unchanged: 48.0% is near target
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
-  [FightingStyle.BashingAttack]: /*BA*/ [-8, -10, -14, -2, -4, 0], // deepened further: -29 → -38 to bring 62.5% toward 60%
+  [FightingStyle.BashingAttack]: /*BA*/ [-9, -11, -15, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15, RIP -4→-5; BA was 64.8% pre-existing, now 61.6%
   [FightingStyle.StrikingAttack]: /*ST*/ [-9, -7, -10, -3, -3, +1], // unchanged: 52.4% is within target
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
   [FightingStyle.TotalParry]: /*TP*/ [-15, -1, -12, -6, -4, -2], // deepened further: -32 → -40 to bring 56.5% toward 60%
-  [FightingStyle.WallOfSteel]: /*WS*/ [-8, -6, -13, -2, -4, -2], // deepened further: -26 → -35 to bring 59.9% toward 60%
+  [FightingStyle.WallOfSteel]: /*WS*/ [-8, -6, -10, 0, -4, -2], // re-ratchet: lightened DEF -13→-10, INI -2→0 to offset encumbrance penalties from equipment changes
 };

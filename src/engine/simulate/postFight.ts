@@ -117,7 +117,7 @@ export function processPostFight(
   // If no winner was determined, resolve via decision logic
   if (!winner) {
     const timeLimitResult = handleTimeLimit(fA, fD, nameA, nameD, rng, log, headless);
-    const finalMinutes = headless ? fightMinutes : Math.max(1, log[log.length - 1]?.minute ?? 1);
+    const finalMinutes = fightMinutes;
 
     return {
       winner: timeLimitResult.winner,
@@ -136,7 +136,7 @@ export function processPostFight(
   }
 
   // Winner was determined during the simulation
-  const finalMinutes = headless ? fightMinutes : Math.max(1, log[log.length - 1]?.minute ?? 1);
+  const finalMinutes = fightMinutes;
   const tags = generateOutcomeTags(winner, by, fA, fD, finalMinutes);
 
   return {

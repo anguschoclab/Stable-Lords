@@ -2,6 +2,8 @@
  * Weapon/Armor type interactions — damage type mapping and armor resistance.
  */
 
+import { getItemById } from '@/data/equipment/equipment.utils';
+
 type DamageType = 'slash' | 'bash' | 'pierce' | 'none';
 
 export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
@@ -51,4 +53,17 @@ export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: s
   if (!dtype || dtype === 'none') return damage;
   const mult = ARMOR_TYPE_MULT[armorId]?.[dtype] ?? 1.0;
   return Math.round(damage * mult);
+}
+
+/**
+ * Applies flat damage mitigation from armor and helm.
+ * Stacks armor.mitigation + helm.mitigation additively, then subtracts from damage.
+ * Floors at 1 for positive damage, 0 stays 0.
+ */
+export function applyFlatMitigation(damage: number, armorId?: string, helmId?: string): number {
+  if (damage <= 0) return 0;
+  const armorItem = armorId ? getItemById(armorId) : undefined;
+  const helmItem = helmId ? getItemById(helmId) : undefined;
+  const totalMitigation = (armorItem?.mitigation ?? 0) + (helmItem?.mitigation ?? 0);
+  return Math.max(1, damage - totalMitigation);
 }

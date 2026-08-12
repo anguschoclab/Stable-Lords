@@ -11,7 +11,7 @@ export {
   LOCATION_KILL_MULT,
 } from './hitLocation';
 
-export { WEAPON_DAMAGE_TYPE, applyArmorTypeMod } from './weaponArmor';
+export { WEAPON_DAMAGE_TYPE, applyArmorTypeMod, applyFlatMitigation } from './weaponArmor';
 
 export { applyProtectMod, applyShieldZoneMod } from './protectShield';
 

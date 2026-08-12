@@ -11,6 +11,11 @@ import {
   getLoadoutWeight,
 } from '@/data/equipment';
 import { getWeaponSuitability, type WeaponSuitability } from '@/engine/weaponSuitability';
+import {
+  getEncumbranceRatio,
+  getEncumbranceTier,
+  getEncumbrancePenalties,
+} from '@/data/equipment/encumbrance';
 
 /**
  * Defines the shape of gear recommendation.
@@ -75,25 +80,65 @@ function scoreWeapon(item: EquipmentItem, style: FightingStyle, profile: BuildPr
 }
 
 function scoreArmor(item: EquipmentItem, profile: BuildProfile): number {
-  if (profile === 'speed') return item.weight <= 1 ? 30 : item.weight <= 2 ? 15 : 0;
-  if (profile === 'damage') return item.weight <= 3 ? 20 : 10;
-  if (profile === 'tank') return item.weight >= 5 ? 20 + item.weight : item.weight >= 3 ? 20 : 5;
-  // balanced: 2-4 weight sweet spot; weight breaks ties so leather (w=4) beats padded (w=2)
-  return item.weight >= 2 && item.weight <= 4 ? 15 + item.weight : 5;
+  let score = 0;
+  if (profile === 'speed') score = item.weight <= 1 ? 30 : item.weight <= 2 ? 15 : 0;
+  else if (profile === 'damage') score = item.weight <= 3 ? 20 : 10;
+  else if (profile === 'tank') score = item.weight >= 5 ? 20 + item.weight : item.weight >= 3 ? 20 : 5;
+  else score = item.weight >= 2 && item.weight <= 4 ? 15 + item.weight : 5;
+  // Mitigation bonus — tank values it most, speed values it least
+  const mit = item.mitigation ?? 0;
+  if (profile === 'tank') score += mit * 2;
+  else if (profile === 'balanced') score += mit;
+  else if (profile === 'damage') score += mit * 0.5;
+  // defenseMod bonus
+  const defMod = item.defenseMod ?? 0;
+  if (profile === 'tank') score += defMod * 3;
+  else if (profile === 'balanced') score += defMod;
+  // enduranceCostMod penalty — speed is most sensitive
+  const endMod = item.enduranceCostMod ?? 1.0;
+  if (profile === 'speed') score -= Math.max(0, (endMod - 1.0) * 20);
+  else if (profile === 'balanced') score -= Math.max(0, (endMod - 1.0) * 5);
+  return score;
 }
 
 function scoreShield(item: EquipmentItem, profile: BuildProfile): number {
-  if (item.id === 'none_shield') return profile === 'speed' || profile === 'damage' ? 20 : 5;
-  if (profile === 'tank') return item.weight >= 3 ? 30 : 20;
-  if (profile === 'speed') return item.weight <= 1 ? 15 : 0;
-  return item.weight <= 2 ? 15 : 10;
+  let score = 0;
+  if (item.id === 'none_shield') score = profile === 'speed' || profile === 'damage' ? 20 : 5;
+  else if (profile === 'tank') score = item.weight >= 3 ? 30 : 20;
+  else if (profile === 'speed') score = item.weight <= 1 ? 15 : 0;
+  else score = item.weight <= 2 ? 15 : 10;
+  // shieldParryBonus — tank and balanced value it most
+  const parry = item.shieldParryBonus ?? 0;
+  if (profile === 'tank') score += parry * 5;
+  else if (profile === 'balanced') score += parry * 2;
+  else if (profile === 'speed') score += parry;
+  // shieldAttPenalty — damage and speed are most penalized
+  const attPen = item.shieldAttPenalty ?? 0;
+  if (profile === 'damage') score += attPen * 3;
+  else if (profile === 'speed') score += attPen * 2;
+  else score += attPen;
+  return score;
 }
 
 function scoreHelm(item: EquipmentItem, profile: BuildProfile): number {
-  if (item.id === 'none_helm') return profile === 'speed' ? 20 : 5;
-  if (profile === 'tank') return item.weight >= 2 ? 20 + item.weight : 15;
-  if (profile === 'speed') return item.weight <= 1 ? 20 : 5;
-  return item.weight <= 2 ? 20 : 10;
+  let score = 0;
+  if (item.id === 'none_helm') score = profile === 'speed' ? 20 : 5;
+  else if (profile === 'tank') score = item.weight >= 2 ? 20 + item.weight : 15;
+  else if (profile === 'speed') score = item.weight <= 1 ? 20 : 5;
+  else score = item.weight <= 2 ? 20 : 10;
+  // Mitigation bonus
+  const mit = item.mitigation ?? 0;
+  if (profile === 'tank') score += mit * 2;
+  else if (profile === 'balanced') score += mit;
+  // defenseMod bonus
+  const defMod = item.defenseMod ?? 0;
+  if (profile === 'tank') score += defMod * 3;
+  else if (profile === 'balanced') score += defMod;
+  // enduranceCostMod penalty
+  const endMod = item.enduranceCostMod ?? 1.0;
+  if (profile === 'speed') score -= Math.max(0, (endMod - 1.0) * 20);
+  else if (profile === 'balanced') score -= Math.max(0, (endMod - 1.0) * 5);
+  return score;
 }
 
 function bestItem(items: EquipmentItem[], scorer: (i: EquipmentItem) => number): EquipmentItem {
@@ -148,8 +193,22 @@ export function generateRecommendations(
     // Synergy score: 0-100 — the canonical favorite (CW) earns the most.
     let synergy = 40;
     synergy += suitability === 'CW' ? 30 : suitability === 'W' ? 25 : 0;
-    if (totalWeight <= carryCap) synergy += 20;
-    if (totalWeight <= carryCap * 0.7) synergy += 15;
+
+    // Encumbrance tier-aware synergy adjustments
+    const encRatio = getEncumbranceRatio(loadout, carryCap);
+    const encTier = getEncumbranceTier(encRatio);
+    if (encTier === 'NONE') {
+      synergy += 20;
+      if (encRatio <= 0.5) synergy += 10; // very light bonus
+    } else if (encTier === 'LIGHT') {
+      synergy += 10;
+    } else if (encTier === 'MEDIUM') {
+      synergy += 0;
+    } else if (encTier === 'HEAVY') {
+      synergy -= 10;
+    } else if (encTier === 'OVER') {
+      synergy -= 25;
+    }
 
     return {
       loadout,

@@ -5,9 +5,15 @@ import { type Trainer } from '@/types/state.types';
 import {
   getClassicWeaponBonus,
   checkWeaponRequirements,
-  isOverEncumbered,
+  getShieldModifiers,
   getStyleDefaultLoadout,
+  getItemById,
 } from '@/data/equipment';
+import {
+  getEncumbranceRatio,
+  getEncumbranceTier,
+  getEncumbrancePenalties,
+} from '@/data/equipment/encumbrance';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getFavoriteWeaponBonus } from '@/engine/favorites';
 import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
@@ -65,14 +71,8 @@ export function createFighterState(
   const mastery = getMasteryBonus(plan.style, isMastered);
   const veteranDef = warrior ? getVeteranDefBonus(warrior.age ?? 18, attrs.WL) : 0;
 
-  const getShieldBonus = (id: string) => {
-    if (id === 'small_shield') return { def: 1, att: 0 };
-    if (id === 'medium_shield') return { def: 2, att: 0 };
-    if (id === 'large_shield') return { def: 3, att: -1 };
-    return { def: 0, att: 0 };
-  };
-  const wShield = getShieldBonus(equip.weapon);
-  const oShield = getShieldBonus(equip.shield);
+  const wShield = getShieldModifiers(equip.weapon);
+  const oShield = getShieldModifiers(equip.shield);
   const totalShieldDef = wShield.def + oShield.def;
   const totalShieldAtt = wShield.att + oShield.att;
 
@@ -83,9 +83,20 @@ export function createFighterState(
     DF: attrs.DF,
   });
 
-  const overweight = isOverEncumbered(equip, derived.encumbrance);
-  const encumbranceIniPenalty = overweight ? -2 : 0;
-  const encumbranceEndMult = overweight ? 1.2 : 1.0;
+  // 5-tier encumbrance system
+  const encRatio = getEncumbranceRatio(equip, derived.encumbrance);
+  const encTier = getEncumbranceTier(encRatio);
+  const encPenalties = getEncumbrancePenalties(encTier);
+  const encumbranceIniPenalty = encPenalties.iniPenalty;
+  const encumbranceDefPenalty = encPenalties.defPenalty;
+  const encumbranceParPenalty = encPenalties.parPenalty;
+  const encumbranceEndMult = encPenalties.enduranceMult;
+
+  // Equipment defense modifiers (armor + helm)
+  const armorItem = getItemById(equip.armor);
+  const helmItem = getItemById(equip.helm);
+  const armorDefMod = armorItem?.defenseMod ?? 0;
+  const helmDefMod = helmItem?.defenseMod ?? 0;
 
   const classicBonus = warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0;
 
@@ -113,6 +124,7 @@ export function createFighterState(
       skills.PAR +
       (trainerMods?.parMod ?? 0) +
       totalShieldDef +
+      encumbranceParPenalty +
       (drills.PAR ?? 0) +
       traitMods.parMod +
       (injuryPenalties['PAR'] ?? 0),
@@ -120,6 +132,9 @@ export function createFighterState(
       skills.DEF +
       (trainerMods?.defMod ?? 0) +
       totalShieldDef +
+      armorDefMod +
+      helmDefMod +
+      encumbranceDefPenalty +
       veteranDef +
       mastery.def +
       (drills.DEF ?? 0) +
@@ -191,10 +206,11 @@ export function createFighterState(
     traits: warrior?.traits,
     staticEnduranceMult: traitMods.enduranceMult,
     totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
-    encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult },
+    encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, defPenalty: encumbranceDefPenalty, parPenalty: encumbranceParPenalty, enduranceMult: encumbranceEndMult },
     weaponId: equip.weapon,
     armorId: equip.armor,
     shieldId: equip.shield,
+    helmId: equip.helm,
     bleedStacks: 0,
     momentum: 0,
     riposteStreak: 0,

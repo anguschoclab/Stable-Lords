@@ -380,6 +380,8 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.ParryStrike,
     ],
     coverage: 'MEDIUM',
+    shieldParryBonus: 1,
+    shieldAttPenalty: 0,
   },
   {
     id: 'medium_shield',
@@ -400,6 +402,8 @@ export const WEAPONS: EquipmentItem[] = [
     ],
     restrictedStyles: [FightingStyle.AimedBlow],
     coverage: 'MEDIUM',
+    shieldParryBonus: 2,
+    shieldAttPenalty: 0,
   },
   {
     id: 'large_shield',
@@ -421,6 +425,8 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.AimedBlow,
     ],
     coverage: 'HIGH',
+    shieldParryBonus: 3,
+    shieldAttPenalty: -1,
   },
 
   // Two-handed weapons — higher requirements

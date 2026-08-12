@@ -49,10 +49,11 @@ export interface FighterState {
    *  per-exchange endurance cost in applyEnduranceCosts. Defaults to 1. */
   staticEnduranceMult?: number;
   totalFights: number;
-  encumbrancePenalty?: { iniPenalty: number; enduranceMult: number };
+  encumbrancePenalty?: { iniPenalty: number; defPenalty: number; parPenalty: number; enduranceMult: number };
   weaponId?: string;
   armorId?: string;
   shieldId?: string;
+  helmId?: string;
   desperate?: boolean;
   /** Slashing Attack bleed: damage-over-time stacks this fighter is suffering.
    *  0..SL_BLEED_CAP; ticks and decays each exchange in resolveExchange. */

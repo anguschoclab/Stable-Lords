@@ -206,6 +206,22 @@ export function isOverEncumbered(loadout: EquipmentLoadout, carryCap: number): b
 }
 
 /**
+ * Data-driven shield modifier lookup.
+ * Reads shieldParryBonus (→ DEF) and shieldAttPenalty (→ ATT) from the item data,
+ * replacing the hardcoded getShieldBonus in fighterState.ts.
+ * Returns {def, att} for any id — non-shields return {def: 0, att: 0}.
+ */
+export function getShieldModifiers(id: string | undefined): { def: number; att: number } {
+  if (!id) return { def: 0, att: 0 };
+  const item = getItemById(id);
+  if (!item) return { def: 0, att: 0 };
+  return {
+    def: item.shieldParryBonus ?? 0,
+    att: item.shieldAttPenalty ?? 0,
+  };
+}
+
+/**
  * Hard-block validation for a loadout. Replaces the previous soft-warning fallthrough
  * for the two-handed + shield conflict — illegal combinations return a list of issues
  * so the UI/plan layer can block save instead of silently stripping gear.

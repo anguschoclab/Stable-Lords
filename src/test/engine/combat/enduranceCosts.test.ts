@@ -80,6 +80,7 @@ interface DrainOpts {
   arenaEndMult: number;
   psychMult: number;
   traitMult: number;
+  equipEndMult: number;
 }
 
 function expectedAttDrain(o: DrainOpts): number {
@@ -88,6 +89,7 @@ function expectedAttDrain(o: DrainOpts): number {
       getEnduranceMult(o.style) *
       o.weaponPenalty *
       o.encumbranceMult *
+      o.equipEndMult *
       o.arenaEndMult *
       o.psychMult *
       o.traitMult
@@ -103,6 +105,7 @@ function expectedDefDrain(o: DrainOpts): number {
         getEnduranceMult(o.style) *
         o.weaponPenalty *
         o.encumbranceMult *
+        o.equipEndMult *
         o.arenaEndMult *
         o.psychMult *
         o.traitMult
@@ -133,6 +136,10 @@ interface RunOpts {
   hpA?: number;
   hpD?: number;
   preEvents?: CombatEvent[];
+  fAArmorId?: string;
+  fAHelmId?: string;
+  fDArmorId?: string;
+  fDHelmId?: string;
 }
 
 function run(opts: RunOpts): { fA: FighterState; fD: FighterState; events: CombatEvent[] } {
@@ -157,8 +164,10 @@ function run(opts: RunOpts): { fA: FighterState; fD: FighterState; events: Comba
     hp: opts.hpA ?? 100,
     staticEnduranceMult: opts.fATrait,
     encumbrancePenalty: opts.fAEncumbrance
-      ? { iniPenalty: 0, enduranceMult: opts.fAEncumbrance }
+      ? { iniPenalty: 0, defPenalty: 0, parPenalty: 0, enduranceMult: opts.fAEncumbrance }
       : undefined,
+    armorId: opts.fAArmorId,
+    helmId: opts.fAHelmId,
   });
   const fD = makeFighter({
     label: 'D',
@@ -168,8 +177,10 @@ function run(opts: RunOpts): { fA: FighterState; fD: FighterState; events: Comba
     hp: opts.hpD ?? 100,
     staticEnduranceMult: opts.fDTrait,
     encumbrancePenalty: opts.fDEncumbrance
-      ? { iniPenalty: 0, enduranceMult: opts.fDEncumbrance }
+      ? { iniPenalty: 0, defPenalty: 0, parPenalty: 0, enduranceMult: opts.fDEncumbrance }
       : undefined,
+    armorId: opts.fDArmorId,
+    helmId: opts.fDHelmId,
   });
 
   const events: CombatEvent[] = [...(opts.preEvents ?? [])];
@@ -208,6 +219,7 @@ const BASE = {
   arenaEndMult: 1.0,
   psychMult: 1.0,
   traitMult: 1,
+  equipEndMult: 1.0,
 };
 
 // ─── surfaceMod.enduranceMult ─────────────────────────────────────────────────
@@ -343,6 +355,7 @@ describe('applyEnduranceCosts — full multiplicative chain', () => {
       arenaEndMult: 1.25,
       psychMult: 1.1,
       traitMult: 0.8,
+      equipEndMult: 1.0,
     });
     expect(1000 - r.fA.endurance).toBe(attExp);
   });
@@ -514,5 +527,65 @@ describe('applyEnduranceCosts — edge cases', () => {
     expect(1000 - fA.endurance).toBe(attExp);
     // Verify both multipliers stack: Sweltering staminaMult=1.3, arena=1.25
     expect(attExp).toBe(Math.round(enduranceCost(10, 10, 'Sweltering') * 10 * 1.25));
+  });
+});
+
+// ─── T6: Armor/helm enduranceCostMod ──────────────────────────────────────────
+
+describe('applyEnduranceCosts — armor/helm enduranceCostMod', () => {
+  it('armor enduranceCostMod increases att drain (chain_mail 1.8)', () => {
+    const base = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10 });
+    const armored = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10, fAArmorId: 'chain_mail' });
+    const baseDrain = 1000 - base.fA.endurance;
+    const armoredDrain = 1000 - armored.fA.endurance;
+    const attExp = expectedAttDrain({ ...BASE, equipEndMult: 1.8 });
+    expect(armoredDrain).toBe(attExp);
+    expect(armoredDrain).toBeGreaterThan(baseDrain);
+  });
+
+  it('helm enduranceCostMod increases att drain (full_helm 1.2)', () => {
+    const base = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10 });
+    const helmed = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10, fAHelmId: 'full_helm' });
+    const baseDrain = 1000 - base.fA.endurance;
+    const helmedDrain = 1000 - helmed.fA.endurance;
+    const attExp = expectedAttDrain({ ...BASE, equipEndMult: 1.2 });
+    expect(helmedDrain).toBe(attExp);
+    expect(helmedDrain).toBeGreaterThan(baseDrain);
+  });
+
+  it('armor + helm enduranceCostMod stack multiplicatively (chain_mail 1.8 * full_helm 1.2 = 2.16)', () => {
+    const r = run({
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+      fAArmorId: 'chain_mail',
+      fAHelmId: 'full_helm',
+    });
+    const attExp = expectedAttDrain({ ...BASE, equipEndMult: 1.8 * 1.2 });
+    expect(1000 - r.fA.endurance).toBe(attExp);
+  });
+
+  it('none_armor and none_helm have no effect (enduranceCostMod=1.0)', () => {
+    const r = run({
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+      fAArmorId: 'none_armor',
+      fAHelmId: 'none_helm',
+    });
+    const attExp = expectedAttDrain({ ...BASE, equipEndMult: 1.0 });
+    expect(1000 - r.fA.endurance).toBe(attExp);
+  });
+
+  it('defender also affected by their own armor/helm enduranceCostMod', () => {
+    const base = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10 });
+    const armored = run({
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+      fDArmorId: 'plate_mail',
+    });
+    const baseDefDrain = 1000 - base.fD.endurance;
+    const armoredDefDrain = 1000 - armored.fD.endurance;
+    const defExp = expectedDefDrain({ ...BASE, equipEndMult: 2.0 });
+    expect(armoredDefDrain).toBe(defExp);
+    expect(armoredDefDrain).toBeGreaterThan(baseDefDrain);
   });
 });

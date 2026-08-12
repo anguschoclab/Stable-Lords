@@ -253,4 +253,153 @@ describe('fighterState', () => {
       expect(result.label).toBe('A');
     });
   });
+
+  // ─── T5: Equipment defense / encumbrance tier / shield wiring ───────────────
+
+  describe('equipment defenseMod integration', () => {
+    it('armor defenseMod raises effSkills.DEF', () => {
+      const base = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'none_armor', shield: 'none_shield', helm: 'none_helm' },
+      });
+      const armored = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      });
+      const plan = createMockPlan();
+      const rBase = createFighterState('A', plan, base);
+      const rArmored = createFighterState('A', plan, armored);
+      // leather defenseMod = 1
+      expect(rArmored.skills.DEF).toBeGreaterThan(rBase.skills.DEF);
+    });
+
+    it('helm defenseMod raises effSkills.DEF further', () => {
+      const noHelm = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      });
+      const withHelm = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'helm' },
+      });
+      const plan = createMockPlan();
+      const rNoHelm = createFighterState('A', plan, noHelm);
+      const rWithHelm = createFighterState('A', plan, withHelm);
+      // helm defenseMod = 1, so DEF should increase by 1
+      expect(rWithHelm.skills.DEF).toBeGreaterThan(rNoHelm.skills.DEF);
+    });
+  });
+
+  describe('encumbrance tier penalties', () => {
+    it('HEAVY encumbrance reduces INI, DEF, and PAR', () => {
+      // Build a loadout that hits HEAVY tier (ratio 1.0-1.2)
+      // halberd weight=8, plate_mail weight=12, large_shield weight=6, full_helm weight=4 = 30 total
+      // carryCap (encumbrance) = 30 → ratio = 1.0 → HEAVY
+      const heavy = createMockWarrior({
+        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 30 },
+      });
+      // Same loadout but with carry cap well above weight → NONE tier
+      const unencumbered = createMockWarrior({
+        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 100 },
+      });
+      const plan = createMockPlan();
+      const rHeavy = createFighterState('A', plan, heavy);
+      const rUnenc = createFighterState('A', plan, unencumbered);
+
+      // HEAVY tier: iniPenalty=-3, defPenalty=-1, parPenalty=-1
+      expect(rHeavy.skills.INI).toBeLessThan(rUnenc.skills.INI);
+      expect(rHeavy.skills.DEF).toBeLessThan(rUnenc.skills.DEF);
+      expect(rHeavy.skills.PAR).toBeLessThan(rUnenc.skills.PAR);
+    });
+
+    it('OVER encumbrance has larger penalties than HEAVY', () => {
+      // Same heavy loadout (weight 30), carryCap = 20 → ratio = 1.5 → OVER
+      const over = createMockWarrior({
+        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 20 },
+      });
+      const heavy = createMockWarrior({
+        equipment: { weapon: 'halberd', armor: 'plate_mail', shield: 'large_shield', helm: 'full_helm' },
+        derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 30 },
+      });
+      const plan = createMockPlan();
+      const rOver = createFighterState('A', plan, over);
+      const rHeavy = createFighterState('A', plan, heavy);
+
+      expect(rOver.skills.INI).toBeLessThan(rHeavy.skills.INI);
+    });
+
+    it('LIGHT encumbrance only penalizes INI, not DEF or PAR', () => {
+      // broadsword weight=4, leather weight=4, none_shield=0, none_helm=0 = 8 total
+      // carryCap = 12 → ratio = 0.667 → LIGHT
+      const light = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 12 },
+      });
+      const none = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+        derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 100 },
+      });
+      const plan = createMockPlan();
+      const rLight = createFighterState('A', plan, light);
+      const rNone = createFighterState('A', plan, none);
+
+      expect(rLight.skills.INI).toBeLessThan(rNone.skills.INI);
+      expect(rLight.skills.DEF).toBe(rNone.skills.DEF);
+      expect(rLight.skills.PAR).toBe(rNone.skills.PAR);
+    });
+  });
+
+  describe('shield slot wiring', () => {
+    it('shield in shield slot raises PAR and DEF', () => {
+      const noShield = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      });
+      const withShield = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'small_shield', helm: 'none_helm' },
+      });
+      const plan = createMockPlan();
+      const rNo = createFighterState('A', plan, noShield);
+      const rWith = createFighterState('A', plan, withShield);
+
+      // small_shield: shieldParryBonus=1 → +1 PAR, +1 DEF
+      expect(rWith.skills.PAR).toBeGreaterThan(rNo.skills.PAR);
+      expect(rWith.skills.DEF).toBeGreaterThan(rNo.skills.DEF);
+    });
+
+    it('shield in weapon slot raises PAR and DEF and applies ATT penalty', () => {
+      const noShield = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      });
+      // large_shield in weapon slot: shieldParryBonus=3, shieldAttPenalty=-1
+      const withWeaponShield = createMockWarrior({
+        equipment: { weapon: 'large_shield', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      });
+      const plan = createMockPlan();
+      const rNo = createFighterState('A', plan, noShield);
+      const rWith = createFighterState('A', plan, withWeaponShield);
+
+      expect(rWith.skills.PAR).toBeGreaterThan(rNo.skills.PAR);
+      expect(rWith.skills.DEF).toBeGreaterThan(rNo.skills.DEF);
+      // large_shield has shieldAttPenalty=-1, broadsword has no penalty
+      // But broadsword is the classic weapon for StrikingAttack (+1 ATT bonus)
+      // while large_shield is not → so ATT should be lower
+      expect(rWith.skills.ATT).toBeLessThan(rNo.skills.ATT);
+    });
+
+    it('dual-slot shields stack PAR and DEF bonuses', () => {
+      const singleSlot = createMockWarrior({
+        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'small_shield', helm: 'none_helm' },
+      });
+      const dualSlot = createMockWarrior({
+        equipment: { weapon: 'small_shield', armor: 'leather', shield: 'medium_shield', helm: 'none_helm' },
+      });
+      const plan = createMockPlan();
+      const rSingle = createFighterState('A', plan, singleSlot);
+      const rDual = createFighterState('A', plan, dualSlot);
+
+      // small_shield(weapon) + medium_shield(shield) = 1+2 = 3 parry/def
+      // vs small_shield(shield) only = 1 parry/def
+      expect(rDual.skills.PAR).toBeGreaterThan(rSingle.skills.PAR);
+      expect(rDual.skills.DEF).toBeGreaterThan(rSingle.skills.DEF);
+    });
+  });
 });

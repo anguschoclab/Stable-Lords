@@ -31,6 +31,7 @@ export {
   validateLoadout,
   getLoadoutWeight,
   isOverEncumbered,
+  getShieldModifiers,
   ALL_EQUIPMENT,
   DEFAULT_LOADOUT,
   getClassicWeaponBonus,

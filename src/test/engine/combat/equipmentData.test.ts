@@ -62,7 +62,9 @@ describe('Armor data fields', () => {
   it('heavier armor has >= mitigation than lighter armor', () => {
     const sorted = [...ARMORS].filter((a) => a.id !== 'none_armor').sort((a, b) => a.weight - b.weight);
     for (let i = 1; i < sorted.length; i++) {
-      expect(sorted[i].mitigation!, `${sorted[i].id} (w=${sorted[i].weight}) should have >= mitigation than ${sorted[i - 1].id} (w=${sorted[i - 1].weight})`).toBeGreaterThanOrEqual(sorted[i - 1].mitigation!);
+      const curr = sorted[i]!;
+      const prev = sorted[i - 1]!;
+      expect(curr.mitigation!, `${curr.id} (w=${curr.weight}) should have >= mitigation than ${prev.id} (w=${prev.weight})`).toBeGreaterThanOrEqual(prev.mitigation!);
     }
   });
 });
@@ -121,7 +123,9 @@ describe('Helm data fields', () => {
   it('heavier helm has >= mitigation than lighter helm', () => {
     const sorted = [...HELMS].filter((h) => h.id !== 'none_helm').sort((a, b) => a.weight - b.weight);
     for (let i = 1; i < sorted.length; i++) {
-      expect(sorted[i].mitigation!, `${sorted[i].id} (w=${sorted[i].weight}) should have >= mitigation than ${sorted[i - 1].id} (w=${sorted[i - 1].weight})`).toBeGreaterThanOrEqual(sorted[i - 1].mitigation!);
+      const curr = sorted[i]!;
+      const prev = sorted[i - 1]!;
+      expect(curr.mitigation!, `${curr.id} (w=${curr.weight}) should have >= mitigation than ${prev.id} (w=${prev.weight})`).toBeGreaterThanOrEqual(prev.mitigation!);
     }
   });
 });

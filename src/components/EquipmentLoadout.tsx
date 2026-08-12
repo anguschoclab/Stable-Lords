@@ -12,7 +12,6 @@ import {
   type EquipmentSlot,
   getItemById,
   getLoadoutWeight,
-  isOverEncumbered,
   validateLoadout,
 } from '@/data/equipment';
 import { SlotSelector, EncumbranceBar } from './equipment';
@@ -44,7 +43,6 @@ export default function EquipmentLoadoutUI({
   onChange,
 }: Props) {
   const totalWeight = getLoadoutWeight(loadout);
-  const overEncumbered = isOverEncumbered(loadout, carryCap);
   const weaponItem = getItemById(loadout.weapon);
   const isTwoHanded = weaponItem?.twoHanded ?? false;
   const loadoutIssues = validateLoadout(loadout);
@@ -98,7 +96,7 @@ export default function EquipmentLoadoutUI({
         <EncumbranceBar
           totalWeight={totalWeight}
           carryCap={carryCap}
-          overEncumbered={overEncumbered}
+          loadout={loadout}
         />
 
         {/* Slots */}

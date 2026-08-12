@@ -37,6 +37,14 @@ vi.mock('@/data/narrativeContent.json', () => ({
       report_medical: 'Medical Report',
       report_treasury: 'Treasury Report',
       memorial_title: 'In Memoriam',
+      memorial_default: 'Fallen in combat.',
+    },
+    memorials: {
+      tributes: ['The arena grows colder with the loss of {{name}}.'],
+    },
+    crowd_reactions: {
+      Bloodthirsty: ['The crowd howls for blood!'],
+      Theatrical: ['The crowd gasps in awe!'],
     },
   },
 }));

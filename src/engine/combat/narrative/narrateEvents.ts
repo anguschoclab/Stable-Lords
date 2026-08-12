@@ -221,7 +221,7 @@ export function narrateEvents(
             const sLine = stateChangeLine(rng, opponentName, newHpRatio, prevRatio);
             if (sLine) log.push({ minute, text: sLine });
 
-            const crowd = crowdReaction(rng, opponentName, actorName, newHpRatio);
+            const crowd = crowdReaction(rng, opponentName, actorName, newHpRatio, ctx.crowdMood);
             if (crowd) log.push({ minute, text: crowd });
           }
         }

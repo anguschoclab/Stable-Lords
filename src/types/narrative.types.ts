@@ -565,4 +565,5 @@ export interface NarrativeContent {
   meta: Meta;
   passives: Passives;
   kill_text?: KillText;
+  crowd_reactions?: Record<string, string[]>;
 }

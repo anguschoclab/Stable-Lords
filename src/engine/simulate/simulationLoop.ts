@@ -177,6 +177,7 @@ export function runSimulationLoop(
         spD: warriorD?.attributes.SP,
         originA: warriorA?.origin,
         originD: warriorD?.origin,
+        crowdMood,
       };
       const { log: newLines } = narrateEvents(events, narCtx, min);
       log.push(...newLines);

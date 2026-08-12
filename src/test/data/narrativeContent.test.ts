@@ -1,5 +1,5 @@
 /**
- * narrativeContent.json — verifies no duplicate entries, valid min values,
+ * narrativeContent domain files — verifies no duplicate entries, valid min values,
  * and correct structure for expanded content.
  */
 import { describe, it, expect } from 'vitest';
@@ -28,7 +28,7 @@ function collectEntries(
   return entries;
 }
 
-describe('narrativeContent.json', () => {
+describe('narrativeContent domain files', () => {
   it('has no duplicate text entries within the same path', () => {
     const entries = collectEntries(narrativeContent);
     const byPath = new Map<string, Set<string>>();

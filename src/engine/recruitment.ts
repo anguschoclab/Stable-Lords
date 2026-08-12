@@ -62,7 +62,7 @@ export interface PoolWarrior {
 
 // ─── Constants ────────────────────────────────────────────────────────────
 
-// TIER data is now fetched from narrativeContent.json
+// TIER data is now fetched from narrative domain files
 
 /**
  * Tier_cost.
@@ -98,7 +98,7 @@ export { REFRESH_COST, DEFAULT_POOL_SIZE };
 
 // ─── Name Pool ────────────────────────────────────────────────────────────
 
-// Name pool is now fetched from narrativeContent.json
+// Name pool is now fetched from narrative domain files
 const NAME_POOL = (narrativeContent as NarrativeContent).recruitment.names;
 
 // Removed manual seededRng implementation in favor of utils/random

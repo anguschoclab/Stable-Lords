@@ -43,8 +43,8 @@ function reset() {
 describe('world liveness over a long sim (26 weeks)', () => {
   beforeEach(reset, 120000);
 
-  it('stays alive and evolves over the full run', () => {
-    const { pulses, finalState } = runSimulation({
+  it('stays alive and evolves over the full run', async () => {
+    const { pulses, finalState } = await runSimulation({
       weeks: 26,
       seed: 4242,
       logFrequency: 2, // sample often so transient multi-flaw warriors are caught
@@ -101,8 +101,8 @@ describe('world liveness over a long sim (26 weeks)', () => {
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {
   beforeEach(reset, 120000);
 
-  it('logs end-of-run trait & churn metrics', () => {
-    const { pulses, finalState } = runSimulation({
+  it('logs end-of-run trait & churn metrics', async () => {
+    const { pulses, finalState } = await runSimulation({
       weeks: 26,
       seed: 4242,
       logFrequency: 4,

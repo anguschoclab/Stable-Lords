@@ -1,6 +1,6 @@
 /**
  * Narrative Content Types
- * Comprehensive TypeScript interfaces for narrativeContent.json
+ * Comprehensive TypeScript interfaces for narrative content domain files
  */
 
 import type { CrowdMoodType } from './shared.types'; /**

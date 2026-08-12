@@ -1,5 +1,5 @@
 /**
- * Narrative content merge — verifies the integrity of narrativeContent.json
+ * Narrative content merge — verifies the integrity of narrative domain files
  * after merging PR #752 (curate-combat-narrative) and PR #747 (cosmic-anomaly).
  */
 import { describe, it, expect } from 'vitest';

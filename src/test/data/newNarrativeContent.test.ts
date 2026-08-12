@@ -62,10 +62,9 @@ describe('expanded narrative content', () => {
 
     for (const wtype of weaponTypes) {
       for (const sev of severities) {
-        const pool = getPool(narrativeContent, 'strikes', wtype, sev);
-        if (pool.length === 0) continue;
-
         it(`strikes.${wtype}.${sev} has no duplicate entries`, () => {
+          const pool = getPool(narrativeContent, 'strikes', wtype, sev);
+          if (pool.length === 0) return; // skip empty pools
           const seen = new Set<string>();
           for (const entry of pool) {
             expect(seen.has(entry), `Duplicate in strikes.${wtype}.${sev}: "${entry}"`).toBe(false);
@@ -74,6 +73,8 @@ describe('expanded narrative content', () => {
         });
 
         it(`strikes.${wtype}.${sev} entries use only valid {{token}} placeholders`, () => {
+          const pool = getPool(narrativeContent, 'strikes', wtype, sev);
+          if (pool.length === 0) return;
           for (const entry of pool) {
             const tokens = entry.match(/\{\{[^}]+\}\}/g) || [];
             for (const token of tokens) {
@@ -98,6 +99,8 @@ describe('expanded narrative content', () => {
         });
 
         it(`strikes.${wtype}.${sev} entries produce no raw tokens when interpolated`, () => {
+          const pool = getPool(narrativeContent, 'strikes', wtype, sev);
+          if (pool.length === 0) return;
           for (const entry of pool) {
             const result = interpolateTemplate(entry, {
               attacker: 'Rex',
@@ -115,9 +118,8 @@ describe('expanded narrative content', () => {
   });
 
   describe('strikes.generic', () => {
-    const pool = getPool(narrativeContent, 'strikes', 'generic');
-
     it('has no duplicate entries', () => {
+      const pool = getPool(narrativeContent, 'strikes', 'generic');
       const seen = new Set<string>();
       for (const entry of pool) {
         expect(seen.has(entry), `Duplicate in strikes.generic: "${entry}"`).toBe(false);
@@ -126,6 +128,7 @@ describe('expanded narrative content', () => {
     });
 
     it('entries produce no raw tokens when interpolated', () => {
+      const pool = getPool(narrativeContent, 'strikes', 'generic');
       for (const entry of pool) {
         const result = interpolateTemplate(entry, {
           attacker: 'Rex',

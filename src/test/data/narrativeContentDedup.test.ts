@@ -1,12 +1,12 @@
 /**
- * Narrative — narrativeContent.json deduplication test.
- * Pre-merge test: validates no duplicate entries exist in narrativeContent.json.
+ * Narrative — narrative content deduplication test.
+ * Pre-merge test: validates no duplicate entries exist in narrative domain files.
  * After merging PRs #783 and #786, this test guards against duplicate content.
  */
 import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
 
-describe('narrativeContent.json deduplication', () => {
+describe('narrative domain files deduplication', () => {
   it('no duplicate entry IDs exist', () => {
     const entries = narrativeContent as Record<string, unknown>;
     const ids = Object.keys(entries);

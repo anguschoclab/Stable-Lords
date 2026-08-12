@@ -1,7 +1,7 @@
 /**
  * Stable Lords — Tag/Badge Tooltip Descriptions
  * Describes the gameplay impact of flair, titles, injuries, and status tags.
- * Decoupled from hardcoded strings and migrated to narrativeContent.json.
+ * Decoupled from hardcoded strings and migrated to narrative domain files.
  */
 import uiMeta from '@/data/narrative/uiMeta.json';
 

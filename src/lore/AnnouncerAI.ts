@@ -1,6 +1,6 @@
 /**
  * Announcer AI — generates flavourful blurbs, hype lines, and recap narration.
- * Consolidated and Unified with the Bard Archive (narrativeContent.json).
+ * Consolidated and Unified with the Bard Archive (narrative domain files).
  */
 
 import { getFromArchive, interpolateTemplate } from '@/engine/narrative';

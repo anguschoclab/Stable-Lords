@@ -126,7 +126,7 @@ describe('chaos_weavers_gift offseason event', () => {
     expect(impact).toEqual({});
   });
 
-  it('narrativeContent.json contains chaos_weavers_gift event after merge', async () => {
+  it('narrative domain files contain chaos_weavers_gift event after merge', async () => {
     const content = await import('@/data/narrative');
     const events = (content as any).default?.offseason_events || (content as any).offseason_events;
     if (events && events.chaos_weavers_gift) {

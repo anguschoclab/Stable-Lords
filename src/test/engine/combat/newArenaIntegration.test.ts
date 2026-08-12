@@ -4,6 +4,7 @@ import { getStyleWeatherModifier } from '@/constants/arena/arena';
 import { WEATHER_PENALTIES } from '@/constants/arena/weather';
 import { FightingStyle } from '@/types/shared.types';
 
+// Uses static data — no RNG or mocks needed
 describe('New Arena Integration Tests', () => {
   it('should register MIST_SHROUDED_RUINS correctly', () => {
     expect(MIST_SHROUDED_RUINS.id).toBe('mist_shrouded_ruins');

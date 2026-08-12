@@ -15,6 +15,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { WARRIOR_AGING } from '@/constants/aging';
+import { WEEKS_PER_YEAR } from '@/constants/core/core';
 
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
 // ~6% per-bout kill rate (lifespan ~0.7y in calendar terms even after lethality
@@ -23,7 +24,6 @@ import { WARRIOR_AGING } from '@/constants/aging';
 // 25-year stress test was missing entirely.
 const FORCED_RETIRE_MIN = WARRIOR_AGING.FORCED_RETIREMENT_MIN;
 const FORCED_RETIRE_MAX = WARRIOR_AGING.FORCED_RETIREMENT_MAX;
-const WEEKS_PER_YEAR = WARRIOR_AGING.WEEKS_PER_YEAR;
 
 interface AgingResult {
   retired: boolean;

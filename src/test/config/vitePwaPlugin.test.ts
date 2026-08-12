@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 
 describe('vite-plugin-pwa is wired into vite.config.ts', () => {
   it('vite config includes VitePWA in the plugins array', async () => {
-    // @ts-ignore TS6307: vite.config.ts is in tsconfig.node.json, not tsconfig.app.json; vitest resolves it at runtime
-    const viteConfig = await import('../../../vite.config');
+    const configPath = '../../../vite.config';
+    const viteConfig = await import(configPath);
     const config = (viteConfig as any).default;
     expect(config).toBeDefined();
     expect(config.plugins).toBeDefined();

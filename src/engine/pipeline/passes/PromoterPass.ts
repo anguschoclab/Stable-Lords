@@ -225,16 +225,15 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
           candidateScore = personalityScore * 100 - gap;
         }
 
-        if (candidateScore > bestScore) {
-          // Player challenge — boost challenged warriors when a player warrior is in the matchup
-          if (playerWarriorIds.has(warriorA.id) && challengeSet.has(candidate.id)) {
-            candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
-          }
-          if (playerWarriorIds.has(candidate.id) && challengeSet.has(warriorA.id)) {
-            candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
-          }
+        // Player challenge — boost challenged warriors when a player warrior is in the matchup
+        if (playerWarriorIds.has(warriorA.id) && challengeSet.has(candidate.id)) {
+          candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+        }
+        if (playerWarriorIds.has(candidate.id) && challengeSet.has(warriorA.id)) {
+          candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+        }
 
-          if (candidateScore > bestScore) {
+        if (candidateScore > bestScore) {
           bestScore = candidateScore;
           bestCandidate = candidate;
         }

@@ -1201,8 +1201,8 @@ describe('Scheduling Assistant Engine', () => {
       const state = mockState([rival]);
       const score = scoreMatchup(player, rival, state);
 
-      // No challenge/avoid modifiers — score should be base 100 + win rate 0 + novelty 3
-      expect(score).toBe(103);
+      // No challenge/avoid modifiers — score should be base 100 (no history, no rank, equal stats)
+      expect(score).toBe(100);
     });
 
     it('applies both challenge and avoid when rival is in both arrays (net zero)', () => {

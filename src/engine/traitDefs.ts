@@ -717,7 +717,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'evasive',
     name: 'Evasive',
     description: 'A ghost on the sand, near-impossible to pin down.',
-    effect: { fightPlanMod: { AL: 10, OE: -5, feintTendency: 5 }, attrBonus: { SP: 2 } },
+    effect: { fightPlanMod: { AL: 2, OE: -3, feintTendency: 5 }, attrBonus: { SP: 2 } },
     weight: 0.8,
     synergy: ['agile'],
     antiSynergy: ['brutal', 'tank'],

@@ -129,14 +129,9 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   await page.getByRole('link', { name: 'Arena', exact: true }).click();
   await page.waitForTimeout(1000);
 
-  // Click "EXECUTE WEEK" button to open the combat panel
-  const executeWeekBtn = page.getByRole('button', { name: /EXECUTE WEEK|EXECUTE DAY/ });
-  await executeWeekBtn.click();
-  await page.waitForTimeout(1000);
-
-  // Click "EXECUTE CYLCE" (note: typo in source code) to run bouts
-  const executeCycleBtn = page.getByRole('button', { name: /EXECUTE CYLCE|EXECUTE CYCLE/ });
-  await executeCycleBtn.click();
+  // Click "ADVANCE WEEK" button to run the week pipeline
+  const advanceWeekBtn = page.getByRole('button', { name: /ADVANCE WEEK|ADVANCE DAY/ });
+  await advanceWeekBtn.click();
 
   // Wait for the week advancement to complete (resolution modal appears)
   // The ResolutionReveal modal has "Cycle Resolution" as its title

@@ -177,4 +177,113 @@ describe('coreGenerator', () => {
       expect(() => aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced')).not.toThrow();
     });
   });
+
+  describe('fallbackCondition wiring', () => {
+    it('Aggressive personality, no intent → fallbackCondition BERZERK', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBe('BERZERK');
+    });
+
+    it('Methodical personality, no intent → fallbackCondition TURTLE', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Methodical' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBe('TURTLE');
+    });
+
+    it('Pragmatic personality, no intent → fallbackCondition FLEE', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBe('FLEE');
+    });
+
+    it('Showman personality, no intent → fallbackCondition None', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Showman' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBe('None');
+    });
+
+    it('Tactician personality, no intent → fallbackCondition TURTLE', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Tactician' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBe('TURTLE');
+    });
+
+    it('RECOVERY intent overrides personality → fallbackCondition YIELD', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(
+        w,
+        'Aggressive' as OwnerPersonality,
+        'Balanced',
+        undefined,
+        'RECOVERY'
+      );
+      expect(plan.fallbackCondition).toBe('YIELD');
+    });
+
+    it('VENDETTA intent overrides personality → fallbackCondition BERZERK', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(
+        w,
+        'Methodical' as OwnerPersonality,
+        'Balanced',
+        undefined,
+        'VENDETTA'
+      );
+      expect(plan.fallbackCondition).toBe('BERZERK');
+    });
+
+    it('defensive style (TotalParry) with Showman → fallbackCondition TURTLE', () => {
+      const w = createMockWarrior({ style: FightingStyle.TotalParry });
+      const plan = aiPlanForWarrior(w, 'Showman' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBe('TURTLE');
+    });
+
+    it('EXPANSION intent with Aggressive → fallbackCondition BERZERK (falls through to personality)', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(
+        w,
+        'Aggressive' as OwnerPersonality,
+        'Balanced',
+        undefined,
+        'EXPANSION'
+      );
+      expect(plan.fallbackCondition).toBe('BERZERK');
+    });
+
+    it('fallbackCondition is always set (not undefined) on AI-generated plans', () => {
+      const w = createMockWarrior();
+      for (const p of ['Aggressive', 'Methodical', 'Showman', 'Pragmatic', 'Tactician'] as const) {
+        const plan = aiPlanForWarrior(w, p as OwnerPersonality, 'Balanced');
+        expect(plan.fallbackCondition).toBeDefined();
+      }
+    });
+
+    it('fallbackCondition coexists with desperatePlan — both are defined on the same plan', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+      expect(plan.fallbackCondition).toBeDefined();
+      expect(plan.desperatePlan).toBeDefined();
+    });
+  });
+
+  describe('fallbackCondition + desperatePlan coexistence', () => {
+    it('fallbackCondition is preserved through handleDesperateState spread pattern', () => {
+      const w = createMockWarrior();
+      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+
+      expect(plan.fallbackCondition).toBe('BERZERK');
+      expect(plan.desperatePlan).toBeDefined();
+
+      const dp = plan.desperatePlan!;
+      const activePlan = {
+        ...plan,
+        OE: dp.OE,
+        AL: dp.AL,
+        phases: undefined,
+      };
+
+      expect(activePlan.fallbackCondition).toBe('BERZERK');
+    });
+  });
 });

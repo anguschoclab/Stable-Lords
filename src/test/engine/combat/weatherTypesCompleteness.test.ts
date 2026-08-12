@@ -1,10 +1,11 @@
 /**
  * Weather type completeness — verifies all weather registries are in sync
- * and have no duplicates. Pre-existing duplicate 'Eldritch Eclipse' in
- * enumSourcesSync.test.ts and 'Moonlight Duel' in shared.types.ts are
- * detected here.
+ * and have no duplicates. Scans WEATHER_TYPES (enumSources), WeatherTypeSchema
+ * (schemaEnums), and the WeatherType union (shared.types.ts source) for
+ * duplicate members, and confirms every member has effect/config/line entries.
  */
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'fs';
 import { WEATHER_TYPES } from '@/types/enumSources';
 import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
 import { getWeatherEffect, weatherOpeningLine } from '@/engine/combat/mechanics/weatherEffects';
@@ -50,5 +51,14 @@ describe('weather type registry completeness', () => {
 
   it('Weather count is 58 (post-merge with chaos weaver branches)', () => {
     expect(WEATHER_TYPES.length).toBe(58);
+  });
+
+  it('WeatherType union in shared.types.ts has no duplicate members', () => {
+    const source = readFileSync('src/types/shared.types.ts', 'utf-8');
+    const match = source.match(/export type WeatherType =\s*([\s\S]*?);/);
+    expect(match).not.toBeNull();
+    const unionBody = match?.[1] ?? '';
+    const members = [...unionBody.matchAll(/'([^']+)'/g)].map((m) => m[1]);
+    expect(new Set(members).size).toBe(members.length);
   });
 });

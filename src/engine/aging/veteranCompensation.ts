@@ -1,5 +1,5 @@
 /**
- * Veteran compensation — as a fighter ages past 28 they lose SP/DF (see
+ * Veteran compensation — as a fighter ages past 25 they lose SP/DF (see
  * aging.ts), which guts initiative-dependent styles. Rather than soften the
  * loss (which flattens the lifecycle), we grant a partial, WL-scaled DEF bonus:
  * the veteran "learns to fight old" and drifts toward a patient, defensive

@@ -3,6 +3,7 @@ import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { FightingStyle, type Warrior } from '@/types/game';
+import { AGING_PENALTY_START } from '@/constants/combat/combat';
 
 function warrior(style: FightingStyle, age: number, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
@@ -28,14 +29,14 @@ function warrior(style: FightingStyle, age: number, id: string): Warrior {
 }
 
 describe('getVeteranDefBonus', () => {
-  it('is zero before the aging penalty kicks in (age <= 28)', () => {
+  it('is zero at or below AGING_PENALTY_START (age <= 25)', () => {
+    expect(getVeteranDefBonus(24, 15)).toBe(0);
     expect(getVeteranDefBonus(25, 15)).toBe(0);
-    expect(getVeteranDefBonus(28, 15)).toBe(0);
   });
 
-  it('grows with age past 28 (more lost speed -> more compensating wisdom)', () => {
-    const young = getVeteranDefBonus(31, 15); // penalty 1 (floor(3/3)=1)
-    const old = getVeteranDefBonus(34, 15); // penalty 2 (floor(6/3)=2)
+  it('grows with age past AGING_PENALTY_START (more lost speed -> more compensating wisdom)', () => {
+    const young = getVeteranDefBonus(31, 15); // penalty 2 (floor(6/3)=2)
+    const old = getVeteranDefBonus(34, 15); // penalty 3 (floor(9/3)=3)
     expect(old).toBeGreaterThan(young);
   });
 
@@ -46,9 +47,13 @@ describe('getVeteranDefBonus', () => {
   });
 
   it('never exceeds the speed it compensates (no net buff)', () => {
-    // At age 34, penalty = 2 SP + 2 DF lost = 4 attribute points lost.
+    // At age 34, penalty = 3 SP + 3 DF lost = 6 attribute points lost.
     // DEF compensation must stay <= that, so aging is still a net decline.
-    expect(getVeteranDefBonus(34, 25)).toBeLessThanOrEqual(4);
+    expect(getVeteranDefBonus(34, 25)).toBeLessThanOrEqual(6);
+  });
+
+  it('uses the same AGING_PENALTY_START as the constants module (guards against drift)', () => {
+    expect(AGING_PENALTY_START).toBe(25);
   });
 });
 

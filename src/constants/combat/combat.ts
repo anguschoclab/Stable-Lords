@@ -225,7 +225,7 @@ export const TRAIT_SELECTION_THRESHOLDS = {
 /**
  * Age at which aging penalties begin (SP/DF loss)
  */
-export const AGING_PENALTY_START = 28;
+export const AGING_PENALTY_START = 25;
 
 /**
  * DEF gained per attribute-point-lost × WL/15 for veteran compensation

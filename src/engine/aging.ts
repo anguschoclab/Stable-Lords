@@ -2,9 +2,9 @@
  * Aging System — warriors age each week and may face forced retirement at old age.
  *
  * - Warriors age +1 year every 52 weeks (1 game year)
- * - At age 30+, each week there's a growing chance of forced retirement
- * - At age 40, forced retirement is guaranteed
- * - Aging penalties apply to SP and DF after age 28
+ * - At age 26+, each week there's a growing chance of forced retirement
+ * - At age 32, forced retirement is guaranteed
+ * - Aging penalties apply to SP and DF after age 25
  */
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior, WarriorStatus } from '@/types/warrior.types';
@@ -13,16 +13,17 @@ import { computeWarriorStats } from './skillCalc';
 import { type StateImpact } from './impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateEntityInList } from '@/utils/stateUtils';
+import { AGING_PENALTY_START } from '@/constants/combat/combat';
+import { WARRIOR_AGING } from '@/constants/aging';
 
-const WEEKS_PER_YEAR = 52;
-const AGING_PENALTY_START = 25;
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
 // ~6% per-bout kill rate (lifespan ~0.7y in calendar terms even after lethality
 // halving). Pulling MIN to 26 / MAX to 32 lets a 5-7 calendar-year career
 // reach the retirement curve, restoring the generational turnover that the
 // 25-year stress test was missing entirely.
-const FORCED_RETIRE_MIN = 26;
-const FORCED_RETIRE_MAX = 32;
+const FORCED_RETIRE_MIN = WARRIOR_AGING.FORCED_RETIREMENT_MIN;
+const FORCED_RETIRE_MAX = WARRIOR_AGING.FORCED_RETIREMENT_MAX;
+const WEEKS_PER_YEAR = WARRIOR_AGING.WEEKS_PER_YEAR;
 
 interface AgingResult {
   retired: boolean;

@@ -2,6 +2,7 @@ import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // Strips the react-refresh runtime preamble that @vitejs/plugin-react-swc
 // injects into every transformed file. Web workers crash on it because they
@@ -42,6 +43,10 @@ export default defineConfig({
     }),
     react(),
     stripWorkerRefresh(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'icons/icon-192.png', 'icons/icon-512.png'],
+    }),
   ],
   worker: {
     format: 'es',

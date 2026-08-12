@@ -8,3 +8,4 @@ export { getBestOffensiveTactic, getBestDefensiveTactic } from './tacticAdvisor'
 export { buildPhasePlan, buildDesperatePlan, buildUniversalConditions } from './phasePlanner';
 export { getPersonalityAdaptations, PERSONALITY_ADAPTATION_MAP } from './personalityEngine';
 export { validateAndAdjustPlan } from './strategyValidator';
+export { getAIFallbackCondition } from './levers';

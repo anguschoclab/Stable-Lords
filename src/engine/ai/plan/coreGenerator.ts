@@ -23,6 +23,7 @@ import {
   getAIAggressionBias,
   getAIOpeningMove,
   getAIRangePreference,
+  getAIFallbackCondition,
 } from '@/engine/ai/plan/levers';
 import { reconcileGearTwoHanded } from '@/engine/planBias';
 
@@ -124,6 +125,10 @@ export function aiPlanForWarrior(
 
   // Desperate plan — wired into resolution.ts at HP<30% or END<20%
   plan.desperatePlan = buildDesperatePlan(plan, personality);
+
+  // Fallback condition — granular tactical fallback (FLEE/TURTLE/BERZERK/YIELD)
+  // coexists with desperatePlan: deltas apply in calculateFinalOEAL on top of active plan
+  plan.fallbackCondition = getAIFallbackCondition(personality, w.style, intent);
 
   // Universal ENDURANCE_BELOW condition prepended before personality ones
   // (first-match-wins: this fires before personality-specific conditions)

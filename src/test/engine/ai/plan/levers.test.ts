@@ -11,7 +11,9 @@ import {
   getAIOpeningMove,
   getAIRangePreference,
   getAITactics,
+  getAIFallbackCondition,
 } from '@/engine/ai/plan/levers';
+import type { AIIntent } from '@/types/state.types';
 
 describe('levers — getAITarget', () => {
   it('returns Any when intent is RECOVERY', () => {
@@ -341,5 +343,161 @@ describe('levers — getAITactics', () => {
       expect(validOff).toContain(result.offTactic);
       expect(validDef).toContain(result.defTactic);
     }
+  });
+});
+
+describe('levers — getAIFallbackCondition', () => {
+  const ALL_PERSONALITIES = ['Aggressive', 'Methodical', 'Showman', 'Pragmatic', 'Tactician'] as const;
+
+  // ── Intent priority tests ──
+
+  it('RECOVERY intent → YIELD for all personalities', () => {
+    for (const p of ALL_PERSONALITIES) {
+      expect(getAIFallbackCondition(p, FightingStyle.StrikingAttack, 'RECOVERY' as AIIntent)).toBe('YIELD');
+    }
+  });
+
+  it('VENDETTA intent → BERZERK for all personalities', () => {
+    for (const p of ALL_PERSONALITIES) {
+      expect(getAIFallbackCondition(p, FightingStyle.StrikingAttack, 'VENDETTA' as AIIntent)).toBe('BERZERK');
+    }
+  });
+
+  it('EXPANSION intent falls through to personality default', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'EXPANSION' as AIIntent)).toBe('BERZERK');
+    expect(getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack, 'EXPANSION' as AIIntent)).toBe('TURTLE');
+  });
+
+  it('CONSOLIDATION intent falls through to personality default', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'CONSOLIDATION' as AIIntent)).toBe('BERZERK');
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack, 'CONSOLIDATION' as AIIntent)).toBe('FLEE');
+  });
+
+  it('AGGRESSIVE_EXPANSION intent falls through to personality default', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'AGGRESSIVE_EXPANSION' as AIIntent)).toBe('BERZERK');
+    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack, 'AGGRESSIVE_EXPANSION' as AIIntent)).toBe('None');
+  });
+
+  it('WEALTH_ACCUMULATION intent falls through to personality default', () => {
+    expect(getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack, 'WEALTH_ACCUMULATION' as AIIntent)).toBe('TURTLE');
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack, 'WEALTH_ACCUMULATION' as AIIntent)).toBe('FLEE');
+  });
+
+  it('ROSTER_DIVERSITY intent falls through to personality default', () => {
+    expect(getAIFallbackCondition('Tactician', FightingStyle.StrikingAttack, 'ROSTER_DIVERSITY' as AIIntent)).toBe('TURTLE');
+    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack, 'ROSTER_DIVERSITY' as AIIntent)).toBe('None');
+  });
+
+  it('undefined intent falls through to personality default', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack)).toBe('BERZERK');
+    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack)).toBe('None');
+  });
+
+  // ── Personality tests (no intent) ──
+
+  it('Aggressive personality → BERZERK', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack)).toBe('BERZERK');
+  });
+
+  it('Methodical personality → TURTLE', () => {
+    expect(getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack)).toBe('TURTLE');
+  });
+
+  it('Tactician personality → TURTLE', () => {
+    expect(getAIFallbackCondition('Tactician', FightingStyle.StrikingAttack)).toBe('TURTLE');
+  });
+
+  it('Pragmatic personality + non-defensive style → FLEE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack)).toBe('FLEE');
+  });
+
+  it('Showman personality + non-defensive style → None', () => {
+    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack)).toBe('None');
+  });
+
+  // ── Style override tests (Pragmatic personality, no intent) ──
+
+  it('Pragmatic + TotalParry → TURTLE (style overrides personality)', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.TotalParry)).toBe('TURTLE');
+  });
+
+  it('Pragmatic + WallOfSteel → TURTLE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.WallOfSteel)).toBe('TURTLE');
+  });
+
+  it('Pragmatic + ParryRiposte → TURTLE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.ParryRiposte)).toBe('TURTLE');
+  });
+
+  it('Pragmatic + ParryStrike → TURTLE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.ParryStrike)).toBe('TURTLE');
+  });
+
+  it('Pragmatic + ParryLunge → TURTLE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.ParryLunge)).toBe('TURTLE');
+  });
+
+  // ── Style override tests (Showman personality, no intent) ──
+
+  it('Showman + TotalParry → TURTLE (style overrides Showman default None)', () => {
+    expect(getAIFallbackCondition('Showman', FightingStyle.TotalParry)).toBe('TURTLE');
+  });
+
+  it('Showman + WallOfSteel → TURTLE', () => {
+    expect(getAIFallbackCondition('Showman', FightingStyle.WallOfSteel)).toBe('TURTLE');
+  });
+
+  // ── Non-defensive style tests (Pragmatic, no intent) ──
+
+  it('Pragmatic + StrikingAttack → FLEE (not in DEFENSIVE_STYLES)', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack)).toBe('FLEE');
+  });
+
+  it('Pragmatic + BashingAttack → FLEE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.BashingAttack)).toBe('FLEE');
+  });
+
+  it('Pragmatic + LungingAttack → FLEE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.LungingAttack)).toBe('FLEE');
+  });
+
+  it('Pragmatic + SlashingAttack → FLEE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.SlashingAttack)).toBe('FLEE');
+  });
+
+  it('Pragmatic + AimedBlow → FLEE', () => {
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.AimedBlow)).toBe('FLEE');
+  });
+
+  // ── Priority ordering tests ──
+
+  it('Aggressive + RECOVERY → YIELD (intent overrides personality)', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'RECOVERY' as AIIntent)).toBe('YIELD');
+  });
+
+  it('Methodical + TotalParry + VENDETTA → BERZERK (intent overrides style+personality)', () => {
+    expect(getAIFallbackCondition('Methodical', FightingStyle.TotalParry, 'VENDETTA' as AIIntent)).toBe('BERZERK');
+  });
+
+  it('Aggressive + VENDETTA → BERZERK (both resolve to BERZERK)', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'VENDETTA' as AIIntent)).toBe('BERZERK');
+  });
+
+  it('Methodical + TotalParry (no intent) → TURTLE (personality and style both resolve TURTLE)', () => {
+    expect(getAIFallbackCondition('Methodical', FightingStyle.TotalParry)).toBe('TURTLE');
+  });
+
+  it('Showman + TotalParry (no intent) → TURTLE (style overrides Showman None)', () => {
+    expect(getAIFallbackCondition('Showman', FightingStyle.TotalParry)).toBe('TURTLE');
+  });
+
+  // ── All personalities × no intent × non-defensive style ──
+
+  it('all personalities with StrikingAttack and no intent return correct defaults', () => {
+    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack)).toBe('BERZERK');
+    expect(getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack)).toBe('TURTLE');
+    expect(getAIFallbackCondition('Tactician', FightingStyle.StrikingAttack)).toBe('TURTLE');
+    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack)).toBe('FLEE');
+    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack)).toBe('None');
   });
 });

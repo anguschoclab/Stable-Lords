@@ -63,3 +63,9 @@ src/routeTree.gen.ts
 
 # npm lockfile (project uses bun)
 package-lock.json
+
+# Compiled Electron main process (generated from electron/main.ts)
+electron/main.js
+
+# Electron build output
+out/

@@ -10,9 +10,9 @@
  */
 export const WARRIOR_AGING = {
   BASE_AGE: 18,
-  PENALTY_START: 30,
-  FORCED_RETIREMENT_MIN: 40,
-  FORCED_RETIREMENT_MAX: 45,
+  WEEKS_PER_YEAR: 52,
+  FORCED_RETIREMENT_MIN: 26,
+  FORCED_RETIREMENT_MAX: 32,
 } as const;
 
 // ─── Trainer Aging ─────────────────────────────────────────────────────────

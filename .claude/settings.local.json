@@ -134,7 +134,11 @@
       "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('packageManager:',p.packageManager\\); console.log\\('main:',p.main\\); console.log\\('--- scripts ---'\\); for\\(const[k,v] of Object.entries\\(p.scripts||{}\\)\\)console.log\\(k,'=',v\\); console.log\\('--- build block ---', JSON.stringify\\(p.build,null,1\\)\\); console.log\\('--- overrides ---', JSON.stringify\\(p.overrides,null,1\\)\\); console.log\\('--- resolutions ---', JSON.stringify\\(p.resolutions,null,1\\)\\);\")",
       "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('=== dependencies ==='\\); for\\(const[k,v] of Object.entries\\(p.dependencies||{}\\)\\)console.log\\(k,v\\); console.log\\('=== devDependencies ==='\\); for\\(const[k,v] of Object.entries\\(p.devDependencies||{}\\)\\)console.log\\(k,v\\);\")",
       "Bash(node -e \"const n=require\\('./src/data/narrativeContent.json'\\); const t=n.recruitment&&n.recruitment.tiers; console.log\\(JSON.stringify\\(t,null,1\\)\\);\")",
-      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.config,null,1\\)\\); console.log\\('keys:', Object.keys\\(p\\).join\\(', '\\)\\)\")"
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.config,null,1\\)\\); console.log\\('keys:', Object.keys\\(p\\).join\\(', '\\)\\)\")",
+      "Bash(node -e \"console.log\\('typescript:', require\\('./node_modules/typescript/package.json'\\).version\\)\")",
+      "Bash(node -e \"const p=require\\('./node_modules/typescript7/package.json'\\); console.log\\('typescript7:', p.name, p.version\\)\")",
+      "Bash(gh workflow *)",
+      "Bash(pkill -f \"vite preview\")"
     ]
   },
   "hooks": {

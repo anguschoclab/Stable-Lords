@@ -8,6 +8,7 @@ import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
 const srcDir = 'src';
+const e2eDir = 'e2e';
 
 // Files/dirs exempt from display-text rules (debug tools, engine internals)
 const EXEMPT = [
@@ -38,6 +39,21 @@ function getTsxFiles(dir = srcDir): string[] {
   return files;
 }
 
+function getE2eTsFiles(dir = e2eDir): string[] {
+  const files: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const fullPath = join(dir, entry);
+    const normalized = normalizePath(fullPath);
+    if (EXEMPT.some((e) => normalized.includes(e))) continue;
+    if (statSync(fullPath).isDirectory()) {
+      files.push(...getE2eTsFiles(fullPath));
+    } else if (normalized.endsWith('.ts')) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
 function readLines(file: string): string[] {
   return readFileSync(file, 'utf-8').split('\n');
 }
@@ -52,6 +68,55 @@ function isCodeLine(line: string): boolean {
     trimmed.startsWith('className=')
   );
 }
+
+const bannedTerms = [
+  'Personnel Intel',
+  'Tactical Telemetry',
+  'Syncing Archive',
+  'Registry Balance',
+  'Temporal Cycle',
+  'Decommission',
+  'Corpse Retrieved',
+  'Neural Simulation',
+  'Intelligence Synchronized',
+  'Protocol Pending',
+  'Asset Alpha',
+  'Asset Beta',
+  'Institutional Profile',
+  'Personnel Management',
+  'Personnel Registry',
+  'Personnel Database',
+  'Personnel Budget',
+  'Tactical Hire',
+  'Command Staff',
+  'Registry Administration',
+  'Fiscal Year',
+  'ARCHIVE SYNC',
+  'PRESS LINE SYNCHRONIZED',
+  'VICTOR_SYNC',
+  'HIGH HOSTILITY SYNC',
+  'SYNCHRONIZATION PENDING',
+  'IMPERIAL REGISTRY',
+  'Commission Unit',
+  'COMMISSION STABLES',
+  'Zero Assets Selected',
+  'combat asset',
+  'MISSION CONTROL',
+  'BIOMETRICS',
+  'Bio-Rhythm',
+  'Materiel Affinity',
+  'EXECUTE WEEK',
+  'EXECUTE DAY',
+  'All systems operational',
+  'No breakthrough signals',
+  'Dormant Phase',
+  'imperial commission has been notified',
+  'No assets have been decommissioned',
+  'disengage if',
+  'CLASSIFIED',
+  'Hardware Authentication Required',
+  'target matching',
+];
 
 describe('Terminology compliance', () => {
   it('no underscored display text in JSX (>XXX_YYY< pattern)', () => {
@@ -72,56 +137,25 @@ describe('Terminology compliance', () => {
   });
 
   it('no banned sci-fi terms in display strings', () => {
-    const bannedTerms = [
-      'Personnel Intel',
-      'Tactical Telemetry',
-      'Syncing Archive',
-      'Registry Balance',
-      'Temporal Cycle',
-      'Decommission',
-      'Corpse Retrieved',
-      'Neural Simulation',
-      'Intelligence Synchronized',
-      'Protocol Pending',
-      'Asset Alpha',
-      'Asset Beta',
-      'Institutional Profile',
-      'Personnel Management',
-      'Personnel Registry',
-      'Personnel Database',
-      'Personnel Budget',
-      'Tactical Hire',
-      'Command Staff',
-      'Registry Administration',
-      'Fiscal Year',
-      'ARCHIVE SYNC',
-      'PRESS LINE SYNCHRONIZED',
-      'VICTOR_SYNC',
-      'HIGH HOSTILITY SYNC',
-      'SYNCHRONIZATION PENDING',
-      'IMPERIAL REGISTRY',
-      'Commission Unit',
-      'COMMISSION STABLES',
-      'Zero Assets Selected',
-      'combat asset',
-      'MISSION CONTROL',
-      'BIOMETRICS',
-      'Bio-Rhythm',
-      'Materiel Affinity',
-      'EXECUTE WEEK',
-      'EXECUTE DAY',
-      'All systems operational',
-      'No breakthrough signals',
-      'Dormant Phase',
-      'imperial commission has been notified',
-      'No assets have been decommissioned',
-      'disengage if',
-      'CLASSIFIED',
-      'Hardware Authentication Required',
-      'target matching',
-    ];
     const matches: string[] = [];
     for (const file of getTsxFiles()) {
+      const lines = readLines(file);
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        for (const term of bannedTerms) {
+          if (line.includes(term)) {
+            matches.push(`${file}:${i + 1}:${line.trim()}`);
+          }
+        }
+      }
+    }
+    expect(matches.join('\n')).toBe('');
+  });
+
+  it('no banned sci-fi terms in e2e specs', () => {
+    const matches: string[] = [];
+    for (const file of getE2eTsFiles()) {
       const lines = readLines(file);
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];

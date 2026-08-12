@@ -595,7 +595,6 @@ export type WeatherType =
   | 'Ashfall'
   | 'Eldritch Eclipse'
   | 'Prismatic Rain'
-  | 'Moonlight Duel'
   | 'Acid Rain'
   | 'Mana Surge'
   | 'Rainbow'

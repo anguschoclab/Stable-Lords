@@ -134,3 +134,17 @@ export function getAITactics(style: FightingStyle): {
       return { offTactic: 'none', defTactic: 'none' };
   }
 }
+
+export function getAIFallbackCondition(
+  personality: OwnerPersonality,
+  style: FightingStyle,
+  intent?: AIIntent
+): 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None' {
+  if (intent === 'RECOVERY') return 'YIELD';
+  if (intent === 'VENDETTA') return 'BERZERK';
+  if (personality === 'Aggressive') return 'BERZERK';
+  if (personality === 'Methodical' || personality === 'Tactician') return 'TURTLE';
+  if (DEFENSIVE_STYLES.has(style)) return 'TURTLE';
+  if (personality === 'Pragmatic') return 'FLEE';
+  return 'None';
+}

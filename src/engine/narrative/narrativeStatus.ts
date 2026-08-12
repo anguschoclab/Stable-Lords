@@ -66,14 +66,25 @@ export function fatigueLine(_rng: IRNGService, name: string, endRatio: number): 
 
 /**
  * Generates crowd reaction line.
+ * When crowdMood is 'Bloodthirsty' or 'Theatrical', uses mood-specific lines
+ * from crowd_reactions instead of generic pbp.reactions.
  */
 export function crowdReaction(
   rng: IRNGService,
   loserName: string,
   winnerName: string,
-  hpRatio: number
+  hpRatio: number,
+  crowdMood?: string
 ): string | null {
   if (rng.next() > 0.25) return null;
+
+  if (crowdMood === 'Bloodthirsty' || crowdMood === 'Theatrical') {
+    const moodLine = getFromArchive(rng, ['crowd_reactions', crowdMood]);
+    if (moodLine && moodLine !== 'A fierce exchange occurs.') {
+      return interpolateTemplate(moodLine, { name: loserName, attacker: winnerName });
+    }
+  }
+
   const isDeadly = hpRatio <= 0.1;
   const mood = isDeadly
     ? 'gasp'

@@ -565,4 +565,9 @@ export interface NarrativeContent {
   meta: Meta;
   passives: Passives;
   kill_text?: KillText;
+  crowd_reactions?: Record<string, string[]>;
+  blurbs?: Record<string, string[]>;
+  commentary?: Record<string, string[]>;
+  recap?: string[];
+  offseason_events?: Record<string, unknown>;
 }

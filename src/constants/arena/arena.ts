@@ -69,6 +69,14 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     description: string;
   }
 > = {
+  'cursed:Blood Moon': {
+    damageMult: WEATHER_PENALTIES.GALLOWS_CURSE_DAMAGE,
+    description: 'The blood moon empowers the curse of the gallows',
+  },
+  'ruins:Dense Fog': {
+    damageMult: WEATHER_PENALTIES.MIST_SHROUDED_DEFENSE_PENALTY,
+    description: 'The unnatural fog in the ruins dampens impacts',
+  },
   'Rainy:SLASHING ATTACK': {
     damageMult: 1 + WEATHER_PENALTIES.RAIN_SLASHING_PENALTY,
     description: 'Rain softens slashing impacts',
@@ -142,10 +150,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   // ─── Arena-Tag + Weather Combinations ────────────────────────────────────
   // These stack with base weather effects
 
-  'cursed:Blood Moon': {
-    damageMult: WEATHER_PENALTIES.CURSED_BLOOD_MOON_DAMAGE, // +10% in cursed arenas (stacks with base 1.2 = 1.32 total)
-    description: 'Cursed ground amplifies bloodlust',
-  },
 
   'water:Rainy': {
     initiativeMod: WEATHER_PENALTIES.WATER_RAINY_INITIATIVE, // Extra -1 in water arenas during rain

@@ -1,0 +1,572 @@
+{
+  "gazette": {
+    "fights": {
+      "Kill": [
+        "A brief, violent clash ended with {{loser}}'s life blood spilling onto the arena floor, courtesy of {{winner}}'s lethal precision.",
+        "It was a massacre. {{winner}} gave absolutely no quarter, dismantling {{loser}} piece by piece until the sands were stained red.",
+        "The crowd watched in awe and horror as {{winner}} systematically broke {{loser}} down, culminating in a gruesome execution.",
+        "No quarter was asked and none given, as {{winner}} systematically dismantled {{loser}} before a {{adj}} execution.",
+        "In a display of horrifying dominance, {{winner}} claimed {{loser}}'s head to the {{adj}} delight of the crowd.",
+        "The crowd roared their approval when {{winner}} claimed {{loser}}'s life in a {{adj}} climax of violence.",
+        "The sands drank deep today as {{winner}} unleashed a {{adj}} massacre, ending {{loser}}'s story forever.",
+        "A chilling reminder of mortality as {{winner}} executed {{loser}} in a {{adj}} and calculated slaughter.",
+        "{{winner}} delivered a masterclass in brutality, ending {{loser}} with a {{adj}} and decisive blow.",
+        "The sands drank deep today as {{winner}} tore {{loser}} apart in a display of unmatched savagery.",
+        "{{loser}} fought valiantly but was ultimately reduced to meat by {{winner}}'s {{adj}} final blow.",
+        "A truly horrifying spectacle. {{winner}} eviscerated {{loser}}, leaving the crowd breathless.",
+        "{{winner}} showed absolute dominance, executing {{loser}} with a terrifyingly precise strike.",
+        "A grisly end for {{loser}}, who fell victim to {{winner}}'s {{adj}} and inescapable wrath.",
+        "In a shocking display of brutality, {{winner}} executed {{loser}} before a roaring crowd.",
+        "{{loser}} met a tragic end at the hands of {{winner}}'s unyielding {{styleW}} assault.",
+        "The arena was painted in crimson after {{winner}}'s {{adj}} evisceration of {{loser}}.",
+        "{{winner}} painted the sands red, butchering {{loser}} in a truly {{adj}} spectacle.",
+        "{{loser}}'s blood stained the sands after a {{adj}} killing blow from {{winner}}.",
+        "The arena witnessed an absolute slaughter as {{winner}} destroyed {{loser}}.",
+        "In a {{adj}} display, {{winner}} struck down {{loser}} with a killing blow.",
+        "The crowd gasped as {{winner}} ended {{loser}}'s life in a {{adj}} climax.",
+        "With a {{adj}} final strike, {{winner}} executed {{loser}} without mercy.",
+        "{{winner}} delivered a gruesome end to {{loser}}, painting the sands red.",
+        "{{winner}}'s {{styleW}} proved fatal for the unfortunate {{loser}}."
+      ],
+      "KO": [
+        "A concussive impact from {{winner}} sent {{loser}} straight into the realm of shadows in a {{adj}} climax.",
+        "In a shocking turn, {{winner}} found the perfect angle to knock {{loser}} senseless in a {{adj}} finish.",
+        "{{winner}} walked away victorious, leaving {{loser}} unconscious and broken after a {{adj}} exchange.",
+        "{{loser}} crumbled like a puppet with cut strings after enduring {{winner}}'s {{adj}} assault.",
+        "{{loser}} will wake up with a hell of a headache, thanks to {{winner}}'s {{adj}} right hand.",
+        "The crowd gasped as {{winner}} delivered a {{adj}} strike that knocked {{loser}} senseless.",
+        "A deafening crack rang out as {{winner}} dropped {{loser}} with a {{adj}} final blow.",
+        "{{winner}} delivered a {{adj}} blow that sent {{loser}} spiraling into darkness.",
+        "{{winner}} battered {{loser}} into unconsciousness with {{adj}} efficiency.",
+        "A {{adj}} masterclass from {{winner}} left {{loser}} twitching on the sand.",
+        "{{winner}}'s sheer power overwhelmed {{loser}}, ending in a swift knockout.",
+        "{{winner}} put {{loser}} to sleep with a {{adj}} and decisive final strike.",
+        "A brutal concussion left {{loser}} unconscious at the feet of {{winner}}.",
+        "The lights went out for {{loser}} after a masterful strike by {{winner}}.",
+        "{{winner}} put {{loser}} to sleep, much to the crowd's {{adj}} delight.",
+        "{{loser}} was battered into unconsciousness by a relentless {{winner}}.",
+        "{{loser}}'s legs gave out after a {{adj}} assault by {{winner}}.",
+        "{{winner}} put {{loser}} to sleep with a devastating blow."
+      ],
+      "Stoppage": [
+        "A merciful stoppage spared {{loser}} further humiliation against the {{adj}} might of {{winner}}.",
+        "The Arenamaster interceded to save {{loser}} from {{winner}}'s {{adj}} and unrelenting fury.",
+        "The white towel flew for {{loser}}, yielding the sands to {{winner}} in a {{adj}} display.",
+        "The sheer {{adj}} pressure from {{winner}} forced the officials to save {{loser}}'s life.",
+        "Mercy was shown to {{loser}}, as the Arenamaster halted {{winner}}'s {{adj}} onslaught.",
+        "{{winner}} showed {{adj}} dominance, leaving the officials no choice but to call it.",
+        "{{winner}} broke {{loser}}'s spirit with a {{adj}} display, prompting an early end.",
+        "{{winner}} battered {{loser}} into submission, forcing a {{adj}} end to the bout.",
+        "{{winner}} ground {{loser}} down. The Arenamaster called the stoppage.",
+        "The officials intervened before a tragedy could occur.",
+        "A mercy stoppage saved a life today.",
+        "The referee waved it off as the punishment became too severe.",
+        "Called off due to excessive bleeding.",
+        "A necessary stoppage in a violently one-sided match.",
+        "The medic called it before further damage was done."
+      ],
+      "Exhaustion": [
+        "A battle of attrition ended with {{loser}} unable to stand, handing {{winner}} the victory.",
+        "Lungs burning and muscles failing, {{winner}} barely edged out {{loser}} at the limit.",
+        "In a grueling test of wills, {{winner}} outlasted a completely spent {{loser}}.",
+        "Both fighters pushed to total exhaustion. {{winner}} was awarded the bout.",
+        "Collapsed from sheer fatigue.",
+        "A battle where stamina gave out before spirit.",
+        "They literally fought until they could no longer stand.",
+        "A war of attrition ends with empty tanks.",
+        "Exhaustion claims the final toll.",
+        "Pushed past the absolute limit of human endurance."
+      ],
+      "Draw": [
+        "Neither warrior could claim the edge; a brutal stalemate was the only result.",
+        "The bell saved them both from mutual destruction in an epic clash.",
+        "The sands of time ran out before a victor could be declared.",
+        "A mutual standstill.",
+        "Neither could find the edge in a bitter stalemate.",
+        "A rare, hard-fought draw.",
+        "Both fighters leave with respect, but no victory.",
+        "An inconclusive end to a fierce rivalry.",
+        "They fought to a bloody standstill.",
+        "A grueling stalemate ends with no clear victor.",
+        "Both combatants exhausted, the match is declared a draw.",
+        "An evenly matched contest results in a bloody draw.",
+        "Neither warrior could break the other's resolve, ending in a mutual stalemate.",
+        "A testament to equal skill and unyielding endurance, resulting in no true winner."
+      ],
+      "Default": [
+        "A grueling test between {{a}} and {{d}} saw {{winner}} raise their arms in victory.",
+        "A hard-fought struggle between {{a}} and {{d}} ended in {{winner}}'s favor.",
+        "{{winner}} emerged triumphant over {{loser}} in a hard-fought contest.",
+        "A victory by default.",
+        "The opponent failed to answer the call.",
+        "A hollow win due to forfeit.",
+        "Awarded the win as the challenger withdrew.",
+        "Victory claimed without striking a blow.",
+        "A disappointing anti-climax by default.",
+        "A standard bout concludes with a predictable outcome.",
+        "Another day, another victory in the blood-soaked sands.",
+        "The expected result plays out as the crowd watches on.",
+        "A typical day in the arena ends with a familiar victory.",
+        "Routine combat yields the anticipated victor."
+      ]
+    },
+    "headlines": {
+      "LegendaryStreak": [
+        "Week {{week}}: BLOOD GOD ASCENDANT! {{name}} Claims {{streak}} Wins Without Breaking a Sweat!",
+        "Week {{week}}: THE ARENA WEEPS! {{name}}'s Blood-Soaked {{streak}}-Win Streak Continues!",
+        "Week {{week}}: THE REAPER'S FAVORITE! {{name}} Reaches {{streak}} Consecutive Victories!",
+        "Week {{week}}: UNRIVALED TITAN! {{name}} Ascends to Godhood with {{streak}} Wins!",
+        "Week {{week}}: IMMORTAL PATH! {{name}}'s {{streak}}-Win Streak Defies the Gods!",
+        "Week {{week}}: UNSTOPPABLE! {{name}} Extends Legendary {{streak}}-Win Streak!",
+        "Week {{week}}: THE UNTOUCHABLE {{name}} Achieves {{streak}} Wins!"
+      ],
+      "HotStreak": [
+        "Week {{week}}: CAN ANYONE STOP THEM? {{name}} Smashes Their Way to {{streak}} Wins!",
+        "Week {{week}}: BLOOD AND SAND! {{name}} Paints the Arena Red with {{streak}} Wins!",
+        "Week {{week}}: THE CROWD'S DARLING! {{name}} is Undefeated in {{streak}} Matches!",
+        "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
+        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} — {{streak}} Wins!"
+      ],
+      "Streak": [
+        "Week {{week}}: {{name}} Continues to Climb With {{streak}} Consecutive Wins!",
+        "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
+        "Week {{week}}: {{name}} Builds Momentum — {{streak}} Victories!"
+      ],
+      "LegacyRivalry": [
+        "Week {{week}}: BAD BLOOD BOILS OVER! {{a}} Meets {{b}} in Chapter {{count}} of Their Vicious Feud!",
+        "Week {{week}}: THE ARENA DIVIDED! Fans Riot as {{a}} Faces {{b}} for the {{count}}{{suffix}} Time!",
+        "Week {{week}}: ETERNAL FOES! {{a}} and {{b}} Clash in Chapter {{count}} of Their Saga!",
+        "Week {{week}}: THE GRUDGE MATCH OF THE CENTURY! {{a}} vs {{b}} (Chapter {{count}})",
+        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!"
+      ],
+      "Rivalry": [
+        "Week {{week}}: BITTER ENEMIES MEET! {{a}} and {{b}} Trade Blows Again!",
+        "Week {{week}}: BLOOD FEUD! {{a}} and {{b}} meet again in the pit!",
+        "Week {{week}}: OLD SCORES SETTLED! {{a}} vs {{b}}"
+      ],
+      "RisingStar": [
+        "Week {{week}}: WATCH THEM RISE! {{name}} Proves Untouchable!",
+        "Week {{week}}: NEW BLOOD! {{name}} Shows Champion Potential!",
+        "Week {{week}}: A STAR IS BORN! {{name}} remains undefeated!"
+      ],
+      "Upset": [
+        "Week {{week}}: DOWN GOES THE TITAN! {{winner}} Pulls Off the Upset of the Century Over {{loser}}!",
+        "Week {{week}}: SHOCKER IN THE SANDS! The Unknown {{winner}} Dismantles the Mighty {{loser}}!",
+        "Week {{week}}: THE KING IS DEAD! {{winner}} Causes the Greatest Upset of the Season!",
+        "Week {{week}}: THE SANDS SHIFT! Nobody expected {{winner}} to massacre {{loser}}!",
+        "Week {{week}}: A MIRACLE IN BLOOD! {{winner}} Defies the Gods, Slaying {{loser}}!",
+        "Week {{week}}: SHOCKER! Unknown {{winner}} Decimates The Great {{loser}}!",
+        "Week {{week}}: DAVID SLAYS GOLIATH! {{winner}} Brings Down {{loser}}!",
+        "The Mighty Fall! {{winner}} Shocks the Arena, Defeats {{loser}}!",
+        "Week {{week}}: UPSET! {{winner}} Topples the Mighty {{loser}}!",
+        "A New King is Crowned: {{winner}} Topples the Great {{loser}}",
+        "Unthinkable! {{loser}}'s Reign Ended by Underdog {{winner}}"
+      ],
+      "MultipleKills": [
+        "Week {{week}}: SLAUGHTER IN THE SANDS! {{count}} Fatalities Recorded!",
+        "Week {{week}}: A BLOODBATH! Multiple Warriors Perish in the Sands!",
+        "Week {{week}}: THE REAPER'S HARVEST! {{count}} warriors fallen!",
+        "Week {{week}}: A BLOODY WEEK! {{count}} Souls Sent to the Void!",
+        "Week {{week}}: THE ARENA WEEPS RED! A Week of Brutal Massacres!",
+        "Week {{week}}: CARNAGE! The Morticians Work Overtime This Week!"
+      ],
+      "Kill": [
+        "Week {{week}}: SLAUGHTER ON THE SANDS: {{killer}} EXECUTES {{loser}} IN BRUTAL SPECTACLE",
+        "Week {{week}}: NO MERCY SHOWN: {{loser}} LEAVES ARENA IN PIECES AT HANDS OF {{killer}}",
+        "Week {{week}}: THE BUTCHER OF THE SANDS! {{killer}} Eviscerates {{loser}}!",
+        "Week {{week}}: A GORE-SOAKED SPECTACLE! {{killer}} Disassembles {{loser}}!",
+        "Week {{week}}: NO QUARTER GIVEN! {{killer}}'s Brutal Slaying of {{loser}}!",
+        "Week {{week}}: FATALITY! {{killer}} Slaughters {{loser}} in Cold Blood!",
+        "Week {{week}}: THE RAVENS FEAST! {{killer}} leaves {{loser}} in pieces.",
+        "Week {{week}}: A GRISLY END! {{killer}}'S FATAL BLOW SHATTERS {{loser}}",
+        "A Grisly End: {{killer}} Dismembers {{loser}} in Front of Roaring Fans",
+        "Week {{week}}: A TRAGIC DEMISE. {{loser}} Falls to {{killer}}'s Blade!",
+        "Week {{week}}: FATAL BLOW! {{killer}} Sends an Opponent to the Grave!",
+        "Week {{week}}: GRUESOME END! {{killer}} Claims the Head of {{loser}}!",
+        "Week {{week}}: BLOOD SOAKED VICTORY! {{killer}} CLAIMS ANOTHER SOUL",
+        "Week {{week}}: THE REAPER SMILES: {{killer}} MASSACRES {{loser}}",
+        "Week {{week}}: BLOOD ON THE SANDS! A Brutal Kill By {{killer}}!",
+        "No Mercy: {{killer}} executes {{loser}} with absolute brutality",
+        "A Fatal Encounter: {{winner}} stands over {{loser}}'s corpse",
+        "Week {{week}}: DEATH IN THE PIT! {{killer}} claims a life!",
+        "Carnage in the Sands! {{killer}} Butchers {{loser}}",
+        "A Gruesome End: The Life of {{loser}} Snuffed Out",
+        "Death in the Dust: {{loser}} Falls to {{winner}}",
+        "No Mercy: {{winner}} Claims Another Skull"
+      ],
+      "MultipleKOs": [
+        "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",
+        "Week {{week}}: {{adj}} CARNAGE! The Healers Will Work Late Tonight!",
+        "Week {{week}}: BODIES EVERYWHERE! A Week of {{adj}} Knockouts!"
+      ],
+      "Standard": [
+        "Week {{week}}: {{adj}} CLASHES! The arena roars for its champions!",
+        "Week {{week}}: ANOTHER WEEK OF {{adj}} WARFARE IN THE PIT!",
+        "Week {{week}}: {{adj}} BOUTS KEEP THE CROWD ROARING!",
+        "Bloodshed in the Arena: A New Challenger Emerges",
+        "The Sand Drinks Again: Another Cycle Concludes",
+        "Blades and Glory: The Latest Spectacle"
+      ],
+      "Empty": [
+        "Week {{week}}: NO BLOOD SHED TODAY. An eerie quiet settles over the sands.",
+        "Week {{week}}: A quiet week in the arena. The peace won't last.",
+        "Week {{week}}: SILENCE IN THE ARENA. The calm before the storm."
+      ],
+      "Graveyard": [
+        "A Moment of Silence for the {{count}} Warrior{{plural}} Lost This Week.",
+        "The Hall of Warriors receives {{count}} new name{{plural}} this week.",
+        "The Halls of the Dead Welcome {{count}} New Soul{{plural}}."
+      ],
+      "major_upset": [
+        "Week {{week}}: THE HEAVENS SHAKE! {{winner}} achieves an impossible victory over {{loser}}!",
+        "Week {{week}}: STUNNING REVERSAL: {{winner}} SHATTERS EXPECTATIONS AGAINST {{loser}}!",
+        "Week {{week}}: {{loser}} HUMILIATED! A stunning victory for the underdog {{winner}}!",
+        "Week {{week}}: GODS BLEED! The mighty {{loser}} has been struck down by {{winner}}!",
+        "Week {{week}}: DOWN GOES THE CHAMPION! {{winner}} causes the upset of the century!",
+        "Week {{week}}: PANDEMONIUM! The Legendary {{loser}} falls to the lowly {{winner}}!",
+        "Week {{week}}: CROWD IN DISBELIEF AS {{winner}} DISMANTLES THE FAVORITE {{loser}}",
+        "Week {{week}}: THE UNTHINKABLE HAPPENS: {{loser}} TOPPLED BY UNDERDOG {{winner}}",
+        "Week {{week}}: BOOKMAKERS WEEP! {{winner}} defies all odds against {{loser}}!",
+        "Week {{week}}: THE UNTHINKABLE HAPPENS! {{winner}} SHOCKS THE WORLD!",
+        "Week {{week}}: A MONUMENTAL UPSET! {{winner}} DEFIES THE ODDS"
+      ],
+      "win_streak": [
+        "Week {{week}}: THE JUGGERNAUT! {{name}} secures their {{streak}}th consecutive victory!",
+        "Week {{week}}: THE STREAK LIVES ON: {{name}} REMAINS UNDEFEATED IN {{streak}} CLASHES",
+        "Week {{week}}: UNSTOPPABLE! {{name}} CONTINUES THEIR BLOODY REIGN ({{streak}} WINS)",
+        "Week {{week}}: NO END IN SIGHT FOR {{name}}'S REIGN OF TERROR ({{streak}} STRAIGHT)",
+        "Week {{week}}: WHO CAN STOP THEM? {{name}} notches win number {{streak}}!",
+        "Week {{week}}: A TRAIL OF BODIES! {{name}}'s win streak hits {{streak}}!",
+        "Week {{week}}: FLAWLESS! {{name}} celebrates {{streak}} straight wins!",
+        "Week {{week}}: {{name}}'S RAMPAGE CONTINUES! {{streak}} AND COUNTING!"
+      ]
+    },
+    "featured": {
+      "LegendaryStreak": [
+        "Bards will sing of {{name}} for generations. A {{streak}}-win streak cements their immortal legacy.",
+        "Few live to see such glory. {{name}} has achieved the impossible with {{streak}} straight wins.",
+        "Whispers of the ancients surround {{name}}, whose {{streak}} victories have become legend."
+      ],
+      "HotStreak": [
+        "The crowd's favorite, {{name}}, leaves another broken body in the dust for win number {{streak}}.",
+        "It seems no one can find a weakness in {{name}}'s armor. {{streak}} wins and counting.",
+        "{{name}} is unstoppable, carving a path through the rankings with {{streak}} wins."
+      ],
+      "Streak": [
+        "Slowly but surely, {{name}} climbs the ranks. {{streak}} wins show great promise.",
+        "A solid foundation is being built by {{name}} with their {{streak}}th win.",
+        "The momentum stays with {{name}} as they secure their {{streak}}th win."
+      ],
+      "LegacyRivalry": [
+        "We thought we had seen it all, but the {{count}}{{suffix}} bout between {{a}} and {{b}} was a masterpiece of violence.",
+        "The grand history between {{a}} and {{b}} continues. This was their {{count}}{{suffix}} meeting.",
+        "The hatred between {{a}} and {{b}} transcends the sport. Chapter {{count}} did not disappoint."
+      ],
+      "Rivalry": [
+        "There is no love lost between {{a}} and {{b}}. The tension in the arena was palpable.",
+        "Sparks flew as {{a}} and {{b}} collided in a highly anticipated grudge match.",
+        "The bad blood between {{a}} and {{b}} was on full display today."
+      ],
+      "RisingStar": [
+        "Flawless execution. {{name}} is proving to be a dangerous new addition to the roster.",
+        "The veterans are watching their backs. {{name}} looks to be the real deal.",
+        "All eyes are on {{name}}, a rising star who refuses to taste defeat."
+      ],
+      "Upset": [
+        "A humbling moment for {{loser}} (fame: {{fameL}}) as they fall to the much lesser-known {{winner}} (fame: {{fameW}}).",
+        "Nobody saw it coming! {{winner}} (fame: {{fameW}}) shattered the ego of the celebrated {{loser}} (fame: {{fameL}}).",
+        "The impossible happened! {{winner}} (fame: {{fameW}}) overcame {{loser}} (fame: {{fameL}})."
+      ],
+      "Graveyard": [
+        "The sands drink deeply today. We remember the {{count}} soul{{plural}} claimed by the arena.",
+        "Not all who enter the pit leave it. {{count}} fighter{{plural}} paid the ultimate price.",
+        "We mourn the {{count}} warrior{{plural}} who gave everything to the sands this week."
+      ]
+    },
+    "season_summary": {
+      "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
+      "body": [
+        "The {{season}} season concludes with {{total}} bouts fought and a {{killRate}}% fatality rate.",
+        "It was a particularly deadly season — many promising careers cut short.",
+        "The arena turns its gaze to the next season. What legends will emerge?",
+        "{{style}} dominated the meta with {{wins}} victories."
+      ]
+    }
+  },
+  "ux_metadata": {
+    "version": "3.0.0",
+    "description": "Unified Bard 1.0 — Universal Narrative Archive",
+    "mood_tone": {
+      "Calm": {
+        "adjectives": [
+          "measured",
+          "technical",
+          "efficient",
+          "precise",
+          "collected",
+          "methodical",
+          "unfazed",
+          "serene",
+          "calculating",
+          "composed",
+          "deliberate",
+          "tranquil",
+          "peaceful",
+          "placid",
+          "undisturbed"
+        ],
+        "opener": [
+          "The arena is quiet today, the air heavy with expectation.",
+          "The arena breathes a slow, measured sigh as the combatants step forward.",
+          "No roaring cheers, only the quiet tension of professional combat.",
+          "A chilling stillness settles over the sands.",
+          "The combatants circle with calculated grace, untouched by the crowd's fervor.",
+          "A silent intensity heralds the beginning of a masterful bout.",
+          "A moment of peace.",
+          "The silence settles in.",
+          "All is quiet.",
+          "Tranquility reigns.",
+          "A gentle breeze blows.",
+          "The stillness is profound.",
+          "Calm before the storm.",
+          "A rare serene moment.",
+          "Quiet expectation."
+        ],
+        "closer": [
+          "A professional display by the arena's finest.",
+          "The bout concludes with surgical precision.",
+          "A quiet nod of respect marks the end of the conflict.",
+          "The silence returns, broken only by the sound of measured breathing.",
+          "A cold, methodical victory is claimed.",
+          "The arena accepts the outcome with a hushed reverence.",
+          "And then it passes.",
+          "The peace holds.",
+          "Quiet remains.",
+          "Stillness endures.",
+          "A deep breath.",
+          "The calm persists.",
+          "Silence echoes.",
+          "Tranquil fade.",
+          "Serenity."
+        ]
+      },
+      "Bloodthirsty": {
+        "adjectives": [
+          "savage",
+          "vicious",
+          "bloodthirsty",
+          "blood-soaked",
+          "gory",
+          "macabre",
+          "unforgiving",
+          "brutal",
+          "ruthless",
+          "ferocious",
+          "barbaric",
+          "ravenous",
+          "carnage-filled",
+          "merciless",
+          "cutthroat",
+          "visceral",
+          "murderous",
+          "carnivorous"
+        ],
+        "opener": [
+          "They want blood, and the arena delivers!",
+          "The crowd screams for slaughter as the gates violently swing open!",
+          "Bloodlust thickens the air, a palpable frenzy waiting to erupt.",
+          "The combatants bare their teeth, eager to paint the sands crimson.",
+          "A primal roar shakes the stands—the butcher's work begins now!",
+          "The thirst for violence is undeniable today!",
+          "Blood for the blood god.",
+          "The scent of copper fills the air.",
+          "A violent frenzy begins.",
+          "No mercy here.",
+          "The slaughter commences.",
+          "Carnage awaits.",
+          "A brutal display.",
+          "Flesh and blood.",
+          "The red mist descends."
+        ],
+        "closer": [
+          "No mercy was found today in the circle of truth.",
+          "The sands are saturated, the crowd's hunger satiated for now.",
+          "A brutal slaughter concludes, leaving nothing but carnage.",
+          "The victorious roar echoes over the mangled remains of the defeated.",
+          "The blood tax is paid in full.",
+          "A savage end to a truly merciless encounter.",
+          "The blood dries.",
+          "A grisly end.",
+          "No survivors.",
+          "The slaughter is complete.",
+          "A violent conclusion.",
+          "The frenzy subsides.",
+          "Carnage ends.",
+          "Blood everywhere.",
+          "A brutal finish."
+        ]
+      },
+      "Theatrical": {
+        "adjectives": [
+          "showy",
+          "spectacular",
+          "grand",
+          "epic",
+          "cinematic",
+          "operatic",
+          "ostentatious",
+          "bombastic",
+          "flamboyant",
+          "dazzling",
+          "larger-than-life",
+          "breathtaking",
+          "exaggerated",
+          "stunning",
+          "magnificent",
+          "theatrical",
+          "dramatic"
+        ],
+        "opener": [
+          "A drama unfolds on the sands today!",
+          "The curtain rises on today's grand spectacle of steel and blood!",
+          "A breathtaking display of martial artistry is about to unfold!",
+          "The combatants enter not as fighters, but as legends on a grand stage.",
+          "Every eye is glued to the sands as the overture of battle begins.",
+          "Prepare for a performance that will echo in eternity!",
+          "The curtain rises.",
+          "A grand performance.",
+          "The stage is set.",
+          "A show for the ages.",
+          "All eyes on them.",
+          "A dramatic entrance.",
+          "The spotlight shines.",
+          "A flamboyant display.",
+          "A theatrical moment."
+        ],
+        "closer": [
+          "A performance for the ages, etched in the memories of all who watched.",
+          "A stunning finale leaves the crowd roaring for an encore!",
+          "The victorious gladiator takes a well-deserved bow.",
+          "A masterclass in showmanship concludes with dramatic flair.",
+          "The final act falls, closing a truly operatic display of violence.",
+          "A performance worthy of the highest praise!",
+          "The curtain falls.",
+          "A grand finale.",
+          "Applause echoes.",
+          "A bow to the crowd.",
+          "The show ends.",
+          "A dramatic exit.",
+          "The spotlight fades.",
+          "A flamboyant finish.",
+          "A theatrical conclusion."
+        ]
+      },
+      "Solemn": {
+        "adjectives": [
+          "heavy",
+          "shadowed",
+          "somber",
+          "mournful",
+          "melancholy",
+          "grim",
+          "fateful",
+          "resigned",
+          "sorrowful",
+          "stoic",
+          "grave",
+          "serious",
+          "earnest",
+          "dignified",
+          "solemn"
+        ],
+        "opener": [
+          "A heavy silence hangs over the arena walls.",
+          "A heavy, mournful wind blows across the empty sands.",
+          "The fighters step forward, carrying the weight of inevitable tragedy.",
+          "There is no joy in today's combat, only grim necessity.",
+          "The arena feels more like a graveyard as the bout begins.",
+          "A quiet sorrow hangs in the air, a prelude to loss.",
+          "A grave moment.",
+          "The mood is serious.",
+          "A somber occasion.",
+          "An earnest beginning.",
+          "A dignified silence.",
+          "A solemn moment.",
+          "Grave tidings.",
+          "A serious tone.",
+          "A somber mood."
+        ],
+        "closer": [
+          "The games continue, though the air remains thick with memory.",
+          "A tragic conclusion to a heavy burden.",
+          "The survivor stands alone, victorious but unsmiling.",
+          "The sands claim another soul in somber silence.",
+          "A bitter victory won at a terrible cost.",
+          "The echoes of the battle fade into a mournful quiet.",
+          "A grave end.",
+          "The serious tone fades.",
+          "A somber conclusion.",
+          "An earnest finish.",
+          "A dignified departure.",
+          "A solemn end.",
+          "Grave silence.",
+          "A serious close.",
+          "A somber finale."
+        ]
+      },
+      "Festive": {
+        "adjectives": [
+          "vibrant",
+          "energetic",
+          "celebratory",
+          "boisterous",
+          "jubilant",
+          "riotous",
+          "gleeful",
+          "merry",
+          "exuberant",
+          "spirited",
+          "joyous",
+          "joyful",
+          "cheerful",
+          "jovial",
+          "festive"
+        ],
+        "opener": [
+          "Music and laughter fill the air as the festive games begin!",
+          "The arena is a carnival of color and noise today!",
+          "Laughter and cheers cascade from the stands as the games commence!",
+          "A joyous uproar greets the fighters as they take the field.",
+          "Wine flows and songs are sung—let the festive bout begin!",
+          "The atmosphere is nothing short of a grand celebration!",
+          "A joyous occasion.",
+          "The mood is merry.",
+          "A cheerful beginning.",
+          "A jovial atmosphere.",
+          "A festive moment.",
+          "A celebratory tone.",
+          "Joyful tidings.",
+          "A merry mood.",
+          "A cheerful start."
+        ],
+        "closer": [
+          "A day of celebration ends with hearts full and wine flowing.",
+          "The crowd erupts in joyous celebration of a fantastic bout!",
+          "The victorious fighter is showered in flowers and wine!",
+          "A brilliant end to a day of glorious revelry.",
+          "The festival continues, fueled by the excitement of the arena.",
+          "Cheers ring out, capping off a spectacular and spirited contest.",
+          "A joyous end.",
+          "The merry mood fades.",
+          "A cheerful conclusion.",
+          "A jovial finish.",
+          "A festive departure.",
+          "A celebratory end.",
+          "Joyful silence.",
+          "A merry close.",
+          "A cheerful finale."
+        ]
+      }
+    }
+  }
+}

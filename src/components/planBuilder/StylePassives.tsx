@@ -30,11 +30,6 @@ export default function StylePassives({ plan, warrior }: StylePassivesProps) {
         </Label>
         <Switch
           id="style-passives-switch"
-          checked={showStylePassives}
-          onCheckedChange={setShowStylePassives}
-        />
-        <Switch
-          id="style-passives-switch"
           aria-label="Style Passives"
           checked={showStylePassives}
           onCheckedChange={setShowStylePassives}

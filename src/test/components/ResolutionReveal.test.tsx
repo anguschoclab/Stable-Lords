@@ -30,6 +30,13 @@ vi.mock('@/data/narrativeContent.json', () => ({
       btn_planning: 'Planning',
       btn_next: 'Next',
     },
+    memorials: {
+      tributes: ['The arena grows colder with the loss of {{name}}.'],
+    },
+    crowd_reactions: {
+      Bloodthirsty: ['The crowd howls for blood!'],
+      Theatrical: ['The crowd gasps in awe!'],
+    },
   },
 }));
 

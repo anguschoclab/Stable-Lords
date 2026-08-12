@@ -1,0 +1,83 @@
+{
+  "conclusions": {
+    "Kill": [
+      "The arena falls utterly silent for a heartbeat, before erupting at the brutal execution delivered by {{attacker}}.",
+      "The match concludes in the most final way possible. {{defender}} is no more, and {{attacker}} ascends in glory.",
+      "A bloody end to a bitter struggle. {{attacker}} is the last one breathing, while {{defender}} feeds the sands.",
+      "{{attacker}} wipes the gore from their weapon, standing victorious over the mangled corpse of {{defender}}.",
+      "{{attacker}} strikes a triumphant pose over {{defender}}'s lifeless form, soaking in the theatrical glory.",
+      "The gods of the arena are appeased today, as {{attacker}} claims the ultimate price from {{defender}}.",
+      "With a grim finality, {{attacker}} ends {{defender}}'s misery. A somber silence falls over the arena.",
+      "The crowd erupts into a frenzy as {{attacker}} savagely finishes {{defender}} in a spray of crimson!",
+      "{{attacker}} roars a challenge to the heavens, having just claimed another soul in the Blood Sands.",
+      "{{attacker}} stands triumphant over the remains of {{defender}}, as blood soaks the thirsty sands.",
+      "An absolutely brutal finish! {{attacker}} shows no mercy, leaving {{defender}} utterly broken.",
+      "In a terrifying display of lethal intent, {{attacker}} reduces {{defender}} to a mere memory.",
+      "A clinical, terrifying end. {{attacker}} delivers the killing blow with cold precision.",
+      "The arena erupts in morbid cheer as {{defender}}'s lifeblood stains the earth.",
+      "Dark humor fills the stands; that was not a fight, it was a butcher's bill.",
+      "The life fades from {{defender}}'s eyes as {{attacker}} stands victorious.",
+      "A clinical, professional slaughter. The deed is done."
+    ],
+    "KO": [
+      "{{defender}} drops, legs gone, and does not rise. {{attacker}} is declared the winner.",
+      "The arena holds its breath, then roars — {{defender}} is out. {{attacker}} wins by KO!",
+      "The ARENAMASTER steps in the instant {{defender}} goes limp. Victory to {{attacker}}!",
+      "The ARENAMASTER waves it off. {{defender}} is out cold. {{attacker}} takes the bout!",
+      "The crowd erupts as {{defender}} hits the sand and does not stir. {{attacker}} wins!",
+      "A clinical finish. {{defender}} is out cold — {{attacker}} claims the knockout.",
+      "{{defender}} collapses into the sand, unconscious. {{attacker}} is the victor.",
+      "{{attacker}} stands over the prone form of {{defender}}. The bout is over.",
+      "{{defender}} crumbles to the sand. {{attacker}} raises a fist in victory.",
+      "{{defender}} is down and not getting up. {{attacker}} wins by knockout!"
+    ],
+    "Stoppage": [
+      "Seeing the one-sided carnage, the officials rush in to save {{defender}} from further ruin.",
+      "The arbiters signal the end as {{defender}}'s injuries become too severe to continue.",
+      "The bout is stopped. {{defender}} has taken too much punishment. {{attacker}} wins!",
+      "{{defender}} cannot answer — the ARENAMASTER calls it. {{attacker}} is the victor.",
+      "Mercy from the officials saves {{defender}} further punishment. {{attacker}} wins.",
+      "It is called off. {{defender}} is done. {{attacker}} takes the stoppage victory.",
+      "The ARENAMASTER steps in. {{defender}} is done. {{attacker}} is victorious!",
+      "Seeing enough, the officials halt the bout. {{attacker}} wins on stoppage.",
+      "The match is called. {{defender}} cannot continue. {{attacker}} wins!",
+      "{{defender}} is waved off — {{attacker}} claims the stoppage victory."
+    ],
+    "Exhaustion": [
+      "Gasping for air, {{defender}} falls to their knees, their body refusing to fight on.",
+      "{{defender}}'s legs simply give out, collapsing in a heap of utter exhaustion.",
+      "{{attacker}} conserved just enough to take the decision. A hard-earned win.",
+      "Both warriors are spent, but {{attacker}} is awarded the victory on merit.",
+      "A war of attrition ends in favour of {{attacker}} on the officials' cards.",
+      "Two spent warriors, one decision — it goes to {{attacker}} on control.",
+      "Neither fighter could finish it, but the judges favour {{attacker}}.",
+      "Legs gone, breath gone — the judges award the bout to {{attacker}}.",
+      "The crowd applauds the effort, but only {{attacker}} gets the nod.",
+      "The bout is decided on exhaustion. {{attacker}} edges it out."
+    ],
+    "Surrender": [
+      "{{defender}} throws down their weapon, yielding before {{attacker}} can deliver the final blow.",
+      "Broken and bleeding, {{defender}} signals their surrender, escaping with their life.",
+      "{{defender}} acknowledges defeat and offers {{attacker}} {{possessive}} hand.",
+      "{{defender}} accepts her loss, jaw clenched to keep from admitting her pain!",
+      "{{defender}} offers {{attacker}} a warrior's handshake in defeat.",
+      "{{defender}} surrenders, and offers his hand to his foe.",
+      "{{defender}} bows before {{attacker}}'s superior skill.",
+      "{{defender}} compliments {{attacker}} on a good fight.",
+      "{{defender}} surrenders with what dignity remains.",
+      "{{defender}} yields the bout to {{attacker}}."
+    ],
+    "Incapacitated": [
+      "{{defender}} motions to the ARENAMASTER that {{pronoun}} cannot continue! {{attacker}} is the victor of the match!",
+      "{{defender}} is stopped by an outcry from the LORD PROTECTORS! {{attacker}} has won the duel!",
+      "{{defender}} can no longer defend {{reflexive}} - the match is called! {{attacker}} wins!",
+      "The ARENAMASTER halts the bout! {{defender}} cannot continue. {{attacker}} is the victor!",
+      "{{defender}} motions that {{pronoun}} cannot continue. {{attacker}} has won the duel!",
+      "{{attacker}} steps back as it becomes clear {{defender}} is entirely incapacitated.",
+      "The crowd murmurs as {{defender}} remains unresponsive on the blood-soaked sand.",
+      "{{defender}} lies motionless, completely incapacitated by the brutal onslaught.",
+      "{{defender}} collapses, unable to rise! {{attacker}} is declared victor!",
+      "{{defender}} is dragged from the arena, too broken to stand."
+    ]
+  }
+}

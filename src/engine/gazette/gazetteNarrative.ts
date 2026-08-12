@@ -2,7 +2,7 @@
  * Gazette Narrative Generation - Generates narrative text for gazette entries
  * Extracted from gazetteNarrative.ts to follow SRP
  */
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { CrowdMoodType } from '@/types/shared.types';
@@ -254,7 +254,14 @@ export function generateGazetteBody(
         .map((w) => w.name)
         .slice(0, 5)
         .join(', ');
-      paragraphs.push(`In memoriam: ${names}. May their names echo in the stands.`);
+      const tributes = (narrativeContent as any).memorials?.tributes;
+      if (tributes && Array.isArray(tributes) && tributes.length > 0) {
+        const tributeTemplate = rngService.pick(tributes);
+        const tributeLine = t(tributeTemplate, { name: recent[0]?.name ?? names });
+        paragraphs.push(`${tributeLine} In memoriam: ${names}.`);
+      } else {
+        paragraphs.push(`In memoriam: ${names}. May their names echo in the stands.`);
+      }
     }
   }
 

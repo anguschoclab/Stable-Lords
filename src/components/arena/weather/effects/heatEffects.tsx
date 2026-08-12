@@ -5,7 +5,7 @@ import { cryptoRandom } from '@/utils/cryptoRandom';
 export function HeatEffect() {
   return (
     <div
-      className="absolute inset-0 pointer-events-none animate-heat-shimmer"
+      className="absolute inset-0 pointer-events-none animate-heat-shimmer motion-reduce:animate-none"
       style={{
         background:
           'linear-gradient(180deg, transparent 0%, rgba(255,200,100,0.1) 50%, transparent 100%)',
@@ -34,7 +34,7 @@ export function ScorchingWindEffect() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Warm haze */}
       <div
-        className="absolute inset-0 animate-heat-shimmer"
+        className="absolute inset-0 animate-heat-shimmer motion-reduce:animate-none"
         style={{
           background:
             'linear-gradient(180deg, rgba(255,170,80,0.06) 0%, rgba(255,140,60,0.12) 60%, transparent 100%)',
@@ -44,7 +44,7 @@ export function ScorchingWindEffect() {
       {Array.from({ length: 22 }).map((_, i) => (
         <div
           key={i}
-          className="absolute h-px w-24 bg-gradient-to-r from-transparent via-arena-gold/30 to-transparent animate-wind"
+          className="absolute h-px w-24 bg-gradient-to-r from-transparent via-arena-gold/30 to-transparent animate-wind motion-reduce:animate-none"
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: '-20%',
@@ -63,7 +63,7 @@ export function MirageEffect() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Intense heat haze base */}
       <div
-        className="absolute inset-0 animate-heat-shimmer"
+        className="absolute inset-0 animate-heat-shimmer motion-reduce:animate-none"
         style={{
           background:
             'linear-gradient(180deg, rgba(255,200,100,0.15) 0%, rgba(255,180,80,0.2) 40%, rgba(255,160,60,0.1) 70%, transparent 100%)',
@@ -73,7 +73,7 @@ export function MirageEffect() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={`ripple-${i}`}
-          className="absolute inset-x-0 h-4 animate-heat-shimmer"
+          className="absolute inset-x-0 h-4 animate-heat-shimmer motion-reduce:animate-none"
           style={{
             top: `${30 + i * 10}%`,
             background: `linear-gradient(90deg, transparent 0%, rgba(255,200,100,0.${10 + i * 2}) 50%, transparent 100%)`,
@@ -87,7 +87,7 @@ export function MirageEffect() {
       {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={`shimmer-${i}`}
-          className="absolute w-1 h-1 bg-arena-gold/30 rounded-full animate-chaotic-drift"
+          className="absolute w-1 h-1 bg-arena-gold/30 rounded-full animate-chaotic-drift motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -114,7 +114,7 @@ export function WildfireSmokeEffect() {
       {Array.from({ length: 12 }).map((_, i) => (
         <div
           key={`smoke-${i}`}
-          className="absolute rounded-full blur-2xl animate-chaotic-drift"
+          className="absolute rounded-full blur-2xl animate-chaotic-drift motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -134,7 +134,7 @@ export function WildfireSmokeEffect() {
       {Array.from({ length: 15 }).map((_, i) => (
         <div
           key={`spark-${i}`}
-          className="absolute w-0.5 h-0.5 bg-arena-blood/80 rounded-full animate-chaotic-drift"
+          className="absolute w-0.5 h-0.5 bg-arena-blood/80 rounded-full animate-chaotic-drift motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,

@@ -1,0 +1,356 @@
+{
+  "fanfare": {
+    "resolution_title": "Cycle Resolution",
+    "gazette_empty": "A quiet week in the arena. No major headlines.",
+    "report_medical": "Medical & Mortality Report",
+    "report_combat": "Combat Results",
+    "report_combat_empty": "Your stable did not participate in any official bouts this week.",
+    "report_math": "Simulation Math & Metrics",
+    "memorial_title": "The Arena Remembers",
+    "memorial_default": "Fallen in combat.",
+    "btn_honor": "Honor the Fallen",
+    "btn_planning": "Acknowledge & Begin Planning",
+    "btn_next": "Next Report",
+    "armor_intro_verbs": [
+      "steps forth in",
+      "is armored in",
+      "glimmers in",
+      "is wearing"
+    ],
+    "weapon_intro_verbs": [
+      "prepares to fight with %W",
+      "clutches their %W",
+      "is armed with %W",
+      "draws their %W"
+    ]
+  },
+  "meta": {
+    "flair": {
+      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight.",
+      "Local Hero": "Loved by the locals. Their presence brings a touch more fame."
+    },
+    "title": {
+      "Champion": "Arena title holder. Earns passive fame each week."
+    },
+    "injury": {
+      "Broken Arm": "Reduces Attack and Parry effectiveness until healed."
+    },
+    "status": {
+      "Active": "Ready for combat.",
+      "Dead": "Fallen in the arena.",
+      "Retired": "Honorably withdrawn from combat."
+    }
+  },
+  "persona": {
+    "good": {
+      "initiative": {
+        "high": [
+          {
+            "min": 33,
+            "text": "Summons a storm of steel that leaves no room to breathe"
+          },
+          {
+            "min": 31,
+            "text": "A terrifying maestro of battle tempo, dictating every bloody exchange"
+          },
+          {
+            "min": 29,
+            "text": "Bends the chaos of the pit to his will, forcing foes to fight on his terms"
+          },
+          {
+            "min": 27,
+            "text": "Drowns his opponent in a relentless tide of crushing aggression"
+          },
+          {
+            "min": 25,
+            "text": "Forces a suffocating, lethal rhythm onto the blood-soaked sands"
+          },
+          {
+            "min": 13,
+            "text": "Steals the center of the pit and refuses to yield a single step"
+          },
+          {
+            "min": 0,
+            "text": "Has learned how to keep his foe in trouble"
+          }
+        ],
+        "low": [
+          {
+            "min": 25,
+            "text": "Lunges from the shadows before the opponent is ready"
+          },
+          {
+            "min": 24,
+            "text": "Fights with a hungry, restless aggression"
+          },
+          {
+            "min": 14,
+            "text": "With a very aggressive and clever fighting style"
+          },
+          {
+            "min": 0,
+            "text": "Has learned how to be decisive and quick"
+          }
+        ]
+      },
+      "riposte": {
+        "high": [
+          {
+            "min": 24,
+            "text": "Baits their opponent into a fatal trap of their own making"
+          },
+          {
+            "min": 23,
+            "text": "Turns the opponent's strength into their execution"
+          },
+          {
+            "min": 14,
+            "text": "Makes the most of his enemy's mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Makes good dueling decisions"
+          }
+        ],
+        "low": [
+          {
+            "min": 21,
+            "text": "Twists an enemy's assault into a sudden, bloody end"
+          },
+          {
+            "min": 14,
+            "text": "Does a lot of little things well"
+          },
+          {
+            "min": 0,
+            "text": "Cleverly controls his foe's actions"
+          }
+        ]
+      },
+      "attack": {
+        "high": [
+          {
+            "min": 35,
+            "text": "An executioner in the pit, delivering critical ruin with every swing"
+          },
+          {
+            "min": 28,
+            "text": "Obliterates opponents with god-like, merciless precision"
+          },
+          {
+            "min": 20,
+            "text": "Hunts for the vital organs with terrifying precision"
+          },
+          {
+            "min": 10,
+            "text": "Makes very clever attacks"
+          },
+          {
+            "min": 0,
+            "text": "He lands blows on less protected areas"
+          }
+        ],
+        "low": [
+          {
+            "min": 24,
+            "text": "Transforms every meager opening into a harrowing bloodbath"
+          },
+          {
+            "min": 14,
+            "text": "Has an unusual fighting style that confuses many opponents"
+          },
+          {
+            "min": 0,
+            "text": "Makes clever attacks"
+          }
+        ]
+      },
+      "parry": {
+        "high": [
+          {
+            "min": 23,
+            "text": "An impenetrable wall of iron, turning aside the deadliest steel"
+          },
+          {
+            "min": 14,
+            "text": "Parrys very intelligently"
+          },
+          {
+            "min": 0,
+            "text": "Is gifted at parrying"
+          }
+        ],
+        "low": [
+          {
+            "min": 21,
+            "text": "Denies the killing stroke with grim, practiced resolve"
+          },
+          {
+            "min": 14,
+            "text": "Rarely makes mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Parrys intelligently"
+          }
+        ]
+      },
+      "defense": {
+        "high": [
+          {
+            "min": 30,
+            "text": "Displays a chilling level of situational dominance"
+          },
+          {
+            "min": 14,
+            "text": "Is always thinking ahead"
+          },
+          {
+            "min": 0,
+            "text": "Is gifted at avoiding a blow"
+          }
+        ],
+        "low": [
+          {
+            "min": 21,
+            "text": "Weaves through the carnage with grim efficiency"
+          },
+          {
+            "min": 14,
+            "text": "Avoids blows well"
+          },
+          {
+            "min": 0,
+            "text": "Makes few mistakes"
+          }
+        ]
+      },
+      "endurance": {
+        "high": [
+          {
+            "min": 24,
+            "text": "A tireless engine of destruction, grinding foes to bloody paste"
+          },
+          {
+            "min": 14,
+            "text": "Rarely wastes his endurance needlessly"
+          },
+          {
+            "min": 0,
+            "text": "Can conserve his endurance past what might normally be expected"
+          }
+        ],
+        "low": [
+          {
+            "min": 22,
+            "text": "Refuses to empty his lungs until the slaughter is completely finished"
+          },
+          {
+            "min": 14,
+            "text": "He plans out every move he makes, seldom wasting any effort"
+          },
+          {
+            "min": 0,
+            "text": "Seldom wastes his endurance needlessly"
+          }
+        ]
+      }
+    },
+    "bad": {
+      "initiative": {
+        "high": [
+          {
+            "min": 17,
+            "text": "Surrenders the momentum to the butcher immediately, standing completely helpless"
+          },
+          {
+            "min": 0,
+            "text": "He needs time to think things through before he can act"
+          }
+        ],
+        "low": [
+          {
+            "min": 24,
+            "text": "Moves with the urgency of a stone sinking in mud"
+          },
+          {
+            "min": 0,
+            "text": "He stands around slack-jawed"
+          }
+        ]
+      },
+      "attack": {
+        "high": [
+          {
+            "min": 25,
+            "text": "Strikes with the sloppy desperation of a drowning man"
+          },
+          {
+            "min": 17,
+            "text": "Telegraphs every swing so heavily it practically invites his own death"
+          },
+          {
+            "min": 0,
+            "text": "He makes a lot of mistakes"
+          }
+        ],
+        "low": [
+          {
+            "min": 26,
+            "text": "Telegraphs every swing like a lumbering ox"
+          },
+          {
+            "min": 0,
+            "text": "He makes stupid feints that fool no one"
+          }
+        ]
+      },
+      "defense": {
+        "high": [
+          {
+            "min": 25,
+            "text": "Stumbles backward, relying on blind luck rather than skill"
+          },
+          {
+            "min": 14,
+            "text": "Fails to anticipate even the most obvious strikes"
+          },
+          {
+            "min": 0,
+            "text": "Leaves dangerous openings in their guard"
+          }
+        ],
+        "low": [
+          {
+            "min": 25,
+            "text": "Seems utterly confused by basic defensive footwork"
+          },
+          {
+            "min": 0,
+            "text": "Is easily outmaneuvered"
+          }
+        ]
+      }
+    },
+    "descriptors": {
+      "coordination": {
+        "Marvel of Fighting Coordination": "Is a marvel of fighting coordination",
+        "Very Highly Coordinated": "Is very highly coordinated",
+        "Highly Coordinated": "Is highly coordinated",
+        "Normal": "",
+        "Slightly Uncoordinated": "Is slightly uncoordinated",
+        "Clumsy": "Is clumsy"
+      },
+      "activity": {
+        "Normal": "Maintains a steady pace",
+        "Default": "Is {{rating}}"
+      }
+    }
+  },
+  "memorials": {
+    "tributes": [
+      "The arena grows colder with the loss of {{name}}.",
+      "A legend has passed into the halls of iron."
+    ]
+  }
+}

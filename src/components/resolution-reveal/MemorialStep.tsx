@@ -3,18 +3,21 @@ import { Skull } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import type { Warrior } from '@/types/warrior.types';
 import narrativeContent from '@/data/narrativeContent.json';
+import { hashStr } from '@/utils/random';
 
 interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
-} /**
- * Memorial step.
- * @param - { dead warriors }.
- */
+}
 
-/**
- * Memorial step.
- * @param - { dead warriors }.
- */
+function pickTribute(name: string): string | null {
+  const tributes = (narrativeContent as any).memorials?.tributes;
+  if (!tributes || !Array.isArray(tributes) || tributes.length === 0) return null;
+  const idx = hashStr(name) % tributes.length;
+  const template = tributes[idx];
+  if (typeof template !== 'string') return null;
+  return template.replace(/\{\{\s*name\s*\}\}/g, name);
+}
+
 export function MemorialStep({ deadWarriors }: MemorialStepProps) {
   return (
     <motion.div
@@ -33,6 +36,7 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
         <div className="flex gap-6 overflow-x-auto pb-4 max-w-[100%]">
           {deadWarriors.map((w) => {
             if (!w) return null;
+            const tribute = pickTribute(w.name);
             return (
               <div
                 key={w.id}
@@ -41,6 +45,11 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
                 <h3 className="text-2xl font-display font-bold text-destructive mb-1 drop-shadow-md">
                   {w.name}
                 </h3>
+                {tribute && (
+                  <p className="text-sm text-arena-gold mb-2 italic leading-relaxed">
+                    {tribute}
+                  </p>
+                )}
                 <p className="text-sm text-muted-foreground mb-4 italic leading-relaxed">
                   {w.deathCause || narrativeContent.fanfare.memorial_default}
                 </p>

@@ -48,6 +48,24 @@ describe('getOutcomeStyles', () => {
     expect(style.textClass).toBe('text-muted-foreground');
   });
 
+  it('returns primary variant for Decision', () => {
+    const style = getOutcomeStyles('Decision');
+    expect(style.variant).toBe('primary');
+    expect(style.icon).toBe('Scale');
+    expect(style.label).toBe('DECISION');
+    expect(style.bgClasses).toBe('bg-primary/10 border-primary/20');
+    expect(style.textClass).toBe('text-primary');
+  });
+
+  it('returns parchment variant for Yield', () => {
+    const style = getOutcomeStyles('Yield');
+    expect(style.variant).toBe('parchment');
+    expect(style.icon).toBe('Flag');
+    expect(style.label).toBe('YIELD');
+    expect(style.bgClasses).toBe('bg-neutral-800 border-white/5');
+    expect(style.textClass).toBe('text-muted-foreground');
+  });
+
   it('returns parchment variant for unknown outcomes', () => {
     const style = getOutcomeStyles('Unknown' as FightOutcomeBy);
     expect(style.variant).toBe('parchment');

@@ -55,12 +55,16 @@
     "@radix-ui/react-toast": "^1.2.23",
     "@radix-ui/react-tooltip": "^1.2.16",
     "@tanstack/react-query": "^5.101.4",
+    "@tanstack/react-router": "^1.170.25",
     "@tanstack/react-virtual": "^3.14.9",
     "@testing-library/dom": "^10.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "comlink": "^4.4.2",
     "date-fns": "^4.4.0",
     "framer-motion": "^12.43.0",
+    "howler": "^2.2.4",
+    "immer": "^11.1.16",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
@@ -71,7 +75,8 @@
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
   },
   "overrides": {
     "fast-uri": "3.1.5",
@@ -84,7 +89,6 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
-    "@tanstack/react-router": "^1.170.25",
     "@tanstack/router-vite-plugin": "^1.167.29",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
@@ -95,15 +99,12 @@
     "@vitejs/plugin-react-swc": "^4.3.3",
     "@vitest/coverage-v8": "^4.1.10",
     "autoprefixer": "^10.5.4",
-    "comlink": "^4.4.2",
     "electron": "^43.3.0",
     "eslint": "^10.8.1",
     "eslint-plugin-jsdoc": "^64.0.2",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.9.0",
-    "howler": "^2.2.4",
-    "immer": "^11.1.16",
     "jsdom": "^30.0.1",
     "postcss": "^8.5.26",
     "prettier": "^3.9.6",
@@ -114,83 +115,38 @@
     "typescript7": "npm:typescript@7.0.2",
     "vite": "^8.2.1",
     "vite-plugin-pwa": "^1.3.0",
-    "vitest": "^4.1.10",
-    "zustand": "^5.0.14"
+    "vitest": "^4.1.10"
   },
-  "build": {
-    "appId": "com.stablelords.app",
-    "productName": "Stable Lords",
-    "directories": {
-      "output": "dist-electron"
-    },
-    "files": [
-      "dist/**/*",
-      "electron/**/*",
-      "package.json"
-    ],
-    "extraMetadata": {
-      "main": "electron/main.ts"
-    },
-    "asar": false,
-    "mac": {
-      "category": "public.app-category.games",
-      "icon": "public/icons/icon-512.png",
-      "target": [
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "rebuildConfig": {},
+      "makers": [
         {
-          "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ]
-    },
-    "win": {
-      "icon": "public/icons/icon-512.png",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "config": {
-      "forge": {
-        "packagerConfig": {},
-        "rebuildConfig": {},
-        "makers": [
-          {
-            "name": "@electron-forge/maker-squirrel",
-            "config": {
-              "name": "stable_lords"
-            }
-          },
-          {
-            "name": "@electron-forge/maker-zip",
-            "platforms": [
-              "darwin"
-            ]
-          },
-          {
-            "name": "@electron-forge/maker-dmg",
-            "config": {}
-          },
-          {
-            "name": "@electron-forge/maker-deb",
-            "config": {}
-          },
-          {
-            "name": "@electron-forge/maker-rpm",
-            "config": {}
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "stable_lords"
           }
-        ]
-      }
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
     }
   }
 }

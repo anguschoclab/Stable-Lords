@@ -16,8 +16,7 @@ export type SfxType =
   | 'clash'
   | 'death'
   | 'recovery'
-  | 'coin'
-  | 'arena_ambient'; /**
+  | 'coin'; /**
  * The AudioManager class.
  */
 
@@ -41,7 +40,26 @@ export class AudioManager {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Howler.js type incompatibility with Electron (external library)
       (window as any).HowlerGlobal = {};
     }
+    this.loadSfx();
     this.ready = this.loadMuteState();
+  }
+
+  /**
+   * Load sound effect Howl instances for all SFX types.
+   */
+  private loadSfx() {
+    const sfxFiles: Record<Exclude<SfxType, never>, string> = {
+      ui_click: '/audio/ui_click.mp3',
+      hit: '/audio/hit.mp3',
+      crit: '/audio/crit.mp3',
+      clash: '/audio/clash.mp3',
+      death: '/audio/death.mp3',
+      recovery: '/audio/recovery.mp3',
+      coin: '/audio/coin.mp3',
+    };
+    (Object.keys(sfxFiles) as SfxType[]).forEach((type) => {
+      this.sfx.set(type, new Howl({ src: [sfxFiles[type]] }));
+    });
   }
 
   /**

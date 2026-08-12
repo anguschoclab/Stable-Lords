@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
-import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
+import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/constants/combat';
 import { getPhaseByMinute } from '@/engine/combat/phase';
 
 interface Props {
@@ -80,7 +80,7 @@ export default function StaminaCurve({ plan, warrior, width = 240, height = 56 }
         {lastPct}%
       </div>
       <div className="text-[9px] uppercase tracking-widest text-muted-foreground/40">
-        @minute 10
+        @minute {BOUT_DURATION_MINUTES}
       </div>
       {collapseMinute !== null && (
         <div className="text-[9px] font-black uppercase tracking-widest text-destructive/80">

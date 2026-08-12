@@ -983,3 +983,63 @@ describe('spatial system integration', () => {
     expect(foundRangeShift).toBe(true);
   });
 });
+
+// ─── Yield Mechanic Tests ─────────────────────────────────────────────────
+
+describe('simulateFight — yield mechanic', () => {
+  it('produces Yield outcome when a fighter with YIELD fallback is below 15% HP and endurance', () => {
+    // We need a fighter that will drop below 15% HP and endurance.
+    // Use a very aggressive plan for fighter A (high OE, high killDesire)
+    // and a YIELD fallback for fighter D with low CN (low endurance pool).
+    const planA = makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 10, killDesire: 10 });
+    const planD = makePlan(FightingStyle.TotalParry, {
+      OE: 1,
+      AL: 1,
+      killDesire: 1,
+      fallbackCondition: 'YIELD',
+    });
+
+    // D has low CN so endurance pool is small, making it easier to drop below 15%
+    const warriorD = makeWarrior('Yielder', FightingStyle.TotalParry, { CN: 3, ST: 3, DF: 3 });
+
+    let foundYield = false;
+    for (let seed = 0; seed < 50; seed++) {
+      const result = simulateFight(
+        planA,
+        planD,
+        makeWarrior('Crusher', FightingStyle.BashingAttack, { ST: 18, CN: 18 }),
+        warriorD,
+        seed
+      );
+      if (result.by === 'Yield') {
+        foundYield = true;
+        expect(result.winner).toBe('A');
+        break;
+      }
+    }
+    expect(foundYield).toBe(true);
+  });
+
+  it('does not produce Yield when fallbackCondition is not YIELD', () => {
+    const planA = makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 10, killDesire: 10 });
+    const planD = makePlan(FightingStyle.TotalParry, {
+      OE: 1,
+      AL: 1,
+      killDesire: 1,
+      fallbackCondition: 'None',
+    });
+
+    const warriorD = makeWarrior('Tank', FightingStyle.TotalParry, { CN: 3, ST: 3, DF: 3 });
+
+    for (let seed = 0; seed < 20; seed++) {
+      const result = simulateFight(
+        planA,
+        planD,
+        makeWarrior('Crusher', FightingStyle.BashingAttack, { ST: 18, CN: 18 }),
+        warriorD,
+        seed
+      );
+      expect(result.by).not.toBe('Yield');
+    }
+  });
+});

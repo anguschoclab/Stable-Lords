@@ -380,7 +380,7 @@ export interface FightPlan {
   killDesire?: number;
   aggressionBias?: number;
   openingMove?: 'Safe' | 'Aggressive' | 'Measured';
-  fallbackCondition?: 'FLEE' | 'TURTLE' | 'BERZERK' | 'None';
+  fallbackCondition?: 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None';
   target?: AttackTarget;
   protect?: ProtectTarget;
   offensiveTactic?: OffensiveTactic;

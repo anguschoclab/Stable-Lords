@@ -105,6 +105,50 @@ export function runSimulationLoop(
       }
     }
 
+    // Yield check — before resolving the exchange, check if either fighter
+    // has fallbackCondition 'YIELD' and meets desperation thresholds.
+    const yieldThreshold = 0.15;
+    if (
+      planA?.fallbackCondition === 'YIELD' &&
+      fA.hp < fA.maxHp * yieldThreshold &&
+      fA.endurance < fA.maxEndurance * yieldThreshold
+    ) {
+      by = 'Yield';
+      winner = 'D';
+      if (!headless) {
+        const boutEndLines = narrateBoutEnd(
+          flavorRng,
+          'Yield',
+          nameD,
+          nameA,
+          weaponD,
+          { mood: crowdMood }
+        );
+        boutEndLines.forEach((line) => log.push({ minute: min, text: line, emphasis: true }));
+      }
+      break;
+    }
+    if (
+      planD?.fallbackCondition === 'YIELD' &&
+      fD.hp < fD.maxHp * yieldThreshold &&
+      fD.endurance < fD.maxEndurance * yieldThreshold
+    ) {
+      by = 'Yield';
+      winner = 'A';
+      if (!headless) {
+        const boutEndLines = narrateBoutEnd(
+          flavorRng,
+          'Yield',
+          nameA,
+          nameD,
+          weaponA,
+          { mood: crowdMood }
+        );
+        boutEndLines.forEach((line) => log.push({ minute: min, text: line, emphasis: true }));
+      }
+      break;
+    }
+
     // A. Resolve Math (Dice)
     const events = resolveExchange(resCtx, fA, fD);
     if (!headless) {
@@ -168,7 +212,7 @@ export function runSimulationLoop(
       fatalExchangeIndex = ex;
       causeBucket = boutEnd.metadata?.cause as DeathCauseBucket;
 
-      if (by === 'Stoppage') {
+      if (by === 'Stoppage' || by === 'Decision' || by === 'Yield') {
         winner = boutEnd.actor === 'A' ? 'D' : 'A';
       } else if (by === 'Exhaustion') {
         winner = null;
@@ -177,7 +221,7 @@ export function runSimulationLoop(
       }
 
       if (!headless) {
-        const boutActorIsWinner = by !== 'Stoppage';
+        const boutActorIsWinner = by !== 'Stoppage' && by !== 'Decision' && by !== 'Yield';
         const narWinner = boutActorIsWinner
           ? boutEnd.actor === 'A'
             ? nameA

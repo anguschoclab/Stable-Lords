@@ -1,7 +1,7 @@
 /**
  * Reporting Handler — fight summary generation and history tracking.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { handleReporting } from '@/engine/bout/reportingHandler';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
@@ -122,6 +122,50 @@ describe('reportingHandler', () => {
 
       // Summary should reflect the fighters involved
       expect(result.summary).toBeDefined();
+    });
+  });
+
+  describe('side-effect accumulation (worker-safe)', () => {
+    it('does not write ArenaHistory to localStorage (data flows via impacts)', () => {
+      const wA = createMockWarrior();
+      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
+      const outcome = createMockOutcome();
+
+      const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
+      handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const arenaHistoryWrites = setItemSpy.mock.calls.filter(
+        ([key]) => key === 'sl.arenaHistory'
+      );
+      expect(arenaHistoryWrites).toHaveLength(0);
+      setItemSpy.mockRestore();
+    });
+
+    it('does not write StyleRollups to localStorage', () => {
+      const wA = createMockWarrior();
+      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
+      const outcome = createMockOutcome();
+
+      const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
+      handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const styleRollupWrites = setItemSpy.mock.calls.filter(
+        ([key]) => typeof key === 'string' && key.startsWith('sl.styleRollups')
+      );
+      expect(styleRollupWrites).toHaveLength(0);
+      setItemSpy.mockRestore();
+    });
+
+    it('does not write LoreArchive to localStorage', () => {
+      const wA = createMockWarrior();
+      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
+      const outcome = createMockOutcome();
+
+      const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
+      handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const loreWrites = setItemSpy.mock.calls.filter(
+        ([key]) => typeof key === 'string' && key.startsWith('sl.lore')
+      );
+      expect(loreWrites).toHaveLength(0);
+      setItemSpy.mockRestore();
     });
   });
 });

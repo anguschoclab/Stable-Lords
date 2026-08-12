@@ -17,6 +17,7 @@ import StylePassives from './planBuilder/StylePassives';
 import ContingencyPlans from './planBuilder/ContingencyPlans';
 import StaminaCurve from './planBuilder/StaminaCurve';
 import { validateStrategy, estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
+import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 
 /* ── Sub-components ─────────────────────────────────────── */
 
@@ -48,7 +49,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
   const collapseWarning = useMemo(() => {
     const curve = estimateStaminaCurve(plan, warrior);
     const collapse = predictedCollapseMinute(curve);
-    if (collapse !== null && collapse < 10) {
+    if (collapse !== null && collapse < BOUT_DURATION_MINUTES) {
       return {
         code: 'PREDICTED_COLLAPSE',
         severity: 'warn' as const,

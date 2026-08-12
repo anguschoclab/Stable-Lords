@@ -56,8 +56,8 @@ export function narrateBoutEnd(
     KO: 'KO',
     Stoppage: 'Stoppage',
     Exhaustion: 'Exhaustion',
-    Surrender: 'Surrender',
-    Incapacitated: 'Incapacitated',
+    Decision: 'Exhaustion',
+    Yield: 'Surrender',
   };
 
   const cat = categoryMap[by] || 'KO';

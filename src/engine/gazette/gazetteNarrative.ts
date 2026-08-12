@@ -58,6 +58,14 @@ export function generateFightNarrative(
     return t(safeRng.pick(g.Stoppage), data);
   }
 
+  if (fight.by === 'Decision' && winner) {
+    return t(safeRng.pick(g.Exhaustion), data);
+  }
+
+  if (fight.by === 'Yield' && winner) {
+    return t(safeRng.pick(g.Default), data);
+  }
+
   if (fight.by === 'Exhaustion') {
     return winner ? t(safeRng.pick(g.Exhaustion), data) : t(safeRng.pick(g.Draw), data);
   }

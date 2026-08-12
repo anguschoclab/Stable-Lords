@@ -396,5 +396,12 @@ describe('tacticResolution', () => {
       expect(oe).toBe(5);
       expect(al).toBe(5);
     });
+
+    it('YIELD fallbackCondition applies no OE/AL modification', () => {
+      const plan: FightPlan = { ...basePlan, fallbackCondition: 'YIELD' };
+      const [oe, al] = calculateFinalOEAL(5, 5, plan, 10, 100, 10, 100, 5);
+      expect(oe).toBe(5);
+      expect(al).toBe(5);
+    });
   });
 });

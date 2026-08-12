@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { defaultPlanForWarrior } from '@/engine/bout/planDefaults';
+import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
@@ -31,153 +32,34 @@ function createMockWarrior(style: FightingStyle, wt: number = 10): Warrior {
 }
 
 describe('defaultPlanForWarrior', () => {
-  describe('Aggressive Styles', () => {
-    it('generates correct defaults for BashingAttack', () => {
-      const warrior = createMockWarrior(FightingStyle.BashingAttack);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.BashingAttack,
-        OE: 7,
-        AL: 3,
-        killDesire: 7,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Bash',
-        defensiveTactic: 'none',
-      });
+  describe('Preset-derived defaults', () => {
+    it('returns a plan whose base OE/AL/KD match the default style preset', () => {
+      for (const style of Object.values(FightingStyle)) {
+        const warrior = createMockWarrior(style);
+        const plan = defaultPlanForWarrior(warrior);
+        const presetPlan = defaultStylePreset(style).plan;
+        expect(plan.style).toBe(style);
+        expect(plan.OE).toBe(presetPlan.OE);
+        expect(plan.AL).toBe(presetPlan.AL);
+        expect(plan.killDesire).toBe(presetPlan.killDesire);
+        expect(plan.offensiveTactic).toBe(presetPlan.offensiveTactic);
+        expect(plan.defensiveTactic).toBe(presetPlan.defensiveTactic);
+        expect(plan.target).toBe(presetPlan.target);
+        expect(plan.protect).toBe(presetPlan.protect);
+        expect(plan.phases).toEqual(presetPlan.phases);
+      }
     });
 
-    it('generates correct defaults for LungingAttack', () => {
-      const warrior = createMockWarrior(FightingStyle.LungingAttack);
+    it('includes feintTendency derived from WT', () => {
+      const warrior = createMockWarrior(FightingStyle.AimedBlow, 18);
       const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.LungingAttack,
-        OE: 7,
-        AL: 6,
-        killDesire: 7,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Lunge',
-        defensiveTactic: 'Dodge',
-      });
+      expect(plan.feintTendency).toBe(6);
     });
 
-    it('generates correct defaults for StrikingAttack', () => {
-      const warrior = createMockWarrior(FightingStyle.StrikingAttack);
+    it('sets feintTendency to 0 when WT < 15', () => {
+      const warrior = createMockWarrior(FightingStyle.AimedBlow, 10);
       const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.StrikingAttack,
-        OE: 7,
-        AL: 5,
-        killDesire: 7,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Decisiveness',
-        defensiveTactic: 'none',
-      });
-    });
-
-    it('generates correct defaults for SlashingAttack', () => {
-      const warrior = createMockWarrior(FightingStyle.SlashingAttack);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.SlashingAttack,
-        OE: 7,
-        AL: 5,
-        killDesire: 7,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Slash',
-        defensiveTactic: 'none',
-      });
-    });
-  });
-
-  describe('Defensive and Tactical Styles', () => {
-    it('generates correct defaults for TotalParry', () => {
-      const warrior = createMockWarrior(FightingStyle.TotalParry);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.TotalParry,
-        OE: 2,
-        AL: 2,
-        killDesire: 3,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'none',
-        defensiveTactic: 'Parry',
-      });
-    });
-
-    it('generates correct defaults for WallOfSteel', () => {
-      const warrior = createMockWarrior(FightingStyle.WallOfSteel);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.WallOfSteel,
-        OE: 7,
-        AL: 6,
-        killDesire: 6,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Bash',
-        defensiveTactic: 'Parry',
-      });
-    });
-
-    it('generates correct defaults for ParryRiposte', () => {
-      const warrior = createMockWarrior(FightingStyle.ParryRiposte);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.ParryRiposte,
-        OE: 4,
-        AL: 5,
-        killDesire: 3,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'none',
-        defensiveTactic: 'Parry',
-      });
-    });
-
-    it('generates correct defaults for AimedBlow', () => {
-      const warrior = createMockWarrior(FightingStyle.AimedBlow);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.AimedBlow,
-        OE: 6,
-        AL: 5,
-        killDesire: 8,
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Slash',
-        defensiveTactic: 'Dodge',
-      });
-    });
-  });
-
-  describe('Other Styles (Defaults)', () => {
-    it('generates base defaults for an unhandled style (e.g. ParryLunge)', () => {
-      const warrior = createMockWarrior(FightingStyle.ParryLunge);
-      const plan = defaultPlanForWarrior(warrior);
-      expect(plan).toEqual({
-        style: FightingStyle.ParryLunge,
-        OE: 5, // Base default
-        AL: 6, // Base default
-        killDesire: 5, // Base default
-        target: 'Any',
-        protect: 'Any',
-        feintTendency: 0,
-        offensiveTactic: 'Lunge',
-        defensiveTactic: 'Parry',
-      });
+      expect(plan.feintTendency).toBe(0);
     });
   });
 

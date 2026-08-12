@@ -251,7 +251,7 @@ export const FightPlanSchema = z.object({
   killDesire: z.number().optional(),
   aggressionBias: z.number().optional(),
   openingMove: z.enum(['Safe', 'Aggressive', 'Measured']).optional(),
-  fallbackCondition: z.enum(['FLEE', 'TURTLE', 'BERZERK', 'None']).optional(),
+  fallbackCondition: z.enum(['FLEE', 'TURTLE', 'BERZERK', 'YIELD', 'None']).optional(),
   target: AttackTargetSchema.optional(),
   protect: ProtectTargetSchema.optional(),
   offensiveTactic: OffensiveTacticSchema.optional(),

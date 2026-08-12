@@ -86,7 +86,7 @@ export type DeathCauseBucket =
 /**
  * Fight outcome by type.
  */
-export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null; /**
+export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | 'Decision' | 'Yield' | null; /**
  * Combat event type type.
  */
 

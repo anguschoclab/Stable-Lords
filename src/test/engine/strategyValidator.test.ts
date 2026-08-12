@@ -5,6 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { validateStrategy, estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
 import { FightingStyle, type FightPlan } from '@/types/shared.types';
+import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
 
@@ -614,10 +615,10 @@ describe('validateStrategy', () => {
 
 describe('estimateStaminaCurve', () => {
   describe('Basic Functionality', () => {
-    it('returns array of length minutes + 1 (default 10 minutes)', () => {
+    it('returns array of length BOUT_DURATION_MINUTES + 1', () => {
       const plan = createMockFightPlan(FightingStyle.StrikingAttack, 5, 5);
       const curve = estimateStaminaCurve(plan);
-      expect(curve).toHaveLength(11); // 10 minutes + initial value
+      expect(curve).toHaveLength(BOUT_DURATION_MINUTES + 1);
     });
 
     it('initial value = 50 + WT * 2', () => {
@@ -754,7 +755,7 @@ describe('estimateStaminaCurve', () => {
       const baseline = estimateStaminaCurve(
         createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
       );
-      expect(curve[10] ?? 0).toBeLessThan(baseline[10] ?? 0);
+      expect(curve[BOUT_DURATION_MINUTES] ?? 0).toBeLessThan(baseline[BOUT_DURATION_MINUTES] ?? 0);
     });
 
     it('falls back to plan OE/AL if phase not defined', () => {

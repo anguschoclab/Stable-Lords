@@ -90,7 +90,7 @@ describe('schema characterization', () => {
     });
 
     it('FightOutcomeBySchema accepts valid outcomes', () => {
-      for (const o of ['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Draw', 'null']) {
+      for (const o of ['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Draw', 'Decision', 'Yield', 'null']) {
         expect(FightOutcomeBySchema.safeParse(o).success, `${o} should be valid`).toBe(true);
       }
     });

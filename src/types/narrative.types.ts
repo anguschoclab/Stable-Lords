@@ -347,7 +347,6 @@ export interface Conclusions {
   Stoppage: string | string[];
   Exhaustion: string | string[];
   Surrender: string | string[];
-  Incapacitated: string | string[];
 } /**
  * Defines the shape of event narrative.
  */

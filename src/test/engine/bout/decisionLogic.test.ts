@@ -44,7 +44,7 @@ describe('decisionLogic', () => {
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D');
 
       expect(result.winner).toBe('A');
-      expect(result.by).toBe('Stoppage');
+      expect(result.by).toBe('Decision');
       expect(result.narrative).toContain('All three judges are in agreement');
     });
 
@@ -68,7 +68,7 @@ describe('decisionLogic', () => {
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D');
 
       expect(result.winner).toBe('D');
-      expect(result.by).toBe('Stoppage');
+      expect(result.by).toBe('Decision');
       expect(result.narrative).toContain('All three judges are in agreement');
     });
 
@@ -79,7 +79,7 @@ describe('decisionLogic', () => {
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D');
 
       expect(result.winner).toBe('A');
-      expect(result.by).toBe('Stoppage');
+      expect(result.by).toBe('Decision');
       expect(result.narrative).toContain('split');
     });
 
@@ -130,7 +130,7 @@ describe('decisionLogic', () => {
 
       // With perfectly even stats, this could be draw or one wins by HP tiebreaker
       expect(['A', 'D', null]).toContain(result.winner);
-      expect(['Stoppage', 'Draw']).toContain(result.by);
+      expect(['Decision', 'Draw']).toContain(result.by);
     });
 
     it('uses HP tiebreaker when judges split evenly', () => {
@@ -189,7 +189,7 @@ describe('decisionLogic', () => {
 
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D', rng);
 
-      if (result.by === 'Stoppage' && result.narrative.includes('overtime')) {
+      if (result.by === 'Decision' && result.narrative.includes('overtime')) {
         expect(result.narrative).toContain('overtime');
       }
     });

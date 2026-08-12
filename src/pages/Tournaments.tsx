@@ -138,9 +138,6 @@ export default function Tournaments() {
       setHasShownPrep(true);
       audioManager.play('clash'); // Thematic entrance sound
     }
-
-    // ⚔️ 1.0 Atmospheric: Trigger ambient arena sound when on this page
-    audioManager.play('arena_ambient');
   }, [isTournamentReadyToStart, hasShownPrep, currentTournament]);
 
   const handleExecuteRound = useCallback(async () => {

@@ -216,6 +216,7 @@ export function calculateFinalOEAL(
     fallOE = 4;
     fallAL = -2;
   }
+  // YIELD: no OE/AL modification here — the simulation loop handles the yield event.
 
   const finalOE = clamp(effOE + openOE + fallOE, 1, 10);
   const finalAL = clamp(effAL + openAL + fallAL, 1, 10);

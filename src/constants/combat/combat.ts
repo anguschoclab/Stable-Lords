@@ -28,6 +28,12 @@ export const MAX_EXCHANGES = 30;
 export const EXCHANGES_PER_MINUTE = 3;
 
 /**
+ * Canonical bout duration in minutes, derived from MAX_EXCHANGES / EXCHANGES_PER_MINUTE.
+ * Use this for UI horizons, stamina curves, and any minute-based projections.
+ */
+export const BOUT_DURATION_MINUTES = MAX_EXCHANGES / EXCHANGES_PER_MINUTE;
+
+/**
  * Initiative press bonus
  */
 export const INITIATIVE_PRESS_BONUS = 1;

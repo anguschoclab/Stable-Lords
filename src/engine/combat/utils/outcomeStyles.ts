@@ -11,7 +11,7 @@ import type { FightOutcomeBy } from '@/types/combat.types'; /**
  * Defines the shape of outcome style.
  */
 export interface OutcomeStyle {
-  variant: 'gold' | 'blood' | 'parchment';
+  variant: 'gold' | 'blood' | 'parchment' | 'primary';
   icon?: string;
   label: string;
   bgClasses: string;
@@ -61,6 +61,22 @@ export function getOutcomeStyles(by: FightOutcomeBy): OutcomeStyle {
         variant: 'parchment',
         label: 'DRAW',
         bgClasses: 'bg-neutral-900 border-white/5',
+        textClass: 'text-muted-foreground',
+      };
+    case 'Decision':
+      return {
+        variant: 'primary',
+        icon: 'Scale',
+        label: 'DECISION',
+        bgClasses: 'bg-primary/10 border-primary/20',
+        textClass: 'text-primary',
+      };
+    case 'Yield':
+      return {
+        variant: 'parchment',
+        icon: 'Flag',
+        label: 'YIELD',
+        bgClasses: 'bg-neutral-800 border-white/5',
         textClass: 'text-muted-foreground',
       };
     default:

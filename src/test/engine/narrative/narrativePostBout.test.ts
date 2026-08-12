@@ -32,7 +32,7 @@ describe('narrativePostBout', () => {
     });
 
     it('handles all end categories', () => {
-      const categories = ['Kill', 'KO', 'Stoppage', 'Exhaustion', 'Surrender', 'Incapacitated'];
+      const categories = ['Kill', 'KO', 'Stoppage', 'Exhaustion', 'Decision', 'Yield'];
       for (const cat of categories) {
         const rng = new SeededRNG(1);
         const result = narrateBoutEnd(rng, cat, 'Winner', 'Loser', 'longsword');

@@ -7,7 +7,7 @@ import type { FightPlan, PhaseStrategy } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import { getPhaseByMinute } from '@/engine/combat/phase';
-import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
+import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/constants/combat';
 
 /**
  * Warning severity type.
@@ -116,9 +116,9 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
 /**
  * Per-minute endurance-burn estimate used by the stamina curve preview.
  * Deterministic, decoupled from the full sim: intended as a UI heuristic only.
- * Defaults to 10 minutes to match the engine's MAX_EXCHANGES / EXCHANGES_PER_MINUTE.
+ * Defaults to BOUT_DURATION_MINUTES (MAX_EXCHANGES / EXCHANGES_PER_MINUTE).
  */
-export function estimateStaminaCurve(plan: FightPlan, warrior?: Warrior, minutes = 10): number[] {
+export function estimateStaminaCurve(plan: FightPlan, warrior?: Warrior, minutes = BOUT_DURATION_MINUTES): number[] {
   const wt = warrior?.attributes?.WT ?? 10;
   const max = warrior?.derivedStats?.endurance ?? 50 + wt * 2;
   let cur = max;

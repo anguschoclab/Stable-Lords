@@ -378,6 +378,8 @@ export const FightOutcomeBySchema = z.enum([
   'Exhaustion',
   'Stoppage',
   'Draw',
+  'Decision',
+  'Yield',
   'null',
 ]);
 

@@ -167,6 +167,22 @@ describe('generateFightNarrative', () => {
     expect(typeof narrative).toBe('string');
   });
 
+  it('generates narrative for Decision victory', () => {
+    const fight = createFight('A', 'Decision');
+    const narrative = generateFightNarrative(fight, 'Calm');
+    expect(narrative).toBeDefined();
+    expect(typeof narrative).toBe('string');
+    expect(narrative.length).toBeGreaterThan(0);
+  });
+
+  it('generates narrative for Yield victory', () => {
+    const fight = createFight('A', 'Yield');
+    const narrative = generateFightNarrative(fight, 'Calm');
+    expect(narrative).toBeDefined();
+    expect(typeof narrative).toBe('string');
+    expect(narrative.length).toBeGreaterThan(0);
+  });
+
   it('generates narrative for draw', () => {
     const fight = createFight(null, 'Exhaustion');
     const narrative = generateFightNarrative(fight, 'Calm');

@@ -133,13 +133,13 @@ function resolveOvertimeOrTiebreaker(
       if (rng() < hpA / total) {
         return {
           winner: 'A',
-          by: 'Stoppage',
+          by: 'Decision',
           narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'overtime'),
         };
       } else {
         return {
           winner: 'D',
-          by: 'Stoppage',
+          by: 'Decision',
           narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'overtime'),
         };
       }
@@ -159,14 +159,14 @@ function resolveOvertimeOrTiebreaker(
   if (fA.hp > fD.hp) {
     return {
       winner: 'A',
-      by: 'Stoppage',
+      by: 'Decision',
       narrative: `Time! ${nameA} wins on the narrowest of margins — bleeding less than their opponent.`,
     };
   }
   if (fD.hp > fA.hp) {
     return {
       winner: 'D',
-      by: 'Stoppage',
+      by: 'Decision',
       narrative: `Time! ${nameD} wins on the narrowest of margins — bleeding less than their opponent.`,
     };
   }
@@ -201,14 +201,14 @@ export function resolveDecision(
   if (aVotes === 3) {
     return {
       winner: 'A',
-      by: 'Stoppage',
+      by: 'Decision',
       narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'unanimous'),
     };
   }
   if (dVotes === 3) {
     return {
       winner: 'D',
-      by: 'Stoppage',
+      by: 'Decision',
       narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'unanimous'),
     };
   }
@@ -219,7 +219,7 @@ export function resolveDecision(
     const dissenter = dissentIdx >= 0 ? archetypes[dissentIdx] : 'Blood';
     return {
       winner: 'A',
-      by: 'Stoppage',
+      by: 'Decision',
       narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'split', dissenter),
     };
   }
@@ -228,7 +228,7 @@ export function resolveDecision(
     const dissenter = dissentIdx >= 0 ? archetypes[dissentIdx] : 'Blood';
     return {
       winner: 'D',
-      by: 'Stoppage',
+      by: 'Decision',
       narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'split', dissenter),
     };
   }

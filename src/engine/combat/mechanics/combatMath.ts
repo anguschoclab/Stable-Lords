@@ -1,7 +1,8 @@
 import { clamp } from '@/utils/math';
 /**
  * Combat Math — RNG, skill/contest checks.
- * Phase detection has moved to @/engine/combat/phase.ts (canonical module).
+ * This module contains only RNG helpers and skill/contest resolution.
+ * Phase detection lives in @/engine/combat/phase.ts.
  */
 
 /**

@@ -113,6 +113,8 @@
 
 ## 4. Metrics Summary
 
+> **Note:** Metrics below are point-in-time snapshots from the consolidation date, not continuously verified. Run `bunx tsc --noEmit` and `bun run lint` for current status.
+
 | Metric                       | Before | After   | Delta                                  |
 | ---------------------------- | ------ | ------- | -------------------------------------- |
 | Test files                   | 460    | 468     | +8                                     |

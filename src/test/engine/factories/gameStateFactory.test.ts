@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { SAVE_STATE_VERSION } from '@/constants/core/core';
+import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { BACKSTORY_IDS } from '@/data/backstories';
 import { FightingStyle } from '@/types/shared.types';
@@ -293,13 +294,13 @@ describe('createFreshState', () => {
   describe('rivals generation', () => {
     const state = createFreshState(SEED);
 
-    it('generates exactly 8 rivals', () => {
-      expect(state.rivals).toHaveLength(8);
+    it('generates exactly 8 rivals (doc alignment)', () => {
+      expect(state.rivals).toHaveLength(INITIAL_RIVAL_COUNT);
     });
 
     it('gives each rival a unique id', () => {
       const ids = state.rivals.map((r) => r.id);
-      expect(new Set(ids).size).toBe(8);
+      expect(new Set(ids).size).toBe(INITIAL_RIVAL_COUNT);
     });
 
     it('sets each rival fame to 100', () => {
@@ -362,12 +363,12 @@ describe('createFreshState', () => {
 
     it('selects 8 unique rival stable names', () => {
       const names = state.rivals.map((r) => r.owner.stableName);
-      expect(new Set(names).size).toBe(8);
+      expect(new Set(names).size).toBe(INITIAL_RIVAL_COUNT);
     });
 
     it('gives each rival owner a unique id', () => {
       const ownerIds = state.rivals.map((r) => r.owner.id);
-      expect(new Set(ownerIds).size).toBe(8);
+      expect(new Set(ownerIds).size).toBe(INITIAL_RIVAL_COUNT);
     });
   });
 

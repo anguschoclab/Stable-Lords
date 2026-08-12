@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
-import { WARRIOR_UPKEEP_BASE } from '@/constants/economy';
+import { WARRIOR_UPKEEP_BASE, FAME_UPKEEP_MULTIPLIER } from '@/constants/economy';
 import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import { generateId } from '@/utils/idUtils';
@@ -41,26 +41,26 @@ describe('Upkeep formula — doc alignment', () => {
     expect(WARRIOR_UPKEEP_BASE).toBe(60);
     const b = computeWeeklyBreakdown(makeInput(0));
     const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-    expect(upkeep!.amount).toBe(60);
+    expect(upkeep!.amount).toBe(WARRIOR_UPKEEP_BASE);
   });
 
-  it('fame premium is Math.round(fame * 1.5) not floor(fame/10)*15', () => {
+  it('fame premium is Math.round(fame * FAME_UPKEEP_MULTIPLIER) not floor(fame/10)*15', () => {
     // fame 25: round(25*1.5)=38, not floor(25/10)*15=30
     const b = computeWeeklyBreakdown(makeInput(25));
     const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-    expect(upkeep!.amount).toBe(60 + 38); // 98
+    expect(upkeep!.amount).toBe(WARRIOR_UPKEEP_BASE + Math.round(25 * FAME_UPKEEP_MULTIPLIER)); // 98
   });
 
   it('30 fame = 105g/week (matches doc example)', () => {
     const b = computeWeeklyBreakdown(makeInput(30));
     const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-    expect(upkeep!.amount).toBe(105); // 60 + round(30*1.5) = 60 + 45
+    expect(upkeep!.amount).toBe(WARRIOR_UPKEEP_BASE + Math.round(30 * FAME_UPKEEP_MULTIPLIER)); // 105
   });
 
-  it('non-multiple-of-10 fame uses exact 1.5x multiplier', () => {
+  it('non-multiple-of-10 fame uses exact multiplier', () => {
     // fame 7: round(7*1.5)=11, not floor(7/10)*15=0
     const b = computeWeeklyBreakdown(makeInput(7));
     const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-    expect(upkeep!.amount).toBe(60 + 11); // 71
+    expect(upkeep!.amount).toBe(WARRIOR_UPKEEP_BASE + Math.round(7 * FAME_UPKEEP_MULTIPLIER)); // 71
   });
 });

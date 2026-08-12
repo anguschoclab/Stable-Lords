@@ -667,18 +667,17 @@ The **Dashboard** is your command centre. It consists of modular widgets display
 
 ### Core Widgets
 
-| Widget            | Purpose                                                       |
-| ----------------- | ------------------------------------------------------------- |
-| Roster Overview   | Quick stats on all warriors (HP, injuries, assigned training) |
-| Treasury Snapshot | Current gold, projected next-week balance                     |
-| Weekly Schedule   | Accepted bouts for the coming week                            |
-| Gazette Headlines | Latest news at a glance                                       |
-| Training Summary  | Which warriors are training what                              |
-| Bout Offers       | Pending promoter offers (with expiry countdown)               |
-| Fame Leaderboard  | Your warriors' fame vs. the world                             |
-| Injury Report     | Active injuries and recovery timelines                        |
-| Tournament Bubble | Your warriors' position relative to promotion/relegation      |
-| Meta Overview     | Current style popularity and trend direction                  |
+| Widget              | Purpose                                                       |
+| ------------------- | ------------------------------------------------------------- |
+| Crowd Mood          | Current arena crowd temperament and momentum                 |
+| Intelligence Hub    | Arena chronicle — recent results and upcoming intelligence   |
+| Next Bout           | Match preview with estimated odds for the next fight         |
+| Medical Audit       | Active injuries and recovery timelines for your roster       |
+| Arena Conditions    | Current weather and its economic/combat effects              |
+| Style Meta          | Fighting style popularity drift and trend direction          |
+| Stable Stats        | Renown, lifetime kills, and win rate at a glance             |
+| Arena Leaderboard   | Global rankings — your position vs rival stables             |
+| Auto-Simulate       | Console for running simulated seasons                        |
 
 Widgets are displayed in a fixed layout. Focus on the information most relevant to your current stage of the game.
 

@@ -105,7 +105,7 @@ export const MIST_SHROUDED_RUINS: ArenaConfig = {
   description: 'Ancient, crumbling walls obscured by an unnatural fog.',
   size: 'open',
   zoneDef: { Edge: -2 },
-  surfaceMod: { initiativeMod: -1, riposteMod: 1, damageMod: 1.0 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.0 },
 };
 
 export const THE_GALLOWS_TREE: ArenaConfig = {
@@ -116,7 +116,7 @@ export const THE_GALLOWS_TREE: ArenaConfig = {
   description: 'A cursed fighting pit dug around the roots of a hanging tree.',
   size: 'cramped',
   zoneDef: { Corner: -4 },
-  surfaceMod: { initiativeMod: -2, riposteMod: 0, damageMod: 1.1 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.1 },
 };
 
 /**
@@ -358,7 +358,7 @@ export const FLESH_GARDENS: ArenaConfig = {
 /**
  * Arena lore entry type.
  */
-export type ArenaLoreType = 'historical_battle' | 'famous_death' | 'architectural_quirk';
+export type ArenaLoreType = 'historical_battle' | 'famous_death' | 'architectural_quirk' | 'hazard';
 
 /**
  * Defines the shape of arena lore entry.

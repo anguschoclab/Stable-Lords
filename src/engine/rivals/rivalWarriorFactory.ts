@@ -35,7 +35,11 @@ export function biasedAttrs(
       throw new Error('Attribute value not found');
     }
     const add = Math.min(pool, 25 - currentVal, Math.floor(rng() * 4) + 1);
-    if (add <= 0) continue;
+    if (add <= 0) {
+      const allMaxed = weighted.every((k) => (attrs[k] ?? 0) >= 25);
+      if (allMaxed) break;
+      continue;
+    }
     attrs[key] = currentVal + add;
     pool -= add;
   }

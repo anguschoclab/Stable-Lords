@@ -2,7 +2,7 @@
  * Gazette Template Helpers - Template substitution and helper functions
  * Extracted from gazetteNarrative.ts to follow SRP
  */
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';

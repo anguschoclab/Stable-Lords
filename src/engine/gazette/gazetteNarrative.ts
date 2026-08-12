@@ -2,7 +2,7 @@
  * Gazette Narrative Generation - Generates narrative text for gazette entries
  * Extracted from gazetteNarrative.ts to follow SRP
  */
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { CrowdMoodType } from '@/types/shared.types';

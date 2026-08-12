@@ -2,7 +2,7 @@
  * Narrative PBP Utils - Core utility functions for narrative generation
  * Extracted from narrativePBP.ts to follow SRP
  */
-import narrativeContent from '@/data/narrativeContent.json';
+import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { escapeHtml } from '@/utils/escapeHtml';

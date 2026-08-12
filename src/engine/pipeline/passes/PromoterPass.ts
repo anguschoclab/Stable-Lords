@@ -4,7 +4,7 @@ import type { BoutOfferId, WeatherType } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
-import { FIGHT_PURSE } from '@/constants/economy';
+import { FIGHT_PURSE, MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 import { collectAllWarriors } from '@/engine/core/warriorCollection';
 import { isBookable } from '@/engine/warriorStatus';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';
@@ -149,6 +149,10 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   // Pre-build a set of player warrior ids for arena-selection favour weighting
   const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
 
+  // Player challenge/avoid sets for bout offer biasing
+  const challengeSet = new Set(state.playerChallenges || []);
+  const avoidSet = new Set(state.playerAvoids || []);
+
   // Repeat-opponent avoidance: build set of warrior pairs that fought within last 4 weeks
   const recentFightPairs = buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4);
 
@@ -204,6 +208,10 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         if (matchedIds.has(candidate.id)) continue;
         if (recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) continue;
 
+        // Player avoid — skip avoided warriors when a player warrior is in the matchup
+        if (playerWarriorIds.has(warriorA.id) && avoidSet.has(candidate.id)) continue;
+        if (playerWarriorIds.has(candidate.id) && avoidSet.has(warriorA.id)) continue;
+
         const scoreB = sortedScores[i];
         if (scoreB === undefined) continue;
         const gap = Math.abs(scoreA - scoreB) / maxScoreA;
@@ -218,6 +226,15 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         }
 
         if (candidateScore > bestScore) {
+          // Player challenge — boost challenged warriors when a player warrior is in the matchup
+          if (playerWarriorIds.has(warriorA.id) && challengeSet.has(candidate.id)) {
+            candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+          }
+          if (playerWarriorIds.has(candidate.id) && challengeSet.has(warriorA.id)) {
+            candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+          }
+
+          if (candidateScore > bestScore) {
           bestScore = candidateScore;
           bestCandidate = candidate;
         }

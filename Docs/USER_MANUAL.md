@@ -162,9 +162,9 @@ Seven core attributes govern everything about a warrior. They range from **3** (
 
 > **Tip:** Size is the only attribute that _cannot_ be trained — warriors are born with it and it never changes.
 
-**Hit Points** = SZ + (CN × 1.5), capped at 30.
+**Hit Points** = CN × 2 + SZ modifier + WL modifier (Terrablood chart lookup, no cap).
 
-**Endurance** = CN × 1.25.
+**Endurance** = Tier-based chart: score = WL × 3 + ST + CN, mapped to discrete values (12–80) via the Terrablood endurance table.
 
 ### 4.2 Base Skills
 
@@ -195,12 +195,12 @@ Every warrior fights in one of **10 fighting styles**, each with distinct streng
 | --------------- | ------- | ----------------------------------------------------------- |
 | Aimed Blow      | AB      | Precision striker; rewards high DF and WT                   |
 | Bashing Attack  | BA      | Brute force; rewards high ST and SZ                         |
-| Lunging Attack  | LA      | Aggressive reach; rewards ST and SP                         |
+| Lunging Attack  | LU      | Aggressive reach; rewards ST and SP                         |
 | Parry-Lunge     | PL      | Bait and punish; balanced offence/defence                   |
 | Parry-Riposte   | PR      | Counter-fighting; rewards high DF and RIP                   |
 | Parry-Strike    | PS      | Methodical; rewards CN and PAR                              |
-| Slashing Attack | SA      | Fast multi-hit; rewards SP and DF                           |
-| Striking Attack | StA     | Hard hits with reach; rewards ST and WT                     |
+| Slashing Attack | SL      | Fast multi-hit; rewards SP and DF                           |
+| Striking Attack | ST      | Hard hits with reach; rewards ST and WT                     |
 | Total Parry     | TP      | Pure defence; survives anything; low offence                |
 | Wall of Steel   | WS      | Offence and defence simultaneously; rewards all-round stats |
 
@@ -208,10 +208,10 @@ Every warrior fights in one of **10 fighting styles**, each with distinct streng
 
 ### 4.4 Aging & Career Arc
 
-Warriors age **one year every 52 weeks**. Attribute _decay_ begins at **age 30**:
+Warriors age **one year every 52 weeks**. Attribute _decay_ begins after **age 25**:
 
-- Each year after 30, one random attribute loses 1 point.
-- Decay accelerates slightly with each additional year.
+- SP and DF penalties accrue after age 25: penalty = floor((age − 25) / 3) every 3 years.
+- Forced retirement can occur from age 26 onward, becoming guaranteed by age 32.
 
 A warrior's productive career is typically **5–10 in-game years** before decay outpaces gains. Plan retirements before decay cripples them.
 
@@ -285,13 +285,13 @@ Each week, every warrior can be assigned to **one training mode**. Training cost
 
 | Mode                   | Effect                                                        | Risk                       |
 | ---------------------- | ------------------------------------------------------------- | -------------------------- |
-| **Attribute Training** | Chance to gain +1 in a chosen attribute (capped by potential) | ~20% injury chance         |
+| **Attribute Training** | Chance to gain +1 in a chosen attribute (capped by potential) | ~3% base injury chance (hard-capped at 10%) |
 | **Skill Drilling**     | +1 to a chosen combat skill (capped by drill limit)           | Slightly lower injury risk |
 | **Recovery**           | Reduces weeks remaining on an injury                          | No new injury risk         |
 
 **Attribute potential** is hidden — each attribute has a personal ceiling beyond which no further gains are possible. The ceiling is revealed gradually through training attempts.
 
-**Skill drill cap** limits how many times you can artificially boost any one skill through drilling (typically 5–7 total across a career). Use drills wisely.
+**Skill drill cap** limits how many times you can artificially boost any one skill through drilling (3 per skill). Use drills wisely.
 
 ### 6.2 Trainers
 
@@ -313,7 +313,7 @@ Trainers are hired from the **Trainers** page and apply their bonuses to all war
 
 ### 6.3 Injuries During Training
 
-Training is dangerous. Each week of attribute training carries roughly a **20% chance of a minor injury**. Severity is modified by trainer tier.
+Training is dangerous. Each week of attribute training carries a **3% base chance of a minor injury**, hard-capped at 10%. Severity is modified by trainer tier.
 
 If a warrior is injured in training, they may be automatically switched to **Recovery** mode, or you can manually reassign them.
 
@@ -440,14 +440,18 @@ Armour coverage varies by body area — full plate covers the chest; lighter arm
 
 ### 9.4 Death & Permadeath
 
-Death is real and permanent. When a warrior's **HP drops below 30%** AND **endurance drops below 20%**, a **kill window** opens. The opponent (if aggressive) may attempt a finishing blow.
+Death is real and permanent. When a warrior's **HP ratio drops below a style-specific threshold** (0.3–0.8 depending on fighting style) and **endurance ratio drops below 0.4**, a **kill window** opens with a probability calculated from multiple factors:
 
-Factors that affect kill probability:
-
-- **Crowd mood** — a bloodthirsty crowd raises kill odds slightly
-- **Opponent's offensive emphasis** — aggressive opponents press kill opportunities
+- **HP ratio** — lower HP increases kill probability
+- **Endurance ratio** — lower endurance increases kill probability (tiers at 0.2, 0.4, 0.6)
+- **Location multiplier** — hit location affects lethality
+- **Attacker skills** — higher offensive skills increase kill odds
+- **Momentum and kill desire** — aggressive opponents press kill opportunities
+- **Phase level** — later exchange phases are more lethal
 - **Warrior's Will** — high WL reduces the chance of succumbing to finishing blows
 - **Injuries** — active injuries make death more likely
+
+The base kill probability is clamped to a maximum of 4% per exchange.
 
 When a warrior dies:
 

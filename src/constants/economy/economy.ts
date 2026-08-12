@@ -28,7 +28,7 @@ export const FAME_DIVIDEND = 0.5;
 /**
  * Warrior upkeep base cost
  */
-export const WARRIOR_UPKEEP_BASE = 45;
+export const WARRIOR_UPKEEP_BASE = 60;
 
 /**
  * Training cost per session

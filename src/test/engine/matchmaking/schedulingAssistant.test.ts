@@ -15,6 +15,7 @@ import {
 } from '@/engine/schedulingAssistant';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
+import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 
 describe('Scheduling Assistant Engine', () => {
   // Helper to generate minimal mock warrior
@@ -1163,6 +1164,100 @@ describe('Scheduling Assistant Engine', () => {
       const score = scoreMatchup(player, rival, state);
       // Base 100 + 5 (last winner player) = 105
       expect(score).toBe(105);
+    });
+  });
+
+  describe('Player Challenge/Avoid Modifiers', () => {
+    it('applies CHALLENGE_BONUS when rival warrior ID is in state.playerChallenges', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      state.playerChallenges = [rival.id as any];
+      const challenged = scoreMatchup(player, rival, state);
+
+      expect(challenged - baseline).toBe(MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS);
+    });
+
+    it('applies AVOID_PENALTY when rival warrior ID is in state.playerAvoids', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      state.playerAvoids = [rival.id as any];
+      const avoided = scoreMatchup(player, rival, state);
+
+      expect(avoided - baseline).toBe(MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY);
+    });
+
+    it('is unaffected when both arrays are empty', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]);
+      const score = scoreMatchup(player, rival, state);
+
+      // No challenge/avoid modifiers — score should be base 100 + win rate 0 + novelty 3
+      expect(score).toBe(103);
+    });
+
+    it('applies both challenge and avoid when rival is in both arrays (net zero)', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      state.playerChallenges = [rival.id as any];
+      state.playerAvoids = [rival.id as any];
+      const both = scoreMatchup(player, rival, state);
+
+      expect(both).toBe(baseline);
+    });
+
+    it('does NOT apply challenge/avoid for player warrior ID', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      // Putting the player's own ID in challenges/avoids should have no effect
+      state.playerChallenges = [player.id as any];
+      state.playerAvoids = [player.id as any];
+      const score = scoreMatchup(player, rival, state);
+
+      expect(score).toBe(baseline);
+    });
+
+    it('getRecommendedChallenges ranks challenged warriors higher', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalA = mockWarrior('rA', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalB = mockWarrior('rB', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rivalA, rivalB]);
+      state.playerChallenges = [rivalB.id as any];
+
+      const recs = getRecommendedChallenges(state, player, 2);
+      // rivalB should be ranked first due to +500 challenge bonus
+      expect(recs[0]?.rivalWarrior.id).toBe(rivalB.id);
+    });
+
+    it('getMatchupsToAvoid ranks avoided warriors as more avoidable', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalA = mockWarrior('rA', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalB = mockWarrior('rB', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rivalA, rivalB]);
+      state.playerAvoids = [rivalB.id as any];
+
+      const avoids = getMatchupsToAvoid(state, player, 2);
+      // rivalB should be first (lowest score) due to -500 avoid penalty
+      expect(avoids[0]?.rivalWarrior.id).toBe(rivalB.id);
     });
   });
 });

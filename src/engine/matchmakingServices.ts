@@ -1,3 +1,5 @@
+import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
+
 /**
  * Matchmaking Scoring Service - handles the weights and logic for pairing warriors.
  */
@@ -33,28 +35,31 @@ export const MatchScoringService = {
       rivalIntent,
     } = params;
 
-    let score = 100;
+    let score = MATCHMAKING_SCORE_CONSTANTS.BASE_SCORE;
 
     // 1. Fame proximity bonus (0-30)
     score += Math.max(0, 30 - Math.abs(p_fame - r_fame) * 3);
 
     // 2. Rivalry & Strategic Intent
     if (rivalryIntensity !== undefined) {
-      score += rivalryIntensity >= 4 ? 200 : 50;
+      score +=
+        rivalryIntensity >= 4
+          ? MATCHMAKING_SCORE_CONSTANTS.RIVALRY_HIGH_BONUS
+          : MATCHMAKING_SCORE_CONSTANTS.RIVALRY_LOW_BONUS;
     }
 
     // VENDETTA: If intentional targeting of the player
     if (rivalIntent === 'VENDETTA') {
-      score += 300;
+      score += MATCHMAKING_SCORE_CONSTANTS.VENDETTA_BONUS;
     }
 
     // RECOVERY: Avoid high-risk bouts
     if (rivalIntent === 'RECOVERY' && p_fame > r_fame + 20) {
-      score -= 200;
+      score += MATCHMAKING_SCORE_CONSTANTS.RECOVERY_PENALTY;
     }
 
     // 3. Style diversity bonus
-    if (!isRecentStyleMatch) score += 20;
+    if (!isRecentStyleMatch) score += MATCHMAKING_SCORE_CONSTANTS.STYLE_MATCH_BONUS;
 
     // 4. Repeat penalty
     if (lastMatchWeek !== undefined && lastMatchWeek >= week - 2) {
@@ -62,8 +67,8 @@ export const MatchScoringService = {
     }
 
     // 5. Challenge / Avoid modifiers
-    if (isChallenged) score += 500;
-    if (isAvoided) score -= 500;
+    if (isChallenged) score += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+    if (isAvoided) score += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
 
     // 6. Random jitter
     score += Math.floor(rng() * 16);

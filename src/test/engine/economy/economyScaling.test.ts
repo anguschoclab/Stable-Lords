@@ -130,8 +130,8 @@ describe('computeWeeklyBreakdown — Full Integration', () => {
     expect(b.expenses.some((e) => e.label === 'Insulation & Fuel Overhead')).toBe(true);
     expect(b.expenses.some((e) => e.label.startsWith('Trainer salaries'))).toBe(true);
     expect(b.expenses.some((e) => e.label.startsWith('Training fees'))).toBe(true);
-    // upkeep: 45 + 75 = 120, blizzard: 2*10 = 20, trainer: 10, training: 20 → total 170
-    expect(b.totalExpenses).toBe(170);
+    // upkeep: 60 + 90 = 150, blizzard: 2*10 = 20, trainer: 10, training: 20 → total 200
+    expect(b.totalExpenses).toBe(200);
     expect(b.net).toBe(b.totalIncome - b.totalExpenses);
   });
 });

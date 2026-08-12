@@ -90,7 +90,7 @@ export function createFreshState(
     progression: DEFAULT_PROGRESSION,
   };
 
-  // 2. Generate Initial Rivals (4 Stables) - Seeded selection
+  // 2. Generate Initial Rivals (8 Stables) - Seeded selection
   const RIVAL_NAMES = (narrativeContent as NarrativeContent).recruitment.rival_stable_names;
   const PERSONALITIES: OwnerPersonality[] = [
     'Aggressive',
@@ -100,7 +100,7 @@ export function createFreshState(
     'Tactician',
   ];
 
-  // Shuffle and pick 4
+  // Shuffle and pick 8
   const pool = [...RIVAL_NAMES];
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(rng.next() * (i + 1));
@@ -112,7 +112,7 @@ export function createFreshState(
     }
   }
 
-  state.rivals = pool.slice(0, 4).map((name): RivalStableData => {
+  state.rivals = pool.slice(0, 8).map((name): RivalStableData => {
     const personalityIndex = Math.floor(rng.next() * PERSONALITIES.length);
     const backstoryIdx = Math.floor(rng.next() * BACKSTORY_IDS.length);
     const backstoryId = BACKSTORY_IDS[backstoryIdx];

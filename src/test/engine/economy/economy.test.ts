@@ -95,11 +95,11 @@ describe('Economy Engine', () => {
       const breakdown = computeWeeklyBreakdown(state as GameState);
 
       // Expenses (from economyConstants.ts):
-      // Warriors: 2 * (45 + 0 fame premium) = 90
+      // Warriors: 2 * (60 + 0 fame premium) = 120
       // Trainers: 1 * 10 = 10
       // Training: 1 * 20 = 20
-      // Total expenses: 120
-      expect(breakdown.totalExpenses).toBe(120);
+      // Total expenses: 150
+      expect(breakdown.totalExpenses).toBe(150);
       // Idle stipend applies (0 fights, ≥1 warrior)
       expect(breakdown.totalIncome).toBe(25);
     });
@@ -174,8 +174,8 @@ describe('Economy Engine', () => {
       state.arenaHistory = [];
 
       const breakdown = computeWeeklyBreakdown(state as GameState);
-      // Income: stipend 25. Expenses: upkeep 45. Net = -20.
-      expect(breakdown.net).toBe(-20);
+      // Income: stipend 25. Expenses: upkeep 60. Net = -35.
+      expect(breakdown.net).toBe(-35);
     });
   });
 
@@ -339,22 +339,22 @@ describe('Economy Engine', () => {
       });
       const b = computeWeeklyBreakdown(input);
       expect(b.income.some((i) => i.label === 'Noble Patronage Contribution')).toBe(false);
-      // upkeep = 45 + floor(0/10)*15 = 45
+      // upkeep = 60 + round(0*1.5) = 60
       const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-      expect(upkeep!.amount).toBe(45);
+      expect(upkeep!.amount).toBe(60);
     });
   });
 
   // ── Phase 3: Elite Maintenance ─────────────────────────────────────────
-  describe('computeWeeklyBreakdown — Elite Maintenance (fame premium ×15)', () => {
-    it('should scale warrior upkeep with fame premium ×15 per 10 fame', () => {
+  describe('computeWeeklyBreakdown — Elite Maintenance (1.5g × fame)', () => {
+    it('should scale warrior upkeep with 1.5g × fame premium', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 20 })],
       });
       const b = computeWeeklyBreakdown(input);
       const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
       expect(upkeep).toBeDefined();
-      expect(upkeep!.amount).toBe(75); // 45 + floor(20/10)*15 = 45 + 30
+      expect(upkeep!.amount).toBe(90); // 60 + round(20*1.5) = 60 + 30
     });
 
     it('should calculate upkeep for fame-0 warrior as base only', () => {
@@ -363,7 +363,7 @@ describe('Economy Engine', () => {
       });
       const b = computeWeeklyBreakdown(input);
       const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-      expect(upkeep!.amount).toBe(45);
+      expect(upkeep!.amount).toBe(60);
     });
 
     it('should calculate upkeep for high-fame warrior (fame 60)', () => {
@@ -372,7 +372,7 @@ describe('Economy Engine', () => {
       });
       const b = computeWeeklyBreakdown(input);
       const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-      expect(upkeep!.amount).toBe(135); // 45 + floor(60/10)*15 = 45 + 90
+      expect(upkeep!.amount).toBe(150); // 60 + round(60*1.5) = 60 + 90
     });
 
     it('should sum upkeep across multiple warriors with varying fame', () => {
@@ -385,7 +385,7 @@ describe('Economy Engine', () => {
       });
       const b = computeWeeklyBreakdown(input);
       const upkeep = b.expenses.find((e) => e.label.startsWith('Warrior upkeep'));
-      expect(upkeep!.amount).toBe(240); // 45 + 75 + 120
+      expect(upkeep!.amount).toBe(285); // 60 + 90 + 135
     });
   });
 
@@ -729,7 +729,7 @@ describe('Economy Engine', () => {
       const impact = computeEconomyImpact(input);
       const upkeepEntry = impact.ledgerEntries!.find((e) => e.label.startsWith('Warrior upkeep'));
       expect(upkeepEntry).toBeDefined();
-      expect(upkeepEntry!.amount).toBe(-45);
+      expect(upkeepEntry!.amount).toBe(-60);
     });
 
     it('should set treasuryDelta equal to breakdown.net', () => {

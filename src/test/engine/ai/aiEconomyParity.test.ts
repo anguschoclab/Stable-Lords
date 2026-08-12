@@ -78,7 +78,7 @@ describe('AI Economy Parity', () => {
     const result = processAIStable(rival, state);
 
     // Player path: fame=0, tier-1 → FIGHT_PURSE + WIN_BONUS - WARRIOR_UPKEEP_BASE
-    const expectedDelta = FIGHT_PURSE + WIN_BONUS - 45;
+    const expectedDelta = FIGHT_PURSE + WIN_BONUS - 60;
     expect(result.updatedRival.treasury).toBe(1000 + expectedDelta);
   });
 
@@ -133,9 +133,9 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep = 45 base + Math.floor(30/10)*15 = 45 + 45 = 90
-    // No fights → idle stipend +25. Net = 25 - 90 = -65
-    expect(result.updatedRival.treasury).toBe(1000 - 65);
+    // Upkeep = 60 base + Math.round(30*1.5) = 60 + 45 = 105
+    // No fights → idle stipend +25. Net = 25 - 105 = -80
+    expect(result.updatedRival.treasury).toBe(1000 - 80);
   });
 
   it('AI gets Mana Surge income', () => {
@@ -171,8 +171,8 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep 45 + weather 5 = 50. No fights → stipend +25. Net = 25 - 50 = -25
-    expect(result.updatedRival.treasury).toBe(1000 - 25);
+    // Upkeep 60 + weather 5 = 65. No fights → stipend +25. Net = 25 - 65 = -40
+    expect(result.updatedRival.treasury).toBe(1000 - 40);
   });
 
   it('AI gets weather expenses (Blizzard)', () => {
@@ -195,8 +195,8 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep 45 + weather 10 = 55. No fights → stipend +25. Net = 25 - 55 = -30
-    expect(result.updatedRival.treasury).toBe(1000 - 30);
+    // Upkeep 60 + weather 10 = 70. No fights → stipend +25. Net = 25 - 70 = -45
+    expect(result.updatedRival.treasury).toBe(1000 - 45);
   });
 
   it('AI gets Noble Patronage for famous warriors', () => {
@@ -220,9 +220,9 @@ describe('AI Economy Parity', () => {
     const result = processAIStable(rival, state);
 
     // Patronage = Math.floor((50-40)/10)*25 = 25
-    // Upkeep = 45 + Math.floor(50/10)*15 = 45 + 75 = 120
-    // No fights → stipend +25. Net = 25 + 25 - 120 = -70
-    expect(result.updatedRival.treasury).toBe(1000 - 70);
+    // Upkeep = 60 + Math.round(50*1.5) = 60 + 75 = 135
+    // No fights → stipend +25. Net = 25 + 25 - 135 = -85
+    expect(result.updatedRival.treasury).toBe(1000 - 85);
   });
 
   it('AI only pays trainers with active contracts', () => {
@@ -304,8 +304,8 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep 45 + training 20 = 65. No fights → stipend +25. Net = 25 - 65 = -40
-    expect(result.updatedRival.treasury).toBe(1000 - 40);
+    // Upkeep 60 + training 20 = 80. No fights → stipend +25. Net = 25 - 80 = -55
+    expect(result.updatedRival.treasury).toBe(1000 - 55);
   });
 
   it('AI and player produce identical breakdowns for the same input', () => {

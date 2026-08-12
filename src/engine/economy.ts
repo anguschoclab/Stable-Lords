@@ -158,7 +158,7 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
   if (input.roster.length > 0) {
     // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
     const rosterUpkeep = input.roster.reduce((sum, w) => {
-      const famePremium = Math.floor((w.fame || 0) / 10) * 15; // Increased from 10 to 15 for 1.0 balance
+      const famePremium = Math.round((w.fame || 0) * 1.5); // 1.5g per fame point
       return sum + WARRIOR_UPKEEP_BASE + famePremium;
     }, 0);
     expenses.push({ label: `Warrior upkeep (${input.roster.length})`, amount: rosterUpkeep });

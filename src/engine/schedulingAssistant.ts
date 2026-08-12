@@ -4,6 +4,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from './injuries';
 import { getMatchupBonus } from '@/constants/combat';
 import { getStablePairKey } from '@/utils/keyUtils';
+import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 
 /**
  * Defines the shape of head-to-head record.
@@ -122,6 +123,14 @@ export function scoreMatchup(
     ) {
       score -= 15;
     }
+  }
+
+  // Player challenge/avoid modifiers
+  if (state.playerChallenges?.includes(rivalWarrior.id)) {
+    score += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+  }
+  if (state.playerAvoids?.includes(rivalWarrior.id)) {
+    score += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
   }
 
   return score;

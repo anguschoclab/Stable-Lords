@@ -293,13 +293,13 @@ describe('createFreshState', () => {
   describe('rivals generation', () => {
     const state = createFreshState(SEED);
 
-    it('generates exactly 4 rivals', () => {
-      expect(state.rivals).toHaveLength(4);
+    it('generates exactly 8 rivals', () => {
+      expect(state.rivals).toHaveLength(8);
     });
 
     it('gives each rival a unique id', () => {
       const ids = state.rivals.map((r) => r.id);
-      expect(new Set(ids).size).toBe(4);
+      expect(new Set(ids).size).toBe(8);
     });
 
     it('sets each rival fame to 100', () => {
@@ -360,14 +360,14 @@ describe('createFreshState', () => {
       expect(state.rivals.every((r) => r.trainingAssignments.length === 0)).toBe(true);
     });
 
-    it('selects 4 unique rival stable names', () => {
+    it('selects 8 unique rival stable names', () => {
       const names = state.rivals.map((r) => r.owner.stableName);
-      expect(new Set(names).size).toBe(4);
+      expect(new Set(names).size).toBe(8);
     });
 
     it('gives each rival owner a unique id', () => {
       const ownerIds = state.rivals.map((r) => r.owner.id);
-      expect(new Set(ownerIds).size).toBe(4);
+      expect(new Set(ownerIds).size).toBe(8);
     });
   });
 

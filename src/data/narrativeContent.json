@@ -5042,7 +5042,7 @@
     "tiers": {
       "Common": {
         "points": [66, 70],
-        "cost": 100,
+        "cost": 50,
         "stars": 0
       },
       "Promising": {
@@ -5052,12 +5052,12 @@
       },
       "Exceptional": {
         "points": [74, 78],
-        "cost": 250,
+        "cost": 300,
         "stars": 2
       },
       "Prodigy": {
         "points": [78, 82],
-        "cost": 400,
+        "cost": 500,
         "stars": 3
       }
     },

@@ -1151,4 +1151,72 @@ describe('PromoterPass — eligibility gating', () => {
     );
     expect(rematchOffer).toBeUndefined();
   });
+
+  describe('Player Challenge/Avoid Bias', () => {
+    it('skips avoided warriors for player matchups', () => {
+      // Set up: player warrior p_w_0, avoid rival r_0_w_0
+      state.playerAvoids = ['r_0_w_0'];
+
+      (state as any).promoters = {
+        local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+      };
+
+      const result = runPromoterPass(state);
+      const offers = Object.values(result.boutOffers || {});
+
+      // No offer should pair a player warrior (p_w_*) with r_0_w_0
+      const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+      const playerWithAvoided = offers.find(
+        (o) =>
+          o.warriorIds.some((id) => playerWarriorIds.has(id)) &&
+          o.warriorIds.includes('r_0_w_0' as WarriorId)
+      );
+      expect(playerWithAvoided).toBeUndefined();
+    });
+
+    it('boosts challenged warriors for player matchups', () => {
+      // Set up: player warrior p_w_0, challenge rival r_0_w_0
+      state.playerChallenges = ['r_0_w_0'];
+
+      (state as any).promoters = {
+        local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 1),
+      };
+
+      const result = runPromoterPass(state);
+      const offers = Object.values(result.boutOffers || {});
+
+      // If there's an offer involving a player warrior, it should prefer r_0_w_0
+      const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+      const playerOffers = offers.filter((o) =>
+        o.warriorIds.some((id) => playerWarriorIds.has(id))
+      );
+
+      if (playerOffers.length > 0) {
+        const hasChallenged = playerOffers.some((o) =>
+          o.warriorIds.includes('r_0_w_0' as WarriorId)
+        );
+        expect(hasChallenged).toBe(true);
+      }
+    });
+
+    it('challenge/avoid bias only applies when a player warrior is in the matchup', () => {
+      // Avoid a rival warrior — NPC vs NPC matchups should still be allowed
+      state.playerAvoids = ['r_0_w_0'];
+
+      (state as any).promoters = {
+        local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
+      };
+
+      const result = runPromoterPass(state);
+      const offers = Object.values(result.boutOffers || {});
+
+      const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+      // At least one NPC-vs-NPC offer should exist (not involving player warriors)
+      const npcOffers = offers.filter(
+        (o) => !o.warriorIds.some((id) => playerWarriorIds.has(id))
+      );
+      // With 200 rival warriors and capacity 10, there should be NPC-vs-NPC offers
+      expect(npcOffers.length).toBeGreaterThan(0);
+    });
+  });
 });

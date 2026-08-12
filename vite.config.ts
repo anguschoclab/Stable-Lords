@@ -11,7 +11,7 @@ function stripWorkerRefresh(): Plugin {
     name: 'strip-worker-refresh',
     enforce: 'post',
     transform(code, id) {
-      if (!id.includes('engine/worker.ts') && !id.includes('engine/worker?')) return;
+      if (!id.match(/engine\/(worker|storage\/archiveWorker)\.ts/) && !id.match(/engine\/(worker|storage\/archiveWorker)\?/)) return;
       // Remove the RefreshRuntime preamble block inserted by the SWC plugin
       return {
         code: code

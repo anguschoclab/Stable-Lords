@@ -10,7 +10,6 @@ import { computeCrowdMood } from '@/engine/crowdMood';
 import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { SeededRNGService } from '@/utils/random';
 
 /**
@@ -68,8 +67,6 @@ export function finalizeWeekSideEffectsToImpact(
     state.absoluteWeek,
     rng
   );
-
-  NewsletterFeed.closeWeekToIssue(state.absoluteWeek);
 
   return impact;
 }

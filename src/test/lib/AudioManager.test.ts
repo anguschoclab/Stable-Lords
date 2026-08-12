@@ -3,12 +3,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AudioManager } from '@/lib/AudioManager';
 import '@/test/_setup/setup';
 
-// Mock Howler globally before any imports
-const mockHowlPlay = vi.fn();
 vi.mock('howler', () => {
   return {
     Howl: class MockHowl {
-      play = mockHowlPlay;
+      play = vi.fn();
       volume = vi.fn();
       unload = vi.fn();
       constructor(_opts: unknown) {}
@@ -19,7 +17,6 @@ vi.mock('howler', () => {
 describe('AudioManager', () => {
   beforeEach(() => {
     AudioManager.resetForTesting();
-    vi.clearAllMocks();
     localStorage.clear();
   });
 
@@ -77,17 +74,19 @@ describe('AudioManager', () => {
 
   it('constructor populates sfx Map with Howl instances for all 7 sound types', async () => {
     AudioManager.resetForTesting();
-    AudioManager.getInstance();
+    const manager = AudioManager.getInstance();
     await new Promise((r) => setTimeout(r, 50));
 
-    // Howl constructor should have been called 7 times via loadSfx
-    // The class mock tracks calls via mockHowlPlay being shared
-    // Verify by checking that play() works (sfx Map is populated)
-    const manager = AudioManager.getInstance();
-    await manager.setMuted(false);
-    mockHowlPlay.mockClear();
-    await manager.play('ui_click');
-    expect(mockHowlPlay).toHaveBeenCalledTimes(1);
+    // Access private sfx Map to verify it's populated
+    const sfx = (manager as unknown as { sfx: Map<string, unknown> }).sfx;
+    expect(sfx.size).toBe(7);
+    expect(sfx.has('ui_click')).toBe(true);
+    expect(sfx.has('hit')).toBe(true);
+    expect(sfx.has('crit')).toBe(true);
+    expect(sfx.has('clash')).toBe(true);
+    expect(sfx.has('death')).toBe(true);
+    expect(sfx.has('recovery')).toBe(true);
+    expect(sfx.has('coin')).toBe(true);
   });
 
   it('play() calls sound.play() when not muted and sfx is loaded', async () => {
@@ -95,9 +94,16 @@ describe('AudioManager', () => {
     const manager = AudioManager.getInstance();
     await new Promise((r) => setTimeout(r, 50));
     await manager.setMuted(false);
-    mockHowlPlay.mockClear();
+
+    // Spy on the Howl instance's play method stored in the sfx Map
+    const sfx = (manager as unknown as { sfx: Map<string, { play: () => void }> }).sfx;
+    const howlInstance = sfx.get('ui_click');
+    expect(howlInstance).toBeDefined();
+    const playSpy = vi.spyOn(howlInstance!, 'play');
+
     await manager.play('ui_click');
-    expect(mockHowlPlay).toHaveBeenCalled();
+    expect(playSpy).toHaveBeenCalled();
+    playSpy.mockRestore();
   });
 
   it('arena_ambient is not a valid SfxType (removed from union)', () => {

@@ -3,10 +3,6 @@ import type { StableId, FightId } from '@/types/shared.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateId } from '@/utils/idUtils';
-import { StyleRollups } from '@/engine/stats/styleRollups';
-import { ArenaHistory } from '@/engine/history/arenaHistory';
-import { LoreArchive } from '@/lore/LoreArchive';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
 import { SeededRNGService } from '@/utils/random';
 import { weekToTimestamp } from '@/constants'; /**
@@ -79,18 +75,6 @@ export function handleReporting(
     contractId,
     createdAt: weekToTimestamp(absoluteWeek ?? week),
   };
-
-  // Side effects
-  StyleRollups.addFight({
-    week: absoluteWeek ?? week,
-    styleA: wA.style,
-    styleD: wD.style,
-    winner: outcome.winner,
-    by: outcome.by,
-  });
-  ArenaHistory.append(summary);
-  LoreArchive.signalFight(summary);
-  NewsletterFeed.appendFightResult({ summary, transcript: summary.transcript ?? [] });
 
   const tone: AnnounceTone =
     outcome.by === 'Kill' ? 'grim' : tags.includes('Flashy') ? 'hype' : 'neutral';

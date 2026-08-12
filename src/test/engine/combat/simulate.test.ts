@@ -988,35 +988,33 @@ describe('spatial system integration', () => {
 
 describe('simulateFight — yield mechanic', () => {
   it('produces Yield outcome when a fighter with YIELD fallback is below 15% HP and endurance', () => {
-    // We need a fighter that will drop below 15% HP and endurance.
-    // Use a very aggressive plan for fighter A (high OE, high killDesire)
-    // and a YIELD fallback for fighter D with low CN (low endurance pool).
-    const planA = makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 10, killDesire: 10 });
-    const planD = makePlan(FightingStyle.TotalParry, {
+    // Attacker: high OE/AL for endurance drain, low killDesire, moderate ST.
+    // Defender: ParryRiposte (enduranceMult 1.04), low CN (small endurance pool),
+    // moderate ST/DF (HP drops gradually, not instantly to 0).
+    const planA = makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10, killDesire: 1 });
+    const planD = makePlan(FightingStyle.ParryRiposte, {
       OE: 1,
       AL: 1,
       killDesire: 1,
       fallbackCondition: 'YIELD',
     });
 
-    // D has low CN so endurance pool is small, making it easier to drop below 15%
-    const warriorD = makeWarrior('Yielder', FightingStyle.TotalParry, { CN: 3, ST: 3, DF: 3 });
+    const warriorA = makeWarrior('Striker', FightingStyle.StrikingAttack, { ST: 3, CN: 15, SP: 15 });
+    const warriorD = makeWarrior('Yielder', FightingStyle.ParryRiposte, { CN: 10, ST: 3, DF: 3 });
 
     let foundYield = false;
-    for (let seed = 0; seed < 50; seed++) {
-      const result = simulateFight(
-        planA,
-        planD,
-        makeWarrior('Crusher', FightingStyle.BashingAttack, { ST: 18, CN: 18 }),
-        warriorD,
-        seed
-      );
+    const outcomes: Record<string, number> = {};
+    for (let seed = 0; seed < 200; seed++) {
+      const result = simulateFight(planA, planD, warriorA, warriorD, seed);
+      const key = String(result.by);
+      outcomes[key] = (outcomes[key] ?? 0) + 1;
       if (result.by === 'Yield') {
         foundYield = true;
         expect(result.winner).toBe('A');
         break;
       }
     }
+    if (!foundYield) console.log('Yield outcomes:', outcomes);
     expect(foundYield).toBe(true);
   });
 

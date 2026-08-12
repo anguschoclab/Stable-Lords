@@ -47,7 +47,7 @@ function reset() {
 describe('year rollover', () => {
   beforeEach(reset, 120000);
 
-  it('world bouts keep firing across the week-52 → week-1 boundary', () => {
+  it('world bouts keep firing across the week-52 → week-1 boundary', async () => {
     let state = populateInitialWorld(createFreshState('rollover'), 4141);
     // Jump to late in the year. Keep week/year/absoluteWeek consistent.
     state.week = 50;
@@ -58,7 +58,7 @@ describe('year rollover', () => {
     const boutsPerWeek: number[] = [];
     let prev = state.arenaHistory.length;
     for (let i = 0; i < 6; i++) {
-      state = advanceWeek(state, { headless: true });
+      state = await advanceWeek(state, { headless: true });
       boutsPerWeek.push(state.arenaHistory.length - prev);
       prev = state.arenaHistory.length;
     }

@@ -4,7 +4,7 @@ import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
 describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
-  it('runs a 52-week high-stakes career simulation', () => {
+  it('runs a 52-week high-stakes career simulation', async () => {
     const seed = 12345;
     let state = populateInitialWorld(createFreshState('test-seed'), seed);
 
@@ -17,7 +17,7 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
     }
 
     for (let i = 0; i < 52; i++) {
-      state = advanceWeek(state);
+      state = await advanceWeek(state);
     }
 
     const finalRivalCount = state.rivals?.length || 0;

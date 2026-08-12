@@ -53,30 +53,30 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Basic Week Progression', () => {
-    it('should advance week counter', () => {
-      const week1 = advanceWeek(initialState);
+    it('should advance week counter', async () => {
+      const week1 = await advanceWeek(initialState);
       expect(week1.week).toBe(2);
 
-      const week2 = advanceWeek(week1);
+      const week2 = await advanceWeek(week1);
       expect(week2.week).toBe(3);
     });
 
-    it('should maintain roster across weeks', () => {
-      const week1 = advanceWeek(initialState);
+    it('should maintain roster across weeks', async () => {
+      const week1 = await advanceWeek(initialState);
       expect(week1.roster).toHaveLength(1);
       expect(week1.roster[0]!.name).toBe('Test Warrior');
 
-      const week2 = advanceWeek(week1);
+      const week2 = await advanceWeek(week1);
       expect(week2.roster).toHaveLength(1);
       expect(week2.roster[0]!.name).toBe('Test Warrior');
     });
 
-    it('should preserve warrior IDs across weeks', () => {
+    it('should preserve warrior IDs across weeks', async () => {
       const originalId = initialState.roster[0]!.id;
 
       let state = initialState;
       for (let i = 0; i < 5; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
 
       expect(state.roster[0]!.id).toBe(originalId);
@@ -94,11 +94,11 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Multi-Week Simulation', () => {
-    it('should successfully advance 52 weeks (1 year)', () => {
+    it('should successfully advance 52 weeks (1 year)', async () => {
       let state = initialState;
 
       for (let i = 0; i < 52; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       // Cyclical: 52 advancements from week 1 should land on week 1, year 2
       expect(state.week).toBe(1);
@@ -107,11 +107,11 @@ describe('Week Advancement Integration', () => {
       expect(state.ledger).toBeDefined();
     });
 
-    it('should maintain data integrity over 100 weeks', () => {
+    it('should maintain data integrity over 100 weeks', async () => {
       let state = initialState;
 
       for (let i = 0; i < 100; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
 
         // Verify critical invariants
         expect(state.roster).toBeDefined();
@@ -128,7 +128,7 @@ describe('Week Advancement Integration', () => {
       expect(state.week).toBe(49);
     });
 
-    it('should accumulate newsletter entries over time', () => {
+    it('should accumulate newsletter entries over time', async () => {
       // Force aging to trigger a newsletter entry
       let state = {
         ...initialState,
@@ -136,7 +136,7 @@ describe('Week Advancement Integration', () => {
       };
 
       for (let i = 0; i < 52; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
 
       // Should have at least some newsletter entries from aging/economy
@@ -145,31 +145,31 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Season Transitions', () => {
-    it('should cycle through seasons correctly', () => {
+    it('should cycle through seasons correctly', async () => {
       let state = initialState;
       expect(state.season).toBe('Spring');
 
       // Advance to Summer (week 14)
       for (let i = 0; i < 13; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       expect(state.season).toBe('Summer');
 
       // Advance to Fall (week 27)
       for (let i = 0; i < 13; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       expect(state.season).toBe('Fall');
 
       // Advance to Winter (week 40)
       for (let i = 0; i < 13; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       expect(state.season).toBe('Winter');
 
       // Advance to next year Spring (week 1)
       for (let i = 0; i < 13; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       expect(state.year).toBe(2);
       expect(state.week).toBe(1);
@@ -177,7 +177,7 @@ describe('Week Advancement Integration', () => {
 
       // Advance to next year Summer (week 14)
       for (let i = 0; i < 13; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       expect(state.year).toBe(2);
       expect(state.week).toBe(14);
@@ -185,14 +185,14 @@ describe('Week Advancement Integration', () => {
 
       // Advance to year 3 Spring (week 1)
       for (let i = 0; i < 39; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
       expect(state.year).toBe(3);
       expect(state.week).toBe(1);
       expect(state.season).toBe('Spring');
     });
 
-    it('should not crash on seasonal growth check', () => {
+    it('should not crash on seasonal growth check', async () => {
       // Don't set seasonalGrowth directly on state to avoid circular reference in mergeImpacts
       // Instead, test that the seasonal growth system works by adding a training assignment
       let state: GameState = {
@@ -207,7 +207,7 @@ describe('Week Advancement Integration', () => {
       };
 
       // Advance one week to process training
-      state = advanceWeek(state);
+      state = await advanceWeek(state);
 
       // Should have seasonal growth entries after training
       expect(state.seasonalGrowth).toBeDefined();
@@ -216,7 +216,7 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Aging System', () => {
-    it('should age warriors after 52 weeks', () => {
+    it('should age warriors after 52 weeks', async () => {
       const state = {
         ...initialState,
         rivals: [],
@@ -232,7 +232,7 @@ describe('Week Advancement Integration', () => {
 
       let current: GameState = state;
       for (let i = 0; i < 52; i++) {
-        current = advanceWeek(current);
+        current = await advanceWeek(current);
         // Keep realmRankings empty so w1 is never seeded into tournaments
         current = { ...current, realmRankings: {}, tournaments: [] };
       }
@@ -245,23 +245,23 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Economic Consistency', () => {
-    it('should process economy every week', () => {
+    it('should process economy every week', async () => {
       let state = initialState;
       const initialLedgerLength = state.ledger.length;
 
       for (let i = 0; i < 5; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
 
       // Ledger should have new entries from weekly economic processing
       expect(state.ledger.length).toBeGreaterThan(initialLedgerLength);
     });
 
-    it('should maintain treasury balance over time', () => {
+    it('should maintain treasury balance over time', async () => {
       let state = initialState;
 
       for (let i = 0; i < 20; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
 
         // Treasury should be a valid number (not NaN or Infinity)
         expect(typeof state.treasury).toBe('number');
@@ -271,7 +271,7 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Roster Management', () => {
-    it('should maintain roster integrity across deaths', () => {
+    it('should maintain roster integrity across deaths', async () => {
       const state = {
         ...initialState,
         rivals: [], // no rivals → no fights → w2 cannot die in combat
@@ -296,7 +296,7 @@ describe('Week Advancement Integration', () => {
 
       let current = afterDeath;
       for (let i = 0; i < 10; i++) {
-        current = advanceWeek(current);
+        current = await advanceWeek(current);
       }
 
       // Graveyard should remain stable (only w1)
@@ -308,7 +308,7 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('Training System', () => {
-    it('should process training assignments and clear them', () => {
+    it('should process training assignments and clear them', async () => {
       const state = {
         ...initialState,
         trainingAssignments: [
@@ -320,7 +320,7 @@ describe('Week Advancement Integration', () => {
         ],
       };
 
-      const week1 = advanceWeek(state);
+      const week1 = await advanceWeek(state);
 
       // Training assignments should be cleared after processing
       expect(week1.trainingAssignments).toEqual([]);
@@ -328,18 +328,18 @@ describe('Week Advancement Integration', () => {
   });
 
   describe('State Invariants', () => {
-    it('should allow going negative within debt limits', () => {
+    it('should allow going negative within debt limits', async () => {
       let state = { ...initialState, treasury: 500 };
 
       for (let i = 0; i < 30; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
       }
 
       // Allow going negative (debt system) - usually -1000 or -2500 depending on tuning
       expect(state.treasury).toBeGreaterThan(-3000);
     });
 
-    it('should maintain unique warrior IDs', () => {
+    it('should maintain unique warrior IDs', async () => {
       const state = {
         ...initialState,
         roster: [
@@ -351,7 +351,7 @@ describe('Week Advancement Integration', () => {
 
       let current = state;
       for (let i = 0; i < 20; i++) {
-        current = advanceWeek(current);
+        current = await advanceWeek(current);
 
         const ids = current.roster.map((w) => w.id);
         const uniqueIds = new Set(ids);
@@ -359,11 +359,11 @@ describe('Week Advancement Integration', () => {
       }
     });
 
-    it('should respect cyclical week counter', () => {
+    it('should respect cyclical week counter', async () => {
       let state = initialState;
 
       for (let i = 0; i < 60; i++) {
-        state = advanceWeek(state);
+        state = await advanceWeek(state);
         expect(state.week).toBeGreaterThanOrEqual(1);
         expect(state.week).toBeLessThanOrEqual(52);
       }

@@ -12,6 +12,7 @@ import {
   boutOfferExpirationAbsoluteWeek,
 } from '@/engine/core/absoluteWeek';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
+import { loadCombatNarrative } from '@/data/narrative';
 
 /**
  * Options for week advancement
@@ -127,7 +128,9 @@ function invalidateDeadWarriors(state: GameState, deadIds: Set<WarriorId>): void
   });
 }
 
-function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): GameState {
+async function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): Promise<GameState> {
+  // Safety net: ensure combat narrative data is loaded before bout resolution
+  await loadCombatNarrative();
   // Maps are already built by buildWeekCaches at the week boundary
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
   const {
@@ -172,7 +175,7 @@ function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
 }
 
 /**
- *
+ * Check whether the treasury would fall below the bankruptcy threshold after applying core impacts.
  */
 export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
   const netTreasuryDelta = coreImpacts.reduce((sum, i) => sum + (i.treasuryDelta ?? 0), 0);
@@ -284,7 +287,7 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
  * Stable Lords — Consolidated Weekly Pipeline (1.0 Hardened)
  * Orchestrates the simulation tick using a high-performance batched architecture.
  */
-export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameState {
+export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
   const headless = opts?.headless;
 
   // Deep clone state once at week boundary to allow safe mutation in all passes
@@ -294,7 +297,7 @@ export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameSt
   // Build caches once per week for O(1) lookups
   buildWeekCaches(mutableState);
 
-  const settledState = runBoutPhase(mutableState, ctx, headless);
+  const settledState = await runBoutPhase(mutableState, ctx, headless);
   const coreImpacts = collectCoreImpacts(settledState, ctx);
 
   // Player stop conditions gate PLAYER content only — the WORLD keeps evolving.

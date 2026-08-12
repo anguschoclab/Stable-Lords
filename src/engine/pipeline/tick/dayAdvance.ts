@@ -6,6 +6,6 @@ import { TickOrchestrator } from './TickOrchestrator';
  * Stable Lords — Daily Progression
  * Delegates to the Unified Tick Orchestrator.
  */
-export function advanceDay(state: GameState, _rng?: IRNGService): GameState {
+export async function advanceDay(state: GameState, _rng?: IRNGService): Promise<GameState> {
   return TickOrchestrator.advanceDay(state);
 }

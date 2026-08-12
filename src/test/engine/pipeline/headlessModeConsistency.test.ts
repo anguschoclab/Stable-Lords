@@ -3,10 +3,10 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('headlessModeConsistency', () => {
-  it('headless mode produces consistent state for world/system/rankings passes', () => {
+  it('headless mode produces consistent state for world/system/rankings passes', async () => {
     const state = createFreshState('headless-test-1');
 
-    const nextHeadless = advanceWeek(state, { headless: true });
+    const nextHeadless = await advanceWeek(state, { headless: true });
 
     // World pass should still update weather
     expect(nextHeadless.weather).toBeDefined();
@@ -20,12 +20,12 @@ describe('headlessModeConsistency', () => {
     expect(typeof nextHeadless.realmRankings).toBe('object');
   });
 
-  it('playerStopped flag skips EventPass and NarrativePass but not SeasonalPass', () => {
+  it('playerStopped flag skips EventPass and NarrativePass but not SeasonalPass', async () => {
     // Create a state with empty roster to trigger playerStopped
     const state = createFreshState('headless-test-2');
     state.roster = []; // Empty roster triggers playerStopped
 
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // Week should still advance
     expect(next.week).toBeGreaterThan(state.week);
@@ -41,10 +41,10 @@ describe('headlessModeConsistency', () => {
     expect(typeof next.treasury).toBe('number');
   });
 
-  it('headless mode does not produce dangling references to player-only data', () => {
+  it('headless mode does not produce dangling references to player-only data', async () => {
     const state = createFreshState('headless-test-3');
 
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // Player should still exist
     expect(next.player).toBeDefined();

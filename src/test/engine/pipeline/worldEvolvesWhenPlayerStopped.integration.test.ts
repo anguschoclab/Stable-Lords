@@ -48,15 +48,15 @@ const totalRivalWarriors = (s: GameState) => s.rivals.reduce((acc, r) => acc + r
 describe('world evolves while the player is stopped', () => {
   beforeEach(reset, 120000);
 
-  it('keeps running rival bouts after the player goes bankrupt', () => {
+  it('keeps running rival bouts after the player goes bankrupt', async () => {
     let state = populateInitialWorld(createFreshState('freeze-fix'), 777);
     state.treasury = -10000; // force the player permanently below BANKRUPTCY_THRESHOLD
 
     // advance one week so any in-flight offers settle, then measure the baseline
-    state = advanceWeek(state, { headless: true });
+    state = await advanceWeek(state, { headless: true });
     const boutsAfterWarmup = state.arenaHistory.length;
 
-    for (let i = 0; i < 8; i++) state = advanceWeek(state, { headless: true });
+    for (let i = 0; i < 8; i++) state = await advanceWeek(state, { headless: true });
 
     // Rival-vs-rival world bouts keep firing while the player is bankrupt,
     // so the bout count must grow.
@@ -64,11 +64,11 @@ describe('world evolves while the player is stopped', () => {
     expect(state.arenaHistory.length).toBeGreaterThan(boutsAfterWarmup);
   }, 120000);
 
-  it('keeps rival rosters alive when the player roster is empty', () => {
+  it('keeps rival rosters alive when the player roster is empty', async () => {
     let state = populateInitialWorld(createFreshState('empty-roster'), 778);
     state.roster = []; // player has no warriors
 
-    for (let i = 0; i < 8; i++) state = advanceWeek(state, { headless: true });
+    for (let i = 0; i < 8; i++) state = await advanceWeek(state, { headless: true });
 
     // World keeps churning: rivals must still exist and have non-empty rosters.
     expect(state.rivals.length).toBeGreaterThan(0);

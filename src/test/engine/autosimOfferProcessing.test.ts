@@ -4,9 +4,9 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
 describe('autosimOfferProcessing', () => {
-  it('processPlayerOffers uses warriorToOfferIds index when available', () => {
+  it('processPlayerOffers uses warriorToOfferIds index when available', async () => {
     let state = createFreshState('autosim-offer-index-test');
-    state = advanceWeek(state, { headless: true });
+    state = await advanceWeek(state, { headless: true });
 
     // After advanceWeek, warriorToOfferIds should be built
     expect(state.warriorToOfferIds).toBeDefined();
@@ -16,9 +16,9 @@ describe('autosimOfferProcessing', () => {
     expect(result).toBeDefined();
   });
 
-  it('processPlayerOffers falls back to scan when index is missing', () => {
+  it('processPlayerOffers falls back to scan when index is missing', async () => {
     let state = createFreshState('autosim-offer-scan-test');
-    state = advanceWeek(state, { headless: true });
+    state = await advanceWeek(state, { headless: true });
 
     // Remove the index to force scan fallback
     state.warriorToOfferIds = undefined;
@@ -28,7 +28,7 @@ describe('autosimOfferProcessing', () => {
     expect(result).toBeDefined();
   });
 
-  it('extractWeekSummary handles missing lastSimulationReport gracefully', () => {
+  it('extractWeekSummary handles missing lastSimulationReport gracefully', async () => {
     const state = createFreshState('autosim-summary-missing-test');
     state.lastSimulationReport = undefined;
 
@@ -38,7 +38,7 @@ describe('autosimOfferProcessing', () => {
     expect(summary.deathNames).toEqual([]);
   });
 
-  it('extractWeekSummary correctly counts kills from lastSimulationReport', () => {
+  it('extractWeekSummary correctly counts kills from lastSimulationReport', async () => {
     const state = createFreshState('autosim-summary-kills-test');
     state.lastSimulationReport = {
       id: 'test-report' as any,

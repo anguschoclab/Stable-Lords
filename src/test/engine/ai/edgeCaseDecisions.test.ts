@@ -48,14 +48,14 @@ function makeRival(id: string, roster: Warrior[]): RivalStableData {
 }
 
 describe('AI edgeCaseDecisions', () => {
-  it('AI with empty roster does not crash advanceWeek', () => {
+  it('AI with empty roster does not crash advanceWeek', async () => {
     const state = createFreshState('ai-empty-roster-test');
     state.rivals = [makeRival('rival-empty', [])];
 
     expect(() => advanceWeek(state, { headless: true })).not.toThrow();
   });
 
-  it('AI with all-injured roster does not schedule bouts', () => {
+  it('AI with all-injured roster does not schedule bouts', async () => {
     const state = createFreshState('ai-injured-roster-test');
     state.rivals = [
       makeRival('rival-injured', [
@@ -64,7 +64,7 @@ describe('AI edgeCaseDecisions', () => {
       ]),
     ];
 
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // The injured warriors should still be in the roster (not dead)
     const rival = next.rivals?.find((r) => r.id === 'rival-injured');
@@ -72,26 +72,26 @@ describe('AI edgeCaseDecisions', () => {
     expect(rival!.roster.length).toBe(2);
   });
 
-  it('AI does not draft from empty pool', () => {
+  it('AI does not draft from empty pool', async () => {
     const state = createFreshState('ai-empty-pool-test');
     state.recruitPool = [];
     state.rivals = [makeRival('rival-1', [makeWarrior('rw1', 'Rival1')])];
 
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // The game should not crash and rivals should still have their warriors
     expect(next.rivals).toBeDefined();
     expect(next.rivals!.length).toBeGreaterThan(0);
   });
 
-  it('bankrupt AI stable triggers replacement', () => {
+  it('bankrupt AI stable triggers replacement', async () => {
     const state = createFreshState('ai-bankrupt-test');
     // Create a rival with very low treasury to trigger bankruptcy
     const bankruptRival = makeRival('rival-bankrupt', [makeWarrior('bw1', 'BankruptWarrior')]);
     bankruptRival.treasury = -10000; // Deeply in debt
     state.rivals = [bankruptRival];
 
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // The game should not crash
     expect(next.rivals).toBeDefined();

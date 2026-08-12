@@ -103,7 +103,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     };
 
     // 2. Advance the week (which should trigger the simulation)
-    const nextState = advanceWeek(initialState as GameState);
+    const nextState = await advanceWeek(initialState as GameState);
 
     // 3. Verifications
     // - Should have 1 fight in history (if bout was processed)

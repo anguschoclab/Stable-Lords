@@ -12,7 +12,7 @@ describe('rival trait AI (integration)', () => {
       const before = state.rivals
         .flatMap((r) => r.roster)
         .reduce((s, w) => s + (w.traits?.length ?? 0), 0);
-      for (let i = 0; i < 26; i++) state = advanceWeek(state, { headless: true });
+      for (let i = 0; i < 26; i++) state = await advanceWeek(state, { headless: true });
       const after = state.rivals
         .flatMap((r) => r.roster)
         .reduce((s, w) => s + (w.traits?.length ?? 0), 0);

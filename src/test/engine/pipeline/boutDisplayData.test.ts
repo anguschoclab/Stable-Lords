@@ -103,7 +103,7 @@ function makeBoutState(): GameState {
 }
 
 describe('BoutSimulationPass returns display data', () => {
-  it('runBoutSimulationPass returns { impact, results, summary }', () => {
+  it('runBoutSimulationPass returns { impact, results, summary }', async () => {
     const state = makeBoutState();
     const rng = new SeededRNGService(42);
     const result = runBoutSimulationPass(state, rng);
@@ -116,9 +116,9 @@ describe('BoutSimulationPass returns display data', () => {
     expect(result.summary).toHaveProperty('injuryNames');
   });
 
-  it('runBoutPhase stashes lastWeekBoutDisplay on state via advanceWeek', () => {
+  it('runBoutPhase stashes lastWeekBoutDisplay on state via advanceWeek', async () => {
     const state = makeBoutState();
-    const nextState = advanceWeek(state);
+    const nextState = await advanceWeek(state);
 
     expect(nextState.lastWeekBoutDisplay).toBeDefined();
     expect(nextState.lastWeekBoutDisplay!.results).toHaveLength(1);
@@ -126,9 +126,9 @@ describe('BoutSimulationPass returns display data', () => {
     expect(Array.isArray(nextState.lastWeekBoutDisplay!.injuryNames)).toBe(true);
   });
 
-  it('lastWeekBoutDisplay is plain serializable data (no Maps)', () => {
+  it('lastWeekBoutDisplay is plain serializable data (no Maps)', async () => {
     const state = makeBoutState();
-    const nextState = advanceWeek(state);
+    const nextState = await advanceWeek(state);
 
     expect(() => JSON.stringify(nextState.lastWeekBoutDisplay)).not.toThrow();
     expect(() => structuredClone(nextState.lastWeekBoutDisplay)).not.toThrow();

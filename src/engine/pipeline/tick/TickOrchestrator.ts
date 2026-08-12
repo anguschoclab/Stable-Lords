@@ -17,7 +17,7 @@ export const TickOrchestrator = {
   /**
    * Advances a single day including tournament resolution.
    */
-  advanceDay(state: GameState): GameState {
+  async advanceDay(state: GameState): Promise<GameState> {
     const currentDay = state.day || 0;
     const nextDay = currentDay + 1;
     // Standardize seed generation
@@ -27,7 +27,7 @@ export const TickOrchestrator = {
     // 1. Weekly Transition (Day 7)
     if (nextDay >= 7) {
       // Correct for 52-week year wrap-around logic moved to SystemPass
-      const finalState = runWeeklyPipeline(state);
+      const finalState = await runWeeklyPipeline(state);
       return {
         ...finalState,
         day: 0,
@@ -68,7 +68,7 @@ export const TickOrchestrator = {
    * High-performance: Skips to the end of the current week.
    * Batches tournament rounds into a single summary.
    */
-  skipToWeekEnd(state: GameState): GameState {
+  async skipToWeekEnd(state: GameState): Promise<GameState> {
     let currentState = { ...state };
     const currentDay = state.day || 0;
     const weeklyNewsItems: string[] = [];
@@ -106,7 +106,7 @@ export const TickOrchestrator = {
     }
 
     // 3. Run final weekly pipeline
-    const finalState = runWeeklyPipeline(currentState);
+    const finalState = await runWeeklyPipeline(currentState);
     return {
       ...finalState,
       day: 0,

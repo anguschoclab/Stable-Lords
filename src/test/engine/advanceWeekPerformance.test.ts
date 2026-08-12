@@ -3,7 +3,7 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('advanceWeekPerformance', () => {
-  it('advanceWeek completes within reasonable time for a single week', () => {
+  it('advanceWeek completes within reasonable time for a single week', async () => {
     const state = createFreshState('perf-test-single');
     const start = performance.now();
     advanceWeek(state, { headless: true });
@@ -13,13 +13,13 @@ describe('advanceWeekPerformance', () => {
     expect(elapsed).toBeLessThan(500);
   });
 
-  it('advanceWeek does not degrade significantly over 10 weeks', () => {
+  it('advanceWeek does not degrade significantly over 10 weeks', async () => {
     let state = createFreshState('perf-test-degradation');
     const times: number[] = [];
 
     for (let i = 0; i < 10; i++) {
       const start = performance.now();
-      state = advanceWeek(state, { headless: true });
+      state = await advanceWeek(state, { headless: true });
       times.push(performance.now() - start);
     }
 
@@ -29,7 +29,7 @@ describe('advanceWeekPerformance', () => {
     expect(ratio).toBeLessThan(15);
   });
 
-  it('structuredClone produces a valid deep copy', () => {
+  it('structuredClone produces a valid deep copy', async () => {
     const state = createFreshState('perf-test-clone');
     const cloned = structuredClone(state);
 

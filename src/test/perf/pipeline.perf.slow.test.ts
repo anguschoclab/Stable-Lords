@@ -98,7 +98,7 @@ describe('Determinism vs Performance Trade-offs', () => {
     let seqState = stateSeq;
     for (let i = 0; i < 13; i++) {
       const { advanceWeek } = await import('@/engine/pipeline/services/weekPipelineService');
-      seqState = advanceWeek(seqState, { headless: true });
+      seqState = await advanceWeek(seqState, { headless: true });
     }
 
     // Batch: 1 quarter call

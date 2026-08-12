@@ -7,7 +7,7 @@ import { SeededRNGService } from '@/utils/random';
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
 
 describe('trait training (integration)', () => {
-  it('a blank warrior assigned to a Master trainer resolves after N weeks', () => {
+  it('a blank warrior assigned to a Master trainer resolves after N weeks', async () => {
     let state = createFreshState('train-int');
     const rng = new SeededRNGService(42);
     const w = makeWarrior(
@@ -34,7 +34,7 @@ describe('trait training (integration)', () => {
       { warriorId: w.id, type: 'trait', trainerId: 'm', weeksRemaining: TRAIT_TRAIN_WEEKS },
     ];
 
-    for (let i = 0; i < TRAIT_TRAIN_WEEKS; i++) state = advanceWeek(state);
+    for (let i = 0; i < TRAIT_TRAIN_WEEKS; i++) state = await advanceWeek(state);
 
     const after = state.roster.find((x) => x.id === w.id)!;
     expect(after).toBeDefined();

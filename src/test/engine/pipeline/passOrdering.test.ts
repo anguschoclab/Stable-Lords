@@ -3,20 +3,20 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('passOrdering', () => {
-  it('RecruitmentPass runs before RivalStrategyPass — pool is filled before draft', () => {
+  it('RecruitmentPass runs before RivalStrategyPass — pool is filled before draft', async () => {
     const state = createFreshState('test-seed-123');
     // After advanceWeek, RecruitmentPass should have refilled the pool
     // before RivalStrategyPass drains it via AI draft
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // The pool should not be empty — RecruitmentPass refills it before
     // RivalStrategyPass drains it. If ordering were wrong, pool would be empty.
     expect((next.recruitPool || []).length).toBeGreaterThan(0);
   });
 
-  it('BoutSimulationPass runs before WarriorPass — dead warriors are not trained', () => {
+  it('BoutSimulationPass runs before WarriorPass — dead warriors are not trained', async () => {
     const state = createFreshState('test-seed-456');
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // Warriors that died in bout phase should not appear in training results
     // or have their stats modified by training. The graveyard should contain
@@ -28,9 +28,9 @@ describe('passOrdering', () => {
     }
   });
 
-  it('core impacts are resolved before remaining passes (staged pipeline)', () => {
+  it('core impacts are resolved before remaining passes (staged pipeline)', async () => {
     const state = createFreshState('test-seed-789');
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     // After advanceWeek, the week should have advanced
     expect(next.week).toBeGreaterThan(state.week);

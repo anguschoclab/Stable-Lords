@@ -19,7 +19,7 @@ describe('Simulation Determinism', () => {
     vi.useRealTimers();
   });
 
-  it('should produce identical results from a fresh state over 5 weeks', () => {
+  it('should produce identical results from a fresh state over 5 weeks', async () => {
     // Pin toISOString so any new Date().toISOString() calls inside advanceWeek are stable
     const FIXED_ISO = '2026-04-11T09:00:00.000Z';
     vi.spyOn(Date.prototype, 'toISOString').mockReturnValue(FIXED_ISO);
@@ -34,8 +34,8 @@ describe('Simulation Determinism', () => {
     let currentB = stateB;
 
     for (let i = 0; i < 5; i++) {
-      currentA = advanceWeek(currentA);
-      currentB = advanceWeek(currentB);
+      currentA = await advanceWeek(currentA);
+      currentB = await advanceWeek(currentB);
     }
 
     // 3. Compare states (Omit non-serializable caches)
@@ -48,7 +48,7 @@ describe('Simulation Determinism', () => {
     expect(currentA).toEqual(currentB);
   });
 
-  it('should remain deterministic even when branching (recreating RNG)', () => {
+  it('should remain deterministic even when branching (recreating RNG)', async () => {
     const rng1 = new SeededRNGService(12345);
     const rng2 = new SeededRNGService(12345);
 
@@ -57,19 +57,19 @@ describe('Simulation Determinism', () => {
     }
   });
 
-  it('should produce different results for different seeds', () => {
+  it('should produce different results for different seeds', async () => {
     const stateA = createFreshState('seed-a');
 
     // Manually skew one state's week or a seed-relevant property if needed,
     // but here we just verify that they are deterministic based on the week index.
 
     // Run week 1
-    const week1A = advanceWeek(stateA);
+    const week1A = await advanceWeek(stateA);
 
     // Simulate a different "next week" path (this is a bit contrived but tests the principle)
     // Actually, just changing the starting week will change the seed.
     const stateC = { ...stateA, week: 10 };
-    const week11C = advanceWeek(stateC);
+    const week11C = await advanceWeek(stateC);
 
     expect(JSON.stringify(week1A)).not.toBe(JSON.stringify(week11C));
   });
@@ -90,7 +90,7 @@ describe('Quarter/Year Advancement Determinism', () => {
     // Advance using sequential method
     let sequentialState = stateSequential;
     for (let i = 0; i < 13; i++) {
-      sequentialState = advanceWeek(sequentialState);
+      sequentialState = await advanceWeek(sequentialState);
     }
 
     // Compare functional state (week, year, treasury, roster size, etc.)
@@ -129,7 +129,7 @@ describe('Quarter/Year Advancement Determinism', () => {
     // Advance using sequential method
     let sequentialState = stateSequential;
     for (let i = 0; i < 52; i++) {
-      sequentialState = advanceWeek(sequentialState);
+      sequentialState = await advanceWeek(sequentialState);
     }
 
     // Compare functional state (week, year, treasury, roster size, etc.)

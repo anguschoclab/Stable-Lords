@@ -194,7 +194,7 @@ describe('TimeAdvanceService methods', () => {
     mockState = createFreshState('test-seed');
 
     // Use spyOn instead of vi.mock to avoid bun test vi.mock errors
-    vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation((state) => {
+    vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
       return { ...state, week: state.week + 1, arenaHistory: [] };
     });
 
@@ -218,7 +218,7 @@ describe('TimeAdvanceService methods', () => {
 
     it('should stop early if a condition is triggered at a checkpoint', async () => {
       let calls = 0;
-      vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation((state) => {
+      vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
         calls++;
         if (calls >= 4) {
           return { ...state, week: state.week + 1, roster: [], arenaHistory: [] };
@@ -264,7 +264,7 @@ describe('TimeAdvanceService methods', () => {
 
     it('should stop and return early if a quarter triggers a stop condition', async () => {
       let calls = 0;
-      vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation((state) => {
+      vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
         calls++;
         if (calls >= 6) {
           return {
@@ -312,8 +312,8 @@ describe('TimeAdvanceService methods', () => {
   });
 
   describe('advanceWeek', () => {
-    it('should advance a single week', () => {
-      TimeAdvanceService.advanceWeek(mockState);
+    it('should advance a single week', async () => {
+      await TimeAdvanceService.advanceWeek(mockState);
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(1);
     });
   });

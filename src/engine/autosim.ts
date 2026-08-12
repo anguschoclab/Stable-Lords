@@ -5,9 +5,7 @@ import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
 import { truncateState } from '@/engine/storage/truncation';
 import { TimeAdvanceService, type SoftStopCondition } from './pipeline/tick/timeAdvance';
-import { BANKRUPTCY_THRESHOLD } from '@/constants/economy'; /**
- * Defines the shape of autosim week summary.
- */
+import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 
 /**
  * Defines the shape of autosim week summary.
@@ -19,9 +17,7 @@ export interface AutosimWeekSummary {
   injuries: number;
   deathNames: string[];
   injuryNames: string[];
-} /**
- * Defines the shape of autosim result.
- */
+}
 
 /**
  * Defines the shape of autosim result.
@@ -58,9 +54,7 @@ const STOP_REASON_MAP: Record<string, AutosimResult['stopReason']> = {
  */
 function mapStopReason(reason: string | null | undefined): AutosimResult['stopReason'] {
   return (reason && STOP_REASON_MAP[reason]) || 'max_weeks';
-} /**
- * Defines the shape of autosim options.
- */
+}
 
 /**
  * Defines the shape of autosim options.
@@ -125,7 +119,7 @@ function getNamesFromTitle(title: string): { a: string; d: string } {
 }
 
 /**
- *
+ * Extract week summary from state after advancement.
  */
 export function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
   const boutSummaries = state.lastSimulationReport?.bouts ?? [];
@@ -170,7 +164,7 @@ async function runSequentialAutosim(
 
   for (let i = 0; i < weeksToSim; i++) {
     // 1. Advance Week with headless mode
-    state = advanceWeek(state, {
+    state = await advanceWeek(state, {
       headless: true,
     });
 

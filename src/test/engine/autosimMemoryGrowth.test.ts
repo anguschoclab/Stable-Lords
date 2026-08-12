@@ -4,7 +4,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
 describe('NF3: autosim memory growth', () => {
-  it('sequential autosim should not grow arenaHistory unboundedly', () => {
+  it('sequential autosim should not grow arenaHistory unboundedly', async () => {
     const state = createFreshState('autosim-memory-test');
     const initialArenaLength = (state.arenaHistory || []).length;
 
@@ -21,7 +21,7 @@ describe('NF3: autosim memory growth', () => {
     });
   });
 
-  it('sequential autosim should not grow ledger unboundedly', () => {
+  it('sequential autosim should not grow ledger unboundedly', async () => {
     const state = createFreshState('autosim-ledger-test');
 
     return runAutosim(state, { weeksToSim: 10 }).then((result) => {
@@ -36,9 +36,9 @@ describe('NF3: autosim memory growth', () => {
     });
   });
 
-  it('extractWeekSummary reads from lastSimulationReport', () => {
+  it('extractWeekSummary reads from lastSimulationReport', async () => {
     const state = createFreshState('autosim-summary-test');
-    const next = advanceWeek(state, { headless: true });
+    const next = await advanceWeek(state, { headless: true });
 
     const summary = extractWeekSummary(next, next.week);
     expect(summary.week).toBe(next.week);

@@ -11,7 +11,7 @@ import { evaluateStopConditions } from './stopConditions';
 import { extractWeekSummary, buildQuarterSummary, buildAnnualSummary } from './summaries';
 
 export const TimeAdvanceService = {
-  advanceWeek(state: GameState, opts?: AdvanceOptions): GameState {
+  async advanceWeek(state: GameState, opts?: AdvanceOptions): Promise<GameState> {
     const weekOpts: WeekAdvanceOptions = {
       headless: opts?.headless,
     };
@@ -33,7 +33,7 @@ export const TimeAdvanceService = {
       const weekOpts: WeekAdvanceOptions = {
         headless: opts?.headless,
       };
-      currentState = advanceWeek(currentState, weekOpts);
+      currentState = await advanceWeek(currentState, weekOpts);
 
       weekSummaries.push(extractWeekSummary(currentState));
 

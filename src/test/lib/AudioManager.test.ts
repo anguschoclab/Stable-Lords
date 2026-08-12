@@ -9,7 +9,6 @@ vi.mock('howler', () => {
       play = vi.fn();
       volume = vi.fn();
       unload = vi.fn();
-      constructor(_opts: unknown) {}
     },
   };
 });

@@ -80,7 +80,7 @@ function scoreWeapon(item: EquipmentItem, style: FightingStyle, profile: BuildPr
 }
 
 function scoreArmor(item: EquipmentItem, profile: BuildProfile): number {
-  let score = 0;
+  let score: number;
   if (profile === 'speed') score = item.weight <= 1 ? 30 : item.weight <= 2 ? 15 : 0;
   else if (profile === 'damage') score = item.weight <= 3 ? 20 : 10;
   else if (profile === 'tank')
@@ -103,7 +103,7 @@ function scoreArmor(item: EquipmentItem, profile: BuildProfile): number {
 }
 
 function scoreShield(item: EquipmentItem, profile: BuildProfile): number {
-  let score = 0;
+  let score: number;
   if (item.id === 'none_shield') score = profile === 'speed' || profile === 'damage' ? 20 : 5;
   else if (profile === 'tank') score = item.weight >= 3 ? 30 : 20;
   else if (profile === 'speed') score = item.weight <= 1 ? 15 : 0;
@@ -122,7 +122,7 @@ function scoreShield(item: EquipmentItem, profile: BuildProfile): number {
 }
 
 function scoreHelm(item: EquipmentItem, profile: BuildProfile): number {
-  let score = 0;
+  let score: number;
   if (item.id === 'none_helm') score = profile === 'speed' ? 20 : 5;
   else if (profile === 'tank') score = item.weight >= 2 ? 20 + item.weight : 15;
   else if (profile === 'speed') score = item.weight <= 1 ? 20 : 5;

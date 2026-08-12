@@ -50,6 +50,18 @@ export interface EquipmentItem {
   // Used by combatDamage to apply zone-specific mitigation when the defender
   // is protecting that band.
   coverage?: 'LOW' | 'MEDIUM' | 'HIGH';
+  // Armor/helm: flat damage reduction applied after multiplicative armor-type
+  // modifiers. Stacks armor + helm, floored at 1 total damage.
+  mitigation?: number;
+  // Armor/helm: flat DEF skill bonus contributed by this item.
+  defenseMod?: number;
+  // Armor/helm: endurance drain multiplier (1.0 = no penalty, 1.5 = 50% more drain).
+  // Wearer-only — does not affect the opponent.
+  enduranceCostMod?: number;
+  // Shield-only: parry/DEF bonus contributed by this shield (replaces hardcoded getShieldBonus).
+  shieldParryBonus?: number;
+  // Shield-only: ATT penalty applied when wielding this shield (e.g. large_shield = -1).
+  shieldAttPenalty?: number;
 } /**
  * Defines the shape of equipment loadout.
  */

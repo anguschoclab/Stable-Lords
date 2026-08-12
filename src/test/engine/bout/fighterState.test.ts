@@ -16,7 +16,7 @@ describe('fighterState', () => {
       attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
       injuries: [],
-      equipment: { weapon: 'broadsword', armor: 'leather', helm: 'none', shield: 'none' },
+      equipment: { weapon: 'broadsword', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
       derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
       ...overrides,
     }) as Warrior;
@@ -100,14 +100,14 @@ describe('fighterState', () => {
 
     it('applies equipment modifiers', () => {
       const warrior = createMockWarrior({
-        equipment: { weapon: 'short_spear', armor: 'chainmail', helm: 'none', shield: 'none' },
+        equipment: { weapon: 'short_spear', armor: 'chain_mail', helm: 'none_helm', shield: 'none_shield' },
       });
       const plan = createMockPlan();
 
       const result = createFighterState('A', plan, warrior);
 
       expect(result.weaponId).toBe('short_spear');
-      expect(result.armorId).toBe('chainmail');
+      expect(result.armorId).toBe('chain_mail');
     });
 
     it('calculates HP from derived stats', () => {
@@ -137,7 +137,7 @@ describe('fighterState', () => {
     it('applies weapon requirement penalties when skill too low', () => {
       const warrior = createMockWarrior({
         baseSkills: { ATT: 5, DEF: 5, INI: 5, PAR: 5, RIP: 5, DEC: 5 },
-        equipment: { weapon: 'halberd', armor: 'leather', helm: 'none', shield: 'none' },
+        equipment: { weapon: 'halberd', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
       });
       const plan = createMockPlan();
 
@@ -221,8 +221,8 @@ describe('fighterState', () => {
       const warrior = createMockWarrior({
         equipment: {
           weapon: 'halberd',
-          armor: 'plate',
-          helm: 'none',
+          armor: 'plate_mail',
+          helm: 'none_helm',
           shield: 'large_shield',
         },
       });
@@ -231,7 +231,7 @@ describe('fighterState', () => {
       const result = createFighterState('A', plan, warrior);
 
       expect(result.weaponId).toBe('halberd');
-      expect(result.armorId).toBe('plate');
+      expect(result.armorId).toBe('plate_mail');
       expect(result.shieldId).toBe('large_shield');
     });
 

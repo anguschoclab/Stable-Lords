@@ -88,7 +88,7 @@ describe('AB — inherent called shot (armor bypass)', () => {
     const bypass = Math.max(0, Math.min(0.4, 15 / 50)); // DF=15
 
     // Light armor (leather): slash mult = 0.9
-    const lightMitigated = applyArmorTypeMod(rawDamage, weaponId, 'leather_armor');
+    const lightMitigated = applyArmorTypeMod(rawDamage, weaponId, 'leather');
     const lightAB = Math.round(lightMitigated + bypass * (rawDamage - lightMitigated));
     const lightAdvantage = lightAB - lightMitigated;
 

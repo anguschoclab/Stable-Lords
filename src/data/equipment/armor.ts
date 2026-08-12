@@ -19,6 +19,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 0,
     description: 'No armor. Maximum mobility.',
+    mitigation: 0,
+    defenseMod: 0,
+    enduranceCostMod: 1.0,
   },
   {
     id: 'padded',
@@ -27,6 +30,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 2,
     description: 'Quilted cloth armor. Basic protection.',
+    mitigation: 1,
+    defenseMod: 0,
+    enduranceCostMod: 1.1,
   },
   {
     id: 'leather',
@@ -35,6 +41,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 4,
     description: 'Cured leather armor. Light and flexible.',
+    mitigation: 2,
+    defenseMod: 1,
+    enduranceCostMod: 1.2,
   },
   {
     id: 'studded_leather',
@@ -43,6 +52,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 5,
     description: 'Leather reinforced with metal studs.',
+    mitigation: 3,
+    defenseMod: 1,
+    enduranceCostMod: 1.3,
   },
   {
     id: 'ring_mail',
@@ -51,6 +63,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 6,
     description: 'Leather with metal rings sewn on.',
+    mitigation: 4,
+    defenseMod: 1,
+    enduranceCostMod: 1.4,
   },
   {
     id: 'scale_mail',
@@ -59,6 +74,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 8,
     description: 'Overlapping metal scales. Heavy.',
+    mitigation: 5,
+    defenseMod: 2,
+    enduranceCostMod: 1.6,
   },
   {
     id: 'chain_mail',
@@ -67,6 +85,9 @@ export const ARMORS: EquipmentItem[] = [
     slot: 'armor',
     weight: 10,
     description: 'Interlocking metal rings. Standard heavy protection.',
+    mitigation: 6,
+    defenseMod: 2,
+    enduranceCostMod: 1.8,
   },
   {
     id: 'plate_mail',
@@ -76,6 +97,9 @@ export const ARMORS: EquipmentItem[] = [
     weight: 12,
     description: 'Full plate mail. Very heavy.',
     restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack],
+    mitigation: 8,
+    defenseMod: 3,
+    enduranceCostMod: 2.0,
   },
   {
     id: 'plate_armor',
@@ -89,5 +113,8 @@ export const ARMORS: EquipmentItem[] = [
       FightingStyle.LungingAttack,
       FightingStyle.SlashingAttack,
     ],
+    mitigation: 10,
+    defenseMod: 3,
+    enduranceCostMod: 2.5,
   },
 ];

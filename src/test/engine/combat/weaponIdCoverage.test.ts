@@ -229,3 +229,49 @@ describe('getItemById finds every weapon', () => {
     }
   });
 });
+
+// ─── 9. Shield data-driven modifier fields ───────────────────────────────────
+// Shields must define shieldParryBonus and shieldAttPenalty matching the
+// hardcoded getShieldBonus values in fighterState.ts, so the hardcoded
+// lookup can be replaced with a data-driven one.
+
+describe('Shield data-driven modifier fields', () => {
+  it('small_shield has shieldParryBonus=1, shieldAttPenalty=0', () => {
+    const item = getItemById('small_shield');
+    expect(item).toBeDefined();
+    expect(item!.shieldParryBonus).toBe(1);
+    expect(item!.shieldAttPenalty).toBe(0);
+  });
+
+  it('medium_shield has shieldParryBonus=2, shieldAttPenalty=0', () => {
+    const item = getItemById('medium_shield');
+    expect(item).toBeDefined();
+    expect(item!.shieldParryBonus).toBe(2);
+    expect(item!.shieldAttPenalty).toBe(0);
+  });
+
+  it('large_shield has shieldParryBonus=3, shieldAttPenalty=-1', () => {
+    const item = getItemById('large_shield');
+    expect(item).toBeDefined();
+    expect(item!.shieldParryBonus).toBe(3);
+    expect(item!.shieldAttPenalty).toBe(-1);
+  });
+
+  it('all shields define shieldParryBonus as a non-negative number', () => {
+    for (const id of SHIELD_ITEM_IDS) {
+      const item = getItemById(id);
+      expect(item).toBeDefined();
+      expect(typeof item!.shieldParryBonus).toBe('number');
+      expect(item!.shieldParryBonus).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('all shields define shieldAttPenalty as a number <= 0', () => {
+    for (const id of SHIELD_ITEM_IDS) {
+      const item = getItemById(id);
+      expect(item).toBeDefined();
+      expect(typeof item!.shieldAttPenalty).toBe('number');
+      expect(item!.shieldAttPenalty).toBeLessThanOrEqual(0);
+    }
+  });
+});

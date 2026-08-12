@@ -143,6 +143,23 @@ describe('retrieveHotState plausibility check', () => {
     expect(result).toBeNull();
   });
 
+  it('returns null and logs error when meta.version does not match SAVE_STATE_VERSION', async () => {
+    const service = new OPFSArchiveService();
+    const mismatchedState = {
+      ...validState,
+      meta: { gameName: 'Stable Lords', version: '0.9.0-old', createdAt: '2024-01-01' },
+    };
+    setMockOPFSFileText(JSON.stringify(mismatchedState));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const result = await service.retrieveHotState('slot-version-mismatch');
+    expect(result).toBeNull();
+    expect(errorSpy).toHaveBeenCalledWith(
+      'incompatible save version: expected 2.1.0-hardened, got 0.9.0-old',
+      expect.objectContaining({ slotId: 'slot-version-mismatch' })
+    );
+  });
+
   it('still returns null on invalid JSON (pre-existing behavior)', async () => {
     const service = new OPFSArchiveService();
     setMockOPFSFileText('not-valid-json');

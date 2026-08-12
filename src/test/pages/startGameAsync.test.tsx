@@ -101,8 +101,13 @@ vi.mock('@/components/startGame/ActionButtons', () => ({
   ),
 }));
 
+let mockOnLoad: ((slotId: string) => void) | null = null;
+
 vi.mock('@/components/startGame/SavedGamesSection', () => ({
-  default: () => null,
+  default: ({ onLoad }: any) => {
+    mockOnLoad = onLoad;
+    return null;
+  },
 }));
 
 vi.mock('@/utils/dateUtils', () => ({
@@ -110,7 +115,8 @@ vi.mock('@/utils/dateUtils', () => ({
 }));
 
 import StartGame from '@/pages/StartGame';
-import { saveToSlot } from '@/state/saveSlots';
+import { saveToSlot, loadFromSlot } from '@/state/saveSlots';
+import { toast } from 'sonner';
 
 describe('#5 StartGame handleNewGame awaits saveToSlot', () => {
   beforeEach(() => {
@@ -137,5 +143,42 @@ describe('#5 StartGame handleNewGame awaits saveToSlot', () => {
     });
 
     expect(saveToSlot).toHaveBeenCalledBefore(mockLoadGame);
+  });
+});
+
+describe('StartGame loadSlot failure handling', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('calls toast.error when loadFromSlot returns null', async () => {
+    vi.mocked(loadFromSlot).mockResolvedValue(null);
+
+    render(<StartGame />);
+
+    // Trigger loadSlot via the SavedGamesSection onLoad callback
+    expect(mockOnLoad).not.toBeNull();
+    mockOnLoad!('slot_test_1');
+
+    await waitFor(() => {
+      expect(loadFromSlot).toHaveBeenCalledWith('slot_test_1');
+      expect(toast.error).toHaveBeenCalled();
+    });
+  });
+
+  it('does NOT call loadGame when loadFromSlot returns null', async () => {
+    vi.mocked(loadFromSlot).mockResolvedValue(null);
+
+    render(<StartGame />);
+
+    mockOnLoad!('slot_test_1');
+
+    await waitFor(() => {
+      expect(loadFromSlot).toHaveBeenCalled();
+    });
+
+    // Give any pending microtasks a chance to flush
+    await new Promise((r) => setTimeout(r, 50));
+    expect(mockLoadGame).not.toHaveBeenCalled();
   });
 });

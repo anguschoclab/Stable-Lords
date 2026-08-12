@@ -3,6 +3,7 @@ import { ArchiveConflictError } from './types';
 import { assertSafeFileNamePart } from './validation';
 import type { ArchiveService } from './types';
 import { isPlausibleGameState } from './plausibility';
+import { SAVE_STATE_VERSION } from '@/constants/core';
 
 /** OPFS-based archive service implementing the ArchiveService interface for persistent storage. */
 export class OPFSArchiveService implements ArchiveService {
@@ -107,6 +108,13 @@ export class OPFSArchiveService implements ArchiveService {
         const parsed: unknown = JSON.parse(text);
         if (!isPlausibleGameState(parsed)) {
           console.error('corrupt/incompatible save: failed plausibility check', { slotId });
+          return null;
+        }
+        if (parsed.meta.version !== SAVE_STATE_VERSION) {
+          console.error(
+            `incompatible save version: expected ${SAVE_STATE_VERSION}, got ${parsed.meta.version}`,
+            { slotId }
+          );
           return null;
         }
         if (import.meta.env.DEV) {

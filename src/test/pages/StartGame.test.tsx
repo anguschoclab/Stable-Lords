@@ -85,4 +85,36 @@ describe('StartGame', () => {
       expect(toast.error).toHaveBeenCalledWith('Import failed');
     });
   });
+
+  it('shows a load-failure toast when import succeeds but loadFromSlot returns null', async () => {
+    vi.mocked(saveSlots.importSaveToNewSlot).mockResolvedValue('slot_imported_1');
+    vi.mocked(saveSlots.loadFromSlot).mockResolvedValue(null);
+
+    const mockFileReader = {
+      readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {
+        if (this.onload) {
+          this.onload({ target: { result: '{"valid": "json"}' } } as any);
+        }
+      }),
+      onload: null,
+    };
+
+    window.FileReader = vi.fn().mockImplementation(function () {
+      return mockFileReader;
+    }) as any;
+
+    render(<StartGame />);
+
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const file = new File(['{"valid": "json"}'], 'save.json', { type: 'application/json' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(saveSlots.importSaveToNewSlot).toHaveBeenCalledWith('{"valid": "json"}');
+      expect(saveSlots.loadFromSlot).toHaveBeenCalledWith('slot_imported_1');
+      expect(toast.error).toHaveBeenCalledWith(
+        'Imported save could not be loaded — incompatible or corrupted. A backup has been saved.'
+      );
+    });
+  });
 });

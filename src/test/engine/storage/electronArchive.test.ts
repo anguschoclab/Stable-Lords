@@ -129,6 +129,45 @@ describe('ElectronArchiveService', () => {
       const result = await service.retrieveHotState('slot1');
       expect(result).toBeNull();
     });
+
+    it('logs error to console when IPC returns { success: false }', async () => {
+      (global as any).window = {
+        electronAPI: createMockElectronAPI({
+          loadGame: vi.fn().mockResolvedValue({
+            success: false,
+            error: 'Incompatible save version',
+          }),
+        }),
+      };
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot1');
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to retrieve hot state:',
+        'Incompatible save version'
+      );
+
+      consoleSpy.mockRestore();
+    });
+
+    it('logs error to console when IPC returns { success: false } for not found', async () => {
+      (global as any).window = {
+        electronAPI: createMockElectronAPI({
+          loadGame: vi.fn().mockResolvedValue({ success: false, error: 'Save file not found' }),
+        }),
+      };
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot1');
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to retrieve hot state:',
+        'Save file not found'
+      );
+
+      consoleSpy.mockRestore();
+    });
   });
 
   // ───────────────────────────────────────────────────────────────────────────

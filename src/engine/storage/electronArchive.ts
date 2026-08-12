@@ -83,6 +83,9 @@ export class ElectronArchiveService implements ArchiveService {
       if (result.success && result.data) {
         return result.data as GameState;
       }
+      if (!result.success) {
+        console.error('Failed to retrieve hot state:', result.error);
+      }
       return null;
     } catch (error) {
       console.error('Error retrieving hot state:', error);

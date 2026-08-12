@@ -83,6 +83,9 @@ vi.mock('fs/promises', () => ({
   unlink: vi.fn().mockResolvedValue(undefined),
 }));
 
+import { ipcMain as mockIpcMain } from 'electron';
+import * as mockFs from 'fs/promises';
+
 import {
   createWindow,
   createMenu,
@@ -91,6 +94,8 @@ import {
   _setMainWindow,
   _getTray,
   _setTray,
+  validateAndMigrateState,
+  registerIPCHandlers,
 } from '../../electron/main';
 
 function findMenuItem(template: any[] | null, label: string): any | null {
@@ -255,6 +260,188 @@ describe('electron/main.ts behavioral tests', () => {
       const handler = mockState.appHandlers['before-quit'];
       expect(handler).toBeDefined();
       expect(() => handler!()).not.toThrow();
+    });
+  });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Suite: validateAndMigrateState — pure function unit tests
+  // ───────────────────────────────────────────────────────────────────────────
+  describe('validateAndMigrateState', () => {
+    const CURRENT_VERSION = '2.1.0-hardened';
+
+    it('returns { valid: true, data } when meta.version matches SAVE_STATE_VERSION', () => {
+      const state = { meta: { version: CURRENT_VERSION, gameName: 'Test' }, week: 1 };
+      const result = validateAndMigrateState(state);
+      expect(result.valid).toBe(true);
+      if (result.valid) {
+        expect(result.data).toEqual(state);
+      }
+    });
+
+    it('returns { valid: false, reason: "incompatible" } when meta.version does not match and no migration exists', () => {
+      const state = { meta: { version: '0.9.0-old', gameName: 'Test' }, week: 1 };
+      const result = validateAndMigrateState(state);
+      expect(result.valid).toBe(false);
+      if (!result.valid) {
+        expect(result.reason).toBe('incompatible');
+      }
+    });
+
+    it('returns { valid: false, reason: "malformed" } when meta.version is missing', () => {
+      const state = { meta: { gameName: 'Test' }, week: 1 };
+      const result = validateAndMigrateState(state);
+      expect(result.valid).toBe(false);
+      if (!result.valid) {
+        expect(result.reason).toBe('malformed');
+      }
+    });
+
+    it('returns { valid: false, reason: "malformed" } when meta.version is not a string', () => {
+      const state = { meta: { version: 123, gameName: 'Test' }, week: 1 };
+      const result = validateAndMigrateState(state);
+      expect(result.valid).toBe(false);
+      if (!result.valid) {
+        expect(result.reason).toBe('malformed');
+      }
+    });
+
+    it('returns { valid: false, reason: "malformed" } when meta is missing entirely', () => {
+      const state = { week: 1 };
+      const result = validateAndMigrateState(state);
+      expect(result.valid).toBe(false);
+      if (!result.valid) {
+        expect(result.reason).toBe('malformed');
+      }
+    });
+
+    it('returns { valid: false, reason: "malformed" } when state is null', () => {
+      const result = validateAndMigrateState(null);
+      expect(result.valid).toBe(false);
+      if (!result.valid) {
+        expect(result.reason).toBe('malformed');
+      }
+    });
+  });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Suite: load-game IPC handler — version check + .bak backup
+  // ───────────────────────────────────────────────────────────────────────────
+  describe('load-game IPC handler', () => {
+    let ipcHandlers: Record<string, (...args: any[]) => any>;
+
+    beforeEach(() => {
+      ipcHandlers = {};
+      // Capture ipcMain.handle registrations
+      vi.mocked(mockIpcMain.handle).mockImplementation(
+        (channel: string, handler: (...args: any[]) => any) => {
+          ipcHandlers[channel] = handler;
+          return undefined as any;
+        }
+      );
+      registerIPCHandlers();
+    });
+
+    it('returns { success: true, data } for a valid-version save', async () => {
+      const validState = JSON.stringify({
+        meta: { version: '2.1.0-hardened', gameName: 'Test' },
+        week: 1,
+      });
+      vi.mocked(mockFs.readFile).mockResolvedValue(validState);
+      vi.mocked(mockFs.access).mockResolvedValue(undefined);
+
+      const result = await ipcHandlers['load-game']!({}, 'slot1');
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(JSON.parse(validState));
+    });
+
+    it('returns { success: false, error: "Incompatible save version" } for a mismatched version', async () => {
+      const oldState = JSON.stringify({
+        meta: { version: '0.9.0-old', gameName: 'Test' },
+        week: 1,
+      });
+      vi.mocked(mockFs.readFile).mockResolvedValue(oldState);
+      vi.mocked(mockFs.access).mockResolvedValue(undefined);
+
+      const result = await ipcHandlers['load-game']!({}, 'slot1');
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Incompatible save version');
+    });
+
+    it('writes .bak file on version mismatch', async () => {
+      const oldState = JSON.stringify({
+        meta: { version: '0.9.0-old', gameName: 'Test' },
+        week: 1,
+      });
+      const writeSpy = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(mockFs.readFile).mockResolvedValue(oldState);
+      vi.mocked(mockFs.access).mockResolvedValue(undefined);
+      vi.mocked(mockFs.writeFile).mockImplementation(writeSpy);
+
+      await ipcHandlers['load-game']!({}, 'slot1');
+
+      // Verify writeFile was called with a .bak path
+      const bakCall = writeSpy.mock.calls.find(
+        (call: any[]) => typeof call[0] === 'string' && call[0].endsWith('.json.bak')
+      );
+      expect(bakCall).toBeDefined();
+      expect(bakCall![1]).toBe(oldState);
+    });
+
+    it('returns { success: false, error: "Save file not found" } for missing file (regression guard)', async () => {
+      vi.mocked(mockFs.access).mockRejectedValue(new Error('not found'));
+
+      const result = await ipcHandlers['load-game']!({}, 'slot1');
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Save file not found');
+    });
+  });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Suite: save-game IPC handler — stamps meta.version
+  // ───────────────────────────────────────────────────────────────────────────
+  describe('save-game IPC handler', () => {
+    let ipcHandlers: Record<string, (...args: any[]) => any>;
+
+    beforeEach(() => {
+      ipcHandlers = {};
+      vi.mocked(mockIpcMain.handle).mockImplementation(
+        (channel: string, handler: (...args: any[]) => any) => {
+          ipcHandlers[channel] = handler;
+          return undefined as any;
+        }
+      );
+      registerIPCHandlers();
+    });
+
+    it('stamps meta.version with SAVE_STATE_VERSION before writing to disk', async () => {
+      const state = {
+        meta: { gameName: 'Test', version: 'old-version', createdAt: '2024-01-01' },
+        week: 1,
+      };
+      const writeSpy = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(mockFs.writeFile).mockImplementation(writeSpy);
+      vi.mocked(mockFs.mkdir).mockResolvedValue(undefined);
+
+      const result = await ipcHandlers['save-game']!({}, 'slot1', state);
+      expect(result.success).toBe(true);
+
+      const writtenJson = writeSpy.mock.calls[0]![1] as string;
+      const writtenState = JSON.parse(writtenJson);
+      expect(writtenState.meta.version).toBe('2.1.0-hardened');
+    });
+
+    it('stamps meta.version even when meta is missing', async () => {
+      const state = { week: 1, year: 1 };
+      const writeSpy = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(mockFs.writeFile).mockImplementation(writeSpy);
+      vi.mocked(mockFs.mkdir).mockResolvedValue(undefined);
+
+      const result = await ipcHandlers['save-game']!({}, 'slot1', state);
+      expect(result.success).toBe(true);
+
+      const writtenJson = writeSpy.mock.calls[0]![1] as string;
+      const writtenState = JSON.parse(writtenJson);
+      expect(writtenState.meta.version).toBe('2.1.0-hardened');
     });
   });
 });

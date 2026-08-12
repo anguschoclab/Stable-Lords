@@ -96,7 +96,11 @@ export default function StartGame() {
   const loadSlot = useCallback(
     async (slotId: string) => {
       const state = await loadFromSlot(slotId);
-      if (state) loadGame(slotId, state);
+      if (state) {
+        loadGame(slotId, state);
+      } else {
+        toast.error('Save could not be loaded — incompatible or corrupted. A backup has been saved.');
+      }
     },
     [loadGame]
   );
@@ -136,7 +140,11 @@ export default function StartGame() {
           refreshSlots();
           toast.success('Save imported! Loading now…');
           const state = await loadFromSlot(slotId);
-          if (state) loadGame(slotId, state);
+          if (state) {
+            loadGame(slotId, state);
+          } else {
+            toast.error('Imported save could not be loaded — incompatible or corrupted. A backup has been saved.');
+          }
         } catch (err) {
           toast.error((err as Error)?.message ?? 'Failed to import save file.');
         }

@@ -18,6 +18,38 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Keep in sync with src/constants/core/core.ts
+const SAVE_STATE_VERSION = '2.1.0-hardened';
+
+// Migration map: oldVersion → migrationFn. Empty for now — all mismatches are blocked.
+const MIGRATIONS: Record<string, (state: any) => any> = {};
+
+type ValidationResult = { valid: true; data: any } | { valid: false; reason: string };
+
+/** Validates save state shape and version. Applies migration if available. */
+export function validateAndMigrateState(state: unknown): ValidationResult {
+  if (!state || typeof state !== 'object') {
+    return { valid: false, reason: 'malformed' };
+  }
+  const s = state as any;
+  if (!s.meta || typeof s.meta !== 'object') {
+    return { valid: false, reason: 'malformed' };
+  }
+  if (typeof s.meta.version !== 'string' || typeof s.meta.gameName !== 'string') {
+    return { valid: false, reason: 'malformed' };
+  }
+  if (s.meta.version === SAVE_STATE_VERSION) {
+    return { valid: true, data: s };
+  }
+  const migrate = MIGRATIONS[s.meta.version];
+  if (migrate) {
+    const migrated = migrate(s);
+    migrated.meta.version = SAVE_STATE_VERSION;
+    return { valid: true, data: migrated };
+  }
+  return { valid: false, reason: 'incompatible' };
+}
+
 // Simple development mode check - force dev mode for now since we're testing
 const isDev = !app.isPackaged;
 // Vite uses port 8080 by default, but may use 8081 if 8080 is in use
@@ -387,7 +419,7 @@ export function createTray() {
   });
 }
 
-function registerIPCHandlers() {
+export function registerIPCHandlers() {
   // Validate slot ID format
   function validateSlotId(slotId: string): boolean {
     return (
@@ -426,6 +458,11 @@ function registerIPCHandlers() {
       if (!state || typeof state !== 'object') {
         return { success: false, error: 'Invalid state data' };
       }
+      // Defensively stamp meta.version at the storage layer
+      if (!state.meta || typeof state.meta !== 'object') {
+        state.meta = {};
+      }
+      state.meta.version = SAVE_STATE_VERSION;
       const stateStr = JSON.stringify(state, null, 2);
       if (stateStr.length > 10 * 1024 * 1024) {
         return { success: false, error: 'State payload size exceeds limit' };
@@ -452,7 +489,19 @@ function registerIPCHandlers() {
         return { success: false, error: 'Save file not found' };
       }
       const data = await fs.readFile(filePath, 'utf-8');
-      return { success: true, data: JSON.parse(data) };
+      const parsed = JSON.parse(data);
+      const validation = validateAndMigrateState(parsed);
+      if (validation.valid) {
+        return { success: true, data: validation.data };
+      }
+      // Version mismatch or malformed — back up the original before returning failure
+      const bakPath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json.bak`);
+      try {
+        await fs.writeFile(bakPath, data);
+      } catch (backupError) {
+        console.error('Failed to write .bak backup:', backupError);
+      }
+      return { success: false, error: 'Incompatible save version' };
     } catch (error) {
       console.error('Error loading game:', error);
       return { success: false, error: (error as Error).message };

@@ -1,0 +1,120 @@
+{
+  "blurbs": {
+    "neutral": [
+      "%A defeated %D%H in a hard-fought contest.",
+      "%A emerged victorious over %D%H.",
+      "%A bested %D%H.",
+      "A gritty display of fundamental combat.",
+      "Both fighters are giving it their all.",
+      "A tactical stalemate unfolds in the arena.",
+      "Neither side is willing to concede an inch.",
+      "A methodical and calculated exchange.",
+      "The combatants test each other's defenses.",
+      "%A defeated %D%H.",
+      "New unique template."
+    ],
+    "hype": [
+      "%A finishes %D%H with a spectacular display!",
+      "%A DOMINATED %D%H! The crowd goes wild!",
+      "What a performance! %A crushed %D%H!",
+      "The crowd is going absolutely wild for this!",
+      "An explosive exchange that shakes the very foundations of the arena!",
+      "Pure adrenaline! This is what we came to see!",
+      "A masterful display of violence and skill!",
+      "The energy in the pit is off the charts!",
+      "An unforgettable clash of titans!",
+      "The crowd is absolutely electric today!",
+      "Anticipation hangs heavy in the arena air.",
+      "A battle that will be sung about for generations!",
+      "The atmosphere is boiling over with excitement!",
+      "Every spectator is on their feet, waiting for the first strike!"
+    ],
+    "grim": [
+      "%D fell to %A%H. The sands drink deep.",
+      "%A ended %D%H in brutal fashion.",
+      "%A cut down %D%H without mercy.",
+      "A brutal, ugly affair.",
+      "The sand drinks deeply today.",
+      "A sickening display of raw butchery.",
+      "There is no glory here, only survival.",
+      "A harrowing reminder of the cost of the arena.",
+      "The air is thick with desperation and copper.",
+      "Only blood can settle the score today.",
+      "The sands are thirsty, and death is patient.",
+      "A heavy silence precedes the inevitable slaughter.",
+      "The air is thick with the promise of violence.",
+      "No mercy will be found in the pit today."
+    ]
+  },
+  "commentary": {
+    "KO": [
+      "They're not getting up from that one. A clean, decisive knockout!",
+      "The impact echoed all the way to the cheap seats. Goodnight!",
+      "{{attacker}} lays out {{defender}} with a devastating blow!",
+      "Lights out! What a devastating blow to end the match!",
+      "What a knockout! The crowd erupts!",
+      "And they are DOWN! A spectacular knockout!",
+      "Lights out! What a devastating finish!",
+      "That's it! They're not getting back up from that one.",
+      "A crushing blow ends it right there!",
+      "Absolutely folded! The referee waves it off!",
+      "A beautiful knockout to seal the victory!"
+    ],
+    "Kill": [
+      "What a brutal finish!",
+      "A fatal blow! The arena claims another soul.",
+      "Brutal and final. There's no coming back from that.",
+      "A horrifying end to a vicious bout.",
+      "The ultimate price paid on the blood-soaked sands.",
+      "A clean kill. The crowd roars for blood.",
+      "An execution in the center of the pit.",
+      "A gruesome end to a brutal contest.",
+      "They won't be getting up from that one.",
+      "A decisive, fatal strike ends the bout.",
+      "The executioner's final blow, swift and merciless.",
+      "A life extinguished on the bloody sands."
+    ],
+    "Flashy": [
+      "{{defender}} is breathing heavily, their stamina fading under the relentless assault of {{attacker}}.",
+      "{{attacker}}'s footwork is utterly mesmerizing. They're dancing around {{defender}}!",
+      "A brutal exchange! Both fighters are leaving everything on the sand.",
+      "{{attacker}} is putting on a show!",
+      "What a flashy display of skill!",
+      "Incredible acrobatics!",
+      "A display of absolute mastery!",
+      "Such flair! Such style!",
+      "They're not just fighting, they're performing!",
+      "A beautiful combination that leaves the crowd breathless!",
+      "What a showboat, but they have the skills to back it up!"
+    ],
+    "Upset": [
+      "The upset of the week! {{defender}} never saw it coming!",
+      "What a shock! {{attacker}} defies the odds!",
+      "Unbelievable! The underdog pulls it off!",
+      "A shocking upset! No one saw this coming!",
+      "Against all odds, they've claimed victory!",
+      "The favorites fall today! What a match!",
+      "A stunning reversal of expectations!",
+      "They defied the odds and the prognosticators!",
+      "The favorite falls! Unbelievable!",
+      "Nobody saw that coming, what a turn of events!",
+      "The underdog claims a shocking victory today.",
+      "A monumental upset that defies all predictions!",
+      "The crowd is stunned as the giant is slain!"
+    ]
+  },
+  "recap": [
+    "{{attacker}} defeated {{defender}} in {{hits}} minutes.",
+    "The bout concluded with a decisive victory.",
+    "A grueling match that tested the limits of both fighters.",
+    "A quick and brutal affair.",
+    "A long, drawn-out battle of attrition.",
+    "A technical masterpiece from the victor.",
+    "A sloppy but entertaining brawl.",
+    "A bloody affair that tested the limits of both combatants.",
+    "A masterful display of martial prowess from start to finish.",
+    "A chaotic struggle that left the arena soaked in blood.",
+    "A grim reminder of the brutal reality of the arena.",
+    "A legendary clash that will be recounted in taverns for years."
+  ]
+}

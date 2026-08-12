@@ -1,22 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { biasedAttrs, createRivalWarrior } from '@/engine/rivals/rivalWarriorFactory';
+import { biasedAttrs } from '@/engine/rivals/rivalWarriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-
-// Mock makeWarrior - use vi.hoisted to ensure it's applied before imports
-const { mockMakeWarrior } = vi.hoisted(() => ({
-  mockMakeWarrior: vi.fn((wId: string, wName: string, style: unknown, attrs: unknown, info: unknown, rngWrapper: unknown) => ({
-    id: wId,
-    name: wName,
-    style,
-    attrs,
-    info,
-    _rngMocked: rngWrapper,
-  })),
-}));
-
-vi.mock('@/engine/factories/warriorFactory', () => ({
-  makeWarrior: mockMakeWarrior,
-}));
 
 describe('rivalWarriorFactory', () => {
   describe('biasedAttrs', () => {

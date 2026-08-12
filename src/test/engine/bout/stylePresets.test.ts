@@ -89,61 +89,61 @@ describe('defaultStylePreset', () => {
 describe('Specific preset values (from spec)', () => {
   it('AimedBlow presets match spec', () => {
     const presets = getStylePresets(FightingStyle.AimedBlow);
-    expect(presets[0].name).toBe('Patient Surgeon');
-    expect(presets[1].name).toBe('Aggressive Precision');
+    expect(presets[0]!.name).toBe('Patient Surgeon');
+    expect(presets[1]!.name).toBe('Aggressive Precision');
   });
 
   it('BashingAttack presets match spec', () => {
     const presets = getStylePresets(FightingStyle.BashingAttack);
-    expect(presets[0].name).toBe('Steamroller');
-    expect(presets[1].name).toBe('Measured Brute');
+    expect(presets[0]!.name).toBe('Steamroller');
+    expect(presets[1]!.name).toBe('Measured Brute');
   });
 
   it('LungingAttack presets match spec', () => {
     const presets = getStylePresets(FightingStyle.LungingAttack);
-    expect(presets[0].name).toBe('Blitz');
-    expect(presets[1].name).toBe('Sustained Pressure');
+    expect(presets[0]!.name).toBe('Blitz');
+    expect(presets[1]!.name).toBe('Sustained Pressure');
   });
 
   it('ParryLunge presets match spec', () => {
     const presets = getStylePresets(FightingStyle.ParryLunge);
-    expect(presets[0].name).toBe('Counter-Strike');
-    expect(presets[1].name).toBe('Explosive Opener');
+    expect(presets[0]!.name).toBe('Counter-Strike');
+    expect(presets[1]!.name).toBe('Explosive Opener');
   });
 
   it('ParryRiposte presets match spec', () => {
     const presets = getStylePresets(FightingStyle.ParryRiposte);
-    expect(presets[0].name).toBe('Classic Counter');
-    expect(presets[1].name).toBe('Aggressive Riposte');
+    expect(presets[0]!.name).toBe('Classic Counter');
+    expect(presets[1]!.name).toBe('Aggressive Riposte');
   });
 
   it('ParryStrike presets match spec', () => {
     const presets = getStylePresets(FightingStyle.ParryStrike);
-    expect(presets[0].name).toBe('Measured Defense');
-    expect(presets[1].name).toBe('Quick Finish');
+    expect(presets[0]!.name).toBe('Measured Defense');
+    expect(presets[1]!.name).toBe('Quick Finish');
   });
 
   it('SlashingAttack presets match spec', () => {
     const presets = getStylePresets(FightingStyle.SlashingAttack);
-    expect(presets[0].name).toBe('Pressure Cutter');
-    expect(presets[1].name).toBe('Cautious Slasher');
+    expect(presets[0]!.name).toBe('Pressure Cutter');
+    expect(presets[1]!.name).toBe('Cautious Slasher');
   });
 
   it('StrikingAttack presets match spec', () => {
     const presets = getStylePresets(FightingStyle.StrikingAttack);
-    expect(presets[0].name).toBe('Fast Finish');
-    expect(presets[1].name).toBe('Technical Striker');
+    expect(presets[0]!.name).toBe('Fast Finish');
+    expect(presets[1]!.name).toBe('Technical Striker');
   });
 
   it('TotalParry presets match spec', () => {
     const presets = getStylePresets(FightingStyle.TotalParry);
-    expect(presets[0].name).toBe('Endurance Wall');
-    expect(presets[1].name).toBe('Opportunistic');
+    expect(presets[0]!.name).toBe('Endurance Wall');
+    expect(presets[1]!.name).toBe('Opportunistic');
   });
 
   it('WallOfSteel presets match spec', () => {
     const presets = getStylePresets(FightingStyle.WallOfSteel);
-    expect(presets[0].name).toBe('Iron Curtain');
-    expect(presets[1].name).toBe('Aggressive Wall');
+    expect(presets[0]!.name).toBe('Iron Curtain');
+    expect(presets[1]!.name).toBe('Aggressive Wall');
   });
 });

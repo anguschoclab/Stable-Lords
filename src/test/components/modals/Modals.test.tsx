@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { DeathModalHeader } from '@/components/modals/death-modal/DeathModalHeader';
 import { DeathModalFooter } from '@/components/modals/death-modal/DeathModalFooter';
 import { DeathModalWarriorInfo } from '@/components/modals/death-modal/DeathModalWarriorInfo';
+import { DeathModalPaperDoll } from '@/components/modals/death-modal/DeathModalPaperDoll';
 import type { Warrior } from '@/types/warrior.types';
 
 vi.mock('framer-motion', () => ({
@@ -72,5 +73,17 @@ describe('DeathModalWarriorInfo', () => {
     const warrior = { ...mockWarrior, deathCause: undefined } as unknown as Warrior;
     render(<DeathModalWarriorInfo warrior={warrior} />);
     expect(screen.getByText(/honorable combat/i)).toBeInTheDocument();
+  });
+});
+
+describe('DeathModalPaperDoll', () => {
+  it('renders without crashing', () => {
+    const { container } = render(<DeathModalPaperDoll />);
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('renders paper doll mock', () => {
+    render(<DeathModalPaperDoll />);
+    expect(screen.getByTestId('paper-doll')).toBeInTheDocument();
   });
 });

@@ -4,6 +4,7 @@ import { getFieldPattern } from '@/components/crest/fieldPatterns';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { Helmet } from '@/components/crest/StableCrest/components/Helmet';
 import { Mantling } from '@/components/crest/StableCrest/components/Mantling';
+import { ChargeComponent } from '@/components/crest/StableCrest/components/ChargeComponent';
 import type { CrestData } from '@/types/crest.types';
 
 vi.mock('@/engine/crest/chargePaths', () => ({
@@ -85,5 +86,26 @@ describe('StableCrest', () => {
   it('renders generation badge when generation > 0', () => {
     render(<StableCrest crest={mockCrest} size="xl" showGenerationBadge />);
     expect(screen.getByText('G1')).toBeInTheDocument();
+  });
+});
+
+describe('ChargeComponent', () => {
+  it('renders without crashing with valid charge', () => {
+    const { container } = render(
+      <svg>
+        <ChargeComponent charge={mockCrest.charge} metal="#D4AF37" />
+      </svg>
+    );
+    expect(container.querySelector('path')).toBeInTheDocument();
+  });
+
+  it('renders null for unknown charge name', () => {
+    const charge = { ...mockCrest.charge, name: 'nonexistent' } as never;
+    const { container } = render(
+      <svg>
+        <ChargeComponent charge={charge} metal="#D4AF37" />
+      </svg>
+    );
+    expect(container.querySelector('path')).toBeNull();
   });
 });

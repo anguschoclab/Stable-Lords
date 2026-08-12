@@ -2,9 +2,13 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { StableRankings } from '@/components/world/StableRankings';
 import { StableRankingsTitle } from '@/components/world/StableRankingsTitle';
+import { StableRankingsHeader } from '@/components/world/StableRankingsHeader';
 import { WarriorLeaderboardTitle } from '@/components/world/WarriorLeaderboardTitle';
+import { WarriorLeaderboardFilters } from '@/components/world/WarriorLeaderboardFilters';
+import { WarriorLeaderboardRow } from '@/components/world/WarriorLeaderboardRow';
 import { WorldStats } from '@/components/world/WorldStats';
-import type { StableRow } from '@/types/leaderboard';
+import { RivalIntelligence } from '@/components/world/RivalIntelligence';
+import type { StableRow, WarriorRow } from '@/types/leaderboard';
 
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: (s: Record<string, unknown>) => unknown) => {
@@ -20,6 +24,18 @@ vi.mock('@/state/useGameStore', () => ({
 
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: (s: Record<string, unknown>) => unknown) => fn,
+}));
+
+vi.mock('@/components/bookmarks/BookmarkButton', () => ({
+  BookmarkButton: () => <div data-testid="bookmark-btn">Bookmark</div>,
+}));
+
+vi.mock('@/components/widgets', () => ({
+  MetaDriftWidget: () => <div data-testid="meta-drift">MetaDrift</div>,
+}));
+
+vi.mock('@/components/ui/sort-header', () => ({
+  SortHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 describe('StableRankingsTitle', () => {
@@ -76,6 +92,56 @@ describe('WorldStats', () => {
     const { container } = render(
       <WorldStats stableCount={10} warriorCount={50} killCount={5} topStable="—" topStableId={null} />
     );
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});
+
+describe('StableRankingsHeader', () => {
+  it('renders without crashing', () => {
+    const { container } = render(
+      <StableRankingsHeader sort={{ field: 'fame', dir: 'desc' }} onSort={vi.fn()} />
+    );
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});
+
+describe('WarriorLeaderboardFilters', () => {
+  it('renders without crashing', () => {
+    const { container } = render(
+      <WarriorLeaderboardFilters
+        classes={['Bashing Attack', 'Total Parry']}
+        classFilter={null}
+        setClassFilter={vi.fn()}
+        quickFilter={null}
+        setQuickFilter={vi.fn()}
+        myWarriorsOnly={false}
+        setMyWarriorsOnly={vi.fn()}
+        onSort={vi.fn()}
+        isFiltered={false}
+        clearFilters={vi.fn()}
+      />
+    );
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});
+
+describe('WarriorLeaderboardRow', () => {
+  it('renders without crashing', () => {
+    const row: WarriorRow = {
+      id: 'w1', name: 'TestWarrior', stableName: 'StableA', stableId: 's1',
+      fame: 50, wins: 10, losses: 5, kills: 3, winRate: 0.67,
+      style: 'Bashing Attack', isPlayer: true, officialRank: 1, compositeScore: 100,
+    };
+    const { container } = render(
+      <WarriorLeaderboardRow row={row} index={0} isFiltered={false} />
+    );
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});
+
+describe('RivalIntelligence', () => {
+  it('renders without crashing with empty rivals', () => {
+    const { container } = render(<RivalIntelligence rivals={[]} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 });

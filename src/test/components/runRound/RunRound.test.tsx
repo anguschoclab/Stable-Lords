@@ -4,13 +4,43 @@ import { AutosimConsole } from '@/components/run-round/AutosimConsole';
 import { OutcomeIcon } from '@/components/run-round/OutcomeIcon';
 import { LethalityBadge } from '@/components/run-round/LethalityBadge';
 import { RunResultsSummary } from '@/components/run-round/RunResultsSummary';
+import { RunResults } from '@/components/run-round/RunResults';
+import { MatchCard } from '@/components/run-round/MatchCard';
 import type { Warrior } from '@/types/game';
+
+vi.mock('@/components/BoutViewer', () => ({
+  default: () => <div data-testid="bout-viewer">BoutViewer</div>,
+}));
+
+vi.mock('@/engine/narrative/fightAnalysis', () => ({
+  buildFightAnalysis: () => ({ summary: 'test' }),
+}));
+
+vi.mock('@/components/ui/WarriorBadges', () => ({
+  WarriorNameTag: ({ name }: { name: string }) => <span>{name}</span>,
+  StatBadge: ({ styleName }: { styleName: string }) => <span>{styleName}</span>,
+}));
+
+vi.mock('@/components/EntityLink', () => ({
+  StableLink: ({ name }: { name: string }) => <span>{name}</span>,
+}));
+
+vi.mock('@/components/ui/Surface', () => ({
+  Surface: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
+vi.mock('@/components/ui/collapsible', () => ({
+  Collapsible: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  CollapsibleContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  CollapsibleTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
 
 const mockWarrior = {
   id: 'w1',
   name: 'TestWarrior',
   style: 'Bashing Attack',
   derivedStats: { hp: 20 },
+  career: { wins: 5, losses: 3 },
 } as unknown as Warrior;
 
 describe('OutcomeIcon', () => {
@@ -100,5 +130,54 @@ describe('AutosimConsole', () => {
     );
     expect(screen.getByText(/Simulation Concluded/i)).toBeInTheDocument();
     expect(screen.getByText(/13 Weeks/i)).toBeInTheDocument();
+  });
+});
+
+describe('RunResults', () => {
+  it('renders null for empty results', () => {
+    const { container } = render(
+      <RunResults results={[]} expandedId={null} onToggleExpand={vi.fn()} />
+    );
+    expect(container.firstChild).toBeNull();
+  });
+
+  it('renders with results', () => {
+    const results = [
+      {
+        id: 'r1',
+        a: mockWarrior,
+        d: mockWarrior,
+        outcome: { winner: 'A', by: 'KO', minutes: 5 },
+        log: [],
+      },
+    ] as never;
+    const { container } = render(
+      <RunResults results={results} expandedId={null} onToggleExpand={vi.fn()} />
+    );
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});
+
+describe('MatchCard', () => {
+  it('renders without crashing', () => {
+    const pairing = {
+      a: mockWarrior,
+      d: mockWarrior,
+      rivalStable: 'RivalStable',
+      isRivalry: false,
+    } as never;
+    const { container } = render(<MatchCard pairing={pairing} crowdMood="Calm" />);
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('renders rivalry indicator', () => {
+    const pairing = {
+      a: mockWarrior,
+      d: mockWarrior,
+      rivalStable: 'RivalStable',
+      isRivalry: true,
+    } as never;
+    const { container } = render(<MatchCard pairing={pairing} crowdMood="Bloodthirsty" />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 });

@@ -27,6 +27,7 @@ jobs:
       - name: Run Bard Daemon
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DRY_RUN: ${{ !secrets.GEMINI_API_KEY && 'true' || '' }}
         run: bun run bard:daily
 
       - name: Commit and Push Changes

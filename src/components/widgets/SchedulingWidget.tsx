@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { type Warrior, STYLE_DISPLAY_NAMES } from '@/types/game';
 import {
   getRecommendedChallenges,
@@ -18,9 +18,13 @@ import { cn } from '@/lib/utils';
 interface MatchupCardProps {
   matchup: MatchupScore;
   type: 'recommend' | 'avoid';
+  isChallenged: boolean;
+  isAvoided: boolean;
+  onToggleChallenge: () => void;
+  onToggleAvoid: () => void;
 }
 
-function MatchupCard({ matchup, type }: MatchupCardProps) {
+function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge, onToggleAvoid }: MatchupCardProps) {
   const w = matchup.rivalWarrior;
   const isGood = type === 'recommend';
 
@@ -98,6 +102,25 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
           {Math.round(matchup.score)}
         </div>
       </div>
+
+      <div className="flex items-center gap-2 pt-3">
+        <Button
+          variant={isChallenged ? 'default' : 'outline'}
+          size="sm"
+          onClick={onToggleChallenge}
+          className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+        >
+          {isChallenged ? 'Challenged' : 'Challenge'}
+        </Button>
+        <Button
+          variant={isAvoided ? 'destructive' : 'outline'}
+          size="sm"
+          onClick={onToggleAvoid}
+          className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+        >
+          {isAvoided ? 'Avoided' : 'Avoid'}
+        </Button>
+      </div>
     </Surface>
   );
 }
@@ -115,6 +138,10 @@ interface SchedulingWidgetProps {
  */
 export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
   const state = useWorldState();
+  const playerChallenges = useGameStore((s) => s.playerChallenges);
+  const playerAvoids = useGameStore((s) => s.playerAvoids);
+  const toggleChallenge = useGameStore((s) => s.toggleChallenge);
+  const toggleAvoid = useGameStore((s) => s.toggleAvoid);
 
   const recommendations = useMemo(
     () => getRecommendedChallenges(state, warrior, 2),
@@ -132,7 +159,15 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
           <div className="space-y-4">
             {recommendations.length > 0 ? (
               recommendations.map((m) => (
-                <MatchupCard key={m.rivalStableName} matchup={m} type="recommend" />
+                <MatchupCard
+                  key={m.rivalStableName}
+                  matchup={m}
+                  type="recommend"
+                  isChallenged={playerChallenges?.includes(m.rivalWarrior.id) ?? false}
+                  isAvoided={playerAvoids?.includes(m.rivalWarrior.id) ?? false}
+                  onToggleChallenge={() => toggleChallenge(m.rivalWarrior.id)}
+                  onToggleAvoid={() => toggleAvoid(m.rivalWarrior.id)}
+                />
               ))
             ) : (
               <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
@@ -147,7 +182,17 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
           <SectionDivider label="High Risk Vectors" variant="blood" />
           <div className="space-y-4">
             {toAvoid.length > 0 ? (
-              toAvoid.map((m) => <MatchupCard key={m.rivalStableName} matchup={m} type="avoid" />)
+              toAvoid.map((m) => (
+                <MatchupCard
+                  key={m.rivalStableName}
+                  matchup={m}
+                  type="avoid"
+                  isChallenged={playerChallenges?.includes(m.rivalWarrior.id) ?? false}
+                  isAvoided={playerAvoids?.includes(m.rivalWarrior.id) ?? false}
+                  onToggleChallenge={() => toggleChallenge(m.rivalWarrior.id)}
+                  onToggleAvoid={() => toggleAvoid(m.rivalWarrior.id)}
+                />
+              ))
             ) : (
               <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
                 No imminent threats detected.

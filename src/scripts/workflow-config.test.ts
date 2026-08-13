@@ -68,4 +68,24 @@ describe('workflow-config', () => {
     const yml = readFile('.github/workflows/daily_sim.yml');
     expect(yml).not.toContain('git push origin HEAD:main');
   });
+
+  it('daily_bard.yml falls back to DRY_RUN when GEMINI_API_KEY is absent', () => {
+    const yml = readFile('.github/workflows/daily_bard.yml');
+    expect(yml).toContain('DRY_RUN:');
+    expect(yml).toContain('!secrets.GEMINI_API_KEY');
+  });
+
+  it('daily_bard.yml passes GEMINI_API_KEY through when available', () => {
+    const yml = readFile('.github/workflows/daily_bard.yml');
+    expect(yml).toContain('GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}');
+  });
+
+  it('ci.yml pins bun-version: 1.3.11', () => {
+    const yml = readFile('.github/workflows/ci.yml');
+    const matches = yml.match(/bun-version:\s*(.+)/g);
+    expect(matches).not.toBeNull();
+    for (const m of matches!) {
+      expect(m.trim()).toBe('bun-version: 1.3.11');
+    }
+  });
 });

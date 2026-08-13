@@ -86,4 +86,6 @@ export interface WorldSlice {
   ) => void;
   renameStable: (newName: string) => void;
   renamePlayer: (newName: string) => void;
+  toggleChallenge: (warriorId: string) => void;
+  toggleAvoid: (warriorId: string) => void;
 }

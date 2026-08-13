@@ -401,4 +401,94 @@ describe('WorldSlice', () => {
     });
     expect(useTestStore.getState().arenaHistory).toHaveLength(22);
   });
+
+  describe('toggleChallenge', () => {
+    it('should add warriorId to playerChallenges when not present', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: [], playerAvoids: [] });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['w1']);
+    });
+
+    it('should remove warriorId from playerChallenges when already present (toggle off)', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: ['w1'], playerAvoids: [] });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual([]);
+    });
+
+    it('should remove warriorId from playerAvoids when challenging (mutual exclusivity)', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: [], playerAvoids: ['w1'] });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['w1']);
+      expect(useTestStore.getState().playerAvoids).toEqual([]);
+    });
+
+    it('should preserve other entries when adding', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: ['w2'], playerAvoids: ['w3'] });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['w2', 'w1']);
+      expect(useTestStore.getState().playerAvoids).toEqual(['w3']);
+    });
+
+    it('should preserve other entries when toggling off', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: ['w1', 'w2'], playerAvoids: ['w3'] });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['w2']);
+      expect(useTestStore.getState().playerAvoids).toEqual(['w3']);
+    });
+  });
+
+  describe('toggleAvoid', () => {
+    it('should add warriorId to playerAvoids when not present', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: [], playerAvoids: [] });
+        useTestStore.getState().toggleAvoid('w1');
+      });
+      expect(useTestStore.getState().playerAvoids).toEqual(['w1']);
+    });
+
+    it('should remove warriorId from playerAvoids when already present (toggle off)', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: [], playerAvoids: ['w1'] });
+        useTestStore.getState().toggleAvoid('w1');
+      });
+      expect(useTestStore.getState().playerAvoids).toEqual([]);
+    });
+
+    it('should remove warriorId from playerChallenges when avoiding (mutual exclusivity)', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: ['w1'], playerAvoids: [] });
+        useTestStore.getState().toggleAvoid('w1');
+      });
+      expect(useTestStore.getState().playerAvoids).toEqual(['w1']);
+      expect(useTestStore.getState().playerChallenges).toEqual([]);
+    });
+
+    it('should preserve other entries when adding', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: ['w3'], playerAvoids: ['w2'] });
+        useTestStore.getState().toggleAvoid('w1');
+      });
+      expect(useTestStore.getState().playerAvoids).toEqual(['w2', 'w1']);
+      expect(useTestStore.getState().playerChallenges).toEqual(['w3']);
+    });
+
+    it('should preserve other entries when toggling off', () => {
+      act(() => {
+        useTestStore.setState({ playerChallenges: ['w3'], playerAvoids: ['w1', 'w2'] });
+        useTestStore.getState().toggleAvoid('w1');
+      });
+      expect(useTestStore.getState().playerAvoids).toEqual(['w2']);
+      expect(useTestStore.getState().playerChallenges).toEqual(['w3']);
+    });
+  });
 });

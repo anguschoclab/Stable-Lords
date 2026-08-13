@@ -55,12 +55,13 @@ export const WarriorDossier = React.memo(function WarriorDossier({
     return <div className="p-8 text-center text-muted-foreground">Warrior not found.</div>;
 
   const record = `${warrior.career.wins}W - ${warrior.career.losses}L - ${warrior.career.kills}K`;
+  const isPlayerOwned = state.roster.some((w) => w.id === warriorId);
 
   return (
     <ScrollArea className="h-full pr-4">
       <div className="space-y-6 pb-20">
         <div className="space-y-4">
-          <WarriorDossierHeader warrior={warrior} record={record} rankings={rankings} />
+          <WarriorDossierHeader warrior={warrior} record={record} rankings={rankings} isPlayerOwned={isPlayerOwned} />
           <WarriorDossierTraits warrior={warrior} />
         </div>
 

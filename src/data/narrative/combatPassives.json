@@ -1,19 +1,34 @@
 {
   "passives": {
     "AIMED BLOW": [
-      "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."
+      "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening.",
+      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
+      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
+      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
     ],
     "BASHING ATTACK": [
-      "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
+      "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!",
+      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
+      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
+      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
     ],
     "LUNGING ATTACK": [
-      "{{attacker}} overextends with a desperate lunge, trading balance for lethal reach."
+      "{{attacker}} overextends with a desperate lunge, trading balance for lethal reach.",
+      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
+      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
+      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
     ],
     "PARRY-LUNGE": [
-      "{{attacker}} catches the blade on their hilt, pivoting into a lightning-fast riposte lunge."
+      "{{attacker}} catches the blade on their hilt, pivoting into a lightning-fast riposte lunge.",
+      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
+      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
+      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
     ],
     "PARRY-RIPOSTE": [
-      "{{attacker}} deflects the strike and immediately circles back with a precision counter-attack."
+      "{{attacker}} deflects the strike and immediately circles back with a precision counter-attack.",
+      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
+      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
+      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
     ],
     "PARRY-STRIKE": [
       "{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike."

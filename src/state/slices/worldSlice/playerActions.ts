@@ -37,5 +37,33 @@ export function createPlayerActions(set: (fn: (state: GameStore) => Partial<Game
         player: { ...state.player, name: newName },
       }));
     },
+
+    toggleChallenge: (warriorId: string) => {
+      set((state) => {
+        const challenges = state.playerChallenges || [];
+        const avoids = state.playerAvoids || [];
+        if (challenges.includes(warriorId)) {
+          return { playerChallenges: challenges.filter((id) => id !== warriorId) };
+        }
+        return {
+          playerChallenges: [...challenges, warriorId],
+          playerAvoids: avoids.filter((id) => id !== warriorId),
+        };
+      });
+    },
+
+    toggleAvoid: (warriorId: string) => {
+      set((state) => {
+        const challenges = state.playerChallenges || [];
+        const avoids = state.playerAvoids || [];
+        if (avoids.includes(warriorId)) {
+          return { playerAvoids: avoids.filter((id) => id !== warriorId) };
+        }
+        return {
+          playerAvoids: [...avoids, warriorId],
+          playerChallenges: challenges.filter((id) => id !== warriorId),
+        };
+      });
+    },
   };
 }

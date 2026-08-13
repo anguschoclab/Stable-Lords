@@ -50,7 +50,7 @@ function fixHowler(): Plugin {
       path.resolve(__dirname, 'node_modules/howler/dist/howler.js'),
       'utf-8'
     );
-    const marker = '*  Spatial Plugin';
+    const marker = '/*!\n *  Spatial Plugin';
     const idx = source.indexOf(marker);
     if (idx === -1) {
       cachedCode = source;
@@ -58,15 +58,21 @@ function fixHowler(): Plugin {
     }
     const core = source.slice(0, idx);
     let spatial = source.slice(idx);
-    // Replace bare references with window.X in the spatial plugin only.
+    // Replace bare references with globalThis.X in the spatial plugin only.
+    // globalThis works in both main thread (window) and worker contexts.
     // Word boundaries ensure HowlerGlobal is not partially matched by Howler, etc.
     spatial = spatial
-      .replace(/\bHowlerGlobal\b/g, 'window.HowlerGlobal')
-      .replace(/\bHowler\b/g, 'window.Howler')
-      .replace(/\bHowl\b/g, 'window.Howl')
-      .replace(/\bSound\b/g, 'window.Sound');
-    // Add ESM exports — howler sets these on window during the core IIFE
-    cachedCode = core + spatial + '\nexport const Howl = window.Howl;\nexport const Howler = window.Howler;\n';
+      .replace(/\bHowlerGlobal\b/g, 'globalThis.HowlerGlobal')
+      .replace(/\bHowler\b/g, 'globalThis.Howler')
+      .replace(/\bHowl\b/g, 'globalThis.Howl')
+      .replace(/\bSound\b/g, 'globalThis.Sound');
+    // Wrap spatial plugin in a guard so it only runs when HowlerGlobal is available
+    // (main thread). In workers, the spatial plugin is skipped.
+    spatial = 'if (typeof globalThis.HowlerGlobal !== "undefined") {\n' + spatial + '\n}\n';
+    // Add ESM exports — howler sets these on globalThis during the core IIFE.
+    // The IIFE runs before this line, so globalThis.Howl is already set.
+    // Using `as` cast to satisfy TypeScript — the actual types come from @types/howler.
+    cachedCode = core + spatial + '\nconsole.error("[HOWLER-SHIM] globalThis.Howl =", typeof globalThis.Howl, "globalThis.Howler =", typeof globalThis.Howler);\nvar __howl = globalThis.Howl;\nvar __howler = globalThis.Howler;\nexport { __howl as Howl, __howler as Howler };\n';
     return cachedCode;
   }
 

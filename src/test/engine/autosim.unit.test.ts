@@ -10,7 +10,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 
 vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
-  advanceWeek: vi.fn((state: GameState) => state),
+  advanceWeek: vi.fn(async (state: GameState) => state),
 }));
 
 function makeOffer(id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer {
@@ -354,7 +354,7 @@ describe('runAutosim', () => {
 
   it('runs sequentially up to weeksToSim', async () => {
     const spy = vi.mocked(advanceWeek);
-    spy.mockImplementation((state: GameState) => state);
+    spy.mockImplementation(async (state: GameState) => state);
 
     const state = makeState();
     const onProgress = vi.fn();
@@ -368,7 +368,7 @@ describe('runAutosim', () => {
 
   it('supports legacy options signature', async () => {
     const spy = vi.mocked(advanceWeek);
-    spy.mockImplementation((state: GameState) => state);
+    spy.mockImplementation(async (state: GameState) => state);
 
     const state = makeState();
     const onProgress = vi.fn();
@@ -382,7 +382,7 @@ describe('runAutosim', () => {
   it('stops on bankruptcy (sequential)', async () => {
     const spy = vi.mocked(advanceWeek);
     let callCount = 0;
-    spy.mockImplementation((state: GameState) => {
+    spy.mockImplementation(async (state: GameState) => {
       callCount++;
       if (callCount === 2) {
         return { ...state, treasury: BANKRUPTCY_THRESHOLD - 1 };
@@ -399,7 +399,7 @@ describe('runAutosim', () => {
 
   it('runs batch mode for full quarters and remaining weeks', async () => {
     const weekSpy = vi.mocked(advanceWeek);
-    weekSpy.mockImplementation((state: GameState) => state);
+    weekSpy.mockImplementation(async (state: GameState) => state);
 
     const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
     quarterSpy.mockResolvedValue({
@@ -437,7 +437,7 @@ describe('runAutosim', () => {
 
   it('runs batch mode without onProgress', async () => {
     const weekSpy = vi.mocked(advanceWeek);
-    weekSpy.mockImplementation((state: GameState) => state);
+    weekSpy.mockImplementation(async (state: GameState) => state);
 
     const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
     quarterSpy.mockResolvedValue({

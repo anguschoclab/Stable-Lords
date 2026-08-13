@@ -23,6 +23,8 @@ export const defaultWorldState: Omit<
   | 'updateWarriorStatus'
   | 'renameStable'
   | 'renamePlayer'
+  | 'toggleChallenge'
+  | 'toggleAvoid'
 > = {
   year: 1,
   week: 1,

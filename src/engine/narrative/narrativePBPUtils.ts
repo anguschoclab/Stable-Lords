@@ -3,7 +3,6 @@
  * Extracted from narrativePBP.ts to follow SRP
  */
 import { narrativeContent } from '@/data/narrative';
-import type { NarrativeContent } from '@/types/narrative.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { escapeHtml } from '@/utils/escapeHtml';
 
@@ -153,7 +152,7 @@ export function getFromArchive(rng: IRNGService, path: string[]): string {
  */
 export function richHitLocation(rng: IRNGService, location: string): string {
   if (!narrativeContent.pbp) return location.toUpperCase();
-  const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
+  const hitLocations = narrativeContent.pbp.hit_locations;
   const key = location.toLowerCase() as keyof typeof hitLocations;
   const variants = hitLocations[key];
   if (!variants) return location.toUpperCase();

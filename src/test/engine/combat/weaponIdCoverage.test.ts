@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { WEAPONS, SHIELD_ITEM_IDS, SHIELD_COVERAGE } from '@/data/equipment/weapons';
 import {
   STYLE_CLASSIC_WEAPONS,
@@ -144,6 +146,14 @@ describe('getClassicWeaponBonus shield coverage', () => {
         `${style}: classic weapon ${classicWeapon} should give +1`
       ).toBe(1);
     }
+  });
+
+  it('equipment.utils.ts has no private duplicate SHIELD_IDS set', () => {
+    const src = readFileSync(
+      join(process.cwd(), 'src/data/equipment/equipment.utils.ts'),
+      'utf-8'
+    );
+    expect(src).not.toMatch(/const SHIELD_IDS\s*=\s*new Set/);
   });
 });
 

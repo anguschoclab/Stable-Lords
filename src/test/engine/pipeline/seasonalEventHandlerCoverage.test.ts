@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
 
 describe('seasonal event handler coverage', () => {
-  const jsonEvents = Object.keys(narrativeContent.offseason_events);
+  const jsonEvents = Object.keys(narrativeContent.offseason_events ?? {});
 
   it('every offseason_events key has a non-empty effectType', () => {
     for (const key of jsonEvents) {

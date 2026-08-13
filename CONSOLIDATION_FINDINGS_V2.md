@@ -140,13 +140,13 @@
 - console.log in production: Only in logger.ts (wrapper) and scripts/ (CLI) — no production console.log
 - TODO/FIXME: Zero found in source files
 - .jules/ directories: None tracked in git
-- Circular dependencies: madge reports 0 circular deps
+- Circular dependencies: madge reports 0 circular deps (shallow scan without --ts-config); 82 type-level circular deps found with --ts-config (no runtime impact)
 - Dead code: ts-prune shows minimal unused exports (type defs, electron internals) — low risk
 - UI honesty audit: No fabricated chrome, no hardcoded status labels, no SCREAMING_SNAKE_CASE, no illegible KPI styling
 
 **REMAINING (requires GitHub access)**:
 
-- Remote branch deletion: 1 remote feature branch remains (`combat-chronicler-curation`) — 9 original PR branches deleted
+- Remote branch deletion: All remote feature branches processed — `combat-chronicler-curation` content cherry-picked (3 JSON files), branch can be deleted
 - PR closure: 10 PRs need closure comments (7 merged, 3 disapproved) — may already be closed via GitHub UI
 
 ---

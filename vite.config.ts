@@ -69,10 +69,15 @@ function fixHowler(): Plugin {
     // Wrap spatial plugin in a guard so it only runs when HowlerGlobal is available
     // (main thread). In workers, the spatial plugin is skipped.
     spatial = 'if (typeof globalThis.HowlerGlobal !== "undefined") {\n' + spatial + '\n}\n';
-    // Add ESM exports — howler sets these on globalThis during the core IIFE.
-    // The IIFE runs before this line, so globalThis.Howl is already set.
-    // Using `as` cast to satisfy TypeScript — the actual types come from @types/howler.
-    cachedCode = core + spatial + '\nconsole.error("[HOWLER-SHIM] globalThis.Howl =", typeof globalThis.Howl, "globalThis.Howler =", typeof globalThis.Howler);\nvar __howl = globalThis.Howl;\nvar __howler = globalThis.Howler;\nexport { __howl as Howl, __howler as Howler };\n';
+    // Add ESM exports — howler sets these on globalThis during the core IIFE
+    // (main thread only). In workers, globalThis.Howl is undefined, so we
+    // fall back to a no-op constructor to avoid crashes. The worker doesn't
+    // actually use howler — it just gets pulled into the module graph.
+    cachedCode = core + spatial + `
+var __howl = globalThis.Howl || function() { this.play = function(){}; this.stop = function(){}; this.volume = function(){}; this.mute = function(){}; this.unload = function(){}; this.state = function(){return 'unloaded';}; this.on = function(){return this;}; this.once = function(){return this;}; this.off = function(){return this;}; };
+var __howler = globalThis.Howler || { ctx: null, _enabled: false, _muted: false, mute: function(){}, volume: function(){}, stop: function(){}, unload: function(){}, codecs: function(){return false;}, usingWebAudio: false, usingHTML5Audio: false, noAudio: false, autoUnlock: false, autoSuspend: false, mobileAutoEnable: false, _pos: [0,0,0], _orientation: [0,0,-1,0,1,0] };
+export { __howl as Howl, __howler as Howler };
+`;
     return cachedCode;
   }
 

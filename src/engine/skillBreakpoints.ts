@@ -271,7 +271,7 @@ export const STYLE_PENALTIES: Record<
 > = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
-  [FightingStyle.AimedBlow]: /*AB*/ [-15, -7, -11, -7, -6, +1], // re-ratchet: lightened INI -8→-7 to lift 39.9% into 40%+ band
+  [FightingStyle.AimedBlow]: /*AB*/ [-12, -7, -11, -7, -6, +1], // lightened ATT -15→-12 to reduce mirror-match A/D bias (34% → 37% → targeting 40%+)
   [FightingStyle.ParryRiposte]: /*PR*/ [-12, -6, -13, -6, -1, -1], // lightened: -49 → -39 to lift 29.0% toward 40%
   [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -5, -3, 0], // re-ratchet: lightened INI -7→-5 to offset encumbrance INI penalty from equipment changes
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%

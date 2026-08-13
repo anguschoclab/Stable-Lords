@@ -2,7 +2,7 @@
 
 **Date**: August 2026
 **Branch**: `integration/exhaustive-audit`
-**Scope**: Full re-audit of ~202K lines, 1,466 source files, 537 test files, 10 open PRs (#809–#818), 8 closed-unmerged PRs (#789–#808)
+**Scope**: Full re-audit of ~203K lines, 1,475 source files, 555 test files, 10 open PRs (#809–#818), 8 closed-unmerged PRs (#789–#808)
 
 ---
 
@@ -42,7 +42,7 @@
 
 1. **Module decomposition quality**: APPROVED — Engine subdirectory structure is well-organized (combat, bout, pipeline, matchmaking, narrative, stats, training, etc.)
 2. **State management patterns**: APPROVED — Zustand + Immer with slice pattern, proper selector memoization
-3. **Narrative content architecture**: APPROVED — Single-file `narrativeContent.json` (5,800+ lines) works for this project size; narrative-validate script catches duplicates
+3. **Narrative content architecture**: APPROVED (updated) — Originally single-file `narrativeContent.json` (5,800+ lines); now split into 11 domain-specific JSON files in `src/data/narrative/` (commits `71bf0a68`, `ad68a561`). Split architecture improves maintainability; narrative-validate script catches duplicates
 4. **Accessibility patterns**: APPROVED (improved) — motion-reduce fallbacks added, aria-label fallback on Button, duplicate Switch fixed
 5. **Dead code and stubs**: APPROVED — ts-prune found minimal dead code (a few unused exports in electron/ and type definitions); no significant dead code
 6. **Test infrastructure and mock isolation**: APPROVED — Setup file has vi.restoreAllMocks() in afterEach, cache clearing; 6857 tests pass with 0 failures
@@ -80,7 +80,7 @@
 | Test fail count | 4 | 0 | -4 |
 | Lint errors | pre-existing | pre-existing | 0 |
 | Open PRs | 10 | 0 (7 merged, 3 disapproved) | -10 |
-| Remote branches | 10 | 10 (awaiting GitHub cleanup) | 0 |
+| Remote branches | 10 | 1 (9 deleted, 1 new post-plan) | -9 |
 | Build | PASS | PASS | 0 |
 | Narrative validate | PASS | PASS | 0 |
 | Circular dependencies | 0 | 0 | 0 |
@@ -126,13 +126,14 @@
 **RESOLVED (stale — no action needed)**:
 
 - `getClassicWeaponBonus` export: STALE — function IS exported, 28 tests pass
-- `vi.mocked` undefined: STALE — no vi.mocked() usage in any test file
+- `vi.mocked` undefined: STALE — vi.mocked() IS used in electronMain.test.ts (14 occurrences) and works correctly
 - Playwright `test.describe` conflicts: STALE — no test.describe in e2e/ directory
 
 **RESOLVED (fixed in this session)**:
 
-- recruitCosts.test.ts: Fixed — test expectations updated to match narrativeContent.json
+- recruitCosts.test.ts: Fixed — test expectations updated to match narrative data (100/150/250/400)
 - determinismAudit.test.ts: Fixed — added static keyword to newArenaIntegration test
+- narrativeContent.json: Split into 11 domain-specific JSON files in src/data/narrative/ (post-plan commits 71bf0a68, ad68a561)
 
 **VERIFIED CLEAN**:
 
@@ -145,8 +146,8 @@
 
 **REMAINING (requires GitHub access)**:
 
-- Remote branch deletion: 10 remote feature branches need deletion via GitHub UI or `gh` CLI
-- PR closure: 10 PRs need closure comments (7 merged, 3 disapproved)
+- Remote branch deletion: 1 remote feature branch remains (`combat-chronicler-curation`) — 9 original PR branches deleted
+- PR closure: 10 PRs need closure comments (7 merged, 3 disapproved) — may already be closed via GitHub UI
 
 ---
 

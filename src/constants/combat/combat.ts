@@ -240,7 +240,7 @@ export const VETERAN_WISDOM_FACTOR = 0.25;
  * Allowed deviation from 50% for mirror-match A-side win rates
  * Engine A/D bias should be reduced toward 0.05 over time
  */
-export const MIRROR_MATCH_BAND = 0.16;
+export const MIRROR_MATCH_BAND = 0.10;
 
 /**
  * Target absolute-power band for overall style win rates (50% ± 10pp)
@@ -439,15 +439,15 @@ export const STYLE_ORDER = [
 export const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
   [0, 1, 2, 1, 1, 1, 2, 2, 1, 3], // AB
-  [-1, 0, 0, -1, -1, 0, -1, -1, 0, 0], // BA
+  [-1, 0, 0, -1, -1, 0, -1, -1, -1, 0], // BA
   [-2, 0, 0, 0, 0, -1, -1, -1, 0, 0], // LU
   [-1, 1, 0, 0, 1, 1, 0, 0, 1, 1], // PL
   [-1, 1, 0, 0, 0, 0, 0, 1, 1, 1], // PR
   [-1, 0, 1, -1, 0, 0, 0, 2, 0, 2], // PS
   [-2, 1, 1, 0, 0, 0, 0, -1, 0, 1], // SL
   [-2, 1, 1, 0, -1, -2, 1, 0, 1, 2], // ST
-  [-1, 0, 0, -1, 0, 0, 0, -1, 0, 0], // TP
-  [-3, 1, 0, -1, 0, -1, -1, -1, 1, 0], // WS
+  [-1, 1, 0, -1, 0, 0, 0, -1, 0, 0], // TP
+  [-3, 1, 0, -1, 0, -1, -1, -1, 0, 0], // WS
 ];
 
 /**

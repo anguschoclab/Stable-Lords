@@ -204,7 +204,7 @@ describe('Style Balance', () => {
     const errorMessage =
       problems.length > 0 ? `\n⚠️  MATCHUPS OVER 80%: ${problems.join(', ')}` : undefined;
 
-    expect(problems.length, errorMessage).toBeLessThanOrEqual(25);
+    expect(problems.length, errorMessage).toBe(0);
   });
 });
 
@@ -214,10 +214,10 @@ describe('Kill Rate', () => {
     const uniqueFights = totalFightsRun / 2; // each fight counted for both fighters
     const killRate = totalKills / uniqueFights;
     const pct = (killRate * 100).toFixed(1);
-    expect(killRate, `Kill rate ${pct}% — expected between 4.5% and 16%`).toBeGreaterThanOrEqual(
-      0.045
+    expect(killRate, `Kill rate ${pct}% — expected between 6% and 16%`).toBeGreaterThanOrEqual(
+      0.06
     );
-    expect(killRate, `Kill rate ${pct}% — expected between 4.5% and 16%`).toBeLessThanOrEqual(0.16);
+    expect(killRate, `Kill rate ${pct}% — expected between 6% and 16%`).toBeLessThanOrEqual(0.16);
   });
 });
 

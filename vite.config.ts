@@ -1,6 +1,7 @@
 import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
+import fs from 'fs';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -28,6 +29,60 @@ function stripWorkerRefresh(): Plugin {
   };
 }
 
+// Fixes howler.js spatial plugin scoping issue.
+// howler's dist/howler.js has two IIFEs: the core IIFE declares
+// `var HowlerGlobal/Howler/Howl/Sound` and sets them on `window`. The
+// spatial plugin IIFE references these as bare variables, which in
+// non-strict mode resolve to `window.X`. But ESM strict mode throws
+// ReferenceError for undeclared variables. Vite's pre-bundler wraps
+// both IIFEs in a single function, preserving their closures, so the
+// spatial plugin can't access the core's `var` declarations.
+// This plugin intercepts howler at the module resolution level, patches
+// the spatial plugin's bare references to use `window.X`, and adds ESM
+// exports — bypassing pre-bundling entirely.
+function fixHowler(): Plugin {
+  const VIRTUAL_ID = '\0howler-patched';
+  let cachedCode: string | null = null;
+
+  function getPatchedCode(): string {
+    if (cachedCode) return cachedCode;
+    const source = fs.readFileSync(
+      path.resolve(__dirname, 'node_modules/howler/dist/howler.js'),
+      'utf-8'
+    );
+    const marker = '*  Spatial Plugin';
+    const idx = source.indexOf(marker);
+    if (idx === -1) {
+      cachedCode = source;
+      return source;
+    }
+    const core = source.slice(0, idx);
+    let spatial = source.slice(idx);
+    // Replace bare references with window.X in the spatial plugin only.
+    // Word boundaries ensure HowlerGlobal is not partially matched by Howler, etc.
+    spatial = spatial
+      .replace(/\bHowlerGlobal\b/g, 'window.HowlerGlobal')
+      .replace(/\bHowler\b/g, 'window.Howler')
+      .replace(/\bHowl\b/g, 'window.Howl')
+      .replace(/\bSound\b/g, 'window.Sound');
+    // Add ESM exports — howler sets these on window during the core IIFE
+    cachedCode = core + spatial + '\nexport const Howl = window.Howl;\nexport const Howler = window.Howler;\n';
+    return cachedCode;
+  }
+
+  return {
+    name: 'fix-howler',
+    enforce: 'pre',
+    resolveId(source) {
+      if (source === 'howler') return VIRTUAL_ID;
+    },
+    load(id) {
+      if (id !== VIRTUAL_ID) return;
+      return getPatchedCode();
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
@@ -38,6 +93,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    fixHowler(),
     TanStackRouterVite({
       autoCodeSplitting: true,
     }),
@@ -54,7 +110,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      howler: path.resolve(__dirname, './src/lib/howler-shim.ts'),
     },
   },
   build: {

@@ -132,10 +132,11 @@ describe('unexplained_monolith offseason event', () => {
   it('narrative content contains unexplained_monolith event', () => {
     const events = narrativeContent.offseason_events as Record<string, OffseasonEventNarrative>;
     expect(events.unexplained_monolith).toBeDefined();
-    expect(events.unexplained_monolith.title).toBe('The Unexplained Monolith');
-    expect(events.unexplained_monolith.effectType).toBe('unexplained_monolith');
-    expect(Array.isArray(events.unexplained_monolith.newsletter)).toBe(true);
-    expect(events.unexplained_monolith.newsletter.length).toBeGreaterThan(0);
+    const monolith = events.unexplained_monolith!;
+    expect(monolith.title).toBe('The Unexplained Monolith');
+    expect(monolith.effectType).toBe('unexplained_monolith');
+    expect(Array.isArray(monolith.newsletter)).toBe(true);
+    expect(monolith.newsletter.length).toBeGreaterThan(0);
   });
 
   it('handleUnexplainedMonolith is registered in EVENT_HANDLERS via runSeasonalPass', () => {

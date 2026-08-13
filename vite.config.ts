@@ -38,7 +38,7 @@ function stripWorkerRefresh(): Plugin {
 // both IIFEs in a single function, preserving their closures, so the
 // spatial plugin can't access the core's `var` declarations.
 // This plugin intercepts howler at the module resolution level, patches
-// the spatial plugin's bare references to use `window.X`, and adds ESM
+// the spatial plugin's bare references to use `globalThis.X`, and adds ESM
 // exports — bypassing pre-bundling entirely.
 function fixHowler(): Plugin {
   const VIRTUAL_ID = '\0howler-patched';

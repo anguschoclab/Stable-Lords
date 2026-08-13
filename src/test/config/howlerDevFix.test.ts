@@ -18,6 +18,11 @@ describe('howler dev white-screen fix', () => {
     expect(content).not.toContain('"global.HowlerGlobal"');
   });
 
+  it('vite.config.ts includes fixHowler plugin in the plugins array', () => {
+    const content = fs.readFileSync(path.join(projectRoot, 'vite.config.ts'), 'utf-8');
+    expect(content).toContain('fixHowler()');
+  });
+
   it('src/main.tsx does NOT reference HowlerGlobal', () => {
     const content = fs.readFileSync(path.join(projectRoot, 'src/main.tsx'), 'utf-8');
     expect(content).not.toContain('HowlerGlobal');

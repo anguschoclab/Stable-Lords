@@ -27,7 +27,7 @@ export function TelemetryPanel({
       <SectionDivider label="Data Visualization" />
       <Surface variant="glass" className="border-white/5 overflow-hidden font-mono text-[11px]">
         <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4 text-muted-foreground/40 uppercase font-black tracking-widest">
-          <Activity className="h-4 w-4" /> Protocol Dump // V2.4.0
+          <Activity className="h-4 w-4" /> Data Report // V2.4.0
         </div>
         <div className="p-8 bg-black/40 overflow-x-auto thin-scrollbar">
           <pre className="text-primary/60">

@@ -24,7 +24,7 @@ export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
               <Download className="h-3 w-3 text-muted-foreground" />
             </ImperialRing>
             <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-              Save Core
+              Save Data
             </span>
           </div>
           <div className="p-8 space-y-4">
@@ -58,7 +58,7 @@ export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
               <Trash2 className="h-3 w-3 text-primary" />
             </ImperialRing>
             <span className="text-[10px] font-black uppercase tracking-widest text-primary">
-              Destructive Reset
+              Full Reset
             </span>
           </div>
           <div className="p-8 space-y-6">
@@ -71,7 +71,7 @@ export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
               variant="destructive"
               className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none"
             >
-              Execute System Wipe
+              Delete All Data
             </Button>
           </div>
         </Surface>

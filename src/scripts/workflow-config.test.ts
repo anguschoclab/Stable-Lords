@@ -31,10 +31,9 @@ describe('workflow-config', () => {
     expect(yml).toContain('src/scripts/daily_oracle.ts');
   });
 
-  it('all three workflow YAMLs pin bun-version: 1.3.11', () => {
+  it('both workflow YAMLs pin bun-version: 1.3.11', () => {
     const files = [
       '.github/workflows/daily_sim.yml',
-      '.github/workflows/daily_balance_report.yml',
       '.github/workflows/daily_bard.yml',
     ];
     for (const f of files) {
@@ -45,10 +44,9 @@ describe('workflow-config', () => {
     }
   });
 
-  it('all three workflow YAMLs have permissions: contents: write', () => {
+  it('both workflow YAMLs have permissions: contents: write', () => {
     const files = [
       '.github/workflows/daily_sim.yml',
-      '.github/workflows/daily_balance_report.yml',
       '.github/workflows/daily_bard.yml',
     ];
     for (const f of files) {
@@ -57,14 +55,13 @@ describe('workflow-config', () => {
     }
   });
 
-  it('daily_sim.yml cron differs from daily_balance_report.yml cron', () => {
-    const simYml = readFile('.github/workflows/daily_sim.yml');
-    const balanceYml = readFile('.github/workflows/daily_balance_report.yml');
-    const simCron = simYml.match(/cron:\s*'([^']+)'/);
-    const balanceCron = balanceYml.match(/cron:\s*'([^']+)'/);
-    expect(simCron).not.toBeNull();
-    expect(balanceCron).not.toBeNull();
-    expect(simCron?.[1]).not.toBe(balanceCron?.[1]);
+  it('daily_oracle.ts awaits runSimulation', () => {
+    const src = readFile('src/scripts/daily_oracle.ts');
+    expect(src).toContain('await runSimulation');
+  });
+
+  it('daily_balance_report.yml has been removed', () => {
+    expect(() => readFile('.github/workflows/daily_balance_report.yml')).toThrow();
   });
 
   it('daily_sim.yml does NOT contain git push origin HEAD:main', () => {

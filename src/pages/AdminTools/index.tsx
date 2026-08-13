@@ -40,9 +40,9 @@ export default function AdminTools() {
     <PageFrame maxWidth="lg" className="pb-32">
       <PageHeader
         icon={Terminal}
-        eyebrow="Console // Root Access"
+        eyebrow="Administration"
         title="Administration"
-        subtitle="IMPERIAL CENSOR · SYSTEM OVERRIDE · DATA ARCHIVAL"
+        subtitle="Censor · Override · Archive"
         actions={
           <div className="flex items-center gap-4">
             <div className="flex flex-col items-end px-4 border-r border-white/5">
@@ -55,7 +55,7 @@ export default function AdminTools() {
                   ftueComplete ? 'text-primary' : 'text-destructive'
                 )}
               >
-                SYSTEM_{ftueComplete ? 'UNLOCKED' : 'LOCKED'}
+                {ftueComplete ? 'UNLOCKED' : 'LOCKED'}
               </span>
             </div>
           </div>

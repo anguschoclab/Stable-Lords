@@ -10,7 +10,7 @@ const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
 async function main() {
   console.log(`Starting Autobalance Simulation for ${WEEKS_TO_SIMULATE} weeks...`);
 
-  const result = runSimulation({
+  const result = await runSimulation({
     weeks: WEEKS_TO_SIMULATE,
     seed: 12345, // Deterministic
     logFrequency: 1,

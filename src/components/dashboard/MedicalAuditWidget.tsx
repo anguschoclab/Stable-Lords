@@ -35,10 +35,10 @@ export function MedicalAuditWidget() {
           </div>
           <div>
             <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Biological Audit
+              Medical Audit
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Nodal Integrity Monitor
+              Injury Monitor
             </p>
           </div>
         </div>
@@ -57,7 +57,7 @@ export function MedicalAuditWidget() {
           <div className="flex flex-col items-center justify-center py-12 opacity-20 group-hover:opacity-30 transition-opacity">
             <Activity className="h-12 w-12 mb-4" />
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center italic">
-              Roster Integrity Nominal
+              Roster Healthy
             </p>
           </div>
         ) : (

@@ -52,20 +52,20 @@ describe('AdminTools Page', () => {
   it('renders all administrative panels', () => {
     render(<AdminTools />);
 
-    // Check main title
-    expect(screen.getByText('Administration')).toBeDefined();
+    // Check main title (eyebrow and title both say "Administration")
+    expect(screen.getAllByText('Administration').length).toBeGreaterThan(0);
 
     // Check category nav labels are visible
-    expect(screen.getByText('Core_System')).toBeDefined();
-    expect(screen.getByText('Temporal_Flux')).toBeDefined();
-    expect(screen.getByText('Data_Stream')).toBeDefined();
+    expect(screen.getByText('System')).toBeDefined();
+    expect(screen.getByText('World')).toBeDefined();
+    expect(screen.getByText('Telemetry')).toBeDefined();
   });
 
   it('provides buttons for time skipping', () => {
     render(<AdminTools />);
 
     // Navigate to the WORLD category tab
-    fireEvent.click(screen.getByText('Temporal_Flux'));
+    fireEvent.click(screen.getByText('World'));
 
     const skipWeekBtn = screen.getByRole('button', { name: /Advance 1 Week/i });
     expect(skipWeekBtn).toBeDefined();
@@ -80,8 +80,8 @@ describe('AdminTools Page', () => {
   it('provides button for hard reset', () => {
     render(<AdminTools />);
 
-    // The SYSTEM tab (default) shows the Execute System Wipe button
-    const resetBtn = screen.getByRole('button', { name: /Execute System Wipe/i });
+    // The SYSTEM tab (default) shows the Delete All Data button
+    const resetBtn = screen.getByRole('button', { name: /Delete All Data/i });
     expect(resetBtn).toBeDefined();
   });
 
@@ -89,7 +89,7 @@ describe('AdminTools Page', () => {
     render(<AdminTools />);
 
     // Navigate to the WORLD category tab
-    fireEvent.click(screen.getByText('Temporal_Flux'));
+    fireEvent.click(screen.getByText('World'));
 
     const skipFtueBtn = screen.getByRole('button', { name: /Bypass FTUE/i });
     expect(skipFtueBtn).toBeDefined();
@@ -101,8 +101,8 @@ describe('AdminTools Page', () => {
   it('renders a JSON state dump', () => {
     render(<AdminTools />);
 
-    // Navigate to Data Stream tab
-    fireEvent.click(screen.getByText('Data_Stream'));
+    // Navigate to Telemetry tab
+    fireEvent.click(screen.getByText('Telemetry'));
 
     // The dump uses nested keys: temporal.week and inventory.treasury
     expect(screen.getByText(/"week":/)).toBeDefined();

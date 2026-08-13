@@ -54,6 +54,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      howler: path.resolve(__dirname, './src/lib/howler-shim.ts'),
     },
   },
   build: {
@@ -81,8 +82,5 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 600,
-  },
-  define: {
-    'global.HowlerGlobal': '{}',
   },
 });

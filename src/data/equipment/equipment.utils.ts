@@ -264,13 +264,11 @@ export const STYLE_CLASSIC_WEAPONS: Record<string, string> = {
   [FightingStyle.WallOfSteel]: 'morning_star', // CW: Morning Star
 };
 
-const SHIELD_IDS = new Set(['small_shield', 'medium_shield', 'large_shield']);
-
 /** Returns +1 if the warrior is using their style's classic weapon, 0 otherwise.
  *  Total-Parry: any shield qualifies. */
 export function getClassicWeaponBonus(style: FightingStyle, weaponId: string): number {
   if (style === FightingStyle.TotalParry) {
-    return SHIELD_IDS.has(weaponId) ? 1 : 0;
+    return SHIELD_ID_SET.has(weaponId) ? 1 : 0;
   }
   return STYLE_CLASSIC_WEAPONS[style] === weaponId ? 1 : 0;
 }

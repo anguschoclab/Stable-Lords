@@ -12,9 +12,6 @@ const e2eDir = 'e2e';
 
 // Files/dirs exempt from display-text rules (debug tools, engine internals)
 const EXEMPT = [
-  'AdminTools/',
-  'TelemetryDashboard',
-  'ErrorBoundary',
   'debug/',
   '.test.',
   'routeTree.gen.ts',

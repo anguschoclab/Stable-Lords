@@ -9,14 +9,6 @@ import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import './index.css';
 
-// Initialize HowlerGlobal for Electron environment
-// Note: Howler.js types expect HowlerGlobal to be a class, but we initialize
-// as empty object for Electron compatibility. This is intentional.
-if (typeof window.HowlerGlobal === 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Howler.js type incompatibility with Electron (external library)
-  (window as any).HowlerGlobal = {};
-}
-
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element not found');
 

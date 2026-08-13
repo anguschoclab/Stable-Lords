@@ -3,11 +3,11 @@ import { Settings, Zap, FastForward, Activity, SlidersHorizontal } from 'lucide-
 import type { AdminCategory } from '../hooks/useAdminTools';
 
 const CATEGORIES: { id: AdminCategory; icon: React.ElementType; label: string }[] = [
-  { id: 'SYSTEM', icon: Settings, label: 'Core_System' },
-  { id: 'ECONOMY', icon: Zap, label: 'Market_Ops' },
-  { id: 'WORLD', icon: FastForward, label: 'Temporal_Flux' },
-  { id: 'TELEMETRY', icon: Activity, label: 'Data_Stream' },
-  { id: 'PREFERENCES', icon: SlidersHorizontal, label: 'Arena_Prefs' },
+  { id: 'SYSTEM', icon: Settings, label: 'System' },
+  { id: 'ECONOMY', icon: Zap, label: 'Economy' },
+  { id: 'WORLD', icon: FastForward, label: 'World' },
+  { id: 'TELEMETRY', icon: Activity, label: 'Telemetry' },
+  { id: 'PREFERENCES', icon: SlidersHorizontal, label: 'Preferences' },
 ];
 
 interface CategoryNavProps {

@@ -16,7 +16,7 @@ interface WorldPanelProps {
 export function WorldPanel({ onSkipWeek, onSkipSeason, onSkipFTUE }: WorldPanelProps) {
   return (
     <div className="space-y-12">
-      <SectionDivider label="Temporal Control" />
+      <SectionDivider label="Time Control" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
@@ -24,7 +24,7 @@ export function WorldPanel({ onSkipWeek, onSkipSeason, onSkipFTUE }: WorldPanelP
               <FastForward className="h-3 w-3 text-arena-gold" />
             </ImperialRing>
             <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-              Time Dilation
+              Advance Time
             </span>
           </div>
           <div className="p-8 space-y-4">

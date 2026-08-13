@@ -117,8 +117,9 @@ describe('SHIELD_COVERAGE syncs with SHIELD_ITEM_IDS', () => {
 });
 
 // ─── 5. getClassicWeaponBonus recognizes all shields for TotalParry ───────────
-// getClassicWeaponBonus uses a private SHIELD_IDS set that duplicates
-// SHIELD_ITEM_IDS. If they drift, a shield could miss the +1 classic bonus.
+// getClassicWeaponBonus uses SHIELD_ID_SET (built from the canonical
+// SHIELD_ITEM_IDS). No private duplicate set exists — the old hardcoded
+// SHIELD_IDS was eliminated to prevent drift between copies.
 
 describe('getClassicWeaponBonus shield coverage', () => {
   it('returns 1 for every shield when style is TotalParry', () => {

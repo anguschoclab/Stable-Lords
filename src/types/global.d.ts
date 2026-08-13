@@ -1,8 +1,5 @@
 declare global {
   interface Window {
-    // Howler.js global configuration (initialized as empty object for Electron compatibility)
-    HowlerGlobal?: Record<string, unknown>;
-
     // Electron IPC bridge (inferred from usage patterns)
     electronAPI?: {
       // Game state management

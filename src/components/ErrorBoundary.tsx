@@ -42,11 +42,11 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
     return (
       <div className="h-screen w-screen bg-background flex flex-col items-center justify-center gap-6 font-mono text-center px-8">
         <div className="text-primary text-[10px] uppercase tracking-[0.5em] animate-pulse motion-reduce:animate-none">
-          System Failure
+          Error
         </div>
-        <h1>Critical System Failure</h1>
+        <h1>Fatal Error</h1>
         <p className="text-muted-foreground text-xs uppercase tracking-[0.3em] max-w-sm">
-          Nodal link severed. All combat protocols offline.
+          A fatal error occurred. The arena scribe cannot continue.
         </p>
         {this.state.error && (
           <details className="text-left mt-2 max-w-lg w-full">
@@ -59,11 +59,11 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
           </details>
         )}
         <button
-          aria-label="Reboot System"
+          aria-label="Reload Page"
           onClick={() => this.setState({ hasError: false, error: null })}
           className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
         >
-          Reboot System
+          Reload Page
         </button>
       </div>
     );

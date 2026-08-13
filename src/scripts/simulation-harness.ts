@@ -28,7 +28,7 @@ export interface SimulationResult {
 
 /**
  * Run a headless simulation loop.
- * Synchronous and deterministic.
+ * Asynchronous and deterministic.
  */
 export async function runSimulation(config: SimulationConfig): Promise<SimulationResult> {
   const { weeks, seed, logFrequency = 1 } = config;

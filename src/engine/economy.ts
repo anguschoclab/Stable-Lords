@@ -147,23 +147,31 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     income.push({ label: 'Celestial Gift (Mana Surge)', amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT });
   }
 
-  // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
-  const patronageIncome = input.roster.reduce((sum, w) => {
-    if ((w.fame || 0) > WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) {
-      return sum + Math.floor(((w.fame || 0) - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
+  // ⚡ Bolt: Replaced multiple O(N) array traversals with a single-pass loop
+  // to avoid redundant iterations and intermediate object allocations.
+  let patronageIncome = 0;
+  let rosterUpkeep = 0;
+
+  for (let i = 0; i < input.roster.length; i++) {
+    const w = input.roster[i];
+    if (!w) continue;
+    const fame = w.fame || 0;
+
+    // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
+    if (fame > WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) {
+      patronageIncome += Math.floor((fame - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
     }
-    return sum;
-  }, 0);
-  if (patronageIncome > 0)
+
+    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
+    rosterUpkeep += WARRIOR_UPKEEP_BASE + Math.round(fame * FAME_UPKEEP_MULTIPLIER);
+  }
+
+  if (patronageIncome > 0) {
     income.push({ label: 'Noble Patronage Contribution', amount: patronageIncome });
+  }
 
   const expenses: { label: string; amount: number }[] = [];
   if (input.roster.length > 0) {
-    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
-    const rosterUpkeep = input.roster.reduce((sum, w) => {
-      const famePremium = Math.round((w.fame || 0) * FAME_UPKEEP_MULTIPLIER);
-      return sum + WARRIOR_UPKEEP_BASE + famePremium;
-    }, 0);
     expenses.push({ label: `Warrior upkeep (${input.roster.length})`, amount: rosterUpkeep });
 
     // Weather-specific ledger labels for clarity
@@ -175,16 +183,16 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     }
   }
 
-  const { activeTrainerCount, trainerCost } = input.trainers.reduce(
-    (acc, t) => {
-      if (t.contractWeeksLeft > 0) {
-        acc.activeTrainerCount++;
-        acc.trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? TRAINER_SALARY_FALLBACK;
-      }
-      return acc;
-    },
-    { activeTrainerCount: 0, trainerCost: 0 }
-  );
+  // ⚡ Bolt: Use scalar variables in a for loop instead of allocating an accumulator object in reduce().
+  let activeTrainerCount = 0;
+  let trainerCost = 0;
+  for (let i = 0; i < input.trainers.length; i++) {
+    const t = input.trainers[i];
+    if (t && t.contractWeeksLeft > 0) {
+      activeTrainerCount++;
+      trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? TRAINER_SALARY_FALLBACK;
+    }
+  }
   if (activeTrainerCount > 0) {
     expenses.push({ label: `Trainer salaries (${activeTrainerCount})`, amount: trainerCost });
   }

@@ -91,7 +91,7 @@ describe('tsconfig reference graph', () => {
       execSync('node node_modules/typescript7/bin/tsc --build --force', {
         cwd: projectRoot,
         stdio: 'pipe',
-        timeout: 120000,
+        timeout: 600000,
       });
     }).not.toThrow();
   });

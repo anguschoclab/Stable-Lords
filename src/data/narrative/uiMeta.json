@@ -308,7 +308,7 @@
       "defense": {
         "high": [
           {
-            "min": 24,
+            "min": 25,
             "text": "Stumbles backward, relying on blind luck rather than skill"
           },
           {

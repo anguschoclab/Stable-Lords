@@ -87,7 +87,10 @@
         "With a vicious backhand, {{attacker}}'s blade traces a deadly arc toward {{defender}}.",
         "{{attacker}} steps in close, delivering a brutal downward cleave.",
         "A flurry of flashing steel as {{attacker}} attempts to dismember {{defender}}.",
-        "{{attacker}} slashes out with murderous intent, testing {{defender}}'s reflexes."
+        "{{attacker}} slashes out with murderous intent, testing {{defender}}'s reflexes.",
+        "{{attacker}} arcs their blade in a lethal crescent toward {{defender}}.",
+        "With a swift flick of the wrist, {{attacker}} slashes out.",
+        "A gleaming edge sweeps through the air as {{attacker}} attacks."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}.",
@@ -266,7 +269,9 @@
         "A solid thud echoes as {{weapon}} connects cleanly.",
         "The impact sends a shockwave through {{defender}}.",
         "A firm bash leaves a nasty bruise on {{defender}}.",
-        "{{attacker}} lands a heavy, bone-jarring blow."
+        "{{attacker}} lands a heavy, bone-jarring blow.",
+        "A concussive swing from {{attacker}} aims to batter {{defender}}.",
+        "{{attacker}} winds up for a massive, staggering blow."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",
@@ -437,7 +442,10 @@
         "With pinpoint accuracy, {{attacker}} darts forward to puncture.",
         "{{attacker}} steps into a measured, deeply penetrating thrust.",
         "{{attacker}} feints high, then drives a cruel stab forward.",
-        "A direct lunge from {{attacker}} punctures {{defender}}."
+        "A direct lunge from {{attacker}} punctures {{defender}}.",
+        "{{attacker}} lunges forward, point first, aiming for {{defender}}'s vitals.",
+        "A lightning-fast thrust from {{attacker}} seeks an opening.",
+        "{{attacker}} channels all their force into a precise thrust."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} finds the microscopic gap in {{defender}}'s defense, sliding effortlessly into the {{bodyPart}}.",
@@ -615,7 +623,10 @@
         "{{attacker}} connects with a firm, bruising hook.",
         "{{attacker}} lands a heavy hook on {{defender}}.",
         "The solid punch lands with a satisfying thwack.",
-        "The blow leaves a red mark and a stinging ache."
+        "The blow leaves a red mark and a stinging ache.",
+        "{{attacker}} steps in and unloads a rapid combination.",
+        "A punishing left hook from {{attacker}} catches the air.",
+        "With savage torque, {{attacker}} throws a heavy overhand."
       ],
       "mastery": [
         "{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence.",

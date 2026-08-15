@@ -83,7 +83,6 @@
         "{{attacker}} twists their body, delivering a powerful thrust straight at {{defender}}'s midsection.",
         "{{attacker}} steps in quickly, launching a deadly thrust at {{defender}}.",
         "With surgical precision, {{attacker}} attempts to skewer {{defender}}.",
-        "{{attacker}} lunges forward, point first, aiming for {{defender}}'s vitals.",
         "A lightning-fast stab is directed at {{defender}} by {{attacker}}.",
         "{{attacker}} feints, then drives a piercing strike straight toward {{defender}}.",
         "{{attacker}} thrusts with devastating accuracy at {{defender}}.",
@@ -657,7 +656,9 @@
           {
             "text": "{{defender}} barely avoids {{attacker}}'s deadly swing",
             "min": 45
-          }
+          },
+          "{{defender}} barely manages to twist away from a fatal blow.",
+          "A wild stumble somehow saves {{defender}} from certain injury."
         ],
         "confident": [
           "{{defender}} barely shifts their weight, a masterclass in minimal effort, dodging with absolute certainty.",
@@ -705,7 +706,9 @@
           "With casual elegance, {{defender}} sways just out of range.",
           "With a smirk, {{defender}} smoothly weaves out of danger.",
           "{{defender}} sways backward, casually avoiding the blow.",
-          "{{defender}} sidesteps with complete nonchalance."
+          "{{defender}} sidesteps with complete nonchalance.",
+          "{{defender}} sidesteps the attack with absolute certainty, barely blinking.",
+          "A smirk crosses {{defender}}'s face as they effortlessly evade."
         ],
         "theatrical": [
           "{{defender}} twirls like a dancer, letting the deadly strike pass through thin air where they stood a moment ago.",
@@ -808,7 +811,9 @@
           "{{defender}} steps away silently, eyes locked dead on the foe.",
           "{{defender}} silently slips the attack, their expression cold.",
           "{{defender}} avoids the strike silently, a ghost of the arena.",
-          "A silent, phantom-like retreat keeps {{defender}} untouched."
+          "A silent, phantom-like retreat keeps {{defender}} untouched.",
+          "{{defender}} silently shifts their weight, grimly focused on survival.",
+          "A cold, calculated step backward puts {{defender}} just out of harm's way."
         ]
       },
       "parry": {
@@ -1533,7 +1538,10 @@
           "They crash to the sands, struggling to find the strength to rise as time seems to crawl.",
           "A heavy impact sends {{name}} sprawling, their sluggish movements hinting at deep exhaustion.",
           "Time seems to crawl as {{name}} tumbles endlessly toward the ground.",
-          "{{name}} falls with agonizing slowness, every moment a struggle to stay upright."
+          "{{name}} falls with agonizing slowness, every moment a struggle to stay upright.",
+          "{{name}} struggles to find their footing in the loose sand, every second a battle.",
+          "A heavy groan escapes {{name}} as they hit the ground, overwhelmed by the impact.",
+          "The impact knocks the wind from {{name}}, forcing a momentary pause."
         ],
         "fast": [
           "The fight erupts into a blur of motion, both fighters pushing the pace to a dangerous extreme!",
@@ -1560,7 +1568,9 @@
           "A blindingly fast takedown leaves {{name}} eating sand.",
           "{{name}} crashes down before the crowd can even gasp.",
           "A lightning-fast impact drops {{name}} like a stone.",
-          "{{name}} hits the sand with whip-like suddenness."
+          "{{name}} hits the sand with whip-like suddenness.",
+          "{{name}} rolls with the fall, scattering dirt across the arena.",
+          "The crowd jeers as {{name}} is sent sprawling into the dust."
         ],
         "recovery_slow": [
           "{{name}} uses their weapon as a crutch, dragging themselves upright with agonizing slowness.",
@@ -2032,12 +2042,7 @@
         "A devastating strike connects, the impact echoing through the arena.",
         "The blow lands true, biting deep into flesh and bone.",
         "A brutal impact forces a ragged gasp from the wounded combatant.",
-        "The strike finds a gap in the defense, delivering punishing force.",
-        "The {{weapon}} lands on {{defender}} with a sickening crunch, meeting its mark.",
-        "A devastating strike connects from {{attacker}}, the impact echoing through the arena.",
-        "The blow lands true, biting deep into {{defender}}'s flesh and bone.",
-        "A brutal impact forces a ragged gasp from {{defender}}.",
-        "The strike from {{attacker}} finds a gap in the defense, delivering punishing force."
+        "The strike finds a gap in the defense, delivering punishing force."
       ]
     },
     "executions": [

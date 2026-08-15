@@ -88,7 +88,8 @@
       "{{attacker}} delivers a cold, methodical coup de grâce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
-      "The sands drink deeply today."
+      "The sands drink deeply today.",
+      "{{attacker}} stands over {{defender}}, delivering a cold, final blow that echoes in the silent arena."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -217,7 +218,9 @@
       "Bleeding out on the arena floor, {{defender}} draws their final, shuddering breath.",
       "{{defender}}'s body simply gives out, ruined beyond the capacity to live.",
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
-      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever."
+      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever.",
+      "The light fades from {{defender}}'s eyes as {{attacker}}'s fatal strike finds its mark.",
+      "A sickening crunch signals the end for {{defender}}, falling lifeless to the bloody sand."
     ]
   }
 }

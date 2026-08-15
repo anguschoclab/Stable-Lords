@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
@@ -7,22 +8,23 @@ interface CommonControlsProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
 } /**
- * Common controls.
- * @param - { plan, on plan change }.
- */
+   * Common controls.
+   * @param - { plan, on plan change }.
+   */
 
 /**
  * Common controls.
  * @param - { plan, on plan change }.
  */
 export default function CommonControls({ plan, onPlanChange }: CommonControlsProps) {
+  const idPrefix = useId();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-6 border border-white/5">
       <div className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label
-              htmlFor="plan-oe"
+              htmlFor={`${idPrefix}-plan-oe`}
               className="text-[10px] font-black uppercase tracking-widest text-arena-gold"
             >
               Offensive Effort
@@ -30,7 +32,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
             <span className="text-sm font-mono font-bold text-arena-gold">{plan.OE}</span>
           </div>
           <Slider
-            id="plan-oe"
+            id={`${idPrefix}-plan-oe`}
             aria-label="Offensive Effort"
             value={[plan.OE]}
             onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
@@ -42,7 +44,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label
-              htmlFor="plan-al"
+              htmlFor={`${idPrefix}-plan-al`}
               className="text-[10px] font-black uppercase tracking-widest text-arena-fame"
             >
               Activity Level
@@ -50,7 +52,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
             <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
           </div>
           <Slider
-            id="plan-al"
+            id={`${idPrefix}-plan-al`}
             aria-label="Activity Level"
             value={[plan.AL ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
@@ -65,7 +67,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label
-              htmlFor="plan-kd"
+              htmlFor={`${idPrefix}-plan-kd`}
               className="text-[10px] font-black uppercase tracking-widest text-destructive"
             >
               Kill Desire
@@ -75,7 +77,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
             </span>
           </div>
           <Slider
-            id="plan-kd"
+            id={`${idPrefix}-plan-kd`}
             aria-label="Kill Desire"
             value={[plan.killDesire ?? 5]}
             onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v })}

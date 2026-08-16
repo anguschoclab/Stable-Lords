@@ -144,47 +144,66 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
 
   // 🌩️ Weather Impact: Mana Surge Gift
   if (input.weather === 'Mana Surge') {
-    income.push({ label: 'Celestial Gift (Mana Surge)', amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT });
+    income.push({
+      label: 'Celestial Gift (Mana Surge)',
+      amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT,
+    });
   }
 
-  // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
-  const patronageIncome = input.roster.reduce((sum, w) => {
-    if ((w.fame || 0) > WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) {
-      return sum + Math.floor(((w.fame || 0) - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
+  // ⚡ Bolt: Single-pass loop for roster economy logic, avoiding multiple .reduce() allocations
+  let patronageIncome = 0;
+  let rosterUpkeep = 0;
+  for (let i = 0; i < input.roster.length; i++) {
+    const w = input.roster[i];
+    if (!w) continue;
+    const wFame = w.fame || 0;
+
+    // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
+    if (wFame > WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) {
+      patronageIncome +=
+        Math.floor(
+          (wFame - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR
+        ) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
     }
-    return sum;
-  }, 0);
+
+    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
+    const famePremium = Math.round(wFame * FAME_UPKEEP_MULTIPLIER);
+    rosterUpkeep += WARRIOR_UPKEEP_BASE + famePremium;
+  }
+
   if (patronageIncome > 0)
     income.push({ label: 'Noble Patronage Contribution', amount: patronageIncome });
 
   const expenses: { label: string; amount: number }[] = [];
   if (input.roster.length > 0) {
-    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
-    const rosterUpkeep = input.roster.reduce((sum, w) => {
-      const famePremium = Math.round((w.fame || 0) * FAME_UPKEEP_MULTIPLIER);
-      return sum + WARRIOR_UPKEEP_BASE + famePremium;
-    }, 0);
     expenses.push({ label: `Warrior upkeep (${input.roster.length})`, amount: rosterUpkeep });
 
     // Weather-specific ledger labels for clarity
     if (input.weather === 'Sweltering') {
-      expenses.push({ label: 'Cooling & Ventilation Overhead', amount: input.roster.length * WEATHER_ECONOMICS.SWELTERING_PREMIUM });
+      expenses.push({
+        label: 'Cooling & Ventilation Overhead',
+        amount: input.roster.length * WEATHER_ECONOMICS.SWELTERING_PREMIUM,
+      });
     }
     if (input.weather === 'Blizzard') {
-      expenses.push({ label: 'Insulation & Fuel Overhead', amount: input.roster.length * WEATHER_ECONOMICS.BLIZZARD_PREMIUM });
+      expenses.push({
+        label: 'Insulation & Fuel Overhead',
+        amount: input.roster.length * WEATHER_ECONOMICS.BLIZZARD_PREMIUM,
+      });
     }
   }
 
-  const { activeTrainerCount, trainerCost } = input.trainers.reduce(
-    (acc, t) => {
-      if (t.contractWeeksLeft > 0) {
-        acc.activeTrainerCount++;
-        acc.trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? TRAINER_SALARY_FALLBACK;
-      }
-      return acc;
-    },
-    { activeTrainerCount: 0, trainerCost: 0 }
-  );
+  // ⚡ Bolt: Standard for-loop avoids intermediate object allocation during array reduction
+  let activeTrainerCount = 0;
+  let trainerCost = 0;
+  for (let i = 0; i < input.trainers.length; i++) {
+    const t = input.trainers[i];
+    if (t && t.contractWeeksLeft > 0) {
+      activeTrainerCount++;
+      trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? TRAINER_SALARY_FALLBACK;
+    }
+  }
+
   if (activeTrainerCount > 0) {
     expenses.push({ label: `Trainer salaries (${activeTrainerCount})`, amount: trainerCost });
   }
@@ -196,9 +215,18 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
       amount: trainingCount * TRAINING_COST,
     });
 
-  // ⚡ Bolt: Optimized calculation over constant size small arrays.
-  const totalIncome = income.reduce((s, item) => s + item.amount, 0);
-  const totalExpenses = expenses.reduce((s, item) => s + item.amount, 0);
+  // ⚡ Bolt: Optimized calculation over constant size small arrays without .reduce() overhead.
+  let totalIncome = 0;
+  for (let i = 0; i < income.length; i++) {
+    const item = income[i];
+    if (item) totalIncome += item.amount;
+  }
+
+  let totalExpenses = 0;
+  for (let i = 0; i < expenses.length; i++) {
+    const item = expenses[i];
+    if (item) totalExpenses += item.amount;
+  }
 
   return { income, expenses, totalIncome, totalExpenses, net: totalIncome - totalExpenses };
 }

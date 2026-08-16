@@ -639,3 +639,23 @@ export function handleUnexplainedMonolith(
     }
   }
 }
+
+/** Handler for the Weeping Skies offseason event — grants XP but adds a strange weather note. */
+export function handleWeepingSkies(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      ctx.rosterUpdates.set(chosen.id, { xp: (chosen.xp || 0) + 20 });
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}

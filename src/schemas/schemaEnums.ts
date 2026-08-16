@@ -51,6 +51,7 @@ export const WeatherTypeSchema = z.enum([
   'Blazing Sun',
   'Gale',
   'Blood Moon',
+  'Weeping Skies',
   'Eclipse of Chaos',
   'Eclipse',
   'Whispering Winds',

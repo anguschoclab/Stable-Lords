@@ -505,6 +505,21 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundered_coliseum_orphan_king',
+    arenaId: 'sundered_coliseum',
+    type: 'famous_death',
+    title: 'The Orphan King',
+    narrative: 'A self-proclaimed king of the undercity was hurled into the spiked walls during a frantic bout, his crude tin crown embedding itself permanently in the stone.',
+  },
+  {
+    id: 'lantern_hall_flicker_strike',
+    arenaId: 'lantern_hall_arena',
+    type: 'historical_battle',
+    title: 'The Flicker Strike',
+    narrative: 'When a sudden gust blew out half the sconces, a desperate fighter used the momentary darkness to weave past an unblockable guard and sever a rival champion\'s hand.',
+  },
+
+  {
     id: 'mist_shrouded_ruins_echoes',
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',

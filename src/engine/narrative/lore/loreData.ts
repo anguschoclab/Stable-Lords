@@ -4,6 +4,12 @@
  */
 
 export const ORIGINS: string[] = [
+  'Found clutching a cracked porcelain mask in the ruins of the Sunless Orphanage',
+  'Abandoned in the submerged cellars of the Drowned Chapel',
+  'Raised by the blind seers of the Obsidian Ward',
+  'Survived the terrifying starvation of the Winter Culling',
+  'Found shivering amidst the shattered statues of the Forgotten Kings',
+
   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
   'Raised in the submerged basements of the Drowned Ward',
   'Found clutching a rusted dagger in the alleys of the Ash Quarter',
@@ -215,6 +221,10 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'was caught meticulously sharpening coins against the cobblestones for throwing',
+  'practiced evading the cruel matron by walking flawlessly on the precarious rafters',
+  'learned to mimic the chilling whistle of the wind through the catacombs',
+
   'used to meticulously trace the structural flaws in stone walls',
   "slept soundly only when the city's warning bells rang",
   'was known for carving the names of their enemies into their own flesh',
@@ -334,6 +344,10 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  'until they choked an abusive taskmaster with their bare hands and demanded a place in the pits',
+  'knowing that the arena is the only place their rage is rewarded with gold instead of lashes',
+  'waiting for the moment they could turn the cruelty of their youth into a spectacle of vengeance',
+
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',
@@ -378,7 +392,6 @@ export const DEFINING_MOMENTS: string[] = [
   'until the day they dragged their abuser into the light and left them broken',
   'realizing that mercy in the undercity is just an invitation to be killed',
   'waiting for the moment the gates would close and the true test would begin',
-  'realizing that the only true law of the streets was written in blood',
   'waiting for the moment the arena doors would open and swallow their past',
   "until the day they crushed a street enforcer's windpipe in a brawl over coppers",
   'understanding early that fear is just a weakness waiting to be exploited',
@@ -430,14 +443,12 @@ export const DEFINING_MOMENTS: string[] = [
   'carrying the heavy chains of their past not as a burden, but as a weapon',
   'now seeking the silence that only falls over the colosseum after a brutal execution',
   'realizing that pain is simply the currency demanded by the gods of the arena',
-  "until they drove a splintered chair leg through a slaver's hand",
   'realizing that the only true currency in the undercity is pain',
   'waiting for the moment the crowd screams a name they once forgot',
   'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
   'now driven by a dark vow sworn over the grave of their only friend',
   'until they realized the arena was the only family they needed',
-  'waiting for the day they could turn their scars into a spectacle',
   'knowing that the roar of the crowd was the only god left to them',
   "until they drove a shattered bottle into their tormentor's eye and fled",
 ];

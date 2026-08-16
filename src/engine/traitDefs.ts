@@ -98,6 +98,34 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_of_the_pit: {
+    id: 'orphan_of_the_pit',
+    name: 'Orphan of the Pit',
+    description: '+1 damage, +1 attack — forged in the fire of the undercity fighting rings.',
+    effect: { dmgBonus: 1, attMod: 1 },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gutter_blood_frenzy: {
+    id: 'gutter_blood_frenzy',
+    name: 'Gutter Blood Frenzy',
+    description: '+1 attack and +1 decisiveness late in the fight — desperation fuels their strikes.',
+    effect: { attModLate: 1, decMod: 1 },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  feral_instinct_awakened: {
+    id: 'feral_instinct_awakened',
+    name: 'Awakened Feral Instinct',
+    description: '+1 initiative — always reacts faster than the rich.',
+    effect: { iniMod: 1 },
+    weight: 0.5,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+
   // 5 New Personality/Lore Traits
 
   guttersnipe_cunning: {

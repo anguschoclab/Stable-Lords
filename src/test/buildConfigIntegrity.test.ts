@@ -86,7 +86,7 @@ describe('tsconfig reference graph', () => {
     expect(e2eTsconfig.compilerOptions?.composite).toBe(true);
   });
 
-  it('tsc --build --force exits with code 0 from root', () => {
+  it('node_modules/.bin/tsc --build --force exits with code 0 from root', () => {
     expect(() => {
       execSync('node node_modules/typescript7/bin/tsc --build --force', {
         cwd: projectRoot,

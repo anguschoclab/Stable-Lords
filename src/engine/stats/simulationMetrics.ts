@@ -31,16 +31,7 @@ export function collectPulse(state: GameState): SimPulse {
   for (const r of activeRivals) {
     totalTreasury += r.treasury;
   }
-  const avgRivalTreasury =
-    activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
-
-  // World-wide trait accounting: player roster + every rival roster.
-  function* iterWarriors() {
-    yield* state.roster;
-    for (const r of activeRivals) {
-      if (r.roster) yield* r.roster;
-    }
-  }
+  const avgRivalTreasury = activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
 
   let traitedWarriors = 0;
   let totalTraits = 0;
@@ -48,13 +39,19 @@ export function collectPulse(state: GameState): SimPulse {
   let multiFlawWarriors = 0;
   let classTraitInstances = 0;
   let signatureInstances = 0;
-  for (const w of iterWarriors()) {
-    const ids = w.traits ?? [];
-    if (ids.length > 0) traitedWarriors++;
-    totalTraits += ids.length;
+
+  // Process a single warrior
+  const processWarrior = (w: import('@/types/warrior.types').Warrior) => {
+    const ids = w.traits;
+    if (!ids) return;
+    const len = ids.length;
+    if (len > 0) traitedWarriors++;
+    totalTraits += len;
     let flawsOnW = 0;
-    for (const id of ids) {
-      const t = TRAITS[id];
+    for (let i = 0; i < len; i++) {
+      const tId = ids[i];
+      if (!tId) continue;
+      const t = TRAITS[tId];
       if (!t) continue;
       if (t.tier === 'Flaw') {
         flawInstances++;
@@ -64,6 +61,21 @@ export function collectPulse(state: GameState): SimPulse {
       if (t.styles && t.styles.length > 0) classTraitInstances++;
     }
     if (flawsOnW >= 2) multiFlawWarriors++;
+  };
+
+  // Iterate without generators to avoid iterator allocations
+  for (let i = 0; i < state.roster.length; i++) {
+    const w = state.roster[i];
+    if (w) processWarrior(w);
+  }
+  for (let i = 0; i < activeRivals.length; i++) {
+    const rivalRoster = activeRivals[i]?.roster;
+    if (rivalRoster) {
+      for (let j = 0; j < rivalRoster.length; j++) {
+        const w = rivalRoster[j];
+        if (w) processWarrior(w);
+      }
+    }
   }
 
   return {

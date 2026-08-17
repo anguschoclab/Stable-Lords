@@ -57,7 +57,7 @@ describe('Cosmic Anomaly weather type', () => {
     // After adding Temporal Rift + Stardust Gale: 56
     // After adding Mana Storm: 58
     if (WEATHER_TYPES.includes('Cosmic Anomaly' as any)) {
-      expect(WEATHER_TYPES.length).toBe(58);
+      expect(WEATHER_TYPES.length).toBe(59);
     } else {
       // Before merge, still 55
       expect(WEATHER_TYPES.length).toBe(55);

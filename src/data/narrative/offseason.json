@@ -347,6 +347,13 @@
       "newsletter": [
         "A swirling vortex of dark energy appeared in the stable during the off-season. {{name}} stared into it and emerged stronger, yet changed... (+25 XP, Minor Injury)"
       ]
+    },
+    "weeping_skies": {
+      "title": "Weeping Skies",
+      "effectType": "weeping_skies",
+      "newsletter": [
+        "A strange, localized rain cloud settled directly over {{name}}. The weeping skies sapped their energy but left them strangely enlightened. (+20 XP, Weeping Skies unlocked for next season!)"
+      ]
     }
   },
   "events": {

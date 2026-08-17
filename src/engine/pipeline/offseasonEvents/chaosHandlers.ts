@@ -623,7 +623,9 @@ export function handleUnexplainedMonolith(
       const currentInjuries = existingUpdate.injuries ?? chosen.injuries ?? [];
       const currentTraits = existingUpdate.traits ?? chosen.traits ?? [];
 
-      const newTraits = currentTraits.includes('precise') ? currentTraits : [...currentTraits, 'precise'];
+      const newTraits = currentTraits.includes('precise')
+        ? currentTraits
+        : [...currentTraits, 'precise'];
 
       ctx.rosterUpdates.set(chosen.id, {
         ...existingUpdate,
@@ -633,6 +635,26 @@ export function handleUnexplainedMonolith(
         traits: newTraits,
       });
 
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
+/** Handler for the Weeping Skies offseason event — grants XP but adds a strange weather note. */
+export function handleWeepingSkies(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      ctx.rosterUpdates.set(chosen.id, { xp: (chosen.xp || 0) + 20 });
       pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
       });

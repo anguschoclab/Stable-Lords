@@ -34,6 +34,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Eclipse of Chaos':
     'The sky darkens as a chaotic eclipse sets in, filling the arena with unnatural tension.',
   'Blood Moon': 'A crimson moon hangs overhead. The crowd is already baying for blood.',
+  'Weeping Skies': 'A strange localized rain cloud hovers over the arena.',
   Eclipse: 'Darkness falls mid-day. An eerie calm descends before the violence.',
   Sandstorm: 'A howling sandstorm blinds the arena. Every breath is a battle.',
   Tornado: 'A terrifying tornado tears through the arena, throwing sand and debris everywhere.',

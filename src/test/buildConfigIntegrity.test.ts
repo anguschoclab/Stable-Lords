@@ -88,7 +88,7 @@ describe('tsconfig reference graph', () => {
 
   it('node_modules/.bin/tsc --build --force exits with code 0 from root', () => {
     expect(() => {
-      execSync('node node_modules/typescript7/bin/tsc --build --force', {
+      execSync('bun x tsc --build --force', {
         cwd: projectRoot,
         stdio: 'pipe',
         timeout: 120000,

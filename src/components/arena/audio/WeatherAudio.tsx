@@ -63,6 +63,7 @@ export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Blood Fog': 'ambience-blood-moon',
   'Shimmering Heat': null,
   'Crystal Rain': 'ambience-rain',
+  'Winds of Chaos': 'ambience-mana-surge',
   'Rain of Frogs': 'ambience-rain',
   'Chaos Storm': 'ambience-arcane-storm',
   'Whispering Winds': 'ambience-wind-breezy',

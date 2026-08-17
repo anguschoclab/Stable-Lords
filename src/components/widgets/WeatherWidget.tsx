@@ -60,6 +60,7 @@ export const WEATHER_STATS: Record<WeatherType, string> = {
   'Blood Fog': 'INITIATIVE -6 | RIPOSTE +6 | DAMAGE +25% | STAMINA DRAIN 110%',
   'Shimmering Heat': 'STAMINA DRAIN 120% | INITIATIVE -2',
   'Crystal Rain': 'INITIATIVE -3 | DAMAGE +20% | STAMINA DRAIN 110%',
+  'Winds of Chaos': 'STAMINA CONSERVATION 20% | INITIATIVE ERRATIC | DAMAGE +15%',
   'Rain of Frogs': 'INITIATIVE -4 | RIPOSTE -2 | DAMAGE -10% | STAMINA DRAIN 110%',
   'Chaos Storm': 'STAMINA DRAIN 125% | INITIATIVE -5 | RIPOSTE +10 | DAMAGE +50%',
   'Whispering Winds': 'INITIATIVE -1 | RIPOSTE +2 | DAMAGE -5%',

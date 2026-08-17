@@ -620,6 +620,7 @@ export type WeatherType =
   | 'Shimmering Heat'
   | 'Crystal Rain'
   | 'Rain of Frogs'
+  | 'Winds of Chaos'
   | 'Chaos Storm'
   | 'Chaos Squall'
   | 'Whispering Winds'

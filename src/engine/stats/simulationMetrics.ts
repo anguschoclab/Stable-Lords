@@ -49,7 +49,9 @@ export function collectPulse(state: GameState): SimPulse {
     totalTraits += len;
     let flawsOnW = 0;
     for (let i = 0; i < len; i++) {
-      const t = TRAITS[ids[i]];
+      const tId = ids[i];
+      if (!tId) continue;
+      const t = TRAITS[tId];
       if (!t) continue;
       if (t.tier === 'Flaw') {
         flawInstances++;
@@ -63,13 +65,15 @@ export function collectPulse(state: GameState): SimPulse {
 
   // Iterate without generators to avoid iterator allocations
   for (let i = 0; i < state.roster.length; i++) {
-    processWarrior(state.roster[i]);
+    const w = state.roster[i];
+    if (w) processWarrior(w);
   }
   for (let i = 0; i < activeRivals.length; i++) {
-    const rivalRoster = activeRivals[i].roster;
+    const rivalRoster = activeRivals[i]?.roster;
     if (rivalRoster) {
       for (let j = 0; j < rivalRoster.length; j++) {
-        processWarrior(rivalRoster[j]);
+        const w = rivalRoster[j];
+        if (w) processWarrior(w);
       }
     }
   }

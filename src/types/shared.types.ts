@@ -628,7 +628,8 @@ export type WeatherType =
   | 'Abyssal Tempest'
   | 'Temporal Rift'
   | 'Stardust Gale'
-  | 'Mana Storm';
+  | 'Mana Storm'
+  | 'Shattered Skies';
 
 /**
  * Defines the shape of death event.

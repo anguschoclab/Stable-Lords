@@ -68,6 +68,7 @@ export const WEATHER_STATS: Record<WeatherType, string> = {
   'Temporal Rift': 'STAMINA DRAIN 200% | INITIATIVE +10 | RIPOSTE +5',
   'Stardust Gale': 'STAMINA DRAIN 115% | INITIATIVE +2',
   'Mana Storm': 'STAMINA DRAIN 150% | INITIATIVE +4 | RIPOSTE +1 | DAMAGE +10%',
+  'Shattered Skies': 'STAMINA DRAIN 110% | INITIATIVE +2 | RIPOSTE -2 | DAMAGE +15%',
 }; /**
  * Weather widget.
  */

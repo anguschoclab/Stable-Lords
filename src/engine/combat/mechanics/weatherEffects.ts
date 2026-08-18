@@ -438,6 +438,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
   },
+  'Shattered Skies': {
+    staminaMult: 1.1,
+    initiativeMod: 2,
+    riposteMod: -2,
+    damageMult: 1.15,
+    description: 'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
+  },
 };
 
 /**

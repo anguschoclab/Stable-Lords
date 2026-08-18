@@ -33,14 +33,13 @@
       "{{attacker}} unleashes a brutal, visceral final strike, painting the arena with {{defender}}'s gore.",
       "No mercy, no hesitation. {{attacker}} performs a brutal execution on the defenseless {{defender}}.",
       "A cold, dispassionate execution. {{attacker}} ends {{defender}}'s life with terrifying efficiency.",
-      "{{attacker}} stands over the fallen form of {{defender}}, delivering a cold, merciless final blow.",
       "{{attacker}} stands over {{defender}}, delivering a final, merciless strike to end the suffering.",
       "A final, silencing blow from {{attacker}} leaves {{defender}} lifeless on the blood-soaked sands.",
       "With absolute finality, {{attacker}} drives their weapon home, extinguishing {{defender}}'s life.",
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -85,7 +84,7 @@
       "A brutal, final strike separates {{defender}} from the mortal coil.",
       "{{attacker}} executes a flawless, cold-blooded finishing blow.",
       "A brutal execution that leaves the crowd in stunned silence.",
-      "{{attacker}} delivers a cold, methodical coup de grâce.",
+      "{{attacker}} delivers a cold, methodical coup de gr\u00e2ce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
       "The sands drink deeply today."
@@ -217,7 +216,10 @@
       "Bleeding out on the arena floor, {{defender}} draws their final, shuddering breath.",
       "{{defender}}'s body simply gives out, ruined beyond the capacity to live.",
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
-      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever."
+      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever.",
+      "{{defender}}'s eyes go wide with shock before the life leaves them completely, slumping to the blood-stained sand.",
+      "A brutal, final gasp escapes {{defender}} as the fatal blow lands, their body giving out under the terrible weight of the strike.",
+      "{{defender}} stares blankly at the wound for a long, agonizing second before collapsing backward, dead before they hit the ground."
     ]
   }
 }

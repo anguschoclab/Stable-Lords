@@ -9,7 +9,9 @@ import { loadCombatNarrative } from '@/data/narrative';
 enableMapSet();
 
 // Eagerly load combat narrative data for all tests
-beforeAll(async () => { await loadCombatNarrative(); });
+beforeAll(async () => {
+  await loadCombatNarrative();
+});
 
 /**
  * Mock localStorage implementation for Bun/Vitest environment.

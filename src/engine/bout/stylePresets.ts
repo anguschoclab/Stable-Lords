@@ -324,5 +324,6 @@ export function getStylePresets(style: FightingStyle): StylePreset[] {
  *
  */
 export function defaultStylePreset(style: FightingStyle): StylePreset {
-  return (STYLE_PRESETS[style]?.[0] ?? STYLE_PRESETS[FightingStyle.StrikingAttack]?.[0]) as StylePreset;
+  return (STYLE_PRESETS[style]?.[0] ??
+    STYLE_PRESETS[FightingStyle.StrikingAttack]?.[0]) as StylePreset;
 }

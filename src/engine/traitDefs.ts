@@ -103,7 +103,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'feral_gaze',
     name: 'Feral Gaze',
     description: 'An unblinking, predatory stare that unsettles even seasoned veterans.',
-    effect: { iniModEarly: 1, attModEarly: 1, fightPlanMod: { defenseFocus: 0.1 } },
+    effect: { iniModEarly: 1, attModEarly: 1 },
     tier: 'Common',
     sign: 'positive',
     weight: 0.7,

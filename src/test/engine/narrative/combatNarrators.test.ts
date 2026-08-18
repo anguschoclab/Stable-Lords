@@ -23,7 +23,9 @@ import { loadCombatNarrative } from '@/data/narrative';
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 
 describe('combatNarrators', () => {
-  beforeAll(async () => { await loadCombatNarrative(); });
+  beforeAll(async () => {
+    await loadCombatNarrative();
+  });
   describe('narrateAttack', () => {
     it('produces no-raw-token text', () => {
       const rng = new SeededRNG(1);

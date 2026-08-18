@@ -11,10 +11,7 @@ import {
   getLoadoutWeight,
 } from '@/data/equipment';
 import { getWeaponSuitability, type WeaponSuitability } from '@/engine/weaponSuitability';
-import {
-  getEncumbranceRatio,
-  getEncumbranceTier,
-} from '@/data/equipment/encumbrance';
+import { getEncumbranceRatio, getEncumbranceTier } from '@/data/equipment/encumbrance';
 
 /**
  * Defines the shape of gear recommendation.

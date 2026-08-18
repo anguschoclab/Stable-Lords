@@ -96,7 +96,6 @@ export const STANDARD_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
 export const MIST_SHROUDED_RUINS: ArenaConfig = {
   id: 'mist_shrouded_ruins',
   name: 'Mist-Shrouded Ruins',
@@ -505,18 +504,45 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'blood_sands_first_king',
+    arenaId: 'bloodsands_arena',
+    type: 'historical_battle',
+    title: 'The Fall of the First King',
+    narrative:
+      'The bloodsands still run a deeper crimson where the first Arena King was overthrown by a mob of enraged pit fighters in 742.',
+  },
+  {
+    id: 'lantern_hall_shadow_dance',
+    arenaId: 'lantern_hall_arena',
+    type: 'architectural_quirk',
+    title: 'The Dance of Shadows',
+    narrative:
+      'Due to the precise placement of the swinging lanterns, an observant fighter can cast a terrifying shadow that appears thrice their size, demoralizing rookies.',
+  },
+  {
+    id: 'glacial_rift_frozen_tears',
+    arenaId: 'glacial_rift',
+    type: 'famous_death',
+    title: 'The Frozen Tears',
+    narrative:
+      'A celebrated champion fell here, their blood freezing into sharp crimson icicles before they even hit the ground.',
+  },
+
+  {
     id: 'mist_shrouded_ruins_echoes',
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',
     title: 'Echoes of the Ancients',
-    narrative: 'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
+    narrative:
+      'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
   },
   {
     id: 'the_gallows_tree_roots',
     arenaId: 'the_gallows_tree',
     type: 'hazard',
     title: 'Grasping Roots',
-    narrative: 'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
+    narrative:
+      'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
   },
   {
     id: 'sunken_vault_echo',
@@ -1184,5 +1210,5 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   THE_SUNKEN_VAULT,
   IRON_FORGE,
   MIST_SHROUDED_RUINS,
-  THE_GALLOWS_TREE
+  THE_GALLOWS_TREE,
 ].forEach(registerArena);

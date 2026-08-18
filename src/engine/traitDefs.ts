@@ -97,7 +97,37 @@ export interface TraitDef {
 /**
  * Traits.
  */
+// New traits are dynamically rolled in recruitment.ts and scouted via traitMods.ts. No manual wiring needed.
 export const TRAITS: Record<string, TraitDef> = {
+  feral_gaze: {
+    id: 'feral_gaze',
+    name: 'Feral Gaze',
+    description: 'An unblinking, predatory stare that unsettles even seasoned veterans.',
+    effect: { iniModEarly: 1, attModEarly: 1, fightPlanMod: { defenseFocus: 0.1 } },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.7,
+  },
+  orphan_resilience: {
+    id: 'orphan_resilience',
+    name: 'Orphan Resilience',
+    description:
+      'Accustomed to starvation and beatings, they fight through pain longer than expected.',
+    effect: { enduranceMult: 0.9, attModLowHp: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  shadow_born_quirk: {
+    id: 'shadow_born_quirk',
+    name: 'Shadow Born Quirk',
+    description: 'Uncomfortable in bright lights, they tend to hang back until striking.',
+    effect: { iniModEarly: -1, defModEarly: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+
   // 5 New Personality/Lore Traits
 
   guttersnipe_cunning: {

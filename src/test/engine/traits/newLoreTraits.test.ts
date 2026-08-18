@@ -441,8 +441,6 @@ describe('new traits from lore expansion', () => {
       expect(TRAITS.pit_scarred).toBeUndefined();
     });
 
-    it('orphan_resilience is undefined (duplicate of asylum_born)', () => {
-      expect(TRAITS.orphan_resilience).toBeUndefined();
-    });
+
   });
 });

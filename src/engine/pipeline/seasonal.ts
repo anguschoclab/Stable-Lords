@@ -65,6 +65,7 @@ import {
   handleWanderingMystic,
   handleAbyssalTempestRitual,
   handleCursedTreasureDiscovery,
+  handleShatteredSkiesRitual,
 } from './seasonalHandlers';
 
 const EVENT_HANDLERS: Record<
@@ -128,6 +129,7 @@ const EVENT_HANDLERS: Record<
   bountiful_harvest: handleBountifulHarvest,
   cursed_treasure_discovery: handleCursedTreasureDiscovery,
   abyssal_tempest_ritual: handleAbyssalTempestRitual,
+  shattered_skies_ritual: handleShatteredSkiesRitual,
 };
 
 /**

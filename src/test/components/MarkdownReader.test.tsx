@@ -76,4 +76,13 @@ describe('MarkdownReader', () => {
     const link = screen.getByRole('link', { name: 'Link text' });
     expect(link).toHaveAttribute('href', 'https://example.com');
   });
+
+  it('sanitizes malicious javascript links', () => {
+    render(<MarkdownReader content="[Malicious link](javascript:alert(1))" />);
+    // When href is empty string, testing-library/dom's `byRole('link')` might not find it as a proper valid interactive link role,
+    // so we can fallback to querying the text which is wrapped in an anchor.
+    const link = screen.getByText('Malicious link');
+    expect(link.tagName.toLowerCase()).toBe('a');
+    expect(link).toHaveAttribute('href', '');
+  });
 });

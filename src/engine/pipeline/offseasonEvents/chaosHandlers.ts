@@ -623,7 +623,9 @@ export function handleUnexplainedMonolith(
       const currentInjuries = existingUpdate.injuries ?? chosen.injuries ?? [];
       const currentTraits = existingUpdate.traits ?? chosen.traits ?? [];
 
-      const newTraits = currentTraits.includes('precise') ? currentTraits : [...currentTraits, 'precise'];
+      const newTraits = currentTraits.includes('precise')
+        ? currentTraits
+        : [...currentTraits, 'precise'];
 
       ctx.rosterUpdates.set(chosen.id, {
         ...existingUpdate,

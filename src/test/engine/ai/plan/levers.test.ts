@@ -347,45 +347,103 @@ describe('levers — getAITactics', () => {
 });
 
 describe('levers — getAIFallbackCondition', () => {
-  const ALL_PERSONALITIES = ['Aggressive', 'Methodical', 'Showman', 'Pragmatic', 'Tactician'] as const;
+  const ALL_PERSONALITIES = [
+    'Aggressive',
+    'Methodical',
+    'Showman',
+    'Pragmatic',
+    'Tactician',
+  ] as const;
 
   // ── Intent priority tests ──
 
   it('RECOVERY intent → YIELD for all personalities', () => {
     for (const p of ALL_PERSONALITIES) {
-      expect(getAIFallbackCondition(p, FightingStyle.StrikingAttack, 'RECOVERY' as AIIntent)).toBe('YIELD');
+      expect(getAIFallbackCondition(p, FightingStyle.StrikingAttack, 'RECOVERY' as AIIntent)).toBe(
+        'YIELD'
+      );
     }
   });
 
   it('VENDETTA intent → BERZERK for all personalities', () => {
     for (const p of ALL_PERSONALITIES) {
-      expect(getAIFallbackCondition(p, FightingStyle.StrikingAttack, 'VENDETTA' as AIIntent)).toBe('BERZERK');
+      expect(getAIFallbackCondition(p, FightingStyle.StrikingAttack, 'VENDETTA' as AIIntent)).toBe(
+        'BERZERK'
+      );
     }
   });
 
   it('EXPANSION intent falls through to personality default', () => {
-    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'EXPANSION' as AIIntent)).toBe('BERZERK');
-    expect(getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack, 'EXPANSION' as AIIntent)).toBe('TURTLE');
+    expect(
+      getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'EXPANSION' as AIIntent)
+    ).toBe('BERZERK');
+    expect(
+      getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack, 'EXPANSION' as AIIntent)
+    ).toBe('TURTLE');
   });
 
   it('CONSOLIDATION intent falls through to personality default', () => {
-    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'CONSOLIDATION' as AIIntent)).toBe('BERZERK');
-    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack, 'CONSOLIDATION' as AIIntent)).toBe('FLEE');
+    expect(
+      getAIFallbackCondition(
+        'Aggressive',
+        FightingStyle.StrikingAttack,
+        'CONSOLIDATION' as AIIntent
+      )
+    ).toBe('BERZERK');
+    expect(
+      getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack, 'CONSOLIDATION' as AIIntent)
+    ).toBe('FLEE');
   });
 
   it('AGGRESSIVE_EXPANSION intent falls through to personality default', () => {
-    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'AGGRESSIVE_EXPANSION' as AIIntent)).toBe('BERZERK');
-    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack, 'AGGRESSIVE_EXPANSION' as AIIntent)).toBe('None');
+    expect(
+      getAIFallbackCondition(
+        'Aggressive',
+        FightingStyle.StrikingAttack,
+        'AGGRESSIVE_EXPANSION' as AIIntent
+      )
+    ).toBe('BERZERK');
+    expect(
+      getAIFallbackCondition(
+        'Showman',
+        FightingStyle.StrikingAttack,
+        'AGGRESSIVE_EXPANSION' as AIIntent
+      )
+    ).toBe('None');
   });
 
   it('WEALTH_ACCUMULATION intent falls through to personality default', () => {
-    expect(getAIFallbackCondition('Methodical', FightingStyle.StrikingAttack, 'WEALTH_ACCUMULATION' as AIIntent)).toBe('TURTLE');
-    expect(getAIFallbackCondition('Pragmatic', FightingStyle.StrikingAttack, 'WEALTH_ACCUMULATION' as AIIntent)).toBe('FLEE');
+    expect(
+      getAIFallbackCondition(
+        'Methodical',
+        FightingStyle.StrikingAttack,
+        'WEALTH_ACCUMULATION' as AIIntent
+      )
+    ).toBe('TURTLE');
+    expect(
+      getAIFallbackCondition(
+        'Pragmatic',
+        FightingStyle.StrikingAttack,
+        'WEALTH_ACCUMULATION' as AIIntent
+      )
+    ).toBe('FLEE');
   });
 
   it('ROSTER_DIVERSITY intent falls through to personality default', () => {
-    expect(getAIFallbackCondition('Tactician', FightingStyle.StrikingAttack, 'ROSTER_DIVERSITY' as AIIntent)).toBe('TURTLE');
-    expect(getAIFallbackCondition('Showman', FightingStyle.StrikingAttack, 'ROSTER_DIVERSITY' as AIIntent)).toBe('None');
+    expect(
+      getAIFallbackCondition(
+        'Tactician',
+        FightingStyle.StrikingAttack,
+        'ROSTER_DIVERSITY' as AIIntent
+      )
+    ).toBe('TURTLE');
+    expect(
+      getAIFallbackCondition(
+        'Showman',
+        FightingStyle.StrikingAttack,
+        'ROSTER_DIVERSITY' as AIIntent
+      )
+    ).toBe('None');
   });
 
   it('undefined intent falls through to personality default', () => {
@@ -472,15 +530,21 @@ describe('levers — getAIFallbackCondition', () => {
   // ── Priority ordering tests ──
 
   it('Aggressive + RECOVERY → YIELD (intent overrides personality)', () => {
-    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'RECOVERY' as AIIntent)).toBe('YIELD');
+    expect(
+      getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'RECOVERY' as AIIntent)
+    ).toBe('YIELD');
   });
 
   it('Methodical + TotalParry + VENDETTA → BERZERK (intent overrides style+personality)', () => {
-    expect(getAIFallbackCondition('Methodical', FightingStyle.TotalParry, 'VENDETTA' as AIIntent)).toBe('BERZERK');
+    expect(
+      getAIFallbackCondition('Methodical', FightingStyle.TotalParry, 'VENDETTA' as AIIntent)
+    ).toBe('BERZERK');
   });
 
   it('Aggressive + VENDETTA → BERZERK (both resolve to BERZERK)', () => {
-    expect(getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'VENDETTA' as AIIntent)).toBe('BERZERK');
+    expect(
+      getAIFallbackCondition('Aggressive', FightingStyle.StrikingAttack, 'VENDETTA' as AIIntent)
+    ).toBe('BERZERK');
   });
 
   it('Methodical + TotalParry (no intent) → TURTLE (personality and style both resolve TURTLE)', () => {

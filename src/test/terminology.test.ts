@@ -11,11 +11,7 @@ const srcDir = 'src';
 const e2eDir = 'e2e';
 
 // Files/dirs exempt from display-text rules (debug tools, engine internals)
-const EXEMPT = [
-  'debug/',
-  '.test.',
-  'routeTree.gen.ts',
-];
+const EXEMPT = ['debug/', '.test.', 'routeTree.gen.ts'];
 
 function normalizePath(p: string): string {
   return p.replace(/\\/g, '/');

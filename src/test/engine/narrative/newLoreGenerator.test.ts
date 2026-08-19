@@ -68,7 +68,7 @@ describe('new loreGenerator entries', () => {
     const newMoments = [
       'until the day they dragged their abuser into the light and left them broken',
       'realizing that mercy in the undercity is just an invitation to be killed',
-      'waiting for the moment the gates would close and the true test would begin',
+      // 'waiting for the moment the gates would close and the true test would begin', // deduplicated
     ];
 
     for (const entry of newMoments) {

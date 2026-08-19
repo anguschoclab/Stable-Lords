@@ -24,7 +24,14 @@ interface MatchupCardProps {
   onToggleAvoid: () => void;
 }
 
-function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge, onToggleAvoid }: MatchupCardProps) {
+function MatchupCard({
+  matchup,
+  type,
+  isChallenged,
+  isAvoided,
+  onToggleChallenge,
+  onToggleAvoid,
+}: MatchupCardProps) {
   const w = matchup.rivalWarrior;
   const isGood = type === 'recommend';
 

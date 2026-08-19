@@ -144,13 +144,23 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
 
   // 🌩️ Weather Impact: Mana Surge Gift
   if (input.weather === 'Mana Surge') {
-    income.push({ label: 'Celestial Gift (Mana Surge)', amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT });
+    income.push({
+      label: 'Celestial Gift (Mana Surge)',
+      amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT,
+    });
   }
 
   // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
   const patronageIncome = input.roster.reduce((sum, w) => {
     if ((w.fame || 0) > WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) {
-      return sum + Math.floor(((w.fame || 0) - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
+      return (
+        sum +
+        Math.floor(
+          ((w.fame || 0) - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) /
+            WEATHER_ECONOMICS.PATRONAGE_DIVISOR
+        ) *
+          WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER
+      );
     }
     return sum;
   }, 0);
@@ -168,10 +178,16 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
 
     // Weather-specific ledger labels for clarity
     if (input.weather === 'Sweltering') {
-      expenses.push({ label: 'Cooling & Ventilation Overhead', amount: input.roster.length * WEATHER_ECONOMICS.SWELTERING_PREMIUM });
+      expenses.push({
+        label: 'Cooling & Ventilation Overhead',
+        amount: input.roster.length * WEATHER_ECONOMICS.SWELTERING_PREMIUM,
+      });
     }
     if (input.weather === 'Blizzard') {
-      expenses.push({ label: 'Insulation & Fuel Overhead', amount: input.roster.length * WEATHER_ECONOMICS.BLIZZARD_PREMIUM });
+      expenses.push({
+        label: 'Insulation & Fuel Overhead',
+        amount: input.roster.length * WEATHER_ECONOMICS.BLIZZARD_PREMIUM,
+      });
     }
   }
 

@@ -309,7 +309,11 @@ describe('OPFS Archival System', () => {
 
   describe('Suite 13: retrieveHotState with plausibility check', () => {
     const minimalState = {
-      meta: { gameName: 'Test', version: SAVE_STATE_VERSION, createdAt: '2024-01-01T00:00:00.000Z' },
+      meta: {
+        gameName: 'Test',
+        version: SAVE_STATE_VERSION,
+        createdAt: '2024-01-01T00:00:00.000Z',
+      },
       ftueComplete: true,
       isFTUE: false,
       isTournamentWeek: false,

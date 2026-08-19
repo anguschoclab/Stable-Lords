@@ -13,7 +13,7 @@ describe('howler dev white-screen fix', () => {
 
   it('vite.config.ts does NOT have a define block for HowlerGlobal', () => {
     const content = fs.readFileSync(path.join(projectRoot, 'vite.config.ts'), 'utf-8');
-    expect(content).not.toContain("define:");
+    expect(content).not.toContain('define:');
     expect(content).not.toContain("'global.HowlerGlobal'");
     expect(content).not.toContain('"global.HowlerGlobal"');
   });

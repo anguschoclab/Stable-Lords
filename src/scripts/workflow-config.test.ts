@@ -13,7 +13,7 @@ describe('workflow-config', () => {
     const gitignore = readFile('.gitignore');
     const lines = gitignore.split('\n');
     const matches = lines.filter(
-      (l) => l.trim() === 'Daily_Balance_Report.md' && !l.trim().startsWith('#'),
+      (l) => l.trim() === 'Daily_Balance_Report.md' && !l.trim().startsWith('#')
     );
     expect(matches).toHaveLength(0);
   });
@@ -32,10 +32,7 @@ describe('workflow-config', () => {
   });
 
   it('both workflow YAMLs pin bun-version: 1.3.11', () => {
-    const files = [
-      '.github/workflows/daily_sim.yml',
-      '.github/workflows/daily_bard.yml',
-    ];
+    const files = ['.github/workflows/daily_sim.yml', '.github/workflows/daily_bard.yml'];
     for (const f of files) {
       const yml = readFile(f);
       const match = yml.match(/bun-version:\s*(.+)/);
@@ -45,10 +42,7 @@ describe('workflow-config', () => {
   });
 
   it('both workflow YAMLs have permissions: contents: write', () => {
-    const files = [
-      '.github/workflows/daily_sim.yml',
-      '.github/workflows/daily_bard.yml',
-    ];
+    const files = ['.github/workflows/daily_sim.yml', '.github/workflows/daily_bard.yml'];
     for (const f of files) {
       const yml = readFile(f);
       expect(yml, `${f} should have contents: write`).toContain('contents: write');

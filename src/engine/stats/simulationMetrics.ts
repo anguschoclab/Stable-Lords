@@ -31,8 +31,7 @@ export function collectPulse(state: GameState): SimPulse {
   for (const r of activeRivals) {
     totalTreasury += r.treasury;
   }
-  const avgRivalTreasury =
-    activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
+  const avgRivalTreasury = activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
 
   // World-wide trait accounting: player roster + every rival roster.
   function* iterWarriors() {

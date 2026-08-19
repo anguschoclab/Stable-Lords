@@ -265,10 +265,10 @@
         "The impact sends a shockwave through {{defender}}.",
         "A firm bash leaves a nasty bruise on {{defender}}.",
         "{{attacker}} lands a heavy, bone-jarring blow.",
-        "{{attacker}} heaves their weapon in a bone-crushing overhand swing.",
         "Dropping their weight, {{attacker}} drives a heavy, blunt strike directly at {{defender}}.",
         "{{attacker}} steps forward, swinging their weapon like a battering ram.",
-        "With raw momentum, {{attacker}} unloads a devastating backhand swing."
+        "With raw momentum, {{attacker}} unloads a devastating backhand swing.",
+        "{{attacker}} heaves their weapon in a bone-crushing overhand swing."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",

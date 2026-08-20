@@ -621,6 +621,7 @@ export type WeatherType =
   | 'Crystal Rain'
   | 'Rain of Frogs'
   | 'Chaos Storm'
+  | 'Ethereal Mist'
   | 'Chaos Squall'
   | 'Whispering Winds'
   | 'Diamond Rain'

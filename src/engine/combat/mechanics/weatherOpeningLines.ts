@@ -91,6 +91,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     "Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters' will.",
   'Stardust Gale':
     'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
+  'Ethereal Mist': 'An ethereal mist rolls in, casting the arena in a soft, inspiring glow.',
   'Mana Storm':
     "Raw mana erupts across the arena in crackling waves. The fighters' eyes glow with arcane fire.",
 };

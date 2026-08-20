@@ -430,6 +430,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Unpredictable bursts of raw energy whip through the arena, empowering strikes but punishing mistakes.',
   },
+  'Ethereal Mist': {
+    staminaMult: 0.9,
+    initiativeMod: +2,
+    riposteMod: 0,
+    damageMult: 1.15,
+    description: 'A glorious, piercing light inspires the fighters. Attacks are sharper, and exhaustion fades.',
+  },
   'Mana Storm': {
     staminaMult: 1.5,
     initiativeMod: 4,

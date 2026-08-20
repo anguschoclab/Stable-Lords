@@ -438,6 +438,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
+  'Ethereal Mist': {
+    icon: CloudFog,
+    colorClass: 'text-indigo-300',
+    bgClass: 'bg-indigo-900/30',
+    borderClass: 'border-indigo-400',
+    description: 'A glorious, piercing light inspires the fighters. Attacks are sharper, and exhaustion fades.',
+  },
   'Mana Storm': {
     icon: Sparkles,
     colorClass: 'text-purple-400',

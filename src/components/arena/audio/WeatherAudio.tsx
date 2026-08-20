@@ -70,6 +70,7 @@ export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Diamond Rain': 'ambience-rain',
   'Temporal Rift': 'ambience-blood-moon',
   'Stardust Gale': 'ambience-wind-breezy',
+  'Ethereal Mist': 'ambience-wind-breezy',
   'Mana Storm': 'ambience-arcane-storm',
 }; /**
  * Weather audio.

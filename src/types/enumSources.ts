@@ -56,6 +56,7 @@ export const WEATHER_TYPES = [
   'Crystal Rain',
   'Rain of Frogs',
   'Chaos Storm',
+  'Ethereal Mist',
   'Chaos Squall',
   'Crimson Snow',
   'Whispering Winds',

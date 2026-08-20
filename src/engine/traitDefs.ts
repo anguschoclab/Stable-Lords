@@ -98,6 +98,35 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  // New Narrative Traits
+  orphan_resilience: {
+    id: 'orphan_resilience',
+    name: 'Orphan Resilience',
+    description: 'Accustomed to taking a beating and surviving against the odds.',
+    effect: { defModLate: 1, enduranceMult: 0.95 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  hollow_gaze: {
+    id: 'hollow_gaze',
+    name: 'Hollow Gaze',
+    description: 'An unnerving stare that throws opponents off balance when tired.',
+    effect: { defModLate: 1, attModLate: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.7,
+  },
+  scab_survivor: {
+    id: 'scab_survivor',
+    name: 'Scab Survivor',
+    description: 'Hardened by the slums, giving them an edge when injured.',
+    effect: { attModLowHP: 1, defModLowHP: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
+
   // 5 New Personality/Lore Traits
 
   guttersnipe_cunning: {

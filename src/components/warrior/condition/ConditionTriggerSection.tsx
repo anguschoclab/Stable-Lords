@@ -23,11 +23,15 @@ export function ConditionTriggerSection({
 
   return (
     <div className="space-y-2">
-      <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
+      <label
+        htmlFor={`condition-item-${idx}-trigger-type`}
+        className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60"
+      >
         When
-      </div>
+      </label>
       <div className="flex items-center gap-2 flex-wrap">
         <select
+          id={`condition-item-${idx}-trigger-type`}
           value={cond.trigger.type}
           onChange={(e) => onTriggerChange(e.target.value as ConditionTriggerType)}
           className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
@@ -41,6 +45,7 @@ export function ConditionTriggerSection({
 
         {trigOpt.inputType === 'phase' ? (
           <select
+            aria-label="Phase"
             value={String(cond.trigger.value)}
             onChange={(e) => onValueChange(e.target.value)}
             className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
@@ -51,6 +56,7 @@ export function ConditionTriggerSection({
           </select>
         ) : trigOpt.inputType === 'integer' ? (
           <select
+            aria-label="Integer"
             value={String(cond.trigger.value)}
             onChange={(e) => onValueChange(e.target.value)}
             className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"

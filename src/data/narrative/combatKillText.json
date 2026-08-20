@@ -88,7 +88,11 @@
       "{{attacker}} delivers a cold, methodical coup de grâce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
-      "The sands drink deeply today."
+      "The sands drink deeply today.",
+      "The arena goes dead silent as {{attacker}} delivers the final, soul-crushing strike to {{defender}}.",
+      "{{attacker}} shows absolutely no mercy, finishing {{defender}} with a brutal and darkly poetic strike.",
+      "With a clinical, dispassionate gaze, {{attacker}} systematically dismantles {{defender}}'s last shred of life.",
+      "{{attacker}} raises their weapon high, bringing the curtain down on {{defender}}'s life in a grand display of theatrical finality."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",

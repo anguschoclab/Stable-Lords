@@ -60,6 +60,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Glittering Frost',
   'Temporal Rift',
   'Stardust Gale',
+  'Abyssal Tempest',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];

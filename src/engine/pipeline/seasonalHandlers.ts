@@ -30,6 +30,7 @@ export {
   handleMysteriousPatron,
   handleMidnightFeast,
   handleShadowTraining,
+  handleOffseasonTrainingCamp,
   handleGladiatorOlympics,
   handleUndergroundPitFight,
   handleMeteorShower,

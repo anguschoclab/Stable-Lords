@@ -31,24 +31,18 @@ export function collectPulse(state: GameState): SimPulse {
   for (const r of activeRivals) {
     totalTreasury += r.treasury;
   }
-  const avgRivalTreasury =
-    activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
+  const avgRivalTreasury = activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
 
   // World-wide trait accounting: player roster + every rival roster.
-  function* iterWarriors() {
-    yield* state.roster;
-    for (const r of activeRivals) {
-      if (r.roster) yield* r.roster;
-    }
-  }
-
+  // Using direct loops instead of a generator to avoid allocating temporary iterator objects in the simulation hot path.
   let traitedWarriors = 0;
   let totalTraits = 0;
   let flawInstances = 0;
   let multiFlawWarriors = 0;
   let classTraitInstances = 0;
   let signatureInstances = 0;
-  for (const w of iterWarriors()) {
+
+  const processWarrior = (w: (typeof state.roster)[0]) => {
     const ids = w.traits ?? [];
     if (ids.length > 0) traitedWarriors++;
     totalTraits += ids.length;
@@ -64,6 +58,17 @@ export function collectPulse(state: GameState): SimPulse {
       if (t.styles && t.styles.length > 0) classTraitInstances++;
     }
     if (flawsOnW >= 2) multiFlawWarriors++;
+  };
+
+  for (const w of state.roster) {
+    processWarrior(w);
+  }
+  for (const r of activeRivals) {
+    if (r.roster) {
+      for (const w of r.roster) {
+        processWarrior(w);
+      }
+    }
   }
 
   return {

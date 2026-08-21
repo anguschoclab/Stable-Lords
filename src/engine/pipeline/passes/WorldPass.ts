@@ -88,6 +88,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Gravity Anomaly',
     'Crimson Snow',
     'Glittering Frost',
+    'Abyssal Tempest',
   ],
 };
 
@@ -168,6 +169,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   'Aurora Borealis': 0.5,
   'Gravity Anomaly': 0.5,
   'Glittering Frost': 2,
+  'Abyssal Tempest': 0.5,
 };
 
 const DEFAULT_WEIGHT = 1;

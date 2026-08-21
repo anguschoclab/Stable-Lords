@@ -23,6 +23,7 @@ export { handleWanderingMystic } from './buffHandlers';
 export { handleChaosSpores } from './buffHandlers';
 export { handleChaosWeaversGift } from './buffHandlers';
 export { handleShadowTraining } from './buffHandlers';
+export { handleOffseasonTrainingCamp } from './buffHandlers';
 export { handleTavernBrawl } from './injuryHandlers';
 export { handlePlagueOutbreak } from './injuryHandlers';
 export { handleWildAnimalAttack } from './injuryHandlers';

@@ -96,7 +96,6 @@ export const STANDARD_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
 export const MIST_SHROUDED_RUINS: ArenaConfig = {
   id: 'mist_shrouded_ruins',
   name: 'Mist-Shrouded Ruins',
@@ -505,18 +504,44 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'mudpit_arena_drowning_grasp',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Drowning Grasp',
+    narrative:
+      'A legendary heavily-armored champion slipped in the muck, and their lighter opponent simply held their face beneath the surface until the bubbles stopped.',
+  },
+  {
+    id: 'clifftop_arena_the_long_fall',
+    arenaId: 'clifftop_arena',
+    type: 'famous_death',
+    title: 'The Long Fall',
+    narrative:
+      'In a desperate final exchange, a cornered fighter grappled their opponent, throwing them both over the edge. The crowd still claims you can hear the screams.',
+  },
+  {
+    id: 'stormtop_terrace_lightning_strike',
+    arenaId: 'stormtop_terrace',
+    type: 'architectural_quirk',
+    title: 'The Static Charge',
+    narrative:
+      'Fighters in full plate often find their hair standing on end moments before a strike; some intentionally wear conductive metals to harness the sparks and blind opponents.',
+  },
+  {
     id: 'mist_shrouded_ruins_echoes',
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',
     title: 'Echoes of the Ancients',
-    narrative: 'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
+    narrative:
+      'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
   },
   {
     id: 'the_gallows_tree_roots',
     arenaId: 'the_gallows_tree',
     type: 'hazard',
     title: 'Grasping Roots',
-    narrative: 'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
+    narrative:
+      'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
   },
   {
     id: 'sunken_vault_echo',
@@ -1184,5 +1209,5 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   THE_SUNKEN_VAULT,
   IRON_FORGE,
   MIST_SHROUDED_RUINS,
-  THE_GALLOWS_TREE
+  THE_GALLOWS_TREE,
 ].forEach(registerArena);

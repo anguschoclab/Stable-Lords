@@ -710,7 +710,8 @@
           "{{defender}} sidesteps with complete nonchalance.",
           "{{defender}} sidesteps the attack with an arrogant smirk.",
           "A fluid, effortless movement takes {{defender}} out of harm's way.",
-          "{{defender}} weaves past the attack, completely unbothered."
+          "{{defender}} weaves past the attack, completely unbothered.",
+          "Without breaking a sweat, {{defender}} easily avoids the clumsy strike."
         ],
         "theatrical": [
           "{{defender}} twirls like a dancer, letting the deadly strike pass through thin air where they stood a moment ago.",
@@ -763,6 +764,7 @@
           "{{defender}} pirouettes away from the blow with a mocking bow.",
           "{{defender}} flips gracefully away from the strike.",
           "{{defender}} performs a dramatic pirouette, letting the strike miss spectacularly.",
+          "With a flourish, {{defender}} dances away from the attack.",
           "{{defender}} dodges the blow with a sweeping, crowd-pleasing bow.",
           "A grand backward leap from {{defender}} avoids the attack and earns a roar from the stands."
         ],
@@ -817,6 +819,7 @@
           "{{defender}} silently slips the attack, their expression cold.",
           "{{defender}} avoids the strike silently, a ghost of the arena.",
           "A silent, phantom-like retreat keeps {{defender}} untouched.",
+          "{{defender}} mechanically steps aside, their cold eyes never leaving their foe.",
           "A calculating shift in stance is all {{defender}} needs to evade the attack.",
           "{{defender}} slips the strike with brutal, joyless efficiency.",
           "Silence follows as {{defender}} cleanly evades the blow, already plotting their counter."
@@ -1419,7 +1422,10 @@
         "Legs buckling, {{name}} hits the dirt hard.",
         "{{name}} crumples under the onslaught!!",
         "{{name}} stumbles to the ground!!!",
-        "{{name}} drops to one knee!!"
+        "{{name}} drops to one knee!!",
+        "{{name}} is sent crashing into the blood-soaked sand by the force of the blow.",
+        "The impact sweeps {{name}} off their feet, landing hard on the arena floor.",
+        "{{name}} crumples to the dirt, the wind knocked out of them completely."
       ],
       "recovery": [
         "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight.",
@@ -1514,7 +1520,9 @@
         "{{name}} rises unsteadily but determinedly.",
         "{{name}} rolls and stands back up quickly.",
         "{{name}} is standing once more!",
-        "{{name}} staggers upright, shaking off the dust and pain to fight another moment."
+        "Spitting blood, {{name}} climbs back to their feet, glaring with renewed hatred.",
+        "{{name}} staggers upright, shaking off the dust and pain to fight another moment.",
+        "With agonizing slowness, {{name}} rises from the dirt, refusing to stay down."
       ],
       "pacing": {
         "slow": [

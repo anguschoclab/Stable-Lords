@@ -86,6 +86,7 @@
         "{{attacker}} steps in close, delivering a brutal downward cleave.",
         "A flurry of flashing steel as {{attacker}} attempts to dismember {{defender}}.",
         "{{attacker}} slashes out with murderous intent, testing {{defender}}'s reflexes.",
+        "{{attacker}}'s blade bites deep into {{defender}}'s flesh.",
         "A vicious slash leaves a ragged wound across {{defender}}.",
         "{{attacker}} executes a masterful draw-cut, slicing into {{defender}}."
       ],
@@ -619,6 +620,7 @@
         "The solid punch lands with a satisfying thwack.",
         "The blow leaves a red mark and a stinging ache.",
         "{{attacker}}'s bare knuckles connect with a wet thud against {{defender}}.",
+        "A savage cross from {{attacker}} snaps {{defender}}'s head back.",
         "{{attacker}} hammers {{defender}} with a rapid, punishing barrage of strikes."
       ],
       "mastery": [

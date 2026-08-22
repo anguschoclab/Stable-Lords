@@ -57,6 +57,10 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // Click "To the Arena"
   await page.getByRole('button', { name: /To the Arena/ }).click();
 
+  // Step 2: Set the Plan — click \"To the Arena\" again
+  await page.waitForSelector('text=Set the Plan', { timeout: 15_000 });
+  await page.getByRole('button', { name: /To the Arena/ }).click();
+
   // Step 2: First Blood — click "Continue"
   await page.waitForSelector('text=Continue', { timeout: 15_000 });
   await page.getByRole('button', { name: /Continue/ }).click();
@@ -144,10 +148,13 @@ test('golden path: new game → navigate all pages → fight → advance week', 
     const nextBtn = page.getByRole('button', {
       name: /Next Report|Acknowledge & Begin Planning|Honor the Fallen/,
     });
-    const count = await nextBtn.count();
-    if (count === 0) break;
-    await nextBtn.click();
-    await page.waitForTimeout(500);
+    try {
+      await nextBtn.first().waitFor({ state: 'visible', timeout: 2000 });
+      await nextBtn.first().click();
+      await page.waitForTimeout(500);
+    } catch {
+      break;
+    }
   }
 
   // ── 7. Verify Week Advanced ─────────────────────────────────────────────

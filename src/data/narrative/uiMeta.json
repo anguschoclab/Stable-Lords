@@ -11,12 +11,7 @@
     "btn_honor": "Honor the Fallen",
     "btn_planning": "Acknowledge & Begin Planning",
     "btn_next": "Next Report",
-    "armor_intro_verbs": [
-      "steps forth in",
-      "is armored in",
-      "glimmers in",
-      "is wearing"
-    ],
+    "armor_intro_verbs": ["steps forth in", "is armored in", "glimmers in", "is wearing"],
     "weapon_intro_verbs": [
       "prepares to fight with %W",
       "clutches their %W",
@@ -26,7 +21,7 @@
   },
   "meta": {
     "flair": {
-      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight.",
+      "Flashy": "Crowd favorite \u2014 earns +2 Popularity per flashy fight.",
       "Local Hero": "Loved by the locals. Their presence brings a touch more fame."
     },
     "title": {
@@ -308,6 +303,10 @@
       "defense": {
         "high": [
           {
+            "min": 35,
+            "text": "Flails hopelessly against an opponent who can read their every move"
+          },
+          {
             "min": 25,
             "text": "Stumbles backward, relying on blind luck rather than skill"
           },
@@ -321,6 +320,10 @@
           }
         ],
         "low": [
+          {
+            "min": 35,
+            "text": "Stands like a deer caught in headlights as destruction approaches"
+          },
           {
             "min": 25,
             "text": "Seems utterly confused by basic defensive footwork"

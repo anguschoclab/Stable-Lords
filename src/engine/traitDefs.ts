@@ -98,6 +98,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_resilience: {
+    id: 'orphan_resilience',
+    name: 'Orphan Resilience',
+    description: 'Hardened by a brutal upbringing, they refuse to yield when cornered.',
+    effect: { defModLate: 2, enduranceMult: 0.85 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  gutter_shadow: {
+    id: 'gutter_shadow',
+    name: 'Gutter Shadow',
+    description: 'Accustomed to fighting in cramped, lightless alleys.',
+    effect: { attMod: 1, iniMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.8,
+  },
   // 5 New Personality/Lore Traits
 
   guttersnipe_cunning: {

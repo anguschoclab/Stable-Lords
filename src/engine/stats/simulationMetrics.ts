@@ -35,20 +35,15 @@ export function collectPulse(state: GameState): SimPulse {
     activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
 
   // World-wide trait accounting: player roster + every rival roster.
-  function* iterWarriors() {
-    yield* state.roster;
-    for (const r of activeRivals) {
-      if (r.roster) yield* r.roster;
-    }
-  }
-
   let traitedWarriors = 0;
   let totalTraits = 0;
   let flawInstances = 0;
   let multiFlawWarriors = 0;
   let classTraitInstances = 0;
   let signatureInstances = 0;
-  for (const w of iterWarriors()) {
+
+  // Process a single warrior's traits inline to avoid allocation overhead.
+  const processWarrior = (w: { traits?: string[] }) => {
     const ids = w.traits ?? [];
     if (ids.length > 0) traitedWarriors++;
     totalTraits += ids.length;
@@ -64,6 +59,17 @@ export function collectPulse(state: GameState): SimPulse {
       if (t.styles && t.styles.length > 0) classTraitInstances++;
     }
     if (flawsOnW >= 2) multiFlawWarriors++;
+  };
+
+  for (const w of state.roster) {
+    processWarrior(w);
+  }
+  for (const r of activeRivals) {
+    if (r.roster) {
+      for (const w of r.roster) {
+        processWarrior(w);
+      }
+    }
   }
 
   return {

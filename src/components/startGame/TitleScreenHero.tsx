@@ -9,7 +9,7 @@ import { IconMedallion } from '@/components/ui/IconMedallion'; /**
 export default function TitleScreenHero() {
   return (
     <div className="text-center space-y-5">
-      <IconMedallion icon={<Swords className="h-6 w-6 text-[#F2D5B8]" strokeWidth={1.5} />} />
+      <IconMedallion icon={<Swords className="h-6 w-6 text-foreground" strokeWidth={1.5} />} />
 
       <div className="space-y-2">
         <h1 className="text-5xl sm:text-6xl font-display font-black tracking-[0.06em] uppercase text-foreground [text-shadow:0_2px_12px_rgba(0,0,0,0.9),0_1px_0_rgba(0,0,0,0.95),0_0_30px_rgba(201,151,42,0.15)]">

@@ -11,7 +11,7 @@ export function ThunderstormEffect() {
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-6 bg-arena-steel/40 animate-rain"
+          className="absolute w-px h-6 bg-arena-steel/40 animate-rain motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -43,7 +43,7 @@ export function ArcaneStormEffect() {
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -82,7 +82,7 @@ export function AetherStormEffect() {
       {Array.from({ length: 40 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark"
+          className="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -99,7 +99,7 @@ export function AetherStormEffect() {
       {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={`v-${i}`}
-          className="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -123,7 +123,7 @@ export function MeteorShowerEffect() {
       {Array.from({ length: 30 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-8 bg-gradient-to-b from-orange-300/60 to-transparent animate-rain"
+          className="absolute w-px h-8 bg-gradient-to-b from-orange-300/60 to-transparent animate-rain motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: '-10%',

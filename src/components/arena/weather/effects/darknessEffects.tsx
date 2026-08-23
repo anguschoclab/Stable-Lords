@@ -54,7 +54,7 @@ export function CursedMiasmaEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <div
-        className="absolute inset-0 animate-fog-drift"
+        className="absolute inset-0 animate-fog-drift motion-reduce:animate-none"
         style={{
           background:
             'radial-gradient(ellipse at 50% 80%, rgba(120,40,160,0.12) 0%, rgba(80,20,110,0.45) 100%)',

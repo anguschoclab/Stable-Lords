@@ -11,7 +11,7 @@ export function AuroraBorealisEffect() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={`aurora-${i}`}
-          className="absolute inset-x-0 h-1/3 animate-fog-drift"
+          className="absolute inset-x-0 h-1/3 animate-fog-drift motion-reduce:animate-none"
           style={{
             top: `${5 + i * 12}%`,
             background: `linear-gradient(90deg, transparent 0%, rgba(${i % 2 === 0 ? '0,255,150' : '140,0,255'},0.${8 + i * 2}) 30%, rgba(${i % 2 === 0 ? '0,200,200' : '180,0,255'},0.${10 + i * 2}) 50%, rgba(${i % 2 === 0 ? '0,255,150' : '140,0,255'},0.${8 + i * 2}) 70%, transparent 100%)`,
@@ -54,7 +54,7 @@ export function GravityAnomalyEffect() {
       {Array.from({ length: 30 }).map((_, i) => (
         <div
           key={`debris-${i}`}
-          className="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift"
+          className="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -99,7 +99,7 @@ export function RainbowEffect() {
       {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={`sparkle-${i}`}
-          className="absolute w-1 h-1 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,

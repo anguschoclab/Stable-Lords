@@ -9,7 +9,7 @@ export function WindEffect({ strong }: { strong: boolean }) {
       {Array.from({ length: strong ? 40 : 15 }).map((_, i) => (
         <div
           key={i}
-          className={cn('absolute h-px bg-white/20 animate-wind', strong ? 'w-16' : 'w-8')}
+          className={cn('absolute h-px bg-white/20 animate-wind motion-reduce:animate-none', strong ? 'w-16' : 'w-8')}
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: `-20%`,
@@ -41,7 +41,7 @@ export function TornadoEffect() {
       {Array.from({ length: 30 }).map((_, i) => (
         <div
           key={i}
-          className="absolute h-px w-20 bg-neutral-300/25 animate-wind"
+          className="absolute h-px w-20 bg-neutral-300/25 animate-wind motion-reduce:animate-none"
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: '-20%',
@@ -54,7 +54,7 @@ export function TornadoEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={`d${i}`}
-          className="absolute w-1 h-1 bg-neutral-600/60 rounded-sm animate-mana-spark"
+          className="absolute w-1 h-1 bg-neutral-600/60 rounded-sm animate-mana-spark motion-reduce:animate-none"
           style={
             {
               left: `${30 + cryptoRandom() * 40}%`,
@@ -81,7 +81,7 @@ export function ChaoticWindsEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={`lr-${i}`}
-          className="absolute h-px bg-gradient-to-r from-transparent via-arena-gold/25 to-transparent animate-wind"
+          className="absolute h-px bg-gradient-to-r from-transparent via-arena-gold/25 to-transparent animate-wind motion-reduce:animate-none"
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: '-20%',
@@ -121,7 +121,7 @@ export function ChaoticWindsEffect() {
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={`d-${i}`}
-          className="absolute w-0.5 h-0.5 bg-arena-gold/50 rounded-full animate-chaotic-drift"
+          className="absolute w-0.5 h-0.5 bg-arena-gold/50 rounded-full animate-chaotic-drift motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,

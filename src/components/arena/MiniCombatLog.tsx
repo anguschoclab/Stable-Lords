@@ -95,7 +95,7 @@ export default function MiniCombatLog({
         className={cn(
           'flex items-center justify-between gap-2 px-3 py-2',
           'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
-          'rounded-none cursor-pointer hover:border-white/20 transition-colors',
+          'rounded-none cursor-pointer hover:border-white/20 transition-colors motion-reduce:transition-none',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
         )}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -128,7 +128,7 @@ export default function MiniCombatLog({
                 e.stopPropagation();
                 onClose();
               }}
-              className="p-1 hover:bg-white/10 rounded-none transition-colors ml-1"
+              className="p-1 hover:bg-white/10 rounded-none transition-colors motion-reduce:transition-none ml-1"
             >
               <X className="h-3 w-3 text-muted-foreground" />
             </button>

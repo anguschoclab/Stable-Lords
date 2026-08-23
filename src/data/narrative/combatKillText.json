@@ -40,7 +40,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -88,7 +88,10 @@
       "{{attacker}} delivers a cold, methodical coup de grâce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
-      "The sands drink deeply today."
+      "The sands drink deeply today.",
+      "A chillingly precise maneuver from {{attacker}} ends {{defender}}'s life before they even realize they are dead.",
+      "{{attacker}} dispatches {{defender}} with an almost clinical detachment, a perfect, fatal strike.",
+      "The arena goes dead silent as {{attacker}} brutally, efficiently executes {{defender}}."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -113,7 +116,10 @@
       "{{attacker}} doesn't stop, raining down blows until {{defender}} stops moving entirely.",
       "A brutal combination leaves {{defender}} lifeless before they even hit the ground.",
       "A dizzying combination of strikes from {{attacker}} completely dismantles {{defender}}, leaving them dead before they hit the ground.",
-      "{{attacker}} unleashes a blinding series of blows, the final strike crushing the life from {{defender}}."
+      "{{attacker}} unleashes a blinding series of blows, the final strike crushing the life from {{defender}}.",
+      "A blinding, overwhelming flurry from {{attacker}} completely dismantles {{defender}}, ending in a horrific final blow.",
+      "{{attacker}} unleashes a relentless tempest of steel, breaking {{defender}} down piece by bloody piece.",
+      "Unable to weather the furious storm, {{defender}} is finally, brutally put down by {{attacker}}."
     ],
     "armor_failure": [
       "{{defender}}'s armor finally gives way under the relentless assault, {{attacker}} driving their weapon through the splintered ruin to end it.",
@@ -136,7 +142,10 @@
       "Steel shatters and flesh yields as {{attacker}} drives right through {{defender}}'s ruined defenses.",
       "A sickening crunch echoes as {{defender}}'s failing armor proves useless against the killing strike.",
       "{{defender}}'s armor finally gives way, allowing {{attacker}}'s weapon to bite deeply and fatally.",
-      "Sparks fly as {{defender}}'s battered protection shatters, {{attacker}}'s blade finding a fatal mark."
+      "Sparks fly as {{defender}}'s battered protection shatters, {{attacker}}'s blade finding a fatal mark.",
+      "{{defender}}'s shattered defense offers no resistance as {{attacker}} drives a fatal strike straight through the ruined plate.",
+      "With a horrifying crunch, {{attacker}} smashes right through {{defender}}'s compromised guard, ending it instantly.",
+      "Relying on ruined gear costs {{defender}} everything, as {{attacker}} exploits the weakness for a lethal finish."
     ],
     "fatigue_collapse": [
       "Exhaustion claims its toll. As {{defender}} drops their guard, gasping for air, {{attacker}} drives home a mercifully quick death.",
@@ -159,7 +168,10 @@
       "Too weak to even lift their weapon, {{defender}} collapses under the final blow.",
       "{{defender}}'s exhausted limbs betray them, making the lethal strike an inevitability.",
       "Exhausted and broken, {{defender}} simply cannot raise their weapon to stop {{attacker}}'s killing blow.",
-      "{{defender}} collapses from pure exhaustion, offering no resistance as {{attacker}} delivers the end."
+      "{{defender}} collapses from pure exhaustion, offering no resistance as {{attacker}} delivers the end.",
+      "Exhaustion claims {{defender}} completely, leaving them helpless as {{attacker}} steps in for the grim, final kill.",
+      "Too exhausted to even raise a weapon, {{defender}} simply awaits the end as {{attacker}} delivers the deathblow.",
+      "{{defender}}'s legs finally give out; {{attacker}} shows no mercy, finishing the exhausted gladiator."
     ],
     "rivalry_finish": [
       "With a scream of pure hatred, {{attacker}} buries their {{weapon}} into {{defender}}, finishing the blood feud once and for all.",
@@ -181,7 +193,10 @@
       "Years of bad blood culminate in {{attacker}} driving the fatal blow into {{defender}}.",
       "A bitter feud reaches its bloody conclusion as {{attacker}} ends {{defender}}.",
       "Years of bitter hatred culminate as {{attacker}} violently tears the life from their nemesis, {{defender}}.",
-      "{{attacker}} screams in triumph, standing victorious over the bloody corpse of their hated rival, {{defender}}."
+      "{{attacker}} screams in triumph, standing victorious over the bloody corpse of their hated rival, {{defender}}.",
+      "This blood feud ends here! {{attacker}} stands victorious, staring down at the lifeless body of their bitter rival, {{defender}}.",
+      "Years of hatred culminate in a single, devastating stroke as {{attacker}} finally puts {{defender}} in the ground.",
+      "The bitter rivalry is extinguished in blood. {{attacker}} walks away, leaving {{defender}} to the carrion birds."
     ],
     "fatal_damage": [
       "The sheer kinetic energy of {{attacker}}'s strike pulverizes {{defender}}'s insides. A catastrophic and instantaneous death.",

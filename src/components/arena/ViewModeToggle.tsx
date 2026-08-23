@@ -47,7 +47,6 @@ export default function ViewModeToggle({
       )}
     >
       <button
-        aria-label="View log"
         onClick={() => onChange('log')}
         className={cn(
           'flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all motion-reduce:transition-none motion-reduce:transform-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
@@ -64,7 +63,6 @@ export default function ViewModeToggle({
       </button>
 
       <button
-        aria-label="View arena"
         onClick={() => onChange('arena')}
         className={cn(
           'flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all motion-reduce:transition-none motion-reduce:transform-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',

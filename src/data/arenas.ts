@@ -96,7 +96,6 @@ export const STANDARD_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
 export const MIST_SHROUDED_RUINS: ArenaConfig = {
   id: 'mist_shrouded_ruins',
   name: 'Mist-Shrouded Ruins',
@@ -509,14 +508,16 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',
     title: 'Echoes of the Ancients',
-    narrative: 'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
+    narrative:
+      'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
   },
   {
     id: 'the_gallows_tree_roots',
     arenaId: 'the_gallows_tree',
     type: 'hazard',
     title: 'Grasping Roots',
-    narrative: 'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
+    narrative:
+      'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
   },
   {
     id: 'sunken_vault_echo',
@@ -1101,6 +1102,31 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A crack in the western wall perfectly catches the wind, emitting a sound remarkably like a child weeping. Opponents of high empathy often find their morale broken here.',
   },
+
+  {
+    id: 'charnel_pits_crawling_bone',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Crawling Bone',
+    narrative:
+      'A necromancer’s experiment gone wrong once animated the shattered bones embedded in the arena floor. Both fighters had to cooperate to survive the undead onslaught before resuming their deathmatch.',
+  },
+  {
+    id: 'the_abyssal_pit_silent_fall',
+    arenaId: 'the_abyssal_pit',
+    type: 'famous_death',
+    title: 'The Silent Fall',
+    narrative:
+      'A famed dual-wielder was pushed to the edge and slipped. Uniquely, they made no sound as they fell into the abyss, leaving the roaring crowd in an unnerving, sudden silence.',
+  },
+  {
+    id: 'bloodsands_arena_crimson_tide',
+    arenaId: 'bloodsands_arena',
+    type: 'architectural_quirk',
+    title: 'The Crimson Tide',
+    narrative:
+      'The sands here are so saturated with centuries of blood that during heavy rains, the arena floor turns into a slick, crimson mud, making footing treacherous and falls often fatal.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {
@@ -1184,5 +1210,5 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   THE_SUNKEN_VAULT,
   IRON_FORGE,
   MIST_SHROUDED_RUINS,
-  THE_GALLOWS_TREE
+  THE_GALLOWS_TREE,
 ].forEach(registerArena);

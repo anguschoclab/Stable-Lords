@@ -1,4 +1,5 @@
 import type { GameState } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
 import { TRAITS } from '@/engine/traits';
 
 /**
@@ -35,20 +36,15 @@ export function collectPulse(state: GameState): SimPulse {
     activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
 
   // World-wide trait accounting: player roster + every rival roster.
-  function* iterWarriors() {
-    yield* state.roster;
-    for (const r of activeRivals) {
-      if (r.roster) yield* r.roster;
-    }
-  }
-
   let traitedWarriors = 0;
   let totalTraits = 0;
   let flawInstances = 0;
   let multiFlawWarriors = 0;
   let classTraitInstances = 0;
   let signatureInstances = 0;
-  for (const w of iterWarriors()) {
+
+  // ⚡ Bolt: Use direct loops and helper to avoid generator function overhead
+  const processWarrior = (w: Warrior) => {
     const ids = w.traits ?? [];
     if (ids.length > 0) traitedWarriors++;
     totalTraits += ids.length;
@@ -64,6 +60,21 @@ export function collectPulse(state: GameState): SimPulse {
       if (t.styles && t.styles.length > 0) classTraitInstances++;
     }
     if (flawsOnW >= 2) multiFlawWarriors++;
+  };
+
+  for (let i = 0; i < state.roster.length; i++) {
+    const w = state.roster[i];
+    if (w) processWarrior(w);
+  }
+
+  for (let i = 0; i < activeRivals.length; i++) {
+    const r = activeRivals[i];
+    if (r && r.roster) {
+      for (let j = 0; j < r.roster.length; j++) {
+        const rw = r.roster[j];
+        if (rw) processWarrior(rw);
+      }
+    }
   }
 
   return {

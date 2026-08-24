@@ -93,7 +93,7 @@
         "{{attacker}}'s {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}.",
         "In a blur of practiced rhythm, {{attacker}}'s {{weapon}} flows through {{defender}}'s guard to find the {{bodyPart}}.",
         "{{attacker}} turns the blade with frightening precision, finding a gap in the armor.",
-        "A maestro's stroke—{{attacker}} leaves a perfect, bleeding line across {{defender}}.",
+        "A maestro's stroke\u2014{{attacker}} leaves a perfect, bleeding line across {{defender}}.",
         "A textbook slashing technique from {{attacker}}, carving a clean, devastating arc.",
         "The crowd marvels as {{attacker}}'s blade sings through flesh with terrible grace.",
         "A masterful cut perfectly exploits the smallest opening in {{defender}}'s stance.",
@@ -266,7 +266,11 @@
         "A solid thud echoes as {{weapon}} connects cleanly.",
         "The impact sends a shockwave through {{defender}}.",
         "A firm bash leaves a nasty bruise on {{defender}}.",
-        "{{attacker}} lands a heavy, bone-jarring blow."
+        "{{attacker}} lands a heavy, bone-jarring blow.",
+        "The sheer weight of {{attacker}}'s {{weapon}} caves into {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} swings with raw power, hammering the {{weapon}} into {{defender}}'s {{bodyPart}}.",
+        "{{defender}} is rocked as {{attacker}}'s {{weapon}} crashes against their {{bodyPart}}.",
+        "A devastating, bone-rattling blow from {{attacker}} impacts {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",
@@ -411,7 +415,7 @@
         "{{attacker}} catches {{defender}} flat-footed and sinks {{possessive}} {{weapon}} into the {{bodyPart}}.",
         "With deadly precision, {{attacker}} drives a piercing attack straight toward {{defender}}'s vitals.",
         "{{attacker}} finds their mark, driving the tip of {{possessive}} {{weapon}} into the {{bodyPart}}.",
-        "{{attacker}} drives {{possessive}} {{weapon}} home — {{defender}} is struck on the {{bodyPart}}!",
+        "{{attacker}} drives {{possessive}} {{weapon}} home \u2014 {{defender}} is struck on the {{bodyPart}}!",
         "A clean thrust from {{attacker}} sinks into {{defender}}'s {{bodyPart}} with punishing accuracy!",
         "{{attacker}}'s {{weapon}} punches through {{defender}}'s guard and bites into the {{bodyPart}}!",
         "A deadly thrust! {{attacker}}'s {{weapon}} punches cleanly into {{defender}}'s {{bodyPart}}!",
@@ -585,7 +589,7 @@
         "{{attacker}} drives a piston-like straight punch directly into {{defender}}'s midsection.",
         "A heavy, calculated punch from {{attacker}} slams into {{defender}}'s {{bodyPart}}.",
         "{{attacker}} throws a wild, haymaker punch, putting their entire weight behind it.",
-        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} — a punishing blow!",
+        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} \u2014 a punishing blow!",
         "{{attacker}} closes the distance, throwing a brutal right hook at {{defender}}.",
         "{{attacker}} steps inside the guard and unloads a bone-shattering right hook.",
         "With a brutal uppercut, {{attacker}} lifts {{defender}} clean off their feet.",
@@ -615,7 +619,13 @@
         "{{attacker}} connects with a firm, bruising hook.",
         "{{attacker}} lands a heavy hook on {{defender}}.",
         "The solid punch lands with a satisfying thwack.",
-        "The blow leaves a red mark and a stinging ache."
+        "The blow leaves a red mark and a stinging ache.",
+        "{{defender}}'s {{bodyPart}} absorbs a punishing straight right from {{attacker}}.",
+        "{{attacker}} works inside, pounding a heavy hook into {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} steps in and drives a brutal uppercut toward {{defender}}'s {{bodyPart}}.",
+        "{{defender}} winces as {{attacker}}'s knuckles dig into their {{bodyPart}}.",
+        "{{attacker}} finds the range, landing a thudding body blow on the {{bodyPart}}.",
+        "A flurry of disciplined strikes from {{attacker}} finds {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence.",
@@ -628,7 +638,7 @@
         "With boxer-like perfection, the strike lands flush on the absolute weak point.",
         "The blow is delivered with cold, mechanical perfection and devastating timing.",
         "{{attacker}} slips inside the guard to deliver a textbook, staggering cross.",
-        "A master martial artist's strike—{{attacker}} hits the exact pressure point.",
+        "A master martial artist's strike\u2014{{attacker}} hits the exact pressure point.",
         "The punch is a masterpiece of kinetic linking, transferring maximum force.",
         "A clinic in unarmed combat; the punch exploits a millimeter of an opening.",
         "A textbook, flawless punch perfectly dismantles {{defender}}'s guard.",

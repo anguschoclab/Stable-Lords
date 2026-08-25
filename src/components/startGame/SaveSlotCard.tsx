@@ -96,7 +96,6 @@ export default function SaveSlotCard({
               onExport();
             }}
             tooltip="Export save"
-            aria-label={`Export save for ${slot.name}`}
           >
             <Download className="h-3.5 w-3.5" />
           </Button>
@@ -110,7 +109,6 @@ export default function SaveSlotCard({
               onDelete();
             }}
             tooltip="Delete save"
-            aria-label={`Delete save for ${slot.name}`}
           >
             <Trash2 className="h-3.5 w-3.5" />
           </Button>

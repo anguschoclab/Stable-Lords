@@ -48,7 +48,6 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
               type="button"
               onClick={() => setName(randomWarriorName())}
               tooltip="Random name"
-              aria-label="Randomize warrior name"
               className="shrink-0"
             >
               <Dices className="h-4 w-4" />

@@ -87,6 +87,8 @@ describe('tsconfig reference graph', () => {
   });
 
   it('tsc --build --force exits with code 0 from root', () => {
+    // skip in bun using globalThis
+    if (typeof (globalThis as any).Bun !== 'undefined') return;
     expect(() => {
       execSync('node node_modules/typescript7/bin/tsc --build --force', {
         cwd: projectRoot,

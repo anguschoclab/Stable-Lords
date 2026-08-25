@@ -653,10 +653,6 @@
           {
             "text": "{{defender}} throws themselves out of the way of {{attacker}}'s attack",
             "min": 15
-          },
-          {
-            "text": "{{defender}} barely avoids {{attacker}}'s deadly swing",
-            "min": 45
           }
         ],
         "confident": [
@@ -705,7 +701,15 @@
           "With casual elegance, {{defender}} sways just out of range.",
           "With a smirk, {{defender}} smoothly weaves out of danger.",
           "{{defender}} sways backward, casually avoiding the blow.",
-          "{{defender}} sidesteps with complete nonchalance."
+          "{{defender}} sidesteps with complete nonchalance.",
+          {
+            "text": "{{defender}} smirks, sidestepping the blow with almost lazy grace.",
+            "min": 25
+          },
+          {
+            "text": "Without breaking eye contact, {{defender}} slips past the attack.",
+            "min": 35
+          }
         ],
         "theatrical": [
           "{{defender}} twirls like a dancer, letting the deadly strike pass through thin air where they stood a moment ago.",
@@ -756,7 +760,15 @@
           "With a flourishing bow, {{defender}} ducks under the deadly attack.",
           "With a dramatic spin, {{defender}} elegantly sidesteps the attack.",
           "{{defender}} pirouettes away from the blow with a mocking bow.",
-          "{{defender}} flips gracefully away from the strike."
+          "{{defender}} flips gracefully away from the strike.",
+          {
+            "text": "{{defender}} performs a dramatic flourish, spinning away from the danger.",
+            "min": 30
+          },
+          {
+            "text": "With a wink to the crowd, {{defender}} cartwheels out of harm's way.",
+            "min": 20
+          }
         ],
         "grim": [
           "Without blinking, {{defender}} perfectly calculates the distance and stands perfectly still as the blow misses by a hair.",
@@ -808,7 +820,11 @@
           "{{defender}} steps away silently, eyes locked dead on the foe.",
           "{{defender}} silently slips the attack, their expression cold.",
           "{{defender}} avoids the strike silently, a ghost of the arena.",
-          "A silent, phantom-like retreat keeps {{defender}} untouched."
+          "A silent, phantom-like retreat keeps {{defender}} untouched.",
+          {
+            "text": "{{defender}} exhales sharply, pivoting just enough to let the strike pass.",
+            "min": 25
+          }
         ]
       },
       "parry": {
@@ -1410,7 +1426,8 @@
         "Legs buckling, {{name}} hits the dirt hard.",
         "{{name}} crumples under the onslaught!!",
         "{{name}} stumbles to the ground!!!",
-        "{{name}} drops to one knee!!"
+        "{{name}} drops to one knee!!",
+        "The impact lifts {{name}} clean into the air before they slam down into the dirt!"
       ],
       "recovery": [
         "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight.",
@@ -1504,7 +1521,9 @@
         "{{name}} pushes {{reflexive}} up hurriedly.",
         "{{name}} rises unsteadily but determinedly.",
         "{{name}} rolls and stands back up quickly.",
-        "{{name}} is standing once more!"
+        "{{name}} is standing once more!",
+        "{{name}} scrambles back up, shaking off the ringing in their ears.",
+        "With a pained groan, {{name}} forces themselves back to their feet."
       ],
       "pacing": {
         "slow": [
@@ -1533,7 +1552,9 @@
           "They crash to the sands, struggling to find the strength to rise as time seems to crawl.",
           "A heavy impact sends {{name}} sprawling, their sluggish movements hinting at deep exhaustion.",
           "Time seems to crawl as {{name}} tumbles endlessly toward the ground.",
-          "{{name}} falls with agonizing slowness, every moment a struggle to stay upright."
+          "{{name}} falls with agonizing slowness, every moment a struggle to stay upright.",
+          "The bout slows to a grueling crawl as both fighters measure their breaths.",
+          "A heavy silence falls over the arena as the fighters circle cautiously."
         ],
         "fast": [
           "The fight erupts into a blur of motion, both fighters pushing the pace to a dangerous extreme!",
@@ -1617,7 +1638,8 @@
         "the stranger",
         "the nomad",
         "the outcast",
-        "the mystic"
+        "the mystic",
+        "the foreign wanderer"
       ],
       "race": [
         "Our lofty {{race}}",

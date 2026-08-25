@@ -57,6 +57,10 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // Click "To the Arena"
   await page.getByRole('button', { name: /To the Arena/ }).click();
 
+  // FTUE Plan Builder screen — click "To the Arena" again to start the fight
+  await page.waitForSelector('text=To the Arena', { timeout: 15_000 });
+  await page.getByRole('button', { name: /To the Arena/ }).click();
+
   // Step 2: First Blood — click "Continue"
   await page.waitForSelector('text=Continue', { timeout: 15_000 });
   await page.getByRole('button', { name: /Continue/ }).click();
@@ -151,7 +155,9 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   }
 
   // ── 7. Verify Week Advanced ─────────────────────────────────────────────
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(3000);
+  // Wait for the week text to actually update
+  await expect(page.locator('text=/Week \\d+/').first()).not.toHaveText(new RegExp(`Week ${initialWeek}`));
   const newWeekText = await page.locator('text=/Week \\d+/').first().textContent();
   const newWeek = parseInt(newWeekText?.match(/Week (\d+)/)?.[1] ?? '1', 10);
   expect(newWeek).toBeGreaterThan(initialWeek);

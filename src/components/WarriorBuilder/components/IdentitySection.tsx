@@ -44,6 +44,7 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
             <Button
               variant="outline"
               size="icon"
+              aria-label="Randomize warrior name"
               type="button"
               onClick={() => setName(randomWarriorName())}
               tooltip="Random name"

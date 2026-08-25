@@ -77,6 +77,7 @@ export function EditableText({
       >
         <Input
           ref={inputRef}
+          aria-label={`Edit ${label || value}`}
           value={tempValue}
           onChange={(e) => setTempValue(e.target.value)}
           onKeyDown={handleKeyDown}

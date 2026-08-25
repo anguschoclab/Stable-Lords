@@ -89,6 +89,7 @@ export default function SaveSlotCard({
           <Button
             variant="ghost"
             size="icon"
+            aria-label={`Export save for ${slot.name}`}
             className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150"
             onClick={(e) => {
               e.stopPropagation();
@@ -102,6 +103,7 @@ export default function SaveSlotCard({
           <Button
             variant="ghost"
             size="icon"
+            aria-label={`Delete save for ${slot.name}`}
             className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150"
             onClick={(e) => {
               e.stopPropagation();

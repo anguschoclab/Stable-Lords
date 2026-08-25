@@ -4,6 +4,12 @@
  */
 
 export const ORIGINS: string[] = [
+  'Surrendered to the soot-stained sisters of the Iron Covenant',
+  'Found wandering the haunted alleys of the Shrieking Quarter',
+  'Raised in the rat-infested under-levels of the Cinder Keep',
+  'Abandoned on the blood-stained steps of the fighting pits',
+  'Survived the great fire of the Ashwood Orphanage by hiding in a kiln',
+
   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
   'Raised in the submerged basements of the Drowned Ward',
   'Found clutching a rusted dagger in the alleys of the Ash Quarter',
@@ -33,10 +39,8 @@ export const ORIGINS: string[] = [
   'Discovered starving in the forgotten cellars of a ruined manor',
   'Raised amidst the chaotic brawls of the Harbor Taverns',
   'Abandoned at the rusted iron gates of the Blackwater Penitentiary',
-  'Found shivering in the rusted ruins of the Old Steelworks',
   'Survived by stealing scraps from the vicious hounds of the Meat Market',
   'Born in the sunless cells of the Deep Ward penitentiary',
-  'Found clutching a rusted blade in the ruins of the Ashwood Orphanage',
   'Raised by the grim executioners of the High Court',
   'Abandoned in the freezing canals of the Lower Dross',
   'Survived the gruesome cullings of the Black Sun fighting pits',
@@ -62,7 +66,6 @@ export const ORIGINS: string[] = [
   'Survived the grim culling of the Dross Wards by hiding among the dead',
   'Found curled inside a shattered iron bell in the Cathedral of Ash',
   'Raised by graverobbers in the sunken cemetery of Oakhaven',
-  "Abandoned in the blood-stained gutters of the Butcher's Ward",
   'Survived the Winter of Crows by hiding in a hollowed-out tree',
   'Discovered half-drowned in the venomous swamps of the Lower Wastes',
   'Left wrapped in bloodied rags on the steps of the Silent Brothers monastery',
@@ -147,7 +150,6 @@ export const ORIGINS: string[] = [
   'Born during the red comet, abandoned to the howling winds',
   'A runaway from the deep mines, eyes unused to the sun',
   'Sole survivor of a cult sacrifice in the forgotten catacombs',
-  "Raised in the shadow of the executioner's block",
   'Taken from a raided nomadic tribe in the far deserts',
   'A forgotten child of the Silent Order, marked by their shadow-brands',
   'Surviving the collapse of the Blackwater Sluice through sheer, grim stubbornness',
@@ -215,6 +217,10 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'would constantly trace imaginary battle lines in the dirt',
+  'developed a knack for finding the weak point in any structure or person',
+  'learned to endure pain by chewing on leather scraps during beatings',
+
   'used to meticulously trace the structural flaws in stone walls',
   "slept soundly only when the city's warning bells rang",
   'was known for carving the names of their enemies into their own flesh',
@@ -242,7 +248,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to predict strikes by watching the shadows of passing guards',
   'developed a chillingly blank stare when faced with violence',
   'would compulsively sharpen splinters of bone in the dark',
-  'learned to sleep with one eye open after surviving the orphanage riots',
   'was known for an unnerving, silent stare that made the matrons flinch',
   'would sit completely still for hours watching the fighting pit from the rafters',
   'learned to predict a strike by watching the tension in a bully’s shoulders',
@@ -259,7 +264,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   'perfected the art of striking from the shadows of the orphanage dormitories',
   'would meticulously collect and sharpen shattered glass from the streets',
   'learned to anticipate the exact moment a drunkard would throw a punch',
-  'was known for an unnerving, unblinking stare that made older boys back down',
   'would spend nights mapping the patrol routes of the city guard for fun',
   'would collect shattered teeth from the fighting pits as grim trophies',
   'would trace the flight paths of throwing knives with unsettling focus',
@@ -334,6 +338,10 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  'until they broke a slaver’s grip and tasted true freedom',
+  'realizing that survival in the arena was just another form of the streets',
+  'knowing that their scars would one day buy them a crown',
+
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',
@@ -358,7 +366,6 @@ export const DEFINING_MOMENTS: string[] = [
   'realizing that the only true escape from the gutters was carved in blood',
   'waiting for the moment the iron portcullis of the arena would rise on their true destiny',
   'until they shattered a cruel overseer’s kneecap with a stolen hammer',
-  'realizing the arena was the only place where their rage was rewarded',
   'knowing that blood on the sands washes away the dirt of the slums',
   'waiting for the moment the iron gates would open to true freedom',
   "until they broke a slaver's nose with a singular, perfectly timed headbutt",
@@ -368,7 +375,6 @@ export const DEFINING_MOMENTS: string[] = [
   'realizing that mercy in the fighting pits is merely a slow suicide',
   'waiting for the day they could turn the arena sands into a river of red',
   "until they drove a rusted spike through a slaver's boot and walked free",
-  'knowing that the roar of the crowd was the only lullaby they ever needed',
   'fought off three armed thugs with nothing but a rusted iron spike',
   'stole a discarded combat manual from a dead gladiator and memorized every stance',
   'strangled a corrupt guard with their own rusted chains to escape confinement',
@@ -377,8 +383,6 @@ export const DEFINING_MOMENTS: string[] = [
   'stole a broken sword from a fallen gladiator and taught themselves to kill',
   'until the day they dragged their abuser into the light and left them broken',
   'realizing that mercy in the undercity is just an invitation to be killed',
-  'waiting for the moment the gates would close and the true test would begin',
-  'realizing that the only true law of the streets was written in blood',
   'waiting for the moment the arena doors would open and swallow their past',
   "until the day they crushed a street enforcer's windpipe in a brawl over coppers",
   'understanding early that fear is just a weakness waiting to be exploited',
@@ -437,7 +441,6 @@ export const DEFINING_MOMENTS: string[] = [
   'waiting for the day they could paint the arena sands with the blood of their oppressors',
   'now driven by a dark vow sworn over the grave of their only friend',
   'until they realized the arena was the only family they needed',
-  'waiting for the day they could turn their scars into a spectacle',
   'knowing that the roar of the crowd was the only god left to them',
   "until they drove a shattered bottle into their tormentor's eye and fled",
 ];

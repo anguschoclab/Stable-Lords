@@ -505,6 +505,21 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'blood_soaked_pillars',
+    arenaId: 'mudpit_arena',
+    type: 'historical_battle',
+    title: 'The Crimson Tide',
+    narrative: 'A legendary brawl that lasted three days left the arena pillars permanently stained with blood.',
+  },
+  {
+    id: 'echoes_of_the_fallen',
+    arenaId: 'charnel_pits',
+    type: 'famous_death',
+    title: 'The Final Howl',
+    narrative: 'The ghost of a disgraced champion is said to howl from the pits every full moon.',
+  },
+
+  {
     id: 'mist_shrouded_ruins_echoes',
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',

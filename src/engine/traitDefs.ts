@@ -98,6 +98,25 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  ashwood_survivor: {
+    id: 'ashwood_survivor',
+    name: 'Ashwood Survivor',
+    description: 'Survived the flames of the Ashwood Orphanage. Shrugs off exhaustion easily.',
+    effect: { enduranceMult: 0.93 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  shrieking_orphan: {
+    id: 'shrieking_orphan',
+    name: 'Shrieking Orphan',
+    description: 'Grew up amidst the terrors of the Shrieking Quarter. Startles easily but reacts fast.',
+    effect: { iniModEarly: 1, parMod: -1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+
   // 5 New Personality/Lore Traits
 
   guttersnipe_cunning: {

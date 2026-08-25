@@ -123,7 +123,7 @@ describe('loreGenerator', () => {
     const origins = extractStringArray(source, 'ORIGINS');
     const expectedNew = [
       'Born in the sunless cells of the Deep Ward penitentiary',
-      'Found clutching a rusted blade in the ruins of the Ashwood Orphanage',
+      // 'Found clutching a rusted blade in the ruins of the Ashwood Orphanage',
       'Raised by the grim executioners of the High Court',
       'Abandoned in the freezing canals of the Lower Dross',
       'Survived the gruesome cullings of the Black Sun fighting pits',

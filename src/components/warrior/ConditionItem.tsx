@@ -71,7 +71,6 @@ export function ConditionItem({
 
         <TacticSelectors
           cond={cond}
-          idx={idx}
           onTacticChange={(key, val) => updateOverrideTactic(idx, key, val)}
         />
 

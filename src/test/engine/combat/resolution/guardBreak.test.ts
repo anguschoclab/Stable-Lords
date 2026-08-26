@@ -1,24 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { accumulateGuardBreak } from '@/engine/combat/resolution/guardBreak';
-import { BA_PARDEGRADE_PER_HIT, BA_PARDEGRADE_CAP } from '@/constants/combat/combat';
 
 describe('Guard Break Mechanics', () => {
   describe('accumulateGuardBreak', () => {
-    it('adds penalty normally when below cap', () => {
-      const current = 1;
-      const result = accumulateGuardBreak(current);
-      expect(result).toBe(current + BA_PARDEGRADE_PER_HIT);
-    });
-
-    it('caps penalty correctly', () => {
-      const current = BA_PARDEGRADE_CAP - (BA_PARDEGRADE_PER_HIT / 2);
-      const result = accumulateGuardBreak(current);
-      expect(result).toBe(BA_PARDEGRADE_CAP);
-    });
-
-    it('does not exceed cap if already at cap', () => {
-      const result = accumulateGuardBreak(BA_PARDEGRADE_CAP);
-      expect(result).toBe(BA_PARDEGRADE_CAP);
+    it('adds guard break penalty up to the cap (3)', () => {
+      // 0 + 0.5 = 0.5
+      expect(accumulateGuardBreak(0)).toBe(0.5);
+      // 2 + 0.5 = 2.5
+      expect(accumulateGuardBreak(2)).toBe(2.5);
+      // 2.6 + 0.5 = 3.1, capped to 3
+      expect(accumulateGuardBreak(2.6)).toBe(3);
+      // 3 + 0.5 = 3.5, capped to 3
+      expect(accumulateGuardBreak(3)).toBe(3);
     });
   });
 });

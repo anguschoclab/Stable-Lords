@@ -37,10 +37,7 @@ const RenderTracker = ({
   renderCountRef: React.MutableRefObject<number>;
 }) => {
   const value = useTestStore(selector);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // eslint-disable-next-line react-hooks/refs
-  renderCountRef.current++;
+  React.useEffect(() => { renderCountRef.current++; });
   return <div data-testid="value">{JSON.stringify(value)}</div>;
 };
 
@@ -89,8 +86,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
 
     const WithShallow = () => {
       const val = useTestStore(useShallow(selector));
-      // eslint-disable-next-line
-      renderCountWithShallowRef.current++;
+      React.useEffect(() => { renderCountWithShallowRef.current++; });
       return <div>{val.treasury}</div>;
     };
 

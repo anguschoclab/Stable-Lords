@@ -127,11 +127,11 @@ export function WeeklyDigestWidget({
               <span className="font-bold text-primary">{summary.signedOffers}</span> bout
               {summary.signedOffers > 1 ? 's' : ''} scheduled for Week {week}
             </p>
-            <Link to="/stable/bouts">
-              <Button variant="ghost" size="sm" className="mt-2 h-7 text-[10px] uppercase">
+            <Button asChild variant="ghost" size="sm" className="mt-2 h-7 text-[10px] uppercase">
+              <Link to="/stable/bouts">
                 View Schedule <ChevronRight className="h-3 w-3 ml-1" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         )}
       </CardContent>

@@ -76,4 +76,37 @@ describe('MarkdownReader', () => {
     const link = screen.getByRole('link', { name: 'Link text' });
     expect(link).toHaveAttribute('href', 'https://example.com');
   });
+
+  it('XSS: sanitizes javascript: URLs in markdown links', () => {
+    render(<MarkdownReader content="[Click me](javascript:alert(1))" />);
+    const link = screen.queryByRole('link', { name: 'Click me' });
+    if (link) {
+      expect(link.getAttribute('href')).not.toContain('javascript:');
+    }
+  });
+
+  it('XSS: sanitizes data: URLs with HTML content in markdown links', () => {
+    render(<MarkdownReader content="[Click](data:text/html,<script>alert(1)</script>)" />);
+    const link = screen.queryByRole('link', { name: 'Click' });
+    if (link) {
+      expect(link.getAttribute('href')).not.toContain('data:text/html');
+    }
+  });
+
+  it('XSS: does not render raw HTML script tags', () => {
+    const { container } = render(
+      <MarkdownReader content="<script>alert('xss')</script>" />
+    );
+    expect(container.querySelector('script')).toBeNull();
+  });
+
+  it('XSS: sanitizes javascript: URLs in inline HTML img tags', () => {
+    const { container } = render(
+      <MarkdownReader content='<img src="javascript:alert(1)" alt="xss" />' />
+    );
+    const img = container.querySelector('img');
+    if (img) {
+      expect(img.getAttribute('src')).not.toContain('javascript:');
+    }
+  });
 });

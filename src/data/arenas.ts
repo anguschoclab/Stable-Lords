@@ -504,6 +504,30 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'mudpit_arena_drowning_grasp',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Drowning Grasp',
+    narrative:
+      'A legendary heavily-armored champion slipped in the muck, and their lighter opponent simply held their face beneath the surface until the bubbles stopped.',
+  },
+  {
+    id: 'clifftop_arena_the_long_fall',
+    arenaId: 'clifftop_arena',
+    type: 'famous_death',
+    title: 'The Long Fall',
+    narrative:
+      'In a desperate final exchange, a cornered fighter grappled their opponent, throwing them both over the edge. The crowd still claims you can hear the screams.',
+  },
+  {
+    id: 'stormtop_terrace_lightning_strike',
+    arenaId: 'stormtop_terrace',
+    type: 'architectural_quirk',
+    title: 'The Static Charge',
+    narrative:
+      'Fighters in full plate often find their hair standing on end moments before a strike; some intentionally wear conductive metals to harness the sparks and blind opponents.',
+  },
+  {
     id: 'mist_shrouded_ruins_echoes',
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',

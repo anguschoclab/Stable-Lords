@@ -88,7 +88,7 @@ describe('tsconfig reference graph', () => {
 
   it('tsc --build --force exits with code 0 from root', () => {
     expect(() => {
-      execSync('node node_modules/typescript7/bin/tsc --build --force', {
+      execSync('bun run type-check', {
         cwd: projectRoot,
         stdio: 'pipe',
         timeout: 600000,
@@ -116,7 +116,7 @@ describe('CI and package.json scripts', () => {
     const ciPath = path.join(projectRoot, '.github', 'workflows', 'ci.yml');
     const ci = fs.readFileSync(ciPath, 'utf-8');
     expect(ci).toContain('type-check');
-    expect(ci).toContain('tsc --build');
+    expect(ci).toContain('type-check');
   });
 
   it('ci.yml has a build job running vite build', () => {

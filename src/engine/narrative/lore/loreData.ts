@@ -4,6 +4,11 @@
  */
 
 export const ORIGINS: string[] = [
+  'Abandoned at the rusted gates of the Blackwood Workhouse',
+  'Survived the chilling cullings of the Whispering Vaults',
+  'Raised amidst the deafening roar of the Cinderstone Forges',
+  'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+  'Sold by debt-ridden parents to the pit-masters of the Sump',
   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
   'Raised in the submerged basements of the Drowned Ward',
   'Found clutching a rusted dagger in the alleys of the Ash Quarter',
@@ -223,6 +228,9 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  "learned to gauge distance by dodging the overseer's lash",
+  'memorized the anatomy of beasts while working the charnel pits',
+  'developed an iron grip from clinging to the underside of merchant carts',
   'used to meticulously trace the structural flaws in stone walls',
   "slept soundly only when the city's warning bells rang",
   'was known for carving the names of their enemies into their own flesh',
@@ -341,6 +349,9 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  'discovering that a rusted spoon could be sharpened into a deadly shiv',
+  'surviving a night in the dog-cages by out-snarling the hounds',
+  'realizing that mercy in the Undercity was just another word for weakness',
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',

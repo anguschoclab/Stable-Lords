@@ -121,10 +121,19 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'scab_survivor',
     name: 'Scab Survivor',
     description: 'Hardened by the slums, giving them an edge when injured.',
-    effect: { attModLowHP: 1, defModLowHP: 1 },
+    effect: { attModLowHp: 1, defModLowHp: 1 },
     tier: 'Exceptional',
     sign: 'positive',
     weight: 0.4,
+  },
+  gutter_shadow: {
+    id: 'gutter_shadow',
+    name: 'Gutter Shadow',
+    description: 'Accustomed to fighting in cramped, lightless alleys.',
+    effect: { attMod: 1, iniMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.8,
   },
 
   // 5 New Personality/Lore Traits

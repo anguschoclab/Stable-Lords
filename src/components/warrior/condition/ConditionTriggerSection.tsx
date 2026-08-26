@@ -34,6 +34,7 @@ export function ConditionTriggerSection({
           id={`condition-item-${idx}-trigger-type`}
           value={cond.trigger.type}
           onChange={(e) => onTriggerChange(e.target.value as ConditionTriggerType)}
+          aria-label="Condition Trigger Type"
           className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
         >
           {TRIGGER_OPTIONS.map((o) => (
@@ -48,6 +49,7 @@ export function ConditionTriggerSection({
             aria-label="Phase"
             value={String(cond.trigger.value)}
             onChange={(e) => onValueChange(e.target.value)}
+            aria-label="Trigger Phase"
             className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
           >
             <option value="Opening">Opening</option>
@@ -59,6 +61,7 @@ export function ConditionTriggerSection({
             aria-label="Integer"
             value={String(cond.trigger.value)}
             onChange={(e) => onValueChange(e.target.value)}
+            aria-label="Trigger Integer"
             className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
           >
             <option value="1">1</option>

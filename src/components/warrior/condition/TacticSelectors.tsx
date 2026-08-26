@@ -27,6 +27,7 @@ export function TacticSelectors({ cond, onTacticChange }: TacticSelectorsProps) 
           id={offId}
           value={cond.override.offensiveTactic ?? 'none'}
           onChange={(e) => onTacticChange('offensiveTactic', e.target.value)}
+          aria-label="Offensive Tactic"
           className="w-full bg-black/60 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
         >
           {OFFENSIVE_TACTICS.map((t) => (
@@ -47,6 +48,7 @@ export function TacticSelectors({ cond, onTacticChange }: TacticSelectorsProps) 
           id={defId}
           value={cond.override.defensiveTactic ?? 'none'}
           onChange={(e) => onTacticChange('defensiveTactic', e.target.value)}
+          aria-label="Defensive Tactic"
           className="w-full bg-black/60 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
         >
           {DEFENSIVE_TACTICS.map((t) => (

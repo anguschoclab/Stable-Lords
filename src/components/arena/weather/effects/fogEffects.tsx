@@ -5,7 +5,7 @@ export function MistEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <div
-        className="absolute inset-0 animate-fog-drift"
+        className="absolute inset-0 animate-fog-drift motion-reduce:animate-none"
         style={{
           background:
             'radial-gradient(ellipse at 50% 80%, rgba(200,200,200,0.05) 0%, rgba(150,150,150,0.3) 100%)',
@@ -23,7 +23,7 @@ export function DenseFogEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <div
-        className="absolute inset-0 animate-fog-drift"
+        className="absolute inset-0 animate-fog-drift motion-reduce:animate-none"
         style={{
           background:
             'radial-gradient(ellipse at 50% 50%, rgba(200,200,200,0.1) 0%, rgba(150,150,150,0.6) 100%)',
@@ -42,7 +42,7 @@ export function BloodFogEffect() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Crimson fog base */}
       <div
-        className="absolute inset-0 animate-fog-drift"
+        className="absolute inset-0 animate-fog-drift motion-reduce:animate-none"
         style={{
           background:
             'radial-gradient(ellipse at 50% 80%, rgba(120,0,0,0.15) 0%, rgba(80,0,0,0.4) 100%)',
@@ -52,7 +52,7 @@ export function BloodFogEffect() {
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={`mist-${i}`}
-          className="absolute w-2 h-2 rounded-full animate-fog-drift"
+          className="absolute w-2 h-2 rounded-full animate-fog-drift motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: `${cryptoRandom() * 100}%`,

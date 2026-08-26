@@ -7,7 +7,7 @@ export function RainEffect() {
       {Array.from({ length: 50 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-4 bg-primary/30 animate-rain"
+          className="absolute w-px h-4 bg-primary/30 animate-rain motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -26,7 +26,7 @@ export function BloodRainEffect() {
       {Array.from({ length: 55 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-4 bg-arena-blood/40 animate-rain"
+          className="absolute w-px h-4 bg-arena-blood/40 animate-rain motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -48,7 +48,7 @@ export function AcidRainEffect() {
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-5 bg-arena-pop/30 animate-rain"
+          className="absolute w-px h-5 bg-arena-pop/30 animate-rain motion-reduce:animate-none"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -72,7 +72,7 @@ export function EmberRainEffect() {
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={`ember-${i}`}
-          className="absolute w-1 h-1 bg-arena-blood rounded-full animate-hail drop-shadow-[0_0_4px_rgba(251,146,60,0.8)]"
+          className="absolute w-1 h-1 bg-arena-blood rounded-full animate-hail motion-reduce:animate-none drop-shadow-[0_0_4px_rgba(251,146,60,0.8)]"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: '-5%',
@@ -86,7 +86,7 @@ export function EmberRainEffect() {
       {Array.from({ length: 15 }).map((_, i) => (
         <div
           key={`smoke-${i}`}
-          className="absolute w-16 h-16 bg-neutral-500/10 rounded-full blur-xl animate-chaotic-drift"
+          className="absolute w-16 h-16 bg-neutral-500/10 rounded-full blur-xl animate-chaotic-drift motion-reduce:animate-none"
           style={
             {
               left: `${cryptoRandom() * 100}%`,

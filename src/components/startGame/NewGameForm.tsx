@@ -121,7 +121,7 @@ export default function NewGameForm({
           />
 
           <div className="text-center space-y-4">
-            <IconMedallion icon={<Dices className="h-6 w-6 text-[#F2D5B8]" strokeWidth={1.5} />} />
+            <IconMedallion icon={<Dices className="h-6 w-6 text-foreground" strokeWidth={1.5} />} />
             <div>
               <h2 className="text-2xl font-display font-bold text-foreground">FORGE YOUR STABLE</h2>
               <p className="text-muted-foreground text-xs mt-2 leading-relaxed max-w-xs mx-auto">

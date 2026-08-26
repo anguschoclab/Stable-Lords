@@ -193,6 +193,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
             {stylePresets.map((preset) => (
               <button
                 key={preset.name}
+                aria-label={preset.name}
                 onClick={() => applyPreset(preset.plan)}
                 className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors"
               >
@@ -201,6 +202,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
             ))}
             {warrior && (
               <button
+                aria-label="Restore Default"
                 onClick={restoreDefault}
                 className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors"
               >
@@ -215,6 +217,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
             {biasPresets.map((preset) => (
               <button
                 key={preset.label}
+                aria-label={preset.label}
                 onClick={() => applyBias(preset.bias)}
                 className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors"
               >

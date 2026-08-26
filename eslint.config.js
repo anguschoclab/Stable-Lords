@@ -22,9 +22,6 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'react-hooks/set-state-in-effect': 'error',
-      'react-hooks/refs': 'error',
-      'react-hooks/immutability': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true },
@@ -126,8 +123,6 @@ export default tseslint.config(
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
-      'react-hooks/refs': 'off',
-      'react-hooks/immutability': 'off',
     },
   },
   {

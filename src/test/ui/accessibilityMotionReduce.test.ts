@@ -36,7 +36,7 @@ describe('accessibility motion-reduce', () => {
       const content = readFileSync(fullPath, 'utf-8');
       // Flag bg-background/90 used as a blanket replacement (should preserve original opacity)
       // AppHeader.tsx is exempt — it intentionally uses bg-background/90 for sticky header backdrop
-      if (file === 'layout/AppHeader.tsx') continue;
+      if (file.replace(/\\/g, '/') === 'layout/AppHeader.tsx') continue;
       const matches = content.match(/bg-background\/90/g);
       if (matches) {
         violations += matches.length;

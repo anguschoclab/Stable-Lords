@@ -61,7 +61,7 @@ function VirtualizedInner({
   rows: Warrior[][];
   cols: number;
   season: string;
-  parentRef: React.RefObject<HTMLDivElement>;
+  parentRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const colsClass =
     cols === 3

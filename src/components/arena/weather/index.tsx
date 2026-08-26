@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import type { WeatherType } from '@/types/shared.types';
 import {
   RainEffect,

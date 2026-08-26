@@ -18,10 +18,10 @@ describe('Psych State Mechanics', () => {
     plan: {
       OE: 1,
       AL: 1,
-      offensiveTactic: 'None',
-      defensiveTactic: 'None',
+      offensiveTactic: 'none',
+      defensiveTactic: 'none',
       target: 'Chest',
-      protect: 'Chest',
+      protect: 'Body',
     },
     activePlan: {
       OE: 1,
@@ -53,28 +53,28 @@ describe('Psych State Mechanics', () => {
 
       const events = evaluatePsychState(
         fA, fD, defaultContext,
-        { psychState: 'Faltering' },
-        { psychState: 'Confident' }
+        { psychState: 'Rattled' },
+        { psychState: 'InTheZone' }
       );
 
       expect(events).toHaveLength(2);
-      expect(events[0]).toEqual({ type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_FALTERING' });
-      expect(events[1]).toEqual({ type: 'STATE_CHANGE', actor: 'D', result: 'PSYCH_CONFIDENT' });
+      expect(events[0]).toEqual({ type: 'STATE_CHANGE', actor: 'A', result: 'PSYCH_RATTLED' });
+      expect(events[1]).toEqual({ type: 'STATE_CHANGE', actor: 'D', result: 'PSYCH_INTHEZONE' });
 
-      expect(fA.psychState).toBe('Faltering');
-      expect(fD.psychState).toBe('Confident');
+      expect(fA.psychState).toBe('Rattled');
+      expect(fD.psychState).toBe('InTheZone');
     });
   });
 
   describe('getPsychStateMods', () => {
     it('returns the correct mods based on fighter psych states', () => {
-       const fA = { ...defaultFighter, psychState: 'Faltering' as const } as FighterState;
-       const fD = { ...defaultFighter, psychState: 'Confident' as const } as FighterState;
+       const fA = { ...defaultFighter, psychState: 'Rattled' as const } as FighterState;
+       const fD = { ...defaultFighter, psychState: 'InTheZone' as const } as FighterState;
 
        const mods = getPsychStateMods(fA, fD);
 
-       expect(mods.psychA).toEqual(PSYCH_STATE_MODS['Faltering']);
-       expect(mods.psychD).toEqual(PSYCH_STATE_MODS['Confident']);
+       expect(mods.psychA).toEqual(PSYCH_STATE_MODS['Rattled']);
+       expect(mods.psychD).toEqual(PSYCH_STATE_MODS['InTheZone']);
     });
   });
 

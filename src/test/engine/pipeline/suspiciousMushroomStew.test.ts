@@ -45,11 +45,11 @@ describe('handleSuspiciousMushroomStew', () => {
     expect(update?.xp).toBeGreaterThan(100);
 
     expect(update?.injuries).toHaveLength(1);
-    expect(update?.injuries?.[0].name).toBe('Stomach Ache');
-    expect(update?.injuries?.[0].severity).toBe('Minor');
-    expect(update?.injuries?.[0].penalties).toEqual({ CN: -1, END: -1 });
+    expect(update?.injuries?.[0]?.name).toBe('Stomach Ache');
+    expect(update?.injuries?.[0]?.severity).toBe('Minor');
+    expect(update?.injuries?.[0]?.penalties).toEqual({ CN: -1, SP: -1 });
 
     expect(mockCtx.newsletterItems).toHaveLength(1);
-    expect(mockCtx.newsletterItems[0].items[0]).toContain(warrior.name);
+    expect(mockCtx.newsletterItems[0]?.items?.[0]).toContain(warrior.name);
   });
 });

@@ -660,10 +660,65 @@ export function handleShatteredSkiesRitual(
         fatigue: (chosen.fatigue || 0) + fatigueGained,
       });
 
-      const message = t(rng.pick(e.newsletter) || e.title, {
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
         name: chosen.name,
       });
-      pushNewsletterItem(ctx.newsletterItems, nextWeek, message, 'special');
+    }
+  }
+}
+
+/** Handler for the Weeping Skies offseason event — grants XP to a random warrior. */
+export function handleWeepingSkies(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      ctx.rosterUpdates.set(chosen.id, { xp: (chosen.xp || 0) + 20 });
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
+/** Handler for the Suspicious Mushroom Stew offseason event — grants XP but may cause injury. */
+export function handleSuspiciousMushroomStew(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state, true);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20 + Math.floor(rng.next() * 16);
+
+      const newInjury = makeInjury(rng, {
+        name: 'Stomach Ache',
+        description: 'A gnawing ache from eating suspicious glowing mushrooms.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { CN: -1, SP: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+        xp: xpGained,
+      });
     }
   }
 }

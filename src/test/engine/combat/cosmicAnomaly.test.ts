@@ -51,13 +51,14 @@ describe('Cosmic Anomaly weather type', () => {
     }
   });
 
-  it('weather count is 59 after adding Cosmic Anomaly, Temporal Rift, Stardust Gale, and Mana Storm', () => {
+  it('weather count is 61 after adding Cosmic Anomaly, Temporal Rift, Stardust Gale, Mana Storm, Weeping Skies, Shattered Skies, and Winds of Chaos', () => {
     // Baseline: 53 weather types
     // After adding Cosmic Anomaly: 54
     // After adding Temporal Rift + Stardust Gale: 56
     // After adding Mana Storm: 59
+    // After adding Weeping Skies + Shattered Skies + Winds of Chaos: 61
     if (WEATHER_TYPES.includes('Cosmic Anomaly' as any)) {
-      expect(WEATHER_TYPES.length).toBe(59);
+      expect(WEATHER_TYPES.length).toBe(61);
     } else {
       // Before merge, still 55
       expect(WEATHER_TYPES.length).toBe(55);

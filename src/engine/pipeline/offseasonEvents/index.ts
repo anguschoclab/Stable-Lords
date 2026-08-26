@@ -59,3 +59,5 @@ export { handleAbyssalTempestRitual } from './chaosHandlers';
 export { handleUnexplainedMonolith } from './chaosHandlers';
 
 export { handleShatteredSkiesRitual } from './chaosHandlers';
+export { handleWeepingSkies } from './chaosHandlers';
+export { handleSuspiciousMushroomStew } from './chaosHandlers';

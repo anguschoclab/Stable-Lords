@@ -67,6 +67,8 @@ import {
   handleAbyssalTempestRitual,
   handleCursedTreasureDiscovery,
   handleShatteredSkiesRitual,
+  handleWeepingSkies,
+  handleSuspiciousMushroomStew,
 } from './seasonalHandlers';
 
 const EVENT_HANDLERS: Record<
@@ -132,6 +134,8 @@ const EVENT_HANDLERS: Record<
   cursed_treasure_discovery: handleCursedTreasureDiscovery,
   abyssal_tempest_ritual: handleAbyssalTempestRitual,
   shattered_skies_ritual: handleShatteredSkiesRitual,
+  weeping_skies: handleWeepingSkies,
+  suspicious_mushroom_stew: handleSuspiciousMushroomStew,
 };
 
 /**

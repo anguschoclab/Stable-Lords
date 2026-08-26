@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { performDefenseCheck } from '@/engine/combat/resolution/exchangeHelpers/checks/defenseCheck';
-import type { FighterState } from '@/engine/combat/types';
+import type { FighterState } from '@/engine/combat/resolution/types';
 
 describe('defenseCheck', () => {
   const defaultMods = {

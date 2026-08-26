@@ -73,12 +73,10 @@ describe('Combat Math Mechanics', () => {
     });
 
     it('applies modifiers to rolls correctly', () => {
-      let callCount = 0;
       const rng = vi.fn().mockImplementation(() => 0.5); // Both roll 11
       // A: 11 + 5 + 2 = 18. D: 11 + 5 + 0 = 16.
       expect(contestCheck(rng, 5, 5, 2, 0)).toBe(true);
 
-      callCount = 0;
       // A: 11 + 5 + 0 = 16. D: 11 + 5 + 2 = 18.
       expect(contestCheck(rng, 5, 5, 0, 2)).toBe(false);
     });

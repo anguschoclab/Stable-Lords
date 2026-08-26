@@ -336,16 +336,12 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to perfectly mimic the sound of snapping bone',
   'would systematically dismantle discarded clockwork toys',
   'developed a terrifyingly serene smile during the most brutal beatings',
+  'developed a terrifyingly serene smile right before physical conflict erupted',
   'would purposefully instigate fights just to study how different people bleed',
   'always watched the shadows instead of the sun',
   'practiced throwing rusted spoons with lethal accuracy',
   'learned to sleep with one eye open and a knife in hand',
   "never cried out when the overseer's lash fell",
-
-  'learned to predict strikes by watching the shadows of passing guards',
-  'would silently endure beatings to learn how to absorb and redirect blows',
-  'was known for an unnerving, unblinking stare that made older boys back down',
-  'learned to sleep with one eye open after surviving the Blackwood orphanage riots',
 ];
 
 export const DEFINING_MOMENTS: string[] = [
@@ -448,7 +444,7 @@ export const DEFINING_MOMENTS: string[] = [
   "until they drove a shattered bottle into their tormentor's eye and fled",
 
   'knowing that the roar of the crowd was the only lullaby they ever needed',
-  'waiting for the day they could paint the arena sands with the blood of their oppressors',
+  "until they shattered a warden’s jaw with a single, perfectly timed kick",
   'realizing the arena was the only place where their rage was rewarded with silver',
   "until they drove a splintered chair leg through a slaver's hand and walked free",
 ];

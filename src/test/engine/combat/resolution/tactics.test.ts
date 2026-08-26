@@ -1,46 +1,49 @@
 import { describe, it, expect } from 'vitest';
 import { resolveEffectiveTactics, applyAggressionBias } from '@/engine/combat/resolution/tactics';
 import type { FightPlan } from '@/types/combat.types';
+import { FightingStyle } from '@/types/shared.types';
 
 describe('Tactics Mechanics', () => {
   describe('resolveEffectiveTactics', () => {
     it('uses phase tactics if provided', () => {
       const plan: FightPlan = {
+        style: FightingStyle.StrikingAttack,
         OE: 1, AL: 1,
-        offensiveTactic: 'Aggressive',
-        defensiveTactic: 'Evasive',
+        offensiveTactic: 'Bash',
+        defensiveTactic: 'Dodge',
         target: 'Head',
         protect: 'Head',
         phases: {
-          opening: { offensiveTactic: 'None', defensiveTactic: 'None', target: 'Chest', protect: 'Chest' },
-          mid: { offensiveTactic: 'Precision', defensiveTactic: 'Brace', target: 'Arms', protect: 'Arms' },
-          late: { offensiveTactic: 'Aggressive', defensiveTactic: 'Evasive', target: 'Legs', protect: 'Legs' }
+          opening: { OE: 1, AL: 1, killDesire: 5, offensiveTactic: 'none', defensiveTactic: 'none', target: 'Chest' },
+          mid: { OE: 1, AL: 1, killDesire: 5, offensiveTactic: 'Decisiveness', defensiveTactic: 'Parry', target: 'Right Arm' },
+          late: { OE: 1, AL: 1, killDesire: 5, offensiveTactic: 'Bash', defensiveTactic: 'Dodge', target: 'Right Leg' }
         }
       };
 
       const result = resolveEffectiveTactics(plan, 'mid');
-      expect(result.offTactic).toBe('Precision');
-      expect(result.defTactic).toBe('Brace');
-      expect(result.target).toBe('Arms');
+      expect(result.offTactic).toBe('Decisiveness');
+      expect(result.defTactic).toBe('Parry');
+      expect(result.target).toBe('Right Arm');
     });
 
     it('falls back to default plan tactics if phase not provided', () => {
       const plan: FightPlan = {
+        style: FightingStyle.StrikingAttack,
         OE: 1, AL: 1,
-        offensiveTactic: 'Aggressive',
-        defensiveTactic: 'Evasive',
+        offensiveTactic: 'Bash',
+        defensiveTactic: 'Dodge',
         target: 'Head',
         protect: 'Head',
       };
 
       const result = resolveEffectiveTactics(plan, 'opening');
-      expect(result.offTactic).toBe('Aggressive');
-      expect(result.defTactic).toBe('Evasive');
+      expect(result.offTactic).toBe('Bash');
+      expect(result.defTactic).toBe('Dodge');
       expect(result.target).toBe('Head');
     });
 
     it('falls back to none/Any if neither plan nor phase tactics exist', () => {
-      const plan: FightPlan = { OE: 1, AL: 1, target: 'Head', protect: 'Head' } as any;
+      const plan: FightPlan = { style: FightingStyle.StrikingAttack, OE: 1, AL: 1, target: 'Head', protect: 'Head' } as any;
 
       const result = resolveEffectiveTactics(plan, 'late');
       expect(result.offTactic).toBe('none');

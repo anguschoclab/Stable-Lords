@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { performRiposteCheck } from '@/engine/combat/resolution/exchangeHelpers/checks/riposteCheck';
-import type { FighterState } from '@/engine/combat/types';
+import type { FighterState } from '@/engine/combat/resolution/types';
 
 describe('riposteCheck', () => {
   const defaultPassives = {

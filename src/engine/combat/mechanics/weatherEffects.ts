@@ -384,6 +384,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.2,
     description: 'Sharp, shimmering crystals fall from the sky, cutting through armor.',
   },
+  'Winds of Chaos': {
+    staminaMult: 0.8,
+    initiativeMod: -2,
+    riposteMod: 0,
+    damageMult: 1.15,
+    description: 'Unpredictable magical gales that make initiative erratic but conserve stamina.',
+  },
   'Rain of Frogs': {
     staminaMult: 1.1,
     initiativeMod: -4,

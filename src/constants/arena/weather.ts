@@ -393,6 +393,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'Sharp, shimmering crystals fall from the sky. Cuts armor, drains stamina.',
   },
+  'Winds of Chaos': {
+    icon: Wind,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'Unpredictable magical gales that make initiative erratic but conserve stamina.',
+  },
   'Rain of Frogs': {
     icon: CloudRain,
     colorClass: 'text-primary',

@@ -79,6 +79,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Shimmering Heat': 'The air ripples with shimmering heat, distorting every shape upon the sands.',
   'Crystal Rain':
     'Sharp, shimmering crystals plummet from the sky. Blood will undoubtedly be drawn.',
+  'Winds of Chaos': 'Unpredictable magical gales whip through the arena, carrying the scent of ozone and madness.',
   'Rain of Frogs':
     'The sky darkens and an absurd, writhing rain of frogs begins to fall, confusing everyone.',
   'Chaos Storm':

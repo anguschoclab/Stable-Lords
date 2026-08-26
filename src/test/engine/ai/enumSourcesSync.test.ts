@@ -51,6 +51,7 @@ describe('enumSources sync with WeatherType', () => {
     'Shimmering Heat',
     'Crystal Rain',
     'Rain of Frogs',
+    'Winds of Chaos',
     'Chaos Storm',
     'Chaos Squall',
     'Astral Dust',

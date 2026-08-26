@@ -51,7 +51,7 @@ describe('Cosmic Anomaly weather type', () => {
     }
   });
 
-  it('weather count is 58 after adding Cosmic Anomaly, Temporal Rift, Stardust Gale, and Mana Storm', () => {
+  it('weather count is 59 after adding Cosmic Anomaly, Temporal Rift, Stardust Gale, and Mana Storm', () => {
     // Baseline: 53 weather types
     // After adding Cosmic Anomaly: 54
     // After adding Temporal Rift + Stardust Gale: 56

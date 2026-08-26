@@ -43,6 +43,7 @@ interface TestStore {
 // Minimal test component that mirrors RootComponent's selector pattern
 let testRenderCountRef = { current: 0 };
 function TestRootComponent() {
+  // eslint-disable-next-line
   testRenderCountRef.current++;
   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;

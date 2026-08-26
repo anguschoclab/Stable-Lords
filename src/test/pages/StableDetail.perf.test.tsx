@@ -35,6 +35,9 @@ const RenderTracker = ({ renderCountRef }: { renderCountRef: React.MutableRefObj
   const { rivals, arenaHistory } = useTestStore(
     useShallow((s) => ({ rivals: s.rivals, arenaHistory: s.arenaHistory }))
   );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/refs
   renderCountRef.current++;
   return (
     <div data-testid="render-tracker">

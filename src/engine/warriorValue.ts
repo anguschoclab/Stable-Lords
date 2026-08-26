@@ -22,25 +22,42 @@ const POSITIVE_VALUE: Record<TraitTier, number> = {
 /**
  * Liability = flaw burden minus the warrior's value (good traits, record, fame).
  * The churn signal: 2+ flaws reads as a cut candidate unless real value offsets it.
+ *
+ * ⚡ Bolt Optimization: Uses a single for-loop for trait evaluation instead of
+ * chained array methods (.map, .filter, .reduce) to prevent allocating multiple
+ * temporary arrays and reduce GC pressure during AI roster simulation.
  */
 export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
-  const traits = (warrior.traits ?? [])
-    .map((id) => TRAITS[id])
-    .filter((t): t is TraitDef => Boolean(t));
   const factors: { name: string; weight: number }[] = [];
 
-  const flaws = traits.filter((t) => t.tier === 'Flaw');
-  const flawBurden = flaws.length * 34;
-  if (flaws.length)
+  let flawCount = 0;
+  let traitValue = 0;
+
+  if (warrior.traits) {
+    for (let i = 0; i < warrior.traits.length; i++) {
+      const t = TRAITS[warrior.traits[i]];
+      if (!t) continue;
+
+      if (t.tier === 'Flaw') {
+        flawCount++;
+      }
+      if (t.sign === 'positive') {
+        traitValue += POSITIVE_VALUE[t.tier];
+      }
+    }
+  }
+
+  const flawBurden = flawCount * 34;
+  if (flawCount > 0) {
     factors.push({
-      name: `${flaws.length} flaw${flaws.length > 1 ? 's' : ''}`,
+      name: `${flawCount} flaw${flawCount > 1 ? 's' : ''}`,
       weight: flawBurden,
     });
+  }
 
-  const traitValue = traits
-    .filter((t) => t.sign === 'positive')
-    .reduce((s, t) => s + POSITIVE_VALUE[t.tier], 0);
-  if (traitValue) factors.push({ name: 'positive traits', weight: -traitValue });
+  if (traitValue > 0) {
+    factors.push({ name: 'positive traits', weight: -traitValue });
+  }
 
   const c = warrior.career ?? { wins: 0, losses: 0, kills: 0 };
   const fights = (c.wins ?? 0) + (c.losses ?? 0);
@@ -58,11 +75,7 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
   const score = clamp(raw + 20, 0, 100); // baseline 20 so a clean warrior sits low-but-nonzero
 
   const recommendation: LiabilityResult['recommendation'] =
-    flaws.length >= 2 && score > 55
-      ? 'Release'
-      : flaws.length >= 1 || score > 55
-        ? 'Monitor'
-        : 'Keep';
+    flawCount >= 2 && score > 55 ? 'Release' : flawCount >= 1 || score > 55 ? 'Monitor' : 'Keep';
 
   return { score, factors, recommendation };
 }

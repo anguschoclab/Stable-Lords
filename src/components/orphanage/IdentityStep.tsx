@@ -108,7 +108,7 @@ export default function IdentityStep({
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-border/80 bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

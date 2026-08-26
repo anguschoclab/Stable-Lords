@@ -639,3 +639,39 @@ export function handleUnexplainedMonolith(
     }
   }
 }
+
+/** Handler for the Suspicious Mushroom Stew offseason event — grants XP but causes a minor stomach injury. */
+export function handleSuspiciousMushroomStew(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state, true);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20 + Math.floor(rng.next() * 16);
+
+      const newInjury = makeInjury(rng, {
+        name: 'Stomach Ache',
+        description: 'A gnawing ache from eating suspicious glowing mushrooms.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { CN: -1, END: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}

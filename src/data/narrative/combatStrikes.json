@@ -17,10 +17,7 @@
       "The attack finds its mark, drawing a wince.",
       "Impact! The strike connects solidly.",
       "A painful hit lands on {{defender}}.",
-      "A solid blow lands squarely.",
-      "{{attacker}} finds an opening, driving their {{weapon}} into {{defender}}'s {{bodyPart}}.",
-      "A sudden blur of motion results in {{attacker}} striking {{defender}}'s {{bodyPart}}.",
-      "{{defender}}'s guard slips, allowing {{attacker}} to hit their {{bodyPart}}."
+      "A solid blow lands squarely."
     ],
     "slashing": {
       "glancing": [
@@ -51,9 +48,7 @@
         "A hasty swing from {{attacker}} barely nicks {{defender}}.",
         "{{attacker}} attempts a shallow cut, missing the vitals.",
         "A grazing slash barely scores {{defender}}'s defense.",
-        "{{attacker}} drags the blade in a quick, shallow arc.",
-        "{{attacker}}'s blade merely kisses {{defender}}'s {{bodyPart}}, leaving a shallow red line.",
-        "A frantic slash from {{attacker}} glances harmlessly off {{defender}}'s {{bodyPart}}."
+        "{{attacker}} drags the blade in a quick, shallow arc."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -271,9 +266,7 @@
         "A solid thud echoes as {{weapon}} connects cleanly.",
         "The impact sends a shockwave through {{defender}}.",
         "A firm bash leaves a nasty bruise on {{defender}}.",
-        "{{attacker}} lands a heavy, bone-jarring blow.",
-        "{{attacker}} brings the heavy {{weapon}} down hard on {{defender}}'s {{bodyPart}}, a bruising impact.",
-        "With a grunt of exertion, {{attacker}} smashes {{defender}}'s {{bodyPart}} with their {{weapon}}."
+        "{{attacker}} lands a heavy, bone-jarring blow."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",

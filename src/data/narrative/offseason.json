@@ -348,11 +348,11 @@
         "A swirling vortex of dark energy appeared in the stable during the off-season. {{name}} stared into it and emerged stronger, yet changed... (+25 XP, Minor Injury)"
       ]
     },
-    "weeping_skies": {
-      "title": "Weeping Skies",
-      "effectType": "weeping_skies",
+    "shattered_skies_ritual": {
+      "title": "Shattered Skies Ritual",
+      "effectType": "shattered_skies_ritual",
       "newsletter": [
-        "A strange, localized rain cloud settled directly over {{name}}. The weeping skies sapped their energy but left them strangely enlightened. (+20 XP, Weeping Skies unlocked for next season!)"
+        "A chaotic cult performed a ritual as the sky seemingly shattered like glass. {{name}} stood near the epicenter, absorbing the raw aether. They gained profound insight but look completely exhausted. (+25 XP, Minor Fatigue)"
       ]
     }
   },

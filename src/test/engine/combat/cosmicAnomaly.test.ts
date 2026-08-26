@@ -55,7 +55,7 @@ describe('Cosmic Anomaly weather type', () => {
     // Baseline: 53 weather types
     // After adding Cosmic Anomaly: 54
     // After adding Temporal Rift + Stardust Gale: 56
-    // After adding Mana Storm: 58
+    // After adding Mana Storm: 59
     if (WEATHER_TYPES.includes('Cosmic Anomaly' as any)) {
       expect(WEATHER_TYPES.length).toBe(59);
     } else {

@@ -9,6 +9,7 @@ export {
   getActiveWarriors,
   handleChaosRift,
   handleUnexplainedMonolith,
+  handleShatteredSkiesRitual,
   handleChaoticWeatherExperiment,
   handleFameBoost,
   handleWinterChill,

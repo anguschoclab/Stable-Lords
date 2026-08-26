@@ -453,13 +453,18 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
   'Mana Storm': {
+    icon: CloudLightning,
+    colorClass: 'text-purple-400',
+    bgClass: 'bg-purple-900/10',
+    borderClass: 'border-purple-500/20',
+    description: 'Violent magical storms grant explosive energy but drain stamina.',
+  },
+  'Shattered Skies': {
     icon: Sparkles,
     colorClass: 'text-purple-400',
-    bgClass: 'bg-purple-900/40',
-    borderClass: 'border-purple-600',
-    extraClass: 'animate-pulse drop-shadow-md',
-    description:
-      'Violent purple energy crackles in the air, giving extreme energy but draining stamina massively.',
+    bgClass: 'bg-purple-900/10',
+    borderClass: 'border-purple-500/20',
+    description: 'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
 };
 

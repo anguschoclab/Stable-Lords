@@ -68,6 +68,7 @@ export const WEATHER_TYPES = [
   'Temporal Rift',
   'Stardust Gale',
   'Mana Storm',
+  'Shattered Skies',
 ] as const;
 
 export const TRAINER_TIERS = ['Novice', 'Seasoned', 'Master'] as const;

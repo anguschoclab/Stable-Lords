@@ -149,10 +149,17 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   },
   'Blood Moon': {
     icon: Moon,
-    colorClass: 'text-destructive',
-    bgClass: 'bg-destructive/10',
-    borderClass: 'border-destructive/20',
-    description: 'A crimson moon rises. Fighters are bloodthirsty, vastly increasing lethality.',
+    colorClass: 'text-red-500',
+    bgClass: 'bg-red-500/10',
+    borderClass: 'border-red-500/20',
+    description: 'A crimson moon heightens bloodlust.',
+  },
+  'Weeping Skies': {
+    icon: CloudRain,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A sorrowful localized rain saps energy but clears the mind.',
   },
   Eclipse: {
     icon: Circle,

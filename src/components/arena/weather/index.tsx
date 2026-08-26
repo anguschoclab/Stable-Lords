@@ -102,6 +102,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Temporal Rift': () => <ArcaneStormEffect />,
   'Stardust Gale': () => <WindEffect strong={false} />,
   'Mana Storm': () => <ArcaneStormEffect />,
+  'Weeping Skies': () => <RainEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

@@ -137,6 +137,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.2,
     description: 'Crimson moon — crowd frenzy drives fighters harder.',
   },
+  'Weeping Skies': {
+    staminaMult: 1.2,
+    initiativeMod: +2,
+    riposteMod: 0,
+    damageMult: 0.95,
+    description: 'A sorrowful localized rain saps energy but clears the mind.',
+  },
   Eclipse: {
     staminaMult: 0.8,
     initiativeMod: +5,

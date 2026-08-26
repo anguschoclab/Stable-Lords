@@ -56,4 +56,4 @@ export { handleDreamweaverVisit } from './socialHandlers';
 export { handleChaosWeaversProphecy } from './chaosHandlers';
 export { handleAbyssalTempestRitual } from './chaosHandlers';
 export { handleUnexplainedMonolith } from './chaosHandlers';
-export { handleSuspiciousMushroomStew } from './chaosHandlers';
+export { handleWeepingSkies } from './chaosHandlers';

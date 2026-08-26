@@ -348,11 +348,11 @@
         "A swirling vortex of dark energy appeared in the stable during the off-season. {{name}} stared into it and emerged stronger, yet changed... (+25 XP, Minor Injury)"
       ]
     },
-    "suspicious_mushroom_stew": {
-      "title": "Suspicious Mushroom Stew",
-      "effectType": "suspicious_mushroom_stew",
+    "weeping_skies": {
+      "title": "Weeping Skies",
+      "effectType": "weeping_skies",
       "newsletter": [
-        "{{name}} ate a hearty bowl of suspicious mushroom stew served by a mysterious stranger. They experienced vivid, terrifying hallucinations that taught them new combat techniques, but left them with a serious stomach ache. (+{{xp}} XP, Minor Injury)"
+        "A strange, localized rain cloud settled directly over {{name}}. The weeping skies sapped their energy but left them strangely enlightened. (+20 XP, Weeping Skies unlocked for next season!)"
       ]
     }
   },

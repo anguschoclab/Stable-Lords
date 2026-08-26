@@ -60,7 +60,7 @@ export interface OffseasonEventNarrative {
     | 'wandering_mystic'
     | 'bountiful_harvest'
     | 'abyssal_tempest_ritual'
-    | 'suspicious_mushroom_stew';
+    | 'weeping_skies';
   newsletter: string[];
 }
 

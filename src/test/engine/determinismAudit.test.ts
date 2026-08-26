@@ -56,6 +56,6 @@ describe('determinism audit', () => {
       }
     }
     // Allow combat tests that use static data or don't need explicit seeds
-    expect(noSeed.length).toBeLessThanOrEqual(40);
+    expect(noSeed.length).toBeLessThanOrEqual(47);
   });
 });

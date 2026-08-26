@@ -10,6 +10,7 @@ import type { Warrior } from '@/types/state.types';
 import {
   calculateCareerUpdate,
   applyCareerUpdate,
+  updateWarriorAfterBout,
   updateWarriorFromBoutOutcome,
   CareerUpdateInput,
 } from '@/engine/warrior/careerUpdate';
@@ -288,6 +289,47 @@ describe('careerUpdate', () => {
 
       expect(updated.id).toBe(warrior.id);
       expect(updated.name).toBe(warrior.name);
+    });
+  });
+
+  describe('updateWarriorAfterBout', () => {
+    it('should correctly apply fame and popularity deltas along with win/kill outcomes', () => {
+      const warrior = createTestWarrior(10, 5, 3, 1, 20);
+      warrior.popularity = 50;
+      const updated = updateWarriorAfterBout(warrior, 5, 10, true, true, []);
+      expect(updated.fame).toBe(28);
+      expect(updated.popularity).toBe(60);
+      expect(updated.career.wins).toBe(6);
+      expect(updated.career.kills).toBe(2);
+    });
+
+    it('should apply "Flashy" flair to winner if "Flashy" tag is present', () => {
+      const warrior = createTestWarrior();
+      const updated = updateWarriorAfterBout(warrior, 0, 0, true, false, ['Flashy', 'OtherTag']);
+      expect(updated.flair).toContain('Flashy');
+    });
+
+    it('should not apply "Flashy" flair to loser even if "Flashy" tag is present', () => {
+      const warrior = createTestWarrior();
+      const updated = updateWarriorAfterBout(warrior, 0, 0, false, false, ['Flashy']);
+      expect(updated.flair === undefined || updated.flair.length === 0).toBe(true);
+    });
+
+    it('should preserve existing flair when adding "Flashy"', () => {
+      const warrior = createTestWarrior();
+      warrior.flair = ['Veteran'];
+      const updated = updateWarriorAfterBout(warrior, 0, 0, true, false, ['Flashy']);
+      expect(updated.flair).toContain('Veteran');
+      expect(updated.flair).toContain('Flashy');
+      expect(updated.flair?.length).toBe(2);
+    });
+
+    it('should not duplicate "Flashy" flair if already present', () => {
+      const warrior = createTestWarrior();
+      warrior.flair = ['Flashy'];
+      const updated = updateWarriorAfterBout(warrior, 0, 0, true, false, ['Flashy']);
+      expect(updated.flair).toContain('Flashy');
+      expect(updated.flair?.length).toBe(1);
     });
   });
 

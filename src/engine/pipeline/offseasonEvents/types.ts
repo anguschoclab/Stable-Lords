@@ -60,7 +60,7 @@ export interface OffseasonEventNarrative {
     | 'wandering_mystic'
     | 'bountiful_harvest'
     | 'abyssal_tempest_ritual'
-    | 'shattered_skies_ritual';
+    | 'offseason_training_camp';
   newsletter: string[];
 }
 

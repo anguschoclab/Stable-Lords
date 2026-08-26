@@ -374,3 +374,31 @@ export function handleShadowTraining(
     }
   }
 }
+
+/**
+ * Handle Offseason Training Camp
+ */
+export function handleOffseasonTrainingCamp(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 40 + Math.floor(rng.next() * 21);
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}

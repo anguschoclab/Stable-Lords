@@ -348,11 +348,11 @@
         "A swirling vortex of dark energy appeared in the stable during the off-season. {{name}} stared into it and emerged stronger, yet changed... (+25 XP, Minor Injury)"
       ]
     },
-    "shattered_skies_ritual": {
-      "title": "Shattered Skies Ritual",
-      "effectType": "shattered_skies_ritual",
+    "offseason_training_camp": {
+      "title": "Offseason Training Camp",
+      "effectType": "offseason_training_camp",
       "newsletter": [
-        "A chaotic cult performed a ritual as the sky seemingly shattered like glass. {{name}} stood near the epicenter, absorbing the raw aether. They gained profound insight but look completely exhausted. (+25 XP, Minor Fatigue)"
+        "A grueling but highly effective offseason training camp pushed your warriors to their absolute limits. {{name}} emerged stronger and wiser, earning significant XP! (+{{xp}} XP)"
       ]
     }
   },

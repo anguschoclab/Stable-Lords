@@ -64,6 +64,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Glittering Frost',
   'Temporal Rift',
   'Stardust Gale',
+  'Abyssal Tempest',
 ];
 
 describe('Weather season exclusivity', () => {

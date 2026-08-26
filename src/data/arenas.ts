@@ -96,7 +96,6 @@ export const STANDARD_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
 export const MIST_SHROUDED_RUINS: ArenaConfig = {
   id: 'mist_shrouded_ruins',
   name: 'Mist-Shrouded Ruins',
@@ -509,14 +508,16 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',
     title: 'Echoes of the Ancients',
-    narrative: 'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
+    narrative:
+      'Combatants swear the crumbling stones whisper ancient combat forms, aiding those who listen.',
   },
   {
     id: 'the_gallows_tree_roots',
     arenaId: 'the_gallows_tree',
     type: 'hazard',
     title: 'Grasping Roots',
-    narrative: 'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
+    narrative:
+      'The twisted roots of the old gallows tree seem to reach for anyone who stumbles near the edge.',
   },
   {
     id: 'sunken_vault_echo',
@@ -1101,6 +1102,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A crack in the western wall perfectly catches the wind, emitting a sound remarkably like a child weeping. Opponents of high empathy often find their morale broken here.',
   },
+  {
+    id: 'forgotten_crypt_whispers',
+    arenaId: 'forgotten_crypt',
+    type: 'famous_death',
+    title: 'The Silent Execution',
+    narrative:
+      'Legend states a grand champion was dragged screaming into the shadows here, leaving only his shattered blade.',
+  },
+  {
+    id: 'rusted_gorge_slag',
+    arenaId: 'rusted_gorge',
+    type: 'historical_battle',
+    title: 'The Slag Pit Rebellion',
+    narrative:
+      'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {
@@ -1150,6 +1167,30 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.15 },
 };
 
+export const FORGOTTEN_CRYPT: ArenaConfig = {
+  id: 'forgotten_crypt',
+  name: 'Forgotten Crypt',
+  tags: ['indoor', 'cramped', 'cursed'],
+  tier: 2,
+  size: 'cramped',
+  description:
+    'A subterranean burial chamber where the shadows seem to swallow the light, hiding fatal mistakes.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.1 },
+};
+
+export const RUSTED_GORGE: ArenaConfig = {
+  id: 'rusted_gorge',
+  name: 'Rusted Gorge',
+  tags: ['outdoor', 'uneven', 'open'],
+  tier: 1,
+  size: 'open',
+  description:
+    'An ancient industrial trench filled with twisted scrap metal and treacherous, uneven terrain.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
+};
+
 // ─── Auto-register ────────────────────────────────────────────────────────────
 [
   STANDARD_ARENA,
@@ -1184,5 +1225,7 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   THE_SUNKEN_VAULT,
   IRON_FORGE,
   MIST_SHROUDED_RUINS,
-  THE_GALLOWS_TREE
+  THE_GALLOWS_TREE,
+  FORGOTTEN_CRYPT,
+  RUSTED_GORGE,
 ].forEach(registerArena);

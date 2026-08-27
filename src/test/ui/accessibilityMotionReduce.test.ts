@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
-import { globSync } from 'glob';
+import { sync as globSync } from 'glob';
 import path from 'path';
 
 describe('accessibility motion-reduce', () => {

@@ -11,10 +11,7 @@ import {
   getLoadoutWeight,
 } from '@/data/equipment';
 import { getWeaponSuitability, type WeaponSuitability } from '@/engine/weaponSuitability';
-import {
-  getEncumbranceRatio,
-  getEncumbranceTier,
-} from '@/data/equipment/encumbrance';
+import { getEncumbranceRatio, getEncumbranceTier } from '@/data/equipment/encumbrance';
 
 /**
  * Defines the shape of gear recommendation.
@@ -147,7 +144,21 @@ function bestItem(items: EquipmentItem[], scorer: (i: EquipmentItem) => number):
   }
   const first = items[0];
   if (!first) throw new Error('Cannot select best item from empty array');
-  return items.reduce((best, item) => (scorer(item) > scorer(best) ? item : best), first);
+
+  // ⚡ Bolt: Caching bestScore to prevent redundant scorer() calls on every iteration,
+  // avoiding .reduce() overhead and doubling execution speed.
+  let best = first;
+  let bestScore = scorer(first);
+  for (let i = 1; i < items.length; i++) {
+    const item = items[i];
+    if (!item) continue;
+    const score = scorer(item);
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
+    }
+  }
+  return best;
 }
 
 /**

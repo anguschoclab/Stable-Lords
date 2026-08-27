@@ -17,7 +17,12 @@
       "The attack finds its mark, drawing a wince.",
       "Impact! The strike connects solidly.",
       "A painful hit lands on {{defender}}.",
-      "A solid blow lands squarely."
+      "A solid blow lands squarely.",
+      "{{attacker}} unleashes a punishing flurry against {{defender}}'s {{bodyPart}}.",
+      "A brutal blow from {{attacker}} finds the {{bodyPart}} of {{defender}}.",
+      "{{defender}}'s {{bodyPart}} absorbs a heavy impact from {{attacker}}.",
+      "{{attacker}} connects fiercely with {{defender}}'s {{bodyPart}}.",
+      "The sickening sound of impact echoes as {{attacker}} strikes {{defender}}'s {{bodyPart}}."
     ],
     "slashing": {
       "glancing": [

@@ -65,20 +65,20 @@
             "text": "Steals the center of the pit and refuses to yield a single step"
           },
           {
+            "min": 4,
+            "text": "Demonstrates impressive initiative (9)"
+          },
+          {
             "min": 3,
             "text": "Demonstrates impressive initiative (7)"
           },
           {
-            "min": 1,
+            "min": 2,
             "text": "Demonstrates impressive initiative (8)"
           },
           {
             "min": 0,
             "text": "Has learned how to keep his foe in trouble"
-          },
-          {
-            "min": 0,
-            "text": "Demonstrates impressive initiative (9)"
           }
         ],
         "low": [
@@ -96,31 +96,31 @@
           },
           {
             "min": 4,
-            "text": "Has reasonable, if basic, initiative (9)"
+            "text": "Has reasonable, if basic, initiative (4)"
           },
           {
             "min": 3,
-            "text": "Has reasonable, if basic, initiative (8)"
+            "text": "Has reasonable, if basic, initiative (5)"
           },
           {
             "min": 3,
-            "text": "Has reasonable, if basic, initiative (8)"
-          },
-          {
-            "min": 2,
             "text": "Has reasonable, if basic, initiative (6)"
+          },
+          {
+            "min": 3,
+            "text": "Has reasonable, if basic, initiative (8)"
+          },
+          {
+            "min": 1,
+            "text": "Has reasonable, if basic, initiative (7)"
+          },
+          {
+            "min": 1,
+            "text": "Has reasonable, if basic, initiative (9)"
           },
           {
             "min": 0,
             "text": "Has learned how to be decisive and quick"
-          },
-          {
-            "min": 0,
-            "text": "Has reasonable, if basic, initiative (5)"
-          },
-          {
-            "min": 0,
-            "text": "Has reasonable, if basic, initiative (7)"
           }
         ]
       },
@@ -140,19 +140,15 @@
           },
           {
             "min": 4,
-            "text": "Delivers devastating ripostes (8)"
-          },
-          {
-            "min": 3,
-            "text": "Delivers devastating ripostes (6)"
-          },
-          {
-            "min": 2,
             "text": "Delivers devastating ripostes (9)"
           },
           {
-            "min": 1,
-            "text": "Delivers devastating ripostes (7)"
+            "min": 2,
+            "text": "Delivers devastating ripostes (4)"
+          },
+          {
+            "min": 2,
+            "text": "Delivers devastating ripostes (5)"
           },
           {
             "min": 0,
@@ -160,7 +156,11 @@
           },
           {
             "min": 0,
-            "text": "Delivers devastating ripostes (5)"
+            "text": "Delivers devastating ripostes (6)"
+          },
+          {
+            "min": 0,
+            "text": "Delivers devastating ripostes (7)"
           },
           {
             "min": 0,
@@ -178,35 +178,35 @@
           },
           {
             "min": 4,
-            "text": "Shows competent riposte ability (5)"
+            "text": "Shows competent riposte ability (9)"
           },
           {
             "min": 3,
             "text": "Shows competent riposte ability (4)"
           },
           {
-            "min": 3,
-            "text": "Shows competent riposte ability (5)"
-          },
-          {
-            "min": 3,
+            "min": 2,
             "text": "Shows competent riposte ability (7)"
           },
           {
-            "min": 3,
-            "text": "Shows competent riposte ability (9)"
-          },
-          {
-            "min": 2,
-            "text": "Shows competent riposte ability (6)"
-          },
-          {
-            "min": 2,
+            "min": 1,
             "text": "Shows competent riposte ability (8)"
           },
           {
             "min": 0,
             "text": "Cleverly controls his foe's actions"
+          },
+          {
+            "min": 0,
+            "text": "Shows competent riposte ability (3)"
+          },
+          {
+            "min": 0,
+            "text": "Shows competent riposte ability (5)"
+          },
+          {
+            "min": 0,
+            "text": "Shows competent riposte ability (6)"
           }
         ]
       },
@@ -233,24 +233,24 @@
             "text": "Mounts a ferocious offense (6)"
           },
           {
+            "min": 4,
+            "text": "Mounts a ferocious offense (8)"
+          },
+          {
+            "min": 4,
+            "text": "Mounts a ferocious offense (9)"
+          },
+          {
             "min": 3,
             "text": "Mounts a ferocious offense (7)"
           },
           {
-            "min": 3,
-            "text": "Mounts a ferocious offense (8)"
-          },
-          {
             "min": 2,
-            "text": "Mounts a ferocious offense (9)"
+            "text": "Mounts a ferocious offense (5)"
           },
           {
             "min": 0,
             "text": "He lands blows on less protected areas"
-          },
-          {
-            "min": 0,
-            "text": "Mounts a ferocious offense (9)"
           }
         ],
         "low": [
@@ -264,11 +264,7 @@
           },
           {
             "min": 4,
-            "text": "Provides a steady offensive front (4)"
-          },
-          {
-            "min": 4,
-            "text": "Provides a steady offensive front (5)"
+            "text": "Provides a steady offensive front (3)"
           },
           {
             "min": 4,
@@ -276,14 +272,18 @@
           },
           {
             "min": 3,
-            "text": "Provides a steady offensive front (7)"
+            "text": "Provides a steady offensive front (5)"
           },
           {
             "min": 3,
             "text": "Provides a steady offensive front (6)"
           },
           {
-            "min": 3,
+            "min": 2,
+            "text": "Provides a steady offensive front (4)"
+          },
+          {
+            "min": 1,
             "text": "Provides a steady offensive front (8)"
           },
           {
@@ -337,16 +337,8 @@
             "text": "Is always thinking ahead"
           },
           {
-            "min": 4,
+            "min": 2,
             "text": "Shows solid defense capabilities in the arena (4)"
-          },
-          {
-            "min": 3,
-            "text": "Shows solid defense capabilities in the arena (4)"
-          },
-          {
-            "min": 3,
-            "text": "Shows solid defense capabilities in the arena (6)"
           },
           {
             "min": 2,
@@ -354,11 +346,15 @@
           },
           {
             "min": 2,
-            "text": "Shows solid defense capabilities in the arena (8)"
+            "text": "Shows solid defense capabilities in the arena (6)"
+          },
+          {
+            "min": 2,
+            "text": "Shows solid defense capabilities in the arena (7)"
           },
           {
             "min": 1,
-            "text": "Shows solid defense capabilities in the arena (7)"
+            "text": "Shows solid defense capabilities in the arena (8)"
           },
           {
             "min": 1,
@@ -367,6 +363,10 @@
           {
             "min": 0,
             "text": "Is gifted at avoiding a blow"
+          },
+          {
+            "min": 0,
+            "text": "Shows solid defense capabilities in the arena (3)"
           }
         ],
         "low": [
@@ -380,35 +380,35 @@
           },
           {
             "min": 4,
-            "text": "Shows solid defense capabilities in the arena (6)"
+            "text": "Shows solid defense capabilities in the arena (3)"
           },
           {
             "min": 4,
-            "text": "Shows solid defense capabilities in the arena (4)"
-          },
-          {
-            "min": 4,
-            "text": "Shows solid defense capabilities in the arena (6)"
-          },
-          {
-            "min": 3,
             "text": "Shows solid defense capabilities in the arena (7)"
           },
           {
-            "min": 2,
+            "min": 4,
             "text": "Shows solid defense capabilities in the arena (8)"
+          },
+          {
+            "min": 3,
+            "text": "Shows solid defense capabilities in the arena (5)"
+          },
+          {
+            "min": 3,
+            "text": "Shows solid defense capabilities in the arena (6)"
+          },
+          {
+            "min": 2,
+            "text": "Shows solid defense capabilities in the arena (9)"
+          },
+          {
+            "min": 1,
+            "text": "Shows solid defense capabilities in the arena (4)"
           },
           {
             "min": 0,
             "text": "Makes few mistakes"
-          },
-          {
-            "min": 0,
-            "text": "Shows solid defense capabilities in the arena (5)"
-          },
-          {
-            "min": 0,
-            "text": "Shows solid defense capabilities in the arena (9)"
           }
         ]
       },
@@ -423,28 +423,24 @@
             "text": "Rarely wastes his endurance needlessly"
           },
           {
-            "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (3)"
-          },
-          {
-            "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (4)"
-          },
-          {
-            "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (7)"
-          },
-          {
-            "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (8)"
+            "min": 3,
+            "text": "Shows solid endurance capabilities in the arena (6)"
           },
           {
             "min": 3,
-            "text": "Shows solid endurance capabilities in the arena (5)"
+            "text": "Shows solid endurance capabilities in the arena (9)"
           },
           {
             "min": 2,
-            "text": "Shows solid endurance capabilities in the arena (9)"
+            "text": "Shows solid endurance capabilities in the arena (8)"
+          },
+          {
+            "min": 1,
+            "text": "Shows solid endurance capabilities in the arena (3)"
+          },
+          {
+            "min": 1,
+            "text": "Shows solid endurance capabilities in the arena (4)"
           },
           {
             "min": 0,
@@ -452,7 +448,11 @@
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (6)"
+            "text": "Shows solid endurance capabilities in the arena (5)"
+          },
+          {
+            "min": 0,
+            "text": "Shows solid endurance capabilities in the arena (7)"
           }
         ],
         "low": [
@@ -466,11 +466,7 @@
           },
           {
             "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (8)"
-          },
-          {
-            "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (7)"
+            "text": "Shows solid endurance capabilities in the arena (5)"
           },
           {
             "min": 3,
@@ -478,11 +474,11 @@
           },
           {
             "min": 3,
-            "text": "Shows solid endurance capabilities in the arena (6)"
+            "text": "Shows solid endurance capabilities in the arena (7)"
           },
           {
             "min": 2,
-            "text": "Shows solid endurance capabilities in the arena (8)"
+            "text": "Shows solid endurance capabilities in the arena (6)"
           },
           {
             "min": 0,
@@ -490,7 +486,11 @@
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (5)"
+            "text": "Shows solid endurance capabilities in the arena (3)"
+          },
+          {
+            "min": 0,
+            "text": "Shows solid endurance capabilities in the arena (8)"
           },
           {
             "min": 0,
@@ -508,35 +508,35 @@
           },
           {
             "min": 4,
-            "text": "Struggles significantly with initiative (3)"
+            "text": "Struggles significantly with initiative (2)"
           },
           {
             "min": 4,
-            "text": "Struggles significantly with initiative (3)"
-          },
-          {
-            "min": 4,
-            "text": "Struggles significantly with initiative (6)"
-          },
-          {
-            "min": 4,
-            "text": "Struggles significantly with initiative (7)"
-          },
-          {
-            "min": 3,
             "text": "Struggles significantly with initiative (5)"
           },
           {
             "min": 3,
-            "text": "Struggles significantly with initiative (9)"
-          },
-          {
-            "min": 1,
             "text": "Struggles significantly with initiative (4)"
           },
           {
-            "min": 1,
+            "min": 3,
+            "text": "Struggles significantly with initiative (6)"
+          },
+          {
+            "min": 3,
+            "text": "Struggles significantly with initiative (7)"
+          },
+          {
+            "min": 3,
             "text": "Struggles significantly with initiative (8)"
+          },
+          {
+            "min": 2,
+            "text": "Struggles significantly with initiative (3)"
+          },
+          {
+            "min": 1,
+            "text": "Struggles significantly with initiative (9)"
           },
           {
             "min": 0,
@@ -554,35 +554,35 @@
           },
           {
             "min": 4,
-            "text": "Is woefully slow to react (8)"
-          },
-          {
-            "min": 3,
-            "text": "Is woefully slow to react (3)"
-          },
-          {
-            "min": 3,
             "text": "Is woefully slow to react (4)"
           },
           {
-            "min": 3,
+            "min": 2,
+            "text": "Is woefully slow to react (2)"
+          },
+          {
+            "min": 2,
+            "text": "Is woefully slow to react (6)"
+          },
+          {
+            "min": 2,
             "text": "Is woefully slow to react (9)"
           },
           {
-            "min": 2,
+            "min": 1,
             "text": "Is woefully slow to react (5)"
           },
           {
-            "min": 2,
+            "min": 1,
             "text": "Is woefully slow to react (7)"
+          },
+          {
+            "min": 1,
+            "text": "Is woefully slow to react (8)"
           },
           {
             "min": 0,
             "text": "He stands around slack-jawed"
-          },
-          {
-            "min": 0,
-            "text": "Is woefully slow to react (6)"
           }
         ]
       },
@@ -598,35 +598,35 @@
           },
           {
             "min": 4,
-            "text": "Struggles to mount a proper offensive (3)"
+            "text": "Struggles to mount a proper offensive (7)"
           },
           {
-            "min": 3,
-            "text": "Struggles to mount a proper offensive (4)"
+            "min": 4,
+            "text": "Struggles to mount a proper offensive (8)"
+          },
+          {
+            "min": 4,
+            "text": "Struggles to mount a proper offensive (9)"
           },
           {
             "min": 3,
             "text": "Struggles to mount a proper offensive (5)"
           },
           {
-            "min": 2,
+            "min": 3,
             "text": "Struggles to mount a proper offensive (6)"
           },
           {
-            "min": 2,
-            "text": "Struggles to mount a proper offensive (8)"
-          },
-          {
-            "min": 2,
-            "text": "Struggles to mount a proper offensive (9)"
-          },
-          {
             "min": 1,
-            "text": "Struggles to mount a proper offensive (7)"
+            "text": "Struggles to mount a proper offensive (4)"
           },
           {
             "min": 0,
             "text": "He makes a lot of mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Struggles to mount a proper offensive (3)"
           }
         ],
         "low": [
@@ -635,24 +635,24 @@
             "text": "Telegraphs every swing like a lumbering ox"
           },
           {
-            "min": 4,
-            "text": "Struggles to mount a proper offensive (2)"
-          },
-          {
-            "min": 4,
-            "text": "Struggles to mount a proper offensive (6)"
-          },
-          {
-            "min": 3,
-            "text": "Struggles to mount a proper offensive (3)"
-          },
-          {
             "min": 3,
             "text": "Struggles to mount a proper offensive (5)"
           },
           {
-            "min": 3,
-            "text": "Struggles to mount a proper offensive (8)"
+            "min": 2,
+            "text": "Struggles to mount a proper offensive (3)"
+          },
+          {
+            "min": 2,
+            "text": "Struggles to mount a proper offensive (4)"
+          },
+          {
+            "min": 1,
+            "text": "Struggles to mount a proper offensive (2)"
+          },
+          {
+            "min": 1,
+            "text": "Struggles to mount a proper offensive (7)"
           },
           {
             "min": 0,
@@ -660,11 +660,11 @@
           },
           {
             "min": 0,
-            "text": "Struggles to mount a proper offensive (4)"
+            "text": "Struggles to mount a proper offensive (6)"
           },
           {
             "min": 0,
-            "text": "Struggles to mount a proper offensive (7)"
+            "text": "Struggles to mount a proper offensive (8)"
           },
           {
             "min": 0,
@@ -687,15 +687,11 @@
             "text": "Has terrible defensive instincts (3)"
           },
           {
-            "min": 4,
-            "text": "Has terrible defensive instincts (5)"
-          },
-          {
-            "min": 3,
-            "text": "Has terrible defensive instincts (7)"
-          },
-          {
             "min": 2,
+            "text": "Has terrible defensive instincts (8)"
+          },
+          {
+            "min": 1,
             "text": "Has terrible defensive instincts (4)"
           },
           {
@@ -703,12 +699,16 @@
             "text": "Has terrible defensive instincts (6)"
           },
           {
+            "min": 1,
+            "text": "Has terrible defensive instincts (7)"
+          },
+          {
             "min": 0,
             "text": "Leaves dangerous openings in their guard"
           },
           {
             "min": 0,
-            "text": "Has terrible defensive instincts (8)"
+            "text": "Has terrible defensive instincts (5)"
           },
           {
             "min": 0,
@@ -722,31 +722,31 @@
           },
           {
             "min": 4,
-            "text": "Has terrible defensive instincts (4)"
+            "text": "Has terrible defensive instincts (8)"
           },
           {
             "min": 3,
             "text": "Has terrible defensive instincts (2)"
           },
           {
-            "min": 2,
-            "text": "Has terrible defensive instincts (7)"
-          },
-          {
-            "min": 2,
-            "text": "Has terrible defensive instincts (8)"
-          },
-          {
-            "min": 2,
-            "text": "Has terrible defensive instincts (9)"
-          },
-          {
-            "min": 1,
+            "min": 3,
             "text": "Has terrible defensive instincts (3)"
           },
           {
-            "min": 1,
+            "min": 2,
+            "text": "Has terrible defensive instincts (5)"
+          },
+          {
+            "min": 2,
             "text": "Has terrible defensive instincts (6)"
+          },
+          {
+            "min": 1,
+            "text": "Has terrible defensive instincts (4)"
+          },
+          {
+            "min": 1,
+            "text": "Has terrible defensive instincts (7)"
           },
           {
             "min": 0,
@@ -754,7 +754,7 @@
           },
           {
             "min": 0,
-            "text": "Has terrible defensive instincts (5)"
+            "text": "Has terrible defensive instincts (9)"
           }
         ]
       }

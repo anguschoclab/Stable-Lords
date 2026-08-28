@@ -4,6 +4,12 @@
  */
 
 export const ORIGINS: string[] = [
+  'Raised in the echoing halls of the Sunken Orphanage of Dross',
+  'Abandoned on the rusted steps of the Weeping Maiden Asylum',
+  'Survived the cruel lotteries of the Ironwood Foundling Home',
+  'Found swaddled in soot in the boiler rooms of the Blackwood Workhouse',
+  'Raised by the scarred matrons of the Bleeding Heart Orphanage',
+  'Sold to the fighting pits by the debt-ridden wardens of the Hollow Hill Orphanage',
   'Abandoned at the rusted gates of the Blackwood Workhouse',
   'Survived the chilling cullings of the Whispering Vaults',
   'Raised amidst the deafening roar of the Cinderstone Forges',
@@ -218,16 +224,15 @@ export const ORIGINS: string[] = [
   'Cast out by a fallen noble house, forced to scavenge among the very peasants they once ruled',
 
   "Abandoned at the rusted gates of the Silent Order of St. Jude's Orphanage",
-  'Raised by feral hounds in the ruins of the Old Cathedral of the Weeping Mother',
-  'Survived the silent culling of the Hollow Hill Orphanage during the long winter',
   'Found swaddled in blood-stained rags in the catacombs beneath the Dross Wards',
-  'Raised in the lightless cellars of the Harrow-Home for Wayward Foundlings',
-  'Sold to the under-barons of the Scab District for a handful of copper by desperate parents',
   'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse',
-  'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity',
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'learned to sleep with one eye open after the night terrors of the ash-ward',
+  'developed an uncanny ability to sense blood before it was spilled',
+  'practiced dodging the heavy iron cudgels of the workhouse overseers',
+  'memorized the sound of every snapping bone in the fighting pits',
   "learned to gauge distance by dodging the overseer's lash",
   'memorized the anatomy of beasts while working the charnel pits',
   'developed an iron grip from clinging to the underside of merchant carts',
@@ -345,6 +350,10 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  "until they shattered a slaver's jaw with a rusted iron chain",
+  'realizing that the only way to escape the slums was over a mountain of broken bodies',
+  'until they garroted a brutal taskmaster with their own whip',
+  'knowing that the roaring crowd of the arena was the only family they would ever need',
   'discovering that a rusted spoon could be sharpened into a deadly shiv',
   'surviving a night in the dog-cages by out-snarling the hounds',
   'realizing that mercy in the Undercity was just another word for weakness',
@@ -444,7 +453,5 @@ export const DEFINING_MOMENTS: string[] = [
   "until they drove a shattered bottle into their tormentor's eye and fled",
 
   'knowing that the roar of the crowd was the only lullaby they ever needed',
-  "until they shattered a warden’s jaw with a single, perfectly timed kick",
-  'realizing the arena was the only place where their rage was rewarded with silver',
-  "until they drove a splintered chair leg through a slaver's hand and walked free",
+  'until they shattered a warden’s jaw with a single, perfectly timed kick',
 ];

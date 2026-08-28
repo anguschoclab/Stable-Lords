@@ -504,6 +504,31 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundial_plaza_famous_death',
+    arenaId: 'sundial_plaza',
+    type: 'famous_death',
+    title: 'Shadow of the Gnomon',
+    narrative:
+      'A weary gladiator used the massive shadow of the central sundial to hide, leaping out to execute a flawless decapitation on the reigning champion just as noon struck.',
+  },
+  {
+    id: 'the_pit_architectural_quirk',
+    arenaId: 'the_pit',
+    type: 'architectural_quirk',
+    title: 'The Bleeding Grates',
+    narrative:
+      'The drainage grates in the center of the Pit are famously clogged with bone fragments and dried blood, creating a slick hazard that has claimed more lives than the weapons wielded above them.',
+  },
+  {
+    id: 'iron_spire_historical_battle',
+    arenaId: 'iron_spire',
+    type: 'historical_battle',
+    title: 'The Day of Three Hundred Strikes',
+    narrative:
+      'Two evenly matched dual-wielding champions clashed for over an hour, their blades striking three hundred times before exhaustion finally felled one. The audience watched in total silence for the last twenty minutes.',
+  },
+
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

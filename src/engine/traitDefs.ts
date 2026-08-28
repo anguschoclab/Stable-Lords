@@ -98,6 +98,16 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  street_rat_evasion: {
+    id: 'street_rat_evasion',
+    name: 'Street Rat Evasion',
+    description: 'Slippery and elusive, having spent a lifetime dodging the authorities.',
+    effect: { defMod: 1, iniMod: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.5,
+  },
+
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

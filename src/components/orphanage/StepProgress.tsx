@@ -42,7 +42,7 @@ export default function StepProgress({ step, total }: StepProgressProps) {
           {step + 1} / {total}
         </span>
       </div>
-      <div className="h-1 bg-card border border-[rgba(60,42,22,0.5)] overflow-hidden">
+      <div className="h-1 bg-card border border-[hsl(var(--border) / 0.5)] overflow-hidden">
         <div
           className="h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 ease-out"
           style={{

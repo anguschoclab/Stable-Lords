@@ -232,7 +232,7 @@ export default function TacticalLogView({
           className="flex items-center justify-between px-4 py-2"
           style={{
             background: '#0A0705',
-            border: '1px solid rgba(60,42,22,0.8)',
+            border: '1px solid hsl(var(--border) / 0.8)',
             borderTop: 'none',
           }}
         >

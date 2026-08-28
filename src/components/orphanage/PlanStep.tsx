@@ -42,8 +42,8 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         className="p-7 space-y-6"
         style={{
           background: 'linear-gradient(145deg, #150F08 0%, #110C07 100%)',
-          border: '1px solid rgba(201,151,42,0.3)',
-          borderTopColor: 'rgba(201,151,42,0.5)',
+          border: '1px solid hsl(var(--arena-gold) / 0.3)',
+          borderTopColor: 'hsl(var(--arena-gold) / 0.5)',
         }}
       >
         <div>
@@ -55,7 +55,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
 
         <div
           className="flex items-center gap-3 p-3"
-          style={{ background: 'rgba(20,15,8,0.6)', border: '1px solid rgba(60,42,22,0.5)' }}
+          style={{ background: 'rgba(20,15,8,0.6)', border: '1px solid hsl(var(--border) / 0.5)' }}
         >
           <div className="flex-1">
             <span className="font-display font-bold text-base text-foreground">{warrior.name}</span>
@@ -187,7 +187,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[hsl(var(--border) / 0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

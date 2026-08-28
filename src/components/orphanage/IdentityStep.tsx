@@ -44,7 +44,7 @@ export default function IdentityStep({
       className="p-7 space-y-6"
       style={{
         background: 'linear-gradient(145deg, #150F08 0%, #110C07 60%, #140E08 100%)',
-        border: '1px solid rgba(60,42,22,0.9)',
+        border: '1px solid hsl(var(--border) / 0.9)',
         borderTopColor: 'rgba(100,70,36,0.5)',
       }}
     >
@@ -73,7 +73,7 @@ export default function IdentityStep({
             placeholder="e.g. Master Thorne"
             style={{
               background: '#0A0705',
-              border: '1px solid rgba(60,42,22,0.8)',
+              border: '1px solid hsl(var(--border) / 0.8)',
               color: 'hsl(var(--foreground))',
               outline: 'none',
             }}
@@ -96,7 +96,7 @@ export default function IdentityStep({
             placeholder="e.g. The Iron Sentinels"
             style={{
               background: '#0A0705',
-              border: '1px solid rgba(60,42,22,0.8)',
+              border: '1px solid hsl(var(--border) / 0.8)',
               color: 'hsl(var(--foreground))',
               outline: 'none',
             }}
@@ -108,7 +108,7 @@ export default function IdentityStep({
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[hsl(var(--border) / 0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

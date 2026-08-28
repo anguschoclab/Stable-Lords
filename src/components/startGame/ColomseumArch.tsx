@@ -33,14 +33,14 @@ export default function ColomseumArch() {
         className="absolute top-0 left-0 right-0 h-px"
         style={{
           background:
-            'linear-gradient(90deg, transparent 0%, rgba(201, 151, 42, 0.25) 30%, rgba(201, 151, 42, 0.5) 50%, rgba(201, 151, 42, 0.25) 70%, transparent 100%)',
+            'linear-gradient(90deg, transparent 0%, hsl(var(--arena-gold) / 0.25) 30%, hsl(var(--arena-gold) / 0.5) 50%, hsl(var(--arena-gold) / 0.25) 70%, transparent 100%)',
         }}
       />
       <div
         className="absolute bottom-0 left-0 right-0 h-px"
         style={{
           background:
-            'linear-gradient(90deg, transparent 0%, rgba(201, 151, 42, 0.15) 30%, rgba(201, 151, 42, 0.3) 50%, rgba(201, 151, 42, 0.15) 70%, transparent 100%)',
+            'linear-gradient(90deg, transparent 0%, hsl(var(--arena-gold) / 0.15) 30%, hsl(var(--arena-gold) / 0.3) 50%, hsl(var(--arena-gold) / 0.15) 70%, transparent 100%)',
         }}
       />
     </div>

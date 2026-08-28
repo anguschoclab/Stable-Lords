@@ -46,7 +46,7 @@ export default function WarriorSelectionStep({
         className="px-5 py-4 flex items-center justify-between"
         style={{
           background: '#110C07',
-          border: '1px solid rgba(60,42,22,0.7)',
+          border: '1px solid hsl(var(--border) / 0.7)',
           borderTopColor: 'rgba(100,70,36,0.35)',
         }}
       >
@@ -60,7 +60,7 @@ export default function WarriorSelectionStep({
               className="px-2.5 py-0.5 text-[10px] font-mono font-black"
               style={{
                 background: 'rgba(20,15,8,0.8)',
-                border: '1px solid rgba(60,42,22,0.6)',
+                border: '1px solid hsl(var(--border) / 0.6)',
                 color: selected.size === 3 ? 'hsl(var(--accent))' : 'hsl(var(--muted-foreground))',
               }}
             >
@@ -93,7 +93,7 @@ export default function WarriorSelectionStep({
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[hsl(var(--border) / 0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

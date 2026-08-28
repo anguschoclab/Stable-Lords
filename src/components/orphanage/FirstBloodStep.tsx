@@ -91,9 +91,9 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
           className="p-4 text-center"
           style={{
             background:
-              boutResult.outcome.by === 'Kill' ? 'rgba(135,34,40,0.12)' : 'rgba(201,151,42,0.06)',
+              boutResult.outcome.by === 'Kill' ? 'rgba(135,34,40,0.12)' : 'hsl(var(--arena-gold) / 0.06)',
             border: `1px solid ${
-              boutResult.outcome.by === 'Kill' ? 'rgba(135,34,40,0.4)' : 'rgba(201,151,42,0.25)'
+              boutResult.outcome.by === 'Kill' ? 'rgba(135,34,40,0.4)' : 'hsl(var(--arena-gold) / 0.25)'
             }`,
           }}
         >
@@ -134,7 +134,7 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[hsl(var(--border) / 0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

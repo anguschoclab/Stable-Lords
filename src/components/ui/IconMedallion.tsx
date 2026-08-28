@@ -15,7 +15,7 @@ export function IconMedallion({ icon, className }: IconMedallionProps) {
         className="absolute inset-0 rounded-full"
         style={{
           background:
-            'conic-gradient(from 0deg, rgba(201, 151, 42, 0.5), rgba(201, 151, 42, 0.15), rgba(201, 151, 42, 0.5), rgba(201, 151, 42, 0.15), rgba(201, 151, 42, 0.5))',
+            'conic-gradient(from 0deg, hsl(var(--arena-gold) / 0.5), hsl(var(--arena-gold) / 0.15), hsl(var(--arena-gold) / 0.5), hsl(var(--arena-gold) / 0.15), hsl(var(--arena-gold) / 0.5))',
           padding: '1px',
         }}
       >

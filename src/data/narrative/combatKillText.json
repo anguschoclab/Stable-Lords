@@ -40,7 +40,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -233,6 +233,24 @@
       "{{defender}}'s body simply gives out, ruined beyond the capacity to live.",
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
       "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever."
-    ]
+    ],
+    "weapon_specific": {
+      "slashing": [
+        "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
+      ],
+      "piercing": [
+        "{{attacker}} drives their point straight through {{defender}}'s heart.",
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
+      ],
+      "bashing": [
+        "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
+      ],
+      "fist": [
+        "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
+      ]
+    }
   }
 }

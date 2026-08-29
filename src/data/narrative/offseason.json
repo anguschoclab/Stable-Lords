@@ -354,6 +354,27 @@
       "newsletter": [
         "A grueling but highly effective offseason training camp pushed your warriors to their absolute limits. {{name}} emerged stronger and wiser, earning significant XP! (+{{xp}} XP)"
       ]
+    },
+    "shattered_skies_ritual": {
+      "title": "Shattered Skies Ritual",
+      "effectType": "shattered_skies_ritual",
+      "newsletter": [
+        "A bizarre ritual in the training yard seemingly shattered the sky. {{name}} feels empowered but deeply exhausted. (+25 XP, +15 Fatigue)"
+      ]
+    },
+    "weeping_skies": {
+      "title": "Weeping Skies",
+      "effectType": "weeping_skies",
+      "newsletter": [
+        "An unnatural rain fell, leaving the sand slick and cold. {{name}} spent the day reflecting in the downpour. (+20 XP)"
+      ]
+    },
+    "suspicious_mushroom_stew": {
+      "title": "Suspicious Mushroom Stew",
+      "effectType": "suspicious_mushroom_stew",
+      "newsletter": [
+        "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
+      ]
     }
   },
   "events": {

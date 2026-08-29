@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 139; // 100 baseline + 20 new traits + 3 from #769 + 5 from refactor + 4 from #788 + 3 from #784 + 3 narrative traits + 1 gutter_shadow
+const EXPECTED_COUNT = 141; // 100 baseline + 20 new traits + 3 from #769 + 5 from refactor + 4 from #788 + 3 from #784 + 3 narrative traits + 1 gutter_shadow + 2 from #expand-narrative-lore
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

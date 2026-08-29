@@ -900,6 +900,26 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+  gutter_survivor: {
+    id: 'gutter_survivor',
+    name: 'Gutter Survivor',
+    description: '+1 defense when bloodied (HP < 50%), +1 initiative — forged in the dirty alleys where hesitation means death.',
+    effect: { defModLowHp: 1, iniMod: 1 },
+    weight: 0.6,
+    synergy: ['cunning'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  void_touched: {
+    id: 'void_touched',
+    name: 'Void Touched',
+    description: '+2 decisiveness, -1 defense — stared into the abyss, leaving them terrifyingly decisive but careless of their own safety.',
+    effect: { decMod: 2, defMod: -1 },
+    weight: 0.5,
+    synergy: ['brutal'],
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

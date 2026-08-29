@@ -148,6 +148,21 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
 
   // ─── Arena-Tag + Weather Combinations ────────────────────────────────────
+
+  'cursed:Dense Fog': {
+    riposteMod: WEATHER_PENALTIES.ASYLUM_CURSE_RIPOSTE,
+    description: 'Cursed fog heavily favors ripostes',
+  },
+  'indoor:Blood Moon': {
+    damageMult: WEATHER_PENALTIES.ASYLUM_CURSE_DRAIN,
+    description: 'Blood Moon echoes in closed cursed spaces',
+  },
+  'living:Ashfall': {
+    initiativeMod: WEATHER_PENALTIES.VOLCANIC_HEAT_INITIATIVE,
+    damageMult: WEATHER_PENALTIES.VOLCANIC_HEAT_DAMAGE,
+    description: 'Living ash clouds burn lungs and empower strikes',
+  },
+
   // These stack with base weather effects
 
 

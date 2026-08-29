@@ -474,6 +474,10 @@ export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
 }
 
 export const WEATHER_PENALTIES = {
+  ASYLUM_CURSE_DRAIN: 1.25,
+  VOLCANIC_HEAT_INITIATIVE: -2,
+  ASYLUM_CURSE_RIPOSTE: 2,
+  VOLCANIC_HEAT_DAMAGE: 1.1,
   MIST_SHROUDED_DEFENSE_PENALTY: 0.9,
   GALLOWS_CURSE_DAMAGE: 1.15,
   RAIN_LUNGE_INITIATIVE: -2,

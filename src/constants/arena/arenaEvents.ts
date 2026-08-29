@@ -136,6 +136,27 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
 
   // ─── Water Events ───────────────────────────────────────────────────────
 
+  volcanic_eruption: {
+    id: 'volcanic_eruption',
+    name: 'Volcanic Eruption',
+    description: 'The crater spews fire and ash',
+    requiredTags: ['living'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.VOLCANIC_ERUPTION_TRIGGER,
+    narrativeText: 'A vent violently erupts, showering the arena with searing ash!',
+  },
+
+  whispers_of_madness: {
+    id: 'whispers_of_madness',
+    name: 'Whispers of Madness',
+    description: 'The cursed asylum echoes with spectral torment',
+    requiredTags: ['cursed', 'indoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.WHISPERS_OF_MADNESS_TRIGGER,
+    narrativeText: 'Ghostly screams echo off the walls, fraying the nerves of the fighters!',
+  },
+
+
   // ─── Premium Events ────────────────────────────────────────────────────
   crowd_riot: {
     id: 'crowd_riot',

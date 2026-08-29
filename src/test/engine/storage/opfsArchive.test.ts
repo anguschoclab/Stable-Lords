@@ -266,7 +266,10 @@ describe('OPFS Archival System', () => {
 
       const result = await service.getArchivedBoutIdsForSeason(1);
       expect(result).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith('Error getting archived bout ids:', expect.any(Error));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error getting archived bout ids:',
+        expect.any(Error)
+      );
 
       consoleSpy.mockRestore();
     });
@@ -340,7 +343,11 @@ describe('OPFS Archival System', () => {
 
   describe('Suite 13: retrieveHotState with plausibility check', () => {
     const minimalState = {
-      meta: { gameName: 'Test', version: SAVE_STATE_VERSION, createdAt: '2024-01-01T00:00:00.000Z' },
+      meta: {
+        gameName: 'Test',
+        version: SAVE_STATE_VERSION,
+        createdAt: '2024-01-01T00:00:00.000Z',
+      },
       ftueComplete: true,
       isFTUE: false,
       isTournamentWeek: false,

@@ -60,7 +60,7 @@ export default function ActionButtons({
         variant={mostRecent ? 'outline' : 'default'}
         className={`w-full gap-2 font-display font-bold tracking-wider uppercase ${
           mostRecent
-            ? 'h-11 text-sm border-[rgba(60,42,22,0.9)] hover:border-accent/40 bg-transparent hover:bg-accent/5 text-foreground/80 hover:text-accent'
+            ? 'h-11 text-sm border-border hover:border-accent/40 bg-transparent hover:bg-accent/5 text-foreground/80 hover:text-accent'
             : 'h-14 text-sm'
         }`}
         size="lg"

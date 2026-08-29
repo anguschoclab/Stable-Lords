@@ -38,7 +38,7 @@ export const surfaceVariants = cva('relative overflow-hidden transition-all dura
       paper: [
         'shadow-xl border-2 border-double',
         'bg-background',
-        'border-[rgba(60,42,22,0.7)]',
+        'border-border',
         '[border-top-color:rgba(100,70,36,0.5)]',
         '[background-image:linear-gradient(145deg,rgba(24,16,9,0.9)_0%,rgba(18,12,7,0.95)_50%,rgba(22,15,8,0.9)_100%)]',
       ],

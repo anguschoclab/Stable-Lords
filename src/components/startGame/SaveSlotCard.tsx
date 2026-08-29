@@ -90,6 +90,7 @@ export default function SaveSlotCard({
             variant="ghost"
             size="icon"
             className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150"
+            aria-label="Export save"
             onClick={(e) => {
               e.stopPropagation();
               onExport();
@@ -103,6 +104,7 @@ export default function SaveSlotCard({
             variant="ghost"
             size="icon"
             className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150"
+            aria-label="Delete save"
             onClick={(e) => {
               e.stopPropagation();
               onDelete();

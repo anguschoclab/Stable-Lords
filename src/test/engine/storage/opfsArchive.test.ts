@@ -245,6 +245,31 @@ describe('OPFS Archival System', () => {
 
       consoleSpy.mockRestore();
     });
+
+    it('Test 10.5: retrieveGazette logs warning on generic error', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSError('UnknownError', 'getFileHandle');
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const result = await service.retrieveGazette(1, 1);
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith('Error retrieving gazette:', expect.any(Error));
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 10.6: getArchivedBoutIdsForSeason catches generic error', async () => {
+      const service = new OPFSArchiveService();
+      // To bypass getDirectory catching it, we mock 'values' instead.
+      setMockOPFSError('UnknownError', 'values');
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const result = await service.getArchivedBoutIdsForSeason(1);
+      expect(result).toEqual([]);
+      expect(consoleSpy).toHaveBeenCalledWith('Error getting archived bout ids:', expect.any(Error));
+
+      consoleSpy.mockRestore();
+    });
   });
 
   describe('Suite 11: Writable stream close error handling', () => {
@@ -253,11 +278,14 @@ describe('OPFS Archival System', () => {
       setMockOPFSError('AbortError', 'close');
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      await expect(service.archiveHotState('slot1', {} as any)).resolves.toBeUndefined();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to close writable stream:',
-        expect.any(Error)
-      );
+      await service.archiveHotState('slot1', {} as any);
+      // Wait for the enqueue queue to empty
+      await vi.waitFor(() => {
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Failed to close writable stream:',
+          expect.any(Error)
+        );
+      });
 
       consoleSpy.mockRestore();
     });
@@ -283,11 +311,14 @@ describe('OPFS Archival System', () => {
       setMockOPFSError('AbortError', 'close');
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      await expect(service.archiveGazette(1, 1, '# Gazette')).resolves.toBeUndefined();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to close writable stream:',
-        expect.any(Error)
-      );
+      await service.archiveGazette(1, 1, '# Gazette');
+      // Wait for the enqueue queue to empty
+      await vi.waitFor(() => {
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Failed to close writable stream:',
+          expect.any(Error)
+        );
+      });
 
       consoleSpy.mockRestore();
     });

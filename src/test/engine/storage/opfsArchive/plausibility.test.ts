@@ -203,6 +203,18 @@ describe('isPlausibleGameState', () => {
     expect(isPlausibleGameState(state)).toBe(false);
   });
 
+  it('42. treasury not a number → false', () => {
+    const state = makeMinimalGameState();
+    state.treasury = '100';
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
+
+  it('43. day not a number → false', () => {
+    const state = makeMinimalGameState();
+    state.day = 'Monday';
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
+
   // ── Array field checks ────────────────────────────────────────────────
   it('21. Missing roster → false', () => {
     const state = makeMinimalGameState();
@@ -274,6 +286,18 @@ describe('isPlausibleGameState', () => {
   it('28. progression is null → false', () => {
     const state = makeMinimalGameState();
     state.progression = null;
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
+
+  it('44. boutOffers not an object → false', () => {
+    const state = makeMinimalGameState();
+    state.boutOffers = [];
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
+
+  it('45. realmRankings not an object → false', () => {
+    const state = makeMinimalGameState();
+    state.realmRankings = 'Rankings';
     expect(isPlausibleGameState(state)).toBe(false);
   });
 

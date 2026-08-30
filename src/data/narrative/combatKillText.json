@@ -40,7 +40,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -233,6 +233,16 @@
       "{{defender}}'s body simply gives out, ruined beyond the capacity to live.",
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
       "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever."
+    ],
+    "default": [
+      "The fatal blow is delivered with cold, mechanical efficiency, instantly halting {{defender}}'s vitals.",
+      "A surgical strike from {{attacker}} completely severs {{defender}}'s essential lifelines.",
+      "With a final, desperate gasp, {{defender}} falls, their soul joining the countless ghosts of the arena!",
+      "{{attacker}} raises their weapon high as {{defender}}'s lifeblood paints the hot sands crimson!",
+      "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
+      "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
+      "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
     ]
   }
 }

@@ -59,10 +59,10 @@ function RootComponent() {
       <AppShell>
         <React.Suspense
           fallback={
-            <div className="h-screen w-screen bg-[#0d0f14] flex flex-col items-center justify-center font-mono text-[10px] uppercase tracking-[0.5em] text-primary/80 animate-pulse">
+            <div className="h-screen w-screen bg-[#0d0f14] flex flex-col items-center justify-center font-mono text-[10px] uppercase tracking-[0.5em] text-primary/80 animate-pulse motion-reduce:animate-none">
               <div className="mb-4">Unsealing the Archive...</div>
               <div className="w-48 h-[1px] bg-primary/20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-primary/60 animate-progress" />
+                <div className="absolute inset-0 bg-primary/60 animate-progress motion-reduce:animate-none" />
               </div>
             </div>
           }
@@ -83,7 +83,7 @@ export const Route = createRootRoute({
   errorComponent: ({ error }) => (
     <div className="flex min-h-screen items-center justify-center bg-[#050506]">
       <div className="text-center font-mono max-w-md p-8">
-        <div className="text-destructive text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse">
+        <div className="text-destructive text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse motion-reduce:animate-none">
           Critical Error
         </div>
         <h1 className="text-foreground text-4xl font-bold uppercase tracking-widest mb-4">
@@ -94,7 +94,7 @@ export const Route = createRootRoute({
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="text-primary text-[10px] uppercase tracking-[0.4em] border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="text-primary text-[10px] uppercase tracking-[0.4em] border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors motion-reduce:transition-none"
         >
           Reload Archive
         </button>

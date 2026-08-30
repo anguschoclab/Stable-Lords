@@ -221,14 +221,10 @@ export const ORIGINS: string[] = [
   'Raised by feral hounds in the ruins of the Old Cathedral of the Weeping Mother',
   'Survived the silent culling of the Hollow Hill Orphanage during the long winter',
   'Found swaddled in blood-stained rags in the catacombs beneath the Dross Wards',
+  'Raised in the lightless cellars of the Harrow-Home for Wayward Foundlings',
   'Sold to the under-barons of the Scab District for a handful of copper by desperate parents',
   'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse',
   'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity',
-  'Abandoned at the foot of the Weeping Spire during a blood moon',
-  'Raised by the blind monks of the Silent Sisterhood',
-  'Found shivering amidst the wreckage of a sunken slave galley',
-  'Survived the decade-long famine of the Rust Wastes by eating rats',
-  'Sold to the flesh-peddlers of the Lower Sump for a handful of silver',
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
@@ -346,9 +342,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   'practiced throwing rusted spoons with lethal accuracy',
   'learned to sleep with one eye open and a knife in hand',
   "never cried out when the overseer's lash fell",
-  'learned to count by tallying the fresh graves each morning',
-  'would fashion crude shanks from the bones of their meager meals',
-  'developed a terrifyingly serene composure whenever blood was drawn',
 ];
 
 export const DEFINING_MOMENTS: string[] = [
@@ -452,8 +445,6 @@ export const DEFINING_MOMENTS: string[] = [
 
   'knowing that the roar of the crowd was the only lullaby they ever needed',
   "until they shattered a warden’s jaw with a single, perfectly timed kick",
+  'realizing the arena was the only place where their rage was rewarded with silver',
   "until they drove a splintered chair leg through a slaver's hand and walked free",
-  'until they realized the only way to not bleed is to make someone else bleed first',
-  'knowing the roar of the crowd is the only eulogy they will ever need',
-  'until they gouged out the eye of a slaver with a broken cobblestone',
 ];

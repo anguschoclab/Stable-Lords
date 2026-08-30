@@ -1142,22 +1142,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
-  {
-    id: 'brass_ring_molten_tomb_2',
-    arenaId: 'brass_ring',
-    type: 'historical_battle',
-    title: 'The Copper Uprising',
-    narrative:
-      'A dozen fighters turned their weapons against the guards, holding the arena for a full day before the outer heating coils were set to maximum, cooking them alive.',
-  },
-  {
-    id: 'underpit_arena_crushing_dark_2',
-    arenaId: 'underpit_arena',
-    type: 'famous_death',
-    title: 'The Silent Choke',
-    narrative:
-      'A celebrated brute was strangled in complete darkness by a nameless challenger. The crowd only knew it was over when they heard the heavy thud of his armored corpse.',
-  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

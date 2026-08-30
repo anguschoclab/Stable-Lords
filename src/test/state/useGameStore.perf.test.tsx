@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 /**
  * useGameStore performance tests.
  * @vitest-environment jsdom
@@ -37,7 +38,7 @@ const RenderTracker = ({
   renderCountRef: React.MutableRefObject<number>;
 }) => {
   const value = useTestStore(selector);
-  renderCountRef.current++;
+  useEffect(() => { renderCountRef.current++; });
   return <div data-testid="value">{JSON.stringify(value)}</div>;
 };
 
@@ -48,7 +49,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
   });
 
   it('re-renders when selected state changes', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     const selector = (s: any) => s.treasury;
 
     render(<RenderTracker selector={selector} renderCountRef={renderCountRef} />);
@@ -64,7 +65,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
   });
 
   it('does NOT re-render when unrelated state changes (with precise selector)', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     const selector = (s: any) => s.treasury;
 
     render(<RenderTracker selector={selector} renderCountRef={renderCountRef} />);
@@ -86,7 +87,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
 
     const WithShallow = () => {
       const val = useTestStore(useShallow(selector));
-      renderCountWithShallowRef.current++;
+      useEffect(() => { renderCountWithShallowRef.current++; });
       return <div>{val.treasury}</div>;
     };
 

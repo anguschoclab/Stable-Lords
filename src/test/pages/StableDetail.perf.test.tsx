@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 /**
  * StableDetail performance tests — verify useShallow selector prevents
  * unnecessary re-renders when unrelated store state changes.
@@ -35,7 +36,7 @@ const RenderTracker = ({ renderCountRef }: { renderCountRef: React.MutableRefObj
   const { rivals, arenaHistory } = useTestStore(
     useShallow((s) => ({ rivals: s.rivals, arenaHistory: s.arenaHistory }))
   );
-  renderCountRef.current++;
+  useEffect(() => { renderCountRef.current++; });
   return (
     <div data-testid="render-tracker">
       <span data-testid="rivals-count">{rivals.length}</span>
@@ -56,7 +57,7 @@ describe('StableDetail useShallow optimization', () => {
   });
 
   it('does not re-render when unrelated state changes', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     render(<RenderTracker renderCountRef={renderCountRef} />);
     expect(renderCountRef.current).toBe(1);
 
@@ -70,7 +71,7 @@ describe('StableDetail useShallow optimization', () => {
   });
 
   it('does not re-render when treasury changes', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     render(<RenderTracker renderCountRef={renderCountRef} />);
     expect(renderCountRef.current).toBe(1);
 
@@ -84,7 +85,7 @@ describe('StableDetail useShallow optimization', () => {
   });
 
   it('does not re-render when crowdMood changes', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     render(<RenderTracker renderCountRef={renderCountRef} />);
     expect(renderCountRef.current).toBe(1);
 
@@ -98,7 +99,7 @@ describe('StableDetail useShallow optimization', () => {
   });
 
   it('re-renders when rivals array changes', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     render(<RenderTracker renderCountRef={renderCountRef} />);
     expect(renderCountRef.current).toBe(1);
 
@@ -112,7 +113,7 @@ describe('StableDetail useShallow optimization', () => {
   });
 
   it('re-renders when arenaHistory changes', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     render(<RenderTracker renderCountRef={renderCountRef} />);
     expect(renderCountRef.current).toBe(1);
 
@@ -126,7 +127,7 @@ describe('StableDetail useShallow optimization', () => {
   });
 
   it('useShallow prevents re-render when same reference returned', async () => {
-    const renderCountRef = { current: 0 };
+    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
     render(<RenderTracker renderCountRef={renderCountRef} />);
     expect(renderCountRef.current).toBe(1);
 

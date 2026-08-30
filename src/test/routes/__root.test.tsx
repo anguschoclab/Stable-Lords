@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 /**
  * RootComponent — verifies narrowed ftueComplete selector prevents
  * re-renders when unrelated store state changes.
@@ -43,7 +44,7 @@ interface TestStore {
 // Minimal test component that mirrors RootComponent's selector pattern
 let testRenderCountRef = { current: 0 };
 function TestRootComponent() {
-  testRenderCountRef.current++;
+  useEffect(() => { testRenderCountRef.current++; });
   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;
 

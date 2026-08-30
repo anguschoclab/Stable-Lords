@@ -99,6 +99,33 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  alley_stalker: {
+    id: 'alley_stalker',
+    name: 'Alley Stalker',
+    description: 'Raised in the slums, they fight harder when cornered.',
+    effect: { attModLate: 1, defModLate: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  feral_instincts: {
+    id: 'feral_instincts',
+    name: 'Feral Instincts',
+    description: 'Possesses a beast-like reaction time born of necessity.',
+    effect: { iniMod: 2, ripMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.7,
+  },
+  scar_tissue: {
+    id: 'scar_tissue',
+    name: 'Scar Tissue',
+    description: 'Thickened skin from a lifetime of beatings.',
+    effect: { defMod: 1, enduranceMult: 0.95 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',

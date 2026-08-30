@@ -1142,6 +1142,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
+  {
+    id: 'lore_blood_pit_mutiny',
+    arenaId: 'blood_pit',
+    type: 'historical_battle',
+    title: 'The Blood Pit Mutiny',
+    narrative:
+      'A legendary revolt where gladiators turned on their masters, painting the sands crimson before being inevitably crushed.',
+  },
+  {
+    id: 'lore_silent_champion',
+    arenaId: 'the_abyssal_pit',
+    type: 'myth',
+    title: 'The Silent Champion',
+    narrative:
+      'The tale of a mute warrior who never lost a bout and vanished without a trace into the shadows of the Abyss.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

@@ -1,0 +1,134 @@
+diff --git a/src/test/pages/StableDetail.perf.test.tsx b/src/test/pages/StableDetail.perf.test.tsx
+index aa5d13b..ec3d8ca 100644
+--- a/src/test/pages/StableDetail.perf.test.tsx
++++ b/src/test/pages/StableDetail.perf.test.tsx
+@@ -1,3 +1,4 @@
++import { useEffect } from "react";
+ /**
+  * StableDetail performance tests — verify useShallow selector prevents
+  * unnecessary re-renders when unrelated store state changes.
+@@ -35,7 +36,7 @@ const RenderTracker = ({ renderCountRef }: { renderCountRef: React.MutableRefObj
+   const { rivals, arenaHistory } = useTestStore(
+     useShallow((s) => ({ rivals: s.rivals, arenaHistory: s.arenaHistory }))
+   );
+-  renderCountRef.current++;
++  useEffect(() => { renderCountRef.current++; });
+   return (
+     <div data-testid="render-tracker">
+       <span data-testid="rivals-count">{rivals.length}</span>
+@@ -56,7 +57,7 @@ describe('StableDetail useShallow optimization', () => {
+   });
+
+   it('does not re-render when unrelated state changes', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     render(<RenderTracker renderCountRef={renderCountRef} />);
+     expect(renderCountRef.current).toBe(1);
+
+@@ -70,7 +71,7 @@ describe('StableDetail useShallow optimization', () => {
+   });
+
+   it('does not re-render when treasury changes', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     render(<RenderTracker renderCountRef={renderCountRef} />);
+     expect(renderCountRef.current).toBe(1);
+
+@@ -84,7 +85,7 @@ describe('StableDetail useShallow optimization', () => {
+   });
+
+   it('does not re-render when crowdMood changes', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     render(<RenderTracker renderCountRef={renderCountRef} />);
+     expect(renderCountRef.current).toBe(1);
+
+@@ -98,7 +99,7 @@ describe('StableDetail useShallow optimization', () => {
+   });
+
+   it('re-renders when rivals array changes', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     render(<RenderTracker renderCountRef={renderCountRef} />);
+     expect(renderCountRef.current).toBe(1);
+
+@@ -112,7 +113,7 @@ describe('StableDetail useShallow optimization', () => {
+   });
+
+   it('re-renders when arenaHistory changes', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     render(<RenderTracker renderCountRef={renderCountRef} />);
+     expect(renderCountRef.current).toBe(1);
+
+@@ -126,7 +127,7 @@ describe('StableDetail useShallow optimization', () => {
+   });
+
+   it('useShallow prevents re-render when same reference returned', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     render(<RenderTracker renderCountRef={renderCountRef} />);
+     expect(renderCountRef.current).toBe(1);
+
+diff --git a/src/test/routes/__root.test.tsx b/src/test/routes/__root.test.tsx
+index 06b5c05..900540a 100644
+--- a/src/test/routes/__root.test.tsx
++++ b/src/test/routes/__root.test.tsx
+@@ -1,3 +1,4 @@
++import { useEffect } from "react";
+ /**
+  * RootComponent — verifies narrowed ftueComplete selector prevents
+  * re-renders when unrelated store state changes.
+@@ -43,7 +44,7 @@ interface TestStore {
+ // Minimal test component that mirrors RootComponent's selector pattern
+ let testRenderCountRef = { current: 0 };
+ function TestRootComponent() {
+-  testRenderCountRef.current++;
++  useEffect(() => { testRenderCountRef.current++; });
+   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
+   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;
+
+diff --git a/src/test/state/useGameStore.perf.test.tsx b/src/test/state/useGameStore.perf.test.tsx
+index 7239e7a..bf0a16d 100644
+--- a/src/test/state/useGameStore.perf.test.tsx
++++ b/src/test/state/useGameStore.perf.test.tsx
+@@ -1,3 +1,4 @@
++import { useEffect } from "react";
+ /**
+  * useGameStore performance tests.
+  * @vitest-environment jsdom
+@@ -37,7 +38,7 @@ const RenderTracker = ({
+   renderCountRef: React.MutableRefObject<number>;
+ }) => {
+   const value = useTestStore(selector);
+-  renderCountRef.current++;
++  useEffect(() => { renderCountRef.current++; });
+   return <div data-testid="value">{JSON.stringify(value)}</div>;
+ };
+
+@@ -48,7 +49,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
+   });
+
+   it('re-renders when selected state changes', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     const selector = (s: any) => s.treasury;
+
+     render(<RenderTracker selector={selector} renderCountRef={renderCountRef} />);
+@@ -64,7 +65,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
+   });
+
+   it('does NOT re-render when unrelated state changes (with precise selector)', async () => {
+-    const renderCountRef = { current: 0 };
++    const renderCountRef = { current: 0 } as React.MutableRefObject<number>;
+     const selector = (s: any) => s.treasury;
+
+     render(<RenderTracker selector={selector} renderCountRef={renderCountRef} />);
+@@ -86,7 +87,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
+
+     const WithShallow = () => {
+       const val = useTestStore(useShallow(selector));
+-      renderCountWithShallowRef.current++;
++      useEffect(() => { renderCountWithShallowRef.current++; });
+       return <div>{val.treasury}</div>;
+     };

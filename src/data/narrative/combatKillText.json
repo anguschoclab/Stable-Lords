@@ -40,7 +40,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -91,7 +91,9 @@
       "The sands drink deeply today.",
       "A chillingly precise maneuver from {{attacker}} ends {{defender}}'s life before they even realize they are dead.",
       "{{attacker}} dispatches {{defender}} with an almost clinical detachment, a perfect, fatal strike.",
-      "The arena goes dead silent as {{attacker}} brutally, efficiently executes {{defender}}."
+      "The arena goes dead silent as {{attacker}} brutally, efficiently executes {{defender}}.",
+      "The blow shatters bone and splinters reality; {{defender}} is dead before they hit the ground, another sacrifice to the pit.",
+      "A cold, clinical strike severs the spine. {{defender}} collapses like a puppet with cut strings, ending the bout."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -232,7 +234,9 @@
       "Bleeding out on the arena floor, {{defender}} draws their final, shuddering breath.",
       "{{defender}}'s body simply gives out, ruined beyond the capacity to live.",
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
-      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever."
+      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever.",
+      "Blood flows in rivers as {{defender}} takes a hit they cannot walk away from, their life pouring into the hungry sands.",
+      "The final strike is unceremonious and brutal, snuffing out {{defender}}'s life with dull, wet finality."
     ]
   }
 }

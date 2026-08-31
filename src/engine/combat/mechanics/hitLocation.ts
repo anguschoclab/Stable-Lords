@@ -6,7 +6,13 @@
  *
  */
 export type HitLocation =
-  'head' | 'chest' | 'abdomen' | 'right arm' | 'left arm' | 'right leg' | 'left leg';
+  | 'head'
+  | 'chest'
+  | 'abdomen'
+  | 'right arm'
+  | 'left arm'
+  | 'right leg'
+  | 'left leg';
 
 export const HIT_LOCATIONS = [
   'head',

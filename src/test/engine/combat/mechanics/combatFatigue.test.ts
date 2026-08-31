@@ -47,7 +47,7 @@ describe('Combat Fatigue Mechanics', () => {
     });
 
     it('handles zero maxEndurance gracefully by returning heavy penalty', () => {
-       expect(fatiguePenalty(0, 0)).toBe(-8);
+      expect(fatiguePenalty(0, 0)).toBe(-8);
     });
   });
 });

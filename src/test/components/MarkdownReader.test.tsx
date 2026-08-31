@@ -94,9 +94,7 @@ describe('MarkdownReader', () => {
   });
 
   it('XSS: does not render raw HTML script tags', () => {
-    const { container } = render(
-      <MarkdownReader content="<script>alert('xss')</script>" />
-    );
+    const { container } = render(<MarkdownReader content="<script>alert('xss')</script>" />);
     expect(container.querySelector('script')).toBeNull();
   });
 

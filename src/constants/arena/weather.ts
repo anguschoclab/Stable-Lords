@@ -464,7 +464,8 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-purple-400',
     bgClass: 'bg-purple-900/10',
     borderClass: 'border-purple-500/20',
-    description: 'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
+    description:
+      'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
 };
 

@@ -29,7 +29,7 @@ describe('Warrior Lookup Utilities', () => {
     const warrior = { id: 'w-rival' } as Warrior;
     const state = {
       roster: [],
-      rivals: [{ id: 'rival-1', roster: [warrior] }]
+      rivals: [{ id: 'rival-1', roster: [warrior] }],
     } as unknown as GameState;
 
     expect(findWarriorById(state, 'w-rival')).toBe(warrior);

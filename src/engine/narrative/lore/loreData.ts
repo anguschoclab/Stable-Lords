@@ -444,7 +444,7 @@ export const DEFINING_MOMENTS: string[] = [
   "until they drove a shattered bottle into their tormentor's eye and fled",
 
   'knowing that the roar of the crowd was the only lullaby they ever needed',
-  "until they shattered a warden’s jaw with a single, perfectly timed kick",
+  'until they shattered a warden’s jaw with a single, perfectly timed kick',
   'realizing the arena was the only place where their rage was rewarded with silver',
   "until they drove a splintered chair leg through a slaver's hand and walked free",
 ];

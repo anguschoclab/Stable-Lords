@@ -457,7 +457,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: 2,
     riposteMod: -2,
     damageMult: 1.15,
-    description: 'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
+    description:
+      'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
 };
 

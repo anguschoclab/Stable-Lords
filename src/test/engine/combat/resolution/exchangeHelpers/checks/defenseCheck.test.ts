@@ -21,7 +21,12 @@ describe('defenseCheck', () => {
 
   it('performs a dodge check successfully', () => {
     const rng = () => 0.05; // roll a 5
-    const def = { skills: { DEF: 90, PAR: 90 }, legHits: 0, armHits: 0, committed: false } as FighterState;
+    const def = {
+      skills: { DEF: 90, PAR: 90 },
+      legHits: 0,
+      armHits: 0,
+      committed: false,
+    } as FighterState;
 
     const result = performDefenseCheck(
       rng,
@@ -47,7 +52,12 @@ describe('defenseCheck', () => {
 
   it('performs a parry check successfully', () => {
     const rng = () => 0.05; // roll a 5
-    const def = { skills: { DEF: 100, PAR: 100 }, legHits: 0, armHits: 0, committed: false } as FighterState;
+    const def = {
+      skills: { DEF: 100, PAR: 100 },
+      legHits: 0,
+      armHits: 0,
+      committed: false,
+    } as FighterState;
 
     const result = performDefenseCheck(
       rng,
@@ -73,7 +83,12 @@ describe('defenseCheck', () => {
 
   it('performs a dodge check unsuccessfully', () => {
     const rng = () => 0.95; // roll a 95
-    const def = { skills: { DEF: 50, PAR: 50 }, legHits: 0, armHits: 0, committed: false } as FighterState;
+    const def = {
+      skills: { DEF: 50, PAR: 50 },
+      legHits: 0,
+      armHits: 0,
+      committed: false,
+    } as FighterState;
 
     const result = performDefenseCheck(
       rng,
@@ -99,7 +114,12 @@ describe('defenseCheck', () => {
 
   it('adds penalty when attacker is committed', () => {
     const rng = () => 0.05; // roll a 5
-    const def = { skills: { DEF: 10, PAR: 10 }, legHits: 0, armHits: 0, committed: false } as FighterState;
+    const def = {
+      skills: { DEF: 10, PAR: 10 },
+      legHits: 0,
+      armHits: 0,
+      committed: false,
+    } as FighterState;
     const attacker = { committed: true } as FighterState;
 
     // Test that the +15 defense bonus for committed attacker allows a successful parry that would otherwise fail

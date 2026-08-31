@@ -22,7 +22,11 @@ import { StyleRollups } from '@/engine/stats/styleRollups';
 import { engineProxy } from '@/engine/workerProxy';
 import type { GameState } from '@/types/state.types';
 
-function makeMinimalState(overrides: Partial<GameState> = {/* empty */}): GameState {
+function makeMinimalState(
+  overrides: Partial<GameState> = {
+    /* empty */
+  }
+): GameState {
   return {
     meta: { gameName: 'Test', version: 'test', createdAt: '2024-01-01' },
     treasury: 1000,
@@ -37,15 +41,21 @@ function makeMinimalState(overrides: Partial<GameState> = {/* empty */}): GameSt
       id: 'p1',
       name: 'Test',
       stableName: 'Test',
-      crest: {/* empty */} as any,
+      crest: {
+        /* empty */
+      } as any,
       generation: 0,
     },
     week: 1,
     day: 0,
     season: 'Spring',
     weather: 'Clear',
-    promoters: {/* empty */},
-    boutOffers: {/* empty */},
+    promoters: {
+      /* empty */
+    },
+    boutOffers: {
+      /* empty */
+    },
     rivals: [],
     gazettes: [],
     scoutReports: [],
@@ -57,7 +67,9 @@ function makeMinimalState(overrides: Partial<GameState> = {/* empty */}): GameSt
     year: 1,
     popularity: 0,
     fame: 0,
-    realmRankings: {/* empty */},
+    realmRankings: {
+      /* empty */
+    },
     awards: [],
     trainers: [],
     hiringPool: [],

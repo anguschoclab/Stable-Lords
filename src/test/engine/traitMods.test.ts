@@ -35,13 +35,23 @@ describe('traitMods', () => {
 
   describe('getDynamicTraitMods', () => {
     it('returns default mods if warrior has no traits', () => {
-      const ctx: DynamicTraitContext = { phase: 'MID', hpRatio: 1, endRatio: 1, consecutiveHits: 0 };
+      const ctx: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 1,
+        endRatio: 1,
+        consecutiveHits: 0,
+      };
       const result = getDynamicTraitMods({}, ctx);
       expect(result).toEqual({ attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 });
     });
 
     it('returns default mods if warrior is undefined', () => {
-      const ctx: DynamicTraitContext = { phase: 'MID', hpRatio: 1, endRatio: 1, consecutiveHits: 0 };
+      const ctx: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 1,
+        endRatio: 1,
+        consecutiveHits: 0,
+      };
       const result = getDynamicTraitMods(undefined, ctx);
       expect(result.attMod).toBe(0);
     });
@@ -51,12 +61,22 @@ describe('traitMods', () => {
       const warrior = { traits: ['cornered_beast'] };
 
       // High HP
-      const ctxHigh: DynamicTraitContext = { phase: 'MID', hpRatio: 0.8, endRatio: 0.5, consecutiveHits: 0 };
+      const ctxHigh: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 0.8,
+        endRatio: 0.5,
+        consecutiveHits: 0,
+      };
       let result = getDynamicTraitMods(warrior, ctxHigh);
       expect(result.defMod).toBe(0);
 
       // Low HP
-      const ctxLow: DynamicTraitContext = { phase: 'MID', hpRatio: 0.4, endRatio: 0.5, consecutiveHits: 0 };
+      const ctxLow: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 0.4,
+        endRatio: 0.5,
+        consecutiveHits: 0,
+      };
       result = getDynamicTraitMods(warrior, ctxLow);
       expect(result.defMod).toBe(2);
     });
@@ -66,12 +86,22 @@ describe('traitMods', () => {
       const warrior = { traits: ['paranoid'] };
 
       // Early
-      const ctxEarly: DynamicTraitContext = { phase: 'OPENING', hpRatio: 0.6, endRatio: 0.5, consecutiveHits: 0 };
+      const ctxEarly: DynamicTraitContext = {
+        phase: 'OPENING',
+        hpRatio: 0.6,
+        endRatio: 0.5,
+        consecutiveHits: 0,
+      };
       let result = getDynamicTraitMods(warrior, ctxEarly);
       expect(result.defMod).toBe(2);
 
       // Late
-      const ctxLate: DynamicTraitContext = { phase: 'LATE', hpRatio: 0.6, endRatio: 0.5, consecutiveHits: 0 };
+      const ctxLate: DynamicTraitContext = {
+        phase: 'LATE',
+        hpRatio: 0.6,
+        endRatio: 0.5,
+        consecutiveHits: 0,
+      };
       result = getDynamicTraitMods(warrior, ctxLate);
       expect(result.defMod).toBe(0);
     });
@@ -81,12 +111,22 @@ describe('traitMods', () => {
       const warrior = { traits: ['comboartist'] };
 
       // Consecutive hits < 2
-      const ctxLowHits: DynamicTraitContext = { phase: 'MID', hpRatio: 0.6, endRatio: 0.8, consecutiveHits: 1 };
+      const ctxLowHits: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 0.6,
+        endRatio: 0.8,
+        consecutiveHits: 1,
+      };
       let result = getDynamicTraitMods(warrior, ctxLowHits);
       expect(result.attMod).toBe(0);
 
       // Consecutive hits >= 2
-      const ctxHits: DynamicTraitContext = { phase: 'MID', hpRatio: 0.6, endRatio: 0.5, consecutiveHits: 2 };
+      const ctxHits: DynamicTraitContext = {
+        phase: 'MID',
+        hpRatio: 0.6,
+        endRatio: 0.5,
+        consecutiveHits: 2,
+      };
       result = getDynamicTraitMods(warrior, ctxHits);
       expect(result.attMod).toBe(1);
     });

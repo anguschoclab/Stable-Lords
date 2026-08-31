@@ -1,5 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { hasInjuries, countInjuries, getInjurySeverityCounts, hasInjuryOfSeverity, makeInjury } from '@/engine/injuries/utils';
+import {
+  hasInjuries,
+  countInjuries,
+  getInjurySeverityCounts,
+  hasInjuryOfSeverity,
+  makeInjury,
+} from '@/engine/injuries/utils';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { InjuryId } from '@/types/shared.types';
@@ -7,7 +13,9 @@ import type { InjuryId } from '@/types/shared.types';
 describe('Injury Utilities', () => {
   describe('hasInjuries', () => {
     it('returns true if warrior has injuries', () => {
-      const warrior = { injuries: [{ id: 'inj-1' as InjuryId, severity: 'Minor' as const }] } as unknown as Warrior;
+      const warrior = {
+        injuries: [{ id: 'inj-1' as InjuryId, severity: 'Minor' as const }],
+      } as unknown as Warrior;
       expect(hasInjuries(warrior)).toBe(true);
     });
 

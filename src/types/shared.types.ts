@@ -308,7 +308,14 @@ export interface NewsletterItem {
  * Attack target type.
  */
 export type AttackTarget =
-  'Head' | 'Chest' | 'Abdomen' | 'Right Arm' | 'Left Arm' | 'Right Leg' | 'Left Leg' | 'Any'; /**
+  | 'Head'
+  | 'Chest'
+  | 'Abdomen'
+  | 'Right Arm'
+  | 'Left Arm'
+  | 'Right Leg'
+  | 'Left Leg'
+  | 'Any'; /**
  * Protect target type.
  */
 
@@ -431,7 +438,12 @@ export interface PlanCondition {
  * Psych state type.
  */
 export type PsychState =
-  'Neutral' | 'InTheZone' | 'Rattled' | 'Desperate' | 'Cruising' | 'FatiguePanic'; /**
+  | 'Neutral'
+  | 'InTheZone'
+  | 'Rattled'
+  | 'Desperate'
+  | 'Cruising'
+  | 'FatiguePanic'; /**
  * Distance range type.
  */
 

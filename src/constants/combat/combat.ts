@@ -240,7 +240,7 @@ export const VETERAN_WISDOM_FACTOR = 0.25;
  * Allowed deviation from 50% for mirror-match A-side win rates
  * Engine A/D bias should be reduced toward 0.05 over time
  */
-export const MIRROR_MATCH_BAND = 0.10;
+export const MIRROR_MATCH_BAND = 0.1;
 
 /**
  * Target absolute-power band for overall style win rates (50% ± 10pp)

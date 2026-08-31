@@ -19,7 +19,11 @@ export const ORIGINS: string[] = [
   'Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings',
   'Survived the brutal winters huddled in the exhaust vents of the Grand Forge',
   'Raised as a nameless thrall in the fighting pits of the Undercity',
-  'Raised in the lightless cellars of the Harrow-Home for Foundlings',
+  'Found abandoned at the rusted iron gates of the Cinder-Ash Orphanage',
+  'Raised by the brutal wardens of the Hollow Hill Foundling House',
+  'Survived the silent starvation of the Weeping Sisters\' Ward',
+  'Sold into indentured servitude from the Blackbriar Workhouse at age four',
+  'Escaped the disease-ridden dormitories of the Lower Sump Orphanage',
   'Abandoned beneath the crumbling arches of the Weeping Aqueduct',
   'Found swaddled in blood-stained rags at the gates of the Silent Order',
   'Survived the brutal starvation of the Rat-Catcher Guilds',
@@ -342,6 +346,9 @@ export const CHILDHOOD_TRAITS: string[] = [
   'practiced throwing rusted spoons with lethal accuracy',
   'learned to sleep with one eye open and a knife in hand',
   "never cried out when the overseer's lash fell",
+  "always won the vicious scrap-fights for table scraps",
+  "learned to predict punches by watching the cruel wardens",
+  "developed an unnatural pain tolerance from years of lashings",
 ];
 
 export const DEFINING_MOMENTS: string[] = [
@@ -366,7 +373,6 @@ export const DEFINING_MOMENTS: string[] = [
   'until they garroted a cruel overseer and fled into the night',
   'waiting for the moment the iron portcullis of the arena would rise on their true destiny',
   'until they shattered a cruel overseer’s kneecap with a stolen hammer',
-  'realizing the arena was the only place where their rage was rewarded',
   'knowing that blood on the sands washes away the dirt of the slums',
   "until they broke a slaver's nose with a singular, perfectly timed headbutt",
   'waiting to turn the misery of their youth into a spectacle of vengeance',
@@ -447,4 +453,7 @@ export const DEFINING_MOMENTS: string[] = [
   "until they shattered a warden’s jaw with a single, perfectly timed kick",
   'realizing the arena was the only place where their rage was rewarded with silver',
   "until they drove a splintered chair leg through a slaver's hand and walked free",
+  'discovering that blood on the sands paid better than copper in the mines',
+  'strangling a debt collector and realizing their true calling was violence',
+  'being thrown into a pit fight to settle a bar tab and surviving against all odds',
 ];

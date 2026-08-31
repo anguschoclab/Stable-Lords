@@ -99,6 +99,24 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  street_rat_reflexes: {
+    id: 'street_rat_reflexes',
+    name: 'Street Rat Reflexes',
+    description: 'A lifetime of dodging the wardens’ cane translates to unnatural agility in the pit.',
+    effect: { defMod: 1, iniMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  orphan_spite: {
+    id: 'orphan_spite',
+    name: 'Orphan Spite',
+    description: 'Deep-seated anger at the world that fuels their strikes when they start falling behind.',
+    effect: { attModLate: 2 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.7,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',

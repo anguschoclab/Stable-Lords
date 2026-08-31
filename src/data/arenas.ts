@@ -504,6 +504,20 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'mudpit_arena_the_sinking',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Sinking',
+    narrative: 'A heavily wounded gladiator was swallowed whole by an unusually deep mud patch, their opponent declared victor by default.',
+  },
+  {
+    id: 'clifftop_arena_wind_shear',
+    arenaId: 'clifftop_arena',
+    type: 'architectural_quirk',
+    title: 'The Sudden Gusts',
+    narrative: 'Fighters must constantly adjust their footing, as unpredictable crosswinds have claimed more lives than the blades themselves.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

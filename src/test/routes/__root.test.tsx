@@ -9,6 +9,7 @@
  */
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import React from 'react';
 import { render, act } from '@testing-library/react';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -41,9 +42,9 @@ interface TestStore {
 }
 
 // Minimal test component that mirrors RootComponent's selector pattern
-let testRenderCountRef = { current: 0 };
+const testRenderCountRef = { current: 0 };
 function TestRootComponent() {
-  testRenderCountRef.current++;
+  React.useEffect(() => { testRenderCountRef.current++; });
   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;
 
@@ -86,7 +87,7 @@ describe('RootComponent narrowed selector', () => {
   it('does NOT re-render when unrelated state (treasury) changes', async () => {
     useTestStore.setState({ ftueComplete: true, atTitleScreen: false });
 
-    testRenderCountRef = { current: 0 };
+    testRenderCountRef.current = 0;
 
     render(<TestRootComponent />);
     expect(testRenderCountRef.current).toBe(1);
@@ -102,7 +103,7 @@ describe('RootComponent narrowed selector', () => {
   it('DOES re-render when ftueComplete changes', async () => {
     useTestStore.setState({ ftueComplete: false, atTitleScreen: false });
 
-    testRenderCountRef = { current: 0 };
+    testRenderCountRef.current = 0;
 
     const { getByTestId } = render(<TestRootComponent />);
     expect(getByTestId('orphanage')).toBeInTheDocument();

@@ -40,15 +40,22 @@ export function processStaff(
         : [];
       const pool = focusCandidates.length > 0 ? focusCandidates : affordable;
 
-      const first = pool[0];
-      if (!first) {
+      let best = pool[0];
+      if (!best) {
         throw new Error('Pool is unexpectedly empty');
       }
-      const best = pool.reduce(
-        (max, current) =>
-          (HIRE_COST[current.tier] ?? 0) > (HIRE_COST[max.tier] ?? 0) ? current : max,
-        first
-      );
+      let bestScore = HIRE_COST[best.tier] ?? 0;
+      // ⚡ Bolt: Single-pass loop to avoid redundant HIRE_COST lookups for the max item
+      for (let i = 1; i < pool.length; i++) {
+        const current = pool[i];
+        if (!current) continue;
+
+        const score = HIRE_COST[current.tier] ?? 0;
+        if (score > bestScore) {
+          best = current;
+          bestScore = score;
+        }
+      }
       const hireCost = HIRE_COST[best.tier] ?? 0;
       const budgetReport = checkBudget(updatedRival, hireCost, 'STAFF');
 

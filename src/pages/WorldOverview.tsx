@@ -15,15 +15,7 @@ import type { StableRow, WarriorRow } from '@/types/leaderboard';
 import { isActive } from '@/engine/warriorStatus';
 
 type SortField =
-  | 'rank'
-  | 'name'
-  | 'fame'
-  | 'wins'
-  | 'losses'
-  | 'kills'
-  | 'winRate'
-  | 'roster'
-  | 'tier';
+  'rank' | 'name' | 'fame' | 'wins' | 'losses' | 'kills' | 'winRate' | 'roster' | 'tier';
 type WarriorSortField =
   | 'name'
   | 'stable'

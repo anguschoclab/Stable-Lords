@@ -6,13 +6,7 @@
  *
  */
 export type BookmarkEntityType =
-  | 'warrior'
-  | 'rival'
-  | 'promoter'
-  | 'trainer'
-  | 'tournament'
-  | 'boutOffer'
-  | 'scoutReport';
+  'warrior' | 'rival' | 'promoter' | 'trainer' | 'tournament' | 'boutOffer' | 'scoutReport';
 
 /**
  *

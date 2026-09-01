@@ -44,7 +44,9 @@ interface TestStore {
 // Minimal test component that mirrors RootComponent's selector pattern
 const testRenderCountRef = { current: 0 };
 function TestRootComponent() {
-  React.useEffect(() => { testRenderCountRef.current++; });
+  React.useEffect(() => {
+    testRenderCountRef.current++;
+  });
   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;
 

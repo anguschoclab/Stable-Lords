@@ -98,12 +98,7 @@ export default function ArenaView({
 }: ArenaViewProps) {
   const arenaPrefs = useArenaPreferences();
   const season = useGameStore((s) => s.season?.toLowerCase()) as
-    | 'spring'
-    | 'summer'
-    | 'fall'
-    | 'winter'
-    | 'tournament'
-    | undefined;
+    'spring' | 'summer' | 'fall' | 'winter' | 'tournament' | undefined;
 
   // Arena animation state
   const { fighterA, fighterD, bubbles, hpA, hpD, fpA, fpD, removeBubble } = useArenaAnimation(

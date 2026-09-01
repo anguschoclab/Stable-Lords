@@ -5,7 +5,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
-import { sync } from 'glob';
+import glob from 'glob';
+// @ts-ignore
 import path from 'path';
 
 describe('accessibility motion-reduce', () => {
@@ -29,7 +30,7 @@ describe('accessibility motion-reduce', () => {
 
   it('no blanket bg-background/90 replacements in component files', () => {
     const componentDir = path.resolve(process.cwd(), 'src/components');
-    const files = sync('**/*.tsx', { cwd: componentDir });
+    const files = glob.sync('**/*.tsx', { cwd: componentDir });
     let violations = 0;
     for (const file of files) {
       const fullPath = path.join(componentDir, file);

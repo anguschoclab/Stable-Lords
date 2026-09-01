@@ -504,6 +504,20 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'underpit_arena_the_bloodied_coin',
+    arenaId: 'underpit_arena',
+    type: 'historical_battle',
+    title: 'The Bloodied Coin',
+    narrative: 'Two fighters once brawled for three hours straight until a single copper coin fell into the pit, and they both collapsed trying to claim it.',
+  },
+  {
+    id: 'bloodsands_arena_the_widowmaker_trap',
+    arenaId: 'bloodsands_arena',
+    type: 'architectural_quirk',
+    title: 'The Widowmaker Trap',
+    narrative: 'A slightly sunken section of the sands where countless novices have tripped to their doom, now ironically known as the safest spot for veterans to stand.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

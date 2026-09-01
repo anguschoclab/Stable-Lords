@@ -4,6 +4,11 @@
  */
 
 export const ORIGINS: string[] = [
+  'Raised in the soot-choked halls of the Iron Orphanage',
+  'Survived the brutal winters of the Weeping Stone Foundling Home',
+  'Cast out from the Ashen Sisters Charity House for uncontrollable violence',
+  'Endured the starvation diets of the Hollow Creek Workhouse',
+  'Grew up fighting for scraps in the sunken ruins of the Drowned Ward Orphanage',
   'Abandoned at the rusted gates of the Blackwood Workhouse',
   'Survived the chilling cullings of the Whispering Vaults',
   'Raised amidst the deafening roar of the Cinderstone Forges',
@@ -19,8 +24,7 @@ export const ORIGINS: string[] = [
   'Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings',
   'Survived the brutal winters huddled in the exhaust vents of the Grand Forge',
   'Raised as a nameless thrall in the fighting pits of the Undercity',
-  'Raised in the lightless cellars of the Harrow-Home for Foundlings',
-  'Abandoned beneath the crumbling arches of the Weeping Aqueduct',
+    'Abandoned beneath the crumbling arches of the Weeping Aqueduct',
   'Found swaddled in blood-stained rags at the gates of the Silent Order',
   'Survived the brutal starvation of the Rat-Catcher Guilds',
   'Sold to the under-barons of the Scab District for a handful of copper',
@@ -228,6 +232,9 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'learned to anticipate blows by watching the shadows of the cruel orphanage masters',
+  'would instinctively bite anyone who tried to take their meager rations',
+  'spent their nights punching the stone walls of their cell until their knuckles calloused',
   "learned to gauge distance by dodging the overseer's lash",
   'memorized the anatomy of beasts while working the charnel pits',
   'developed an iron grip from clinging to the underside of merchant carts',
@@ -345,6 +352,9 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  'discovering that the crowd\'s cheers felt warmer than any hearth they had ever known',
+  'until they finally realized their lifelong scars were just a map to the arena',
+  'realizing that bleeding in the sands paid better than bleeding in the slums',
   'discovering that a rusted spoon could be sharpened into a deadly shiv',
   'surviving a night in the dog-cages by out-snarling the hounds',
   'realizing that mercy in the Undercity was just another word for weakness',
@@ -366,8 +376,7 @@ export const DEFINING_MOMENTS: string[] = [
   'until they garroted a cruel overseer and fled into the night',
   'waiting for the moment the iron portcullis of the arena would rise on their true destiny',
   'until they shattered a cruel overseer’s kneecap with a stolen hammer',
-  'realizing the arena was the only place where their rage was rewarded',
-  'knowing that blood on the sands washes away the dirt of the slums',
+    'knowing that blood on the sands washes away the dirt of the slums',
   "until they broke a slaver's nose with a singular, perfectly timed headbutt",
   'waiting to turn the misery of their youth into a spectacle of vengeance',
   'knowing that the arena sands are softer than the stone floors of their youth',

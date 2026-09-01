@@ -99,6 +99,24 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  asylum_escapee: {
+    id: 'asylum_escapee',
+    name: 'Asylum Escapee',
+    description: 'Fled a nightmarish institution, gaining unpredictable bursts of adrenaline.',
+    effect: { iniModFresh: 1, attModLate: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  feral_upbringing: {
+    id: 'feral_upbringing',
+    name: 'Feral Upbringing',
+    description: 'Raised like a wild beast, leading to vicious early combat advantages.',
+    effect: { attModEarly: 1, defModEarly: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',

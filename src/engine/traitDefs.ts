@@ -99,6 +99,24 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  street_survivor: {
+    id: 'street_survivor',
+    name: 'Street Survivor',
+    description: 'Forged in the alleys, they fight with desperate cunning.',
+    effect: { defModEarly: 1, fightPlanMod: { AL: 1, OE: 1 } },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  shadow_stalker: {
+    id: 'shadow_stalker',
+    name: 'Shadow Stalker',
+    description: 'Learned to move silently and strike from the dark corners of the undercity.',
+    effect: { iniMod: 2, dmgBonus: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',

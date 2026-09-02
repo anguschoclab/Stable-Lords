@@ -504,6 +504,22 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'mudpit_arena_sinkhole_massacre',
+    arenaId: 'mudpit_arena',
+    type: 'historical_battle',
+    title: 'The Sinkhole Massacre',
+    narrative:
+      'A mid-summer bout was abruptly halted when the center of the arena collapsed into the sewers below, swallowing both combatants and three unlucky referees. Only one gladiator crawled out.',
+  },
+  {
+    id: 'clifftop_arena_gargoyle_perch',
+    arenaId: 'clifftop_arena',
+    type: 'architectural_quirk',
+    title: 'The Bloodied Gargoyles',
+    narrative:
+      'The statues adorning the eastern edge are notoriously unstable. More than one cunning fighter has won a bout simply by kicking a pillar and letting gravity do the rest.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

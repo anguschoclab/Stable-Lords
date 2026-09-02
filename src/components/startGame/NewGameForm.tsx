@@ -213,12 +213,12 @@ export default function NewGameForm({
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 flex items-center gap-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 flex items-center gap-2">
                 HERALDIC SEAL
                 <span className="text-[8px] text-muted-foreground/50 normal-case tracking-normal">
                   — Your sigil in the arena
                 </span>
-              </label>
+              </div>
 
               <div
                 className="relative p-6 flex flex-col items-center gap-4"

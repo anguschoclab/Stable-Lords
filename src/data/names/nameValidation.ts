@@ -34,6 +34,27 @@ function filterValid(names: string[], validator: (name: string) => boolean): str
 }
 
 /**
+ * Attempts to match a stable name against a known prefix (from
+ * `STABLE_PREFIXES`) followed by a valid suffix (from `STABLE_SUFFIXES`).
+ *
+ * Unlike a naive whitespace split, this correctly handles multi-word
+ * prefixes like "The Bleeding" by checking the name against every known
+ * prefix. Returns true if any prefix+suffix combination matches.
+ */
+function matchesPrefixedStableName(stableName: string): boolean {
+  const trimmed = stableName.trim();
+  for (const prefix of STABLE_PREFIXES) {
+    if (trimmed.startsWith(prefix + ' ')) {
+      const suffix = trimmed.slice(prefix.length + 1);
+      if (isValidStableSuffix(suffix)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
  * Validates if a name is a valid warrior name.
  *
  * @param name - The name to validate
@@ -117,13 +138,8 @@ export function isValidStableName(stableName: string): boolean {
     return true;
   }
 
-  // Check if it's prefix+suffix format
-  const parts = splitTwoParts(stableName);
-  if (parts) {
-    return isValidStablePrefix(parts[0]) && isValidStableSuffix(parts[1]);
-  }
-
-  return false;
+  // Check if it's prefix+suffix format (handles multi-word prefixes)
+  return matchesPrefixedStableName(stableName);
 }
 
 /**
@@ -137,8 +153,7 @@ export function getStableNameFormat(stableName: string): 'alt' | 'prefixed' | 'i
     return 'alt';
   }
 
-  const parts = splitTwoParts(stableName);
-  if (parts && isValidStablePrefix(parts[0]) && isValidStableSuffix(parts[1])) {
+  if (matchesPrefixedStableName(stableName)) {
     return 'prefixed';
   }
 

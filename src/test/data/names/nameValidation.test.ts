@@ -1,16 +1,9 @@
 /**
- * Characterization tests for src/data/names/nameValidation.ts.
+ * Tests for src/data/names/nameValidation.ts.
  *
- * Locks the CURRENT behavior of every exported validator (including known
- * quirks) so the dedup refactor cannot silently change semantics.
- *
- * Known quirk captured below: STABLE_PREFIXES entries are all multi-word
- * ("The Bleeding", "The Iron", ...), so a 2-token split can never match a
- * prefix. As a result the 'prefixed' branch of isValidStableName /
- * getStableNameFormat is effectively unreachable with the current data,
- * and randomly generated prefixed stable names (e.g. "The Bleeding Wolves",
- * 3 tokens) are rejected. These tests assert that buggy behavior so the
- * refactor preserves it; a follow-up should fix the split logic.
+ * Covers the dedup refactor (helpers: isInNameList, splitTwoParts,
+ * filterValid) and the F1 fix (matchesPrefixedStableName correctly
+ * handles multi-word prefixes like "The Bleeding").
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -146,18 +139,24 @@ describe('isValidStableName', () => {
     expect(isValidStableName(STABLE_ALT[0]!)).toBe(true);
   });
 
-  // NOTE: All STABLE_PREFIXES are multi-word ("The Bleeding", ...), so no
-  // 2-token string can have a valid prefix as its first token. The
-  // 'prefixed' branch is therefore unreachable with current data; we
-  // assert that any 2-token string is rejected.
-  it('returns false for a 2-token string (no single-token prefix exists)', () => {
-    expect(isValidStableName('The Wolves')).toBe(false);
+  // F1 fix: multi-word prefixes are now matched correctly. A generated
+  // prefixed name like "The Bleeding Wolves" (3 tokens) should validate.
+  it('returns true for a multi-word prefix + suffix (F1 fix)', () => {
+    const prefixed = `${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`;
+    expect(isValidStableName(prefixed)).toBe(true);
   });
 
-  // F1 bug: a generated prefixed name like "The Bleeding Wolves" has 3
-  // tokens, but isValidStableName requires exactly 2 -> rejected.
-  it('returns false for a 3-token prefixed name (F1 bug preservation)', () => {
-    expect(isValidStableName(`${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`)).toBe(false);
+  it('returns true for another multi-word prefix + suffix combination', () => {
+    const prefixed = `${STABLE_PREFIXES[5]!} ${STABLE_SUFFIXES[10]!}`;
+    expect(isValidStableName(prefixed)).toBe(true);
+  });
+
+  it('returns false for a valid prefix + invalid suffix', () => {
+    expect(isValidStableName(`${STABLE_PREFIXES[0]!} NotARealSuffix`)).toBe(false);
+  });
+
+  it('returns false for an invalid prefix + valid suffix', () => {
+    expect(isValidStableName(`NotARealPrefix ${STABLE_SUFFIXES[0]!}`)).toBe(false);
   });
 
   it('returns false for a single token', () => {
@@ -171,6 +170,10 @@ describe('isValidStableName', () => {
   it('returns false for garbage', () => {
     expect(isValidStableName('some random garbage text')).toBe(false);
   });
+
+  it('returns false for a prefix with no suffix', () => {
+    expect(isValidStableName(STABLE_PREFIXES[0]!)).toBe(false);
+  });
 });
 
 describe('getStableNameFormat', () => {
@@ -178,16 +181,21 @@ describe('getStableNameFormat', () => {
     expect(getStableNameFormat(STABLE_ALT[0]!)).toBe('alt');
   });
 
-  it("returns 'invalid' for a 2-token string (no single-token prefix)", () => {
-    expect(getStableNameFormat('The Wolves')).toBe('invalid');
+  it("returns 'prefixed' for a multi-word prefix + suffix (F1 fix)", () => {
+    const prefixed = `${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`;
+    expect(getStableNameFormat(prefixed)).toBe('prefixed');
   });
 
-  it("returns 'invalid' for a 3-token prefixed name (F1 bug preservation)", () => {
-    expect(getStableNameFormat(`${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`)).toBe('invalid');
+  it("returns 'invalid' for a valid prefix + invalid suffix", () => {
+    expect(getStableNameFormat(`${STABLE_PREFIXES[0]!} NotARealSuffix`)).toBe('invalid');
   });
 
   it("returns 'invalid' for garbage", () => {
     expect(getStableNameFormat('some random garbage text')).toBe('invalid');
+  });
+
+  it("returns 'invalid' for a prefix with no suffix", () => {
+    expect(getStableNameFormat(STABLE_PREFIXES[0]!)).toBe('invalid');
   });
 });
 
@@ -217,11 +225,11 @@ describe('filterValidOwnerNames', () => {
 });
 
 describe('filterValidStableNames', () => {
-  it('keeps only valid stable names (alt names pass, prefixed do not due to F1)', () => {
+  it('keeps both alt and prefixed stable names (F1 fix)', () => {
     const validAlt = STABLE_ALT[0]!;
-    const generatedPrefixed = `${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`; // 3 tokens -> invalid
-    const input = [validAlt, generatedPrefixed, 'garbage'];
-    expect(filterValidStableNames(input)).toEqual([validAlt]);
+    const validPrefixed = `${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`;
+    const input = [validAlt, validPrefixed, 'garbage'];
+    expect(filterValidStableNames(input)).toEqual([validAlt, validPrefixed]);
   });
 
   it('returns an empty array for empty input', () => {

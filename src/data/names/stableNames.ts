@@ -40,9 +40,6 @@ export const STABLE_PREFIXES = [
   'The Wrathful',
   'The Cursed',
   'The Grinding',
-  'The Bleeding',
-  'The Ruined',
-  'The Shattered',
   'The Forsaken',
   'The Merciless',
   'The Unforgiving',
@@ -51,7 +48,6 @@ export const STABLE_PREFIXES = [
   'The Blighted',
   'The Mangled',
   'The Slagged',
-  'The Severed',
   'The Decayed',
   'The Ruinous',
   'The Pestilent',
@@ -68,9 +64,7 @@ export const STABLE_PREFIXES = [
   'The Bloodstained',
   'The Ironbound',
   'The Sanguine',
-]; /**
- * Stable_suffixes.
- */
+];
 
 /**
  * Stable_suffixes.
@@ -137,9 +131,7 @@ export const STABLE_SUFFIXES = [
   'Devils',
   'Vanguards',
   'Desolators',
-]; /**
- * Stable_alt.
- */
+];
 
 /**
  * Stable_alt.
@@ -182,7 +174,6 @@ export const STABLE_ALT = [
   'The Hell Hounds',
   'The Doom Bringers',
   'The Grave Diggers',
-  'Cult of the Severed Head',
   'Brotherhood of the Black Sand',
   'Choir of Screams',
   "The Iron Maiden's Embrace",

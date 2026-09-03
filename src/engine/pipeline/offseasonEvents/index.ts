@@ -11,6 +11,7 @@ export { handleMerchantBlessing } from './economicHandlers';
 export { handleBlackMarketRaid } from './economicHandlers';
 export { handleMysteriousPatron } from './economicHandlers';
 export { handleBountifulHarvest } from './economicHandlers';
+export { handleGoblinMerchant } from './economicHandlers';
 export { handleFameBoost } from './buffHandlers';
 export { handleEpiphany } from './buffHandlers';
 export { handleBardsSong } from './buffHandlers';

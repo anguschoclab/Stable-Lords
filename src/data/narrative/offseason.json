@@ -21,6 +21,13 @@
         "{{name}} got into a massive, unexpected brawl at the local tavern. They took some scrapes, but the patrons loved the show! (+{{fame}} Fame, Minor Injury)"
       ]
     },
+    "goblin_merchant": {
+      "title": "Goblin Merchant",
+      "effectType": "goblin_merchant",
+      "newsletter": [
+        "A peculiar goblin merchant wandered into camp. You haggled a bit and acquired some rare salvage at a discount. (+{{gold}} Gold)"
+      ]
+    },
     "goblin_raid": {
       "title": "Goblin Raid",
       "effectType": "goblin_raid",

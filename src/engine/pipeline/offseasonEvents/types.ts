@@ -41,6 +41,7 @@ export interface OffseasonEventNarrative {
     | 'chaos_spores'
     | 'dreamweaver_visit'
     | 'abyssal_bargain'
+    | 'goblin_merchant'
     | 'goblin_raid'
     | 'fey_trickster'
     | 'shadow_tournament'

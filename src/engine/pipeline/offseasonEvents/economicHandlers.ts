@@ -104,3 +104,21 @@ export function handleBountifulHarvest(
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bountiful Harvest', gold, 'other'));
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
 }
+
+/**
+ * Handler for the Goblin Merchant offseason event — grants a small amount of gold.
+ */
+export function handleGoblinMerchant(
+  __state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const gold = 50 + Math.floor(rng.next() * 101); // 50 to 150 gold
+  ctx.treasuryDelta += gold;
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Goblin Merchant Salvage', gold, 'other')
+  );
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
+}

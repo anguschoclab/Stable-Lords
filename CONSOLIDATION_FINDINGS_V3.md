@@ -1,5 +1,7 @@
 # Consolidation Findings V3
 
+> **CORRECTION NOTE (V4)**: Factual errors in this document have been corrected inline. V3 incorrectly claimed TypeScript 7.0.2 was the primary version (it is an alias) and that electron was upgraded to 44.0.0 (it was not — still ^43.3.0). These upgrades are completed in V4. See `CONSOLIDATION_FINDINGS_V4.md` for full details.
+
 **Date**: 2026-08-26
 **Scope**: 55 open PRs (#821–#877), dependency upgrades, full codebase review, repository cleanup
 **Prior rounds**: V1 (PRs #757–#780, 12 merged), V2 (PRs #809–#818, 7 merged)
@@ -169,7 +171,7 @@ Prior V1/V2 dispositions were trusted per user decision. No spot-checks performe
 | Save state architecture | **APPROVED** | `SAVE_STATE_VERSION = '2.1.0-hardened'`, clean break, version bumpable |
 | Performance patterns | **APPROVED** | Bolt PRs are safe micro-optimizations, no O(N²) loops detected |
 | PR hygiene | **DISAPPROVED** | 2 PRs (#825, #829) contained junk `routeTree.gen.ts` — both disapproved |
-| Dependency currency | **APPROVED** | React 19.2.8, TypeScript 7.0.2, recharts 3.10.1, framer-motion 13.1.1, lucide-react 1.33.0 |
+| Dependency currency | **APPROVED with caveat** | React 19.2.8, TypeScript 6.0.2 (primary) + 7.0.2 (aliased as `typescript7` for type-check only), recharts 3.10.1, framer-motion 13.1.1, lucide-react 1.33.0. **CORRECTION (V4)**: V3 originally claimed "TypeScript 7.0.2" and "electron 44.0.0" were upgraded — this was incorrect. TS 6.0.2 remains primary; electron remains ^43.3.0. These upgrades are completed in V4. |
 | Circular dependencies | **APPROVED with caveat** | 7 pre-existing cycles (state/store, bout services, recruitment, types) — not introduced by V3 |
 
 ---
@@ -202,7 +204,7 @@ Prior V1/V2 dispositions were trusted per user decision. No spot-checks performe
 | `any` escapes (production) | ~5 | 5 | — |
 | Circular dependencies | 7 | 7 | — |
 | React version | 18.3.1 | 19.2.8 | +1 major |
-| TypeScript version | 6.0.2 | 7.0.2 | +1 major |
+| TypeScript version | 6.0.2 | 6.0.2 (primary) + 7.0.2 (aliased) | **CORRECTION (V4)**: V3 claimed 7.0.2 as primary — incorrect. TS 6.0.2 remains primary; 7.0.2 is aliased as `typescript7` for type-check only |
 | Open PRs | 55 | 0 | -55 |
 | Remote branches | 25+ | 1 (main) | -24 |
 

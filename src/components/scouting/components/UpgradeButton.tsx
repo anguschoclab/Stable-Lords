@@ -32,7 +32,7 @@ export function UpgradeButton({ currentQuality, onUpgrade }: UpgradeButtonProps)
       )}
     >
       <div className="flex items-center gap-3">
-        <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 group-hover:bg-arena-gold/20 transition-colors">
+        <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 group-hover:bg-arena-gold/20 transition-colors motion-reduce:transition-none">
           <ArrowUp className="h-4 w-4 text-arena-gold" />
         </div>
         <div className="text-left">

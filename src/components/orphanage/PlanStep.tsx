@@ -41,7 +41,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
       <div
         className="p-7 space-y-6"
         style={{
-          background: 'linear-gradient(145deg, #150F08 0%, #110C07 100%)',
+          background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 100%)',
           border: '1px solid rgba(201,151,42,0.3)',
           borderTopColor: 'rgba(201,151,42,0.5)',
         }}

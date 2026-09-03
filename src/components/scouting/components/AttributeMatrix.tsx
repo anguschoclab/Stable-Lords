@@ -37,7 +37,7 @@ function AttributeRangeRow({ attribute, range }: AttributeRangeRowProps) {
   return (
     <div className="flex items-center group">
       <div className="w-20 shrink-0">
-        <span className="text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest group-hover:text-primary/60 transition-colors">
+        <span className="text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest group-hover:text-primary/60 transition-colors motion-reduce:transition-none">
           {attribute}
         </span>
       </div>

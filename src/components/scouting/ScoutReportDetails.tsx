@@ -61,7 +61,7 @@ export function ScoutReportDetails({
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-2">
             <div className="flex items-center gap-2 opacity-40 group">
-              <Target className="h-3 w-3 text-primary group-hover:scale-110 transition-transform" />
+              <Target className="h-3 w-3 text-primary group-hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground leading-none">
                 Combat Style
               </span>

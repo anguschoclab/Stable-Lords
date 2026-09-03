@@ -130,14 +130,14 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
       padding="none"
       className="group relative border-border/40 overflow-hidden hover:border-destructive/40 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 shadow-2xl h-full flex flex-col"
     >
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive via-destructive/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive via-destructive/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
       <div className="p-8 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-8">
           <div className="flex flex-col">
             <WarriorLink
               name={w.name}
               id={w.id}
-              className="font-display font-black text-2xl uppercase tracking-tighter group-hover:text-destructive transition-colors"
+              className="font-display font-black text-2xl uppercase tracking-tighter group-hover:text-destructive transition-colors motion-reduce:transition-none"
             />
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/50 mt-1">
               {STYLE_DISPLAY_NAMES[w.style as FightingStyle]}

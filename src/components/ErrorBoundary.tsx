@@ -50,7 +50,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
         </p>
         {this.state.error && (
           <details className="text-left mt-2 max-w-lg w-full">
-            <summary className="text-[10px] text-muted-foreground uppercase tracking-widest cursor-pointer hover:text-primary transition-colors">
+            <summary className="text-[10px] text-muted-foreground uppercase tracking-widest cursor-pointer hover:text-primary transition-colors motion-reduce:transition-none">
               Error Details
             </summary>
             <pre className="mt-2 text-[9px] text-destructive bg-black/50 p-3 rounded overflow-auto max-h-40 whitespace-pre-wrap">
@@ -61,7 +61,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
         <button
           aria-label="Reload Page"
           onClick={() => this.setState({ hasError: false, error: null })}
-          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
         >
           Reload Page
         </button>

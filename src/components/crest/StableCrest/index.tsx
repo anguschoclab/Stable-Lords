@@ -92,7 +92,7 @@ export function StableCrest({
       style={containerStyle}
       title={showTooltip ? heraldicDesc : undefined}
     >
-      <div className="w-full h-full transition-transform duration-200 ease-out group-hover:scale-105">
+      <div className="w-full h-full transition-transform duration-200 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none">
         <svg
           viewBox="0 0 100 100"
           width={pixelSize}

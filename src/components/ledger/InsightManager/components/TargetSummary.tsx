@@ -40,7 +40,7 @@ export function TargetSummary({ warrior, canReveal, isRevealing, onReveal }: Tar
         {isRevealing ? (
           <RotateCw className="h-4 w-4 mr-2 animate-spin motion-reduce:animate-none" />
         ) : (
-          <Zap className="h-4 w-4 mr-2 group-hover:scale-125 transition-transform" />
+          <Zap className="h-4 w-4 mr-2 group-hover:scale-125 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
         )}
         {isRevealing ? 'CONSULTING ORACLES...' : 'SEQUENCE START'}
       </Button>

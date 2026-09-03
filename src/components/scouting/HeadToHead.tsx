@@ -120,14 +120,13 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
                 return (
                   <div
                     key={f.id}
-                    className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none"
+                    className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none motion-reduce:transition-none"
                   >
                     <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">
                       W{f.week}
                     </div>
                     <div
-                      className={cn(
-                        'flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight',
+                      className={cn('flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
                         winnerIsA ? 'text-primary' : 'text-muted-foreground/40'
                       )}
                     >
@@ -143,8 +142,7 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
                       </Badge>
                     </div>
                     <div
-                      className={cn(
-                        'flex-1 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight',
+                      className={cn('flex-1 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
                         winnerIsB ? 'text-accent' : 'text-muted-foreground/40'
                       )}
                     >

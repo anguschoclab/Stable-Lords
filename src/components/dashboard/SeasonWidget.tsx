@@ -46,7 +46,7 @@ export function SeasonWidget() {
 
   return (
     <Surface variant="glass" className="h-full border-border/10 group overflow-hidden relative p-0">
-      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity motion-reduce:transition-none">
         <Calendar className="h-12 w-12" />
       </div>
 
@@ -114,7 +114,7 @@ export function SeasonWidget() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex flex-col gap-1 cursor-help group/stat">
-                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors">
+                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors motion-reduce:transition-none">
                     Season Phase
                   </span>
                   <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">

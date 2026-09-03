@@ -45,7 +45,7 @@ export default function WarriorSelectionStep({
       <div
         className="px-5 py-4 flex items-center justify-between"
         style={{
-          background: '#110C07',
+          background: 'var(--card)',
           border: '1px solid rgba(60,42,22,0.7)',
           borderTopColor: 'rgba(100,70,36,0.35)',
         }}
@@ -70,7 +70,7 @@ export default function WarriorSelectionStep({
         </div>
         <button
           onClick={onRerollPool}
-          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-accent transition-colors px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-accent transition-colors px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
         >
           <RefreshCw className="h-3 w-3" />
           New Batch

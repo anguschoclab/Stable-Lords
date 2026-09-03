@@ -45,7 +45,7 @@ export function RivalryWidget() {
       padding="none"
       className="md:col-span-2 border-border/10 group overflow-hidden relative flex flex-col min-h-96"
     >
-      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity motion-reduce:transition-none">
         <Flame className="h-48 w-48 text-destructive" />
       </div>
 
@@ -102,10 +102,10 @@ export function RivalryWidget() {
         <Button
           variant="ghost"
           aria-label="Access Conflict Archives"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
         >
           Access Conflict Archives{' '}
-          <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+          <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
         </Button>
       </div>
     </Surface>

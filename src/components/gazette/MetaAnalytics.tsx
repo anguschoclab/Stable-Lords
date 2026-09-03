@@ -78,14 +78,14 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
                 <span className="text-[10px] font-mono font-black text-foreground/20">
                   0{idx + 1}
                 </span>
-                <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors">
+                <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
                   {s.style}
                 </span>
               </div>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono font-black text-primary/60 group-hover:text-primary transition-colors">
+                    <span className="text-[10px] font-mono font-black text-primary/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
                       {s.rate.toFixed(1)}%
                     </span>
                     <Badge
@@ -121,7 +121,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
         ))}
       </div>
 
-      <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-40 hover:opacity-80 transition-opacity">
+      <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-40 hover:opacity-80 transition-opacity motion-reduce:transition-none">
         <div className="flex items-center gap-2">
           <Search className="h-3 w-3" />
           <span className="text-[8px] font-black uppercase tracking-widest">
@@ -195,7 +195,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
                   key={s}
                   className="p-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 text-center w-16 group/header"
                 >
-                  <div className="rotate-45 mb-4 group-hover/header:text-primary transition-colors">
+                  <div className="rotate-45 mb-4 group-hover/header:text-primary transition-colors motion-reduce:transition-none">
                     {s}
                   </div>
                 </th>
@@ -205,7 +205,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
           <tbody>
             {TACTICAL_STYLES.map((rowStyle) => (
               <tr key={rowStyle} className="group/row">
-                <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground/60 text-right pr-4 group-hover/row:text-arena-gold transition-colors">
+                <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground/60 text-right pr-4 group-hover/row:text-arena-gold transition-colors motion-reduce:transition-none">
                   {rowStyle}
                 </td>
                 {TACTICAL_STYLES.map((colStyle) => {

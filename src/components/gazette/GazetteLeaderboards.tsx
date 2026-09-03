@@ -96,7 +96,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
             {leaderData.map((w, idx) => (
               <TableRow
                 key={w.name}
-                className="border-white/5 group hover:bg-white/2 transition-colors"
+                className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none"
               >
                 <TableCell className="pl-8 py-5">
                   <div className="flex items-center gap-4">
@@ -105,7 +105,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
                     </span>
                     <WarriorLink
                       name={w.name}
-                      className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors"
+                      className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none"
                     />
                   </div>
                 </TableCell>
@@ -136,7 +136,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
                   </Tooltip>
                 </TableCell>
                 <TableCell className="text-right py-5">
-                  <span className="text-xs font-mono font-black text-primary/80 group-hover:text-primary transition-colors">
+                  <span className="text-xs font-mono font-black text-primary/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
                     {(w.rate * 100).toFixed(1)}%
                   </span>
                 </TableCell>
@@ -204,7 +204,7 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
                 </span>
                 <WarriorLink
                   name={d.name}
-                  className="text-xs font-display font-black uppercase text-foreground group-hover:text-arena-gold transition-colors"
+                  className="text-xs font-display font-black uppercase text-foreground group-hover:text-arena-gold transition-colors motion-reduce:transition-none"
                 />
               </div>
               <div className="flex flex-col items-end">
@@ -268,7 +268,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
                 <div className="flex flex-col">
                   <WarriorLink
                     name={s.name}
-                    className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors"
+                    className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none"
                   />
                   <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                     Joined Week {s.firstWeek}
@@ -282,7 +282,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
                     >
                       {s.wins}-{s.matches - s.wins}
                     </Badge>
-                    <ShieldCheck className="h-3 w-3 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                    <ShieldCheck className="h-3 w-3 text-primary opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
                   </div>
                 </div>
               </div>

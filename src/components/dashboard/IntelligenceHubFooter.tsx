@@ -9,9 +9,9 @@ export function IntelligenceHubFooter() {
     <div className="p-4 border-t border-white/5 bg-black/40 flex items-center justify-between relative z-10 mt-auto gap-4">
       <Link
         to="/world/chronicle"
-        className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+        className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group motion-reduce:transition-none"
       >
-        Read All <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+        Read All <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
       </Link>
       <Link
         to="/world/scouting"
@@ -20,7 +20,7 @@ export function IntelligenceHubFooter() {
       >
         <Target className="h-3 w-3 shrink-0" />
         Scout Rivals
-        <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+        <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
       </Link>
     </div>
   );

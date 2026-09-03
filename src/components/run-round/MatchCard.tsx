@@ -70,7 +70,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
           <div className="flex items-center justify-end gap-2 text-[9px] font-black uppercase tracking-widest text-accent/60">
             <StableLink
               name={rivalStable || 'Rival Stable'}
-              className="hover:text-accent transition-colors underline-offset-4 decoration-accent/30"
+              className="hover:text-accent transition-colors underline-offset-4 decoration-accent/30 motion-reduce:transition-none"
             />
           </div>
         </div>

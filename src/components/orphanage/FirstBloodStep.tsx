@@ -31,7 +31,7 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
       <div
         className="p-7 space-y-6"
         style={{
-          background: 'linear-gradient(145deg, #150F08 0%, #110C07 100%)',
+          background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 100%)',
           border: '1px solid rgba(135,34,40,0.4)',
           borderTopColor: 'rgba(200,80,88,0.3)',
         }}

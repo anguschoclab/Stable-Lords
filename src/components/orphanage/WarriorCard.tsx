@@ -42,7 +42,7 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
       style={{
         background: isSelected
           ? 'linear-gradient(145deg, rgba(135,34,40,0.12) 0%, rgba(135,34,40,0.06) 100%)'
-          : 'linear-gradient(145deg, #150F08 0%, #110C07 100%)',
+          : 'linear-gradient(145deg, var(--background) 0%, var(--card) 100%)',
         border: isSelected ? '1px solid rgba(135,34,40,0.5)' : '1px solid rgba(60,42,22,0.7)',
         borderTopColor: isSelected ? 'rgba(200,80,88,0.4)' : 'rgba(100,70,36,0.35)',
       }}

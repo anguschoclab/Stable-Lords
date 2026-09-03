@@ -25,12 +25,12 @@ interface ResetDialogProps {
 export function ResetDialog({ open, onOpenChange, onConfirm }: ResetDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-neutral-900 border-destructive/20 scale-105">
+      <AlertDialogContent aria-describedby="reset-dialog-description" className="bg-neutral-900 border-destructive/20 scale-105">
         <AlertDialogHeader>
           <AlertDialogTitle className="font-display font-black text-2xl uppercase tracking-tighter text-destructive">
             Expunge the Record
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-muted-foreground font-medium selection:bg-destructive/20">
+          <AlertDialogDescription id="reset-dialog-description" className="text-muted-foreground font-medium selection:bg-destructive/20">
             You are about to seal and destroy this ledger. All combat history, stable roster, and
             financial records will be permanently struck from the archive.
             <br />

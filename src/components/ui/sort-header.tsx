@@ -37,7 +37,7 @@ export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {
       size="sm"
       onClick={onClick}
       aria-label={ariaLabel}
-      className="flex items-center gap-1 hover:text-foreground transition-colors group p-0 h-auto"
+      className="flex items-center gap-1 hover:text-foreground transition-colors group p-0 h-auto motion-reduce:transition-none"
     >
       <span>{label}</span>
       <span className="sr-only">

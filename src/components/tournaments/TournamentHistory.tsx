@@ -56,7 +56,7 @@ export function TournamentHistory({
               </div>
             )}
             <div className="p-4 border-b border-white/5 bg-secondary/5 flex items-center gap-3">
-              <span className="text-xl group-hover:scale-125 transition-transform duration-500">
+              <span className="text-xl group-hover:scale-125 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none">
                 {seasonIcons[s]}
               </span>
               <span className="font-display font-black uppercase text-[10px] tracking-[0.2em]">

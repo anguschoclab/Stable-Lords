@@ -35,8 +35,7 @@ function TacticalBarHeader({
       tabIndex={0}
       aria-expanded={expanded}
       aria-label={expanded ? 'Collapse alerts' : 'Expand alerts'}
-      className={cn(
-        'flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+      className={cn('flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
         expanded && 'border-b border-white/5'
       )}
       onClick={onToggle}

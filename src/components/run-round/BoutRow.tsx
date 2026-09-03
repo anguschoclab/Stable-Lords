@@ -112,8 +112,7 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
                 <OutcomeIcon by={res.outcome.by} />
               </div>
               <div
-                className={cn(
-                  'h-8 w-8 flex items-center justify-center border border-white/5 transition-colors',
+                className={cn('h-8 w-8 flex items-center justify-center border border-white/5 transition-colors motion-reduce:transition-none',
                   isExpanded
                     ? 'bg-primary/20 text-primary border-primary/40'
                     : 'bg-white/[0.02] text-muted-foreground/40 group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20'

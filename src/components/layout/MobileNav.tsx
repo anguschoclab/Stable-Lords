@@ -67,7 +67,7 @@ export function MobileNav({ className }: MobileNavProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-10 w-10 rounded-none hover:bg-white/5 transition-colors"
+            className="h-10 w-10 rounded-none hover:bg-white/5 transition-colors motion-reduce:transition-none"
             tooltip="Open navigation menu"
             aria-label="Open navigation menu"
           >

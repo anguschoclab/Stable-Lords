@@ -207,7 +207,7 @@ export function HubSwitcher({
             {alertCount > 0 && (
               <button
                 aria-label={`${alertCount} alerts for ${hub.label}`}
-                className="flex items-center justify-center bg-primary/20 text-primary hover:bg-primary/30 transition-colors text-[10px] font-mono font-black h-5 min-w-[20px] px-1 rounded-none border border-primary/30"
+                className="flex items-center justify-center bg-primary/20 text-primary hover:bg-primary/30 transition-colors text-[10px] font-mono font-black h-5 min-w-[20px] px-1 rounded-none border border-primary/30 motion-reduce:transition-none"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -301,8 +301,7 @@ export function SubPageList({
                   <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary" />
                 )}
                 <PageIcon
-                  className={cn(
-                    'h-3.5 w-3.5 shrink-0 transition-colors',
+                  className={cn('h-3.5 w-3.5 shrink-0 transition-colors motion-reduce:transition-none',
                     isActive
                       ? 'text-primary'
                       : 'text-muted-foreground/40 group-hover:text-muted-foreground/70',
@@ -367,8 +366,7 @@ export function AlertStrip({ alerts, LinkComponent = Link, itemClassName }: Aler
           <LinkComponent
             key={a.label}
             to={a.to as never}
-            className={cn(
-              'flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70',
+            className={cn('flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70 motion-reduce:transition-none',
               a.color,
               itemClassName
             )}

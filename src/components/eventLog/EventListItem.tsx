@@ -34,8 +34,7 @@ export function EventListItem({
           onClick();
         }
       }}
-      className={cn(
-        'w-full text-left px-4 py-2.5 flex items-start gap-3 transition-colors border-b border-border/30',
+      className={cn('w-full text-left px-4 py-2.5 flex items-start gap-3 transition-colors border-b border-border/30 motion-reduce:transition-none',
         'hover:bg-secondary/60 cursor-pointer group'
       )}
     >
@@ -60,7 +59,7 @@ export function EventListItem({
           </div>
         )}
       </div>
-      <ChevronRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/60 transition-colors mt-0.5 shrink-0" />
+      <ChevronRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/60 transition-colors mt-0.5 shrink-0 motion-reduce:transition-none" />
     </div>
   );
 }

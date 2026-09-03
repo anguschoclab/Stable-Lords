@@ -25,7 +25,7 @@ export function MostWantedBanner({ name, stable, wins, kills }: MostWantedBanner
             <Skull className="h-5 w-5 text-destructive animate-pulse motion-reduce:animate-none" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black uppercase tracking-tight text-foreground transition-colors group-wanted:text-destructive">
+            <span className="text-sm font-black uppercase tracking-tight text-foreground transition-colors group-wanted:text-destructive motion-reduce:transition-none">
               {name}
             </span>
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">

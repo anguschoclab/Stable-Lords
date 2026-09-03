@@ -8,6 +8,7 @@
  * ftueComplete changes, not when other state changes.
  */
 // @vitest-environment jsdom
+import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { create } from 'zustand';
@@ -43,7 +44,7 @@ interface TestStore {
 // Minimal test component that mirrors RootComponent's selector pattern
 let testRenderCountRef = { current: 0 };
 function TestRootComponent() {
-  testRenderCountRef.current++;
+  React.useEffect(() => { testRenderCountRef.current++; });
   const ftueComplete = useTestStore((s: any) => s.ftueComplete) as boolean;
   const atTitleScreen = useTestStore((s: any) => s.atTitleScreen) as boolean;
 

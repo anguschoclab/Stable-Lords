@@ -18,6 +18,37 @@ interface WarriorCardProps {
  * Render the WarriorCard component.
  * @param - { warrior, is selected, can select, on click }.
  */
+
+/**
+ * Render the trait tooltip content for a warrior's trait.
+ * @param trait - The trait id to look up in TRAIT_DATA.
+ */
+function TraitTooltipContent({ trait }: { trait: string }) {
+  const data = TRAIT_DATA[trait];
+  if (!data) return <span>Flavor trait — shapes personality</span>;
+
+  const mods = data.effect.fightPlanMod;
+  const e = data.effect;
+  const parts: string[] = [];
+  if (mods?.OE) parts.push(`OE ${mods.OE}`);
+  if (mods?.AL) parts.push(`AL ${mods.AL}`);
+  if (mods?.killDesire) parts.push(`KD ${mods.killDesire}`);
+  if (mods?.feintTendency) parts.push(`Feint ${mods.feintTendency}`);
+  if (e.attMod) parts.push(`ATT ${e.attMod > 0 ? '+' : ''}${e.attMod}`);
+  if (e.defMod) parts.push(`DEF ${e.defMod > 0 ? '+' : ''}${e.defMod}`);
+  if (e.iniMod) parts.push(`INI ${e.iniMod > 0 ? '+' : ''}${e.iniMod}`);
+  if (e.parMod) parts.push(`PAR ${e.parMod > 0 ? '+' : ''}${e.parMod}`);
+  if (e.dmgBonus) parts.push(`DMG +${e.dmgBonus}`);
+
+  return (
+    <div className="space-y-1">
+      <p className="font-bold border-b border-white/10 pb-1">{data.name}</p>
+      <p className="italic text-muted-foreground">{data.description}</p>
+      {parts.length > 0 && <p className="text-accent">{parts.join(', ')}</p>}
+    </div>
+  );
+}
+
 export default function WarriorCard({ warrior, isSelected, canSelect, onClick }: WarriorCardProps) {
   const stats = computeWarriorStats(warrior.attrs, warrior.style);
 
@@ -82,30 +113,7 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
                   </span>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="max-w-xs text-[10px]">
-                  {(() => {
-                    const data = TRAIT_DATA[warrior.trait];
-                    if (!data) return <span>Flavor trait — shapes personality</span>;
-                    const mods = data.effect.fightPlanMod;
-                    const parts: string[] = [];
-                    if (mods?.OE) parts.push(`OE ${mods.OE}`);
-                    if (mods?.AL) parts.push(`AL ${mods.AL}`);
-                    if (mods?.killDesire) parts.push(`KD ${mods.killDesire}`);
-                    if (mods?.feintTendency) parts.push(`Feint ${mods.feintTendency}`);
-                    // Static skill mods
-                    const e = data.effect;
-                    if (e.attMod) parts.push(`ATT ${e.attMod > 0 ? '+' : ''}${e.attMod}`);
-                    if (e.defMod) parts.push(`DEF ${e.defMod > 0 ? '+' : ''}${e.defMod}`);
-                    if (e.iniMod) parts.push(`INI ${e.iniMod > 0 ? '+' : ''}${e.iniMod}`);
-                    if (e.parMod) parts.push(`PAR ${e.parMod > 0 ? '+' : ''}${e.parMod}`);
-                    if (e.dmgBonus) parts.push(`DMG +${e.dmgBonus}`);
-                    return (
-                      <div className="space-y-1">
-                        <p className="font-bold border-b border-white/10 pb-1">{data.name}</p>
-                        <p className="italic text-muted-foreground">{data.description}</p>
-                        {parts.length > 0 && <p className="text-accent">{parts.join(', ')}</p>}
-                      </div>
-                    );
-                  })()}
+                  <TraitTooltipContent trait={warrior.trait} />
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

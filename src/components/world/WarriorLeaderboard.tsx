@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useVirtualizer, type VirtualItem } from '@tanstack/react-virtual';
 import { Surface } from '@/components/ui/Surface';
 import { TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SortHeader } from '@/components/ui/sort-header';
@@ -27,6 +27,20 @@ const COLUMNS = [
   { key: 'kills', label: 'Kills', className: 'text-center' },
   { key: 'bookmark', label: '', className: 'w-10 text-center' },
 ];
+
+interface VirtualizedRowProps {
+  vi: VirtualItem;
+  filtered: WarriorRow[];
+  isFiltered: boolean;
+}
+
+function VirtualizedRow({ vi, filtered, isFiltered }: VirtualizedRowProps) {
+  const row = filtered[vi.index];
+  if (!row) return null;
+  return (
+    <WarriorLeaderboardRow row={row} index={vi.index} isFiltered={isFiltered} />
+  );
+}
 
 /**
  *
@@ -102,18 +116,14 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                     <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
                   </tr>
                 )}
-                {items.map((vi) => {
-                  const row = filtered[vi.index];
-                  if (!row) return null;
-                  return (
-                    <WarriorLeaderboardRow
-                      key={row.id}
-                      row={row}
-                      index={vi.index}
-                      isFiltered={isFiltered}
-                    />
-                  );
-                })}
+                {items.map((vi) => (
+                  <VirtualizedRow
+                    key={vi.key}
+                    vi={vi}
+                    filtered={filtered}
+                    isFiltered={isFiltered}
+                  />
+                ))}
                 {items[items.length - 1] && (
                   <tr
                     style={{

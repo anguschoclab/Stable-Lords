@@ -19,6 +19,21 @@ vi.mock('@/data/orphanPool', () => ({
       description: 'A test trait',
       effect: {},
     },
+    with_fight_plan: {
+      name: 'Fight Plan Trait',
+      description: 'A fight-plan trait',
+      effect: { fightPlanMod: { OE: 5, AL: 3, killDesire: 2, feintTendency: 1 } },
+    },
+    with_static_mods: {
+      name: 'Static Mods Trait',
+      description: 'A static-mods trait',
+      effect: { attMod: 1, defMod: -1, iniMod: 2, parMod: 1, dmgBonus: 1 },
+    },
+    with_empty_effect: {
+      name: 'Empty Effect Trait',
+      description: 'An empty-effect trait',
+      effect: {},
+    },
   },
 }));
 
@@ -145,5 +160,64 @@ describe('WarriorCard', () => {
     const card = container.querySelector('[role="button"]') || container.firstElementChild;
     fireEvent.keyDown(card!, { key: ' ' });
     expect(onClick).toHaveBeenCalled();
+  });
+
+  // ── Characterization tests for the trait-tooltip parts-builder ───────────
+  // These pin the rendered output of the IIFE so the refactor to
+  // TraitTooltipContent can be proven equivalent.
+
+  it('renders flavor-trait fallback when trait id has no TRAIT_DATA entry', () => {
+    const { container } = render(
+      <WarriorCard
+        {...baseCardProps}
+        warrior={makeOrphan({ trait: 'flavor_only' })}
+        onClick={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain('Flavor trait — shapes personality');
+  });
+
+  it('renders fightPlanMod fields with no sign prefix', () => {
+    const { container } = render(
+      <WarriorCard
+        {...baseCardProps}
+        warrior={makeOrphan({ trait: 'with_fight_plan' })}
+        onClick={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain('OE 5');
+    expect(container.textContent).toContain('AL 3');
+    expect(container.textContent).toContain('KD 2');
+    expect(container.textContent).toContain('Feint 1');
+    // fightPlanMod fields never get a '+' prefix
+    expect(container.textContent).not.toMatch(/OE \+5/);
+  });
+
+  it('renders static skill mods with sign formatting (+ for positive, - for negative)', () => {
+    const { container } = render(
+      <WarriorCard
+        {...baseCardProps}
+        warrior={makeOrphan({ trait: 'with_static_mods' })}
+        onClick={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain('ATT +1');
+    expect(container.textContent).toContain('DEF -1');
+    expect(container.textContent).toContain('INI +2');
+    expect(container.textContent).toContain('PAR +1');
+    expect(container.textContent).toContain('DMG +1');
+  });
+
+  it('renders name and description but no parts line when effect is empty', () => {
+    const { container } = render(
+      <WarriorCard
+        {...baseCardProps}
+        warrior={makeOrphan({ trait: 'with_empty_effect' })}
+        onClick={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain('Empty Effect Trait');
+    expect(container.textContent).toContain('An empty-effect trait');
+    expect(container.textContent).not.toMatch(/\bOE\b|\bATT\b|\bDMG\b/);
   });
 });

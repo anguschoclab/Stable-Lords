@@ -8,13 +8,39 @@ import { OWNER_FIRST, OWNER_LAST } from './ownerNames';
 import { STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from './stableNames';
 
 /**
+ * Returns true if `name` is present in `list`. When `caseInsensitive` is
+ * true the input is upper-cased before lookup (used for warrior names,
+ * which are stored uppercase).
+ */
+function isInNameList(name: string, list: readonly string[], caseInsensitive = false): boolean {
+  return list.includes(caseInsensitive ? name.toUpperCase() : name);
+}
+
+/**
+ * Splits a full name into exactly two whitespace-separated parts after
+ * trimming. Returns null if the name does not contain exactly two parts.
+ */
+function splitTwoParts(fullName: string): [string, string] | null {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length !== 2) return null;
+  return [parts[0] ?? '', parts[1] ?? ''];
+}
+
+/**
+ * Filters `names` using `validator`.
+ */
+function filterValid(names: string[], validator: (name: string) => boolean): string[] {
+  return names.filter(validator);
+}
+
+/**
  * Validates if a name is a valid warrior name.
  *
  * @param name - The name to validate
  * @returns True if the name is in the WARRIOR_NAMES array
  */
 export function isValidWarriorName(name: string): boolean {
-  return WARRIOR_NAMES.includes(name.toUpperCase());
+  return isInNameList(name, WARRIOR_NAMES, true);
 }
 
 /**
@@ -24,7 +50,7 @@ export function isValidWarriorName(name: string): boolean {
  * @returns True if the name is in the OWNER_FIRST array
  */
 export function isValidOwnerFirstName(name: string): boolean {
-  return OWNER_FIRST.includes(name);
+  return isInNameList(name, OWNER_FIRST);
 }
 
 /**
@@ -34,7 +60,7 @@ export function isValidOwnerFirstName(name: string): boolean {
  * @returns True if the name is in the OWNER_LAST array
  */
 export function isValidOwnerLastName(name: string): boolean {
-  return OWNER_LAST.includes(name);
+  return isInNameList(name, OWNER_LAST);
 }
 
 /**
@@ -44,12 +70,9 @@ export function isValidOwnerLastName(name: string): boolean {
  * @returns True if both first and last names are valid
  */
 export function isValidOwnerName(fullName: string): boolean {
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length !== 2) return false;
-
-  const firstName = parts[0] ?? '';
-  const lastName = parts[1] ?? '';
-  return isValidOwnerFirstName(firstName) && isValidOwnerLastName(lastName);
+  const parts = splitTwoParts(fullName);
+  if (!parts) return false;
+  return isValidOwnerFirstName(parts[0]) && isValidOwnerLastName(parts[1]);
 }
 
 /**
@@ -59,7 +82,7 @@ export function isValidOwnerName(fullName: string): boolean {
  * @returns True if the prefix is in the STABLE_PREFIXES array
  */
 export function isValidStablePrefix(prefix: string): boolean {
-  return STABLE_PREFIXES.includes(prefix);
+  return isInNameList(prefix, STABLE_PREFIXES);
 }
 
 /**
@@ -69,7 +92,7 @@ export function isValidStablePrefix(prefix: string): boolean {
  * @returns True if the suffix is in the STABLE_SUFFIXES array
  */
 export function isValidStableSuffix(suffix: string): boolean {
-  return STABLE_SUFFIXES.includes(suffix);
+  return isInNameList(suffix, STABLE_SUFFIXES);
 }
 
 /**
@@ -79,7 +102,7 @@ export function isValidStableSuffix(suffix: string): boolean {
  * @returns True if the name is in the STABLE_ALT array
  */
 export function isValidAltStableName(altName: string): boolean {
-  return STABLE_ALT.includes(altName);
+  return isInNameList(altName, STABLE_ALT);
 }
 
 /**
@@ -95,11 +118,9 @@ export function isValidStableName(stableName: string): boolean {
   }
 
   // Check if it's prefix+suffix format
-  const parts = stableName.trim().split(/\s+/);
-  if (parts.length === 2) {
-    const prefix = parts[0] ?? '';
-    const suffix = parts[1] ?? '';
-    return isValidStablePrefix(prefix) && isValidStableSuffix(suffix);
+  const parts = splitTwoParts(stableName);
+  if (parts) {
+    return isValidStablePrefix(parts[0]) && isValidStableSuffix(parts[1]);
   }
 
   return false;
@@ -116,13 +137,9 @@ export function getStableNameFormat(stableName: string): 'alt' | 'prefixed' | 'i
     return 'alt';
   }
 
-  const parts = stableName.trim().split(/\s+/);
-  if (parts.length === 2) {
-    const prefix = parts[0] ?? '';
-    const suffix = parts[1] ?? '';
-    if (isValidStablePrefix(prefix) && isValidStableSuffix(suffix)) {
-      return 'prefixed';
-    }
+  const parts = splitTwoParts(stableName);
+  if (parts && isValidStablePrefix(parts[0]) && isValidStableSuffix(parts[1])) {
+    return 'prefixed';
   }
 
   return 'invalid';
@@ -135,7 +152,7 @@ export function getStableNameFormat(stableName: string): 'alt' | 'prefixed' | 'i
  * @returns Array of valid warrior names
  */
 export function filterValidWarriorNames(names: string[]): string[] {
-  return names.filter((name) => isValidWarriorName(name));
+  return filterValid(names, isValidWarriorName);
 }
 
 /**
@@ -145,7 +162,7 @@ export function filterValidWarriorNames(names: string[]): string[] {
  * @returns Array of valid owner names
  */
 export function filterValidOwnerNames(names: string[]): string[] {
-  return names.filter((name) => isValidOwnerName(name));
+  return filterValid(names, isValidOwnerName);
 }
 
 /**
@@ -155,5 +172,5 @@ export function filterValidOwnerNames(names: string[]): string[] {
  * @returns Array of valid stable names
  */
 export function filterValidStableNames(names: string[]): string[] {
-  return names.filter((name) => isValidStableName(name));
+  return filterValid(names, isValidStableName);
 }

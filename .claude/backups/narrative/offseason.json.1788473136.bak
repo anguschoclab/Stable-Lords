@@ -1,0 +1,414 @@
+{
+  "offseason_events": {
+    "chaos_rift": {
+      "title": "The Chaos Rift",
+      "effectType": "chaos_rift",
+      "newsletter": [
+        "A bizarre, swirling rift opened temporarily in the training yard. {{name}} bravely stepped inside and returned moments later, holding a glowing crystal and speaking in riddles. (+150 Gold, +25 XP, +15 Fame, Chaotic Insight)"
+      ]
+    },
+    "unexplained_monolith": {
+      "title": "The Unexplained Monolith",
+      "effectType": "unexplained_monolith",
+      "newsletter": [
+        "A perfectly smooth black monolith appeared overnight in the training yard. {{name}} touched it, stared blankly for an hour, and now fights with unnatural focus but lingering fatigue. (+15 XP, +10 Fame, 'Precise' trait, Minor Fatigue)"
+      ]
+    },
+    "tavern_brawl_surprise": {
+      "title": "A Spontaneous Tavern Brawl",
+      "effectType": "tavern_brawl_surprise",
+      "newsletter": [
+        "{{name}} got into a massive, unexpected brawl at the local tavern. They took some scrapes, but the patrons loved the show! (+{{fame}} Fame, Minor Injury)"
+      ]
+    },
+    "goblin_raid": {
+      "title": "Goblin Raid",
+      "effectType": "goblin_raid",
+      "newsletter": [
+        "A sudden goblin raid on the stable! {{name}} fought them off but took a nasty scratch. The stable lost {{gold}} gold in the chaos. (-{{gold}} Gold, Minor Injury)"
+      ]
+    },
+    "loyal_stray_dog": {
+      "title": "A Loyal Stray",
+      "effectType": "loyal_stray_dog",
+      "newsletter": [
+        "A scruffy stray dog wandered into the training yard and has taken a liking to {{name}}. The gladiator's spirits are lifted! (+10 XP)"
+      ]
+    },
+    "strange_dream": {
+      "title": "A Strange Dream",
+      "effectType": "strange_dream",
+      "newsletter": [
+        "{{name}} woke up in a cold sweat after a bizarre dream about the arena. They feel oddly invigorated, though slightly unnerved. (+{{xp}} XP)"
+      ]
+    },
+    "festival_of_blades": {
+      "title": "Festival of Blades",
+      "effectType": "fame_boost",
+      "newsletter": [
+        "During the annual Festival of Blades, {{name}} was paraded through the streets, greatly boosting their fame! (+{{fame}} Fame)"
+      ]
+    },
+    "harsh_winter": {
+      "title": "A Bitter Winter",
+      "effectType": "winter_chill",
+      "newsletter": [
+        "A sudden, freezing wind swept through the stable grounds. We had to spend {{gold}} gold on extra heating and supplies."
+      ]
+    },
+    "merchant_blessing": {
+      "title": "Wandering Merchant's Favor",
+      "effectType": "merchant_blessing",
+      "newsletter": [
+        "A wealthy traveling merchant, impressed by our past victories, has sponsored the stable with a generous gift of {{gold}} gold."
+      ]
+    },
+    "offseason_epiphany": {
+      "title": "Offseason Epiphany",
+      "effectType": "epiphany",
+      "newsletter": [
+        "During the quiet months, {{name}} experienced a profound breakthrough in training! (+15 XP, +10 Fame, New Insight Discovered)"
+      ]
+    },
+    "tavern_brawl": {
+      "title": "Tavern Brawl",
+      "effectType": "tavern_brawl",
+      "newsletter": [
+        "{{name}} got involved in a chaotic tavern brawl over the break! They broke a few noses (and maybe a chair), gaining notoriety, but took some bruises in the process. (+{{fame}} Fame, Minor Injury)"
+      ]
+    },
+    "bards_song": {
+      "title": "A Bard's Song",
+      "effectType": "bards_song",
+      "newsletter": [
+        "A wandering bard composed a thrilling ballad about {{name}}'s recent victories! The song is spreading across the taverns. (+{{fame}} Fame)"
+      ]
+    },
+    "plague_outbreak": {
+      "title": "Plague Outbreak",
+      "effectType": "plague_outbreak",
+      "newsletter": [
+        "A nasty fever has swept through the gladiator barracks. {{name}} caught the worst of it, suffering a minor injury and temporary weakness. (-{{fame}} Fame, Sickness)"
+      ]
+    },
+    "black_market_raid": {
+      "title": "Black Market Raid",
+      "effectType": "black_market_raid",
+      "newsletter": [
+        "The city watch raided a black market {{name}} was frequenting! They escaped, but dropped {{gold}} gold in the chaos."
+      ]
+    },
+    "grand_feast": {
+      "title": "A Grand Feast",
+      "effectType": "grand_feast",
+      "newsletter": [
+        "We hosted a grand feast for the stable! It cost {{gold}} gold, but spirits are high, and everyone feels invigorated. (+10 XP)"
+      ]
+    },
+    "wandering_healer": {
+      "title": "A Wandering Healer",
+      "effectType": "wandering_healer",
+      "newsletter": [
+        "A wandering medicine man offered snake oil tonics to the stable. It cost us {{gold}} gold, but at least they tasted interesting.",
+        "A peculiar wandering healer arrived and cured {{name}} of an injury! It cost us {{gold}} gold."
+      ]
+    },
+    "mystic_vision": {
+      "title": "A Mystic Vision",
+      "effectType": "mystic_vision",
+      "newsletter": [
+        "A strange hermit visited the camp. {{name}} experienced a mystic vision, unlocking latent potential! (+{{xp}} XP, +{{fame}} Fame)"
+      ]
+    },
+    "wild_animal_attack": {
+      "title": "Wild Beast Encounter",
+      "effectType": "wild_animal_attack",
+      "newsletter": [
+        "A wild beast wandered into the camp! {{name}} fended it off, gaining some fame (+{{fame}}) but taking a nasty bite in the process."
+      ]
+    },
+    "loyal_stray": {
+      "title": "A Loyal Stray",
+      "effectType": "loyal_stray",
+      "newsletter": [
+        "A scruffy stray dog wandered into the training grounds and immediately bonded with {{name}}. The mood in the camp has lifted considerably! (+{{xp}} XP, +{{fame}} Fame, -{{gold}} Gold for treats)"
+      ]
+    },
+    "street_performance": {
+      "title": "Street Performance",
+      "effectType": "street_performance",
+      "newsletter": [
+        "During the offseason, {{name}} took to the streets, performing mock battles for the local townsfolk. The crowd loved it! (+{{fame}} Fame, +{{gold}} Gold, 'Local Hero' Tag)"
+      ]
+    },
+    "chaotic_spells": {
+      "title": "Chaotic Spells",
+      "effectType": "chaotic_spells",
+      "newsletter": [
+        "A rogue wizard's spell went awry near the barracks! {{name}} was caught in the blast and experienced strange side effects."
+      ]
+    },
+    "mysterious_patron": {
+      "title": "A Mysterious Patron!",
+      "effectType": "mysterious_patron",
+      "newsletter": [
+        "A mysterious patron was impressed by your stable and anonymously donated {{gold}} gold!"
+      ]
+    },
+    "midnight_feast": {
+      "title": "Midnight Feast",
+      "effectType": "midnight_feast",
+      "newsletter": [
+        "{{name}} snuck out for a legendary midnight feast! The resulting food coma lasted for days, but the stories are incredible. (+{{xp}} XP, +{{fame}} Fame, -{{gold}} Gold)"
+      ]
+    },
+    "shadow_training": {
+      "title": "Shadow Training",
+      "effectType": "shadow_training",
+      "newsletter": [
+        "{{name}} was seen practicing bizarre, forbidden techniques in the dead of night. The locals are disturbed, but their skills are undoubtedly sharper. (+{{xp}} XP, -{{fame}} Fame)"
+      ]
+    },
+    "gladiator_olympics": {
+      "title": "Gladiator Olympics",
+      "effectType": "gladiator_olympics",
+      "newsletter": [
+        "During the local Gladiator Olympics, {{name}} absolutely dominated the competition! The crowd loved the spectacle. (+{{xp}} XP, +{{fame}} Fame)"
+      ]
+    },
+    "meteor_shower": {
+      "title": "Meteor Shower",
+      "effectType": "meteor_shower",
+      "newsletter": [
+        "A stunning meteor shower lit up the night sky! {{name}} watched in awe and feels inspired for the upcoming season. (+{{xp}} XP, +{{fame}} Fame)"
+      ]
+    },
+    "underground_pit_fight": {
+      "title": "Underground Pit Fight",
+      "effectType": "underground_pit_fight",
+      "newsletter": [
+        "{{name}} snuck out to participate in an illegal underground pit fight. They earned some brutal notoriety, but the lack of rules came with a cost. (+{{fame}} Fame, Minor Injury)"
+      ]
+    },
+    "rogue_alchemist": {
+      "title": "Rogue Alchemist",
+      "effectType": "rogue_alchemist",
+      "newsletter": [
+        "A strange rogue alchemist visited the stable, offering a glowing green potion to {{name}}. They drank it...",
+        "{{name}} accepted a bubbling concoction from a wandering alchemist."
+      ]
+    },
+    "dreamweaver_visit": {
+      "title": "Dreamweaver's Visit",
+      "effectType": "dreamweaver_visit",
+      "newsletter": [
+        "A mysterious dreamweaver visited {{name}} in their sleep. They awoke with profound new insights into combat. (+{{xp}} XP, +1 Insight Token)",
+        "{{name}} experienced vivid, guiding visions from a passing dreamweaver, sharpening their mind. (+{{xp}} XP, +1 Insight Token)"
+      ]
+    },
+    "abyssal_bargain": {
+      "title": "Abyssal Bargain",
+      "effectType": "abyssal_bargain",
+      "newsletter": [
+        "{{name}} was approached by a shadowed figure in the dead of night offering terrible power for a terrible price..."
+      ]
+    },
+    "shadow_tournament": {
+      "title": "Shadow Tournament",
+      "effectType": "shadow_tournament",
+      "newsletter": [
+        "{{name}} participated in a secretive, brutal shadow tournament beneath the city streets. They emerged victorious, covered in strange bruises but carrying a hefty purse. (+{{xp}} XP, +{{fame}} Fame)",
+        "{{name}} snuck out to fight in an underground shadow tournament. They lost horribly to a masked opponent and limped back in disgrace. (-{{fame}} Fame, Moderate Injury)"
+      ]
+    },
+    "wandering_fortune_teller": {
+      "title": "The Wandering Fortune Teller",
+      "effectType": "wandering_fortune_teller",
+      "newsletter": [
+        "A mysterious fortune teller visited the camp. {{name}} parted with {{gold}} gold to have their fortune read, uncovering cryptic advice about their fighting style. (-{{gold}} Gold, +15 XP, Style Insight)"
+      ]
+    },
+    "chaos_weaver_visit": {
+      "title": "The Chaos Weaver's Visit",
+      "effectType": "chaos_weaver_visit",
+      "newsletter": [
+        "A figure wreathed in swirling chaos energy appeared in the camp. {{name}} was touched by the Chaos Weaver and emerged fundamentally changed, gaining the {{trait}} trait."
+      ]
+    },
+    "traveling_circus": {
+      "title": "A Traveling Circus Arrives",
+      "effectType": "traveling_circus",
+      "newsletter": [
+        "A traveling circus set up camp near the stable. {{name}} spent the week learning acrobatic tricks and mesmerizing the locals. (+{{fame}} Fame, +{{xp}} XP, Minor Treasury Cost)"
+      ]
+    },
+    "bounty_hunter_visit": {
+      "title": "Bounty Hunter Visit",
+      "effectType": "bounty_hunter_visit",
+      "newsletter": [
+        "A wandering bounty hunter visited looking for someone who sounded a lot like {{name}}. They paid handsomely for information. (+{{gold}} Gold, +{{fame}} Fame)"
+      ]
+    },
+    "midnight_market": {
+      "title": "The Midnight Market",
+      "effectType": "midnight_market",
+      "newsletter": [
+        "A hidden Midnight Market appeared behind the arena. {{name}} spent {{gold}} gold on strange elixirs and a whispered secret, gaining +20 XP and a new insight."
+      ]
+    },
+    "moonlight_duel": {
+      "title": "Moonlight Duel",
+      "effectType": "moonlight_duel",
+      "newsletter": [
+        "{{name}} was challenged to an unsanctioned moonlight duel! They emerged victorious, proving their skill to a wealthy patron. (+{{gold}} Gold)"
+      ]
+    },
+    "shadow_market_run": {
+      "title": "Shadow Market Run",
+      "effectType": "shadow_market_run",
+      "newsletter": [
+        "{{name}} took a risk and navigated the dangerous Shadow Market! They spent some gold but emerged with newfound knowledge and fame. (-{{gold}} Gold, +{{fame}} Fame)"
+      ]
+    },
+    "the_chaos_spores": {
+      "title": "Chaos Spores",
+      "effectType": "chaos_spores",
+      "newsletter": [
+        "A cloud of glowing chaos spores drifted through the barracks. {{name}} inhaled them and feels profoundly changed! (+{{xp}} XP, new Trait: Spore Kissed)"
+      ]
+    },
+    "secret_fight_club": {
+      "title": "Secret Fight Club",
+      "effectType": "secret_fight_club",
+      "newsletter": [
+        "{{name}} snuck out to a secret fight club! They earned respect and learned a few tricks, but took some hits. (+{{xp}} XP, +{{fame}} Fame, Minor Injury)"
+      ]
+    },
+    "chaos_weavers_game": {
+      "title": "The Chaos Weaver's Game",
+      "effectType": "chaos_weavers_game",
+      "newsletter": [
+        "The Chaos Weaver appeared in the barracks, proposing a dangerous gamble. {{name}} accepted, gaining strange newfound power. (+25 XP)",
+        "The Chaos Weaver offered a game of chance. {{name}} played and lost, returning battered. (Minor Injury)"
+      ]
+    },
+    "chaotic_weather_experiment": {
+      "title": "A Wild Weather Experiment",
+      "effectType": "chaotic_weather_experiment",
+      "newsletter": [
+        "A wandering alchemist tested a bizarre weather machine in the courtyard. {{name}} got caught in a sudden, localized magic squall! They learned from the chaos but took some minor magic burns. (+{{xp}} XP, Minor Injury)"
+      ]
+    },
+    "chaos_weavers_gift": {
+      "title": "The Chaos Weaver's Gift",
+      "effectType": "chaos_weavers_gift",
+      "newsletter": [
+        "The Chaos Weaver appeared in the barracks, dropping a small pouch. {{name}} found it contained exactly what they needed. (+{{xp}} XP, Insight Token)"
+      ]
+    },
+    "temporal_anomaly": {
+      "title": "A Temporal Anomaly",
+      "effectType": "temporal_anomaly",
+      "newsletter": [
+        "A temporal anomaly ripped through the training grounds! {{name}} got caught in the distortion, rapidly gaining experience but losing a piece of their essence. (+35 XP, Insight Token, Lost Trait)"
+      ]
+    },
+    "wandering_mystic": {
+      "title": "Wandering Mystic",
+      "effectType": "wandering_mystic",
+      "newsletter": [
+        "A wandering mystic sought shelter with {{name}} over the winter, teaching them strange truths. (+Chaos Touched trait)"
+      ]
+    },
+    "cursed_treasure_discovery": {
+      "title": "Cursed Treasure Discovery",
+      "effectType": "cursed_treasure_discovery",
+      "newsletter": [
+        "While digging out a new training pit, {{name}} unearthed a cursed chest! The stable gained a hoard of gold, but the gladiator suffered a lingering magical affliction and public suspicion. (+{{gold}} Gold, -{{fame}} Fame, Moderate Injury)"
+      ]
+    },
+    "chaos_weavers_prophecy": {
+      "title": "The Chaos Weaver's Prophecy",
+      "effectType": "chaos_weavers_prophecy",
+      "newsletter": [
+        "The Chaos Weaver whispered dark prophecies in {{name}}'s ear. They awoke forever changed. (+{{xp}} XP, Minor Injury)"
+      ]
+    },
+    "bountiful_harvest": {
+      "title": "A Bountiful Harvest",
+      "effectType": "bountiful_harvest",
+      "newsletter": [
+        "A local village celebrated a surprisingly bountiful harvest and shared their excess crops with the stable. The gladiators enjoyed the feast! (+{{gold}} Gold)"
+      ]
+    },
+    "abyssal_tempest_ritual": {
+      "title": "Abyssal Tempest Ritual",
+      "effectType": "abyssal_tempest_ritual",
+      "newsletter": [
+        "A swirling vortex of dark energy appeared in the stable during the off-season. {{name}} stared into it and emerged stronger, yet changed... (+25 XP, Minor Injury)"
+      ]
+    },
+    "offseason_training_camp": {
+      "title": "Offseason Training Camp",
+      "effectType": "offseason_training_camp",
+      "newsletter": [
+        "A grueling but highly effective offseason training camp pushed your warriors to their absolute limits. {{name}} emerged stronger and wiser, earning significant XP! (+{{xp}} XP)"
+      ]
+    },
+    "shattered_skies_ritual": {
+      "title": "Shattered Skies Ritual",
+      "effectType": "shattered_skies_ritual",
+      "newsletter": [
+        "A bizarre ritual in the training yard seemingly shattered the sky. {{name}} feels empowered but deeply exhausted. (+25 XP, +15 Fatigue)"
+      ]
+    },
+    "weeping_skies": {
+      "title": "Weeping Skies",
+      "effectType": "weeping_skies",
+      "newsletter": [
+        "An unnatural rain fell, leaving the sand slick and cold. {{name}} spent the day reflecting in the downpour. (+20 XP)"
+      ]
+    },
+    "suspicious_mushroom_stew": {
+      "title": "Suspicious Mushroom Stew",
+      "effectType": "suspicious_mushroom_stew",
+      "newsletter": [
+        "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
+      ]
+    }
+  },
+  "events": {
+    "tavern_brawl": {
+      "title": "Tavern Brawl!",
+      "newsletter": [
+        "{{name}} got into a wild tavern brawl last night! They gained +{{fame}} Fame but suffered a minor injury."
+      ],
+      "injury_name": "Black Eye",
+      "injury_desc": "Caught a nasty right hook in the tavern."
+    },
+    "celestial_blessing": {
+      "title": "A Sign from the Gods!",
+      "newsletter": [
+        "A shooting star was seen over the arena exactly as {{name}} was training. (+{{fame}} Fame, +{{xp}} XP)"
+      ]
+    },
+    "lost_relic": {
+      "title": "Lost Relic Discovery",
+      "newsletter": [
+        "{{name}} discovered an ancient artifact while exploring the ruins! (+{{fame}} Fame, +{{xp}} XP)"
+      ]
+    },
+    "mysterious_patron": {
+      "title": "A Mysterious Patron!",
+      "newsletter": [
+        "A mysterious patron was impressed by your stable and donated {{gold}} gold!"
+      ]
+    },
+    "goblin_merchant": {
+      "title": "Goblin Merchant",
+      "newsletter": [
+        "A shady goblin merchant visited the stables! {{name}} traded some scrap for a curious trinket. (+{{xp}} XP, -20 Gold)"
+      ]
+    }
+  }
+}

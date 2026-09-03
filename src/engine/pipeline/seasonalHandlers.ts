@@ -40,6 +40,7 @@ export {
   handleAbyssalBargain,
   handleTavernBrawlSurprise,
   handleGoblinRaid,
+  handleGoblinMerchant,
   handleFeyTrickster,
   handleShadowTournament,
   handleWanderingFortuneTeller,

@@ -40,7 +40,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -91,7 +91,9 @@
       "The sands drink deeply today.",
       "A chillingly precise maneuver from {{attacker}} ends {{defender}}'s life before they even realize they are dead.",
       "{{attacker}} dispatches {{defender}} with an almost clinical detachment, a perfect, fatal strike.",
-      "The arena goes dead silent as {{attacker}} brutally, efficiently executes {{defender}}."
+      "The arena goes dead silent as {{attacker}} brutally, efficiently executes {{defender}}.",
+      "The blow shatters bone and splinters reality; {{defender}} is dead before they hit the ground, another sacrifice to the pit.",
+      "A cold, clinical strike severs the spine. {{defender}} collapses like a puppet with cut strings, ending the bout."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -232,7 +234,37 @@
       "Bleeding out on the arena floor, {{defender}} draws their final, shuddering breath.",
       "{{defender}}'s body simply gives out, ruined beyond the capacity to live.",
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
-      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever."
+      "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever.",
+      "Blood flows in rivers as {{defender}} takes a hit they cannot walk away from, their life pouring into the hungry sands.",
+      "The final strike is unceremonious and brutal, snuffing out {{defender}}'s life with dull, wet finality."
+    ],
+    "weapon_specific": {
+      "slashing": [
+        "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
+      ],
+      "piercing": [
+        "{{attacker}} drives their point straight through {{defender}}'s heart.",
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
+      ],
+      "bashing": [
+        "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
+      ],
+      "fist": [
+        "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
+      ]
+    },
+    "default": [
+      "The fatal blow is delivered with cold, mechanical efficiency, instantly halting {{defender}}'s vitals.",
+      "A surgical strike from {{attacker}} completely severs {{defender}}'s essential lifelines.",
+      "With a final, desperate gasp, {{defender}} falls, their soul joining the countless ghosts of the arena!",
+      "{{attacker}} raises their weapon high as {{defender}}'s lifeblood paints the hot sands crimson!",
+      "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
+      "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
+      "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
     ]
   }
 }

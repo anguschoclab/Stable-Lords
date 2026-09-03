@@ -247,11 +247,15 @@ async function runBatchAutosim(
       });
     }
 
+    const prevWeeksSimmed = weeksSimmed;
     weeksSimmed += result.weeksCompleted;
     state = result.state;
 
-    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth
-    if (weeksSimmed % 50 === 0) {
+    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth.
+    // Batch mode advances in 13-week chunks, so a plain `% 50 === 0` check would almost
+    // never fire (13 and 50 are coprime → only aligns every 650 weeks). Detect boundary
+    // crossings instead so truncation still happens roughly every 50 weeks.
+    if (Math.floor(weeksSimmed / 50) > Math.floor(prevWeeksSimmed / 50)) {
       state = truncateState(state);
     }
 

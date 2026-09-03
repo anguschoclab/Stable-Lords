@@ -26,8 +26,9 @@ describe('FighterConfigCard DOM ID uniqueness', () => {
     const hasUseId = /useId/.test(content);
     const hasHardcodedId = /id=\{`stat-slider-\$\{key\}`\}/.test(content);
 
-    // If useId is present, hardcoded pattern is OK (it'll be prefixed)
-    // If useId is NOT present, hardcoded pattern is a bug (duplicate IDs)
+    // If useId is present, the hardcoded pattern is OK (it'll be prefixed).
+    // If useId is NOT present, the hardcoded pattern produces duplicate IDs
+    // and must be rejected.
     if (!hasUseId) {
       expect(hasHardcodedId).toBe(false);
     }

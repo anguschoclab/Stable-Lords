@@ -68,4 +68,20 @@ describe('NF3: sequential autosim memory growth', () => {
     const truncated = truncateState(state);
     expect(truncated.lastWeekBoutDisplay).toBeUndefined();
   });
+
+  it('batch autosim truncates arenaHistory across 50-week boundaries (13-week chunks)', () => {
+    // Batch mode advances 13 weeks at a time. A naive `% 50 === 0` check would
+    // only fire every 650 weeks (LCM of 13 and 50). The boundary-crossing check
+    // must fire roughly every 50 weeks instead.
+    const state = createFreshState('batch-mem-trunc-test', '2025-01-01T00:00:00.000Z');
+    state.treasury = 100000;
+
+    // 65 weeks = 5 quarters. Crosses the 50-week boundary during the 4th quarter
+    // (weeks 40→53). Without the fix, truncation never fires and arenaHistory
+    // grows past 500.
+    return runAutosim(state, { weeksToSim: 65, useBatchMode: true }).then((result) => {
+      expect(result.weeksSimmed).toBe(65);
+      expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
+    });
+  });
 });

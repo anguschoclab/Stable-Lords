@@ -34,8 +34,8 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
   let traitValue = 0;
 
   if (warrior.traits) {
-    for (let i = 0; i < warrior.traits.length; i++) {
-      const t = TRAITS[warrior.traits[i]!];
+    for (const traitId of warrior.traits) {
+      const t = TRAITS[traitId];
       if (!t) continue;
 
       if (t.tier === 'Flaw') {

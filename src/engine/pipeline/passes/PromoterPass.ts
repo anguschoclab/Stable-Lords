@@ -147,7 +147,8 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   );
 
   // Pre-build a set of player warrior ids for arena-selection favour weighting
-  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+  const playerWarriorIds = new Set<string>();
+  for (const w of state.roster || []) playerWarriorIds.add(w.id);
 
   // Player challenge/avoid sets for bout offer biasing
   const challengeSet = new Set(state.playerChallenges || []);
@@ -178,7 +179,11 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     // Build score-sorted array for binary-search windowing
     const scoreOf = (w: Warrior) => rankings[w.id]?.compositeScore ?? 0;
     const sortedByScore = [...shuffledEligible].sort((a, b) => scoreOf(a) - scoreOf(b));
-    const sortedScores = sortedByScore.map((w) => scoreOf(w));
+    const sortedScores: number[] = new Array(sortedByScore.length);
+    for (let i = 0; i < sortedByScore.length; i++) {
+      const w = sortedByScore[i];
+      if (w) sortedScores[i] = scoreOf(w);
+    }
 
     // Track matched warriors to prevent reuse within this promoter's pass
     const matchedIds = new Set<string>();

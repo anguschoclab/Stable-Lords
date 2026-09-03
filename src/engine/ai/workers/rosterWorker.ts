@@ -43,13 +43,13 @@ export function processRoster(
   const rngService = rng || new SeededRNGService(seed ?? currentWeek * 7919 + 101);
   let updatedRival = { ...rival };
   let seasonalGrowth: SeasonalGrowth[] = updatedRival.seasonalGrowth ?? [];
-  const activeRoster = updatedRival.roster.filter((w) => isActive(w));
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
 
   // 0. Recovery — tick injuries for all active wounded warriors, applying any
   // healing trainer bonus exactly as the player path does in training.ts.
   const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
-  for (const wounded of activeRoster) {
+  for (const wounded of updatedRival.roster) {
+    if (!isActive(wounded)) continue;
     if ((wounded.injuries ?? []).length === 0) continue;
     const { updatedInjuries } = processRecovery(wounded, healingBonus);
     updatedRival.roster = updateEntityInList(updatedRival.roster, wounded.id, (w) => ({

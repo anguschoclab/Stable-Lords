@@ -49,7 +49,8 @@ export function processAllRivalsBoutOffers(
     const pickedWarriors = new Set<string>();
 
     // ⚡ Bolt Optimization: Pre-compute Set for O(1) roster checks
-    const owningRosterIds = new Set(owningRival.roster.map((w) => w.id));
+    const owningRosterIds = new Set<string>();
+    for (const w of owningRival.roster) owningRosterIds.add(w.id);
 
     const sortedOffers = [...rivalOffers].sort((a, b) => {
       const scoreA = a.hype * a.purse;

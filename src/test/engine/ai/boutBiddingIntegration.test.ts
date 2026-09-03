@@ -273,6 +273,42 @@ describe('convertBidsToOffers', () => {
     expect(ids.has(warriorA.id)).toBe(true);
     expect(ids.has(warriorB.id)).toBe(true);
   });
+
+  it('VENDETTA bid skips inactive warriors in target stable roster', () => {
+    const warriorA = makeWarrior('Vindicator', FightingStyle.StrikingAttack);
+    const activeTarget = makeWarrior('ActiveTarget', FightingStyle.BashingAttack);
+    const deadTarget = makeWarrior('DeadTarget', FightingStyle.BashingAttack);
+    deadTarget.status = 'Dead';
+    const retiredTarget = makeWarrior('RetiredTarget', FightingStyle.BashingAttack);
+    retiredTarget.status = 'Retired';
+
+    const rivalA = makeRival({
+      id: 'rival-a' as any,
+      roster: [warriorA],
+      strategy: { intent: 'VENDETTA', targetStableId: 'rival-b' as any, planWeeksRemaining: 4 },
+    });
+    const rivalB = makeRival({
+      id: 'rival-b' as any,
+      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },
+      roster: [deadTarget, retiredTarget, activeTarget],
+    });
+    const state = makeMinimalState([rivalA, rivalB]);
+
+    const { bids } = generateBoutBids(rivalA, 5, 'Clear', 'Calm', [rivalB]);
+    expect(bids.length).toBeGreaterThan(0);
+
+    const rng = new SeededRNGService(42);
+    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
+    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+
+    expect(offers.length).toBeGreaterThan(0);
+    const offer = offers[0]!;
+    // The offer must pair warriorA with the active target, never the dead or retired ones
+    expect(offer.warriorIds).toContain(warriorA.id);
+    expect(offer.warriorIds).toContain(activeTarget.id);
+    expect(offer.warriorIds).not.toContain(deadTarget.id);
+    expect(offer.warriorIds).not.toContain(retiredTarget.id);
+  });
 });
 
 // ─── Integration test through RivalStrategyPass ──────────────────────────────

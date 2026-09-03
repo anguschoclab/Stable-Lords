@@ -35,10 +35,15 @@ export function generateBoutBids(
       : undefined;
 
   // Pre-calculate active opponents for non-vendetta intents
-  const nonVendettaOpponents =
-    intent !== 'VENDETTA'
-      ? rivals.filter((r) => r.id !== rival.id).flatMap((r) => r.roster.filter((w) => isActive(w)))
-      : [];
+  const nonVendettaOpponents: typeof rival.roster = [];
+  if (intent !== 'VENDETTA') {
+    for (const r of rivals) {
+      if (r.id === rival.id) continue;
+      for (const w of r.roster) {
+        if (isActive(w)) nonVendettaOpponents.push(w);
+      }
+    }
+  }
 
   // Build a mock state for matchup scoring
   const mockState: GameState = {
@@ -266,12 +271,11 @@ export function convertBidsToOffers(
       // VENDETTA: target a specific stable
       const targetRival = rivalMap.get(bid.targetStableId);
       if (targetRival) {
-        candidates = targetRival.roster
-          .filter((w) => isActive(w))
-          .map((w) => ({
-            warrior: w,
-            stableId: targetRival.id as string,
-          }));
+        candidates = [];
+        for (const w of targetRival.roster) {
+          if (!isActive(w)) continue;
+          candidates.push({ warrior: w, stableId: targetRival.id as string });
+        }
       }
     } else {
       // All other intents: search all rival stables

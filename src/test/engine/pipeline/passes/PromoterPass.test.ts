@@ -1220,3 +1220,109 @@ describe('PromoterPass — eligibility gating', () => {
     });
   });
 });
+
+// ─── sortedScores / sortedByScore index alignment ──────────────────────────
+// Verifies that the binary-search windowing path (lowerBound/upperBound over
+// sortedScores) stays aligned with the sortedByScore warrior array after the
+// .map() → for-loop refactor of sortedScores construction.
+
+describe('sortedScores index alignment', () => {
+  function makeStateWithWarriors(
+    scores: { id: string; score: number }[]
+  ): GameState {
+    const warriors: Warrior[] = scores.map((s) => {
+      const w = makeWarrior(
+        s.id as WarriorId,
+        `Warrior ${s.id}`,
+        FightingStyle.StrikingAttack,
+        { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        { fame: s.score }
+      );
+      w.id = s.id as WarriorId;
+      return w;
+    });
+
+    const realmRankings: Record<string, any> = {};
+    for (const s of scores) {
+      realmRankings[s.id] = { overallRank: 1, classRank: 1, compositeScore: s.score };
+    }
+
+    return {
+      meta: { gameName: '', version: '', createdAt: '' },
+      week: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      treasury: 1000,
+      fame: 0,
+      roster: warriors,
+      rivals: [],
+      promoters: {},
+      boutOffers: {},
+      realmRankings,
+    } as unknown as GameState;
+  }
+
+  it('produces correct matches when scores are in non-sorted input order', () => {
+    // Input order is deliberately unsorted to verify that sortedScores
+    // (built from sortedByScore) maintains index alignment through the
+    // binary-search windowing. If alignment breaks, warriors with close
+    // scores would fail to match.
+    const state = makeStateWithWarriors([
+      { id: 'w50', score: 50 },
+      { id: 'w10', score: 10 },
+      { id: 'w30', score: 30 },
+      { id: 'w31', score: 31 },
+      { id: 'w20', score: 20 },
+    ]);
+
+    (state as any).promoters = {
+      ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'p',
+        'Test',
+        'Corporate',
+        'Local',
+        10
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    // w30 (score 30) and w31 (score 31) have gap = 1/30 ≈ 0.033 < 0.20
+    // (Corporate threshold). They should match each other.
+    const w30w31Offer = offers.find(
+      (o) =>
+        o.warriorIds.includes('w30' as WarriorId) &&
+        o.warriorIds.includes('w31' as WarriorId)
+    );
+    expect(w30w31Offer).toBeDefined();
+  });
+
+  it('produces correct matches with duplicate scores', () => {
+    // Duplicate scores stress the binary search boundaries (lowerBound/upperBound)
+    // and verify sortedScores has the right length and element positions.
+    const state = makeStateWithWarriors([
+      { id: 'd1', score: 40 },
+      { id: 'd2', score: 40 },
+      { id: 'd3', score: 40 },
+      { id: 'd4', score: 40 },
+    ]);
+
+    (state as any).promoters = {
+      ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'p',
+        'Test',
+        'Corporate',
+        'Local',
+        10
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    // 4 warriors all score 40 → all in each other's window → 2 offers
+    expect(offers.length).toBe(2);
+  });
+});

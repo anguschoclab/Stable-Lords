@@ -4,6 +4,11 @@
  */
 
 export const ORIGINS: string[] = [
+  'Raised in the ash-choked chimneys of the Upper Spire',
+  'Left for dead in the gutters of the Alchemist District',
+  'Sold to the fighting pits by debt-collectors at age seven',
+  'Raised by feral street-dogs in the shadows of the Colosseum',
+  'Born in the sunless depths of the Salt Mines',
   'Abandoned at the rusted gates of the Blackwood Workhouse',
   'Survived the chilling cullings of the Whispering Vaults',
   'Raised amidst the deafening roar of the Cinderstone Forges',
@@ -19,7 +24,6 @@ export const ORIGINS: string[] = [
   'Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings',
   'Survived the brutal winters huddled in the exhaust vents of the Grand Forge',
   'Raised as a nameless thrall in the fighting pits of the Undercity',
-  'Raised in the lightless cellars of the Harrow-Home for Foundlings',
   'Abandoned beneath the crumbling arches of the Weeping Aqueduct',
   'Found swaddled in blood-stained rags at the gates of the Silent Order',
   'Survived the brutal starvation of the Rat-Catcher Guilds',
@@ -254,9 +258,11 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'learned to read an opponent by watching the twitch of their jaw',
+  'never slept with both eyes fully closed',
+  'mastered the art of slipping out of restraints in the dark',
   "learned to gauge distance by dodging the overseer's lash",
   'memorized the anatomy of beasts while working the charnel pits',
-  'developed an iron grip from clinging to the underside of merchant carts',
   'used to meticulously trace the structural flaws in stone walls',
   "slept soundly only when the city's warning bells rang",
   'was known for carving the names of their enemies into their own flesh',
@@ -283,7 +289,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to sleep with one eye open after surviving the orphanage riots',
   'was known for an unnerving, silent stare that made the matrons flinch',
   'would sit completely still for hours watching the fighting pit from the rafters',
-  'learned to predict a strike by watching the tension in a bully’s shoulders',
   'was infamous for never crying out, no matter how severe the punishment',
   'would map out the blind spots of the orphanage guards with obsessive precision',
   'would catch and study the weak points of venomous centipedes',
@@ -388,6 +393,9 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  'until they broke a slaver’s iron collar with a single strike',
+  'realizing that fear was a weapon they could wield against the strong',
+  'knowing that every drop of blood spilled brings them closer to the throne',
   'discovering that a rusted spoon could be sharpened into a deadly shiv',
   'surviving a night in the dog-cages by out-snarling the hounds',
   'realizing that mercy in the Undercity was just another word for weakness',
@@ -487,7 +495,6 @@ export const DEFINING_MOMENTS: string[] = [
   "until they drove a shattered bottle into their tormentor's eye and fled",
   'knowing that the roar of the crowd was the only lullaby they ever needed',
   'until they shattered a warden’s jaw with a single, perfectly timed kick',
-  'realizing the arena was the only place where their rage was rewarded with silver',
   "until they drove a splintered chair leg through a slaver's hand and walked free",
   "until they shattered a slaver's jaw with a rusted iron chain",
   'realizing that the only way to escape the slums was over a mountain of broken bodies',
@@ -502,7 +509,5 @@ export const DEFINING_MOMENTS: string[] = [
   "discovering that the crowd's cheers felt warmer than any hearth they had ever known",
   'until they finally realized their lifelong scars were just a map to the arena',
   'realizing that bleeding in the sands paid better than bleeding in the slums',
-  'discovering that a rusted spoon could be sharpened into a deadly shiv in the dark',
-  'surviving a night in the dog-cages by out-snarling the feral hounds',
   'realizing that mercy in the Undercity was just another word for weakness when their friend was slain',
 ];

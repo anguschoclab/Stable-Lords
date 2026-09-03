@@ -504,6 +504,22 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sunken_temple_blood_eclipse',
+    arenaId: 'sunken_temple',
+    type: 'famous_death',
+    title: 'The Blood Eclipse',
+    narrative:
+      'During a rare solar eclipse, a challenger was executed exactly as the sun vanished. Fanatics say their shadow never returned.',
+  },
+  {
+    id: 'underpit_arena_whispering_walls',
+    arenaId: 'underpit_arena',
+    type: 'architectural_quirk',
+    title: 'The Whispering Walls',
+    narrative:
+      'The stones here echo with the last words of the defeated. Some fighters refuse to enter without stuffing wax in their ears.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

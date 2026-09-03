@@ -241,55 +241,19 @@
     "weapon_specific": {
       "slashing": [
         "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
-        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin.",
-        "{{attacker}} executes a flawless, sweeping decapitation, ending the bout instantly.",
-        "A brutal flurry of slashes from {{attacker}} leaves {{defender}} in pieces on the sand.",
-        "{{attacker}}'s blade shears cleanly through {{defender}}'s neck. A fountain of crimson erupts.",
-        "With a terrifying scream, {{attacker}} cleaves {{defender}} perfectly in twain.",
-        "{{attacker}} draws their weapon across {{defender}}'s throat in a cold, precise execution.",
-        "A masterful, diagonal cut from {{attacker}} eviscerates {{defender}} completely.",
-        "{{defender}} collapses as {{attacker}}'s final, devastating slash paints the arena red.",
-        "{{attacker}} parts {{defender}} from their limbs in a gruesome display of slashing mastery.",
-        "The crowd roars as {{attacker}}'s blade removes {{defender}}'s head from their shoulders."
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
-        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
-        "{{attacker}} drives their point straight through {{defender}}'s heart, killing them instantly.",
-        "A flurry of precise, lethal thrusts from {{attacker}} turns {{defender}} into a pincushion.",
-        "{{attacker}} impales {{defender}} effortlessly, lifting them off the ground before letting them fall.",
-        "With clinical precision, {{attacker}} pierces {{defender}}'s skull, ending the fight.",
-        "{{defender}} gasps as {{attacker}}'s final lunge skewers their vitals completely.",
-        "{{attacker}} drives the weapon deep into {{defender}}'s chest, twisting the blade cruelly.",
-        "A perfectly placed thrust from {{attacker}} severs {{defender}}'s spine.",
-        "{{attacker}} pins {{defender}} to the bloody sand with a devastating, fatal lunge.",
-        "The arena falls silent as {{attacker}}'s blade punches perfectly through {{defender}}'s heart."
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
-        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly.",
-        "{{attacker}} unleashes a skull-crushing blow, caving in {{defender}}'s head.",
-        "A sickening crunch echoes through the coliseum as {{attacker}} obliterates {{defender}}'s chest cavity.",
-        "{{attacker}} repeatedly smashes {{defender}} into the dirt until nothing remains but ruin.",
-        "With a thunderous swing, {{attacker}} shatters every bone in {{defender}}'s body.",
-        "{{defender}} is reduced to a bloody pulp by {{attacker}}'s merciless, crushing barrage.",
-        "{{attacker}} caves in {{defender}}'s skull with a final, devastating overhead smash.",
-        "The crowd gasps as {{attacker}}'s heavy weapon completely crushes {{defender}}.",
-        "A terrifying, bone-pulverizing hit from {{attacker}} ends {{defender}}'s life instantly.",
-        "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands."
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
-        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery.",
-        "{{attacker}} pummels {{defender}}'s face into an unrecognizable ruin.",
-        "A devastating, bone-shattering uppercut from {{attacker}} snaps {{defender}}'s neck.",
-        "{{attacker}} mounts {{defender}} and delivers a savage, bare-knuckle execution.",
-        "With a sickening crunch, {{attacker}} caves in {{defender}}'s windpipe with a final punch.",
-        "{{defender}} falls lifeless after {{attacker}} lands a terrifying, fatal haymaker.",
-        "{{attacker}} beats the absolute life out of {{defender}} in a brutal display of pure ferocity.",
-        "A savage flurry of blows from {{attacker}} ends {{defender}}'s life on the blood-soaked sand.",
-        "{{attacker}} shatters {{defender}}'s skull with a single, monstrous punch.",
-        "The crowd winces as {{attacker}} literally beats {{defender}} to death with their bare hands."
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
       ]
     },
     "default": [
@@ -300,16 +264,7 @@
       "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
       "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
       "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
-      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold.",
-      "{{attacker}} delivers the final, lethal blow, silencing {{defender}} forever.",
-      "The crowd roars as {{attacker}} ends {{defender}}'s miserable existence.",
-      "{{defender}} falls, their lifeblood staining the arena sand, courtesy of {{attacker}}.",
-      "A brutal, merciless execution from {{attacker}} concludes the bout.",
-      "{{attacker}} stands victorious over the ruined corpse of {{defender}}.",
-      "The ARENAMASTER signals the end as {{attacker}} finishes {{defender}} off.",
-      "{{defender}}'s lifeless body hits the dirt. {{attacker}} is triumphant.",
-      "With a final, devastating strike, {{attacker}} sends {{defender}} to the void.",
-      "{{attacker}} claims victory, leaving {{defender}} dead upon the sands."
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
     ]
   }
 }

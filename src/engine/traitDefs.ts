@@ -30,7 +30,7 @@ export type TraitSign = 'positive' | 'negative';
 /**
  *
  */
-export type TraitId = string;
+export type TraitId = keyof typeof TRAITS;
 
 /**
  * Defines the shape of trait effect.
@@ -99,6 +99,24 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  pit_survivor: {
+    id: 'pit_survivor',
+    name: 'Pit Survivor',
+    description: 'Forged in the brutal fighting pits, gaining strength when cornered.',
+    effect: { defModLate: 2, enduranceMult: 0.96 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  feral_instinct: {
+    id: 'feral_instinct',
+    name: 'Feral Instinct',
+    description: 'Moves with the unpredictable savagery of a cornered beast.',
+    effect: { iniMod: 2, riposteMod: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',
@@ -152,7 +170,7 @@ export const TRAITS: Record<string, TraitDef> = {
     name: 'Iron Stomach',
     description:
       'Raised on garbage and sour water. Shrugs off stamina loss slightly better than most.',
-    effect: { enduranceMult: 0.95 },
+    effect: { enduranceMult: 0.96, hpModLate: 1 },
     tier: 'Common',
     sign: 'positive',
     weight: 0.8,

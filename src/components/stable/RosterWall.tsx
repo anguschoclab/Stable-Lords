@@ -76,7 +76,7 @@ export function RosterWall() {
                 <StyleCompositionDonut
                   styles={rosterStyles}
                   size={28}
-                  className="ml-1 opacity-70 hover:opacity-100 transition-opacity"
+                  className="ml-1 opacity-70 hover:opacity-100 transition-opacity motion-reduce:transition-none"
                 />
               )}
             </div>

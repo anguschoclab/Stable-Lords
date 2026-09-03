@@ -56,8 +56,7 @@ export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
               >
                 {tab.icon && (
                   <span
-                    className={cn(
-                      'transition-transform duration-300 group-hover:scale-110',
+                    className={cn('transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none',
                       activeTab === tab.id ? 'text-primary' : 'text-muted-foreground/50'
                     )}
                   >

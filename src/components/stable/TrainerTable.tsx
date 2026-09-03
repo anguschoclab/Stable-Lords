@@ -69,7 +69,7 @@ export function TrainerTable() {
               <Surface
                 variant="neon"
                 padding="sm"
-                className="text-[10px] font-black uppercase tracking-[0.2em] px-8 py-2.5 hover:scale-105 transition-transform"
+                className="text-[10px] font-black uppercase tracking-[0.2em] px-8 py-2.5 hover:scale-105 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
               >
                 Enlist Specialists
               </Surface>
@@ -91,7 +91,7 @@ export function TrainerTable() {
                 >
                   <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-display font-black uppercase tracking-tight group-hover:text-primary transition-colors">
+                      <span className="text-xs font-display font-black uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none">
                         {t.name}
                       </span>
                       <Badge

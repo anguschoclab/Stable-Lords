@@ -82,12 +82,11 @@ export function ReputationSliders() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Icon
-                  className={cn(
-                    'h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity',
+                  className={cn('h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none',
                     color
                   )}
                 />
-                <span className="text-xs font-display font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
+                <span className="text-xs font-display font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
                   {label}
                 </span>
               </div>
@@ -103,7 +102,7 @@ export function ReputationSliders() {
                 </div>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="h-3 w-3 text-muted-foreground/30 hover:text-muted-foreground transition-colors cursor-help shrink-0" />
+                    <Info className="h-3 w-3 text-muted-foreground/30 hover:text-muted-foreground transition-colors cursor-help shrink-0 motion-reduce:transition-none" />
                   </TooltipTrigger>
                   <TooltipContent className="w-full max-w-xs text-[10px] font-medium leading-relaxed bg-neutral-950 border-white/10">
                     {desc}

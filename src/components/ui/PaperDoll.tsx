@@ -46,7 +46,7 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
           cx="50"
           cy="25"
           r="15"
-          className={cn('transition-colors duration-500', getPartColor('Head'))}
+          className={cn('transition-colors duration-500 motion-reduce:transition-none', getPartColor('Head'))}
           data-testid="body-part-head"
           stroke="currentColor"
           strokeWidth="2"
@@ -55,7 +55,7 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
         {/* Torso */}
         <path
           d="M35 45H65L70 110H30L35 45Z"
-          className={cn('transition-colors duration-500', getPartColor('Torso'))}
+          className={cn('transition-colors duration-500 motion-reduce:transition-none', getPartColor('Torso'))}
           data-testid="body-part-torso"
           stroke="currentColor"
           strokeWidth="2"
@@ -64,7 +64,7 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
         {/* Left Arm */}
         <path
           d="M30 50L10 100L15 105L35 60"
-          className={cn('transition-colors duration-500', getPartColor('LeftArm'))}
+          className={cn('transition-colors duration-500 motion-reduce:transition-none', getPartColor('LeftArm'))}
           data-testid="body-part-left-arm"
           stroke="currentColor"
           strokeWidth="2"
@@ -73,7 +73,7 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
         {/* Right Arm */}
         <path
           d="M70 50L90 100L85 105L65 60"
-          className={cn('transition-colors duration-500', getPartColor('RightArm'))}
+          className={cn('transition-colors duration-500 motion-reduce:transition-none', getPartColor('RightArm'))}
           data-testid="body-part-right-arm"
           stroke="currentColor"
           strokeWidth="2"
@@ -82,7 +82,7 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
         {/* Legs (Simplified as one unit for now, as per Lead Engineer's spec "Legs") */}
         <path
           d="M35 110L25 180H45L50 130L55 180H75L65 110"
-          className={cn('transition-colors duration-500', getPartColor('Legs'))}
+          className={cn('transition-colors duration-500 motion-reduce:transition-none', getPartColor('Legs'))}
           data-testid="body-part-legs"
           stroke="currentColor"
           strokeWidth="2"

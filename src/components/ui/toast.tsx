@@ -70,8 +70,7 @@ const ToastAction = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Action
     ref={ref}
-    className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-none border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group-[.destructive]:focus-visible:ring-destructive disabled:opacity-50',
+    className={cn('inline-flex h-8 shrink-0 items-center justify-center rounded-none border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group-[.destructive]:focus-visible:ring-destructive disabled:opacity-50 motion-reduce:transition-none',
       className
     )}
     {...props}
@@ -88,8 +87,7 @@ const ToastClose = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Close
     ref={ref}
-    className={cn(
-      'absolute right-2 top-2 rounded-none p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-destructive hover:text-foreground group-[.destructive]:hover:text-destructive/50 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 group-[.destructive]:focus-visible:ring-destructive group-[.destructive]:focus-visible:ring-offset-destructive',
+    className={cn('absolute right-2 top-2 rounded-none p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-destructive hover:text-foreground group-[.destructive]:hover:text-destructive/50 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 group-[.destructive]:focus-visible:ring-destructive group-[.destructive]:focus-visible:ring-offset-destructive motion-reduce:transition-none',
       className
     )}
     toast-close=""

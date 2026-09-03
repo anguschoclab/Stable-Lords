@@ -150,7 +150,7 @@ export function AttributeRow({
             ) : !disabled ? (
               <div className="flex items-center justify-end gap-1">
                 <span className="text-[10px] font-mono font-bold text-primary/80">{chance}%</span>
-                <ArrowUpRight className="h-2.5 w-2.5 opacity-40 group-hover/row:opacity-100 transition-opacity" />
+                <ArrowUpRight className="h-2.5 w-2.5 opacity-40 group-hover/row:opacity-100 transition-opacity motion-reduce:transition-none" />
               </div>
             ) : null}
           </div>

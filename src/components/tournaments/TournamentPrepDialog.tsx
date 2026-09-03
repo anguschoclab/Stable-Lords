@@ -42,9 +42,9 @@ export function TournamentPrepDialog({
 }: TournamentPrepDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
+      <DialogContent aria-describedby="tournament-prep-description" className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
         <DialogTitle className="sr-only">Tournament Preparation</DialogTitle>
-        <DialogDescription className="sr-only">Prepare for the tournament</DialogDescription>
+        <DialogDescription id="tournament-prep-description" className="sr-only">Prepare for the tournament</DialogDescription>
         <div className="bg-secondary/20 p-6 border-b border-white/5 flex items-center gap-3">
           <Shield className="h-5 w-5 text-primary" />
           <h2 className="font-display text-xl font-black uppercase tracking-tighter text-foreground">
@@ -118,7 +118,7 @@ export function TournamentPrepDialog({
               }}
               className="h-12 px-10 gap-3 font-black uppercase text-[11px] tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] group"
             >
-              <Trophy className="h-4 w-4 group-hover:scale-125 transition-transform" />
+              <Trophy className="h-4 w-4 group-hover:scale-125 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
               <span>INITIATE SEASON CAMPAIGN</span>
             </Button>
           </div>

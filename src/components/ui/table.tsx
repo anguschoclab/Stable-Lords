@@ -68,8 +68,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
     <tr
       ref={ref}
       data-player={isPlayer}
-      className={cn(
-        'border-b border-white/5 transition-colors',
+      className={cn('border-b border-white/5 transition-colors motion-reduce:transition-none',
         'hover:bg-white/[0.02]',
         isPlayer && 'bg-primary/[0.03] border-l-2 border-l-primary',
         className

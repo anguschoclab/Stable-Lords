@@ -10,10 +10,10 @@ import { getSalary } from '../hooks/useContractData';
  */
 export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
   return (
-    <TableRow key={t.id} className="border-white/5 group hover:bg-white/2 transition-colors">
+    <TableRow key={t.id} className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none">
       <TableCell className="pl-8 py-5">
         <div className="flex flex-col">
-          <span className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors">
+          <span className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none">
             {t.name}
           </span>
           {t.retiredFromWarrior && (
@@ -28,7 +28,7 @@ export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
       </TableCell>
       <TableCell className="py-5">
         <div className="flex items-center gap-2.5">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors" />
+          <div className="h-1.5 w-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors motion-reduce:transition-none" />
           <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none">
             {t.focus}
           </span>

@@ -10,7 +10,7 @@ export function EmptyContractState() {
     <div className="py-24 text-center flex flex-col items-center gap-6 group">
       <div className="relative">
         <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full" />
-        <GraduationCap className="h-16 w-16 text-muted-foreground opacity-20 relative z-10 group-hover:scale-110 transition-transform duration-500" />
+        <GraduationCap className="h-16 w-16 text-muted-foreground opacity-20 relative z-10 group-hover:scale-110 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
       </div>
       <div className="space-y-2">
         <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">

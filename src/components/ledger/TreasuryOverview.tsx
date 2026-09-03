@@ -83,7 +83,7 @@ function GlobalTreasuryMatrix({
               padding="md"
               className="flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-all motion-reduce:transition-none motion-reduce:transform-none relative overflow-hidden h-32"
             >
-              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity motion-reduce:transition-none">
                 <stat.icon className="h-10 w-10" />
               </div>
               <stat.icon
@@ -165,7 +165,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
             {breakdown.income.map((item, i) => (
               <div
                 key={`${item.label}-${i}`}
-                className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded-none transition-colors"
+                className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded-none transition-colors motion-reduce:transition-none"
               >
                 <span className="text-[11px] font-medium text-foreground/70 group-hover/item:text-foreground">
                   {item.label}
@@ -193,7 +193,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
             {breakdown.expenses.map((item, i) => (
               <div
                 key={`${item.label}-${i}`}
-                className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded-none transition-colors"
+                className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded-none transition-colors motion-reduce:transition-none"
               >
                 <span className="text-[11px] font-medium text-foreground/70 group-hover/item:text-foreground">
                   {item.label}
@@ -222,7 +222,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] opacity-40">
               Weekly Net Flux
             </span>
-            <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
+            <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
               Projected Net
             </span>
           </div>
@@ -285,7 +285,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
       <div className="flex-1 overflow-auto custom-scrollbar">
         {recentLedger.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-20 group">
-            <Wallet className="h-16 w-16 mb-4 group-hover:scale-110 transition-transform duration-500" />
+            <Wallet className="h-16 w-16 mb-4 group-hover:scale-110 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
             <p className="text-sm font-display font-black uppercase tracking-[0.3em]">No Entries</p>
             <p className="text-[10px] lowercase italic opacity-80 mt-2 font-medium">
               Fight a bout to see transactions here...
@@ -310,14 +310,14 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
               {recentLedger.map((entry) => (
                 <TableRow
                   key={entry.id}
-                  className="border-white/5 group hover:bg-white/2 transition-colors"
+                  className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none"
                 >
                   <TableCell className="pl-8 py-4">
                     <div className="flex items-center gap-3">
                       <span className="text-[9px] font-mono font-black text-muted-foreground opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all motion-reduce:transition-none motion-reduce:transform-none">
                         WK {entry.week.toString().padStart(2, '0')}
                       </span>
-                      <div className="h-1 w-1 rounded-full bg-white/5 group-hover:bg-primary transition-colors" />
+                      <div className="h-1 w-1 rounded-full bg-white/5 group-hover:bg-primary transition-colors motion-reduce:transition-none" />
                     </div>
                   </TableCell>
                   <TableCell className="py-4">
@@ -346,10 +346,10 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center">
         <button
           aria-label="Access Full Archive"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-none"
+          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-none motion-reduce:transition-none"
         >
           Access Full Archive{' '}
-          <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform" />
+          <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
         </button>
       </div>
     </Surface>

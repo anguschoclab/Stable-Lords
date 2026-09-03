@@ -18,7 +18,7 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
     <div className="space-y-4 p-4 bg-white/2 rounded-none border border-white/5 hover:border-destructive/20 transition-all motion-reduce:transition-none motion-reduce:transform-none group/item">
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
-          <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-destructive transition-colors">
+          <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-destructive transition-colors motion-reduce:transition-none">
             {r.stableName}
           </span>
           <div className="flex items-center gap-2">

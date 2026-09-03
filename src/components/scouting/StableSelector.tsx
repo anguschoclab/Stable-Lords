@@ -56,8 +56,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                         <Shield className="h-4 w-4" />
                       </div>
                       <span
-                        className={cn(
-                          'font-display font-black text-xs uppercase tracking-tight transition-colors',
+                        className={cn('font-display font-black text-xs uppercase tracking-tight transition-colors motion-reduce:transition-none',
                           idA === r.owner.id ? 'text-primary' : 'text-muted-foreground'
                         )}
                       >
@@ -120,8 +119,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                         <Shield className="h-4 w-4" />
                       </div>
                       <span
-                        className={cn(
-                          'font-display font-black text-xs uppercase tracking-tight transition-colors',
+                        className={cn('font-display font-black text-xs uppercase tracking-tight transition-colors motion-reduce:transition-none',
                           idB === r.owner.id ? 'text-accent' : 'text-muted-foreground'
                         )}
                       >

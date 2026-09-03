@@ -48,7 +48,7 @@ export function LegacyMentorsTab({ currentTrainers }: LegacyMentorsTabProps) {
             className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all motion-reduce:transition-none motion-reduce:transform-none"
           >
             <div className="flex items-center gap-6">
-              <span className="text-3xl font-display font-black text-arena-gold/30 group-hover:text-arena-gold transition-colors w-8 text-center">
+              <span className="text-3xl font-display font-black text-arena-gold/30 group-hover:text-arena-gold transition-colors w-8 text-center motion-reduce:transition-none">
                 {i + 1}
               </span>
               <div className="flex flex-col">

@@ -79,8 +79,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                         </div>
                         <div className="space-y-1 min-w-0">
                           <span
-                            className={cn(
-                              'block font-display font-black text-sm uppercase tracking-tight transition-colors truncate',
+                            className={cn('block font-display font-black text-sm uppercase tracking-tight transition-colors truncate motion-reduce:transition-none',
                               selectedRivalId === rival.owner.id
                                 ? 'text-primary'
                                 : 'text-foreground'

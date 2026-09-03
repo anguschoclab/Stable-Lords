@@ -20,9 +20,9 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
   const playerWon = (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');
 
   return (
-    <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors">
+    <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors motion-reduce:transition-none">
       <TableCell className="pl-6 py-4">
-        <span className="text-[10px] font-mono font-black text-foreground/20 group-hover/row:text-primary transition-colors">
+        <span className="text-[10px] font-mono font-black text-foreground/20 group-hover/row:text-primary transition-colors motion-reduce:transition-none">
           WK {bout.week.toString().padStart(2, '0')}
         </span>
       </TableCell>
@@ -61,7 +61,7 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
           <span className="text-[10px] font-mono font-black text-muted-foreground/60 uppercase">
             {bout.by || 'Decision'}
           </span>
-          <div className="h-0.5 w-8 bg-white/5 rounded-full mt-1 group-hover/row:bg-primary/40 transition-colors" />
+          <div className="h-0.5 w-8 bg-white/5 rounded-full mt-1 group-hover/row:bg-primary/40 transition-colors motion-reduce:transition-none" />
         </div>
       </TableCell>
     </TableRow>

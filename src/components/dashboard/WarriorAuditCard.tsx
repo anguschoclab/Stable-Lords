@@ -23,7 +23,7 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
           <WarriorLink
             name={warrior.name}
             id={warrior.id}
-            className="text-xs font-black uppercase tracking-tight text-foreground/80 hover:text-primary transition-colors"
+            className="text-xs font-black uppercase tracking-tight text-foreground/80 hover:text-primary transition-colors motion-reduce:transition-none"
           />
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
             ID: {warrior.id.slice(0, 8)}

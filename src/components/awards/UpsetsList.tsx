@@ -28,10 +28,10 @@ export default function UpsetsList({ upsets }: { upsets: UpsetEntry[] }) {
 
   return (
     <Collapsible>
-      <CollapsibleTrigger className="flex items-center gap-2 text-sm font-display font-semibold text-muted-foreground hover:text-foreground transition-colors group w-full">
+      <CollapsibleTrigger className="flex items-center gap-2 text-sm font-display font-semibold text-muted-foreground hover:text-foreground transition-colors group w-full motion-reduce:transition-none">
         <Zap className="h-4 w-4 text-accent" />
         Biggest Upsets ({upsets.length})
-        <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180 ml-auto" />
+        <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180 ml-auto motion-reduce:transition-none motion-reduce:transform-none" />
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="mt-2 space-y-1.5">

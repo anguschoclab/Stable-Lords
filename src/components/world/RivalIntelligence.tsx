@@ -59,7 +59,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                     {rival.owner.stableName.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-display font-black uppercase text-sm tracking-tight text-foreground group-hover:text-primary transition-colors truncate">
+                    <h4 className="font-display font-black uppercase text-sm tracking-tight text-foreground group-hover:text-primary transition-colors truncate motion-reduce:transition-none">
                       {rival.owner.stableName}
                     </h4>
                     <div className="flex items-center gap-2 mt-0.5">
@@ -158,7 +158,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                   </div>
                 </div>
 
-                <div className="absolute right-0 top-0 h-full w-0.5 bg-primary/20 transform translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                <div className="absolute right-0 top-0 h-full w-0.5 bg-primary/20 transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
               </div>
             ))}
           </div>

@@ -298,7 +298,7 @@ export function InsightVault() {
             variant="pop"
           />
           <div className="p-8 bg-secondary/5 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none" />
+            <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none motion-reduce:transition-none" />
             <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">
               Status
             </span>

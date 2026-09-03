@@ -63,7 +63,7 @@ export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
                       <WarriorLink
                         name={w.name}
                         id={w.id}
-                        className="text-lg font-display font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors block mb-1"
+                        className="text-lg font-display font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors block mb-1 motion-reduce:transition-none"
                       />
                       <div className="flex items-center gap-3">
                         <StatBadge styleName={w.style} showFullName />

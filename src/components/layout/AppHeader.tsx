@@ -54,7 +54,7 @@ function HeaderLogo() {
         <Swords className="w-5 h-5" />
       </ImperialRing>
       <div className="flex flex-col">
-        <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">
+        <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors motion-reduce:transition-none">
           Stable Lords
         </span>
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-30">
@@ -212,7 +212,7 @@ function MuteButton() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+          className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black motion-reduce:transition-none"
           onClick={toggleMute}
           aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
           aria-pressed={!isMuted}
@@ -298,7 +298,7 @@ function ResetButton({ onResetPrompt }: ResetButtonProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+          className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-1 focus-visible:ring-offset-black motion-reduce:transition-none"
           onClick={onResetPrompt}
           aria-label="Expunge Ledger"
         >
@@ -329,7 +329,7 @@ function ExitButton({ isSimulating, returnToTitle }: ExitButtonProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+          className="h-9 w-9 rounded-none hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black motion-reduce:transition-none"
           onClick={returnToTitle}
           disabled={isSimulating}
           aria-label="Exit to title"

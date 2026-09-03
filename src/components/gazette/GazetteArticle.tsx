@@ -73,7 +73,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
     >
       {/* ─── Masthead Branding ─── */}
       <div className="p-8 md:p-12 border-b border-white/5 relative overflow-hidden bg-black/40">
-        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity motion-reduce:transition-none">
           <Newspaper className="h-40 w-40" />
         </div>
 
@@ -97,7 +97,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
             </h2>
           </div>
 
-          <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity">
+          <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity motion-reduce:transition-none">
             <span className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">
               Certified
             </span>
@@ -112,7 +112,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/5 bg-black/20">
         {/* ─── The Lead Story ─── */}
         <div className="lg:col-span-8 p-8 md:p-12 space-y-8 relative group/story">
-          <div className="absolute top-12 left-12 opacity-5 pointer-events-none group-hover/story:opacity-10 transition-opacity">
+          <div className="absolute top-12 left-12 opacity-5 pointer-events-none group-hover/story:opacity-10 transition-opacity motion-reduce:transition-none">
             <Quote className="h-24 w-24 text-primary" />
           </div>
 
@@ -154,7 +154,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                 Full Story{' '}
                 <ArrowRight
                   aria-hidden="true"
-                  className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform"
+                  className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
                 />
               </Button>
             </div>
@@ -177,14 +177,14 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                   key={`${story.slice(0, 30)}-${i}`}
                   className="group/short space-y-3 relative pl-6 border-l border-white/5 hover:border-arena-gold/30 transition-all motion-reduce:transition-none motion-reduce:transform-none"
                 >
-                  <div className="absolute -left-0.5 top-0 w-1 h-3 bg-arena-gold opacity-0 group-hover/short:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
+                  <div className="absolute -left-0.5 top-0 w-1 h-3 bg-arena-gold opacity-0 group-hover/short:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,215,0,0.5)] motion-reduce:transition-none" />
                   <div className="flex items-center gap-2">
-                    <Zap className="h-3 w-3 text-arena-gold opacity-40 group-hover/short:opacity-100 transition-opacity" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/40 group-hover/short:text-arena-gold transition-colors">
+                    <Zap className="h-3 w-3 text-arena-gold opacity-40 group-hover/short:opacity-100 transition-opacity motion-reduce:transition-none" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/40 group-hover/short:text-arena-gold transition-colors motion-reduce:transition-none">
                       INTEL_FRAGMENT
                     </span>
                   </div>
-                  <div className="text-[11px] md:text-xs text-muted-foreground group-hover/short:text-foreground transition-colors leading-relaxed font-medium">
+                  <div className="text-[11px] md:text-xs text-muted-foreground group-hover/short:text-foreground transition-colors leading-relaxed font-medium motion-reduce:transition-none">
                     <MarkdownReader
                       content={story}
                       warriorNames={warriorNames}
@@ -205,11 +205,11 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Trophy className="h-4 w-4 text-primary" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary/80 group-hover:text-primary transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-primary/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
                     Bout_Replays_Active
                   </span>
                 </div>
-                <ExternalLink className="h-3 w-3 text-foreground/20 group-hover:text-primary transition-colors" />
+                <ExternalLink className="h-3 w-3 text-foreground/20 group-hover:text-primary transition-colors motion-reduce:transition-none" />
               </div>
             </Surface>
             <div className="flex items-center justify-center gap-2 opacity-20">

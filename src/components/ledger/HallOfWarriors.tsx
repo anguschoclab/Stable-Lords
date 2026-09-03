@@ -19,7 +19,7 @@ import type { Warrior, CareerRecord } from '@/types/game';
 function EmptyRegistry() {
   return (
     <div className="py-24 text-center opacity-30 group">
-      <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700" />
+      <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700 motion-reduce:transition-none motion-reduce:transform-none" />
       <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
         No Retired Warriors
       </p>
@@ -127,7 +127,7 @@ function RetiredWarriorRow({ warrior: w }: RetiredWarriorRowProps) {
       </TableCell>
       <TableCell className="text-right pr-8 py-5">
         <div className="flex flex-col items-end">
-          <span className="font-mono font-black text-[10px] text-foreground/40 uppercase tracking-widest group-hover:text-foreground/60 transition-colors">
+          <span className="font-mono font-black text-[10px] text-foreground/40 uppercase tracking-widest group-hover:text-foreground/60 transition-colors motion-reduce:transition-none">
             WK_{w.retiredWeek?.toString().padStart(2, '0') ?? '??'}
           </span>
           <span className="text-[8px] font-black text-foreground/20 uppercase tracking-widest">

@@ -69,7 +69,7 @@ export function BriefingTab({ reports }: BriefingTabProps) {
                 </div>
               </div>
 
-              <h4 className="text-xs font-black uppercase tracking-tight text-arena-gold/80 group-hover/report:text-arena-gold transition-colors">
+              <h4 className="text-xs font-black uppercase tracking-tight text-arena-gold/80 group-hover/report:text-arena-gold transition-colors motion-reduce:transition-none">
                 <LinkifiedText text={report.title} names={warriorNames} stableNames={stableNames} />
               </h4>
 

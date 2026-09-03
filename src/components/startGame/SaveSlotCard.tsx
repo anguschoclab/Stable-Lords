@@ -49,13 +49,13 @@ export default function SaveSlotCard({
       }}
       className="group relative cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       style={{
-        background: 'linear-gradient(145deg, #150F08 0%, #110C07 50%, #140E08 100%)',
+        background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 50%, var(--card) 100%)',
         border: '1px solid rgba(60, 42, 22, 0.8)',
         borderTopColor: 'rgba(100, 70, 36, 0.45)',
         borderLeftColor: 'rgba(80, 56, 28, 0.4)',
       }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[linear-gradient(90deg,transparent_0%,rgba(201,151,42,0.5)_30%,rgba(201,151,42,0.8)_50%,rgba(201,151,42,0.5)_70%,transparent_100%)]" />
+      <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[linear-gradient(90deg,transparent_0%,rgba(201,151,42,0.5)_30%,rgba(201,151,42,0.8)_50%,rgba(201,151,42,0.5)_70%,transparent_100%)] motion-reduce:transition-none" />
       <div className="p-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div
@@ -89,7 +89,7 @@ export default function SaveSlotCard({
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150"
+            className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150 motion-reduce:transition-none"
             onClick={(e) => {
               e.stopPropagation();
               onExport();
@@ -102,7 +102,7 @@ export default function SaveSlotCard({
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150"
+            className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150 motion-reduce:transition-none"
             onClick={(e) => {
               e.stopPropagation();
               onDelete();

@@ -195,7 +195,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
                 key={preset.name}
                 aria-label={preset.name}
                 onClick={() => applyPreset(preset.plan)}
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors"
+                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors motion-reduce:transition-none"
               >
                 {preset.name}
               </button>
@@ -204,7 +204,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
               <button
                 aria-label="Restore Default"
                 onClick={restoreDefault}
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors"
+                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors motion-reduce:transition-none"
               >
                 Restore Default
               </button>
@@ -219,7 +219,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
                 key={preset.label}
                 aria-label={preset.label}
                 onClick={() => applyBias(preset.bias)}
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors"
+                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors motion-reduce:transition-none"
               >
                 {preset.label}
               </button>

@@ -19,7 +19,7 @@ export function MedicalAuditWidget() {
       padding="none"
       className="h-full border-border/10 group overflow-hidden relative flex flex-col shadow-2xl"
     >
-      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity motion-reduce:transition-none">
         <HeartPulse className="h-48 w-48 text-destructive" />
       </div>
 
@@ -54,7 +54,7 @@ export function MedicalAuditWidget() {
 
       <div className="p-6 flex-1 relative z-10 custom-scrollbar overflow-y-auto max-h-96">
         {atRisk.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 opacity-20 group-hover:opacity-30 transition-opacity">
+          <div className="flex flex-col items-center justify-center py-12 opacity-20 group-hover:opacity-30 transition-opacity motion-reduce:transition-none">
             <Activity className="h-12 w-12 mb-4" />
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center italic">
               Roster Healthy

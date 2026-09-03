@@ -34,8 +34,7 @@ export function ObjectivesWidget() {
         {progression.objectives.map((obj) => (
           <div
             key={obj.id}
-            className={cn(
-              'flex items-start gap-3 px-3 py-2 border-l-2 transition-colors',
+            className={cn('flex items-start gap-3 px-3 py-2 border-l-2 transition-colors motion-reduce:transition-none',
               obj.completed ? 'border-primary bg-primary/5' : 'border-white/10 bg-transparent'
             )}
           >

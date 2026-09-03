@@ -68,7 +68,7 @@ function StableCell({ row }: { row: WarriorRow }) {
       {row.isPlayer ? (
         <Link
           to="/stable/roster"
-          className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+          className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 motion-reduce:transition-none"
         >
           <span className="text-[10px] opacity-20">PATRON:</span> {row.stableName}
         </Link>
@@ -76,7 +76,7 @@ function StableCell({ row }: { row: WarriorRow }) {
         <Link
           to="/world/stable/$id"
           params={{ id: row.stableId }}
-          className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+          className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 motion-reduce:transition-none"
         >
           <span className="text-[10px] opacity-20">PATRON:</span> {row.stableName}
         </Link>
@@ -149,8 +149,7 @@ function BookmarkCell({ row }: { row: WarriorRow }) {
 export function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderboardRowProps) {
   return (
     <TableRow
-      className={cn(
-        'border-white/5 transition-colors group',
+      className={cn('border-white/5 transition-colors group motion-reduce:transition-none',
         row.isPlayer ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-white/5'
       )}
     >

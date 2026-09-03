@@ -56,7 +56,7 @@ export function GazetteTab({ stories }: GazetteTabProps) {
           {stories.map((story, i) => (
             <div
               key={`${story.headline.slice(0, 30)}-${i}`}
-              className="group/story relative pl-12 border-l border-white/5 hover:border-primary/40 transition-colors py-1"
+              className="group/story relative pl-12 border-l border-white/5 hover:border-primary/40 transition-colors py-1 motion-reduce:transition-none"
             >
               <div className="absolute left-[-5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-800 border boder-white/10 group-hover/story:bg-primary group-hover/story:shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all motion-reduce:transition-none motion-reduce:transform-none" />
 
@@ -64,7 +64,7 @@ export function GazetteTab({ stories }: GazetteTabProps) {
                 <span className="text-[9px] font-mono font-black text-primary/60">
                   WK {story.week.toString().padStart(2, '0')}
                 </span>
-                <h4 className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/story:text-foreground transition-colors italic">
+                <h4 className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/story:text-foreground transition-colors italic motion-reduce:transition-none">
                   <LinkifiedText
                     text={story.headline}
                     names={warriorNames}

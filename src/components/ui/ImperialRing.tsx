@@ -46,14 +46,13 @@ export function ImperialRing({
 
   return (
     <div
-      className={cn(
-        'relative flex items-center justify-center border rounded-none transform rotate-45 shrink-0',
+      className={cn('relative flex items-center justify-center border rounded-none transform rotate-45 shrink-0 motion-reduce:transform-none',
         sizeClasses[size],
         variantClasses[variant],
         className
       )}
     >
-      <div className="transform -rotate-45 flex items-center justify-center w-full h-full">
+      <div className="transform -rotate-45 flex items-center justify-center w-full h-full motion-reduce:transform-none">
         {children}
       </div>
       {/* Decorative corner accents */}

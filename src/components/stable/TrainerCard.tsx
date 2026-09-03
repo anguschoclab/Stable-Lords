@@ -57,8 +57,8 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-6">
               {/* Visual Avatar Container */}
-              <div className="relative group-hover:scale-105 transition-transform duration-500 overflow-visible">
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-none opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative group-hover:scale-105 transition-transform duration-500 overflow-visible motion-reduce:transition-none motion-reduce:transform-none">
+                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-none opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
                 <div className="w-16 h-16 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center relative z-10 shadow-inner text-3xl">
                   {icon}
                 </div>
@@ -117,7 +117,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
                       aria-label="Release Trainer"
                       className="p-2.5 rounded-none bg-neutral-900 border border-white/5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all motion-reduce:transition-none motion-reduce:transform-none group/fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                     >
-                      <UserMinus className="h-4 w-4 group-hover/fire:scale-110 transition-transform" />
+                      <UserMinus className="h-4 w-4 group-hover/fire:scale-110 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="left">TERMINATE CONTRACT</TooltipContent>

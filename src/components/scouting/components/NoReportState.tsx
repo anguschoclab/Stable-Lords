@@ -18,7 +18,7 @@ export function NoReportState({ warriorName, treasury, onScout }: NoReportStateP
 
   return (
     <Surface variant="glass" className="border-border/40 shadow-2xl relative overflow-hidden group">
-      <div className="absolute -right-12 -bottom-12 opacity-5 transform rotate-12 group-hover:scale-110 transition-transform duration-1000">
+      <div className="absolute -right-12 -bottom-12 opacity-5 transform rotate-12 group-hover:scale-110 transition-transform duration-1000 motion-reduce:transition-none motion-reduce:transform-none">
         <Target className="h-48 w-48 text-primary" />
       </div>
 
@@ -83,8 +83,7 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
     >
       <div className="flex items-center gap-4">
         <div
-          className={cn(
-            'p-2 rounded-none transition-colors border',
+          className={cn('p-2 rounded-none transition-colors border motion-reduce:transition-none',
             isExpert
               ? 'bg-white/10 border-white/20'
               : 'bg-neutral-800 border-white/5 group-hover/btn:bg-primary/20 group-hover/btn:border-primary/20 group-hover/btn:text-primary'

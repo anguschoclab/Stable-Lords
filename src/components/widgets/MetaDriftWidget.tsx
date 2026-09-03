@@ -54,7 +54,7 @@ export function MetaDriftWidget() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Info className="h-3.5 w-3.5 text-muted-foreground/40 cursor-help hover:text-foreground transition-colors" />
+              <Info className="h-3.5 w-3.5 text-muted-foreground/40 cursor-help hover:text-foreground transition-colors motion-reduce:transition-none" />
             </TooltipTrigger>
             <TooltipContent className="bg-black border-white/10 text-[9px] uppercase font-black tracking-widest p-3 rounded-none">
               Tracks winning trends over the last 20 bouts.
@@ -82,7 +82,7 @@ export function MetaDriftWidget() {
                     ) : (
                       <TrendingDown className="h-3 w-3 text-destructive" />
                     )}
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 group-hover:text-foreground transition-colors">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 group-hover:text-foreground transition-colors motion-reduce:transition-none">
                       {STYLE_DISPLAY_NAMES[item.style]}
                     </span>
                   </div>

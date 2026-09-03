@@ -83,7 +83,7 @@ export function NextBoutWidget() {
           <Target className="h-4 w-4 text-primary" /> Match Preview
         </CardTitle>
         <Link to="/stable/arena">
-          <ChevronRight className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer" />
+          <ChevronRight className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer motion-reduce:transition-none" />
         </Link>
       </CardHeader>
       <CardContent>

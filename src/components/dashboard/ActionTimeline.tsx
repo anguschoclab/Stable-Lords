@@ -62,7 +62,7 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
           events.map((event, i) => (
             <div
               key={`${event.description.slice(0, 30)}-${i}`}
-              className="flex items-start gap-3 p-2 rounded-none bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+              className="flex items-start gap-3 p-2 rounded-none bg-white/5 border border-white/5 hover:bg-white/10 transition-colors motion-reduce:transition-none"
             >
               <span className="text-[8px] font-mono text-primary mt-0.5">W{event.week}</span>
               <div className="flex-1 min-w-0">

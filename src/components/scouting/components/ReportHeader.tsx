@@ -37,7 +37,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
         <TooltipTrigger asChild>
           <button
             aria-label="More Info"
-            className="p-2 rounded-none bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors"
+            className="p-2 rounded-none bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors motion-reduce:transition-none"
           >
             <Info className="h-4 w-4 text-muted-foreground/40" />
           </button>

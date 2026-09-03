@@ -97,7 +97,7 @@ export default function NewGameForm({
       <div className="relative z-10 w-full max-w-xl space-y-6">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-muted-foreground/60 hover:text-accent text-[11px] font-black uppercase tracking-widest transition-colors duration-150"
+          className="flex items-center gap-2 text-muted-foreground/60 hover:text-accent text-[11px] font-black uppercase tracking-widest transition-colors duration-150 motion-reduce:transition-none"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           RETURN TO TITLE
@@ -106,7 +106,7 @@ export default function NewGameForm({
         <div
           className="relative p-8 space-y-7"
           style={{
-            background: 'linear-gradient(145deg, #150F08 0%, #110C07 60%, #140E08 100%)',
+            background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
             border: '1px solid rgba(60, 42, 22, 0.9)',
             borderTopColor: 'rgba(100, 70, 36, 0.55)',
             borderLeftColor: 'rgba(80, 56, 28, 0.5)',

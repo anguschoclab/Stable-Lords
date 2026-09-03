@@ -1,5 +1,5 @@
 import type { Warrior } from '@/types/warrior.types';
-import { TRAITS, type TraitTier, type TraitDef } from '@/engine/traits';
+import { TRAITS, type TraitTier } from '@/engine/traits';
 import { clamp } from '@/utils/math';
 
 /**
@@ -35,7 +35,7 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
 
   if (warrior.traits) {
     for (let i = 0; i < warrior.traits.length; i++) {
-      const t = TRAITS[warrior.traits[i]];
+      const t = TRAITS[warrior.traits[i]!];
       if (!t) continue;
 
       if (t.tier === 'Flaw') {

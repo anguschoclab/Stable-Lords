@@ -94,7 +94,7 @@ vi.mock('@/lib/AudioManager', () => ({
 }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
+function makeWarrior(overrides: Record<string, unknown> = {}): Warrior {
   return {
     id: 'w1',
     name: 'Test Warrior',

@@ -185,7 +185,7 @@ export default function Tournaments() {
           isReadyToStart={isTournamentReadyToStart}
           onExecuteRound={handleExecuteRound}
           onOpenPrep={() => setIsPrepOpen(true)}
-          seasonIcon={SEASON_ICONS[season]}
+          seasonIcon={SEASON_ICONS[season] ?? ''}
         />
       )}
 

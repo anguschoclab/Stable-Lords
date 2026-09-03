@@ -1,7 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
-import type { Warrior } from '@/types/warrior';
+import type { Warrior } from '@/types/game';
 
 function getFatigueLabel(fatigue: number | undefined): { label: string; color: string } {
   const f = fatigue ?? 0;

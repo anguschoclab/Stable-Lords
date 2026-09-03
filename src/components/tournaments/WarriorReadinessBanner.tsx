@@ -2,8 +2,7 @@ import { Zap } from 'lucide-react';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
-import type { TournamentEntry } from '@/types/game';
-import type { Warrior } from '@/types/warrior';
+import type { TournamentEntry, Warrior } from '@/types/game';
 import { TournamentPrizeBadge } from './TournamentPrizeBadge';
 import { WarriorReadinessCard } from './WarriorReadinessCard';
 

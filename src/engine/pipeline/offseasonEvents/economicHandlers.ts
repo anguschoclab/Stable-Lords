@@ -12,7 +12,7 @@ import {
 } from './types';
 
 /**
- *
+ * Handler for the Winter Chill offseason event.
  */
 export function handleWinterChill(
   __state: GameState,
@@ -30,7 +30,7 @@ export function handleWinterChill(
 }
 
 /**
- *
+ * Handler for the Merchant Blessing offseason event.
  */
 export function handleMerchantBlessing(
   __state: GameState,
@@ -46,7 +46,7 @@ export function handleMerchantBlessing(
 }
 
 /**
- *
+ * Handler for the Black Market Raid offseason event.
  */
 export function handleBlackMarketRaid(
   _state: GameState,
@@ -68,7 +68,7 @@ export function handleBlackMarketRaid(
 }
 
 /**
- *
+ * Handler for the Mysterious Patron offseason event.
  */
 export function handleMysteriousPatron(
   __state: GameState,
@@ -90,7 +90,7 @@ export function handleMysteriousPatron(
 }
 
 /**
- *
+ * Handler for the Bountiful Harvest offseason event.
  */
 export function handleBountifulHarvest(
   _state: GameState,

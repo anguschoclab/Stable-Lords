@@ -98,6 +98,25 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  gutter_instincts_lore: {
+    id: 'gutter_instincts_lore',
+    name: 'Gutter Instincts',
+    description: 'Raised in the squalor of the citys lowest depths, possessing a primal urge to survive.',
+    effect: { iniMod: 1, defModLowHp: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  pit_rat_lore: {
+    id: 'pit_rat_lore',
+    name: 'Pit Rat',
+    description: 'Scavenged the fighting pits as a child, learning the dirty tricks of the trade.',
+    effect: { decMod: 1, ripMod: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

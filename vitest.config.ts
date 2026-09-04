@@ -8,7 +8,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/_setup/setup.ts'],
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
     testTimeout: 120000,
     hookTimeout: 10000,

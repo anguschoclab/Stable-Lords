@@ -504,6 +504,21 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'mudpit_arena_plague_rat',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Plague Rat Swarm',
+    narrative: 'A match was once paused when an unprecedented swarm of plague rats flooded the pit, devouring the losing fighter before the winner could claim the kill.',
+  },
+  {
+    id: 'brass_ring_molten_spill',
+    arenaId: 'brass_ring',
+    type: 'famous_death',
+    title: 'The Molten Spill of 412',
+    narrative: 'A structural failure caused a vat of molten brass to spill into the ring, instantly turning three fighters into permanent metallic statues that still adorn the arena edges.',
+  },
+
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

@@ -1,0 +1,134 @@
+[
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hit_locations.right arm",
+    "kept": "RIGHT BICEPS",
+    "removed": "RIGHT TRICEPS"
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hit_locations.right arm",
+    "kept": "RIGHT BICEPS",
+    "removed": "RIGHT BICEP"
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hit_locations.left arm",
+    "kept": "LEFT BICEPS",
+    "removed": "LEFT TRICEPS"
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hit_locations.left arm",
+    "kept": "LEFT BICEPS",
+    "removed": "LEFT BICEP"
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.defenses.dodge.desperate",
+    "kept": "{{defender}} scrambles backward like a cornered rat, barely avoiding the strike.",
+    "removed": "{{defender}} scrambles backward like a cornered animal, barely avoiding the blow."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.defenses.dodge.grim",
+    "kept": "A minimalist, chillingly precise shift from {{defender}} avoids the fatal strike entirely.",
+    "removed": "A minimalist, chillingly precise shift from {{defender}} avoids the fatal strike."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.defenses.dodge.grim",
+    "kept": "{{defender}} steps aside in grim silence, their cold stare never leaving {{attacker}}.",
+    "removed": "{{defender}} steps aside silently, their cold eyes never leaving {{attacker}}."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.defenses.parry.desperate",
+    "kept": "{{defender}} barely gets their weapon up in time, deflecting the blow with a panicked grunt.",
+    "removed": "{{defender}} barely gets their {{defenseWeapon}} up in time, deflecting the blow with a panicked shout."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.defenses.parry.theatrical",
+    "kept": "{{defender}} parries with a dramatic flourish, holding the pose for the crowd.",
+    "removed": "{{defender}} parries with a resounding flourish, holding the pose for the cheering crowd."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.slow",
+    "kept": "They stalk each other deliberately, every step calculated and painfully slow.",
+    "removed": "The gladiators stalk each other deliberately, every step calculated and painfully slow."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.slow",
+    "kept": "They crash to the sands, struggling to find the strength to rise as time seems to crawl.",
+    "removed": "{{name}} crash to the sands, struggling to find the strength to rise as time seems to crawl."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.fast",
+    "kept": "They clash violently, the pacing of the bout instantly shifting into high gear.",
+    "removed": "{{name}} clash violently, the pacing of the bout instantly shifting into high gear."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.fast",
+    "kept": "{{name}} is slammed into the dirt before they even realize what hit them.",
+    "removed": "{{name}} is slammed into the dirt before {{name}} even realizes what hit them."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.fast",
+    "kept": "No time to bleed! {{name}} is moving the instant they hit the dirt.",
+    "removed": "No time to bleed! {{name}} is moving the instant {{name}} hit the dirt."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.fast",
+    "kept": "{{name}} is instantly flattened, hitting the dirt before the crowd can even gasp.",
+    "removed": "{{name}} is instantly flattened, slamming into the dirt before the crowd can even gasp."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.knockdown.pacing.recovery_slow",
+    "kept": "Shaken to the core, {{name}} wobbles violently as they try to stand.",
+    "removed": "Shaken to the core, {{name}} wobbles violently as {{name}} tries to stand."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hits.generic",
+    "kept": "The {{weapon}} lands with a sickening crunch, meeting its mark.",
+    "removed": "The {{weapon}} lands on {{defender}} with a sickening crunch, meeting its mark."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hits.generic",
+    "kept": "A devastating strike connects, the impact echoing through the arena.",
+    "removed": "A devastating strike connects from {{attacker}}, the impact echoing through the arena."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hits.generic",
+    "kept": "The blow lands true, biting deep into flesh and bone.",
+    "removed": "The blow lands true, biting deep into {{defender}}'s flesh and bone."
+  },
+  {
+    "file": "combatPbp.json",
+    "path": "pbp.hits.generic",
+    "kept": "The strike finds a gap in the defense, delivering punishing force.",
+    "removed": "The strike from {{attacker}} finds a gap in the defense, delivering punishing force."
+  },
+  {
+    "file": "combatStrikes.json",
+    "path": "strikes.piercing.solid",
+    "kept": "{{attacker}} drives their point forward, sinking steel into {{defender}}'s {{bodyPart}}.",
+    "removed": "{{attacker}} drives the point deep into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "kept": "A bone-jarring punch snaps into {{defender}}'s {{bodyPart}}.",
+    "removed": "A heavy, bone-jarring punch slams into {{defender}}'s {{bodyPart}}."
+  }
+]

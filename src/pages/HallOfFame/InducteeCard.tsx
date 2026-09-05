@@ -20,19 +20,30 @@ function getNamesFromTitle(title: string): { a: string; d: string } {
 function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | null {
   const wFights = fights.filter((f) => f.warriorIdA === warrior.id || f.warriorIdD === warrior.id);
   if (wFights.length === 0) return null;
-  const first = wFights[0];
-  if (!first) return null;
-  return wFights.reduce((best, f) => {
-    const score = (t: FightSummary) => {
-      let s = 0;
-      if (t.by === 'Kill') s += 5;
-      if (t.by === 'KO') s += 3;
-      if (t.flashyTags?.includes('Comeback')) s += 4;
-      if (t.flashyTags?.includes('Flashy')) s += 2;
-      return s;
-    };
-    return score(f) > score(best) ? f : best;
-  }, first);
+  let best = wFights[0];
+  if (!best) return null;
+
+  const score = (t: FightSummary) => {
+    let s = 0;
+    if (t.by === 'Kill') s += 5;
+    if (t.by === 'KO') s += 3;
+    if (t.flashyTags?.includes('Comeback')) s += 4;
+    if (t.flashyTags?.includes('Flashy')) s += 2;
+    return s;
+  };
+
+  // ⚡ Bolt: Replaced .reduce with a single-pass for-loop to avoid redundant evaluations of the best item's score.
+  let bestScore = score(best);
+  for (let i = 1; i < wFights.length; i++) {
+    const f = wFights[i] as FightSummary;
+    const currentScore = score(f);
+    if (currentScore > bestScore) {
+      best = f;
+      bestScore = currentScore;
+    }
+  }
+
+  return best;
 }
 
 /* ── Inductee Card ───────────────────────────────────────── */

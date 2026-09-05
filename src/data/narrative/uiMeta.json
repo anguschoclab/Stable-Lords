@@ -218,6 +218,10 @@
       "attack": {
         "high": [
           {
+            "min": 40,
+            "text": "A dramatic maestro of destruction, leaving crowds in silent awe"
+          },
+          {
             "min": 35,
             "text": "An executioner in the pit, delivering critical ruin with every swing"
           },
@@ -256,10 +260,6 @@
           {
             "min": 0,
             "text": "He lands blows on less protected areas"
-          },
-          {
-            "min": 40,
-            "text": "A dramatic maestro of destruction, leaving crowds in silent awe"
           }
         ],
         "low": [

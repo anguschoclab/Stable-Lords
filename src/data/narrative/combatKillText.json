@@ -241,19 +241,51 @@
     "weapon_specific": {
       "slashing": [
         "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
-        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin.",
+        "A vicious arc of steel leaves them ruined upon the ground.",
+        "The blade parts flesh and bone, ending their struggle in a spray of crimson.",
+        "With a sickening sound, the slashing blow ensures their final rest.",
+        "Their life is severed as cleanly as the grim cut that brings them down.",
+        "A brutal slash tears through their defenses and their life alike.",
+        "The sharp edge finds its mark, drawing a final, fatal line across their form.",
+        "A merciless cut leaves them bleeding out their last moments on the unforgiving sands.",
+        "They are unmade by a flurry of devastating slashes that offer no mercy."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
-        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
+        "The thrust takes them perfectly, plunging deep and ending it all.",
+        "A precise puncture finds the vital mark; they collapse instantly.",
+        "Impaled upon the cruel point, they sag in defeat and death.",
+        "The deadly point pierces through armor and flesh, extinguishing their spark.",
+        "A swift, surgical thrust leaves them gasping their last breath.",
+        "They are skewered by a relentless attack, their strength draining away with their blood.",
+        "The penetrating strike finds the heart of the matter, literally and figuratively.",
+        "A final, desperate lunge drives the point home, sealing their grim fate."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
-        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly.",
+        "The sheer concussive force shatters them, leaving only a broken shell.",
+        "A horrific crunch signals the end, their body unable to withstand the trauma.",
+        "They are hammered into the dirt, their spirit crushed along with their bones.",
+        "The heavy blow lands with a devastating thud, extinguishing their life.",
+        "A brutal bludgeoning leaves them senseless and forever stilled.",
+        "They are pulverized by a merciless onslaught of crushing impacts.",
+        "The crushing force shatters their resolve and their form in a single, terrible instant.",
+        "A final, overwhelming smash brings a violent end to their struggle."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
-        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery.",
+        "The sheer brutal force of the bare-handed blow stops their heart.",
+        "A relentless pummeling leaves them broken and lifeless on the arena floor.",
+        "They are beaten down, unable to rise from the savage barrage of fists.",
+        "The primal ferocity of the strike overwhelms them, extinguishing their fight.",
+        "A devastating bare-knuckle blow shatters their defenses and their life.",
+        "They are battered into submission and beyond, succumbing to the raw power.",
+        "The visceral impact of the final strike leaves them a broken heap on the sands.",
+        "A merciless flurry of blows brings a brutal and unceremonious end to their days."
       ]
     },
     "default": [
@@ -264,7 +296,10 @@
       "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
       "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
       "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
-      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold.",
+      "A final, breathless gasp escapes them as the light fades.",
+      "The arena stands in momentary silence as they fall, never to rise again.",
+      "Their blood stains the sands, a grim testament to the harsh reality of the games."
     ]
   }
 }

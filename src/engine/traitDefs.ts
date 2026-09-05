@@ -98,6 +98,33 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  ash_lungs: {
+    id: 'ash_lungs',
+    name: 'Ash Lungs',
+    description: 'Raised breathing the toxic fumes of the Smelting Ward; strangely resistant to fatigue in long, grinding matches.',
+    effect: { enduranceMult: 0.9, defModLate: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  feral_gaze: {
+    id: 'feral_gaze',
+    name: 'Feral Gaze',
+    description: 'A predatory stare developed in the dog-cages that slightly unnerves attackers early in the fight.',
+    effect: { defModEarly: 1, attModEarly: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.7,
+  },
+  iron_jaw: {
+    id: 'iron_jaw',
+    name: 'Iron Jaw',
+    description: 'Took too many cudgels to the face in the workhouse; now barely flinches when struck.',
+    effect: { parMod: 1, ripMod: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

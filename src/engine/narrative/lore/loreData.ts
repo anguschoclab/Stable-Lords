@@ -4,6 +4,13 @@
  */
 
 export const ORIGINS: string[] = [
+  'Born in the ash-choked gutters of the Smelting Ward, where children learned to breathe smoke before air',
+  'Abandoned at the gates of the Silent Order, raised by monks who only spoke in the language of bruises',
+  'Hatched from a lineage of disgraced duelists, carrying a rusted family sword and a ledger of grudges',
+  'Surviving the plague-quarantines by scavenging the corpses of the fallen for copper and stale bread',
+  'Raised in a traveling freak show, displayed as a monster until they realized the bars couldn\'t hold them',
+  'Found wailing in a blood-soaked alleyway, with no memory of the massacre that left them an orphan',
+  'Sold into the sulfur mines at age six, trading the light of the sun for a pickaxe and a hardened spine',
   'Abandoned at the rusted gates of the Blackwood Workhouse',
   'Survived the chilling cullings of the Whispering Vaults',
   'Raised amidst the deafening roar of the Cinderstone Forges',
@@ -19,7 +26,6 @@ export const ORIGINS: string[] = [
   'Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings',
   'Survived the brutal winters huddled in the exhaust vents of the Grand Forge',
   'Raised as a nameless thrall in the fighting pits of the Undercity',
-  'Raised in the lightless cellars of the Harrow-Home for Foundlings',
   'Abandoned beneath the crumbling arches of the Weeping Aqueduct',
   'Found swaddled in blood-stained rags at the gates of the Silent Order',
   'Survived the brutal starvation of the Rat-Catcher Guilds',
@@ -254,9 +260,12 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'learned to anticipate an ambush by the sudden silence of the alley rats',
+  'practiced dodging the heavy iron cudgels of the workhouse overseers in complete darkness',
+  'developed an unnatural tolerance for pain by walking barefoot across the slag heaps',
+  'always kept a sharpened piece of flint hidden beneath their tongue during sleep',
   "learned to gauge distance by dodging the overseer's lash",
   'memorized the anatomy of beasts while working the charnel pits',
-  'developed an iron grip from clinging to the underside of merchant carts',
   'used to meticulously trace the structural flaws in stone walls',
   "slept soundly only when the city's warning bells rang",
   'was known for carving the names of their enemies into their own flesh',
@@ -283,7 +292,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to sleep with one eye open after surviving the orphanage riots',
   'was known for an unnerving, silent stare that made the matrons flinch',
   'would sit completely still for hours watching the fighting pit from the rafters',
-  'learned to predict a strike by watching the tension in a bully’s shoulders',
   'was infamous for never crying out, no matter how severe the punishment',
   'would map out the blind spots of the orphanage guards with obsessive precision',
   'would catch and study the weak points of venomous centipedes',
@@ -388,8 +396,10 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
-  'discovering that a rusted spoon could be sharpened into a deadly shiv',
-  'surviving a night in the dog-cages by out-snarling the hounds',
+  'until they dragged a corrupt guard into the shadows and emerged with the keys to their own chains',
+  'realizing that the cheers of the arena were the only lullaby they would ever need',
+  'knowing that every drop of blood spilled on the sands was a coin paid toward their ultimate freedom',
+  'until the day they turned a shattered bone into a makeshift dagger and claimed their first victory',
   'realizing that mercy in the Undercity was just another word for weakness',
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',

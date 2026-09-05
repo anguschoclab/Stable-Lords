@@ -504,6 +504,27 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundered_coliseum_silent_strangler',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Silent Strangler',
+    narrative: 'A forgotten mute gladiator once garroted three armored champions in succession using nothing but the ripped sinews of a slain beast, turning the deafening crowd utterly silent in sheer terror.',
+  },
+  {
+    id: 'crystal_cavern_shattering',
+    arenaId: 'crystal_cavern',
+    type: 'architectural_quirk',
+    title: 'The Shattering Resonance',
+    narrative: 'Certain war cries can hit a resonant frequency that shatters the fragile outer crystals, raining razor-sharp shards down upon the combatants when the tension is highest.',
+  },
+  {
+    id: 'mudpit_arena_drowning',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Suffocating Grasp',
+    narrative: 'A heavy bruiser, too weighed down by ornate armor, was dragged beneath the thick mud by a far smaller opponent who simply held them down until the bubbles stopped rising.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

@@ -124,20 +124,20 @@
         "Week {{week}}: CAN ANYONE STOP THEM? {{name}} Smashes Their Way to {{streak}} Wins!",
         "Week {{week}}: BLOOD AND SAND! {{name}} Paints the Arena Red with {{streak}} Wins!",
         "Week {{week}}: THE CROWD'S DARLING! {{name}} is Undefeated in {{streak}} Matches!",
-        "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
-        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} — {{streak}} Wins!"
+        "Week {{week}}: {{name}} Is On Fire \u2014 {{streak}} Consecutive Victories!",
+        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} \u2014 {{streak}} Wins!"
       ],
       "Streak": [
         "Week {{week}}: {{name}} Continues to Climb With {{streak}} Consecutive Wins!",
         "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
-        "Week {{week}}: {{name}} Builds Momentum — {{streak}} Victories!"
+        "Week {{week}}: {{name}} Builds Momentum \u2014 {{streak}} Victories!"
       ],
       "LegacyRivalry": [
         "Week {{week}}: BAD BLOOD BOILS OVER! {{a}} Meets {{b}} in Chapter {{count}} of Their Vicious Feud!",
         "Week {{week}}: THE ARENA DIVIDED! Fans Riot as {{a}} Faces {{b}} for the {{count}}{{suffix}} Time!",
         "Week {{week}}: ETERNAL FOES! {{a}} and {{b}} Clash in Chapter {{count}} of Their Saga!",
         "Week {{week}}: THE GRUDGE MATCH OF THE CENTURY! {{a}} vs {{b}} (Chapter {{count}})",
-        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!"
+        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} \u2014 Chapter {{count}}!"
       ],
       "Rivalry": [
         "Week {{week}}: BITTER ENEMIES MEET! {{a}} and {{b}} Trade Blows Again!",
@@ -287,7 +287,7 @@
       "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
       "body": [
         "The {{season}} season concludes with {{total}} bouts fought and a {{killRate}}% fatality rate.",
-        "It was a particularly deadly season — many promising careers cut short.",
+        "It was a particularly deadly season \u2014 many promising careers cut short.",
         "The arena turns its gaze to the next season. What legends will emerge?",
         "{{style}} dominated the meta with {{wins}} victories."
       ]
@@ -295,7 +295,7 @@
   },
   "ux_metadata": {
     "version": "3.0.0",
-    "description": "Unified Bard 1.0 — Universal Narrative Archive",
+    "description": "Unified Bard 1.0 \u2014 Universal Narrative Archive",
     "mood_tone": {
       "Calm": {
         "adjectives": [
@@ -376,7 +376,7 @@
           "The crowd screams for slaughter as the gates violently swing open!",
           "Bloodlust thickens the air, a palpable frenzy waiting to erupt.",
           "The combatants bare their teeth, eager to paint the sands crimson.",
-          "A primal roar shakes the stands—the butcher's work begins now!",
+          "A primal roar shakes the stands\u2014the butcher's work begins now!",
           "The thirst for violence is undeniable today!",
           "Blood for the blood god.",
           "The scent of copper fills the air.",
@@ -537,7 +537,7 @@
           "The arena is a carnival of color and noise today!",
           "Laughter and cheers cascade from the stands as the games commence!",
           "A joyous uproar greets the fighters as they take the field.",
-          "Wine flows and songs are sung—let the festive bout begin!",
+          "Wine flows and songs are sung\u2014let the festive bout begin!",
           "The atmosphere is nothing short of a grand celebration!",
           "A joyous occasion.",
           "The mood is merry.",

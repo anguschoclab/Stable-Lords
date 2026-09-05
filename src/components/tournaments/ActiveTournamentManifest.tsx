@@ -57,7 +57,7 @@ export function ActiveTournamentManifest({
               </h3>
             </div>
           </div>
-          <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] px-6 py-2 rounded-none animate-pulse">
+          <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] px-6 py-2 rounded-none animate-pulse motion-reduce:animate-none">
             LIVE PHASE
           </Badge>
         </div>
@@ -81,7 +81,7 @@ export function ActiveTournamentManifest({
               <div className="flex gap-6">
                 <Button
                   onClick={onExecuteRound}
-                  className="flex-1 h-16 font-black uppercase text-[12px] tracking-[0.4em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all rounded-none"
+                  className="flex-1 h-16 font-black uppercase text-[12px] tracking-[0.4em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none rounded-none"
                 >
                   <Play className="h-5 w-5 mr-4 fill-current" /> EXECUTE NEXT BOUT
                 </Button>
@@ -91,7 +91,7 @@ export function ActiveTournamentManifest({
                 <Button
                   variant="outline"
                   onClick={onOpenPrep}
-                  className="w-full h-12 font-black uppercase text-[10px] tracking-[0.2em] gap-3 bg-white/5 border-white/10 hover:bg-white/10 transition-all rounded-none"
+                  className="w-full h-12 font-black uppercase text-[10px] tracking-[0.2em] gap-3 bg-white/5 border-white/10 hover:bg-white/10 transition-all motion-reduce:transition-none rounded-none"
                 >
                   <Settings2 className="h-4 w-4" /> OPEN PREPARATION CONSOLE
                 </Button>

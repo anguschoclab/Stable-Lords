@@ -375,6 +375,13 @@
       "newsletter": [
         "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
       ]
+    },
+    "phantom_sparring_partner": {
+      "title": "Phantom Sparring Partner",
+      "effectType": "phantom_sparring_partner",
+      "newsletter": [
+        "{{name}} reported sparring with a ghostly apparition all winter. Their stamina is drained, but their technique has improved dramatically. (+40 XP, +10 Fatigue)"
+      ]
     }
   },
   "events": {

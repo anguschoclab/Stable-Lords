@@ -40,7 +40,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -85,7 +85,7 @@
       "A brutal, final strike separates {{defender}} from the mortal coil.",
       "{{attacker}} executes a flawless, cold-blooded finishing blow.",
       "A brutal execution that leaves the crowd in stunned silence.",
-      "{{attacker}} delivers a cold, methodical coup de grâce.",
+      "{{attacker}} delivers a cold, methodical coup de gr\u00e2ce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
       "The sands drink deeply today.",
@@ -241,19 +241,51 @@
     "weapon_specific": {
       "slashing": [
         "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
-        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin.",
+        "{{attacker}}'s blade arcs in a final, brutal sweep, ending {{defender}}'s resistance.",
+        "With a sickening wet thud, {{attacker}} cleaves through {{defender}}'s last defense.",
+        "A swift decapitating arc from {{attacker}} leaves {{defender}} lifeless on the sands.",
+        "{{defender}} collapses as {{attacker}}'s edge finds a fatal artery.",
+        "{{attacker}} turns a parry into a disemboweling slash, dropping {{defender}}.",
+        "A blindingly fast draw-cut from {{attacker}} silences {{defender}} forever.",
+        "{{attacker}} steps past {{defender}}, leaving a fatal wake of crimson in the air.",
+        "The crowd erupts as {{attacker}}'s steel cleanly severs {{defender}}'s thread of life."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
-        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
+        "{{attacker}} drives the point home, skewering {{defender}} where they stand.",
+        "With surgical precision, {{attacker}} punctures {{defender}}'s heart.",
+        "{{defender}} gasps as {{attacker}}'s thrust finds the fatal gap in their armor.",
+        "A devastating lunge from {{attacker}} impales {{defender}} on the spot.",
+        "{{attacker}} twists the blade deep in {{defender}}'s vitals, securing the kill.",
+        "{{defender}} slumps over {{attacker}}'s weapon, eyes fading to glass.",
+        "A final, desperate thrust from {{attacker}} punches clean through {{defender}}.",
+        "{{attacker}} withdraws their weapon with a sickening squelch, leaving {{defender}} to fall."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
-        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly.",
+        "{{attacker}} delivers a crushing blow that shatters {{defender}}'s skull.",
+        "The sheer concussive force of {{attacker}}'s final strike pulverizes {{defender}}.",
+        "{{defender}} is folded in half by a devastating swing from {{attacker}}.",
+        "A thunderous impact from {{attacker}} caves in {{defender}}'s chest cavity.",
+        "{{attacker}} brings the hammer down, flattening {{defender}} into the dirt.",
+        "Bones splinter like dry wood as {{attacker}} smashes {{defender}} to the ground.",
+        "{{defender}}'s defenses are violently dismantled by {{attacker}}'s crushing finisher.",
+        "With a brutal overhead smash, {{attacker}} permanently retires {{defender}}."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
-        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery.",
+        "{{attacker}} unleashes a brutal hook that snaps {{defender}}'s neck.",
+        "A relentless flurry of bare-knuckle strikes from {{attacker}} beats the life from {{defender}}.",
+        "{{attacker}} lands an uppercut so devastating it lifts {{defender}} off their feet into the grave.",
+        "With a sickening crunch, {{attacker}} caves in {{defender}}'s throat.",
+        "{{defender}} crumples under a final, piston-like straight right from {{attacker}}.",
+        "{{attacker}} mounts the fallen {{defender}}, raining blows until the referee finally calls it.",
+        "A perfectly timed overhand right from {{attacker}} turns the lights out on {{defender}} forever.",
+        "{{attacker}} crushes {{defender}}'s windpipe with a desperate, crushing grip."
       ]
     },
     "default": [
@@ -264,7 +296,15 @@
       "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
       "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
       "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
-      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold.",
+      "{{attacker}} delivers the coup de gr\u00e2ce, standing triumphant over {{defender}}.",
+      "The life leaves {{defender}}'s eyes as {{attacker}} secures the final victory.",
+      "A hush falls over the arena as {{attacker}} ends {{defender}}'s miserable existence.",
+      "{{defender}}'s fight is over, snuffed out by {{attacker}}'s unrelenting assault.",
+      "{{attacker}} seals {{defender}}'s fate with a merciless finishing blow.",
+      "Blood soaks the sands as {{attacker}} finally puts {{defender}} down for good.",
+      "{{defender}} succumbs to their wounds, leaving {{attacker}} as the sole survivor.",
+      "With brutal finality, {{attacker}} terminates {{defender}}'s agonizing struggle."
     ]
   }
 }

@@ -241,51 +241,19 @@
     "weapon_specific": {
       "slashing": [
         "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
-        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin.",
-        "A wide, terrible arc from {{attacker}} completely eviscerates {{defender}}.",
-        "{{attacker}}'s edge bites deep, severing {{defender}}'s vital tendons and ending it all.",
-        "With a sickening wet thud, {{attacker}}'s blade decapitates {{defender}}.",
-        "{{attacker}} casually flick the blood from their blade as {{defender}} collapses in pieces.",
-        "A flurry of razor-sharp cuts leaves {{defender}} a bloody, motionless ruin.",
-        "{{defender}} tries to hold their own insides in, but {{attacker}}'s slashing finish is absolute.",
-        "A final, perfectly angled draw cut from {{attacker}} ends {{defender}} instantly.",
-        "The crowd roars as {{attacker}}'s weapon carves a fatal path through {{defender}}."
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
-        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
-        "{{attacker}} steps inside the guard, plunging the point fatally into {{defender}}.",
-        "A blindingly fast lunge from {{attacker}} skewers {{defender}} completely.",
-        "{{attacker}} pins {{defender}} to the arena floor with a brutal, final thrust.",
-        "With clinical precision, {{attacker}} punctures {{defender}}'s lung, ending the bout.",
-        "{{defender}} chokes on their own blood as {{attacker}} twists the embedded point.",
-        "A final, devastating thrust from {{attacker}} leaves {{defender}} utterly lifeless.",
-        "{{attacker}} finds the gap in the armor, driving their point home for the kill.",
-        "The sheer force of {{attacker}}'s thrust crumples {{defender}} in a tragic finale."
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
-        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly.",
-        "{{attacker}} brings the weapon down with earth-shattering force, flattening {{defender}}.",
-        "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s ribs.",
-        "{{attacker}} swings like a lumberjack, turning {{defender}} into a broken heap.",
-        "With brutal, concussive force, {{attacker}} obliterates {{defender}}'s final defense.",
-        "{{defender}}'s bones shatter under the merciless impact of {{attacker}}'s final blow.",
-        "A masterstroke of raw power from {{attacker}}! The weapon finds its mark with deadly blunt force.",
-        "{{attacker}} executes a flawless bludgeoning technique, leaving {{defender}} no chance.",
-        "The crushing weight of {{attacker}}'s weapon strike crumples {{defender}} entirely."
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
-        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery.",
-        "{{attacker}} unleashes a flurry of fatal bare-knuckle strikes, pummeling {{defender}} to death.",
-        "A sickening crunch of cartilage signals the end as {{attacker}} crushes {{defender}}'s throat.",
-        "{{attacker}} drives a piston-like punch through {{defender}}'s guard, snapping their neck.",
-        "With brutal, bare-handed savagery, {{attacker}} beats the life out of {{defender}}.",
-        "{{defender}} collapses like a puppet with cut strings after {{attacker}}'s final punch.",
-        "A masterstroke of martial violence from {{attacker}} ends {{defender}} instantly.",
-        "{{attacker}} executes a flawless hand-to-hand finisher, leaving {{defender}} motionless.",
-        "The sheer concussive force of {{attacker}}'s fist crumples {{defender}} in a bloody finale."
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
       ]
     },
     "default": [
@@ -296,10 +264,7 @@
       "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
       "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
       "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
-      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold.",
-      "{{attacker}} ends the bout with a brutal and final blow, leaving {{defender}} motionless on the arena floor.",
-      "{{attacker}} delivers a sudden, decisive blow that drops {{defender}} in a lifeless heap.",
-      "The crowd gasps as {{attacker}}'s final attack strikes true, concluding the fight instantly."
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
     ]
   }
 }

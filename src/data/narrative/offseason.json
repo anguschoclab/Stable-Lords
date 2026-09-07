@@ -375,6 +375,13 @@
       "newsletter": [
         "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
       ]
+    },
+    "wandering_merchant_strange_brew": {
+      "title": "Wandering Merchant's Strange Brew",
+      "effectType": "wandering_merchant_strange_brew",
+      "newsletter": [
+        "A wandering merchant offered {{name}} a glowing, foul-smelling brew. They chugged it on a dare. They look strangely invigorated, yet deeply regret the taste. (+20 XP, +10 Fame)"
+      ]
     }
   },
   "events": {

@@ -18,9 +18,11 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
   } as unknown as GameState;
 }
 
+import { type WarriorId } from '@/types/shared.types';
+
 function createMockWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
-    id: 'w1',
+    id: 'w1' as WarriorId,
     name: 'Alaric',
     status: 'Active',
     xp: 0,
@@ -34,7 +36,7 @@ import { narrativeContent } from '@/data/narrative';
 describe('seasonal pass - wandering_merchant_strange_brew', () => {
   it('grants XP and Fame to a random warrior', () => {
     const state = createMockState();
-    const w1 = createMockWarrior({ id: 'w1', name: 'Alaric', status: 'Active', xp: 10, fame: 5 });
+    const w1 = createMockWarrior({ id: 'w1' as WarriorId, name: 'Alaric', status: 'Active', xp: 10, fame: 5 });
     state.roster = [w1];
 
     // Force the rng to select our new event by overriding the narrative content temporarily, or using an rng that picks it.
@@ -52,12 +54,12 @@ describe('seasonal pass - wandering_merchant_strange_brew', () => {
     // Restore
     (narrativeContent as any).offseason_events = originalEvents;
 
-    expect(impact.rosterUpdates?.has('w1')).toBe(true);
-    const updates = impact.rosterUpdates!.get('w1');
+    expect(impact.rosterUpdates?.has('w1' as WarriorId)).toBe(true);
+    const updates = impact.rosterUpdates!.get('w1' as WarriorId);
     expect(updates?.xp).toBe(30); // 10 + 20
     expect(updates?.fame).toBe(15); // 5 + 10
 
     expect(impact.newsletterItems?.length).toBe(1);
-    expect(impact.newsletterItems?.[0].title).toBe("Wandering Merchant's Strange Brew");
+    expect(impact.newsletterItems?.[0]?.title).toBe("Wandering Merchant's Strange Brew");
   });
 });

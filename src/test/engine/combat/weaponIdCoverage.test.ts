@@ -149,10 +149,7 @@ describe('getClassicWeaponBonus shield coverage', () => {
   });
 
   it('equipment.utils.ts has no private duplicate SHIELD_IDS set', () => {
-    const src = readFileSync(
-      join(process.cwd(), 'src/data/equipment/equipment.utils.ts'),
-      'utf-8'
-    );
+    const src = readFileSync(join(process.cwd(), 'src/data/equipment/equipment.utils.ts'), 'utf-8');
     expect(src).not.toMatch(/const SHIELD_IDS\s*=\s*new Set/);
   });
 });

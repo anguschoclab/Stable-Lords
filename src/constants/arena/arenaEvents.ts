@@ -156,7 +156,6 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     narrativeText: 'Ghostly screams echo off the walls, fraying the nerves of the fighters!',
   },
 
-
   // ─── Premium Events ────────────────────────────────────────────────────
   crowd_riot: {
     id: 'crowd_riot',

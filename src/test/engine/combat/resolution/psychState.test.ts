@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { evaluatePsychState, getPsychStateMods, handleDesperateState } from '@/engine/combat/resolution/psychState';
+import {
+  evaluatePsychState,
+  getPsychStateMods,
+  handleDesperateState,
+} from '@/engine/combat/resolution/psychState';
 import { FightingStyle } from '@/types/shared.types';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import { PSYCH_STATE_MODS } from '@/engine/combat/mechanics/conditionEngine';
@@ -37,7 +41,9 @@ describe('Psych State Mechanics', () => {
       const fD = { ...defaultFighter, label: 'D' as const };
 
       const events = evaluatePsychState(
-        fA, fD, defaultContext,
+        fA,
+        fD,
+        defaultContext,
         { psychState: 'Neutral' },
         { psychState: 'Neutral' }
       );
@@ -52,7 +58,9 @@ describe('Psych State Mechanics', () => {
       const fD = { ...defaultFighter, label: 'D' as const };
 
       const events = evaluatePsychState(
-        fA, fD, defaultContext,
+        fA,
+        fD,
+        defaultContext,
         { psychState: 'Rattled' },
         { psychState: 'InTheZone' }
       );
@@ -68,19 +76,22 @@ describe('Psych State Mechanics', () => {
 
   describe('getPsychStateMods', () => {
     it('returns the correct mods based on fighter psych states', () => {
-       const fA = { ...defaultFighter, psychState: 'Rattled' as const } as FighterState;
-       const fD = { ...defaultFighter, psychState: 'InTheZone' as const } as FighterState;
+      const fA = { ...defaultFighter, psychState: 'Rattled' as const } as FighterState;
+      const fD = { ...defaultFighter, psychState: 'InTheZone' as const } as FighterState;
 
-       const mods = getPsychStateMods(fA, fD);
+      const mods = getPsychStateMods(fA, fD);
 
-       expect(mods.psychA).toEqual(PSYCH_STATE_MODS['Rattled']);
-       expect(mods.psychD).toEqual(PSYCH_STATE_MODS['InTheZone']);
+      expect(mods.psychA).toEqual(PSYCH_STATE_MODS['Rattled']);
+      expect(mods.psychD).toEqual(PSYCH_STATE_MODS['InTheZone']);
     });
   });
 
   describe('handleDesperateState', () => {
     it('does nothing if not desperate conditions', () => {
-      const fA = { ...defaultFighter, plan: { ...defaultFighter.plan, desperatePlan: { OE: 2, AL: 2 } } } as FighterState;
+      const fA = {
+        ...defaultFighter,
+        plan: { ...defaultFighter.plan, desperatePlan: { OE: 2, AL: 2 } },
+      } as FighterState;
       const fD = { ...defaultFighter, label: 'D' as const } as FighterState;
 
       const events = handleDesperateState(fA, fD);
@@ -92,7 +103,7 @@ describe('Psych State Mechanics', () => {
       const fA = {
         ...defaultFighter,
         hp: 20, // Low HP trigger
-        plan: { ...defaultFighter.plan, desperatePlan: { OE: 3, AL: 3, killDesire: 10 } }
+        plan: { ...defaultFighter.plan, desperatePlan: { OE: 3, AL: 3, killDesire: 10 } },
       } as FighterState;
       const fD = { ...defaultFighter, label: 'D' as const } as FighterState;
 
@@ -110,7 +121,7 @@ describe('Psych State Mechanics', () => {
       const fA = {
         ...defaultFighter,
         endurance: 10, // Low Endurance trigger
-        plan: { ...defaultFighter.plan, desperatePlan: { OE: 0, AL: 0 } }
+        plan: { ...defaultFighter.plan, desperatePlan: { OE: 0, AL: 0 } },
       } as FighterState;
       const fD = { ...defaultFighter, label: 'D' as const } as FighterState;
 
@@ -126,7 +137,7 @@ describe('Psych State Mechanics', () => {
         ...defaultFighter,
         desperate: true,
         hp: 10,
-        plan: { ...defaultFighter.plan, desperatePlan: { OE: 0, AL: 0 } }
+        plan: { ...defaultFighter.plan, desperatePlan: { OE: 0, AL: 0 } },
       } as FighterState;
       const fD = { ...defaultFighter, label: 'D' as const } as FighterState;
 

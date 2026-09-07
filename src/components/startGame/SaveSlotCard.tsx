@@ -49,7 +49,8 @@ export default function SaveSlotCard({
       }}
       className="group relative cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       style={{
-        background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 50%, var(--card) 100%)',
+        background:
+          'linear-gradient(145deg, var(--background) 0%, var(--card) 50%, var(--card) 100%)',
         border: '1px solid rgba(60, 42, 22, 0.8)',
         borderTopColor: 'rgba(100, 70, 36, 0.45)',
         borderLeftColor: 'rgba(80, 56, 28, 0.4)',

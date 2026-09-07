@@ -67,6 +67,14 @@ export default function ScreenShake({
   }[intensity];
 
   return (
-    <div className={cn('transition-transform motion-reduce:transition-none motion-reduce:transform-none', isShaking && shakeClass, className)}>{children}</div>
+    <div
+      className={cn(
+        'transition-transform motion-reduce:transition-none motion-reduce:transform-none',
+        isShaking && shakeClass,
+        className
+      )}
+    >
+      {children}
+    </div>
   );
 }

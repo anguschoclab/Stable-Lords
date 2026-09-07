@@ -43,7 +43,8 @@ export default function IdentityStep({
     <div
       className="p-7 space-y-6"
       style={{
-        background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
+        background:
+          'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
         border: '1px solid rgba(60,42,22,0.9)',
         borderTopColor: 'rgba(100,70,36,0.5)',
       }}

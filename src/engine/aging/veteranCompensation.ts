@@ -15,7 +15,10 @@ import { WARRIOR_AGING } from '@/constants/aging';
 
 /** SP+DF points lost to aging at a given age (matches aging.ts penalty). */
 function agingAttributeLoss(age: number): number {
-  const penalty = Math.max(0, Math.floor((age - AGING_PENALTY_START) / WARRIOR_AGING.PENALTY_INTERVAL));
+  const penalty = Math.max(
+    0,
+    Math.floor((age - AGING_PENALTY_START) / WARRIOR_AGING.PENALTY_INTERVAL)
+  );
   return penalty * 2; // applied to both SP and DF
 }
 

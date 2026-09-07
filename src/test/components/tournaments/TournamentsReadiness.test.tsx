@@ -70,13 +70,7 @@ vi.mock('@/components/ui/badge', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({
-    children,
-    onClick,
-  }: {
-    children?: React.ReactNode;
-    onClick?: () => void;
-  }) => (
+  Button: ({ children, onClick }: { children?: React.ReactNode; onClick?: () => void }) => (
     <button onClick={onClick}>{children}</button>
   ),
 }));
@@ -195,12 +189,7 @@ describe('WarriorReadinessCard', () => {
 // ─── WarriorReadinessBanner ───────────────────────────────────────────────────
 describe('WarriorReadinessBanner', () => {
   it('renders the "Warrior Readiness" section divider label', () => {
-    render(
-      <WarriorReadinessBanner
-        tournament={makeTournament()}
-        warriors={[makeWarrior()]}
-      />
-    );
+    render(<WarriorReadinessBanner tournament={makeTournament()} warriors={[makeWarrior()]} />);
     expect(screen.getByText('Warrior Readiness')).toBeDefined();
   });
 
@@ -233,12 +222,7 @@ describe('WarriorReadinessBanner', () => {
   });
 
   it('renders the "Combat Status Audit" header label', () => {
-    render(
-      <WarriorReadinessBanner
-        tournament={makeTournament()}
-        warriors={[makeWarrior()]}
-      />
-    );
+    render(<WarriorReadinessBanner tournament={makeTournament()} warriors={[makeWarrior()]} />);
     expect(screen.getByText(/Combat Status Audit/i)).toBeDefined();
   });
 });

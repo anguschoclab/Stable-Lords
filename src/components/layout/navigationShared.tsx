@@ -301,7 +301,8 @@ export function SubPageList({
                   <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary" />
                 )}
                 <PageIcon
-                  className={cn('h-3.5 w-3.5 shrink-0 transition-colors motion-reduce:transition-none',
+                  className={cn(
+                    'h-3.5 w-3.5 shrink-0 transition-colors motion-reduce:transition-none',
                     isActive
                       ? 'text-primary'
                       : 'text-muted-foreground/40 group-hover:text-muted-foreground/70',
@@ -366,7 +367,8 @@ export function AlertStrip({ alerts, LinkComponent = Link, itemClassName }: Aler
           <LinkComponent
             key={a.label}
             to={a.to as never}
-            className={cn('flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70 motion-reduce:transition-none',
+            className={cn(
+              'flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70 motion-reduce:transition-none',
               a.color,
               itemClassName
             )}

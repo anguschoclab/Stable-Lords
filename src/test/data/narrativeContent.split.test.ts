@@ -17,7 +17,9 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 
 import { narrativeContent as assembledContent } from '@/data/narrative';
 
-beforeAll(async () => { await loadCombatNarrative(); });
+beforeAll(async () => {
+  await loadCombatNarrative();
+});
 
 const ORIGINAL_KEYS = [
   'blurbs',

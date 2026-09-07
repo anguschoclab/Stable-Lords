@@ -165,7 +165,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 
   // These stack with base weather effects
 
-
   'water:Rainy': {
     initiativeMod: WEATHER_PENALTIES.WATER_RAINY_INITIATIVE, // Extra -1 in water arenas during rain
     description: 'Standing water deepens with fresh rain',

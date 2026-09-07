@@ -8,16 +8,38 @@ describe('Tactics Mechanics', () => {
     it('uses phase tactics if provided', () => {
       const plan: FightPlan = {
         style: FightingStyle.StrikingAttack,
-        OE: 1, AL: 1,
+        OE: 1,
+        AL: 1,
         offensiveTactic: 'Bash',
         defensiveTactic: 'Dodge',
         target: 'Head',
         protect: 'Head',
         phases: {
-          opening: { OE: 1, AL: 1, killDesire: 5, offensiveTactic: 'none', defensiveTactic: 'none', target: 'Chest' },
-          mid: { OE: 1, AL: 1, killDesire: 5, offensiveTactic: 'Decisiveness', defensiveTactic: 'Parry', target: 'Right Arm' },
-          late: { OE: 1, AL: 1, killDesire: 5, offensiveTactic: 'Bash', defensiveTactic: 'Dodge', target: 'Right Leg' }
-        }
+          opening: {
+            OE: 1,
+            AL: 1,
+            killDesire: 5,
+            offensiveTactic: 'none',
+            defensiveTactic: 'none',
+            target: 'Chest',
+          },
+          mid: {
+            OE: 1,
+            AL: 1,
+            killDesire: 5,
+            offensiveTactic: 'Decisiveness',
+            defensiveTactic: 'Parry',
+            target: 'Right Arm',
+          },
+          late: {
+            OE: 1,
+            AL: 1,
+            killDesire: 5,
+            offensiveTactic: 'Bash',
+            defensiveTactic: 'Dodge',
+            target: 'Right Leg',
+          },
+        },
       };
 
       const result = resolveEffectiveTactics(plan, 'mid');
@@ -29,7 +51,8 @@ describe('Tactics Mechanics', () => {
     it('falls back to default plan tactics if phase not provided', () => {
       const plan: FightPlan = {
         style: FightingStyle.StrikingAttack,
-        OE: 1, AL: 1,
+        OE: 1,
+        AL: 1,
         offensiveTactic: 'Bash',
         defensiveTactic: 'Dodge',
         target: 'Head',
@@ -43,7 +66,13 @@ describe('Tactics Mechanics', () => {
     });
 
     it('falls back to none/Any if neither plan nor phase tactics exist', () => {
-      const plan: FightPlan = { style: FightingStyle.StrikingAttack, OE: 1, AL: 1, target: 'Head', protect: 'Head' } as any;
+      const plan: FightPlan = {
+        style: FightingStyle.StrikingAttack,
+        OE: 1,
+        AL: 1,
+        target: 'Head',
+        protect: 'Head',
+      } as any;
 
       const result = resolveEffectiveTactics(plan, 'late');
       expect(result.offTactic).toBe('none');

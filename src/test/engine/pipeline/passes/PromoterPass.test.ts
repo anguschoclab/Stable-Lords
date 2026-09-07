@@ -1212,9 +1212,7 @@ describe('PromoterPass — eligibility gating', () => {
 
       const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
       // At least one NPC-vs-NPC offer should exist (not involving player warriors)
-      const npcOffers = offers.filter(
-        (o) => !o.warriorIds.some((id) => playerWarriorIds.has(id))
-      );
+      const npcOffers = offers.filter((o) => !o.warriorIds.some((id) => playerWarriorIds.has(id)));
       // With 200 rival warriors and capacity 10, there should be NPC-vs-NPC offers
       expect(npcOffers.length).toBeGreaterThan(0);
     });
@@ -1227,9 +1225,7 @@ describe('PromoterPass — eligibility gating', () => {
 // .map() → for-loop refactor of sortedScores construction.
 
 describe('sortedScores index alignment', () => {
-  function makeStateWithWarriors(
-    scores: { id: string; score: number }[]
-  ): GameState {
+  function makeStateWithWarriors(scores: { id: string; score: number }[]): GameState {
     const warriors: Warrior[] = scores.map((s) => {
       const w = makeWarrior(
         s.id as WarriorId,
@@ -1292,9 +1288,7 @@ describe('sortedScores index alignment', () => {
     // w30 (score 30) and w31 (score 31) have gap = 1/30 ≈ 0.033 < 0.20
     // (Corporate threshold). They should match each other.
     const w30w31Offer = offers.find(
-      (o) =>
-        o.warriorIds.includes('w30' as WarriorId) &&
-        o.warriorIds.includes('w31' as WarriorId)
+      (o) => o.warriorIds.includes('w30' as WarriorId) && o.warriorIds.includes('w31' as WarriorId)
     );
     expect(w30w31Offer).toBeDefined();
   });

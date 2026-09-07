@@ -24,9 +24,7 @@ describe('Button aria-label fallback', () => {
   });
 
   it('does not use non-string tooltip for aria-label', () => {
-    renderWithProvider(
-      <Button tooltip={<span>Complex</span>}>Click</Button>
-    );
+    renderWithProvider(<Button tooltip={<span>Complex</span>}>Click</Button>);
     expect(screen.getByRole('button')).not.toHaveAttribute('aria-label');
   });
 });

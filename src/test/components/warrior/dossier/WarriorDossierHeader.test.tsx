@@ -39,7 +39,15 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, onClick, variant }: { children: React.ReactNode; onClick?: () => void; variant?: string }) => (
+  Button: ({
+    children,
+    onClick,
+    variant,
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
+    variant?: string;
+  }) => (
     <button data-testid="button" data-variant={variant} onClick={onClick}>
       {children}
     </button>
@@ -78,36 +86,28 @@ describe('WarriorDossierHeader', () => {
 
   it('does NOT render Challenge/Avoid buttons for player-owned warriors', () => {
     const warrior = makeWarrior();
-    render(
-      <WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={true} />
-    );
+    render(<WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={true} />);
     expect(screen.queryByText('Challenge')).not.toBeInTheDocument();
     expect(screen.queryByText('Avoid')).not.toBeInTheDocument();
   });
 
   it('renders Challenge and Avoid buttons for rival warriors', () => {
     const warrior = makeWarrior();
-    render(
-      <WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />
-    );
+    render(<WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />);
     expect(screen.getByText('Challenge')).toBeInTheDocument();
     expect(screen.getByText('Avoid')).toBeInTheDocument();
   });
 
   it('calls toggleChallenge with warrior.id when Challenge button clicked', () => {
     const warrior = makeWarrior({ id: 'rival1' as WarriorId });
-    render(
-      <WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />
-    );
+    render(<WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />);
     fireEvent.click(screen.getByText('Challenge'));
     expect(mockToggleChallenge).toHaveBeenCalledWith('rival1');
   });
 
   it('calls toggleAvoid with warrior.id when Avoid button clicked', () => {
     const warrior = makeWarrior({ id: 'rival1' as WarriorId });
-    render(
-      <WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />
-    );
+    render(<WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />);
     fireEvent.click(screen.getByText('Avoid'));
     expect(mockToggleAvoid).toHaveBeenCalledWith('rival1');
   });
@@ -115,18 +115,14 @@ describe('WarriorDossierHeader', () => {
   it('shows Challenged text when warrior is already challenged', () => {
     mockPlayerChallenges = ['rival1'];
     const warrior = makeWarrior({ id: 'rival1' as WarriorId });
-    render(
-      <WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />
-    );
+    render(<WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />);
     expect(screen.getByText('Challenged')).toBeInTheDocument();
   });
 
   it('shows Avoided text when warrior is already avoided', () => {
     mockPlayerAvoids = ['rival1'];
     const warrior = makeWarrior({ id: 'rival1' as WarriorId });
-    render(
-      <WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />
-    );
+    render(<WarriorDossierHeader warrior={warrior} record="5W - 3L - 1K" isPlayerOwned={false} />);
     expect(screen.getByText('Avoided')).toBeInTheDocument();
   });
 });

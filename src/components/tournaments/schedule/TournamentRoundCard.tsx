@@ -48,7 +48,8 @@ export function TournamentRoundCard({
       )}
     >
       <CardHeader
-        className={cn('p-3 cursor-pointer hover:bg-secondary/20 transition-colors motion-reduce:transition-none',
+        className={cn(
+          'p-3 cursor-pointer hover:bg-secondary/20 transition-colors motion-reduce:transition-none',
           isComplete && 'bg-primary/5',
           isCurrent && 'bg-primary/5'
         )}

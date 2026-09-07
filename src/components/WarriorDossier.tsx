@@ -61,7 +61,12 @@ export const WarriorDossier = React.memo(function WarriorDossier({
     <ScrollArea className="h-full pr-4">
       <div className="space-y-6 pb-20">
         <div className="space-y-4">
-          <WarriorDossierHeader warrior={warrior} record={record} rankings={rankings} isPlayerOwned={isPlayerOwned} />
+          <WarriorDossierHeader
+            warrior={warrior}
+            record={record}
+            rankings={rankings}
+            isPlayerOwned={isPlayerOwned}
+          />
           <WarriorDossierTraits warrior={warrior} />
         </div>
 

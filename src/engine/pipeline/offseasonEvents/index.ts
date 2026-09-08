@@ -41,6 +41,7 @@ export { handleShadowTournament } from './chaosHandlers';
 export { handleChaosWeaversGame } from './chaosHandlers';
 export { handleChaosWeaverVisit } from './chaosHandlers';
 export { handleTemporalAnomaly } from './chaosHandlers';
+export { handleDreamweaversMist } from './chaosHandlers';
 export { handleCursedTreasureDiscovery } from './chaosHandlers';
 export { handleShadowMarketRun } from './socialHandlers';
 export { handleGrandFeast } from './socialHandlers';

@@ -63,7 +63,8 @@ export interface OffseasonEventNarrative {
     | 'shattered_skies_ritual'
     | 'weeping_skies'
     | 'suspicious_mushroom_stew'
-    | 'offseason_training_camp';
+    | 'offseason_training_camp'
+    | 'dreamweavers_mist';
   newsletter: string[];
 }
 

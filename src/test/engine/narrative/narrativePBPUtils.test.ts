@@ -12,7 +12,9 @@ import { loadCombatNarrative } from '@/data/narrative';
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 
 describe('narrativePBPUtils', () => {
-  beforeAll(async () => { await loadCombatNarrative(); });
+  beforeAll(async () => {
+    await loadCombatNarrative();
+  });
   describe('interpolateTemplate', () => {
     it('replaces %A with attacker name', () => {
       expect(interpolateTemplate('%A attacks.', { attacker: 'Thor' })).toBe('Thor attacks.');

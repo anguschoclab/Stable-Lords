@@ -1217,5 +1217,5 @@ export const WARRIOR_NAMES = [
   'ZEPHYR',
   'ZEPHYRA',
   'ZOG',
-  'ZOMBIE'
+  'ZOMBIE',
 ];

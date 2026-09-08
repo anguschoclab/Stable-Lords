@@ -42,7 +42,8 @@ export function WarriorSlots({
         role="button"
         tabIndex={0}
         aria-label={`Select ${resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}`}
-        className={cn('flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
+        className={cn(
+          'flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
           isAChosen
             ? 'bg-primary/10 text-primary font-bold shadow-inner'
             : isDChosen
@@ -109,7 +110,8 @@ export function WarriorSlots({
         aria-label={
           isBye ? 'Bye' : `Select ${resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}`
         }
-        className={cn('flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
+        className={cn(
+          'flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
           isDChosen
             ? 'bg-primary/10 text-primary font-bold shadow-inner'
             : isAChosen

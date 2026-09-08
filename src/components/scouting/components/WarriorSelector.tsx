@@ -135,7 +135,8 @@ function WarriorSelectionCard({
           </div>
           <div className="flex-1 min-w-0">
             <div
-              className={cn('font-display font-black text-sm uppercase tracking-tight transition-colors truncate motion-reduce:transition-none',
+              className={cn(
+                'font-display font-black text-sm uppercase tracking-tight transition-colors truncate motion-reduce:transition-none',
                 isSelected ? colors.text : 'text-muted-foreground'
               )}
             >

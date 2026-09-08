@@ -22,17 +22,30 @@ function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | nul
   if (wFights.length === 0) return null;
   const first = wFights[0];
   if (!first) return null;
-  return wFights.reduce((best, f) => {
-    const score = (t: FightSummary) => {
-      let s = 0;
-      if (t.by === 'Kill') s += 5;
-      if (t.by === 'KO') s += 3;
-      if (t.flashyTags?.includes('Comeback')) s += 4;
-      if (t.flashyTags?.includes('Flashy')) s += 2;
-      return s;
-    };
-    return score(f) > score(best) ? f : best;
-  }, first);
+  const score = (t: FightSummary) => {
+    let s = 0;
+    if (t.by === 'Kill') s += 5;
+    if (t.by === 'KO') s += 3;
+    if (t.flashyTags?.includes('Comeback')) s += 4;
+    if (t.flashyTags?.includes('Flashy')) s += 2;
+    return s;
+  };
+
+  // ⚡ Bolt: Replaced .reduce with a single-pass for-loop to avoid redundant evaluations of the best item's score.
+  let best = first;
+  let bestScore = score(best);
+
+  for (let i = 1; i < wFights.length; i++) {
+    const f = wFights[i];
+    if (!f) continue;
+    const fScore = score(f);
+    if (fScore > bestScore) {
+      best = f;
+      bestScore = fScore;
+    }
+  }
+
+  return best;
 }
 
 /* ── Inductee Card ───────────────────────────────────────── */

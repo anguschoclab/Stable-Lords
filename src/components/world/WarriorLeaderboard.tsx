@@ -37,9 +37,7 @@ interface VirtualizedRowProps {
 function VirtualizedRow({ vi, filtered, isFiltered }: VirtualizedRowProps) {
   const row = filtered[vi.index];
   if (!row) return null;
-  return (
-    <WarriorLeaderboardRow row={row} index={vi.index} isFiltered={isFiltered} />
-  );
+  return <WarriorLeaderboardRow row={row} index={vi.index} isFiltered={isFiltered} />;
 }
 
 /**

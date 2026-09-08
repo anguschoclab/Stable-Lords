@@ -83,7 +83,8 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
     >
       <div className="flex items-center gap-4">
         <div
-          className={cn('p-2 rounded-none transition-colors border motion-reduce:transition-none',
+          className={cn(
+            'p-2 rounded-none transition-colors border motion-reduce:transition-none',
             isExpert
               ? 'bg-white/10 border-white/20'
               : 'bg-neutral-800 border-white/5 group-hover/btn:bg-primary/20 group-hover/btn:border-primary/20 group-hover/btn:text-primary'

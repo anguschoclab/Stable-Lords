@@ -69,7 +69,8 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
       <Tooltip>
         <TooltipTrigger asChild>
           <SheetTrigger
-            className={cn('text-primary hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold motion-reduce:transition-none',
+            className={cn(
+              'text-primary hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold motion-reduce:transition-none',
               className
             )}
             onClick={(e) => e.stopPropagation()}
@@ -172,7 +173,8 @@ export function StableLink({ name, className, children }: StableLinkProps) {
       <Tooltip>
         <TooltipTrigger asChild>
           <SheetTrigger
-            className={cn('text-arena-gold hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold motion-reduce:transition-none',
+            className={cn(
+              'text-arena-gold hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold motion-reduce:transition-none',
               className
             )}
             onClick={(e) => e.stopPropagation()}

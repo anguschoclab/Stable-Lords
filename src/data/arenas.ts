@@ -1215,18 +1215,17 @@ export const RUSTED_GORGE: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
 };
 
-
 export const THE_ASYLUM: ArenaConfig = {
   id: 'the_asylum',
   name: 'The Asylum',
   tags: ['indoor', 'cramped', 'cursed'],
   tier: 2,
   size: 'cramped',
-  description: 'A maddening enclosed space echoing with the screams of past victims. Stamina drains quickly.',
+  description:
+    'A maddening enclosed space echoing with the screams of past victims. Stamina drains quickly.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.25 },
 };
-
 
 export const VOLCANIC_CRATER: ArenaConfig = {
   id: 'volcanic_crater',

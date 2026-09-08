@@ -3,7 +3,10 @@ import { handleSuspiciousMushroomStew } from '@/engine/pipeline/offseasonEvents/
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
-import type { OffseasonEventContext, OffseasonEventNarrative } from '@/engine/pipeline/offseasonEvents/types';
+import type {
+  OffseasonEventContext,
+  OffseasonEventNarrative,
+} from '@/engine/pipeline/offseasonEvents/types';
 import { SeededRNGService } from '@/utils/random';
 
 describe('handleSuspiciousMushroomStew', () => {

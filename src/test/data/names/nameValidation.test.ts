@@ -20,7 +20,14 @@ import {
   filterValidOwnerNames,
   filterValidStableNames,
 } from '@/data/names/nameValidation';
-import { WARRIOR_NAMES, OWNER_FIRST, OWNER_LAST, STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from '@/data/names';
+import {
+  WARRIOR_NAMES,
+  OWNER_FIRST,
+  OWNER_LAST,
+  STABLE_PREFIXES,
+  STABLE_SUFFIXES,
+  STABLE_ALT,
+} from '@/data/names';
 
 describe('isValidWarriorName', () => {
   it('returns true for an exact uppercase match', () => {
@@ -28,7 +35,7 @@ describe('isValidWarriorName', () => {
   });
 
   it('returns true for lowercase input (case-insensitive)', () => {
-    expect(isValidWarriorName((WARRIOR_NAMES[0]!).toLowerCase())).toBe(true);
+    expect(isValidWarriorName(WARRIOR_NAMES[0]!.toLowerCase())).toBe(true);
   });
 
   it('returns true for mixed-case input (case-insensitive)', () => {
@@ -56,7 +63,7 @@ describe('isValidOwnerFirstName', () => {
   });
 
   it('is case-sensitive (lowercase input rejected)', () => {
-    expect(isValidOwnerFirstName((OWNER_FIRST[0]!).toLowerCase())).toBe(false);
+    expect(isValidOwnerFirstName(OWNER_FIRST[0]!.toLowerCase())).toBe(false);
   });
 });
 

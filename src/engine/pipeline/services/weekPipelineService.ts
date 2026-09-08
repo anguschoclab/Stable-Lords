@@ -128,7 +128,11 @@ function invalidateDeadWarriors(state: GameState, deadIds: Set<WarriorId>): void
   });
 }
 
-async function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): Promise<GameState> {
+async function runBoutPhase(
+  state: GameState,
+  ctx: WeekContext,
+  headless?: boolean
+): Promise<GameState> {
   // Safety net: ensure combat narrative data is loaded before bout resolution
   await loadCombatNarrative();
   // Maps are already built by buildWeekCaches at the week boundary

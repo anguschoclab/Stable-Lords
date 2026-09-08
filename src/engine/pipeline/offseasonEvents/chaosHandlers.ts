@@ -15,6 +15,42 @@ import {
   getActiveWarriors,
 } from './types';
 
+/** Handler for the Dreamweavers Mist offseason event — grants XP but causes a minor magic burn. */
+export function handleDreamweaversMist(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15;
+      const newInjury = makeInjury(rng, {
+        name: 'Magic Burn',
+        description: 'Strange magical blisters that throb in the dark.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { END: -1 },
+      });
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+      const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [baseMsg],
+      });
+    }
+  }
+}
+
 /** Handler for the Chaos Rift offseason event — grants XP, fame, and gold from a chaos crystal. */
 export function handleChaosRift(
   state: GameState,

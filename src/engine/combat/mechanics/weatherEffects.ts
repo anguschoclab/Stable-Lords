@@ -30,6 +30,14 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'A violent tear into the abyss that heavily drains stamina and unnerves the combatants.',
   },
+  'Dreamweavers Mist': {
+    staminaMult: 0.85,
+    initiativeMod: -1,
+    riposteMod: 2,
+    damageMult: 0.95,
+    description:
+      'A hallucinogenic mist rolls in. Fighters move languidly, saving stamina and dodging gracefully, but hits lack their usual sting.',
+  },
 
   'Prismatic Rain': {
     staminaMult: 1.15,

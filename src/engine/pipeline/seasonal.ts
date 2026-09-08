@@ -61,6 +61,7 @@ import {
   handleChaosWeaversGift,
   handleChaosWeaversGame,
   handleTemporalAnomaly,
+  handleDreamweaversMist,
   handleChaosWeaversProphecy,
   handleBountifulHarvest,
   handleWanderingMystic,
@@ -127,6 +128,7 @@ const EVENT_HANDLERS: Record<
   chaos_weavers_gift: handleChaosWeaversGift,
   chaos_weavers_game: handleChaosWeaversGame,
   temporal_anomaly: handleTemporalAnomaly,
+  dreamweavers_mist: handleDreamweaversMist,
   chaos_weavers_prophecy: handleChaosWeaversProphecy,
   wandering_mystic: handleWanderingMystic,
 

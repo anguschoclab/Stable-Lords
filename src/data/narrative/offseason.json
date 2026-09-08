@@ -375,6 +375,13 @@
       "newsletter": [
         "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
       ]
+    },
+    "dreamweavers_mist": {
+      "title": "Dreamweavers Mist Settles",
+      "effectType": "dreamweavers_mist",
+      "newsletter": [
+        "A strange, hallucinogenic mist rolled through the camp. {{name}} breathed it deeply, discovering an uncanny new fighting rhythm but taking minor magic burns. (+15 XP, Minor Injury)"
+      ]
     }
   },
   "events": {

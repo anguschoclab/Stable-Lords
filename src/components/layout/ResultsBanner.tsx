@@ -24,12 +24,19 @@ export function ResultsBanner({ week, results, onDismiss }: ResultsBannerProps) 
 
   if (results.length === 0) return null;
 
-  const wins = results.filter((r) => r.outcome.winner === r.a.id).length;
+  // ⚡ Bolt: Single-pass loop to calculate results, replacing multiple .filter and .map operations.
+  let wins = 0;
+  let kills = 0;
+  const deaths: string[] = [];
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    if (r.outcome.winner === r.a.id) wins++;
+    if (r.outcome.by === 'Kill') {
+      kills++;
+      deaths.push(r.outcome.winner === r.a.id ? r.d.name : r.a.name);
+    }
+  }
   const losses = results.length - wins;
-  const kills = results.filter((r) => r.outcome.by === 'Kill').length;
-  const deaths = results
-    .filter((r) => r.outcome.by === 'Kill')
-    .map((r) => (r.outcome.winner === r.a.id ? r.d.name : r.a.name));
 
   return (
     <div

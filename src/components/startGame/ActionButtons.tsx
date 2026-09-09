@@ -65,6 +65,7 @@ export default function ActionButtons({
         }`}
         size="lg"
         disabled={slots.length >= maxSaveSlots}
+        tooltip={slots.length >= maxSaveSlots ? `Maximum ${maxSaveSlots} saves reached` : undefined}
       >
         <Plus className="h-4 w-4" />
         NEW GAME

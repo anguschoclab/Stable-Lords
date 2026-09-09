@@ -30,6 +30,7 @@ export function ResultsBanner({ week, results, onDismiss }: ResultsBannerProps) 
   const deaths: string[] = [];
   for (let i = 0; i < results.length; i++) {
     const r = results[i];
+    if (!r) continue;
     if (r.outcome.winner === r.a.id) wins++;
     if (r.outcome.by === 'Kill') {
       kills++;

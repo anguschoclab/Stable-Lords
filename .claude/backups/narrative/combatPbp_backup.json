@@ -1715,11 +1715,7 @@
           "The gladiators stalk each other deliberately, every step calculated and painfully slow.",
           "{{name}} crash to the sands, struggling to find the strength to rise as time seems to crawl.",
           "{{name}} crumples like a felled tree, the impact heavy and drawn out in the silence of the arena.",
-          "Time seems to drag as {{name}} collapses to the bloody sand, every heavy thud echoing across the pit.",
-          "{{name}} struggles to stand, every movement agonizingly sluggish as the crowd holds its breath.",
-          "Time seems to stand still as {{name}} painfully pushes themselves up from the blood-soaked sand.",
-          "A heavy silence falls as {{name}} slowly, defiantly rises to their feet.",
-          "Every second stretches into eternity as {{name}} gathers the willpower to stand once more."
+          "Time seems to drag as {{name}} collapses to the bloody sand, every heavy thud echoing across the pit."
         ],
         "fast": [
           "The fight erupts into a blur of motion, both fighters pushing the pace to a dangerous extreme!",
@@ -1752,11 +1748,7 @@
           "{{name}} is slammed into the dirt before {{name}} even realizes what hit them.",
           "No time to bleed! {{name}} is moving the instant {{name}} hit the dirt.",
           "{{name}} is instantly flattened, slamming into the dirt before the crowd can even gasp.",
-          "A sudden crack and {{name}} is on their back, dropped faster than the blink of an eye.",
-          "{{name}} bounces right back up, fueled by raw adrenaline and rage!",
-          "No hesitation! {{name}} is back on their feet in a heartbeat, ready for more.",
-          "A lightning-fast recovery! {{name}} springs up instantly, refusing to stay down.",
-          "{{name}} ignores the impact, surging upward before the dust even settles."
+          "A sudden crack and {{name}} is on their back, dropped faster than the blink of an eye."
         ],
         "recovery_slow": [
           "{{name}} uses their weapon as a crutch, dragging themselves upright with agonizing slowness.",
@@ -1789,11 +1781,7 @@
           "With a ragged breath, {{name}} slowly pushes off the blood-soaked sand.",
           "Shaken to the core, {{name}} wobbles violently as {{name}} tries to stand.",
           "Gasping for breath, {{name}} painfully drags themselves up from the dirt, eyes still glassy.",
-          "It takes agonizing seconds for {{name}} to find their footing, swaying dangerously as {{name}} rise.",
-          "Gasping for air, {{name}} wobbles precariously, barely able to find their balance.",
-          "{{name}} staggers upright, their eyes unfocused as they try to shake off the brutal impact.",
-          "It takes everything {{name}} has just to stand, swaying dangerously as the fight resumes.",
-          "A painful, staggering recovery leaves {{name}} completely exposed for a terrifying moment."
+          "It takes agonizing seconds for {{name}} to find their footing, swaying dangerously as {{name}} rise."
         ],
         "recovery_fast": [
           "{{name}} bounces off the ground with terrifying speed, immediately raising their guard.",
@@ -1821,11 +1809,7 @@
           "{{name}} springs back to their feet immediately, fueled by pure adrenaline.",
           "Before the dust can settle, {{name}} kips up, ready for more.",
           "{{name}} bounces back to their feet immediately, shaking off the dirt with ferocious energy.",
-          "Before the dust even settles, {{name}} has rolled and sprang back upright, weapon ready.",
-          "{{name}} rolls with the impact and springs back into a flawless fighting stance.",
-          "A seamless, acrobatic recovery puts {{name}} right back into the action.",
-          "{{name}} snaps back to attention, eyes locked on the opponent with renewed fury.",
-          "Like a coiled spring, {{name}} pops back up, utterly unfazed by the knockdown."
+          "Before the dust even settles, {{name}} has rolled and sprang back upright, weapon ready."
         ]
       }
     },

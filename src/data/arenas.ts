@@ -1142,6 +1142,21 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
+
+  {
+    id: 'the_abyssal_pit_falling_star',
+    arenaId: 'the_abyssal_pit',
+    type: 'famous_death',
+    title: 'The Falling Star',
+    narrative: 'A renowned champion was hurled into the abyss during an eclipse, their scream echoing for what felt like an eternity before sudden silence.',
+  },
+  {
+    id: 'forgotten_crypt_shifting_stones',
+    arenaId: 'forgotten_crypt',
+    type: 'architectural_quirk',
+    title: 'The Shifting Stones',
+    narrative: 'It is said that the crypt rearranges its layout between matches, a claim substantiated by the frequent disorientation of returning veterans.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

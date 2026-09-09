@@ -900,6 +900,26 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+
+  hollow_bones: {
+    id: 'hollow_bones',
+    name: 'Hollow Bones',
+    description: '−1 defense baseline, +1 initiative — fragile but terrifyingly light on their feet.',
+    effect: { defMod: -1, iniMod: 1 },
+    weight: 0.5,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  orphan_scavenger: {
+    id: 'orphan_scavenger',
+    name: 'Orphan Scavenger',
+    description: '+1 defense in LATE phase, +1 decisiveness — knows how to conserve energy and spot opportunities.',
+    effect: { defModLate: 1, decMod: 1 },
+    weight: 0.6,
+    synergy: ['cunning'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

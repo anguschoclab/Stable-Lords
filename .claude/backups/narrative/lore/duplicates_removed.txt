@@ -1,0 +1,9 @@
+ORIGINS:
+'Raised in the lightless cellars of the Harrow-Home for Foundlings'
+CHILDHOOD_TRAITS:
+'developed an iron grip from clinging to the underside of plague carts'
+'learned to predict a strike by watching the shift in a bully’s shoulders'
+DEFINING_MOMENTS:
+'discovering that a rusted spoon could be sharpened into a deadly shiv'
+'surviving a night in the dog-cages by out-snarling the hounds'
+'realizing the arena was the only place where their rage was rewarded'

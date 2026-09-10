@@ -45,7 +45,7 @@ export const FormSparkline = React.memo(function FormSparkline({
               label = 'Draw';
             } else if (won) {
               colorClass = byKill
-                ? 'bg-arena-blood shadow-[0_0_8px_rgba(153,27,27,0.5)]'
+                ? 'bg-arena-blood shadow-[0_0_8px_hsl(var(--arena-blood)/0.5)]'
                 : 'bg-arena-fame';
               label = byKill ? 'Win (Kill)' : 'Win';
             } else {

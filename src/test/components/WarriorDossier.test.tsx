@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightingStyle, WarriorId } from '@/types/shared.types';
@@ -85,29 +85,29 @@ describe('WarriorDossier', () => {
     mockState.roster = [makeWarrior()];
   });
 
-  it('renders "Warrior not found." for unknown warriorId', () => {
-    render(<WarriorDossier warriorId={'nonexistent' as WarriorId} />);
+  it('renders "Warrior not found." for unknown warriorId', async () => {
+    await act(async () => { render(<WarriorDossier warriorId={'nonexistent' as WarriorId} />); });
     expect(screen.getByText('Warrior not found.')).toBeInTheDocument();
   });
 
-  it('renders "Physical Polygon" card header', () => {
-    render(<WarriorDossier warriorId={'w1' as WarriorId} />);
+  it('renders "Physical Polygon" card header', async () => {
+    await act(async () => { render(<WarriorDossier warriorId={'w1' as WarriorId} />); });
     expect(screen.getByText('Physical Polygon')).toBeInTheDocument();
   });
 
-  it('renders WarriorRadarChart inside Suspense', () => {
-    render(<WarriorDossier warriorId={'w1' as WarriorId} />);
+  it('renders WarriorRadarChart inside Suspense', async () => {
+    await act(async () => { render(<WarriorDossier warriorId={'w1' as WarriorId} />); });
     expect(screen.getByTestId('radar-chart')).toBeInTheDocument();
   });
 
-  it('passes the correct warrior to WarriorRadarChart', () => {
-    render(<WarriorDossier warriorId={'w1' as WarriorId} />);
+  it('passes the correct warrior to WarriorRadarChart', async () => {
+    await act(async () => { render(<WarriorDossier warriorId={'w1' as WarriorId} />); });
     const chart = screen.getByTestId('radar-chart');
     expect(chart.getAttribute('data-warrior')).toBe('w1');
   });
 
-  it('renders dossier sub-components', () => {
-    render(<WarriorDossier warriorId={'w1' as WarriorId} />);
+  it('renders dossier sub-components', async () => {
+    await act(async () => { render(<WarriorDossier warriorId={'w1' as WarriorId} />); });
     expect(screen.getByTestId('dossier-header')).toBeInTheDocument();
     expect(screen.getByTestId('dossier-traits')).toBeInTheDocument();
     expect(screen.getByTestId('dossier-stats')).toBeInTheDocument();

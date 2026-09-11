@@ -41,17 +41,17 @@ vi.mock('@/components/ui/sheet', () => ({
   ),
   SheetHeader: ({ children }: any) => <div>{children}</div>,
   SheetTitle: ({ children }: any) => <div>{children}</div>,
-  SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+  SheetTrigger: ({ children, asChild, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
 vi.mock('@/components/ui/tooltip', () => ({
   Tooltip: ({ children }: any) => <div>{children}</div>,
   TooltipContent: ({ children }: any) => <div>{children}</div>,
-  TooltipTrigger: ({ children }: any) => <div>{children}</div>,
+  TooltipTrigger: ({ children, asChild, ...props }: any) => <div {...props}>{children}</div>,
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+  Button: ({ children, asChild, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
 vi.mock('@/components/WarriorDossier', () => ({

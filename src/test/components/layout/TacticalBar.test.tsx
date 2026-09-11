@@ -29,7 +29,7 @@ vi.mock('@/hooks/useTacticalAlerts', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+  Button: ({ children, asChild, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
 import { TacticalBar } from '@/components/layout/TacticalBar';

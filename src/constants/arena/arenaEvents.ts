@@ -200,6 +200,26 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.DEEPENING_MUCK_TRIGGER,
     narrativeText: 'The waterlogged ground sucks at boots, slowing movement!',
   },
+  ruins_collapse: {
+    id: 'ruins_collapse',
+    name: 'Ruins Collapse',
+    description: 'Unstable ruins fall apart during heavy blows',
+    requiredTags: ['ruins', 'cramped'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.RUINS_COLLAPSE_TRIGGER,
+    narrativeText: 'The cramped ruins collapse further inward under the force of the blow!',
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.RUINS_COLLAPSE_DAMAGE },
+  },
+  magical_surge: {
+    id: 'magical_surge',
+    name: 'Magical Surge',
+    description: 'A sudden burst of raw mana',
+    requiredTags: ['magical', 'water'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.MAGICAL_SURGE_TRIGGER,
+    narrativeText: 'The mystical waters violently surge with chaotic mana!',
+    mechanicalEffect: { type: 'endurance_drain', value: ARENA_EVENT_CONSTANTS.MAGICAL_SURGE_DRAIN },
+  },
 };
 
 // ─── Helper Functions ──────────────────────────────────────────────────────

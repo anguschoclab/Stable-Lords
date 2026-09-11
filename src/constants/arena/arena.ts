@@ -102,6 +102,18 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     riposteMod: WEATHER_PENALTIES.DENSE_FOG_LUNGE_BONUS,
     description: 'Fog aids the cunning counter-striker',
   },
+  'ruins:Thunderstorm': {
+    initiativeMod: WEATHER_PENALTIES.ELEVATED_RUINS_INITIATIVE,
+    description: 'Thunder echoing in ruins disrupts timing',
+  },
+  'water:Mana Surge': {
+    riposteMod: WEATHER_PENALTIES.WATER_MAGICAL_RIPOSTE,
+    description: 'Magical water amplifies counter-movements',
+  },
+  'cramped:Earthquake': {
+    damageMult: WEATHER_PENALTIES.CRAMPED_RUINS_DAMAGE,
+    description: 'Tight spaces during tremors amplify impacts',
+  },
 
   // Sandstorm penalizes aimed blows (can't aim)
   'Sandstorm:PARRY-RIPOSTE': {

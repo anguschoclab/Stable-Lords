@@ -83,6 +83,7 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
             <Button
               variant="outline"
               size="sm"
+              aria-label="Reveal fighting rhythm"
               onClick={() => handleInsight('rhythm')}
               className="h-8 w-8 p-0 border-white/10 hover:bg-white/5 rounded-none"
             >
@@ -96,7 +97,7 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
           className={cn(
             'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
             isRhythmDiscovered
-              ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]'
+              ? 'bg-arena-gold shadow-[0_0_8px_hsl(var(--arena-gold)/0.4)]'
               : 'bg-white/10'
           )}
           style={{ width: `${rhythmProgress}%` }}

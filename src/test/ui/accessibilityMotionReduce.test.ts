@@ -5,6 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
+// @ts-ignore
 import { sync as globSync } from 'glob';
 import path from 'path';
 

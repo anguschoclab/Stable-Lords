@@ -1243,7 +1243,7 @@ export const VOLCANIC_CRATER: ArenaConfig = {
 export const ECHOING_CATACOMBS: ArenaConfig = {
   id: 'echoing_catacombs',
   name: 'Echoing Catacombs',
-  tags: ['indoor', 'cramped', 'ruins'],
+  tags: ['indoor', 'cramped', 'ruins'] as ArenaTag[],
   tier: 2,
   size: 'cramped',
   description: 'Ancient underground burial grounds with little room to swing wide.',
@@ -1254,7 +1254,7 @@ export const ECHOING_CATACOMBS: ArenaConfig = {
 export const SHATTERED_BRIDGE: ArenaConfig = {
   id: 'shattered_bridge',
   name: 'Shattered Bridge',
-  tags: ['outdoor', 'elevated', 'ruins', 'cramped'],
+  tags: ['outdoor', 'elevated', 'ruins', 'cramped'] as ArenaTag[],
   tier: 3,
   size: 'cramped',
   description: 'A crumbling bridge spanning a deep chasm. Footing is treacherous.',
@@ -1265,7 +1265,7 @@ export const SHATTERED_BRIDGE: ArenaConfig = {
 export const SUNKEN_OASIS: ArenaConfig = {
   id: 'sunken_oasis',
   name: 'Sunken Oasis',
-  tags: ['outdoor', 'water', 'magical'],
+  tags: ['outdoor', 'water', 'magical'] as ArenaTag[],
   tier: 2,
   size: 'open',
   description: 'A magical oasis in the desert, where water flows upward.',

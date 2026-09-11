@@ -118,9 +118,7 @@ describe('WorldStats', () => {
 
 describe('StableRankingsHeader', () => {
   it('renders without crashing', () => {
-    const { container } = render(
-      <StableRankingsHeader sort={{ field: 'fame', dir: 'desc' }} onSort={vi.fn()} />
-    );
+    const { container } = render(<table><StableRankingsHeader sort={{ field: 'fame', dir: 'desc' }} onSort={vi.fn()} /></table>);
     expect(container.firstChild).toBeInTheDocument();
   });
 });
@@ -162,7 +160,7 @@ describe('WarriorLeaderboardRow', () => {
       officialRank: 1,
       compositeScore: 100,
     };
-    const { container } = render(<WarriorLeaderboardRow row={row} index={0} isFiltered={false} />);
+    const { container } = render(<table><tbody><WarriorLeaderboardRow row={row} index={0} isFiltered={false} /></tbody></table>);
     expect(container.firstChild).toBeInTheDocument();
   });
 });

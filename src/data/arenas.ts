@@ -1239,6 +1239,40 @@ export const VOLCANIC_CRATER: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.35 },
 };
 
+
+export const ECHOING_CATACOMBS: ArenaConfig = {
+  id: 'echoing_catacombs',
+  name: 'Echoing Catacombs',
+  tags: ['indoor', 'cramped', 'ruins'] as ArenaTag[],
+  tier: 2,
+  size: 'cramped',
+  description: 'Ancient underground burial grounds with little room to swing wide.',
+  zoneDef: { Edge: -1, Corner: -3 },
+  surfaceMod: { initiativeMod: 1, riposteMod: 1, enduranceMult: 1.0 },
+};
+
+export const SHATTERED_BRIDGE: ArenaConfig = {
+  id: 'shattered_bridge',
+  name: 'Shattered Bridge',
+  tags: ['outdoor', 'elevated', 'ruins', 'cramped'] as ArenaTag[],
+  tier: 3,
+  size: 'cramped',
+  description: 'A crumbling bridge spanning a deep chasm. Footing is treacherous.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
+};
+
+export const SUNKEN_OASIS: ArenaConfig = {
+  id: 'sunken_oasis',
+  name: 'Sunken Oasis',
+  tags: ['outdoor', 'water', 'magical'] as ArenaTag[],
+  tier: 2,
+  size: 'open',
+  description: 'A magical oasis in the desert, where water flows upward.',
+  zoneDef: { Edge: 0, Corner: -1 },
+  surfaceMod: { initiativeMod: 0, riposteMod: 2, enduranceMult: 1.1 },
+};
+
 // ─── Auto-register ────────────────────────────────────────────────────────────
 [
   STANDARD_ARENA,
@@ -1278,4 +1312,7 @@ export const VOLCANIC_CRATER: ArenaConfig = {
   RUSTED_GORGE,
   THE_ASYLUM,
   VOLCANIC_CRATER,
+  ECHOING_CATACOMBS,
+  SHATTERED_BRIDGE,
+  SUNKEN_OASIS,
 ].forEach(registerArena);

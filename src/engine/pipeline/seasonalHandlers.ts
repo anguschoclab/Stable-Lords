@@ -61,4 +61,5 @@ export {
   handleAbyssalTempestRitual,
   handleWeepingSkies,
   handleSuspiciousMushroomStew,
+  handleGoblinMerchant,
 } from './offseasonEvents';

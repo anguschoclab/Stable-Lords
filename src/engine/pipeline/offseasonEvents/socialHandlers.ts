@@ -475,3 +475,37 @@ export function handleDreamweaverVisit(
     }
   }
 }
+
+export function handleGoblinMerchant(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    const cost = 50 + Math.floor(rng.next() * 50);
+
+    const attrs = chosen.attributes;
+
+    ctx.rosterUpdates.set(chosen.id, {
+      attributes: {
+        ...attrs,
+        CN: attrs.CN + 1,
+        WL: attrs.WL + 1,
+      },
+    });
+
+    ctx.treasuryDelta -= cost;
+    ctx.ledgerEntries.push(
+      makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other')
+    );
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      gold: cost,
+    });
+  }
+}

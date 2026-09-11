@@ -375,6 +375,13 @@
       "newsletter": [
         "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
       ]
+    },
+    "goblin_merchant_visit": {
+      "title": "Goblin Merchant Visit",
+      "effectType": "goblin_merchant",
+      "newsletter": [
+        "A peculiar goblin merchant visited the stables! Bought strange herbs for {{gold}}G. {{name}} feels more enduring."
+      ]
     }
   },
   "events": {

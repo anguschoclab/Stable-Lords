@@ -61,3 +61,4 @@ export { handleUnexplainedMonolith } from './chaosHandlers';
 export { handleShatteredSkiesRitual } from './chaosHandlers';
 export { handleWeepingSkies } from './chaosHandlers';
 export { handleSuspiciousMushroomStew } from './chaosHandlers';
+export { handleGoblinMerchant } from './socialHandlers';

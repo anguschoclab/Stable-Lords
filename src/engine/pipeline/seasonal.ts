@@ -69,6 +69,7 @@ import {
   handleShatteredSkiesRitual,
   handleWeepingSkies,
   handleSuspiciousMushroomStew,
+  handleGoblinMerchant,
 } from './seasonalHandlers';
 
 const EVENT_HANDLERS: Record<
@@ -136,6 +137,7 @@ const EVENT_HANDLERS: Record<
   shattered_skies_ritual: handleShatteredSkiesRitual,
   weeping_skies: handleWeepingSkies,
   suspicious_mushroom_stew: handleSuspiciousMushroomStew,
+  goblin_merchant: handleGoblinMerchant,
 };
 
 /**

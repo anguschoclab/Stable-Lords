@@ -1239,6 +1239,39 @@ export const VOLCANIC_CRATER: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.35 },
 };
 
+export const THE_WAILING_CHASM: ArenaConfig = {
+  id: 'the_wailing_chasm',
+  name: 'The Wailing Chasm',
+  tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A cursed, narrow chasm filled with wailing winds that distract the mind.',
+  zoneDef: { Edge: -2, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.1 },
+};
+
+export const SHATTERED_MONOLITH: ArenaConfig = {
+  id: 'shattered_monolith',
+  name: 'Shattered Monolith',
+  tags: ['elevated', 'ruins', 'magical', 'open'],
+  tier: 3,
+  size: 'open',
+  description: 'An ancient, magical monolith fractured into floating, elevated platforms.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: 0, riposteMod: 1, enduranceMult: 1.0 },
+};
+
+export const VERDANT_LABYRINTH: ArenaConfig = {
+  id: 'verdant_labyrinth',
+  name: 'Verdant Labyrinth',
+  tags: ['cramped', 'living', 'outdoor', 'water'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A flooded, living labyrinth of vines and roots that actively grabs at fighters.',
+  zoneDef: { Edge: -1, Corner: -3 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
+};
+
 // ─── Auto-register ────────────────────────────────────────────────────────────
 [
   STANDARD_ARENA,
@@ -1278,4 +1311,7 @@ export const VOLCANIC_CRATER: ArenaConfig = {
   RUSTED_GORGE,
   THE_ASYLUM,
   VOLCANIC_CRATER,
+  THE_WAILING_CHASM,
+  SHATTERED_MONOLITH,
+  VERDANT_LABYRINTH,
 ].forEach(registerArena);

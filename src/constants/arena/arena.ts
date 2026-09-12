@@ -204,6 +204,21 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     damageMult: 1 + WEATHER_PENALTIES.ECLIPSE_STRIKING_BONUS,
     description: 'Unearthly darkness enhances the power of striking weapons on cursed ground',
   },
+
+  'cursed:Blizzard': {
+    damageMult: 1 - WEATHER_PENALTIES.WAILING_CHASM_LUNGE_PENALTY,
+    description: 'The cursed frozen chasm winds suppress lunging momentum',
+  },
+
+  'magical:Mana Surge': {
+    riposteMod: WEATHER_PENALTIES.MAGICAL_MANA_SURGE_RIPOSTE + WEATHER_PENALTIES.SHATTERED_MONOLITH_RIPOSTE_BONUS,
+    description: 'Magical resonance immensely aids riposte timing on shattered grounds',
+  },
+
+  'living:Rainy': {
+    initiativeMod: WEATHER_PENALTIES.LABYRINTH_LIVING_INITIATIVE,
+    description: 'The living labyrinth flourishes in the rain, aggressively slowing footwork',
+  },
 };
 
 // ─── Arena Event Constants ─────────────────────────────────────────────────

@@ -99,6 +99,33 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  ashen_lungs: {
+    id: 'ashen_lungs',
+    name: 'Ashen Lungs',
+    description: 'Raised in the smog-choked Ash Quarter, granting unnatural breath control.',
+    effect: { enduranceMult: 0.9, iniMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  feral_reflexes: {
+    id: 'feral_reflexes',
+    name: 'Feral Reflexes',
+    description: 'Honed by surviving the dog-cages of the undercity.',
+    effect: { defModEarly: 1, ripMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  coin_biter: {
+    id: 'coin_biter',
+    name: 'Coin Biter',
+    description: 'A childhood spent fighting for coppers gives a desperate edge.',
+    effect: { attModLowHp: 1, killWindowBonus: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',

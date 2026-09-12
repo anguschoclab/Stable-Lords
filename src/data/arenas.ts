@@ -1142,6 +1142,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
+  {
+    id: 'the_bramble_ring_living_vines',
+    arenaId: 'the_bramble_ring',
+    type: 'hazard',
+    title: 'The Living Vines',
+    narrative:
+      'The thorny overgrowth of the Bramble Ring is said to be sentient, occasionally reaching out to entangle fighters who spill too much blood near the edges.',
+  },
+  {
+    id: 'thunder_peak_shattering_storm',
+    arenaId: 'thunder_peak',
+    type: 'historical_battle',
+    title: 'The Shattering Storm',
+    narrative:
+      'During a vicious lightning storm, a legendary bout was decided when a massive bolt struck the center of the peak, blinding both fighters and leaving only one standing.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

@@ -99,15 +99,6 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
-  ashen_lungs: {
-    id: 'ashen_lungs',
-    name: 'Ashen Lungs',
-    description: 'Raised in the smog-choked Ash Quarter, granting unnatural breath control.',
-    effect: { enduranceMult: 0.9, iniMod: 1 },
-    tier: 'Notable',
-    sign: 'positive',
-    weight: 0.5,
-  },
   feral_reflexes: {
     id: 'feral_reflexes',
     name: 'Feral Reflexes',

@@ -241,19 +241,51 @@
     "weapon_specific": {
       "slashing": [
         "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
-        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin.",
+        "A brutal, sweeping arc from {{attacker}} severs {{defender}}'s neck.",
+        "{{attacker}}'s blade carves a fatal path across {{defender}}'s torso.",
+        "With a sickening wet thud, {{attacker}}'s slash ends {{defender}}'s life.",
+        "{{defender}} drops in a spray of crimson as {{attacker}}'s slash bites deep.",
+        "{{attacker}} eviscerates {{defender}} with a ruthless, arcing strike.",
+        "A flashing blade from {{attacker}} finds the gap in {{defender}}'s armor, ending it.",
+        "{{defender}} falls to pieces before {{attacker}}'s relentless slashing assault.",
+        "With a savage horizontal cut, {{attacker}} executes {{defender}} on the spot."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
-        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
+        "{{attacker}} lunges perfectly, the point impaling {{defender}} through the chest.",
+        "A wicked thrust from {{attacker}} punctures {{defender}}'s vital organs.",
+        "{{defender}} gasps as {{attacker}}'s weapon punches clean through their heart.",
+        "With clinical precision, {{attacker}} runs {{defender}} through.",
+        "{{attacker}} buries their point deep into {{defender}}'s neck, a swift and fatal strike.",
+        "A flash of steel and {{attacker}} pierces {{defender}}'s throat.",
+        "{{defender}} collapses as {{attacker}} skewers them with brutal force.",
+        "{{attacker}} finds the seam in the armor, driving a fatal thrust into {{defender}}."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
-        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly.",
+        "A crushing blow from {{attacker}} caves in {{defender}}'s ribcage.",
+        "{{attacker}} brings down a world-shattering smash that instantly kills {{defender}}.",
+        "With a sickening crunch, {{attacker}} obliterates {{defender}}'s skull.",
+        "{{defender}} is flattened by a thunderous, fatal bash from {{attacker}}.",
+        "{{attacker}} delivers a massive, bone-splintering strike that ends {{defender}}.",
+        "A savage downward swing from {{attacker}} crushes the life out of {{defender}}.",
+        "{{defender}}'s armor crumples like paper under {{attacker}}'s lethal smash.",
+        "{{attacker}} swings with the force of a battering ram, obliterating {{defender}}."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
-        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery.",
+        "{{attacker}} unleashes a devastating haymaker that breaks {{defender}}'s neck.",
+        "A rapid volley of brutal punches from {{attacker}} beats the life out of {{defender}}.",
+        "{{attacker}} drives a concussive blow straight through {{defender}}'s guard, killing them.",
+        "With raw, blunt force, {{attacker}} caves in {{defender}}'s face.",
+        "{{defender}}'s heart stops after a massive, bone-shattering body blow from {{attacker}}.",
+        "A lethal uppercut from {{attacker}} snaps {{defender}}'s head back with fatal force.",
+        "{{attacker}} drops {{defender}} lifeless with a single, perfectly placed strike.",
+        "With brutal, bare-handed savagery, {{attacker}} pounds {{defender}} into the dirt forever."
       ]
     },
     "default": [

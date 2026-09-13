@@ -241,19 +241,51 @@
     "weapon_specific": {
       "slashing": [
         "{{attacker}}'s blade finds the artery, and {{defender}} bleeds out in seconds.",
-        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin."
+        "With a horrifying sweep, {{attacker}} leaves {{defender}} in absolute ruin.",
+        "A sweeping decapitation leaves the crowd in stunned silence.",
+        "{{attacker}}'s blade finds the neck, showering the sand in crimson.",
+        "With a brutal horizontal slash, {{attacker}} cuts {{defender}} down for good.",
+        "{{defender}} collapses as {{attacker}}'s edge neatly severs their main artery.",
+        "A sickening wet thud marks the end as {{attacker}} cleaves through bone.",
+        "{{attacker}}'s steel sings a fatal song, laying {{defender}} to rest.",
+        "A final, desperate parry fails, and {{attacker}} opens {{defender}}'s throat.",
+        "{{defender}} falls apart under a relentless flurry of lethal cuts."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
-        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead."
+        "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
+        "{{attacker}}'s point slips past the guard, puncturing a vital organ.",
+        "With a sickening crunch, {{attacker}} impales {{defender}} through the chest.",
+        "A swift lunge finds the eye, dropping {{defender}} lifeless to the sand.",
+        "{{defender}} chokes on their own blood as {{attacker}} drives the spike deep.",
+        "{{attacker}} skewers their prey like a master butcher.",
+        "A quick inward twist of the blade, and {{defender}} breathes their last.",
+        "{{attacker}} steps in close and drives the point straight upward into the heart.",
+        "A precise, deadly thrust ends the contest in a heartbeat."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
-        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly."
+        "{{attacker}} shatters {{defender}}'s chest cavity, ending the fight instantly.",
+        "{{attacker}} delivers a crushing blow that turns bone to powder.",
+        "The horrifying sound of a shattered ribcage echoes as {{defender}} drops.",
+        "{{attacker}} brings the hammer down, and the lights go out for {{defender}}.",
+        "A final, deafening smack, and {{defender}} is no more than broken meat.",
+        "{{defender}}'s head snaps violently back, neck broken by the brutal impact.",
+        "{{attacker}} caves in {{defender}}'s chest with an unstoppable, heavy swing.",
+        "With a roar, {{attacker}} turns {{defender}} into a crumpled, lifeless heap.",
+        "The impact shakes the arena floor as {{attacker}} delivers the deathblow."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
-        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery."
+        "A brutal, neck-snapping strike from {{attacker}} ends {{defender}}'s misery.",
+        "{{attacker}} lands a terrifying bare-knuckle hook, shattering the jaw and dropping {{defender}} dead.",
+        "A sickening crack of the neck, and {{attacker}}'s raw strength claims a life.",
+        "{{defender}} collapses from internal bleeding after a merciless gut punch.",
+        "{{attacker}} mounts and pummels {{defender}} into a grisly end.",
+        "With a final brutal strike, {{attacker}} beats the remaining life out of their foe.",
+        "{{attacker}}'s fists prove deadlier than any blade, finishing the job.",
+        "A rapid one-two combo leaves {{defender}} lifeless in the dirt.",
+        "{{defender}} simply folds in half, organs ruptured by {{attacker}}'s monstrous blow."
       ]
     },
     "default": [
@@ -264,7 +296,11 @@
       "Well, that's one way to solve a dispute. {{defender}} is dead, and the sand is a bit redder.",
       "{{attacker}}'s weapon finds the squishy part. Turns out {{defender}} needed that.",
       "Another meaningless death on the endless blood-soaked sands. {{defender}} is forgotten instantly.",
-      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold."
+      "The crowd cheers briefly, then demands the next slaughter as {{defender}}'s body grows cold.",
+      "The light fades from {{defender}}'s eyes as they join the fallen.",
+      "Another corpse for the cart. {{attacker}} walks away victorious.",
+      "{{defender}} falls heavily, their story ended on the bloody sands.",
+      "A gasp, a shudder, and stillness. The arena claims another soul."
     ]
   }
 }

@@ -98,6 +98,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  feral_bite: {
+    id: 'feral_bite',
+    name: 'Feral Bite',
+    description: 'Fights with a desperate, animalistic ferocity when cornered.',
+    effect: { iniModLowHp: 1, defModLowHp: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
+  shadow_stalker: {
+    id: 'shadow_stalker',
+    name: 'Shadow Stalker',
+    description: 'Moves with unsettling silence, striking from unexpected angles.',
+    effect: { iniMod: 1, ripMod: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

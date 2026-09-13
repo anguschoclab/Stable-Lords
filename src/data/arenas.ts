@@ -504,6 +504,20 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'brass_ring_molten_tomb_2',
+    arenaId: 'brass_ring',
+    type: 'architectural_quirk',
+    title: 'The Howling Grates',
+    narrative: 'Steam escaping from the heating coils produces a high-pitched shriek when a body falls heavily on the grates.',
+  },
+  {
+    id: 'sundered_coliseum_fallen_pillar_2',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Day of Ash',
+    narrative: 'A great battle fought under a rain of volcanic ash where both champions suffocated before landing a mortal blow.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

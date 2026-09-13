@@ -102,7 +102,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'feral_bite',
     name: 'Feral Bite',
     description: 'Fights with a desperate, animalistic ferocity when cornered.',
-    effect: { iniModLowHp: 1, defModLowHp: 1 },
+    effect: { attModLowHp: 2 },
     tier: 'Notable',
     sign: 'positive',
     weight: 0.6,

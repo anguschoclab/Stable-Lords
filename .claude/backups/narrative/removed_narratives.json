@@ -1,0 +1,114 @@
+[
+  {
+    "path": "strikes.strikes.slashing.solid",
+    "text": "{{attacker}}'s blade bites viciously into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "strikes.strikes.piercing.solid",
+    "text": "{{attacker}} lunges, driving the point deep into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "strikes.strikes.piercing.solid",
+    "text": "{{attacker}} drives the point sharply into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "strikes.strikes.piercing.solid",
+    "text": "A precise thrust from {{attacker}} punctures {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "strikes.strikes.fist.glancing",
+    "text": "{{defender}} slips the punch, catching only a light tap from {{attacker}}."
+  },
+  {
+    "path": "strikes.strikes.fist.solid",
+    "text": "A heavy, bone-jarring punch slams into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "pbp.pbp.hit_locations.right arm",
+    "text": "RIGHT BICEP"
+  },
+  {
+    "path": "pbp.pbp.hit_locations.left arm",
+    "text": "LEFT BICEP"
+  },
+  {
+    "path": "pbp.pbp.defenses.dodge.desperate",
+    "text": "{{defender}} scrambles backward like a cornered animal, barely avoiding the blow."
+  },
+  {
+    "path": "pbp.pbp.defenses.dodge.theatrical",
+    "text": "With a dramatic flourish of their arms, {{defender}} spins out of danger."
+  },
+  {
+    "path": "pbp.pbp.defenses.dodge.grim",
+    "text": "A minimalist, chillingly precise shift from {{defender}} avoids the fatal strike."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.theatrical",
+    "text": "{{defender}} deflects the strike with a dazzling, windmill-like motion that wows the front rows."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.theatrical",
+    "text": "{{defender}} intercepts the attack with an operatic stance, fully embracing the bloody spectacle."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.theatrical",
+    "text": "With an elegant twirl of steel, {{defender}} turns the heavy blow aside in breathtaking fashion."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.grim",
+    "text": "{{defender}} meets the steel with a stoic, unyielding block, completely devoid of mercy or hesitation."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.grim",
+    "text": "{{defender}} catches the strike with brutal efficiency, no wasted movement, no emotion showing."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.grim",
+    "text": "With a chilling calmness, {{defender}} grinds their weapon against the incoming blow, eyes dead."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.grim",
+    "text": "{{defender}} violently swats the attack aside, their face a terrifying mask of quiet rage."
+  },
+  {
+    "path": "pbp.pbp.defenses.parry.grim",
+    "text": "A heavy, joyless block from {{defender}}, a purely mechanical act of brutal survival."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.slow",
+    "text": "The gladiators stalk each other deliberately, every step calculated and painfully slow."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.slow",
+    "text": "{{name}} crash to the sands, struggling to find the strength to rise as time seems to crawl."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.fast",
+    "text": "{{name}} clash violently, the pacing of the bout instantly shifting into high gear."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.fast",
+    "text": "{{name}} is slammed into the dirt before {{name}} even realizes what hit them."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.fast",
+    "text": "No time to bleed! {{name}} is moving the instant {{name}} hit the dirt."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.fast",
+    "text": "{{name}} is instantly flattened, slamming into the dirt before the crowd can even gasp."
+  },
+  {
+    "path": "pbp.pbp.knockdown.pacing.recovery_slow",
+    "text": "Shaken to the core, {{name}} wobbles violently as {{name}} tries to stand."
+  },
+  {
+    "path": "kill_text.kill_text.weapon_specific.bashing",
+    "text": "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s skull."
+  },
+  {
+    "path": "kill_text.kill_text.weapon_specific.bashing",
+    "text": "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s ribs."
+  }
+]

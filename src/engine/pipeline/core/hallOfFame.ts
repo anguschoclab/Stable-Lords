@@ -61,11 +61,16 @@ export function processHallOfFame(
 
   if (eligible.length === 0) return {};
 
-  const woty = eligible.reduce(
-    (max, curr) =>
-      curr.wins > max.wins || (curr.wins === max.wins && curr.fame > max.fame) ? curr : max,
-    eligible[0] as (typeof eligible)[number]
-  );
+  // ⚡ Bolt Optimization: Using single-pass loop instead of .reduce() to avoid redundant score evaluations.
+  let woty = eligible[0];
+  if (!woty) return {};
+  for (let i = 1; i < eligible.length; i++) {
+    const curr = eligible[i];
+    if (!curr) continue;
+    if (curr.wins > woty.wins || (curr.wins === woty.wins && curr.fame > woty.fame)) {
+      woty = curr;
+    }
+  }
   if (woty && woty.wins > 0) {
     const award: AnnualAward = {
       year: completedYear,
@@ -98,11 +103,16 @@ export function processHallOfFame(
     );
   }
 
-  const koty = eligible.reduce(
-    (max, curr) =>
-      curr.kills > max.kills || (curr.kills === max.kills && curr.wins > max.wins) ? curr : max,
-    eligible[0] as (typeof eligible)[number]
-  );
+  // ⚡ Bolt Optimization: Using single-pass loop instead of .reduce() to avoid redundant score evaluations.
+  let koty = eligible[0];
+  if (!koty) return {};
+  for (let i = 1; i < eligible.length; i++) {
+    const curr = eligible[i];
+    if (!curr) continue;
+    if (curr.kills > koty.kills || (curr.kills === koty.kills && curr.wins > koty.wins)) {
+      koty = curr;
+    }
+  }
   if (koty && koty.kills > 0) {
     const award: AnnualAward = {
       year: completedYear,
@@ -135,12 +145,17 @@ export function processHallOfFame(
 
   Object.values(FightingStyle).forEach((style) => {
     const styleEligible = eligible.filter((e) => e.w.style === style);
-    const mvp =
-      styleEligible.length > 0
-        ? styleEligible.reduce((max, curr) =>
-            curr.wins > max.wins || (curr.wins === max.wins && curr.fame > max.fame) ? curr : max
-          )
-        : undefined;
+    // ⚡ Bolt Optimization: Using single-pass loop instead of .reduce() to avoid redundant score evaluations.
+    const firstStyle = styleEligible[0];
+    if (!firstStyle) return;
+    let mvp = firstStyle;
+    for (let i = 1; i < styleEligible.length; i++) {
+      const curr = styleEligible[i];
+      if (!curr) continue;
+      if (curr.wins > mvp.wins || (curr.wins === mvp.wins && curr.fame > mvp.fame)) {
+        mvp = curr;
+      }
+    }
     if (mvp && mvp.wins > 0) {
       const award: AnnualAward = {
         year: completedYear,

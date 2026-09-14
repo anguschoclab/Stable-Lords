@@ -46,6 +46,34 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     narrativeText: 'Chunks of stone fall from above, forcing both fighters to dodge!',
   },
 
+  chasm_collapse: {
+    id: 'chasm_collapse',
+    name: 'Chasm Collapse',
+    description: 'The walls of the chasm cave in during fierce clashes',
+    requiredTags: ['cramped', 'cursed'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.CHASM_COLLAPSE_TRIGGER,
+    narrativeText: 'A heavy impact shatters the cursed chasm walls, raining debris!',
+    mechanicalEffect: {
+      type: 'damage',
+      value: 2,
+    },
+  },
+
+  monolith_pulse: {
+    id: 'monolith_pulse',
+    name: 'Monolith Pulse',
+    description: 'The shattered monolith pulses with arcane energy',
+    requiredTags: ['magical', 'elevated'],
+    triggerCondition: 'random',
+    triggerValue: 0.05,
+    narrativeText: 'The floating monolith releases a blinding magical pulse!',
+    mechanicalEffect: {
+      type: 'initiative_mod',
+      value: -3,
+    },
+  },
+
   shadow_tendrils: {
     id: 'shadow_tendrils',
     name: 'Shadow Tendrils',

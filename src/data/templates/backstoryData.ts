@@ -4,7 +4,7 @@
  */
 
 import type { StableTemplate } from './stableTemplate.types';
-import { ALL_TEMPLATES } from './templateBuilders';
+import { ALL_TEMPLATES } from './templateCache';
 
 /**
  * Gets all unique backstory IDs used in templates.

@@ -6,16 +6,6 @@ import {
   TacticSelectors,
   ConditionLabelInput,
 } from './condition';
-
-// Re-export constants and utility for backwards compatibility during migration
-export {
-  TRIGGER_OPTIONS,
-  OFFENSIVE_TACTICS,
-  DEFENSIVE_TACTICS,
-} from '@/constants/combat/planConditions';
-// eslint-disable-next-line react-refresh/only-export-components
-export { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
-
 interface ConditionItemProps {
   cond: PlanCondition;
   idx: number;

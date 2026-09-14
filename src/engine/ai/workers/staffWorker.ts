@@ -44,11 +44,14 @@ export function processStaff(
       if (!first) {
         throw new Error('Pool is unexpectedly empty');
       }
-      const best = pool.reduce(
-        (max, current) =>
-          (HIRE_COST[current.tier] ?? 0) > (HIRE_COST[max.tier] ?? 0) ? current : max,
-        first
-      );
+      // ⚡ Bolt Optimization: Replace .reduce() with a for loop to avoid iterator overhead in hot loop
+      let best = first;
+      for (let i = 1; i < pool.length; i++) {
+        const current = pool[i];
+        if (current && (HIRE_COST[current.tier] ?? 0) > (HIRE_COST[best.tier] ?? 0)) {
+          best = current;
+        }
+      }
       const hireCost = HIRE_COST[best.tier] ?? 0;
       const budgetReport = checkBudget(updatedRival, hireCost, 'STAFF');
 

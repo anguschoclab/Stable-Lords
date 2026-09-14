@@ -68,12 +68,15 @@ export function selectTrainingFocus(
   else if (season === 'Summer') chosen = 'ST';
 
   if (!chosen || w.attributes[chosen] >= ATTRIBUTE_MAX) {
-    const initialKey = trainableKeys[0];
-    if (initialKey) {
-      chosen = trainableKeys.reduce(
-        (min, k) => (w.attributes[k] < w.attributes[min] ? k : min),
-        initialKey
-      );
+    if (trainableKeys.length > 0) {
+      // ⚡ Bolt Optimization: Replace .reduce() with a for loop to avoid iterator overhead in hot loop
+      chosen = trainableKeys[0];
+      for (let i = 1; i < trainableKeys.length; i++) {
+        const k = trainableKeys[i];
+        if (k && chosen && w.attributes[k] < w.attributes[chosen]) {
+          chosen = k;
+        }
+      }
     }
   }
 

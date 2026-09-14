@@ -41,6 +41,7 @@ export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Spooky Night': 'ambience-wind-breezy',
   Blizzard: 'ambience-wind-gale',
   'Dense Fog': null,
+  'Dreamweavers Mist': null,
   Thunderstorm: 'ambience-thunderstorm',
   Ashfall: null,
   'Acid Rain': 'ambience-acid-rain',

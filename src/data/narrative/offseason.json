@@ -375,6 +375,34 @@
       "newsletter": [
         "{{name}} ate a strange stew made from glowing mushrooms found in the cellar. They gained {{xp}} XP, but contracted a gnawing Stomach Ache!"
       ]
+    },
+    "goblin_merchant": {
+      "title": "Goblin Merchant Visit",
+      "effectType": "goblin_merchant",
+      "newsletter": [
+        "A sly goblin merchant offered suspicious tonic. {{name}} took a swig, feeling strange vigor! (+1 CN, +1 WL, -{{gold}} Gold)"
+      ]
+    },
+    "wandering_merchant_strange_brew": {
+      "title": "Wandering Merchant's Strange Brew",
+      "effectType": "wandering_merchant_strange_brew",
+      "newsletter": [
+        "A wandering merchant offered {{name}} an exotic potion. Their senses sharpen dramatically! (+20 XP, +10 Fame)"
+      ]
+    },
+    "phantom_sparring": {
+      "title": "Phantom Sparring Partner",
+      "effectType": "phantom_sparring",
+      "newsletter": [
+        "A translucent phantom gladiator sparred with {{name}} into the dead of night. (+40 XP, +10 Fatigue)"
+      ]
+    },
+    "dreamweavers_mist": {
+      "title": "Dreamweavers Mist Settles",
+      "effectType": "dreamweavers_mist",
+      "newsletter": [
+        "A strange, hallucinogenic mist rolled through the camp. {{name}} breathed it deeply, discovering an uncanny new fighting rhythm but taking minor magic burns. (+15 XP, Minor Injury)"
+      ]
     }
   },
   "events": {

@@ -8,11 +8,64 @@ import {
   getMastery,
   getStylePassive,
   getKillMechanic,
+  getStyleIdentity,
+  getStyleAntiSynergy,
   type Phase,
 } from '@/engine/stylePassives';
 import { FightingStyle } from '@/types/game';
 
 describe('Style Passives', () => {
+  describe('getStyleIdentity', () => {
+    it('should return correct identity for Aimed Blow', () => {
+      const identity = getStyleIdentity(FightingStyle.AimedBlow);
+      expect(identity.voice).toBe('Surgical');
+      expect(identity.attackFreq).toBe('Sparing');
+      expect(identity.killBias).toBe('Methodical');
+      expect(identity.fatigueBurn).toBe('Low');
+      expect(identity.tagline).toBe('patient surgeon of the arena');
+    });
+  });
+
+  describe('fallback behaviors', () => {
+    it('should handle invalid fighting styles safely', () => {
+      const invalidStyle = 'InvalidStyle' as FightingStyle;
+
+      const tempo = getTempoBonus(invalidStyle, 'OPENING');
+      expect(tempo).toBe(0);
+
+      const endMult = getEnduranceMult(invalidStyle);
+      expect(endMult).toBe(1.0);
+
+      const passive = getStylePassive(invalidStyle, {
+        phase: 'MID',
+        exchange: 0,
+        hitsLanded: 0,
+        hitsTaken: 0,
+        ripostes: 0,
+        consecutiveHits: 0,
+        hpRatio: 1,
+        endRatio: 1,
+        opponentStyle: FightingStyle.StrikingAttack,
+        totalFights: 0,
+      });
+      expect(passive.attBonus).toBe(0);
+      expect(passive.mastery).toBe('Novice');
+
+      const killMech = getKillMechanic(invalidStyle, {
+        phase: 'MID',
+        hitsLanded: 0,
+        consecutiveHits: 0,
+        hitLocation: 'torso',
+      });
+      expect(killMech.killBonus).toBe(0);
+      expect(killMech.killNarrative).toBe('strikes home!');
+
+      const antiSyn = getStyleAntiSynergy(invalidStyle);
+      expect(antiSyn.offMult).toBe(1.0);
+      expect(antiSyn.defMult).toBe(1.0);
+    });
+  });
+
   describe('getTempoBonus', () => {
     it('should return phase-specific bonuses for each style', () => {
       const opening = getTempoBonus(FightingStyle.LungingAttack, 'OPENING');
@@ -57,7 +110,8 @@ describe('Style Passives', () => {
   });
 
   describe('getMastery', () => {
-    it('should return Novice for 0-9 fights', () => {
+    it('should return Novice for 0-9 fights, and negative fights', () => {
+      expect(getMastery(-1).tier).toBe('Novice');
       expect(getMastery(0).tier).toBe('Novice');
       expect(getMastery(5).tier).toBe('Novice');
       expect(getMastery(9).tier).toBe('Novice');
@@ -249,6 +303,87 @@ describe('Style Passives', () => {
       });
 
       expect(master.dmgBonus).toBeGreaterThanOrEqual(novice.dmgBonus);
+    });
+  });
+
+  describe('getStyleAntiSynergy', () => {
+    it('should penalize Bashing Attack for Lunging and Dodging/Riposte', () => {
+      const antiLungeDodge = getStyleAntiSynergy(FightingStyle.BashingAttack, 'Lunge', 'Dodge');
+      expect(antiLungeDodge.offMult).toBe(0.7);
+      expect(antiLungeDodge.defMult).toBe(0.7);
+      expect(antiLungeDodge.warning).toContain('heavy for effective lunging');
+      expect(antiLungeDodge.warning).toContain('cannot dodge');
+
+      const antiRiposte = getStyleAntiSynergy(FightingStyle.BashingAttack, undefined, 'Riposte');
+      expect(antiRiposte.defMult).toBe(0.7);
+    });
+
+    it('should penalize Lunging Attack for Bashing and Parrying', () => {
+      const antiBashParry = getStyleAntiSynergy(FightingStyle.LungingAttack, 'Bash', 'Parry');
+      expect(antiBashParry.offMult).toBe(0.5);
+      expect(antiBashParry.defMult).toBe(0.6);
+      expect(antiBashParry.warning).toContain('lack the weight');
+      expect(antiBashParry.warning).toContain('overextended');
+    });
+
+    it('should penalize Parry-Riposte for Bashing and Decisiveness', () => {
+      const antiBash = getStyleAntiSynergy(FightingStyle.ParryRiposte, 'Bash');
+      expect(antiBash.offMult).toBe(0.5);
+      expect(antiBash.warning).toContain('lack bashing power');
+
+      const antiDec = getStyleAntiSynergy(FightingStyle.ParryRiposte, 'Decisiveness');
+      expect(antiDec.offMult).toBe(0.7);
+    });
+
+    it('should penalize Parry-Strike for Bashing', () => {
+      const antiBash = getStyleAntiSynergy(FightingStyle.ParryStrike, 'Bash');
+      expect(antiBash.offMult).toBe(0.6);
+
+      const normal = getStyleAntiSynergy(FightingStyle.ParryStrike, 'Slash');
+      expect(normal.offMult).toBe(1.0);
+    });
+
+    it('should penalize Slashing Attack for Bashing and Parrying', () => {
+      const antiBashParry = getStyleAntiSynergy(FightingStyle.SlashingAttack, 'Bash', 'Parry');
+      expect(antiBashParry.offMult).toBe(0.5);
+      expect(antiBashParry.defMult).toBe(0.6);
+      expect(antiBashParry.warning).toContain('rely on blade edge');
+      expect(antiBashParry.warning).toContain('struggle with disciplined parries');
+    });
+
+    it('should penalize Striking Attack for Riposte', () => {
+      const antiRiposte = getStyleAntiSynergy(FightingStyle.StrikingAttack, undefined, 'Riposte');
+      expect(antiRiposte.defMult).toBe(0.6);
+
+      const normal = getStyleAntiSynergy(FightingStyle.StrikingAttack, 'Lunge', 'Dodge');
+      expect(normal.offMult).toBe(1.0);
+      expect(normal.defMult).toBe(1.0);
+    });
+
+    it('should penalize Total Parry for any offense', () => {
+      const antiLunge = getStyleAntiSynergy(FightingStyle.TotalParry, 'Lunge');
+      expect(antiLunge.offMult).toBe(0.4);
+      expect(antiLunge.warning).toContain('not built for lunge');
+
+      const antiSlash = getStyleAntiSynergy(FightingStyle.TotalParry, 'Slash');
+      expect(antiSlash.offMult).toBe(0.5);
+
+      const normal = getStyleAntiSynergy(FightingStyle.TotalParry, 'Decisiveness');
+      expect(normal.offMult).toBe(1.0);
+    });
+
+    it('should have no anti-synergies for certain styles', () => {
+      const wos = getStyleAntiSynergy(FightingStyle.WallOfSteel, 'Bash', 'Dodge');
+      expect(wos.offMult).toBe(1.0);
+      expect(wos.defMult).toBe(1.0);
+
+      const ab = getStyleAntiSynergy(FightingStyle.AimedBlow, 'Lunge', 'Parry');
+      expect(ab.offMult).toBe(1.0);
+      expect(ab.defMult).toBe(1.0);
+
+      const pl = getStyleAntiSynergy(FightingStyle.ParryLunge, 'Slash', 'Riposte');
+      expect(pl.offMult).toBe(1.0);
+      expect(pl.defMult).toBe(1.0);
     });
   });
 

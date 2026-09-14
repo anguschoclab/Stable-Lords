@@ -102,6 +102,7 @@ export const WeatherTypeSchema = z.enum([
   'Temporal Rift',
   'Stardust Gale',
   'Mana Storm',
+  'Dreamweavers Mist',
   'Shattered Skies',
 ]);
 

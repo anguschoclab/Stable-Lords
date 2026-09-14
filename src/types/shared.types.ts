@@ -631,6 +631,7 @@ export type WeatherType =
   | 'Temporal Rift'
   | 'Stardust Gale'
   | 'Mana Storm'
+  | 'Dreamweavers Mist'
   | 'Shattered Skies';
 
 /**

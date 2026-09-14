@@ -68,6 +68,7 @@ export const WEATHER_TYPES = [
   'Temporal Rift',
   'Stardust Gale',
   'Mana Storm',
+  'Dreamweavers Mist',
   'Shattered Skies',
 ] as const;
 

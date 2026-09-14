@@ -29,11 +29,11 @@ export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: S
       case 'taunt':
         return 'border-arena-gold/40 bg-neutral-950/95 text-arena-gold';
       case 'crit':
-        return 'border-destructive/50 bg-destructive/10 text-destructive shadow-[0_0_20px_rgba(var(--destructive-rgb),0.3)]';
+        return 'border-destructive/50 bg-destructive/10 text-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.3)]';
       case 'death':
-        return 'border-arena-blood/50 bg-arena-blood/10 text-arena-blood shadow-[0_0_20px_rgba(var(--arena-blood-rgb),0.4)]';
+        return 'border-arena-blood/50 bg-arena-blood/10 text-arena-blood shadow-[0_0_20px_hsl(var(--arena-blood)/0.4)]';
       case 'victory':
-        return 'border-primary/40 bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]';
+        return 'border-primary/40 bg-primary/10 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.3)]';
       case 'hit':
       default:
         return 'border-white/20 bg-neutral-950/90 text-foreground';

@@ -722,3 +722,61 @@ export function handleSuspiciousMushroomStew(
     }
   }
 }
+
+/** Handler for the Phantom Sparring Partner offseason event — grants XP but adds fatigue. */
+export function handlePhantomSparringPartner(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 40;
+      const fatigueGained = 10;
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fatigue: (chosen.fatigue || 0) + fatigueGained,
+      });
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
+/** Handler for the Dreamweavers Mist offseason event — grants XP but causes a minor magic burn. */
+export function handleDreamweaversMist(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15;
+      const newInjury = makeInjury(rng, {
+        name: 'Magic Burn',
+        description: 'Strange magical blisters that throb in the dark.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { CN: -1 },
+      });
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+

@@ -69,6 +69,10 @@ import {
   handleShatteredSkiesRitual,
   handleWeepingSkies,
   handleSuspiciousMushroomStew,
+  handleGoblinMerchant,
+  handleWanderingMerchantStrangeBrew,
+  handlePhantomSparringPartner,
+  handleDreamweaversMist,
 } from './seasonalHandlers';
 
 const EVENT_HANDLERS: Record<
@@ -136,6 +140,10 @@ const EVENT_HANDLERS: Record<
   shattered_skies_ritual: handleShatteredSkiesRitual,
   weeping_skies: handleWeepingSkies,
   suspicious_mushroom_stew: handleSuspiciousMushroomStew,
+  goblin_merchant: handleGoblinMerchant,
+  wandering_merchant_strange_brew: handleWanderingMerchantStrangeBrew,
+  phantom_sparring: handlePhantomSparringPartner,
+  dreamweavers_mist: handleDreamweaversMist,
 };
 
 /**

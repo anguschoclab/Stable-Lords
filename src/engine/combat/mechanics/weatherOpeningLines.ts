@@ -95,6 +95,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'A shimmering gale of stardust sweeps the arena. Fighters move with hastened, exhausting speed.',
   'Mana Storm':
     "Raw mana erupts across the arena in crackling waves. The fighters' eyes glow with arcane fire.",
+  'Dreamweavers Mist':
+    'A surreal, hallucinogenic mist envelops the arena, distorting senses and lulling the crowd.',
   'Shattered Skies': 'The sky shatters like glass, raining ethereal shards onto the sand.',
 };
 

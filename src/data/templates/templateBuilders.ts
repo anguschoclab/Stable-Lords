@@ -5,32 +5,7 @@
 
 import type { StableTemplate, StableTier } from './stableTemplate.types';
 import { randomPick } from '@/utils/random';
-import {
-  ALL_TEMPLATES,
-  getTemplatesByTier,
-  getTemplatesByPhilosophy,
-  getTemplatesByPersonality,
-  getTemplatesByMetaAdaptation,
-  getTemplatesByBackstory,
-  getTemplatesByStyle,
-  getTemplatesByFameRange,
-  getTemplatesByRosterRange,
-  searchTemplates,
-} from './templateCache';
-
-// Re-export cached functions for backward compatibility
-export {
-  ALL_TEMPLATES,
-  getTemplatesByTier,
-  getTemplatesByPhilosophy,
-  getTemplatesByPersonality,
-  getTemplatesByMetaAdaptation,
-  getTemplatesByBackstory,
-  getTemplatesByStyle,
-  getTemplatesByFameRange,
-  getTemplatesByRosterRange,
-  searchTemplates,
-};
+import { ALL_TEMPLATES, getTemplatesByTier } from './templateCache';
 
 /**
  * Gets a random template from all available templates.

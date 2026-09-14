@@ -459,6 +459,14 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-purple-500/20',
     description: 'Violent magical storms grant explosive energy but drain stamina.',
   },
+  'Dreamweavers Mist': {
+    icon: CloudFog,
+    colorClass: 'text-purple-400',
+    bgClass: 'bg-purple-900/10',
+    borderClass: 'border-purple-500/20',
+    description:
+      'A hallucinogenic mist rolls in. Fighters move languidly, saving stamina and dodging gracefully, but hits lack their usual sting.',
+  },
   'Shattered Skies': {
     icon: Sparkles,
     colorClass: 'text-purple-400',
@@ -504,4 +512,7 @@ export const WEATHER_PENALTIES = {
   ECLIPSE_STRIKING_BONUS: 0.2,
   ACID_RAIN_LUNGE_DAMAGE: 1.1,
   SPARK_FORGE_RIPOSTE: 2,
+  WAILING_CHASM_LUNGE_PENALTY: 0.15,
+  SHATTERED_MONOLITH_RIPOSTE_BONUS: 2,
+  LABYRINTH_LIVING_INITIATIVE: -3,
 } as const;

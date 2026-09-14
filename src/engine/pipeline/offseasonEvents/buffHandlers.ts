@@ -402,3 +402,28 @@ export function handleOffseasonTrainingCamp(
     }
   }
 }
+
+export function handleWanderingMerchantStrangeBrew(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + 20,
+      fame: (chosen.fame || 0) + 10,
+    });
+
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      xp: 20,
+      fame: 10,
+    });
+  }
+}

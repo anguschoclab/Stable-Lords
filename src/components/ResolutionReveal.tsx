@@ -36,10 +36,20 @@ export default function ResolutionReveal() {
 
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map(
-      (state.graveyard ?? []).map((w: { name: string }) => [w.name, w] as [string, typeof w])
-    );
-    return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
+
+    // ⚡ Bolt: Single-pass loops for graveyard map and deaths filter to avoid redundant array allocations.
+    const graveyardByName = new Map();
+    const gy = state.graveyard ?? [];
+    for (let i = 0; i < gy.length; i++) {
+      graveyardByName.set(gy[i].name, gy[i]);
+    }
+
+    const result = [];
+    for (let i = 0; i < data.deaths.length; i++) {
+      const w = graveyardByName.get(data.deaths[i]);
+      if (w) result.push(w);
+    }
+    return result;
   }, [data, state.graveyard]);
 
   if (!data) return null;

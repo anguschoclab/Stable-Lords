@@ -65,7 +65,7 @@ vi.mock('@/engine/warriorStatus', () => ({
 vi.mock('@/lib/obfuscation', () => ({
   obfuscateWarrior: vi.fn((_w: any) => _w),
 }));
-vi.mock('@/utils/warriorCollection', () => ({
+vi.mock('@/engine/core/warriorCollection', () => ({
   buildWarriorMap: vi.fn((args: any) => {
     const map = new Map();
     for (const w of [...args.roster, ...args.rivals, ...args.graveyard, ...args.retired]) {

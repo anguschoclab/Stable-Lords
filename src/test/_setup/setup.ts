@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react/pure';
 import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
-import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
+import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorLookup';
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
 import { loadCombatNarrative } from '@/data/narrative';
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { collectAllKnownWarriors, buildWarriorMap } from '@/utils/warriorCollection';
+import { collectAllKnownWarriors, buildWarriorMap } from '@/engine/core/warriorCollection';
 import type { Warrior } from '@/types/warrior.types';
 
 describe('warriorCollection', () => {

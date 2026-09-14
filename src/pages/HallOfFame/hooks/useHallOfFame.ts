@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { collectAllKnownWarriors, buildWarriorMap } from '@/utils/warriorCollection';
+import { collectAllKnownWarriors, buildWarriorMap } from '@/engine/core/warriorCollection';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { AnnualAward } from '@/types/game';
 import type { UpsetEntry } from '@/components/awards/UpsetsList';

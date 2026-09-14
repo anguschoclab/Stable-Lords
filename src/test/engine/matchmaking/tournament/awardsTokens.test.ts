@@ -7,7 +7,7 @@ import {
   type TournamentId,
 } from '@/types/shared.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { clearWarriorCache } from '@/engine/matchmaking/tournamentSelection/utils';
+import { clearWarriorCache } from '@/engine/core/warriorLookup';
 import { awardTournamentPrizes } from '@/engine/matchmaking/tournamentSelection/awards';
 
 // ─── Constants ───

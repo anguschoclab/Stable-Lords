@@ -8,7 +8,8 @@ import type {
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
-import { findWarriorById, getAIPlan } from './utils';
+import { findWarriorById } from '@/engine/core/warriorLookup';
+import { getAIPlan } from './utils';
 import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';

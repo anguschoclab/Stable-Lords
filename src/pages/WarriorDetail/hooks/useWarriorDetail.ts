@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { buildWarriorMap } from '@/utils/warriorCollection';
+import { buildWarriorMap } from '@/engine/core/warriorCollection';
 import { obfuscateWarrior } from '@/lib/obfuscation';
 import { type FightPlan } from '@/types/game';
 import type { Warrior } from '@/types/state.types';

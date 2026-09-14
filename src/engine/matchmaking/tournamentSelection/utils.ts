@@ -2,12 +2,11 @@ import type { GameState, Warrior } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { aiPlanForWarrior, defaultPlanForWarrior } from '@/engine';
-import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup';
+import { aiPlanForWarrior } from '@/engine';
+import { defaultPlanForWarrior } from '@/engine/simulate';
 import { getPairKey } from '@/utils/keyUtils';
 
-// Re-export for backward compatibility
-export { findWarriorById, clearWarriorCache }; /**
+/**
  * Get ai plan.
  * @param opponentStyle - Opponent style. (optional)
  * @param opponentOwnerId - Opponent owner id. (optional)

@@ -224,10 +224,3 @@ export function generateScoutReport(
   };
 }
 
-// Re-export insight creation functions for backward compatibility
-export {
-  createStyleInsight,
-  createAttributeInsights,
-  createTacticInsight,
-  createTraitInsights,
-} from './scoutInsights';

@@ -6,7 +6,8 @@ import {
   resolveRound,
   applyBoutResults,
 } from './tournamentSelection/resolution';
-import { findWarriorById, getAIPlan, generateFreelancer } from './tournamentSelection/utils';
+import { findWarriorById } from '@/engine/core/warriorLookup';
+import { getAIPlan, generateFreelancer } from './tournamentSelection/utils';
 
 export { TOURNAMENT_TIERS }; /**
  * Tournament selection service.

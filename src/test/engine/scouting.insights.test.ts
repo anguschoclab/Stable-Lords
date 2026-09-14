@@ -3,13 +3,13 @@
  * Tests the individual create*Insight functions directly + integration via generateScoutReport.
  */
 import { describe, it, expect } from 'vitest';
+import { generateScoutReport } from '@/engine/scouting';
 import {
-  generateScoutReport,
   createStyleInsight,
   createAttributeInsights,
   createTacticInsight,
   createTraitInsights,
-} from '@/engine/scouting';
+} from '@/engine/scoutInsights';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/utils/random';

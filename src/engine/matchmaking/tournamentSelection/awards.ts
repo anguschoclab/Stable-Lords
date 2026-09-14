@@ -2,7 +2,7 @@ import type { GameState, Warrior, TournamentEntry, InsightTokenType } from '@/ty
 import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
 import { updateEntityInList } from '@/utils/stateUtils';
-import { findWarriorById } from './utils'; /**
+import { findWarriorById } from '@/engine/core/warriorLookup'; /**
  * Award tournament prizes.
  */
 

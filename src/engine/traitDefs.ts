@@ -900,6 +900,35 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+  pit_fighter: {
+    id: 'pit_fighter',
+    name: 'Pit Fighter',
+    description: '+1 damage, +1 defense when bloodied (HP < 50%) — forged in the deepest pits.',
+    effect: { dmgBonus: 1, defModLowHp: 1 },
+    weight: 0.6,
+    synergy: ['brutal'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gut_instinct: {
+    id: 'gut_instinct',
+    name: 'Gut Instinct',
+    description: '+1 decisiveness, +1 parry in OPENING phase — preternatural sense for danger.',
+    effect: { decMod: 1, parModHighHp: 1, fightPlanMod: { AL: 1 } },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gallows_born: {
+    id: 'gallows_born',
+    name: 'Gallows Born',
+    description: '+2 kill window bonus — born under a bad sign, they have an uncanny knack for finding the lethal strike.',
+    effect: { killWindowBonus: 2, fightPlanMod: { killDesire: 2 } },
+    weight: 0.4,
+    synergy: ['cunning'],
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

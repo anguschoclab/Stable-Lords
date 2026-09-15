@@ -1142,6 +1142,20 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
+  {
+    id: 'standard_arena_first_blood',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The First Blood',
+    narrative: 'The very first sanctioned match held here ended in a gruesome tie when both fighters simultaneously decapitated each other, setting a bloody precedent for all future bouts.',
+  },
+  {
+    id: 'mudpit_arena_drowning_shame',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Drowning Shame',
+    narrative: 'A haughty noble champion, unused to the treacherous footing, slipped in the mud and was unceremoniously suffocated by a lowly pit scrapper before he could draw his gilded blade.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

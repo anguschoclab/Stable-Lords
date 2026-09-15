@@ -331,9 +331,7 @@
         "A masterful, diagonal cut from {{attacker}} eviscerates {{defender}} completely.",
         "{{defender}} collapses as {{attacker}}'s final, devastating slash paints the arena red.",
         "{{attacker}} parts {{defender}} from their limbs in a gruesome display of slashing mastery.",
-        "The crowd roars as {{attacker}}'s blade removes {{defender}}'s head from their shoulders.",
-        "With a terrifying, wide sweep, {{attacker}} fully severs {{defender}}'s lifeline.",
-        "{{attacker}}'s blade completes its deadly arc, leaving {{defender}} in bloody ruin."
+        "The crowd roars as {{attacker}}'s blade removes {{defender}}'s head from their shoulders."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
@@ -427,9 +425,7 @@
         "{{attacker}} drives the weapon deep into {{defender}}'s chest, twisting the blade cruelly.",
         "A perfectly placed thrust from {{attacker}} severs {{defender}}'s spine.",
         "{{attacker}} pins {{defender}} to the bloody sand with a devastating, fatal lunge.",
-        "The arena falls silent as {{attacker}}'s blade punches perfectly through {{defender}}'s heart.",
-        "{{attacker}} twists the blade deep, extinguishing the fight in {{defender}}'s eyes.",
-        "A final, fatal thrust from {{attacker}} pins {{defender}} lifelessly to the dirt."
+        "The arena falls silent as {{attacker}}'s blade punches perfectly through {{defender}}'s heart."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
@@ -521,9 +517,7 @@
         "{{attacker}} caves in {{defender}}'s skull with a final, devastating overhead smash.",
         "The crowd gasps as {{attacker}}'s heavy weapon completely crushes {{defender}}.",
         "A terrifying, bone-pulverizing hit from {{attacker}} ends {{defender}}'s life instantly.",
-        "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands.",
-        "A sickening final thud rings out as {{attacker}} crushes the last bit of life from {{defender}}.",
-        "{{defender}} is battered into absolute stillness by the relentless fury of {{attacker}}."
+        "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
@@ -617,9 +611,7 @@
         "{{attacker}} beats the absolute life out of {{defender}} in a brutal display of pure ferocity.",
         "A savage flurry of blows from {{attacker}} ends {{defender}}'s life on the blood-soaked sand.",
         "{{attacker}} shatters {{defender}}'s skull with a single, monstrous punch.",
-        "The crowd winces as {{attacker}} literally beats {{defender}} to death with their bare hands.",
-        "A final, devastating blow from {{attacker}}'s bare knuckles puts {{defender}} to sleep forever.",
-        "{{attacker}} beats {{defender}} into the dirt until movement stops completely."
+        "The crowd winces as {{attacker}} literally beats {{defender}} to death with their bare hands."
       ]
     },
     "default": [
@@ -683,10 +675,7 @@
       "The ARENAMASTER signals the end as {{attacker}} finishes {{defender}} off.",
       "{{defender}}'s lifeless body hits the dirt. {{attacker}} is triumphant.",
       "With a final, devastating strike, {{attacker}} sends {{defender}} to the void.",
-      "{{attacker}} claims victory, leaving {{defender}} dead upon the sands.",
-      "{{attacker}} steps over the broken form of {{defender}}, securing a grim victory.",
-      "The arena falls into a brief, stunned silence as {{defender}} breathes their last.",
-      "Blood soaks the thirsty sands as {{attacker}} brings a brutal end to {{defender}}'s story."
+      "{{attacker}} claims victory, leaving {{defender}} dead upon the sands."
     ]
   }
 }

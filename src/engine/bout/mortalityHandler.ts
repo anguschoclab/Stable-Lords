@@ -8,10 +8,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { formatDateOfDeath } from '@/utils/format';
 import { StateImpact } from '@/engine/impacts';
-import { weekToTimestamp } from '@/constants'; /**
- * Handle death.
- * @param rivalStableId - Rival stable id. (optional)
- */
+import { weekToTimestamp } from '@/constants';
 
 /**
  * Handle death.

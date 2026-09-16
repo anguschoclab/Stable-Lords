@@ -43,9 +43,7 @@ import ActionButtons from '@/components/startGame/ActionButtons';
 import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 import { formatDate } from '@/utils/dateUtils';
 
-type Screen = 'title' | 'newGame'; /**
- * Start game.
- */
+type Screen = 'title' | 'newGame';
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 

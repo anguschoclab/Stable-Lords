@@ -49,9 +49,7 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
         ? [{ id: rng.uuid(), week: state.week, title: 'Medical Report', items: injuryNews }]
         : [],
   };
-} /**
- * Apply health updates.
- */
+}
 
 /**
  * Apply health updates.

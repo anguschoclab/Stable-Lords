@@ -41,9 +41,7 @@ export function getAIPlan(
     rival.strategy?.intent,
     grudgeIntensity
   );
-} /**
- * Generate freelancer.
- */
+}
 
 /**
  * Generate freelancer.

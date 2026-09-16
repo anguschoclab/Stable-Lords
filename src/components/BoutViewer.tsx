@@ -29,23 +29,7 @@ interface BoutViewerProps {
   arenaId?: string;
   transcript?: string[];
   analysis?: import('@/engine/narrative/fightAnalysis').FightAnalysis;
-} /**
-   * Bout viewer.
-   * @param  - {
-  name a,
-  name d,
-  style a,
-  style d,
-  log,
-  winner,
-  by,
-  announcement,
-  is rivalry,
-  arena tier = 'standard',
-  weather = 'clear',
-  arena id,
-}.
-   */
+}
 
 /**
  * Bout viewer.

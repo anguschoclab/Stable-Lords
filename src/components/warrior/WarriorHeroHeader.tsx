@@ -27,18 +27,7 @@ interface WarriorHeroHeaderProps {
   id?: string;
   isPlayerOwned?: boolean;
   insightTokens?: InsightToken[];
-} /**
-   * Render the WarriorHeroHeader component.
-   * @param  - {
-  warrior,
-  record,
-  streak label,
-  streak val,
-  id,
-  is player owned,
-  insight tokens,
-}.
-   */
+}
 
 /**
  * Render the WarriorHeroHeader component.

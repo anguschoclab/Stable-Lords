@@ -83,9 +83,7 @@ export function committeeSelection(
   }
 
   return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
-} /**
- * Build tournament.
- */
+}
 
 /**
  * Build tournament.

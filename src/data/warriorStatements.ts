@@ -92,9 +92,7 @@ function getQuicknessStatement(defBase: number, parBase: number, wt: number): st
   }
 
   return qualifier ? `${speed}, ${qualifier}` : speed;
-} /**
- * Generate warrior statements.
- */
+}
 
 // ─── Generator ─────────────────────────────────────────────────────────────
 

@@ -6,10 +6,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 
 interface GazetteStepProps {
   gazette: NewsletterItem[];
-} /**
- * Gazette step.
- * @param - { gazette }.
- */
+}
 
 /**
  * Gazette step.

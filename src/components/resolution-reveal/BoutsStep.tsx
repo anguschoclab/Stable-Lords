@@ -9,10 +9,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 
 interface BoutsStepProps {
   bouts: BoutResult[];
-} /**
- * Bouts step.
- * @param - { bouts }.
- */
+}
 
 /**
  * Bouts step.

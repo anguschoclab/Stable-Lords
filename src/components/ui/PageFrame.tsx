@@ -4,10 +4,7 @@ interface PageFrameProps {
   children: React.ReactNode;
   className?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-} /**
- * Page frame.
- * @param - { children, class name, max width = 'xl' }.
- */
+}
 
 /**
  * Page frame.

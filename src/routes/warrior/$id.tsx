@@ -1,7 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import WarriorDetail from '@/pages/WarriorDetail'; /**
- * Route.
- */
+import WarriorDetail from '@/pages/WarriorDetail';
 
 /**
  * Route.

@@ -102,9 +102,7 @@ function computeTopMovers(
     .slice(0, 5);
 }
 
-const current: FightCard[] = []; /**
- * Newsletter feed.
- */
+const current: FightCard[] = [];
 
 /**
  * Newsletter feed.

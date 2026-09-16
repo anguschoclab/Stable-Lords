@@ -189,9 +189,7 @@ export function resolveRound(
     isComplete,
     updatedTournament,
   };
-} /**
- * Resolve complete tournament.
- */
+}
 
 /**
  * Resolve complete tournament.
@@ -214,10 +212,7 @@ export function resolveCompleteTournament(
     safety++;
   }
   return current;
-} /**
- * Apply bout results.
- * @param skipFatigue - Skip fatigue. (optional)
- */
+}
 
 /**
  * Apply bout results.

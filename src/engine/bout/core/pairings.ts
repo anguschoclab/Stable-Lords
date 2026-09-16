@@ -12,9 +12,7 @@ export interface BoutPairing {
   rivalStable?: string;
   rivalStableId?: string;
   contractId?: string;
-} /**
- * Generate pairings.
- */
+}
 
 /**
  * Generate pairings.

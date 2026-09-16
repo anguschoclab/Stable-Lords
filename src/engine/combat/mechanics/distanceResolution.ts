@@ -54,10 +54,7 @@ export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
   long_spear: 'Extended',
   maul: 'Extended',
   quarterstaff: 'Extended',
-}; /**
- * Get weapon preferred range.
- * @param weaponId - Weapon id. (optional)
- */
+};
 
 /**
  * Get weapon preferred range.
@@ -129,9 +126,7 @@ export function computeReachScore(
   recoveryDebt: number
 ): number {
   return ini + (OE - 5) * 2 + motivationBonus - recoveryDebt * 2;
-} /**
- * Defines the shape of distance contest result.
- */
+}
 
 // ─── Distance Contest ─────────────────────────────────────────────────────────
 

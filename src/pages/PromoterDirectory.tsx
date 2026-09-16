@@ -176,9 +176,7 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
       </CardFooter>
     </Card>
   );
-} /**
- * Promoter directory.
- */
+}
 
 /**
  * Promoter directory.

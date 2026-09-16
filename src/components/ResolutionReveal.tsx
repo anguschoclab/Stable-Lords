@@ -12,9 +12,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 
 import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
 
-type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
- * Resolution reveal.
- */
+type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
 
 /**
  * Resolution reveal.

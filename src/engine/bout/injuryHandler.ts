@@ -5,11 +5,7 @@ import type { FightOutcome } from '@/types/combat.types';
 import { generateInjury } from '@/engine/injuries';
 import { addRestState } from '@/engine/matchmaking/historyLogic';
 import { updateEntityInList } from '@/utils/stateUtils';
-import { StateImpact } from '@/engine/impacts'; /**
- * Handle injuries.
- * @param rivalStableId - Rival stable id. (optional)
- * @param seed - Seed. (optional)
- */
+import { StateImpact } from '@/engine/impacts';
 
 /**
  * Handle injuries.

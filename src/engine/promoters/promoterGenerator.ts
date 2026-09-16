@@ -80,10 +80,7 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Sadistic',
   'Flashy',
   'Corporate',
-]; /**
- * Generate promoters.
- * @param rng - Rng. (optional)
- */
+];
 
 /**
  * Generate promoters.

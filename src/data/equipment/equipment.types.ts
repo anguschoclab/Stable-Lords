@@ -2,16 +2,12 @@
  * Equipment type definitions for Stable Lords.
  */
 
-import { FightingStyle } from '@/types/game'; /**
- * Equipment slot type.
- */
+import { FightingStyle } from '@/types/game';
 
 /**
  * Equipment slot type.
  */
-export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm'; /**
- * Defines the shape of equipment item.
- */
+export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';
 
 /**
  * Defines the shape of equipment item.
@@ -62,9 +58,7 @@ export interface EquipmentItem {
   shieldParryBonus?: number;
   // Shield-only: ATT penalty applied when wielding this shield (e.g. large_shield = -1).
   shieldAttPenalty?: number;
-} /**
- * Defines the shape of equipment loadout.
- */
+}
 
 /**
  * Defines the shape of equipment loadout.
@@ -83,9 +77,7 @@ export interface WeaponReqCheck {
   required: number;
   current: number;
   deficit: number;
-} /**
- * Defines the shape of weapon req result.
- */
+}
 
 /**
  * Defines the shape of weapon req result.

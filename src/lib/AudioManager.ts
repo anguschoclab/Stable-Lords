@@ -9,9 +9,7 @@ import { STORE_KEYS } from '@/constants/core/storeKeys';
 /**
  * Supported sound effect types for audio playback.
  */
-export type SfxType = 'ui_click' | 'hit' | 'crit' | 'clash' | 'death' | 'recovery' | 'coin'; /**
- * The AudioManager class.
- */
+export type SfxType = 'ui_click' | 'hit' | 'crit' | 'clash' | 'death' | 'recovery' | 'coin';
 
 /**
  * The AudioManager class.
@@ -127,9 +125,7 @@ export class AudioManager {
   public static resetForTesting(): void {
     AudioManager.instance = undefined;
   }
-} /**
- * Audio manager.
- */
+}
 
 /**
  * Audio manager.

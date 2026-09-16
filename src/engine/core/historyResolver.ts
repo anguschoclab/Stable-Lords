@@ -1,14 +1,10 @@
-import { GameState, Warrior } from '@/types/state.types'; /**
- * Warrior minimal type.
- */
+import { GameState, Warrior } from '@/types/state.types';
 
 // Minimal types for history resolution — avoids importing full RivalStableData
 /**
  * Warrior minimal type.
  */
-export type WarriorMinimal = Pick<Warrior, 'id' | 'name'>; /**
- * Rival shallow type.
- */
+export type WarriorMinimal = Pick<Warrior, 'id' | 'name'>;
 
 /**
  * Rival shallow type.
@@ -17,9 +13,7 @@ export type RivalShallow = {
   id: string;
   owner: { stableName: string };
   roster?: WarriorMinimal[];
-}; /**
- * Defines the shape of name resolution state.
- */
+};
 
 /**
  * Defines the shape of name resolution state.

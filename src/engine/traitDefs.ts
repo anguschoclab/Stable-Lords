@@ -65,9 +65,7 @@ export interface TraitEffect {
   // Personality / Combat AI modifiers (from FTUE)
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
-} /**
- * Defines the shape of trait def.
- */
+}
 
 /**
  * Defines the shape of trait def.
@@ -90,9 +88,7 @@ export interface TraitDef {
   /** If present, the trait is class-restricted: only warriors of these styles
    *  can roll/train it, and it only appears in matching trainers' pools. */
   styles?: FightingStyle[];
-} /**
- * Traits.
- */
+}
 
 /**
  * Traits.

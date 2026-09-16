@@ -13,9 +13,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip'; /**
- * Meta drift widget.
- */
+} from '@/components/ui/tooltip';
 
 /**
  * Meta drift widget.

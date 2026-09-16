@@ -5,10 +5,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 interface InjuriesStepProps {
   injuries: string[];
   deaths: string[];
-} /**
- * Injuries step.
- * @param - { injuries, deaths }.
- */
+}
 
 /**
  * Injuries step.

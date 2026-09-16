@@ -10,17 +10,7 @@ interface ActionButtonsProps {
   onContinue: () => void;
   onNewGame: () => void;
   onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
-} /**
-   * Action buttons.
-   * @param  - {
-  most recent,
-  slots,
-  max save slots,
-  on continue,
-  on new game,
-  on import,
-}.
-   */
+}
 
 /**
  * Action buttons.

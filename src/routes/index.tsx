@@ -1,6 +1,4 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'; /**
- * Route.
- */
+import { createFileRoute, Navigate } from '@tanstack/react-router';
 
 /**
  * Route.

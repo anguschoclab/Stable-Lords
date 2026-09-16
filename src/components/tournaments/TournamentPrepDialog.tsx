@@ -12,16 +12,7 @@ interface TournamentPrepDialogProps {
   activeWarriors: Warrior[];
   seasonName: string;
   onStart: () => void;
-} /**
-   * Tournament prep dialog.
-   * @param  - {
-  is open,
-  on open change,
-  active warriors,
-  season name,
-  on start,
-}.
-   */
+}
 
 /**
  * Tournament prep dialog.

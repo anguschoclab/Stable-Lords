@@ -14,10 +14,7 @@ interface TrainerCardProps {
   onFire?: () => void;
   owned: boolean;
   action?: ReactNode;
-} /**
- * Trainer card.
- * @param - { trainer, on fire, owned, action }.
- */
+}
 
 /**
  * Trainer card.

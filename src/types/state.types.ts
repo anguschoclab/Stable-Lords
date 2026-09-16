@@ -46,9 +46,7 @@ export type {
 import { type FightSummary, type FightOutcomeBy } from './combat.types';
 export type { FightSummary, FightOutcomeBy };
 import type { PoolWarrior } from '@/engine/recruitment';
-export type { PoolWarrior }; /**
- * Defines the shape of ranking entry.
- */
+export type { PoolWarrior };
 
 // ─── Ranking & Contracts ───────────────────────────────────────────────────
 
@@ -59,23 +57,17 @@ export interface RankingEntry {
   overallRank: number;
   classRank: number;
   compositeScore: number;
-} /**
- * Bout offer status type.
- */
+}
 
 /**
  * Bout offer status type.
  */
-export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired'; /**
- * Bout offer response type.
- */
+export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired';
 
 /**
  * Bout offer response type.
  */
-export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined'; /**
- * Defines the shape of bout offer.
- */
+export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined';
 
 /**
  * Defines the shape of bout offer.
@@ -98,16 +90,12 @@ export interface BoutOffer {
   /** Absolute week when this offer was created. Disambiguates boutWeek/expirationWeek
    *  which are stored as display weeks (1–52). Legacy saves omit this field. */
   createdAbsoluteWeek?: number;
-} /**
- * Promoter personality type.
- */
+}
 
 /**
  * Promoter personality type.
  */
-export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate'; /**
- * Defines the shape of promoter.
- */
+export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate';
 
 /**
  * Defines the shape of promoter.
@@ -127,9 +115,7 @@ export interface Promoter {
     mentorId?: PromoterId;
     legacyFame: number;
   };
-} /**
- * Owner personality type.
- */
+}
 
 // ─── Owner / Stable ─────────────────────────────────────────────────────────
 
@@ -143,9 +129,7 @@ export type OwnerPersonality = (typeof OWNER_PERSONALITIES)[number];
 /**
  * Meta adaptation type.
  */
-export type MetaAdaptation = (typeof META_ADAPTATIONS)[number]; /**
- * Defines the shape of owner.
- */
+export type MetaAdaptation = (typeof META_ADAPTATIONS)[number];
 
 /**
  * Defines the shape of owner.
@@ -166,9 +150,7 @@ export interface Owner {
   foundedByWarriorId?: WarriorId; // Lineage breadcrumb for legacy founders
   age?: number; // 🎂 1.0 Hardening: Owner age for retirement
   ageRetired?: number; // Week the previous owner retired
-} /**
- * Defines the shape of tournament bout.
- */
+}
 
 // ─── Game State ─────────────────────────────────────────────────────────────
 
@@ -185,9 +167,7 @@ export interface TournamentBout {
   winner?: 'A' | 'D' | null;
   by?: FightOutcomeBy;
   fightId?: FightId;
-} /**
- * Defines the shape of tournament entry.
- */
+}
 
 /**
  * Defines the shape of tournament entry.
@@ -202,9 +182,7 @@ export interface TournamentEntry {
   participants: Warrior[];
   champion?: string;
   completed: boolean;
-} /**
- * Defines the shape of training assignment.
- */
+}
 
 /**
  * Defines the shape of training assignment.
@@ -219,9 +197,7 @@ export interface TrainingAssignment {
   trainerId?: string;
   /** Trait training: weeks left before the outcome roll. Counts down each week. */
   weeksRemaining?: number;
-} /**
- * Defines the shape of seasonal growth.
- */
+}
 
 /**
  * Defines the shape of seasonal growth.
@@ -230,9 +206,7 @@ export interface SeasonalGrowth {
   warriorId: WarriorId;
   season: Season;
   gains: Partial<Record<keyof Attributes, number>>;
-} /**
- * Defines the shape of ledger entry.
- */
+}
 
 /**
  * Defines the shape of ledger entry.
@@ -243,9 +217,7 @@ export interface LedgerEntry {
   label: string;
   amount: number;
   category: 'fight' | 'training' | 'recruit' | 'trainer' | 'upkeep' | 'prize' | 'other';
-} /**
- * Ai intent type.
- */
+}
 
 /**
  * Ai intent type.
@@ -258,9 +230,7 @@ export type AIIntent =
   | 'SURVIVAL'
   | 'WEALTH_ACCUMULATION'
   | 'AGGRESSIVE_EXPANSION'
-  | 'ROSTER_DIVERSITY'; /**
- * Defines the shape of ai strategy.
- */
+  | 'ROSTER_DIVERSITY';
 
 /**
  * Defines the shape of ai strategy.
@@ -269,9 +239,7 @@ export interface AIStrategy {
   intent: AIIntent;
   targetStableId?: StableId;
   planWeeksRemaining: number;
-} /**
- * Defines the shape of ai event.
- */
+}
 
 // TrainerData was here, now using Trainer from shared.types
 
@@ -284,9 +252,7 @@ export interface AIEvent {
   type: 'STRATEGY' | 'FINANCE' | 'ROSTER' | 'STAFF';
   description: string;
   riskTier: 'Low' | 'Medium' | 'High';
-} /**
- * Defines the shape of ai agent memory.
- */
+}
 
 /**
  * Defines the shape of ai agent memory.
@@ -303,9 +269,7 @@ export interface AIAgentMemory {
     kills: number;
     rosterSizeAtSeasonStart: number;
   };
-} /**
- * Defines the shape of rival stable data.
- */
+}
 
 /**
  * Defines the shape of rival stable data.
@@ -328,9 +292,7 @@ export interface RivalStableData {
   seasonalGrowth?: SeasonalGrowth[];
   ledger: LedgerEntry[];
   trainingAssignments: TrainingAssignment[];
-} /**
- * Defines the shape of scout report data.
- */
+}
 
 /**
  * Defines the shape of scout report data.
@@ -347,9 +309,7 @@ export interface ScoutReportData {
   suspectedOE?: string;
   suspectedAL?: string;
   notes: string;
-} /**
- * Defines the shape of rest state.
- */
+}
 
 /**
  * Defines the shape of rest state.
@@ -357,9 +317,7 @@ export interface ScoutReportData {
 export interface RestState {
   warriorId: WarriorId;
   restUntilWeek: number;
-} /**
- * Defines the shape of rivalry.
- */
+}
 
 /**
  * Defines the shape of rivalry.
@@ -371,9 +329,7 @@ export interface Rivalry {
   intensity: number;
   reason: string;
   startWeek: number;
-} /**
- * Defines the shape of match record.
- */
+}
 
 /**
  * Defines the shape of match record.
@@ -383,9 +339,7 @@ export interface MatchRecord {
   playerWarriorId: WarriorId;
   opponentWarriorId: WarriorId;
   opponentStableId: StableId;
-} /**
- * Defines the shape of owner grudge.
- */
+}
 
 /**
  * Defines the shape of owner grudge.
@@ -398,9 +352,7 @@ export interface OwnerGrudge {
   reason: string;
   startWeek: number;
   lastEscalation: number;
-} /**
- * Defines the shape of gazette story.
- */
+}
 
 /**
  * Defines the shape of gazette story.
@@ -412,16 +364,12 @@ export interface GazetteStory {
   mood: CrowdMoodType;
   tags: string[];
   week: number;
-} /**
- * Insight token type type.
- */
+}
 
 /**
  * Insight token type type.
  */
-export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait'; /**
- * Defines the shape of insight token.
- */
+export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait';
 
 /**
  * Defines the shape of insight token.
@@ -435,9 +383,7 @@ export interface InsightToken {
   targetKey?: string;
   origin?: string;
   discoveredWeek: number;
-} /**
- * Defines the shape of hall entry.
- */
+}
 
 /**
  * Defines the shape of hall entry.
@@ -447,9 +393,7 @@ export interface HallEntry {
   week: number;
   label: 'Fight of the Week' | 'Fight of the Tournament';
   fightId: FightId;
-} /**
- * Defines the shape of simulation report.
- */
+}
 
 // ─── Simulation & Awards ────────────────────────────────────────────────────
 
@@ -470,17 +414,13 @@ export interface SimulationReport {
   agingEvents: string[];
   healthEvents: string[];
   bouts?: import('@/types/combat.types').FightSummary[];
-} /**
- * Annual award type type.
- */
+}
 
 /**
  * Annual award type type.
  */
 export type AnnualAwardType =
-  'WARRIOR_OF_YEAR' | 'KILLER_OF_YEAR' | 'STABLE_OF_YEAR' | 'CLASS_MVP' | 'TOURNAMENT_RANK'; /**
- * Defines the shape of annual award.
- */
+  'WARRIOR_OF_YEAR' | 'KILLER_OF_YEAR' | 'STABLE_OF_YEAR' | 'CLASS_MVP' | 'TOURNAMENT_RANK';
 
 /**
  * Defines the shape of annual award.
@@ -498,13 +438,13 @@ export interface AnnualAward {
 }
 
 /**
- *
+ * Identifier for a progression objective.
  */
 export type ObjectiveId =
   'TOP_10_STABLE' | 'TOP_3_STABLE' | 'FIRST_TOURNAMENT_WIN' | 'HALL_OF_FAMER' | 'REALM_CHAMPION';
 
 /**
- *
+ * Defines the shape of a progression objective.
  */
 export interface ProgressionObjective {
   id: ObjectiveId;
@@ -516,12 +456,12 @@ export interface ProgressionObjective {
 }
 
 /**
- *
+ * Status of the overall progression campaign.
  */
 export type ProgressionStatus = 'active' | 'won' | 'continued';
 
 /**
- *
+ * Defines the shape of progression state.
  */
 export interface ProgressionState {
   status: ProgressionStatus;
@@ -544,9 +484,7 @@ export interface DeferredBoutLog {
   season: number;
   boutId: string;
   transcript: string[];
-} /**
- * Defines the shape of game state.
- */
+}
 
 /**
  * Defines the shape of game state.
@@ -632,9 +570,7 @@ export interface GameState {
   bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
   progression: ProgressionState;
-} /**
- * Defines the shape of ui prefs.
- */
+}
 
 /**
  * Defines the shape of ui prefs.

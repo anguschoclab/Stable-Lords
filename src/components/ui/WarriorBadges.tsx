@@ -62,16 +62,7 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
       </TooltipContent>
     </Tooltip>
   );
-} /**
-   * Stat badge.
-   * @param  - {
-  style name,
-  career,
-  variant = 'outline',
-  show full name = false,
-  class name,
-}.
-   */
+}
 
 // ─── StatBadge ────────────────────────────────────────────────────────────
 
@@ -107,17 +98,7 @@ export function StatBadge({
       )}
     </div>
   );
-} /**
-   * Warrior name tag.
-   * @param  - {
-  id,
-  name,
-  is champion,
-  injury count = 0,
-  use crown = false,
-  is dead = false,
-}.
-   */
+}
 
 // ─── WarriorNameTag ───────────────────────────────────────────────────────
 

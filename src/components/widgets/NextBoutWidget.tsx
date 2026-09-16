@@ -12,9 +12,7 @@ import {
   resolveWarriorName,
   resolveStableName,
   findWarrior,
-} from '@/engine/core/historyResolver'; /**
- * Next bout widget.
- */
+} from '@/engine/core/historyResolver';
 
 /**
  * Next bout widget.

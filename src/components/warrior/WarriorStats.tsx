@@ -3,15 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ATTRIBUTE_TRAINING, SKILL_MAX_DEFAULT } from '@/constants/training';
 import { growthNarrative } from './GrowthHelpers';
 import { generateWarriorStatements } from '@/data/warriorStatements';
-import { StatBattery } from '@/components/ui/StatBattery'; /**
-                                                            * Attr bar.
-                                                            * @param  - {
-  label,
-  value,
-  potential,
-  max = 25,
-}.
-                                                            */
+import { StatBattery } from '@/components/ui/StatBattery';
 
 /**
  * Attr bar.
@@ -59,14 +51,7 @@ export function AttrBar({
       <StatBattery label="" value={value} max={max} className="[&>span:first-child]:hidden" />
     </div>
   );
-} /**
-   * Render the SkillBar component.
-   * @param  - {
-  label,
-  value,
-  max = 20,
-}.
-   */
+}
 
 /**
  * Render the SkillBar component.
@@ -86,10 +71,7 @@ export function SkillBar({
   max?: number;
 }) {
   return <StatBattery label={label} value={value} max={max} />;
-} /**
- * Render the WarriorStatementsPanel component.
- * @param - { warrior }.
- */
+}
 
 /**
  * Render the WarriorStatementsPanel component.

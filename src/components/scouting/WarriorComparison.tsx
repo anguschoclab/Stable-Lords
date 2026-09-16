@@ -11,10 +11,7 @@ import { EmptyWarriorState } from './components/EmptyWarriorState';
 interface WarriorComparisonProps {
   rivals: RivalStableData[];
   playerRoster: Warrior[];
-} /**
- * Warrior comparison.
- * @param - { rivals, player roster }.
- */
+}
 
 /**
  * Warrior comparison.

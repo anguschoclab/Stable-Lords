@@ -4,9 +4,7 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import type { EquipmentItem } from './equipment.types'; /**
- * Weapons.
- */
+import type { EquipmentItem } from './equipment.types';
 
 /**
  * Weapons.
@@ -585,16 +583,12 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.WallOfSteel,
     ],
   },
-]; /**
- * Shield_item_ids.
- */
+];
 
 /**
  * Shield_item_ids.
  */
-export const SHIELD_ITEM_IDS = ['small_shield', 'medium_shield', 'large_shield'] as const; /**
- * Shield_coverage.
- */
+export const SHIELD_ITEM_IDS = ['small_shield', 'medium_shield', 'large_shield'] as const;
 
 /**
  * Shield_coverage.

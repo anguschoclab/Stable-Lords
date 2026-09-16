@@ -18,18 +18,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Zap: <Zap className="h-4 w-4" />,
   Shield: <Shield className="h-4 w-4" />,
   Activity: <Activity className="h-4 w-4" />,
-}; /**
-    * Bout resolution.
-    * @param  - {
-  is complete,
-  winner,
-  winner name,
-  by,
-  minutes,
-  total events,
-  announcement,
-}.
-    */
+};
 
 /**
  * Bout resolution.

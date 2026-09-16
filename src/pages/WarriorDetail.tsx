@@ -32,12 +32,10 @@ const TABS: SubNavTab[] = [
   { id: 'biometrics', label: 'DOSSIER', icon: <User className="h-4 w-4" /> },
   { id: 'mission', label: 'WAR PLAN', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
-]; /**
- * Warrior detail.
- */
+];
 
 /**
- *
+ * Warrior detail.
  */
 export default function WarriorDetail() {
   const {

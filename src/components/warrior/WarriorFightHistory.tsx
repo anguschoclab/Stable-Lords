@@ -10,8 +10,6 @@ import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Warrior fight history.
- * @param warriorId - Warrior id.
- * @param arenaHistory - Arena history of fights for this warrior.
  */
 export function WarriorFightHistory({
   warriorId,

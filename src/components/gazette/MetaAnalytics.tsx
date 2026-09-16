@@ -10,10 +10,7 @@ interface MetaAnalyticsProps {
   allFights: import('@/types/game').FightSummary[];
 }
 
-const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler']; /**
- * Tactical style analysis.
- * @param - { all fights }.
- */
+const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'];
 
 /**
  * Tactical style analysis.
@@ -132,10 +129,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
       </div>
     </Surface>
   );
-} /**
- * Style matchup heatmap.
- * @param - { all fights }.
- */
+}
 
 /**
  * Style matchup heatmap.

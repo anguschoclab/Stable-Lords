@@ -14,9 +14,7 @@ import { isActive } from '@/engine/warriorStatus';
  * Encapsulates the turn logic for a single rival stable.
  * Implements "Skeptical Memory" and "Hierarchical Delegation".
  */
-export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral'; /**
- * Defines the shape of agent context.
- */
+export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral';
 
 /**
  * Defines the shape of agent context.
@@ -26,9 +24,7 @@ export interface AgentContext {
   state: GameState;
   meta: Record<string, number>;
   playerThreatLevel: PlayerThreatLevel;
-} /**
- * Create agent context.
- */
+}
 
 /**
  * Create agent context.

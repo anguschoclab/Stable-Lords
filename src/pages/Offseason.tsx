@@ -16,9 +16,7 @@ import {
   BookOpen,
   ArrowRight,
   History,
-} from 'lucide-react'; /**
- * Offseason.
- */
+} from 'lucide-react';
 
 /**
  * Offseason.

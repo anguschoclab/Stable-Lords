@@ -1,7 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge'; /**
- * Cn.
- */
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Cn.

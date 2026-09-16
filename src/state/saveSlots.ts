@@ -16,9 +16,7 @@ export interface SaveSlotMeta {
   version: string;
 }
 
-const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS; /**
- * Max_save_slots.
- */
+const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS;
 
 /**
  * Max_save_slots.
@@ -80,18 +78,14 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
       console.error('Failed to save save slot metadata', error);
     }
   }
-} /**
- * List save slots.
- */
+}
 
 /**
  * List save slots.
  */
 export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
   return await getStoredMeta();
-} /**
- * Save to slot.
- */
+}
 
 /**
  * Save to slot.
@@ -120,18 +114,14 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
   // Truncate state to keep save file size manageable
   const truncatedState = truncateState(state);
   await archiveService.archiveHotState(slotId, truncatedState);
-} /**
- * Load from slot.
- */
+}
 
 /**
  * Load from slot.
  */
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {
   return await archiveService.retrieveHotState(slotId);
-} /**
- * Delete slot.
- */
+}
 
 /**
  * Delete slot.
@@ -149,18 +139,14 @@ export async function deleteSlot(slotId: string) {
       console.error('Failed to delete save file from disk:', error);
     }
   }
-} /**
- * New slot id.
- */
+}
 
 /**
  * New slot id.
  */
 export function newSlotId(): string {
   return `slot_${crypto.randomUUID()}`;
-} /**
- * Export slot.
- */
+}
 
 /**
  * Export slot.
@@ -171,9 +157,7 @@ export async function exportSlot(slotId: string): Promise<string | null> {
   // Truncate state to keep export file size manageable
   const truncatedState = truncateState(state);
   return JSON.stringify(truncatedState);
-} /**
- * Import save to new slot.
- */
+}
 
 /**
  * Import save to new slot.

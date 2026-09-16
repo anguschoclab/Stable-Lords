@@ -51,9 +51,7 @@ export const telemetry = {
   gauge(name: string, value: number, tags?: Record<string, string>): void {
     globalProvider.gauge(name, value, tags);
   },
-}; /**
- * Telemetry events.
- */
+};
 
 // Named telemetry events for consistency
 /**
@@ -79,9 +77,7 @@ export const TelemetryEvents = {
   FEATURE_FLAG_YEAR: 'feature_flag_year',
   FEATURE_FLAG_HEADLESS: 'feature_flag_headless',
   DEFERRED_LOGS_COUNT: 'deferred_logs_count',
-} as const; /**
- * Telemetry tags.
- */
+} as const;
 
 // Common tag keys
 /**

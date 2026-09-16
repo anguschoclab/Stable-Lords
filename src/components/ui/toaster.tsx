@@ -6,9 +6,7 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from '@/components/ui/toast'; /**
- * Toaster.
- */
+} from '@/components/ui/toast';
 
 /**
  * Toaster.

@@ -1,15 +1,11 @@
 import type { ReactNode } from 'react';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@/components/ui/button'; /**
- * Sort dir type.
- */
+import { Button } from '@/components/ui/button';
 
 /**
  * Sort dir type.
  */
-export type SortDir = 'asc' | 'desc'; /**
- * Defines the shape of sort header props.
- */
+export type SortDir = 'asc' | 'desc';
 
 /**
  * Defines the shape of sort header props.
@@ -19,10 +15,7 @@ export interface SortHeaderProps {
   active: boolean;
   dir?: SortDir;
   onClick: () => void;
-} /**
- * Sort header.
- * @param - { label, active, dir, on click }.
- */
+}
 
 /**
  * Sort header.

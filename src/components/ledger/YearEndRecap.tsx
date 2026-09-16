@@ -8,9 +8,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Trophy, Skull, Coins, Swords, Users, Flame } from 'lucide-react';
-import { cn } from '@/lib/utils'; /**
- * Year end recap.
- */
+import { cn } from '@/lib/utils';
 
 /**
  * Year end recap.

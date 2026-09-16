@@ -1,6 +1,4 @@
-import { Warrior, InsightToken, FightingStyle, Attributes, FightPlan } from '@/types/game'; /**
- * Defines the shape of obfuscated warrior.
- */
+import { Warrior, InsightToken, FightingStyle, Attributes, FightPlan } from '@/types/game';
 
 // Obfuscated representation of a warrior for the UI
 /**

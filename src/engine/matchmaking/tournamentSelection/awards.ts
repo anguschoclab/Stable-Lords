@@ -2,9 +2,7 @@ import type { GameState, Warrior, TournamentEntry, InsightTokenType } from '@/ty
 import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
 import { updateEntityInList } from '@/utils/stateUtils';
-import { findWarriorById } from '@/engine/core/warriorLookup'; /**
- * Award tournament prizes.
- */
+import { findWarriorById } from '@/engine/core/warriorLookup';
 
 /**
  * Standalone helper to process and apply tournament rewards for a specific place finish.
@@ -164,9 +162,7 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
   }
 
   return updatedState;
-} /**
- * Modify warrior.
- */
+}
 
 /**
  * Modify warrior.

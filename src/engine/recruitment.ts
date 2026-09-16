@@ -33,9 +33,7 @@ import { clamp } from '@/utils/math';
 /**
  * Recruit tier type.
  */
-export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy'; /**
- * Defines the shape of pool warrior.
- */
+export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy';
 
 /**
  * Defines the shape of pool warrior.
@@ -72,9 +70,7 @@ export const TIER_COST: Record<RecruitTier, number> = {
   Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.cost ?? 0,
   Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.cost ?? 0,
   Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.cost ?? 0,
-}; /**
- * Tier_stars.
- */
+};
 
 /**
  * Tier_stars.

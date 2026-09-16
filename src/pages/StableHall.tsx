@@ -10,9 +10,7 @@ import { TrainerTable } from '@/components/stable/TrainerTable';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { InsightManager } from '@/components/ledger';
 import { PageFrame } from '@/components/ui/PageFrame';
-import { SectionDivider } from '@/components/ui/SectionDivider'; /**
- * Stable hall.
- */
+import { SectionDivider } from '@/components/ui/SectionDivider';
 
 /**
  * Stable hall.

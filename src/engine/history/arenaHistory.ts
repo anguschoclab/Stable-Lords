@@ -41,9 +41,7 @@ function save(arr: FightSummary[]) {
       }
     }
   }
-} /**
- * Arena history.
- */
+}
 
 /**
  * Arena history.

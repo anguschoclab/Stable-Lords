@@ -5,9 +5,7 @@
  * See memory terrablood-canon-sources / terrablood-weapon-tables.
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types'; /**
- * Suitability rating type.
- */
+import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 
 /**
  * Suitability rating type.
@@ -83,9 +81,7 @@ export function suitabilityMultiplier(rating: SuitabilityRating): number {
     U: 0.3,
   };
   return multipliers[rating];
-} /**
- * Suitability_colors.
- */
+}
 
 /**
  * Suitability_colors.
@@ -94,9 +90,7 @@ export const SUITABILITY_COLORS: Record<SuitabilityRating, string> = {
   WS: 'text-primary',
   S: 'text-arena-gold',
   U: 'text-destructive',
-}; /**
- * Suitability_labels.
- */
+};
 
 /**
  * Suitability_labels.

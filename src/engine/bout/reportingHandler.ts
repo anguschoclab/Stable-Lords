@@ -5,14 +5,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateId } from '@/utils/idUtils';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
 import { SeededRNGService } from '@/utils/random';
-import { weekToTimestamp } from '@/constants'; /**
- * Handle reporting.
- * @param _rivalStableId - _rival stable id. (optional)
- * @param isRivalry - Is rivalry. (optional)
- * @param rng - Rng. (optional)
- * @param arenaId - Arena id. (optional)
- * @param weather - Weather. (optional)
- */
+import { weekToTimestamp } from '@/constants';
 
 /**
  * Handle reporting.

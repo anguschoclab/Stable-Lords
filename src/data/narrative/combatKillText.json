@@ -93,7 +93,11 @@
       "{{attacker}} dispatches {{defender}} with an almost clinical detachment, a perfect, fatal strike.",
       "The arena goes dead silent as {{attacker}} brutally, efficiently executes {{defender}}.",
       "The blow shatters bone and splinters reality; {{defender}} is dead before they hit the ground, another sacrifice to the pit.",
-      "A cold, clinical strike severs the spine. {{defender}} collapses like a puppet with cut strings, ending the bout."
+      "A cold, clinical strike severs the spine. {{defender}} collapses like a puppet with cut strings, ending the bout.",
+      "{{attacker}} executes a clinically precise strike. {{defender}} is gone before they hit the ground.",
+      "With operatic drama, {{attacker}} brings the weapon down, ending {{defender}} in a spray of crimson.",
+      "{{defender}} stumbles, realizes their mistake, and twitches once as {{attacker}} stamps out their life.",
+      "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -462,7 +466,6 @@
         "With a bone-shattering smash, {{attacker}} crushes the very life out of {{defender}}.",
         "{{attacker}} executes a thunderous overhead strike that folds {{defender}} like paper.",
         "A concussive, brutal impact from {{attacker}} stops {{defender}}'s heart instantly.",
-        "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s skull.",
         "{{attacker}} brings the weapon down with godlike force, flattening {{defender}}.",
         "A brutal smash from {{attacker}} shatters {{defender}}'s ribs, ending the fight.",
         "{{defender}} is thrown backward, their body broken by {{attacker}}'s crushing blow.",
@@ -479,7 +482,6 @@
         "{{defender}} spasms once and goes still after a devastating, bone-shattering smash.",
         "{{attacker}} delivers a crushing coup de grace, reducing {{defender}} to a broken mess.",
         "{{attacker}} brings the weapon down with earth-shattering force, flattening {{defender}}.",
-        "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s ribs.",
         "{{attacker}} swings like a lumberjack, turning {{defender}} into a broken heap.",
         "With brutal, concussive force, {{attacker}} obliterates {{defender}}'s final defense.",
         "{{defender}}'s bones shatter under the merciless impact of {{attacker}}'s final blow.",

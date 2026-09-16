@@ -9,7 +9,10 @@ export function WindEffect({ strong }: { strong: boolean }) {
       {Array.from({ length: strong ? 40 : 15 }).map((_, i) => (
         <div
           key={i}
-          className={cn('absolute h-px bg-white/20 animate-wind motion-reduce:animate-none', strong ? 'w-16' : 'w-8')}
+          className={cn(
+            'absolute h-px bg-white/20 animate-wind motion-reduce:animate-none',
+            strong ? 'w-16' : 'w-8'
+          )}
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: `-20%`,

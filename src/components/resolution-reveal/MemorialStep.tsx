@@ -46,9 +46,7 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
                   {w.name}
                 </h3>
                 {tribute && (
-                  <p className="text-sm text-arena-gold mb-2 italic leading-relaxed">
-                    {tribute}
-                  </p>
+                  <p className="text-sm text-arena-gold mb-2 italic leading-relaxed">{tribute}</p>
                 )}
                 <p className="text-sm text-muted-foreground mb-4 italic leading-relaxed">
                   {w.deathCause || (uiMeta as any).fanfare.memorial_default}

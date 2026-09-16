@@ -36,7 +36,13 @@ import { narrativeContent } from '@/data/narrative';
 describe('seasonal pass - wandering_merchant_strange_brew', () => {
   it('grants XP and Fame to a random warrior', () => {
     const state = createMockState();
-    const w1 = createMockWarrior({ id: 'w1' as WarriorId, name: 'Alaric', status: 'Active', xp: 10, fame: 5 });
+    const w1 = createMockWarrior({
+      id: 'w1' as WarriorId,
+      name: 'Alaric',
+      status: 'Active',
+      xp: 10,
+      fame: 5,
+    });
     state.roster = [w1];
 
     // Force the rng to select our new event by overriding the narrative content temporarily, or using an rng that picks it.
@@ -45,7 +51,7 @@ describe('seasonal pass - wandering_merchant_strange_brew', () => {
 
     const originalEvents = (narrativeContent as any).offseason_events;
     (narrativeContent as any).offseason_events = {
-      wandering_merchant_strange_brew: originalEvents['wandering_merchant_strange_brew']
+      wandering_merchant_strange_brew: originalEvents['wandering_merchant_strange_brew'],
     };
 
     const rng = new SeededRNGService(12345);

@@ -35,7 +35,9 @@ const RenderTracker = ({ renderCountRef }: { renderCountRef: React.MutableRefObj
   const { rivals, arenaHistory } = useTestStore(
     useShallow((s) => ({ rivals: s.rivals, arenaHistory: s.arenaHistory }))
   );
-  React.useEffect(() => { renderCountRef.current++; });
+  React.useEffect(() => {
+    renderCountRef.current++;
+  });
   return (
     <div data-testid="render-tracker">
       <span data-testid="rivals-count">{rivals.length}</span>

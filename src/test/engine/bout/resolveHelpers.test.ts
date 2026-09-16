@@ -188,7 +188,13 @@ describe('resolveHelpers', () => {
         purse: 500,
       } as unknown as BoutOffer;
 
-      const impacts = processContractPayouts(state, contract, 'warrior-a', 'warrior-a', 'warrior-d');
+      const impacts = processContractPayouts(
+        state,
+        contract,
+        'warrior-a',
+        'warrior-a',
+        'warrior-d'
+      );
       const promoterImpact = impacts.find((i) => i.promoters);
       expect(promoterImpact).toBeDefined();
       const updatedPromoter = (promoterImpact!.promoters as any)['p1'];

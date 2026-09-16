@@ -19,7 +19,13 @@ describe('attackCheck', () => {
 
   it('performs an attack check successfully', () => {
     const rng = () => 0.05; // roll a 5
-    const att = { skills: { ATT: 90 }, style: 'BALANCED', armHits: 0, offBalance: 0, committed: false } as unknown as FighterState;
+    const att = {
+      skills: { ATT: 90 },
+      style: 'BALANCED',
+      armHits: 0,
+      offBalance: 0,
+      committed: false,
+    } as unknown as FighterState;
 
     const result = performAttackCheck(
       rng,
@@ -40,7 +46,13 @@ describe('attackCheck', () => {
 
   it('performs an attack check unsuccessfully', () => {
     const rng = () => 0.95; // roll a 95
-    const att = { skills: { ATT: 10 }, style: 'BALANCED', armHits: 0, offBalance: 0, committed: false } as unknown as FighterState;
+    const att = {
+      skills: { ATT: 10 },
+      style: 'BALANCED',
+      armHits: 0,
+      offBalance: 0,
+      committed: false,
+    } as unknown as FighterState;
 
     const result = performAttackCheck(
       rng,
@@ -61,7 +73,13 @@ describe('attackCheck', () => {
 
   it('adds bonus when attacker is committed', () => {
     const rng = () => 0.05; // roll a 5
-    const att = { skills: { ATT: 10 }, style: 'BALANCED', armHits: 0, offBalance: 0, committed: true } as unknown as FighterState;
+    const att = {
+      skills: { ATT: 10 },
+      style: 'BALANCED',
+      armHits: 0,
+      offBalance: 0,
+      committed: true,
+    } as unknown as FighterState;
 
     const result = performAttackCheck(
       rng,

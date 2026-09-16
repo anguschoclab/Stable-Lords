@@ -15,10 +15,7 @@ interface WarriorReadinessBannerProps {
  * Pre-tournament readiness banner: header (with prize badge) + grid of
  * per-warrior readiness cards.
  */
-export function WarriorReadinessBanner({
-  tournament,
-  warriors,
-}: WarriorReadinessBannerProps) {
+export function WarriorReadinessBanner({ tournament, warriors }: WarriorReadinessBannerProps) {
   return (
     <div className="pt-4">
       <SectionDivider label="Warrior Readiness" />

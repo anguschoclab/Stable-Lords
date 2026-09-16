@@ -82,7 +82,8 @@ export function ReputationSliders() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Icon
-                  className={cn('h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none',
+                  className={cn(
+                    'h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none',
                     color
                   )}
                 />

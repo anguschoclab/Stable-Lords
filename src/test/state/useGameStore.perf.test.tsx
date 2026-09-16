@@ -37,7 +37,9 @@ const RenderTracker = ({
   renderCountRef: React.MutableRefObject<number>;
 }) => {
   const value = useTestStore(selector);
-  React.useEffect(() => { renderCountRef.current++; });
+  React.useEffect(() => {
+    renderCountRef.current++;
+  });
   return <div data-testid="value">{JSON.stringify(value)}</div>;
 };
 
@@ -86,7 +88,9 @@ describe('useGameStore Optimization (Epic 4)', () => {
 
     const WithShallow = () => {
       const val = useTestStore(useShallow(selector));
-      React.useEffect(() => { renderCountWithShallowRef.current++; });
+      React.useEffect(() => {
+        renderCountWithShallowRef.current++;
+      });
       return <div>{val.treasury}</div>;
     };
 

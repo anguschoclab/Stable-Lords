@@ -165,7 +165,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 
   // These stack with base weather effects
 
-
   'water:Rainy': {
     initiativeMod: WEATHER_PENALTIES.WATER_RAINY_INITIATIVE, // Extra -1 in water arenas during rain
     description: 'Standing water deepens with fresh rain',
@@ -177,7 +176,9 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
 
   'magical:Mana Surge': {
-    riposteMod: WEATHER_PENALTIES.MAGICAL_MANA_SURGE_RIPOSTE + WEATHER_PENALTIES.SHATTERED_MONOLITH_RIPOSTE_BONUS,
+    riposteMod:
+      WEATHER_PENALTIES.MAGICAL_MANA_SURGE_RIPOSTE +
+      WEATHER_PENALTIES.SHATTERED_MONOLITH_RIPOSTE_BONUS,
     description: 'Magical resonance immensely aids riposte timing on shattered grounds',
   },
 

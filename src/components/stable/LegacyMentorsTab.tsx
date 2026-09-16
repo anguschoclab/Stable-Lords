@@ -12,14 +12,21 @@ interface LegacyMentorsTabProps {
  *
  */
 export function LegacyMentorsTab({ currentTrainers }: LegacyMentorsTabProps) {
-  const ranked = [...currentTrainers]
-    .map((t) => ({
-      t,
-      score: (t.legacyWins ?? 0) * 2 + (t.legacyKills ?? 0) * 3 + (t.fame ?? 0),
-    }))
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 8);
+  // ⚡ Bolt: Use a single-pass loop instead of chained .map/.filter to prevent
+  // multiple intermediate array allocations per render.
+  const ranked = [];
+  for (let i = 0; i < currentTrainers.length; i++) {
+    const t = currentTrainers[i];
+    const score = (t.legacyWins ?? 0) * 2 + (t.legacyKills ?? 0) * 3 + (t.fame ?? 0);
+    if (score > 0) {
+      ranked.push({ t, score });
+    }
+  }
+
+  ranked.sort((a, b) => b.score - a.score);
+  if (ranked.length > 8) {
+    ranked.length = 8;
+  }
 
   if (ranked.length === 0) {
     return (

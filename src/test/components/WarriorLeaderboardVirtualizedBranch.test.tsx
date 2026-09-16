@@ -74,9 +74,7 @@ describe('WarriorLeaderboard (virtualized branch)', () => {
     // Only 5 rows, but virtualizer reports an item at index 99.
     const rows = makeWarriorRows(5);
     const sort = { field: 'fame', dir: 'desc' as const };
-    const { container } = render(
-      <WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />,
-    );
+    const { container } = render(<WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />);
     // Warrior99 does not exist in the data — must not render.
     expect(screen.queryByText('Warrior99')).toBeNull();
     // Exactly two warrior rows rendered (the two in-bounds virtual items).
@@ -90,9 +88,7 @@ describe('WarriorLeaderboard (virtualized branch)', () => {
     const { WarriorLeaderboard } = await import('@/components/world/WarriorLeaderboard');
     const rows = makeWarriorRows(5);
     const sort = { field: 'fame', dir: 'desc' as const };
-    const { container } = render(
-      <WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />,
-    );
+    const { container } = render(<WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />);
     const tbody = container.querySelector('tbody');
     expect(tbody).not.toBeNull();
     const firstTr = tbody!.querySelector('tr');
@@ -106,9 +102,7 @@ describe('WarriorLeaderboard (virtualized branch)', () => {
     const { WarriorLeaderboard } = await import('@/components/world/WarriorLeaderboard');
     const rows = makeWarriorRows(5);
     const sort = { field: 'fame', dir: 'desc' as const };
-    const { container } = render(
-      <WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />,
-    );
+    const { container } = render(<WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />);
     const tbody = container.querySelector('tbody');
     expect(tbody).not.toBeNull();
     const trs = tbody!.querySelectorAll('tr');

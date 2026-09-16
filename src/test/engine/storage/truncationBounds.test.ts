@@ -125,7 +125,8 @@ describe('truncationBounds', () => {
         id: 'r1' as any,
         ledger: Array.from(
           { length: 600 },
-          (_, i) => ({ id: `l${i}`, amount: 100, week: i + 1, label: 'x', category: 'fight' }) as any
+          (_, i) =>
+            ({ id: `l${i}`, amount: 100, week: i + 1, label: 'x', category: 'fight' }) as any
         ),
         roster: [],
       } as any,

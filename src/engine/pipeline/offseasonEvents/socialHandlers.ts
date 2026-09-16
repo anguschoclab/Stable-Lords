@@ -500,9 +500,7 @@ export function handleGoblinMerchant(
     });
 
     ctx.treasuryDelta -= cost;
-    ctx.ledgerEntries.push(
-      makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other')
-    );
+    ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other'));
     pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
       name: chosen.name,
       gold: cost,

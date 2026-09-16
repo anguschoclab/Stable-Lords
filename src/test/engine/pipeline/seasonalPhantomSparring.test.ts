@@ -4,7 +4,10 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
-import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import type {
+  OffseasonEventNarrative,
+  OffseasonEventContext,
+} from '@/engine/pipeline/offseasonEvents/types';
 
 describe('handlePhantomSparringPartner', () => {
   it('awards 40 XP and 10 fatigue to an active warrior and adds newsletter', () => {

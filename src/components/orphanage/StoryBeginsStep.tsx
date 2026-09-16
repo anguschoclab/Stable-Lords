@@ -17,7 +17,8 @@ export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
     <div
       className="p-7 space-y-6 text-center"
       style={{
-        background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
+        background:
+          'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
         border: '1px solid rgba(201,151,42,0.3)',
         borderTopColor: 'rgba(201,151,42,0.6)',
       }}

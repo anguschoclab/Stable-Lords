@@ -73,8 +73,8 @@ describe('Weapon & Armor Mechanics', () => {
     });
 
     it('handles missing items correctly', () => {
-        // missing/invalid items should return undefined mitigation (0)
-        expect(applyFlatMitigation(10, 'unknown_armor', 'unknown_helm')).toBe(10);
+      // missing/invalid items should return undefined mitigation (0)
+      expect(applyFlatMitigation(10, 'unknown_armor', 'unknown_helm')).toBe(10);
     });
   });
 });

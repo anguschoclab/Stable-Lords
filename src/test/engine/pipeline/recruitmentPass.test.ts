@@ -54,7 +54,15 @@ describe('RecruitmentPass — usedNames excludes rival roster names', () => {
       rivals: [
         {
           id: 'rival-1' as any,
-          owner: { id: 'o1' as any, name: 'Owner', stableName: 'Stable', fame: 0, renown: 0, titles: 0, personality: 'Pragmatic' },
+          owner: {
+            id: 'o1' as any,
+            name: 'Owner',
+            stableName: 'Stable',
+            fame: 0,
+            renown: 0,
+            titles: 0,
+            personality: 'Pragmatic',
+          },
           roster: [
             {
               id: 'rw1' as any,

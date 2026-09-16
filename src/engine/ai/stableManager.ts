@@ -101,7 +101,7 @@ export function processAIStable(
       category: 'upkeep',
     });
   }
-  updatedRival.ledger = [...(updatedRival.ledger || []), ...newEntries];
+  updatedRival.ledger = [...(updatedRival.ledger || []), ...newEntries].slice(-500);
 
   // Clear training assignments (mirrors player finalizeState)
   updatedRival.trainingAssignments = [];

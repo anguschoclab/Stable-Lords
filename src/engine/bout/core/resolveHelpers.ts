@@ -135,7 +135,7 @@ export function processContractPayouts(
         ...promoter.history,
         totalPursePaid: (promoter.history.totalPursePaid || 0) + purse,
         notableBouts: [
-          ...(promoter.history.notableBouts || []),
+          ...(promoter.history.notableBouts || []).slice(-9),
           `bout_${state.week}_${currentWId}_vs_${currentOId}` as FightId,
         ],
       },

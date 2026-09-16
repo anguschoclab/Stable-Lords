@@ -255,6 +255,13 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
 
   if (state.season !== oldState.season) {
     state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
+    if (state.rivals) {
+      state.rivals = state.rivals.map((r) =>
+        r.seasonalGrowth
+          ? { ...r, seasonalGrowth: r.seasonalGrowth.filter((sg) => sg.season === state.season) }
+          : r
+      );
+    }
   }
 
   // Handle OPFS archiving — always defer to off-thread flush for consistency

@@ -128,4 +128,36 @@ describe('processAIStable', () => {
 
     expect(result.updatedRival.treasury).toBeGreaterThan(1000);
   });
+
+  it('caps rival ledger at 500 entries', () => {
+    const state = createFreshState('ledger-cap-test');
+    state.week = 10;
+    state.absoluteWeek = 10;
+
+    const rivalId = 'rival-ledger-cap' as any;
+    const rival: RivalStableData = {
+      id: rivalId,
+      owner: {
+        id: rivalId,
+        name: 'Ledger Cap Owner',
+        stableName: 'Ledger Cap Stable',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
+      fame: 0,
+      roster: [],
+      treasury: 1000,
+      ledger: Array.from(
+        { length: 600 },
+        (_, i) =>
+          ({ id: `l${i}` as any, amount: 100, week: i + 1, label: 'x', category: 'fight' }) as any
+      ),
+      trainingAssignments: [],
+    };
+
+    const result = processAIStable(rival, state);
+
+    expect(result.updatedRival.ledger.length).toBeLessThanOrEqual(500);
+  });
 });

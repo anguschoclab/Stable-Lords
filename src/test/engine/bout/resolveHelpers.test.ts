@@ -11,6 +11,7 @@ import {
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { GameState, BoutOffer } from '@/types/state.types';
 
 describe('resolveHelpers', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
@@ -163,6 +164,38 @@ describe('resolveHelpers', () => {
       const result = processContractPayouts(state, undefined, 'A', 'warrior-a', 'warrior-d');
 
       expect(result).toEqual([]);
+    });
+
+    it('caps notableBouts at 10 (matching updatePromoterHistory)', () => {
+      const state = {
+        week: 5,
+        promoters: {
+          p1: {
+            id: 'p1',
+            history: {
+              totalPursePaid: 1000,
+              notableBouts: Array.from({ length: 25 }, (_, i) => `old-bout-${i}`),
+              legacyFame: 0,
+            },
+          },
+        },
+        boutOffers: {},
+      } as unknown as GameState;
+
+      const contract = {
+        id: 'c1',
+        promoterId: 'p1',
+        purse: 500,
+      } as unknown as BoutOffer;
+
+      const impacts = processContractPayouts(state, contract, 'warrior-a', 'warrior-a', 'warrior-d');
+      const promoterImpact = impacts.find((i) => i.promoters);
+      expect(promoterImpact).toBeDefined();
+      const updatedPromoter = (promoterImpact!.promoters as any)['p1'];
+      expect(updatedPromoter.history.notableBouts.length).toBe(10);
+      // Last 9 old + new bout
+      expect(updatedPromoter.history.notableBouts[9]).toContain('bout_5_warrior-a_vs_warrior-d');
+      expect(updatedPromoter.history.notableBouts).not.toContain('old-bout-0');
     });
   });
 });

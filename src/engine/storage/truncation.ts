@@ -42,7 +42,23 @@ export function truncateState(state: GameState): GameState {
     hiringPool: (state.hiringPool || []).slice(-20),
     recruitPool: (state.recruitPool || []).slice(-50),
     trainers: (state.trainers || []).slice(-50),
-    rivals: (state.rivals || []).slice(-50),
+    rivals: (state.rivals || []).slice(-50).map((r) => ({
+      ...r,
+      ledger: (r.ledger || []).slice(-500),
+      seasonalGrowth: (r.seasonalGrowth || []).filter((sg) => sg.season === state.season),
+    })),
+    promoters: Object.fromEntries(
+      Object.entries(state.promoters || {}).map(([id, p]) => [
+        id,
+        {
+          ...p,
+          history: {
+            ...p.history,
+            notableBouts: (p.history?.notableBouts || []).slice(-10),
+          },
+        },
+      ])
+    ),
     unacknowledgedDeaths: (state.unacknowledgedDeaths || []).slice(-100),
     deferredBoutLogs: (state.deferredBoutLogs || []).slice(-200),
     awards: (state.awards || []).slice(-100),

@@ -3,19 +3,8 @@
  * Extracted from gazetteNarrative.ts to follow SRP
  */
 import type { FightSummary } from '@/types/combat.types';
-import type { WarriorId } from '@/types/shared.types'; /**
- * Defines the shape of gazette detections.
- */
-
-/**
- * Extract warrior display names from the FightSummary title.
- * Title format: "${nameA} vs ${nameB}" or "${nameA} vs ${nameB} (${tournament})"
- */
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
+import type { WarriorId } from '@/types/shared.types';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Defines the shape of gazette detections.

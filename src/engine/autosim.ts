@@ -6,6 +6,7 @@ import { resolveImpacts } from './impacts';
 import { truncateState } from '@/engine/storage/truncation';
 import { TimeAdvanceService, type SoftStopCondition } from './pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Defines the shape of autosim week summary.
@@ -107,15 +108,6 @@ function processPlayerOffersScan(state: GameState): GameState {
   });
 
   return state;
-}
-
-/**
- * Extract week summary from state after advancement
- */
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }
 
 /**

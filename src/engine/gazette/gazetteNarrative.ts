@@ -11,12 +11,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { styleName, t, MOOD_TONE } from './gazetteTemplateHelpers';
 import type { GazetteDetections } from './gazetteDetections';
-
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Generates narrative for a single fight.

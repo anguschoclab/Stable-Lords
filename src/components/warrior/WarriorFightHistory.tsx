@@ -5,28 +5,13 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
 import BoutViewer from '@/components/BoutViewer';
-import { cn } from '@/lib/utils'; /**
-                                   * Warrior fight history.
-                                   * @param  - {
-  warrior id,
-  warrior name,
-  arena history,
-}.
-                                   */
-
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
+import { cn } from '@/lib/utils';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Warrior fight history.
- * @param  - {
-  warrior id,
-  warrior name,
-  arena history,
-}.
+ * @param warriorId - Warrior id.
+ * @param arenaHistory - Arena history of fights for this warrior.
  */
 export function WarriorFightHistory({
   warriorId,

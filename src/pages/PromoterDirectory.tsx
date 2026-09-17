@@ -208,15 +208,24 @@ export default function PromoterDirectory() {
     });
 
     // Calculate aggregate stats
-    const totalPurse = allPromoters.reduce((sum, p) => sum + (p.history?.totalPursePaid || 0), 0);
-    const totalNotableBouts = allPromoters.reduce(
-      (sum, p) => sum + (p.history?.notableBouts?.length || 0),
-      0
-    );
-    const totalCapacity = allPromoters.reduce((sum, p) => sum + p.capacity, 0);
-    const totalActiveOffers = Object.values(boutOffers || {}).filter(
-      (o) => o.status === 'Signed'
-    ).length;
+    // ⚡ Bolt: Single-pass loops to calculate aggregate stats, replacing multiple .reduce and .filter operations.
+    let totalPurse = 0;
+    let totalNotableBouts = 0;
+    let totalCapacity = 0;
+    for (let i = 0; i < allPromoters.length; i++) {
+      const p = allPromoters[i];
+      totalPurse += p.history?.totalPursePaid || 0;
+      totalNotableBouts += p.history?.notableBouts?.length || 0;
+      totalCapacity += p.capacity || 0;
+    }
+
+    let totalActiveOffers = 0;
+    const offersArray = Object.values(boutOffers || {});
+    for (let i = 0; i < offersArray.length; i++) {
+      if (offersArray[i].status === 'Signed') {
+        totalActiveOffers++;
+      }
+    }
 
     return {
       sortedPromoters: sorted,

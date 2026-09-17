@@ -34,10 +34,19 @@ export default function ResolutionReveal() {
 
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map(
-      (state.graveyard ?? []).map((w: { name: string }) => [w.name, w] as [string, typeof w])
-    );
-    return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
+
+    // ⚡ Bolt: Use single pass reduce for O(1) lookups instead of mapping arrays
+    const graveyardByName = (state.graveyard ?? []).reduce((acc: Map<string, any>, w: any) => {
+      acc.set(w.name, w);
+      return acc;
+    }, new Map());
+
+    // ⚡ Bolt: Single pass reduce to resolve deaths without intermediate array allocation
+    return data.deaths.reduce((acc: any[], name: string) => {
+      const warrior = graveyardByName.get(name);
+      if (warrior) acc.push(warrior);
+      return acc;
+    }, []);
   }, [data, state.graveyard]);
 
   if (!data) return null;

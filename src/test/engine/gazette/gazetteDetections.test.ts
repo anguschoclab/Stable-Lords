@@ -8,17 +8,20 @@ import {
   detectGazetteTags,
   detectHotStreakers,
   detectRisingStars,
+  buildNamesByFightId,
+  type FightAnalysisContext,
 } from '@/engine/gazette/gazetteDetections';
 import type { FightSummary } from '@/types/combat.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 
 const nameToId = (name: string) => `w-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
 
+let fightIdCounter = 0;
 const createFight = (overrides: any = {}): FightSummary => {
-  const { a, d, ...rest } = overrides;
+  const { a, d, id, ...rest } = overrides;
   const title = rest.title || `${a || 'Alice'} vs ${d || 'Bob'}`;
   return {
-    id: 'f1' as FightId,
+    id: (id ?? `f${fightIdCounter++}`) as FightId,
     week: 1,
     title,
     warriorIdA: (rest.warriorIdA || nameToId(a || 'Alice')) as WarriorId,
@@ -42,7 +45,7 @@ describe('detectUpsets', () => {
     const fights = [
       createFight({ a: 'Underdog', d: 'Favorite', winner: 'A', fameA: 10, fameD: 30 }),
     ];
-    const upsets = detectUpsets(fights);
+    const upsets = detectUpsets(fights, buildNamesByFightId(fights));
     expect(upsets).toHaveLength(1);
     expect(upsets[0]).toEqual({
       winner: 'Underdog',
@@ -57,7 +60,7 @@ describe('detectUpsets', () => {
     const fights = [
       createFight({ a: 'Underdog', d: 'Favorite', winner: 'A', fameA: 10, fameD: 15 }),
     ];
-    const upsets = detectUpsets(fights);
+    const upsets = detectUpsets(fights, buildNamesByFightId(fights));
     expect(upsets).toHaveLength(0);
   });
 
@@ -67,7 +70,7 @@ describe('detectUpsets', () => {
     const fights = [
       createFight({ a: 'Underdog', d: 'Favorite', winner: 'A', fameA: 15, fameD: 25 }),
     ];
-    const upsets = detectUpsets(fights);
+    const upsets = detectUpsets(fights, buildNamesByFightId(fights));
     expect(upsets).toHaveLength(0);
   });
 
@@ -75,13 +78,13 @@ describe('detectUpsets', () => {
     const fights = [
       createFight({ a: 'Favorite', d: 'Underdog', winner: 'A', fameA: 30, fameD: 10 }),
     ];
-    const upsets = detectUpsets(fights);
+    const upsets = detectUpsets(fights, buildNamesByFightId(fights));
     expect(upsets).toHaveLength(0);
   });
 
   it('does not detect an upset on a draw', () => {
     const fights = [createFight({ winner: null, fameA: 10, fameD: 30 })];
-    const upsets = detectUpsets(fights);
+    const upsets = detectUpsets(fights, buildNamesByFightId(fights));
     expect(upsets).toHaveLength(0);
   });
 
@@ -89,7 +92,7 @@ describe('detectUpsets', () => {
     const fights = [
       createFight({ a: 'Underdog', d: 'Favorite', winner: 'A', fameA: undefined, fameD: 30 }),
     ];
-    const upsets = detectUpsets(fights);
+    const upsets = detectUpsets(fights, buildNamesByFightId(fights));
     expect(upsets).toHaveLength(0);
   });
 });
@@ -333,15 +336,21 @@ describe('detectRivalryMatchup', () => {
 
 describe('detectHotStreakers', () => {
   it('detects winners on a streak of 5+', () => {
-    const streaks = new Map<WarriorId, number>([
-      ['w-alice' as WarriorId, 5],
-      ['w-bob' as WarriorId, 4],
-    ]);
     const weekFights = [
       createFight({ a: 'Alice', d: 'Charlie', winner: 'A' }),
       createFight({ a: 'Bob', d: 'Dave', winner: 'A' }),
     ];
-    const hot = detectHotStreakers(weekFights, streaks);
+    const ctx: FightAnalysisContext = {
+      streaks: new Map<WarriorId, number>([
+        ['w-alice' as WarriorId, 5],
+        ['w-bob' as WarriorId, 4],
+      ]),
+      priorWarriorIds: new Set<WarriorId>(),
+      warriorStats: new Map(),
+      pairCounts: new Map(),
+      namesByFightId: buildNamesByFightId(weekFights),
+    };
+    const hot = detectHotStreakers(weekFights, ctx);
     expect(hot).toHaveLength(1);
     expect(hot[0]!.name).toBe('Alice');
     expect(hot[0]!.streak).toBe(5);
@@ -381,6 +390,7 @@ describe('computeFightAnalysis', () => {
     expect(ctx.priorWarriorIds.size).toBe(0);
     expect(ctx.warriorStats.size).toBe(0);
     expect(ctx.pairCounts.size).toBe(0);
+    expect(ctx.namesByFightId.size).toBe(0);
   });
 
   it('skips null/undefined entries in allFights gracefully', () => {
@@ -524,5 +534,99 @@ describe('detectGazetteTags', () => {
     };
     const tags = detectGazetteTags([], detections);
     expect(tags).toContain('Upset');
+  });
+});
+
+describe('buildNamesByFightId', () => {
+  it('returns an empty map for empty input', () => {
+    const map = buildNamesByFightId([]);
+    expect(map.size).toBe(0);
+  });
+
+  it('skips null or undefined entries gracefully', () => {
+    const f = createFight({ id: 'x1', a: 'Alice', d: 'Bob' });
+    const map = buildNamesByFightId([f, null as any, undefined as any]);
+    expect(map.size).toBe(1);
+    expect(map.get('x1' as FightId)).toEqual({ a: 'Alice', d: 'Bob' });
+  });
+
+  it('keys by fight id and parses titles via getNamesFromTitle', () => {
+    const f = createFight({ id: 'x1', a: 'Alice', d: 'Bob' });
+    const map = buildNamesByFightId([f]);
+    expect(map.get('x1' as FightId)).toEqual({ a: 'Alice', d: 'Bob' });
+  });
+
+  it('strips tournament parentheticals from titles', () => {
+    const f = createFight({ id: 'x1', a: 'Alice', d: 'Bob', title: 'Alice vs Bob (Spring Cup)' });
+    const map = buildNamesByFightId([f]);
+    expect(map.get('x1' as FightId)).toEqual({ a: 'Alice', d: 'Bob' });
+  });
+});
+
+describe('names cache integration', () => {
+  it('detectUpsets reads names from the cache, not by re-parsing titles', () => {
+    const f = createFight({ id: 'x1', a: 'Underdog', d: 'Favorite', winner: 'A', fameA: 10, fameD: 30 });
+    // Cache names deliberately diverge from what getNamesFromTitle(title) would return
+    const namesByFightId = new Map([
+      ['x1' as FightId, { a: 'CACHED_A', d: 'CACHED_D' }],
+    ]);
+    const upsets = detectUpsets([f], namesByFightId);
+    expect(upsets).toHaveLength(1);
+    expect(upsets[0]!.winner).toBe('CACHED_A');
+    expect(upsets[0]!.loser).toBe('CACHED_D');
+  });
+
+  it('detectHotStreakers reads names from the cache, not by re-parsing titles', () => {
+    const f = createFight({ id: 'x1', a: 'Alice', d: 'Charlie', winner: 'A' });
+    const ctx: FightAnalysisContext = {
+      streaks: new Map<WarriorId, number>([['w-alice' as WarriorId, 5]]),
+      priorWarriorIds: new Set<WarriorId>(),
+      warriorStats: new Map(),
+      pairCounts: new Map(),
+      namesByFightId: new Map([['x1' as FightId, { a: 'CACHED_A', d: 'CACHED_D' }]]),
+    };
+    const hot = detectHotStreakers([f], ctx);
+    expect(hot).toHaveLength(1);
+    expect(hot[0]!.name).toBe('CACHED_A');
+  });
+
+  it('detectDebuts reads names from the cache, not by re-parsing titles', () => {
+    const f = createFight({ id: 'x1', a: 'Newcomer', d: 'Veteran' });
+    const ctx: FightAnalysisContext = {
+      streaks: new Map(),
+      priorWarriorIds: new Set<WarriorId>(['w-veteran' as WarriorId]),
+      warriorStats: new Map(),
+      pairCounts: new Map(),
+      namesByFightId: new Map([['x1' as FightId, { a: 'CACHED_NEW', d: 'Veteran' }]]),
+    };
+    const debuts = detectDebuts([f], ctx);
+    expect(debuts).toContain('CACHED_NEW');
+    expect(debuts).not.toContain('Newcomer');
+  });
+
+  it('detectRivalryMatchup reads names from the cache, not by re-parsing titles', () => {
+    const f1 = createFight({ id: 'x1', a: 'Alice', d: 'Bob' });
+    const f2 = createFight({ id: 'x2', a: 'Alice', d: 'Bob' });
+    const f3 = createFight({ id: 'x3', a: 'Alice', d: 'Bob' });
+    const allFights = [f1, f2, f3];
+    const weekFights = [f3];
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    // Overwrite the cache entry for the week fight with divergent names
+    ctx.namesByFightId.set('x3' as FightId, { a: 'CACHED_A', d: 'CACHED_D' });
+    const rivalry = detectRivalryMatchup(weekFights, ctx);
+    expect(rivalry).toEqual({ a: 'CACHED_A', b: 'CACHED_D', count: 3 });
+  });
+
+  it('detectRisingStars reads names from the cache, not by re-parsing titles', () => {
+    const f1 = createFight({ id: 'x1', a: 'Alice', d: 'B', winner: 'A' });
+    const f2 = createFight({ id: 'x2', a: 'Alice', d: 'C', winner: 'A' });
+    const f3 = createFight({ id: 'x3', a: 'Alice', d: 'D', winner: 'A' });
+    const allFights = [f1, f2, f3];
+    const weekFights = [f3];
+    const ctx = computeFightAnalysis(weekFights, allFights);
+    ctx.namesByFightId.set('x3' as FightId, { a: 'CACHED_A', d: 'D' });
+    const stars = detectRisingStars(weekFights, ctx);
+    expect(stars).toContain('CACHED_A');
+    expect(stars).not.toContain('Alice');
   });
 });

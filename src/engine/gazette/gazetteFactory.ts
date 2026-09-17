@@ -17,6 +17,7 @@ import {
   detectRisingStars,
   detectUpsets,
   detectDebuts,
+  buildNamesByFightId,
   type GazetteDetections,
 } from './gazetteDetections';
 import { generateGazetteHeadline, generateGazetteBody } from './gazetteNarrative';
@@ -39,10 +40,10 @@ export function generateWeeklyGazette(
 
   // Run all detections — single pass over allFights via computeFightAnalysis
   const ctx = allFights ? computeFightAnalysis(fights, allFights) : null;
-  const hotStreakers = detectHotStreakers(fights, ctx?.streaks ?? new Map());
+  const hotStreakers = ctx ? detectHotStreakers(fights, ctx) : [];
   const rivalryPair = ctx ? detectRivalryMatchup(fights, ctx) : null;
   const risingStars = ctx ? detectRisingStars(fights, ctx) : [];
-  const upsets = detectUpsets(fights);
+  const upsets = detectUpsets(fights, ctx?.namesByFightId ?? buildNamesByFightId(fights));
   const debuts = ctx ? detectDebuts(fights, ctx) : [];
 
   const detections: GazetteDetections = {

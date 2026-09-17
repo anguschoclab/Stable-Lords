@@ -278,7 +278,8 @@ export const StyleRollups = {
   last10(): StyleRecord[] {
     const rolling = loadRolling();
     const rows: StyleRecord[] = [];
-    for (const [s, styleData] of Object.entries(rolling)) {
+    for (const s in rolling) {
+      const styleData = rolling[s];
       if (!styleData) continue;
       let W = 0;
       let L = 0;
@@ -308,7 +309,8 @@ export const StyleRollups = {
   tournament(tid: string): StyleRecord[] {
     const tour = loadTour()[tid] || {};
     const rows: StyleRecord[] = [];
-    for (const [s, b] of Object.entries(tour)) {
+    for (const s in tour) {
+      const b = tour[s];
       if (!b) continue;
       rows.push({
         style: s,

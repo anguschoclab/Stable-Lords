@@ -25,7 +25,7 @@ export type StableReputationInput = Pick<
 >;
 
 /**
- *
+ * Composite stable reputation scores (Fame, Notoriety, Honor, Adaptability).
  */
 export interface StableReputation {
   fame: number; // 0-100: public acclaim
@@ -100,15 +100,6 @@ function calculateHonor(cleanBouts: number, totalKills: number): number {
 }
 
 /**
- * Calculate stable Adaptability based on style diversity and training setups.
- */
-function calculateAdaptability(state: StableReputationInput, uniqueStyles: Set<string>): number {
-  const trainingCount = (state.trainingAssignments ?? []).length;
-  const adaptRaw = uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2;
-  return Math.min(100, Math.round(adaptRaw));
-}
-
-/**
  * Compute stable reputation from current game state.
  * Fame = average top-5 warrior fame + gazette mentions
  * Notoriety = kills * 2 + fatal finishers * 3 + rival kills * 5
@@ -174,7 +165,11 @@ export function computeStableReputation(state: StableReputationInput): StableRep
   const fame = calculateFame(state, activeWarriors, gazetteMentions);
   const notoriety = calculateNotoriety(totalKills, graveyardKills, killBouts);
   const honor = calculateHonor(cleanBouts, totalKills);
-  const adaptability = calculateAdaptability(state, uniqueStyles);
+  const trainingCount = (state.trainingAssignments ?? []).length;
+  const adaptability = Math.min(
+    100,
+    Math.round(uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2),
+  );
 
   return { fame, notoriety, honor, adaptability };
 }

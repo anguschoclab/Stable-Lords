@@ -195,37 +195,6 @@ describe('SeededRNG.clone', () => {
   });
 });
 
-describe('SeededRNG.pickWeighted', () => {
-  it('picks items proportional to weights', () => {
-    const rng = new SeededRNG(42);
-    const items = ['a', 'b'];
-    const weights = [0, 100];
-    // With all weight on 'b', should always pick 'b'
-    for (let i = 0; i < 20; i++) {
-      expect(rng.pickWeighted(items, weights)).toBe('b');
-    }
-  });
-
-  it('throws on length mismatch', () => {
-    const rng = new SeededRNG(42);
-    expect(() => rng.pickWeighted(['a', 'b'], [1])).toThrow(
-      'Items and weights must have same length'
-    );
-  });
-
-  it('throws on empty arrays', () => {
-    const rng = new SeededRNG(42);
-    expect(() => rng.pickWeighted([], [])).toThrow('Cannot pick from empty array');
-  });
-
-  it('picks last item when all weight is on last', () => {
-    const rng = new SeededRNG(42);
-    const items = ['x', 'y', 'z'];
-    const weights = [0, 0, 50];
-    expect(rng.pickWeighted(items, weights)).toBe('z');
-  });
-});
-
 describe('SeededRNG.pick', () => {
   it('throws on empty array', () => {
     const rng = new SeededRNG(42);

@@ -30,13 +30,6 @@ export interface IRNGService {
   shuffle<T>(array: T[]): T[];
 
   /**
-   * Weighted random selection from items array.
-   * @deprecated Use {@link rollWeighted} for string-keyed weight maps. `pickWeighted`
-   * is retained for parallel-array selection of non-string items.
-   */
-  pickWeighted<T>(items: T[], weights: number[]): T;
-
-  /**
    * Weighted random selection of a string key from a weight map.
    * Falls back to the first key if the total weight is zero.
    */

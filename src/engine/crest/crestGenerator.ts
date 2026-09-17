@@ -70,9 +70,7 @@ function selectShieldShape(
 
   // Otherwise, pick based on tier weights
   const weights = SHIELD_SHAPE_WEIGHTS[tier];
-  const shapes = Object.keys(weights) as ShieldShape[];
-  const shapeWeights = shapes.map((s) => weights[s]);
-  return rng.pickWeighted(shapes, shapeWeights);
+  return rng.rollWeighted(weights);
 }
 
 /**
@@ -129,13 +127,20 @@ function selectFieldType(
   const availableTypes = fieldTypesByTier[tier] ?? ['solid', 'fess', 'pale'];
 
   // Weighted toward solid for lower tiers, more complex for higher
-  const weights = availableTypes.map((type) => {
-    if (type === 'solid')
-      return tier === 'Minor' ? 40 : tier === 'Established' ? 30 : tier === 'Major' ? 20 : 15;
-    return 10;
-  });
-
-  return rng.pickWeighted(availableTypes, weights);
+  const weights: Partial<Record<FieldType, number>> = {};
+  for (const type of availableTypes) {
+    weights[type] =
+      type === 'solid'
+        ? tier === 'Minor'
+          ? 40
+          : tier === 'Established'
+            ? 30
+            : tier === 'Major'
+              ? 20
+              : 15
+        : 10;
+  }
+  return rng.rollWeighted(weights);
 }
 
 /**

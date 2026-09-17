@@ -82,7 +82,6 @@ describe('reportingHandler', () => {
         pick: <T>(arr: T[]) => arr[0]!,
         roll: (min: number) => min,
         shuffle: <T>(arr: T[]) => arr,
-        pickWeighted: <T>(items: { item: T; weight: number }[]) => items[0]!.item,
         chance: () => false,
       };
 

@@ -58,7 +58,6 @@ describe('rivalWarriorFactory', () => {
       uuid: vi.fn(),
       chance: vi.fn(),
       shuffle: vi.fn(),
-      pickWeighted: vi.fn(),
       rollWeighted: vi.fn(),
     };
 
@@ -113,21 +112,6 @@ describe('rivalWarriorFactory', () => {
       expect(shuffled).toContain('a');
       expect(shuffled).toContain('b');
       expect(shuffled).toContain('c');
-    });
-
-    it('rngWrapper.pickWeighted handles standard cases', () => {
-      const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
-      mockRNG.next.mockReturnValueOnce(0.2); // total weight is 10, random is 2. it should pick first element.
-      expect(warrior._rngMocked.pickWeighted(['a', 'b'], [5, 5])).toBe('a');
-    });
-
-    it('rngWrapper.pickWeighted hits fallback edge case on floating point inaccuracies', () => {
-      const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior('w1', 'Bob', FightingStyle.StrikingAttack, attrs, 's1', [10, 20], mockRNG) as any;
-      // Mock random to be slightly higher than cumulative total to force fallback
-      mockRNG.next.mockReturnValueOnce(1.0);
-      expect(warrior._rngMocked.pickWeighted(['a', 'b'], [5, 5])).toBe('b');
     });
   });
 });

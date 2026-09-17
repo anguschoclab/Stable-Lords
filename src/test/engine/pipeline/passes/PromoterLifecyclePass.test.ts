@@ -21,7 +21,6 @@ function makeMockRng(retireNext: boolean): IRNGService {
     uuid: () => `mock-uuid-${Math.random()}`,
     roll: () => 5,
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (p: number) => p > 0,
   } as unknown as IRNGService;
 }
@@ -189,7 +188,6 @@ describe('PromoterLifecyclePass', () => {
         uuid: () => `successor-${++uuidCount}`,
         roll: () => 5,
         shuffle: <T>(arr: T[]): T[] => arr,
-        pickWeighted: <T>(items: T[]): T => items[0]!,
         chance: (p: number) => p > 0,
       } as unknown as IRNGService;
 

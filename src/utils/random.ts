@@ -90,40 +90,6 @@ export class SeededRNG implements IRNGService {
   rollWeighted<K extends string>(weights: Partial<Record<K, number>>): K {
     return rollWeighted(weights, this);
   }
-
-  /**
-   * Weighted random selection from items array.
-   * Implements IRNGService.pickWeighted for direct interface compliance.
-   * @deprecated Use {@link rollWeighted} for string-keyed weight maps. `pickWeighted`
-   * is retained for parallel-array selection of non-string items.
-   */
-  pickWeighted<T>(items: T[], weights: number[]): T {
-    if (items.length !== weights.length) {
-      throw new Error('Items and weights must have same length');
-    }
-    if (items.length === 0) throw new Error('Cannot pick from empty array');
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    let random = this.next() * totalWeight;
-    for (let i = 0; i < items.length; i++) {
-      const weight = weights[i];
-      if (weight === undefined) {
-        throw new Error('Weight index out of bounds');
-      }
-      random -= weight;
-      if (random <= 0) {
-        const item = items[i];
-        if (item === undefined) {
-          throw new Error('Item index out of bounds');
-        }
-        return item;
-      }
-    }
-    const fallback = items[items.length - 1];
-    if (fallback === undefined) {
-      throw new Error('No items available for weighted pick');
-    }
-    return fallback;
-  }
 }
 
 /**

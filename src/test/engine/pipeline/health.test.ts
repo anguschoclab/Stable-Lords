@@ -27,7 +27,6 @@ function makeMockRNG(uuidValue: string = 'test-uuid'): IRNGService {
     pick: <T>(arr: T[]): T => arr[0]!,
     roll: (min: number): number => min,
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (): boolean => true,
   } as any;
 }

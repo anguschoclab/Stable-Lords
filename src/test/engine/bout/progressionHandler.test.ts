@@ -172,7 +172,6 @@ describe('progressionHandler', () => {
         pick: <T>(arr: T[]) => arr[0]!,
         roll: (min: number) => min,
         shuffle: <T>(arr: T[]) => arr,
-        pickWeighted: <T>(items: T[]) => items[0]!,
         rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
           Object.keys(weights)[0] as K,
         chance: () => false,

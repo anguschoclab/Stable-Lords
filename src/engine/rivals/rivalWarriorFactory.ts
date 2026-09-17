@@ -88,30 +88,6 @@ export function createRivalWarrior(
       }
       return shuffled;
     },
-    pickWeighted: <T>(items: T[], weights: number[]): T => {
-      const totalWeight = weights.reduce((a, b) => a + b, 0);
-      const random = rng.next() * totalWeight;
-      let cumulative = 0;
-      for (let i = 0; i < items.length; i++) {
-        const weight = weights[i];
-        if (weight === undefined) {
-          throw new Error('Weight index out of bounds');
-        }
-        cumulative += weight;
-        if (random < cumulative) {
-          const item = items[i];
-          if (item === undefined) {
-            throw new Error('Item index out of bounds');
-          }
-          return item;
-        }
-      }
-      const fallback = items[items.length - 1];
-      if (fallback === undefined) {
-        throw new Error('No items available for weighted pick');
-      }
-      return fallback;
-    },
     rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
       rollWeighted(weights, rng),
   };

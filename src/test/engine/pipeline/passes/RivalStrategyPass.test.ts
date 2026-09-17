@@ -139,7 +139,6 @@ function makeMockRng(returns: number[]): IRNGServiceLike {
     uuid: (p?: string) => `${p ?? 'id'}-${Math.random()}`,
     roll: (min: number, _max: number) => min,
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (p: number) => p > 0,
   };
 }
@@ -150,7 +149,6 @@ interface IRNGServiceLike {
   uuid(prefix?: string): string;
   roll(min: number, max: number): number;
   shuffle<T>(array: T[]): T[];
-  pickWeighted<T>(items: T[], weights: number[]): T;
   chance(probability: number): boolean;
 }
 

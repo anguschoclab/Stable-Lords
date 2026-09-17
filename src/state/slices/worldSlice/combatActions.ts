@@ -4,7 +4,9 @@ import type { WarriorId, StableId } from '@/types/shared.types';
 import { truncateArray, updateEntityInList } from '@/utils/stateUtils';
 
 /**
- *
+ * Creates the combat actions for the world slice: recording fight
+ * summaries in arena history and applying post-fight stat/career
+ * updates to player or rival warriors.
  */
 export function createCombatActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {

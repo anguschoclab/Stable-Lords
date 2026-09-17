@@ -26,7 +26,7 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
     >
       <div className="flex items-center gap-2 mb-6 shrink-0">
         <Swords className="h-6 w-6 text-primary" />
-        <h3 className="text-xl font-semibold">{(uiMeta as any).fanfare.report_combat}</h3>
+        <h3 className="text-xl font-semibold">{uiMeta.fanfare.report_combat}</h3>
       </div>
       <ScrollArea className="flex-1 pr-4">
         {bouts.length > 0 ? (
@@ -76,7 +76,7 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
           </div>
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground italic">
-            {(uiMeta as any).fanfare.report_combat_empty}
+            {uiMeta.fanfare.report_combat_empty}
           </div>
         )}
       </ScrollArea>

@@ -278,9 +278,8 @@ export const StyleRollups = {
   last10(): StyleRecord[] {
     const rolling = loadRolling();
     const rows: StyleRecord[] = [];
-    Object.keys(rolling).forEach((s) => {
-      const styleData = rolling[s];
-      if (!styleData) return;
+    for (const [s, styleData] of Object.entries(rolling)) {
+      if (!styleData) continue;
       let W = 0;
       let L = 0;
       let K = 0;
@@ -301,7 +300,7 @@ export const StyleRollups = {
         P: fights ? Math.round((W / fights) * 100) : 0,
         fights,
       });
-    });
+    }
     return rows.sort((a, b) => b.P - a.P);
   },
 
@@ -309,9 +308,8 @@ export const StyleRollups = {
   tournament(tid: string): StyleRecord[] {
     const tour = loadTour()[tid] || {};
     const rows: StyleRecord[] = [];
-    Object.keys(tour).forEach((s) => {
-      const b = tour[s];
-      if (!b) return;
+    for (const [s, b] of Object.entries(tour)) {
+      if (!b) continue;
       rows.push({
         style: s,
         W: b.W,
@@ -320,7 +318,7 @@ export const StyleRollups = {
         P: b.fights ? Math.round((b.W / b.fights) * 100) : 0,
         fights: b.fights,
       });
-    });
+    }
     return rows.sort((a, b) => b.P - a.P);
   },
 };

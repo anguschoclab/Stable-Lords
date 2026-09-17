@@ -49,7 +49,7 @@ export function GazetteStep({ gazette }: GazetteStepProps) {
           </div>
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground italic">
-            {(uiMeta as any).fanfare.gazette_empty}
+            {uiMeta.fanfare.gazette_empty}
           </div>
         )}
       </ScrollArea>

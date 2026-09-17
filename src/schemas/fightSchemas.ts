@@ -28,10 +28,6 @@ export const NewsletterItemSchema = z.object({
 });
 
 /**
- * InjuryData schema
- */
-
-/**
  * BoutOffer schema
  */
 export const BoutOfferSchema = z.object({
@@ -54,19 +50,11 @@ export const BoutOfferSchema = z.object({
 /**
  * RankingEntry schema
  */
-
-/**
- * RankingEntry schema
- */
 export const RankingEntrySchema = z.object({
   overallRank: z.number(),
   classRank: z.number(),
   compositeScore: z.number(),
 });
-
-/**
- * TournamentBout schema
- */
 
 /**
  * TournamentBout schema
@@ -86,10 +74,6 @@ export const TournamentBoutSchema = z.object({
 /**
  * TournamentEntry schema
  */
-
-/**
- * TournamentEntry schema
- */
 export const TournamentEntrySchema = z.object({
   id: z.string(),
   season: SeasonSchema,
@@ -101,10 +85,6 @@ export const TournamentEntrySchema = z.object({
   champion: z.string().optional(),
   completed: z.boolean(),
 });
-
-/**
- * TrainingAssignment schema
- */
 
 /**
  * GazetteStory schema
@@ -119,10 +99,6 @@ export const GazetteStorySchema = z.object({
 });
 
 /**
- * InsightToken schema
- */
-
-/**
  * HallEntry schema
  */
 export const HallEntrySchema = z.object({
@@ -131,10 +107,6 @@ export const HallEntrySchema = z.object({
   label: z.enum(['Fight of the Week', 'Fight of the Tournament']),
   fightId: z.string(),
 });
-
-/**
- * CombatEvent schema
- */
 
 /**
  * CombatEvent schema
@@ -152,10 +124,6 @@ export const CombatEventSchema = z.object({
 /**
  * MinuteEvent schema
  */
-
-/**
- * MinuteEvent schema
- */
 export const MinuteEventSchema = z.object({
   minute: z.number(),
   text: z.string(),
@@ -168,10 +136,6 @@ export const MinuteEventSchema = z.object({
   protectD: z.string().optional(),
   events: z.array(CombatEventSchema).optional(),
 });
-
-/**
- * ExchangeLogEntry schema
- */
 
 /**
  * ExchangeLogEntry schema
@@ -194,10 +158,6 @@ export const ExchangeLogEntrySchema = z.object({
   executionFlag: z.boolean().optional(),
   reasonCodes: z.array(z.string()).optional(),
 });
-
-/**
- * FightOutcome schema
- */
 
 /**
  * FightOutcome schema
@@ -227,20 +187,12 @@ export const FightOutcomeSchema = z.object({
 /**
  * AnalysisFactor schema
  */
-
-/**
- * AnalysisFactor schema
- */
 const analysisFactorSchema = z.object({
   label: z.string(),
   detail: z.string(),
   favored: z.enum(['A', 'D']).nullable(),
   weight: z.number(),
 });
-
-/**
- * FightAnalysis schema
- */
 
 /**
  * FightAnalysis schema
@@ -267,10 +219,6 @@ export const fightAnalysisSchema = z.object({
   }),
   factors: z.array(analysisFactorSchema),
 });
-
-/**
- * FightSummary schema
- */
 
 /**
  * FightSummary schema
@@ -319,10 +267,6 @@ export const FightSummarySchema = z.object({
 /**
  * SimulationReport schema
  */
-
-/**
- * SimulationReport schema
- */
 export const SimulationReportSchema = z.object({
   id: z.string(),
   week: z.number(),
@@ -339,10 +283,6 @@ export const SimulationReportSchema = z.object({
   healthEvents: z.array(z.string()),
   bouts: z.array(FightSummarySchema).optional(),
 });
-
-/**
- * AnnualAward schema
- */
 
 /**
  * AnnualAward schema

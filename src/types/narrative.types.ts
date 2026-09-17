@@ -148,7 +148,7 @@ export interface DodgeTiers {
   tier2_medium: string[];
   tier3_high: string[];
   tier4_supernatural: string[];
-  desperate?: string[];
+  desperate?: (string | PersonaDescriptor)[];
   confident?: string[];
   theatrical?: string[];
   grim?: string[];
@@ -475,7 +475,7 @@ export interface Passives {
  * Defines the shape of kill text.
  */
 export interface KillText {
-  [key: string]: string[];
+  [key: string]: string[] | Record<string, string[]>;
 }
 
 /**

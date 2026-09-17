@@ -38,10 +38,6 @@ export const CrestChargeSchema = z.object({
 /**
  * CrestData schema
  */
-
-/**
- * CrestData schema
- */
 export const CrestDataSchema = z.object({
   shieldShape: ShieldShapeSchema,
   fieldType: FieldTypeSchema,
@@ -52,10 +48,6 @@ export const CrestDataSchema = z.object({
   generation: z.number(),
   parentCrest: z.any().optional(), // Recursive - using any
 });
-
-/**
- * Owner schema
- */
 
 /**
  * Owner schema
@@ -81,10 +73,6 @@ export const OwnerSchema = z.object({
 /**
  * Promoter schema
  */
-
-/**
- * Promoter schema
- */
 export const PromoterSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -102,10 +90,6 @@ export const PromoterSchema = z.object({
 });
 
 /**
- * BoutOffer schema
- */
-
-/**
  * TrainingAssignment schema
  */
 export const TrainingAssignmentSchema = z.object({
@@ -120,19 +104,11 @@ export const TrainingAssignmentSchema = z.object({
 /**
  * SeasonalGrowth schema
  */
-
-/**
- * SeasonalGrowth schema
- */
 export const SeasonalGrowthSchema = z.object({
   warriorId: z.string(),
   season: SeasonSchema,
   gains: z.record(z.string(), z.number()),
 });
-
-/**
- * LedgerEntry schema
- */
 
 /**
  * LedgerEntry schema
@@ -148,19 +124,11 @@ export const LedgerEntrySchema = z.object({
 /**
  * AIStrategy schema
  */
-
-/**
- * AIStrategy schema
- */
 export const AIStrategySchema = z.object({
   intent: AIIntentSchema,
   targetStableId: z.string().optional(),
   planWeeksRemaining: z.number(),
 });
-
-/**
- * AIEvent schema
- */
 
 /**
  * AIEvent schema
@@ -172,10 +140,6 @@ export const AIEventSchema = z.object({
   description: z.string(),
   riskTier: z.enum(['Low', 'Medium', 'High']),
 });
-
-/**
- * AIAgentMemory schema
- */
 
 /**
  * AIAgentMemory schema
@@ -195,10 +159,6 @@ export const AIAgentMemorySchema = z.object({
     })
     .optional(),
 });
-
-/**
- * RivalStableData schema
- */
 
 /**
  * RivalStableData schema
@@ -226,10 +186,6 @@ export const RivalStableDataSchema = z.object({
 /**
  * ScoutReportData schema
  */
-
-/**
- * ScoutReportData schema
- */
 export const ScoutReportDataSchema = z.object({
   id: z.string(),
   warriorName: z.string(),
@@ -245,10 +201,6 @@ export const ScoutReportDataSchema = z.object({
 });
 
 /**
- * RestState schema
- */
-
-/**
  * OwnerGrudge schema
  */
 export const OwnerGrudgeSchema = z.object({
@@ -260,10 +212,6 @@ export const OwnerGrudgeSchema = z.object({
   startWeek: z.number(),
   lastEscalation: z.number(),
 });
-
-/**
- * GazetteStory schema
- */
 
 export const ProgressionObjectiveSchema = z.object({
   id: z.enum([
@@ -293,20 +241,12 @@ export const ProgressionStateSchema = z.object({
 /**
  * DeferredBoutLog schema
  */
-
-/**
- * DeferredBoutLog schema
- */
 export const DeferredBoutLogSchema = z.object({
   year: z.number(),
   season: z.number(),
   boutId: z.string(),
   transcript: z.array(z.string()),
 });
-
-/**
- * Bookmark schema
- */
 
 /**
  * Bookmark schema
@@ -330,10 +270,6 @@ export const BookmarkSchema = z.object({
 /**
  * Trainer schema
  */
-
-/**
- * Trainer schema
- */
 export const TrainerSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -353,10 +289,6 @@ export const TrainerSchema = z.object({
 /**
  * SurfaceMod schema
  */
-
-/**
- * SurfaceMod schema
- */
 export const SurfaceModSchema = z.object({
   initiativeMod: z.number(),
   enduranceMult: z.number(),
@@ -366,19 +298,11 @@ export const SurfaceModSchema = z.object({
 /**
  * ArenaWeatherMod schema
  */
-
-/**
- * ArenaWeatherMod schema
- */
 export const ArenaWeatherModSchema = z.object({
   weatherType: WeatherTypeSchema,
   zoneDef: z.record(ArenaZoneSchema, z.number()).optional(),
   surfaceMod: SurfaceModSchema.optional(),
 });
-
-/**
- * ArenaConfig schema
- */
 
 /**
  * ArenaConfig schema

@@ -74,7 +74,7 @@ export default function ResolutionReveal() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-display font-bold">
-                {(uiMeta as any).fanfare.resolution_title}
+                {uiMeta.fanfare.resolution_title}
               </CardTitle>
               <CardDescription>Week {state.week - 1} Results</CardDescription>
             </div>
@@ -117,10 +117,10 @@ export default function ResolutionReveal() {
             variant={step === 'memorial' ? 'destructive' : 'default'}
           >
             {step === 'math' && data.deaths.length > 0
-              ? (uiMeta as any).fanfare.btn_honor
+              ? uiMeta.fanfare.btn_honor
               : step === 'math' || step === 'memorial'
-                ? (uiMeta as any).fanfare.btn_planning
-                : (uiMeta as any).fanfare.btn_next}
+                ? uiMeta.fanfare.btn_planning
+                : uiMeta.fanfare.btn_next}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

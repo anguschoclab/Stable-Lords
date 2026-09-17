@@ -41,9 +41,9 @@ export class AudioManager {
       recovery: '/audio/recovery.mp3',
       coin: '/audio/coin.mp3',
     };
-    (Object.keys(sfxFiles) as SfxType[]).forEach((type) => {
-      this.sfx.set(type, new Howl({ src: [sfxFiles[type]] }));
-    });
+    for (const [type, src] of Object.entries(sfxFiles)) {
+      this.sfx.set(type as SfxType, new Howl({ src: [src] }));
+    }
   }
 
   /**

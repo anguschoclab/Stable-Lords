@@ -180,7 +180,7 @@ describe('Terminology compliance', () => {
         while ((m = DISPLAY_PROP_RE.exec(stripped)) !== null) {
           const prop = m[1];
           const value = m[3];
-          if (SCREAMING_SNAKE.test(value)) {
+          if (value && SCREAMING_SNAKE.test(value)) {
             matches.push(`${file}:${i + 1}: ${prop}="${value}" :: ${line.trim()}`);
           }
         }
@@ -202,7 +202,7 @@ describe('Terminology compliance', () => {
         stringLiteral.lastIndex = 0;
         while ((m = stringLiteral.exec(stripped)) !== null) {
           const content = m[2];
-          if (SCREAMING_SNAKE.test(content) && /[a-z]/.test(content)) {
+          if (content && SCREAMING_SNAKE.test(content) && /[a-z]/.test(content)) {
             matches.push(`${file}:${i + 1}: "${content}" :: ${line.trim()}`);
           }
         }

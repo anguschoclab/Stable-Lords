@@ -46,16 +46,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
         <p className="text-muted-foreground text-xs uppercase tracking-[0.3em] max-w-sm">
           A fatal error occurred. The arena scribe cannot continue.
         </p>
-        {this.state.error && (
-          <details className="text-left mt-2 max-w-lg w-full">
-            <summary className="text-[10px] text-muted-foreground uppercase tracking-widest cursor-pointer hover:text-primary transition-colors motion-reduce:transition-none">
-              Error Details
-            </summary>
-            <pre className="mt-2 text-[9px] text-destructive bg-black/50 p-3 rounded overflow-auto max-h-40 whitespace-pre-wrap">
-              {this.state.error.message}
-            </pre>
-          </details>
-        )}
+        {/* Error details are hidden to prevent information leakage */}
         <button
           aria-label="Reload Page"
           onClick={() => this.setState({ hasError: false, error: null })}

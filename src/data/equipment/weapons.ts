@@ -5,6 +5,17 @@
 
 import { FightingStyle } from '@/types/game';
 import type { EquipmentItem } from './equipment.types';
+import {
+  without,
+  FENCING_PREFERRED_STYLES,
+  BASHING_STRIKE_STYLES,
+  CRUSHING_PREFERRED_STYLES,
+  FENCING_RESTRICTED_STYLES,
+  SPEAR_RESTRICTED_STYLES,
+  HEAVY_RESTRICTED_STYLES,
+  CRUSHING_RESTRICTED_STYLES,
+  BASHING_RESTRICTED_STYLES,
+} from './weaponStyles';
 
 /**
  * Weapons.
@@ -73,17 +84,8 @@ export const WEAPONS: EquipmentItem[] = [
     dualWieldReqAmbi: { DF: 17 }, // …17 if ambidextrous
     description: 'Thrusting weapon. CW for Parry-Riposte. W for most styles.',
     favoredStyles: [FightingStyle.ParryRiposte],
-    preferredStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.SlashingAttack,
-      FightingStyle.StrikingAttack,
-      FightingStyle.TotalParry,
-    ],
-    restrictedStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel],
+    preferredStyles: FENCING_PREFERRED_STYLES,
+    restrictedStyles: FENCING_RESTRICTED_STYLES,
   },
   {
     id: 'hatchet',
@@ -123,17 +125,8 @@ export const WEAPONS: EquipmentItem[] = [
     dualWieldReq: { ST: 7 }, // canon: 2× Shortsword requires 7 ST
     description: 'Quick slashing weapon. Versatile. CW for Parry-Strike.',
     favoredStyles: [FightingStyle.ParryStrike],
-    preferredStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.SlashingAttack,
-      FightingStyle.StrikingAttack,
-      FightingStyle.TotalParry,
-    ],
-    restrictedStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel],
+    preferredStyles: FENCING_PREFERRED_STYLES,
+    restrictedStyles: FENCING_RESTRICTED_STYLES,
   },
   {
     id: 'scimitar',
@@ -149,16 +142,7 @@ export const WEAPONS: EquipmentItem[] = [
     dualWieldReqAmbi: { DF: 15 }, // …15 if ambidextrous
     description: 'Curved slashing blade. CW for Slashing Attack.',
     favoredStyles: [FightingStyle.SlashingAttack],
-    preferredStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.SlashingAttack,
-      FightingStyle.StrikingAttack,
-      FightingStyle.TotalParry,
-      FightingStyle.WallOfSteel,
-    ],
+    preferredStyles: without(FightingStyle.BashingAttack, FightingStyle.LungingAttack),
     restrictedStyles: [FightingStyle.BashingAttack],
   },
   {
@@ -181,11 +165,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.ParryStrike,
       FightingStyle.StrikingAttack,
     ],
-    restrictedStyles: [
-      FightingStyle.BashingAttack,
-      FightingStyle.SlashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+    restrictedStyles: SPEAR_RESTRICTED_STYLES,
   },
 
   // Medium weapons (weight 3-4) — balanced requirements
@@ -224,17 +204,8 @@ export const WEAPONS: EquipmentItem[] = [
     dualWieldReqAmbi: { DF: 15 }, // …15 if ambidextrous
     description: 'Versatile thrusting/slashing sword. CW for Parry-Lunge.',
     favoredStyles: [FightingStyle.ParryLunge],
-    preferredStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.SlashingAttack,
-      FightingStyle.StrikingAttack,
-      FightingStyle.TotalParry,
-    ],
-    restrictedStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel],
+    preferredStyles: FENCING_PREFERRED_STYLES,
+    restrictedStyles: FENCING_RESTRICTED_STYLES,
   },
   {
     id: 'long_spear',
@@ -247,20 +218,12 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 5,
     reqDF: 9,
     description: 'Long reach thrusting spear. Dominates at Extended range.',
-    preferredStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.StrikingAttack,
-      FightingStyle.TotalParry,
-    ],
-    restrictedStyles: [
+    preferredStyles: without(
       FightingStyle.BashingAttack,
       FightingStyle.SlashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+      FightingStyle.WallOfSteel
+    ),
+    restrictedStyles: SPEAR_RESTRICTED_STYLES,
   },
   {
     id: 'mace',
@@ -274,15 +237,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqDF: 5,
     description: 'One-handed crushing weapon. CW for Bashing Attack.',
     favoredStyles: [FightingStyle.BashingAttack],
-    preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.SlashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+    preferredStyles: BASHING_STRIKE_STYLES,
+    restrictedStyles: BASHING_RESTRICTED_STYLES,
   },
   {
     id: 'morning_star',
@@ -296,19 +252,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqDF: 11,
     description: 'Spiked crushing weapon. CW for Wall of Steel.',
     favoredStyles: [FightingStyle.WallOfSteel],
-    preferredStyles: [
-      FightingStyle.BashingAttack,
-      FightingStyle.StrikingAttack,
-      FightingStyle.WallOfSteel,
-    ],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.SlashingAttack,
-      FightingStyle.TotalParry,
-    ],
+    preferredStyles: CRUSHING_PREFERRED_STYLES,
+    restrictedStyles: CRUSHING_RESTRICTED_STYLES,
   },
   {
     id: 'war_flail',
@@ -321,19 +266,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 5,
     reqDF: 5,
     description: 'Chained weapon. Hard to parry.',
-    preferredStyles: [
-      FightingStyle.BashingAttack,
-      FightingStyle.StrikingAttack,
-      FightingStyle.WallOfSteel,
-    ],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.SlashingAttack,
-      FightingStyle.TotalParry,
-    ],
+    preferredStyles: CRUSHING_PREFERRED_STYLES,
+    restrictedStyles: CRUSHING_RESTRICTED_STYLES,
   },
   {
     id: 'war_hammer',
@@ -352,14 +286,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.StrikingAttack,
       FightingStyle.TotalParry,
     ],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.SlashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+    restrictedStyles: BASHING_RESTRICTED_STYLES,
   },
   {
     id: 'small_shield',
@@ -502,12 +429,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.TotalParry,
       FightingStyle.WallOfSteel,
     ],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-    ],
+    restrictedStyles: HEAVY_RESTRICTED_STYLES,
   },
   {
     id: 'battle_axe',
@@ -529,12 +451,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.TotalParry,
       FightingStyle.WallOfSteel,
     ],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-    ],
+    restrictedStyles: HEAVY_RESTRICTED_STYLES,
   },
   {
     id: 'halberd',
@@ -548,7 +465,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqDF: 11,
     twoHanded: true,
     description: 'Polearm with axe blade and spike. Versatile.',
-    preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack],
+    preferredStyles: BASHING_STRIKE_STYLES,
     restrictedStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.ParryLunge,
@@ -571,17 +488,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqDF: 7,
     twoHanded: true,
     description: 'Massive hammer. Devastating but slow.',
-    preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack],
-    restrictedStyles: [
-      FightingStyle.AimedBlow,
-      FightingStyle.LungingAttack,
-      FightingStyle.ParryLunge,
-      FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.SlashingAttack,
-      FightingStyle.TotalParry,
-      FightingStyle.WallOfSteel,
-    ],
+    preferredStyles: BASHING_STRIKE_STYLES,
+    restrictedStyles: without(FightingStyle.BashingAttack, FightingStyle.StrikingAttack),
   },
 ];
 

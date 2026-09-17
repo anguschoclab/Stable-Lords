@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { truncateState } from '@/engine/storage/truncation';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { FightSummary } from '@/types/state.types';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, PromoterId } from '@/types/shared.types';
 
 function makeFightSummary(id: string, week: number): FightSummary {
   return {
@@ -101,21 +101,20 @@ describe('truncationBounds', () => {
 
   it('truncateState caps promoters[id].history.notableBouts to 10', () => {
     const state = createFreshState('trunc-promoter-bouts-test');
-    state.promoters = {
-      p1: {
-        id: 'p1' as any,
-        history: {
-          totalPursePaid: 0,
-          notableBouts: Array.from({ length: 25 }, (_, i) => `bout-${i}` as any),
-          legacyFame: 0,
-        },
-      } as any,
-    };
+    const promoterId = 'p1' as PromoterId;
+    state.promoters[promoterId] = {
+      id: promoterId,
+      history: {
+        totalPursePaid: 0,
+        notableBouts: Array.from({ length: 25 }, (_, i) => `bout-${i}` as any),
+        legacyFame: 0,
+      },
+    } as any;
 
     const truncated = truncateState(state);
-    expect(truncated.promoters!['p1']!.history.notableBouts.length).toBe(10);
+    expect(truncated.promoters[promoterId]!.history.notableBouts.length).toBe(10);
     // Last 10 kept
-    expect(truncated.promoters!['p1']!.history.notableBouts[9]).toBe('bout-24');
+    expect(truncated.promoters[promoterId]!.history.notableBouts[9]).toBe('bout-24');
   });
 
   it('truncateState caps each rivals[i].ledger to 500 entries', () => {
@@ -151,7 +150,8 @@ describe('truncationBounds', () => {
     ];
 
     const truncated = truncateState(state);
-    expect(truncated.rivals![0]!.seasonalGrowth.length).toBe(1);
-    expect(truncated.rivals![0]!.seasonalGrowth[0]!.season).toBe('Summer');
+    const growth = truncated.rivals![0]!.seasonalGrowth!;
+    expect(growth.length).toBe(1);
+    expect(growth[0]!.season).toBe('Summer');
   });
 });

@@ -84,8 +84,18 @@ export class SeededRNG implements IRNGService {
   }
 
   /**
+   * Weighted random selection of a string key from a weight map.
+   * Delegates to the module-scope {@link rollWeighted} free function.
+   */
+  rollWeighted<K extends string>(weights: Partial<Record<K, number>>): K {
+    return rollWeighted(weights, this);
+  }
+
+  /**
    * Weighted random selection from items array.
    * Implements IRNGService.pickWeighted for direct interface compliance.
+   * @deprecated Use {@link rollWeighted} for string-keyed weight maps. `pickWeighted`
+   * is retained for parallel-array selection of non-string items.
    */
   pickWeighted<T>(items: T[], weights: number[]): T {
     if (items.length !== weights.length) {
@@ -174,6 +184,32 @@ export function shuffled<T>(arr: T[], rng: (() => number) | IRNGService): T[] {
     copy[j] = tempI;
   }
   return copy;
+}
+
+/**
+ * Roll a string key from a weight map. Falls back to the first key if the
+ * total weight is zero, and throws if the map is empty.
+ */
+export function rollWeighted<K extends string>(
+  weights: Partial<Record<K, number>>,
+  rng: IRNGService
+): K {
+  const entries = Object.entries(weights) as [K, number][];
+  if (entries.length === 0) {
+    throw new Error('No entries available for weighted roll');
+  }
+  const total = entries.reduce((sum, [, w]) => sum + w, 0);
+  if (total <= 0) return entries[0]?.[0] as K;
+  let roll = rng.next() * total;
+  for (const [key, w] of entries) {
+    roll -= w;
+    if (roll <= 0) return key;
+  }
+  const fallback = entries[entries.length - 1];
+  if (!fallback) {
+    throw new Error('No entries available for weighted roll');
+  }
+  return fallback[0];
 }
 
 /** Backward-compatible alias — callers should migrate to {@link SeededRNG}. */

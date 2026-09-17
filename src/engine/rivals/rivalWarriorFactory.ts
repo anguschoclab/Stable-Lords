@@ -6,6 +6,7 @@ import type { Attributes } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { FightingStyle } from '@/types/shared.types';
+import { rollWeighted } from '@/utils/random';
 import { makeWarrior } from '../factories/warriorFactory';
 
 /**
@@ -111,6 +112,8 @@ export function createRivalWarrior(
       }
       return fallback;
     },
+    rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
+      rollWeighted(weights, rng),
   };
 
   return makeWarrior(

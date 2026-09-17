@@ -59,6 +59,7 @@ describe('rivalWarriorFactory', () => {
       chance: vi.fn(),
       shuffle: vi.fn(),
       pickWeighted: vi.fn(),
+      rollWeighted: vi.fn(),
     };
 
     it('creates a warrior and passes through basic info', () => {

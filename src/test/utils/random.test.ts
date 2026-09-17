@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled } from '@/utils/random';
+import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled, rollWeighted } from '@/utils/random';
 
 describe('SeededRNG', () => {
   it('produces deterministic results for the same seed', () => {
@@ -258,5 +258,69 @@ describe('shuffled', () => {
     const arr = [1, 2, 3, 4, 5];
     const result = shuffled(arr, rng);
     expect(result.sort()).toEqual([1, 2, 3, 4, 5]);
+  });
+});
+
+describe('rollWeighted', () => {
+  it('is deterministic for the same seed', () => {
+    const rng1 = new SeededRNG(42);
+    const rng2 = new SeededRNG(42);
+    const weights = { a: 1, b: 3, c: 6 } as const;
+    for (let i = 0; i < 20; i++) {
+      expect(rollWeighted(weights, rng1)).toBe(rollWeighted(weights, rng2));
+    }
+  });
+
+  it('picks proportional to weights (all weight on one key returns that key)', () => {
+    const rng = new SeededRNG(42);
+    const weights = { a: 0, b: 100, c: 0 } as const;
+    for (let i = 0; i < 20; i++) {
+      expect(rollWeighted(weights, rng)).toBe('b');
+    }
+  });
+
+  it('returns last key when all weight is on the last key', () => {
+    const rng = new SeededRNG(42);
+    const weights = { x: 0, y: 0, z: 50 } as const;
+    expect(rollWeighted(weights, rng)).toBe('z');
+  });
+
+  it('returns the only key for a single-entry weight map', () => {
+    const rng = new SeededRNG(42);
+    expect(rollWeighted({ only: 10 }, rng)).toBe('only');
+  });
+
+  it('skips zero-weight entries', () => {
+    const rng = new SeededRNG(42);
+    const weights = { a: 0, b: 5 } as const;
+    for (let i = 0; i < 20; i++) {
+      expect(rollWeighted(weights, rng)).toBe('b');
+    }
+  });
+
+  it('throws on empty weight map', () => {
+    const rng = new SeededRNG(42);
+    expect(() => rollWeighted({}, rng)).toThrow('No entries available for weighted roll');
+  });
+
+  it('returns the first key when total weight is zero (fallback branch)', () => {
+    const rng = new SeededRNG(42);
+    const weights = { a: 0, b: 0 } as const;
+    expect(rollWeighted(weights, rng)).toBe('a');
+  });
+
+  it('free function and SeededRNG method produce identical keys for the same seed', () => {
+    const seed = 1234;
+    const weights = { a: 2, b: 5, c: 3 } as const;
+    for (let i = 0; i < 20; i++) {
+      const rngFree = new SeededRNG(seed);
+      const rngMethod = new SeededRNG(seed);
+      // Advance both i times so we compare the i-th draw.
+      for (let j = 0; j < i; j++) {
+        rollWeighted(weights, rngFree);
+        rngMethod.rollWeighted(weights);
+      }
+      expect(rollWeighted(weights, rngFree)).toBe(rngMethod.rollWeighted(weights));
+    }
   });
 });

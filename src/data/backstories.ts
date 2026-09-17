@@ -1,6 +1,7 @@
 import type { GameState, Owner, OwnerPersonality, MetaAdaptation } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { rollWeighted } from '@/utils/random';
 
 /**
  * Union type of all available player backstory identifiers.
@@ -178,23 +179,6 @@ export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES);
  * Array of all backstory IDs.
  */
 export const BACKSTORY_IDS: BackstoryId[] = BACKSTORY_LIST.map((b) => b.id);
-
-/** Roll a key from a weight map. Falls back to first key if weights are empty. */
-function rollWeighted<K extends string>(weights: Partial<Record<K, number>>, rng: IRNGService): K {
-  const entries = Object.entries(weights) as [K, number][];
-  const total = entries.reduce((sum, [, w]) => sum + w, 0);
-  if (total <= 0) return entries[0]?.[0] as K;
-  let roll = rng.next() * total;
-  for (const [key, w] of entries) {
-    roll -= w;
-    if (roll <= 0) return key;
-  }
-  const fallback = entries[entries.length - 1];
-  if (!fallback) {
-    throw new Error('No entries available for weighted roll');
-  }
-  return fallback[0];
-}
 
 /** Apply economy deltas to an Owner's fame/renown/titles-adjacent stats. */
 function applyEconomyToOwner(owner: Owner, econ: BackstoryEconomy): void {

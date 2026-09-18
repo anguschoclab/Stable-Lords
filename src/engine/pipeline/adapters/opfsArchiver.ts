@@ -19,7 +19,8 @@ import { archiveWorkerProxy } from '@/engine/storage/archiveWorkerProxy';
 export function flushDeferredArchivesOffThread(state: GameState): GameState {
   const logs = state.deferredBoutLogs;
   if (!logs || logs.length === 0) return state;
-  state.deferredBoutLogs = [];
+  const queue: typeof logs = [];
+  state.deferredBoutLogs = queue;
 
   const archiveDirectly = () =>
     Promise.all(
@@ -36,7 +37,7 @@ export function flushDeferredArchivesOffThread(state: GameState): GameState {
       )
     ).then((results) => {
       const failed = results.filter((log): log is NonNullable<typeof log> => log !== null);
-      if (failed.length > 0) state.deferredBoutLogs.push(...failed);
+      if (failed.length > 0) queue.push(...failed);
     });
 
   if (typeof window !== 'undefined' && window.electronAPI) {

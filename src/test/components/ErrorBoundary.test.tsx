@@ -67,7 +67,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     const boundaryCall = consoleError.mock.calls.find(
-      (args) => typeof args[0] === 'string' && args[0].includes('[ErrorBoundary]')
+      (args: unknown[]) => typeof args[0] === 'string' && args[0].includes('[ErrorBoundary]')
     );
     expect(boundaryCall).toBeDefined();
     expect(boundaryCall?.[1]).toBeInstanceOf(Error);

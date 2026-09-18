@@ -9,6 +9,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import type { RivalStableData } from '@/types/state.types';
+import type { StableId } from '@/types/shared.types';
 
 let mockState: any = {};
 
@@ -49,7 +50,7 @@ beforeEach(() => {
   mockState = {
     rivals: [
       rival(),
-      rival({ id: 'stable_target', owner: { stableName: 'Crimson Oath' } as any }),
+      rival({ id: 'stable_target' as StableId, owner: { stableName: 'Crimson Oath' } as any }),
     ],
   };
 });

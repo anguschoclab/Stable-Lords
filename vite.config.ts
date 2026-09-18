@@ -47,7 +47,7 @@ function fixHowler(): Plugin {
   function getPatchedCode(): string {
     if (cachedCode) return cachedCode;
     const source = fs.readFileSync(
-      path.resolve(__dirname, 'node_modules/howler/dist/howler.js'),
+      path.resolve(import.meta.dirname, 'node_modules/howler/dist/howler.js'),
       'utf-8'
     );
     const marker = '/*!\n *  Spatial Plugin';
@@ -120,7 +120,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   build: {

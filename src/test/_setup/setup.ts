@@ -8,6 +8,9 @@ import { loadCombatNarrative } from '@/data/narrative';
 
 enableMapSet();
 
+// OPFS modules are never mocked globally; ensure no stale mock leaks across files.
+vi.unmock('@/engine/storage/opfsArchive');
+
 // Eagerly load combat narrative data for all tests
 beforeAll(async () => { await loadCombatNarrative(); });
 
@@ -191,18 +194,6 @@ afterEach(() => {
     clearHistoryResolverCaches?.();
   } catch (e) {
     // Ignore if modules don't export clear functions
-  }
-});
-
-// Clear module cache for tests that modify global state
-afterEach(() => {
-  try {
-    // Clear OPFS-related modules that may have cached state
-    if (typeof vi !== 'undefined') {
-      vi.unmock('@/engine/storage/opfsArchive');
-    }
-  } catch (e) {
-    // Ignore if module doesn't exist
   }
 });
 

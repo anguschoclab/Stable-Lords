@@ -19,7 +19,7 @@ type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
  */
 export default function ResolutionReveal() {
   const state = useGameStore(
-    useShallow((s: any) => ({
+    useShallow((s: GameStore) => ({
       arenaHistory: s.arenaHistory,
       graveyard: s.graveyard,
       week: s.week,

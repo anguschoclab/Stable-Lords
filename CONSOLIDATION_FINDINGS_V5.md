@@ -125,9 +125,13 @@ The red tests caught real scope growth: `killWindowScale.test.ts` revealed **thr
 - 518 lint warnings — mostly JSDoc-description and a handful of hook-deps; unchanged from baseline, not in consolidation scope.
 - iCloud-hosted original working copy — abandoned in place; contains another session's untracked scratch scripts under `scripts/`.
 
-## 10. Remote Disposition
+## 10. Remote Disposition — EXECUTED
 
-Executed after this document (Phase 7): commits pushed to `main`; each of the 11 PRs receives a verdict comment referencing this file and its integration commit(s); PRs closed per §1; remote branches deleted after disposition.
+- `main` pushed: `ea6f8b18..a2131edd` (19 commits, rebased onto the remote's `ea6f8b18`; ledger conflict resolved in favor of the complete version).
+- Restore point tag `pre-v5-consolidation` pushed.
+- Verdict comment posted on all 11 PRs citing this document and their integration commit(s).
+- All 11 PRs closed (0 open remaining).
+- All 11 evaluated remote branches deleted after disposition (PR diffs remain preserved on GitHub).
 
 ## 11. Final Verdict
 

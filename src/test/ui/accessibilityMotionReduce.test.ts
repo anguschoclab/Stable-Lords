@@ -4,9 +4,18 @@
  * classes exist on main. Test 4 verifies no blanket bg-background/90.
  */
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'fs';
-import { sync as globSync } from 'glob';
+import { readFileSync, readdirSync } from 'fs';
 import path from 'path';
+
+function listTsxFiles(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...listTsxFiles(full));
+    else if (entry.name.endsWith('.tsx')) out.push(full);
+  }
+  return out;
+}
 
 describe('accessibility motion-reduce', () => {
   it('MiniCombatLog has motion-reduce:transition-none on all log entries', () => {
@@ -29,10 +38,10 @@ describe('accessibility motion-reduce', () => {
 
   it('no blanket bg-background/90 replacements in component files', () => {
     const componentDir = path.resolve(process.cwd(), 'src/components');
-    const files = globSync('**/*.tsx', { cwd: componentDir });
+    const files = listTsxFiles(componentDir);
     let violations = 0;
-    for (const file of files) {
-      const fullPath = path.join(componentDir, file);
+    for (const fullPath of files) {
+      const file = path.relative(componentDir, fullPath);
       const content = readFileSync(fullPath, 'utf-8');
       // Flag bg-background/90 used as a blanket replacement (should preserve original opacity)
       // AppHeader.tsx is exempt — it intentionally uses bg-background/90 for sticky header backdrop

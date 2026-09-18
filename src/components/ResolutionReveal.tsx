@@ -34,10 +34,17 @@ export default function ResolutionReveal() {
 
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map(
-      (state.graveyard ?? []).map((w: { name: string }) => [w.name, w] as [string, typeof w])
-    );
-    return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
+    const graveyardByName = new Map<string, (typeof state.graveyard)[number]>();
+    const gy = state.graveyard ?? [];
+    for (let i = 0; i < gy.length; i++) {
+      graveyardByName.set(gy[i]!.name, gy[i]!);
+    }
+    const result: (typeof state.graveyard)[number][] = [];
+    for (let i = 0; i < data.deaths.length; i++) {
+      const w = graveyardByName.get(data.deaths[i]!);
+      if (w) result.push(w);
+    }
+    return result;
   }, [data, state.graveyard]);
 
   if (!data) return null;
@@ -103,9 +110,7 @@ export default function ResolutionReveal() {
             {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
             {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
             {step === 'math' && <MathStep lastSimulationReport={state.lastSimulationReport} />}
-            {step === 'memorial' && deadWarriors.length > 0 && (
-              <MemorialStep deadWarriors={deadWarriors} />
-            )}
+            {step === 'memorial' && <MemorialStep deadWarriors={deadWarriors} />}
           </AnimatePresence>
         </CardContent>
 

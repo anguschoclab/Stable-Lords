@@ -1,6 +1,6 @@
 /**
  * Per-style strategy presets — 20 named presets (2 per fighting style)
- * transcribed from Docs/Stable_Lords_Strategy_Editor_Spec_v1.0.md §5.
+ * transcribed from docs/Stable_Lords_Strategy_Editor_Spec_v1.0.md §5.
  *
  * Each preset provides a complete FightPlan with per-phase OE/AL/KD overrides.
  * The first preset per style is the "default" shown in PlanBuilder when no

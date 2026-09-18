@@ -161,8 +161,7 @@ export function TreasurySparkline({
   const vp: Viewport = { min, range, H, W, PAD };
 
   const pathD = useMemo(
-    () => buildSparklinePath(points, vp),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    () => buildSparklinePath(points, { min, range, H, W, PAD }),
     [points, min, range, H, W, PAD]
   );
 

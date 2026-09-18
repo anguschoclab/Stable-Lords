@@ -12,10 +12,26 @@ const BASE_URL = 'http://localhost:8080';
 
 test('golden path: new game → navigate all pages → fight → advance week', async ({
   page,
+  isMobile,
 }: {
   page: Page;
+  isMobile: boolean;
 }) => {
-  test.setTimeout(120_000);
+  // Mobile runs are slower (sheet open/close animation per nav click).
+  test.setTimeout(isMobile ? 240_000 : 120_000);
+
+  // On mobile viewports the side nav is hidden; links live inside the
+  // hamburger sheet (role=dialog) and the sheet auto-closes after each
+  // navigation. Hub links embed alert badges, so their accessible names
+  // carry a suffix like "Stable 3 alerts for Stable" — match them loosely.
+  const clickNavLink = async (name: string, opts: { exact?: boolean } = { exact: true }) => {
+    if (isMobile) {
+      await page.getByRole('button', { name: 'Open navigation menu' }).click();
+      await page.getByRole('dialog').getByRole('link', { name, exact: opts.exact }).first().click();
+    } else {
+      await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
+    }
+  };
 
   // ── 1. Title Screen → New Game ──────────────────────────────────────────
   await page.goto(BASE_URL + '/');
@@ -59,6 +75,9 @@ test('golden path: new game → navigate all pages → fight → advance week', 
 
   // Step 2: Set the Plan — click \"To the Arena\" again
   await page.waitForSelector('text=Set the Plan', { timeout: 15_000 });
+  // Wait for the exiting step-1 subtree to unmount — its button shares the
+  // same label, and clicking it is a no-op (slow browsers race this).
+  await expect(page.getByRole('button', { name: /To the Arena/ })).toHaveCount(1);
   await page.getByRole('button', { name: /To the Arena/ }).click();
 
   // Step 2: First Blood — click "Continue"
@@ -70,8 +89,10 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   await page.getByRole('button', { name: /Enter the Arena Hub/ }).click();
 
   // ── 4. Main App — Navigate Side Panel Menu Items ────────────────────────
-  // Wait for the app shell to load (left nav visible on desktop)
-  await page.waitForSelector('nav', { timeout: 15_000 });
+  // Wait for the app shell to load (left nav on desktop, hamburger on mobile)
+  await page.waitForSelector(isMobile ? 'button[aria-label="Open navigation menu"]' : 'nav', {
+    timeout: 15_000,
+  });
 
   // Record initial week from the header
   const weekText = await page.locator('text=/Week \\d+/').first().textContent();
@@ -94,7 +115,7 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   ];
 
   for (const label of stablePages) {
-    await page.getByRole('link', { name: label, exact: true }).click();
+    await clickNavLink(label);
     // Wait for page transition animation + content
     await page.waitForTimeout(800);
     // Verify no crash — check that main content area still exists
@@ -102,7 +123,7 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   }
 
   // --- Switch to World hub ---
-  await page.getByRole('link', { name: 'World', exact: true }).first().click();
+  await clickNavLink('World', { exact: false });
   await page.waitForTimeout(500);
 
   const worldPages = [
@@ -116,21 +137,21 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   ];
 
   for (const label of worldPages) {
-    await page.getByRole('link', { name: label, exact: true }).click();
+    await clickNavLink(label);
     await page.waitForTimeout(800);
     await expect(page.locator('main').first()).toBeVisible();
   }
 
   // --- Switch to Bookmarks hub ---
-  await page.getByRole('link', { name: 'Bookmarks', exact: true }).first().click();
+  await clickNavLink('Bookmarks', { exact: false });
   await page.waitForTimeout(500);
   await expect(page.locator('main').first()).toBeVisible();
 
   // ── 5. Arena Hub → Execute Week (Fight) ─────────────────────────────────
   // Navigate to Arena
-  await page.getByRole('link', { name: 'Stable', exact: true }).first().click();
+  await clickNavLink('Stable', { exact: false });
   await page.waitForTimeout(500);
-  await page.getByRole('link', { name: 'Arena', exact: true }).click();
+  await clickNavLink('Arena');
   await page.waitForTimeout(1000);
 
   // Click "ADVANCE WEEK" button to run the week pipeline

@@ -197,9 +197,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerChallenges: store.playerChallenges || [],
     playerAvoids: store.playerAvoids || [],
     bookmarks: store.bookmarks || [],
-    // Type assertion to handle FightOutcome vs SimulationReport mismatch
-    // This preserves existing behavior while extracting the logic
-    lastSimulationReport: store.lastSimulationReport as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    lastSimulationReport: store.lastSimulationReport,
   };
 
   lastResult = result;

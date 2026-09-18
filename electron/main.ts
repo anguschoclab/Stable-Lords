@@ -9,6 +9,7 @@ import {
   nativeImage,
   Notification,
   session,
+  type MenuItemConstructorOptions,
 } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -361,8 +362,7 @@ export function createMenu() {
     },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Electron Menu.buildFromTemplate API mismatch (external library)
-  const menu = Menu.buildFromTemplate(template as any);
+  const menu = Menu.buildFromTemplate(template as MenuItemConstructorOptions[]);
   Menu.setApplicationMenu(menu);
 }
 

@@ -140,13 +140,13 @@ describe('BoutControls', () => {
   it('exposes the transport tooltip matching the reset/skip convention', async () => {
     // PR #962 target: play/pause gets a tooltip like RESET BUFFER / SKIP TO RESOLVE.
     renderWithTooltip(<BoutControls {...props({ isPlaying: false })} />);
-    fireEvent.mouseEnter(screen.getByRole('button', { name: 'Play bout' }));
+    fireEvent.focus(screen.getByRole('button', { name: 'Play bout' }));
     expect(await screen.findByText('PLAY BOUT')).toBeInTheDocument();
   });
 
   it('shows the pause tooltip while playing', async () => {
     renderWithTooltip(<BoutControls {...props({ isPlaying: true })} />);
-    fireEvent.mouseEnter(screen.getByRole('button', { name: 'Pause playback' }));
+    fireEvent.focus(screen.getByRole('button', { name: 'Pause playback' }));
     expect(await screen.findByText('PAUSE PLAYBACK')).toBeInTheDocument();
   });
 

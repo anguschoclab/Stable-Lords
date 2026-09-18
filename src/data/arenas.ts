@@ -504,6 +504,20 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sunken_vault_the_breathless_duel',
+    arenaId: 'the_sunken_vault',
+    type: 'historical_battle',
+    title: 'The Breathless Duel',
+    narrative: 'A legendary bout where both fighters were dragged underwater, but one simply refused to drown before delivering the killing blow.',
+  },
+  {
+    id: 'thunder_peak_the_shattered_helm',
+    arenaId: 'thunder_peak',
+    type: 'famous_death',
+    title: 'The Shattered Helm',
+    narrative: 'A champion’s heavy iron helm acted as a lightning rod, ending the match in a blinding flash that scarred the spectators’ eyes.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

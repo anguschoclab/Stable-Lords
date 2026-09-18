@@ -94,6 +94,34 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  // New Narrative Traits added by Lore Keeper
+  orphan_resilience_two: {
+    id: 'orphan_resilience_two',
+    name: 'Orphan Resilience II',
+    description: 'A deeply ingrained instinct to survive when pushed to the absolute edge.',
+    effect: { defModLowHp: 2, enduranceMult: 0.90 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  gut_instinct: {
+    id: 'gut_instinct',
+    name: 'Gut Instinct',
+    description: 'Reacts intuitively in the opening moments of a fight before overthinking.',
+    effect: { iniModEarly: 2, attModEarly: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
+  gallows_born: {
+    id: 'gallows_born',
+    name: 'Gallows Born',
+    description: 'A grim fatalism that makes them increasingly dangerous as death approaches.',
+    effect: { attModLowHp: 2, defModLowHp: -1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

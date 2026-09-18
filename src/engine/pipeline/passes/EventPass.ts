@@ -18,7 +18,9 @@ import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Run event pass.
- * @param rootRng - Root rng. (optional)
+ * @param state -
+ * @param nextWeek -
+ * @param rootRng -
  */
 export function runEventPass(
   state: GameState,

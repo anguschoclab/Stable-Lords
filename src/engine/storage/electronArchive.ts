@@ -95,7 +95,11 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Archive bout log.
-   * @param _overwrite - _overwrite. (optional)
+   * @param year -
+   * @param season -
+   * @param boutId -
+   * @param logData -
+   * @param _overwrite -
    */
   async archiveBoutLog(
     year: number,

@@ -249,7 +249,7 @@ export function generateGazetteBody(
         .map((w) => w.name)
         .slice(0, 5)
         .join(', ');
-      const tributes = (narrativeContent as any).memorials?.tributes;
+      const tributes = (narrativeContent as NarrativeContent).memorials?.tributes;
       if (tributes && Array.isArray(tributes) && tributes.length > 0) {
         const tributeTemplate = rngService.pick(tributes);
         const tributeLine = t(tributeTemplate, { name: recent[0]?.name ?? names });

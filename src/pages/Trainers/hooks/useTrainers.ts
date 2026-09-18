@@ -25,7 +25,6 @@ export function useTrainers(showBookmarkedOnly: boolean) {
     treasury,
     setState,
     deductFunds,
-    isBookmarked,
     bookmarks,
   } = useGameStore(
     useShallow((s) => ({
@@ -37,7 +36,6 @@ export function useTrainers(showBookmarkedOnly: boolean) {
       treasury: s.treasury,
       setState: s.setState,
       deductFunds: s.deductFunds,
-      isBookmarked: s.isBookmarked,
       bookmarks: s.bookmarks,
     }))
   );
@@ -47,10 +45,10 @@ export function useTrainers(showBookmarkedOnly: boolean) {
   const allTrainers = useMemo(() => trainers ?? [], [trainers]);
   const currentTrainers = useMemo(() => {
     if (!showBookmarkedOnly) return allTrainers;
-    return allTrainers.filter((t) => isBookmarked('trainer', t.id));
-  }, [allTrainers, showBookmarkedOnly, isBookmarked, bookmarks]);
+    return allTrainers.filter((t) => bookmarks.some((b) => b.entityType === 'trainer' && b.entityId === t.id));
+  }, [allTrainers, showBookmarkedOnly, bookmarks]);
 
-  const bookmarkedCount = allTrainers.filter((t) => isBookmarked('trainer', t.id)).length;
+  const bookmarkedCount = allTrainers.filter((t) => bookmarks.some((b) => b.entityType === 'trainer' && b.entityId === t.id)).length;
   const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 

@@ -234,9 +234,9 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
 /**
  * Compute the economic impact of the current week.
  *
- * @param state - The current game state
- * @param rng - RNG service for generating transaction IDs (optional)
- * @returns The state impact containing treasury delta and ledger entries
+ * @param input -
+ * @param rng -
+ * * @returns The state impact containing treasury delta and ledger entries
  */
 export function computeEconomyImpact(input: StableEconomyInput, rng?: IRNGService): StateImpact {
   const breakdown = computeWeeklyBreakdown(input);

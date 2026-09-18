@@ -19,9 +19,8 @@ interface HeadToHeadData {
 /**
  * Hook for processing head-to-head fight history data.
  * Optimized for performance with single O(N) pass through fight data.
- * @param rosterA - First roster of warriors
- * @param rosterB - Second roster of warriors
- * @returns Processed head-to-head statistics and fight data
+ * @param props - The head-to-head data props containing rosterA and rosterB
+ * * @returns Processed head-to-head statistics and fight data
  */
 export function useHeadToHeadData({ rosterA, rosterB }: HeadToHeadDataProps): HeadToHeadData {
   const allFights = useMemo(() => ArenaHistory.all() || [], []);

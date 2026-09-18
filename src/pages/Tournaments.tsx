@@ -55,7 +55,6 @@ export default function Tournaments() {
     activeSlotId,
     loadGame,
     setSimulating,
-    isBookmarked,
     bookmarks,
   } = useGameStore(
     useShallow((s) => ({
@@ -69,7 +68,6 @@ export default function Tournaments() {
       activeSlotId: s.activeSlotId,
       loadGame: s.loadGame,
       setSimulating: s.setSimulating,
-      isBookmarked: s.isBookmarked,
       bookmarks: s.bookmarks,
     }))
   );
@@ -98,10 +96,10 @@ export default function Tournaments() {
   );
   const pastTournaments = useMemo(() => {
     if (!showBookmarkedOnly) return allPastTournaments;
-    return allPastTournaments.filter((t) => isBookmarked('tournament', t.id));
-  }, [allPastTournaments, showBookmarkedOnly, isBookmarked, bookmarks]);
+    return allPastTournaments.filter((t) => bookmarks.some((b) => b.entityType === 'tournament' && b.entityId === t.id));
+  }, [allPastTournaments, showBookmarkedOnly, bookmarks]);
 
-  const bookmarkedCount = allPastTournaments.filter((t) => isBookmarked('tournament', t.id)).length;
+  const bookmarkedCount = allPastTournaments.filter((t) => bookmarks.some((b) => b.entityType === 'tournament' && b.entityId === t.id)).length;
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
   const isTournamentReadyToStart = useMemo(() => {

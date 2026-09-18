@@ -41,7 +41,9 @@ export default tseslint.config(
           contexts: ['TSTypeAliasDeclaration', 'TSInterfaceDeclaration'],
         },
       ],
-      'jsdoc/require-description': ['warn', { contexts: ['any'] }],
+      /* Stub-style JSDoc (@param/@returns only, no prose) is accepted convention here —
+         scripts/strip-junk-jsdoc.ts exists to remove generated prose noise. */
+      'jsdoc/require-description': 'off',
       'jsdoc/require-param-description': 'warn',
       'jsdoc/require-returns-description': 'warn',
       'jsdoc/no-types': 'warn',
@@ -112,6 +114,12 @@ export default tseslint.config(
     },
   },
   {
+    /* ROUTE FILES: TanStack file-routing requires exporting Route objects and
+       lazy component consts alongside the root component — fast-refresh rule N/A. */
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     /* BY-DESIGN: Logger utility intentionally uses console */
     files: ['src/utils/logger.ts'],
     rules: { 'no-console': 'off' },
@@ -126,9 +134,15 @@ export default tseslint.config(
     },
   },
   {
-    /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions */
+    /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions.
+       scripts/stubs are intentionally minimal headless shims — JSDoc and
+       constructor-shape rules add no value there. */
     files: ['scratch/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}', 'src/scripts/**/*.{ts,tsx}', '*.ts'],
-    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      'jsdoc/require-jsdoc': 'off',
+      '@typescript-eslint/no-useless-constructor': 'off',
+    },
   },
   {
     /* CRYPTO UTILS: Allow non-null assertion for crypto.getRandomValues which always populates array */

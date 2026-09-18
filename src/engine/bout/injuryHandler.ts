@@ -9,8 +9,13 @@ import { StateImpact } from '@/engine/impacts';
 
 /**
  * Handle injuries.
- * @param rivalStableId - Rival stable id. (optional)
- * @param seed - Seed. (optional)
+ * @param s -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param week -
+ * @param rivalStableId -
+ * @param seed -
  */
 export function handleInjuries(
   s: GameState,

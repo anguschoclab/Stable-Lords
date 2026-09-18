@@ -1,5 +1,5 @@
 import type { GameState, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
-import type { BoutOfferId, PromoterId, WarriorId } from '@/types/shared.types';
+import type { BoutOfferId, PromoterId, StableId, WarriorId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/crowdMood';
 import { FightingStyle } from '@/types/shared.types';
 import { scoreMatchup } from '@/engine/schedulingAssistant';
@@ -317,7 +317,7 @@ export function convertBidsToOffers(
     const offer: BoutOffer = {
       id: offerId,
       promoterId: BID_MATCHMAKING_ID,
-      proposerStableId: proposerStable.stableId as any,
+      proposerStableId: proposerStable.stableId as StableId,
       warriorIds: [bid.proposingWarriorId as WarriorId, opponent.id as WarriorId],
       boutWeek: displayWeek(state.absoluteWeek + 2),
       expirationWeek: displayWeek(state.absoluteWeek + 1),

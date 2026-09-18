@@ -70,6 +70,7 @@ function VirtualizedInner({
         ? 'grid grid-cols-1 md:grid-cols-2 gap-8'
         : 'grid grid-cols-1 gap-8';
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- @tanstack/react-virtual returns non-memoizable functions; no memo-safe alternative exists
   const virtualizer = useVirtualizer({
     count: rows.length,
     estimateSize: () => 400,

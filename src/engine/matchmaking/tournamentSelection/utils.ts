@@ -14,8 +14,10 @@ import { getPairKey } from '@/utils/keyUtils';
 
 /**
  * Get ai plan.
- * @param opponentStyle - Opponent style. (optional)
- * @param opponentOwnerId - Opponent owner id. (optional)
+ * @param state -
+ * @param w -
+ * @param opponentStyle -
+ * @param opponentOwnerId -
  */
 export function getAIPlan(
   state: GameState,

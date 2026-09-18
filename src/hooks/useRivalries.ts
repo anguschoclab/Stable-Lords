@@ -24,7 +24,7 @@ function buildNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
  *
  */
 export function useNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
-  return useMemo(() => buildNameResolver(state), [state.roster, state.graveyard, state.rivals]);
+  return useMemo(() => buildNameResolver(state), [state]);
 }
 
 // Custom Hook to gather player roster IDs

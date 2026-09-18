@@ -214,7 +214,9 @@ export function getWeatherSeason(weather: WeatherType): Season | 'All' {
 
 /**
  * Run world pass.
- * @param rng - Rng. (optional)
+ * @param _state -
+ * @param nextWeek -
+ * @param rng -
  */
 export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(nextWeek * 13);

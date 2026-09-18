@@ -476,6 +476,7 @@ export function handleDreamweaverVisit(
   }
 }
 
+/** Handles the Goblin Merchant offseason event outcome. */
 export function handleGoblinMerchant(
   state: GameState,
   nextWeek: number,

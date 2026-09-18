@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useWorldState, useGameStore, useBookmarks } from '@/state/useGameStore';
+import { useWorldState, useBookmarks } from '@/state/useGameStore';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -33,7 +33,6 @@ type WarriorSortField =
  */
 export default function WorldOverview() {
   const state = useWorldState();
-  const isBookmarked = useGameStore((s) => s.isBookmarked);
   const bookmarks = useBookmarks();
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: 'asc' | 'desc' }>({
     field: 'fame',
@@ -125,10 +124,10 @@ export default function WorldOverview() {
 
   const filteredStableRows = useMemo(() => {
     if (!showBookmarkedOnly) return stableRows;
-    return stableRows.filter((r) => isBookmarked('rival', r.id));
-  }, [stableRows, showBookmarkedOnly, isBookmarked, bookmarks]);
+    return stableRows.filter((r) => bookmarks.some((b) => b.entityType === 'rival' && b.entityId === r.id));
+  }, [stableRows, showBookmarkedOnly, bookmarks]);
 
-  const stableBookmarkedCount = stableRows.filter((r) => isBookmarked('rival', r.id)).length;
+  const stableBookmarkedCount = stableRows.filter((r) => bookmarks.some((b) => b.entityType === 'rival' && b.entityId === r.id)).length;
 
   const warriorRows = useMemo<WarriorRow[]>(() => {
     const mapWarrior = (
@@ -197,10 +196,10 @@ export default function WorldOverview() {
 
   const filteredWarriorRows = useMemo(() => {
     if (!showBookmarkedOnly) return warriorRows;
-    return warriorRows.filter((r) => isBookmarked('warrior', r.id));
-  }, [warriorRows, showBookmarkedOnly, isBookmarked, bookmarks]);
+    return warriorRows.filter((r) => bookmarks.some((b) => b.entityType === 'warrior' && b.entityId === r.id));
+  }, [warriorRows, showBookmarkedOnly, bookmarks]);
 
-  const warriorBookmarkedCount = warriorRows.filter((r) => isBookmarked('warrior', r.id)).length;
+  const warriorBookmarkedCount = warriorRows.filter((r) => bookmarks.some((b) => b.entityType === 'warrior' && b.entityId === r.id)).length;
 
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);
   const totalKills = stableRows.reduce((s, r) => s + (r.kills || 0), 0);

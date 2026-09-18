@@ -35,21 +35,21 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
       rivals: s.rivals,
     }))
   );
-  const roster = stateRoster ?? [];
-  const rivals = stateRivals ?? [];
 
   const stable = useMemo(() => {
     if (stableId === 'player' || stableName === player.stableName) {
       return {
         owner: player,
-        roster,
+        roster: stateRoster ?? [],
         isPlayer: true,
       };
     }
-    const rival = rivals.find((r) => r.owner.id === stableId || r.owner.stableName === stableName);
+    const rival = (stateRivals ?? []).find(
+      (r) => r.owner.id === stableId || r.owner.stableName === stableName
+    );
     if (rival) return { ...rival, isPlayer: false };
     return undefined;
-  }, [stableId, stableName, player, roster, rivals]);
+  }, [stableId, stableName, player, stateRoster, stateRivals]);
 
   if (!stable)
     return <div className="p-8 text-center text-muted-foreground">Stable not found.</div>;

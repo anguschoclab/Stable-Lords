@@ -9,11 +9,23 @@ import { weekToTimestamp } from '@/constants';
 
 /**
  * Handle reporting.
- * @param _rivalStableId - _rival stable id. (optional)
- * @param isRivalry - Is rivalry. (optional)
- * @param rng - Rng. (optional)
- * @param arenaId - Arena id. (optional)
- * @param weather - Weather. (optional)
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param tags -
+ * @param fA -
+ * @param pA -
+ * @param fD -
+ * @param pD -
+ * @param week -
+ * @param _rivalStableId -
+ * @param isRivalry -
+ * @param _day -
+ * @param rng -
+ * @param arenaId -
+ * @param weather -
+ * @param absoluteWeek -
+ * @param contractId -
  */
 export function handleReporting(
   wA: Warrior,

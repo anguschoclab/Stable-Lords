@@ -84,7 +84,9 @@ const PERSONALITIES: PromoterPersonality[] = [
 
 /**
  * Generate promoters.
- * @param rng - Rng. (optional)
+ * @param count -
+ * @param seed -
+ * @param rng -
  */
 export function generatePromoters(count: number, seed: number, rng?: IRNGService): Promoter[] {
   const rngService = rng || new SeededRNGService(seed);

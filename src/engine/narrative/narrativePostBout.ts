@@ -35,7 +35,12 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
 
 /**
  * Narrate bout end.
- * @param weaponId - Weapon id. (optional)
+ * @param rng -
+ * @param by -
+ * @param winnerName -
+ * @param loserName -
+ * @param weaponId -
+ * @param ctx -
  */
 export function narrateBoutEnd(
   rng: IRNGService,

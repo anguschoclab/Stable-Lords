@@ -135,7 +135,7 @@ export function useBookingOffice() {
         response
       );
       if (next.boutOffers) {
-        s.boutOffers = next.boutOffers as any;
+        s.boutOffers = next.boutOffers;
       }
     });
     toast.success(`Bout ${response === 'Accepted' ? 'accepted' : 'declined'}.`);

@@ -28,7 +28,8 @@ const LOW = 3;
 
 /**
  * Validate strategy.
- * @param warrior - Warrior. (optional)
+ * @param plan -
+ * @param warrior -
  */
 export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWarning[] {
   const out: StrategyWarning[] = [];

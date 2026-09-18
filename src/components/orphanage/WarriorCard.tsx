@@ -46,6 +46,7 @@ function TraitTooltipContent({ trait }: { trait: string }) {
   );
 }
 
+/** Selectable warrior card shown in the orphanage draft grid. */
 export default function WarriorCard({ warrior, isSelected, canSelect, onClick }: WarriorCardProps) {
   const stats = computeWarriorStats(warrior.attrs, warrior.style);
 

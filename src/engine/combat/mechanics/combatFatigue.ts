@@ -24,7 +24,9 @@ const FATIGUE_HEAVY_PENALTY = -8;
 
 /**
  * Endurance cost.
- * @param weather - Weather. (optional)
+ * @param oe -
+ * @param al -
+ * @param weather -
  */
 export function enduranceCost(oe: number, al: number, weather?: WeatherType | string): number {
   const baseCost = oe * ENDURANCE_OE_SCALING + al * ENDURANCE_AL_SCALING;

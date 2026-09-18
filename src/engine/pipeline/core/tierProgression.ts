@@ -50,7 +50,10 @@ const tierRules: Record<NonNullable<RivalStableData['tier']>, TierRule[]> = {
 
 /**
  * Process tier progression.
- * @param rng - Rng. (optional)
+ * @param state -
+ * @param newSeason -
+ * @param newWeek -
+ * @param rng -
  */
 export function processTierProgression(
   state: GameState,

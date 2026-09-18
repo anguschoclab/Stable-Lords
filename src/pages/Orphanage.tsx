@@ -166,7 +166,7 @@ export default function Orphanage() {
     poolSeedValue,
     saveCurrentState,
     navigate,
-    state.ftueComplete,
+    playerPlan,
   ]);
 
   // ─── Shell ──────────────────────────────────────────────────────────────────

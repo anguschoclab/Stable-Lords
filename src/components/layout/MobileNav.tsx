@@ -6,13 +6,12 @@ import { useState } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import {
-  HUBS,
-  type HubId,
   useNavAlerts,
   HubSwitcher,
   SubPageList,
   AlertStrip,
 } from './navigationShared';
+import { HUBS, type HubId } from './navigationHubs';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,

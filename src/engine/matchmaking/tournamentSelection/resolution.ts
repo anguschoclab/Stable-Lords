@@ -216,7 +216,14 @@ export function resolveCompleteTournament(
 
 /**
  * Apply bout results.
- * @param skipFatigue - Skip fatigue. (optional)
+ * @param state -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param tId -
+ * @param tName -
+ * @param rng -
+ * @param skipFatigue - If true, skip fatigue accrual (tournament bouts during tournament week)
  */
 export function applyBoutResults(
   state: GameState,

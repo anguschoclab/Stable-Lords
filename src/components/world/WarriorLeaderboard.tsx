@@ -61,6 +61,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- @tanstack/react-virtual returns non-memoizable functions; no memo-safe alternative exists
   const virtualizer = useVirtualizer({
     count: filtered.length,
     estimateSize: () => 48,

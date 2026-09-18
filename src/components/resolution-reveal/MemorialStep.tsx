@@ -18,6 +18,7 @@ function pickTribute(name: string): string | null {
   return template.replace(/\{\{\s*name\s*\}\}/g, name);
 }
 
+/** Memorial step of the resolution reveal, honoring warriors who died this season. */
 export function MemorialStep({ deadWarriors }: MemorialStepProps) {
   return (
     <motion.div

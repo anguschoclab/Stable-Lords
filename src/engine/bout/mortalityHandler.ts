@@ -12,7 +12,14 @@ import { weekToTimestamp } from '@/constants';
 
 /**
  * Handle death.
- * @param rivalStableId - Rival stable id. (optional)
+ * @param s -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param week -
+ * @param tags -
+ * @param rivalStableId -
+ * @param rng -
  */
 export function handleDeath(
   s: GameState,

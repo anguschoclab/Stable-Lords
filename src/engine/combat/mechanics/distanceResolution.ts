@@ -149,7 +149,13 @@ export interface DistanceContestResult {
  * Range shifts one step toward the winner's preferred weapon range, capped by
  * the arena's maxRange (a cramped arena never allows Extended range).
  *
- * @param sizeProfile - Optional arena size profile. Defaults to standard if omitted.
+ * @param rng -
+ * @param fA -
+ * @param fD -
+ * @param OE_A -
+ * @param OE_D -
+ * @param currentRange -
+ * @param sizeProfile -
  */
 export function contestDistance(
   rng: () => number,

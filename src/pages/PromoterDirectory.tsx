@@ -182,13 +182,12 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
  * Promoter directory.
  */
 export default function PromoterDirectory() {
-  const { promoters, boutOffers, week, absoluteWeek, isBookmarked, bookmarks } = useGameStore(
+  const { promoters, boutOffers, week, absoluteWeek, bookmarks } = useGameStore(
     useShallow((s) => ({
       promoters: s.promoters,
       boutOffers: s.boutOffers,
       week: s.week,
       absoluteWeek: s.absoluteWeek,
-      isBookmarked: s.isBookmarked,
       bookmarks: s.bookmarks,
     }))
   );
@@ -196,7 +195,7 @@ export default function PromoterDirectory() {
 
   const { sortedPromoters, stats, bookmarkedCount } = useMemo(() => {
     const allPromoters = Object.values(promoters || {});
-    const bookmarked = allPromoters.filter((p) => isBookmarked('promoter', p.id));
+    const bookmarked = allPromoters.filter((p) => bookmarks.some((b) => b.entityType === 'promoter' && b.entityId === p.id));
     const list = showBookmarkedOnly ? bookmarked : allPromoters;
 
     // Sort by tier (Legendary first) then by legacy fame
@@ -229,7 +228,7 @@ export default function PromoterDirectory() {
       },
       bookmarkedCount: bookmarked.length,
     };
-  }, [promoters, boutOffers, showBookmarkedOnly, isBookmarked, bookmarks]);
+  }, [promoters, boutOffers, showBookmarkedOnly, bookmarks]);
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">

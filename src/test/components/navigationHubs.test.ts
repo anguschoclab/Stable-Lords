@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { HUBS, type HubId } from '@/components/layout/navigationShared';
+import { HUBS, type HubId } from '@/components/layout/navigationHubs';
 
 describe('HUBS structure after consolidation', () => {
   it('has exactly one stable management hub, world, and bookmarks (no command/ops split)', () => {

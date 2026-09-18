@@ -9,7 +9,8 @@ import { getSpecialtyMods } from '@/engine/trainerSpecialties';
 
 /**
  * Create rng for context.
- * @param rng - Rng. (optional)
+ * @param seed -
+ * @param rng -
  */
 export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
   return rng || new SeededRNGService(seed);
@@ -33,9 +34,11 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
 
 /**
  * Get trainer mods.
- * @param fighter - Fighter. (optional)
- * @param opponent - Opponent. (optional)
- * @param ctx - Ctx. (optional)
+ * @param trainers -
+ * @param style -
+ * @param fighter -
+ * @param opponent -
+ * @param ctx -
  */
 export function getTrainerMods(
   trainers: Trainer[] | undefined,

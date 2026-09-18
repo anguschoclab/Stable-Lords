@@ -38,7 +38,8 @@ const TRAIT_IDS = Object.keys(TRAITS);
 
 /**
  * Generate orphan pool.
- * @param seed - Seed. (optional)
+ * @param count -
+ * @param seed -
  */
 export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarrior[] {
   const rng = new SeededRNGService(seed ?? cryptoRandomInt(0, 2147483647));

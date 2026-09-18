@@ -33,6 +33,7 @@ export const narrativeContent: NarrativeContent = {
   crowd_reactions: undefined,
 };
 
+/** Lazily loads the combat narrative JSON archives into the narrative content cache. */
 export function loadCombatNarrative(): Promise<void> {
   if (combatCache) return combatCache;
   combatCache = (async () => {

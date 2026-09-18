@@ -2,7 +2,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TacticBank, { TACTIC_BANK } from '@/components/planBuilder/TacticBank';
+import TacticBank from '@/components/planBuilder/TacticBank';
+import { TACTIC_BANK } from '@/components/planBuilder/tacticBankData';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/shared.types';
 

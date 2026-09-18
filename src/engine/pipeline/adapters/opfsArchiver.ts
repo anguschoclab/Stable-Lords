@@ -10,7 +10,9 @@ import { archiveWorkerProxy } from '@/engine/storage/archiveWorkerProxy';
  * a hard-coded backend — so persistence lands in the same place as saves.
  * In Electron the service writes via IPC; on the web the work goes to a Web
  * Worker, and a worker failure retries directly on the main thread rather
- * than dropping the logs (the transcripts are already detached).
+ * than dropping the logs (the transcripts are already detached). A log whose
+ * write still fails is pushed back onto `state.deferredBoutLogs` so the next
+ * week's flush retries it instead of losing the transcript.
  *
  * Returns the mutated state with deferredBoutLogs cleared.
  */
@@ -24,11 +26,18 @@ export function flushDeferredArchivesOffThread(state: GameState): GameState {
       logs.map((log) =>
         archiveService
           .archiveBoutLog(log.year, log.season, log.boutId, log.transcript, true)
-          .catch((err) => {
-            console.error(`Failed to archive bout ${log.boutId}:`, err);
-          })
+          .then(
+            () => null,
+            (err) => {
+              console.error(`Failed to archive bout ${log.boutId}:`, err);
+              return log;
+            }
+          )
       )
-    );
+    ).then((results) => {
+      const failed = results.filter((log): log is NonNullable<typeof log> => log !== null);
+      if (failed.length > 0) state.deferredBoutLogs.push(...failed);
+    });
 
   if (typeof window !== 'undefined' && window.electronAPI) {
     void archiveDirectly();

@@ -66,4 +66,20 @@ describe('flushDeferredArchivesOffThread', () => {
     expect(archiveBoutLog).toHaveBeenCalledWith(1, 0, 'bout_0', ['line 0'], true);
     expect(archiveBoutLog).toHaveBeenCalledWith(1, 0, 'bout_1', ['line 1'], true);
   });
+
+  it('re-queues logs whose direct archive write fails so a later flush retries', async () => {
+    flushLogs.mockRejectedValue(new Error('worker died'));
+    archiveBoutLog.mockImplementation((_y: number, _s: number, boutId: string) =>
+      boutId === 'bout_1' ? Promise.reject(new Error('disk full')) : Promise.resolve(undefined)
+    );
+    const state = stateWithLogs(3);
+    flushDeferredArchivesOffThread(state);
+    await vi.waitFor(() => {
+      expect(archiveBoutLog).toHaveBeenCalledTimes(3);
+    });
+    await vi.waitFor(() => {
+      expect(state.deferredBoutLogs).toHaveLength(1);
+    });
+    expect(state.deferredBoutLogs?.[0]?.boutId).toBe('bout_1');
+  });
 });

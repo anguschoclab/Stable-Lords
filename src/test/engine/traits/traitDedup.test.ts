@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 142; // 139 previous + 3 new narrative traits (pit_fighter, gut_instinct, gallows_born)
+const EXPECTED_COUNT = 143; // 139 previous + 3 new narrative traits (pit_fighter, gut_instinct, gallows_born) + 1 extra base trait in trunk
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

@@ -117,6 +117,11 @@ export default defineConfig({
   ],
   worker: {
     format: 'es',
+    // Worker bundles run through a separate rolldown pass that does not
+    // inherit the main plugin list — re-apply fixHowler so the worker gets
+    // the guarded/no-op build instead of raw howler (which throws
+    // ReferenceError: HowlerGlobal in a window-less scope).
+    plugins: () => [fixHowler()],
   },
   resolve: {
     alias: {

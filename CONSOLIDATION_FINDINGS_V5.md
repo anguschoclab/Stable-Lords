@@ -8,17 +8,17 @@
 
 | PR # | Category | Verdict | Integration commit | Rationale |
 |------|----------|---------|--------------------|-----------|
-| #958 | Narrative | EXTRACTED | f83c442f | Combat PBP/strikes/kill-text additions folded into the curated union; strip list applied |
-| #959 | Perf | EXTRACTED | af4bea03 | Typed single-pass `deadWarriors` — cleanest of the two ResolutionReveal PRs; also fixed F-memorial in the same hunk |
-| #960 | A11y | EXTRACTED | 9ce9d8d3 | `motion-reduce:animate-none` on all 8 animated fighter stances — clean, complete |
-| #961 | Narrative | EXTRACTED | f83c442f | Largest content contributor to the union; curation over literal merge |
-| #962 | UX | EXTRACTED | 04922d09 | Play/pause tooltip, state-aware (`PLAY BOUT`/`PAUSE PLAYBACK`), matches Radix convention |
-| #963 | Feature | PARTIAL/EXTRACTED | 2f9418aa | 3 traits adopted; `gallows_born` killWindowBonus corrected 2→0.01; 2 arena lore entries rejected as duplicates; loreData churn and artifacts stripped |
-| #964 | Narrative | EXTRACTED | f83c442f | Largest deduper — consensus removals applied; `.cjs` scripts + bun.lock churn stripped |
-| #965 | Bundled | PARTIAL/EXTRACTED | fd08b71a | ~23-line LegacyMentorsTab hunk kept (typed explicitly); the other 110 cosmetic files DISAPPROVED |
+| #958 | Narrative | EXTRACTED | 535e91a2 | Combat PBP/strikes/kill-text additions folded into the curated union; strip list applied |
+| #959 | Perf | EXTRACTED | 32563291 | Typed single-pass `deadWarriors` — cleanest of the two ResolutionReveal PRs; also fixed F-memorial in the same hunk |
+| #960 | A11y | EXTRACTED | 38a41c4e | `motion-reduce:animate-none` on all 8 animated fighter stances — clean, complete |
+| #961 | Narrative | EXTRACTED | 535e91a2 | Largest content contributor to the union; curation over literal merge |
+| #962 | UX | EXTRACTED | 1acbbcc4 | Play/pause tooltip, state-aware (`PLAY BOUT`/`PAUSE PLAYBACK`), matches Radix convention |
+| #963 | Feature | PARTIAL/EXTRACTED | d9638746 | 3 traits adopted; `gallows_born` killWindowBonus corrected 2→0.01; 2 arena lore entries rejected as duplicates; loreData churn and artifacts stripped |
+| #964 | Narrative | EXTRACTED | 535e91a2 | Largest deduper — consensus removals applied; `.cjs` scripts + bun.lock churn stripped |
+| #965 | Bundled | PARTIAL/EXTRACTED | 3e90e829 | ~23-line LegacyMentorsTab hunk kept (typed explicitly); the other 110 cosmetic files DISAPPROVED |
 | #966 | Perf | DISAPPROVED/SUPERSEDED | — | `.reduce`+`any` loses type safety vs #959; junk `.jules/bolt.md`; same `@types/glob` artifact |
-| #967 | Security/UX | EXTRACTED | 558f734b | Raw `error.message` removed from fallback UI; honest retry label added. Severity lower than claimed (details-gated) — still correct |
-| #968 | Narrative/Chore | EXTRACTED | f83c442f + bba0b262 | JSON → union; vitest spec `^4.1.10`→`^4.1.11` matches resolved version; `@types/glob` + backups stripped |
+| #967 | Security/UX | EXTRACTED | e96cb6dc | Raw `error.message` removed from fallback UI; honest retry label added. Severity lower than claimed (details-gated) — still correct |
+| #968 | Narrative/Chore | EXTRACTED | 535e91a2 + 5520c02f | JSON → union; vitest spec `^4.1.10`→`^4.1.11` matches resolved version; `@types/glob` + backups stripped |
 
 **Summary**: 0 PRs merged verbatim (every branch carried artifact contamination — `.claude/backups/**`, scratch `.cjs` scripts, `@types/glob`, `bun.lock` churn, `.jules/bolt.md`). 9 extracted in whole or part, #965 partially, #966 superseded. Curated union applied per the computed overlap matrix.
 
@@ -45,18 +45,18 @@ Union computed from branch JSON (not diff lines), keyed on `text` for `{text,min
 
 | Finding | Evidence | Fix | Commit |
 |---------|----------|-----|--------|
-| F-trait1: kill-window saturation | `calculateKillWindow` clamps to `[0, 0.04]`; traits carried `killWindowBonus` of 1–2 | orphan_vengeance 1→0.01, death_marked 2→0.012, alley_stalker 1→0.008; `gallows_born` landed at 0.01 | 2f9418aa |
-| F-arch1: archive routing | `createStore` imported OPFS singleton directly, bypassing the Electron/web switch | all persistence routed through `archiveService` | 86bae8c8 |
-| F-arch3: deferred-log loss | per-log archive failures swallowed by `console.error` | failed logs re-queued onto `deferredBoutLogs` for next flush | eb7c4a9e |
-| F-memorial: blank memorial step | unresolved death names → empty `deadWarriors` → memorial skipped | memorial renders whenever selected; unresolved-name test added | af4bea03 |
-| F-type1: `lastSimulationReport` type drift | store declared `FightOutcome`; runtime copies `SimulationReport` — masked by `any` selector | store.types + serialization use `GameState['lastSimulationReport']` | b7c31861 |
-| F-rng1: dead `Date.now()` fallback | `getRandomValues` always fills the array | `as number` cast matching `initialization.ts` | b7c31861 |
-| F-case: `Docs/`↔`docs/` collision | 67 vs 5 tracked paths, case-insensitive FS collision + clone warnings | consolidated to `docs/`; README + spec comments updated | 1687bb7e |
-| F-ui1/F-ui2: fabricated UI | static "Confidence: 94.8%", raw `targetStableId`, `LIVE_DATA_STREAM` on archived news, fake telemetry label | all values now map to real state | 046ca5fe |
-| Dead code | `templateBuilders.ts` zero consumers; `advanceWeek.test.ts.skip` mocked removed APIs | deleted | b7c31861 |
-| Config warnings | `__dirname` under native configLoader; nested `vi.unmock` | `import.meta.dirname`; top-level unmock | b7c31861 |
-| Store test mocks | 4 state tests broke when `createStore` moved to `archiveService` | `OPFSArchiveService` stub added to mocks | 5840f7d2 |
-| Lint regression | 3 non-null assertions introduced by my own rewrite | for-of iteration | ff7f57d8 |
+| F-trait1: kill-window saturation | `calculateKillWindow` clamps to `[0, 0.04]`; traits carried `killWindowBonus` of 1–2 | orphan_vengeance 1→0.01, death_marked 2→0.012, alley_stalker 1→0.008; `gallows_born` landed at 0.01 | d9638746 |
+| F-arch1: archive routing | `createStore` imported OPFS singleton directly, bypassing the Electron/web switch | all persistence routed through `archiveService` | 59bc245e |
+| F-arch3: deferred-log loss | per-log archive failures swallowed by `console.error` | failed logs re-queued onto `deferredBoutLogs` for next flush | 7893385c |
+| F-memorial: blank memorial step | unresolved death names → empty `deadWarriors` → memorial skipped | memorial renders whenever selected; unresolved-name test added | 32563291 |
+| F-type1: `lastSimulationReport` type drift | store declared `FightOutcome`; runtime copies `SimulationReport` — masked by `any` selector | store.types + serialization use `GameState['lastSimulationReport']` | 255de87e |
+| F-rng1: dead `Date.now()` fallback | `getRandomValues` always fills the array | `as number` cast matching `initialization.ts` | 255de87e |
+| F-case: `Docs/`↔`docs/` collision | 67 vs 5 tracked paths, case-insensitive FS collision + clone warnings | consolidated to `docs/`; README + spec comments updated | 0f348eda |
+| F-ui1/F-ui2: fabricated UI | static "Confidence: 94.8%", raw `targetStableId`, `LIVE_DATA_STREAM` on archived news, fake telemetry label | all values now map to real state | a63b78a4 |
+| Dead code | `templateBuilders.ts` zero consumers; `advanceWeek.test.ts.skip` mocked removed APIs | deleted | 255de87e |
+| Config warnings | `__dirname` under native configLoader; nested `vi.unmock` | `import.meta.dirname`; top-level unmock | 255de87e |
+| Store test mocks | 4 state tests broke when `createStore` moved to `archiveService` | `OPFSArchiveService` stub added to mocks | 5f4bbdc9 |
+| Lint regression | 3 non-null assertions introduced by my own rewrite | for-of iteration | 28885a3a |
 
 ## 5. Architectural Findings — Explicit Verdicts
 
@@ -102,19 +102,19 @@ Known non-blocking noise (all pre-existing, verified): `HowlerGlobal` worker Ref
 
 ## 8. Test-First Compliance Audit
 
-Gate commit `5e72520d` authored 18 intentionally-red tests + characterization suites **before** any implementation commit. Mapping (test commit → impl commit):
+Gate commit `80b2265c` authored 18 intentionally-red tests + characterization suites **before** any implementation commit. Mapping (test commit → impl commit):
 
 | Item | Test | Impl |
 |------|------|------|
-| ResolutionReveal deadWarriors + memorial | 5e72520d | af4bea03 |
-| LegacyMentorsTab ranking | 5e72520d | fd08b71a |
-| Stance motion-reduce | 5e72520d | 9ce9d8d3 |
-| BoutControls tooltip | 5e72520d | 04922d09 |
-| ErrorBoundary leakage | 5e72520d | 558f734b |
-| AgentReasoningWidget honesty | 5e72520d | 046ca5fe |
-| Archive routing | 5e72520d | 86bae8c8 |
-| Deferred-log re-queue | 5e72520d (+ red test landed in eb7c4a9e before impl) | eb7c4a9e |
-| Kill-window scale invariant | 5e72520d | 2f9418aa |
+| ResolutionReveal deadWarriors + memorial | 80b2265c | 32563291 |
+| LegacyMentorsTab ranking | 80b2265c | 3e90e829 |
+| Stance motion-reduce | 80b2265c | 38a41c4e |
+| BoutControls tooltip | 80b2265c | 1acbbcc4 |
+| ErrorBoundary leakage | 80b2265c | e96cb6dc |
+| AgentReasoningWidget honesty | 80b2265c | a63b78a4 |
+| Archive routing | 80b2265c | 59bc245e |
+| Deferred-log re-queue | 80b2265c (+ red test landed in 7893385c before impl) | 7893385c |
+| Kill-window scale invariant | 80b2265c | d9638746 |
 
 The red tests caught real scope growth: `killWindowScale.test.ts` revealed **three** traits saturated the cap, not the one originally flagged.
 

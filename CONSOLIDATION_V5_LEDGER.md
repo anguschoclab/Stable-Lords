@@ -84,17 +84,17 @@ Coverage tiers: **D**eep-read (every line) / **S**canned (structure + key sectio
 
 | Change item | Required tests | Test file | Test commit | Impl commit |
 | ----------- | -------------- | --------- | ----------- | ---------- |
-| #959 deadWarriors | populated-graveyard resolution | src/test/components/ResolutionReveal.test.tsx | 5e72520d | af4bea03 |
-| #965 mentors | ranking characterization | src/test/components/stable/LegacyMentorsTab.test.tsx | 5e72520d | fd08b71a |
-| #960 stances | pure-function classes | src/test/components/arena/useFighterStyles.test.ts | 5e72520d | 9ce9d8d3 |
-| #962 tooltip | tooltip content | src/test/components/boutViewer/BoutViewer.test.tsx | 5e72520d | 04922d09 |
-| #967 boundary | crash UI + message hidden | src/test/components/ErrorBoundary.test.tsx | 5e72520d | 558f734b |
-| F-ui1/2 honesty | no fabricated values | src/test/components/dashboard/AgentReasoningWidget.test.tsx | 5e72520d | 046ca5fe |
-| F-arch1/2 routing | Electron/web service switch | src/test/engine/storage/archiveRouting.test.ts | 5e72520d | 86bae8c8 |
-| F-arch3 re-queue | failed logs re-queued | src/test/engine/pipeline/opfsArchiverFlush.test.ts | 5e72520d(+eb7c4a9e) | eb7c4a9e |
-| F-trait1 scale | killWindowBonus ≤ cap | src/test/engine/traits/killWindowScale.test.ts | 5e72520d | 2f9418aa |
-| #963 traits | count bump + trait resolution | src/test/engine/traits/traitDedup.test.ts | 5e72520d | 2f9418aa |
-| narrative curation | suite + validate | existing narrativeContent* + arenaLoreDedup | n/a — pre-existing | f83c442f |
+| #959 deadWarriors | populated-graveyard resolution | src/test/components/ResolutionReveal.test.tsx | 80b2265c | 32563291 |
+| #965 mentors | ranking characterization | src/test/components/stable/LegacyMentorsTab.test.tsx | 80b2265c | 3e90e829 |
+| #960 stances | pure-function classes | src/test/components/arena/useFighterStyles.test.ts | 80b2265c | 38a41c4e |
+| #962 tooltip | tooltip content | src/test/components/boutViewer/BoutViewer.test.tsx | 80b2265c | 1acbbcc4 |
+| #967 boundary | crash UI + message hidden | src/test/components/ErrorBoundary.test.tsx | 80b2265c | e96cb6dc |
+| F-ui1/2 honesty | no fabricated values | src/test/components/dashboard/AgentReasoningWidget.test.tsx | 80b2265c | a63b78a4 |
+| F-arch1/2 routing | Electron/web service switch | src/test/engine/storage/archiveRouting.test.ts | 80b2265c | 59bc245e |
+| F-arch3 re-queue | failed logs re-queued | src/test/engine/pipeline/opfsArchiverFlush.test.ts | 80b2265c(+7893385c) | 7893385c |
+| F-trait1 scale | killWindowBonus ≤ cap | src/test/engine/traits/killWindowScale.test.ts | 80b2265c | d9638746 |
+| #963 traits | count bump + trait resolution | src/test/engine/traits/traitDedup.test.ts | 80b2265c | d9638746 |
+| narrative curation | suite + validate | existing narrativeContent* + arenaLoreDedup | n/a — pre-existing | 535e91a2 |
 | B1 glob fix | n/a (test file is the fix) | same file | n/a — direct fix | ea6f8b18 |
 
 ## Final verification (Phase 6, clean clone)

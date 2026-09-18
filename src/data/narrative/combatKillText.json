@@ -693,7 +693,12 @@
       "{{attacker}} claims victory, leaving {{defender}} dead upon the sands.",
       "{{attacker}} steps over the broken form of {{defender}}, securing a grim victory.",
       "The arena falls into a brief, stunned silence as {{defender}} breathes their last.",
-      "Blood soaks the thirsty sands as {{attacker}} brings a brutal end to {{defender}}'s story."
+      "Blood soaks the thirsty sands as {{attacker}} brings a brutal end to {{defender}}'s story.",
+      "A clinical, final strike that ends the bout with grim certainty.",
+      "The life fades from their eyes as the final, brutal blow connects.",
+      "A darkly humorous end as they collapse into a heap of defeat.",
+      "The arena falls silent as the final, dramatic strike seals their fate.",
+      "A bleak and inevitable conclusion to a brutal clash."
     ]
   }
 }

@@ -38,6 +38,7 @@ fix_*.cjs
 .jules/
 .Jules/
 .claude/backups/
+.playwright-mcp/
 
 # Debug scripts at repo root
 test_*.cjs

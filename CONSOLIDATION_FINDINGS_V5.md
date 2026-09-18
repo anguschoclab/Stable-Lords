@@ -1,6 +1,6 @@
 # Consolidation Findings V5
 
-> **Final verdict: APPROVED.** 11 open PRs (#958–#968) evaluated under curated-extraction rules — every PR dispositioned, every accepted change committed to `main` behind a test-first gate. All gates green: type-check 0 errors, lint 0 errors, **7,431/7,431 tests** across 595 files, build + Electron compile + narrative-validate + E2E golden path all pass. Working tree is a clean clone outside iCloud; the original working copy was disqualified on evidence (§5, F-icloud).
+> **Final verdict: APPROVED.** 11 open PRs (#958–#968) evaluated under curated-extraction rules — every PR dispositioned, every accepted change committed to `main` behind a test-first gate. All gates green: type-check 0 errors, lint **0 errors / 0 warnings**, **7,431/7,431 tests** across 595 files, build + Electron compile + narrative-validate + E2E golden path across **all 5 browser projects** (chromium, firefox, webkit, Mobile Chrome, Mobile Safari) all pass. Working tree is a clean clone outside iCloud; the original working copy was disqualified on evidence (§5, F-icloud).
 
 ---
 
@@ -118,12 +118,15 @@ Gate commit `80b2265c` authored 18 intentionally-red tests + characterization su
 
 The red tests caught real scope growth: `killWindowScale.test.ts` revealed **three** traits saturated the cap, not the one originally flagged.
 
-## 9. Deferred Items
+## 9. Deferred Items — ALL RESOLVED (post-disposition follow-up)
 
-- `bun.lock` regeneration — blocked on network (artifactory + git+ssh); recommendation in §5/F-lock.
-- `fixHowler` worker-bundle coverage — pre-existing, needs a worker-aware patch or howler-free worker import graph.
-- 518 lint warnings — mostly JSDoc-description and a handful of hook-deps; unchanged from baseline, not in consolidation scope.
-- iCloud-hosted original working copy — abandoned in place; contains another session's untracked scratch scripts under `scripts/`.
+- `bun.lock` regeneration — **RESOLVED** `d50b960d`: dropped the `git+ssh`-pinned `@electron/node-gyp` resolution for a registry tarball and regenerated the lockfile against the public registry. `bun install` now completes anonymously.
+- `fixHowler` worker-bundle coverage — **RESOLVED** `6fa390b5`: `fixHowler()` now applies through `worker.plugins` so worker bundles emit the guarded `globalThis.HowlerGlobal` access. Verified end-to-end: built-app browser console clean (after clearing the stale PWA precache).
+- 518 lint warnings — **RESOLVED** `b88f251a` + `94c6c108`: 22 stale `@param` names corrected against real signatures; 12 `any` sites typed (`GameStore` selectors, `StableId`/`NewsId` brands, `SaveEnvelope`, `MenuItemConstructorOptions`, `Promise<unknown>` write queue); 12 hook-dep warnings fixed honestly (`bookmarks` reactivity now uses the store data inside memos rather than an unused dep trigger; unstable `?? []` aliases removed); non-component exports extracted to sibling modules (`navigationHubs.ts`, `tacticBankData.ts`, `treasurySparklineUtils.ts`, `recruitTierConfig.ts`); `jsdoc/require-description` disabled (stub-style docs are repo convention per `strip-junk-jsdoc.ts`); scripts/stubs exempted; 2 `useVirtualizer` incompatible-library warnings justified inline. **Lint: 0 errors, 0 warnings.**
+- `Math.random` production audit — **CLEAN**: zero hits outside `src/test/` (engine restriction enforced at error level).
+- eslint suppressions/console/TODO audit — **CLEAN**: all 21 remaining suppressions justified inline; console calls confined to error-path diagnostics and CLI scripts; no TODO/FIXME markers in production code.
+- e2e all-browser coverage — **RESOLVED** `94c6c108`: installed firefox/webkit, fixed an `AnimatePresence` race (exiting step-1 button shared the "To the Arena" label — deterministic firefox failure) via a count-1 guard, made nav clicks mobile-aware through the hamburger sheet, and matched badge-suffixed hub links non-exactly. **All 5 projects pass** (chromium, firefox, webkit, Mobile Chrome, Mobile Safari). One Mobile Chrome renderer crash observed under 5-worker parallel load was flaky — passed on re-run and in the final matrix run.
+- iCloud-hosted original working copy — **UNCHANGED** by design: abandoned in place; contains another session's untracked scratch scripts under `scripts/` (already migrated into this clone via `ea6f8b18`).
 
 ## 10. Remote Disposition — EXECUTED
 
@@ -135,4 +138,4 @@ The red tests caught real scope growth: `killWindowScale.test.ts` revealed **thr
 
 ## 11. Final Verdict
 
-**APPROVED.** The consolidation extracted everything of value from 11 contaminated branches without importing any of their artifacts; fixed nine findings discovered during review (kill-window saturation, archive data-loss, type drift, blank memorial, fabricated UI, case collision, dead code, dead fallback, config warnings); preserved the test-first gate end-to-end; and leaves the tree strictly greener than the already-green baseline (+170 tests, −1 warning, +2 precached narrative payloads). The two infra problems found are environmental (iCloud eviction, artifactory-pinned lockfile), documented with evidence and recommendations rather than papered over.
+**APPROVED.** The consolidation extracted everything of value from 11 contaminated branches without importing any of their artifacts; fixed nine findings discovered during review (kill-window saturation, archive data-loss, type drift, blank memorial, fabricated UI, case collision, dead code, dead fallback, config warnings); preserved the test-first gate end-to-end; and leaves the tree strictly greener than the already-green baseline (+170 tests, +2 precached narrative payloads). The two infra problems found were environmental (iCloud eviction, artifactory-pinned lockfile) and both were subsequently resolved. Post-disposition follow-up (`d50b960d`, `6fa390b5`, `910230f6`, `b88f251a`, `94c6c108`) additionally: regenerated `bun.lock` on the public registry, fixed the `HowlerGlobal` worker-bundle crash, eliminated all 518 lint warnings (lint now 0/0), replaced every remaining `as any` in production code, and brought the e2e golden path green across all 5 browser projects. **Every deferred item in §9 is now resolved or deliberately retained.**

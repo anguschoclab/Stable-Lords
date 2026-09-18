@@ -5,7 +5,7 @@ import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
-import { opfsArchive } from '@/engine/storage/opfsArchive';
+import { archiveService } from '@/engine/storage/archiveService';
 import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
 import {
   stripNonSerializable,
@@ -124,7 +124,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           draft.atTitleScreen = false;
           draft.lastSavedAt = new Date().toISOString();
         });
-        opfsArchive.archiveHotState(slotId, state);
+        archiveService.archiveHotState(slotId, state);
       },
 
       setSimulating: (simulating: boolean) => {
@@ -247,7 +247,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
         const { activeSlotId } = get();
         if (activeSlotId) {
           const state = reconstructGameState(get());
-          await opfsArchive.archiveHotState(activeSlotId, state);
+          await archiveService.archiveHotState(activeSlotId, state);
           set({ lastSavedAt: new Date().toISOString() });
         }
       },

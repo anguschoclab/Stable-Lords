@@ -99,7 +99,7 @@ type GameStateValues = {
   phase: GameState['phase'];
   playerChallenges: GameState['playerChallenges'];
   playerAvoids: GameState['playerAvoids'];
-  lastSimulationReport: import('@/types/combat.types').FightOutcome | undefined;
+  lastSimulationReport: import('@/types/state.types').SimulationReport | undefined;
   bookmarks: import('@/types/bookmark.types').Bookmark[];
   progression: GameState['progression'];
 };

@@ -11,6 +11,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/state/useGameStore';
 import type { RivalStableData, AIIntent } from '@/types/state.types';
 import { ActionTimeline } from './ActionTimeline';
 
@@ -76,9 +77,14 @@ const INTENT_METRICS: Record<
  *
  */
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
+  const rivals = useGameStore((s) => s.rivals);
   const currentIntent = rival.agentMemory?.currentIntent || 'SURVIVAL';
   const metric = INTENT_METRICS[currentIntent];
   const Icon = metric.icon;
+  const targetId = rival.strategy?.targetStableId;
+  const targetName = targetId
+    ? (rivals?.find((r) => r.id === targetId)?.owner.stableName ?? 'Unknown Stable')
+    : 'All Rivals';
 
   return (
     <Card className="bg-background border-white/5 relative overflow-hidden group">
@@ -122,9 +128,8 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
 
         <ActionTimeline events={rival.actionHistory || []} />
 
-        <div className="pt-2 flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">
-          <span>Targeting: {rival.strategy?.targetStableId || 'All Rivals'}</span>
-          <span>Confidence: 94.8%</span>
+        <div className="pt-2 text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">
+          <span>Targeting: {targetName}</span>
         </div>
       </CardContent>
     </Card>

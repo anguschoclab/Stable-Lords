@@ -4,7 +4,7 @@
  */
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, act } from '@testing-library/react';
+import { render, act, screen, fireEvent } from '@testing-library/react';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
@@ -44,7 +44,11 @@ vi.mock('@/components/resolution-reveal', () => ({
   InjuriesStep: () => <div data-testid="injuries">Injuries</div>,
   BoutsStep: () => <div data-testid="bouts">Bouts</div>,
   MathStep: () => <div data-testid="math">Math</div>,
-  MemorialStep: () => <div data-testid="memorial">Memorial</div>,
+  MemorialStep: ({ deadWarriors }: any) => (
+    <div data-testid="memorial">
+      Memorial:{(deadWarriors ?? []).map((w: any) => w?.name ?? 'undefined').join(',')}
+    </div>
+  ),
 }));
 
 // Mock UI components
@@ -215,5 +219,81 @@ describe('ResolutionReveal narrowed selector', () => {
 
     // arenaHistory is in the narrowed selector, so it should re-render
     expect(renderCount.current).toBeGreaterThan(0); // With the custom mock, zustand state updates might be synchronous resulting in just 1 render
+  });
+});
+
+describe('ResolutionReveal deadWarriors resolution', () => {
+  const deaths = (names: string[]) => ({
+    pendingResolutionData: {
+      gazette: 'Test',
+      injuries: [],
+      deaths: names,
+      bouts: [],
+    },
+  });
+  const dead = (id: string, name: string) => ({ id, name, age: 30, fame: 5 });
+
+  function stepThrough(times: number) {
+    // gazette → injuries → bouts → math → memorial (4 clicks to memorial)
+    for (let i = 0; i < times; i++) {
+      fireEvent.click(screen.getByRole('button', { name: /next|honor|planning/i }));
+    }
+  }
+
+  beforeEach(() => {
+    useTestStore.setState({
+      arenaHistory: [],
+      graveyard: [],
+      week: 1,
+      lastSimulationReport: undefined,
+      treasury: 0,
+    });
+  });
+
+  it('resolves death names against graveyard entries, in death order', () => {
+    useTestStore.setState({
+      arenaHistory: [deaths(['Bravo', 'Alpha'])],
+      graveyard: [dead('w1', 'Alpha'), dead('w2', 'Bravo'), dead('w3', 'Charlie')],
+      week: 2,
+    });
+    render(<ResolutionReveal />);
+    stepThrough(4); // gazette → injuries → bouts → math → memorial
+    expect(screen.getByTestId('memorial')).toHaveTextContent('Memorial:Bravo,Alpha');
+  });
+
+  it('filters out death names missing from the graveyard', () => {
+    useTestStore.setState({
+      arenaHistory: [deaths(['Ghost', 'Bravo'])],
+      graveyard: [dead('w2', 'Bravo')],
+      week: 2,
+    });
+    render(<ResolutionReveal />);
+    stepThrough(4);
+    const memorial = screen.getByTestId('memorial');
+    expect(memorial).toHaveTextContent('Bravo');
+    expect(memorial).not.toHaveTextContent('Ghost');
+  });
+
+  it('still renders the memorial step when no graveyard entry resolves', () => {
+    // The dead deserve the memorial even if their records are absent — an
+    // empty step must not collapse into a blank panel (F-memorial).
+    useTestStore.setState({
+      arenaHistory: [deaths(['Ghost'])],
+      graveyard: [],
+      week: 2,
+    });
+    render(<ResolutionReveal />);
+    stepThrough(4);
+    expect(screen.getByTestId('memorial')).toBeInTheDocument();
+  });
+
+  it('does not offer the memorial step when there are no deaths', () => {
+    useTestStore.setState({
+      arenaHistory: [deaths([])],
+      graveyard: [dead('w1', 'Alpha')],
+      week: 2,
+    });
+    render(<ResolutionReveal />);
+    expect(screen.queryByText(/graveyard/i)).not.toBeInTheDocument();
   });
 });

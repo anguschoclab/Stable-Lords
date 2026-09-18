@@ -6,7 +6,7 @@
  * Higher quality tiers get higher potential ranges.
  * Potential is hidden by default and revealed through scouting/fights.
  *
- * See: Docs/Stable_Lords_Warrior_Potential_Spec_v1.0.md
+ * See: docs/Stable_Lords_Warrior_Potential_Spec_v1.0.md
  */
 import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX, type Attributes } from '@/types/shared.types';
 import type { AttributePotential } from '@/types/warrior.types';

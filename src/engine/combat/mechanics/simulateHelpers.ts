@@ -26,7 +26,7 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
   const seed =
     typeof providedRng === 'number'
       ? providedRng
-      : (crypto.getRandomValues(new Uint32Array(1))[0] ?? Date.now());
+      : (crypto.getRandomValues(new Uint32Array(1))[0] as number);
   const sRng = new SeededRNGService(seed);
   return () => sRng.next();
 }

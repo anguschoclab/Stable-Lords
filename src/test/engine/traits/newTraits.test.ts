@@ -145,7 +145,7 @@ describe('new traits from lore expansion', () => {
     it('has effect iniMod 1, killWindowBonus 1, fightPlanMod AL 2', () => {
       const t = TRAITS.alley_stalker!;
       expect(t.effect.iniMod).toBe(1);
-      expect(t.effect.killWindowBonus).toBe(1);
+      expect(t.effect.killWindowBonus).toBe(0.008);
       expect(t.effect.fightPlanMod?.AL).toBe(2);
     });
 

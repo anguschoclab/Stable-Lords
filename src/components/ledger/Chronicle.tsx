@@ -159,9 +159,8 @@ export function Chronicle() {
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/10 to-transparent mx-8 hidden md:block" />
         <div className="flex items-center gap-2">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-primary opacity-60">
-            LIVE_DATA_STREAM
+          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Archive Feed
           </span>
         </div>
       </div>

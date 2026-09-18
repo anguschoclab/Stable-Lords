@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 139; // 100 baseline + 20 new traits + 3 from #769 + 5 from refactor + 4 from #788 + 3 from #784 + 3 narrative traits + 1 gutter_shadow
+const EXPECTED_COUNT = 142; // 139 previous + 3 new narrative traits (pit_fighter, gut_instinct, gallows_born)
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
@@ -143,7 +143,9 @@ describe('Trait deduplication', () => {
     it('orphan_vengeance is defined with correct effect fields', () => {
       expect(TRAITS.orphan_vengeance).toBeDefined();
       expect(TRAITS.orphan_vengeance?.effect.attModLate).toBe(2);
-      expect(TRAITS.orphan_vengeance?.effect.killWindowBonus).toBe(1);
+      // killWindowBonus lives on the probability scale — the old `1` saturated
+      // the 0.04 kill cap on its own; rescaled to 0.01 (see killWindowScale test).
+      expect(TRAITS.orphan_vengeance?.effect.killWindowBonus).toBe(0.01);
       expect(TRAITS.orphan_vengeance?.tier).toBe('Exceptional');
       expect(TRAITS.orphan_vengeance?.sign).toBe('positive');
     });

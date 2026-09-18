@@ -31,7 +31,7 @@ describe('workflow-config', () => {
     expect(yml).toContain('src/scripts/daily_oracle.ts');
   });
 
-  it('both workflow YAMLs pin bun-version: 1.3.11', () => {
+  it('both workflow YAMLs pin bun-version: 1.4.0', () => {
     const files = [
       '.github/workflows/daily_sim.yml',
       '.github/workflows/daily_bard.yml',
@@ -40,7 +40,7 @@ describe('workflow-config', () => {
       const yml = readFile(f);
       const match = yml.match(/bun-version:\s*(.+)/);
       expect(match, `${f} should have bun-version`).not.toBeNull();
-      expect(match?.[1]?.trim()).toBe('1.3.11');
+      expect(match?.[1]?.trim()).toBe('1.4.0');
     }
   });
 
@@ -80,12 +80,12 @@ describe('workflow-config', () => {
     expect(yml).toContain('GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}');
   });
 
-  it('ci.yml pins bun-version: 1.3.11', () => {
+  it('ci.yml pins bun-version: 1.4.0', () => {
     const yml = readFile('.github/workflows/ci.yml');
     const matches = yml.match(/bun-version:\s*(.+)/g);
     expect(matches).not.toBeNull();
     for (const m of matches!) {
-      expect(m.trim()).toBe('bun-version: 1.3.11');
+      expect(m.trim()).toBe('bun-version: 1.4.0');
     }
   });
 });

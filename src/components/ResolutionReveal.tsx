@@ -32,20 +32,20 @@ export default function ResolutionReveal() {
   const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];
   const data = latestFight?.pendingResolutionData;
 
+  const graveyard = state.graveyard;
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map<string, (typeof state.graveyard)[number]>();
-    const gy = state.graveyard ?? [];
-    for (let i = 0; i < gy.length; i++) {
-      graveyardByName.set(gy[i]!.name, gy[i]!);
+    const graveyardByName = new Map<string, NonNullable<typeof graveyard>[number]>();
+    for (const entry of graveyard ?? []) {
+      graveyardByName.set(entry.name, entry);
     }
-    const result: (typeof state.graveyard)[number][] = [];
-    for (let i = 0; i < data.deaths.length; i++) {
-      const w = graveyardByName.get(data.deaths[i]!);
+    const result: NonNullable<typeof graveyard>[number][] = [];
+    for (const name of data.deaths) {
+      const w = graveyardByName.get(name);
       if (w) result.push(w);
     }
     return result;
-  }, [data, state.graveyard]);
+  }, [data, graveyard]);
 
   if (!data) return null;
 

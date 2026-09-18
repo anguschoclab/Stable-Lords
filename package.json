@@ -78,6 +78,9 @@
     "zustand": "^5.0.14"
   },
   "overrides": {
+    "@electron/rebuild": {
+      "@electron/node-gyp": "10.2.0-electron.1"
+    },
     "fast-uri": "3.1.5",
     "ip-address": "10.3.1",
     "tmp": "0.2.7",

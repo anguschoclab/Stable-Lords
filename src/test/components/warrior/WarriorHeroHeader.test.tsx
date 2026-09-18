@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children }: any) => <div>{children}</div>,
@@ -25,12 +25,13 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 import { WarriorHeroHeader } from '@/components/warrior/WarriorHeroHeader';
+import { FightingStyle } from '@/types/shared.types';
 
 function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
     derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },

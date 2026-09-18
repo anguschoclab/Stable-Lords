@@ -23,5 +23,10 @@
     "vitest.config.all.ts",
     "vitest.config.slow.ts",
     "tailwind.config.ts"
+  ],
+  "exclude": [
+    "scripts/run-fight.ts",
+    "scripts/build-fight.ts",
+    "scripts/strip-junk-jsdoc.ts"
   ]
 }

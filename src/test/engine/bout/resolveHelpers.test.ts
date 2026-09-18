@@ -10,15 +10,16 @@ import {
 } from '@/engine/bout/core/resolveHelpers';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
+import { FightingStyle } from '@/types/shared.types';
 
 describe('resolveHelpers', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     ({
       id: 'warrior-a' as WarriorId,
       name: 'Warrior A',
-      style: 'StrikingAttack' as FightingStyle,
+      style: FightingStyle.StrikingAttack,
       status: 'Active',
       injuries: [],
       ...overrides,

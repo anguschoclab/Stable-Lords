@@ -5,14 +5,15 @@ import { describe, it, expect, vi } from 'vitest';
 import { handleReporting } from '@/engine/bout/reportingHandler';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
+import { FightingStyle } from '@/types/shared.types';
 
 describe('reportingHandler', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     ({
       id: 'warrior-a' as WarriorId,
       name: 'Warrior A',
-      style: 'StrikingAttack' as FightingStyle,
+      style: FightingStyle.StrikingAttack,
       fame: 10,
       ...overrides,
     }) as Warrior;

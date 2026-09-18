@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 
 const mockToggleChallenge = vi.fn();
 const mockToggleAvoid = vi.fn();
@@ -47,12 +47,13 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 import { WarriorDossierHeader } from '@/components/warrior/dossier/WarriorDossierHeader';
+import { FightingStyle } from '@/types/shared.types';
 
 function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
     derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },

@@ -86,6 +86,7 @@ export function useAdminTools() {
           }
         }
       };
+      reader.onerror = () => toast.error('Failed to read save file.');
       reader.readAsText(file);
     },
     [loadGame]

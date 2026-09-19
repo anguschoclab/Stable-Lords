@@ -17,15 +17,16 @@ describe('AudioManager', () => {
   beforeEach(() => {
     AudioManager.resetForTesting();
     localStorage.clear();
+    delete (window as any).electronAPI;
   });
 
-  it('should be able to set and get muted state', () => {
+  it('should be able to set and get muted state', async () => {
     const manager = AudioManager.getInstance();
-    manager.setMuted(true);
+    await manager.setMuted(true);
     expect(manager.isMuted()).toBe(true);
     expect(localStorage.getItem('sl_muted')).toBe('true');
 
-    manager.setMuted(false);
+    await manager.setMuted(false);
     expect(manager.isMuted()).toBe(false);
     expect(localStorage.getItem('sl_muted')).toBe('false');
   });
@@ -103,6 +104,152 @@ describe('AudioManager', () => {
     await manager.play('ui_click');
     expect(playSpy).toHaveBeenCalled();
     playSpy.mockRestore();
+  });
+
+  // ── Error Handling & Persistence Path Tests ─────────────────────────────
+
+  it('play() does not invoke Howl.play when muted', async () => {
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await new Promise((r) => setTimeout(r, 50));
+    await manager.setMuted(true);
+
+    const sfx = (manager as unknown as { sfx: Map<string, { play: () => void }> }).sfx;
+    const playSpy = vi.spyOn(sfx.get('hit')!, 'play');
+
+    await manager.play('hit');
+    expect(playSpy).not.toHaveBeenCalled();
+    playSpy.mockRestore();
+  });
+
+  it('loads persisted mute state from localStorage on init', async () => {
+    localStorage.setItem('sl_muted', 'true');
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await new Promise((r) => setTimeout(r, 50));
+
+    expect(manager.isMuted()).toBe(true);
+
+    const sfx = (manager as unknown as { sfx: Map<string, { play: () => void }> }).sfx;
+    const playSpy = vi.spyOn(sfx.get('coin')!, 'play');
+    await manager.play('coin');
+    expect(playSpy).not.toHaveBeenCalled();
+    playSpy.mockRestore();
+  });
+
+  it('loads mute state from electron-store when electronAPI is present', async () => {
+    (window as any).electronAPI = {
+      storeGet: vi.fn().mockResolvedValue('true'),
+      storeSet: vi.fn().mockResolvedValue({ success: true }),
+    };
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await new Promise((r) => setTimeout(r, 50));
+
+    expect(manager.isMuted()).toBe(true);
+
+    await manager.setMuted(false);
+    expect((window as any).electronAPI.storeSet).toHaveBeenCalledWith('sl_muted', 'false');
+  });
+
+  it('defaults to unmuted when electron-store read fails', async () => {
+    (window as any).electronAPI = {
+      storeGet: vi.fn().mockRejectedValue(new Error('read failed')),
+    };
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await new Promise((r) => setTimeout(r, 50));
+
+    expect(manager.isMuted()).toBe(false);
+  });
+
+  it('setMuted logs quota error and keeps in-memory muted state', async () => {
+    const quotaError = Object.assign(new Error('QuotaExceededError'), {
+      name: 'QuotaExceededError',
+    });
+    vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+      throw quotaError;
+    });
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const manager = AudioManager.getInstance();
+    await expect(manager.setMuted(true)).resolves.toBeUndefined();
+
+    expect(manager.isMuted()).toBe(true);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'localStorage quota exceeded when saving mute state',
+      quotaError
+    );
+  });
+
+  it('setMuted logs a generic error for non-quota localStorage failures', async () => {
+    const boom = new Error('boom');
+    vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+      throw boom;
+    });
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const manager = AudioManager.getInstance();
+    await expect(manager.setMuted(true)).resolves.toBeUndefined();
+
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to save mute state', boom);
+  });
+
+  it('setMuted logs when electron-store write fails', async () => {
+    const boom = new Error('write failed');
+    (window as any).electronAPI = {
+      storeGet: vi.fn().mockResolvedValue(null),
+      storeSet: vi.fn().mockRejectedValue(boom),
+    };
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(manager.setMuted(true)).resolves.toBeUndefined();
+
+    expect(manager.isMuted()).toBe(true);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Failed to save mute state to electron-store',
+      boom
+    );
+  });
+
+  // Regression for latent bug: setMuted() sets `this.muted` synchronously but
+  // does NOT await `this.ready`, so an in-flight loadMuteState() resolves
+  // afterwards and clobbers the value the caller just set. play() awaits
+  // `this.ready`; setMuted() must do the same.
+  it('setMuted called before init completes is not clobbered by loadMuteState', async () => {
+    let resolveStoreGet: (v: unknown) => void = () => {};
+    (window as any).electronAPI = {
+      storeGet: vi.fn(
+        () =>
+          new Promise((resolve) => {
+            resolveStoreGet = resolve;
+          })
+      ),
+      storeSet: vi.fn().mockResolvedValue({ success: true }),
+    };
+
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+
+    // setMuted while loadMuteState is still in flight
+    const setMutedPromise = manager.setMuted(true);
+    resolveStoreGet('false');
+    await setMutedPromise;
+    await new Promise((r) => setTimeout(r, 50));
+
+    expect(manager.isMuted()).toBe(true);
+  });
+
+  it('getInstance returns a singleton until resetForTesting is called', () => {
+    const first = AudioManager.getInstance();
+    expect(AudioManager.getInstance()).toBe(first);
+
+    AudioManager.resetForTesting();
+    const second = AudioManager.getInstance();
+    expect(second).not.toBe(first);
   });
 
   it('arena_ambient is not a valid SfxType (removed from union)', () => {

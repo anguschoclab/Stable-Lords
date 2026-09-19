@@ -89,6 +89,7 @@ export class AudioManager {
    * @param muted - Whether audio should be muted.
    */
   public async setMuted(muted: boolean) {
+    await this.ready;
     this.muted = muted;
     if (typeof window !== 'undefined' && window.electronAPI) {
       try {

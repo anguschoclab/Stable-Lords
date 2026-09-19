@@ -151,6 +151,7 @@ export default function StartGame() {
           toast.error((err as Error)?.message ?? 'Failed to import save file.');
         }
       };
+      reader.onerror = () => toast.error('Failed to read save file.');
       reader.readAsText(file);
       e.target.value = '';
     },

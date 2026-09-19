@@ -9,7 +9,8 @@ const KEY_HALL = 'sl.lore.hall';
 function loadArray<T>(key: string): T[] {
   if (typeof localStorage === 'undefined') return [];
   try {
-    return JSON.parse(localStorage.getItem(key) || '[]');
+    const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }

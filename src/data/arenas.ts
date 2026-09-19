@@ -1272,6 +1272,39 @@ export const VERDANT_LABYRINTH: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
 };
 
+export const THE_SHIFTING_SANDS: ArenaConfig = {
+  id: 'the_shifting_sands',
+  name: 'The Shifting Sands',
+  tags: ['open', 'uneven', 'outdoor'],
+  tier: 2,
+  size: 'open',
+  description: 'Deep, unstable dunes that constantly shift underfoot, heavily penalizing sudden movements.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -3, riposteMod: 0, enduranceMult: 1.25 },
+};
+
+export const THE_CURSED_SWAMP: ArenaConfig = {
+  id: 'the_cursed_swamp',
+  name: 'The Cursed Swamp',
+  tags: ['cramped', 'water', 'cursed'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A foul, waist-deep quagmire steeped in dark magic. Movement is sluggish and the air breathes despair.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.4 },
+};
+
+export const THE_IRON_CAGE: ArenaConfig = {
+  id: 'the_iron_cage',
+  name: 'The Iron Cage',
+  tags: ['cramped', 'indoor', 'premium'],
+  tier: 3,
+  size: 'cramped',
+  description: 'An elite, brutal fighting pit enclosed in spiked iron bars, designed for maximum bloodshed and crowd excitement.',
+  zoneDef: { Edge: -4, Corner: -6 },
+  surfaceMod: { initiativeMod: 1, riposteMod: -1, enduranceMult: 1.1 },
+};
+
 // ─── Auto-register ────────────────────────────────────────────────────────────
 [
   STANDARD_ARENA,
@@ -1314,4 +1347,7 @@ export const VERDANT_LABYRINTH: ArenaConfig = {
   THE_WAILING_CHASM,
   SHATTERED_MONOLITH,
   VERDANT_LABYRINTH,
+  THE_SHIFTING_SANDS,
+  THE_CURSED_SWAMP,
+  THE_IRON_CAGE,
 ].forEach(registerArena);

@@ -27,5 +27,14 @@ describe('Arena Architect Verification', () => {
     const modRainy = getStyleWeatherModifier(FightingStyle.SlashingAttack, 'Rainy', ['living']);
     expect(modRainy.initiativeMod).toBeLessThan(0);
     expect(modRainy.descriptions.some(d => d.includes('living labyrinth'))).toBe(true);
+
+    // New modifiers
+    const modSandstorm = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Sandstorm', ['uneven']);
+    expect(modSandstorm.damageMult).toBeLessThan(1.0);
+    expect(modSandstorm.descriptions.some(d => d.includes('Shifting sands'))).toBe(true);
+
+    const modBloodMoon = getStyleWeatherModifier(FightingStyle.SlashingAttack, 'Blood Moon', ['water']);
+    expect(modBloodMoon.damageMult).toBeGreaterThan(1.0);
+    expect(modBloodMoon.descriptions.some(d => d.includes('cursed swamp boils'))).toBe(true);
   });
 });

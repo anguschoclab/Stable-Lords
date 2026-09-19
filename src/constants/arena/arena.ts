@@ -214,6 +214,16 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     initiativeMod: WEATHER_PENALTIES.LABYRINTH_LIVING_INITIATIVE,
     description: 'The living labyrinth flourishes in the rain, aggressively slowing footwork',
   },
+
+  'uneven:Sandstorm': {
+    damageMult: 1 - WEATHER_PENALTIES.SHIFTING_SANDS_LUNGE_PENALTY,
+    description: 'Shifting sands in a sandstorm drastically reduce lunging stability',
+  },
+
+  'water:Blood Moon': {
+    damageMult: WEATHER_PENALTIES.SWAMP_CURSE_DRAIN,
+    description: 'The cursed swamp boils under the blood moon, amplifying the necrotic drain',
+  },
 };
 
 // ─── Arena Event Constants ─────────────────────────────────────────────────

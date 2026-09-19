@@ -554,6 +554,20 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 0.3 - 0.19, 4);
   });
 
+  it('water + cursed tag combination → synergy penalty for high aggression', () => {
+    const w = makeWarrior({ style: FightingStyle.BashingAttack });
+    const arena = makeArena({ tags: ['water', 'cursed'] });
+    const score = scoreArenaFitForWarrior(w, arena);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX - 0.5, 5);
+  });
+
+  it('water + cursed tag combination → no penalty for low aggression styles', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryRiposte });
+    const arena = makeArena({ tags: ['water', 'cursed'] });
+    const score = scoreArenaFitForWarrior(w, arena);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
+  });
+
   it('tag not in ARENA_TAG_WEIGHTS → no effect', () => {
     const w = makeWarrior();
     const arena = makeArena({ size: 'standard', tags: ['outdoor' as any] });

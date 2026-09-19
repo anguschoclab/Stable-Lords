@@ -16,6 +16,10 @@ import {
   buildUniversalConditions,
 } from '@/engine/ai/plan/phasePlanner';
 import { getPersonalityAdaptations } from '@/engine/ai/plan/personalityEngine';
+import {
+  getBestOffensiveTactic,
+  getBestDefensiveTactic,
+} from '@/engine/ai/plan/tacticAdvisor';
 import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import {
   getAITarget,
@@ -78,6 +82,7 @@ export function aiPlanForWarrior(
   let rematchOE = 0;
   let rematchAL = 0;
   let rematchKD = 0;
+  let changeTactics = false;
   if (dossier) {
     const { w: wins, l: losses, k: kills } = dossier.recordVs;
     const meetings = wins + losses;
@@ -85,6 +90,9 @@ export function aiPlanForWarrior(
       rematchOE = -Math.min(2, losses - wins);
       rematchAL = Math.min(2, losses - wins);
       if (kills > 0) rematchKD = 1;
+      // The signature gameplan is losing — the stable abandons its canonical
+      // favorite tactics for the suitability-ranked optimal picks.
+      changeTactics = true;
     }
   }
 
@@ -139,6 +147,12 @@ export function aiPlanForWarrior(
   // We intentionally do NOT override them here: some styles canonically run a
   // signature tactic on one side and 'none' on the other (e.g. aggressive styles
   // commit offense and carry no defensive tactic), and that choice must survive.
+  // The exception is rematch adaptation: a stable that keeps losing to this
+  // opponent scraps the signature gameplan for the advisor's optimal picks.
+  if (changeTactics) {
+    plan.offensiveTactic = getBestOffensiveTactic(w.style);
+    plan.defensiveTactic = getBestDefensiveTactic(w.style);
+  }
 
   // Strategic levers the AI previously left at defaults — hit-location target,
   // protected zone, aggression bias, opening move, and range preference — so NPCs

@@ -8,6 +8,10 @@
  */
 import { describe, it, expect } from 'vitest';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
+import {
+  getBestOffensiveTactic,
+  getBestDefensiveTactic,
+} from '@/engine/ai/plan/tacticAdvisor';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import type { OpponentDossier } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
@@ -80,5 +84,29 @@ describe('rematch adaptation', () => {
     const a = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
     const b = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
     expect(a).toEqual(b);
+  });
+
+  it('a losing record swaps canonical tactics for the advisor-optimal picks', () => {
+    // makeWarrior defaults to BashingAttack: canon Bash/none, advisor
+    // Decisiveness/none — a losing rematch must visibly change the gameplan.
+    const w = makeWarrior();
+    const baseline = aiPlanForWarrior(w, ...BASELINE_ARGS);
+    const rematch = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
+
+    expect(baseline.offensiveTactic).toBe('Bash');
+    expect(rematch.offensiveTactic).toBe(getBestOffensiveTactic(w.style));
+    expect(rematch.defensiveTactic).toBe(getBestDefensiveTactic(w.style));
+  });
+
+  it('a winning record keeps the canonical favorite tactics', () => {
+    const w = makeWarrior();
+    const winning = aiPlanForWarrior(w, ...BASELINE_ARGS, {
+      lastSeenWeek: 9,
+      knownStyles: [FightingStyle.BashingAttack],
+      estimatedThreat: 0.3,
+      recordVs: { w: 3, l: 0, k: 0 },
+    });
+    expect(winning.offensiveTactic).toBe('Bash');
+    expect(winning.defensiveTactic).toBe('none');
   });
 });

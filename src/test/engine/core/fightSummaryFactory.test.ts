@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   createFightSummary,
   createBoutSummary,
-  createMinimalFightSummary,
 } from '@/engine/core/fightSummaryFactory';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
@@ -394,28 +393,4 @@ describe('createFightSummary absoluteWeek field', () => {
   });
 });
 
-// ─── createMinimalFightSummary (previously untested) ──────────────────────────
 
-describe('createMinimalFightSummary', () => {
-  it('generates id via rng.uuid', () => {
-    const summary = createMinimalFightSummary(makeWarriorA(), makeWarriorD(), 'A', 'Kill', 1, {
-      uuid: (prefix?: string) => `min-${prefix}`,
-    });
-    expect(summary.id).toBe('min-bout' as any);
-  });
-
-  it('builds title without tournament context', () => {
-    const summary = createMinimalFightSummary(makeWarriorA(), makeWarriorD(), 'A', 'Kill', 1, {
-      uuid: () => 'min-id',
-    });
-    expect(summary.title).toBe('Aulus vs Bran');
-  });
-
-  it('has empty transcript and no analysis field', () => {
-    const summary = createMinimalFightSummary(makeWarriorA(), makeWarriorD(), 'D', 'KO', 5, {
-      uuid: () => 'min-id',
-    });
-    expect(summary.transcript).toEqual([]);
-    expect(summary.analysis).toBeUndefined();
-  });
-});

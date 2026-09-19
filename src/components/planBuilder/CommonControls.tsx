@@ -2,7 +2,15 @@ import { useId } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import type { FightPlan } from '@/types/game';
+import type { OffensiveTactic, DefensiveTactic } from '@/types/game';
+import {
+  getOffensiveSuitability,
+  getDefensiveSuitability,
+  SUITABILITY_LABELS,
+  SUITABILITY_COLORS,
+} from '@/engine/tacticSuitability';
 
 interface CommonControlsProps {
   plan: FightPlan;
@@ -86,11 +94,57 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
         <div className="min-h-[60px] border-2 border-dashed flex items-center justify-center p-4 bg-black/20 border-white/10">
           <div className="flex gap-2">
             {plan.offensiveTactic && plan.offensiveTactic !== 'none' && (
-              <Badge>{plan.offensiveTactic}</Badge>
+              <Badge>
+                {plan.offensiveTactic}
+                {plan.style && (
+                  <span
+                    className={cn(
+                      'ml-1 text-[8px]',
+                      SUITABILITY_COLORS[
+                        getOffensiveSuitability(
+                          plan.style,
+                          plan.offensiveTactic as OffensiveTactic
+                        )
+                      ]
+                    )}
+                  >
+                    {
+                      SUITABILITY_LABELS[
+                        getOffensiveSuitability(
+                          plan.style,
+                          plan.offensiveTactic as OffensiveTactic
+                        )
+                      ]
+                    }
+                  </span>
+                )}
+              </Badge>
             )}
             {plan.defensiveTactic && plan.defensiveTactic !== 'none' && (
               <Badge className="bg-arena-gold text-primary-foreground rounded-none uppercase font-black tracking-widest px-3 py-1">
                 {plan.defensiveTactic}
+                {plan.style && (
+                  <span
+                    className={cn(
+                      'ml-1 text-[8px]',
+                      SUITABILITY_COLORS[
+                        getDefensiveSuitability(
+                          plan.style,
+                          plan.defensiveTactic as DefensiveTactic
+                        )
+                      ]
+                    )}
+                  >
+                    {
+                      SUITABILITY_LABELS[
+                        getDefensiveSuitability(
+                          plan.style,
+                          plan.defensiveTactic as DefensiveTactic
+                        )
+                      ]
+                    }
+                  </span>
+                )}
               </Badge>
             )}
             {!plan.offensiveTactic && !plan.defensiveTactic && (

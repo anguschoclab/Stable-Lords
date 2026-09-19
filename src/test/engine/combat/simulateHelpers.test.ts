@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  getTrainerMods,
-  processOutcomeTags,
-} from '@/engine/combat/mechanics/simulateHelpers';
+import { getTrainerMods } from '@/engine/combat/mechanics/simulateHelpers';
 import { FightingStyle } from '@/types/shared.types';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import type { Trainer } from '@/types/state.types';
@@ -47,48 +44,4 @@ describe('simulateHelpers mechanics', () => {
     });
   });
 
-  describe('processOutcomeTags', () => {
-    it('returns empty array if no tags apply', () => {
-      const fA = { hp: 100, maxHp: 100, hitsLanded: 2 } as FighterState;
-      const fD = { hp: 0, maxHp: 100, hitsLanded: 0 } as FighterState;
-      const tags = processOutcomeTags('A', 'Stoppage', fA, fD);
-      expect(tags).toEqual([]);
-    });
-
-    it('adds KO tag', () => {
-      const fA = { hp: 100, maxHp: 100, hitsLanded: 2 } as FighterState;
-      const fD = { hp: 0, maxHp: 100, hitsLanded: 0 } as FighterState;
-      const tags = processOutcomeTags('A', 'KO', fA, fD);
-      expect(tags).toContain('KO');
-    });
-
-    it('adds Kill tag', () => {
-      const fA = { hp: 100, maxHp: 100, hitsLanded: 2 } as FighterState;
-      const fD = { hp: 0, maxHp: 100, hitsLanded: 0 } as FighterState;
-      const tags = processOutcomeTags('A', 'Kill', fA, fD);
-      expect(tags).toContain('Kill');
-    });
-
-    it('adds Dominance tag if winner landed >= 5 hits', () => {
-      const fA = { hp: 100, maxHp: 100, hitsLanded: 5 } as FighterState;
-      const fD = { hp: 0, maxHp: 100, hitsLanded: 0 } as FighterState;
-      const tags = processOutcomeTags('A', 'Stoppage', fA, fD);
-      expect(tags).toContain('Dominance');
-    });
-
-    it('adds Comeback tag if winner has < 30% max hp and landed more hits than loser', () => {
-      const fA = { hp: 20, maxHp: 100, hitsLanded: 4 } as FighterState;
-      const fD = { hp: 0, maxHp: 100, hitsLanded: 3 } as FighterState;
-      const tags = processOutcomeTags('A', 'Stoppage', fA, fD);
-      expect(tags).toContain('Comeback');
-    });
-
-    it('processes tags for defender winning', () => {
-      const fA = { hp: 0, maxHp: 100, hitsLanded: 0 } as FighterState;
-      const fD = { hp: 100, maxHp: 100, hitsLanded: 6 } as FighterState;
-      const tags = processOutcomeTags('D', 'Kill', fA, fD);
-      expect(tags).toContain('Kill');
-      expect(tags).toContain('Dominance');
-    });
-  });
 });

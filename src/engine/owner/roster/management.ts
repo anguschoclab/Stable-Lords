@@ -7,6 +7,7 @@ import { computeWarriorLiability } from '@/engine/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import { aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warriorStatus';
+import { filterActive } from '@/utils/roster';
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
@@ -91,7 +92,7 @@ export function processAIRosterManagement(
     // Liability-based culling: release flaw-loaded warriors per personality threshold
     const traitPolicy = policyFor(r.owner.personality);
     const liabilityCandidates = r.roster.filter((w) => {
-      if (w.status !== 'Active') return false;
+      if (!isActive(w)) return false;
       if (isOnWinStreak(w)) return false;
       const liability = computeWarriorLiability(w);
       return (
@@ -131,7 +132,7 @@ export function processAIRosterManagement(
     r.needsRecruit =
       currentActive < aiRosterMin(personality) && culledThisTick === 0 && intent !== 'RECOVERY';
 
-    r.roster = r.roster.filter((w) => isActive(w));
+    r.roster = filterActive(r.roster);
     return r;
   });
 

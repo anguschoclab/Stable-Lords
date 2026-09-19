@@ -105,37 +105,5 @@ export function createBoutSummary(
   });
 }
 
-/**
- * Creates a minimal fight summary for arena history
- * Used when full bout details aren't needed
- */
-export function createMinimalFightSummary(
-  warriorA: Warrior,
-  warriorD: Warrior,
-  winner: 'A' | 'D' | null,
-  by: FightOutcome['by'],
-  week: number,
-  rng: { uuid: (prefix?: string) => string } | IRNGService,
-  absoluteWeek?: number
-): FightSummary {
-  const id = (
-    typeof rng.uuid === 'function' ? rng.uuid('bout') : (rng as IRNGService).uuid()
-  ) as FightId;
 
-  return {
-    id,
-    week,
-    phase: 'resolution',
-    title: `${warriorA.name} vs ${warriorD.name}`,
-    warriorIdA: warriorA.id,
-    warriorIdD: warriorD.id,
-    stableIdA: warriorA.stableId,
-    stableIdD: warriorD.stableId,
-    winner,
-    by,
-    styleA: warriorA.style,
-    styleD: warriorD.style,
-    transcript: [],
-    createdAt: weekToTimestamp(absoluteWeek ?? week),
-  };
-}
+

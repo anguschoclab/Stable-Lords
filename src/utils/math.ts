@@ -63,18 +63,6 @@ export function mapRange(
 }
 
 /**
- * Rounds a number to a specified number of decimal places
- *
- * @param value - The value to round
- * @param decimals - The number of decimal places
- * @returns The rounded value
- */
-export function roundTo(value: number, decimals: number): number {
-  const factor = Math.pow(10, decimals);
-  return Math.round(value * factor) / factor;
-}
-
-/**
  * Adds two numbers together, capping at a maximum value
  * Used for cumulative stat calculations
  *

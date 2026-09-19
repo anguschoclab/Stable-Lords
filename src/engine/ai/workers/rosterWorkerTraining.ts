@@ -29,6 +29,7 @@ import {
 import { rollTraitTraining, TRAIT_CAP } from '@/engine/training/trainingGains/traitTraining';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import type { Trainer } from '@/types/shared.types';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * AI training runs at ~80% player effectiveness per the Training Mechanics spec.
@@ -233,7 +234,7 @@ export function processTraitDevelopment(
   };
 
   return roster.map((w) => {
-    if (w.status !== 'Active') return w;
+    if (!isActive(w)) return w;
     const traits = w.traits ?? [];
     if (traits.length >= TRAIT_CAP) return w;
 

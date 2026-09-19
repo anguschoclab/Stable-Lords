@@ -15,7 +15,7 @@ import {
   SEASONAL_WEATHER,
   rollWeather,
   getWeatherSeason,
-} from '@/engine/pipeline/passes/WorldPass';
+} from '@/engine/weather/seasonalWeather';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
 import { WEATHER_TYPES } from '@/types/enumSources';
 import { WeatherTypeSchema } from '@/schemas/gameStateSchema';

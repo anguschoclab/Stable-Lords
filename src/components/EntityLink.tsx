@@ -230,4 +230,4 @@ export function StableLink({ name, className, children }: StableLinkProps) {
   );
 }
 
-export { WarriorLink as WarriorLinkSheet, StableLink as StableLinkSheet };
+

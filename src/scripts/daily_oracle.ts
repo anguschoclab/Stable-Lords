@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import { runSimulation } from './simulation-harness';
+import { formatPulseTable } from '@/engine/stats/simulationMetrics';
 import { NodeArchiveService } from './nodeArchiveService';
 
 const WEEKS_TO_SIMULATE = 1000;
@@ -49,6 +50,7 @@ async function main() {
     pulses.length > 0 ? pulses.reduce((sum, p) => sum + p.playerTreasury, 0) / pulses.length : 0;
 
   console.log('=== Autobalance Engine Metrics ===');
+  console.log(formatPulseTable(pulses.slice(-20))); // trailing 20-week pulse window
   console.log(`Mortality Rate: ${(mortalityRate * 100).toFixed(2)}%`);
   console.log(`Average Economy: ${avgEconomy.toFixed(0)} gold`);
   console.log(`Win Rates:`);

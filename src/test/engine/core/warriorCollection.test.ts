@@ -2,9 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   collectAllWarriors,
   collectAllActiveWarriors,
-  collectAvailableWarriors,
-  countActiveWarriors,
-  collectHealthyWarriors,
+  collectBookedWarriorIds,
 } from '@/engine/core/warriorCollection';
 import type { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
@@ -232,185 +230,61 @@ describe('warriorCollection', () => {
     });
   });
 
-  describe('collectAvailableWarriors', () => {
-    it('returns active warriors when no bout offers exist', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const state = makeState([w1]);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
-      expect(result[0]!.id).toBe('p1');
+  describe('collectBookedWarriorIds', () => {
+    it('returns empty set when no bout offers exist', () => {
+      const state = makeState([makeWarrior('p1', { status: 'Active' })]);
+      expect(collectBookedWarriorIds(state, 5).size).toBe(0);
     });
 
-    it('excludes warriors booked for the target week via Signed offers', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const w2 = makeWarrior('p2', { status: 'Active' });
-      const offers = {
-        o1: makeOffer('o1', ['p1'], 5, 'Signed'),
-      };
-      const state = makeState([w1, w2], [], offers);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
-      expect(result[0]!.id).toBe('p2');
+    it('includes warriors booked for the target week via Signed offers', () => {
+      const offers = { o1: makeOffer('o1', ['p1'], 5, 'Signed') };
+      const state = makeState([makeWarrior('p1'), makeWarrior('p2')], [], offers);
+      expect([...collectBookedWarriorIds(state, 5)]).toEqual(['p1']);
     });
 
-    it('does not exclude warriors from non-Signed offers', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const offers = {
-        o1: makeOffer('o1', ['p1'], 5, 'Proposed'),
-      };
-      const state = makeState([w1], [], offers);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
+    it('ignores warriors from non-Signed offers', () => {
+      const offers = { o1: makeOffer('o1', ['p1'], 5, 'Proposed') };
+      const state = makeState([makeWarrior('p1')], [], offers);
+      expect(collectBookedWarriorIds(state, 5).size).toBe(0);
     });
 
-    it('does not exclude warriors from Signed offers for a different week', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const offers = {
-        o1: makeOffer('o1', ['p1'], 3, 'Signed'),
-      };
-      const state = makeState([w1], [], offers);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
+    it('ignores Signed offers for a different week', () => {
+      const offers = { o1: makeOffer('o1', ['p1'], 3, 'Signed') };
+      const state = makeState([makeWarrior('p1')], [], offers);
+      expect(collectBookedWarriorIds(state, 5).size).toBe(0);
     });
 
     it('handles state.boutOffers being undefined', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const state = makeState([w1]);
+      const state = makeState([makeWarrior('p1')]);
       (state as any).boutOffers = undefined;
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
+      expect(collectBookedWarriorIds(state, 5).size).toBe(0);
     });
 
     it('handles offer with undefined warriorIds', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const offers = {
-        o1: makeOffer('o1', [], 5, 'Signed'),
-      };
+      const offers = { o1: makeOffer('o1', [], 5, 'Signed') };
       (offers.o1 as any).warriorIds = undefined;
-      const state = makeState([w1], [], offers);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
+      const state = makeState([makeWarrior('p1')], [], offers);
+      expect(collectBookedWarriorIds(state, 5).size).toBe(0);
     });
 
-    it('returns empty when all active warriors are booked', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const offers = {
-        o1: makeOffer('o1', ['p1'], 5, 'Signed'),
-      };
-      const state = makeState([w1], [], offers);
-      expect(collectAvailableWarriors(state, 5)).toEqual([]);
-    });
-
-    it('handles multiple signed offers for the same week', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const w2 = makeWarrior('p2', { status: 'Active' });
-      const w3 = makeWarrior('p3', { status: 'Active' });
+    it('collects ids across multiple signed offers for the same week', () => {
       const offers = {
         o1: makeOffer('o1', ['p1'], 5, 'Signed'),
         o2: makeOffer('o2', ['p2'], 5, 'Signed'),
       };
-      const state = makeState([w1, w2, w3], [], offers);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(1);
-      expect(result[0]!.id).toBe('p3');
+      const state = makeState([makeWarrior('p1'), makeWarrior('p2'), makeWarrior('p3')], [], offers);
+      expect([...collectBookedWarriorIds(state, 5)].sort()).toEqual(['p1', 'p2']);
     });
 
-    it('handles mixed statuses with multiple offers for same week', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const w2 = makeWarrior('p2', { status: 'Active' });
-      const w3 = makeWarrior('p3', { status: 'Active' });
+    it('only collects ids from Signed offers when statuses are mixed', () => {
       const offers = {
         o1: makeOffer('o1', ['p1'], 5, 'Signed'),
         o2: makeOffer('o2', ['p2'], 5, 'Proposed'),
         o3: makeOffer('o3', ['p3'], 5, 'Rejected'),
       };
-      const state = makeState([w1, w2, w3], [], offers);
-      const result = collectAvailableWarriors(state, 5);
-      expect(result).toHaveLength(2);
-      expect(result.map((w) => w.id).sort()).toEqual(['p2', 'p3']);
-    });
-
-    it('handles an offer with an empty warriorIds array', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      const offers = {
-        o1: makeOffer('o1', [], 5, 'Signed'),
-      };
-      const state = makeState([w1], [], offers);
-      expect(collectAvailableWarriors(state, 5)).toHaveLength(1);
+      const state = makeState([makeWarrior('p1'), makeWarrior('p2'), makeWarrior('p3')], [], offers);
+      expect([...collectBookedWarriorIds(state, 5)]).toEqual(['p1']);
     });
   });
 
-  describe('countActiveWarriors', () => {
-    it('returns 0 when no warriors exist', () => {
-      const state = makeState([]);
-      expect(countActiveWarriors(state)).toBe(0);
-    });
-
-    it('returns correct count of active warriors across player and rivals', () => {
-      const pw1 = makeWarrior('p1', { status: 'Active' });
-      const pw2 = makeWarrior('p2', { status: 'Active' });
-      const rw1 = makeWarrior('r1', { status: 'Active' });
-      const state = makeState([pw1, pw2], [makeRival('rs', [rw1])]);
-      expect(countActiveWarriors(state)).toBe(3);
-    });
-
-    it('returns 0 when all warriors are non-active', () => {
-      const state = makeState([
-        makeWarrior('d1', { status: 'Dead' }),
-        makeWarrior('r1', { status: 'Retired' }),
-      ]);
-      expect(countActiveWarriors(state)).toBe(0);
-    });
-  });
-
-  describe('collectHealthyWarriors', () => {
-    it('returns active warriors with no injuries', () => {
-      const w1 = makeWarrior('p1', { status: 'Active', injuries: [] });
-      const state = makeState([w1]);
-      const result = collectHealthyWarriors(state);
-      expect(result).toHaveLength(1);
-      expect(result[0]!.id).toBe('p1');
-    });
-
-    it('excludes active warriors with injuries', () => {
-      const w1 = makeWarrior('p1', { status: 'Active', injuries: [] });
-      const w2 = makeWarrior('p2', {
-        status: 'Active',
-        injuries: [
-          {
-            id: 'inj1' as any,
-            name: 'Broken Arm',
-            description: '',
-            severity: 'Minor',
-            weeksRemaining: 2,
-            penalties: {},
-          },
-        ],
-      });
-      const state = makeState([w1, w2]);
-      const result = collectHealthyWarriors(state);
-      expect(result).toHaveLength(1);
-      expect(result[0]!.id).toBe('p1');
-    });
-
-    it('excludes non-active warriors', () => {
-      const w1 = makeWarrior('p1', { status: 'Dead', injuries: [] });
-      const state = makeState([w1]);
-      expect(collectHealthyWarriors(state)).toEqual([]);
-    });
-
-    it('handles warrior with undefined injuries field', () => {
-      const w1 = makeWarrior('p1', { status: 'Active' });
-      (w1 as any).injuries = undefined;
-      const state = makeState([w1]);
-      const result = collectHealthyWarriors(state);
-      expect(result).toHaveLength(1);
-    });
-
-    it('handles warrior with empty injuries array', () => {
-      const w1 = makeWarrior('p1', { status: 'Active', injuries: [] });
-      const state = makeState([w1]);
-      expect(collectHealthyWarriors(state)).toHaveLength(1);
-    });
-  });
 });

@@ -571,4 +571,54 @@ describe('planWorldBouts — eligibility gating', () => {
     );
     expect(rematchOffer).toBeUndefined();
   });
+
+  // ─── Signed-Offer Exclusion (double-booking guard) ────────────────────────
+
+  it('does not double-book a rival warrior already signed for the target week', () => {
+    const state = makeTestState(
+      [
+        makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+        makeTestRival('r2', [makeTestWarrior('w2', 100)]),
+      ],
+      1
+    );
+    // w1 is already signed for absoluteWeek + 2 — the world matchmaking target
+    state.boutOffers = {
+      'offer-signed': {
+        id: 'offer-signed',
+        warriorIds: ['w1', 'wX'],
+        status: 'Signed',
+        boutWeek: state.absoluteWeek + 2,
+        createdAbsoluteWeek: state.absoluteWeek,
+        expirationWeek: state.absoluteWeek + 2,
+      },
+    } as any;
+
+    const offers = planWorldBouts(state, rng);
+    expect(offers.flatMap((o) => o.warriorIds)).not.toContain('w1');
+  });
+
+  it('still pairs warriors whose signed bout is a different week', () => {
+    const state = makeTestState(
+      [
+        makeTestRival('r1', [makeTestWarrior('w1', 100)]),
+        makeTestRival('r2', [makeTestWarrior('w2', 100)]),
+      ],
+      1
+    );
+    // w1 is signed for absoluteWeek + 3 — not this target week (+2)
+    state.boutOffers = {
+      'offer-later': {
+        id: 'offer-later',
+        warriorIds: ['w1', 'wX'],
+        status: 'Signed',
+        boutWeek: state.absoluteWeek + 3,
+        createdAbsoluteWeek: state.absoluteWeek,
+        expirationWeek: state.absoluteWeek + 3,
+      },
+    } as any;
+
+    const offers = planWorldBouts(state, rng);
+    expect(offers.flatMap((o) => o.warriorIds)).toContain('w1');
+  });
 });

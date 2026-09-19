@@ -7,6 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Heart, X, Gauge } from 'lucide-react';
 import { ATTRIBUTE_TOTAL_CAP } from '@/constants/training';
+import { hasInjuries } from '@/engine/injuries/utils';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
 import { TrainingCardHeader } from './TrainingCardHeader';
@@ -38,7 +39,7 @@ export function WarriorTrainingCard({
 }) {
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0);
   const atCap = total >= ATTRIBUTE_TOTAL_CAP;
-  const hasInjury = warrior.injuries.length > 0;
+  const hasInjury = hasInjuries(warrior);
   const isRecovery = assignment?.type === 'recovery';
   const isTraining = assignment?.type === 'attribute';
 

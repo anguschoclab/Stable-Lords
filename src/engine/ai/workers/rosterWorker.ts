@@ -70,7 +70,7 @@ export function processRoster(
   const trainingLimit = updatedRival.treasury > 500 ? 3 : 1;
   const { champions, nonChampions } = updatedRival.roster.reduce(
     (acc, w) => {
-      if (w.status !== 'Active' || (w.injuries ?? []).length > 0) return acc;
+      if (!isActive(w) || (w.injuries ?? []).length > 0) return acc;
       if (w.champion || w.isStarInvestment) acc.champions.push(w);
       else acc.nonChampions.push(w);
       return acc;

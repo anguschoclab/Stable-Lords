@@ -1,19 +1,19 @@
-import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { InjuryData } from '@/types/warrior.types';
 import type { InjuryId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /** Whether a warrior currently has any injuries. */
-export function hasInjuries(w: Pick<Warrior, 'injuries'>): boolean {
+export function hasInjuries(w: { injuries?: readonly unknown[] | null }): boolean {
   return Array.isArray(w.injuries) && w.injuries.length > 0;
 }
 
 /** Total number of active injuries on a warrior. */
-export function countInjuries(w: Pick<Warrior, 'injuries'>): number {
+export function countInjuries(w: { injuries?: readonly unknown[] | null }): number {
   return w.injuries?.length ?? 0;
 }
 
 /** Count injuries by severity level. */
-export function getInjurySeverityCounts(w: Pick<Warrior, 'injuries'>): Record<string, number> {
+export function getInjurySeverityCounts(w: { injuries?: readonly unknown[] | null }): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const inj of w.injuries ?? []) {
     const severity = (inj as InjuryData).severity ?? 'Unknown';
@@ -24,7 +24,7 @@ export function getInjurySeverityCounts(w: Pick<Warrior, 'injuries'>): Record<st
 
 /** Whether a warrior has at least one injury of the given severity. */
 export function hasInjuryOfSeverity(
-  w: Pick<Warrior, 'injuries'>,
+  w: { injuries?: readonly unknown[] | null },
   severity: InjuryData['severity']
 ): boolean {
   return (w.injuries ?? []).some((i) => (i as InjuryData).severity === severity);

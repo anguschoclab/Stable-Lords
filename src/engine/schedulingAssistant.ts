@@ -5,6 +5,7 @@ import { isTooInjuredToFight } from './injuries';
 import { getMatchupBonus } from '@/constants/combat';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Defines the shape of head-to-head record.
@@ -181,7 +182,7 @@ function getEligibleRivals(state: GameState): { warrior: Warrior; stable: RivalS
   const rivals: { warrior: Warrior; stable: RivalStableData }[] = [];
   for (const stable of state.rivals ?? []) {
     for (const warrior of stable.roster) {
-      if (warrior.status !== 'Active') continue;
+      if (!isActive(warrior)) continue;
       if (!isTooInjuredToFight(warrior.injuries)) {
         rivals.push({ warrior, stable });
       }

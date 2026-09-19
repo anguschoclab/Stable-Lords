@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getWeatherConfig } from '@/constants/arena/weather';
+import { getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { WEATHER_STATS } from '@/constants/arena/weatherStats';
 import type { WeatherType } from '@/types/shared.types';
 
@@ -45,6 +46,13 @@ export function WeatherWidget() {
         >
           {weather}
         </Badge>
+      </div>
+
+      <div className="text-[8px] text-muted-foreground/50 uppercase font-black tracking-widest mb-2">
+        {(() => {
+          const s = getWeatherSeason(weather as WeatherType);
+          return s === 'All' ? 'All-Season Phenomenon' : `${s} Season Phenomenon`;
+        })()}
       </div>
 
       <div className="flex items-center justify-between mb-4">

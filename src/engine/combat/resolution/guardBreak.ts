@@ -1,4 +1,5 @@
 import { BA_PARDEGRADE_PER_HIT, BA_PARDEGRADE_CAP } from '@/constants/combat/combat';
+import { addCapped } from '@/utils/math';
 
 /**
  * Bashing Attack win condition: each landed BA hit erodes the defender's guard.
@@ -6,5 +7,5 @@ import { BA_PARDEGRADE_PER_HIT, BA_PARDEGRADE_CAP } from '@/constants/combat/com
  * cap. Pure — the caller (executeHit) owns the FighterState mutation.
  */
 export function accumulateGuardBreak(current: number): number {
-  return Math.min(BA_PARDEGRADE_CAP, current + BA_PARDEGRADE_PER_HIT);
+  return addCapped(current, BA_PARDEGRADE_PER_HIT, BA_PARDEGRADE_CAP);
 }

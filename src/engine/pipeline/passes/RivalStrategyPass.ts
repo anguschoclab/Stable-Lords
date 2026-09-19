@@ -54,7 +54,8 @@ export function runRivalStrategyPass(
         { ...rival, strategy },
         nextWeek,
         new SeededRNGService(strategySeed + 123),
-        successorByStable
+        successorByStable,
+        state.absoluteWeek + 1
       );
     globalGazetteItems.push(...lifecycleGazette);
 
@@ -253,7 +254,8 @@ export function handleOwnerLifecycle(
   rival: RivalStableData,
   nextWeek: number,
   rng: IRNGService,
-  successorByStable: Map<StableId, Warrior>
+  successorByStable: Map<StableId, Warrior>,
+  absoluteWeek?: number
 ): { updatedRival: RivalStableData; gazetteItems: string[] } {
   const updatedRival = { ...rival, owner: { ...rival.owner } };
   const gazetteItems: string[] = [];
@@ -285,6 +287,7 @@ export function handleOwnerLifecycle(
       generation,
       fame: Math.floor(updatedRival.owner.fame * 0.4), // Fame reset on new leadership
       backstoryId: undefined, // Fresh start
+      ageRetired: absoluteWeek ?? nextWeek, // Week the previous owner retired
     };
 
     gazetteItems.push(

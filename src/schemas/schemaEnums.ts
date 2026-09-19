@@ -28,15 +28,20 @@ export const FightingStyleSchema = z.enum([
 export const SeasonSchema = z.enum(['Spring', 'Summer', 'Fall', 'Winter']);
 
 /**
- * CrowdMoodType enum schema
+ * Canonical crowd-mood values — engine/constants derive from this tuple.
  */
-export const CrowdMoodTypeSchema = z.enum([
+export const CROWD_MOOD_VALUES = [
   'Calm',
   'Bloodthirsty',
   'Theatrical',
   'Solemn',
   'Festive',
-]);
+] as const;
+
+/**
+ * CrowdMoodType enum schema
+ */
+export const CrowdMoodTypeSchema = z.enum(CROWD_MOOD_VALUES);
 
 /**
  * WeatherType enum schema

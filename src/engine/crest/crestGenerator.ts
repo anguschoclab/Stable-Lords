@@ -22,7 +22,7 @@ import {
   INHERITANCE_CHANCES,
   DEFAULT_INHERITANCE,
 } from '@/types/crest.types';
-import { getChargePathsByType } from './chargePaths';
+import { getRandomCharge } from './chargePaths';
 import { SeededRNGService } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
@@ -166,7 +166,7 @@ function selectColors(
     const preferredColors =
       PHILOSOPHY_COLOR_PREFERENCES[philosophy] || (Object.keys(CREST_COLORS) as CrestColorKey[]);
     const colorKey = rng.pick(preferredColors);
-    primaryColor = CREST_COLORS[colorKey as CrestColorKey];
+    primaryColor = getCrestColor(colorKey as CrestColorKey);
   }
 
   // Determine secondary color (only for non-solid fields)
@@ -180,7 +180,7 @@ function selectColors(
       const availableColors = allColorKeys.filter((k) => CREST_COLORS[k] !== primaryColor);
       if (availableColors.length > 0) {
         const pickedColor = rng.pick(availableColors);
-        secondaryColor = CREST_COLORS[pickedColor];
+        secondaryColor = getCrestColor(pickedColor);
       }
     }
   }
@@ -230,9 +230,7 @@ function selectCharge(
   }
 
   // Select specific charge from the type
-  const chargePaths = getChargePathsByType(chargeType);
-  const availableCharges = Object.keys(chargePaths);
-  const chargeName = rng.pick(availableCharges);
+  const chargeName = getRandomCharge(chargeType, rng.next()).name;
 
   // Determine count based on tier (higher = more charges)
   let count: 1 | 2 | 3;
@@ -342,8 +340,9 @@ export function getChargeDescription(charge: CrestCharge): string {
 export function getCrestDescription(crest: CrestData): string {
   const metalName = crest.metalColor === 'gold' ? 'Or' : 'Argent';
   const fieldDesc = crest.fieldType === 'solid' ? '' : ` ${crest.fieldType}`;
-  const chargeDesc = getChargeDescription(crest.charge);
-  const countDesc = crest.charge.count > 1 ? `${crest.charge.count} ` : '';
+  const countDesc =
+    crest.charge.count > 1 ? `${crest.charge.count} ` : '';
+  const posture = crest.charge.posture ? ` ${crest.charge.posture}` : '';
 
-  return `${metalName}${fieldDesc} with ${countDesc}${chargeDesc}`;
+  return `${metalName}${fieldDesc} with ${countDesc}${crest.charge.name}${posture}`;
 }

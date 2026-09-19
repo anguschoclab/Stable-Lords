@@ -1,13 +1,17 @@
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
+import { getFatigueBand } from '@/engine/core/fatigueUtils';
+import { hasInjuries, countInjuries } from '@/engine/injuries/utils';
 import type { Warrior } from '@/types/game';
 
+const FATIGUE_LABELS = {
+  fresh: { label: 'Fresh', color: 'text-primary', bar: 'bg-primary' },
+  elevated: { label: 'Tired', color: 'text-arena-gold', bar: 'bg-arena-gold' },
+  exhausted: { label: 'Exhausted', color: 'text-destructive', bar: 'bg-destructive' },
+} as const;
+
 function getFatigueLabel(fatigue: number | undefined): { label: string; color: string } {
-  const f = fatigue ?? 0;
-  if (f < FATIGUE_FRESH) return { label: 'Fresh', color: 'text-primary' };
-  if (f < FATIGUE_ELEVATED) return { label: 'Tired', color: 'text-arena-gold' };
-  return { label: 'Exhausted', color: 'text-destructive' };
+  return FATIGUE_LABELS[getFatigueBand(fatigue ?? 0)];
 }
 
 interface WarriorReadinessCardProps {
@@ -19,20 +23,20 @@ interface WarriorReadinessCardProps {
  */
 export function WarriorReadinessCard({ warrior }: WarriorReadinessCardProps) {
   const { label: fatigueLabel, color: fatigueColor } = getFatigueLabel(warrior.fatigue);
-  const hasInjuries = warrior.injuries && warrior.injuries.length > 0;
+  const injured = hasInjuries(warrior);
   return (
     <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-all motion-reduce:transition-none">
       <div className="flex flex-col gap-0.5">
         <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90">
           {warrior.name}
         </span>
-        {hasInjuries ? (
+        {injured ? (
           <div className="flex items-center gap-1.5 text-destructive animate-pulse motion-reduce:animate-none">
             <AlertTriangle className="h-2.5 w-2.5" />
             <span className="text-[8px] font-black uppercase tracking-widest">
-              {warrior.injuries.length === 1
+              {countInjuries(warrior) === 1
                 ? warrior.injuries[0]?.severity
-                : `${warrior.injuries.length} INJURIES`}
+                : `${countInjuries(warrior)} INJURIES`}
             </span>
           </div>
         ) : (
@@ -49,11 +53,7 @@ export function WarriorReadinessCard({ warrior }: WarriorReadinessCardProps) {
           <div
             className={cn(
               'h-full transition-all motion-reduce:transition-none',
-              (warrior.fatigue ?? 0) < FATIGUE_FRESH
-                ? 'bg-primary'
-                : (warrior.fatigue ?? 0) < FATIGUE_ELEVATED
-                  ? 'bg-arena-gold'
-                  : 'bg-destructive'
+              FATIGUE_LABELS[getFatigueBand(warrior.fatigue ?? 0)].bar
             )}
             style={{ width: `${Math.min(100, warrior.fatigue ?? 0)}%` }}
           />

@@ -5,6 +5,7 @@ import { selectArenaForMatchup } from './arenaFit';
 import { weekToTimestamp } from '@/constants';
 import { displayWeek } from '@/engine/core/absoluteWeek';
 import { isBookable } from '@/engine/warriorStatus';
+import { collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';
 import { getPairKey } from '@/utils/keyUtils';
 
@@ -24,10 +25,14 @@ const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
  */
 export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
   const targetWeek = state.absoluteWeek + 1;
+  // World bouts are scheduled for absoluteWeek + 2 (see offer.boutWeek below);
+  // exclude warriors already signed for that week to prevent double-booking.
+  const bookedIds = collectBookedWarriorIds(state, state.absoluteWeek + 2);
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
+      if (bookedIds.has(warrior.id)) continue;
       if (
         isBookable(warrior, {
           // restStates is global (injuryHandler writes it for any warrior);

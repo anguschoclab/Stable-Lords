@@ -4,6 +4,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
+import { hasInjuries } from '@/engine/injuries/utils';
 import { isActive } from '@/engine/warriorStatus';
 import { HAZARDOUS_WEATHER } from './weatherSuitability';
 
@@ -38,9 +39,9 @@ export function pickWeeklyIntent(
   const personality = rival.owner.personality ?? 'Pragmatic';
   const { activeRoster, injuryCount, lungeCount } = rival.roster.reduce(
     (acc, w) => {
-      if (w.status !== 'Active') return acc;
+      if (!isActive(w)) return acc;
       acc.activeRoster.push(w);
-      if (w.injuries && w.injuries.length > 0) acc.injuryCount++;
+      if (hasInjuries(w)) acc.injuryCount++;
       if (w.style === 'LUNGING ATTACK') acc.lungeCount++;
       return acc;
     },
@@ -266,7 +267,7 @@ export function intentStillApplies(
   const activeRoster = rival.roster.filter(isActive);
   const activeCount = activeRoster.length;
   const personality = rival.owner.personality ?? 'Pragmatic';
-  const injuryCount = activeRoster.filter((w) => w.injuries && w.injuries.length > 0).length;
+  const injuryCount = activeRoster.filter(hasInjuries).length;
   const seasonRecord = rival.agentMemory?.seasonRecord;
   const fights = (seasonRecord?.wins ?? 0) + (seasonRecord?.losses ?? 0);
   const winRate = fights >= 4 ? (seasonRecord?.wins ?? 0) / fights : null;

@@ -175,12 +175,13 @@ describe('StableDossier', () => {
     expect(screen.getByTestId('stable-crest')).toBeInTheDocument();
   });
 
-  it('shows crest charge description text for rival with crest (name + posture)', () => {
+  it('shows crest charge description text for rival with crest (name + posture + symbolism)', () => {
     render(<StableDossier stableId="rival-owner-1" />);
-    // The charge description renders as "lion (rampant)" in an italic <p>
-    // Use exact text to avoid matching the StableCrest mock which also renders "lion"
-    const desc = screen.getByText('lion (rampant)');
+    // Charge line renders "lion (rampant) — <symbolism>" in an italic <p>;
+    // exact-match the symbolism text to avoid matching the StableCrest mock.
+    const desc = screen.getByText(/Courage and nobility/);
     expect(desc).toBeInTheDocument();
+    expect(desc.textContent).toContain('lion (rampant)');
   });
 
   it('shows generation badge "G{generation}" when rival owner generation > 0 and crest present', () => {

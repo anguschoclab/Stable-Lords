@@ -3,22 +3,18 @@
  * Arena-wide mood states that affect fame gain, kill probability, and gazette tone.
  */
 import type { FightSummary } from '@/types/combat.types';
+import { CROWD_MOOD_VALUES } from '@/schemas/schemaEnums';
 
 /**
- * Crowd mood type.
+ * Crowd mood states — kept in sync with the schema-canonical CROWD_MOOD_VALUES tuple.
  */
 export type CrowdMood = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';
 
 /**
- * Crowd_moods.
+ * All crowd-mood values — derived from the schema-canonical tuple so the
+ * runtime list can never drift from serialization validation.
  */
-export const CROWD_MOODS: CrowdMood[] = [
-  'Calm',
-  'Bloodthirsty',
-  'Theatrical',
-  'Solemn',
-  'Festive',
-];
+export const CROWD_MOODS: CrowdMood[] = [...CROWD_MOOD_VALUES];
 
 /**
  * Mood_descriptions.

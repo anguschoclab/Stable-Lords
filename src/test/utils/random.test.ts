@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   SeededRNG,
   randomPick,
-  stringToSeed,
   hashStr,
   shuffled,
   rollWeighted,
@@ -75,24 +74,6 @@ describe('randomPick', () => {
   });
 });
 
-describe('stringToSeed', () => {
-  it('produces consistent seeds for same string', () => {
-    const seed1 = stringToSeed('test');
-    const seed2 = stringToSeed('test');
-    expect(seed1).toBe(seed2);
-  });
-
-  it('produces different seeds for different strings', () => {
-    const seed1 = stringToSeed('test');
-    const seed2 = stringToSeed('different');
-    expect(seed1).not.toBe(seed2);
-  });
-
-  it('returns positive numbers', () => {
-    const seed = stringToSeed('any string');
-    expect(seed).toBeGreaterThan(0);
-  });
-});
 
 describe('hashStr', () => {
   it('produces consistent hashes for same string', () => {

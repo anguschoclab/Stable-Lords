@@ -158,4 +158,15 @@ describe('TacticBank component', () => {
     const btn = screen.getByLabelText('Select Tactic: Lunge');
     expect(btn.className).toMatch(/focus-visible:ring/);
   });
+
+  it('annotates tactics with suitability labels for the plan style', () => {
+    // AimedBlow: Lunge=WS, Decisiveness=U, Parry=U (see tacticSuitability matrices)
+    render(<TacticBank plan={mockPlan} onPlanChange={vi.fn()} />);
+    const lunge = screen.getByLabelText('Select Tactic: Lunge');
+    const decisiveness = screen.getByLabelText('Select Tactic: Decisiveness');
+    const parry = screen.getByLabelText('Select Tactic: Parry');
+    expect(lunge.textContent).toContain('Well Suited');
+    expect(decisiveness.textContent).toContain('Unsuited');
+    expect(parry.textContent).toContain('Unsuited');
+  });
 });

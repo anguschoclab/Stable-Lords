@@ -99,7 +99,7 @@ export function processRecruitment(
 
   const activeStyleCounts = new Map<string, number>();
   for (const r of updatedRival.roster) {
-    if (r.status !== 'Active') continue;
+    if (!isActive(r)) continue;
     activeStyleCounts.set(r.style, (activeStyleCounts.get(r.style) ?? 0) + 1);
   }
 

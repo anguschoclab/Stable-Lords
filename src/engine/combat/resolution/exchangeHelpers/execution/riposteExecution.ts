@@ -14,6 +14,7 @@ import {
 } from '../../../mechanics/combatDamage';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { MOMENTUM_CAP, MOMENTUM_FLOOR } from '@/constants/combat';
+import { addCapped } from '@/utils/math';
 
 /**
  * Execute riposte.
@@ -57,7 +58,7 @@ export function executeRiposte(
   // Riposte swings momentum decisively
   const prevDefMom = defender.momentum;
   const prevAttMom = attacker.momentum;
-  defender.momentum = Math.min(MOMENTUM_CAP, defender.momentum + 1);
+  defender.momentum = addCapped(defender.momentum, 1, MOMENTUM_CAP);
   attacker.momentum = Math.max(MOMENTUM_FLOOR, attacker.momentum - 1);
   if (defender.momentum !== prevDefMom || attacker.momentum !== prevAttMom) {
     events.push({

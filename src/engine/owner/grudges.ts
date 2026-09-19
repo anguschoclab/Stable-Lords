@@ -1,7 +1,7 @@
 import type { GameState, OwnerGrudge } from '@/types/state.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import { PERSONALITY_CLASH } from '@/data/ownerData';
-import { clamp } from '@/utils/math';
+import { addCapped, clamp } from '@/utils/math';
 
 /**
  * Detect and escalate owner-to-owner grudges based on personality clashes
@@ -67,7 +67,7 @@ export function processOwnerGrudges(
       if (existing) {
         if (hasKill && existing.lastEscalation < state.week - 4) {
           const prevIntensity = existing.intensity;
-          existing.intensity = Math.min(5, existing.intensity + 1);
+          existing.intensity = addCapped(existing.intensity, 1, 5);
           existing.lastEscalation = state.week;
           existing.reason = `Blood spilled between ${rA.owner.stableName} and ${rB.owner.stableName}`;
           gazetteItems.push(
@@ -140,7 +140,7 @@ export function processOwnerGrudges(
 
       if (existing) {
         if (hasKill && existing.lastEscalation < state.week - 4) {
-          existing.intensity = Math.min(5, existing.intensity + 1);
+          existing.intensity = addCapped(existing.intensity, 1, 5);
           existing.lastEscalation = state.week;
           existing.reason = `Blood spilled between ${r.owner.stableName} and the player's stable`;
           gazetteItems.push(

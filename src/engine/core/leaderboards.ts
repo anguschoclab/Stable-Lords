@@ -147,23 +147,31 @@ export function calculatePerArenaLeaderboards(
 
   const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
 
-  return arenas.map((arena) => {
-    const arenaId = arena.id;
-    const topWarriors: ArenaWarriorEntry[] = [];
-    const topKillers: ArenaWarriorEntry[] = [];
+  return arenas.map((arena) =>
+    buildArenaLeaderboard(arena.id, arena.name, allEntries, limit)
+  );
+}
 
-    for (const { warrior, stableName, isPlayer } of allEntries) {
-      const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
-      if (entry.wins + entry.losses > 0) {
-        insertBounded(topWarriors, limit, entry, cmpWarriors);
-        if (entry.kills > 0) {
-          insertBounded(topKillers, limit, entry, cmpKillers);
-        }
+function buildArenaLeaderboard(
+  arenaId: string,
+  arenaName: string,
+  allEntries: ReturnType<typeof collectActiveWarriorEntries>,
+  limit: number
+): ArenaLeaderboardData {
+  const topWarriors: ArenaWarriorEntry[] = [];
+  const topKillers: ArenaWarriorEntry[] = [];
+
+  for (const { warrior, stableName, isPlayer } of allEntries) {
+    const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
+    if (entry.wins + entry.losses > 0) {
+      insertBounded(topWarriors, limit, entry, cmpWarriors);
+      if (entry.kills > 0) {
+        insertBounded(topKillers, limit, entry, cmpKillers);
       }
     }
+  }
 
-    return { arenaId, arenaName: arena.name, topWarriors, topKillers };
-  });
+  return { arenaId, arenaName, topWarriors, topKillers };
 }
 
 /**
@@ -178,24 +186,5 @@ export function calculateArenaLeaderboard(
 ): ArenaLeaderboardData {
   const arena = getArenaById(arenaId);
   const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
-
-  const topWarriors: ArenaWarriorEntry[] = [];
-  const topKillers: ArenaWarriorEntry[] = [];
-
-  for (const { warrior, stableName, isPlayer } of allEntries) {
-    const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
-    if (entry.wins + entry.losses > 0) {
-      insertBounded(topWarriors, limit, entry, cmpWarriors);
-      if (entry.kills > 0) {
-        insertBounded(topKillers, limit, entry, cmpKillers);
-      }
-    }
-  }
-
-  return {
-    arenaId,
-    arenaName: arena.name,
-    topWarriors,
-    topKillers,
-  };
+  return buildArenaLeaderboard(arenaId, arena.name, allEntries, limit);
 }

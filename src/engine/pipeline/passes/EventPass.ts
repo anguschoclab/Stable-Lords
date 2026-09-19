@@ -9,7 +9,7 @@ import type { EventNarrative } from '@/types/narrative.types';
 import { rollRange } from '@/engine/core/rng/rollRange';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { makeNewsletterItem } from '@/engine/narrative/newsletterHelpers';
-import { filterHealthy } from '@/utils/roster';
+import { filterActive, filterHealthy } from '@/utils/roster';
 import { isActive } from '@/engine/warriorStatus';
 
 /**
@@ -101,7 +101,7 @@ export function runEventPass(
 
   // 🏺 Lost Relic Discovery Event
   if (brawlRng.next() < 0.04 && state.roster.length > 0) {
-    const activeWarriors = state.roster.filter((w) => isActive(w));
+    const activeWarriors = filterActive(state.roster);
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.lost_relic;
@@ -149,7 +149,7 @@ export function runEventPass(
     (state.treasury || 0) + treasuryDelta >= 20 &&
     state.roster.length > 0
   ) {
-    const activeWarriors = state.roster.filter((w) => isActive(w));
+    const activeWarriors = filterActive(state.roster);
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.goblin_merchant;

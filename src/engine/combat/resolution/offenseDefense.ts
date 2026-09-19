@@ -32,6 +32,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { styleRiposteBonus } from './styleRiposteBonus';
 import type { FighterState, ResolutionContext } from './types';
 import type { ResolvedTactics } from './tactics';
+import { addCapped } from '@/utils/math';
 
 /**
  * Bundled inputs + resolved per-side ("current attacker/defender") view for a
@@ -162,7 +163,7 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
 
   const prevDefMomParry = def.momentum;
   const prevAttMomParry = att.momentum;
-  def.momentum = Math.min(MOMENTUM_CAP, def.momentum + 1);
+  def.momentum = addCapped(def.momentum, 1, MOMENTUM_CAP);
   att.momentum = Math.max(MOMENTUM_FLOOR, att.momentum - 1);
   if (def.momentum !== prevDefMomParry || att.momentum !== prevAttMomParry) {
     events.push({

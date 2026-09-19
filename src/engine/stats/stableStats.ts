@@ -1,5 +1,6 @@
 import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/shared.types';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Defines the shape of stable stats.
@@ -33,7 +34,7 @@ export function calculateStableStats(roster: Warrior[]): StableStats {
   let topWarrior: Warrior | null = null;
 
   for (const w of roster) {
-    if (w.status !== 'Active') continue;
+    if (!isActive(w)) continue;
 
     activeCount++;
     totalWins += w.career?.wins ?? 0;

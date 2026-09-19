@@ -5,7 +5,10 @@ import { describe, it, expect } from 'vitest';
 import { getWeatherEffect, weatherOpeningLine } from '@/engine/combat/mechanics/weatherEffects';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
 import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
-import { SEASONAL_WEATHER, rollWeather } from '@/engine/pipeline/passes/WorldPass';
+import {
+  SEASONAL_WEATHER,
+  rollWeather,
+} from '@/engine/weather/seasonalWeather';
 import type { WeatherType } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 

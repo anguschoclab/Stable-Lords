@@ -3,7 +3,7 @@ import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStor
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
-import { isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
+import { isExhausted, getFatigueBand } from '@/engine/core/fatigueUtils';
 import { toast } from 'sonner';
 import type { Warrior } from '@/types/state.types';
 import type { InjuryData } from '@/types/warrior.types';
@@ -17,23 +17,26 @@ export function getFatigueStatus(fatigue: number): {
   color: string;
   icon: React.ReactNode;
 } {
-  if (fatigue <= FATIGUE_FRESH)
-    return {
-      label: 'Optimal',
-      color: 'text-primary',
-      icon: React.createElement(Heart, { className: 'h-3 w-3' }),
-    };
-  if (fatigue <= FATIGUE_ELEVATED)
-    return {
-      label: 'Degraded',
-      color: 'text-arena-gold',
-      icon: React.createElement(Clock, { className: 'h-3 w-3' }),
-    };
-  return {
-    label: 'Critical',
-    color: 'text-destructive',
-    icon: React.createElement(AlertTriangle, { className: 'h-3 w-3' }),
-  };
+  switch (getFatigueBand(fatigue)) {
+    case 'fresh':
+      return {
+        label: 'Optimal',
+        color: 'text-primary',
+        icon: React.createElement(Heart, { className: 'h-3 w-3' }),
+      };
+    case 'elevated':
+      return {
+        label: 'Degraded',
+        color: 'text-arena-gold',
+        icon: React.createElement(Clock, { className: 'h-3 w-3' }),
+      };
+    default:
+      return {
+        label: 'Critical',
+        color: 'text-destructive',
+        icon: React.createElement(AlertTriangle, { className: 'h-3 w-3' }),
+      };
+  }
 }
 
 /**

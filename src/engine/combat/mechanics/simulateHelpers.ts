@@ -1,5 +1,4 @@
 import { FightingStyle } from '@/types/shared.types';
-import type { FightOutcome } from '@/types/combat.types';
 import type { Trainer } from '@/types/state.types';
 import type { ResolutionContext, FighterState } from '@/engine/combat/resolution/types';
 import { getTrainingBonus } from '@/engine/trainers';
@@ -72,23 +71,5 @@ export function getTrainerMods(
   };
 }
 
-/**
- * Process outcome tags.
- */
-export function processOutcomeTags(
-  winner: 'A' | 'D',
-  by: FightOutcome['by'],
-  fA: FighterState,
-  fD: FighterState
-): string[] {
-  const tags = new Set<string>();
-  const w = winner === 'A' ? fA : fD;
-  const l = winner === 'A' ? fD : fA;
 
-  if (w.hp < w.maxHp * 0.3 && w.hitsLanded > l.hitsLanded) tags.add('Comeback');
-  if (w.hitsLanded >= 5) tags.add('Dominance');
-  if (by === 'KO') tags.add('KO');
-  if (by === 'Kill') tags.add('Kill');
 
-  return Array.from(tags);
-}

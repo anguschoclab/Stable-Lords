@@ -5,6 +5,7 @@
  */
 import type { AnalysisFactor } from '@/engine/narrative/fightAnalysis';
 import { getMatchupBonus } from '@/constants/combat/combat';
+import { hasInjuryOfSeverity } from '@/engine/injuries/utils';
 import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
 /**
@@ -45,7 +46,10 @@ function biggestSkillGap(a: ForecastWarrior, d: ForecastWarrior) {
 function readinessRisk(w: ForecastWarrior): AnalysisFactor | null {
   const active = (w.injuries ?? []).filter((i) => (i.weeksRemaining ?? 0) > 0);
   if (active.length === 0) return null;
-  const worst = active.some((i) => i.severity === 'Major' || i.severity === 'Severe');
+  // 'Major' was never a real severity — serious means Severe or worse.
+  const worst = (['Severe', 'Critical', 'Permanent'] as const).some((sev) =>
+    hasInjuryOfSeverity({ injuries: active }, sev)
+  );
   return {
     label: 'Readiness',
     detail: `${w.name} carries ${active.length} active injur${active.length === 1 ? 'y' : 'ies'}${worst ? ' (serious)' : ''} into this bout.`,

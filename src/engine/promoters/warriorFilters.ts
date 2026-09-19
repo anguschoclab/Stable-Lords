@@ -4,6 +4,7 @@
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
+import { hasInjuryOfSeverity } from '@/engine/injuries/utils';
 
 /** Check if warrior is a "high-kill" type (for Sadistic promoter) */
 export function isHighKillWarrior(w: Warrior): boolean {
@@ -12,8 +13,8 @@ export function isHighKillWarrior(w: Warrior): boolean {
 
 /** Check if warrior has injury-prone characteristics */
 export function hasInjuryRisk(w: Warrior): boolean {
-  return (w.injuries || []).some(
-    (i) => i.severity === 'Moderate' || i.severity === 'Severe' || i.severity === 'Critical'
+  return (['Moderate', 'Severe', 'Critical'] as const).some((sev) =>
+    hasInjuryOfSeverity(w, sev)
   );
 }
 

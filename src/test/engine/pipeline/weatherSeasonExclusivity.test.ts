@@ -7,7 +7,7 @@ import {
   SEASONAL_WEATHER,
   rollWeather,
   getWeatherSeason,
-} from '@/engine/pipeline/passes/WorldPass';
+} from '@/engine/weather/seasonalWeather';
 import { SeededRNGService } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
 

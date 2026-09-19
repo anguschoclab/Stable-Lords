@@ -306,6 +306,30 @@ describe('handleOwnerLifecycle', () => {
     expect(updatedRival.owner.age).toBeGreaterThanOrEqual(25);
     expect(updatedRival.owner.age).toBeLessThanOrEqual(39);
   });
+
+  it('succession → records the absolute week the previous owner retired', () => {
+    const rival = makeRival({
+      owner: { ...makeRival().owner, age: 80, fame: 200, generation: 0 },
+    });
+    const state = makeMinimalState([rival]);
+    const rng = makeMockRng([0.1, 0.5]);
+    const index = buildSuccessorIndex(state.retired);
+
+    const { updatedRival } = handleOwnerLifecycle(rival, 5, rng as any, index, 140);
+
+    expect(updatedRival.owner.ageRetired).toBe(140);
+  });
+
+  it('no succession → ageRetired stays unset', () => {
+    const rival = makeRival({ owner: { ...makeRival().owner, age: 50 } });
+    const state = makeMinimalState([rival]);
+    const rng = makeMockRng([1]);
+    const index = buildSuccessorIndex(state.retired);
+
+    const { updatedRival } = handleOwnerLifecycle(rival, 5, rng as any, index, 140);
+
+    expect(updatedRival.owner.ageRetired).toBeUndefined();
+  });
 });
 
 // ─── Suite 3: Integration via runRivalStrategyPass ─────────────────────────

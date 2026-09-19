@@ -1,6 +1,12 @@
 import { cn } from '@/lib/utils';
 import { TACTIC_BANK } from './tacticBankData';
 import type { FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
+import {
+  getOffensiveSuitability,
+  getDefensiveSuitability,
+  SUITABILITY_LABELS,
+  SUITABILITY_COLORS,
+} from '@/engine/tacticSuitability';
 
 
 interface TacticBankProps {
@@ -28,24 +34,41 @@ export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {})
         <span className="text-[10px] font-black uppercase tracking-widest">Tactic Bank</span>
       </div>
       <div className="flex flex-col gap-2 p-2 bg-black/40 border border-white/5 rounded-none">
-        {TACTIC_BANK.map((t) => (
-          <button
-            key={t.id}
-            aria-label={`Select Tactic: ${t.id}`}
-            onClick={() => handleClick(t)}
-            className={cn(
-              'flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-              plan &&
-                ((t.type === 'offensive' && plan.offensiveTactic === t.id) ||
-                  (t.type === 'defensive' && plan.defensiveTactic === t.id))
-                ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
-                : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(189,138,36,0.15)] active:scale-[0.98] active:shadow-none'
-            )}
-          >
-            <t.icon className="w-4 h-4 shrink-0" />
-            {t.label}
-          </button>
-        ))}
+        {TACTIC_BANK.map((t) => {
+          const rating = plan
+            ? t.type === 'offensive'
+              ? getOffensiveSuitability(plan.style, t.id as OffensiveTactic)
+              : getDefensiveSuitability(plan.style, t.id as DefensiveTactic)
+            : null;
+          return (
+            <button
+              key={t.id}
+              aria-label={`Select Tactic: ${t.id}`}
+              onClick={() => handleClick(t)}
+              className={cn(
+                'flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+                plan &&
+                  ((t.type === 'offensive' && plan.offensiveTactic === t.id) ||
+                    (t.type === 'defensive' && plan.defensiveTactic === t.id))
+                  ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
+                  : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(189,138,36,0.15)] active:scale-[0.98] active:shadow-none'
+              )}
+            >
+              <t.icon className="w-4 h-4 shrink-0" />
+              {t.label}
+              {rating && (
+                <span
+                  className={cn(
+                    'ml-auto text-[8px] font-black uppercase tracking-widest',
+                    SUITABILITY_COLORS[rating]
+                  )}
+                >
+                  {SUITABILITY_LABELS[rating]}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

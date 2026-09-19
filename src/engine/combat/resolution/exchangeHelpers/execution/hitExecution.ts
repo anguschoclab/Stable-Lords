@@ -44,6 +44,7 @@ import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../guardBreak';
 import { accumulateBleed } from '../../bleed';
 import { getMomentumDamageBonus, getWsAttritionBonus } from '../../tempoMechanics';
+import { addCapped } from '@/utils/math';
 import {
   getFrontloadMult,
   getStCritChanceBonus,
@@ -262,7 +263,7 @@ function applyMomentumShift(
 ): void {
   const prevAttMom = attacker.momentum;
   const prevDefMom = defender.momentum;
-  attacker.momentum = Math.min(MOMENTUM_CAP, attacker.momentum + 1);
+  attacker.momentum = addCapped(attacker.momentum, 1, MOMENTUM_CAP);
   defender.momentum = Math.max(MOMENTUM_FLOOR, defender.momentum - 1);
   if (attacker.momentum !== prevAttMom || defender.momentum !== prevDefMom) {
     events.push({

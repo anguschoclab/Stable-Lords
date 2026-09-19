@@ -2,7 +2,6 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { tickInjuries } from '@/engine/injuries';
-import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import type { StateImpact } from './impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
@@ -51,32 +50,3 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
   };
 }
 
-/**
- * Apply health updates.
- */
-export const applyHealthUpdates: (state: GameState, rng?: IRNGService) => GameState = (
-  state,
-  rng
-) => {
-  const impact = computeHealthImpact(state, rng);
-  let roster = [...state.roster];
-  const rosterUpdates = impact.rosterUpdates;
-  if (rosterUpdates) {
-    roster = roster.map((w) => {
-      const update = rosterUpdates.get(w.id);
-      return update ? { ...w, ...update } : w;
-    });
-  }
-
-  const s = {
-    ...state,
-    roster,
-    restStates: clearExpiredRest(state.restStates || [], state.absoluteWeek ?? state.week),
-  };
-
-  if (impact.newsletterItems && impact.newsletterItems.length > 0) {
-    s.newsletter = [...(s.newsletter || []), ...impact.newsletterItems];
-  }
-
-  return s;
-};

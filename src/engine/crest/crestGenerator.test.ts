@@ -287,6 +287,22 @@ describe('crestGenerator', () => {
       expect(desc).toContain('with');
     });
 
+    it('produces a proper blazon naming the charge and posture', () => {
+      const crest = {
+        shieldShape: 'heater',
+        fieldType: 'solid',
+        primaryColor: '#8B0000',
+        metalColor: 'gold',
+        charge: { type: 'beast', name: 'lion', posture: 'rampant', count: 1 },
+        generation: 0,
+      } as never;
+
+      const desc = getCrestDescription(crest);
+      expect(desc).toContain('Or');
+      expect(desc).toContain('lion');
+      expect(desc).toContain('rampant');
+    });
+
     it('should include charge count for multiple charges', () => {
       const parent = generateCrest({
         seed: 88888,

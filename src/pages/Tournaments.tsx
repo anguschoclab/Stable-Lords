@@ -201,6 +201,7 @@ export default function Tournaments() {
           seasonIcons={SEASON_ICONS}
           seasonNames={SEASON_NAMES}
           currentSeason={season}
+          arenaHistory={arenaHistory}
         />
       </div>
       <TournamentPrepDialog

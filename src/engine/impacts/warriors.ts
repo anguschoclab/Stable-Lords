@@ -5,6 +5,7 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import { removeFromRoster, updateRoster } from '@/utils/roster';
 
 /**
  * Apply roster updates to state.
@@ -27,10 +28,7 @@ export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Wa
       state.roster = nextRoster;
     }
   } else {
-    state.roster = state.roster.map((w) => {
-      const update = value.get(w.id);
-      return update ? ({ ...w, ...update } as Warrior) : w;
-    });
+    state.roster = updateRoster(state.roster, value);
   }
 };
 
@@ -39,7 +37,7 @@ export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Wa
  */
 export const rosterRemovals = (state: GameState, value: WarriorId[]) => {
   if (value.length === 0) return;
-  state.roster = state.roster.filter((w) => !value.includes(w.id));
+  state.roster = removeFromRoster(state.roster, value);
 };
 
 /**

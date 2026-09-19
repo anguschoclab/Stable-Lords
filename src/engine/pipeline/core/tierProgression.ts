@@ -5,6 +5,7 @@ import { hashStr, resolveRng } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment';
 import { StateImpact } from '@/engine/impacts';
 import { isActive } from '@/engine/warriorStatus';
+import { filterActive } from '@/utils/roster';
 
 interface TierStats {
   totalWins: number;
@@ -75,7 +76,7 @@ export function processTierProgression(
       stats.totalKills += w.career.kills;
       stats.totalFights += w.career.wins + w.career.losses;
     }
-    stats.activeCount = r.roster.filter((w) => isActive(w)).length;
+    stats.activeCount = filterActive(r.roster).length;
 
     const rules = tierRules[r.tier || 'Minor'];
     for (const rule of rules) {

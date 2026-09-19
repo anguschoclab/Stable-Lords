@@ -1,6 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * SeasonalRetirementService - Handles retirement and legacy founder system.
@@ -32,7 +33,7 @@ export const SeasonalRetirementService = {
 
     updatedState.rivals = (updatedState.rivals || []).map((rival) => {
       const updatedRoster = rival.roster.map((w) => {
-        if (w.status !== 'Active') return w;
+        if (!isActive(w)) return w;
 
         const age = w.age ?? 20;
         const retireChance = age >= 40 ? 1 : age >= 30 ? (age - 30) * 0.05 : 0;

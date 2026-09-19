@@ -8,6 +8,7 @@ import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { StableCrest } from '@/components/crest';
 import { isActive } from '@/engine/warriorStatus';
+import { getChargeDescription } from '@/engine/crest/crestGenerator';
 
 interface StableDossierProps {
   stableId?: string;
@@ -93,11 +94,19 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
             <p className="text-sm text-muted-foreground">
               Master: <span className="font-bold text-foreground">{stable.owner.name}</span>
             </p>
+            {stable.owner.ageRetired !== undefined && (
+              <p className="text-[10px] text-muted-foreground/70">
+                Ascended to the mantle in week {stable.owner.ageRetired}
+                {stable.owner.generation ? ` · Generation ${stable.owner.generation}` : ''}
+              </p>
+            )}
             {'crest' in stable && stable.crest && (
               <p className="text-[10px] text-muted-foreground italic">
                 {stable.crest.charge.count > 1 ? `${stable.crest.charge.count} ` : ''}
                 {stable.crest.charge.name}
                 {stable.crest.charge.posture ? ` (${stable.crest.charge.posture})` : ''}
+                {' — '}
+                {getChargeDescription(stable.crest.charge)}
               </p>
             )}
           </div>

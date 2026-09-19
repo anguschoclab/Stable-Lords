@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
-import { rollWeather } from '@/engine/pipeline/passes/WorldPass';
+import {
+  rollWeather,
+} from '@/engine/weather/seasonalWeather';
 import { SeededRNGService } from '@/utils/random';
 
 describe('Blood Rain Feature', () => {

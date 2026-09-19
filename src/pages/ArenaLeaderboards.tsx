@@ -3,9 +3,10 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { getAllArenas } from '@/data/arenas';
 import {
-  calculatePerArenaLeaderboards,
+  calculateArenaLeaderboard,
   type ArenaLeaderboardData,
 } from '@/engine/core/leaderboards';
+import { getFightsForArena } from '@/engine/core/historyUtils';
 import { ARENA_SIZE_PROFILES } from '@/engine/combat/mechanics/distanceResolution';
 import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -150,22 +151,28 @@ export default function ArenaLeaderboards() {
   const arenas = useMemo(() => getAllArenas(), []);
   const [selectedArenaId, setSelectedArenaId] = useState<string>(arenas[0]?.id ?? '');
 
-  const { roster, rivals, player } = useGameStore(
+  const { roster, rivals, player, arenaHistory } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       rivals: s.rivals,
       player: s.player,
+      arenaHistory: s.arenaHistory,
     }))
   );
 
-  const allLeaderboards = useMemo(
-    () => calculatePerArenaLeaderboards(roster, player.stableName, rivals),
-    [roster, rivals, player.stableName]
+  // Compute only the selected arena's board — cheaper than materializing all
+  // venues on every render (single-arena API exists for exactly this case).
+  const currentLB = useMemo(
+    () =>
+      selectedArenaId
+        ? calculateArenaLeaderboard(selectedArenaId, roster, player.stableName, rivals)
+        : undefined,
+    [selectedArenaId, roster, rivals, player.stableName]
   );
-
-  const currentLB = allLeaderboards.find((lb) => lb.arenaId === selectedArenaId);
   const currentArena = arenas.find((a) => a.id === selectedArenaId);
   const sizeProfile = currentArena ? ARENA_SIZE_PROFILES[currentArena.size] : null;
+
+  const recentBouts = getFightsForArena(arenaHistory, selectedArenaId).slice(-6).reverse();
 
   return (
     <PageFrame>
@@ -305,6 +312,34 @@ export default function ArenaLeaderboards() {
           <p className="text-[9px] text-muted-foreground/30 mt-1 uppercase tracking-widest">
             Fight records will appear once bouts are held here
           </p>
+        </Surface>
+      )}
+
+      {/* Recent bouts at this venue */}
+      {recentBouts.length > 0 && (
+        <Surface variant="glass" className="mt-6">
+          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
+            <Swords className="h-3.5 w-3.5 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+              Recent Bouts
+            </span>
+          </div>
+          <div className="divide-y divide-white/5">
+            {recentBouts.map((f) => (
+              <div
+                key={f.id}
+                className="flex items-center justify-between px-6 py-3 text-[10px]"
+              >
+                <span className="text-foreground/80">{f.title}</span>
+                <span className="flex items-center gap-3">
+                  <span className="font-black uppercase tracking-widest text-muted-foreground/50">
+                    {f.by}
+                  </span>
+                  <span className="font-mono text-muted-foreground/40">Wk {f.week}</span>
+                </span>
+              </div>
+            ))}
+          </div>
         </Surface>
       )}
     </PageFrame>

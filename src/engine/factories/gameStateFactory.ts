@@ -14,6 +14,7 @@ import { BACKSTORY_IDS } from '@/data/backstories';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { SAVE_STATE_VERSION } from '@/constants/core';
 import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
+import { OWNER_PERSONALITIES_WITH_POLICY } from '@/engine/ai/traitPolicy';
 
 /**
  * Creates the initial, deterministic game state for a new game.
@@ -93,13 +94,9 @@ export function createFreshState(
 
   // 2. Generate Initial Rivals - Seeded selection
   const RIVAL_NAMES = (narrativeContent as NarrativeContent).recruitment.rival_stable_names;
-  const PERSONALITIES: OwnerPersonality[] = [
-    'Aggressive',
-    'Methodical',
-    'Showman',
-    'Pragmatic',
-    'Tactician',
-  ];
+  // Every seeded owner must map to a trait policy — the canonical list lives
+  // in ai/traitPolicy so personalities can never drift out of coverage.
+  const PERSONALITIES: OwnerPersonality[] = OWNER_PERSONALITIES_WITH_POLICY;
 
   // Shuffle and pick INITIAL_RIVAL_COUNT
   const pool = [...RIVAL_NAMES];

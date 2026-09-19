@@ -7,6 +7,7 @@ import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
+import { hasInjuries } from '@/engine/injuries/utils';
 import { type LedgerEntryId } from '@/types/shared.types';
 import {
   type OffseasonEventNarrative,
@@ -101,7 +102,7 @@ export function handleWanderingHealer(
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep'));
 
   const activeInjured = state.roster.filter(
-    (w) => isActive(w) && w.injuries && w.injuries.length > 0
+    (w) => isActive(w) && hasInjuries(w)
   );
 
   const chosen = activeInjured.length > 0 ? rng.pick(activeInjured) : null;

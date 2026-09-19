@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Activity, Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
+import { hasInjuries, getInjurySeverityCounts } from '@/engine/injuries/utils';
 
 interface WarriorDossierMedicalReportProps {
   warrior: Warrior;
@@ -12,7 +13,7 @@ interface WarriorDossierMedicalReportProps {
  * @param - { warrior }.
  */
 export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalReportProps) {
-  if (!warrior.injuries || warrior.injuries.length === 0) {
+  if (!hasInjuries(warrior)) {
     return null;
   }
 
@@ -20,6 +21,11 @@ export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalRe
     <div className="space-y-2">
       <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1">
         <Activity className="h-3 w-3 text-destructive" /> Wounds & Ailments
+        <span className="ml-auto normal-case tracking-normal opacity-70">
+          {Object.entries(getInjurySeverityCounts(warrior))
+            .map(([sev, n]) => `${n} ${sev}`)
+            .join(' · ')}
+        </span>
       </h3>
       <div className="grid gap-2">
         {warrior.injuries.map((inj: InjuryData) => {

@@ -281,7 +281,7 @@ export function convertBidsToOffers(
         if (rival.id === proposerStable.stableId || rival.owner.id === proposerStable.stableId)
           continue;
         for (const w of rival.roster) {
-          if (w.status !== 'Active') continue;
+          if (!isActive(w)) continue;
           if (
             !bookable(w, {
               restStates: state.restStates,

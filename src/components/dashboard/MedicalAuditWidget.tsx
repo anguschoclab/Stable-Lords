@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import { WarriorAuditCard } from './WarriorAuditCard';
+import { countInjuries } from '@/engine/injuries/utils';
 
 /**
  *
@@ -11,7 +12,7 @@ import { WarriorAuditCard } from './WarriorAuditCard';
 export function MedicalAuditWidget() {
   const atRisk = useAtRiskWarriors();
 
-  const criticalCount = atRisk.filter((w) => (w.fatigue ?? 0) > 85 || w.injuries.length > 1).length;
+  const criticalCount = atRisk.filter((w) => (w.fatigue ?? 0) > 85 || countInjuries(w) > 1).length;
 
   return (
     <Surface

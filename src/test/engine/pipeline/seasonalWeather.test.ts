@@ -3,8 +3,8 @@ import {
   SEASONAL_WEATHER,
   rollWeather,
   getWeatherSeason,
-  computeNextSeason,
-} from '@/engine/pipeline/passes/WorldPass';
+} from '@/engine/weather/seasonalWeather';
+import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { SeededRNGService } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';

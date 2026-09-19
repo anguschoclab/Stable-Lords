@@ -9,6 +9,7 @@ import { FightingStyle, type TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import { generateFreelancer } from './utils';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Committee selection.
@@ -35,7 +36,7 @@ export function committeeSelection(
       stable?.strategy?.intent === 'RECOVERY' || stable?.strategy?.intent === 'SURVIVAL';
     if (declines) return;
     for (const w of roster) {
-      if (w.status !== 'Active') continue;
+      if (!isActive(w)) continue;
       if (!lockedIds.has(w.id)) {
         // 🌩️ Tournament Entry Skepticism: Weather Check — consolidated gate (G16)
         if (committeeWeatherSkip(w, state.weather)) continue;

@@ -66,10 +66,20 @@ describe('AI edgeCaseDecisions', () => {
 
     const next = await advanceWeek(state, { headless: true });
 
-    // The injured warriors should still be in the roster (not dead)
+    // The stable survives and no injured warrior is offered a bout
     const rival = next.rivals?.find((r) => r.id === 'rival-injured');
     expect(rival).toBeDefined();
-    expect(rival!.roster.length).toBe(2);
+    const offered = new Set<string>();
+    for (const offer of Object.values(next.boutOffers ?? {})) {
+      if (offer.status === 'Proposed' || offer.status === 'Signed') {
+        for (const wid of offer.warriorIds) offered.add(wid as string);
+      }
+    }
+    expect(offered.has('iw1')).toBe(false);
+    expect(offered.has('iw2')).toBe(false);
+    // Injured warriors are processed out of the bookable roster; the unified
+    // draft path signs at most one replacement per week.
+    expect(rival!.roster.every((w) => w.status === 'Active')).toBe(true);
   });
 
   it('AI does not draft from empty pool', async () => {

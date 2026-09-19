@@ -1,14 +1,11 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { computeMetaDrift } from '../../metaDrift';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
-import { META_RECRUIT_QUOTES } from '@/data/ownerData';
 import { resolveRng } from '@/utils/random';
-import { getStablePairKey } from '@/utils/keyUtils';
-import { generateAIRecruit } from './recruitGenerator';
 import { computeWarriorLiability } from '@/engine/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
+import { aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warriorStatus';
 
 /**
@@ -24,11 +21,7 @@ export function processAIRosterManagement(
   rng?: IRNGService
 ): { updatedRivals: RivalStableData[]; gazetteItems: string[] } {
   const rngSnapshot = resolveRng(rng, state.week * 7919 + 101);
-  const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory, 20);
   const gazetteItems: string[] = [];
-  const rivalryMap = new Map(
-    (state.rivalries || []).map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
-  );
   const updatedRivals = (state.rivals || []).map((rival) => {
     const r = {
       ...rival,
@@ -37,10 +30,6 @@ export function processAIRosterManagement(
     };
 
     const personality = r.owner.personality ?? 'Pragmatic';
-    let activeBeforeCulling = 0;
-    for (const w of r.roster) {
-      if (isActive(w)) activeBeforeCulling++;
-    }
 
     // 1) Retirement / Culling Logic
     let culledThisTick = 0;
@@ -131,58 +120,16 @@ export function processAIRosterManagement(
       }
     }
 
-    // 2) Recruitment Logic
+    // 2) Recruitment flag — signing is unified in aiDraftFromPool /
+    // processRecruitment (G9). Management only declares the need; the draft
+    // path owns caps, budgets, and pool-vs-generated sourcing.
     let currentActive = 0;
     for (const w of r.roster) {
       if (isActive(w)) currentActive++;
     }
-    const minRoster = personality === 'Aggressive' ? 8 : personality === 'Showman' ? 7 : 6;
-    const recruitChance =
-      currentActive < 4
-        ? 1.0
-        : personality === 'Aggressive'
-          ? 0.4
-          : personality === 'Pragmatic'
-            ? 0.25
-            : 0.15;
-
-    // Treasury Awareness: Recruitment costs 100g (signing fee)
-    const RECRUIT_COST = 100;
-    const canAfford = r.treasury >= RECRUIT_COST + (activeBeforeCulling < 4 ? 0 : 200); // Only enforce buffer if roster was healthy before culling
     const intent = r.strategy?.intent ?? 'CONSOLIDATION';
-
-    if (
-      currentActive < minRoster &&
-      culledThisTick === 0 &&
-      rngSnapshot.next() < recruitChance &&
-      canAfford &&
-      intent !== 'RECOVERY'
-    ) {
-      const adaptation = r.owner.metaAdaptation ?? 'Opportunist';
-      let customMeta = meta;
-
-      // Special handling for rivalries: counter player's favorite style
-      if (state.rivalries) {
-        const rivalry = rivalryMap.get(getStablePairKey(state.player.id, r.owner.id));
-        if (rivalry && rivalry.intensity >= 3 && adaptation !== 'Traditionalist') {
-          const playerMeta = computeMetaDrift(
-            getRecentFightsForWarrior(state.arenaHistory, state.player.id, 10),
-            10
-          );
-          if (Object.keys(playerMeta).length > 0) customMeta = playerMeta;
-        }
-      }
-
-      const newWarrior = generateAIRecruit(r, state.week, customMeta);
-      if (newWarrior) {
-        r.treasury -= RECRUIT_COST;
-        r.roster.push(newWarrior);
-        const adaptQuote = META_RECRUIT_QUOTES[adaptation] ?? '"A new warrior joins."';
-        gazetteItems.push(
-          `📢 ${r.owner.stableName} recruits ${newWarrior.name} (${newWarrior.style}) — ${adaptQuote}`
-        );
-      }
-    }
+    r.needsRecruit =
+      currentActive < aiRosterMin(personality) && culledThisTick === 0 && intent !== 'RECOVERY';
 
     r.roster = r.roster.filter((w) => isActive(w));
     return r;

@@ -13,6 +13,7 @@ import BoutHeader from './bout-viewer/BoutHeader';
 import BoutControls from './bout-viewer/BoutControls';
 import BoutResolution from './bout-viewer/BoutResolution';
 import { FightAnalysisPanel } from './bout-viewer/FightAnalysisPanel';
+import { AIDebugDrawer } from './bout-viewer/AIDebugDrawer';
 
 interface BoutViewerProps {
   nameA: string;
@@ -29,6 +30,7 @@ interface BoutViewerProps {
   arenaId?: string;
   transcript?: string[];
   analysis?: import('@/engine/narrative/fightAnalysis').FightAnalysis;
+  exchangeLog?: import('@/types/combat.types').ExchangeLogEntry[];
 }
 
 /**
@@ -62,6 +64,7 @@ export default function BoutViewer({
   weather = 'Clear',
   arenaId,
   analysis,
+  exchangeLog,
 }: BoutViewerProps) {
   const isIndoor = isIndoorArena(arenaId);
   const effectiveWeather = isIndoor ? 'Clear' : weather;
@@ -174,6 +177,9 @@ export default function BoutViewer({
 
           {/* Fight Analysis Panel */}
           <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
+
+          {/* Dev-only AI telemetry drawer */}
+          <AIDebugDrawer exchangeLog={exchangeLog} />
         </div>
       )}
     </Surface>

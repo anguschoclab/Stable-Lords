@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
-import type { GameState, RivalStableData } from '@/types/state.types';
+import { aiDraftFromPool } from '@/engine/draftService';
+import type { GameState, PoolWarrior, RivalStableData } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('Owner Roster Worker', () => {
@@ -49,6 +50,20 @@ describe('Owner Roster Worker', () => {
       trainingAssignments: [],
     } as unknown as RivalStableData;
   };
+
+  const poolCandidate = (id: string, style: FightingStyle): PoolWarrior =>
+    ({
+      id,
+      name: `Recruit ${id}`,
+      style,
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      potential: { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
+      baseSkills: {},
+      derivedStats: {},
+      tier: 'Promising',
+      age: 19,
+      addedWeek: 1,
+    }) as unknown as PoolWarrior;
 
   describe('Culling Logic', () => {
     it('should cull warriors based on win rate for Methodical and Tactician personalities', () => {
@@ -134,8 +149,9 @@ describe('Owner Roster Worker', () => {
   });
 
   describe('Recruitment Logic', () => {
-    it('should recruit if roster size is below min (guaranteed if < 4)', () => {
-      // Showman min is 7. Current active is 3. Recruit chance should be 1.0.
+    it('should flag needsRecruit if roster size is below min (signing is unified in the draft path)', () => {
+      // Showman min is 7. Current active is 3. Management declares the need;
+      // aiDraftFromPool/processRecruitment does the signing (G9).
       const r1 = createRival('r1', 'Showman', 500, [
         { status: 'Active' },
         { status: 'Active' },
@@ -143,12 +159,11 @@ describe('Owner Roster Worker', () => {
       ]);
 
       mockState.rivals = [r1];
-      // Do not use the broken mockRng, let the method use its default SeededRNG
-      const { updatedRivals, gazetteItems } = processAIRosterManagement(mockState);
+      const { updatedRivals } = processAIRosterManagement(mockState);
 
-      expect(updatedRivals[0]!.roster.length).toBe(4);
-      expect(updatedRivals[0]!.treasury).toBe(400); // 500 - 100
-      expect(gazetteItems[0]!).toContain('recruits');
+      expect(updatedRivals[0]!.needsRecruit).toBe(true);
+      expect(updatedRivals[0]!.roster.length).toBe(3); // no direct signing
+      expect(updatedRivals[0]!.treasury).toBe(500);
     });
 
     it('should not recruit if intent is RECOVERY', () => {
@@ -166,19 +181,40 @@ describe('Owner Roster Worker', () => {
     });
 
     it('should apply meta drift for intense rivalries during recruitment', () => {
-      const r1 = createRival('r1', 'Showman', 500, [{ status: 'Active' }]);
+      // Counter-meta moved to the unified draft path (G9): a rival in a
+      // heated feud with the player drafts the style the player wins with.
+      const r1 = createRival('r1', 'Showman', 5000, [
+        { status: 'Active', style: FightingStyle.TotalParry },
+      ]);
+      r1.needsRecruit = true;
       mockState.rivals = [r1];
       mockState.rivalries = [
         { stableIdA: 'player-1', stableIdB: 'r1', intensity: 3, id: 'rv-1' } as any,
       ];
-      // Force history to show player using a lot of Strikers
-      mockState.arenaHistory = [
-        { week: 9, winner: 'A', warriorIdA: 'player-w', warriorIdD: 'other' } as any,
-        { week: 8, winner: 'D', warriorIdD: 'player-w', warriorIdA: 'other' } as any,
-      ];
+      // Player-stable fights are all Bashing Attack wins → counter-meta
+      // favors drafting a Basher over a Parry-Lunger.
+      mockState.warriorToStableMap = new Map([
+        ['pw-1', { stableId: 'player-1', isPlayer: true }],
+        ['rw-x', { stableId: 'r9', isPlayer: false }],
+      ]) as any;
+      mockState.arenaHistory = Array.from({ length: 6 }, (_, i) => ({
+        week: 9 - i,
+        winner: 'A',
+        warriorIdA: 'pw-1',
+        warriorIdD: 'rw-x',
+        styleA: FightingStyle.BashingAttack,
+        styleD: FightingStyle.StrikingAttack,
+      })) as any;
 
-      const { updatedRivals } = processAIRosterManagement(mockState);
-      expect(updatedRivals[0]!.roster.length).toBe(2);
+      const pool = [
+        poolCandidate('pool-bash', FightingStyle.BashingAttack),
+        poolCandidate('pool-pl', FightingStyle.ParryLunge),
+      ];
+      const { updatedRivals } = aiDraftFromPool(pool, [r1], 10, mockState);
+      const signed = updatedRivals[0]!.roster[1];
+      expect(signed).toBeDefined();
+      expect(signed!.style).toBe(FightingStyle.BashingAttack);
+      expect(updatedRivals[0]!.needsRecruit).toBe(false);
     });
   });
 
@@ -230,18 +266,35 @@ describe('Owner Roster Worker', () => {
 
   describe('Rivalry Lookup with Reversed IDs', () => {
     it('should apply meta drift for intense rivalries with reversed stable ID order', () => {
-      const r1 = createRival('r1', 'Showman', 500, [{ status: 'Active' }]);
+      const r1 = createRival('r1', 'Showman', 5000, [
+        { status: 'Active', style: FightingStyle.TotalParry },
+      ]);
+      r1.needsRecruit = true;
       mockState.rivals = [r1];
       mockState.rivalries = [
         { stableIdA: 'r1', stableIdB: 'player-1', intensity: 3, id: 'rv-1' } as any,
       ];
-      mockState.arenaHistory = [
-        { week: 9, winner: 'A', warriorIdA: 'player-w', warriorIdD: 'other' } as any,
-        { week: 8, winner: 'D', warriorIdD: 'player-w', warriorIdA: 'other' } as any,
-      ];
+      mockState.warriorToStableMap = new Map([
+        ['pw-1', { stableId: 'player-1', isPlayer: true }],
+        ['rw-x', { stableId: 'r9', isPlayer: false }],
+      ]) as any;
+      mockState.arenaHistory = Array.from({ length: 6 }, (_, i) => ({
+        week: 9 - i,
+        winner: 'A',
+        warriorIdA: 'pw-1',
+        warriorIdD: 'rw-x',
+        styleA: FightingStyle.BashingAttack,
+        styleD: FightingStyle.StrikingAttack,
+      })) as any;
 
-      const { updatedRivals } = processAIRosterManagement(mockState);
-      expect(updatedRivals[0]!.roster.length).toBe(2);
+      const pool = [
+        poolCandidate('pool-bash', FightingStyle.BashingAttack),
+        poolCandidate('pool-pl', FightingStyle.ParryLunge),
+      ];
+      const { updatedRivals } = aiDraftFromPool(pool, [r1], 10, mockState);
+      const signed = updatedRivals[0]!.roster[1];
+      expect(signed).toBeDefined();
+      expect(signed!.style).toBe(FightingStyle.BashingAttack);
     });
 
     it('should match only the correct rival among multiple rivals with rivalries', () => {

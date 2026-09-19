@@ -128,6 +128,7 @@ export const AIStrategySchema = z.object({
   intent: AIIntentSchema,
   targetStableId: z.string().optional(),
   planWeeksRemaining: z.number(),
+  reason: z.string().optional(),
 });
 
 /**
@@ -136,9 +137,43 @@ export const AIStrategySchema = z.object({
 export const AIEventSchema = z.object({
   id: z.string(),
   week: z.number(),
-  type: z.enum(['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF']),
+  type: z.enum(['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF', 'BOUT', 'INTEL']),
   description: z.string(),
   riskTier: z.enum(['Low', 'Medium', 'High']),
+  cause: z
+    .union([
+      AIIntentSchema,
+      z.enum(['BOUT_OUTCOME', 'INTEL_UPDATE', 'MAINTENANCE', 'TOURNAMENT_PREP']),
+    ])
+    .optional(),
+});
+
+const SeasonRecordSchema = z.object({
+  wins: z.number(),
+  losses: z.number(),
+  kills: z.number(),
+  rosterSizeAtSeasonStart: z.number(),
+});
+
+/**
+ * OpponentDossier schema
+ */
+export const OpponentDossierSchema = z.object({
+  lastSeenWeek: z.number(),
+  knownStyles: z.array(FightingStyleSchema),
+  estimatedThreat: z.number().min(0).max(1),
+  recordVs: z.object({
+    w: z.number(),
+    l: z.number(),
+    k: z.number(),
+  }),
+  planIntel: z
+    .object({
+      suspectedOE: z.number().optional(),
+      suspectedAL: z.number().optional(),
+      lastPlanWeek: z.number().optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -150,14 +185,10 @@ export const AIAgentMemorySchema = z.object({
   metaAwareness: z.record(z.string(), z.number()),
   knownRivals: z.array(z.string()),
   currentIntent: AIIntentSchema.optional(),
-  seasonRecord: z
-    .object({
-      wins: z.number(),
-      losses: z.number(),
-      kills: z.number(),
-      rosterSizeAtSeasonStart: z.number(),
-    })
-    .optional(),
+  seasonRecord: SeasonRecordSchema.optional(),
+  lastSeasonRecord: SeasonRecordSchema.optional(),
+  opponentDossiers: z.record(z.string(), OpponentDossierSchema),
+  lastLossFactors: z.array(z.string()).max(3).optional(),
 });
 
 /**
@@ -181,6 +212,8 @@ export const RivalStableDataSchema = z.object({
   seasonalGrowth: z.array(SeasonalGrowthSchema).optional(),
   ledger: z.array(LedgerEntrySchema),
   trainingAssignments: z.array(TrainingAssignmentSchema),
+  needsRecruit: z.boolean().optional(),
+  lastPoachSeason: z.number().int().nonnegative().optional(),
 });
 
 /**

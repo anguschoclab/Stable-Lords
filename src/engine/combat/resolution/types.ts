@@ -16,6 +16,7 @@ import type {
   SurfaceMod,
 } from '@/types/shared.types';
 import type { WeatherEffect } from '../mechanics/weatherEffects';
+import type { BoutIntent } from '@/engine/ai/intentStates';
 
 /**
  * Defines the shape of fighter state.
@@ -85,6 +86,10 @@ export interface FighterState {
   recoveryDebt: number;
   /** True when fighter was knocked down by a heavy hit — cleared on RECOVERY next exchange. */
   knockedDown?: boolean;
+  /** Last emitted in-bout AI intent (Stage F telemetry). Label only — names
+   *  which existing plan/state selection is active; dedups AI_INTENT events
+   *  to transitions. Never read by combat math. */
+  lastIntent?: BoutIntent;
 }
 
 /**
@@ -133,4 +138,7 @@ export interface ResolutionContext {
   zoneStepBias: number;
   /** Crowd-mood lethality delta injected by simulate.ts. */
   crowdKillBonus?: number;
+  /** When true, prepareExchange emits AI_INTENT transition events (Stage F).
+   *  Set by runSimulationLoop: non-headless, or headless + __AI_DEBUG. */
+  aiIntentTelemetry?: boolean;
 }

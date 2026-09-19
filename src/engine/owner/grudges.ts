@@ -96,6 +96,78 @@ export function processOwnerGrudges(
     }
   }
 
+  // ── Player × rival pairs (G5b): kills/upsets against the player's roster
+  // create real grudges. Unlike rival×rival pairs these need no personality
+  // clash — bloodshed is reason enough.
+  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+  if (playerWarriorIds.size > 0) {
+    for (const r of rivals) {
+      const rIds = new Set(r.roster.map((w) => w.id));
+      let hasKill = false;
+      let hasUpset = false;
+
+      for (const f of recentFights) {
+        const crossFight =
+          (rIds.has(f.warriorIdA) && playerWarriorIds.has(f.warriorIdD)) ||
+          (rIds.has(f.warriorIdD) && playerWarriorIds.has(f.warriorIdA));
+        if (!crossFight) continue;
+
+        if (f.by === 'Kill') {
+          hasKill = true;
+          break;
+        }
+
+        // Upset: the rival's warrior beat a much more famous player warrior.
+        const rivalWon =
+          (f.winner === 'A' && rIds.has(f.warriorIdA)) ||
+          (f.winner === 'D' && rIds.has(f.warriorIdD));
+        if (rivalWon) {
+          const loserId = rIds.has(f.warriorIdA) ? f.warriorIdD : f.warriorIdA;
+          const winnerId = rIds.has(f.warriorIdA) ? f.warriorIdA : f.warriorIdD;
+          const loserFame = state.warriorMap?.get(loserId)?.fame ?? 0;
+          const winnerFame = state.warriorMap?.get(winnerId)?.fame ?? 0;
+          if (loserFame - winnerFame >= 100) hasUpset = true;
+        }
+      }
+
+      if (!hasKill && !hasUpset) continue;
+
+      const existing = grudges.find(
+        (g) =>
+          (g.ownerIdA === r.owner.id && g.ownerIdB === state.player.id) ||
+          (g.ownerIdB === r.owner.id && g.ownerIdA === state.player.id)
+      );
+
+      if (existing) {
+        if (hasKill && existing.lastEscalation < state.week - 4) {
+          existing.intensity = Math.min(5, existing.intensity + 1);
+          existing.lastEscalation = state.week;
+          existing.reason = `Blood spilled between ${r.owner.stableName} and the player's stable`;
+          gazetteItems.push(
+            `🔥 GRUDGE DEEPENS: ${r.owner.name} vows vengeance on the player's stable after another kill!`
+          );
+        }
+      } else {
+        grudges.push({
+          id: `grudge_${r.owner.id}_${state.player.id}` as import('@/types/shared.types').GrudgeId,
+          ownerIdA: r.owner.id,
+          ownerIdB: state.player.id,
+          intensity: hasKill ? 2 : 1,
+          reason: hasKill
+            ? `${r.owner.stableName} suffered a kill at the player's hands`
+            : `${r.owner.stableName} was humiliated by an underdog defeat`,
+          startWeek: state.week,
+          lastEscalation: state.week,
+        });
+        gazetteItems.push(
+          hasKill
+            ? `⚔️ BLOOD FEUD: ${r.owner.name} has sworn vengeance on the player's stable!`
+            : `😤 SLIGHTED: ${r.owner.name} seethes after an upset loss to the player's stable.`
+        );
+      }
+    }
+  }
+
   // Decay old grudges — after 4 consecutive weeks with no cross-stable fight the
   // intensity drops by 1. This replaces the old 26-week cliff.
   for (const g of grudges) {

@@ -24,6 +24,17 @@ export interface SimPulse {
   cumulativeBouts?: number;
   cumulativeDeaths?: number;
   cumulativeRetired?: number;
+  // ─── AI behavior metrics (Stage I) ───
+  /** Rival count per active strategy intent this week. */
+  intentDistribution: Record<string, number>;
+  /** 1 when ≥1 Proposed offer targets a player warrior this sampled week, else 0. */
+  playerChallengedWeeks: number;
+  /** Rivals currently running VENDETTA. */
+  vendettaCount: number;
+  /** Mean opponent-dossier count across rivals. */
+  avgDossierCoverage: number;
+  /** Share of standing offers carrying a counter purse bump. */
+  counterOfferRate: number;
 }
 
 /**
@@ -75,6 +86,32 @@ export function collectPulse(state: GameState): SimPulse {
     }
   }
 
+  // ─── AI behavior metrics ───
+  const intentDistribution: Record<string, number> = {};
+  let vendettaCount = 0;
+  let totalDossiers = 0;
+  for (const r of activeRivals) {
+    const intent = r.strategy?.intent;
+    if (intent) {
+      intentDistribution[intent] = (intentDistribution[intent] ?? 0) + 1;
+      if (intent === 'VENDETTA') vendettaCount++;
+    }
+    totalDossiers += Object.keys(r.agentMemory?.opponentDossiers ?? {}).length;
+  }
+
+  const playerIds = new Set(state.roster.map((w) => w.id as string));
+  let playerChallenged = false;
+  let offerCount = 0;
+  let counteredCount = 0;
+  for (const o of Object.values(state.boutOffers ?? {})) {
+    if (!o) continue;
+    offerCount++;
+    if ((o.counterPurseBump ?? 0) > 0) counteredCount++;
+    if (o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id as string))) {
+      playerChallenged = true;
+    }
+  }
+
   return {
     week: state.week,
     playerTreasury: state.treasury,
@@ -90,6 +127,12 @@ export function collectPulse(state: GameState): SimPulse {
     multiFlawWarriors,
     classTraitInstances,
     signatureInstances,
+    intentDistribution,
+    playerChallengedWeeks: playerChallenged ? 1 : 0,
+    vendettaCount,
+    avgDossierCoverage:
+      activeRivals.length > 0 ? Math.round((totalDossiers / activeRivals.length) * 100) / 100 : 0,
+    counterOfferRate: offerCount > 0 ? counteredCount / offerCount : 0,
   };
 }
 

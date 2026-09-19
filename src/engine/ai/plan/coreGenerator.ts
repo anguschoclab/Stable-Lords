@@ -5,7 +5,7 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
-import type { OwnerPersonality, AIIntent } from '@/types/state.types';
+import type { OwnerPersonality, AIIntent, OpponentDossier } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 import { clamp } from '@/utils/math';
@@ -37,6 +37,8 @@ import { reconcileGearTwoHanded } from '@/engine/planBias';
  * @param opponentStyle - Fighting style of the opponent (optional)
  * @param intent - Current strategic intent (e.g., VENDETTA)
  * @param grudgeIntensity - Intensity of the grudge between owners
+ * @param dossier - Optional opponent intel dossier; a losing record drives
+ *                  rematch adaptation (G11) through existing plan fields only
  * @returns A computed fight plan for the warrior
  */
 export function aiPlanForWarrior(
@@ -45,7 +47,8 @@ export function aiPlanForWarrior(
   philosophy: string,
   opponentStyle?: FightingStyle,
   intent?: AIIntent,
-  grudgeIntensity: number = 0
+  grudgeIntensity: number = 0,
+  dossier?: OpponentDossier
 ): FightPlan {
   const base = defaultPlanForWarrior(w);
   const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
@@ -69,6 +72,22 @@ export function aiPlanForWarrior(
   const grudgeKD = grudgeIntensity; // +1 to +5
   const grudgeAL = Math.floor(grudgeIntensity / 2);
 
+  // Rematch adaptation (G11): a losing record against this specific opponent
+  // makes the stable fight more patiently — patience scales with how lopsided
+  // the record is; a kill suffered adds personal edge to killDesire.
+  let rematchOE = 0;
+  let rematchAL = 0;
+  let rematchKD = 0;
+  if (dossier) {
+    const { w: wins, l: losses, k: kills } = dossier.recordVs;
+    const meetings = wins + losses;
+    if (meetings >= 2 && losses > wins) {
+      rematchOE = -Math.min(2, losses - wins);
+      rematchAL = Math.min(2, losses - wins);
+      if (kills > 0) rematchKD = 1;
+    }
+  }
+
   // Per-style matchup heuristics
   const matchup = opponentStyle
     ? getStyleMatchupMods(w.style, opponentStyle)
@@ -77,9 +96,19 @@ export function aiPlanForWarrior(
   // Generate initial plan
   const plan: FightPlan = {
     ...base,
-    OE: clamp((base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE, 1, 10),
+    OE: clamp(
+      (base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE + rematchOE,
+      1,
+      10
+    ),
     AL: clamp(
-      (base.AL ?? 5) + (pMod.AL ?? 0) + (phMod.AL ?? 0) + matchup.al + intentAL + grudgeAL,
+      (base.AL ?? 5) +
+        (pMod.AL ?? 0) +
+        (phMod.AL ?? 0) +
+        matchup.al +
+        intentAL +
+        grudgeAL +
+        rematchAL,
       1,
       10
     ),
@@ -89,7 +118,8 @@ export function aiPlanForWarrior(
         (phMod.killDesire ?? 0) +
         matchup.kd +
         intentKD +
-        grudgeKD,
+        grudgeKD +
+        rematchKD,
       1,
       10
     ),
@@ -136,7 +166,16 @@ export function aiPlanForWarrior(
 
   plan.ownerPersonality = personality;
   const adaptations = getPersonalityAdaptations(personality, plan, intent);
-  plan.conditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
+  const allConditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
+  // WIT-gated condition density (F.3): low-WIT warriors carry sparse,
+  // "mistake-shaped" plans — few adaptive branches — mirroring the
+  // evaluationInterval tiers that already gate re-evaluation cadence in
+  // conditionEngine (WT>=7 every exchange, 4-6 every 3, <4 every 5).
+  // The universal ENDURANCE_BELOW safety is always retained.
+  const wt = w.attributes?.WT ?? 10;
+  const conditionCap =
+    wt >= 7 ? allConditions.length : wt >= 4 ? universalConditions.length + 1 : universalConditions.length;
+  plan.conditions = allConditions.slice(0, conditionCap);
 
   // Reconcile two-handed weapon + shield conflict
   if (w.equipment) {

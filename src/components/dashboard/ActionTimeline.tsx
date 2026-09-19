@@ -6,9 +6,11 @@ import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 
 interface ActionEvent {
+  id?: string;
   week: number;
   description: string;
   riskTier: string;
+  cause?: string;
 }
 
 interface ActionTimelineProps {
@@ -84,8 +86,16 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
                           : 'bg-primary/20 text-primary'
                     )}
                   >
-                    {event.riskTier}_RISK
+                    {event.riskTier} RISK
                   </span>
+                  {event.cause && (
+                    <span
+                      data-testid={`cause-chip-${event.id ?? event.week}`}
+                      className="text-[7px] font-black uppercase px-1 rounded-none bg-primary/10 text-primary/70"
+                    >
+                      {event.cause.replace(/_/g, ' ')}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

@@ -96,7 +96,8 @@ export type CombatEventType =
   | 'FEINT_FAIL'
   | 'ZONE_SHIFT'
   | 'KNOCKDOWN'
-  | 'RECOVERY';
+  | 'RECOVERY'
+  | 'AI_INTENT';
 
 /**
  * Defines the shape of combat event.

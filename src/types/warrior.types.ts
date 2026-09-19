@@ -159,6 +159,10 @@ export interface Warrior {
   career: CareerRecord;
   champion: boolean;
   plan?: FightPlan;
+  /** absoluteWeek the persisted plan was computed for (staleness check). */
+  planWeek?: number;
+  /** Stable id the persisted plan was computed against (opponent check). */
+  planForStableId?: string;
   equipment?: EquipmentLoadout;
   status: WarriorStatus;
   age?: number;

@@ -5,6 +5,9 @@ import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
 import { isActive } from '@/engine/warriorStatus';
+import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
+import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
+import type { StyleMeta } from '@/engine/metaDrift';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 
@@ -18,7 +21,7 @@ export function processRecruitment(
   week: number,
   rng: IRNGService,
   isMajorDraftWeek: boolean,
-  meta: Record<string, number> = {}
+  meta?: StyleMeta
 ): { updatedRival: RivalStableData; updatedPool: PoolWarrior[]; gazetteItems: string[] } {
   let updatedRival = { ...rival };
   const gazetteItems: string[] = [];
@@ -32,21 +35,60 @@ export function processRecruitment(
 
   // 1. Check Recruitment Chance
   // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap
-  // (Aggressive=10, others=8) is deliberately decoupled from the player's
-  // `BASE_ROSTER_CAP` constant. The asymmetry exists so that rival stables
-  // feel distinct in roster shape; unifying to a single cap would flatten that.
-  const maxRoster = updatedRival.owner.personality === 'Aggressive' ? 10 : 8;
-  if (activeCount >= maxRoster || remainingPool.length === 0) {
+  // is deliberately decoupled from the player's `BASE_ROSTER_CAP` constant.
+  // Single config source: src/constants/ai.ts (G9).
+  const maxRoster = aiRosterMax(updatedRival.owner.personality);
+  if (activeCount >= maxRoster) {
     return { updatedRival, updatedPool: remainingPool, gazetteItems };
   }
 
+  // G9: a stable flagged needsRecruit always drafts — the flag is set by
+  // processAIRosterManagement (unified path) and cleared on a successful sign.
+  const needsRecruit = updatedRival.needsRecruit === true;
   const intentBonus = intent === 'EXPANSION' ? 0.6 : 0;
   const willRecruit =
+    needsRecruit ||
     isMajorDraftWeek ||
     (activeCount < 4 && rng.next() < 0.3 + intentBonus) ||
     rng.next() < 0.05 + intentBonus;
 
   if (!willRecruit) {
+    return { updatedRival, updatedPool: remainingPool, gazetteItems };
+  }
+
+  // Pool-empty fallback: generate a recruit out of thin air ONLY when the
+  // stable declared a need and can afford the signing fee through the same
+  // budget check as pool drafts (G9 — generateAIRecruit is no longer a
+  // parallel recruitment path).
+  if (remainingPool.length === 0) {
+    if (!needsRecruit) {
+      return { updatedRival, updatedPool: remainingPool, gazetteItems };
+    }
+    const budgetReport = checkBudget(updatedRival, AI_GENERATED_RECRUIT_COST, 'ROSTER');
+    if (!budgetReport.isAffordable) {
+      return { updatedRival, updatedPool: remainingPool, gazetteItems };
+    }
+    const generated = generateAIRecruit(updatedRival, week, meta);
+    if (!generated) {
+      return { updatedRival, updatedPool: remainingPool, gazetteItems };
+    }
+    updatedRival = {
+      ...updatedRival,
+      treasury: updatedRival.treasury - AI_GENERATED_RECRUIT_COST,
+      roster: [...updatedRival.roster, generated],
+      needsRecruit: false,
+    };
+    updatedRival = logAgentAction(
+      updatedRival,
+      'ROSTER',
+      `Signed recruit ${generated.name} for ${AI_GENERATED_RECRUIT_COST}g.`,
+      budgetReport.riskTier,
+      week,
+      'ROSTER_DIVERSITY'
+    );
+    gazetteItems.push(
+      `📣 MARKET: ${updatedRival.owner.stableName} signed ${generated.name} for ${AI_GENERATED_RECRUIT_COST}g.`
+    );
     return { updatedRival, updatedPool: remainingPool, gazetteItems };
   }
 
@@ -74,7 +116,7 @@ export function processRecruitment(
     if (prefsSet.has(w.style)) score += 30;
 
     // ⚡ TSA: Meta-Fit Scoring
-    const drift = meta[w.style] || 0;
+    const drift = meta?.[w.style] || 0;
     score += drift * 5; // Reward styles that are trending up
 
     // ⚡ TSA: Style Diversity Guard
@@ -105,6 +147,7 @@ export function processRecruitment(
 
     if (budgetReport.isAffordable) {
       updatedRival.treasury -= cost;
+      updatedRival.needsRecruit = false;
       remainingPool.splice(bestIdx, 1);
 
       const newWarrior: Warrior = {

@@ -2,6 +2,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import type { GameState, WeatherType, Season } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
+import { processOwnerGrudges } from '@/engine/owner/grudges';
+import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 
 /**
  * Stable Lords — World Pipeline Pass
@@ -223,9 +226,36 @@ export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGServ
   const nextSeason = computeNextSeason(nextWeek);
   const nextWeather = rollWeather(rngService, nextSeason);
 
-  return {
+  // ── World-facing social layer (relocated from NarrativePass — G5):
+  // grudges and rivalries are world state, not player-facing narrative, so
+  // they must keep updating in headless mode and when the player is stopped.
+  const weekFights = getFightsForWeek(_state.arenaHistory, _state.absoluteWeek);
+  const { grudges, gazetteItems } = processOwnerGrudges(_state, _state.ownerGrudges || []);
+  const rivalries = updateRivalriesFromBouts(
+    _state.rivalries || [],
+    weekFights,
+    _state.absoluteWeek,
+    rngService
+  );
+
+  const impact: StateImpact = {
     week: nextWeek,
     season: nextSeason,
     weather: nextWeather,
+    ownerGrudges: grudges,
+    rivalries,
   };
+
+  if (gazetteItems.length > 0) {
+    impact.newsletterItems = [
+      {
+        id: rngService.uuid(),
+        week: _state.absoluteWeek + 1,
+        title: 'Stable Rivalries & Grudges',
+        items: gazetteItems,
+      },
+    ];
+  }
+
+  return impact;
 }

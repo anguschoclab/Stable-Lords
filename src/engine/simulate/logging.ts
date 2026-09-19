@@ -48,6 +48,10 @@ export function buildExchangeLogEntry(
         entry.executionFlag = e.result === 'Kill';
         entry.killWindow ??= e.result === 'Kill';
         break;
+      case 'AI_INTENT':
+        // Stage F: metadata.cause is already 'AI_INTENT_*' — surface verbatim.
+        if (e.metadata?.cause) reasonCodes.push(String(e.metadata.cause));
+        break;
       case 'KNOCKDOWN':
         // actor is the fighter who was knocked down (defender of the hit)
         entry.knockdown ??= e.actor;

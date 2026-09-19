@@ -371,7 +371,12 @@ export const BoutOfferStatusSchema = z.enum([
 /**
  * BoutOfferResponse enum schema
  */
-export const BoutOfferResponseSchema = z.enum(['Pending', 'Accepted', 'Declined']);
+export const BoutOfferResponseSchema = z.enum([
+  'Pending',
+  'Accepted',
+  'Declined',
+  'Countered',
+]);
 
 /**
  * FightOutcomeBy enum schema
@@ -433,6 +438,7 @@ export const AIIntentSchema = z.enum([
   'WEALTH_ACCUMULATION',
   'AGGRESSIVE_EXPANSION',
   'ROSTER_DIVERSITY',
+  'TOURNAMENT_CAMPAIGN',
 ]);
 
 /**

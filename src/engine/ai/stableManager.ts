@@ -3,6 +3,7 @@ import type { LedgerEntryId } from '@/types/shared.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
+import { updateSeasonRecord, recordBoutOutcome } from './memory/seasonRecord';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
@@ -16,7 +17,8 @@ import { isActive } from '@/engine/warriorStatus';
  */
 export function processAIStable(
   rival: RivalStableData,
-  state: GameState
+  state: GameState,
+  perception?: import('./memory/perceptionSnapshot').PerceptionSnapshot
 ): {
   updatedRival: RivalStableData;
   isBankrupt: boolean;
@@ -25,7 +27,7 @@ export function processAIStable(
   impact: StateImpact;
 } {
   // 1. Initialize Context & Skeptical Memory
-  const context = createAgentContext(rival, state);
+  const context = createAgentContext(rival, state, perception);
   let updatedRival = { ...context.rival };
   let currentHiringPool = [...(state.hiringPool || [])];
   const gazetteItems: string[] = [];
@@ -68,7 +70,9 @@ export function processAIStable(
     roster: updatedRival.roster,
     fame: updatedRival.fame ?? updatedRival.owner.fame ?? 0,
     weather: state.weather,
-    arenaHistory: getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week),
+    arenaHistory:
+      perception?.weekFights ??
+      getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
     applyStipend: (state.rivals || []).length <= 45,
@@ -128,7 +132,13 @@ export function processAIStable(
     }
   }
 
-  // 6. Background Consolidation: Prune logs and update burn rate in memory
+  // 6. Background Consolidation: record this week's bout outcomes into
+  // seasonRecord + typed BOUT events, then prune logs and update burn rate.
+  const weekFights =
+    perception?.weekFights ??
+    getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week);
+  updatedRival = updateSeasonRecord(updatedRival, weekFights, state.week);
+  updatedRival = recordBoutOutcome(updatedRival, weekFights, state.week);
   updatedRival = consolidateAgentMemory(updatedRival, state.week);
 
   // Collect impact for this rival

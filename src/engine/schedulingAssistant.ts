@@ -33,6 +33,112 @@ export interface MatchupScore {
 }
 
 /**
+ * Player-agnostic context for pairwise matchup scoring (G18).
+ * Everything `scoreMatchup` reads except the player-specific
+ * challenge/avoid marks — those stay in the `scoreMatchup` wrapper so
+ * AI-vs-AI scoring can never see player intent.
+ */
+export interface PairwiseMatchupContext {
+  rankings?: GameState['realmRankings'];
+  arenaHistory?: GameState['arenaHistory'];
+  rivalries?: GameState['rivalries'];
+  rivalryMap?: GameState['rivalryMap'];
+  /** Stable id for side A (defaults to a.stableId). */
+  aStableId?: string;
+  /** Stable id for side B (defaults to b.stableId). */
+  bStableId?: string;
+  week?: number;
+}
+
+/**
+ * Symmetric matchup scorer — identical math to `scoreMatchup` minus the
+ * player challenge/avoid modifiers. Used for AI-vs-AI scoring.
+ */
+export function scorePairwiseMatchup(
+  a: Warrior,
+  b: Warrior,
+  ctx: PairwiseMatchupContext
+): number {
+  const styleAdvantage = getMatchupBonus(a.style, b.style);
+  const fameDiff = a.fame - b.fame;
+
+  let score = 100;
+  score += styleAdvantage * 25;
+
+  const absFameDiff = Math.abs(fameDiff);
+  if (absFameDiff > 20) {
+    score -= absFameDiff - 20;
+  } else if (fameDiff > 10) {
+    score -= 5;
+  } else if (fameDiff < -10) {
+    score += 10;
+  }
+
+  const aWinRate =
+    (a.career?.wins ?? 0) /
+    Math.max(1, (a.career?.wins ?? 0) + (a.career?.losses ?? 0));
+  const bWinRate =
+    (b.career?.wins ?? 0) /
+    Math.max(1, (b.career?.wins ?? 0) + (b.career?.losses ?? 0));
+  score += (aWinRate - bWinRate) * 20;
+
+  // Rivalry multiplier for grudge matches
+  const aStableId = ctx.aStableId ?? a.stableId;
+  const bStableId = ctx.bStableId ?? b.stableId;
+
+  if (aStableId && bStableId) {
+    const rivalry =
+      ctx.rivalryMap?.get(getStablePairKey(aStableId, bStableId)) ??
+      (ctx.rivalries || []).find(
+        (r) =>
+          (r.stableIdA === aStableId && r.stableIdB === bStableId) ||
+          (r.stableIdB === aStableId && r.stableIdA === bStableId)
+      );
+    if (rivalry) {
+      score += rivalry.intensity * 50; // Grudge match!
+    }
+  }
+
+  // Rank modifier
+  const aRank = ctx.rankings?.[a.id]?.overallRank;
+  const bRank = ctx.rankings?.[b.id]?.overallRank;
+  if (aRank !== undefined && bRank !== undefined) {
+    const rankDiff = Math.abs(aRank - bRank);
+    if (rankDiff <= 3) {
+      score += 15;
+    } else if (rankDiff <= 10) {
+      score += 5;
+    } else {
+      score -= 10;
+    }
+  }
+
+  // Head-to-head history modifier
+  if (ctx.arenaHistory && ctx.arenaHistory.length > 0) {
+    const hh = getHeadToHeadRecord(a, b, ctx.arenaHistory);
+    if (hh.total === 0) {
+      score += 3; // Novelty bonus
+    } else {
+      if (hh.lastWinner === 'a') score += 5;
+      if (hh.lastWinner === 'b') score += 10;
+      if (hh.total >= 3 && hh.wins === hh.total) score -= 5; // Repetitive farm
+      if (hh.total >= 3 && hh.losses === hh.total) score -= 15; // Curb stomp
+    }
+    // Recency penalty — rematches within last 2 weeks
+    if (
+      hh.lastFightWeek !== undefined &&
+      ctx.week !== undefined &&
+      ctx.week - hh.lastFightWeek >= 0 &&
+      ctx.week - hh.lastFightWeek <= 2
+    ) {
+      score -= 15;
+    }
+  }
+
+  return score;
+}
+
+/**
  * Calculates a numerical score for a matchup between a player warrior and a rival.
  * Considers style advantage, fame difference, win rates, and active rivalries.
  *
@@ -50,80 +156,15 @@ export function scoreMatchup(
     return 100;
   }
 
-  const styleAdvantage = getMatchupBonus(playerWarrior.style, rivalWarrior.style);
-  const fameDiff = playerWarrior.fame - rivalWarrior.fame;
-
-  let score = 100;
-  score += styleAdvantage * 25;
-
-  const absFameDiff = Math.abs(fameDiff);
-  if (absFameDiff > 20) {
-    score -= absFameDiff - 20;
-  } else if (fameDiff > 10) {
-    score -= 5;
-  } else if (fameDiff < -10) {
-    score += 10;
-  }
-
-  const pWinRate =
-    (playerWarrior.career?.wins ?? 0) /
-    Math.max(1, (playerWarrior.career?.wins ?? 0) + (playerWarrior.career?.losses ?? 0));
-  const rWinRate =
-    (rivalWarrior.career?.wins ?? 0) /
-    Math.max(1, (rivalWarrior.career?.wins ?? 0) + (rivalWarrior.career?.losses ?? 0));
-  score += (pWinRate - rWinRate) * 20;
-
-  // Rivalry multiplier for grudge matches
-  const playerStableId = playerWarrior.stableId || state.player?.id;
-  const rivalStableId = rivalWarrior.stableId;
-
-  if (playerStableId && rivalStableId) {
-    const rivalry =
-      state.rivalryMap?.get(getStablePairKey(playerStableId, rivalStableId)) ??
-      (state.rivalries || []).find(
-        (r) =>
-          (r.stableIdA === playerStableId && r.stableIdB === rivalStableId) ||
-          (r.stableIdB === playerStableId && r.stableIdA === rivalStableId)
-      );
-    if (rivalry) {
-      score += rivalry.intensity * 50; // Grudge match!
-    }
-  }
-
-  // Rank modifier
-  const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
-  const rivalRank = state.realmRankings?.[rivalWarrior.id]?.overallRank;
-  if (playerRank !== undefined && rivalRank !== undefined) {
-    const rankDiff = Math.abs(playerRank - rivalRank);
-    if (rankDiff <= 3) {
-      score += 15;
-    } else if (rankDiff <= 10) {
-      score += 5;
-    } else {
-      score -= 10;
-    }
-  }
-
-  // Head-to-head history modifier
-  if (state.arenaHistory && state.arenaHistory.length > 0) {
-    const hh = getHeadToHeadRecord(playerWarrior, rivalWarrior, state.arenaHistory);
-    if (hh.total === 0) {
-      score += 3; // Novelty bonus
-    } else {
-      if (hh.lastWinner === 'player') score += 5;
-      if (hh.lastWinner === 'rival') score += 10;
-      if (hh.total >= 3 && hh.wins === hh.total) score -= 5; // Repetitive farm
-      if (hh.total >= 3 && hh.losses === hh.total) score -= 15; // Curb stomp
-    }
-    // Recency penalty — rematches within last 2 weeks
-    if (
-      hh.lastFightWeek !== undefined &&
-      state.week - hh.lastFightWeek >= 0 &&
-      state.week - hh.lastFightWeek <= 2
-    ) {
-      score -= 15;
-    }
-  }
+  let score = scorePairwiseMatchup(playerWarrior, rivalWarrior, {
+    rankings: state.realmRankings,
+    arenaHistory: state.arenaHistory,
+    rivalries: state.rivalries,
+    rivalryMap: state.rivalryMap,
+    aStableId: playerWarrior.stableId || state.player?.id,
+    bStableId: rivalWarrior.stableId,
+    week: state.week,
+  });
 
   // Player challenge/avoid modifiers
   if (state.playerChallenges?.includes(rivalWarrior.id)) {
@@ -149,15 +190,25 @@ function getEligibleRivals(state: GameState): { warrior: Warrior; stable: RivalS
   return rivals;
 }
 
+interface PairwiseHeadToHead {
+  /** Wins from side A's perspective. */
+  wins: number;
+  /** Losses from side A's perspective. */
+  losses: number;
+  total: number;
+  lastWinner: 'a' | 'b' | 'draw' | null;
+  lastFightWeek?: number;
+}
+
 function getHeadToHeadRecord(
-  playerWarrior: Warrior,
-  rivalWarrior: Warrior,
+  a: Warrior,
+  b: Warrior,
   arenaHistory: FightSummary[] | undefined
-): HeadToHeadRecord {
+): PairwiseHeadToHead {
   let wins = 0;
   let losses = 0;
   let total = 0;
-  let lastWinner: 'player' | 'rival' | 'draw' | null = null;
+  let lastWinner: 'a' | 'b' | 'draw' | null = null;
   let lastFightWeek: number | undefined;
 
   if (!arenaHistory) {
@@ -167,22 +218,22 @@ function getHeadToHeadRecord(
   for (let i = 0; i < arenaHistory.length; i++) {
     const fight = arenaHistory[i];
     if (!fight) continue;
-    const playerIsA = fight.warriorIdA === playerWarrior.id;
-    const playerIsD = fight.warriorIdD === playerWarrior.id;
-    const rivalIsA = fight.warriorIdA === rivalWarrior.id;
-    const rivalIsD = fight.warriorIdD === rivalWarrior.id;
+    const aIsA = fight.warriorIdA === a.id;
+    const aIsD = fight.warriorIdD === a.id;
+    const bIsA = fight.warriorIdA === b.id;
+    const bIsD = fight.warriorIdD === b.id;
 
-    if ((playerIsA && rivalIsD) || (playerIsD && rivalIsA)) {
+    if ((aIsA && bIsD) || (aIsD && bIsA)) {
       total++;
       lastFightWeek = fight.week;
       if (fight.winner === null) {
         lastWinner = 'draw';
-      } else if ((playerIsA && fight.winner === 'A') || (playerIsD && fight.winner === 'D')) {
+      } else if ((aIsA && fight.winner === 'A') || (aIsD && fight.winner === 'D')) {
         wins++;
-        lastWinner = 'player';
+        lastWinner = 'a';
       } else {
         losses++;
-        lastWinner = 'rival';
+        lastWinner = 'b';
       }
     }
   }
@@ -249,7 +300,15 @@ function buildMatchupScore(
   const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
   const rankDiff =
     playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
-  const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
+  const hh = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
+  const headToHead: HeadToHeadRecord = {
+    wins: hh.wins,
+    losses: hh.losses,
+    total: hh.total,
+    lastWinner:
+      hh.lastWinner === 'a' ? 'player' : hh.lastWinner === 'b' ? 'rival' : hh.lastWinner,
+    lastFightWeek: hh.lastFightWeek,
+  };
   return {
     playerWarriorId: playerWarrior.id,
     rivalWarrior: r.warrior,

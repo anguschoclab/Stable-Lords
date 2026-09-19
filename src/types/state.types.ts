@@ -67,7 +67,7 @@ export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 
 /**
  * Bout offer response type.
  */
-export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined';
+export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined' | 'Countered';
 
 /**
  * Defines the shape of bout offer.
@@ -90,6 +90,9 @@ export interface BoutOffer {
   /** Absolute week when this offer was created. Disambiguates boutWeek/expirationWeek
    *  which are stored as display weeks (1–52). Legacy saves omit this field. */
   createdAbsoluteWeek?: number;
+  /** Purse increase demanded by the last counter (COUNTERED_PURSE round).
+   *  The proposer stable must afford this bump for the counter to sign. */
+  counterPurseBump?: number;
 }
 
 /**
@@ -230,7 +233,8 @@ export type AIIntent =
   | 'SURVIVAL'
   | 'WEALTH_ACCUMULATION'
   | 'AGGRESSIVE_EXPANSION'
-  | 'ROSTER_DIVERSITY';
+  | 'ROSTER_DIVERSITY'
+  | 'TOURNAMENT_CAMPAIGN';
 
 /**
  * Defines the shape of ai strategy.
@@ -239,9 +243,23 @@ export interface AIStrategy {
   intent: AIIntent;
   targetStableId?: StableId;
   planWeeksRemaining: number;
+  /** Human-readable explanation of why this intent was chosen (UI-facing). */
+  reason?: string;
 }
 
 // TrainerData was here, now using Trainer from shared.types
+
+/**
+ * Typed reason an AI action was taken. Intent values mean the action was
+ * intent-driven; the non-intent members tag systemic events. Replaces the
+ * old English-substring intent inference in logAgentAction.
+ */
+export type AIEventCause =
+  | AIIntent
+  | 'BOUT_OUTCOME'
+  | 'INTEL_UPDATE'
+  | 'MAINTENANCE'
+  | 'TOURNAMENT_PREP';
 
 /**
  * Defines the shape of ai event.
@@ -249,9 +267,27 @@ export interface AIStrategy {
 export interface AIEvent {
   id: string; // Events are often transient or don't need branding if not referenced
   week: number;
-  type: 'STRATEGY' | 'FINANCE' | 'ROSTER' | 'STAFF';
+  type: 'STRATEGY' | 'FINANCE' | 'ROSTER' | 'STAFF' | 'BOUT' | 'INTEL';
   description: string;
   riskTier: 'Low' | 'Medium' | 'High';
+  cause?: AIEventCause;
+}
+
+/**
+ * What a rival stable believes about another stable. `recordVs` and
+ * `knownStyles` are observed facts; `estimatedThreat` is an inferred belief
+ * that regresses toward uncertainty as `lastSeenWeek` stales.
+ */
+export interface OpponentDossier {
+  lastSeenWeek: number;
+  knownStyles: FightingStyle[];
+  estimatedThreat: number; // 0..1
+  recordVs: { w: number; l: number; k: number };
+  planIntel?: {
+    suspectedOE?: number;
+    suspectedAL?: number;
+    lastPlanWeek?: number;
+  };
 }
 
 /**
@@ -269,6 +305,16 @@ export interface AIAgentMemory {
     kills: number;
     rosterSizeAtSeasonStart: number;
   };
+  lastSeasonRecord?: {
+    wins: number;
+    losses: number;
+    kills: number;
+    rosterSizeAtSeasonStart: number;
+  };
+  /** Perceived opponent intel keyed by stable id (player stable included). */
+  opponentDossiers: Record<string, OpponentDossier>;
+  /** Top reasons recent bouts were lost, most recent first, capped at 3. */
+  lastLossFactors?: string[];
 }
 
 /**
@@ -292,6 +338,12 @@ export interface RivalStableData {
   seasonalGrowth?: SeasonalGrowth[];
   ledger: LedgerEntry[];
   trainingAssignments: TrainingAssignment[];
+  /** Set by processAIRosterManagement when the roster is below its personality
+   *  floor — the unified recruitment path (aiDraftFromPool) acts on it. */
+  needsRecruit?: boolean;
+  /** Season index of the last poach bid tabled by this stable — enforces the
+   *  once-per-season poaching cadence (G.2). */
+  lastPoachSeason?: number;
 }
 
 /**

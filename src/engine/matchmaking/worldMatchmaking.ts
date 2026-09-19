@@ -30,8 +30,16 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
     for (const warrior of rival.roster) {
       if (
         isBookable(warrior, {
+          // restStates is global (injuryHandler writes it for any warrior);
+          // trainingAssignments combine the global list with the owning
+          // stable's own list — G19 rival rest prep (TOURNAMENT_CAMPAIGN)
+          // must gate booking the same way the player's assignments do.
+          // Entries are keyed by warriorId, so the lists can't cross-match.
           restStates: state.restStates || [],
-          trainingAssignments: state.trainingAssignments || [],
+          trainingAssignments: [
+            ...(state.trainingAssignments || []),
+            ...(rival.trainingAssignments || []),
+          ],
           targetWeek,
         })
       ) {

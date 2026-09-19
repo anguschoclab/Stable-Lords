@@ -215,10 +215,8 @@ function selectCharge(
   if (parentChargeType && rng.chance(config.chargeTypeChance)) {
     chargeType = parentChargeType;
   } else {
-    const preferredTypes = PHILOSOPHY_CHARGE_PREFERENCES[philosophy] || [
-      'beast',
-      'symbol',
-      'weapon',
+    const preferredTypes = [
+      ...(PHILOSOPHY_CHARGE_PREFERENCES[philosophy] || ['beast', 'symbol', 'weapon']),
     ];
 
     // Higher tiers get access to mythical charges

@@ -239,6 +239,8 @@ export const WarriorSchema = z.object({
   career: CareerRecordSchema,
   champion: z.boolean(),
   plan: FightPlanSchema.optional(),
+  planWeek: z.number().optional(),
+  planForStableId: z.string().optional(),
   equipment: EquipmentLoadoutSchema.optional(),
   status: WarriorStatusSchema,
   age: z.number().optional(),

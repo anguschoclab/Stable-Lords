@@ -45,6 +45,7 @@ export const BoutOfferSchema = z.object({
   createdAt: z.string().optional(),
   arenaId: z.string().optional(),
   createdAbsoluteWeek: z.number().optional(),
+  counterPurseBump: z.number().optional(),
 });
 
 /**

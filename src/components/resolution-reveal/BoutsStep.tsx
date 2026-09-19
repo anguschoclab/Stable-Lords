@@ -68,6 +68,7 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
                     announcement={r.announcement}
                     isRivalry={r.isRivalry}
                     analysis={analysis}
+                    exchangeLog={r.outcome.exchangeLog}
                   />
                   <Separator className="my-4" />
                 </div>

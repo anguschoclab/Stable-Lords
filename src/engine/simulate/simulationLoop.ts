@@ -18,6 +18,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
 import { buildExchangeLogEntry } from './logging';
 import { minuteStatusLine, tacticStreakLine, narrateBoutEnd } from '../narrative';
+import { isAIDebugEnabled } from '@/engine/ai/debug';
 
 type Phase = 'OPENING' | 'MID' | 'LATE';
 
@@ -56,6 +57,10 @@ export function runSimulationLoop(
   const flavorRng = narRng;
   const log: MinuteEvent[] = [];
   const exchangeLog: ExchangeLogEntry[] = [];
+  // Stage F: AI_INTENT telemetry + exchangeLog surface when narrated, or when
+  // the __AI_DEBUG escape hatch is set (headless debugging without narration).
+  const telemetry = !headless || isAIDebugEnabled();
+  resCtx.aiIntentTelemetry = telemetry;
   let prevHpRatioA = 1.0;
   let prevHpRatioD = 1.0;
   let winner: 'A' | 'D' | null = null;
@@ -141,7 +146,7 @@ export function runSimulationLoop(
 
     // A. Resolve Math (Dice)
     const events = resolveExchange(resCtx, fA, fD);
-    if (!headless) {
+    if (telemetry) {
       exchangeLog.push(buildExchangeLogEntry(ex, min, phase, events));
     }
 

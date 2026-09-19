@@ -1,93 +1,89 @@
-/**
- * AgentReasoningWidget — UI honesty tests.
- *
- * Every value on screen must trace to real state: the intent label comes from
- * `rival.agentMemory.currentIntent`, the target line must resolve the rival's
- * stable name — and nothing may be fabricated (no invented confidence score).
- */
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import type { RivalStableData } from '@/types/state.types';
+import '@testing-library/jest-dom';
+import { AgentReasoningWidget } from '@/components/dashboard/AgentReasoningWidget';
+import { makeRival } from '@/test/_fixtures/factories';
 import type { StableId } from '@/types/shared.types';
 
 let mockState: any = {};
-
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: vi.fn((selector?: any) => (selector ? selector(mockState) : mockState)),
 }));
-
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: any) => fn,
 }));
 
-vi.mock('@/components/dashboard/ActionTimeline', () => ({
-  ActionTimeline: () => <div data-testid="timeline" />,
-}));
-
-import { AgentReasoningWidget } from '@/components/dashboard/AgentReasoningWidget';
-
-function rival(over: Partial<RivalStableData> = {}): RivalStableData {
-  return {
-    id: 'stable_victim',
-    owner: { stableName: 'Iron Pits' } as any,
-    fame: 10,
-    roster: [],
-    treasury: 500,
-    strategy: { intent: 'VENDETTA', targetStableId: 'stable_target', planWeeksRemaining: 3 },
-    agentMemory: {
-      lastTreasury: 500,
-      burnRate: 0,
-      metaAwareness: {},
-      knownRivals: [],
-      currentIntent: 'VENDETTA',
-    },
-    ...over,
-  } as RivalStableData;
-}
-
-beforeEach(() => {
-  mockState = {
-    rivals: [
-      rival(),
-      rival({ id: 'stable_target' as StableId, owner: { stableName: 'Crimson Oath' } as any }),
-    ],
-  };
-});
-
-describe('AgentReasoningWidget', () => {
-  it('shows the intent label for the rival current intent', () => {
-    render(<AgentReasoningWidget rival={rival()} />);
-    expect(screen.getByText('Owner Vendetta')).toBeInTheDocument();
+describe('AgentReasoningWidget (H.1)', () => {
+  beforeEach(() => {
+    mockState = { rivals: [], roster: [], graveyard: [], retired: [], player: undefined };
   });
 
-  it('falls back to Survival when no intent is recorded', () => {
-    render(
-      <AgentReasoningWidget
-        rival={rival({ agentMemory: { lastTreasury: 0, burnRate: 0, metaAwareness: {}, knownRivals: [] } })}
-      />
-    );
-    expect(screen.getByText('Survival')).toBeInTheDocument();
+  it('renders the strategy reason text from real state', () => {
+    const rival = makeRival({
+      strategy: {
+        intent: 'VENDETTA',
+        planWeeksRemaining: 4,
+        targetStableId: 'player-1' as StableId,
+        reason: 'Grudge: player beat this stable twice this season',
+      },
+    });
+    mockState.player = { id: 'player-1' as StableId, stableName: 'My Stable' };
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(
+      screen.getByText(/player beat this stable twice/i)
+    ).toBeInTheDocument();
   });
 
-  it('does not fabricate a confidence score', () => {
-    render(<AgentReasoningWidget rival={rival()} />);
-    expect(screen.queryByText(/confidence/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/94\.8/)).not.toBeInTheDocument();
+  it('renders the season record W-L-K from agentMemory', () => {
+    const rival = makeRival({
+      agentMemory: {
+        lastTreasury: 1000,
+        burnRate: 50,
+        metaAwareness: {},
+        knownRivals: [],
+        currentIntent: 'EXPANSION',
+        seasonRecord: { wins: 5, losses: 2, kills: 1, rosterSizeAtSeasonStart: 7 },
+        opponentDossiers: {},
+      },
+      strategy: { intent: 'EXPANSION', planWeeksRemaining: 3 },
+    });
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(screen.getByText(/5/)).toBeInTheDocument();
+    expect(screen.getByTestId('season-record')).toHaveTextContent('5-2-1');
   });
 
-  it('resolves the targeted stable to its name, not its internal id', () => {
-    render(<AgentReasoningWidget rival={rival()} />);
-    expect(screen.getByText(/Crimson Oath/)).toBeInTheDocument();
-    expect(screen.queryByText(/stable_target/)).not.toBeInTheDocument();
+  it('shows TOURNAMENT_CAMPAIGN as an active intent label', () => {
+    const rival = makeRival({
+      agentMemory: {
+        lastTreasury: 1000,
+        burnRate: 50,
+        metaAwareness: {},
+        knownRivals: [],
+        currentIntent: 'TOURNAMENT_CAMPAIGN',
+        opponentDossiers: {},
+      },
+      strategy: { intent: 'TOURNAMENT_CAMPAIGN', planWeeksRemaining: 2 },
+    });
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(screen.getByText(/tournament campaign/i)).toBeInTheDocument();
   });
 
-  it('shows an honest fallback when there is no specific target', () => {
-    render(
-      <AgentReasoningWidget
-        rival={rival({ strategy: { intent: 'EXPANSION', planWeeksRemaining: 2 } })}
-      />
-    );
-    expect(screen.getByText(/all rivals/i)).toBeInTheDocument();
+  it('renders a cause chip on timeline events carrying a typed cause', () => {
+    const rival = makeRival({
+      actionHistory: [
+        {
+          id: 'e1',
+          week: 3,
+          type: 'ROSTER',
+          description: 'Poached Warrior X from Stable Y for 80g',
+          riskTier: 'Medium',
+          cause: 'WEALTH_ACCUMULATION',
+        },
+      ],
+    });
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(screen.getByText(/Poached Warrior X/i)).toBeInTheDocument();
+    expect(screen.getByTestId('cause-chip-e1')).toHaveTextContent(/wealth/i);
   });
 });

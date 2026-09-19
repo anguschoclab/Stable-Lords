@@ -14,6 +14,14 @@ const ZERO_TRAIT_FIELDS = {
   signatureInstances: 0,
 } as const;
 
+const ZERO_AI_FIELDS = {
+  intentDistribution: {},
+  playerChallengedWeeks: 0,
+  vendettaCount: 0,
+  avgDossierCoverage: 0,
+  counterOfferRate: 0,
+} as const;
+
 describe('simulationMetrics', () => {
   let mockState: GameState;
 
@@ -49,6 +57,7 @@ describe('simulationMetrics', () => {
         avgRivalTreasury: 2000,
         totalBouts: 2,
         ...ZERO_TRAIT_FIELDS,
+        ...ZERO_AI_FIELDS,
       });
     });
 
@@ -100,6 +109,7 @@ describe('simulationMetrics', () => {
         avgRivalTreasury: 3000,
         totalBouts: 5,
         ...ZERO_TRAIT_FIELDS,
+        ...ZERO_AI_FIELDS,
       };
 
       const result = formatPulseTable([pulse]);
@@ -125,6 +135,7 @@ describe('simulationMetrics', () => {
           avgRivalTreasury: 1500,
           totalBouts: 0,
           ...ZERO_TRAIT_FIELDS,
+          ...ZERO_AI_FIELDS,
         },
         {
           week: 100,
@@ -136,6 +147,7 @@ describe('simulationMetrics', () => {
           avgRivalTreasury: 4200,
           totalBouts: 50,
           ...ZERO_TRAIT_FIELDS,
+          ...ZERO_AI_FIELDS,
         },
       ];
 

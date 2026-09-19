@@ -3,8 +3,6 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
-import { processOwnerGrudges } from '@/engine/owner/grudges';
-import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 
 /**
@@ -31,33 +29,12 @@ export function runNarrativePass(
   );
   const gazettes = [...(state.gazettes || []), { ...story, week: state.absoluteWeek }].slice(-50);
 
-  // 2. Owner Grudges
-  const { grudges, gazetteItems } = processOwnerGrudges(state, state.ownerGrudges || []);
-
-  // 3. Rivalry Escalation
-  const rivalries = updateRivalriesFromBouts(
-    state.rivalries || [],
-    weekFights,
-    state.absoluteWeek,
-    rng
-  );
+  // 2. Owner grudges and rivalries are world state — they were relocated to
+  // WorldPass (G5) so they keep updating in headless/player-stopped runs.
 
   const impact: StateImpact = {
     gazettes,
-    ownerGrudges: grudges,
-    rivalries,
   };
-
-  if (gazetteItems.length > 0) {
-    impact.newsletterItems = [
-      {
-        id: rng.uuid(),
-        week: state.absoluteWeek + 1,
-        title: 'Stable Rivalries & Grudges',
-        items: gazetteItems,
-      },
-    ];
-  }
 
   return impact;
 }

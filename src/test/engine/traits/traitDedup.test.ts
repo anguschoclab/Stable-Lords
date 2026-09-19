@@ -43,7 +43,6 @@ const RETAINED_IDS = [
   'street_rat_cunning',
 ] as const;
 
-const BASELINE_COUNT = 100;
 const EXPECTED_COUNT = 144; // 139 previous + 3 new narrative traits + 2 new traits
 
 describe('Trait deduplication', () => {

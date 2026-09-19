@@ -5,21 +5,10 @@ import '@testing-library/jest-dom';
 import { Dumbbell } from 'lucide-react';
 import type { TacticalAlert } from '@/hooks/useTacticalAlerts';
 
-let mockStore: any = { week: 5, isTournamentWeek: false, bookmarks: [] };
 let mockAlerts: TacticalAlert[] = [];
 let mockPathname = '/world';
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: vi.fn((selector?: any) => (selector ? selector(mockStore) : mockStore)),
-  };
-});
-
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@tanstack/react-router', () => ({
   useLocation: () => ({ pathname: mockPathname }),
@@ -43,7 +32,9 @@ function makeAlert(id: string, message: string): TacticalAlert {
 
 describe('useNavAlerts', () => {
   beforeEach(() => {
-    mockStore = { week: 5, isTournamentWeek: false, bookmarks: [] };
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({ week: 5, isTournamentWeek: false, bookmarks: [] } as never);
     mockAlerts = [];
     mockPathname = '/world';
     vi.mocked(useTacticalAlerts).mockImplementation(() => mockAlerts);
@@ -57,13 +48,13 @@ describe('useNavAlerts', () => {
   });
 
   it('returns counts.world = 1 when isTournamentWeek = true', () => {
-    mockStore = { ...mockStore, isTournamentWeek: true };
+    useGameStore.setState({ isTournamentWeek: true } as never);
     const { result } = renderHook(() => useNavAlerts());
     expect(result.current.counts.world).toBe(1);
   });
 
   it('returns counts.bookmarks = N matching bookmarkCount', () => {
-    mockStore = { ...mockStore, bookmarks: Array(7) };
+    useGameStore.setState({ bookmarks: Array(7) } as never);
     const { result } = renderHook(() => useNavAlerts());
     expect(result.current.counts.bookmarks).toBe(7);
   });
@@ -118,7 +109,7 @@ describe('useNavAlerts', () => {
   it('with trackWeek=true: hides stable alert when week has not advanced past lastSeenWeek', () => {
     // On /stable, lastSeenWeek gets set to current week (5).
     // If we're still on week 5 and navigate away, week is not > lastSeenWeek, so no alert.
-    mockStore = { ...mockStore, week: 5, bookmarks: [] };
+    useGameStore.setState({ week: 5, bookmarks: [] } as never);
     mockAlerts = [makeAlert('unassigned-training', '3 warriors need training assignment')];
     vi.mocked(useTacticalAlerts).mockImplementation(() => mockAlerts);
     // First render on /world (lastSeenStableWeek initializes to -1)

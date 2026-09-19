@@ -8,26 +8,7 @@ vi.mock('@/hooks/useWeekExecution', () => ({
   useWeekExecution: vi.fn(),
 }));
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: vi.fn((selector?: any) => {
-      const store = {
-        week: 5,
-        isTournamentWeek: false,
-        day: 0,
-        isSimulating: false,
-      };
-      if (typeof selector === 'function') return selector(store);
-      return store;
-    }),
-  };
-});
-
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+import { useGameStore } from '@/state/useGameStore';
 
 import { ExecuteWeekButton } from '@/components/layout/ExecuteWeekButton';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
@@ -52,13 +33,10 @@ describe('ExecuteWeekButton', () => {
     mockExecuteWeek = vi.fn();
     mockHandleStartAutosim = vi.fn();
     vi.mocked(useWeekExecution).mockImplementation(defaultHookValue);
-    // Reset gameStore mock back to defaults after async tests may have mutated it
-    const { useGameStore } = await import('@/state/useGameStore');
-    vi.mocked(useGameStore).mockImplementation((selector?: any) => {
-      const store = { week: 5, isTournamentWeek: false, day: 0, isSimulating: false };
-      if (typeof selector === 'function') return selector(store);
-      return store;
-    });
+    // Reset store state back to defaults after async tests may have mutated it.
+    // (vi.mock's importOriginal arg does not exist under bun:test — inject
+    // state into the real store instead.)
+    useGameStore.setState({ week: 5, isTournamentWeek: false, day: 0, isSimulating: false } as never);
   });
 
   it('renders "ADVANCE WEEK 5" with correct week number', () => {
@@ -67,12 +45,7 @@ describe('ExecuteWeekButton', () => {
   });
 
   it('renders "ADVANCE DAY" label when isTournamentWeek=true', async () => {
-    const { useGameStore } = await import('@/state/useGameStore');
-    vi.mocked(useGameStore).mockImplementation((selector?: any) => {
-      const store = { week: 5, isTournamentWeek: true, day: 2, isSimulating: false };
-      if (typeof selector === 'function') return selector(store);
-      return store;
-    });
+    useGameStore.setState({ week: 5, isTournamentWeek: true, day: 2, isSimulating: false } as never);
     render(<ExecuteWeekButton />);
     expect(screen.getByText(/ADVANCE DAY/i)).toBeTruthy();
   });
@@ -97,12 +70,7 @@ describe('ExecuteWeekButton', () => {
   });
 
   it('button is disabled when isSimulating=true', async () => {
-    const { useGameStore } = await import('@/state/useGameStore');
-    vi.mocked(useGameStore).mockImplementation((selector?: any) => {
-      const store = { week: 5, isTournamentWeek: false, day: 0, isSimulating: true };
-      if (typeof selector === 'function') return selector(store);
-      return store;
-    });
+    useGameStore.setState({ week: 5, isTournamentWeek: false, day: 0, isSimulating: true } as never);
     render(<ExecuteWeekButton />);
     const btn = screen.getByRole('button');
     expect(btn).toBeDisabled();

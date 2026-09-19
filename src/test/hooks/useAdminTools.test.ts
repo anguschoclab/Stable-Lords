@@ -32,19 +32,6 @@ vi.mock('@/engine/rivals', () => ({
   generateRivalStables: vi.fn(() => [{ id: 'rival-1' }]),
 }));
 
-// Partial mock: control GameStateSchema.parse for the import paths while
-// keeping every other export (SaveSlotMetaSchema etc.) real. The store does
-// not import this module, so this cannot affect store internals.
-vi.mock('@/schemas/gameStateSchema', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/schemas/gameStateSchema')>();
-  return {
-    ...actual,
-    GameStateSchema: {
-      parse: vi.fn((data: unknown) => data),
-    },
-  };
-});
-
 import { useAdminTools } from '@/pages/AdminTools/hooks/useAdminTools';
 import { useGameStore } from '@/state/useGameStore';
 import { toast } from 'sonner';
@@ -81,7 +68,11 @@ const mockFileReader = (result: string | null, opts: { error?: boolean } = {}) =
 describe('useAdminTools', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(GameStateSchema.parse).mockImplementation((data: unknown) => data as never);
+    // Control GameStateSchema.parse for the import paths while keeping every
+    // other schema method real — the store does not import this module, so
+    // this cannot affect store internals. (spyOn works on both runners;
+    // vi.mock's importOriginal arg does not exist under bun:test.)
+    vi.spyOn(GameStateSchema, 'parse').mockImplementation((data: unknown) => data as never);
     seedStore();
   });
 
@@ -196,9 +187,14 @@ describe('useAdminTools', () => {
       const revokeObjectURL = vi.fn();
       (URL as any).createObjectURL = createObjectURL;
       (URL as any).revokeObjectURL = revokeObjectURL;
+      let anchor: HTMLAnchorElement | undefined;
       const clickSpy = vi
         .spyOn(HTMLAnchorElement.prototype, 'click')
-        .mockImplementation(function (this: HTMLAnchorElement) {});
+        .mockImplementation(function (this: HTMLAnchorElement) {
+          // bun:test's spy does not populate mock.instances — capture `this`.
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
+          anchor = this;
+        });
 
       const { result } = renderHook(() => useAdminTools());
       act(() => {
@@ -207,8 +203,7 @@ describe('useAdminTools', () => {
 
       expect(createObjectURL).toHaveBeenCalledOnce();
       expect(clickSpy).toHaveBeenCalledOnce();
-      const anchor = clickSpy.mock.instances[0] as unknown as HTMLAnchorElement;
-      expect(anchor.download).toBe(`stable-lords-export-w${result.current.week}.json`);
+      expect(anchor?.download).toBe(`stable-lords-export-w${result.current.week}.json`);
       expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock');
       expect(toast.success).toHaveBeenCalledWith('Current session state exported.');
     });

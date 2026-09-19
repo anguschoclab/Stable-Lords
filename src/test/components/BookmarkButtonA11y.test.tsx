@@ -5,28 +5,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { useGameStore } from '@/state/useGameStore';
 
 const bookmarkedIds = new Set<string>();
 const mockToggle = vi.fn();
-
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector: any) => {
-      const state = {
-        isBookmarked: (_type: string, id: string) => bookmarkedIds.has(id),
-        toggleBookmark: mockToggle,
-      };
-      return selector(state);
-    },
-  };
-});
 
 describe('BookmarkButton accessibility', () => {
   beforeEach(() => {
     bookmarkedIds.clear();
     mockToggle.mockClear();
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({
+      isBookmarked: (_type: string, id: string) => bookmarkedIds.has(id),
+      toggleBookmark: mockToggle,
+    } as never);
   });
 
   it('has focus-visible:ring classes', () => {

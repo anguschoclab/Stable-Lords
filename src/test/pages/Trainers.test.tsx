@@ -45,26 +45,23 @@ const defaultStoreState = {
   },
 };
 
-// Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: any) => {
-      const state = {
-        ...defaultStoreState,
-        ...storeOverride,
-        setState: vi.fn((fn: (draft: any) => void) => {
-          fn(storeOverride);
-        }),
-        deductFunds: vi.fn(() => true),
-        isBookmarked: vi.fn(() => false),
-        bookmarks: [],
-      };
-      return selector ? selector(state) : state;
-    },
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
+
+// Inject fake state into the real store — vi.mock's importOriginal arg does
+// not exist under bun:test. The fake setState mutates storeOverride (shared
+// refs keep the real store in sync) so tests can assert on it.
+const applyStore = () =>
+  useGameStore.setState({
+    ...defaultStoreState,
+    ...storeOverride,
+    setState: vi.fn((fn: (draft: any) => void) => {
+      fn(storeOverride);
+    }),
+    deductFunds: vi.fn(() => true),
+    isBookmarked: vi.fn(() => false),
+    bookmarks: [],
+  } as never);
+
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
@@ -127,6 +124,7 @@ describe('Trainers Component', () => {
       treasury: mockState.treasury,
       ledger: [],
     };
+    applyStore();
   });
 
   it('renders current trainers correctly', async () => {

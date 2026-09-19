@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   newSlotId,
   listSaveSlots,
@@ -9,22 +9,9 @@ import {
   importSaveToNewSlot,
 } from '@/state/saveSlots';
 import { archiveService } from '@/engine/storage/archiveService';
+import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { STORE_KEYS } from '@/constants/core/storeKeys';
 import type { GameState } from '@/types/state.types';
-
-vi.mock('@/schemas/gameStateSchema', async (importOriginal) => {
-  const actual = await importOriginal<any>();
-  return {
-    ...actual,
-    GameStateSchema: {
-      parse: vi.fn((data) => {
-        if (data.invalid) throw new Error('Invalid');
-        if (!data.meta) data.meta = { version: '1.0' };
-        return data;
-      }),
-    },
-  };
-});
 
 vi.mock('@/engine/storage/archiveService', () => ({
   archiveService: {
@@ -38,6 +25,15 @@ describe('saveSlots', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    // Control GameStateSchema.parse for the import paths while keeping every
+    // other schema method real. (spyOn works on both runners; vi.mock's
+    // importOriginal arg does not exist under bun:test.)
+    vi.spyOn(GameStateSchema, 'parse').mockImplementation((data: unknown) => {
+      const d = data as { invalid?: boolean; meta?: { version: string } };
+      if (d.invalid) throw new Error('Invalid');
+      if (!d.meta) d.meta = { version: '1.0' };
+      return d as never;
+    });
     // Re-mock window if electronAPI exists, let's just stick to local storage branch for coverage
     // by ensuring electronAPI is undefined
     (window as any).electronAPI = undefined;

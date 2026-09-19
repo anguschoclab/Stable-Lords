@@ -5,23 +5,7 @@ import '@testing-library/jest-dom';
 import { AlertStrip } from '@/components/layout/navigationShared';
 import type { HubId } from '@/components/layout/navigationShared';
 
-let mockIsTournamentWeek = false;
-
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: vi.fn((selector?: any) =>
-      selector
-        ? selector({ isTournamentWeek: mockIsTournamentWeek })
-        : { isTournamentWeek: mockIsTournamentWeek }
-    ),
-  };
-});
-
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children, className }: any) => (
@@ -35,7 +19,9 @@ const defaultAlerts: Record<HubId, number> = { stable: 0, world: 0, bookmarks: 0
 
 describe('AlertStrip', () => {
   beforeEach(() => {
-    mockIsTournamentWeek = false;
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({ isTournamentWeek: false } as never);
   });
 
   it('returns null when no stable alerts and not tournament week', () => {
@@ -62,19 +48,19 @@ describe('AlertStrip', () => {
   });
 
   it('renders tournament week item when isTournamentWeek = true', () => {
-    mockIsTournamentWeek = true;
+    useGameStore.setState({ isTournamentWeek: true } as never);
     render(<AlertStrip alerts={defaultAlerts} />);
     expect(screen.getByText('Tournament week')).toBeInTheDocument();
   });
 
   it('tournament week item shows "Tournament week" label', () => {
-    mockIsTournamentWeek = true;
+    useGameStore.setState({ isTournamentWeek: true } as never);
     render(<AlertStrip alerts={defaultAlerts} />);
     expect(screen.getByText('Tournament week')).toBeInTheDocument();
   });
 
   it('tournament week item links to /world/tournaments', () => {
-    mockIsTournamentWeek = true;
+    useGameStore.setState({ isTournamentWeek: true } as never);
     render(<AlertStrip alerts={defaultAlerts} />);
     expect(screen.getByText('Tournament week').closest('a')).toHaveAttribute(
       'href',
@@ -83,7 +69,7 @@ describe('AlertStrip', () => {
   });
 
   it('renders both items when both conditions are true', () => {
-    mockIsTournamentWeek = true;
+    useGameStore.setState({ isTournamentWeek: true } as never);
     const alerts = { ...defaultAlerts, stable: 2 };
     render(<AlertStrip alerts={alerts} />);
     expect(screen.getByText('2 alerts')).toBeInTheDocument();

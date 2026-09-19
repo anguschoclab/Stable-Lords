@@ -59,7 +59,7 @@ describe('AudioManager', () => {
     AudioManager.resetForTesting();
     const manager = AudioManager.getInstance();
     // Call play() immediately after construction, before loadMuteState resolves
-    await expect(manager.play('hit')).resolves.not.toThrow();
+    await expect(manager.play('hit')).resolves.toBeUndefined();
   });
 
   it('play() succeeds after init completes', async () => {
@@ -67,7 +67,7 @@ describe('AudioManager', () => {
     const manager = AudioManager.getInstance();
     // Wait for init to complete
     await new Promise((r) => setTimeout(r, 50));
-    await expect(manager.play('hit')).resolves.not.toThrow();
+    await expect(manager.play('hit')).resolves.toBeUndefined();
   });
 
   // ── SFX Map Population Tests ──────────────────────────────────────────────
@@ -167,7 +167,7 @@ describe('AudioManager', () => {
     const quotaError = Object.assign(new Error('QuotaExceededError'), {
       name: 'QuotaExceededError',
     });
-    vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
       throw quotaError;
     });
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -184,7 +184,7 @@ describe('AudioManager', () => {
 
   it('setMuted logs a generic error for non-quota localStorage failures', async () => {
     const boom = new Error('boom');
-    vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
       throw boom;
     });
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

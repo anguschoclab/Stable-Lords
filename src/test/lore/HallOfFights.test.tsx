@@ -8,7 +8,7 @@ import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary } from '@/types/game';
 import '@/test/_setup/setup';
 
-let storeOverride: any = {};
+import { useGameStore } from '@/state/useGameStore';
 
 const defaultStoreState = {
   roster: [],
@@ -38,15 +38,10 @@ const defaultStoreState = {
   },
 };
 
-// Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
-    useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
-  };
-});
+// Inject fake state into the real store — vi.mock's importOriginal arg does
+// not exist under bun:test. Call instead of assigning a store override.
+const applyStore = (override: any = {}) =>
+  useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
 // Must mock the module before importing it inside components
 vi.mock('@/lore/LoreArchive', () => {
@@ -135,10 +130,9 @@ describe('HallOfFights Component', () => {
   };
 
   beforeEach(() => {
-    storeOverride = {};
     mockState = createFreshState('test-seed');
     mockState.arenaHistory = [fight1, fight2, fight3];
-    storeOverride = { arenaHistory: mockState.arenaHistory, week: mockState.week };
+    applyStore({ arenaHistory: mockState.arenaHistory, week: mockState.week });
 
     // Setup LoreArchive mock for hall entries
     const mockAllHall = LoreArchive.allHall as any;

@@ -41,13 +41,7 @@ vi.mock('@/components/warrior/dossier/WarriorDossierMedicalReport', () => ({
   WarriorDossierMedicalReport: () => <div data-testid="dossier-medical" />,
 }));
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useWorldState: vi.fn(() => mockState),
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@/engine/core/historyResolver', () => ({
   findWarrior: vi.fn(
@@ -84,6 +78,9 @@ import { FightingStyle } from '@/types/shared.types';
 describe('WarriorDossier', () => {
   beforeEach(() => {
     mockState.roster = [makeWarrior()];
+    // Inject state into the real store so useWorldState resolves —
+    // vi.mock's importOriginal arg does not exist under bun:test.
+    useGameStore.setState({ roster: mockState.roster } as never);
   });
 
   it('renders "Warrior not found." for unknown warriorId', () => {

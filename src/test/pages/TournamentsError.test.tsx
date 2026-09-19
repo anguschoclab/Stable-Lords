@@ -38,18 +38,7 @@ const store = {
   bookmarks: [],
 };
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  const useGameStore = vi.fn((selector?: (s: typeof store) => unknown) =>
-    selector ? selector(store) : store
-  );
-  (useGameStore as any).getState = () => store;
-  return {
-    ...actual,
-    useGameStore,
-    reconstructGameState: (s: unknown) => s,
-  };
-});
+import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 
 vi.mock('@/engine/workerProxy', () => ({
   engineProxy: {
@@ -98,6 +87,9 @@ describe('Tournaments page — handleExecuteRound', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     capturedExecute = null;
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState(store as never);
   });
 
   it('posts toast.error and resets simulating when resolveTournamentRound rejects', async () => {
@@ -134,7 +126,11 @@ describe('Tournaments page — handleExecuteRound', () => {
       await capturedExecute!();
     });
 
-    expect(engineProxy.resolveTournamentRound).toHaveBeenCalledWith(store, 't1', 42);
+    expect(engineProxy.resolveTournamentRound).toHaveBeenCalledWith(
+      reconstructGameState(useGameStore.getState()),
+      't1',
+      42
+    );
     expect(mockLoadGame).toHaveBeenCalledWith('slot-1', updatedState);
     expect(audioManager.play).toHaveBeenCalledWith('clash');
     expect(toast.success).toHaveBeenCalledWith('Round resolved.');

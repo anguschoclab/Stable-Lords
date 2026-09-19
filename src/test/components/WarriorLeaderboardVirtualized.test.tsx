@@ -3,19 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import type { WarriorRow } from '@/types/leaderboard';
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: any) => {
-      const state = {
-        isBookmarked: () => false,
-        toggleBookmark: vi.fn(),
-      };
-      return selector ? selector(state) : state;
-    },
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
@@ -45,6 +33,12 @@ function makeWarriorRows(n: number): WarriorRow[] {
 describe('WarriorLeaderboard (virtualized)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({
+      isBookmarked: () => false,
+      toggleBookmark: vi.fn(),
+    } as never);
   });
 
   it('renders sticky header with all column labels', async () => {

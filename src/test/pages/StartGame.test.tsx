@@ -4,16 +4,7 @@ import StartGame from '@/pages/StartGame';
 import * as saveSlots from '@/state/saveSlots';
 import { toast } from 'sonner';
 
-// Mock everything
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: () => ({
-      loadGame: vi.fn(),
-    }),
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@/state/saveSlots', () => ({
   listSaveSlots: vi.fn().mockResolvedValue([]),
@@ -51,6 +42,9 @@ vi.mock('@/components/startGame/ColomseumArch', () => ({
 describe('StartGame', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({ loadGame: vi.fn() } as never);
   });
 
   it('shows an error toast when import fails', async () => {

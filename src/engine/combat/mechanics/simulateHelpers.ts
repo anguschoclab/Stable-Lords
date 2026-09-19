@@ -2,35 +2,8 @@ import { FightingStyle } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { Trainer } from '@/types/state.types';
 import type { ResolutionContext, FighterState } from '@/engine/combat/resolution/types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getSpecialtyMods } from '@/engine/trainerSpecialties';
-
-/**
- * Create rng for context.
- * @param seed -
- * @param rng -
- */
-export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
-  return rng || new SeededRNGService(seed);
-}
-
-/**
- * Setup rng.
- * @param providedRng - Provided rng. (optional)
- */
-export function setupRng(providedRng?: (() => number) | number): () => number {
-  if (typeof providedRng === 'function') {
-    return providedRng;
-  }
-  const seed =
-    typeof providedRng === 'number'
-      ? providedRng
-      : (crypto.getRandomValues(new Uint32Array(1))[0] as number);
-  const sRng = new SeededRNGService(seed);
-  return () => sRng.next();
-}
 
 /**
  * Get trainer mods.

@@ -3,7 +3,7 @@ import { StateImpact } from '@/engine/impacts';
 import type { BoutOfferId, WeatherType } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { FIGHT_PURSE, MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 import { collectAllWarriors } from '@/engine/core/warriorCollection';
 import { isBookable } from '@/engine/warriorStatus';
@@ -89,7 +89,7 @@ function isWeatherDisadvantaged(warrior: Warrior, weather: WeatherType): boolean
  *
  */
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
-  const rngService = rng || new SeededRNGService(state.week * 881 + 17);
+  const rngService = resolveRng(rng, state.week * 881 + 17);
   const rankings = state.realmRankings || {};
 
   // 0. Garbage Collection: Prune expired or stale bout offers

@@ -5,7 +5,7 @@ import { tickInjuries } from '@/engine/injuries';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import type { StateImpact } from './impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 
 /**
  * Health Impact calculation — extracted from the legacy pipeline.
@@ -14,7 +14,7 @@ import { SeededRNGService } from '@/utils/random';
 export function computeHealthImpact(state: GameState, rngService?: IRNGService): StateImpact {
   const injuryNews: string[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rng = rngService || new SeededRNGService(state.week);
+  const rng = resolveRng(rngService, state.week);
 
   for (const w of state.roster) {
     const updates: Partial<Warrior> = {};

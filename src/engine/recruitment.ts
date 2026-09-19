@@ -14,7 +14,7 @@ import { computeWarriorStats, rollLuckfactor } from './skillCalc';
 import { generatePotential } from './potential';
 import { generateFavorites } from './favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
@@ -239,7 +239,7 @@ export function generateRecruitPool(
   meta?: StyleMeta,
   legacyCandidates: import('@/types/warrior.types').Warrior[] = []
 ): PoolWarrior[] {
-  const rngService = rng || new SeededRNGService(week * 9973 + 42);
+  const rngService = resolveRng(rng, week * 9973 + 42);
   const pool: PoolWarrior[] = [];
 
   // Guarantee at least two Promising+ warriors in a larger pool
@@ -302,7 +302,7 @@ export function partialRefreshPool(
   const remainingNames = new Set(remaining.map((w) => w.name));
   const allUsed = new Set([...usedNames, ...remainingNames]);
 
-  const rngService = rng || new SeededRNGService(week * 7919 + 31);
+  const rngService = resolveRng(rng, week * 7919 + 31);
   const newWarriors: PoolWarrior[] = [];
   for (let i = 0; i < removeCount; i++) {
     newWarriors.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
@@ -338,7 +338,7 @@ export function fullRefreshPool(
   usedNames: Set<string>,
   rng?: IRNGService
 ): PoolWarrior[] {
-  const rngService = rng || new SeededRNGService(week * 1337 + 7);
+  const rngService = resolveRng(rng, week * 1337 + 7);
   return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rngService);
 }
 

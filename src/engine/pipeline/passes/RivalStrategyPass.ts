@@ -14,7 +14,7 @@ import {
   convertBidsToOffers,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, resolveRng } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 
@@ -27,7 +27,7 @@ export function runRivalStrategyPass(
   rootRng?: IRNGService,
   headless?: boolean
 ): StateImpact {
-  const rng = rootRng || new SeededRNGService(state.absoluteWeek * 7919 + 13);
+  const rng = resolveRng(rootRng, state.absoluteWeek * 7919 + 13);
   const impacts: StateImpact[] = [];
   const globalGazetteItems: string[] = [];
 

@@ -5,6 +5,7 @@
  * deterministic randomness in the engine.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { cryptoRandomInt } from './cryptoRandom';
 
 /**
  * The SeededRNG class - implements IRNGService directly
@@ -176,6 +177,24 @@ export function rollWeighted<K extends string>(
     throw new Error('No entries available for weighted roll');
   }
   return fallback[0];
+}
+
+/**
+ * Resolves an optional IRNGService, falling back to a deterministic seeded RNG.
+ * The ONLY place engine/pipeline code may construct a fallback — call sites
+ * must pass the same context-derived seed they used previously.
+ */
+export function resolveRng(rng: IRNGService | undefined, fallbackSeed: number): IRNGService {
+  return rng ?? new SeededRNG(fallbackSeed);
+}
+
+/**
+ * SeededRNG backed by cryptographic entropy — for contexts that intentionally
+ * want non-reproducible variety (name gen, pools, UI). Determinism-sensitive
+ * callers must pass an explicit rng instead.
+ */
+export function entropyRng(): IRNGService {
+  return new SeededRNG(cryptoRandomInt(0, 0x7fffffff));
 }
 
 /** Backward-compatible alias — callers should migrate to {@link SeededRNG}. */

@@ -8,7 +8,7 @@ import type {
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan';
 import { FightingStyle } from '@/types/shared.types';
@@ -41,7 +41,7 @@ export function resolveRound(
   rng?: IRNGService,
   tournament?: TournamentEntry
 ): RoundResolutionResult {
-  const rngService = rng || new SeededRNGService(seed);
+  const rngService = resolveRng(rng, seed);
   const resolvedTournament =
     tournament ?? (state.tournaments || []).find((t) => t.id === tournamentId);
   if (!resolvedTournament || resolvedTournament.completed)

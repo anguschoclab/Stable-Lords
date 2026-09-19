@@ -1,8 +1,7 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { type Season, type StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
-import { hashStr } from '@/utils/random';
+import { hashStr, resolveRng } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment';
 import { StateImpact } from '@/engine/impacts';
 import { isActive } from '@/engine/warriorStatus';
@@ -64,7 +63,7 @@ export function processTierProgression(
   if (newSeason === state.season) return {};
 
   const createdAt = state.meta?.createdAt || new Date(0).toISOString();
-  const rngService = rng || new SeededRNGService(hashStr(createdAt) + state.week);
+  const rngService = resolveRng(rng, hashStr(createdAt) + state.week);
 
   const promotionNews: string[] = [];
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();

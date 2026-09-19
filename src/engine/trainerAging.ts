@@ -1,7 +1,7 @@
 import type { GameState, Trainer, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { TRAINER_AGING, RETIREMENT_CHANCES } from '@/constants/aging';
 
 /**
@@ -20,7 +20,7 @@ export function computeTrainerAging(
   updatedHiringPool: Trainer[];
   rivalsUpdates: Map<StableId, Partial<RivalStableData>>;
 } {
-  const rngService = rng || new SeededRNGService(state.week * 1337 + 7);
+  const rngService = resolveRng(rng, state.week * 1337 + 7);
   const news: string[] = [];
   const isAgingWeek = state.week % TRAINER_AGING.WEEKS_PER_YEAR === 0;
 

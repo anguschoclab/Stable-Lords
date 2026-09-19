@@ -1,6 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
 import { processOwnerGrudges } from '@/engine/owner/grudges';
@@ -17,7 +17,7 @@ export function runNarrativePass(
   _nextWeek: number,
   rootRng?: IRNGService
 ): StateImpact {
-  const rng = rootRng || new SeededRNGService(state.absoluteWeek * 9973 + 456);
+  const rng = resolveRng(rootRng, state.absoluteWeek * 9973 + 456);
 
   // 1. Gazette generation
   const weekFights = getFightsForWeek(state.arenaHistory, state.absoluteWeek);

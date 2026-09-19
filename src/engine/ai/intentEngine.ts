@@ -2,7 +2,7 @@ import type { GameState, RivalStableData, AIIntent, AIStrategy } from '@/types/s
 import { computeMetaDrift } from '../metaDrift';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, resolveRng } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
 import { isActive } from '@/engine/warriorStatus';
 
@@ -33,7 +33,7 @@ export function pickWeeklyIntent(
   seed?: number,
   rng?: IRNGService
 ): AIIntent {
-  const rngService = rng || new SeededRNGService(seed ?? state.week * 131 + rival.owner.id.length);
+  const rngService = resolveRng(rng, seed ?? state.week * 131 + rival.owner.id.length);
   const personality = rival.owner.personality ?? 'Pragmatic';
   const { activeRoster, injuryCount, lungeCount } = rival.roster.reduce(
     (acc, w) => {

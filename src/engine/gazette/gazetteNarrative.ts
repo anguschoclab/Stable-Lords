@@ -8,7 +8,7 @@ import type { FightSummary } from '@/types/combat.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { styleName, t, MOOD_TONE } from './gazetteTemplateHelpers';
 import type { GazetteDetections } from './gazetteDetections';
 import { getNamesFromTitle } from '@/utils/fightTitle';
@@ -21,7 +21,7 @@ export function generateFightNarrative(
   mood: CrowdMoodType,
   rng?: IRNGService
 ): string {
-  const safeRng = rng || new SeededRNGService(fight.week * 42);
+  const safeRng = resolveRng(rng, fight.week * 42);
   const toneResource = MOOD_TONE[mood] || MOOD_TONE['Calm'];
   if (!MOOD_TONE[mood] && mood !== 'Calm')
     console.error(`Missing mood tone logic for: ${mood}, falling back to Calm`);

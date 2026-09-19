@@ -133,10 +133,11 @@ function makeMinimalState(rivals: RivalStableData[]): GameState {
 
 function makeMockRng(returns: number[]): IRNGServiceLike {
   let i = 0;
+  let idCounter = 0;
   return {
     next: () => returns[i++] ?? returns[returns.length - 1] ?? 0,
     pick: <T>(arr: T[]): T => arr[0]!,
-    uuid: (p?: string) => `${p ?? 'id'}-${Math.random()}`,
+    uuid: (p?: string) => `${p ?? 'id'}-${idCounter++}`,
     roll: (min: number, _max: number) => min,
     shuffle: <T>(arr: T[]): T[] => arr,
     chance: (p: number) => p > 0,

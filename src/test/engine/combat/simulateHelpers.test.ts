@@ -1,63 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
-  setupRng,
   getTrainerMods,
   processOutcomeTags,
-  createRNGForContext,
 } from '@/engine/combat/mechanics/simulateHelpers';
 import { FightingStyle } from '@/types/shared.types';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import type { Trainer } from '@/types/state.types';
 
 describe('simulateHelpers mechanics', () => {
-  describe('createRNGForContext', () => {
-    it('returns provided RNG if it exists', () => {
-      const mockRng = { next: vi.fn(), random: vi.fn() };
-      expect(createRNGForContext(123, mockRng as any)).toBe(mockRng);
-    });
-
-    it('creates a new SeededRNGService if none provided', () => {
-      const rng = createRNGForContext(123);
-      expect(rng).toBeDefined();
-      expect(typeof rng.next).toBe('function');
-    });
-  });
-
-  describe('setupRng', () => {
-    it('returns the provided function directly', () => {
-      const fn = () => 0.5;
-      expect(setupRng(fn)).toBe(fn);
-    });
-
-    it('creates an rng function from a provided number seed', () => {
-      const fn = setupRng(123);
-      expect(typeof fn).toBe('function');
-      const val1 = fn();
-      const val2 = setupRng(123)();
-      expect(val1).toBe(val2); // deterministic
-    });
-
-    it('creates an rng function even if no arguments are provided', () => {
-      // Mock global crypto to ensure it works
-      const originalCrypto = globalThis.crypto;
-      Object.defineProperty(globalThis, 'crypto', {
-        value: {
-          getRandomValues: (arr: Uint32Array) => {
-            arr[0] = 999;
-            return arr;
-          },
-        },
-        configurable: true,
-      });
-
-      const fn = setupRng();
-      expect(typeof fn).toBe('function');
-      expect(typeof fn()).toBe('number');
-
-      Object.defineProperty(globalThis, 'crypto', { value: originalCrypto, configurable: true });
-    });
-  });
-
   describe('getTrainerMods', () => {
     it('returns zeroed base mods when trainers is undefined', () => {
       const mods = getTrainerMods(undefined, FightingStyle.StrikingAttack);

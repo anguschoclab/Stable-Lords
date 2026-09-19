@@ -1,5 +1,5 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import type { GameState, WeatherType, Season } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
 
@@ -219,7 +219,7 @@ export function getWeatherSeason(weather: WeatherType): Season | 'All' {
  * @param rng -
  */
 export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGService): StateImpact {
-  const rngService = rng || new SeededRNGService(nextWeek * 13);
+  const rngService = resolveRng(rng, nextWeek * 13);
   const nextSeason = computeNextSeason(nextWeek);
   const nextWeather = rollWeather(rngService, nextSeason);
 

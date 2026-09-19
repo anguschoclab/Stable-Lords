@@ -7,7 +7,7 @@ import type { CrowdMoodType } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GazetteStory } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { MOOD_TONE } from './gazetteTemplateHelpers';
 import {
   computeFightAnalysis,
@@ -33,7 +33,7 @@ export function generateWeeklyGazette(
   allFights?: FightSummary[],
   rng?: IRNGService
 ): GazetteStory {
-  const rngService = rng || new SeededRNGService(week * 7919 + 55);
+  const rngService = resolveRng(rng, week * 7919 + 55);
   const storyId = rngService.uuid();
   const moodKey = mood && MOOD_TONE[mood] ? mood : 'Calm';
   const tone = MOOD_TONE[moodKey];

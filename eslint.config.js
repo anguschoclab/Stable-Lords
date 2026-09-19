@@ -50,21 +50,24 @@ export default tseslint.config(
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
       'jsdoc/check-tag-names': ['warn', { definedTags: ['vitest-environment'] }],
       'jsdoc/check-alignment': 'warn',
-    },
-  },
-  {
-    /* ARCHITECTURAL BOUNDARY: ENGINE */
-    files: ['src/engine/**/*.{ts,tsx}'],
-    rules: {
+      /* RNG POLICY: Math.random is banned repo-wide. Deterministic contexts use
+         SeededRNG/resolveRng from @/utils/random; non-deterministic variety uses
+         cryptoRandom/cryptoRandomInt from @/utils/cryptoRandom. */
       'no-restricted-properties': [
         'error',
         {
           object: 'Math',
           property: 'random',
           message:
-            'Do not use Math.random() in engine code. Use SeededRNG from @/utils/random or SeededRNGService from @/engine/core/rng/SeededRNGService.',
+            'Use SeededRNG from @/utils/random or cryptoRandom from @/utils/cryptoRandom — never Math.random.',
         },
       ],
+    },
+  },
+  {
+    /* ARCHITECTURAL BOUNDARY: ENGINE */
+    files: ['src/engine/**/*.{ts,tsx}'],
+    rules: {
       'no-restricted-imports': [
         'error',
         {

@@ -1,7 +1,7 @@
 import type { GameState, NewsletterItem, LedgerEntry } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 import { StateImpact } from '@/engine/impacts';
 import { type WarriorId, type InjuryId } from '@/types/shared.types';
@@ -27,7 +27,7 @@ export function runEventPass(
   nextWeek: number,
   rootRng?: IRNGService
 ): StateImpact {
-  const brawlRng = rootRng || new SeededRNGService(nextWeek * 999 + 1);
+  const brawlRng = resolveRng(rootRng, nextWeek * 999 + 1);
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];
   let treasuryDelta = 0;

@@ -1,6 +1,6 @@
 import type { GameState, Season } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, resolveRng } from '@/utils/random';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
 import { processHallOfFame, createYearlySnapshots } from '../core/hallOfFame';
@@ -173,7 +173,7 @@ function materializeFloorRecruit(
 export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
   const nextYear = nextWeek === 1 ? state.year + 1 : state.year;
-  const rng = rootRng || new SeededRNGService(state.week * 881 + 17);
+  const rng = resolveRng(rootRng, state.week * 881 + 17);
 
   // 1. Systemic Progression (Draft-heavy)
   const impact = processSystemicProgression(state, nextWeek, nextYear);

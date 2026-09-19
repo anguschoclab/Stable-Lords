@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled, rollWeighted } from '@/utils/random';
+import {
+  SeededRNG,
+  randomPick,
+  stringToSeed,
+  hashStr,
+  shuffled,
+  rollWeighted,
+  resolveRng,
+  entropyRng,
+} from '@/utils/random';
 
 describe('SeededRNG', () => {
   it('produces deterministic results for the same seed', () => {
@@ -290,6 +299,39 @@ describe('rollWeighted', () => {
         rngMethod.rollWeighted(weights);
       }
       expect(rollWeighted(weights, rngFree)).toBe(rngMethod.rollWeighted(weights));
+    }
+  });
+});
+
+describe('resolveRng', () => {
+  it('returns the provided rng instance unchanged', () => {
+    const rng = new SeededRNG(1);
+    expect(resolveRng(rng, 999)).toBe(rng);
+  });
+
+  it('produces the identical sequence to a SeededRNG built from the same seed', () => {
+    const resolved = resolveRng(undefined, 12345);
+    const direct = new SeededRNG(12345);
+    for (let i = 0; i < 50; i++) {
+      expect(resolved.next()).toBe(direct.next());
+    }
+  });
+});
+
+describe('entropyRng', () => {
+  it('returns a full IRNGService surface', () => {
+    const rng = entropyRng();
+    for (const m of ['next', 'pick', 'uuid', 'roll', 'shuffle', 'rollWeighted', 'chance'] as const) {
+      expect(typeof rng[m]).toBe('function');
+    }
+  });
+
+  it('next() returns values in [0, 1)', () => {
+    const rng = entropyRng();
+    for (let i = 0; i < 100; i++) {
+      const v = rng.next();
+      expect(v).toBeGreaterThanOrEqual(0);
+      expect(v).toBeLessThan(1);
     }
   });
 });

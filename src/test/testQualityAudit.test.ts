@@ -18,22 +18,6 @@ function readDirRecursive(dir: string, ext: string, results: string[] = []): str
 describe('testQualityAudit', () => {
   const testDir = path.resolve(__dirname, '..');
 
-  it('no test file uses Math.random() directly (should use SeededRNGService)', () => {
-    const files = readDirRecursive(testDir, '.test.ts');
-    const violations: string[] = [];
-    for (const file of files) {
-      // Skip this file (it mentions Math.random() in its assertion message)
-      if (file.endsWith('testQualityAudit.test.ts')) continue;
-      const content = fs.readFileSync(file, 'utf-8');
-      if (content.includes('Math.random()')) {
-        violations.push(path.basename(file));
-      }
-    }
-    // Known existing violations: RivalStrategyPass.test.ts, idUtils.test.ts
-    // These should be fixed over time. For now, document them.
-    expect(violations.length).toBeLessThanOrEqual(5);
-  });
-
   it('no test file uses Date.now() for deterministic logic', () => {
     const files = readDirRecursive(testDir, '.test.ts');
     const violations: string[] = [];

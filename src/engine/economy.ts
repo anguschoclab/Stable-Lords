@@ -20,7 +20,7 @@ import type { Trainer, WeatherType } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { LedgerEntryId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import {
   FAME_DIVIDEND,
   WARRIOR_UPKEEP_BASE,
@@ -242,7 +242,7 @@ export function computeEconomyImpact(input: StableEconomyInput, rng?: IRNGServic
   const breakdown = computeWeeklyBreakdown(input);
   const entries: LedgerEntry[] = [];
 
-  const rngService = rng || new SeededRNGService(input.week * 31);
+  const rngService = resolveRng(rng, input.week * 31);
 
   for (const i of breakdown.income) {
     entries.push({

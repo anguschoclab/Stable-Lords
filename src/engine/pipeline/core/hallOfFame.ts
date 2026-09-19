@@ -2,7 +2,7 @@ import { type GameState, type AnnualAward, type RivalStableData } from '@/types/
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId, type StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 /**
  * Process hall of fame awards for the completed year.
@@ -17,7 +17,7 @@ export function processHallOfFame(
   newWeek: number,
   rng?: IRNGService
 ): StateImpact {
-  const rngService = rng || new SeededRNGService(state.year * 777);
+  const rngService = resolveRng(rng, state.year * 777);
 
   // completedYear = the year that just finished.
   // On the transition tick (week=52→1): state.year is the completed year.

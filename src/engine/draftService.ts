@@ -1,6 +1,6 @@
 import { type RivalStableData, type PoolWarrior, type GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { processRecruitment } from './ai/workers/recruitmentWorker';
 import { computeMetaDrift } from './metaDrift';
 import { isActive } from '@/engine/warriorStatus';
@@ -18,7 +18,7 @@ export function aiDraftFromPool(
   seed?: number,
   rng?: IRNGService
 ): { updatedPool: PoolWarrior[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  const rngService = rng || new SeededRNGService(seed ?? week * 7919 + 101);
+  const rngService = resolveRng(rng, seed ?? week * 7919 + 101);
   const isMajorDraftWeek = week % 4 === 0;
 
   let currentPool = [...pool];

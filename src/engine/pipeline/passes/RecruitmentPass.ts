@@ -1,6 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { partialRefreshPool, generateRecruit } from '@/engine/recruitment';
 
@@ -9,7 +9,7 @@ import { partialRefreshPool, generateRecruit } from '@/engine/recruitment';
  * Handles the weekly refresh of the recruitment pool.
  */
 export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): StateImpact {
-  const rng = rootRng || new SeededRNGService(state.week * 701 + 13);
+  const rng = resolveRng(rootRng, state.week * 701 + 13);
 
   // 1. Refresh recruitment pool
   const usedNames = new Set<string>();

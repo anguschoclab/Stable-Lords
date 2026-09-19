@@ -10,7 +10,7 @@
 import type { Warrior, InjuryData, InjurySeverity } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 
 const INJURY_TABLE: Omit<InjuryData, 'id' | 'weeksRemaining'>[] = [
   // Minor (1-3 weeks)
@@ -127,9 +127,10 @@ export function generateInjury(
   seed?: number,
   rng?: IRNGService
 ): InjuryData | null {
-  const rngService =
-    rng ||
-    new SeededRNGService(seed ?? (outcome.post?.fatalExchangeIndex ?? 0) + side.charCodeAt(0));
+  const rngService = resolveRng(
+    rng,
+    seed ?? (outcome.post?.fatalExchangeIndex ?? 0) + side.charCodeAt(0)
+  );
   const wasHit = side === 'A' ? (outcome.post?.hitsD ?? 0) : (outcome.post?.hitsA ?? 0);
   const lost = outcome.winner !== side && outcome.winner !== null;
   const wasKilled =

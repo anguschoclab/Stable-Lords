@@ -10,7 +10,7 @@ import type { Season } from '@/types/shared.types';
 import { checkBudget } from './budgetWorker';
 import { logAgentAction } from '../agentCore';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
 import { processRecovery } from '@/engine/training/trainingGains';
 import { isActive } from '@/engine/warriorStatus';
@@ -40,7 +40,7 @@ export function processRoster(
   seed?: number,
   rng?: IRNGService
 ): RivalStableData {
-  const rngService = rng || new SeededRNGService(seed ?? currentWeek * 7919 + 101);
+  const rngService = resolveRng(rng, seed ?? currentWeek * 7919 + 101);
   let updatedRival = { ...rival };
   let seasonalGrowth: SeasonalGrowth[] = updatedRival.seasonalGrowth ?? [];
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';

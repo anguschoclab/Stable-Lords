@@ -4,7 +4,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { computeMetaDrift } from '../../metaDrift';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { META_RECRUIT_QUOTES } from '@/data/ownerData';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { generateAIRecruit } from './recruitGenerator';
 import { computeWarriorLiability } from '@/engine/warriorValue';
@@ -23,7 +23,7 @@ export function processAIRosterManagement(
   state: GameState,
   rng?: IRNGService
 ): { updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  const rngSnapshot = rng || new SeededRNGService(state.week * 7919 + 101);
+  const rngSnapshot = resolveRng(rng, state.week * 7919 + 101);
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory, 20);
   const gazetteItems: string[] = [];
   const rivalryMap = new Map(

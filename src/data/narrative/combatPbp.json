@@ -1096,8 +1096,7 @@
           "A confident pivot leaves {{attacker}} swinging at shadows.",
           "{{defender}} casually ducks the blow, already plotting their counter-attack.",
           "With a mocking smile, {{defender}} perfectly times their evasion.",
-          "{{defender}} smoothly sidesteps, letting the attack breeze harmlessly past.",
-          "With a bored sigh, {{defender}} leans out of the weapon's reach."
+          "{{defender}} smoothly sidesteps, letting the attack breeze harmlessly past."
         ],
         "theatrical": [
           "{{defender}} twirls like a dancer, letting the deadly strike pass through thin air where they stood a moment ago.",
@@ -1574,8 +1573,6 @@
           "With needless extravagance, {{defender}} stops the attack cold.",
           "{{defender}} catches the strike with a sweeping spin, sending a brilliant shower of sparks into the air.",
           "With a grand, sweeping motion, {{defender}} parries the blow and strikes a heroic pose for the roaring crowd.",
-          "The clash of weapons is deafening as {{defender}} executes a picture-perfect, dramatic block.",
-          "With a grandiose sweep of their weapon, {{defender}} turns a desperate parry into a stunning performance.",
           "{{defender}} blocks with a flamboyant arc, drawing a loud cheer from the bloodthirsty spectators.",
           "Flourishing their weapon, {{defender}} catches the strike in a dazzling theatrical parry.",
           "{{defender}} turns the block into a dance, executing a spinning theatrical parry.",
@@ -1653,9 +1650,6 @@
           "A violent, heavy block from {{defender}} rattles the attacker's bones.",
           "{{defender}} stops the strike completely, staring dead-eyed through the clash.",
           "Without a word, {{defender}} violently smashes the incoming attack aside.",
-          "With cold, lethal intent, {{defender}} intercepts the strike and immediately readies their lethal counter.",
-          "A bone-jarring block stops the attack dead, as {{defender}} glares murderously through the crossing blades.",
-          "The weapons clash with a dull, heavy clang; {{defender}} doesn't even bother to blink.",
           "With bone-jarring force, {{defender}} delivers a heavy, grim parry against {{attacker}}.",
           "{{defender}} simply absorbs the impact with a silent, grim parry.",
           "A cold, mechanical motion defines {{defender}}'s perfectly executed grim parry.",
@@ -1901,7 +1895,6 @@
           "{{defender}} arrogantly catches the blow, sending a lethal counter in return.",
           "With unwavering certainty, {{defender}} turns the defense into a deadly offense.",
           "{{defender}} yawns, lazily deflecting the attack before burying a perfect counterstrike.",
-          "{{defender}} practically invites the blow, parrying it to set up a devastating, arrogant riposte.",
           "With an infuriating smirk, {{defender}} redirects the force and effortlessly punctures {{attacker}}."
         ],
         "theatrical": [
@@ -2896,11 +2889,7 @@
         "The blow lands true, biting deep into flesh and bone.",
         "A brutal impact forces a ragged gasp from the wounded combatant.",
         "The strike finds a gap in the defense, delivering punishing force.",
-        "The {{weapon}} lands on {{defender}} with a sickening crunch, meeting its mark.",
-        "A devastating strike connects from {{attacker}}, the impact echoing through the arena.",
-        "The blow lands true, biting deep into {{defender}}'s flesh and bone.",
-        "A brutal impact forces a ragged gasp from {{defender}}.",
-        "The strike from {{attacker}} finds a gap in the defense, delivering punishing force."
+        "A brutal impact forces a ragged gasp from {{defender}}."
       ]
     },
     "executions": [

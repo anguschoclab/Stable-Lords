@@ -2,48 +2,123 @@
   "passives": {
     "AIMED BLOW": [
       "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "With clinical precision, {{attacker}} holds their strike until the exact moment of vulnerability.",
+      "{{attacker}} narrows their eyes, picking apart the defensive stance before committing to the attack.",
+      "A cold calculation flashes in {{attacker}}'s gaze as they line up a devastating blow.",
+      "{{attacker}} bides their time, letting the opponent's eagerness create a fatal gap.",
+      "Measuring the distance with a practiced eye, {{attacker}} readies a flawless strike.",
+      "{{attacker}} ignores the chaos of the melee, focusing entirely on a single, vital weak point.",
+      "With a predator's patience, {{attacker}} waits for the guard to drop a fraction of an inch.",
+      "{{attacker}} shifts their weight almost imperceptibly, perfectly aligning their next attack.",
+      "Breathing steadily, {{attacker}} targets a chink in the armor with terrifying focus."
     ],
     "BASHING ATTACK": [
       "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "With a brutal display of strength, {{attacker}} brings their weapon down in a crushing arc.",
+      "{{attacker}} throws their entire body weight behind a savage, staggering blow.",
+      "Ignoring subtlety, {{attacker}} attempts to simply smash through the opponent's guard.",
+      "A terrifying roar accompanies {{attacker}}'s heavy, bone-rattling assault.",
+      "{{attacker}} steps into the swing, turning momentum into pure, unadulterated blunt force.",
+      "The sheer kinetic energy of {{attacker}}'s swing threatens to shatter bone and steel alike.",
+      "{{attacker}} winds up for a devastating haymaker, prioritizing impact over precision.",
+      "With primal fury, {{attacker}} unleashes a heavy, concussive strike meant to break the spirit.",
+      "{{attacker}} brings the full mass of their weapon to bear in a vicious, sweeping smash."
     ],
     "LUNGING ATTACK": [
       "{{attacker}} overextends with a desperate lunge, trading balance for lethal reach.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "Throwing caution to the wind, {{attacker}} propels themselves forward in a sudden thrust.",
+      "{{attacker}} explodes off their back foot, closing the distance with terrifying speed.",
+      "With a sharp exhalation, {{attacker}} thrusts their weapon forward, striving to pierce the defense.",
+      "{{attacker}} risks their own guard to deliver a sudden, elongated strike.",
+      "A sudden burst of speed sends {{attacker}} rocketing forward in a high-stakes lunge.",
+      "{{attacker}} commits entirely to a forward drive, hoping to end the exchange in a single motion.",
+      "Stretching to their absolute limit, {{attacker}} attempts to strike before the opponent can react.",
+      "{{attacker}} bridges the gap in an instant with a long, sweeping offensive step.",
+      "With aggressive momentum, {{attacker}} launches a thrust that leaves them wide open."
     ],
     "PARRY-LUNGE": [
       "{{attacker}} catches the blade on their hilt, pivoting into a lightning-fast riposte lunge.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "A sharp clang of metal precedes {{attacker}}'s sudden, explosive counter-thrust.",
+      "{{attacker}} absorbs the impact of the strike, using the opponent's momentum to launch a deadly lunge.",
+      "With a fluid motion, {{attacker}} deflects the attack and immediately extends into a rapid thrust.",
+      "Turning defense into sudden offense, {{attacker}} parries and lunges in one continuous movement.",
+      "{{attacker}} barely stops the incoming blow before shooting forward like a coiled spring.",
+      "The parry opens a fleeting gap, and {{attacker}} capitalizes instantly with a deep lunge.",
+      "{{attacker}} deflects the weapon with a sharp twist, extending their reach for a fatal counter.",
+      "A calculated parry sets the stage for {{attacker}}'s vicious, immediate forward strike.",
+      "{{attacker}} effortlessly blocks the attack and surges forward, turning the tables in a heartbeat."
     ],
     "PARRY-RIPOSTE": [
       "{{attacker}} deflects the strike and immediately circles back with a precision counter-attack.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "With elegant timing, {{attacker}} turns aside the blow and snakes their weapon past the opponent's guard.",
+      "{{attacker}} lets the incoming strike slide harmlessly away, answering with a sudden, sharp riposte.",
+      "A masterful deflection leaves the opponent exposed to {{attacker}}'s immediate, stinging counter.",
+      "{{attacker}} parries with the flat of the blade, seamlessly transitioning into a deadly riposte.",
+      "The clash of weapons is quickly followed by {{attacker}}'s opportunistic counterstrike.",
+      "{{attacker}} creates an opening through a flawless block, punishing the aggression instantly.",
+      "With a flick of the wrist, {{attacker}} swats the attack aside and delivers a swift reprisal.",
+      "{{attacker}} uses the opponent's force against them, parrying and riposting in a single breath.",
+      "A deft parry unbalances the foe, and {{attacker}} strikes back with lethal efficiency."
     ],
     "PARRY-STRIKE": [
-      "{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike."
+      "{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike.",
+      "With a brutal block, {{attacker}} shatters the rhythm of the attack and delivers a punishing blow.",
+      "{{attacker}} parries forcefully, clearing the way for a devastating, heavy counter-swing.",
+      "A powerful deflection stops the attack cold, allowing {{attacker}} to unleash a savage strike.",
+      "{{attacker}} batters the incoming weapon away and steps in for a close, aggressive hit.",
+      "Using raw strength, {{attacker}} forces the block and immediately brings down a heavy strike.",
+      "{{attacker}} meets steel with steel, overwhelming the opponent before delivering a brutal counter.",
+      "A thunderous parry leaves the opponent staggering as {{attacker}} readies a crushing blow.",
+      "{{attacker}} aggressively blocks the strike, immediately transitioning into a fierce offensive maneuver.",
+      "With sheer power, {{attacker}} swats the attack aside and drives home a heavy, decisive strike."
     ],
     "SLASHING ATTACK": [
-      "{{attacker}} unleashes a wide, sweeping arc, forcing the opponent to retreat or be rent asunder."
+      "{{attacker}} unleashes a wide, sweeping arc, forcing the opponent to retreat or be rent asunder.",
+      "A deadly crescent of steel cuts through the air as {{attacker}} steps into a massive slash.",
+      "{{attacker}} swings their weapon in a brutal, horizontal arc meant to cleave through flesh and armor.",
+      "With a vicious snarl, {{attacker}} delivers a broad, sweeping strike across the opponent's guard.",
+      "{{attacker}} carves a path through the air with a powerful, sweeping slash.",
+      "A flurry of broad, arcing swings forces the opponent onto the defensive as {{attacker}} presses the advantage.",
+      "{{attacker}} puts their back into a sweeping cut, prioritizing area of effect over precision.",
+      "The weapon hums as {{attacker}} brings it around in a devastating, wide-angle slash.",
+      "{{attacker}} attempts to bisect the opponent with a terrible, sweeping horizontal blow.",
+      "A wide, aggressive swing from {{attacker}} threatens to sever anything in its path."
     ],
     "STRIKING ATTACK": [
-      "{{attacker}} steps into the guard, delivering a flurry of rapid, overwhelming strikes."
+      "{{attacker}} steps into the guard, delivering a flurry of rapid, overwhelming strikes.",
+      "With dizzying speed, {{attacker}} unleashes a barrage of short, sharp blows.",
+      "{{attacker}} gets inside the opponent's reach, pummeling them with quick, precise strikes.",
+      "A relentless series of rapid hits leaves the opponent reeling as {{attacker}} presses the assault.",
+      "{{attacker}} closes the distance, utilizing quick, successive strikes to break down the defense.",
+      "With a blur of motion, {{attacker}} rains down rapid, stinging blows upon the opponent.",
+      "{{attacker}} sacrifices power for speed, peppering the target with a multitude of swift strikes.",
+      "A staccato rhythm of rapid attacks echoes through the arena as {{attacker}} goes on the offensive.",
+      "{{attacker}} overwhelms the opponent's senses with a chaotic flurry of close-range strikes.",
+      "Quick, darting attacks from {{attacker}} force the opponent to frantically shore up their guard."
     ],
     "TOTAL PARRY": [
-      "{{attacker}} enters a state of absolute defense, their weapon becoming an impenetrable wall of steel."
+      "{{attacker}} enters a state of absolute defense, their weapon becoming an impenetrable wall of steel.",
+      "With unwavering focus, {{attacker}} dedicates themselves entirely to turning aside every incoming blow.",
+      "{{attacker}} weaves a defensive web, their weapon moving with dizzying speed to block all angles.",
+      "Falling into a deep defensive stance, {{attacker}} prepares to weather the coming storm.",
+      "{{attacker}} abandons all thought of offense, prioritizing absolute survival and flawless defense.",
+      "A masterclass in defensive technique unfolds as {{attacker}} parries multiple phantom strikes in anticipation.",
+      "{{attacker}} tightens their grip, their eyes darting rapidly to intercept any approaching threat.",
+      "With preternatural calm, {{attacker}} establishes a defensive perimeter that seems impossible to breach.",
+      "{{attacker}} matches the opponent's aggression with a perfect, impenetrable defensive posture.",
+      "Every muscle in {{attacker}}'s body is tensed for pure defense, ready to deflect the unblockable."
     ],
     "WALL OF STEEL": [
-      "{{attacker}} holds their ground with mountain-like stability, negating the opponent's momentum."
+      "{{attacker}} holds their ground with mountain-like stability, negating the opponent's momentum.",
+      "Like a breakwater against the tide, {{attacker}} plants their feet and prepares for impact.",
+      "{{attacker}} drops their center of gravity, becoming an immovable object in the face of the assault.",
+      "With a stoic expression, {{attacker}} solidifies their stance, daring the opponent to find a weakness.",
+      "{{attacker}} readies themselves, transforming their body and weapon into an unyielding fortress.",
+      "A deep breath centers {{attacker}} as they adopt an incredibly stable, unshakeable defensive posture.",
+      "{{attacker}} braces for impact, their stance radiating an aura of invulnerability.",
+      "The arena dust swirls around {{attacker}} as they establish a perfectly balanced, immovable guard.",
+      "{{attacker}} becomes the anchor in the storm, an unyielding presence against the enemy's fury.",
+      "With defiant stillness, {{attacker}} prepares to absorb whatever the opponent throws at them."
     ]
   }
 }

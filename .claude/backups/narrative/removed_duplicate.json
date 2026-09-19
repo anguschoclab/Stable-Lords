@@ -1,0 +1,7 @@
+{
+  "type": "duplicate_removal",
+  "file": "src/data/narrative/combatPbp.json",
+  "path": "pbp.defenses.parry.grim",
+  "removed_text": "With cold, lethal intent, {{defender}} intercepts the strike and immediately readies their lethal counter.",
+  "retained_text": "With cold, lethal intent, {{defender}} intercepts the strike and readies their counter."
+}

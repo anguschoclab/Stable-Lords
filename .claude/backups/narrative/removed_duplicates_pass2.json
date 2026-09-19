@@ -1,0 +1,57 @@
+[
+  {
+    "path": "fist.solid",
+    "removed_text": "{{attacker}} lands a heavy, bruising cross on {{defender}}'s {{bodyPart}}.",
+    "retained_text": "{{attacker}} lands a heavy cross squarely on {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "defenses.dodge.confident",
+    "removed_text": "With a bored sigh, {{defender}} leans out of the weapon's reach.",
+    "retained_text": "With a bored sigh, {{defender}} leans out of the weapon's path."
+  },
+  {
+    "path": "defenses.parry.theatrical",
+    "removed_text": "With a grandiose sweep of their weapon, {{defender}} turns a desperate parry into a stunning performance.",
+    "retained_text": "With a grandiose sweep of their weapon, {{defender}} turns the parry into a performance."
+  },
+  {
+    "path": "defenses.parry.theatrical",
+    "removed_text": "The clash of weapons is deafening as {{defender}} executes a picture-perfect, dramatic block.",
+    "retained_text": "The clash of weapons is loud and dramatic as {{defender}} executes a picture-perfect block."
+  },
+  {
+    "path": "defenses.parry.grim",
+    "removed_text": "The weapons clash with a dull, heavy clang; {{defender}} doesn't even bother to blink.",
+    "retained_text": "The weapons clash with a dull clang; {{defender}} doesn't even blink."
+  },
+  {
+    "path": "defenses.parry.grim",
+    "removed_text": "A bone-jarring block stops the attack dead, as {{defender}} glares murderously through the crossing blades.",
+    "retained_text": "A bone-jarring block stops the attack dead, as {{defender}} glares murderously."
+  },
+  {
+    "path": "defenses.riposte.confident",
+    "removed_text": "{{defender}} practically invites the blow, parrying it to set up a devastating, arrogant riposte.",
+    "retained_text": "{{defender}} practically invites the blow, parrying it to set up a flawless riposte."
+  },
+  {
+    "path": "hits.generic",
+    "removed_text": "The strike from {{attacker}} finds a gap in the defense, delivering punishing force.",
+    "retained_text": "The strike finds a gap in the defense, delivering punishing force."
+  },
+  {
+    "path": "hits.generic",
+    "removed_text": "The blow lands true, biting deep into {{defender}}'s flesh and bone.",
+    "retained_text": "The blow lands true, biting deep into flesh and bone."
+  },
+  {
+    "path": "hits.generic",
+    "removed_text": "A devastating strike connects from {{attacker}}, the impact echoing through the arena.",
+    "retained_text": "A devastating strike connects, the impact echoing through the arena."
+  },
+  {
+    "path": "hits.generic",
+    "removed_text": "The {{weapon}} lands on {{defender}} with a sickening crunch, meeting its mark.",
+    "retained_text": "The {{weapon}} lands with a sickening crunch, meeting its mark."
+  }
+]

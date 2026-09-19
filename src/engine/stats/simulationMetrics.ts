@@ -20,6 +20,10 @@ export interface SimPulse {
   multiFlawWarriors: number;
   classTraitInstances: number;
   signatureInstances: number;
+  // ─── All-time counters (set by the harness; survive truncation) ───
+  cumulativeBouts?: number;
+  cumulativeDeaths?: number;
+  cumulativeRetired?: number;
 }
 
 /**

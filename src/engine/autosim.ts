@@ -167,7 +167,9 @@ async function runSequentialAutosim(
     weekSummaries.push(extractWeekSummary(state, state.week));
     weeksSimmed++;
 
-    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth
+    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth.
+    // Note: deferredBoutLogs needs no flush here — headless bouts produce empty
+    // transcripts, so the queue stays empty for the whole run.
     if (weeksSimmed % 50 === 0) {
       state = truncateState(state);
     }
@@ -179,7 +181,7 @@ async function runSequentialAutosim(
     // 4. Stop conditions
     if (checkBankruptcy(state)) {
       return {
-        finalState: state,
+        finalState: truncateState(state),
         weeksSimmed,
         stopReason: 'bankrupt',
         stopDetail: 'Stable ran out of treasury',
@@ -187,6 +189,10 @@ async function runSequentialAutosim(
       };
     }
   }
+
+  // Final truncation so the returned state is bounded like batch mode's
+  // (advanceQuarter truncates internally at each quarter end).
+  state = truncateState(state);
 
   return {
     finalState: state,

@@ -4,6 +4,7 @@
  */
 import { describe, test, vi, beforeEach, expect } from 'vitest';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { setMockIdGenerator } from '@/utils/idUtils';
@@ -107,6 +108,11 @@ describe('Emergent behavior report', () => {
       });
 
       state = await advanceWeek(state);
+
+      // Non-headless weeks append a full transcript per bout to
+      // deferredBoutLogs — drain weekly so the 52-week loop stays bounded
+      // (the report never reads transcripts; same discipline as the harness).
+      drainDeferredBoutLogs(state);
 
       // keep player alive so the sim doesn't stall (auto-recruit on empty)
       if (state.roster.length === 0 && state.recruitPool.length > 0) {
@@ -214,5 +220,7 @@ describe('Emergent behavior report', () => {
     // Sometimes the sim stops slightly earlier if everyone goes bankrupt or logic diverges
     // It's acceptable for it to finish the loop, but state.week might not increment if it halts
     expect(state.week).toBeGreaterThan(0);
+    // Weekly drain kept the transcript queue empty
+    expect(state.deferredBoutLogs ?? []).toHaveLength(0);
   }, 600000);
 });

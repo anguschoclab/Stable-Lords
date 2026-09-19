@@ -67,3 +67,6 @@ electron/main.js
 
 # Electron build output
 out/
+
+# Script-generated archives (daily_oracle bout transcripts)
+archives/

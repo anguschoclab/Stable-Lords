@@ -84,4 +84,58 @@ describe('NF3: sequential autosim memory growth', () => {
       expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
     });
   });
+
+  it('returns a bounded finalState when weeksToSim < 50 (no periodic checkpoint fires)', () => {
+    const state = createFreshState('seq-final-trunc-test', '2025-01-01T00:00:00.000Z');
+    state.treasury = 100000;
+    // Oversized history already in state — the every-50-weeks checkpoint never
+    // fires on a 2-week run, so only the final truncateState can bound it.
+    state.arenaHistory = new Array(600).fill(null).map((_, i) => ({
+      id: `pre_bout_${i}`,
+      week: i + 1,
+      title: 'Alpha vs Beta',
+      warriorIdA: 'wA',
+      warriorIdD: 'wD',
+      winner: 'A',
+      by: 'KO',
+      styleA: 'X',
+      styleD: 'Y',
+      createdAt: '2025-01-01T00:00:00.000Z',
+    })) as any;
+    state.ledger = new Array(600).fill(null).map((_, i) => ({
+      week: i + 1,
+      type: 'income',
+      amount: 1,
+      description: `entry ${i}`,
+    })) as any;
+
+    return runAutosim(state, { weeksToSim: 2 }).then((result) => {
+      expect(result.weeksSimmed).toBe(2);
+      expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
+      expect(result.finalState.ledger!.length).toBeLessThanOrEqual(500);
+    });
+  });
+
+  it('returns a bounded finalState on the bankruptcy early-return', () => {
+    const state = createFreshState('seq-bankrupt-trunc-test', '2025-01-01T00:00:00.000Z');
+    state.arenaHistory = new Array(600).fill(null).map((_, i) => ({
+      id: `pre_bout_${i}`,
+      week: i + 1,
+      title: 'Alpha vs Beta',
+      warriorIdA: 'wA',
+      warriorIdD: 'wD',
+      winner: 'A',
+      by: 'KO',
+      styleA: 'X',
+      styleD: 'Y',
+      createdAt: '2025-01-01T00:00:00.000Z',
+    })) as any;
+    // Far below BANKRUPTCY_THRESHOLD (-500) — one week of income can't recover.
+    state.treasury = -100000;
+
+    return runAutosim(state, { weeksToSim: 10 }).then((result) => {
+      expect(result.stopReason).toBe('bankrupt');
+      expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
+    });
+  });
 });

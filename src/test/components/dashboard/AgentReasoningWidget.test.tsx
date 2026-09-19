@@ -86,4 +86,40 @@ describe('AgentReasoningWidget (H.1)', () => {
     expect(screen.getByText(/Poached Warrior X/i)).toBeInTheDocument();
     expect(screen.getByTestId('cause-chip-e1')).toHaveTextContent(/wealth/i);
   });
+
+  it('falls back to Survival when no intent is recorded', () => {
+    const rival = makeRival({
+      agentMemory: {
+        lastTreasury: 0,
+        burnRate: 0,
+        metaAwareness: {},
+        knownRivals: [],
+        opponentDossiers: {},
+      },
+    });
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(screen.getByText('Survival')).toBeInTheDocument();
+  });
+
+  it('resolves the targeted stable to its name, not its internal id', () => {
+    const target = makeRival({ id: 'stable_target' as StableId });
+    target.owner = { ...target.owner, stableName: 'Crimson Oath' };
+    mockState.rivals = [target];
+    const rival = makeRival({
+      strategy: {
+        intent: 'VENDETTA',
+        targetStableId: 'stable_target' as StableId,
+        planWeeksRemaining: 3,
+      },
+    });
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(screen.getByText(/Crimson Oath/)).toBeInTheDocument();
+    expect(screen.queryByText(/stable_target/)).not.toBeInTheDocument();
+  });
+
+  it('does not fabricate a confidence score', () => {
+    render(<AgentReasoningWidget rival={makeRival()} />);
+    expect(screen.queryByText(/confidence/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/94\.8/)).not.toBeInTheDocument();
+  });
 });

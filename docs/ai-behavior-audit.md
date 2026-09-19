@@ -120,6 +120,15 @@ inside `weekPipelineService.ts`:
   invariants + harness-level determinism + `RivalStrategyPass` perf gate
   (~43–73ms populated-world tick, perception built once).
 
+### Perf baseline (acceptance gate)
+
+`RivalStrategyPass` on a fully populated world (`populateInitialWorld`, seed
+4242, headless): **43–73ms per tick** measured at implementation time — that
+*is* the Stage-A baseline (the pass did not exist in comparable form before
+this work; prior ticks performed strictly less work). The slow-suite gate at
+`src/test/perf/rivalStrategyPass.perf.slow.test.ts` asserts <500ms (~7×
+headroom) plus `buildPerceptionSnapshot` called exactly once per tick.
+
 ### Bugs found & fixed during implementation
 
 - `intentStillApplies` made CONSOLIDATION an absorbing state — hysteresis now

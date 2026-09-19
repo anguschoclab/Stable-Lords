@@ -32,9 +32,11 @@ describe('RivalStrategyPass perf gate (I.2)', () => {
 
     // B.1 contract: one shared perception context per tick, not per-rival scans.
     expect(perceptionSpy).toHaveBeenCalledTimes(1);
-    // Perf bound — measured ~Xms at implementation time; 3s ceiling guards
-    // against reintroducing per-rival world scans or clone churn (G17).
-    expect(elapsed).toBeLessThan(3000);
+    // Perf bound — measured 43–73ms on dev hardware at implementation time
+    // (recorded in docs/ai-behavior-audit.md). 500ms leaves ~7× CI headroom
+    // while still catching a reintroduced per-rival world scan or the
+    // structuredClone-per-rival churn removed in G17.
+    expect(elapsed).toBeLessThan(500);
     console.log(`[perf] RivalStrategyPass populated-world tick: ${elapsed.toFixed(1)}ms`);
   }, 60000);
 });

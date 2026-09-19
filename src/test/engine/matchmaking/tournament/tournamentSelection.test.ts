@@ -41,7 +41,7 @@ vi.mock('@/engine/tokens/patronTokenService', () => ({
   },
 }));
 
-vi.mock('@/engine/matchmaking/tournament/tournamentStateMutator', () => ({
+vi.mock('@/engine/core/warriorLookup', () => ({
   findWarriorById: vi.fn((state: GameState, id: string) => {
     for (const w of state.roster) if (w.id === id) return w;
     for (const r of state.rivals || []) for (const w of r.roster) if (w.id === id) return w;

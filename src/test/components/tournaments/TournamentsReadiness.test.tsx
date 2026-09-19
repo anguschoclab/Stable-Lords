@@ -87,6 +87,9 @@ vi.mock('@/components/tournaments/TournamentSchedule', () => ({
 
 vi.mock('@/components/tournaments/TournamentBracket', () => ({
   TournamentBracket: () => <div data-testid="tournament-bracket">Bracket</div>,
+  TournamentProgress: () => <div data-testid="tournament-progress">Progress</div>,
+  ChampionDisplay: () => <div data-testid="champion-display">Champion</div>,
+  BronzeHighlight: () => <div data-testid="bronze-highlight">Bronze</div>,
 }));
 
 vi.mock('@/lib/AudioManager', () => ({

@@ -4,7 +4,6 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { hashStr, resolveRng } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment';
 import { StateImpact } from '@/engine/impacts';
-import { isActive } from '@/engine/warriorStatus';
 import { filterActive } from '@/utils/roster';
 
 interface TierStats {

@@ -12,7 +12,7 @@ import { isActive } from '@/engine/warriorStatus';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import { type SubNavTab } from '@/components/layout/SubNav';
 import { Separator } from '@/components/ui/separator';
-import { Trophy, Users } from 'lucide-react';
+import { Trophy, Users, Medal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Surface } from '@/components/ui/Surface';
@@ -189,6 +189,22 @@ export default function WarriorDetail() {
               </div>
               <ImperialRing size="md" variant="silver">
                 <Users className="h-5 w-5 text-arena-pop" />
+              </ImperialRing>
+            </div>
+
+            <Separator className="bg-white/5" />
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+                  Season Points
+                </span>
+                <span className="font-display font-black text-3xl text-foreground leading-none tabular-nums">
+                  {displayWarrior.seasonPoints ?? 0}
+                </span>
+              </div>
+              <ImperialRing size="md" variant="bronze">
+                <Medal className="h-5 w-5 text-arena-fame" />
               </ImperialRing>
             </div>
           </Surface>

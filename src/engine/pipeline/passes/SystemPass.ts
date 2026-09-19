@@ -75,12 +75,27 @@ function processSeasonalChurnAndPhilosophy(
     );
     const narrGazette = generateOwnerNarratives(state, nextSeason, rngContext.getRNG());
 
+    // Season points race winner — warriors still hold the completed season's
+    // points here; the reset happens post-passes in weekPipelineService.
+    let pointsLeader: Warrior | undefined;
+    const consider = (w: Warrior) => {
+      if ((w.seasonPoints ?? 0) > (pointsLeader?.seasonPoints ?? 0)) pointsLeader = w;
+    };
+    state.roster.forEach(consider);
+    state.rivals.forEach((r) => r.roster.forEach(consider));
+    const pointsNews =
+      pointsLeader && (pointsLeader.seasonPoints ?? 0) > 0
+        ? [
+            `🏅 POINTS RACE: ${pointsLeader.name} tops the ${prevSeason} standings with ${pointsLeader.seasonPoints} season points.`,
+          ]
+        : [];
+
     impact.rivalsUpdates = new Map();
     philRivals.forEach((r) => {
       if (impact.rivalsUpdates) impact.rivalsUpdates.set(r.id, r);
     });
 
-    const combinedNews = [...news, ...gazetteItems, ...narrGazette];
+    const combinedNews = [...news, ...gazetteItems, ...narrGazette, ...pointsNews];
     if (combinedNews.length > 0) {
       const existingItems = impact.newsletterItems || [];
       impact.newsletterItems = [

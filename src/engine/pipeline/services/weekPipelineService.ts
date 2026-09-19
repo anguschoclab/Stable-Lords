@@ -255,12 +255,16 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
 
   if (state.season !== oldState.season) {
     state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
+    // Season points race resets at the season boundary for every warrior.
+    state.roster = state.roster.map((w) =>
+      w.seasonPoints ? { ...w, seasonPoints: 0 } : w
+    );
     if (state.rivals) {
-      state.rivals = state.rivals.map((r) =>
-        r.seasonalGrowth
-          ? { ...r, seasonalGrowth: r.seasonalGrowth.filter((sg) => sg.season === state.season) }
-          : r
-      );
+      state.rivals = state.rivals.map((r) => ({
+        ...r,
+        seasonalGrowth: r.seasonalGrowth?.filter((sg) => sg.season === state.season),
+        roster: r.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w)),
+      }));
     }
   }
 

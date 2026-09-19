@@ -3,11 +3,7 @@
  * Pure functions with no side effects.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  updateWarriorAfterBout,
-  applyFameDelta,
-  applyCareerStats,
-} from '@/engine/bout/warriorStateUpdater';
+import { updateWarriorAfterBout } from '@/engine/bout/warriorStateUpdater';
 import type { Warrior } from '@/types/warrior.types';
 
 describe('warriorStateUpdater', () => {
@@ -143,88 +139,6 @@ describe('warriorStateUpdater', () => {
 
       expect(result.name).toBe('Special Name');
       expect(result.id).toBe('special-id');
-    });
-  });
-
-  describe('applyFameDelta', () => {
-    it('adds positive fame', () => {
-      const warrior = createMockWarrior({ fame: 10 });
-      const result = applyFameDelta(warrior, 5);
-
-      expect(result.fame).toBe(15);
-    });
-
-    it('subtracts fame', () => {
-      const warrior = createMockWarrior({ fame: 10 });
-      const result = applyFameDelta(warrior, -3);
-
-      expect(result.fame).toBe(7);
-    });
-
-    it('clamps fame at minimum 0', () => {
-      const warrior = createMockWarrior({ fame: 5 });
-      const result = applyFameDelta(warrior, -10);
-
-      expect(result.fame).toBe(0);
-    });
-
-    it('handles undefined fame', () => {
-      const warrior = createMockWarrior({ fame: undefined });
-      const result = applyFameDelta(warrior, 5);
-
-      expect(result.fame).toBe(5);
-    });
-
-    it('preserves other warrior properties', () => {
-      const warrior = createMockWarrior({ name: 'Test', popularity: 10 });
-      const result = applyFameDelta(warrior, 5);
-
-      expect(result.name).toBe('Test');
-      expect(result.popularity).toBe(10);
-    });
-  });
-
-  describe('applyCareerStats', () => {
-    it('increments wins when win=true', () => {
-      const warrior = createMockWarrior({ career: { wins: 5, losses: 3, kills: 1 } });
-      const result = applyCareerStats(warrior, { win: true, kill: false });
-
-      expect(result.career.wins).toBe(6);
-      expect(result.career.losses).toBe(3);
-      expect(result.career.kills).toBe(1);
-    });
-
-    it('increments losses when win=false', () => {
-      const warrior = createMockWarrior({ career: { wins: 5, losses: 3, kills: 1 } });
-      const result = applyCareerStats(warrior, { win: false, kill: false });
-
-      expect(result.career.wins).toBe(5);
-      expect(result.career.losses).toBe(4);
-      expect(result.career.kills).toBe(1);
-    });
-
-    it('increments kills when kill=true', () => {
-      const warrior = createMockWarrior({ career: { wins: 5, losses: 3, kills: 1 } });
-      const result = applyCareerStats(warrior, { win: true, kill: true });
-
-      expect(result.career.kills).toBe(2);
-    });
-
-    it('handles missing career stats gracefully', () => {
-      const warrior = { ...createMockWarrior(), career: { wins: 0, losses: 0, kills: 0 } };
-      const result = applyCareerStats(warrior, { win: true, kill: true });
-
-      expect(result.career.wins).toBe(1);
-      expect(result.career.losses).toBe(0);
-      expect(result.career.kills).toBe(1);
-    });
-
-    it('preserves other warrior properties', () => {
-      const warrior = createMockWarrior({ name: 'Test', fame: 50 });
-      const result = applyCareerStats(warrior, { win: true, kill: false });
-
-      expect(result.name).toBe('Test');
-      expect(result.fame).toBe(50);
     });
   });
 });

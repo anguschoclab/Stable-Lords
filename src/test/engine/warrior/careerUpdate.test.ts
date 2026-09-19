@@ -401,6 +401,33 @@ describe('careerUpdate', () => {
     });
   });
 
+  describe('seasonPoints', () => {
+    it('should accrue +2 season points for a regular win', () => {
+      const warrior = createTestWarrior();
+      const updated = updateWarriorFromBoutOutcome(warrior, true, 'A', false, false);
+      expect(updated.seasonPoints).toBe(2);
+    });
+
+    it('should accrue +5 season points for a kill win', () => {
+      const warrior = createTestWarrior();
+      const updated = updateWarriorFromBoutOutcome(warrior, true, 'A', true, false);
+      expect(updated.seasonPoints).toBe(5);
+    });
+
+    it('should accrue 0 season points for a loss', () => {
+      const warrior = createTestWarrior();
+      const updated = updateWarriorFromBoutOutcome(warrior, true, 'D', false, false);
+      expect(updated.seasonPoints ?? 0).toBe(0);
+    });
+
+    it('should accumulate across bouts', () => {
+      let warrior = createTestWarrior();
+      warrior = updateWarriorFromBoutOutcome(warrior, true, 'A', false, false);
+      warrior = updateWarriorFromBoutOutcome(warrior, true, 'A', true, false);
+      expect(warrior.seasonPoints).toBe(7); // 2 + 5
+    });
+  });
+
   describe('tournament week fatigue exemption integration', () => {
     it('should simulate tournament week with multiple bouts - fatigue should not accumulate', () => {
       let warrior = createTestWarrior(10);

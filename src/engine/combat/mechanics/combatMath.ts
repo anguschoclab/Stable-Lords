@@ -6,15 +6,6 @@ import { clamp } from '@/utils/math';
  */
 
 /**
- * Pick text.
- */
-export function pickText(rng: () => number, texts: string[]): string {
-  if (texts.length === 0) return '';
-  const index = Math.floor(rng() * texts.length);
-  return texts[index] ?? '';
-}
-
-/**
  * Skill check.
  */
 export function skillCheck(rng: () => number, skill: number, modifier: number = 0): boolean {

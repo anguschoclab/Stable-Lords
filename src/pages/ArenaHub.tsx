@@ -30,7 +30,6 @@ import {
   Star,
   Skull,
   Eye,
-  TrendingUp,
   Activity,
   Shield,
   BarChart3,
@@ -372,18 +371,18 @@ export default function ArenaHub() {
       <ArenaLeaderboard />
 
       {/* Arena Status Strip */}
-      <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 opacity-20 px-6 border-t border-white/5 mt-12 grayscale hover:grayscale-0 transition-all duration-700">
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <Skull className="h-3.5 w-3.5 text-destructive" /> Codex: V1.4
+      <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 px-6 border-t border-white/5 mt-12 transition-all duration-700">
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
+          <Swords className="h-3.5 w-3.5 text-primary" /> {gameState.season} · Wk {gameState.week}
         </div>
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <TrendingUp className="h-3.5 w-3.5 text-primary" /> Meta: Live
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
+          <Shield className="h-3.5 w-3.5 text-accent" /> {roster.filter((w) => isActive(w)).length} Active Warriors
         </div>
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <Star className="h-3.5 w-3.5 text-arena-gold" /> Fame: Active
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
+          <Star className="h-3.5 w-3.5 text-arena-gold" /> {gameState.rivals.length} Rival Stables
         </div>
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <Shield className="h-3.5 w-3.5 text-accent" /> Roster: Sealed
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
+          <Skull className="h-3.5 w-3.5 text-destructive" /> {lifetimeKills} Career Kills
         </div>
       </div>
 

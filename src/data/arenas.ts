@@ -1142,6 +1142,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
+  {
+    id: 'sundered_coliseum_the_weeping_statue',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Weeping Statue',
+    narrative:
+      'A massive iron statue of the first champion that reportedly bleeds rust whenever a match ends in a fatal decapitation.',
+  },
+  {
+    id: 'narrow_bridge_the_blind_shove',
+    arenaId: 'narrow_bridge',
+    type: 'famous_death',
+    title: 'The Blind Shove',
+    narrative:
+      'A blinded fighter, relying entirely on the vibrations of the bridge, anticipated a charge and sidestepped perfectly, sending a massive warlord plummeting into the abyss.',
+  },
+  {
+    id: 'bloodsands_arena_the_crimson_tide',
+    arenaId: 'bloodsands_arena',
+    type: 'historical_battle',
+    title: 'The Crimson Tide',
+    narrative:
+      'A grueling three-day tournament where so much blood was spilled that the sands refused to absorb it, leaving fighters to battle ankle-deep in crimson muck.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

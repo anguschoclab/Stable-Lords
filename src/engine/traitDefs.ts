@@ -94,6 +94,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  abyssal_survivor: {
+    id: 'abyssal_survivor',
+    name: 'Abyssal Survivor',
+    description: 'Survived a fall that should have killed them. Fights with desperate ferocity when cornered.',
+    effect: { attModLowHp: 2, defModLate: -1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.3,
+  },
+  rust_blooded: {
+    id: 'rust_blooded',
+    name: 'Rust Blooded',
+    description: 'Accustomed to fighting amidst industrial decay. Immune to minor scrapes and exhaustion.',
+    effect: { enduranceMult: 0.90, defMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

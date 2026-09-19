@@ -4,6 +4,13 @@
  */
 
 export const ORIGINS: string[] = [
+  "Abandoned in the pitch-black oubliettes of the Silent Keep",
+  "Raised in the soot-choked rafters of the Grand Foundry",
+  "Found shivering amongst the bones in the Kingswood Ossuary",
+  "Traded to the flesh-peddlers of the Red Lantern District for a vial of dream-dust",
+  "Survived the great culling of the Hollow Wards by hiding inside a hollowed-out gargoyle",
+  "Raised by the blind seers of the Whispering Sands",
+  "Abandoned at the blood-stained altars of the Crimson Brotherhood",
   "Abandoned at the rusted gates of the Blackwood Workhouse",
   "Survived the chilling cullings of the Whispering Vaults",
   "Raised amidst the deafening roar of the Cinderstone Forges",
@@ -19,15 +26,12 @@ export const ORIGINS: string[] = [
   "Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings",
   "Survived the brutal winters huddled in the exhaust vents of the Grand Forge",
   "Raised as a nameless thrall in the fighting pits of the Undercity",
-  "Raised in the lightless cellars of the Harrow-Home for Foundlings",
   "Abandoned beneath the crumbling arches of the Weeping Aqueduct",
   "Found swaddled in blood-stained rags at the gates of the Silent Order",
-  "Survived the brutal starvation of the Rat-Catcher Guilds",
   "Sold to the under-barons of the Scab District for a handful of copper",
   "Raised by the feral street-packs of the Warrens",
   "Raised in the haunted dormitories of the Blackbriar Orphanage",
   "Found shivering in the crypts of the Old Abbey",
-  "Survived the cruel discipline of the Iron Spire Orphanage",
   "Sold to the fighting pits by the matrons of the Bleak House",
   "Abandoned in the haunted shadows of the Whispering Woods",
   "Raised by the grim grave-keepers of the Obsidian Cemetery",
@@ -283,9 +287,12 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  "learned to move entirely without sound after spending weeks hiding from the debt collectors",
+  "developed a terrifying pain tolerance from participating in illegal bare-knuckle pit fights as a child",
+  "mastered the art of reading micro-expressions from surviving the brutal politics of the beggar king's court",
+  "grew unusually strong from hauling bodies out of the plague wards for the morticians",
   "learned to gauge distance by dodging the overseer",
   "memorized the anatomy of beasts while working the charnel pits",
-  "developed an iron grip from clinging to the underside of merchant carts",
   "used to meticulously trace the structural flaws in stone walls",
   "slept soundly only when the city",
   "was known for carving the names of their enemies into their own flesh",
@@ -312,7 +319,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   "learned to sleep with one eye open after surviving the orphanage riots",
   "was known for an unnerving, silent stare that made the matrons flinch",
   "would sit completely still for hours watching the fighting pit from the rafters",
-  "learned to predict a strike by watching the tension in a bully’s shoulders",
   "was infamous for never crying out, no matter how severe the punishment",
   "would map out the blind spots of the orphanage guards with obsessive precision",
   "would catch and study the weak points of venomous centipedes",
@@ -438,8 +444,10 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
-  "discovering that a rusted spoon could be sharpened into a deadly shiv",
-  "surviving a night in the dog-cages by out-snarling the hounds",
+  "until they finally snapped and drove a rusty iron spike through the leg of their abusive taskmaster",
+  "realizing that in a city of stone and ash, only the edge of a blade could carve a future",
+  "waiting for the day they could wash the stench of the slums off with the blood of champions",
+  "knowing that their destiny was to stand over the broken bodies of those who once looked down on them",
   "realizing that mercy in the Undercity was just another word for weakness",
   "until they garroted a corrupt slaver with a stolen rosary",
   "until they drowned a corrupt overseer in a vat of boiling lye",

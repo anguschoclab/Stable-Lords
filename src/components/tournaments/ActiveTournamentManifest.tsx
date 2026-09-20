@@ -38,21 +38,44 @@ export function ActiveTournamentManifest({
 }: ActiveTournamentManifestProps) {
   const bracket = tournament.bracket;
   const totalMatches = bracket.length;
-  const completedMatches = bracket.filter((b) => b.winner !== undefined).length;
+
+  let completedMatches = 0;
+  let maxRound = 0;
+  let minIncompleteRound = Infinity;
+
+  for (let i = 0; i < totalMatches; i++) {
+    const b = bracket[i];
+    if (b.winner !== undefined) {
+      completedMatches++;
+    } else if (b.round < minIncompleteRound) {
+      minIncompleteRound = b.round;
+    }
+    if (b.round > maxRound) {
+      maxRound = b.round;
+    }
+  }
+
   const isComplete = totalMatches > 0 && completedMatches === totalMatches;
-  const allRounds = [...new Set(bracket.map((b) => b.round))];
-  const maxRound = allRounds.length > 0 ? Math.max(...allRounds) : 0;
+  const totalRounds = maxRound;
   const currentRound = isComplete
     ? maxRound
-    : Math.min(...bracket.filter((b) => b.winner === undefined).map((b) => b.round));
+    : minIncompleteRound === Infinity
+      ? 0
+      : minIncompleteRound;
 
   const participantName = (id: string | undefined) =>
     tournament.participants?.find((w) => w.id === id)?.name ?? 'Unknown';
 
-  const championshipBout = bracket.find((b) => b.round === maxRound && b.matchIndex === 0);
-  const bronzeBout =
-    bracket.find((b) => b.matchIndex === 1 && (b.round === maxRound || b.round === maxRound - 1)) ??
-    undefined;
+  let championshipBout;
+  let bronzeBout;
+  for (let i = 0; i < totalMatches; i++) {
+    const b = bracket[i];
+    if (b.round === maxRound && b.matchIndex === 0) {
+      championshipBout = b;
+    } else if (b.matchIndex === 1 && (b.round === maxRound || b.round === maxRound - 1)) {
+      bronzeBout = b;
+    }
+  }
   const championId =
     isComplete && championshipBout?.winner
       ? championshipBout.winner === 'A'
@@ -101,7 +124,7 @@ export function ActiveTournamentManifest({
           <div className="px-8 pt-8">
             <TournamentProgress
               currentRound={currentRound}
-              totalRounds={allRounds.length}
+              totalRounds={totalRounds}
               completedMatches={completedMatches}
               totalMatches={totalMatches}
             />

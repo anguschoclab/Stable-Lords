@@ -27,6 +27,7 @@ import {
   pickExposureFlaw,
 } from '@/engine/training/trainingGains/traitCapacity';
 import { rollTraitTraining, TRAIT_CAP } from '@/engine/training/trainingGains/traitTraining';
+import { assessBurnRisks } from '@/engine/training/burnAnalysis';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import type { Trainer } from '@/types/shared.types';
 import { isActive } from '@/engine/warriorStatus';
@@ -60,15 +61,18 @@ export const QUALIFIED_DEV_APPETITE = 0.5;
  */
 export function selectTrainingFocus(
   w: Warrior,
-  season: Season | undefined
+  season: Season | undefined,
+  exclude?: ReadonlySet<keyof Attributes>
 ): keyof Attributes | undefined {
-  const trainableKeys = ATTRIBUTE_KEYS.filter((k) => k !== 'SZ') as (keyof Attributes)[];
+  const trainableKeys = ATTRIBUTE_KEYS.filter(
+    (k) => k !== 'SZ' && !exclude?.has(k)
+  ) as (keyof Attributes)[];
 
   let chosen: keyof Attributes | undefined;
   if (season === 'Spring') chosen = 'CN';
   else if (season === 'Summer') chosen = 'ST';
 
-  if (!chosen || w.attributes[chosen] >= ATTRIBUTE_MAX) {
+  if (!chosen || w.attributes[chosen] >= ATTRIBUTE_MAX || exclude?.has(chosen)) {
     if (trainableKeys.length > 0) {
       // ⚡ Bolt Optimization: Replace .reduce() with a for loop to avoid iterator overhead in hot loop
       chosen = trainableKeys[0];
@@ -132,7 +136,14 @@ export function performAITraining(
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + w.attributes[k], 0);
   if (total >= TOTAL_CAP) return { warrior: w, seasonalGrowth };
 
-  const chosen = selectTrainingFocus(w, season);
+  // Burn protection: attributes already at their potential ceiling are a wasted
+  // week — exclude them so the focus lands on a stat that can still grow.
+  const burned = new Set(
+    assessBurnRisks(w, stable.trainers ?? [])
+      .filter((risk) => risk.severity === 'high')
+      .map((risk) => risk.attribute)
+  );
+  const chosen = selectTrainingFocus(w, season, burned);
   if (!chosen) return { warrior: w, seasonalGrowth };
 
   const { warrior, seasonalGrowth: nextGrowth } = executeTrainingAttempt(

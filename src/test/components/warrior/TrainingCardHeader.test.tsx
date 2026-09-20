@@ -89,4 +89,20 @@ describe('TrainingCardHeader', () => {
     const { container } = renderHeader(makeWarrior(), 77);
     expect(container.textContent).toContain('77');
   });
+
+  it('renders a trainability score derived from real gain chances', () => {
+    // A warrior with all attrs at 10 and no potential caps has positive
+    // trainability; a fully-capped warrior shows 0%.
+    const { container } = renderHeader(makeWarrior(), 70);
+    expect(container.textContent).toMatch(/Trainability/i);
+    expect(container.textContent).toMatch(/\d+%/);
+  });
+
+  it('shows 0% trainability when every attribute is at its potential ceiling', () => {
+    const capped = makeWarrior({
+      potential: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    });
+    const { container } = renderHeader(capped, 70);
+    expect(container.textContent).toContain('0%');
+  });
 });

@@ -45,7 +45,7 @@ export function WarriorTrainingCard({
 
   return (
     <Surface variant="glass" className="overflow-hidden flex flex-col group h-full">
-      <TrainingCardHeader warrior={warrior} total={total} hasInjury={hasInjury} />
+      <TrainingCardHeader warrior={warrior} total={total} hasInjury={hasInjury} trainers={trainers} />
 
       <div className="p-4 flex-1 space-y-4">
         {hasInjury && !isTraining && (

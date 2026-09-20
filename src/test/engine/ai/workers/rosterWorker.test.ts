@@ -4,7 +4,21 @@
  */
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { processRoster, selectTrainingFocus } from '@/engine/ai/workers/rosterWorker';
+import { performAITraining } from '@/engine/ai/workers/rosterWorkerTraining';
 import { FLAW_EXPOSURE_CHANCE } from '@/engine/ai/workers/rosterWorker';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
+
+// RNG that always passes the AI_TRAINING_EFFECTIVENESS gate (next() → 0 < 0.8)
+// and returns no training injury — so the chosen focus is deterministic.
+const alwaysTrainRng = {
+  next: () => 0,
+  roll: (min: number) => min,
+  chance: () => true,
+  pick: <T,>(arr: T[]) => arr[0] as T,
+  shuffle: <T,>(arr: T[]) => arr,
+  uuid: () => 'test-uuid',
+  rollWeighted: <T,>(entries: readonly { item: T; weight: number }[]) => entries[0]?.item as T,
+} as IRNGService;
 import type { RivalStableData } from '@/types/state.types';
 import type { Warrior, Attributes } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
@@ -116,6 +130,31 @@ describe('selectTrainingFocus', () => {
     const w = makeWarrior('w1', { ST: 15, CN: 14, SZ: 3, WT: 14, WL: 13, SP: 16, DF: 12 });
     const result = selectTrainingFocus(w, 'Fall');
     expect(result).not.toBe('SZ');
+  });
+
+  it('skips attributes already at their potential ceiling (burn risk)', () => {
+    // ST is the lowest attr but its potential is already maxed — training it
+    // is a wasted week. The focus must fall to the next-lowest trainable.
+    const w = makeWarrior(
+      'w1',
+      { ST: 11, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 15 },
+      { potential: { ST: 11 } as Warrior['potential'] }
+    );
+    const stable = makeRivalStable({ roster: [w] });
+    const { chosen } = performAITraining(w, stable, 'Fall', [], alwaysTrainRng);
+    expect(chosen).toBe('CN');
+  });
+
+  it('skips a seasonal pick that is at its potential ceiling', () => {
+    const w = makeWarrior(
+      'w1',
+      { ST: 15, CN: 11, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 12 },
+      { potential: { CN: 11 } as Warrior['potential'] }
+    );
+    const stable = makeRivalStable({ roster: [w] });
+    // Spring → CN, but CN is capped → fall back to lowest non-capped (DF=12)
+    const { chosen } = performAITraining(w, stable, 'Spring', [], alwaysTrainRng);
+    expect(chosen).toBe('DF');
   });
 });
 

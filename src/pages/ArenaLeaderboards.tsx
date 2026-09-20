@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { getAllArenas, getArenaLore } from '@/data/arenas';
+import { getPackArenaLore } from '@/lib/contentPacks';
 import {
   calculateArenaLeaderboard,
   type ArenaLeaderboardData,
@@ -151,12 +152,13 @@ export default function ArenaLeaderboards() {
   const arenas = useMemo(() => getAllArenas(), []);
   const [selectedArenaId, setSelectedArenaId] = useState<string>(arenas[0]?.id ?? '');
 
-  const { roster, rivals, player, arenaHistory } = useGameStore(
+  const { roster, rivals, player, arenaHistory, contentPacks } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       rivals: s.rivals,
       player: s.player,
       arenaHistory: s.arenaHistory,
+      contentPacks: s.contentPacks,
     }))
   );
 
@@ -173,7 +175,10 @@ export default function ArenaLeaderboards() {
   const sizeProfile = currentArena ? ARENA_SIZE_PROFILES[currentArena.size] : null;
 
   const recentBouts = getFightsForArena(arenaHistory, selectedArenaId).slice(-6).reverse();
-  const arenaLore = getArenaLore(selectedArenaId);
+  const arenaLore = useMemo(
+    () => [...getArenaLore(selectedArenaId), ...getPackArenaLore(contentPacks, selectedArenaId)],
+    [selectedArenaId, contentPacks]
+  );
 
   return (
     <PageFrame>

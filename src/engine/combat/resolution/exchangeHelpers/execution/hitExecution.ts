@@ -335,7 +335,7 @@ function checkKillWindow(
       specKillBonus + attackerTraitKill,
       crowdKillBonus
     );
-    if (rng() < killThreshold) {
+    if (rng() < killThreshold * (ctx?.deathRateMult ?? 1)) {
       defender.hp = 0;
       didKill = true;
       if (attacker.consecutiveHits >= CRITICAL_CHAIN_HITS) {

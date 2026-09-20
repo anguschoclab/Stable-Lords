@@ -21,6 +21,8 @@ import {
   Activity,
   LifeBuoy,
   Terminal,
+  FileJson,
+  FlaskConical,
 } from 'lucide-react';
 
 /**
@@ -80,6 +82,8 @@ export const HUBS = [
  */
 export const UTILITY_LINKS = [
   { to: '/help', label: 'Help', icon: LifeBuoy },
+  { to: '/import-export', label: 'Import / Export', icon: FileJson },
+  { to: '/mods', label: 'Mods', icon: FlaskConical },
   { to: '/admin', label: 'Admin', icon: Terminal, devOnly: true },
 ] as const;
 

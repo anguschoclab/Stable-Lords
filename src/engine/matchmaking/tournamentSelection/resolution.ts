@@ -86,7 +86,8 @@ export function resolveRound(
       updatedState.weather ?? 'Clear',
       arenaId,
       updatedState.crowdMood,
-      headless
+      headless,
+      updatedState.houseRules?.deathRateMult
     );
 
     bout.winner = outcome.winner;

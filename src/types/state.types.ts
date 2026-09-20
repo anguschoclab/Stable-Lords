@@ -46,6 +46,7 @@ export type {
 import { type FightSummary, type FightOutcomeBy } from './combat.types';
 export type { FightSummary, FightOutcomeBy };
 import type { PoolWarrior } from '@/engine/recruitment';
+import type { ContentPack } from '@/lib/contentPacks';
 export type { PoolWarrior };
 
 // ─── Ranking & Contracts ───────────────────────────────────────────────────
@@ -538,6 +539,20 @@ export interface DeferredBoutLog {
   transcript: string[];
 }
 
+/** Player-configurable house rules (non-canonical variants). */
+export interface HouseRules {
+  /** Kill-window probability multiplier applied to every bout. 1 = canonical. */
+  deathRateMult: number;
+  /** When true, fatal blows become career-threatening injuries, never deaths. */
+  severeInjuryInsteadOfDeath: boolean;
+}
+
+/** Canonical (full permadeath) house rules — the default game. */
+export const CANONICAL_HOUSE_RULES: HouseRules = {
+  deathRateMult: 1,
+  severeInjuryInsteadOfDeath: false,
+};
+
 /**
  * Defines the shape of game state.
  */
@@ -562,6 +577,14 @@ export interface GameState {
   ftueComplete: boolean;
   ftueStep?: number;
   coachDismissed: string[];
+  /**
+   * Optional house rules (Design Bible §House Rules and Mods). Absent or
+   * canonical values mean standard full-permadeath play; any weakening of
+   * permadeath is a non-canonical house rule and must be labeled as such in UI.
+   */
+  houseRules?: HouseRules;
+  /** Installed content packs (Design Bible #36) — narrative overlays only. */
+  contentPacks?: ContentPack[];
   player: Owner;
   fame: number;
   popularity: number;

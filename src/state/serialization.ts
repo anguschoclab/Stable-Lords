@@ -93,6 +93,8 @@ type GameStateValues = {
   ftueStep: GameState['ftueStep'];
   ftueComplete: GameState['ftueComplete'];
   coachDismissed: GameState['coachDismissed'];
+  houseRules: GameState['houseRules'];
+  contentPacks: GameState['contentPacks'];
   rivalries: GameState['rivalries'];
   matchHistory: GameState['matchHistory'];
   ownerGrudges: GameState['ownerGrudges'];
@@ -158,6 +160,8 @@ export function reconstructGameState(store: GameStore): GameState {
     ftueStep: store.ftueStep,
     ftueComplete: store.ftueComplete,
     coachDismissed: store.coachDismissed,
+    houseRules: store.houseRules,
+    contentPacks: store.contentPacks,
     rivalries: store.rivalries,
     matchHistory: store.matchHistory,
     ownerGrudges: store.ownerGrudges,

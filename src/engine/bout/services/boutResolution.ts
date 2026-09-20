@@ -129,7 +129,8 @@ function runBoutSimulation(
     weather,
     arenaId,
     state.crowdMood,
-    _ctx.headless
+    _ctx.headless,
+    state.houseRules?.deathRateMult
   );
 }
 

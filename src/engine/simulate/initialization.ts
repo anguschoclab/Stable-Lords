@@ -92,7 +92,8 @@ export function initializeResolutionContext(
   warriorD?: Warrior,
   trainers?: Trainer[],
   arenaId: string = 'standard_arena',
-  crowdMood?: CrowdMood
+  crowdMood?: CrowdMood,
+  deathRateMult?: number
 ): ResolutionContext {
   const weaponA = (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon;
   const weaponD = (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon;
@@ -144,6 +145,7 @@ export function initializeResolutionContext(
     zoneStepBias: ARENA_SIZE_PROFILES[arenaConfig.size].zoneStepBias,
     pushedFighter: undefined,
     crowdKillBonus: crowdMood ? CROWD_KILL_BONUS[crowdMood] : 0,
+    deathRateMult,
   };
 }
 

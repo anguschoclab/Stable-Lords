@@ -142,6 +142,8 @@
 | Dead exports in live modules (D) | 28 rows (~45 symbols; ~20 approved, rest note) |
 | Nav-hidden routes (E) | 3 approved + 1 note (+2 disproved) |
 | AI-unreachable (F) | 2 approved-candidates, 6 notes/disproved |
-| Spec gaps (G) | 7 (4 unimplemented, 2 partial, 1 flag-only) |
+| Spec gaps (G) | 7 (all implemented: G1–G7 wired with production-path tests) |
 
-**Escalation list (wire-everything conflicts):** A1 (superseded tournament engine), A4 (superseded results UI), B1 (seasonPoints — implement or remove), D15 (NewsletterFeed object), G1/G2/G7 (net-new features — build vs. descope), G4 (quest system depth).
+**Escalation list (wire-everything conflicts):** RESOLVED — A1 removed (superseded tournament engine), A4 salvaged into `BoutsStep`, B1 seasonPoints wired, D15 NewsletterFeed wired, G1/G2/G4/G7 built as scoped features, G3/G5/G6 built.
+
+**Final validation (post-implementation):** type-check 0 errors · eslint 0 errors/0 warnings · vitest 647 files / 7,581 tests passing (2 skipped) · combat+matchmaking suites (100 files / 1,498 tests) green — canonical combat behavior unchanged (house rules default to canonical).

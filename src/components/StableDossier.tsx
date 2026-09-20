@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
+import { StatCard } from '@/components/ui/StatCard';
 import { StableCrest } from '@/components/crest';
 import { isActive } from '@/engine/warriorStatus';
 import { getChargeDescription } from '@/engine/crest/crestGenerator';
@@ -116,20 +117,22 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
         <div className="grid grid-cols-2 gap-3">
           <Card className="bg-secondary/20 border-none">
             <CardContent className="p-3 text-center">
-              <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Fame</div>
-              <div className="text-xl font-display font-black text-arena-fame">
-                {stable.owner.fame}
-              </div>
+              <StatCard
+                label="Fame"
+                value={stable.owner.fame}
+                variant="fame"
+                className="items-center"
+              />
             </CardContent>
           </Card>
           <Card className="bg-secondary/20 border-none">
             <CardContent className="p-3 text-center">
-              <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
-                Roster
-              </div>
-              <div className="text-xl font-display font-black text-primary">
-                {stable.roster.filter((w) => isActive(w)).length}
-              </div>
+              <StatCard
+                label="Roster"
+                value={stable.roster.filter((w) => isActive(w)).length}
+                variant="primary"
+                className="items-center"
+              />
             </CardContent>
           </Card>
         </div>

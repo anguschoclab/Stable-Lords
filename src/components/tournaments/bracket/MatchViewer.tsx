@@ -1,7 +1,11 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
-import { resolveWarriorName, type NameResolutionState } from '@/engine/core/historyResolver';
+import {
+  findWarrior,
+  resolveWarriorName,
+  type NameResolutionState,
+} from '@/engine/core/historyResolver';
 import BoutViewer from '@/components/BoutViewer';
 import type { TournamentBout, FightSummary } from '@/types/game';
 
@@ -46,6 +50,8 @@ export function MatchViewer({ bout, fightSummary, gameState, onToggleExpand }: M
             by={fightSummary.by ?? null}
             isRivalry={fightSummary.isRivalry}
             analysis={fightSummary.analysis}
+            weaponIdA={findWarrior(gameState, fightSummary.warriorIdA)?.equipment?.weapon}
+            weaponIdD={findWarrior(gameState, fightSummary.warriorIdD)?.equipment?.weapon}
           />
         </div>
         <Button

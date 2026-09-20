@@ -31,6 +31,8 @@ interface BoutViewerProps {
   transcript?: string[];
   analysis?: import('@/engine/narrative/fightAnalysis').FightAnalysis;
   exchangeLog?: import('@/types/combat.types').ExchangeLogEntry[];
+  weaponIdA?: string;
+  weaponIdD?: string;
 }
 
 /**
@@ -65,6 +67,8 @@ export default function BoutViewer({
   arenaId,
   analysis,
   exchangeLog,
+  weaponIdA,
+  weaponIdD,
 }: BoutViewerProps) {
   const isIndoor = isIndoorArena(arenaId);
   const effectiveWeather = isIndoor ? 'Clear' : weather;
@@ -156,6 +160,8 @@ export default function BoutViewer({
               arenaId={arenaId}
               maxHpA={50}
               maxHpD={50}
+              weaponIdA={weaponIdA}
+              weaponIdD={weaponIdD}
             />
           ) : (
             <TacticalLogView log={log} visibleCount={visibleCount} />

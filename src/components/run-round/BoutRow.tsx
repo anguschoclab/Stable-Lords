@@ -138,9 +138,12 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
               log={res.outcome.log}
               winner={res.outcome.winner}
               by={res.outcome.by}
+              announcement={res.announcement}
               isRivalry={res.isRivalry}
               analysis={analysis}
               exchangeLog={res.outcome.exchangeLog}
+              weaponIdA={res.a.equipment?.weapon}
+              weaponIdD={res.d.equipment?.weapon}
             />
           </div>
         </CollapsibleContent>

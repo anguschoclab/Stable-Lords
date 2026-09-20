@@ -17,7 +17,8 @@ const alwaysTrainRng = {
   pick: <T,>(arr: T[]) => arr[0] as T,
   shuffle: <T,>(arr: T[]) => arr,
   uuid: () => 'test-uuid',
-  rollWeighted: <T,>(entries: readonly { item: T; weight: number }[]) => entries[0]?.item as T,
+  rollWeighted: <K extends string>(weights: Partial<Record<K, number>>) =>
+    Object.keys(weights)[0] as K,
 } as IRNGService;
 import type { RivalStableData } from '@/types/state.types';
 import type { Warrior, Attributes } from '@/types/warrior.types';

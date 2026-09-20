@@ -5,6 +5,7 @@ import {
   offerWeatherDecline,
 } from '@/engine/ai/weatherSuitability';
 import { COUNTERED_PURSE_CONDITION } from '@/engine/bout/mutations/contractMutations';
+import { buildFightForecast } from '@/engine/narrative/fightForecast';
 
 /**
  *
@@ -130,6 +131,15 @@ export function evaluateBoutOffer(
 
   if (isTournamentHungry) {
     return 'Accepted';
+  }
+
+  // Matchup Skepticism — calculating stables decline a strongly unfavorable
+  // style matchup when they can afford to (same forecast the player sees).
+  if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+    const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+    if (edge <= -2) {
+      return 'Declined';
+    }
   }
 
   // Counter logic: famous warriors hold out for a purse worthy of their name.

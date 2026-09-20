@@ -68,7 +68,8 @@ export interface OffseasonEventNarrative {
     | 'goblin_merchant'
     | 'wandering_merchant_strange_brew'
     | 'phantom_sparring'
-    | 'dreamweavers_mist';
+    | 'dreamweavers_mist'
+    | 'prismatic_gale_exposure';
   newsletter: string[];
 }
 

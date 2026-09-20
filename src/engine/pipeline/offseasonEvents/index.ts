@@ -65,4 +65,5 @@ export { handleGoblinMerchant } from './socialHandlers';
 export { handleWanderingMerchantStrangeBrew } from './buffHandlers';
 export { handlePhantomSparringPartner } from './chaosHandlers';
 export { handleDreamweaversMist } from './chaosHandlers';
+export { handlePrismaticGaleExposure } from './chaosHandlers';
 

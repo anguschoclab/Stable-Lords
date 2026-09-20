@@ -520,6 +520,7 @@ export type WeatherType =
   | 'Winds of Chaos'
   | 'Chaos Storm'
   | 'Chaos Squall'
+  | 'Prismatic Gale'
   | 'Whispering Winds'
   | 'Diamond Rain'
   | 'Cosmic Anomaly'

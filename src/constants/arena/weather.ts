@@ -430,6 +430,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     description:
       'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
   },
+  'Prismatic Gale': {
+    icon: Sparkles,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'A shimmering wind of colorful energy that invigorates combatants, reducing stamina drain and increasing damage.',
+  },
   'Diamond Rain': {
     icon: Sparkles,
     colorClass: 'text-arena-fame',

@@ -452,6 +452,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Unpredictable bursts of raw energy whip through the arena, empowering strikes but punishing mistakes.',
   },
+  'Prismatic Gale': {
+    staminaMult: 0.85,
+    initiativeMod: 2,
+    riposteMod: 1,
+    damageMult: 1.15,
+    description: 'A shimmering wind of colorful energy that invigorates combatants, reducing stamina drain and increasing damage.',
+  },
   'Mana Storm': {
     staminaMult: 1.5,
     initiativeMod: 4,

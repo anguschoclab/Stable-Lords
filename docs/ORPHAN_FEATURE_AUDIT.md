@@ -147,3 +147,75 @@
 **Escalation list (wire-everything conflicts):** RESOLVED — A1 removed (superseded tournament engine), A4 salvaged into `BoutsStep`, B1 seasonPoints wired, D15 NewsletterFeed wired, G1/G2/G4/G7 built as scoped features, G3/G5/G6 built.
 
 **Final validation (post-implementation):** type-check 0 errors · eslint 0 errors/0 warnings · vitest 647 files / 7,581 tests passing (2 skipped) · combat+matchmaking suites (100 files / 1,498 tests) green — canonical combat behavior unchanged (house rules default to canonical).
+
+---
+
+## Phase 5 — Final Ledger
+
+### Disposition table (finding → resolution → commit)
+
+| Finding | Disposition | Commit |
+|---------|-------------|--------|
+| A1 duplicate tournament engine | Removed (superseded by `tournamentSelection/`) | `f71466bd` |
+| B1 `Warrior.seasonPoints` | Wired: accrual, season reset, points-race line, WarriorDetail display | `47177b72` |
+| D1 dead helpers | Removed with dead-code tests | `47177b72` |
+| A2 `burnAnalysis` | Wired into `performAITraining` burned-attribute exclusion + `computeTrainability` surfaced in TrainingCardHeader | `3d7d853e` |
+| A3 `tacticAdvisor` | Wired into plan generation (advisor-ranked tactics replace hardcoded switch) | `3d7d853e` |
+| D2–D27 dead exports | Wired or dispositioned per row | `d388f724` |
+| D3 `pickText` + ArenaHub fake chrome | Removed; ArenaHub chrome replaced with real-state values | `093f8709` |
+| A4 `run-round/` results UI | Salvaged: `RunResults`/`BoutRow`/`RunResultsSummary`/`OutcomeIcon` into `BoutsStep` | `2a853647` |
+| A5 `WeaponTrail` | Wired: weapon-id→trail classification, plumbed through `BoutViewer`→`ArenaView` + `MatchViewer`/`WarriorFightHistory` callers | `2a853647` |
+| A6 UI primitives | `StatCard` deduped into WarriorDetail/StableDossier; `HeaderMetricDisplay` superseded (register-allowed) | `2a853647` |
+| F1 stable notoriety | Wired into rival bout-offer hype | `40c31eb4` |
+| F4 `fightForecast` | Wired: style-matchup edge gates rival bout acceptance | `2a58822b` |
+| F2/F3 | NOTE — verified wired on own paths (`scouting.ts` consumer; `cumulativeTracker` harness-only) | — |
+| C1–C5 dead data | Wired: persona→scout notes, arena lore→leaderboards, `getArenasByTag`→weather-aware matchmaking, meta quotes→doctrine intel, encumbrance labels→dossier | `09f1cddf` |
+| E1–E4 hidden routes | Nav-wired: Hall of Fights→World, Physicals→Stable, Help/Admin/Import-Export/Mods→utility strip | `669c7533` |
+| A7–A10 cleanup | Dead barrels + test-only combatFactory removed; `handleLocalStorageQuotaError` wired into array-persistence paths | `669c7533` |
+| G3 a11y pack | Implemented: persisted contrast + text scale, boot-time apply, Help controls | `c683c3bd` |
+| G5 bible search | Implemented: `bibleIndex` heading-section search on Help page | `c683c3bd` |
+| G6 kill analytics | Implemented: persisted-field aggregator + "Mechanics of Death" Graveyard tab | `c683c3bd` |
+| G4 onboarding quests | Implemented: GameState-derived checklist + `QuestsWidget` on Control Center | `71803c2e` |
+| G2 import/export | Implemented: `/import-export` JSON+YAML packs, strict schema (exposed+fixed `absoluteWeek` drift) | `0cd89d1b` |
+| G1 house rules | Implemented: `houseRules` levers (`deathRateMult`, `severeInjuryInsteadOfDeath`) + `/mods` page, non-canonical labeling | `c570a4f6` |
+| G7 content updater | Implemented: persisted zod-validated content packs overlaying lore/quotes, `/mods` UI | `c570a4f6` |
+
+### Before/after metrics
+
+| Metric | Baseline (`49802cb2`) | Post-implementation |
+|--------|--------------------:|--------------------:|
+| Test files | 631 | 647 |
+| Tests | 7,590 | 7,581 (2 skipped) |
+| type-check errors | 0 | 0 |
+| lint errors/warnings | 0/0 | 0/0 |
+| Nav-hidden routes | 5 | 0 unexplained (`/arena-hub` is a registered duplicate alias, E5) |
+
+Net test delta −9 with +16 files: deleted orphan-only tests for removed code (combatFactory, dead barrels, A1 tournament engine) and added ~40 wiring tests that exercise production entry paths (T2-compliant), not isolated units.
+
+### Phase 5 validation battery
+
+| Gate | Result |
+|------|--------|
+| `type-check` (router gen + tsc --build) | 0 errors |
+| `eslint .` | 0 errors / 0 warnings |
+| `bun x vitest run` | 647 files / 7,581 tests green (2 skipped) |
+| `test:slow` (determinism, world liveness, trait balance, pipeline perf) | 10 files / 121 tests green |
+| `narrative-validate` | clean |
+| `build` (vite) | green — all new routes chunked |
+| `electron:compile` | green |
+| Headless soak (`scripts/soak.mjs`, 41 weeks / ~3 seasons, seed 20260919) | 4,397 bouts, 16 deaths, 7/9 intents active, dossier coverage 12.0, player challenged ×2, 169 traited warriors |
+| `test:all` (full suite incl. slow) | 657 files / 7,702 tests green (2 skipped) |
+| `e2e` (playwright ×5 projects) | 5/5 green (golden-path: new game → all pages → fight → advance week) |
+
+Soak caveat: the harness drives `advanceWeek` only — tournament rounds resolve in `advanceDay`/`TickOrchestrator`, so tournament counts are zero in the soak by construction. Daily-path tournament resolution is covered by `TickOrchestrator.test.ts`, `dayPipeline.test.ts`, and the tournamentSelection suite.
+
+### New seed expressions (RNG audit, §constraints)
+
+No new RNG consumers added — `deathRateMult` scales an existing threshold (no extra draw), quests derive deterministically from state, packs/a11y prefs are UI-persisted. `determinism.slow.test.ts` (identical-pulse two-seed runs) green.
+
+### Known residual items (deferred, documented)
+
+- `cumulativeTracker` (F3): intentionally harness-only instrumentation — closed as NOTE.
+- `/arena-hub` duplicate route (E5): registered alias of `/stable/arena`; no action.
+- `_headless` ignored param at `RivalStrategyPass:302`: pre-existing, carried as V8 candidate per plan §93.
+- Emergent-report instrumentation (`src/scripts/emergent-report.test.ts`): pre-existing diagnostic harness, unchanged.

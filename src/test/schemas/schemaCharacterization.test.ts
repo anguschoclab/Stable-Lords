@@ -256,24 +256,20 @@ describe('schema characterization', () => {
   });
 
   describe('GameStateSchema validates fresh state', () => {
-    it('createFreshState produces a GameState that passes schema (excluding known extra fields)', () => {
+    it('createFreshState produces a GameState that passes schema', () => {
       const state = createFreshState('test-seed', '2024-01-01T00:00:00Z');
-      // createFreshState includes absoluteWeek which GameStateSchema.strict() rejects.
-      // This is a pre-existing mismatch — document it as current behavior.
-      const { absoluteWeek, ...rest } = state;
-      const result = GameStateSchema.safeParse(rest);
+      const result = GameStateSchema.safeParse(state);
       expect(
         result.success,
         result.success ? '' : JSON.stringify(result.error.issues, null, 2)
       ).toBe(true);
     });
 
-    it('createFreshState includes absoluteWeek (pre-existing schema mismatch documented)', () => {
+    it('createFreshState includes absoluteWeek (schema field added during orphan audit)', () => {
       const state = createFreshState('test-seed', '2024-01-01T00:00:00Z');
       expect((state as any).absoluteWeek).toBeDefined();
-      // GameStateSchema.strict() rejects this field — pre-existing issue
       const fullResult = GameStateSchema.safeParse(state);
-      expect(fullResult.success).toBe(false);
+      expect(fullResult.success).toBe(true);
     });
 
     it('GameStateSchema rejects missing required fields', () => {
@@ -282,8 +278,7 @@ describe('schema characterization', () => {
 
     it('GameStateSchema rejects unknown fields (strict mode)', () => {
       const state = createFreshState('test-seed', '2024-01-01T00:00:00Z');
-      const { absoluteWeek, ...rest } = state;
-      const withExtra = { ...rest, unknownField: 'bad' };
+      const withExtra = { ...state, unknownField: 'bad' };
       expect(GameStateSchema.safeParse(withExtra).success).toBe(false);
     });
   });

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ArenaLeaderboards from '@/pages/ArenaLeaderboards';
 import { useGameStore } from '@/state/useGameStore';
 import { STANDARD_ARENA } from '@/data/arenas';
@@ -60,4 +60,12 @@ describe('ArenaLeaderboards', () => {
     expect(screen.getByText('Bout At Selected Arena')).toBeInTheDocument();
     expect(screen.queryByText('Bout At Other Arena')).not.toBeInTheDocument();
   });
+
+  it('surfaces arena lore for the selected venue (C3)', () => {
+    useGameStore.setState({ ...defaultStoreState } as never);
+    render(<ArenaLeaderboards />);
+    fireEvent.click(screen.getByRole('button', { name: 'The Mudpit' }));
+    expect(screen.getByText('The Drowning Grasp')).toBeInTheDocument();
+  });
 });
+

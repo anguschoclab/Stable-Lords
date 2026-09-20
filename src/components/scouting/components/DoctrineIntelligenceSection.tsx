@@ -4,6 +4,7 @@ import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData } from '@/types/game';
 import type { FightPlan } from '@/types/shared.types';
 import { modLabel } from '../utils/modLabel';
+import { META_RECRUIT_QUOTES } from '@/data/ownerData';
 
 interface DoctrineIntelligenceSectionProps {
   rivalA: RivalStableData;
@@ -96,6 +97,11 @@ export function DoctrineIntelligenceSection({
                   {rival.owner.metaAdaptation ?? '—'}
                 </span>
               </div>
+              {rival.owner.metaAdaptation && (
+                <p className="text-[9px] italic text-muted-foreground/50 leading-relaxed">
+                  {META_RECRUIT_QUOTES[rival.owner.metaAdaptation]}
+                </p>
+              )}
               {Object.keys(mods).length > 0 && (
                 <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                   <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">

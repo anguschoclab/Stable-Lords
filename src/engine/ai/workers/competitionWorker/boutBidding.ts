@@ -327,7 +327,9 @@ export function convertBidsToOffers(
     }
 
     const opponent = bestCandidate.warrior;
-    const arenaId = selectArenaForMatchup(proposer, opponent, rng);
+    const arenaId = selectArenaForMatchup(proposer, opponent, rng, {
+      weather: state.weather,
+    });
     const offerId = `bid_${rng.uuid()}` as BoutOfferId;
 
     // Stable notoriety sells tickets — butcher stables draw a bigger crowd.

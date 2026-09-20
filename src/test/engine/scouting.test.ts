@@ -6,6 +6,7 @@ import { generateScoutReport, getScoutCost } from '@/engine/scouting';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/utils/random';
+import { narrativeContent } from '@/data/narrative';
 
 const TEST_RNG = new SeededRNGService(42);
 
@@ -198,4 +199,29 @@ describe('Scouting System', () => {
       expect(report1.id).not.toBe(report2.id);
     });
   });
+
+  describe('persona lines in Expert reports (C1)', () => {
+    it('Expert notes include a persona line for the standout skill', () => {
+      const warrior = makeWarrior();
+      const { report } = generateScoutReport(warrior, 'Expert', 1, TEST_RNG);
+      const personaTexts = new Set<string>();
+      for (const table of [
+        narrativeContent.persona.good,
+        narrativeContent.persona.bad,
+      ]) {
+        for (const skill of Object.values(table)) {
+          for (const t of [...skill.high, ...skill.low]) personaTexts.add(t.text);
+        }
+      }
+      const hasPersonaLine = [...personaTexts].some((t) => report.notes.includes(t));
+      expect(hasPersonaLine).toBe(true);
+    });
+
+    it('Basic reports carry no persona detail', () => {
+      const warrior = makeWarrior();
+      const { report } = generateScoutReport(warrior, 'Basic', 1, TEST_RNG);
+      expect(report.notes).toContain('Limited information available');
+    });
+  });
 });
+

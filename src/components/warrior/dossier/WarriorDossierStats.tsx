@@ -3,6 +3,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { cn } from '@/lib/utils';
 import { type Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_LABELS, ATTRIBUTE_KEYS } from '@/types/game';
+import { computeEncumbranceClass, ENCUMBRANCE_LABELS } from '@/data/terrabloodCharts';
 
 interface Props {
   warrior: Warrior;
@@ -13,6 +14,10 @@ interface Props {
  * @param - { warrior }.
  */
 export default function WarriorDossierStats({ warrior }: Props) {
+  const encumbranceClass = computeEncumbranceClass(
+    warrior.attributes.ST,
+    warrior.attributes.CN
+  );
   return (
     <div className="space-y-8">
       <SectionDivider label="Physique" />
@@ -49,6 +54,12 @@ export default function WarriorDossierStats({ warrior }: Props) {
           { label: 'Vitality', value: warrior.derivedStats?.hp, sub: 'Hit Points' },
           { label: 'Stamina', value: warrior.derivedStats?.endurance, sub: 'Endurance' },
           { label: 'Swiftness', value: warrior.attributes?.SP, sub: 'Reflexes' },
+          {
+            label: 'Capacity',
+            value: encumbranceClass,
+            sub: 'Encumbrance',
+            detail: ENCUMBRANCE_LABELS[encumbranceClass],
+          },
         ].map((stat) => (
           <Surface key={stat.label} variant="glass" className="p-6 border-white/5">
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
@@ -58,6 +69,11 @@ export default function WarriorDossierStats({ warrior }: Props) {
               {stat.label}
             </div>
             <div className="text-3xl font-display font-black text-foreground">{stat.value}</div>
+            {'detail' in stat && stat.detail && (
+              <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-2">
+                {stat.detail}
+              </div>
+            )}
           </Surface>
         ))}
       </div>

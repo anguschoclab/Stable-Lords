@@ -270,6 +270,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
           arenaPool: promoter.arenaPool,
           planA: favorWarrior.plan ?? undefined,
           planB: otherWarrior.plan ?? undefined,
+          weather,
         });
 
         const typedOfferId = offerId as BoutOfferId;

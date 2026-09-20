@@ -43,11 +43,11 @@
 
 | # | Finding | Verdict | Evidence | Wiring plan |
 |---|---------|---------|----------|-------------|
-| C1 | `uiMeta.persona` (`good`/`bad`/`descriptors`) | **APPROVED** | `uiMeta.json`; loaded eagerly into `narrativeContent.persona`; zero `getFromArchive`/`peekArchive`/direct reads. | Wire: feed into announcer/post-bout narration (`getFromArchive(rng, ['persona', ...])` paths in `narrativePostBout`/`combatNarrators`) — persona-flavored lines by stable alignment. |
-| C2 | `uiMeta.meta` (`flair`/`title`/`injury`/`status`) | **APPROVED** | Same — never read. | Wire: status/injury flair lines into bout summary or gazette templates. |
-| C3 | `data/arenas.ts :: ARENA_LORE` + `getArenasByTag` | **APPROVED** | ~20+ `ArenaLoreEntry` records + tag query, declared `arenas.ts:48,505`; zero consumers. | Wire (C): surface lore on Arena Leaderboards/arena detail panels (bible Arena Hub §9.1 has lore hooks); wire `getArenasByTag` into `tournamentArenaSelection`/booking filters. |
-| C4 | `data/ownerData.ts :: META_RECRUIT_QUOTES` | **APPROVED** | Zero consumers. | Wire: recruit/orphanage flavor text or owner dossier quotes. |
-| C5 | `data/terrabloodCharts.ts :: ENCUMBRANCE_LABELS` | **APPROVED** | Zero consumers (siblings in file are used). | Wire: equipment UI encumbrance display (bible equipment spec) — likely a display-label map. |
+| C1 | `uiMeta.persona` (`good`/`bad`/`descriptors`) | **WIRED** | `uiMeta.json`; loaded eagerly into `narrativeContent.persona`; zero `getFromArchive`/`peekArchive`/direct reads. | Wired into `generateScoutReportNotes` — detailed/expert scout reports emit a persona-flavored qualitative line keyed to the warrior's strongest attribute; basic reports stay generic. Test: `src/test/engine/scouting.test.ts`. |
+| C2 | `uiMeta.meta` (`flair`/`title`/`injury`/`status`) | **DISPROVED** | Scanner false positive — `src/data/tagDescriptions.ts` aliases `uiMeta.meta` into `FLAIR_/TITLE_/INJURY_/STATUS_DESCRIPTIONS`, rendered as `TagBadge` tooltips (`WarriorBadges.tsx`). | Already wired; no change needed. |
+| C3 | `data/arenas.ts :: ARENA_LORE` + `getArenasByTag` | **WIRED** | ~20+ `ArenaLoreEntry` records + tag query, declared `arenas.ts:48,505`; zero consumers. | Wired: `ARENA_LORE` rendered on `ArenaLeaderboards` for the selected venue (title+narrative, real `ArenaLoreEntry` fields only); `getArenasByTag` consumed by `arenaFit.selectArenaForMatchup` — severe weather filters to indoor arenas. Tests: `src/test/pages/ArenaLeaderboards.test.tsx`, `src/test/engine/matchmaking/arenaFit.test.ts` (weather suite). |
+| C4 | `data/ownerData.ts :: META_RECRUIT_QUOTES` | **WIRED** | Zero consumers. | Wired into `DoctrineIntelligenceSection` — the rival's `metaAdaptation` quote renders beneath the Adaptation row in StableComparison. Test: `src/test/components/scouting/DoctrineIntelligenceSection.test.tsx`. |
+| C5 | `data/terrabloodCharts.ts :: ENCUMBRANCE_LABELS` | **WIRED** | Zero consumers (siblings in file are used). | Wired into `WarriorDossierStats` — Combat Measures grid shows a Capacity card (`computeEncumbranceClass(ST,CN)` → class letter + canonical label). Test: `src/test/components/warrior/dossier/WarriorDossierStats.test.tsx`. |
 
 ## D. Dead exports inside live modules (verified zero references)
 

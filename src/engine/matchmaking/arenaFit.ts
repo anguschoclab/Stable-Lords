@@ -1,5 +1,5 @@
 import type { Warrior } from '@/types/warrior.types';
-import type { ArenaConfig, FightPlan } from '@/types/shared.types';
+import type { ArenaConfig, FightPlan, WeatherType } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import {
@@ -7,7 +7,8 @@ import {
   ARENA_SIZE_PROFILES,
   RANGE_ORDER,
 } from '@/engine/combat/mechanics/distanceResolution';
-import { getAllArenas, getArenaById } from '@/data/arenas';
+import { getAllArenas, getArenaById, getArenasByTag } from '@/data/arenas';
+import { HAZARDOUS_WEATHER } from '@/engine/ai/weatherSuitability';
 import { ARENA_FIT, ARENA_SELECTION, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 
 // ─── Style classification helpers ─────────────────────────────────────────────
@@ -140,13 +141,27 @@ export function selectArenaForMatchup(
   favorWarrior: Warrior,
   otherWarrior: Warrior,
   rng: IRNGService,
-  opts?: { favorWeight?: number; planA?: FightPlan; planB?: FightPlan; arenaPool?: string[] }
+  opts?: {
+    favorWeight?: number;
+    planA?: FightPlan;
+    planB?: FightPlan;
+    arenaPool?: string[];
+    weather?: WeatherType;
+  }
 ): string {
   const favorWeight = opts?.favorWeight ?? ARENA_SELECTION.FAVOR_WEIGHT_DEFAULT;
   const excludedIds = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
 
   const allAvailable = opts?.arenaPool ? opts.arenaPool.map(getArenaById) : getAllArenas();
-  const arenas = allAvailable.filter((a) => !excludedIds.has(a.id));
+  let arenas = allAvailable.filter((a) => !excludedIds.has(a.id));
+
+  // Hazardous weather drives bouts indoors — a blizzard on a clifftop arena
+  // is a promoter no-show, not a spectacle. Only when an indoor venue exists.
+  if (opts?.weather && HAZARDOUS_WEATHER.includes(opts.weather)) {
+    const indoorIds = new Set(getArenasByTag('indoor').map((a) => a.id));
+    const indoor = arenas.filter((a) => indoorIds.has(a.id));
+    if (indoor.length > 0) arenas = indoor;
+  }
 
   if (arenas.length === 0) return 'standard_arena';
 

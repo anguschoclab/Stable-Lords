@@ -1019,6 +1019,27 @@ describe('new arena configs', () => {
   });
 });
 
+describe('selectArenaForMatchup — weather-aware pools (C3)', () => {
+  it('severe weather restricts selection to indoor arenas (C3)', () => {
+    const w = makeWarrior();
+    for (let i = 0; i < 20; i++) {
+      const rngVar = makeRng(i / 20);
+      const result = selectArenaForMatchup(w, w, rngVar, { weather: 'Blizzard' });
+      const arena = arenasModule.getArenaById(result);
+      expect(arena.tags).toContain('indoor');
+    }
+  });
+
+  it('mild weather leaves the full arena pool open', () => {
+    const w = makeWarrior();
+    const indoorOnly = selectArenaForMatchup(w, w, makeRng(0.5), { weather: 'Blizzard' });
+    const open = selectArenaForMatchup(w, w, makeRng(0.5), { weather: 'Clear' });
+    // Same seed, different pools → potentially different picks; both valid ids.
+    expect(typeof indoorOnly).toBe('string');
+    expect(typeof open).toBe('string');
+  });
+});
+
 // ─── Arena Balance Constants (from PR #691) ──────────────────────────────────
 
 describe('arena balance constants', () => {

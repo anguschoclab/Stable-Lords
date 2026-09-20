@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { getAllArenas } from '@/data/arenas';
+import { getAllArenas, getArenaLore } from '@/data/arenas';
 import {
   calculateArenaLeaderboard,
   type ArenaLeaderboardData,
@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Swords, Trophy, Skull, MapPin } from 'lucide-react';
+import { Swords, Trophy, Skull, MapPin, ScrollText } from 'lucide-react';
 
 const SIZE_LABELS: Record<string, string> = {
   cramped: 'CRAMPED',
@@ -173,6 +173,7 @@ export default function ArenaLeaderboards() {
   const sizeProfile = currentArena ? ARENA_SIZE_PROFILES[currentArena.size] : null;
 
   const recentBouts = getFightsForArena(arenaHistory, selectedArenaId).slice(-6).reverse();
+  const arenaLore = getArenaLore(selectedArenaId);
 
   return (
     <PageFrame>
@@ -285,6 +286,28 @@ export default function ArenaLeaderboards() {
             </div>
           </div>
         </Surface>
+      )}
+
+      {/* Arena lore — recorded deaths, quirks, and hazards for the venue */}
+      {arenaLore.length > 0 && (
+        <div className="mb-6 space-y-2">
+          {arenaLore.map((entry) => (
+            <div
+              key={entry.id}
+              className="flex items-start gap-3 px-4 py-2.5 border-l-2 border-arena-gold/30 bg-arena-gold/[0.03]"
+            >
+              <ScrollText className="h-3.5 w-3.5 text-arena-gold/70 shrink-0 mt-0.5" />
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold/90">
+                  {entry.title}
+                </span>
+                <p className="text-[10px] text-muted-foreground/70 leading-relaxed mt-0.5">
+                  {entry.narrative}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
       {/* Leaderboard tables */}

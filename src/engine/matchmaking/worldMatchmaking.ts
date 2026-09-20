@@ -114,7 +114,9 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
       pairedIds.add(bestOpponent.warrior.id);
 
       const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
-      const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng);
+      const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng, {
+        weather: state.weather,
+      });
       const offer: BoutOffer = {
         id: offerId,
         promoterId: WORLD_MATCHMAKING,

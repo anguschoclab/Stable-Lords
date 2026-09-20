@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { HUBS, type HubId } from '@/components/layout/navigationHubs';
+import { HUBS, UTILITY_LINKS, type HubId } from '@/components/layout/navigationHubs';
 
 describe('HUBS structure after consolidation', () => {
   it('has exactly one stable management hub, world, and bookmarks (no command/ops split)', () => {
@@ -10,10 +10,12 @@ describe('HUBS structure after consolidation', () => {
     expect(ids).not.toContain('ops');
   });
 
-  it('the stable hub links only to /stable/* (and /world/tournaments)', () => {
+  it('the stable hub links only to /stable/* (and /world, /tools)', () => {
     const stable = HUBS.find((h) => h.id === 'stable')!;
     stable.pages.forEach((p) => {
-      expect(p.to.startsWith('/stable') || p.to.startsWith('/world')).toBe(true);
+      expect(
+        p.to.startsWith('/stable') || p.to.startsWith('/world') || p.to.startsWith('/tools')
+      ).toBe(true);
     });
   });
 
@@ -40,14 +42,14 @@ describe('HUBS extended structure', () => {
     });
   });
 
-  it('stable hub has exactly 13 pages', () => {
+  it('stable hub has exactly 14 pages', () => {
     const stable = HUBS.find((h) => h.id === 'stable')!;
-    expect(stable.pages).toHaveLength(13);
+    expect(stable.pages).toHaveLength(14);
   });
 
-  it('world hub has exactly 7 pages', () => {
+  it('world hub has exactly 8 pages', () => {
     const world = HUBS.find((h) => h.id === 'world')!;
-    expect(world.pages).toHaveLength(7);
+    expect(world.pages).toHaveLength(8);
   });
 
   it('bookmarks hub has exactly 0 pages', () => {
@@ -116,6 +118,7 @@ describe('HUBS extended structure', () => {
     expect(labels).toContain('Recruit');
     expect(labels).toContain('Offseason');
     expect(labels).toContain('Tournaments');
+    expect(labels).toContain('Simulator');
   });
 
   it('world hub pages include expected labels', () => {
@@ -128,5 +131,21 @@ describe('HUBS extended structure', () => {
     expect(labels).toContain('Chronicle');
     expect(labels).toContain('Hall of Fame');
     expect(labels).toContain('Graveyard');
+    expect(labels).toContain('Hall of Fights');
+  });
+});
+
+describe('UTILITY_LINKS (E1/E4 nav wiring)', () => {
+  it('exposes /help and /admin as reachable utility destinations', () => {
+    const paths = UTILITY_LINKS.map((l) => l.to);
+    expect(paths).toContain('/help');
+    expect(paths).toContain('/admin');
+  });
+
+  it('admin is dev-gated; help is not', () => {
+    const admin = UTILITY_LINKS.find((l) => l.to === '/admin')!;
+    const help = UTILITY_LINKS.find((l) => l.to === '/help')!;
+    expect((admin as { devOnly?: boolean }).devOnly).toBe(true);
+    expect((help as { devOnly?: boolean }).devOnly).not.toBe(true);
   });
 });

@@ -137,7 +137,7 @@ describe('LoreArchive', () => {
   });
 
   describe('quota recovery (saveArray)', () => {
-    it('trims to the last 100 existing entries when quota is exceeded', () => {
+    it('trims the oldest 20% of the array and retries when quota is exceeded', () => {
       const seeded = Array.from({ length: 150 }, (_, i) => makeFight(`old-${i}`));
       localStorage.setItem(KEY_FIGHTS, JSON.stringify(seeded));
 
@@ -150,20 +150,20 @@ describe('LoreArchive', () => {
 
       LoreArchive.signalFight(makeFight('new-fight'));
 
-      // Recovery re-reads the OLD stored array (the new write failed) and
-      // retries with its last 100 entries — the new fight is dropped.
+      // Recovery trims the incoming array's oldest 20% (151 -> 121 entries)
+      // and retries — the newest entries, including the new fight, are kept.
       expect(setItemSpy).toHaveBeenCalledTimes(2);
       const retryArg = JSON.parse(setItemSpy.mock.calls[1]![1] as string);
-      expect(retryArg).toHaveLength(100);
-      expect(retryArg[0].id).toBe('old-50');
-      expect(retryArg[99].id).toBe('old-149');
+      expect(retryArg).toHaveLength(121);
+      expect(retryArg[0].id).toBe('old-30');
+      expect(retryArg[120].id).toBe('new-fight');
       expect(consoleSpy).toHaveBeenCalledWith(
         `localStorage quota exceeded when saving ${KEY_FIGHTS}`,
         expect.any(Error)
       );
     });
 
-    it('does not retry when quota is exceeded with 100 or fewer existing entries', () => {
+    it('retries with a trimmed array even for small histories', () => {
       const seeded = Array.from({ length: 50 }, (_, i) => makeFight(`old-${i}`));
       localStorage.setItem(KEY_FIGHTS, JSON.stringify(seeded));
 
@@ -176,7 +176,7 @@ describe('LoreArchive', () => {
 
       LoreArchive.signalFight(makeFight('new-fight'));
 
-      expect(setItemSpy).toHaveBeenCalledTimes(1);
+      expect(setItemSpy).toHaveBeenCalledTimes(2);
     });
 
     it('logs a generic error and does not retry for non-quota failures', () => {

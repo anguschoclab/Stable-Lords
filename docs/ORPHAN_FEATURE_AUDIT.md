@@ -27,10 +27,10 @@
 | A4 | `components/run-round/{BoutRow,OutcomeIcon,RunResults,RunResultsSummary}.tsx` | UI | **APPROVED — superseded?** | Test-only component subtree rendering bout results; live result display is `ResolutionReveal` (`__root.tsx:12,56`). Siblings `AutosimConsole`, `LethalityBadge`, `MatchCard` are wired. | Escalate: either rewire into a results view (e.g., `/stable/bouts` detail) or delete as superseded — your call under wire-everything, recommend salvage `OutcomeIcon`/`LethalityBadge`-style glyphs if ResolutionReveal lacks them. |
 | A5 | `components/arena/effects/WeaponTrail.tsx` | UI | **APPROVED** | Zero importers anywhere (not even tests). Animated weapon-trail effect for the bout viewer. | Wire (C): mount in `components/arena/effects/` chain of `BoutViewer` if the spatial viewer supports it; else escalate (may predate the current viewer). |
 | A6 | `components/ui/{StatCard,HeaderMetricDisplay}.tsx` | UI | **APPROVED** | Zero importers. StatCard = variant-mapped stat tile; HeaderMetricDisplay = titled metric strip — both match bible §7 primitives. | Wire (C): adopt in dashboards where stat tiles are hand-rolled (Control Center, Stable Hall metrics) — or delete if primitives were superseded by `Surface`/badges. |
-| A7 | `constants/core/saveVersion.ts` — dead barrel | Loop | **NOTE** | Re-exports `SAVE_STATE_VERSION` from `./core`; consumers import `@/constants/core` directly. | Trivial: point consumers at it or delete the barrel. |
-| A8 | `engine/factories/combatFactory.ts` — `makeFightSummary` test helper | Loop | **NOTE** | Test-only factory living in `engine/factories/`. | Move to `src/test/_fixtures/factories.ts` (precedent exists) or leave; not gameplay. |
-| A9 | `utils/storage.ts` — `handleLocalStorageQuotaError` | UI | **APPROVED** | Test-only. Quota-retry-with-trim helper; production persistence goes through `archiveService`/OPFS, not localStorage — but other localStorage users (bookmarks? prefs?) may exist unguarded. | Wire: apply to any raw `localStorage.setItem` call sites, or delete if none exist. |
-| A10 | `components/{bookmarks,planBuilder}/index.ts` dead barrels | UI | **NOTE** | Barrels unimported; consumers deep-import the components. | Harmless; keep or delete. |
+| A7 | `constants/core/saveVersion.ts` — dead barrel | Loop | **REMOVED** | Re-exports `SAVE_STATE_VERSION` from `./core`; consumers import `@/constants/core` directly. | Deleted — barrel had zero consumers. |
+| A8 | `engine/factories/combatFactory.ts` — `makeFightSummary` test helper | Loop | **REMOVED** | Test-only factory living in `engine/factories/`; duplicated by `_fixtures/factories.ts::makeFightSummary`. | Deleted; the 2 test consumers repointed to the fixture factory; `combatFactory.test.ts` removed (fixture has its own coverage). |
+| A9 | `utils/storage.ts` — `handleLocalStorageQuotaError` | UI | **WIRED** | Test-only quota-retry helper; localStorage call sites each had hand-rolled copies. | Wired into `LoreArchive.saveArray` + `arenaHistory.save` (deduped ~40 lines). Helper tightened to only trim-retry on `QuotaExceededError` (non-quota errors rethrow). Call-site tests updated to helper semantics (trim incoming array's oldest 20%). |
+| A10 | `components/{bookmarks,planBuilder}/index.ts` dead barrels | UI | **REMOVED** | Barrels unimported; consumers deep-import the components. | Deleted — zero importers. |
 
 ## B. Dead state fields
 
@@ -86,10 +86,10 @@
 
 | # | Route | Verdict | Evidence | Wiring plan |
 |---|-------|---------|----------|-------------|
-| E1 | `/admin` → `pages/AdminTools` | **APPROVED** | Full admin console (CategoryNav, SystemPanel, WorldPanel, EconomyPanel, TelemetryPanel) routed, zero nav links. Matrix #39 "Admin Tools". | Wire: add to nav (dev-mode gated?) or link from Help/Footer. |
-| E2 | `/lore/hall-of-fights` → `lore/HallOfFights` | **APPROVED** | Routed, no nav link. | Wire into World hub nav or Chronicle. |
-| E3 | `/tools/physicals-simulator` → `pages/PhysicalsSimulator` | **APPROVED** | Routed, no nav link. Matrix #9 "Physicals Simulator". | Wire into nav (tools section) or link from Training. |
-| E4 | `/help` | **NOTE** | Reachable via `?` keyboard shortcut only (`useKeyboardShortcuts.ts:62`). | Consider a visible help link — borderline intentional. |
+| E1 | `/admin` → `pages/AdminTools` | **WIRED** | Full admin console (CategoryNav, SystemPanel, WorldPanel, EconomyPanel, TelemetryPanel) routed, zero nav links. Matrix #39 "Admin Tools". | Wired: `UTILITY_LINKS` strip in `navigationHubs.ts` rendered at bottom of `LeftNav`/`MobileNav`; admin entry dev-gated via `import.meta.env.DEV`. Test: `src/test/components/navigationHubs.test.ts`. |
+| E2 | `/lore/hall-of-fights` → `lore/HallOfFights` | **WIRED** | Routed, no nav link. | Wired: added to World hub pages as "Hall of Fights". |
+| E3 | `/tools/physicals-simulator` → `pages/PhysicalsSimulator` | **WIRED** | Routed, no nav link. Matrix #9 "Physicals Simulator". | Wired: added to Stable hub pages as "Simulator". |
+| E4 | `/help` | **WIRED** | Reachable via `?` keyboard shortcut only (`useKeyboardShortcuts.ts:62`). | Wired: visible Help link in the `UTILITY_LINKS` strip (always shown, not dev-gated). |
 | E5 | `/arena-hub` | **DISPROVED** | Duplicate alias of nav-linked `/stable/arena` (both render `ArenaHub`). | No action — redundant alias, not an orphan. |
 | E6 | `/welcome`, param routes (`/warrior/:id`, `/stable/promoter/:id`, `/world/stable/:id`) | **DISPROVED** | FTUE flow + entity-deep-links via EntityLink. | No action. |
 

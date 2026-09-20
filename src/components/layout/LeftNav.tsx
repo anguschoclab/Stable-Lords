@@ -10,6 +10,7 @@ import {
   HubSwitcher,
   SubPageList,
   AlertStrip,
+  UtilityStrip,
 } from './navigationShared';
 import { HUBS, type HubId } from './navigationHubs';
 
@@ -60,6 +61,9 @@ export function LeftNav({ className }: LeftNavProps) {
 
       {/* Bottom alert strip */}
       <AlertStrip alerts={alerts} LinkComponent={Link} />
+
+      {/* Utility links (Help, dev-only Admin) */}
+      <UtilityStrip LinkComponent={Link} />
     </nav>
   );
 }

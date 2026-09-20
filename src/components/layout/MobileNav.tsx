@@ -10,6 +10,7 @@ import {
   HubSwitcher,
   SubPageList,
   AlertStrip,
+  UtilityStrip,
 } from './navigationShared';
 import { HUBS, type HubId } from './navigationHubs';
 import { Button } from '@/components/ui/button';
@@ -111,6 +112,9 @@ export function MobileNav({ className }: MobileNavProps) {
 
             {/* Bottom alert strip */}
             <AlertStrip alerts={alerts} LinkComponent={SheetCloseLink} itemClassName="px-2 py-2" />
+
+            {/* Utility links (Help, dev-only Admin) */}
+            <UtilityStrip LinkComponent={SheetCloseLink} itemClassName="px-2 py-2" />
           </div>
         </SheetContent>
       </Sheet>

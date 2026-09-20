@@ -18,6 +18,9 @@ import {
   BrainCircuit,
   UserPlus,
   Bookmark,
+  Activity,
+  LifeBuoy,
+  Terminal,
 } from 'lucide-react';
 
 /**
@@ -42,6 +45,7 @@ export const HUBS = [
       { to: '/stable/finance', label: 'Finance', icon: Coins },
       { to: '/stable/recruit', label: 'Recruit', icon: UserPlus },
       { to: '/stable/offseason', label: 'Offseason', icon: Sunset },
+      { to: '/tools/physicals-simulator', label: 'Simulator', icon: Activity },
       { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
     ],
   },
@@ -57,6 +61,7 @@ export const HUBS = [
       { to: '/world/scouting', label: 'Scouting', icon: Radar },
       { to: '/world/chronicle', label: 'Chronicle', icon: Newspaper },
       { to: '/world/history', label: 'Hall of Fame', icon: Trophy },
+      { to: '/lore/hall-of-fights', label: 'Hall of Fights', icon: ScrollText },
       { to: '/world/graveyard', label: 'Graveyard', icon: Skull },
     ],
   },
@@ -67,6 +72,15 @@ export const HUBS = [
     to: '/bookmarks',
     pages: [],
   },
+] as const;
+
+/**
+ * Utility destinations rendered at the bottom of the nav rail, outside the hub
+ * structure. `devOnly` entries are hidden in production builds.
+ */
+export const UTILITY_LINKS = [
+  { to: '/help', label: 'Help', icon: LifeBuoy },
+  { to: '/admin', label: 'Admin', icon: Terminal, devOnly: true },
 ] as const;
 
 /**

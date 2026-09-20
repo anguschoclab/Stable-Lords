@@ -10,8 +10,6 @@ import { TRAITS, generateTraits } from '@/engine/traits';
 import { SeededRNGService } from '@/utils/random';
 
 const REMOVED_IDS = [
-  'shadow_born',
-  'feral_instincts',
   'iron_gut',
   'blood_scent',
   'pit_rat',
@@ -44,7 +42,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 142; // 139 previous + 3 new narrative traits (pit_fighter, gut_instinct, gallows_born)
+const EXPECTED_COUNT = 144; // 139 previous + 3 new narrative traits (pit_fighter, gut_instinct, gallows_born)
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

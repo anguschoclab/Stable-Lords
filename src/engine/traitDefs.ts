@@ -94,6 +94,29 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  // New Lore Traits
+  shadow_born: {
+    id: 'shadow_born',
+    weight: 20,
+    name: 'Shadow Born',
+    description: 'Raised in the pitch-black cellars of the undercity, this warrior is unnaturally perceptive.',
+    sign: 'positive',
+    tier: 'Notable',
+    effect: { iniMod: 2, defMod: 1 },
+    incompatibilities: ['clumsy', 'nearsighted'],
+    tags: ['perception', 'stealth'],
+  },
+  feral_instincts: {
+    id: 'feral_instincts',
+    weight: 20,
+    name: 'Feral Instincts',
+    description: 'Surviving the vicious dog-pits gave them a wild, unpredictable fighting style.',
+    sign: 'positive',
+    tier: 'Notable',
+    effect: { attMod: 2, defMod: -1, dmgBonus: 1 },
+    incompatibilities: ['methodical', 'hesitant'],
+    tags: ['aggression', 'unpredictable'],
+  },
   // New Narrative Traits
   orphan_resilience: {
     id: 'orphan_resilience',

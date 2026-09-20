@@ -504,6 +504,22 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'sundered_coliseum_first_collapse',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The First Collapse',
+    narrative:
+      'During the grand opening matches, a stray spell shattered the western pillar, causing a collapse that killed three fighters and birthed the uneven terrain used today.',
+  },
+  {
+    id: 'sunken_temple_drowned_priest',
+    arenaId: 'sunken_temple',
+    type: 'famous_death',
+    title: 'The Drowned Priest',
+    narrative:
+      'A zealous warrior, too heavily armored, tripped in the holy waters and was held under by a rival, cursing the temple with his dying breath.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

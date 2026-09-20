@@ -4,6 +4,11 @@
  */
 
 export const ORIGINS: string[] = [
+  "Raised in the soot-stained rafters of the Blackwood Orphanage",
+  "Abandoned near the whispering gargoyles of the High Basilica",
+  "Found clutching a broken gear in the lower wards of the Clockwork District",
+  "Survived the plague-ships anchored in the forgotten harbor",
+  "Torn from the brutal training yards of the Sump Guild",
   "Abandoned at the rusted gates of the Blackwood Workhouse",
   "Survived the chilling cullings of the Whispering Vaults",
   "Raised amidst the deafening roar of the Cinderstone Forges",
@@ -221,7 +226,6 @@ export const ORIGINS: string[] = [
   "Raised by feral hounds in the ruins of the Old Cathedral of the Weeping Mother",
   "Survived the silent culling of the Hollow Hill Orphanage during the long winter",
   "Found swaddled in blood-stained rags in the catacombs beneath the Dross Wards",
-  "Raised in the lightless cellars of the Harrow-Home for Wayward Foundlings",
   "Sold to the under-barons of the Scab District for a handful of copper by desperate parents",
   "Abandoned in the soot-stained nursery of the Ashen Ward Workhouse",
   "Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity",
@@ -283,6 +287,9 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  "developed a haunting stare that made even the guards look away",
+  "learned to walk without making a single sound on gravel",
+  "would collect the teeth of fallen gladiator beasts as morbid trophies",
   "learned to gauge distance by dodging the overseer",
   "memorized the anatomy of beasts while working the charnel pits",
   "developed an iron grip from clinging to the underside of merchant carts",
@@ -401,7 +408,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   "developed an uncanny ability to sense blood before it was spilled",
   "practiced dodging the heavy iron cudgels of the workhouse overseers",
   "memorized the sound of every snapping bone in the fighting pits",
-  "learned to predict a strike by watching the shift in a bully’s shoulders",
   "always carried a rusted iron nail hidden under their tongue",
   "slept with their back against the wall and a broken bottle in hand",
   "developed a habit of meticulously counting the breaths of sleeping guards",
@@ -413,7 +419,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   "spent their nights punching the stone walls of their cell until their knuckles calloused",
   "learned to gauge distance by dodging the matron’s iron ruler",
   "memorized the anatomy of beasts while working the charnel pits of the lower wards",
-  "developed an iron grip from clinging to the underside of plague carts",
   "developed an unnerving habit of collecting shattered blades from the gutter",
   "learned to move entirely without sound after the great ward riots",
   "survived the bitter winter by huddling next to the crematorium vents",
@@ -438,6 +443,9 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  "until they defended a weaker child by breaking a foreman’s wrist",
+  "knowing the only escape from the slums was the blood-soaked sand of the arena",
+  "realizing their quick reflexes were meant for killing, not just surviving",
   "discovering that a rusted spoon could be sharpened into a deadly shiv",
   "surviving a night in the dog-cages by out-snarling the hounds",
   "realizing that mercy in the Undercity was just another word for weakness",
@@ -537,7 +545,6 @@ export const DEFINING_MOMENTS: string[] = [
   "until they drove a shattered bottle into their tormentor",
   "knowing that the roar of the crowd was the only lullaby they ever needed",
   "until they shattered a warden’s jaw with a single, perfectly timed kick",
-  "realizing the arena was the only place where their rage was rewarded with silver",
   "until they shattered a slaver",
   "realizing that the only way to escape the slums was over a mountain of broken bodies",
   "until they garroted a brutal taskmaster with their own whip",
@@ -551,8 +558,6 @@ export const DEFINING_MOMENTS: string[] = [
   "discovering that the crowd",
   "until they finally realized their lifelong scars were just a map to the arena",
   "realizing that bleeding in the sands paid better than bleeding in the slums",
-  "discovering that a rusted spoon could be sharpened into a deadly shiv in the dark",
-  "surviving a night in the dog-cages by out-snarling the feral hounds",
   "realizing that mercy in the Undercity was just another word for weakness when their friend was slain",
   "until they broke a taskmaster’s jaw with a stolen cobblestone",
   "realizing that only violence could buy their freedom from the lower wards",

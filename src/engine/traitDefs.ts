@@ -103,8 +103,6 @@ export const TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     tier: 'Notable',
     effect: { iniMod: 2, defMod: 1 },
-    incompatibilities: ['clumsy', 'nearsighted'],
-    tags: ['perception', 'stealth'],
   },
   feral_instincts: {
     id: 'feral_instincts',
@@ -114,8 +112,6 @@ export const TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     tier: 'Notable',
     effect: { attMod: 2, defMod: -1, dmgBonus: 1 },
-    incompatibilities: ['methodical', 'hesitant'],
-    tags: ['aggression', 'unpredictable'],
   },
   // New Narrative Traits
   orphan_resilience: {

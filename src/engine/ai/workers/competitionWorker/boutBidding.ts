@@ -17,6 +17,7 @@ import type { BoutBid } from './types';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
 import { displayWeek } from '@/engine/core/absoluteWeek';
+import { computeRivalReputation } from '@/engine/stableReputation';
 import { clamp } from '@/utils/math';
 import { isActive, isBookable } from '@/engine/warriorStatus';
 
@@ -329,6 +330,14 @@ export function convertBidsToOffers(
     const arenaId = selectArenaForMatchup(proposer, opponent, rng);
     const offerId = `bid_${rng.uuid()}` as BoutOfferId;
 
+    // Stable notoriety sells tickets — butcher stables draw a bigger crowd.
+    const proposerRoster = proposerStable.isPlayer
+      ? state.roster
+      : rivalMap.get(proposerStable.stableId)?.roster;
+    const notorietyHype = proposerRoster
+      ? Math.floor(computeRivalReputation(proposerRoster).notoriety / 2)
+      : 0;
+
     const offer: BoutOffer = {
       id: offerId,
       promoterId: BID_MATCHMAKING_ID,
@@ -340,7 +349,9 @@ export function convertBidsToOffers(
       purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
       hype: Math.max(
         40,
-        Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5
+        Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) +
+          bid.priority * 5 +
+          notorietyHype
       ),
       status: 'Proposed',
       responses: {

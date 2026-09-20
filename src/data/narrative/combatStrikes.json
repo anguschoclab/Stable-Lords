@@ -150,7 +150,9 @@
         "{{defender}} reels as {{attacker}}'s slash connects with sickening force on their {{bodyPart}}.",
         "{{attacker}} carves a brutal line of crimson into {{defender}}'s {{bodyPart}}.",
         "With terrible momentum, {{attacker}}'s steel parts flesh on {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} delivers a wide, punishing arc that bites deeply into {{defender}}'s {{bodyPart}}."
+        "{{attacker}} delivers a wide, punishing arc that bites deeply into {{defender}}'s {{bodyPart}}.",
+        "{{attacker}}'s blade arcs beautifully, slicing deeply into {{defender}}'s {{bodyPart}} in a spray of scarlet.",
+        "With a vicious backhand swing, {{attacker}} leaves a weeping red line across {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}.",
@@ -406,7 +408,9 @@
         "{{attacker}} crashes their weapon into {{defender}}'s {{bodyPart}} with staggering force.",
         "The dull, horrifying thud of {{attacker}}'s weapon connects solidly with {{defender}}'s {{bodyPart}}.",
         "{{attacker}} unleashes a crushing swing, smashing into {{defender}}'s {{bodyPart}}.",
-        "{{defender}} reels as {{attacker}}'s heavy blow connects brutally with their {{bodyPart}}."
+        "{{defender}} reels as {{attacker}}'s heavy blow connects brutally with their {{bodyPart}}.",
+        "The sickening crack of impact rings out as {{attacker}}'s heavy weapon crushes against {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} drives their weight into a hammering blow, punishing {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",
@@ -650,7 +654,9 @@
         "With cruel precision, {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
         "A lightning-fast lunge from {{attacker}} finds its mark in {{defender}}'s {{bodyPart}}.",
         "{{attacker}} executes a clinically precise thrust into {{defender}}.",
-        "A swift piercing strike from {{attacker}} finds the mark on {{defender}}."
+        "A swift piercing strike from {{attacker}} finds the mark on {{defender}}.",
+        "A sudden, viper-like lunge from {{attacker}} sinks deep into {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} finds a gap in the armor, plunging their point into {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} finds the microscopic gap in {{defender}}'s defense, sliding effortlessly into the {{bodyPart}}.",
@@ -906,7 +912,9 @@
         "A heavy, bare-knuckle strike from {{attacker}} rocks {{defender}}'s {{bodyPart}}.",
         "{{attacker}} steps inside and buries a vicious hook into {{defender}}'s {{bodyPart}}.",
         "A thundering cross from {{attacker}} rocks {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} unleashes a raw, bare-knuckle haymaker straight to {{defender}}'s {{bodyPart}}."
+        "{{attacker}} unleashes a raw, bare-knuckle haymaker straight to {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} lands a punishing hook directly onto {{defender}}'s {{bodyPart}}, staggering them.",
+        "A flurry of savage, bare-knuckle blows from {{attacker}} finds {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence.",

@@ -112,10 +112,10 @@
 |---|-----------|---------|----------|-------------|
 | G1 | #25 House Rules / Mods Loader | **UNIMPLEMENTED** | Zero code hits. | New feature — scope as its own finding; large. |
 | G2 | #27 Import/Export Manager (JSON/YAML packs) | **UNIMPLEMENTED** | Zero code hits. | New feature — separate scope. |
-| G3 | #31 Theme/Accessibility Pack (high-contrast, text size) | **PARTIAL** | `motion-reduce` honored; no high-contrast/text-size controls found. | Wire as settings surface on Help/Admin. |
+| G3 | #31 Theme/Accessibility Pack (high-contrast, text size) | **IMPLEMENTED** | `motion-reduce` honored; no high-contrast/text-size controls found. | `src/lib/a11yPrefs.ts` (localStorage-persisted contrast + text-scale, applied via `data-contrast` + `zoom` on documentElement at boot in `main.tsx`); `.high-contrast` token overrides in `index.css`; Accessibility section on Help page. Tests: `src/test/lib/a11yPrefs.test.ts`, `src/test/pages/HelpA11y.test.tsx`. |
 | G4 | #33 Onboarding Quests & Tips | **PARTIAL** | `useCoachTip` exists; quest structure absent. | Escalate: how much of the quest system to build? |
-| G5 | #34 Design Bible Search | **UNIMPLEMENTED** | `MarkdownReader.tsx` exists (bible reader may be wired — verify); no search. | Verify reader first; add search if reader is live. |
-| G6 | #15 Kill Analytics (Mechanics of Death visualizer) | **UNIMPLEMENTED** | No hits; combat has kill-window data (`ExchangeLogEntry.killWindow`). | Wire: analytics view fed by existing killWindow/executionFlag telemetry. |
+| G5 | #34 Design Bible Search | **IMPLEMENTED** | `MarkdownReader` was live only inside GazetteArticle. | `src/lib/bibleIndex.ts` loads all `docs/*.md` via `import.meta.glob ?raw`, splits into heading sections, ranked snippet search; `BibleSearch` accordion section on Help page. Tests: `src/test/lib/bibleIndex.test.ts`, `src/test/pages/HelpA11y.test.tsx`. |
+| G6 | #15 Kill Analytics (Mechanics of Death visualizer) | **IMPLEMENTED** | `exchangeLog` is bout-time only (not persisted); persisted kill telemetry = `FightSummary.by/isDeathEvent/deathEventData.memorialTags/analysis.decisiveExchange` + graveyard `causeOfDeath`/`killedBy`. | `src/engine/analytics/killAnalytics.ts` aggregates kills/kill-rate, cause buckets, killer styles, fatal-minute bands, memorial tags, top killers; `KillAnalyticsPanel` rendered as "Mechanics of Death" tab in `GraveyardTabs`. Tests: `src/test/engine/analytics/killAnalytics.test.ts`, `src/test/components/fallen/KillAnalyticsPanel.test.tsx`. |
 | G7 | #36 Content Updater | **UNIMPLEMENTED** | Zero code hits. | Out of scope-ish (live-ops feature); flag only. |
 
 ## H. Disproved premise checks (verified wired — no action)

@@ -1,6 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Zap, Skull } from 'lucide-react';
+import { Zap, Skull, Crosshair } from 'lucide-react';
 import { VirtualizedFallenGrid } from '@/components/fallen/VirtualizedFallenGrid';
+import { KillAnalyticsPanel } from '@/components/fallen/KillAnalyticsPanel';
+import { useGameStore } from '@/state/useGameStore';
 import type { Warrior } from '@/types/game';
 
 interface GraveyardTabsProps {
@@ -13,6 +15,8 @@ interface GraveyardTabsProps {
  *
  */
 export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProps) {
+  const arenaHistory = useGameStore((s) => s.arenaHistory);
+  const graveyardState = useGameStore((s) => s.graveyard);
   return (
     <Tabs defaultValue="memorial" className="w-full">
       <TabsList className="bg-secondary/20 p-1 rounded-none h-10 w-full sm:w-auto mb-8">
@@ -27,6 +31,12 @@ export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProp
           className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all"
         >
           <Skull className="h-3 w-3" /> World Cemetery ({graveyard.length})
+        </TabsTrigger>
+        <TabsTrigger
+          value="analytics"
+          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-arena-blood data-[state=active]:text-primary-foreground transition-all"
+        >
+          <Crosshair className="h-3 w-3" /> Mechanics of Death
         </TabsTrigger>
       </TabsList>
       <TabsContent value="memorial">
@@ -44,6 +54,9 @@ export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProp
           emptyTitle="Sands of Peace"
           emptyDesc="No blood has been spilled in this realm."
         />
+      </TabsContent>
+      <TabsContent value="analytics">
+        <KillAnalyticsPanel fights={arenaHistory} graveyard={graveyardState} />
       </TabsContent>
     </Tabs>
   );

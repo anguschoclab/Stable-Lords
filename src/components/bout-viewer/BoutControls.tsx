@@ -15,21 +15,7 @@ interface BoutControlsProps {
   onReset: () => void;
   onTogglePlay: () => void;
   onSkipToEnd: () => void;
-} /**
-   * Bout controls.
-   * @param  - {
-  view mode,
-  on view mode change,
-  is playing,
-  speed,
-  set speed,
-  visible count,
-  total events,
-  on reset,
-  on toggle play,
-  on skip to end,
-}.
-   */
+}
 
 /**
  * Bout controls.
@@ -86,22 +72,29 @@ export default function BoutControls({
 
           <div className="h-4 w-px bg-white/10" />
 
-          <button
-            onClick={onTogglePlay}
-            className={cn(
-              'flex items-center justify-center p-2.5 rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-              isPlaying
-                ? 'bg-foreground/10 text-foreground'
-                : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.6)] hover:bg-primary/90'
-            )}
-            aria-label={isPlaying ? 'Pause playback' : 'Play bout'}
-          >
-            {isPlaying ? (
-              <Pause className="h-4 w-4" />
-            ) : (
-              <Play className="h-4 w-4 ml-0.5 fill-current" />
-            )}
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={onTogglePlay}
+                className={cn(
+                  'flex items-center justify-center p-2.5 rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                  isPlaying
+                    ? 'bg-foreground/10 text-foreground'
+                    : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.6)] hover:bg-primary/90'
+                )}
+                aria-label={isPlaying ? 'Pause playback' : 'Play bout'}
+              >
+                {isPlaying ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4 ml-0.5 fill-current" />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
+              {isPlaying ? 'PAUSE PLAYBACK' : 'PLAY BOUT'}
+            </TooltipContent>
+          </Tooltip>
 
           <div className="h-4 w-px bg-white/10" />
 

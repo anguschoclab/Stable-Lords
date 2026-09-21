@@ -1,11 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
-import ArenaHub from '@/pages/ArenaHub'; /**
- * Route.
- */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 /**
- * Route.
+ * Legacy alias — `/arena-hub` predates the hub navigation reorganization.
+ * Canonical surface is `/stable/arena`; redirect preserves external links.
  */
 export const Route = createFileRoute('/arena-hub')({
-  component: ArenaHub,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable/arena' });
+  },
 });

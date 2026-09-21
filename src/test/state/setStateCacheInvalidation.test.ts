@@ -13,6 +13,11 @@ vi.mock('@/engine/storage/opfsArchive', () => ({
   opfsArchive: {
     archiveHotState: vi.fn().mockResolvedValue(undefined),
   },
+  OPFSArchiveService: class {
+    archiveHotState() {
+      return Promise.resolve(undefined);
+    }
+  },
 }));
 
 import '@/test/_setup/setup';

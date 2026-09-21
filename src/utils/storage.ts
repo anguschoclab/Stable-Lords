@@ -12,6 +12,7 @@ export function handleLocalStorageQuotaError(operation: string, data: unknown): 
   try {
     localStorage.setItem(operation, JSON.stringify(data));
   } catch (error) {
+    if ((error as Error)?.name !== 'QuotaExceededError') throw error;
     console.error(`localStorage quota exceeded when saving ${operation}`, error);
 
     // Attempt to recover by trimming the specific array data being saved

@@ -29,6 +29,7 @@ function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStable
       burnRate: 0,
       metaAwareness: {},
       knownRivals: [],
+      opponentDossiers: {},
     },
     ...overrides,
   } as any as RivalStableData;

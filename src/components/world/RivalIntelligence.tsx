@@ -8,10 +8,7 @@ import { cn } from '@/lib/utils';
 
 interface RivalIntelligenceProps {
   rivals: RivalStableData[];
-} /**
- * Rival intelligence.
- * @param - { rivals }.
- */
+}
 
 /**
  * Rival intelligence.
@@ -74,6 +71,23 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <BookmarkButton entityType="rival" entityId={rival.owner.id} size="sm" />
+                    <span
+                      data-testid="intel-quality-chip"
+                      className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm bg-neutral-900 border border-white/5 text-muted-foreground/70 tabular-nums"
+                    >
+                      {Object.keys(rival.agentMemory?.opponentDossiers ?? {}).length > 0
+                        ? `${Object.keys(rival.agentMemory?.opponentDossiers ?? {}).length} dossiers`
+                        : 'No intel'}
+                    </span>
+                    {rival.strategy?.intent === 'TOURNAMENT_CAMPAIGN' && (
+                      <Badge
+                        data-testid="tournament-posture-chip"
+                        variant="outline"
+                        className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
+                      >
+                        Tournament prep
+                      </Badge>
+                    )}
                     <Badge
                       className={cn(
                         'text-[9px] font-black border-none uppercase tracking-widest px-2 py-0.5 shrink-0',

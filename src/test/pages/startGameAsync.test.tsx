@@ -142,7 +142,11 @@ describe('#5 StartGame handleNewGame awaits saveToSlot', () => {
       expect(mockLoadGame).toHaveBeenCalledOnce();
     });
 
-    expect(saveToSlot).toHaveBeenCalledBefore(mockLoadGame);
+    // vi.toHaveBeenCalledBefore does not exist under bun:test — compare
+    // invocationCallOrder directly (same semantics, both runners).
+    expect(vi.mocked(saveToSlot).mock.invocationCallOrder[0]!).toBeLessThan(
+      mockLoadGame.mock.invocationCallOrder[0]!
+    );
   });
 });
 

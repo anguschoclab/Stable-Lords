@@ -6,6 +6,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { type WarriorId } from '@/types/shared.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { isActive } from '@/engine/warriorStatus';
+import { hasInjuries } from '@/engine/injuries/utils';
 
 /** Narrative definition for an offseason event — title, effect type, and newsletter text. */
 export interface OffseasonEventNarrative {
@@ -83,6 +84,6 @@ export interface OffseasonEventContext {
 /** Active warriors, optionally restricted to those carrying no injuries. */
 export function getActiveWarriors(state: GameState, healthyOnly = false): Warrior[] {
   return state.roster.filter(
-    (w) => isActive(w) && (!healthyOnly || !w.injuries || w.injuries.length === 0)
+    (w) => isActive(w) && (!healthyOnly || !hasInjuries(w))
   );
 }

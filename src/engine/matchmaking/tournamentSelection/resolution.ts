@@ -86,7 +86,8 @@ export function resolveRound(
       updatedState.weather ?? 'Clear',
       arenaId,
       updatedState.crowdMood,
-      headless
+      headless,
+      updatedState.houseRules?.deathRateMult
     );
 
     bout.winner = outcome.winner;
@@ -189,9 +190,7 @@ export function resolveRound(
     isComplete,
     updatedTournament,
   };
-} /**
- * Resolve complete tournament.
- */
+}
 
 /**
  * Resolve complete tournament.
@@ -214,14 +213,18 @@ export function resolveCompleteTournament(
     safety++;
   }
   return current;
-} /**
- * Apply bout results.
- * @param skipFatigue - Skip fatigue. (optional)
- */
+}
 
 /**
  * Apply bout results.
- * @param skipFatigue - Skip fatigue. (optional)
+ * @param state -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param tId -
+ * @param tName -
+ * @param rng -
+ * @param skipFatigue - If true, skip fatigue accrual (tournament bouts during tournament week)
  */
 export function applyBoutResults(
   state: GameState,

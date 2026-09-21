@@ -3,19 +3,8 @@
  * Extracted from gazetteNarrative.ts to follow SRP
  */
 import type { FightSummary } from '@/types/combat.types';
-import type { WarriorId } from '@/types/shared.types'; /**
- * Defines the shape of gazette detections.
- */
-
-/**
- * Extract warrior display names from the FightSummary title.
- * Title format: "${nameA} vs ${nameB}" or "${nameA} vs ${nameB} (${tournament})"
- */
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
+import type { FightId, WarriorId } from '@/types/shared.types';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Defines the shape of gazette detections.
@@ -39,6 +28,42 @@ export interface FightAnalysisContext {
   priorWarriorIds: Set<WarriorId>;
   warriorStats: Map<WarriorId, { total: number; wins: number }>;
   pairCounts: Map<string, number>;
+  namesByFightId: Map<FightId, { a: string; d: string }>;
+}
+
+/**
+ * Build a per-fight names cache keyed by fight id, parsing each title once.
+ * Skips null/undefined entries gracefully.
+ */
+export function buildNamesByFightId(
+  fights: FightSummary[]
+): Map<FightId, { a: string; d: string }> {
+  const map = new Map<FightId, { a: string; d: string }>();
+  for (const f of fights) {
+    if (!f) continue;
+    map.set(f.id, getNamesFromTitle(f.title));
+  }
+  return map;
+}
+
+/**
+ * Shared streak-update logic used by both `computeStreaks` and `computeFightAnalysis`.
+ */
+function applyStreakUpdate(streaks: Map<WarriorId, number>, f: FightSummary): void {
+  if (f.winner === 'A') {
+    const a = streaks.get(f.warriorIdA) ?? 0;
+    const d = streaks.get(f.warriorIdD) ?? 0;
+    streaks.set(f.warriorIdA, a >= 0 ? a + 1 : 1);
+    streaks.set(f.warriorIdD, d <= 0 ? d - 1 : -1);
+  } else if (f.winner === 'D') {
+    const a = streaks.get(f.warriorIdA) ?? 0;
+    const d = streaks.get(f.warriorIdD) ?? 0;
+    streaks.set(f.warriorIdD, d >= 0 ? d + 1 : 1);
+    streaks.set(f.warriorIdA, a <= 0 ? a - 1 : -1);
+  } else {
+    streaks.set(f.warriorIdA, 0);
+    streaks.set(f.warriorIdD, 0);
+  }
 }
 
 /**
@@ -65,21 +90,8 @@ export function computeFightAnalysis(
       priorWarriorIds.add(f.warriorIdD);
     }
 
-    // streaks: identical logic to computeStreaks
-    if (f.winner === 'A') {
-      const aStreak = streaks.get(f.warriorIdA) ?? 0;
-      const dStreak = streaks.get(f.warriorIdD) ?? 0;
-      streaks.set(f.warriorIdA, aStreak >= 0 ? aStreak + 1 : 1);
-      streaks.set(f.warriorIdD, dStreak <= 0 ? dStreak - 1 : -1);
-    } else if (f.winner === 'D') {
-      const aStreak = streaks.get(f.warriorIdA) ?? 0;
-      const dStreak = streaks.get(f.warriorIdD) ?? 0;
-      streaks.set(f.warriorIdD, dStreak >= 0 ? dStreak + 1 : 1);
-      streaks.set(f.warriorIdA, aStreak <= 0 ? aStreak - 1 : -1);
-    } else {
-      streaks.set(f.warriorIdA, 0);
-      streaks.set(f.warriorIdD, 0);
-    }
+    // streaks: shared logic with computeStreaks
+    applyStreakUpdate(streaks, f);
 
     // warriorStats: total fights and wins per warrior
     const aStats = warriorStats.get(f.warriorIdA);
@@ -105,7 +117,7 @@ export function computeFightAnalysis(
     pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
   }
 
-  return { streaks, priorWarriorIds, warriorStats, pairCounts };
+  return { streaks, priorWarriorIds, warriorStats, pairCounts, namesByFightId: buildNamesByFightId(weekFights) };
 }
 
 /**
@@ -117,7 +129,7 @@ export function detectDebuts(weekFights: FightSummary[], ctx: FightAnalysisConte
   const names = new Set<string>();
   for (const f of weekFights) {
     if (!f) continue;
-    const n = getNamesFromTitle(f.title);
+    const n = ctx.namesByFightId.get(f.id) ?? { a: 'Unknown', d: 'Unknown' };
     if (!ctx.priorWarriorIds.has(f.warriorIdA)) names.add(n.a);
     if (!ctx.priorWarriorIds.has(f.warriorIdD)) names.add(n.d);
   }
@@ -133,20 +145,7 @@ export function computeStreaks(allFights: FightSummary[]): Map<WarriorId, number
   for (let i = 0; i < allFights.length; i++) {
     const f = allFights[i];
     if (!f) continue;
-    if (f.winner === 'A') {
-      const aStreak = streaks.get(f.warriorIdA) ?? 0;
-      const dStreak = streaks.get(f.warriorIdD) ?? 0;
-      streaks.set(f.warriorIdA, aStreak >= 0 ? aStreak + 1 : 1);
-      streaks.set(f.warriorIdD, dStreak <= 0 ? dStreak - 1 : -1);
-    } else if (f.winner === 'D') {
-      const aStreak = streaks.get(f.warriorIdA) ?? 0;
-      const dStreak = streaks.get(f.warriorIdD) ?? 0;
-      streaks.set(f.warriorIdD, dStreak >= 0 ? dStreak + 1 : 1);
-      streaks.set(f.warriorIdA, aStreak <= 0 ? aStreak - 1 : -1);
-    } else {
-      streaks.set(f.warriorIdA, 0);
-      streaks.set(f.warriorIdD, 0);
-    }
+    applyStreakUpdate(streaks, f);
   }
   return streaks;
 }
@@ -169,7 +168,7 @@ export function detectRivalryMatchup(
         : `${f.warriorIdD}||${f.warriorIdA}`;
     const count = ctx.pairCounts.get(key) ?? 0;
     if (count >= 3 && (!best || count > best.count)) {
-      const n = getNamesFromTitle(f.title);
+      const n = ctx.namesByFightId.get(f.id) ?? { a: 'Unknown', d: 'Unknown' };
       best = { a: n.a, b: n.d, count };
     }
   }
@@ -201,15 +200,15 @@ export function detectGazetteTags(fights: FightSummary[], detections: GazetteDet
  */
 export function detectHotStreakers(
   fights: FightSummary[],
-  streaks: Map<WarriorId, number>
+  ctx: FightAnalysisContext
 ): { name: string; streak: number }[] {
   const hotStreakers: { name: string; streak: number }[] = [];
   for (const f of fights) {
     if (!f.winner) continue;
     const winnerId = f.winner === 'A' ? f.warriorIdA : f.warriorIdD;
-    const s = streaks.get(winnerId) ?? 0;
+    const s = ctx.streaks.get(winnerId) ?? 0;
     if (s >= 5) {
-      const n = getNamesFromTitle(f.title);
+      const n = ctx.namesByFightId.get(f.id) ?? { a: 'Unknown', d: 'Unknown' };
       const winnerName = f.winner === 'A' ? n.a : n.d;
       hotStreakers.push({ name: winnerName, streak: s });
     }
@@ -242,7 +241,8 @@ export function detectRisingStars(fights: FightSummary[], ctx: FightAnalysisCont
   }
   const names = new Set<string>();
   for (const f of fights) {
-    const n = getNamesFromTitle(f.title);
+    if (!f) continue;
+    const n = ctx.namesByFightId.get(f.id) ?? { a: 'Unknown', d: 'Unknown' };
     if (risingIds.has(f.warriorIdA)) names.add(n.a);
     if (risingIds.has(f.warriorIdD)) names.add(n.d);
   }
@@ -253,14 +253,15 @@ export function detectRisingStars(fights: FightSummary[], ctx: FightAnalysisCont
  * Detect upset victories.
  */
 export function detectUpsets(
-  fights: FightSummary[]
+  fights: FightSummary[],
+  namesByFightId: Map<FightId, { a: string; d: string }>
 ): { winner: string; loser: string; winnerFame: number; loserFame: number }[] {
   const upsets: { winner: string; loser: string; winnerFame: number; loserFame: number }[] = [];
   for (const f of fights) {
     if (!f.winner || f.fameA == null || f.fameD == null) continue;
     const winnerFame = f.winner === 'A' ? f.fameA : f.fameD;
     const loserFame = f.winner === 'A' ? f.fameD : f.fameA;
-    const n = getNamesFromTitle(f.title);
+    const n = namesByFightId.get(f.id) ?? { a: 'Unknown', d: 'Unknown' };
     const winnerName = f.winner === 'A' ? n.a : n.d;
     const loserName = f.winner === 'A' ? n.d : n.a;
     if (loserFame >= winnerFame + 10 && loserFame >= winnerFame * 2) {

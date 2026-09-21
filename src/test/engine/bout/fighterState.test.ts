@@ -5,14 +5,15 @@ import { describe, it, expect } from 'vitest';
 import { createFighterState } from '@/engine/bout/fighterState';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
-import type { FightingStyle, WarriorId, InjuryId } from '@/types/shared.types';
+import type { WarriorId, InjuryId } from '@/types/shared.types';
+import { FightingStyle } from '@/types/shared.types';
 
 describe('fighterState', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     ({
       id: 'warrior-a' as WarriorId,
       name: 'Warrior A',
-      style: 'StrikingAttack' as FightingStyle,
+      style: FightingStyle.StrikingAttack,
       attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
       injuries: [],
@@ -27,7 +28,7 @@ describe('fighterState', () => {
     }) as Warrior;
 
   const createMockPlan = (overrides: Partial<FightPlan> = {}): FightPlan => ({
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     OE: 5,
     AL: 5,
     killDesire: 5,

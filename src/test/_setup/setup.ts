@@ -1,12 +1,23 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react/pure';
 import { enableMapSet } from 'immer';
-import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorLookup';
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
 import { loadCombatNarrative } from '@/data/narrative';
 
 enableMapSet();
+
+// OPFS modules are never mocked globally; ensure no stale mock leaks across files.
+vi.unmock('@/engine/storage/opfsArchive');
+
+// jsdom does not implement HTMLMediaElement playback — stub the two methods
+// AudioManager paths touch so tests don't emit "Not implemented" noise.
+if (typeof HTMLMediaElement !== 'undefined') {
+  HTMLMediaElement.prototype.play = function () {
+    return Promise.resolve();
+  };
+  HTMLMediaElement.prototype.load = function () {};
+}
 
 // Eagerly load combat narrative data for all tests
 beforeAll(async () => { await loadCombatNarrative(); });
@@ -186,23 +197,10 @@ afterEach(() => {
 // Clear module-level WeakMap caches to prevent state pollution across tests
 afterEach(() => {
   try {
-    clearTournamentCache?.();
     clearSelectionCache?.();
     clearHistoryResolverCaches?.();
   } catch (e) {
     // Ignore if modules don't export clear functions
-  }
-});
-
-// Clear module cache for tests that modify global state
-afterEach(() => {
-  try {
-    // Clear OPFS-related modules that may have cached state
-    if (typeof vi !== 'undefined') {
-      vi.unmock('@/engine/storage/opfsArchive');
-    }
-  } catch (e) {
-    // Ignore if module doesn't exist
   }
 });
 

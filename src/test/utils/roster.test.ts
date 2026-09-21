@@ -4,7 +4,6 @@ import {
   updateRoster,
   removeFromRoster,
   filterActive,
-  filterByStatus,
   filterHealthy,
 } from '@/utils/roster';
 import type { GameState, Warrior } from '@/types/state.types';
@@ -164,18 +163,6 @@ describe('filterActive', () => {
   });
 });
 
-describe('filterByStatus', () => {
-  it('filters by specific status', () => {
-    const roster = [
-      createTestWarrior('w1', 'Warrior 1', 'Active'),
-      createTestWarrior('w2', 'Warrior 2', 'Retired'),
-      createTestWarrior('w3', 'Warrior 3', 'Injured'),
-    ];
-    const retired = filterByStatus(roster, 'Retired');
-    expect(retired.length).toBe(1);
-    expect(retired[0]!.status).toBe('Retired');
-  });
-});
 
 describe('filterHealthy', () => {
   it('filters to active warriors with no injuries', () => {

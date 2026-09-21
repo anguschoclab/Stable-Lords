@@ -135,6 +135,7 @@ export function getAITactics(style: FightingStyle): {
   }
 }
 
+/** Resolves the AI's fallback fight condition when no active plan lever applies. */
 export function getAIFallbackCondition(
   personality: OwnerPersonality,
   style: FightingStyle,

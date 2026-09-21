@@ -93,13 +93,16 @@ type GameStateValues = {
   ftueStep: GameState['ftueStep'];
   ftueComplete: GameState['ftueComplete'];
   coachDismissed: GameState['coachDismissed'];
+  houseRules: GameState['houseRules'];
+  contentPacks: GameState['contentPacks'];
+  lifetimeStats: GameState['lifetimeStats'];
   rivalries: GameState['rivalries'];
   matchHistory: GameState['matchHistory'];
   ownerGrudges: GameState['ownerGrudges'];
   phase: GameState['phase'];
   playerChallenges: GameState['playerChallenges'];
   playerAvoids: GameState['playerAvoids'];
-  lastSimulationReport: import('@/types/combat.types').FightOutcome | undefined;
+  lastSimulationReport: import('@/types/state.types').SimulationReport | undefined;
   bookmarks: import('@/types/bookmark.types').Bookmark[];
   progression: GameState['progression'];
 };
@@ -158,6 +161,9 @@ export function reconstructGameState(store: GameStore): GameState {
     ftueStep: store.ftueStep,
     ftueComplete: store.ftueComplete,
     coachDismissed: store.coachDismissed,
+    houseRules: store.houseRules,
+    contentPacks: store.contentPacks,
+    lifetimeStats: store.lifetimeStats,
     rivalries: store.rivalries,
     matchHistory: store.matchHistory,
     ownerGrudges: store.ownerGrudges,
@@ -197,9 +203,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerChallenges: store.playerChallenges || [],
     playerAvoids: store.playerAvoids || [],
     bookmarks: store.bookmarks || [],
-    // Type assertion to handle FightOutcome vs SimulationReport mismatch
-    // This preserves existing behavior while extracting the logic
-    lastSimulationReport: store.lastSimulationReport as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    lastSimulationReport: store.lastSimulationReport,
   };
 
   lastResult = result;

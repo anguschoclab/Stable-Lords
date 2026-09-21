@@ -6,8 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
+import { StatCard } from '@/components/ui/StatCard';
 import { StableCrest } from '@/components/crest';
 import { isActive } from '@/engine/warriorStatus';
+import { getChargeDescription } from '@/engine/crest/crestGenerator';
 
 interface StableDossierProps {
   stableId?: string;
@@ -35,21 +37,21 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
       rivals: s.rivals,
     }))
   );
-  const roster = stateRoster ?? [];
-  const rivals = stateRivals ?? [];
 
   const stable = useMemo(() => {
     if (stableId === 'player' || stableName === player.stableName) {
       return {
         owner: player,
-        roster,
+        roster: stateRoster ?? [],
         isPlayer: true,
       };
     }
-    const rival = rivals.find((r) => r.owner.id === stableId || r.owner.stableName === stableName);
+    const rival = (stateRivals ?? []).find(
+      (r) => r.owner.id === stableId || r.owner.stableName === stableName
+    );
     if (rival) return { ...rival, isPlayer: false };
     return undefined;
-  }, [stableId, stableName, player, roster, rivals]);
+  }, [stableId, stableName, player, stateRoster, stateRivals]);
 
   if (!stable)
     return <div className="p-8 text-center text-muted-foreground">Stable not found.</div>;
@@ -93,11 +95,19 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
             <p className="text-sm text-muted-foreground">
               Master: <span className="font-bold text-foreground">{stable.owner.name}</span>
             </p>
+            {stable.owner.ageRetired !== undefined && (
+              <p className="text-[10px] text-muted-foreground/70">
+                Ascended to the mantle in week {stable.owner.ageRetired}
+                {stable.owner.generation ? ` · Generation ${stable.owner.generation}` : ''}
+              </p>
+            )}
             {'crest' in stable && stable.crest && (
               <p className="text-[10px] text-muted-foreground italic">
                 {stable.crest.charge.count > 1 ? `${stable.crest.charge.count} ` : ''}
                 {stable.crest.charge.name}
                 {stable.crest.charge.posture ? ` (${stable.crest.charge.posture})` : ''}
+                {' — '}
+                {getChargeDescription(stable.crest.charge)}
               </p>
             )}
           </div>
@@ -107,20 +117,22 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
         <div className="grid grid-cols-2 gap-3">
           <Card className="bg-secondary/20 border-none">
             <CardContent className="p-3 text-center">
-              <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Fame</div>
-              <div className="text-xl font-display font-black text-arena-fame">
-                {stable.owner.fame}
-              </div>
+              <StatCard
+                label="Fame"
+                value={stable.owner.fame}
+                variant="fame"
+                className="items-center"
+              />
             </CardContent>
           </Card>
           <Card className="bg-secondary/20 border-none">
             <CardContent className="p-3 text-center">
-              <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
-                Roster
-              </div>
-              <div className="text-xl font-display font-black text-primary">
-                {stable.roster.filter((w) => isActive(w)).length}
-              </div>
+              <StatCard
+                label="Roster"
+                value={stable.roster.filter((w) => isActive(w)).length}
+                variant="primary"
+                className="items-center"
+              />
             </CardContent>
           </Card>
         </div>

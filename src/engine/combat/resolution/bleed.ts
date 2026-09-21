@@ -1,3 +1,4 @@
+import { addCapped } from '@/utils/math';
 import {
   SL_BLEED_STACKS_PER_HIT,
   SL_BLEED_CAP,
@@ -10,7 +11,7 @@ import {
  * on a landed SL hit, clamped to the cap. Pure — the caller owns the mutation.
  */
 export function accumulateBleed(current: number): number {
-  return Math.min(SL_BLEED_CAP, current + SL_BLEED_STACKS_PER_HIT);
+  return addCapped(current, SL_BLEED_STACKS_PER_HIT, SL_BLEED_CAP);
 }
 
 /**

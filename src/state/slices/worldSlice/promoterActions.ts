@@ -5,7 +5,8 @@ import { updatePromoterHistory as engineUpdatePromoterHistory } from '@/engine/p
 import type { WorldSlice } from './types';
 
 /**
- *
+ * Creates the promoter actions for the world slice: recording purse
+ * payouts in promoter history and swapping promoters in and out.
  */
 export function createPromoterActions(
   set: (fn: (state: WorldSlice) => Partial<GameStore> | WorldSlice) => void

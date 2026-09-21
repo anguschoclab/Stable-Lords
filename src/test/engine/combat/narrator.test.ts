@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/narrator';
 import type { CombatEvent } from '@/types/combat.types';
-import type { FightingStyle } from '@/types/shared.types';
+import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 
 describe('narrator', () => {
@@ -14,8 +14,8 @@ describe('narrator', () => {
     nameD: 'Lightning',
     weaponA: 'broadsword',
     weaponD: 'short_spear',
-    styleA: 'StrikingAttack' as FightingStyle,
-    styleD: 'TotalParry' as FightingStyle,
+    styleA: FightingStyle.StrikingAttack,
+    styleD: FightingStyle.TotalParry,
     maxHpA: 100,
     maxHpD: 100,
     prevHpRatioA: 1.0,
@@ -156,8 +156,8 @@ describe('narrator', () => {
 
     it('uses fighting styles in narration', () => {
       const ctx = createMockContext({
-        styleA: 'LungingAttack' as FightingStyle,
-        styleD: 'ParryRiposte' as FightingStyle,
+        styleA: FightingStyle.LungingAttack,
+        styleD: FightingStyle.ParryRiposte,
       });
       const events: CombatEvent[] = [{ type: 'ATTACK', actor: 'A' }];
 

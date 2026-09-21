@@ -176,9 +176,7 @@ function saveTour(m: Record<string, Record<string, RollingBucket>>) {
       }
     }
   }
-} /**
- * Style record type.
- */
+}
 
 // ── Public types ──────────────────────────────────────────────────────────
 
@@ -192,9 +190,7 @@ export type StyleRecord = {
   K: number;
   P: number;
   fights: number;
-}; /**
- * Style rollups.
- */
+};
 
 function clearCaches() {
   weekCache.clear();
@@ -282,9 +278,9 @@ export const StyleRollups = {
   last10(): StyleRecord[] {
     const rolling = loadRolling();
     const rows: StyleRecord[] = [];
-    Object.keys(rolling).forEach((s) => {
+    for (const s in rolling) {
       const styleData = rolling[s];
-      if (!styleData) return;
+      if (!styleData) continue;
       let W = 0;
       let L = 0;
       let K = 0;
@@ -305,7 +301,7 @@ export const StyleRollups = {
         P: fights ? Math.round((W / fights) * 100) : 0,
         fights,
       });
-    });
+    }
     return rows.sort((a, b) => b.P - a.P);
   },
 
@@ -313,9 +309,9 @@ export const StyleRollups = {
   tournament(tid: string): StyleRecord[] {
     const tour = loadTour()[tid] || {};
     const rows: StyleRecord[] = [];
-    Object.keys(tour).forEach((s) => {
+    for (const s in tour) {
       const b = tour[s];
-      if (!b) return;
+      if (!b) continue;
       rows.push({
         style: s,
         W: b.W,
@@ -324,7 +320,7 @@ export const StyleRollups = {
         P: b.fights ? Math.round((b.W / b.fights) * 100) : 0,
         fights: b.fights,
       });
-    });
+    }
     return rows.sort((a, b) => b.P - a.P);
   },
 };

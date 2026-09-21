@@ -4,29 +4,15 @@ import { type FightSummary } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
+import { findWarrior } from '@/engine/core/historyResolver';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import BoutViewer from '@/components/BoutViewer';
-import { cn } from '@/lib/utils'; /**
-                                   * Warrior fight history.
-                                   * @param  - {
-  warrior id,
-  warrior name,
-  arena history,
-}.
-                                   */
-
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
+import { cn } from '@/lib/utils';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Warrior fight history.
- * @param  - {
-  warrior id,
-  warrior name,
-  arena history,
-}.
  */
 export function WarriorFightHistory({
   warriorId,
@@ -36,6 +22,15 @@ export function WarriorFightHistory({
   arenaHistory: FightSummary[];
 }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const nameResolutionState = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      rivals: s.rivals,
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+    }))
+  );
   const fights = getAllFightsForWarrior(arenaHistory, warriorId);
 
   const h2h = useMemo(() => {
@@ -154,6 +149,8 @@ export function WarriorFightHistory({
                     by={f.by}
                     isRivalry={f.isRivalry}
                     analysis={f.analysis}
+                    weaponIdA={findWarrior(nameResolutionState, f.warriorIdA)?.equipment?.weapon}
+                    weaponIdD={findWarrior(nameResolutionState, f.warriorIdD)?.equipment?.weapon}
                   />
                 </div>
               )}

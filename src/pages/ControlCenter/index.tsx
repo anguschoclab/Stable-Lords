@@ -14,6 +14,7 @@ import { WeeklyDigestMini } from '@/components/dashboard/WeeklyDigestMini';
 import { RivalryWidget } from '@/components/dashboard/RivalryWidget';
 import { MetaDriftWidget } from '@/components/widgets';
 import { ObjectivesWidget } from '@/components/dashboard/ObjectivesWidget';
+import { QuestsWidget } from '@/components/dashboard/QuestsWidget';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { Swords, Activity, Users, Crown } from 'lucide-react';
 import { useControlCenter, type TabId } from './hooks/useControlCenter';
@@ -102,6 +103,7 @@ export default function ControlCenter() {
               {activeTab === 'overview' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <SeasonWidget />
+                  <QuestsWidget />
                   <ObjectivesWidget />
                   <WeeklyDigestWidget
                     week={week}

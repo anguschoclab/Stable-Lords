@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { getAllArenas } from '@/data/arenas';
+import { getAllArenas, getArenaLore } from '@/data/arenas';
+import { getPackArenaLore } from '@/lib/contentPacks';
 import {
-  calculatePerArenaLeaderboards,
+  calculateArenaLeaderboard,
   type ArenaLeaderboardData,
 } from '@/engine/core/leaderboards';
+import { getFightsForArena } from '@/engine/core/historyUtils';
 import { ARENA_SIZE_PROFILES } from '@/engine/combat/mechanics/distanceResolution';
 import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -20,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Swords, Trophy, Skull, MapPin } from 'lucide-react';
+import { Swords, Trophy, Skull, MapPin, ScrollText } from 'lucide-react';
 
 const SIZE_LABELS: Record<string, string> = {
   cramped: 'CRAMPED',
@@ -150,22 +152,33 @@ export default function ArenaLeaderboards() {
   const arenas = useMemo(() => getAllArenas(), []);
   const [selectedArenaId, setSelectedArenaId] = useState<string>(arenas[0]?.id ?? '');
 
-  const { roster, rivals, player } = useGameStore(
+  const { roster, rivals, player, arenaHistory, contentPacks } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       rivals: s.rivals,
       player: s.player,
+      arenaHistory: s.arenaHistory,
+      contentPacks: s.contentPacks,
     }))
   );
 
-  const allLeaderboards = useMemo(
-    () => calculatePerArenaLeaderboards(roster, player.stableName, rivals),
-    [roster, rivals, player.stableName]
+  // Compute only the selected arena's board — cheaper than materializing all
+  // venues on every render (single-arena API exists for exactly this case).
+  const currentLB = useMemo(
+    () =>
+      selectedArenaId
+        ? calculateArenaLeaderboard(selectedArenaId, roster, player.stableName, rivals)
+        : undefined,
+    [selectedArenaId, roster, rivals, player.stableName]
   );
-
-  const currentLB = allLeaderboards.find((lb) => lb.arenaId === selectedArenaId);
   const currentArena = arenas.find((a) => a.id === selectedArenaId);
   const sizeProfile = currentArena ? ARENA_SIZE_PROFILES[currentArena.size] : null;
+
+  const recentBouts = getFightsForArena(arenaHistory, selectedArenaId).slice(-6).reverse();
+  const arenaLore = useMemo(
+    () => [...getArenaLore(selectedArenaId), ...getPackArenaLore(contentPacks, selectedArenaId)],
+    [selectedArenaId, contentPacks]
+  );
 
   return (
     <PageFrame>
@@ -280,6 +293,28 @@ export default function ArenaLeaderboards() {
         </Surface>
       )}
 
+      {/* Arena lore — recorded deaths, quirks, and hazards for the venue */}
+      {arenaLore.length > 0 && (
+        <div className="mb-6 space-y-2">
+          {arenaLore.map((entry) => (
+            <div
+              key={entry.id}
+              className="flex items-start gap-3 px-4 py-2.5 border-l-2 border-arena-gold/30 bg-arena-gold/[0.03]"
+            >
+              <ScrollText className="h-3.5 w-3.5 text-arena-gold/70 shrink-0 mt-0.5" />
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold/90">
+                  {entry.title}
+                </span>
+                <p className="text-[10px] text-muted-foreground/70 leading-relaxed mt-0.5">
+                  {entry.narrative}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Leaderboard tables */}
       {currentLB ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -305,6 +340,34 @@ export default function ArenaLeaderboards() {
           <p className="text-[9px] text-muted-foreground/30 mt-1 uppercase tracking-widest">
             Fight records will appear once bouts are held here
           </p>
+        </Surface>
+      )}
+
+      {/* Recent bouts at this venue */}
+      {recentBouts.length > 0 && (
+        <Surface variant="glass" className="mt-6">
+          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-2">
+            <Swords className="h-3.5 w-3.5 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+              Recent Bouts
+            </span>
+          </div>
+          <div className="divide-y divide-white/5">
+            {recentBouts.map((f) => (
+              <div
+                key={f.id}
+                className="flex items-center justify-between px-6 py-3 text-[10px]"
+              >
+                <span className="text-foreground/80">{f.title}</span>
+                <span className="flex items-center gap-3">
+                  <span className="font-black uppercase tracking-widest text-muted-foreground/50">
+                    {f.by}
+                  </span>
+                  <span className="font-mono text-muted-foreground/40">Wk {f.week}</span>
+                </span>
+              </div>
+            ))}
+          </div>
         </Surface>
       )}
     </PageFrame>

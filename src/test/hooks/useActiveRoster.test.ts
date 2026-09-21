@@ -1,27 +1,21 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import '@/test/_setup/setup';
 
-let storeOverride: any = {};
+import { useGameStore } from '@/state/useGameStore';
 
 const defaultStoreState = {
   roster: [] as Warrior[],
 };
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: (state: any) => any) => {
-      const state = { ...defaultStoreState, ...storeOverride };
-      return selector ? selector(state) : state;
-    },
-  };
-});
+// Inject fake state into the real store — vi.mock's importOriginal arg does
+// not exist under bun:test. Call instead of assigning a store override.
+const applyStore = (override: any = {}) =>
+  useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
   return {
@@ -45,38 +39,38 @@ function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
 
 describe('useActiveRoster', () => {
   it('returns an empty array when roster is empty', () => {
-    storeOverride = { roster: [] };
+    applyStore({ roster: [] });
     const { result } = renderHook(() => useActiveRoster());
     expect(result.current).toEqual([]);
   });
 
   it('filters out Dead and Retired warriors', () => {
-    storeOverride = {
+    applyStore({
       roster: [
         createMockWarrior('w1', { status: 'Active', fame: 100 }),
         createMockWarrior('w2', { status: 'Dead', fame: 200 }),
         createMockWarrior('w3', { status: 'Retired', fame: 300 }),
       ],
-    };
+    });
     const { result } = renderHook(() => useActiveRoster());
     expect(result.current).toHaveLength(1);
     expect(result.current[0]!.id).toBe('w1');
   });
 
   it('sorts by fame descending', () => {
-    storeOverride = {
+    applyStore({
       roster: [
         createMockWarrior('w1', { fame: 50 }),
         createMockWarrior('w2', { fame: 200 }),
         createMockWarrior('w3', { fame: 100 }),
       ],
-    };
+    });
     const { result } = renderHook(() => useActiveRoster());
     expect(result.current.map((w) => w.id)).toEqual(['w2', 'w3', 'w1']);
   });
 
   it('returns correct field subset', () => {
-    storeOverride = {
+    applyStore({
       roster: [
         createMockWarrior('w1', {
           name: 'Test',
@@ -86,7 +80,7 @@ describe('useActiveRoster', () => {
           career: { wins: 5, losses: 2, kills: 1 },
         }),
       ],
-    };
+    });
     const { result } = renderHook(() => useActiveRoster());
     const item = result.current[0]!;
     expect(item.id).toBe('w1');
@@ -99,9 +93,9 @@ describe('useActiveRoster', () => {
   });
 
   it('returns referentially stable result across re-renders with same roster', () => {
-    storeOverride = {
+    applyStore({
       roster: [createMockWarrior('w1', { fame: 100 }), createMockWarrior('w2', { fame: 50 })],
-    };
+    });
     const { result, rerender } = renderHook(() => useActiveRoster());
     const first = result.current;
     rerender();

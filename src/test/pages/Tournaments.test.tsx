@@ -4,45 +4,37 @@ import { render } from '@testing-library/react';
 import Tournaments from '@/pages/Tournaments';
 import '@/test/_setup/setup';
 
-// Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: any) => {
-      const state = {
-        roster: [],
-        newsletter: [],
-        ledger: [],
-        matchHistory: [],
-        moodHistory: [],
-        graveyard: [],
-        retired: [],
-        week: 1,
-        season: 'Spring',
-        year: 1,
-        treasury: 500,
-        tournaments: [],
-        rivals: [],
-        arenaHistory: [],
-        trainers: [],
-        trainingAssignments: [],
-        fame: 0,
-        bookmarks: [],
-        isBookmarked: vi.fn(() => false),
-        player: {
-          id: 'p1',
-          name: 'Player',
-          stableName: "Dragon's Hearth",
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-      };
-      return selector ? selector(state) : state;
-    },
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
+
+const fakeStoreState = {
+  roster: [],
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
+  week: 1,
+  season: 'Spring',
+  year: 1,
+  treasury: 500,
+  tournaments: [],
+  rivals: [],
+  arenaHistory: [],
+  trainers: [],
+  trainingAssignments: [],
+  fame: 0,
+  bookmarks: [],
+  isBookmarked: vi.fn(() => false),
+  player: {
+    id: 'p1',
+    name: 'Player',
+    stableName: "Dragon's Hearth",
+    fame: 0,
+    renown: 0,
+    titles: 0,
+  },
+};
 
 // We mock @tanstack/react-router to avoid setting up a full router context
 vi.mock('@tanstack/react-router', () => ({
@@ -55,7 +47,9 @@ vi.mock('@tanstack/react-router', () => ({
 describe('Tournaments Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // No mockReturnValue needed - renderWithGameState handles it
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({ ...fakeStoreState } as never);
   });
 
   it('renders recruit operatives button when criteria are met', () => {

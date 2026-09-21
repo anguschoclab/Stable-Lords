@@ -2,9 +2,11 @@ import type { GameState, RivalStableData, AIIntent, AIStrategy } from '@/types/s
 import { computeMetaDrift } from '../metaDrift';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, resolveRng } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
+import { hasInjuries } from '@/engine/injuries/utils';
 import { isActive } from '@/engine/warriorStatus';
+import { HAZARDOUS_WEATHER } from './weatherSuitability';
 
 /**
  * Finds a high-intensity grudge (>= 3) involving the given owner.
@@ -33,32 +35,29 @@ export function pickWeeklyIntent(
   seed?: number,
   rng?: IRNGService
 ): AIIntent {
-  const rngService = rng || new SeededRNGService(seed ?? state.week * 131 + rival.owner.id.length);
+  const rngService = resolveRng(rng, seed ?? state.week * 131 + rival.owner.id.length);
   const personality = rival.owner.personality ?? 'Pragmatic';
   const { activeRoster, injuryCount, lungeCount } = rival.roster.reduce(
     (acc, w) => {
-      if (w.status !== 'Active') return acc;
+      if (!isActive(w)) return acc;
       acc.activeRoster.push(w);
-      if (w.injuries && w.injuries.length > 0) acc.injuryCount++;
+      if (hasInjuries(w)) acc.injuryCount++;
       if (w.style === 'LUNGING ATTACK') acc.lungeCount++;
       return acc;
     },
     { activeRoster: [] as typeof rival.roster, injuryCount: 0, lungeCount: 0 }
   );
 
-  // ⚡ Environmental Awareness
-  const isHazardousWeather = [
-    'Rainy',
-    'Blizzard',
-    'Sandstorm',
-    'Gale',
-    'Tornado',
-    'Dense Fog',
-    'Acid Rain',
-  ].includes(state.weather ?? 'Clear');
+  // ⚡ Environmental Awareness — consolidated hazard list (G16)
+  const isHazardousWeather = HAZARDOUS_WEATHER.includes(state.weather ?? 'Clear');
 
-  // ⚡ Continuous Alignment: Meta-Drift Awareness (use cached if available)
-  const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
+  // ⚡ Continuous Alignment: Meta-Drift Awareness — the agent reasons over its
+  // *perceived* meta (lagged intel from createAgentContext), not omniscience.
+  const perceived = rival.agentMemory?.metaAwareness;
+  const meta =
+    perceived && Object.keys(perceived).length > 0
+      ? perceived
+      : state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
   const favoredStyles = rival.owner.favoredStyles || [];
   const metaIsHostile = favoredStyles.some((s) => (meta[s] || 0) < -2);
 
@@ -99,6 +98,14 @@ export function pickWeeklyIntent(
   }
   if (playerThreatVendettaChance > 0 && rngService.next() < playerThreatVendettaChance) {
     return 'VENDETTA';
+  }
+
+  // 2.5. TOURNAMENT_CAMPAIGN: healthy stables peak for the season-ending
+  // tournament (weeks 10–13). Preparation only — committee selection is
+  // rank-based and unaffected (G13).
+  const inTournamentWindow = state.week >= 10 && state.week <= 13;
+  if (inTournamentWindow && activeRoster.length >= 3 && rival.treasury >= 400) {
+    return 'TOURNAMENT_CAMPAIGN';
   }
 
   // 3. WEALTH_ACCUMULATION: Thriving stables with full rosters hoard cash
@@ -189,6 +196,19 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   const activeCount = rival.roster.reduce((count, w) => (isActive(w) ? count + 1 : count), 0);
   if (strategy.intent === 'VENDETTA' && activeCount < 3) return true;
 
+  // Skepticism Tier 2.5: VENDETTA with no grievance and no living target —
+  // a vendetta needs either a grudge or a target that still exists.
+  if (strategy.intent === 'VENDETTA') {
+    const hasGrudge = findGrudge(state.grudgeMap, rival.owner.id) !== undefined;
+    const targetIsPlayer = strategy.targetStableId === state.player?.id;
+    const targetExists =
+      targetIsPlayer ||
+      (state.rivals ?? []).some(
+        (r) => r.id === strategy.targetStableId || r.owner.id === strategy.targetStableId
+      );
+    if (!hasGrudge && !targetIsPlayer && !targetExists) return true;
+  }
+
   // Skepticism Tier 3: Meta Hostility (Methodical/Tactician agents only)
   if (personality === 'Methodical' || personality === 'Tactician') {
     const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
@@ -197,15 +217,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   }
 
   // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
-  const isHazardousWeather = [
-    'Rainy',
-    'Blizzard',
-    'Sandstorm',
-    'Gale',
-    'Tornado',
-    'Dense Fog',
-    'Acid Rain',
-  ].includes(state.weather ?? 'Clear');
+  const isHazardousWeather = HAZARDOUS_WEATHER.includes(state.weather ?? 'Clear');
   let precisionHeavy = false;
   for (const w of rival.roster) {
     if (isActive(w) && w.style === 'LUNGING ATTACK') {
@@ -227,6 +239,92 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 }
 
 /**
+ * Human-readable rationale per intent — surfaced in AgentReasoningWidget.
+ */
+const INTENT_REASONS: Record<AIIntent, string> = {
+  RECOVERY: 'Crisis response — stabilizing before risking more bouts',
+  VENDETTA: 'A blood feud demands an answer',
+  SURVIVAL: 'Holding on — the stable is at the edge',
+  EXPANSION: 'Roster is too thin — recruiting to fill ranks',
+  CONSOLIDATION: 'Steady state — training and upkeep',
+  WEALTH_ACCUMULATION: 'Thriving — banking gold while ahead',
+  AGGRESSIVE_EXPANSION: 'Dominant position — pressing for prestige bouts',
+  ROSTER_DIVERSITY: 'Style concentration is losing to the current meta',
+  TOURNAMENT_CAMPAIGN: 'Season-ending tournament approaches — peaking the roster',
+};
+
+/**
+ * Hysteresis check — relaxed re-entry conditions for the CURRENT intent.
+ * When a plan merely expires (not disproved) and its trigger condition is
+ * still ~met within a margin, the agent holds course rather than flickering
+ * between neighboring intents week to week.
+ */
+export function intentStillApplies(
+  rival: RivalStableData,
+  state: GameState,
+  intent: AIIntent
+): boolean {
+  const activeRoster = rival.roster.filter(isActive);
+  const activeCount = activeRoster.length;
+  const personality = rival.owner.personality ?? 'Pragmatic';
+  const injuryCount = activeRoster.filter(hasInjuries).length;
+  const seasonRecord = rival.agentMemory?.seasonRecord;
+  const fights = (seasonRecord?.wins ?? 0) + (seasonRecord?.losses ?? 0);
+  const winRate = fights >= 4 ? (seasonRecord?.wins ?? 0) / fights : null;
+
+  switch (intent) {
+    case 'RECOVERY':
+      return (
+        rival.treasury < 280 ||
+        (activeCount > 0 && injuryCount / activeCount >= 0.3) ||
+        (winRate !== null && winRate < 0.4)
+      );
+    case 'VENDETTA':
+      return (
+        findGrudge(state.grudgeMap, rival.owner.id) !== undefined ||
+        rival.strategy?.targetStableId === state.player?.id
+      );
+    case 'SURVIVAL':
+      return rival.treasury < 300;
+    case 'EXPANSION': {
+      const minSize = personality === 'Aggressive' ? 8 : personality === 'Methodical' ? 5 : 6;
+      return activeCount < minSize + 1 && rival.treasury > 200;
+    }
+    case 'AGGRESSIVE_EXPANSION':
+      return activeCount >= 6 && rival.treasury > 900;
+    case 'WEALTH_ACCUMULATION':
+      return rival.treasury > 1100;
+    case 'TOURNAMENT_CAMPAIGN':
+      return state.week >= 9 && state.week <= 13 && activeCount >= 3;
+    case 'ROSTER_DIVERSITY': {
+      const styles = activeRoster.map((w) => w.style);
+      if (styles.length < 4) return false;
+      const counts = new Map<string, number>();
+      let max = 0;
+      let dominant: string | undefined;
+      for (const s of styles) {
+        const c = (counts.get(s) ?? 0) + 1;
+        counts.set(s, c);
+        if (c > max) {
+          max = c;
+          dominant = s;
+        }
+      }
+      const perceived = rival.agentMemory?.metaAwareness;
+      const meta: Record<string, number> =
+        perceived && Object.keys(perceived).length > 0
+          ? perceived
+          : state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
+      return (
+        dominant !== undefined && max / styles.length >= 0.45 && (meta[dominant] ?? 0) <= -2
+      );
+    }
+    case 'CONSOLIDATION':
+      return true;
+  }
+}
+
+/**
  * Updates the AI strategy, either continuing the current plan or picking a new one.
  */
 export function updateAIStrategy(
@@ -243,7 +341,20 @@ export function updateAIStrategy(
   if (!current || current.planWeeksRemaining <= 0 || planDisproved) {
     const s = seed ?? state.week * 7919 + rival.owner.id.length * 13;
     const rng = new SeededRNGService(s);
-    const intent = pickWeeklyIntent(rival, state, s, rng);
+    const picked = pickWeeklyIntent(rival, state, s, rng);
+
+    // Hysteresis: a merely-expired (not disproved) plan whose condition still
+    // ~applies is renewed rather than churned into a neighboring intent.
+    // CONSOLIDATION is the fallback, not a real plan — `intentStillApplies`
+    // returns true for it unconditionally, so without this exclusion it would
+    // absorb every re-pick and the strategy could never leave the default.
+    const holdCourse =
+      current !== undefined &&
+      !planDisproved &&
+      picked !== current.intent &&
+      current.intent !== 'CONSOLIDATION' &&
+      intentStillApplies(rival, state, current.intent);
+    const intent = holdCourse ? current.intent : picked;
 
     // Determine the duration of this intent
     const duration =
@@ -256,9 +367,20 @@ export function updateAIStrategy(
         targetStableId =
           grudgeTarget.ownerIdA === rival.owner.id ? grudgeTarget.ownerIdB : grudgeTarget.ownerIdA;
       }
-      // If no grudge target but player triggered the vendetta, target the player stable
+      // No grudge target — fall back to dossier intel: whoever has beaten us
+      // most (or threatens us most), else the player stable.
       if (!targetStableId) {
-        targetStableId = state.player?.id;
+        const dossiers = rival.agentMemory?.opponentDossiers ?? {};
+        let bestId: string | undefined;
+        let bestScore = 0;
+        for (const [id, d] of Object.entries(dossiers)) {
+          const score = d.recordVs.l * 2 + d.recordVs.k * 3 + d.estimatedThreat;
+          if (score > bestScore) {
+            bestScore = score;
+            bestId = id;
+          }
+        }
+        targetStableId = (bestId ?? state.player?.id) as AIStrategy['targetStableId'];
       }
     }
 
@@ -266,6 +388,9 @@ export function updateAIStrategy(
       intent,
       planWeeksRemaining: duration,
       targetStableId,
+      reason: holdCourse
+        ? `Holding course — ${INTENT_REASONS[intent].toLowerCase()}`
+        : INTENT_REASONS[intent],
     };
   }
 

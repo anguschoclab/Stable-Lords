@@ -16,7 +16,7 @@ import { cryptoRandom } from '@/utils/cryptoRandom';
  * @returns A random warrior name
  */
 export function randomWarriorName(rng?: () => number): string {
-  return randomPick(WARRIOR_NAMES, rng || cryptoRandom);
+  return randomPick(WARRIOR_NAMES, rng ?? cryptoRandom);
 }
 
 /**
@@ -26,8 +26,8 @@ export function randomWarriorName(rng?: () => number): string {
  * @returns A random owner name in "First Last" format
  */
 export function randomOwnerName(rng?: () => number): string {
-  const firstName = randomPick(OWNER_FIRST, rng || cryptoRandom);
-  const lastName = randomPick(OWNER_LAST, rng || cryptoRandom);
+  const firstName = randomPick(OWNER_FIRST, rng ?? cryptoRandom);
+  const lastName = randomPick(OWNER_LAST, rng ?? cryptoRandom);
   return `${firstName} ${lastName}`;
 }
 
@@ -39,7 +39,7 @@ export function randomOwnerName(rng?: () => number): string {
  */
 export function randomStableName(rng?: () => number): string {
   // 50% chance for prefixed name, 50% chance for alternative name
-  const usePrefixed = (rng || cryptoRandom)() < 0.5;
+  const usePrefixed = (rng ?? cryptoRandom)() < 0.5;
   return usePrefixed ? randomPrefixedStableName(rng) : randomAltStableName(rng);
 }
 
@@ -50,8 +50,8 @@ export function randomStableName(rng?: () => number): string {
  * @returns A random prefixed stable name
  */
 export function randomPrefixedStableName(rng?: () => number): string {
-  const prefix = randomPick(STABLE_PREFIXES, rng || cryptoRandom);
-  const suffix = randomPick(STABLE_SUFFIXES, rng || cryptoRandom);
+  const prefix = randomPick(STABLE_PREFIXES, rng ?? cryptoRandom);
+  const suffix = randomPick(STABLE_SUFFIXES, rng ?? cryptoRandom);
   return `${prefix} ${suffix}`;
 }
 
@@ -62,5 +62,5 @@ export function randomPrefixedStableName(rng?: () => number): string {
  * @returns A random alternative stable name
  */
 export function randomAltStableName(rng?: () => number): string {
-  return randomPick(STABLE_ALT, rng || cryptoRandom);
+  return randomPick(STABLE_ALT, rng ?? cryptoRandom);
 }

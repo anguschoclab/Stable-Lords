@@ -6,17 +6,6 @@ import { clamp } from '@/utils/math';
  */
 
 /**
- * Pick text.
- */
-export function pickText(rng: () => number, texts: string[]): string {
-  if (texts.length === 0) return '';
-  const index = Math.floor(rng() * texts.length);
-  return texts[index] ?? '';
-} /**
- * Skill check.
- */
-
-/**
  * Skill check.
  */
 export function skillCheck(rng: () => number, skill: number, modifier: number = 0): boolean {
@@ -24,9 +13,7 @@ export function skillCheck(rng: () => number, skill: number, modifier: number = 
   const target = clamp(Math.floor(skill) + modifier, 1, 19);
   const success = roll === 1 || (roll !== 20 && roll <= target);
   return success;
-} /**
- * Contest check.
- */
+}
 
 /**
  * Contest check.

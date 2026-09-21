@@ -121,6 +121,7 @@ describe('checkBudget — burn rate', () => {
         burnRate: 100,
         metaAwareness: {},
         knownRivals: [],
+        opponentDossiers: {},
       },
     });
     expect(checkBudget(rival, 600, 'OTHER').isAffordable).toBe(true);
@@ -140,6 +141,7 @@ describe('checkBudget — burn rate', () => {
         burnRate: 0,
         metaAwareness: {},
         knownRivals: [],
+        opponentDossiers: {},
       },
     });
     expect(checkBudget(rival, 700, 'OTHER').isAffordable).toBe(true);
@@ -152,6 +154,7 @@ describe('checkBudget — burn rate', () => {
         burnRate: undefined as any,
         metaAwareness: {},
         knownRivals: [],
+        opponentDossiers: {},
       },
     });
     expect(checkBudget(rival, 700, 'OTHER').isAffordable).toBe(true);

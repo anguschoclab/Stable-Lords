@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   newSlotId,
   listSaveSlots,
@@ -9,22 +9,9 @@ import {
   importSaveToNewSlot,
 } from '@/state/saveSlots';
 import { archiveService } from '@/engine/storage/archiveService';
+import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { STORE_KEYS } from '@/constants/core/storeKeys';
 import type { GameState } from '@/types/state.types';
-
-vi.mock('@/schemas/gameStateSchema', async (importOriginal) => {
-  const actual = await importOriginal<any>();
-  return {
-    ...actual,
-    GameStateSchema: {
-      parse: vi.fn((data) => {
-        if (data.invalid) throw new Error('Invalid');
-        if (!data.meta) data.meta = { version: '1.0' };
-        return data;
-      }),
-    },
-  };
-});
 
 vi.mock('@/engine/storage/archiveService', () => ({
   archiveService: {
@@ -38,6 +25,15 @@ describe('saveSlots', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    // Control GameStateSchema.parse for the import paths while keeping every
+    // other schema method real. (spyOn works on both runners; vi.mock's
+    // importOriginal arg does not exist under bun:test.)
+    vi.spyOn(GameStateSchema, 'parse').mockImplementation((data: unknown) => {
+      const d = data as { invalid?: boolean; meta?: { version: string } };
+      if (d.invalid) throw new Error('Invalid');
+      if (!d.meta) d.meta = { version: '1.0' };
+      return d as never;
+    });
     // Re-mock window if electronAPI exists, let's just stick to local storage branch for coverage
     // by ensuring electronAPI is undefined
     (window as any).electronAPI = undefined;
@@ -146,6 +142,167 @@ describe('saveSlots', () => {
       expect(typeof res).toBe('string');
       // Truncation should strip down arrays, for instance
       expect(JSON.parse(res as string).week).toBe(10);
+    });
+  });
+
+  describe('quota recovery (setStoredMeta)', () => {
+    const quotaError = () =>
+      Object.assign(new Error('QuotaExceededError'), { name: 'QuotaExceededError' });
+
+    const seedMetas = (metas: Array<Record<string, unknown>>) => {
+      localStorage.setItem(STORE_KEYS.SAVE_SLOTS, JSON.stringify(metas));
+    };
+
+    const meta = (id: string) => ({
+      id,
+      name: `Save ${id}`,
+      week: 1,
+      year: 1,
+      timestamp: '2024-01-01',
+      version: '1',
+    });
+
+    it('saveToSlot keeps only the most recent existing slot when quota is exceeded', async () => {
+      const metas = [meta('slot_1'), meta('slot_2'), meta('slot_3')];
+      seedMetas(metas);
+
+      const setItemSpy = vi
+        .spyOn(localStorage, 'setItem')
+        .mockImplementationOnce(() => {
+          throw quotaError();
+        });
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
+      await saveToSlot('slot_new', 'New Save', state);
+
+      // First attempt wrote all 4 metas and threw; recovery re-reads the OLD
+      // stored array and retries with only the most recent existing slot.
+      expect(setItemSpy).toHaveBeenCalledTimes(2);
+      expect(setItemSpy).toHaveBeenLastCalledWith(
+        STORE_KEYS.SAVE_SLOTS,
+        JSON.stringify([metas[2]])
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'localStorage quota exceeded when saving save slot metadata',
+        expect.any(Error)
+      );
+
+      const stored = JSON.parse(localStorage.getItem(STORE_KEYS.SAVE_SLOTS) || '[]');
+      expect(stored).toEqual([metas[2]]);
+    });
+
+    it('deleteSlot applies the same quota recovery', async () => {
+      const metas = [meta('slot_1'), meta('slot_2'), meta('slot_3')];
+      seedMetas(metas);
+
+      const setItemSpy = vi
+        .spyOn(localStorage, 'setItem')
+        .mockImplementationOnce(() => {
+          throw quotaError();
+        });
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await deleteSlot('slot_1');
+
+      expect(setItemSpy).toHaveBeenCalledTimes(2);
+      expect(setItemSpy).toHaveBeenLastCalledWith(
+        STORE_KEYS.SAVE_SLOTS,
+        JSON.stringify([metas[2]])
+      );
+    });
+
+    it('does not retry when quota is exceeded and no existing metas are stored', async () => {
+      const setItemSpy = vi
+        .spyOn(localStorage, 'setItem')
+        .mockImplementationOnce(() => {
+          throw quotaError();
+        });
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
+      await saveToSlot('slot_1', 'Save', state);
+
+      expect(setItemSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('logs a generic error and does not retry for non-quota failures', async () => {
+      seedMetas([meta('slot_1')]);
+
+      const setItemSpy = vi
+        .spyOn(localStorage, 'setItem')
+        .mockImplementationOnce(() => {
+          throw new Error('boom');
+        });
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
+      await expect(saveToSlot('slot_2', 'Save', state)).resolves.toBeUndefined();
+
+      expect(setItemSpy).toHaveBeenCalledTimes(1);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to save save slot metadata',
+        expect.any(Error)
+      );
+    });
+
+    it('logs a recovery failure when the quota retry also throws', async () => {
+      seedMetas([meta('slot_1'), meta('slot_2')]);
+
+      vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+        throw quotaError();
+      });
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
+      await expect(saveToSlot('slot_3', 'Save', state)).resolves.toBeUndefined();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to recover from localStorage quota error',
+        expect.any(Error)
+      );
+      // setStoredMeta swallowed the error, so the hot state is still archived
+      expect(archiveService.archiveHotState).toHaveBeenCalledWith(
+        'slot_3',
+        expect.objectContaining(state)
+      );
+    });
+  });
+
+  describe('electron-store error paths', () => {
+    afterEach(() => {
+      (window as any).electronAPI = undefined;
+    });
+
+    it('listSaveSlots logs and returns [] when electron-store data fails schema parse', async () => {
+      (window as any).electronAPI = {
+        storeGet: vi.fn().mockResolvedValue({ not: 'an array' }),
+      };
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const slots = await listSaveSlots();
+
+      expect(slots).toEqual([]);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to parse save slot metadata from electron-store',
+        expect.any(Error)
+      );
+    });
+
+    it('saveToSlot logs when electron-store write fails', async () => {
+      (window as any).electronAPI = {
+        storeGet: vi.fn().mockResolvedValue([]),
+        storeSet: vi.fn().mockRejectedValue(new Error('disk full')),
+      };
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
+      await expect(saveToSlot('slot_1', 'Save', state)).resolves.toBeUndefined();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to save save slot metadata to electron-store',
+        expect.any(Error)
+      );
     });
   });
 

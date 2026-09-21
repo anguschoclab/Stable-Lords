@@ -2,7 +2,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TacticBank, { TACTIC_BANK } from '@/components/planBuilder/TacticBank';
+import TacticBank from '@/components/planBuilder/TacticBank';
+import { TACTIC_BANK } from '@/components/planBuilder/tacticBankData';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/shared.types';
 
@@ -156,5 +157,16 @@ describe('TacticBank component', () => {
     render(<TacticBank plan={mockPlan} onPlanChange={vi.fn()} />);
     const btn = screen.getByLabelText('Select Tactic: Lunge');
     expect(btn.className).toMatch(/focus-visible:ring/);
+  });
+
+  it('annotates tactics with suitability labels for the plan style', () => {
+    // AimedBlow: Lunge=WS, Decisiveness=U, Parry=U (see tacticSuitability matrices)
+    render(<TacticBank plan={mockPlan} onPlanChange={vi.fn()} />);
+    const lunge = screen.getByLabelText('Select Tactic: Lunge');
+    const decisiveness = screen.getByLabelText('Select Tactic: Decisiveness');
+    const parry = screen.getByLabelText('Select Tactic: Parry');
+    expect(lunge.textContent).toContain('Well Suited');
+    expect(decisiveness.textContent).toContain('Unsuited');
+    expect(parry.textContent).toContain('Unsuited');
   });
 });

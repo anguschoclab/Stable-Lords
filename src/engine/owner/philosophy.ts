@@ -7,7 +7,7 @@ import {
   PHILOSOPHY_EVOLVE_THRESHOLD_LOSS,
   PHILOSOPHY_MIN_FIGHTS,
 } from '@/data/ownerData';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 
 /**
  * Evolve stable philosophies based on season results.
@@ -19,7 +19,7 @@ export function evolvePhilosophies(
   newSeason: Season,
   rng?: IRNGService
 ): { updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  const rngService = rng || new SeededRNGService(state.week * 131 + 42);
+  const rngService = resolveRng(rng, state.week * 131 + 42);
   if (newSeason === state.season) return { updatedRivals: state.rivals || [], gazetteItems: [] };
 
   const gazetteItems: string[] = [];

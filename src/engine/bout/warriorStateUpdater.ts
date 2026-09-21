@@ -1,4 +1,5 @@
 import type { Warrior } from '@/types/warrior.types';
+import { SEASON_POINTS } from '@/constants/core/core';
 
 /**
  * Update a warrior's state after a bout
@@ -54,49 +55,8 @@ export function updateWarriorAfterBout(
         ? Array.from(new Set([...(warrior.flair || []), 'Flashy']))
         : warrior.flair,
     fatigue,
-  };
-}
-
-/**
- * Apply a fame delta to a warrior with bounds checking
- */
-export function applyFameDelta(warrior: Warrior, delta: number): Warrior {
-  return {
-    ...warrior,
-    fame: Math.max(0, (warrior.fame || 0) + delta),
-  };
-}
-
-/**
- * Apply career stat updates based on bout result
- */
-export function applyCareerStats(
-  warrior: Warrior,
-  result: { win: boolean; kill: boolean },
-  arenaId?: string
-): Warrior {
-  const prevByArena = warrior.career.byArena ?? {};
-  const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
-  const byArena =
-    arenaId && arenaRecord
-      ? {
-          ...prevByArena,
-          [arenaId]: {
-            wins: arenaRecord.wins + (result.win ? 1 : 0),
-            losses: arenaRecord.losses + (!result.win ? 1 : 0),
-            kills: arenaRecord.kills + (result.kill ? 1 : 0),
-          },
-        }
-      : prevByArena;
-
-  return {
-    ...warrior,
-    career: {
-      ...warrior.career,
-      wins: (warrior.career.wins || 0) + (result.win ? 1 : 0),
-      losses: (warrior.career.losses || 0) + (!result.win ? 1 : 0),
-      kills: (warrior.career.kills || 0) + (result.kill ? 1 : 0),
-      byArena,
-    },
+    seasonPoints:
+      (warrior.seasonPoints ?? 0) +
+      (isWinner ? SEASON_POINTS.WIN + (wasKilled ? SEASON_POINTS.KILL_BONUS : 0) : 0),
   };
 }

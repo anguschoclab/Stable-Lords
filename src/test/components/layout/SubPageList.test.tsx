@@ -20,14 +20,14 @@ describe('SubPageList', () => {
     expect(screen.queryByRole('link')).toBeNull();
   });
 
-  it('renders correct number of pages for stable hub (13)', () => {
+  it('renders correct number of pages for stable hub (14)', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable" />);
-    expect(screen.getAllByRole('link')).toHaveLength(13);
+    expect(screen.getAllByRole('link')).toHaveLength(14);
   });
 
-  it('renders correct number of pages for world hub (7)', () => {
+  it('renders correct number of pages for world hub (8)', () => {
     render(<SubPageList activeHubId="world" currentPath="/world" />);
-    expect(screen.getAllByRole('link')).toHaveLength(7);
+    expect(screen.getAllByRole('link')).toHaveLength(8);
   });
 
   it('renders no pages for bookmarks hub (0 pages)', () => {
@@ -91,7 +91,7 @@ describe('SubPageList', () => {
       </span>
     );
     render(<SubPageList activeHubId="stable" currentPath="/stable" LinkComponent={CustomLink} />);
-    expect(screen.getAllByTestId('custom-page-link')).toHaveLength(13);
+    expect(screen.getAllByTestId('custom-page-link')).toHaveLength(14);
   });
 
   it('renders motion indicator div when useMotionIndicator=true (default) and page is active', () => {

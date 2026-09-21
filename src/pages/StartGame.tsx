@@ -43,9 +43,7 @@ import ActionButtons from '@/components/startGame/ActionButtons';
 import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 import { formatDate } from '@/utils/dateUtils';
 
-type Screen = 'title' | 'newGame'; /**
- * Start game.
- */
+type Screen = 'title' | 'newGame';
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -153,6 +151,7 @@ export default function StartGame() {
           toast.error((err as Error)?.message ?? 'Failed to import save file.');
         }
       };
+      reader.onerror = () => toast.error('Failed to read save file.');
       reader.readAsText(file);
       e.target.value = '';
     },

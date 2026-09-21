@@ -16,7 +16,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.types';
 import type { Attributes } from '@/types/shared.types';
 import { computeWarriorStats } from './skillCalc';
@@ -26,9 +26,7 @@ const XP_PER_LEVEL = 5;
 const TOTAL_ATTR_CAP = 80;
 
 /** Chance to reveal an attribute's potential after each fight */
-const POTENTIAL_REVEAL_CHANCE = 0.15; /**
- * Defines the shape of xp gain.
- */
+const POTENTIAL_REVEAL_CHANCE = 0.15;
 
 /**
  * Defines the shape of xp gain.
@@ -76,7 +74,7 @@ export function applyXP(
   xpGained: number,
   rng?: IRNGService
 ): { warrior: Warrior; gain: XPGain } {
-  const rngService = rng || new SeededRNGService(xpGained * 7919 + 42);
+  const rngService = resolveRng(rng, xpGained * 7919 + 42);
   const currentXp = (warrior as Warrior).xp ?? 0;
   const newXp = currentXp + xpGained;
   const oldLevel = Math.floor(currentXp / XP_PER_LEVEL);

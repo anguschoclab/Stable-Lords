@@ -8,15 +8,10 @@ import type { FightSummary } from '@/types/combat.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { styleName, t, MOOD_TONE } from './gazetteTemplateHelpers';
 import type { GazetteDetections } from './gazetteDetections';
-
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Generates narrative for a single fight.
@@ -26,7 +21,7 @@ export function generateFightNarrative(
   mood: CrowdMoodType,
   rng?: IRNGService
 ): string {
-  const safeRng = rng || new SeededRNGService(fight.week * 42);
+  const safeRng = resolveRng(rng, fight.week * 42);
   const toneResource = MOOD_TONE[mood] || MOOD_TONE['Calm'];
   if (!MOOD_TONE[mood] && mood !== 'Calm')
     console.error(`Missing mood tone logic for: ${mood}, falling back to Calm`);
@@ -254,7 +249,7 @@ export function generateGazetteBody(
         .map((w) => w.name)
         .slice(0, 5)
         .join(', ');
-      const tributes = (narrativeContent as any).memorials?.tributes;
+      const tributes = (narrativeContent as NarrativeContent).memorials?.tributes;
       if (tributes && Array.isArray(tributes) && tributes.length > 0) {
         const tributeTemplate = rngService.pick(tributes);
         const tributeLine = t(tributeTemplate, { name: recent[0]?.name ?? names });

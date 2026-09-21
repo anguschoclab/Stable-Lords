@@ -13,6 +13,5 @@ export * from './establishedTemplates';
 export * from './minorTemplates';
 
 // Template utilities
-export * from './templateBuilders';
 export * from './templateCache';
 export * from './backstoryData';

@@ -1,25 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
-import { pickText, skillCheck, contestCheck } from '@/engine/combat/mechanics/combatMath';
+import { skillCheck, contestCheck } from '@/engine/combat/mechanics/combatMath';
 
 describe('Combat Math Mechanics', () => {
-  describe('pickText', () => {
-    it('returns empty string if array is empty', () => {
-      expect(pickText(() => 0.5, [])).toBe('');
-    });
-
-    it('picks element based on rng', () => {
-      const texts = ['a', 'b', 'c'];
-      expect(pickText(() => 0.1, texts)).toBe('a');
-      expect(pickText(() => 0.5, texts)).toBe('b');
-      expect(pickText(() => 0.9, texts)).toBe('c');
-    });
-
-    it('returns empty string as fallback if undefined', () => {
-      // Simulate sparse array
-      const arr = new Array(1);
-      expect(pickText(() => 0, arr)).toBe('');
-    });
-  });
 
   describe('skillCheck', () => {
     it('succeeds on a natural 1 regardless of target', () => {

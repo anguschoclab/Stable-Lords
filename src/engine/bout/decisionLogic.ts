@@ -51,15 +51,15 @@ function judgeScore(
 /**
  * Generates a narrative summary of a judge's decision.
  *
- * @param winner - The winning fighter's label ('A' or 'D')
- * @param loser - The losing fighter's label ('A' or 'D')
+ * @param _winner -
+ * @param _loser -
  * @param winName - The winner's display name
  * @param loseName - The loser's display name
  * @param fW - The winner's fighter state
  * @param fL - The loser's fighter state
  * @param voteType - The type of decision (unanimous, split, or overtime)
- * @param dissenter - The archetype of the dissenting judge (if any)
- * @returns A formatted narrative string describing the decision
+ * @param dissenter -
+ * * @returns A formatted narrative string describing the decision
  */
 function decisionNarrative(
   _winner: 'A' | 'D',

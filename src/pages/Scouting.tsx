@@ -18,15 +18,13 @@ import { WarriorComparison } from '@/components/scouting/WarriorComparison';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { ImperialRing } from '@/components/ui/ImperialRing'; /**
- * Scouting.
- */
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 /**
  * Scouting.
  */
 export default function Scouting() {
-  const { treasury, week, rivals, scoutReports, roster, setState, isBookmarked, bookmarks } =
+  const { treasury, week, rivals, scoutReports, roster, setState, bookmarks } =
     useGameStore(
       useShallow((s) => ({
         treasury: s.treasury,
@@ -35,7 +33,6 @@ export default function Scouting() {
         scoutReports: s.scoutReports,
         roster: s.roster,
         setState: s.setState,
-        isBookmarked: s.isBookmarked,
         bookmarks: s.bookmarks,
       }))
     );
@@ -46,10 +43,10 @@ export default function Scouting() {
   const allReports = useMemo(() => scoutReports ?? [], [scoutReports]);
   const filteredReports = useMemo(() => {
     if (!showBookmarkedOnly) return allReports;
-    return allReports.filter((r) => isBookmarked('scoutReport', r.id));
-  }, [allReports, showBookmarkedOnly, isBookmarked, bookmarks]);
+    return allReports.filter((r) => bookmarks.some((b) => b.entityType === 'scoutReport' && b.entityId === r.id));
+  }, [allReports, showBookmarkedOnly, bookmarks]);
 
-  const bookmarkedCount = allReports.filter((r) => isBookmarked('scoutReport', r.id)).length;
+  const bookmarkedCount = allReports.filter((r) => bookmarks.some((b) => b.entityType === 'scoutReport' && b.entityId === r.id)).length;
 
   const rivalMap = useMemo(() => {
     const map = new Map<string, RivalStableData>();

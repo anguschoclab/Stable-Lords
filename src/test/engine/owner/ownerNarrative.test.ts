@@ -9,7 +9,8 @@ const mockRng: IRNGService = {
   uuid: () => 'mock-uuid',
   roll: () => 0,
   shuffle: <T>(arr: T[]) => [...arr],
-  pickWeighted: <T>(items: T[]) => items[0] as T,
+  rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
+    Object.keys(weights)[0] as K,
   chance: () => true,
 };
 

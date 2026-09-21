@@ -13,9 +13,7 @@ export interface StatBatteryProps {
   labelValue?: string | number; // Optional explicit display string for the value
   colorClass?: string; // Tailwind class for the progress bar color
   className?: string; // Optional wrapper class
-} /**
- * Stat battery.
- */
+}
 
 /**
  * Stat battery.

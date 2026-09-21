@@ -9,17 +9,7 @@ interface WarriorSelectionStepProps {
   onRerollPool: () => void;
   onBack: () => void;
   onNext: () => void;
-} /**
-   * Warrior selection step.
-   * @param  - {
-  orphan pool,
-  selected,
-  on toggle warrior,
-  on reroll pool,
-  on back,
-  on next,
-}.
-   */
+}
 
 /**
  * Warrior selection step.

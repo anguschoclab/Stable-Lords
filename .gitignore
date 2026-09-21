@@ -38,6 +38,7 @@ fix_*.cjs
 .jules/
 .Jules/
 .claude/backups/
+.playwright-mcp/
 
 # Debug scripts at repo root
 test_*.cjs
@@ -66,3 +67,6 @@ electron/main.js
 
 # Electron build output
 out/
+
+# Script-generated archives (daily_oracle bout transcripts)
+archives/

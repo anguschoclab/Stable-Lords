@@ -2,9 +2,8 @@
  * Newsletter feed — collects fight cards per week and generates issues.
  */
 import type { FightSummary } from '@/types/combat.types';
-import { weekToTimestamp } from '@/constants'; /**
- * Defines the shape of fight card.
- */
+import { weekToTimestamp } from '@/constants';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Defines the shape of fight card.
@@ -12,9 +11,7 @@ import { weekToTimestamp } from '@/constants'; /**
 export interface FightCard {
   summary: FightSummary;
   transcript: string[];
-} /**
- * Defines the shape of newsletter issue.
- */
+}
 
 /**
  * Defines the shape of newsletter issue.
@@ -79,12 +76,6 @@ function computeStyleRollups(
   return rollups;
 }
 
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
-
 function computeTopMovers(
   fights: FightCard[]
 ): { name: string; fameDelta: number; popDelta: number }[] {
@@ -111,9 +102,7 @@ function computeTopMovers(
     .slice(0, 5);
 }
 
-const current: FightCard[] = []; /**
- * Newsletter feed.
- */
+const current: FightCard[] = [];
 
 /**
  * Newsletter feed.

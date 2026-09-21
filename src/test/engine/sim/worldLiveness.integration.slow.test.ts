@@ -98,6 +98,62 @@ describe('world liveness over a long sim (26 weeks)', () => {
   }, 120000);
 });
 
+describe('AI liveness invariants over 104 weeks (I.2)', () => {
+  beforeEach(reset, 120000);
+
+  it('every intent fires, memory persists, dossiers cover the world, player gets challenged', async () => {
+    const { pulses, finalState } = await runSimulation({
+      weeks: 104,
+      seed: 4242,
+      logFrequency: 4,
+      ignoreBankruptcy: true,
+    });
+
+    expect(pulses.length).toBeGreaterThan(20);
+
+    // Every strategy intent fires at least once across two seasons.
+    const seenIntents = new Set<string>();
+    for (const p of pulses) {
+      for (const intent of Object.keys(p.intentDistribution)) seenIntents.add(intent);
+    }
+    for (const required of [
+      'VENDETTA',
+      'WEALTH_ACCUMULATION',
+      'CONSOLIDATION',
+      'EXPANSION',
+      'RECOVERY',
+      'TOURNAMENT_CAMPAIGN',
+    ]) {
+      expect(seenIntents, `intent ${required} never fired`).toContain(required);
+    }
+
+    // No rival stable runs a silent mind — every stable logs actions.
+    expect(
+      finalState.rivals.every((r) => (r.actionHistory?.length ?? 0) > 0),
+      'a rival ended 104 weeks with an empty actionHistory'
+    ).toBe(true);
+
+    // Post-wk13 pulses show live season records — the season rollup is running.
+    const latePulses = pulses.filter((p) => p.week > 13);
+    expect(latePulses.length).toBeGreaterThan(0);
+    const stablesWithRecords = finalState.rivals.filter(
+      (r) =>
+        ((r.agentMemory?.seasonRecord?.wins ?? 0) + (r.agentMemory?.seasonRecord?.losses ?? 0)) > 0 ||
+        (r.agentMemory?.lastSeasonRecord?.wins ?? 0) +
+          (r.agentMemory?.lastSeasonRecord?.losses ?? 0) >
+          0
+    );
+    expect(stablesWithRecords.length).toBeGreaterThan(0);
+
+    // Intel accumulates — dossier coverage is nonzero in the late game.
+    const end = pulses[pulses.length - 1]!;
+    expect(end.avgDossierCoverage).toBeGreaterThan(0);
+
+    // Rivals challenge the player at least once across the run.
+    expect(pulses.some((p) => p.playerChallengedWeeks > 0)).toBe(true);
+  }, 600000);
+});
+
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {
   beforeEach(reset, 120000);
 

@@ -1,6 +1,11 @@
 import type { Warrior, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
-import { FightingStyle } from '@/types/shared.types';
 import { displayWeek } from '@/engine/core/absoluteWeek';
+import {
+  acceptanceWeatherBlock,
+  offerWeatherDecline,
+} from '@/engine/ai/weatherSuitability';
+import { COUNTERED_PURSE_CONDITION } from '@/engine/bout/mutations/contractMutations';
+import { buildFightForecast } from '@/engine/narrative/fightForecast';
 
 /**
  *
@@ -13,45 +18,10 @@ export function verifyBoutAcceptance(
 ): { accepted: boolean; reason?: string } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
 
-  // Weather Skepticism
-  const isLunger = warrior.style === FightingStyle.LungingAttack;
-  if (weather === 'Rainy' && isLunger) {
-    return { accepted: false, reason: 'Precision penalty in rain.' };
-  }
-
-  if (weather === 'Sweltering' && warrior.attributes.CN < 15) {
-    return { accepted: false, reason: 'Heatstroke risk too high.' };
-  }
-
-  if (weather === 'Acid Rain') {
-    return { accepted: false, reason: 'Acid rain causes permanent scarring and gear rot.' };
-  }
-
-  if (weather === 'Blizzard' && (isLunger || warrior.attributes.CN < 12)) {
-    return { accepted: false, reason: 'Too cold for precise footwork/low stamina.' };
-  }
-
-  if (weather === 'Dense Fog' && isLunger) {
-    return { accepted: false, reason: 'Zero visibility prevents lunging strategy.' };
-  }
-
-  if (weather === 'Sandstorm' && (isLunger || warrior.style === FightingStyle.AimedBlow)) {
-    return { accepted: false, reason: 'Sandstorm blinds precision targeting.' };
-  }
-
-  if (weather === 'Gale' && (warrior.style === FightingStyle.StrikingAttack || isLunger)) {
-    return { accepted: false, reason: 'Gale-force winds disrupt attack accuracy.' };
-  }
-
-  if (weather === 'Tornado') {
-    return { accepted: false, reason: 'Tornado conditions make all combat unsafe.' };
-  }
-
-  if (weather === 'Hailstorm' && warrior.attributes.CN < 12) {
-    return {
-      accepted: false,
-      reason: 'Hailstorm drains stamina too fast for low-conditioning warriors.',
-    };
+  // Weather Skepticism — consolidated gate (G16)
+  const weatherReason = acceptanceWeatherBlock(warrior, weather);
+  if (weatherReason !== null) {
+    return { accepted: false, reason: weatherReason };
   }
 
   // Skeptical Check: RECOVERY agents refuse fights with "Killers"
@@ -84,37 +54,51 @@ export function verifyBoutAcceptance(
 const BLOCKING_INJURY_SEVERITIES = ['Moderate', 'Severe', 'Critical', 'Permanent'] as const;
 type BlockingSeverity = (typeof BLOCKING_INJURY_SEVERITIES)[number];
 
+/** The rival's verdict on a bout offer — 'Countered' is a one-shot purse renegotiation. */
+export type BoutEvaluation = 'Accepted' | 'Declined' | 'Countered';
+
 /**
- *
+ * Evaluate a bout offer for a rival-owned warrior.
+ * Hard safety refusals (blocking injuries, weather, RECOVERY risk) run BEFORE
+ * the desperation gate — an empty treasury never overrides them (G14).
+ * Marginal purses may be 'Countered' once per offer.
  */
 export function evaluateBoutOffer(
   offer: BoutOffer,
   rival: RivalStableData,
   warrior: Warrior,
   currentWeek: number,
-  weather: WeatherType = 'Clear'
-): 'Accepted' | 'Declined' {
-  // 0. Desperation Gate: if treasury is critically low, accept ANYTHING for the purse
-  if (rival.treasury < 500) {
-    return 'Accepted';
+  weather: WeatherType = 'Clear',
+  opponent?: Warrior
+): BoutEvaluation {
+  const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
+
+  // ── Hard gates (cannot be bought off by desperation) ──
+
+  // Injury Gate — blocking injuries decline at any treasury
+  const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
+    (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
+  );
+  if (hasBlockingInjury) {
+    return 'Declined';
   }
 
-  // 0.5 Weather Skepticism
-  const isLunger = warrior.style === FightingStyle.LungingAttack;
-  if (weather === 'Rainy' && isLunger) {
+  // Weather Skepticism — consolidated gate (G16)
+  if (offerWeatherDecline(warrior, weather)) {
     return 'Declined';
   }
-  if (weather === 'Sweltering' && warrior.attributes.CN < 12) {
-    return 'Declined';
+
+  // RECOVERY risk refusal — killers and severe mismatches are never accepted,
+  // even when the treasury is empty.
+  if (intent === 'RECOVERY' && opponent) {
+    if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
+      return 'Declined';
+    }
   }
-  if (weather === 'Dense Fog' && isLunger) {
-    return 'Declined';
-  }
-  if (weather === 'Blizzard' && (isLunger || warrior.attributes.CN < 12)) {
-    return 'Declined';
-  }
-  if (weather === 'Acid Rain') {
-    return 'Declined';
+
+  // ── Desperation Gate: critically low treasury accepts anything survivable ──
+  if (rival.treasury < 500) {
+    return 'Accepted';
   }
 
   // Tournament Hunger — use display week since tournaments are seasonal (every 13 display weeks)
@@ -140,14 +124,6 @@ export function evaluateBoutOffer(
     return 'Declined';
   }
 
-  // Injury Gate
-  const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
-    (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
-  );
-  if (hasBlockingInjury) {
-    return 'Declined';
-  }
-
   // Personality Logic
   const personality = rival.owner.personality;
   const hype = offer.hype;
@@ -155,6 +131,27 @@ export function evaluateBoutOffer(
 
   if (isTournamentHungry) {
     return 'Accepted';
+  }
+
+  // Matchup Skepticism — calculating stables decline a strongly unfavorable
+  // style matchup when they can afford to (same forecast the player sees).
+  if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+    const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+    if (edge <= -2) {
+      return 'Declined';
+    }
+  }
+
+  // Counter logic: famous warriors hold out for a purse worthy of their name.
+  // The fame floor precedes the personality accepts — a Pragmatic does not
+  // take 300g for a name worth 2000 just because it clears the generic bar.
+  // One round only — an offer already tagged COUNTERED_PURSE is final.
+  const alreadyCountered = offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false;
+  if (!alreadyCountered && personality !== 'Aggressive') {
+    const purseFloor = (warrior.fame ?? 0) - 50;
+    if (purseFloor > 0 && offer.purse < purseFloor) {
+      return 'Countered';
+    }
   }
 
   if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';

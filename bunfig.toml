@@ -1,3 +1,9 @@
 [test]
-preload = ["./src/test/_setup/bun-setup.ts"]
-pathIgnorePatterns = ["e2e/**", "src/test/electronMain.test.ts"]
+# bunViPolyfill MUST precede bun-setup: setup.ts calls vi.unmock at top level,
+# and ESM hoisting means bun-setup cannot shim it before its own ./setup import.
+preload = ["./src/test/_setup/bunViPolyfill.ts", "./src/test/_setup/bun-setup.ts"]
+# .slow tests are excluded for parity with the default `bunx vitest run` suite;
+# they retain dedicated CI coverage via the `slow-tests` job.
+# out/** is gitignored electron-packager output — it contains a full bundled
+# copy of src/test plus dependency test files that must never be collected.
+pathIgnorePatterns = ["e2e/**", "out/**", "src/test/electronMain.test.ts", "**/*.slow.test.ts"]

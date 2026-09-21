@@ -12,9 +12,7 @@ import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/co
 /**
  * Warning severity type.
  */
-export type WarningSeverity = 'info' | 'warn' | 'error'; /**
- * Defines the shape of strategy warning.
- */
+export type WarningSeverity = 'info' | 'warn' | 'error';
 
 /**
  * Defines the shape of strategy warning.
@@ -26,14 +24,12 @@ export interface StrategyWarning {
 }
 
 const HIGH = 8;
-const LOW = 3; /**
- * Validate strategy.
- * @param warrior - Warrior. (optional)
- */
+const LOW = 3;
 
 /**
  * Validate strategy.
- * @param warrior - Warrior. (optional)
+ * @param plan -
+ * @param warrior -
  */
 export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWarning[] {
   const out: StrategyWarning[] = [];

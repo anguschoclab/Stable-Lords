@@ -12,11 +12,12 @@ import { isActive } from '@/engine/warriorStatus';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import { type SubNavTab } from '@/components/layout/SubNav';
 import { Separator } from '@/components/ui/separator';
-import { Trophy, Users } from 'lucide-react';
+import { Trophy, Users, Medal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { StatCard } from '@/components/ui/StatCard';
 import { useWarriorDetail } from '@/pages/WarriorDetail/hooks/useWarriorDetail';
 
 // Modularized Warrior Components
@@ -32,12 +33,10 @@ const TABS: SubNavTab[] = [
   { id: 'biometrics', label: 'DOSSIER', icon: <User className="h-4 w-4" /> },
   { id: 'mission', label: 'WAR PLAN', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
-]; /**
- * Warrior detail.
- */
+];
 
 /**
- *
+ * Warrior detail.
  */
 export default function WarriorDetail() {
   const {
@@ -165,14 +164,12 @@ export default function WarriorDetail() {
           <SectionDivider label="Standing" />
           <Surface variant="glass" className="p-8 space-y-8 border-white/5">
             <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-1">
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Renown
-                </span>
-                <span className="font-display font-black text-3xl text-arena-fame leading-none">
-                  {displayWarrior.fame}
-                </span>
-              </div>
+              <StatCard
+                label="Renown"
+                value={displayWarrior.fame}
+                variant="fame"
+                valueClassName="text-3xl leading-none"
+              />
               <ImperialRing size="md" variant="gold">
                 <Trophy className="h-5 w-5 text-arena-fame" />
               </ImperialRing>
@@ -181,16 +178,26 @@ export default function WarriorDetail() {
             <Separator className="bg-white/5" />
 
             <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-1">
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Crowd Favor
-                </span>
-                <span className="font-display font-black text-3xl text-arena-pop leading-none">
-                  {displayWarrior.popularity}
-                </span>
-              </div>
+              <StatCard
+                label="Crowd Favor"
+                value={displayWarrior.popularity}
+                valueClassName="text-3xl leading-none text-arena-pop"
+              />
               <ImperialRing size="md" variant="silver">
                 <Users className="h-5 w-5 text-arena-pop" />
+              </ImperialRing>
+            </div>
+
+            <Separator className="bg-white/5" />
+
+            <div className="flex items-center justify-between">
+              <StatCard
+                label="Season Points"
+                value={displayWarrior.seasonPoints ?? 0}
+                valueClassName="text-3xl leading-none tabular-nums"
+              />
+              <ImperialRing size="md" variant="bronze">
+                <Medal className="h-5 w-5 text-arena-fame" />
               </ImperialRing>
             </div>
           </Surface>

@@ -46,9 +46,8 @@ export type {
 import { type FightSummary, type FightOutcomeBy } from './combat.types';
 export type { FightSummary, FightOutcomeBy };
 import type { PoolWarrior } from '@/engine/recruitment';
-export type { PoolWarrior }; /**
- * Defines the shape of ranking entry.
- */
+import type { ContentPack } from '@/lib/contentPacks';
+export type { PoolWarrior };
 
 // ─── Ranking & Contracts ───────────────────────────────────────────────────
 
@@ -59,23 +58,17 @@ export interface RankingEntry {
   overallRank: number;
   classRank: number;
   compositeScore: number;
-} /**
- * Bout offer status type.
- */
+}
 
 /**
  * Bout offer status type.
  */
-export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired'; /**
- * Bout offer response type.
- */
+export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired';
 
 /**
  * Bout offer response type.
  */
-export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined'; /**
- * Defines the shape of bout offer.
- */
+export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined' | 'Countered';
 
 /**
  * Defines the shape of bout offer.
@@ -98,16 +91,15 @@ export interface BoutOffer {
   /** Absolute week when this offer was created. Disambiguates boutWeek/expirationWeek
    *  which are stored as display weeks (1–52). Legacy saves omit this field. */
   createdAbsoluteWeek?: number;
-} /**
- * Promoter personality type.
- */
+  /** Purse increase demanded by the last counter (COUNTERED_PURSE round).
+   *  The proposer stable must afford this bump for the counter to sign. */
+  counterPurseBump?: number;
+}
 
 /**
  * Promoter personality type.
  */
-export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate'; /**
- * Defines the shape of promoter.
- */
+export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate';
 
 /**
  * Defines the shape of promoter.
@@ -127,9 +119,7 @@ export interface Promoter {
     mentorId?: PromoterId;
     legacyFame: number;
   };
-} /**
- * Owner personality type.
- */
+}
 
 // ─── Owner / Stable ─────────────────────────────────────────────────────────
 
@@ -143,9 +133,7 @@ export type OwnerPersonality = (typeof OWNER_PERSONALITIES)[number];
 /**
  * Meta adaptation type.
  */
-export type MetaAdaptation = (typeof META_ADAPTATIONS)[number]; /**
- * Defines the shape of owner.
- */
+export type MetaAdaptation = (typeof META_ADAPTATIONS)[number];
 
 /**
  * Defines the shape of owner.
@@ -166,9 +154,7 @@ export interface Owner {
   foundedByWarriorId?: WarriorId; // Lineage breadcrumb for legacy founders
   age?: number; // 🎂 1.0 Hardening: Owner age for retirement
   ageRetired?: number; // Week the previous owner retired
-} /**
- * Defines the shape of tournament bout.
- */
+}
 
 // ─── Game State ─────────────────────────────────────────────────────────────
 
@@ -185,9 +171,7 @@ export interface TournamentBout {
   winner?: 'A' | 'D' | null;
   by?: FightOutcomeBy;
   fightId?: FightId;
-} /**
- * Defines the shape of tournament entry.
- */
+}
 
 /**
  * Defines the shape of tournament entry.
@@ -202,9 +186,7 @@ export interface TournamentEntry {
   participants: Warrior[];
   champion?: string;
   completed: boolean;
-} /**
- * Defines the shape of training assignment.
- */
+}
 
 /**
  * Defines the shape of training assignment.
@@ -219,9 +201,7 @@ export interface TrainingAssignment {
   trainerId?: string;
   /** Trait training: weeks left before the outcome roll. Counts down each week. */
   weeksRemaining?: number;
-} /**
- * Defines the shape of seasonal growth.
- */
+}
 
 /**
  * Defines the shape of seasonal growth.
@@ -230,9 +210,7 @@ export interface SeasonalGrowth {
   warriorId: WarriorId;
   season: Season;
   gains: Partial<Record<keyof Attributes, number>>;
-} /**
- * Defines the shape of ledger entry.
- */
+}
 
 /**
  * Defines the shape of ledger entry.
@@ -243,9 +221,7 @@ export interface LedgerEntry {
   label: string;
   amount: number;
   category: 'fight' | 'training' | 'recruit' | 'trainer' | 'upkeep' | 'prize' | 'other';
-} /**
- * Ai intent type.
- */
+}
 
 /**
  * Ai intent type.
@@ -258,9 +234,8 @@ export type AIIntent =
   | 'SURVIVAL'
   | 'WEALTH_ACCUMULATION'
   | 'AGGRESSIVE_EXPANSION'
-  | 'ROSTER_DIVERSITY'; /**
- * Defines the shape of ai strategy.
- */
+  | 'ROSTER_DIVERSITY'
+  | 'TOURNAMENT_CAMPAIGN';
 
 /**
  * Defines the shape of ai strategy.
@@ -269,11 +244,23 @@ export interface AIStrategy {
   intent: AIIntent;
   targetStableId?: StableId;
   planWeeksRemaining: number;
-} /**
- * Defines the shape of ai event.
- */
+  /** Human-readable explanation of why this intent was chosen (UI-facing). */
+  reason?: string;
+}
 
 // TrainerData was here, now using Trainer from shared.types
+
+/**
+ * Typed reason an AI action was taken. Intent values mean the action was
+ * intent-driven; the non-intent members tag systemic events. Replaces the
+ * old English-substring intent inference in logAgentAction.
+ */
+export type AIEventCause =
+  | AIIntent
+  | 'BOUT_OUTCOME'
+  | 'INTEL_UPDATE'
+  | 'MAINTENANCE'
+  | 'TOURNAMENT_PREP';
 
 /**
  * Defines the shape of ai event.
@@ -281,12 +268,28 @@ export interface AIStrategy {
 export interface AIEvent {
   id: string; // Events are often transient or don't need branding if not referenced
   week: number;
-  type: 'STRATEGY' | 'FINANCE' | 'ROSTER' | 'STAFF';
+  type: 'STRATEGY' | 'FINANCE' | 'ROSTER' | 'STAFF' | 'BOUT' | 'INTEL';
   description: string;
   riskTier: 'Low' | 'Medium' | 'High';
-} /**
- * Defines the shape of ai agent memory.
+  cause?: AIEventCause;
+}
+
+/**
+ * What a rival stable believes about another stable. `recordVs` and
+ * `knownStyles` are observed facts; `estimatedThreat` is an inferred belief
+ * that regresses toward uncertainty as `lastSeenWeek` stales.
  */
+export interface OpponentDossier {
+  lastSeenWeek: number;
+  knownStyles: FightingStyle[];
+  estimatedThreat: number; // 0..1
+  recordVs: { w: number; l: number; k: number };
+  planIntel?: {
+    suspectedOE?: number;
+    suspectedAL?: number;
+    lastPlanWeek?: number;
+  };
+}
 
 /**
  * Defines the shape of ai agent memory.
@@ -303,9 +306,17 @@ export interface AIAgentMemory {
     kills: number;
     rosterSizeAtSeasonStart: number;
   };
-} /**
- * Defines the shape of rival stable data.
- */
+  lastSeasonRecord?: {
+    wins: number;
+    losses: number;
+    kills: number;
+    rosterSizeAtSeasonStart: number;
+  };
+  /** Perceived opponent intel keyed by stable id (player stable included). */
+  opponentDossiers: Record<string, OpponentDossier>;
+  /** Top reasons recent bouts were lost, most recent first, capped at 3. */
+  lastLossFactors?: string[];
+}
 
 /**
  * Defines the shape of rival stable data.
@@ -328,9 +339,13 @@ export interface RivalStableData {
   seasonalGrowth?: SeasonalGrowth[];
   ledger: LedgerEntry[];
   trainingAssignments: TrainingAssignment[];
-} /**
- * Defines the shape of scout report data.
- */
+  /** Set by processAIRosterManagement when the roster is below its personality
+   *  floor — the unified recruitment path (aiDraftFromPool) acts on it. */
+  needsRecruit?: boolean;
+  /** Season index of the last poach bid tabled by this stable — enforces the
+   *  once-per-season poaching cadence (G.2). */
+  lastPoachSeason?: number;
+}
 
 /**
  * Defines the shape of scout report data.
@@ -347,9 +362,7 @@ export interface ScoutReportData {
   suspectedOE?: string;
   suspectedAL?: string;
   notes: string;
-} /**
- * Defines the shape of rest state.
- */
+}
 
 /**
  * Defines the shape of rest state.
@@ -357,9 +370,7 @@ export interface ScoutReportData {
 export interface RestState {
   warriorId: WarriorId;
   restUntilWeek: number;
-} /**
- * Defines the shape of rivalry.
- */
+}
 
 /**
  * Defines the shape of rivalry.
@@ -371,9 +382,7 @@ export interface Rivalry {
   intensity: number;
   reason: string;
   startWeek: number;
-} /**
- * Defines the shape of match record.
- */
+}
 
 /**
  * Defines the shape of match record.
@@ -383,9 +392,7 @@ export interface MatchRecord {
   playerWarriorId: WarriorId;
   opponentWarriorId: WarriorId;
   opponentStableId: StableId;
-} /**
- * Defines the shape of owner grudge.
- */
+}
 
 /**
  * Defines the shape of owner grudge.
@@ -398,9 +405,7 @@ export interface OwnerGrudge {
   reason: string;
   startWeek: number;
   lastEscalation: number;
-} /**
- * Defines the shape of gazette story.
- */
+}
 
 /**
  * Defines the shape of gazette story.
@@ -412,16 +417,12 @@ export interface GazetteStory {
   mood: CrowdMoodType;
   tags: string[];
   week: number;
-} /**
- * Insight token type type.
- */
+}
 
 /**
  * Insight token type type.
  */
-export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait'; /**
- * Defines the shape of insight token.
- */
+export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait';
 
 /**
  * Defines the shape of insight token.
@@ -435,9 +436,7 @@ export interface InsightToken {
   targetKey?: string;
   origin?: string;
   discoveredWeek: number;
-} /**
- * Defines the shape of hall entry.
- */
+}
 
 /**
  * Defines the shape of hall entry.
@@ -447,9 +446,7 @@ export interface HallEntry {
   week: number;
   label: 'Fight of the Week' | 'Fight of the Tournament';
   fightId: FightId;
-} /**
- * Defines the shape of simulation report.
- */
+}
 
 // ─── Simulation & Awards ────────────────────────────────────────────────────
 
@@ -470,17 +467,13 @@ export interface SimulationReport {
   agingEvents: string[];
   healthEvents: string[];
   bouts?: import('@/types/combat.types').FightSummary[];
-} /**
- * Annual award type type.
- */
+}
 
 /**
  * Annual award type type.
  */
 export type AnnualAwardType =
-  'WARRIOR_OF_YEAR' | 'KILLER_OF_YEAR' | 'STABLE_OF_YEAR' | 'CLASS_MVP' | 'TOURNAMENT_RANK'; /**
- * Defines the shape of annual award.
- */
+  'WARRIOR_OF_YEAR' | 'KILLER_OF_YEAR' | 'STABLE_OF_YEAR' | 'CLASS_MVP' | 'TOURNAMENT_RANK';
 
 /**
  * Defines the shape of annual award.
@@ -498,13 +491,13 @@ export interface AnnualAward {
 }
 
 /**
- *
+ * Identifier for a progression objective.
  */
 export type ObjectiveId =
   'TOP_10_STABLE' | 'TOP_3_STABLE' | 'FIRST_TOURNAMENT_WIN' | 'HALL_OF_FAMER' | 'REALM_CHAMPION';
 
 /**
- *
+ * Defines the shape of a progression objective.
  */
 export interface ProgressionObjective {
   id: ObjectiveId;
@@ -516,12 +509,12 @@ export interface ProgressionObjective {
 }
 
 /**
- *
+ * Status of the overall progression campaign.
  */
 export type ProgressionStatus = 'active' | 'won' | 'continued';
 
 /**
- *
+ * Defines the shape of progression state.
  */
 export interface ProgressionState {
   status: ProgressionStatus;
@@ -544,9 +537,32 @@ export interface DeferredBoutLog {
   season: number;
   boutId: string;
   transcript: string[];
-} /**
- * Defines the shape of game state.
+}
+
+/** Player-configurable house rules (non-canonical variants). */
+export interface HouseRules {
+  /** Kill-window probability multiplier applied to every bout. 1 = canonical. */
+  deathRateMult: number;
+  /** When true, fatal blows become career-threatening injuries, never deaths. */
+  severeInjuryInsteadOfDeath: boolean;
+}
+
+/** Canonical (full permadeath) house rules — the default game. */
+export const CANONICAL_HOUSE_RULES: HouseRules = {
+  deathRateMult: 1,
+  severeInjuryInsteadOfDeath: false,
+};
+
+/**
+ * All-time world counters. Unlike `arenaHistory`/`graveyard` (which truncate),
+ * these accumulate forever — the production counterpart of the harness-only
+ * cumulativeTracker (register F3).
  */
+export interface LifetimeStats {
+  bouts: number;
+  kills: number;
+  retirements: number;
+}
 
 /**
  * Defines the shape of game state.
@@ -572,6 +588,16 @@ export interface GameState {
   ftueComplete: boolean;
   ftueStep?: number;
   coachDismissed: string[];
+  /**
+   * Optional house rules (Design Bible §House Rules and Mods). Absent or
+   * canonical values mean standard full-permadeath play; any weakening of
+   * permadeath is a non-canonical house rule and must be labeled as such in UI.
+   */
+  houseRules?: HouseRules;
+  /** Installed content packs (Design Bible #36) — narrative overlays only. */
+  contentPacks?: ContentPack[];
+  /** All-time counters immune to array truncation. */
+  lifetimeStats?: LifetimeStats;
   player: Owner;
   fame: number;
   popularity: number;
@@ -632,9 +658,7 @@ export interface GameState {
   bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
   progression: ProgressionState;
-} /**
- * Defines the shape of ui prefs.
- */
+}
 
 /**
  * Defines the shape of ui prefs.

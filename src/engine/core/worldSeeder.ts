@@ -6,7 +6,7 @@ import { generateRivalStables } from '@/engine/rivals';
 import { generateRecruitPool } from '@/engine/recruitment';
 import { generateHiringPool } from '@/engine/trainers';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, resolveRng } from '@/utils/random';
 
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 
@@ -15,7 +15,7 @@ import { generatePromoters } from '@/engine/promoters/promoterGenerator';
  * Bypasses the FTUE for headless simulation.
  */
 export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGService): GameState {
-  const rngService = rng || new SeededRNGService(seed);
+  const rngService = resolveRng(rng, seed);
   const usedNames = new Set<string>();
 
   // 1. Generate Rivals (45 stables for the fluid population target)

@@ -55,6 +55,9 @@ export interface WorldSlice {
   ftueComplete: boolean;
   player: Owner;
   coachDismissed: string[];
+  houseRules?: GameState['houseRules'];
+  contentPacks?: GameState['contentPacks'];
+  lifetimeStats?: GameState['lifetimeStats'];
   rivalries: Rivalry[];
   matchHistory: MatchRecord[];
   playerChallenges: string[];

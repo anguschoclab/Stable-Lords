@@ -49,10 +49,9 @@ export function getBackstoryCounts(): Record<StableTemplate['backstoryId'], numb
     number
   >;
 
-  Object.keys(grouped).forEach((backstoryId) => {
-    counts[backstoryId as StableTemplate['backstoryId']] =
-      grouped[backstoryId as StableTemplate['backstoryId']].length;
-  });
+  for (const [backstoryId, templates] of Object.entries(grouped)) {
+    counts[backstoryId as StableTemplate['backstoryId']] = templates.length;
+  }
 
   return counts;
 }

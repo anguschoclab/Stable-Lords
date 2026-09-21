@@ -266,15 +266,16 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
 
   for (const [path, items] of Object.entries(newTemplatesMap)) {
     const segments = path.split('.');
-    let target: any = data; // eslint-disable-line @typescript-eslint/no-explicit-any
+    let target = data as unknown as Record<string, unknown>;
     for (let i = 0; i < segments.length - 1; i++) {
-      target = target[segments[i]!];
+      target = target[segments[i]!] as Record<string, unknown>;
     }
     const leaf = segments[segments.length - 1]!;
 
     // Merge and Deduplicate
-    const uniqueTemplates = [...new Set([...target[leaf], ...items])];
-    const newItemsCount = uniqueTemplates.length - target[leaf].length;
+    const existing = target[leaf] as string[];
+    const uniqueTemplates = [...new Set([...existing, ...items])];
+    const newItemsCount = uniqueTemplates.length - existing.length;
 
     target[leaf] = uniqueTemplates;
 
@@ -304,13 +305,15 @@ export function deduplicate_full_archive(data: ValidatedJSON) {
       continue;
     }
     for (const sev of Object.keys(severities)) {
-      (severities as any)[sev] = [...new Set((severities as any)[sev])]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const sevMap = severities as Record<string, string[]>;
+        sevMap[sev] = [...new Set(sevMap[sev])];
     }
   }
   if (data.defenses) {
     for (const outcomes of Object.values(data.defenses)) {
       for (const outcome of Object.keys(outcomes)) {
-        (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])]; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const outMap = outcomes as Record<string, string[]>;
+        outMap[outcome] = [...new Set(outMap[outcome])];
       }
     }
   }
@@ -332,13 +335,15 @@ export function deduplicate_full_archive(data: ValidatedJSON) {
   for (const cat of extraCategories) {
     if (!data[cat]) continue;
     for (const subCat of Object.keys(data[cat])) {
-      const val = (data[cat] as any)[subCat]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const subMap = data[cat] as Record<string, unknown>;
+      const val = subMap[subCat];
       if (Array.isArray(val)) {
-        (data[cat] as any)[subCat] = [...new Set(val)]; // eslint-disable-line @typescript-eslint/no-explicit-any
-      } else if (typeof val === 'object') {
-        for (const leaf of Object.keys(val)) {
-          if (Array.isArray(val[leaf])) {
-            val[leaf] = [...new Set(val[leaf])];
+        subMap[subCat] = [...new Set(val)];
+      } else if (typeof val === 'object' && val !== null) {
+        const leafMap = val as Record<string, unknown>;
+        for (const leaf of Object.keys(leafMap)) {
+          if (Array.isArray(leafMap[leaf])) {
+            leafMap[leaf] = [...new Set(leafMap[leaf] as unknown[])];
           }
         }
       }

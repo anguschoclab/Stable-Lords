@@ -8,14 +8,9 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /* ── helpers ─────────────────────────────────────────────── */
-
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
 
 function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | null {
   const wFights = fights.filter((f) => f.warriorIdA === warrior.id || f.warriorIdD === warrior.id);

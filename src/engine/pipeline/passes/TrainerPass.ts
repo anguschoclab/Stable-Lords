@@ -1,6 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { computeTrainerAging } from '@/engine/trainerAging';
 
@@ -9,7 +9,7 @@ import { computeTrainerAging } from '@/engine/trainerAging';
  * Handles aging, retirement, and pool management for trainers.
  */
 export function runTrainerPass(state: GameState, rootRng?: IRNGService): StateImpact {
-  const rng = rootRng || new SeededRNGService(state.week * 1337 + 7);
+  const rng = resolveRng(rootRng, state.week * 1337 + 7);
   const { updatedTrainers, news, updatedHiringPool, rivalsUpdates } = computeTrainerAging(
     state,
     rng

@@ -9,6 +9,7 @@ import {
   nativeImage,
   Notification,
   session,
+  type MenuItemConstructorOptions,
 } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -21,17 +22,23 @@ const __dirname = path.dirname(__filename);
 // Keep in sync with src/constants/core/core.ts
 const SAVE_STATE_VERSION = '2.1.0-hardened';
 
-// Migration map: oldVersion → migrationFn. Empty for now — all mismatches are blocked.
-const MIGRATIONS: Record<string, (state: any) => any> = {};
+/** Minimal validated save-state envelope; the full game payload is opaque to main. */
+interface SaveEnvelope {
+  meta: { version: unknown; gameName: unknown };
+  [key: string]: unknown;
+}
 
-type ValidationResult = { valid: true; data: any } | { valid: false; reason: string };
+// Migration map: oldVersion → migrationFn. Empty for now — all mismatches are blocked.
+const MIGRATIONS: Record<string, (state: SaveEnvelope) => SaveEnvelope> = {};
+
+type ValidationResult = { valid: true; data: SaveEnvelope } | { valid: false; reason: string };
 
 /** Validates save state shape and version. Applies migration if available. */
 export function validateAndMigrateState(state: unknown): ValidationResult {
   if (!state || typeof state !== 'object') {
     return { valid: false, reason: 'malformed' };
   }
-  const s = state as any;
+  const s = state as SaveEnvelope;
   if (!s.meta || typeof s.meta !== 'object') {
     return { valid: false, reason: 'malformed' };
   }
@@ -355,8 +362,7 @@ export function createMenu() {
     },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Electron Menu.buildFromTemplate API mismatch (external library)
-  const menu = Menu.buildFromTemplate(template as any);
+  const menu = Menu.buildFromTemplate(template as MenuItemConstructorOptions[]);
   Menu.setApplicationMenu(menu);
 }
 

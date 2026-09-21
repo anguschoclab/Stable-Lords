@@ -161,9 +161,7 @@ function calculateStats(
     avgPurse: Math.round(avgPurse),
     totalHype,
   };
-} /**
- * Promoter detail.
- */
+}
 
 /**
  * Promoter detail.

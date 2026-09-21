@@ -3,9 +3,8 @@
  * Consolidates career stat updates to eliminate DRY violations across tournament resolvers
  */
 import type { Warrior } from '@/types/warrior.types';
-import type { WarriorStatus, CareerRecord } from '@/types/warrior.types'; /**
- * Defines the shape of career update input.
- */
+import type { WarriorStatus, CareerRecord } from '@/types/warrior.types';
+import { SEASON_POINTS } from '@/constants/core/core';
 
 /**
  * Defines the shape of career update input.
@@ -18,9 +17,7 @@ export interface CareerUpdateInput {
   popularityDelta?: number;
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
   skipFatigue?: boolean;
-} /**
- * Defines the shape of career update result.
- */
+}
 
 /**
  * Defines the shape of career update result.
@@ -32,6 +29,7 @@ export interface CareerUpdateResult {
   fame: number;
   popularity?: number;
   flair?: string[];
+  seasonPoints?: number;
 }
 
 /**
@@ -63,6 +61,11 @@ export function calculateCareerUpdate(
   const fameGain = isWinner ? (didKill ? 3 : 1) : 0;
   const fame = Math.max(0, (warrior.fame || 0) + fameGain + fameDelta);
 
+  // Season points race: +WIN per victory, +KILL_BONUS extra for a kill
+  const seasonPoints =
+    (warrior.seasonPoints ?? 0) +
+    (isWinner ? SEASON_POINTS.WIN + (didKill ? SEASON_POINTS.KILL_BONUS : 0) : 0);
+
   // Calculate new status
   const status: WarriorStatus = isVictim ? 'Dead' : 'Active';
 
@@ -79,6 +82,7 @@ export function calculateCareerUpdate(
     fatigue,
     career,
     fame,
+    seasonPoints,
   };
 
   // Only include optional fields if they have values
@@ -99,6 +103,7 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
     fatigue: result.fatigue,
     career: result.career,
     fame: result.fame,
+    seasonPoints: result.seasonPoints,
   };
 
   if (result.popularity !== undefined) {

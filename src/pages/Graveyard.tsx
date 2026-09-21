@@ -7,9 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skull, Zap } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { cn } from '@/lib/utils';
-import { VirtualizedFallenGrid } from '@/components/fallen/VirtualizedFallenGrid'; /**
- * Graveyard.
- */
+import { VirtualizedFallenGrid } from '@/components/fallen/VirtualizedFallenGrid';
 
 /**
  * Graveyard.

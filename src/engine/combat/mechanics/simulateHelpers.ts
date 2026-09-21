@@ -1,52 +1,16 @@
 import { FightingStyle } from '@/types/shared.types';
-import type { FightOutcome } from '@/types/combat.types';
 import type { Trainer } from '@/types/state.types';
 import type { ResolutionContext, FighterState } from '@/engine/combat/resolution/types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
 import { getTrainingBonus } from '@/engine/trainers';
-import { getSpecialtyMods } from '@/engine/trainerSpecialties'; /**
- * Create rng for context.
- * @param rng - Rng. (optional)
- */
-
-/**
- * Create rng for context.
- * @param rng - Rng. (optional)
- */
-export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
-  return rng || new SeededRNGService(seed);
-} /**
- * Setup rng.
- * @param providedRng - Provided rng. (optional)
- */
-
-/**
- * Setup rng.
- * @param providedRng - Provided rng. (optional)
- */
-export function setupRng(providedRng?: (() => number) | number): () => number {
-  if (typeof providedRng === 'function') {
-    return providedRng;
-  }
-  const seed =
-    typeof providedRng === 'number'
-      ? providedRng
-      : (crypto.getRandomValues(new Uint32Array(1))[0] ?? Date.now());
-  const sRng = new SeededRNGService(seed);
-  return () => sRng.next();
-} /**
- * Get trainer mods.
- * @param fighter - Fighter. (optional)
- * @param opponent - Opponent. (optional)
- * @param ctx - Ctx. (optional)
- */
+import { getSpecialtyMods } from '@/engine/trainerSpecialties';
 
 /**
  * Get trainer mods.
- * @param fighter - Fighter. (optional)
- * @param opponent - Opponent. (optional)
- * @param ctx - Ctx. (optional)
+ * @param trainers -
+ * @param style -
+ * @param fighter -
+ * @param opponent -
+ * @param ctx -
  */
 export function getTrainerMods(
   trainers: Trainer[] | undefined,
@@ -105,27 +69,7 @@ export function getTrainerMods(
     riposteDamageMult: 1.0,
     fatiguePenaltyReduction: 0,
   };
-} /**
- * Process outcome tags.
- */
-
-/**
- * Process outcome tags.
- */
-export function processOutcomeTags(
-  winner: 'A' | 'D',
-  by: FightOutcome['by'],
-  fA: FighterState,
-  fD: FighterState
-): string[] {
-  const tags = new Set<string>();
-  const w = winner === 'A' ? fA : fD;
-  const l = winner === 'A' ? fD : fA;
-
-  if (w.hp < w.maxHp * 0.3 && w.hitsLanded > l.hitsLanded) tags.add('Comeback');
-  if (w.hitsLanded >= 5) tags.add('Dominance');
-  if (by === 'KO') tags.add('KO');
-  if (by === 'Kill') tags.add('Kill');
-
-  return Array.from(tags);
 }
+
+
+

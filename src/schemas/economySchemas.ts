@@ -38,10 +38,6 @@ export const CrestChargeSchema = z.object({
 /**
  * CrestData schema
  */
-
-/**
- * CrestData schema
- */
 export const CrestDataSchema = z.object({
   shieldShape: ShieldShapeSchema,
   fieldType: FieldTypeSchema,
@@ -52,10 +48,6 @@ export const CrestDataSchema = z.object({
   generation: z.number(),
   parentCrest: z.any().optional(), // Recursive - using any
 });
-
-/**
- * Owner schema
- */
 
 /**
  * Owner schema
@@ -81,10 +73,6 @@ export const OwnerSchema = z.object({
 /**
  * Promoter schema
  */
-
-/**
- * Promoter schema
- */
 export const PromoterSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -102,10 +90,6 @@ export const PromoterSchema = z.object({
 });
 
 /**
- * BoutOffer schema
- */
-
-/**
  * TrainingAssignment schema
  */
 export const TrainingAssignmentSchema = z.object({
@@ -120,19 +104,11 @@ export const TrainingAssignmentSchema = z.object({
 /**
  * SeasonalGrowth schema
  */
-
-/**
- * SeasonalGrowth schema
- */
 export const SeasonalGrowthSchema = z.object({
   warriorId: z.string(),
   season: SeasonSchema,
   gains: z.record(z.string(), z.number()),
 });
-
-/**
- * LedgerEntry schema
- */
 
 /**
  * LedgerEntry schema
@@ -148,19 +124,12 @@ export const LedgerEntrySchema = z.object({
 /**
  * AIStrategy schema
  */
-
-/**
- * AIStrategy schema
- */
 export const AIStrategySchema = z.object({
   intent: AIIntentSchema,
   targetStableId: z.string().optional(),
   planWeeksRemaining: z.number(),
+  reason: z.string().optional(),
 });
-
-/**
- * AIEvent schema
- */
 
 /**
  * AIEvent schema
@@ -168,14 +137,44 @@ export const AIStrategySchema = z.object({
 export const AIEventSchema = z.object({
   id: z.string(),
   week: z.number(),
-  type: z.enum(['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF']),
+  type: z.enum(['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF', 'BOUT', 'INTEL']),
   description: z.string(),
   riskTier: z.enum(['Low', 'Medium', 'High']),
+  cause: z
+    .union([
+      AIIntentSchema,
+      z.enum(['BOUT_OUTCOME', 'INTEL_UPDATE', 'MAINTENANCE', 'TOURNAMENT_PREP']),
+    ])
+    .optional(),
+});
+
+const SeasonRecordSchema = z.object({
+  wins: z.number(),
+  losses: z.number(),
+  kills: z.number(),
+  rosterSizeAtSeasonStart: z.number(),
 });
 
 /**
- * AIAgentMemory schema
+ * OpponentDossier schema
  */
+export const OpponentDossierSchema = z.object({
+  lastSeenWeek: z.number(),
+  knownStyles: z.array(FightingStyleSchema),
+  estimatedThreat: z.number().min(0).max(1),
+  recordVs: z.object({
+    w: z.number(),
+    l: z.number(),
+    k: z.number(),
+  }),
+  planIntel: z
+    .object({
+      suspectedOE: z.number().optional(),
+      suspectedAL: z.number().optional(),
+      lastPlanWeek: z.number().optional(),
+    })
+    .optional(),
+});
 
 /**
  * AIAgentMemory schema
@@ -186,19 +185,11 @@ export const AIAgentMemorySchema = z.object({
   metaAwareness: z.record(z.string(), z.number()),
   knownRivals: z.array(z.string()),
   currentIntent: AIIntentSchema.optional(),
-  seasonRecord: z
-    .object({
-      wins: z.number(),
-      losses: z.number(),
-      kills: z.number(),
-      rosterSizeAtSeasonStart: z.number(),
-    })
-    .optional(),
+  seasonRecord: SeasonRecordSchema.optional(),
+  lastSeasonRecord: SeasonRecordSchema.optional(),
+  opponentDossiers: z.record(z.string(), OpponentDossierSchema),
+  lastLossFactors: z.array(z.string()).max(3).optional(),
 });
-
-/**
- * RivalStableData schema
- */
 
 /**
  * RivalStableData schema
@@ -221,11 +212,9 @@ export const RivalStableDataSchema = z.object({
   seasonalGrowth: z.array(SeasonalGrowthSchema).optional(),
   ledger: z.array(LedgerEntrySchema),
   trainingAssignments: z.array(TrainingAssignmentSchema),
+  needsRecruit: z.boolean().optional(),
+  lastPoachSeason: z.number().int().nonnegative().optional(),
 });
-
-/**
- * ScoutReportData schema
- */
 
 /**
  * ScoutReportData schema
@@ -245,10 +234,6 @@ export const ScoutReportDataSchema = z.object({
 });
 
 /**
- * RestState schema
- */
-
-/**
  * OwnerGrudge schema
  */
 export const OwnerGrudgeSchema = z.object({
@@ -260,10 +245,6 @@ export const OwnerGrudgeSchema = z.object({
   startWeek: z.number(),
   lastEscalation: z.number(),
 });
-
-/**
- * GazetteStory schema
- */
 
 export const ProgressionObjectiveSchema = z.object({
   id: z.enum([
@@ -293,20 +274,12 @@ export const ProgressionStateSchema = z.object({
 /**
  * DeferredBoutLog schema
  */
-
-/**
- * DeferredBoutLog schema
- */
 export const DeferredBoutLogSchema = z.object({
   year: z.number(),
   season: z.number(),
   boutId: z.string(),
   transcript: z.array(z.string()),
 });
-
-/**
- * Bookmark schema
- */
 
 /**
  * Bookmark schema
@@ -330,10 +303,6 @@ export const BookmarkSchema = z.object({
 /**
  * Trainer schema
  */
-
-/**
- * Trainer schema
- */
 export const TrainerSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -353,10 +322,6 @@ export const TrainerSchema = z.object({
 /**
  * SurfaceMod schema
  */
-
-/**
- * SurfaceMod schema
- */
 export const SurfaceModSchema = z.object({
   initiativeMod: z.number(),
   enduranceMult: z.number(),
@@ -366,19 +331,11 @@ export const SurfaceModSchema = z.object({
 /**
  * ArenaWeatherMod schema
  */
-
-/**
- * ArenaWeatherMod schema
- */
 export const ArenaWeatherModSchema = z.object({
   weatherType: WeatherTypeSchema,
   zoneDef: z.record(ArenaZoneSchema, z.number()).optional(),
   surfaceMod: SurfaceModSchema.optional(),
 });
-
-/**
- * ArenaConfig schema
- */
 
 /**
  * ArenaConfig schema

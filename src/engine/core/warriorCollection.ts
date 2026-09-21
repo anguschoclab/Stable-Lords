@@ -45,8 +45,11 @@ export function collectAllActiveWarriors(state: GameState): Warrior[] {
  * Collects all warriors available for matchmaking
  * (Active and not already booked for upcoming weeks)
  */
-export function collectAvailableWarriors(state: GameState, targetWeek: number): Warrior[] {
-  // Get all warriors already signed for target week
+/**
+ * Collects the ids of all warriors already signed to a bout for a given
+ * absolute week. Used to prevent double-booking by any matchmaking path.
+ */
+export function collectBookedWarriorIds(state: GameState, targetWeek: number): Set<string> {
   const bookedWarriorIds = new Set<string>();
 
   const offers = state.boutOffers;
@@ -61,16 +64,7 @@ export function collectAvailableWarriors(state: GameState, targetWeek: number): 
     }
   }
 
-  // Return active warriors who aren't booked
-  return collectAllWarriors(state, (w) => isActive(w) && !bookedWarriorIds.has(w.id));
-}
-
-/**
- * Gets the count of all active warriors in the world
- * Useful for meta calculations and capacity planning
- */
-export function countActiveWarriors(state: GameState): number {
-  return collectAllActiveWarriors(state).length;
+  return bookedWarriorIds;
 }
 
 /**
@@ -109,9 +103,3 @@ export function buildWarriorMap(state: {
   return map;
 }
 
-/**
- * Collects healthy active warriors (status === "Active" and no injuries)
- */
-export function collectHealthyWarriors(state: GameState): Warrior[] {
-  return collectAllWarriors(state, (w) => isActive(w) && (!w.injuries || w.injuries.length === 0));
-}

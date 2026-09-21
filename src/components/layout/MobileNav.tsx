@@ -6,13 +6,13 @@ import { useState } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import {
-  HUBS,
-  type HubId,
   useNavAlerts,
   HubSwitcher,
   SubPageList,
   AlertStrip,
+  UtilityStrip,
 } from './navigationShared';
+import { HUBS, type HubId } from './navigationHubs';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -112,6 +112,9 @@ export function MobileNav({ className }: MobileNavProps) {
 
             {/* Bottom alert strip */}
             <AlertStrip alerts={alerts} LinkComponent={SheetCloseLink} itemClassName="px-2 py-2" />
+
+            {/* Utility links (Help, dev-only Admin) */}
+            <UtilityStrip LinkComponent={SheetCloseLink} itemClassName="px-2 py-2" />
           </div>
         </SheetContent>
       </Sheet>

@@ -5,6 +5,7 @@ import type {
   GazetteStory,
 } from '@/types/state.types';
 import type { StateImpact } from '@/engine/impacts';
+import type { NewsId } from '@/types/shared.types';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 
 interface StableEntry {
@@ -100,7 +101,7 @@ export function runProgressionPass(
       if (obj.id === 'REALM_CHAMPION') {
         realmChampionCompleted = true;
         gazettes.push({
-          id: `gazette-realm-champion-${state.year}` as any,
+          id: `gazette-realm-champion-${state.year}` as NewsId,
           headline: 'Realm Champion Crowned!',
           body: `${state.player.stableName} has finished Year ${state.year} as the #1 stable in the realm. A new champion is etched into the annals of history.`,
           mood: 'Festive',

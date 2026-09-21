@@ -16,19 +16,7 @@ interface ScoutIntelTabProps {
   onSelectWarrior: (id: string) => void;
   treasury: number;
   onScout: (quality: ScoutQuality) => void;
-} /**
-   * Scout intel tab.
-   * @param  - {
-  rivals,
-  reports,
-  selected rival id,
-  on select rival,
-  selected warrior id,
-  on select warrior,
-  treasury,
-  on scout,
-}.
-   */
+}
 
 /**
  * Scout intel tab.

@@ -1,8 +1,9 @@
 import { BaseSkills } from '@/types/shared.types';
+import type { Persona } from '@/types/narrative.types';
 import { computeCoordination, computeActivityRating } from './terrabloodCharts';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
-const persona = (uiMeta as any).persona;
+const persona: Persona = uiMeta.persona;
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -34,6 +35,25 @@ function pickFromArchive(entries: StatementEntry[] | undefined, witValue: number
   }
   const last = entries[entries.length - 1];
   return last?.text ?? '';
+}
+
+function getStatement(
+  skillKey: string,
+  baseValue: number,
+  highThreshold: number,
+  isGoodWit: boolean,
+  wt: number,
+  personaData: Persona,
+): string {
+  const witKey = isGoodWit ? 'good' : 'bad';
+  const orderKey = baseValue >= highThreshold ? 'high' : 'low';
+  const category = (personaData[witKey] as unknown as Record<
+    string,
+    Record<string, StatementEntry[]>
+  >)?.[skillKey];
+  const entries = category?.[orderKey];
+  // Personas in the archive use the WT itself for the sub-selection min values
+  return pickFromArchive(entries, wt);
 }
 
 function getQuicknessStatement(defBase: number, parBase: number, wt: number): string {
@@ -92,9 +112,7 @@ function getQuicknessStatement(defBase: number, parBase: number, wt: number): st
   }
 
   return qualifier ? `${speed}, ${qualifier}` : speed;
-} /**
- * Generate warrior statements.
- */
+}
 
 // ─── Generator ─────────────────────────────────────────────────────────────
 
@@ -110,23 +128,12 @@ export function generateWarriorStatements(
   const isGoodWit = wt > 7;
   const p = persona;
 
-  function getStatement(skillKey: string, baseValue: number, highThreshold: number): string {
-    const witKey = isGoodWit ? 'good' : 'bad';
-    const orderKey = baseValue >= highThreshold ? 'high' : 'low';
-    const category = (p[witKey] as unknown as Record<string, Record<string, StatementEntry[]>>)?.[
-      skillKey
-    ];
-    const entries = category?.[orderKey];
-    // Personas in the archive use the WT itself for the sub-selection min values
-    return pickFromArchive(entries, wt);
-  }
-
-  const initiative = getStatement('initiative', skills.INI, 13);
-  const riposte = getStatement('riposte', skills.RIP, 13);
-  const attack = getStatement('attack', skills.ATT, 10);
-  const parry = getStatement('parry', skills.PAR, 10);
-  const defense = getStatement('defense', skills.DEF, 7);
-  const endurance = getStatement('endurance', skills.DEC, 10);
+  const initiative = getStatement('initiative', skills.INI, 13, isGoodWit, wt, p);
+  const riposte = getStatement('riposte', skills.RIP, 13, isGoodWit, wt, p);
+  const attack = getStatement('attack', skills.ATT, 10, isGoodWit, wt, p);
+  const parry = getStatement('parry', skills.PAR, 10, isGoodWit, wt, p);
+  const defense = getStatement('defense', skills.DEF, 7, isGoodWit, wt, p);
+  const endurance = getStatement('endurance', skills.DEC, 10, isGoodWit, wt, p);
 
   // Descriptors
   const coordRating = computeCoordination(sp, df);

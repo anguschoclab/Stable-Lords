@@ -6,89 +6,17 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Swords,
-  Globe,
-  LayoutDashboard,
-  BookUser,
-  Dumbbell,
-  Flame,
-  Skull,
-  Wrench,
-  Coins,
-  ScrollText,
-  Building2,
-  Sunset,
-  Trophy,
-  Radar,
-  Newspaper,
-  ChevronRight,
-  AlertCircle,
-  CalendarClock,
-  ShieldAlert,
-  BrainCircuit,
-  UserPlus,
-  Bookmark,
-} from 'lucide-react';
+import { AlertCircle, ChevronRight, ShieldAlert } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useTacticalAlerts } from '@/hooks/useTacticalAlerts';
+import { HUBS, UTILITY_LINKS, type HubId } from './navigationHubs';
+
+export type { HubId } from './navigationHubs';
 
 // ─── Hub + sub-page definitions ─────────────────────────────────────────────
 
-/**
- * Hubs.
- */
-export const HUBS = [
-  {
-    id: 'stable',
-    label: 'Stable',
-    icon: Swords,
-    to: '/stable',
-    pages: [
-      { to: '/stable', label: 'Overview', icon: LayoutDashboard, exact: true },
-      { to: '/stable/roster', label: 'Roster', icon: BookUser },
-      { to: '/stable/training', label: 'Training', icon: Dumbbell },
-      { to: '/stable/planner', label: 'Planner', icon: BrainCircuit },
-      { to: '/stable/arena', label: 'Arena', icon: Flame },
-      { to: '/stable/equipment', label: 'Equipment', icon: Wrench },
-      { to: '/stable/bouts', label: 'Bouts', icon: ScrollText },
-      { to: '/stable/promoters', label: 'Promoters', icon: Building2 },
-      { to: '/stable/trainers', label: 'Trainers', icon: Dumbbell },
-      { to: '/stable/finance', label: 'Finance', icon: Coins },
-      { to: '/stable/recruit', label: 'Recruit', icon: UserPlus },
-      { to: '/stable/offseason', label: 'Offseason', icon: Sunset },
-      { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
-    ],
-  },
-  {
-    id: 'world',
-    label: 'World',
-    icon: Globe,
-    to: '/world',
-    pages: [
-      { to: '/world', label: 'Rankings', icon: Trophy, exact: true },
-      { to: '/world/arena-leaderboards', label: 'Arenas', icon: Swords },
-      { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
-      { to: '/world/scouting', label: 'Scouting', icon: Radar },
-      { to: '/world/chronicle', label: 'Chronicle', icon: Newspaper },
-      { to: '/world/history', label: 'Hall of Fame', icon: Trophy },
-      { to: '/world/graveyard', label: 'Graveyard', icon: Skull },
-    ],
-  },
-  {
-    id: 'bookmarks',
-    label: 'Bookmarks',
-    icon: Bookmark,
-    to: '/bookmarks',
-    pages: [],
-  },
-] as const;
 
-/**
- * Hub id type.
- */
-export type HubId = (typeof HUBS)[number]['id'];
 
 // ─── Alert badge helper ──────────────────────────────────────────────────────
 
@@ -373,6 +301,44 @@ export function AlertStrip({ alerts, LinkComponent = Link, itemClassName }: Aler
           >
             <Icon className="h-3 w-3 shrink-0" />
             <span>{a.label}</span>
+          </LinkComponent>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Utility links strip ──────────────────────────────────────────────────────
+
+interface UtilityStripProps {
+  LinkComponent?: React.ComponentType<{
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }>;
+  itemClassName?: string;
+}
+
+/**
+ * Bottom-of-nav utility links (Help, dev-only Admin).
+ */
+export function UtilityStrip({ LinkComponent = Link, itemClassName }: UtilityStripProps) {
+  const links = UTILITY_LINKS.filter((l) => !('devOnly' in l && l.devOnly) || import.meta.env.DEV);
+  return (
+    <div className="border-t border-white/5 p-2 flex flex-col gap-1">
+      {links.map((l) => {
+        const Icon = l.icon;
+        return (
+          <LinkComponent
+            key={l.to}
+            to={l.to}
+            className={cn(
+              'flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 transition-opacity hover:opacity-70 motion-reduce:transition-none',
+              itemClassName
+            )}
+          >
+            <Icon className="h-3 w-3 shrink-0" />
+            <span>{l.label}</span>
           </LinkComponent>
         );
       })}

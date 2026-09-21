@@ -5,7 +5,12 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
 describe('NF3: autosim memory growth', () => {
   it('sequential autosim should not grow arenaHistory unboundedly', async () => {
-    const state = createFreshState('autosim-memory-test');
+    // Seed a deep treasury: this test measures memory growth across truncation
+    // points, not economics. The degenerate autosim stable (roster=1, no fight
+    // income) otherwise survives only on Mana Surge gift timing, which drifts
+    // whenever weekly rng consumption changes — an incidental dependency that
+    // makes weeksSimmed luck-based rather than a real liveness signal.
+    const state = { ...createFreshState('autosim-memory-test'), treasury: 10000 };
     const initialArenaLength = (state.arenaHistory || []).length;
 
     // Run 100 weeks of sequential autosim — crosses two truncation points (50, 100)

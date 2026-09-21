@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
-import { cn } from '@/lib/utils'; /**
- * Particle type type.
- */
+import { cn } from '@/lib/utils';
 
 /**
  * Particle type type.
@@ -26,15 +24,7 @@ interface ParticleSystemProps {
   sourceX: number; // 0-100 arena position
   sourceY: number;
   className?: string;
-} /**
-   * Particle system.
-   * @param  - {
-  trigger,
-  source x,
-  source y,
-  class name,
-}.
-   */
+}
 
 /**
  * Particle system.

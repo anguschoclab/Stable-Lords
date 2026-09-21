@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { verifyIntentSkepticism } from '@/engine/ai/intentEngine';
-import { consolidateAgentMemory } from '@/engine/ai/agentCore';
+import { updateSeasonRecord } from '@/engine/ai/memory/seasonRecord';
 import type { GameState, RivalStableData } from '@/types/state.types';
 
 describe('AI Agent Architecture - Skeptical Intent', () => {
@@ -55,7 +55,13 @@ describe('AI Agent Architecture - Memory Consolidation', () => {
     const rival = {
       owner: { id: 'r1' },
       treasury: 500,
-      agentMemory: { lastTreasury: 500, burnRate: 0, metaAwareness: {}, knownRivals: [] },
+      agentMemory: {
+        lastTreasury: 500,
+        burnRate: 0,
+        metaAwareness: {},
+        knownRivals: [],
+        opponentDossiers: {},
+      },
       roster: [
         { status: 'Active' },
         { status: 'Active' },
@@ -64,7 +70,8 @@ describe('AI Agent Architecture - Memory Consolidation', () => {
       ],
     } as any as RivalStableData;
 
-    const updated = consolidateAgentMemory(rival, 1);
+    // Season-boundary reset now lives in updateSeasonRecord (B.2).
+    const updated = updateSeasonRecord(rival, [], 1);
     expect(updated.agentMemory?.seasonRecord?.rosterSizeAtSeasonStart).toBe(2);
   });
 
@@ -77,12 +84,13 @@ describe('AI Agent Architecture - Memory Consolidation', () => {
         burnRate: 0,
         metaAwareness: {},
         knownRivals: [],
+        opponentDossiers: {},
         seasonRecord: { wins: 0, losses: 0, kills: 0, rosterSizeAtSeasonStart: 5 },
       },
       roster: [{ status: 'Active' }],
     } as any as RivalStableData;
 
-    const updated = consolidateAgentMemory(rival, 2);
+    const updated = updateSeasonRecord(rival, [], 2);
     expect(updated.agentMemory?.seasonRecord?.rosterSizeAtSeasonStart).toBe(5);
   });
 });

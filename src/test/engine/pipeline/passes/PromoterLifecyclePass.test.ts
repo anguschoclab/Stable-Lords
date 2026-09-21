@@ -8,6 +8,7 @@ import { runPromoterLifecyclePass } from '@/engine/pipeline/passes/PromoterLifec
 
 function makeMockRng(retireNext: boolean): IRNGService {
   let callCount = 0;
+  let idCounter = 0;
   return {
     next: () => {
       if (callCount === 0) {
@@ -18,10 +19,9 @@ function makeMockRng(retireNext: boolean): IRNGService {
       return 0.5;
     },
     pick: <T>(arr: T[]): T => arr[0]!,
-    uuid: () => `mock-uuid-${Math.random()}`,
+    uuid: () => `mock-uuid-${idCounter++}`,
     roll: () => 5,
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (p: number) => p > 0,
   } as unknown as IRNGService;
 }
@@ -189,7 +189,6 @@ describe('PromoterLifecyclePass', () => {
         uuid: () => `successor-${++uuidCount}`,
         roll: () => 5,
         shuffle: <T>(arr: T[]): T[] => arr,
-        pickWeighted: <T>(items: T[]): T => items[0]!,
         chance: (p: number) => p > 0,
       } as unknown as IRNGService;
 

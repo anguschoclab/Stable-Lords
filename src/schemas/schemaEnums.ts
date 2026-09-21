@@ -28,15 +28,20 @@ export const FightingStyleSchema = z.enum([
 export const SeasonSchema = z.enum(['Spring', 'Summer', 'Fall', 'Winter']);
 
 /**
- * CrowdMoodType enum schema
+ * Canonical crowd-mood values — engine/constants derive from this tuple.
  */
-export const CrowdMoodTypeSchema = z.enum([
+export const CROWD_MOOD_VALUES = [
   'Calm',
   'Bloodthirsty',
   'Theatrical',
   'Solemn',
   'Festive',
-]);
+] as const;
+
+/**
+ * CrowdMoodType enum schema
+ */
+export const CrowdMoodTypeSchema = z.enum(CROWD_MOOD_VALUES);
 
 /**
  * WeatherType enum schema
@@ -371,7 +376,12 @@ export const BoutOfferStatusSchema = z.enum([
 /**
  * BoutOfferResponse enum schema
  */
-export const BoutOfferResponseSchema = z.enum(['Pending', 'Accepted', 'Declined']);
+export const BoutOfferResponseSchema = z.enum([
+  'Pending',
+  'Accepted',
+  'Declined',
+  'Countered',
+]);
 
 /**
  * FightOutcomeBy enum schema
@@ -433,6 +443,7 @@ export const AIIntentSchema = z.enum([
   'WEALTH_ACCUMULATION',
   'AGGRESSIVE_EXPANSION',
   'ROSTER_DIVERSITY',
+  'TOURNAMENT_CAMPAIGN',
 ]);
 
 /**

@@ -3,7 +3,7 @@
  * for VENDETTA targeting produces correct results. After Group A merge,
  * the Map lookup optimization must preserve this behavior.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import type { RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -79,6 +79,16 @@ describe('boutBidding VENDETTA targeting', () => {
     // even when the target rival is not found in the rivals array
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('nonexistent');
+  });
+
+  it('does not structuredClone a mock GameState per rival (G17)', () => {
+    const spy = vi.spyOn(globalThis, 'structuredClone');
+    const rival = makeRival({
+      strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
+    });
+    generateBoutBids(rival, 5, 'Clear', 'Calm', [rival]);
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
 
   it('Non-VENDETTA intents still iterate all rivals for matchup scoring', () => {

@@ -13,9 +13,7 @@ import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/stat
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { shuffled } from '@/utils/random';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import { SeededRNGService } from '@/utils/random'; /**
- * Defines the shape of orphan warrior.
- */
+import { resolveRng } from '@/utils/random';
 
 /**
  * Defines the shape of orphan warrior.
@@ -34,19 +32,17 @@ export interface OrphanWarrior {
 
 // ── RNG & Helpers ────────────────────────────────────────────────────────
 
-const TRAIT_IDS = Object.keys(TRAITS); /**
- * Generate orphan pool.
- * @param seed - Seed. (optional)
- */
+const TRAIT_IDS = Object.keys(TRAITS);
 
 // ── Generation Logic ─────────────────────────────────────────────────────
 
 /**
  * Generate orphan pool.
- * @param seed - Seed. (optional)
+ * @param count -
+ * @param seed -
  */
 export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarrior[] {
-  const rng = new SeededRNGService(seed ?? cryptoRandomInt(0, 2147483647));
+  const rng = resolveRng(undefined, seed ?? cryptoRandomInt(0, 2147483647));
   const styles = Object.values(FightingStyle);
   const usedNames = new Set<string>();
   const pool: OrphanWarrior[] = [];

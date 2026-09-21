@@ -5,6 +5,7 @@
  * deterministic randomness in the engine.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { cryptoRandomInt } from './cryptoRandom';
 
 /**
  * The SeededRNG class - implements IRNGService directly
@@ -84,35 +85,11 @@ export class SeededRNG implements IRNGService {
   }
 
   /**
-   * Weighted random selection from items array.
-   * Implements IRNGService.pickWeighted for direct interface compliance.
+   * Weighted random selection of a string key from a weight map.
+   * Delegates to the module-scope {@link rollWeighted} free function.
    */
-  pickWeighted<T>(items: T[], weights: number[]): T {
-    if (items.length !== weights.length) {
-      throw new Error('Items and weights must have same length');
-    }
-    if (items.length === 0) throw new Error('Cannot pick from empty array');
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    let random = this.next() * totalWeight;
-    for (let i = 0; i < items.length; i++) {
-      const weight = weights[i];
-      if (weight === undefined) {
-        throw new Error('Weight index out of bounds');
-      }
-      random -= weight;
-      if (random <= 0) {
-        const item = items[i];
-        if (item === undefined) {
-          throw new Error('Item index out of bounds');
-        }
-        return item;
-      }
-    }
-    const fallback = items[items.length - 1];
-    if (fallback === undefined) {
-      throw new Error('No items available for weighted pick');
-    }
-    return fallback;
+  rollWeighted<K extends string>(weights: Partial<Record<K, number>>): K {
+    return rollWeighted(weights, this);
   }
 }
 
@@ -129,18 +106,6 @@ export function randomPick<T>(arr: T[], rng: (() => number) | IRNGService): T {
     return arr[idx] as T;
   }
   return rng.pick(arr);
-}
-
-/**
- * Converts a string to a numeric seed using character code reduction.
- */
-export function stringToSeed(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0; // Convert to 32bit integer
-  }
-  return Math.abs(hash);
 }
 
 /**
@@ -174,6 +139,50 @@ export function shuffled<T>(arr: T[], rng: (() => number) | IRNGService): T[] {
     copy[j] = tempI;
   }
   return copy;
+}
+
+/**
+ * Roll a string key from a weight map. Falls back to the first key if the
+ * total weight is zero, and throws if the map is empty.
+ */
+export function rollWeighted<K extends string>(
+  weights: Partial<Record<K, number>>,
+  rng: IRNGService
+): K {
+  const entries = Object.entries(weights) as [K, number][];
+  if (entries.length === 0) {
+    throw new Error('No entries available for weighted roll');
+  }
+  const total = entries.reduce((sum, [, w]) => sum + w, 0);
+  if (total <= 0) return entries[0]?.[0] as K;
+  let roll = rng.next() * total;
+  for (const [key, w] of entries) {
+    roll -= w;
+    if (roll <= 0) return key;
+  }
+  const fallback = entries[entries.length - 1];
+  if (!fallback) {
+    throw new Error('No entries available for weighted roll');
+  }
+  return fallback[0];
+}
+
+/**
+ * Resolves an optional IRNGService, falling back to a deterministic seeded RNG.
+ * The ONLY place engine/pipeline code may construct a fallback — call sites
+ * must pass the same context-derived seed they used previously.
+ */
+export function resolveRng(rng: IRNGService | undefined, fallbackSeed: number): IRNGService {
+  return rng ?? new SeededRNG(fallbackSeed);
+}
+
+/**
+ * SeededRNG backed by cryptographic entropy — for contexts that intentionally
+ * want non-reproducible variety (name gen, pools, UI). Determinism-sensitive
+ * callers must pass an explicit rng instead.
+ */
+export function entropyRng(): IRNGService {
+  return new SeededRNG(cryptoRandomInt(0, 0x7fffffff));
 }
 
 /** Backward-compatible alias — callers should migrate to {@link SeededRNG}. */

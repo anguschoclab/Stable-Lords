@@ -174,6 +174,7 @@ export function generateRivalStables(
         burnRate: 0,
         metaAwareness: {},
         knownRivals: [],
+        opponentDossiers: {},
       },
       actionHistory: [],
       fame: iteration > 0 ? 50 + iteration * 100 : 0,

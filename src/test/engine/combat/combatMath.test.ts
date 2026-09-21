@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { skillCheck, pickText, contestCheck } from '@/engine/combat/mechanics/combatMath';
+import { skillCheck, contestCheck } from '@/engine/combat/mechanics/combatMath';
 
 describe('combatMath engine', () => {
   describe('skillCheck', () => {
@@ -37,25 +37,6 @@ describe('combatMath engine', () => {
     });
   });
 
-  describe('pickText', () => {
-    it('returns empty string when array is empty', () => {
-      const rng = vi.fn().mockReturnValue(0.5);
-      expect(pickText(rng, [])).toBe('');
-    });
-    it('returns element based on rng', () => {
-      const texts = ['a', 'b', 'c'];
-      let rng = vi.fn().mockReturnValue(0);
-      expect(pickText(rng, texts)).toBe('a');
-      rng = vi.fn().mockReturnValue(0.99);
-      expect(pickText(rng, texts)).toBe('c');
-      rng = vi.fn().mockReturnValue(0.4);
-      expect(pickText(rng, texts)).toBe('b');
-    });
-    it('returns empty string when array contains undefined', () => {
-      const rng = vi.fn().mockReturnValue(0.5);
-      expect(pickText(rng, [undefined] as unknown as string[])).toBe('');
-    });
-  });
 
   describe('contestCheck', () => {
     it('returns true if rollA > rollD', () => {

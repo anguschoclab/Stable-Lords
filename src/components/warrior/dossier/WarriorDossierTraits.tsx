@@ -3,10 +3,7 @@ import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
 
 interface WarriorDossierTraitsProps {
   warrior: Warrior;
-} /**
- * Warrior dossier traits.
- * @param - { warrior }.
- */
+}
 
 /**
  * Warrior dossier traits.

@@ -21,9 +21,7 @@ const chartConfig: ChartConfig = {
     label: 'Natural Potential',
     color: 'hsl(var(--muted-foreground))',
   },
-}; /**
- * Warrior radar chart.
- */
+};
 
 /**
  * Warrior radar chart.

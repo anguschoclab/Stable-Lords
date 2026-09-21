@@ -2,13 +2,15 @@ import { useMemo } from 'react';
 import { History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 
 interface ActionEvent {
+  id?: string;
   week: number;
   description: string;
   riskTier: string;
+  cause?: string;
 }
 
 interface ActionTimelineProps {
@@ -20,7 +22,7 @@ interface ActionTimelineProps {
  */
 export function ActionTimeline({ events }: ActionTimelineProps) {
   const state = useGameStore(
-    useShallow((s: any) => ({
+    useShallow((s: GameStore) => ({
       roster: s.roster,
       graveyard: s.graveyard,
       retired: s.retired,
@@ -35,7 +37,7 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
         ...(state.roster ?? []),
         ...(state.graveyard ?? []),
         ...(state.retired ?? []),
-        ...(state.rivals ?? []).flatMap((r: any) => r.roster),
+        ...(state.rivals ?? []).flatMap((r) => r.roster),
       ].map((w) => w.name)
     );
     return [...names];
@@ -84,8 +86,16 @@ export function ActionTimeline({ events }: ActionTimelineProps) {
                           : 'bg-primary/20 text-primary'
                     )}
                   >
-                    {event.riskTier}_RISK
+                    {event.riskTier} RISK
                   </span>
+                  {event.cause && (
+                    <span
+                      data-testid={`cause-chip-${event.id ?? event.week}`}
+                      className="text-[7px] font-black uppercase px-1 rounded-none bg-primary/10 text-primary/70"
+                    >
+                      {event.cause.replace(/_/g, ' ')}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

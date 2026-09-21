@@ -2,6 +2,7 @@
  * Lore Archive — persists fight summaries and Hall of Fights entries.
  */
 import type { FightSummary, HallEntry } from '@/types/game';
+import { handleLocalStorageQuotaError } from '@/utils/storage';
 
 const KEY_FIGHTS = 'sl.lore.fights';
 const KEY_HALL = 'sl.lore.hall';
@@ -9,36 +10,20 @@ const KEY_HALL = 'sl.lore.hall';
 function loadArray<T>(key: string): T[] {
   if (typeof localStorage === 'undefined') return [];
   try {
-    return JSON.parse(localStorage.getItem(key) || '[]');
+    const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
 }
 function saveArray<T>(key: string, arr: T[]) {
-  if (typeof localStorage !== 'undefined') {
-    try {
-      localStorage.setItem(key, JSON.stringify(arr));
-    } catch (error) {
-      if ((error as Error)?.name === 'QuotaExceededError') {
-        console.error(`localStorage quota exceeded when saving ${key}`, error);
-        // Lore data is capped at 500 entries, attempt to clear older entries
-        try {
-          const existing = loadArray<T>(key);
-          if (existing.length > 100) {
-            const trimmed = existing.slice(-100);
-            localStorage.setItem(key, JSON.stringify(trimmed));
-          }
-        } catch (retryError) {
-          console.error(`Failed to recover from localStorage quota error for ${key}`, retryError);
-        }
-      } else {
-        console.error(`Failed to save ${key}`, error);
-      }
-    }
+  if (typeof localStorage === 'undefined') return;
+  try {
+    handleLocalStorageQuotaError(key, arr);
+  } catch (error) {
+    console.error(`Failed to save ${key}`, error);
   }
-} /**
- * Lore archive.
- */
+}
 
 /**
  * Lore archive.

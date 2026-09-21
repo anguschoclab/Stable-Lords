@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Dices, ArrowRight } from 'lucide-react';
 import { IconMedallion } from '@/components/ui/IconMedallion';
 import { randomOwnerName, randomStableName } from '@/data/names';
-import { generateCrest } from '@/engine/crest/crestGenerator';
+import { generateCrest, getCrestDescription, getChargeDescription } from '@/engine/crest/crestGenerator';
 import { StableCrest } from '@/components/crest/StableCrest';
 import type { CrestData } from '@/types/crest.types';
 import BackstoryPicker from '@/components/startGame/BackstoryPicker';
@@ -23,22 +23,7 @@ interface NewGameFormProps {
   onBack: () => void;
   onSubmit: () => void;
   canCreate: boolean;
-} /**
-   * New game form.
-   * @param  - {
-  owner name,
-  set owner name,
-  stable name,
-  set stable name,
-  player crest,
-  set player crest,
-  backstory id,
-  set backstory id,
-  on back,
-  on submit,
-  can create,
-}.
-   */
+}
 
 /**
  * New game form.
@@ -247,11 +232,10 @@ export default function NewGameForm({
 
                 <div className="text-center space-y-1">
                   <p className="text-[10px] text-muted-foreground italic">
-                    {playerCrest.fieldType} field • {playerCrest.shieldShape} shield
+                    {getCrestDescription(playerCrest)}
                   </p>
                   <p className="text-[9px] text-accent/60 uppercase tracking-widest">
-                    {playerCrest.charge.name}
-                    {playerCrest.charge.count > 1 && ` ×${playerCrest.charge.count}`}
+                    {getChargeDescription(playerCrest.charge)}
                   </p>
                 </div>
 

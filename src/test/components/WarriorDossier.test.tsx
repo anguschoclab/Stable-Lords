@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 
 vi.mock('@/components/charts/WarriorRadarChart', () => ({
   WarriorRadarChart: ({ warrior }: any) => (
@@ -41,13 +41,7 @@ vi.mock('@/components/warrior/dossier/WarriorDossierMedicalReport', () => ({
   WarriorDossierMedicalReport: () => <div data-testid="dossier-medical" />,
 }));
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useWorldState: vi.fn(() => mockState),
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@/engine/core/historyResolver', () => ({
   findWarrior: vi.fn(
@@ -62,7 +56,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
     derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
@@ -79,10 +73,14 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
 }
 
 import { WarriorDossier } from '@/components/WarriorDossier';
+import { FightingStyle } from '@/types/shared.types';
 
 describe('WarriorDossier', () => {
   beforeEach(() => {
     mockState.roster = [makeWarrior()];
+    // Inject state into the real store so useWorldState resolves —
+    // vi.mock's importOriginal arg does not exist under bun:test.
+    useGameStore.setState({ roster: mockState.roster } as never);
   });
 
   it('renders "Warrior not found." for unknown warriorId', () => {

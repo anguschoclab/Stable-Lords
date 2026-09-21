@@ -127,10 +127,7 @@ function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge
 
 interface SchedulingWidgetProps {
   warrior: Warrior;
-} /**
- * Scheduling widget.
- * @param - { warrior }.
- */
+}
 
 /**
  * Scheduling widget.

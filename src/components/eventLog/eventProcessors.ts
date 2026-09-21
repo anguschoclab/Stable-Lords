@@ -1,4 +1,5 @@
 import { findWarrior } from '@/engine/core/historyResolver';
+import { hasInjuries } from '@/engine/injuries/utils';
 import { EVENT_ICONS } from './constants';
 import type { GameEvent, EventType } from '@/types/eventLog';
 import type {
@@ -85,7 +86,7 @@ export function processRetirementEvents(retired: Warrior[]): GameEvent[] {
 export function processInjuryEvents(roster: Warrior[], week: number): GameEvent[] {
   const events: GameEvent[] = [];
   roster.forEach((w) => {
-    if (!w.injuries || w.injuries.length === 0) return;
+    if (!hasInjuries(w)) return;
     w.injuries.forEach((inj, idx) => {
       if (typeof inj === 'string') return;
       events.push({

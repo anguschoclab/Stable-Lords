@@ -228,6 +228,28 @@ describe('StyleRollups', () => {
       expect(result).toHaveLength(1);
       expect(result[0]!.style).toBe('Sword');
     });
+
+    it('returns multiple styles aggregated and sorted by win pct descending', () => {
+      const data = {
+        Sword: [
+          { W: 1, L: 0, K: 1, fights: 1 },
+          { W: 1, L: 0, K: 0, fights: 1 },
+          { W: 1, L: 0, K: 0, fights: 1 },
+        ],
+        Axe: [
+          { W: 1, L: 0, K: 0, fights: 1 },
+          { W: 0, L: 1, K: 0, fights: 1 },
+        ],
+        Spear: [{ W: 0, L: 1, K: 0, fights: 1 }],
+      };
+      mockGetItem2.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.last10();
+      expect(result).toHaveLength(3);
+      expect(result.map((r) => r.style)).toEqual(['Sword', 'Axe', 'Spear']);
+      expect(result[0]).toMatchObject({ W: 3, L: 0, K: 1, fights: 3, P: 100 });
+      expect(result[1]).toMatchObject({ W: 1, L: 1, K: 0, fights: 2, P: 50 });
+      expect(result[2]).toMatchObject({ W: 0, L: 1, K: 0, fights: 1, P: 0 });
+    });
   });
 
   describe('loadTour (via tournament)', () => {
@@ -339,6 +361,21 @@ describe('StyleRollups', () => {
       expect(result).toHaveLength(1);
       expect(result[0]!.style).toBe('Sword');
       expect(result[0]!.fights).toBe(1);
+    });
+
+    it('returns multiple styles aggregated and sorted by win pct descending', () => {
+      const data = {
+        tour1: {
+          Sword: { W: 2, L: 0, K: 1, fights: 2 },
+          Axe: { W: 1, L: 1, K: 0, fights: 2 },
+          Spear: { W: 0, L: 2, K: 0, fights: 2 },
+        },
+      };
+      mockGetItem3.mockReturnValue(JSON.stringify(data));
+      const result = StyleRollups.tournament('tour1');
+      expect(result).toHaveLength(3);
+      expect(result.map((r) => r.style)).toEqual(['Sword', 'Axe', 'Spear']);
+      expect(result.map((r) => r.P)).toEqual([100, 50, 0]);
     });
   });
 

@@ -3,13 +3,13 @@ import type { FighterPose } from '@/types/arena.types';
 
 const STANCE_ANIMATION_CLASSES: Record<FighterPose['stance'], string> = {
   neutral: '',
-  advancing: 'animate-advancing',
-  retreating: 'animate-retreating',
-  lunging: 'animate-lunging',
-  defending: 'animate-defending',
-  stunned: 'animate-stunned',
-  victorious: 'animate-victorious',
-  defeated: 'animate-defeated',
+  advancing: 'animate-advancing motion-reduce:animate-none',
+  retreating: 'animate-retreating motion-reduce:animate-none',
+  lunging: 'animate-lunging motion-reduce:animate-none',
+  defending: 'animate-defending motion-reduce:animate-none',
+  stunned: 'animate-stunned motion-reduce:animate-none',
+  victorious: 'animate-victorious motion-reduce:animate-none',
+  defeated: 'animate-defeated motion-reduce:animate-none',
 };
 
 /**

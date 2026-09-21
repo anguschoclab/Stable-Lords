@@ -4,6 +4,8 @@ import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData } from '@/types/game';
 import type { FightPlan } from '@/types/shared.types';
 import { modLabel } from '../utils/modLabel';
+import { getRecruitQuote } from '@/lib/contentPacks';
+import { useGameStore } from '@/state/useGameStore';
 
 interface DoctrineIntelligenceSectionProps {
   rivalA: RivalStableData;
@@ -25,6 +27,7 @@ export function DoctrineIntelligenceSection({
   clashes,
   grudge,
 }: DoctrineIntelligenceSectionProps) {
+  const contentPacks = useGameStore((s) => s.contentPacks);
   return (
     <Surface variant="glass" padding="none" className="border-arena-gold/10 overflow-hidden">
       <div className="p-4 border-b border-white/5 bg-arena-gold/5 flex items-center gap-3">
@@ -96,6 +99,11 @@ export function DoctrineIntelligenceSection({
                   {rival.owner.metaAdaptation ?? '—'}
                 </span>
               </div>
+              {rival.owner.metaAdaptation && (
+                <p className="text-[9px] italic text-muted-foreground/50 leading-relaxed">
+                  {getRecruitQuote(rival.owner.metaAdaptation, contentPacks)}
+                </p>
+              )}
               {Object.keys(mods).length > 0 && (
                 <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                   <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">

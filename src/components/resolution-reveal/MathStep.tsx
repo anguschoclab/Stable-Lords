@@ -8,10 +8,7 @@ import type { GameState } from '@/types/state.types';
 
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
-} /**
- * Math step.
- * @param - { last simulation report }.
- */
+}
 
 /**
  * Math step.
@@ -28,7 +25,7 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
     >
       <div className="flex items-center gap-2">
         <Activity className="h-6 w-6 text-muted-foreground" />
-        <h3 className="text-xl font-semibold">{(uiMeta as any).fanfare.report_math}</h3>
+        <h3 className="text-xl font-semibold">{uiMeta.fanfare.report_math}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

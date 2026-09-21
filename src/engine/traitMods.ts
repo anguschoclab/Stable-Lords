@@ -45,9 +45,7 @@ export function getStaticTraitMods(warrior?: Warrior): {
     if (t.effect.enduranceMult != null) acc.enduranceMult *= t.effect.enduranceMult;
   }
   return acc;
-} /**
- * Defines the shape of dynamic trait context.
- */
+}
 
 /**
  * Defines the shape of dynamic trait context.

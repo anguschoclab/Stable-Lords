@@ -44,7 +44,8 @@ export function simulateFight(
   weather: WeatherType = 'Clear',
   arenaId: string = 'standard_arena',
   crowdMood?: CrowdMood,
-  headless?: boolean
+  headless?: boolean,
+  deathRateMult?: number
 ): FightOutcome {
   // 1. Initialize RNG
   const { rng, seed: boutSeed } = initializeRng(providedRng);
@@ -78,7 +79,8 @@ export function simulateFight(
     warriorD,
     trainers,
     arenaId,
-    crowdMood
+    crowdMood,
+    deathRateMult
   );
   resCtx.rng = rng;
 

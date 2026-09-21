@@ -11,6 +11,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/state/useGameStore';
 import type { RivalStableData, AIIntent } from '@/types/state.types';
 import { ActionTimeline } from './ActionTimeline';
 
@@ -70,15 +71,30 @@ const INTENT_METRICS: Record<
     color: 'text-primary/60',
     description: 'Resting injured warriors and avoiding high-stakes bouts.',
   },
+  TOURNAMENT_CAMPAIGN: {
+    label: 'Tournament Campaign',
+    icon: Target,
+    color: 'text-arena-gold',
+    description: 'Peaking the roster for the season-ending tournament.',
+  },
 };
 
 /**
  *
  */
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
+  const rivals = useGameStore((s) => s.rivals);
   const currentIntent = rival.agentMemory?.currentIntent || 'SURVIVAL';
   const metric = INTENT_METRICS[currentIntent];
   const Icon = metric.icon;
+  const targetId = rival.strategy?.targetStableId;
+  const playerStableId = useGameStore((s) => s.player?.id);
+  const playerStableName = useGameStore((s) => s.player?.stableName);
+  const targetName = targetId
+    ? targetId === playerStableId
+      ? (playerStableName ?? 'Your Stable')
+      : (rivals?.find((r) => r.id === targetId)?.owner.stableName ?? 'Unknown Stable')
+    : 'All Rivals';
 
   return (
     <Card className="bg-background border-white/5 relative overflow-hidden group">
@@ -118,13 +134,27 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
           <p className="text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
             {metric.description}
           </p>
+          {rival.strategy?.reason && (
+            <p className="text-[10px] text-foreground/70 leading-relaxed border-l-2 border-primary/20 pl-2">
+              {rival.strategy.reason}
+            </p>
+          )}
+          {rival.agentMemory?.seasonRecord && (
+            <div
+              data-testid="season-record"
+              className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 tabular-nums"
+            >
+              Season {rival.agentMemory.seasonRecord.wins}-
+              {rival.agentMemory.seasonRecord.losses}-
+              {rival.agentMemory.seasonRecord.kills} W-L-K
+            </div>
+          )}
         </div>
 
         <ActionTimeline events={rival.actionHistory || []} />
 
-        <div className="pt-2 flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">
-          <span>Targeting: {rival.strategy?.targetStableId || 'All Rivals'}</span>
-          <span>Confidence: 94.8%</span>
+        <div className="pt-2 text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">
+          <span>Targeting: {targetName}</span>
         </div>
       </CardContent>
     </Card>

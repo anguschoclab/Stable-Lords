@@ -16,6 +16,7 @@ import {
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
+import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import type { FighterState, ResolutionContext } from './types';
 
 /**
@@ -237,6 +238,16 @@ export function prepareExchange(
 
   // ── Desperate state handling ──
   events.push(...handleDesperateState(fA, fD));
+
+  // ── AI intent telemetry (Stage F) — labels which existing plan/state
+  //    selection is active (condition override / psych / desperate / kill
+  //    window). Pure annotation: emits on transitions only, touches no math. ──
+  if (ctx.aiIntentTelemetry) {
+    const intentA = evaluateBoutIntent(fA, fD, ctx);
+    if (intentA) events.push(intentA);
+    const intentD = evaluateBoutIntent(fD, fA, ctx);
+    if (intentD) events.push(intentD);
+  }
 
   const tac = resolveTacticsAndBias(fA, fD, phaseKey);
   const oal = resolveOEAL(fA, fD, phaseKey, exchange);

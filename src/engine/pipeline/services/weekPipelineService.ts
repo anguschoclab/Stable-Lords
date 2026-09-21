@@ -214,6 +214,21 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   state.year = ctx.nextYear;
   state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
   state.day = 0;
+
+  // All-time counters — immune to the periodic truncation of arenaHistory.
+  // Id-diff is exact even when slice(-500) drops entries mid-week: dropped
+  // entries are always the oldest, already counted in earlier weeks.
+  const prevLifetime = state.lifetimeStats ?? { bouts: 0, kills: 0, retirements: 0 };
+  const newIds = <T extends { id: unknown }>(next: T[] | undefined, prev: T[] | undefined) => {
+    const seen = new Set((prev ?? []).map((x) => x.id));
+    return (next ?? []).filter((x) => !seen.has(x.id)).length;
+  };
+  state.lifetimeStats = {
+    bouts: prevLifetime.bouts + newIds(state.arenaHistory, oldState.arenaHistory),
+    kills: prevLifetime.kills + newIds(state.graveyard, oldState.graveyard),
+    retirements: prevLifetime.retirements + newIds(state.retired, oldState.retired),
+  };
+
   state.trainingAssignments = (state.trainingAssignments ?? [])
     .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
     .map((a) => ({ ...a, weeksRemaining: (a.weeksRemaining ?? 0) - 1 }));
@@ -255,6 +270,17 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
 
   if (state.season !== oldState.season) {
     state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
+    // Season points race resets at the season boundary for every warrior.
+    state.roster = state.roster.map((w) =>
+      w.seasonPoints ? { ...w, seasonPoints: 0 } : w
+    );
+    if (state.rivals) {
+      state.rivals = state.rivals.map((r) => ({
+        ...r,
+        seasonalGrowth: r.seasonalGrowth?.filter((sg) => sg.season === state.season),
+        roster: r.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w)),
+      }));
+    }
   }
 
   // Handle OPFS archiving — always defer to off-thread flush for consistency

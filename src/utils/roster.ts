@@ -4,6 +4,7 @@
  * Eliminates DRY violations of roster filtering/mapping patterns
  */
 import type { GameState, Warrior } from '@/types/state.types';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Builds a Map<string, Warrior> from the game state
@@ -43,19 +44,12 @@ export function removeFromRoster(roster: Warrior[], ids: string[]): Warrior[] {
  */
 export function filterActive(roster: Warrior[]): Warrior[] {
   if (!Array.isArray(roster)) return [];
-  return roster.filter((w) => w.status === 'Active');
-}
-
-/**
- * Filters roster by specific status
- */
-export function filterByStatus(roster: Warrior[], status: string): Warrior[] {
-  return roster.filter((w) => w.status === status);
+  return roster.filter((w) => isActive(w));
 }
 
 /**
  * Filters roster to active warriors with no injuries
  */
 export function filterHealthy(roster: Warrior[]): Warrior[] {
-  return roster.filter((w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0));
+  return roster.filter((w) => isActive(w) && (!w.injuries || w.injuries.length === 0));
 }

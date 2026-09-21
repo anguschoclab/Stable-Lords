@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled } from '@/utils/random';
+import {
+  SeededRNG,
+  randomPick,
+  hashStr,
+  shuffled,
+  rollWeighted,
+  resolveRng,
+  entropyRng,
+} from '@/utils/random';
 
 describe('SeededRNG', () => {
   it('produces deterministic results for the same seed', () => {
@@ -66,24 +74,6 @@ describe('randomPick', () => {
   });
 });
 
-describe('stringToSeed', () => {
-  it('produces consistent seeds for same string', () => {
-    const seed1 = stringToSeed('test');
-    const seed2 = stringToSeed('test');
-    expect(seed1).toBe(seed2);
-  });
-
-  it('produces different seeds for different strings', () => {
-    const seed1 = stringToSeed('test');
-    const seed2 = stringToSeed('different');
-    expect(seed1).not.toBe(seed2);
-  });
-
-  it('returns positive numbers', () => {
-    const seed = stringToSeed('any string');
-    expect(seed).toBeGreaterThan(0);
-  });
-});
 
 describe('hashStr', () => {
   it('produces consistent hashes for same string', () => {
@@ -195,37 +185,6 @@ describe('SeededRNG.clone', () => {
   });
 });
 
-describe('SeededRNG.pickWeighted', () => {
-  it('picks items proportional to weights', () => {
-    const rng = new SeededRNG(42);
-    const items = ['a', 'b'];
-    const weights = [0, 100];
-    // With all weight on 'b', should always pick 'b'
-    for (let i = 0; i < 20; i++) {
-      expect(rng.pickWeighted(items, weights)).toBe('b');
-    }
-  });
-
-  it('throws on length mismatch', () => {
-    const rng = new SeededRNG(42);
-    expect(() => rng.pickWeighted(['a', 'b'], [1])).toThrow(
-      'Items and weights must have same length'
-    );
-  });
-
-  it('throws on empty arrays', () => {
-    const rng = new SeededRNG(42);
-    expect(() => rng.pickWeighted([], [])).toThrow('Cannot pick from empty array');
-  });
-
-  it('picks last item when all weight is on last', () => {
-    const rng = new SeededRNG(42);
-    const items = ['x', 'y', 'z'];
-    const weights = [0, 0, 50];
-    expect(rng.pickWeighted(items, weights)).toBe('z');
-  });
-});
-
 describe('SeededRNG.pick', () => {
   it('throws on empty array', () => {
     const rng = new SeededRNG(42);
@@ -258,5 +217,102 @@ describe('shuffled', () => {
     const arr = [1, 2, 3, 4, 5];
     const result = shuffled(arr, rng);
     expect(result.sort()).toEqual([1, 2, 3, 4, 5]);
+  });
+});
+
+describe('rollWeighted', () => {
+  it('is deterministic for the same seed', () => {
+    const rng1 = new SeededRNG(42);
+    const rng2 = new SeededRNG(42);
+    const weights = { a: 1, b: 3, c: 6 } as const;
+    for (let i = 0; i < 20; i++) {
+      expect(rollWeighted(weights, rng1)).toBe(rollWeighted(weights, rng2));
+    }
+  });
+
+  it('picks proportional to weights (all weight on one key returns that key)', () => {
+    const rng = new SeededRNG(42);
+    const weights = { a: 0, b: 100, c: 0 } as const;
+    for (let i = 0; i < 20; i++) {
+      expect(rollWeighted(weights, rng)).toBe('b');
+    }
+  });
+
+  it('returns last key when all weight is on the last key', () => {
+    const rng = new SeededRNG(42);
+    const weights = { x: 0, y: 0, z: 50 } as const;
+    expect(rollWeighted(weights, rng)).toBe('z');
+  });
+
+  it('returns the only key for a single-entry weight map', () => {
+    const rng = new SeededRNG(42);
+    expect(rollWeighted({ only: 10 }, rng)).toBe('only');
+  });
+
+  it('skips zero-weight entries', () => {
+    const rng = new SeededRNG(42);
+    const weights = { a: 0, b: 5 } as const;
+    for (let i = 0; i < 20; i++) {
+      expect(rollWeighted(weights, rng)).toBe('b');
+    }
+  });
+
+  it('throws on empty weight map', () => {
+    const rng = new SeededRNG(42);
+    expect(() => rollWeighted({}, rng)).toThrow('No entries available for weighted roll');
+  });
+
+  it('returns the first key when total weight is zero (fallback branch)', () => {
+    const rng = new SeededRNG(42);
+    const weights = { a: 0, b: 0 } as const;
+    expect(rollWeighted(weights, rng)).toBe('a');
+  });
+
+  it('free function and SeededRNG method produce identical keys for the same seed', () => {
+    const seed = 1234;
+    const weights = { a: 2, b: 5, c: 3 } as const;
+    for (let i = 0; i < 20; i++) {
+      const rngFree = new SeededRNG(seed);
+      const rngMethod = new SeededRNG(seed);
+      // Advance both i times so we compare the i-th draw.
+      for (let j = 0; j < i; j++) {
+        rollWeighted(weights, rngFree);
+        rngMethod.rollWeighted(weights);
+      }
+      expect(rollWeighted(weights, rngFree)).toBe(rngMethod.rollWeighted(weights));
+    }
+  });
+});
+
+describe('resolveRng', () => {
+  it('returns the provided rng instance unchanged', () => {
+    const rng = new SeededRNG(1);
+    expect(resolveRng(rng, 999)).toBe(rng);
+  });
+
+  it('produces the identical sequence to a SeededRNG built from the same seed', () => {
+    const resolved = resolveRng(undefined, 12345);
+    const direct = new SeededRNG(12345);
+    for (let i = 0; i < 50; i++) {
+      expect(resolved.next()).toBe(direct.next());
+    }
+  });
+});
+
+describe('entropyRng', () => {
+  it('returns a full IRNGService surface', () => {
+    const rng = entropyRng();
+    for (const m of ['next', 'pick', 'uuid', 'roll', 'shuffle', 'rollWeighted', 'chance'] as const) {
+      expect(typeof rng[m]).toBe('function');
+    }
+  });
+
+  it('next() returns values in [0, 1)', () => {
+    const rng = entropyRng();
+    for (let i = 0; i < 100; i++) {
+      const v = rng.next();
+      expect(v).toBeGreaterThanOrEqual(0);
+      expect(v).toBeLessThan(1);
+    }
   });
 });

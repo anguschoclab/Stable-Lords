@@ -343,3 +343,45 @@ describe('RivalStrategyPass bid integration', () => {
     vi.restoreAllMocks();
   });
 });
+
+describe('stable notoriety inflates offer hype (F1)', () => {
+  it('a killer stable\'s bid produces more hype than an identical clean stable\'s', () => {
+    const killer = makeWarrior('Butcher', FightingStyle.StrikingAttack);
+    killer.career = { wins: 8, losses: 0, kills: 10 }; // notoriety = 80 → +40 hype
+    const clean = makeWarrior('Gentle', FightingStyle.StrikingAttack);
+    clean.career = { wins: 8, losses: 0, kills: 0 };
+    const opponent = makeWarrior('Opp', FightingStyle.BashingAttack);
+
+    const killerStable = makeRival({ id: 'rival-k' as any, roster: [killer] });
+    const cleanStable = makeRival({ id: 'rival-c' as any, roster: [clean] });
+    const oppStable = makeRival({
+      id: 'rival-o' as any,
+      owner: { ...makeRival().owner, id: 'owner-o' as any, name: 'OwnerO', stableName: 'StableO' },
+      roster: [opponent],
+    });
+
+    const stateK = makeMinimalState([killerStable, oppStable]);
+    const { bids: bidsK } = generateBoutBids(killerStable, 5, 'Clear', 'Calm', [oppStable]);
+    const offersK = convertBidsToOffers(
+      bidsK.map((bid) => ({ bid, rivalId: killerStable.id as string })),
+      [killerStable, oppStable],
+      stateK,
+      new SeededRNGService(42),
+      new Set()
+    );
+
+    const stateC = makeMinimalState([cleanStable, oppStable]);
+    const { bids: bidsC } = generateBoutBids(cleanStable, 5, 'Clear', 'Calm', [oppStable]);
+    const offersC = convertBidsToOffers(
+      bidsC.map((bid) => ({ bid, rivalId: cleanStable.id as string })),
+      [cleanStable, oppStable],
+      stateC,
+      new SeededRNGService(42),
+      new Set()
+    );
+
+    expect(offersK.length).toBeGreaterThan(0);
+    expect(offersC.length).toBeGreaterThan(0);
+    expect(offersK[0]!.hype - offersC[0]!.hype).toBe(40);
+  });
+});

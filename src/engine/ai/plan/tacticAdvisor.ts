@@ -8,6 +8,7 @@ import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
 } from '@/engine/combat/mechanics/tacticResolution';
+import { OFFENSIVE_PARRY_BYPASS_WEIGHT, OFFENSIVE_END_COST_WEIGHT } from '@/constants/combat';
 
 const suitabilityScore = (r: 'WS' | 'S' | 'U'): number => (r === 'WS' ? 2 : r === 'S' ? 1 : 0);
 
@@ -20,7 +21,12 @@ function offensiveTacticValue(style: FightingStyle, tactic: OffensiveTactic): nu
   if (tactic === 'none') return 0;
   const m = getOffensiveTacticMods(tactic, style);
   return (
-    m.attBonus + m.dmgBonus + m.parryBypass * 0.5 + m.decBonus - m.defPenalty - m.endCost * 0.5
+    m.attBonus +
+    m.dmgBonus +
+    m.parryBypass * OFFENSIVE_PARRY_BYPASS_WEIGHT +
+    m.decBonus -
+    m.defPenalty -
+    m.endCost * OFFENSIVE_END_COST_WEIGHT
   );
 }
 

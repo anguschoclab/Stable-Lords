@@ -2,10 +2,13 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import { runSimulation } from './simulation-harness';
+import { formatPulseTable } from '@/engine/stats/simulationMetrics';
+import { NodeArchiveService } from './nodeArchiveService';
 
 const WEEKS_TO_SIMULATE = 1000;
 
 const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
+const ARCHIVE_DIR = path.join(process.cwd(), 'archives');
 
 async function main() {
   console.log(`Starting Autobalance Simulation for ${WEEKS_TO_SIMULATE} weeks...`);
@@ -15,33 +18,19 @@ async function main() {
     seed: 12345, // Deterministic
     logFrequency: 1,
     ignoreBankruptcy: true,
+    // Archive fight transcripts to disk (mirrors OPFS layout) and truncate
+    // historical arrays every 50 weeks so the 1000-week run stays bounded.
+    archiveService: new NodeArchiveService(ARCHIVE_DIR),
   });
 
-  const { finalState, pulses } = result;
+  const { pulses, cumulative } = result;
 
   console.log('Simulation complete. Analyzing data...');
 
-  // Calculate Metrics
-  const styleWins: Record<string, number> = {};
-  const styleLosses: Record<string, number> = {};
-
-  finalState.arenaHistory.forEach((bout) => {
-    const aStyle = bout.styleA || 'Unknown';
-    const dStyle = bout.styleD || 'Unknown';
-
-    if (!styleWins[aStyle]) styleWins[aStyle] = 0;
-    if (!styleLosses[aStyle]) styleLosses[aStyle] = 0;
-    if (!styleWins[dStyle]) styleWins[dStyle] = 0;
-    if (!styleLosses[dStyle]) styleLosses[dStyle] = 0;
-
-    if (bout.winner === 'A') {
-      styleWins[aStyle]++;
-      styleLosses[dStyle]++;
-    } else if (bout.winner === 'D') {
-      styleWins[dStyle]++;
-      styleLosses[aStyle]++;
-    }
-  });
+  // Calculate Metrics — all-time counters accumulated before each
+  // truncation pass, so they reflect the full 1000 weeks.
+  const styleWins = cumulative.styleWins;
+  const styleLosses = cumulative.styleLosses;
 
   const styleWinRates: Record<string, number> = {};
   for (const style in styleWins) {
@@ -53,14 +42,15 @@ async function main() {
     }
   }
 
-  const deaths = finalState.graveyard.length;
-  const bouts = finalState.arenaHistory.length;
+  const deaths = cumulative.deaths;
+  const bouts = cumulative.totalBouts;
   const mortalityRate = bouts > 0 ? deaths / bouts : 0;
 
   const avgEconomy =
     pulses.length > 0 ? pulses.reduce((sum, p) => sum + p.playerTreasury, 0) / pulses.length : 0;
 
   console.log('=== Autobalance Engine Metrics ===');
+  console.log(formatPulseTable(pulses.slice(-20))); // trailing 20-week pulse window
   console.log(`Mortality Rate: ${(mortalityRate * 100).toFixed(2)}%`);
   console.log(`Average Economy: ${avgEconomy.toFixed(0)} gold`);
   console.log(`Win Rates:`);
@@ -130,4 +120,8 @@ ${recommendations}
   console.log(`\nWrote Daily_Balance_Report.md`);
 }
 
-main().catch(console.error);
+// Guard like daily_bard.ts — importing this module under a test runner must
+// not kick off the 1000-week simulation.
+if (!process.env.VITEST) {
+  main().catch(console.error);
+}

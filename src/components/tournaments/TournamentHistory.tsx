@@ -1,5 +1,8 @@
-import { Trophy } from 'lucide-react';
+import { useState } from 'react';
+import { Trophy, ChevronDown, ChevronRight, Swords } from 'lucide-react';
 import type { TournamentEntry } from '@/types/game';
+import type { FightSummary } from '@/types/combat.types';
+import { getFightsForTournament } from '@/engine/core/historyUtils';
 import { Surface } from '@/components/ui/Surface';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
@@ -9,15 +12,8 @@ interface TournamentHistoryProps {
   seasonIcons: Record<string, string>;
   seasonNames: Record<string, string>;
   currentSeason: string;
-} /**
-   * Tournament history.
-   * @param  - {
-  past tournaments,
-  season icons,
-  season names,
-  current season,
-}.
-   */
+  arenaHistory?: FightSummary[];
+}
 
 /**
  * Tournament history.
@@ -33,7 +29,9 @@ export function TournamentHistory({
   seasonIcons,
   seasonNames,
   currentSeason,
+  arenaHistory = [],
 }: TournamentHistoryProps) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {['Spring', 'Summer', 'Fall', 'Winter'].map((s) => {
@@ -69,25 +67,64 @@ export function TournamentHistory({
                   <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
                     Champion Archives
                   </div>
-                  {pastForSeason.map((t) => (
-                    <div
-                      key={t.id}
-                      className="flex items-center justify-between p-3 bg-black/20 border border-white/5"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Trophy className="h-4 w-4 text-arena-gold drop-shadow-[0_0_8px_hsla(var(--arena-gold),0.6)]" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                          Wk {t.week}
-                        </span>
+                  {pastForSeason.map((t) => {
+                    const bouts =
+                      expandedId === t.id ? getFightsForTournament(arenaHistory, t.id) : [];
+                    return (
+                      <div key={t.id} className="bg-black/20 border border-white/5">
+                        <div className="flex items-center justify-between p-3">
+                          <div className="flex items-center gap-3">
+                            <Trophy className="h-4 w-4 text-arena-gold drop-shadow-[0_0_8px_hsla(var(--arena-gold),0.6)]" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                              Wk {t.week}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <BookmarkButton entityType="tournament" entityId={t.id} size="sm" />
+                            <span className="font-display font-black text-xs text-arena-gold uppercase tracking-tight">
+                              {t.champion ?? 'VACANT'}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpandedId((prev) => (prev === t.id ? null : t.id))
+                              }
+                              className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 hover:text-foreground transition-colors"
+                            >
+                              <Swords className="h-3 w-3" />
+                              Bouts
+                              {expandedId === t.id ? (
+                                <ChevronDown className="h-3 w-3" />
+                              ) : (
+                                <ChevronRight className="h-3 w-3" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                        {expandedId === t.id && (
+                          <div className="px-3 pb-3 space-y-1.5">
+                            {bouts.length === 0 ? (
+                              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/30 py-2">
+                                No recorded bouts in archive
+                              </p>
+                            ) : (
+                              bouts.map((f) => (
+                                <div
+                                  key={f.id}
+                                  className="flex items-center justify-between text-[10px] py-1.5 px-2 bg-white/[0.02] border-l-2 border-arena-gold/30"
+                                >
+                                  <span className="text-foreground/80">{f.title}</span>
+                                  <span className="font-black uppercase tracking-widest text-muted-foreground/50">
+                                    {f.by}
+                                  </span>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2">
-                        <BookmarkButton entityType="tournament" entityId={t.id} size="sm" />
-                        <span className="font-display font-black text-xs text-arena-gold uppercase tracking-tight">
-                          {t.champion ?? 'VACANT'}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="py-8 text-center text-muted-foreground/20 border border-dashed border-white/5">

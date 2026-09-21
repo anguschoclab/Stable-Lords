@@ -76,20 +76,7 @@ const mockRivals: RivalStableData[] = [
   },
 ];
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: vi.fn((selector?: any) => {
-      const store = { player: mockPlayer, roster: mockRoster, rivals: mockRivals };
-      return selector ? selector(store) : store;
-    }),
-  };
-});
-
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+import { useGameStore } from '@/state/useGameStore';
 
 vi.mock('@/components/crest', () => ({
   StableCrest: ({ crest }: any) => <div data-testid="stable-crest">{crest.charge.name}</div>,
@@ -104,6 +91,9 @@ import { StableDossier } from '@/components/StableDossier';
 describe('StableDossier', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({ player: mockPlayer, roster: mockRoster, rivals: mockRivals } as never);
   });
 
   it('shows "Stable not found." when stableId does not match any player or rival', () => {
@@ -185,12 +175,13 @@ describe('StableDossier', () => {
     expect(screen.getByTestId('stable-crest')).toBeInTheDocument();
   });
 
-  it('shows crest charge description text for rival with crest (name + posture)', () => {
+  it('shows crest charge description text for rival with crest (name + posture + symbolism)', () => {
     render(<StableDossier stableId="rival-owner-1" />);
-    // The charge description renders as "lion (rampant)" in an italic <p>
-    // Use exact text to avoid matching the StableCrest mock which also renders "lion"
-    const desc = screen.getByText('lion (rampant)');
+    // Charge line renders "lion (rampant) — <symbolism>" in an italic <p>;
+    // exact-match the symbolism text to avoid matching the StableCrest mock.
+    const desc = screen.getByText(/Courage and nobility/);
     expect(desc).toBeInTheDocument();
+    expect(desc.textContent).toContain('lion (rampant)');
   });
 
   it('shows generation badge "G{generation}" when rival owner generation > 0 and crest present', () => {

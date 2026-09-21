@@ -53,14 +53,31 @@ function handleInvalidBout(ctx: BoutContext): BoutImpact {
   };
 }
 
-function getNPCPlan(
+/**
+ * Resolve the fight plan an NPC warrior runs this bout: a fresh persisted
+ * plan written for this opponent this week is honored verbatim; anything
+ * stale or opponent-mismatched is recomputed through `aiPlanForWarrior`.
+ */
+export function getNPCPlan(
   state: GameState,
   w: Warrior,
   opponentStyle: FightingStyle,
-  opponentOwnerId?: string
+  opponentOwnerId?: string,
+  opponentStableId?: string
 ): FightPlan {
   const rival = state.rivalMap?.get(w.stableId as string);
   if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
+
+  // E.2 — a committed plan written for THIS opponent THIS week is honored
+  // verbatim; a stale or opponent-mismatched plan is recomputed (G8).
+  const week = state.absoluteWeek ?? state.week;
+  if (
+    w.plan &&
+    w.planWeek === week &&
+    (opponentStableId === undefined || w.planForStableId === opponentStableId)
+  ) {
+    return w.plan;
+  }
 
   let grudgeIntensity = 0;
   if (opponentOwnerId) {
@@ -74,7 +91,8 @@ function getNPCPlan(
     rival.philosophy || 'Opportunist',
     opponentStyle,
     rival.strategy?.intent,
-    grudgeIntensity
+    grudgeIntensity,
+    opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined
   );
 }
 
@@ -95,10 +113,10 @@ function runBoutSimulation(
     : (_ctx.contract?.arenaId ?? undefined);
 
   const planA = isNPCWarrior(state, validCW)
-    ? getNPCPlan(state, validCW, validCO.style, _ctx.playerId)
+    ? getNPCPlan(state, validCW, validCO.style, _ctx.playerId, validCO.stableId as string)
     : getDefaultPlan(validCW, defaultPlanForWarrior);
   const planD = isNPCWarrior(state, validCO)
-    ? getNPCPlan(state, validCO, validCW.style, _ctx.playerId)
+    ? getNPCPlan(state, validCO, validCW.style, _ctx.playerId, validCW.stableId as string)
     : getDefaultPlan(validCO, defaultPlanForWarrior);
 
   return simulateFight(
@@ -111,7 +129,8 @@ function runBoutSimulation(
     weather,
     arenaId,
     state.crowdMood,
-    _ctx.headless
+    _ctx.headless,
+    state.houseRules?.deathRateMult
   );
 }
 

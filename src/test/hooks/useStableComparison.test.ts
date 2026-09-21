@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { stableStats, useStableComparison } from '@/hooks/useScoutingStableComparison';
 import type { RivalStableData, Warrior, OwnerGrudge } from '@/types/game';
@@ -7,22 +7,16 @@ import { FightingStyle } from '@/types/game';
 import type { StableId, GrudgeId, WarriorId } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
-let storeOverride: any = {};
+import { useGameStore } from '@/state/useGameStore';
 
 const defaultStoreState = {
   ownerGrudges: [] as OwnerGrudge[],
 };
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: (state: any) => any) => {
-      const state = { ...defaultStoreState, ...storeOverride };
-      return selector ? selector(state) : state;
-    },
-  };
-});
+// Inject fake state into the real store — vi.mock's importOriginal arg does
+// not exist under bun:test. Call instead of assigning a store override.
+const applyStore = (override: any = {}) =>
+  useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
   return {
@@ -162,7 +156,7 @@ describe('stableStats', () => {
 
 describe('useStableComparison', () => {
   beforeEach(() => {
-    storeOverride = {};
+    applyStore();
   });
 
   it('returns correct initial state with no rivals selected', () => {
@@ -249,9 +243,9 @@ describe('useStableComparison', () => {
   it('detects grudge in forward order', () => {
     const rival1 = createMockRival('r1');
     const rival2 = createMockRival('r2');
-    storeOverride = {
+    applyStore({
       ownerGrudges: [createMockGrudge('r1', 'r2', { intensity: 3, reason: 'Blood feud' })],
-    };
+    });
 
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -268,9 +262,9 @@ describe('useStableComparison', () => {
   it('detects grudge in reversed order', () => {
     const rival1 = createMockRival('r1');
     const rival2 = createMockRival('r2');
-    storeOverride = {
+    applyStore({
       ownerGrudges: [createMockGrudge('r2', 'r1', { intensity: 2 })],
-    };
+    });
 
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -363,7 +357,7 @@ describe('useStableComparison', () => {
   it('returns null grudge when no grudges exist', () => {
     const rival1 = createMockRival('r1');
     const rival2 = createMockRival('r2');
-    storeOverride = { ownerGrudges: [] };
+    applyStore({ ownerGrudges: [] });
 
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -379,9 +373,9 @@ describe('useStableComparison', () => {
     const rival1 = createMockRival('r1');
     const rival2 = createMockRival('r2');
     const rival3 = createMockRival('r3');
-    storeOverride = {
+    applyStore({
       ownerGrudges: [createMockGrudge('r2', 'r3')],
-    };
+    });
 
     const { result } = renderHook(() => useStableComparison([rival1, rival2, rival3]));
 

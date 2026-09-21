@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightingStyle, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 
 // --- Router mock ---
 vi.mock('@tanstack/react-router', () => ({
@@ -98,7 +98,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
     derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
@@ -117,6 +117,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
 import WarriorDetail from '@/pages/WarriorDetail';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { isActive } from '@/engine/warriorStatus';
+import { FightingStyle } from '@/types/shared.types';
 
 describe('WarriorDetail', () => {
   beforeEach(() => {

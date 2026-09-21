@@ -6,6 +6,7 @@ import { resolveImpacts } from './impacts';
 import { truncateState } from '@/engine/storage/truncation';
 import { TimeAdvanceService, type SoftStopCondition } from './pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  * Defines the shape of autosim week summary.
@@ -110,15 +111,6 @@ function processPlayerOffersScan(state: GameState): GameState {
 }
 
 /**
- * Extract week summary from state after advancement
- */
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
-}
-
-/**
  * Extract week summary from state after advancement.
  */
 export function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
@@ -175,7 +167,9 @@ async function runSequentialAutosim(
     weekSummaries.push(extractWeekSummary(state, state.week));
     weeksSimmed++;
 
-    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth
+    // NF3 fix: Truncate historical arrays periodically to prevent unbounded memory growth.
+    // Note: deferredBoutLogs needs no flush here — headless bouts produce empty
+    // transcripts, so the queue stays empty for the whole run.
     if (weeksSimmed % 50 === 0) {
       state = truncateState(state);
     }
@@ -187,7 +181,7 @@ async function runSequentialAutosim(
     // 4. Stop conditions
     if (checkBankruptcy(state)) {
       return {
-        finalState: state,
+        finalState: truncateState(state),
         weeksSimmed,
         stopReason: 'bankrupt',
         stopDetail: 'Stable ran out of treasury',
@@ -195,6 +189,10 @@ async function runSequentialAutosim(
       };
     }
   }
+
+  // Final truncation so the returned state is bounded like batch mode's
+  // (advanceQuarter truncates internally at each quarter end).
+  state = truncateState(state);
 
   return {
     finalState: state,

@@ -11,9 +11,19 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, Warrior } from '@/types/state.types';
 import { computeWarriorStats } from '@/engine/skillCalc';
+
+// Non-headless advanceWeek appends a full transcript per bout to
+// deferredBoutLogs — drain each week so long loops stay bounded
+// (same discipline as the simulation harness).
+const advanceDrained = async (s: GameState): Promise<GameState> => {
+  const next = await advanceWeek(s);
+  drainDeferredBoutLogs(next);
+  return next;
+};
 
 function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
   const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
@@ -76,7 +86,7 @@ describe('Week Advancement Integration', () => {
 
       let state = initialState;
       for (let i = 0; i < 5; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
 
       expect(state.roster[0]!.id).toBe(originalId);
@@ -98,7 +108,7 @@ describe('Week Advancement Integration', () => {
       let state = initialState;
 
       for (let i = 0; i < 52; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       // Cyclical: 52 advancements from week 1 should land on week 1, year 2
       expect(state.week).toBe(1);
@@ -111,7 +121,7 @@ describe('Week Advancement Integration', () => {
       let state = initialState;
 
       for (let i = 0; i < 100; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
 
         // Verify critical invariants
         expect(state.roster).toBeDefined();
@@ -126,6 +136,8 @@ describe('Week Advancement Integration', () => {
       // 100 / 52 = 1 year, 48 weeks. 1 + 48 = 49.
       expect(state.year).toBe(2);
       expect(state.week).toBe(49);
+      // Weekly drain kept the transcript queue empty for the whole run
+      expect(state.deferredBoutLogs ?? []).toHaveLength(0);
     });
 
     it('should accumulate newsletter entries over time', async () => {
@@ -136,7 +148,7 @@ describe('Week Advancement Integration', () => {
       };
 
       for (let i = 0; i < 52; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
 
       // Should have at least some newsletter entries from aging/economy
@@ -151,25 +163,25 @@ describe('Week Advancement Integration', () => {
 
       // Advance to Summer (week 14)
       for (let i = 0; i < 13; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       expect(state.season).toBe('Summer');
 
       // Advance to Fall (week 27)
       for (let i = 0; i < 13; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       expect(state.season).toBe('Fall');
 
       // Advance to Winter (week 40)
       for (let i = 0; i < 13; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       expect(state.season).toBe('Winter');
 
       // Advance to next year Spring (week 1)
       for (let i = 0; i < 13; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       expect(state.year).toBe(2);
       expect(state.week).toBe(1);
@@ -177,7 +189,7 @@ describe('Week Advancement Integration', () => {
 
       // Advance to next year Summer (week 14)
       for (let i = 0; i < 13; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       expect(state.year).toBe(2);
       expect(state.week).toBe(14);
@@ -185,7 +197,7 @@ describe('Week Advancement Integration', () => {
 
       // Advance to year 3 Spring (week 1)
       for (let i = 0; i < 39; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
       expect(state.year).toBe(3);
       expect(state.week).toBe(1);
@@ -207,7 +219,7 @@ describe('Week Advancement Integration', () => {
       };
 
       // Advance one week to process training
-      state = await advanceWeek(state);
+      state = await advanceDrained(state);
 
       // Should have seasonal growth entries after training
       expect(state.seasonalGrowth).toBeDefined();
@@ -232,7 +244,7 @@ describe('Week Advancement Integration', () => {
 
       let current: GameState = state;
       for (let i = 0; i < 52; i++) {
-        current = await advanceWeek(current);
+        current = await advanceDrained(current);
         // Keep realmRankings empty so w1 is never seeded into tournaments
         current = { ...current, realmRankings: {}, tournaments: [] };
       }
@@ -250,7 +262,7 @@ describe('Week Advancement Integration', () => {
       const initialLedgerLength = state.ledger.length;
 
       for (let i = 0; i < 5; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
 
       // Ledger should have new entries from weekly economic processing
@@ -261,7 +273,7 @@ describe('Week Advancement Integration', () => {
       let state = initialState;
 
       for (let i = 0; i < 20; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
 
         // Treasury should be a valid number (not NaN or Infinity)
         expect(typeof state.treasury).toBe('number');
@@ -296,7 +308,7 @@ describe('Week Advancement Integration', () => {
 
       let current = afterDeath;
       for (let i = 0; i < 10; i++) {
-        current = await advanceWeek(current);
+        current = await advanceDrained(current);
       }
 
       // Graveyard should remain stable (only w1)
@@ -332,7 +344,7 @@ describe('Week Advancement Integration', () => {
       let state = { ...initialState, treasury: 500 };
 
       for (let i = 0; i < 30; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
       }
 
       // Allow going negative (debt system) - usually -1000 or -2500 depending on tuning
@@ -351,7 +363,7 @@ describe('Week Advancement Integration', () => {
 
       let current = state;
       for (let i = 0; i < 20; i++) {
-        current = await advanceWeek(current);
+        current = await advanceDrained(current);
 
         const ids = current.roster.map((w) => w.id);
         const uniqueIds = new Set(ids);
@@ -363,7 +375,7 @@ describe('Week Advancement Integration', () => {
       let state = initialState;
 
       for (let i = 0; i < 60; i++) {
-        state = await advanceWeek(state);
+        state = await advanceDrained(state);
         expect(state.week).toBeGreaterThanOrEqual(1);
         expect(state.week).toBeLessThanOrEqual(52);
       }

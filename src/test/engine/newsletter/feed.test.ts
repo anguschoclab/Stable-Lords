@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import type { FightCard } from '@/engine/newsletter/feed';
 // import type { FightSummary } from '@/types/combat.types';
-import { makeFightSummary } from '@/engine/factories/combatFactory';
+import { makeFightSummary } from '@/test/_fixtures/factories';
 import { setMockIdGenerator } from '@/utils/idUtils';
 
 describe('NewsletterFeed', () => {

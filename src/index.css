@@ -161,6 +161,31 @@
     --sidebar-background: 24 22% 3%;
     --sidebar-foreground: 32 18% 62%;
   }
+
+  /* High-contrast accessibility theme — brighter foregrounds,
+     stronger borders, deeper surfaces. Activated by
+     document.documentElement[data-contrast="high"]. */
+  :root[data-contrast='high'] {
+    --foreground: 36 60% 96%;
+    --card-foreground: 36 60% 96%;
+    --popover-foreground: 36 60% 96%;
+    --secondary-foreground: 34 45% 90%;
+    --muted-foreground: 32 30% 72%;
+    --accent-foreground: 24 30% 4%;
+    --border: 32 30% 38%;
+    --input: 26 20% 18%;
+    --ring: 38 80% 55%;
+    --arena-gold: 40 80% 60%;
+    --arena-blood: 358 80% 55%;
+    --arena-fame: 275 70% 72%;
+    --arena-pop: 188 75% 60%;
+    --arena-steel: 210 20% 80%;
+    --arena-bone: 34 50% 88%;
+    --sidebar-foreground: 34 45% 88%;
+    --torch-glow: rgba(200, 120, 20, 0.04);
+    --marble-vein: rgba(255, 245, 220, 0.006);
+    --parchment-texture: rgba(234, 209, 173, 0.01);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

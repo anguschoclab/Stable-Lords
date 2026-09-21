@@ -7,7 +7,9 @@ import type {
 } from '@/types/state.types';
 import { FightingStyle, type TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
+import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import { generateFreelancer } from './utils';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Committee selection.
@@ -26,13 +28,18 @@ export function committeeSelection(
   // Gather all active, unlocked warriors
   const pool: { w: Warrior; rank: number; score: number }[] = [];
 
-  const collect = (roster: Warrior[]) => {
+  const collect = (roster: Warrior[], stable?: (typeof state.rivals)[number]) => {
+    // G13 decline hook: a stable in crisis (RECOVERY/SURVIVAL intent) declines
+    // tournament conscription for its warriors — agency over preparation,
+    // not over selection math.
+    const declines =
+      stable?.strategy?.intent === 'RECOVERY' || stable?.strategy?.intent === 'SURVIVAL';
+    if (declines) return;
     for (const w of roster) {
-      if (w.status !== 'Active') continue;
+      if (!isActive(w)) continue;
       if (!lockedIds.has(w.id)) {
-        // 🌩️ Tournament Entry Skepticism: Weather Check
-        if (state.weather === 'Rainy' && w.style === FightingStyle.LungingAttack) continue;
-        if (state.weather === 'Sweltering' && (w.attributes.CN || 0) < 10) continue;
+        // 🌩️ Tournament Entry Skepticism: Weather Check — consolidated gate (G16)
+        if (committeeWeatherSkip(w, state.weather)) continue;
 
         const r = rankings[w.id];
         if (r) pool.push({ w, rank: r.overallRank, score: r.compositeScore });
@@ -41,7 +48,7 @@ export function committeeSelection(
   };
 
   collect(state.roster);
-  state.rivals.forEach((r) => collect(r.roster));
+  state.rivals.forEach((r) => collect(r.roster, r));
 
   // Sort pool by rank
   const sortedPool = pool.sort((a, b) => a.rank - b.rank);
@@ -83,9 +90,7 @@ export function committeeSelection(
   }
 
   return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
-} /**
- * Build tournament.
- */
+}
 
 /**
  * Build tournament.

@@ -175,9 +175,7 @@ export function getDefensiveTacticMods(
   if (!tactic || tactic === 'none') return ZERO_DEF;
   const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
   return (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);
-} /**
- * Calculate final oeal.
- */
+}
 
 /**
  * Calculate final oeal.

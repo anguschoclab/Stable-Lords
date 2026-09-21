@@ -10,9 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { GraduationCap, Target, Coins, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils'; /**
- * Trainer table.
- */
+import { cn } from '@/lib/utils';
 
 /**
  * Trainer table.

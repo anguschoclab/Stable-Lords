@@ -46,15 +46,19 @@ describe('ArenaHistory persistence error handling', () => {
       consoleSpy.mockRestore();
     });
 
-    it('attempts trim-to-100 retry on quota error when existing > 100', () => {
+    it('trims the oldest 20% of the array and retries on quota error', () => {
       // Pre-populate localStorage with 150 fights directly
       const fights = Array.from({ length: 150 }, (_, i) => createMockFight({ id: `f${i}` as any }));
       localStorage.setItem('sl.arenaHistory', JSON.stringify(fights));
 
+      let calls = 0;
       const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
-        const err = new Error('QuotaExceededError');
-        (err as any).name = 'QuotaExceededError';
-        throw err;
+        calls++;
+        if (calls === 1) {
+          const err = new Error('QuotaExceededError');
+          (err as any).name = 'QuotaExceededError';
+          throw err;
+        }
       });
 
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -62,25 +66,34 @@ describe('ArenaHistory persistence error handling', () => {
       const fight = createMockFight({ id: 'f151' as any });
       ArenaHistory.append(fight);
 
-      // Should have logged quota error
+      // Helper logs the quota error keyed by the storage key, then retries
+      // with the incoming array minus its oldest 20% (151 -> 121 entries).
       expect(consoleSpy).toHaveBeenCalledWith(
-        'localStorage quota exceeded when saving arena history',
+        'localStorage quota exceeded when saving sl.arenaHistory',
         expect.any(Error)
       );
+      expect(setItemSpy).toHaveBeenCalledTimes(2);
+      const retryArg = JSON.parse(setItemSpy.mock.calls[1]![1] as string);
+      expect(retryArg).toHaveLength(121);
+      expect(retryArg[retryArg.length - 1].id).toBe('f151');
 
       setItemSpy.mockRestore();
       consoleSpy.mockRestore();
     });
 
-    it('skips retry when existing <= 100 (edge case)', () => {
+    it('retries with a trimmed array even for small histories (edge case)', () => {
       // Pre-populate with 50 fights
       const fights = Array.from({ length: 50 }, (_, i) => createMockFight({ id: `f${i}` as any }));
       localStorage.setItem('sl.arenaHistory', JSON.stringify(fights));
 
+      let calls = 0;
       const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
-        const err = new Error('QuotaExceededError');
-        (err as any).name = 'QuotaExceededError';
-        throw err;
+        calls++;
+        if (calls === 1) {
+          const err = new Error('QuotaExceededError');
+          (err as any).name = 'QuotaExceededError';
+          throw err;
+        }
       });
 
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -90,9 +103,10 @@ describe('ArenaHistory persistence error handling', () => {
 
       // Should have logged quota error
       expect(consoleSpy).toHaveBeenCalledWith(
-        'localStorage quota exceeded when saving arena history',
+        'localStorage quota exceeded when saving sl.arenaHistory',
         expect.any(Error)
       );
+      expect(setItemSpy).toHaveBeenCalledTimes(2);
 
       setItemSpy.mockRestore();
       consoleSpy.mockRestore();
@@ -114,16 +128,20 @@ describe('ArenaHistory persistence error handling', () => {
       const fight = createMockFight({ id: 'f151' as any });
       ArenaHistory.append(fight);
 
-      // Should log both the initial error and the retry error
-      expect(consoleSpy).toHaveBeenCalledTimes(2);
+      // Helper logs quota error + recovery failure, then rethrows — the save()
+      // wrapper catches and logs the final failure.
       expect(consoleSpy).toHaveBeenNthCalledWith(
         1,
-        'localStorage quota exceeded when saving arena history',
+        'localStorage quota exceeded when saving sl.arenaHistory',
         expect.any(Error)
       );
       expect(consoleSpy).toHaveBeenNthCalledWith(
         2,
-        'Failed to recover from localStorage quota error for arena history',
+        'Failed to recover from localStorage quota error for sl.arenaHistory',
+        expect.any(Error)
+      );
+      expect(consoleSpy).toHaveBeenLastCalledWith(
+        'Failed to save arena history',
         expect.any(Error)
       );
 

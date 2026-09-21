@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { isExhausted } from '@/engine/core/fatigueUtils';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  *
@@ -21,7 +22,7 @@ export function useAtRiskWarriors() {
   return useMemo(() => {
     const result: AtRiskWarrior[] = [];
     for (const w of roster) {
-      if (w.status !== 'Active') continue;
+      if (!isActive(w)) continue;
       const fatigue = w.fatigue ?? 0;
       if (isExhausted(fatigue) || w.injuries.length > 0) {
         result.push({

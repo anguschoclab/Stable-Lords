@@ -9,9 +9,7 @@ import { STORE_KEYS } from '@/constants/core/storeKeys';
 /**
  * Supported sound effect types for audio playback.
  */
-export type SfxType = 'ui_click' | 'hit' | 'crit' | 'clash' | 'death' | 'recovery' | 'coin'; /**
- * The AudioManager class.
- */
+export type SfxType = 'ui_click' | 'hit' | 'crit' | 'clash' | 'death' | 'recovery' | 'coin';
 
 /**
  * The AudioManager class.
@@ -43,9 +41,9 @@ export class AudioManager {
       recovery: '/audio/recovery.mp3',
       coin: '/audio/coin.mp3',
     };
-    (Object.keys(sfxFiles) as SfxType[]).forEach((type) => {
-      this.sfx.set(type, new Howl({ src: [sfxFiles[type]] }));
-    });
+    for (const [type, src] of Object.entries(sfxFiles)) {
+      this.sfx.set(type as SfxType, new Howl({ src: [src] }));
+    }
   }
 
   /**
@@ -91,6 +89,7 @@ export class AudioManager {
    * @param muted - Whether audio should be muted.
    */
   public async setMuted(muted: boolean) {
+    await this.ready;
     this.muted = muted;
     if (typeof window !== 'undefined' && window.electronAPI) {
       try {
@@ -127,9 +126,7 @@ export class AudioManager {
   public static resetForTesting(): void {
     AudioManager.instance = undefined;
   }
-} /**
- * Audio manager.
- */
+}
 
 /**
  * Audio manager.

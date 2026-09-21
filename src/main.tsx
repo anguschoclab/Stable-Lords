@@ -8,6 +8,9 @@ import { ThemeProvider } from 'next-themes';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import './index.css';
+import { applyA11yPrefs, loadA11yPrefs } from './lib/a11yPrefs';
+
+applyA11yPrefs(loadA11yPrefs());
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element not found');

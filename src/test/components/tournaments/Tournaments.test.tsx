@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { TournamentBracket } from '@/components/tournaments/TournamentBracket';
 import { TournamentSchedule } from '@/components/tournaments/TournamentSchedule';
 import { TournamentHistory } from '@/components/tournaments/TournamentHistory';
@@ -13,6 +13,7 @@ import { TournamentStatsHeader } from '@/components/tournaments/schedule/Tournam
 import { TournamentFilterBar } from '@/components/tournaments/schedule/TournamentFilterBar';
 import { TournamentBoutRow } from '@/components/tournaments/schedule/TournamentBoutRow';
 import { TournamentRoundCard } from '@/components/tournaments/schedule/TournamentRoundCard';
+import { ActiveTournamentManifest } from '@/components/tournaments/ActiveTournamentManifest';
 import type { TournamentEntry, TournamentBout } from '@/types/game';
 
 vi.mock('framer-motion', () => ({
@@ -80,7 +81,7 @@ vi.mock('@/components/ui/Surface', () => ({
 }));
 
 vi.mock('@/engine/core/historyResolver', () => ({
-  resolveWarriorName: () => 'Unknown',
+  resolveWarriorName: (_s: unknown, _id: unknown, fallback?: string) => fallback ?? 'Unknown',
   resolveStableName: () => 'Unknown',
   findWarrior: () => undefined,
 }));
@@ -224,6 +225,45 @@ describe('TournamentHistory', () => {
       />
     );
     expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('expands a past tournament to show its recorded bouts from arenaHistory', () => {
+    const pastTournaments = [
+      { id: 't1', week: 12, bracket: [], completed: true, season: 'Winter', champion: 'Alice' },
+    ] as unknown as TournamentEntry[];
+    const arenaHistory = [
+      {
+        id: 'f1',
+        tournamentId: 't1',
+        title: 'Winter Cup Final',
+        winner: 'A',
+        by: 'Kill',
+        week: 12,
+      },
+      {
+        id: 'f2',
+        tournamentId: 't1',
+        title: 'Winter Cup Semifinal',
+        winner: 'D',
+        by: 'Decision',
+        week: 12,
+      },
+      { id: 'f3', tournamentId: 'other', title: 'Unrelated Bout', winner: 'A', by: 'KO', week: 12 },
+    ] as never[];
+    render(
+      <TournamentHistory
+        pastTournaments={pastTournaments}
+        seasonIcons={{ Winter: 'snow' }}
+        seasonNames={{ Winter: 'Winter Cup' }}
+        currentSeason="Spring"
+        arenaHistory={arenaHistory}
+      />
+    );
+    const toggle = screen.getByRole('button', { name: /bouts/i });
+    fireEvent.click(toggle);
+    expect(screen.getByText('Winter Cup Final')).toBeInTheDocument();
+    expect(screen.getByText('Winter Cup Semifinal')).toBeInTheDocument();
+    expect(screen.queryByText('Unrelated Bout')).not.toBeInTheDocument();
   });
 });
 
@@ -372,5 +412,70 @@ describe('TournamentRoundCard', () => {
       />
     );
     expect(container.firstChild).toBeInTheDocument();
+  });
+});
+
+describe('ActiveTournamentManifest progress and results', () => {
+  const participants = [
+    { id: 'w1', name: 'Champ One' },
+    { id: 'w2', name: 'Runner Up' },
+    { id: 'w3', name: 'Bronze Three' },
+    { id: 'w4', name: 'Bronze Four' },
+  ] as unknown as import('@/types/game').Warrior[];
+
+  const completedTournament = {
+    id: 't1',
+    name: 'Spring Grand Melee',
+    week: 5,
+    participants,
+    bracket: [
+      { round: 6, matchIndex: 1, warriorIdA: 'w3', warriorIdD: 'w4', winner: 'D' },
+      { round: 7, matchIndex: 0, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A' },
+    ],
+  } as unknown as TournamentEntry;
+
+  const renderManifest = (tournament: TournamentEntry) =>
+    render(
+      <ActiveTournamentManifest
+        tournament={tournament}
+        arenaHistory={[]}
+        week={5}
+        expandedBout={null}
+        onToggleExpand={vi.fn()}
+        isReadyToStart={false}
+        onExecuteRound={vi.fn()}
+        onOpenPrep={vi.fn()}
+        seasonIcon="🌸"
+      />
+    );
+
+  it('renders the tournament progress strip', () => {
+    renderManifest(completedTournament);
+    expect(screen.getByText(/matches completed/i)).toBeInTheDocument();
+  });
+
+  it('renders the champion callout when the tournament is complete', () => {
+    renderManifest(completedTournament);
+    expect(screen.getByText(/Tournament Supreme Champion/i)).toBeInTheDocument();
+    expect(screen.getByText('Champ One')).toBeInTheDocument();
+  });
+
+  it('renders the bronze highlight when the bronze bout is resolved', () => {
+    renderManifest(completedTournament);
+    expect(screen.getByText(/Third Place Medalist/i)).toBeInTheDocument();
+    expect(screen.getByText('Bronze Four')).toBeInTheDocument();
+  });
+
+  it('hides champion and bronze callouts while the tournament is in progress', () => {
+    const inProgress = {
+      ...completedTournament,
+      bracket: [
+        { round: 6, matchIndex: 1, warriorIdA: 'w3', warriorIdD: 'w4', winner: 'D' },
+        { round: 7, matchIndex: 0, warriorIdA: 'w1', warriorIdD: 'w2' },
+      ],
+    } as unknown as TournamentEntry;
+    renderManifest(inProgress);
+    expect(screen.queryByText(/Tournament Supreme Champion/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/matches completed/i)).toBeInTheDocument();
   });
 });

@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { OrphanWarrior } from '@/data/orphanPool';
-import type { FightingStyle, Attributes } from '@/types/shared.types';
+import type { Attributes } from '@/types/shared.types';
 
 vi.mock('@/engine/skillCalc', () => ({
   computeWarriorStats: () => ({
@@ -51,6 +51,7 @@ vi.mock('@/components/ui/tooltip', () => ({
 }));
 
 import WarriorCard from '@/components/orphanage/WarriorCard';
+import { FightingStyle } from '@/types/shared.types';
 
 const attrs: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
 
@@ -59,7 +60,7 @@ function makeOrphan(overrides: Partial<OrphanWarrior> = {}): OrphanWarrior {
     id: 'ow1',
     name: 'TestWarrior',
     age: 20,
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     attrs: { ...attrs },
     lore: 'A mysterious fighter from the hills.',
     trait: 'test_trait',

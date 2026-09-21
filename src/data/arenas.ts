@@ -1315,3 +1315,19 @@ export const VERDANT_LABYRINTH: ArenaConfig = {
   SHATTERED_MONOLITH,
   VERDANT_LABYRINTH,
 ].forEach(registerArena);
+
+const loreIndex = new Map<string, ArenaLoreEntry[]>();
+
+/**
+ * Get all lore entries for an arena.
+ * @param arenaId - Arena id to look up.
+ * @returns Lore entries for the arena (empty when none recorded).
+ */
+export function getArenaLore(arenaId: string): ArenaLoreEntry[] {
+  let results = loreIndex.get(arenaId);
+  if (!results) {
+    results = ARENA_LORE.filter((e) => e.arenaId === arenaId);
+    loreIndex.set(arenaId, results);
+  }
+  return [...results];
+}

@@ -1,6 +1,6 @@
 import type { GameState, Season } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, resolveRng } from '@/utils/random';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
 import { processHallOfFame, createYearlySnapshots } from '../core/hallOfFame';
@@ -75,12 +75,27 @@ function processSeasonalChurnAndPhilosophy(
     );
     const narrGazette = generateOwnerNarratives(state, nextSeason, rngContext.getRNG());
 
+    // Season points race winner — warriors still hold the completed season's
+    // points here; the reset happens post-passes in weekPipelineService.
+    let pointsLeader: Warrior | undefined;
+    const consider = (w: Warrior) => {
+      if ((w.seasonPoints ?? 0) > (pointsLeader?.seasonPoints ?? 0)) pointsLeader = w;
+    };
+    state.roster.forEach(consider);
+    state.rivals.forEach((r) => r.roster.forEach(consider));
+    const pointsNews =
+      pointsLeader && (pointsLeader.seasonPoints ?? 0) > 0
+        ? [
+            `🏅 POINTS RACE: ${pointsLeader.name} tops the ${prevSeason} standings with ${pointsLeader.seasonPoints} season points.`,
+          ]
+        : [];
+
     impact.rivalsUpdates = new Map();
     philRivals.forEach((r) => {
       if (impact.rivalsUpdates) impact.rivalsUpdates.set(r.id, r);
     });
 
-    const combinedNews = [...news, ...gazetteItems, ...narrGazette];
+    const combinedNews = [...news, ...gazetteItems, ...narrGazette, ...pointsNews];
     if (combinedNews.length > 0) {
       const existingItems = impact.newsletterItems || [];
       impact.newsletterItems = [
@@ -173,7 +188,7 @@ function materializeFloorRecruit(
 export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
   const nextYear = nextWeek === 1 ? state.year + 1 : state.year;
-  const rng = rootRng || new SeededRNGService(state.week * 881 + 17);
+  const rng = resolveRng(rootRng, state.week * 881 + 17);
 
   // 1. Systemic Progression (Draft-heavy)
   const impact = processSystemicProgression(state, nextWeek, nextYear);

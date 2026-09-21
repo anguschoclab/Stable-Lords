@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Quote, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import type { GazetteStory } from '@/types/state.types';
 
@@ -15,7 +15,7 @@ interface GazetteTabProps {
  */
 export function GazetteTab({ stories }: GazetteTabProps) {
   const state = useGameStore(
-    useShallow((s: any) => ({
+    useShallow((s: GameStore) => ({
       roster: s.roster,
       graveyard: s.graveyard,
       retired: s.retired,

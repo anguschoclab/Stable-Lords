@@ -73,6 +73,22 @@ export function OfferCard({
               <span className="text-[8px] font-black uppercase text-primary tracking-widest">
                 {promoter?.tier} PROMOTER
               </span>
+              {offer.proposerStableId && (
+                <span
+                  data-testid="rival-challenge-badge"
+                  className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/10 text-destructive border border-destructive/20"
+                >
+                  Rival challenge
+                </span>
+              )}
+              {!!offer.counterPurseBump && (
+                <span
+                  data-testid="counter-offer-badge"
+                  className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/10 text-arena-gold border border-arena-gold/20 tabular-nums"
+                >
+                  Countered +{offer.counterPurseBump}G
+                </span>
+              )}
               {personalityConfig && (
                 <span
                   className={cn(

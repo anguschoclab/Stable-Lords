@@ -15,10 +15,7 @@ interface WarriorDossierHeaderProps {
     compositeScore: number;
   };
   isPlayerOwned?: boolean;
-} /**
- * Warrior dossier header.
- * @param - { warrior, record, rankings }.
- */
+}
 
 /**
  * Warrior dossier header.

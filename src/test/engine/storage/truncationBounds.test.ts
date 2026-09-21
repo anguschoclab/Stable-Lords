@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { truncateState } from '@/engine/storage/truncation';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { FightSummary } from '@/types/state.types';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, PromoterId } from '@/types/shared.types';
 
 function makeFightSummary(id: string, week: number): FightSummary {
   return {
@@ -97,5 +97,61 @@ describe('truncationBounds', () => {
     expect(truncated.week).toBe(10);
     expect(truncated.year).toBe(2);
     expect(truncated.roster).toBe(state.roster);
+  });
+
+  it('truncateState caps promoters[id].history.notableBouts to 10', () => {
+    const state = createFreshState('trunc-promoter-bouts-test');
+    const promoterId = 'p1' as PromoterId;
+    state.promoters[promoterId] = {
+      id: promoterId,
+      history: {
+        totalPursePaid: 0,
+        notableBouts: Array.from({ length: 25 }, (_, i) => `bout-${i}` as any),
+        legacyFame: 0,
+      },
+    } as any;
+
+    const truncated = truncateState(state);
+    expect(truncated.promoters[promoterId]!.history.notableBouts.length).toBe(10);
+    // Last 10 kept
+    expect(truncated.promoters[promoterId]!.history.notableBouts[9]).toBe('bout-24');
+  });
+
+  it('truncateState caps each rivals[i].ledger to 500 entries', () => {
+    const state = createFreshState('trunc-rival-ledger-test');
+    state.rivals = [
+      {
+        id: 'r1' as any,
+        ledger: Array.from(
+          { length: 600 },
+          (_, i) => ({ id: `l${i}`, amount: 100, week: i + 1, label: 'x', category: 'fight' }) as any
+        ),
+        roster: [],
+      } as any,
+    ];
+
+    const truncated = truncateState(state);
+    expect(truncated.rivals![0]!.ledger.length).toBe(500);
+  });
+
+  it('truncateState filters rivals[i].seasonalGrowth to current season', () => {
+    const state = createFreshState('trunc-rival-growth-test');
+    state.season = 'Summer';
+    state.rivals = [
+      {
+        id: 'r1' as any,
+        seasonalGrowth: [
+          { warriorId: 'w1' as any, season: 'Spring', gains: { CN: 1 } },
+          { warriorId: 'w2' as any, season: 'Summer', gains: { ST: 1 } },
+          { warriorId: 'w3' as any, season: 'Fall', gains: { CN: 1 } },
+        ] as any,
+        roster: [],
+      } as any,
+    ];
+
+    const truncated = truncateState(state);
+    const growth = truncated.rivals![0]!.seasonalGrowth!;
+    expect(growth.length).toBe(1);
+    expect(growth[0]!.season).toBe('Summer');
   });
 });

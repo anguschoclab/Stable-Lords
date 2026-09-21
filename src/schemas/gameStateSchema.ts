@@ -176,6 +176,44 @@ export const GameStateSchema = z
     ftueComplete: z.boolean(),
     ftueStep: z.number().optional(),
     coachDismissed: z.array(z.string()),
+  houseRules: z
+    .object({
+      deathRateMult: z.number().min(0).max(1),
+      severeInjuryInsteadOfDeath: z.boolean(),
+    })
+    .optional(),
+  contentPacks: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+        arenaLore: z
+          .array(
+            z.object({
+              id: z.string().min(1),
+              arenaId: z.string().min(1),
+              type: z.enum([
+                'historical_battle',
+                'famous_death',
+                'architectural_quirk',
+                'hazard',
+              ]),
+              title: z.string().min(1),
+              narrative: z.string().min(1),
+            })
+          )
+          .optional(),
+        recruitQuotes: z.record(z.string(), z.string()).optional(),
+      })
+    )
+    .optional(),
+  lifetimeStats: z
+    .object({
+      bouts: z.number().int().nonnegative(),
+      kills: z.number().int().nonnegative(),
+      retirements: z.number().int().nonnegative(),
+    })
+    .optional(),
     player: OwnerSchema,
     fame: z.number(),
     popularity: z.number(),
@@ -183,6 +221,7 @@ export const GameStateSchema = z
     ledger: z.array(LedgerEntrySchema),
     week: z.number(),
     year: z.number(),
+    absoluteWeek: z.number(),
     phase: z.enum(['planning', 'resolution']),
     season: SeasonSchema,
     weather: WeatherTypeSchema,

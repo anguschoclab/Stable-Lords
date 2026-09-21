@@ -5,6 +5,7 @@ import { selectArenaForMatchup } from './arenaFit';
 import { weekToTimestamp } from '@/constants';
 import { displayWeek } from '@/engine/core/absoluteWeek';
 import { isBookable } from '@/engine/warriorStatus';
+import { collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';
 import { getPairKey } from '@/utils/keyUtils';
 
@@ -24,14 +25,26 @@ const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
  */
 export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
   const targetWeek = state.absoluteWeek + 1;
+  // World bouts are scheduled for absoluteWeek + 2 (see offer.boutWeek below);
+  // exclude warriors already signed for that week to prevent double-booking.
+  const bookedIds = collectBookedWarriorIds(state, state.absoluteWeek + 2);
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
+      if (bookedIds.has(warrior.id)) continue;
       if (
         isBookable(warrior, {
+          // restStates is global (injuryHandler writes it for any warrior);
+          // trainingAssignments combine the global list with the owning
+          // stable's own list — G19 rival rest prep (TOURNAMENT_CAMPAIGN)
+          // must gate booking the same way the player's assignments do.
+          // Entries are keyed by warriorId, so the lists can't cross-match.
           restStates: state.restStates || [],
-          trainingAssignments: state.trainingAssignments || [],
+          trainingAssignments: [
+            ...(state.trainingAssignments || []),
+            ...(rival.trainingAssignments || []),
+          ],
           targetWeek,
         })
       ) {
@@ -101,7 +114,9 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
       pairedIds.add(bestOpponent.warrior.id);
 
       const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
-      const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng);
+      const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng, {
+        weather: state.weather,
+      });
       const offer: BoutOffer = {
         id: offerId,
         promoterId: WORLD_MATCHMAKING,

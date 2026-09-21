@@ -1,7 +1,5 @@
 import { Star, Swords } from 'lucide-react';
-import { IconMedallion } from '@/components/ui/IconMedallion'; /**
- * Title screen hero.
- */
+import { IconMedallion } from '@/components/ui/IconMedallion';
 
 /**
  * Title screen hero.

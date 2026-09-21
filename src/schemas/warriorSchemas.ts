@@ -32,10 +32,6 @@ export const AttributesSchema = z.object({
 /**
  * BaseSkills schema (non-negative)
  */
-
-/**
- * BaseSkills schema (non-negative)
- */
 export const BaseSkillsSchema = z.object({
   ATT: z.number().min(0),
   PAR: z.number().min(0),
@@ -44,10 +40,6 @@ export const BaseSkillsSchema = z.object({
   RIP: z.number().min(0),
   DEC: z.number().min(0),
 });
-
-/**
- * Luckfactor schema (allows negative ±4 deltas)
- */
 
 /**
  * Luckfactor schema (allows negative ±4 deltas)
@@ -64,20 +56,12 @@ export const LuckfactorSchema = z.object({
 /**
  * DerivedStats schema
  */
-
-/**
- * DerivedStats schema
- */
 export const DerivedStatsSchema = z.object({
   hp: z.number(),
   endurance: z.number(),
   damage: z.number(),
   encumbrance: z.number(),
 });
-
-/**
- * NewsletterItem schema
- */
 
 /**
  * InjuryData schema
@@ -92,10 +76,6 @@ export const InjuryDataSchema = z.object({
   penalties: z.record(z.string(), z.number()),
   permanent: z.boolean().optional(),
 });
-
-/**
- * WarriorFavorites schema
- */
 
 /**
  * WarriorFavorites schema
@@ -117,10 +97,6 @@ export const WarriorFavoritesSchema = z.object({
 /**
  * WarriorLineage schema
  */
-
-/**
- * WarriorLineage schema
- */
 export const WarriorLineageSchema = z.object({
   parentId: z.string().optional(),
   stableId: z.string().optional(),
@@ -128,10 +104,6 @@ export const WarriorLineageSchema = z.object({
   pedigree: z.enum(['Commoner', 'Second Generation', 'Legacy', 'Noble Blood', 'Exiled Legend']),
   mentorName: z.string().optional(),
 });
-
-/**
- * CareerRecord schema
- */
 
 /**
  * CareerRecord schema
@@ -156,10 +128,6 @@ export const CareerRecordSchema = z.object({
 /**
  * DeathEvent schema
  */
-
-/**
- * DeathEvent schema
- */
 export const DeathEventSchema = z.object({
   boutId: z.string(),
   killerId: z.string(),
@@ -170,20 +138,12 @@ export const DeathEventSchema = z.object({
 /**
  * EquipmentLoadout schema
  */
-
-/**
- * EquipmentLoadout schema
- */
 export const EquipmentLoadoutSchema = z.object({
   weapon: z.string(),
   armor: z.string(),
   shield: z.string(),
   helm: z.string(),
 });
-
-/**
- * PhaseStrategy schema
- */
 
 /**
  * PhaseStrategy schema
@@ -201,10 +161,6 @@ export const PhaseStrategySchema = z.object({
 /**
  * DesperatePlan schema
  */
-
-/**
- * DesperatePlan schema
- */
 export const DesperatePlanSchema = z.object({
   OE: z.number(),
   AL: z.number(),
@@ -214,10 +170,6 @@ export const DesperatePlanSchema = z.object({
   target: AttackTargetSchema.optional(),
   protect: ProtectTargetSchema.optional(),
 });
-
-/**
- * PlanCondition schema
- */
 
 /**
  * PlanCondition schema
@@ -236,10 +188,6 @@ export const PlanConditionSchema = z.object({
   }),
   label: z.string().optional(),
 });
-
-/**
- * FightPlan schema
- */
 
 /**
  * FightPlan schema
@@ -274,10 +222,6 @@ export const FightPlanSchema = z.object({
 /**
  * Warrior schema
  */
-
-/**
- * Warrior schema
- */
 export const WarriorSchema = z.object({
   id: z.string(), // WarriorId branded type - runtime string
   name: z.string(),
@@ -295,6 +239,8 @@ export const WarriorSchema = z.object({
   career: CareerRecordSchema,
   champion: z.boolean(),
   plan: FightPlanSchema.optional(),
+  planWeek: z.number().optional(),
+  planForStableId: z.string().optional(),
   equipment: EquipmentLoadoutSchema.optional(),
   status: WarriorStatusSchema,
   age: z.number().optional(),
@@ -325,20 +271,12 @@ export const WarriorSchema = z.object({
 });
 
 /**
- * CrestCharge schema
- */
-
-/**
  * RestState schema
  */
 export const RestStateSchema = z.object({
   warriorId: z.string(),
   restUntilWeek: z.number(),
 });
-
-/**
- * Rivalry schema
- */
 
 /**
  * Rivalry schema
@@ -355,20 +293,12 @@ export const RivalrySchema = z.object({
 /**
  * MatchRecord schema
  */
-
-/**
- * MatchRecord schema
- */
 export const MatchRecordSchema = z.object({
   week: z.number(),
   playerWarriorId: z.string(),
   opponentWarriorId: z.string(),
   opponentStableId: z.string(),
 });
-
-/**
- * OwnerGrudge schema
- */
 
 /**
  * InsightToken schema
@@ -383,7 +313,3 @@ export const InsightTokenSchema = z.object({
   origin: z.string().optional(),
   discoveredWeek: z.number(),
 });
-
-/**
- * HallEntry schema
- */

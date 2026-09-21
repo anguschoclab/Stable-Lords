@@ -4,9 +4,7 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import type { StableTemplate } from './stableTemplate.types'; /**
- * Minor_templates.
- */
+import type { StableTemplate } from './stableTemplate.types';
 
 /**
  * Minor_templates.

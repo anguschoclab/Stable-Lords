@@ -12,14 +12,21 @@ function isTournamentParticipant(state: GameState, warriorId: string): boolean {
   return state.tournaments.some(
     (t) => !t.completed && t.participants?.some((p) => p.id === warriorId)
   );
-} /**
- * Apply records.
- * @param rivalStableId - Rival stable id. (optional)
- */
+}
 
 /**
  * Apply records.
- * @param rivalStableId - Rival stable id. (optional)
+ * @param s -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param tags -
+ * @param fameA -
+ * @param popA -
+ * @param fameD -
+ * @param popD -
+ * @param rivalStableId -
+ * @param arenaId -
  */
 export function applyRecords(
   s: GameState,

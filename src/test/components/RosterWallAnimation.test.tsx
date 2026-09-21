@@ -17,44 +17,26 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: (selector?: any) => {
-      const state = {
-        isBookmarked: () => false,
-        roster: mockRoster,
-        player: {
-          id: 'p1',
-          name: 'Player',
-          stableName: "Dragon's Hearth",
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        rivals: [],
-        retired: [],
-        graveyard: [],
-      };
-      return selector ? selector(state) : state;
+import { useGameStore } from '@/state/useGameStore';
+
+// Inject fake state into the real store — vi.mock's importOriginal arg does
+// not exist under bun:test. Call after every mockRoster reassignment.
+const applyStore = () =>
+  useGameStore.setState({
+    isBookmarked: () => false,
+    roster: mockRoster,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
     },
-    useWorldState: () => ({
-      player: {
-        id: 'p1',
-        name: 'Player',
-        stableName: "Dragon's Hearth",
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
-      rivals: [],
-      roster: mockRoster,
-      retired: [],
-      graveyard: [],
-    }),
-  };
-});
+    rivals: [],
+    retired: [],
+    graveyard: [],
+  } as never);
 
 vi.mock('@/hooks/useActiveRoster', () => ({
   useActiveRoster: () => mockRoster,
@@ -110,10 +92,12 @@ describe('RosterWall animation fix', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRoster = [];
+    applyStore();
   });
 
   it('renders all roster items (no virtualization)', async () => {
     mockRoster = makeRosterItems(5);
+    applyStore();
     const { RosterWall } = await import('@/components/stable/RosterWall');
     render(<RosterWall />);
     expect(screen.getByText('RosterWarrior0')).toBeInTheDocument();
@@ -123,6 +107,7 @@ describe('RosterWall animation fix', () => {
 
   it('renders with 10+ warriors without crash', async () => {
     mockRoster = makeRosterItems(12);
+    applyStore();
     const { RosterWall } = await import('@/components/stable/RosterWall');
     render(<RosterWall />);
     expect(screen.getByText('RosterWarrior0')).toBeInTheDocument();
@@ -131,6 +116,7 @@ describe('RosterWall animation fix', () => {
 
   it('does not use AnimatePresence with popLayout', async () => {
     mockRoster = makeRosterItems(3);
+    applyStore();
     const { RosterWall } = await import('@/components/stable/RosterWall');
     const { container } = render(<RosterWall />);
     expect(container.innerHTML).not.toContain('popLayout');
@@ -141,6 +127,7 @@ describe('RosterWall animation fix', () => {
 
   it('empty roster state renders when filteredRoster.length === 0', async () => {
     mockRoster = [];
+    applyStore();
     const { RosterWall } = await import('@/components/stable/RosterWall');
     render(<RosterWall />);
     expect(screen.getByText(/^Roster$/)).toBeInTheDocument();

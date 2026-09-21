@@ -403,6 +403,7 @@ export function handleOffseasonTrainingCamp(
   }
 }
 
+/** Handles the Wandering Merchant "Strange Brew" offseason event outcome. */
 export function handleWanderingMerchantStrangeBrew(
   state: GameState,
   nextWeek: number,

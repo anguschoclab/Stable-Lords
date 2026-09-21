@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, readdirSync, promises as fsPromises } from 'fs';
 import { resolve } from 'path';
 import {
   templateStringSchema,
@@ -12,20 +12,14 @@ import {
   DRY_RUN,
 } from './daily_bard';
 
-// Direct mock function references for reliable call inspection (hoisted)
-const { mockReadFile, mockWriteFile } = vi.hoisted(() => ({
-  mockReadFile: vi.fn(),
-  mockWriteFile: vi.fn(),
-}));
+// Spy on fs.promises instead of vi.mock — bun:test's mock factories don't
+// receive vitest's importOriginal arg, and setup.ts restores mocks per test.
+let mockReadFile: ReturnType<typeof vi.spyOn>;
+let mockWriteFile: ReturnType<typeof vi.spyOn>;
 
-// Mock fs — preserve original structure, override readFile/writeFile with our mocks
-vi.mock('fs', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('fs')>();
-  return {
-    ...actual,
-    default: { ...actual, promises: { readFile: mockReadFile, writeFile: mockWriteFile } },
-    promises: { ...actual.promises, readFile: mockReadFile, writeFile: mockWriteFile },
-  };
+beforeEach(() => {
+  mockReadFile = vi.spyOn(fsPromises, 'readFile');
+  mockWriteFile = vi.spyOn(fsPromises, 'writeFile');
 });
 
 // Mock @google/generative-ai

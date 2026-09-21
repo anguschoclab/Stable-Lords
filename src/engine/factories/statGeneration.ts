@@ -2,9 +2,7 @@ import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/shared.t
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { shuffled } from '@/utils/random';
 
-type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank'; /**
- * Style_archetype.
- */
+type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank';
 
 /**
  * Style_archetype.

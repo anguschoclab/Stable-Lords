@@ -10,7 +10,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { type RecruitTier, TIER_COST, REFRESH_COST } from '@/engine/recruitment';
-import { TIER_CONFIG } from '@/components/stable/RecruitCard';
+import { TIER_CONFIG } from '@/components/stable/recruitTierConfig';
 import { RefreshCw, Coins } from 'lucide-react';
 
 interface RecruitFiltersProps {

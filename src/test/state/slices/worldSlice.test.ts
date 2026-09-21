@@ -165,6 +165,18 @@ describe('WorldSlice', () => {
     expect(useTestStore.getState()).toBe(stateBefore);
   });
 
+  it('should clearExpiredOffers be a no-op when boutOffers is empty', () => {
+    act(() => {
+      useTestStore.setState({ absoluteWeek: 5, boutOffers: {} });
+    });
+    const stateBefore = useTestStore.getState();
+    act(() => {
+      useTestStore.getState().clearExpiredOffers();
+    });
+    expect(useTestStore.getState().boutOffers).toEqual({});
+    expect(useTestStore.getState()).toBe(stateBefore);
+  });
+
   it('should update player warrior status', () => {
     act(() => {
       useTestStore.setState({

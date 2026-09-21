@@ -4,49 +4,46 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import AdminTools from '@/pages/AdminTools';
 import '@/test/_setup/setup';
 
-// Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    useGameStore: () => ({
-      roster: [],
-      newsletter: [],
-      ledger: [],
-      matchHistory: [],
-      moodHistory: [],
-      graveyard: [],
-      retired: [],
-      week: 1,
-      season: 'Spring',
-      year: 1,
-      treasury: 500,
-      tournaments: [],
-      rivals: [],
-      arenaHistory: [],
-      trainers: [],
-      trainingAssignments: [],
-      fame: 0,
-      ftueComplete: false,
-      player: {
-        id: 'p1',
-        name: 'Player',
-        stableName: "Dragon's Hearth",
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
-      setState: vi.fn(),
-      doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
-      doReset: vi.fn(),
-    }),
-    reconstructGameState: vi.fn((s: any) => s),
-  };
-});
+import { useGameStore } from '@/state/useGameStore';
+
+const fakeStoreState = {
+  roster: [],
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
+  week: 1,
+  season: 'Spring',
+  year: 1,
+  treasury: 500,
+  tournaments: [],
+  rivals: [],
+  arenaHistory: [],
+  trainers: [],
+  trainingAssignments: [],
+  fame: 0,
+  ftueComplete: false,
+  player: {
+    id: 'p1',
+    name: 'Player',
+    stableName: "Dragon's Hearth",
+    fame: 0,
+    renown: 0,
+    titles: 0,
+  },
+  setState: vi.fn(),
+  doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
+  doReset: vi.fn(),
+};
 
 describe('AdminTools Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Inject fake state into the real store — vi.mock's importOriginal arg
+    // does not exist under bun:test.
+    useGameStore.setState({ ...fakeStoreState } as never);
   });
 
   it('renders all administrative panels', () => {

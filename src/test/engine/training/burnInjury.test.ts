@@ -57,7 +57,6 @@ function makeRNG(nextVal: number, pickIdx?: number, rollVal?: number): IRNGServi
     roll: () => rollVal ?? 1,
     uuid: (prefix?: string) => (prefix ? `${prefix}-mock` : 'mock-uuid'),
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (p: number) => nextVal < p,
   } as any as IRNGService;
 }
@@ -73,7 +72,6 @@ function makeInjuryRNG(
     roll: () => rollVal,
     uuid: (prefix?: string) => (prefix ? `${prefix}-mock` : 'mock-uuid'),
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (p: number) => nextVal < p,
   } as any as IRNGService;
 }

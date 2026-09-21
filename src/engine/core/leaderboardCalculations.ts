@@ -1,5 +1,6 @@
 import type { FightSummary } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
+import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
  *
@@ -31,12 +32,6 @@ export interface RisingStarEntry {
   wins: number;
   matches: number;
   firstWeek: number;
-}
-
-function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0] ?? '';
-  const parts = base.split(' vs ');
-  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }
 
 function buildNameMap(fights: FightSummary[]): Map<WarriorId, string> {

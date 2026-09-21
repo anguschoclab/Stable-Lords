@@ -65,9 +65,7 @@ export interface TraitEffect {
   // Personality / Combat AI modifiers (from FTUE)
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
-} /**
- * Defines the shape of trait def.
- */
+}
 
 /**
  * Defines the shape of trait def.
@@ -90,9 +88,7 @@ export interface TraitDef {
   /** If present, the trait is class-restricted: only warriors of these styles
    *  can roll/train it, and it only appears in matching trainers' pools. */
   styles?: FightingStyle[];
-} /**
- * Traits.
- */
+}
 
 /**
  * Traits.
@@ -282,8 +278,8 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'orphan_vengeance',
     name: 'Orphan Vengeance',
     description:
-      'Driven by a dark past. Gains brutal offensive capability in the late stages of a fight.',
-    effect: { attModLate: 2, killWindowBonus: 1 },
+      'Driven by a dark past. +2 attack in the late stages and +1% kill window.',
+    effect: { attModLate: 2, killWindowBonus: 0.01 },
     tier: 'Exceptional',
     sign: 'positive',
     weight: 0.2,
@@ -827,8 +823,8 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'death_marked',
     name: 'Death-Marked',
     description:
-      '+2 kill window bonus and +1 decisiveness — an eerie aura that makes their lethal strikes more likely to finish the job.',
-    effect: { killWindowBonus: 2, decMod: 1, fightPlanMod: { killDesire: 4 } },
+      '+1.2% kill window bonus and +1 decisiveness — an eerie aura that makes their lethal strikes more likely to finish the job.',
+    effect: { killWindowBonus: 0.012, decMod: 1, fightPlanMod: { killDesire: 4 } },
     weight: 0.5,
     synergy: ['brutal', 'cunning'],
     antiSynergy: ['tank'],
@@ -859,8 +855,8 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'alley_stalker',
     name: 'Alley Stalker',
     description:
-      '+1 Initiative, +1 Kill Window Bonus — honed senses from a life of ambushing marks in the shadowed alleys.',
-    effect: { iniMod: 1, killWindowBonus: 1, fightPlanMod: { AL: 2 } },
+      '+1 Initiative, +0.8% kill window — honed senses from a life of ambushing marks in the shadowed alleys.',
+    effect: { iniMod: 1, killWindowBonus: 0.008, fightPlanMod: { AL: 2 } },
     weight: 0.6,
     synergy: ['agile', 'cunning'],
     antiSynergy: ['tank'],
@@ -897,6 +893,35 @@ export const TRAITS: Record<string, TraitDef> = {
       'Touched by strange forces, their strikes grow stronger and wilder as the fight drags on.',
     effect: { dmgBonus: 1, attModLate: 1 },
     weight: 0.1,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  pit_fighter: {
+    id: 'pit_fighter',
+    name: 'Pit Fighter',
+    description: '+1 damage, +1 defense when bloodied (HP < 50%) — forged in the deepest pits.',
+    effect: { dmgBonus: 1, defModLowHp: 1 },
+    weight: 0.6,
+    synergy: ['brutal'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gut_instinct: {
+    id: 'gut_instinct',
+    name: 'Gut Instinct',
+    description: '+1 decisiveness, +1 parry in OPENING phase — preternatural sense for danger.',
+    effect: { decMod: 1, parModHighHp: 1, fightPlanMod: { AL: 1 } },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gallows_born: {
+    id: 'gallows_born',
+    name: 'Gallows Born',
+    description: '+1% kill window bonus — born under a bad sign, they have an uncanny knack for finding the lethal strike.',
+    effect: { killWindowBonus: 0.01, fightPlanMod: { killDesire: 2 } },
+    weight: 0.4,
+    synergy: ['cunning'],
     tier: 'Exceptional',
     sign: 'positive',
   },

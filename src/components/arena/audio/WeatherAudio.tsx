@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { WeatherType } from '@/types/shared.types';
 
 import { isIndoorArena } from '@/data/arenas';
+import { WEATHER_AMBIENCE } from '@/constants/arena/weatherAmbience';
 
 interface WeatherAudioProps {
   weather: WeatherType;
@@ -10,74 +11,8 @@ interface WeatherAudioProps {
   arenaId?: string;
 }
 
-// Weather to ambient sound mapping
-export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
-  'Cosmic Anomaly': 'ambience-mana-surge',
-  'Abyssal Tempest': 'ambience-mana-surge',
-
-  Zephyr: 'ambience-wind-breezy',
-  'Ember Rain': null,
-  'Wild Magic': 'ambience-blood-moon',
-  Clear: null,
-  'Prismatic Rain': 'ambience-rain',
-  'Eldritch Eclipse': 'ambience-blood-moon',
-  'Moonlight Duel': null,
-  'Crimson Snow': 'ambience-wind-gale',
-  Overcast: null,
-  Rainy: 'ambience-rain',
-  Sweltering: null,
-  Breezy: 'ambience-wind-breezy',
-  'Blazing Sun': null,
-  Gale: 'ambience-wind-gale',
-  'Blood Moon': 'ambience-blood-moon',
-  'Weeping Skies': 'ambience-rain',
-  'Eclipse of Chaos': 'ambience-eclipse',
-  Eclipse: 'ambience-eclipse',
-  Sandstorm: 'ambience-wind-gale',
-  Tornado: 'ambience-wind-gale',
-  Mist: null,
-  'Glittering Frost': 'ambience-wind-gale',
-  'Scorching Wind': 'ambience-wind-gale',
-  'Spooky Night': 'ambience-wind-breezy',
-  Blizzard: 'ambience-wind-gale',
-  'Dense Fog': null,
-  'Dreamweavers Mist': null,
-  Thunderstorm: 'ambience-thunderstorm',
-  Ashfall: null,
-  'Acid Rain': 'ambience-acid-rain',
-  'Mana Surge': 'ambience-mana-surge',
-  'Astral Dust': 'ambience-arcane-storm',
-  'Abyssal Gloom': 'ambience-eclipse',
-  'Cursed Miasma': 'ambience-acid-rain',
-  Hailstorm: 'ambience-acid-rain',
-  'Solar Flare': 'ambience-blood-moon',
-  'Meteor Shower': 'ambience-mana-surge',
-  'Arcane Storm': 'ambience-mana-surge',
-  'Blood Rain': 'ambience-rain',
-  'Locust Swarm': 'ambience-wind-gale',
-  'Aurora Borealis': 'ambience-mana-surge',
-  'Chaotic Winds': 'ambience-wind-gale',
-  'Aether Storm': 'ambience-wind-gale',
-  Mirage: 'ambience-wind-gale',
-  Rainbow: null,
-  'Wildfire Smoke': null,
-  'Gravity Anomaly': 'ambience-eclipse',
-  'Blood Fog': 'ambience-blood-moon',
-  'Shimmering Heat': null,
-  'Crystal Rain': 'ambience-rain',
-  'Winds of Chaos': 'ambience-mana-surge',
-  'Rain of Frogs': 'ambience-rain',
-  'Chaos Storm': 'ambience-arcane-storm',
-  'Whispering Winds': 'ambience-wind-breezy',
-  'Chaos Squall': 'ambience-arcane-storm',
-  'Diamond Rain': 'ambience-rain',
-  'Temporal Rift': 'ambience-blood-moon',
-  'Stardust Gale': 'ambience-wind-breezy',
-  'Mana Storm': 'ambience-arcane-storm',
-  'Shattered Skies': 'ambience-arcane-storm',
-}; /**
+/**
  * Weather audio.
- * @param - { weather, volume, enabled, arena id }.
  */
 export default function WeatherAudio({ weather, volume, enabled, arenaId }: WeatherAudioProps) {
   const currentWeatherRef = useRef<WeatherType | null>(null);

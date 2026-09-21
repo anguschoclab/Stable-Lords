@@ -4,7 +4,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { PoolWarrior, RecruitTier } from '@/engine/recruitment';
 import type { PotentialScoutReport } from '@/engine/recruitScouting';
-import type { FightingStyle } from '@/types/shared.types';
+import { FightingStyle } from '@/types/shared.types';
 import type { Attributes, BaseSkills, DerivedStats } from '@/types/game';
 
 vi.mock('@/components/ui/Surface', () => ({
@@ -46,7 +46,7 @@ function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
   return {
     id: 'pw1',
     name: 'TestRecruit',
-    style: 'StrikingAttack' as FightingStyle,
+    style: FightingStyle.StrikingAttack,
     attributes: { ...baseAttrs },
     potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
     baseSkills: { ...baseSkills },

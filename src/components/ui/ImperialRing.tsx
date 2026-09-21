@@ -5,15 +5,7 @@ interface ImperialRingProps {
   className?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   variant?: 'bronze' | 'silver' | 'gold' | 'blood';
-} /**
-   * Imperial ring.
-   * @param  - {
-  children,
-  class name,
-  size = 'md',
-  variant = 'bronze',
-}.
-   */
+}
 
 /**
  * Imperial ring.

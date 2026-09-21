@@ -42,4 +42,4 @@ bun run lint         # ESLint
 bun run e2e          # Playwright end-to-end tests
 ```
 
-The player-facing manual lives in [`Docs/USER_MANUAL.md`](Docs/USER_MANUAL.md); design docs are in [`Docs/`](Docs/).
+The player-facing manual lives in [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md); design docs are in [`docs/`](docs/).

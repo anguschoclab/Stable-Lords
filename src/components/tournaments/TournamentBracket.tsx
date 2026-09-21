@@ -11,15 +11,7 @@ interface TournamentBracketProps {
   arenaHistory: FightSummary[];
   expandedBout: string | null;
   onToggleExpand: (key: string | null) => void;
-} /**
-   * Tournament bracket.
-   * @param  - {
-  bouts,
-  arena history,
-  expanded bout,
-  on toggle expand,
-}.
-   */
+}
 
 /**
  * Tournament bracket.
@@ -102,14 +94,7 @@ interface ChampionDisplayProps {
   championName: string;
   championId?: string;
   tournamentName: string;
-} /**
-   * Champion display.
-   * @param  - {
-  champion name,
-  champion id,
-  tournament name,
-}.
-   */
+}
 
 /**
  * Champion display.
@@ -162,10 +147,7 @@ export function ChampionDisplay({
 interface BronzeHighlightProps {
   thirdPlaceName: string;
   thirdPlaceId?: string;
-} /**
- * Bronze highlight.
- * @param - { third place name, third place id }.
- */
+}
 
 /**
  * Bronze highlight.
@@ -205,15 +187,7 @@ interface TournamentProgressProps {
   totalRounds: number;
   completedMatches: number;
   totalMatches: number;
-} /**
-   * Tournament progress.
-   * @param  - {
-  current round,
-  total rounds,
-  completed matches,
-  total matches,
-}.
-   */
+}
 
 /**
  * Tournament progress.

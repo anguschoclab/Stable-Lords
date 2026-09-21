@@ -48,6 +48,16 @@ export const POPULARITY_DECAY_RATE = 0.0133;
  */
 export const FAME_TIER_ELITE = 2000;
 
+/**
+ * Season points awarded per bout outcome. Accumulates on the warrior
+ * throughout the season, resets at season change, and feeds the
+ * seasonal points race surfaced in season summaries.
+ */
+export const SEASON_POINTS = {
+  WIN: 2,
+  KILL_BONUS: 3,
+} as const;
+
 // ─── World Simulation ────────────────────────────────────────────────────
 /**
  * World bout minimum fame gap

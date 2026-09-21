@@ -7,6 +7,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import type { TournamentEntry, FightSummary } from '@/types/game';
 import { TournamentBracket } from './TournamentBracket';
 import { TournamentSchedule } from './TournamentSchedule';
+import { ChampionDisplay, BronzeHighlight, TournamentProgress } from './TournamentBracket';
 
 interface ActiveTournamentManifestProps {
   tournament: TournamentEntry;
@@ -35,6 +36,36 @@ export function ActiveTournamentManifest({
   onOpenPrep,
   seasonIcon,
 }: ActiveTournamentManifestProps) {
+  const bracket = tournament.bracket;
+  const totalMatches = bracket.length;
+  const completedMatches = bracket.filter((b) => b.winner !== undefined).length;
+  const isComplete = totalMatches > 0 && completedMatches === totalMatches;
+  const allRounds = [...new Set(bracket.map((b) => b.round))];
+  const maxRound = allRounds.length > 0 ? Math.max(...allRounds) : 0;
+  const currentRound = isComplete
+    ? maxRound
+    : Math.min(...bracket.filter((b) => b.winner === undefined).map((b) => b.round));
+
+  const participantName = (id: string | undefined) =>
+    tournament.participants?.find((w) => w.id === id)?.name ?? 'Unknown';
+
+  const championshipBout = bracket.find((b) => b.round === maxRound && b.matchIndex === 0);
+  const bronzeBout =
+    bracket.find((b) => b.matchIndex === 1 && (b.round === maxRound || b.round === maxRound - 1)) ??
+    undefined;
+  const championId =
+    isComplete && championshipBout?.winner
+      ? championshipBout.winner === 'A'
+        ? championshipBout.warriorIdA
+        : championshipBout.warriorIdD
+      : undefined;
+  const bronzeId =
+    isComplete && bronzeBout?.winner
+      ? bronzeBout.winner === 'A'
+        ? bronzeBout.warriorIdA
+        : bronzeBout.warriorIdD
+      : undefined;
+
   return (
     <div className="pt-8">
       <SectionDivider label="Active Manifest" variant="primary" />
@@ -67,6 +98,15 @@ export function ActiveTournamentManifest({
             <TournamentSchedule tournament={tournament} currentWeek={week} />
           </div>
 
+          <div className="px-8 pt-8">
+            <TournamentProgress
+              currentRound={currentRound}
+              totalRounds={allRounds.length}
+              completedMatches={completedMatches}
+              totalMatches={totalMatches}
+            />
+          </div>
+
           <div className="py-12 bg-gradient-to-b from-transparent to-white/[0.02]">
             <TournamentBracket
               bouts={tournament.bracket}
@@ -75,6 +115,24 @@ export function ActiveTournamentManifest({
               onToggleExpand={onToggleExpand}
             />
           </div>
+
+          {isComplete && (
+            <div className="grid gap-4 px-8 pb-8 md:grid-cols-2">
+              {championId && (
+                <ChampionDisplay
+                  championName={participantName(championId)}
+                  championId={championId}
+                  tournamentName={tournament.name}
+                />
+              )}
+              {bronzeId && (
+                <BronzeHighlight
+                  thirdPlaceName={participantName(bronzeId)}
+                  thirdPlaceId={bronzeId}
+                />
+              )}
+            </div>
+          )}
 
           {tournament.bracket.some((b) => b.winner === undefined) && (
             <div className="flex flex-col gap-6 p-8 border-t border-white/5 bg-primary/5">

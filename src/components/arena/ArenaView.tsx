@@ -7,6 +7,8 @@ import FighterPair from './FighterPair';
 import MiniCombatLog from './MiniCombatLog';
 import ParticleSystem from './effects/ParticleSystem';
 import ScreenShake from './effects/ScreenShake';
+import WeaponTrail from './effects/WeaponTrail';
+import { weaponTrailTypeFor } from './effects/weaponTrailType';
 import CrowdReactions from './crowd/CrowdReactions';
 import { useArenaAnimation } from '@/hooks/useArenaAnimation';
 import { useLastEventType, useCrowdState } from '@/hooks/useArenaEventEffects';
@@ -33,29 +35,10 @@ interface ArenaViewProps {
   maxHpA?: number;
   maxHpD?: number;
   transcript?: string[];
+  weaponIdA?: string;
+  weaponIdD?: string;
   className?: string;
-} /**
-   * Arena view.
-   * @param  - {
-  name a,
-  name d,
-  style a,
-  style d,
-  log,
-  winner,
-  visible count,
-  is playing,
-  is complete = false,
-  arena tier = 'standard',
-  weather = 'clear',
-  arena id,
-  gear a,
-  gear d,
-  max hp a = 50,
-  max hp d = 50,
-  class name,
-}.
-   */
+}
 
 /**
  * Arena view.
@@ -94,6 +77,8 @@ export default function ArenaView({
   arenaId,
   maxHpA = DEFAULT_MAX_HP,
   maxHpD = DEFAULT_MAX_HP,
+  weaponIdA,
+  weaponIdD,
   className,
 }: ArenaViewProps) {
   const arenaPrefs = useArenaPreferences();
@@ -115,6 +100,13 @@ export default function ArenaView({
   // Extracted: Event tracking and crowd state
   const lastEventType = useLastEventType(log, visibleCount);
   const crowdState = useCrowdState(lastEventType, isComplete, visibleCount);
+
+  // Weapon trail: flash the attacker's equipped-weapon arc on attack events.
+  const isAttackEvent =
+    lastEventType === 'hit' || lastEventType === 'crit' || lastEventType === 'riposte';
+  const lastEvent = visibleCount > 0 ? log[visibleCount - 1] : undefined;
+  const attackerSide = lastEvent?.events?.find((e) => e.actor)?.actor;
+  const trailWeaponId = attackerSide === 'D' ? weaponIdD : weaponIdA;
 
   // Extracted: Fighter status calculations
   const { isDeadA, isDeadD, isWinnerA, isWinnerD } = calculateFighterStatuses(winner, isComplete);
@@ -151,6 +143,18 @@ export default function ArenaView({
       {/* Particle System */}
       {arenaPrefs.effectsEnabled && (
         <ParticleSystem trigger={lastEventType} sourceX={50} sourceY={50} />
+      )}
+
+      {/* Weapon Trail — keyed by visibleCount so consecutive attacks re-flash */}
+      {arenaPrefs.effectsEnabled && isAttackEvent && trailWeaponId && (
+        <WeaponTrail
+          key={visibleCount}
+          trigger
+          weaponType={weaponTrailTypeFor(trailWeaponId)}
+          direction={attackerSide === 'D' ? 'left' : 'right'}
+          sourceX={attackerSide === 'D' ? 72 : 28}
+          sourceY={45}
+        />
       )}
 
       {/* Speech Bubbles */}

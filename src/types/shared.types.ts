@@ -2,121 +2,87 @@
 /** Branded ID pattern to prevent mixing different ID types at compile time. */
 export type Brand<T, TBrand extends string> = T & { readonly __brand: TBrand };
 
-import type { EquipmentLoadout } from '@/data/equipment'; /**
- * Warrior id type.
- */
+import type { EquipmentLoadout } from '@/data/equipment';
 
 /**
  * Warrior id type.
  */
-export type WarriorId = Brand<string, 'WarriorId'>; /**
- * Stable id type.
- */
+export type WarriorId = Brand<string, 'WarriorId'>;
 
 /**
  * Stable id type.
  */
-export type StableId = Brand<string, 'StableId'>; /**
- * Promoter id type.
- */
+export type StableId = Brand<string, 'StableId'>;
 
 /**
  * Promoter id type.
  */
-export type PromoterId = Brand<string, 'PromoterId'>; /**
- * Trainer id type.
- */
+export type PromoterId = Brand<string, 'PromoterId'>;
 
 /**
  * Trainer id type.
  */
-export type TrainerId = Brand<string, 'TrainerId'>; /**
- * Fight id type.
- */
+export type TrainerId = Brand<string, 'TrainerId'>;
 
 /**
  * Fight id type.
  */
-export type FightId = Brand<string, 'FightId'>; /**
- * Tournament id type.
- */
+export type FightId = Brand<string, 'FightId'>;
 
 /**
  * Tournament id type.
  */
-export type TournamentId = Brand<string, 'TournamentId'>; /**
- * Bout offer id type.
- */
+export type TournamentId = Brand<string, 'TournamentId'>;
 
 /**
  * Bout offer id type.
  */
-export type BoutOfferId = Brand<string, 'BoutOfferId'>; /**
- * Injury id type.
- */
+export type BoutOfferId = Brand<string, 'BoutOfferId'>;
 
 /**
  * Injury id type.
  */
-export type InjuryId = Brand<string, 'InjuryId'>; /**
- * Ledger entry id type.
- */
+export type InjuryId = Brand<string, 'InjuryId'>;
 
 /**
  * Ledger entry id type.
  */
-export type LedgerEntryId = Brand<string, 'LedgerEntryId'>; /**
- * Scout report id type.
- */
+export type LedgerEntryId = Brand<string, 'LedgerEntryId'>;
 
 /**
  * Scout report id type.
  */
-export type ScoutReportId = Brand<string, 'ScoutReportId'>; /**
- * News id type.
- */
+export type ScoutReportId = Brand<string, 'ScoutReportId'>;
 
 /**
  * News id type.
  */
-export type NewsId = Brand<string, 'NewsId'>; /**
- * Grudge id type.
- */
+export type NewsId = Brand<string, 'NewsId'>;
 
 /**
  * Grudge id type.
  */
-export type GrudgeId = Brand<string, 'GrudgeId'>; /**
- * Rivalry id type.
- */
+export type GrudgeId = Brand<string, 'GrudgeId'>;
 
 /**
  * Rivalry id type.
  */
-export type RivalryId = Brand<string, 'RivalryId'>; /**
- * Insight id type.
- */
+export type RivalryId = Brand<string, 'RivalryId'>;
 
 /**
  * Insight id type.
  */
-export type InsightId = Brand<string, 'InsightId'>; /**
- * Hall entry id type.
- */
+export type InsightId = Brand<string, 'InsightId'>;
 
 /**
  * Hall entry id type.
  */
-export type HallEntryId = Brand<string, 'HallEntryId'>; /**
- * Simulation report id type.
- */
+export type HallEntryId = Brand<string, 'HallEntryId'>;
 
 /**
  * Simulation report id type.
  */
-export type SimulationReportId = Brand<string, 'SimulationReportId'>; /**
- * FightingStyle enumeration.
- */
+export type SimulationReportId = Brand<string, 'SimulationReportId'>;
 
 // ─── Fighting Styles ────────────────────────────────────────────────────────
 
@@ -134,9 +100,7 @@ export enum FightingStyle {
   StrikingAttack = 'STRIKING ATTACK',
   TotalParry = 'TOTAL PARRY',
   WallOfSteel = 'WALL OF STEEL',
-} /**
- * Style_display_names.
- */
+}
 
 /**
  * Style_display_names.
@@ -152,9 +116,7 @@ export const STYLE_DISPLAY_NAMES: Record<FightingStyle, string> = {
   [FightingStyle.StrikingAttack]: 'Striker',
   [FightingStyle.TotalParry]: 'Total-Parry',
   [FightingStyle.WallOfSteel]: 'Wall of Steel',
-}; /**
- * Style_abbrev.
- */
+};
 
 /**
  * Style_abbrev.
@@ -170,9 +132,7 @@ export const STYLE_ABBREV: Record<FightingStyle, string> = {
   [FightingStyle.StrikingAttack]: 'ST',
   [FightingStyle.TotalParry]: 'TP',
   [FightingStyle.WallOfSteel]: 'WS',
-}; /**
- * Defines the shape of attributes.
- */
+};
 
 // ─── Attributes ─────────────────────────────────────────────────────────────
 
@@ -187,16 +147,12 @@ export interface Attributes {
   WL: number; // Will (3-25)
   SP: number; // Speed (3-25)
   DF: number; // Deftness (3-25)
-} /**
- * Attribute_keys.
- */
+}
 
 /**
  * Attribute_keys.
  */
-export const ATTRIBUTE_KEYS: (keyof Attributes)[] = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF']; /**
- * Attribute_labels.
- */
+export const ATTRIBUTE_KEYS: (keyof Attributes)[] = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'];
 
 /**
  * Attribute_labels.
@@ -209,30 +165,22 @@ export const ATTRIBUTE_LABELS: Record<keyof Attributes, string> = {
   WL: 'Will',
   SP: 'Speed',
   DF: 'Deftness',
-}; /**
- * Attribute_min.
- */
+};
 
 /**
  * Attribute_min.
  */
-export const ATTRIBUTE_MIN = 3; /**
- * Attribute_max.
- */
+export const ATTRIBUTE_MIN = 3;
 
 /**
  * Attribute_max.
  */
-export const ATTRIBUTE_MAX = 25; /**
- * Attribute_total.
- */
+export const ATTRIBUTE_MAX = 25;
 
 /**
  * Attribute_total.
  */
-export const ATTRIBUTE_TOTAL = 70; /**
- * Defines the shape of base skills.
- */
+export const ATTRIBUTE_TOTAL = 70;
 
 // ─── Base Skills ────────────────────────────────────────────────────────────
 
@@ -246,9 +194,7 @@ export interface BaseSkills {
   INI: number; // Initiative
   RIP: number; // Riposte
   DEC: number; // Decisiveness
-} /**
- * Defines the shape of derived stats.
- */
+}
 
 // ─── Derived Stats ──────────────────────────────────────────────────────────
 
@@ -260,25 +206,19 @@ export interface DerivedStats {
   endurance: number;
   damage: number;
   encumbrance: number;
-} /**
- * Season type.
- */
+}
 
 // ─── Global Enums/Constants ─────────────────────────────────────────────────
 
 /**
  * Season type.
  */
-export type Season = 'Spring' | 'Summer' | 'Fall' | 'Winter'; /**
- * Crowd mood type type.
- */
+export type Season = 'Spring' | 'Summer' | 'Fall' | 'Winter';
 
 /**
  * Crowd mood type type.
  */
-export type CrowdMoodType = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive'; /**
- * Defines the shape of newsletter item.
- */
+export type CrowdMoodType = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';
 
 /**
  * Defines the shape of newsletter item.
@@ -289,9 +229,7 @@ export interface NewsletterItem {
   title: string;
   items: string[];
   category?: 'event' | 'news' | 'newsletter';
-} /**
- * Shield size type.
- */
+}
 
 // ─── Equipment ──────────────────────────────────────────────────────────────
 /**
@@ -308,30 +246,22 @@ export interface NewsletterItem {
  * Attack target type.
  */
 export type AttackTarget =
-  'Head' | 'Chest' | 'Abdomen' | 'Right Arm' | 'Left Arm' | 'Right Leg' | 'Left Leg' | 'Any'; /**
- * Protect target type.
- */
+  'Head' | 'Chest' | 'Abdomen' | 'Right Arm' | 'Left Arm' | 'Right Leg' | 'Left Leg' | 'Any';
 
 /**
  * Protect target type.
  */
-export type ProtectTarget = 'Head' | 'Body' | 'Arms' | 'Legs' | 'Any'; /**
- * Offensive tactic type.
- */
+export type ProtectTarget = 'Head' | 'Body' | 'Arms' | 'Legs' | 'Any';
 
 /**
  * Offensive tactic type.
  */
-export type OffensiveTactic = 'Lunge' | 'Slash' | 'Bash' | 'Decisiveness' | 'none'; /**
- * Defensive tactic type.
- */
+export type OffensiveTactic = 'Lunge' | 'Slash' | 'Bash' | 'Decisiveness' | 'none';
 
 /**
  * Defensive tactic type.
  */
-export type DefensiveTactic = 'Dodge' | 'Parry' | 'Riposte' | 'Responsiveness' | 'none'; /**
- * Defines the shape of phase strategy.
- */
+export type DefensiveTactic = 'Dodge' | 'Parry' | 'Riposte' | 'Responsiveness' | 'none';
 
 /**
  * Defines the shape of phase strategy.
@@ -344,9 +274,7 @@ export interface PhaseStrategy {
   defensiveTactic?: DefensiveTactic;
   target?: AttackTarget;
   aggressionBias?: number; // 0-10
-} /**
- * Defines the shape of desperate plan.
- */
+}
 
 /**
  * Defines the shape of desperate plan.
@@ -359,9 +287,7 @@ export interface DesperatePlan {
   defensiveTactic?: DefensiveTactic;
   target?: AttackTarget;
   protect?: ProtectTarget;
-} /**
- * Defines the shape of fight plan.
- */
+}
 
 /**
  * Defines the shape of fight plan.
@@ -394,9 +320,7 @@ export interface FightPlan {
   rangePreference?: DistanceRange;
   /** Stable owner's personality — drives in-bout adaptation conditions (see ownerAI.ts). Undefined for player-authored plans. */
   ownerPersonality?: 'Aggressive' | 'Methodical' | 'Showman' | 'Pragmatic' | 'Tactician';
-} /**
- * Condition trigger type type.
- */
+}
 
 // ─── Conditional Fight Plans ─────────────────────────────────────────────────
 
@@ -409,9 +333,7 @@ export type ConditionTriggerType =
   | 'MOMENTUM_LEAD'
   | 'MOMENTUM_DEFICIT'
   | 'PHASE_IS'
-  | 'ENDURANCE_BELOW'; /**
- * Defines the shape of plan condition.
- */
+  | 'ENDURANCE_BELOW';
 
 /**
  * Defines the shape of plan condition.
@@ -423,40 +345,30 @@ export interface PlanCondition {
     Pick<FightPlan, 'OE' | 'AL' | 'killDesire' | 'offensiveTactic' | 'defensiveTactic'>
   >;
   label?: string;
-} /**
- * Psych state type.
- */
+}
 
 /**
  * Psych state type.
  */
 export type PsychState =
-  'Neutral' | 'InTheZone' | 'Rattled' | 'Desperate' | 'Cruising' | 'FatiguePanic'; /**
- * Distance range type.
- */
+  'Neutral' | 'InTheZone' | 'Rattled' | 'Desperate' | 'Cruising' | 'FatiguePanic';
 
 // ─── Spatial / Distance System ─────────────────────────────────────────────
 
 /**
  * Distance range type.
  */
-export type DistanceRange = 'Grapple' | 'Tight' | 'Striking' | 'Extended'; /**
- * Arena zone type.
- */
+export type DistanceRange = 'Grapple' | 'Tight' | 'Striking' | 'Extended';
 
 /**
  * Arena zone type.
  */
-export type ArenaZone = 'Center' | 'Edge' | 'Corner' | 'Obstacle'; /**
- * Commit level type.
- */
+export type ArenaZone = 'Center' | 'Edge' | 'Corner' | 'Obstacle';
 
 /**
  * Commit level type.
  */
-export type CommitLevel = 'Cautious' | 'Standard' | 'Full'; /**
- * Arena tag type.
- */
+export type CommitLevel = 'Cautious' | 'Standard' | 'Full';
 
 /**
  * Arena tag type.
@@ -473,9 +385,7 @@ export type ArenaTag =
   | 'ruins'
   | 'magical'
   | 'living'
-  | 'cursed'; /**
- * Defines the shape of surface mod.
- */
+  | 'cursed';
 
 /**
  * Defines the shape of surface mod.
@@ -484,9 +394,7 @@ export interface SurfaceMod {
   initiativeMod: number; // flat bonus/penalty to INI rolls each exchange
   enduranceMult: number; // multiplier on endurance costs (1.0 = baseline)
   riposteMod: number; // flat bonus/penalty to riposte checks
-} /**
- * Defines the shape of arena weather mod.
- */
+}
 
 /**
  * Defines the shape of arena weather mod.
@@ -495,9 +403,7 @@ export interface ArenaWeatherMod {
   weatherType: WeatherType;
   zoneDef?: Partial<Record<ArenaZone, number>>;
   surfaceMod?: Partial<SurfaceMod>;
-} /**
- * Defines the shape of arena config.
- */
+}
 
 /**
  * Defines the shape of arena config.
@@ -521,25 +427,19 @@ export interface ArenaConfig {
   surfaceMod: SurfaceMod;
   weatherMods?: ArenaWeatherMod[];
   startingZone?: ArenaZone; // default "Center"
-} /**
- * Trainer tier type.
- */
+}
 
 // ─── Trainer Types ────────────────────────────────────────────────────────
 
 /**
  * Trainer tier type.
  */
-export type TrainerTier = 'Novice' | 'Seasoned' | 'Master'; /**
- * Trainer focus type.
- */
+export type TrainerTier = 'Novice' | 'Seasoned' | 'Master';
 
 /**
  * Trainer focus type.
  */
-export type TrainerFocus = 'Aggression' | 'Defense' | 'Endurance' | 'Mind' | 'Healing'; /**
- * Trainer specialty type.
- */
+export type TrainerFocus = 'Aggression' | 'Defense' | 'Endurance' | 'Mind' | 'Healing';
 
 /**
  * Trainer specialty type.
@@ -551,9 +451,7 @@ export type TrainerSpecialty =
   | 'Footwork' // Defense: initiative +3 in MID/LATE phase
   | 'IronGuard' // Defense: damage taken −10% while endurance > 60%
   | 'Finisher' // Aggression: ATT +10% when momentum >= 2
-  | 'RopeADope'; /**
- * Scout quality type.
- */
+  | 'RopeADope';
 // Endurance: fatigue penalty reduced 30%
 
 // ─── Scouting Types ───────────────────────────────────────────────────────
@@ -561,9 +459,7 @@ export type TrainerSpecialty =
 /**
  * Scout quality type.
  */
-export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert'; /**
- * Weather type type.
- */
+export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';
 
 // ─── Weather Types ────────────────────────────────────────────────────────
 
@@ -642,9 +538,7 @@ export interface DeathEvent {
   killerId: string;
   deathSummary: string;
   memorialTags: string[];
-} /**
- * Defines the shape of trainer.
- */
+}
 
 // ─── Trainer Interface ───────────────────────────────────────────────────────
 

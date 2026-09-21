@@ -2,13 +2,8 @@ import React, { useMemo } from 'react';
 import { History, Swords, Trophy, Skull, Star, Armchair } from 'lucide-react';
 import { type Warrior, type FightSummary } from '@/types/game';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { getAllFightsForWarrior } from '@/engine/core/historyUtils'; /**
-                                                                      * Career timeline.
-                                                                      * @param  - {
-  warrior,
-  arena history,
-}.
-                                                                      */
+import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
+import { isDead, isRetired } from '@/engine/warriorStatus';
 
 /**
  * Career timeline.
@@ -80,7 +75,7 @@ export function CareerTimeline({
       });
     }
 
-    if (warrior.status === 'Retired' && warrior.retiredWeek) {
+    if (isRetired(warrior) && warrior.retiredWeek) {
       events.push({
         week: warrior.retiredWeek,
         label: 'Granted Rudis',
@@ -89,7 +84,7 @@ export function CareerTimeline({
       });
     }
 
-    if (warrior.status === 'Dead' && warrior.deathWeek) {
+    if (isDead(warrior) && warrior.deathWeek) {
       events.push({
         week: warrior.deathWeek,
         label: warrior.deathCause ?? 'Fallen',

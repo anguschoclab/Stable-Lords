@@ -2,13 +2,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { ChevronDown, Swords, Skull } from 'lucide-react';
-import type { FightSummary } from '@/types/game'; /**
-                                                   * Fights list.
-                                                   * @param  - {
-  fights,
-  get round,
-}.
-                                                   */
+import type { FightSummary } from '@/types/game';
 
 /**
  * Fights list.

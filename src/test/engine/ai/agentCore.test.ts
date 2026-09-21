@@ -121,8 +121,13 @@ describe('agentCore — createAgentContext', () => {
     expect(ctx.rival.agentMemory).toBeDefined();
     expect(ctx.rival.agentMemory!.lastTreasury).toBe(1000);
     expect(ctx.rival.agentMemory!.burnRate).toBe(0);
-    expect(ctx.rival.agentMemory!.metaAwareness).toEqual({});
+    // metaAwareness is now populated each tick — an empty arena history
+    // yields a neutral (all-zero) perceived meta.
+    expect(Object.values(ctx.rival.agentMemory!.metaAwareness).every((v) => v === 0)).toBe(
+      true
+    );
     expect(ctx.rival.agentMemory!.currentIntent).toBe('CONSOLIDATION');
+    expect(ctx.rival.agentMemory!.opponentDossiers).toBeDefined();
   });
 
   it('uses existing agentMemory when present', () => {
@@ -132,11 +137,15 @@ describe('agentCore — createAgentContext', () => {
       metaAwareness: { STRIKING_ATTACK: 1 },
       knownRivals: ['owner_2' as any],
       currentIntent: 'VENDETTA',
+      opponentDossiers: {},
     };
     const rival = createMockRival({ agentMemory: existingMemory });
     const state = createMockState();
     const ctx = createAgentContext(rival, state);
-    expect(ctx.rival.agentMemory).toEqual(existingMemory);
+    // Identity fields are preserved; perception fields are refreshed.
+    expect(ctx.rival.agentMemory!.lastTreasury).toBe(500);
+    expect(ctx.rival.agentMemory!.burnRate).toBe(50);
+    expect(ctx.rival.agentMemory!.currentIntent).toBe('VENDETTA');
   });
 
   it('initializes knownRivals from state.rivals excluding self', () => {
@@ -366,45 +375,22 @@ describe('agentCore — logAgentAction', () => {
     expect(r1.actionHistory![0]!.id).toBe(r2.actionHistory![0]!.id);
   });
 
-  it('infers WEALTH_ACCUMULATION intent from FINANCE type with "hoard" keyword', () => {
+  it('sets currentIntent from a typed cause', () => {
+    const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
+    const updated = logAgentAction(rival, 'STRATEGY', 'Targeting a rival', 'High', 5, 'VENDETTA');
+    expect(updated.agentMemory!.currentIntent).toBe('VENDETTA');
+    expect(updated.actionHistory![0]!.cause).toBe('VENDETTA');
+  });
+
+  it('does not infer intent from description substrings', () => {
     const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
     const updated = logAgentAction(rival, 'FINANCE', 'Decided to hoard gold', 'Low', 5);
-    expect(updated.agentMemory!.currentIntent).toBe('WEALTH_ACCUMULATION');
+    expect(updated.agentMemory!.currentIntent).toBe('CONSOLIDATION');
   });
 
-  it('infers WEALTH_ACCUMULATION intent from FINANCE type with "saving" keyword', () => {
-    const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'FINANCE', 'saving for future', 'Low', 5);
-    expect(updated.agentMemory!.currentIntent).toBe('WEALTH_ACCUMULATION');
-  });
-
-  it('infers AGGRESSIVE_EXPANSION intent from STRATEGY type with "aggressive" keyword', () => {
-    const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'STRATEGY', 'Pursuing aggressive expansion', 'High', 5);
-    expect(updated.agentMemory!.currentIntent).toBe('AGGRESSIVE_EXPANSION');
-  });
-
-  it('infers AGGRESSIVE_EXPANSION intent from STRATEGY type with "dominance" keyword', () => {
-    const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'STRATEGY', 'Seeking dominance', 'High', 5);
-    expect(updated.agentMemory!.currentIntent).toBe('AGGRESSIVE_EXPANSION');
-  });
-
-  it('infers ROSTER_DIVERSITY intent from ROSTER type with "scout" keyword', () => {
-    const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'ROSTER', 'Looking to scout new talent', 'Medium', 5);
-    expect(updated.agentMemory!.currentIntent).toBe('ROSTER_DIVERSITY');
-  });
-
-  it('infers ROSTER_DIVERSITY intent from ROSTER type with "diversify" keyword', () => {
-    const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'ROSTER', 'Need to diversify roster', 'Medium', 5);
-    expect(updated.agentMemory!.currentIntent).toBe('ROSTER_DIVERSITY');
-  });
-
-  it('preserves current intent when no keyword matches', () => {
+  it('preserves current intent when cause is not an intent', () => {
     const rival = createMockRival({ agentMemory: { currentIntent: 'VENDETTA' } as any });
-    const updated = logAgentAction(rival, 'STAFF', 'Hired a trainer', 'Low', 5);
+    const updated = logAgentAction(rival, 'STAFF', 'Hired a trainer', 'Low', 5, 'MAINTENANCE');
     expect(updated.agentMemory!.currentIntent).toBe('VENDETTA');
   });
 
@@ -431,6 +417,7 @@ describe('agentCore — consolidateAgentMemory', () => {
         metaAwareness: {},
         knownRivals: [],
         currentIntent: 'CONSOLIDATION',
+        opponentDossiers: {},
       },
     });
     const result = consolidateAgentMemory(rival, 5);
@@ -446,6 +433,7 @@ describe('agentCore — consolidateAgentMemory', () => {
         metaAwareness: {},
         knownRivals: [],
         currentIntent: 'CONSOLIDATION',
+        opponentDossiers: {},
       },
     });
     const result = consolidateAgentMemory(rival, 5);
@@ -461,71 +449,27 @@ describe('agentCore — consolidateAgentMemory', () => {
         metaAwareness: {},
         knownRivals: [],
         currentIntent: 'CONSOLIDATION',
+        opponentDossiers: {},
       },
     });
     const result = consolidateAgentMemory(rival, 5);
     expect(result.agentMemory!.lastTreasury).toBe(750);
   });
 
-  it('resets seasonRecord on week 1 (season boundary)', () => {
+  it('leaves seasonRecord untouched (boundary resets live in updateSeasonRecord)', () => {
+    const record = { wins: 5, losses: 2, kills: 1, rosterSizeAtSeasonStart: 3 };
     const rival = createMockRival({
-      roster: [
-        { id: 'w1' as any, status: 'Active' } as any,
-        { id: 'w2' as any, status: 'Active' } as any,
-        { id: 'w3' as any, status: 'Retired' } as any,
-      ],
       agentMemory: {
         lastTreasury: 1000,
         burnRate: 0,
         metaAwareness: {},
         knownRivals: [],
         currentIntent: 'CONSOLIDATION',
-        seasonRecord: { wins: 5, losses: 2, kills: 1, rosterSizeAtSeasonStart: 3 },
+        seasonRecord: record,
+        opponentDossiers: {},
       },
     });
     const result = consolidateAgentMemory(rival, 1);
-    expect(result.agentMemory!.seasonRecord).toEqual({
-      wins: 0,
-      losses: 0,
-      kills: 0,
-      rosterSizeAtSeasonStart: 2, // Only Active warriors counted
-    });
-  });
-
-  it('preserves seasonRecord on non-boundary weeks', () => {
-    const existingRecord = { wins: 5, losses: 2, kills: 1, rosterSizeAtSeasonStart: 3 };
-    const rival = createMockRival({
-      treasury: 900,
-      agentMemory: {
-        lastTreasury: 1000,
-        burnRate: 0,
-        metaAwareness: {},
-        knownRivals: [],
-        currentIntent: 'CONSOLIDATION',
-        seasonRecord: existingRecord,
-      },
-    });
-    const result = consolidateAgentMemory(rival, 5);
-    expect(result.agentMemory!.seasonRecord).toEqual(existingRecord);
-  });
-
-  it('counts only Active warriors in rosterSizeAtSeasonStart', () => {
-    const rival = createMockRival({
-      roster: [
-        { id: 'w1' as any, status: 'Active' } as any,
-        { id: 'w2' as any, status: 'Active' } as any,
-        { id: 'w3' as any, status: 'Injured' } as any,
-        { id: 'w4' as any, status: 'Active' } as any,
-      ],
-      agentMemory: {
-        lastTreasury: 1000,
-        burnRate: 0,
-        metaAwareness: {},
-        knownRivals: [],
-        currentIntent: 'CONSOLIDATION',
-      },
-    });
-    const result = consolidateAgentMemory(rival, 1);
-    expect(result.agentMemory!.seasonRecord!.rosterSizeAtSeasonStart).toBe(3);
+    expect(result.agentMemory!.seasonRecord).toEqual(record);
   });
 });

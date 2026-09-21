@@ -85,6 +85,22 @@ export const KILL_WINDOW_ENDURANCE = 0.4;
  */
 export const TACTIC_OVERUSE_CAP = 3;
 
+// ─── AI Tactic Valuation ───────────────────────────────────────────────────
+/**
+ * Weight applied to parry-bypass in the offensive tactic tiebreaker
+ * (offensiveTacticValue). Parry bypass is valuable but secondary to raw
+ * attack/damage, so it is discounted relative to attBonus/dmgBonus.
+ */
+export const OFFENSIVE_PARRY_BYPASS_WEIGHT = 0.5;
+
+/**
+ * Weight applied to endurance cost in the offensive tactic tiebreaker
+ * (offensiveTacticValue). Endurance cost is a real but secondary
+ * disincentive, so it is discounted relative to the defPenalty
+ * self-exposure term.
+ */
+export const OFFENSIVE_END_COST_WEIGHT = 0.5;
+
 /**
  * Critical damage multiplier
  */

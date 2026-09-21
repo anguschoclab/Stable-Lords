@@ -12,7 +12,6 @@ function makeMockRng(): IRNGService {
     pick: vi.fn().mockImplementation(<T>(arr: T[]) => arr[0] as T),
     roll: vi.fn().mockReturnValue(0),
     shuffle: vi.fn().mockImplementation(<T>(arr: T[]) => [...arr]),
-    pickWeighted: vi.fn().mockImplementation(<T>(items: T[]) => items[0] as T),
     chance: vi.fn().mockReturnValue(false),
   } as unknown as IRNGService;
 }

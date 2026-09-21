@@ -5,6 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
+import { OFFENSIVE_PARRY_BYPASS_WEIGHT, OFFENSIVE_END_COST_WEIGHT } from '@/constants/combat';
 
 describe('tacticAdvisor — getBestOffensiveTactic', () => {
   it('returns Slash for AimedBlow (WS for Slash)', () => {
@@ -144,5 +145,15 @@ describe('tacticAdvisor — payoff tie-breaking', () => {
     const result = getBestOffensiveTactic(FightingStyle.BashingAttack);
     // Both are WS — the winner is determined by offensiveTacticValue
     expect(['Bash', 'Decisiveness']).toContain(result);
+  });
+});
+
+describe('tacticAdvisor — valuation constants', () => {
+  it('exposes OFFENSIVE_PARRY_BYPASS_WEIGHT = 0.5', () => {
+    expect(OFFENSIVE_PARRY_BYPASS_WEIGHT).toBe(0.5);
+  });
+
+  it('exposes OFFENSIVE_END_COST_WEIGHT = 0.5', () => {
+    expect(OFFENSIVE_END_COST_WEIGHT).toBe(0.5);
   });
 });

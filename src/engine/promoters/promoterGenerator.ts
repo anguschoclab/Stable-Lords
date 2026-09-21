@@ -2,7 +2,7 @@ import { getArenasByTier } from '@/data/arenas';
 import { Promoter, PromoterPersonality } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { resolveRng } from '@/utils/random';
 
 const PROMOTER_FIRST_NAMES = [
   'Silas',
@@ -80,17 +80,16 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Sadistic',
   'Flashy',
   'Corporate',
-]; /**
- * Generate promoters.
- * @param rng - Rng. (optional)
- */
+];
 
 /**
  * Generate promoters.
- * @param rng - Rng. (optional)
+ * @param count -
+ * @param seed -
+ * @param rng -
  */
 export function generatePromoters(count: number, seed: number, rng?: IRNGService): Promoter[] {
-  const rngService = rng || new SeededRNGService(seed);
+  const rngService = resolveRng(rng, seed);
   const promoters: Promoter[] = [];
 
   const tiers: ('Local' | 'Regional' | 'National' | 'Legendary')[] = [

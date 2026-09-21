@@ -165,9 +165,7 @@ function GazetteEmptyState() {
       </div>
     </Surface>
   );
-} /**
- * Gazette.
- */
+}
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 

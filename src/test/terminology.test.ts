@@ -66,6 +66,42 @@ function isCodeLine(line: string): boolean {
   );
 }
 
+// A SCREAMING_SNAKE token: at least two uppercase groups separated by underscore.
+const SCREAMING_SNAKE = /[A-Z]{2,}_[A-Z]{2,}/;
+
+// Remove ${...} template interpolations so constant identifiers referenced
+// inside ${...} (e.g. ${ATTRIBUTE_TRAINING.MAX_VALUE}) are not treated as
+// literal display text. Sufficient for this codebase: interpolations are
+// simple property accesses / ternaries without nested braces.
+function stripInterpolations(s: string): string {
+  return s.replace(/\$\{[^}]*\}/g, '');
+}
+
+// Display-rendering props whose string value is shown to users. Curated,
+// conservative allowlist — excludes generic/risky names like `name`, `value`,
+// `id`, `key`, `type`, `error`, `text`, `header`, `footer` that frequently
+// hold data/identifiers rather than display copy. Extend as needed.
+const DISPLAY_PROPS = [
+  'label', 'title', 'placeholder', 'aria-label', 'description', 'alt',
+  'subtitle', 'heading', 'caption', 'tooltip', 'message', 'helperText',
+  'errorMessage',
+];
+// NOTE: the `g` flag is REQUIRED — without it, RegExp.exec() in a while
+// loop never advances lastIndex, causing an infinite loop that hangs the
+// test suite.
+const DISPLAY_PROP_RE = new RegExp(
+  `(?:^|\\s)(${DISPLAY_PROPS.join('|')})\\s*=\\s*\\{?\\s*(['"\`])([^'"\`]*)\\2`,
+  'g',
+);
+
+// Narrower skip for the display-string checks: does NOT reuse isCodeLine
+// (which would wrongly skip `const msg = "..."` display strings and
+// multi-prop JSX lines starting with `const`).
+function skipForDisplayScan(line: string): boolean {
+  const t = line.trim();
+  return t.startsWith('import ') || t.startsWith('//');
+}
+
 const bannedTerms = [
   'Personnel Intel',
   'Tactical Telemetry',
@@ -123,10 +159,52 @@ describe('Terminology compliance', () => {
       const lines = readLines(file);
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        if (!line) continue;
-        if (isCodeLine(line)) continue;
-        if (pattern.test(line)) {
-          matches.push(`${file}:${i + 1}:${line.trim()}`);
+        if (!line || isCodeLine(line)) continue;
+        const m = line.match(pattern);
+        if (m) matches.push(`${file}:${i + 1}: token=${m[0]} :: ${line.trim()}`);
+      }
+    }
+    expect(matches.join('\n')).toBe('');
+  });
+
+  it('no SCREAMING_SNAKE in display-rendering props', () => {
+    const matches: string[] = [];
+    for (const file of getTsxFiles()) {
+      const lines = readLines(file);
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line || skipForDisplayScan(line)) continue;
+        const stripped = stripInterpolations(line);
+        let m: RegExpExecArray | null;
+        DISPLAY_PROP_RE.lastIndex = 0;
+        while ((m = DISPLAY_PROP_RE.exec(stripped)) !== null) {
+          const prop = m[1];
+          const value = m[3];
+          if (value && SCREAMING_SNAKE.test(value)) {
+            matches.push(`${file}:${i + 1}: ${prop}="${value}" :: ${line.trim()}`);
+          }
+        }
+      }
+    }
+    expect(matches.join('\n')).toBe('');
+  });
+
+  it('no SCREAMING_SNAKE in prose-mixed string literals', () => {
+    const stringLiteral = /(['"`])([^'"`]*)\1/g;
+    const matches: string[] = [];
+    for (const file of getTsxFiles()) {
+      const lines = readLines(file);
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line || skipForDisplayScan(line)) continue;
+        const stripped = stripInterpolations(line);
+        let m: RegExpExecArray | null;
+        stringLiteral.lastIndex = 0;
+        while ((m = stringLiteral.exec(stripped)) !== null) {
+          const content = m[2];
+          if (content && SCREAMING_SNAKE.test(content) && /[a-z]/.test(content)) {
+            matches.push(`${file}:${i + 1}: "${content}" :: ${line.trim()}`);
+          }
         }
       }
     }

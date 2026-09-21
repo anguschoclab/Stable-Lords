@@ -1,11 +1,10 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { type Season, type StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
-import { hashStr } from '@/utils/random';
+import { hashStr, resolveRng } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment';
 import { StateImpact } from '@/engine/impacts';
-import { isActive } from '@/engine/warriorStatus';
+import { filterActive } from '@/utils/roster';
 
 interface TierStats {
   totalWins: number;
@@ -46,14 +45,14 @@ const tierRules: Record<NonNullable<RivalStableData['tier']>, TierRule[]> = {
         : null,
   ],
   Legendary: [],
-}; /**
- * Process tier progression.
- * @param rng - Rng. (optional)
- */
+};
 
 /**
  * Process tier progression.
- * @param rng - Rng. (optional)
+ * @param state -
+ * @param newSeason -
+ * @param newWeek -
+ * @param rng -
  */
 export function processTierProgression(
   state: GameState,
@@ -64,7 +63,7 @@ export function processTierProgression(
   if (newSeason === state.season) return {};
 
   const createdAt = state.meta?.createdAt || new Date(0).toISOString();
-  const rngService = rng || new SeededRNGService(hashStr(createdAt) + state.week);
+  const rngService = resolveRng(rng, hashStr(createdAt) + state.week);
 
   const promotionNews: string[] = [];
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
@@ -76,7 +75,7 @@ export function processTierProgression(
       stats.totalKills += w.career.kills;
       stats.totalFights += w.career.wins + w.career.losses;
     }
-    stats.activeCount = r.roster.filter((w) => isActive(w)).length;
+    stats.activeCount = filterActive(r.roster).length;
 
     const rules = tierRules[r.tier || 'Minor'];
     for (const rule of rules) {

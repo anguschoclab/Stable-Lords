@@ -41,28 +41,33 @@ export default tseslint.config(
           contexts: ['TSTypeAliasDeclaration', 'TSInterfaceDeclaration'],
         },
       ],
-      'jsdoc/require-description': ['warn', { contexts: ['any'] }],
+      /* Stub-style JSDoc (@param/@returns only, no prose) is accepted convention here —
+         scripts/strip-junk-jsdoc.ts exists to remove generated prose noise. */
+      'jsdoc/require-description': 'off',
       'jsdoc/require-param-description': 'warn',
       'jsdoc/require-returns-description': 'warn',
       'jsdoc/no-types': 'warn',
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
       'jsdoc/check-tag-names': ['warn', { definedTags: ['vitest-environment'] }],
       'jsdoc/check-alignment': 'warn',
-    },
-  },
-  {
-    /* ARCHITECTURAL BOUNDARY: ENGINE */
-    files: ['src/engine/**/*.{ts,tsx}'],
-    rules: {
+      /* RNG POLICY: Math.random is banned repo-wide. Deterministic contexts use
+         SeededRNG/resolveRng from @/utils/random; non-deterministic variety uses
+         cryptoRandom/cryptoRandomInt from @/utils/cryptoRandom. */
       'no-restricted-properties': [
         'error',
         {
           object: 'Math',
           property: 'random',
           message:
-            'Do not use Math.random() in engine code. Use SeededRNG from @/utils/random or SeededRNGService from @/engine/core/rng/SeededRNGService.',
+            'Use SeededRNG from @/utils/random or cryptoRandom from @/utils/cryptoRandom — never Math.random.',
         },
       ],
+    },
+  },
+  {
+    /* ARCHITECTURAL BOUNDARY: ENGINE */
+    files: ['src/engine/**/*.{ts,tsx}'],
+    rules: {
       'no-restricted-imports': [
         'error',
         {
@@ -112,6 +117,12 @@ export default tseslint.config(
     },
   },
   {
+    /* ROUTE FILES: TanStack file-routing requires exporting Route objects and
+       lazy component consts alongside the root component — fast-refresh rule N/A. */
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     /* BY-DESIGN: Logger utility intentionally uses console */
     files: ['src/utils/logger.ts'],
     rules: { 'no-console': 'off' },
@@ -126,9 +137,15 @@ export default tseslint.config(
     },
   },
   {
-    /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions */
+    /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions.
+       scripts/stubs are intentionally minimal headless shims — JSDoc and
+       constructor-shape rules add no value there. */
     files: ['scratch/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}', 'src/scripts/**/*.{ts,tsx}', '*.ts'],
-    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      'jsdoc/require-jsdoc': 'off',
+      '@typescript-eslint/no-useless-constructor': 'off',
+    },
   },
   {
     /* CRYPTO UTILS: Allow non-null assertion for crypto.getRandomValues which always populates array */

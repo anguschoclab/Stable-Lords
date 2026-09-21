@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { clamp, clamp01, lerp, mapRange, roundTo, addCapped } from '@/utils/math';
+import { clamp, clamp01, lerp, mapRange, addCapped } from '@/utils/math';
 
 describe('clamp', () => {
   it('returns value when within range', () => {
@@ -85,19 +85,6 @@ describe('mapRange', () => {
   });
 });
 
-describe('roundTo', () => {
-  it('rounds to specified decimal places', () => {
-    expect(roundTo(3.14159, 2)).toBe(3.14);
-    expect(roundTo(3.14159, 3)).toBe(3.142);
-    expect(roundTo(2.5, 0)).toBe(3);
-    expect(roundTo(2.4, 0)).toBe(2);
-  });
-
-  it('handles negative decimal places', () => {
-    expect(roundTo(123, -1)).toBe(120);
-    expect(roundTo(123, -2)).toBe(100);
-  });
-});
 
 describe('addCapped', () => {
   it('adds normally when under cap', () => {

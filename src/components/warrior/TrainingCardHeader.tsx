@@ -2,17 +2,27 @@ import { AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { STYLE_DISPLAY_NAMES, type Warrior } from '@/types/game';
+import { computeTrainability, assessBurnRisks } from '@/engine/training/burnAnalysis';
+import type { Trainer } from '@/types/shared.types';
 
 interface TrainingCardHeaderProps {
   warrior: Warrior;
   total: number;
   hasInjury: boolean;
+  trainers?: Trainer[];
 }
 
 /**
  *
  */
-export function TrainingCardHeader({ warrior, total, hasInjury }: TrainingCardHeaderProps) {
+export function TrainingCardHeader({
+  warrior,
+  total,
+  hasInjury,
+  trainers = [],
+}: TrainingCardHeaderProps) {
+  const trainability = computeTrainability(warrior, trainers);
+  const burnWarnings = assessBurnRisks(warrior, trainers);
   return (
     <div className="p-4 bg-white/5 border-b border-white/5">
       <div className="flex items-start justify-between">
@@ -43,6 +53,22 @@ export function TrainingCardHeader({ warrior, total, hasInjury }: TrainingCardHe
               </TooltipContent>
             </Tooltip>
           )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="text-[10px] font-mono opacity-40 cursor-help">
+                Trainability {trainability}%
+              </div>
+            </TooltipTrigger>
+            <TooltipContent
+              side="bottom"
+              sideOffset={6}
+              className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest"
+            >
+              {burnWarnings.length > 0
+                ? burnWarnings.map((w) => `${w.attribute}: ${w.reason}`).join(' | ')
+                : 'Average attribute gain chance across trainable stats'}
+            </TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="text-[10px] font-mono opacity-40 cursor-help">Sum {total}/80</div>

@@ -15,7 +15,8 @@ function makeMockRng(nextValue: number): IRNGService {
     pick: <T>(arr: T[]) => arr[0]!,
     roll: (min: number, _max: number) => min,
     shuffle: <T>(arr: T[]) => arr,
-    pickWeighted: <T>(items: T[]) => items[0]!,
+    rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
+      Object.keys(weights)[0] as K,
     chance: () => nextValue < 0.5,
   };
 }

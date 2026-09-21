@@ -30,9 +30,10 @@ export interface IRNGService {
   shuffle<T>(array: T[]): T[];
 
   /**
-   * Weighted random selection from items array.
+   * Weighted random selection of a string key from a weight map.
+   * Falls back to the first key if the total weight is zero.
    */
-  pickWeighted<T>(items: T[], weights: number[]): T;
+  rollWeighted<K extends string>(weights: Partial<Record<K, number>>): K;
 
   /**
    * Returns true with given probability (0-1).

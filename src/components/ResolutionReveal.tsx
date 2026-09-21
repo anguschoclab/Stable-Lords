@@ -12,16 +12,14 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 
 import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
 
-type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
- * Resolution reveal.
- */
+type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
 
 /**
  * Resolution reveal.
  */
 export default function ResolutionReveal() {
   const state = useGameStore(
-    useShallow((s: any) => ({
+    useShallow((s: GameStore) => ({
       arenaHistory: s.arenaHistory,
       graveyard: s.graveyard,
       week: s.week,
@@ -34,13 +32,20 @@ export default function ResolutionReveal() {
   const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];
   const data = latestFight?.pendingResolutionData;
 
+  const graveyard = state.graveyard;
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map(
-      (state.graveyard ?? []).map((w: { name: string }) => [w.name, w] as [string, typeof w])
-    );
-    return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
-  }, [data, state.graveyard]);
+    const graveyardByName = new Map<string, NonNullable<typeof graveyard>[number]>();
+    for (const entry of graveyard ?? []) {
+      graveyardByName.set(entry.name, entry);
+    }
+    const result: NonNullable<typeof graveyard>[number][] = [];
+    for (const name of data.deaths) {
+      const w = graveyardByName.get(name);
+      if (w) result.push(w);
+    }
+    return result;
+  }, [data, graveyard]);
 
   if (!data) return null;
 
@@ -76,7 +81,7 @@ export default function ResolutionReveal() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-display font-bold">
-                {(uiMeta as any).fanfare.resolution_title}
+                {uiMeta.fanfare.resolution_title}
               </CardTitle>
               <CardDescription>Week {state.week - 1} Results</CardDescription>
             </div>
@@ -105,9 +110,7 @@ export default function ResolutionReveal() {
             {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
             {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
             {step === 'math' && <MathStep lastSimulationReport={state.lastSimulationReport} />}
-            {step === 'memorial' && deadWarriors.length > 0 && (
-              <MemorialStep deadWarriors={deadWarriors} />
-            )}
+            {step === 'memorial' && <MemorialStep deadWarriors={deadWarriors} />}
           </AnimatePresence>
         </CardContent>
 
@@ -119,10 +122,10 @@ export default function ResolutionReveal() {
             variant={step === 'memorial' ? 'destructive' : 'default'}
           >
             {step === 'math' && data.deaths.length > 0
-              ? (uiMeta as any).fanfare.btn_honor
+              ? uiMeta.fanfare.btn_honor
               : step === 'math' || step === 'memorial'
-                ? (uiMeta as any).fanfare.btn_planning
-                : (uiMeta as any).fanfare.btn_next}
+                ? uiMeta.fanfare.btn_planning
+                : uiMeta.fanfare.btn_next}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

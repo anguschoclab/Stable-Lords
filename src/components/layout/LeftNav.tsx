@@ -6,13 +6,13 @@
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import {
-  HUBS,
-  type HubId,
   useNavAlerts,
   HubSwitcher,
   SubPageList,
   AlertStrip,
+  UtilityStrip,
 } from './navigationShared';
+import { HUBS, type HubId } from './navigationHubs';
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -61,6 +61,9 @@ export function LeftNav({ className }: LeftNavProps) {
 
       {/* Bottom alert strip */}
       <AlertStrip alerts={alerts} LinkComponent={Link} />
+
+      {/* Utility links (Help, dev-only Admin) */}
+      <UtilityStrip LinkComponent={Link} />
     </nav>
   );
 }

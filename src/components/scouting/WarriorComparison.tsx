@@ -7,14 +7,12 @@ import { ComparisonHeader } from './ComparisonHeader';
 import { AttributeComparison } from './components/AttributeComparison';
 import { CareerComparison } from './components/CareerComparison';
 import { EmptyWarriorState } from './components/EmptyWarriorState';
+import { isActive } from '@/engine/warriorStatus';
 
 interface WarriorComparisonProps {
   rivals: RivalStableData[];
   playerRoster: Warrior[];
-} /**
- * Warrior comparison.
- * @param - { rivals, player roster }.
- */
+}
 
 /**
  * Warrior comparison.
@@ -27,13 +25,13 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
   const allWarriors = useMemo(() => {
     const list: { warrior: Warrior; stable: string }[] = [];
     for (const w of playerRoster) {
-      if (w.status !== 'Active') continue;
+      if (!isActive(w)) continue;
       list.push({ warrior: w, stable: 'User Stable' });
     }
     for (const r of rivals) {
       const stableName = r.owner.stableName;
       for (const w of r.roster) {
-        if (w.status !== 'Active') continue;
+        if (!isActive(w)) continue;
         list.push({ warrior: w, stable: stableName });
       }
     }

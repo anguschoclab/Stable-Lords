@@ -47,9 +47,7 @@ const REP_LABELS: {
     glow: 'bg-arena-pop',
     desc: 'How well your stable adapts to the shifting combat meta. High adaptability lets warriors capitalize on style matchups.',
   },
-]; /**
- * Reputation sliders.
- */
+];
 
 /**
  * Reputation sliders.

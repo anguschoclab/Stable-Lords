@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/game';
 import type { UseFavoritesActionsResult } from '@/hooks/useFavoritesActions';
+import { getWeaponSuitability, WEAPON_SUITABILITY_LABELS, WEAPON_SUITABILITY_COLORS } from '@/engine/weaponSuitability';
+import { weaponDamageBonus } from '@/engine/combat/mechanics/weaponStats';
 
 interface WeaponAffinitySectionProps {
   warrior: Warrior;
@@ -30,6 +32,10 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
     weaponProgress,
   } = actions;
 
+  const weaponId = warrior.favorites?.weaponId;
+  const suitability = weaponId ? getWeaponSuitability(weaponId, warrior.style) : null;
+  const dmgBonus = weaponId ? weaponDamageBonus(weaponId, warrior.style) : 0;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -49,7 +55,12 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
             <div className="space-y-1">
               <div className="text-sm font-display font-black uppercase">{favDisplay.weapon}</div>
               <div className="text-[9px] font-black text-arena-gold uppercase tracking-widest">
-                Combat Bonus: +2 ACC / +1 DMG
+                {dmgBonus >= 0 ? '+' : ''}{dmgBonus} DMG
+                {suitability && (
+                  <span className={cn('ml-2', WEAPON_SUITABILITY_COLORS[suitability])}>
+                    {WEAPON_SUITABILITY_LABELS[suitability]}
+                  </span>
+                )}
               </div>
             </div>
           ) : (

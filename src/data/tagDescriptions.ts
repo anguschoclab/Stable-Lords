@@ -5,7 +5,7 @@
  */
 import uiMeta from '@/data/narrative/uiMeta.json';
 
-const meta = (uiMeta as any).meta;
+const meta = uiMeta.meta;
 
 /**
  * Flair_descriptions.

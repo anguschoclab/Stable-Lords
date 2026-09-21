@@ -1,8 +1,6 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
-import { ChevronDown, Zap, Swords } from 'lucide-react'; /**
- * Defines the shape of upset entry.
- */
+import { ChevronDown, Zap, Swords } from 'lucide-react';
 
 /**
  * Defines the shape of upset entry.
@@ -14,10 +12,7 @@ export interface UpsetEntry {
   fameDiff: number;
   week?: number; // Used in Seasonal
   round?: number; // Used in Tournament
-} /**
- * Upsets list.
- * @param - { upsets }.
- */
+}
 
 /**
  * Upsets list.

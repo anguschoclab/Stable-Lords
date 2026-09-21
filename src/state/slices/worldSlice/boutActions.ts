@@ -5,7 +5,8 @@ import { respondToBoutOffer as engineRespondToBoutOffer } from '@/engine/bout/mu
 import type { WorldSlice } from './types';
 
 /**
- *
+ * Creates the bout-offer actions for the world slice: status updates,
+ * accept/decline responses, and expiry sweeps.
  */
 export function createBoutActions(
   set: (fn: (state: WorldSlice) => Partial<GameStore> | WorldSlice) => void
@@ -44,14 +45,13 @@ export function createBoutActions(
         const newOffers = { ...state.boutOffers };
         let changed = false;
 
-        (Object.keys(newOffers) as BoutOfferId[]).forEach((id) => {
-          const offer = newOffers[id];
-          if (!offer) return;
+        for (const [id, offer] of Object.entries(newOffers)) {
+          if (!offer) continue;
           if (offer.status === 'Proposed' && state.absoluteWeek >= offer.expirationWeek) {
-            newOffers[id] = { ...offer, status: 'Expired' };
+            newOffers[id as BoutOfferId] = { ...offer, status: 'Expired' };
             changed = true;
           }
-        });
+        }
 
         return changed ? { boutOffers: newOffers } : state;
       });

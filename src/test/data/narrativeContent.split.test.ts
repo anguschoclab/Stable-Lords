@@ -120,7 +120,7 @@ describe('narrativeContent split — assembled object', () => {
   });
 
   it('assembled fanfare deep-equals uiMeta.json fanfare', () => {
-    expect(assembledContent.fanfare).toEqual((uiMeta as any).fanfare);
+    expect(assembledContent.fanfare).toEqual(uiMeta.fanfare);
   });
 
   it('assembled recruitment deep-equals recruitment.json recruitment', () => {
@@ -128,7 +128,7 @@ describe('narrativeContent split — assembled object', () => {
   });
 
   it('assembled memorials deep-equals uiMeta.json memorials', () => {
-    expect(assembledContent.memorials).toEqual((uiMeta as any).memorials);
+    expect(assembledContent.memorials).toEqual(uiMeta.memorials);
   });
 });
 

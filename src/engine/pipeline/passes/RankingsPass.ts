@@ -18,9 +18,7 @@ interface WarriorScore {
 }
 
 // Pre-allocated arrays for style buckets to avoid repeated allocations
-const STYLE_BUCKETS: FightingStyle[] = Object.values(FightingStyle); /**
- * Run rankings pass.
- */
+const STYLE_BUCKETS: FightingStyle[] = Object.values(FightingStyle);
 
 /**
  * Run rankings pass.

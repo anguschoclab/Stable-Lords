@@ -31,14 +31,16 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
   FATIGUE_COLLAPSE: 'fatigue_collapse',
   RIVALRY_FINISH: 'rivalry_finish',
   FATAL_DAMAGE: 'fatal_damage',
-}; /**
- * Narrate bout end.
- * @param weaponId - Weapon id. (optional)
- */
+};
 
 /**
  * Narrate bout end.
- * @param weaponId - Weapon id. (optional)
+ * @param rng -
+ * @param by -
+ * @param winnerName -
+ * @param loserName -
+ * @param weaponId -
+ * @param ctx -
  */
 export function narrateBoutEnd(
   rng: IRNGService,

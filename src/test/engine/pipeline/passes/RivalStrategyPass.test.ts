@@ -133,13 +133,13 @@ function makeMinimalState(rivals: RivalStableData[]): GameState {
 
 function makeMockRng(returns: number[]): IRNGServiceLike {
   let i = 0;
+  let idCounter = 0;
   return {
     next: () => returns[i++] ?? returns[returns.length - 1] ?? 0,
     pick: <T>(arr: T[]): T => arr[0]!,
-    uuid: (p?: string) => `${p ?? 'id'}-${Math.random()}`,
+    uuid: (p?: string) => `${p ?? 'id'}-${idCounter++}`,
     roll: (min: number, _max: number) => min,
     shuffle: <T>(arr: T[]): T[] => arr,
-    pickWeighted: <T>(items: T[]): T => items[0]!,
     chance: (p: number) => p > 0,
   };
 }
@@ -150,7 +150,6 @@ interface IRNGServiceLike {
   uuid(prefix?: string): string;
   roll(min: number, max: number): number;
   shuffle<T>(array: T[]): T[];
-  pickWeighted<T>(items: T[], weights: number[]): T;
   chance(probability: number): boolean;
 }
 
@@ -306,6 +305,30 @@ describe('handleOwnerLifecycle', () => {
 
     expect(updatedRival.owner.age).toBeGreaterThanOrEqual(25);
     expect(updatedRival.owner.age).toBeLessThanOrEqual(39);
+  });
+
+  it('succession → records the absolute week the previous owner retired', () => {
+    const rival = makeRival({
+      owner: { ...makeRival().owner, age: 80, fame: 200, generation: 0 },
+    });
+    const state = makeMinimalState([rival]);
+    const rng = makeMockRng([0.1, 0.5]);
+    const index = buildSuccessorIndex(state.retired);
+
+    const { updatedRival } = handleOwnerLifecycle(rival, 5, rng as any, index, 140);
+
+    expect(updatedRival.owner.ageRetired).toBe(140);
+  });
+
+  it('no succession → ageRetired stays unset', () => {
+    const rival = makeRival({ owner: { ...makeRival().owner, age: 50 } });
+    const state = makeMinimalState([rival]);
+    const rng = makeMockRng([1]);
+    const index = buildSuccessorIndex(state.retired);
+
+    const { updatedRival } = handleOwnerLifecycle(rival, 5, rng as any, index, 140);
+
+    expect(updatedRival.owner.ageRetired).toBeUndefined();
   });
 });
 
@@ -484,5 +507,37 @@ describe('runRivalStrategyPass — tournament week', () => {
     expect(impact.graveyard).toBeUndefined();
     expect(impact.arenaHistory).toBeUndefined();
     expect(impact.rosterRemovals).toBeUndefined();
+  });
+});
+
+// ─── Suite: seasonal tournament headless gating ─────────────────────────────
+
+describe('runRivalStrategyPass — seasonal tournament headless gating', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('headless suppresses the player-facing announcement but still seeds tournaments', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+
+    const impact = runRivalStrategyPass(state, 13, undefined as any, true);
+
+    expect(impact.tournaments?.length).toBeGreaterThan(0);
+    expect(impact.isTournamentWeek).toBe(true);
+    const titles = (impact.newsletterItems ?? []).map((n) => n.title);
+    expect(titles).not.toContain('🎖️ TOURNAMENT ANNOUNCEMENT');
+  });
+
+  it('non-headless emits the tournament announcement', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+
+    const impact = runRivalStrategyPass(state, 13, undefined as any, false);
+
+    const titles = (impact.newsletterItems ?? []).map((n) => n.title);
+    expect(titles).toContain('🎖️ TOURNAMENT ANNOUNCEMENT');
   });
 });

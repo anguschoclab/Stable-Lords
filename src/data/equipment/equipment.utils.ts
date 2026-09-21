@@ -15,9 +15,7 @@ import type {
   WeaponReqResult,
   WeaponReqCheck,
   LoadoutIssue,
-} from './equipment.types'; /**
- * All_equipment.
- */
+} from './equipment.types';
 
 // Combined all equipment for convenience
 /**
@@ -45,9 +43,7 @@ export function getItemById(id: string): EquipmentItem | undefined {
  */
 export function getItemByCode(code: string): EquipmentItem | undefined {
   return ITEM_BY_CODE.get(code);
-} /**
- * Get available items.
- */
+}
 
 /**
  * Get available items.
@@ -62,18 +58,14 @@ export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): Eq
           ? [...SHIELDS, ...WEAPONS.filter((w) => SHIELD_ID_SET.has(w.id))]
           : HELMS;
   return pool.filter((item) => !item.restrictedStyles?.includes(style));
-} /**
- * Is preferred weapon.
- */
+}
 
 /**
  * Is preferred weapon.
  */
 export function isPreferredWeapon(item: EquipmentItem, style: FightingStyle): boolean {
   return item.preferredStyles?.includes(style) ?? false;
-} /**
- * Default_loadout.
- */
+}
 
 /**
  * Default_loadout.
@@ -103,9 +95,7 @@ export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
     shield: 'none_shield',
     helm: 'leather_cap',
   };
-} /**
- * Get loadout weight.
- */
+}
 
 /**
  * Get loadout weight.
@@ -194,9 +184,7 @@ export function checkWeaponRequirements(
     attPenalty: totalDeficit * -2,
     endurancePenalty: 1 + totalDeficit * 0.1,
   };
-} /**
- * Is over encumbered.
- */
+}
 
 /**
  * Is over encumbered.

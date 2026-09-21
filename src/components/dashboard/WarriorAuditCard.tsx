@@ -3,6 +3,7 @@ import { VitalityRing } from '@/components/ui/VitalityRing';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorLink } from '@/components/EntityLink';
 import type { AtRiskWarrior } from '@/hooks/useAtRiskWarriors';
+import { hasInjuries } from '@/engine/injuries/utils';
 
 interface WarriorAuditCardProps {
   warrior: AtRiskWarrior;
@@ -14,7 +15,7 @@ interface WarriorAuditCardProps {
 export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
   const fatigue = warrior.fatigue ?? 0;
   const condition = Math.max(0, 100 - fatigue);
-  const isInjured = warrior.injuries.length > 0;
+  const isInjured = hasInjuries(warrior);
 
   return (
     <div key={warrior.id} className="group/item relative">

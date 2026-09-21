@@ -13,7 +13,7 @@ export interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
   activeSlotId: string | null;
-  lastSimulationReport?: import('@/types/combat.types').FightOutcome;
+  lastSimulationReport?: GameState['lastSimulationReport'];
   lastWeekBoutDisplay?: GameState['lastWeekBoutDisplay'];
   isSimulating: boolean;
   isInitialized: boolean;

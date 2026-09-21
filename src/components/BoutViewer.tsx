@@ -13,6 +13,7 @@ import BoutHeader from './bout-viewer/BoutHeader';
 import BoutControls from './bout-viewer/BoutControls';
 import BoutResolution from './bout-viewer/BoutResolution';
 import { FightAnalysisPanel } from './bout-viewer/FightAnalysisPanel';
+import { AIDebugDrawer } from './bout-viewer/AIDebugDrawer';
 
 interface BoutViewerProps {
   nameA: string;
@@ -29,23 +30,10 @@ interface BoutViewerProps {
   arenaId?: string;
   transcript?: string[];
   analysis?: import('@/engine/narrative/fightAnalysis').FightAnalysis;
-} /**
-   * Bout viewer.
-   * @param  - {
-  name a,
-  name d,
-  style a,
-  style d,
-  log,
-  winner,
-  by,
-  announcement,
-  is rivalry,
-  arena tier = 'standard',
-  weather = 'clear',
-  arena id,
-}.
-   */
+  exchangeLog?: import('@/types/combat.types').ExchangeLogEntry[];
+  weaponIdA?: string;
+  weaponIdD?: string;
+}
 
 /**
  * Bout viewer.
@@ -78,6 +66,9 @@ export default function BoutViewer({
   weather = 'Clear',
   arenaId,
   analysis,
+  exchangeLog,
+  weaponIdA,
+  weaponIdD,
 }: BoutViewerProps) {
   const isIndoor = isIndoorArena(arenaId);
   const effectiveWeather = isIndoor ? 'Clear' : weather;
@@ -169,6 +160,8 @@ export default function BoutViewer({
               arenaId={arenaId}
               maxHpA={50}
               maxHpD={50}
+              weaponIdA={weaponIdA}
+              weaponIdD={weaponIdD}
             />
           ) : (
             <TacticalLogView log={log} visibleCount={visibleCount} />
@@ -190,6 +183,9 @@ export default function BoutViewer({
 
           {/* Fight Analysis Panel */}
           <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
+
+          {/* Dev-only AI telemetry drawer */}
+          <AIDebugDrawer exchangeLog={exchangeLog} />
         </div>
       )}
     </Surface>

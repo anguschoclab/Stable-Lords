@@ -119,6 +119,17 @@ export function scoreArenaFitForWarrior(
     }
   }
 
+  // Synergy penalties for specific tag combinations
+  const hasWater = arena.tags.includes('water');
+  const hasCursed = arena.tags.includes('cursed');
+
+  if (hasWater && hasCursed) {
+    // Water + Cursed creates an extremely draining environment that punishes high-aggression
+    if (HIGH_AGGRESSION_STYLES.has(warrior.style)) {
+      score -= 0.5;
+    }
+  }
+
   return score;
 }
 

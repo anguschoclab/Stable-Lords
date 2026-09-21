@@ -55,9 +55,9 @@ describe('Cosmic Anomaly weather type', () => {
     // Baseline: 53 weather types
     // After adding Cosmic Anomaly: 54
     // After adding Temporal Rift + Stardust Gale: 56
-    // After adding Weeping Skies + Shattered Skies + Winds of Chaos + Dreamweavers Mist: 62
+    // After adding Weeping Skies + Shattered Skies + Winds of Chaos + Dreamweavers Mist + Prismatic Gale: 63
     if (WEATHER_TYPES.includes('Cosmic Anomaly' as any)) {
-      expect(WEATHER_TYPES.length).toBe(62);
+      expect(WEATHER_TYPES.length).toBe(63);
     } else {
       // Before merge, still 55
       expect(WEATHER_TYPES.length).toBe(55);

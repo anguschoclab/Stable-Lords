@@ -403,6 +403,13 @@
       "newsletter": [
         "A strange, hallucinogenic mist rolled through the camp. {{name}} breathed it deeply, discovering an uncanny new fighting rhythm but taking minor magic burns. (+15 XP, Minor Injury)"
       ]
+    },
+    "prismatic_gale_exposure": {
+      "title": "Caught in a Prismatic Gale",
+      "effectType": "prismatic_gale_exposure",
+      "newsletter": [
+        "{{name}} was caught in a rare Prismatic Gale! The magical winds whispered secrets of movement, but left them dizzy. (+20 XP, Insight Token, Minor Injury)"
+      ]
     }
   },
   "events": {

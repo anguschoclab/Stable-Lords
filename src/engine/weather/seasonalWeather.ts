@@ -37,6 +37,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Wild Magic',
     'Astral Dust',
     'Temporal Rift',
+    'Prismatic Gale',
   ],
   Summer: [
     'Sweltering',
@@ -107,6 +108,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   'Mana Surge': 0.5,
   'Chaos Storm': 0.1,
   'Chaos Squall': 0.5,
+  'Prismatic Gale': 2,
   'Whispering Winds': 3,
 
   // Spring-exclusive

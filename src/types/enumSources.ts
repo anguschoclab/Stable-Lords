@@ -59,6 +59,7 @@ export const WEATHER_TYPES = [
   'Winds of Chaos',
   'Chaos Storm',
   'Chaos Squall',
+  'Prismatic Gale',
   'Crimson Snow',
   'Whispering Winds',
   'Glittering Frost',

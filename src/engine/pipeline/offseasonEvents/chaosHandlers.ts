@@ -780,3 +780,49 @@ export function handleDreamweaversMist(
   }
 }
 
+/** Handler for the Prismatic Gale Exposure offseason event. */
+export function handlePrismaticGaleExposure(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20;
+
+      const newInjury = makeInjury(rng, {
+        name: 'Prismatic Dizziness',
+        description: 'Still seeing colors and feeling off-balance.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { SP: -1, CN: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      ctx.insightTokens.push(
+        makeInsightToken(rng, {
+          type: 'Style',
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'The prismatic winds whispered secrets of movement and flow.',
+          discoveredWeek: nextWeek,
+          origin: 'Prismatic Gale',
+        })
+      );
+
+      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+

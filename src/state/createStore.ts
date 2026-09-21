@@ -121,7 +121,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           draft.playerAvoids = state.playerAvoids || [];
           draft.bookmarks = state.bookmarks || [];
           draft.progression = state.progression || DEFAULT_PROGRESSION;
-          draft.lastSimulationReport = state.lastSimulationReport as never;
+          draft.lastSimulationReport = state.lastSimulationReport;
 
           draft.activeSlotId = slotId;
           draft.atTitleScreen = false;

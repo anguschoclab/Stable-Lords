@@ -73,6 +73,7 @@ import {
   handleWanderingMerchantStrangeBrew,
   handlePhantomSparringPartner,
   handleDreamweaversMist,
+  handlePrismaticGaleExposure,
 } from './seasonalHandlers';
 
 const EVENT_HANDLERS: Record<
@@ -144,6 +145,7 @@ const EVENT_HANDLERS: Record<
   wandering_merchant_strange_brew: handleWanderingMerchantStrangeBrew,
   phantom_sparring: handlePhantomSparringPartner,
   dreamweavers_mist: handleDreamweaversMist,
+  prismatic_gale_exposure: handlePrismaticGaleExposure,
 };
 
 /**

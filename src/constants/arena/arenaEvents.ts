@@ -228,6 +228,26 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.DEEPENING_MUCK_TRIGGER,
     narrativeText: 'The waterlogged ground sucks at boots, slowing movement!',
   },
+
+  sands_shift: {
+    id: 'sands_shift',
+    name: 'Shifting Sands',
+    description: 'A sudden shifting of the sand dunes destabilizes footing',
+    requiredTags: ['uneven', 'outdoor'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.SANDS_SHIFT_TRIGGER,
+    narrativeText: 'The impact causes the sandy ground to collapse momentarily, throwing fighters off balance!',
+  },
+
+  swamp_miasma: {
+    id: 'swamp_miasma',
+    name: 'Swamp Miasma',
+    description: 'Noxious gas bubbles up from the swamp',
+    requiredTags: ['water', 'cursed'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.SWAMP_MIASMA_TRIGGER,
+    narrativeText: 'A noxious bubble bursts, releasing a choking, cursed miasma into the air!',
+  },
 };
 
 // ─── Helper Functions ──────────────────────────────────────────────────────

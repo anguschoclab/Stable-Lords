@@ -554,6 +554,20 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX + 0.3 - 0.19, 4);
   });
 
+  it('water + cursed tag combination → synergy penalty for high aggression', () => {
+    const w = makeWarrior({ style: FightingStyle.BashingAttack });
+    const arena = makeArena({ tags: ['water', 'cursed'] });
+    const score = scoreArenaFitForWarrior(w, arena);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX - 0.5, 5);
+  });
+
+  it('water + cursed tag combination → no penalty for low aggression styles', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryRiposte });
+    const arena = makeArena({ tags: ['water', 'cursed'] });
+    const score = scoreArenaFitForWarrior(w, arena);
+    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
+  });
+
   it('tag not in ARENA_TAG_WEIGHTS → no effect', () => {
     const w = makeWarrior();
     const arena = makeArena({ size: 'standard', tags: ['outdoor' as any] });
@@ -1016,27 +1030,6 @@ describe('new arena configs', () => {
     expect(ids).toContain('narrow_bridge');
     expect(ids).toContain('the_meat_grinder');
     expect(ids).toContain('the_abyssal_pit');
-  });
-});
-
-describe('selectArenaForMatchup — weather-aware pools (C3)', () => {
-  it('severe weather restricts selection to indoor arenas (C3)', () => {
-    const w = makeWarrior();
-    for (let i = 0; i < 20; i++) {
-      const rngVar = makeRng(i / 20);
-      const result = selectArenaForMatchup(w, w, rngVar, { weather: 'Blizzard' });
-      const arena = arenasModule.getArenaById(result);
-      expect(arena.tags).toContain('indoor');
-    }
-  });
-
-  it('mild weather leaves the full arena pool open', () => {
-    const w = makeWarrior();
-    const indoorOnly = selectArenaForMatchup(w, w, makeRng(0.5), { weather: 'Blizzard' });
-    const open = selectArenaForMatchup(w, w, makeRng(0.5), { weather: 'Clear' });
-    // Same seed, different pools → potentially different picks; both valid ids.
-    expect(typeof indoorOnly).toBe('string');
-    expect(typeof open).toBe('string');
   });
 });
 

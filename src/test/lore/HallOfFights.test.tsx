@@ -190,4 +190,29 @@ describe('HallOfFights Component', () => {
     expect(lungerCells[3]).toHaveTextContent('1'); // losses
     expect(lungerCells[5]).toHaveTextContent('50%'); // win rate
   });
+
+  it('surfaces all-time lifetime stats from real state', async () => {
+    applyStore({
+      lifetimeStats: { bouts: 1234, kills: 56, retirements: 12 },
+    });
+    render(
+      <TooltipProvider>
+        <HallOfFights />
+      </TooltipProvider>
+    );
+    const strip = await screen.findByTestId('lifetime-stats');
+    expect(strip).toHaveTextContent('1234');
+    expect(strip).toHaveTextContent('56');
+    expect(strip).toHaveTextContent('12');
+  });
+
+  it('hides the lifetime strip when no bouts have been fought', () => {
+    applyStore({ lifetimeStats: { bouts: 0, kills: 0, retirements: 0 } });
+    render(
+      <TooltipProvider>
+        <HallOfFights />
+      </TooltipProvider>
+    );
+    expect(screen.queryByTestId('lifetime-stats')).not.toBeInTheDocument();
+  });
 });

@@ -57,6 +57,7 @@ export interface WorldSlice {
   coachDismissed: string[];
   houseRules?: GameState['houseRules'];
   contentPacks?: GameState['contentPacks'];
+  lifetimeStats?: GameState['lifetimeStats'];
   rivalries: Rivalry[];
   matchHistory: MatchRecord[];
   playerChallenges: string[];

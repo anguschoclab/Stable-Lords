@@ -83,6 +83,8 @@ export const HallOfFights: React.FC = () => {
       .sort((a, b) => b.winRate - a.winRate);
   }, [state.arenaHistory]);
 
+  const lifetime = state.lifetimeStats;
+
   return (
     <div className="space-y-6">
       <div>
@@ -91,6 +93,20 @@ export const HallOfFights: React.FC = () => {
           Arena history, legendary bouts, and style analytics.
         </p>
       </div>
+
+      {lifetime && lifetime.bouts > 0 && (
+        <div className="flex flex-wrap gap-6 text-xs text-muted-foreground" data-testid="lifetime-stats">
+          <span>
+            <span className="font-black text-foreground tabular-nums">{lifetime.bouts}</span> bouts all-time
+          </span>
+          <span>
+            <span className="font-black text-arena-blood tabular-nums">{lifetime.kills}</span> deaths all-time
+          </span>
+          <span>
+            <span className="font-black text-foreground tabular-nums">{lifetime.retirements}</span> retirements all-time
+          </span>
+        </div>
+      )}
 
       <Tabs defaultValue="history">
         <TabsList>

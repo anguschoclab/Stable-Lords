@@ -110,6 +110,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           draft.coachDismissed = state.coachDismissed || [];
           draft.houseRules = state.houseRules;
           draft.contentPacks = state.contentPacks;
+          draft.lifetimeStats = state.lifetimeStats;
           draft.rivalries = state.rivalries || [];
           draft.matchHistory = state.matchHistory || [];
           draft.ownerGrudges = state.ownerGrudges || [];

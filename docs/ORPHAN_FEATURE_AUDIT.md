@@ -184,8 +184,8 @@
 
 | Metric | Baseline (`49802cb2`) | Post-implementation |
 |--------|--------------------:|--------------------:|
-| Test files | 631 | 647 |
-| Tests | 7,590 | 7,581 (2 skipped) |
+| Test files | 631 | 648 |
+| Tests | 7,590 | 7,585 (2 skipped) |
 | type-check errors | 0 | 0 |
 | lint errors/warnings | 0/0 | 0/0 |
 | Nav-hidden routes | 5 | 0 unexplained (`/arena-hub` is a registered duplicate alias, E5) |
@@ -215,7 +215,9 @@ No new RNG consumers added — `deathRateMult` scales an existing threshold (no 
 
 ### Known residual items (deferred, documented)
 
-- `cumulativeTracker` (F3): intentionally harness-only instrumentation — closed as NOTE.
-- `/arena-hub` duplicate route (E5): registered alias of `/stable/arena`; no action.
-- `_headless` ignored param at `RivalStrategyPass:302`: pre-existing, carried as V8 candidate per plan §93.
+All residuals resolved:
+
+- `cumulativeTracker` (F3): production counterpart landed — `GameState.lifetimeStats` (bouts/kills/retirements) accumulated by id-diff in `finalizeState`, immune to `arenaHistory` truncation; surfaced as an all-time strip on the Chronicle page. The harness tracker itself remains instrumentation. Tests: `src/test/engine/pipeline/lifetimeStats.test.ts`, `src/test/lore/HallOfFights.test.tsx`.
+- `/arena-hub` duplicate route (E5): converted to a `redirect → /stable/arena` (canonical surface; external links preserved). Test: `src/test/routes/top-routes.test.tsx` redirect assertion.
+- `_headless` ignored param at `RivalStrategyPass`: now honored — `handleSeasonalTournaments` suppresses the player-facing announcement newsletter in headless mode while still seeding world tournaments. Tests: `RivalStrategyPass.test.ts` headless-gating suite.
 - Emergent-report instrumentation (`src/scripts/emergent-report.test.ts`): pre-existing diagnostic harness, unchanged.

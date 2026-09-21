@@ -509,3 +509,35 @@ describe('runRivalStrategyPass — tournament week', () => {
     expect(impact.rosterRemovals).toBeUndefined();
   });
 });
+
+// ─── Suite: seasonal tournament headless gating ─────────────────────────────
+
+describe('runRivalStrategyPass — seasonal tournament headless gating', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('headless suppresses the player-facing announcement but still seeds tournaments', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+
+    const impact = runRivalStrategyPass(state, 13, undefined as any, true);
+
+    expect(impact.tournaments?.length).toBeGreaterThan(0);
+    expect(impact.isTournamentWeek).toBe(true);
+    const titles = (impact.newsletterItems ?? []).map((n) => n.title);
+    expect(titles).not.toContain('🎖️ TOURNAMENT ANNOUNCEMENT');
+  });
+
+  it('non-headless emits the tournament announcement', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const rival = makeRival();
+    const state = makeMinimalState([rival]);
+
+    const impact = runRivalStrategyPass(state, 13, undefined as any, false);
+
+    const titles = (impact.newsletterItems ?? []).map((n) => n.title);
+    expect(titles).toContain('🎖️ TOURNAMENT ANNOUNCEMENT');
+  });
+});

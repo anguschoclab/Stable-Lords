@@ -302,7 +302,7 @@ function handleSeasonalTournaments(
   state: GameState,
   week: number,
   rng: IRNGService,
-  _headless?: boolean
+  headless?: boolean
 ): StateImpact {
   const tournaments = TournamentSelectionService.generateSeasonalTiers(
     state,
@@ -320,13 +320,16 @@ function handleSeasonalTournaments(
       isTournamentWeek: true,
       activeTournamentId: tournaments[0]?.id,
       day: 0,
-      newsletterItems: [
-        {
-          id: rng.uuid(),
-          week: week,
-          title: '🎖️ TOURNAMENT ANNOUNCEMENT',
-          items: tournamentNews,
-        },
+      // Player-facing flavor — suppressed in headless mode per pipeline convention.
+      newsletterItems: headless
+        ? []
+        : [
+            {
+              id: rng.uuid(),
+              week: week,
+              title: '🎖️ TOURNAMENT ANNOUNCEMENT',
+              items: tournamentNews,
+            },
       ],
     },
   ]);

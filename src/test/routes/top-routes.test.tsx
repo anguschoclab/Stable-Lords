@@ -32,7 +32,6 @@ vi.mock('@/pages/WarriorDetail', () => ({
 
 const routes = [
   { name: 'admin', path: '/admin', importPath: '@/routes/admin' },
-  { name: 'arena-hub', path: '/arena-hub', importPath: '@/routes/arena-hub' },
   { name: 'bookmarks', path: '/bookmarks', importPath: '@/routes/bookmarks' },
   { name: 'help', path: '/help', importPath: '@/routes/help' },
   { name: 'welcome', path: '/welcome', importPath: '@/routes/welcome' },
@@ -63,5 +62,22 @@ describe.each(routes)('Route: $name', (routeConfig) => {
   it('renders component without crashing', async () => {
     const mod = await import(routeConfig.importPath);
     renderRouteComponent(mod.Route);
+  });
+});
+
+describe('Route: arena-hub (legacy alias)', () => {
+  it('redirects to the canonical /stable/arena surface', async () => {
+    const mod = await import('@/routes/arena-hub');
+    const beforeLoad = mod.Route.options.beforeLoad;
+    expect(typeof beforeLoad).toBe('function');
+    if (typeof beforeLoad !== 'function') throw new Error('expected redirect beforeLoad');
+    expect(() => beforeLoad({} as never)).toThrow();
+    try {
+      beforeLoad({} as never);
+    } catch (e) {
+      expect((e as { options?: { to?: string } }).options?.to ?? (e as { to?: string }).to).toBe(
+        '/stable/arena'
+      );
+    }
   });
 });

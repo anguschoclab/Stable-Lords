@@ -554,6 +554,17 @@ export const CANONICAL_HOUSE_RULES: HouseRules = {
 };
 
 /**
+ * All-time world counters. Unlike `arenaHistory`/`graveyard` (which truncate),
+ * these accumulate forever — the production counterpart of the harness-only
+ * cumulativeTracker (register F3).
+ */
+export interface LifetimeStats {
+  bouts: number;
+  kills: number;
+  retirements: number;
+}
+
+/**
  * Defines the shape of game state.
  */
 export interface GameState {
@@ -585,6 +596,8 @@ export interface GameState {
   houseRules?: HouseRules;
   /** Installed content packs (Design Bible #36) — narrative overlays only. */
   contentPacks?: ContentPack[];
+  /** All-time counters immune to array truncation. */
+  lifetimeStats?: LifetimeStats;
   player: Owner;
   fame: number;
   popularity: number;

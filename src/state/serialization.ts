@@ -95,6 +95,7 @@ type GameStateValues = {
   coachDismissed: GameState['coachDismissed'];
   houseRules: GameState['houseRules'];
   contentPacks: GameState['contentPacks'];
+  lifetimeStats: GameState['lifetimeStats'];
   rivalries: GameState['rivalries'];
   matchHistory: GameState['matchHistory'];
   ownerGrudges: GameState['ownerGrudges'];
@@ -162,6 +163,7 @@ export function reconstructGameState(store: GameStore): GameState {
     coachDismissed: store.coachDismissed,
     houseRules: store.houseRules,
     contentPacks: store.contentPacks,
+    lifetimeStats: store.lifetimeStats,
     rivalries: store.rivalries,
     matchHistory: store.matchHistory,
     ownerGrudges: store.ownerGrudges,

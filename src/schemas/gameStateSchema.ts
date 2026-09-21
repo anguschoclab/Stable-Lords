@@ -207,6 +207,13 @@ export const GameStateSchema = z
       })
     )
     .optional(),
+  lifetimeStats: z
+    .object({
+      bouts: z.number().int().nonnegative(),
+      kills: z.number().int().nonnegative(),
+      retirements: z.number().int().nonnegative(),
+    })
+    .optional(),
     player: OwnerSchema,
     fame: z.number(),
     popularity: z.number(),

@@ -4,7 +4,11 @@
  * - Valid JSON
  * - All template brackets {{...}} are balanced
  * - No duplicate entries within arrays
+ * - No mock/placeholder markers (N1: (Mock, TODO, FIXME, PLACEHOLDER, LOREM, XXX, TBD)
  * - Required top-level keys present
+ *
+ * Canonical narrative tokens (%A, %D, %W, %BP, %H) are NOT flagged — they are
+ * legitimate per narrativePBPUtils.ts:23.
  */
 import { readFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
@@ -19,6 +23,31 @@ interface ValidationError {
 }
 
 const errors: ValidationError[] = [];
+
+/**
+ * Placeholder markers that indicate mock/contaminated narrative content.
+ * Canonical %A-style tokens are NOT included here — they are legitimate.
+ */
+const PLACEHOLDER_MARKERS = ['(Mock', 'TODO', 'FIXME', 'PLACEHOLDER', 'LOREM', 'XXX', 'TBD'];
+
+/**
+ * Check a string array for placeholder/mock markers.
+ * Returns an array of error messages for strings containing markers.
+ * Canonical %A/%D/%W/%BP/%H tokens are NOT flagged.
+ */
+export function checkForPlaceholderMarkers(arr: string[]): string[] {
+  const offenders: string[] = [];
+  for (const item of arr) {
+    if (typeof item !== 'string') continue;
+    for (const marker of PLACEHOLDER_MARKERS) {
+      if (item.includes(marker)) {
+        offenders.push(`"${item}" (marker: ${marker})`);
+        break;
+      }
+    }
+  }
+  return offenders;
+}
 
 function checkTemplateBrackets(str: string, path: string): void {
   let depth = 0;
@@ -55,9 +84,20 @@ function checkArrayForDuplicates(arr: string[], path: string): void {
 function walkStrings(obj: unknown, path: string): void {
   if (typeof obj === 'string') {
     checkTemplateBrackets(obj, path);
+    // N1: check for mock/placeholder markers in individual strings
+    for (const marker of PLACEHOLDER_MARKERS) {
+      if (obj.includes(marker)) {
+        errors.push({ path, message: `Placeholder marker "${marker}" found in string` });
+      }
+    }
   } else if (Array.isArray(obj)) {
     if (obj.length > 0 && typeof obj[0] === 'string') {
       checkArrayForDuplicates(obj as string[], path);
+      // N1: check string arrays for placeholder markers
+      const offenders = checkForPlaceholderMarkers(obj as string[]);
+      for (const offender of offenders) {
+        errors.push({ path, message: `Placeholder marker found: ${offender}` });
+      }
     }
     for (let i = 0; i < obj.length; i++) {
       walkStrings(obj[i], `${path}[${i}]`);
@@ -92,7 +132,6 @@ try {
 
   if (errors.length === 0) {
     console.log('narrative domain files validation passed — no errors found.');
-    process.exit(0);
   } else {
     console.error(`Validation failed with ${errors.length} error(s):`);
     for (const e of errors) {

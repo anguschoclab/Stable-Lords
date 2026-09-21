@@ -2,48 +2,113 @@
   "passives": {
     "AIMED BLOW": [
       "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "{{attacker}} narrows their eyes, calculating the trajectory of their next strike.",
+      "{{attacker}} shifts their grip, bringing the weapon into perfect alignment.",
+      "A moment of chilling calm settles over {{attacker}} as they line up a killing blow.",
+      "{{attacker}} patiently waits, letting {{defender}}'s guard drift a fraction of an inch.",
+      "{{attacker}} feints slightly, testing {{defender}}'s reactions for a clean opening.",
+      "{{attacker}} breathes deeply, centering their focus for a single, decisive strike.",
+      "With terrifying patience, {{attacker}} stalks {{defender}}, looking for the fatal gap."
     ],
     "BASHING ATTACK": [
       "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "{{attacker}} hefts their weapon, preparing to shatter {{defender}}'s guard.",
+      "{{attacker}} steps forward with heavy, thudding force, building momentum.",
+      "{{attacker}} winds up, channeling pure kinetic fury into their swing.",
+      "{{attacker}} roars, driving forward to crush {{defender}}'s defenses.",
+      "A grim determination settles on {{attacker}} as they ready a bone-breaking strike.",
+      "{{attacker}} ignores subtlety, bracing themselves for a devastating impact.",
+      "{{attacker}} plants their feet, becoming an immovable force ready to strike."
     ],
     "LUNGING ATTACK": [
       "{{attacker}} overextends with a desperate lunge, trading balance for lethal reach.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "{{attacker}} coils their legs like springs, ready to explode forward.",
+      "{{attacker}} drops low, measuring the exact distance to {{defender}}.",
+      "{{attacker}} shifts their weight forward, a predator preparing to pounce.",
+      "With a sudden burst of speed, {{attacker}} tests the distance with a half-step.",
+      "{{attacker}} points their weapon forward, eyes locked intensely on {{defender}}.",
+      "{{attacker}} leans into their stance, willing to risk it all for a sudden strike.",
+      "A tense silence falls as {{attacker}} prepares to close the gap in a flash."
     ],
     "PARRY-LUNGE": [
       "{{attacker}} catches the blade on their hilt, pivoting into a lightning-fast riposte lunge.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "{{attacker}} holds their weapon at a tight angle, ready to turn defense into offense.",
+      "{{attacker}} anticipates the strike, their counter-lunge already coiled and ready.",
+      "{{attacker}} shifts their weight backward, preparing to snap forward like a whip.",
+      "{{attacker}} watches {{defender}}'s shoulders, waiting for the attack to commit.",
+      "With a subtle turn of the wrist, {{attacker}} readies a deflecting and striking motion.",
+      "{{attacker}} stands lightly on their feet, prepared to deflect and instantly advance.",
+      "{{attacker}} narrows their stance, prioritizing a rapid counter-thrust."
     ],
     "PARRY-RIPOSTE": [
       "{{attacker}} deflects the strike and immediately circles back with a precision counter-attack.",
-      "%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)",
-      "A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)",
-      "%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)"
+      "{{attacker}} keeps their blade close, preparing to weave a counterattack.",
+      "{{attacker}} watches the incoming weapon, calculating the perfect angle of deflection.",
+      "{{attacker}} fluidly shifts their guard, creating an opening for a swift return strike.",
+      "{{attacker}} stays balanced, ready to turn {{defender}}'s momentum against them.",
+      "With cold precision, {{attacker}} prepares to parry and strike in a single motion.",
+      "{{attacker}}'s eyes track the weapon, a counter-strike already forming in their mind.",
+      "{{attacker}} invites the attack, their counter prepared with deadly intent."
     ],
     "PARRY-STRIKE": [
-      "{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike."
+      "{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike.",
+      "{{attacker}} braces for impact, planning a heavy, punishing counter-blow.",
+      "{{attacker}} tightens their grip, ready to absorb the strike and hit back harder.",
+      "{{attacker}} drops into a solid stance, waiting to break the attack and retaliate.",
+      "With a low growl, {{attacker}} prepares to power through the next strike.",
+      "{{attacker}} sets their jaw, planning to trade a block for a devastating hit.",
+      "{{attacker}} watches for the swing, their own weapon pulled back for a brutal return.",
+      "{{attacker}} holds their ground, an unyielding wall with a nasty surprise.",
+      "{{attacker}} prepares to catch the blow and unleash a counter of pure force.",
+      "{{attacker}} readies their weapon to deflect and simultaneously crush."
     ],
     "SLASHING ATTACK": [
-      "{{attacker}} unleashes a wide, sweeping arc, forcing the opponent to retreat or be rent asunder."
+      "{{attacker}} unleashes a wide, sweeping arc, forcing the opponent to retreat or be rent asunder.",
+      "{{attacker}} opens their stance, preparing for a wide, devastating sweep.",
+      "{{attacker}} swings their weapon in a low arc, testing the weight and reach.",
+      "{{attacker}} steps into a flowing rhythm, ready to unleash a flurry of cuts.",
+      "With a flourish, {{attacker}} readies a broad, sweeping attack.",
+      "{{attacker}} positions themselves to maximize the cutting edge of their weapon.",
+      "{{attacker}} draws their weapon back, aiming to cleave through any defense.",
+      "{{attacker}} advances with a series of quick, slicing feints.",
+      "{{attacker}} readies a sweeping motion, designed to keep {{defender}} at bay.",
+      "{{attacker}} focuses on the edge alignment, preparing a clean, deep cut."
     ],
     "STRIKING ATTACK": [
-      "{{attacker}} steps into the guard, delivering a flurry of rapid, overwhelming strikes."
+      "{{attacker}} steps into the guard, delivering a flurry of rapid, overwhelming strikes.",
+      "{{attacker}} shifts lightly on their feet, preparing a relentless barrage.",
+      "{{attacker}} keeps their weapon moving, blurring the lines of their next attack.",
+      "{{attacker}} steps in quickly, aiming to overwhelm with sheer speed.",
+      "With a sharp exhalation, {{attacker}} readies a combination of rapid blows.",
+      "{{attacker}} bounces on their toes, finding a dynamic attacking rhythm.",
+      "{{attacker}} prepares to unleash a flurry that {{defender}} cannot hope to block.",
+      "{{attacker}} narrows their focus, targeting multiple vital points in rapid succession.",
+      "{{attacker}} readies themselves to explode into action with blinding speed.",
+      "{{attacker}} tightens their core, preparing for a rapid sequence of strikes."
     ],
     "TOTAL PARRY": [
-      "{{attacker}} enters a state of absolute defense, their weapon becoming an impenetrable wall of steel."
+      "{{attacker}} enters a state of absolute defense, their weapon becoming an impenetrable wall of steel.",
+      "{{attacker}} pulls their guard tight, prioritizing survival above all else.",
+      "{{attacker}} steps back, raising a formidable wall of defense.",
+      "{{attacker}} focuses entirely on deflection, ignoring any offensive openings.",
+      "With cautious movements, {{attacker}} prepares to weather the coming storm.",
+      "{{attacker}} shifts into a purely defensive stance, shutting down all avenues of attack.",
+      "{{attacker}} watches {{defender}} warily, ready to block from any angle.",
+      "{{attacker}} centers themselves, preparing to endure a barrage of strikes.",
+      "{{attacker}} brings their weapon close, a tight shell against the onslaught.",
+      "{{attacker}} abandons offense, focusing solely on preserving their life."
     ],
     "WALL OF STEEL": [
-      "{{attacker}} holds their ground with mountain-like stability, negating the opponent's momentum."
+      "{{attacker}} holds their ground with mountain-like stability, negating the opponent's momentum.",
+      "{{attacker}} plants their feet firmly, becoming an immovable obstacle.",
+      "{{attacker}} squares their shoulders, preparing to stop any advance dead in its tracks.",
+      "{{attacker}} lowers their center of gravity, a stoic bastion of defense.",
+      "With a deep breath, {{attacker}} readies to absorb the brunt of the assault.",
+      "{{attacker}} holds their weapon steady, a resolute barrier against the enemy.",
+      "{{attacker}} sets a rigid stance, defying {{defender}} to break through.",
+      "{{attacker}} stares down {{defender}}, daring them to test the solid defense.",
+      "{{attacker}} tightens every muscle, preparing to hold the line at all costs.",
+      "{{attacker}} assumes a stance of pure, unyielding resistance."
     ]
   }
 }

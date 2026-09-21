@@ -100,7 +100,8 @@
       "{{attacker}} executes a clinically precise strike. {{defender}} is gone before they hit the ground.",
       "With operatic drama, {{attacker}} brings the weapon down, ending {{defender}} in a spray of crimson.",
       "{{defender}} stumbles, realizes their mistake, and twitches once as {{attacker}} stamps out their life.",
-      "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark."
+      "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark.",
+      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -243,7 +244,8 @@
       "The sheer trauma of the injury proves too much; {{defender}} expires instantly on the sand.",
       "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever.",
       "Blood flows in rivers as {{defender}} takes a hit they cannot walk away from, their life pouring into the hungry sands.",
-      "The final strike is unceremonious and brutal, snuffing out {{defender}}'s life with dull, wet finality."
+      "The final strike is unceremonious and brutal, snuffing out {{defender}}'s life with dull, wet finality.",
+      "{{defender}} takes one last, shuddering breath before collapsing into a lifeless heap. {{attacker}} merely turns away, job done."
     ],
     "weapon_specific": {
       "slashing": [
@@ -693,7 +695,12 @@
       "{{attacker}} claims victory, leaving {{defender}} dead upon the sands.",
       "{{attacker}} steps over the broken form of {{defender}}, securing a grim victory.",
       "The arena falls into a brief, stunned silence as {{defender}} breathes their last.",
-      "Blood soaks the thirsty sands as {{attacker}} brings a brutal end to {{defender}}'s story."
+      "Blood soaks the thirsty sands as {{attacker}} brings a brutal end to {{defender}}'s story.",
+      "A clinical, final strike that ends the bout with grim certainty.",
+      "The life fades from their eyes as the final, brutal blow connects.",
+      "A darkly humorous end as they collapse into a heap of defeat.",
+      "The arena falls silent as the final, dramatic strike seals their fate.",
+      "A bleak and inevitable conclusion to a brutal clash."
     ]
   }
 }

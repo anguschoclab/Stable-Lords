@@ -1,3 +1,8 @@
+# Pin the public npm registry so `bun install` produces a portable bun.lock
+# regardless of a developer's global ~/.npmrc (e.g. corporate artifactory mirrors).
+[install]
+registry = "https://registry.npmjs.org"
+
 [test]
 # bunViPolyfill MUST precede bun-setup: setup.ts calls vi.unmock at top level,
 # and ESM hoisting means bun-setup cannot shim it before its own ./setup import.

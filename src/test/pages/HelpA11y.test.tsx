@@ -39,6 +39,6 @@ describe('Help — design bible search (G5)', () => {
     fireEvent.click(screen.getByRole('button', { name: /design bible/i }));
     const input = screen.getByRole('searchbox', { name: /search the design bible/i });
     fireEvent.change(input, { target: { value: 'encumbrance' } });
-    expect(screen.getByText(/results/i)).toBeInTheDocument();
+    expect(screen.getByText(/^\d+ results?$/)).toBeInTheDocument();
   });
 });

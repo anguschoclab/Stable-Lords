@@ -44,7 +44,8 @@ export function ActiveTournamentManifest({
   let minIncompleteRound = Infinity;
 
   for (let i = 0; i < totalMatches; i++) {
-    const b = bracket[i]!;
+    const b = bracket[i];
+    if (!b) continue;
     if (b.winner !== undefined) {
       completedMatches++;
     } else if (b.round < minIncompleteRound) {
@@ -69,7 +70,8 @@ export function ActiveTournamentManifest({
   let championshipBout;
   let bronzeBout;
   for (let i = 0; i < totalMatches; i++) {
-    const b = bracket[i]!;
+    const b = bracket[i];
+    if (!b) continue;
     if (b.round === maxRound && b.matchIndex === 0) {
       championshipBout = b;
     } else if (b.matchIndex === 1 && (b.round === maxRound || b.round === maxRound - 1)) {

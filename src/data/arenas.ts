@@ -1408,6 +1408,11 @@ export const THE_IRON_CAGE: ArenaConfig = {
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();
 
+/**
+ * Retrieve arena lore entries for a given arena ID, with caching.
+ * @param arenaId - The arena ID to look up lore entries for.
+ * @returns An array of ArenaLoreEntry objects for the given arena.
+ */
 export function getArenaLore(arenaId: string): ArenaLoreEntry[] {
   let results = loreIndex.get(arenaId);
   if (!results) {

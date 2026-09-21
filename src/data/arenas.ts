@@ -1142,6 +1142,60 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A century ago, enslaved workers wielded the very metal they forged to shatter the guards of the Gorge.',
   },
+  {
+    id: 'sundered_coliseum_the_weeping_statue',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: 'The Weeping Statue',
+    narrative:
+      'A massive iron statue of the first champion that reportedly bleeds rust whenever a match ends in a fatal decapitation.',
+  },
+  {
+    id: 'narrow_bridge_the_blind_shove',
+    arenaId: 'narrow_bridge',
+    type: 'famous_death',
+    title: 'The Blind Shove',
+    narrative:
+      'A blinded fighter, relying entirely on the vibrations of the bridge, anticipated a charge and sidestepped perfectly, sending a massive warlord plummeting into the abyss.',
+  },
+  {
+    id: 'bloodsands_arena_the_crimson_tide',
+    arenaId: 'bloodsands_arena',
+    type: 'historical_battle',
+    title: 'The Crimson Tide',
+    narrative:
+      'A grueling three-day tournament where so much blood was spilled that the sands refused to absorb it, leaving fighters to battle ankle-deep in crimson muck.',
+  },
+  {
+    id: 'sundered_coliseum_first_collapse',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The First Collapse',
+    narrative:
+      'During the grand opening matches, a stray spell shattered the western pillar, causing a collapse that killed three fighters and birthed the uneven terrain used today.',
+  },
+  {
+    id: 'sunken_temple_drowned_priest',
+    arenaId: 'sunken_temple',
+    type: 'famous_death',
+    title: 'The Drowned Priest',
+    narrative:
+      'A zealous warrior, too heavily armored, tripped in the holy waters and was held under by a rival, cursing the temple with his dying breath.',
+  },
+  {
+    id: 'sunken_vault_the_breathless_duel',
+    arenaId: 'the_sunken_vault',
+    type: 'historical_battle',
+    title: 'The Breathless Duel',
+    narrative: 'A legendary bout where both fighters were dragged underwater, but one simply refused to drown before delivering the killing blow.',
+  },
+  {
+    id: 'thunder_peak_the_shattered_helm',
+    arenaId: 'thunder_peak',
+    type: 'famous_death',
+    title: 'The Shattered Helm',
+    narrative: 'A champion\'s heavy iron helm acted as a lightning rod, ending the match in a blinding flash that scarred the spectators\' eyes.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {
@@ -1318,11 +1372,6 @@ export const VERDANT_LABYRINTH: ArenaConfig = {
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();
 
-/**
- * Get all lore entries for an arena.
- * @param arenaId - Arena id to look up.
- * @returns Lore entries for the arena (empty when none recorded).
- */
 export function getArenaLore(arenaId: string): ArenaLoreEntry[] {
   let results = loreIndex.get(arenaId);
   if (!results) {

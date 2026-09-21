@@ -925,6 +925,33 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
+  orphan_resilience_two: {
+    id: 'orphan_resilience_two',
+    name: 'Orphan Resilience II',
+    description: 'A deeply ingrained instinct to survive when pushed to the absolute edge.',
+    effect: { defModLowHp: 2, enduranceMult: 0.90 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  abyssal_survivor: {
+    id: 'abyssal_survivor',
+    name: 'Abyssal Survivor',
+    description: 'Survived a fall that should have killed them. Fights with desperate ferocity when cornered.',
+    effect: { attModLowHp: 2, defModLate: -1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.3,
+  },
+  rust_blooded: {
+    id: 'rust_blooded',
+    name: 'Rust Blooded',
+    description: 'Accustomed to fighting amidst industrial decay. Immune to minor scrapes and exhaustion.',
+    effect: { enduranceMult: 0.90, defMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.6,
+  },
 };
 
 // Merge bulk data modules.

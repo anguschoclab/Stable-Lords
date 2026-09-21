@@ -280,6 +280,23 @@ export const ORIGINS: string[] = [
   "Sold to the fighting pits by debt-collectors at age seven",
   "Raised by feral street-dogs in the shadows of the Colosseum",
   "Born in the sunless depths of the Salt Mines",
+  "Raised in the soot-stained rafters of the Blackwood Orphanage",
+  "Abandoned near the whispering gargoyles of the High Basilica",
+  "Found clutching a broken gear in the lower wards of the Clockwork District",
+  "Survived the plague-ships anchored in the forgotten harbor",
+  "Torn from the brutal training yards of the Sump Guild",
+  "Left screaming at the soot-stained doors of the Cinderhouse Orphanage",
+  "Found shivering beneath the rusted gratings of the Undercity vents",
+  "Raised by a ruthless cabal of pit-fighters in the Black Sun district",
+  "Abandoned during the chaotic riots of the Lower Wards",
+  "Survived the brutal winter culling in the Frost-touched Slums",
+  "Abandoned in the pitch-black oubliettes of the Silent Keep",
+  "Raised in the soot-choked rafters of the Grand Foundry",
+  "Found shivering amongst the bones in the Kingswood Ossuary",
+  "Traded to the flesh-peddlers of the Red Lantern District for a vial of dream-dust",
+  "Survived the great culling of the Hollow Wards by hiding inside a hollowed-out gargoyle",
+  "Raised by the blind seers of the Whispering Sands",
+  "Abandoned at the blood-stained altars of the Crimson Brotherhood",
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
@@ -435,6 +452,16 @@ export const CHILDHOOD_TRAITS: string[] = [
   "learned to read an opponent by watching the twitch of their jaw",
   "never slept with both eyes fully closed",
   "mastered the art of slipping out of restraints in the dark",
+  "developed a haunting stare that made even the guards look away",
+  "learned to walk without making a single sound on gravel",
+  "would collect the teeth of fallen gladiator beasts as morbid trophies",
+  "learned to ignore pain by repeatedly burning their fingers on hot iron",
+  "would silently trace the weak points on sleeping guards",
+  "developed a chilling, emotionless stare when threatened by older orphans",
+  "learned to move entirely without sound after spending weeks hiding from the debt collectors",
+  "developed a terrifying pain tolerance from participating in illegal bare-knuckle pit fights as a child",
+  "mastered the art of reading micro-expressions from surviving the brutal politics of the beggar king's court",
+  "grew unusually strong from hauling bodies out of the plague wards for the morticians",
 ];
 
 export const DEFINING_MOMENTS: string[] = [
@@ -573,4 +600,15 @@ export const DEFINING_MOMENTS: string[] = [
   "until they broke a slaver’s iron collar with a single strike",
   "realizing that fear was a weapon they could wield against the strong",
   "knowing that every drop of blood spilled brings them closer to the throne",
+  "until they defended a weaker child by breaking a foreman’s wrist",
+  "knowing the only escape from the slums was the blood-soaked sand of the arena",
+  "realizing their quick reflexes were meant for killing, not just surviving",
+  "until they broke a bully's arm in three places for stealing their crust of bread",
+  "realizing that their bloodlust was a talent, not a curse, when the arena recruiters came",
+  "knowing that the deafening roar of the bloodsands is the only true applause",
+  "until they finally snapped and drove a rusty iron spike through the leg of their abusive taskmaster",
+  "realizing that in a city of stone and ash, only the edge of a blade could carve a future",
+  "waiting for the day they could wash the stench of the slums off with the blood of champions",
+  "knowing that their destiny was to stand over the broken bodies of those who once looked down on them",
 ];
+

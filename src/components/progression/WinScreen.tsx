@@ -97,20 +97,22 @@ export function WinScreen() {
           <div className="flex gap-4">
             <button
               onClick={acknowledgeWin}
+              aria-label="Continue Legacy"
               className={cn(
                 'flex-1 px-6 py-4 text-[11px] font-black uppercase tracking-[0.2em]',
                 'bg-primary text-primary-foreground hover:bg-primary/90',
-                'transition-colors duration-300'
+                'transition-colors motion-reduce:transition-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
               )}
             >
               Continue Legacy
             </button>
             <button
               onClick={doReset}
+              aria-label="New Game"
               className={cn(
                 'flex items-center justify-center gap-2 px-6 py-4 text-[11px] font-black uppercase tracking-[0.2em]',
                 'border border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20',
-                'transition-colors duration-300'
+                'transition-colors motion-reduce:transition-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
               )}
             >
               <RotateCcw className="h-3.5 w-3.5" />

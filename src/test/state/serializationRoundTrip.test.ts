@@ -180,4 +180,73 @@ describe('serializationRoundTrip', () => {
     const result2 = reconstructGameState(store);
     expect(result2.treasury).toBe(5000);
   });
+
+  it('N2: lastSimulationReport survives serialization round-trip', () => {
+    clearReconstructionCache();
+
+    const report = {
+      boutId: 'test-bout-1',
+      winner: 'A' as const,
+      rounds: 3,
+      summary: 'Test summary',
+    } as any;
+
+    const store = {
+      treasury: 1000,
+      roster: [],
+      rivals: [],
+      week: 1,
+      year: 1,
+      day: 0,
+      season: 'Spring',
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      ledger: [],
+      graveyard: [],
+      retired: [],
+      recruitPool: [],
+      insightTokens: [],
+      arenaHistory: [],
+      player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
+      promoters: {},
+      boutOffers: {},
+      gazettes: [],
+      scoutReports: [],
+      unacknowledgedDeaths: [],
+      rosterBonus: 0,
+      tournaments: [],
+      isTournamentWeek: false,
+      activeTournamentId: undefined,
+      popularity: 0,
+      fame: 0,
+      realmRankings: {},
+      awards: [],
+      trainers: [],
+      hiringPool: [],
+      trainingAssignments: [],
+      seasonalGrowth: [],
+      restStates: [],
+      moodHistory: [],
+      newsletter: [],
+      hallOfFame: [],
+      isFTUE: true,
+      ftueStep: 0,
+      ftueComplete: false,
+      coachDismissed: [],
+      rivalries: [],
+      matchHistory: [],
+      ownerGrudges: [],
+      phase: 'planning',
+      playerChallenges: [],
+      playerAvoids: [],
+      lastSimulationReport: report,
+      bookmarks: [],
+      progression: undefined,
+      lastSavedAt: '',
+    } as any;
+
+    const result = reconstructGameState(store);
+    expect(result.lastSimulationReport).toEqual(report);
+    expect(result.lastSimulationReport).not.toBeUndefined();
+  });
 });

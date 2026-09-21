@@ -27,7 +27,7 @@ export function useContractData() {
 
     for (let i = 0; i < safeTrainers.length; i++) {
       const t = safeTrainers[i];
-      if (t.contractWeeksLeft > 0) {
+      if (t && t.contractWeeksLeft > 0) {
         activeTrainers.push(t);
         totalWeeklyExpense += getSalary(t.tier);
         if (t.contractWeeksLeft <= 4) {

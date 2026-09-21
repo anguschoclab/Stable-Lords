@@ -185,16 +185,15 @@ Gate commit `11338dd3` (Phase 3A) authored all red tests before implementation:
 
 ## 11. Remote Disposition Log
 
-| Action | Detail |
-|--------|--------|
-| Push | `main` → `origin/main` (7 consolidation commits + findings doc) |
-| Tag | `pre-v6-consolidation` → pushed |
-| Verdict comments | Posted on all 8 open PRs citing this document + integration commits |
-| PR closures | #969, #970, #972, #973, #979, #980, #981, #982 closed (value extracted) |
-| Branch deletions | 10 remote branches: 8 open-PR heads + `feature/arena-architect-3413841124313887882` (#971) + `palette-tooltip-5886959168913987839` (stale, V5) |
-| Preserved | `main`, `pre-v6-consolidation` tag; PR diffs remain on GitHub |
-
-*(Populated after execution — see git log and PR timelines.)*
+| Action | Detail | Status |
+|--------|--------|--------|
+| Push | `main` → `origin/main` — `fdadf6a2..f8016828` (consolidation + findings doc) | ✅ Done |
+| Tag | `pre-v6-consolidation` → pushed (new tag) | ✅ Done |
+| Verdict comments | Posted on all 8 open PRs citing this document + integration commits | ✅ Done |
+| PR closures | #969, #970, #972, #973, #979, #980, #981, #982 — all closed with verdict comments | ✅ Done |
+| Branch deletions | All 10 unmerged remote branches deleted: 8 open-PR heads + `feature/arena-architect-3413841124313887882` (#971, closed PR) + `palette-tooltip-5886959168913987839` (stale, V5) | ✅ Done |
+| Post-state | `git branch -r --no-merged main` → **0 branches**; `gh pr list --state open` → **empty**; remote has only `origin/main` | ✅ Verified |
+| Preserved | `main`, `pre-v6-consolidation` tag; all PR diffs remain preserved on GitHub | ✅ |
 
 ---
 

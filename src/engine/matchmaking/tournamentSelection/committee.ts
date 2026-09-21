@@ -61,14 +61,22 @@ export function committeeSelection(
   });
 
   // 2. Style Champions Auto-Bid (Top 1 of each style not yet invited)
-  Object.values(FightingStyle).forEach((style) => {
-    if (qualified.length >= 50) return;
-    const styleLead = sortedPool.find((p) => p.w.style === style && !newLocks.has(p.w.id));
-    if (styleLead) {
-      qualified.push(styleLead.w);
-      newLocks.add(styleLead.w.id);
+  // Single pass over the rank-sorted pool: first unlocked entry per style is
+  // that style's champion. Equivalent to a per-style find() — warriors carry
+  // exactly one style, so a lead locked for one style can never lead another.
+  const styleLeads = new Map<FightingStyle, (typeof sortedPool)[number]>();
+  for (const p of sortedPool) {
+    if (newLocks.has(p.w.id)) continue;
+    if (!styleLeads.has(p.w.style)) styleLeads.set(p.w.style, p);
+  }
+  for (const style of Object.values(FightingStyle)) {
+    if (qualified.length >= 50) break;
+    const lead = styleLeads.get(style);
+    if (lead && !newLocks.has(lead.w.id)) {
+      qualified.push(lead.w);
+      newLocks.add(lead.w.id);
     }
-  });
+  }
 
   // 3. Bubble Watch (Fill to 64 from the next 40 candidates)
   const remainingNeeded = 64 - qualified.length;

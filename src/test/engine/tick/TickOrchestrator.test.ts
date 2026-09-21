@@ -14,7 +14,7 @@ let spyAdvanceWeek: any;
 
 import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { GameState } from '@/types/state.types';
+import { GameState, TournamentEntry } from '@/types/state.types';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
@@ -148,7 +148,11 @@ describe('TickOrchestrator', () => {
         'test-tournament' as import('@/types/shared.types').TournamentId;
       const stateTour = { id: 'test-tournament', completed: false };
       mockState.tournaments = [stateTour] as never;
-      const updatedTour = { id: 'test-tournament', completed: false, marker: 'round-1' };
+      const updatedTour = {
+        id: 'test-tournament',
+        completed: false,
+        marker: 'round-1',
+      } as unknown as TournamentEntry;
 
       vi.mocked(TournamentSelectionService.resolveRound).mockImplementation(
         (state: any, _tId: any, _seed: any, _headless: any, _tour: any) => ({

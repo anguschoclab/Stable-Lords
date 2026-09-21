@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import '@/test/_setup/setup';
 
 const mockNavigate = vi.fn();
@@ -40,7 +40,9 @@ describe('useWarriorDetail', () => {
     const { result } = renderHook(() => useWarriorDetail());
     const plan = { strategy: 'defensive' } as never;
 
-    result.current.handlePlanChange(plan);
+    act(() => {
+      result.current.handlePlanChange(plan);
+    });
 
     const roster = useGameStore.getState().roster;
     expect(roster.find((w) => w.id === 'w2')?.plan).toBe(plan);
@@ -51,7 +53,9 @@ describe('useWarriorDetail', () => {
     const { result } = renderHook(() => useWarriorDetail());
     const loadout = { weapon: 'war_axe' } as never;
 
-    result.current.handleEquipmentChange(loadout);
+    act(() => {
+      result.current.handleEquipmentChange(loadout);
+    });
 
     const roster = useGameStore.getState().roster;
     expect(roster.find((w) => w.id === 'w2')?.equipment).toBe(loadout);
@@ -63,7 +67,9 @@ describe('useWarriorDetail', () => {
     const { result } = renderHook(() => useWarriorDetail());
     const plan = { strategy: 'defensive' } as never;
 
-    result.current.handlePlanChange(plan);
+    act(() => {
+      result.current.handlePlanChange(plan);
+    });
 
     const roster = useGameStore.getState().roster;
     expect(roster.every((w) => w.plan === undefined)).toBe(true);

@@ -76,18 +76,19 @@ export const TickOrchestrator = {
     // 1. Resolve Tournament Rounds (Batched)
     if (state.isTournamentWeek && state.activeTournamentId) {
       const tournamentId = state.activeTournamentId;
+      // Locate the tournament once and thread the updated entry through each
+      // round instead of re-scanning state.tournaments per day.
+      let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
       for (let day = currentDay + 1; day < 7; day++) {
         const daySeed = state.year * 10000 + state.week * 100 + day;
-        const { updatedState, roundResults } = TournamentSelectionService.resolveRound(
-          currentState,
-          tournamentId,
-          daySeed,
-          true
-        );
+        const { updatedState, roundResults, isComplete, updatedTournament } =
+          TournamentSelectionService.resolveRound(currentState, tournamentId, daySeed, true, tour);
         currentState = updatedState;
+        tour = updatedTournament ?? tour;
         if (roundResults.length > 0) {
           weeklyNewsItems.push(...roundResults.map((r) => `[Day ${day}] ${r}`));
         }
+        if (isComplete) break;
       }
     }
 

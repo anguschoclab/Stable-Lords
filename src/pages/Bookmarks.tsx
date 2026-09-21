@@ -23,6 +23,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { buildWarriorMap } from '@/engine/core/warriorCollection';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 
 const ENTITY_CONFIG: Record<
@@ -151,6 +152,60 @@ export default function Bookmarks() {
       scoutReport: [],
     };
 
+    // Build per-type lookup maps once — only for entity types actually
+    // bookmarked — instead of re-scanning arrays inside the loop.
+    const typesPresent = new Set(bookmarks.map((b) => b.entityType));
+
+    const warriorMap = typesPresent.has('warrior')
+      ? buildWarriorMap({ roster, graveyard, retired, rivals })
+      : undefined;
+
+    const rivalMap = typesPresent.has('rival')
+      ? new Map<string, (typeof rivals)[number]>()
+      : undefined;
+    if (rivalMap) {
+      for (const r of rivals ?? []) {
+        rivalMap.set(r.id, r);
+        rivalMap.set(r.owner.id, r);
+      }
+    }
+
+    const promoterMap =
+      typesPresent.has('promoter') || typesPresent.has('boutOffer')
+        ? new Map<string, (typeof promoters)[keyof typeof promoters]>()
+        : undefined;
+    if (promoterMap) {
+      for (const p of Object.values(promoters || {})) promoterMap.set(p.id, p);
+    }
+
+    const trainerMap = typesPresent.has('trainer')
+      ? new Map<string, (typeof trainers)[number]>()
+      : undefined;
+    if (trainerMap) {
+      for (const t of trainers ?? []) trainerMap.set(t.id, t);
+    }
+
+    const tournamentMap = typesPresent.has('tournament')
+      ? new Map<string, (typeof tournaments)[number]>()
+      : undefined;
+    if (tournamentMap) {
+      for (const t of tournaments ?? []) tournamentMap.set(t.id, t);
+    }
+
+    const boutOfferMap = typesPresent.has('boutOffer')
+      ? new Map<string, (typeof boutOffers)[keyof typeof boutOffers]>()
+      : undefined;
+    if (boutOfferMap) {
+      for (const o of Object.values(boutOffers || {})) boutOfferMap.set(o.id, o);
+    }
+
+    const scoutReportMap = typesPresent.has('scoutReport')
+      ? new Map<string, (typeof scoutReports)[number]>()
+      : undefined;
+    if (scoutReportMap) {
+      for (const r of scoutReports ?? []) scoutReportMap.set(r.id, r);
+    }
+
     for (const b of bookmarks) {
       let name = 'Unknown Entity';
       let subtitle: string | undefined;
@@ -158,13 +213,7 @@ export default function Bookmarks() {
 
       switch (b.entityType) {
         case 'warrior': {
-          const allWarriors = [
-            ...roster,
-            ...graveyard,
-            ...retired,
-            ...(rivals?.flatMap((r) => r.roster) ?? []),
-          ];
-          const w = allWarriors.find((x) => x.id === b.entityId);
+          const w = warriorMap?.get(b.entityId);
           if (w) {
             name = w.name;
             subtitle = w.style;
@@ -175,7 +224,7 @@ export default function Bookmarks() {
           break;
         }
         case 'rival': {
-          const r = rivals?.find((x) => x.id === b.entityId || x.owner.id === b.entityId);
+          const r = rivalMap?.get(b.entityId);
           if (r) {
             name = r.owner.stableName;
             subtitle = r.owner.name;
@@ -186,7 +235,7 @@ export default function Bookmarks() {
           break;
         }
         case 'promoter': {
-          const p = Object.values(promoters || {}).find((x) => x.id === b.entityId);
+          const p = promoterMap?.get(b.entityId);
           if (p) {
             name = p.name;
             subtitle = `${p.tier} · ${p.personality}`;
@@ -197,7 +246,7 @@ export default function Bookmarks() {
           break;
         }
         case 'trainer': {
-          const t = trainers?.find((x) => x.id === b.entityId);
+          const t = trainerMap?.get(b.entityId);
           if (t) {
             name = t.name;
             subtitle = `${t.tier} · ${t.focus}`;
@@ -208,7 +257,7 @@ export default function Bookmarks() {
           break;
         }
         case 'tournament': {
-          const tour = tournaments?.find((x) => x.id === b.entityId);
+          const tour = tournamentMap?.get(b.entityId);
           if (tour) {
             name = tour.name;
             subtitle = `${tour.season} · Year ${tour.week}`;
@@ -219,9 +268,9 @@ export default function Bookmarks() {
           break;
         }
         case 'boutOffer': {
-          const offer = Object.values(boutOffers || {}).find((x) => x.id === b.entityId);
+          const offer = boutOfferMap?.get(b.entityId);
           if (offer) {
-            const promoter = Object.values(promoters || {}).find((p) => p.id === offer.promoterId);
+            const promoter = promoterMap?.get(offer.promoterId);
             name = promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`;
             subtitle = offer.id;
             onClick = () => navigate({ to: '/stable/bouts' });
@@ -231,7 +280,7 @@ export default function Bookmarks() {
           break;
         }
         case 'scoutReport': {
-          const report = scoutReports?.find((x) => x.id === b.entityId);
+          const report = scoutReportMap?.get(b.entityId);
           if (report) {
             name = report.warriorName;
             subtitle = `${report.quality} Report · Week ${report.week}`;

@@ -56,18 +56,24 @@ export function useWarriorDetail() {
     return obfuscateWarrior(warrior, insightTokens, isPlayerOwned);
   }, [warrior, insightTokens, isPlayerOwned]);
 
+  const updateRosterWarrior = useCallback(
+    (id: string, mutate: (w: Warrior) => void) => {
+      setState((draft) => {
+        const target = draft.roster.find((w: Warrior) => w.id === id);
+        if (target) mutate(target);
+      });
+    },
+    [setState]
+  );
+
   const handlePlanChange = useCallback(
     (newPlan: FightPlan) => {
       if (!warrior) return;
-      setState((draft) => {
-        const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
-        const found = draft.roster[index];
-        if (found) {
-          found.plan = newPlan;
-        }
+      updateRosterWarrior(warrior.id, (w) => {
+        w.plan = newPlan;
       });
     },
-    [warrior, setState]
+    [warrior, updateRosterWarrior]
   );
 
   const handleRetire = useCallback(() => {
@@ -80,15 +86,11 @@ export function useWarriorDetail() {
   const handleEquipmentChange = useCallback(
     (newLoadout: EquipmentLoadout) => {
       if (!warrior) return;
-      setState((draft) => {
-        const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
-        const found = draft.roster[index];
-        if (found) {
-          found.equipment = newLoadout;
-        }
+      updateRosterWarrior(warrior.id, (w) => {
+        w.equipment = newLoadout;
       });
     },
-    [warrior, setState]
+    [warrior, updateRosterWarrior]
   );
 
   return {

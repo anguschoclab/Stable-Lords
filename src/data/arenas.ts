@@ -504,6 +504,30 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'grand_colosseum_emperors_folly',
+    arenaId: 'grand_colosseum',
+    type: 'historical_battle',
+    title: "The Emperor's Folly",
+    narrative:
+      'A century ago, an arrogant emperor demanded to fight the reigning champion here. The champion obliged, and the emperor’s reign ended in a single, brutal exchange.',
+  },
+  {
+    id: 'subterranean_pits_the_cave_in',
+    arenaId: 'subterranean_pits',
+    type: 'architectural_quirk',
+    title: 'The Unstable Ceiling',
+    narrative:
+      'The ceiling of this pit is notoriously unstable. Seasoned fighters know to avoid striking the eastern pillars, lest they bring the roof down on their own heads.',
+  },
+  {
+    id: 'blood_sands_crimson_tide',
+    arenaId: 'blood_sands',
+    type: 'famous_death',
+    title: 'The Crimson Tide',
+    narrative:
+      'A legendary duel between twin brothers ended in a mutual, fatal strike. The sands drank so much blood that day, they are said to remain permanently stained crimson.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

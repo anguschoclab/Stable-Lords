@@ -95,6 +95,33 @@ export interface TraitDef {
  */
 export const TRAITS: Record<string, TraitDef> = {
   // New Narrative Traits
+  orphan_street_rat: {
+    id: 'orphan_street_rat',
+    name: 'Street Rat',
+    description: 'Raised in the slums, nimble and hard to hit when desperate.',
+    effect: { defModLate: 1, decMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  orphan_pit_fighter: {
+    id: 'orphan_pit_fighter',
+    name: 'Pit Fighter',
+    description: 'Early exposure to brutal fights instills a natural instinct to parry.',
+    effect: { parMod: 1, attModEarly: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  orphan_survivor: {
+    id: 'orphan_survivor',
+    name: 'Survivor',
+    description: 'Surviving a harsh upbringing grants an incredible will to live.',
+    effect: { enduranceMult: 0.95, defMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_resilience: {
     id: 'orphan_resilience',
     name: 'Orphan Resilience',

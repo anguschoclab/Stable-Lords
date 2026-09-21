@@ -4,6 +4,11 @@
  */
 
 export const ORIGINS: string[] = [
+  "Abandoned in the smog-choked alleys of the Lower Wards and raised by stray hounds",
+  "Born in the sunless depths of the Undercity, fighting for scraps of mouldy bread",
+  "Left on the blood-stained steps of the fighting pits as a mere infant",
+  "Raised in the lightless oubliettes beneath the High Lord's estate",
+  "Forged in the merciless fires of the Cinder-Ash Orphanage",
   "Abandoned at the rusted gates of the Blackwood Workhouse",
   "Survived the chilling cullings of the Whispering Vaults",
   "Raised amidst the deafening roar of the Cinderstone Forges",
@@ -19,15 +24,12 @@ export const ORIGINS: string[] = [
   "Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings",
   "Survived the brutal winters huddled in the exhaust vents of the Grand Forge",
   "Raised as a nameless thrall in the fighting pits of the Undercity",
-  "Raised in the lightless cellars of the Harrow-Home for Foundlings",
   "Abandoned beneath the crumbling arches of the Weeping Aqueduct",
   "Found swaddled in blood-stained rags at the gates of the Silent Order",
   "Survived the brutal starvation of the Rat-Catcher Guilds",
-  "Sold to the under-barons of the Scab District for a handful of copper",
   "Raised by the feral street-packs of the Warrens",
   "Raised in the haunted dormitories of the Blackbriar Orphanage",
   "Found shivering in the crypts of the Old Abbey",
-  "Survived the cruel discipline of the Iron Spire Orphanage",
   "Sold to the fighting pits by the matrons of the Bleak House",
   "Abandoned in the haunted shadows of the Whispering Woods",
   "Raised by the grim grave-keepers of the Obsidian Cemetery",
@@ -252,7 +254,6 @@ export const ORIGINS: string[] = [
   "Raised amidst the deafening roar of the Ironclad Foundling Home",
   "Found swaddled in soot-stained rags beneath the Drowned Bridge",
   "Sold by desperate parents to the pit-masters of the Whispering Ward",
-  "Raised in the soot-choked rafters of the Iron-Gale Foundry",
   "Abandoned to the ravenous tide-pools of the Sunken Ward",
   "Found clutching a silver coin in the ash-drifts of the Pyre District",
   "Survived the relentless floggings of the Black-Briar Orphanage",
@@ -300,9 +301,12 @@ export const ORIGINS: string[] = [
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
+  "hiding a sharpened spoon in their boots for protection",
+  "developed an uncanny tolerance for pain after years of daily beatings",
+  "learned to dodge blows by weaving through the crowded, aggressive slums",
+  "always observing the subtle twitches and tells of their cruel overseers",
   "learned to gauge distance by dodging the overseer",
   "memorized the anatomy of beasts while working the charnel pits",
-  "developed an iron grip from clinging to the underside of merchant carts",
   "used to meticulously trace the structural flaws in stone walls",
   "slept soundly only when the city",
   "was known for carving the names of their enemies into their own flesh",
@@ -329,7 +333,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   "learned to sleep with one eye open after surviving the orphanage riots",
   "was known for an unnerving, silent stare that made the matrons flinch",
   "would sit completely still for hours watching the fighting pit from the rafters",
-  "learned to predict a strike by watching the tension in a bully’s shoulders",
   "was infamous for never crying out, no matter how severe the punishment",
   "would map out the blind spots of the orphanage guards with obsessive precision",
   "would catch and study the weak points of venomous centipedes",
@@ -465,8 +468,11 @@ export const CHILDHOOD_TRAITS: string[] = [
 ];
 
 export const DEFINING_MOMENTS: string[] = [
+  "realizing that the blood on their hands was the only currency that mattered",
+  "watching their only friend die, vowing to never be weak again",
+  "breaking the nose of the local crime boss in a desperate street brawl",
+  "discovering that the roar of the arena crowd could drown out their dark memories",
   "discovering that a rusted spoon could be sharpened into a deadly shiv",
-  "surviving a night in the dog-cages by out-snarling the hounds",
   "realizing that mercy in the Undercity was just another word for weakness",
   "until they garroted a corrupt slaver with a stolen rosary",
   "until they drowned a corrupt overseer in a vat of boiling lye",
@@ -486,7 +492,6 @@ export const DEFINING_MOMENTS: string[] = [
   "until they garroted a cruel overseer and fled into the night",
   "waiting for the moment the iron portcullis of the arena would rise on their true destiny",
   "until they shattered a cruel overseer’s kneecap with a stolen hammer",
-  "realizing the arena was the only place where their rage was rewarded",
   "knowing that blood on the sands washes away the dirt of the slums",
   "until they broke a slaver",
   "waiting to turn the misery of their youth into a spectacle of vengeance",

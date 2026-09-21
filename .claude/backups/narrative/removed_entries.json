@@ -1,0 +1,17 @@
+[
+  {
+    "path": "strikes.strikes.piercing.solid",
+    "removed": "With cruel precision, {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
+    "kept": "With a precise motion, {{attacker}} skewers {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "pbp.pbp.defenses.dodge.confident",
+    "removed": "With a bored sigh, {{defender}} leans out of the weapon's reach.",
+    "kept": "With a bored sigh, {{defender}} leans out of the weapon's path."
+  },
+  {
+    "path": "killText.kill_text.weapon_specific.bashing",
+    "removed": "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses.",
+    "kept": "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s defenses."
+  }
+]

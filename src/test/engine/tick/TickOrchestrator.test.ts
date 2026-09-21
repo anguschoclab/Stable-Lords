@@ -140,6 +140,74 @@ describe('TickOrchestrator', () => {
       expect(latestNews.title).toContain('Recap');
       expect(latestNews.items.length).toBe(3);
     });
+
+    it('should thread the updated tournament through subsequent resolveRound calls', async () => {
+      mockState.day = 3;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
+      const stateTour = { id: 'test-tournament', completed: false };
+      mockState.tournaments = [stateTour] as never;
+      const updatedTour = { id: 'test-tournament', completed: false, marker: 'round-1' };
+
+      vi.mocked(TournamentSelectionService.resolveRound).mockImplementation(
+        (state: any, _tId: any, _seed: any, _headless: any, _tour: any) => ({
+          updatedState: state,
+          roundResults: [],
+          isComplete: false,
+          updatedTournament: updatedTour,
+        })
+      );
+
+      spyAdvanceWeek.mockImplementation(async (state: any) => state);
+      await TickOrchestrator.skipToWeekEnd(mockState);
+
+      // First call receives the tournament found in state; later calls receive
+      // the previously returned updatedTournament.
+      expect(TournamentSelectionService.resolveRound).toHaveBeenNthCalledWith(
+        1,
+        expect.anything(),
+        'test-tournament',
+        expect.any(Number),
+        true,
+        stateTour
+      );
+      expect(TournamentSelectionService.resolveRound).toHaveBeenNthCalledWith(
+        2,
+        expect.anything(),
+        'test-tournament',
+        expect.any(Number),
+        true,
+        updatedTour
+      );
+      expect(TournamentSelectionService.resolveRound).toHaveBeenNthCalledWith(
+        3,
+        expect.anything(),
+        'test-tournament',
+        expect.any(Number),
+        true,
+        updatedTour
+      );
+    });
+
+    it('should stop resolving rounds once the tournament is complete', async () => {
+      mockState.day = 3;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.tournaments = [{ id: 'test-tournament', completed: false }] as never;
+
+      vi.mocked(TournamentSelectionService.resolveRound).mockImplementation((state: any) => ({
+        updatedState: state,
+        roundResults: ['Champion crowned'],
+        isComplete: true,
+      }));
+
+      spyAdvanceWeek.mockImplementation(async (state: any) => state);
+      await TickOrchestrator.skipToWeekEnd(mockState);
+
+      expect(TournamentSelectionService.resolveRound).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('Time Advance Delegation', () => {

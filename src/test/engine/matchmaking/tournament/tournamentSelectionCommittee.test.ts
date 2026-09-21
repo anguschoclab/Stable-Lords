@@ -5,7 +5,9 @@ import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { committeeSelection } from '@/engine/matchmaking/tournamentSelection/committee';
 import { TOURNAMENT_TIERS } from '@/engine/matchmaking/tournamentSelection/core';
 import { resolveImpacts } from '@/engine/impacts';
-import { GameState } from '@/types/state.types';
+import { isActive } from '@/engine/warriorStatus';
+import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
+import { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 
 describe('TournamentSelectionCommittee', () => {
@@ -96,6 +98,52 @@ describe('TournamentSelectionCommittee', () => {
       const styles = new Set(warriors.map((w) => w.style));
       // Should have at least 6 different styles (all major styles)
       expect(styles.size).toBeGreaterThanOrEqual(6);
+    });
+
+    it('produces identical selections across runs (golden determinism)', () => {
+      const run = () =>
+        committeeSelection(state, 'Gold', 1, new Set()).warriors.map((w) => w.id);
+      const first = run();
+      const second = run();
+      expect(first).toHaveLength(64);
+      expect(second).toEqual(first);
+    });
+
+    it('selects the minimum-ranked eligible warrior as each style champion', () => {
+      const { warriors } = committeeSelection(state, 'Gold', 1, new Set());
+      const rankings = state.realmRankings;
+
+      // Reconstruct the eligible pool exactly as committeeSelection builds it.
+      const eligible: { w: Warrior; rank: number }[] = [];
+      const collect = (roster: Warrior[], stable?: RivalStableData) => {
+        const declines =
+          stable?.strategy?.intent === 'RECOVERY' || stable?.strategy?.intent === 'SURVIVAL';
+        if (declines) return;
+        for (const w of roster) {
+          if (!isActive(w)) continue;
+          if (committeeWeatherSkip(w, state.weather)) continue;
+          const r = rankings[w.id];
+          if (r) eligible.push({ w, rank: r.overallRank });
+        }
+      };
+      collect(state.roster);
+      state.rivals.forEach((r) => collect(r.roster, r));
+      eligible.sort((a, b) => a.rank - b.rank);
+
+      const top40Ids = new Set(eligible.slice(0, 40).map((p) => p.w.id));
+      const selectedIds = new Set(warriors.map((w) => w.id));
+
+      // Each style's champion (lowest rank outside the mandatory top-40) must
+      // be selected unless the 50-invite cap was already reached.
+      let inviteCount = top40Ids.size;
+      for (const style of Object.values(FightingStyle)) {
+        if (inviteCount >= 50) break;
+        const lead = eligible.find((p) => p.w.style === style && !top40Ids.has(p.w.id));
+        if (lead) {
+          expect(selectedIds.has(lead.w.id)).toBe(true);
+          inviteCount++;
+        }
+      }
     });
 
     it('should generate emergency fillers if pool is insufficient', () => {

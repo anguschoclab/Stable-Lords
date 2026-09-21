@@ -128,6 +128,21 @@ describe('Bookmarks Page', () => {
     expect(screen.getByText('RetiredWarrior')).toBeInTheDocument();
   });
 
+  it('looks up rivals by owner id when stable id differs', () => {
+    setStore({ bookmarks: [
+      { entityType: 'rival', entityId: 'owner-1', createdAt: '2026-01-01' },
+    ] });
+    setStore({ rivals: [
+      {
+        id: 'stable-1',
+        owner: { id: 'owner-1', name: 'Owner One', stableName: 'Split Key Stable' },
+        roster: [],
+      },
+    ] });
+    render(<Bookmarks />);
+    expect(screen.getByText('Split Key Stable')).toBeInTheDocument();
+  });
+
   it('looks up warriors from rival rosters', () => {
     setStore({ bookmarks: [
       { entityType: 'warrior', entityId: 'rival-warrior', createdAt: '2026-01-01' },

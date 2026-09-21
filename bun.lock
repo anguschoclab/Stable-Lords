@@ -29,13 +29,13 @@
         "clsx": "^2.1.1",
         "comlink": "^4.4.2",
         "date-fns": "^4.4.0",
-        "framer-motion": "13.1.1",
+        "framer-motion": "13.2.0",
         "howler": "^2.2.4",
         "immer": "^11.1.16",
-        "lucide-react": "1.34.0",
+        "lucide-react": "1.44.0",
         "next-themes": "0.4.6",
-        "react": "19.2.8",
-        "react-dom": "19.2.8",
+        "react": "19.3.0",
+        "react-dom": "19.3.0",
         "react-markdown": "^10.1.0",
         "recharts": "3.10.1",
         "remark-gfm": "^4.0.1",
@@ -63,12 +63,12 @@
         "@types/howler": "^2.2.13",
         "@types/jsdom": "^30.0.0",
         "@types/node": "^26.2.0",
-        "@types/react": "19.2.18",
-        "@types/react-dom": "19.2.5",
+        "@types/react": "19.3.0",
+        "@types/react-dom": "19.3.0",
         "@vitejs/plugin-react-swc": "^4.3.3",
         "@vitest/coverage-v8": "^4.1.10",
         "autoprefixer": "^10.5.4",
-        "electron": "44.0.0",
+        "electron": "44.3.0",
         "eslint": "^10.8.1",
         "eslint-plugin-jsdoc": "^64.0.2",
         "eslint-plugin-react-hooks": "^7.1.1",
@@ -863,9 +863,9 @@
 
     "@types/node": ["@types/node@26.2.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@types/node/-/node-26.2.0.tgz", { "dependencies": { "undici-types": "~8.3.0" } }, "sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg=="],
 
-    "@types/react": ["@types/react@19.2.18", "https://artifactory.ubisoft.org/api/npm/npm/@types/react/-/react-19.2.18.tgz", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w=="],
+    "@types/react": ["@types/react@19.3.0", "https://artifactory.ubisoft.org/api/npm/npm/@types/react/-/react-19.3.0.tgz", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg=="],
 
-    "@types/react-dom": ["@types/react-dom@19.2.5", "https://artifactory.ubisoft.org/api/npm/npm/@types/react-dom/-/react-dom-19.2.5.tgz", { "peerDependencies": { "@types/react": "^19.2.0" } }, "sha512-fMPwH9v7r/pp43yUd2/Mbiex5KouJwwR3dzHkhLREUC6764VyDsqxhAxv6OFEYR1RhjOyD1naqba8ECDBe7ZQg=="],
+    "@types/react-dom": ["@types/react-dom@19.3.0", "https://artifactory.ubisoft.org/api/npm/npm/@types/react-dom/-/react-dom-19.3.0.tgz", { "peerDependencies": { "@types/react": "^19.3.0" } }, "sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q=="],
 
     "@types/resolve": ["@types/resolve@1.20.2", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@types/resolve/-/resolve-1.20.2.tgz", {}, "sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q=="],
 
@@ -949,17 +949,17 @@
 
     "@vitest/coverage-v8": ["@vitest/coverage-v8@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/coverage-v8/-/coverage-v8-4.1.10.tgz", { "dependencies": { "@bcoe/v8-coverage": "^1.0.2", "@vitest/utils": "4.1.10", "ast-v8-to-istanbul": "^1.0.0", "istanbul-lib-coverage": "^3.2.2", "istanbul-lib-report": "^3.0.1", "istanbul-reports": "^3.2.0", "magicast": "^0.5.2", "obug": "^2.1.1", "std-env": "^4.0.0-rc.1", "tinyrainbow": "^3.1.0" }, "peerDependencies": { "@vitest/browser": "4.1.10", "vitest": "4.1.10" }, "optionalPeers": ["@vitest/browser"] }, "sha512-IM49HmthevbgAO4anp1hwtoT9wYe59w0LR00gr+eagHE+ZJ5lK4sLPeO0ubgoJcwLk6dehU3R24N+FbEEKDc8g=="],
 
-    "@vitest/expect": ["@vitest/expect@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/expect/-/expect-4.1.10.tgz", { "dependencies": { "@standard-schema/spec": "^1.1.0", "@types/chai": "^5.2.2", "@vitest/spy": "4.1.10", "@vitest/utils": "4.1.10", "chai": "^6.2.2", "tinyrainbow": "^3.1.0" } }, "sha512-YsCn+qAk1GWjQOWFEsEcL2gNQ0zmVmQu3T03qP6UyjhtmdtwtbuI+DASn/7iQB3HGTXkdBwGddzxPlmiql5vlA=="],
+    "@vitest/expect": ["@vitest/expect@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/expect/-/expect-4.1.11.tgz", { "dependencies": { "@standard-schema/spec": "^1.1.0", "@types/chai": "^5.2.2", "@vitest/spy": "4.1.11", "@vitest/utils": "4.1.11", "chai": "^6.2.2", "tinyrainbow": "^3.1.0" } }, "sha512-VX2x5vNJXET47KAFzwERI+KRMtTTCSWTfSMKsW7JsUsXV4psq++e3DvZpuTDOpHcxytiDs6p2nhVb2tVDiiUYw=="],
 
-    "@vitest/mocker": ["@vitest/mocker@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/mocker/-/mocker-4.1.10.tgz", { "dependencies": { "@vitest/spy": "4.1.10", "estree-walker": "^3.0.3", "magic-string": "^0.30.21" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" }, "optionalPeers": ["msw", "vite"] }, "sha512-v0xaezt+DKEmKfaxg133ldzADrwLGd7Ze1MfQQTYfvs8OqZIwbxyxaYURivwV7sWy5fqn3rH5uOrSp07bp44Ow=="],
+    "@vitest/mocker": ["@vitest/mocker@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/mocker/-/mocker-4.1.11.tgz", { "dependencies": { "@vitest/spy": "4.1.11", "estree-walker": "^3.0.3", "magic-string": "^0.30.21" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^6.0.0 || ^7.0.0 || ^8.0.0" }, "optionalPeers": ["msw", "vite"] }, "sha512-2XJVD55d1o5AZous5CCGKS74g/riOj9odEt2bQpCVZeblHyHdnMeFl4jl0XjU21stf4mbjUkew2eXQZt65g5CQ=="],
 
-    "@vitest/pretty-format": ["@vitest/pretty-format@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/pretty-format/-/pretty-format-4.1.10.tgz", { "dependencies": { "tinyrainbow": "^3.1.0" } }, "sha512-W1HsjSH4MXQ9YfmmhLAoIYf1HRfekQCGngeIgcei6MP5QQGWUe0gkopdZQaVCFO+JDJMrAJGwa5pRpNpvy4P8Q=="],
+    "@vitest/pretty-format": ["@vitest/pretty-format@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/pretty-format/-/pretty-format-4.1.11.tgz", { "dependencies": { "tinyrainbow": "^3.1.0" } }, "sha512-yiZzPbGTS9Sr/JpFl8zHrcIkAofNbFV6k21vIgQN/cY/oxZeXhJv5sc/MBJ5jFKWmWs+oJHw0UXLZjmf931+Vw=="],
 
-    "@vitest/runner": ["@vitest/runner@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/runner/-/runner-4.1.10.tgz", { "dependencies": { "@vitest/utils": "4.1.10", "pathe": "^2.0.3" } }, "sha512-IKI6kpIH+LmpROplyLwBBaCfMgOZOMsygVa6BARD6ahA04VRuJSa6OaVG7kRvSEMD870Vd91rSSw0eegtWyLGg=="],
+    "@vitest/runner": ["@vitest/runner@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/runner/-/runner-4.1.11.tgz", { "dependencies": { "@vitest/utils": "4.1.11", "pathe": "^2.0.3" } }, "sha512-LztvUgdwMNJMIkj3hQnnxiC2Xy1zNxq928W/xhjCLaNCzqTZOudjwbQf6v9IntZGPw132i2Lq2rgTRZHD3JHNw=="],
 
-    "@vitest/snapshot": ["@vitest/snapshot@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/snapshot/-/snapshot-4.1.10.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.10", "@vitest/utils": "4.1.10", "magic-string": "^0.30.21", "pathe": "^2.0.3" } }, "sha512-xRkfOT1qpTAi/Ti4Y1LtfRc3kEuqxGw59eN2jN9pRWMtS/XDevekhcFSqvQqjUNGksfjMJu3Y+oJ+4Ypn2OaJw=="],
+    "@vitest/snapshot": ["@vitest/snapshot@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/snapshot/-/snapshot-4.1.11.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.11", "@vitest/utils": "4.1.11", "magic-string": "^0.30.21", "pathe": "^2.0.3" } }, "sha512-pN7ikn1ON7h8ee4gIAp4AzyK+zBtJPzVbqOgu5LCEh4VaJVbPQcgYQYJIMGQPXVeJJq1fnfazis7a5pFNPahog=="],
 
-    "@vitest/spy": ["@vitest/spy@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/spy/-/spy-4.1.10.tgz", {}, "sha512-PLf/Ugvoq5wO/b4rwYCR1h2PSIdXz7wnkQFMiUpLdtM7l6pqVFcQIBEHyT1+l+cj7mNwAfZHzqXqDyjvOuwbDw=="],
+    "@vitest/spy": ["@vitest/spy@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/spy/-/spy-4.1.11.tgz", {}, "sha512-apNa/prQy2qCeywhnixOHPRCgGNhvg7T4Dapfl1GahLp/R+uhBm5cPyFoNVyqsNd2h1nJxL6BqqdIjiABL60YA=="],
 
     "@vitest/utils": ["@vitest/utils@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/utils/-/utils-4.1.10.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.10", "convert-source-map": "^2.0.0", "tinyrainbow": "^3.1.0" } }, "sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA=="],
 
@@ -995,7 +995,7 @@
 
     "@webassemblyjs/wast-printer": ["@webassemblyjs/wast-printer@1.14.1", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@webassemblyjs/wast-printer/-/wast-printer-1.14.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.14.1", "@xtuc/long": "4.2.2" } }, "sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw=="],
 
-    "@xmldom/xmldom": ["@xmldom/xmldom@0.9.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@xmldom/xmldom/-/xmldom-0.9.10.tgz", {}, "sha512-A9gOqLdi6cV4ibazAjcQufGj0B1y/vDqYrcuP6d/6x8P27gRS8643Dj9o1dEKtB6O7fwxb2FgBmJS2mX7gpvdw=="],
+    "@xmldom/xmldom": ["@xmldom/xmldom@0.9.12", "https://artifactory.ubisoft.org/api/npm/npm/@xmldom/xmldom/-/xmldom-0.9.12.tgz", {}, "sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A=="],
 
     "@xtuc/ieee754": ["@xtuc/ieee754@1.2.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@xtuc/ieee754/-/ieee754-1.2.0.tgz", {}, "sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA=="],
 
@@ -1269,7 +1269,7 @@
 
     "ejs": ["ejs@3.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/ejs/-/ejs-3.1.10.tgz", { "dependencies": { "jake": "^10.8.5" }, "bin": { "ejs": "bin/cli.js" } }, "sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA=="],
 
-    "electron": ["electron@44.0.0", "https://artifactory.ubisoft.org/api/npm/npm/electron/-/electron-44.0.0.tgz", { "dependencies": { "@electron-internal/extract-zip": "^1.0.1", "@electron/get": "^5.0.0", "@types/node": "^24.9.0" }, "bin": { "electron": "cli.js", "install-electron": "install.js" } }, "sha512-FkTqPrFPZYljdPI5b7KORGsJTd6FgUQDefl5MrU3Xz9R87pAj9JLreIjDqcRN8hJIkFHIou0o8kKzvcpT9qiRQ=="],
+    "electron": ["electron@44.3.0", "https://artifactory.ubisoft.org/api/npm/npm/electron/-/electron-44.3.0.tgz", { "dependencies": { "@electron-internal/extract-zip": "^1.0.1", "@electron/get": "^5.0.0", "@types/node": "^24.9.0" }, "bin": { "electron": "cli.js", "install-electron": "install.js" } }, "sha512-St9EV7F2VtYaYWD2qaAjBwUgKxx39eJOUsUJ5+/1113sqbVfNqv4Dbm/W1rN7qmYSPa+mWwR6yr+b7MfgjgVfQ=="],
 
     "electron-installer-common": ["electron-installer-common@0.10.4", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/electron-installer-common/-/electron-installer-common-0.10.4.tgz", { "dependencies": { "@electron/asar": "^3.2.5", "@malept/cross-spawn-promise": "^1.0.0", "debug": "^4.1.1", "fs-extra": "^9.0.0", "glob": "^7.1.4", "lodash": "^4.17.15", "parse-author": "^2.0.0", "semver": "^7.1.1", "tmp-promise": "^3.0.2" }, "optionalDependencies": { "@types/fs-extra": "^9.0.1" } }, "sha512-8gMNPXfAqUE5CfXg8RL0vXpLE9HAaPkgLXVoHE3BMUzogMWenf4LmwQ27BdCUrEhkjrKl+igs2IHJibclR3z3Q=="],
 
@@ -1413,7 +1413,7 @@
 
     "fraction.js": ["fraction.js@5.3.4", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/fraction.js/-/fraction.js-5.3.4.tgz", {}, "sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ=="],
 
-    "framer-motion": ["framer-motion@13.1.1", "https://artifactory.ubisoft.org/api/npm/npm/framer-motion/-/framer-motion-13.1.1.tgz", { "dependencies": { "motion-dom": "^13.1.1", "motion-utils": "^13.0.0", "tslib": "^2.4.0" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["react", "react-dom"] }, "sha512-B/xn2TPS4f61cEBLFjiYlQFnBZUW1YVj/LM+C+N4OP8Rs95VLEI2ot/RlfBg111la/EiyECFaJJi/A3FWA8MUA=="],
+    "framer-motion": ["framer-motion@13.2.0", "https://artifactory.ubisoft.org/api/npm/npm/framer-motion/-/framer-motion-13.2.0.tgz", { "dependencies": { "motion-dom": "^13.2.0", "motion-utils": "^13.0.0", "tslib": "^2.4.0" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["react", "react-dom"] }, "sha512-9E33ebgMaO33w1nN/jEdW8z3/GO483fMi4rqbMG9rt83XgW9QLKRe4NcmJ8s+fQ3O34++UHrIQwlIWGIWTITjA=="],
 
     "fs-extra": ["fs-extra@10.1.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/fs-extra/-/fs-extra-10.1.0.tgz", { "dependencies": { "graceful-fs": "^4.2.0", "jsonfile": "^6.0.1", "universalify": "^2.0.0" } }, "sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ=="],
 
@@ -1747,7 +1747,7 @@
 
     "lru-cache": ["lru-cache@11.5.2", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/lru-cache/-/lru-cache-11.5.2.tgz", {}, "sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g=="],
 
-    "lucide-react": ["lucide-react@1.34.0", "https://artifactory.ubisoft.org/api/npm/npm/lucide-react/-/lucide-react-1.34.0.tgz", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-vnjGJNI7Htk5+oWW8gXGuaLgwgAb0T6/iZbBrp9JCfRFwdNWZ0YTm3eyxjOLgwN6r8iyAf3UA70zNmBRBNv7yg=="],
+    "lucide-react": ["lucide-react@1.44.0", "https://artifactory.ubisoft.org/api/npm/npm/lucide-react/-/lucide-react-1.44.0.tgz", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-2egNApH4hX4j/qdCgRublh88+9u3mEhz9iSlW5ckm4kaQEqZbXbMr0l5u5JZLy8nmWRx2dbHGQkEDYz6C9aCgw=="],
 
     "lz-string": ["lz-string@1.5.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/lz-string/-/lz-string-1.5.0.tgz", { "bin": { "lz-string": "bin/bin.js" } }, "sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ=="],
 
@@ -1895,7 +1895,7 @@
 
     "mkdirp": ["mkdirp@0.5.6", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/mkdirp/-/mkdirp-0.5.6.tgz", { "dependencies": { "minimist": "^1.2.6" }, "bin": { "mkdirp": "bin/cmd.js" } }, "sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw=="],
 
-    "motion-dom": ["motion-dom@13.1.1", "https://artifactory.ubisoft.org/api/npm/npm/motion-dom/-/motion-dom-13.1.1.tgz", { "dependencies": { "motion-utils": "^13.0.0" } }, "sha512-XSf8VYWSB6G/0IY3rWVbyLcxWXtAVHkN1PQE2agTaCv3u8RGvbwu56TyyR/MNzBqqNavEBTZzErcxI1TxBrjcA=="],
+    "motion-dom": ["motion-dom@13.3.0", "https://artifactory.ubisoft.org/api/npm/npm/motion-dom/-/motion-dom-13.3.0.tgz", { "dependencies": { "motion-utils": "^13.3.0" } }, "sha512-AmAnB6pHdZ1vHGzWzuzteG6Q3j1lHKeX/lbST6jGlgm0cjvLUgaCk1xhOuPMOy5SgovN6wnnUdwFrkcsus7Ftg=="],
 
     "motion-utils": ["motion-utils@13.0.0", "https://artifactory.ubisoft.org/api/npm/npm/motion-utils/-/motion-utils-13.0.0.tgz", {}, "sha512-7DnN7TmbLcYXcG4RVadXIihWlyuM9afoUww8Y5Agg431kGKiuL2/OMyP4mJ5wLz+pvN3t5ySClLOaVXJ+wekRQ=="],
 
@@ -2053,9 +2053,9 @@
 
     "random-path": ["random-path@0.1.2", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/random-path/-/random-path-0.1.2.tgz", { "dependencies": { "base32-encode": "^0.1.0 || ^1.0.0", "murmur-32": "^0.1.0 || ^0.2.0" } }, "sha512-4jY0yoEaQ5v9StCl5kZbNIQlg1QheIDBrdkDn53EynpPb9FgO6//p3X/tgMnrC45XN6QZCzU1Xz/+pSSsJBpRw=="],
 
-    "react": ["react@19.2.8", "https://artifactory.ubisoft.org/api/npm/npm/react/-/react-19.2.8.tgz", {}, "sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw=="],
+    "react": ["react@19.3.0", "https://artifactory.ubisoft.org/api/npm/npm/react/-/react-19.3.0.tgz", {}, "sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog=="],
 
-    "react-dom": ["react-dom@19.2.8", "https://artifactory.ubisoft.org/api/npm/npm/react-dom/-/react-dom-19.2.8.tgz", { "dependencies": { "scheduler": "^0.27.0" }, "peerDependencies": { "react": "^19.2.8" } }, "sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ=="],
+    "react-dom": ["react-dom@19.3.0", "https://artifactory.ubisoft.org/api/npm/npm/react-dom/-/react-dom-19.3.0.tgz", { "dependencies": { "scheduler": "^0.28.0" }, "peerDependencies": { "react": "^19.3.0" } }, "sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q=="],
 
     "react-is": ["react-is@18.3.1", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/react-is/-/react-is-18.3.1.tgz", {}, "sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg=="],
 
@@ -2159,7 +2159,7 @@
 
     "saxes": ["saxes@6.0.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/saxes/-/saxes-6.0.0.tgz", { "dependencies": { "xmlchars": "^2.2.0" } }, "sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA=="],
 
-    "scheduler": ["scheduler@0.27.0", "https://artifactory.ubisoft.org/api/npm/npm/scheduler/-/scheduler-0.27.0.tgz", {}, "sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q=="],
+    "scheduler": ["scheduler@0.28.0", "https://artifactory.ubisoft.org/api/npm/npm/scheduler/-/scheduler-0.28.0.tgz", {}, "sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw=="],
 
     "schema-utils": ["schema-utils@4.3.3", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/schema-utils/-/schema-utils-4.3.3.tgz", { "dependencies": { "@types/json-schema": "^7.0.9", "ajv": "^8.9.0", "ajv-formats": "^2.1.1", "ajv-keywords": "^5.1.0" } }, "sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA=="],
 
@@ -2423,7 +2423,7 @@
 
     "vite-plugin-pwa": ["vite-plugin-pwa@1.3.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/vite-plugin-pwa/-/vite-plugin-pwa-1.3.0.tgz", { "dependencies": { "debug": "^4.3.6", "pretty-bytes": "^6.1.1", "tinyglobby": "^0.2.10", "workbox-build": "^7.4.1", "workbox-window": "^7.4.1" }, "peerDependencies": { "@vite-pwa/assets-generator": "^1.0.0", "vite": "^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0" }, "optionalPeers": ["@vite-pwa/assets-generator"] }, "sha512-c5kMgN+ITrOtHXp8PAtk2uOIEea6XjP/unCGxOWWBzQ6qa65qj/awHg0wf+QF9E/2u9vh86LqxPwzEPNbM2r5A=="],
 
-    "vitest": ["vitest@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/vitest/-/vitest-4.1.10.tgz", { "dependencies": { "@vitest/expect": "4.1.10", "@vitest/mocker": "4.1.10", "@vitest/pretty-format": "4.1.10", "@vitest/runner": "4.1.10", "@vitest/snapshot": "4.1.10", "@vitest/spy": "4.1.10", "@vitest/utils": "4.1.10", "es-module-lexer": "^2.0.0", "expect-type": "^1.3.0", "magic-string": "^0.30.21", "obug": "^2.1.1", "pathe": "^2.0.3", "picomatch": "^4.0.3", "std-env": "^4.0.0-rc.1", "tinybench": "^2.9.0", "tinyexec": "^1.0.2", "tinyglobby": "^0.2.15", "tinyrainbow": "^3.1.0", "vite": "^6.0.0 || ^7.0.0 || ^8.0.0", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@opentelemetry/api": "^1.9.0", "@types/node": "^20.0.0 || ^22.0.0 || >=24.0.0", "@vitest/browser-playwright": "4.1.10", "@vitest/browser-preview": "4.1.10", "@vitest/browser-webdriverio": "4.1.10", "@vitest/coverage-istanbul": "4.1.10", "@vitest/coverage-v8": "4.1.10", "@vitest/ui": "4.1.10", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@opentelemetry/api", "@types/node", "@vitest/browser-playwright", "@vitest/browser-preview", "@vitest/browser-webdriverio", "@vitest/coverage-istanbul", "@vitest/coverage-v8", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "./vitest.mjs" } }, "sha512-R9jUTe5S4Qb0HCd4TNqpC7oGcrMssMRGXLW80ubjWsW9VH5GF8y1Y0SFLY9AbqSk6nt0PnOx4H4WNJYZ13GUPw=="],
+    "vitest": ["vitest@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/vitest/-/vitest-4.1.11.tgz", { "dependencies": { "@vitest/expect": "4.1.11", "@vitest/mocker": "4.1.11", "@vitest/pretty-format": "4.1.11", "@vitest/runner": "4.1.11", "@vitest/snapshot": "4.1.11", "@vitest/spy": "4.1.11", "@vitest/utils": "4.1.11", "es-module-lexer": "^2.0.0", "expect-type": "^1.3.0", "magic-string": "^0.30.21", "obug": "^2.1.1", "pathe": "^2.0.3", "picomatch": "^4.0.3", "std-env": "^4.0.0-rc.1", "tinybench": "^2.9.0", "tinyexec": "^1.0.2", "tinyglobby": "^0.2.15", "tinyrainbow": "^3.1.0", "vite": "^6.0.0 || ^7.0.0 || ^8.0.0", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@opentelemetry/api": "^1.9.0", "@types/node": "^20.0.0 || ^22.0.0 || >=24.0.0", "@vitest/browser-playwright": "4.1.11", "@vitest/browser-preview": "4.1.11", "@vitest/browser-webdriverio": "4.1.11", "@vitest/coverage-istanbul": "4.1.11", "@vitest/coverage-v8": "4.1.11", "@vitest/ui": "4.1.11", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@opentelemetry/api", "@types/node", "@vitest/browser-playwright", "@vitest/browser-preview", "@vitest/browser-webdriverio", "@vitest/coverage-istanbul", "@vitest/coverage-v8", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "./vitest.mjs" } }, "sha512-fhACrNXUidIbGSBr5FlbuBkO7VWC1ZyLl0DO4CU2DrQoAPxX84Ysxs+HeGQpii5lZWV1Q4gBZTTu49mF+A6Edw=="],
 
     "w3c-xmlserializer": ["w3c-xmlserializer@5.0.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz", { "dependencies": { "xml-name-validator": "^5.0.0" } }, "sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA=="],
 
@@ -2621,6 +2621,14 @@
 
     "@typescript-eslint/eslint-plugin/ignore": ["ignore@7.0.6", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/ignore/-/ignore-7.0.6.tgz", {}, "sha512-BAg6QkE8W+TuQLrrw0Ugr7HegXduRuuj8/ti2kSOc+jz1dmx8/WNcjr6XGnq5YpDWxFwwaavqD0+jIUOKelTsw=="],
 
+    "@vitest/expect/@vitest/utils": ["@vitest/utils@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/utils/-/utils-4.1.11.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.11", "convert-source-map": "^2.0.0", "tinyrainbow": "^3.1.0" } }, "sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ=="],
+
+    "@vitest/runner/@vitest/utils": ["@vitest/utils@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/utils/-/utils-4.1.11.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.11", "convert-source-map": "^2.0.0", "tinyrainbow": "^3.1.0" } }, "sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ=="],
+
+    "@vitest/snapshot/@vitest/utils": ["@vitest/utils@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/utils/-/utils-4.1.11.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.11", "convert-source-map": "^2.0.0", "tinyrainbow": "^3.1.0" } }, "sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ=="],
+
+    "@vitest/utils/@vitest/pretty-format": ["@vitest/pretty-format@4.1.10", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/@vitest/pretty-format/-/pretty-format-4.1.10.tgz", { "dependencies": { "tinyrainbow": "^3.1.0" } }, "sha512-W1HsjSH4MXQ9YfmmhLAoIYf1HRfekQCGngeIgcei6MP5QQGWUe0gkopdZQaVCFO+JDJMrAJGwa5pRpNpvy4P8Q=="],
+
     "ajv-formats/ajv": ["ajv@8.20.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/ajv/-/ajv-8.20.0.tgz", { "dependencies": { "fast-deep-equal": "^3.1.3", "fast-uri": "^3.0.1", "json-schema-traverse": "^1.0.0", "require-from-string": "^2.0.2" } }, "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA=="],
 
     "ajv-keywords/ajv": ["ajv@8.20.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/ajv/-/ajv-8.20.0.tgz", { "dependencies": { "fast-deep-equal": "^3.1.3", "fast-uri": "^3.0.1", "json-schema-traverse": "^1.0.0", "require-from-string": "^2.0.2" } }, "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA=="],
@@ -2721,6 +2729,8 @@
 
     "minipass-sized/minipass": ["minipass@3.3.6", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/minipass/-/minipass-3.3.6.tgz", { "dependencies": { "yallist": "^4.0.0" } }, "sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw=="],
 
+    "motion-dom/motion-utils": ["motion-utils@13.3.0", "https://artifactory.ubisoft.org/api/npm/npm/motion-utils/-/motion-utils-13.3.0.tgz", {}, "sha512-sgSschQp7EseHInIlR7hBbMuvet3RA0bs28KPZAXJcGKGdxHGvh1ogpYDilY3bOMtl73EqPNmp75sAKHYPU5sg=="],
+
     "node-fetch/whatwg-url": ["whatwg-url@5.0.0", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/whatwg-url/-/whatwg-url-5.0.0.tgz", { "dependencies": { "tr46": "~0.0.3", "webidl-conversions": "^3.0.0" } }, "sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw=="],
 
     "normalize-package-data/semver": ["semver@5.7.2", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/semver/-/semver-5.7.2.tgz", { "bin": { "semver": "bin/semver" } }, "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g=="],
@@ -2768,6 +2778,8 @@
     "trim-repeated/escape-string-regexp": ["escape-string-regexp@1.0.5", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz", {}, "sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg=="],
 
     "validate-npm-package-license/spdx-expression-parse": ["spdx-expression-parse@3.0.1", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/spdx-expression-parse/-/spdx-expression-parse-3.0.1.tgz", { "dependencies": { "spdx-exceptions": "^2.1.0", "spdx-license-ids": "^3.0.0" } }, "sha512-cbqHunsQWnJNE6KhVSMsMeH5H/L9EpymbzqTQ3uLwNCLZ1Q481oWaofqH7nO6V07xlXwY6PhQdQ2IedWx/ZK4Q=="],
+
+    "vitest/@vitest/utils": ["@vitest/utils@4.1.11", "https://artifactory.ubisoft.org/api/npm/npm/@vitest/utils/-/utils-4.1.11.tgz", { "dependencies": { "@vitest/pretty-format": "4.1.11", "convert-source-map": "^2.0.0", "tinyrainbow": "^3.1.0" } }, "sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ=="],
 
     "webpack/eslint-scope": ["eslint-scope@5.1.1", "https://artifactory.ubisoft.org/artifactory/api/npm/npm/eslint-scope/-/eslint-scope-5.1.1.tgz", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^4.1.1" } }, "sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw=="],
 

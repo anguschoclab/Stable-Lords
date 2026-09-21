@@ -59,6 +59,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Astral Dust',
   'Chaos Storm',
   'Chaos Squall',
+  'Prismatic Gale',
   'Crimson Snow',
   'Whispering Winds',
   'Glittering Frost',

@@ -88,6 +88,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'Unseen voices murmur through the arena. The fighters glance around nervously.',
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
+  'Prismatic Gale':
+    'A shimmering wind of colorful energy begins to blow, invigorating the combatants.',
   'Diamond Rain': 'A bizarre rain of diamonds begins to fall, cutting flesh and armor alike.',
   'Temporal Rift':
     "Reality shudders as a Temporal Rift opens. Time itself seems to bend to the fighters' will.",

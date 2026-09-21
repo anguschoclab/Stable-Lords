@@ -814,6 +814,7 @@ export function handlePrismaticGaleExposure(
           warriorId: chosen.id,
           warriorName: chosen.name,
           detail: 'The prismatic winds whispered secrets of movement and flow.',
+          discoveredWeek: nextWeek,
           origin: 'Prismatic Gale',
         })
       );

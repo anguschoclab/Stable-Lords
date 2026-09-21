@@ -60,6 +60,7 @@ export const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Chaos Storm': 'ambience-arcane-storm',
   'Whispering Winds': 'ambience-wind-breezy',
   'Chaos Squall': 'ambience-arcane-storm',
+  'Prismatic Gale': 'ambience-wind-gale',
   'Diamond Rain': 'ambience-rain',
   'Temporal Rift': 'ambience-blood-moon',
   'Stardust Gale': 'ambience-wind-breezy',

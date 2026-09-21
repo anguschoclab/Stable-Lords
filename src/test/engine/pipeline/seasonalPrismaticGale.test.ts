@@ -1,19 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { handlePrismaticGaleExposure } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
 import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/utils/random';
 import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import narrativeContent from '@/data/narrative/offseason.json';
 
 describe('prismatic_gale_exposure offseason event', () => {
   let mockState: GameState;
-  let mockRng: SeededRNGService;
+  let mockRng: InstanceType<typeof SeededRNGService>;
   let mockCtx: OffseasonEventContext;
 
   beforeEach(() => {
-    mockRng = new SeededRNGService('test-seed');
+    mockRng = new SeededRNGService(12345);
     const warrior = makeWarrior('w1' as any, 'Test Warrior', FightingStyle.StrikingAttack, { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 });
     warrior.status = 'Active';
     warrior.injuries = [];
@@ -36,15 +36,15 @@ describe('prismatic_gale_exposure offseason event', () => {
     };
     handlePrismaticGaleExposure(mockState, 10, eventDef, mockRng, mockCtx);
 
-    expect(mockCtx.rosterUpdates.has('w1')).toBe(true);
-    const update = mockCtx.rosterUpdates.get('w1')!;
+    expect(mockCtx.rosterUpdates.has('w1' as WarriorId)).toBe(true);
+    const update = mockCtx.rosterUpdates.get('w1' as WarriorId)!;
     expect(update.xp).toBe(30); // 10 + 20
     expect(update.injuries).toBeDefined();
     expect(update.injuries!.length).toBe(1);
-    expect(update.injuries![0].name).toBe('Prismatic Dizziness');
+    expect(update.injuries![0]!.name).toBe('Prismatic Dizziness');
 
     expect(mockCtx.insightTokens.length).toBe(1);
-    expect(mockCtx.insightTokens[0].origin).toBe('Prismatic Gale');
+    expect(mockCtx.insightTokens[0]?.origin).toBe('Prismatic Gale');
 
     expect(mockCtx.newsletterItems.length).toBe(1);
   });

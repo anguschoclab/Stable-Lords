@@ -65,4 +65,5 @@ export {
   handleWanderingMerchantStrangeBrew,
   handlePhantomSparringPartner,
   handleDreamweaversMist,
+  handlePrismaticGaleExposure,
 } from './offseasonEvents';

@@ -6,6 +6,7 @@ import { Users, ChevronRight, Swords } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import { useBookmarks } from '@/state/useGameStore';
+import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { RosterWarriorRow } from './RosterWarriorRow';
 import { StyleCompositionDonut } from './StyleCompositionDonut';
@@ -47,7 +48,8 @@ export function RosterWall() {
 
   const filteredRoster = useMemo(() => {
     if (!showBookmarkedOnly) return sortedRoster;
-    return sortedRoster.filter((w) => bookmarks.some((b) => b.entityType === 'warrior' && b.entityId === w.id));
+    const ids = bookmarkIdsByType(bookmarks).get('warrior');
+    return sortedRoster.filter((w) => ids?.has(w.id));
   }, [sortedRoster, showBookmarkedOnly, bookmarks]);
 
   const rosterStyles = useMemo(

@@ -38,10 +38,13 @@ export const TickOrchestrator = {
 
     // 2. Tournament Day (Skip to End Mode not active)
     if (state.isTournamentWeek && state.activeTournamentId) {
+      const tour = (state.tournaments || []).find((t) => t.id === state.activeTournamentId);
       const { updatedState, roundResults } = TournamentSelectionService.resolveRound(
         state,
         state.activeTournamentId,
-        state.week * 100 + nextDay
+        state.week * 100 + nextDay,
+        undefined,
+        tour
       );
 
       const nextState = { ...updatedState, day: nextDay };
@@ -80,6 +83,7 @@ export const TickOrchestrator = {
       // round instead of re-scanning state.tournaments per day.
       let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
       for (let day = currentDay + 1; day < 7; day++) {
+        if (!tour || tour.completed) break;
         const daySeed = state.year * 10000 + state.week * 100 + day;
         const { updatedState, roundResults, isComplete, updatedTournament } =
           TournamentSelectionService.resolveRound(currentState, tournamentId, daySeed, true, tour);

@@ -6,6 +6,7 @@
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import type { Promoter, BoutOffer, PromoterPersonality } from '@/types/state.types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
@@ -195,7 +196,8 @@ export default function PromoterDirectory() {
 
   const { sortedPromoters, stats, bookmarkedCount } = useMemo(() => {
     const allPromoters = Object.values(promoters || {});
-    const bookmarked = allPromoters.filter((p) => bookmarks.some((b) => b.entityType === 'promoter' && b.entityId === p.id));
+    const promoterBookmarkIds = bookmarkIdsByType(bookmarks).get('promoter');
+    const bookmarked = allPromoters.filter((p) => promoterBookmarkIds?.has(p.id));
     const list = showBookmarkedOnly ? bookmarked : allPromoters;
 
     // Sort by tier (Legendary first) then by legacy fame

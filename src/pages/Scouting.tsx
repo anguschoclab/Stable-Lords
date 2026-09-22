@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
+import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
 import { type ScoutReportData, type Warrior, type RivalStableData } from '@/types/game';
 import { Radio } from 'lucide-react';
@@ -41,12 +42,16 @@ export default function Scouting() {
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const allReports = useMemo(() => scoutReports ?? [], [scoutReports]);
+  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
   const filteredReports = useMemo(() => {
     if (!showBookmarkedOnly) return allReports;
-    return allReports.filter((r) => bookmarks.some((b) => b.entityType === 'scoutReport' && b.entityId === r.id));
-  }, [allReports, showBookmarkedOnly, bookmarks]);
+    const ids = bookmarkIds.get('scoutReport');
+    return allReports.filter((r) => ids?.has(r.id));
+  }, [allReports, showBookmarkedOnly, bookmarkIds]);
 
-  const bookmarkedCount = allReports.filter((r) => bookmarks.some((b) => b.entityType === 'scoutReport' && b.entityId === r.id)).length;
+  const bookmarkedCount = allReports.filter(
+    (r) => bookmarkIds.get('scoutReport')?.has(r.id)
+  ).length;
 
   const rivalMap = useMemo(() => {
     const map = new Map<string, RivalStableData>();

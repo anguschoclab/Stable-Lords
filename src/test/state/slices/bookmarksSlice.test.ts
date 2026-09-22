@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { createBookmarksSlice, BookmarksSlice } from '@/state/slices/bookmarksSlice';
+import {
+  createBookmarksSlice,
+  bookmarkKeySet,
+  bookmarkIdsByType,
+  BookmarksSlice,
+} from '@/state/slices/bookmarksSlice';
 
 const createTestStore = () =>
   create<BookmarksSlice>()(
@@ -194,6 +199,35 @@ describe('BookmarksSlice', () => {
     expect(useTestStore.getState().isBookmarked('warrior', 'w2')).toBe(false);
     expect(useTestStore.getState().isBookmarked('rival', 'r1')).toBe(true);
     expect(useTestStore.getState().isBookmarked('promoter', 'p1')).toBe(false);
+  });
+
+  it('bookmarkIdsByType groups entity ids per type', () => {
+    useTestStore.getState().toggleBookmark('warrior', 'w1');
+    useTestStore.getState().toggleBookmark('warrior', 'w2');
+    useTestStore.getState().toggleBookmark('rival', 'r1');
+
+    const ids = bookmarkIdsByType(useTestStore.getState().bookmarks);
+    expect(ids.get('warrior')).toEqual(new Set(['w1', 'w2']));
+    expect(ids.get('rival')).toEqual(new Set(['r1']));
+    expect(ids.get('trainer')).toBeUndefined();
+  });
+
+  it('bookmarkKeySet supports O(1) composite key checks and invalidates on change', () => {
+    useTestStore.getState().toggleBookmark('warrior', 'w1');
+
+    const before = useTestStore.getState().bookmarks;
+    expect(bookmarkKeySet(before).has('warrior:w1')).toBe(true);
+    expect(bookmarkKeySet(before).has('rival:w1')).toBe(false);
+
+    useTestStore.getState().toggleBookmark('warrior', 'w1');
+    const after = useTestStore.getState().bookmarks;
+    expect(after).not.toBe(before);
+    expect(bookmarkKeySet(after).has('warrior:w1')).toBe(false);
+  });
+
+  it('bookmark helpers return empty lookups for undefined bookmarks', () => {
+    expect(bookmarkKeySet(undefined).size).toBe(0);
+    expect(bookmarkIdsByType(undefined).size).toBe(0);
   });
 
   it('cleanDanglingBookmarks should be a no-op when all bookmarks are valid', () => {

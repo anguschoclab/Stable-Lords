@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useWorldState, useBookmarks } from '@/state/useGameStore';
+import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -122,12 +123,17 @@ export default function WorldOverview() {
     });
   }, [state, stableSort, templates]);
 
+  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
+
   const filteredStableRows = useMemo(() => {
     if (!showBookmarkedOnly) return stableRows;
-    return stableRows.filter((r) => bookmarks.some((b) => b.entityType === 'rival' && b.entityId === r.id));
-  }, [stableRows, showBookmarkedOnly, bookmarks]);
+    const ids = bookmarkIds.get('rival');
+    return stableRows.filter((r) => ids?.has(r.id));
+  }, [stableRows, showBookmarkedOnly, bookmarkIds]);
 
-  const stableBookmarkedCount = stableRows.filter((r) => bookmarks.some((b) => b.entityType === 'rival' && b.entityId === r.id)).length;
+  const stableBookmarkedCount = stableRows.filter(
+    (r) => bookmarkIds.get('rival')?.has(r.id)
+  ).length;
 
   const warriorRows = useMemo<WarriorRow[]>(() => {
     const mapWarrior = (
@@ -196,10 +202,13 @@ export default function WorldOverview() {
 
   const filteredWarriorRows = useMemo(() => {
     if (!showBookmarkedOnly) return warriorRows;
-    return warriorRows.filter((r) => bookmarks.some((b) => b.entityType === 'warrior' && b.entityId === r.id));
-  }, [warriorRows, showBookmarkedOnly, bookmarks]);
+    const ids = bookmarkIds.get('warrior');
+    return warriorRows.filter((r) => ids?.has(r.id));
+  }, [warriorRows, showBookmarkedOnly, bookmarkIds]);
 
-  const warriorBookmarkedCount = warriorRows.filter((r) => bookmarks.some((b) => b.entityType === 'warrior' && b.entityId === r.id)).length;
+  const warriorBookmarkedCount = warriorRows.filter(
+    (r) => bookmarkIds.get('warrior')?.has(r.id)
+  ).length;
 
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);
   const totalKills = stableRows.reduce((s, r) => s + (r.kills || 0), 0);

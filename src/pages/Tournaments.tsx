@@ -5,6 +5,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
+import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -94,12 +95,16 @@ export default function Tournaments() {
     () => tournaments.filter((t) => t.completed).reverse(),
     [tournaments]
   );
+  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
   const pastTournaments = useMemo(() => {
     if (!showBookmarkedOnly) return allPastTournaments;
-    return allPastTournaments.filter((t) => bookmarks.some((b) => b.entityType === 'tournament' && b.entityId === t.id));
-  }, [allPastTournaments, showBookmarkedOnly, bookmarks]);
+    const ids = bookmarkIds.get('tournament');
+    return allPastTournaments.filter((t) => ids?.has(t.id));
+  }, [allPastTournaments, showBookmarkedOnly, bookmarkIds]);
 
-  const bookmarkedCount = allPastTournaments.filter((t) => bookmarks.some((b) => b.entityType === 'tournament' && b.entityId === t.id)).length;
+  const bookmarkedCount = allPastTournaments.filter(
+    (t) => bookmarkIds.get('tournament')?.has(t.id)
+  ).length;
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
   const isTournamentReadyToStart = useMemo(() => {

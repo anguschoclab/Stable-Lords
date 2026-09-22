@@ -70,13 +70,17 @@ describe('TickOrchestrator', () => {
       mockState.isTournamentWeek = true;
       mockState.activeTournamentId =
         'test-tournament' as import('@/types/shared.types').TournamentId;
+      const stateTour = { id: 'test-tournament', completed: false };
+      mockState.tournaments = [stateTour] as never;
 
       const nextState = await TickOrchestrator.advanceDay(mockState);
 
       expect(TournamentSelectionService.resolveRound).toHaveBeenCalledWith(
         mockState,
         'test-tournament',
-        expect.any(Number) // the seed
+        expect.any(Number), // the seed
+        undefined, // headless
+        stateTour // tournament threaded through, no re-scan inside resolveRound
       );
 
       expect(nextState.day).toBe(3);
@@ -107,6 +111,7 @@ describe('TickOrchestrator', () => {
       mockState.isTournamentWeek = true;
       mockState.activeTournamentId =
         'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.tournaments = [{ id: 'test-tournament', completed: false }] as never;
 
       // Setup mock to return incremental changes
       vi.mocked(TournamentSelectionService.resolveRound).mockImplementation(

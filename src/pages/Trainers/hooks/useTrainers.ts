@@ -1,6 +1,7 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { Trainer } from '@/types/shared.types';
 import {
@@ -43,12 +44,16 @@ export function useTrainers(showBookmarkedOnly: boolean) {
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
   const allTrainers = useMemo(() => trainers ?? [], [trainers]);
+  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
   const currentTrainers = useMemo(() => {
     if (!showBookmarkedOnly) return allTrainers;
-    return allTrainers.filter((t) => bookmarks.some((b) => b.entityType === 'trainer' && b.entityId === t.id));
-  }, [allTrainers, showBookmarkedOnly, bookmarks]);
+    const ids = bookmarkIds.get('trainer');
+    return allTrainers.filter((t) => ids?.has(t.id));
+  }, [allTrainers, showBookmarkedOnly, bookmarkIds]);
 
-  const bookmarkedCount = allTrainers.filter((t) => bookmarks.some((b) => b.entityType === 'trainer' && b.entityId === t.id)).length;
+  const bookmarkedCount = allTrainers.filter(
+    (t) => bookmarkIds.get('trainer')?.has(t.id)
+  ).length;
   const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 

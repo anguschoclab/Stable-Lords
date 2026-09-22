@@ -2,6 +2,49 @@ import { StateCreator } from 'zustand';
 import type { Bookmark, BookmarkEntityType } from '@/types/bookmark.types';
 import type { GameStore } from '@/state/useGameStore';
 
+const EMPTY_SET: Set<string> = new Set();
+const keySetCache = new WeakMap<Bookmark[], Set<string>>();
+const typeSetCache = new WeakMap<Bookmark[], Map<BookmarkEntityType, Set<string>>>();
+
+/**
+ * Cached Set of `${entityType}:${entityId}` keys for O(1) bookmark existence
+ * checks. WeakMap-keyed on the bookmarks array — immer produces a new array
+ * on every bookmark change, so the cache self-invalidates and never leaks.
+ */
+export function bookmarkKeySet(bookmarks: Bookmark[] | undefined): Set<string> {
+  if (!bookmarks) return EMPTY_SET;
+  let set = keySetCache.get(bookmarks);
+  if (!set) {
+    set = new Set(bookmarks.map((b) => `${b.entityType}:${b.entityId}`));
+    keySetCache.set(bookmarks, set);
+  }
+  return set;
+}
+
+/**
+ * Cached per-type Map of entityId Sets — one pass over bookmarks builds all
+ * type buckets. Replaces `rows.filter((r) => bookmarks.some(...))` scans.
+ */
+export function bookmarkIdsByType(
+  bookmarks: Bookmark[] | undefined
+): Map<BookmarkEntityType, Set<string>> {
+  if (!bookmarks) return new Map();
+  let map = typeSetCache.get(bookmarks);
+  if (!map) {
+    map = new Map();
+    for (const b of bookmarks) {
+      let set = map.get(b.entityType);
+      if (!set) {
+        set = new Set();
+        map.set(b.entityType, set);
+      }
+      set.add(b.entityId);
+    }
+    typeSetCache.set(bookmarks, map);
+  }
+  return map;
+}
+
 /**
  *
  */
@@ -80,7 +123,7 @@ export const createBookmarksSlice: StateCreator<GameStore, [], [], BookmarksSlic
   },
 
   isBookmarked: (type, id) => {
-    return get().bookmarks.some((b: Bookmark) => b.entityType === type && b.entityId === id);
+    return bookmarkKeySet(get().bookmarks).has(`${type}:${id}`);
   },
 
   getBookmarksByType: (type) => {

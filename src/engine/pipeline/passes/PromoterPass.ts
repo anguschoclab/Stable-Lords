@@ -1,84 +1,20 @@
 import { GameState, Warrior } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
-import type { BoutOfferId, WeatherType } from '@/types/shared.types';
-import { FightingStyle } from '@/types/shared.types';
+import type { WeatherType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
-import { FIGHT_PURSE, MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 import { collectAllWarriors } from '@/engine/core/warriorCollection';
 import { isBookable } from '@/engine/warriorStatus';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';
-import { getPairKey } from '@/utils/keyUtils';
+import { RANK_REQUIREMENTS, PERSONALITY_GAP_THRESHOLDS } from '@/engine/promoters/promoterConfig';
 import {
-  TIER_MULTIPLIERS,
-  RANK_REQUIREMENTS,
-  PERSONALITY_GAP_THRESHOLDS,
-} from '@/engine/promoters/promoterConfig';
-import {
-  calculatePersonalityMatchScore,
-  calculatePersonalityPurseModifier,
-} from '@/engine/promoters/personalityScoring';
-import { calculateHype } from '@/engine/promoters/hypeCalculator';
-import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
-import {
-  displayWeek,
-  boutOfferAbsoluteWeek,
-  boutOfferExpirationAbsoluteWeek,
-} from '@/engine/core/absoluteWeek';
+  isWeatherDisadvantaged,
+  pruneStaleBoutOffers,
+  collectUnavailableWarriorIds,
+  findBestOpponent,
+  createBoutOffer,
+} from '@/engine/promoters/offerMatchmaking';
 
-/**
- * Binary search: returns the first index where arr[index] >= target.
- * If all elements are < target, returns arr.length.
- */
-export function lowerBound(arr: number[], target: number): number {
-  let lo = 0;
-  let hi = arr.length;
-  while (lo < hi) {
-    const mid = (lo + hi) >>> 1;
-    if ((arr[mid] || 0) < target) {
-      lo = mid + 1;
-    } else {
-      hi = mid;
-    }
-  }
-  return lo;
-}
-
-/**
- * Binary search: returns the first index where arr[index] > target.
- * If all elements are <= target, returns arr.length.
- */
-export function upperBound(arr: number[], target: number): number {
-  let lo = 0;
-  let hi = arr.length;
-  while (lo < hi) {
-    const mid = (lo + hi) >>> 1;
-    if ((arr[mid] || 0) <= target) {
-      lo = mid + 1;
-    } else {
-      hi = mid;
-    }
-  }
-  return lo;
-}
-
-/**
- * Returns true if the warrior's style is heavily penalized by the current weather,
- * making them a poor choice for promoter matchmaking.
- */
-function isWeatherDisadvantaged(warrior: Warrior, weather: WeatherType): boolean {
-  const isLunger = warrior.style === FightingStyle.LungingAttack;
-  if (weather === 'Rainy' && isLunger) return true;
-  if (weather === 'Dense Fog' && isLunger) return true;
-  if (weather === 'Blizzard' && (isLunger || warrior.attributes.CN < 12)) return true;
-  if (weather === 'Sandstorm' && (isLunger || warrior.style === FightingStyle.AimedBlow))
-    return true;
-  if (weather === 'Gale' && (warrior.style === FightingStyle.StrikingAttack || isLunger))
-    return true;
-  if (weather === 'Tornado') return true;
-  if (weather === 'Acid Rain') return true;
-  return false;
-}
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.
@@ -93,17 +29,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   const rankings = state.realmRankings || {};
 
   // 0. Garbage Collection: Prune expired or stale bout offers
-  const newOffers: typeof state.boutOffers = {};
-  for (const [key, offer] of Object.entries(state.boutOffers)) {
-    if (!offer) continue;
-    const isPast = boutOfferAbsoluteWeek(offer) < state.absoluteWeek;
-    const isExpired =
-      boutOfferExpirationAbsoluteWeek(offer) < state.absoluteWeek && offer.status !== 'Signed';
-
-    if (!isPast && !isExpired) {
-      newOffers[key as BoutOfferId] = offer;
-    }
-  }
+  const newOffers = pruneStaleBoutOffers(state);
 
   // 1. Gather all bookable warriors (active, not resting, not too injured, not training)
   const targetWeek = state.absoluteWeek + 2; // Forward booking
@@ -117,27 +43,8 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
   // ⚡ Bolt: Pre-compute available warriors to avoid repeated availability checks
   // Available = No SIGNED or PROPOSED bout for Week+2 or Week+3
-  const unavailableWarriorIds = new Set<string>();
-  Object.values(newOffers).forEach((o) => {
-    const isBooked =
-      (o.status === 'Signed' || o.status === 'Proposed') &&
-      (boutOfferAbsoluteWeek(o) === targetWeek || boutOfferAbsoluteWeek(o) === targetWeek + 1);
-    if (isBooked) {
-      o.warriorIds.forEach((id) => unavailableWarriorIds.add(id));
-    }
-  });
-
   // 🔒 Tournament Lock: On tournament weeks, exclude warriors in active tournaments
-  if (state.isTournamentWeek) {
-    const tournamentLockedIds = new Set<string>();
-    state.tournaments?.forEach((t) => {
-      if (!t.completed) {
-        t.participants?.forEach((p) => tournamentLockedIds.add(p.id));
-      }
-    });
-    tournamentLockedIds.forEach((id) => unavailableWarriorIds.add(id));
-  }
-
+  const unavailableWarriorIds = collectUnavailableWarriorIds(state, newOffers, targetWeek);
   const availableWarriors = allWarriors.filter((warrior) => !unavailableWarriorIds.has(warrior.id));
 
   // Gap 10: Filter out warriors whose style is heavily penalized by current weather
@@ -187,109 +94,36 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
     // Track matched warriors to prevent reuse within this promoter's pass
     const matchedIds = new Set<string>();
+    const searchCtx = {
+      promoter,
+      matchedIds,
+      recentFightPairs,
+      playerWarriorIds,
+      avoidSet,
+      challengeSet,
+      gapThreshold,
+    };
+    const offerCtx = { playerWarriorIds, weather };
 
     for (const warriorA of shuffledEligible) {
       if (generated >= capacity) break;
       if (matchedIds.has(warriorA.id)) continue;
 
       const scoreA = scoreOf(warriorA);
-      const maxScoreA = Math.max(1, scoreA);
-
-      // Compute score window for gap threshold
-      const minScoreB = scoreA - gapThreshold * maxScoreA;
-      const maxScoreB = scoreA + gapThreshold * maxScoreA;
-
-      // Binary search to find the contiguous window in sortedByScore
-      const lo = lowerBound(sortedScores, minScoreB);
-      const hi = upperBound(sortedScores, maxScoreB);
-
-      let bestCandidate: Warrior | null = null;
-      let bestScore = -Infinity;
-
-      for (let i = lo; i < hi; i++) {
-        const candidate = sortedByScore[i];
-        if (!candidate) continue;
-        if (candidate.id === warriorA.id) continue;
-        if (matchedIds.has(candidate.id)) continue;
-        if (recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) continue;
-
-        // Player avoid — skip avoided warriors when a player warrior is in the matchup
-        if (playerWarriorIds.has(warriorA.id) && avoidSet.has(candidate.id)) continue;
-        if (playerWarriorIds.has(candidate.id) && avoidSet.has(warriorA.id)) continue;
-
-        const scoreB = sortedScores[i];
-        if (scoreB === undefined) continue;
-        const gap = Math.abs(scoreA - scoreB) / maxScoreA;
-
-        const personalityScore = calculatePersonalityMatchScore(warriorA, candidate, promoter);
-
-        let candidateScore: number;
-        if (promoter.personality === 'Greedy') {
-          candidateScore = gap * 100 + personalityScore;
-        } else {
-          candidateScore = personalityScore * 100 - gap;
-        }
-
-        // Player challenge — boost challenged warriors when a player warrior is in the matchup
-        if (playerWarriorIds.has(warriorA.id) && challengeSet.has(candidate.id)) {
-          candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
-        }
-        if (playerWarriorIds.has(candidate.id) && challengeSet.has(warriorA.id)) {
-          candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
-        }
-
-        if (candidateScore > bestScore) {
-          bestScore = candidateScore;
-          bestCandidate = candidate;
-        }
-      }
-
-      const opponentB = bestCandidate;
+      const opponentB = findBestOpponent(
+        warriorA,
+        scoreA,
+        sortedByScore,
+        sortedScores,
+        searchCtx
+      );
 
       if (opponentB) {
         matchedIds.add(warriorA.id);
         matchedIds.add(opponentB.id);
 
-        const offerId = rngService.uuid();
-        const hype = calculateHype(warriorA, opponentB, promoter);
-        const basePurse = FIGHT_PURSE * TIER_MULTIPLIERS[promoter.tier];
-        const purseModifier = calculatePersonalityPurseModifier(
-          warriorA,
-          opponentB,
-          promoter,
-          hype
-        );
-        const finalPurse = Math.floor(basePurse * (hype / 100) * purseModifier);
-
-        // Favour the player's warrior when selecting arena fit
-        const isWarriorAPlayer = playerWarriorIds.has(warriorA.id);
-        const favorWarrior = isWarriorAPlayer ? warriorA : opponentB;
-        const otherWarrior = isWarriorAPlayer ? opponentB : warriorA;
-        const arenaId = selectArenaForMatchup(favorWarrior, otherWarrior, rngService, {
-          favorWeight: 1.2,
-          arenaPool: promoter.arenaPool,
-          planA: favorWarrior.plan ?? undefined,
-          planB: otherWarrior.plan ?? undefined,
-          weather,
-        });
-
-        const typedOfferId = offerId as BoutOfferId;
-        newOffers[typedOfferId] = {
-          id: typedOfferId,
-          promoterId: promoter.id,
-          warriorIds: [warriorA.id, opponentB.id],
-          boutWeek: displayWeek(state.absoluteWeek + 2),
-          expirationWeek: displayWeek(state.absoluteWeek + 1),
-          createdAbsoluteWeek: state.absoluteWeek,
-          purse: finalPurse,
-          hype,
-          status: 'Proposed',
-          responses: {
-            [warriorA.id]: 'Pending',
-            [opponentB.id]: 'Pending',
-          },
-          arenaId,
-        };
+        const offer = createBoutOffer(warriorA, opponentB, promoter, state, rngService, offerCtx);
+        newOffers[offer.id] = offer;
         generated++;
       }
     }

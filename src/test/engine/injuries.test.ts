@@ -2,30 +2,18 @@ import { describe, it, expect } from 'vitest';
 import { generateInjury, isTooInjuredToFight } from '@/engine/injuries';
 import { computeHealthImpact } from '@/engine/health';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
-import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { InjuryId } from '@/types/shared.types';
-import type { GameState } from '@/types/game';
+import { makeGameState, makeWarrior } from '@/test/_fixtures/factories';
 
 describe('rollForInjury', () => {
-  const mockWarrior: Warrior = {
+  const mockWarrior = makeWarrior({
     id: 'test-warrior' as WarriorId,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    baseSkills: {} as any,
-    derivedStats: {} as any,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
-  };
+  });
 
   const mockOutcome: FightOutcome = {
     winner: 'D',
@@ -163,14 +151,13 @@ describe('Health System Boundary Testing', () => {
       penalties: {},
     };
 
-    const mockState = {
+    const mockState = makeGameState({
       week: 5,
       roster: [
-        { id: 'w1', name: 'Warrior 1', injuries: [mockInjury] },
-        { id: 'w2', name: 'Warrior 2', injuries: [mockInjury2] },
+        makeWarrior({ id: 'w1' as WarriorId, name: 'Warrior 1', injuries: [mockInjury] }),
+        makeWarrior({ id: 'w2' as WarriorId, name: 'Warrior 2', injuries: [mockInjury2] }),
       ],
-      restStates: [],
-    } as any as GameState;
+    });
 
     const impact = computeHealthImpact(mockState);
 

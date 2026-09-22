@@ -97,6 +97,40 @@ export const NarrativeSchema = z
 
 type ValidatedJSON = z.infer<typeof NarrativeSchema>;
 
+/**
+ * Runtime guard: true when the value is an array containing only strings.
+ */
+export function isStringArray(v: unknown): v is string[] {
+  return Array.isArray(v) && v.every((x) => typeof x === 'string');
+}
+
+/**
+ * Walks a dot-delimited path through a narrative record tree and returns the
+ * parent record, leaf key, and the existing template array at that path.
+ * Throws a descriptive error when an intermediate segment is not a record
+ * or when the leaf is not a string array.
+ */
+export function resolveNarrativeArray(
+  root: Record<string, unknown>,
+  path: string
+): { parent: Record<string, unknown>; leaf: string; existing: string[] } {
+  const segments = path.split('.');
+  let node: Record<string, unknown> = root;
+  for (const seg of segments.slice(0, -1)) {
+    const next = node[seg];
+    if (typeof next !== 'object' || next === null || Array.isArray(next)) {
+      throw new Error(`Invalid narrative path "${path}": "${seg}" is not a record`);
+    }
+    node = next as Record<string, unknown>;
+  }
+  const leaf = segments[segments.length - 1]!;
+  const existing = node[leaf];
+  if (!isStringArray(existing)) {
+    throw new Error(`Invalid narrative path "${path}": leaf is not a string array`);
+  }
+  return { parent: node, leaf, existing };
+}
+
 export const DRY_RUN = process.env.DRY_RUN === 'true';
 
 let model: ReturnType<GoogleGenerativeAI['getGenerativeModel']> | null = null;
@@ -265,19 +299,16 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
   let addedCount = 0;
 
   for (const [path, items] of Object.entries(newTemplatesMap)) {
-    const segments = path.split('.');
-    let target = data as unknown as Record<string, unknown>;
-    for (let i = 0; i < segments.length - 1; i++) {
-      target = target[segments[i]!] as Record<string, unknown>;
-    }
-    const leaf = segments[segments.length - 1]!;
+    const { parent, leaf, existing } = resolveNarrativeArray(
+      data as unknown as Record<string, unknown>,
+      path
+    );
 
     // Merge and Deduplicate
-    const existing = target[leaf] as string[];
     const uniqueTemplates = [...new Set([...existing, ...items])];
     const newItemsCount = uniqueTemplates.length - existing.length;
 
-    target[leaf] = uniqueTemplates;
+    parent[leaf] = uniqueTemplates;
 
     report += `### Added to ${path} (${newItemsCount} new unique templates)\n`;
     items.forEach((it) => (report += `- ${it}\n`));
@@ -298,22 +329,22 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
  */
 export function deduplicate_full_archive(data: ValidatedJSON) {
   for (const severities of Object.values(data.strikes)) {
-    if (Array.isArray(severities)) {
+    if (isStringArray(severities)) {
       const deduped = [...new Set(severities)];
       severities.length = 0;
       severities.push(...deduped);
       continue;
     }
-    for (const sev of Object.keys(severities)) {
-      const sevMap = severities as Record<string, string[]>;
-        sevMap[sev] = [...new Set(sevMap[sev])];
+    for (const sev of Object.keys(severities) as (keyof typeof severities)[]) {
+      const list = severities[sev];
+      if (isStringArray(list)) severities[sev] = [...new Set(list)];
     }
   }
   if (data.defenses) {
     for (const outcomes of Object.values(data.defenses)) {
-      for (const outcome of Object.keys(outcomes)) {
-        const outMap = outcomes as Record<string, string[]>;
-        outMap[outcome] = [...new Set(outMap[outcome])];
+      for (const outcome of Object.keys(outcomes) as (keyof typeof outcomes)[]) {
+        const list = outcomes[outcome];
+        if (isStringArray(list)) outcomes[outcome] = [...new Set(list)];
       }
     }
   }
@@ -333,17 +364,17 @@ export function deduplicate_full_archive(data: ValidatedJSON) {
     'commentary',
   ];
   for (const cat of extraCategories) {
-    if (!data[cat]) continue;
-    for (const subCat of Object.keys(data[cat])) {
-      const subMap = data[cat] as Record<string, unknown>;
-      const val = subMap[subCat];
-      if (Array.isArray(val)) {
+    const category = data[cat];
+    if (typeof category !== 'object' || category === null) continue;
+    const subMap = category as Record<string, unknown>;
+    for (const [subCat, val] of Object.entries(subMap)) {
+      if (isStringArray(val)) {
         subMap[subCat] = [...new Set(val)];
       } else if (typeof val === 'object' && val !== null) {
         const leafMap = val as Record<string, unknown>;
-        for (const leaf of Object.keys(leafMap)) {
-          if (Array.isArray(leafMap[leaf])) {
-            leafMap[leaf] = [...new Set(leafMap[leaf] as unknown[])];
+        for (const [leaf, leafVal] of Object.entries(leafMap)) {
+          if (isStringArray(leafVal)) {
+            leafMap[leaf] = [...new Set(leafVal)];
           }
         }
       }

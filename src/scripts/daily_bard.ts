@@ -188,14 +188,15 @@ export function fetch_narrative_deficits(data: ValidatedJSON): string[] {
     'commentary',
   ];
   for (const cat of extraCategories) {
-    if (typeof data[cat] !== 'object' || data[cat] === null) continue;
-    for (const [subCat, templates] of Object.entries(data[cat])) {
-      if (Array.isArray(templates)) {
+    const category = data[cat];
+    if (typeof category !== 'object' || category === null) continue;
+    for (const [subCat, templates] of Object.entries(category as Record<string, unknown>)) {
+      if (isStringArray(templates)) {
         if (templates.length < 12) deficits.push(`${cat}.${subCat}`);
-      } else if (typeof templates === 'object') {
+      } else if (typeof templates === 'object' && templates !== null) {
         // Handle nested (e.g., promoters.[personality].pitch)
-        for (const [key, tps] of Object.entries(templates)) {
-          if (Array.isArray(tps) && tps.length < 12) deficits.push(`${cat}.${subCat}.${key}`);
+        for (const [key, tps] of Object.entries(templates as Record<string, unknown>)) {
+          if (isStringArray(tps) && tps.length < 12) deficits.push(`${cat}.${subCat}.${key}`);
         }
       }
     }
@@ -299,10 +300,7 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
   let addedCount = 0;
 
   for (const [path, items] of Object.entries(newTemplatesMap)) {
-    const { parent, leaf, existing } = resolveNarrativeArray(
-      data as unknown as Record<string, unknown>,
-      path
-    );
+    const { parent, leaf, existing } = resolveNarrativeArray(data, path);
 
     // Merge and Deduplicate
     const uniqueTemplates = [...new Set([...existing, ...items])];
@@ -316,7 +314,7 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
   }
 
   if (addedCount > 0) {
-    await writeSplitNarrative(data as unknown as Record<string, unknown>);
+    await writeSplitNarrative(data);
     await fs.writeFile(REPORT_FILE, report, 'utf-8');
     console.log(`Successfully added ${addedCount} new templates.`);
   } else {
@@ -427,10 +425,6 @@ async function main() {
   const freshRaw = await readMergedNarrative();
   const freshData = JSON.parse(JSON.stringify(freshRaw));
   deduplicate_full_archive(freshData);
-  // Deduplicate flat array categories
-  if (freshData.recap) {
-    freshData.recap = [...new Set(freshData.recap)];
-  }
   await writeSplitNarrative(freshData);
 
   console.log('✅ Bardic duties complete.');

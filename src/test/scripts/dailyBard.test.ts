@@ -1,8 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { promises as fsp } from 'fs';
+import path from 'path';
 import {
   fetch_narrative_deficits,
   deduplicate_full_archive,
   validate_with_retry,
+  commit_to_archive,
   isStringArray,
   resolveNarrativeArray,
 } from '@/scripts/daily_bard';
@@ -137,6 +140,53 @@ describe('validate_with_retry', () => {
     expect(result).not.toBeNull();
     expect(result!.length).toBe(3);
     for (const t of result!) expect(typeof t).toBe('string');
+  });
+});
+
+describe('commit_to_archive', () => {
+  // fs.promises is a shared singleton: spying on its methods intercepts the
+  // script's `import { promises as fs }` calls regardless of module mocking.
+  let readFileMock: ReturnType<typeof vi.fn>;
+  let writeFileMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    readFileMock = vi.spyOn(fsp, 'readFile') as unknown as ReturnType<typeof vi.fn>;
+    writeFileMock = vi.spyOn(fsp, 'writeFile') as unknown as ReturnType<typeof vi.fn>;
+    readFileMock.mockImplementation(async (p: unknown) => {
+      const file = path.basename(String(p));
+      if (file === 'combatStrikes.json') {
+        return JSON.stringify({ strikes: { slash: ['existing'] } });
+      }
+      return '{}';
+    });
+    writeFileMock.mockImplementation(async () => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('merges new templates into the domain file and writes a report', async () => {
+    await commit_to_archive({ 'strikes.slash': ['existing', 'brand new %A line'] });
+
+    const writes = writeFileMock.mock.calls as [string, string][];
+    const combatWrite = writes.find(([p]) => String(p).endsWith('combatStrikes.json'));
+    expect(combatWrite).toBeDefined();
+    const written = JSON.parse(String(combatWrite![1]));
+    expect(written.strikes.slash).toEqual(['existing', 'brand new %A line']);
+
+    expect(writes.some(([p]) => String(p).endsWith('Daily_Bard_Report.md'))).toBe(true);
+  });
+
+  it('writes nothing when every supplied template is a duplicate', async () => {
+    await commit_to_archive({ 'strikes.slash': ['existing'] });
+    expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
+  it('throws a descriptive error for a malformed deficit path', async () => {
+    await expect(commit_to_archive({ 'strikes.nope.deep': ['x'] })).rejects.toThrow(
+      /strikes\.nope\.deep/
+    );
   });
 });
 

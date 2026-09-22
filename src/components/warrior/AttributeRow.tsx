@@ -48,7 +48,7 @@ export function AttributeRow({
   } = getAttributeRowState({ warrior, key, assignment, seasonalGains, trainers, atCap });
 
   return (
-    <Tooltip key={key}>
+    <Tooltip>
       <TooltipTrigger asChild>
         <button
           disabled={disabled}

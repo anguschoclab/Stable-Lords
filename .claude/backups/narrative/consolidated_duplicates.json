@@ -1,0 +1,270 @@
+[
+  {
+    "path": "strikes.slashing.solid",
+    "item": "The blade traces a weeping crimson arc across {{defender}}'s exposed flesh."
+  },
+  {
+    "path": "strikes.slashing.solid",
+    "item": "A wicked horizontal cut leaves a jagged gash weeping blood."
+  },
+  {
+    "path": "strikes.slashing.solid",
+    "item": "The edge bites deep, drawing a sharp spray of arterial red."
+  },
+  {
+    "path": "strikes.slashing.solid",
+    "item": "With a whistling sweep, the steel carves a grim new tally into {{defender}}."
+  },
+  {
+    "path": "strikes.slashing.solid",
+    "item": "The blade shaves a layer of flesh with clinical, agonizing precision."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "item": "The blunt weight crashes down with the sickening percussion of breaking ribs."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "item": "A heavy blow reverberates through {{defender}}, shaking loose dust and teeth."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "item": "The impact rings out like a dull gong, compressing bone and sinew."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "item": "A crushing strike leaves a crater of bruised flesh and shattered cartilage."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "item": "The hammer-blow lands with absolute finality, rattling {{defender}}'s spine."
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "item": "The point darts like a serpent's tongue, sinking neatly into soft tissue."
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "item": "A vicious thrust punches a perfectly round, dark well of blood."
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "item": "The tip glides past armor, burying itself deep in the yielding meat below."
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "item": "A sudden, surgical jab finds an agonizing home between {{defender}}'s ribs."
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "item": "The point drills inward, leaving a ragged puncture in its wake."
+  },
+  {
+    "path": "strikes.fist.solid",
+    "item": "A thunderous hook connects cleanly, sending a spray of sweat and blood."
+  },
+  {
+    "path": "strikes.fist.solid",
+    "item": "The knuckle-strike lands flush, the sharp crack of cartilage echoing loudly."
+  },
+  {
+    "path": "strikes.fist.solid",
+    "item": "A piston-like straight punch drives the air violently from {{defender}}'s lungs."
+  },
+  {
+    "path": "strikes.fist.solid",
+    "item": "The brute force of the blow caves the skin inward with a dull thud."
+  },
+  {
+    "path": "strikes.fist.solid",
+    "item": "A rapid flurry of bruising strikes turns {{defender}}'s defense into a chaotic scramble."
+  },
+  {
+    "path": "pbp.defenses.dodge.desperate",
+    "item": "{{defender}} drops into the muck just as the lethal arc sails overhead."
+  },
+  {
+    "path": "pbp.defenses.dodge.desperate",
+    "item": "Throwing all dignity aside, {{defender}} rolls frantically out of the kill zone."
+  },
+  {
+    "path": "pbp.defenses.dodge.desperate",
+    "item": "A panic-driven stumble somehow keeps {{defender}} barely out of reach."
+  },
+  {
+    "path": "pbp.defenses.dodge.confident",
+    "item": "{{defender}} sways backward with agonizing slowness, letting the strike miss by a hair."
+  },
+  {
+    "path": "pbp.defenses.dodge.confident",
+    "item": "With a casual tilt of the head, {{defender}} watches the blow sail uselessly past."
+  },
+  {
+    "path": "pbp.defenses.dodge.confident",
+    "item": "{{defender}} sidesteps the attack with the practiced grace of a ballroom dancer."
+  },
+  {
+    "path": "pbp.defenses.dodge.theatrical",
+    "item": "{{defender}} performs a breathtaking backflip, escaping the blow with unnecessary flair."
+  },
+  {
+    "path": "pbp.defenses.dodge.theatrical",
+    "item": "A dramatic twirl leaves the attacker striking nothing but {{defender}}'s afterimage."
+  },
+  {
+    "path": "pbp.defenses.dodge.theatrical",
+    "item": "{{defender}} bows mockingly as the deadly strike sweeps right over their head."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "item": "{{defender}} shifts an inch to the left; an inch is all it takes to survive."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "item": "With brutal economy of motion, {{defender}} steps out of the strike's fatal path."
+  },
+  {
+    "path": "pbp.defenses.dodge.grim",
+    "item": "No wasted movement—{{defender}} pivots sharply, eyes locked coldly on the attacker."
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "item": "{{defender}} throws up their guard in sheer panic, steel screeching against steel."
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "item": "A wild, untutored block barely turns the strike aside with a bone-jarring clang."
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "item": "{{defender}} slaps the incoming weapon away just inches from their own throat."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "item": "{{defender}} flicks their wrist, casually batting the heavy blow aside."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "item": "A lazy parry redirects the force flawlessly, leaving the attacker stumbling."
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "item": "{{defender}} catches the strike precisely on the strong part of the blade, unbothered."
+  },
+  {
+    "path": "pbp.defenses.parry.theatrical",
+    "item": "{{defender}} sweeps the attack aside with a grand, sweeping flourish of steel."
+  },
+  {
+    "path": "pbp.defenses.parry.theatrical",
+    "item": "With a dazzling spin of their weapon, {{defender}} easily deflects the incoming blow."
+  },
+  {
+    "path": "pbp.defenses.parry.theatrical",
+    "item": "{{defender}} catches the strike and holds it there for a moment, soaking in the crowd's awe."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "item": "{{defender}} brutally slams their weapon into the incoming strike, halting it dead."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "item": "A sudden, violent block sends shockwaves up the attacker's arm."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "item": "{{defender}} meets the blow head-on with cold, mechanical precision."
+  },
+  {
+    "path": "pbp.defenses.riposte.desperate",
+    "item": "After nearly losing their head, {{defender}} lashes out blindly in a panicked counter."
+  },
+  {
+    "path": "pbp.defenses.riposte.desperate",
+    "item": "Stumbling from the block, {{defender}} throws a desperate, flailing return strike."
+  },
+  {
+    "path": "pbp.defenses.riposte.desperate",
+    "item": "A panicked deflection turns into a wild, breathless lunge from {{defender}}."
+  },
+  {
+    "path": "pbp.defenses.riposte.confident",
+    "item": "Having effortlessly turned the blade aside, {{defender}} calmly returns the favor."
+  },
+  {
+    "path": "pbp.defenses.riposte.confident",
+    "item": "A smooth block flows seamlessly into an arrogant, lightning-fast thrust."
+  },
+  {
+    "path": "pbp.defenses.riposte.confident",
+    "item": "{{defender}} tuts softly before executing a flawless, textbook counterattack."
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "item": "{{defender}} spins from the parry into a gorgeous, showboating counter-strike."
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "item": "With a laugh, {{defender}} deflects the blow and returns fire with dazzling flair."
+  },
+  {
+    "path": "pbp.defenses.riposte.theatrical",
+    "item": "A sweeping block transforms into a dramatic, sweeping counter from {{defender}}."
+  },
+  {
+    "path": "pbp.defenses.riposte.grim",
+    "item": "The block is brutal, the immediate counter-strike even more so."
+  },
+  {
+    "path": "pbp.defenses.riposte.grim",
+    "item": "{{defender}} knocks the weapon aside and drives an ugly, pragmatic blow forward."
+  },
+  {
+    "path": "pbp.defenses.riposte.grim",
+    "item": "A cold deflection is instantly followed by a merciless, mechanical thrust."
+  },
+  {
+    "path": "pbp.knockdowns",
+    "item": "The sheer weight of the impact sends {{defender}} crashing into the brutal sand."
+  },
+  {
+    "path": "pbp.knockdowns",
+    "item": "{{defender}}'s legs give out completely, collapsing them into a pathetic heap."
+  },
+  {
+    "path": "pbp.knockdowns",
+    "item": "The blow lifts {{defender}} clean off their feet, slamming them hard onto their back."
+  },
+  {
+    "path": "pbp.recoveries",
+    "item": "Spitting blood and sand, {{defender}} forces themselves painfully back to their feet."
+  },
+  {
+    "path": "pbp.recoveries",
+    "item": "{{defender}} rolls with the momentum, scrambling upright with ragged breaths."
+  },
+  {
+    "path": "pbp.recoveries",
+    "item": "Pushing off the stained ground, {{defender}} rises unsteadily but refuses to stay down."
+  },
+  {
+    "path": "kill_text.default",
+    "item": "The final blow is clinical, separating soul from flesh without fanfare."
+  },
+  {
+    "path": "kill_text.default",
+    "item": "A brutal strike ends it, painting the sands in a fresh, tragic canvas of red."
+  },
+  {
+    "path": "kill_text.default",
+    "item": "{{defender}} collapses, life bleeding out into the arena's unforgiving dirt."
+  },
+  {
+    "path": "kill_text.default",
+    "item": "The strike is violently final; an ugly, wet crunch that silences {{defender}} forever."
+  },
+  {
+    "path": "kill_text.default",
+    "item": "With a dark, gurgling sigh, {{defender}} joins the countless dead beneath the arena floor."
+  }
+]

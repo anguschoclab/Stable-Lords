@@ -1348,6 +1348,50 @@ export const THE_CURSED_SWAMP: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.4 },
 };
 
+export const THE_JAGGED_PEAK: ArenaConfig = {
+  id: 'the_jagged_peak',
+  name: 'The Jagged Peak',
+  tags: ['open', 'elevated', 'uneven', 'cursed'],
+  tier: 3,
+  size: 'open',
+  description: 'A perilous, cursed summit where unpredictable gales and treacherous rocks test even the most skilled combatants.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.25 },
+};
+
+export const THE_MURKY_DEPTHS: ArenaConfig = {
+  id: 'the_murky_depths',
+  name: 'The Murky Depths',
+  tags: ['cramped', 'water', 'indoor', 'magical'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A flooded, arcane cavern that disorients fighters while amplifying magical resonances.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.2 },
+};
+
+export const THE_SMOLDERING_PITS: ArenaConfig = {
+  id: 'the_smoldering_pits',
+  name: 'The Smoldering Pits',
+  tags: ['open', 'living', 'outdoor', 'ruins'],
+  tier: 2,
+  size: 'open',
+  description: 'Ancient ruins set ablaze by natural vents, creating a shifting, hazardous battlefield.',
+  zoneDef: { Edge: -1, Corner: -4 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.3 },
+};
+
+export const THE_CRYSTAL_SPIRE: ArenaConfig = {
+  id: 'the_crystal_spire',
+  name: 'The Crystal Spire',
+  tags: ['cramped', 'elevated', 'magical', 'indoor'],
+  tier: 3,
+  size: 'cramped',
+  description: 'A towering, enclosed spire of humming crystals. Movements are mirrored and distorted by arcane light.',
+  zoneDef: { Edge: -4, Corner: -6 },
+  surfaceMod: { initiativeMod: 1, riposteMod: 2, enduranceMult: 1.15 },
+};
+
 export const THE_IRON_CAGE: ArenaConfig = {
   id: 'the_iron_cage',
   name: 'The Iron Cage',
@@ -1403,6 +1447,10 @@ export const THE_IRON_CAGE: ArenaConfig = {
   VERDANT_LABYRINTH,
   THE_SHIFTING_SANDS,
   THE_CURSED_SWAMP,
+  THE_JAGGED_PEAK,
+  THE_MURKY_DEPTHS,
+  THE_SMOLDERING_PITS,
+  THE_CRYSTAL_SPIRE,
   THE_IRON_CAGE,
 ].forEach(registerArena);
 

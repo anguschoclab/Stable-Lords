@@ -248,6 +248,26 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.SWAMP_MIASMA_TRIGGER,
     narrativeText: 'A noxious bubble bursts, releasing a choking, cursed miasma into the air!',
   },
+
+  jagged_peak_avalanche: {
+    id: 'jagged_peak_avalanche',
+    name: 'Rock Avalanche',
+    description: 'Unstable rocks plummet from the jagged peak',
+    requiredTags: ['elevated', 'uneven'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.JAGGED_PEAK_AVALANCHE_TRIGGER,
+    narrativeText: 'The sheer force dislodges rocks from the peak, sending a minor avalanche onto the fighters!',
+  },
+
+  murky_depths_tide: {
+    id: 'murky_depths_tide',
+    name: 'Arcane Tide',
+    description: 'A surge of magical water sweeps the floor',
+    requiredTags: ['water', 'magical'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.MURKY_DEPTHS_TIDE_TRIGGER,
+    narrativeText: 'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
+  },
 };
 
 // ─── Helper Functions ──────────────────────────────────────────────────────

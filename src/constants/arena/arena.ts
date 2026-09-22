@@ -225,7 +225,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     description: 'The cursed swamp boils under the blood moon, amplifying the necrotic drain',
   },
 
-  'uneven:Blizzard': {
+  'elevated:Blizzard': {
     damageMult: 1 - WEATHER_PENALTIES.JAGGED_PEAK_LUNGE_PENALTY,
     description: 'The jagged peaks become completely impassable for forward lunges',
   },

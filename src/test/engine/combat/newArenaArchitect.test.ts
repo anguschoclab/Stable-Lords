@@ -41,7 +41,7 @@ describe('Arena Architect Verification', () => {
     expect(modMurky.riposteMod).toBeGreaterThan(0);
     expect(modMurky.descriptions.some(d => d.includes('Arcane resonances'))).toBe(true);
 
-    const modJagged = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Blizzard', ['uneven']);
+    const modJagged = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Blizzard', ['elevated']);
     expect(modJagged.damageMult).toBeLessThan(1.0);
     expect(modJagged.descriptions.some(d => d.includes('jagged peaks'))).toBe(true);
   });

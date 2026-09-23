@@ -39,6 +39,17 @@ import { engineProxy } from '@/engine/workerProxy';
 import { generateRivalStables } from '@/engine/rivals';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 
+vi.mock('@/schemas/gameStateSchema', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/schemas/gameStateSchema')>();
+  return {
+    ...actual,
+    GameStateSchema: {
+      ...actual.GameStateSchema,
+      parse: vi.fn(),
+    }
+  };
+});
+
 const seedStore = () => {
   useGameStore
     .getState()
@@ -71,7 +82,7 @@ describe('useAdminTools', () => {
     // other schema method real — the store does not import this module, so
     // this cannot affect store internals. (spyOn works on both runners;
     // vi.mock's importOriginal arg does not exist under bun:test.)
-    vi.spyOn(GameStateSchema, 'parse').mockImplementation((data: unknown) => data as never);
+    vi.mocked(GameStateSchema.parse).mockImplementation((data: unknown) => data as never);
     seedStore();
   });
 

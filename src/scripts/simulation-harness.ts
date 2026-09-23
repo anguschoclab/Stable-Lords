@@ -1,5 +1,8 @@
 import { type GameState, type DeferredBoutLog } from '@/types/state.types';
-import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import {
+  advanceWeek,
+  getLastPipelineProfile,
+} from '@/engine/pipeline/services/weekPipelineService';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';
@@ -47,6 +50,17 @@ export interface SimulationConfig {
    * is cloned before the run so the caller's object is never mutated.
    */
   initialState?: GameState;
+  /**
+   * Enable the per-pass pipeline profiler (`__SL_PIPELINE_PROF`). When set,
+   * the result carries an aggregated per-pass timing table.
+   */
+  profile?: boolean;
+  /**
+   * Optional per-week observer invoked after each `advanceWeek` with the
+   * post-week state and 1-based week index — used by soak.mjs to run
+   * invariant checks without re-entering the loop.
+   */
+  onWeek?: (state: GameState, weekIndex: number) => void;
 }
 
 /**
@@ -56,6 +70,18 @@ export interface SimulationResult {
   finalState: GameState;
   pulses: SimPulse[];
   cumulative: CumulativeStats;
+  /** Per-pass aggregate timings — present only when `config.profile` is set. */
+  profile?: PassProfileRow[];
+}
+
+/** Aggregated timing for one pipeline pass across the whole run. */
+export interface PassProfileRow {
+  id: string;
+  stage: string;
+  weeks: number;
+  totalMs: number;
+  avgMs: number;
+  maxMs: number;
 }
 
 async function flushDeferredLogs(
@@ -102,7 +128,15 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
   // 2. Main Loop
   console.log(`[Harness] Starting simulation for ${weeks} weeks...`);
 
-  for (let w = 1; w <= weeks; w++) {
+  // Per-pass profiling is opt-in: the flag is checked once per pass, so the
+  // steady-state cost is a single property read per pass per week.
+  const g = globalThis as Record<string, unknown>;
+  const prevProf = g.__SL_PIPELINE_PROF;
+  if (config.profile) g.__SL_PIPELINE_PROF = true;
+  const passAgg = new Map<string, PassProfileRow>();
+
+  try {
+    for (let w = 1; w <= weeks; w++) {
     // A. Weekly Decision Logic (AI/Player)
 
     // Headless: Auto-Respond to Player Contracts
@@ -129,9 +163,28 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
     // B. Advance Week
     state = await advanceWeek(state);
 
+    if (config.profile) {
+      for (const t of getLastPipelineProfile() ?? []) {
+        const row = passAgg.get(t.id) ?? {
+          id: t.id,
+          stage: t.stage,
+          weeks: 0,
+          totalMs: 0,
+          avgMs: 0,
+          maxMs: 0,
+        };
+        row.weeks++;
+        row.totalMs += t.ms;
+        row.avgMs = row.totalMs / row.weeks;
+        row.maxMs = Math.max(row.maxMs, t.ms);
+        passAgg.set(t.id, row);
+      }
+    }
+
     // C. Record this week's new bouts/deaths/retirements by id — before any
     // truncation can drop the underlying entries.
     tracker.recordWeek(state);
+    config.onWeek?.(state, w);
 
     // D. Drain deferred bout transcripts weekly when an archive sink is
     // configured — keeps peak transcript memory at ~1 week of bouts.
@@ -177,6 +230,12 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
         break;
       }
     }
+    }
+  } finally {
+    if (config.profile) {
+      if (prevProf === undefined) delete g.__SL_PIPELINE_PROF;
+      else g.__SL_PIPELINE_PROF = prevProf;
+    }
   }
 
   // Final pass: flush any remaining transcripts and return a bounded state.
@@ -199,5 +258,8 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
     finalState: state,
     pulses,
     cumulative: tracker.snapshot(),
+    profile: config.profile
+      ? [...passAgg.values()].sort((a, b) => b.totalMs - a.totalMs)
+      : undefined,
   };
 }

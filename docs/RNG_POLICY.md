@@ -35,3 +35,41 @@ and by `src/test/engine/determinismAudit.test.ts`. Never add it back.
 | `entropyRng()` | `src/utils/random.ts` | `IRNGService` seeded from crypto entropy |
 | `cryptoRandom` / `cryptoRandomInt` | `src/utils/cryptoRandom.ts` | CSPRNG float in [0,1) / int in [min,max] |
 | `generateId(rng?, prefix?)` | `src/utils/idUtils.ts` | UUID via `crypto.randomUUID` / `getRandomValues` / seeded rng |
+
+## Seed-scheme table (determinism-critical)
+
+These seed expressions are the pipeline's determinism contract. They are
+load-bearing — shard workers and the in-line path must compute identical
+streams — so a change is a content change and the `*.slow.test.ts`
+determinism suite (`determinism`, `parallelDeterminism`) will catch drift.
+
+| Consumer | Seed expression | Location |
+|---|---|---|
+| Week root rng | `nextYear * 52 + nextWeek * 7919 + 101` | `pipeline/services/weekPipelineService.ts` (`prepareWeekContext`) |
+| Tournament day | `tournamentDaySeed(year, week, day)` = `year * 10000 + week * 100 + day` | `pipeline/tick/TickOrchestrator.ts` — shared by `advanceDay` and `skipToWeekEnd` |
+| Bout resolution | `hashStr(`${absoluteWeek}|${aId}|${dId}`)` | `bout/services/boutResolution.ts` |
+| Rival strategy (shard-safe) | `absoluteWeek * 31 + index * 997 + owner.id.length` | `pipeline/passes/rivalStableShard.ts` |
+| Rival shard intel rng | `strategySeed + 123` | `pipeline/passes/rivalStableShard.ts` |
+| Rival succession (bankruptcy) | `absoluteWeek + index * 1000` | `pipeline/passes/rivalStableShard.ts` |
+| Rival roster mgmt | `absoluteWeek * 13 + 7` | `pipeline/passes/RivalStrategyPass.ts` |
+| Week gazette flavor | `absoluteWeek * 9973 + 123` | `bout/services/WeekFinalizationService.ts` |
+| Week side-effects rng | `absoluteWeek * 13` | `bout/services/WeekFinalizationService.ts` |
+| System-pass floor rng | `state.week * 6151 + 29` | `pipeline/passes/SystemPass.ts` |
+| Tier progression fallback | `hashStr(createdAt) + state.week` | `pipeline/core/tierProgression.ts` |
+
+### Identity-dependent seeds
+
+Bout seeds hash warrior **ids** — any change to how ids are generated is a
+seed change. `generateId()` without an rng and `crypto.randomUUID()` produce
+non-deterministic ids and are banned on simulation paths; generated rival
+warriors derive uuids from the seeded rng (`rivalWarriorFactory` delegates
+`rngWrapper.uuid` to `rng.uuid`). Tests install `setMockIdGenerator` to keep
+`generateId` call-order deterministic.
+
+### Shard determinism
+
+Shard seeds must be **position-independent**: `index`-derived seeds use the
+rival's index in the week's stable ordering (fixed before dispatch), never a
+chunk-local index or worker id. `hashStr`-based bout seeds depend only on
+immutable ids and the absolute week, so chunk boundaries are invisible to
+the output.

@@ -1,5 +1,14 @@
 # Pipeline and Tick Optimization - Implementation Summary
 
+> **Superseded (2026-09 revision).** The architecture described below was
+> replaced by the staged-pipeline refactor: `featureFlags.ts`,
+> `useBatchMode`, the legacy `runAutosim(state, weeks, cb)` signature, and
+> `src/engine/tick/TimeAdvanceService.ts` no longer exist. Current
+> architecture: `docs/PIPELINE_AUDIT.md`, `docs/PIPELINE_DEPENDENCY_MAP.md`,
+> `docs/PIPELINE_PARALLELISM.md`, `docs/BATCH_ADVANCE_PRODUCTION.md`,
+> `docs/RNG_POLICY.md` (seed-scheme table). The remainder of this document is
+> retained as historical record only.
+
 ## Project Status: ✅ COMPLETE
 
 All phases of the pipeline and tick optimization project have been successfully implemented.

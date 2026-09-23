@@ -65,6 +65,11 @@ export interface AutosimOptions {
   onProgress?: (current: number, total: number) => void;
   /** Defaults to DEFAULT_AUTOSIM_STOP_CONDITIONS; evaluated every week. */
   stopConditions?: SoftStopCondition[];
+  /**
+   * In-process shard pool for parallelizable passes (rival strategy, bout
+   * resolution). In-process only — not structured-cloneable.
+   */
+  pool?: import('@/engine/pool/enginePool').EnginePool;
 }
 
 /**
@@ -173,6 +178,7 @@ export async function runAutosim(
     state = await advanceWeek(state, {
       headless: true,
       mutableInput: i > 0,
+      pool: options.pool,
     });
 
     // 2. Auto-respond to player contracts

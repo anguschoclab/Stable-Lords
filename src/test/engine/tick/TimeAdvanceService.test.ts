@@ -213,14 +213,21 @@ describe('TimeAdvanceService methods', () => {
       expect(result.state.week).toBe(startWeek + 13);
     });
 
-    it('should stop early if a condition is triggered at a checkpoint', async () => {
+    it('should stop early if a condition is triggered mid-quarter', async () => {
       let calls = 0;
       vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
         calls++;
         if (calls >= 4) {
           return { ...state, week: state.week + 1, roster: [], arenaHistory: [] };
         }
-        return { ...state, week: state.week + 1, arenaHistory: [] };
+        // Fresh state has an empty roster — keep it populated until week 4 or
+        // rosterEmpty fires immediately.
+        return {
+          ...state,
+          week: state.week + 1,
+          roster: [{ id: 'w1' } as never],
+          arenaHistory: [],
+        };
       });
 
       const conditions: SoftStopCondition[] = [{ type: 'rosterEmpty' }];
@@ -239,14 +246,19 @@ describe('TimeAdvanceService methods', () => {
         calls++;
         // Roster empties on week 1 — the sim must halt at week 1, not continue
         // to a 4-week checkpoint (the old checkpointInterval behavior).
-        return { ...state, week: state.week + 1, roster: [], arenaHistory: [] };
+        return {
+          ...state,
+          week: state.week + 1,
+          roster: calls === 1 ? [{ id: 'w1' } as never] : [],
+          arenaHistory: [],
+        };
       });
 
       const result = await TimeAdvanceService.advanceQuarter(mockState, {
         stopConditions: [{ type: 'rosterEmpty' }],
       });
 
-      expect(result.weeksCompleted).toBe(1);
+      expect(result.weeksCompleted).toBe(2);
       expect(result.stopReason).toBe('roster_empty');
     });
 

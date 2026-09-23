@@ -14,6 +14,8 @@ import {
   type WeekPassSpec,
   type WeekPipelineContext,
 } from '@/engine/pipeline/pipelineStages';
+import { getEnginePool, type EnginePool } from '@/engine/pool/enginePool';
+import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/telemetry';
 
 /**
  * Options for week advancement
@@ -34,6 +36,12 @@ export interface WeekAdvanceOptions {
    * service itself produced). In-process callers must leave this unset.
    */
   mutableInput?: boolean;
+  /**
+   * Explicit engine pool for shard-parallel passes. When omitted, the shared
+   * pool is used only if it was configured with size > 1 via
+   * `configureEnginePool`; otherwise every pass runs in-line.
+   */
+  pool?: EnginePool;
 }
 
 // 🌩️ Modular Pipeline Passes
@@ -56,6 +64,29 @@ import { runProgressionPass } from '../passes/ProgressionPass';
 
 interface WeekContext extends WeekPipelineContext {
   headless?: boolean;
+}
+
+/**
+ * Dev-only per-pass profiler: when `globalThis.__SL_PIPELINE_PROF` is truthy,
+ * every pass's wall-clock ms is recorded and exposed via
+ * `getLastPipelineProfile()`. Zero-cost when off (a single flag check).
+ */
+export function isPipelineProfiling(): boolean {
+  return Boolean((globalThis as Record<string, unknown>).__SL_PIPELINE_PROF);
+}
+
+/** One pass's wall-clock time within a profiled week. */
+export interface PipelinePassTiming {
+  id: string;
+  stage: WeekPassSpec['stage'];
+  ms: number;
+}
+
+let lastPipelineProfile: PipelinePassTiming[] | null = null;
+
+/** Returns the most recent profiled week, or null when profiling is off. */
+export function getLastPipelineProfile(): PipelinePassTiming[] | null {
+  return lastPipelineProfile;
 }
 
 function prepareWeekContext(state: GameState, headless?: boolean): WeekContext {
@@ -159,7 +190,7 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
     id: 'rivalStrategy',
     stage: 'world',
     after: ['recruitment'], // draft pool must be refilled before the AI draft drains it
-    run: (s, ctx) => runRivalStrategyPass(s, ctx.nextWeek, ctx.rootRng, ctx.headless),
+    run: (s, ctx) => runRivalStrategyPass(s, ctx.nextWeek, ctx.rootRng, ctx.headless, ctx.pool),
     writes: [
       'rivalsUpdates',
       'boutOffers',
@@ -232,7 +263,14 @@ function stripWeekCaches(state: GameState): GameState {
  */
 function createMutableWeekContext(state: GameState, mutableInput?: boolean): GameState {
   if (mutableInput) return stripWeekCaches(state);
-  return structuredClone(stripWeekCaches(state));
+  const stripped = stripWeekCaches(state);
+  if (isTelemetryEnabled()) {
+    const t0 = performance.now();
+    const cloned = structuredClone(stripped);
+    telemetry.timing(TelemetryEvents.SERIALIZATION_CLONE_MS, performance.now() - t0);
+    return cloned;
+  }
+  return structuredClone(stripped);
 }
 
 /**
@@ -281,10 +319,11 @@ async function runBoutPhase(
   // (memoized promise — a resolved-promise no-op after first load).
   await loadCombatNarrative();
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  const { impact: boutImpact, results, summary } = runBoutSimulationPass(
+  const { impact: boutImpact, results, summary } = await runBoutSimulationPass(
     state,
     ctx.rootRng,
-    ctx.headless
+    ctx.headless,
+    ctx.pool
   );
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
@@ -307,19 +346,30 @@ async function runBoutPhase(
 
 /**
  * Runs every pass in a resolution stage against the same snapshot, then
- * applies the merged impacts and resyncs the week caches.
+ * applies the merged impacts and resyncs the week caches. Passes run in
+ * declaration order and are awaited individually — intra-pass sharding may
+ * parallelize work inside a pass, but stage semantics stay sequential.
  */
-function runStage(
+async function runStage(
   stage: WeekPassSpec['stage'],
   state: GameState,
   ctx: WeekContext,
   opts?: WeekAdvanceOptions
-): GameState {
+): Promise<GameState> {
+  const profiling = isPipelineProfiling();
   const impacts: StateImpact[] = [];
   for (const spec of WEEK_PIPELINE_PASSES) {
     if (spec.stage !== stage) continue;
     if (spec.playerFacing && (opts?.headless || opts?.playerStopped)) continue;
-    impacts.push(spec.run(state, ctx));
+    const started = profiling ? performance.now() : 0;
+    impacts.push(await spec.run(state, ctx));
+    if (profiling) {
+      const ms = performance.now() - started;
+      lastPipelineProfile?.push({ id: spec.id, stage, ms });
+      telemetry.timing(TelemetryEvents.PIPELINE_PASS_TIMING, ms, {
+        pass: spec.id,
+      });
+    }
   }
   const resolved = resolveImpacts(state, impacts);
   buildWeekCaches(resolved);
@@ -338,8 +388,22 @@ export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): b
  * Preview the core-stage impacts without applying them. The bankruptcy gate
  * needs the projected treasury delta before commit.
  */
-function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
-  return WEEK_PIPELINE_PASSES.filter((p) => p.stage === 'core').map((p) => p.run(state, ctx));
+async function collectCoreImpacts(state: GameState, ctx: WeekContext): Promise<StateImpact[]> {
+  const impacts: StateImpact[] = [];
+  const profiling = isPipelineProfiling();
+  for (const spec of WEEK_PIPELINE_PASSES) {
+    if (spec.stage !== 'core') continue;
+    const started = profiling ? performance.now() : 0;
+    impacts.push(await spec.run(state, ctx));
+    if (profiling) {
+      const ms = performance.now() - started;
+      lastPipelineProfile?.push({ id: spec.id, stage: 'core', ms });
+      telemetry.timing(TelemetryEvents.PIPELINE_PASS_TIMING, ms, {
+        pass: spec.id,
+      });
+    }
+  }
+  return impacts;
 }
 
 function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
@@ -349,12 +413,29 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   state.day = 0;
 
   // All-time counters — immune to the periodic truncation of arenaHistory.
-  // Id-diff is exact even when slice(-500) drops entries mid-week: dropped
-  // entries are always the oldest, already counted in earlier weeks.
+  // next === prev.slice(K) ++ appended (truncation only ever drops a prefix),
+  // so the boundary is located by scanning backwards for prev's last id —
+  // O(appended) instead of an O(history) Set-diff per array. Falls back to
+  // the diff if the expected suffix structure doesn't hold (defensive).
   const prevLifetime = state.lifetimeStats ?? { bouts: 0, kills: 0, retirements: 0 };
   const newIds = <T extends { id: unknown }>(next: T[] | undefined, prev: T[] | undefined) => {
-    const seen = new Set((prev ?? []).map((x) => x.id));
-    return (next ?? []).filter((x) => !seen.has(x.id)).length;
+    const n = next ?? [];
+    const p = prev ?? [];
+    const lastPrevId = p.length > 0 ? p[p.length - 1]?.id : undefined;
+    if (lastPrevId === undefined) return n.length;
+    let boundary = -1;
+    for (let i = n.length - 1; i >= 0; i--) {
+      if (n[i]?.id === lastPrevId) {
+        boundary = i + 1;
+        break;
+      }
+    }
+    // Sanity: retained prefix must align with prev's tail (covers duplicate ids).
+    if (boundary >= 0 && p[p.length - boundary]?.id === n[0]?.id) {
+      return n.length - boundary;
+    }
+    const seen = new Set(p.map((x) => x.id));
+    return n.filter((x) => !seen.has(x.id)).length;
   };
   state.lifetimeStats = {
     bouts: prevLifetime.bouts + newIds(state.arenaHistory, oldState.arenaHistory),
@@ -438,19 +519,27 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
  */
 export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
   const headless = opts?.headless;
+  const weekStarted = performance.now();
 
   assertPipelineLegal();
+
+  // Shard pool: explicit override wins; otherwise the shared pool is used only
+  // when configured > 1 (getEnginePool() lazily no-ops at size 1).
+  const sharedPool = getEnginePool();
+  const pool = opts?.pool ?? (sharedPool.size > 1 ? sharedPool : undefined);
+
+  if (isPipelineProfiling()) lastPipelineProfile = [];
 
   // Deep clone state once at week boundary to allow safe mutation in all
   // passes — skipped when the caller grants ownership via mutableInput.
   const mutableState = createMutableWeekContext(state, opts?.mutableInput);
-  const ctx = prepareWeekContext(mutableState, headless);
+  const ctx: WeekContext = { ...prepareWeekContext(mutableState, headless), pool };
 
   // Build caches once per week for O(1) lookups
   buildWeekCaches(mutableState);
 
   const settledState = await runBoutPhase(mutableState, ctx);
-  const coreImpacts = collectCoreImpacts(settledState, ctx);
+  const coreImpacts = await collectCoreImpacts(settledState, ctx);
 
   // Player stop conditions gate PLAYER content only — the WORLD keeps evolving.
   const playerStopped =
@@ -460,10 +549,14 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
   const stateAfterCore = resolveImpacts(settledState, coreImpacts);
   buildWeekCaches(stateAfterCore);
 
-  const stateAfterWorld = runStage('world', stateAfterCore, ctx, opts);
-  return finalizeState(
-    runStage('content', stateAfterWorld, ctx, { ...opts, playerStopped }),
+  const stateAfterWorld = await runStage('world', stateAfterCore, ctx, opts);
+  const result = finalizeState(
+    await runStage('content', stateAfterWorld, ctx, { ...opts, playerStopped }),
     state,
     ctx
   );
+  telemetry.timing(TelemetryEvents.ADVANCE_WEEK, performance.now() - weekStarted, {
+    headless: String(Boolean(headless)),
+  });
+  return result;
 }

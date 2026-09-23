@@ -24,12 +24,19 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
  * are deterministic in declaration order and disjoint-key safe.
  */
 
+/** Resolution stage — 'core' settles first, then 'world', then 'content'. */
 export type WeekStage = 'core' | 'world' | 'content';
 
+/** Declarative spec for one weekly pipeline pass. */
 export interface WeekPassSpec {
   id: string;
   stage: WeekStage;
-  run: (state: GameState, ctx: WeekPipelineContext) => StateImpact;
+  /**
+   * Executes the pass against the shared stage snapshot. May return a Promise
+   * — the stage runner awaits each pass in declaration order, so async passes
+   * preserve sequential stage semantics (only intra-pass work parallelizes).
+   */
+  run: (state: GameState, ctx: WeekPipelineContext) => StateImpact | Promise<StateImpact>;
   /** StateImpact keys this pass may write. */
   writes: (keyof StateImpact)[];
   /** Pass ids that must resolve in an earlier-or-equal position. */
@@ -38,6 +45,7 @@ export interface WeekPassSpec {
   playerFacing?: boolean;
 }
 
+/** Per-week context shared by every pass in the pipeline. */
 export interface WeekPipelineContext {
   currentWeek: number;
   nextWeek: number;
@@ -45,6 +53,11 @@ export interface WeekPipelineContext {
   rootRng: IRNGService;
   /** Suppresses UI-facing output inside passes that read it (rival strategy newsletters). */
   headless?: boolean;
+  /**
+   * Shard pool for parallelizable passes. Present only when configured with
+   * size > 1 — passes must treat its absence as "run in-line".
+   */
+  pool?: import('@/engine/pool/enginePool').EnginePool;
 }
 
 /** 'replace'-strategy keys — destructive under same-snapshot writes. */
@@ -74,6 +87,7 @@ const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
 
 const STAGE_ORDER: Record<WeekStage, number> = { core: 0, world: 1, content: 2 };
 
+/** A single pipeline legality violation found by validatePipelinePasses. */
 export interface PipelineValidationIssue {
   kind: 'exclusive-write-collision' | 'ordering' | 'unknown-after';
   message: string;
@@ -117,8 +131,8 @@ export function validatePipelinePasses(specs: WeekPassSpec[]): PipelineValidatio
   for (const spec of specs) {
     for (const dep of spec.after ?? []) {
       const depIdx = indexById.get(dep);
-      const specIdx = indexById.get(spec.id)!;
-      if (depIdx === undefined) {
+      const specIdx = indexById.get(spec.id);
+      if (depIdx === undefined || specIdx === undefined) {
         issues.push({
           kind: 'unknown-after',
           message: `Pass '${spec.id}' declares after='${dep}' which is not a registered pass`,
@@ -126,8 +140,11 @@ export function validatePipelinePasses(specs: WeekPassSpec[]): PipelineValidatio
         });
         continue;
       }
-      const depStage = STAGE_ORDER[specs[depIdx]!.stage];
-      const specStage = STAGE_ORDER[spec.stage];
+      const depSpec = specs[depIdx];
+      const specSpec = specs[specIdx];
+      if (!depSpec || !specSpec) continue;
+      const depStage = STAGE_ORDER[depSpec.stage];
+      const specStage = STAGE_ORDER[specSpec.stage];
       const violated = depStage > specStage || (depStage === specStage && depIdx >= specIdx);
       if (violated) {
         issues.push({

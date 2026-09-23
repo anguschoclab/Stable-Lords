@@ -39,6 +39,15 @@ export function getTelemetryProvider(): TelemetryProvider {
 }
 
 /**
+ * True when a real provider is installed — callers use this to gate
+ * instrumentation that itself has a cost (e.g. measuring payload bytes via
+ * JSON.stringify).
+ */
+export function isTelemetryEnabled(): boolean {
+  return globalProvider !== noopProvider;
+}
+
+/**
  * Telemetry helper functions for batch advancement
  */
 export const telemetry = {
@@ -59,11 +68,18 @@ export const telemetry = {
  */
 export const TelemetryEvents = {
   // Timing events
+  ADVANCE_WEEK: 'advance_week',
+  ADVANCE_DAY: 'advance_day',
   ADVANCE_QUARTER: 'advance_quarter',
   ADVANCE_YEAR: 'advance_year',
   SKIP_TO_QUARTER_END: 'skip_to_quarter_end',
   SKIP_TO_YEAR_END: 'skip_to_year_end',
   FLUSH_DEFERRED_ARCHIVES: 'flush_deferred_archives',
+  PIPELINE_PASS_TIMING: 'pipeline_pass_timing',
+  PARALLEL_SHARD_MS: 'parallel_shard_ms',
+  SERIALIZATION_CLONE_MS: 'serialization_clone_ms',
+  SERIALIZATION_PAYLOAD_BYTES: 'serialization_payload_bytes',
+  ENGINE_ROUNDTRIP_MS: 'engine_roundtrip_ms',
 
   // Counter events
   ADVANCE_QUARTER_SUCCESS: 'advance_quarter_success',
@@ -77,6 +93,7 @@ export const TelemetryEvents = {
   FEATURE_FLAG_YEAR: 'feature_flag_year',
   FEATURE_FLAG_HEADLESS: 'feature_flag_headless',
   DEFERRED_LOGS_COUNT: 'deferred_logs_count',
+  ENGINE_JOB_QUEUE_DEPTH: 'engine_job_queue_depth',
 } as const;
 
 // Common tag keys

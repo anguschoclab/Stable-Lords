@@ -33,6 +33,10 @@ const pendingRetries: DeferredBoutLog[] = [];
 type ArchiveRetryListener = (log: DeferredBoutLog) => void;
 const retryListeners = new Set<ArchiveRetryListener>();
 
+/**
+ * Subscribe to archive-write failures: the listener is invoked with each log
+ * parked for retry. Returns an unsubscribe function.
+ */
 export function onArchiveRetry(listener: ArchiveRetryListener): () => void {
   retryListeners.add(listener);
   return () => retryListeners.delete(listener);
@@ -53,6 +57,9 @@ export function getPendingArchiveRetries(): readonly DeferredBoutLog[] {
   return pendingRetries;
 }
 
+/**
+ * Write each log via archiveService; failures land in the retry registry.
+ */
 function archiveDirectly(logs: DeferredBoutLog[]): Promise<void> {
   return Promise.all(
     logs.map((log) =>

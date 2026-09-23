@@ -11,6 +11,7 @@ import {
   type YearAdvanceResult,
   type AdvanceOptions,
 } from './timeAdvance';
+import { telemetry, TelemetryEvents } from '@/engine/telemetry';
 
 /**
  * Canonical tournament-day RNG seed. Both the interactive day tick
@@ -24,21 +25,23 @@ export function tournamentDaySeed(year: number, week: number, day: number): numb
 
 /**
  * Resolve a single tournament day. Shared by advanceDay (single step) and
- * skipToWeekEnd (batched loop) so the two paths can never drift apart.
+ * skipToWeekEnd (batched loop) so the two paths can never drift apart —
+ * same seed formula, same tournament-entry threading, same headless flag.
  */
 function resolveTournamentDay(
   state: GameState,
   tournamentId: string,
   day: number,
-  headless?: boolean
-): { state: GameState; roundResults: string[] } {
-  const { updatedState, roundResults } = TournamentSelectionService.resolveRound(
+  headless: boolean | undefined,
+  tournament?: GameState['tournaments'][number]
+) {
+  return TournamentSelectionService.resolveRound(
     state,
     tournamentId,
     tournamentDaySeed(state.year, state.week, day),
-    headless
+    headless,
+    tournament
   );
-  return { state: updatedState, roundResults };
 }
 
 /**
@@ -50,6 +53,18 @@ export const TickOrchestrator = {
    * Advances a single day including tournament resolution.
    */
   async advanceDay(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
+    const dayStarted = performance.now();
+    const result = await TickOrchestrator._advanceDayInner(state, opts);
+    telemetry.timing(TelemetryEvents.ADVANCE_DAY, performance.now() - dayStarted, {
+      tournament: String(Boolean(state.isTournamentWeek)),
+    });
+    return result;
+  },
+
+  /**
+   * Inner day-advance implementation (telemetry is measured by advanceDay).
+   */
+  async _advanceDayInner(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
     const currentDay = state.day || 0;
     const nextDay = currentDay + 1;
     // Standardize seed generation
@@ -70,11 +85,13 @@ export const TickOrchestrator = {
 
     // 2. Tournament Day (Skip to End Mode not active)
     if (state.isTournamentWeek && state.activeTournamentId) {
-      const { state: updatedState, roundResults } = resolveTournamentDay(
+      const tour = (state.tournaments || []).find((t) => t.id === state.activeTournamentId);
+      const { updatedState, roundResults } = resolveTournamentDay(
         state,
         state.activeTournamentId,
         nextDay,
-        opts?.headless
+        opts?.headless,
+        tour
       );
 
       const nextState = { ...updatedState, day: nextDay };
@@ -109,17 +126,19 @@ export const TickOrchestrator = {
     // 1. Resolve Tournament Rounds (Batched)
     if (state.isTournamentWeek && state.activeTournamentId) {
       const tournamentId = state.activeTournamentId;
+      // Locate the tournament once and thread the updated entry through each
+      // round instead of re-scanning state.tournaments per day.
+      let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
       for (let day = currentDay + 1; day < 7; day++) {
-        const { state: updatedState, roundResults } = resolveTournamentDay(
-          currentState,
-          tournamentId,
-          day,
-          true
-        );
+        if (!tour || tour.completed) break;
+        const { updatedState, roundResults, isComplete, updatedTournament } =
+          resolveTournamentDay(currentState, tournamentId, day, true, tour);
         currentState = updatedState;
+        tour = updatedTournament ?? tour;
         if (roundResults.length > 0) {
           weeklyNewsItems.push(...roundResults.map((r) => `[Day ${day}] ${r}`));
         }
+        if (isComplete) break;
       }
     }
 

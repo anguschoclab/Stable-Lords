@@ -28,6 +28,12 @@ export interface AdvanceOptions {
    * points and by advanceYear for quarters after the first.
    */
   mutableInput?: boolean;
+  /**
+   * In-process shard pool for parallelizable passes. IN-PROCESS ONLY — never
+   * send this across a worker boundary (it is not structured-cloneable). In
+   * worker contexts, configure the shared pool via `configureEnginePool`.
+   */
+  pool?: import('@/engine/pool/enginePool').EnginePool;
 }
 
 /**

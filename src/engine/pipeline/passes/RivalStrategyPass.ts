@@ -1,16 +1,10 @@
 import { GameState, RivalStableData } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
 import type { StableId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { updateAIStrategy } from '@/engine/ai/intentEngine';
-import { processAIStable } from '@/engine/ai/stableManager';
-import { generateRivalStables } from '@/engine/rivals';
 import { aiDraftFromPool } from '@/engine/draftService';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
-import { processIntel } from '@/engine/ai/workers/intelWorker';
-import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import {
   generateBoutBids,
   convertBidsToOffers,
@@ -22,19 +16,46 @@ import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { processPoachMarket } from '@/engine/ai/market/poachBid';
+import {
+  buildSuccessorIndex,
+  runRivalShardChunk,
+  type RivalShardContext,
+  type RivalShardOutput,
+} from './rivalStableShard';
+import type { EnginePool } from '@/engine/pool/enginePool';
+
+// Re-exported for existing importers (tests, docs).
+export { buildSuccessorIndex, handleOwnerLifecycle } from './rivalStableShard';
 
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
+ *
+ * The per-rival stage-1 loop runs through `rivalStableShard.processRivalStable`
+ * — in-line by default, or distributed across the engine pool's shard workers
+ * when `pool.size > 1`. Shard output is order-preserving, so both paths merge
+ * identically.
  */
 export function runRivalStrategyPass(
   state: GameState,
   nextWeek: number,
   rootRng?: IRNGService,
   headless?: boolean
-): StateImpact {
+): StateImpact;
+export function runRivalStrategyPass(
+  state: GameState,
+  nextWeek: number,
+  rootRng: IRNGService | undefined,
+  headless: boolean | undefined,
+  pool: EnginePool | undefined
+): StateImpact | Promise<StateImpact>;
+export function runRivalStrategyPass(
+  state: GameState,
+  nextWeek: number,
+  rootRng?: IRNGService,
+  headless?: boolean,
+  pool?: EnginePool
+): StateImpact | Promise<StateImpact> {
   const rng = resolveRng(rootRng, state.absoluteWeek * 7919 + 13);
-  const impacts: StateImpact[] = [];
-  const globalGazetteItems: string[] = [];
 
   // 0. Build successor index: maps stableId → first famous retired warrior (fame > 200)
   const successorByStable = buildSuccessorIndex(state.retired);
@@ -43,51 +64,15 @@ export function runRivalStrategyPass(
   // agent context so per-rival memory work never re-scans the world (B.1).
   const perception = buildPerceptionSnapshot(state);
 
-  // 1. Process Individual Rival Stables (Economy/Strategy)
-  let currentRivals = (state.rivals || []).map((rival, index) => {
-    const strategySeed = state.absoluteWeek * 31 + index * 997 + (rival.owner.id || '').length;
-    const strategy = updateAIStrategy(rival, state, strategySeed);
+  const shardCtx: RivalShardContext = { state, perception, successorByStable, nextWeek };
+  const inputs = (state.rivals || []).map((rival, index) => ({ rival, index }));
 
-    // 🎂 1.0 Hardening: Handle Aging & Succession
-    const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } =
-      handleOwnerLifecycle(
-        { ...rival, strategy },
-        nextWeek,
-        new SeededRNGService(strategySeed + 123),
-        successorByStable,
-        state.absoluteWeek + 1
-      );
-    globalGazetteItems.push(...lifecycleGazette);
+  const finish = (shardOutputs: RivalShardOutput[]): StateImpact => {
+    const impacts: StateImpact[] = [];
+    const globalGazetteItems: string[] = shardOutputs.flatMap((o) => o.gazetteItems);
 
-    const { updatedRival: processedRival, isBankrupt, gazetteItems } = processAIStable(
-      rivalWithLifecycle,
-      state,
-      perception
-    );
-    globalGazetteItems.push(...gazetteItems);
-
-    // D.5 — Intel worker: weekly seeded dossier refresh before planning.
-    const intel = processIntel(processedRival, state, perception);
-    globalGazetteItems.push(...intel.gazetteItems);
-
-    // D.7 — Tournament worker: TOURNAMENT_CAMPAIGN rest-bias prep.
-    const prep = processTournamentPrep(intel.updatedRival, nextWeek);
-    globalGazetteItems.push(...prep.gazetteItems);
-    const updatedRival = prep.updatedRival;
-
-    if (isBankrupt) {
-      const retirementSeed = state.absoluteWeek + index * 1000;
-      const generated = generateRivalStables(1, retirementSeed);
-      const newStable = generated[0];
-      if (newStable) {
-        globalGazetteItems.push(
-          `🆕 RECRUITMENT: ${newStable.owner.stableName} has debuted in the league under ${newStable.owner.name}!`
-        );
-        return newStable as RivalStableData;
-      }
-    }
-    return updatedRival;
-  });
+    // 1. Process Individual Rival Stables (Economy/Strategy)
+    let currentRivals = shardOutputs.map((o) => o.rival);
 
   // 1.5. World Matchmaking: NPCs propose bouts to each other
   const worldBouts = planWorldBouts(state, rng);
@@ -211,85 +196,28 @@ export function runRivalStrategyPass(
     impacts.push(tournamentImpact);
   }
 
-  if (globalGazetteItems.length > 0) {
-    impacts.push({
-      newsletterItems: [
-        {
-          id: rng.uuid(),
-          week: nextWeek,
-          title: 'Intelligence & Strategy Report',
-          items: globalGazetteItems,
-        },
-      ],
-    });
-  }
-
-  return mergeImpacts(impacts);
-}
-
-/**
- * Builds an index mapping stableId → first famous retired warrior (fame > 200).
- * Replaces per-rival O(N) find() scans with O(1) map lookups.
- */
-export function buildSuccessorIndex(retired: Warrior[] | undefined): Map<StableId, Warrior> {
-  const index = new Map<StableId, Warrior>();
-  for (const w of retired || []) {
-    if ((w.fame || 0) > 200 && w.stableId && !index.has(w.stableId)) {
-      index.set(w.stableId, w);
+    if (globalGazetteItems.length > 0) {
+      impacts.push({
+        newsletterItems: [
+          {
+            id: rng.uuid(),
+            week: nextWeek,
+            title: 'Intelligence & Strategy Report',
+            items: globalGazetteItems,
+          },
+        ],
+      });
     }
-  }
-  return index;
-}
 
-/**
- * 🎂 Owner Lifecycle: Handles annual aging and generational succession.
- */
-export function handleOwnerLifecycle(
-  rival: RivalStableData,
-  nextWeek: number,
-  rng: IRNGService,
-  successorByStable: Map<StableId, Warrior>,
-  absoluteWeek?: number
-): { updatedRival: RivalStableData; gazetteItems: string[] } {
-  const updatedRival = { ...rival, owner: { ...rival.owner } };
-  const gazetteItems: string[] = [];
+    return mergeImpacts(impacts);
+  };
 
-  // 1. Annual Aging (Occurs on Week 1)
-  if (nextWeek === 1) {
-    updatedRival.owner.age = (updatedRival.owner.age || 40) + 1;
-  }
-
-  // 2. Succession Logic (Starts at age 65, becomes likely by 75)
-  const age = updatedRival.owner.age || 40;
-  const retirementChance = age < 65 ? 0 : age < 75 ? 0.05 : 0.2;
-
-  if (rng.next() < retirementChance) {
-    const generation = (updatedRival.owner.generation || 0) + 1;
-    const oldName = updatedRival.owner.name;
-
-    // 🏆 Successor Hunt: O(1) lookup via pre-built index
-    const successorCandidate = successorByStable.get(updatedRival.id);
-
-    const newName = successorCandidate
-      ? successorCandidate.name
-      : `Lord ${updatedRival.owner.stableName.split(' ')[0]} ${'I'.repeat(generation + 1)}`;
-
-    updatedRival.owner = {
-      ...updatedRival.owner,
-      name: newName,
-      age: 25 + Math.floor(rng.next() * 15),
-      generation,
-      fame: Math.floor(updatedRival.owner.fame * 0.4), // Fame reset on new leadership
-      backstoryId: undefined, // Fresh start
-      ageRetired: absoluteWeek ?? nextWeek, // Week the previous owner retired
-    };
-
-    gazetteItems.push(
-      `👑 SUCCESSION: ${oldName} has retired from ${updatedRival.owner.stableName}. ${newName} takes the mantle (Generation ${generation})!`
-    );
-  }
-
-  return { updatedRival, gazetteItems };
+  // In-line by default; distributed across shard workers when a pool is
+  // configured. Both paths run the same processRivalStable shard function
+  // and merge in declaration order — output is identical by construction.
+  return pool && pool.size > 1
+    ? pool.mapRivalShards(inputs, shardCtx).then(finish)
+    : finish(runRivalShardChunk(inputs, shardCtx));
 }
 
 function handleSeasonalTournaments(

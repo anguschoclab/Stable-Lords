@@ -73,11 +73,23 @@ export function decayDossiers(
   const out: Record<string, OpponentDossier> = {};
   for (const [id, d] of Object.entries(dossiers)) {
     const stale = Math.max(0, currentWeek - d.lastSeenWeek);
+    // Copy-on-write: updateDossiers mutates the returned dossiers in place
+    // (lastSeenWeek / observeStyle pushes / recordVs tallies). Returning the
+    // caller's objects — or shallow copies that share knownStyles/recordVs —
+    // leaks those writes back into GameState.rivals mid-pass, which shard
+    // workers cannot observe (they hold separate clones). Fresh objects keep
+    // the mutation contained to the returned map, so sequential and
+    // distributed execution produce identical state.
+    const copy: OpponentDossier = {
+      ...d,
+      knownStyles: [...d.knownStyles],
+      recordVs: { ...d.recordVs },
+    };
     out[id] =
       stale === 0
-        ? d
+        ? copy
         : {
-            ...d,
+            ...copy,
             estimatedThreat:
               THREAT_PRIOR + (d.estimatedThreat - THREAT_PRIOR) * Math.pow(DECAY, stale),
           };

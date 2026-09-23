@@ -20,6 +20,7 @@ type Handler = (event: EngineEvent) => void;
 
 class EventBus {
   private handlers: Set<Handler> = new Set();
+  private captureStack: EngineEvent[][] = [];
 
   /**
    * Subscribe to engine events.
@@ -32,9 +33,28 @@ class EventBus {
   }
 
   /**
-   * Emit an event to all subscribers.
+   * Redirect subsequent emissions into `buffer` instead of dispatching to
+   * subscribers, until the returned release function is called. Supports
+   * nesting — used by shard workers whose emissions can't cross the worker
+   * boundary and must be ferried back in the shard result.
+   */
+  capture(buffer: EngineEvent[]): () => void {
+    this.captureStack.push(buffer);
+    return () => {
+      const i = this.captureStack.lastIndexOf(buffer);
+      if (i >= 0) this.captureStack.splice(i, 1);
+    };
+  }
+
+  /**
+   * Emit an event to all subscribers (or the innermost capture buffer).
    */
   emit(event: EngineEvent): void {
+    const capture = this.captureStack[this.captureStack.length - 1];
+    if (capture) {
+      capture.push(event);
+      return;
+    }
     this.handlers.forEach((handler) => handler(event));
   }
 

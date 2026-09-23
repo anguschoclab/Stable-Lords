@@ -38,7 +38,6 @@ import { toast } from 'sonner';
 import { engineProxy } from '@/engine/workerProxy';
 import { generateRivalStables } from '@/engine/rivals';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
-import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 
 const seedStore = () => {
   useGameStore
@@ -109,11 +108,29 @@ describe('useAdminTools', () => {
     });
 
     expect(engineProxy.skipToQuarterEnd).toHaveBeenCalledOnce();
+    // WorldPass already computes the season inside the engine — the caller
+    // must NOT post-hoc overwrite it.
     expect(loadGame).toHaveBeenCalledWith(
       'test-slot',
-      expect.objectContaining({ week: 13, season: computeNextSeason(13) })
+      expect.objectContaining({ week: 13 })
     );
     expect(toast.success).toHaveBeenCalledWith('Seasonal transition forced.');
+    expect(useGameStore.getState().isSimulating).toBe(false);
+  });
+
+  it('skipSeason is blocked while a simulation is in progress', async () => {
+    const loadGame = vi.fn();
+    useGameStore.setState({ loadGame, isSimulating: true } as never);
+
+    const { result } = renderHook(() => useAdminTools());
+    await act(async () => {
+      await result.current.skipSeason();
+    });
+
+    expect(engineProxy.skipToQuarterEnd).not.toHaveBeenCalled();
+    expect(loadGame).not.toHaveBeenCalled();
+    expect(toast.error).toHaveBeenCalledWith('Simulation already in progress.');
+    useGameStore.setState({ isSimulating: false } as never);
   });
 
   it('skipSeason posts an error toast when the engine call fails', async () => {

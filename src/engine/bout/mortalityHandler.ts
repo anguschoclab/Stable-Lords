@@ -131,9 +131,14 @@ export function handleDeath(
   const stampedCause = outcome.post?.causeBucket;
   const causeBucket: string = isRivalryKill ? 'RIVALRY_FINISH' : (stampedCause ?? 'FATAL_DAMAGE');
 
-  // Pure State Transformation for Death
+  // Pure State Transformation for Death.
+  // Deep-copy the victim: a shallow spread would leave nested mutables
+  // (favorites.discovered, injuries, flair) aliased to the still-live roster
+  // object — post-death progression writes (checkDiscovery runs after this
+  // handler and rival victims stay addressable via stale roster rebuilds)
+  // would leak into the memorial. A graveyard entry is a snapshot at death.
   const graveyardEntry: Warrior = {
-    ...victim,
+    ...structuredClone(victim),
     status: 'Dead',
     deathWeek: week,
     isDead: true,

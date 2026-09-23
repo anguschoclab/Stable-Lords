@@ -63,4 +63,72 @@ describe('#8c clearReconstructionCache invalidates cached result', () => {
     expect(result2.treasury).toBe(2000);
     expect(result1).not.toBe(result2);
   });
+
+  it('deferredBoutLogs survives the store → GameState reconstruction roundtrip', () => {
+    // Regression guard: the archive retry path re-queues failed transcript
+    // writes onto deferredBoutLogs — if the field were dropped by
+    // reconstruction, retries would silently die (was the pre-fix bug).
+    const logs = [{ year: 2, season: 1, boutId: 'bout-x', transcript: ['l1'] }];
+    const mockStore: any = {
+      treasury: 1000,
+      ledger: [],
+      roster: [],
+      graveyard: [],
+      retired: [],
+      recruitPool: [],
+      insightTokens: [],
+      arenaHistory: [],
+      player: { id: 'p1', name: 'Test', stableName: 'Test', crest: {}, generation: 0 },
+      week: 1,
+      day: 0,
+      season: 'Spring',
+      weather: 'Clear',
+      promoters: {},
+      boutOffers: {},
+      rivals: [],
+      gazettes: [],
+      scoutReports: [],
+      unacknowledgedDeaths: [],
+      rosterBonus: 0,
+      tournaments: [],
+      isTournamentWeek: false,
+      activeTournamentId: null,
+      year: 1,
+      popularity: 0,
+      fame: 0,
+      realmRankings: {},
+      awards: [],
+      trainers: [],
+      hiringPool: [],
+      trainingAssignments: [],
+      seasonalGrowth: [],
+      restStates: [],
+      crowdMood: 'Neutral',
+      moodHistory: [],
+      newsletter: [],
+      hallOfFame: [],
+      isFTUE: false,
+      ftueStep: 0,
+      ftueComplete: false,
+      coachDismissed: [],
+      rivalries: [],
+      matchHistory: [],
+      ownerGrudges: [],
+      phase: 'planning',
+      playerChallenges: [],
+      playerAvoids: [],
+      bookmarks: [],
+      lastSavedAt: null,
+      deferredBoutLogs: logs,
+    };
+
+    clearReconstructionCache();
+    const result = reconstructGameState(mockStore);
+    expect(result.deferredBoutLogs).toEqual(logs);
+
+    // And a mutation to the store field must invalidate the cache.
+    mockStore.deferredBoutLogs = [...logs, { year: 2, season: 1, boutId: 'b2', transcript: [] }];
+    const result2 = reconstructGameState(mockStore);
+    expect(result2.deferredBoutLogs).toHaveLength(2);
+  });
 });

@@ -72,7 +72,11 @@ export function createRivalWarrior(
       return item;
     },
     roll: (min: number, max: number) => Math.floor(rng.next() * (max - min + 1)) + min,
-    uuid: () => crypto.randomUUID(),
+    // Seeded — NOT crypto.randomUUID: generated warriors must carry
+    // deterministic ids or their ids perturb every downstream seeded draw
+    // (bout seeds hash warrior ids), breaking run-to-run and shard-vs-inline
+    // determinism.
+    uuid: (prefix?: string) => rng.uuid(prefix),
     chance: (p: number) => rng.next() < p,
     shuffle: <T>(arr: T[]): T[] => {
       const shuffled = [...arr];

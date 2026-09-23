@@ -58,7 +58,10 @@ describe('TickOrchestrator', () => {
 
       const nextState = await TickOrchestrator.advanceDay(mockState);
 
-      expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(mockState);
+      expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(
+        mockState,
+        expect.objectContaining({})
+      );
       expect(nextState.day).toBe(0);
       expect(nextState.isTournamentWeek).toBe(false);
       expect(nextState.activeTournamentId).toBeUndefined();
@@ -100,7 +103,9 @@ describe('TickOrchestrator', () => {
 
       const nextState = await TickOrchestrator.skipToWeekEnd(mockState);
 
-      expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(mockState);
+      expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(
+        expect.objectContaining({ day: 1 })
+      );
       expect(nextState.day).toBe(0);
       expect(nextState.treasury).toBe(999);
       expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();

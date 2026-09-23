@@ -210,9 +210,18 @@ function collectBoutImpacts(
     const hasCombatant = rival.roster.some((w) => w.id === validCW.id || w.id === validCO.id);
     if (hasCombatant) {
       const rivalRosterUpdates = new Map();
+      // Combatant entries are rebuilt from the validated warriors — not the
+      // state.rivals roster refs — so in-place post-bout writes (favorites
+      // discovery in handleProgressions mutates validCW/validCO) survive
+      // shard-worker boundaries, where state and combatants are separate
+      // clones. In sequential execution these are the same objects.
       rivalRosterUpdates.set(rival.id, {
         roster: rival.roster.map((w) =>
-          w.id === validCW.id || w.id === validCO.id ? { ...w, lastBoutWeek: ctx.week } : w
+          w.id === validCW.id
+            ? { ...validCW, lastBoutWeek: ctx.week }
+            : w.id === validCO.id
+              ? { ...validCO, lastBoutWeek: ctx.week }
+              : w
         ),
       });
       impacts.push({ rivalsUpdates: rivalRosterUpdates });
@@ -276,8 +285,12 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   return {
     impact: mergeImpacts(impacts),
     result: {
-      a: ctx.warrior,
-      d: ctx.opponent,
+      // cW/cO are the post-resolution combatants — in sequential execution
+      // they are identical objects to ctx.warrior/ctx.opponent, but in shard
+      // workers they are the clones that received in-place post-bout writes
+      // (favorites discovery), so results stay byte-identical across paths.
+      a: cW,
+      d: cO,
       outcome,
       announcement,
       isRivalry: ctx.isRivalry,

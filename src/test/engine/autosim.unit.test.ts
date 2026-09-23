@@ -347,6 +347,9 @@ function makeSimmableState(overrides?: Partial<GameState>): GameState {
 
 describe('runAutosim', () => {
   beforeEach(() => {
+    // clearAllMocks resets call history — restoreAllMocks alone leaves stale
+    // calls bleeding into toHaveBeenNthCalledWith assertions.
+    vi.clearAllMocks();
     vi.restoreAllMocks();
   });
 

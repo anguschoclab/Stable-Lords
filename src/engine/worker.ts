@@ -6,6 +6,7 @@ import { TickOrchestrator } from './pipeline/tick/TickOrchestrator';
 import { runAutosim } from './autosim';
 import { loadCombatNarrative } from '@/data/narrative';
 import { createJobQueue } from './jobQueue';
+import { configureEnginePool, shutdownEnginePool } from './pool/enginePool';
 import type { GameState } from '@/types/state.types';
 import type { WeekAdvanceOptions } from './pipeline/services/weekPipelineService';
 
@@ -50,6 +51,16 @@ const engine = {
   skipToYearEnd: (state: GameState, opts?: Parameters<typeof TickOrchestrator.skipToYearEnd>[1]) =>
     jobs.enqueue(TickOrchestrator.skipToYearEnd, state, { ...opts, mutableInput: true }),
   runAutosim: (...args: Parameters<typeof runAutosim>) => jobs.enqueue(runAutosim, ...args),
+  /**
+   * Configure the shard pool INSIDE this worker (pools are per-context and
+   * can't cross postMessage). size <= 1 keeps the sequential in-line path.
+   */
+  configureEnginePool: (size: number) =>
+    jobs.enqueue(() => {
+      if (size <= 1) shutdownEnginePool();
+      configureEnginePool(size);
+      return size;
+    }),
 };
 
 /**

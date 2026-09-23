@@ -11,6 +11,7 @@ import {
   onArchiveRetry,
 } from '@/engine/pipeline/adapters/opfsArchiver';
 import { engineSession, bumpEngineEpoch } from '@/engine/session';
+import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/telemetry';
 import {
   stripNonSerializable,
   reconstructGameState,
@@ -193,11 +194,22 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           // bumped the epoch while the worker computed — stale results are
           // discarded instead of clobbering newer state.
           const next = await engineSession.runExclusive(async () => {
+            const t0 = performance.now();
             const job = cleanState.isTournamentWeek
               ? engineProxy.skipToWeekEnd(cleanState)
               : engineProxy.advanceWeek(cleanState);
             const resolved = await Promise.race([job, timeout]);
             if (timerId) clearTimeout(timerId);
+            const elapsed = performance.now() - t0;
+            telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, elapsed, {
+              op: cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek',
+            });
+            if (isTelemetryEnabled()) {
+              telemetry.gauge(
+                TelemetryEvents.SERIALIZATION_PAYLOAD_BYTES,
+                JSON.stringify(cleanState).length
+              );
+            }
             return resolved;
           });
           if (!next) {
@@ -233,8 +245,18 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
 
         try {
           const next = await engineSession.runExclusive(async () => {
+            const t0 = performance.now();
             const resolved = await Promise.race([engineProxy.advanceDay(cleanState), timeout]);
             if (timerId) clearTimeout(timerId);
+            telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, performance.now() - t0, {
+              op: 'advanceDay',
+            });
+            if (isTelemetryEnabled()) {
+              telemetry.gauge(
+                TelemetryEvents.SERIALIZATION_PAYLOAD_BYTES,
+                JSON.stringify(cleanState).length
+              );
+            }
             return resolved;
           });
           if (!next) {

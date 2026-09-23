@@ -15,6 +15,7 @@ export const TimeAdvanceService = {
     const weekOpts: WeekAdvanceOptions = {
       headless: opts?.headless,
       mutableInput: opts?.mutableInput,
+      pool: opts?.pool,
     };
     return advanceWeek(state, weekOpts);
   },
@@ -72,6 +73,7 @@ export const TimeAdvanceService = {
         // Week 1 input is caller-owned unless they granted mutableInput;
         // weeks after that run on this service's own returned state.
         mutableInput: i > 0 || opts?.mutableInput === true,
+        pool: opts?.pool,
       };
       currentState = await advanceWeek(currentState, weekOpts);
 

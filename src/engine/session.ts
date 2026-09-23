@@ -26,6 +26,9 @@ export function bumpEngineEpoch(): number {
   return ++epoch;
 }
 
+/**
+ * Current session epoch — bumps on every wholesale state replacement.
+ */
 export function getEngineEpoch(): number {
   return epoch;
 }

@@ -504,6 +504,27 @@ export const IRON_FORGE: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_blood_stain',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Unwashable Stain',
+    narrative: 'Near the center of the arena lies a dark red stain that scrubbing has never managed to remove. It is said to mark the spot where the first champion fell.',
+  },
+  {
+    id: 'mist_shrouded_ruins_phantom_cheers',
+    arenaId: 'mist_shrouded_ruins',
+    type: 'historical_battle',
+    title: 'Phantom Cheers',
+    narrative: 'When the fog rolls in thickest, some fighters swear they hear the roars of a spectral crowd from an empire long crumbled into dust.',
+  },
+  {
+    id: 'the_gallows_tree_hangman_dance',
+    arenaId: 'the_gallows_tree',
+    type: 'famous_death',
+    title: "The Hangman's Dance",
+    narrative: 'A renowned duelist met his end here, not by a blade, but when a stray strike severed a heavy branch that crushed him instantly.',
+  },
+  {
     id: 'mudpit_arena_drowning_grasp',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

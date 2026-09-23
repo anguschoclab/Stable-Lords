@@ -19,7 +19,6 @@ export const ORIGINS: string[] = [
   "Found wandering aimlessly in the labyrinthine catacombs of the Forgotten Kings",
   "Survived the brutal winters huddled in the exhaust vents of the Grand Forge",
   "Raised as a nameless thrall in the fighting pits of the Undercity",
-  "Raised in the lightless cellars of the Harrow-Home for Foundlings",
   "Abandoned beneath the crumbling arches of the Weeping Aqueduct",
   "Found swaddled in blood-stained rags at the gates of the Silent Order",
   "Survived the brutal starvation of the Rat-Catcher Guilds",
@@ -291,12 +290,16 @@ export const ORIGINS: string[] = [
   "Abandoned during the chaotic riots of the Lower Wards",
   "Survived the brutal winter culling in the Frost-touched Slums",
   "Abandoned in the pitch-black oubliettes of the Silent Keep",
-  "Raised in the soot-choked rafters of the Grand Foundry",
   "Found shivering amongst the bones in the Kingswood Ossuary",
   "Traded to the flesh-peddlers of the Red Lantern District for a vial of dream-dust",
   "Survived the great culling of the Hollow Wards by hiding inside a hollowed-out gargoyle",
   "Raised by the blind seers of the Whispering Sands",
   "Abandoned at the blood-stained altars of the Crimson Brotherhood",
+  "Born in the shadow of the Obsidian Spire to a family of soot-gatherers",
+  "Abandoned on the steps of the Silent Sisters with nothing but a rusted pendant",
+  "Raised among the feral street urchins of the Sunken Market",
+  "Found floating in a wicker basket down the blood-red waters of the Crimson River",
+  "Brought up in the gladiatorial slave pens of the Iron Barons",
 ];
 
 export const CHILDHOOD_TRAITS: string[] = [
@@ -329,7 +332,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   "learned to sleep with one eye open after surviving the orphanage riots",
   "was known for an unnerving, silent stare that made the matrons flinch",
   "would sit completely still for hours watching the fighting pit from the rafters",
-  "learned to predict a strike by watching the tension in a bully’s shoulders",
   "was infamous for never crying out, no matter how severe the punishment",
   "would map out the blind spots of the orphanage guards with obsessive precision",
   "would catch and study the weak points of venomous centipedes",
@@ -430,7 +432,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   "spent their nights punching the stone walls of their cell until their knuckles calloused",
   "learned to gauge distance by dodging the matron’s iron ruler",
   "memorized the anatomy of beasts while working the charnel pits of the lower wards",
-  "developed an iron grip from clinging to the underside of plague carts",
   "developed an unnerving habit of collecting shattered blades from the gutter",
   "learned to move entirely without sound after the great ward riots",
   "survived the bitter winter by huddling next to the crematorium vents",
@@ -462,11 +463,12 @@ export const CHILDHOOD_TRAITS: string[] = [
   "developed a terrifying pain tolerance from participating in illegal bare-knuckle pit fights as a child",
   "mastered the art of reading micro-expressions from surviving the brutal politics of the beggar king's court",
   "grew unusually strong from hauling bodies out of the plague wards for the morticians",
+  "learned to dodge before they learned to walk",
+  "practiced striking by snapping the necks of giant centipedes in the dark",
+  "developed a terrifyingly silent footfall from hiding from debt collectors",
 ];
 
 export const DEFINING_MOMENTS: string[] = [
-  "discovering that a rusted spoon could be sharpened into a deadly shiv",
-  "surviving a night in the dog-cages by out-snarling the hounds",
   "realizing that mercy in the Undercity was just another word for weakness",
   "until they garroted a corrupt slaver with a stolen rosary",
   "until they drowned a corrupt overseer in a vat of boiling lye",
@@ -486,7 +488,6 @@ export const DEFINING_MOMENTS: string[] = [
   "until they garroted a cruel overseer and fled into the night",
   "waiting for the moment the iron portcullis of the arena would rise on their true destiny",
   "until they shattered a cruel overseer’s kneecap with a stolen hammer",
-  "realizing the arena was the only place where their rage was rewarded",
   "knowing that blood on the sands washes away the dirt of the slums",
   "until they broke a slaver",
   "waiting to turn the misery of their youth into a spectacle of vengeance",
@@ -610,5 +611,8 @@ export const DEFINING_MOMENTS: string[] = [
   "realizing that in a city of stone and ash, only the edge of a blade could carve a future",
   "waiting for the day they could wash the stench of the slums off with the blood of champions",
   "knowing that their destiny was to stand over the broken bodies of those who once looked down on them",
+  "until they strangled an assassin in their sleep to steal their dagger",
+  "realizing their only path to glory was paved with the broken bones of their oppressors",
+  "knowing that every drop of blood spilled on the sands was a step closer to the throne",
 ];
 

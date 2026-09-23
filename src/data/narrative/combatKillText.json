@@ -700,7 +700,11 @@
       "The life fades from their eyes as the final, brutal blow connects.",
       "A darkly humorous end as they collapse into a heap of defeat.",
       "The arena falls silent as the final, dramatic strike seals their fate.",
-      "A bleak and inevitable conclusion to a brutal clash."
+      "A bleak and inevitable conclusion to a brutal clash.",
+      "{{attacker}} ends it, driving their {{weapon}} into {{defender}}'s heart.",
+      "The crowd roars as {{attacker}} finishes {{defender}} with brutal finality.",
+      "{{defender}} collapses, their life bleeding into the unforgiving sand.",
+      "A final, devastating blow from {{attacker}} leaves {{defender}} motionless."
     ]
   }
 }

@@ -15,6 +15,8 @@ export interface GameStoreState {
   activeSlotId: string | null;
   lastSimulationReport?: GameState['lastSimulationReport'];
   lastWeekBoutDisplay?: GameState['lastWeekBoutDisplay'];
+  /** Bout transcripts queued for off-thread archive flush; carried across worker round-trips so retries survive. */
+  deferredBoutLogs?: GameState['deferredBoutLogs'];
   isSimulating: boolean;
   isInitialized: boolean;
   eventLogOpen: boolean;

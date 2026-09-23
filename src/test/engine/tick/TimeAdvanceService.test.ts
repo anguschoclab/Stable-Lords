@@ -7,7 +7,6 @@ import {
 import type { GameState } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
-import * as opfsArchiver from '@/engine/pipeline/adapters/opfsArchiver';
 
 describe('TimeAdvanceService - evaluateStopConditions', () => {
   let mockState: GameState;
@@ -197,8 +196,6 @@ describe('TimeAdvanceService methods', () => {
     vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
       return { ...state, week: state.week + 1, arenaHistory: [] };
     });
-
-    vi.spyOn(opfsArchiver, 'flushDeferredArchivesOffThread').mockImplementation((state) => state);
   });
 
   afterEach(() => {
@@ -231,9 +228,26 @@ describe('TimeAdvanceService methods', () => {
         stopConditions: conditions,
       });
 
-      expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(4); // Checked at interval 4
+      expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(4);
       expect(result.stopReason).toBe('roster_empty');
       expect(result.weeksCompleted).toBe(4);
+    });
+
+    it('evaluates stop conditions EVERY week — not just at checkpoints', async () => {
+      let calls = 0;
+      vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
+        calls++;
+        // Roster empties on week 1 — the sim must halt at week 1, not continue
+        // to a 4-week checkpoint (the old checkpointInterval behavior).
+        return { ...state, week: state.week + 1, roster: [], arenaHistory: [] };
+      });
+
+      const result = await TimeAdvanceService.advanceQuarter(mockState, {
+        stopConditions: [{ type: 'rosterEmpty' }],
+      });
+
+      expect(result.weeksCompleted).toBe(1);
+      expect(result.stopReason).toBe('roster_empty');
     });
 
     it('should call onProgress if provided', async () => {
@@ -245,9 +259,26 @@ describe('TimeAdvanceService methods', () => {
       expect(onProgress).toHaveBeenNthCalledWith(13, 13, 13);
     });
 
-    it('should always flush archives', async () => {
-      await TimeAdvanceService.advanceQuarter(mockState);
-      expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(1);
+    it('drains deferredBoutLogs into pendingArchives weekly — the service never performs I/O', async () => {
+      let calls = 0;
+      vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (state) => {
+        calls++;
+        return {
+          ...state,
+          week: state.week + 1,
+          arenaHistory: [],
+          deferredBoutLogs: [
+            { year: 1, season: 0, boutId: `bout_w${calls}`, transcript: ['line'] },
+          ],
+        };
+      });
+
+      const result = await TimeAdvanceService.advanceQuarter(mockState);
+
+      // 13 weeks × 1 log each — drained weekly, not dropped by truncation.
+      expect(result.pendingArchives).toHaveLength(13);
+      expect(result.pendingArchives[0]?.boutId).toBe('bout_w1');
+      expect(result.state.deferredBoutLogs ?? []).toHaveLength(0);
     });
   });
 
@@ -280,7 +311,6 @@ describe('TimeAdvanceService methods', () => {
       const conditions: SoftStopCondition[] = [{ type: 'playerDeath' }];
       const result = await TimeAdvanceService.advanceYear(mockState, {
         stopConditions: conditions,
-        checkpointInterval: 2,
       });
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(6);
@@ -295,7 +325,7 @@ describe('TimeAdvanceService methods', () => {
       const result = await TimeAdvanceService.skipToQuarterEnd(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(13);
-      expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(1);
+      expect(result.pendingArchives).toBeDefined();
       expect(result.state.week).toBe(startWeek + 13);
     });
   });
@@ -306,7 +336,7 @@ describe('TimeAdvanceService methods', () => {
       const result = await TimeAdvanceService.skipToYearEnd(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(52);
-      expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(4);
+      expect(result.pendingArchives).toBeDefined();
       expect(result.state.week).toBe(startWeek + 52);
     });
   });

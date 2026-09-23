@@ -6,7 +6,11 @@ import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { archiveService } from '@/engine/storage/archiveService';
-import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
+import {
+  flushDeferredArchivesOffThread,
+  onArchiveRetry,
+} from '@/engine/pipeline/adapters/opfsArchiver';
+import { engineSession, bumpEngineEpoch } from '@/engine/session';
 import {
   stripNonSerializable,
   reconstructGameState,
@@ -25,6 +29,35 @@ import { createTournamentSlice } from './slices/tournamentSlice';
 import { createBookmarksSlice } from './slices/bookmarksSlice';
 import { createProgressionSlice } from './slices/progressionSlice';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
+
+/**
+ * Post-process a worker-returned state and commit it to the store.
+ * Shared by doAdvanceWeek/doAdvanceDay — previously duplicated inline.
+ */
+function commitWorkerResult(store: GameStore, next: GameState, currentWeek: number): void {
+  const flushed = flushDeferredArchivesOffThread(next);
+  flushed.phase = 'resolution';
+  const display = flushed.lastWeekBoutDisplay;
+  const resolutionPayload = {
+    bouts: display?.results ?? [],
+    deaths: display?.deathNames ?? [],
+    injuries: display?.injuryNames ?? [],
+    promotions: [],
+    gazette: flushed.newsletter.filter((n) => n.week === currentWeek),
+  };
+  flushed.pendingResolutionData = resolutionPayload;
+
+  if (flushed.arenaHistory && flushed.arenaHistory.length > 0) {
+    const idx = flushed.arenaHistory.length - 1;
+    const lastEntry = flushed.arenaHistory[idx];
+    if (lastEntry) {
+      flushed.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+    }
+  }
+
+  store.loadGame(store.activeSlotId || 'autosave', flushed);
+  useGameStore.setState({ isSimulating: false });
+}
 
 export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore>()(
   subscribeWithSelector(
@@ -63,6 +96,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
       },
 
       loadGame: (slotId: string, state: GameState) => {
+        bumpEngineEpoch();
         clearReconstructionCache();
         StyleRollups._clearCaches();
         set((draft) => {
@@ -122,6 +156,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           draft.bookmarks = state.bookmarks || [];
           draft.progression = state.progression || DEFAULT_PROGRESSION;
           draft.lastSimulationReport = state.lastSimulationReport;
+          draft.deferredBoutLogs = state.deferredBoutLogs || [];
 
           draft.activeSlotId = slotId;
           draft.atTitleScreen = false;
@@ -153,38 +188,25 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
         });
 
         try {
-          let next: GameState;
-          if (cleanState.isTournamentWeek) {
-            next = await Promise.race([engineProxy.skipToWeekEnd(cleanState), timeout]);
-          } else {
-            next = await Promise.race([engineProxy.advanceWeek(cleanState), timeout]);
-          }
-          if (timerId) clearTimeout(timerId);
-
-          next = flushDeferredArchivesOffThread(next);
-          next.phase = 'resolution';
-          const display = next.lastWeekBoutDisplay;
-          const resolutionPayload = {
-            bouts: display?.results ?? [],
-            deaths: display?.deathNames ?? [],
-            injuries: display?.injuryNames ?? [],
-            promotions: [],
-            gazette: next.newsletter.filter((n) => n.week === currentWeek),
-          };
-          next.pendingResolutionData = resolutionPayload;
-
-          if (next.arenaHistory && next.arenaHistory.length > 0) {
-            const idx = next.arenaHistory.length - 1;
-            const lastEntry = next.arenaHistory[idx];
-            if (lastEntry) {
-              next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
-            }
-          }
-
-          store.loadGame(store.activeSlotId || 'autosave', next);
-          set((draft) => {
-            draft.isSimulating = false;
+          // runExclusive serializes against every other engine caller
+          // (autosim, admin skips) and returns undefined when a loadGame/reset
+          // bumped the epoch while the worker computed — stale results are
+          // discarded instead of clobbering newer state.
+          const next = await engineSession.runExclusive(async () => {
+            const job = cleanState.isTournamentWeek
+              ? engineProxy.skipToWeekEnd(cleanState)
+              : engineProxy.advanceWeek(cleanState);
+            const resolved = await Promise.race([job, timeout]);
+            if (timerId) clearTimeout(timerId);
+            return resolved;
           });
+          if (!next) {
+            set((draft) => {
+              draft.isSimulating = false;
+            });
+            return;
+          }
+          commitWorkerResult(store, next, currentWeek);
         } catch (err) {
           console.error('Worker advancement failed:', err);
           set((draft) => {
@@ -210,34 +232,18 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
         });
 
         try {
-          let next: GameState;
-          next = await Promise.race([engineProxy.advanceDay(cleanState), timeout]);
-          if (timerId) clearTimeout(timerId);
-
-          next = flushDeferredArchivesOffThread(next);
-          next.phase = 'resolution';
-          const display = next.lastWeekBoutDisplay;
-          const resolutionPayload = {
-            bouts: display?.results ?? [],
-            deaths: display?.deathNames ?? [],
-            injuries: display?.injuryNames ?? [],
-            promotions: [],
-            gazette: next.newsletter.filter((n) => n.week === currentWeek),
-          };
-          next.pendingResolutionData = resolutionPayload;
-
-          if (next.arenaHistory && next.arenaHistory.length > 0) {
-            const idx = next.arenaHistory.length - 1;
-            const lastEntry = next.arenaHistory[idx];
-            if (lastEntry) {
-              next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
-            }
-          }
-
-          store.loadGame(store.activeSlotId || 'autosave', next);
-          set((draft) => {
-            draft.isSimulating = false;
+          const next = await engineSession.runExclusive(async () => {
+            const resolved = await Promise.race([engineProxy.advanceDay(cleanState), timeout]);
+            if (timerId) clearTimeout(timerId);
+            return resolved;
           });
+          if (!next) {
+            set((draft) => {
+              draft.isSimulating = false;
+            });
+            return;
+          }
+          commitWorkerResult(store, next, currentWeek);
         } catch (err) {
           console.error('Worker advancement failed:', err);
           set((draft) => {
@@ -278,3 +284,12 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
     }))
   )
 );
+
+// Failed archive writes are re-queued onto the store's deferredBoutLogs so the
+// next week's flush retries them — durability lives in the retry registry +
+// store field, not in the ephemeral worker-state copy.
+onArchiveRetry((log) => {
+  useGameStore.setState((s) => ({
+    deferredBoutLogs: [...(s.deferredBoutLogs ?? []), log],
+  }));
+});

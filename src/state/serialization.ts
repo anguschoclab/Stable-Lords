@@ -105,6 +105,7 @@ type GameStateValues = {
   lastSimulationReport: import('@/types/state.types').SimulationReport | undefined;
   bookmarks: import('@/types/bookmark.types').Bookmark[];
   progression: GameState['progression'];
+  deferredBoutLogs: GameState['deferredBoutLogs'];
 };
 
 let lastResult: GameState | null = null;
@@ -173,6 +174,7 @@ export function reconstructGameState(store: GameStore): GameState {
     lastSimulationReport: store.lastSimulationReport,
     bookmarks: store.bookmarks,
     progression: store.progression,
+    deferredBoutLogs: store.deferredBoutLogs,
   };
 
   if (lastResult && lastStoreValues) {
@@ -204,6 +206,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerAvoids: store.playerAvoids || [],
     bookmarks: store.bookmarks || [],
     lastSimulationReport: store.lastSimulationReport,
+    deferredBoutLogs: store.deferredBoutLogs || [],
   };
 
   lastResult = result;

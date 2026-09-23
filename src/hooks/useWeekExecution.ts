@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import * as Comlink from 'comlink';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
@@ -6,6 +7,7 @@ import type { BoutResult } from '@/engine/bout';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
 import { engineProxy } from '@/engine/workerProxy';
+import { engineSession } from '@/engine/session';
 import type { AutosimResult } from '@/engine/autosim';
 import type { Warrior } from '@/types/warrior.types';
 
@@ -101,12 +103,16 @@ export function useWeekExecution() {
       setSimulating(true);
       setAutosimResult(null);
       try {
-        const result = await engineProxy.runAutosim(gameState, {
-          weeksToSim: weeks,
-          onProgress: (currentWeek: number) => {
-            setAutosimProgress({ current: currentWeek, total: weeks });
-          },
-        });
+        const result = await engineSession.runExclusive(() =>
+          engineProxy.runAutosim(gameState, {
+            weeksToSim: weeks,
+            onProgress: Comlink.proxy((currentWeek: number) => {
+              setAutosimProgress({ current: currentWeek, total: weeks });
+            }),
+          })
+        );
+        // undefined → epoch moved mid-run (loadGame/reset); discard the result.
+        if (!result) return;
         setAutosimResult(result);
         const currentStore = useGameStore.getState();
         loadGame(currentStore.activeSlotId || 'autosave', result.finalState);

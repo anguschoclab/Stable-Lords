@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processPlayerOffers, extractWeekSummary, runAutosim } from '@/engine/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
@@ -338,14 +337,13 @@ describe('extractWeekSummary', () => {
   });
 });
 
-const mockQuarterSummary = {
-  startWeek: 1,
-  endWeek: 13,
-  startYear: 1,
-  endYear: 1,
-  treasuryDelta: 0,
-  weekSummaries: [],
-};
+/** Two fight-ready warriors keep the per-week `noPairings` stop from firing. */
+function makeSimmableState(overrides?: Partial<GameState>): GameState {
+  return makeState({
+    roster: [makeAutosimWarrior('w1', 'Alice'), makeAutosimWarrior('w2', 'Bob')],
+    ...overrides,
+  });
+}
 
 describe('runAutosim', () => {
   beforeEach(() => {
@@ -356,7 +354,7 @@ describe('runAutosim', () => {
     const spy = vi.mocked(advanceWeek);
     spy.mockImplementation(async (state: GameState) => state);
 
-    const state = makeState();
+    const state = makeSimmableState();
     const onProgress = vi.fn();
     const result = await runAutosim(state, { weeksToSim: 3, onProgress });
 
@@ -366,20 +364,19 @@ describe('runAutosim', () => {
     expect(spy).toHaveBeenCalledTimes(3);
   });
 
-  it('supports legacy options signature', async () => {
+  it('passes mutableInput only after the first week (caller owns the input state)', async () => {
     const spy = vi.mocked(advanceWeek);
     spy.mockImplementation(async (state: GameState) => state);
 
-    const state = makeState();
-    const onProgress = vi.fn();
-    const result = await runAutosim(state, 2, onProgress);
+    const state = makeSimmableState();
+    await runAutosim(state, { weeksToSim: 3 });
 
-    expect(result.weeksSimmed).toBe(2);
-    expect(result.stopReason).toBe('max_weeks');
-    expect(onProgress).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(1, state, { headless: true, mutableInput: false });
+    expect(spy).toHaveBeenNthCalledWith(2, state, { headless: true, mutableInput: true });
+    expect(spy).toHaveBeenNthCalledWith(3, state, { headless: true, mutableInput: true });
   });
 
-  it('stops on bankruptcy (sequential)', async () => {
+  it('stops on bankruptcy', async () => {
     const spy = vi.mocked(advanceWeek);
     let callCount = 0;
     spy.mockImplementation(async (state: GameState) => {
@@ -390,134 +387,58 @@ describe('runAutosim', () => {
       return state;
     });
 
-    const state = makeState();
+    const state = makeSimmableState();
     const result = await runAutosim(state, { weeksToSim: 10 });
 
     expect(result.weeksSimmed).toBe(2);
     expect(result.stopReason).toBe('bankrupt');
   });
 
-  it('runs batch mode for full quarters and remaining weeks', async () => {
-    const weekSpy = vi.mocked(advanceWeek);
-    weekSpy.mockImplementation(async (state: GameState) => state);
-
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: makeState(),
-      weeksCompleted: 13,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: null,
+  it('evaluates stop conditions EVERY week — stops mid-run on empty roster', async () => {
+    const spy = vi.mocked(advanceWeek);
+    let callCount = 0;
+    spy.mockImplementation(async (state: GameState) => {
+      callCount++;
+      return callCount === 2 ? { ...state, roster: [] } : state;
     });
 
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 15, useBatchMode: true });
+    const state = makeSimmableState();
+    const result = await runAutosim(state, { weeksToSim: 10 });
 
-    expect(result.weeksSimmed).toBe(15);
-    expect(quarterSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('stops on max_weeks when running full quarters exactly (no remainder)', async () => {
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: makeState(),
-      weeksCompleted: 13,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: null,
-    });
-
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
-
-    expect(result.weeksSimmed).toBe(26);
-    expect(result.stopReason).toBe('max_weeks');
-    expect(quarterSpy).toHaveBeenCalledTimes(2);
-  });
-
-  it('runs batch mode without onProgress', async () => {
-    const weekSpy = vi.mocked(advanceWeek);
-    weekSpy.mockImplementation(async (state: GameState) => state);
-
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: makeState(),
-      weeksCompleted: 13,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: null,
-    });
-
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 13, useBatchMode: true });
-
-    expect(result.weeksSimmed).toBe(13);
-    expect(result.stopReason).toBe('max_weeks');
-  });
-
-  it('stops on bankruptcy (batch mode) after a quarter', async () => {
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: { ...makeState(), treasury: BANKRUPTCY_THRESHOLD - 1 },
-      weeksCompleted: 13,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: null,
-    });
-
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
-
-    expect(result.weeksSimmed).toBe(13);
-    expect(result.stopReason).toBe('bankrupt');
-  });
-
-  it('stops on internal TimeAdvanceService condition', async () => {
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: makeState(),
-      weeksCompleted: 5,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: 'roster_empty',
-    });
-
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
-
-    expect(result.weeksSimmed).toBe(5);
+    // Previously stop conditions only fired at 13-week checkpoints; a week-2
+    // roster wipe must halt immediately, not sim 11 more weeks.
+    expect(result.weeksSimmed).toBe(2);
     expect(result.stopReason).toBe('no_pairings');
   });
 
-  it('maps custom_condition to injury stop reason', async () => {
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: makeState(),
-      weeksCompleted: 3,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: 'custom_condition',
+  it('stops on playerDeath when the condition is configured', async () => {
+    const spy = vi.mocked(advanceWeek);
+    spy.mockImplementation(async (state: GameState) => ({
+      ...state,
+      unacknowledgedDeaths: ['w1' as WarriorId],
+    }));
+
+    const state = makeSimmableState();
+    const result = await runAutosim(state, {
+      weeksToSim: 10,
+      stopConditions: [{ type: 'playerDeath' }],
     });
 
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
-
-    expect(result.stopReason).toBe('injury');
+    expect(result.weeksSimmed).toBe(1);
+    expect(result.stopReason).toBe('death');
   });
 
-  it('maps unknown condition to max_weeks', async () => {
-    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
-    quarterSpy.mockResolvedValue({
-      state: makeState(),
-      weeksCompleted: 3,
-      summaries: [],
-      quarterSummary: mockQuarterSummary,
-      stopReason: 'some_unknown_reason',
+  it('maps custom conditions to the custom stop reason', async () => {
+    const spy = vi.mocked(advanceWeek);
+    spy.mockImplementation(async (state: GameState) => state);
+
+    const state = makeSimmableState();
+    const result = await runAutosim(state, {
+      weeksToSim: 10,
+      stopConditions: [{ type: 'custom', check: (s) => s.week >= 0 }],
     });
 
-    const state = makeState();
-    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
-
-    expect(result.stopReason).toBe('max_weeks');
+    expect(result.weeksSimmed).toBe(1);
+    expect(result.stopReason).toBe('custom');
   });
 });

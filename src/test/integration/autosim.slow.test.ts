@@ -65,8 +65,11 @@ describe('Autosim Integration', () => {
       const weeksToAdvance = 5;
       let progressCalls = 0;
 
-      const result = await runAutosim(initialState, weeksToAdvance, () => {
-        progressCalls++;
+      const result = await runAutosim(initialState, {
+        weeksToSim: weeksToAdvance,
+        onProgress: () => {
+          progressCalls++;
+        },
       });
 
       expect(result.finalState).toBeDefined();
@@ -77,7 +80,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should provide week summaries', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       expect(result.weekSummaries).toBeDefined();
       expect(Array.isArray(result.weekSummaries)).toBe(true);
@@ -87,9 +90,12 @@ describe('Autosim Integration', () => {
     it('should call progress callback for each week', async () => {
       const progressCallbacks: number[] = [];
 
-      await runAutosim(initialState, 3, (completed, total) => {
-        progressCallbacks.push(completed);
-        expect(total).toBe(3);
+      await runAutosim(initialState, {
+        weeksToSim: 3,
+        onProgress: (completed, total) => {
+          progressCallbacks.push(completed);
+          expect(total).toBe(3);
+        },
       });
 
       expect(progressCallbacks.length).toBeGreaterThan(0);
@@ -103,7 +109,7 @@ describe('Autosim Integration', () => {
         roster: [],
       };
 
-      const result = await runAutosim(state, 10, () => {});
+      const result = await runAutosim(state, { weeksToSim: 10 });
 
       // Roster floor refills during advanceWeek, so sim runs to max weeks
       expect(result.stopReason).toBe('max_weeks');
@@ -112,7 +118,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should provide stop details', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       expect(result.stopDetail).toBeDefined();
       expect(typeof result.stopDetail).toBe('string');
@@ -120,7 +126,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should stop at max weeks when no other conditions trigger', async () => {
-      const result = await runAutosim(initialState, 3, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 3 });
 
       expect(result.stopReason).toBe('max_weeks');
       expect(result.weeksSimmed).toBe(3);
@@ -129,7 +135,7 @@ describe('Autosim Integration', () => {
 
   describe('State Consistency', () => {
     it('should maintain roster integrity during autosim', async () => {
-      const result = await runAutosim(initialState, 10, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 10 });
 
       expect(result.finalState).toBeDefined();
 
@@ -152,7 +158,7 @@ describe('Autosim Integration', () => {
         roster: [uniqueWarrior],
       };
 
-      const result = await runAutosim(state, 5, () => {});
+      const result = await runAutosim(state, { weeksToSim: 5 });
 
       expect(result.finalState).toBeDefined();
 
@@ -177,14 +183,14 @@ describe('Autosim Integration', () => {
         roster: [uniqueWarrior],
       };
 
-      const result = await runAutosim(state, 5, () => {});
+      const result = await runAutosim(state, { weeksToSim: 5 });
 
       expect(result.finalState).toBeDefined();
       expect(result.finalState.newsletter).toBeDefined();
     });
 
     it('should process economy correctly', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       expect(result.finalState).toBeDefined();
 
@@ -200,7 +206,7 @@ describe('Autosim Integration', () => {
 
   describe('Week Summaries', () => {
     it('should track bouts per week', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       for (const summary of result.weekSummaries) {
         expect(summary.bouts).toBeDefined();
@@ -210,7 +216,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should track deaths and injuries', async () => {
-      const result = await runAutosim(initialState, 10, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 10 });
 
       for (const summary of result.weekSummaries) {
         expect(summary.deaths).toBeDefined();
@@ -221,7 +227,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should include week numbers', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       let lastWeek = 0;
       for (const summary of result.weekSummaries) {
@@ -233,7 +239,7 @@ describe('Autosim Integration', () => {
 
   describe('Long-term Simulation', () => {
     it('should handle multi-week simulation', async () => {
-      const result = await runAutosim(initialState, 20, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 20 });
 
       expect(result.weeksSimmed).toBeGreaterThan(0);
       expect(result.finalState.week).toBeGreaterThan(initialState.week);
@@ -242,7 +248,7 @@ describe('Autosim Integration', () => {
     it('should complete in reasonable time', async () => {
       const startTime = Date.now();
 
-      await runAutosim(initialState, 30, () => {});
+      await runAutosim(initialState, { weeksToSim: 30 });
 
       const elapsed = Date.now() - startTime;
 
@@ -258,7 +264,7 @@ describe('Autosim Integration', () => {
         roster: [],
       };
 
-      const result = await runAutosim(state, 5, () => {});
+      const result = await runAutosim(state, { weeksToSim: 5 });
 
       expect(result).toBeDefined();
       expect(result.stopReason).toBe('max_weeks');
@@ -266,7 +272,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should handle zero weeks to advance', async () => {
-      const result = await runAutosim(initialState, 0, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 0 });
 
       expect(result.weeksSimmed).toBe(0);
       expect(result.finalState.week).toBe(initialState.week);
@@ -275,14 +281,14 @@ describe('Autosim Integration', () => {
 
   describe('Result Metadata', () => {
     it('should provide accurate weeks simmed count', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       expect(result.weeksSimmed).toBeGreaterThanOrEqual(0);
       expect(result.weeksSimmed).toBeLessThanOrEqual(5);
     });
 
     it('should always have a stop reason', async () => {
-      const result = await runAutosim(initialState, 3, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 3 });
 
       expect(result.stopReason).toBeDefined();
       expect([
@@ -298,7 +304,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should provide descriptive stop details', async () => {
-      const result = await runAutosim(initialState, 5, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 5 });
 
       expect(result.stopDetail).toBeDefined();
       expect(typeof result.stopDetail).toBe('string');
@@ -308,12 +314,12 @@ describe('Autosim Integration', () => {
 
   describe('warriorToOfferIds index', () => {
     it('index is populated after advanceWeek', async () => {
-      const result = await runAutosim(initialState, 1, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 1 });
       expect(result.finalState.warriorToOfferIds).toBeInstanceOf(Map);
     });
 
     it('index maps warrior IDs to correct offer IDs', async () => {
-      const result = await runAutosim(initialState, 1, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 1 });
       const index = result.finalState.warriorToOfferIds;
       expect(index).toBeDefined();
       if (!index) return;
@@ -348,7 +354,7 @@ describe('Autosim Integration', () => {
         },
       };
 
-      const result = await runAutosim(state, 1, () => {});
+      const result = await runAutosim(state, { weeksToSim: 1 });
       const index = result.finalState.warriorToOfferIds;
       expect(index).toBeDefined();
       if (!index) return;
@@ -360,7 +366,7 @@ describe('Autosim Integration', () => {
     });
 
     it('index is consistent with boutOffers after multi-week sim', async () => {
-      const result = await runAutosim(initialState, 3, () => {});
+      const result = await runAutosim(initialState, { weeksToSim: 3 });
       const index = result.finalState.warriorToOfferIds;
       expect(index).toBeDefined();
       if (!index) return;
@@ -375,100 +381,31 @@ describe('Autosim Integration', () => {
     });
   });
 
-  describe('Batch Mode', () => {
-    it('should advance weeks using batch mode (useBatchMode: true)', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 5, useBatchMode: true });
+  describe('Single-path determinism', () => {
+    // The old useBatchMode dual-path is gone — there is exactly one autosim
+    // loop. Two runs from the same seed must produce identical state.
+    it('produces identical results for identical inputs', async () => {
+      const run = () => {
+        const state = createFreshState('test-seed');
+        state.treasury = 5000;
+        state.roster = [
+          makeAutosimWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
+          makeAutosimWarrior('w2', 'Test Warrior 2', { fame: 10, popularity: 5 }),
+          makeAutosimWarrior('w3', 'Test Warrior 3', { fame: 10, popularity: 5 }),
+          makeAutosimWarrior('w4', 'Test Warrior 4', { fame: 10, popularity: 5 }),
+        ];
+        return runAutosim(state, { weeksToSim: 13 });
+      };
 
-      expect(result.finalState).toBeDefined();
-      expect(result.finalState.week).toBeGreaterThan(initialState.week);
-      expect(result.weeksSimmed).toBeGreaterThan(0);
-      expect(result.weeksSimmed).toBeLessThanOrEqual(5);
-    });
+      const a = await run();
+      const b = await run();
 
-    it('should produce week summaries in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
-
-      expect(result.weekSummaries).toBeDefined();
-      expect(Array.isArray(result.weekSummaries)).toBe(true);
-      expect(result.weekSummaries.length).toBeGreaterThan(0);
-    });
-
-    it('should call progress callback in batch mode', async () => {
-      const progressCalls: number[] = [];
-      const result = await runAutosim(initialState, {
-        weeksToSim: 13,
-        useBatchMode: true,
-        onProgress: (current, total) => {
-          progressCalls.push(current);
-          expect(total).toBe(13);
-        },
-      });
-
-      expect(progressCalls.length).toBeGreaterThan(0);
-      expect(result.weeksSimmed).toBeGreaterThan(0);
-    });
-
-    it('should handle full quarter (13 weeks) in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
-
-      expect(result.weeksSimmed).toBeGreaterThan(0);
-      expect(result.weeksSimmed).toBeLessThanOrEqual(13);
-      expect(result.stopReason).toBeDefined();
-    });
-
-    it('should handle multiple quarters (26 weeks) in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 26, useBatchMode: true });
-
-      expect(result.weeksSimmed).toBeGreaterThan(0);
-      expect(result.finalState.week).toBeGreaterThan(initialState.week);
-    });
-
-    it('should handle non-quarter remainder (20 weeks = 13 + 7) in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 20, useBatchMode: true });
-
-      expect(result.weeksSimmed).toBeGreaterThan(0);
-      expect(result.weeksSimmed).toBeLessThanOrEqual(20);
-    });
-
-    it('should maintain state consistency in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
-
-      expect(result.finalState).toBeDefined();
-      const totalWarriors =
-        (result.finalState.roster || []).length +
-        (result.finalState.graveyard || []).length +
-        (result.finalState.retired || []).length;
-      expect(totalWarriors).toBeGreaterThanOrEqual(0);
-    });
-
-    it('should produce valid stop reason in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
-
-      expect([
-        'death',
-        'player_death',
-        'injury',
-        'rivalry_escalation',
-        'tournament_week',
-        'max_weeks',
-        'no_pairings',
-        'bankrupt',
-      ]).toContain(result.stopReason);
-    });
-
-    it('should handle zero weeks in batch mode', async () => {
-      const result = await runAutosim(initialState, { weeksToSim: 0, useBatchMode: true });
-
-      expect(result.weeksSimmed).toBe(0);
-      expect(result.finalState.week).toBe(initialState.week);
-    });
-
-    it('should handle empty roster in batch mode with roster floor', async () => {
-      const state = { ...initialState, roster: [] };
-      const result = await runAutosim(state, { weeksToSim: 13, useBatchMode: true });
-
-      expect(result).toBeDefined();
-      expect(result.finalState.roster.length).toBeGreaterThan(0);
+      expect(b.weeksSimmed).toBe(a.weeksSimmed);
+      expect(b.stopReason).toBe(a.stopReason);
+      expect(b.finalState.week).toBe(a.finalState.week);
+      expect(b.finalState.treasury).toBe(a.finalState.treasury);
+      expect(b.finalState.arenaHistory).toEqual(a.finalState.arenaHistory);
+      expect(b.finalState.roster).toEqual(a.finalState.roster);
     });
   });
 });

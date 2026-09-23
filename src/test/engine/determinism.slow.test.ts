@@ -169,7 +169,6 @@ describe('Quarter/Year Advancement Determinism', () => {
     // Roster floor adds a warrior → upkeep > stipend → treasury drops
     const result = await TimeAdvanceService.advanceQuarter(state, {
       stopConditions: [{ type: 'custom', check: (s) => s.treasury < 1000 }],
-      checkpointInterval: 1,
     });
 
     expect(result.stopReason).toBe('custom_condition');

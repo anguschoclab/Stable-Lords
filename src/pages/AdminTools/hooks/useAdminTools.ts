@@ -2,11 +2,12 @@ import { useCallback, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import type { GameState, RivalStableData, Owner } from '@/types/state.types';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { toast } from 'sonner';
 import { engineProxy } from '@/engine/workerProxy';
+import { engineSession } from '@/engine/session';
+import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
 
 /**
  *
@@ -99,15 +100,29 @@ export function useAdminTools() {
 
   const skipSeason = useCallback(async () => {
     const store = useGameStore.getState();
+    if (store.isSimulating) {
+      toast.error('Simulation already in progress.');
+      return;
+    }
     const currentState = reconstructGameState(store);
+    store.setSimulating(true);
     try {
-      const result = await engineProxy.skipToQuarterEnd(currentState);
-      result.state.season = computeNextSeason(result.state.week);
+      const result = await engineSession.runExclusive(() =>
+        engineProxy.skipToQuarterEnd(currentState)
+      );
+      // undefined → epoch moved mid-run (loadGame/reset); discard the result.
+      if (!result) return;
+      // Batch advancement never does I/O — flush drained transcripts here on
+      // the main thread where the Electron/OPFS switch is visible.
+      archiveBoutLogs(result.pendingArchives ?? []);
+      // WorldPass already computed the new season each week — no post-hoc fix needed.
       store.loadGame(store.activeSlotId || 'autosave', result.state);
       toast.success('Seasonal transition forced.');
     } catch (err) {
       console.error('Skip season failed:', err);
       toast.error('Seasonal transition failed.');
+    } finally {
+      store.setSimulating(false);
     }
   }, []);
 

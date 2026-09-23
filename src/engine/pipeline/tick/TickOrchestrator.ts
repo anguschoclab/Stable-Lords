@@ -1,6 +1,9 @@
 import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/utils/random';
-import { advanceWeek as runWeeklyPipeline } from '@/engine/pipeline/services/weekPipelineService';
+import {
+  advanceWeek as runWeeklyPipeline,
+  type WeekAdvanceOptions,
+} from '@/engine/pipeline/services/weekPipelineService';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import {
   TimeAdvanceService,
@@ -10,6 +13,35 @@ import {
 } from './timeAdvance';
 
 /**
+ * Canonical tournament-day RNG seed. Both the interactive day tick
+ * (advanceDay) and the batched skip (skipToWeekEnd) MUST use this — they
+ * previously diverged (week*100+day vs year*10000+week*100+day), producing
+ * different tournament outcomes for identical game days.
+ */
+export function tournamentDaySeed(year: number, week: number, day: number): number {
+  return year * 10000 + week * 100 + day;
+}
+
+/**
+ * Resolve a single tournament day. Shared by advanceDay (single step) and
+ * skipToWeekEnd (batched loop) so the two paths can never drift apart.
+ */
+function resolveTournamentDay(
+  state: GameState,
+  tournamentId: string,
+  day: number,
+  headless?: boolean
+): { state: GameState; roundResults: string[] } {
+  const { updatedState, roundResults } = TournamentSelectionService.resolveRound(
+    state,
+    tournamentId,
+    tournamentDaySeed(state.year, state.week, day),
+    headless
+  );
+  return { state: updatedState, roundResults };
+}
+
+/**
  * Stable Lords — Unified Tick Orchestrator
  * Central point for all time-based progression logic.
  */
@@ -17,17 +49,17 @@ export const TickOrchestrator = {
   /**
    * Advances a single day including tournament resolution.
    */
-  async advanceDay(state: GameState): Promise<GameState> {
+  async advanceDay(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
     const currentDay = state.day || 0;
     const nextDay = currentDay + 1;
     // Standardize seed generation
-    const seed = state.year * 10000 + state.week * 100 + nextDay;
+    const seed = tournamentDaySeed(state.year, state.week, nextDay);
     const rng = new SeededRNGService(seed);
 
     // 1. Weekly Transition (Day 7)
     if (nextDay >= 7) {
       // Correct for 52-week year wrap-around logic moved to SystemPass
-      const finalState = await runWeeklyPipeline(state);
+      const finalState = await runWeeklyPipeline(state, { mutableInput: opts?.mutableInput });
       return {
         ...finalState,
         day: 0,
@@ -38,13 +70,11 @@ export const TickOrchestrator = {
 
     // 2. Tournament Day (Skip to End Mode not active)
     if (state.isTournamentWeek && state.activeTournamentId) {
-      const tour = (state.tournaments || []).find((t) => t.id === state.activeTournamentId);
-      const { updatedState, roundResults } = TournamentSelectionService.resolveRound(
+      const { state: updatedState, roundResults } = resolveTournamentDay(
         state,
         state.activeTournamentId,
-        state.week * 100 + nextDay,
-        undefined,
-        tour
+        nextDay,
+        opts?.headless
       );
 
       const nextState = { ...updatedState, day: nextDay };
@@ -79,20 +109,17 @@ export const TickOrchestrator = {
     // 1. Resolve Tournament Rounds (Batched)
     if (state.isTournamentWeek && state.activeTournamentId) {
       const tournamentId = state.activeTournamentId;
-      // Locate the tournament once and thread the updated entry through each
-      // round instead of re-scanning state.tournaments per day.
-      let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
       for (let day = currentDay + 1; day < 7; day++) {
-        if (!tour || tour.completed) break;
-        const daySeed = state.year * 10000 + state.week * 100 + day;
-        const { updatedState, roundResults, isComplete, updatedTournament } =
-          TournamentSelectionService.resolveRound(currentState, tournamentId, daySeed, true, tour);
+        const { state: updatedState, roundResults } = resolveTournamentDay(
+          currentState,
+          tournamentId,
+          day,
+          true
+        );
         currentState = updatedState;
-        tour = updatedTournament ?? tour;
         if (roundResults.length > 0) {
           weeklyNewsItems.push(...roundResults.map((r) => `[Day ${day}] ${r}`));
         }
-        if (isComplete) break;
       }
     }
 
@@ -132,10 +159,7 @@ export const TickOrchestrator = {
    * Skip to quarter end (headless mode for UI).
    * Batches 13 weeks with deferred I/O.
    */
-  async skipToQuarterEnd(
-    state: GameState,
-    opts?: Omit<AdvanceOptions, 'checkpointInterval'>
-  ): Promise<QuarterAdvanceResult> {
+  async skipToQuarterEnd(state: GameState, opts?: AdvanceOptions): Promise<QuarterAdvanceResult> {
     return TimeAdvanceService.skipToQuarterEnd(state, opts);
   },
 
@@ -151,10 +175,7 @@ export const TickOrchestrator = {
    * Skip to year end (headless mode for UI).
    * Batches 52 weeks with deferred I/O.
    */
-  async skipToYearEnd(
-    state: GameState,
-    opts?: Omit<AdvanceOptions, 'checkpointInterval'>
-  ): Promise<YearAdvanceResult> {
+  async skipToYearEnd(state: GameState, opts?: AdvanceOptions): Promise<YearAdvanceResult> {
     return TimeAdvanceService.skipToYearEnd(state, opts);
   },
 };

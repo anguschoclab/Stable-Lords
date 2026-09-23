@@ -15,7 +15,7 @@ import {
   generateBoutBids,
   convertBidsToOffers,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
-import { boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
@@ -95,15 +95,9 @@ export function runRivalStrategyPass(
     ...(state.boutOffers || {}),
   };
 
-  // 🧹 1.6 Hardening: Purge Expired Offers (Prevent state bloat)
-  const newBoutOffersWithWorld: Record<BoutOfferId, (typeof boutOffersWithWorld)[BoutOfferId]> =
-    {} as Record<BoutOfferId, (typeof boutOffersWithWorld)[BoutOfferId]>;
-  for (const [key, offer] of Object.entries(boutOffersWithWorld)) {
-    if (offer && boutOfferExpirationAbsoluteWeek(offer) >= state.absoluteWeek + 1) {
-      newBoutOffersWithWorld[key as BoutOfferId] = offer;
-    }
-  }
-  boutOffersWithWorld = newBoutOffersWithWorld;
+  // 🧹 1.6 Hardening: Purge Expired Offers (Prevent state bloat).
+  // Shares the single cleanup contract with finalizeState (offerCleanup.ts).
+  boutOffersWithWorld = pruneBoutOffers(boutOffersWithWorld, state.absoluteWeek);
 
   if (worldBouts.length > 0) {
     worldBouts.forEach((o) => {

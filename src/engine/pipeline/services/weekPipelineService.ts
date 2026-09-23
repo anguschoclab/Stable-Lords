@@ -1,18 +1,19 @@
-import type { GameState, Warrior, BoutOffer } from '@/types/state.types';
+import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { computeMetaDrift } from '@/engine/metaDrift';
 import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getStablePairKey } from '@/utils/keyUtils';
-import {
-  deriveAbsoluteWeek,
-  boutOfferAbsoluteWeek,
-  boutOfferExpirationAbsoluteWeek,
-} from '@/engine/core/absoluteWeek';
+import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import { loadCombatNarrative } from '@/data/narrative';
+import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
+import {
+  validatePipelinePasses,
+  type WeekPassSpec,
+  type WeekPipelineContext,
+} from '@/engine/pipeline/pipelineStages';
 
 /**
  * Options for week advancement
@@ -26,6 +27,13 @@ export interface WeekAdvanceOptions {
    * set by advanceWeek, not by callers.
    */
   playerStopped?: boolean;
+  /**
+   * Caller grants ownership of `state` — the pipeline mutates it in place
+   * instead of structuredClone-ing. Only legal when the caller exclusively
+   * owns the object (e.g. postMessage-delivered worker input, or a state the
+   * service itself produced). In-process callers must leave this unset.
+   */
+  mutableInput?: boolean;
 }
 
 // 🌩️ Modular Pipeline Passes
@@ -46,14 +54,11 @@ import { runNarrativePass } from '../passes/NarrativePass';
 import { runSeasonalPass } from '../seasonal';
 import { runProgressionPass } from '../passes/ProgressionPass';
 
-interface WeekContext {
-  currentWeek: number;
-  nextWeek: number;
-  nextYear: number;
-  rootRng: IRNGService;
+interface WeekContext extends WeekPipelineContext {
+  headless?: boolean;
 }
 
-function prepareWeekContext(state: GameState): WeekContext {
+function prepareWeekContext(state: GameState, headless?: boolean): WeekContext {
   const currentWeek = state.week;
   let nextWeek = currentWeek + 1;
   let nextYear = state.year || 1;
@@ -65,24 +70,178 @@ function prepareWeekContext(state: GameState): WeekContext {
     currentWeek,
     nextWeek,
     nextYear,
+    headless,
     rootRng: new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101),
   };
 }
 
 /**
- * Creates a mutable copy of the game state for the week pipeline.
- * Uses structuredClone for deep cloning, allowing passes to mutate freely.
- * This replaces the shallow-copy-then-mutate pattern in resolveImpacts.
+ * Declarative pipeline table. Execution order is declaration order; stages
+ * resolve sequentially (core → world → content). `writes` declarations are
+ * validated by `validatePipelinePasses` — asserted once per process in
+ * advanceWeek and exhaustively in weekPipelineDAG.test.ts.
  */
-function createMutableWeekContext(state: GameState): GameState {
-  return structuredClone(state);
+export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
+  {
+    id: 'warrior',
+    stage: 'core',
+    run: (s, ctx) => runWarriorPass(s, ctx.rootRng),
+    writes: ['rosterUpdates', 'retired', 'hiringPool', 'seasonalGrowth', 'ledgerEntries'],
+  },
+  {
+    id: 'economy',
+    stage: 'core',
+    run: (s, ctx) => runEconomyPass(s, ctx.rootRng),
+    writes: ['treasuryDelta', 'ledgerEntries', 'popularityDelta', 'fameDelta'],
+  },
+  {
+    id: 'equipment',
+    stage: 'core',
+    run: (s) => runEquipmentPass(s),
+    writes: ['rivalsUpdates'],
+  },
+  {
+    id: 'recruitment',
+    stage: 'core',
+    run: (s, ctx) => runRecruitmentPass(s, ctx.rootRng),
+    writes: ['recruitPool'],
+  },
+  {
+    id: 'world',
+    stage: 'world',
+    run: (s, ctx) => runWorldPass(s, ctx.nextWeek, ctx.rootRng),
+    writes: ['week', 'season', 'weather', 'ownerGrudges', 'rivalries'],
+  },
+  {
+    id: 'system',
+    stage: 'world',
+    run: (s, ctx) => runSystemPass(s, ctx.rootRng),
+    writes: [
+      'seasonalGrowth',
+      'hallOfFame',
+      'awards',
+      'rosterUpdates',
+      'rivalsUpdates',
+      'newsletterItems',
+    ],
+  },
+  {
+    id: 'rankings',
+    stage: 'world',
+    run: (s) => runRankingsPass(s),
+    writes: ['realmRankings'],
+  },
+  {
+    id: 'progression',
+    stage: 'world',
+    run: (s, ctx) => runProgressionPass(s, ctx.nextWeek, ctx.nextYear),
+    writes: ['progression', 'newsletterItems', 'gazettes'],
+  },
+  {
+    id: 'promoter',
+    stage: 'world',
+    run: (s) => runPromoterPass(s),
+    writes: ['boutOffers'],
+  },
+  {
+    id: 'promoterLifecycle',
+    stage: 'world',
+    run: (s, ctx) => runPromoterLifecyclePass(s, ctx.rootRng),
+    writes: ['promoters'],
+  },
+  {
+    id: 'trainer',
+    stage: 'world',
+    run: (s, ctx) => runTrainerPass(s, ctx.rootRng),
+    writes: ['trainers', 'hiringPool', 'rivalsUpdates'],
+  },
+  {
+    id: 'rivalStrategy',
+    stage: 'world',
+    after: ['recruitment'], // draft pool must be refilled before the AI draft drains it
+    run: (s, ctx) => runRivalStrategyPass(s, ctx.nextWeek, ctx.rootRng, ctx.headless),
+    writes: [
+      'rivalsUpdates',
+      'boutOffers',
+      'recruitPool',
+      'tournaments',
+      'isTournamentWeek',
+      'activeTournamentId',
+      'day',
+      'newsletterItems',
+      'retired',
+    ],
+  },
+  {
+    id: 'event',
+    stage: 'content',
+    playerFacing: true,
+    run: (s, ctx) => runEventPass(s, ctx.nextWeek, ctx.rootRng),
+    writes: ['rosterUpdates', 'newsletterItems', 'ledgerEntries', 'treasuryDelta'],
+  },
+  {
+    id: 'narrative',
+    stage: 'content',
+    playerFacing: true,
+    run: (s, ctx) => runNarrativePass(s, ctx.currentWeek, ctx.nextWeek, ctx.rootRng),
+    writes: ['gazettes', 'newsletterItems'],
+  },
+  {
+    id: 'seasonal',
+    stage: 'content',
+    run: (s, ctx) => runSeasonalPass(s, ctx.nextWeek, ctx.rootRng),
+    writes: ['rosterUpdates', 'treasuryDelta', 'ledgerEntries', 'insightTokens', 'newsletterItems'],
+  },
+];
+
+let pipelineValidated = false;
+function assertPipelineLegal(): void {
+  if (pipelineValidated) return;
+  const issues = validatePipelinePasses(WEEK_PIPELINE_PASSES);
+  if (issues.length > 0) {
+    throw new Error(
+      `Illegal week pipeline declaration:\n${issues.map((i) => ` - ${i.message}`).join('\n')}`
+    );
+  }
+  pipelineValidated = true;
+}
+
+/**
+ * Per-week lookup caches live on the state object but are NOT serializable
+ * (Maps) — strip them before cloning so the worker path never pays to clone
+ * maps that get rebuilt anyway.
+ */
+function stripWeekCaches(state: GameState): GameState {
+  const {
+    warriorMap: _wm,
+    cachedMetaDrift: _cmd,
+    warriorToStableMap: _wts,
+    rivalMap: _rm,
+    rivalryMap: _rvm,
+    grudgeMap: _gm,
+    warriorToOfferIds: _wto,
+    ...rest
+  } = state;
+  return rest as GameState;
+}
+
+/**
+ * Creates a mutable copy of the game state for the week pipeline.
+ * Uses structuredClone for deep cloning, allowing passes to mutate freely —
+ * unless the caller grants ownership via `mutableInput`.
+ */
+function createMutableWeekContext(state: GameState, mutableInput?: boolean): GameState {
+  if (mutableInput) return stripWeekCaches(state);
+  return structuredClone(stripWeekCaches(state));
 }
 
 /**
  * Builds warrior and rival maps once per week for O(1) lookups.
- * Called at the start of advanceWeek and selectively invalidated when warriors die.
+ * Called at the start of advanceWeek and re-run after every impact-resolution
+ * boundary so caches never point at pre-impact object identities (impact
+ * handlers replace objects — e.g. rosterUpdates produces a new Warrior).
  */
-function buildWeekCaches(state: GameState): void {
+export function buildWeekCaches(state: GameState): void {
   const warriorMap = new Map<WarriorId, Warrior>();
   state.roster.forEach((w) => warriorMap.set(w.id, w));
   (state.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
@@ -114,30 +273,19 @@ function buildWeekCaches(state: GameState): void {
   state.grudgeMap = grudgeMap;
 }
 
-/**
- * Invalidates warrior caches for dead/retired warriors only.
- * More efficient than rebuilding all maps from scratch.
- */
-function invalidateDeadWarriors(state: GameState, deadIds: Set<WarriorId>): void {
-  if (deadIds.size === 0) return;
-
-  // Remove dead warriors from maps
-  deadIds.forEach((id) => {
-    state.warriorMap?.delete(id);
-    state.warriorToStableMap?.delete(id);
-  });
-}
-
-async function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): Promise<GameState> {
+async function runBoutPhase(
+  state: GameState,
+  ctx: WeekContext
+): Promise<GameState> {
   // Safety net: ensure combat narrative data is loaded before bout resolution
+  // (memoized promise — a resolved-promise no-op after first load).
   await loadCombatNarrative();
-  // Maps are already built by buildWeekCaches at the week boundary
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  const {
-    impact: boutImpact,
-    results,
-    summary,
-  } = runBoutSimulationPass(state, ctx.rootRng, headless);
+  const { impact: boutImpact, results, summary } = runBoutSimulationPass(
+    state,
+    ctx.rootRng,
+    ctx.headless
+  );
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
@@ -148,30 +296,34 @@ async function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boole
     injuryNames: summary.injuryNames,
   };
 
-  // Collect dead warrior IDs for selective cache invalidation
-  const deadIds = new Set<WarriorId>();
-  (settledState.graveyard || []).forEach((w) => deadIds.add(w.id));
-  invalidateDeadWarriors(settledState, deadIds);
-
-  // Rebuild rivalMap to reflect any roster changes from bout impacts (NF2 fix)
-  const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
-  (settledState.rivals || []).forEach((r) => rivalMap.set(r.id, r));
-  settledState.rivalMap = rivalMap;
+  // Resync all week caches: impact handlers replaced warrior/rival objects,
+  // so warriorMap & friends still point at pre-bout identities. Rebuilding
+  // covers deaths, injuries, and roster changes in one pass (supersedes the
+  // old invalidateDeadWarriors + manual rivalMap rebuild — NF2 fix).
+  buildWeekCaches(settledState);
 
   return settledState;
 }
 
-function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
-  return [
-    runWarriorPass(state, ctx.rootRng),
-    runEconomyPass(state, ctx.rootRng),
-    runEquipmentPass(state),
-    // RecruitmentPass refills the draft pool. Must land before RivalStrategyPass
-    // (which drains it) — otherwise both run in parallel against the same
-    // pre-impact state and the post-recruitment pool gets clobbered by the
-    // post-draft pool, leaving the pool empty every tick.
-    runRecruitmentPass(state, ctx.rootRng),
-  ];
+/**
+ * Runs every pass in a resolution stage against the same snapshot, then
+ * applies the merged impacts and resyncs the week caches.
+ */
+function runStage(
+  stage: WeekPassSpec['stage'],
+  state: GameState,
+  ctx: WeekContext,
+  opts?: WeekAdvanceOptions
+): GameState {
+  const impacts: StateImpact[] = [];
+  for (const spec of WEEK_PIPELINE_PASSES) {
+    if (spec.stage !== stage) continue;
+    if (spec.playerFacing && (opts?.headless || opts?.playerStopped)) continue;
+    impacts.push(spec.run(state, ctx));
+  }
+  const resolved = resolveImpacts(state, impacts);
+  buildWeekCaches(resolved);
+  return resolved;
 }
 
 /**
@@ -182,31 +334,12 @@ export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): b
   return state.treasury + netTreasuryDelta < BANKRUPTCY_THRESHOLD;
 }
 
-function collectRemainingImpacts(
-  state: GameState,
-  ctx: WeekContext,
-  opts?: WeekAdvanceOptions
-): StateImpact[] {
-  const impacts: StateImpact[] = [
-    runWorldPass(state, ctx.nextWeek, ctx.rootRng),
-    runSystemPass(state, ctx.rootRng),
-    runRankingsPass(state),
-    runProgressionPass(state, ctx.nextWeek, ctx.nextYear),
-    runPromoterPass(state),
-    runPromoterLifecyclePass(state, ctx.rootRng),
-    runTrainerPass(state, ctx.rootRng),
-    runRivalStrategyPass(state, ctx.nextWeek, ctx.rootRng, opts?.headless),
-  ];
-
-  // PLAYER-FACING content — skip in headless mode OR when the player is stopped
-  // (bankrupt / empty roster): no point generating the player's events & gazette.
-  if (!opts?.headless && !opts?.playerStopped) {
-    impacts.push(runEventPass(state, ctx.nextWeek, ctx.rootRng));
-    impacts.push(runNarrativePass(state, ctx.currentWeek, ctx.nextWeek, ctx.rootRng));
-  }
-
-  impacts.push(runSeasonalPass(state, ctx.nextWeek, ctx.rootRng));
-  return impacts;
+/**
+ * Preview the core-stage impacts without applying them. The bankruptcy gate
+ * needs the projected treasury delta before commit.
+ */
+function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
+  return WEEK_PIPELINE_PASSES.filter((p) => p.stage === 'core').map((p) => p.run(state, ctx));
 }
 
 function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
@@ -236,22 +369,11 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   // Prune expired rest states so warriors become bookable again after KO recovery
   state.restStates = clearExpiredRest(state.restStates || [], state.absoluteWeek);
 
-  // 🧹 Bout offer cleanup — single source of truth for offer pruning.
+  // 🧹 Bout offer cleanup — single implementation in offerCleanup.ts, shared
+  // with RivalStrategyPass's pre-bidding purge.
   if (state.boutOffers) {
-    const cleanedOffers: Record<string, BoutOffer> = {};
     const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
-    Object.values(state.boutOffers).forEach((offer) => {
-      if (boutOfferAbsoluteWeek(offer) <= justFinishedWeek) return;
-      if (
-        offer.status !== 'Signed' &&
-        offer.expirationWeek != null &&
-        boutOfferExpirationAbsoluteWeek(offer) <= justFinishedWeek
-      ) {
-        return;
-      }
-      cleanedOffers[offer.id] = offer;
-    });
-    state.boutOffers = cleanedOffers;
+    state.boutOffers = pruneBoutOffers(state.boutOffers, justFinishedWeek);
   }
 
   // Build warrior→offerIds index for O(1) lookup in autosim
@@ -271,9 +393,7 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   if (state.season !== oldState.season) {
     state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
     // Season points race resets at the season boundary for every warrior.
-    state.roster = state.roster.map((w) =>
-      w.seasonPoints ? { ...w, seasonPoints: 0 } : w
-    );
+    state.roster = state.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w));
     if (state.rivals) {
       state.rivals = state.rivals.map((r) => ({
         ...r,
@@ -281,6 +401,8 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
         roster: r.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w)),
       }));
     }
+    // Season boundary changed roster identities — resync caches.
+    buildWeekCaches(state);
   }
 
   // Handle OPFS archiving — always defer to off-thread flush for consistency
@@ -304,7 +426,8 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
     }
   }
 
-  // Store in state for batch flushing
+  // Store in state for batch flushing (drained by the main-thread caller —
+  // this function never performs I/O itself).
   state.deferredBoutLogs = [...(state.deferredBoutLogs || []), ...pendingArchives];
   return state;
 }
@@ -316,14 +439,17 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
 export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
   const headless = opts?.headless;
 
-  // Deep clone state once at week boundary to allow safe mutation in all passes
-  const mutableState = createMutableWeekContext(state);
-  const ctx = prepareWeekContext(mutableState);
+  assertPipelineLegal();
+
+  // Deep clone state once at week boundary to allow safe mutation in all
+  // passes — skipped when the caller grants ownership via mutableInput.
+  const mutableState = createMutableWeekContext(state, opts?.mutableInput);
+  const ctx = prepareWeekContext(mutableState, headless);
 
   // Build caches once per week for O(1) lookups
   buildWeekCaches(mutableState);
 
-  const settledState = await runBoutPhase(mutableState, ctx, headless);
+  const settledState = await runBoutPhase(mutableState, ctx);
   const coreImpacts = collectCoreImpacts(settledState, ctx);
 
   // Player stop conditions gate PLAYER content only — the WORLD keeps evolving.
@@ -332,9 +458,12 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
 
   // Stage the pipeline: apply core impacts BEFORE running remaining passes
   const stateAfterCore = resolveImpacts(settledState, coreImpacts);
-  const remainingImpacts = collectRemainingImpacts(stateAfterCore, ctx, {
-    headless,
-    playerStopped,
-  });
-  return finalizeState(resolveImpacts(stateAfterCore, remainingImpacts), state, ctx);
+  buildWeekCaches(stateAfterCore);
+
+  const stateAfterWorld = runStage('world', stateAfterCore, ctx, opts);
+  return finalizeState(
+    runStage('content', stateAfterWorld, ctx, { ...opts, playerStopped }),
+    state,
+    ctx
+  );
 }

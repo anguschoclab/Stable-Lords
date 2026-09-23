@@ -46,7 +46,7 @@ describe('Pipeline Performance Benchmarks', () => {
     expect(headlessDuration).toBeLessThan(5000);
   });
 
-  it('autosim batch mode should handle large week counts', async () => {
+  it('autosim should handle large week counts', async () => {
     const state = createFreshState('autosim-perf-test', '2026-04-28T09:00:00Z');
     const weeksToSim = 52; // One year
 
@@ -54,7 +54,7 @@ describe('Pipeline Performance Benchmarks', () => {
 
     const result = await runAutosim(state, {
       weeksToSim,
-      useBatchMode: true,
+      stopConditions: [], // perf run must sim the full span, not stop on empty roster
     });
 
     const endTime = performance.now();
@@ -124,7 +124,7 @@ describe('Long-running Simulation Stress Tests', () => {
 
     const result = await runAutosim(state, {
       weeksToSim: totalWeeks,
-      useBatchMode: true,
+      stopConditions: [],
     });
 
     // Just verify it completed some weeks without crashing

@@ -20,9 +20,14 @@ export const DEFAULT_AUTOSIM_STOPS: SoftStopCondition[] = [
  */
 export interface AdvanceOptions {
   headless?: boolean;
-  checkpointInterval?: number;
   stopConditions?: SoftStopCondition[];
   onProgress?: (weeksCompleted: number, totalWeeks: number) => void;
+  /**
+   * Caller exclusively owns `state` — the pipeline may mutate it in place
+   * instead of cloning at the first week boundary. Set by worker entry
+   * points and by advanceYear for quarters after the first.
+   */
+  mutableInput?: boolean;
 }
 
 /**
@@ -58,6 +63,11 @@ export interface QuarterAdvanceResult {
   quarterSummary: QuarterSummary;
   stopReason: string | null;
   weeksCompleted: number;
+  /**
+   * Bout transcripts drained before truncation. The service never performs
+   * I/O — the caller's environment must hand these to the archive sink.
+   */
+  pendingArchives: import('@/types/state.types').DeferredBoutLog[];
 }
 
 /**
@@ -66,6 +76,8 @@ export interface QuarterAdvanceResult {
 export interface YearAdvanceResult {
   state: GameState;
   quarterResults: QuarterAdvanceResult[];
+  /** All bout transcripts drained across the four quarters. */
+  pendingArchives: import('@/types/state.types').DeferredBoutLog[];
   annualSummary: {
     startYear: number;
     endYear: number;

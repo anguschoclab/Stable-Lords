@@ -9,7 +9,9 @@ describe('NF3: sequential autosim memory growth', () => {
     const state = createFreshState('seq-mem-trunc-test', '2025-01-01T00:00:00.000Z');
     state.treasury = 100000;
 
-    return runAutosim(state, { weeksToSim: 60 }).then((result) => {
+    // stopConditions disabled — a fresh state's empty roster would halt the
+    // run at week 1 now that stops are evaluated per week.
+    return runAutosim(state, { weeksToSim: 60, stopConditions: [] }).then((result) => {
       // After 60 weeks, truncateState should have been called at week 50
       expect(result.weeksSimmed).toBe(60);
       // arenaHistory should be bounded — without truncation, 60 weeks of bouts
@@ -23,7 +25,7 @@ describe('NF3: sequential autosim memory growth', () => {
     const state = createFreshState('seq-mem-bounds-test', '2025-01-01T00:00:00.000Z');
     state.treasury = 100000;
 
-    return runAutosim(state, { weeksToSim: 100 }).then((result) => {
+    return runAutosim(state, { weeksToSim: 100, stopConditions: [] }).then((result) => {
       expect(result.weeksSimmed).toBe(100);
       // After 100 weeks with truncation at 50 and 100, arenaHistory should be bounded
       expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
@@ -69,17 +71,13 @@ describe('NF3: sequential autosim memory growth', () => {
     expect(truncated.lastWeekBoutDisplay).toBeUndefined();
   });
 
-  it('batch autosim truncates arenaHistory across 50-week boundaries (13-week chunks)', () => {
-    // Batch mode advances 13 weeks at a time. A naive `% 50 === 0` check would
-    // only fire every 650 weeks (LCM of 13 and 50). The boundary-crossing check
-    // must fire roughly every 50 weeks instead.
+  it('autosim truncates arenaHistory across a 50-week boundary', () => {
     const state = createFreshState('batch-mem-trunc-test', '2025-01-01T00:00:00.000Z');
     state.treasury = 100000;
 
-    // 65 weeks = 5 quarters. Crosses the 50-week boundary during the 4th quarter
-    // (weeks 40→53). Without the fix, truncation never fires and arenaHistory
-    // grows past 500.
-    return runAutosim(state, { weeksToSim: 65, useBatchMode: true }).then((result) => {
+    // 65 weeks crosses the 50-week checkpoint; without it arenaHistory would
+    // grow past the 500-entry cap.
+    return runAutosim(state, { weeksToSim: 65, stopConditions: [] }).then((result) => {
       expect(result.weeksSimmed).toBe(65);
       expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
     });
@@ -109,7 +107,7 @@ describe('NF3: sequential autosim memory growth', () => {
       description: `entry ${i}`,
     })) as any;
 
-    return runAutosim(state, { weeksToSim: 2 }).then((result) => {
+    return runAutosim(state, { weeksToSim: 2, stopConditions: [] }).then((result) => {
       expect(result.weeksSimmed).toBe(2);
       expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
       expect(result.finalState.ledger!.length).toBeLessThanOrEqual(500);
@@ -133,7 +131,7 @@ describe('NF3: sequential autosim memory growth', () => {
     // Far below BANKRUPTCY_THRESHOLD (-500) — one week of income can't recover.
     state.treasury = -100000;
 
-    return runAutosim(state, { weeksToSim: 10 }).then((result) => {
+    return runAutosim(state, { weeksToSim: 10, stopConditions: [] }).then((result) => {
       expect(result.stopReason).toBe('bankrupt');
       expect(result.finalState.arenaHistory!.length).toBeLessThanOrEqual(500);
     });

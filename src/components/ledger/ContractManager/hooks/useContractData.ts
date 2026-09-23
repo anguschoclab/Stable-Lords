@@ -16,9 +16,21 @@ export function getSalary(tier: Trainer['tier']): number {
 export function useContractData() {
   const trainers = useGameStore((s) => s.trainers);
   const safeTrainers = trainers ?? [];
-  const activeTrainers = safeTrainers.filter((t) => t.contractWeeksLeft > 0);
-  const totalWeeklyExpense = activeTrainers.reduce((sum, t) => sum + getSalary(t.tier), 0);
-  const expiringSoonCount = activeTrainers.filter((t) => t.contractWeeksLeft <= 4).length;
+  // ⚡ Bolt: Single-pass loop to calculate contract metrics, replacing multiple .filter and .reduce operations.
+  const activeTrainers: Trainer[] = [];
+  let totalWeeklyExpense = 0;
+  let expiringSoonCount = 0;
+
+  for (let i = 0; i < safeTrainers.length; i++) {
+    const t = safeTrainers[i];
+    if (t && t.contractWeeksLeft > 0) {
+      activeTrainers.push(t);
+      totalWeeklyExpense += getSalary(t.tier);
+      if (t.contractWeeksLeft <= 4) {
+        expiringSoonCount++;
+      }
+    }
+  }
 
   return { activeTrainers, totalWeeklyExpense, expiringSoonCount };
 }

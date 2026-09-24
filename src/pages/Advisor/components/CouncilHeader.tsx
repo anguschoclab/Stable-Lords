@@ -9,6 +9,7 @@ interface CouncilHeaderProps {
   onExecuteAll: () => void;
 }
 
+/** War Council banner: stable-wide directives, purse/solvency projection, KPI bar, and the Execute-All action. */
 export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
   const hasActionable = summary.allActionPayloads.length > 0;
 
@@ -44,8 +45,16 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
                 +{summary.projectedPurseGold}G
               </span>
               <span className="text-[8px] text-muted-foreground/40 font-mono">
-                Training: -{summary.projectedTrainingCost}G
+                Training: -{summary.projectedTrainingCost}G · Treasury: {summary.treasury}G
               </span>
+              {summary.solvencyWarning && (
+                <span
+                  data-testid="solvency-warning"
+                  className="mt-1 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/20 text-destructive border border-destructive/40"
+                >
+                  Insolvent
+                </span>
+              )}
             </div>
 
             <Button

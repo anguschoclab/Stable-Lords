@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Switch } from '@/components/ui/switch';
 import { FastForward, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { AutosimResult, AutosimWeekSummary as WeekSummary } from '@/engine/autosim';
 
@@ -8,7 +10,7 @@ interface AutosimConsoleProps {
   isSimulating: boolean;
   progress: { current: number; total: number; lastSummary?: WeekSummary } | null;
   result: AutosimResult | null;
-  onStart: (weeks: number) => void;
+  onStart: (weeks: number, options?: { councilAutoPilot?: boolean }) => void;
   onReset?: () => void;
 }
 
@@ -24,6 +26,8 @@ export function AutosimConsole({
   onReset,
 }: AutosimConsoleProps) {
   const percent = progress ? Math.round((progress.current / progress.total) * 100) : 0;
+  const [councilAutoPilot, setCouncilAutoPilot] = useState(false);
+  const start = (weeks: number) => onStart(weeks, { councilAutoPilot });
 
   return (
     <Card className="border-accent/40 bg-accent/5 shadow-lg overflow-hidden">
@@ -40,24 +44,40 @@ export function AutosimConsole({
               Run multiple weeks automatically. The simulation will stop if casualties or critical
               injuries are detected.
             </p>
+            <div className="flex items-center justify-between gap-3 bg-background/40 border border-accent/20 px-3 py-2">
+              <label
+                htmlFor="council-autopilot"
+                className="text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer"
+              >
+                War Council Autopilot
+                <span className="block text-[8px] font-bold text-muted-foreground/60 normal-case tracking-normal">
+                  Advisor scores offers &amp; applies training each week
+                </span>
+              </label>
+              <Switch
+                id="council-autopilot"
+                checked={councilAutoPilot}
+                onCheckedChange={setCouncilAutoPilot}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                onClick={() => onStart(4)}
+                onClick={() => start(4)}
                 className="h-10 font-black uppercase text-[10px] tracking-widest"
               >
                 4 Wks (Short)
               </Button>
               <Button
                 variant="outline"
-                onClick={() => onStart(8)}
+                onClick={() => start(8)}
                 className="h-10 font-black uppercase text-[10px] tracking-widest"
               >
                 8 Wks (Medium)
               </Button>
               <Button
                 variant="default"
-                onClick={() => onStart(13)}
+                onClick={() => start(13)}
                 className="h-10 font-black uppercase text-[10px] tracking-widest col-span-2 shadow-[0_0_15px_-5px_rgba(var(--accent-rgb),0.5)]"
               >
                 13 Wks (Full Season)

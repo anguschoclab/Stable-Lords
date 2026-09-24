@@ -1,14 +1,21 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PlanBuilder from '@/components/PlanBuilder';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/game';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { makeWarrior } from '@/test/_fixtures/factories';
+import { makeWarrior, makeGameState } from '@/test/_fixtures/factories';
+import { useGameStore } from '@/state/useGameStore';
+import type { GameState } from '@/types/state.types';
 
 describe('PlanBuilder Council Tactics (Task 4.4)', () => {
+  beforeEach(() => {
+    const fresh = makeGameState({ week: 1, season: 'Spring' });
+    useGameStore.getState().loadGame('test-slot', fresh as GameState);
+  });
+
   const basePlan: FightPlan = {
     style: FightingStyle.StrikingAttack,
     OE: 5,
@@ -74,5 +81,35 @@ describe('PlanBuilder Council Tactics (Task 4.4)', () => {
     // Striking Attack recommended offensive tactic is typically 'charge' or 'slash'/'lunge'
     expect(updatedPlan.offensiveTactic).not.toBe('none');
     expect(updatedPlan.defensiveTactic).not.toBe('none');
+  });
+
+  it('auto-detects REHABILITATION for an unpinned injured warrior and applies YIELD fallback', () => {
+    const warrior = makeWarrior({
+      style: FightingStyle.StrikingAttack,
+      injuries: [
+        {
+          id: 'inj-1' as any,
+          name: 'Fractured Rib',
+          description: '',
+          severity: 'Moderate',
+          weeksRemaining: 2,
+          penalties: {},
+        },
+      ],
+    });
+
+    const onPlanChange = vi.fn();
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={basePlan} onPlanChange={onPlanChange} warrior={warrior} />
+      </TooltipProvider>
+    );
+
+    fireEvent.click(screen.getByTestId('apply-council-tactics-btn'));
+
+    const updatedPlan = onPlanChange.mock.calls[0]![0] as FightPlan;
+    // Auto-detected REHABILITATION focus must surface the life-preserving YIELD
+    // fallback — a pinned-less PURSE_HUNTER default would leave TURTLE in place.
+    expect(updatedPlan.fallbackCondition).toBe('YIELD');
   });
 });

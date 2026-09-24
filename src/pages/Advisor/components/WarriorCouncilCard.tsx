@@ -30,6 +30,7 @@ const FOCUS_LABELS: Record<CampaignFocus, { label: string; color: string }> = {
   VETERAN_TWILIGHT: { label: 'Twilight Legacy', color: 'border-purple-400/40 text-purple-400 bg-purple-400/10' },
 };
 
+/** Per-warrior council card surfacing fight, training, and tactics advice with focus override and apply-plan controls. */
 export function WarriorCouncilCard({ card, onApplyPlan, onSetFocus }: WarriorCouncilCardProps) {
   const focusMeta = FOCUS_LABELS[card.campaignFocus] ?? FOCUS_LABELS.PURSE_HUNTER;
   const isBlocked = card.fightAdvice.action === 'BLOCKED_BY_INJURY';
@@ -237,6 +238,11 @@ export function WarriorCouncilCard({ card, onApplyPlan, onSetFocus }: WarriorCou
           <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
             Change Focus:
           </span>
+          {card.suggestedCampaignFocus !== card.campaignFocus && (
+            <span className="text-[9px] font-black uppercase tracking-widest text-arena-gold/80">
+              Suggested: {FOCUS_LABELS[card.suggestedCampaignFocus].label}
+            </span>
+          )}
           <select
             value={card.campaignFocus}
             onChange={(e) => onSetFocus(card.warriorId, e.target.value as CampaignFocus)}

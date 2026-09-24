@@ -24,6 +24,9 @@ import {
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import { ShieldCheck } from 'lucide-react';
 import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';
+import { evaluateCampaignFocus } from '@/engine/advisor';
+import { reconstructGameState } from '@/state/serialization';
+import { useGameStore } from '@/state/useGameStore';
 
 /* ── Sub-components ─────────────────────────────────────── */
 
@@ -76,7 +79,8 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
 
   const applyCouncilTactics = () => {
     if (!warrior) return;
-    const focus = warrior.campaignFocus ?? 'PURSE_HUNTER';
+    const state = reconstructGameState(useGameStore.getState());
+    const focus = evaluateCampaignFocus(warrior, state);
     const tacticsAdvice = evaluateTacticsAdvice(warrior, focus);
     onPlanChange({
       ...plan,
@@ -84,7 +88,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
       defensiveTactic: tacticsAdvice.bestDefensiveTactic,
       OE: tacticsAdvice.suggestedOE,
       AL: tacticsAdvice.suggestedAL,
-      fallbackCondition: tacticsAdvice.fallbackCondition as any,
+      fallbackCondition: tacticsAdvice.fallbackCondition,
     });
   };
 

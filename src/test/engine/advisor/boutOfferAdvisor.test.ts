@@ -2,8 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { evaluateBoutOffers } from '@/engine/advisor/boutOfferAdvisor';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { GameState, BoutOffer, Promoter } from '@/types/state.types';
+import type { GameState, BoutOffer, Promoter, InsightToken } from '@/types/state.types';
 import type { WarriorTournamentAdvice } from '@/engine/advisor/types';
+import { makeFightSummary } from '@/test/_fixtures/factories';
 
 const mkWarrior = (id: string, style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior => ({
   id: id as any,
@@ -177,5 +178,92 @@ describe('evaluateBoutOffers', () => {
     const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
     expect(advice.action).toBe('NO_VIABLE_OFFERS');
     expect(advice.headline).toContain('No Bout Offers');
+  });
+
+  it('treasury pressure elevates purse weight — lucrative mismatch beats safe low-purse bout', () => {
+    const warrior = mkWarrior('p1', FightingStyle.LungingAttack);
+    // LU vs ParryStrike = -1 (unfavorable) but big purse; LU vs BashingAttack = 0 with small purse.
+    const toughOpponent = mkWarrior('opp_tough', FightingStyle.ParryStrike);
+    const easyOpponent = mkWarrior('opp_easy', FightingStyle.BashingAttack);
+    const lucrative = mkOffer('offer_lucrative', 'p1', 'opp_tough', { purse: 250 });
+    const modest = mkOffer('offer_modest', 'p1', 'opp_easy', { purse: 100 });
+    const rivals = [
+      { id: 'rs1', roster: [toughOpponent], owner: { stableName: 'T' } },
+      { id: 'rs2', roster: [easyOpponent], owner: { stableName: 'E' } },
+    ];
+
+    // Solvent: modest-purse safe matchup wins (score 60 vs 55).
+    const solvent = evaluateBoutOffers(
+      warrior,
+      mkState({
+        treasury: 1000,
+        roster: [warrior],
+        rivals: rivals as any,
+        boutOffers: { offer_lucrative: lucrative, offer_modest: modest } as any,
+      }),
+      'PURSE_HUNTER'
+    );
+    expect(solvent.recommendedOfferId).toBe('offer_modest');
+
+    // Desperate treasury (< roster * TRAINING_COST): purse weight doubles with a
+    // higher cap — the lucrative mismatch now outranks (score 80 vs 70).
+    const broke = evaluateBoutOffers(
+      warrior,
+      mkState({
+        treasury: 10,
+        roster: [warrior],
+        rivals: rivals as any,
+        boutOffers: { offer_lucrative: lucrative, offer_modest: modest } as any,
+      }),
+      'PURSE_HUNTER'
+    );
+    expect(broke.recommendedOfferId).toBe('offer_lucrative');
+    expect(broke.reasoning.some((r) => /treasury|purse/i.test(r))).toBe(true);
+  });
+
+  it('surfaces scout intel tokens for the opponent in reasoning', () => {
+    const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
+    const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);
+    const offer = mkOffer('offer_intel', 'p1', 'r1');
+    const tokens: InsightToken[] = [
+      {
+        id: 'tok1' as any,
+        type: 'Weapon',
+        warriorId: 'r1' as any,
+        warriorName: 'Warrior_r1',
+        detail: 'Fights with a tower shield',
+        discoveredWeek: 4,
+      },
+    ];
+    const state = mkState({
+      roster: [warrior],
+      rivals: [{ id: 'rival_stable', roster: [opponent], owner: { stableName: 'Rivals' } } as any],
+      boutOffers: { offer_intel: offer } as any,
+      insightTokens: tokens,
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.reasoning.some((r) => /scout intel/i.test(r) && r.includes('tower shield'))).toBe(
+      true
+    );
+  });
+
+  it('warns rematch caution when the warrior holds a losing record vs the opponent', () => {
+    const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
+    const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);
+    const offer = mkOffer('offer_rematch', 'p1', 'r1');
+    const state = mkState({
+      roster: [warrior],
+      rivals: [{ id: 'rival_stable', roster: [opponent], owner: { stableName: 'Rivals' } } as any],
+      boutOffers: { offer_rematch: offer } as any,
+      arenaHistory: [
+        makeFightSummary({ warriorIdA: 'p1' as any, warriorIdD: 'r1' as any, winner: 'D' }),
+        makeFightSummary({ warriorIdA: 'r1' as any, warriorIdD: 'p1' as any, winner: 'A' }),
+        makeFightSummary({ warriorIdA: 'p1' as any, warriorIdD: 'r1' as any, winner: 'D' }),
+      ],
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.warnings.some((w) => /rematch/i.test(w) && /0-3|0–3/.test(w))).toBe(true);
   });
 });

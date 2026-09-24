@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { buildStableCouncilReport } from '@/engine/advisor/stableCouncilService';
+import {
+  buildStableCouncilReport,
+  computeStableCouncilReport,
+} from '@/engine/advisor/stableCouncilService';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
@@ -96,5 +99,118 @@ describe('buildStableCouncilReport', () => {
     expect(p2!.boutOfferIdToAccept).toBeUndefined(); // no bout accepted for injured
     expect(p2!.trainingAssignment.type).toBe('recovery');
     expect(p2!.tacticsPlanPatch?.fallbackCondition).toBe('YIELD');
+  });
+
+  it('keeps suggestedCampaignFocus independent when a pin diverges from auto-detection', () => {
+    // Pinned REHABILITATION on an otherwise healthy prime warrior (age 24,
+    // 10 career bouts, unranked, week 5 of season) — auto-detect would pick
+    // PURSE_HUNTER, so the card must surface the divergence.
+    const w = mkWarrior('w3', {
+      campaignFocus: 'REHABILITATION',
+      age: 24,
+      career: { wins: 6, losses: 4, kills: 0 },
+    });
+
+    const state = {
+      week: 5,
+      absoluteWeek: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      roster: [w],
+      rivals: [],
+      boutOffers: {},
+      trainingAssignments: [],
+      realmRankings: {},
+      tournaments: [],
+      isTournamentWeek: false,
+    } as unknown as GameState;
+
+    const report = buildStableCouncilReport(state);
+    const card = report.cards[0]!;
+
+    expect(card.campaignFocus).toBe('REHABILITATION');
+    expect(card.suggestedCampaignFocus).toBe('PURSE_HUNTER');
+  });
+
+  it('memoizes reports per state snapshot so concurrent subscribers share one computation', () => {
+    const w = mkWarrior('w9');
+    const state = {
+      week: 5,
+      absoluteWeek: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      roster: [w],
+      rivals: [],
+      boutOffers: {},
+      trainingAssignments: [],
+      realmRankings: {},
+      tournaments: [],
+      isTournamentWeek: false,
+    } as unknown as GameState;
+
+    const first = buildStableCouncilReport(state);
+    const second = buildStableCouncilReport(state);
+    expect(second).toBe(first); // same state ref → same report object
+
+    // A fresh snapshot (any store change mints a new GameState via
+    // reconstructGameState) must recompute rather than serve the cache.
+    const next = buildStableCouncilReport({ ...state });
+    expect(next).not.toBe(first);
+    expect(next.summary.totalWarriors).toBe(1);
+  });
+
+  it('computeStableCouncilReport is uncached and safe for in-place mutated state', () => {
+    // Autosim advances weeks via mutableInput — the same GameState object is
+    // mutated in place, so engine-side callers must bypass the ref-keyed cache.
+    const w = mkWarrior('w10');
+    const state = {
+      week: 5,
+      absoluteWeek: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      roster: [w],
+      rivals: [],
+      boutOffers: {},
+      trainingAssignments: [],
+      realmRankings: {},
+      tournaments: [],
+      isTournamentWeek: false,
+    } as unknown as GameState;
+
+    const before = computeStableCouncilReport(state);
+    expect(before.summary.rehabCount).toBe(0);
+
+    (state.roster[0] as Warrior).fatigue = 55; // in-place mutation, same refs
+    const after = computeStableCouncilReport(state);
+    expect(after.summary.rehabCount).toBe(1);
+  });
+
+  it('surfaces treasury solvency — directives and warning when projected costs exceed funds', () => {
+    const roster = [mkWarrior('s1'), mkWarrior('s2'), mkWarrior('s3')];
+    const state = {
+      week: 5,
+      absoluteWeek: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      roster,
+      rivals: [],
+      boutOffers: {},
+      trainingAssignments: [],
+      realmRankings: {},
+      tournaments: [],
+      isTournamentWeek: false,
+      treasury: 10, // projected training = 3 * 20 = 60
+    } as unknown as GameState;
+
+    const report = buildStableCouncilReport(state);
+    expect(report.summary.treasury).toBe(10);
+    expect(report.summary.solvencyWarning).toBeDefined();
+    expect(
+      report.summary.stableDirectives.some((d) => /treasury|insolven|afford/i.test(d))
+    ).toBe(true);
   });
 });

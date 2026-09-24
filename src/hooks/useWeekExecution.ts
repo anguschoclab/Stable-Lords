@@ -96,7 +96,7 @@ export function useWeekExecution() {
   }, []);
 
   const handleStartAutosim = useCallback(
-    async (weeks: number) => {
+    async (weeks: number, options?: { councilAutoPilot?: boolean }) => {
       if (autosimmingRef.current || useGameStore.getState().isSimulating) return;
       autosimmingRef.current = true;
       setAutosimming(true);
@@ -106,6 +106,7 @@ export function useWeekExecution() {
         const result = await engineSession.runExclusive(() =>
           engineProxy.runAutosim(gameState, {
             weeksToSim: weeks,
+            councilAutoPilot: options?.councilAutoPilot ?? false,
             onProgress: Comlink.proxy((currentWeek: number) => {
               setAutosimProgress({ current: currentWeek, total: weeks });
             }),

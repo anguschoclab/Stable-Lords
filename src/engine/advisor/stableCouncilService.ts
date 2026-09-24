@@ -17,19 +17,32 @@ import { evaluateTrainingAdvice } from './trainingAdvisor';
 import { evaluateTacticsAdvice } from './tacticsAdvisorBridge';
 import { isActive } from '@/engine/warriorStatus';
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
+import { TRAINING_COST } from '@/constants/economy';
 
 /**
- * Generate a complete Stable Council Report evaluating all active roster warriors.
+ * Compute a complete Stable Council Report evaluating all active roster warriors.
+ * Uncached — safe for callers that mutate a GameState in place (e.g. the autosim
+ * loop's mutableInput path, where the same object identity persists across weeks).
+ * React/UI subscribers should use buildStableCouncilReport instead.
  */
-export function buildStableCouncilReport(state: GameState): StableCouncilReport {
+export function computeStableCouncilReport(state: GameState): StableCouncilReport {
   const activeWarriors = (state.roster || []).filter(isActive);
 
   const cards: WarriorAdvisorCard[] = activeWarriors.map((warrior) => {
     const campaignFocus = evaluateCampaignFocus(warrior, state);
+    // What the council would recommend absent the player's pin — lets the UI
+    // surface "Suggested: X" when the pin diverges from auto-detection.
+    const suggestedCampaignFocus = evaluateCampaignFocus(
+      { ...warrior, campaignFocus: undefined },
+      state
+    );
     const tournamentAdvice = evaluateTournamentAdvice(warrior, state);
     const fightAdvice = evaluateBoutOffers(warrior, state, campaignFocus, tournamentAdvice);
     const trainingAdvice = evaluateTrainingAdvice(warrior, state);
-    const tacticsAdvice = evaluateTacticsAdvice(warrior, campaignFocus);
+    const tacticsAdvice = evaluateTacticsAdvice(warrior, campaignFocus, {
+      opponent: fightAdvice.opponent ?? undefined,
+      state,
+    });
 
     const fatigue = warrior.fatigue ?? 0;
     const fatigueStatus = {
@@ -97,7 +110,7 @@ export function buildStableCouncilReport(state: GameState): StableCouncilReport 
       warriorName: warrior.name,
       style: warrior.style,
       campaignFocus,
-      suggestedCampaignFocus: campaignFocus,
+      suggestedCampaignFocus,
       fatigueStatus,
       injuryStatus,
       fightAdvice,
@@ -137,10 +150,26 @@ export function buildStableCouncilReport(state: GameState): StableCouncilReport 
     return acc;
   }, 0);
 
-  const projectedTrainingCost = activeWarriors.length * 20;
+  const projectedTrainingCost = activeWarriors.length * TRAINING_COST;
+  const treasury = state.treasury ?? 0;
+  const solvencyWarning =
+    treasury < 0
+      ? `Treasury in deficit (${treasury}G) — stable is approaching bankruptcy.`
+      : treasury < projectedTrainingCost
+        ? `Treasury (${treasury}G) cannot cover projected training costs (${projectedTrainingCost}G).`
+        : undefined;
 
   // Synthesize High-Priority Stable Directives
   const stableDirectives: string[] = [];
+  if (treasury < 0) {
+    stableDirectives.push(
+      `🛑 Treasury deficit (${treasury}G): accept purse bouts and suspend paid coaching before bankruptcy.`
+    );
+  } else if (treasury < projectedTrainingCost) {
+    stableDirectives.push(
+      `💰 Treasury (${treasury}G) cannot cover projected training (${projectedTrainingCost}G): prioritize purse bouts and defer paid coaching.`
+    );
+  }
   if (rehabCount > 0) {
     stableDirectives.push(
       `⚠️ ${rehabCount} warrior${rehabCount > 1 ? 's' : ''} require Med Bay recovery due to active injuries or elevated fatigue.`
@@ -179,6 +208,8 @@ export function buildStableCouncilReport(state: GameState): StableCouncilReport 
     pendingBoutOffersCount,
     projectedPurseGold,
     projectedTrainingCost,
+    treasury,
+    solvencyWarning,
     stableDirectives,
     allActionPayloads,
   };
@@ -187,4 +218,24 @@ export function buildStableCouncilReport(state: GameState): StableCouncilReport 
     summary,
     cards,
   };
+}
+
+const reportCache = new WeakMap<GameState, StableCouncilReport>();
+
+/**
+ * Snapshot-memoized report builder for React subscribers. `useWorldState`
+ * (reconstructGameState) mints a new GameState object whenever any tracked
+ * field changes, so a reference-keyed WeakMap dedupes the N concurrent
+ * useStableAdvisor() mounts (Advisor page, Training, BookingOffice,
+ * ControlCenter widget) down to one computation per store snapshot.
+ * Engine-side callers that mutate state in place must call
+ * computeStableCouncilReport directly — a ref-keyed cache cannot see
+ * in-place mutation.
+ */
+export function buildStableCouncilReport(state: GameState): StableCouncilReport {
+  const cached = reportCache.get(state);
+  if (cached) return cached;
+  const report = computeStableCouncilReport(state);
+  reportCache.set(state, report);
+  return report;
 }

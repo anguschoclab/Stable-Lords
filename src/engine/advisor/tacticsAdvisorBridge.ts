@@ -4,10 +4,13 @@
  * life-preserving surrender thresholds (YIELD), and equipment encumbrance audits.
  */
 import type { Warrior } from '@/types/warrior.types';
+import type { GameState } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { CampaignFocus, WarriorTacticsAdvice } from './types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
+import { deriveHeadToHead } from './intelAdvisor';
+import { clamp } from '@/utils/math';
 
 const AGILE_STYLES = new Set([
   FightingStyle.SlashingAttack,
@@ -20,7 +23,8 @@ const AGILE_STYLES = new Set([
  */
 export function evaluateTacticsAdvice(
   warrior: Warrior,
-  campaignFocus: CampaignFocus
+  campaignFocus: CampaignFocus,
+  ctx?: { opponent?: Warrior; state?: GameState }
 ): WarriorTacticsAdvice {
   const bestOffensiveTactic = getBestOffensiveTactic(warrior.style);
   const bestDefensiveTactic = getBestDefensiveTactic(warrior.style);
@@ -62,6 +66,21 @@ export function evaluateTacticsAdvice(
           'Encumbrance warning: Heavy plate armor imposes severe mobility and defense penalties on agile styles. Consider chainmail or leather.'
         );
       }
+    }
+  }
+
+  // 4. Rematch adaptation: a losing record vs this specific opponent shifts the
+  // plan patient — mirrors the G11 deltas applied to NPC stables (lower OE,
+  // higher AL, scaled by how lopsided the record is, capped at ±2).
+  if (ctx?.opponent && ctx.state) {
+    const h2h = deriveHeadToHead(ctx.state, warrior.id, ctx.opponent.id);
+    if (h2h.meetings >= 2 && h2h.losses > h2h.wins) {
+      const delta = Math.min(2, h2h.losses - h2h.wins);
+      suggestedOE = clamp(suggestedOE - delta, 1, 10);
+      suggestedAL = clamp(suggestedAL + delta, 1, 10);
+      gearNotes.push(
+        `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${ctx.opponent.name} — fight more patiently.`
+      );
     }
   }
 

@@ -103,7 +103,7 @@ describe('AutosimConsole', () => {
     const onStart = vi.fn();
     render(<AutosimConsole isSimulating={false} progress={null} result={null} onStart={onStart} />);
     fireEvent.click(screen.getByText(/4 Wks/i));
-    expect(onStart).toHaveBeenCalledWith(4);
+    expect(onStart).toHaveBeenCalledWith(4, { councilAutoPilot: false });
   });
 
   it('renders progress when simulating', () => {

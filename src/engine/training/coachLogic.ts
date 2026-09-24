@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { type Attributes, type TrainerFocus } from '@/types/shared.types';
 import { TIER_BONUS } from '@/engine/trainers';
 
-const FOCUS_ATTR_MAP: Record<TrainerFocus, (keyof Attributes)[]> = {
+export const FOCUS_ATTR_MAP: Record<TrainerFocus, (keyof Attributes)[]> = {
   Aggression: ['ST', 'SP'],
   Defense: ['CN', 'WL'],
   Endurance: ['CN', 'WL', 'ST'],

@@ -114,7 +114,7 @@ export interface WarriorAdvisorCard {
   style: FightingStyle;
   campaignFocus: CampaignFocus;
   suggestedCampaignFocus: CampaignFocus;
-  fatigueStatus: { band: 'fresh' | 'elevated' | 'exhausted' | 'critical'; value: number };
+  fatigueStatus: { band: 'fresh' | 'elevated' | 'exhausted'; value: number };
   injuryStatus: { isInjured: boolean; severities: string[]; requiresRecovery: boolean };
   fightAdvice: WarriorFightAdvice;
   tournamentAdvice: WarriorTournamentAdvice;
@@ -136,6 +136,8 @@ export interface StableAdvisorSummary {
   pendingBoutOffersCount: number;
   projectedPurseGold: number;
   projectedTrainingCost: number;
+  treasury: number;
+  solvencyWarning?: string;
   stableDirectives: string[];
   allActionPayloads: WarriorActionPayload[];
 }

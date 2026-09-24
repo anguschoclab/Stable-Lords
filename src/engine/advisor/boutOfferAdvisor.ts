@@ -15,6 +15,8 @@ import { boutOfferAbsoluteWeek, deriveAbsoluteWeek } from '@/engine/core/absolut
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { getMatchupBonus } from '@/constants/combat/combat';
 import { acceptanceWeatherBlock } from '@/engine/ai/weatherSuitability';
+import { TRAINING_COST } from '@/constants/economy';
+import { deriveHeadToHead, getOpponentIntel, summarizeIntel } from './intelAdvisor';
 
 const BLOCKING_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
 
@@ -117,6 +119,13 @@ export function evaluateBoutOffers(
     };
   }
 
+  // Treasury pressure: when the treasury cannot cover this week's projected
+  // training payroll, purses weigh heavier (purse/5, cap 60) and the council
+  // flags the income motive in its reasoning.
+  const projectedWeeklyCost = Math.max(1, state.roster?.length ?? 1) * TRAINING_COST;
+  const treasuryDesperate =
+    state.treasury !== undefined && state.treasury < projectedWeeklyCost;
+
   // 5. Score Each Offer
   const scored: ScoredOffer[] = candidateOffers.map((offer) => {
     const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
@@ -128,6 +137,16 @@ export function evaluateBoutOffers(
     const warnings: string[] = [];
     const reasons: string[] = [];
     let dangerLevel: CombatDangerLevel = 'SAFE';
+
+    // Scout intel & head-to-head history for this specific opponent
+    if (opponentId) {
+      for (const line of summarizeIntel(getOpponentIntel(state, opponentId))) {
+        reasons.push(`Scout intel: ${line}`);
+      }
+    }
+    const h2h = opponent ? deriveHeadToHead(state, warrior.id, opponent.id) : null;
+    const rematchLosing =
+      !!h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins;
 
     // Lethality
     const kills = opponent?.career?.kills ?? 0;
@@ -161,17 +180,31 @@ export function evaluateBoutOffers(
       warnings.push('Sadistic promoter: Elevated combat lethality and underdog bias.');
     }
 
+    // Rematch caution (recent head-to-head record)
+    if (h2h && rematchLosing) {
+      if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
+      warnings.push(
+        `Rematch caution: ${h2h.wins}-${h2h.losses} career record vs ${opponent?.name}.`
+      );
+    }
+
     // Purse Incentive
     reasons.push(`Purse: ${offer.purse} gold`);
+    if (treasuryDesperate) {
+      reasons.push('Treasury pressure: prioritizing purse income over matchup purity.');
+    }
 
     // Numerical Composite Score
     let score = 50;
     score += styleEdge * 20;
-    score += Math.min(30, offer.purse / 10);
+    score += treasuryDesperate
+      ? Math.min(60, offer.purse / 5)
+      : Math.min(30, offer.purse / 10);
     if (kills > 0) score -= 60;
     if (weatherReason) score -= 35;
     if (styleEdge <= -2) score -= 40;
     if (promoter?.personality === 'Sadistic') score -= 15;
+    if (rematchLosing) score -= 10;
 
     return {
       offer,
@@ -186,7 +219,10 @@ export function evaluateBoutOffers(
 
   // Sort by desirability
   scored.sort((a, b) => b.score - a.score);
-  const best = scored[0]!;
+  const best = scored[0];
+  if (!best) {
+    throw new Error('Scored offers unexpectedly empty despite non-empty candidates');
+  }
 
   // If even the best match is lethal or severely hazardous with negative score, advise resting
   if (best.score < 40 && (best.dangerLevel === 'LETHAL' || best.dangerLevel === 'HAZARDOUS')) {

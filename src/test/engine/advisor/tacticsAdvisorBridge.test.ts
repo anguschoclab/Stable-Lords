@@ -3,6 +3,7 @@ import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
+import { makeFightSummary, makeGameState } from '@/test/_fixtures/factories';
 
 const mkWarrior = (style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior => ({
   id: 'w1' as any,
@@ -59,5 +60,43 @@ describe('evaluateTacticsAdvice', () => {
 
     const advice = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
     expect(advice.gearNotes.some((n) => n.toLowerCase().includes('encumbrance') || n.toLowerCase().includes('plate'))).toBe(true);
+  });
+
+  it('applies rematch patience deltas when warrior holds a losing record vs the opponent', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const state = makeGameState({
+      arenaHistory: [
+        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'D' }),
+        makeFightSummary({ warriorIdA: 'opp1' as any, warriorIdD: 'w1' as any, winner: 'A' }),
+        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'D' }),
+      ],
+    });
+
+    const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
+    const adjusted = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state });
+
+    // 0-3 record → patience delta capped at 2 (mirrors G11 rematch adaptation)
+    expect(adjusted.suggestedOE).toBe(Math.max(1, base.suggestedOE - 2));
+    expect(adjusted.suggestedAL).toBe(Math.min(10, base.suggestedAL + 2));
+    expect(adjusted.gearNotes.some((n) => /rematch/i.test(n))).toBe(true);
+  });
+
+  it('leaves tactics untouched when the record vs opponent is even or winning', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const state = makeGameState({
+      arenaHistory: [
+        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'A' }),
+        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'A' }),
+      ],
+    });
+
+    const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
+    const adjusted = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state });
+
+    expect(adjusted.suggestedOE).toBe(base.suggestedOE);
+    expect(adjusted.suggestedAL).toBe(base.suggestedAL);
+    expect(adjusted.gearNotes.some((n) => /rematch/i.test(n))).toBe(false);
   });
 });

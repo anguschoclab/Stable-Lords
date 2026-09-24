@@ -100,4 +100,23 @@ describe('WarriorCouncilCard', () => {
     fireEvent.click(button);
     expect(handleApply).toHaveBeenCalledWith('w1');
   });
+
+  it('shows a suggested-focus caption only when the pin diverges from auto-detection', () => {
+    const diverged: WarriorAdvisorCard = {
+      ...mockCard,
+      campaignFocus: 'REHABILITATION',
+      suggestedCampaignFocus: 'PURSE_HUNTER',
+    };
+
+    const { unmount } = render(
+      <WarriorCouncilCard card={diverged} onApplyPlan={vi.fn()} onSetFocus={vi.fn()} />
+    );
+    expect(screen.getByText(/Suggested:/i)).toBeInTheDocument();
+    unmount();
+
+    render(
+      <WarriorCouncilCard card={mockCard} onApplyPlan={vi.fn()} onSetFocus={vi.fn()} />
+    );
+    expect(screen.queryByText(/Suggested:/i)).not.toBeInTheDocument();
+  });
 });

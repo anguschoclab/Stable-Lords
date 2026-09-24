@@ -7,6 +7,8 @@ import { truncateState } from '@/engine/storage/truncation';
 import { evaluateStopConditions, type SoftStopCondition } from './pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getNamesFromTitle } from '@/utils/fightTitle';
+import { computeStableCouncilReport } from './advisor/stableCouncilService';
+import { applyCouncilPlan } from './advisor/applyCouncilPlan';
 
 /**
  * Defines the shape of autosim week summary.
@@ -70,6 +72,12 @@ export interface AutosimOptions {
    * resolution). In-process only — not structured-cloneable.
    */
   pool?: import('@/engine/pool/enginePool').EnginePool;
+  /**
+   * When true, the War Council runs the stable each week: advisor-scored bout
+   * acceptances replace the hype/purse heuristic, and recommended training
+   * assignments + fight-plan tactics are applied. Structured-cloneable.
+   */
+  councilAutoPilot?: boolean;
 }
 
 /**
@@ -181,8 +189,16 @@ export async function runAutosim(
       pool: options.pool,
     });
 
-    // 2. Auto-respond to player contracts
-    state = processPlayerOffers(state);
+    // 2. Auto-respond to player contracts. With the council autopilot engaged
+    // the advisor decides offers AND applies training/tactics payloads; the
+    // report must be computed uncached — mutableInput mutates this same state
+    // object across weeks, so the WeakMap-keyed buildStableCouncilReport would
+    // serve stale week-1 recommendations.
+    if (options.councilAutoPilot) {
+      state = applyCouncilPlan(state, computeStableCouncilReport(state));
+    } else {
+      state = processPlayerOffers(state);
+    }
 
     // 3. Extract week summary
     weekSummaries.push(extractWeekSummary(state, state.week));

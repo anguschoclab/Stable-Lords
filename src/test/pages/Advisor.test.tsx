@@ -51,6 +51,25 @@ describe('AdvisorPage', () => {
     expect(screen.getByText('Brutus')).toBeDefined();
   });
 
+  it('renders a solvency warning chip when the treasury cannot cover projected costs', () => {
+    const fresh = createFreshState('test-seed-broke');
+    fresh.roster = [
+      makeWarrior('w9' as any, 'Cassian', FightingStyle.AimedBlow, baseAttrs),
+    ];
+    fresh.week = 5;
+    fresh.absoluteWeek = 5;
+    fresh.season = 'Spring';
+    fresh.weather = 'Clear';
+    fresh.treasury = 5;
+    fresh.realmRankings = {};
+    fresh.boutOffers = {};
+    fresh.trainingAssignments = [];
+    useGameStore.getState().loadGame('test-slot', fresh as GameState);
+
+    render(<AdvisorPage />);
+    expect(screen.getByTestId('solvency-warning')).toBeInTheDocument();
+  });
+
   it('filters roster by tabs (Rehab filter isolates injured warrior)', () => {
     render(<AdvisorPage />);
 

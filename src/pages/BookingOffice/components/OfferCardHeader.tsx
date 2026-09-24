@@ -1,4 +1,4 @@
-import { Briefcase } from 'lucide-react';
+import { Briefcase, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
@@ -10,17 +10,21 @@ interface OfferCardHeaderProps {
   promoter?: { name?: string; tier?: string; personality?: string };
   personality?: PromoterPersonality;
   personalityConfig: PersonalityEntry | null;
+  isCouncilPick?: boolean;
+  councilWarning?: string | null;
 }
 
 /**
  * Offer card header: promoter identity + badges (rival challenge, counter,
- * personality), bookmark toggle, and the fight purse.
+ * personality, council pick/warning), bookmark toggle, and the fight purse.
  */
 export function OfferCardHeader({
   offer,
   promoter,
   personality,
   personalityConfig,
+  isCouncilPick,
+  councilWarning,
 }: OfferCardHeaderProps) {
   return (
     <div className="p-6 border-b border-white/5 flex items-start justify-between bg-white/[0.01]">
@@ -60,6 +64,25 @@ export function OfferCardHeader({
                 )}
               >
                 {personality}
+              </span>
+            )}
+            {isCouncilPick && (
+              <span
+                data-testid="council-pick-badge"
+                className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
+              >
+                <ShieldCheck className="h-2.5 w-2.5" />
+                Council Pick
+              </span>
+            )}
+            {councilWarning && !isCouncilPick && (
+              <span
+                data-testid="council-warning-badge"
+                className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/20 text-destructive border border-destructive/40 flex items-center gap-1"
+                title={councilWarning}
+              >
+                <AlertTriangle className="h-2.5 w-2.5" />
+                {councilWarning}
               </span>
             )}
           </div>

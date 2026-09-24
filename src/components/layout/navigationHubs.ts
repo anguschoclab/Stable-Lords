@@ -23,6 +23,7 @@ import {
   Terminal,
   FileJson,
   FlaskConical,
+  ShieldCheck,
 } from 'lucide-react';
 
 /**
@@ -36,6 +37,7 @@ export const HUBS = [
     to: '/stable',
     pages: [
       { to: '/stable', label: 'Overview', icon: LayoutDashboard, exact: true },
+      { to: '/stable/advisor', label: 'War Council', icon: ShieldCheck },
       { to: '/stable/roster', label: 'Roster', icon: BookUser },
       { to: '/stable/training', label: 'Training', icon: Dumbbell },
       { to: '/stable/planner', label: 'Planner', icon: BrainCircuit },

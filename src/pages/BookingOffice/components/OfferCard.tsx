@@ -23,6 +23,8 @@ interface OfferCardProps {
     warriorId: string | undefined,
     response: 'Accepted' | 'Declined'
   ) => void;
+  isCouncilPick?: boolean;
+  councilWarning?: string | null;
 }
 
 /**
@@ -35,6 +37,8 @@ export function OfferCard({
   rivalWarriorMap,
   signedOfferIds,
   onResponse,
+  isCouncilPick,
+  councilWarning,
 }: OfferCardProps) {
   const promoter = promoters[offer.promoterId];
   const playerWarrior = roster.find((w) => offer.warriorIds.includes(w.id));
@@ -63,6 +67,8 @@ export function OfferCard({
         promoter={promoter}
         personality={personality}
         personalityConfig={personalityConfig}
+        isCouncilPick={isCouncilPick}
+        councilWarning={councilWarning}
       />
 
       <div className="p-8 space-y-8">

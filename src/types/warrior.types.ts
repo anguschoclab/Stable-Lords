@@ -192,6 +192,8 @@ export interface Warrior {
   origin?: string;
   lineage?: WarriorLineage;
   isStarInvestment?: boolean;
+  /** Player-pinned or advisory campaign focus archetype. */
+  campaignFocus?: import('@/engine/advisor/types').CampaignFocus;
 }
 
 // Re-exports for convenience

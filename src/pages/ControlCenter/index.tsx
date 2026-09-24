@@ -22,6 +22,7 @@ import { KpiBar } from './components/KpiBar';
 import { RankingsBar } from './components/RankingsBar';
 import { RosterSnapshot } from './components/RosterSnapshot';
 import { ReputationTab } from './components/ReputationTab';
+import { CouncilBriefingWidget } from './components/CouncilBriefingWidget';
 
 const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: 'overview', label: 'Overview', icon: Activity },
@@ -102,6 +103,9 @@ export default function ControlCenter() {
             <div className="min-h-[400px] animate-in fade-in duration-500">
               {activeTab === 'overview' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="md:col-span-2">
+                    <CouncilBriefingWidget />
+                  </div>
                   <SeasonWidget />
                   <QuestsWidget />
                   <ObjectivesWidget />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Briefcase, Award, Target } from 'lucide-react';
 import { useGameStore, useBookmarks } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
+import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { useBookingOffice } from './hooks/useBookingOffice';
 import { OfferCard } from './components/OfferCard';
 import { AssetRegistry } from './components/AssetRegistry';
@@ -35,6 +36,15 @@ export default function BookingOffice() {
     handleResponse,
     acceptAllHonorable,
   } = useBookingOffice();
+  const { cards } = useStableAdvisor();
+  const advisorCardMap = useMemo(() => {
+    const map = new Map<string, (typeof cards)[0]>();
+    for (const c of cards) {
+      map.set(c.warrior.id, c);
+    }
+    return map;
+  }, [cards]);
+
   const isBookmarked = useGameStore((s) => s.isBookmarked);
   useBookmarks(); // trigger re-render on bookmark changes
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
@@ -182,17 +192,32 @@ export default function BookingOffice() {
                 </Surface>
               ) : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {filteredThisWeek.map((o) => (
-                    <OfferCard
-                      key={o.id}
-                      offer={o}
-                      promoters={promoters}
-                      roster={roster}
-                      rivalWarriorMap={rivalWarriorMap}
-                      signedOfferIds={signedOfferIds}
-                      onResponse={handleResponse}
-                    />
-                  ))}
+                  {filteredThisWeek.map((o) => {
+                    const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
+                    const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
+                    const isCouncilPick = advisorCard?.boutAdvice.bestOffer?.id === o.id;
+                    const isWarning =
+                      !isCouncilPick &&
+                      (advisorCard?.boutAdvice.dangerLevel === 'LETHAL' ||
+                        advisorCard?.boutAdvice.dangerLevel === 'HAZARDOUS');
+                    const councilWarning = isWarning
+                      ? advisorCard?.boutAdvice.warnings[0] ?? 'Hazardous Matchup'
+                      : undefined;
+
+                    return (
+                      <OfferCard
+                        key={o.id}
+                        offer={o}
+                        promoters={promoters}
+                        roster={roster}
+                        rivalWarriorMap={rivalWarriorMap}
+                        signedOfferIds={signedOfferIds}
+                        onResponse={handleResponse}
+                        isCouncilPick={isCouncilPick}
+                        councilWarning={councilWarning}
+                      />
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>
@@ -217,17 +242,32 @@ export default function BookingOffice() {
                 </Surface>
               ) : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {filteredUpcoming.map((o) => (
-                    <OfferCard
-                      key={o.id}
-                      offer={o}
-                      promoters={promoters}
-                      roster={roster}
-                      rivalWarriorMap={rivalWarriorMap}
-                      signedOfferIds={signedOfferIds}
-                      onResponse={handleResponse}
-                    />
-                  ))}
+                  {filteredUpcoming.map((o) => {
+                    const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
+                    const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
+                    const isCouncilPick = advisorCard?.boutAdvice.bestOffer?.id === o.id;
+                    const isWarning =
+                      !isCouncilPick &&
+                      (advisorCard?.boutAdvice.dangerLevel === 'LETHAL' ||
+                        advisorCard?.boutAdvice.dangerLevel === 'HAZARDOUS');
+                    const councilWarning = isWarning
+                      ? advisorCard?.boutAdvice.warnings[0] ?? 'Hazardous Matchup'
+                      : undefined;
+
+                    return (
+                      <OfferCard
+                        key={o.id}
+                        offer={o}
+                        promoters={promoters}
+                        roster={roster}
+                        rivalWarriorMap={rivalWarriorMap}
+                        signedOfferIds={signedOfferIds}
+                        onResponse={handleResponse}
+                        isCouncilPick={isCouncilPick}
+                        councilWarning={councilWarning}
+                      />
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>

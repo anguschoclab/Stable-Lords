@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 145; // 142 previous + 3 new narrative traits (orphan_resilience_two, abyssal_survivor, rust_blooded)
+const EXPECTED_COUNT = 146; // 142 previous + 3 new narrative traits (orphan_resilience_two, abyssal_survivor, rust_blooded)
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

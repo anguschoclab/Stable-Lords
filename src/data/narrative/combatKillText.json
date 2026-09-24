@@ -342,7 +342,9 @@
         "{{attacker}} parts {{defender}} from their limbs in a gruesome display of slashing mastery.",
         "The crowd roars as {{attacker}}'s blade removes {{defender}}'s head from their shoulders.",
         "With a terrifying, wide sweep, {{attacker}} fully severs {{defender}}'s lifeline.",
-        "{{attacker}}'s blade completes its deadly arc, leaving {{defender}} in bloody ruin."
+        "{{attacker}}'s blade completes its deadly arc, leaving {{defender}} in bloody ruin.",
+        "With a final, sickening sound of rending flesh, {{attacker}} executes {{defender}} in a fountain of crimson.",
+        "{{attacker}} delivers a macabre, finishing slash, leaving {{defender}} to bleed out on the cold stones."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",

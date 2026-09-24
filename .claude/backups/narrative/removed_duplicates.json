@@ -1,0 +1,14 @@
+{
+  "removed": [
+    {
+      "path": "src/data/narrative/combatPbp.json.pbp.defenses.parry.grim",
+      "keep": "With cold, lethal intent, {{defender}} intercepts the strike and readies their counter.",
+      "remove": "With cold, lethal intent, {{defender}} intercepts the strike and immediately readies their lethal counter."
+    },
+    {
+      "path": "src/data/narrative/combatPbp.json.pbp.hits.generic",
+      "keep": "The blow lands true, biting deep into flesh and bone.",
+      "remove": "The blow lands true, biting deep into {{defender}}'s flesh and bone."
+    }
+  ]
+}

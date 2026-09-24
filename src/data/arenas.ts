@@ -1196,6 +1196,27 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Shattered Helm',
     narrative: 'A champion\'s heavy iron helm acted as a lightning rod, ending the match in a blinding flash that scarred the spectators\' eyes.',
   },
+  {
+    id: 'cursed_swamp_the_drowning_grasp',
+    arenaId: 'the_cursed_swamp',
+    type: 'architectural_quirk',
+    title: 'The Drowning Grasp',
+    narrative: 'The thick mud of the swamp often acts like quicksand; fighters who stay still too long find themselves slowly pulled beneath the surface.',
+  },
+  {
+    id: 'iron_cage_the_blood_bars',
+    arenaId: 'the_iron_cage',
+    type: 'historical_battle',
+    title: 'The Blood-Painted Bars',
+    narrative: 'A legendary riot erupted when a fighter was thrown against the iron bars so violently that the crowd was splattered with blood, sparking a frenzy.',
+  },
+  {
+    id: 'rusted_gorge_madmans_end',
+    arenaId: 'rusted_gorge',
+    type: 'famous_death',
+    title: "The Madman's End",
+    narrative: 'A fighter went entirely feral, ignoring all blows until they succumbed to exhaustion, dying with a terrifying smile on their face.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

@@ -952,6 +952,15 @@ export const TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.6,
   },
+  iron_orphan: {
+    id: 'iron_orphan',
+    name: 'Iron Orphan',
+    description: 'Forged in the cruelest foundling homes, they fight with a desperate, unyielding survival instinct.',
+    effect: { defModLowHp: 1, enduranceMult: 0.95 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
 };
 
 // Merge bulk data modules.

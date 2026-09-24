@@ -21,6 +21,7 @@ import { computeStableCouncilReport } from '@/engine/advisor/stableCouncilServic
 import { applyCouncilPlan } from '@/engine/advisor/applyCouncilPlan';
 import { runAutosim, type AutosimResult } from '@/engine/autosim';
 import { truncateState } from '@/engine/storage/truncation';
+import { stripNonSerializable } from '@/state/serialization';
 import type { WarriorId } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 
@@ -205,7 +206,12 @@ printCouncil(state, `week ${state.week}, final`);
 // ─── 7. Optionally emit an importable save for the UI half of the check ─────
 const saveIdx = process.argv.indexOf('--save');
 if (saveIdx !== -1 && process.argv[saveIdx + 1]) {
-  writeFileSync(process.argv[saveIdx + 1], JSON.stringify(truncateState(state)));
+  // Mirror exportSlot: truncate for size, strip runtime-only Map caches that
+  // GameStateSchema rejects on import.
+  writeFileSync(
+    process.argv[saveIdx + 1],
+    JSON.stringify(stripNonSerializable(truncateState(state)))
+  );
   console.log(`\nsave written → ${process.argv[saveIdx + 1]}`);
 }
 

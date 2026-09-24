@@ -22,6 +22,8 @@ import {
   predictedCollapseMinute,
 } from '@/engine/strategyValidator';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
+import { ShieldCheck } from 'lucide-react';
+import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';
 
 /* ── Sub-components ─────────────────────────────────────── */
 
@@ -70,6 +72,20 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
     if (warrior) {
       onPlanChange(defaultPlanForWarrior(warrior));
     }
+  };
+
+  const applyCouncilTactics = () => {
+    if (!warrior) return;
+    const focus = warrior.campaignFocus ?? 'PURSE_HUNTER';
+    const tacticsAdvice = evaluateTacticsAdvice(warrior, focus);
+    onPlanChange({
+      ...plan,
+      offensiveTactic: tacticsAdvice.bestOffensiveTactic,
+      defensiveTactic: tacticsAdvice.bestDefensiveTactic,
+      OE: tacticsAdvice.suggestedOE,
+      AL: tacticsAdvice.suggestedAL,
+      fallbackCondition: tacticsAdvice.fallbackCondition as any,
+    });
   };
 
   const biasPresets: { label: string; bias: Bias }[] = [
@@ -198,13 +214,24 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
               </button>
             ))}
             {warrior && (
-              <button
-                aria-label="Restore Default"
-                onClick={restoreDefault}
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors motion-reduce:transition-none"
-              >
-                Restore Default
-              </button>
+              <>
+                <button
+                  aria-label="Restore Default"
+                  onClick={restoreDefault}
+                  className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors motion-reduce:transition-none"
+                >
+                  Restore Default
+                </button>
+                <button
+                  aria-label="Apply Council Tactics"
+                  data-testid="apply-council-tactics-btn"
+                  onClick={applyCouncilTactics}
+                  className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-arena-gold/40 text-arena-gold bg-arena-gold/10 hover:bg-arena-gold/20 flex items-center gap-1.5 transition-colors motion-reduce:transition-none"
+                >
+                  <ShieldCheck className="h-3 w-3" />
+                  Apply Council Tactics
+                </button>
+              </>
             )}
           </div>
           <div className="flex items-center gap-2 flex-wrap">

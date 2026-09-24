@@ -6,7 +6,7 @@ import type { GameState, BoutOffer, Promoter } from '@/types/state.types';
 import type { WarriorTournamentAdvice } from '@/engine/advisor/types';
 
 const mkWarrior = (id: string, style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior => ({
-  id,
+  id: id as any,
   name: `Warrior_${id}`,
   style,
   attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
@@ -28,16 +28,16 @@ const mkOffer = (
   warriorIdB: string,
   over: Partial<BoutOffer> = {}
 ): BoutOffer => ({
-  id,
-  promoterId: 'promoter_1',
-  warriorIds: [warriorIdA, warriorIdB],
+  id: id as any,
+  promoterId: 'promoter_1' as any,
+  warriorIds: [warriorIdA as any, warriorIdB as any],
   boutWeek: 6,
   createdAbsoluteWeek: 5,
   expirationWeek: 6,
   purse: 180,
   hype: 20,
   status: 'Proposed',
-  responses: { [warriorIdA]: 'Pending', [warriorIdB]: 'Pending' },
+  responses: { [warriorIdA]: 'Pending', [warriorIdB]: 'Pending' } as any,
   ...over,
 });
 
@@ -65,7 +65,7 @@ describe('evaluateBoutOffers', () => {
     const warrior = mkWarrior('p1', FightingStyle.LungingAttack, {
       injuries: [
         {
-          id: 'i1',
+          id: 'i1' as any,
           name: 'Fractured Rib',
           description: '',
           severity: 'Severe',
@@ -79,7 +79,7 @@ describe('evaluateBoutOffers', () => {
     const state = mkState({
       roster: [warrior],
       rivals: [{ id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } } as any],
-      boutOffers: { offer_1: offer },
+      boutOffers: { offer_1: offer } as any,
     });
 
     const advice = evaluateBoutOffers(warrior, state, 'REHABILITATION');
@@ -98,7 +98,7 @@ describe('evaluateBoutOffers', () => {
       absoluteWeek: 11,
       roster: [warrior],
       rivals: [{ id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } } as any],
-      boutOffers: { offer_1: offer },
+      boutOffers: { offer_1: offer } as any,
     });
     const tourneyAdvice: WarriorTournamentAdvice = {
       qualifiedTier: 'Gold',
@@ -123,7 +123,7 @@ describe('evaluateBoutOffers', () => {
     const state = mkState({
       roster: [warrior],
       rivals: [{ id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } } as any],
-      boutOffers: { offer_1: offer },
+      boutOffers: { offer_1: offer } as any,
     });
 
     const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
@@ -140,7 +140,7 @@ describe('evaluateBoutOffers', () => {
     const state = mkState({
       roster: [warrior],
       rivals: [{ id: 'rival_stable', roster: [killerRival], owner: { stableName: 'Bloody Hands' } } as any],
-      boutOffers: { offer_killer: offer },
+      boutOffers: { offer_killer: offer } as any,
     });
 
     const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
@@ -156,7 +156,7 @@ describe('evaluateBoutOffers', () => {
     const state = mkState({
       roster: [warrior],
       rivals: [{ id: 'rival_stable', roster: [favoredOpponent], owner: { stableName: 'Rivals' } } as any],
-      boutOffers: { offer_good: offer },
+      boutOffers: { offer_good: offer } as any,
     });
 
     const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');

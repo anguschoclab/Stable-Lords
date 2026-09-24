@@ -29,7 +29,7 @@ function makeOffer(id: string, widA: string, widB: string, purse = 250): BoutOff
     purse,
     hype: 10,
     status: 'Proposed',
-    responses: { [widA]: 'Pending', [widB]: 'Pending' },
+    responses: { [widA]: 'Pending', [widB]: 'Pending' } as any,
   };
 }
 
@@ -72,7 +72,7 @@ describe('useStableAdvisor', () => {
       state.setState((draft) => {
         draft.roster = [w1];
         draft.rivals = [{ id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } } as any];
-        draft.boutOffers = { off_1: offer };
+        draft.boutOffers = { off_1: offer } as any;
       });
     });
 
@@ -86,7 +86,7 @@ describe('useStableAdvisor', () => {
     // 1. Training assignment applied
     expect(updated.trainingAssignments.some((a) => a.warriorId === 'w1')).toBe(true);
     // 2. Bout offer accepted
-    expect(updated.boutOffers['off_1']?.responses['w1']).toBe('Accepted');
+    expect((updated.boutOffers as any)['off_1']?.responses['w1']).toBe('Accepted');
     // 3. Plan updated
     const updatedWarrior = updated.roster.find((w) => w.id === 'w1');
     expect(updatedWarrior?.plan?.offensiveTactic).toBeDefined();

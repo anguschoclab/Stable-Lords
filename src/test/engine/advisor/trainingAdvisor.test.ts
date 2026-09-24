@@ -5,7 +5,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 
 const mkWarrior = (style: FightingStyle = FightingStyle.AimedBlow, over: Partial<Warrior> = {}): Warrior => ({
-  id: 'w1',
+  id: 'w1' as any,
   name: 'Aulus',
   style,
   attributes: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 10, SP: 12, DF: 14 },
@@ -37,7 +37,7 @@ describe('evaluateTrainingAdvice', () => {
     const warrior = mkWarrior(FightingStyle.AimedBlow, {
       injuries: [
         {
-          id: 'i1',
+          id: 'i1' as any,
           name: 'Sprained Wrist',
           description: '',
           severity: 'Moderate',

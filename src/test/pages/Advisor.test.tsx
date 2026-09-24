@@ -6,7 +6,6 @@ import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import '@/test/_setup/setup';
 
@@ -37,7 +36,7 @@ describe('AdvisorPage', () => {
     fresh.realmRankings = {
       w1: { overallRank: 20, classRank: 2, compositeScore: 210 },
       w2: { overallRank: 80, classRank: 8, compositeScore: 160 },
-    };
+    } as any;
     fresh.boutOffers = {};
     fresh.trainingAssignments = [];
     useGameStore.getState().loadGame('test-slot', fresh as GameState);

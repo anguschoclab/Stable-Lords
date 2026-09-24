@@ -5,7 +5,7 @@ import {
   type Attributes,
 } from '@/types/game';
 import { Button } from '@/components/ui/button';
-import { Heart, X, Gauge } from 'lucide-react';
+import { Heart, X, Gauge, ShieldCheck } from 'lucide-react';
 import { ATTRIBUTE_TOTAL_CAP } from '@/constants/training';
 import { hasInjuries } from '@/engine/injuries/utils';
 import { Surface } from '@/components/ui/Surface';
@@ -14,6 +14,7 @@ import { TrainingCardHeader } from './TrainingCardHeader';
 import { AttributeRow } from './AttributeRow';
 import { TraitTrainingSection } from './TraitTrainingSection';
 import type { Trainer } from '@/types/shared.types';
+import type { WarriorTrainingAdvice } from '@/engine/advisor/types';
 
 /**
  *
@@ -27,6 +28,7 @@ export function WarriorTrainingCard({
   onAssignRecovery,
   onClear,
   onAssignTraitTraining,
+  advisorAdvice,
 }: {
   warrior: Warrior;
   assignment?: TrainingAssignment;
@@ -36,6 +38,7 @@ export function WarriorTrainingCard({
   onAssignRecovery: () => void;
   onClear: () => void;
   onAssignTraitTraining?: (trainerId: string) => void;
+  advisorAdvice?: WarriorTrainingAdvice;
 }) {
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0);
   const atCap = total >= ATTRIBUTE_TOTAL_CAP;
@@ -56,13 +59,24 @@ export function WarriorTrainingCard({
               'w-full h-10 gap-2 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none text-[10px] font-black uppercase tracking-[0.2em]',
               isRecovery
                 ? 'bg-destructive/20 text-destructive border-destructive/40 shadow-[0_0_15px_-5px_rgba(239,68,68,0.4)]'
-                : 'bg-white/5 hover:bg-white/10'
+                : advisorAdvice?.mode === 'recovery'
+                  ? 'bg-arena-gold/10 border-arena-gold/40 text-foreground hover:bg-arena-gold/20 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
+                  : 'bg-white/5 hover:bg-white/10'
             )}
           >
             <Heart
               className={cn('h-3.5 w-3.5', isRecovery ? 'text-destructive' : 'text-destructive')}
             />
-            {isRecovery ? 'CANCEL RECOVERY' : 'ACTIVE RECOVERY'}
+            <span>{isRecovery ? 'CANCEL RECOVERY' : 'ACTIVE RECOVERY'}</span>
+            {advisorAdvice?.mode === 'recovery' && (
+              <span
+                data-testid="advisor-recovery-badge"
+                className="ml-auto text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
+              >
+                <ShieldCheck className="h-2.5 w-2.5" />
+                Council Pick
+              </span>
+            )}
           </Button>
         )}
 
@@ -78,6 +92,10 @@ export function WarriorTrainingCard({
                 trainers={trainers}
                 atCap={atCap}
                 onAssign={onAssign}
+                isAdvisorRecommended={
+                  advisorAdvice?.mode === 'attribute' &&
+                  advisorAdvice.targetAttribute === key
+                }
               />
             ))}
           </div>

@@ -5,7 +5,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 
 const mkWarrior = (style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior => ({
-  id: 'w1',
+  id: 'w1' as any,
   name: 'Marcus',
   style,
   attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },

@@ -25,6 +25,7 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
 import { isActive } from '@/engine/warriorStatus';
+import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 
 /**
  * Training.
@@ -33,6 +34,13 @@ export default function Training() {
   const navigate = useNavigate();
   const state = useWorldState();
   const setState = useGameStore((s) => s.setState);
+  const { cards } = useStableAdvisor();
+
+  const advisorCardMap = useMemo(() => {
+    const map = new Map<string, (typeof cards)[0]>();
+    for (const c of cards) map.set(c.warriorId, c);
+    return map;
+  }, [cards]);
 
   const assignmentMap = useMemo(() => {
     const map = new Map<string, TrainingAssignment>();
@@ -296,6 +304,7 @@ export default function Training() {
                     onAssignTraitTraining={(trainerId) =>
                       handleAssignTraitTraining(warrior.id, trainerId)
                     }
+                    advisorAdvice={advisorCardMap.get(warrior.id)?.trainingAdvice}
                   />
                 ))}
             </div>

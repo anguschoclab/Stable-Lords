@@ -5,7 +5,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 
 const mkWarrior = (overrides: Partial<Warrior> = {}): Warrior => ({
-  id: 'w1',
+  id: 'w1' as any,
   name: 'Marcus',
   style: FightingStyle.LungingAttack,
   attributes: { ST: 14, CN: 12, SZ: 11, WT: 12, WL: 10, SP: 14, DF: 10 },
@@ -47,7 +47,7 @@ describe('evaluateCampaignFocus', () => {
     const warrior = mkWarrior({
       injuries: [
         {
-          id: 'inj1',
+          id: 'inj1' as any,
           name: 'Torn Muscle',
           description: '',
           severity: 'Moderate',
@@ -76,12 +76,12 @@ describe('evaluateCampaignFocus', () => {
   });
 
   it('assigns TOURNAMENT_PUSH for ranked contenders during seasonal tournament prep (weeks 10-13)', () => {
-    const warrior = mkWarrior({ id: 'contender1', career: { wins: 8, losses: 2, kills: 1 } });
+    const warrior = mkWarrior({ id: 'contender1' as any, career: { wins: 8, losses: 2, kills: 1 } });
     const state = mkState({
       week: 11, // prep window (weeks 11-12)
       realmRankings: {
         contender1: { overallRank: 42, classRank: 5, compositeScore: 120 },
-      },
+      } as any,
     });
     expect(evaluateCampaignFocus(warrior, state)).toBe('TOURNAMENT_PUSH');
   });

@@ -5,7 +5,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
 
 const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior => ({
-  id,
+  id: id as any,
   name: `Warrior_${id}`,
   style: FightingStyle.LungingAttack,
   attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
@@ -22,16 +22,16 @@ const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior => ({
 });
 
 const mkOffer = (id: string, widA: string, widB: string, purse = 200): BoutOffer => ({
-  id,
-  promoterId: 'p1',
-  warriorIds: [widA, widB],
+  id: id as any,
+  promoterId: 'p1' as any,
+  warriorIds: [widA as any, widB as any],
   boutWeek: 6,
   createdAbsoluteWeek: 5,
   expirationWeek: 6,
   purse,
   hype: 10,
   status: 'Proposed',
-  responses: { [widA]: 'Pending', [widB]: 'Pending' },
+  responses: { [widA]: 'Pending', [widB]: 'Pending' } as any,
 });
 
 describe('buildStableCouncilReport', () => {
@@ -40,7 +40,7 @@ describe('buildStableCouncilReport', () => {
     const w2 = mkWarrior('w2', {
       injuries: [
         {
-          id: 'i1',
+          id: 'i1' as any,
           name: 'Fracture',
           description: '',
           severity: 'Moderate',

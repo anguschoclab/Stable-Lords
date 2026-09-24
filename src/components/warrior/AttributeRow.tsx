@@ -1,4 +1,4 @@
-import { Lock } from 'lucide-react';
+import { Lock, ShieldCheck } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,7 @@ interface AttributeRowProps {
   trainers: Trainer[];
   atCap: boolean;
   onAssign: (attr: keyof Attributes) => void;
+  isAdvisorRecommended?: boolean;
 }
 
 /**
@@ -31,6 +32,7 @@ export function AttributeRow({
   trainers,
   atCap,
   onAssign,
+  isAdvisorRecommended,
 }: AttributeRowProps) {
   const {
     val,
@@ -59,7 +61,9 @@ export function AttributeRow({
               ? 'bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]'
               : disabled
                 ? 'bg-white/[0.02] border-white/5 opacity-40 cursor-not-allowed'
-                : 'bg-white/[0.03] border-white/5 hover:border-white/20 hover:bg-white/[0.08]'
+                : isAdvisorRecommended
+                  ? 'bg-arena-gold/5 border-arena-gold/30 hover:border-arena-gold/50 hover:bg-arena-gold/10 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
+                  : 'bg-white/[0.03] border-white/5 hover:border-white/20 hover:bg-white/[0.08]'
           )}
           aria-label={`Assign ${ATTRIBUTE_LABELS[key]} training for ${warrior.name}`}
         >
@@ -112,6 +116,16 @@ export function AttributeRow({
               />
             )}
           </div>
+
+          {isAdvisorRecommended && !isSelected && (
+            <span
+              data-testid="advisor-attribute-badge"
+              className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1 shrink-0"
+            >
+              <ShieldCheck className="h-2.5 w-2.5" />
+              Council Pick
+            </span>
+          )}
 
           <AttributeRowStatus
             isSelected={isSelected}

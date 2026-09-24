@@ -5,7 +5,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, TournamentEntry } from '@/types/state.types';
 
 const mkWarrior = (id = 'w1'): Warrior => ({
-  id,
+  id: id as any,
   name: 'Marcus',
   style: FightingStyle.WallOfSteel,
   attributes: { ST: 14, CN: 14, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
@@ -40,7 +40,7 @@ describe('evaluateTournamentAdvice', () => {
       week: 5,
       realmRankings: {
         w1: { overallRank: 12, classRank: 2, compositeScore: 240 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);
@@ -58,7 +58,7 @@ describe('evaluateTournamentAdvice', () => {
       week: 4,
       realmRankings: {
         w2: { overallRank: 95, classRank: 10, compositeScore: 150 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);
@@ -72,7 +72,7 @@ describe('evaluateTournamentAdvice', () => {
       week: 4,
       realmRankings: {
         w3: { overallRank: 140, classRank: 14, compositeScore: 110 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);
@@ -86,7 +86,7 @@ describe('evaluateTournamentAdvice', () => {
       week: 4,
       realmRankings: {
         w4: { overallRank: 210, classRank: 22, compositeScore: 80 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);
@@ -100,7 +100,7 @@ describe('evaluateTournamentAdvice', () => {
       week: 4,
       realmRankings: {
         w5: { overallRank: 280, classRank: 30, compositeScore: 40 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);
@@ -114,7 +114,7 @@ describe('evaluateTournamentAdvice', () => {
       week: 11, // 2 weeks until tournament
       realmRankings: {
         w1: { overallRank: 30, classRank: 4, compositeScore: 200 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);
@@ -127,7 +127,7 @@ describe('evaluateTournamentAdvice', () => {
   it('triggers ACTIVE_ROUND when isTournamentWeek is true and warrior is a participant', () => {
     const warrior = mkWarrior('w1');
     const mockTournament: TournamentEntry = {
-      id: 'tour_1',
+      id: 'tour_1' as any,
       season: 'Spring',
       week: 13,
       tierId: 'Gold',
@@ -142,7 +142,7 @@ describe('evaluateTournamentAdvice', () => {
       tournaments: [mockTournament],
       realmRankings: {
         w1: { overallRank: 25, classRank: 3, compositeScore: 210 },
-      },
+      } as any,
     });
 
     const advice = evaluateTournamentAdvice(warrior, state);

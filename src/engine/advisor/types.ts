@@ -114,7 +114,7 @@ export interface WarriorAdvisorCard {
   style: FightingStyle;
   campaignFocus: CampaignFocus;
   suggestedCampaignFocus: CampaignFocus;
-  fatigueStatus: { band: 'fresh' | 'elevated' | 'critical'; value: number };
+  fatigueStatus: { band: 'fresh' | 'elevated' | 'exhausted' | 'critical'; value: number };
   injuryStatus: { isInjured: boolean; severities: string[]; requiresRecovery: boolean };
   fightAdvice: WarriorFightAdvice;
   tournamentAdvice: WarriorTournamentAdvice;

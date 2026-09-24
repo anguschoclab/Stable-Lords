@@ -24,7 +24,7 @@ describe('ControlCenter Page', () => {
       } as any,
       week: 2,
       absoluteWeek: 2,
-      season: 1,
+      season: 1 as any,
       roster: [],
       boutOffers: {},
       arenaHistory: [],

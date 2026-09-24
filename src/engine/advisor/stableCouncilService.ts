@@ -147,11 +147,22 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   });
 
   // Calculate Stable-wide KPIs
-  const combatReadyCount = cards.filter((c) => c.fightAdvice.action === 'ACCEPT_OFFER').length;
-  const rehabCount = cards.filter((c) => c.campaignFocus === 'REHABILITATION').length;
-  const tournamentContenderCount = cards.filter(
-    (c) => c.tournamentAdvice.qualifiedTier !== null
-  ).length;
+  // ⚡ Bolt Optimization: Using single-pass loop instead of .filter().length and .reduce() over cards to avoid redundant array iterations and allocations.
+  let combatReadyCount = 0;
+  let rehabCount = 0;
+  let tournamentContenderCount = 0;
+  let projectedPurseGold = 0;
+  for (let i = 0; i < cards.length; i++) {
+    const c = cards[i];
+    if (c.fightAdvice.action === 'ACCEPT_OFFER') {
+      combatReadyCount++;
+      if (c.fightAdvice.recommendedOffer) {
+        projectedPurseGold += c.fightAdvice.recommendedOffer.purse ?? 0;
+      }
+    }
+    if (c.campaignFocus === 'REHABILITATION') rehabCount++;
+    if (c.tournamentAdvice.qualifiedTier !== null) tournamentContenderCount++;
+  }
 
   const assignedWarriorIds = new Set(
     (state.trainingAssignments || []).map((a) => a.warriorId)
@@ -167,12 +178,7 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
       o.warriorIds.some((wid) => playerWarriorIds.has(wid) && o.responses[wid] === 'Pending')
   ).length;
 
-  const projectedPurseGold = cards.reduce((acc, c) => {
-    if (c.fightAdvice.action === 'ACCEPT_OFFER' && c.fightAdvice.recommendedOffer) {
-      return acc + (c.fightAdvice.recommendedOffer.purse ?? 0);
-    }
-    return acc;
-  }, 0);
+
 
   const projectedTrainingCost = activeWarriors.length * TRAINING_COST;
   const treasury = state.treasury ?? 0;

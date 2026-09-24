@@ -9,15 +9,21 @@ import type {
   StableAdvisorSummary,
   StableCouncilReport,
   WarriorActionPayload,
+  CouncilDirective,
+  CouncilLookahead,
 } from './types';
 import { evaluateCampaignFocus } from './campaignFocusEvaluator';
 import { evaluateTournamentAdvice } from './tournamentAdvisor';
 import { evaluateBoutOffers } from './boutOfferAdvisor';
 import { evaluateTrainingAdvice } from './trainingAdvisor';
 import { evaluateTacticsAdvice } from './tacticsAdvisorBridge';
+import { getOpponentIntel } from './intelAdvisor';
 import { isActive } from '@/engine/warriorStatus';
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
 import { TRAINING_COST } from '@/constants/economy';
+import { boutOfferAbsoluteWeek, deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { findWarriorById } from '@/engine/core/warriorLookup';
+import { getScoutCost } from '@/engine/scouting';
 
 /**
  * Compute a complete Stable Council Report evaluating all active roster warriors.
@@ -210,9 +216,151 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
       `🏋️ ${unassignedTrainingCount} warrior${unassignedTrainingCount > 1 ? 's need' : ' needs'} weekly training assignments.`
     );
   }
+  // Deeper scouting: flag recommended bouts where the opponent has no dossier
+  // and a Basic report is affordable — intel feeds both scoring and tactics.
+  const blindOpponents = cards
+    .filter(
+      (c) =>
+        c.fightAdvice.action === 'ACCEPT_OFFER' &&
+        c.fightAdvice.opponent &&
+        getOpponentIntel(state, c.fightAdvice.opponent.id).length === 0
+    )
+    .map((c) => c.fightAdvice.opponent?.name ?? 'Unknown Opponent');
+  const basicScoutCost = getScoutCost('Basic');
+  if (blindOpponents.length > 0 && treasury >= basicScoutCost) {
+    stableDirectives.push(
+      `🕵️ No scout dossier on ${blindOpponents.slice(0, 3).join(', ')}${
+        blindOpponents.length > 3 ? ` and ${blindOpponents.length - 3} more` : ''
+      } — commission a Basic scout report (${basicScoutCost}G) before signing.`
+    );
+  }
+
   if (stableDirectives.length === 0) {
     stableDirectives.push('Stable operations are balanced. Review individual warrior profiles below.');
   }
+
+  // ── Pre-advance checklist: council recommendations not yet in live state ──
+  const currentAbsWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
+  const upcomingAbsWeek = currentAbsWeek + 1;
+  const fightingIds = new Set(
+    cards.filter((c) => c.fightAdvice.action === 'ACCEPT_OFFER').map((c) => c.warriorId)
+  );
+  for (const o of Object.values(state.boutOffers || {})) {
+    if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) === upcomingAbsWeek) {
+      for (const wid of o.warriorIds) {
+        if (playerWarriorIds.has(wid)) fightingIds.add(wid);
+      }
+    }
+  }
+
+  const unresolvedDirectives: CouncilDirective[] = [];
+  for (const card of cards) {
+    const warrior = activeWarriors.find((w) => w.id === card.warriorId);
+    if (!warrior) continue;
+
+    const offerId = card.actionPayload.boutOfferIdToAccept;
+    if (offerId) {
+      const offer = state.boutOffers?.[offerId];
+      const response = offer?.responses?.[card.warriorId];
+      if (offer && response !== 'Accepted' && response !== 'Declined') {
+        unresolvedDirectives.push({
+          kind: 'unsigned-offer',
+          warriorId: card.warriorId,
+          warriorName: card.warriorName,
+          label: `Sign bout contract vs ${card.fightAdvice.opponent?.name ?? 'opponent'} (${offer.purse}G)`,
+        });
+      }
+    }
+
+    const assignment = card.actionPayload.trainingAssignment;
+    if (assignment && !assignedWarriorIds.has(card.warriorId)) {
+      unresolvedDirectives.push({
+        kind: 'unassigned-training',
+        warriorId: card.warriorId,
+        warriorName: card.warriorName,
+        label: `Assign ${assignment.type} training`,
+      });
+    }
+
+    if (fightingIds.has(card.warriorId) && card.actionPayload.tacticsPlanPatch) {
+      const plan = warrior.plan;
+      const patch = card.actionPayload.tacticsPlanPatch;
+      const diverged =
+        !plan ||
+        plan.OE !== patch.OE ||
+        plan.AL !== patch.AL ||
+        plan.offensiveTactic !== patch.offensiveTactic ||
+        plan.defensiveTactic !== patch.defensiveTactic ||
+        plan.fallbackCondition !== patch.fallbackCondition;
+      if (diverged) {
+        unresolvedDirectives.push({
+          kind: 'unapplied-tactics',
+          warriorId: card.warriorId,
+          warriorName: card.warriorName,
+          label: 'Apply recommended tactics plan',
+        });
+      }
+    }
+  }
+
+  // ── Multi-week lookahead ──
+  const futureCommitments = Object.values(state.boutOffers || {})
+    .filter((o) => {
+      const playerId = o.warriorIds.find((wid) => playerWarriorIds.has(wid));
+      return (
+        playerId !== undefined &&
+        boutOfferAbsoluteWeek(o) > upcomingAbsWeek &&
+        (o.status === 'Signed' || o.responses[playerId] === 'Accepted')
+      );
+    })
+    .map((o) => {
+      const playerId = o.warriorIds.find((wid) => playerWarriorIds.has(wid));
+      if (playerId === undefined) return null;
+      const opponentId = o.warriorIds.find((wid) => wid !== playerId);
+      return {
+        offerId: o.id,
+        warriorId: playerId,
+        warriorName: cards.find((c) => c.warriorId === playerId)?.warriorName ?? playerId,
+        opponentName: opponentId
+          ? (findWarriorById(state, opponentId)?.name ?? 'Unknown Opponent')
+          : 'Unknown Opponent',
+        absoluteWeek: boutOfferAbsoluteWeek(o),
+        purse: o.purse,
+      };
+    })
+    .filter((e): e is NonNullable<typeof e> => e !== null)
+    .sort((a, b) => a.absoluteWeek - b.absoluteWeek);
+
+  const recoveryEtas = activeWarriors
+    .map((w) => {
+      const weeks = Math.max(
+        0,
+        ...(w.injuries || []).map((i) => i.weeksRemaining ?? 0)
+      );
+      return weeks > 0
+        ? {
+            warriorId: w.id,
+            warriorName: w.name,
+            weeksRemaining: weeks,
+            returnsAbsoluteWeek: currentAbsWeek + weeks,
+          }
+        : null;
+    })
+    .filter((e): e is NonNullable<typeof e> => e !== null);
+
+  const seasonWeek = ((state.week - 1) % 13) + 1;
+  const lookahead: CouncilLookahead = {
+    futureCommitments,
+    recoveryEtas,
+    weeksUntilTournament: 13 - seasonWeek,
+    projectedContenders: cards
+      .filter((c) => c.tournamentAdvice.qualifiedTier !== null)
+      .map((c) => ({
+        warriorId: c.warriorId,
+        warriorName: c.warriorName,
+        tierName: c.tournamentAdvice.tierName ?? c.tournamentAdvice.qualifiedTier ?? 'Unknown Tier',
+      })),
+  };
 
   const allActionPayloads = cards.map((c) => c.actionPayload);
 
@@ -234,6 +382,8 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   return {
     summary,
     cards,
+    unresolvedDirectives,
+    lookahead,
   };
 }
 

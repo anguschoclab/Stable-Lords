@@ -110,6 +110,8 @@ export function useStableAdvisor() {
     report,
     summary: report.summary,
     cards: report.cards,
+    unresolvedDirectives: report.unresolvedDirectives,
+    lookahead: report.lookahead,
     applyWarriorSetup,
     applyAllSetups,
     setWarriorCampaignFocus,

@@ -27,6 +27,8 @@
   "exclude": [
     "scripts/run-fight.ts",
     "scripts/build-fight.ts",
-    "scripts/strip-junk-jsdoc.ts"
+    "scripts/strip-junk-jsdoc.ts",
+    "scripts/advisor-e2e.ts",
+    "scripts/advisor-probe.ts"
   ]
 }

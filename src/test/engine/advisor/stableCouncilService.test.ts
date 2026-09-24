@@ -216,6 +216,216 @@ describe('buildStableCouncilReport', () => {
     ).toBe(true);
   });
 
+  describe('unresolvedDirectives — pre-advance checklist', () => {
+    const mkBase = (over: Record<string, unknown> = {}): GameState =>
+      ({
+        week: 5,
+        absoluteWeek: 5,
+        year: 1,
+        season: 'Spring',
+        weather: 'Clear',
+        roster: [],
+        rivals: [],
+        boutOffers: {},
+        trainingAssignments: [],
+        realmRankings: {},
+        tournaments: [],
+        isTournamentWeek: false,
+        treasury: 5000,
+        ...over,
+      }) as unknown as GameState;
+
+    it('flags a recommended offer whose player signature is still pending', () => {
+      const w = mkWarrior('w1', { style: FightingStyle.AimedBlow });
+      const rival = mkWarrior('r1', { style: FightingStyle.WallOfSteel });
+      const offer = mkOffer('off_1', 'w1', 'r1', 220); // boutWeek 6 = absWeek+1, w1 Pending
+      const state = mkBase({
+        roster: [w],
+        rivals: [{ id: 'rs', roster: [rival] }],
+        boutOffers: { off_1: offer },
+      });
+
+      const report = computeStableCouncilReport(state);
+      const item = report.unresolvedDirectives.find(
+        (d) => d.kind === 'unsigned-offer' && d.warriorId === 'w1'
+      );
+      expect(item).toBeDefined();
+      expect(item!.label).toContain('Warrior_r1');
+    });
+
+    it('clears the unsigned-offer item once the player response is Accepted', () => {
+      const w = mkWarrior('w1', { style: FightingStyle.AimedBlow });
+      const rival = mkWarrior('r1', { style: FightingStyle.WallOfSteel });
+      const offer = mkOffer('off_1', 'w1', 'r1', 220);
+      offer.responses = { w1: 'Accepted', r1: 'Accepted' } as any;
+      offer.status = 'Signed';
+      const state = mkBase({
+        roster: [w],
+        rivals: [{ id: 'rs', roster: [rival] }],
+        boutOffers: { off_1: offer },
+      });
+
+      const report = computeStableCouncilReport(state);
+      expect(
+        report.unresolvedDirectives.some((d) => d.kind === 'unsigned-offer')
+      ).toBe(false);
+    });
+
+    it('flags warriors with a recommended assignment not yet on the board', () => {
+      const w = mkWarrior('w2', { age: 19, career: { wins: 1, losses: 0, kills: 0 } });
+      const state = mkBase({ roster: [w] });
+
+      const report = computeStableCouncilReport(state);
+      expect(
+        report.unresolvedDirectives.some(
+          (d) => d.kind === 'unassigned-training' && d.warriorId === 'w2'
+        )
+      ).toBe(true);
+
+      const withAssignment = mkBase({
+        roster: [w],
+        trainingAssignments: [
+          { warriorId: 'w2' as any, type: 'attribute', attribute: 'ST' },
+        ],
+      });
+      const resolved = computeStableCouncilReport(withAssignment);
+      expect(
+        resolved.unresolvedDirectives.some(
+          (d) => d.kind === 'unassigned-training' && d.warriorId === 'w2'
+        )
+      ).toBe(false);
+    });
+
+    it('flags unapplied tactics only for warriors fighting this week', () => {
+      // w1 has an accepted offer → fight week; w3 is a dev prospect with no bout.
+      const w = mkWarrior('w1', { style: FightingStyle.AimedBlow });
+      const w3 = mkWarrior('w3', { age: 19, career: { wins: 1, losses: 0, kills: 0 } });
+      const rival = mkWarrior('r1', { style: FightingStyle.WallOfSteel });
+      const offer = mkOffer('off_1', 'w1', 'r1', 220);
+      offer.responses = { w1: 'Accepted', r1: 'Accepted' } as any;
+      offer.status = 'Signed';
+      const state = mkBase({
+        roster: [w, w3],
+        rivals: [{ id: 'rs', roster: [rival] }],
+        boutOffers: { off_1: offer },
+      });
+
+      const report = computeStableCouncilReport(state);
+      const fighting = report.unresolvedDirectives.filter(
+        (d) => d.kind === 'unapplied-tactics'
+      );
+      expect(fighting.some((d) => d.warriorId === 'w1')).toBe(true);
+      expect(fighting.some((d) => d.warriorId === 'w3')).toBe(false);
+    });
+  });
+
+  describe('lookahead — multi-week campaign horizon', () => {
+    const mkBase = (over: Record<string, unknown> = {}): GameState =>
+      ({
+        week: 5,
+        absoluteWeek: 5,
+        year: 1,
+        season: 'Spring',
+        weather: 'Clear',
+        roster: [],
+        rivals: [],
+        boutOffers: {},
+        trainingAssignments: [],
+        realmRankings: {},
+        tournaments: [],
+        isTournamentWeek: false,
+        treasury: 5000,
+        ...over,
+      }) as unknown as GameState;
+
+    it('lists signed bouts committed beyond the upcoming week', () => {
+      const w = mkWarrior('w1');
+      const rival = mkWarrior('r1');
+      const future = mkOffer('off_future', 'w1', 'r1', 300);
+      future.boutWeek = 8; // absoluteWeek 8 vs current 5 → beyond next week
+      future.status = 'Signed';
+      future.responses = { w1: 'Accepted', r1: 'Accepted' } as any;
+      const state = mkBase({
+        roster: [w],
+        rivals: [{ id: 'rs', roster: [rival] }],
+        boutOffers: { off_future: future },
+      });
+
+      const report = computeStableCouncilReport(state);
+      expect(report.lookahead.futureCommitments).toHaveLength(1);
+      const c = report.lookahead.futureCommitments[0]!;
+      expect(c.warriorId).toBe('w1');
+      expect(c.opponentName).toBe('Warrior_r1');
+      expect(c.absoluteWeek).toBe(8);
+      expect(c.purse).toBe(300);
+    });
+
+    it('ignores rival-only bouts and offers already resolved this week', () => {
+      const w = mkWarrior('w1');
+      const rival = mkWarrior('r1');
+      const rival2 = mkWarrior('r2');
+      const rivalOnly = mkOffer('off_rv', 'r1', 'r2', 100);
+      rivalOnly.boutWeek = 9;
+      rivalOnly.status = 'Signed';
+      const thisWeek = mkOffer('off_now', 'w1', 'r1', 100);
+      thisWeek.boutWeek = 6; // absWeek+1 — the imminent bout, not a lookahead item
+      thisWeek.status = 'Signed';
+      const state = mkBase({
+        roster: [w],
+        rivals: [{ id: 'rs', roster: [rival, rival2] }],
+        boutOffers: { off_rv: rivalOnly, off_now: thisWeek },
+      });
+
+      const report = computeStableCouncilReport(state);
+      expect(report.lookahead.futureCommitments).toHaveLength(0);
+    });
+
+    it('projects injury recovery ETAs in absolute weeks', () => {
+      const w = mkWarrior('w1', {
+        injuries: [
+          {
+            id: 'i1' as any,
+            name: 'Fracture',
+            description: '',
+            severity: 'Severe',
+            weeksRemaining: 3,
+            penalties: {},
+          },
+        ],
+      });
+      const state = mkBase({ roster: [w] });
+
+      const report = computeStableCouncilReport(state);
+      expect(report.lookahead.recoveryEtas).toHaveLength(1);
+      expect(report.lookahead.recoveryEtas[0]!.warriorId).toBe('w1');
+      expect(report.lookahead.recoveryEtas[0]!.weeksRemaining).toBe(3);
+      expect(report.lookahead.recoveryEtas[0]!.returnsAbsoluteWeek).toBe(8); // 5 + 3
+    });
+
+    it('counts down to the seasonal tournament and lists projected contenders', () => {
+      const w = mkWarrior('w1');
+      const state = mkBase({
+        roster: [w],
+        realmRankings: { w1: { overallRank: 40, classRank: 3, compositeScore: 180 } },
+      });
+
+      const report = computeStableCouncilReport(state);
+      // Week 5 of a 13-week season → 8 weeks until the week-13 bracket
+      expect(report.lookahead.weeksUntilTournament).toBe(8);
+      expect(report.lookahead.projectedContenders).toHaveLength(1);
+      expect(report.lookahead.projectedContenders[0]!.warriorId).toBe('w1');
+      expect(report.lookahead.projectedContenders[0]!.tierName).toBeTruthy();
+    });
+
+    it('reports 0 weeks during tournament week', () => {
+      const w = mkWarrior('w1');
+      const state = mkBase({ week: 13, absoluteWeek: 13, roster: [w], isTournamentWeek: true });
+
+      const report = computeStableCouncilReport(state);
+      expect(report.lookahead.weeksUntilTournament).toBe(0);
+    });
+  });
+
   describe('bookability-aware training payloads', () => {
     // isBookable() excludes warriors holding any trainingAssignment — so a
     // council that assigns training to everyone every week makes the roster

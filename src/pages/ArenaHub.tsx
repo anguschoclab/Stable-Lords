@@ -6,6 +6,7 @@ import type { RivalStableData } from '@/types/game';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { AutosimConsole } from '@/components/run-round/AutosimConsole';
+import { PreAdvanceChecklist } from '@/components/widgets/PreAdvanceChecklist';
 import { MatchCard } from '@/components/run-round/MatchCard';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import {
@@ -408,6 +409,10 @@ export default function ArenaHub() {
           </Surface>
         </>
       )}
+
+      {/* ── Pre-Advance Council Checklist ── */}
+      <SectionDivider label="War Council Checklist" />
+      <PreAdvanceChecklist />
 
       {/* ── Auto-Simulate Season ── */}
       <SectionDivider label="Auto-Simulate Season" />

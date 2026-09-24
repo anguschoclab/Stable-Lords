@@ -17,6 +17,7 @@ import { getMatchupBonus } from '@/constants/combat/combat';
 import { acceptanceWeatherBlock } from '@/engine/ai/weatherSuitability';
 import { TRAINING_COST } from '@/constants/economy';
 import { deriveHeadToHead, getOpponentIntel, summarizeIntel } from './intelAdvisor';
+import { getScoutCost } from '@/engine/scouting';
 
 const BLOCKING_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
 
@@ -139,10 +140,9 @@ export function evaluateBoutOffers(
     let dangerLevel: CombatDangerLevel = 'SAFE';
 
     // Scout intel & head-to-head history for this specific opponent
-    if (opponentId) {
-      for (const line of summarizeIntel(getOpponentIntel(state, opponentId))) {
-        reasons.push(`Scout intel: ${line}`);
-      }
+    const intel = opponentId ? getOpponentIntel(state, opponentId) : [];
+    for (const line of summarizeIntel(intel)) {
+      reasons.push(`Scout intel: ${line}`);
     }
     const h2h = opponent ? deriveHeadToHead(state, warrior.id, opponent.id) : null;
     const rematchLosing =
@@ -192,6 +192,20 @@ export function evaluateBoutOffers(
     reasons.push(`Purse: ${offer.purse} gold`);
     if (treasuryDesperate) {
       reasons.push('Treasury pressure: prioritizing purse income over matchup purity.');
+    }
+
+    // Blind bout: no dossier on the opponent — flag the scouting opportunity
+    // when a Basic report is affordable.
+    const scoutCost = getScoutCost('Basic');
+    if (
+      opponent &&
+      intel.length === 0 &&
+      state.treasury !== undefined &&
+      state.treasury >= scoutCost
+    ) {
+      reasons.push(
+        `No scout dossier on ${opponent.name} — commission a Basic scout report (${scoutCost}G) before signing.`
+      );
     }
 
     // Numerical Composite Score

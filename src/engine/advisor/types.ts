@@ -130,6 +130,47 @@ export interface WarriorAdvisorCard {
 }
 
 /**
+ * A single unresolved pre-advance checklist item: something the council
+ * recommended that has not yet been applied to live state.
+ */
+export interface CouncilDirective {
+  kind: 'unsigned-offer' | 'unassigned-training' | 'unapplied-tactics';
+  warriorId: WarriorId;
+  warriorName: string;
+  label: string;
+}
+
+/** A bout already committed beyond the upcoming week. */
+export interface FutureCommitment {
+  offerId: BoutOfferId;
+  warriorId: WarriorId;
+  warriorName: string;
+  opponentName: string;
+  absoluteWeek: number;
+  purse: number;
+}
+
+/** Projected absolute week an injured warrior returns to duty. */
+export interface RecoveryEta {
+  warriorId: WarriorId;
+  warriorName: string;
+  weeksRemaining: number;
+  returnsAbsoluteWeek: number;
+}
+
+/**
+ * Multi-week campaign horizon: everything on the calendar past next week —
+ * committed bouts, injury return dates, and the tournament countdown.
+ */
+export interface CouncilLookahead {
+  futureCommitments: FutureCommitment[];
+  recoveryEtas: RecoveryEta[];
+  /** Weeks until the week-13 seasonal tournament bracket (0 during it). */
+  weeksUntilTournament: number;
+  projectedContenders: { warriorId: WarriorId; warriorName: string; tierName: string }[];
+}
+
+/**
  * Stable-wide aggregate council summary and batch execution directives.
  */
 export interface StableAdvisorSummary {
@@ -153,4 +194,11 @@ export interface StableAdvisorSummary {
 export interface StableCouncilReport {
   summary: StableAdvisorSummary;
   cards: WarriorAdvisorCard[];
+  /**
+   * Pre-advance checklist — council recommendations not yet reflected in
+   * live state (unsigned contracts, missing assignments, stale tactics).
+   */
+  unresolvedDirectives: CouncilDirective[];
+  /** Multi-week campaign horizon — commitments and countdowns past next week. */
+  lookahead: CouncilLookahead;
 }

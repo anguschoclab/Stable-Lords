@@ -8,7 +8,12 @@ import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { CouncilHeader } from './components/CouncilHeader';
 import { CouncilFilterTabs, type AdvisorFilterTab } from './components/CouncilFilterTabs';
 import { WarriorCouncilCard } from './components/WarriorCouncilCard';
+import { CampaignHorizon } from './components/CampaignHorizon';
 
+/**
+ * Lanista's War Council — stable-wide advisory briefing synthesizing per-warrior
+ * fight selection, campaign focus, tournament contention, and training regimens.
+ */
 export default function AdvisorPage() {
   const { cards, summary, applyWarriorSetup, applyAllSetups, setWarriorCampaignFocus } =
     useStableAdvisor();
@@ -49,6 +54,9 @@ export default function AdvisorPage() {
       {/* Top Directives & Master Plan Executor */}
       <CouncilHeader summary={summary} onExecuteAll={applyAllSetups} />
 
+      {/* Multi-week lookahead — committed bouts, recovery ETAs, tournament */}
+      <CampaignHorizon />
+
       <div className="space-y-6 pt-4">
         <div className="flex items-center justify-between">
           <SectionDivider label={`Warriors Council [${filteredCards.length}]`} variant="gold" />
@@ -64,7 +72,7 @@ export default function AdvisorPage() {
             </p>
           </Surface>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6" data-testid="warrior-cards">
             {filteredCards.map((card) => (
               <WarriorCouncilCard
                 key={card.warriorId}

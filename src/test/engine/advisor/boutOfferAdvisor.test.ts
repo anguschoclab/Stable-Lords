@@ -248,6 +248,66 @@ describe('evaluateBoutOffers', () => {
     );
   });
 
+  it('recommends commissioning a scout report when the opponent has no dossier and the treasury affords one', () => {
+    const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
+    const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);
+    const offer = mkOffer('offer_blind', 'p1', 'r1');
+    const state = mkState({
+      roster: [warrior],
+      rivals: [{ id: 'rival_stable', roster: [opponent], owner: { stableName: 'Rivals' } } as any],
+      boutOffers: { offer_blind: offer } as any,
+      insightTokens: [], // never scouted
+      treasury: 500,
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.action).toBe('ACCEPT_OFFER');
+    expect(
+      advice.reasoning.some((r) => /scout report|dossier/i.test(r) && /25/.test(r))
+    ).toBe(true);
+  });
+
+  it('omits scout-purchase advice when the treasury cannot cover a Basic report', () => {
+    const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
+    const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);
+    const offer = mkOffer('offer_broke', 'p1', 'r1');
+    const state = mkState({
+      roster: [warrior],
+      rivals: [{ id: 'rival_stable', roster: [opponent], owner: { stableName: 'Rivals' } } as any],
+      boutOffers: { offer_broke: offer } as any,
+      insightTokens: [],
+      treasury: 5, // below the 25G Basic scout cost
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.reasoning.some((r) => /scout report|dossier/i.test(r))).toBe(false);
+  });
+
+  it('omits scout-purchase advice when a dossier already exists', () => {
+    const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
+    const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);
+    const offer = mkOffer('offer_known', 'p1', 'r1');
+    const state = mkState({
+      roster: [warrior],
+      rivals: [{ id: 'rival_stable', roster: [opponent], owner: { stableName: 'Rivals' } } as any],
+      boutOffers: { offer_known: offer } as any,
+      insightTokens: [
+        {
+          id: 'tok1' as any,
+          type: 'Style',
+          warriorId: 'r1' as any,
+          warriorName: 'Warrior_r1',
+          detail: 'Identified as Wall of Steel',
+          discoveredWeek: 3,
+        },
+      ],
+      treasury: 500,
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.reasoning.some((r) => /scout report|dossier/i.test(r))).toBe(false);
+  });
+
   it('warns rematch caution when the warrior holds a losing record vs the opponent', () => {
     const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
     const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);

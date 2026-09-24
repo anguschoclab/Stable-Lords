@@ -1,6 +1,7 @@
 import { Zap, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
+import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -19,6 +20,8 @@ export function ExecuteWeekButton() {
   );
 
   const { executeWeek, running } = useWeekExecution();
+  const { unresolvedDirectives } = useStableAdvisor();
+  const pendingCount = unresolvedDirectives.length;
 
   const disabled = running || isSimulating;
 
@@ -41,6 +44,14 @@ export function ExecuteWeekButton() {
         <Zap className="h-4 w-4 fill-current" />
       )}
       {label}
+      {pendingCount > 0 && !running && (
+        <span
+          aria-label={`${pendingCount} unresolved council directives`}
+          className="ml-1 px-1.5 py-0.5 bg-arena-gold/20 text-arena-gold text-[9px] font-black rounded-sm"
+        >
+          {pendingCount}
+        </span>
+      )}
     </Button>
   );
 }

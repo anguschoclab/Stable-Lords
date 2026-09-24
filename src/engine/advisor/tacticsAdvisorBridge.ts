@@ -9,7 +9,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { CampaignFocus, WarriorTacticsAdvice } from './types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
-import { deriveHeadToHead } from './intelAdvisor';
+import { deriveHeadToHead, getOpponentIntel } from './intelAdvisor';
 import { clamp } from '@/utils/math';
 
 const AGILE_STYLES = new Set([
@@ -80,6 +80,27 @@ export function evaluateTacticsAdvice(
       suggestedAL = clamp(suggestedAL + delta, 1, 10);
       gearNotes.push(
         `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${ctx.opponent.name} — fight more patiently.`
+      );
+    }
+
+    // Counter-tempo: a 'Tactic' dossier token (Expert scouting) reads the
+    // opponent's suspected plan. Meet a high-OE aggressor with patience;
+    // press a passive opponent before they can settle in.
+    const tacticIntel = getOpponentIntel(ctx.state, ctx.opponent.id).find(
+      (t) => t.type === 'Tactic'
+    );
+    const suspected = tacticIntel?.detail.match(/Suspected OE: (\w+), AL: (\w+)/);
+    if (suspected?.[1] === 'High') {
+      suggestedOE = clamp(suggestedOE - 1, 1, 10);
+      suggestedAL = clamp(suggestedAL + 1, 1, 10);
+      gearNotes.push(
+        `Counter-tempo: scouts report ${ctx.opponent.name} fights at high offensive eagerness — absorb and counter.`
+      );
+    } else if (suspected?.[1] === 'Low') {
+      suggestedOE = clamp(suggestedOE + 1, 1, 10);
+      suggestedAL = clamp(suggestedAL - 1, 1, 10);
+      gearNotes.push(
+        `Scouts report ${ctx.opponent.name} fights passively — press the tempo.`
       );
     }
   }

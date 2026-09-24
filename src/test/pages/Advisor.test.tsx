@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import AdvisorPage from '@/pages/Advisor';
 import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -47,8 +47,10 @@ describe('AdvisorPage', () => {
 
     expect(screen.getByText(/Lanista's War Council/i)).toBeDefined();
     expect(screen.getByText(/Execute War Council Plan/i)).toBeDefined();
-    expect(screen.getByText('Aulus')).toBeDefined();
-    expect(screen.getByText('Brutus')).toBeDefined();
+    // Names also appear in the Campaign Horizon (contenders/recovery) — scope to the card grid
+    const grid = within(screen.getByTestId('warrior-cards'));
+    expect(grid.getByText('Aulus')).toBeDefined();
+    expect(grid.getByText('Brutus')).toBeDefined();
   });
 
   it('renders a solvency warning chip when the treasury cannot cover projected costs', () => {
@@ -77,8 +79,10 @@ describe('AdvisorPage', () => {
     const rehabTab = screen.getByRole('button', { name: /Med Bay/i });
     fireEvent.click(rehabTab);
 
-    // Brutus is in rehab; Aulus is not
-    expect(screen.queryByText('Aulus')).toBeNull();
-    expect(screen.getByText('Brutus')).toBeDefined();
+    // Brutus is in rehab; Aulus is not — scope to the card grid since the
+    // Campaign Horizon also lists contender/recovery names
+    const grid = within(screen.getByTestId('warrior-cards'));
+    expect(grid.queryByText('Aulus')).toBeNull();
+    expect(grid.getByText('Brutus')).toBeDefined();
   });
 });

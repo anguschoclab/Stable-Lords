@@ -82,6 +82,80 @@ describe('evaluateTacticsAdvice', () => {
     expect(adjusted.gearNotes.some((n) => /rematch/i.test(n))).toBe(true);
   });
 
+  it('shifts to counter-tempo when scout intel reports an aggressive opponent plan', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const state = makeGameState({
+      insightTokens: [
+        {
+          id: 'tok1' as any,
+          type: 'Tactic',
+          warriorId: 'opp1' as any,
+          warriorName: 'Marcus',
+          detail: 'Suspected OE: High, AL: High',
+          discoveredWeek: 4,
+        },
+      ],
+    });
+
+    const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
+    const adjusted = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state });
+
+    expect(adjusted.suggestedOE).toBe(Math.max(1, base.suggestedOE - 1));
+    expect(adjusted.suggestedAL).toBe(Math.min(10, base.suggestedAL + 1));
+    expect(adjusted.gearNotes.some((n) => /counter|aggressive|tempo/i.test(n))).toBe(true);
+  });
+
+  it('presses the tempo when scout intel reports a passive opponent plan', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const state = makeGameState({
+      insightTokens: [
+        {
+          id: 'tok1' as any,
+          type: 'Tactic',
+          warriorId: 'opp1' as any,
+          warriorName: 'Marcus',
+          detail: 'Suspected OE: Low, AL: Low',
+          discoveredWeek: 4,
+        },
+      ],
+    });
+
+    const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
+    const adjusted = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state });
+
+    expect(adjusted.suggestedOE).toBe(Math.min(10, base.suggestedOE + 1));
+    expect(adjusted.suggestedAL).toBe(Math.max(1, base.suggestedAL - 1));
+  });
+
+  it('makes no counter-tempo adjustment on Medium or absent opponent intel', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const medium = makeGameState({
+      insightTokens: [
+        {
+          id: 'tok1' as any,
+          type: 'Tactic',
+          warriorId: 'opp1' as any,
+          warriorName: 'Marcus',
+          detail: 'Suspected OE: Medium, AL: Medium',
+          discoveredWeek: 4,
+        },
+      ],
+    });
+    const none = makeGameState({ insightTokens: [] });
+
+    const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
+    const vsMedium = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state: medium });
+    const vsNone = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state: none });
+
+    expect(vsMedium.suggestedOE).toBe(base.suggestedOE);
+    expect(vsMedium.suggestedAL).toBe(base.suggestedAL);
+    expect(vsNone.suggestedOE).toBe(base.suggestedOE);
+    expect(vsNone.suggestedAL).toBe(base.suggestedAL);
+  });
+
   it('leaves tactics untouched when the record vs opponent is even or winning', () => {
     const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
     const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });

@@ -104,13 +104,19 @@ export function useWeekExecution() {
       setAutosimResult(null);
       try {
         const result = await engineSession.runExclusive(() =>
-          engineProxy.runAutosim(gameState, {
-            weeksToSim: weeks,
-            councilAutoPilot: options?.councilAutoPilot ?? false,
-            onProgress: Comlink.proxy((currentWeek: number) => {
+          // onProgress must be a top-level arg: Comlink only detects proxy
+          // markers on direct arguments — a nested callback is structured-
+          // cloned into the worker and throws DataCloneError.
+          engineProxy.runAutosim(
+            gameState,
+            {
+              weeksToSim: weeks,
+              councilAutoPilot: options?.councilAutoPilot ?? false,
+            },
+            Comlink.proxy((currentWeek: number) => {
               setAutosimProgress({ current: currentWeek, total: weeks });
-            }),
-          })
+            })
+          )
         );
         // undefined → epoch moved mid-run (loadGame/reset); discard the result.
         if (!result) return;

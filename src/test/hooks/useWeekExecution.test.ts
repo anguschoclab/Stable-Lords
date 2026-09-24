@@ -225,8 +225,31 @@ describe('useWeekExecution', () => {
     });
     expect(engineProxy.runAutosim).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ weeksToSim: 4 })
+      expect.objectContaining({ weeksToSim: 4 }),
+      expect.any(Function)
     );
+  });
+
+  it('handleStartAutosim passes onProgress as a top-level arg, not nested in options', async () => {
+    // Comlink only honors proxy markers on top-level arguments — a callback
+    // nested inside the options object is structured-cloned and throws
+    // DataCloneError in the worker.
+    vi.mocked(engineProxy.runAutosim).mockResolvedValue({
+      finalState: {} as any,
+      weeksSimmed: 4,
+      stopReason: 'max_weeks',
+      stopDetail: 'done',
+      weekSummaries: [],
+    });
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.handleStartAutosim(4);
+    });
+    const call = vi.mocked(engineProxy.runAutosim).mock.calls[0];
+    expect(call).toBeDefined();
+    const [, options, progress] = call!;
+    expect(options).not.toHaveProperty('onProgress');
+    expect(typeof progress).toBe('function');
   });
 
   it('handleStartAutosim calls loadGame with finalState on success', async () => {

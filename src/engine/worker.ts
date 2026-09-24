@@ -9,6 +9,7 @@ import { createJobQueue } from './jobQueue';
 import { configureEnginePool, shutdownEnginePool } from './pool/enginePool';
 import type { GameState } from '@/types/state.types';
 import type { WeekAdvanceOptions } from './pipeline/services/weekPipelineService';
+import type { AutosimOptions } from './autosim';
 
 // Fire-and-forget: start loading combat data when worker initializes
 loadCombatNarrative();
@@ -50,7 +51,13 @@ const engine = {
   ) => jobs.enqueue(TickOrchestrator.skipToQuarterEnd, state, { ...opts, mutableInput: true }),
   skipToYearEnd: (state: GameState, opts?: Parameters<typeof TickOrchestrator.skipToYearEnd>[1]) =>
     jobs.enqueue(TickOrchestrator.skipToYearEnd, state, { ...opts, mutableInput: true }),
-  runAutosim: (...args: Parameters<typeof runAutosim>) => jobs.enqueue(runAutosim, ...args),
+  // onProgress arrives as a top-level arg (Comlink proxies only work at the
+  // top level) and is folded back into options for the in-process engine call.
+  runAutosim: (
+    state: GameState,
+    options: Omit<Parameters<typeof runAutosim>[1], 'onProgress'>,
+    onProgress?: AutosimOptions['onProgress']
+  ) => jobs.enqueue(runAutosim, state, { ...options, onProgress }),
   /**
    * Configure the shard pool INSIDE this worker (pools are per-context and
    * can't cross postMessage). size <= 1 keeps the sequential in-line path.

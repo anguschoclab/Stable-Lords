@@ -353,7 +353,9 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   const lookahead: CouncilLookahead = {
     futureCommitments,
     recoveryEtas,
-    weeksUntilTournament: 13 - seasonWeek,
+    // isTournamentWeek is authoritative (matches evaluateTournamentAdvice) —
+    // brackets run day-by-day and the calendar week isn't necessarily 13.
+    weeksUntilTournament: state.isTournamentWeek ? 0 : 13 - seasonWeek,
     projectedContenders: cards
       .filter((c) => c.tournamentAdvice.qualifiedTier !== null)
       .map((c) => ({

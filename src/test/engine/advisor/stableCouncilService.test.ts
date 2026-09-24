@@ -417,9 +417,11 @@ describe('buildStableCouncilReport', () => {
       expect(report.lookahead.projectedContenders[0]!.tierName).toBeTruthy();
     });
 
-    it('reports 0 weeks during tournament week', () => {
+    it('reports 0 weeks during a live tournament week regardless of calendar week', () => {
       const w = mkWarrior('w1');
-      const state = mkBase({ week: 13, absoluteWeek: 13, roster: [w], isTournamentWeek: true });
+      // Tournament weeks advance day-by-day; isTournamentWeek is authoritative
+      // (matching evaluateTournamentAdvice) even when the calendar week isn't 13.
+      const state = mkBase({ week: 31, absoluteWeek: 31, roster: [w], isTournamentWeek: true });
 
       const report = computeStableCouncilReport(state);
       expect(report.lookahead.weeksUntilTournament).toBe(0);

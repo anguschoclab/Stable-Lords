@@ -152,6 +152,12 @@ describe('store guards — behavioral tests', () => {
       const result = reconstructGameState(useGameStore.getState());
       expect(result.week).toBe(1);
     });
+
+    it('loadGame syncs absoluteWeek so flat-field consumers do not read a stale counter', () => {
+      const state = makeMinimalState({ week: 31, year: 1, absoluteWeek: 31 });
+      useGameStore.getState().loadGame('test-slot', state);
+      expect(useGameStore.getState().absoluteWeek).toBe(31);
+    });
   });
 
   // #9 — doAdvanceWeek clears timeout timer after race settles

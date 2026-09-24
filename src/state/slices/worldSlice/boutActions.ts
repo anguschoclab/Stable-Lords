@@ -2,6 +2,7 @@ import type { GameStore } from '@/state/useGameStore';
 import type { BoutOffer, GameState } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { respondToBoutOffer as engineRespondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
+import { boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import type { WorldSlice } from './types';
 
 /**
@@ -47,7 +48,10 @@ export function createBoutActions(
 
         for (const [id, offer] of Object.entries(newOffers)) {
           if (!offer) continue;
-          if (offer.status === 'Proposed' && state.absoluteWeek >= offer.expirationWeek) {
+          if (
+            offer.status === 'Proposed' &&
+            state.absoluteWeek >= boutOfferExpirationAbsoluteWeek(offer)
+          ) {
             newOffers[id as BoutOfferId] = { ...offer, status: 'Expired' };
             changed = true;
           }

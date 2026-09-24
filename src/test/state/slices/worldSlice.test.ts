@@ -141,6 +141,32 @@ describe('WorldSlice', () => {
     expect(offers['o3']?.status).toBe('Accepted');
   });
 
+  it('should not expire offers whose absolute expiry crosses the year boundary', () => {
+    // Offer created in absolute week 51 expiring in display week 1 of the next
+    // year resolves to absolute week 53 — not yet expired at absolute week 52.
+    // Comparing state.absoluteWeek to the raw display expirationWeek (52 >= 1)
+    // would wrongly expire it.
+    act(() => {
+      useTestStore.setState({
+        absoluteWeek: 52,
+        boutOffers: {
+          o1: {
+            id: 'o1',
+            status: 'Proposed',
+            week: 51,
+            createdAbsoluteWeek: 51,
+            expirationWeek: 1,
+            purse: 100,
+            rivalStableId: 'r1',
+            rivalWarriorId: 'w2',
+          } as any,
+        },
+      });
+      useTestStore.getState().clearExpiredOffers();
+    });
+    expect(useTestStore.getState().boutOffers['o1']?.status).toBe('Proposed');
+  });
+
   it('should clearExpiredOffers not mutate state when no offers expire', () => {
     act(() => {
       useTestStore.setState({

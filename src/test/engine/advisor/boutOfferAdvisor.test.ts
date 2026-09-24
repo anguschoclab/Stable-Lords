@@ -331,6 +331,24 @@ describe('evaluateBoutOffers', () => {
     expect(advice.reasoning.some((r) => /scout report|dossier/i.test(r))).toBe(false);
   });
 
+  it('labels an already-accepted offer as a signed commitment rather than a pending accept', () => {
+    const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
+    const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);
+    const offer = mkOffer('offer_signed', 'p1', 'r1', {
+      status: 'Signed',
+      responses: { p1: 'Accepted', r1: 'Accepted' } as any,
+    });
+    const state = mkState({
+      roster: [warrior],
+      rivals: [{ id: 'rival_stable', roster: [opponent], owner: { stableName: 'Rivals' } } as any],
+      boutOffers: { offer_signed: offer } as any,
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.action).toBe('ACCEPT_OFFER');
+    expect(advice.headline).toContain('Signed Bout');
+  });
+
   it('warns rematch caution when the warrior holds a losing record vs the opponent', () => {
     const warrior = mkWarrior('p1', FightingStyle.AimedBlow);
     const opponent = mkWarrior('r1', FightingStyle.WallOfSteel);

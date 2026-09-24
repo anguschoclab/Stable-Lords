@@ -50,7 +50,13 @@ export function OfferCard({
   const fatigue = playerWarrior?.fatigue ?? 0;
   const fatigueStatus = getFatigueStatus(fatigue);
   const injuryBadge = getInjuryBadge(playerWarrior?.injuries || []);
-  const isSigned = signedOfferIds.has(offer.id);
+  // Signed state must reflect the persisted offer, not just this page's local
+  // click-tracker — offers signed via the War Council (autopilot or "Execute
+  // War Council Plan") never touch signedOfferIds.
+  const isSigned =
+    offer.status === 'Signed' ||
+    (playerWarriorId !== undefined && offer.responses?.[playerWarriorId] === 'Accepted') ||
+    signedOfferIds.has(offer.id);
 
   const forecast = playerWarrior ? buildFightForecast(playerWarrior, opponent ?? null) : undefined;
 

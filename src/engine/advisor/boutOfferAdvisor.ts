@@ -255,6 +255,11 @@ export function evaluateBoutOffers(
     };
   }
 
+  // An offer already signed player-side (council execution or autopilot) is a
+  // commitment, not a pending decision — the headline says so honestly.
+  const alreadySigned =
+    best.offer.status === 'Signed' || best.offer.responses?.[warrior.id] === 'Accepted';
+
   return {
     action: 'ACCEPT_OFFER',
     recommendedOfferId: best.offer.id,
@@ -262,8 +267,9 @@ export function evaluateBoutOffers(
     opponent: best.opponent,
     matchupEdge: best.styleEdge,
     dangerLevel: best.dangerLevel,
-    headline:
-      best.dangerLevel === 'SAFE'
+    headline: alreadySigned
+      ? `Signed Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
+      : best.dangerLevel === 'SAFE'
         ? `Favorable Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
         : `Accept Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`,
     reasoning: best.reasons,

@@ -18,6 +18,7 @@ import {
   clearReconstructionCache,
 } from './serialization';
 import type { GameStore } from './store.types';
+import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
 import type { UseBoundStore, StoreApi } from 'zustand';
@@ -125,6 +126,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           draft.isTournamentWeek = state.isTournamentWeek || false;
           draft.activeTournamentId = state.activeTournamentId;
           draft.year = state.year || 1;
+          draft.absoluteWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
 
           draft.popularity = state.popularity || 0;
           draft.fame = state.fame || 0;

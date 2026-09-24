@@ -6,7 +6,7 @@
 import { useMemo, useCallback } from 'react';
 import { useWorldState, useGameStore } from '@/state/useGameStore';
 import type { GameStore } from '@/state/store.types';
-import type { GameState, TrainingAssignment } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import {
   buildStableCouncilReport,
@@ -14,44 +14,15 @@ import {
   type CampaignFocus,
   type WarriorActionPayload,
 } from '@/engine/advisor';
-import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
-import { defaultStylePreset } from '@/engine/bout/stylePresets';
+import { applyWarriorPayload } from '@/engine/advisor/applyCouncilPlan';
 import { toast } from 'sonner';
 
 function applySinglePayloadToDraft(draft: GameStore, payload: WarriorActionPayload) {
-  // 1. Training Assignment — absent payload assignment means "stay bookable":
-  // clear any existing assignment rather than appending.
-  draft.trainingAssignments = [
-    ...(draft.trainingAssignments ?? []).filter(
-      (a: TrainingAssignment) => a.warriorId !== payload.warriorId
-    ),
-    ...(payload.trainingAssignment ? [payload.trainingAssignment] : []),
-  ];
-
-  // 2. Bout Offer Acceptance
-  if (payload.boutOfferIdToAccept) {
-    const next = respondToBoutOffer(
-      draft as unknown as GameState,
-      payload.boutOfferIdToAccept,
-      payload.warriorId,
-      'Accepted'
-    );
-    if (next.boutOffers) {
-      draft.boutOffers = next.boutOffers;
-    }
-  }
-
-  // 3. Battle Plan Tuning
-  if (payload.tacticsPlanPatch) {
-    const warrior = draft.roster.find((w) => w.id === payload.warriorId);
-    if (warrior) {
-      const basePlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
-      warrior.plan = {
-        ...basePlan,
-        ...payload.tacticsPlanPatch,
-      };
-    }
-  }
+  // Shared with the autosim council autopilot — the engine mutates in place
+  // (resolveImpacts writes through field handlers), so the immer draft proxy
+  // records every change with no copy step. GameStore exposes the GameState
+  // fields applyWarriorPayload touches (roster, boutOffers, trainingAssignments).
+  applyWarriorPayload(draft as unknown as GameState, payload);
 }
 
 /**

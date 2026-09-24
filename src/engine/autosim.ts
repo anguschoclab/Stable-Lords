@@ -7,8 +7,7 @@ import { truncateState } from '@/engine/storage/truncation';
 import { evaluateStopConditions, type SoftStopCondition } from './pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getNamesFromTitle } from '@/utils/fightTitle';
-import { computeStableCouncilReport } from './advisor/stableCouncilService';
-import { applyCouncilPlan } from './advisor/applyCouncilPlan';
+import { applyCouncilDecisions } from './advisor/applyCouncilPlan';
 
 /**
  * Defines the shape of autosim week summary.
@@ -195,7 +194,7 @@ export async function runAutosim(
     // object across weeks, so the WeakMap-keyed buildStableCouncilReport would
     // serve stale week-1 recommendations.
     if (options.councilAutoPilot) {
-      state = applyCouncilPlan(state, computeStableCouncilReport(state));
+      state = applyCouncilDecisions(state);
     } else {
       state = processPlayerOffers(state);
     }

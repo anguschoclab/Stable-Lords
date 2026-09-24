@@ -9,3 +9,4 @@ export * from './trainingAdvisor';
 export * from './tacticsAdvisorBridge';
 export * from './intelAdvisor';
 export * from './stableCouncilService';
+export * from './applyCouncilPlan';

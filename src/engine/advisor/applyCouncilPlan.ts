@@ -9,6 +9,7 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { StableCouncilReport, WarriorActionPayload } from './types';
+import { computeStableCouncilReport } from './stableCouncilService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from '@/engine/impacts';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
@@ -58,4 +59,14 @@ export function applyCouncilPlan(state: GameState, report: StableCouncilReport):
     state = applyWarriorPayload(state, payload);
   }
   return state;
+}
+
+/**
+ * Compute the council report for the state and apply every payload — the
+ * autosim councilAutoPilot entry point. Uses the UNCACHED report builder:
+ * callers here own a mutating GameState (mutableInput loop), so the ref-keyed
+ * WeakMap cache in buildStableCouncilReport would serve stale reports.
+ */
+export function applyCouncilDecisions(state: GameState): GameState {
+  return applyCouncilPlan(state, computeStableCouncilReport(state));
 }

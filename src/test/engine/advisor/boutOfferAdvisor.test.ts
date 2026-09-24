@@ -192,7 +192,8 @@ describe('evaluateBoutOffers', () => {
       { id: 'rs2', roster: [easyOpponent], owner: { stableName: 'E' } },
     ];
 
-    // Solvent: modest-purse safe matchup wins (score 60 vs 55).
+    // Solvent + non-purse focus: modest-purse safe matchup wins (score 60 vs 55).
+    // (PURSE_HUNTER itself elevates purse weight — see the focus test below.)
     const solvent = evaluateBoutOffers(
       warrior,
       mkState({
@@ -201,7 +202,7 @@ describe('evaluateBoutOffers', () => {
         rivals: rivals as any,
         boutOffers: { offer_lucrative: lucrative, offer_modest: modest } as any,
       }),
-      'PURSE_HUNTER'
+      'TOURNAMENT_PUSH'
     );
     expect(solvent.recommendedOfferId).toBe('offer_modest');
 
@@ -219,6 +220,28 @@ describe('evaluateBoutOffers', () => {
     );
     expect(broke.recommendedOfferId).toBe('offer_lucrative');
     expect(broke.reasoning.some((r) => /treasury|purse/i.test(r))).toBe(true);
+  });
+
+  it('PURSE_HUNTER focus elevates purse weight even on a solvent treasury', () => {
+    const warrior = mkWarrior('p1', FightingStyle.LungingAttack);
+    const toughOpponent = mkWarrior('opp_tough', FightingStyle.ParryStrike);
+    const easyOpponent = mkWarrior('opp_easy', FightingStyle.BashingAttack);
+    const lucrative = mkOffer('offer_lucrative', 'p1', 'opp_tough', { purse: 250 });
+    const modest = mkOffer('offer_modest', 'p1', 'opp_easy', { purse: 100 });
+    const rivals = [
+      { id: 'rs1', roster: [toughOpponent], owner: { stableName: 'T' } },
+      { id: 'rs2', roster: [easyOpponent], owner: { stableName: 'E' } },
+    ];
+    const state = mkState({
+      treasury: 1000, // solvent — treasury pressure alone would not elevate
+      roster: [warrior],
+      rivals: rivals as any,
+      boutOffers: { offer_lucrative: lucrative, offer_modest: modest } as any,
+    });
+
+    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
+    expect(advice.recommendedOfferId).toBe('offer_lucrative');
+    expect(advice.reasoning.some((r) => /purse/i.test(r))).toBe(true);
   });
 
   it('surfaces scout intel tokens for the opponent in reasoning', () => {

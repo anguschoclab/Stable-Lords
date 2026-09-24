@@ -30,6 +30,7 @@ import { getScoutCost } from '@/engine/scouting';
  * Uncached — safe for callers that mutate a GameState in place (e.g. the autosim
  * loop's mutableInput path, where the same object identity persists across weeks).
  * React/UI subscribers should use buildStableCouncilReport instead.
+ * @see buildStableCouncilReport — the snapshot-memoized wrapper for React subscribers
  */
 export function computeStableCouncilReport(state: GameState): StableCouncilReport {
   const activeWarriors = (state.roster || []).filter(isActive);
@@ -398,6 +399,7 @@ const reportCache = new WeakMap<GameState, StableCouncilReport>();
  * Engine-side callers that mutate state in place must call
  * computeStableCouncilReport directly — a ref-keyed cache cannot see
  * in-place mutation.
+ * @see computeStableCouncilReport — the uncached implementation this memoizes
  */
 export function buildStableCouncilReport(state: GameState): StableCouncilReport {
   const cached = reportCache.get(state);

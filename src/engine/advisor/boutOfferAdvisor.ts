@@ -120,12 +120,13 @@ export function evaluateBoutOffers(
     };
   }
 
-  // Treasury pressure: when the treasury cannot cover this week's projected
-  // training payroll, purses weigh heavier (purse/5, cap 60) and the council
-  // flags the income motive in its reasoning.
+  // Purse priority: when the treasury cannot cover this week's projected
+  // training payroll, or the warrior's campaign is explicitly purse-driven,
+  // purses weigh heavier (purse/5, cap 60) and the council flags the motive.
   const projectedWeeklyCost = Math.max(1, state.roster?.length ?? 1) * TRAINING_COST;
   const treasuryDesperate =
     state.treasury !== undefined && state.treasury < projectedWeeklyCost;
+  const pursePriority = treasuryDesperate || campaignFocus === 'PURSE_HUNTER';
 
   // 5. Score Each Offer
   const scored: ScoredOffer[] = candidateOffers.map((offer) => {
@@ -192,6 +193,8 @@ export function evaluateBoutOffers(
     reasons.push(`Purse: ${offer.purse} gold`);
     if (treasuryDesperate) {
       reasons.push('Treasury pressure: prioritizing purse income over matchup purity.');
+    } else if (campaignFocus === 'PURSE_HUNTER') {
+      reasons.push('Purse-hunter campaign: weighting purse income over matchup purity.');
     }
 
     // Blind bout: no dossier on the opponent — flag the scouting opportunity
@@ -211,7 +214,7 @@ export function evaluateBoutOffers(
     // Numerical Composite Score
     let score = 50;
     score += styleEdge * 20;
-    score += treasuryDesperate
+    score += pursePriority
       ? Math.min(60, offer.purse / 5)
       : Math.min(30, offer.purse / 10);
     if (kills > 0) score -= 60;

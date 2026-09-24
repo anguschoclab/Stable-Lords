@@ -154,14 +154,15 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   let projectedPurseGold = 0;
   for (let i = 0; i < cards.length; i++) {
     const c = cards[i];
-    if (c.fightAdvice.action === 'ACCEPT_OFFER') {
+    if (!c) continue;
+    if (c.fightAdvice?.action === 'ACCEPT_OFFER') {
       combatReadyCount++;
       if (c.fightAdvice.recommendedOffer) {
         projectedPurseGold += c.fightAdvice.recommendedOffer.purse ?? 0;
       }
     }
     if (c.campaignFocus === 'REHABILITATION') rehabCount++;
-    if (c.tournamentAdvice.qualifiedTier !== null) tournamentContenderCount++;
+    if (c.tournamentAdvice?.qualifiedTier !== null) tournamentContenderCount++;
   }
 
   const assignedWarriorIds = new Set(

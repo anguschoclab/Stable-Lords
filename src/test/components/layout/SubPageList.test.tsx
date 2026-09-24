@@ -20,9 +20,9 @@ describe('SubPageList', () => {
     expect(screen.queryByRole('link')).toBeNull();
   });
 
-  it('renders correct number of pages for stable hub (14)', () => {
+  it('renders correct number of pages for stable hub (15)', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable" />);
-    expect(screen.getAllByRole('link')).toHaveLength(14);
+    expect(screen.getAllByRole('link')).toHaveLength(15);
   });
 
   it('renders correct number of pages for world hub (8)', () => {
@@ -91,7 +91,7 @@ describe('SubPageList', () => {
       </span>
     );
     render(<SubPageList activeHubId="stable" currentPath="/stable" LinkComponent={CustomLink} />);
-    expect(screen.getAllByTestId('custom-page-link')).toHaveLength(14);
+    expect(screen.getAllByTestId('custom-page-link')).toHaveLength(15);
   });
 
   it('renders motion indicator div when useMotionIndicator=true (default) and page is active', () => {

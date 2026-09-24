@@ -54,6 +54,19 @@ export function evaluateBoutOffers(
     };
   }
 
+  // 1b. Hard Gate: Rehabilitation Focus
+  if (campaignFocus === 'REHABILITATION') {
+    return {
+      action: 'REST_RECOMMENDED',
+      dangerLevel: 'SAFE',
+      headline: 'Rehabilitation Active: No Arena Bouts Scheduled',
+      reasoning: [
+        'Warrior is designated for rehabilitation and should rest or receive Med Bay treatment.',
+      ],
+      warnings: [],
+    };
+  }
+
   // 2. Hard Gate: Tournament Contender Taper Rest
   if (tourneyAdvice?.status === 'CONTENDER_REST') {
     return {

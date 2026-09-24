@@ -40,7 +40,7 @@ export default function BookingOffice() {
   const advisorCardMap = useMemo(() => {
     const map = new Map<string, (typeof cards)[0]>();
     for (const c of cards) {
-      map.set(c.warrior.id, c);
+      map.set(c.warriorId, c);
     }
     return map;
   }, [cards]);
@@ -195,13 +195,13 @@ export default function BookingOffice() {
                   {filteredThisWeek.map((o) => {
                     const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
                     const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
-                    const isCouncilPick = advisorCard?.boutAdvice.bestOffer?.id === o.id;
+                    const isCouncilPick = advisorCard?.fightAdvice.recommendedOfferId === o.id;
                     const isWarning =
                       !isCouncilPick &&
-                      (advisorCard?.boutAdvice.dangerLevel === 'LETHAL' ||
-                        advisorCard?.boutAdvice.dangerLevel === 'HAZARDOUS');
+                      (advisorCard?.fightAdvice.dangerLevel === 'LETHAL' ||
+                        advisorCard?.fightAdvice.dangerLevel === 'HAZARDOUS');
                     const councilWarning = isWarning
-                      ? advisorCard?.boutAdvice.warnings[0] ?? 'Hazardous Matchup'
+                      ? advisorCard?.fightAdvice.warnings[0] ?? 'Hazardous Matchup'
                       : undefined;
 
                     return (
@@ -245,13 +245,13 @@ export default function BookingOffice() {
                   {filteredUpcoming.map((o) => {
                     const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
                     const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
-                    const isCouncilPick = advisorCard?.boutAdvice.bestOffer?.id === o.id;
+                    const isCouncilPick = advisorCard?.fightAdvice.recommendedOfferId === o.id;
                     const isWarning =
                       !isCouncilPick &&
-                      (advisorCard?.boutAdvice.dangerLevel === 'LETHAL' ||
-                        advisorCard?.boutAdvice.dangerLevel === 'HAZARDOUS');
+                      (advisorCard?.fightAdvice.dangerLevel === 'LETHAL' ||
+                        advisorCard?.fightAdvice.dangerLevel === 'HAZARDOUS');
                     const councilWarning = isWarning
-                      ? advisorCard?.boutAdvice.warnings[0] ?? 'Hazardous Matchup'
+                      ? advisorCard?.fightAdvice.warnings[0] ?? 'Hazardous Matchup'
                       : undefined;
 
                     return (

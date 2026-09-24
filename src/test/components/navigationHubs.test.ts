@@ -42,9 +42,9 @@ describe('HUBS extended structure', () => {
     });
   });
 
-  it('stable hub has exactly 14 pages', () => {
+  it('stable hub has exactly 15 pages', () => {
     const stable = HUBS.find((h) => h.id === 'stable')!;
-    expect(stable.pages).toHaveLength(14);
+    expect(stable.pages).toHaveLength(15);
   });
 
   it('world hub has exactly 8 pages', () => {

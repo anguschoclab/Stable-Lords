@@ -100,7 +100,12 @@ export interface WarriorTacticsAdvice {
  */
 export interface WarriorActionPayload {
   warriorId: WarriorId;
-  trainingAssignment: TrainingAssignment;
+  /**
+   * Omitted when the warrior is booked to fight or is being held available for
+   * bookings — isBookable() excludes warriors holding any assignment, so
+   * assigning one would suppress next week's offers/challenges.
+   */
+  trainingAssignment?: TrainingAssignment;
   boutOfferIdToAccept?: BoutOfferId;
   tacticsPlanPatch?: Partial<FightPlan>;
 }

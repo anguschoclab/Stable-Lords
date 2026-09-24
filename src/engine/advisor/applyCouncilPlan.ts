@@ -16,10 +16,14 @@ import { defaultStylePreset } from '@/engine/bout/stylePresets';
 /** Apply one warrior's council payload (training, bout response, plan patch). */
 export function applyWarriorPayload(state: GameState, payload: WarriorActionPayload): GameState {
   // 1. Training assignment — replace any existing assignment for the warrior.
+  // A payload with no assignment clears a stale one so the warrior stays
+  // bookable for the next promoter/challenge pass.
   const assignments = (state.trainingAssignments ?? []).filter(
     (a) => a.warriorId !== payload.warriorId
   );
-  assignments.push(payload.trainingAssignment);
+  if (payload.trainingAssignment) {
+    assignments.push(payload.trainingAssignment);
+  }
   state.trainingAssignments = assignments;
 
   // 2. Bout offer acceptance.

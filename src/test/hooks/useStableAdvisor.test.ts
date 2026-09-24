@@ -83,8 +83,9 @@ describe('useStableAdvisor', () => {
     });
 
     const updated = useGameStore.getState();
-    // 1. Training assignment applied
-    expect(updated.trainingAssignments.some((a) => a.warriorId === 'w1')).toBe(true);
+    // 1. Warrior is booked to fight — no training assignment (assigned warriors
+    // are unbookable; the bout is their week's activity)
+    expect(updated.trainingAssignments.some((a) => a.warriorId === 'w1')).toBe(false);
     // 2. Bout offer accepted
     expect((updated.boutOffers as any)['off_1']?.responses['w1']).toBe('Accepted');
     // 3. Plan updated

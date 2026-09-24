@@ -19,12 +19,13 @@ import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { toast } from 'sonner';
 
 function applySinglePayloadToDraft(draft: GameStore, payload: WarriorActionPayload) {
-  // 1. Training Assignment
+  // 1. Training Assignment — absent payload assignment means "stay bookable":
+  // clear any existing assignment rather than appending.
   draft.trainingAssignments = [
     ...(draft.trainingAssignments ?? []).filter(
       (a: TrainingAssignment) => a.warriorId !== payload.warriorId
     ),
-    payload.trainingAssignment,
+    ...(payload.trainingAssignment ? [payload.trainingAssignment] : []),
   ];
 
   // 2. Bout Offer Acceptance

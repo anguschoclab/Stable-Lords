@@ -85,11 +85,13 @@ describe('buildStableCouncilReport', () => {
     expect(report.summary.stableDirectives.length).toBeGreaterThan(0);
     expect(report.summary.allActionPayloads).toHaveLength(2);
 
-    // Verify action payload for w1
+    // Verify action payload for w1 — a warrior booked to fight is NOT given a
+    // training assignment: the bout is their week, and holding an assignment
+    // would make them unbookable (isBookable excludes assigned warriors).
     const p1 = report.summary.allActionPayloads.find((p) => p.warriorId === 'w1');
     expect(p1).toBeDefined();
     expect(p1!.boutOfferIdToAccept).toBe('off_1');
-    expect(p1!.trainingAssignment.type).toBe('attribute');
+    expect(p1!.trainingAssignment).toBeUndefined();
     expect(p1!.tacticsPlanPatch?.offensiveTactic).toBeDefined();
     expect(p1!.tacticsPlanPatch?.defensiveTactic).toBeDefined();
 
@@ -97,7 +99,7 @@ describe('buildStableCouncilReport', () => {
     const p2 = report.summary.allActionPayloads.find((p) => p.warriorId === 'w2');
     expect(p2).toBeDefined();
     expect(p2!.boutOfferIdToAccept).toBeUndefined(); // no bout accepted for injured
-    expect(p2!.trainingAssignment.type).toBe('recovery');
+    expect(p2!.trainingAssignment?.type).toBe('recovery');
     expect(p2!.tacticsPlanPatch?.fallbackCondition).toBe('YIELD');
   });
 
@@ -212,5 +214,68 @@ describe('buildStableCouncilReport', () => {
     expect(
       report.summary.stableDirectives.some((d) => /treasury|insolven|afford/i.test(d))
     ).toBe(true);
+  });
+
+  describe('bookability-aware training payloads', () => {
+    // isBookable() excludes warriors holding any trainingAssignment — so a
+    // council that assigns training to everyone every week makes the roster
+    // permanently unchallengable. Fight-focused warriors with no viable offer
+    // must stay unassigned so promoters/challengers can book them next week.
+    const bareState = (warriors: Warrior[]): GameState =>
+      ({
+        week: 5,
+        absoluteWeek: 5,
+        year: 1,
+        season: 'Spring',
+        weather: 'Clear',
+        roster: warriors,
+        rivals: [],
+        boutOffers: {},
+        trainingAssignments: [],
+        realmRankings: {},
+        tournaments: [],
+        isTournamentWeek: false,
+        treasury: 5000,
+      }) as unknown as GameState;
+
+    it('omits the training assignment for a PURSE_HUNTER with no viable offers', () => {
+      // age 24 + 10 career bouts + unranked → PURSE_HUNTER
+      const w = mkWarrior('ph1', { age: 24, career: { wins: 6, losses: 4, kills: 0 } });
+      const report = computeStableCouncilReport(bareState([w]));
+      const card = report.cards[0]!;
+      expect(card.campaignFocus).toBe('PURSE_HUNTER');
+      expect(card.fightAdvice.action).toBe('NO_VIABLE_OFFERS');
+      expect(card.actionPayload.trainingAssignment).toBeUndefined();
+    });
+
+    it('still assigns attribute training to a PROSPECT_DEV warrior with no offers', () => {
+      // young + <5 career bouts → PROSPECT_DEV (development is the week's purpose)
+      const w = mkWarrior('pd1', { age: 19, career: { wins: 1, losses: 0, kills: 0 } });
+      const report = computeStableCouncilReport(bareState([w]));
+      const card = report.cards[0]!;
+      expect(card.campaignFocus).toBe('PROSPECT_DEV');
+      expect(card.actionPayload.trainingAssignment?.type).toBe('attribute');
+    });
+
+    it('keeps recovery assignment for injured warriors regardless of focus', () => {
+      const w = mkWarrior('inj1', {
+        age: 24,
+        career: { wins: 6, losses: 4, kills: 0 },
+        injuries: [
+          {
+            id: 'i1' as any,
+            name: 'Fracture',
+            description: '',
+            severity: 'Severe',
+            weeksRemaining: 2,
+            penalties: {},
+          },
+        ],
+      });
+      const report = computeStableCouncilReport(bareState([w]));
+      const card = report.cards[0]!;
+      expect(card.campaignFocus).toBe('REHABILITATION');
+      expect(card.actionPayload.trainingAssignment?.type).toBe('recovery');
+    });
   });
 });

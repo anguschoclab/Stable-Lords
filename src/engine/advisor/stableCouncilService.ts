@@ -56,9 +56,26 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
       requiresRecovery: campaignFocus === 'REHABILITATION',
     };
 
-    // Construct Training Assignment
-    let trainingAssignment: TrainingAssignment;
-    if (trainingAdvice.mode === 'recovery') {
+    // Construct Training Assignment — but only when this warrior's week is
+    // training rather than fighting. isBookable() excludes warriors holding
+    // any assignment, so a warrior booked to fight (ACCEPT_OFFER) or a
+    // fight-focused warrior waiting for offers must carry none, or the
+    // promoter/challenge pipeline can never book them (autopilot starvation).
+    const requiresRecovery =
+      campaignFocus === 'REHABILITATION' || injuryStatus.requiresRecovery;
+    const wantsBooking =
+      !requiresRecovery &&
+      (campaignFocus === 'PURSE_HUNTER' ||
+        campaignFocus === 'VETERAN_TWILIGHT' ||
+        (campaignFocus === 'TOURNAMENT_PUSH' &&
+          tournamentAdvice.status === 'QUALIFYING'));
+    const holdsForBooking =
+      fightAdvice.action === 'NO_VIABLE_OFFERS' && wantsBooking;
+
+    let trainingAssignment: TrainingAssignment | undefined;
+    if (fightAdvice.action === 'ACCEPT_OFFER' || holdsForBooking) {
+      trainingAssignment = undefined;
+    } else if (trainingAdvice.mode === 'recovery') {
       trainingAssignment = { warriorId: warrior.id, type: 'recovery' };
     } else if (trainingAdvice.mode === 'skillDrill') {
       trainingAssignment = {

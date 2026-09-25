@@ -82,7 +82,7 @@ No closed-not-merged PR contained unique value absent from `main` at review time
 | N-B1 | `sturdy` trait: 26.67% win rate < 32% floor (deterministic) — bisected to `5f92de0e` "gate exhaustion stoppage on HP" which removed the stall-win payoff the trait's plan (AL−3/OE−2/killDesire−5) depended on | high | **FIXED** — trait rebalanced into a sustainable wall profile (verified against the 2s harness); intentional engine change kept | `f0692659` |
 | N-B2 | `worldLiveness` freeze-guard asserted on `totalBouts` (bounded, pruned by `truncateState` mid-run — counter went backwards 752→641) | high | **FIXED** — guard now uses the truncation-proof `cumulativeBouts` field the harness already supplies; the post-V6 bracket-completion fix made pruning observable | `f0692659` |
 | N-C | #990 test rewrite breaks under `bun:test` | medium | **REJECTED** — hunk not landed | — |
-| N-D | 3 `jsdoc/require-jsdoc` warnings on main (`CouncilFilterTabs`, `CouncilBriefingWidget`) | low | **FIXED** — docstrings added; lint is now 0/0 | |
+| N-D | 3 `jsdoc/require-jsdoc` warnings on main (`CouncilFilterTabs`, `CouncilBriefingWidget`) | low | **FIXED** — docstrings added; lint is now 0/0 | `c69fad9a` |
 | N-E | `DeathModal` unscrollable below the fold on mobile — `MEMORIALIZE & CONTINUE` unreachable → true deadlock for real mobile users; also blocked the stacked `ResolutionReveal` | high | **FIXED** — scrolling `min-h-full` flex wrapper | `3a171364` |
 | N-F | `routeTree.gen.ts` absent on clean checkout → `tsc --build` failed in CI after N-A direct-tsc change | medium | **FIXED** — buildConfig test generates the route tree via `bun x` first | `c2380baf` |
 

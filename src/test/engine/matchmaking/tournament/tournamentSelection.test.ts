@@ -1467,3 +1467,152 @@ describe('applyBoutResults — deathWeek at year boundary', () => {
     expect(updated.graveyard[0]!.deathWeek).toBe(53);
   });
 });
+
+// ─── full-bracket completion (regression: phantom 7th round) ────────────────
+
+describe('resolveRound — full bracket completes in 6 rounds', () => {
+  /** `aWins` controls which bracket slot always wins — the simulateFight mock
+   *  returns winner 'A', so slot-A warriors take every bout. */
+  function makeBracketWarriors(count: number, aWins: 'player' | 'rival' = 'player'): Warrior[] {
+    const ws: Warrior[] = [];
+    for (let i = 0; i < count; i++) {
+      const isSlotA = i % 2 === 0;
+      const stableId = isSlotA === (aWins === 'player') ? PLAYER_ID : RIVAL_ID;
+      ws.push(
+        makeTestWarrior(`bw${i}`, `Bracket Warrior ${i}`, FightingStyle.StrikingAttack, stableId)
+      );
+    }
+    return ws;
+  }
+
+  function makeBracketState(warriors: Warrior[]): GameState {
+    const s = makeBaseState();
+    s.roster = warriors.filter((w) => w.stableId === PLAYER_ID);
+    s.rivals = [
+      {
+        id: RIVAL_ID,
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        roster: warriors.filter((w) => w.stableId === RIVAL_ID),
+        treasury: 500,
+        fame: 0,
+      } as any,
+    ];
+    s.tournaments = [makeTournamentWithR1(warriors)];
+    return s;
+  }
+
+  const stopOutcome = {
+    winner: 'A' as const,
+    by: 'Stoppage' as const,
+    minutes: 1,
+    log: [],
+    exchangeLog: [],
+    post: { tags: [] },
+  };
+
+  it('64-slot bracket finishes in 6 rounds; bronze winner does not advance', () => {
+    // Earlier tests leave simulateFight mocked to 'Kill' — restore Stoppage.
+    vi.mocked(simulateFight).mockReturnValue(stopOutcome as any);
+    const warriors = makeBracketWarriors(64);
+    let state = makeBracketState(warriors);
+    let tour = state.tournaments[0]!;
+
+    let rounds = 0;
+    for (let i = 0; i < 10 && !tour.completed; i++) {
+      const res = resolveRound(state, tour.id, 1000 + i, true, tour);
+      state = res.updatedState;
+      tour = res.updatedTournament ?? tour;
+      rounds++;
+    }
+
+    // Six playable days in a tournament week — the bracket MUST finish in 6.
+    expect(rounds).toBe(6);
+    expect(tour.completed).toBe(true);
+    expect(tour.champion).toBeTruthy();
+
+    // No phantom round-7 championship rematch.
+    expect(tour.bracket.some((b: TournamentBout) => b.round >= 7)).toBe(false);
+    // 32 + 16 + 8 + 4 + 2 + finals + 3rd-place = 64 bouts.
+    expect(tour.bracket.length).toBe(64);
+
+    // Champion is the finals winner, not the third-place winner.
+    const finals = tour.bracket.find((b: TournamentBout) => b.round === 6 && b.matchIndex === 0);
+    const bronze = tour.bracket.find((b: TournamentBout) => b.round === 6 && b.matchIndex === 1);
+    expect(finals?.winner).toBeDefined();
+    expect(bronze?.winner).toBeDefined();
+    expect(bronze?.isBronzeMatch).toBe(true);
+    const champId = finals!.winner === 'A' ? finals!.warriorIdA : finals!.warriorIdD;
+    const champWarrior = warriors.find((w) => w.id === champId);
+    expect(tour.champion).toBe(champWarrior?.name);
+  });
+
+  it('prizes land on NPC winners — rival stable gets purse + fame + token effects', () => {
+    vi.mocked(simulateFight).mockReturnValue(stopOutcome as any);
+    // slot-A warriors are all rivals → with winner 'A' every podium finisher is an NPC.
+    const warriors = makeBracketWarriors(64, 'rival');
+    let state = makeBracketState(warriors);
+    let tour = state.tournaments[0]!;
+
+    const preTreasury = state.rivals[0]!.treasury;
+    const preFame = state.rivals[0]!.fame;
+
+    for (let i = 0; i < 10 && !tour.completed; i++) {
+      const res = resolveRound(state, tour.id, 2000 + i, true, tour);
+      state = res.updatedState;
+      tour = res.updatedTournament ?? tour;
+    }
+
+    expect(tour.completed).toBe(true);
+
+    const finals = tour.bracket.find((b: TournamentBout) => b.round === 6 && b.matchIndex === 0);
+    const bronze = tour.bracket.find((b: TournamentBout) => b.isBronzeMatch);
+    const podium = [
+      { id: finals!.winner === 'A' ? finals!.warriorIdA : finals!.warriorIdD, purse: 5000, fame: 100, medal: 'gold' as const },
+      { id: finals!.winner === 'A' ? finals!.warriorIdD : finals!.warriorIdA, purse: 2500, fame: 50, medal: 'silver' as const },
+      { id: bronze!.winner === 'A' ? bronze!.warriorIdA : bronze!.warriorIdD, purse: 1250, fame: 25, medal: 'bronze' as const },
+    ];
+
+    // Purse + fame follow each podium finisher's stable.
+    let rivalGold = 0;
+    let rivalFame = 0;
+    let playerGold = 0;
+    for (const p of podium) {
+      const w = warriors.find((x) => x.id === p.id)!;
+      if (w.stableId === RIVAL_ID) {
+        rivalGold += p.purse;
+        rivalFame += p.fame;
+      } else {
+        playerGold += p.purse;
+      }
+
+      // Medal lands on the warrior in whichever roster owns them.
+      const updated =
+        state.rivals[0]!.roster.find((x: Warrior) => x.id === p.id) ??
+        state.roster.find((x) => x.id === p.id)!;
+      expect(updated?.career.medals?.[p.medal]).toBe(1);
+    }
+
+    expect(state.rivals[0]!.treasury).toBe(preTreasury + rivalGold);
+    expect(state.rivals[0]!.fame).toBe(preFame + rivalFame);
+    expect(state.treasury).toBe(1000 + playerGold);
+    // Every NPC podium finisher belongs to the one rival here — the NPC path
+    // must have paid out.
+    expect(rivalGold).toBeGreaterThan(0);
+
+    // Token effects are applied directly to the NPC champion (no UI token pool):
+    // Gold 1st place = Weapon + Rhythm + Attribute.
+    const champ = state.rivals[0]!.roster.find((x: Warrior) => x.id === podium[0]!.id)!;
+    expect(champ.favorites?.discovered.weapon).toBe(true);
+    expect(champ.favorites?.discovered.rhythm).toBe(true);
+    expect(
+      Object.values(champ.attributes).some((v) => v > 10)
+    ).toBe(true);
+  });
+});

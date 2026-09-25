@@ -47,14 +47,19 @@ export function resolveRound(
   const losers: { id: WarriorId; name: string; stableId?: StableId }[] = [];
 
   for (const bout of roundBouts) {
+    // The third-place playoff is terminal: its winner medals but does not
+    // feed the next round's pairings.
+    const advancesWinner = !bout.isBronzeMatch;
     if (bout.warriorIdD === 'bye') {
       bout.winner = 'A';
       const wABye = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
-      winners.push({
-        id: bout.warriorIdA,
-        name: wABye?.name ?? 'Unknown',
-        stableId: bout.stableIdA,
-      });
+      if (advancesWinner) {
+        winners.push({
+          id: bout.warriorIdA,
+          name: wABye?.name ?? 'Unknown',
+          stableId: bout.stableIdA,
+        });
+      }
       continue;
     }
 
@@ -68,7 +73,7 @@ export function resolveRound(
         : wD
           ? { id: wD.id, name: wD.name, stableId: wD.stableId }
           : undefined;
-      if (winnerObj) winners.push(winnerObj);
+      if (winnerObj && advancesWinner) winners.push(winnerObj);
       continue;
     }
 
@@ -94,16 +99,18 @@ export function resolveRound(
     bout.by = outcome.by;
     bout.fightId = rng.uuid('bout') as FightId;
 
-    winners.push(
-      outcome.winner === 'A'
-        ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-        : { id: wD.id, name: wD.name, stableId: wD.stableId }
-    );
-    losers.push(
-      outcome.winner === 'A'
-        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
-        : { id: wA.id, name: wA.name, stableId: wA.stableId }
-    );
+    if (advancesWinner) {
+      winners.push(
+        outcome.winner === 'A'
+          ? { id: wA.id, name: wA.name, stableId: wA.stableId }
+          : { id: wD.id, name: wD.name, stableId: wD.stableId }
+      );
+      losers.push(
+        outcome.winner === 'A'
+          ? { id: wD.id, name: wD.name, stableId: wD.stableId }
+          : { id: wA.id, name: wA.name, stableId: wA.stableId }
+      );
+    }
     updatedState = applyBoutResults(
       updatedState,
       wA,
@@ -157,15 +164,32 @@ export function resolveRound(
           warriorIdD: bD.id,
           stableIdA: bA.stableId,
           stableIdD: bD.stableId,
+          isBronzeMatch: true,
         };
         bracket.push(bronzeBout);
       }
     }
   }
 
-  // 🏆 7-round tournament: R1(32) → R2(16) → R3(8) → QF(4) → SF(2) → 3rd(1) → Finals(1)
-  const isComplete = winners.length <= 1 && currentRound >= 7;
-  const champion = isComplete ? winners[0]?.name : undefined;
+  // 🏆 6-round tournament: R1(32) → R2(16) → R3(8) → QF(4) → SF(2) → Finals+3rd(2).
+  // Six rounds map onto the six playable days of a tournament week — the
+  // week rolls over on day 7, so a seventh bracket round could never resolve
+  // before the season (and with it the tournament's UI window) advanced.
+  const isComplete = bracket.every((b) => b.winner !== undefined);
+  // Champion = winner of the championship bout: latest non-bronze bout.
+  const finalsBout = [...bracket]
+    .filter((b) => !b.isBronzeMatch)
+    .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
+  const championId =
+    isComplete && finalsBout?.winner
+      ? finalsBout.winner === 'A'
+        ? finalsBout.warriorIdA
+        : finalsBout.warriorIdD
+      : undefined;
+  const champion = championId
+    ? (winners.find((w) => w.id === championId)?.name ??
+      findWarriorById(updatedState, championId, resolvedTournament)?.name)
+    : undefined;
 
   let updatedTournament: TournamentEntry | undefined;
   updatedState.tournaments = updateEntityInList(
@@ -178,7 +202,7 @@ export function resolveRound(
   );
 
   if (isComplete && champion) {
-    updatedState = awardTournamentPrizes(resolvedTournament, updatedState);
+    updatedState = awardTournamentPrizes(updatedTournament ?? resolvedTournament, updatedState);
   }
 
   return {

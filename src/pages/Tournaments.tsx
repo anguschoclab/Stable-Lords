@@ -56,6 +56,7 @@ export default function Tournaments() {
     activeSlotId,
     loadGame,
     setSimulating,
+    isSimulating,
     bookmarks,
   } = useGameStore(
     useShallow((s) => ({
@@ -69,6 +70,7 @@ export default function Tournaments() {
       activeSlotId: s.activeSlotId,
       loadGame: s.loadGame,
       setSimulating: s.setSimulating,
+      isSimulating: s.isSimulating,
       bookmarks: s.bookmarks,
     }))
   );
@@ -187,6 +189,7 @@ export default function Tournaments() {
           onToggleExpand={setExpandedBout}
           isReadyToStart={isTournamentReadyToStart}
           onExecuteRound={handleExecuteRound}
+          isSimulating={isSimulating}
           onOpenPrep={() => setIsPrepOpen(true)}
           seasonIcon={SEASON_ICONS[season] ?? ''}
         />

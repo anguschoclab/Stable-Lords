@@ -103,8 +103,15 @@ function processTournamentPlaceAward(
  */
 export function awardTournamentPrizes(tournament: TournamentEntry, state: GameState): GameState {
   const bracket = tournament.bracket;
-  const finals = bracket.find((b) => b.round === 6 && b.matchIndex === 0);
-  const bronze = bracket.find((b) => b.round === 6 && b.matchIndex === 1);
+  // Championship bout = the latest non-bronze bout at matchIndex 0. The bronze
+  // playoff is flagged at creation; the round/matchIndex fallback covers
+  // brackets serialized before the flag existed.
+  const finals = bracket
+    .filter((b) => !b.isBronzeMatch)
+    .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
+  const bronze =
+    bracket.find((b) => b.isBronzeMatch) ??
+    bracket.find((b) => b.round === 6 && b.matchIndex === 1);
 
   if (!finals) return state;
 

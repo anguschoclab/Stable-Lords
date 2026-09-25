@@ -19,6 +19,7 @@ interface ActiveTournamentManifestProps {
   onExecuteRound: () => void;
   onOpenPrep: () => void;
   seasonIcon: string;
+  isSimulating?: boolean;
 }
 
 /**
@@ -35,6 +36,7 @@ export function ActiveTournamentManifest({
   onExecuteRound,
   onOpenPrep,
   seasonIcon,
+  isSimulating,
 }: ActiveTournamentManifestProps) {
   const bracket = tournament.bracket;
   const totalMatches = bracket.length;
@@ -164,6 +166,7 @@ export function ActiveTournamentManifest({
               <div className="flex gap-6">
                 <Button
                   onClick={onExecuteRound}
+                  disabled={isSimulating}
                   className="flex-1 h-16 font-black uppercase text-[12px] tracking-[0.4em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none rounded-none"
                 >
                   <Play className="h-5 w-5 mr-4 fill-current" /> EXECUTE NEXT BOUT

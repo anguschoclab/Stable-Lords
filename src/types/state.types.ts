@@ -171,6 +171,8 @@ export interface TournamentBout {
   winner?: 'A' | 'D' | null;
   by?: FightOutcomeBy;
   fightId?: FightId;
+  /** Third-place playoff — terminal bout whose winner does NOT advance. */
+  isBronzeMatch?: boolean;
 }
 
 /**

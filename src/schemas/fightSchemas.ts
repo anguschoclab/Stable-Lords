@@ -70,6 +70,7 @@ export const TournamentBoutSchema = z.object({
   winner: z.union([z.literal('A'), z.literal('D'), z.null()]).optional(),
   by: FightOutcomeBySchema.optional(),
   fightId: z.string().optional(),
+  isBronzeMatch: z.boolean().optional(),
 });
 
 /**

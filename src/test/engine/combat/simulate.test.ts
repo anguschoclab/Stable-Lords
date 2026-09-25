@@ -451,37 +451,43 @@ describe('simulateFight — equipment modifiers', () => {
   });
 
   it('shields improve defense', () => {
-    const wShield = makeWarrior(
-      'Shielder',
-      FightingStyle.WallOfSteel,
-      { CN: 14, DF: 14 },
-      {
-        equipment: {
-          weapon: 'short_sword',
-          armor: 'chain_mail',
-          helm: 'helm',
-          shield: 'medium_shield',
-        },
-      }
-    );
+    const buildWall = (shielded: boolean) =>
+      makeWarrior(
+        'Shielder',
+        FightingStyle.WallOfSteel,
+        { CN: 14, DF: 14 },
+        {
+          equipment: {
+            weapon: 'short_sword',
+            armor: 'chain_mail',
+            helm: 'helm',
+            shield: shielded ? 'medium_shield' : 'none_shield',
+          },
+        }
+      );
     const wNoShield = makeWarrior('Attacker', FightingStyle.StrikingAttack, { ST: 14 });
 
-    let shieldWins = 0;
-    const trials = 25;
+    // A pure wall has ~no offense, so scoreboard wins are rare — the shield's
+    // defensive value shows up as fewer brutal finishes: blows that would KO
+    // or kill an unshielded defender get turned into survivable stoppages or
+    // judges' decisions. Compare KO/Kill losses over the same seeds.
+    const trials = 40;
+    const destroyed = (shielded: boolean) => {
+      let count = 0;
+      for (let seed = 1; seed <= trials; seed++) {
+        const result = simulateFight(
+          makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 5 }),
+          makePlan(FightingStyle.StrikingAttack, { OE: 7 }),
+          buildWall(shielded),
+          wNoShield,
+          seed
+        );
+        if (result.winner === 'D' && (result.by === 'KO' || result.by === 'Kill')) count++;
+      }
+      return count;
+    };
 
-    for (let seed = 1; seed <= trials; seed++) {
-      const result = simulateFight(
-        makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 5 }),
-        makePlan(FightingStyle.StrikingAttack, { OE: 7 }),
-        wShield,
-        wNoShield,
-        seed
-      );
-      if (result.winner === 'A') shieldWins++;
-    }
-
-    // Shield should provide meaningful defensive advantage
-    expect(shieldWins).toBeGreaterThan(0);
+    expect(destroyed(true)).toBeLessThan(destroyed(false));
   });
 });
 

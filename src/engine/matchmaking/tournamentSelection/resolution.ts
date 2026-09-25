@@ -95,6 +95,16 @@ export function resolveRound(
       updatedState.houseRules?.deathRateMult
     );
 
+    // Tournament bouts cannot end in a draw — the bracket needs a winner.
+    // Sudden-death overtime: the busier fighter (more hits landed) advances;
+    // a true tie falls to a seeded coin flip. Without this, a drawn bout would
+    // silently advance the defender via the `winner === 'A'` ternary below.
+    if (outcome.winner === null) {
+      const hitsA = outcome.post?.hitsA ?? 0;
+      const hitsD = outcome.post?.hitsD ?? 0;
+      outcome.winner = hitsA === hitsD ? (rng.next() < 0.5 ? 'A' : 'D') : hitsA > hitsD ? 'A' : 'D';
+    }
+
     bout.winner = outcome.winner;
     bout.by = outcome.by;
     bout.fightId = rng.uuid('bout') as FightId;

@@ -1,7 +1,8 @@
 import type { GameState, RivalStableData, Warrior } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { updateAIStrategy } from '@/engine/ai/intentEngine';
+import { updateAIStrategy, verifyIntentSkepticism } from '@/engine/ai/intentEngine';
+import { logAgentAction } from '@/engine/ai/agentCore';
 import { processAIStable } from '@/engine/ai/stableManager';
 import { generateRivalStables } from '@/engine/rivals';
 import { processIntel } from '@/engine/ai/workers/intelWorker';
@@ -121,12 +122,30 @@ export function processRivalStable(
   const gazetteItems: string[] = [];
 
   const strategySeed = state.absoluteWeek * 31 + index * 997 + (rival.owner.id || '').length;
+  // Audit trail: issuance is exactly updateAIStrategy's re-pick gate (no plan,
+  // expired plan, or disproved plan). Recomputing the gate here beats inferring
+  // issuance from planWeeksRemaining deltas, which can't distinguish a weekly
+  // tick from a disproved plan being replaced by a shorter one.
+  const planIssued =
+    !rival.strategy ||
+    rival.strategy.planWeeksRemaining <= 0 ||
+    verifyIntentSkepticism(rival, state);
   const strategy = updateAIStrategy(rival, state, strategySeed);
+  const rivalWithStrategy = planIssued
+    ? logAgentAction(
+        { ...rival, strategy },
+        'STRATEGY',
+        strategy.reason ?? `Adopted ${strategy.intent}`,
+        'Low',
+        state.week,
+        strategy.intent
+      )
+    : { ...rival, strategy };
 
   // 🎂 1.0 Hardening: Handle Aging & Succession
   const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } =
     handleOwnerLifecycle(
-      { ...rival, strategy },
+      rivalWithStrategy,
       nextWeek,
       new SeededRNGService(strategySeed + 123),
       successorByStable,

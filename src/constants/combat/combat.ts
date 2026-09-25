@@ -76,6 +76,15 @@ export const AL_ATTR_SCALING = 0.5;
 export const DEFENDER_ENDURANCE_DISCOUNT = 0.6;
 
 /**
+ * Exhaustion-stoppage HP gate: a fighter who hits 0 endurance is only stopped
+ * when they can no longer defend themselves (hp below this ratio of maxHp).
+ * A merely-winded fighter keeps fighting under heavy fatigue penalties instead
+ * of auto-losing — prevents the attrition axis from deciding ~all low-pool
+ * bouts regardless of damage taken.
+ */
+export const EXHAUSTION_STOP_HP_RATIO = 0.45;
+
+/**
  * Kill window endurance threshold
  */
 export const KILL_WINDOW_ENDURANCE = 0.4;

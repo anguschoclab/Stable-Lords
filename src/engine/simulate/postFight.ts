@@ -114,8 +114,11 @@ export function processPostFight(
   fatalHitLocation?: string,
   fatalExchangeIndex?: number
 ): FightOutcome {
-  // If no winner was determined, resolve via decision logic
-  if (!winner) {
+  // Run judges only when the loop timed out without a terminal outcome.
+  // A real terminal outcome with winner === null (mutual-collapse Exhaustion,
+  // Draw) must be surfaced as-is — re-judging it would silently convert every
+  // draw into a Decision and fabricate a winner.
+  if (by === null) {
     const timeLimitResult = handleTimeLimit(fA, fD, nameA, nameD, rng, log, headless);
     const finalMinutes = fightMinutes;
 

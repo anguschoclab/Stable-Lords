@@ -7,7 +7,7 @@ import type { ResolutionContext } from '../../types';
 import { enduranceCost } from '../../../mechanics/combatFatigue';
 import { PSYCH_STATE_MODS } from '../../../mechanics/conditionEngine';
 import { getEnduranceMult } from '@/engine/stylePassives';
-import { DEFENDER_ENDURANCE_DISCOUNT } from '@/constants/combat';
+import { DEFENDER_ENDURANCE_DISCOUNT, EXHAUSTION_STOP_HP_RATIO } from '@/constants/combat';
 import { getItemById } from '@/data/equipment/equipment.utils';
 
 /**
@@ -71,23 +71,33 @@ export function applyEnduranceCosts(
     )
   );
 
+  const collapsedA = fA.endurance <= 0;
+  const collapsedD = fD.endurance <= 0;
   if (
-    (fA.endurance <= 0 || fD.endurance <= 0) &&
+    (collapsedA || collapsedD) &&
     !events.some((e) => e.result === 'Kill' || e.result === 'KO')
   ) {
-    if (fA.endurance <= 0 && fD.endurance <= 0) {
+    // Exhaustion/stoppage is a *safety* rule, not a win condition: a collapsed
+    // fighter is only stopped when they are also hurt enough that they can no
+    // longer defend themselves. A fighter who merely gassed out keeps fighting
+    // under the existing heavy fatigue penalties until hurt, KO'd, or decided
+    // by the judges.
+    const hurtA = collapsedA && fA.hp < fA.maxHp * EXHAUSTION_STOP_HP_RATIO;
+    const hurtD = collapsedD && fD.hp < fD.maxHp * EXHAUSTION_STOP_HP_RATIO;
+    if (hurtA && hurtD) {
+      // Double collapse of two already-beaten fighters — the rare mutual draw.
       events.push({
         type: 'BOUT_END',
         actor: 'A',
         result: 'Exhaustion',
         metadata: { cause: 'FATIGUE_COLLAPSE' },
       });
-    } else {
-      const collapsed = fA.endurance <= 0 ? fA : fD;
+    } else if (hurtA || hurtD) {
+      const collapsed = hurtA ? fA : fD;
       const cause = collapsed.hp < collapsed.maxHp * 0.15 ? 'FATIGUE_COLLAPSE' : undefined;
       events.push({
         type: 'BOUT_END',
-        actor: fA.endurance <= 0 ? 'A' : 'D',
+        actor: hurtA ? 'A' : 'D',
         result: 'Stoppage',
         metadata: cause ? { cause } : undefined,
       });

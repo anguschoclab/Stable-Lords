@@ -354,8 +354,8 @@ describe('agentCore — logAgentAction', () => {
     expect(updated.actionHistory![1]!.description).toBe('Old action');
   });
 
-  it('prunes actionHistory to 20 entries (daemon limits)', () => {
-    const existingEvents: AIEvent[] = Array.from({ length: 25 }, (_, i) => ({
+  it('prunes actionHistory to 40 entries (daemon limits)', () => {
+    const existingEvents: AIEvent[] = Array.from({ length: 45 }, (_, i) => ({
       id: `event-${i}`,
       week: i,
       type: 'STAFF' as const,
@@ -364,7 +364,7 @@ describe('agentCore — logAgentAction', () => {
     }));
     const rival = createMockRival({ actionHistory: existingEvents });
     const updated = logAgentAction(rival, 'STAFF', 'New action', 'Low', 99);
-    expect(updated.actionHistory).toHaveLength(20);
+    expect(updated.actionHistory).toHaveLength(40);
     expect(updated.actionHistory![0]!.description).toBe('New action');
   });
 

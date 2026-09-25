@@ -1,6 +1,6 @@
 import { type RivalStableData, type PoolWarrior, type Warrior } from '@/types/state.types';
 import { PERSONALITY_STYLE_PREFS } from '@/data/ownerData';
-import { logAgentAction } from '../agentCore';
+import { logAgentAction, logFinanceEvent } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
@@ -78,6 +78,14 @@ export function processRecruitment(
       roster: [...updatedRival.roster, generated],
       needsRecruit: false,
     };
+    updatedRival = logFinanceEvent(updatedRival, {
+      label: `Recruit signing — ${generated.name}`,
+      amount: -AI_GENERATED_RECRUIT_COST,
+      week,
+      category: 'recruit',
+      description: `Paid ${AI_GENERATED_RECRUIT_COST}g signing fee for ${generated.name}.`,
+      riskTier: budgetReport.riskTier,
+    });
     updatedRival = logAgentAction(
       updatedRival,
       'ROSTER',
@@ -149,6 +157,14 @@ export function processRecruitment(
       updatedRival.treasury -= cost;
       updatedRival.needsRecruit = false;
       remainingPool.splice(bestIdx, 1);
+      updatedRival = logFinanceEvent(updatedRival, {
+        label: `Draft signing — ${recruit.name}`,
+        amount: -cost,
+        week,
+        category: 'recruit',
+        description: `Paid ${cost}g draft fee for ${recruit.tier} ${recruit.name}.`,
+        riskTier: budgetReport.riskTier,
+      });
 
       const newWarrior: Warrior = {
         id: rng.uuid() as import('@/types/shared.types').WarriorId,

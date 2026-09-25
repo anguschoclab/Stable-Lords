@@ -3,6 +3,7 @@ import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { logFinanceEvent } from '@/engine/ai/agentCore';
 
 /**
  * Standalone helper to process and apply tournament rewards for a specific place finish.
@@ -72,11 +73,23 @@ function processTournamentPlaceAward(
   } else {
     // warrior.stableId is rival.id (StableId), not owner.id
     // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
-    updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId as string, (r) => ({
-      ...r,
-      treasury: r.treasury + prizeGold,
-      fame: (r.fame || 0) + prizeFame,
-    }));
+    updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId as string, (r) =>
+      logFinanceEvent(
+        {
+          ...r,
+          treasury: r.treasury + prizeGold,
+          fame: (r.fame || 0) + prizeFame,
+        },
+        {
+          label: `${tournament.name} (${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'})`,
+          amount: prizeGold,
+          week: updatedState.week,
+          category: 'prize',
+          description: `${w.name} took ${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'} at ${tournament.name} — ${prizeGold}g prize.`,
+          riskTier: 'Low',
+        }
+      )
+    );
     // Apply token effects directly to rival warriors (no pool — rivals don't manage tokens via UI)
     const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
     for (const tokenType of tokens) {

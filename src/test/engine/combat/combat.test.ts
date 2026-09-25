@@ -57,7 +57,9 @@ describe('simulateFight — outcome structure', () => {
     expect(result).toHaveProperty('post');
     expect(result.log.length).toBeGreaterThan(0);
     expect(['A', 'D', null]).toContain(result.winner);
-    expect(['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Draw', null]).toContain(result.by);
+    expect(['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Draw', 'Decision', 'Yield', null]).toContain(
+      result.by
+    );
   });
 
   it('log entries have valid minute and text', () => {

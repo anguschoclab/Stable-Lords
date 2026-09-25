@@ -687,7 +687,7 @@ describe('Economy Engine', () => {
       expect(impact.ledgerEntries!.every((e) => e.week === 7)).toBe(true);
     });
 
-    it('should set category fight for all income entries', () => {
+    it('should set per-line-item categories on income entries', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'p1' as WarriorId, fame: 50 })],
         weather: 'Mana Surge',
@@ -697,10 +697,24 @@ describe('Economy Engine', () => {
       });
       const impact = computeEconomyImpact(input);
       const positiveEntries = impact.ledgerEntries!.filter((e) => e.amount > 0);
-      expect(positiveEntries.every((e) => e.category === 'fight')).toBe(true);
+      // Fight income stays 'fight'; non-combat income (fame dividends,
+      // celestial gifts, patronage) is categorized as 'other' rather than
+      // being collapsed into 'fight'.
+      expect(
+        positiveEntries
+          .filter((e) => e.label.startsWith('Fight purses') || e.label.startsWith('Win bonuses'))
+          .every((e) => e.category === 'fight')
+      ).toBe(true);
+      expect(
+        positiveEntries
+          .filter(
+            (e) => !e.label.startsWith('Fight purses') && !e.label.startsWith('Win bonuses')
+          )
+          .every((e) => e.category === 'other')
+      ).toBe(true);
     });
 
-    it('should set category upkeep for all expense entries', () => {
+    it('should set per-line-item categories on expense entries', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
         weather: 'Blizzard',
@@ -719,7 +733,15 @@ describe('Economy Engine', () => {
       });
       const impact = computeEconomyImpact(input);
       const negativeEntries = impact.ledgerEntries!.filter((e) => e.amount < 0);
-      expect(negativeEntries.every((e) => e.category === 'upkeep')).toBe(true);
+      // Per-line-item: upkeep lines stay 'upkeep', but trainer salaries and
+      // training fees carry their own categories.
+      for (const e of negativeEntries) {
+        if (e.label.startsWith('Trainer salaries')) expect(e.category).toBe('trainer');
+        else if (e.label.startsWith('Training fees')) expect(e.category).toBe('training');
+        else expect(e.category).toBe('upkeep');
+      }
+      expect(negativeEntries.some((e) => e.category === 'trainer')).toBe(true);
+      expect(negativeEntries.some((e) => e.category === 'training')).toBe(true);
     });
 
     it('should negate expense amounts in ledger', () => {
@@ -786,7 +808,7 @@ describe('Economy Engine', () => {
       const entry = impact.ledgerEntries!.find((e) => e.label === 'Celestial Gift (Mana Surge)');
       expect(entry).toBeDefined();
       expect(entry!.amount).toBeGreaterThan(0);
-      expect(entry!.category).toBe('fight');
+      expect(entry!.category).toBe('other');
     });
 
     it('should create ledger entry for Noble Patronage income', () => {
@@ -797,7 +819,7 @@ describe('Economy Engine', () => {
       const entry = impact.ledgerEntries!.find((e) => e.label === 'Noble Patronage Contribution');
       expect(entry).toBeDefined();
       expect(entry!.amount).toBe(25);
-      expect(entry!.category).toBe('fight');
+      expect(entry!.category).toBe('other');
     });
 
     it('should create ledger entry for Sweltering cooling expense', () => {

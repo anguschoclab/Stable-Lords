@@ -93,7 +93,7 @@ export function processAIStable(
       week: state.week,
       label: i.label,
       amount: i.amount,
-      category: 'fight',
+      category: i.category,
     });
   }
   for (const e of breakdown.expenses) {
@@ -102,7 +102,7 @@ export function processAIStable(
       week: state.week,
       label: e.label,
       amount: -e.amount,
-      category: 'upkeep',
+      category: e.category,
     });
   }
   updatedRival.ledger = [...(updatedRival.ledger || []), ...newEntries].slice(-500);

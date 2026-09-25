@@ -200,7 +200,7 @@ export const BOUT_OFFER_STATUSES = [
 
 export const BOUT_OFFER_RESPONSES = ['Pending', 'Accepted', 'Declined'] as const;
 
-export const FIGHT_OUTCOME_BY = ['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Draw', 'null'] as const;
+export const FIGHT_OUTCOME_BY = ['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Decision', 'Yield', 'Draw', 'null'] as const;
 
 export const DEATH_CAUSE_BUCKETS = [
   'FATAL_DAMAGE',

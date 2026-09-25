@@ -8,7 +8,7 @@ import type { RivalStableData, SeasonalGrowth, TrainingAssignment } from '@/type
 import { TRAINING_COST } from '@/constants/economy';
 import type { Season } from '@/types/shared.types';
 import { checkBudget } from './budgetWorker';
-import { logAgentAction } from '../agentCore';
+import { logAgentAction, logFinanceEvent } from '../agentCore';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
@@ -148,6 +148,14 @@ export function processRoster(
       updatedRival.roster = updateEntityInList(updatedRival.roster, champWarrior.id, (w) =>
         applyGearUpgrade(w, rngService)
       );
+      updatedRival = logFinanceEvent(updatedRival, {
+        label: `Gear upgrade — ${champWarrior.name}`,
+        amount: -gearCost,
+        week: currentWeek,
+        category: 'other',
+        description: `Invested ${gearCost}g in gear for champion ${champWarrior.name}.`,
+        riskTier: budgetReport.riskTier,
+      });
       updatedRival = logAgentAction(
         updatedRival,
         'ROSTER',
@@ -173,6 +181,14 @@ export function processRoster(
         updatedRival.roster = updateEntityInList(updatedRival.roster, gearCandidate.id, (w) =>
           applyGearUpgrade(w, rngService)
         );
+        updatedRival = logFinanceEvent(updatedRival, {
+          label: `Gear upgrade — ${gearCandidate.name}`,
+          amount: -gearCost,
+          week: currentWeek,
+          category: 'other',
+          description: `Invested ${gearCost}g in gear for ${gearCandidate.name}.`,
+          riskTier: budgetReport.riskTier,
+        });
         updatedRival = logAgentAction(
           updatedRival,
           'ROSTER',

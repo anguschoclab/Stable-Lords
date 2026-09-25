@@ -416,10 +416,12 @@ describe('applyEnduranceCosts — role reversal (aGoesFirst: false)', () => {
 // ─── Exhaustion / BOUT_END events ─────────────────────────────────────────────
 
 describe('applyEnduranceCosts — exhaustion / BOUT_END events', () => {
-  it('both fighters exhausted → Exhaustion event', () => {
+  it('both fighters exhausted AND hurt → Exhaustion draw', () => {
     const { events } = run({
       enduranceA: 1,
       enduranceD: 1,
+      hpA: 20,
+      hpD: 20,
       fAWeaponPenalty: 10,
       fDWeaponPenalty: 10,
     });
@@ -429,10 +431,27 @@ describe('applyEnduranceCosts — exhaustion / BOUT_END events', () => {
     expect(boutEnd!.metadata).toEqual({ cause: 'FATIGUE_COLLAPSE' });
   });
 
-  it('one fighter exhausted → Stoppage event', () => {
+  it('both fighters exhausted, only the hurt one is stopped → Stoppage', () => {
+    // A gassed-and-beaten fighter loses by stoppage even though the winner is
+    // also spent — the healthy-but-tired winner is not penalized.
+    const { events } = run({
+      enduranceA: 1,
+      enduranceD: 1,
+      hpA: 20,
+      hpD: 90,
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+    });
+    const boutEnd = events.find((e) => e.type === 'BOUT_END');
+    expect(boutEnd?.result).toBe('Stoppage');
+    expect(boutEnd?.actor).toBe('A');
+  });
+
+  it('one fighter exhausted and hurt → Stoppage event', () => {
     const { events } = run({
       enduranceA: 1,
       enduranceD: 1000,
+      hpA: 20,
       fAWeaponPenalty: 10,
       fDWeaponPenalty: 10,
     });
@@ -440,6 +459,42 @@ describe('applyEnduranceCosts — exhaustion / BOUT_END events', () => {
     expect(boutEnd).toBeDefined();
     expect(boutEnd!.result).toBe('Stoppage');
     expect(boutEnd!.actor).toBe('A');
+  });
+
+  it('exhausted but healthy fighter is NOT stopped — bout continues', () => {
+    // hpA 100/100 is far above EXHAUSTION_STOP_HP_RATIO: gassing out alone no
+    // longer forfeits the bout — it runs on under fatigue penalties until hurt,
+    // KO'd, or decided by the judges.
+    const { events } = run({
+      enduranceA: 1,
+      enduranceD: 1000,
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+    });
+    expect(events.some((e) => e.type === 'BOUT_END')).toBe(false);
+  });
+
+  it('exhausted fighter exactly at the HP threshold is NOT stopped (strict <)', () => {
+    const { events } = run({
+      enduranceA: 1,
+      enduranceD: 1000,
+      hpA: 45,
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+    });
+    expect(events.some((e) => e.type === 'BOUT_END')).toBe(false);
+  });
+
+  it('mutual exhaustion at full HP does NOT end the bout — judges decide', () => {
+    const { events } = run({
+      enduranceA: 1,
+      enduranceD: 1,
+      hpA: 100,
+      hpD: 100,
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+    });
+    expect(events.some((e) => e.type === 'BOUT_END')).toBe(false);
   });
 
   it('FATIGUE_COLLAPSE metadata when HP < 15%', () => {
@@ -459,7 +514,7 @@ describe('applyEnduranceCosts — exhaustion / BOUT_END events', () => {
     const { events } = run({
       enduranceA: 1,
       enduranceD: 1000,
-      hpA: 50,
+      hpA: 30,
       fAWeaponPenalty: 10,
       fDWeaponPenalty: 10,
     });

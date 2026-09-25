@@ -39,9 +39,9 @@ import { getArenaById } from '@/data/arenas';
  */
 export interface WeeklyBreakdown {
   /** Individual income items */
-  income: { label: string; amount: number }[];
+  income: { label: string; amount: number; category: LedgerEntry['category'] }[];
   /** Individual expense items */
-  expenses: { label: string; amount: number }[];
+  expenses: { label: string; amount: number; category: LedgerEntry['category'] }[];
   /** Sum of all income */
   totalIncome: number;
   /** Sum of all expenses */
@@ -132,14 +132,20 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     }
   }
 
-  const income: { label: string; amount: number }[] = [];
-  if (fightCount > 0) income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
-  if (winCount > 0) income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
+  const income: { label: string; amount: number; category: LedgerEntry['category'] }[] = [];
+  if (fightCount > 0)
+    income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse, category: 'fight' });
+  if (winCount > 0)
+    income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus, category: 'fight' });
   if (input.fame > 0)
-    income.push({ label: 'Fame dividends', amount: Math.round(input.fame * FAME_DIVIDEND) });
+    income.push({
+      label: 'Fame dividends',
+      amount: Math.round(input.fame * FAME_DIVIDEND),
+      category: 'other',
+    });
 
   if (input.applyStipend !== false && fightCount === 0 && input.roster.length > 0) {
-    income.push({ label: 'Idle Stipend', amount: IDLE_STIPEND });
+    income.push({ label: 'Idle Stipend', amount: IDLE_STIPEND, category: 'other' });
   }
 
   // 🌩️ Weather Impact: Mana Surge Gift
@@ -147,6 +153,7 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     income.push({
       label: 'Celestial Gift (Mana Surge)',
       amount: WEATHER_ECONOMICS.MANA_SURGE_GIFT,
+      category: 'other',
     });
   }
 
@@ -172,23 +179,33 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
   }
 
   if (patronageIncome > 0)
-    income.push({ label: 'Noble Patronage Contribution', amount: patronageIncome });
+    income.push({
+      label: 'Noble Patronage Contribution',
+      amount: patronageIncome,
+      category: 'other',
+    });
 
-  const expenses: { label: string; amount: number }[] = [];
+  const expenses: { label: string; amount: number; category: LedgerEntry['category'] }[] = [];
   if (input.roster.length > 0) {
-    expenses.push({ label: `Warrior upkeep (${input.roster.length})`, amount: rosterUpkeep });
+    expenses.push({
+      label: `Warrior upkeep (${input.roster.length})`,
+      amount: rosterUpkeep,
+      category: 'upkeep',
+    });
 
     // Weather-specific ledger labels for clarity
     if (input.weather === 'Sweltering') {
       expenses.push({
         label: 'Cooling & Ventilation Overhead',
         amount: input.roster.length * WEATHER_ECONOMICS.SWELTERING_PREMIUM,
+        category: 'upkeep',
       });
     }
     if (input.weather === 'Blizzard') {
       expenses.push({
         label: 'Insulation & Fuel Overhead',
         amount: input.roster.length * WEATHER_ECONOMICS.BLIZZARD_PREMIUM,
+        category: 'upkeep',
       });
     }
   }
@@ -205,7 +222,11 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
   }
 
   if (activeTrainerCount > 0) {
-    expenses.push({ label: `Trainer salaries (${activeTrainerCount})`, amount: trainerCost });
+    expenses.push({
+      label: `Trainer salaries (${activeTrainerCount})`,
+      amount: trainerCost,
+      category: 'trainer',
+    });
   }
 
   const trainingCount = (input.trainingAssignments ?? []).length;
@@ -213,6 +234,7 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     expenses.push({
       label: `Training fees (${trainingCount})`,
       amount: trainingCount * TRAINING_COST,
+      category: 'training',
     });
 
   // ⚡ Bolt: Optimized calculation over constant size small arrays without .reduce() overhead.
@@ -250,7 +272,7 @@ export function computeEconomyImpact(input: StableEconomyInput, rng?: IRNGServic
       week: input.week,
       label: i.label,
       amount: i.amount,
-      category: 'fight',
+      category: i.category,
     });
   }
   for (const e of breakdown.expenses) {
@@ -259,7 +281,7 @@ export function computeEconomyImpact(input: StableEconomyInput, rng?: IRNGServic
       week: input.week,
       label: e.label,
       amount: -e.amount,
-      category: 'upkeep',
+      category: e.category,
     });
   }
 

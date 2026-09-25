@@ -1,7 +1,7 @@
 import type { RivalStableData, GameState, Trainer } from '@/types/state.types';
 import type { FightingStyle, TrainerFocus } from '@/types/shared.types';
 import { checkBudget } from './budgetWorker';
-import { logAgentAction, type AgentContext } from '../agentCore';
+import { logAgentAction, logFinanceEvent, type AgentContext } from '../agentCore';
 
 const HIRE_COST: Record<string, number> = { Novice: 50, Seasoned: 100, Master: 200 };
 
@@ -116,6 +116,14 @@ export function processStaff(
         currentPool = currentPool.filter((t) => t.id !== best.id);
 
         updatedRival = { ...updatedRival, treasury: currentTreasury, trainers: currentTrainers };
+        updatedRival = logFinanceEvent(updatedRival, {
+          label: `Trainer hired — ${best.name}`,
+          amount: -hireCost,
+          week,
+          category: 'trainer',
+          description: `Paid ${hireCost}g to hire ${best.name} (${best.tier}).`,
+          riskTier: budgetReport.riskTier,
+        });
         updatedRival = logAgentAction(
           updatedRival,
           'STAFF',

@@ -4,7 +4,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { computeWarriorLiability } from '@/engine/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import { checkBudget } from '@/engine/ai/workers/budgetWorker';
-import { logAgentAction } from '@/engine/ai/agentCore';
+import { logAgentAction, logFinanceEvent } from '@/engine/ai/agentCore';
 import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
 import { WEEKS_PER_SEASON } from '@/constants/core';
 import { isAIDebugEnabled } from '@/engine/ai/debug';
@@ -175,17 +175,40 @@ export function processPoachMarket(
     if (!seller || !target) continue;
 
     const moved: Warrior = { ...target, stableId: rival.id };
-    const buyerAfter = {
-      ...stamped,
-      treasury: stamped.treasury - bid.price,
-      roster: [...stamped.roster, moved],
-    };
+    const buyerAfter = logFinanceEvent(
+      {
+        ...stamped,
+        treasury: stamped.treasury - bid.price,
+        roster: [...stamped.roster, moved],
+      },
+      {
+        label: `Poach purchase — ${target.name}`,
+        amount: -bid.price,
+        week: state.week,
+        category: 'recruit',
+        description: `Paid ${bid.price}g to poach ${target.name} from ${seller.owner.name}.`,
+        riskTier: 'Medium',
+      }
+    );
     byId.set(rival.id, buyerAfter);
-    byId.set(seller.id, {
-      ...seller,
-      treasury: seller.treasury + bid.price,
-      roster: seller.roster.filter((w) => w.id !== bid.warriorId),
-    });
+    byId.set(
+      seller.id,
+      logFinanceEvent(
+        {
+          ...seller,
+          treasury: seller.treasury + bid.price,
+          roster: seller.roster.filter((w) => w.id !== bid.warriorId),
+        },
+        {
+          label: `Poach sale — ${target.name}`,
+          amount: bid.price,
+          week: state.week,
+          category: 'recruit',
+          description: `Sold ${target.name} to ${rival.owner.name} for ${bid.price}g.`,
+          riskTier: 'Medium',
+        }
+      )
+    );
 
     const desc = `Poached ${target.name} from ${seller.owner.name} for ${bid.price}g`;
     gazetteItems.push(`[POACH] ${desc}`);

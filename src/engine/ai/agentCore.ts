@@ -5,7 +5,9 @@ import type {
   AIAgentMemory,
   AIIntent,
   AIEventCause,
+  LedgerEntry,
 } from '@/types/state.types';
+import type { LedgerEntryId } from '@/types/shared.types';
 import { AI_INTENTS } from '@/types/enumSources';
 import { hashStr } from '../../utils/random';
 import { computeMetaDrift } from '../metaDrift';
@@ -122,7 +124,9 @@ export function logAgentAction(
     riskTier,
     ...(cause !== undefined ? { cause } : {}),
   };
-  const actionHistory = [newEvent, ...(rival.actionHistory || [])].slice(0, 20);
+  // 40-deep so a burst of INTEL/BOUT noise can't evict rare STRATEGY/FINANCE
+  // decisions within the same audit horizon.
+  const actionHistory = [newEvent, ...(rival.actionHistory || [])].slice(0, 40);
 
   const currentIntent: AIIntent =
     cause !== undefined && isAIIntent(cause)
@@ -131,6 +135,46 @@ export function logAgentAction(
 
   const agentMemory = { ...(rival.agentMemory || {}), currentIntent };
   return { ...rival, actionHistory, agentMemory: agentMemory as AIAgentMemory };
+}
+
+/**
+ * Records a discrete rival financial movement: writes a typed ledger entry AND
+ * a FINANCE action-history event so both the money trail and the decision
+ * audit survive. Use for non-weekly-breakdown flows (prizes, recruits, hires,
+ * poaches, gear). `amount` is signed (+income / −expense).
+ */
+export function logFinanceEvent(
+  rival: RivalStableData,
+  opts: {
+    label: string;
+    amount: number;
+    week: number;
+    category: LedgerEntry['category'];
+    description?: string;
+    riskTier?: AIEvent['riskTier'];
+  }
+): RivalStableData {
+  const ledgerId =
+    `ledger-${hashStr(`${rival.owner.id}|${opts.week}|${opts.label}|${(rival.ledger ?? []).length}`).toString(16)}` as LedgerEntryId;
+  const entry: LedgerEntry = {
+    id: ledgerId,
+    week: opts.week,
+    label: opts.label,
+    amount: opts.amount,
+    category: opts.category,
+  };
+  const withLedger: RivalStableData = {
+    ...rival,
+    ledger: [...(rival.ledger ?? []), entry].slice(-500),
+  };
+  return logAgentAction(
+    withLedger,
+    'FINANCE',
+    opts.description ?? opts.label,
+    opts.riskTier ?? 'Low',
+    opts.week,
+    'MAINTENANCE'
+  );
 }
 
 /**

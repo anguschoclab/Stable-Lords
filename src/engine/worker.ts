@@ -11,8 +11,10 @@ import type { GameState } from '@/types/state.types';
 import type { WeekAdvanceOptions } from './pipeline/services/weekPipelineService';
 import type { AutosimOptions } from './autosim';
 
-// Fire-and-forget: start loading combat data when worker initializes
-loadCombatNarrative();
+// Start loading combat data when the worker initializes; sim-bearing jobs
+// await it so the first request can't race the lazy JSON imports (each
+// worker owns a module-level narrativeContent cache).
+const narrativeReady = loadCombatNarrative();
 
 /**
  * Stable Lords — Engine Worker
@@ -25,39 +27,46 @@ loadCombatNarrative();
  */
 const jobs = createJobQueue();
 
+// Enqueue fn behind the narrative preload — after the first job resolves it
+// this is a cached-promise await, effectively free.
+const enqueueSim = async <A extends unknown[], R>(
+  fn: (...args: A) => Promise<R> | R,
+  ...args: A
+): Promise<R> => {
+  await narrativeReady;
+  return jobs.enqueue(fn, ...args);
+};
+
 // States arrive via postMessage → structuredClone, so this worker exclusively
 // owns them: mutableInput lets the pipeline skip its boundary clone.
 const engine = {
   advanceWeek: (state: GameState, opts?: WeekAdvanceOptions) =>
-    jobs.enqueue(advanceWeek, state, { ...opts, mutableInput: true }),
+    enqueueSim(advanceWeek, state, { ...opts, mutableInput: true }),
   advanceDay: (state: GameState, opts?: WeekAdvanceOptions) =>
-    jobs.enqueue(TickOrchestrator.advanceDay, state, { ...opts, mutableInput: true }),
+    enqueueSim(TickOrchestrator.advanceDay, state, { ...opts, mutableInput: true }),
   skipToWeekEnd: (...args: Parameters<typeof TickOrchestrator.skipToWeekEnd>) =>
-    jobs.enqueue(TickOrchestrator.skipToWeekEnd, ...args),
+    enqueueSim(TickOrchestrator.skipToWeekEnd, ...args),
   resolveTournamentRound: (...args: Parameters<typeof TournamentSelectionService.resolveRound>) =>
-    jobs.enqueue(
-      TournamentSelectionService.resolveRound.bind(TournamentSelectionService),
-      ...args
-    ),
+    enqueueSim(TournamentSelectionService.resolveRound.bind(TournamentSelectionService), ...args),
   createFreshState: (...args: Parameters<typeof createFreshState>) =>
     jobs.enqueue(createFreshState, ...args),
   advanceQuarter: (state: GameState, opts?: Parameters<typeof TickOrchestrator.advanceQuarter>[1]) =>
-    jobs.enqueue(TickOrchestrator.advanceQuarter, state, { ...opts, mutableInput: true }),
+    enqueueSim(TickOrchestrator.advanceQuarter, state, { ...opts, mutableInput: true }),
   advanceYear: (state: GameState, opts?: Parameters<typeof TickOrchestrator.advanceYear>[1]) =>
-    jobs.enqueue(TickOrchestrator.advanceYear, state, { ...opts, mutableInput: true }),
+    enqueueSim(TickOrchestrator.advanceYear, state, { ...opts, mutableInput: true }),
   skipToQuarterEnd: (
     state: GameState,
     opts?: Parameters<typeof TickOrchestrator.skipToQuarterEnd>[1]
-  ) => jobs.enqueue(TickOrchestrator.skipToQuarterEnd, state, { ...opts, mutableInput: true }),
+  ) => enqueueSim(TickOrchestrator.skipToQuarterEnd, state, { ...opts, mutableInput: true }),
   skipToYearEnd: (state: GameState, opts?: Parameters<typeof TickOrchestrator.skipToYearEnd>[1]) =>
-    jobs.enqueue(TickOrchestrator.skipToYearEnd, state, { ...opts, mutableInput: true }),
+    enqueueSim(TickOrchestrator.skipToYearEnd, state, { ...opts, mutableInput: true }),
   // onProgress arrives as a top-level arg (Comlink proxies only work at the
   // top level) and is folded back into options for the in-process engine call.
   runAutosim: (
     state: GameState,
     options: Omit<Parameters<typeof runAutosim>[1], 'onProgress'>,
     onProgress?: AutosimOptions['onProgress']
-  ) => jobs.enqueue(runAutosim, state, { ...options, onProgress }),
+  ) => enqueueSim(runAutosim, state, { ...options, onProgress }),
   /**
    * Configure the shard pool INSIDE this worker (pools are per-context and
    * can't cross postMessage). size <= 1 keeps the sequential in-line path.

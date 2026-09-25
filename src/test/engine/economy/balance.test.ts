@@ -5,10 +5,11 @@
  *
  * Run with: bunx vitest run src/test/balance.test.ts
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { computeWarriorStats } from '@/engine/skillCalc';
+import { loadCombatNarrative } from '@/data/narrative';
 import type { FightPlan } from '@/types/combat.types';
 import {
   findAntisymmetryViolations,
@@ -108,34 +109,40 @@ for (const s of ALL_STYLES) {
   for (const s2 of ALL_STYLES) matchupWins[s][s2] = 0;
 }
 
-for (const styleA of ALL_STYLES) {
-  for (const styleD of ALL_STYLES) {
-    const wA = makeTestWarrior(styleA, `A_${styleA}`);
-    const wD = makeTestWarrior(styleD, `D_${styleD}`);
-    const planA = defaultPlanForWarrior(wA);
-    const planD = defaultPlanForWarrior(wD);
+// The matrix must run inside beforeAll, not at module scope: collection-time
+// code executes before the global setup hook has loaded the combat narrative
+// archive, so every simulated fight would narrate against an empty archive.
+beforeAll(async () => {
+  await loadCombatNarrative();
+  for (const styleA of ALL_STYLES) {
+    for (const styleD of ALL_STYLES) {
+      const wA = makeTestWarrior(styleA, `A_${styleA}`);
+      const wD = makeTestWarrior(styleD, `D_${styleD}`);
+      const planA = defaultPlanForWarrior(wA);
+      const planD = defaultPlanForWarrior(wD);
 
-    const idxA = ALL_STYLES.indexOf(styleA);
-    const idxD = ALL_STYLES.indexOf(styleD);
+      const idxA = ALL_STYLES.indexOf(styleA);
+      const idxD = ALL_STYLES.indexOf(styleD);
 
-    for (let i = 0; i < FIGHTS_PER_MATCHUP; i++) {
-      const seed = (idxA * 10 + idxD) * 100000 + i * 7919 + 42;
-      const outcome = simulateFight(planA, planD, wA, wD, seed);
+      for (let i = 0; i < FIGHTS_PER_MATCHUP; i++) {
+        const seed = (idxA * 10 + idxD) * 100000 + i * 7919 + 42;
+        const outcome = simulateFight(planA, planD, wA, wD, seed);
 
-      styleFights[styleA]!++;
-      styleFights[styleD]!++;
-      totalFightsRun++;
+        styleFights[styleA]!++;
+        styleFights[styleD]!++;
+        totalFightsRun++;
 
-      if (outcome.winner === 'A') {
-        styleWins[styleA]!++;
-        matchupWins[styleA]![styleD]!++;
-      } else if (outcome.winner === 'D') {
-        styleWins[styleD]!++;
+        if (outcome.winner === 'A') {
+          styleWins[styleA]!++;
+          matchupWins[styleA]![styleD]!++;
+        } else if (outcome.winner === 'D') {
+          styleWins[styleD]!++;
+        }
+        if (outcome.by === 'Kill') totalKills++;
       }
-      if (outcome.by === 'Kill') totalKills++;
     }
   }
-}
+});
 
 // ── Test 1: No style >65% ─────────────────────────────────────────────────
 describe('Style Balance', () => {

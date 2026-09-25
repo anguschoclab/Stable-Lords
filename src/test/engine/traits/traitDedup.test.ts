@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 145; // 142 previous + 3 new narrative traits (orphan_resilience_two, abyssal_survivor, rust_blooded)
+const EXPECTED_COUNT = 149; // 145 previous + 4 V7 union traits (orphan_street_rat, orphan_pit_fighter, orphan_survivor, iron_orphan)
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
@@ -57,6 +57,19 @@ describe('Trait deduplication', () => {
 
   describe('retained traits still exist', () => {
     for (const id of RETAINED_IDS) {
+      it(`${id} is defined in TRAITS`, () => {
+        expect(TRAITS[id]).toBeDefined();
+      });
+    }
+  });
+
+  describe('V7 union traits exist', () => {
+    for (const id of [
+      'orphan_street_rat',
+      'orphan_pit_fighter',
+      'orphan_survivor',
+      'iron_orphan',
+    ]) {
       it(`${id} is defined in TRAITS`, () => {
         expect(TRAITS[id]).toBeDefined();
       });

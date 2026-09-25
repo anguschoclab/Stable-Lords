@@ -88,13 +88,18 @@ describe('tsconfig reference graph', () => {
 
   it('tsc --build --force exits with code 0 from root', () => {
     expect(() => {
-      // Invoke tsc directly: `bun run type-check` shells through `bun x`, which
-      // resolves dependencies and can mutate bun.lock mid-test under bun:test.
-      execSync('node node_modules/typescript7/bin/tsc --build --force', {
-        cwd: projectRoot,
-        stdio: 'pipe',
-        timeout: 600000,
-      });
+      // `bun run type-check` nests `bun run` inside the test runner, which can
+      // resolve deps and mutate bun.lock mid-suite under bun:test. Run the two
+      // steps directly instead — router-cli first because routeTree.gen.ts is
+      // gitignored and absent on a clean checkout.
+      execSync(
+        'bun x @tanstack/router-cli generate && node node_modules/typescript7/bin/tsc --build --force',
+        {
+          cwd: projectRoot,
+          stdio: 'pipe',
+          timeout: 600000,
+        }
+      );
     }).not.toThrow();
   });
 });

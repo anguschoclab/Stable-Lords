@@ -27,8 +27,19 @@ describe('arena registration — V7 union (PR #988 arenas + PR #984/#991/#995 lo
   it.each([
     'iron_cage_the_blood_bars',
     'cursed_swamp_the_drowning_grasp',
-    'grand_colosseum_emperors_folly',
+    'the_gallows_tree_hangman_dance',
+    'standard_arena_blood_stain',
+    'mist_shrouded_ruins_phantom_cheers',
+    'rusted_gorge_madmans_end',
   ])('ARENA_LORE gains union entry %s', (id) => {
     expect(ARENA_LORE.some((e) => e.id === id)).toBe(true);
+  });
+
+  it.each([
+    'grand_colosseum_emperors_folly',
+    'subterranean_pits_the_cave_in',
+    'blood_sands_crimson_tide',
+  ])('ARENA_LORE rejects %s — references a non-existent arena', (id) => {
+    expect(ARENA_LORE.some((e) => e.id === id)).toBe(false);
   });
 });

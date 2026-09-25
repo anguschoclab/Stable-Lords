@@ -11,7 +11,7 @@ export const ARENA_TAG_WEIGHTS = {
   open: { weight: 1.0, description: 'Open ground favors reach weapons' },
   uneven: { weight: 0.95, description: 'Uneven footing penalizes lungers' },
   ruins: { weight: 1.0, description: 'Ancient structures may shift' },
-  magical: { weight: 0.95, description: 'Arcane resonance aids counters' },
+  magical: { weight: 0.93, description: 'Arcane resonance aids counters' },
   living: { weight: 0.98, description: 'Reactive environment affects movement' },
   cursed: { weight: 0.85, description: 'Dark energy amplifies lethality' },
   water: { weight: 0.85, description: 'Wet conditions slow footwork' },
@@ -226,6 +226,23 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   'water:Blood Moon': {
     damageMult: WEATHER_PENALTIES.SWAMP_CURSE_DRAIN,
     description: 'The cursed swamp boils under the blood moon, amplifying the necrotic drain',
+  },
+
+  'elevated:Blizzard': {
+    damageMult: 1 - WEATHER_PENALTIES.JAGGED_PEAK_LUNGE_PENALTY,
+    description: 'The jagged peaks become completely impassable for forward lunges',
+  },
+  'indoor:Mana Surge': {
+    riposteMod: WEATHER_PENALTIES.MURKY_DEPTHS_RIPOSTE_BONUS,
+    description: 'Arcane resonances within the depths sharply improve counter-attack anticipation',
+  },
+  'living:Wildfire Smoke': {
+    damageMult: WEATHER_PENALTIES.SMOLDERING_PITS_DAMAGE,
+    description: 'The smoldering ruins catch further ablaze, adding raw damage to desperate strikes',
+  },
+  'elevated:Aurora Borealis': {
+    initiativeMod: WEATHER_PENALTIES.CRYSTAL_SPIRE_INITIATIVE,
+    description: 'The shifting lights of the spire distract and delay even the sharpest reflexes',
   },
 };
 

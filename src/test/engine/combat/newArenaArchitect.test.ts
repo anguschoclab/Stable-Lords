@@ -36,5 +36,13 @@ describe('Arena Architect Verification', () => {
     const modBloodMoon = getStyleWeatherModifier(FightingStyle.SlashingAttack, 'Blood Moon', ['water']);
     expect(modBloodMoon.damageMult).toBeGreaterThan(1.0);
     expect(modBloodMoon.descriptions.some(d => d.includes('cursed swamp boils'))).toBe(true);
+
+    const modMurky = getStyleWeatherModifier(FightingStyle.ParryRiposte, 'Mana Surge', ['indoor']);
+    expect(modMurky.riposteMod).toBeGreaterThan(0);
+    expect(modMurky.descriptions.some(d => d.includes('Arcane resonances'))).toBe(true);
+
+    const modJagged = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Blizzard', ['elevated']);
+    expect(modJagged.damageMult).toBeLessThan(1.0);
+    expect(modJagged.descriptions.some(d => d.includes('jagged peaks'))).toBe(true);
   });
 });

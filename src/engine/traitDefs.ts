@@ -731,7 +731,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'sturdy',
     name: 'Sturdy',
     description: 'An unbreakable wall that outlasts any opponent.',
-    effect: { fightPlanMod: { AL: -3, OE: -2, killDesire: -5 }, attrBonus: { CN: 1, SZ: 1 } },
+    effect: { fightPlanMod: { AL: -2, killDesire: -5 }, attrBonus: { CN: 1, SZ: 1 }, defMod: 1 },
     weight: 1.0,
     synergy: ['tank'],
     antiSynergy: ['agile'],

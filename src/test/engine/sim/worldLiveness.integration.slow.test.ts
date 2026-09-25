@@ -56,7 +56,10 @@ describe('world liveness over a long sim (26 weeks)', () => {
     const end = pulses[pulses.length - 1]!;
 
     // FREEZE GUARD: total bouts must keep climbing in the second half of the run.
-    expect(end.totalBouts).toBeGreaterThan(mid.totalBouts);
+    // Assert on cumulativeBouts — the harness's all-time counter. totalBouts
+    // reads retained arenaHistory, which tournament resolution slice(-500)
+    // and periodic truncation prune, making it non-monotonic.
+    expect(end.cumulativeBouts!).toBeGreaterThan(mid.cumulativeBouts!);
 
     // Every rival stable still fields warriors at the end (recruiting refills churn).
     expect(finalState.rivals.length).toBeGreaterThan(0);

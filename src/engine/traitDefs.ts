@@ -988,6 +988,26 @@ export const TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.6,
   },
+  gutter_rat: {
+    id: 'gutter_rat',
+    name: 'Gutter Rat',
+    description: 'Forged in the filthy alleyways. +1 Attack when HP < 50%, ignores minor scrapes.',
+    effect: { attModLowHp: 1, enduranceMult: 0.95 },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  orphan_fury: {
+    id: 'orphan_fury',
+    name: 'Orphan Fury',
+    description: 'Years of suppressed rage unleashed. +1 Attack, +1 Decisiveness, fights with intense malice.',
+    effect: { attMod: 1, decMod: 1, fightPlanMod: { killDesire: 3, OE: 2 } },
+    weight: 0.4,
+    synergy: ['brutal'],
+    antiSynergy: ['tank'],
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

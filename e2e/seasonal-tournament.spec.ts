@@ -164,7 +164,10 @@ interface StateSnap {
   playerId?: string;
   ledgerPrizeCount: number;
   warriors: Record<string, WarriorSnap>;
-  rivals: Record<string, { treasury: number; fame: number }>;
+  rivals: Record<
+    string,
+    { treasury: number; fame: number; prizeEntries: { label: string; amount: number }[] }
+  >;
   tournaments: {
     id: string;
     name?: string;
@@ -220,7 +223,13 @@ interface RawGameState {
   player?: { id: string };
   ledger?: { category: string }[];
   roster?: RawWarrior[];
-  rivals?: { id: string; treasury: number; fame: number; roster?: RawWarrior[] }[];
+  rivals?: {
+    id: string;
+    treasury: number;
+    fame: number;
+    roster?: RawWarrior[];
+    ledger?: { category: string; label: string; amount: number }[];
+  }[];
   tournaments?: {
     id: string;
     name?: string;
@@ -277,7 +286,19 @@ async function snapshotState(page: Page): Promise<StateSnap> {
       ledgerPrizeCount: (s.ledger ?? []).filter((l) => l.category === 'prize').length,
       warriors,
       rivals: Object.fromEntries(
-        (s.rivals ?? []).map((r) => [r.id, { treasury: r.treasury, fame: r.fame }])
+        (s.rivals ?? []).map((r) => [
+          r.id,
+          {
+            treasury: r.treasury,
+            fame: r.fame,
+            // Prize-category ledger entries, attributed by label so a single
+            // tournament's payout can be isolated from other income (swept
+            // leftover-tier prizes, bout purses) in the same window.
+            prizeEntries: (r.ledger ?? [])
+              .filter((l) => l.category === 'prize')
+              .map((l) => ({ label: l.label, amount: l.amount })),
+          },
+        ])
       ),
       tournaments: (s.tournaments ?? []).map((t) => ({
         id: t.id,
@@ -369,14 +390,30 @@ function verifyPrizePayout(
       postRival,
       `rival stable ${stableId} should still exist for prize payout`
     ).toBeDefined();
+
+    // Attribute purse gold by ledger label: the snapshot window also covers
+    // swept leftover-tier prizes and bout income for the same stable, so the
+    // raw treasury delta can exceed this tournament's purse. The labeled
+    // prize entries isolate it exactly.
+    const prizeFor = (r?: { prizeEntries: { label: string; amount: number }[] }) =>
+      (r?.prizeEntries ?? [])
+        .filter((e) => tourney.name != null && e.label.startsWith(tourney.name))
+        .reduce((s, e) => s + e.amount, 0);
+    expect(
+      prizeFor(postRival) - prizeFor(preRival),
+      `rival stable ${stableId} should receive ${acc.gold}g in ${tourney.name} purses`
+    ).toBe(acc.gold);
+
+    // Treasury/fame deltas include other same-window income — assert the
+    // expected award is at least covered.
     expect(
       (postRival?.treasury ?? 0) - (preRival?.treasury ?? 0),
-      `rival stable ${stableId} should receive ${acc.gold}g in purses`
-    ).toBe(acc.gold);
+      `rival stable ${stableId} treasury should grow by at least ${acc.gold}g`
+    ).toBeGreaterThanOrEqual(acc.gold);
     expect(
       (postRival?.fame ?? 0) - (preRival?.fame ?? 0),
-      `rival stable ${stableId} should receive ${acc.fame} fame`
-    ).toBe(acc.fame);
+      `rival stable ${stableId} should receive at least ${acc.fame} fame`
+    ).toBeGreaterThanOrEqual(acc.fame);
   }
 
   if (playerExpectedGold > 0) {

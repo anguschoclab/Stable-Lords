@@ -1,8 +1,5 @@
 /**
  * A11y — FighterConfigCard DOM ID uniqueness.
- * Pre-merge test: will FAIL on main because FighterConfigCard uses
- * hardcoded `stat-slider-${key}` IDs (no useId). After PR #781 merge,
- * useId will generate unique IDs per instance.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';

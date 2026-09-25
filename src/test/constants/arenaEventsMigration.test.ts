@@ -1,9 +1,3 @@
-/**
- * Feature — ARENA_EVENT_CONSTANTS migration test for PR #791.
- * Pre-merge test: will FAIL on main because the new path
- * @/constants/arenaEvents doesn't exist yet.
- * After PR #791 merge, the export moves to the new location.
- */
 import { describe, it, expect } from 'vitest';
 
 describe('ARENA_EVENT_CONSTANTS migration to @/constants/arenaEvents', () => {

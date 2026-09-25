@@ -1,9 +1,5 @@
 /**
  * Tests for src/data/names/nameValidation.ts.
- *
- * Covers the dedup refactor (helpers: isInNameList, splitTwoParts,
- * filterValid) and the F1 fix (matchesPrefixedStableName correctly
- * handles multi-word prefixes like "The Bleeding").
  */
 import { describe, it, expect } from 'vitest';
 import {

@@ -20,13 +20,6 @@ import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineSer
 import type { GameState } from '@/types/state.types';
 import type { TournamentId } from '@/types/shared.types';
 
-/**
- * Regression guard for the day-path seed divergence (audit finding #6):
- * advanceDay and skipToWeekEnd must resolve the same calendar day with the
- * same seed — both go through resolveTournamentDay → tournamentDaySeed
- * (year*10000 + week*100 + day). Before unification they used different
- * formulas and produced different tournament outcomes for identical days.
- */
 describe('tournament day seed parity', () => {
   let state: GameState;
 

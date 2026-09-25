@@ -3,7 +3,6 @@ import { getFromArchive, peekArchive, richHitLocation } from '@/engine/narrative
 import { SeededRNG } from '@/utils/random';
 import { loadCombatNarrative } from '@/data/narrative';
 
-// Domain file imports — these will fail until Phase 2B creates them
 import combatPbp from '@/data/narrative/combatPbp.json';
 import combatStrikes from '@/data/narrative/combatStrikes.json';
 import combatKillText from '@/data/narrative/combatKillText.json';

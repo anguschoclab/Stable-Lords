@@ -1,7 +1,5 @@
 /**
  * A11y — aria-label presence on Slider/Switch components.
- * Pre-merge test: will FAIL on main because many components
- * don't yet have aria-labels. After PR #787 merge, they will.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';

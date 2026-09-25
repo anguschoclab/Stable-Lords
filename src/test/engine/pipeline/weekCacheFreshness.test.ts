@@ -6,13 +6,6 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 
-/**
- * Finding #9 guard: impact handlers REPLACE warrior/rival objects rather
- * than mutating them, so the per-week lookup caches (warriorMap, rivalMap,
- * warriorToStableMap) hold stale pre-impact identities unless resynced.
- * buildWeekCaches must run after every resolveImpacts boundary and point at
- * the post-impact objects.
- */
 function makeWarrior(id: string, stableId?: string): Warrior {
   return {
     id: id as WarriorId,

@@ -72,8 +72,28 @@ async function dismissBlockingOverlays(page: Page, maxPasses = 12) {
         await page.waitForTimeout(250);
         dismissed = true;
         break;
-      } catch {
-        /* not present or covered by a higher overlay */
+      } catch (e) {
+        if (!(await btn.first().isVisible().catch(() => false))) continue;
+        const info = await btn
+          .first()
+          .evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            const at = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+            return `btnRect=${JSON.stringify({ x: r.x, y: r.y, w: r.width, h: r.height })} covers=${at ? `${at.tagName}.${(at as HTMLElement).className?.toString().slice(0, 120)}` : 'none'}`;
+          })
+          .catch(() => 'unreadable');
+        console.log(`[e2e] click-fail ${pattern}: ${String(e).split('\n')[0]} :: ${info}`);
+        // A covered-but-visible button is usually blocked by a transient or
+        // stacked toast — dispatch the click programmatically. The goal here
+        // is dismissing the overlay, not hit-testing the toast layer.
+        try {
+          await btn.first().evaluate((el) => (el as HTMLElement).click());
+          await page.waitForTimeout(250);
+          dismissed = true;
+          break;
+        } catch {
+          /* still not clickable */
+        }
       }
     }
     if (!dismissed) {

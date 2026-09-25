@@ -117,4 +117,33 @@ describe('calculateStableStats', () => {
     expect(stats.avgAttributes.ST).toBe(10);
     expect(stats.avgAttributes.CN).toBe(0); // Coalesced to 0
   });
+
+  it('exercises attribute sum coalescing logic with missing attributes on active warrior', () => {
+    // Create a warrior with partially undefined attributes
+    const partialWarrior: any = {
+      id: '2' as WarriorId,
+      status: 'Active',
+      style: 'Tricky',
+      attributes: { ST: 10, CN: undefined }, // Missing other attributes, CN explicitly undefined
+      traits: [],
+      career: { wins: 0, losses: 0, kills: 0 },
+      fame: 10,
+    };
+
+    const stats = calculateStableStats([partialWarrior as Warrior]);
+    expect(stats.avgAttributes.ST).toBe(10);
+    expect(stats.avgAttributes.CN).toBe(0);
+    expect(stats.avgAttributes.SZ).toBe(0);
+    expect(stats.topWarrior?.id).toBe('2'); // Replaces null topWarrior
+  });
+
+  it('updates topWarrior correctly', () => {
+    const roster = [
+      createMockWarrior('1', 'Active', undefined as unknown as number, 0, 0, 'Balanced', {}), // null/undef fame
+      createMockWarrior('2', 'Active', 50, 0, 0, 'Balanced', {}),
+      createMockWarrior('3', 'Active', 25, 0, 0, 'Balanced', {}),
+    ];
+    const stats = calculateStableStats(roster);
+    expect(stats.topWarrior?.id).toBe('2');
+  });
 });

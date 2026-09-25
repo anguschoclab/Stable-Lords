@@ -17,6 +17,14 @@ describe('planConditionUtils', () => {
       expect(triggerDisplayValue(cond)).toBe('mid');
     });
 
+    it('returns string value when inputType is integer', () => {
+      const cond: PlanCondition = {
+        trigger: { type: 'MOMENTUM_LEAD', value: 10 },
+        override: { AL: 3 },
+      };
+      expect(triggerDisplayValue(cond)).toBe('10');
+    });
+
     it('returns string value when no option is found', () => {
       const cond = {
         trigger: { type: 'unknown_type', value: 'custom_val' },

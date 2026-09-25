@@ -16,6 +16,10 @@
  * (vitest.config.ts does not reference bunfig preload files).
  */
 import { describe, it, test, vi } from 'vitest';
+// bun:test has no type declarations; this preload only ever executes under
+// Bun's native runner (bunfig.toml [test].preload), so suppress the lookup.
+// @ts-expect-error — runtime-only Bun module
+import { mock as bunMock } from 'bun:test';
 
 const v = vi as Record<string, any>;
 
@@ -75,6 +79,104 @@ if (!v.__mockWrappedForImportOriginal) {
       factory ? async () => factory(() => import(actualUrl(path))) : factory,
     );
   v.__mockWrappedForImportOriginal = true;
+}
+
+// bun:test's spyOn cannot mock accessor properties — e.g. Zod 4 defines
+// schema methods like `parse` as prototype getters, so
+// vi.spyOn(schema, 'parse') throws "does not support accessor properties".
+// When the resolved descriptor is an accessor, shadow it with an own data
+// property that forwards to a swappable implementation. Repeated spies on the
+// same property reuse the installed shim so beforeEach re-mocking works.
+if (v.spyOn && !v.__spyOnHandlesAccessors) {
+  const origSpyOn = v.spyOn.bind(v);
+  v.spyOn = (obj: object, prop: string | symbol) => {
+    const ownDesc = Object.getOwnPropertyDescriptor(obj, prop);
+    if (
+      ownDesc &&
+      typeof ownDesc.value === 'function' &&
+      ownDesc.value.__accessorShim
+    ) {
+      return ownDesc.value;
+    }
+    let holder: any = obj;
+    let desc: PropertyDescriptor | undefined;
+    while (
+      holder != null &&
+      !(desc = Object.getOwnPropertyDescriptor(holder, prop))
+    ) {
+      holder = Object.getPrototypeOf(holder);
+    }
+    if (!desc || typeof desc.get !== 'function') {
+      return origSpyOn(obj, prop as never);
+    }
+    let realFn: unknown;
+    try {
+      realFn = desc.get.call(obj);
+    } catch {
+      realFn = undefined;
+    }
+    const defaultImpl = (...args: unknown[]) =>
+      typeof realFn === 'function'
+        ? (realFn as any).apply(obj, args)
+        : desc.get!.call(obj)(...args);
+    let impl: any = defaultImpl;
+    // Build on bun's native fn-mock so expect().toHaveBeenCalled*() and
+    // vi.clearAllMocks() recognize it — bun tracks mocks internally.
+    const mock: any = bunMock(function (this: unknown, ...args: unknown[]) {
+      return impl.apply(this, args);
+    });
+    // bun's mock methods live on a shared non-writable prototype — shadow
+    // them with own properties so chainable impl-swapping works.
+    const def = (name: string, value: unknown) =>
+      Object.defineProperty(mock, name, {
+        value,
+        writable: true,
+        configurable: true,
+      });
+    def('__accessorShim', true);
+    def('mockImplementation', (fn: any) => {
+      impl = fn;
+      return mock;
+    });
+    def('mockReturnValue', (value: unknown) => {
+      impl = () => value;
+      return mock;
+    });
+    def('mockResolvedValue', (value: unknown) => {
+      impl = () => Promise.resolve(value);
+      return mock;
+    });
+    def('mockRejectedValue', (err: unknown) => {
+      impl = () => Promise.reject(err);
+      return mock;
+    });
+    def('mockImplementationOnce', (fn: any) => {
+      const prev = impl;
+      impl = function (this: unknown, ...a: unknown[]) {
+        impl = prev;
+        return fn.apply(this, a);
+      };
+      return mock;
+    });
+    def('mockReset', () => {
+      // Native mockClear lives on the non-writable proto — reach it there to
+      // clear bun's internal call log without touching our dispatcher.
+      Object.getPrototypeOf(mock).mockClear?.call(mock);
+      impl = defaultImpl;
+      return mock;
+    });
+    def('mockRestore', () => {
+      if (ownDesc) Object.defineProperty(obj, prop, ownDesc);
+      else Reflect.deleteProperty(obj, prop);
+    });
+    Object.defineProperty(obj, prop, {
+      value: mock,
+      writable: true,
+      configurable: true,
+    });
+    return mock;
+  };
+  v.__spyOnHandlesAccessors = true;
 }
 
 const stubbedGlobals = new Map<string, { had: boolean; original: unknown }>();

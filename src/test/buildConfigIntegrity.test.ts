@@ -88,7 +88,9 @@ describe('tsconfig reference graph', () => {
 
   it('tsc --build --force exits with code 0 from root', () => {
     expect(() => {
-      execSync('bun run type-check', {
+      // Invoke tsc directly: `bun run type-check` shells through `bun x`, which
+      // resolves dependencies and can mutate bun.lock mid-test under bun:test.
+      execSync('node node_modules/typescript7/bin/tsc --build --force', {
         cwd: projectRoot,
         stdio: 'pipe',
         timeout: 600000,

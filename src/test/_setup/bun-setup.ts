@@ -81,7 +81,11 @@ for (const key of Object.getOwnPropertyNames(dom.window)) {
     // Bun's AbortSignal instances get rejected by jsdom's addEventListener
     // ({ signal }) — framer-motion gesture listeners hit this.
     key === 'AbortSignal' ||
-    key === 'AbortController';
+    key === 'AbortController' ||
+    // Bun's native Blob/File are a different realm: jsdom's FileReader
+    // silently fails to read them, stalling upload paths (Mods/ImportExport).
+    key === 'Blob' ||
+    key === 'File';
   if (!mustOverride && key in globalThis) continue;
   const desc = Object.getOwnPropertyDescriptor(dom.window, key);
   if (desc) Object.defineProperty(globalThis, key, desc);

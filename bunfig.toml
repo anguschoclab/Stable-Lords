@@ -11,4 +11,7 @@ preload = ["./src/test/_setup/bunViPolyfill.ts", "./src/test/_setup/bun-setup.ts
 # they retain dedicated CI coverage via the `slow-tests` job.
 # out/** is gitignored electron-packager output — it contains a full bundled
 # copy of src/test plus dependency test files that must never be collected.
-pathIgnorePatterns = ["e2e/**", "out/**", "src/test/electronMain.test.ts", "**/*.slow.test.ts"]
+# bibleIndex.test.ts and HelpA11y.test.tsx transitively import src/lib/bibleIndex.ts,
+# which relies on Vite's `import.meta.glob` transform (?raw/eager) and cannot run
+# under Bun's test runner. They remain covered by the vitest suite.
+pathIgnorePatterns = ["e2e/**", "out/**", "src/test/electronMain.test.ts", "**/*.slow.test.ts", "src/test/lib/bibleIndex.test.ts", "src/test/pages/HelpA11y.test.tsx"]

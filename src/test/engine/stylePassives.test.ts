@@ -175,9 +175,6 @@ describe('Style Passives', () => {
     });
 
     it('should give Aimed Blow a smaller bonus without targeting (and a larger one with targeting)', () => {
-      // Tuned 2026-04: AB used to have zero passive without targeting, which made
-      // default-plan AB warriors (target='Any') a 17% W% style. Now AB always
-      // gets a baseline attBonus + crit, with a stronger bonus when targeting.
       const untargeted = getStylePassive(FightingStyle.AimedBlow, {
         ...baseContext,
         targetedLocation: 'Any',

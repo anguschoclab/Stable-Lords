@@ -56,7 +56,6 @@ describe('world liveness over a long sim (26 weeks)', () => {
     const end = pulses[pulses.length - 1]!;
 
     // FREEZE GUARD: total bouts must keep climbing in the second half of the run.
-    // Pre-fix, this is flat (the world froze once the player went bankrupt).
     expect(end.totalBouts).toBeGreaterThan(mid.totalBouts);
 
     // Every rival stable still fields warriors at the end (recruiting refills churn).

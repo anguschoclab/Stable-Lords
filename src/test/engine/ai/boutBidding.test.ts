@@ -130,9 +130,6 @@ describe('matchup scoring excludes own stablemates', () => {
     expect(bids.length).toBeGreaterThan(0);
     const bid = bids.find((b) => b.proposingWarriorId === warrior.id);
     expect(bid).toBeDefined();
-    // Without the fix, ownStablemate (BashingAttack, favorable +1.25) would inflate
-    // the modifier. With the fix, only neutralOpp (LungingAttack, mod 0) is scored,
-    // so priority should be exactly 4 (base + 0 weather + 0 mood + 0 matchup).
     expect(bid!.priority).toBe(4);
   });
 });
@@ -164,8 +161,6 @@ describe('matchupModifier goes negative for unfavorable matchups', () => {
     const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival]);
 
     expect(bids.length).toBeGreaterThan(0);
-    // Without the fix, modifier stays at 0 → priority = 4.
-    // With the fix, modifier = -3.75 → priority = max(1, 4 - 3.75) = 0.25 < 4.
     expect(bids[0]!.priority).toBeLessThan(4);
   });
 
@@ -191,9 +186,6 @@ describe('VENDETTA without targetStableId', () => {
 
     const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
 
-    // Without the fix, VENDETTA without target falls through to the else block
-    // and generates "Standard training bout." bids. With the fix, no bids are
-    // generated for VENDETTA without a target.
     expect(bids.length).toBe(0);
   });
 });
@@ -233,9 +225,6 @@ describe('VENDETTA bid description reflects matchup against target stable', () =
     const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [targetRival]);
 
     expect(bids.length).toBeGreaterThan(0);
-    // Without the fix, matchupModifier is always 0 for VENDETTA so description
-    // never contains "Favorable matchup". With the fix, the VENDETTA scoring
-    // loop evaluates the target stable and finds the favorable matchup.
     expect(bids[0]!.description).toContain('Favorable matchup');
   });
 });

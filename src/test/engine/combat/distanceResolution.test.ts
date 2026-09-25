@@ -35,11 +35,6 @@ describe('computeReachScore', () => {
 });
 
 describe('getWeaponPreferredRange', () => {
-  // Updated 2026-04: weapon ids must match those in src/data/equipment.ts.
-  // Prior tests used `open_hand` and `pike` which were never real weapon ids,
-  // (Fixed: pike -> short_spear to use a valid weapon id)
-  // exposing the underlying weapon-id-mismatch bug that silently disabled the
-  // entire range/weapon system.
   it('returns Tight for short_sword', () => {
     expect(getWeaponPreferredRange('short_sword')).toBe('Tight');
   });
@@ -161,8 +156,6 @@ describe('resetZone', () => {
     expect(resetZone('Center')).toBe('Center');
   });
 });
-
-// ─── Regression: Weapon ID lookups must reference canonical WEAPONS ─────────
 
 const WEAPON_IDS = new Set(WEAPONS.map((w) => w.id));
 

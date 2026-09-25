@@ -91,8 +91,6 @@ describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
   const rng = new SeededRNGService(42);
 
   it('createdAt for game year 2, week 1 should be Jan 1, 2025 (not Jan 7)', () => {
-    // Bug: Date.UTC(2024, 0, 1 + 53*7) = Jan 7, 2025 (absoluteWeek drift)
-    // Fix: Date.UTC(2024 + 2 - 1, 0, 1 + 0*7) = Jan 1, 2025
     const state = makeState(1, 2);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
@@ -103,8 +101,6 @@ describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
     const createdAt = report.bouts[0].createdAt as string;
     const date = new Date(createdAt);
 
-    // After fix: should be Jan 1, 2025 (start of game year 2)
-    // With bug: is Jan 7, 2025 (53 * 7 = 371 days from Jan 1, 2024)
     expect(date.getUTCFullYear(), 'year should be 2025').toBe(2025);
     expect(date.getUTCMonth(), 'month should be January (0)').toBe(0);
     expect(date.getUTCDate(), 'day should be 1, not 7 (absoluteWeek drift bug)').toBe(1);
@@ -119,7 +115,6 @@ describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
     const date = new Date(createdAt);
 
     // Game year 1, week 1 should be Jan 1, 2024
-    // With bug: Date.UTC(2024, 0, 1 + 1*7) = Jan 8, 2024 (off by 7 days)
     expect(date.getUTCFullYear(), 'year should be 2024').toBe(2024);
     expect(date.getUTCMonth(), 'month should be January (0)').toBe(0);
     expect(date.getUTCDate(), 'day should be 1, not 8 (off-by-one week bug)').toBe(1);

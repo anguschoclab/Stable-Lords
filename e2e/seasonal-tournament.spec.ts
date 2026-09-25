@@ -182,6 +182,27 @@ interface StateSnap {
       winner?: 'A' | 'D' | null;
     }[];
   }[];
+  /**
+   * World-systems coverage payload — sampled weekly so capped arrays
+   * (arenaHistory 500, newsletter 100, actionHistory 40) still yield
+   * full-year data when deduped/unioned by the accumulator.
+   */
+  coverage: {
+    fights: { id: string; week: number; arenaId?: string; by?: string }[];
+    newsItems: { id: string; category?: string; title: string }[];
+    gazetteHeadlines: { id: string; headline: string }[];
+    lifetimeStats?: { bouts: number; kills: number; retirements: number };
+    offers: { id: string; promoterId: string; status: string }[];
+    hallOfFameCount: number;
+    awards: { year: number; type: string }[];
+    recruitPoolSize: number;
+    graveyardIds: string[];
+    retiredIds: string[];
+    rivalRosterIds: Record<string, string[]>;
+    aiEventTypes: string[];
+    aiCauses: string[];
+    aiLedgerCategories: string[];
+  };
 }
 
 /**
@@ -223,12 +244,23 @@ interface RawGameState {
   player?: { id: string };
   ledger?: { category: string }[];
   roster?: RawWarrior[];
+  arenaHistory?: { id: string; week: number; arenaId?: string; by?: string }[];
+  newsletter?: { id: string; week: number; category?: string; title: string }[];
+  gazettes?: { id: string; week: number; headline: string }[];
+  lifetimeStats?: { bouts: number; kills: number; retirements: number };
+  boutOffers?: Record<string, { id: string; promoterId: string; status: string }>;
+  hallOfFame?: { id: string; label: string }[];
+  awards?: { year: number; type: string }[];
+  recruitPool?: { id: string }[];
+  graveyard?: { id: string }[];
+  retired?: { id: string }[];
   rivals?: {
     id: string;
     treasury: number;
     fame: number;
     roster?: RawWarrior[];
     ledger?: { category: string; label: string; amount: number }[];
+    actionHistory?: { type: string; cause?: string }[];
   }[];
   tournaments?: {
     id: string;
@@ -314,6 +346,50 @@ async function snapshotState(page: Page): Promise<StateSnap> {
           winner: b.winner,
         })),
       })),
+      coverage: {
+        fights: (s.arenaHistory ?? []).map((f) => ({
+          id: f.id,
+          week: f.week,
+          arenaId: f.arenaId,
+          by: f.by,
+        })),
+        newsItems: (s.newsletter ?? []).map((n) => ({
+          id: n.id,
+          category: n.category,
+          title: n.title,
+        })),
+        gazetteHeadlines: (s.gazettes ?? []).map((g) => ({
+          id: g.id,
+          headline: g.headline,
+        })),
+        lifetimeStats: s.lifetimeStats,
+        offers: Object.values(s.boutOffers ?? {}).map((o) => ({
+          id: o.id,
+          promoterId: o.promoterId,
+          status: o.status,
+        })),
+        hallOfFameCount: (s.hallOfFame ?? []).length,
+        awards: (s.awards ?? []).map((a) => ({ year: a.year, type: a.type })),
+        recruitPoolSize: (s.recruitPool ?? []).length,
+        graveyardIds: (s.graveyard ?? []).map((w) => w.id),
+        retiredIds: (s.retired ?? []).map((w) => w.id),
+        rivalRosterIds: Object.fromEntries(
+          (s.rivals ?? []).map((r) => [r.id, (r.roster ?? []).map((w) => w.id)])
+        ),
+        aiEventTypes: [
+          ...new Set((s.rivals ?? []).flatMap((r) => (r.actionHistory ?? []).map((e) => e.type))),
+        ],
+        aiCauses: [
+          ...new Set(
+            (s.rivals ?? [])
+              .flatMap((r) => (r.actionHistory ?? []).map((e) => e.cause))
+              .filter((c): c is string => c != null)
+          ),
+        ],
+        aiLedgerCategories: [
+          ...new Set((s.rivals ?? []).flatMap((r) => (r.ledger ?? []).map((l) => l.category))),
+        ],
+      },
     };
   });
 }
@@ -426,6 +502,85 @@ function verifyPrizePayout(
   // applied directly to rival warriors by the awards pass. At least one NPC
   // placer is expected in a 64-slot bracket of mostly rival warriors.
   expect(rivalExpected.size, 'at least one podium finisher should be an NPC').toBeGreaterThan(0);
+}
+
+/**
+ * Accumulates world-systems evidence across the whole year soak. State
+ * arrays are capped (arenaHistory 500, newsletter 100, rival actionHistory
+ * 40), so weekly snapshots are merged here: fights/news/offers dedup by id,
+ * AI event types and roster ids union over time.
+ */
+function makeCoverage() {
+  return {
+    fightIds: new Set<string>(),
+    fightsMissingArena: 0,
+    arenas: new Map<string, number>(),
+    outcomes: new Map<string, number>(),
+    eventTitles: new Set<string>(),
+    newsTitles: new Set<string>(),
+    gazetteHeadlines: new Set<string>(),
+    offerIds: new Set<string>(),
+    offerPromoters: new Set<string>(),
+    offerStatuses: new Set<string>(),
+    aiEventTypes: new Set<string>(),
+    aiCauses: new Set<string>(),
+    aiLedgerCategories: new Set<string>(),
+    /** Every warrior id ever seen on each rival's roster — growth past the
+     *  baseline means recruitment happened. */
+    rivalWarriorIds: new Map<string, Set<string>>(),
+    rivalRosterSize: new Map<string, number>(),
+    /** Warrior ids on the first observed roster — the baseline for detecting
+     *  replenishment (new ids appearing later). */
+    baselineRosterIds: new Set<string>(),
+    graveyardIds: new Set<string>(),
+    retiredIds: new Set<string>(),
+    peakBouts: 0,
+    peakKills: 0,
+    peakRetirements: 0,
+    awards: [] as { year: number; type: string }[],
+    hallOfFameCount: 0,
+    minRecruitPool: Number.MAX_SAFE_INTEGER,
+  };
+}
+type YearlyCoverage = ReturnType<typeof makeCoverage>;
+
+function collectCoverage(cov: YearlyCoverage, snap: StateSnap) {
+  const c = snap.coverage;
+  for (const f of c.fights) {
+    if (cov.fightIds.has(f.id)) continue;
+    cov.fightIds.add(f.id);
+    if (!f.arenaId) cov.fightsMissingArena++;
+    else cov.arenas.set(f.arenaId, (cov.arenas.get(f.arenaId) ?? 0) + 1);
+    const by = f.by ?? 'Unknown';
+    cov.outcomes.set(by, (cov.outcomes.get(by) ?? 0) + 1);
+  }
+  for (const n of c.newsItems) {
+    if (n.category === 'event') cov.eventTitles.add(n.title);
+    else cov.newsTitles.add(n.title);
+  }
+  for (const g of c.gazetteHeadlines) cov.gazetteHeadlines.add(g.headline);
+  for (const o of c.offers) {
+    cov.offerIds.add(o.id);
+    cov.offerPromoters.add(o.promoterId);
+    cov.offerStatuses.add(o.status);
+  }
+  for (const t of c.aiEventTypes) cov.aiEventTypes.add(t);
+  for (const x of c.aiCauses) cov.aiCauses.add(x);
+  for (const x of c.aiLedgerCategories) cov.aiLedgerCategories.add(x);
+  for (const [stableId, ids] of Object.entries(c.rivalRosterIds)) {
+    const set = cov.rivalWarriorIds.get(stableId) ?? new Set<string>();
+    for (const id of ids) set.add(id);
+    cov.rivalWarriorIds.set(stableId, set);
+    cov.rivalRosterSize.set(stableId, ids.length);
+  }
+  for (const id of c.graveyardIds) cov.graveyardIds.add(id);
+  for (const id of c.retiredIds) cov.retiredIds.add(id);
+  cov.peakBouts = Math.max(cov.peakBouts, c.lifetimeStats?.bouts ?? 0);
+  cov.peakKills = Math.max(cov.peakKills, c.lifetimeStats?.kills ?? 0);
+  cov.peakRetirements = Math.max(cov.peakRetirements, c.lifetimeStats?.retirements ?? 0);
+  cov.awards = c.awards;
+  cov.hallOfFameCount = Math.max(cov.hallOfFameCount, c.hallOfFameCount);
+  cov.minRecruitPool = Math.min(cov.minRecruitPool, c.recruitPoolSize);
 }
 
 test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
@@ -657,6 +812,14 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   const completedTourneys: { id: string; week: number; season?: string; year: number }[] = [];
   let yearTwoStartSnap: StateSnap | undefined;
 
+  // World-systems coverage — merged weekly across the whole soak.
+  const cov = makeCoverage();
+  const baselineSnap = await snapshotState(page);
+  collectCoverage(cov, baselineSnap);
+  for (const ids of Object.values(baselineSnap.coverage.rivalRosterIds)) {
+    for (const id of ids) cov.baselineRosterIds.add(id);
+  }
+
   for (let guard = 0; guard < 160; guard++) {
     // Wait until any in-flight resolution finishes and overlays are clear.
     await expect
@@ -664,6 +827,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
       .not.toBe('busy');
 
     const snap = await snapshotState(page);
+    collectCoverage(cov, snap);
 
     // Capture the state right after the year rollover — every year-1
     // tournament (played or leftover tier) must already be completed.
@@ -714,6 +878,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   // Tournament ids must be unique across the whole run — year 2 regenerates
   // the same season+week slots, so collisions would break find-by-id.
   const endSnap = await snapshotState(page);
+  collectCoverage(cov, endSnap);
   const allIds = endSnap.tournaments.map((t) => t.id);
   expect(new Set(allIds).size, 'tournament ids must be unique across years').toBe(
     allIds.length
@@ -753,6 +918,82 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   await expect
     .poll(() => settledAdvanceLabel(page), { timeout: 60_000 })
     .toMatch(/ADVANCE WEEK 14/);
+
+  // ── 7. World-systems coverage — arenas, events, mortality, AI, economy ──
+  const killRate = cov.peakKills / Math.max(1, cov.peakBouts);
+  const outcomeStr = [...cov.outcomes.entries()]
+    .map(([k, v]) => `${k}:${v}`)
+    .join(' ');
+  const newRosterIds = [...cov.rivalWarriorIds.values()]
+    .flatMap((s) => [...s])
+    .filter((id) => !cov.baselineRosterIds.has(id));
+  const totalRosterNow = [...cov.rivalRosterSize.values()].reduce((a, b) => a + b, 0);
+  console.log(
+    `[e2e] coverage: bouts=${cov.peakBouts} kills=${cov.peakKills} ` +
+      `(${((killRate * 100).toFixed(1))}%) retirements=${cov.peakRetirements} ` +
+      `outcomes=[${outcomeStr}] arenas=${[...cov.arenas.entries()]
+        .map(([a, n]) => `${a}:${n}`)
+        .join(',')} events=${[...cov.eventTitles].join('|')} ` +
+      `offers=${cov.offerIds.size} promoters=${cov.offerPromoters.size} ` +
+      `aiTypes=${[...cov.aiEventTypes].join(',')} aiCauses=${[...cov.aiCauses].join(',')} ` +
+      `ledgerCats=${[...cov.aiLedgerCategories].join(',')} ` +
+      `newRosterIds=${newRosterIds.length} rosterTotal=${totalRosterNow} ` +
+      `graveyard=${cov.graveyardIds.size} retired=${cov.retiredIds.size} ` +
+      `awards=${cov.awards.length} hof=${cov.hallOfFameCount} recruitPool≥${cov.minRecruitPool}`
+  );
+
+  // Arena diversity: a full year of bouts must rotate venues, not pin one.
+  expect(cov.fightIds.size, 'a full year should produce hundreds of fights').toBeGreaterThan(300);
+  expect(cov.fightsMissingArena, 'every fight should record its arena').toBe(0);
+  expect(cov.arenas.size, 'multiple arenas should host bouts over a year').toBeGreaterThanOrEqual(3);
+
+  // Kill rate: deaths happen (permadeath is the game's stake) but stay a
+  // rare outcome — not so common the roster churn is cartoonish.
+  expect(cov.peakBouts, 'lifetimeStats.bouts should accumulate all year').toBeGreaterThan(300);
+  expect(cov.peakKills, 'a year of combat should produce kills').toBeGreaterThan(0);
+  expect(killRate, 'kill rate should stay under 15%').toBeLessThan(0.15);
+  expect(cov.graveyardIds.size, 'kills should leave graveyard entries').toBeGreaterThan(0);
+
+  // Events: at least the offseason event fires at year rollover; weekly
+  // EventPass events also surface as 'event' newsletter items.
+  expect(cov.eventTitles.size, 'seasonal/world events should trigger during the year')
+    .toBeGreaterThanOrEqual(1);
+
+  // Promoters: bout offers are issued during the year and resolve.
+  expect(cov.offerIds.size, 'promoters should offer bouts during the year')
+    .toBeGreaterThanOrEqual(1);
+  expect(cov.offerPromoters.size, 'offers should come from real promoters')
+    .toBeGreaterThanOrEqual(1);
+
+  // End-of-year awards exist for year 1, and the hall of fame collects
+  // fight-of-the-week/tournament entries over the year.
+  expect(
+    cov.awards.filter((a) => a.year === 1).length,
+    'year-1 annual awards should be granted at rollover'
+  ).toBeGreaterThanOrEqual(1);
+  expect(cov.hallOfFameCount, 'hall of fame should collect entries over the year')
+    .toBeGreaterThanOrEqual(1);
+
+  // NPC AI exercised every function category, not just the noisy ones.
+  for (const t of ['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF', 'BOUT', 'INTEL'] as const) {
+    expect(
+      cov.aiEventTypes.has(t),
+      `NPC AI should produce ${t} events during a full year`
+    ).toBe(true);
+  }
+  // Rival ledgers must carry real economic categories — prizes, upkeep,
+  // fight income at minimum.
+  for (const c of ['fight', 'upkeep', 'prize'] as const) {
+    expect(cov.aiLedgerCategories.has(c), `rival ledgers should include '${c}' entries`).toBe(true);
+  }
+
+  // Replenishment: warriors die/retire but stables restock — new ids appear
+  // on rival rosters over the year and no stable's roster collapses to zero.
+  expect(newRosterIds.length, 'rivals should recruit new warriors during the year')
+    .toBeGreaterThanOrEqual(1);
+  for (const [stableId, size] of cov.rivalRosterSize) {
+    expect(size, `rival stable ${stableId} roster should not be empty`).toBeGreaterThan(0);
+  }
 
   // Final screenshot for the report.
   await page.screenshot({ path: 'e2e/screenshots/seasonal-tournament-final.png', fullPage: false });

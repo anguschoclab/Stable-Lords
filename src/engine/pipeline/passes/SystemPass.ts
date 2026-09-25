@@ -3,7 +3,11 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
-import { processHallOfFame, createYearlySnapshots } from '../core/hallOfFame';
+import {
+  processHallOfFame,
+  createYearlySnapshots,
+  recordWeeklyHallOfFame,
+} from '../core/hallOfFame';
 import { processTierProgression } from '../core/tierProgression';
 import { WorldManagementService } from '@/engine/ai/worldManagement';
 import { evolvePhilosophies } from '@/engine/owner/philosophy';
@@ -31,6 +35,7 @@ function processSystemicProgression(
   nextYear: number
 ): StateImpact {
   const hofImpact = processHallOfFame(state, nextWeek);
+  const weeklyHofImpact = recordWeeklyHallOfFame(state);
 
   let snapshotImpact: StateImpact = {};
   const isFirstTick = state.week === 1 && state.year === 1;
@@ -47,6 +52,7 @@ function processSystemicProgression(
     ...hofImpact,
     ...snapshotImpact,
     ...tierImpact,
+    ...weeklyHofImpact,
     seasonalGrowth: state.seasonalGrowth ? [...state.seasonalGrowth] : [],
   };
 }

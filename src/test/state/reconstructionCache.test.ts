@@ -65,9 +65,6 @@ describe('#8c clearReconstructionCache invalidates cached result', () => {
   });
 
   it('deferredBoutLogs survives the store → GameState reconstruction roundtrip', () => {
-    // Regression guard: the archive retry path re-queues failed transcript
-    // writes onto deferredBoutLogs — if the field were dropped by
-    // reconstruction, retries would silently die (was the pre-fix bug).
     const logs = [{ year: 2, season: 1, boutId: 'bout-x', transcript: ['l1'] }];
     const mockStore: any = {
       treasury: 1000,

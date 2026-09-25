@@ -286,7 +286,6 @@ describe('useWeekExecution', () => {
     expect(engineProxy.runAutosim).toHaveBeenCalledOnce();
   });
 
-  // #12 — handleStartAutosim must check isSimulating from the store
   it('handleStartAutosim no-ops when store isSimulating is already true', async () => {
     vi.mocked(engineProxy.runAutosim).mockResolvedValue({
       finalState: {} as any,

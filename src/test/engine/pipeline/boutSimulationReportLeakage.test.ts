@@ -98,7 +98,6 @@ describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
 
     const report = impact.lastSimulationReport as any;
     expect(report).toBeDefined();
-    // NF1 bug: ...state.lastSimulationReport spread overwrites these with old values
     expect(report.trainingGains, 'trainingGains should be empty for week 2').toEqual([]);
     expect(report.agingEvents, 'agingEvents should be empty for week 2').toEqual([]);
     expect(report.healthEvents, 'healthEvents should be empty for week 2').toEqual([]);

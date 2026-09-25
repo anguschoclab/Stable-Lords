@@ -30,7 +30,6 @@ describe('checkBankruptcy', () => {
     const state = makeState(0);
     const impacts: StateImpact[] = [{ treasuryDelta: -200 }, { treasuryDelta: -400 }];
     // 0 + (-200) + (-400) = -600 < -500 → true
-    // Old .find() would only see first -200, giving -200 → false (bug)
     expect(checkBankruptcy(state, impacts)).toBe(true);
   });
 

@@ -10,7 +10,6 @@ import { WEATHER_CONFIG } from '@/constants/arena/weather';
 
 describe('Cosmic Anomaly weather type', () => {
   it('Cosmic Anomaly is in WEATHER_TYPES enum source', () => {
-    // After PR #747 merge, this should pass
     expect(WEATHER_TYPES.includes('Cosmic Anomaly' as any)).toBe(true);
   });
 

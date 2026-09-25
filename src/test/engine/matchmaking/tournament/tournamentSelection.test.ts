@@ -1469,8 +1469,6 @@ describe('applyBoutResults — deathWeek at year boundary', () => {
   });
 });
 
-// ─── full-bracket completion (regression: phantom 7th round) ────────────────
-
 describe('resolveRound — full bracket completes in 6 rounds', () => {
   /** `aWins` controls which bracket slot always wins — the simulateFight mock
    *  returns winner 'A', so slot-A warriors take every bout. */

@@ -139,8 +139,6 @@ describe('isValidStableName', () => {
     expect(isValidStableName(STABLE_ALT[0]!)).toBe(true);
   });
 
-  // F1 fix: multi-word prefixes are now matched correctly. A generated
-  // prefixed name like "The Bleeding Wolves" (3 tokens) should validate.
   it('returns true for a multi-word prefix + suffix (F1 fix)', () => {
     const prefixed = `${STABLE_PREFIXES[0]!} ${STABLE_SUFFIXES[0]!}`;
     expect(isValidStableName(prefixed)).toBe(true);

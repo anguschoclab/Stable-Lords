@@ -1,9 +1,16 @@
-import { type GameState, type AnnualAward, type RivalStableData } from '@/types/state.types';
+import {
+  type GameState,
+  type AnnualAward,
+  type HallEntry,
+  type RivalStableData,
+} from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle, type WarriorId, type StableId } from '@/types/shared.types';
+import type { FightSummary } from '@/types/combat.types';
+import { FightingStyle, type WarriorId, type StableId, type HallEntryId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 /**
  * Process hall of fame awards for the completed year.
  *
@@ -259,4 +266,69 @@ export function createYearlySnapshots(state: GameState, snapshotYear?: number): 
   });
 
   return { rosterUpdates, rivalsUpdates };
+}
+
+/**
+ * Score a fight for 'Fight of the Week' consideration: kills outrank
+ * everything, then flashy spectacle, then the fame the bout generated.
+ */
+function fightNotability(f: FightSummary): number {
+  return (
+    (f.by === 'Kill' ? 1_000_000 : 0) +
+    (f.flashyTags?.length ?? 0) * 10_000 +
+    (f.fameDeltaA ?? 0) +
+    (f.fameDeltaD ?? 0)
+  );
+}
+
+/**
+ * Append the week's standout bouts to the Hall of Fame ledger.
+ *
+ * The `hallOfFame` state field was plumbed end-to-end (impact writer,
+ * truncation cap, declared pipeline write) but no producer ever created a
+ * `HallEntry` — the array stayed empty forever. Each week the most notable
+ * bout earns a 'Fight of the Week' entry, and every tournament whose final
+ * resolved that week earns a 'Fight of the Tournament' entry.
+ *
+ * @param state - Current game state (arenaHistory holds this week's fights).
+ * @param rng   - Optional RNG service for entry ids.
+ * @returns     - StateImpact with new hallOfFame entries, or {} if none.
+ */
+export function recordWeeklyHallOfFame(state: GameState, rng?: IRNGService): StateImpact {
+  const weekFights = getFightsForWeek(state.arenaHistory || [], state.absoluteWeek);
+  if (weekFights.length === 0) return {};
+
+  const rngService = resolveRng(rng, state.absoluteWeek * 331 + 7);
+  const alreadyRecorded = new Set((state.hallOfFame ?? []).map((e) => e.fightId));
+  const entries: HallEntry[] = [];
+
+  // 'Fight of the Tournament' — the final is the last recorded bout for each
+  // tournamentId in this week's fights.
+  const finalsByTournament = new Map<string, FightSummary>();
+  for (const f of weekFights) {
+    if (f.tournamentId) finalsByTournament.set(f.tournamentId, f);
+  }
+  for (const final of finalsByTournament.values()) {
+    if (alreadyRecorded.has(final.id)) continue;
+    entries.push({
+      id: rngService.uuid('hof') as HallEntryId,
+      week: state.week,
+      label: 'Fight of the Tournament',
+      fightId: final.id,
+    });
+    alreadyRecorded.add(final.id);
+  }
+
+  // 'Fight of the Week' — the single most notable bout of the week.
+  const best = weekFights.reduce((a, b) => (fightNotability(b) > fightNotability(a) ? b : a));
+  if (!alreadyRecorded.has(best.id)) {
+    entries.push({
+      id: rngService.uuid('hof') as HallEntryId,
+      week: state.week,
+      label: 'Fight of the Week',
+      fightId: best.id,
+    });
+  }
+
+  return entries.length > 0 ? { hallOfFame: entries } : {};
 }

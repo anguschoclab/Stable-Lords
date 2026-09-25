@@ -103,7 +103,6 @@ describe('store guards — behavioral tests', () => {
     StyleRollups._clearCaches();
   });
 
-  // #3 — doAdvanceWeek/doAdvanceDay must guard isSimulating
   describe('#3 doAdvanceWeek isSimulating guard', () => {
     it('returns early without calling engineProxy when isSimulating is true', async () => {
       useGameStore.getState().setSimulating(true);
@@ -120,7 +119,6 @@ describe('store guards — behavioral tests', () => {
     });
   });
 
-  // #7 — returnToTitle must await saveCurrentState before clearing
   describe('#7 returnToTitle awaits saveCurrentState', () => {
     it('sets atTitleScreen=true and clears activeSlotId after save completes', async () => {
       useGameStore.getState().setState((s) => {
@@ -133,7 +131,6 @@ describe('store guards — behavioral tests', () => {
     });
   });
 
-  // #8a + #8b — loadGame and doReset invalidate the reconstruction cache
   describe('#8a/#8b reconstruction cache invalidation', () => {
     it('loadGame invalidates the reconstruction cache so stale data is not returned', () => {
       const storeState = useGameStore.getState();
@@ -160,7 +157,6 @@ describe('store guards — behavioral tests', () => {
     });
   });
 
-  // #9 — doAdvanceWeek clears timeout timer after race settles
   describe('#9 doAdvanceWeek timeout cleanup', () => {
     it('does not leave dangling timers after successful advancement', async () => {
       vi.useFakeTimers();
@@ -178,7 +174,6 @@ describe('store guards — behavioral tests', () => {
     });
   });
 
-  // #11a + #11b — loadGame and doReset clear StyleRollups caches
   describe('#11a/#11b StyleRollups cache invalidation', () => {
     it('loadGame clears StyleRollups weekCache so stale data is not returned', () => {
       localStorage.clear();
@@ -219,7 +214,6 @@ describe('store guards — behavioral tests', () => {
     });
   });
 
-  // #13 — doAdvanceDay must have a worker timeout (Promise.race)
   describe('#13 doAdvanceDay worker timeout', () => {
     it('resets isSimulating when worker stalls beyond 15s timeout', async () => {
       vi.useFakeTimers();

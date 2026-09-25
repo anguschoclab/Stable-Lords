@@ -128,7 +128,9 @@ export function resolveRound(
       outcome,
       resolvedTournament.id,
       resolvedTournament.name,
-      rng
+      rng,
+      undefined,
+      arenaId
     );
   }
 
@@ -269,7 +271,9 @@ export function applyBoutResults(
   tName: string,
   rng: SeededRNG,
   /** If true, skip fatigue accrual (tournament bouts during tournament week) */
-  skipFatigue?: boolean
+  skipFatigue?: boolean,
+  /** The venue the bout was simulated in — recorded on the summary. */
+  arenaId?: string
 ): GameState {
   const isKill = outcome.by === 'Kill';
   const winnerSide = outcome.winner;
@@ -283,6 +287,7 @@ export function applyBoutResults(
     absoluteWeek: state.absoluteWeek,
     tournamentId: tId,
     tournamentName: tName,
+    arenaId,
     rng,
   });
 

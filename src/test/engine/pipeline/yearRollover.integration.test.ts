@@ -63,8 +63,6 @@ describe('year rollover', () => {
       prev = state.arenaHistory.length;
     }
 
-    // Weeks simulated: 51, 52, 1(y2), 2, 3, 4. The bug: bouts booked in week 52
-    // for "week 53" never match week 1, so the rollover week goes silent.
     expect(state.year).toBe(2);
     const rolloverWeekBouts = boutsPerWeek[2]!; // the first week of year 2
     expect(rolloverWeekBouts, `bouts per week: [${boutsPerWeek.join(', ')}]`).toBeGreaterThan(0);

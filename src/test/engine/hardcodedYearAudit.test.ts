@@ -51,7 +51,6 @@ describe('NF7: hardcoded year 2024', () => {
     const factoryPath = path.resolve(srcDir, 'factories/gameStateFactory.ts');
     if (fs.existsSync(factoryPath)) {
       const content = fs.readFileSync(factoryPath, 'utf-8');
-      // After NF7 fix, the default should use new Date().toISOString()
       expect(content).not.toContain("'2024-01-01");
       expect(content).toContain('new Date().toISOString()');
     }

@@ -109,7 +109,6 @@ describe('Tactic Suitability', () => {
     });
 
     // Canonical defensive cells from the Pagan "Styles & Tactics" chart (terrablood.com).
-    // These four styles previously diverged from canon; lock them in.
     it('should rate Aimed Blow as U for Parry and WS for Riposte (canon: AB dodges & ripostes, does not parry)', () => {
       expect(getDefensiveSuitability(FightingStyle.AimedBlow, 'Parry')).toBe('U');
       expect(getDefensiveSuitability(FightingStyle.AimedBlow, 'Riposte')).toBe('WS');

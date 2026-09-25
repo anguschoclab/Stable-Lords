@@ -13,7 +13,6 @@ describe('FighterConfigCard DOM ID uniqueness', () => {
     const filePath = path.resolve(process.cwd(), 'src/components/stable/FighterConfigCard.tsx');
     const content = readFileSync(filePath, 'utf-8');
 
-    // After PR #781, FighterConfigCard should import and use React's useId
     expect(content).toMatch(/useId/);
   });
 

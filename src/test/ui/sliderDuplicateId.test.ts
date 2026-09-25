@@ -1,7 +1,5 @@
 /**
  * A11y — Slider duplicate DOM ID detection.
- * Pre-merge test: verifies slider.tsx does NOT assign the same id
- * to both Root and Thumb elements. Catches V4 bug from PR #792.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
@@ -12,11 +10,9 @@ describe('slider.tsx DOM ID uniqueness', () => {
     const filePath = path.resolve(process.cwd(), 'src/components/ui/slider.tsx');
     const content = readFileSync(filePath, 'utf-8');
 
-    // Check if both Root and Thumb have id={id} directly (the V4 bug)
     const rootHasId = /<SliderPrimitive\.Root[^>]*\bid=\{id\}/.test(content);
     const thumbHasId = /<SliderPrimitive\.Thumb[^>]*\bid=\{id\}/.test(content);
 
-    // Both having id={id} directly is the bug
     expect(rootHasId && thumbHasId).toBe(false);
   });
 

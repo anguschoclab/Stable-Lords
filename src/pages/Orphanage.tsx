@@ -118,9 +118,16 @@ export default function Orphanage() {
     const outcome = simulateFight(planA, planB, wA, wB, boutSeed);
     const tags = outcome.post?.tags ?? [];
 
-    const summary = createBoutSummary(wA, wB, outcome, 1, {
-      uuid: () => generateId(undefined, 'ftue'),
-    });
+    const summary = createBoutSummary(
+      wA,
+      wB,
+      outcome,
+      1,
+      {
+        uuid: () => generateId(undefined, 'ftue'),
+      },
+      'standard_arena' // simulateFight defaults to the standard arena
+    );
     summary.flashyTags = tags;
     summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;
     summary.fameDeltaD = outcome.winner === 'D' ? 1 : 0;

@@ -1,7 +1,3 @@
-/**
- * New arenas — verifies the 3 new arenas from PR #746/#749 are registered
- * with correct properties (id, name, tier, tags).
- */
 import { describe, it, expect } from 'vitest';
 import { getAllArenas } from '@/data/arenas';
 
@@ -9,12 +5,10 @@ describe('new arenas registration', () => {
   const allArenas = getAllArenas();
 
   it('Jungle Ruins arena is registered', () => {
-    // After PR #746 merge, this arena should exist
     // The exact ID may vary; check for jungle_ruins pattern
     const jungleArena = allArenas.find(
       (a) => a.id.includes('jungle') || a.name?.toLowerCase().includes('jungle')
     );
-    // This test will pass after merge; before merge it validates the absence
     if (jungleArena) {
       expect(jungleArena).toBeDefined();
       expect(jungleArena!.tags).toBeDefined();
@@ -39,7 +33,6 @@ describe('new arenas registration', () => {
         a.name?.toLowerCase().includes('thunder')
     );
     // STORMTOP_TERRACE already exists; this checks for a new Thunder Peak
-    // After PR #749 merge, a new thunder_peak arena should be added
     if (thunderArena) {
       expect(thunderArena).toBeDefined();
     }
@@ -53,9 +46,6 @@ describe('new arenas registration', () => {
   });
 
   it('arena count increases after merge', () => {
-    // Current baseline: 23 arenas
-    // After merge: 23 + 3 = 26
-    // This test documents the expected count
     expect(allArenas.length).toBeGreaterThanOrEqual(23);
   });
 });

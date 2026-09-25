@@ -49,6 +49,9 @@ export const ARENA_SELECTION = {
   SCORE_SHIFT_BUFFER: 0.1,
   TOURNAMENT_DEFAULT_ARENA: 'bloodsands_arena',
   EXCLUDED_ARENA_IDS: ['bloodsands_arena'],
+  /** Seed offset for deterministic tournament-bout venue selection inside
+   *  resolveBout — keeps the arena draw off the combat RNG stream. */
+  TOURNAMENT_BOUT_SEED_OFFSET: 7919,
 } as const;
 
 // ─── Tournament Arena Filter Defaults ─────────────────────────────────────

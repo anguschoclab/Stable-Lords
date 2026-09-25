@@ -21,6 +21,9 @@ export interface FightSummaryParams {
   absoluteWeek?: number;
   tournamentId?: string;
   tournamentName?: string;
+  /** The venue the bout was simulated in — recorded so arenaHistory,
+   *  leaderboards, and career byArena stats attribute it correctly. */
+  arenaId?: string;
   rng: { uuid: (prefix?: string) => string } | IRNGService;
 }
 
@@ -29,8 +32,17 @@ export interface FightSummaryParams {
  * Used by both tournament resolution systems to ensure consistency
  */
 export function createFightSummary(params: FightSummaryParams): FightSummary {
-  const { warriorA, warriorD, outcome, week, absoluteWeek, tournamentId, tournamentName, rng } =
-    params;
+  const {
+    warriorA,
+    warriorD,
+    outcome,
+    week,
+    absoluteWeek,
+    tournamentId,
+    tournamentName,
+    arenaId,
+    rng,
+  } = params;
 
   // Generate unique ID
   const id = (
@@ -76,6 +88,7 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
     warriorIdD: warriorD.id,
     stableIdA: warriorA.stableId,
     stableIdD: warriorD.stableId,
+    arenaId,
     winner: outcome.winner,
     by: outcome.by,
     styleA: warriorA.style,
@@ -94,13 +107,15 @@ export function createBoutSummary(
   warriorD: Warrior,
   outcome: FightOutcome,
   week: number,
-  rng: { uuid: (prefix?: string) => string } | IRNGService
+  rng: { uuid: (prefix?: string) => string } | IRNGService,
+  arenaId?: string
 ): FightSummary {
   return createFightSummary({
     warriorA,
     warriorD,
     outcome,
     week,
+    arenaId,
     rng,
   });
 }

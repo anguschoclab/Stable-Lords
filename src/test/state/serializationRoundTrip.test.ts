@@ -174,9 +174,6 @@ describe('serializationRoundTrip', () => {
     // the reference, the cache will return stale data.
     store.treasury = 5000;
 
-    // CORRECT behavior: should return updated treasury
-    // This currently PASSES because the reference comparison detects the change
-    // (store.treasury is a primitive, so the reference comparison works)
     const result2 = reconstructGameState(store);
     expect(result2.treasury).toBe(5000);
   });

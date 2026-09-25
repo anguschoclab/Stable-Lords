@@ -197,8 +197,6 @@ describe('StartGame', () => {
     });
   });
 
-  // Regression for latent bug: reader.onerror is never assigned in
-  // StartGame.handleImport, so file-read failures are silent — no toast at all.
   it('shows an error toast when the file read itself fails', async () => {
     const mockFileReader = {
       readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {

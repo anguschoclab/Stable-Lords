@@ -298,8 +298,6 @@ describe('useAdminTools', () => {
       expect(toast.success).not.toHaveBeenCalled();
     });
 
-    // Regression for latent bug: reader.onerror is never assigned in
-    // useAdminTools.handleImport, so file-read failures are silent.
     it('posts an error toast when the file read itself fails', () => {
       mockFileReader(null, { error: true });
 

@@ -408,8 +408,6 @@ describe('runAutosim', () => {
     const state = makeSimmableState();
     const result = await runAutosim(state, { weeksToSim: 10 });
 
-    // Previously stop conditions only fired at 13-week checkpoints; a week-2
-    // roster wipe must halt immediately, not sim 11 more weeks.
     expect(result.weeksSimmed).toBe(2);
     expect(result.stopReason).toBe('no_pairings');
   });

@@ -1,8 +1,3 @@
-/**
- * N1 red test — narrative_validate.ts script must reject mock/placeholder markers.
- * This test FAILS until the validator is extended with checkForPlaceholderMarkers.
- * The validator must NOT flag canonical %A-style tokens (narrativePBPUtils.ts:23).
- */
 import { describe, it, expect } from 'vitest';
 import { execSync } from 'child_process';
 import { writeFileSync, mkdirSync, unlinkSync, rmdirSync, existsSync } from 'fs';
@@ -10,9 +5,6 @@ import { join } from 'path';
 
 describe('narrative_validate.ts rejects mock/placeholder markers (N1)', () => {
   it('validator script exits 0 on current content (after mock removal)', () => {
-    // This will FAIL until mock entries are removed from combatPassives.json
-    // AND the validator is extended to check for them.
-    // After both fixes, it should pass.
     let exitCode = 0;
     try {
       execSync('bun run scripts/narrative_validate.ts', { stdio: 'pipe' });
@@ -23,14 +15,12 @@ describe('narrative_validate.ts rejects mock/placeholder markers (N1)', () => {
   });
 
   it('checkForPlaceholderMarkers detects (Mock N) but not canonical %A tokens', async () => {
-    // RED until checkForPlaceholderMarkers is added to narrative_validate.ts.
-    // We dynamically import the validator module.
     const validatorPath = '../../../scripts/narrative_validate.ts';
     let mod: any;
     try {
       mod = await import(validatorPath);
     } catch {
-      // Module may not export anything yet — that's the red state.
+      // Module may not export anything.
     }
     expect(mod, 'narrative_validate.ts should export checkForPlaceholderMarkers').toBeDefined();
     expect(typeof mod.checkForPlaceholderMarkers).toBe('function');

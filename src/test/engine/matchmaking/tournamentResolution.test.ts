@@ -8,7 +8,10 @@
 import { describe, it, expect } from 'vitest';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { modifyWarrior } from '@/engine/matchmaking/tournamentSelection/awards';
+import { applyBoutResults } from '@/engine/matchmaking/tournamentSelection/resolution';
+import { SeededRNG } from '@/utils/random';
 import type { GameState, Warrior } from '@/types/state.types';
+import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 
 function makeWarrior(id: string, name: string, stableId?: string): Warrior {
@@ -80,5 +83,29 @@ describe('tournament resolution — updateEntityInList usage', () => {
     const roster = [w1];
     const result = updateEntityInList(roster, 'missing', (w) => ({ ...w, fame: 99 }));
     expect(result).toBe(roster);
+  });
+});
+
+describe('applyBoutResults — arena attribution', () => {
+  it('records the simulated arenaId on the persisted FightSummary', () => {
+    const wA = makeWarrior('wA', 'Challenger', 'player');
+    const wD = makeWarrior('wD', 'Defender', 'rival1');
+    const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);
+
+    const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;
+    const result = applyBoutResults(
+      state,
+      wA,
+      wD,
+      outcome,
+      't1',
+      'Gold Cup',
+      new SeededRNG(12345),
+      true,
+      'sundered_coliseum'
+    );
+
+    const summary = result.arenaHistory[result.arenaHistory.length - 1];
+    expect(summary?.arenaId).toBe('sundered_coliseum');
   });
 });

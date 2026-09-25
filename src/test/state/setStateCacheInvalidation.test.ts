@@ -44,7 +44,6 @@ describe('NF4: setState stale cache bug', () => {
     });
 
     // reconstructGameState should return the NEW treasury, not the cached old value
-    // NF4 bug: setState doesn't clear the reconstruction cache, so it may return stale data
     const result2 = reconstructGameState(useGameStore.getState());
     expect(result2.treasury, 'should reflect setState mutation, not stale cache').toBe(99999);
   });

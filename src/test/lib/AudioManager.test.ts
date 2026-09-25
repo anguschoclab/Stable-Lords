@@ -54,7 +54,6 @@ describe('AudioManager', () => {
     // but the public contract of the abstraction is verified.
   });
 
-  // #15 — play() must await mute state initialization (async init race)
   it('play() does not throw when called before init completes', async () => {
     AudioManager.resetForTesting();
     const manager = AudioManager.getInstance();
@@ -215,10 +214,6 @@ vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
     );
   });
 
-  // Regression for latent bug: setMuted() sets `this.muted` synchronously but
-  // does NOT await `this.ready`, so an in-flight loadMuteState() resolves
-  // afterwards and clobbers the value the caller just set. play() awaits
-  // `this.ready`; setMuted() must do the same.
   it('setMuted called before init completes is not clobbered by loadMuteState', async () => {
     let resolveStoreGet: (v: unknown) => void = () => {};
     (window as any).electronAPI = {
@@ -253,8 +248,6 @@ vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
   });
 
   it('arena_ambient is not a valid SfxType (removed from union)', () => {
-    // After the fix, arena_ambient should not be in the SfxType union
-    // This test verifies the type system excludes it
     type ValidSfxTypes = 'ui_click' | 'hit' | 'crit' | 'clash' | 'death' | 'recovery' | 'coin';
     const validTypes: ValidSfxTypes[] = [
       'ui_click',

@@ -17,7 +17,6 @@ describe('logAgentAction — typed cause', () => {
 
   it('does NOT infer intent from description substrings anymore', () => {
     const rival = makeRival({ actionHistory: [] });
-    // 'aggressive'/'dominance' phrasing previously forced AGGRESSIVE_EXPANSION
     const out = logAgentAction(
       rival,
       'STRATEGY',

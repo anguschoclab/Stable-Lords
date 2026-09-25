@@ -60,9 +60,6 @@ describe('processRivalStable — STRATEGY audit events', () => {
   });
 
   it('logs STRATEGY when a disproved plan is replaced by a SHORTER one', () => {
-    // Regression: detecting issuance via planWeeksRemaining deltas misses
-    // e.g. VENDETTA(6) → RECOVERY(2), because 2 < 5. Issuance must be gated
-    // on updateAIStrategy's actual re-pick predicate instead.
     const state = createFreshState('strategy-disproved');
     state.week = 5;
     state.absoluteWeek = 5;

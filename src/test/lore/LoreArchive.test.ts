@@ -43,9 +43,6 @@ describe('LoreArchive', () => {
       expect(LoreArchive.allHall()).toEqual([]);
     });
 
-    // Regression for latent bug: non-array JSON parses successfully, then
-    // signalFight/markFightOfWeek crash on .push/.filter. loadArray must guard
-    // with Array.isArray.
     it('returns [] when stored JSON is a non-array value and signalFight does not throw', () => {
       localStorage.setItem(KEY_FIGHTS, '{}');
       localStorage.setItem(KEY_HALL, 'null');

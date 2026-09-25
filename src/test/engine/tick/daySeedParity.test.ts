@@ -77,7 +77,6 @@ describe('tournament day seed parity', () => {
     const skipSeed = vi.mocked(TournamentSelectionService.resolveRound).mock.calls[0]?.[2];
 
     expect(skipSeed).toBe(daySeed);
-    // And the formula is year-qualified — the pre-unification bug dropped it.
     expect(daySeed).toBe(3 * 10000 + 9 * 100 + 3);
   });
 });

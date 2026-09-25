@@ -9,6 +9,8 @@ import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { SeededRNGService } from '@/utils/random';
+import { selectArenaForTournamentBout } from '@/engine/matchmaking/tournament/tournamentArenaSelection';
+import { ARENA_SELECTION } from '@/constants/arena';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
 import {
@@ -100,6 +102,18 @@ function isNPCWarrior(state: GameState, w: Warrior): boolean {
   return !!state.rivalMap?.get(w.stableId as string);
 }
 
+/**
+ * Tournament pairings carry a synthetic `tour_*` contractId, not a real
+ * BoutOffer — so `contract.arenaId` is unavailable. Pick the venue
+ * deterministically from the bout seed so the simulation, career records,
+ * and persisted summary all agree even across shard-worker boundaries.
+ */
+function resolveBoutArenaId(ctx: BoutContext, boutSeed: number): string | undefined {
+  if (!ctx.isTournamentBout) return ctx.contract?.arenaId ?? undefined;
+  const arenaRng = new SeededRNGService(boutSeed + ARENA_SELECTION.TOURNAMENT_BOUT_SEED_OFFSET);
+  return selectArenaForTournamentBout(() => arenaRng.next());
+}
+
 function runBoutSimulation(
   state: GameState,
   _ctx: BoutContext,
@@ -108,9 +122,7 @@ function runBoutSimulation(
   boutSeed: number
 ) {
   const weather = _ctx.isTournamentBout ? 'Clear' : state.weather;
-  const arenaId = _ctx.isTournamentBout
-    ? 'bloodsands_arena'
-    : (_ctx.contract?.arenaId ?? undefined);
+  const arenaId = resolveBoutArenaId(_ctx, boutSeed);
 
   const planA = isNPCWarrior(state, validCW)
     ? getNPCPlan(state, validCW, validCO.style, _ctx.playerId, validCO.stableId as string)
@@ -158,9 +170,7 @@ function collectBoutImpacts(
     validCW.id,
     validCO.id
   );
-  const boutArenaId = ctx.isTournamentBout
-    ? 'bloodsands_arena'
-    : (ctx.contract?.arenaId ?? undefined);
+  const boutArenaId = resolveBoutArenaId(ctx, boutSeed);
   impacts.push(
     applyRecords(
       state,
@@ -228,9 +238,7 @@ function collectBoutImpacts(
     }
   }
 
-  const resolvedArenaId = ctx.isTournamentBout
-    ? 'bloodsands_arena'
-    : (ctx.contract?.arenaId ?? undefined);
+  const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
   const { summary, announcement } = handleReporting(
     validCW,
     validCO,

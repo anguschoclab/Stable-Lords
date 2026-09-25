@@ -42,7 +42,7 @@ export function ResetDialog({ open, onOpenChange, onConfirm }: ResetDialogProps)
             Preserve the Record
           </AlertDialogCancel>
           <AlertDialogAction
-            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)]"
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_hsl(var(--destructive)/0.3)]"
             onClick={() => {
               onConfirm();
               onOpenChange(false);

@@ -109,9 +109,13 @@ export function buildTournament(
   warriors: Warrior[],
   week: number,
   season: Season,
-  rng: SeededRNG
+  rng: SeededRNG,
+  year = 1
 ): TournamentEntry {
-  const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}` as TournamentId;
+  // The year must be in the id: the same season+week recurs annually, and a
+  // year-2 tournament sharing an id with a completed year-1 entry makes every
+  // find-by-id resolution target the stale one.
+  const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-y${year}-w${week}` as TournamentId;
   const shuffled = rng.shuffle([...warriors]);
   const bracket: TournamentBout[] = [];
 

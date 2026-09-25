@@ -58,10 +58,12 @@ export default function Tournaments() {
     setSimulating,
     isSimulating,
     bookmarks,
+    activeTournamentId,
   } = useGameStore(
     useShallow((s) => ({
       tournaments: s.tournaments,
       season: s.season,
+      activeTournamentId: s.activeTournamentId,
       roster: s.roster,
       week: s.week,
       year: s.year,
@@ -80,9 +82,14 @@ export default function Tournaments() {
   const [hasShownPrep, setHasShownPrep] = useState(false);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
+  // The active tournament is whichever the engine marked live this week.
+  // Leftover tiers from previous years share season/week, so a bare
+  // `!completed` match would resurrect a stale bracket — scope by id first.
   const currentTournament = useMemo(
-    () => tournaments.find((t) => t.season === season && !t.completed),
-    [tournaments, season]
+    () =>
+      tournaments.find((t) => t.id === activeTournamentId) ??
+      tournaments.find((t) => t.week === week && !t.completed),
+    [tournaments, activeTournamentId, week]
   );
 
   const activeWarriors = useMemo(() => roster.filter((w) => isActive(w)), [roster]);

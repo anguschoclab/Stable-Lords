@@ -62,6 +62,7 @@ import {
   applyBoutResults,
 } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { getAIPlan, generateFreelancer } from '@/engine/matchmaking/tournamentSelection/utils';
+import { generateSeasonalTiers } from '@/engine/matchmaking/tournamentSelection/core';
 import { simulateFight } from '@/engine/simulate';
 
 // ─── Helpers ───
@@ -1614,5 +1615,20 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
     expect(
       Object.values(champ.attributes).some((v) => v > 10)
     ).toBe(true);
+  });
+});
+
+describe('generateSeasonalTiers — tournament id uniqueness across years', () => {
+  it('produces distinct ids for the same season+week in different years', () => {
+    // Year 2's Spring week-13 tournament must not reuse year 1's id — a
+    // collision makes find-by-id resolution target the stale completed entry.
+    const y1 = generateSeasonalTiers(makeBaseState(), 13, 'Spring', 881);
+    const y2 = generateSeasonalTiers({ ...makeBaseState(), year: 2 }, 13, 'Spring', 881);
+
+    const ids = [...y1, ...y2].map((t) => t.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const tour of y2) {
+      expect(y1.map((t) => t.id)).not.toContain(tour.id);
+    }
   });
 });

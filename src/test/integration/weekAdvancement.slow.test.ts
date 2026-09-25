@@ -381,4 +381,30 @@ describe('Week Advancement Integration', () => {
       }
     });
   });
+
+  describe('Tournament Week Rollover', () => {
+    it('batch-advancing through a tournament week resolves every tier and clears tournament mode', async () => {
+      let state = initialState;
+
+      // Advance into the Spring tournament week (13): tiers are generated but
+      // batch advancement never runs the interactive day ticks.
+      for (let i = 0; i < 12; i++) {
+        state = await advanceDrained(state);
+      }
+      expect(state.week).toBe(13);
+      expect(state.isTournamentWeek).toBe(true);
+      expect(state.activeTournamentId).toBeTruthy();
+      expect(state.tournaments.filter((t) => !t.completed).length).toBeGreaterThan(0);
+
+      // Rolling out of the week must resolve all generated brackets (not just
+      // the headline tier) and release tournament mode.
+      state = await advanceDrained(state);
+      expect(state.week).toBe(14);
+      expect(state.isTournamentWeek).toBe(false);
+      expect(state.activeTournamentId).toBeUndefined();
+      expect(state.tournaments.length).toBeGreaterThan(0);
+      expect(state.tournaments.every((t) => t.completed)).toBe(true);
+      expect(state.tournaments.every((t) => t.champion)).toBe(true);
+    });
+  });
 });

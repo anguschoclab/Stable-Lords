@@ -57,6 +57,7 @@ import { runPromoterPass } from '../passes/PromoterPass';
 import { runPromoterLifecyclePass } from '../passes/PromoterLifecyclePass';
 import { runTrainerPass } from '../passes/TrainerPass';
 import { runRivalStrategyPass } from '../passes/RivalStrategyPass';
+import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { runEventPass } from '../passes/EventPass';
 import { runNarrativePass } from '../passes/NarrativePass';
 import { runSeasonalPass } from '../seasonal';
@@ -412,6 +413,14 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
   state.day = 0;
 
+  // Release tournament mode when entering a non-tournament week. The impact
+  // system can't write `undefined`, and headless/batch advances never run the
+  // day ticks that clear these flags — leaving them stuck on forever.
+  if (ctx.nextWeek % 13 !== 0) {
+    state.isTournamentWeek = false;
+    state.activeTournamentId = undefined;
+  }
+
   // All-time counters — immune to the periodic truncation of arenaHistory.
   // next === prev.slice(K) ++ appended (truncation only ever drops a prefix),
   // so the boundary is located by scanning backwards for prev's last id —
@@ -532,7 +541,24 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
 
   // Deep clone state once at week boundary to allow safe mutation in all
   // passes — skipped when the caller grants ownership via mutableInput.
-  const mutableState = createMutableWeekContext(state, opts?.mutableInput);
+  // Sweep unfinished tournaments before the week rolls over. The three
+  // non-headline seasonal tiers are never day-resolved interactively, and
+  // headless batch advances skip the day ticks entirely — every bracket must
+  // complete here or it lingers as a stale incomplete tournament forever.
+  let preState = state;
+  const unfinished = (state.tournaments ?? []).filter((t) => !t.completed);
+  for (let i = 0; i < unfinished.length; i++) {
+    const tour = unfinished[i];
+    if (!tour) continue;
+    preState = TournamentSelectionService.resolveCompleteTournament(
+      preState,
+      tour.id,
+      preState.year * 10000 + preState.week * 100 + 7 + i,
+      headless
+    );
+  }
+
+  const mutableState = createMutableWeekContext(preState, opts?.mutableInput);
   const ctx: WeekContext = { ...prepareWeekContext(mutableState, headless), pool };
 
   // Build caches once per week for O(1) lookups

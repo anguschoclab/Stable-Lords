@@ -21,8 +21,11 @@ export function NextBoutWidget() {
   const state = useWorldState();
 
   const nextBout = useMemo(() => {
-    // Check tournaments first
-    const activeTourney = state.tournaments.find((t) => !t.completed);
+    // Check tournaments first — only the engine-marked live tournament can
+    // have a player-actionable next bout; leftover/generated tiers don't.
+    const activeTourney = state.tournaments.find(
+      (t) => t.id === state.activeTournamentId && !t.completed
+    );
     if (activeTourney) {
       const pendingMatch = activeTourney.bracket.find((m) => !m.winner);
       if (pendingMatch) {
@@ -58,7 +61,14 @@ export function NextBoutWidget() {
     }
 
     return null;
-  }, [state.tournaments, state.roster, state.rivals, state.player.id, state.player.stableName]);
+  }, [
+    state.tournaments,
+    state.activeTournamentId,
+    state.roster,
+    state.rivals,
+    state.player.id,
+    state.player.stableName,
+  ]);
 
   const odds = useMemo(() => {
     if (!nextBout) return 50;

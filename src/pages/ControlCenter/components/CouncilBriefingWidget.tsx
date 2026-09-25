@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import { ShieldCheck, ChevronRight, Swords, Heart, Trophy } from 'lucide-react';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 
+/**
+ * Council briefing widget.
+ */
 export function CouncilBriefingWidget() {
   const { summary } = useStableAdvisor();
 

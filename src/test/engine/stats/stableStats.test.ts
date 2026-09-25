@@ -1,13 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import type { Warrior } from '@/types/warrior.types';
-import type { WarriorId } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
 
-// Mock warrior creation helper
+// Mock warrior creation helper — `fame` accepts undefined so fixtures can
+// exercise the nullish-coalescing paths in the aggregation.
 const createMockWarrior = (
   id: string,
   status: 'Active' | 'Dead' | 'Retired',
-  fame: number,
+  fame: number | undefined,
   wins: number,
   losses: number,
   style: string,
@@ -17,9 +18,9 @@ const createMockWarrior = (
     id: id as WarriorId,
     name: `Warrior ${id}`,
     status,
-    fame,
+    fame: fame as number,
     popularity: 0,
-    style: style as any, // Cast to FightingStyle
+    style: style as FightingStyle,
     champion: false,
     titles: [],
     injuries: [],
@@ -37,6 +38,14 @@ const createMockWarrior = (
       ...attributes,
     },
   };
+};
+
+// Intentionally-incomplete fixture shape — the `as Warrior` casts document
+// that the aggregation must tolerate warriors missing whole sections.
+type PartialWarriorFixture = Omit<Partial<Warrior>, 'attributes' | 'career' | 'style'> & {
+  attributes?: Partial<Warrior['attributes']>;
+  career?: Partial<Warrior['career']>;
+  style?: string;
 };
 
 describe('calculateStableStats', () => {
@@ -97,7 +106,7 @@ describe('calculateStableStats', () => {
 
   it('should handle missing career or attribute data gracefully', () => {
     // Create a warrior directly to omit optional fields
-    const partialWarrior: any = {
+    const partialWarrior: PartialWarriorFixture = {
       id: '1' as WarriorId,
       status: 'Active',
       style: 'Tricky',
@@ -120,7 +129,7 @@ describe('calculateStableStats', () => {
 
   it('exercises attribute sum coalescing logic with missing attributes on active warrior', () => {
     // Create a warrior with partially undefined attributes
-    const partialWarrior: any = {
+    const partialWarrior: PartialWarriorFixture = {
       id: '2' as WarriorId,
       status: 'Active',
       style: 'Tricky',
@@ -139,7 +148,7 @@ describe('calculateStableStats', () => {
 
   it('updates topWarrior correctly', () => {
     const roster = [
-      createMockWarrior('1', 'Active', undefined as unknown as number, 0, 0, 'Balanced', {}), // null/undef fame
+      createMockWarrior('1', 'Active', undefined, 0, 0, 'Balanced', {}), // null/undef fame
       createMockWarrior('2', 'Active', 50, 0, 0, 'Balanced', {}),
       createMockWarrior('3', 'Active', 25, 0, 0, 'Balanced', {}),
     ];

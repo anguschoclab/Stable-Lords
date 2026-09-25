@@ -21,7 +21,7 @@
 | #984 | Lore + traits | **PARTIAL / EXTRACTED** | `411df1f8` | ORIGINS/CHILDHOOD/DEFINING + ARENA_LORE unioned; traits `orphan_street_rat`, `orphan_pit_fighter`, `orphan_survivor` accepted (valid effect keys, none in `REMOVED_IDS`, `enduranceMult: 0.95`+`positive` matches existing precedent). `.claude/backups/**` stripped. |
 | #985 | WinScreen a11y | **APPROVED / EXTRACTED** | `875b1523` | aria-labels, focus-visible rings, `motion-reduce` — clean 2-file diff, landed wholesale. |
 | #986 | Perf (Bolt) | **APPROVED / EXTRACTED** | `afa670fd` | `useContractData` — chose this over #990's equivalent because it adds `useMemo` memoization on top of the single-pass loop. `.jules/bolt.md` branding stripped. New characterization test added pre-change. |
-| #987 | Tests | **APPROVED / EXTRACTED** | `7c876d03` | Plan-condition + stable-stat coverage; green on main as pure test additions. |
+| #987 | Tests | **APPROVED / EXTRACTED** | `7c876d03` | Plan-condition + stable-stat coverage; green on main as pure test additions. `: any` fixtures later tidied into a `PartialWarriorFixture` type + `fame: number \| undefined` helper signature (optional plan item — done). |
 | #988 | New arenas | **PARTIAL / EXTRACTED** | `411df1f8` | 4 arenas + events + weather modifiers landed; all tags/sizes/`zoneDef` values verified against existing enums. **Global balance change caught:** `magical` tag weight 0.95→0.93 affects all magical arenas — reviewed and **accepted** because the PR adds two magical-tagged arenas and its stated intent is rebalancing tag weights. |
 | #989 | Combat narrative | **PARTIAL / EXTRACTED** | `3fc7c97c` | Unioned; `.claude/backups/narrative/consolidated_duplicates.json` stripped. |
 | #990 | Perf (Bolt) | **REJECTED (superseded + harmful hunk)** | — | Hook optimization superseded by #986 (no memoization). `useAdminTools.test.ts` rewrite **rejected outright**: replaces the documented bun-safe `vi.spyOn` pattern with `vi.mock`+`importOriginal`, which the file itself documents as unsupported under `bun:test` — would have deepened the N-A runner failure. |
@@ -82,7 +82,7 @@ No closed-not-merged PR contained unique value absent from `main` at review time
 | N-B1 | `sturdy` trait: 26.67% win rate < 32% floor (deterministic) — bisected to `5f92de0e` "gate exhaustion stoppage on HP" which removed the stall-win payoff the trait's plan (AL−3/OE−2/killDesire−5) depended on | high | **FIXED** — trait rebalanced into a sustainable wall profile (verified against the 2s harness); intentional engine change kept | `f0692659` |
 | N-B2 | `worldLiveness` freeze-guard asserted on `totalBouts` (bounded, pruned by `truncateState` mid-run — counter went backwards 752→641) | high | **FIXED** — guard now uses the truncation-proof `cumulativeBouts` field the harness already supplies; the post-V6 bracket-completion fix made pruning observable | `f0692659` |
 | N-C | #990 test rewrite breaks under `bun:test` | medium | **REJECTED** — hunk not landed | — |
-| N-D | 3 `jsdoc/require-jsdoc` warnings on main (`CouncilFilterTabs`, `CouncilBriefingWidget`) | low | **ACCEPTED as baseline** — 0 errors; warnings tracked, not blocking |
+| N-D | 3 `jsdoc/require-jsdoc` warnings on main (`CouncilFilterTabs`, `CouncilBriefingWidget`) | low | **FIXED** — docstrings added; lint is now 0/0 | |
 | N-E | `DeathModal` unscrollable below the fold on mobile — `MEMORIALIZE & CONTINUE` unreachable → true deadlock for real mobile users; also blocked the stacked `ResolutionReveal` | high | **FIXED** — scrolling `min-h-full` flex wrapper | `3a171364` |
 | N-F | `routeTree.gen.ts` absent on clean checkout → `tsc --build` failed in CI after N-A direct-tsc change | medium | **FIXED** — buildConfig test generates the route tree via `bun x` first | `c2380baf` |
 
@@ -99,7 +99,7 @@ Phase 3A gate (`f8a040bc`) committed **before any implementation**: narrative-un
 | Gate | Result |
 |------|--------|
 | `bun run type-check` | **0 errors** |
-| `bun run lint` | **0 errors**, 3 pre-existing jsdoc warnings (N-D) |
+| `bun run lint` | **0 errors / 0 warnings** (N-D resolved post-sweep) |
 | `bun run test` (vitest) | **7,880 pass / 0 fail** |
 | `bun run test:bun` (native) | **~7,850 pass / 1 skip / 0 fail** (was 40+ failures pre-N-A) |
 | `bun run test:slow` | **116/116 pass** (was 2 deterministic failures pre-N-B) |
@@ -130,6 +130,26 @@ Phase 3A gate (`f8a040bc`) committed **before any implementation**: narrative-un
 
 ## 10. Known Limitations
 
-- 3 `jsdoc/require-jsdoc` warnings remain (pre-existing, N-D — cosmetic).
 - The seasonal e2e soak is long (~10–11 min/project serially); CI covers chromium only — the mobile/desktop matrix was verified locally on this HEAD.
 - Mobile dismissal relies on the production fix (scrollable `DeathModal`) plus an e2e helper that dispatches a programmatic click when a transient toast layer hit-tests over a button; the covering element is still logged for diagnostics.
+
+## 11. Deferred Items Register
+
+**Empty.** Every optional, deferred, and out-of-scope item identified during planning and validation has been completed:
+
+- N-D jsdoc warnings → fixed (lint 0/0).
+- #987 `: any` fixtures → typed `PartialWarriorFixture` helper (optional tidy from the validation table — done).
+- #996 `?.` semantics decision → made and documented (direct access; §2).
+- #988 `magical` weight → explicitly dispositioned and accepted (§2).
+- `git branch -r --no-merged main` → empty (Phase-7 post-state check §9).
+
+## 12. Remote Disposition Log
+
+| Action | Result | Evidence |
+|--------|--------|----------|
+| Push `main` | `492d719a..3a171364` then `3a171364..1f1ec1fb` | `git push` output; `git log origin/main` |
+| Push tag `pre-v7-consolidation` | new tag → `63c5b72d` | `git ls-remote --tags` |
+| Verdict comments | 14/14 posted with commit references | `gh pr view N --comments` |
+| Close PRs #983–#996 | 14/14 closed | `gh pr list --state open` → 0 |
+| Delete 14 head branches | 14/14 deleted | `git ls-remote --heads` → 0 matches |
+| `git branch -r --no-merged main` | empty | post-delete check |

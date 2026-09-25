@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Users, Swords, Trophy, Heart } from 'lucide-react';
 
+/** Advisor filter tab. */
 export type AdvisorFilterTab = 'all' | 'ready' | 'tournament' | 'rehab';
 
 interface CouncilFilterTabsProps {
@@ -9,6 +10,9 @@ interface CouncilFilterTabsProps {
   counts: Record<AdvisorFilterTab, number>;
 }
 
+/**
+ * Council filter tabs.
+ */
 export function CouncilFilterTabs({ currentTab, onTabChange, counts }: CouncilFilterTabsProps) {
   const tabs: { id: AdvisorFilterTab; label: string; icon: React.ElementType }[] = [
     { id: 'all', label: 'All Warriors', icon: Users },

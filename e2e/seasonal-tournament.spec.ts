@@ -107,7 +107,10 @@ async function advanceLabel(page: Page): Promise<string> {
  * "Resolving Bouts…") or the button isn't in an advance state.
  */
 async function settledAdvanceLabel(page: Page): Promise<string> {
-  await dismissBlockingOverlays(page, 4);
+  // Full pass budget: a death-bearing Cycle Resolution needs 5 sequential
+  // step clicks alone, so a shallow pass count can leave it stuck on the
+  // memorial step while the advance label already reads as settled.
+  await dismissBlockingOverlays(page);
   const label = await advanceLabel(page);
   return ADVANCE_RE.test(label) ? label : 'busy';
 }
@@ -129,7 +132,7 @@ async function progressedLabel(page: Page, prev: string): Promise<string> {
 async function clickAdvance(page: Page): Promise<void> {
   const btn = page.getByRole('button', { name: ADVANCE_RE });
   for (let attempt = 0; attempt < 8; attempt++) {
-    await dismissBlockingOverlays(page, 4);
+    await dismissBlockingOverlays(page);
     try {
       await btn.click({ timeout: 5_000 });
       return;
@@ -399,6 +402,32 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   test.setTimeout(1_500_000);
 
   const clickNavLink = async (name: string, opts: { exact?: boolean } = { exact: true }) => {
+    // A late-appearing blocking overlay (resolution modal, death modal) can
+    // still be up when we navigate — a single actionability wait would stall
+    // for the whole test timeout. Dismiss first, then retry the click.
+    for (let attempt = 0; attempt < 6; attempt++) {
+      await dismissBlockingOverlays(page);
+      try {
+        if (isMobile) {
+          await page.getByRole('button', { name: 'Open navigation menu' }).click({ timeout: 5_000 });
+          await page
+            .getByRole('dialog')
+            .getByRole('link', { name, exact: opts.exact })
+            .first()
+            .click({ timeout: 5_000 });
+        } else {
+          await page
+            .locator('nav')
+            .getByRole('link', { name, exact: opts.exact })
+            .first()
+            .click({ timeout: 5_000 });
+        }
+        return;
+      } catch {
+        /* covered by an overlay — retry */
+      }
+    }
+    // Final attempt without a catch so the real Playwright error surfaces.
     if (isMobile) {
       await page.getByRole('button', { name: 'Open navigation menu' }).click();
       await page

@@ -105,7 +105,11 @@ export function CoachOverlay() {
             initial={{ opacity: 0, x: 50, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-            className="pointer-events-auto"
+            // Passive warning card — no interactive children. Keep it
+            // click-through: at z-[100] it renders above the resolution
+            // modal (z-50) and would otherwise swallow clicks on modal
+            // buttons it happens to overlap.
+            className="pointer-events-none"
           >
             <Card
               className={cn(

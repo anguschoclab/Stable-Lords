@@ -1,8 +1,6 @@
 /**
  * Weather registries — verifies WEATHER_CONFIG, WEATHER_STATS,
  * WEATHER_AMBIENCE, and WEATHER_VISUALS have entries for new weather types.
- *
- * Pre-merge test: will FAIL on main because new weather types don't exist yet.
  */
 import { describe, it, expect } from 'vitest';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';

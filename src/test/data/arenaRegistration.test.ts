@@ -1,8 +1,3 @@
-/**
- * Feature — Arena registration for PR #791.
- * Pre-merge test: will FAIL on main because new arenas
- * (SUN_BAKED_PLATEAU, ANCIENT_AQUEDUCT) don't exist yet.
- */
 import { describe, it, expect } from 'vitest';
 import { getArenaById, getAllArenas } from '@/data/arenas';
 

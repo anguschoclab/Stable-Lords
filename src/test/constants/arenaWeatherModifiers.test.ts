@@ -1,8 +1,3 @@
-/**
- * Feature — Arena weather modifiers for PR #791.
- * Pre-merge test: will FAIL on main because new weather modifiers
- * (ACID_RAIN_SLASHING_DAMAGE, ECLIPSE_STRIKING_BONUS) don't exist yet.
- */
 import { describe, it, expect } from 'vitest';
 import { WEATHER_PENALTIES } from '@/constants/arena/weather';
 

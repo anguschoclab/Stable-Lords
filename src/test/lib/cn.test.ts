@@ -1,7 +1,5 @@
 /**
  * Dependency — cn() utility compatibility test for tailwind-merge 3 upgrade.
- * Pre-merge test: validates cn() works correctly on current tailwind-merge 2.
- * After upgrading to tailwind-merge 3, this test should still pass.
  */
 import { describe, it, expect } from 'vitest';
 import { cn } from '@/lib/utils';

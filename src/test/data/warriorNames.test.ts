@@ -1,7 +1,5 @@
 /**
  * Warrior names — verifies new chaotic names are present and no duplicates.
- *
- * Pre-merge test: will FAIL on main because new names don't exist yet.
  */
 import { describe, it, expect } from 'vitest';
 import { WARRIOR_NAMES } from '@/data/names/warriorNames';

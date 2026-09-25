@@ -1,7 +1,5 @@
 /**
  * Narrative — narrative content deduplication test.
- * Pre-merge test: validates no duplicate entries exist in narrative domain files.
- * After merging PRs #783 and #786, this test guards against duplicate content.
  */
 import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';

@@ -2,9 +2,6 @@
  * New traits from lore expansion — verifies gutter_blood, clutch_survivor,
  * and adrenaline_surge are registered, well-formed, and produce correct
  * dynamic mods under the right combat conditions.
- *
- * Pre-merge test: these will FAIL on main (traits don't exist yet) and
- * PASS after the jules-lore-expansion branch is merged.
  */
 import { describe, it, expect } from 'vitest';
 import { TRAITS, getDynamicTraitMods, type DynamicTraitContext } from '@/engine/traits';

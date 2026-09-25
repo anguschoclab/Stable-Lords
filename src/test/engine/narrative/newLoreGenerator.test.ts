@@ -2,9 +2,6 @@
  * New loreGenerator entries from lore expansion — verifies new origins,
  * childhood traits, and defining moments are present and that all arrays
  * remain duplicate-free after the expansion.
- *
- * Pre-merge test: these will FAIL on main (entries don't exist yet) and
- * PASS after the jules-lore-expansion branch is merged.
  */
 import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';

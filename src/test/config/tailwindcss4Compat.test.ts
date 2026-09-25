@@ -1,7 +1,5 @@
 /**
  * Dependency — tailwindcss 4 compatibility check.
- * Pre-merge test: verifies arena tokens are defined in the config
- * and will resolve after tailwindcss 4 migration.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';

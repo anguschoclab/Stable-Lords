@@ -2,9 +2,6 @@
  * New arena lore entries from lore expansion — verifies
  * flesh_gardens_thorny_path and walled_court_kings_fall are present,
  * reference valid arena IDs, and have valid structure.
- *
- * Pre-merge test: these will FAIL on main (entries don't exist yet) and
- * PASS after the jules-lore-expansion branch is merged.
  */
 import { describe, it, expect } from 'vitest';
 import { ARENA_LORE, getAllArenas } from '@/data/arenas';

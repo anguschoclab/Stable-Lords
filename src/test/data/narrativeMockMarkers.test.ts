@@ -1,9 +1,3 @@
-/**
- * N1 red test — narrative content must not contain mock/placeholder markers.
- * This test FAILS until the 15 mock entries in combatPassives.json are removed.
- * Canonical tokens (%A, %D, %W, %BP, %H) are NOT flagged — they are legitimate
- * per narrativePBPUtils.ts:23.
- */
 import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
 

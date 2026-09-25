@@ -1,7 +1,5 @@
 /**
  * Dependency — toast() compatibility test for sonner 2 upgrade.
- * Pre-merge test: validates toast() works correctly on current sonner 1.
- * After upgrading to sonner 2, this test should still pass.
  */
 import { describe, it, expect } from 'vitest';
 

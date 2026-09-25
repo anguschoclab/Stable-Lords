@@ -2,8 +2,6 @@
  * Tournament resolution — verifies updateEntityInList is used correctly
  * in awards.ts modifyWarrior for O(1) targeted roster/rival updates,
  * and that applyBoutResults correctly updates warriors.
- *
- * Pre-merge test: validates existing behavior on main.
  */
 import { describe, it, expect } from 'vitest';
 import { updateEntityInList } from '@/utils/stateUtils';

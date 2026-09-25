@@ -1,9 +1,6 @@
 /**
  * Wild Magic weather — verifies mechanics, season exclusivity, opening line,
  * config/schema/enum sync, and rollWeather integration.
- *
- * Pre-merge test: these will FAIL on main (no 'Wild Magic' in WeatherType)
- * and PASS after the wild-magic-weather branch is merged.
  */
 import { describe, it, expect } from 'vitest';
 import {

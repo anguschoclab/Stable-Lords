@@ -2,9 +2,6 @@
  * Expanded narrative content from narrative pool branch — verifies
  * expanded pool sizes, valid tokens, no duplicates, and no raw token
  * leaks when interpolated.
- *
- * Pre-merge test: size assertions will FAIL on main (pools are smaller)
- * and PASS after the jules-narrative-pool branch is merged.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { narrativeContent, loadCombatNarrative } from '@/data/narrative';

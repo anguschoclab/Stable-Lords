@@ -1,7 +1,5 @@
 /**
  * Arena events — verifies new arena event configs and constants.
- *
- * Pre-merge test: will FAIL on main because new events don't exist yet.
  */
 import { describe, it, expect } from 'vitest';
 import { ARENA_EVENTS } from '@/constants/arena/arenaEvents';

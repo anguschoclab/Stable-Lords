@@ -1,7 +1,5 @@
 /**
  * Dependency — vitest 4 compatibility check.
- * Pre-merge test: verifies no incompatible vi API usage that would
- * break with vitest 4 upgrade.
  */
 import { describe, it, expect, vi } from 'vitest';
 

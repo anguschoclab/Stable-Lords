@@ -196,4 +196,34 @@ describe('Warrior Traits', () => {
       expect(mods.killDesire).toBe(-2);
     });
   });
+
+  describe('generation characterization', () => {
+    const SEEDS = Array.from({ length: 50 }, (_, i) => i + 1);
+
+    it('generated traits have correct tier/sign consistency', () => {
+      for (const seed of SEEDS) {
+        const rng = new SeededRNGService(seed);
+        for (const traitId of generateTraits(rng)) {
+          const t = TRAITS[traitId];
+          if (!t) continue;
+          if (t.tier === 'Flaw') {
+            expect(t.sign, `flaw ${traitId} should be negative`).toBe('negative');
+          } else {
+            expect(t.sign, `non-flaw ${traitId} should be positive`).toBe('positive');
+          }
+        }
+      }
+    });
+
+    it('getStaticTraitMods produces stable output for same warrior', () => {
+      for (const seed of SEEDS) {
+        const rng = new SeededRNGService(seed);
+        const warrior = { traits: generateTraits(rng) } as unknown as Warrior;
+
+        expect(getStaticTraitMods(warrior), `seed ${seed} static mods diverged`).toEqual(
+          getStaticTraitMods(warrior)
+        );
+      }
+    });
+  });
 });

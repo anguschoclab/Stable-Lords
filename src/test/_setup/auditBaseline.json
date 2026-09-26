@@ -9,9 +9,7 @@
     "src/scripts/workflow-config.test.ts",
     "src/utils/format.test.ts"
   ],
-  "sameModuleBasenamePairs": [
-    "src/test/data/newArenas.test.ts <-> src/test/engine/matchmaking/newArenas.test.ts"
-  ],
+  "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
     "src/lib/obfuscation.test.ts",
     "src/test/components/StableDossier.test.tsx",

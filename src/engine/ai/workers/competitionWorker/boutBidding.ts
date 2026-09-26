@@ -9,7 +9,7 @@ import type {
 } from '@/types/state.types';
 import type { BoutOfferId, PromoterId, StableId, WarriorId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/crowdMood';
-import { scorePairwiseMatchup } from '@/engine/schedulingAssistant';
+import { scorePairwiseMatchup, type PairwiseHeadToHead } from '@/engine/schedulingAssistant';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
 import { weatherBidModifier } from '@/engine/ai/weatherSuitability';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -215,6 +215,36 @@ export function convertBidsToOffers(
   const playerOffersByStable = new Map<string, number>();
   let playerOfferTotal = 0;
 
+  // Hoisted once per call instead of scanning the array per bid.
+  const playerAvoidSet = new Set<string>(state.playerAvoids ?? []);
+
+  // One h2h memo for the whole conversion — scorePairwiseMatchup scans all of
+  // arenaHistory per call, so sharing this turns O(bids × candidates × F) into
+  // O(unique pairs × F).
+  const h2hCache = new Map<string, PairwiseHeadToHead>();
+
+  // bookable() depends only on (warrior, restStates, trainingAssignments,
+  // targetWeek) — all fixed for the call except the assignments list, which
+  // varies per stable. Memoize per assignments-array to avoid re-running the
+  // rest/assignment scans for every (bid × roster slot).
+  const bookableMemo = new Map<TrainingAssignment[] | undefined, Map<string, boolean>>();
+  const isBookableMemo = (w: Warrior, assignments: TrainingAssignment[] | undefined): boolean => {
+    let m = bookableMemo.get(assignments);
+    if (!m) {
+      m = new Map();
+      bookableMemo.set(assignments, m);
+    }
+    const cached = m.get(w.id as string);
+    if (cached !== undefined) return cached;
+    const v = bookable(w, {
+      restStates: state.restStates,
+      trainingAssignments: assignments,
+      targetWeek,
+    });
+    m.set(w.id as string, v);
+    return v;
+  };
+
   for (const { bid, rivalId } of sorted) {
     if (paired.has(bid.proposingWarriorId)) continue;
 
@@ -233,7 +263,7 @@ export function convertBidsToOffers(
     const bidTargetsPlayer = bid.targetStableId === playerStableId;
 
     // The player's avoid list vetoes the proposer for player-bound offers.
-    if (bidTargetsPlayer && (state.playerAvoids ?? []).includes(bid.proposingWarriorId)) continue;
+    if (bidTargetsPlayer && playerAvoidSet.has(bid.proposingWarriorId)) continue;
 
     // Player-bound caps: ≤1 per proposing stable, ≤3 globally.
     if (bidTargetsPlayer) {
@@ -248,14 +278,7 @@ export function convertBidsToOffers(
     if (bidTargetsPlayer) {
       for (const w of state.roster) {
         if (!isActive(w)) continue;
-        if (
-          !bookable(w, {
-            restStates: state.restStates,
-            trainingAssignments: state.trainingAssignments,
-            targetWeek,
-          })
-        )
-          continue;
+        if (!isBookableMemo(w, state.trainingAssignments)) continue;
         candidates.push({ warrior: w, stableId: playerStableId });
       }
     } else if (bid.targetStableId) {
@@ -265,14 +288,7 @@ export function convertBidsToOffers(
         candidates = [];
         for (const w of targetRival.roster) {
           if (!isActive(w)) continue;
-          if (
-            !bookable(w, {
-              restStates: state.restStates,
-              trainingAssignments: targetRival.trainingAssignments,
-              targetWeek,
-            })
-          )
-            continue;
+          if (!isBookableMemo(w, targetRival.trainingAssignments)) continue;
           candidates.push({ warrior: w, stableId: targetRival.id as string });
         }
       }
@@ -283,14 +299,7 @@ export function convertBidsToOffers(
           continue;
         for (const w of rival.roster) {
           if (!isActive(w)) continue;
-          if (
-            !bookable(w, {
-              restStates: state.restStates,
-              trainingAssignments: rival.trainingAssignments,
-              targetWeek,
-            })
-          )
-            continue;
+          if (!isBookableMemo(w, rival.trainingAssignments)) continue;
           candidates.push({ warrior: w, stableId: rival.id as string });
         }
       }
@@ -319,6 +328,7 @@ export function convertBidsToOffers(
         aStableId: proposerStable.stableId as string,
         bStableId: candidate.stableId,
         week: state.week,
+        h2hCache,
       });
       if (score > bestScore) {
         bestScore = score;

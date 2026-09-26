@@ -1,4 +1,5 @@
 import type { GameState, OwnerGrudge } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import { PERSONALITY_CLASH } from '@/data/ownerData';
 import { addCapped, clamp } from '@/utils/math';
@@ -18,6 +19,73 @@ export function processOwnerGrudges(
   // Check for personality clashes between stables that have recently fought
   const recentFights = getRecentFights(state.arenaHistory, state.week - 13);
 
+  // ── Single-pass aggregation ────────────────────────────────────────────────
+  // Resolve each fight's warriors to their owning roster once, instead of
+  // re-scanning all recentFights for every rival pair (O(R²·F)) and again for
+  // every rival×player pair (O(R·F)).
+  const warriorToRival = new Map<WarriorId, number>();
+  rivals.forEach((r, idx) => {
+    for (const w of r.roster) {
+      if (!warriorToRival.has(w.id)) warriorToRival.set(w.id, idx);
+    }
+  });
+  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+
+  const pairKey = (i: number, j: number) => (i < j ? `${i}|${j}` : `${j}|${i}`);
+  const rivalPairAgg = new Map<string, { hasCrossFight: boolean; hasKill: boolean }>();
+  const rivalKillVsPlayer = new Set<number>();
+  const rivalUpsetVsPlayer = new Set<number>();
+
+  for (const f of recentFights) {
+    if (!f) continue;
+    const idxA = warriorToRival.get(f.warriorIdA);
+    const idxD = warriorToRival.get(f.warriorIdD);
+
+    if (idxA !== undefined && idxD !== undefined) {
+      if (idxA === idxD) continue; // intra-stable bout is never a cross-fight
+      const key = pairKey(idxA, idxD);
+      const agg = rivalPairAgg.get(key) ?? { hasCrossFight: false, hasKill: false };
+      agg.hasCrossFight = true;
+      if (f.by === 'Kill') agg.hasKill = true;
+      rivalPairAgg.set(key, agg);
+      continue;
+    }
+
+    // Player cross-fight: exactly one side is a current rival warrior and the
+    // other a current player-roster warrior.
+    const rivalIdx = idxA !== undefined ? idxA : idxD;
+    if (rivalIdx === undefined) continue;
+    const rivalIsA = idxA !== undefined;
+    const otherIsPlayer = rivalIsA
+      ? playerWarriorIds.has(f.warriorIdD)
+      : playerWarriorIds.has(f.warriorIdA);
+    if (!otherIsPlayer) continue;
+
+    if (f.by === 'Kill') {
+      rivalKillVsPlayer.add(rivalIdx);
+      continue;
+    }
+
+    // Upset: the rival's warrior beat a much more famous player warrior.
+    const rivalWon = (f.winner === 'A' && rivalIsA) || (f.winner === 'D' && !rivalIsA);
+    if (rivalWon) {
+      const loserId = rivalIsA ? f.warriorIdD : f.warriorIdA;
+      const winnerId = rivalIsA ? f.warriorIdA : f.warriorIdD;
+      const loserFame = state.warriorMap?.get(loserId)?.fame ?? 0;
+      const winnerFame = state.warriorMap?.get(winnerId)?.fame ?? 0;
+      if (loserFame - winnerFame >= 100) rivalUpsetVsPlayer.add(rivalIdx);
+    }
+  }
+
+  // Order-independent owner-pair lookup replaces the per-pair `grudges.find`
+  // scan (was O(R²·G)).
+  const ownerPairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+  const grudgeByPair = new Map<string, OwnerGrudge>();
+  for (const g of grudges) {
+    const k = ownerPairKey(g.ownerIdA, g.ownerIdB);
+    if (!grudgeByPair.has(k)) grudgeByPair.set(k, g);
+  }
+
   for (let i = 0; i < rivals.length; i++) {
     const rA = rivals[i];
     if (!rA) continue;
@@ -33,36 +101,11 @@ export function processOwnerGrudges(
         PERSONALITY_CLASH[persA]?.includes(persB) || PERSONALITY_CLASH[persB]?.includes(persA);
       if (!clash) continue;
 
-      // Check if they've had kills against each other recently
-      const aIdsSet = new Set(rA.roster.map((w) => w.id));
-      const bIdsSet = new Set(rB.roster.map((w) => w.id));
+      const agg = rivalPairAgg.get(pairKey(i, j));
+      if (!agg?.hasCrossFight) continue;
+      const hasKill = agg.hasKill;
 
-      let hasCrossFight = false;
-      let hasKill = false;
-
-      for (let k = 0; k < recentFights.length; k++) {
-        const f = recentFights[k];
-        if (!f) continue;
-        const isCrossFight =
-          (aIdsSet.has(f.warriorIdA) && bIdsSet.has(f.warriorIdD)) ||
-          (bIdsSet.has(f.warriorIdA) && aIdsSet.has(f.warriorIdD));
-
-        if (isCrossFight) {
-          hasCrossFight = true;
-          if (f.by === 'Kill') {
-            hasKill = true;
-            break;
-          }
-        }
-      }
-
-      if (!hasCrossFight) continue;
-
-      const existing = grudges.find(
-        (g) =>
-          (g.ownerIdA === rA.owner.id && g.ownerIdB === rB.owner.id) ||
-          (g.ownerIdB === rA.owner.id && g.ownerIdA === rB.owner.id)
-      );
+      const existing = grudgeByPair.get(ownerPairKey(rA.owner.id, rB.owner.id));
 
       if (existing) {
         if (hasKill && existing.lastEscalation < state.week - 4) {
@@ -80,7 +123,7 @@ export function processOwnerGrudges(
           }
         }
       } else if (hasKill) {
-        grudges.push({
+        const created: OwnerGrudge = {
           id: `grudge_${rA.owner.id}_${rB.owner.id}` as import('@/types/shared.types').GrudgeId,
           ownerIdA: rA.owner.id,
           ownerIdB: rB.owner.id,
@@ -88,7 +131,9 @@ export function processOwnerGrudges(
           reason: `Personality clash: ${persA} vs ${persB} — ignited by bloodshed`,
           startWeek: state.week,
           lastEscalation: state.week,
-        });
+        };
+        grudges.push(created);
+        grudgeByPair.set(ownerPairKey(created.ownerIdA, created.ownerIdB), created);
         gazetteItems.push(
           `⚔️ NEW RIVALRY: ${rA.owner.name} the ${persA} and ${rB.owner.name} the ${persB} have declared a blood feud!`
         );
@@ -99,44 +144,16 @@ export function processOwnerGrudges(
   // ── Player × rival pairs (G5b): kills/upsets against the player's roster
   // create real grudges. Unlike rival×rival pairs these need no personality
   // clash — bloodshed is reason enough.
-  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
   if (playerWarriorIds.size > 0) {
-    for (const r of rivals) {
-      const rIds = new Set(r.roster.map((w) => w.id));
-      let hasKill = false;
-      let hasUpset = false;
-
-      for (const f of recentFights) {
-        const crossFight =
-          (rIds.has(f.warriorIdA) && playerWarriorIds.has(f.warriorIdD)) ||
-          (rIds.has(f.warriorIdD) && playerWarriorIds.has(f.warriorIdA));
-        if (!crossFight) continue;
-
-        if (f.by === 'Kill') {
-          hasKill = true;
-          break;
-        }
-
-        // Upset: the rival's warrior beat a much more famous player warrior.
-        const rivalWon =
-          (f.winner === 'A' && rIds.has(f.warriorIdA)) ||
-          (f.winner === 'D' && rIds.has(f.warriorIdD));
-        if (rivalWon) {
-          const loserId = rIds.has(f.warriorIdA) ? f.warriorIdD : f.warriorIdA;
-          const winnerId = rIds.has(f.warriorIdA) ? f.warriorIdA : f.warriorIdD;
-          const loserFame = state.warriorMap?.get(loserId)?.fame ?? 0;
-          const winnerFame = state.warriorMap?.get(winnerId)?.fame ?? 0;
-          if (loserFame - winnerFame >= 100) hasUpset = true;
-        }
-      }
+    for (let idx = 0; idx < rivals.length; idx++) {
+      const r = rivals[idx];
+      if (!r) continue;
+      const hasKill = rivalKillVsPlayer.has(idx);
+      const hasUpset = rivalUpsetVsPlayer.has(idx);
 
       if (!hasKill && !hasUpset) continue;
 
-      const existing = grudges.find(
-        (g) =>
-          (g.ownerIdA === r.owner.id && g.ownerIdB === state.player.id) ||
-          (g.ownerIdB === r.owner.id && g.ownerIdA === state.player.id)
-      );
+      const existing = grudgeByPair.get(ownerPairKey(r.owner.id, state.player.id));
 
       if (existing) {
         if (hasKill && existing.lastEscalation < state.week - 4) {
@@ -148,7 +165,7 @@ export function processOwnerGrudges(
           );
         }
       } else {
-        grudges.push({
+        const created: OwnerGrudge = {
           id: `grudge_${r.owner.id}_${state.player.id}` as import('@/types/shared.types').GrudgeId,
           ownerIdA: r.owner.id,
           ownerIdB: state.player.id,
@@ -158,7 +175,9 @@ export function processOwnerGrudges(
             : `${r.owner.stableName} was humiliated by an underdog defeat`,
           startWeek: state.week,
           lastEscalation: state.week,
-        });
+        };
+        grudges.push(created);
+        grudgeByPair.set(ownerPairKey(created.ownerIdA, created.ownerIdB), created);
         gazetteItems.push(
           hasKill
             ? `⚔️ BLOOD FEUD: ${r.owner.name} has sworn vengeance on the player's stable!`

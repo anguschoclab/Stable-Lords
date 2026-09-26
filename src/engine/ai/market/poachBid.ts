@@ -56,6 +56,11 @@ interface PoachTarget {
   traitValue: number;
 }
 
+/** Per-sweep memo: computeWarriorLiability is pure per warrior, and rival
+ * rosters are not mutated in place during a sweep (transfers go through the
+ * byId copy), so an id-keyed cache shared across buyers is exact. */
+type LiabilityCache = Map<WarriorId, ReturnType<typeof computeWarriorLiability>>;
+
 /**
  * Pick the rival warrior most worth poaching: highest liability that still
  * clears the SELLER's own cut threshold (the seller would drop them anyway)
@@ -66,7 +71,8 @@ interface PoachTarget {
 function pickPoachTarget(
   buyer: RivalStableData,
   rivals: RivalStableData[],
-  state: GameState
+  state: GameState,
+  liabilityCache: LiabilityCache
 ): PoachTarget | null {
   let best: PoachTarget | null = null;
   const consider = (
@@ -75,7 +81,11 @@ function pickPoachTarget(
     sellerPersonality: PoachTarget['sellerPersonality'],
     playerBound: boolean
   ) => {
-    const liability = computeWarriorLiability(warrior);
+    let liability = liabilityCache.get(warrior.id);
+    if (!liability) {
+      liability = computeWarriorLiability(warrior);
+      liabilityCache.set(warrior.id, liability);
+    }
     const cutThreshold = policyFor(sellerPersonality).cutLiabilityThreshold;
     if (liability.score < cutThreshold) return;
     const traitValue = positiveTraitValue(liability);
@@ -105,14 +115,15 @@ export function computePoachBid(
   buyer: RivalStableData,
   rivals: RivalStableData[],
   state: GameState,
-  seasonIndex: number
+  seasonIndex: number,
+  liabilityCache: LiabilityCache = new Map()
 ): PoachBid | null {
   if (!isPoachingEnabled()) return null;
   if (buyer.strategy?.intent !== 'WEALTH_ACCUMULATION') return null;
   if (buyer.lastPoachSeason === seasonIndex) return null;
   if (buyer.roster.length >= aiRosterMax(buyer.owner?.personality)) return null;
 
-  const target = pickPoachTarget(buyer, rivals, state);
+  const target = pickPoachTarget(buyer, rivals, state, liabilityCache);
   if (!target) return null;
 
   // Price: base recruit cost plus the recoverable trait upside, discounted by
@@ -147,16 +158,21 @@ export function processPoachMarket(
 
   const seasonIndex = seasonIndexFor(state.absoluteWeek);
   const byId = new Map(rivals.map((r) => [r.id, r] as const));
+  // Shared across every buyer in the sweep: liability is recomputed at most
+  // once per warrior instead of once per (buyer × warrior).
+  const liabilityCache: LiabilityCache = new Map();
 
   for (const rival of rivals) {
-    const bid = computePoachBid(rival, rivals, state, seasonIndex);
+    const bid = computePoachBid(rival, rivals, state, seasonIndex, liabilityCache);
     if (!bid) continue;
 
     const stamped = { ...rival, lastPoachSeason: seasonIndex };
     byId.set(rival.id, stamped);
 
     if (bid.playerBound) {
-      const target = state.roster.find((w) => w.id === bid.warriorId);
+      const target =
+        state.warriorMap?.get(bid.warriorId) ??
+        state.roster.find((w) => w.id === bid.warriorId);
       const desc =
         `Poach bid on your warrior ${target?.name ?? String(bid.warriorId)} — ` +
         `${rival.owner.name} offers ${bid.price}g (publicized, awaits your decision)`;

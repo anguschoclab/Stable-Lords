@@ -85,17 +85,19 @@ export function filterAndSortOffers(
   // Sort upcoming by absolute bout week
   upcoming.sort((a, b) => boutOfferAbsoluteWeek(a) - boutOfferAbsoluteWeek(b));
 
-  // Find idle warriors (active but no offers)
-  const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));
+  // Find idle warriors (active but no offers) and highest purse in one pass
+  const warriorsWithOffers = new Set<WarriorId>();
+  let maxPurse = 0;
+  for (const o of playerOffers) {
+    for (const wId of o.warriorIds) warriorsWithOffers.add(wId);
+    if (o.purse > maxPurse) maxPurse = o.purse;
+  }
   const idle: Warrior[] = [];
   for (const w of roster) {
     if (isActive(w) && !warriorsWithOffers.has(w.id)) {
       idle.push(w);
     }
   }
-
-  // Find highest purse
-  const maxPurse = playerOffers.length > 0 ? Math.max(...playerOffers.map((o) => o.purse)) : 0;
 
   return {
     thisWeekOffers: thisWeek,

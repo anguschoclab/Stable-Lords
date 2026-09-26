@@ -200,8 +200,15 @@ export function runSimulationLoop(
       }
     }
 
-    // C. Check for End Events
-    const boutEnd = events.find((e) => e.type === 'BOUT_END');
+    // C. Check for End Events — first BOUT_END in the array wins; inline scan
+    // avoids allocating a find-closure per exchange.
+    let boutEnd: (typeof events)[number] | undefined;
+    for (const e of events) {
+      if (e.type === 'BOUT_END') {
+        boutEnd = e;
+        break;
+      }
+    }
     if (boutEnd) {
       by = boutEnd.result as FightOutcomeBy;
       fatalHitLocation = boutEnd.metadata?.location as string;

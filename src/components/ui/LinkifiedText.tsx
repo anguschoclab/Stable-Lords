@@ -23,7 +23,7 @@ interface LinkifiedTextProps {
  * Renders text with known entity names replaced by clickable WarriorLink/StableLink components.
  * Names are matched longest-first to avoid partial matches.
  */
-export function LinkifiedText({ text, names, stableNames }: LinkifiedTextProps) {
+export const LinkifiedText = React.memo(function LinkifiedText({ text, names, stableNames }: LinkifiedTextProps) {
   const combinedNames = useMemo(() => {
     if (!stableNames || stableNames.length === 0) return names;
     return [...names, ...stableNames];
@@ -84,4 +84,4 @@ export function LinkifiedText({ text, names, stableNames }: LinkifiedTextProps) 
       )}
     </>
   );
-}
+});

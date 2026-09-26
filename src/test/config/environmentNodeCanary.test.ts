@@ -1,4 +1,6 @@
-// @vitest-environment node
+/**
+ * @vitest-environment node
+ */
 /**
  * Node-environment canary — the counterpart to environmentSplitCanary. If this
  * file fails, per-file node environments are broken and the global env must

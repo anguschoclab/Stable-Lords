@@ -29,6 +29,7 @@
     "scripts/build-fight.ts",
     "scripts/strip-junk-jsdoc.ts",
     "scripts/advisor-e2e.ts",
-    "scripts/advisor-probe.ts"
+    "scripts/advisor-probe.ts",
+    "scripts/emergent-report.ts"
   ]
 }

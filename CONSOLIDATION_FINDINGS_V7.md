@@ -3,7 +3,7 @@
 **Scope:** 14 open PRs (#983–#996), closed-PR salvage scan, full-repo re-read with tiered sweeps, re-verification of all V5/V6 findings, strict test-first scheduling (Phase 3A gate), curated extraction into `main` — zero backwards-compatibility constraints.
 **Restore point:** tag `pre-v7-consolidation` → baseline `63c5b72d` (pushed).
 **Result range:** `63c5b72d..main` — 12 consolidation commits plus one repo-owner commit (`492d719a`, `.tanstack/` gitignore).
-**Working mode:** in-place at the canonical clone (per user direction); iCloud artifact contamination (` * 2` duplicates) swept once, no recurrence.
+**Working mode:** in-place at the canonical clone (per user direction); iCloud artifact contamination (" 2"-suffixed duplicates) swept once, no recurrence.
 
 ---
 
@@ -16,7 +16,7 @@
 ## 2. Per-PR Disposition Table
 
 | PR | Category | Verdict | Integration commit | Rationale |
-|----|----------|---------|--------------------|-----------|
+| ---- | ---------- | --------- | -------------------- | ----------- |
 | #983 | Combat narrative | **PARTIAL / EXTRACTED** | `3fc7c97c` | combatPbp/combatStrikes/combatKillText deltas unioned with #989/#993/#994 by leaf path, keyed on `text` (mixed leaf shapes — plain strings and `{text,min}` objects — normalized), removals required ≥2-PR consensus. `.claude/backups/**` stripped. |
 | #984 | Lore + traits | **PARTIAL / EXTRACTED** | `411df1f8` | ORIGINS/CHILDHOOD/DEFINING + ARENA_LORE unioned; traits `orphan_street_rat`, `orphan_pit_fighter`, `orphan_survivor` accepted (valid effect keys, none in `REMOVED_IDS`, `enduranceMult: 0.95`+`positive` matches existing precedent). `.claude/backups/**` stripped. |
 | #985 | WinScreen a11y | **APPROVED / EXTRACTED** | `875b1523` | aria-labels, focus-visible rings, `motion-reduce` — clean 2-file diff, landed wholesale. |
@@ -43,14 +43,14 @@ No closed-not-merged PR contained unique value absent from `main` at review time
 ## 3. Artifact Contamination Strip List
 
 | Artifact | Source | Disposition |
-|----------|--------|-------------|
+| ---------- | -------- | ------------- |
 | `.claude/backups/**` (removed/archived JSON backups) | #983, #989, #991, #994, #995 | **Stripped** — never landed |
 | `.jules/bolt.md` | #986 | **Stripped** — generator branding |
 | `bun.lock` churn | #992 | **Stripped** — only component diffs extracted |
 | `useAdminTools.test.ts` rewrite | #990 | **Rejected** — see disposition + N-C |
 | `⚡ Bolt` code comments | #986 | **Stripped** — branding in comments |
 | `trace-head.ts` | pre-existing main | **Deleted** (`f0692659`) — committed debug scratch file |
-| iCloud ` * 2` duplicate files | working dir | **Deleted** — sync contamination |
+| iCloud " 2"-suffixed duplicate files | working dir | **Deleted** — sync contamination |
 
 `stateInvariants.ts` was evaluated and **kept** — it is intentional soak-test tooling per its own docstring, not junk.
 
@@ -78,7 +78,7 @@ No closed-not-merged PR contained unique value absent from `main` at review time
 ## 5. New Findings & Fixes (not contained in any PR)
 
 | id | Finding | Severity | Disposition | Commit |
-|----|---------|----------|-------------|--------|
+| ---- | --------- | ---------- | ------------- | -------- |
 | N-A | `bun:test` suite red on main — `import.meta.glob` w/ `?raw`/`eager` (Vite-only, `src/lib/bibleIndex.ts`) crashed collection; `buildConfigIntegrity.test.ts` shelled `bun run type-check` → nested `bun x` dep resolution + lockfile mutation mid-test | high | **FIXED** — Vite-only specs excluded via `bunfig.toml` pathIgnorePatterns; test now invokes router codegen + `tsc --build` directly | `a4f3c446`, `c2380baf` |
 | N-A2 | Bun runner divergences once collection worked: `spyOn` can't mock Zod 4 prototype accessors (`GameStateSchema.parse`); `expect().toHaveBeenCalled` rejects non-Bun mocks; Bun `File`/`Blob` realm mismatch broke jsdom `FileReader`; missing `vi`/`expect` imports | high | **FIXED** — accessor-aware spy + restoration, Bun-native `mock()` shim, jsdom realm overrides, explicit imports | `a4f3c446` |
 | N-B1 | `sturdy` trait: 26.67% win rate < 32% floor (deterministic) — bisected to `5f92de0e` "gate exhaustion stoppage on HP" which removed the stall-win payoff the trait's plan (AL−3/OE−2/killDesire−5) depended on | high | **FIXED** — trait rebalanced into a sustainable wall profile (verified against the 2s harness); intentional engine change kept | `f0692659` |
@@ -99,7 +99,7 @@ Phase 3A gate (`f8a040bc`) committed **before any implementation**: narrative-un
 ## 7. Gate Matrix (final HEAD `3a171364`)
 
 | Gate | Result |
-|------|--------|
+| ------ | -------- |
 | `bun run type-check` | **0 errors** |
 | `bun run lint` | **0 errors / 0 warnings** (N-D resolved post-sweep) |
 | `bun run test` (vitest) | **7,880 pass / 0 fail** |
@@ -148,7 +148,7 @@ Phase 3A gate (`f8a040bc`) committed **before any implementation**: narrative-un
 ## 12. Remote Disposition Log
 
 | Action | Result | Evidence |
-|--------|--------|----------|
+| -------- | -------- | ---------- |
 | Push `main` | `492d719a..3a171364` then `3a171364..1f1ec1fb` | `git push` output; `git log origin/main` |
 | Push tag `pre-v7-consolidation` | new tag → `63c5b72d` | `git ls-remote --tags` |
 | Verdict comments | 14/14 posted with commit references | `gh pr view N --comments` |

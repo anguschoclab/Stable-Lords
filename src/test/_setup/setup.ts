@@ -4,6 +4,11 @@ import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorLookup';
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
 import { loadCombatNarrative } from '@/data/narrative';
+import { engineEventBus } from '@/engine/core/EventBus';
+import { NewsletterFeed } from '@/engine/newsletter/feed';
+import { setMockIdGenerator } from '@/utils/idUtils';
+import { clearReconstructionCache } from '@/state/serialization';
+import { StyleRollups } from '@/engine/stats/styleRollups';
 
 enableMapSet();
 
@@ -229,8 +234,34 @@ afterEach(() => {
   try {
     clearSelectionCache?.();
     clearHistoryResolverCaches?.();
+    clearReconstructionCache?.();
+    StyleRollups._clearCaches?.();
   } catch (e) {
     // Ignore if modules don't export clear functions
+  }
+});
+
+// Reset engine singletons mutated by tests — preconditions for sharing module
+// state across files (isolate: false) and for intra-file leak prevention.
+// Sentinel coverage: src/test/_setup/stateReset.test.ts.
+afterEach(() => {
+  engineEventBus.clear();
+  NewsletterFeed.clear();
+  setMockIdGenerator(null);
+});
+
+// Reset the game store between tests. Imported lazily so the store graph
+// (worker proxies, storage services) is only loaded in workers that run at
+// least one test, and only after the DOM/Worker stubs below are installed.
+// Files that vi.mock('@/state/useGameStore') own their state — the mocked
+// module lacks getInitialState, so the reset is skipped there.
+afterEach(async () => {
+  try {
+    const { useGameStore } = await import('@/state/useGameStore');
+    const initial = useGameStore.getInitialState?.();
+    if (initial) useGameStore.setState(initial, true);
+  } catch {
+    // mocked or unavailable in this file's registry — nothing to reset
   }
 });
 

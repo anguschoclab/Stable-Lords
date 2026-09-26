@@ -206,6 +206,31 @@ fs.writeFileSync(
   JSON.stringify({ generatedAt: new Date().toISOString(), summary, basenameCollisions, importSetClusters, records }, null, 2)
 );
 
+// Baseline allowlist for testQualityAudit.test.ts structural guards — the set
+// of CURRENT violations each guard tolerates. Entries must shrink to empty as
+// Phases 3–4 land fixes. Committed (lives outside gitignored scripts/out).
+const baseline = {
+  generatedAt: new Date().toISOString(),
+  strayTestFiles: records
+    .filter((r) => !r.file.startsWith('src/test/'))
+    .map((r) => r.file)
+    .sort(),
+  sameModuleBasenamePairs: basenameCollisions
+    .filter((g) => g.sharedTargets.length > 0)
+    .map((g) => g.files.sort())
+    .map((files) => files.join(' <-> '))
+    .sort(),
+  localFactoryFiles: records.filter((r) => r.localFactory).map((r) => r.file).sort(),
+  missingJsdomPragma: records
+    .filter((r) => r.needsDom && r.envPragma !== 'jsdom')
+    .map((r) => r.file)
+    .sort(),
+};
+fs.writeFileSync(
+  path.join(SRC, 'test', '_setup', 'auditBaseline.json'),
+  JSON.stringify(baseline, null, 2)
+);
+
 console.log('=== TEST AUDIT SCAN ===');
 for (const [k, v] of Object.entries(summary)) console.log(`  ${k}: ${v}`);
 console.log('\nFiles needing DOM but missing jsdom pragma:');

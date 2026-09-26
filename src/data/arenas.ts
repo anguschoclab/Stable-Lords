@@ -1238,6 +1238,20 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: "The Madman's End",
     narrative: 'A fighter went entirely feral, ignoring all blows until they succumbed to exhaustion, dying with a terrifying smile on their face.',
   },
+  {
+    id: 'cursed_swamp_the_sunken_champion',
+    arenaId: 'the_cursed_swamp',
+    type: 'historical_battle',
+    title: 'The Sunken Champion',
+    narrative: 'A heavy-armored champion arrogant in his might slowly sank into the mire, screaming as his lighter opponent casually watched from a dry root.',
+  },
+  {
+    id: 'the_iron_cage_the_bloody_bars',
+    arenaId: 'the_iron_cage',
+    type: 'architectural_quirk',
+    title: 'The Bloody Bars',
+    narrative: 'The spiked bars are so thoroughly stained that no amount of scrubbing removes the rust-colored taint of a thousand desperate clashes.',
+  },
 ];
 
 export const THE_BRAMBLE_RING: ArenaConfig = {

@@ -32,6 +32,8 @@
 | #995 | Lore + traits | **PARTIAL / EXTRACTED** | `411df1f8` | Lore unioned; `iron_orphan` accepted (`defModLowHp`+`enduranceMult` consumed by `traitMods.ts`). `.claude/backups/lore/archived_lore.json` stripped. |
 | #996 | Perf (Bolt) | **APPROVED / EXTRACTED (corrected)** | `7eeeb56c` | Single-pass council KPI loop landed — **with a correction**: the PR's `tournamentAdvice?.contenders` optional chaining was dropped because `undefined !== null` would count a missing advisory as a contender; the field is required (`advisor/types.ts`) so direct access is correct and preserves semantics. Existing characterization tests cover the KPI fields. |
 
+| #997 | Lore + traits (post-V7 arrival) | **PARTIAL / EXTRACTED** | `82effddf` | 14 lore strings + 2 arena lore entries verified unique and landed. **Rejected:** `gutter_rat`/`orphan_fury` trait hunks — both ids already exist on main with different effect definitions (duplicate keys would silently shadow); single-PR removals lack consensus; `.claude/backups/**` stripped. |
+
 ### Closed-PR salvage scan
 
 No closed-not-merged PR contained unique value absent from `main` at review time (verified via `gh pr list --state all` + file-overlap check against the extraction commits).

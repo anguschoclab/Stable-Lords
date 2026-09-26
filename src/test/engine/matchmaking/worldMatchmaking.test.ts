@@ -5,16 +5,17 @@ import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // ─── Lightweight Test Factories ──────────────────────────────────────────────
 
-function makeTestWarrior(
+const makeTestWarrior = (
   id: string,
   fame: number = 0,
   lastBoutWeek: number = 0,
   overrides?: Partial<Warrior>
-): Warrior {
-  return {
+): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
@@ -32,8 +33,7 @@ function makeTestWarrior(
     lastBoutWeek,
     isDead: false,
     ...overrides,
-  } as Warrior;
-}
+  });
 
 function makeTestRival(
   id: string,

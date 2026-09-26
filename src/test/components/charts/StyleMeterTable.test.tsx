@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: (s: unknown) => unknown) => fn,
@@ -18,8 +19,8 @@ vi.mock('@/state/useGameStore', () => ({
 
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
@@ -34,8 +35,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     status: 'Active',
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 describe('StyleMeterTable', () => {
   beforeEach(() => {

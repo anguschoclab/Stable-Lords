@@ -11,9 +11,10 @@ import { SeededRNG } from '@/utils/random';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, name: string, stableId?: string): Warrior {
-  return {
+const makeWarrior = (id: string, name: string, stableId?: string): Warrior =>
+  fixtureWarrior({
     id,
     name,
     style: 'Brawler',
@@ -25,18 +26,16 @@ function makeWarrior(id: string, name: string, stableId?: string): Warrior {
     age: 20,
     traits: [],
     status: 'Active',
-  } as unknown as Warrior;
-}
+  } as any);
 
-function makeState(roster: Warrior[], rivals: { id: string; roster: Warrior[] }[]): GameState {
-  return {
+const makeState = (roster: Warrior[], rivals: { id: string; roster: Warrior[] }[]): GameState =>
+  fixtureGameState({
     roster,
     rivals: rivals as any,
     player: { id: 'player' },
     week: 1,
     absoluteWeek: 1,
-  } as unknown as GameState;
-}
+  } as any);
 
 describe('tournament resolution — updateEntityInList usage', () => {
   it('modifyWarrior updates roster warrior via updateEntityInList', () => {

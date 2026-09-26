@@ -16,6 +16,7 @@ import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
 import { SeededRNGService } from '@/utils/random';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
@@ -41,8 +42,8 @@ function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
   };
 }
 
-function makeState(overrides?: Partial<GameState>): GameState {
-  return {
+const makeState = (overrides?: Partial<GameState>): GameState =>
+  fixtureGameState({
     phase: 'planning',
     meta: { gameName: 'Test', version: '1.0.0', createdAt: new Date().toISOString() },
     ftueComplete: true,
@@ -98,8 +99,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
     realmRankings: {},
     awards: [],
     ...overrides,
-  } as unknown as GameState;
-}
+  } as any);
 
 describe('Training System', () => {
   describe('computeGainChance', () => {

@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import type { FightId, BoutOfferId, PromoterId } from '@/types/shared.types';
+import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
 
 let mockState: any = {};
 
@@ -18,8 +19,8 @@ vi.mock('zustand/react/shallow', () => ({
 
 import { WeeklyDigestMini } from '@/components/dashboard/WeeklyDigestMini';
 
-function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
-  return {
+const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
+  fixtureFightSummary({
     id: 'fight-1' as FightId,
     week: 5,
     absoluteWeek: 5,
@@ -32,8 +33,7 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
     styleD: 'Technician',
     createdAt: '2026-01-01T00:00:00Z',
     ...overrides,
-  } as FightSummary;
-}
+  } as any);
 
 function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
   const warriorIds = overrides.warriorIds ?? ['wa' as WarriorId];

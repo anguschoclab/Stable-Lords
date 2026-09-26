@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import '@/test/_setup/setup';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 const mockNavigate = vi.fn();
 
@@ -15,14 +16,14 @@ import { useGameStore } from '@/state/useGameStore';
 import type { Warrior } from '@/types/state.types';
 
 const makeWarrior = (id: string): Warrior =>
-  ({
+  fixtureWarrior({
     id,
     name: `Warrior ${id}`,
     style: 'SlashingAttack',
     status: 'Active',
     fame: 10,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-  }) as unknown as Warrior;
+  } as any);
 
 describe('useWarriorDetail', () => {
   beforeEach(() => {

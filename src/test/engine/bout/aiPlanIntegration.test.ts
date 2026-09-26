@@ -10,6 +10,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { defaultPlanForWarrior } from '@/engine/simulate';
+import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -43,8 +45,8 @@ function makeWarrior(
   } as Warrior;
 }
 
-function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'owner-1' as any,
@@ -62,11 +64,10 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
     trainingAssignments: [],
     philosophy: 'Brute Force',
     ...overrides,
-  } as RivalStableData;
-}
+  } as any);
 
-function makeBaseState(overrides: Partial<GameState> = {}): GameState {
-  return {
+const makeBaseState = (overrides: Partial<GameState> = {}): GameState =>
+  fixtureGameState({
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
     week: 5,
     absoluteWeek: 5,
@@ -124,8 +125,7 @@ function makeBaseState(overrides: Partial<GameState> = {}): GameState {
     coachDismissed: [],
     isFTUE: false,
     ...overrides,
-  } as unknown as GameState;
-}
+  });
 
 function setupStateWithOffer(
   playerWarrior: Warrior,

@@ -10,6 +10,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
 import { getAvailableItems } from '@/data/equipment';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -28,10 +29,10 @@ function makeMockRng(values: number[]): IRNGService {
   };
 }
 
-function makeWarrior(
+const makeWarrior = (
   overrides: { favorites?: WarriorFavorites; name?: string; equipment?: { weapon: string } } = {}
-): Warrior {
-  return {
+): Warrior =>
+  fixtureWarrior({
     id: 'warrior-test' as import('@/types/shared.types').WarriorId,
     name: overrides.name ?? 'Test Warrior',
     style: FightingStyle.StrikingAttack,
@@ -50,8 +51,7 @@ function makeWarrior(
     traits: [],
     ...(overrides.favorites ? { favorites: overrides.favorites } : {}),
     ...(overrides.equipment ? { equipment: overrides.equipment } : {}),
-  } as Warrior;
-}
+  } as any);
 
 // ─── generateFavorites ──────────────────────────────────────────────────────
 

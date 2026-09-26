@@ -2,9 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import type { BoutOffer, Promoter, Warrior } from '@/types/state.types';
 import type { WarriorId, PromoterId, BoutOfferId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
-function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
-  return {
+const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: 'offer-default' as BoutOfferId,
     promoterId: 'promoter-default' as PromoterId,
     warriorIds: [] as WarriorId[],
@@ -15,8 +16,7 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
     status: 'Proposed',
     responses: {},
     ...overrides,
-  } as BoutOffer;
-}
+  } as any);
 
 function makePromoter(overrides: Partial<Promoter> = {}): Promoter {
   return {
@@ -32,8 +32,8 @@ function makePromoter(overrides: Partial<Promoter> = {}): Promoter {
   } as Promoter;
 }
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'warrior-default' as WarriorId,
     name: 'Test Warrior',
     style: 'StrikingAttack' as any,
@@ -48,8 +48,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     status: 'Active',
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 describe('filterAndSortOffers', () => {
   it('returns empty arrays and zero highestPurse when given empty inputs', () => {

@@ -9,10 +9,11 @@ import {
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // Helper to create minimal warrior for testing
-function createTestWarrior(id: string, name: string, status: string): Warrior {
-  return {
+const createTestWarrior = (id: string, name: string, status: string): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
@@ -29,8 +30,7 @@ function createTestWarrior(id: string, name: string, status: string): Warrior {
     champion: false,
     status: status as any,
     age: 20,
-  };
-}
+  });
 
 describe('buildWarriorMap', () => {
   it('builds map from player roster', () => {

@@ -4,8 +4,10 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-const mkWarrior = (style: FightingStyle = FightingStyle.AimedBlow, over: Partial<Warrior> = {}): Warrior => ({
+const mkWarrior = (style: FightingStyle = FightingStyle.AimedBlow, over: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
   id: 'w1' as any,
   name: 'Aulus',
   style,
@@ -23,7 +25,7 @@ const mkWarrior = (style: FightingStyle = FightingStyle.AimedBlow, over: Partial
 });
 
 const mkState = (over: Partial<GameState> = {}): GameState =>
-  ({
+  fixtureGameState({
     week: 3,
     absoluteWeek: 3,
     year: 1,
@@ -31,7 +33,7 @@ const mkState = (over: Partial<GameState> = {}): GameState =>
     roster: [],
     trainers: [],
     ...over,
-  }) as unknown as GameState;
+  });
 
 const mkTrainer = (id: string, over: Partial<Trainer> = {}): Trainer => ({
   id,

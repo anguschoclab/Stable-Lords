@@ -15,7 +15,17 @@ const RTL_RE = /@testing-library\/react|\brender(Hook)?\s*\(/;
 const DOM_GLOBALS_RE = /\b(document|window|HTMLElement|HTMLMediaElement|navigator)\b/;
 const DOM_STUB_LINE_RE = /defineProperty|=\s*(class|function|new|\{)|Mock|prototype\s*=|as\s+typeof/;
 const LOCAL_FACTORY_RE =
-  /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)/;
+  /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
+// `const makeX = (...) => fixtureY({ ... })` delegates to _fixtures — not a
+// local factory. Only non-delegating defs count. Mirrors scanner logic.
+function hasLocalFactory(content: string): boolean {
+  for (const m of content.matchAll(LOCAL_FACTORY_RE)) {
+    const tail = content.slice(m.index, m.index + 300);
+    if (/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*fixture\w+\(/.test(tail)) continue;
+    return true;
+  }
+  return false;
+}
 
 function readDirRecursive(dir: string, pred: (name: string) => boolean, results: string[] = []): string[] {
   const items = fs.readdirSync(dir, { withFileTypes: true });
@@ -137,7 +147,7 @@ describe('testQualityAudit', () => {
     const violations: string[] = [];
     for (const f of allVitestTestFiles()) {
       const content = fs.readFileSync(f, 'utf8');
-      if (LOCAL_FACTORY_RE.test(content) && !f.endsWith('factories.test.ts')) {
+      if (hasLocalFactory(content) && !f.endsWith('factories.test.ts')) {
         violations.push(rel(f));
       }
     }

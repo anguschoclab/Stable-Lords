@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import type { GameState } from '@/types/state.types';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 // Minimal GameState builder
-function makeState(over: Partial<GameState> = {}): GameState {
-  return {
+const makeState = (over: Partial<GameState> = {}): GameState =>
+  fixtureGameState({
     week: 5,
     fame: 0,
     weather: 'Clear',
@@ -13,8 +14,7 @@ function makeState(over: Partial<GameState> = {}): GameState {
     trainingAssignments: [],
     arenaHistory: [],
     ...over,
-  } as unknown as GameState;
-}
+  } as any);
 
 describe('computeWeeklyBreakdown income scaling', () => {
   it('pays more for a famous warrior in a high-tier arena than the flat base', () => {

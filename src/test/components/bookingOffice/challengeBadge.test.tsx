@@ -6,6 +6,7 @@ import { OfferCard } from '@/pages/BookingOffice/components/OfferCard';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import type { BoutOffer } from '@/types/state.types';
+import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/bookmarks/BookmarkButton', () => ({
   BookmarkButton: () => <div data-testid="bookmark" />,
@@ -19,8 +20,8 @@ vi.mock('@/engine/narrative/fightForecast', () => ({
 
 const playerWarrior = makeWarrior({ id: 'pw-1' as WarriorId, name: 'My Fighter' });
 
-function makeOffer(over: Partial<BoutOffer> = {}): BoutOffer {
-  return {
+const makeOffer = (over: Partial<BoutOffer> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: 'offer-1' as BoutOffer['id'],
     promoterId: 'prom-1' as BoutOffer['promoterId'],
     warriorIds: [playerWarrior.id, 'rw-1' as WarriorId],
@@ -31,8 +32,7 @@ function makeOffer(over: Partial<BoutOffer> = {}): BoutOffer {
     status: 'Proposed',
     responses: {},
     ...over,
-  };
-}
+  } as any);
 
 const baseProps = {
   promoters: { 'prom-1': { name: 'Grand Arena', tier: 'Major', personality: 'Showman' } },

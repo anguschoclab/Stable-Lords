@@ -6,8 +6,10 @@ import {
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
+import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior => ({
+const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
   id: id as any,
   name: `Warrior_${id}`,
   style: FightingStyle.LungingAttack,
@@ -24,7 +26,8 @@ const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior => ({
   ...over,
 });
 
-const mkOffer = (id: string, widA: string, widB: string, purse = 200): BoutOffer => ({
+const mkOffer = (id: string, widA: string, widB: string, purse = 200): BoutOffer =>
+  fixtureBoutOffer({
   id: id as any,
   promoterId: 'p1' as any,
   warriorIds: [widA as any, widB as any],
@@ -218,7 +221,7 @@ describe('buildStableCouncilReport', () => {
 
   describe('unresolvedDirectives — pre-advance checklist', () => {
     const mkBase = (over: Record<string, unknown> = {}): GameState =>
-      ({
+  fixtureGameState({
         week: 5,
         absoluteWeek: 5,
         year: 1,
@@ -233,7 +236,7 @@ describe('buildStableCouncilReport', () => {
         isTournamentWeek: false,
         treasury: 5000,
         ...over,
-      }) as unknown as GameState;
+      });
 
     it('flags a recommended offer whose player signature is still pending', () => {
       const w = mkWarrior('w1', { style: FightingStyle.AimedBlow });

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { GazetteStory, NewsletterItem, RivalStableData } from '@/types/state.types';
+import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 let mockState: any = {};
 
@@ -99,8 +100,8 @@ function makeNewsletter(id: string, week: number): NewsletterItem {
   };
 }
 
-function makeRival(id: string): RivalStableData {
-  return {
+const makeRival = (id: string): RivalStableData =>
+  fixtureRival({
     id: id as any,
     owner: {
       id: id as any,
@@ -115,8 +116,7 @@ function makeRival(id: string): RivalStableData {
     treasury: 0,
     ledger: [],
     trainingAssignments: [],
-  } as any;
-}
+  } as any);
 
 describe('IntelligenceHubWidget', () => {
   beforeEach(() => {

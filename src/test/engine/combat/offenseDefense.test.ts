@@ -6,7 +6,6 @@ import { describe, it, expect } from 'vitest';
 import { resolveCombatOffenseDefense } from '@/engine/combat/resolution/offenseDefense';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import { FightingStyle } from '@/types/shared.types';
-import type { WeatherType, PsychState, DistanceRange, ArenaZone } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import { resolveEffectiveTactics } from '@/engine/combat/resolution/tactics';
 import {
@@ -20,66 +19,17 @@ import {
   runCommit,
   type ExchangeState,
 } from '@/engine/combat/resolution/exchangeSubPhases';
+import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
 
-function makeFighter(overrides: Partial<FighterState> = {}): FighterState {
-  return {
-    label: 'A',
-    style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
-    derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
+const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
+  makeFighterState({
     plan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5 } as any,
     activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5 } as any,
-    psychState: 'Neutral' as PsychState,
-    hp: 100,
-    maxHp: 100,
-    endurance: 100,
-    maxEndurance: 100,
-    hitsLanded: 0,
-    hitsTaken: 0,
-    ripostes: 0,
-    consecutiveHits: 0,
-    armHits: 0,
-    legHits: 0,
-    totalFights: 0,
-    momentum: 0,
-    committed: false,
-    survivalStrike: false,
-    recoveryDebt: 0,
     ...overrides,
-  } as FighterState;
-}
+  });
+const makeCtx = makeResolutionContext;
 
-function makeCtx(overrides: Partial<ResolutionContext> = {}): ResolutionContext {
-  return {
-    rng: () => 0.5,
-    phase: 'OPENING',
-    exchange: 0,
-    weather: 'Clear' as WeatherType,
-    weatherEffect: {
-      staminaMult: 1,
-      initiativeMod: 0,
-      riposteMod: 0,
-      damageMult: 1,
-      description: '',
-    },
-    matchupA: 0,
-    matchupD: 0,
-    trainerModsA: {},
-    trainerModsD: {},
-    weaponReqA: { endurancePenalty: 1, attPenalty: 0 },
-    weaponReqD: { endurancePenalty: 1, attPenalty: 0 },
-    tacticStreakA: 0,
-    tacticStreakD: 0,
-    range: 'Striking' as DistanceRange,
-    zone: 'Center' as ArenaZone,
-    arenaConfig: { tags: [] } as any,
-    surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
-    maxRange: 'Extended' as DistanceRange,
-    zoneStepBias: 0,
-    ...overrides,
-  } as ResolutionContext;
-}
+
 
 interface SetupResult {
   ctx: ResolutionContext;

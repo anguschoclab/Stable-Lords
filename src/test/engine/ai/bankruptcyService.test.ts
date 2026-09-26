@@ -7,9 +7,10 @@ import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { MIN_BANKRUPTCY_ROSTER, DEBT_FLOOR, EMERGENCY_LOAN } from '@/constants/economy';
 import { generateId } from '@/utils/idUtils';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeTestWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: overrides.id ?? (generateId(undefined, 'w') as Warrior['id']),
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
@@ -25,8 +26,7 @@ function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
     age: 20,
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  });
 
 describe('BankruptcyService', () => {
   let state: GameState;

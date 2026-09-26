@@ -8,11 +8,12 @@ import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { pickWeeklyIntent, verifyIntentSkepticism } from '@/engine/ai/intentEngine';
+import { makeRival as fixtureRival, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'owner-1' as any,
@@ -30,8 +31,7 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
     ledger: [],
     trainingAssignments: [],
     ...overrides,
-  } as RivalStableData;
-}
+  } as any);
 
 function makeLungeRoster(): any[] {
   // 3 LungingAttack + 1 BashingAttack = 75% precision-heavy
@@ -71,8 +71,8 @@ function makeLungeRoster(): any[] {
   ];
 }
 
-function makeState(weather: string): GameState {
-  return {
+const makeState = (weather: string): GameState =>
+  fixtureGameState({
     week: 5,
     season: 'Spring',
     year: 1,
@@ -83,8 +83,7 @@ function makeState(weather: string): GameState {
     roster: [],
     rivals: [],
     arenaHistory: [],
-  } as any as GameState;
-}
+  } as any);
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 

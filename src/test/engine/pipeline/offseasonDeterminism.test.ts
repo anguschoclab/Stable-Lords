@@ -5,6 +5,7 @@ import { narrativeContent } from '@/data/narrative';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 const events = (narrativeContent as any).offseason_events as Record<string, { effectType: string }>;
 const eventKeys = Object.keys(events);
@@ -25,10 +26,10 @@ function makeMockRng(targetEventKey: string, baseSeed: number) {
   return rng;
 }
 
-function makeState(
+const makeState = (
   warriors: { id: string; name: string; status?: string; injuries?: unknown[] }[]
-): Partial<GameState> {
-  return {
+): Partial<GameState> =>
+  fixtureGameState({
     year: 1,
     roster: warriors.map((w) => ({
       id: w.id as WarriorId,
@@ -43,8 +44,7 @@ function makeState(
     rivals: [],
     graveyard: [],
     retired: [],
-  };
-}
+  } as any);
 
 describe('offseason determinism characterization', () => {
   const SEEDS = [1, 42, 99, 777, 12345, 31337, 555, 888, 2024, 67890];

@@ -8,6 +8,7 @@ import {
   ActiveTournamentManifest,
 } from '@/components/tournaments';
 import type { TournamentEntry, Warrior, FightSummary } from '@/types/game';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // ─── Shared mocks (mirror src/test/components/tournaments/Tournaments.test.tsx) ──
 vi.mock('framer-motion', () => ({
@@ -97,15 +98,14 @@ vi.mock('@/lib/AudioManager', () => ({
 }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function makeWarrior(overrides: Record<string, unknown> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Record<string, unknown> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1',
     name: 'Test Warrior',
     injuries: [],
     fatigue: 0,
     ...overrides,
-  } as unknown as Warrior;
-}
+  } as any);
 
 function makeTournament(overrides: Partial<TournamentEntry> = {}): TournamentEntry {
   return {

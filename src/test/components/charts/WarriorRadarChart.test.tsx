@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('recharts', () => {
   const Stub = ({ children, ...props }: any) => (
@@ -30,8 +31,8 @@ vi.mock('@/components/ui/chart', () => ({
 import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
 import { FightingStyle } from '@/types/shared.types';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
@@ -47,8 +48,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     champion: false,
     status: 'Active',
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 describe('WarriorRadarChart', () => {
   it('renders without crashing', () => {

@@ -10,6 +10,7 @@ import { BoutsStep } from '@/components/resolution-reveal/BoutsStep';
 import type { BoutResult } from '@/engine/bout';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/BoutViewer', () => ({
   default: () => <div data-testid="bout-viewer">BoutViewer</div>,
@@ -19,8 +20,8 @@ vi.mock('@/engine/narrative/fightAnalysis', () => ({
   buildFightAnalysis: () => ({ summary: 'test' }),
 }));
 
-function makeWarrior(id: string, name: string): Warrior {
-  return {
+const makeWarrior = (id: string, name: string): Warrior =>
+  fixtureWarrior({
     id: id as Warrior['id'],
     name,
     style: FightingStyle.StrikingAttack,
@@ -34,8 +35,7 @@ function makeWarrior(id: string, name: string): Warrior {
     flair: [],
     champion: false,
     traits: [],
-  } as Warrior;
-}
+  } as any);
 
 function makeResult(by: 'Kill' | 'KO' | 'Decision', a: string, d: string): BoutResult {
   return {

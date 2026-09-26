@@ -5,6 +5,7 @@ import type { GameState, Warrior, Attributes, WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/utils/random';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
 
@@ -41,8 +42,8 @@ function makeWarrior(id: string, age: number, attrs: Partial<Attributes> = {}): 
   };
 }
 
-function makeGameState(week: number, roster: Warrior[]): GameState {
-  return {
+const makeGameState = (week: number, roster: Warrior[]): GameState =>
+  fixtureGameState({
     meta: { gameName: 'Test', version: '1.0', createdAt: '' },
     ftueComplete: true,
     coachDismissed: [],
@@ -82,8 +83,7 @@ function makeGameState(week: number, roster: Warrior[]): GameState {
     activeTournamentId: undefined,
     isFTUE: false,
     unacknowledgedDeaths: [],
-  } as any as GameState;
-}
+  } as any);
 
 // ─── Tests ────────────────────────────────────────────────────────────────
 

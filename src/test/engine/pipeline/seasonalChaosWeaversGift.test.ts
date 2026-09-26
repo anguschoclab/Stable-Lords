@@ -9,9 +9,10 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeWarrior(name: string): Warrior {
-  return {
+const makeWarrior = (name: string): Warrior =>
+  fixtureWarrior({
     id: `w_${name}` as WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
@@ -26,11 +27,10 @@ function makeWarrior(name: string): Warrior {
     champion: false,
     status: 'Active',
     derivedStats: { hp: 100 } as any,
-  } as Warrior;
-}
+  } as any);
 
-function makeState(roster: Warrior[] = []): GameState {
-  return {
+const makeState = (roster: Warrior[] = []): GameState =>
+  fixtureGameState({
     meta: { gameName: '', version: '', createdAt: '' },
     ftueComplete: true,
     ftueStep: undefined,
@@ -96,8 +96,7 @@ function makeState(roster: Warrior[] = []): GameState {
       deaths: 0,
       weeksElapsed: 13,
     } as any,
-  } as unknown as GameState;
-}
+  } as any);
 
 describe('chaos_weavers_gift offseason event', () => {
   it('runSeasonalPass does not throw with empty roster', () => {

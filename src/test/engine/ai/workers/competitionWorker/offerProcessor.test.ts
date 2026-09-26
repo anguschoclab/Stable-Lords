@@ -9,13 +9,14 @@ import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
-function makeWarrior(
+const makeWarrior = (
   id: string,
   name: string,
   style: FightingStyle = FightingStyle.StrikingAttack
-): Warrior {
-  return {
+): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name,
     style,
@@ -30,11 +31,10 @@ function makeWarrior(
     champion: false,
     status: 'Active',
     derivedStats: { hp: 100 } as any,
-  } as Warrior;
-}
+  } as any);
 
-function makeRival(id: string, roster: Warrior[]): RivalStableData {
-  return {
+const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
+  fixtureRival({
     id: id as StableId,
     owner: {
       id: `owner-${id}` as any,
@@ -51,11 +51,10 @@ function makeRival(id: string, roster: Warrior[]): RivalStableData {
     ledger: [],
     trainingAssignments: [],
     strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
-  } as RivalStableData;
-}
+  } as any);
 
-function makeOffer(id: string, warriorIds: string[], opts: Partial<BoutOffer> = {}): BoutOffer {
-  return {
+const makeOffer = (id: string, warriorIds: string[], opts: Partial<BoutOffer> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: id as BoutOfferId,
     promoterId: 'prom-1' as any,
     warriorIds: warriorIds as WarriorId[],
@@ -66,8 +65,7 @@ function makeOffer(id: string, warriorIds: string[], opts: Partial<BoutOffer> = 
     status: 'Proposed',
     responses: Object.fromEntries(warriorIds.map((w) => [w, 'Pending'])),
     ...opts,
-  } as BoutOffer;
-}
+  } as any);
 
 function makeState(
   offers: BoutOffer[],

@@ -26,7 +26,17 @@ const TIMINGS_FILE = path.join(OUT_DIR, 'baseline-test-timings.tsv');
 const TEST_RE = /\.(test|spec)\.(ts|tsx|js|jsx)$/;
 const DOM_GLOBALS = /\b(document|window|HTMLElement|HTMLMediaElement|navigator)\b/;
 const RTL_RE = /@testing-library\/react|\brender(Hook)?\s*\(/;
-const FACTORY_DEF_RE = /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)/;
+const FACTORY_DEF_RE = /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
+// a `const makeX = (...) => fixtureY({ ... })` adapter is a delegation to the
+// shared fixture, not a duplicate factory — only flag non-delegating defs
+function hasLocalFactory(content) {
+  for (const m of content.matchAll(FACTORY_DEF_RE)) {
+    const tail = content.slice(m.index, m.index + 300);
+    if (/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*fixture\w+\(/.test(tail)) continue;
+    return true;
+  }
+  return false;
+}
 const LEAK_SIGNALS = [
   ['useGameStore', /useGameStore\.(setState|getState)/g],
   ['engineEventBus', /engineEventBus\.(on|emit|subscribe|off)/g],
@@ -145,7 +155,7 @@ const records = testFiles.map((file) => {
     imports: appImports,
     leak,
     dead,
-    localFactory: FACTORY_DEF_RE.test(content),
+    localFactory: hasLocalFactory(content),
     usesSharedFixtures: content.includes('_fixtures/factories'),
     runtimeMs: timings.get(relPath) ?? null,
     slow: relPath.includes('.slow.test.'),

@@ -3,6 +3,7 @@ import { createCumulativeTracker } from '@/engine/stats/cumulativeTracker';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 let boutSeq = 0;
 
@@ -22,9 +23,8 @@ function makeBout(overrides?: Partial<FightSummary>): FightSummary {
   } as FightSummary;
 }
 
-function makeWarrior(id: string): Warrior {
-  return { id, name: id } as unknown as Warrior;
-}
+const makeWarrior = (id: string): Warrior =>
+  fixtureWarrior({ id: id as Warrior['id'], name: id });
 
 function sumValues(record: Record<string, number>): number {
   return Object.values(record).reduce((a, b) => a + b, 0);

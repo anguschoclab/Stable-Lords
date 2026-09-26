@@ -3,14 +3,15 @@ import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 const offerId = 'offer1' as BoutOfferId;
 const w1 = 'w1' as WarriorId;
 const w2 = 'w2' as WarriorId;
 const w3 = 'w3' as WarriorId;
 
-function makeOffer(warriorIds: WarriorId[], responses: Record<string, string> = {}): BoutOffer {
-  return {
+const makeOffer = (warriorIds: WarriorId[], responses: Record<string, string> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: offerId,
     promoterId: 'p1' as any,
     warriorIds,
@@ -20,8 +21,7 @@ function makeOffer(warriorIds: WarriorId[], responses: Record<string, string> = 
     hype: 10,
     status: 'Proposed',
     responses: Object.fromEntries(warriorIds.map((w) => [w, responses[w] ?? 'Pending'])) as any,
-  };
-}
+  } as any);
 
 describe('contractMutations', () => {
   let state: GameState;

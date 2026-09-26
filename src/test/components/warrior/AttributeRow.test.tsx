@@ -6,6 +6,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { TrainingAssignment, Attributes } from '@/types/game';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 0),
@@ -31,8 +32,8 @@ import { canGrow } from '@/engine/potential';
 import { AttributeRow } from '@/components/warrior/AttributeRow';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -53,8 +54,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     potentialRevealed: { ST: true, CN: true, SZ: true, WT: true, WL: true, SP: true, DF: true },
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 const baseProps = {
   assignment: undefined as TrainingAssignment | undefined,

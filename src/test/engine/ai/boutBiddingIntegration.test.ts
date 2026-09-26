@@ -9,11 +9,12 @@ import {
   BID_MATCHMAKING_ID,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { SeededRNGService } from '@/utils/random';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(name: string, style: FightingStyle, fame: number = 100): Warrior {
-  return {
+const makeWarrior = (name: string, style: FightingStyle, fame: number = 100): Warrior =>
+  fixtureWarrior({
     id: `w_${name}` as WarriorId,
     name,
     style,
@@ -28,11 +29,10 @@ function makeWarrior(name: string, style: FightingStyle, fame: number = 100): Wa
     champion: false,
     status: 'Active',
     derivedStats: { hp: 100 } as any,
-  } as Warrior;
-}
+  } as any);
 
-function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'owner-1' as any,
@@ -50,8 +50,7 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
     trainingAssignments: [],
     strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
     ...overrides,
-  } as RivalStableData;
-}
+  } as any);
 
 function makeMinimalState(rivals: RivalStableData[]): GameState {
   const warriorMap = new Map<string, Warrior>();

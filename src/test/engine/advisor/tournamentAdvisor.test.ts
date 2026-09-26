@@ -3,8 +3,10 @@ import { evaluateTournamentAdvice } from '@/engine/advisor/tournamentAdvisor';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, TournamentEntry } from '@/types/state.types';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-const mkWarrior = (id = 'w1'): Warrior => ({
+const mkWarrior = (id = 'w1'): Warrior =>
+  fixtureWarrior({
   id: id as any,
   name: 'Marcus',
   style: FightingStyle.WallOfSteel,
@@ -21,7 +23,7 @@ const mkWarrior = (id = 'w1'): Warrior => ({
 });
 
 const mkState = (overrides: Partial<GameState> = {}): GameState =>
-  ({
+  fixtureGameState({
     week: 6,
     absoluteWeek: 6,
     year: 1,
@@ -31,7 +33,7 @@ const mkState = (overrides: Partial<GameState> = {}): GameState =>
     tournaments: [],
     isTournamentWeek: false,
     ...overrides,
-  }) as unknown as GameState;
+  });
 
 describe('evaluateTournamentAdvice', () => {
   it('maps rank 1-64 to Imperial Gold Cup with QUALIFYING status in mid-season', () => {

@@ -13,15 +13,16 @@ import {
   verifyBoutAcceptance,
   evaluateBoutOffer,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(
+const makeWarrior = (
   style: FightingStyle,
   cn: number = 15,
   overrides: Partial<Warrior> = {}
-): Warrior {
-  return {
+): Warrior =>
+  fixtureWarrior({
     id: 'w1' as any,
     name: 'Test Warrior',
     style,
@@ -37,8 +38,7 @@ function makeWarrior(
     status: 'Active',
     derivedStats: { hp: 100 } as any,
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 function makeOpponent(
   style: FightingStyle,
@@ -48,8 +48,8 @@ function makeOpponent(
   return makeWarrior(style, cn, { id: 'w2' as any, name: 'Opponent', ...overrides });
 }
 
-function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'owner-1' as any,
@@ -66,11 +66,10 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
     ledger: [],
     trainingAssignments: [],
     ...overrides,
-  } as RivalStableData;
-}
+  } as any);
 
-function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
-  return {
+const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: 'offer-1' as any,
     promoterId: 'prom-1' as any,
     warriorIds: ['w1' as any, 'w2' as any],
@@ -82,8 +81,7 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
     responses: {},
     arenaId: 'standard_arena',
     ...overrides,
-  } as BoutOffer;
-}
+  } as any);
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 

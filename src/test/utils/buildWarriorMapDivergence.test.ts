@@ -3,30 +3,29 @@ import { buildActiveWarriorMap as buildWarriorMapRoster } from '@/utils/roster';
 import { buildWarriorMap as buildWarriorMapCollection } from '@/engine/core/warriorCollection';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, name: string, status: Warrior['status'] = 'Active'): Warrior {
-  return {
+const makeWarrior = (id: string, name: string, status: Warrior['status'] = 'Active'): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name,
     status,
     fame: 0,
     xp: 0,
-  } as unknown as Warrior;
-}
+  } as any);
 
-function makeState(opts: {
+const makeState = (opts: {
   roster?: Warrior[];
   graveyard?: Warrior[];
   retired?: Warrior[];
   rivals?: { roster: Warrior[] }[];
-}): GameState {
-  return {
+}): GameState =>
+  fixtureGameState({
     roster: opts.roster ?? [],
     graveyard: opts.graveyard ?? [],
     retired: opts.retired ?? [],
     rivals: opts.rivals ?? [],
-  } as unknown as GameState;
-}
+  } as any);
 
 describe('buildWarriorMap divergence characterization', () => {
   it('both return identical results when graveyard and retired are empty', () => {

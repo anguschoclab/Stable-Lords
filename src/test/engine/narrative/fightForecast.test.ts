@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-const mkWarrior = (over: Partial<any> = {}) => ({
+const mkWarrior = (over: Partial<any> = {}) =>
+  fixtureWarrior({
   id: 'w',
   name: 'Test',
   style: 'Lunging Attack',
@@ -10,7 +12,7 @@ const mkWarrior = (over: Partial<any> = {}) => ({
   equipment: {},
   injuries: [],
   ...over,
-});
+} as any);
 
 describe('buildFightForecast', () => {
   it('reports the style matchup edge when the opponent is known', () => {

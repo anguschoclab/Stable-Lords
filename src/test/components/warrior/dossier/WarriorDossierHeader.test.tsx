@@ -4,6 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 const mockToggleChallenge = vi.fn();
 const mockToggleAvoid = vi.fn();
@@ -49,8 +50,8 @@ vi.mock('@/components/ui/button', () => ({
 import { WarriorDossierHeader } from '@/components/warrior/dossier/WarriorDossierHeader';
 import { FightingStyle } from '@/types/shared.types';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -66,8 +67,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     champion: false,
     status: 'Active',
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 describe('WarriorDossierHeader', () => {
   beforeEach(() => {

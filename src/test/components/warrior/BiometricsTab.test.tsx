@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { ObfuscatedWarrior } from '@/lib/obfuscation';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/charts/WarriorRadarChart', () => ({
   WarriorRadarChart: ({ warrior }: any) => (
@@ -51,8 +52,8 @@ vi.mock('@/components/ui/separator', () => ({
 import { BiometricsTab } from '@/components/warrior/BiometricsTab';
 import { FightingStyle } from '@/types/shared.types';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -68,8 +69,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     champion: false,
     status: 'Active',
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 function makeDisplayWarrior(warrior: Warrior): ObfuscatedWarrior {
   return {

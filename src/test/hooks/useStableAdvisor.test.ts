@@ -9,6 +9,7 @@ import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import '@/test/_setup/setup';
+import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 
@@ -18,8 +19,8 @@ function makeTestWarrior(id: string, name: string, overrides?: Partial<Warrior>)
   });
 }
 
-function makeOffer(id: string, widA: string, widB: string, purse = 250): BoutOffer {
-  return {
+const makeOffer = (id: string, widA: string, widB: string, purse = 250): BoutOffer =>
+  fixtureBoutOffer({
     id: id as any,
     promoterId: 'p1' as any,
     warriorIds: [widA as any, widB as any],
@@ -30,8 +31,7 @@ function makeOffer(id: string, widA: string, widB: string, purse = 250): BoutOff
     hype: 10,
     status: 'Proposed',
     responses: { [widA]: 'Pending', [widB]: 'Pending' } as any,
-  };
-}
+  } as any);
 
 describe('useStableAdvisor', () => {
   beforeEach(() => {

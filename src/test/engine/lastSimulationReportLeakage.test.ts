@@ -3,9 +3,10 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { StateImpact } from '@/engine/impacts';
 import type { GameState } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeState(lastSimReport?: any): GameState {
-  return {
+const makeState = (lastSimReport?: any): GameState =>
+  fixtureGameState({
     treasury: 1000,
     fame: 50,
     week: 1,
@@ -56,8 +57,7 @@ function makeState(lastSimReport?: any): GameState {
       titles: 0,
     },
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-  } as any;
-}
+  } as any);
 
 describe('NF1: lastSimulationReport leakage', () => {
   it('lastSimulationReport is replaced (not merged) by impact system', () => {

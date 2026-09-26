@@ -6,35 +6,16 @@ import {
   runRecovery,
 } from '@/engine/combat/resolution/exchangeSubPhases';
 import type { FighterState } from '@/engine/combat/resolution/resolution';
+import { makeFighterState } from '@/test/_fixtures/factories';
 
-function makeFighter(overrides: Partial<FighterState> = {}): FighterState {
-  return {
-    label: 'A',
+const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
+  makeFighterState({
     style: 'SLASHING ATTACK' as any,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
-    derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
     plan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
     activePlan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
-    psychState: 'Neutral',
-    hp: 100,
-    maxHp: 100,
-    endurance: 100,
-    maxEndurance: 100,
-    hitsLanded: 0,
-    hitsTaken: 0,
-    ripostes: 0,
-    consecutiveHits: 0,
-    armHits: 0,
-    legHits: 0,
-    totalFights: 0,
-    momentum: 0,
-    committed: false,
-    survivalStrike: false,
-    recoveryDebt: 0,
     ...overrides,
-  } as FighterState;
-}
+  });
+
 
 describe('makeExchangeState', () => {
   it('initialises with zero modifiers', () => {

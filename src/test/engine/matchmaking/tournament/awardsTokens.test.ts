@@ -9,6 +9,7 @@ import {
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { clearWarriorCache } from '@/engine/core/warriorLookup';
 import { awardTournamentPrizes } from '@/engine/matchmaking/tournamentSelection/awards';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 // ─── Constants ───
 
@@ -17,8 +18,8 @@ const RIVAL_ID = 'stable-rival-1' as StableId;
 
 // ─── Helpers ───
 
-function makeBaseState(): GameState {
-  return {
+const makeBaseState = (): GameState =>
+  fixtureGameState({
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
     player: {
       id: PLAYER_ID,
@@ -76,8 +77,7 @@ function makeBaseState(): GameState {
     coachDismissed: [],
     rivalMap: new Map(),
     warriorMap: new Map(),
-  } as unknown as GameState;
-}
+  });
 
 function makeTestWarrior(
   id: string,

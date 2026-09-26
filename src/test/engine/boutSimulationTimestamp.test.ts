@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/bout/services/boutProcessorService', () => {
   const mockBoutResult = {
@@ -31,8 +32,8 @@ import { SeededRNGService } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 
-function makeState(week: number, year: number): GameState {
-  return {
+const makeState = (week: number, year: number): GameState =>
+  fixtureGameState({
     treasury: 1000,
     fame: 50,
     week,
@@ -84,8 +85,7 @@ function makeState(week: number, year: number): GameState {
       titles: 0,
     },
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-  } as any;
-}
+  } as any);
 
 describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
   const rng = new SeededRNGService(42);

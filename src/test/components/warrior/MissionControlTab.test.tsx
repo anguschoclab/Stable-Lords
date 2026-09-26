@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children }: any) => <div>{children}</div>,
@@ -27,8 +28,8 @@ vi.mock('@/components/widgets', () => ({
 import { MissionControlTab } from '@/components/warrior/MissionControlTab';
 import { FightingStyle } from '@/types/shared.types';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: (overrides.id ?? 'w1') as WarriorId,
     name: 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -44,8 +45,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     champion: false,
     status: 'Active',
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 describe('MissionControlTab', () => {
   const baseProps = {

@@ -7,14 +7,15 @@ import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TrainingCardHeader } from '@/components/warrior/TrainingCardHeader';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
   WarriorNameTag: ({ name }: { name: string }) => <span data-testid="warrior-name">{name}</span>,
   StatBadge: () => <span data-testid="stat-badge" />,
 }));
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -32,8 +33,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     age: 24,
     fatigue: 0,
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 function renderHeader(warrior = makeWarrior(), total = 70, hasInjury = false) {
   return render(

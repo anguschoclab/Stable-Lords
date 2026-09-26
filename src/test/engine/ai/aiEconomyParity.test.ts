@@ -4,9 +4,10 @@ import { computeWeeklyBreakdown } from '@/engine/economy';
 import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FIGHT_PURSE, WIN_BONUS } from '@/constants/economy';
+import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
-function makeRival(over: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (over: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'rival-1' as any,
@@ -22,8 +23,7 @@ function makeRival(over: Partial<RivalStableData> = {}): RivalStableData {
     ledger: [],
     trainingAssignments: [],
     ...over,
-  };
-}
+  } as any);
 
 function makeFight(
   week: number,

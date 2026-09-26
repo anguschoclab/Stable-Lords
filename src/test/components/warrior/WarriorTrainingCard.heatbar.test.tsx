@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 0),
@@ -24,8 +25,8 @@ import { computeGainChance } from '@/engine/training';
 import { WarriorTrainingCard } from '@/components/warrior/WarriorTrainingCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -46,8 +47,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     potentialRevealed: { ST: true, CN: true, SZ: true, WT: true, WL: true, SP: true, DF: true },
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 const defaultProps = {
   assignment: undefined,

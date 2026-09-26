@@ -5,6 +5,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
+import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
   advanceWeek: vi.fn(async (state: GameState) => state),
@@ -17,8 +18,8 @@ function makeState(overrides?: Partial<GameState>): GameState {
 }
 
 /** Offer scheduled for the upcoming week (absoluteWeek 1 → boutWeek 2). */
-function makeOffer(id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer {
-  return {
+const makeOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer =>
+  fixtureBoutOffer({
     id: id as BoutOfferId,
     promoterId: 'promoter-1' as any,
     warriorIds: warriorIds as WarriorId[],
@@ -30,8 +31,7 @@ function makeOffer(id: string, warriorIds: string[], opts?: Partial<BoutOffer>):
     responses: Object.fromEntries(warriorIds.map((w) => [w, 'Pending'])) as any,
     conditions: [],
     ...opts,
-  };
-}
+  } as any);
 
 function makeSimmableState(overrides?: Partial<GameState>): GameState {
   return makeState({

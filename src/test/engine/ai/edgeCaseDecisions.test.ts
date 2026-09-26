@@ -5,9 +5,10 @@ import type { RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, name: string, status: string = 'Active'): Warrior {
-  return {
+const makeWarrior = (id: string, name: string, status: string = 'Active'): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
@@ -24,11 +25,10 @@ function makeWarrior(id: string, name: string, status: string = 'Active'): Warri
     champion: false,
     status: status as any,
     age: 20,
-  };
-}
+  } as any);
 
-function makeRival(id: string, roster: Warrior[]): RivalStableData {
-  return {
+const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
+  fixtureRival({
     id: id as StableId,
     fame: 50,
     owner: {
@@ -44,8 +44,7 @@ function makeRival(id: string, roster: Warrior[]): RivalStableData {
     tier: 'Established' as any,
     ledger: [],
     trainingAssignments: [],
-  };
-}
+  } as any);
 
 describe('AI edgeCaseDecisions', () => {
   it('AI with empty roster does not crash advanceWeek', async () => {

@@ -5,17 +5,17 @@ import { buildWeekCaches } from '@/engine/pipeline/services/weekPipelineService'
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, stableId?: string): Warrior {
-  return {
+const makeWarrior = (id: string, stableId?: string): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name: `W-${id}`,
     status: 'Active',
     stableId: stableId as StableId | undefined,
     injuries: [],
     fame: 10,
-  } as unknown as Warrior;
-}
+  } as any);
 
 function stateWithWarriors(): GameState {
   const state = createFreshState('cache-freshness');

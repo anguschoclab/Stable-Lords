@@ -2,9 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { obfuscateWarrior, type ObfuscatedWarrior } from './obfuscation';
 import { FightingStyle } from '@/types/game';
 import type { Warrior, InsightToken } from '@/types/game';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as Warrior['id'],
     name: 'Test Warrior',
     style: FightingStyle.BashingAttack,
@@ -25,8 +26,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
       AL: 5,
     },
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 function makeInsight(
   type: InsightToken['type'],

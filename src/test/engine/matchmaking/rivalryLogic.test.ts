@@ -4,11 +4,12 @@ import type { FightSummary } from '@/types/combat.types';
 import type { Rivalry } from '@/types/state.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
+import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
 
 // ─── Factory helpers ────────────────────────────────────────────────────────
 
-function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
-  return {
+const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
+  fixtureFightSummary({
     id: 'f1' as FightId,
     week: 1,
     title: 'Alice vs Bob',
@@ -24,8 +25,7 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
     fameD: 50,
     createdAt: new Date().toISOString(),
     ...overrides,
-  } as FightSummary;
-}
+  } as any);
 
 function makeRivalry(overrides: Partial<Rivalry> = {}): Rivalry {
   return {

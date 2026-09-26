@@ -8,6 +8,7 @@ import type { WarriorId, Trainer } from '@/types/shared.types';
 import type { TrainingAssignment } from '@/types/state.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TraitTrainingSection } from '@/components/warrior/TraitTrainingSection';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/training/trainingGains/traitTraining', () => ({
   traitTrainingPool: vi.fn(() => []),
@@ -22,8 +23,8 @@ vi.mock('@/components/warrior/traits/TraitBadge', () => ({
   ),
 }));
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -42,8 +43,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     fatigue: 0,
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 const trainers: Trainer[] = [
   {

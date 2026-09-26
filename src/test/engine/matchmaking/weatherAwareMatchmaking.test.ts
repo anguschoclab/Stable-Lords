@@ -12,16 +12,17 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { SeededRNGService } from '@/utils/random';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(
+const makeWarrior = (
   name: string,
   style: FightingStyle,
   stableId: string,
   fame: number = 100
-): Warrior {
-  return {
+): Warrior =>
+  fixtureWarrior({
     id: `w_${name}` as WarriorId,
     name,
     style,
@@ -40,11 +41,10 @@ function makeWarrior(
     derivedStats: { hp: 100 } as any,
     fatigue: 0,
     lastBoutWeek: 0,
-  } as Warrior;
-}
+  } as any);
 
-function makeRival(id: string, roster: Warrior[]): RivalStableData {
-  return {
+const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
+  fixtureRival({
     id: id as any,
     owner: {
       id: `${id}_owner` as any,
@@ -60,8 +60,7 @@ function makeRival(id: string, roster: Warrior[]): RivalStableData {
     fame: 100,
     ledger: [],
     trainingAssignments: [],
-  } as RivalStableData;
-}
+  } as any);
 
 function makeBaseState(overrides: Partial<GameState> = {}): GameState {
   return {

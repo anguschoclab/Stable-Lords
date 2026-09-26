@@ -6,6 +6,9 @@
  * returns objects that parse cleanly through the matching Zod schema.
  */
 import type { Warrior } from '@/types/warrior.types';
+import type { FighterState } from '@/engine/combat/resolution/types';
+import type { ResolutionContext } from '@/engine/combat/resolution/types';
+import type { WeatherType } from '@/types/shared.types';
 import type {
   AIAgentMemory,
   AIEvent,
@@ -133,6 +136,73 @@ export function makeRival(over: Partial<RivalStableData> = {}): RivalStableData 
     ...over,
     roster,
   };
+}
+
+/**
+ * Combat-resolution FighterState (distinct from roster Warrior). Override
+ * style/endurance/plan via `over` — fields are replaced wholesale.
+ */
+export function makeFighterState(over: Partial<FighterState> = {}): FighterState {
+  return {
+    label: 'A',
+    style: FightingStyle.StrikingAttack,
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
+    plan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5 } as FighterState['plan'],
+    activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5 } as FighterState['activePlan'],
+    psychState: 'Neutral',
+    hp: 100,
+    maxHp: 100,
+    endurance: 100,
+    maxEndurance: 100,
+    hitsLanded: 0,
+    hitsTaken: 0,
+    ripostes: 0,
+    consecutiveHits: 0,
+    armHits: 0,
+    legHits: 0,
+    totalFights: 0,
+    momentum: 0,
+    committed: false,
+    survivalStrike: false,
+    recoveryDebt: 0,
+    ...over,
+  } as FighterState;
+}
+
+/** Schema-valid ResolutionContext for combat-exchange tests. */
+export function makeResolutionContext(
+  over: Partial<ResolutionContext> = {}
+): ResolutionContext {
+  return {
+    rng: () => 0.5,
+    phase: 'OPENING',
+    exchange: 0,
+    weather: 'Clear' as WeatherType,
+    weatherEffect: {
+      staminaMult: 1,
+      initiativeMod: 0,
+      riposteMod: 0,
+      damageMult: 1,
+      description: '',
+    },
+    matchupA: 0,
+    matchupD: 0,
+    trainerModsA: {},
+    trainerModsD: {},
+    weaponReqA: { endurancePenalty: 1, attPenalty: 0 },
+    weaponReqD: { endurancePenalty: 1, attPenalty: 0 },
+    tacticStreakA: 0,
+    tacticStreakD: 0,
+    range: 'Striking' as ResolutionContext['range'],
+    zone: 'Center' as ResolutionContext['zone'],
+    arenaConfig: { tags: [] } as unknown as ResolutionContext['arenaConfig'],
+    surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
+    maxRange: 'Extended' as ResolutionContext['maxRange'],
+    zoneStepBias: 0,
+    ...over,
+  } as ResolutionContext;
 }
 
 /** Schema-valid BoutOffer. */

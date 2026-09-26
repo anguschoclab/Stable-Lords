@@ -10,11 +10,12 @@ import {
   runRivalStrategyPass,
 } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { SeededRNG } from '@/utils/random';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(id: string, name: string, overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (id: string, name: string, overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
@@ -29,11 +30,10 @@ function makeWarrior(id: string, name: string, overrides: Partial<Warrior> = {})
     champion: false,
     status: 'Active',
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
-function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'rival-1' as any,
@@ -51,8 +51,7 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
     trainingAssignments: [],
     strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
     ...overrides,
-  } as RivalStableData;
-}
+  } as any);
 
 function makeMinimalState(rivals: RivalStableData[]): GameState {
   const warriorMap = new Map<string, Warrior>();

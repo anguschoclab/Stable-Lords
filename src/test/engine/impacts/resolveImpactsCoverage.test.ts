@@ -3,9 +3,10 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string): Warrior {
-  return {
+const makeWarrior = (id: string): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name: id,
     style: FightingStyle.StrikingAttack,
@@ -22,11 +23,10 @@ function makeWarrior(id: string): Warrior {
     champion: false,
     status: 'Active',
     age: 20,
-  };
-}
+  } as any);
 
-function makeState(): GameState {
-  return {
+const makeState = (): GameState =>
+  fixtureGameState({
     treasury: 1000,
     fame: 50,
     week: 1,
@@ -77,8 +77,7 @@ function makeState(): GameState {
       titles: 0,
     },
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-  } as any;
-}
+  } as any);
 
 describe('resolveImpactsCoverage', () => {
   it('accumulate strategy: treasuryDelta adds to treasury', () => {

@@ -3,9 +3,10 @@ import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types'
 import type { Warrior } from '@/types/warrior.types';
 import { collectAllWarriors, collectAllActiveWarriors, collectBookedWarriorIds, collectAllKnownWarriors, buildWarriorMap } from '@/engine/core/warriorCollection';
 import { FightingStyle } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (id: string, overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: id as Warrior['id'],
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
@@ -20,11 +21,10 @@ function makeWarrior(id: string, overrides: Partial<Warrior> = {}): Warrior {
     status: 'Active',
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
-function makeRival(id: string, warriors: Warrior[]): RivalStableData {
-  return {
+const makeRival = (id: string, warriors: Warrior[]): RivalStableData =>
+  fixtureRival({
     id: id as RivalStableData['id'],
     owner: {
       id: `owner-${id}` as RivalStableData['owner']['id'],
@@ -39,15 +39,14 @@ function makeRival(id: string, warriors: Warrior[]): RivalStableData {
     treasury: 0,
     ledger: [],
     trainingAssignments: [],
-  } as RivalStableData;
-}
+  } as any);
 
-function makeState(
+const makeState = (
   roster: Warrior[],
   rivals: RivalStableData[] = [],
   boutOffers: Record<string, BoutOffer> = {}
-): GameState {
-  return {
+): GameState =>
+  fixtureGameState({
     meta: { gameName: 'test', version: '1', createdAt: '2024-01-01' },
     ftueComplete: true,
     coachDismissed: [],
@@ -104,16 +103,15 @@ function makeState(
     awards: [],
     bookmarks: [],
     progression: { status: 'active', stableStanding: 1, totalStables: 1, objectives: [] },
-  } as GameState;
-}
+  } as any);
 
-function makeOffer(
+const makeOffer = (
   id: string,
   warriorIds: string[],
   boutWeek: number,
   status: BoutOffer['status'] = 'Signed'
-): BoutOffer {
-  return {
+): BoutOffer =>
+  fixtureBoutOffer({
     id: id as BoutOffer['id'],
     promoterId: 'prom1' as any,
     warriorIds: warriorIds as any,
@@ -123,8 +121,7 @@ function makeOffer(
     hype: 0,
     status,
     responses: {} as any,
-  } as BoutOffer;
-}
+  } as any);
 
 describe('warriorCollection', () => {
   describe('collectAllWarriors', () => {

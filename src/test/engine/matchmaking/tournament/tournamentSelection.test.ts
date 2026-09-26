@@ -10,6 +10,7 @@ import {
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNG } from '@/utils/random';
 import { getPairKey } from '@/utils/keyUtils';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 // ─── Mock simulateFight before importing resolution ───
 vi.mock('@/engine/simulate', () => ({
   simulateFight: vi.fn(() => ({
@@ -70,8 +71,8 @@ import { simulateFight } from '@/engine/simulate';
 const PLAYER_ID = 'stable-player' as StableId;
 const RIVAL_ID = 'stable-rival-1' as StableId;
 
-function makeBaseState(): GameState {
-  return {
+const makeBaseState = (): GameState =>
+  fixtureGameState({
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
     player: {
       id: PLAYER_ID,
@@ -129,8 +130,7 @@ function makeBaseState(): GameState {
     coachDismissed: [],
     rivalMap: new Map(),
     warriorMap: new Map(),
-  } as unknown as GameState;
-}
+  });
 
 function makeTestWarrior(
   id: string,

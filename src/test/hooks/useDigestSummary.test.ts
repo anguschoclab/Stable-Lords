@@ -5,9 +5,10 @@ import { useDigestSummary } from '@/hooks/useDigestSummary';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import type { FightId, BoutOfferId, PromoterId } from '@/types/shared.types';
+import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
 
-function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
-  return {
+const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
+  fixtureFightSummary({
     id: 'fight-1' as FightId,
     week: 10,
     title: 'Test Fight',
@@ -19,8 +20,8 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
     styleD: 'Technician',
     createdAt: '2026-01-01T00:00:00Z',
     ...overrides,
-  } as FightSummary;
-}
+    absoluteWeek: overrides.absoluteWeek ?? overrides.week ?? 10,
+  } as any);
 
 function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
   const warriorIds = overrides.warriorIds ?? ['wa' as WarriorId];

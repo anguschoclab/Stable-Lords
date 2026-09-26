@@ -7,11 +7,12 @@ import type { FightSummary } from '@/types/combat.types';
 
 import { FightingStyle } from '@/types/shared.types';
 import '@/test/_setup/setup';
+import { makeWarrior as fixtureWarrior, makeFightSummary as fixtureFightSummary, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 type RivalryStateSlice = Parameters<typeof useRivalriesList>[0];
 
-function makeWarrior(id: string, overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (id: string, overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: id as Warrior['id'],
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
@@ -26,11 +27,10 @@ function makeWarrior(id: string, overrides: Partial<Warrior> = {}): Warrior {
     status: 'Active',
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
-function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
-  return {
+const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
+  fixtureFightSummary({
     id: 'f1' as any,
     week: 10,
     title: 'Test Bout',
@@ -41,19 +41,17 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
     styleA: 'ST',
     styleD: 'BA',
     ...overrides,
-  } as FightSummary;
-}
+  } as any);
 
-function makeState(overrides: Partial<RivalryStateSlice> = {}): RivalryStateSlice {
-  return {
+const makeState = (overrides: Partial<RivalryStateSlice> = {}): RivalryStateSlice =>
+  fixtureGameState({
     roster: [],
     graveyard: [],
     rivals: [],
     arenaHistory: [],
     week: 10,
     ...overrides,
-  };
-}
+  } as any);
 
 describe('useRivalriesList', () => {
   it('returns empty array when no arena history', () => {

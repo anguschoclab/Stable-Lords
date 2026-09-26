@@ -2,9 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { truncateState, TRUNCATION_CAPS } from '@/engine/storage/truncation';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior, CareerRecord } from '@/types/warrior.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-function makeWarrior(overrides?: Partial<Warrior>): Warrior {
-  return {
+const makeWarrior = (overrides?: Partial<Warrior>): Warrior =>
+  fixtureWarrior({
     id: 'w1',
     name: 'Test',
     titles: [],
@@ -13,8 +14,7 @@ function makeWarrior(overrides?: Partial<Warrior>): Warrior {
     injuries: [],
     traits: [],
     ...overrides,
-  } as unknown as Warrior;
-}
+  } as any);
 
 describe('truncateState — configurable caps', () => {
   it('uses default caps when no overrides given', () => {

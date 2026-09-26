@@ -10,9 +10,11 @@ import { FightingStyle, type FightSummary } from '@/types/game';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { generateId } from '@/utils/idUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeTestWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: overrides.id ?? (generateId(undefined, 'w') as Warrior['id']),
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
@@ -28,8 +30,7 @@ function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
     age: 20,
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  });
 
 function makeEconomyInput(overrides: Partial<StableEconomyInput> = {}): StableEconomyInput {
   return {
@@ -44,8 +45,8 @@ function makeEconomyInput(overrides: Partial<StableEconomyInput> = {}): StableEc
   };
 }
 
-function makeFight(week: number, opts: Record<string, any> = {}): FightSummary {
-  return {
+const makeFight = (week: number, opts: Record<string, any> = {}): FightSummary =>
+  fixtureFightSummary({
     id: 'f1',
     week,
     warriorIdA: 'p1',
@@ -57,8 +58,7 @@ function makeFight(week: number, opts: Record<string, any> = {}): FightSummary {
     title: 'A vs B',
     createdAt: new Date().toISOString(),
     ...opts,
-  } as FightSummary;
-}
+  } as any);
 
 describe('Economy Engine', () => {
   const baseState = createFreshState('test-seed');

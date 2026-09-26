@@ -11,11 +11,12 @@ import {
 } from '@/engine/matchmaking/arenaFit';
 import { ARENA_FIT, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 import * as arenasModule from '@/data/arenas';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // ─── Factory Helpers ──────────────────────────────────────────────────────────
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
@@ -30,8 +31,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     status: 'Active',
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 function makeArena(overrides: Partial<ArenaConfig> = {}): ArenaConfig {
   return {

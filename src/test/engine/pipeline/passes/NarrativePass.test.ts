@@ -4,9 +4,10 @@ import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import { SeededRNG } from '@/utils/random';
+import { makeFightSummary as fixtureFightSummary, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeFight(over: Partial<FightSummary> = {}): FightSummary {
-  return {
+const makeFight = (over: Partial<FightSummary> = {}): FightSummary =>
+  fixtureFightSummary({
     id: 'bout_1' as FightSummary['id'],
     week: 5,
     absoluteWeek: 5,
@@ -24,11 +25,10 @@ function makeFight(over: Partial<FightSummary> = {}): FightSummary {
     transcript: [],
     createdAt: 'wk5',
     ...over,
-  } as FightSummary;
-}
+  } as any);
 
-function makeState(arenaHistory: FightSummary[]): GameState {
-  return {
+const makeState = (arenaHistory: FightSummary[]): GameState =>
+  fixtureGameState({
     meta: { gameName: '', version: '', createdAt: '' },
     week: 5,
     year: 1,
@@ -41,8 +41,7 @@ function makeState(arenaHistory: FightSummary[]): GameState {
     roster: [],
     rivals: [],
     crowdMood: 'Calm',
-  } as unknown as GameState;
-}
+  } as any);
 
 describe('runNarrativePass — weekly newsletter issue (D15 wiring)', () => {
   it('emits a Fight of the Week newsletter item generated from real fight data', () => {

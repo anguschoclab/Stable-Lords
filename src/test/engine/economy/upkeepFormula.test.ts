@@ -4,9 +4,10 @@ import { WARRIOR_UPKEEP_BASE, FAME_UPKEEP_MULTIPLIER } from '@/constants/economy
 import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import { generateId } from '@/utils/idUtils';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-function makeWarrior(fame: number): Warrior {
-  return {
+const makeWarrior = (fame: number): Warrior =>
+  fixtureWarrior({
     id: generateId(undefined, 'w') as Warrior['id'],
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
@@ -21,8 +22,7 @@ function makeWarrior(fame: number): Warrior {
     status: 'Active',
     age: 20,
     traits: [],
-  } as Warrior;
-}
+  } as any);
 
 function makeInput(fame: number): StableEconomyInput {
   return {

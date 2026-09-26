@@ -13,16 +13,17 @@ import type { WarriorId, BoutOfferId, PromoterId, StableId, InjuryId } from '@/t
 import { generateId } from '@/utils/idUtils';
 import type { InjuryData } from '@/types/warrior.types';
 import { resolveImpacts } from '@/engine/impacts';
+import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 // Helper to create a test bout offer
-function createTestOffer(
+const createTestOffer = (
   state: GameState,
   promoterId: string,
   warriorIds: string[],
   purse: number = 100,
   hype: number = 100
-): BoutOffer {
-  return {
+): BoutOffer =>
+  fixtureBoutOffer({
     id: generateId(undefined, 'offer') as BoutOfferId,
     promoterId: promoterId as PromoterId,
     warriorIds: warriorIds as WarriorId[],
@@ -32,8 +33,7 @@ function createTestOffer(
     hype,
     status: 'Proposed',
     responses: {},
-  };
-}
+  });
 
 // Helper to create a rival with specific warriors
 function createTestRival(

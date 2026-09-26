@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import { FightingStyle } from '@/types/shared.types';
 import type { Attributes, WarriorId } from '@/types/shared.types';
 import type { Warrior, CareerRecord, AttributePotential } from '@/types/warrior.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/tooltip', () => ({
   TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -70,8 +71,8 @@ import { RosterWarriorRow } from '@/components/stable/RosterWarriorRow';
 const baseAttrs: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
 const career: CareerRecord = { wins: 5, losses: 3, kills: 1 };
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w1' as WarriorId,
     name: 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -91,8 +92,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 // ─── RankStrip ─────────────────────────────────────────────────────────────
 

@@ -3,6 +3,7 @@ import '@/test/_setup/setup';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import type { GameState } from '@/types/state.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 function makeWarrior(
   id: string,
@@ -27,8 +28,8 @@ function makeWarrior(
   } as any;
 }
 
-function makeState(warriors: any[]): GameState {
-  return {
+const makeState = (warriors: any[]): GameState =>
+  fixtureGameState({
     treasury: 1000,
     fame: 50,
     week: 1,
@@ -100,8 +101,7 @@ function makeState(warriors: any[]): GameState {
       titles: 0,
     },
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-  } as any;
-}
+  } as any);
 
 describe('RankingsPass sort behavior', () => {
   it('produces correct overall ranks sorted by score descending', () => {

@@ -24,9 +24,10 @@ import type {
   TournamentEntry,
 } from '@/types/state.types';
 import type { CrowdMoodType, WeatherType } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, name: string): Warrior {
-  return {
+const makeWarrior = (id: string, name: string): Warrior =>
+  fixtureWarrior({
     id: id as any,
     name,
     style: FightingStyle.StrikingAttack,
@@ -43,8 +44,7 @@ function makeWarrior(id: string, name: string): Warrior {
     champion: false,
     status: 'Active',
     age: 20,
-  };
-}
+  } as any);
 
 function makeMinimalGameState(): GameState {
   return {
@@ -92,8 +92,8 @@ function makeMinimalGameState(): GameState {
   } as any;
 }
 
-function makeFightSummary(id: string = 'fight-1'): FightSummary {
-  return {
+const makeFightSummary = (id: string = 'fight-1'): FightSummary =>
+  fixtureFightSummary({
     id: id as any,
     week: 1,
     warriorIdA: 'w1' as any,
@@ -107,8 +107,7 @@ function makeFightSummary(id: string = 'fight-1'): FightSummary {
     title: 'Test Fight',
     transcript: [],
     createdAt: new Date().toISOString(),
-  };
-}
+  } as any);
 
 function makeTrainer(id: string = 'trainer-1'): Trainer {
   return {
@@ -123,8 +122,8 @@ function makeTrainer(id: string = 'trainer-1'): Trainer {
   };
 }
 
-function makeRival(id: string = 'rival-1'): RivalStableData {
-  return {
+const makeRival = (id: string = 'rival-1'): RivalStableData =>
+  fixtureRival({
     id: id as any,
     fame: 50,
     owner: {
@@ -140,8 +139,7 @@ function makeRival(id: string = 'rival-1'): RivalStableData {
     tier: 'Established' as any,
     ledger: [],
     trainingAssignments: [],
-  };
-}
+  } as any);
 
 function makeInitialState(): GameState {
   return makeMinimalGameState();

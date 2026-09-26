@@ -5,8 +5,10 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer, Promoter, InsightToken } from '@/types/state.types';
 import type { WarriorTournamentAdvice } from '@/engine/advisor/types';
 import { makeFightSummary } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-const mkWarrior = (id: string, style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior => ({
+const mkWarrior = (id: string, style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
   id: id as any,
   name: `Warrior_${id}`,
   style,
@@ -21,14 +23,15 @@ const mkWarrior = (id: string, style: FightingStyle = FightingStyle.LungingAttac
   status: 'Active',
   traits: [],
   ...over,
-});
+} as any);
 
 const mkOffer = (
   id: string,
   warriorIdA: string,
   warriorIdB: string,
   over: Partial<BoutOffer> = {}
-): BoutOffer => ({
+): BoutOffer =>
+  fixtureBoutOffer({
   id: id as any,
   promoterId: 'promoter_1' as any,
   warriorIds: [warriorIdA as any, warriorIdB as any],
@@ -40,10 +43,10 @@ const mkOffer = (
   status: 'Proposed',
   responses: { [warriorIdA]: 'Pending', [warriorIdB]: 'Pending' } as any,
   ...over,
-});
+} as any);
 
 const mkState = (over: Partial<GameState> = {}): GameState =>
-  ({
+  fixtureGameState({
     week: 5,
     absoluteWeek: 5,
     year: 1,
@@ -59,7 +62,7 @@ const mkState = (over: Partial<GameState> = {}): GameState =>
     tournaments: [],
     isTournamentWeek: false,
     ...over,
-  }) as unknown as GameState;
+  } as any);
 
 describe('evaluateBoutOffers', () => {
   it('blocks combat when warrior has moderate, severe, or critical injury', () => {

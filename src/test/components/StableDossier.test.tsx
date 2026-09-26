@@ -6,6 +6,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior, CareerRecord } from '@/types/warrior.types';
 import type { Owner, RivalStableData } from '@/types/state.types';
 import type { CrestData } from '@/types/crest.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 const mockPlayer: Owner = {
   id: 'player-1' as any,
@@ -17,8 +18,8 @@ const mockPlayer: Owner = {
   generation: 0,
 };
 
-function makeWarrior(overrides: Record<string, any> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Record<string, any> = {}): Warrior =>
+  fixtureWarrior({
     id: (overrides.id ?? 'w1') as any,
     name: overrides.name ?? 'Spartacus',
     style: FightingStyle.AimedBlow,
@@ -33,8 +34,7 @@ function makeWarrior(overrides: Record<string, any> = {}): Warrior {
     status: (overrides.status ?? 'Active') as any,
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 const mockRoster: Warrior[] = [
   makeWarrior({ id: 'w1', name: 'Spartacus', status: 'Active' }),

@@ -2,13 +2,14 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useInsightManager } from '@/components/ledger/InsightManager/hooks/useInsightManager';
 import type { InsightToken, Warrior } from '@/types/state.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 function makeToken(id: string, type: string = 'Weapon'): InsightToken {
   return { id, type, week: 1 } as unknown as InsightToken;
 }
 
-function makeWarrior(id: string, name: string): Warrior {
-  return {
+const makeWarrior = (id: string, name: string): Warrior =>
+  fixtureWarrior({
     id,
     name,
     style: 'StrikingAttack',
@@ -26,8 +27,7 @@ function makeWarrior(id: string, name: string): Warrior {
     status: 'Active',
     age: 20,
     favorites: { weaponId: 'Gladius', rhythm: { oe: 5, al: 5 } },
-  } as unknown as Warrior;
-}
+  } as any);
 
 describe('#14 useInsightManager timer cleanup on re-reveal', () => {
   beforeEach(() => {

@@ -5,6 +5,7 @@ import { TRAINER_AGING } from '@/constants/aging';
 import type { GameState, Trainer, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { makeRival as fixtureRival, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -34,8 +35,8 @@ function makeTrainer(overrides?: Partial<Trainer>): Trainer {
   };
 }
 
-function makeGameState(overrides?: Partial<GameState>): GameState {
-  return {
+const makeGameState = (overrides?: Partial<GameState>): GameState =>
+  fixtureGameState({
     meta: { gameName: 'Test', version: '1.0', createdAt: '' },
     ftueComplete: true,
     coachDismissed: [],
@@ -91,11 +92,10 @@ function makeGameState(overrides?: Partial<GameState>): GameState {
     realmRankings: {},
     awards: [],
     ...overrides,
-  } as GameState;
-}
+  } as any);
 
-function makeRival(id: string, trainers?: Trainer[]): RivalStableData {
-  return {
+const makeRival = (id: string, trainers?: Trainer[]): RivalStableData =>
+  fixtureRival({
     id: id as StableId,
     owner: {
       id: `owner_${id}` as StableId,
@@ -115,8 +115,7 @@ function makeRival(id: string, trainers?: Trainer[]): RivalStableData {
     trainers,
     ledger: [],
     trainingAssignments: [],
-  };
-}
+  } as any);
 
 // ─── computeTrainerAging ────────────────────────────────────────────────────
 

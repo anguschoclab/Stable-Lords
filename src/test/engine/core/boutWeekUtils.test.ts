@@ -7,9 +7,10 @@ import {
 } from '@/engine/core/absoluteWeek';
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, PromoterId, WarriorId } from '@/types/shared.types';
+import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
-function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
-  return {
+const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: 'test' as BoutOfferId,
     promoterId: 'p' as PromoterId,
     warriorIds: ['w1' as WarriorId, 'w2' as WarriorId],
@@ -20,8 +21,7 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
     status: 'Proposed',
     responses: {},
     ...overrides,
-  };
-}
+  } as any);
 
 describe('resolveAbsoluteWeek', () => {
   it('resolves same-year forward (created week 10, display week 15)', () => {

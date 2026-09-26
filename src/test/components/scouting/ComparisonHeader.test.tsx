@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ComparisonHeader } from '@/components/scouting/ComparisonHeader';
 import type { RivalStableData, Warrior } from '@/types/game';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children, className }: any) => (
@@ -21,8 +22,8 @@ vi.mock('@/components/ui/badge', () => ({
   ),
 }));
 
-function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'rival-1' as any,
     owner: {
       id: 'owner-1' as any,
@@ -39,11 +40,10 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
     trainingAssignments: [],
     tier: 'Established',
     ...overrides,
-  } as RivalStableData;
-}
+  } as any);
 
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: 'w-1' as any,
     name: 'Brutus the Bold',
     style: 'Gladiator' as any,
@@ -59,8 +59,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     age: 25,
     traits: [],
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 describe('ComparisonHeader', () => {
   // ── Stable variant ──────────────────────────────────────────────

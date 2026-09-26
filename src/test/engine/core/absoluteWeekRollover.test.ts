@@ -5,9 +5,10 @@ import type { WarriorId, StableId, BoutOfferId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 import { generatePairings } from '@/engine/bout/core/pairings';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, fame: number = 50): Warrior {
-  return {
+const makeWarrior = (id: string, fame: number = 50): Warrior =>
+  fixtureWarrior({
     id: id as WarriorId,
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
@@ -22,11 +23,10 @@ function makeWarrior(id: string, fame: number = 50): Warrior {
     status: 'Active',
     age: 20,
     fatigue: 0,
-  } as unknown as Warrior;
-}
+  } as any);
 
-function makeRival(id: string, roster: Warrior[]): RivalStableData {
-  return {
+const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
+  fixtureRival({
     id: id as StableId,
     owner: {
       id: `owner_${id}`,
@@ -44,8 +44,7 @@ function makeRival(id: string, roster: Warrior[]): RivalStableData {
     treasury: 1000,
     strategy: { intent: 'AGGRESSIVE' },
     trainingAssignments: [],
-  } as unknown as RivalStableData;
-}
+  } as any);
 
 function makeState(absoluteWeek: number, rivals: RivalStableData[]): GameState {
   const week = ((absoluteWeek - 1) % 52) + 1;

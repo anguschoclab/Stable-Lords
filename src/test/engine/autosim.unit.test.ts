@@ -7,13 +7,14 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
+import { makeBoutOffer as fixtureBoutOffer, makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
   advanceWeek: vi.fn(async (state: GameState) => state),
 }));
 
-function makeOffer(id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer {
-  return {
+const makeOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer =>
+  fixtureBoutOffer({
     id: id as BoutOfferId,
     promoterId: 'promoter-1' as any,
     warriorIds: warriorIds as WarriorId[],
@@ -25,8 +26,7 @@ function makeOffer(id: string, warriorIds: string[], opts?: Partial<BoutOffer>):
     responses: Object.fromEntries(warriorIds.map((w) => [w, 'Pending'])) as any,
     conditions: [],
     ...opts,
-  };
-}
+  } as any);
 
 function makeState(overrides?: Partial<GameState>): GameState {
   const state = createFreshState('test-seed');
@@ -34,8 +34,8 @@ function makeState(overrides?: Partial<GameState>): GameState {
   return { ...state, ...overrides };
 }
 
-function makeFightSummary(title: string, winner: 'A' | 'D' | null, by: string): FightSummary {
-  return {
+const makeFightSummary = (title: string, winner: 'A' | 'D' | null, by: string): FightSummary =>
+  fixtureFightSummary({
     id: 'fight-1' as any,
     week: 1,
     title,
@@ -46,8 +46,7 @@ function makeFightSummary(title: string, winner: 'A' | 'D' | null, by: string): 
     styleA: 'StrikingAttack',
     styleD: 'StrikingAttack',
     createdAt: '2024-01-01T00:00:00.000Z',
-  };
-}
+  } as any);
 
 describe('processPlayerOffers', () => {
   it('accepts high-hype offer via index', () => {

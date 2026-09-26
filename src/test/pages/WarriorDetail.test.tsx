@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // --- Router mock ---
 vi.mock('@tanstack/react-router', () => ({
@@ -94,8 +95,8 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 // --- Fixtures ---
-function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
     id: (overrides.id ?? 'w1') as WarriorId,
     name: overrides.name ?? 'Spartacus',
     style: FightingStyle.StrikingAttack,
@@ -111,8 +112,7 @@ function makeWarrior(overrides: Partial<Warrior> = {}): Warrior {
     champion: false,
     status: 'Active',
     ...overrides,
-  } as Warrior;
-}
+  } as any);
 
 import WarriorDetail from '@/pages/WarriorDetail';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';

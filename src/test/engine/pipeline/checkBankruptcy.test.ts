@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { checkBankruptcy } from '@/engine/pipeline/services/weekPipelineService';
 import type { GameState } from '@/types/state.types';
 import type { StateImpact } from '@/engine/impacts';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-function makeState(treasury: number): GameState {
-  return { treasury } as GameState;
-}
+const makeState = (treasury: number): GameState =>
+  fixtureGameState({ treasury });
 
 describe('checkBankruptcy', () => {
   it('returns false when single treasuryDelta keeps treasury above threshold', () => {

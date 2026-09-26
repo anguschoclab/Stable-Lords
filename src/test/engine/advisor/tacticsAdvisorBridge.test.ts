@@ -4,8 +4,10 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { makeFightSummary, makeGameState } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-const mkWarrior = (style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior => ({
+const mkWarrior = (style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
   id: 'w1' as any,
   name: 'Marcus',
   style,

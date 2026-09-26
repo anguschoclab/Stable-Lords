@@ -3,8 +3,10 @@ import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-const mkWarrior = (overrides: Partial<Warrior> = {}): Warrior => ({
+const mkWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
   id: 'w1' as any,
   name: 'Marcus',
   style: FightingStyle.LungingAttack,
@@ -22,7 +24,7 @@ const mkWarrior = (overrides: Partial<Warrior> = {}): Warrior => ({
 });
 
 const mkState = (overrides: Partial<GameState> = {}): GameState =>
-  ({
+  fixtureGameState({
     week: 5,
     absoluteWeek: 5,
     year: 1,
@@ -33,7 +35,7 @@ const mkState = (overrides: Partial<GameState> = {}): GameState =>
     tournaments: [],
     isTournamentWeek: false,
     ...overrides,
-  }) as unknown as GameState;
+  });
 
 describe('evaluateCampaignFocus', () => {
   it('honors a player-pinned campaign focus if set', () => {

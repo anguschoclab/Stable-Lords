@@ -7,7 +7,7 @@ import {
   ARENA_SIZE_PROFILES,
   RANGE_ORDER,
 } from '@/engine/combat/mechanics/distanceResolution';
-import { getAllArenas, getArenaById, getArenasByTag } from '@/data/arenas';
+import { getAllArenas, getArenaById, getArenasByTag, arenaTagSet } from '@/data/arenas';
 import { HAZARDOUS_WEATHER } from '@/engine/ai/weatherSuitability';
 import { ARENA_FIT, ARENA_SELECTION, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 
@@ -120,8 +120,9 @@ export function scoreArenaFitForWarrior(
   }
 
   // Synergy penalties for specific tag combinations
-  const hasWater = arena.tags.includes('water');
-  const hasCursed = arena.tags.includes('cursed');
+  const arenaTags = arenaTagSet(arena);
+  const hasWater = arenaTags.has('water');
+  const hasCursed = arenaTags.has('cursed');
 
   if (hasWater && hasCursed) {
     // Water + Cursed creates an extremely draining environment that punishes high-aggression

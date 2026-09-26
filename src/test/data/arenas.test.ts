@@ -5,6 +5,7 @@ import {
   getAllArenas,
   getArenasByTag,
   getArenasByTier,
+  arenaTagSet,
   STANDARD_ARENA,
 } from '@/data/arenas';
 import type { ArenaConfig } from '@/types/shared.types';
@@ -46,5 +47,13 @@ describe('Arena Registry', () => {
     };
     registerArena(custom);
     expect(getArenaById('test_arena')).toEqual(custom);
+  });
+
+  it('arenaTagSet returns a memoized Set matching arena.tags', () => {
+    const arena = getArenaById('standard_arena');
+    const s1 = arenaTagSet(arena);
+    const s2 = arenaTagSet(arena);
+    expect(s1).toBe(s2); // same memoized instance
+    expect([...s1].sort()).toEqual([...arena.tags].sort());
   });
 });

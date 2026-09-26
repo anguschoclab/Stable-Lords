@@ -3,7 +3,7 @@
  * Determines which arenas are eligible for tournament bouts.
  */
 
-import { getAllArenas } from '@/data/arenas';
+import { getAllArenas, arenaTagSet } from '@/data/arenas';
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 import { ARENA_SELECTION, ARENA_TAG_WEIGHTS, TOURNAMENT_ARENA_DEFAULTS } from '@/constants/arena';
 
@@ -38,13 +38,14 @@ export function getEligibleArenasForTournament(filter: TournamentArenaFilter = {
     if (arena.tier < minTier || arena.tier > maxTier) return false;
 
     // Tag requirements
+    const tags = arenaTagSet(arena);
     for (const tag of requireTags) {
-      if (!arena.tags.includes(tag)) return false;
+      if (!tags.has(tag)) return false;
     }
 
     // Tag exclusions
     for (const tag of excludeTags) {
-      if (arena.tags.includes(tag)) return false;
+      if (tags.has(tag)) return false;
     }
 
     // Bracket size constraints
@@ -84,7 +85,7 @@ export function selectArenaForTournamentBout(
     }
 
     // Bonus for premium tag
-    if (arena.tags.includes('premium')) weight *= 1.2;
+    if (arenaTagSet(arena).has('premium')) weight *= 1.2;
 
     return Math.max(0.1, weight); // Ensure minimum weight
   });

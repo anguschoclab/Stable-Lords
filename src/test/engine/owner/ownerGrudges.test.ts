@@ -334,7 +334,12 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     // o1(Aggressive) vs o2(Tactician) clash, o3(Methodical) vs o4(Showman) clash
     const { grudges, gazetteItems } = processOwnerGrudges(state, []);
     expect(grudges).toHaveLength(2);
-    expect(gazetteItems.filter((i) => i.includes('NEW RIVALRY'))).toHaveLength(2);
+    // Pin ordering: grudges are emitted in i<j rival-pair order, gazette matches.
+    expect(grudges.map((g) => g.id)).toEqual(['grudge_o1_o2', 'grudge_o3_o4']);
+    const rivalryLines = gazetteItems.filter((i) => i.includes('NEW RIVALRY'));
+    expect(rivalryLines).toHaveLength(2);
+    expect(rivalryLines[0]).toContain('Aggressive');
+    expect(rivalryLines[1]).toContain('Methodical');
   });
 
   it('should match existing grudge by reversed owner IDs', () => {

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { getAllArenas, getArenaById, STANDARD_ARENA } from '@/data/arenas';
+import { getAllArenas, getArenaById, getArenasByTier, STANDARD_ARENA } from '@/data/arenas';
+import { ARENA_ROSTER_LIMITS } from '@/constants/arena';
 
 describe('dataIntegrityArenas', () => {
   it('all arena IDs are unique', () => {
@@ -30,6 +31,22 @@ describe('dataIntegrityArenas', () => {
     for (const arena of all) {
       expect(arena.tier).toBeGreaterThanOrEqual(1);
       expect(arena.tier).toBeLessThanOrEqual(5);
+    }
+  });
+
+  it('arena roster respects the 50-arena cap and per-tier distribution targets', () => {
+    const all = getAllArenas();
+    expect(
+      all.length,
+      `roster has ${all.length} arenas — hard cap is ${ARENA_ROSTER_LIMITS.TOTAL_CAP}`
+    ).toBeLessThanOrEqual(ARENA_ROSTER_LIMITS.TOTAL_CAP);
+
+    for (const tier of [1, 2, 3] as const) {
+      const count = getArenasByTier(tier).length;
+      const cap = ARENA_ROSTER_LIMITS.TIER_CAPS[tier];
+      expect(count, `tier ${tier} has ${count} arenas — target ceiling is ${cap}`).toBeLessThanOrEqual(
+        cap
+      );
     }
   });
 

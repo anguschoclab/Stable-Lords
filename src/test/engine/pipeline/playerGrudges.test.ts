@@ -93,6 +93,72 @@ describe('player×rival grudges', () => {
     expect(g!.intensity).toBeGreaterThan(2);
   });
 
+  it('an upset loss creates a SLIGHTED grudge at intensity 1 (no kill needed)', () => {
+    const starPlayer = makeWarrior({ id: 'star1' as WarriorId, fame: 300 });
+    const underdog = makeWarrior({ id: 'ud1' as WarriorId, fame: 50 });
+    const rival = makeRival({
+      id: 'rA' as StableId,
+      owner: makeOwner({ id: 'ownA' as never, personality: 'Pragmatic' }),
+      roster: [underdog],
+    });
+    const state = makeGameState({
+      roster: [starPlayer],
+      rivals: [rival],
+      week: 6,
+      absoluteWeek: 6,
+      arenaHistory: [
+        makeFightSummary({
+          warriorIdA: 'ud1' as WarriorId,
+          warriorIdD: 'star1' as WarriorId,
+          winner: 'A', // underdog (rival) won
+          by: 'KO',
+          week: 5,
+          absoluteWeek: 5,
+        }),
+      ],
+    });
+
+    const { grudges, gazetteItems } = processOwnerGrudges(state, []);
+    const g = grudges.find(
+      (x) => x.ownerIdA === 'ownA' || x.ownerIdB === 'ownA'
+    );
+    expect(g).toBeDefined();
+    expect(g!.intensity).toBe(1);
+    expect(gazetteItems.some((i) => i.includes('SLIGHTED'))).toBe(true);
+  });
+
+  it('a kill dominates an upset — BLOOD FEUD at intensity 2, not SLIGHTED', () => {
+    const starPlayer = makeWarrior({ id: 'star1' as WarriorId, fame: 300 });
+    const killer = makeWarrior({ id: 'kw1' as WarriorId, fame: 50 });
+    const rival = makeRival({
+      id: 'rA' as StableId,
+      owner: makeOwner({ id: 'ownA' as never, personality: 'Pragmatic' }),
+      roster: [killer],
+    });
+    const state = makeGameState({
+      roster: [starPlayer],
+      rivals: [rival],
+      week: 6,
+      absoluteWeek: 6,
+      arenaHistory: [
+        makeFightSummary({
+          warriorIdA: 'kw1' as WarriorId,
+          warriorIdD: 'star1' as WarriorId,
+          winner: 'A',
+          by: 'Kill',
+          week: 5,
+          absoluteWeek: 5,
+        }),
+      ],
+    });
+
+    const { grudges, gazetteItems } = processOwnerGrudges(state, []);
+    const g = grudges.find((x) => x.ownerIdA === 'ownA' || x.ownerIdB === 'ownA');
+    expect(g!.intensity).toBe(2);
+    expect(gazetteItems.some((i) => i.includes('BLOOD FEUD'))).toBe(true);
+    expect(gazetteItems.some((i) => i.includes('SLIGHTED'))).toBe(false);
+  });
+
   it('no grudge forms when the rival only fought other rivals', () => {
     const rival = makeRival({
       id: 'rA' as StableId,

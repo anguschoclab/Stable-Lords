@@ -408,6 +408,26 @@ describe('filterAndSortOffers', () => {
     expect(ids).not.toContain('stale');
   });
 
+  it('idleWarriors is computed from all player offers — the selectedWarriorId filter does not shrink it', () => {
+    const w1 = makeWarrior({ id: 'w1' as WarriorId, status: 'Active' });
+    const w2 = makeWarrior({ id: 'w2' as WarriorId, status: 'Active' });
+    const roster = [w1, w2];
+    const offers: Record<string, BoutOffer> = {
+      ['o1' as BoutOfferId]: makeOffer({
+        id: 'o1' as BoutOfferId,
+        warriorIds: ['w2' as WarriorId],
+        boutWeek: 2,
+        status: 'Proposed',
+      }),
+    };
+    // Selecting w1 hides w2's offer from thisWeek, but w2 is still booked
+    // (warriorsWithOffers is built from playerOffers, not the filtered list)
+    // while w1 — holding no offer — is idle.
+    const result = filterAndSortOffers(offers, roster, 1, {}, new Set(), 'w1');
+    expect(result.thisWeekOffers).toHaveLength(0);
+    expect(result.idleWarriors.map((w) => w.id)).toEqual(['w1']);
+  });
+
   it('excludes a warrior from idle if they appear in any player-relevant offer', () => {
     const w1 = makeWarrior({ id: 'w1' as WarriorId, status: 'Active' });
     const w2 = makeWarrior({ id: 'w2' as WarriorId, status: 'Active' });

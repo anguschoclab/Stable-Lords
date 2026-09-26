@@ -49,6 +49,12 @@ export interface PairwiseMatchupContext {
   /** Stable id for side B (defaults to b.stableId). */
   bStableId?: string;
   week?: number;
+  /**
+   * Optional per-call head-to-head memo (keyed directionally `aId|bId`).
+   * When omitted, lookups fall back to a WeakMap keyed on the arenaHistory
+   * array — safe because arenaHistory is always replaced, never mutated.
+   */
+  h2hCache?: Map<string, PairwiseHeadToHead>;
 }
 
 /**
@@ -116,7 +122,7 @@ export function scorePairwiseMatchup(
 
   // Head-to-head history modifier
   if (ctx.arenaHistory && ctx.arenaHistory.length > 0) {
-    const hh = getHeadToHeadRecord(a, b, ctx.arenaHistory);
+    const hh = headToHeadFor(a, b, ctx.arenaHistory, ctx.h2hCache);
     if (hh.total === 0) {
       score += 3; // Novelty bonus
     } else {
@@ -191,7 +197,11 @@ function getEligibleRivals(state: GameState): { warrior: Warrior; stable: RivalS
   return rivals;
 }
 
-interface PairwiseHeadToHead {
+/**
+ * Directional head-to-head record between two warriors, with wins and
+ * losses counted from side A's perspective (G18).
+ */
+export interface PairwiseHeadToHead {
   /** Wins from side A's perspective. */
   wins: number;
   /** Losses from side A's perspective. */
@@ -240,6 +250,40 @@ function getHeadToHeadRecord(
   }
 
   return { wins, losses, total, lastWinner, lastFightWeek };
+}
+
+// arenaHistory is append-only-by-replacement (every writer produces a new
+// array), so keying the memo on the array's identity is safe — a new history
+// automatically starts a fresh cache.
+const h2hByHistory = new WeakMap<FightSummary[], Map<string, PairwiseHeadToHead>>();
+
+/**
+ * Memoized head-to-head lookup: O(F) history scan at most once per ordered
+ * warrior pair per arenaHistory identity.
+ */
+function headToHeadFor(
+  a: Warrior,
+  b: Warrior,
+  arenaHistory: FightSummary[] | undefined,
+  explicit?: Map<string, PairwiseHeadToHead>
+): PairwiseHeadToHead {
+  if (!arenaHistory || arenaHistory.length === 0) {
+    return getHeadToHeadRecord(a, b, arenaHistory);
+  }
+  // Directional key — wins/losses are recorded from side A's perspective, so
+  // `${a}|${b}` must stay distinct from `${b}|${a}` (do not use getPairKey).
+  const key = `${a.id}|${b.id}`;
+  let map = explicit ?? h2hByHistory.get(arenaHistory);
+  if (!map) {
+    map = new Map();
+    h2hByHistory.set(arenaHistory, map);
+  }
+  let hh = map.get(key);
+  if (!hh) {
+    hh = getHeadToHeadRecord(a, b, arenaHistory);
+    map.set(key, hh);
+  }
+  return hh;
 }
 
 function getMatchupNotes(
@@ -301,7 +345,7 @@ function buildMatchupScore(
   const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
   const rankDiff =
     playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
-  const hh = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
+  const hh = headToHeadFor(playerWarrior, r.warrior, state.arenaHistory);
   const headToHead: HeadToHeadRecord = {
     wins: hh.wins,
     losses: hh.losses,

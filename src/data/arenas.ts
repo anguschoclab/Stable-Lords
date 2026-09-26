@@ -68,6 +68,24 @@ export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
   return [...results];
 }
 
+// Arena configs are registry-static objects — a WeakMap keyed on the config
+// memoizes one tag Set per arena without mutating ArenaConfig.
+const tagSetCache = new WeakMap<ArenaConfig, Set<ArenaTag>>();
+
+/**
+ * Get a memoized Set of an arena's tags for O(1) membership checks.
+ * @param arena - Arena configuration.
+ * @returns Set of ArenaTag for the arena.
+ */
+export function arenaTagSet(arena: ArenaConfig): Set<ArenaTag> {
+  let s = tagSetCache.get(arena);
+  if (!s) {
+    s = new Set(arena.tags);
+    tagSetCache.set(arena, s);
+  }
+  return s;
+}
+
 /**
  * Check if an arena is indoors.
  * @param id - Arena identifier (optional).

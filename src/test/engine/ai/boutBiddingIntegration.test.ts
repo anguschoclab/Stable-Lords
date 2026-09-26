@@ -309,6 +309,121 @@ describe('convertBidsToOffers', () => {
     expect(offer.warriorIds).not.toContain(deadTarget.id);
     expect(offer.warriorIds).not.toContain(retiredTarget.id);
   });
+
+  it('prefers the candidate with prior head-to-head history (characterization)', () => {
+    // Two otherwise-identical candidates; the one who previously BEAT the
+    // proposer scores +10 (lastWinner 'b') vs +3 novelty — h2h is read through
+    // the matchup ctx and must stay correct under memoization.
+    const proposer = makeWarrior('Proposer', FightingStyle.StrikingAttack);
+    const met = makeWarrior('Met', FightingStyle.BashingAttack);
+    const fresh = makeWarrior('Fresh', FightingStyle.BashingAttack);
+    const rivalA = makeRival({ id: 'rival-a' as any, roster: [proposer] });
+    const rivalB = makeRival({
+      id: 'rival-b' as any,
+      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },
+      roster: [met, fresh],
+    });
+    const state = makeMinimalState([rivalA, rivalB]);
+    state.arenaHistory = [
+      {
+        id: 'f_prior' as any,
+        week: 2,
+        warriorIdA: met.id,
+        warriorIdD: proposer.id,
+        winner: 'A', // met beat proposer
+        by: 'KO',
+      } as any,
+    ];
+
+    const { bids } = generateBoutBids(rivalA, 5, 'Clear', 'Calm', [rivalB]);
+    const offers = convertBidsToOffers(
+      bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
+      [rivalA, rivalB],
+      state,
+      new SeededRNGService(42),
+      new Set()
+    );
+
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers[0]!.warriorIds).toContain(proposer.id);
+    expect(offers[0]!.warriorIds).toContain(met.id);
+    expect(offers[0]!.warriorIds).not.toContain(fresh.id);
+    expect(offers[0]!.purse).toBe(200); // floor(100 fame + 100 fame)
+    expect(offers[0]!.status).toBe('Proposed');
+  });
+
+  it('VENDETTA resolves a targetStableId that is an OWNER id', () => {
+    const proposer = makeWarrior('Vindicator', FightingStyle.StrikingAttack);
+    const target = makeWarrior('Target', FightingStyle.BashingAttack);
+    const rivalA = makeRival({
+      id: 'rival-a' as any,
+      roster: [proposer],
+      // targetStableId points at rivalB's OWNER id — rivalMap keys both
+      // rival.id and owner.id, so resolution must still find rivalB.
+      strategy: { intent: 'VENDETTA', targetStableId: 'owner-b' as any, planWeeksRemaining: 4 },
+    });
+    const rivalB = makeRival({
+      id: 'rival-b' as any,
+      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },
+      roster: [target],
+    });
+    const state = makeMinimalState([rivalA, rivalB]);
+
+    const { bids } = generateBoutBids(rivalA, 5, 'Clear', 'Calm', [rivalB]);
+    expect(bids.length).toBeGreaterThan(0);
+    expect(bids[0]!.targetStableId).toBe('owner-b');
+
+    const offers = convertBidsToOffers(
+      bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
+      [rivalA, rivalB],
+      state,
+      new SeededRNGService(42),
+      new Set()
+    );
+
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers[0]!.warriorIds).toContain(proposer.id);
+    expect(offers[0]!.warriorIds).toContain(target.id);
+  });
+
+  it('excludes resting and training-assigned rival warriors from candidates', () => {
+    const proposer = makeWarrior('Vindicator', FightingStyle.StrikingAttack);
+    const resting = makeWarrior('Resting', FightingStyle.BashingAttack);
+    const assigned = makeWarrior('Assigned', FightingStyle.BashingAttack);
+    const free = makeWarrior('Free', FightingStyle.BashingAttack);
+
+    const rivalA = makeRival({
+      id: 'rival-a' as any,
+      roster: [proposer],
+      strategy: { intent: 'VENDETTA', targetStableId: 'rival-b' as any, planWeeksRemaining: 4 },
+    });
+    const rivalB = makeRival({
+      id: 'rival-b' as any,
+      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },
+      roster: [resting, assigned, free],
+      trainingAssignments: [
+        { warriorId: assigned.id, type: 'attribute', attribute: 'ST' },
+      ] as any,
+    });
+    const state = makeMinimalState([rivalA, rivalB]);
+    // targetWeek = absoluteWeek + 1 = 6; resting is out until week 10
+    state.restStates = [{ warriorId: resting.id, restUntilWeek: 10 }];
+
+    const { bids } = generateBoutBids(rivalA, 5, 'Clear', 'Calm', [rivalB]);
+    const offers = convertBidsToOffers(
+      bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
+      [rivalA, rivalB],
+      state,
+      new SeededRNGService(42),
+      new Set()
+    );
+
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers[0]!.warriorIds).toContain(proposer.id);
+    expect(offers[0]!.warriorIds).toContain(free.id);
+    expect(offers[0]!.warriorIds).not.toContain(resting.id);
+    expect(offers[0]!.warriorIds).not.toContain(assigned.id);
+  });
 });
 
 // ─── Integration test through RivalStrategyPass ──────────────────────────────

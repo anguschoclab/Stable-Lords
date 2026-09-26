@@ -175,6 +175,52 @@ describe('processPoachMarket (G.2)', () => {
     expect(updatedRivals).toEqual([buyer, seller]);
     expect(gazetteItems).toHaveLength(0);
   });
+
+  it('two buyers in one sweep: only the first settles — the stale second bid drops but still stamps the season', () => {
+    // pickPoachTarget scans the ORIGINAL rivals array, so buyer B can target
+    // the warrior buyer A already moved. The seller lookup then misses and the
+    // bid is dropped — but buyer B's lastPoachSeason was already stamped.
+    // Pin this quirk: any refactor must preserve it.
+    const buyerA = wealthyBuyer({
+      id: 'buyer-a' as StableId,
+      roster: Array.from({ length: 4 }, (_, i) =>
+        makeWarrior({ id: `ba-${i}` as WarriorId, stableId: 'buyer-a' as StableId })
+      ),
+    });
+    const buyerB = wealthyBuyer({
+      id: 'buyer-b' as StableId,
+      roster: Array.from({ length: 4 }, (_, i) =>
+        makeWarrior({ id: `bb-${i}` as WarriorId, stableId: 'buyer-b' as StableId })
+      ),
+    });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      treasury: 500,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
+    const state = makeGameState({ rivals: [buyerA, buyerB, seller], absoluteWeek: 5 });
+
+    const { updatedRivals, gazetteItems } = processPoachMarket(state, [buyerA, buyerB, seller]);
+    const a = updatedRivals.find((r) => r.id === 'buyer-a')!;
+    const b = updatedRivals.find((r) => r.id === 'buyer-b')!;
+    const s = updatedRivals.find((r) => r.id === 'seller-1')!;
+
+    expect(a.roster.some((w) => w.id === 'sw-1')).toBe(true);
+    expect(s.roster.some((w) => w.id === 'sw-1')).toBe(false);
+    expect(b.roster.some((w) => w.id === 'sw-1')).toBe(false); // dropped, not double-poached
+    expect(b.lastPoachSeason).toBe(seasonIndexFor(5)); // quirk: season still consumed
+    expect(gazetteItems.filter((g) => g.includes('POACH'))).toHaveLength(1);
+  });
+
+  it('player-bound gazette line resolves the warrior name even without warriorMap', () => {
+    const buyer = wealthyBuyer();
+    const playerWarrior = poachableWarrior('pw-1', 'player-stable');
+    const state = makeGameState({ roster: [playerWarrior], rivals: [buyer], absoluteWeek: 5 });
+    delete state.warriorMap; // raw state — week caches absent
+
+    const { gazetteItems } = processPoachMarket(state, [buyer]);
+    expect(gazetteItems.some((g) => g.includes('Warrior pw-1'))).toBe(true);
+  });
 });
 
 describe('seasonIndexFor', () => {

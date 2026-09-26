@@ -10,6 +10,7 @@ import {
 import type { InjuryData } from '@/types/warrior.types';
 import {
   scoreMatchup,
+  scorePairwiseMatchup,
   getRecommendedChallenges,
   getMatchupsToAvoid,
 } from '@/engine/schedulingAssistant';
@@ -1258,6 +1259,67 @@ describe('Scheduling Assistant Engine', () => {
       const avoids = getMatchupsToAvoid(state, player, 2);
       // rivalB should be first (lowest score) due to -500 avoid penalty
       expect(avoids[0]?.rivalWarrior.id).toBe(rivalB.id);
+    });
+  });
+
+  describe('Head-to-head memoization', () => {
+    // The h2h cache must be keyed directionally — (a,b) wins are from A's
+    // perspective — and must not go stale when arenaHistory is replaced.
+
+    it('scorePairwiseMatchup is identical with an explicit h2hCache and populates it', () => {
+      const a = mockWarrior('a1', FightingStyle.TotalParry, 10, 5, 5);
+      const b = mockWarrior('b1', FightingStyle.TotalParry, 10, 5, 5);
+      const history = [mockFightBetween('a1', 'b1', 'A', 1)];
+
+      const uncached = scorePairwiseMatchup(a, b, { arenaHistory: history, week: 10 });
+      const h2hCache = new Map();
+      const cached = scorePairwiseMatchup(a, b, {
+        arenaHistory: history,
+        week: 10,
+        h2hCache,
+      });
+
+      expect(cached).toBe(uncached);
+      expect(h2hCache.size).toBeGreaterThan(0);
+    });
+
+    it('keeps directional records distinct when the cache is shared', () => {
+      const a = mockWarrior('a1', FightingStyle.TotalParry, 10, 5, 5);
+      const b = mockWarrior('b1', FightingStyle.TotalParry, 10, 5, 5);
+      // a1 beat b1 last: from a's side +5 (lastWinner 'a'), from b's side +10 ('b')
+      const history = [mockFightBetween('a1', 'b1', 'A', 1)];
+      const h2hCache = new Map();
+
+      const scoreAB = scorePairwiseMatchup(a, b, { arenaHistory: history, week: 10, h2hCache });
+      const scoreBA = scorePairwiseMatchup(b, a, { arenaHistory: history, week: 10, h2hCache });
+
+      // Identical warriors otherwise — only the h2h term differs: 110 vs 105
+      expect(scoreBA - scoreAB).toBe(5);
+    });
+
+    it('reflects a newly appended fight when arenaHistory is replaced', () => {
+      const a = mockWarrior('a1', FightingStyle.TotalParry, 10, 5, 5);
+      const b = mockWarrior('b1', FightingStyle.TotalParry, 10, 5, 5);
+      const history1 = [mockFightBetween('a1', 'b1', 'A', 1)];
+      // New array identity, extra fight 1 week ago → -15 recency applies
+      const history2 = [...history1, mockFightBetween('a1', 'b1', 'A', 9)];
+
+      const before = scorePairwiseMatchup(a, b, { arenaHistory: history1, week: 10 });
+      const after = scorePairwiseMatchup(a, b, { arenaHistory: history2, week: 10 });
+
+      expect(after).toBe(before - 15);
+    });
+
+    it('is consistent across repeated calls on the same arenaHistory', () => {
+      const a = mockWarrior('a1', FightingStyle.TotalParry, 10, 5, 5);
+      const b = mockWarrior('b1', FightingStyle.TotalParry, 10, 5, 5);
+      const history = [
+        mockFightBetween('a1', 'b1', 'A', 1),
+        mockFightBetween('a1', 'b1', 'D', 3),
+      ];
+      const ctx = { arenaHistory: history, week: 10 };
+
+      expect(scorePairwiseMatchup(a, b, ctx)).toBe(scorePairwiseMatchup(a, b, ctx));
     });
   });
 });

@@ -61,6 +61,17 @@ export const TOURNAMENT_ARENA_DEFAULTS = {
   LARGE_BRACKET_THRESHOLD: 16, // Brackets >= this size exclude 'cramped' arenas
 } as const;
 
+// ─── Arena Roster Limits ──────────────────────────────────────────────────
+/**
+ * Hard cap on the total arena roster and per-tier distribution targets.
+ * The roster may never exceed 50 arenas; each tier has a fixed slot ceiling.
+ * Enforced by dataIntegrityArenas tests.
+ */
+export const ARENA_ROSTER_LIMITS = {
+  TOTAL_CAP: 50,
+  TIER_CAPS: { 1: 12, 2: 24, 3: 14 } as Record<1 | 2 | 3, number>,
+} as const;
+
 // ─── Style-Weather Modifiers ───────────────────────────────────────────────
 // Flat modifiers applied based on fighting style + weather combination
 export const STYLE_WEATHER_MODIFIERS: Record<

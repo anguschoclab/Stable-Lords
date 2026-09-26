@@ -1,10 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import {
-  collectAllWarriors,
-  collectAllActiveWarriors,
-  collectBookedWarriorIds,
-} from '@/engine/core/warriorCollection';
-import type { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.types';
+import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
+import { collectAllWarriors, collectAllActiveWarriors, collectBookedWarriorIds, collectAllKnownWarriors, buildWarriorMap } from '@/engine/core/warriorCollection';
 import { FightingStyle } from '@/types/shared.types';
 
 function makeWarrior(id: string, overrides: Partial<Warrior> = {}): Warrior {
@@ -287,4 +284,51 @@ describe('warriorCollection', () => {
     });
   });
 
+});
+
+describe('warriorCollection', () => {
+  const dummyWarrior = (id: string): Warrior => ({ id, name: id }) as Warrior;
+
+  const mockState = {
+    roster: [dummyWarrior('p1')],
+    graveyard: [dummyWarrior('g1')],
+    retired: [dummyWarrior('r1')],
+    rivals: [{ id: 'rival_stable', name: 'Rival', renown: 1, roster: [dummyWarrior('rv1')] }],
+  };
+
+  describe('collectAllKnownWarriors', () => {
+    it('collects warriors from all available sources', () => {
+      const all = collectAllKnownWarriors(mockState);
+      expect(all.length).toBe(4);
+      expect(all.map((w) => w.id)).toEqual(['p1', 'g1', 'r1', 'rv1']);
+    });
+
+    it('handles missing rivals array safely', () => {
+      const stateWithoutRivals = { ...mockState, rivals: undefined } as any;
+      const all = collectAllKnownWarriors(stateWithoutRivals);
+      expect(all.length).toBe(3);
+      expect(all.map((w) => w.id)).toEqual(['p1', 'g1', 'r1']);
+    });
+  });
+
+  describe('buildWarriorMap', () => {
+    it('builds a map of all warriors by ID', () => {
+      const map = buildWarriorMap(mockState);
+      expect(map.size).toBe(4);
+      expect(map.get('p1')?.id).toBe('p1');
+      expect(map.get('rv1')?.id).toBe('rv1');
+    });
+
+    it('latest entry overwrites duplicate IDs', () => {
+      const duplicateState = {
+        roster: [dummyWarrior('dup')],
+        graveyard: [],
+        retired: [],
+        rivals: [{ roster: [{ ...dummyWarrior('dup'), name: 'latest_dup' } as Warrior] }],
+      } as any;
+      const map = buildWarriorMap(duplicateState);
+      expect(map.size).toBe(1);
+      expect(map.get('dup')?.name).toBe('latest_dup');
+    });
+  });
 });

@@ -24,9 +24,9 @@ function splitImports(content) {
   while (i < lines.length) {
     const l = lines[i];
     if (/^import\s/.test(l)) {
-      // multi-line import
+      // multi-line import — side-effect imports end at ';', others end at from '...';
       let imp = l;
-      while (!/from\s+['"]/.test(imp) && i + 1 < lines.length) {
+      while (!/;/.test(imp) && i + 1 < lines.length) {
         i++;
         imp += '\n' + lines[i];
       }
@@ -40,13 +40,40 @@ function splitImports(content) {
 }
 
 function mergeImportLines(a, b) {
-  // crude but safe: dedupe exact lines; keep both if same source different specifiers
-  const set = new Map();
-  for (const imp of [...a, ...b]) {
-    const key = imp.replace(/\s+/g, ' ').trim();
-    if (!set.has(key)) set.set(key, imp);
+  // union named specifiers per module; dedupe side-effect/namespace/default lines
+  const named = new Map(); // key: `${type}:${module}` -> Set of specifiers
+  const other = new Map(); // verbatim lines (side-effect, namespace, default)
+  const specRe =
+    /import\s+(type\s+)?\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/;
+  for (const raw of [...a, ...b]) {
+    const oneLine = raw.replace(/\s+/g, ' ').trim();
+    const m = raw.match(specRe);
+    if (m) {
+      const key = `${m[1] ? 'type' : 'value'}:${m[3]}`;
+      if (!named.has(key)) named.set(key, new Set());
+      for (const s of m[2].split(',')) {
+        const spec = s.trim();
+        if (spec) named.get(key).add(spec);
+      }
+    } else if (!other.has(oneLine)) {
+      other.set(oneLine, raw.trim());
+    }
   }
-  return [...set.values()];
+  const vitestKey = 'value:vitest';
+  const out = [];
+  // emit vitest import first (stable ordering), then module imports, then verbatim
+  const keys = [...named.keys()].sort((x, y) =>
+    x === vitestKey ? -1 : y === vitestKey ? 1 : x.localeCompare(y)
+  );
+  for (const k of keys) {
+    const [kind, mod] = k.split(/:(.+)/);
+    const specs = [...named.get(k)].join(', ');
+    out.push(
+      `import ${kind === 'type' ? 'type ' : ''}{ ${specs} } from '${mod}';`
+    );
+  }
+  out.push(...other.values());
+  return out;
 }
 
 // split body into top-level describe blocks (naive: split on ^describe( keeping text)

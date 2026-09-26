@@ -5,16 +5,12 @@
     "src/engine/crest/crestGenerator.test.ts",
     "src/lib/boutUtils.test.ts",
     "src/lib/obfuscation.test.ts",
-    "src/lib/utils.test.ts",
-    "src/scripts/daily_bard.test.ts",
     "src/scripts/simulation.test.ts",
     "src/scripts/workflow-config.test.ts",
     "src/utils/format.test.ts"
   ],
   "sameModuleBasenamePairs": [
-    "src/test/components/WinScreen.test.tsx <-> src/test/components/progression/WinScreen.test.tsx",
-    "src/test/data/newArenas.test.ts <-> src/test/engine/matchmaking/newArenas.test.ts",
-    "src/test/engine/core/warriorCollection.test.ts <-> src/test/utils/warriorCollection.test.ts"
+    "src/test/data/newArenas.test.ts <-> src/test/engine/matchmaking/newArenas.test.ts"
   ],
   "localFactoryFiles": [
     "src/lib/obfuscation.test.ts",
@@ -150,7 +146,6 @@
     "src/test/components/FightAnalysisPanel.test.tsx",
     "src/test/components/FightForecastPanel.test.tsx",
     "src/test/components/ObjectivesWidget.test.tsx",
-    "src/test/components/WinScreen.test.tsx",
     "src/test/components/awards/Awards.test.tsx",
     "src/test/components/boutViewer/BoutViewer.test.tsx",
     "src/test/components/crest/Crest.test.tsx",

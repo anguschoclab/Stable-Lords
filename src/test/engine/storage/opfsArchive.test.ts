@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { ArchiveConflictError } from '@/engine/storage/ArchiveConflictError';
-import { setMockOPFSError, setMockOPFSFileText } from '@/test/_setup/setup';
+import {
+  setMockOPFSError,
+  setMockOPFSFileText,
+  setMockOPFSDirEntries,
+  getMockOPFSDirHandleCalls,
+} from '@/test/_setup/setup';
 import { SAVE_STATE_VERSION } from '@/constants/core';
 
 describe('OPFS Archival System', () => {
@@ -260,8 +265,8 @@ describe('OPFS Archival System', () => {
 
     it('Test 10.6: getArchivedBoutIdsForSeason catches generic error', async () => {
       const service = new OPFSArchiveService();
-      // To bypass getDirectory catching it, we mock 'values' instead.
-      setMockOPFSError('UnknownError', 'values');
+      // To bypass getDirectory catching it, we mock 'keys' instead.
+      setMockOPFSError('UnknownError', 'keys');
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const result = await service.getArchivedBoutIdsForSeason(1);
@@ -465,6 +470,105 @@ describe('OPFS Archival System', () => {
       );
 
       consoleSpy.mockRestore();
+    });
+  });
+
+  describe('Suite 14: directory listing and non-creating read paths', () => {
+    it('Test 14.1: getArchivedBoutIdsForSeason lists only .json entries with suffix stripped', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSDirEntries([
+        { name: '1_b1.json', kind: 'file' },
+        { name: '2_b2.json', kind: 'file' },
+        { name: 'notes.txt', kind: 'file' },
+        { name: 'subdir', kind: 'directory' },
+      ]);
+
+      const ids = await service.getArchivedBoutIdsForSeason(1);
+      expect(ids).toEqual(['1_b1', '2_b2']);
+    });
+
+    it('Test 14.2: retrieveBoutLog uses non-creating directory lookups', async () => {
+      const service = new OPFSArchiveService();
+      await service.retrieveBoutLog(1, 1, 'b-read');
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(false);
+    });
+
+    it('Test 14.3: retrieveGazette uses non-creating directory lookups', async () => {
+      const service = new OPFSArchiveService();
+      await service.retrieveGazette(1, 1);
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(false);
+    });
+
+    it('Test 14.4: retrieveHotState uses non-creating directory lookups', async () => {
+      const service = new OPFSArchiveService();
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await service.retrieveHotState('slot-read');
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(false);
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 14.5: getArchivedBoutIdsForSeason uses non-creating directory lookups', async () => {
+      const service = new OPFSArchiveService();
+      await service.getArchivedBoutIdsForSeason(1);
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(false);
+    });
+
+    it('Test 14.6: archiveBoutLog still creates directories on the write path', async () => {
+      const service = new OPFSArchiveService();
+      await service.archiveBoutLog(1, 1, 'b-write', [], true);
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(true);
+    });
+
+    it('Test 14.7: archiveGazette still creates directories on the write path', async () => {
+      const service = new OPFSArchiveService();
+      await service.archiveGazette(1, 1, '#');
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(true);
+    });
+
+    it('Test 14.8: archiveHotState still creates directories on the write path', async () => {
+      const service = new OPFSArchiveService();
+      await service.archiveHotState('slot-write', {} as any);
+      const calls = getMockOPFSDirHandleCalls();
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(c.opts?.create).toBe(true);
+    });
+
+    it('Test 14.9: retrieveBoutLog returns null silently when the season dir is missing', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSError('NotFoundError', 'getDirectoryHandle');
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const result = await service.retrieveBoutLog(1, 1, 'b-missing');
+      expect(result).toBeNull();
+      expect(warnSpy).not.toHaveBeenCalled();
+
+      warnSpy.mockRestore();
+    });
+
+    it('Test 14.10: getArchivedBoutIdsForSeason returns [] silently when the season dir is missing', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSError('NotFoundError', 'getDirectoryHandle');
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const result = await service.getArchivedBoutIdsForSeason(1);
+      expect(result).toEqual([]);
+      expect(warnSpy).not.toHaveBeenCalled();
+
+      warnSpy.mockRestore();
     });
   });
 });

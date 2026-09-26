@@ -77,10 +77,13 @@ type OPFSOp =
   | 'close'
   | 'getFile'
   | 'values'
+  | 'keys'
   | 'text';
 
 let mockOpfsError: { name: string; target: OPFSOp | 'all' } | null = null;
 let mockOpfsFileText: string | null = null;
+let mockOpfsDirEntries: { name: string; kind: 'file' | 'directory' }[] = [];
+let mockOpfsDirHandleCalls: { dirName: string; opts?: { create?: boolean } }[] = [];
 
 function throwIfTargeted(target: OPFSOp) {
   if (mockOpfsError && (mockOpfsError.target === 'all' || mockOpfsError.target === target)) {
@@ -108,6 +111,26 @@ export function setMockOPFSFileText(text: string): void {
 }
 
 /**
+ * Set the entries yielded by mock directory values()/keys() iteration.
+ * @param entries - Names and kinds to yield from directory iteration.
+ */
+export function setMockOPFSDirEntries(
+  entries: { name: string; kind: 'file' | 'directory' }[]
+): void {
+  mockOpfsDirEntries = entries;
+}
+
+/**
+ * Returns the recorded arguments of every mock getDirectoryHandle() call.
+ */
+export function getMockOPFSDirHandleCalls(): {
+  dirName: string;
+  opts?: { create?: boolean };
+}[] {
+  return mockOpfsDirHandleCalls;
+}
+
+/**
  * Create a mock FileSystemDirectoryHandle for OPFS testing.
  * @param name - The name of the directory.
  * @returns A mock directory handle with nested file/directory capabilities.
@@ -117,6 +140,7 @@ const createMockDirHandle = (name: string) => ({
   name,
   getDirectoryHandle: async (dirName: string, _opts?: { create?: boolean }) => {
     throwIfTargeted('getDirectoryHandle');
+    mockOpfsDirHandleCalls.push({ dirName, opts: _opts });
     return createMockDirHandle(dirName);
   },
   getFileHandle: async (_name?: string, _opts?: { create?: boolean }) => {
@@ -147,7 +171,11 @@ const createMockDirHandle = (name: string) => ({
   },
   values: async function* () {
     throwIfTargeted('values');
-    yield* [];
+    for (const e of mockOpfsDirEntries) yield { kind: e.kind, name: e.name };
+  },
+  keys: async function* () {
+    throwIfTargeted('keys');
+    for (const e of mockOpfsDirEntries) yield e.name;
   },
 });
 
@@ -173,6 +201,8 @@ beforeEach(() => {
   }
   mockOpfsError = null;
   mockOpfsFileText = null;
+  mockOpfsDirEntries = [];
+  mockOpfsDirHandleCalls = [];
   // Bun resets navigator between test files, so re-apply the storage mock in beforeEach
   if (typeof navigator !== 'undefined' && !navigator.storage) {
     Object.defineProperty(navigator, 'storage', {

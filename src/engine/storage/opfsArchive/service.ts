@@ -26,17 +26,19 @@ export class OPFSArchiveService implements ArchiveService {
 
   private async getDirectory(
     season: number,
-    type: 'bouts' | 'gazettes'
+    type: 'bouts' | 'gazettes',
+    create = true
   ): Promise<FileSystemDirectoryHandle | null> {
     if (!this.isSupported()) return null;
 
     try {
       const rootHandle = await navigator.storage.getDirectory();
       const seasonHandle = await rootHandle.getDirectoryHandle(`season_${season}`, {
-        create: true,
+        create,
       });
-      return await seasonHandle.getDirectoryHandle(type, { create: true });
+      return await seasonHandle.getDirectoryHandle(type, { create });
     } catch (error) {
+      if (!create && (error as Error)?.name === 'NotFoundError') return null;
       console.warn(
         'Failed to get directory handle (OPFS may be restricted in this environment):',
         error
@@ -45,12 +47,15 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  private async getHotStateDirectory(): Promise<FileSystemDirectoryHandle | null> {
+  private async getHotStateDirectory(
+    create = true
+  ): Promise<FileSystemDirectoryHandle | null> {
     if (!this.isSupported()) return null;
     try {
       const rootHandle = await navigator.storage.getDirectory();
-      return await rootHandle.getDirectoryHandle('hot_state', { create: true });
+      return await rootHandle.getDirectoryHandle('hot_state', { create });
     } catch (error) {
+      if (!create && (error as Error)?.name === 'NotFoundError') return null;
       console.warn(
         'Failed to get hot_state directory handle (OPFS may be restricted in this environment):',
         error
@@ -98,7 +103,7 @@ export class OPFSArchiveService implements ArchiveService {
   async retrieveHotState(slotId: string): Promise<GameState | null> {
     assertSafeFileNamePart(slotId, 'slotId');
     try {
-      const dirHandle = await this.getHotStateDirectory();
+      const dirHandle = await this.getHotStateDirectory(false);
       if (!dirHandle) return null;
       const fileName = `${slotId}.json`;
       const fileHandle = await dirHandle.getFileHandle(fileName, { create: false });
@@ -210,7 +215,7 @@ export class OPFSArchiveService implements ArchiveService {
   async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     assertSafeFileNamePart(boutId, 'boutId');
     try {
-      const dirHandle = await this.getDirectory(season, 'bouts');
+      const dirHandle = await this.getDirectory(season, 'bouts', false);
       if (!dirHandle) return null;
 
       const fileName = `${year}_${boutId}.json`;
@@ -272,7 +277,7 @@ export class OPFSArchiveService implements ArchiveService {
   async retrieveGazette(season: number, week: number): Promise<string | null> {
     assertSafeFileNamePart(String(week), 'week');
     try {
-      const dirHandle = await this.getDirectory(season, 'gazettes');
+      const dirHandle = await this.getDirectory(season, 'gazettes', false);
       if (!dirHandle) return null;
 
       const fileName = `week_${week}.md`;
@@ -295,13 +300,13 @@ export class OPFSArchiveService implements ArchiveService {
   /** Lists all archived bout IDs for a given season from OPFS. */
   async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     try {
-      const dirHandle = await this.getDirectory(season, 'bouts');
+      const dirHandle = await this.getDirectory(season, 'bouts', false);
       if (!dirHandle) return [];
 
       const boutIds: string[] = [];
-      for await (const entry of dirHandle.values()) {
-        if (entry.kind === 'file' && entry.name.endsWith('.json')) {
-          boutIds.push(entry.name.replace('.json', ''));
+      for await (const name of dirHandle.keys()) {
+        if (name.endsWith('.json')) {
+          boutIds.push(name.replace(/\.json$/, ''));
         }
       }
       return boutIds;

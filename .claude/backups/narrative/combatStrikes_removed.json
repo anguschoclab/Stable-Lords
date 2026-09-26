@@ -1,0 +1,12 @@
+[
+  {
+    "kept": "With a precise motion, {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
+    "removed": "With cruel precision, {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
+    "sim": 0.8571428571428572
+  },
+  {
+    "kept": "{{attacker}} lands a heavy cross squarely on {{defender}}'s {{bodyPart}}.",
+    "removed": "{{attacker}} lands a heavy haymaker squarely on {{defender}}'s {{bodyPart}}.",
+    "sim": 0.8933333333333333
+  }
+]

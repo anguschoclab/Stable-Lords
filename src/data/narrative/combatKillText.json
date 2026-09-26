@@ -345,7 +345,9 @@
         "{{attacker}}'s blade completes its deadly arc, leaving {{defender}} in bloody ruin.",
         "With a final, grisly sweep, {{attacker}} completely severs the last threads of {{defender}}'s life.",
         "With a final, sickening sound of rending flesh, {{attacker}} executes {{defender}} in a fountain of crimson.",
-        "{{attacker}} delivers a macabre, finishing slash, leaving {{defender}} to bleed out on the cold stones."
+        "{{attacker}} delivers a macabre, finishing slash, leaving {{defender}} to bleed out on the cold stones.",
+        "{{attacker}}'s blade finds {{defender}}'s neck, ending the bout in a spray of crimson.",
+        "A final, brutal cleave from {{attacker}} splits {{defender}} wide open, dropping them lifeless."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
@@ -442,7 +444,8 @@
         "The arena falls silent as {{attacker}}'s blade punches perfectly through {{defender}}'s heart.",
         "{{attacker}} twists the blade deep, extinguishing the fight in {{defender}}'s eyes.",
         "A final, fatal thrust from {{attacker}} pins {{defender}} lifelessly to the dirt.",
-        "Like a pinned insect, {{defender}} goes still as {{attacker}} drives the final, fatal thrust home."
+        "Like a pinned insect, {{defender}} goes still as {{attacker}} drives the final, fatal thrust home.",
+        "{{defender}} gasps silently as {{attacker}} impales them completely, lifting them off their feet before dropping their corpse."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
@@ -537,7 +540,8 @@
         "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands.",
         "A sickening final thud rings out as {{attacker}} crushes the last bit of life from {{defender}}.",
         "{{defender}} is battered into absolute stillness by the relentless fury of {{attacker}}.",
-        "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+        "{{attacker}} caves in {{defender}}'s skull with a sickening crunch, ending their misery.",
+        "With a thunderous final blow, {{attacker}} completely crushes {{defender}}'s chest."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
@@ -634,7 +638,9 @@
         "The crowd winces as {{attacker}} literally beats {{defender}} to death with their bare hands.",
         "A final, devastating blow from {{attacker}}'s bare knuckles puts {{defender}} to sleep forever.",
         "{{attacker}} beats {{defender}} into the dirt until movement stops completely.",
-        "A devastating final blow from {{attacker}} silences {{defender}} for good, ending the bout."
+        "A devastating final blow from {{attacker}} silences {{defender}} for good, ending the bout.",
+        "{{attacker}} relentlessly pummels {{defender}} into the dirt until they stop twitching.",
+        "A final, devastating uppercut from {{attacker}} shatters {{defender}}'s jaw, killing them instantly."
       ]
     },
     "default": [

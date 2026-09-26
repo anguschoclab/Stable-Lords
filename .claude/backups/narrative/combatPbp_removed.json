@@ -1,0 +1,12 @@
+[
+  {
+    "kept": "{{defender}} spins from the parry into a gorgeous, showboating counter-strike.",
+    "removed": "{{defender}} spins from the parry into a magnificent, showboating counter-strike.",
+    "sim": 0.8734177215189873
+  },
+  {
+    "kept": "Absorbing the force of the blow, {{defender}} retaliates with a short, brutal, and unyielding strike.",
+    "removed": "Absorbing the force, {{defender}} retaliates with a short, brutal, and unyielding strike.",
+    "sim": 0.8762886597938144
+  }
+]

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T06:58:19.500Z",
+  "generatedAt": "2026-09-26T08:15:04.164Z",
   "strayTestFiles": [
     "src/engine/crest/chargePaths.test.ts",
     "src/engine/crest/crestGenerator.test.ts",
@@ -7,7 +7,6 @@
     "src/lib/obfuscation.test.ts",
     "src/lib/utils.test.ts",
     "src/scripts/daily_bard.test.ts",
-    "src/scripts/emergent-report.test.ts",
     "src/scripts/simulation.test.ts",
     "src/scripts/workflow-config.test.ts",
     "src/utils/format.test.ts"
@@ -15,19 +14,6 @@
   "sameModuleBasenamePairs": [
     "src/test/components/WinScreen.test.tsx <-> src/test/components/progression/WinScreen.test.tsx",
     "src/test/data/newArenas.test.ts <-> src/test/engine/matchmaking/newArenas.test.ts",
-    "src/test/engine/combat/attackCheck.test.ts <-> src/test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts",
-    "src/test/engine/combat/bleed.test.ts <-> src/test/engine/combat/resolution/bleed.test.ts",
-    "src/test/engine/combat/combatDamage.test.ts <-> src/test/engine/combat/mechanics/combatDamage.test.ts",
-    "src/test/engine/combat/combatFatigue.test.ts <-> src/test/engine/combat/mechanics/combatFatigue.test.ts <-> src/test/engine/combatFatigue.test.ts",
-    "src/test/engine/combat/combatMath.test.ts <-> src/test/engine/combat/mechanics/combatMath.test.ts",
-    "src/test/engine/combat/counterstrike.test.ts <-> src/test/engine/combat/resolution/counterstrike.test.ts",
-    "src/test/engine/combat/damageCalc.test.ts <-> src/test/engine/combat/mechanics/damageCalc.test.ts",
-    "src/test/engine/combat/guardBreak.test.ts <-> src/test/engine/combat/resolution/guardBreak.test.ts",
-    "src/test/engine/combat/hitLocation.test.ts <-> src/test/engine/combat/mechanics/hitLocation.test.ts",
-    "src/test/engine/combat/mechanics/protectShield.test.ts <-> src/test/engine/combat/protectShield.test.ts",
-    "src/test/engine/combat/mechanics/weaponArmor.test.ts <-> src/test/engine/combat/weaponArmor.test.ts",
-    "src/test/engine/combat/psychState.test.ts <-> src/test/engine/combat/resolution/psychState.test.ts",
-    "src/test/engine/combat/resolution/specialtyMods.test.ts <-> src/test/engine/combat/specialtyMods.test.ts",
     "src/test/engine/core/warriorCollection.test.ts <-> src/test/utils/warriorCollection.test.ts"
   ],
   "localFactoryFiles": [
@@ -184,6 +170,8 @@
     "src/test/components/warriorBuilder/WarriorBuilder.test.tsx",
     "src/test/components/widgets/Widgets.test.tsx",
     "src/test/components/world/World.test.tsx",
+    "src/test/config/environmentNodeCanary.test.ts",
+    "src/test/config/environmentSplitCanary.test.ts",
     "src/test/electronMain.test.ts",
     "src/test/engine/advisor/boutOfferAdvisor.test.ts",
     "src/test/engine/advisor/campaignFocusEvaluator.test.ts",

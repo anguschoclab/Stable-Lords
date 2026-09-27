@@ -9,7 +9,12 @@ import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+  makeBoutOffer as fixtureBoutOffer,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (
   id: string,
@@ -67,41 +72,19 @@ const makeOffer = (id: string, warriorIds: string[], opts: Partial<BoutOffer> = 
     ...opts,
   } as any);
 
-function makeState(
+// fixtureGameState builds warriorMap / warriorToStableMap / rivalMap
+// (roster → player stable, rivals[].roster → rival id) plus boutOffers.
+const makeState = (
   offers: BoutOffer[],
   rivals: RivalStableData[],
   playerWarriors: Warrior[] = []
-): GameState {
-  const warriorMap = new Map<string, Warrior>();
-  const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
-  const rivalMap = new Map<string, RivalStableData>();
-
-  for (const r of rivals) {
-    rivalMap.set(r.id, r);
-    for (const w of r.roster) {
-      warriorMap.set(w.id, w);
-      warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false });
-    }
-  }
-  for (const w of playerWarriors) {
-    warriorMap.set(w.id, w);
-    warriorToStableMap.set(w.id, { stableId: 'player', isPlayer: true });
-  }
-
-  const boutOffers: Record<string, BoutOffer> = {};
-  for (const o of offers) {
-    boutOffers[o.id] = o;
-  }
-
-  return {
-    boutOffers,
-    warriorMap,
-    warriorToStableMap,
-    rivalMap,
+): GameState =>
+  fixtureGameState({
+    roster: playerWarriors,
+    rivals,
+    boutOffers: Object.fromEntries(offers.map((o) => [o.id, o])),
     absoluteWeek: 5,
-    weather: 'Clear',
-  } as unknown as GameState;
-}
+  });
 
 describe('processAllRivalsBoutOffers', () => {
   it('returns empty boutOffers when no pending offers exist', () => {

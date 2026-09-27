@@ -65,6 +65,15 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'src/test/', '*.test.ts', '*.test.tsx'],
+      // Post-audit baseline (2026-09): 85.3% stmts / 75.2% branches /
+      // 79.1% funcs / 86.8% lines. Thresholds sit ~1pt below to allow
+      // unrelated drift while still catching real coverage regressions.
+      thresholds: {
+        statements: 84,
+        branches: 74,
+        functions: 78,
+        lines: 85.5,
+      },
     },
   },
 });

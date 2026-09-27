@@ -9,50 +9,31 @@ import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { simulateFight } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import {
+  makeComputedWarrior as fixtureComputedWarrior,
+  makePlan as fixturePlan,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(
+const makeWarrior = (
   name: string,
   style: FightingStyle,
   overrides: Partial<Record<string, number>> = {}
-): Warrior {
-  const full = { ST: 12, CN: 15, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 15, ...overrides };
-  const { baseSkills, derivedStats } = computeWarriorStats(full, style);
-  return {
-    id: `test_${name}` as WarriorId,
-    name,
+): Warrior =>
+  fixtureComputedWarrior(
+    { ST: 12, CN: 15, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 15, ...overrides },
     style,
-    attributes: full as any,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-  } as Warrior;
-}
+    {
+      id: `test_${name}` as WarriorId,
+      name,
+      fame: 0,
+      age: 20,
+    }
+  );
 
-function makePlan(style: FightingStyle, overrides: Partial<any> = {}): any {
-  return {
-    style,
-    OE: 7,
-    AL: 6,
-    killDesire: 5,
-    target: 'Any',
-    protect: 'Any',
-    offensiveTactic: 'none',
-    defensiveTactic: 'none',
-    ...overrides,
-  };
-}
+const makePlan = (style: FightingStyle, overrides: Partial<any> = {}): any =>
+  fixturePlan({ style, offensiveTactic: 'none', defensiveTactic: 'none', ...overrides });
 
 function countRipostes(outcome: any): number {
   const exLog = outcome.exchangeLog ?? [];

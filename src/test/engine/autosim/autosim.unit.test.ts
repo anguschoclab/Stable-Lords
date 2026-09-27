@@ -5,9 +5,12 @@ import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
-import { makeBoutOffer as fixtureBoutOffer, makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
+import {
+  makeBoutOffer as fixtureBoutOffer,
+  makeFightSummary as fixtureFightSummary,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
   advanceWeek: vi.fn(async (state: GameState) => state),
@@ -28,11 +31,8 @@ const makeOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>):
     ...opts,
   } as any);
 
-function makeState(overrides?: Partial<GameState>): GameState {
-  const state = createFreshState('test-seed');
-  state.treasury = 5000;
-  return { ...state, ...overrides };
-}
+const makeState = (overrides?: Partial<GameState>): GameState =>
+  fixtureGameState({ treasury: 5000, ...overrides });
 
 const makeFightSummary = (title: string, winner: 'A' | 'D' | null, by: string): FightSummary =>
   fixtureFightSummary({
@@ -337,12 +337,12 @@ describe('extractWeekSummary', () => {
 });
 
 /** Two fight-ready warriors keep the per-week `noPairings` stop from firing. */
-function makeSimmableState(overrides?: Partial<GameState>): GameState {
-  return makeState({
+const makeSimmableState = (overrides?: Partial<GameState>): GameState =>
+  fixtureGameState({
+    treasury: 5000,
     roster: [makeAutosimWarrior('w1', 'Alice'), makeAutosimWarrior('w2', 'Bob')],
     ...overrides,
   });
-}
 
 describe('runAutosim', () => {
   beforeEach(() => {

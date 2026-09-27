@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { handleDeath } from '@/engine/bout/mortalityHandler';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type Attributes } from '@/types/shared.types';
@@ -19,27 +19,13 @@ const FRAIL_ATTRS: Attributes = {
   ST: 5, CN: 3, SZ: 9, WT: 9, WL: 9, SP: 9, DF: 5,
 };
 
-function makeWarrior(id: string, style: FightingStyle, attrs: Attributes): Warrior {
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  return {
+const makeWarrior = (id: string, style: FightingStyle, attrs: Attributes): Warrior =>
+  fixtureComputedWarrior(attrs, style, {
     id: id as WarriorId,
     name: id,
-    style,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
-    traits: [],
-  };
-}
+  });
 
 describe('house rules — death rate multiplier', () => {
   const killer = makeWarrior('killer', FightingStyle.BashingAttack, KILLER_ATTRS);

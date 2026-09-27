@@ -13,29 +13,26 @@ import {
   socialHandlers,
 } from '@/engine/impacts/social';
 import type { OwnerGrudge, Rivalry } from '@/types/state.types';
+import {
+  makeGrudge as fixtureGrudge,
+  makeRivalry as fixtureRivalry,
+} from '@/test/_fixtures/factories';
 
-function makeGrudge(id: string, ownerIdA: string, ownerIdB: string): OwnerGrudge {
-  return {
+const makeGrudge = (id: string, ownerIdA: string, ownerIdB: string): OwnerGrudge =>
+  fixtureGrudge({
     id: id as any,
     ownerIdA: ownerIdA as any,
     ownerIdB: ownerIdB as any,
     intensity: 3,
-    reason: 'Test grudge',
-    startWeek: 1,
-    lastEscalation: 1,
-  };
-}
+  });
 
-function makeRivalry(id: string, stableIdA: string, stableIdB: string): Rivalry {
-  return {
+const makeRivalry = (id: string, stableIdA: string, stableIdB: string): Rivalry =>
+  fixtureRivalry({
     id: id as any,
     stableIdA: stableIdA as any,
     stableIdB: stableIdB as any,
     intensity: 3,
-    reason: 'Test rivalry',
-    startWeek: 1,
-  };
-}
+  });
 
 describe('social impact handlers', () => {
   // ─── ownerGrudges (replace strategy) ──────────────────────────────────

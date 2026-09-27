@@ -1,21 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runAutosim } from '@/engine/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
-import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
+import {
+  makeBoutOffer as fixtureBoutOffer,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
   advanceWeek: vi.fn(async (state: GameState) => state),
 }));
-
-function makeState(overrides?: Partial<GameState>): GameState {
-  const state = createFreshState('test-seed');
-  state.treasury = 5000;
-  return { ...state, ...overrides };
-}
 
 /** Offer scheduled for the upcoming week (absoluteWeek 1 → boutWeek 2). */
 const makeOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer =>
@@ -33,12 +29,12 @@ const makeOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>):
     ...opts,
   } as any);
 
-function makeSimmableState(overrides?: Partial<GameState>): GameState {
-  return makeState({
+const makeSimmableState = (overrides?: Partial<GameState>): GameState =>
+  fixtureGameState({
+    treasury: 5000,
     roster: [makeAutosimWarrior('w1', 'Alice'), makeAutosimWarrior('w2', 'Bob')],
     ...overrides,
   });
-}
 
 describe('runAutosim councilAutoPilot', () => {
   beforeEach(() => {

@@ -16,9 +16,14 @@ import type {
   BoutOffer,
   GameState,
   Owner,
+  Promoter,
   RivalStableData,
 } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
+import type { FightPlan, Trainer } from '@/types/shared.types';
+import type { Rivalry, OwnerGrudge } from '@/types/state.types';
+import type { DerivedRivalry } from '@/types/rivalry.types';
+import type { WarriorRow } from '@/types/leaderboard';
 import {
   FightingStyle,
   type BoutOfferId,
@@ -28,6 +33,8 @@ import {
   type WarriorId,
 } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import type { PoolWarrior } from '@/engine/recruitment';
+import { computeWarriorStats } from '@/engine/skillCalc';
 import { getStablePairKey } from '@/utils/keyUtils';
 
 let idCounter = 0;
@@ -65,6 +72,22 @@ export function makeWarrior(over: Partial<Warrior> = {}): Warrior {
     derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
     ...over,
   };
+}
+
+/**
+ * Warrior with REAL derived stats — attributes are merged over the 10s
+ * baseline, then baseSkills/derivedStats come from computeWarriorStats so
+ * combat/training tests see internally-consistent numbers. Replaces the
+ * per-suite copies that hand-rolled the same literal.
+ */
+export function makeComputedWarrior(
+  attrs: Partial<Warrior['attributes']> = {},
+  style: FightingStyle = FightingStyle.StrikingAttack,
+  over: Partial<Warrior> = {}
+): Warrior {
+  const attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10, ...attrs };
+  const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
+  return makeWarrior({ attributes, baseSkills, derivedStats, style, ...over });
 }
 
 /** Schema-valid Owner. */
@@ -205,6 +228,76 @@ export function makeResolutionContext(
   } as ResolutionContext;
 }
 
+/** Schema-valid PoolWarrior (recruit pool entry). */
+export function makePoolWarrior(over: Partial<PoolWarrior> = {}): PoolWarrior {
+  const id = (over.id as string) ?? nextId('pw');
+  const flat = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
+  const skills = { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 };
+  return {
+    id,
+    name: `Recruit ${id}`,
+    style: FightingStyle.StrikingAttack,
+    attributes: { ...flat },
+    potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
+    baseSkills: { ...skills },
+    derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
+    tier: 'Common',
+    cost: 50,
+    age: 20,
+    lore: 'A young fighter.',
+    traits: [],
+    addedWeek: 1,
+    favorites: {
+      weaponId: 'shortsword',
+      rhythm: { oe: 5, al: 5 },
+      discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+    },
+    luckfactor: { ...skills },
+    ...over,
+  } as PoolWarrior;
+}
+
+/** Leaderboard row — rank varies by index so tables render sorted data. */
+export function makeWarriorRow(i: number, over: Partial<WarriorRow> = {}): WarriorRow {
+  return {
+    id: `w${i}`,
+    name: `Warrior${i}`,
+    stableName: `Stable${i % 5}`,
+    stableId: `s${i % 5}`,
+    fame: 100 - i,
+    wins: 20 - (i % 10),
+    losses: i % 10,
+    kills: i % 5,
+    winRate: 100 - (i % 20),
+    style: ['Brawler', 'Technician', 'Striker'][i % 3]!,
+    isPlayer: i === 0,
+    officialRank: i + 1,
+    compositeScore: 90 - i,
+    ...over,
+  };
+}
+
+/** Ordered leaderboard rows (rank/score vary per row). */
+export function makeWarriorRows(n: number): WarriorRow[] {
+  return Array.from({ length: n }, (_, i) => makeWarriorRow(i));
+}
+
+/** Schema-valid Promoter. */
+export function makePromoter(over: Partial<Promoter> = {}): Promoter {
+  const id = (over.id as string) ?? nextId('promoter');
+  return {
+    id: id as PromoterId,
+    name: `Promoter ${id}`,
+    age: 45,
+    personality: 'Honorable',
+    tier: 'Local',
+    capacity: 2,
+    biases: [FightingStyle.StrikingAttack],
+    history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 },
+    ...over,
+  };
+}
+
 /** Schema-valid BoutOffer. */
 export function makeBoutOffer(over: Partial<BoutOffer> = {}): BoutOffer {
   const id = (over.id as string) ?? nextId('offer');
@@ -283,4 +376,72 @@ export function makeGameState(over: Partial<GameState> = {}): GameState {
   state.grudgeMap = grudgeMap;
 
   return state;
+}
+
+/** Minimal FightPlan — neutral tactics, mid OE/AL. */
+export function makePlan(over: Partial<FightPlan> = {}): FightPlan {
+  return {
+    style: FightingStyle.StrikingAttack,
+    OE: 7,
+    AL: 6,
+    killDesire: 5,
+    target: 'Any',
+    protect: 'Any',
+    ...over,
+  };
+}
+
+/** Schema-valid Trainer. */
+export function makeTrainer(over: Partial<Trainer> = {}): Trainer {
+  return {
+    id: 't1',
+    name: 'Trainer',
+    tier: 'Novice',
+    focus: 'Aggression',
+    fame: 0,
+    age: 40,
+    contractWeeksLeft: 10,
+    ...over,
+  };
+}
+
+/** Schema-valid Rivalry between two stables. */
+export function makeRivalry(over: Partial<Rivalry> = {}): Rivalry {
+  return {
+    id: 'rv-1' as Rivalry['id'],
+    stableIdA: 'StableA' as Rivalry['stableIdA'],
+    stableIdB: 'StableB' as Rivalry['stableIdB'],
+    intensity: 1,
+    reason: 'Test rivalry',
+    startWeek: 1,
+    ...over,
+  };
+}
+
+/** Schema-valid OwnerGrudge between two owners. */
+export function makeGrudge(over: Partial<OwnerGrudge> = {}): OwnerGrudge {
+  return {
+    id: 'g1' as OwnerGrudge['id'],
+    ownerIdA: 'a' as OwnerGrudge['ownerIdA'],
+    ownerIdB: 'b' as OwnerGrudge['ownerIdB'],
+    intensity: 1,
+    reason: 'Test grudge',
+    startWeek: 1,
+    lastEscalation: 1,
+    ...over,
+  };
+}
+
+/** Dashboard-level DerivedRivalry (H2H aggregates, not the state entity). */
+export function makeDerivedRivalry(over: Partial<DerivedRivalry> = {}): DerivedRivalry {
+  return {
+    stableName: 'Iron Wolves',
+    ownerId: 'owner-1',
+    intensity: 3,
+    kills: [],
+    bouts: 10,
+    playerWins: 6,
+    playerLosses: 4,
+    ...over,
+  } as DerivedRivalry;
 }

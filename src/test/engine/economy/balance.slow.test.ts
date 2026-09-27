@@ -8,8 +8,8 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
 import { loadCombatNarrative } from '@/data/narrative';
+import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 import type { FightPlan } from '@/types/combat.types';
 import {
   findAntisymmetryViolations,
@@ -23,27 +23,13 @@ const ALL_STYLES = Object.values(FightingStyle);
 // Standard 70-point warrior for each style
 const STD_ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 
-function makeTestWarrior(style: FightingStyle, id: string): Warrior {
-  const { baseSkills, derivedStats } = computeWarriorStats(STD_ATTRS, style);
-  return {
+const makeTestWarrior = (style: FightingStyle, id: string): Warrior =>
+  fixtureComputedWarrior(STD_ATTRS, style, {
     id: id as import('@/types/shared.types').WarriorId,
     name: id,
-    style,
-    attributes: STD_ATTRS,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
-    traits: [],
-  };
-}
+  });
 
 const FIGHTS_PER_MATCHUP = 100; // 100 per matchup × 100 matchups = 10k fights
 

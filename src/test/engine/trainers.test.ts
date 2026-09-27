@@ -11,31 +11,19 @@ import {
 } from '@/engine/trainers';
 import type { Trainer } from '@/types/shared.types';
 import { FightingStyle, type Warrior } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 
-function makeWarrior(style: FightingStyle, overrides?: Partial<Warrior>): Warrior {
-  const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  return {
+const ATTRS_12 = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
+const makeWarrior = (style: FightingStyle, overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureComputedWarrior(ATTRS_12, style, {
     id: 'w1' as import('@/types/shared.types').WarriorId,
     name: 'Test Warrior',
-    style,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
     fame: 5,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
     career: { wins: 10, losses: 5, kills: 2 },
-    champion: false,
     status: 'Retired',
     age: 28,
-    traits: [],
     ...overrides,
-  };
-}
+  });
 
 describe('Trainer System', () => {
   describe('generateHiringPool', () => {

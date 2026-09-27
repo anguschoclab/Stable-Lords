@@ -3,6 +3,7 @@ import { processTierProgression } from '@/engine/pipeline/core/tierProgression';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { StableId } from '@/types/shared.types';
+import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 describe('TierProgression', () => {
   let mockState: GameState;
@@ -25,8 +26,8 @@ describe('TierProgression', () => {
     id: string,
     tier: RivalStableData['tier'],
     roster: any[]
-  ): RivalStableData => {
-    return {
+  ): RivalStableData =>
+    fixtureRival({
       id: id as StableId,
       owner: { stableName: `Stable ${id}` },
       tier,
@@ -35,8 +36,7 @@ describe('TierProgression', () => {
         status: w.status || 'Active',
         career: w.career || { wins: 0, losses: 0, kills: 0, highestRank: 0 },
       })) as any[],
-    } as RivalStableData;
-  };
+    } as any);
 
   it('should not process progression if season has not changed', () => {
     const impact = processTierProgression(mockState, 'Spring', 1, mockRng);

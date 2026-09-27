@@ -3,52 +3,26 @@ import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
+import {
+  makePlan as fixturePlan,
+  makeWarrior as fixtureWarrior,
+} from '@/test/_fixtures/factories';
 
-function createPlan(style: FightingStyle, overrides?: Partial<FightPlan>): FightPlan {
-  return {
-    style,
-    OE: 5,
-    AL: 5,
-    target: 'Any',
-    protect: 'Any',
-    ...overrides,
-  };
-}
+const createPlan = (style: FightingStyle, overrides: Partial<FightPlan> = {}): FightPlan =>
+  fixturePlan({ style, OE: 5, AL: 5, ...overrides });
 
-function createWarrior(
+const createWarrior = (
   attributesOverride?: Partial<Warrior['attributes']>,
   otherOverrides?: Partial<Warrior>
-): Warrior {
-  const baseAttributes = {
-    ST: 10,
-    CN: 10,
-    SZ: 10,
-    WT: 10,
-    WL: 10,
-    SP: 10,
-    DF: 10,
-  };
-
-  return {
+): Warrior =>
+  fixtureWarrior({
     id: 'test-warrior-1' as any,
     name: 'Test Warrior',
     style: FightingStyle.BashingAttack,
-    attributes: {
-      ...baseAttributes,
-      ...attributesOverride,
-    },
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10, ...attributesOverride },
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
     ...otherOverrides,
-  };
-}
+  });
 
 describe('computeStrategyScore', () => {
   describe('base score', () => {

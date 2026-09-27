@@ -4,19 +4,10 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { RivalryCard } from '@/components/dashboard/RivalryCard';
 import type { DerivedRivalry } from '@/types/rivalry.types';
+import { makeDerivedRivalry } from '@/test/_fixtures/factories';
 
-function makeRivalry(overrides: Partial<DerivedRivalry> = {}): DerivedRivalry {
-  return {
-    stableName: 'Iron Wolves',
-    ownerId: 'owner-1',
-    intensity: 3,
-    kills: [],
-    bouts: 10,
-    playerWins: 6,
-    playerLosses: 4,
-    ...overrides,
-  };
-}
+const makeRivalry = (overrides: Partial<DerivedRivalry> = {}): DerivedRivalry =>
+  makeDerivedRivalry(overrides);
 
 describe('RivalryCard H2H bar', () => {
   it('renders a win-rate bar when bouts > 0', () => {

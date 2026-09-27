@@ -20,7 +20,7 @@ bun x vitest run src/test/perf/rivalStrategyPass.perf.slow.test.ts
 | Populated-world week tick (`RivalStrategyPass` dominant) | `rivalStrategyPass.perf.slow.test.ts` | ~67 ms |
 | 52-week autosim (large week count) | `pipeline.perf.slow.test.ts` | ~480 ms |
 | Batch memory growth | `pipeline.perf.slow.test.ts` | within gate |
-| `advanceYear` ≡ 52× `advanceWeek` | `determinism.slow.test.ts` | ~1.7 s, equivalent |
+| `advanceYear` ≡ 52× `advanceWeek` | `weekDeterminism.slow.test.ts` | ~1.7 s, equivalent |
 | Same-seed determinism (SimPulse + rivals hash) | `sim/determinism.slow.test.ts` | identical, ~4 s |
 
 ## Structural costs removed by the refactor

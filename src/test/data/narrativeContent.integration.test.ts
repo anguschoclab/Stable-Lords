@@ -58,6 +58,7 @@ describe('crowd_reactions integration into crowdReaction()', () => {
     expect(bloodthirstyLines.length).toBeGreaterThan(0);
 
     // Try multiple seeds to find one where crowdReaction fires (rng.next() <= 0.25)
+    let fired = false;
     for (let seed = 1; seed <= 100; seed++) {
       const rng = new SeededRNG(seed);
       const result = (crowdReaction as any)(rng, 'Brutus', 'Maximus', 0.5, 'Bloodthirsty');
@@ -70,11 +71,12 @@ describe('crowd_reactions integration into crowdReaction()', () => {
           return interpolated === result;
         });
         expect(isBloodthirstyLine).toBe(true);
-        return;
+        fired = true;
+        break;
       }
     }
-    // If we never got a non-null result, crowdReaction should still work
-    expect(true).toBe(true);
+    // If we never got a non-null result, crowdReaction's gate is broken — fail.
+    expect(fired).toBe(true);
   });
 
   it('Theatrical mood returns a mood-specific line from crowd_reactions.Theatrical', () => {
@@ -82,6 +84,7 @@ describe('crowd_reactions integration into crowdReaction()', () => {
     expect(theatricalLines).toBeDefined();
     expect(theatricalLines.length).toBeGreaterThan(0);
 
+    let fired = false;
     for (let seed = 1; seed <= 100; seed++) {
       const rng = new SeededRNG(seed);
       const result = (crowdReaction as any)(rng, 'Brutus', 'Maximus', 0.5, 'Theatrical');
@@ -92,13 +95,16 @@ describe('crowd_reactions integration into crowdReaction()', () => {
           return interpolated === result;
         });
         expect(isTheatricalLine).toBe(true);
-        return;
+        fired = true;
+        break;
       }
     }
-    expect(true).toBe(true);
+    // A broken gate (e.g. rng.next() <= 0.25 never hit) must fail, not pass vacuously.
+    expect(fired).toBe(true);
   });
 
   it('Calm mood falls through to generic pbp.reactions (not crowd_reactions)', () => {
+    let fired = false;
     for (let seed = 1; seed <= 100; seed++) {
       const rng = new SeededRNG(seed);
       const result = (crowdReaction as any)(rng, 'Brutus', 'Maximus', 0.5, 'Calm');
@@ -112,13 +118,16 @@ describe('crowd_reactions integration into crowdReaction()', () => {
           return interpolated === result;
         });
         expect(isMoodSpecific).toBe(false);
-        return;
+        fired = true;
+        break;
       }
     }
-    expect(true).toBe(true);
+    // A broken gate (e.g. rng.next() <= 0.25 never hit) must fail, not pass vacuously.
+    expect(fired).toBe(true);
   });
 
   it('undefined crowdMood falls through to generic pbp.reactions', () => {
+    let fired = false;
     for (let seed = 1; seed <= 100; seed++) {
       const rng = new SeededRNG(seed);
       const result = crowdReaction(rng, 'Brutus', 'Maximus', 0.5);
@@ -131,10 +140,12 @@ describe('crowd_reactions integration into crowdReaction()', () => {
           return interpolated === result;
         });
         expect(isMoodSpecific).toBe(false);
-        return;
+        fired = true;
+        break;
       }
     }
-    expect(true).toBe(true);
+    // A broken gate (e.g. rng.next() <= 0.25 never hit) must fail, not pass vacuously.
+    expect(fired).toBe(true);
   });
 
   it('is deterministic: same seed + same mood → same result', () => {

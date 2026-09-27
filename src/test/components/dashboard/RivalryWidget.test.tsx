@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { DerivedRivalry } from '@/types/rivalry.types';
+import { makeDerivedRivalry } from '@/test/_fixtures/factories';
 
 const mockRivalriesList = vi.fn<(state: unknown) => DerivedRivalry[]>();
 const mockMostWantedRival =
@@ -25,18 +26,8 @@ vi.mock('@/hooks/useRivalries', () => ({
 
 import { RivalryWidget } from '@/components/dashboard/RivalryWidget';
 
-function makeRivalry(overrides: Partial<DerivedRivalry> = {}): DerivedRivalry {
-  return {
-    stableName: 'Iron Wolves',
-    ownerId: 'owner-1',
-    intensity: 3,
-    kills: [],
-    bouts: 10,
-    playerWins: 6,
-    playerLosses: 4,
-    ...overrides,
-  };
-}
+const makeRivalry = (overrides: Partial<DerivedRivalry> = {}): DerivedRivalry =>
+  makeDerivedRivalry(overrides);
 
 describe('RivalryWidget', () => {
   beforeEach(() => {

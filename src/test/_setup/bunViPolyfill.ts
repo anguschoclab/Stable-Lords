@@ -236,7 +236,7 @@ if (!v.unstubAllEnvs) {
   v.unstubAllEnvs = () => {
     for (const [name, { had, original }] of stubbedEnvs) {
       if (had) process.env[name] = original;
-      else delete process.env[name];
+      else Reflect.deleteProperty(process.env, name);
     }
     stubbedEnvs.clear();
   };

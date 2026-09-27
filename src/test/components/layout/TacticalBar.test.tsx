@@ -105,9 +105,15 @@ describe('TacticalBar', () => {
   });
 
   it('shows "No Active Alerts" in header when expanded with 0 alerts', () => {
-    // Bar returns null when no alerts and not expanded, so this state is unreachable
-    // without first having alerts. Skip as it's not reachable in normal render flow.
-    expect(true).toBe(true);
+    // Reachable path: expand with alerts, then clear them — expanded persists.
+    mockAlerts = [makeAlert()];
+    vi.mocked(useTacticalAlerts).mockImplementation(() => mockAlerts);
+    const { rerender } = render(<TacticalBar />);
+    const header = screen.getByText('1 Alert').closest('div[class*="cursor-pointer"]');
+    fireEvent.click(header!);
+    mockAlerts = [];
+    rerender(<TacticalBar />);
+    expect(screen.getByText('No Active Alerts')).toBeInTheDocument();
   });
 
   it('shows week number "W{week}" in header', () => {
@@ -132,9 +138,14 @@ describe('TacticalBar', () => {
   });
 
   it('shows "No alerts. All is well." in content when expanded with 0 alerts', () => {
-    // Bar returns null when no alerts and not expanded. This content path
-    // requires expanded=true + 0 alerts, which is unreachable in normal render.
-    expect(true).toBe(true);
+    mockAlerts = [makeAlert()];
+    vi.mocked(useTacticalAlerts).mockImplementation(() => mockAlerts);
+    const { rerender } = render(<TacticalBar />);
+    const header = screen.getByText('1 Alert').closest('div[class*="cursor-pointer"]');
+    fireEvent.click(header!);
+    mockAlerts = [];
+    rerender(<TacticalBar />);
+    expect(screen.getByText(/No alerts\. All is well\./i)).toBeInTheDocument();
   });
 
   it('renders action link with correct label and href when alert has action', () => {

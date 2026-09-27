@@ -13,7 +13,10 @@ import type { WarriorId, BoutOfferId, PromoterId, StableId, InjuryId } from '@/t
 import { generateId } from '@/utils/idUtils';
 import type { InjuryData } from '@/types/warrior.types';
 import { resolveImpacts } from '@/engine/impacts';
-import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
+import {
+  makeBoutOffer as fixtureBoutOffer,
+  makeRival as fixtureRival,
+} from '@/test/_fixtures/factories';
 
 // Helper to create a test bout offer
 const createTestOffer = (
@@ -36,13 +39,13 @@ const createTestOffer = (
   });
 
 // Helper to create a rival with specific warriors
-function createTestRival(
+const createTestRival = (
   id: string,
   name: string,
   warriors: Warrior[],
   personality: RivalStableData['owner']['personality'] = 'Pragmatic'
-): RivalStableData {
-  return {
+): RivalStableData =>
+  fixtureRival({
     id: id as StableId,
     owner: {
       id: `owner_${id}` as StableId,
@@ -57,10 +60,7 @@ function createTestRival(
     roster: warriors,
     treasury: 1000,
     tier: 'Established',
-    ledger: [],
-    trainingAssignments: [],
-  };
-}
+  } as any);
 
 describe('CompetitionWorker', () => {
   let state: GameState;

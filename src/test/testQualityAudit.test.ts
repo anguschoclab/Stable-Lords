@@ -17,12 +17,43 @@ const DOM_GLOBALS_RE = /\b(document|window|HTMLElement|HTMLMediaElement|navigato
 const DOM_STUB_LINE_RE = /defineProperty|=\s*(class|function|new|\{)|Mock|prototype\s*=|as\s+typeof/;
 const LOCAL_FACTORY_RE =
   /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
-// `const makeX = (...) => fixtureY({ ... })` delegates to _fixtures — not a
-// local factory. Only non-delegating defs count. Mirrors scanner logic.
+// Local names bound to shared builders — `import { makeWarrior as fixtureW }`
+// or plain `import { makeWarrior }` from _fixtures/factories. Mirrors scanner.
+function fixtureAliases(content: string): Set<string> {
+  const names = new Set<string>();
+  for (const m of content.matchAll(
+    /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/factories|engine\/factories\/\w+)['"]/g
+  )) {
+    for (const part of m[1]!.split(',')) {
+      const alias = part.trim().split(/\s+as\s+/).pop()?.trim();
+      if (alias) names.add(alias);
+    }
+  }
+  return names;
+}
+// `const makeX = (...) => sharedBuilder(...)`, `const makeX = sharedBuilder`,
+// and `=> { ...; return sharedBuilder(...) }` all delegate to _fixtures —
+// not a local factory. Only defs constructing entities from scratch count.
 function hasLocalFactory(content: string): boolean {
-  for (const m of content.matchAll(LOCAL_FACTORY_RE)) {
-    const tail = content.slice(m.index, m.index + 300);
-    if (/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*fixture\w+\(/.test(tail)) continue;
+  const aliases = fixtureAliases(content);
+  const defs = [...content.matchAll(LOCAL_FACTORY_RE)];
+  for (const [i, m] of defs.entries()) {
+    // Bound inspection at the next factory def so a delegate's `return`
+    // never gets attributed to a preceding def's body.
+    const end = Math.min(defs[i + 1]?.index ?? content.length, m.index! + 1600);
+    const tail = content.slice(m.index!, end);
+    const aliasAssign = tail.match(/^const\s+\w+\s*=\s*(\w+)\s*;/);
+    if (aliasAssign && aliases.has(aliasAssign[1]!)) continue;
+    const exprCall = tail.match(/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*(\w+)\s*\(/);
+    if (exprCall && aliases.has(exprCall[1]!)) continue;
+    const blockCall = tail.match(
+      /^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/
+    );
+    if (blockCall && aliases.has(blockCall[1]!)) continue;
+    const fnCall = tail.match(
+      /^function\s+\w+\s*\([^)]*\)[^{]*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/
+    );
+    if (fnCall && aliases.has(fnCall[1]!)) continue;
     return true;
   }
   return false;
@@ -68,6 +99,9 @@ function extractImportTargets(file: string): Set<string> {
 
 function needsDom(content: string): boolean {
   if (RTL_RE.test(content)) return true;
+  // An explicit `node` pragma means DOM references are assertions of absence
+  // (`typeof document === 'undefined'`), not consumption.
+  if (/@vitest-environment\s+node/.test(content)) return false;
   const lines = content
     .split('\n')
     .filter((l) => DOM_GLOBALS_RE.test(l) && !l.trim().startsWith('//'));
@@ -159,7 +193,7 @@ describe('testQualityAudit', () => {
     const violations: string[] = [];
     for (const f of allVitestTestFiles()) {
       const content = fs.readFileSync(f, 'utf8');
-      if (needsDom(content) && !/@vitest-environment\s+jsdom/.test(content)) {
+      if (needsDom(content) && !/@vitest-environment\s+\w+/.test(content)) {
         violations.push(rel(f));
       }
     }

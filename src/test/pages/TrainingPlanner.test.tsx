@@ -7,6 +7,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan, Warrior } from '@/types/game';
+import { makePlan as fixturePlan } from '@/test/_fixtures/factories';
 import type { GameState } from '@/types/state.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import '@/test/_setup/setup';
@@ -25,17 +26,15 @@ function makeTestWarrior(id: string, name: string, overrides?: Partial<Warrior>)
   });
 }
 
-function makePlan(style: FightingStyle = FightingStyle.StrikingAttack): FightPlan {
-  return {
+const makePlan = (style: FightingStyle = FightingStyle.StrikingAttack): FightPlan =>
+  fixturePlan({
     style,
     OE: 5,
     AL: 5,
     killDesire: 5,
-    target: 'Any',
     offensiveTactic: 'Decisiveness',
     defensiveTactic: 'none',
-  };
-}
+  });
 
 function renderPlanner(roster: Warrior[]) {
   const state = createFreshState('test-seed');

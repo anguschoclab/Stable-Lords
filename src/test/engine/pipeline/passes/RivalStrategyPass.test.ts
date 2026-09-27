@@ -10,7 +10,12 @@ import {
   runRivalStrategyPass,
 } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { SeededRNG } from '@/utils/random';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+  makeGameState as fixtureGameState,
+  makeBoutOffer as fixtureBoutOffer,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -53,82 +58,9 @@ const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
     ...overrides,
   } as any);
 
-function makeMinimalState(rivals: RivalStableData[]): GameState {
-  const warriorMap = new Map<string, Warrior>();
-  const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
-  const rivalMap = new Map<string, RivalStableData>();
-
-  for (const rival of rivals) {
-    rivalMap.set(rival.id as string, rival);
-    for (const w of rival.roster) {
-      warriorMap.set(w.id, w);
-      warriorToStableMap.set(w.id, { stableId: rival.id as string, isPlayer: false });
-    }
-  }
-
-  return {
-    meta: { gameName: '', version: '', createdAt: '' },
-    ftueComplete: true,
-    ftueStep: undefined,
-    coachDismissed: [],
-    player: {
-      id: 'player-1' as any,
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    fame: 0,
-    popularity: 0,
-    treasury: 1000,
-    ledger: [],
-    week: 5,
-    year: 1,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
-    rivals,
-    gazettes: [],
-    hallOfFame: [],
-    crowdMood: 'Calm',
-    tournaments: [],
-    trainers: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    recruitPool: [],
-    rosterBonus: 0,
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    unacknowledgedDeaths: [],
-    isFTUE: false,
-    day: 1,
-    isTournamentWeek: false,
-    promoters: {},
-    boutOffers: {},
-    activeTournamentId: undefined,
-    realmRankings: {},
-    awards: [],
-    bookmarks: [],
-    progression: {} as any,
-    warriorMap,
-    warriorToStableMap,
-    rivalMap,
-  } as any;
-}
+// fixtureGameState builds warriorMap / warriorToStableMap / rivalMap from rivals
+const makeMinimalState = (rivals: RivalStableData[]): GameState =>
+  fixtureGameState({ week: 5, rivals });
 
 function makeMockRng(returns: number[]): IRNGServiceLike {
   let i = 0;
@@ -393,12 +325,12 @@ describe('runRivalStrategyPass — expired offer purge', () => {
     vi.restoreAllMocks();
   });
 
-  function makeOffer(
+  const makeOffer = (
     id: string,
     expirationWeek: number,
     status: 'Proposed' | 'Signed' | 'Declined' = 'Proposed'
-  ) {
-    return {
+  ) =>
+    fixtureBoutOffer({
       id,
       promoterId: 'test-promoter',
       warriorIds: ['w1', 'w2'],
@@ -408,8 +340,7 @@ describe('runRivalStrategyPass — expired offer purge', () => {
       hype: 50,
       status,
       responses: {},
-    } as any;
-  }
+    } as any);
 
   it('purges offers with expirationWeek < state.absoluteWeek + 1', () => {
     vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);

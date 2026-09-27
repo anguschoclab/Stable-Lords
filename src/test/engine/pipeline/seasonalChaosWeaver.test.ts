@@ -10,6 +10,7 @@ import { SeededRNGService } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 import {
   handleSecretFightClub,
   handleChaosWeaversGame,
@@ -19,21 +20,20 @@ import {
 
 
 
-function makeTestState(): GameState {
-  const state = createFreshState('test-seed');
-  state.roster = [
-    {
-      id: 'w-test' as WarriorId,
-      name: 'TestWarrior',
-      status: 'Active',
-      xp: 0,
-      fame: 0,
-      injuries: [],
-    } as any,
-  ];
-  state.year = 1;
-  return state;
-}
+const makeTestState = (): GameState =>
+  fixtureGameState({
+    year: 1,
+    roster: [
+      {
+        id: 'w-test' as WarriorId,
+        name: 'TestWarrior',
+        status: 'Active',
+        xp: 0,
+        fame: 0,
+        injuries: [],
+      } as any,
+    ],
+  });
 
 function makeCtx(): OffseasonEventContext {
   return {

@@ -5,7 +5,11 @@ import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 // ─── Lightweight Test Factories ──────────────────────────────────────────────
 
@@ -35,12 +39,12 @@ const makeTestWarrior = (
     ...overrides,
   });
 
-function makeTestRival(
+const makeTestRival = (
   id: string,
   warriors: Warrior[],
   strategy?: RivalStableData['strategy']
-): RivalStableData {
-  return {
+): RivalStableData =>
+  fixtureRival({
     id: id as StableId,
     owner: {
       id: `owner_${id}` as StableId,
@@ -56,59 +60,10 @@ function makeTestRival(
     treasury: 1000,
     tier: 'Established',
     strategy,
-    ledger: [],
-    trainingAssignments: [],
-  };
-}
+  } as any);
 
-function makeTestState(rivals: RivalStableData[], week: number = 1): GameState {
-  return {
-    meta: { gameName: 'Stable Lords', version: 'test', createdAt: '2024-01-01T00:00:00.000Z' },
-    ftueComplete: false,
-    ftueStep: 0,
-    coachDismissed: [],
-    player: {
-      id: 'stable-player' as StableId,
-      name: 'You',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    fame: 0,
-    popularity: 0,
-    treasury: 1000,
-    ledger: [],
-    week,
-    absoluteWeek: week,
-    year: 1,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    hallOfFame: [],
-    crowdMood: 'Calm',
-    tournaments: [],
-    rivals,
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    recruitPool: [],
-    trainers: [],
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
-    promoters: {},
-  } as any as GameState;
-}
+const makeTestState = (rivals: RivalStableData[], week: number = 1): GameState =>
+  fixtureGameState({ week, absoluteWeek: week, rivals });
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 

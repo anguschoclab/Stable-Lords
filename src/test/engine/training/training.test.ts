@@ -8,7 +8,6 @@ import {
   trainingImpactToStateImpact,
 } from '@/engine/training';
 import { FightingStyle, type GameState, type Warrior } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
 import { resolveImpacts } from '@/engine/impacts';
 import { vi } from 'vitest';
 import { SeededRNG } from '@/utils/random';
@@ -16,31 +15,20 @@ import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
 import { SeededRNGService } from '@/utils/random';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeGameState as fixtureGameState,
+  makeComputedWarrior as fixtureComputedWarrior,
+} from '@/test/_fixtures/factories';
 
-function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
-  return {
+const makeWarrior = (attrs: any, overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureComputedWarrior(attrs, FightingStyle.StrikingAttack, {
     id: 'w1' as WarriorId,
     name: 'Test',
-    style: FightingStyle.StrikingAttack,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
     potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
-    traits: [],
     ...overrides,
-  };
-}
+  });
 
 const makeState = (overrides?: Partial<GameState>): GameState =>
   fixtureGameState({

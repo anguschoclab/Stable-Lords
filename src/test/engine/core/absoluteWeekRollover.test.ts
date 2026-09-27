@@ -5,7 +5,11 @@ import type { WarriorId, StableId, BoutOfferId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 import { generatePairings } from '@/engine/bout/core/pairings';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, fame: number = 50): Warrior =>
   fixtureWarrior({
@@ -47,47 +51,13 @@ const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
   } as any);
 
 function makeState(absoluteWeek: number, rivals: RivalStableData[]): GameState {
-  const week = ((absoluteWeek - 1) % 52) + 1;
-  const year = Math.floor((absoluteWeek - 1) / 52) + 1;
-  const warriorMap = new Map<string, Warrior>();
-  const warriorToStableMap = new Map<string, { stableId: string }>();
-  for (const r of rivals) {
-    for (const w of r.roster) {
-      warriorMap.set(w.id as string, w);
-      warriorToStableMap.set(w.id as string, { stableId: r.id as string });
-    }
-  }
-  return {
-    player: {
-      id: 'player',
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    fame: 0,
-    popularity: 0,
-    treasury: 1000,
-    ledger: [],
-    week,
+  // fixtureGameState builds warriorMap / warriorToStableMap / rivalMap from rivals
+  return fixtureGameState({
+    week: ((absoluteWeek - 1) % 52) + 1,
     absoluteWeek,
-    year,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
+    year: Math.floor((absoluteWeek - 1) / 52) + 1,
     rivals,
-    boutOffers: {},
-    recruitPool: [],
-    crowdMood: 'Calm',
-    warriorMap,
-    warriorToStableMap,
-  } as unknown as GameState;
+  });
 }
 
 describe('absoluteWeek rollover — convertBidsToOffers', () => {

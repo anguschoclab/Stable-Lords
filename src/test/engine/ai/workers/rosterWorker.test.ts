@@ -24,47 +24,26 @@ import type { RivalStableData } from '@/types/state.types';
 import type { Warrior, Attributes } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle, ATTRIBUTE_MAX } from '@/types/shared.types';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import {
+  makeComputedWarrior as fixtureComputedWarrior,
+  makeRival as fixtureRival,
+} from '@/test/_fixtures/factories';
 
-function makeWarrior(
+const makeWarrior = (
   id: string,
   attrs: Partial<Attributes> = {},
   overrides: Partial<Warrior> = {}
-): Warrior {
-  const fullAttrs: Attributes = {
-    ST: 10,
-    CN: 10,
-    SZ: 10,
-    WT: 10,
-    WL: 10,
-    SP: 10,
-    DF: 10,
-    ...attrs,
-  };
-  const { baseSkills, derivedStats } = computeWarriorStats(fullAttrs, FightingStyle.StrikingAttack);
-  return {
+): Warrior =>
+  fixtureComputedWarrior(attrs, FightingStyle.StrikingAttack, {
     id: id as WarriorId,
     name: `Warrior ${id}`,
-    style: FightingStyle.StrikingAttack,
-    attributes: fullAttrs,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 24,
     ...overrides,
-  };
-}
+  });
 
-function makeRivalStable(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+const makeRivalStable = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+  fixtureRival({
     id: 'r1' as StableId,
     owner: {
       id: 'r1' as StableId,
@@ -82,8 +61,7 @@ function makeRivalStable(overrides: Partial<RivalStableData> = {}): RivalStableD
     ledger: [],
     trainingAssignments: [],
     ...overrides,
-  } as any as RivalStableData;
-}
+  } as any);
 
 afterEach(() => {
   vi.restoreAllMocks();

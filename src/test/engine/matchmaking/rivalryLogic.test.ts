@@ -4,7 +4,10 @@ import type { FightSummary } from '@/types/combat.types';
 import type { Rivalry } from '@/types/state.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
-import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
+import {
+  makeFightSummary as fixtureFightSummary,
+  makeRivalry as fixtureRivalry,
+} from '@/test/_fixtures/factories';
 
 // ─── Factory helpers ────────────────────────────────────────────────────────
 
@@ -27,17 +30,8 @@ const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
     ...overrides,
   } as any);
 
-function makeRivalry(overrides: Partial<Rivalry> = {}): Rivalry {
-  return {
-    id: 'rv-1' as any,
-    stableIdA: 'StableA' as StableId,
-    stableIdB: 'StableB' as StableId,
-    intensity: 1,
-    reason: 'Initial clash',
-    startWeek: 1,
-    ...overrides,
-  } as Rivalry;
-}
+const makeRivalry = (overrides: Partial<Rivalry> = {}): Rivalry =>
+  fixtureRivalry({ intensity: 1, reason: 'Initial clash', ...overrides });
 
 function makeRng(seed: number = 12345): SeededRNG {
   return new SeededRNG(seed);

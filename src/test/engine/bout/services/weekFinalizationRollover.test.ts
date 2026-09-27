@@ -3,6 +3,7 @@ import { finalizeWeekSideEffectsToImpact } from '@/engine/bout/services/WeekFina
 import type { GameState } from '@/types/state.types';
 import type { BoutResult } from '@/engine/bout/services/boutProcessorService';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/core/EventBus', () => ({
   engineEventBus: { emit: vi.fn(), clear: vi.fn() },
@@ -13,42 +14,14 @@ describe('finalizeWeekSideEffectsToImpact — year boundary', () => {
     NewsletterFeed.clear();
   });
 
-  function makeState(absoluteWeek: number): GameState {
-    const week = ((absoluteWeek - 1) % 52) + 1;
-    const year = Math.floor((absoluteWeek - 1) / 52) + 1;
-    return {
-      player: {
-        id: 'player',
-        name: 'Player',
-        stableName: 'Player Stable',
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
-      fame: 0,
-      popularity: 0,
-      treasury: 1000,
-      ledger: [],
-      week,
+  const makeState = (absoluteWeek: number): GameState =>
+    fixtureGameState({
+      week: ((absoluteWeek - 1) % 52) + 1,
       absoluteWeek,
-      year,
-      phase: 'planning',
-      season: 'Spring',
-      weather: 'Clear',
-      roster: [],
-      graveyard: [],
-      retired: [],
-      arenaHistory: [],
-      newsletter: [],
-      rivals: [],
-      boutOffers: {},
-      recruitPool: [],
+      year: Math.floor((absoluteWeek - 1) / 52) + 1,
       crowdMood: 'Excited',
       moodHistory: [{ week: absoluteWeek - 1, mood: 'Excited' }],
-      gazettes: [],
-      rivalries: [],
-    } as unknown as GameState;
-  }
+    } as any);
 
   const emptyResults: BoutResult[] = [];
 

@@ -5,7 +5,10 @@ import '@testing-library/jest-dom';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import type { FightId, BoutOfferId, PromoterId } from '@/types/shared.types';
-import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
+import {
+  makeFightSummary as fixtureFightSummary,
+  makeBoutOffer as fixtureBoutOffer,
+} from '@/test/_fixtures/factories';
 
 let mockState: any = {};
 
@@ -35,23 +38,20 @@ const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
     ...overrides,
   } as any);
 
-function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
-  const warriorIds = overrides.warriorIds ?? ['wa' as WarriorId];
-  const responses = overrides.responses ?? { wa: 'Pending' };
-  return {
+const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
+  fixtureBoutOffer({
     id: 'offer-1' as BoutOfferId,
     promoterId: 'promoter-1' as PromoterId,
-    warriorIds,
+    warriorIds: overrides.warriorIds ?? ['wa' as WarriorId],
     boutWeek: 6,
     expirationWeek: 5,
     createdAbsoluteWeek: 5,
     purse: 100,
     hype: 50,
     status: 'Proposed',
-    responses,
+    responses: overrides.responses ?? { wa: 'Pending' },
     ...overrides,
-  } as unknown as BoutOffer;
-}
+  } as any);
 
 function setState(overrides: any = {}) {
   mockState = {

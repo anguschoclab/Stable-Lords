@@ -2,50 +2,25 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { assessBurnRisks, computeTrainability } from '@/engine/training/burnAnalysis';
 import { rollForTrainingInjury, TRAINING_INJURIES } from '@/engine/training/trainingGains';
 import { FightingStyle, type Warrior, type Trainer } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
 import { setMockIdGenerator } from '@/utils/idUtils';
+import {
+  makeComputedWarrior as fixtureComputedWarrior,
+  makeTrainer as fixtureTrainer,
+} from '@/test/_fixtures/factories';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId, InjuryId, WeatherType } from '@/types/shared.types';
 
-function makeWarrior(attrs: Record<string, number>, overrides?: Partial<Warrior>): Warrior {
-  const { baseSkills, derivedStats } = computeWarriorStats(
-    attrs as any,
-    FightingStyle.StrikingAttack
-  );
-  return {
+const makeWarrior = (attrs: Record<string, number>, overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureComputedWarrior(attrs as any, FightingStyle.StrikingAttack, {
     id: 'w1' as WarriorId,
     name: 'Test',
-    style: FightingStyle.StrikingAttack,
-    attributes: attrs as any,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
     potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
-    traits: [],
     ...overrides,
-  };
-}
+  });
 
-function makeTrainer(overrides?: Partial<Trainer>): Trainer {
-  return {
-    id: 't1',
-    name: 'Trainer',
-    tier: 'Novice',
-    focus: 'Aggression',
-    fame: 0,
-    age: 40,
-    contractWeeksLeft: 10,
-    ...overrides,
-  };
-}
+const makeTrainer = (overrides: Partial<Trainer> = {}): Trainer => fixtureTrainer(overrides);
 
 function makeRNG(nextVal: number, pickIdx?: number, rollVal?: number): IRNGService {
   return {

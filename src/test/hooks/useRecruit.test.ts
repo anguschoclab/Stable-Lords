@@ -8,6 +8,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior, Attributes, BaseSkills, DerivedStats } from '@/types/game';
 import type { GameState } from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment';
+import { makePoolWarrior as fixturePoolWarrior } from '@/test/_fixtures/factories';
 import { REFRESH_COST } from '@/engine/recruitment';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import '@/test/_setup/setup';
@@ -33,30 +34,15 @@ const baseAttrs: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, 
 const baseSkills: BaseSkills = { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 };
 const derivedStats: DerivedStats = { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
 
-function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
-  return {
+const makePoolWarrior = (overrides: Partial<PoolWarrior> = {}): PoolWarrior =>
+  fixturePoolWarrior({
     id: 'pw1',
     name: 'TestRecruit',
-    style: FightingStyle.StrikingAttack,
     attributes: { ...baseAttrs },
-    potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
     baseSkills: { ...baseSkills },
     derivedStats: { ...derivedStats },
-    tier: 'Common',
-    cost: 50,
-    age: 20,
-    lore: 'A young fighter.',
-    traits: [],
-    addedWeek: 1,
-    favorites: {
-      weaponId: 'shortsword',
-      rhythm: { oe: 5, al: 5 },
-      discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
-    },
-    luckfactor: { ...baseSkills },
     ...overrides,
-  };
-}
+  } as any);
 
 function makeTestWarrior(id: string, name: string): Warrior {
   return makeWarrior(id as any, name, FightingStyle.StrikingAttack, baseAttrs);

@@ -55,7 +55,7 @@ describe('prismatic_gale_exposure offseason event', () => {
       expect(events.prismatic_gale_exposure.title).toBeTruthy();
       expect(events.prismatic_gale_exposure.effectType).toBe('prismatic_gale_exposure');
     } else {
-      expect(true).toBe(false); // Force failure if not found
+      throw new Error('prismatic_gale_exposure event missing from offseason_events after merge');
     }
   });
 });

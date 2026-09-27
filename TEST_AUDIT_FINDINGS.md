@@ -162,15 +162,27 @@ Presented to user (session msg); deletions proceed under approved plan policy: d
   claim dropped — real contract is 0–2), arena cluster (6→2 files),
   narrative cluster. **22 colliding basenames → 0.**
 
-### 4b. Fixture migration (Phase 3c)
+### 4b. Fixture migration (Phase 3c + follow-up sweep)
 
 - `factories.ts` gained `makeFighterState` + `makeResolutionContext` (combat
-  exchange shapes previously copy-pasted ×5).
-- 85 files migrated to thin adapters delegating to shared builders via a
-  brace-aware codemod (`scripts/delegate-factories.mjs`, removed after use).
-- ~53 files retain local factories, justified: domain contexts without shared
-  builders (OffseasonEventContext, Rivalry, fight plans) and logic-bearing
-  factories. Tracked in `auditBaseline.json` under `localFactoryFiles`.
+  exchange shapes previously copy-pasted ×5), `makeComputedWarrior`
+  (attributes → real `computeWarriorStats` baseSkills/derivedStats, ~23 file
+  pattern), `makeTrainer`, `makeRivalry`, `makeGrudge`, `makePromoter`,
+  `makePoolWarrior`, `makeDerivedRivalry`, `makeWarriorRow(s)`.
+- 85 files migrated to thin adapters via a brace-aware codemod
+  (`scripts/delegate-factories.mjs`, removed after use); a follow-up manual
+  sweep converted function-declared factories, GameState literals (delegate
+  to `makeGameState` which auto-builds warriorMap/rivalMap/grudgeMap), and
+  identical cross-file helpers (DerivedRivalry ×2, WarriorRow ×2).
+- **3 files retain local factories**, all principled: `aiIntentTelemetry`
+  (seeded-RNG fighter pair via the production `warriorFactory`),
+  `equipmentIntegration` (production factory + equipment spread),
+  `tournamentSelection` (inner 8-warrior bracket generator). Tracked in
+  `auditBaseline.json` under `localFactoryFiles`.
+- The delegate detector exempts adapters that call names imported from
+  `_fixtures/factories` OR `@/engine/factories/*` (production factories are
+  not fixture duplication), including `function` declarations and block
+  bodies up to the next factory def.
 - Codemod incidents (stale `as T` tails, braced-body misparse) were reverted
   cleanly and the script fixed before re-application — no forward-patching.
 
@@ -187,24 +199,50 @@ Presented to user (session msg); deletions proceed under approved plan policy: d
 
 | Metric | Before | After |
 | --- | --- | --- |
-| Default suite | ~90s / 702 files / 7,904 tests | **58.95s / 653 files / 7,862 tests** |
-| Environment share | 47% | 25% |
+| Default suite | ~90s / 702 files / 7,904 tests | **~33s / 653 files / 7,867 tests** |
+| Slow suite (parallel) | 125.9s sequential | **~66s** (`fileParallelism` re-enabled — safe) |
+| Environment share | 47% | 18% |
 | jsdom workers | all | only pragma-flagged DOM files |
+| Coverage (v8) | unmeasured | 85.3% stmts / 75.2% branches / 79.1% funcs / 86.8% lines — gated via `coverage.thresholds` |
 
-- Global env `jsdom` → `node`; 55 DOM files carry explicit pragmas.
+- Global env `jsdom` → `node`; every DOM consumer carries an explicit pragma
+  (`needsDomMissingPragma: 0`; a `node` pragma suppresses false-positive
+  "DOM references" like `typeof document === 'undefined'`).
 - 10 long-pole files promoted to `*.slow.test.ts` (top: 52-week simulation
   ~29s). Slow suite: `bun run test:slow`, CI `slow-tests` job.
-- `setup.ts` splits DOM deps: RTL/jest-dom load only when `document` exists.
-- `isolate: false` **evaluated and rejected**: breaks `vi.mock` interception
-  (module-registry sharing) and mixed-env RTL unmount. Noted in
-  `vitest.config.ts`; ~17s deemed unsafe to harvest.
+- `setup.ts` split into `setup.node.ts` + `setup.dom.ts`; the shared project
+  loads only the node half.
+- **Scoped `isolate: false` via `test.projects`**: pure-node files (~440)
+  share workers in a `shared` project; mocks/DOM/global-mutation files stay
+  in `isolated`. Classification is generated into `runnerGroups.json` by the
+  audit scanner and guarded by `testQualityAudit`. `@vitest-isolate` pragma
+  available for cases static detection can't prove.
+- Shared-worker pollution fixed at the root (not by isolating victims):
+  `resetArenaRegistry` in `arenas.ts`; engine-pool reset in `setup.node.ts`
+  (`configureEnginePool(>1)` survived `shutdown` → Comlink workers spawned in
+  vitest → 120s hangs); `bunViPolyfill` gained `stubEnv`/`unstubAllEnvs`.
+- Global `isolate: false` **rejected** earlier — shared module registry breaks
+  `vi.mock` interception and mixed-env RTL unmount; the scoped variant keeps
+  the speed (~33s) without the hazard.
 
 ### 4e. Guardrails (permanent)
 
-- `testQualityAudit.test.ts`: 7 structural guards, shrink-only allowlists in
-  `auditBaseline.json` (stale entries fail the gate).
+- `testQualityAudit.test.ts`: 8 structural guards, shrink-only allowlists in
+  `auditBaseline.json` (stale entries fail the gate); runner-group drift guard
+  keeps the shared/isolated split honest.
 - `stateReset.test.ts`: singleton reset sentinels (eventBus, NewsletterFeed,
-  idCounter, useGameStore, module caches).
+  idCounter, useGameStore, module caches, arena registry, engine pool).
 - `bunRunnerSafety.test.ts`: bans bun-deadlocking `vi.mock(() => import())`.
 - Env canaries: pragma mechanism + node-env proof.
+- Dead-pattern sweep: `expect(true)` tautologies replaced with real
+  assertions (seeded-loop `fired` flags, expand-then-clear UI paths,
+  trait-definition hard asserts, aria-label path fixes — the old list pointed
+  at 9 moved components and silently passed). One intentional `toBe(false)`
+  throw remains inside `vi.waitFor`.
+- Coincidental basename collisions resolved: 7 pairs renamed to
+  subject-qualified names (`weekDeterminism`, `economyUtils`, `injuryUtils`,
+  `impactProgression`, `weatherVisuals`, `TournamentComponents`,
+  `FighterConfigCard.domIds`, `ResolutionReveal.selector`).
+- CI matrix gained `coverage` (threshold-gated) and `electron`
+  (`electron:compile`) jobs; `playwright --project=chromium` already present.
 - Authoring rules: `docs/TESTING.md`.

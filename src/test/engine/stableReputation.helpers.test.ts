@@ -5,29 +5,14 @@ import { describe, it, expect } from 'vitest';
 import { getTopFameWarriors, computeFameScore } from '@/engine/stableReputation';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 
-function makeWarrior(id: string, fame: number): Warrior {
-  const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
-  return {
+const makeWarrior = (id: string, fame: number): Warrior =>
+  fixtureComputedWarrior({}, FightingStyle.StrikingAttack, {
     id: id as any,
     name: `Warrior ${id}`,
-    style: FightingStyle.StrikingAttack,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
     fame,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
-  } as any as Warrior;
-}
+  });
 
 // ─── getTopFameWarriors ───────────────────────────────────────────────────
 

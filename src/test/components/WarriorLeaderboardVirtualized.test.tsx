@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import type { WarriorRow } from '@/types/leaderboard';
+import { makeWarriorRows } from '@/test/_fixtures/factories';
 
 import { useGameStore } from '@/state/useGameStore';
 
@@ -12,23 +12,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-function makeWarriorRows(n: number): WarriorRow[] {
-  return Array.from({ length: n }, (_, i) => ({
-    id: `w${i}`,
-    name: `Warrior${i}`,
-    stableName: `Stable${i % 5}`,
-    stableId: `s${i % 5}`,
-    fame: 100 - i,
-    wins: 20 - (i % 10),
-    losses: i % 10,
-    kills: i % 5,
-    winRate: 100 - (i % 20),
-    style: ['Brawler', 'Technician', 'Striker'][i % 3]!,
-    isPlayer: i === 0,
-    officialRank: i + 1,
-    compositeScore: 90 - i,
-  }));
-}
+
 
 describe('WarriorLeaderboard (virtualized)', () => {
   beforeEach(() => {

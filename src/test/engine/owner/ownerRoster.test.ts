@@ -3,6 +3,7 @@ import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { aiDraftFromPool } from '@/engine/draftService';
 import type { GameState, PoolWarrior, RivalStableData } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
 
 describe('Owner Roster Worker', () => {
   let mockState: GameState;
@@ -23,8 +24,8 @@ describe('Owner Roster Worker', () => {
     personality: string,
     treasury: number,
     roster: Partial<any>[]
-  ): RivalStableData => {
-    return {
+  ): RivalStableData =>
+    fixtureRival({
       id,
       owner: {
         id: `owner-${id}`,
@@ -48,8 +49,7 @@ describe('Owner Roster Worker', () => {
       })),
       ledger: [],
       trainingAssignments: [],
-    } as unknown as RivalStableData;
-  };
+    } as any);
 
   const poolCandidate = (id: string, style: FightingStyle): PoolWarrior =>
     ({

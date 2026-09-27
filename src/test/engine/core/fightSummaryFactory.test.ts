@@ -6,6 +6,7 @@ import {
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 describe('fightSummaryFactory attaches analysis', () => {
   it('includes analysis built from the outcome exchangeLog', () => {
@@ -107,45 +108,33 @@ describe('fightSummaryFactory attaches analysis', () => {
 
 // ─── Shared mock helpers ──────────────────────────────────────────────────────
 
-const makeWarriorA = (overrides: Partial<Warrior> = {}): Warrior => ({
-  id: 'a' as any,
-  name: 'Aulus',
-  style: FightingStyle.LungingAttack,
-  attributes: { ST: 15, CN: 12, SZ: 10, WT: 11, WL: 10, SP: 13, DF: 9 },
-  baseSkills: { ATT: 12, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 },
-  derivedStats: { hp: 30, endurance: 20, damage: 5, encumbrance: 0 },
-  fame: 10,
-  popularity: 5,
-  titles: [],
-  injuries: [],
-  flair: [],
-  career: { wins: 0, losses: 0, kills: 0 },
-  champion: false,
-  status: 'Active',
-  stableId: 's1' as any,
-  traits: [],
-  ...overrides,
-});
+const makeWarriorA = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
+    id: 'a' as any,
+    name: 'Aulus',
+    style: FightingStyle.LungingAttack,
+    attributes: { ST: 15, CN: 12, SZ: 10, WT: 11, WL: 10, SP: 13, DF: 9 },
+    baseSkills: { ATT: 12, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 },
+    derivedStats: { hp: 30, endurance: 20, damage: 5, encumbrance: 0 },
+    fame: 10,
+    popularity: 5,
+    stableId: 's1' as any,
+    ...overrides,
+  });
 
-const makeWarriorD = (overrides: Partial<Warrior> = {}): Warrior => ({
-  id: 'd' as any,
-  name: 'Bran',
-  style: FightingStyle.TotalParry,
-  attributes: { ST: 12, CN: 14, SZ: 11, WT: 10, WL: 12, SP: 10, DF: 11 },
-  baseSkills: { ATT: 10, PAR: 12, DEF: 11, INI: 10, RIP: 8, DEC: 8 },
-  derivedStats: { hp: 32, endurance: 22, damage: 4, encumbrance: 0 },
-  fame: 8,
-  popularity: 4,
-  titles: [],
-  injuries: [],
-  flair: [],
-  career: { wins: 0, losses: 0, kills: 0 },
-  champion: false,
-  status: 'Active',
-  stableId: 's2' as any,
-  traits: [],
-  ...overrides,
-});
+const makeWarriorD = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureWarrior({
+    id: 'd' as any,
+    name: 'Bran',
+    style: FightingStyle.TotalParry,
+    attributes: { ST: 12, CN: 14, SZ: 11, WT: 10, WL: 12, SP: 10, DF: 11 },
+    baseSkills: { ATT: 10, PAR: 12, DEF: 11, INI: 10, RIP: 8, DEC: 8 },
+    derivedStats: { hp: 32, endurance: 22, damage: 4, encumbrance: 0 },
+    fame: 8,
+    popularity: 4,
+    stableId: 's2' as any,
+    ...overrides,
+  });
 
 const makeOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
   winner: 'A',

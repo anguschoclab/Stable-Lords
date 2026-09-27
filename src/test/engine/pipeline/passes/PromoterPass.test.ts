@@ -12,27 +12,28 @@ import type { GameState, Promoter, TournamentEntry, Warrior, BoutOffer } from '@
 import type { WarriorId, InjuryId, TournamentId } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';
 import { resolveImpacts } from '@/engine/impacts';
+import {
+  makePromoter as fixturePromoter,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 // Helper to create a promoter with specific personality
-function createTestPromoter(
+const createTestPromoter = (
   id: string,
   name: string,
   personality: Promoter['personality'],
   tier: Promoter['tier'] = 'Local',
   capacity: number = 2,
   biases: FightingStyle[] = [FightingStyle.StrikingAttack]
-): Promoter {
-  return {
+): Promoter =>
+  fixturePromoter({
     id: id as import('@/types/shared.types').PromoterId,
     name,
-    age: 45,
     personality,
     tier,
     capacity,
     biases,
-    history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 },
-  };
-}
+  });
 
 // Helper to add tournament participants
 function addTournamentParticipants(
@@ -811,20 +812,7 @@ describe('Score-window matching', () => {
       realmRankings[s.id] = { overallRank: 1, classRank: 1, compositeScore: s.score };
     }
 
-    return {
-      meta: { gameName: '', version: '', createdAt: '' },
-      week: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 0,
-      roster: warriors,
-      rivals: [],
-      promoters: {},
-      boutOffers: {},
-      realmRankings,
-    } as unknown as GameState;
+    return fixtureGameState({ week: 5, roster: warriors, realmRankings });
   }
 
   it('warrior with score 30 and gap 0.25 should not match score 20 or 40', () => {
@@ -1249,20 +1237,7 @@ describe('sortedScores index alignment', () => {
       realmRankings[s.id] = { overallRank: 1, classRank: 1, compositeScore: s.score };
     }
 
-    return {
-      meta: { gameName: '', version: '', createdAt: '' },
-      week: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 0,
-      roster: warriors,
-      rivals: [],
-      promoters: {},
-      boutOffers: {},
-      realmRankings,
-    } as unknown as GameState;
+    return fixtureGameState({ week: 5, roster: warriors, realmRankings });
   }
 
   it('produces correct matches when scores are in non-sorted input order', () => {

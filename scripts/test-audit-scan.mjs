@@ -27,12 +27,40 @@ const TEST_RE = /\.(test|spec)\.(ts|tsx|js|jsx)$/;
 const DOM_GLOBALS = /\b(document|window|HTMLElement|HTMLMediaElement|navigator)\b/;
 const RTL_RE = /@testing-library\/react|\brender(Hook)?\s*\(/;
 const FACTORY_DEF_RE = /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
-// a `const makeX = (...) => fixtureY({ ... })` adapter is a delegation to the
-// shared fixture, not a duplicate factory — only flag non-delegating defs
+// Local names bound to shared builders — `import { makeWarrior as fixtureW }`
+// or plain `import { makeWarrior }` from _fixtures/factories.
+function fixtureAliases(content) {
+  const names = new Set();
+  for (const m of content.matchAll(
+    /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/factories|engine\/factories\/\w+)['"]/g
+  )) {
+    for (const part of m[1].split(',')) {
+      const alias = part.trim().split(/\s+as\s+/).pop()?.trim();
+      if (alias) names.add(alias);
+    }
+  }
+  return names;
+}
+// An adapter delegating to a shared builder is not a duplicate factory —
+// `const makeX = (...) => sharedBuilder(...)`, `const makeX = sharedBuilder`,
+// and block-bodied `=> { ...; return sharedBuilder(...) }` all count as
+// delegation. Only defs that construct entities from scratch are flagged.
 function hasLocalFactory(content) {
-  for (const m of content.matchAll(FACTORY_DEF_RE)) {
-    const tail = content.slice(m.index, m.index + 300);
-    if (/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*fixture\w+\(/.test(tail)) continue;
+  const aliases = fixtureAliases(content);
+  const defs = [...content.matchAll(FACTORY_DEF_RE)];
+  for (const [i, m] of defs.entries()) {
+    // Bound inspection at the next factory def so a delegate's `return`
+    // never gets attributed to a preceding def's body.
+    const end = Math.min(defs[i + 1]?.index ?? content.length, m.index + 1600);
+    const tail = content.slice(m.index, end);
+    const aliasAssign = tail.match(/^const\s+\w+\s*=\s*(\w+)\s*;/);
+    if (aliasAssign && aliases.has(aliasAssign[1])) continue;
+    const exprCall = tail.match(/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*(\w+)\s*\(/);
+    if (exprCall && aliases.has(exprCall[1])) continue;
+    const blockCall = tail.match(/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/);
+    if (blockCall && aliases.has(blockCall[1])) continue;
+    const fnCall = tail.match(/^function\s+\w+\s*\([^)]*\)[^{]*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/);
+    if (fnCall && aliases.has(fnCall[1])) continue;
     return true;
   }
   return false;
@@ -133,9 +161,14 @@ const records = testFiles.map((file) => {
 
   const hasPragma = /@vitest-environment\s+(\w+)/.exec(content)?.[1] ?? null;
   const usesRTL = RTL_RE.test(content);
-  const domGlobalLines = content
-    .split('\n')
-    .filter((l) => DOM_GLOBALS.test(l) && !l.trim().startsWith('//'));
+  // An explicit `node` pragma means DOM references are assertions of absence
+  // (`typeof document === 'undefined'`), not consumption.
+  const explicitNode = hasPragma === 'node';
+  const domGlobalLines = explicitNode
+    ? []
+    : content
+        .split('\n')
+        .filter((l) => DOM_GLOBALS.test(l) && !l.trim().startsWith('//'));
   // Stubber heuristic: line assigns/defines the global rather than reading it
   const domStubber =
     domGlobalLines.length > 0 &&
@@ -210,7 +243,7 @@ const summary = {
   slowFiles: records.filter((r) => r.slow).length,
   pragmaFiles: records.filter((r) => r.envPragma).length,
   needsDom: records.filter((r) => r.needsDom).length,
-  needsDomMissingPragma: records.filter((r) => r.needsDom && r.envPragma !== 'jsdom').length,
+  needsDomMissingPragma: records.filter((r) => r.needsDom && !r.envPragma).length,
   domStubOnly: records.filter((r) => r.domStubOnly).length,
   localFactoryFiles: records.filter((r) => r.localFactory).length,
   sharedFixtureFiles: records.filter((r) => r.usesSharedFixtures).length,
@@ -242,7 +275,7 @@ const baseline = {
     .sort(),
   localFactoryFiles: records.filter((r) => r.localFactory).map((r) => r.file).sort(),
   missingJsdomPragma: records
-    .filter((r) => r.needsDom && r.envPragma !== 'jsdom')
+    .filter((r) => r.needsDom && !r.envPragma)
     .map((r) => r.file)
     .sort(),
 };
@@ -270,8 +303,8 @@ fs.writeFileSync(
 
 console.log('=== TEST AUDIT SCAN ===');
 for (const [k, v] of Object.entries(summary)) console.log(`  ${k}: ${v}`);
-console.log('\nFiles needing DOM but missing jsdom pragma:');
-for (const r of records.filter((r) => r.needsDom && r.envPragma !== 'jsdom'))
+console.log('\nFiles needing DOM but missing env pragma:');
+for (const r of records.filter((r) => r.needsDom && !r.envPragma))
   console.log(`   ${r.file} (RTL:${r.usesRTL} stubOnly:${r.domStubOnly})`);
 console.log('\nFiles >2000ms:');
 for (const r of records.filter((r) => r.runtimeMs > 2000).sort((a, b) => b.runtimeMs - a.runtimeMs))

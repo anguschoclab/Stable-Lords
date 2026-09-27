@@ -3,44 +3,21 @@ import { computeAgingImpact } from '@/engine/aging';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior, Attributes, WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/utils/random';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeGameState as fixtureGameState,
+  makeComputedWarrior as fixtureComputedWarrior,
+} from '@/test/_fixtures/factories';
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
 
-function makeWarrior(id: string, age: number, attrs: Partial<Attributes> = {}): Warrior {
-  const fullAttrs: Attributes = {
-    ST: 10,
-    CN: 10,
-    SZ: 10,
-    WT: 10,
-    WL: 10,
-    SP: 10,
-    DF: 10,
-    ...attrs,
-  };
-  const { baseSkills, derivedStats } = computeWarriorStats(fullAttrs, FightingStyle.StrikingAttack);
-
-  return {
+const makeWarrior = (id: string, age: number, attrs: Partial<Attributes> = {}): Warrior =>
+  fixtureComputedWarrior(attrs, FightingStyle.StrikingAttack, {
     id: id as WarriorId,
     name: `Warrior ${id}`,
-    style: FightingStyle.StrikingAttack,
-    attributes: fullAttrs,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age,
-  };
-}
+  });
 
 const makeGameState = (week: number, roster: Warrior[]): GameState =>
   fixtureGameState({

@@ -4,36 +4,26 @@
 import { describe, it, expect } from 'vitest';
 import { generateScoutReport, getScoutCost } from '@/engine/scouting';
 import { FightingStyle, type Warrior } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/utils/random';
+import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 import { narrativeContent } from '@/data/narrative';
 
 const TEST_RNG = new SeededRNGService(42);
 
-function makeWarrior(overrides?: Partial<Warrior>): Warrior {
-  const attrs = { ST: 15, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.SlashingAttack);
-  return {
-    id: 'w1' as import('@/types/shared.types').WarriorId,
-    name: 'Opponent',
-    style: FightingStyle.SlashingAttack,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
-    fame: 5,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 8, losses: 3, kills: 2 },
-    champion: false,
-    status: 'Active',
-    age: 24,
-    traits: [],
-    plan: { OE: 7, AL: 5, killDesire: 6 } as any,
-    ...overrides,
-  };
-}
+const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
+  fixtureComputedWarrior(
+    { ST: 15, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 },
+    FightingStyle.SlashingAttack,
+    {
+      id: 'w1' as import('@/types/shared.types').WarriorId,
+      name: 'Opponent',
+      fame: 5,
+      career: { wins: 8, losses: 3, kills: 2 },
+      age: 24,
+      plan: { OE: 7, AL: 5, killDesire: 6 } as any,
+      ...overrides,
+    }
+  );
 
 describe('Scouting System', () => {
   describe('getScoutCost', () => {

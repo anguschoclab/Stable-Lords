@@ -8,42 +8,29 @@ import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
-import { computeWarriorStats } from '@/engine/skillCalc';
 import { defaultPlanForWarrior } from '@/engine/simulate';
-import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeRival as fixtureRival,
+  makeGameState as fixtureGameState,
+  makeComputedWarrior as fixtureComputedWarrior,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(
+const makeWarrior = (
   name: string,
   style: FightingStyle,
   stableId: string,
   overrides: Partial<Warrior> = {}
-): Warrior {
-  const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  return {
+): Warrior =>
+  fixtureComputedWarrior({}, style, {
     id: `test_${name}` as any,
     name,
-    style,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
     stableId: stableId as any,
     ...overrides,
-  } as Warrior;
-}
+  });
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
   fixtureRival({

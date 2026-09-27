@@ -71,6 +71,29 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bunx vitest run --config vitest.config.slow.ts
 
+  coverage:
+    runs-on: ubuntu-latest
+    needs: test
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      # Thresholds in vitest.config.ts fail the job on coverage regression.
+      - run: bunx vitest run --coverage --reporter=dot
+
+  electron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      - run: bun run electron:compile
+
   e2e:
     runs-on: ubuntu-latest
     needs: test

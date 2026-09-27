@@ -3,30 +3,30 @@ import '@/test/_setup/setup';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import type { GameState } from '@/types/state.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeGameState as fixtureGameState,
+  makeWarrior as fixtureWarrior,
+} from '@/test/_fixtures/factories';
 
-function makeWarrior(
+const makeWarrior = (
   id: string,
   style: FightingStyle,
   fame: number,
   wins: number,
   losses: number,
   kills: number
-) {
-  return {
+) =>
+  fixtureWarrior({
     id: id as WarriorId,
     name: `Warrior ${id}`,
     style,
     fame,
     career: { wins, losses, kills },
     stableId: 'stable-player' as StableId,
-    status: 'Active',
     age: 25,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     isAlive: true,
     isRetired: false,
-  } as any;
-}
+  } as any);
 
 const makeState = (warriors: any[]): GameState =>
   fixtureGameState({

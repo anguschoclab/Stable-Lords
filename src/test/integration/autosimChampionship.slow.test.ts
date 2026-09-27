@@ -153,12 +153,35 @@ describe('championship autosim — week 52+', () => {
 
     // Contenders emerge and crowns are seeded.
     expect(crowned.length).toBeGreaterThan(0);
+    // Contender emergence: at least one arena produced a warrior with enough
+    //    venue experience to qualify for the contender ladder.
+    expect(arenaBoutCounts.size).toBeGreaterThan(0);
     // The title-bout lifecycle completes: offers get signed and resolve into
     // recorded title results (the offer-window regression this test guards).
     expect(CHAMPIONSHIP_DEBUG.signedSeen).toBeGreaterThan(0);
     expect(titleBouts.length).toBeGreaterThan(0);
-    // Resolved title bouts have consequences — dethronements actually happen.
+    // Resolved title bouts have consequences — dethronements actually happen
+    //    and reign history accumulates.
     expect(endReasons['defeated'] ?? 0).toBeGreaterThan(0);
+    expect(historyReigns).toBeGreaterThan(0);
+    // Rival title participation: signed/resolved title offers involve rival
+    //    warriors, not just player-side bookings.
+    const rivalWarriorIds = new Set(
+      Object.values(s.rivals ?? {}).flatMap((r: any) =>
+        (r.roster ?? []).map((w: any) => w.id)
+      )
+    );
+    const rivalTitleOffers = titleOffers.filter((o) =>
+      o.warriorIds.some((id) => rivalWarriorIds.has(id))
+    );
+    expect(rivalTitleOffers.length).toBeGreaterThan(0);
+    // Seasonal tournaments run and complete across the two-plus-year horizon;
+    //    an emitted seasonal bracket that never resolved would be a lifecycle bug.
+    const seasonals = (s.tournaments ?? []).filter(
+      (t) => t.tierId !== CHAMPIONS_TOURNEY.TIER_ID
+    );
+    expect(seasonals.length).toBeGreaterThan(0);
+    expect(seasonals.every((t) => t.completed)).toBe(true);
     // The Grand Championship emits at week 52, completes, and records a winner.
     expect(champsT.length).toBeGreaterThan(0);
     expect(champsT.every((t) => t.completed)).toBe(true);

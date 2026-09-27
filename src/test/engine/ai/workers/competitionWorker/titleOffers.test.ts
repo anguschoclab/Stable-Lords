@@ -188,3 +188,50 @@ describe('processAllRivalsBoutOffers — unified title gate', () => {
     expect(impact.boutOffers?.[offer.id]?.responses['w1' as WarriorId]).toBe('Accepted');
   });
 });
+
+describe('title-bout verdict reasons (Plan G — offer card transparency)', () => {
+  it('records the refusal reason when a champion declines a defense hurt', () => {
+    const champ = makeWarrior({
+      id: 'w1' as WarriorId,
+      derivedStats: { hp: 30, endurance: 100, damage: 5, encumbrance: 0 },
+    });
+    const rival = makeRival({
+      roster: [champ],
+      owner: makeOwner({ personality: 'Pragmatic' }),
+    });
+    const offer = titleOffer('w1', 'k1');
+    const state = makeGameState({
+      week: 5,
+      absoluteWeek: 5,
+      rivals: [rival],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { arena_a: titleAt('w1', { refusals: 0 }) },
+    });
+    const impact = processAllRivalsBoutOffers(state, [rival]);
+    const updated = impact.boutOffers?.[offer.id];
+    expect(updated?.responses['w1' as WarriorId]).toBe('Declined');
+    expect(updated?.responseNotes?.['w1' as WarriorId]).toBe('title-defense-health');
+  });
+
+  it('records the reason when a calculating challenger passes on a killer champion', () => {
+    const challenger = makeWarrior({ id: 'w1' as WarriorId });
+    const rival = makeRival({
+      roster: [challenger],
+      owner: makeOwner({ personality: 'Pragmatic' }),
+    });
+    const offer = titleOffer('champ_x', 'w1');
+    const champWarrior = killer('champ_x');
+    const champStable = makeRival({ id: 'champ-stable' as never, roster: [champWarrior] });
+    const state = makeGameState({
+      week: 5,
+      absoluteWeek: 5,
+      rivals: [rival, champStable],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { arena_a: titleAt('champ_x', { refusals: 0 }) },
+    });
+    const impact = processAllRivalsBoutOffers(state, [rival]);
+    const updated = impact.boutOffers?.[offer.id];
+    expect(updated?.responses['w1' as WarriorId]).toBe('Declined');
+    expect(updated?.responseNotes?.['w1' as WarriorId]).toBe('killer-champion');
+  });
+});

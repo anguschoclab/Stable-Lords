@@ -80,6 +80,13 @@ describe('world liveness — 104 weeks (Stage H)', () => {
       expect(t.refusals).toBeLessThan(ARENA_TITLE.REFUSALS_TO_STRIP);
     }
 
+    // 3b. Strips are rare-but-nonzero: the refusal→strip machinery actually
+    //     engages (a persistent duck got removed), yet it must not dominate
+    //     the ecosystem — deaths/defeats still carry the workload.
+    const endings = pulses[pulses.length - 1].reignEndings;
+    expect(endings.stripped ?? 0).toBeGreaterThanOrEqual(1);
+    expect(endings.stripped ?? 0).toBeLessThan(endings.died ?? 0);
+
     // 4. Grand Championship integrity: every champions-tier tournament that
     //    emitted completed with a recorded winner; cancellations only ever
     //    reflect a genuinely thin field (the metric derives them honestly).

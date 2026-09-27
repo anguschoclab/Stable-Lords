@@ -1,18 +1,33 @@
-import { MapPin } from 'lucide-react';
+import { MapPin, Swords } from 'lucide-react';
 import type { BoutOffer, Warrior } from '@/types/state.types';
 import { getArenaById } from '@/data/arenas';
 import { describeArenaFit } from '@/engine/matchmaking/arenaFit';
+import { COUNTERED_VENUE_CONDITION } from '@/engine/bout/mutations/contractMutations';
 
 interface OfferDetailsGridProps {
   offer: BoutOffer;
   playerWarrior?: Warrior;
 }
 
+/** Human-readable labels for rival title-bout verdict reasons. */
+const TITLE_VERDICT_LABELS: Record<string, string> = {
+  'crown-defense': 'Accepted — defending the crown',
+  'title-shot': 'Accepted — taking the shot',
+  'title-defense-health': 'Declined defense — hurt',
+  'title-defense-threat': 'Declined defense — dangerous challenger',
+  'killer-champion': 'Declined shot — known killer champion',
+  'title-shot-mismatch': 'Declined shot — style mismatch',
+};
+
 /**
  * Offer detail grid: fight week, expected crowd hype, and (when set) the
  * arena with its tags and the fighter's fit assessment.
  */
 export function OfferDetailsGrid({ offer, playerWarrior }: OfferDetailsGridProps) {
+  const venueCountered = offer.conditions?.includes(COUNTERED_VENUE_CONDITION) ?? false;
+  const opponentId = offer.warriorIds.find((id) => id !== playerWarrior?.id);
+  const rivalVerdict = opponentId ? offer.responseNotes?.[opponentId] : undefined;
+
   return (
     <div className="grid grid-cols-2 gap-8 py-6 border-y border-white/5">
       <div className="space-y-1">
@@ -33,8 +48,16 @@ export function OfferDetailsGrid({ offer, playerWarrior }: OfferDetailsGridProps
         <div className="col-span-2 pt-4 border-t border-white/5 flex items-start gap-2">
           <MapPin className="h-3 w-3 text-muted-foreground/40 mt-0.5 shrink-0" />
           <div>
-            <div className="text-[11px] font-display font-black uppercase text-foreground/80">
+            <div className="text-[11px] font-display font-black uppercase text-foreground/80 flex items-center gap-2">
               {getArenaById(offer.arenaId).name}
+              {venueCountered && (
+                <span
+                  data-testid="venue-counter-badge"
+                  className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm border border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
+                >
+                  Venue countered
+                </span>
+              )}
             </div>
             <div className="flex gap-1 mt-1">
               {getArenaById(offer.arenaId).tags.map((tag) => (
@@ -68,6 +91,22 @@ export function OfferDetailsGrid({ offer, playerWarrior }: OfferDetailsGridProps
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+      {rivalVerdict && (
+        <div className="col-span-2 pt-4 border-t border-white/5 flex items-start gap-2">
+          <Swords className="h-3 w-3 text-muted-foreground/40 mt-0.5 shrink-0" />
+          <div>
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 block">
+              Rival Verdict
+            </span>
+            <div
+              data-testid="rival-verdict-note"
+              className="text-[10px] font-black uppercase tracking-tight text-foreground/70 mt-0.5"
+            >
+              {TITLE_VERDICT_LABELS[rivalVerdict] ?? rivalVerdict.replace(/_/g, ' ')}
+            </div>
           </div>
         </div>
       )}

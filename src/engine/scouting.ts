@@ -36,6 +36,9 @@ export interface ScoutReport {
   suspectedAL?: string;
   /** Traits suspected/discovered during scouting */
   suspectedTraits?: string[];
+  /** True when the target stable masks its committed plan — the reported
+   *  tendencies may describe a decoy rather than the real fight plan. */
+  possiblyMaskedPlan?: boolean;
   notes: string;
 }
 
@@ -279,6 +282,9 @@ export function generateScoutReport(
       suspectedOE,
       suspectedAL,
       suspectedTraits,
+      // A masked target makes every plan tendency in this report suspect —
+      // the UI renders this as uncertainty, not confident intel.
+      possiblyMaskedPlan: warrior.planMasked === true || undefined,
       notes,
     },
     newInsights,

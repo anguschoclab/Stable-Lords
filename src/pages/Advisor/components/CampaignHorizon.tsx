@@ -1,7 +1,11 @@
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
-import { CalendarClock, HeartPulse, Trophy, Swords } from 'lucide-react';
+import { CalendarClock, HeartPulse, Trophy, Swords, Crown } from 'lucide-react';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
+import { getAllArenas } from '@/data/arenas';
+
+const arenaName = (id: string): string =>
+  getAllArenas().find((a) => a.id === id)?.name ?? id;
 
 /**
  * Campaign Horizon — the council's multi-week lookahead: committed bouts past
@@ -21,7 +25,7 @@ export function CampaignHorizon() {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
             <Swords className="h-3 w-3 text-primary" />
@@ -81,6 +85,28 @@ export function CampaignHorizon() {
                 <li key={c.warriorId} className="text-xs font-semibold text-foreground/90">
                   {c.warriorName}
                   <span className="text-muted-foreground/60 font-mono"> · {c.tierName}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+            <Crown className="h-3 w-3 text-arena-gold" />
+            Title Defenses
+          </div>
+          {lookahead.titleDefenses.length === 0 ? (
+            <p className="text-[10px] font-mono text-muted-foreground/50">No crowns held</p>
+          ) : (
+            <ul className="space-y-1.5">
+              {lookahead.titleDefenses.map((d) => (
+                <li key={d.arenaId} className="text-xs font-semibold text-foreground/90">
+                  {d.warriorName}
+                  <span className="text-muted-foreground/60 font-mono">
+                    {' '}
+                    · {arenaName(d.arenaId)} · due WK {d.dueAbsoluteWeek}
+                  </span>
                 </li>
               ))}
             </ul>

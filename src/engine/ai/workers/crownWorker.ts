@@ -45,6 +45,12 @@ const CAMPAIGN_SCORE_FLOOR = 2;
 /** Campaign-score bonus for targeting the dominant player's throne —
  *  dethroning the realm's top stable outweighs an easier rival crown. */
 const DETHRONE_BONUS = { Dominant: 3, Moderate: 1 } as const;
+/** Score discount when the champion's stable has been witnessed fighting
+ *  high-OE — a brawling throne is a bloodier climb. Needs >= 2 sightings to
+ *  count as evidence, and Aggressive stables don't flinch. */
+const OBSERVED_TELLS_MIN_SAMPLES = 2;
+const OBSERVED_TELLS_HOT_OE = 0.7;
+const OBSERVED_TELLS_PENALTY = 1;
 
 interface CrownCandidate {
   warrior: Warrior;
@@ -143,6 +149,22 @@ export function assessCrownOpportunity(
         if (dethroneBonus > 0 && playerWarriorIds.has(champion?.id ?? ('' as WarriorId))) {
           score += dethroneBonus;
           reason = `Dethrone bid at ${arenaId} — the dominant player's crown is the prize`;
+        }
+        // Witnessed-tells danger: a dossier that saw the champion's stable
+        // brawl high-OE marks this throne as a bloodier climb.
+        if (champion && rival.owner.personality !== 'Aggressive') {
+          const champStableId = state.warriorToStableMap?.get(champion.id)?.stableId;
+          const tells = champStableId
+            ? rival.agentMemory?.opponentDossiers?.[champStableId]?.observedTells
+            : undefined;
+          if (
+            tells &&
+            tells.samples >= OBSERVED_TELLS_MIN_SAMPLES &&
+            tells.oe >= OBSERVED_TELLS_HOT_OE
+          ) {
+            score -= OBSERVED_TELLS_PENALTY;
+            reason = `Bloody throne at ${arenaId} — the holder's camp brawls`;
+          }
         }
       }
       score += rankBonus;

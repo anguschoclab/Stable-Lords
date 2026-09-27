@@ -29,6 +29,7 @@ import {
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { getScoutCost } from '@/engine/scouting';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
+import { ARENA_TITLE } from '@/constants/arena';
 
 /**
  * Compute a complete Stable Council Report evaluating all active roster warriors.
@@ -396,6 +397,26 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     })
     .filter((e): e is NonNullable<typeof e> => e !== null);
 
+  // Title-defense obligations: crowns the player holds become due when the
+  // reign's activity gap reaches DEFENSE_INTERVAL_WEEKS — surfaced so the
+  // council can plan around a forced title bout.
+  const titleDefenses = Object.entries(state.arenaChampions ?? {})
+    .flatMap(([arenaId, t]) => {
+      const champ = t.champion;
+      if (!champ || !playerWarriorIds.has(champ.warriorId)) return [];
+      return [
+        {
+          arenaId,
+          warriorId: champ.warriorId,
+          warriorName:
+            cards.find((c) => c.warriorId === champ.warriorId)?.warriorName ??
+            champ.warriorId,
+          dueAbsoluteWeek: champ.lastActivityWeek + ARENA_TITLE.DEFENSE_INTERVAL_WEEKS,
+        },
+      ];
+    })
+    .sort((a, b) => a.dueAbsoluteWeek - b.dueAbsoluteWeek);
+
   const lookahead: CouncilLookahead = {
     futureCommitments,
     recoveryEtas,
@@ -412,6 +433,7 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
         warriorName: c.warriorName,
         tierName: c.tournamentAdvice.tierName ?? c.tournamentAdvice.qualifiedTier ?? 'Unknown Tier',
       })),
+    titleDefenses,
   };
 
   const allActionPayloads = cards.map((c) => c.actionPayload);

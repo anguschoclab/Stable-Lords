@@ -10,6 +10,7 @@ import {
   makeGameState,
   makeBoutOffer,
   makeAgentMemory,
+  makeOwner,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
 import { ARENA_COMMISSION_ID } from '@/constants/arena';
@@ -125,6 +126,58 @@ describe('assessCrownOpportunity', () => {
       },
     });
     expect(assessCrownOpportunity(rival, state)).toBeUndefined();
+  });
+
+  it('de-prioritizes a champion whose stable has observed aggressive tells', () => {
+    // Two equally-strong champions; the dossier says arena_a's holder fights
+    // high-OE. A calculating stable prefers the calm throne at arena_b.
+    const dual = makeWarrior({
+      id: 'w1' as WarriorId,
+      career: {
+        wins: 8,
+        losses: 0,
+        kills: 0,
+        byArena: {
+          arena_a: { wins: 4, losses: 0, kills: 0 },
+          arena_b: { wins: 4, losses: 0, kills: 0 },
+        },
+      },
+    });
+    const champA = venueWarrior('champ_a', 'arena_a', { wins: 6, losses: 0 });
+    const champB = venueWarrior('champ_b', 'arena_b', { wins: 6, losses: 0 });
+    const holderA = makeRival({ id: 'aggro-stable' as never, roster: [champA] });
+    const holderB = makeRival({ id: 'calm-stable' as never, roster: [champB] });
+    const rival = makeRival({
+      roster: [dual],
+      owner: makeOwner({ personality: 'Methodical' }),
+      agentMemory: makeAgentMemory({
+        opponentDossiers: {
+          'aggro-stable': {
+            lastSeenWeek: 5,
+            knownStyles: [],
+            estimatedThreat: 0.5,
+            recordVs: { w: 0, l: 0, k: 0 },
+            observedTells: { oe: 0.9, al: 0.2, samples: 4, lastSeenWeek: 5 },
+          },
+          'calm-stable': {
+            lastSeenWeek: 5,
+            knownStyles: [],
+            estimatedThreat: 0.5,
+            recordVs: { w: 0, l: 0, k: 0 },
+            observedTells: { oe: 0.2, al: 0.8, samples: 4, lastSeenWeek: 5 },
+          },
+        },
+      }),
+    });
+    const state = world({
+      rivals: [rival, holderA, holderB],
+      arenaChampions: {
+        arena_a: titleAt('champ_a'),
+        arena_b: titleAt('champ_b'),
+      },
+    });
+    const assessment = assessCrownOpportunity(rival, state);
+    expect(assessment?.arenaId).toBe('arena_b');
   });
 
   it('skips contenders still cooling down after a declined shot', () => {

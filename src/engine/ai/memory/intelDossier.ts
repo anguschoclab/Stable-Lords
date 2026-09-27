@@ -15,10 +15,15 @@ import type {
 import type { FightingStyle, StableId } from '@/types/shared.types';
 import { hashStr } from '@/utils/random';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
+import { findWarriorById } from '@/engine/core/warriorLookup';
 import { clamp } from '@/utils/math';
 
 /** Max dossiers retained per stable — keeps memory bounded over long sims. */
 export const DOSSIER_CAP = 12;
+/** A committed plan counts as observable evidence this many weeks after the fight. */
+const TELL_WINDOW_WEEKS = 8;
+/** Running-mean cap — recent sightings keep weight as samples accumulate. */
+const TELL_SAMPLE_CAP = 8;
 /** Threat prior: what an unobserved stable is assumed to be. */
 const THREAT_PRIOR = 0.5;
 /** Weekly decay factor applied to (threat - prior) per stale week. */
@@ -153,6 +158,39 @@ export function updateDossiers(
     return state.warriorToStableMap?.get(wid)?.stableId;
   };
 
+  // Witnessed tells: a stable that watched this fight reads the participants'
+  // committed plans — persisted as a capped running mean. Masked stables leak
+  // their decoy here, which is exactly the counter-intel trade-off.
+  const observeTells = (
+    wid: FightSummary['warriorIdA'],
+    stableId: string | undefined
+  ): void => {
+    if (!stableId || stableId === rival.id) return;
+    const fighter = findWarriorById(state, wid);
+    if (!fighter) return;
+    const oe = fighter.plan?.OE;
+    const al = fighter.plan?.AL;
+    if (oe == null || al == null) return;
+    if (
+      fighter.lastBoutWeek == null ||
+      week - fighter.lastBoutWeek > TELL_WINDOW_WEEKS
+    ) {
+      return;
+    }
+    const d = dossiers[stableId] ?? (dossiers[stableId] = blankDossier(week));
+    // Copy-on-write like decayDossiers: never mutate a prior observedTells
+    // object in place — it may be shared with live GameState.rivals.
+    const prev =
+      d.observedTells ?? { oe: 0, al: 0, samples: 0, lastSeenWeek: week };
+    const n = Math.min(prev.samples + 1, TELL_SAMPLE_CAP);
+    d.observedTells = {
+      oe: prev.oe + (oe / 10 - prev.oe) / n,
+      al: prev.al + (al / 10 - prev.al) / n,
+      samples: n,
+      lastSeenWeek: week,
+    };
+  };
+
   for (const fight of fights) {
     const stableA = stableOf(fight.warriorIdA);
     const stableD = stableOf(fight.warriorIdD);
@@ -166,6 +204,8 @@ export function updateDossiers(
       d.lastSeenWeek = week;
       observeStyle(d, fight.styleD);
     }
+    observeTells(fight.warriorIdA, stableA);
+    observeTells(fight.warriorIdD, stableD);
 
     // recordVs only moves when THIS stable fought.
     const selfSide = selfIds.has(fight.warriorIdA)

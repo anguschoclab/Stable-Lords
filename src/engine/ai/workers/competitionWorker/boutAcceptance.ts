@@ -140,6 +140,10 @@ export function venueCounterTarget(
  * Hard safety refusals (blocking injuries, weather, RECOVERY risk) run BEFORE
  * the desperation gate — an empty treasury never overrides them (G14).
  * Marginal purses may be 'Countered' once per offer.
+ *
+ * `explain` is an optional out-param: on title bouts the reason bucket for
+ * the verdict is written into `explain.reason` so the offer processor can
+ * persist it onto the offer for UI transparency.
  */
 export function evaluateBoutOffer(
   offer: BoutOffer,
@@ -148,9 +152,21 @@ export function evaluateBoutOffer(
   currentWeek: number,
   weather: WeatherType = 'Clear',
   opponent?: Warrior,
-  state?: GameState
+  state?: GameState,
+  explain?: { reason?: string }
 ): BoutEvaluation {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
+
+  // Observed danger: witnessed-tells dossiers that saw the opponent's stable
+  // brawl high-OE tighten the style-matchup tolerance for calculating owners.
+  const oppStableId = opponent
+    ? state?.warriorToStableMap?.get(opponent.id)?.stableId
+    : undefined;
+  const oppTells = oppStableId
+    ? rival.agentMemory?.opponentDossiers?.[oppStableId]?.observedTells
+    : undefined;
+  const observedDanger =
+    !!oppTells && oppTells.samples >= 2 && oppTells.oe >= 0.7;
 
   // ── Hard gates (cannot be bought off by desperation) ──
 
@@ -186,9 +202,16 @@ export function evaluateBoutOffer(
       if (!wouldStrip && personality !== 'Aggressive') {
         const hp = warrior.derivedStats?.hp ?? 100;
         const fatigue = warrior.fatigue ?? 0;
-        if (hp < 45 || fatigue >= 85) return 'Declined';
-        if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) return 'Declined';
+        if (hp < 45 || fatigue >= 85) {
+          if (explain) explain.reason = 'title-defense-health';
+          return 'Declined';
+        }
+        if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) {
+          if (explain) explain.reason = 'title-defense-threat';
+          return 'Declined';
+        }
       }
+      if (explain) explain.reason = 'crown-defense';
       return 'Accepted';
     }
 
@@ -200,12 +223,17 @@ export function evaluateBoutOffer(
       (opponent.career?.kills ?? 0) >= 3 &&
       (warrior.career?.kills ?? 0) === 0
     ) {
+      if (explain) explain.reason = 'killer-champion';
       return 'Declined';
     }
     if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
       const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-      if (edge <= -2) return 'Declined';
+      if (edge <= (observedDanger ? -1 : -2)) {
+        if (explain) explain.reason = 'title-shot-mismatch';
+        return 'Declined';
+      }
     }
+    if (explain) explain.reason = 'title-shot';
     return 'Accepted';
   }
 
@@ -274,9 +302,11 @@ export function evaluateBoutOffer(
 
   // Matchup Skepticism — calculating stables decline a strongly unfavorable
   // style matchup when they can afford to (same forecast the player sees).
+  // Witnessed high-OE tells tighten the tolerance one notch: a mildly bad
+  // draw against a known brawling camp is a pass.
   if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
     const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-    if (edge <= -2) {
+    if (edge <= (observedDanger ? -1 : -2)) {
       return 'Declined';
     }
   }

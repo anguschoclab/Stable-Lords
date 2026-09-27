@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T20:37:25.239Z",
+  "generatedAt": "2026-09-27T21:40:04.712Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -84,6 +84,7 @@
     "src/test/components/run-round/RunRound.test.tsx",
     "src/test/components/scouting/ComparisonHeader.test.tsx",
     "src/test/components/scouting/DoctrineIntelligenceSection.test.tsx",
+    "src/test/components/scouting/maskedPlanDisplay.test.tsx",
     "src/test/components/stable/FaceoffBar.test.tsx",
     "src/test/components/stable/FighterConfigCard.test.tsx",
     "src/test/components/stable/LegacyMentorsTab.test.tsx",

@@ -128,3 +128,66 @@ of the bisection — not flake.
 - `counterOfferRate` baseline was 0.00; venue/purse counters now exist for
   AI but the metric only counts standing offers — watch post-H soaks for
   actual counter frequency.
+
+## Deferred-items completion pass (post-H)
+
+A second audit swept the plan for every deferred or only-partially-landed
+item after Stage H. All gaps were implemented test-first and validated.
+
+### Engine items landed
+
+- **Observed fight-plan tells, persisted** — `OpponentDossier.observedTells`
+  (`{ oe, al, samples, lastObservedWeek }`) written by `updateDossiers` from
+  witnessed fights and committed plans; bounded running mean with staleness
+  decay. Consumed by `intelWorker` (blended with personality priors at
+  scout-quality weight), `crownWorker.assessCrownOpportunity` (aggressive
+  tells de-prioritize dangerous crown targets), and `boutAcceptance`
+  (tightens the style-mismatch decline threshold for calculating
+  personalities; Aggressive stables still ignore matchups).
+- **Title-opponent scout tier** — `pickScoutTarget` keeps vendetta first,
+  then prefers the stable's upcoming title opponent over fame/threat
+  fallbacks.
+- **Title-defense lookahead** — `CouncilLookahead.titleDefenses` lists
+  player-held crowns with `dueAbsoluteWeek = lastActivityWeek +
+  DEFENSE_INTERVAL_WEEKS` (same field/constant as `scheduleTitleBouts`;
+  deferral-on-slide semantics respected — the lookahead predicts, never
+  pre-empts the engine).
+- **Masked-plan uncertainty** — `ScoutReportData.possiblyMaskedPlan` flags
+  reports whose subject may carry a decoy `w.plan`; uncertainty is preserved
+  even with no committed plan, and the UI never renders it as fact.
+- **Rival verdict transparency** — `BoutOffer.responseNotes` records the
+  title-verdict reason bucket per warrior (`title-defense-health`,
+  `title-defense-threat`, `killer-champion`, `title-shot-mismatch`,
+  `crown-defense`, `title-shot`) at response time; title offers never
+  counter, so the map covers every verdict path.
+- **Schema persistence** — `WarriorSchema.campaignFocus`,
+  `observedTells` on the dossier schema, `responseNotes` on the offer
+  schema, `possiblyMaskedPlan` on the scout-report schema — all
+  round-trip verified.
+
+### UI items landed
+
+- `AgentReasoningWidget` — real `Title campaign: <arena>` line (raw id shown
+  for unknown arenas — no default-arena fallback).
+- `RivalIntelligence` — `arenaChampions` wired from `WorldOverview`;
+  reigning/campaigning posture chip + readable arena name + dossier
+  coverage.
+- `OfferDetailsGrid` — venue-counter badge and rival verdict notes from
+  `responseNotes`.
+- `CombatAnalysis`/`ScoutReportDetails` — masked-plan warning renders even
+  when no OE/AL tendencies exist (honest uncertainty).
+- `AIDebugDrawer` — plan/telemetry panel distinguishing planned intent from
+  realized telemetry (dev-gated, honest empty state).
+- `CampaignHorizon` — Title Defenses column alongside committed bouts,
+  recovery returns, and tournament countdown.
+
+### Validation re-run
+
+- `worldLiveness.slow` (extended): strips rare-but-nonzero — 4 stripped
+  reigns over 104 weeks on seed 20261101, `< died`.
+- `autosimChampionship.slow` (extended): contender emergence (7 arenas with
+  eligible ladders), full lifecycle (22 past reigns, dethronement
+  recorded), rival title participation, all seasonal brackets complete,
+  GC crowned at y2-w52 (field 4).
+- Focused engine/schema/component suites green; typecheck + lint clean;
+  determinism/perf/balance gates re-run post-change.

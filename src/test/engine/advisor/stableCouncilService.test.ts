@@ -4,6 +4,7 @@ import {
   computeStableCouncilReport,
 } from '@/engine/advisor/stableCouncilService';
 import { FightingStyle } from '@/types/shared.types';
+import { ARENA_TITLE } from '@/constants/arena';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
@@ -428,6 +429,54 @@ describe('buildStableCouncilReport', () => {
 
       const report = computeStableCouncilReport(state);
       expect(report.lookahead.weeksUntilTournament).toBe(0);
+    });
+
+    it('lists title-defense obligations for player-held crowns with due weeks', () => {
+      const champ = mkWarrior('w1');
+      const state = mkBase({
+        roster: [champ],
+        arenaChampions: {
+          arena_a: {
+            champion: { warriorId: 'w1', startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 },
+            status: 'active',
+            history: [],
+            refusals: 0,
+            deferrals: 0,
+            noContenderStreak: 0,
+            declinedContenders: {},
+          },
+        },
+      });
+
+      const report = computeStableCouncilReport(state);
+      expect(report.lookahead.titleDefenses).toHaveLength(1);
+      const d = report.lookahead.titleDefenses[0]!;
+      expect(d.arenaId).toBe('arena_a');
+      expect(d.warriorId).toBe('w1');
+      // lastActivity 1 + DEFENSE_INTERVAL_WEEKS(4) → due at absolute week 5.
+      expect(d.dueAbsoluteWeek).toBe(1 + ARENA_TITLE.DEFENSE_INTERVAL_WEEKS);
+    });
+
+    it('omits crowns held by rival stables from title-defense obligations', () => {
+      const champ = mkWarrior('r1');
+      const state = mkBase({
+        roster: [mkWarrior('w1')],
+        rivals: [{ id: 'rs', roster: [champ] }],
+        arenaChampions: {
+          arena_a: {
+            champion: { warriorId: 'r1', startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 },
+            status: 'active',
+            history: [],
+            refusals: 0,
+            deferrals: 0,
+            noContenderStreak: 0,
+            declinedContenders: {},
+          },
+        },
+      });
+
+      const report = computeStableCouncilReport(state);
+      expect(report.lookahead.titleDefenses).toHaveLength(0);
     });
   });
 

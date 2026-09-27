@@ -33,6 +33,10 @@ interface BoutViewerProps {
   exchangeLog?: import('@/types/combat.types').ExchangeLogEntry[];
   weaponIdA?: string;
   weaponIdD?: string;
+  /** Full fighter objects — used only by the dev AI debug drawer to render
+   *  committed plans and mask flags next to the exchange telemetry. */
+  warriorA?: import('@/types/warrior.types').Warrior;
+  warriorD?: import('@/types/warrior.types').Warrior;
 }
 
 /**
@@ -69,9 +73,12 @@ export default function BoutViewer({
   exchangeLog,
   weaponIdA,
   weaponIdD,
+  warriorA,
+  warriorD,
 }: BoutViewerProps) {
   const isIndoor = isIndoorArena(arenaId);
   const effectiveWeather = isIndoor ? 'Clear' : weather;
+  const scoutReports = useGameStore((s) => s.scoutReports);
   const arenaPrefs = useArenaPreferences();
   const setArenaPreferences = useGameStore((s) => s.setArenaPreferences);
   const [expanded, setExpanded] = useState(true);
@@ -185,7 +192,12 @@ export default function BoutViewer({
           <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
 
           {/* Dev-only AI telemetry drawer */}
-          <AIDebugDrawer exchangeLog={exchangeLog} />
+          <AIDebugDrawer
+            exchangeLog={exchangeLog}
+            warriorA={warriorA}
+            warriorD={warriorD}
+            scoutReports={scoutReports}
+          />
         </div>
       )}
     </Surface>

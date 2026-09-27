@@ -2,18 +2,18 @@
  * Intel worker — the rival's weekly scouting action.
  *
  * Each week the stable picks its most relevant opponent (vendetta target >
- * highest-threat dossier > the player) and refreshes that dossier's
- * `planIntel`: suspected OE/AL bands with a freshness stamp. Estimates are
- * personality-based beliefs (aggressive owners plan high-OE), narrowed by the
- * scout's own personality — Tacticians and Methodicals read opponents best.
+ * highest-threat dossier > upcoming title opponent > the player) and refreshes
+ * that dossier's `planIntel`: suspected OE/AL bands with a freshness stamp.
+ * Estimates are personality-based beliefs (aggressive owners plan high-OE),
+ * narrowed by the scout's own personality — Tacticians and Methodicals read
+ * opponents best — and by persisted dossier `observedTells` from witnessed
+ * fights, which override the reputation prior.
  */
 import type { GameState, RivalStableData } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import { logAgentAction } from '../agentCore';
 import { hashStr } from '@/utils/random';
 import { clamp } from '@/utils/math';
-import { isActive } from '@/engine/warriorStatus';
 
 /** Scouting acuity by owner personality — tighter plan estimates. */
 const SCOUT_QUALITY: Record<string, number> = {
@@ -50,36 +50,13 @@ function estimatePlan(
   };
 }
 
-/** A committed plan counts as observable for this many weeks after the bout. */
+/** Persisted dossier tells stay actionable for this many weeks. */
 const PLAN_TELL_WINDOW = 8;
 
 /**
- * Observed tells: warriors on the target roster who recently fought carry
- * their committed fight plans — a scout who watched the bout reads real
- * OE/AL, not a personality guess. Returns the mean normalized tendency, or
- * undefined when nobody observable has a plan.
- */
-function observedPlanTells(
-  roster: Warrior[] | undefined,
-  week: number
-): { oe: number; al: number } | undefined {
-  const samples = (roster ?? []).filter(
-    (w) =>
-      isActive(w) &&
-      w.plan?.OE != null &&
-      w.plan?.AL != null &&
-      w.lastBoutWeek != null &&
-      week - w.lastBoutWeek <= PLAN_TELL_WINDOW
-  );
-  if (samples.length === 0) return undefined;
-  const oe = samples.reduce((s, w) => s + (w.plan?.OE ?? 5), 0) / samples.length / 10;
-  const al = samples.reduce((s, w) => s + (w.plan?.AL ?? 5), 0) / samples.length / 10;
-  return { oe, al };
-}
-
-/**
  * Pick the dossier most worth scouting: the vendetta target if there is one,
- * else the highest-threat observed stable, else the player.
+ * else the highest-threat observed stable, else the stable we meet in an
+ * upcoming title bout, else the most famous rival, else the player.
  */
 function pickScoutTarget(rival: RivalStableData, state: GameState): string | undefined {
   const vendettaTarget =
@@ -96,6 +73,22 @@ function pickScoutTarget(rival: RivalStableData, state: GameState): string | und
     }
   }
   if (bestId) return bestId;
+
+  // Upcoming title opponent — a pending/signed title bout involving one of
+  // our warriors makes the other side's stable the most relevant read.
+  const selfIds = new Set(rival.roster.map((w) => w.id));
+  for (const offer of Object.values(state.boutOffers ?? {})) {
+    if (!offer.titleArenaId) continue;
+    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
+    const mine = offer.warriorIds.find((id) => selfIds.has(id));
+    if (!mine) continue;
+    const otherId = offer.warriorIds.find((id) => id !== mine);
+    if (!otherId) continue;
+    const oppStable =
+      state.warriorToStableMap?.get(otherId)?.stableId ??
+      (state.roster?.some((w) => w.id === otherId) ? state.player.id : undefined);
+    if (oppStable) return oppStable;
+  }
 
   // Thin intel: no dossier has an edge — scout the most famous rival stable
   // (fame is the dossier's threat proxy) before defaulting to the player.
@@ -141,13 +134,14 @@ export function processIntel(
   const bias =
     PERSONALITY_PLAN_BIAS[targetRival?.owner.personality ?? ''] ?? { oe: 0.5, al: 0.5 };
 
-  // Observed tells override the prior: when target fighters recently fought
-  // with committed plans on record, a good scout weighs what they saw over
-  // what they'd expect from the owner's reputation.
-  const observed = observedPlanTells(
-    targetId === state.player.id ? state.roster : targetRival?.roster,
-    week
-  );
+  // Observed tells override the prior: dossier tells persisted from fights
+  // this stable actually witnessed outweigh the owner's reputation — a good
+  // scout weighs what they saw over what they'd expect.
+  const tells = dossiers[targetId]?.observedTells;
+  const observed =
+    tells && tells.samples > 0 && week - tells.lastSeenWeek <= PLAN_TELL_WINDOW
+      ? { oe: tells.oe, al: tells.al }
+      : undefined;
   const effectiveBias = observed
     ? {
         oe: bias.oe * (1 - quality) + observed.oe * quality,

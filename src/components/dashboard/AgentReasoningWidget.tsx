@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/state/useGameStore';
+import { getAllArenas } from '@/data/arenas';
 import type { RivalStableData, AIIntent } from '@/types/state.types';
 import { ActionTimeline } from './ActionTimeline';
 
@@ -161,7 +162,16 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
         <ActionTimeline events={rival.actionHistory || []} />
 
         <div className="pt-2 text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">
-          <span>Targeting: {targetName}</span>
+          {(() => {
+            const arenaId = rival.strategy?.targetArenaId;
+            if (!arenaId) return <span>Targeting: {targetName}</span>;
+            return (
+              <span>
+                Title campaign:{' '}
+                {getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId}
+              </span>
+            );
+          })()}
         </div>
       </CardContent>
     </Card>

@@ -101,6 +101,27 @@ describe('AgentReasoningWidget (H.1)', () => {
     expect(screen.getByText('Survival')).toBeInTheDocument();
   });
 
+  it('shows the crown campaign target arena, not a generic rival label', () => {
+    const rival = makeRival({
+      agentMemory: {
+        lastTreasury: 1000,
+        burnRate: 50,
+        metaAwareness: {},
+        knownRivals: [],
+        currentIntent: 'CROWN_CAMPAIGN',
+        opponentDossiers: {},
+      },
+      strategy: {
+        intent: 'CROWN_CAMPAIGN',
+        planWeeksRemaining: 6,
+        targetArenaId: 'sundered_coliseum',
+      },
+    });
+    render(<AgentReasoningWidget rival={rival} />);
+    expect(screen.getByText(/crown campaign/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sundered Coliseum/)).toBeInTheDocument();
+  });
+
   it('resolves the targeted stable to its name, not its internal id', () => {
     const target = makeRival({ id: 'stable_target' as StableId });
     target.owner = { ...target.owner, stableName: 'Crimson Oath' };

@@ -6,19 +6,32 @@ interface CombatAnalysisProps {
   suspectedOE?: number | string;
   suspectedAL?: number | string;
   knownInjuries: string[];
+  /** The target stable is known to mask its committed plan — any reported
+   *  plan tendencies may describe a decoy. */
+  possiblyMaskedPlan?: boolean;
 }
 
 /**
  *
  */
-export function CombatAnalysis({ suspectedOE, suspectedAL, knownInjuries }: CombatAnalysisProps) {
-  const hasCombatData = suspectedOE || knownInjuries.length > 0;
+export function CombatAnalysis({ suspectedOE, suspectedAL, knownInjuries, possiblyMaskedPlan }: CombatAnalysisProps) {
+  const hasCombatData = suspectedOE || knownInjuries.length > 0 || possiblyMaskedPlan;
 
   if (!hasCombatData) return null;
 
   return (
     <Surface variant="glass" className="bg-black/40 border-border/20 p-6 space-y-6">
       {suspectedOE && <SuspectedModifiers suspectedOE={suspectedOE} suspectedAL={suspectedAL} />}
+
+      {possiblyMaskedPlan && (
+        <div
+          data-testid="masked-plan-warning"
+          className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-arena-gold/70"
+        >
+          <AlertTriangle className="h-3 w-3 shrink-0" />
+          Plan intel uncertain — this stable may be fighting behind a decoy
+        </div>
+      )}
 
       {knownInjuries.length > 0 && <InjuryList injuries={knownInjuries} />}
     </Surface>

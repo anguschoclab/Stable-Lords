@@ -8,6 +8,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { processIntel } from '@/engine/ai/workers/intelWorker';
+import { updateDossiers } from '@/engine/ai/memory/intelDossier';
 import { FightingStyle } from '@/types/shared.types';
 import type { OpponentDossier } from '@/types/state.types';
 import {
@@ -16,6 +17,7 @@ import {
   makeOwner,
   makeAgentMemory,
   makeGameState,
+  makeFightSummary,
   makePlan,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
@@ -90,22 +92,13 @@ describe('aiPlanForWarrior — planIntel counter-planning', () => {
 });
 
 describe('processIntel — observed tells', () => {
-  it('blends observed committed plans into the estimate', () => {
+  it('blends witnessed-fight tells into the estimate', () => {
     const week = 5;
-    const observer = () =>
+    const observer = (opponentDossiers: ReturnType<typeof updateDossiers>) =>
       makeRival({
         id: 'r-obs' as never,
         owner: makeOwner({ id: 'r-obs' as never, personality: 'Tactician' }),
-        agentMemory: makeAgentMemory({
-          opponentDossiers: {
-            'r-target': {
-              lastSeenWeek: week - 1,
-              knownStyles: [],
-              estimatedThreat: 0.9,
-              recordVs: { w: 0, l: 0, k: 0 },
-            },
-          },
-        }),
+        agentMemory: makeAgentMemory({ opponentDossiers }),
       });
 
     // Target stable whose fighters committed hot plans (OE 9 / AL 2).
@@ -113,30 +106,66 @@ describe('processIntel — observed tells', () => {
       id: 'r-target' as never,
       owner: makeOwner({ id: 'r-target' as never, personality: 'Methodical' }),
       roster: [
-        makeWarrior({ plan: makePlan({ OE: 9, AL: 2 }), lastBoutWeek: week - 1 }),
-        makeWarrior({ plan: makePlan({ OE: 8, AL: 2 }), lastBoutWeek: week - 1 }),
+        makeWarrior({ id: 'tw1' as never, plan: makePlan({ OE: 9, AL: 2 }), lastBoutWeek: week }),
+        makeWarrior({ id: 'tw2' as never, plan: makePlan({ OE: 8, AL: 2 }), lastBoutWeek: week }),
       ],
     });
-    // Same stable, same week — but no committed plans to observe.
+    // Same stable, same week — but its fighters carry no committed plans.
     const bareTarget = makeRival({
       id: 'r-target' as never,
       owner: makeOwner({ id: 'r-target' as never, personality: 'Methodical' }),
-      roster: [makeWarrior(), makeWarrior()],
+      roster: [makeWarrior({ id: 'tw1' as never }), makeWarrior({ id: 'tw2' as never })],
     });
+
+    // The witnessed-fight pipeline: this week's arenaHistory feeds
+    // updateDossiers, which persists observedTells before intel runs.
+    const fights = [
+      makeFightSummary({
+        warriorIdA: 'tw1' as never,
+        warriorIdD: 'x1' as never,
+        stableIdA: 'r-target' as never,
+        stableIdD: 'other' as never,
+        absoluteWeek: week,
+      }),
+      makeFightSummary({
+        warriorIdA: 'tw2' as never,
+        warriorIdD: 'x2' as never,
+        stableIdA: 'r-target' as never,
+        stableIdD: 'other' as never,
+        absoluteWeek: week,
+      }),
+    ];
 
     const obsState = makeGameState({
       absoluteWeek: week,
       week,
-      rivals: [observer(), plannedTarget],
+      rivals: [observer({}), plannedTarget],
+      arenaHistory: fights,
     });
+    const obsDossiers = updateDossiers(
+      obsState.rivals![0]!,
+      obsState
+    );
+    const obsObserver = makeRival({
+      id: 'r-obs' as never,
+      owner: makeOwner({ id: 'r-obs' as never, personality: 'Tactician' }),
+      agentMemory: makeAgentMemory({ opponentDossiers: obsDossiers }),
+    });
+
     const bareState = makeGameState({
       absoluteWeek: week,
       week,
-      rivals: [observer(), bareTarget],
+      rivals: [observer({}), bareTarget],
+    });
+    const bareDossiers = updateDossiers(bareState.rivals![0]!, bareState);
+    const bareObserver = makeRival({
+      id: 'r-obs' as never,
+      owner: makeOwner({ id: 'r-obs' as never, personality: 'Tactician' }),
+      agentMemory: makeAgentMemory({ opponentDossiers: bareDossiers }),
     });
 
-    const withObs = processIntel(observer(), obsState).updatedRival;
-    const withoutObs = processIntel(observer(), bareState).updatedRival;
+    const withObs = processIntel(obsObserver, obsState).updatedRival;
+    const withoutObs = processIntel(bareObserver, bareState).updatedRival;
 
     const obsIntel =
       withObs.agentMemory?.opponentDossiers?.['r-target']?.planIntel;

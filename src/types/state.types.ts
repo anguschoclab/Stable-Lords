@@ -97,6 +97,10 @@ export interface BoutOffer {
   /** Set when this offer is an arena title bout for the given arena —
    *  pinned venue, no counters, priority in slate ordering and pairings. */
   titleArenaId?: string;
+  /** Short reason codes recorded when a stable answers a title bout —
+   *  e.g. 'title-defense-health' for a hurt champion's refusal. Surfaced on
+   *  the offer card so the player can read rival title decisions. */
+  responseNotes?: Record<WarriorId, string>;
 }
 
 /**
@@ -367,6 +371,15 @@ export interface OpponentDossier {
     suspectedAL?: number;
     lastPlanWeek?: number;
   };
+  /** Plan tendencies witnessed directly in fights this stable watched —
+   *  normalized 0–1 running mean of observed OE/AL with a sample count.
+   *  Consumed by crown targeting, offer eval, and scout blending. */
+  observedTells?: {
+    oe: number;
+    al: number;
+    samples: number;
+    lastSeenWeek: number;
+  };
 }
 
 /**
@@ -456,6 +469,9 @@ export interface ScoutReportData {
   knownInjuries: string[];
   suspectedOE?: string;
   suspectedAL?: string;
+  /** True when the target stable is known to mask its committed plan —
+   *  the report's plan section may reflect a decoy. */
+  possiblyMaskedPlan?: boolean;
   notes: string;
 }
 

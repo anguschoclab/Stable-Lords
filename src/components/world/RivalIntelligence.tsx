@@ -4,17 +4,43 @@ import { Brain, Zap, Activity } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { MetaDriftWidget } from '@/components/widgets';
 import { STYLE_DISPLAY_NAMES, type FightingStyle, type RivalStableData } from '@/types/game';
+import { getAllArenas } from '@/data/arenas';
+import type { ArenaTitle } from '@/types/state.types';
 import { cn } from '@/lib/utils';
 
 interface RivalIntelligenceProps {
   rivals: RivalStableData[];
+  /** Arena title state — drives the per-rival title posture chip. */
+  arenaChampions?: Record<string, ArenaTitle>;
+}
+
+const arenaDisplayName = (arenaId: string): string =>
+  getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId;
+
+/**
+ * Title posture for one stable: which crowns its roster holds, and whether a
+ * crown campaign is underway — both read from real state, nothing inferred.
+ */
+function titlePosture(
+  rival: RivalStableData,
+  arenaChampions: Record<string, ArenaTitle> | undefined
+): { kind: 'reigning' | 'campaigning'; arenaId: string } | undefined {
+  const rosterIds = new Set(rival.roster.map((w) => w.id));
+  const held = Object.entries(arenaChampions ?? {}).find(
+    ([, t]) => t.champion && rosterIds.has(t.champion.warriorId)
+  );
+  if (held) return { kind: 'reigning', arenaId: held[0] };
+  if (rival.strategy?.intent === 'CROWN_CAMPAIGN' && rival.strategy.targetArenaId) {
+    return { kind: 'campaigning', arenaId: rival.strategy.targetArenaId };
+  }
+  return undefined;
 }
 
 /**
  * Rival intelligence.
  * @param - { rivals }.
  */
-export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
+export function RivalIntelligence({ rivals, arenaChampions }: RivalIntelligenceProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-1">
@@ -79,6 +105,19 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                         ? `${Object.keys(rival.agentMemory?.opponentDossiers ?? {}).length} dossiers`
                         : 'No intel'}
                     </span>
+                    {(() => {
+                      const posture = titlePosture(rival, arenaChampions);
+                      return posture ? (
+                        <Badge
+                          data-testid="title-posture-chip"
+                          variant="outline"
+                          className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
+                        >
+                          {posture.kind === 'reigning' ? 'Crown held' : 'Crown bid'} ·{' '}
+                          {arenaDisplayName(posture.arenaId)}
+                        </Badge>
+                      ) : null;
+                    })()}
                     {rival.strategy?.intent === 'TOURNAMENT_CAMPAIGN' && (
                       <Badge
                         data-testid="tournament-posture-chip"

@@ -321,7 +321,10 @@ export default function WorldOverview() {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
-              <RivalIntelligence rivals={state.rivals || []} />
+              <RivalIntelligence
+                rivals={state.rivals || []}
+                arenaChampions={state.arenaChampions}
+              />
             </div>
             <ReputationQuadrant />
           </div>

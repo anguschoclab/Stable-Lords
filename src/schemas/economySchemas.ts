@@ -183,6 +183,14 @@ export const OpponentDossierSchema = z.object({
       lastPlanWeek: z.number().optional(),
     })
     .optional(),
+  observedTells: z
+    .object({
+      oe: z.number().min(0).max(1),
+      al: z.number().min(0).max(1),
+      samples: z.number().int().nonnegative(),
+      lastSeenWeek: z.number(),
+    })
+    .optional(),
 });
 
 /**
@@ -248,6 +256,7 @@ export const ScoutReportDataSchema = z.object({
   knownInjuries: z.array(z.string()),
   suspectedOE: z.string().optional(),
   suspectedAL: z.string().optional(),
+  possiblyMaskedPlan: z.boolean().optional(),
   notes: z.string(),
 });
 

@@ -242,6 +242,16 @@ export const WarriorSchema = z.object({
   planWeek: z.number().optional(),
   planForStableId: z.string().optional(),
   planMasked: z.boolean().optional(),
+  campaignFocus: z
+    .enum([
+      'TOURNAMENT_PUSH',
+      'PROSPECT_DEV',
+      'PURSE_HUNTER',
+      'REHABILITATION',
+      'VETERAN_TWILIGHT',
+      'CROWN_BID',
+    ])
+    .optional(),
   equipment: EquipmentLoadoutSchema.optional(),
   status: WarriorStatusSchema,
   age: z.number().optional(),

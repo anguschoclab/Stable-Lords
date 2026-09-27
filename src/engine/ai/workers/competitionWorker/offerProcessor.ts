@@ -117,6 +117,7 @@ export function processAllRivalsBoutOffers(
           }
         }
 
+        const explain: { reason?: string } = {};
         const response = boutAcceptance.evaluateBoutOffer(
           trackedOffer,
           owningRival,
@@ -124,7 +125,8 @@ export function processAllRivalsBoutOffers(
           state.absoluteWeek,
           state.weather as WeatherType,
           opponent,
-          state
+          state,
+          explain
         );
 
         if (response === 'Accepted') {
@@ -176,6 +178,17 @@ export function processAllRivalsBoutOffers(
         );
         if (impact.boutOffers) {
           Object.assign(currentOffers, impact.boutOffers);
+        }
+        // Title bouts: persist the verdict reason so the offer card can show
+        // why the rival answered the way they did.
+        if (trackedOffer.titleArenaId && explain.reason) {
+          const updated = currentOffers[offer.id];
+          if (updated) {
+            updated.responseNotes = {
+              ...(updated.responseNotes ?? {}),
+              [wId]: explain.reason,
+            };
+          }
         }
       });
     });

@@ -201,6 +201,14 @@ export interface CouncilLookahead {
   /** Weeks until the next seasonal tournament bracket (0 during a tournament week). */
   weeksUntilTournament: number;
   projectedContenders: { warriorId: WarriorId; warriorName: string; tierName: string }[];
+  /** Title-defense obligations on player-held crowns — a defense is due when
+   *  the reign's activity gap reaches ARENA_TITLE.DEFENSE_INTERVAL_WEEKS. */
+  titleDefenses: {
+    arenaId: string;
+    warriorId: WarriorId;
+    warriorName: string;
+    dueAbsoluteWeek: number;
+  }[];
 }
 
 /**

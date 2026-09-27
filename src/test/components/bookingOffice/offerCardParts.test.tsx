@@ -165,4 +165,32 @@ describe('OfferDetailsGrid', () => {
     render(<OfferDetailsGrid offer={offer} playerWarrior={w} />);
     expect(screen.getByText('The Proving Grounds')).toBeInTheDocument();
   });
+
+  it('badges an offer whose venue was countered by the rival', () => {
+    const offer = makeBoutOffer({
+      arenaId: 'standard_arena',
+      conditions: ['COUNTERED_VENUE'],
+    });
+    render(<OfferDetailsGrid offer={offer} />);
+    expect(screen.getByTestId('venue-counter-badge')).toHaveTextContent(/venue/i);
+  });
+
+  it('shows the rival verdict reason on a declined title offer', () => {
+    const w: Warrior = makeWarrior({ id: 'w-me' as WarriorId });
+    const offer = makeBoutOffer({
+      warriorIds: ['w-me' as WarriorId, 'r-champ' as WarriorId],
+      titleArenaId: 'sundered_coliseum',
+      status: 'Rejected',
+      responses: { 'w-me': 'Accepted', 'r-champ': 'Declined' } as never,
+      responseNotes: { 'r-champ': 'killer-champion' } as never,
+    });
+    render(<OfferDetailsGrid offer={offer} playerWarrior={w} />);
+    expect(screen.getByTestId('rival-verdict-note')).toHaveTextContent(/killer/i);
+  });
+
+  it('renders no verdict note when the rival left none', () => {
+    const offer = makeBoutOffer({ titleArenaId: 'sundered_coliseum' });
+    render(<OfferDetailsGrid offer={offer} />);
+    expect(screen.queryByTestId('rival-verdict-note')).not.toBeInTheDocument();
+  });
 });

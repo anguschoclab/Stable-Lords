@@ -60,3 +60,71 @@ death-dominated reign-endings profile are the numbers Stages B/F are expected to
 - Combat changes follow `.claude/skills/combat-balance` — constants, pure helpers, `STYLE_PENALTIES` re-ratchet, four `balance.test.ts` guardrails, weapon matrix & mortality are canon (untouchable).
 - Symmetric machinery: mid-bout mechanics must be expressible through `FightPlan` — no AI-only edges.
 - Strict test-first: each stage lands a red-test commit before its implementation.
+
+## 5. Post-implementation results (Stages B–H, commit ee164576 + H)
+
+### What shipped
+
+- **B** — `CROWN_CAMPAIGN` intent + `targetArenaId`, per-tick contender index in
+  `PerceptionSnapshot`, `crownWorker` (reign management, relinquish timing,
+  defense posture, refusal economics), unified title-gate eval (V1 fixed),
+  venue-pinned bids, Grand-Championship prep windows.
+- **C** — `StableEvalContext` decouples advisor math from player finances (V3);
+  rival per-warrior roles via `campaignFocus` (V6 field reused); `CROWN_BID`
+  advisor card.
+- **D** — `planIntel` consumed in `coreGenerator` (N1 fixed); observed tells
+  blend into scouting; `planMasked` decoys for deceptive personalities (V2
+  semantics pinned by `scouting.maskedPlan.test.ts`).
+- **E** — real mid-bout adaptivity: opponent-state triggers, phase-boundary
+  corner advice, `ConditionEditor` support; **latent percent-trigger bug fixed**
+  (0–100 values vs 0–1 ratios — the universal `ENDURANCE_BELOW` safety
+  override had been firing on every AI warrior, every exchange).
+- **F** — career-aware retirement (age × permanent injuries × crown deferral),
+  promoter-personality-aware rival offer eval, single-round venue counters
+  (`COUNTERED_VENUE`), dominant-player dethrone pressure.
+- **G** — crown standing on advisor cards, `topContenders` public ladder,
+  roster contender chips, `CONDITION_*`/`PSYCH_*`/`@CORNER` telemetry into
+  `reasonCodes` (debug drawer).
+- **H** — 8 new SimPulse metrics (`crownCampaignsActive`, `titleOfferStatuses`,
+  `avgPlanIntelStaleness`, `maskedScoutReports`, `grandChampFieldSize`,
+  `grandChampCancellations`, `avgChampionFatigue`, `cornerAdviceEvents`),
+  104-week liveness suite, `AIEventCause` bidirectional sync guard (V7).
+
+### Grand Championship bisection (the "pre-existing failure")
+
+The `autosimChampionship` w52-field failure observed mid-project was NOT
+pre-existing — bisection shows:
+
+| Commit | Stage | GC |
+|---|---|---|
+| `befbf6f9` | pre-AI | ✅ field ≥4, GC runs |
+| `ecb31059`–`99bf4318` | B–D | ❌ field <4, cancelled |
+| `fead1f85`+ | E–H | ✅ field = 6, GC runs |
+
+The B–D behavior changes interacted with the always-firing
+`ENDURANCE_BELOW` percent bug (every AI warrior permanently under the
+survival override). Stage E's normalization fix restored realistic bout
+outcomes and the w52 field. Verified deterministic across both directions
+of the bisection — not flake.
+
+### Validation gates (all green at HEAD)
+
+| Gate | Result |
+|---|---|
+| `rivalStrategyPass.perf` | 86.9ms (<500 bound); perception once-per-tick spy ✓ |
+| `determinism.slow` | same-seed two-run: identical pulses + rivals hash |
+| `parallelDeterminism.slow` | shard pool 1 vs 4: byte-identical state, 8 wks |
+| `styleWinConditions` (balance) | 15 guardrail tests green |
+| `worldLiveness.slow` (new) | 104 wks: crowns change hands, campaigns active ≥2 wks, refusals < STRIP, GC integrity, avg champion fatigue <70 |
+| `autosimChampionship.slow` | 120 wks: 6 crowned arenas, GC field 6, winner recorded |
+
+### Residual observations (honest — not regressions, but worth a product look)
+
+- Reign endings remain death-dominated (died 34, defeated 1 in the 120-wk
+  autosim): champions almost never lose the belt *in* a title bout — they
+  die in ordinary bookings first. `defensesBooked` stayed 0. The dethrone
+  path exists but the world rarely reaches it; if a living-defense meta is
+  desired, title-defense cadence vs. open-market bookings needs tuning.
+- `counterOfferRate` baseline was 0.00; venue/purse counters now exist for
+  AI but the metric only counts standing offers — watch post-H soaks for
+  actual counter frequency.

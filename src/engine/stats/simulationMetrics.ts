@@ -1,6 +1,9 @@
 import type { GameState } from '@/types/state.types';
 import { TRAITS } from '@/engine/traits';
 import { owningStableOf } from '@/engine/championship/arenaChampionship';
+import { CHAMPIONS_TOURNEY } from '@/constants/arena';
+import { WEEKS_PER_YEAR } from '@/constants/core/core';
+import { findWarriorById } from '@/engine/core/warriorLookup';
 
 /**
  * Defines the shape of sim pulse.
@@ -46,6 +49,24 @@ export interface SimPulse {
   reignEndings: Record<string, number>;
   /** Grand Champions crowned so far (one per completed Champions tournament). */
   grandChampionsCount: number;
+  // ─── Stage H: AI-depth + championship liveness metrics ───
+  /** Rivals currently running the CROWN_CAMPAIGN intent. */
+  crownCampaignsActive: number;
+  /** Standing title offers tallied by status (Proposed/Signed/Declined/…). */
+  titleOfferStatuses: Record<string, number>;
+  /** Mean weeks since rival plan intel was gathered (0 when none exists). */
+  avgPlanIntelStaleness: number;
+  /** Rival warriors carrying a masked/decoy plan (planMasked). */
+  maskedScoutReports: number;
+  /** Participant count of the most recent champions-tier tournament (0 if none). */
+  grandChampFieldSize: number;
+  /** Elapsed year boundaries with no Champions-tier tournament — honest
+   *  derivation of cancellations (the engine never persists a cancelled GC). */
+  grandChampCancellations: number;
+  /** Mean fatigue across currently reigning arena champions (0 when none). */
+  avgChampionFatigue: number;
+  /** CONDITION_*@CORNER firings across lastWeekBoutDisplay's exchange logs. */
+  cornerAdviceEvents: number;
 }
 
 /**
@@ -141,6 +162,60 @@ export function collectPulse(state: GameState): SimPulse {
     (o) => o?.titleArenaId && (o.status === 'Proposed' || o.status === 'Signed')
   ).length;
 
+  // ─── Stage H metrics ───
+  const titleOfferStatuses: Record<string, number> = {};
+  for (const o of Object.values(state.boutOffers ?? {})) {
+    if (!o?.titleArenaId) continue;
+    titleOfferStatuses[o.status] = (titleOfferStatuses[o.status] ?? 0) + 1;
+  }
+
+  let intelSum = 0;
+  let intelCount = 0;
+  let maskedScoutReports = 0;
+  const now = state.absoluteWeek ?? state.week;
+  for (const r of activeRivals) {
+    for (const w of r.roster ?? []) {
+      if (w.planMasked) maskedScoutReports++;
+    }
+    for (const dossier of Object.values(r.agentMemory?.opponentDossiers ?? {})) {
+      const lpw = dossier?.planIntel?.lastPlanWeek;
+      if (lpw !== undefined) {
+        intelSum += Math.max(0, now - lpw);
+        intelCount++;
+      }
+    }
+  }
+
+  const champsTournaments = (state.tournaments ?? []).filter(
+    (t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID
+  );
+  const grandChampFieldSize = champsTournaments.length
+    ? champsTournaments[champsTournaments.length - 1].participants.length
+    : 0;
+  const expectedGCs = Math.floor(Math.max(0, now - 1) / WEEKS_PER_YEAR);
+  const grandChampCancellations = Math.max(0, expectedGCs - champsTournaments.length);
+
+  let champFatigueSum = 0;
+  let champFatigueCount = 0;
+  for (const title of Object.values(state.arenaChampions ?? {})) {
+    const champId = title?.champion?.warriorId;
+    if (!champId) continue;
+    const w = findWarriorById(state, champId);
+    if (w) {
+      champFatigueSum += w.fatigue ?? 0;
+      champFatigueCount++;
+    }
+  }
+
+  let cornerAdviceEvents = 0;
+  for (const r of state.lastWeekBoutDisplay?.results ?? []) {
+    for (const e of r.outcome?.exchangeLog ?? []) {
+      for (const code of e.reasonCodes ?? []) {
+        if (code.includes('@CORNER')) cornerAdviceEvents++;
+      }
+    }
+  }
+
   return {
     week: state.week,
     playerTreasury: state.treasury,
@@ -167,6 +242,15 @@ export function collectPulse(state: GameState): SimPulse {
     liveTitleOffers,
     reignEndings,
     grandChampionsCount: state.grandChampions?.length ?? 0,
+    crownCampaignsActive: intentDistribution['CROWN_CAMPAIGN'] ?? 0,
+    titleOfferStatuses,
+    avgPlanIntelStaleness: intelCount > 0 ? Math.round(intelSum / intelCount) : 0,
+    maskedScoutReports,
+    grandChampFieldSize,
+    grandChampCancellations,
+    avgChampionFatigue:
+      champFatigueCount > 0 ? Math.round(champFatigueSum / champFatigueCount) : 0,
+    cornerAdviceEvents,
   };
 }
 

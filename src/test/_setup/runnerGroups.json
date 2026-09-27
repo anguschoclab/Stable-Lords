@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T17:00:36.494Z",
+  "generatedAt": "2026-09-27T20:37:25.239Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -90,6 +90,7 @@
     "src/test/components/stable/RecruitCard.test.tsx",
     "src/test/components/stable/RosterWarriorRow.test.tsx",
     "src/test/components/stable/StyleCompositionDonut.test.tsx",
+    "src/test/components/stable/rosterCrownChip.test.tsx",
     "src/test/components/startGame/BackstoryPicker.test.tsx",
     "src/test/components/tournaments/ActiveTournamentManifest.test.tsx",
     "src/test/components/tournaments/TournamentComponents.test.tsx",
@@ -183,6 +184,7 @@
     "src/test/hooks/useWeekExecution.test.ts",
     "src/test/integration/autosim.slow.test.ts",
     "src/test/integration/autosimChampionship.slow.test.ts",
+    "src/test/integration/worldLiveness.slow.test.ts",
     "src/test/lib/AudioManager.test.ts",
     "src/test/lib/a11yPrefs.test.ts",
     "src/test/lib/contentPacks.test.ts",

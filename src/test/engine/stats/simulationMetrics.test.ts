@@ -25,6 +25,14 @@ const ZERO_AI_FIELDS = {
   liveTitleOffers: 0,
   reignEndings: {},
   grandChampionsCount: 0,
+  crownCampaignsActive: 0,
+  titleOfferStatuses: {},
+  avgPlanIntelStaleness: 0,
+  maskedScoutReports: 0,
+  grandChampFieldSize: 0,
+  grandChampCancellations: 0,
+  avgChampionFatigue: 0,
+  cornerAdviceEvents: 0,
 } as const;
 
 describe('simulationMetrics', () => {

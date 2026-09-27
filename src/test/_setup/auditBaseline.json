@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-09-27T17:00:36.493Z",
+  "generatedAt": "2026-09-27T20:37:25.239Z",
   "strayTestFiles": [],
   "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
     "src/test/engine/combat/aiIntentTelemetry.test.ts",
+    "src/test/engine/combat/conditionEngine.triggers.test.ts",
     "src/test/engine/combat/equipmentIntegration.test.ts",
     "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts"
   ],

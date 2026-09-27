@@ -1,0 +1,20 @@
+{
+  "minLines": 10,
+  "minTokens": 100,
+  "formats": ["typescript", "tsx", "javascript"],
+  "gitignore": true,
+  "ignore": [
+    "**/routeTree.gen.ts",
+    "**/*.d.ts",
+    "scripts/out/**",
+    "scripts/.build/**",
+    "playwright-report/**",
+    "test-results/**",
+    ".playwright-mcp/**",
+    "coverage/**",
+    "dist/**",
+    "out/**"
+  ],
+  "reporters": ["console", "json"],
+  "output": "scripts/out/jscpd"
+}

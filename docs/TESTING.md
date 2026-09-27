@@ -119,3 +119,19 @@ fails on stale entries). Regenerate after intentional changes:
 ```
 bun scripts/test-audit-scan.mjs
 ```
+
+## Code hygiene scans
+
+Three complementary, report-only scanners (none gate CI):
+
+| Command | Tool | Detects |
+| --- | --- | --- |
+| `bun run dead-code` | knip | Unused files, exports, exported types, dependencies, duplicate exports |
+| `bun run dead-code:report` | knip | Same, as JSON → `scripts/out/knip-report.json` |
+| `bun run dupes` | jscpd | Copy-pasted blocks ≥10 lines / 100 tokens → `scripts/out/jscpd/` |
+| `bun scripts/orphan-scan.mjs` | custom | Domain audit: state-field liveness, route/nav links, test-only reachability |
+
+Division of labor: knip is the canonical unused-code check (compiler-accurate);
+orphan-scan.mjs covers the domain-specific checks knip can't; jscpd covers
+duplication for consolidation sweeps. Config lives in `knip.json` and
+`.jscpd.json`.

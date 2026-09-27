@@ -1,0 +1,34 @@
+{
+  "$schema": "https://unpkg.com/knip@6.37.0/schema.json",
+  // Entry points knip can't infer: string-path references and ad-hoc runners.
+  "entry": [
+    // Referenced by electron/main.ts via path.join(__dirname, 'preload.js').
+    "electron/preload.js",
+    // Standalone tooling runners invoked directly (bun scripts/x.ts, node x.mjs).
+    "scripts/**/*.{ts,mjs}",
+    "find-dupes.mjs",
+    "src/scripts/**/*.ts",
+    // routeTree.gen.ts is gitignored — this glob keeps the route graph
+    // reachable on a clean checkout without codegen.
+    "src/routes/**/*.{ts,tsx}"
+  ],
+  "ignore": [
+    // Committed esbuild bundle output of scripts/build-fight.ts — not source.
+    "scripts/.build/**",
+    // Scanner reports.
+    "scripts/out/**"
+  ],
+  // Makers are referenced in package.json `config.forge` (inline), which the
+  // electron-forge plugin cannot see — suppressing, not a real finding.
+  // jsdom: knip parses the `@vitest-environment jsdom` pragma inside a docblock
+  // comment in scripts/test-audit-scan.mjs and reports it "unlisted" (devDep
+  // referenced from a non-test entry) — it's a real, used devDependency.
+  "ignoreDependencies": [
+    "@electron-forge/maker-deb",
+    "@electron-forge/maker-dmg",
+    "@electron-forge/maker-rpm",
+    "@electron-forge/maker-squirrel",
+    "@electron-forge/maker-zip",
+    "jsdom."
+  ]
+}

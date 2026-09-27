@@ -47,6 +47,7 @@ export default function WarriorDetail() {
     activeTab,
     setActiveTab,
     arenaHistory,
+    arenaCrowns,
     insightTokens,
     handlePlanChange,
     handleRetire,
@@ -119,6 +120,7 @@ export default function WarriorDetail() {
             id={id}
             isPlayerOwned={isPlayerOwned}
             insightTokens={insightTokens}
+            arenaCrowns={arenaCrowns}
           />
 
           <div className="flex items-center gap-1 border-b border-white/5">

@@ -768,6 +768,32 @@ describe('scheduleTitleBouts', () => {
       expect.arrayContaining(['w-a', 'w-b'])
     );
   });
+
+  it.each([10, 20, 30, 42, 52])('slides defenses during tournament week %i', (week) => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const state = makeGameState({
+      absoluteWeek: week,
+      week,
+      roster: [champ, cont],
+      arenaChampions: {
+        [arenaId]: makeTitleAt(arenaId, 'w-champ', {
+          champion: {
+            warriorId: 'w-champ' as WarriorId,
+            startedAbsoluteWeek: 1,
+            defenses: 0,
+            lastActivityWeek: 1, // cadence long elapsed — only the tournament gates it
+          },
+        }),
+      },
+    });
+    const delta = createChampionshipDelta();
+    scheduleTitleBouts(state, delta, rng);
+    expect(delta.newOffers).toHaveLength(0);
+    // Tournament weeks bail before any title is touched — the defense simply
+    // slides to the next week rather than counting as a deferral.
+    expect(delta.arenaChampions[arenaId]).toBeUndefined();
+  });
 });
 
 // ─── Relinquish ─────────────────────────────────────────────────────────────

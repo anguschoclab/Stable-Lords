@@ -7,8 +7,9 @@
  * Violations are reported, never thrown mid-run — callers decide whether to
  * abort (CI) or log (soak).
  */
-import type { GameState } from '@/types/state.types';
+import type { GameState, TitleStatus, ArenaReignEndReason } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import { findWarriorById } from '@/engine/core/warriorLookup';
 
 /** A single violated invariant. */
 export interface InvariantViolation {
@@ -131,6 +132,100 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
   }
   if (state.day !== undefined && (state.day < 0 || state.day > 7)) {
     out.push({ id: 'calendar', message: `day ${state.day} outside 0..7` });
+  }
+
+  out.push(...validateArenaChampions(state));
+
+  return out;
+}
+
+const TITLE_STATUSES: ReadonlySet<TitleStatus> = new Set([
+  'active',
+  'pendingReengagement',
+  'dormant',
+]);
+const END_REASONS: ReadonlySet<ArenaReignEndReason> = new Set([
+  'defeated',
+  'died',
+  'retired',
+  'stripped',
+  'relinquished',
+]);
+
+/**
+ * Arena-championship invariants. The heavy hitter is the single-crown rule —
+ * one warrior may reign over at most one arena — plus vacancy hygiene: after
+ * any week advance, a reigning champion must be living and unretired (the
+ * vacancy sweep owns the died/retired transitions). Title-record fields are
+ * sanity-checked so corrupt records surface instead of silently skewing
+ * contender ladders.
+ */
+export function validateArenaChampions(state: GameState): InvariantViolation[] {
+  const out: InvariantViolation[] = [];
+  const push = (message: string) => out.push({ id: 'arena-champions', message });
+
+  const deadIds = new Set((state.graveyard ?? []).map((w) => w.id));
+  const retiredIds = new Set((state.retired ?? []).map((w) => w.id));
+  const crownsByWarrior = new Map<string, string[]>();
+
+  for (const [arenaId, title] of Object.entries(state.arenaChampions ?? {})) {
+    if (!TITLE_STATUSES.has(title.status)) {
+      push(`${arenaId}: invalid title status '${title.status}'`);
+    }
+    for (const [field, value] of Object.entries({
+      refusals: title.refusals,
+      deferrals: title.deferrals,
+      noContenderStreak: title.noContenderStreak,
+    })) {
+      if (!Number.isFinite(value) || value < 0) {
+        push(`${arenaId}: ${field} is ${value}`);
+      }
+    }
+    for (const [warriorId, until] of Object.entries(title.declinedContenders ?? {})) {
+      if (!Number.isFinite(until) || until < 0) {
+        push(`${arenaId}: declinedContenders[${warriorId}] = ${until}`);
+      }
+    }
+    for (const h of title.history ?? []) {
+      if (!END_REASONS.has(h.endReason)) {
+        push(`${arenaId}: history entry for ${h.warriorId} has invalid endReason '${h.endReason}'`);
+      }
+      if (h.endedAbsoluteWeek < h.startedAbsoluteWeek) {
+        push(`${arenaId}: reign ${h.warriorId} ends (${h.endedAbsoluteWeek}) before it starts (${h.startedAbsoluteWeek})`);
+      }
+    }
+
+    const reign = title.champion;
+    if (!reign) continue;
+    const arenas = crownsByWarrior.get(reign.warriorId) ?? [];
+    arenas.push(arenaId);
+    crownsByWarrior.set(reign.warriorId, arenas);
+
+    if (!Number.isFinite(reign.defenses) || reign.defenses < 0) {
+      push(`${arenaId}: champion ${reign.warriorId} defenses = ${reign.defenses}`);
+    }
+    if (!Number.isFinite(reign.startedAbsoluteWeek)) {
+      push(`${arenaId}: champion ${reign.warriorId} has non-finite startedAbsoluteWeek`);
+    }
+    if (deadIds.has(reign.warriorId)) {
+      push(`${arenaId}: champion ${reign.warriorId} is in the graveyard but still reigning`);
+    } else if (retiredIds.has(reign.warriorId)) {
+      push(`${arenaId}: champion ${reign.warriorId} is retired but still reigning`);
+    } else if (!findWarriorById(state, reign.warriorId)) {
+      push(`${arenaId}: champion ${reign.warriorId} not found in any roster`);
+    }
+  }
+
+  for (const [warriorId, arenas] of crownsByWarrior) {
+    if (arenas.length > 1) {
+      push(`${warriorId} reigns over ${arenas.length} arenas (${arenas.join(', ')}) — single crown violated`);
+    }
+  }
+
+  for (const g of state.grandChampions ?? []) {
+    if (!g.warriorId || !g.tournamentId || !Number.isFinite(g.year)) {
+      push(`grandChampions entry missing warrior/tournament/year: ${JSON.stringify(g)}`);
+    }
   }
 
   return out;

@@ -22,8 +22,8 @@ import {
   applyLifecycleTransitions,
   scheduleTitleBouts,
   applyChampionPerks,
-  recordGrandChampions,
 } from '@/engine/championship/arenaChampionship';
+import { recordGrandChampions } from '@/engine/championship/championsTournament';
 
 /**
  * Run the arena championship pass.

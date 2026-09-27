@@ -1,5 +1,6 @@
-import { Eye, Target, Shield, Heart, Zap } from 'lucide-react';
+import { Eye, Target, Shield, Heart, Zap, Crown } from 'lucide-react';
 import { TagBadge } from '@/components/ui/WarriorBadges';
+import { Badge } from '@/components/ui/badge';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import { EditableText } from '@/components/ui/EditableText';
 import { useGameStore } from '@/state/useGameStore';
@@ -27,6 +28,8 @@ interface WarriorHeroHeaderProps {
   id?: string;
   isPlayerOwned?: boolean;
   insightTokens?: InsightToken[];
+  /** Arena display names this warrior reigns over / once reigned over. */
+  arenaCrowns?: { current: string[]; past: string[] };
 }
 
 /**
@@ -49,6 +52,7 @@ export function WarriorHeroHeader({
   id,
   isPlayerOwned,
   insightTokens,
+  arenaCrowns,
 }: WarriorHeroHeaderProps) {
   const renameWarrior = useGameStore((s) => s.renameWarrior);
   const warriorInsightTokens = insightTokens?.filter((token) => token.warriorId === id) || [];
@@ -116,6 +120,23 @@ export function WarriorHeroHeader({
             ))}
             {warrior.titles.map((t) => (
               <TagBadge key={t} tag={t} type="title" />
+            ))}
+            {arenaCrowns?.current.map((name) => (
+              <Badge
+                key={`crown-${name}`}
+                className="bg-arena-gold/20 text-arena-gold border-arena-gold/40"
+              >
+                <Crown className="h-3 w-3 mr-1" /> Champion of {name}
+              </Badge>
+            ))}
+            {arenaCrowns?.past.map((name) => (
+              <Badge
+                key={`ex-crown-${name}`}
+                variant="outline"
+                className="text-arena-gold/50 border-arena-gold/20"
+              >
+                <Crown className="h-3 w-3 mr-1" /> Former Champion of {name}
+              </Badge>
             ))}
             {warrior.injuries.map((i) => {
               const injName = typeof i === 'string' ? i : i.name;

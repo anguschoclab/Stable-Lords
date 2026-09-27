@@ -20,8 +20,7 @@ import {
   isSeasonalTournamentWeek,
   isChampionsTournamentWeek,
 } from '@/engine/core/absoluteWeek';
-import { selectGrandChampionshipField } from '@/engine/championship/arenaChampionship';
-import { CHAMPIONS_TOURNEY } from '@/constants/arena';
+import { buildChampionsTournament } from '@/engine/championship/championsTournament';
 import {
   buildSuccessorIndex,
   runRivalShardChunk,
@@ -202,7 +201,7 @@ export function runRivalStrategyPass(
   if (isSeasonalTournamentWeek(nextWeek)) {
     impacts.push(handleSeasonalTournaments(state, nextWeek, rng, headless));
   } else if (isChampionsTournamentWeek(nextWeek)) {
-    impacts.push(handleChampionsTournament(state, nextWeek, rng, headless));
+    impacts.push(buildChampionsTournament(state, nextWeek, rng, headless));
   }
 
     if (globalGazetteItems.length > 0) {
@@ -266,66 +265,4 @@ function handleSeasonalTournaments(
   ]);
 }
 
-/**
- * Week 52 — the Grand Championship. Champions-only field built from live
- * arena reigns; cancelled (with a newsletter) when too few crowns are held.
- * Bouts are lethal, same as any tournament bracket — awards are recorded by
- * ArenaChampionshipPass once the bracket completes.
- */
-function handleChampionsTournament(
-  state: GameState,
-  week: number,
-  rng: IRNGService,
-  headless?: boolean
-): StateImpact {
-  const field = selectGrandChampionshipField(state);
-  if (field.length < CHAMPIONS_TOURNEY.MIN_FIELD) {
-    return mergeImpacts([
-      {
-        newsletterItems: headless
-          ? []
-          : [
-              {
-                id: rng.uuid(),
-                week,
-                title: '🎖️ TOURNAMENT ANNOUNCEMENT',
-                items: [
-                  `${CHAMPIONS_TOURNEY.NAME} is cancelled — only ${field.length} arena crown${field.length === 1 ? '' : 's'} are held this year.`,
-                ],
-              },
-            ],
-      },
-    ]);
-  }
 
-  const tournament = TournamentSelectionService.buildTournament(
-    CHAMPIONS_TOURNEY.TIER_ID,
-    CHAMPIONS_TOURNEY.NAME,
-    field,
-    week,
-    state.season,
-    new SeededRNGService(week * 733),
-    state.year ?? 1
-  );
-
-  return mergeImpacts([
-    { tournaments: [...(state.tournaments || []), tournament] },
-    {
-      isTournamentWeek: true,
-      activeTournamentId: tournament.id,
-      day: 0,
-      newsletterItems: headless
-        ? []
-        : [
-            {
-              id: rng.uuid(),
-              week,
-              title: '🎖️ TOURNAMENT ANNOUNCEMENT',
-              items: [
-                `🏆 ${CHAMPIONS_TOURNEY.NAME} — every reigning arena champion answers the call. Bouts are to the death; the last warrior standing is crowned ${CHAMPIONS_TOURNEY.TITLE}.`,
-              ],
-            },
-          ],
-    },
-  ]);
-}

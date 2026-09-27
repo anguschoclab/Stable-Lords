@@ -90,4 +90,21 @@ describe('WarriorHeroHeader', () => {
     render(<WarriorHeroHeader {...baseProps} id="w1" insightTokens={[]} />);
     expect(screen.queryByText(/Intel Acquired/i)).not.toBeInTheDocument();
   });
+
+  it('renders derived arena crowns — current and former', () => {
+    render(
+      <WarriorHeroHeader
+        {...baseProps}
+        id="w1"
+        arenaCrowns={{ current: ['Bloodsands Arena'], past: ['Mudpit Arena'] }}
+      />
+    );
+    expect(screen.getByText(/Champion of Bloodsands Arena/)).toBeInTheDocument();
+    expect(screen.getByText(/Former Champion of Mudpit Arena/)).toBeInTheDocument();
+  });
+
+  it('renders no crown badges when the warrior holds none', () => {
+    render(<WarriorHeroHeader {...baseProps} id="w1" arenaCrowns={{ current: [], past: [] }} />);
+    expect(screen.queryByText(/Champion of/)).not.toBeInTheDocument();
+  });
 });

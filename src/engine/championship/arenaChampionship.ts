@@ -20,9 +20,9 @@ import type {
   GrandChampionEntry,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { WarriorId, BoutOfferId, PromoterId, StableId, TournamentId } from '@/types/shared.types';
+import type { WarriorId, BoutOfferId, PromoterId, StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { ARENA_TITLE, ARENA_COMMISSION_ID, CHAMPIONS_TOURNEY } from '@/constants/arena';
+import { ARENA_TITLE, ARENA_COMMISSION_ID } from '@/constants/arena';
 import { getAllArenas } from '@/data/arenas';
 import {
   displayWeek,
@@ -863,98 +863,6 @@ export function relinquishCrown(
   news(delta, state.week, `Crown Relinquished`, [`${name} gives up the crown.`], `relinq-${arenaId}-${state.absoluteWeek}`);
 }
 
-// ─── Grand Championship ─────────────────────────────────────────────────────
-
-/**
- * The week-52 field: every reigning arena champion, fight-ready. Dormant and
- * re-engaging titles still hold their crown, so their champions enter.
- * Deterministic arenaId order pre-shuffle, capped at FIELD_CAP.
- */
-export function selectGrandChampionshipField(state: GameState): Warrior[] {
-  return Object.keys(state.arenaChampions ?? {})
-    .sort()
-    .map((arenaId) => state.arenaChampions![arenaId]!.champion?.warriorId)
-    .filter((id): id is WarriorId => id != null)
-    .map((id) => findWarriorById(state, id))
-    .filter((w): w is Warrior => w != null && isFightReady(w, true))
-    .slice(0, CHAMPIONS_TOURNEY.FIELD_CAP);
-}
-
-/**
- * Detect completed 'Champions' tournaments not yet in `grandChampions` and
- * record the winner + awards. The generic tournament prize path skips this
- * tier (see resolution.ts) — this is the single award home.
- */
-export function recordGrandChampions(state: GameState, delta: ChampionshipDelta): void {
-  const recorded = new Set([
-    ...(state.grandChampions ?? []).map((g) => g.tournamentId),
-    ...delta.grandChampions.map((g) => g.tournamentId),
-  ]);
-
-  for (const t of state.tournaments ?? []) {
-    if (t.tierId !== CHAMPIONS_TOURNEY.TIER_ID || !t.completed || recorded.has(t.id)) continue;
-    const finals = [...t.bracket]
-      .filter((b) => !b.isBronzeMatch)
-      .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
-    if (!finals?.winner) continue;
-    const winnerId = (finals.winner === 'A' ? finals.warriorIdA : finals.warriorIdD) as WarriorId;
-    const w = findWarriorById(state, winnerId);
-    if (!w) continue;
-
-    const owner = owningStableOf(state, winnerId);
-    delta.grandChampions.push({
-      tournamentId: t.id as TournamentId,
-      year: state.year ?? 1,
-      warriorId: w.id,
-      warriorName: w.name,
-      stableName: owner?.stableName,
-    });
-
-    const titles = [...(w.titles ?? []), CHAMPIONS_TOURNEY.TITLE];
-    if (owner?.isPlayer) {
-      delta.treasuryDelta += CHAMPIONS_TOURNEY.PURSE;
-      const existing = delta.rosterUpdates.get(w.id) ?? {};
-      delta.rosterUpdates.set(w.id, {
-        ...existing,
-        fame: (existing.fame ?? w.fame ?? 0) + CHAMPIONS_TOURNEY.WINNER_FAME,
-        popularity: (existing.popularity ?? w.popularity ?? 0) + CHAMPIONS_TOURNEY.WINNER_POP,
-        titles,
-        champion: true,
-      });
-    } else {
-      const rival = (state.rivals ?? []).find((r) =>
-        (r.roster ?? []).some((x) => x.id === w.id)
-      );
-      if (rival) {
-        const pending = delta.rivalsUpdates.get(rival.id);
-        const baseRoster = pending?.roster ?? rival.roster;
-        delta.rivalsUpdates.set(rival.id, {
-          ...(pending ?? {}),
-          treasury: (rival.treasury ?? 0) + CHAMPIONS_TOURNEY.PURSE,
-          roster: baseRoster.map((x) =>
-            x.id === w.id
-              ? {
-                  ...x,
-                  fame: (x.fame ?? 0) + CHAMPIONS_TOURNEY.WINNER_FAME,
-                  popularity: (x.popularity ?? 0) + CHAMPIONS_TOURNEY.WINNER_POP,
-                  titles,
-                  champion: true,
-                }
-              : x
-          ),
-        });
-      }
-    }
-
-    news(
-      delta,
-      state.week,
-      `Grand Champion Crowned`,
-      [
-        `${w.name} of ${owner?.stableName ?? 'an unknown stable'} is the ${CHAMPIONS_TOURNEY.TITLE} — last warrior standing at ${CHAMPIONS_TOURNEY.NAME}.`,
-        `Purse: ${CHAMPIONS_TOURNEY.PURSE}g. The arena crowns them immortal.`,
-      ],
-      `gc-${t.id}`
-    );
-  }
-}
+// Grand Championship field selection, bracket emission, and winner recording
+// live in ./championsTournament.ts — the single award home for the
+// champions-only week-52 bracket.

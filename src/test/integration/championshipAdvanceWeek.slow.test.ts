@@ -12,6 +12,8 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import { makeComputedWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
+import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { ArenaTitle } from '@/types/state.types';
@@ -221,5 +223,45 @@ describe('championship lifecycle through advanceWeek', () => {
     expect(entry.year).toBe(1);
     expect(ids).toContain(entry.warriorId);
     expect(entry.tournamentId).toBe(champsT!.id);
+  });
+});
+
+describe('calendar migration through advanceWeek', () => {
+  it('resolves an in-flight legacy-cadence tournament and emits no week-13 seasonal', async () => {
+    // A save made under the old calendar at week 12 with a tournament still
+    // in progress: the unfinished-tournament sweep resolves it entry-driven,
+    // and the old week-13 seasonal never fires — the accepted loss.
+    let state = createFreshState('champ-migration-seed');
+    state.week = 12;
+    state.year = 1;
+    state.absoluteWeek = 12;
+    state.tournaments = [];
+    state.rivals = [];
+
+    const field = ['f1', 'f2', 'f3', 'f4'].map((id, i) =>
+      computed(id, `Freelancer ${i}`)
+    );
+    const inFlight = TournamentSelectionService.buildTournament(
+      'gold',
+      'Legacy Bracket',
+      field,
+      13,
+      state.season,
+      new SeededRNGService(7),
+      1
+    );
+    state.tournaments = [inFlight];
+
+    state = await advanceWeek(state);
+    drainDeferredBoutLogs(state);
+    expect(state.week).toBe(13);
+
+    const resolved = (state.tournaments ?? []).find((t) => t.id === inFlight.id);
+    expect(resolved!.completed).toBe(true);
+    expect(resolved!.champion).toBeTruthy();
+    // The migration is additive only: no NEW seasonal was emitted for week 13
+    // (the legacy cadence is gone) — the only entry is the resolved in-flight one.
+    expect(state.tournaments).toHaveLength(1);
+    expect(state.isTournamentWeek).not.toBe(true);
   });
 });

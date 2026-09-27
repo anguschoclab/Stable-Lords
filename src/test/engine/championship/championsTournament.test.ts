@@ -4,14 +4,15 @@
  * the calendar migration around it (seasonals at weeks 10/20/30/42).
  */
 import { describe, it, expect } from 'vitest';
+import { createChampionshipDelta } from '@/engine/championship/arenaChampionship';
 import {
-  createChampionshipDelta,
   recordGrandChampions,
   selectGrandChampionshipField,
-} from '@/engine/championship/arenaChampionship';
+} from '@/engine/championship/championsTournament';
 import { runRivalStrategyPass } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { runArenaChampionshipPass } from '@/engine/pipeline/passes/ArenaChampionshipPass';
 import { resolveImpacts } from '@/engine/impacts';
+import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { resolveCompleteTournament } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena/arenaChampionship';
 import { SEASONAL_TOURNAMENT_WEEKS, LEGACY_TOURNAMENT_WEEKS } from '@/constants/core/dates';
@@ -226,6 +227,27 @@ describe('seasonal tournament calendar', () => {
     };
     expect(impact.tournaments ?? []).toHaveLength(0);
     expect(impact.isTournamentWeek).not.toBe(true);
+  });
+
+  it('reigning champions remain conscriptable into seasonal brackets', () => {
+    // The booking lock governs bout *offers* only — committeeSelection pools
+    // ranked warriors with no champion exclusion, so crowns fight seasonals.
+    const state = crownedState(6);
+    state.realmRankings = {};
+    state.roster.forEach((w, i) => {
+      state.realmRankings[w.id] = { overallRank: i + 1, classRank: 1, compositeScore: 100 - i };
+    });
+    const tournaments = TournamentSelectionService.generateSeasonalTiers(
+      state,
+      10,
+      state.season,
+      42
+    );
+    expect(tournaments.length).toBeGreaterThan(0);
+    const field = new Set(tournaments.flatMap((t) => t.participants.map((p) => p.id)));
+    for (const w of state.roster) {
+      expect(field.has(w.id), `champion ${w.id} missing from seasonal field`).toBe(true);
+    }
   });
 });
 

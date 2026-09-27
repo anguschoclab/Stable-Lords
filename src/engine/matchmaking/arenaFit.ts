@@ -134,6 +134,27 @@ export function scoreArenaFitForWarrior(
   return score;
 }
 
+/** The arena where the warrior holds the most recorded bouts — their "home"
+ *  venue. Ties resolve to the earliest-fought venue (insertion order).
+ *  Tournament-only grounds (Bloodsands) are ineligible — a record there can
+ *  never be defended, so it must not become "home". */
+function homeVenueOf(warrior: Warrior): { arenaId: string; bouts: number } | undefined {
+  const recs = warrior.career?.byArena;
+  if (!recs) return undefined;
+  const excluded = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
+  let best: string | undefined;
+  let bestBouts = 0;
+  for (const [arenaId, rec] of Object.entries(recs)) {
+    if (excluded.has(arenaId)) continue;
+    const bouts = (rec.wins ?? 0) + (rec.losses ?? 0);
+    if (bouts > bestBouts) {
+      best = arenaId;
+      bestBouts = bouts;
+    }
+  }
+  return best ? { arenaId: best, bouts: bestBouts } : undefined;
+}
+
 // ─── Matchup arena selection ───────────────────────────────────────────────────
 
 /**
@@ -177,10 +198,33 @@ export function selectArenaForMatchup(
 
   if (arenas.length === 0) return 'standard_arena';
 
+  // Record-book stickiness: fighters defend home turf. A flat chance the bout
+  // books the venue where either warrior holds the deepest record — the
+  // favored warrior's home wins ties. This is what lets venue records
+  // accumulate enough for title contention to emerge. The roll is only
+  // consumed when a legal home venue exists, keeping the RNG stream stable
+  // for warriors without records.
+  const homeA = homeVenueOf(favorWarrior);
+  const homeB = homeVenueOf(otherWarrior);
+  const homeArenaId =
+    !homeA ? homeB?.arenaId :
+    !homeB ? homeA.arenaId :
+    homeA.bouts >= homeB.bouts ? homeA.arenaId : homeB.arenaId;
+  if (
+    homeArenaId &&
+    arenas.some((a) => a.id === homeArenaId) &&
+    rng.next() < ARENA_SELECTION.HOME_VENUE_CHANCE
+  ) {
+    return homeArenaId;
+  }
+
   const scores = arenas.map((arena) => {
     const fitFavor = scoreArenaFitForWarrior(favorWarrior, arena, opts?.planA);
     const fitOther = scoreArenaFitForWarrior(otherWarrior, arena, opts?.planB);
-    return fitFavor * favorWeight + fitOther;
+    // Home venues also dominate the fit draw — the flat roll above is not the
+    // only path back; record-book depth earns real weight in the softmax.
+    const homeBonus = arena.id === homeArenaId ? ARENA_SELECTION.HOME_VENUE_FIT_BONUS : 0;
+    return fitFavor * favorWeight + fitOther + homeBonus;
   });
 
   // Shift all scores to be non-negative (softmax-style weighted draw)

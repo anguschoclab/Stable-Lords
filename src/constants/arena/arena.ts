@@ -49,6 +49,15 @@ export const ARENA_SELECTION = {
   SCORE_SHIFT_BUFFER: 0.1,
   TOURNAMENT_DEFAULT_ARENA: 'bloodsands_arena',
   EXCLUDED_ARENA_IDS: ['bloodsands_arena'],
+  /** Flat chance a bout books the favored warrior's "home" venue (the arena
+   *  where they hold the most recorded bouts). Without record-book stickiness
+   *  venue draws diffuse across the whole circuit and nobody accumulates the
+   *  venue record a title chase needs. */
+  HOME_VENUE_CHANCE: 0.8,
+  /** Fit-score bonus applied to a warrior's home venue inside the weighted
+   *  draw — combined with HOME_VENUE_CHANCE this makes home venues dominant
+   *  (~90% of bookings) without being absolute. Scores run ~0–4 pre-shift. */
+  HOME_VENUE_FIT_BONUS: 3.0,
   /** Seed offset for deterministic tournament-bout venue selection inside
    *  resolveBout — keeps the arena draw off the combat RNG stream. */
   TOURNAMENT_BOUT_SEED_OFFSET: 7919,

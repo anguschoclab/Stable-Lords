@@ -300,8 +300,10 @@ describe('Week Advancement Integration', () => {
         current = await advanceDrained(current);
       }
 
-      // Graveyard should remain stable (only w1)
-      expect(current.graveyard).toHaveLength(1);
+      // The seeded death stays in the graveyard. (Ten advances cross the
+      // week-10 tournament rollover — its lethal bracket adds freelancer
+      // deaths even with no rival stables, so the graveyard is not static.)
+      expect(current.graveyard.some((g) => g.id === 'w1')).toBe(true);
 
       // Living warrior (w2) should still be in roster
       expect(current.roster.some((w) => w.id === 'w2')).toBe(true);
@@ -375,12 +377,12 @@ describe('Week Advancement Integration', () => {
     it('batch-advancing through a tournament week resolves every tier and clears tournament mode', async () => {
       let state = initialState;
 
-      // Advance into the Spring tournament week (13): tiers are generated but
-      // batch advancement never runs the interactive day ticks.
-      for (let i = 0; i < 12; i++) {
+      // Advance into the first seasonal tournament week (10): tiers are
+      // generated but batch advancement never runs the interactive day ticks.
+      for (let i = 0; i < 9; i++) {
         state = await advanceDrained(state);
       }
-      expect(state.week).toBe(13);
+      expect(state.week).toBe(10);
       expect(state.isTournamentWeek).toBe(true);
       expect(state.activeTournamentId).toBeTruthy();
       expect(state.tournaments.filter((t) => !t.completed).length).toBeGreaterThan(0);
@@ -388,7 +390,7 @@ describe('Week Advancement Integration', () => {
       // Rolling out of the week must resolve all generated brackets (not just
       // the headline tier) and release tournament mode.
       state = await advanceDrained(state);
-      expect(state.week).toBe(14);
+      expect(state.week).toBe(11);
       expect(state.isTournamentWeek).toBe(false);
       expect(state.activeTournamentId).toBeUndefined();
       expect(state.tournaments.length).toBeGreaterThan(0);

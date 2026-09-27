@@ -24,7 +24,11 @@ import type { WarriorId, BoutOfferId, PromoterId, StableId, TournamentId } from 
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { ARENA_TITLE, ARENA_COMMISSION_ID, CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { getAllArenas } from '@/data/arenas';
-import { displayWeek, isTournamentWeekOfYear } from '@/engine/core/absoluteWeek';
+import {
+  displayWeek,
+  isTournamentWeekOfYear,
+  boutOfferExpirationAbsoluteWeek,
+} from '@/engine/core/absoluteWeek';
 import { collectAllWarriors, collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { isActive, isFightReady, isDead, isRetired } from '@/engine/warriorStatus';
@@ -54,6 +58,16 @@ export interface ChampionshipDelta {
   /** Player-stable purse award from a Grand Championship win. */
   treasuryDelta: number;
 }
+
+/** Debug counters for autosim diagnostics. */
+export const CHAMPIONSHIP_DEBUG = {
+  offersCreated: 0,
+  signedSeen: 0,
+  rejectedSeen: 0,
+  expiredSeen: 0,
+  resultsResolved: 0,
+  defensesScheduled: 0,
+};
 
 export function createChampionshipDelta(): ChampionshipDelta {
   return {
@@ -466,6 +480,7 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
     if (summary.absoluteWeek != null && summary.absoluteWeek !== now) continue;
 
     const title = ensureTitle(state, delta, arenaId);
+    CHAMPIONSHIP_DEBUG.resultsResolved++;
     const champId = title.champion?.warriorId ?? null;
 
     if (summary.winner == null) {
@@ -539,12 +554,24 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
     if (!title) continue;
 
     if (offer.status === 'Signed') {
+      CHAMPIONSHIP_DEBUG.signedSeen++;
       if (title.refusals !== 0) ensureTitle(state, delta, arenaId).refusals = 0;
       continue;
     }
-    if (offer.status !== 'Rejected' && offer.status !== 'Expired') continue;
+    // Nothing ever writes 'Expired' — unsigned offers are silently pruned once
+    // their expiration passes. Because this sweep runs before that prune, a
+    // Proposed offer past its expiration IS an expiration: the bout window is
+    // already gone (bout phase precedes the world stage), so any late response
+    // cannot rescue it.
+    const lapsedUnsigned =
+      offer.status === 'Proposed' &&
+      offer.expirationWeek != null &&
+      boutOfferExpirationAbsoluteWeek(offer) <= now;
+    if (offer.status !== 'Rejected' && offer.status !== 'Expired' && !lapsedUnsigned) continue;
+    if (offer.status === 'Rejected') CHAMPIONSHIP_DEBUG.rejectedSeen++;
+    else CHAMPIONSHIP_DEBUG.expiredSeen++;
 
-    // Rejected → the explicit Declined party. Expired → whoever never
+    // Rejected → the explicit Declined party. Expired/lapsed → whoever never
     // accepted; the champion is checked first (silence = ducking).
     const declinerId =
       offer.status === 'Rejected'
@@ -677,8 +704,13 @@ export function scheduleTitleBouts(
   if (isTournamentWeekOfYear(state.week)) return;
 
   const now = state.absoluteWeek;
-  const targetWeek = displayWeek(now + 1);
-  const bookedNext = collectBookedWarriorIds(state, now + 1);
+  // Title offers use the same two-week horizon as ordinary producers: the bout
+  // is targeted at now+2 so the week between (now+1) is the response window —
+  // offers created for the immediately-next week can never be responded to in
+  // time, since bout resolution runs before the world stage that processes
+  // responses.
+  const targetWeek = displayWeek(now + 2);
+  const bookedNext = collectBookedWarriorIds(state, now + 2);
   const offers = effectiveOffers(state, delta);
   const liveTitleArenas = new Set(
     offers.filter((o) => o.titleArenaId && isOpenOffer(o)).map((o) => o.titleArenaId!)
@@ -708,6 +740,8 @@ export function scheduleTitleBouts(
         continue;
       }
       delta.newOffers.push(makeTitleOffer(rng, arenaId, reign.warriorId, contender.id, targetWeek, now));
+      CHAMPIONSHIP_DEBUG.offersCreated++;
+      CHAMPIONSHIP_DEBUG.defensesScheduled++;
       liveTitleArenas.add(arenaId);
       bookedNext.add(contender.id);
       bookedNext.add(reign.warriorId);
@@ -721,6 +755,7 @@ export function scheduleTitleBouts(
       }
       const [a, b] = ranked;
       delta.newOffers.push(makeTitleOffer(rng, arenaId, a!.warrior.id, b!.warrior.id, targetWeek, now));
+      CHAMPIONSHIP_DEBUG.offersCreated++;
       liveTitleArenas.add(arenaId);
       bookedNext.add(a!.warrior.id);
       bookedNext.add(b!.warrior.id);
@@ -743,7 +778,14 @@ function makeTitleOffer(
     promoterId: ARENA_COMMISSION_ID as PromoterId,
     warriorIds: [aId, bId],
     boutWeek: targetDisplayWeek,
-    expirationWeek: targetDisplayWeek,
+    // Expiry is the bout week itself, not the week before: offer impacts only
+    // land in state at world-stage resolution, so rival responses always come
+    // one tick later — during advance(now+1→now+2)'s world stage, whose prune
+    // drops unsigned offers with expiration <= absoluteWeek(now+1). Expiring at
+    // the bout week gives the offer exactly one full response window and is
+    // still caught by the refusal sweep (which runs before the prune) if
+    // nobody answers.
+    expirationWeek: displayWeek(now + 2),
     purse,
     hype: 50 + ARENA_TITLE.HYPE_BONUS,
     status: 'Proposed',

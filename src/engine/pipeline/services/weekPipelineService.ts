@@ -189,6 +189,27 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
     writes: ['trainers', 'hiringPool', 'rivalsUpdates'],
   },
   {
+    id: 'arenaChampionship',
+    stage: 'world',
+    // Before rivalStrategy: the refusal sweep must observe Rejected and
+    // lapsed-unsigned title offers before that pass's pruneBoutOffers removes
+    // them (stage impacts resolve against one snapshot — nothing here can be
+    // observed same-tick, so order only matters for next-tick reads).
+    after: ['rankings'],
+    run: (s, ctx) => runArenaChampionshipPass(s, ctx),
+    writes: [
+      'arenaChampions',
+      'grandChampions',
+      'boutOffers',
+      'newsletterItems',
+      'rosterUpdates',
+      'rivalsUpdates',
+      'fameDelta',
+      'popularityDelta',
+      'treasuryDelta',
+    ],
+  },
+  {
     id: 'rivalStrategy',
     stage: 'world',
     after: ['recruitment'], // draft pool must be refilled before the AI draft drains it
@@ -203,23 +224,6 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
       'day',
       'newsletterItems',
       'retired',
-    ],
-  },
-  {
-    id: 'arenaChampionship',
-    stage: 'world',
-    after: ['rankings'],
-    run: (s, ctx) => runArenaChampionshipPass(s, ctx),
-    writes: [
-      'arenaChampions',
-      'grandChampions',
-      'boutOffers',
-      'newsletterItems',
-      'rosterUpdates',
-      'rivalsUpdates',
-      'fameDelta',
-      'popularityDelta',
-      'treasuryDelta',
     ],
   },
   {

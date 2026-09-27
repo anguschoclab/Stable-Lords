@@ -113,6 +113,63 @@ describe('championship lifecycle through advanceWeek', () => {
     );
   });
 
+  it('a booked defense offer resolves into a title bout result', async () => {
+    let state = createFreshState('champ-defense-seed');
+    state.week = 15;
+    state.year = 1;
+    state.absoluteWeek = 15;
+
+    const champ = computed('w-champ', 'The Champion');
+    const cont = computed('w-cont', 'The Contender', {
+      career: {
+        wins: 4,
+        losses: 1,
+        kills: 0,
+        byArena: { [ARENA]: { wins: 4, losses: 1, kills: 0 } },
+      },
+    });
+    state.roster = [];
+    // Rival-owned champion + contender — the AI responds for both sides inside
+    // the pipeline (a player champion would wait on UI input).
+    state.rivals = [
+      {
+        ...(state.rivals?.[0] ?? {}),
+        id: 'r1',
+        owner: { id: 'r1', stableName: 'Rival Stab' },
+        roster: [champ, cont],
+      } as GameState['rivals'][number],
+    ];
+    state.arenaChampions = {
+      [ARENA]: {
+        champion: {
+          warriorId: 'w-champ' as WarriorId,
+          startedAbsoluteWeek: 1,
+          defenses: 0,
+          lastActivityWeek: 1, // long elapsed → books immediately
+        },
+        status: 'active',
+        history: [],
+        refusals: 0,
+        deferrals: 0,
+        noContenderStreak: 0,
+        declinedContenders: {},
+      },
+    };
+
+    let resolved = false;
+    for (let i = 0; i < 8 && !resolved; i++) {
+      state = await advanceWeek(state);
+      drainDeferredBoutLogs(state);
+      resolved = (state.arenaHistory ?? []).some((f) => f.titleArenaId === ARENA);
+    }
+
+    expect(resolved).toBe(true);
+    const title = state.arenaChampions![ARENA]!;
+    expect(
+      title.champion!.defenses + title.history.length
+    ).toBeGreaterThanOrEqual(1);
+  });
+
   it('year boundary: the Grand Championship emits at 52, resolves, and records its winner', async () => {
     let state = createFreshState('grand-champ-seed');
     state.week = 51;

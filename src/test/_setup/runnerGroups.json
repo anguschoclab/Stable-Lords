@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T13:54:04.973Z",
+  "generatedAt": "2026-09-27T14:48:52.934Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -182,6 +182,7 @@
     "src/test/hooks/useWarriorLeaderboard.test.ts",
     "src/test/hooks/useWeekExecution.test.ts",
     "src/test/integration/autosim.slow.test.ts",
+    "src/test/integration/autosimChampionship.slow.test.ts",
     "src/test/lib/AudioManager.test.ts",
     "src/test/lib/a11yPrefs.test.ts",
     "src/test/lib/contentPacks.test.ts",

@@ -445,6 +445,7 @@ export const AIIntentSchema = z.enum([
   'AGGRESSIVE_EXPANSION',
   'ROSTER_DIVERSITY',
   'TOURNAMENT_CAMPAIGN',
+  'CROWN_CAMPAIGN',
 ]);
 
 /**

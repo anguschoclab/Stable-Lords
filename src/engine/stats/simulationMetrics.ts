@@ -1,5 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import { TRAITS } from '@/engine/traits';
+import { owningStableOf } from '@/engine/championship/arenaChampionship';
 
 /**
  * Defines the shape of sim pulse.
@@ -35,6 +36,16 @@ export interface SimPulse {
   avgDossierCoverage: number;
   /** Share of standing offers carrying a counter purse bump. */
   counterOfferRate: number;
+  // ─── Championship metrics (Phase-2 megaplan Stage A baselines) ───
+  /** Arena crowns currently held by rival stables vs the player. */
+  aiCrownsHeld: number;
+  playerCrownsHeld: number;
+  /** Open title offers (Proposed or Signed) across all arenas. */
+  liveTitleOffers: number;
+  /** All-time reign endings by reason, summed across arena title histories. */
+  reignEndings: Record<string, number>;
+  /** Grand Champions crowned so far (one per completed Champions tournament). */
+  grandChampionsCount: number;
 }
 
 /**
@@ -112,6 +123,24 @@ export function collectPulse(state: GameState): SimPulse {
     }
   }
 
+  // ─── Championship metrics ───
+  let aiCrownsHeld = 0;
+  let playerCrownsHeld = 0;
+  const reignEndings: Record<string, number> = {};
+  for (const title of Object.values(state.arenaChampions ?? {})) {
+    const champId = title?.champion?.warriorId;
+    if (champId) {
+      if (owningStableOf(state, champId)?.isPlayer) playerCrownsHeld++;
+      else aiCrownsHeld++;
+    }
+    for (const r of title?.history ?? []) {
+      reignEndings[r.endReason] = (reignEndings[r.endReason] ?? 0) + 1;
+    }
+  }
+  const liveTitleOffers = Object.values(state.boutOffers ?? {}).filter(
+    (o) => o?.titleArenaId && (o.status === 'Proposed' || o.status === 'Signed')
+  ).length;
+
   return {
     week: state.week,
     playerTreasury: state.treasury,
@@ -133,6 +162,11 @@ export function collectPulse(state: GameState): SimPulse {
     avgDossierCoverage:
       activeRivals.length > 0 ? Math.round((totalDossiers / activeRivals.length) * 100) / 100 : 0,
     counterOfferRate: offerCount > 0 ? counteredCount / offerCount : 0,
+    aiCrownsHeld,
+    playerCrownsHeld,
+    liveTitleOffers,
+    reignEndings,
+    grandChampionsCount: state.grandChampions?.length ?? 0,
   };
 }
 

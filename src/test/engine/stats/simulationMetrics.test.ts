@@ -20,6 +20,11 @@ const ZERO_AI_FIELDS = {
   vendettaCount: 0,
   avgDossierCoverage: 0,
   counterOfferRate: 0,
+  aiCrownsHeld: 0,
+  playerCrownsHeld: 0,
+  liveTitleOffers: 0,
+  reignEndings: {},
+  grandChampionsCount: 0,
 } as const;
 
 describe('simulationMetrics', () => {

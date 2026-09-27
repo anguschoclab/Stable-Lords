@@ -127,6 +127,7 @@ export const LedgerEntrySchema = z.object({
 export const AIStrategySchema = z.object({
   intent: AIIntentSchema,
   targetStableId: z.string().optional(),
+  targetArenaId: z.string().optional(),
   planWeeksRemaining: z.number(),
   reason: z.string().optional(),
 });
@@ -143,7 +144,15 @@ export const AIEventSchema = z.object({
   cause: z
     .union([
       AIIntentSchema,
-      z.enum(['BOUT_OUTCOME', 'INTEL_UPDATE', 'MAINTENANCE', 'TOURNAMENT_PREP']),
+      z.enum([
+        'BOUT_OUTCOME',
+        'INTEL_UPDATE',
+        'MAINTENANCE',
+        'TOURNAMENT_PREP',
+        'CROWN_DEFENSE',
+        'CROWN_RELINQUISH',
+        'CROWN_PREP',
+      ]),
     ])
     .optional(),
 });
@@ -189,6 +198,15 @@ export const AIAgentMemorySchema = z.object({
   lastSeasonRecord: SeasonRecordSchema.optional(),
   opponentDossiers: z.record(z.string(), OpponentDossierSchema),
   lastLossFactors: z.array(z.string()).max(3).optional(),
+  crownAssessment: z
+    .object({
+      arenaId: z.string(),
+      warriorId: z.string(),
+      score: z.number(),
+      reason: z.string(),
+    })
+    .optional(),
+  pendingRelinquish: z.string().optional(),
 });
 
 /**

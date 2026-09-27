@@ -99,3 +99,14 @@ export function isSeasonalTournamentPrepWeek(week: number): boolean {
 export function isTournamentPrepWeek(week: number): boolean {
   return weeksUntilNextSeasonalTournament(week) <= 3;
 }
+
+/**
+ * Display weeks until the champions-only Grand Championship (week 52).
+ * 1-based count: returns 0 during week 52 itself, 51 in week 1 — the bracket
+ * is once per year, so the count never wraps past one full season.
+ */
+export function weeksUntilChampionsTournament(week: number): number {
+  // displayWeek always lands in 1..52 and the bracket sits on the last week
+  // of the year, so the count is a direct subtraction — never wraps.
+  return CHAMPIONS_TOURNAMENT_WEEK - displayWeek(week);
+}

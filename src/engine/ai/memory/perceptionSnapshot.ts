@@ -8,6 +8,7 @@ import type { StableId, WarriorId } from '@/types/shared.types';
 import { computeMetaDrift, type StyleMeta } from '@/engine/metaDrift';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { isActive } from '@/engine/warriorStatus';
+import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 
 /** The shared read-only world view consumed by every rival's agent context. */
 export interface PerceptionSnapshot {
@@ -25,6 +26,9 @@ export interface PerceptionSnapshot {
   championByArena: Map<string, WarriorId>;
   /** champion warriorId → arenaIds held (reverse index of championByArena). */
   arenasHeldByChampion: Map<WarriorId, string[]>;
+  /** arenaId → top-N eligible contender ids (rankContenders order), built
+   *  once per tick so crown campaigning never re-ranks ladders per rival. */
+  contenderIndexByArena: Map<string, WarriorId[]>;
   weather: GameState['weather'];
   crowdMood: GameState['crowdMood'];
   recruitPoolSize: number;
@@ -92,6 +96,7 @@ export function buildPerceptionSnapshot(state: GameState): PerceptionSnapshot {
     foughtThisWeek,
     championByArena,
     arenasHeldByChampion,
+    contenderIndexByArena: buildContenderIndex(state),
     weather: state.weather,
     crowdMood: state.crowdMood,
     recruitPoolSize: (state.recruitPool ?? []).length,

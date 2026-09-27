@@ -16,7 +16,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { BoutBid } from './types';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
-import { displayWeek } from '@/engine/core/absoluteWeek';
+import { displayWeek, boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { computeRivalReputation } from '@/engine/stableReputation';
 import { clamp } from '@/utils/math';
 import { isActive, isBookable } from '@/engine/warriorStatus';
@@ -68,10 +68,22 @@ export function generateBoutBids(
 ): { bids: BoutBid[]; updatedRival: RivalStableData } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const assignedIds = new Set((rival.trainingAssignments ?? []).map((a) => a.warriorId));
+  // Warriors already committed to a signed upcoming bout don't re-enter the
+  // pool — a signed title shot (or any booked fight) shouldn't double-book.
+  const signedIds = new Set<string>();
+  if (state) {
+    const now = state.absoluteWeek ?? state.week;
+    for (const offer of Object.values(state.boutOffers ?? {})) {
+      if (offer.status !== 'Signed') continue;
+      if (boutOfferAbsoluteWeek(offer) <= now) continue;
+      for (const wId of offer.warriorIds) signedIds.add(wId as string);
+    }
+  }
   const activeRoster = rival.roster.filter(
     (w) =>
       isActive(w) &&
       !assignedIds.has(w.id) &&
+      !signedIds.has(w.id) &&
       // Booking-locked arena champions only fight title bouts.
       !(state && isChampionBookingLocked(state, w.id))
   );
@@ -159,6 +171,19 @@ export function generateBoutBids(
       });
     } else if (intent === 'VENDETTA') {
       continue;
+    } else if (
+      intent === 'CROWN_CAMPAIGN' &&
+      rival.strategy?.targetArenaId &&
+      rival.agentMemory?.crownAssessment?.warriorId === warrior.id
+    ) {
+      // The campaign warrior's ordinary bookings are pinned to the target
+      // arena — every venue bout there feeds contender ranking.
+      bids.push({
+        proposingWarriorId: warrior.id,
+        arenaId: rival.strategy.targetArenaId,
+        priority: Math.max(1, 9 + weatherModifier + moodModifier + matchupModifier),
+        description: `Crown campaign — climbing the ladder at ${rival.strategy.targetArenaId}.`,
+      });
     } else if (warriorIsChallenged && state && !warriorIsAvoided) {
       // The player publicly challenged this warrior — the stable answers.
       bids.push({
@@ -372,6 +397,7 @@ export function convertBidsToOffers(
       }
     }
     const arenaId =
+      bid.arenaId ??
       contenderVenue ??
       selectArenaForMatchup(proposer, opponent, rng, {
         weather: state.weather,

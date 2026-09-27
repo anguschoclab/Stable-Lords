@@ -7,6 +7,7 @@ import { processAIStable } from '@/engine/ai/stableManager';
 import { generateRivalStables } from '@/engine/rivals';
 import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
+import { processCrownPosture } from '@/engine/ai/workers/crownWorker';
 import { SeededRNGService } from '@/utils/random';
 import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 
@@ -153,8 +154,14 @@ export function processRivalStable(
     );
   gazetteItems.push(...lifecycleGazette);
 
+  // Crown posture: refresh the title assessment (read by next tick's intent
+  // pick), flag relinquishments, and write rest markers BEFORE processAIStable
+  // so the roster worker sees them and skips training the protected warriors.
+  const crown = processCrownPosture(rivalWithLifecycle, state, perception);
+  gazetteItems.push(...crown.gazetteItems);
+
   const { updatedRival: processedRival, isBankrupt, gazetteItems: stableGazette } =
-    processAIStable(rivalWithLifecycle, state, perception);
+    processAIStable(crown.updatedRival, state, perception);
   gazetteItems.push(...stableGazette);
 
   // D.5 — Intel worker: weekly seeded dossier refresh before planning.

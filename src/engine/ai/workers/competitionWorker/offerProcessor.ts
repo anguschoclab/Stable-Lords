@@ -92,13 +92,15 @@ export function processAllRivalsBoutOffers(
         const opponentId = offer.warriorIds.find((id) => id !== wId);
         const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
 
-        // Call verifyBoutAcceptance first for weather skepticism
+        // Call verifyBoutAcceptance first for weather skepticism — title
+        // offers are flagged so crown obligations bypass the soft gates.
         if (opponent) {
           const acceptance = boutAcceptance.verifyBoutAcceptance(
             owningRival,
             rivalWarrior,
             opponent,
-            state.weather as WeatherType
+            state.weather as WeatherType,
+            { isTitleBout: !!trackedOffer.titleArenaId }
           );
           if (!acceptance.accepted) {
             const impact = respondToBoutOffer(
@@ -120,7 +122,8 @@ export function processAllRivalsBoutOffers(
           rivalWarrior,
           state.absoluteWeek,
           state.weather as WeatherType,
-          opponent
+          opponent,
+          state
         );
 
         if (response === 'Accepted') {
@@ -197,7 +200,8 @@ export function processAllRivalsBoutOffers(
           pendingWarrior,
           state.absoluteWeek,
           state.weather as WeatherType,
-          opponent
+          opponent,
+          state
         );
         // No second counter round — an already-countered offer is take it or leave it.
         final = verdict === 'Declined' || verdict === 'Countered' ? 'Declined' : 'Accepted';

@@ -8,6 +8,7 @@ import {
   ShieldAlert,
   Coins,
   Users,
+  Crown,
   LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -76,6 +77,12 @@ const INTENT_METRICS: Record<
     icon: Target,
     color: 'text-arena-gold',
     description: 'Peaking the roster for the season-ending tournament.',
+  },
+  CROWN_CAMPAIGN: {
+    label: 'Crown Campaign',
+    icon: Crown,
+    color: 'text-arena-gold',
+    description: 'Climbing an arena ladder — the stable is hunting a title.',
   },
 };
 

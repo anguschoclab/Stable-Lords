@@ -109,6 +109,18 @@ export function pickWeeklyIntent(
     return 'TOURNAMENT_CAMPAIGN';
   }
 
+  // 2.6. CROWN_CAMPAIGN: the crown worker's persisted assessment has found a
+  // winnable throne. A crown already claimed by the campaign warrior can't
+  // retrigger (the assessment refreshes after this pick — one tick of lag).
+  const crownTarget = rival.agentMemory?.crownAssessment;
+  if (
+    crownTarget &&
+    rival.treasury >= 400 &&
+    state.arenaChampions?.[crownTarget.arenaId]?.champion?.warriorId !== crownTarget.warriorId
+  ) {
+    return 'CROWN_CAMPAIGN';
+  }
+
   // 3. WEALTH_ACCUMULATION: Thriving stables with full rosters hoard cash
   if (
     rival.treasury > 1500 &&
@@ -210,6 +222,12 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
     if (!hasGrudge && !targetIsPlayer && !targetExists) return true;
   }
 
+  // Skepticism Tier 2.7: a crown campaign ends when the assessment lapses,
+  // the campaign warrior is gone, or the throne is already theirs.
+  if (strategy.intent === 'CROWN_CAMPAIGN' && !crownCampaignApplies(rival, state)) {
+    return true;
+  }
+
   // Skepticism Tier 3: Meta Hostility (Methodical/Tactician agents only)
   if (personality === 'Methodical' || personality === 'Tactician') {
     const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
@@ -240,6 +258,22 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 }
 
 /**
+ * CROWN_CAMPAIGN's living condition — shared by the skepticism tier and the
+ * hysteresis check so both apply identical "still campaigning" semantics.
+ */
+function crownCampaignApplies(rival: RivalStableData, state: GameState): boolean {
+  const target = rival.agentMemory?.crownAssessment;
+  if (!target || rival.treasury <= 300) return false;
+  const campaignWarrior = rival.roster.find((w) => w.id === target.warriorId);
+  if (!campaignWarrior || !isActive(campaignWarrior)) return false;
+  // The throne is already theirs — campaign complete.
+  if (state.arenaChampions?.[target.arenaId]?.champion?.warriorId === target.warriorId) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Human-readable rationale per intent — surfaced in AgentReasoningWidget.
  */
 const INTENT_REASONS: Record<AIIntent, string> = {
@@ -252,6 +286,7 @@ const INTENT_REASONS: Record<AIIntent, string> = {
   AGGRESSIVE_EXPANSION: 'Dominant position — pressing for prestige bouts',
   ROSTER_DIVERSITY: 'Style concentration is losing to the current meta',
   TOURNAMENT_CAMPAIGN: 'Season-ending tournament approaches — peaking the roster',
+  CROWN_CAMPAIGN: 'A throne looks winnable — the stable climbs the arena ladder',
 };
 
 /**
@@ -297,6 +332,8 @@ export function intentStillApplies(
       return rival.treasury > 1100;
     case 'TOURNAMENT_CAMPAIGN':
       return state.week >= 9 && state.week <= 13 && activeCount >= 3;
+    case 'CROWN_CAMPAIGN':
+      return crownCampaignApplies(rival, state);
     case 'ROSTER_DIVERSITY': {
       const styles = activeRoster.map((w) => w.style);
       if (styles.length < 4) return false;
@@ -359,7 +396,13 @@ export function updateAIStrategy(
 
     // Determine the duration of this intent
     const duration =
-      intent === 'RECOVERY' ? 2 : intent === 'VENDETTA' ? 6 : intent === 'EXPANSION' ? 3 : 4;
+      intent === 'RECOVERY'
+        ? 2
+        : intent === 'VENDETTA' || intent === 'CROWN_CAMPAIGN'
+          ? 6
+          : intent === 'EXPANSION'
+            ? 3
+            : 4;
 
     let targetStableId = undefined;
     if (intent === 'VENDETTA') {
@@ -385,13 +428,17 @@ export function updateAIStrategy(
       }
     }
 
+    const crownTarget = rival.agentMemory?.crownAssessment;
     return {
       intent,
       planWeeksRemaining: duration,
       targetStableId,
+      targetArenaId: intent === 'CROWN_CAMPAIGN' ? crownTarget?.arenaId : undefined,
       reason: holdCourse
         ? `Holding course — ${INTENT_REASONS[intent].toLowerCase()}`
-        : INTENT_REASONS[intent],
+        : intent === 'CROWN_CAMPAIGN' && crownTarget
+          ? `${INTENT_REASONS[intent]} — ${crownTarget.reason}.`
+          : INTENT_REASONS[intent],
     };
   }
 

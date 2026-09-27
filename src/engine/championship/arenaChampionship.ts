@@ -292,6 +292,22 @@ export function contenderRankAtArena(
   return idx === -1 ? null : idx + 1;
 }
 
+/**
+ * Per-arena top-N eligible contender ids — one pass over every championship
+ * arena, built once per tick for the shared perception snapshot so rival AI
+ * never re-ranks the ladder per stable.
+ */
+export function buildContenderIndex(state: GameState, depth = 5): Map<string, WarriorId[]> {
+  const index = new Map<string, WarriorId[]>();
+  for (const arena of getAllArenas()) {
+    if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(arena.id)) continue;
+    const ranked = rankContenders(state, arena.id, undefined, { includeUnready: true });
+    if (ranked.length === 0) continue;
+    index.set(arena.id, ranked.slice(0, depth).map((r) => r.warrior.id));
+  }
+  return index;
+}
+
 // ─── Reign transitions ──────────────────────────────────────────────────────
 
 function pushHistory(title: ArenaTitle, record: ArenaReignRecord): void {
@@ -867,6 +883,23 @@ export function relinquishCrown(
   const name = findWarriorById(state, champId)?.name ?? champId;
   endReign(state, t, 'relinquished', state.absoluteWeek);
   news(delta, state.week, `Crown Relinquished`, [`${name} gives up the crown.`], `relinq-${arenaId}-${state.absoluteWeek}`);
+}
+
+/**
+ * Consume rival relinquish declarations (`agentMemory.pendingRelinquish`).
+ * The crown worker only flags intent; the actual vacancy goes through the
+ * same `relinquishCrown` path a player abdication uses, inside the pass's
+ * championship delta. Markers clear themselves next tick — the crown worker
+ * drops them once the stable no longer holds that throne.
+ */
+export function processPendingRelinquishments(state: GameState, delta: ChampionshipDelta): void {
+  for (const rival of state.rivals ?? []) {
+    const pending = rival.agentMemory?.pendingRelinquish;
+    if (!pending) continue;
+    const champId = titleOf(state, delta, pending)?.champion?.warriorId;
+    if (!champId || !rival.roster.some((w) => w.id === champId)) continue;
+    relinquishCrown(state, delta, pending);
+  }
 }
 
 // Grand Championship field selection, bracket emission, and winner recording

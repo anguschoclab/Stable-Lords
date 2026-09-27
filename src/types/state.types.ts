@@ -307,7 +307,8 @@ export type AIIntent =
   | 'WEALTH_ACCUMULATION'
   | 'AGGRESSIVE_EXPANSION'
   | 'ROSTER_DIVERSITY'
-  | 'TOURNAMENT_CAMPAIGN';
+  | 'TOURNAMENT_CAMPAIGN'
+  | 'CROWN_CAMPAIGN';
 
 /**
  * Defines the shape of ai strategy.
@@ -315,6 +316,8 @@ export type AIIntent =
 export interface AIStrategy {
   intent: AIIntent;
   targetStableId?: StableId;
+  /** Arena the stable is campaigning for under CROWN_CAMPAIGN. */
+  targetArenaId?: string;
   planWeeksRemaining: number;
   /** Human-readable explanation of why this intent was chosen (UI-facing). */
   reason?: string;
@@ -332,7 +335,10 @@ export type AIEventCause =
   | 'BOUT_OUTCOME'
   | 'INTEL_UPDATE'
   | 'MAINTENANCE'
-  | 'TOURNAMENT_PREP';
+  | 'TOURNAMENT_PREP'
+  | 'CROWN_DEFENSE'
+  | 'CROWN_RELINQUISH'
+  | 'CROWN_PREP';
 
 /**
  * Defines the shape of ai event.
@@ -364,6 +370,18 @@ export interface OpponentDossier {
 }
 
 /**
+ * A rival stable's chosen crown target: which warrior is climbing which
+ * arena's title ladder, and why. Refreshed each tick by the crown worker;
+ * consumed one tick later by the intent engine (memory is allowed to lag).
+ */
+export interface CrownAssessment {
+  arenaId: string;
+  warriorId: WarriorId;
+  score: number;
+  reason: string;
+}
+
+/**
  * Defines the shape of ai agent memory.
  */
 export interface AIAgentMemory {
@@ -388,6 +406,11 @@ export interface AIAgentMemory {
   opponentDossiers: Record<string, OpponentDossier>;
   /** Top reasons recent bouts were lost, most recent first, capped at 3. */
   lastLossFactors?: string[];
+  /** Current crown target — the stable's best (warrior, arena) campaign. */
+  crownAssessment?: CrownAssessment;
+  /** Arena id whose crown the stable intends to vacate — consumed by the
+   *  championship pass (real relinquish happens through its delta). */
+  pendingRelinquish?: string;
 }
 
 /**

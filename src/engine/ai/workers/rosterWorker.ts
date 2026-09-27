@@ -67,10 +67,18 @@ export function processRoster(
   // ⚡ TSA: Prioritize Champion or high-fame units for training.
   // Injured warriors are excluded — they are already in the recovery path above
   // and training them would stack the injury penalty from trainingGains.ts.
+  // Warriors on a 'recovery' assignment (tournament prep, crown posture) rest —
+  // no drills means no training-injury roll before a booked engagement.
+  const restingIds = new Set(
+    (updatedRival.trainingAssignments ?? [])
+      .filter((a) => a.type === 'recovery')
+      .map((a) => a.warriorId)
+  );
   const trainingLimit = updatedRival.treasury > 500 ? 3 : 1;
   const { champions, nonChampions } = updatedRival.roster.reduce(
     (acc, w) => {
       if (!isActive(w) || (w.injuries ?? []).length > 0) return acc;
+      if (restingIds.has(w.id)) return acc;
       if (w.champion || w.isStarInvestment) acc.champions.push(w);
       else acc.nonChampions.push(w);
       return acc;

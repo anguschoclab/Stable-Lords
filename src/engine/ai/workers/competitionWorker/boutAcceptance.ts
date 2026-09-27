@@ -1,22 +1,35 @@
-import type { Warrior, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
+import type {
+  Warrior,
+  RivalStableData,
+  WeatherType,
+  BoutOffer,
+  GameState,
+} from '@/types/state.types';
 import { weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
 import {
   acceptanceWeatherBlock,
   offerWeatherDecline,
 } from '@/engine/ai/weatherSuitability';
+import { ARENA_TITLE } from '@/constants/arena';
 import { COUNTERED_PURSE_CONDITION } from '@/engine/bout/mutations/contractMutations';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
 
 /**
- *
+ * Pre-evaluation sanity gate. Title bouts bypass the soft refusal gates
+ * (RECOVERY risk aversion, fame gaps) — a crown obligation can't be ducked
+ * through a path that never sees `titleArenaId`; refusal economics live in
+ * evaluateBoutOffer's reign-management branch where the strip count is
+ * visible. Weather hazards still block — a blizzard postpones anyone.
  */
 export function verifyBoutAcceptance(
   rival: RivalStableData,
   warrior: Warrior,
   opponent: Warrior,
-  weather: WeatherType = 'Clear'
+  weather: WeatherType = 'Clear',
+  opts?: { isTitleBout?: boolean }
 ): { accepted: boolean; reason?: string } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
+  const isTitleBout = opts?.isTitleBout === true;
 
   // Weather Skepticism — consolidated gate (G16)
   const weatherReason = acceptanceWeatherBlock(warrior, weather);
@@ -25,7 +38,7 @@ export function verifyBoutAcceptance(
   }
 
   // Skeptical Check: RECOVERY agents refuse fights with "Killers"
-  if (intent === 'RECOVERY') {
+  if (!isTitleBout && intent === 'RECOVERY') {
     if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
       return { accepted: false, reason: 'Too risky for recovery phase.' };
     }
@@ -43,7 +56,7 @@ export function verifyBoutAcceptance(
   }
 
   // Default: Accept unless it's a massive fame gap
-  if ((opponent.fame || 0) > (warrior.fame || 0) + 300) {
+  if (!isTitleBout && (opponent.fame || 0) > (warrior.fame || 0) + 300) {
     return { accepted: false, reason: 'Opponent outclasses us significantly.' };
   }
 
@@ -69,7 +82,8 @@ export function evaluateBoutOffer(
   warrior: Warrior,
   currentWeek: number,
   weather: WeatherType = 'Clear',
-  opponent?: Warrior
+  opponent?: Warrior,
+  state?: GameState
 ): BoutEvaluation {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
 
@@ -88,27 +102,54 @@ export function evaluateBoutOffer(
     return 'Declined';
   }
 
+  // ── Title bouts ──
+  // The Arena Commission doesn't negotiate: a crown shot outweighs any purse,
+  // so the counter/fame-floor logic below is skipped entirely. This branch
+  // runs BEFORE the RECOVERY refusal so reign obligations are decided by
+  // title economics (strip risk, defense health floors) rather than ordinary
+  // bout risk aversion — the unified gate fixes the old double-gate where a
+  // RECOVERY champion could quietly refuse defenses into a strip.
+  if (offer.titleArenaId) {
+    const personality = rival.owner.personality;
+    const title = state?.arenaChampions?.[offer.titleArenaId];
+    const isChampion = title?.champion?.warriorId === warrior.id;
+
+    if (isChampion && title) {
+      // Declining counts toward stripping — when the next refusal would cost
+      // the crown, the champion fights hurt rather than abdicate by accident.
+      const wouldStrip = title.refusals + 1 >= ARENA_TITLE.REFUSALS_TO_STRIP;
+      if (!wouldStrip && personality !== 'Aggressive') {
+        const hp = warrior.derivedStats?.hp ?? 100;
+        const fatigue = warrior.fatigue ?? 0;
+        if (hp < 45 || fatigue >= 85) return 'Declined';
+        if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) return 'Declined';
+      }
+      return 'Accepted';
+    }
+
+    // Challenger side — a declined shot costs only the challenger cooldown,
+    // so a known killer champion is a legitimate pass for calculating stables.
+    if (
+      opponent &&
+      personality !== 'Aggressive' &&
+      (opponent.career?.kills ?? 0) >= 3 &&
+      (warrior.career?.kills ?? 0) === 0
+    ) {
+      return 'Declined';
+    }
+    if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+      const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+      if (edge <= -2) return 'Declined';
+    }
+    return 'Accepted';
+  }
+
   // RECOVERY risk refusal — killers and severe mismatches are never accepted,
   // even when the treasury is empty.
   if (intent === 'RECOVERY' && opponent) {
     if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
       return 'Declined';
     }
-  }
-
-  // ── Title bouts ──
-  // The Arena Commission doesn't negotiate: a crown shot outweighs any purse,
-  // so the counter/fame-floor logic below is skipped entirely. Hard gates
-  // above still apply — a blocking injury declines (the pass treats it as a
-  // medical postponement), and a severe style counter can still draw a
-  // refusal from calculating stables (feeding the strip machinery).
-  if (offer.titleArenaId) {
-    const personality = rival.owner.personality;
-    if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
-      const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-      if (edge <= -2) return 'Declined';
-    }
-    return 'Accepted';
   }
 
   // ── Desperation Gate: critically low treasury accepts anything survivable ──

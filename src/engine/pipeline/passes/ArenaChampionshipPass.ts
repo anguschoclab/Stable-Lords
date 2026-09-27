@@ -20,6 +20,7 @@ import {
   resolveTitleBoutResults,
   sweepTitleRefusals,
   applyLifecycleTransitions,
+  processPendingRelinquishments,
   scheduleTitleBouts,
   applyChampionPerks,
 } from '@/engine/championship/arenaChampionship';
@@ -36,6 +37,7 @@ export function runArenaChampionshipPass(state: GameState, ctx: WeekPipelineCont
   resolveTitleBoutResults(state, delta);
   sweepTitleRefusals(state, delta);
   applyLifecycleTransitions(state, delta);
+  processPendingRelinquishments(state, delta);
   scheduleTitleBouts(state, delta, ctx.rootRng);
   applyChampionPerks(state, delta);
   recordGrandChampions(state, delta);

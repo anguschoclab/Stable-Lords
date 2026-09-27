@@ -221,6 +221,7 @@ export const AI_INTENTS = [
   'AGGRESSIVE_EXPANSION',
   'ROSTER_DIVERSITY',
   'TOURNAMENT_CAMPAIGN',
+  'CROWN_CAMPAIGN',
 ] as const;
 
 export const ANNUAL_AWARD_TYPES = [

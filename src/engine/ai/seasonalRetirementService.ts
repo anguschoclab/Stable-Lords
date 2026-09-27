@@ -16,6 +16,32 @@ interface LegacyCandidate {
   fightingStyle?: import('@/types/shared.types').FightingStyle;
 }
 
+/** Each permanent injury adds this many years of effective aging pressure. */
+const PERMANENT_INJURY_AGE_PRESSURE = 5;
+/** Reigning champions stop deferring at this effective age — old enough that
+ *  even a crown can't hold off the end for long. */
+const CHAMPION_DEFERRAL_AGE = 38;
+
+/**
+ * Probability a rival warrior retires at the seasonal churn.
+ * Career-aware rather than pure age:
+ *  - permanent injuries count as accelerated aging (broken bodies exit early)
+ *  - a reigning champion defers retirement while defending the crown —
+ *    voluntary exits flow through the relinquish path instead; deferral
+ *    fades to a halved chance once the champion is genuinely old.
+ */
+export function retireChanceFor(w: Warrior, isChampion: boolean): number {
+  const age = w.age ?? 20;
+  const permanent = (w.injuries ?? []).filter(
+    (i) => i.permanent || i.severity === 'Permanent'
+  ).length;
+  const effectiveAge = age + permanent * PERMANENT_INJURY_AGE_PRESSURE;
+  const base = effectiveAge >= 40 ? 1 : effectiveAge >= 30 ? (effectiveAge - 30) * 0.05 : 0;
+  if (!isChampion) return base;
+  if (effectiveAge < CHAMPION_DEFERRAL_AGE) return 0;
+  return base * 0.5;
+}
+
 /**
  * Seasonal retirement service.
  */
@@ -31,12 +57,18 @@ export const SeasonalRetirementService = {
     const updatedState = { ...state };
     const legacyCandidates: LegacyCandidate[] = [];
 
+    // Reigning champions defer retirement — the crown keeps them fighting.
+    const championIds = new Set(
+      Object.values(state.arenaChampions ?? {})
+        .map((t) => t.champion?.warriorId)
+        .filter((id): id is NonNullable<typeof id> => id != null)
+    );
+
     updatedState.rivals = (updatedState.rivals || []).map((rival) => {
       const updatedRoster = rival.roster.map((w) => {
         if (!isActive(w)) return w;
 
-        const age = w.age ?? 20;
-        const retireChance = age >= 40 ? 1 : age >= 30 ? (age - 30) * 0.05 : 0;
+        const retireChance = retireChanceFor(w, championIds.has(w.id));
 
         if (rng.next() < retireChance) {
           // Check if warrior could become a legacy founder

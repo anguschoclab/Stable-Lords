@@ -11,7 +11,11 @@ import {
   offerWeatherDecline,
 } from '@/engine/ai/weatherSuitability';
 import { ARENA_TITLE } from '@/constants/arena';
-import { COUNTERED_PURSE_CONDITION } from '@/engine/bout/mutations/contractMutations';
+import {
+  COUNTERED_PURSE_CONDITION,
+  COUNTERED_VENUE_CONDITION,
+} from '@/engine/bout/mutations/contractMutations';
+import { contenderRankAtArena } from '@/engine/championship/arenaChampionship';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
 
 /**
@@ -67,8 +71,69 @@ export function verifyBoutAcceptance(
 const BLOCKING_INJURY_SEVERITIES = ['Moderate', 'Severe', 'Critical', 'Permanent'] as const;
 type BlockingSeverity = (typeof BLOCKING_INJURY_SEVERITIES)[number];
 
-/** The rival's verdict on a bout offer — 'Countered' is a one-shot purse renegotiation. */
-export type BoutEvaluation = 'Accepted' | 'Declined' | 'Countered';
+/** The rival's verdict on a bout offer — the two counters are each one-shot
+ * renegotiations (purse or venue, never chained). */
+export type BoutEvaluation = 'Accepted' | 'Declined' | 'Countered' | 'CounteredVenue';
+
+/** Minimum venue bouts before a warrior's record there counts as evidence. */
+const VENUE_SAMPLE_BOUTS = 3;
+/** Losing-rate ceiling for "bad venue" aversion. */
+const BAD_VENUE_WIN_RATE = 0.4;
+/** Win-rate floor for the arena a warrior counters toward. */
+const GOOD_VENUE_WIN_RATE = 0.6;
+
+/**
+ * The arena a warrior would counter a Proposed offer toward, or undefined.
+ * Two motives, checked in order:
+ *  - CROWN_BID ladder pull — the warrior campaigns for a crown and is ranked
+ *    at the target arena, so off-ladder bouts get dragged onto the ladder.
+ *  - Bad-venue aversion — a losing record at the offered arena (≥3 bouts,
+ *    <40% wins) with a clearly better venue on the books.
+ * Title offers and already-countered offers never yield a target.
+ */
+export function venueCounterTarget(
+  offer: BoutOffer,
+  warrior: Warrior,
+  rival: RivalStableData,
+  state?: GameState
+): string | undefined {
+  if (!offer.arenaId || offer.titleArenaId) return undefined;
+  const conds = offer.conditions ?? [];
+  if (conds.includes(COUNTERED_VENUE_CONDITION) || conds.includes(COUNTERED_PURSE_CONDITION)) {
+    return undefined;
+  }
+
+  const ladder =
+    warrior.campaignFocus === 'CROWN_BID' ? rival.strategy?.targetArenaId : undefined;
+  if (
+    ladder &&
+    ladder !== offer.arenaId &&
+    state &&
+    contenderRankAtArena(state, ladder, warrior.id) != null
+  ) {
+    return ladder;
+  }
+
+  const here = warrior.career?.byArena?.[offer.arenaId];
+  if (!here) return undefined;
+  const hereBouts = here.wins + here.losses;
+  if (hereBouts < VENUE_SAMPLE_BOUTS || here.wins / hereBouts >= BAD_VENUE_WIN_RATE) {
+    return undefined;
+  }
+  let bestArena: string | undefined;
+  let bestRate = 0;
+  for (const [arenaId, rec] of Object.entries(warrior.career?.byArena ?? {})) {
+    if (arenaId === offer.arenaId) continue;
+    const bouts = rec.wins + rec.losses;
+    if (bouts < VENUE_SAMPLE_BOUTS) continue;
+    const rate = rec.wins / bouts;
+    if (rate > bestRate) {
+      bestRate = rate;
+      bestArena = arenaId;
+    }
+  }
+  return bestRate >= GOOD_VENUE_WIN_RATE ? bestArena : undefined;
+}
 
 /**
  * Evaluate a bout offer for a rival-owned warrior.
@@ -152,6 +217,23 @@ export function evaluateBoutOffer(
     }
   }
 
+  // Promoter awareness — rivals read the promoter's reputation like the
+  // advisor does. A Sadistic promoter booking a killer is a death-show:
+  // cautious personalities pass regardless of purse. Aggressive and Showman
+  // stables don't flinch — blood sells.
+  const promoter = offer.promoterId ? state?.promoters?.[offer.promoterId] : undefined;
+  const personalityPre = rival.owner.personality;
+  if (
+    promoter?.personality === 'Sadistic' &&
+    opponent &&
+    (opponent.career?.kills ?? 0) > 0 &&
+    (warrior.career?.kills ?? 0) === 0 &&
+    personalityPre !== 'Aggressive' &&
+    personalityPre !== 'Showman'
+  ) {
+    return 'Declined';
+  }
+
   // ── Desperation Gate: critically low treasury accepts anything survivable ──
   if (rival.treasury < 500) {
     return 'Accepted';
@@ -199,6 +281,21 @@ export function evaluateBoutOffer(
     }
   }
 
+  // Venue counter — the arena itself is the sticking point. A CROWN_BID
+  // contender drags the bout onto their ladder arena; any warrior with a
+  // losing record at the offered venue counters toward their best stage.
+  // Runs before the CROWN_BID blanket accept and the purse counter: venue is
+  // a harder constraint than either, and a single negotiation round total
+  // (either counter tag makes the offer take-it-or-leave-it).
+  const alreadyVenueOrPurseCountered =
+    (offer.conditions?.includes(COUNTERED_VENUE_CONDITION) ?? false) ||
+    (offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false);
+  if (!alreadyVenueOrPurseCountered && personality !== 'Aggressive') {
+    if (venueCounterTarget(offer, warrior, rival, state)) {
+      return 'CounteredVenue';
+    }
+  }
+
   // Campaign roles — shared advisor semantics: a CROWN_BID contender takes
   // venue bouts where they hold a record (the ladder standing is the real
   // payout); a PURSE_HUNTER takes volume and never holds out for a marquee.
@@ -213,13 +310,15 @@ export function evaluateBoutOffer(
   // The fame floor precedes the personality accepts — a Pragmatic does not
   // take 300g for a name worth 2000 just because it clears the generic bar.
   // One round only — an offer already tagged COUNTERED_PURSE is final.
-  const alreadyCountered = offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false;
+  const alreadyCountered = alreadyVenueOrPurseCountered;
   if (
     !alreadyCountered &&
     personality !== 'Aggressive' &&
     warrior.campaignFocus !== 'PURSE_HUNTER'
   ) {
-    const purseFloor = (warrior.fame ?? 0) - 50;
+    // Greedy promoters lowball — their fame floor sits closer to asking price.
+    const purseFloor =
+      (warrior.fame ?? 0) - (promoter?.personality === 'Greedy' ? 20 : 50);
     if (purseFloor > 0 && offer.purse < purseFloor) {
       return 'Countered';
     }

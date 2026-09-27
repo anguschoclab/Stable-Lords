@@ -3,6 +3,7 @@ import type { BoutOfferId, WarriorId, StableId } from '@/types/shared.types';
 import {
   respondToBoutOffer,
   counterBoutOffer,
+  counterBoutVenue,
 } from '@/engine/bout/mutations/contractMutations';
 import { checkBudget } from '../budgetWorker';
 import { StateImpact } from '@/engine/impacts';
@@ -130,7 +131,31 @@ export function processAllRivalsBoutOffers(
           pickedWarriors.add(wId);
         }
 
-        if (response === 'Countered') {
+        if (response === 'CounteredVenue') {
+          // Venue counter: swap the arena, re-pend the other side — the purse
+          // is untouched and the counter tag closes the negotiation round.
+          const target = boutAcceptance.venueCounterTarget(
+            trackedOffer,
+            rivalWarrior,
+            owningRival,
+            state
+          );
+          if (target) {
+            const impact = counterBoutVenue(
+              { ...state, boutOffers: currentOffers },
+              offer.id as BoutOfferId,
+              rivalWarrior.id as WarriorId,
+              target
+            );
+            if (impact.boutOffers) {
+              Object.assign(currentOffers, impact.boutOffers);
+            }
+            return;
+          }
+          // No venue to counter toward — fall through to the purse counter.
+        }
+
+        if (response === 'Countered' || response === 'CounteredVenue') {
           // One negotiation round: sweeten the purse and re-pend the other side.
           const impact = counterBoutOffer(
             { ...state, boutOffers: currentOffers },
@@ -204,7 +229,10 @@ export function processAllRivalsBoutOffers(
           state
         );
         // No second counter round — an already-countered offer is take it or leave it.
-        final = verdict === 'Declined' || verdict === 'Countered' ? 'Declined' : 'Accepted';
+        final =
+          verdict === 'Declined' || verdict === 'Countered' || verdict === 'CounteredVenue'
+            ? 'Declined'
+            : 'Accepted';
         if (verdict === 'Accepted') {
           // mark warrior committed (best effort — pickedWarriors is per-slate)
         }

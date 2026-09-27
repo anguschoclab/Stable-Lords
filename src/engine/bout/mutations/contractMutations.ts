@@ -6,6 +6,8 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 export const COUNTER_PURSE_MULTIPLIER = 1.25;
 /** Condition tag marking that an offer has already been countered once. */
 export const COUNTERED_PURSE_CONDITION = 'COUNTERED_PURSE';
+/** Condition tag marking that an offer's arena has already been countered once. */
+export const COUNTERED_VENUE_CONDITION = 'COUNTERED_VENUE';
 
 /**
  * Respond to bout offer.
@@ -85,6 +87,50 @@ export function counterBoutOffer(
         purse: newPurse,
         counterPurseBump: (offer.counterPurseBump ?? 0) + bump,
         conditions: [...(offer.conditions ?? []), COUNTERED_PURSE_CONDITION],
+        responses: newResponses as typeof offer.responses,
+        status: 'Proposed',
+      },
+    },
+  };
+}
+
+/**
+ * Counter a bout offer on venue — the countering warrior refuses to fight at
+ * the offered arena and nominates another. Same negotiation mechanics as a
+ * purse counter (counterer marked 'Countered', other parties re-pended), but
+ * the purse is untouched: `arenaId` is the only term that changes.
+ * One round only — callers must not counter an offer already tagged
+ * COUNTERED_VENUE or COUNTERED_PURSE.
+ */
+export function counterBoutVenue(
+  state: GameState,
+  offerId: BoutOfferId,
+  counteringWarriorId: WarriorId,
+  newArenaId: string
+): StateImpact {
+  const offer = state.boutOffers[offerId];
+  if (!offer || !offer.arenaId) return {};
+  if (
+    offer.conditions?.includes(COUNTERED_VENUE_CONDITION) ||
+    offer.conditions?.includes(COUNTERED_PURSE_CONDITION)
+  ) {
+    return {};
+  }
+  // Title bouts are pinned to the crown's arena — never negotiable.
+  if (offer.titleArenaId) return {};
+
+  const newResponses: Record<string, string> = {};
+  for (const wid of offer.warriorIds) {
+    newResponses[wid as string] = wid === counteringWarriorId ? 'Countered' : 'Pending';
+  }
+
+  return {
+    boutOffers: {
+      ...state.boutOffers,
+      [offerId]: {
+        ...offer,
+        arenaId: newArenaId,
+        conditions: [...(offer.conditions ?? []), COUNTERED_VENUE_CONDITION],
         responses: newResponses as typeof offer.responses,
         status: 'Proposed',
       },

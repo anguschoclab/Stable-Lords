@@ -33,7 +33,7 @@ import {
   weeksUntilChampionsTournament,
   boutOfferAbsoluteWeek,
 } from '@/engine/core/absoluteWeek';
-import { logAgentAction } from '../agentCore';
+import { logAgentAction, computePlayerThreatLevel } from '../agentCore';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 
 /** Weeks before the Grand Championship bracket in which champions rest. */
@@ -42,6 +42,9 @@ const GRAND_CHAMP_PREP_WEEKS = 2;
 const RELINQUISH_AGE = 30;
 /** Cap on simultaneous crown campaigns per stable. */
 const CAMPAIGN_SCORE_FLOOR = 2;
+/** Campaign-score bonus for targeting the dominant player's throne —
+ *  dethroning the realm's top stable outweighs an easier rival crown. */
+const DETHRONE_BONUS = { Dominant: 3, Moderate: 1 } as const;
 
 interface CrownCandidate {
   warrior: Warrior;
@@ -90,6 +93,14 @@ export function assessCrownOpportunity(
   for (const w of state.roster ?? []) warriorById.set(w.id, w);
   for (const r of state.rivals ?? []) for (const w of r.roster) warriorById.set(w.id, w);
 
+  // Dominant-player pressure: when the player stable tops the realm, a throne
+  // they hold becomes a prestige target — rivals would rather dethrone the
+  // dominant stable than pick off a weaker rival crown of equal difficulty.
+  const playerThreat = computePlayerThreatLevel(state);
+  const dethroneBonus =
+    playerThreat === 'Dominant' ? DETHRONE_BONUS.Dominant : playerThreat === 'Moderate' ? DETHRONE_BONUS.Moderate : 0;
+  const playerWarriorIds = new Set((state.roster ?? []).map((w) => w.id));
+
   let best: CrownCandidate | undefined;
   for (const w of rival.roster) {
     if (!isActive(w)) continue;
@@ -128,6 +139,10 @@ export function assessCrownOpportunity(
           reason = `Winnable throne at ${arenaId}`;
         } else {
           reason = `Crown climb at ${arenaId}`;
+        }
+        if (dethroneBonus > 0 && playerWarriorIds.has(champion?.id ?? ('' as WarriorId))) {
+          score += dethroneBonus;
+          reason = `Dethrone bid at ${arenaId} — the dominant player's crown is the prize`;
         }
       }
       score += rankBonus;

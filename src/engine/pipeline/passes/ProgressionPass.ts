@@ -99,12 +99,12 @@ export function runProgressionPass(
         // Three titles across three DIFFERENT warriors — one crown per
         // warrior means three crowned warriors, not three reigns.
         const crownedIds = new Set(
-          Object.values(state.arenaChampions ?? {})
-            .filter((t) => {
-              const wid = t.champion?.warriorId;
-              return wid != null && owningStableOf(state, wid)?.stableId === state.player.id;
-            })
-            .map((t) => t.champion!.warriorId)
+          Object.values(state.arenaChampions ?? {}).flatMap((t) => {
+            const wid = t.champion?.warriorId;
+            return wid != null && owningStableOf(state, wid)?.stableId === state.player.id
+              ? [wid]
+              : [];
+          })
         );
         completed = crownedIds.size >= 3;
         break;

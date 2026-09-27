@@ -281,27 +281,31 @@ export default function ArenaDetail() {
           title="Best in Class"
           icon={<Swords className="h-4 w-4 text-primary" />}
           head={['STYLE', 'WARRIOR', 'STABLE', 'W / L / K']}
-          rows={Object.entries(styleLeaders).map(([style, e], i) => ({
-            key: style,
-            rank: i + 1,
-            cells: [
-              <span key="st" className="text-[9px] font-black uppercase tracking-widest text-primary/80">
-                {style}
-              </span>,
-              <WarriorNameTag key="n" id={e!.warriorId} name={e!.name} isChampion={e!.warriorId === champId} />,
-              <span key="s" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
-                {e!.stableName}
-              </span>,
-              <span key="r" className="font-mono text-[10px]">
-                <span className="text-primary font-bold">{e!.wins}</span>
-                <span className="mx-1 opacity-20">/</span>
-                <span className="text-destructive font-bold">{e!.losses}</span>
-                <span className="mx-1 opacity-20">/</span>
-                <span className="text-arena-blood font-black">{e!.kills}</span>
-              </span>,
-            ],
-            isPlayer: e!.isPlayer,
-          }))}
+          rows={Object.entries(styleLeaders).flatMap(([style, e], i) =>
+            e
+              ? [{
+                  key: style,
+                  rank: i + 1,
+                  cells: [
+                    <span key="st" className="text-[9px] font-black uppercase tracking-widest text-primary/80">
+                      {style}
+                    </span>,
+                    <WarriorNameTag key="n" id={e.warriorId} name={e.name} isChampion={e.warriorId === champId} />,
+                    <span key="s" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
+                      {e.stableName}
+                    </span>,
+                    <span key="r" className="font-mono text-[10px]">
+                      <span className="text-primary font-bold">{e.wins}</span>
+                      <span className="mx-1 opacity-20">/</span>
+                      <span className="text-destructive font-bold">{e.losses}</span>
+                      <span className="mx-1 opacity-20">/</span>
+                      <span className="text-arena-blood font-black">{e.kills}</span>
+                    </span>,
+                  ],
+                  isPlayer: e.isPlayer,
+                }]
+              : []
+          )}
         />
 
         <RecordTable

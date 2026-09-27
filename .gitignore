@@ -71,3 +71,6 @@ out/
 
 # Script-generated archives (daily_oracle bout transcripts)
 archives/
+
+# Bundled output of scripts/build-fight.ts (Bun.build artifact)
+scripts/.build/

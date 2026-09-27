@@ -88,7 +88,6 @@ describe('championship autosim — week 52+', () => {
       }
     }
 
-    // eslint-disable-next-line no-console
     console.log(
       JSON.stringify(
         {

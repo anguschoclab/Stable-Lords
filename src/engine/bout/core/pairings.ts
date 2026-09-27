@@ -95,8 +95,9 @@ export function generatePairings(state: GameState): PairingsResult {
   // their signed ordinary offers normally.
   const activeChampionIds = new Set(
     Object.values(state.arenaChampions ?? {})
-      .filter((t) => t.status === 'active' && t.champion)
-      .map((t) => t.champion!.warriorId as string)
+      .flatMap((t) =>
+        t.status === 'active' && t.champion ? [t.champion.warriorId as string] : []
+      )
   );
 
   currentOffers.forEach((offer) => {

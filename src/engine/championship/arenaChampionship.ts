@@ -69,6 +69,7 @@ export const CHAMPIONSHIP_DEBUG = {
   defensesScheduled: 0,
 };
 
+/** Fresh accumulator for one championship pass — mutated by each sub-step. */
 export function createChampionshipDelta(): ChampionshipDelta {
   return {
     arenaChampions: {},
@@ -405,7 +406,7 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
   for (const arenaId of arenas) {
     const title = titleOf(state, delta, arenaId);
     if (title?.champion) continue;
-    const rows = rankedByArena.get(arenaId)!;
+    const rows = rankedByArena.get(arenaId) ?? [];
     const top = rows[0];
     if (!top) continue;
     const margin = marginOf(rows, top);
@@ -420,7 +421,7 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
   for (const arenaId of arenas) {
     const title = titleOf(state, delta, arenaId);
     if (title?.champion) continue;
-    const rows = rankedByArena.get(arenaId)!;
+    const rows = rankedByArena.get(arenaId) ?? [];
     const pick = rows.find((r) => claimed.get(r.warrior.id)?.arenaId === arenaId)
       ?? rows.find((r) => {
         const c = claimed.get(r.warrior.id);
@@ -441,8 +442,7 @@ export function enforceVacancies(state: GameState, delta: ChampionshipDelta): vo
   const retiredIds = new Set((state.retired ?? []).map((w) => w.id));
 
   for (const arenaId of sortedTitleKeys(state, delta)) {
-    const title = titleOf(state, delta, arenaId)!;
-    const reign = title.champion;
+    const reign = titleOf(state, delta, arenaId)?.champion;
     if (!reign) continue;
     const w = findWarriorById(state, reign.warriorId);
     const dead = deadIds.has(reign.warriorId) || (w ? isDead(w) : false);
@@ -501,8 +501,11 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
     }
 
     if (winnerId === champId) {
-      title.champion!.defenses += 1;
-      title.champion!.lastActivityWeek = now;
+      const reign = title.champion;
+      if (reign) {
+        reign.defenses += 1;
+        reign.lastActivityWeek = now;
+      }
       title.refusals = 0;
       continue;
     }
@@ -624,8 +627,8 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
 export function applyLifecycleTransitions(state: GameState, delta: ChampionshipDelta): void {
   const now = state.absoluteWeek;
   for (const arenaId of sortedTitleKeys(state, delta)) {
-    const base = titleOf(state, delta, arenaId)!;
-    if (!base.champion) continue; // vacant titles have no dormancy lifecycle
+    const base = titleOf(state, delta, arenaId);
+    if (!base?.champion) continue; // vacant titles have no dormancy lifecycle
     const champId = base.champion.warriorId;
 
     // Contender existence ignores booking — a booked contender still counts.
@@ -713,14 +716,14 @@ export function scheduleTitleBouts(
   const bookedNext = collectBookedWarriorIds(state, now + 2);
   const offers = effectiveOffers(state, delta);
   const liveTitleArenas = new Set(
-    offers.filter((o) => o.titleArenaId && isOpenOffer(o)).map((o) => o.titleArenaId!)
+    offers.flatMap((o) => (o.titleArenaId && isOpenOffer(o) ? [o.titleArenaId] : []))
   );
 
   let bookedCount = 0;
   for (const arenaId of sortedTitleKeys(state, delta)) {
     if (bookedCount >= ARENA_TITLE.MAX_TITLE_BOUTS_PER_WEEK) break;
-    const title = titleOf(state, delta, arenaId)!;
-    if (title.status !== 'active') continue;
+    const title = titleOf(state, delta, arenaId);
+    if (title?.status !== 'active') continue;
     if (liveTitleArenas.has(arenaId)) continue;
 
     if (title.champion) {
@@ -754,11 +757,12 @@ export function scheduleTitleBouts(
         continue;
       }
       const [a, b] = ranked;
-      delta.newOffers.push(makeTitleOffer(rng, arenaId, a!.warrior.id, b!.warrior.id, targetWeek, now));
+      if (!a || !b) continue;
+      delta.newOffers.push(makeTitleOffer(rng, arenaId, a.warrior.id, b.warrior.id, targetWeek, now));
       CHAMPIONSHIP_DEBUG.offersCreated++;
       liveTitleArenas.add(arenaId);
-      bookedNext.add(a!.warrior.id);
-      bookedNext.add(b!.warrior.id);
+      bookedNext.add(a.warrior.id);
+      bookedNext.add(b.warrior.id);
       bookedCount++;
     }
   }
@@ -808,12 +812,12 @@ export function applyChampionPerks(state: GameState, delta: ChampionshipDelta): 
   const now = state.absoluteWeek;
   const offers = effectiveOffers(state, delta);
   const arenasWithLiveOffer = new Set(
-    offers.filter((o) => o.titleArenaId && isOpenOffer(o)).map((o) => o.titleArenaId!)
+    offers.flatMap((o) => (o.titleArenaId && isOpenOffer(o) ? [o.titleArenaId] : []))
   );
 
   for (const arenaId of sortedTitleKeys(state, delta)) {
-    const title = titleOf(state, delta, arenaId)!;
-    if (!title.champion || title.status !== 'active') continue;
+    const title = titleOf(state, delta, arenaId);
+    if (!title?.champion || title.status !== 'active') continue;
     const recentActivity =
       now - title.champion.lastActivityWeek <= ARENA_TITLE.ACTIVITY_WINDOW_WEEKS ||
       arenasWithLiveOffer.has(arenaId);
@@ -858,7 +862,9 @@ export function relinquishCrown(
   const title = titleOf(state, delta, arenaId);
   if (!title?.champion) return;
   const t = ensureTitle(state, delta, arenaId);
-  const name = findWarriorById(state, t.champion!.warriorId)?.name ?? t.champion!.warriorId;
+  const champId = t.champion?.warriorId;
+  if (!champId) return;
+  const name = findWarriorById(state, champId)?.name ?? champId;
   endReign(state, t, 'relinquished', state.absoluteWeek);
   news(delta, state.week, `Crown Relinquished`, [`${name} gives up the crown.`], `relinq-${arenaId}-${state.absoluteWeek}`);
 }

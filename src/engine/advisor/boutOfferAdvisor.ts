@@ -199,7 +199,7 @@ export function evaluateBoutOffers(
     const isTitleBout = !!offer.titleArenaId;
     if (isTitleBout) {
       reasons.push(
-        warriorOwnsArenaCrown(state, offer.titleArenaId!, warrior.id)
+        warriorOwnsArenaCrown(state, offer.titleArenaId as string, warrior.id)
           ? 'TITLE DEFENSE — your arena crown is on the line. Refusal can cost the title.'
           : 'TITLE BOUT — victory claims the arena crown.'
       );

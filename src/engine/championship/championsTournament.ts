@@ -30,7 +30,7 @@ import { owningStableOf, type ChampionshipDelta } from './arenaChampionship';
 export function selectGrandChampionshipField(state: GameState): Warrior[] {
   return Object.keys(state.arenaChampions ?? {})
     .sort()
-    .map((arenaId) => state.arenaChampions![arenaId]!.champion?.warriorId)
+    .map((arenaId) => state.arenaChampions?.[arenaId]?.champion?.warriorId)
     .filter((id): id is WarriorId => id != null)
     .map((id) => findWarriorById(state, id))
     .filter((w): w is Warrior => w != null && isFightReady(w, true))

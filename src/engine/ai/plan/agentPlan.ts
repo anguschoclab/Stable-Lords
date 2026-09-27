@@ -13,6 +13,7 @@ import type { FightPlan } from '@/types/combat.types';
 import { aiPlanForWarrior } from './coreGenerator';
 import { getPairKey } from '@/utils/keyUtils';
 import { isActive } from '@/engine/warriorStatus';
+import { clamp } from '@/utils/math';
 
 /**
  * Compute the plan an NPC stable commits for `w` against `opponent`.
@@ -44,14 +45,34 @@ export function agentPlanForWarrior(
     opponent.style,
     rival.strategy?.intent,
     grudge?.intensity ?? 0,
-    dossier
+    dossier,
+    state.absoluteWeek ?? state.week
   );
+}
+
+/** Owners who scout well also deceive well — their committed plans are decoys. */
+const DECEPTIVE_PERSONALITIES = new Set(['Tactician', 'Methodical']);
+
+/**
+ * Invert the effort axes into a credible-looking decoy. The masked plan is
+ * the scouting artifact Expert reports read; `planMasked` guarantees bout
+ * resolution recomputes the real plan rather than fighting the decoy.
+ */
+function decoyPlan(plan: FightPlan): FightPlan {
+  return {
+    ...plan,
+    OE: clamp(11 - (plan.OE ?? 5), 1, 10),
+    AL: clamp(11 - (plan.AL ?? 5), 1, 10),
+    killDesire: clamp(11 - (plan.killDesire ?? 5), 1, 10),
+  };
 }
 
 /**
  * Write committed plans onto rival warriors whose bouts are Signed.
  * Only 'Signed' offers persist a plan — a proposed bout has no commitment
  * yet, and a stale plan for a different opponent is never reused.
+ * Tactician/Methodical stables write a masked decoy (`planMasked`): scouts
+ * read the decoy, resolution recomputes the real plan.
  */
 export function persistNPCPlans(
   rivals: RivalStableData[],
@@ -101,11 +122,14 @@ export function persistNPCPlans(
       const opponent = state.warriorMap?.get(commitment.opponentId as never);
       if (!opponent) return w;
       changed = true;
+      const real = agentPlanForWarrior(rival, w, opponent, state, commitment.opponentStableId);
+      const masked = DECEPTIVE_PERSONALITIES.has(rival.owner.personality ?? '');
       return {
         ...w,
-        plan: agentPlanForWarrior(rival, w, opponent, state, commitment.opponentStableId),
+        plan: masked ? decoyPlan(real) : real,
         planWeek: week,
         planForStableId: commitment.opponentStableId,
+        planMasked: masked || undefined,
       };
     });
     return changed ? { ...rival, roster } : rival;

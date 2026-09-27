@@ -241,6 +241,7 @@ export const WarriorSchema = z.object({
   plan: FightPlanSchema.optional(),
   planWeek: z.number().optional(),
   planForStableId: z.string().optional(),
+  planMasked: z.boolean().optional(),
   equipment: EquipmentLoadoutSchema.optional(),
   status: WarriorStatusSchema,
   age: z.number().optional(),

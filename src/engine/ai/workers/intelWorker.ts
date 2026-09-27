@@ -8,10 +8,12 @@
  * scout's own personality — Tacticians and Methodicals read opponents best.
  */
 import type { GameState, RivalStableData } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import { logAgentAction } from '../agentCore';
 import { hashStr } from '@/utils/random';
 import { clamp } from '@/utils/math';
+import { isActive } from '@/engine/warriorStatus';
 
 /** Scouting acuity by owner personality — tighter plan estimates. */
 const SCOUT_QUALITY: Record<string, number> = {
@@ -46,6 +48,33 @@ function estimatePlan(
     suspectedOE: Math.round(clamp(bias.oe + jitter('oe'), 0, 1) * 100) / 100,
     suspectedAL: Math.round(clamp(bias.al + jitter('al'), 0, 1) * 100) / 100,
   };
+}
+
+/** A committed plan counts as observable for this many weeks after the bout. */
+const PLAN_TELL_WINDOW = 8;
+
+/**
+ * Observed tells: warriors on the target roster who recently fought carry
+ * their committed fight plans — a scout who watched the bout reads real
+ * OE/AL, not a personality guess. Returns the mean normalized tendency, or
+ * undefined when nobody observable has a plan.
+ */
+function observedPlanTells(
+  roster: Warrior[] | undefined,
+  week: number
+): { oe: number; al: number } | undefined {
+  const samples = (roster ?? []).filter(
+    (w) =>
+      isActive(w) &&
+      w.plan?.OE != null &&
+      w.plan?.AL != null &&
+      w.lastBoutWeek != null &&
+      week - w.lastBoutWeek <= PLAN_TELL_WINDOW
+  );
+  if (samples.length === 0) return undefined;
+  const oe = samples.reduce((s, w) => s + (w.plan?.OE ?? 5), 0) / samples.length / 10;
+  const al = samples.reduce((s, w) => s + (w.plan?.AL ?? 5), 0) / samples.length / 10;
+  return { oe, al };
 }
 
 /**
@@ -112,7 +141,21 @@ export function processIntel(
   const bias =
     PERSONALITY_PLAN_BIAS[targetRival?.owner.personality ?? ''] ?? { oe: 0.5, al: 0.5 };
 
-  const estimate = estimatePlan(rival.owner.id, targetId, week, quality, bias);
+  // Observed tells override the prior: when target fighters recently fought
+  // with committed plans on record, a good scout weighs what they saw over
+  // what they'd expect from the owner's reputation.
+  const observed = observedPlanTells(
+    targetId === state.player.id ? state.roster : targetRival?.roster,
+    week
+  );
+  const effectiveBias = observed
+    ? {
+        oe: bias.oe * (1 - quality) + observed.oe * quality,
+        al: bias.al * (1 - quality) + observed.al * quality,
+      }
+    : bias;
+
+  const estimate = estimatePlan(rival.owner.id, targetId, week, quality, effectiveBias);
 
   const prior = dossiers[targetId] ?? {
     lastSeenWeek: week,

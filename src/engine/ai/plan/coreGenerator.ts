@@ -31,6 +31,9 @@ import {
 } from '@/engine/ai/plan/levers';
 import { reconcileGearTwoHanded } from '@/engine/planBias';
 
+/** Scouted plan tendencies older than this many weeks are ignored. */
+export const PLAN_INTEL_FRESH_WEEKS = 6;
+
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
  * Now includes per-style matchup heuristics, global strategic intent, and strategy score validation.
@@ -43,6 +46,9 @@ import { reconcileGearTwoHanded } from '@/engine/planBias';
  * @param grudgeIntensity - Intensity of the grudge between owners
  * @param dossier - Optional opponent intel dossier; a losing record drives
  *                  rematch adaptation (G11) through existing plan fields only
+ * @param now - Current absolute week; fresh `dossier.planIntel` (scouted
+ *              suspected OE/AL) drives counter-planning deltas. Stale intel
+ *              older than PLAN_INTEL_FRESH_WEEKS is ignored.
  * @returns A computed fight plan for the warrior
  */
 export function aiPlanForWarrior(
@@ -52,7 +58,8 @@ export function aiPlanForWarrior(
   opponentStyle?: FightingStyle,
   intent?: AIIntent,
   grudgeIntensity: number = 0,
-  dossier?: OpponentDossier
+  dossier?: OpponentDossier,
+  now?: number
 ): FightPlan {
   const base = defaultPlanForWarrior(w);
   const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
@@ -75,6 +82,35 @@ export function aiPlanForWarrior(
   // Grudge-based escalation
   const grudgeKD = grudgeIntensity; // +1 to +5
   const grudgeAL = Math.floor(grudgeIntensity / 2);
+
+  // Counter-planning off scouted plan tendencies: a fresh dossier estimate
+  // of the opponent's OE/AL shifts our axes — cover up against hot openers,
+  // press passive shells, raise the kill tempo against brittle defenses.
+  let intelOE = 0;
+  let intelAL = 0;
+  let intelKD = 0;
+  let intelHotOpener = false;
+  let intelFragile = false;
+  const planIntel = dossier?.planIntel;
+  if (
+    planIntel &&
+    now !== undefined &&
+    planIntel.lastPlanWeek !== undefined &&
+    now - planIntel.lastPlanWeek <= PLAN_INTEL_FRESH_WEEKS
+  ) {
+    if ((planIntel.suspectedOE ?? 0.5) >= 0.65) {
+      intelAL += 1;
+      intelHotOpener = true;
+    } else if ((planIntel.suspectedOE ?? 0.5) <= 0.35) {
+      intelOE += 1;
+    }
+    if ((planIntel.suspectedAL ?? 0.5) >= 0.65) {
+      intelOE += 1; // break the shell
+    } else if ((planIntel.suspectedAL ?? 0.5) <= 0.35) {
+      intelKD += 1;
+      intelFragile = true;
+    }
+  }
 
   // Rematch adaptation (G11): a losing record against this specific opponent
   // makes the stable fight more patiently — patience scales with how lopsided
@@ -105,7 +141,7 @@ export function aiPlanForWarrior(
   const plan: FightPlan = {
     ...base,
     OE: clamp(
-      (base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE + rematchOE,
+      (base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE + rematchOE + intelOE,
       1,
       10
     ),
@@ -116,7 +152,8 @@ export function aiPlanForWarrior(
         matchup.al +
         intentAL +
         grudgeAL +
-        rematchAL,
+        rematchAL +
+        intelAL,
       1,
       10
     ),
@@ -127,7 +164,8 @@ export function aiPlanForWarrior(
         matchup.kd +
         intentKD +
         grudgeKD +
-        rematchKD,
+        rematchKD +
+        intelKD,
       1,
       10
     ),
@@ -159,6 +197,10 @@ export function aiPlanForWarrior(
   // contest the same systems a human player can exploit.
   plan.target = getAITarget(w.style, personality, plan.killDesire ?? 5, intent);
   plan.protect = getAIProtect(w.style, personality, intent);
+  // Intel-driven target selection: a scouted hot opener gets the head guard;
+  // a scouted fragile defense invites the kill shot.
+  if (intelHotOpener) plan.protect = 'Head';
+  if (intelFragile) plan.target = 'Head';
   plan.aggressionBias = getAIAggressionBias(personality, intent);
   plan.openingMove = getAIOpeningMove(personality);
   const rangePref = getAIRangePreference(w.style);

@@ -75,6 +75,7 @@ export function getNPCPlan(
   const week = state.absoluteWeek ?? state.week;
   if (
     w.plan &&
+    !w.planMasked &&
     w.planWeek === week &&
     (opponentStableId === undefined || w.planForStableId === opponentStableId)
   ) {
@@ -94,7 +95,8 @@ export function getNPCPlan(
     opponentStyle,
     rival.strategy?.intent,
     grudgeIntensity,
-    opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined
+    opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined,
+    week
   );
 }
 

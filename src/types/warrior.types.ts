@@ -163,6 +163,9 @@ export interface Warrior {
   planWeek?: number;
   /** Stable id the persisted plan was computed against (opponent check). */
   planForStableId?: string;
+  /** True when the persisted plan is a deliberate decoy — scouting reads it,
+   *  but bout resolution always recomputes the real plan. */
+  planMasked?: boolean;
   equipment?: EquipmentLoadout;
   status: WarriorStatus;
   age?: number;

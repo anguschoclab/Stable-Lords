@@ -408,7 +408,7 @@ describe('runRivalStrategyPass — tournament week', () => {
     vi.restoreAllMocks();
   });
 
-  it('creates tournaments without resolving them when nextWeek % 13 === 0', () => {
+  it('creates tournaments without resolving them on a seasonal tournament week', () => {
     vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
 
     const rival = makeRival({
@@ -419,10 +419,10 @@ describe('runRivalStrategyPass — tournament week', () => {
     });
     const state = makeMinimalState([rival]);
     state.recruitPool = [];
-    state.absoluteWeek = 12;
-    state.week = 12;
+    state.absoluteWeek = 9;
+    state.week = 9;
 
-    const impact = runRivalStrategyPass(state, 13, undefined as any, true);
+    const impact = runRivalStrategyPass(state, 10, undefined as any, true);
 
     expect(impact.isTournamentWeek).toBe(true);
     expect(impact.activeTournamentId).toBeDefined();
@@ -452,7 +452,7 @@ describe('runRivalStrategyPass — seasonal tournament headless gating', () => {
     const rival = makeRival();
     const state = makeMinimalState([rival]);
 
-    const impact = runRivalStrategyPass(state, 13, undefined as any, true);
+    const impact = runRivalStrategyPass(state, 10, undefined as any, true);
 
     expect(impact.tournaments?.length).toBeGreaterThan(0);
     expect(impact.isTournamentWeek).toBe(true);
@@ -465,7 +465,7 @@ describe('runRivalStrategyPass — seasonal tournament headless gating', () => {
     const rival = makeRival();
     const state = makeMinimalState([rival]);
 
-    const impact = runRivalStrategyPass(state, 13, undefined as any, false);
+    const impact = runRivalStrategyPass(state, 10, undefined as any, false);
 
     const titles = (impact.newsletterItems ?? []).map((n) => n.title);
     expect(titles).toContain('🎖️ TOURNAMENT ANNOUNCEMENT');

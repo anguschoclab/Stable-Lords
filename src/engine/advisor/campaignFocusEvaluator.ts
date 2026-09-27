@@ -4,6 +4,7 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
+import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
 import type { CampaignFocus } from './types';
 
 const REHAB_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
@@ -32,10 +33,9 @@ export function evaluateCampaignFocus(warrior: Warrior, state: GameState): Campa
   }
 
   // 4. Tournament Timing & Qualification -> TOURNAMENT_PUSH
-  const seasonWeek = ((state.week - 1) % 13) + 1;
   const rank = state.realmRankings?.[warrior.id]?.overallRank;
   const isContender = rank !== undefined && rank >= 1 && rank <= 256;
-  if (isContender && (seasonWeek >= 10 || state.isTournamentWeek)) {
+  if (isContender && (isTournamentPrepWeek(state.week) || state.isTournamentWeek)) {
     return 'TOURNAMENT_PUSH';
   }
 

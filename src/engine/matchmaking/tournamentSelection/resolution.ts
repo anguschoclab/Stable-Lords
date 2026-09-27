@@ -16,6 +16,7 @@ import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { findCurrentRoundBouts } from '../tournament/bracketUtils';
+import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { selectArenaForTournamentBout } from '../tournament/tournamentArenaSelection';
 
 /**
@@ -80,7 +81,12 @@ export function resolveRound(
     const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
     const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
 
-    const arenaId = selectArenaForTournamentBout(() => rng.next());
+    // The Grand Championship is always fought at Bloodsands — the realm's
+    // neutral championship ground; seasonals keep the weighted venue draw.
+    const arenaId =
+      resolvedTournament.tierId === CHAMPIONS_TOURNEY.TIER_ID
+        ? 'bloodsands_arena'
+        : selectArenaForTournamentBout(() => rng.next());
     const outcome = simulateFight(
       planA,
       planD,
@@ -213,7 +219,10 @@ export function resolveRound(
     }
   );
 
-  if (isComplete && champion) {
+  // The 'Champions' tier's purse/fame/accolade is awarded by
+  // ArenaChampionshipPass.recordGrandChampions — the single award home —
+  // so the generic placement machinery skips it here.
+  if (isComplete && champion && resolvedTournament.tierId !== CHAMPIONS_TOURNEY.TIER_ID) {
     updatedState = awardTournamentPrizes(updatedTournament ?? resolvedTournament, updatedState);
   }
 

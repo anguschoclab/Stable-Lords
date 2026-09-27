@@ -36,8 +36,8 @@ describe('CampaignHorizon', () => {
 
   it('renders the tournament countdown', () => {
     render(<CampaignHorizon />);
-    // Week 5 of 13 → 8 weeks until bracket
-    expect(screen.getByText(/8 weeks until the seasonal tournament/i)).toBeDefined();
+    // Week 5 → next seasonal is week 10, so 5 weeks out
+    expect(screen.getByText(/5 weeks until the seasonal tournament/i)).toBeDefined();
   });
 
   it('lists future signed commitments and recovery ETAs', () => {

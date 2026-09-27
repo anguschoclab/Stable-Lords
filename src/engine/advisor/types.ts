@@ -165,7 +165,7 @@ export interface RecoveryEta {
 export interface CouncilLookahead {
   futureCommitments: FutureCommitment[];
   recoveryEtas: RecoveryEta[];
-  /** Weeks until the week-13 seasonal tournament bracket (0 during it). */
+  /** Weeks until the next seasonal tournament bracket (0 during a tournament week). */
   weeksUntilTournament: number;
   projectedContenders: { warriorId: WarriorId; warriorName: string; tierName: string }[];
 }

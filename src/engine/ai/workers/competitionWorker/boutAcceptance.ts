@@ -1,5 +1,5 @@
 import type { Warrior, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
-import { displayWeek } from '@/engine/core/absoluteWeek';
+import { weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
 import {
   acceptanceWeatherBlock,
   offerWeatherDecline,
@@ -116,8 +116,9 @@ export function evaluateBoutOffer(
     return 'Accepted';
   }
 
-  // Tournament Hunger — use display week since tournaments are seasonal (every 13 display weeks)
-  const weeksUntilTournament = 13 - (displayWeek(currentWeek) % 13);
+  // Tournament Hunger — seasonals only (weeks 10/20/30/42); the champions-only
+  // Grand Championship at week 52 doesn't create ordinary bout pressure.
+  const weeksUntilTournament = weeksUntilNextSeasonalTournament(currentWeek);
   const isTournamentHungry = weeksUntilTournament <= 4;
 
   // Inactivity Pressure

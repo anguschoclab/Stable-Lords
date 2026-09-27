@@ -7,6 +7,7 @@
  *
  * Internal order is load-bearing and tested:
  *   seed → vacancies → results → refusal sweep → lifecycle → scheduling → perks
+ *   → grand-champion recording (independent award step — last)
  */
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
@@ -21,6 +22,7 @@ import {
   applyLifecycleTransitions,
   scheduleTitleBouts,
   applyChampionPerks,
+  recordGrandChampions,
 } from '@/engine/championship/arenaChampionship';
 
 /**
@@ -36,11 +38,14 @@ export function runArenaChampionshipPass(state: GameState, ctx: WeekPipelineCont
   applyLifecycleTransitions(state, delta);
   scheduleTitleBouts(state, delta, ctx.rootRng);
   applyChampionPerks(state, delta);
+  recordGrandChampions(state, delta);
 
   const impact: StateImpact = {};
   if (Object.keys(delta.arenaChampions).length > 0) {
     impact.arenaChampions = delta.arenaChampions;
   }
+  if (delta.grandChampions.length > 0) impact.grandChampions = delta.grandChampions;
+  if (delta.treasuryDelta !== 0) impact.treasuryDelta = delta.treasuryDelta;
 
   // boutOffers dictMerge — new title offers + cancellations share one keyspace.
   const boutOffers: Record<BoutOfferId, BoutOffer> = {};

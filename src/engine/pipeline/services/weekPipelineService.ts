@@ -5,7 +5,7 @@ import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getStablePairKey } from '@/utils/keyUtils';
-import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { deriveAbsoluteWeek, isTournamentWeekOfYear } from '@/engine/core/absoluteWeek';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import { loadCombatNarrative } from '@/data/narrative';
 import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
@@ -434,7 +434,7 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   // Release tournament mode when entering a non-tournament week. The impact
   // system can't write `undefined`, and headless/batch advances never run the
   // day ticks that clear these flags — leaving them stuck on forever.
-  if (ctx.nextWeek % 13 !== 0) {
+  if (!isTournamentWeekOfYear(ctx.nextWeek)) {
     state.isTournamentWeek = false;
     state.activeTournamentId = undefined;
   }

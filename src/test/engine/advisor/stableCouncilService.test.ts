@@ -413,8 +413,8 @@ describe('buildStableCouncilReport', () => {
       });
 
       const report = computeStableCouncilReport(state);
-      // Week 5 of a 13-week season → 8 weeks until the week-13 bracket
-      expect(report.lookahead.weeksUntilTournament).toBe(8);
+      // Week 5 → next seasonal is week 10, so 5 weeks out
+      expect(report.lookahead.weeksUntilTournament).toBe(5);
       expect(report.lookahead.projectedContenders).toHaveLength(1);
       expect(report.lookahead.projectedContenders[0]!.warriorId).toBe('w1');
       expect(report.lookahead.projectedContenders[0]!.tierName).toBeTruthy();

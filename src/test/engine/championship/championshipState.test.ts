@@ -10,6 +10,7 @@ import {
   isTournamentWeekOfYear,
   weeksUntilNextSeasonalTournament,
   isSeasonalTournamentPrepWeek,
+  isTournamentPrepWeek,
 } from '@/engine/core/absoluteWeek';
 import { ARENA_TITLE, CHAMPIONS_TOURNEY } from '@/constants/arena';
 import type { ArenaTitle, GrandChampionEntry } from '@/types/state.types';
@@ -185,6 +186,17 @@ describe('Phase 1 — tournament calendar helpers', () => {
     expect(isSeasonalTournamentPrepWeek(5)).toBe(false); // outside 4-week window
     expect(isSeasonalTournamentPrepWeek(39)).toBe(true); // run-up to week 42
     expect(isSeasonalTournamentPrepWeek(52)).toBe(false); // past week 42 → 10 weeks out
+  });
+
+  it('campaign window covers the three prep weeks plus the event week', () => {
+    expect(isTournamentPrepWeek(7)).toBe(true); // 3 weeks out from week 10
+    expect(isTournamentPrepWeek(10)).toBe(true); // the seasonal week itself
+    expect(isTournamentPrepWeek(6)).toBe(false); // 4 weeks out — too early
+    expect(isTournamentPrepWeek(11)).toBe(false); // just past the event
+    expect(isTournamentPrepWeek(39)).toBe(true); // run-up to week 42
+    expect(isTournamentPrepWeek(52)).toBe(false); // 10 weeks out — Grand Championship ≠ seasonal
+    // Year rollover: weeks 7–10 of the NEXT year count from late year weeks.
+    expect(isTournamentPrepWeek(59)).toBe(true); // year-2 week 7
   });
 });
 

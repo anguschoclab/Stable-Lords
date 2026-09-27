@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 /**
- * Stage C.0 — TOURNAMENT_CAMPAIGN intent: fires in the pre-tournament window
- * (weeks 10–13) for stables healthy enough to contend. It shapes preparation
- * only — committee selection stays rank-based.
+ * Stage C.0 — TOURNAMENT_CAMPAIGN intent: fires in the run-up to each
+ * seasonal tournament (the prep window plus the event week) for stables
+ * healthy enough to contend. It shapes preparation only — committee
+ * selection stays rank-based.
  */
 import { describe, it, expect } from 'vitest';
 import { pickWeeklyIntent, updateAIStrategy } from '@/engine/ai/intentEngine';
@@ -15,29 +16,29 @@ const contenders = () =>
   );
 
 describe('TOURNAMENT_CAMPAIGN', () => {
-  it('fires in weeks 10–13 for an eligible stable', () => {
+  it('fires inside the seasonal prep window for an eligible stable', () => {
     const rival = makeRival({ treasury: 900, roster: contenders() });
-    const state = makeGameState({ rivals: [rival], week: 11, weather: 'Clear', arenaHistory: [] });
+    const state = makeGameState({ rivals: [rival], week: 8, weather: 'Clear', arenaHistory: [] });
     expect(pickWeeklyIntent(rival, state, 42)).toBe('TOURNAMENT_CAMPAIGN');
   });
 
   it('does not fire outside the window', () => {
     const rival = makeRival({ treasury: 900, roster: contenders() });
-    const state = makeGameState({ rivals: [rival], week: 6, weather: 'Clear', arenaHistory: [] });
+    const state = makeGameState({ rivals: [rival], week: 3, weather: 'Clear', arenaHistory: [] });
     expect(pickWeeklyIntent(rival, state, 42)).not.toBe('TOURNAMENT_CAMPAIGN');
   });
 
   it('does not fire for a crisis stable (thin roster / broke)', () => {
     const broke = makeRival({ treasury: 50, roster: contenders() });
     const thin = makeRival({ treasury: 900, roster: [makeWarrior()] });
-    const state = makeGameState({ week: 11, weather: 'Clear', arenaHistory: [] });
+    const state = makeGameState({ week: 8, weather: 'Clear', arenaHistory: [] });
     expect(pickWeeklyIntent(broke, state, 42)).not.toBe('TOURNAMENT_CAMPAIGN');
     expect(pickWeeklyIntent(thin, state, 42)).not.toBe('TOURNAMENT_CAMPAIGN');
   });
 
   it('strategy carries a human-readable reason', () => {
     const rival = makeRival({ treasury: 900, roster: contenders() });
-    const state = makeGameState({ rivals: [rival], week: 11, weather: 'Clear', arenaHistory: [] });
+    const state = makeGameState({ rivals: [rival], week: 8, weather: 'Clear', arenaHistory: [] });
     const next = updateAIStrategy(rival, state, 42);
     expect(next.intent).toBe('TOURNAMENT_CAMPAIGN');
     expect(next.reason).toBeTruthy();

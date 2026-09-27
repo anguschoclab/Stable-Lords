@@ -7,6 +7,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import type { WarriorTournamentAdvice } from './types';
 import { TOURNAMENT_TIERS } from '@/engine/matchmaking/tournamentSelection/core';
+import { weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
 
 interface TierInfo {
   tierId: 'Gold' | 'Silver' | 'Bronze' | 'Iron';
@@ -34,9 +35,10 @@ export function evaluateTournamentAdvice(
   const overallRank = ranking?.overallRank ?? null;
   const tierInfo = resolveTierForRank(overallRank ?? undefined);
 
-  // Canonical 13-week seasonal cycle
-  const seasonWeek = ((state.week - 1) % 13) + 1;
-  const weeksUntilTournament = Math.max(0, 13 - seasonWeek);
+  // Seasonal calendar (weeks 10/20/30/42) — the Grand Championship is excluded
+  // deliberately: most warriors can never enter week 52, so "weeks until" only
+  // counts the brackets they could actually fight in.
+  const weeksUntilTournament = weeksUntilNextSeasonalTournament(state.week);
 
   const currentTournament = (state.tournaments || []).find(
     (t) => t.season === state.season && !t.completed
@@ -85,7 +87,7 @@ export function evaluateTournamentAdvice(
     };
   }
 
-  // 3. Tapering Window (weeks 11-12)
+  // 3. Tapering Window (final two weeks before the next seasonal)
   if (weeksUntilTournament <= 2) {
     return {
       qualifiedTier: tierInfo.tierId,
@@ -99,7 +101,7 @@ export function evaluateTournamentAdvice(
     };
   }
 
-  // 4. Standard Season Campaign (weeks 1-10)
+  // 4. Standard Season Campaign (outside the tapering window)
   return {
     qualifiedTier: tierInfo.tierId,
     tierName: tierInfo.tierName,

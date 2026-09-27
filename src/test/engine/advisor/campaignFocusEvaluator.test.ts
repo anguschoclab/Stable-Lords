@@ -78,10 +78,10 @@ describe('evaluateCampaignFocus', () => {
     expect(evaluateCampaignFocus(warrior, state)).toBe('VETERAN_TWILIGHT');
   });
 
-  it('assigns TOURNAMENT_PUSH for ranked contenders during seasonal tournament prep (weeks 10-13)', () => {
+  it('assigns TOURNAMENT_PUSH for ranked contenders during seasonal tournament prep', () => {
     const warrior = mkWarrior({ id: 'contender1' as any, career: { wins: 8, losses: 2, kills: 1 } });
     const state = mkState({
-      week: 11, // prep window (weeks 11-12)
+      week: 8, // inside the prep window for the week-10 seasonal
       realmRankings: {
         contender1: { overallRank: 42, classRank: 5, compositeScore: 120 },
       } as any,

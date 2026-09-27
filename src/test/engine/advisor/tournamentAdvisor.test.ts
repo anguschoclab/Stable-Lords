@@ -50,7 +50,7 @@ describe('evaluateTournamentAdvice', () => {
     expect(advice.tierName).toBe('Imperial Gold Cup');
     expect(advice.overallRank).toBe(12);
     expect(advice.status).toBe('QUALIFYING');
-    expect(advice.weeksUntilTournament).toBe(8); // 13 - 5 = 8
+    expect(advice.weeksUntilTournament).toBe(5); // next seasonal is week 10
     expect(advice.headline).toContain('Imperial Gold Cup');
   });
 
@@ -110,10 +110,10 @@ describe('evaluateTournamentAdvice', () => {
     expect(advice.status).toBe('NONE');
   });
 
-  it('triggers CONTENDER_REST during weeks 11-12 for qualified warriors', () => {
+  it('triggers CONTENDER_REST in the two weeks before a seasonal for qualified warriors', () => {
     const warrior = mkWarrior('w1');
     const state = mkState({
-      week: 11, // 2 weeks until tournament
+      week: 8, // 2 weeks until the week-10 seasonal
       realmRankings: {
         w1: { overallRank: 30, classRank: 4, compositeScore: 200 },
       } as any,

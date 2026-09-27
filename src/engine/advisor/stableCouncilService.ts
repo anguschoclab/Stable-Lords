@@ -21,7 +21,11 @@ import { getOpponentIntel } from './intelAdvisor';
 import { isActive } from '@/engine/warriorStatus';
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
 import { TRAINING_COST } from '@/constants/economy';
-import { boutOfferAbsoluteWeek, deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import {
+  boutOfferAbsoluteWeek,
+  deriveAbsoluteWeek,
+  weeksUntilNextSeasonalTournament,
+} from '@/engine/core/absoluteWeek';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { getScoutCost } from '@/engine/scouting';
 
@@ -351,13 +355,15 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     })
     .filter((e): e is NonNullable<typeof e> => e !== null);
 
-  const seasonWeek = ((state.week - 1) % 13) + 1;
   const lookahead: CouncilLookahead = {
     futureCommitments,
     recoveryEtas,
     // isTournamentWeek is authoritative (matches evaluateTournamentAdvice) —
-    // brackets run day-by-day and the calendar week isn't necessarily 13.
-    weeksUntilTournament: state.isTournamentWeek ? 0 : 13 - seasonWeek,
+    // brackets run day-by-day. The countdown tracks seasonals only: the
+    // Grand Championship isn't a bracket most warriors can enter.
+    weeksUntilTournament: state.isTournamentWeek
+      ? 0
+      : weeksUntilNextSeasonalTournament(state.week),
     projectedContenders: cards
       .filter((c) => c.tournamentAdvice.qualifiedTier !== null)
       .map((c) => ({

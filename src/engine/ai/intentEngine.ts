@@ -7,6 +7,7 @@ import { computePlayerThreatLevel } from './agentCore';
 import { hasInjuries } from '@/engine/injuries/utils';
 import { isActive } from '@/engine/warriorStatus';
 import { HAZARDOUS_WEATHER } from './weatherSuitability';
+import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Finds a high-intensity grudge (>= 3) involving the given owner.
@@ -100,10 +101,10 @@ export function pickWeeklyIntent(
     return 'VENDETTA';
   }
 
-  // 2.5. TOURNAMENT_CAMPAIGN: healthy stables peak for the season-ending
-  // tournament (weeks 10–13). Preparation only — committee selection is
-  // rank-based and unaffected (G13).
-  const inTournamentWindow = state.week >= 10 && state.week <= 13;
+  // 2.5. TOURNAMENT_CAMPAIGN: healthy stables peak in the run-up to each
+  // seasonal tournament (the campaign window ending on the event week).
+  // Preparation only — committee selection is rank-based (G13).
+  const inTournamentWindow = isTournamentPrepWeek(state.week);
   if (inTournamentWindow && activeRoster.length >= 3 && rival.treasury >= 400) {
     return 'TOURNAMENT_CAMPAIGN';
   }

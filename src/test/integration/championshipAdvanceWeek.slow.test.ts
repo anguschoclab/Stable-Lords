@@ -16,7 +16,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
-import { ARENA_TITLE } from '@/constants/arena';
+import { ARENA_TITLE, CHAMPIONS_TOURNEY } from '@/constants/arena';
 
 const ARENA = 'standard_arena';
 
@@ -111,5 +111,58 @@ describe('championship lifecycle through advanceWeek', () => {
     expect(titleOffer?.warriorIds).toEqual(
       expect.arrayContaining(['w-champ', 'w-cont'])
     );
+  });
+
+  it('year boundary: the Grand Championship emits at 52, resolves, and records its winner', async () => {
+    let state = createFreshState('grand-champ-seed');
+    state.week = 51;
+    state.year = 1;
+    state.absoluteWeek = 51;
+
+    const ids = ['gc1', 'gc2', 'gc3', 'gc4'];
+    state.roster = ids.map((id, i) => computed(id, `Champ ${i}`));
+    const arenas = ['standard_arena', 'mudpit_arena', 'narrow_bridge', 'brass_ring'];
+    state.arenaChampions = {};
+    arenas.forEach((a, i) => {
+      state.arenaChampions![a] = {
+        champion: {
+          warriorId: ids[i] as WarriorId,
+          startedAbsoluteWeek: 1,
+          defenses: 0,
+          lastActivityWeek: 50,
+        },
+        status: 'active',
+        history: [],
+        refusals: 0,
+        deferrals: 0,
+        noContenderStreak: 0,
+        declinedContenders: {},
+      };
+    });
+
+    // 51 → 52: the pass emits the champions-only bracket.
+    state = await advanceWeek(state);
+    drainDeferredBoutLogs(state);
+    expect(state.week).toBe(52);
+    const champsT = (state.tournaments ?? []).find(
+      (t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID
+    );
+    expect(champsT).toBeDefined();
+    expect(champsT!.name).toBe(CHAMPIONS_TOURNEY.NAME);
+    expect(champsT!.participants.map((p) => p.id).sort()).toEqual([...ids].sort());
+
+    // 52 → year 2 week 1: the boundary sweep resolves the bracket and the
+    // championship pass records the winner with the year it was earned in.
+    state = await advanceWeek(state);
+    drainDeferredBoutLogs(state);
+    expect(state.week).toBe(1);
+    expect(state.year).toBe(2);
+    const done = (state.tournaments ?? []).find((t) => t.id === champsT!.id);
+    expect(done!.completed).toBe(true);
+    expect(state.grandChampions ?? []).toHaveLength(1);
+    const entry = state.grandChampions![0]!;
+    expect(entry.year).toBe(1);
+    expect(ids).toContain(entry.warriorId);
+    expect(entry.tournamentId).toBe(champsT!.id);
   });
 });

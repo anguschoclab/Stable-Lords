@@ -191,3 +191,66 @@ item after Stage H. All gaps were implemented test-first and validated.
   GC crowned at y2-w52 (field 4).
 - Focused engine/schema/component suites green; typecheck + lint clean;
   determinism/perf/balance gates re-run post-change.
+
+## Post-completion rescan — remaining gaps closed
+
+A second file-name-vs-behavior audit after the deferred pass found most of
+the plan's master test inventory is covered under renamed/consolidated
+files (e.g. `conditionEngine.triggers.test.ts` for `conditionTriggers`,
+`planIntel.test.ts` for `counterPlanning`, `retirementTiming.test.ts` for
+`retirement`). The items below were genuine gaps and are now closed.
+
+### Engine items landed
+
+- **Advisor condition recommendations** (plan E-G.3) —
+  `WarriorTacticsAdvice.suggestedConditions` now carries the opponent-state
+  triggers the rival AI emits for itself: `ENDURANCE_BELOW` survival ramp
+  (REHAB/VETERAN/exhausted), `OPPONENT_MOMENTUM_LEAD` tempo shield (killer
+  or losing-rematch opponents — mirrors the dossier counter-condition),
+  `OPPONENT_HP_BELOW` kill-window press, and `OPPONENT_ENDURANCE_BELOW`
+  swarm on scout-reported passive plans. Wired into `tacticsPlanPatch` and
+  applied non-destructively by `applyWarriorPayload` — authored conditions
+  win trigger-type ties; the council directive check flags uncovered
+  suggestions as `unapplied-tactics`.
+- **Dominant-player offer pressure** (plan F-G.4) —
+  `evaluateBoutOffer` now reads `computePlayerThreatLevel` for player-bound
+  offers: Methodical camps decline coin-flip-or-worse matchups vs a
+  `Dominant` player (skepticism floor tightens to 0), Showmen accept the
+  upset raw (before purse counters), and all non-Aggressive stables squeeze
+  the fame floor to `fame - 20` on player-bound offers — a counter-rate
+  bump on the side that can pay.
+
+### Tests added
+
+- `src/test/integration/autosimCouncil.crown.test.ts` — plan C-R item:
+  councilAutoPilot accepts a qualifying title offer (was the only truly
+  missing prescribed test).
+- `src/test/engine/combat/simulateFight.adaptivity.test.ts` — directional
+  integration assertion (plan E-R): kill-window press raises paired-seed
+  finish rate; `CONDITION_*` codes verified end-to-end in exchange
+  telemetry.
+- `src/test/components/warrior/condition/ConditionTriggerSection.test.tsx` —
+  plan E-R editor coverage: all ten trigger types selectable incl. the four
+  opponent-state/psych triggers; correct input control per trigger kind.
+- `src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts` —
+  dominant-player pressure incl. the rival-bound control.
+- `applyWarriorPayload` merge-semantics tests (conditions append without
+  stomping authored plans, no duplicate trigger types).
+
+### Gates re-run for this pass
+
+- Typecheck + lint clean; focused regression 103 files / 1,375 tests green.
+- `parallelDeterminism.slow` (pool 1 vs 4): green — offer evaluation is
+  coordinator-side; no shard divergence introduced.
+- `weekDeterminism.slow` + `sim/determinism.slow`: green.
+- `rivalStrategyPass.perf.slow`: 87.6 ms (< 500 bound), perception once/tick.
+- `worldLiveness.slow`: 104-week invariants hold.
+- `autosimChampionship.slow`: y2 GC crowned.
+- Balance harness (`styleWinConditions` + `economy/balance` slow): 24 green.
+
+### Residual honest observation
+
+Reign endings remain death-dominated (champions die in ordinary bookings
+rather than losing belts in title bouts — `defensesBooked ≈ 0` on the
+autosim seed). The dethrone machinery works; title-defense cadence vs
+ordinary booking priority is a tuning question, not an AI-coverage gap.

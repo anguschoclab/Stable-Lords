@@ -16,6 +16,7 @@ import {
   COUNTERED_VENUE_CONDITION,
 } from '@/engine/bout/mutations/contractMutations';
 import { contenderRankAtArena } from '@/engine/championship/arenaChampionship';
+import { computePlayerThreatLevel, type PlayerThreatLevel } from '@/engine/ai/agentCore';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
 
 /**
@@ -159,14 +160,26 @@ export function evaluateBoutOffer(
 
   // Observed danger: witnessed-tells dossiers that saw the opponent's stable
   // brawl high-OE tighten the style-matchup tolerance for calculating owners.
-  const oppStableId = opponent
-    ? state?.warriorToStableMap?.get(opponent.id)?.stableId
+  const oppStableInfo = opponent
+    ? state?.warriorToStableMap?.get(opponent.id)
     : undefined;
-  const oppTells = oppStableId
-    ? rival.agentMemory?.opponentDossiers?.[oppStableId]?.observedTells
+  const oppTells = oppStableInfo?.stableId
+    ? rival.agentMemory?.opponentDossiers?.[oppStableInfo.stableId]?.observedTells
     : undefined;
   const observedDanger =
     !!oppTells && oppTells.samples >= 2 && oppTells.oe >= 0.7;
+
+  // Player-bound offers: when the player's stable dominates the realm
+  // rankings, rival owners adjust — calculating camps refuse to feed the
+  // dominant stable, Showmen chase the upset, and everyone negotiates harder
+  // because the dominant stable can afford it.
+  const playerBound =
+    !!opponent &&
+    !!state &&
+    (oppStableInfo?.isPlayer ??
+      (state.roster ?? []).some((w) => w.id === opponent.id));
+  const playerThreat: PlayerThreatLevel =
+    playerBound && state ? computePlayerThreatLevel(state) : 'Neutral';
 
   // ── Hard gates (cannot be bought off by desperation) ──
 
@@ -306,7 +319,15 @@ export function evaluateBoutOffer(
   // draw against a known brawling camp is a pass.
   if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
     const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-    if (edge <= (observedDanger ? -1 : -2)) {
+    // Methodical camps refuse to feed a dominant player on a coin flip —
+    // anything short of a clear edge is a pass.
+    const skepticismFloor =
+      personality === 'Methodical' && playerThreat === 'Dominant'
+        ? 0
+        : observedDanger
+          ? -1
+          : -2;
+    if (edge <= skepticismFloor) {
       return 'Declined';
     }
   }
@@ -324,6 +345,13 @@ export function evaluateBoutOffer(
     if (venueCounterTarget(offer, warrior, rival, state)) {
       return 'CounteredVenue';
     }
+  }
+
+  // Dominant-player upset chase: a Showman takes the fight raw — beating
+  // the realm's top stable IS the spectacle, no purse negotiation needed.
+  // Runs after the venue counter (a Showman still won't fight on a bad stage).
+  if (playerThreat === 'Dominant' && personality === 'Showman') {
+    return 'Accepted';
   }
 
   // Campaign roles — shared advisor semantics: a CROWN_BID contender takes
@@ -347,8 +375,10 @@ export function evaluateBoutOffer(
     warrior.campaignFocus !== 'PURSE_HUNTER'
   ) {
     // Greedy promoters lowball — their fame floor sits closer to asking price.
-    const purseFloor =
-      (warrior.fame ?? 0) - (promoter?.personality === 'Greedy' ? 20 : 50);
+    // A dominant player's stable can afford to pay up — squeeze harder.
+    const squeeze =
+      promoter?.personality === 'Greedy' || playerThreat === 'Dominant';
+    const purseFloor = (warrior.fame ?? 0) - (squeeze ? 20 : 50);
     if (purseFloor > 0 && offer.purse < purseFloor) {
       return 'Countered';
     }

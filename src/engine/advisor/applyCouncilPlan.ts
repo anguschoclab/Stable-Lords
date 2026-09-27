@@ -41,12 +41,24 @@ export function applyWarriorPayload(state: GameState, payload: WarriorActionPayl
     }
   }
 
-  // 3. Battle plan tuning.
+  // 3. Battle plan tuning. Suggested conditions merge non-destructively:
+  // authored conditions are preserved and a suggestion is skipped when the
+  // plan already covers that trigger type — the council advises, the authored
+  // plan wins ties.
   if (payload.tacticsPlanPatch) {
     const warrior = state.roster.find((w) => w.id === payload.warriorId);
     if (warrior) {
       const basePlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
-      warrior.plan = { ...basePlan, ...payload.tacticsPlanPatch };
+      const { conditions: suggested, ...restPatch } = payload.tacticsPlanPatch;
+      warrior.plan = { ...basePlan, ...restPatch };
+      if (suggested?.length) {
+        const authored = basePlan.conditions ?? [];
+        const covered = new Set(authored.map((c) => c.trigger.type));
+        warrior.plan.conditions = [
+          ...authored,
+          ...suggested.filter((c) => !covered.has(c.trigger.type)),
+        ];
+      }
     }
   }
 

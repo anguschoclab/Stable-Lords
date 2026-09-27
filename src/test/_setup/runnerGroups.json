@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T21:40:04.712Z",
+  "generatedAt": "2026-09-27T22:01:58.090Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -113,6 +113,7 @@
     "src/test/components/warrior/WarriorTrainingCard.heatbar.test.tsx",
     "src/test/components/warrior/WeaponAffinitySection.test.tsx",
     "src/test/components/warrior/attributeRowState.test.ts",
+    "src/test/components/warrior/condition/ConditionTriggerSection.test.tsx",
     "src/test/components/warrior/condition/OverrideSliders.test.tsx",
     "src/test/components/warrior/dossier/WarriorDossierHeader.test.tsx",
     "src/test/components/warrior/dossier/WarriorDossierStats.test.tsx",
@@ -125,6 +126,7 @@
     "src/test/config/environmentSplitCanary.test.ts",
     "src/test/engine/advisor/boutOfferAdvisor.test.ts",
     "src/test/engine/advisor/campaignFocusEvaluator.test.ts",
+    "src/test/engine/advisor/tacticsAdvisorBridge.test.ts",
     "src/test/engine/ai/intentEngine.tournament.test.ts",
     "src/test/engine/ai/intentStates.test.ts",
     "src/test/engine/ai/plan/coreGenerator.test.ts",
@@ -185,6 +187,7 @@
     "src/test/hooks/useWeekExecution.test.ts",
     "src/test/integration/autosim.slow.test.ts",
     "src/test/integration/autosimChampionship.slow.test.ts",
+    "src/test/integration/autosimCouncil.crown.test.ts",
     "src/test/integration/worldLiveness.slow.test.ts",
     "src/test/lib/AudioManager.test.ts",
     "src/test/lib/a11yPrefs.test.ts",

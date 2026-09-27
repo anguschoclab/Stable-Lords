@@ -135,6 +135,9 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
         OE: tacticsAdvice.suggestedOE,
         AL: tacticsAdvice.suggestedAL,
         fallbackCondition: tacticsAdvice.fallbackCondition,
+        ...(tacticsAdvice.suggestedConditions?.length
+          ? { conditions: tacticsAdvice.suggestedConditions }
+          : {}),
       },
     };
 
@@ -334,13 +337,19 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     if (fightingIds.has(card.warriorId) && card.actionPayload.tacticsPlanPatch) {
       const plan = warrior.plan;
       const patch = card.actionPayload.tacticsPlanPatch;
+      // A suggested condition counts as unapplied only when no authored
+      // condition already covers the same trigger type.
+      const uncoveredSuggestion = (patch.conditions ?? []).some(
+        (c) => !(plan?.conditions ?? []).some((p) => p.trigger.type === c.trigger.type)
+      );
       const diverged =
         !plan ||
         plan.OE !== patch.OE ||
         plan.AL !== patch.AL ||
         plan.offensiveTactic !== patch.offensiveTactic ||
         plan.defensiveTactic !== patch.defensiveTactic ||
-        plan.fallbackCondition !== patch.fallbackCondition;
+        plan.fallbackCondition !== patch.fallbackCondition ||
+        uncoveredSuggestion;
       if (diverged) {
         unresolvedDirectives.push({
           kind: 'unapplied-tactics',

@@ -12,6 +12,7 @@ import type {
   WarriorId,
   BoutOfferId,
   FightPlan,
+  PlanCondition,
 } from '@/types/shared.types';
 import type { BoutOffer, InsightToken, TrainingAssignment } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -111,6 +112,12 @@ export interface WarriorTacticsAdvice {
   suggestedOE: number;
   suggestedAL: number;
   fallbackCondition?: 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None';
+  /**
+   * Recommended plan conditions (the opponent-state/survival triggers the
+   * rival AI emits for itself). Applied non-destructively — authored
+   * conditions on the warrior's plan are preserved.
+   */
+  suggestedConditions?: PlanCondition[];
   gearNotes: string[];
 }
 

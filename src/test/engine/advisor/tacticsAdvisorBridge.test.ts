@@ -176,3 +176,94 @@ describe('evaluateTacticsAdvice', () => {
     expect(adjusted.gearNotes.some((n) => /rematch/i.test(n))).toBe(false);
   });
 });
+
+describe('suggested conditions (plan triggers)', () => {
+  it('recommends a tempo-shield condition vs a known killer', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const killer = mkWarrior(FightingStyle.BashingAttack, {
+      id: 'opp1' as any,
+      career: { wins: 9, losses: 1, kills: 2 },
+    });
+    const advice = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', {
+      opponent: killer,
+      state: makeGameState({}),
+    });
+
+    const shield = advice.suggestedConditions?.find(
+      (c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD'
+    );
+    expect(shield).toBeDefined();
+    expect(shield?.label).toBeTruthy();
+  });
+
+  it('recommends a tempo-shield on a losing rematch record', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const state = makeGameState({
+      arenaHistory: [
+        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'D' }),
+        makeFightSummary({ warriorIdA: 'opp1' as any, warriorIdD: 'w1' as any, winner: 'A' }),
+        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'D' }),
+      ],
+    });
+
+    const advice = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state });
+    expect(
+      advice.suggestedConditions?.some((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')
+    ).toBe(true);
+  });
+
+  it('recommends a survival ramp for REHABILITATION and exhausted fighters', () => {
+    const rehab = evaluateTacticsAdvice(mkWarrior(FightingStyle.TotalParry), 'REHABILITATION');
+    expect(
+      rehab.suggestedConditions?.some((c) => c.trigger.type === 'ENDURANCE_BELOW')
+    ).toBe(true);
+
+    const exhausted = evaluateTacticsAdvice(
+      mkWarrior(FightingStyle.BashingAttack, { fatigue: 45 }),
+      'PURSE_HUNTER'
+    );
+    expect(
+      exhausted.suggestedConditions?.some((c) => c.trigger.type === 'ENDURANCE_BELOW')
+    ).toBe(true);
+  });
+
+  it('recommends a gassed-opponent press when intel reports a passive plan', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const state = makeGameState({
+      insightTokens: [
+        {
+          id: 'tok1' as any,
+          type: 'Tactic',
+          warriorId: 'opp1' as any,
+          warriorName: 'Marcus',
+          detail: 'Suspected OE: Low, AL: Low',
+          discoveredWeek: 4,
+        },
+      ],
+    });
+
+    const advice = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state });
+    expect(
+      advice.suggestedConditions?.some((c) => c.trigger.type === 'OPPONENT_ENDURANCE_BELOW')
+    ).toBe(true);
+  });
+
+  it('recommends a kill-window press for a healthy warrior with a scouted opponent', () => {
+    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });
+    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });
+    const advice = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', {
+      opponent,
+      state: makeGameState({}),
+    });
+    expect(
+      advice.suggestedConditions?.some((c) => c.trigger.type === 'OPPONENT_HP_BELOW')
+    ).toBe(true);
+  });
+
+  it('suggests no conditions without an opponent context on a healthy warrior', () => {
+    const advice = evaluateTacticsAdvice(mkWarrior(FightingStyle.LungingAttack), 'PURSE_HUNTER');
+    expect(advice.suggestedConditions ?? []).toHaveLength(0);
+  });
+});

@@ -7,6 +7,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { CampaignFocus, WarriorTacticsAdvice } from './types';
+import type { PlanCondition } from '@/types/shared.types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { deriveHeadToHead, getOpponentIntel } from './intelAdvisor';
@@ -44,8 +45,25 @@ export function evaluateTacticsAdvice(
   let fallbackCondition: 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None' =
     defaultPlan.fallbackCondition ?? 'TURTLE';
 
-  if (campaignFocus === 'REHABILITATION' || campaignFocus === 'VETERAN_TWILIGHT') {
+  const preservational =
+    campaignFocus === 'REHABILITATION' || campaignFocus === 'VETERAN_TWILIGHT';
+  if (preservational) {
     fallbackCondition = 'YIELD';
+  }
+
+  // Conditional plan recommendations — the same opponent-state triggers the
+  // rival AI emits for its own fighters, offered to the player. Each is
+  // labelled so the editor/debug surfaces show it as council advice.
+  const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
+  const suggestedConditions: PlanCondition[] = [];
+
+  // Survival ramp — mirrors the universal AI safety condition.
+  if (preservational || fatigue >= 30) {
+    suggestedConditions.push({
+      trigger: { type: 'ENDURANCE_BELOW', value: 30 },
+      override: { OE: bounded(suggestedOE, -2), AL: bounded(suggestedAL, +2) },
+      label: 'Conserve energy when gassed',
+    });
   }
 
   // 3. Equipment & Loadout Audit
@@ -74,13 +92,37 @@ export function evaluateTacticsAdvice(
   // higher AL, scaled by how lopsided the record is, capped at ±2).
   if (ctx?.opponent && ctx.state) {
     const h2h = deriveHeadToHead(ctx.state, warrior.id, ctx.opponent.id);
-    if (h2h.meetings >= 2 && h2h.losses > h2h.wins) {
+    const losingRematch = h2h.meetings >= 2 && h2h.losses > h2h.wins;
+    if (losingRematch) {
       const delta = Math.min(2, h2h.losses - h2h.wins);
       suggestedOE = clamp(suggestedOE - delta, 1, 10);
       suggestedAL = clamp(suggestedAL + delta, 1, 10);
       gearNotes.push(
         `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${ctx.opponent.name} — fight more patiently.`
       );
+    }
+
+    // Tempo shield — mirrors the dossier counter-condition rival AI pushes
+    // when the opponent has killed or beaten them before: shell up the moment
+    // the opponent seizes tempo.
+    if ((ctx.opponent.career?.kills ?? 0) > 0 || losingRematch) {
+      suggestedConditions.push({
+        trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
+        override: { AL: bounded(suggestedAL, +2), OE: bounded(suggestedOE, -1) },
+        label: `Shell up when ${ctx.opponent.name} seizes tempo`,
+      });
+    }
+
+    // Kill-window press — unless the council is preserving this fighter.
+    if (!preservational) {
+      suggestedConditions.push({
+        trigger: { type: 'OPPONENT_HP_BELOW', value: 30 },
+        override: {
+          killDesire: clamp((warrior.plan?.killDesire ?? 5) + 2, 1, 10),
+          OE: bounded(suggestedOE, +1),
+        },
+        label: 'Press the kill window when they are hurt',
+      });
     }
 
     // Counter-tempo: a 'Tactic' dossier token (Expert scouting) reads the
@@ -102,6 +144,11 @@ export function evaluateTacticsAdvice(
       gearNotes.push(
         `Scouts report ${ctx.opponent.name} fights passively — press the tempo.`
       );
+      suggestedConditions.push({
+        trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 40 },
+        override: { OE: bounded(suggestedOE, +2) },
+        label: 'Swarm when they gas out',
+      });
     }
   }
 
@@ -111,6 +158,7 @@ export function evaluateTacticsAdvice(
     suggestedOE,
     suggestedAL,
     fallbackCondition,
+    suggestedConditions: suggestedConditions.length ? suggestedConditions : undefined,
     gearNotes,
   };
 }

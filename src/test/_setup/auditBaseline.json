@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T21:40:04.711Z",
+  "generatedAt": "2026-09-27T22:01:58.084Z",
   "strayTestFiles": [],
   "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
@@ -8,5 +8,7 @@
     "src/test/engine/combat/equipmentIntegration.test.ts",
     "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts"
   ],
-  "missingJsdomPragma": []
+  "missingJsdomPragma": [
+    "src/test/engine/advisor/tacticsAdvisorBridge.test.ts"
+  ]
 }

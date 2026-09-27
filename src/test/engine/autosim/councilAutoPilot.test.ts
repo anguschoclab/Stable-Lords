@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runAutosim } from '@/engine/autosim';
+import { applyWarriorPayload } from '@/engine/advisor/applyCouncilPlan';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import type { GameState, BoutOffer } from '@/types/state.types';
@@ -108,5 +109,74 @@ describe('runAutosim councilAutoPilot', () => {
     );
     // No council application → no auto training assignments.
     expect(result.finalState.trainingAssignments ?? []).toHaveLength(0);
+  });
+});
+
+describe('applyWarriorPayload — tactics conditions merge', () => {
+  it('appends suggested conditions without stomping authored ones', () => {
+    const state = makeSimmableState();
+    const authored = {
+      trigger: { type: 'HP_BELOW' as const, value: 30 },
+      override: { OE: 2 },
+      label: 'Player-authored survival',
+    };
+    const w = state.roster.find((x) => x.id === ('w1' as WarriorId))!;
+    w.plan = { style: w.style, OE: 6, AL: 6, killDesire: 5, conditions: [authored] } as any;
+
+    applyWarriorPayload(state, {
+      warriorId: 'w1' as WarriorId,
+      tacticsPlanPatch: {
+        OE: 7,
+        conditions: [
+          {
+            trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
+            override: { AL: 8, OE: 4 },
+            label: 'Shell up when they seize tempo',
+          },
+        ],
+      },
+    });
+
+    const plan = w.plan!;
+    expect(plan.OE).toBe(7);
+    expect(plan.conditions).toHaveLength(2);
+    expect(plan.conditions!.some((c) => c.label === 'Player-authored survival')).toBe(true);
+    expect(
+      plan.conditions!.some((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')
+    ).toBe(true);
+  });
+
+  it('does not duplicate a trigger type the authored plan already covers', () => {
+    const state = makeSimmableState();
+    const w = state.roster.find((x) => x.id === ('w1' as WarriorId))!;
+    w.plan = {
+      style: w.style,
+      OE: 6,
+      AL: 6,
+      killDesire: 5,
+      conditions: [
+        {
+          trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 3 },
+          override: { AL: 9 },
+          label: 'Authored shell',
+        },
+      ],
+    } as any;
+
+    applyWarriorPayload(state, {
+      warriorId: 'w1' as WarriorId,
+      tacticsPlanPatch: {
+        conditions: [
+          { trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 }, override: { AL: 8 } },
+          { trigger: { type: 'OPPONENT_HP_BELOW', value: 30 }, override: { killDesire: 9 } },
+        ],
+      },
+    });
+
+    const types = w.plan!.conditions!.map((c) => c.trigger.type);
+    expect(types.filter((t) => t === 'OPPONENT_MOMENTUM_LEAD')).toHaveLength(1);
+    // The authored shell is preserved verbatim — not overwritten.
+    expect(w.plan!.conditions!.find((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')!.trigger.value).toBe(3);
+    expect(types).toContain('OPPONENT_HP_BELOW');
   });
 });

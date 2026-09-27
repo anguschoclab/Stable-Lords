@@ -189,9 +189,7 @@ export function collectPulse(state: GameState): SimPulse {
   const champsTournaments = (state.tournaments ?? []).filter(
     (t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID
   );
-  const grandChampFieldSize = champsTournaments.length
-    ? champsTournaments[champsTournaments.length - 1].participants.length
-    : 0;
+  const grandChampFieldSize = champsTournaments.at(-1)?.participants.length ?? 0;
   const expectedGCs = Math.floor(Math.max(0, now - 1) / WEEKS_PER_YEAR);
   const grandChampCancellations = Math.max(0, expectedGCs - champsTournaments.length);
 

@@ -28,7 +28,7 @@ function finishCount(planA: FightPlan, planD: FightPlan): { finishes: number; fi
     const result = simulateFight(planA, planD, a, d, seed);
     if (result.winner === 'A' && (result.by === 'KO' || result.by === 'Kill')) finishes++;
     // Only plan A carries the condition — any firing belongs to A.
-    firings += result.exchangeLog.filter((e) =>
+    firings += (result.exchangeLog ?? []).filter((e) =>
       (e.reasonCodes ?? []).some((c) => c === 'CONDITION_OPPONENT_HP_BELOW')
     ).length;
   }
@@ -84,7 +84,7 @@ describe('mid-bout adaptivity', () => {
     for (const seed of SEEDS.slice(0, 20)) {
       const { a, d } = fighters();
       const result = simulateFight(shell, brawler, a, d, seed);
-      observed += result.exchangeLog.filter((e) =>
+      observed += (result.exchangeLog ?? []).filter((e) =>
         (e.reasonCodes ?? []).some((c) => c.startsWith('CONDITION_OPPONENT_MOMENTUM_LEAD'))
       ).length;
     }

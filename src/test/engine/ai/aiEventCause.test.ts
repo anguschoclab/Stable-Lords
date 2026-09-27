@@ -45,6 +45,7 @@ describe('AIEventCause sync guard', () => {
         burnRate: 0,
         metaAwareness: {},
         knownRivals: [],
+        opponentDossiers: {},
         currentIntent: 'RECOVERY',
       } as AIAgentMemory,
     });

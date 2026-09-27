@@ -22,7 +22,6 @@ import {
   makeBoutOffer,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
-import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 
 beforeEach(() => resetFixtureIds());
 

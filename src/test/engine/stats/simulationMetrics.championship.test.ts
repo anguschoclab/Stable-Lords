@@ -84,10 +84,10 @@ describe('SimPulse championship metrics (Stage H)', () => {
       'o-1': titleOffer('Proposed', 'o-1'),
       'o-2': titleOffer('Signed', 'o-2'),
       'o-3': titleOffer('Signed', 'o-3'),
-      'o-4': titleOffer('Declined', 'o-4'),
+      'o-4': titleOffer('Rejected', 'o-4'),
     };
     const pulse = collectPulse(makeGameState({ boutOffers: boutOffers as never }));
-    expect(pulse.titleOfferStatuses).toEqual({ Proposed: 1, Signed: 2, Declined: 1 });
+    expect(pulse.titleOfferStatuses).toEqual({ Proposed: 1, Signed: 2, Rejected: 1 });
   });
 
   it('reports mean plan-intel staleness across dossiers', () => {

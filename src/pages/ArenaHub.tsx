@@ -245,7 +245,7 @@ export default function ArenaHub() {
 
   const matchCard = useMemo(
     () =>
-      generatePairings(gameState).map((p) => ({
+      generatePairings(gameState).pairings.map((p) => ({
         playerWarrior: p.a,
         rivalWarrior: p.d,
         rivalStable:

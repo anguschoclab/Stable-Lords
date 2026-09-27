@@ -2,7 +2,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('@/engine/bout/core/pairings', () => ({
-  generatePairings: vi.fn(() => [{ a: { id: 'w1' }, d: { id: 'w2' }, isRivalry: false }]),
+  generatePairings: vi.fn(() => ({
+    pairings: [{ a: { id: 'w1' }, d: { id: 'w2' }, isRivalry: false }],
+    voidedOffers: [],
+  })),
 }));
 
 vi.mock('@/engine/warriorStatus', () => ({
@@ -175,7 +178,7 @@ describe('useWeekExecution', () => {
   });
 
   it('posts error toast when 0 eligible fighters (matchCard=0, fightReady<2)', async () => {
-    vi.mocked(generatePairings).mockReturnValueOnce([]);
+    vi.mocked(generatePairings).mockReturnValueOnce({ pairings: [], voidedOffers: [] });
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();

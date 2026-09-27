@@ -3,7 +3,7 @@
  * Types extracted to boutProcessorTypes.ts, resolution logic to boutResolution.ts.
  * Re-exports for backward compatibility.
  */
-import { GameState } from '@/types/state.types';
+import { BoutOffer, GameState } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
@@ -77,15 +77,23 @@ function stitchCombatantMutations(
 }
 
 /**
- * Shared post-resolution tail: side-effect impact + player match-history
- * records, applied in pairing order. Identical for sequential and sharded
- * execution.
+ * Shared post-resolution tail: voided-contract cancels, side-effect impact +
+ * player match-history records, applied in pairing order. Identical for
+ * sequential and sharded execution.
+ *
+ * The voided-cancel impact must come AFTER per-bout impacts: each resolved
+ * contract's payout step re-emits `boutOffers` with every surviving offer's
+ * pre-bout object (resolveHelpers.ts), which would otherwise overwrite our
+ * 'Canceled' write back to 'Signed' via dictMerge.
  */
 function finalizeBoutResults(
   state: GameState,
   results: BoutResult[],
-  impacts: StateImpact[]
+  impacts: StateImpact[],
+  voidedOffers: BoutOffer[]
 ): void {
+  const voided = voidedOffersImpact(state, voidedOffers);
+  if (voided) impacts.push(voided);
   impacts.push(finalizeWeekSideEffectsToImpact(state, results));
 
   // Build match records for player warriors for repeat-opponent avoidance
@@ -120,6 +128,32 @@ function finalizeBoutResults(
 }
 
 /**
+ * Voided duplicate contracts get an explicit cancel + notice rather than
+ * lingering as Signed ghosts (which would sit in boutOffers until pruning
+ * and never pay out or penalize — invisible bookkeeping drift).
+ */
+function voidedOffersImpact(state: GameState, voidedOffers: BoutOffer[]): StateImpact | null {
+  if (voidedOffers.length === 0) return null;
+  const boutOffers: Record<string, BoutOffer> = {};
+  for (const o of voidedOffers) boutOffers[o.id] = { ...o, status: 'Canceled' };
+  return {
+    boutOffers: boutOffers as StateImpact['boutOffers'],
+    newsletterItems: [
+      {
+        id: `voided_contracts_${state.absoluteWeek}`,
+        week: state.absoluteWeek,
+        title: 'Bout Contract Voided',
+        items: voidedOffers.map(
+          (o) =>
+            `Contract ${o.id} was voided — a warrior cannot be booked twice in one week.`
+        ),
+        category: 'news',
+      },
+    ],
+  };
+}
+
+/**
  * Process week bouts — sequential in-line path.
  */
 export function processWeekBouts(state: GameState, headless?: boolean): WeekBoutsOutput {
@@ -142,7 +176,7 @@ export function processWeekBouts(state: GameState, headless?: boolean): WeekBout
   const results: BoutResult[] = [];
   const summary = createWeekBoutSummary();
 
-  const pairings = generatePairings(state);
+  const { pairings, voidedOffers } = generatePairings(state);
 
   pairings.forEach((p) => {
     const contract = p.contractId ? state.boutOffers[p.contractId as BoutOfferId] : undefined;
@@ -168,7 +202,7 @@ export function processWeekBouts(state: GameState, headless?: boolean): WeekBout
     accumulateWeekStats(summary, res);
   });
 
-  finalizeBoutResults(state, results, impacts);
+  finalizeBoutResults(state, results, impacts, voidedOffers);
   const merged = mergeImpacts(impacts);
   stitchCombatantMutations(state, results, merged);
   return { impact: merged, results, summary };
@@ -199,7 +233,7 @@ export async function processWeekBoutsSharded(
   }
 
   const moodMods = getMoodModifiers(state.crowdMood);
-  const pairings = generatePairings(state);
+  const { pairings, voidedOffers } = generatePairings(state);
 
   const outputs = await pool.mapBoutShards(
     pairings.map((pairing) => ({ pairing })),
@@ -218,7 +252,7 @@ export async function processWeekBoutsSharded(
     for (const e of events) engineEventBus.emit(e);
   }
 
-  finalizeBoutResults(state, results, impacts);
+  finalizeBoutResults(state, results, impacts, voidedOffers);
   const merged = mergeImpacts(impacts);
   stitchCombatantMutations(state, results, merged);
   return { impact: merged, results, summary };

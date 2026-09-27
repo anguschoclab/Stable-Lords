@@ -142,7 +142,7 @@ describe('absoluteWeek rollover — generatePairings', () => {
       warriorMap: state.warriorMap,
     } as GameState;
 
-    const pairings = generatePairings(stateAt54);
+    const { pairings } = generatePairings(stateAt54);
     expect(pairings.length).toBeGreaterThan(0);
     expect(pairings[0]!.a.id).toBe(wA.id);
     expect(pairings[0]!.d.id).toBe(wB.id);

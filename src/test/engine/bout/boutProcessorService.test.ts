@@ -230,3 +230,72 @@ describe('processWeekBouts — matchHistory integration', () => {
     }
   });
 });
+
+describe('processWeekBouts — double-booked warrior dedupe', () => {
+  const mkSignedOffer = (id: string, ids: string[], arenaId = 'arena-1'): any => ({
+    id,
+    promoterId: 'p1',
+    warriorIds: ids,
+    boutWeek: 1,
+    expirationWeek: 1,
+    purse: 100,
+    hype: 100,
+    status: 'Signed',
+    responses: {},
+    arenaId,
+  });
+
+  it('resolves only one bout and explicitly cancels the voided duplicate contract', () => {
+    const state = makeBaseState();
+    state.roster = [makeMinimalWarrior({ id: 'w1' as any, name: 'Ready', fatigue: 0 })];
+    state.rivals = [
+      {
+        id: 'rival-1',
+        owner: {
+          id: 'owner-1',
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        } as any,
+        roster: [
+          makeMinimalWarrior({ id: 'w2' as any, name: 'Rival A', fatigue: 0 }),
+          makeMinimalWarrior({ id: 'w3' as any, name: 'Rival B', fatigue: 0 }),
+        ],
+        treasury: 100,
+        fame: 0,
+      } as any,
+    ];
+    state.boutOffers = {
+      ['offer-a' as any]: mkSignedOffer('offer-a', ['w1', 'w2']),
+      ['offer-b' as any]: mkSignedOffer('offer-b', ['w1', 'w3']),
+    };
+    state.warriorMap = new Map([
+      ['w1' as any, state.roster[0]!],
+      ['w2' as any, state.rivals[0]!.roster[0]!],
+      ['w3' as any, state.rivals[0]!.roster[1]!],
+    ]);
+    state.warriorToStableMap = new Map([
+      ['w2', { stableId: 'rival-1', isPlayer: false }],
+      ['w3', { stableId: 'rival-1', isPlayer: false }],
+    ]) as any;
+
+    const { results, impact } = processWeekBouts(state, true);
+
+    // Only one bout resolved — w1 cannot fight twice in one week
+    expect(results).toHaveLength(1);
+    expect(results[0]!.a.id).toBe('w1');
+
+    // The losing contract is explicitly canceled, not left dangling
+    const offerUpdates = impact.boutOffers ?? {};
+    const voided = Object.values(offerUpdates).find((o) => o.status === 'Canceled');
+    expect(voided).toBeDefined();
+    expect(['offer-a', 'offer-b']).toContain(voided!.id);
+    expect(voided!.id).not.toBe(results[0]!.contractId);
+
+    // And it announces the cancellation rather than silently dropping it
+    const note = (impact.newsletterItems ?? []).find((n) => n.title === 'Bout Contract Voided');
+    expect(note).toBeDefined();
+  });
+});

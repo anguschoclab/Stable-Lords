@@ -55,10 +55,179 @@ describe('boutProcessor - generatePairings', () => {
         },
       },
     };
-    const pairings = generatePairings(state);
+    const { pairings, voidedOffers } = generatePairings(state);
     expect(pairings.length).toBe(1);
     expect(pairings[0]!.a.id).toBe('w1');
     expect(pairings[0]!.d.id).toBe('w2');
+    expect(voidedOffers).toHaveLength(0);
+  });
+
+  it('should void a duplicate signed offer when a warrior is booked twice in one week', () => {
+    const state: any = {
+      week: 1,
+      absoluteWeek: 1,
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [
+        {
+          id: 'w1',
+          status: 'Active',
+          stableId: 'p1',
+          style: FightingStyle.BashingAttack,
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          fame: 0,
+        },
+      ],
+      rivals: [
+        {
+          owner: { id: 'r1', stableName: 'Stab' },
+          roster: [
+            {
+              id: 'w2',
+              status: 'Active',
+              stableId: 'r1',
+              style: FightingStyle.TotalParry,
+              attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+              fame: 0,
+            },
+            {
+              id: 'w3',
+              status: 'Active',
+              stableId: 'r1',
+              style: FightingStyle.TotalParry,
+              attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+              fame: 0,
+            },
+          ],
+        },
+      ],
+      boutOffers: {
+        offer1: {
+          id: 'offer1',
+          status: 'Signed',
+          boutWeek: 1,
+          warriorIds: ['w1', 'w2'],
+          hype: 100,
+          purse: 100,
+        },
+        offer2: {
+          id: 'offer2',
+          status: 'Signed',
+          boutWeek: 1,
+          warriorIds: ['w1', 'w3'],
+          hype: 50,
+          purse: 50,
+        },
+      },
+    };
+    const { pairings, voidedOffers } = generatePairings(state);
+    expect(pairings.length).toBe(1);
+    expect(voidedOffers.map((o) => o.id)).toEqual(['offer2']);
+  });
+
+  it('should dedupe deterministically regardless of offer map insertion order', () => {
+    const mkState = (offerOrder: string[]): any => ({
+      week: 1,
+      absoluteWeek: 1,
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [
+        {
+          id: 'w1',
+          status: 'Active',
+          stableId: 'p1',
+          style: FightingStyle.BashingAttack,
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          fame: 0,
+        },
+      ],
+      rivals: [
+        {
+          owner: { id: 'r1', stableName: 'Stab' },
+          roster: [
+            {
+              id: 'w2',
+              status: 'Active',
+              stableId: 'r1',
+              style: FightingStyle.TotalParry,
+              attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+              fame: 0,
+            },
+            {
+              id: 'w3',
+              status: 'Active',
+              stableId: 'r1',
+              style: FightingStyle.TotalParry,
+              attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+              fame: 0,
+            },
+          ],
+        },
+      ],
+      boutOffers: Object.fromEntries(
+        offerOrder.map((id, i) => [
+          id,
+          {
+            id,
+            status: 'Signed',
+            boutWeek: 1,
+            warriorIds: ['w1', i === 0 ? 'w2' : 'w3'],
+            hype: 100,
+            purse: 100,
+          },
+        ])
+      ),
+    });
+
+    const a = generatePairings(mkState(['offer-a', 'offer-b']));
+    const b = generatePairings(mkState(['offer-b', 'offer-a']));
+    expect(a.pairings.map((p) => p.contractId)).toEqual(b.pairings.map((p) => p.contractId));
+    expect(a.voidedOffers.map((o) => o.id)).toEqual(b.voidedOffers.map((o) => o.id));
+    expect(a.pairings).toHaveLength(1);
+    expect(a.voidedOffers).toHaveLength(1);
+  });
+
+  it('should not double-book a tournament participant signed to a contract the same week', () => {
+    const wA = { id: 'wa', name: 'WarA', status: 'Active', stableId: 's1' };
+    const wD = { id: 'wd', name: 'WarD', status: 'Active', stableId: 's2' };
+    const wE = { id: 'we', name: 'WarE', status: 'Active', stableId: 's2' };
+    const state: any = {
+      week: 1,
+      day: 1,
+      absoluteWeek: 1,
+      isTournamentWeek: true,
+      activeTournamentId: 't1',
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [wA],
+      rivals: [{ id: 's2', owner: { id: 's2', stableName: 'RivalStab' }, roster: [wD, wE] }],
+      tournaments: [
+        {
+          id: 't1',
+          bracket: [
+            { round: 1, matchIndex: 0, warriorIdA: 'wa', warriorIdD: 'wd', stableIdD: 's2' },
+          ],
+        },
+      ],
+      warriorMap: new Map([
+        ['wa', wA],
+        ['wd', wD],
+        ['we', wE],
+      ]),
+      rivalMap: new Map([['s2', { id: 's2', owner: { stableName: 'RivalStab' } }]]),
+      boutOffers: {
+        offer1: {
+          id: 'offer1',
+          status: 'Signed',
+          boutWeek: 1,
+          warriorIds: ['wa', 'we'],
+          hype: 100,
+          purse: 100,
+        },
+      },
+    };
+    const { pairings, voidedOffers } = generatePairings(state);
+    // The tournament bracket is authoritative — the signed offer is voided.
+    expect(pairings).toHaveLength(1);
+    expect(pairings[0]!.contractId).toBe('tour_t1_1_0');
+    expect(voidedOffers.map((o) => o.id)).toEqual(['offer1']);
   });
 
   it('should generate tournament pairings using ID lookups and rivalMap', () => {
@@ -93,7 +262,7 @@ describe('boutProcessor - generatePairings', () => {
       rivalMap: new Map([['s2', { id: 's2', owner: { stableName: 'RivalStab' } }]]),
       boutOffers: {},
     };
-    const pairings = generatePairings(state);
+    const { pairings } = generatePairings(state);
     expect(pairings.length).toBe(1);
     expect(pairings[0]!.a.id).toBe('wa');
     expect(pairings[0]!.d.id).toBe('wd');
@@ -123,7 +292,7 @@ describe('boutProcessor - generatePairings', () => {
       rivalMap: new Map(),
       boutOffers: {},
     };
-    const pairings = generatePairings(state);
+    const { pairings } = generatePairings(state);
     expect(pairings.length).toBe(0);
   });
 });

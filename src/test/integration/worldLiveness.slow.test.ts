@@ -83,7 +83,7 @@ describe('world liveness — 104 weeks (Stage H)', () => {
     // 3b. Strips are rare-but-nonzero: the refusal→strip machinery actually
     //     engages (a persistent duck got removed), yet it must not dominate
     //     the ecosystem — deaths/defeats still carry the workload.
-    const endings = pulses[pulses.length - 1].reignEndings;
+    const endings = pulses[pulses.length - 1]!.reignEndings;
     expect(endings.stripped ?? 0).toBeGreaterThanOrEqual(1);
     expect(endings.stripped ?? 0).toBeLessThan(endings.died ?? 0);
 
@@ -94,7 +94,7 @@ describe('world liveness — 104 weeks (Stage H)', () => {
       (t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID
     );
     expect(champsT.every((t) => t.completed)).toBe(true);
-    const lastPulse = pulses[pulses.length - 1];
+    const lastPulse = pulses[pulses.length - 1]!;
     expect(lastPulse.grandChampCancellations).toBeGreaterThanOrEqual(0);
     expect(lastPulse.grandChampFieldSize).toBeGreaterThanOrEqual(0);
     // If a GC ran, its field met MIN_FIELD — that's the only legal launch.

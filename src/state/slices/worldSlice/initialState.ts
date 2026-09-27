@@ -25,6 +25,7 @@ export const defaultWorldState: Omit<
   | 'renamePlayer'
   | 'toggleChallenge'
   | 'toggleAvoid'
+  | 'relinquishArenaTitle'
 > = {
   year: 1,
   week: 1,

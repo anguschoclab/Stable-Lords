@@ -9,8 +9,11 @@ import {
 vi.mock('@/pages/WorldOverview', () => ({
   default: () => <div data-testid="world-overview">WorldOverview</div>,
 }));
-vi.mock('@/pages/ArenaLeaderboards', () => ({
-  default: () => <div data-testid="arena-leaderboards">ArenaLeaderboards</div>,
+vi.mock('@/pages/ArenaCircuit', () => ({
+  default: () => <div data-testid="arena-circuit">ArenaCircuit</div>,
+}));
+vi.mock('@/pages/ArenaDetail', () => ({
+  default: () => <div data-testid="arena-detail">ArenaDetail</div>,
 }));
 vi.mock('@/pages/Gazette', () => ({
   default: () => <div data-testid="gazette">Gazette</div>,
@@ -33,10 +36,11 @@ vi.mock('@/pages/StableDetail', () => ({
 
 const routes = [
   { name: 'world/index', path: '/world/', importPath: '@/routes/world/index' },
+  { name: 'world/arenas', path: '/world/arenas', importPath: '@/routes/world/arenas' },
   {
-    name: 'world/arena-leaderboards',
-    path: '/world/arena-leaderboards',
-    importPath: '@/routes/world/arena-leaderboards',
+    name: 'world/arenas/$arenaId',
+    path: '/world/arenas/$arenaId',
+    importPath: '@/routes/world/arenas.$arenaId',
   },
   { name: 'world/chronicle', path: '/world/chronicle', importPath: '@/routes/world/chronicle' },
   { name: 'world/graveyard', path: '/world/graveyard', importPath: '@/routes/world/graveyard' },
@@ -64,5 +68,21 @@ describe.each(routes)('Route: $name', (routeConfig) => {
   it('renders component without crashing', async () => {
     const mod = await import(routeConfig.importPath);
     renderRouteComponent(mod.Route);
+  });
+});
+
+describe('Route: world/arena-leaderboards (legacy redirect)', () => {
+  it('redirects to /world/arenas', async () => {
+    const mod = await import('@/routes/world/arena-leaderboards');
+    const beforeLoad = (mod.Route.options as { beforeLoad?: () => void }).beforeLoad;
+    expect(beforeLoad).toBeDefined();
+    expect(() => beforeLoad!()).toThrow();
+    try {
+      beforeLoad!();
+    } catch (e) {
+      expect((e as { to?: string }).to ?? (e as { options?: { to?: string } }).options?.to).toBe(
+        '/world/arenas'
+      );
+    }
   });
 });

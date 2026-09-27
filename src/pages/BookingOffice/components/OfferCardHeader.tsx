@@ -40,6 +40,14 @@ export function OfferCardHeader({
             <span className="text-[8px] font-black uppercase text-primary tracking-widest">
               {promoter?.tier} PROMOTER
             </span>
+            {offer.titleArenaId && (
+              <span
+                data-testid="title-bout-badge"
+                className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40"
+              >
+                Title Bout
+              </span>
+            )}
             {offer.proposerStableId && (
               <span
                 data-testid="rival-challenge-badge"

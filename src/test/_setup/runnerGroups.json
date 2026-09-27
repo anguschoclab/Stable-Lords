@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T13:30:09.426Z",
+  "generatedAt": "2026-09-27T13:39:55.671Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -188,7 +188,7 @@
     "src/test/lore/HallOfFights.test.tsx",
     "src/test/pages/AdminTools.test.tsx",
     "src/test/pages/Advisor.test.tsx",
-    "src/test/pages/ArenaLeaderboards.test.tsx",
+    "src/test/pages/ArenaCircuit.test.tsx",
     "src/test/pages/Bookmarks.test.tsx",
     "src/test/pages/ControlCenter.test.tsx",
     "src/test/pages/HallOfFame.test.tsx",

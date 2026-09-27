@@ -118,6 +118,20 @@ describe('OfferCardHeader', () => {
     expect(screen.getByTestId('counter-offer-badge')).toHaveTextContent('Countered +75G');
   });
 
+  it('renders the Title Bout badge only when titleArenaId is set', () => {
+    const { unmount } = render(
+      <OfferCardHeader offer={baseOffer()} promoter={{ name: 'P' }} personalityConfig={null} />
+    );
+    expect(screen.queryByTestId('title-bout-badge')).not.toBeInTheDocument();
+    unmount();
+
+    const titleOffer = makeBoutOffer({ titleArenaId: 'standard_arena' });
+    render(
+      <OfferCardHeader offer={titleOffer} promoter={{ name: 'P' }} personalityConfig={null} />
+    );
+    expect(screen.getByTestId('title-bout-badge')).toHaveTextContent('Title Bout');
+  });
+
   it('renders personality tag when config is present', () => {
     render(
       <OfferCardHeader

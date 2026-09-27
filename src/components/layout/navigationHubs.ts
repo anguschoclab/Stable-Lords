@@ -60,7 +60,7 @@ export const HUBS = [
     to: '/world',
     pages: [
       { to: '/world', label: 'Rankings', icon: Trophy, exact: true },
-      { to: '/world/arena-leaderboards', label: 'Arenas', icon: Swords },
+      { to: '/world/arenas', label: 'Arenas', icon: Swords },
       { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
       { to: '/world/scouting', label: 'Scouting', icon: Radar },
       { to: '/world/chronicle', label: 'Chronicle', icon: Newspaper },

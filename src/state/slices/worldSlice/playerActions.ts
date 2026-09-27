@@ -1,5 +1,7 @@
 import type { GameStore } from '@/state/useGameStore';
+import type { GameState } from '@/types/state.types';
 import { STARTING_TREASURY } from '@/constants/economy';
+import { createChampionshipDelta, relinquishCrown } from '@/engine/championship/arenaChampionship';
 import type { ArenaPreferences } from './types';
 
 /**
@@ -48,6 +50,19 @@ export function createPlayerActions(set: (fn: (state: GameStore) => Partial<Game
         return {
           playerChallenges: [...challenges, warriorId],
           playerAvoids: avoids.filter((id) => id !== warriorId),
+        };
+      });
+    },
+
+    relinquishArenaTitle: (arenaId: string) => {
+      set((state) => {
+        const delta = createChampionshipDelta();
+        relinquishCrown(state as unknown as GameState, delta, arenaId);
+        const nextTitle = delta.arenaChampions[arenaId];
+        if (!nextTitle) return {};
+        return {
+          arenaChampions: { ...state.arenaChampions, [arenaId]: nextTitle },
+          newsletter: [...(state.newsletter ?? []), ...delta.newsletterItems],
         };
       });
     },

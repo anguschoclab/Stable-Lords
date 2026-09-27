@@ -14,6 +14,9 @@ import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { setMockIdGenerator, generateId } from '@/utils/idUtils';
 import { useGameStore } from '@/state/useGameStore';
 import { makeWarrior, makeFightSummary, resetFixtureIds } from '../_fixtures/factories';
+import { registerArena, getAllArenas } from '@/data/arenas';
+import { STANDARD_ARENA } from '@/data/arenas';
+import { configureEnginePool, getEnginePool } from '@/engine/pool/enginePool';
 
 // Module-level leak probe: persists across tests in this file by design —
 // a leaked subscriber pushes into it when the bus emits.
@@ -79,6 +82,28 @@ describe('isolation sentinels', () => {
 
     it('B: key is gone', () => {
       expect(localStorage.getItem('sentinel')).toBeNull();
+    });
+  });
+
+  describe('arena registry', () => {
+    it('A: registers a test arena and abandons it', () => {
+      registerArena({ ...STANDARD_ARENA, id: 'sentinel_arena' });
+      expect(getAllArenas().some((a) => a.id === 'sentinel_arena')).toBe(true);
+    });
+
+    it('B: registry returns to the built-in set', () => {
+      expect(getAllArenas().some((a) => a.id === 'sentinel_arena')).toBe(false);
+    });
+  });
+
+  describe('engine pool', () => {
+    it('A: configures the shared pool to size 4 and abandons it', () => {
+      configureEnginePool(4);
+      expect(getEnginePool().size).toBe(4);
+    });
+
+    it('B: shared pool returns to size 1 (in-line path)', () => {
+      expect(getEnginePool().size).toBe(1);
     });
   });
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T05:23:15.871Z",
+  "generatedAt": "2026-09-27T06:15:49.113Z",
   "strayTestFiles": [],
   "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
@@ -13,7 +13,7 @@
     "src/test/engine/ai/workers/competitionWorker.test.ts",
     "src/test/engine/ai/workers/competitionWorker/offerProcessor.test.ts",
     "src/test/engine/ai/workers/rosterWorker.test.ts",
-    "src/test/engine/autosim.unit.test.ts",
+    "src/test/engine/autosim/autosim.unit.test.ts",
     "src/test/engine/autosim/councilAutoPilot.test.ts",
     "src/test/engine/bout/aiPlanIntegration.test.ts",
     "src/test/engine/bout/services/weekFinalizationRollover.test.ts",

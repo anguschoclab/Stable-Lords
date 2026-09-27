@@ -7,6 +7,7 @@ import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { clearReconstructionCache } from '@/state/serialization';
 import { StyleRollups } from '@/engine/stats/styleRollups';
+import { resetArenaRegistry } from '@/data/arenas';
 
 enableMapSet();
 
@@ -231,10 +232,16 @@ beforeEach(() => {
   }
 });
 
-// Clear vi mocks after each test to prevent state pollution
+// Clear vi mocks after each test to prevent state pollution. Timer/global/env
+// hygiene also matters for the 'shared' project (isolate: false) where sibling
+// files reuse a worker — a file that leaves fake timers or stubbed globals
+// installed would corrupt the next file in the same worker.
 afterEach(() => {
   if (typeof vi !== 'undefined') {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+    vi.useRealTimers();
   }
 });
 
@@ -245,6 +252,7 @@ afterEach(() => {
     clearHistoryResolverCaches?.();
     clearReconstructionCache?.();
     StyleRollups._clearCaches?.();
+    resetArenaRegistry?.();
   } catch (e) {
     // Ignore if modules don't export clear functions
   }
@@ -257,6 +265,26 @@ afterEach(() => {
   engineEventBus.clear();
   NewsletterFeed.clear();
   setMockIdGenerator(null);
+});
+
+// Reset the shared engine pool. Imported lazily: a static import would pull
+// the rivalStableShard → rivals → warriorFactory chain into this file's
+// module registry before vi.mock runs, silently defeating mocks of that
+// module (observed in rivalWarriorFactory.test.ts).
+// A test that configures pool size > 1 leaves `sharedPoolSize` elevated —
+// shutdownEnginePool only drops the instance, not the size. Subsequent
+// advanceWeek calls in the same worker would then spawn real shard workers
+// (MockWorker never answers Comlink) and hang forever.
+afterEach(async () => {
+  try {
+    const { shutdownEnginePool, configureEnginePool } = await import(
+      '@/engine/pool/enginePool'
+    );
+    shutdownEnginePool();
+    configureEnginePool(1);
+  } catch {
+    // mocked or unavailable in this file's registry — nothing to reset
+  }
 });
 
 // Reset the game store between tests. Imported lazily so the store graph

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -758,30 +758,34 @@ describe('selectArenaForMatchup', () => {
 
 // ─── describeArenaFit ────────────────────────────────────────────────────────
 
-// Register custom test arenas for describeArenaFit (uses getArenaById registry lookup)
-arenasModule.registerArena(
-  makeArena({
-    id: 'test_cramped',
-    size: 'cramped',
-    surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 },
-  })
-);
-arenasModule.registerArena(
-  makeArena({
-    id: 'test_drain',
-    size: 'standard',
-    surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
-  })
-);
-arenasModule.registerArena(
-  makeArena({
-    id: 'test_low_drain',
-    size: 'standard',
-    surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 },
-  })
-);
-
 describe('describeArenaFit', () => {
+  // Custom test arenas (getArenaById goes through the registry). Registered in
+  // beforeEach because setup.ts resets the arena registry after each test —
+  // module-scope registrations would be wiped after the first test.
+  beforeEach(() => {
+    arenasModule.registerArena(
+      makeArena({
+        id: 'test_cramped',
+        size: 'cramped',
+        surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 },
+      })
+    );
+    arenasModule.registerArena(
+      makeArena({
+        id: 'test_drain',
+        size: 'standard',
+        surfaceMod: { initiativeMod: 0, enduranceMult: 1.25, riposteMod: 0 },
+      })
+    );
+    arenasModule.registerArena(
+      makeArena({
+        id: 'test_low_drain',
+        size: 'standard',
+        surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 },
+      })
+    );
+  });
+
   it('cursed tag + riposte mod → tests THE_MEAT_GRINDER', () => {
     const w = makeWarrior({
       style: FightingStyle.ParryRiposte,

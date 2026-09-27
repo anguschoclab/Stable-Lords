@@ -213,6 +213,35 @@ if (!v.unstubAllGlobals) {
   };
 }
 
+// vi.stubEnv / vi.unstubAllEnvs — stub process.env keys with bookkeeping so
+// unstub restores the exact prior state (including absent keys). setup.ts's
+// afterEach calls unstubAllEnvs unconditionally; a missing shim throws and
+// aborts the remaining afterEach hooks, silently skipping state resets.
+const stubbedEnvs = new Map<string, { had: boolean; original: string | undefined }>();
+if (!v.stubEnv) {
+  v.stubEnv = (name: string, value: string | boolean | undefined) => {
+    if (!stubbedEnvs.has(name)) {
+      stubbedEnvs.set(name, {
+        had: Object.prototype.hasOwnProperty.call(process.env, name),
+        original: process.env[name],
+      });
+    }
+    // vitest maps `true`/`false`/`undefined` onto NODE_ENV-style semantics;
+    // the suite only stubs string values, so stringify defensively.
+    process.env[name] = value === undefined ? undefined : String(value);
+    return v;
+  };
+}
+if (!v.unstubAllEnvs) {
+  v.unstubAllEnvs = () => {
+    for (const [name, { had, original }] of stubbedEnvs) {
+      if (had) process.env[name] = original;
+      else delete process.env[name];
+    }
+    stubbedEnvs.clear();
+  };
+}
+
 if (!v.runAllTimersAsync) {
   // Drain pending fake timers, flushing microtasks between rounds so
   // promise-yielding timer callbacks can reschedule. Mirrors vitest's

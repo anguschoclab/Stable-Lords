@@ -1528,6 +1528,17 @@ export const THE_IRON_CAGE: ArenaConfig = {
   THE_IRON_CAGE,
 ].forEach(registerArena);
 
+// Test-only reset: restore the registry to the built-in set so test
+// registerArena() calls do not leak into other tests sharing a worker.
+const BUILTIN_ARENAS = new Map(registry);
+export function resetArenaRegistry(): void {
+  registry.clear();
+  for (const [id, arena] of BUILTIN_ARENAS) registry.set(id, arena);
+  allCache = null;
+  tagIndex.clear();
+  tierIndex.clear();
+}
+
 const loreIndex = new Map<string, ArenaLoreEntry[]>();
 
 /**

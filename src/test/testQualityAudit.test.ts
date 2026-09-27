@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import baseline from './_setup/auditBaseline.json';
+import runnerGroups from './_setup/runnerGroups.json';
 
 const TEST_DIR = path.resolve(__dirname); // src/test/
 const SRC_DIR = path.resolve(TEST_DIR, '..');
@@ -176,5 +177,34 @@ describe('testQualityAudit', () => {
     // default config must exclude slow tests so they never run in the fast suite
     const defaultConfig = fs.readFileSync(path.join(REPO_ROOT, 'vitest.config.ts'), 'utf8');
     expect(defaultConfig).toContain('**/*.slow.test.ts');
+  });
+
+  it('runnerGroups.json matches live isolation signals (regen: test-audit-scan)', () => {
+    const ISOLATION_SIGNALS =
+      /vi\.mock\(|mock\.module\(|vi\.stubGlobal|vi\.stubEnv|(?:globalThis|global)\.\w+\s*=(?!=)|Object\.defineProperty\(\s*(?:globalThis|global)\b|@vitest-isolate\b/;
+    const live: string[] = [];
+    for (const f of allVitestTestFiles()) {
+      const content = fs.readFileSync(f, 'utf8');
+      const pragma = /@vitest-environment\s+(\w+)/.exec(content)?.[1];
+      if (
+        ISOLATION_SIGNALS.test(content) ||
+        pragma === 'jsdom' ||
+        needsDom(content)
+      ) {
+        live.push(rel(f));
+      }
+    }
+    live.sort();
+    const declared = [...runnerGroups.isolated].sort();
+    const missing = live.filter((f) => !declared.includes(f));
+    const extra = declared.filter((f) => !live.includes(f));
+    expect(
+      missing,
+      `files needing isolation missing from runnerGroups.json — rerun scripts/test-audit-scan.mjs:\n${missing.join('\n')}`
+    ).toEqual([]);
+    expect(
+      extra,
+      `stale runnerGroups.json entries — rerun scripts/test-audit-scan.mjs:\n${extra.join('\n')}`
+    ).toEqual([]);
   });
 });

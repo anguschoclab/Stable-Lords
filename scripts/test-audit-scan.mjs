@@ -159,6 +159,16 @@ const records = testFiles.map((file) => {
     usesSharedFixtures: content.includes('_fixtures/factories'),
     runtimeMs: timings.get(relPath) ?? null,
     slow: relPath.includes('.slow.test.'),
+    // Files that must run in isolated workers: module mocks poison a shared
+    // module registry (a sibling caching the real module first makes the mock
+    // a no-op), global stubbing leaks without per-file teardown, and jsdom
+    // files interleave fatally with node-env files in a shared worker.
+    needsIsolation:
+      usesRTL ||
+      domConsumer ||
+      domStubber ||
+      hasPragma === 'jsdom' ||
+      /vi\.mock\(|mock\.module\(|vi\.stubGlobal|vi\.stubEnv|(?:globalThis|global)\.\w+\s*=(?!=)|Object\.defineProperty\(\s*(?:globalThis|global)\b|@vitest-isolate\b/.test(content),
   };
 });
 
@@ -239,6 +249,23 @@ const baseline = {
 fs.writeFileSync(
   path.join(SRC, 'test', '_setup', 'auditBaseline.json'),
   JSON.stringify(baseline, null, 2)
+);
+
+// Worker-sharing groups for vitest.config.ts scoped isolation: files listed
+// in `isolated` run one-worker-per-file; every other test file shares workers
+// in the `shared` project (isolate: false). testQualityAudit.test.ts guards
+// this list against drift — regenerate via this script after adding a vi.mock,
+// global stub, or jsdom pragma to any test file.
+fs.writeFileSync(
+  path.join(SRC, 'test', '_setup', 'runnerGroups.json'),
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      isolated: records.filter((r) => r.needsIsolation).map((r) => r.file).sort(),
+    },
+    null,
+    2
+  )
 );
 
 console.log('=== TEST AUDIT SCAN ===');

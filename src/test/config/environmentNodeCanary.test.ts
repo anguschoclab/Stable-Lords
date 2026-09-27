@@ -9,8 +9,8 @@ import { describe, it, expect } from 'vitest';
 
 describe('node environment canary', () => {
   it('runs without a DOM', () => {
-    expect(typeof document).toBe('undefined');
-    expect(typeof window).toBe('undefined');
+    expect(typeof globalThis.document).toBe('undefined');
+    expect(typeof globalThis.window).toBe('undefined');
   });
 
   it('pure engine module works under node env', async () => {

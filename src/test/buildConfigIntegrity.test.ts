@@ -93,7 +93,7 @@ describe('tsconfig reference graph', () => {
       // steps directly instead — router-cli first because routeTree.gen.ts is
       // gitignored and absent on a clean checkout.
       execSync(
-        'bun x @tanstack/router-cli generate && node node_modules/typescript7/bin/tsc --build --force',
+        'bun x @tanstack/router-cli generate > /dev/null 2>&1 && node node_modules/typescript7/bin/tsc --build --force',
         {
           cwd: projectRoot,
           stdio: 'pipe',

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { mergeImpacts, resolveImpacts, type StateImpact } from '@/engine/impacts';
+import { mergeImpacts, resolveImpacts } from '@/engine/impacts';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { ArenaTitleSchema, GrandChampionEntrySchema } from '@/schemas/fightSchemas';
 import {
@@ -46,8 +46,8 @@ describe('Phase 1 — championship state plumbing', () => {
       { arenaChampions: { arena_a: a } },
       { arenaChampions: { arena_b: b } },
     ]);
-    expect(merged.arenaChampions?.arena_a).toEqual(a);
-    expect(merged.arenaChampions?.arena_b).toEqual(b);
+    expect(merged.arenaChampions?.['arena_a']).toEqual(a);
+    expect(merged.arenaChampions?.['arena_b']).toEqual(b);
   });
 
   it('later arenaChampions impacts replace the whole ArenaTitle for a key', () => {
@@ -57,8 +57,8 @@ describe('Phase 1 — championship state plumbing', () => {
       { arenaChampions: { arena_a: v1 } },
       { arenaChampions: { arena_a: v2 } },
     ]);
-    expect(merged.arenaChampions?.arena_a.status).toBe('pendingReengagement');
-    expect(merged.arenaChampions?.arena_a.deferrals).toBe(1);
+    expect(merged.arenaChampions?.['arena_a']?.status).toBe('pendingReengagement');
+    expect(merged.arenaChampions?.['arena_a']?.deferrals).toBe(1);
   });
 
   it('resolveImpacts applies arenaChampions into state without clobbering siblings', () => {

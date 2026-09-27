@@ -46,6 +46,7 @@ export const BoutOfferSchema = z.object({
   arenaId: z.string().optional(),
   createdAbsoluteWeek: z.number().optional(),
   counterPurseBump: z.number().optional(),
+  titleArenaId: z.string().optional(),
 });
 
 /**
@@ -261,6 +262,8 @@ export const FightSummarySchema = z.object({
   deathEventData: DeathEventSchema.optional(),
   isRivalry: z.boolean().optional(),
   arenaId: z.string().optional(),
+  titleArenaId: z.string().optional(),
+  absoluteWeek: z.number().optional(),
   weather: WeatherTypeSchema.optional(),
   contractId: z.string().optional(),
   analysis: fightAnalysisSchema.optional(),
@@ -299,4 +302,49 @@ export const AnnualAwardSchema = z.object({
   style: FightingStyleSchema.optional(),
   value: z.number(),
   reason: z.string(),
+});
+
+export const TitleStatusSchema = z.enum(['active', 'pendingReengagement', 'dormant']);
+
+export const ArenaReignEndReasonSchema = z.enum([
+  'defeated',
+  'died',
+  'retired',
+  'stripped',
+  'relinquished',
+]);
+
+export const ArenaTitleReignSchema = z.object({
+  warriorId: z.string(),
+  startedAbsoluteWeek: z.number(),
+  defenses: z.number(),
+  lastActivityWeek: z.number(),
+});
+
+export const ArenaReignRecordSchema = z.object({
+  warriorId: z.string(),
+  warriorName: z.string(),
+  stableName: z.string().optional(),
+  startedAbsoluteWeek: z.number(),
+  endedAbsoluteWeek: z.number(),
+  endReason: ArenaReignEndReasonSchema,
+  defenses: z.number(),
+});
+
+export const ArenaTitleSchema = z.object({
+  champion: ArenaTitleReignSchema.nullable(),
+  status: TitleStatusSchema,
+  history: z.array(ArenaReignRecordSchema),
+  refusals: z.number(),
+  deferrals: z.number(),
+  noContenderStreak: z.number(),
+  declinedContenders: z.record(z.string(), z.number()),
+});
+
+export const GrandChampionEntrySchema = z.object({
+  tournamentId: z.string(),
+  year: z.number(),
+  warriorId: z.string(),
+  warriorName: z.string(),
+  stableName: z.string().optional(),
 });

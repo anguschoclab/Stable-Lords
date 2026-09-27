@@ -86,6 +86,8 @@ export function createFreshState(
     activeTournamentId: undefined,
     promoters: {},
     boutOffers: {},
+    arenaChampions: {},
+    grandChampions: [],
     realmRankings: {},
     awards: [],
     bookmarks: [],

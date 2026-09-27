@@ -98,6 +98,8 @@ const MERGE_CONFIG: MergeConfig = {
   recruitPool: { strategy: 'replace', defaultValue: undefined },
   realmRankings: { strategy: 'replace', defaultValue: undefined },
   boutOffers: { strategy: 'dictMerge', defaultValue: undefined },
+  arenaChampions: { strategy: 'dictMerge', defaultValue: undefined },
+  grandChampions: { strategy: 'append', defaultValue: [] },
   promoters: { strategy: 'replace', defaultValue: undefined },
   trainers: { strategy: 'replace', defaultValue: undefined },
   hiringPool: { strategy: 'replace', defaultValue: undefined },

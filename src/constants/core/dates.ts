@@ -37,6 +37,27 @@ export const MS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE 
 /** Milliseconds per game week: 7 * MS_PER_DAY */
 export const MS_PER_WEEK = DAYS_PER_WEEK * MS_PER_DAY;
 
+// ─── Tournament Calendar ──────────────────────────────────────────────────
+//
+// Seasonal tournaments run on these display weeks (of WEEKS_PER_YEAR).
+// The champions-only Grand Championship closes the year on week 52 —
+// the last tournament of the year.
+
+/** Display weeks that host the four seasonal tournaments. */
+export const SEASONAL_TOURNAMENT_WEEKS: readonly number[] = [10, 20, 30, 42] as const;
+
+/** Display week hosting the champions-only Grand Championship (final event of the year). */
+export const CHAMPIONS_TOURNAMENT_WEEK = 52;
+
+/**
+ * Display-week window (inclusive) before a seasonal tournament during which
+ * warriors prep — drives intentEngine narrative hints.
+ */
+export const TOURNAMENT_PREP_WEEKS = 4;
+
+/** Legacy 13-week cadence — retained only for the calendar migration. */
+export const LEGACY_TOURNAMENT_WEEKS: readonly number[] = [13, 26, 39, 52] as const;
+
 /**
  * Compute a UTC timestamp (ISO string) for a given absolute week, anchored to ERA_START_YEAR.
  * Absolute week 1 → Jan 1 of ERA_START_YEAR. Week N → Jan 1 + (N-1)*7 days.

@@ -14,6 +14,8 @@ import type {
   Rivalry,
   MatchRecord,
   OwnerGrudge,
+  ArenaTitle,
+  GrandChampionEntry,
 } from '@/types/state.types';
 import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, StableId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
@@ -45,6 +47,8 @@ export interface WorldSlice {
   gazettes: GazetteStory[];
   scoutReports: ScoutReportData[];
   arenaHistory: FightSummary[];
+  arenaChampions: Record<string, ArenaTitle>;
+  grandChampions: GrandChampionEntry[];
   newsletter: NewsletterItem[];
   hallOfFame: HallEntry[];
   crowdMood: CrowdMoodType;

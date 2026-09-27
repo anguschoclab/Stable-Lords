@@ -28,6 +28,8 @@ import type {
   InsightToken,
   TournamentEntry,
   ProgressionState,
+  ArenaTitle,
+  GrandChampionEntry,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
@@ -92,6 +94,10 @@ export interface StateImpact {
   matchHistory?: MatchRecord[];
   moodHistory?: { week: number; mood: CrowdMoodType }[];
   crowdMood?: CrowdMoodType;
+  /** Per-arena championship updates — dictMerge: each entry replaces the whole ArenaTitle for that arena. */
+  arenaChampions?: Record<string, ArenaTitle>;
+  /** Grand Championship winners — append. */
+  grandChampions?: GrandChampionEntry[];
 
   // Narrative
   gazettes?: GazetteStory[];

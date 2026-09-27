@@ -38,6 +38,8 @@ export const defaultWorldState: Omit<
   gazettes: [],
   scoutReports: [],
   arenaHistory: [],
+  arenaChampions: {},
+  grandChampions: [],
   newsletter: [],
   hallOfFame: [],
   crowdMood: 'Neutral' as CrowdMoodType,

@@ -2,7 +2,14 @@
  * Arena Domain Impacts
  * Handles arena history, hall of fame, match history, mood history, and crowd mood.
  */
-import type { GameState, HallEntry, MatchRecord, CrowdMoodType } from '@/types/state.types';
+import type {
+  GameState,
+  HallEntry,
+  MatchRecord,
+  CrowdMoodType,
+  ArenaTitle,
+  GrandChampionEntry,
+} from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 
 /**
@@ -41,6 +48,20 @@ export const crowdMood = (state: GameState, value: CrowdMoodType) => {
 };
 
 /**
+ * Apply arena championship updates — each entry replaces the whole ArenaTitle for that arena.
+ */
+export const arenaChampions = (state: GameState, value: Record<string, ArenaTitle>) => {
+  state.arenaChampions = { ...(state.arenaChampions || {}), ...value };
+};
+
+/**
+ * Apply grand champion entries to state.
+ */
+export const grandChampions = (state: GameState, value: GrandChampionEntry[]) => {
+  state.grandChampions = [...(state.grandChampions || []), ...value];
+};
+
+/**
  * Arena impact handlers map.
  */
 export const arenaHandlers = {
@@ -49,4 +70,6 @@ export const arenaHandlers = {
   matchHistory,
   moodHistory,
   crowdMood,
+  arenaChampions,
+  grandChampions,
 };

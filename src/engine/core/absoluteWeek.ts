@@ -1,4 +1,9 @@
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
+import {
+  SEASONAL_TOURNAMENT_WEEKS,
+  CHAMPIONS_TOURNAMENT_WEEK,
+  TOURNAMENT_PREP_WEEKS,
+} from '@/constants/core/dates';
 import type { BoutOffer } from '@/types/state.types';
 
 /**
@@ -39,4 +44,47 @@ export function boutOfferExpirationAbsoluteWeek(offer: BoutOffer): number {
   return offer.createdAbsoluteWeek != null
     ? resolveAbsoluteWeek(offer.expirationWeek, offer.createdAbsoluteWeek)
     : offer.expirationWeek;
+}
+
+// ─── Tournament Calendar ──────────────────────────────────────────────────
+// All helpers take a display week (1–WEEKS_PER_YEAR). Absolute-week callers
+// must convert with displayWeek() first — "is this a tournament week" is an
+// in-year question, not a monotonic one.
+
+/** True if this display week hosts one of the four seasonal tournaments. */
+export function isSeasonalTournamentWeek(week: number): boolean {
+  return SEASONAL_TOURNAMENT_WEEKS.includes(displayWeek(week));
+}
+
+/** True if this display week hosts the champions-only Grand Championship. */
+export function isChampionsTournamentWeek(week: number): boolean {
+  return displayWeek(week) === CHAMPIONS_TOURNAMENT_WEEK;
+}
+
+/** True if this display week hosts any tournament (seasonal or champions). */
+export function isTournamentWeekOfYear(week: number): boolean {
+  return isSeasonalTournamentWeek(week) || isChampionsTournamentWeek(week);
+}
+
+/**
+ * Display weeks until the next seasonal tournament (1-based count: returns 0
+ * when the current week IS a seasonal week). Wraps the year boundary. Excludes
+ * the Grand Championship — most warriors can't enter week 52.
+ */
+export function weeksUntilNextSeasonalTournament(week: number): number {
+  const dw = displayWeek(week);
+  for (let ahead = 0; ahead < WEEKS_PER_YEAR; ahead++) {
+    if (SEASONAL_TOURNAMENT_WEEKS.includes(displayWeek(dw + ahead))) return ahead;
+  }
+  return WEEKS_PER_YEAR;
+}
+
+/**
+ * True during the run-up window before the next seasonal tournament —
+ * the window is relative to the next seasonal week, not a fixed range.
+ * Returns false on a seasonal week itself and inside week-52's season.
+ */
+export function isSeasonalTournamentPrepWeek(week: number): boolean {
+  const until = weeksUntilNextSeasonalTournament(week);
+  return until > 0 && until <= TOURNAMENT_PREP_WEEKS;
 }

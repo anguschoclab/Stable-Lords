@@ -80,6 +80,8 @@ type GameStateValues = {
   fame: GameState['fame'];
   realmRankings: GameState['realmRankings'];
   awards: GameState['awards'];
+  arenaChampions: GameState['arenaChampions'];
+  grandChampions: GameState['grandChampions'];
   trainers: GameState['trainers'];
   hiringPool: GameState['hiringPool'];
   trainingAssignments: GameState['trainingAssignments'];
@@ -149,6 +151,8 @@ export function reconstructGameState(store: GameStore): GameState {
     fame: store.fame,
     realmRankings: store.realmRankings,
     awards: store.awards,
+    arenaChampions: store.arenaChampions,
+    grandChampions: store.grandChampions,
     trainers: store.trainers,
     hiringPool: store.hiringPool,
     trainingAssignments: store.trainingAssignments,
@@ -207,6 +211,8 @@ export function reconstructGameState(store: GameStore): GameState {
     bookmarks: store.bookmarks || [],
     lastSimulationReport: store.lastSimulationReport,
     deferredBoutLogs: store.deferredBoutLogs || [],
+    arenaChampions: store.arenaChampions || {},
+    grandChampions: store.grandChampions || [],
   };
 
   lastResult = result;

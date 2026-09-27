@@ -236,6 +236,9 @@ export interface FightSummary {
   deathEventData?: DeathEvent;
   isRivalry?: boolean;
   arenaId?: string;
+  /** Set when this bout was an arena title bout for the given arena — the
+   *  authoritative channel for championship resolution and UI badging. */
+  titleArenaId?: string;
   weather?: import('./shared.types').WeatherType;
   contractId?: string;
   /** Compact, persisted explanation of why the fight went the way it did.

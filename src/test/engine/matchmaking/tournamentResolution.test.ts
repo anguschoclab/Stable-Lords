@@ -106,3 +106,71 @@ describe('applyBoutResults — arena attribution', () => {
     expect(summary?.arenaId).toBe('sundered_coliseum');
   });
 });
+
+describe('applyBoutResults — career.byArena accounting', () => {
+  it('records win/loss at the tournament arena for roster and rival warriors', () => {
+    const wA = makeWarrior('wA', 'Challenger', 'player');
+    const wD = makeWarrior('wD', 'Defender', 'rival1');
+    const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);
+
+    const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;
+    const result = applyBoutResults(
+      state,
+      wA,
+      wD,
+      outcome,
+      't1',
+      'Gold Cup',
+      new SeededRNG(12345),
+      true,
+      'sundered_coliseum'
+    );
+
+    expect(result.roster[0]?.career.byArena?.sundered_coliseum).toEqual({
+      wins: 1,
+      losses: 0,
+      kills: 0,
+    });
+    expect(result.rivals[0]?.roster[0]?.career.byArena?.sundered_coliseum).toEqual({
+      wins: 0,
+      losses: 1,
+      kills: 0,
+    });
+  });
+
+  it('preserves pre-existing byArena records and credits tournament kills to the winner', () => {
+    const wA = makeWarrior('wA', 'Challenger', 'player');
+    wA.career = {
+      ...wA.career,
+      wins: 3,
+      kills: 1,
+      byArena: {
+        sundered_coliseum: { wins: 2, losses: 1, kills: 1 },
+        other_arena: { wins: 7, losses: 0, kills: 0 },
+      },
+      medals: { gold: 1, silver: 0, bronze: 0 },
+    };
+    const wD = makeWarrior('wD', 'Defender', 'rival1');
+    const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);
+
+    const outcome = { winner: 'A', by: 'Kill', log: [] } as unknown as FightOutcome;
+    const result = applyBoutResults(
+      state,
+      wA,
+      wD,
+      outcome,
+      't1',
+      'Gold Cup',
+      new SeededRNG(12345),
+      true,
+      'sundered_coliseum'
+    );
+
+    const winner = result.roster.find((w) => w.id === 'wA');
+    expect(winner?.career.byArena?.sundered_coliseum).toEqual({ wins: 3, losses: 1, kills: 2 });
+    expect(winner?.career.byArena?.other_arena).toEqual({ wins: 7, losses: 0, kills: 0 });
+    expect(winner?.career.medals).toEqual({ gold: 1, silver: 0, bronze: 0 });
+    // Victim is moved to the graveyard rather than left in a roster
+    expect(result.graveyard.some((w) => w.id === 'wD')).toBe(true);
+  });
+});

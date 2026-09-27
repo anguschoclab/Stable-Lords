@@ -17,6 +17,8 @@ export interface CareerUpdateInput {
   popularityDelta?: number;
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
   skipFatigue?: boolean;
+  /** Arena where the bout took place — used to maintain the per-arena career breakdown */
+  arenaId?: string;
 }
 
 /**
@@ -47,14 +49,29 @@ export function calculateCareerUpdate(
     fameDelta = 0,
     popularityDelta = 0,
     skipFatigue = false,
+    arenaId,
   } = input;
   const didKill = isWinner && isKill;
 
-  // Calculate new career stats
+  // Calculate new career stats — preserve the full record (byArena, medals, …)
+  const prevByArena = warrior.career?.byArena ?? {};
+  const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
   const career: CareerRecord = {
+    ...warrior.career,
     wins: (warrior.career?.wins || 0) + (isWinner ? 1 : 0),
     losses: (warrior.career?.losses || 0) + (isWinner ? 0 : 1),
     kills: (warrior.career?.kills || 0) + (didKill ? 1 : 0),
+    byArena:
+      arenaId && arenaRecord
+        ? {
+            ...prevByArena,
+            [arenaId]: {
+              wins: arenaRecord.wins + (isWinner ? 1 : 0),
+              losses: arenaRecord.losses + (isWinner ? 0 : 1),
+              kills: arenaRecord.kills + (didKill ? 1 : 0),
+            },
+          }
+        : prevByArena,
   };
 
   // Calculate fame gain: +1 for win, +3 for kill
@@ -157,7 +174,9 @@ export function updateWarriorFromBoutOutcome(
   winnerSide: 'A' | 'D' | null,
   isKill: boolean,
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
-  skipFatigue?: boolean
+  skipFatigue?: boolean,
+  /** Arena where the bout took place — used to maintain the per-arena career breakdown */
+  arenaId?: string
 ): Warrior {
   const isWinner = (isAttacker && winnerSide === 'A') || (!isAttacker && winnerSide === 'D');
   const isVictim = !isWinner && isKill;
@@ -167,6 +186,7 @@ export function updateWarriorFromBoutOutcome(
     isKill,
     isVictim,
     skipFatigue,
+    arenaId,
   };
 
   const result = calculateCareerUpdate(warrior, input);

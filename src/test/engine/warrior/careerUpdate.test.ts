@@ -401,6 +401,110 @@ describe('careerUpdate', () => {
     });
   });
 
+  describe('byArena career preservation', () => {
+    it('preserves career.byArena and medals when no arenaId is provided', () => {
+      const warrior = createTestWarrior(0, 5, 3, 1);
+      warrior.career = {
+        ...warrior.career,
+        byArena: { arena_x: { wins: 4, losses: 2, kills: 1 } },
+        medals: { gold: 1, silver: 0, bronze: 2 },
+      };
+
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: false,
+        isVictim: false,
+      });
+
+      expect(result.career.wins).toBe(6);
+      expect(result.career.byArena).toEqual({ arena_x: { wins: 4, losses: 2, kills: 1 } });
+      expect(result.career.medals).toEqual({ gold: 1, silver: 0, bronze: 2 });
+    });
+
+    it('records a win into byArena[arenaId] when arenaId is provided', () => {
+      const warrior = createTestWarrior(0, 5, 3, 1);
+      warrior.career = {
+        ...warrior.career,
+        byArena: { arena_x: { wins: 4, losses: 2, kills: 1 } },
+      };
+
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: false,
+        isVictim: false,
+        arenaId: 'arena_x',
+      });
+
+      expect(result.career.byArena?.arena_x).toEqual({ wins: 5, losses: 2, kills: 1 });
+    });
+
+    it('records a loss into byArena[arenaId] when arenaId is provided', () => {
+      const warrior = createTestWarrior(0, 5, 3, 1);
+      warrior.career = {
+        ...warrior.career,
+        byArena: { arena_x: { wins: 4, losses: 2, kills: 1 } },
+      };
+
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: false,
+        isKill: true,
+        isVictim: true,
+        arenaId: 'arena_x',
+      });
+
+      expect(result.career.byArena?.arena_x).toEqual({ wins: 4, losses: 3, kills: 1 });
+    });
+
+    it('credits the kill to the winner arena record only', () => {
+      const winner = createTestWarrior(0, 5, 3, 1);
+      const loser = createTestWarrior(0, 2, 4, 0);
+
+      const winnerResult = calculateCareerUpdate(winner, {
+        isWinner: true,
+        isKill: true,
+        isVictim: false,
+        arenaId: 'arena_x',
+      });
+      const loserResult = calculateCareerUpdate(loser, {
+        isWinner: false,
+        isKill: true,
+        isVictim: true,
+        arenaId: 'arena_x',
+      });
+
+      expect(winnerResult.career.byArena?.arena_x).toEqual({ wins: 1, losses: 0, kills: 1 });
+      expect(loserResult.career.byArena?.arena_x).toEqual({ wins: 0, losses: 1, kills: 0 });
+    });
+
+    it('preserves byArena entries for unrelated arenas when recording a bout', () => {
+      const warrior = createTestWarrior(0, 5, 3, 1);
+      warrior.career = {
+        ...warrior.career,
+        byArena: {
+          arena_x: { wins: 4, losses: 2, kills: 1 },
+          arena_y: { wins: 9, losses: 9, kills: 9 },
+        },
+      };
+
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: false,
+        isVictim: false,
+        arenaId: 'arena_x',
+      });
+
+      expect(result.career.byArena?.arena_y).toEqual({ wins: 9, losses: 9, kills: 9 });
+    });
+
+    it('updateWarriorFromBoutOutcome threads arenaId into byArena', () => {
+      const warrior = createTestWarrior();
+
+      const updated = updateWarriorFromBoutOutcome(warrior, true, 'A', false, false, 'arena_x');
+
+      expect(updated.career.byArena?.arena_x).toEqual({ wins: 1, losses: 0, kills: 0 });
+    });
+  });
+
   describe('seasonPoints', () => {
     it('should accrue +2 season points for a regular win', () => {
       const warrior = createTestWarrior();

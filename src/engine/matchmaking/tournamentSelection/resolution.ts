@@ -297,10 +297,10 @@ export function applyBoutResults(
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
   updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
-    updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue)
+    updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue, arenaId)
   );
   updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
-    updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue)
+    updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue, arenaId)
   );
 
   if (wA.stableId || wD.stableId) {
@@ -308,11 +308,11 @@ export function applyBoutResults(
       let rRoster = r.roster;
       if (r.id === wA.stableId)
         rRoster = updateEntityInList(rRoster, wA.id, (w) =>
-          updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue)
+          updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue, arenaId)
         );
       if (r.id === wD.stableId)
         rRoster = updateEntityInList(rRoster, wD.id, (w) =>
-          updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue)
+          updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue, arenaId)
         );
       return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
     });

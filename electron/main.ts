@@ -459,6 +459,18 @@ export function registerIPCHandlers() {
     );
   }
 
+  // Resolve segments under baseDir and verify the result cannot escape it.
+  // Defense-in-depth containment check: inputs are already validated, but the
+  // final constructed path is confirmed to stay within the intended directory.
+  function resolveContainedPath(baseDir: string, ...segments: string[]): string | null {
+    const resolvedBase = path.resolve(baseDir);
+    const resolved = path.resolve(resolvedBase, ...segments);
+    if (resolved !== resolvedBase && !resolved.startsWith(resolvedBase + path.sep)) {
+      return null;
+    }
+    return resolved;
+  }
+
   ipcMain.handle('save-game', async (_event, slotId, state) => {
     try {
       if (!validateSlotId(slotId)) {
@@ -477,7 +489,10 @@ export function registerIPCHandlers() {
         return { success: false, error: 'State payload size exceeds limit' };
       }
       await ensureSaveDirectory();
-      const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      const filePath = resolveContainedPath(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
       await fs.writeFile(filePath, stateStr);
       return { success: true };
     } catch (error) {
@@ -491,7 +506,10 @@ export function registerIPCHandlers() {
       if (!validateSlotId(slotId)) {
         return { success: false, error: 'Invalid slot ID format' };
       }
-      const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      const filePath = resolveContainedPath(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
       try {
         await fs.access(filePath);
       } catch {
@@ -504,7 +522,7 @@ export function registerIPCHandlers() {
         return { success: true, data: validation.data };
       }
       // Version mismatch or malformed — back up the original before returning failure
-      const bakPath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json.bak`);
+      const bakPath = `${filePath}.bak`;
       try {
         await fs.writeFile(bakPath, data);
       } catch (backupError) {
@@ -542,7 +560,10 @@ export function registerIPCHandlers() {
       if (!validateSlotId(slotId)) {
         return { success: false, error: 'Invalid slot ID format' };
       }
-      const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      const filePath = resolveContainedPath(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
       try {
         await fs.access(filePath);
         await fs.unlink(filePath);
@@ -574,13 +595,22 @@ export function registerIPCHandlers() {
         return { success: false, error: 'Log data size exceeds limit' };
       }
       await ensureSaveDirectory();
-      const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts');
+      const filePath = resolveContainedPath(
+        getSaveDirectory(),
+        'seasons',
+        `season_${season}`,
+        'bouts',
+        `${year}_${boutId}.json`
+      );
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
+      const seasonDir = path.dirname(filePath);
       try {
         await fs.access(seasonDir);
       } catch {
         await fs.mkdir(seasonDir, { recursive: true });
       }
-      const filePath = path.join(seasonDir, `${year}_${boutId}.json`);
       await fs.writeFile(filePath, JSON.stringify(logData, null, 2));
       return { success: true };
     } catch (error) {
@@ -600,13 +630,16 @@ export function registerIPCHandlers() {
       if (!validateBoutId(boutId)) {
         return { success: false, error: 'Invalid bout ID format' };
       }
-      const filePath = path.join(
+      const filePath = resolveContainedPath(
         getSaveDirectory(),
         'seasons',
         `season_${season}`,
         'bouts',
         `${year}_${boutId}.json`
       );
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
       try {
         await fs.access(filePath);
       } catch {
@@ -632,13 +665,22 @@ export function registerIPCHandlers() {
         return { success: false, error: 'Invalid markdown format or size too large' };
       }
       await ensureSaveDirectory();
-      const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes');
+      const filePath = resolveContainedPath(
+        getSaveDirectory(),
+        'seasons',
+        `season_${season}`,
+        'gazettes',
+        `week_${week}.md`
+      );
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
+      const seasonDir = path.dirname(filePath);
       try {
         await fs.access(seasonDir);
       } catch {
         await fs.mkdir(seasonDir, { recursive: true });
       }
-      const filePath = path.join(seasonDir, `week_${week}.md`);
       await fs.writeFile(filePath, markdown);
       return { success: true };
     } catch (error) {
@@ -655,13 +697,16 @@ export function registerIPCHandlers() {
       if (!validateSeasonWeek(week)) {
         return { success: false, error: 'Invalid week' };
       }
-      const filePath = path.join(
+      const filePath = resolveContainedPath(
         getSaveDirectory(),
         'seasons',
         `season_${season}`,
         'gazettes',
         `week_${week}.md`
       );
+      if (!filePath) {
+        return { success: false, error: 'Invalid path' };
+      }
       try {
         await fs.access(filePath);
       } catch {

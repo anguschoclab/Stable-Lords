@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { mergeImpacts, resolveImpacts } from '@/engine/impacts';

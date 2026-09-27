@@ -29,6 +29,9 @@ export interface PairingsResult {
  * keeps the outcome independent of map insertion order.
  */
 function compareOffersForPairing(a: BoutOffer, b: BoutOffer): number {
+  const aTitle = a.titleArenaId ? 0 : 1;
+  const bTitle = b.titleArenaId ? 0 : 1;
+  if (aTitle !== bTitle) return aTitle - bTitle;
   return String(a.id) < String(b.id) ? -1 : String(a.id) > String(b.id) ? 1 : 0;
 }
 
@@ -86,9 +89,26 @@ export function generatePairings(state: GameState): PairingsResult {
     .filter((o) => o.status === 'Signed' && boutOfferAbsoluteWeek(o) === currentWeek)
     .sort(compareOffersForPairing);
 
+  // Choke point: an ACTIVE-status reigning champion only ever fights title
+  // bouts — any non-title pairing involving them is voided, regardless of
+  // which producer created the offer. Pending/dormant champions resolve
+  // their signed ordinary offers normally.
+  const activeChampionIds = new Set(
+    Object.values(state.arenaChampions ?? {})
+      .filter((t) => t.status === 'active' && t.champion)
+      .map((t) => t.champion!.warriorId as string)
+  );
+
   currentOffers.forEach((offer) => {
     const idA = offer.warriorIds[0];
     const idD = offer.warriorIds[1];
+    if (
+      !offer.titleArenaId &&
+      ((idA && activeChampionIds.has(idA)) || (idD && activeChampionIds.has(idD)))
+    ) {
+      voidedOffers.push(offer);
+      return;
+    }
     const wA = idA ? warriorMap.get(idA) : undefined;
     const wD = idD ? warriorMap.get(idD) : undefined;
 

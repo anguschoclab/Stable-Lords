@@ -4,6 +4,13 @@
 import { describe, it, expect } from 'vitest';
 import { resolveBout, generatePairings } from '@/engine/bout';
 import { FightingStyle } from '@/types/game';
+import {
+  makeWarrior,
+  makeRival,
+  makeBoutOffer,
+  makeGameState,
+} from '@/test/_fixtures/factories';
+import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
 
 describe('boutProcessor - generatePairings', () => {
   it('should generate pairings for player and rival', () => {
@@ -125,57 +132,32 @@ describe('boutProcessor - generatePairings', () => {
   });
 
   it('should dedupe deterministically regardless of offer map insertion order', () => {
-    const mkState = (offerOrder: string[]): any => ({
-      week: 1,
-      absoluteWeek: 1,
-      player: { id: 'p1', stableName: 'Player' },
-      roster: [
-        {
-          id: 'w1',
-          status: 'Active',
-          stableId: 'p1',
-          style: FightingStyle.BashingAttack,
-          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-          fame: 0,
-        },
-      ],
-      rivals: [
-        {
-          owner: { id: 'r1', stableName: 'Stab' },
-          roster: [
-            {
-              id: 'w2',
-              status: 'Active',
-              stableId: 'r1',
-              style: FightingStyle.TotalParry,
-              attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-              fame: 0,
-            },
-            {
-              id: 'w3',
-              status: 'Active',
-              stableId: 'r1',
-              style: FightingStyle.TotalParry,
-              attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-              fame: 0,
-            },
-          ],
-        },
-      ],
-      boutOffers: Object.fromEntries(
-        offerOrder.map((id, i) => [
-          id,
-          {
-            id,
-            status: 'Signed',
-            boutWeek: 1,
-            warriorIds: ['w1', i === 0 ? 'w2' : 'w3'],
-            hype: 100,
-            purse: 100,
-          },
-        ])
-      ),
-    });
+    const mkState = (offerOrder: string[]): any =>
+      makeGameState({
+        week: 1,
+        absoluteWeek: 1,
+        roster: [makeWarrior({ id: 'w1' as WarriorId })],
+        rivals: [
+          makeRival({
+            id: 'r1' as StableId,
+            roster: [
+              makeWarrior({ id: 'w2' as WarriorId }),
+              makeWarrior({ id: 'w3' as WarriorId }),
+            ],
+          }),
+        ],
+        boutOffers: Object.fromEntries(
+          offerOrder.map((id, i) => {
+            const offer = makeBoutOffer({
+              id: id as BoutOfferId,
+              status: 'Signed',
+              boutWeek: 1,
+              warriorIds: ['w1' as WarriorId, (i === 0 ? 'w2' : 'w3') as WarriorId],
+            });
+            return [id, offer];
+          })
+        ),
+      });
 
     const a = generatePairings(mkState(['offer-a', 'offer-b']));
     const b = generatePairings(mkState(['offer-b', 'offer-a']));

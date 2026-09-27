@@ -57,6 +57,7 @@ import { runPromoterPass } from '../passes/PromoterPass';
 import { runPromoterLifecyclePass } from '../passes/PromoterLifecyclePass';
 import { runTrainerPass } from '../passes/TrainerPass';
 import { runRivalStrategyPass } from '../passes/RivalStrategyPass';
+import { runArenaChampionshipPass } from '../passes/ArenaChampionshipPass';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { runEventPass } from '../passes/EventPass';
 import { runNarrativePass } from '../passes/NarrativePass';
@@ -202,6 +203,19 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
       'day',
       'newsletterItems',
       'retired',
+    ],
+  },
+  {
+    id: 'arenaChampionship',
+    stage: 'world',
+    after: ['rankings'],
+    run: (s, ctx) => runArenaChampionshipPass(s, ctx),
+    writes: [
+      'arenaChampions',
+      'boutOffers',
+      'newsletterItems',
+      'rosterUpdates',
+      'rivalsUpdates',
     ],
   },
   {

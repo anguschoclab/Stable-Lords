@@ -5,6 +5,7 @@ import { selectArenaForMatchup } from './arenaFit';
 import { weekToTimestamp } from '@/constants';
 import { displayWeek } from '@/engine/core/absoluteWeek';
 import { isBookable } from '@/engine/warriorStatus';
+import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
 import { collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';
 import { getPairKey } from '@/utils/keyUtils';
@@ -33,6 +34,7 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
       if (bookedIds.has(warrior.id)) continue;
+      if (isChampionBookingLocked(state, warrior.id)) continue;
       if (
         isBookable(warrior, {
           // restStates is global (injuryHandler writes it for any warrior);

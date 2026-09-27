@@ -535,9 +535,16 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
       if (title.refusals !== 0) ensureTitle(state, delta, arenaId).refusals = 0;
       continue;
     }
-    if (offer.status !== 'Rejected') continue;
+    if (offer.status !== 'Rejected' && offer.status !== 'Expired') continue;
 
-    const declinerId = offer.warriorIds.find((id) => offer.responses?.[id] === 'Declined');
+    // Rejected → the explicit Declined party. Expired → whoever never
+    // accepted; the champion is checked first (silence = ducking).
+    const declinerId =
+      offer.status === 'Rejected'
+        ? offer.warriorIds.find((id) => offer.responses?.[id] === 'Declined')
+        : title.champion && offer.responses?.[title.champion.warriorId] !== 'Accepted'
+          ? title.champion.warriorId
+          : offer.warriorIds.find((id) => offer.responses?.[id] !== 'Accepted');
     if (!declinerId) continue;
     const t = ensureTitle(state, delta, arenaId);
 

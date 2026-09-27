@@ -20,6 +20,7 @@ import { displayWeek } from '@/engine/core/absoluteWeek';
 import { computeRivalReputation } from '@/engine/stableReputation';
 import { clamp } from '@/utils/math';
 import { isActive, isBookable } from '@/engine/warriorStatus';
+import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
 
 /** Player-bound offer caps: ≤1 per proposing stable, ≤3 globally per week. */
 export const MAX_PLAYER_OFFERS_PER_RIVAL = 1;
@@ -63,7 +64,13 @@ export function generateBoutBids(
 ): { bids: BoutBid[]; updatedRival: RivalStableData } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const assignedIds = new Set((rival.trainingAssignments ?? []).map((a) => a.warriorId));
-  const activeRoster = rival.roster.filter((w) => isActive(w) && !assignedIds.has(w.id));
+  const activeRoster = rival.roster.filter(
+    (w) =>
+      isActive(w) &&
+      !assignedIds.has(w.id) &&
+      // Booking-locked arena champions only fight title bouts.
+      !(state && isChampionBookingLocked(state, w.id))
+  );
   const bids: BoutBid[] = [];
 
   // Pre-calculate vendetta target once outside the loop to prevent O(W * R) lookups
@@ -78,16 +85,18 @@ export function generateBoutBids(
   // Player warriors the vendetta may target (active only; booking filtered at conversion)
   const playerTargets: Warrior[] =
     intent === 'VENDETTA' && targetIsPlayer && state
-      ? state.roster.filter((w) => isActive(w))
+      ? state.roster.filter((w) => isActive(w) && !isChampionBookingLocked(state, w.id))
       : [];
 
-  // Pre-calculate active opponents for non-vendetta intents
+  // Pre-calculate active opponents for non-vendetta intents — booking-locked
+  // champions are excluded as bid targets as well as proposers.
   const nonVendettaOpponents: typeof rival.roster = [];
   if (intent !== 'VENDETTA') {
     for (const r of rivals) {
       if (r.id === rival.id) continue;
       for (const w of r.roster) {
-        if (isActive(w)) nonVendettaOpponents.push(w);
+        if (isActive(w) && !(state && isChampionBookingLocked(state, w.id)))
+          nonVendettaOpponents.push(w);
       }
     }
   }
@@ -108,6 +117,7 @@ export function generateBoutBids(
       const targetPool = targetIsPlayer ? playerTargets : (targetRival?.roster ?? []);
       for (const opponent of targetPool) {
         if (!isActive(opponent)) continue;
+        if (state && isChampionBookingLocked(state, opponent.id)) continue;
         const matchupScore = scorePairwiseMatchup(warrior, opponent, {
           aStableId: (warrior.stableId ?? rival.id) as string,
           bStableId: targetIsPlayer && state
@@ -252,6 +262,9 @@ export function convertBidsToOffers(
       state.warriorMap?.get(bid.proposingWarriorId as WarriorId) ??
       proposerById.get(bid.proposingWarriorId);
     if (!proposer) continue;
+    // Booking-locked arena champions only fight title bouts — a stale bid
+    // generated before a title went pending must not produce an offer.
+    if (isChampionBookingLocked(state, proposer.id)) continue;
 
     // The stable that generated the bid owns the proposer; the cache map is
     // a hot-path fast lookup, with the bid's rivalId as the ground truth.
@@ -278,6 +291,7 @@ export function convertBidsToOffers(
     if (bidTargetsPlayer) {
       for (const w of state.roster) {
         if (!isActive(w)) continue;
+        if (isChampionBookingLocked(state, w.id)) continue;
         if (!isBookableMemo(w, state.trainingAssignments)) continue;
         candidates.push({ warrior: w, stableId: playerStableId });
       }
@@ -288,6 +302,7 @@ export function convertBidsToOffers(
         candidates = [];
         for (const w of targetRival.roster) {
           if (!isActive(w)) continue;
+          if (isChampionBookingLocked(state, w.id)) continue;
           if (!isBookableMemo(w, targetRival.trainingAssignments)) continue;
           candidates.push({ warrior: w, stableId: targetRival.id as string });
         }
@@ -299,6 +314,7 @@ export function convertBidsToOffers(
           continue;
         for (const w of rival.roster) {
           if (!isActive(w)) continue;
+          if (isChampionBookingLocked(state, w.id)) continue;
           if (!isBookableMemo(w, rival.trainingAssignments)) continue;
           candidates.push({ warrior: w, stableId: rival.id as string });
         }

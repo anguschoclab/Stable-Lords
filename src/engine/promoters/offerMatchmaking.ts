@@ -122,6 +122,13 @@ export function collectUnavailableWarriorIds(
       }
     });
   }
+
+  // Booking-locked arena champions (active or pendingReengagement titles)
+  // only fight title bouts — producers must not generate ordinary offers.
+  Object.values(state.arenaChampions ?? {}).forEach((t) => {
+    if (t.champion && t.status !== 'dormant') unavailableWarriorIds.add(t.champion.warriorId);
+  });
+
   return unavailableWarriorIds;
 }
 

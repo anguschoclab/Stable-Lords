@@ -258,6 +258,9 @@ function collectBoutImpacts(
     ctx.week,
     ctx.contract?.id
   );
+  // Stamp the title-bout channel — ArenaChampionshipPass resolves reigns off
+  // this flag, and the UI badges the bout as a defense.
+  if (ctx.contract?.titleArenaId) summary.titleArenaId = ctx.contract.titleArenaId;
   impacts.push({ arenaHistory: [summary] });
 
   if (!ctx.headless) {

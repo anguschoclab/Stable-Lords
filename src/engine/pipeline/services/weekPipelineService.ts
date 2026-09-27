@@ -212,10 +212,14 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
     run: (s, ctx) => runArenaChampionshipPass(s, ctx),
     writes: [
       'arenaChampions',
+      'grandChampions',
       'boutOffers',
       'newsletterItems',
       'rosterUpdates',
       'rivalsUpdates',
+      'fameDelta',
+      'popularityDelta',
+      'treasuryDelta',
     ],
   },
   {

@@ -21,7 +21,6 @@ const isolatedGlobs = runnerGroups.isolated.map(
 const baseTest = {
   environment: 'node' as const,
   globals: true,
-  setupFiles: ['./src/test/_setup/setup.ts'],
   alias: { '@': path.resolve(import.meta.dirname, './src') },
   testTimeout: 120000,
   hookTimeout: 10000,
@@ -37,6 +36,8 @@ export default defineConfig({
       {
         test: {
           name: 'shared',
+          // Pure-node files never see a DOM — skip setup.dom.ts entirely.
+          setupFiles: ['./src/test/_setup/setup.node.ts'],
           isolate: false,
           include: ['**/*.test.ts', '**/*.test.tsx'],
           exclude: [
@@ -50,6 +51,10 @@ export default defineConfig({
       {
         test: {
           name: 'isolated',
+          setupFiles: [
+            './src/test/_setup/setup.node.ts',
+            './src/test/_setup/setup.dom.ts',
+          ],
           isolate: true,
           include: isolatedGlobs,
           exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts'],

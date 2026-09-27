@@ -6,9 +6,12 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
-    setupFiles: ['./src/test/_setup/setup.ts'],
+    setupFiles: [
+      './src/test/_setup/setup.node.ts',
+      './src/test/_setup/setup.dom.ts',
+    ],
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
     testTimeout: 600000,
     hookTimeout: 30000,

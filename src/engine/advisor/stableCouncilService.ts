@@ -28,6 +28,7 @@ import {
 } from '@/engine/core/absoluteWeek';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { getScoutCost } from '@/engine/scouting';
+import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 
 /**
  * Compute a complete Stable Council Report evaluating all active roster warriors.
@@ -38,17 +39,22 @@ import { getScoutCost } from '@/engine/scouting';
  */
 export function computeStableCouncilReport(state: GameState): StableCouncilReport {
   const activeWarriors = (state.roster || []).filter(isActive);
+  // One ladder rank for the whole report — the same shared perception
+  // primitive rival crown campaigns use, not a per-warrior re-scan.
+  const contenderIndex = buildContenderIndex(state);
+  const evalCtx = { contenderIndex };
 
   const cards: WarriorAdvisorCard[] = activeWarriors.map((warrior) => {
-    const campaignFocus = evaluateCampaignFocus(warrior, state);
+    const campaignFocus = evaluateCampaignFocus(warrior, state, contenderIndex);
     // What the council would recommend absent the player's pin — lets the UI
     // surface "Suggested: X" when the pin diverges from auto-detection.
     const suggestedCampaignFocus = evaluateCampaignFocus(
       { ...warrior, campaignFocus: undefined },
-      state
+      state,
+      contenderIndex
     );
     const tournamentAdvice = evaluateTournamentAdvice(warrior, state);
-    const fightAdvice = evaluateBoutOffers(warrior, state, campaignFocus, tournamentAdvice);
+    const fightAdvice = evaluateBoutOffers(warrior, state, campaignFocus, tournamentAdvice, evalCtx);
     const trainingAdvice = evaluateTrainingAdvice(warrior, state);
     const tacticsAdvice = evaluateTacticsAdvice(warrior, campaignFocus, {
       opponent: fightAdvice.opponent ?? undefined,
@@ -78,6 +84,7 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
       !requiresRecovery &&
       (campaignFocus === 'PURSE_HUNTER' ||
         campaignFocus === 'VETERAN_TWILIGHT' ||
+        campaignFocus === 'CROWN_BID' ||
         (campaignFocus === 'TOURNAMENT_PUSH' &&
           tournamentAdvice.status === 'QUALIFYING'));
     const holdsForBooking =
@@ -208,6 +215,12 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   if (combatReadyCount > 0) {
     stableDirectives.push(
       `⚔️ ${combatReadyCount} warrior${combatReadyCount > 1 ? 's have' : ' has'} favorable bout offers with predicted matchup advantages.`
+    );
+  }
+  const crownBids = cards.filter((c) => c.campaignFocus === 'CROWN_BID');
+  if (crownBids.length > 0) {
+    stableDirectives.push(
+      `👑 ${crownBids.length} warrior${crownBids.length > 1 ? 's are' : ' is'} ranked arena contender${crownBids.length > 1 ? 's' : ''} — venue bouts build the title challenge.`
     );
   }
   const restingContenders = cards.filter(

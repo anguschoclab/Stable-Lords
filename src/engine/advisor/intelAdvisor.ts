@@ -44,10 +44,18 @@ export function deriveHeadToHead(
  * Return the freshest scouting token per insight type for a given opponent.
  * Intel goes stale — when several tokens of the same type exist, only the
  * most recently discovered one is reported.
+ *
+ * `opts.tokens` overrides the source list: rivals pass dossier-derived intel
+ * so the same evaluator works off what *they* know instead of the player's
+ * scouting ledger.
  */
-export function getOpponentIntel(state: GameState, opponentId: WarriorId): InsightToken[] {
+export function getOpponentIntel(
+  state: GameState,
+  opponentId: WarriorId,
+  opts?: { tokens?: InsightToken[] }
+): InsightToken[] {
   const byType = new Map<InsightToken['type'], InsightToken>();
-  for (const token of state.insightTokens ?? []) {
+  for (const token of opts?.tokens ?? state.insightTokens ?? []) {
     if (token.warriorId !== opponentId) continue;
     const prev = byType.get(token.type);
     if (!prev || token.discoveredWeek > prev.discoveredWeek) {

@@ -24,7 +24,11 @@ import type {
 import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { isActive } from '@/engine/warriorStatus';
-import { isReigningChampion } from '@/engine/championship/arenaChampionship';
+import {
+  isReigningChampion,
+  buildContenderIndex,
+} from '@/engine/championship/arenaChampionship';
+import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
 import {
   weeksUntilChampionsTournament,
   boutOfferAbsoluteWeek,
@@ -141,6 +145,31 @@ export function assessCrownOpportunity(
     score: best.score,
     reason: best.reason,
   };
+}
+
+/**
+ * Stamp each active rival warrior's `campaignFocus` with the same advisor
+ * semantics the player's council uses — rivals and the player evaluate the
+ * same archetypes, so a rival "CROWN_BID" contender means exactly what the
+ * advisor card would say. REHABILITATION warriors get a recovery assignment
+ * so downstream training/booking workers respect the rest marker.
+ */
+export function assignCampaignRoles(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: PerceptionSnapshot
+): RivalStableData {
+  const index = perception?.contenderIndexByArena ?? buildContenderIndex(state);
+  const assignments: TrainingAssignment[] = [...(rival.trainingAssignments ?? [])];
+  const roster = rival.roster.map((w) => {
+    if (!isActive(w)) return w;
+    const focus = evaluateCampaignFocus(w, state, index);
+    if (focus === 'REHABILITATION' && !assignments.some((a) => a.warriorId === w.id)) {
+      assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
+    }
+    return w.campaignFocus === focus ? w : { ...w, campaignFocus: focus };
+  });
+  return { ...rival, roster, trainingAssignments: assignments };
 }
 
 /**

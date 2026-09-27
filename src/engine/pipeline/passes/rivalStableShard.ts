@@ -7,7 +7,7 @@ import { processAIStable } from '@/engine/ai/stableManager';
 import { generateRivalStables } from '@/engine/rivals';
 import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
-import { processCrownPosture } from '@/engine/ai/workers/crownWorker';
+import { processCrownPosture, assignCampaignRoles } from '@/engine/ai/workers/crownWorker';
 import { SeededRNGService } from '@/utils/random';
 import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 
@@ -171,7 +171,11 @@ export function processRivalStable(
   // D.7 — Tournament worker: TOURNAMENT_CAMPAIGN rest-bias prep.
   const prep = processTournamentPrep(intel.updatedRival, nextWeek);
   gazetteItems.push(...prep.gazetteItems);
-  const updatedRival = prep.updatedRival;
+
+  // D.8 — Campaign roles: stamp each warrior's campaignFocus with the shared
+  // advisor semantics (incl. CROWN_BID for ladder-ranked contenders) so offer
+  // evaluation, training, and bookings all read one role source.
+  const updatedRival = assignCampaignRoles(prep.updatedRival, state, perception);
 
   if (isBankrupt) {
     const retirementSeed = state.absoluteWeek + index * 1000;

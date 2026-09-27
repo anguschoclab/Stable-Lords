@@ -7,6 +7,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type {
   CampaignFocus,
+  StableEvalContext,
   WarriorFightAdvice,
   WarriorTournamentAdvice,
   CombatDangerLevel,
@@ -43,7 +44,8 @@ export function evaluateBoutOffers(
   warrior: Warrior,
   state: GameState,
   campaignFocus: CampaignFocus,
-  tourneyAdvice?: WarriorTournamentAdvice
+  tourneyAdvice?: WarriorTournamentAdvice,
+  ctx?: StableEvalContext
 ): WarriorFightAdvice {
   // 1. Hard Gate: Injuries
   const blockingInjury = (warrior.injuries || []).find(
@@ -128,9 +130,11 @@ export function evaluateBoutOffers(
   // Purse priority: when the treasury cannot cover this week's projected
   // training payroll, or the warrior's campaign is explicitly purse-driven,
   // purses weigh heavier (purse/5, cap 60) and the council flags the motive.
-  const projectedWeeklyCost = Math.max(1, state.roster?.length ?? 1) * TRAINING_COST;
+  const evalTreasury = ctx?.treasury ?? state.treasury;
+  const projectedWeeklyCost =
+    Math.max(1, ctx?.rosterSize ?? state.roster?.length ?? 1) * TRAINING_COST;
   const treasuryDesperate =
-    state.treasury !== undefined && state.treasury < projectedWeeklyCost;
+    evalTreasury !== undefined && evalTreasury < projectedWeeklyCost;
   const pursePriority = treasuryDesperate || campaignFocus === 'PURSE_HUNTER';
 
   // 5. Score Each Offer
@@ -146,7 +150,9 @@ export function evaluateBoutOffers(
     let dangerLevel: CombatDangerLevel = 'SAFE';
 
     // Scout intel & head-to-head history for this specific opponent
-    const intel = opponentId ? getOpponentIntel(state, opponentId) : [];
+    const intel = opponentId
+      ? getOpponentIntel(state, opponentId, { tokens: ctx?.insightTokens })
+      : [];
     for (const line of summarizeIntel(intel)) {
       reasons.push(`Scout intel: ${line}`);
     }
@@ -205,6 +211,18 @@ export function evaluateBoutOffers(
       );
     }
 
+    // Crown bid — a venue bout on a ladder where the warrior is ranked is a
+    // step toward the title challenge, worth more than the purse alone.
+    const onLadderHere =
+      campaignFocus === 'CROWN_BID' &&
+      !!offer.arenaId &&
+      (ctx?.contenderIndex?.get(offer.arenaId)?.includes(warrior.id) ?? false);
+    if (onLadderHere) {
+      reasons.push(
+        `Crown bid: a ${offer.arenaId} bout builds your contender standing for the title.`
+      );
+    }
+
     // Purse Incentive
     reasons.push(`Purse: ${offer.purse} gold`);
     if (treasuryDesperate) {
@@ -219,8 +237,8 @@ export function evaluateBoutOffers(
     if (
       opponent &&
       intel.length === 0 &&
-      state.treasury !== undefined &&
-      state.treasury >= scoutCost
+      evalTreasury !== undefined &&
+      evalTreasury >= scoutCost
     ) {
       reasons.push(
         `No scout dossier on ${opponent.name} — commission a Basic scout report (${scoutCost}G) before signing.`
@@ -231,6 +249,7 @@ export function evaluateBoutOffers(
     let score = 50;
     score += styleEdge * 20;
     if (isTitleBout) score += 60;
+    if (onLadderHere) score += 20;
     score += pursePriority
       ? Math.min(60, offer.purse / 5)
       : Math.min(30, offer.purse / 10);

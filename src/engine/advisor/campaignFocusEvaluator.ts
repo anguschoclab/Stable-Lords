@@ -4,15 +4,23 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
+import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 import type { CampaignFocus } from './types';
 
 const REHAB_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
 
 /**
  * Determine or retrieve the campaign focus archetype for a warrior.
+ * `contenderIndex` — the once-per-tick per-arena top-N ladder — avoids a
+ * re-rank per warrior; built on demand when omitted.
  */
-export function evaluateCampaignFocus(warrior: Warrior, state: GameState): CampaignFocus {
+export function evaluateCampaignFocus(
+  warrior: Warrior,
+  state: GameState,
+  contenderIndex?: Map<string, WarriorId[]>
+): CampaignFocus {
   // 1. Explicit player override takes precedence
   if (warrior.campaignFocus) {
     return warrior.campaignFocus;
@@ -39,7 +47,13 @@ export function evaluateCampaignFocus(warrior: Warrior, state: GameState): Campa
     return 'TOURNAMENT_PUSH';
   }
 
-  // 5. Young Developing Fighter -> PROSPECT_DEV
+  // 5. Ranked Venue Contender -> CROWN_BID
+  const index = contenderIndex ?? buildContenderIndex(state);
+  for (const ids of index.values()) {
+    if (ids.includes(warrior.id)) return 'CROWN_BID';
+  }
+
+  // 6. Young Developing Fighter -> PROSPECT_DEV
   if (totalBouts < 5 && (warrior.age ?? 18) <= 22) {
     return 'PROSPECT_DEV';
   }

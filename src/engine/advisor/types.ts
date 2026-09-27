@@ -13,7 +13,7 @@ import type {
   BoutOfferId,
   FightPlan,
 } from '@/types/shared.types';
-import type { BoutOffer, TrainingAssignment } from '@/types/state.types';
+import type { BoutOffer, InsightToken, TrainingAssignment } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 
 /**
@@ -24,7 +24,26 @@ export type CampaignFocus =
   | 'PROSPECT_DEV' // Young fighter building attributes and core skills
   | 'PURSE_HUNTER' // Solvent prime fighter farming purses with controlled risk
   | 'REHABILITATION' // Injured or exhausted; hard combat block, Med Bay priority
-  | 'VETERAN_TWILIGHT'; // Age > 25; preserve legacy, cautious surrender thresholds
+  | 'VETERAN_TWILIGHT' // Age > 25; preserve legacy, cautious surrender thresholds
+  | 'CROWN_BID'; // Ranked arena contender — every venue bout feeds the title ladder
+
+/**
+ * Explicit stable context for advisor evaluators so rival AI can reuse them
+ * without silently reading the player's treasury, roster size, or intel.
+ * Any omitted field falls back to the player-scoped GameState value.
+ */
+export interface StableEvalContext {
+  /** Owning stable's treasury — drives purse-desperation weighting. */
+  treasury?: number;
+  /** Owning stable's roster size — drives the weekly burn projection. */
+  rosterSize?: number;
+  /** Intel tokens the evaluating stable actually holds (player: insightTokens;
+   *  rivals: dossier-derived tokens). */
+  insightTokens?: InsightToken[];
+  /** Once-per-tick per-arena top-N contender ladder — lets CROWN_BID scoring
+   *  recognize venue bouts that feed the title chase without re-ranking. */
+  contenderIndex?: Map<string, WarriorId[]>;
+}
 
 /**
  * Fight recommendation action directive.

@@ -199,12 +199,26 @@ export function evaluateBoutOffer(
     }
   }
 
+  // Campaign roles — shared advisor semantics: a CROWN_BID contender takes
+  // venue bouts where they hold a record (the ladder standing is the real
+  // payout); a PURSE_HUNTER takes volume and never holds out for a marquee.
+  if (warrior.campaignFocus === 'CROWN_BID' && offer.arenaId) {
+    const venue = warrior.career?.byArena?.[offer.arenaId];
+    if (((venue?.wins ?? 0) + (venue?.losses ?? 0)) > 0) {
+      return 'Accepted';
+    }
+  }
+
   // Counter logic: famous warriors hold out for a purse worthy of their name.
   // The fame floor precedes the personality accepts — a Pragmatic does not
   // take 300g for a name worth 2000 just because it clears the generic bar.
   // One round only — an offer already tagged COUNTERED_PURSE is final.
   const alreadyCountered = offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false;
-  if (!alreadyCountered && personality !== 'Aggressive') {
+  if (
+    !alreadyCountered &&
+    personality !== 'Aggressive' &&
+    warrior.campaignFocus !== 'PURSE_HUNTER'
+  ) {
     const purseFloor = (warrior.fame ?? 0) - 50;
     if (purseFloor > 0 && offer.purse < purseFloor) {
       return 'Countered';

@@ -7,6 +7,7 @@ import type {
 import type { StateImpact } from '@/engine/impacts';
 import type { NewsId } from '@/types/shared.types';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
+import { championsHeldByStable, owningStableOf } from '@/engine/championship/arenaChampionship';
 
 interface StableEntry {
   id: string;
@@ -25,6 +26,14 @@ export function runProgressionPass(
   const current: ProgressionState = state.progression
     ? structuredClone(state.progression)
     : structuredClone(DEFAULT_PROGRESSION);
+
+  // Backfill objectives added after a save was created (e.g. arena title
+  // objectives on legacy saves) — completed flags carry over by id.
+  for (const def of DEFAULT_PROGRESSION.objectives) {
+    if (!current.objectives.some((o) => o.id === def.id)) {
+      current.objectives.push({ ...def });
+    }
+  }
 
   const stables: StableEntry[] = [
     { id: state.player.id, fame: state.fame ?? 0, titles: state.player.titles ?? 0 },
@@ -82,6 +91,28 @@ export function runProgressionPass(
         break;
       case 'REALM_CHAMPION':
         completed = stableStanding === 1 && nextWeek === 1;
+        break;
+      case 'ARENA_TITLE':
+        completed = championsHeldByStable(state, state.player.id).length > 0;
+        break;
+      case 'CIRCUIT_LORD': {
+        // Three titles across three DIFFERENT warriors — one crown per
+        // warrior means three crowned warriors, not three reigns.
+        const crownedIds = new Set(
+          Object.values(state.arenaChampions ?? {})
+            .filter((t) => {
+              const wid = t.champion?.warriorId;
+              return wid != null && owningStableOf(state, wid)?.stableId === state.player.id;
+            })
+            .map((t) => t.champion!.warriorId)
+        );
+        completed = crownedIds.size >= 3;
+        break;
+      }
+      case 'GRAND_CHAMPION':
+        completed = (state.grandChampions ?? []).some(
+          (e) => owningStableOf(state, e.warriorId)?.isPlayer === true
+        );
         break;
     }
 

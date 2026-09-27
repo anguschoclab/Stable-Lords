@@ -566,7 +566,14 @@ export interface AnnualAward {
  * Identifier for a progression objective.
  */
 export type ObjectiveId =
-  'TOP_10_STABLE' | 'TOP_3_STABLE' | 'FIRST_TOURNAMENT_WIN' | 'HALL_OF_FAMER' | 'REALM_CHAMPION';
+  | 'TOP_10_STABLE'
+  | 'TOP_3_STABLE'
+  | 'FIRST_TOURNAMENT_WIN'
+  | 'HALL_OF_FAMER'
+  | 'REALM_CHAMPION'
+  | 'ARENA_TITLE'
+  | 'CIRCUIT_LORD'
+  | 'GRAND_CHAMPION';
 
 /**
  * Defines the shape of a progression objective.

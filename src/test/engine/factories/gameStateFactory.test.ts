@@ -282,8 +282,8 @@ describe('createFreshState', () => {
       expect(state.progression.totalStables).toBe(0);
     });
 
-    it('sets progression.objectives to 5 objectives', () => {
-      expect(state.progression.objectives).toHaveLength(5);
+    it('sets progression.objectives to the default objective set', () => {
+      expect(state.progression.objectives).toHaveLength(DEFAULT_PROGRESSION.objectives.length);
     });
 
     it('sets all progression objectives completed to false', () => {

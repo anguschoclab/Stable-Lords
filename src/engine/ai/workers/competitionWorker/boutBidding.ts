@@ -20,7 +20,11 @@ import { displayWeek } from '@/engine/core/absoluteWeek';
 import { computeRivalReputation } from '@/engine/stableReputation';
 import { clamp } from '@/utils/math';
 import { isActive, isBookable } from '@/engine/warriorStatus';
-import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
+import {
+  isChampionBookingLocked,
+  CHAMPIONSHIP_EXCLUDED_ARENAS,
+} from '@/engine/championship/arenaChampionship';
+import { ARENA_TITLE } from '@/constants/arena';
 
 /** Player-bound offer caps: ≤1 per proposing stable, ≤3 globally per week. */
 export const MAX_PLAYER_OFFERS_PER_RIVAL = 1;
@@ -353,9 +357,25 @@ export function convertBidsToOffers(
     }
 
     const opponent = bestCandidate.warrior;
-    const arenaId = selectArenaForMatchup(proposer, opponent, rng, {
-      weather: state.weather,
-    });
+    // Contender-venue bias: a warrior with a qualifying record at an arena is
+    // climbing that venue's title ladder — their bids keep booking there so a
+    // real contender emerges instead of diffusing across the circuit. Most
+    // venue wins wins the tie; deterministic, so no RNG consumption.
+    let contenderVenue: string | undefined;
+    let contenderVenueWins = -1;
+    for (const [venueId, rec] of Object.entries(proposer.career?.byArena ?? {})) {
+      if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(venueId)) continue;
+      if ((rec.wins ?? 0) + (rec.losses ?? 0) < ARENA_TITLE.MIN_BOUTS) continue;
+      if ((rec.wins ?? 0) > contenderVenueWins) {
+        contenderVenue = venueId;
+        contenderVenueWins = rec.wins ?? 0;
+      }
+    }
+    const arenaId =
+      contenderVenue ??
+      selectArenaForMatchup(proposer, opponent, rng, {
+        weather: state.weather,
+      });
     const offerId = `bid_${rng.uuid()}` as BoutOfferId;
 
     // Stable notoriety sells tickets — butcher stables draw a bigger crowd.

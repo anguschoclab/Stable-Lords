@@ -96,6 +96,21 @@ export function evaluateBoutOffer(
     }
   }
 
+  // ── Title bouts ──
+  // The Arena Commission doesn't negotiate: a crown shot outweighs any purse,
+  // so the counter/fame-floor logic below is skipped entirely. Hard gates
+  // above still apply — a blocking injury declines (the pass treats it as a
+  // medical postponement), and a severe style counter can still draw a
+  // refusal from calculating stables (feeding the strip machinery).
+  if (offer.titleArenaId) {
+    const personality = rival.owner.personality;
+    if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+      const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+      if (edge <= -2) return 'Declined';
+    }
+    return 'Accepted';
+  }
+
   // ── Desperation Gate: critically low treasury accepts anything survivable ──
   if (rival.treasury < 500) {
     return 'Accepted';

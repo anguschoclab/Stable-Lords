@@ -9,12 +9,15 @@ describe('DEFAULT_PROGRESSION', () => {
     expect(DEFAULT_PROGRESSION.status).toBe('active');
     expect(DEFAULT_PROGRESSION.stableStanding).toBe(0);
     expect(DEFAULT_PROGRESSION.totalStables).toBe(0);
-    expect(DEFAULT_PROGRESSION.objectives).toHaveLength(5);
+    expect(DEFAULT_PROGRESSION.objectives).toHaveLength(8);
     expect(DEFAULT_PROGRESSION.objectives.every((o) => o.completed === false)).toBe(true);
     expect(DEFAULT_PROGRESSION.objectives.map((o) => o.id)).toEqual([
       'TOP_10_STABLE',
       'TOP_3_STABLE',
       'FIRST_TOURNAMENT_WIN',
+      'ARENA_TITLE',
+      'CIRCUIT_LORD',
+      'GRAND_CHAMPION',
       'HALL_OF_FAMER',
       'REALM_CHAMPION',
     ]);

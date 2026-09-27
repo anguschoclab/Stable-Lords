@@ -58,6 +58,12 @@ export function processAllRivalsBoutOffers(
     for (const w of owningRival.roster) owningRosterIds.add(w.id);
 
     const sortedOffers = [...rivalOffers].sort((a, b) => {
+      // Title bouts always outrank ordinary offers — a crown obligation or a
+      // title shot precedes any purse comparison, so a warrior commits to the
+      // title bout before the slate fills.
+      const tA = a.titleArenaId ? 1 : 0;
+      const tB = b.titleArenaId ? 1 : 0;
+      if (tA !== tB) return tB - tA;
       const scoreA = a.hype * a.purse;
       const scoreB = b.hype * b.purse;
       return scoreB - scoreA;

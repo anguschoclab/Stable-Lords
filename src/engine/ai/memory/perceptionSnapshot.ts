@@ -21,6 +21,10 @@ export interface PerceptionSnapshot {
   rankingsByWarrior: Map<WarriorId, RankingEntry>;
   /** stableId → true if that stable had a warrior fight this week. */
   foughtThisWeek: Set<string>;
+  /** arenaId → reigning champion warriorId (any lifecycle status). */
+  championByArena: Map<string, WarriorId>;
+  /** champion warriorId → arenaIds held (reverse index of championByArena). */
+  arenasHeldByChampion: Map<WarriorId, string[]>;
   weather: GameState['weather'];
   crowdMood: GameState['crowdMood'];
   recruitPoolSize: number;
@@ -71,12 +75,23 @@ export function buildPerceptionSnapshot(state: GameState): PerceptionSnapshot {
     rankingsByWarrior.set(wid as WarriorId, entry);
   }
 
+  const championByArena = new Map<string, WarriorId>();
+  const arenasHeldByChampion = new Map<WarriorId, string[]>();
+  for (const [arenaId, t] of Object.entries(state.arenaChampions ?? {})) {
+    const champId = t?.champion?.warriorId;
+    if (!champId) continue;
+    championByArena.set(arenaId, champId);
+    arenasHeldByChampion.set(champId, [...(arenasHeldByChampion.get(champId) ?? []), arenaId]);
+  }
+
   return {
     meta: state.cachedMetaDrift ?? computeMetaDrift(state.arenaHistory ?? []),
     weekFights,
     activeRosterSize,
     rankingsByWarrior,
     foughtThisWeek,
+    championByArena,
+    arenasHeldByChampion,
     weather: state.weather,
     crowdMood: state.crowdMood,
     recruitPoolSize: (state.recruitPool ?? []).length,

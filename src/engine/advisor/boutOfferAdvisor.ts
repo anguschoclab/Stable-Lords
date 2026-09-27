@@ -19,6 +19,11 @@ import { TRAINING_COST } from '@/constants/economy';
 import { deriveHeadToHead, getOpponentIntel, summarizeIntel } from './intelAdvisor';
 import { getScoutCost } from '@/engine/scouting';
 
+/** True when the warrior holds the live crown at the given arena. */
+function warriorOwnsArenaCrown(state: GameState, arenaId: string, warriorId: string): boolean {
+  return state.arenaChampions?.[arenaId]?.champion?.warriorId === warriorId;
+}
+
 const BLOCKING_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
 
 interface ScoredOffer {
@@ -189,6 +194,17 @@ export function evaluateBoutOffers(
       );
     }
 
+    // Title Bout — the crown is at stake. Headline + large score bump: this
+    // is not an ordinary purse decision.
+    const isTitleBout = !!offer.titleArenaId;
+    if (isTitleBout) {
+      reasons.push(
+        warriorOwnsArenaCrown(state, offer.titleArenaId!, warrior.id)
+          ? 'TITLE DEFENSE — your arena crown is on the line. Refusal can cost the title.'
+          : 'TITLE BOUT — victory claims the arena crown.'
+      );
+    }
+
     // Purse Incentive
     reasons.push(`Purse: ${offer.purse} gold`);
     if (treasuryDesperate) {
@@ -214,6 +230,7 @@ export function evaluateBoutOffers(
     // Numerical Composite Score
     let score = 50;
     score += styleEdge * 20;
+    if (isTitleBout) score += 60;
     score += pursePriority
       ? Math.min(60, offer.purse / 5)
       : Math.min(30, offer.purse / 10);
@@ -260,6 +277,8 @@ export function evaluateBoutOffers(
   const alreadySigned =
     best.offer.status === 'Signed' || best.offer.responses?.[warrior.id] === 'Accepted';
 
+  const isTitleBout = !!best.offer.titleArenaId;
+
   return {
     action: 'ACCEPT_OFFER',
     recommendedOfferId: best.offer.id,
@@ -267,11 +286,13 @@ export function evaluateBoutOffers(
     opponent: best.opponent,
     matchupEdge: best.styleEdge,
     dangerLevel: best.dangerLevel,
-    headline: alreadySigned
-      ? `Signed Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
-      : best.dangerLevel === 'SAFE'
-        ? `Favorable Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
-        : `Accept Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`,
+    headline: isTitleBout
+      ? `Title Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
+      : alreadySigned
+        ? `Signed Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
+        : best.dangerLevel === 'SAFE'
+          ? `Favorable Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
+          : `Accept Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`,
     reasoning: best.reasons,
     warnings: best.warnings,
   };

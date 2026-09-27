@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { useGameStore } from '@/state/useGameStore';
 import { reconstructGameState } from '@/state/serialization';
+import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import '@/test/_setup/setup';
 
 describe('serialization — progression', () => {
@@ -13,7 +14,9 @@ describe('serialization — progression', () => {
 
     expect(reconstructed.progression).toBeDefined();
     expect(reconstructed.progression.status).toBe('active');
-    expect(reconstructed.progression.objectives).toHaveLength(5);
+    expect(reconstructed.progression.objectives).toHaveLength(
+      DEFAULT_PROGRESSION.objectives.length
+    );
   });
 
   it('reconstructGameState reflects progression changes', () => {

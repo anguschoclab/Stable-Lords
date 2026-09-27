@@ -24,6 +24,24 @@ export const DEFAULT_PROGRESSION: ProgressionState = {
       completed: false,
     },
     {
+      id: 'ARENA_TITLE',
+      label: 'Arena Champion',
+      description: 'Hold an arena championship with one of your warriors',
+      completed: false,
+    },
+    {
+      id: 'CIRCUIT_LORD',
+      label: 'Lord of the Circuit',
+      description: 'Hold three arena championships across three different warriors',
+      completed: false,
+    },
+    {
+      id: 'GRAND_CHAMPION',
+      label: 'Grand Champion',
+      description: 'Win the annual champions-only Grand Championship',
+      completed: false,
+    },
+    {
       id: 'HALL_OF_FAMER',
       label: 'Hall of Famer',
       description: 'Have a warrior win Warrior of the Year or Killer of the Year',

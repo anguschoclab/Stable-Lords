@@ -1,7 +1,9 @@
 import type { Warrior } from '@/types/warrior.types';
-import type { RivalStableData } from '@/types/state.types';
+import type { GameState, RivalStableData } from '@/types/state.types';
+import type { FightingStyle } from '@/types/shared.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
 import { isActive } from '@/engine/warriorStatus';
+import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
 
 // ─── Utility ────────────────────────────────────────────────────────────────
 
@@ -85,6 +87,7 @@ export interface ArenaWarriorEntry {
   name: string;
   stableName: string;
   isPlayer: boolean;
+  style: FightingStyle;
   wins: number;
   losses: number;
   kills: number;
@@ -118,6 +121,7 @@ function buildEntry(
     name: warrior.name,
     stableName,
     isPlayer,
+    style: warrior.style,
     wins: rec.wins,
     losses: rec.losses,
     kills: rec.kills,
@@ -187,4 +191,84 @@ export function calculateArenaLeaderboard(
   const arena = getArenaById(arenaId);
   const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
   return buildArenaLeaderboard(arenaId, arena.name, allEntries, limit);
+}
+
+// ─── Arena "Best in Class" (per-style leaders) ──────────────────────────────
+
+/**
+ * The leading warrior of each fighting style at one arena — the venue's
+ * "best in class" board. Requires at least one bout at the venue.
+ */
+export function calculateArenaStyleLeaders(
+  arenaId: string,
+  playerRoster: Warrior[],
+  playerStableName: string,
+  rivals: RivalStableData[]
+): Partial<Record<FightingStyle, ArenaWarriorEntry>> {
+  const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
+  const leaders: Partial<Record<FightingStyle, ArenaWarriorEntry>> = {};
+
+  for (const { warrior, stableName, isPlayer } of allEntries) {
+    const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
+    if (entry.wins + entry.losses === 0) continue;
+    const current = leaders[entry.style];
+    if (!current || cmpWarriors(entry, current) < 0) {
+      leaders[entry.style] = entry;
+    }
+  }
+  return leaders;
+}
+
+// ─── Arena Stable Standings ─────────────────────────────────────────────────
+
+/** A stable's aggregate record and crown count at one arena. */
+export interface ArenaStableEntry {
+  stableId: string;
+  stableName: string;
+  isPlayer: boolean;
+  wins: number;
+  losses: number;
+  kills: number;
+  /** Live crowns held by this stable at the arena (0 or 1 — one crown per arena). */
+  champions: number;
+}
+
+/**
+ * Ranks stables by their warriors' combined wins at a venue, tie-broken by
+ * kills then stable id for determinism. Crowns are reported alongside.
+ */
+export function calculateArenaStableStandings(
+  state: GameState,
+  arenaId: string,
+  limit = 10
+): ArenaStableEntry[] {
+  const rows: ArenaStableEntry[] = [];
+  const addStable = (
+    stableId: string,
+    stableName: string,
+    isPlayer: boolean,
+    roster: Warrior[]
+  ) => {
+    let wins = 0;
+    let losses = 0;
+    let kills = 0;
+    for (const w of roster) {
+      const rec = w.career?.byArena?.[arenaId];
+      if (!rec) continue;
+      wins += rec.wins;
+      losses += rec.losses;
+      kills += rec.kills;
+    }
+    const champions = championsHeldByStable(state, stableId).includes(arenaId) ? 1 : 0;
+    if (wins + losses === 0 && champions === 0) return;
+    rows.push({ stableId, stableName, isPlayer, wins, losses, kills, champions });
+  };
+
+  addStable(state.player.id, state.player.stableName, true, state.roster ?? []);
+  for (const r of state.rivals ?? []) {
+    addStable(r.id, r.owner.stableName, false, r.roster ?? []);
+  }
+
+  rows.sort((a, b) => b.wins - a.wins || b.kills - a.kills || a.stableId.localeCompare(b.stableId));
+  return rows.slice(0, limit);
 }

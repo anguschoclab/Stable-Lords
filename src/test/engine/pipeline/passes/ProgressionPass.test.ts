@@ -481,7 +481,9 @@ describe('ProgressionPass', () => {
       const impact = runProgressionPass(state, 5, 1);
 
       expect(impact.progression).toBeDefined();
-      expect(impact.progression!.objectives).toHaveLength(5);
+      expect(impact.progression!.objectives).toHaveLength(
+        DEFAULT_PROGRESSION.objectives.length
+      );
     });
   });
 });

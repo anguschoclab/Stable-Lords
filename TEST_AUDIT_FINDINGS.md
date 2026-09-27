@@ -142,3 +142,69 @@
 ### 3g. Sign-off
 
 Presented to user (session msg); deletions proceed under approved plan policy: delete test+source together for confirmed dead code; all merges gated by union-spec-green precondition. Newly discovered items (§3e–§3f) flagged here for review — objections may be raised before Phase 3 commit lands.
+
+---
+
+## 4. Outcomes (Phases 3–5, measured)
+
+### 4a. Deletions & merges
+
+- `src/scripts/emergent-report.test.ts` (33s, self-described "not a real test")
+  → converted to `scripts/emergent-report.ts` standalone script; verified
+  end-to-end run (52 weeks, clean exit).
+- Dead pairs removed: `ai/plan/index.ts` barrel + `dayAdvance.ts`/`dayPipeline`
+  delegation test. Fresh orphan scan re-ran clean; `stateInvariants.ts` kept
+  (documented soak tooling used by `scripts/soak.mjs`).
+- Same-module duplicate merges (union-spec-first, all green pre-delete):
+  combat ×13 (flat → mechanics/resolution), `warriorCollection`, `WinScreen`,
+  `cn`, `daily_bard`→`dailyBard`, `boutBidding` perf+opt (29 tests),
+  `traits`+characterization (2 unique assertions kept; "0–1 traits" weaker
+  claim dropped — real contract is 0–2), arena cluster (6→2 files),
+  narrative cluster. **22 colliding basenames → 0.**
+
+### 4b. Fixture migration (Phase 3c)
+
+- `factories.ts` gained `makeFighterState` + `makeResolutionContext` (combat
+  exchange shapes previously copy-pasted ×5).
+- 85 files migrated to thin adapters delegating to shared builders via a
+  brace-aware codemod (`scripts/delegate-factories.mjs`, removed after use).
+- ~53 files retain local factories, justified: domain contexts without shared
+  builders (OffseasonEventContext, Rivalry, fight plans) and logic-bearing
+  factories. Tracked in `auditBaseline.json` under `localFactoryFiles`.
+- Codemod incidents (stale `as T` tails, braced-body misparse) were reverted
+  cleanly and the script fixed before re-application — no forward-patching.
+
+### 4c. Reorganization (Phase 4)
+
+- 7 colocated strays moved to `src/test/` with `@/` import rewiring.
+- `runRound/` → `run-round/`, `ai/competitionWorker/` → `ai/workers/...` to
+  mirror production paths; meta-tests (`buildConfigIntegrity`,
+  `electronMain`, `terminology`) → `src/test/config/`.
+- `vitest.config*.ts`: `dir` tightened `./src` → `./src/test` — future
+  colocated strays are uncollectable.
+
+### 4d. Performance (Phase 5, measured wall-clock)
+
+| Metric | Before | After |
+| --- | --- | --- |
+| Default suite | ~90s / 702 files / 7,904 tests | **58.95s / 653 files / 7,862 tests** |
+| Environment share | 47% | 25% |
+| jsdom workers | all | only pragma-flagged DOM files |
+
+- Global env `jsdom` → `node`; 55 DOM files carry explicit pragmas.
+- 10 long-pole files promoted to `*.slow.test.ts` (top: 52-week simulation
+  ~29s). Slow suite: `bun run test:slow`, CI `slow-tests` job.
+- `setup.ts` splits DOM deps: RTL/jest-dom load only when `document` exists.
+- `isolate: false` **evaluated and rejected**: breaks `vi.mock` interception
+  (module-registry sharing) and mixed-env RTL unmount. Noted in
+  `vitest.config.ts`; ~17s deemed unsafe to harvest.
+
+### 4e. Guardrails (permanent)
+
+- `testQualityAudit.test.ts`: 7 structural guards, shrink-only allowlists in
+  `auditBaseline.json` (stale entries fail the gate).
+- `stateReset.test.ts`: singleton reset sentinels (eventBus, NewsletterFeed,
+  idCounter, useGameStore, module caches).
+- `bunRunnerSafety.test.ts`: bans bun-deadlocking `vi.mock(() => import())`.
+- Env canaries: pragma mechanism + node-env proof.
+- Authoring rules: `docs/TESTING.md`.

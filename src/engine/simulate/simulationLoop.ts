@@ -79,6 +79,9 @@ export function runSimulationLoop(
     const phase = toPhase(getPhaseByExchange(ex, MAX_EXCHANGES));
     resCtx.phase = phase;
     resCtx.exchange = ex;
+    // Corner advice: the first exchange of a new phase lets both fighters
+    // re-evaluate plan conditions regardless of WT cadence.
+    resCtx.cornerAdvice = phase !== lastPhase;
 
     // Phase Change & Tactic Reveal
     if (phase !== lastPhase) {

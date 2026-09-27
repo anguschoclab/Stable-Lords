@@ -98,6 +98,9 @@ export interface FighterState {
 export interface ResolutionContext {
   rng: () => number;
   phase: 'OPENING' | 'MID' | 'LATE';
+  /** True on the first exchange of a new phase — the corner speaks, so
+   *  condition re-evaluation bypasses the WT cadence gate. */
+  cornerAdvice?: boolean;
   exchange: number;
   weather: WeatherType;
   weatherEffect: WeatherEffect;

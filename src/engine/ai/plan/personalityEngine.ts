@@ -29,9 +29,9 @@ export const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAda
     ];
     if (isKillIntent) {
       conditions.push({
-        trigger: { type: 'MOMENTUM_LEAD', value: 2 },
+        trigger: { type: 'OPPONENT_HP_BELOW', value: 30 },
         override: { OE: bounded(plan.OE, +1), killDesire: bounded(plan.killDesire ?? 5, +2) },
-        label: 'Aggressive+Vendetta: kill commitment',
+        label: 'Aggressive+Vendetta: smell blood',
       });
     }
     return conditions;
@@ -42,6 +42,12 @@ export const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAda
       trigger: { type: 'MOMENTUM_DEFICIT', value: 2 },
       override: { AL: bounded(plan.AL, +1), OE: bounded(plan.OE, -1) },
       label: 'Methodical: disengage and reset',
+    },
+    {
+      // Opponent gassed → press the exhaustion advantage.
+      trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 30 },
+      override: { OE: bounded(plan.OE, +2) },
+      label: 'Methodical: press the gassed',
     },
   ],
   Showman: (plan, bounded) => [
@@ -71,6 +77,12 @@ export const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAda
       override: { OE: bounded(plan.OE, -1), AL: bounded(plan.AL, +1) },
       label: 'Tactician: conserve pace',
     },
+    {
+      // Opponent gassed → the corner calls the press.
+      trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 30 },
+      override: { OE: bounded(plan.OE, +2) },
+      label: 'Tactician: press the gassed',
+    },
   ],
 };
 
@@ -91,5 +103,16 @@ export function getPersonalityAdaptations(
   const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
   const isKillIntent = intent === 'VENDETTA' || intent === 'AGGRESSIVE_EXPANSION';
   const handler = PERSONALITY_ADAPTATION_MAP[personality];
-  return handler ? handler(plan, bounded, isKillIntent) : [];
+  const conditions = handler ? handler(plan, bounded, isKillIntent) : [];
+
+  // Intent-driven conditions — a recovering stable weathers enemy tempo
+  // instead of trading with it.
+  if (intent === 'RECOVERY') {
+    conditions.push({
+      trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
+      override: { OE: bounded(plan.OE, -2), defensiveTactic: 'Parry' },
+      label: 'Recovery: weather the storm',
+    });
+  }
+  return conditions;
 }

@@ -252,6 +252,10 @@ export const ConditionTriggerTypeSchema = z.enum([
   'MOMENTUM_DEFICIT',
   'PHASE_IS',
   'ENDURANCE_BELOW',
+  'OPPONENT_HP_BELOW',
+  'OPPONENT_ENDURANCE_BELOW',
+  'OPPONENT_MOMENTUM_LEAD',
+  'PSYCH_IS',
 ]);
 
 /**

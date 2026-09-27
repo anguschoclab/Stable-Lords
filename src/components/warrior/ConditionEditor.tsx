@@ -37,6 +37,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
     let value: number | string;
     if (opt.inputType === 'percent') value = 35;
     else if (opt.inputType === 'integer') value = 2;
+    else if (opt.inputType === 'psych') value = 'Desperate';
     else value = 'Mid';
     updateCondition(idx, { trigger: { type, value } });
   }
@@ -48,7 +49,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
     if (!opt) return;
 
     let value: number | string;
-    if (opt.inputType === 'phase') {
+    if (opt.inputType === 'phase' || opt.inputType === 'psych') {
       value = raw;
     } else {
       const n = parseFloat(raw);

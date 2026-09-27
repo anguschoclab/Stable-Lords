@@ -222,6 +222,16 @@ export function aiPlanForWarrior(
 
   plan.ownerPersonality = personality;
   const adaptations = getPersonalityAdaptations(personality, plan, intent);
+
+  // Dossier-driven counter-conditions: a stable that knows the opponent has
+  // killed one of its fighters shells up the moment that opponent seizes tempo.
+  if ((dossier?.recordVs.k ?? 0) > 0) {
+    adaptations.push({
+      trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
+      override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
+      label: 'Scouted: shell up vs the killer',
+    });
+  }
   const allConditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
   // WIT-gated condition density (F.3): low-WIT warriors carry sparse,
   // "mistake-shaped" plans — few adaptive branches — mirroring the

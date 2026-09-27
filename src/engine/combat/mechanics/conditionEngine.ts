@@ -17,20 +17,29 @@ function evaluationInterval(wt: number): number {
 }
 
 /**
+ * Percent triggers are stored 0–100 (editor input, AI emitters) but compare
+ * against 0–1 ratios; legacy 0–1 values remain honored for compatibility.
+ */
+function pctThreshold(value: number | string): number {
+  const v = Number(value);
+  return v > 1 ? v / 100 : v;
+}
+
+/**
  * Returns true when the given trigger condition is satisfied.
  */
 function conditionMet(
   trigger: PlanCondition['trigger'],
   fighter: FighterState,
-  _opponent: FighterState,
+  opponent: FighterState,
   ctx: ResolutionContext
 ): boolean {
   const { type, value } = trigger;
   switch (type as ConditionTriggerType) {
     case 'HP_BELOW':
-      return fighter.hp / fighter.maxHp < Number(value);
+      return fighter.hp / fighter.maxHp < pctThreshold(value);
     case 'HP_ABOVE':
-      return fighter.hp / fighter.maxHp > Number(value);
+      return fighter.hp / fighter.maxHp > pctThreshold(value);
     case 'MOMENTUM_LEAD':
       return fighter.momentum >= Number(value);
     case 'MOMENTUM_DEFICIT':
@@ -47,7 +56,15 @@ function conditionMet(
       return ctx.phase === (phaseMap[String(value)] ?? value);
     }
     case 'ENDURANCE_BELOW':
-      return fighter.endurance / fighter.maxEndurance < Number(value);
+      return fighter.endurance / fighter.maxEndurance < pctThreshold(value);
+    case 'OPPONENT_HP_BELOW':
+      return opponent.hp / opponent.maxHp < pctThreshold(value);
+    case 'OPPONENT_ENDURANCE_BELOW':
+      return opponent.endurance / opponent.maxEndurance < pctThreshold(value);
+    case 'OPPONENT_MOMENTUM_LEAD':
+      return opponent.momentum >= Number(value);
+    case 'PSYCH_IS':
+      return derivePsychState(fighter, opponent) === value;
     default:
       return false;
   }
@@ -95,8 +112,10 @@ export function evaluateConditions(
 ): { newPlan: FightPlan; psychState: PsychState } {
   const psychState = derivePsychState(fighter, opponent);
 
-  // WT gates how frequently conditions are re-evaluated
-  if (ctx.exchange % evaluationInterval(wt) !== 0) {
+  // WT gates how frequently conditions are re-evaluated — except at phase
+  // boundaries, when the corner's advice overrides the cadence (any fighter
+  // can hear their corner between rounds).
+  if (!ctx.cornerAdvice && ctx.exchange % evaluationInterval(wt) !== 0) {
     return { newPlan: fighter.activePlan, psychState };
   }
 

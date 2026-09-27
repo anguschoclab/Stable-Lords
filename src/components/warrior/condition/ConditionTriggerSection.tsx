@@ -1,5 +1,5 @@
 import type { PlanCondition, ConditionTriggerType } from '@/types/game';
-import { TRIGGER_OPTIONS } from '@/constants/combat/planConditions';
+import { TRIGGER_OPTIONS, PSYCH_OPTIONS } from '@/constants/combat/planConditions';
 import { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
 
 interface ConditionTriggerSectionProps {
@@ -50,6 +50,19 @@ export function ConditionTriggerSection({
             <option value="Opening">Opening</option>
             <option value="Mid">Mid</option>
             <option value="Late">Late</option>
+          </select>
+        ) : trigOpt.inputType === 'psych' ? (
+          <select
+            value={String(cond.trigger.value)}
+            onChange={(e) => onValueChange(e.target.value)}
+            aria-label="Condition trigger psych state"
+            className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
+          >
+            {PSYCH_OPTIONS.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
           </select>
         ) : trigOpt.inputType === 'integer' ? (
           <select

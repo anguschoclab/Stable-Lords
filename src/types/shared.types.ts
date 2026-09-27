@@ -333,7 +333,11 @@ export type ConditionTriggerType =
   | 'MOMENTUM_LEAD'
   | 'MOMENTUM_DEFICIT'
   | 'PHASE_IS'
-  | 'ENDURANCE_BELOW';
+  | 'ENDURANCE_BELOW'
+  | 'OPPONENT_HP_BELOW'
+  | 'OPPONENT_ENDURANCE_BELOW'
+  | 'OPPONENT_MOMENTUM_LEAD'
+  | 'PSYCH_IS';
 
 /**
  * Defines the shape of plan condition.

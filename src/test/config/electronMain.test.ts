@@ -100,7 +100,7 @@ import {
   _setTray,
   validateAndMigrateState,
   registerIPCHandlers,
-} from '../../electron/main.ts';
+} from '../../../electron/main.ts';
 
 function findMenuItem(template: any[] | null, label: string): any | null {
   if (!template) return null;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatWeek, formatDateOfDeath } from './format';
+import { formatWeek, formatDateOfDeath } from '@/utils/format';
 
 describe('formatWeek', () => {
   it('formats a week and season into a display string', () => {

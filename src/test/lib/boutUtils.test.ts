@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { classifyEvent } from './boutUtils';
+import { classifyEvent } from '@/lib/boutUtils';
 import { MinuteEvent } from '@/types/game';
 
 describe('classifyEvent', () => {

@@ -13,7 +13,7 @@ export default defineConfig({
     testTimeout: 120000,
     hookTimeout: 10000,
     pool: 'threads',
-    dir: './src',
+    dir: './src/test',
     exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts'],
     coverage: {
       provider: 'v8',

@@ -5,7 +5,7 @@ import {
   getCrestColor,
   getChargeDescription,
   getCrestDescription,
-} from './crestGenerator';
+} from '@/engine/crest/crestGenerator';
 import { CREST_COLORS } from '@/types/crest.types';
 import type { CrestData, CrestColorKey } from '@/types/crest.types';
 

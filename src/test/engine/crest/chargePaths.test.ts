@@ -8,7 +8,7 @@ import {
   NATURE_PATHS,
   CELESTIAL_PATHS,
   MYTHICAL_PATHS,
-} from './chargePaths';
+} from '@/engine/crest/chargePaths';
 import { CHARGE_DEFINITIONS } from '@/types/crest.types';
 import type { ChargeType } from '@/types/crest.types';
 

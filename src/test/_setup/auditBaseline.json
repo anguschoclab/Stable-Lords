@@ -1,14 +1,6 @@
 {
-  "generatedAt": "2026-09-26T12:12:15.694Z",
-  "strayTestFiles": [
-    "src/engine/crest/chargePaths.test.ts",
-    "src/engine/crest/crestGenerator.test.ts",
-    "src/lib/boutUtils.test.ts",
-    "src/lib/obfuscation.test.ts",
-    "src/scripts/simulation.test.ts",
-    "src/scripts/workflow-config.test.ts",
-    "src/utils/format.test.ts"
-  ],
+  "generatedAt": "2026-09-27T05:16:39.803Z",
+  "strayTestFiles": [],
   "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
     "src/test/components/WarriorLeaderboardVirtualized.test.tsx",
@@ -81,7 +73,7 @@
     "src/test/components/planBuilder/DuplicateSwitch.test.tsx",
     "src/test/components/planBuilder/SwitchLabelA11y.test.tsx",
     "src/test/components/resolutionReveal/ResolutionReveal.test.tsx",
-    "src/test/components/runRound/RunRound.test.tsx",
+    "src/test/components/run-round/RunRound.test.tsx",
     "src/test/components/tournaments/ActiveTournamentManifest.test.tsx",
     "src/test/components/tournaments/Tournaments.test.tsx",
     "src/test/components/ui/ButtonAriaLabel.test.tsx",
@@ -89,9 +81,9 @@
     "src/test/components/warriorBuilder/WarriorBuilder.test.tsx",
     "src/test/components/widgets/Widgets.test.tsx",
     "src/test/components/world/World.test.tsx",
+    "src/test/config/electronMain.test.ts",
     "src/test/config/environmentNodeCanary.test.ts",
     "src/test/config/environmentSplitCanary.test.ts",
-    "src/test/electronMain.test.ts",
     "src/test/engine/advisor/boutOfferAdvisor.test.ts",
     "src/test/engine/advisor/campaignFocusEvaluator.test.ts",
     "src/test/engine/ai/intentEngine.tournament.test.ts",

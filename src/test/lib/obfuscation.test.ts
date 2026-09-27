@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { obfuscateWarrior, type ObfuscatedWarrior } from './obfuscation';
+import { obfuscateWarrior, type ObfuscatedWarrior } from '@/lib/obfuscation';
 import { FightingStyle } from '@/types/game';
 import type { Warrior, InsightToken } from '@/types/game';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';

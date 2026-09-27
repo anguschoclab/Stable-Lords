@@ -17,7 +17,7 @@ describe('bun-runner safety contract (N-A)', () => {
 
   it('buildConfigIntegrity invokes tsc directly, not via `bun run type-check`', () => {
     const src = fs.readFileSync(
-      path.join(root, 'src/test/buildConfigIntegrity.test.ts'),
+      path.join(root, 'src/test/config/buildConfigIntegrity.test.ts'),
       'utf-8'
     );
     expect(src).toContain('typescript7/bin/tsc');
@@ -25,7 +25,7 @@ describe('bun-runner safety contract (N-A)', () => {
 
   it('buildConfigIntegrity does not shell out to `bun run type-check`', () => {
     const src = fs.readFileSync(
-      path.join(root, 'src/test/buildConfigIntegrity.test.ts'),
+      path.join(root, 'src/test/config/buildConfigIntegrity.test.ts'),
       'utf-8'
     );
     expect(src).not.toContain("execSync('bun run type-check'");

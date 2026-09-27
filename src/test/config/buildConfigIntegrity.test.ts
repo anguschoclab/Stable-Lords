@@ -4,7 +4,7 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 
 describe('buildConfigIntegrity', () => {
-  const projectRoot = path.resolve(__dirname, '../..');
+  const projectRoot = path.resolve(__dirname, '../../..');
 
   it('vite.config.ts exists and is valid', () => {
     const configPath = path.join(projectRoot, 'vite.config.ts');
@@ -45,7 +45,7 @@ describe('buildConfigIntegrity', () => {
 });
 
 describe('tsconfig reference graph', () => {
-  const projectRoot = path.resolve(__dirname, '../..');
+  const projectRoot = path.resolve(__dirname, '../../..');
 
   function readJson(filePath: string): Record<string, any> {
     const raw = fs.readFileSync(filePath, 'utf-8');
@@ -105,7 +105,7 @@ describe('tsconfig reference graph', () => {
 });
 
 describe('CI and package.json scripts', () => {
-  const projectRoot = path.resolve(__dirname, '../..');
+  const projectRoot = path.resolve(__dirname, '../../..');
 
   function readJson(filePath: string): Record<string, any> {
     const raw = fs.readFileSync(filePath, 'utf-8');

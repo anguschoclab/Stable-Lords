@@ -12,9 +12,11 @@ import {
   Sparkles,
   Shield,
   Activity,
+  Crown,
 } from 'lucide-react';
 import type { WarriorAdvisorCard, CampaignFocus } from '@/engine/advisor/types';
 import type { WarriorId } from '@/types/shared.types';
+import { getArenaById } from '@/data/arenas';
 
 interface WarriorCouncilCardProps {
   card: WarriorAdvisorCard;
@@ -147,6 +149,17 @@ export function WarriorCouncilCard({ card, onApplyPlan, onSetFocus }: WarriorCou
               <p className="text-[10px] text-arena-gold/90 flex items-center gap-1.5 font-medium pt-1 border-t border-white/5">
                 <Trophy className="h-3 w-3 shrink-0" />
                 <span>{card.tournamentAdvice.headline}</span>
+              </p>
+            )}
+
+            {card.crownStanding && (
+              <p className="text-[10px] text-amber-400/90 flex items-center gap-1.5 font-medium pt-1 border-t border-white/5">
+                <Crown className="h-3 w-3 shrink-0" />
+                <span>
+                  {card.crownStanding.isChampion
+                    ? `Reigning champion — defending the crown at ${getArenaById(card.crownStanding.arenaId).name}`
+                    : `Crown bid — contender #${card.crownStanding.rank} at ${getArenaById(card.crownStanding.arenaId).name}`}
+                </span>
               </p>
             )}
           </div>

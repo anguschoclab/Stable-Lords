@@ -247,6 +247,23 @@ export function prepareExchange(
     if (intentA) events.push(intentA);
     const intentD = evaluateBoutIntent(fD, fA, ctx);
     if (intentD) events.push(intentD);
+    // Condition-fire annotations — which trigger actually swapped the plan,
+    // marked @CORNER when corner advice forced the off-cadence re-check.
+    const cornerTag = ctx.cornerAdvice ? '@CORNER' : '';
+    if (condResultA.firedTrigger) {
+      events.push({
+        type: 'STATE_CHANGE',
+        actor: 'A',
+        result: `CONDITION_${condResultA.firedTrigger}${cornerTag}`,
+      });
+    }
+    if (condResultD.firedTrigger) {
+      events.push({
+        type: 'STATE_CHANGE',
+        actor: 'D',
+        result: `CONDITION_${condResultD.firedTrigger}${cornerTag}`,
+      });
+    }
   }
 
   const tac = resolveTacticsAndBias(fA, fD, phaseKey);

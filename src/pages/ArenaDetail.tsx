@@ -7,6 +7,7 @@ import { describeArenaEffects } from '@/engine/narrative/arenaNarrative';
 import {
   CHAMPIONSHIP_EXCLUDED_ARENAS,
   owningStableOf,
+  topContenders,
 } from '@/engine/championship/arenaChampionship';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import {
@@ -124,6 +125,14 @@ export default function ArenaDetail() {
     [store.arenaHistory, arenaId]
   );
 
+  // The queue behind the throne — the same eligibility ordering the
+  // championship pass books title bouts from.
+  const ladder = useMemo(
+    () => (arena && !isExcluded ? topContenders(state, arenaId, 5) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [arena, arenaId, isExcluded, store.roster, store.rivals, store.arenaChampions]
+  );
+
   const history = useMemo(() => [...(title?.history ?? [])].reverse(), [title]);
   const champId = reign?.warriorId;
 
@@ -218,6 +227,43 @@ export default function ArenaDetail() {
               </button>
             )}
           </div>
+
+          {/* Contender queue — the real eligibility ladder */}
+          {ladder.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-white/5">
+              <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">
+                Next in line
+              </div>
+              <div className="flex flex-wrap gap-x-6 gap-y-1.5">
+                {ladder.map((c, i) => {
+                  const owner = owningStableOf(state, c.warrior.id);
+                  const isPlayerContender = owner?.isPlayer ?? false;
+                  return (
+                    <div key={c.warrior.id} className="flex items-center gap-2 text-[10px]">
+                      <span className="font-mono font-black text-arena-gold/70 w-4 text-right">
+                        {i + 1}
+                      </span>
+                      <WarriorNameTag id={c.warrior.id} name={c.warrior.name} />
+                      <span className="text-muted-foreground/40 italic">
+                        {owner?.stableName ?? '—'}
+                      </span>
+                      <span className="font-mono text-muted-foreground/50 tabular-nums">
+                        {c.wins}W {c.losses}L
+                      </span>
+                      {isPlayerContender && (
+                        <Badge
+                          variant="outline"
+                          className="text-[7px] font-black tracking-widest border-primary/40 text-primary"
+                        >
+                          YOURS
+                        </Badge>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </Surface>
       )}
 

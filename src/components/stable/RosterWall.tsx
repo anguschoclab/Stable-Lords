@@ -1,16 +1,20 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from '@tanstack/react-router';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
 import { Users, ChevronRight, Swords } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
-import { useBookmarks } from '@/state/useGameStore';
+import { useBookmarks, useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { RosterWarriorRow } from './RosterWarriorRow';
 import { StyleCompositionDonut } from './StyleCompositionDonut';
 import type { FightingStyle } from '@/types/shared.types';
+import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
+import { getArenaById } from '@/data/arenas';
+import type { GameState } from '@/types/state.types';
 
 function EmptyRosterState() {
   return (
@@ -45,6 +49,32 @@ export function RosterWall() {
   const sortedRoster = useActiveRoster();
   const bookmarks = useBookmarks();
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+
+  const crownState = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      rivals: s.rivals,
+      arenaChampions: s.arenaChampions,
+      absoluteWeek: s.absoluteWeek,
+    }))
+  );
+
+  // warriorId → best contender standing across arenas (same index rival AI
+  // campaigns against — the chip shows real ladder position, not decoration).
+  const contenderBadges = useMemo(() => {
+    const index = buildContenderIndex(crownState as GameState);
+    const badges = new Map<string, { arenaName: string; rank: number }>();
+    for (const [arenaId, ids] of index) {
+      ids.forEach((wId, i) => {
+        const rank = i + 1;
+        const existing = badges.get(wId);
+        if (!existing || rank < existing.rank) {
+          badges.set(wId, { arenaName: getArenaById(arenaId).name, rank });
+        }
+      });
+    }
+    return badges;
+  }, [crownState]);
 
   const filteredRoster = useMemo(() => {
     if (!showBookmarkedOnly) return sortedRoster;
@@ -113,6 +143,7 @@ export function RosterWall() {
                   warrior={w}
                   rankIndex={i}
                   onClick={() => navigate({ to: '/warrior/$id', params: { id: w.id } })}
+                  contenderBadge={contenderBadges.get(w.id)}
                 />
               </motion.div>
             ))}

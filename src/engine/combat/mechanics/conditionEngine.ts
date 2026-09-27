@@ -109,7 +109,7 @@ export function evaluateConditions(
   opponent: FighterState,
   ctx: ResolutionContext,
   wt: number
-): { newPlan: FightPlan; psychState: PsychState } {
+): { newPlan: FightPlan; psychState: PsychState; firedTrigger?: ConditionTriggerType } {
   const psychState = derivePsychState(fighter, opponent);
 
   // WT gates how frequently conditions are re-evaluated — except at phase
@@ -123,7 +123,11 @@ export function evaluateConditions(
   if (conditions && conditions.length > 0) {
     for (const cond of conditions) {
       if (conditionMet(cond.trigger, fighter, opponent, ctx)) {
-        return { newPlan: { ...fighter.plan, ...cond.override }, psychState };
+        return {
+          newPlan: { ...fighter.plan, ...cond.override },
+          psychState,
+          firedTrigger: cond.trigger.type,
+        };
       }
     }
   }

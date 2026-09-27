@@ -130,6 +130,18 @@ export interface WarriorActionPayload {
 }
 
 /**
+ * A warrior's standing on a title ladder — the best-ranked championship
+ * arena they contend at, or the crown they already hold. Derived from the
+ * shared contender index, so it always matches what rival AI sees.
+ */
+export interface CrownStanding {
+  arenaId: string;
+  /** 1-based contender rank at the arena (undefined while reigning). */
+  rank?: number;
+  isChampion: boolean;
+}
+
+/**
  * Unified advisor card for a single warrior.
  */
 export interface WarriorAdvisorCard {
@@ -138,6 +150,8 @@ export interface WarriorAdvisorCard {
   style: FightingStyle;
   campaignFocus: CampaignFocus;
   suggestedCampaignFocus: CampaignFocus;
+  /** Title-ladder standing — present only when the warrior reigns or is ranked. */
+  crownStanding?: CrownStanding;
   fatigueStatus: { band: 'fresh' | 'elevated' | 'exhausted'; value: number };
   injuryStatus: { isInjured: boolean; severities: string[]; requiresRecovery: boolean };
   fightAdvice: WarriorFightAdvice;

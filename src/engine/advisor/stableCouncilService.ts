@@ -44,6 +44,13 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   const contenderIndex = buildContenderIndex(state);
   const evalCtx = { contenderIndex };
 
+  // warriorId → the arena they reign over — the crown a champion defends is
+  // state the card surfaces as "defending", not a ladder rank.
+  const championArenaByWarrior = new Map<string, string>();
+  for (const [arenaId, t] of Object.entries(state.arenaChampions ?? {})) {
+    if (t?.champion) championArenaByWarrior.set(t.champion.warriorId, arenaId);
+  }
+
   const cards: WarriorAdvisorCard[] = activeWarriors.map((warrior) => {
     const campaignFocus = evaluateCampaignFocus(warrior, state, contenderIndex);
     // What the council would recommend absent the player's pin — lets the UI
@@ -130,6 +137,26 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
       },
     };
 
+    // Crown standing — the warrior's best title-ladder position, read off the
+    // shared contender index (same ordering rivals campaign against). A
+    // reigning champion reports the arena they defend instead.
+    let crownStanding: WarriorAdvisorCard['crownStanding'];
+    const championArena = championArenaByWarrior.get(warrior.id);
+    if (championArena) {
+      crownStanding = { arenaId: championArena, isChampion: true };
+    } else {
+      let bestArena: string | undefined;
+      let bestRank = Infinity;
+      for (const [arenaId, ids] of contenderIndex) {
+        const idx = ids.indexOf(warrior.id);
+        if (idx >= 0 && idx + 1 < bestRank) {
+          bestRank = idx + 1;
+          bestArena = arenaId;
+        }
+      }
+      if (bestArena) crownStanding = { arenaId: bestArena, rank: bestRank, isChampion: false };
+    }
+
     // Synthesize concise 1-sentence headline summary
     let headlineSummary = `${trainingAdvice.headline}.`;
     if (fightAdvice.action === 'ACCEPT_OFFER') {
@@ -146,6 +173,7 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
       style: warrior.style,
       campaignFocus,
       suggestedCampaignFocus,
+      crownStanding,
       fatigueStatus,
       injuryStatus,
       fightAdvice,

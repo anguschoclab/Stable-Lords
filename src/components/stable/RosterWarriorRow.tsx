@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { Crown, Star } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
@@ -31,12 +31,14 @@ interface RosterWarriorRowProps {
   };
   rankIndex: number;
   onClick: () => void;
+  /** Real contender standing: the arena this warrior ranks on + position. */
+  contenderBadge?: { arenaName: string; rank: number };
 }
 
 /**
  *
  */
-export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorRowProps) {
+export function RosterWarriorRow({ warrior, rankIndex, onClick, contenderBadge }: RosterWarriorRowProps) {
   const fights = warrior.career.wins + warrior.career.losses;
   const winRate = fights > 0 ? Math.round((warrior.career.wins / fights) * 100) : 0;
   const injuryCount = (warrior.injuries ?? []).length;
@@ -75,6 +77,12 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                   injuryCount={injuryCount}
                   useCrown
                 />
+                {!warrior.champion && contenderBadge && (
+                  <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-arena-gold/80">
+                    <Crown className="h-2.5 w-2.5" />
+                    Contender #{contenderBadge.rank} · {contenderBadge.arenaName}
+                  </span>
+                )}
                 <div className="flex items-center gap-3">
                   <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
                   <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none">

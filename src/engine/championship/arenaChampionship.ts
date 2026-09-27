@@ -205,7 +205,8 @@ export function championsHeldByStable(state: GameState, stableId: string): strin
     .sort();
 }
 
-interface RankedContender {
+/** A warrior with their venue-specific record, as ordered by rankContenders. */
+export interface RankedContender {
   warrior: Warrior;
   wins: number;
   losses: number;
@@ -280,6 +281,20 @@ export function selectTitleContender(
   opts?: { bookedIds?: Set<string>; includeUnready?: boolean }
 ): Warrior | null {
   return rankContenders(state, arenaId, delta, opts)[0]?.warrior ?? null;
+}
+
+/**
+ * Top-N eligible contenders at an arena — the same ordering the championship
+ * pass books title bouts from, exposed for posture surfaces (arena detail,
+ * advisor cards). Unready contenders included: the ladder shows standing,
+ * not just this week's bookability.
+ */
+export function topContenders(
+  state: GameState,
+  arenaId: string,
+  depth = 3
+): RankedContender[] {
+  return rankContenders(state, arenaId, undefined, { includeUnready: true }).slice(0, depth);
 }
 
 /** 1-based position in the eligible-contender ordering, or null if not ranked. */

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';

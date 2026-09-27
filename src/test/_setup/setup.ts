@@ -1,5 +1,3 @@
-import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react/pure';
 import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorLookup';
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
@@ -11,6 +9,17 @@ import { clearReconstructionCache } from '@/state/serialization';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
 enableMapSet();
+
+// DOM setup is env-gated: under the global 'node' environment the ~560 pure
+// engine/logic test files must not pay for react/react-dom/jest-dom imports.
+// Vitest applies the per-file environment before setup files run, so
+// `document` presence is the correct discriminator. bun-setup always installs
+// jsdom, so Bun parity is unchanged.
+let rtlCleanup: (() => void) | null = null;
+if (typeof document !== 'undefined') {
+  await import('@testing-library/jest-dom/vitest');
+  rtlCleanup = (await import('@testing-library/react/pure')).cleanup;
+}
 
 // OPFS modules are never mocked globally; ensure no stale mock leaks across files.
 vi.unmock('@/engine/storage/opfsArchive');
@@ -268,7 +277,7 @@ afterEach(async () => {
 // Clean up rendered components after each test in jsdom environment
 afterEach(() => {
   try {
-    cleanup();
+    rtlCleanup?.();
   } catch {
     // Bun parallel runner can trigger concurrent cleanup()/act() calls;
     // swallow the error so it doesn't cascade to unrelated tests.

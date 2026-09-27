@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Style Passives Tests — combat mechanics, tempo, mastery, kill mechanics
  */

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Content packs (G7 / Design Bible #36) — narrative overlays.
  */

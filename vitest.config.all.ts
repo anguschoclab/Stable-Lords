@@ -4,7 +4,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [],
   test: {
-    environment: 'jsdom',
+    environment: 'node',
     globals: true,
     setupFiles: ['./src/test/_setup/setup.ts'],
     alias: {

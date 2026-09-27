@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Characterization tests for executeHit — pins current behavior before
  * refactoring. Tests run against the unrefactored code and must stay green.

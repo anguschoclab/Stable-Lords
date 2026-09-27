@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';

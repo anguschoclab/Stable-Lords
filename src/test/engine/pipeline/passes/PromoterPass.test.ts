@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
 import type { BoutOfferId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';

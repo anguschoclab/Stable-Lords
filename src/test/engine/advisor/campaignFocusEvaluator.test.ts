@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
 import { FightingStyle } from '@/types/shared.types';

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Electron IPC payload bounds — verifies that the IPC layer rejects oversized
  * payloads. Tests the client-side behavior when IPC handlers return rejection

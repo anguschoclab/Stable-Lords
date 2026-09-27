@@ -1,4 +1,4 @@
-import { describe, test, vi, beforeEach } from 'vitest';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { runSimulation } from '@/scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
@@ -58,8 +58,12 @@ describe('Headless Simulation Harness', () => {
     };
 
     console.log(`\n[Sim] Starting 52-week balance check with seed: ${seed}`);
-    await runSimulation(config);
+    const result = await runSimulation(config);
 
     console.log('SUCCESS');
+    expect(result.finalState).toBeDefined();
+    expect(result.finalState.absoluteWeek).toBeGreaterThanOrEqual(52);
+    expect(result.pulses.length).toBeGreaterThan(0);
+    expect(result.cumulative).toBeDefined();
   }, 300000);
 });

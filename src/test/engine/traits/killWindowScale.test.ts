@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * killWindowBonus scale invariant — the trait effect feeds
  * `calculateKillWindow`'s `specialtyBonus`, which is added to a probability

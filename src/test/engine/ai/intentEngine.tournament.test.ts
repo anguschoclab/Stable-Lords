@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Stage C.0 — TOURNAMENT_CAMPAIGN intent: fires in the pre-tournament window
  * (weeks 10–13) for stables healthy enough to contend. It shapes preparation

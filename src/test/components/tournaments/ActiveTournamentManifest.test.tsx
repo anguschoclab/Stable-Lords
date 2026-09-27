@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * #979 perf characterization test — verifies ActiveTournamentManifest
  * computes the same values after the single-pass loop rewrite.

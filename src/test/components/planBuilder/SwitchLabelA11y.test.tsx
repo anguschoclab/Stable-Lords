@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Switch label accessibility — verifies that Switch components in planBuilder
  * have proper label associations via htmlFor/id after PR #748 merge.

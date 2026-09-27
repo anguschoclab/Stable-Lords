@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { ArchiveConflictError } from '@/engine/storage/ArchiveConflictError';

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ElectronArchiveService } from '@/engine/storage/electronArchive';
 import '@/test/_setup/setup';

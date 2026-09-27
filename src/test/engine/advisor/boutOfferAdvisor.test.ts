@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { evaluateBoutOffers } from '@/engine/advisor/boutOfferAdvisor';
 import { FightingStyle } from '@/types/shared.types';

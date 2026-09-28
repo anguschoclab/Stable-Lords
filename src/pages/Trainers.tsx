@@ -67,25 +67,25 @@ export default function Trainers() {
         <TabsList className="bg-white/[0.02] border border-white/5 p-1 h-14 rounded-none w-full justify-start overflow-x-auto no-scrollbar">
           <TabsTrigger
             value="current"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
           >
             <GraduationCap className="h-4 w-4" /> Current Staff
           </TabsTrigger>
           <TabsTrigger
             value="hire"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
           >
             <UserPlus className="h-4 w-4" /> Hire
           </TabsTrigger>
           <TabsTrigger
             value="mentors"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
           >
             <Award className="h-4 w-4" /> Legacy Mentors
           </TabsTrigger>
           <TabsTrigger
             value="legends"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
           >
             <Skull className="h-4 w-4" /> Fallen Legends
           </TabsTrigger>
@@ -93,7 +93,7 @@ export default function Trainers() {
 
         <TabsContent
           value="current"
-          className="mt-0 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
+          className="mt-0 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 motion-reduce:animate-none"
         >
           <div className="flex justify-end">
             <BookmarkFilterToggle
@@ -113,7 +113,7 @@ export default function Trainers() {
 
         <TabsContent
           value="hire"
-          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
+          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 motion-reduce:animate-none"
         >
           <HireTab
             currentHiringPool={currentHiringPool}

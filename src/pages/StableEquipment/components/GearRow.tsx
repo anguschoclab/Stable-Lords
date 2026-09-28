@@ -16,7 +16,7 @@ export function GearRow({ icon: Icon, name, weight, error, blocked, high }: Gear
   return (
     <div
       className={cn(
-        'flex items-center gap-3 p-2.5 transition-all',
+        'flex items-center gap-3 p-2.5 transition-all motion-reduce:transition-none',
         high ? 'bg-white/[0.03]' : 'bg-black/20'
       )}
     >

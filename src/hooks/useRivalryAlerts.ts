@@ -94,17 +94,18 @@ function triggerScreenShake(intensity: number) {
   if (!root) return;
 
   // Screen shake
-  root.classList.add('animate-screen-shake');
+  root.classList.add('animate-screen-shake', 'motion-reduce:animate-none');
 
   // Blood-red flash overlay
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 pointer-events-none z-[9999] animate-blood-flash';
-  overlay.style.backgroundColor = intensity >= 5 ? 'hsl(0 70% 50% / 0.2)' : 'hsl(0 70% 50% / 0.12)';
+  overlay.className = 'fixed inset-0 pointer-events-none z-[9999] animate-blood-flash motion-reduce:animate-none';
+  overlay.style.backgroundColor =
+    intensity >= 5 ? 'rgba(var(--blood-bright-rgb), 0.2)' : 'rgba(var(--blood-bright-rgb), 0.12)';
   document.body.appendChild(overlay);
 
   // Cleanup
   setTimeout(() => {
-    root.classList.remove('animate-screen-shake');
+    root.classList.remove('animate-screen-shake', 'motion-reduce:animate-none');
     overlay.remove();
   }, 800);
 }

@@ -33,7 +33,7 @@ export function AssetRegistry({
             key={warrior.id}
             onClick={() => onSelect(isSelected ? null : warrior.id)}
             className={cn(
-              'flex flex-col gap-1 p-4 border transition-all text-left group relative overflow-hidden',
+              'flex flex-col gap-1 p-4 border transition-all text-left group relative overflow-hidden motion-reduce:transition-none',
               isSelected
                 ? 'bg-white/[0.05] border-white/20'
                 : 'bg-transparent border-white/5 opacity-40 grayscale hover:opacity-100 hover:grayscale-0',

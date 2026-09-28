@@ -34,8 +34,8 @@ export default function IdentityStep({
       className="p-7 space-y-6"
       style={{
         background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
-        border: '1px solid rgba(60,42,22,0.9)',
-        borderTopColor: 'rgba(100,70,36,0.5)',
+        border: '1px solid rgba(var(--oak-rgb), 0.9)',
+        borderTopColor: 'rgba(var(--umber-rgb), 0.5)',
       }}
     >
       <div>
@@ -63,7 +63,7 @@ export default function IdentityStep({
             placeholder="e.g. Master Thorne"
             style={{
               background: 'var(--background)',
-              border: '1px solid rgba(60,42,22,0.8)',
+              border: '1px solid rgba(var(--oak-rgb), 0.8)',
               color: 'hsl(var(--foreground))',
               outline: 'none',
             }}
@@ -86,7 +86,7 @@ export default function IdentityStep({
             placeholder="e.g. The Iron Sentinels"
             style={{
               background: 'var(--background)',
-              border: '1px solid rgba(60,42,22,0.8)',
+              border: '1px solid rgba(var(--oak-rgb), 0.8)',
               color: 'hsl(var(--foreground))',
               outline: 'none',
             }}
@@ -98,7 +98,7 @@ export default function IdentityStep({
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

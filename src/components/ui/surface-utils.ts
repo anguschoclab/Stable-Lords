@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 /**
  * Surface variants.
  */
-export const surfaceVariants = cva('relative overflow-hidden transition-all duration-300', {
+export const surfaceVariants = cva('relative overflow-hidden transition-all duration-300 motion-reduce:transition-none', {
   variants: {
     variant: {
       // Primary working surface — warm dark leather/timber
@@ -11,9 +11,9 @@ export const surfaceVariants = cva('relative overflow-hidden transition-all dura
         'backdrop-blur-xl shadow-2xl border',
         'bg-card/75',
         'border-border',
-        '[border-top-color:rgba(80,55,30,0.45)]',
-        '[border-left-color:rgba(70,48,26,0.4)]',
-        '[background-image:linear-gradient(135deg,rgba(255,245,220,0.018)_0%,transparent_60%,rgba(200,120,20,0.02)_100%)]',
+        '[border-top-color:rgba(var(--sepia-rgb), 0.45)]',
+        '[border-left-color:rgba(var(--sepia-rgb), 0.4)]',
+        '[background-image:linear-gradient(135deg,rgba(var(--sheen-warm-rgb), 0.018)_0%,transparent_60%,rgba(var(--ember-rgb), 0.02)_100%)]',
       ],
 
       // Trophy/achievement surface — bronze-gold accented
@@ -38,9 +38,9 @@ export const surfaceVariants = cva('relative overflow-hidden transition-all dura
       paper: [
         'shadow-xl border-2 border-double',
         'bg-background',
-        'border-[rgba(60,42,22,0.7)]',
-        '[border-top-color:rgba(100,70,36,0.5)]',
-        '[background-image:linear-gradient(145deg,rgba(24,16,9,0.9)_0%,rgba(18,12,7,0.95)_50%,rgba(22,15,8,0.9)_100%)]',
+        'border-[rgba(var(--oak-rgb),_0.7)]',
+        '[border-top-color:rgba(var(--umber-rgb), 0.5)]',
+        '[background-image:linear-gradient(145deg,rgba(var(--inkwash-rgb), 0.9)_0%,rgba(var(--inkwash-rgb), 0.95)_50%,rgba(var(--inkwash-rgb), 0.9)_100%)]',
       ],
 
       // Active/highlighted — crimson glow

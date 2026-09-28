@@ -48,7 +48,7 @@ export function DivisionalStandings({ rivals }: DivisionalStandingsProps) {
             {rivals.map((r, i) => (
               <tr
                 key={r.id}
-                className={`border-b border-white/5 transition-colors hover:bg-white/[0.02] ${i === 0 ? 'bg-arena-gold/[0.03]' : ''}`}
+                className={`border-b border-white/5 transition-colors hover:bg-white/[0.02] ${i === 0 ? 'bg-arena-gold/[0.03]' : ''} motion-reduce:transition-none`}
               >
                 <td className="px-5 py-2.5">
                   <div className="flex items-center gap-2">

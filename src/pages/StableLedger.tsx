@@ -75,7 +75,7 @@ export default function StableLedger() {
             className={cn(
               'p-3 transform rotate-45 border',
               isEmergency
-                ? 'bg-destructive/20 border-destructive/40 animate-pulse'
+                ? 'bg-destructive/20 border-destructive/40 animate-pulse motion-reduce:animate-none'
                 : 'bg-accent/10 border-accent/30'
             )}
           >
@@ -132,7 +132,7 @@ export default function StableLedger() {
       </Surface>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full grid grid-cols-2 md:grid-cols-6 h-auto p-1 bg-[#080604] border border-white/5 backdrop-blur-2xl rounded-none mb-10 overflow-hidden">
+        <TabsList className="w-full grid grid-cols-2 md:grid-cols-6 h-auto p-1 bg-[hsl(var(--background))] border border-white/5 backdrop-blur-2xl rounded-none mb-10 overflow-hidden">
           {[
             { value: 'overview', icon: Coins, label: 'Ledger' },
             { value: 'tokens', icon: Sparkles, label: 'Vault' },
@@ -144,7 +144,7 @@ export default function StableLedger() {
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="text-[9px] font-black uppercase tracking-[0.2em] py-4 gap-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-4px_0_hsl(var(--primary))] transition-all duration-300 rounded-none border-r border-white/5 last:border-0"
+              className="text-[9px] font-black uppercase tracking-[0.2em] py-4 gap-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-4px_0_hsl(var(--primary))] transition-all duration-300 rounded-none border-r border-white/5 last:border-0 motion-reduce:transition-none"
             >
               <tab.icon className="h-3.5 w-3.5 opacity-60" />
               <span className="hidden sm:inline">{tab.label}</span>
@@ -152,7 +152,7 @@ export default function StableLedger() {
           ))}
         </TabsList>
 
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none">
           <TabsContent value="overview" className="focus-visible:outline-none">
             <TreasuryOverview />
           </TabsContent>

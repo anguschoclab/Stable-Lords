@@ -279,7 +279,7 @@ export function CouncilCardFooter({
       <Button
         size="sm"
         onClick={() => onApplyPlan(card.warriorId)}
-        className="h-9 px-6 font-black uppercase text-[10px] tracking-widest gap-2 bg-primary/20 hover:bg-primary text-primary-foreground border border-primary/40 rounded-none transition-all"
+        className="h-9 px-6 font-black uppercase text-[10px] tracking-widest gap-2 bg-primary/20 hover:bg-primary text-primary-foreground border border-primary/40 rounded-none transition-all motion-reduce:transition-none"
       >
         <Sparkles className="h-3.5 w-3.5" />
         Apply Plan for {card.warriorName}

@@ -54,7 +54,7 @@ export function CouncilBriefingWidget() {
         <Link to="/stable/advisor">
           <Button
             size="sm"
-            className="h-10 px-5 font-black uppercase text-[10px] tracking-widest gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-none border border-primary/40 transition-all shrink-0"
+            className="h-10 px-5 font-black uppercase text-[10px] tracking-widest gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-none border border-primary/40 transition-all shrink-0 motion-reduce:transition-none"
           >
             Review War Council
             <ChevronRight className="h-3.5 w-3.5" />

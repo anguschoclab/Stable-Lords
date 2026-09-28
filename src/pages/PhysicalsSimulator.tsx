@@ -141,7 +141,7 @@ export default function PhysicalsSimulator() {
                   key={warrior.id}
                   onClick={() => handleSelectWarrior(warrior)}
                   className={cn(
-                    'w-full text-left p-4 border-b border-white/5 last:border-0 flex items-center gap-3 transition-all',
+                    'w-full text-left p-4 border-b border-white/5 last:border-0 flex items-center gap-3 transition-all motion-reduce:transition-none',
                     inA
                       ? 'bg-primary/10 border-l-4 border-l-primary'
                       : inB

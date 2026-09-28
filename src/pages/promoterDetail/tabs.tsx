@@ -68,7 +68,7 @@ export function OverviewTab({
           </div>
           <div className="h-2 bg-muted rounded-none overflow-hidden">
             <div
-              className={`h-full rounded-none transition-all duration-500 ${
+              className={`h-full rounded-none transition-all duration-500 motion-reduce:transition-none ${
                 stats.capacityPercent >= 80
                   ? 'bg-destructive'
                   : stats.capacityPercent >= 50

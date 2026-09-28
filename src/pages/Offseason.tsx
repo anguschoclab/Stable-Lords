@@ -88,20 +88,20 @@ export default function Offseason() {
                 <Link key={item.to} to={item.to}>
                   <Surface
                     variant="glass"
-                    className="p-5 border-white/5 hover:border-primary/40 transition-all group flex items-center gap-4"
+                    className="p-5 border-white/5 hover:border-primary/40 transition-all group flex items-center gap-4 motion-reduce:transition-none"
                   >
                     <ImperialRing size="sm" variant={item.variant}>
                       <item.icon className="h-4 w-4" />
                     </ImperialRing>
                     <div className="flex-1">
-                      <div className="text-[11px] font-black uppercase tracking-widest group-hover:text-primary transition-colors">
+                      <div className="text-[11px] font-black uppercase tracking-widest group-hover:text-primary transition-colors motion-reduce:transition-none">
                         {item.label}
                       </div>
                       <div className="text-[9px] text-muted-foreground/40 uppercase font-black tracking-tight mt-0.5">
                         {item.sub}
                       </div>
                     </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground/20 group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1" />
+                    <ArrowRight className="h-3 w-3 text-muted-foreground/20 group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:transform-none" />
                   </Surface>
                 </Link>
               ))}

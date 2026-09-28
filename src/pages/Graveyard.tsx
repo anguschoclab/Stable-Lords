@@ -52,13 +52,13 @@ export default function Graveyard() {
         <TabsList className="bg-secondary/20 p-1 rounded-none h-12">
           <TabsTrigger
             value="memorial"
-            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             <Zap className="h-3.5 w-3.5" /> Private Memorial
           </TabsTrigger>
           <TabsTrigger
             value="world"
-            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             <Skull className="h-3.5 w-3.5" /> World Cemetery
           </TabsTrigger>

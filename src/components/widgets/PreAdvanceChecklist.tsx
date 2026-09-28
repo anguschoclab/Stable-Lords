@@ -32,7 +32,7 @@ export function PreAdvanceChecklist() {
         </div>
         <Link
           to="/stable/advisor"
-          className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+          className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors motion-reduce:transition-none"
         >
           Open Council
         </Link>

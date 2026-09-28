@@ -42,7 +42,7 @@ function EmptyStaffState() {
 function FocusBonus({ focus, total }: { focus: TrainerFocus; total: number }) {
   return (
     <div className="group relative flex flex-col items-center gap-6">
-      <div className="text-5xl transition-all duration-700 group-hover:scale-110 group-hover:rotate-6">
+      <div className="text-5xl transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 motion-reduce:transition-none motion-reduce:transform-none">
         {FOCUS_ICONS[focus]}
       </div>
       <div className="text-center">
@@ -50,9 +50,9 @@ function FocusBonus({ focus, total }: { focus: TrainerFocus; total: number }) {
           <span className="text-3xl font-display font-black text-foreground">
             +{total}
           </span>
-          <Zap className="h-4 w-4 text-arena-gold animate-pulse" />
+          <Zap className="h-4 w-4 text-arena-gold animate-pulse motion-reduce:animate-none" />
         </div>
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary transition-colors">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
           {focus}
         </span>
       </div>
@@ -137,12 +137,12 @@ function RetireToCoachCta({
     <div className="mt-12">
       <Button
         onClick={onOpenConvert}
-        className="w-full h-20 bg-primary/5 border border-primary/20 text-primary hover:bg-primary/10 transition-all rounded-none flex items-center justify-center gap-6 group"
+        className="w-full h-20 bg-primary/5 border border-primary/20 text-primary hover:bg-primary/10 transition-all rounded-none flex items-center justify-center gap-6 group motion-reduce:transition-none"
       >
         <ImperialRing
           size="md"
           variant="blood"
-          className="group-hover:scale-110 transition-transform"
+          className="group-hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
         >
           <Armchair className="h-5 w-5" />
         </ImperialRing>
@@ -187,7 +187,7 @@ function HireAction({
           !canHire || !canTransact(treasury, TIER_COST[trainer.tier as TrainerTier] ?? 50)
         }
         onClick={() => onHire(trainer)}
-        className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all"
+        className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all motion-reduce:transition-none"
       >
         <UserPlus className="h-4 w-4 mr-3" />
         Hire
@@ -229,9 +229,9 @@ export function HireTab({
         <Button
           variant="outline"
           onClick={refreshPool}
-          className="h-12 px-8 font-black uppercase text-[10px] tracking-widest gap-3 rounded-none border-white/10 hover:bg-white/5 transition-all"
+          className="h-12 px-8 font-black uppercase text-[10px] tracking-widest gap-3 rounded-none border-white/10 hover:bg-white/5 transition-all motion-reduce:transition-none"
         >
-          <RefreshCw className="h-3.5 w-3.5 group-hover:rotate-180 transition-all duration-700" />
+          <RefreshCw className="h-3.5 w-3.5 group-hover:rotate-180 transition-all duration-700 motion-reduce:transition-none motion-reduce:transform-none" />
           Refresh Pool
         </Button>
       </div>

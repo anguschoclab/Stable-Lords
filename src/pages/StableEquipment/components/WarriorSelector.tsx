@@ -27,7 +27,7 @@ export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelec
           key={w.id}
           onClick={() => onSelect(w.id)}
           className={cn(
-            'w-full flex items-center justify-between p-3 border transition-all duration-300',
+            'w-full flex items-center justify-between p-3 border transition-all duration-300 motion-reduce:transition-none',
             selectedId === w.id
               ? 'bg-primary/10 border-primary/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]'
               : 'bg-white/[0.02] border-white/5 hover:border-white/10 opacity-70 hover:opacity-100'
@@ -37,7 +37,7 @@ export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelec
             <div
               className={cn(
                 'w-1.5 h-1.5 rounded-full shrink-0',
-                selectedId === w.id ? 'bg-primary animate-pulse' : 'bg-white/20'
+                selectedId === w.id ? 'bg-primary animate-pulse motion-reduce:animate-none' : 'bg-white/20'
               )}
             />
             <div className="flex flex-col items-start min-w-0">

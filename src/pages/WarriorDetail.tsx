@@ -104,7 +104,7 @@ export default function WarriorDetail() {
 
           <DetailTabStrip tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
 
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none">
             {activeTab === 'biometrics' && (
               <BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />
             )}

@@ -27,14 +27,14 @@ export function RosterSnapshot() {
       {active.map((w) => {
         return (
           <Link key={w.id} to="/stable/roster" className="block group">
-            <Surface variant="glass" className="p-4 hover:border-primary/20 transition-colors">
+            <Surface variant="glass" className="p-4 hover:border-primary/20 transition-colors motion-reduce:transition-none">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-none bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
                     <Swords className="h-3.5 w-3.5 text-muted-foreground/60" />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-display font-black text-sm uppercase tracking-tight truncate group-hover:text-primary transition-colors">
+                    <div className="font-display font-black text-sm uppercase tracking-tight truncate group-hover:text-primary transition-colors motion-reduce:transition-none">
                       {w.name}
                     </div>
                     <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
@@ -82,7 +82,7 @@ export function RosterSnapshot() {
 
                   <FormSparkline warriorId={w.id} limit={6} />
 
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors" />
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors motion-reduce:transition-none" />
                 </div>
               </div>
             </Surface>

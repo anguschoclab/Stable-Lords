@@ -117,10 +117,10 @@ export function useAdminTools() {
       archiveBoutLogs(result.pendingArchives ?? []);
       // WorldPass already computed the new season each week — no post-hoc fix needed.
       store.loadGame(store.activeSlotId || 'autosave', result.state);
-      toast.success('Seasonal transition forced.');
+      toast.success('Season rollover forced.');
     } catch (err) {
       console.error('Skip season failed:', err);
-      toast.error('Seasonal transition failed.');
+      toast.error('Season rollover failed.');
     } finally {
       store.setSimulating(false);
     }

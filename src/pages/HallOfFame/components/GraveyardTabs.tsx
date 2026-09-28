@@ -22,19 +22,19 @@ export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProp
       <TabsList className="bg-secondary/20 p-1 rounded-none h-10 w-full sm:w-auto mb-8">
         <TabsTrigger
           value="memorial"
-          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
         >
           <Zap className="h-3 w-3" /> My Fallen ({myFallen.length})
         </TabsTrigger>
         <TabsTrigger
           value="world"
-          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all"
+          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
         >
           <Skull className="h-3 w-3" /> World Cemetery ({graveyard.length})
         </TabsTrigger>
         <TabsTrigger
           value="analytics"
-          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-arena-blood data-[state=active]:text-primary-foreground transition-all"
+          className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-arena-blood data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
         >
           <Crosshair className="h-3 w-3" /> Mechanics of Death
         </TabsTrigger>

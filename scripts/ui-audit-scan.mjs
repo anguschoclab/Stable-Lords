@@ -34,6 +34,7 @@ const SCAN_DIRS = ['components', 'pages', 'hooks'];
 const PAINT_ALLOWLIST = [
   /components\/crest\//,        // heraldic metal/color palette is data
   /components\/arena\//,        // bout-viewer canvas/SVG paints
+  /components\/ui\/chart\.tsx/, // recharts internals: hexes are CSS attribute selectors
   /StaminaCurve/,               // semantic chart colors
   /index\.css|tailwind\.config/,
 ];
@@ -55,9 +56,17 @@ const allowlisted = (r, list) => list.some((re) => re.test(r));
 
 const HEX_RE = /#[0-9a-fA-F]{3,8}\b/;
 const RAW_FN_RE = /\b(?:rgba?|hsla?)\s*\((?![^)]*var\(--)[^)]*\d/;
-// screaming-copy: only flag UPPER_SNAKE inside quoted strings or JSX text
-// (`>FOO_BAR<`) — bare identifiers are constant references, not copy.
-const SCREAM_RE = /(['"`>])[^'"`<\n]*\b[A-Z]{2,}_[A-Z0-9_]{2,}\b/;
+// screaming-copy: UPPER_SNAKE as *display copy* only — a JSX text child
+// (`>FOO_BAR<`) or a display-attribute string (label/title/placeholder/
+// aria-label/subtitle/eyebrow/description). Quoted enum literals in code
+// positions (`value=`, `=== 'X_Y'`, `case 'X_Y'`, `key: 'X_Y'`) are constants,
+// not copy — the loose `(['"\`>])` trigger also caught `>` from `=>`/`>=`.
+const SCREAM_TOKEN = /\b[A-Z]{2,}_[A-Z0-9_]{2,}\b/;
+const SCREAM_JSX_TEXT_RE = />[^<>{}]*\b[A-Z]{2,}_[A-Z0-9_]{2,}\b[^<>{}]*</;
+const SCREAM_ATTR_RE =
+  /\b(?:label|title|placeholder|aria-label|subtitle|eyebrow|description|tooltip|message)\s*=\s*['"`{][^'"`}]*\b[A-Z]{2,}_[A-Z0-9_]{2,}\b/;
+const isScreamingCopy = (l) =>
+  SCREAM_JSX_TEXT_RE.test(l) || (SCREAM_ATTR_RE.test(l) && SCREAM_TOKEN.test(l));
 // fake-chrome: decorative sci-fi chrome words that can't map to real state.
 // 'Override'/'telemetry' excluded — both are real game features here.
 const FAKE_CHROME_RE = /\b(SECTOR|SECURE|UPLINK|ENCRYPTED|CLASSIFIED|PROTOCOL)\b/;
@@ -85,7 +94,7 @@ export function collectUiAudit() {
         if ((HEX_RE.test(l) || RAW_FN_RE.test(l)) && !paintOk) {
           findings['token-violation'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
         }
-        if (SCREAM_RE.test(l)) {
+        if (isScreamingCopy(l)) {
           findings['screaming-copy'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
         }
         if (/Math\.random\s*\(/.test(l) && !allowlisted(r, RNG_ALLOWLIST)) {

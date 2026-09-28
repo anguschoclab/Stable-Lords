@@ -70,10 +70,10 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
       }`}
       style={{
         background: isSelected
-          ? 'linear-gradient(145deg, rgba(135,34,40,0.12) 0%, rgba(135,34,40,0.06) 100%)'
+          ? 'linear-gradient(145deg, rgba(var(--blood-glow-rgb), 0.12) 0%, rgba(var(--blood-glow-rgb), 0.06) 100%)'
           : 'linear-gradient(145deg, var(--background) 0%, var(--card) 100%)',
-        border: isSelected ? '1px solid rgba(135,34,40,0.5)' : '1px solid rgba(60,42,22,0.7)',
-        borderTopColor: isSelected ? 'rgba(200,80,88,0.4)' : 'rgba(100,70,36,0.35)',
+        border: isSelected ? '1px solid rgba(var(--blood-glow-rgb), 0.5)' : '1px solid rgba(var(--oak-rgb), 0.7)',
+        borderTopColor: isSelected ? 'rgba(var(--blood-soft-rgb), 0.4)' : 'rgba(var(--umber-rgb), 0.35)',
       }}
     >
       {isSelected && (
@@ -90,10 +90,10 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
         <div
           className="shrink-0 mt-0.5 w-5 h-5 flex items-center justify-center"
           style={{
-            background: isSelected ? 'hsl(var(--primary))' : 'rgba(20,15,8,0.8)',
+            background: isSelected ? 'hsl(var(--primary))' : 'rgba(var(--inkwash-rgb), 0.8)',
             border: isSelected
               ? '1px solid hsl(var(--primary)/0.6)'
-              : '1px solid rgba(60,42,22,0.8)',
+              : '1px solid rgba(var(--oak-rgb), 0.8)',
           }}
         >
           {isSelected && <CheckCircle2 className="h-3 w-3 text-foreground" />}

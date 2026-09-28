@@ -36,8 +36,8 @@ export default function WarriorSelectionStep({
         className="px-5 py-4 flex items-center justify-between"
         style={{
           background: 'var(--card)',
-          border: '1px solid rgba(60,42,22,0.7)',
-          borderTopColor: 'rgba(100,70,36,0.35)',
+          border: '1px solid rgba(var(--oak-rgb), 0.7)',
+          borderTopColor: 'rgba(var(--umber-rgb), 0.35)',
         }}
       >
         <div>
@@ -49,8 +49,8 @@ export default function WarriorSelectionStep({
             <div
               className="px-2.5 py-0.5 text-[10px] font-mono font-black"
               style={{
-                background: 'rgba(20,15,8,0.8)',
-                border: '1px solid rgba(60,42,22,0.6)',
+                background: 'rgba(var(--inkwash-rgb), 0.8)',
+                border: '1px solid rgba(var(--oak-rgb), 0.6)',
                 color: selected.size === 3 ? 'hsl(var(--accent))' : 'hsl(var(--muted-foreground))',
               }}
             >
@@ -83,7 +83,7 @@ export default function WarriorSelectionStep({
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

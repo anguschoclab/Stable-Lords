@@ -58,7 +58,7 @@ export default function Orphanage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative"
-      style={{ background: '#0C0806' }}
+      style={{ background: 'hsl(var(--background))' }}
     >
       {/* Atmospheric warmth */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -66,14 +66,14 @@ export default function Orphanage() {
           className="absolute -top-20 -left-20 w-96 h-96 opacity-30 torch-flicker"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgba(200,140,20,0.15) 0%, transparent 70%)',
+              'radial-gradient(ellipse at center, rgba(var(--ember-rgb), 0.15) 0%, transparent 70%)',
           }}
         />
         <div
           className="absolute top-0 left-0 right-0 h-px"
           style={{
             background:
-              'linear-gradient(90deg, transparent, rgba(201,151,42,0.3) 50%, transparent)',
+              'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.3) 50%, transparent)',
           }}
         />
       </div>

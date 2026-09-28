@@ -29,8 +29,8 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
         className="p-7 space-y-6"
         style={{
           background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 100%)',
-          border: '1px solid rgba(135,34,40,0.4)',
-          borderTopColor: 'rgba(200,80,88,0.3)',
+          border: '1px solid rgba(var(--blood-glow-rgb), 0.4)',
+          borderTopColor: 'rgba(var(--blood-soft-rgb), 0.3)',
         }}
       >
         <div
@@ -88,9 +88,9 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
           className="p-4 text-center"
           style={{
             background:
-              boutResult.outcome.by === 'Kill' ? 'rgba(135,34,40,0.12)' : 'rgba(201,151,42,0.06)',
+              boutResult.outcome.by === 'Kill' ? 'rgba(var(--blood-glow-rgb), 0.12)' : 'rgba(var(--gold-glow-rgb), 0.06)',
             border: `1px solid ${
-              boutResult.outcome.by === 'Kill' ? 'rgba(135,34,40,0.4)' : 'rgba(201,151,42,0.25)'
+              boutResult.outcome.by === 'Kill' ? 'rgba(var(--blood-glow-rgb), 0.4)' : 'rgba(var(--gold-glow-rgb), 0.25)'
             }`,
           }}
         >
@@ -131,7 +131,7 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
         <Button
           variant="outline"
           onClick={onBack}
-          className="gap-2 border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>

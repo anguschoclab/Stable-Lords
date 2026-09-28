@@ -54,7 +54,7 @@ export function LoadoutCard({
     <Surface
       padding="none"
       className={cn(
-        'transition-all group overflow-hidden flex flex-col',
+        'transition-all group overflow-hidden flex flex-col motion-reduce:transition-none',
         isTop
           ? 'border-primary/40 shadow-[0_0_50px_-20px_rgba(var(--primary-rgb),0.3)] ring-1 ring-primary/20'
           : 'border-white/5 hover:border-white/10'
@@ -75,7 +75,7 @@ export function LoadoutCard({
         </div>
 
         <div className="space-y-1">
-          <h3 className="font-display text-lg font-black uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors">
+          <h3 className="font-display text-lg font-black uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
             {rec.label}
           </h3>
           <p className="text-[10px] text-muted-foreground/80 leading-relaxed italic pr-4">
@@ -188,7 +188,7 @@ export function LoadoutCard({
       <div className="p-4 bg-black/40 border-t border-white/5">
         <Button
           className={cn(
-            'w-full h-12 font-black uppercase text-[10px] tracking-[0.4em] transition-all',
+            'w-full h-12 font-black uppercase text-[10px] tracking-[0.4em] transition-all motion-reduce:transition-none',
             isTop
               ? 'bg-primary text-primary-foreground hover:bg-primary/90'
               : 'bg-white/[0.05] border-white/10 hover:bg-white/[0.1] text-foreground'

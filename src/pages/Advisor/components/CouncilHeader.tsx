@@ -61,7 +61,7 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
               size="lg"
               disabled={!hasActionable}
               onClick={onExecuteAll}
-              className="h-12 px-8 font-black uppercase text-[11px] tracking-widest gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 rounded-none border border-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="h-12 px-8 font-black uppercase text-[11px] tracking-widest gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 rounded-none border border-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:transform-none"
             >
               <Sparkles className="h-4 w-4" />
               Execute War Council Plan

@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { IconMedallion } from '@/components/ui/IconMedallion';
 import { getCrestDescription, getChargeDescription } from '@/engine/crest/crestGenerator';
 import { StableCrest } from '@/components/crest/StableCrest';
+import { hexToRgba } from '@/lib/utils';
 import type { CrestData } from '@/types/crest.types';
 
 /** Title + flavour text at the top of the new-game form. */
@@ -29,8 +30,8 @@ export function GoldDivider({ faint = false }: { faint?: boolean }) {
       className="h-px"
       style={{
         background: faint
-          ? 'linear-gradient(90deg, transparent, rgba(201,151,42,0.2) 40%, rgba(201,151,42,0.2) 60%, transparent)'
-          : 'linear-gradient(90deg, transparent, rgba(201,151,42,0.5) 30%, rgba(201,151,42,0.8) 50%, rgba(201,151,42,0.5) 70%, transparent)',
+          ? 'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.2) 40%, rgba(var(--gold-glow-rgb), 0.2) 60%, transparent)'
+          : 'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.5) 30%, rgba(var(--gold-glow-rgb), 0.8) 50%, rgba(var(--gold-glow-rgb), 0.5) 70%, transparent)',
       }}
     />
   );
@@ -74,7 +75,7 @@ export function NameField({
           onChange={(e) => onChange(e.target.value)}
           maxLength={maxLength}
           autoFocus={autoFocus}
-          className="flex-1 h-10 text-sm bg-background border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2"
+          className="flex-1 h-10 text-sm bg-background border-[rgba(var(--oak-rgb),_0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2"
         />
         <Button
           variant="outline"
@@ -83,7 +84,7 @@ export function NameField({
           onClick={onRandomize}
           tooltip="Random name"
           aria-label={randomizeLabel}
-          className="h-10 w-10 shrink-0 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
+          className="h-10 w-10 shrink-0 border-[rgba(var(--oak-rgb),_0.8)] bg-background hover:border-accent/40 hover:bg-accent/5"
         >
           <Dices className="h-4 w-4 text-accent/70" />
         </Button>
@@ -112,16 +113,16 @@ export function CrestPanel({
       <div
         className="relative p-6 flex flex-col items-center gap-4"
         style={{
-          background: `linear-gradient(145deg, rgba(201,151,42,0.05) 0%, rgba(${parseInt(crest.primaryColor.slice(1, 3), 16)}, ${parseInt(crest.primaryColor.slice(3, 5), 16)}, ${parseInt(crest.primaryColor.slice(5, 7), 16)}, 0.03) 50%, rgba(21,15,8,0.8) 100%)`,
-          border: '1px solid rgba(201, 151, 42, 0.25)',
-          borderTopColor: 'rgba(201, 151, 42, 0.4)',
+          background: `linear-gradient(145deg, rgba(var(--gold-glow-rgb), 0.05) 0%, ${hexToRgba(crest.primaryColor, 0.03)} 50%, rgba(var(--inkwash-rgb), 0.8) 100%)`,
+          border: '1px solid rgba(var(--gold-glow-rgb), 0.25)',
+          borderTopColor: 'rgba(var(--gold-glow-rgb), 0.4)',
         }}
       >
         <div
           className="absolute top-0 left-4 right-4 h-px"
           style={{
             background:
-              'linear-gradient(90deg, transparent, rgba(201,151,42,0.3) 30%, rgba(201,151,42,0.5) 50%, rgba(201,151,42,0.3) 70%, transparent)',
+              'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.3) 30%, rgba(var(--gold-glow-rgb), 0.5) 50%, rgba(var(--gold-glow-rgb), 0.3) 70%, transparent)',
           }}
         />
 
@@ -130,7 +131,7 @@ export function CrestPanel({
             crest={crest}
             size={80}
             showMantling
-            className="drop-shadow-[0_0_15px_rgba(201,151,42,0.2)]"
+            className="drop-shadow-[0_0_15px_rgba(var(--gold-glow-rgb), 0.2)]"
           />
         </div>
 
@@ -149,7 +150,7 @@ export function CrestPanel({
           onClick={onRandomize}
           title="Randomize heraldry"
           aria-label="Randomize your heraldic crest"
-          className="h-9 px-4 gap-2 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
+          className="h-9 px-4 gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
         >
           <Dices className="h-4 w-4 text-accent/70" />
           RANDOMIZE HERALDRY

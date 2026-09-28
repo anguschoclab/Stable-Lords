@@ -90,16 +90,16 @@ export default function NewGameForm({
           className="relative p-8 space-y-7"
           style={{
             background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
-            border: '1px solid rgba(60, 42, 22, 0.9)',
-            borderTopColor: 'rgba(100, 70, 36, 0.55)',
-            borderLeftColor: 'rgba(80, 56, 28, 0.5)',
+            border: '1px solid rgba(var(--oak-rgb), 0.9)',
+            borderTopColor: 'rgba(var(--umber-rgb), 0.55)',
+            borderLeftColor: 'rgba(var(--sepia-rgb), 0.5)',
           }}
         >
           <div
             className="absolute top-0 left-6 right-6 h-px"
             style={{
               background:
-                'linear-gradient(90deg, transparent, rgba(201,151,42,0.5) 30%, rgba(201,151,42,0.8) 50%, rgba(201,151,42,0.5) 70%, transparent)',
+                'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.5) 30%, rgba(var(--gold-glow-rgb), 0.8) 50%, rgba(var(--gold-glow-rgb), 0.5) 70%, transparent)',
             }}
           />
 
@@ -112,7 +112,7 @@ export default function NewGameForm({
             type="button"
             onClick={randomizeAll}
             title="Randomize everything"
-            className="w-full h-10 gap-2 border-[rgba(60,42,22,0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
+            className="w-full h-10 gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
           >
             <Dices className="h-4 w-4 text-accent/70" />
             RANDOMIZE ALL

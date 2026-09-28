@@ -27,12 +27,12 @@ export function DeleteSaveDialog({
       confirmLabel="Expunge Record"
       onConfirm={onDelete}
       contentStyle={{
-        background: '#150F08',
-        border: '1px solid rgba(60,42,22,0.9)',
-        borderTopColor: 'rgba(100,70,36,0.5)',
+        background: 'hsl(var(--card))',
+        border: '1px solid rgba(var(--oak-rgb), 0.9)',
+        borderTopColor: 'rgba(var(--umber-rgb), 0.5)',
       }}
       titleClassName="font-display text-lg"
-      cancelClassName="border-[rgba(60,42,22,0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
+      cancelClassName="border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
       confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
     />
   );

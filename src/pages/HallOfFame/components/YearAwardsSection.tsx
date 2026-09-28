@@ -56,7 +56,7 @@ export function YearAwardsSection({
                           <div className="p-1.5 rounded-none border bg-primary/10 border-primary/30">
                             <Users className="h-4 w-4 text-primary" />
                           </div>
-                          <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors">
+                          <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
                             {award.stableName}
                           </span>
                         </div>

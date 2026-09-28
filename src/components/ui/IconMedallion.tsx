@@ -15,7 +15,7 @@ export function IconMedallion({ icon, className }: IconMedallionProps) {
         className="absolute inset-0 rounded-full"
         style={{
           background:
-            'conic-gradient(from 0deg, rgba(201, 151, 42, 0.5), rgba(201, 151, 42, 0.15), rgba(201, 151, 42, 0.5), rgba(201, 151, 42, 0.15), rgba(201, 151, 42, 0.5))',
+            'conic-gradient(from 0deg, rgba(var(--gold-glow-rgb), 0.5), rgba(var(--gold-glow-rgb), 0.15), rgba(var(--gold-glow-rgb), 0.5), rgba(var(--gold-glow-rgb), 0.15), rgba(var(--gold-glow-rgb), 0.5))',
           padding: '1px',
         }}
       >
@@ -25,9 +25,9 @@ export function IconMedallion({ icon, className }: IconMedallionProps) {
         className="relative z-10 flex items-center justify-center w-14 h-14 rounded-full"
         style={{
           background:
-            'radial-gradient(ellipse at 35% 35%, rgba(160, 40, 48, 0.95) 0%, #872228 55%, rgba(100, 20, 26, 0.9) 100%)',
+            'radial-gradient(ellipse at 35% 35%, rgba(var(--blood-mid-rgb), 0.95) 0%, hsl(var(--primary)) 55%, rgba(var(--blood-deep-rgb), 0.9) 100%)',
           boxShadow:
-            '0 4px 16px rgba(135, 34, 40, 0.5), inset 0 1px 0 rgba(255, 200, 200, 0.15), inset 0 -1px 0 rgba(0,0,0,0.3)',
+            '0 4px 16px rgba(var(--blood-glow-rgb), 0.5), inset 0 1px 0 rgba(var(--blush-rgb), 0.15), inset 0 -1px 0 rgba(var(--void-rgb), 0.3)',
         }}
       >
         {icon}

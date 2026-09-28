@@ -77,7 +77,7 @@ export function ReputationTab() {
             </div>
             <div className="h-1 bg-white/5 rounded-none overflow-hidden">
               <div
-                className={cn('h-full rounded-none transition-all', color.replace('text-', 'bg-'))}
+                className={cn('h-full rounded-none transition-all motion-reduce:transition-none', color.replace('text-', 'bg-'))}
                 style={{ width: `${val}%` }}
               />
             </div>

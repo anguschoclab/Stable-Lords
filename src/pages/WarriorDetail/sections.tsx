@@ -38,7 +38,7 @@ export function DetailHeaderActions({
           variant="outline"
           size="sm"
           onClick={onRetire}
-          className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-primary-foreground transition-all duration-300"
+          className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-primary-foreground transition-all duration-300 motion-reduce:transition-none"
         >
           <Armchair className="h-3.5 w-3.5" /> Grant Rudis
         </Button>
@@ -64,7 +64,7 @@ export function DetailTabStrip({
           key={tab.id}
           onClick={() => onSelect(tab.id)}
           className={cn(
-            'relative flex items-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300',
+            'relative flex items-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 motion-reduce:transition-none',
             activeTab === tab.id
               ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px'
               : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'

@@ -9,11 +9,16 @@ import { collectUiAudit } from '../../../scripts/ui-audit-scan.mjs';
  * 114 motion-violation hits / 49 files, 92 screaming-copy candidates,
  * 0 rng-violations, 0 fake-chrome. Guards assert the ceilings never grow;
  * Phase 6 drives them to zero and these numbers get tightened then.
+ *
+ * Phase-6 tightening: screaming-copy was 100% false positives (enum literals
+ * and const refs caught by a loose `(['"\`>])` trigger). The rule now only
+ * counts SCREAMING_SNAKE in display positions (JSX text children, display
+ * attributes) — verified zero real occurrences — so the ceiling is 0.
  */
 const CEILINGS = {
-  'token-violation': 90,
-  'screaming-copy': 92,
-  'motion-violation': 114,
+  'token-violation': 0,
+  'screaming-copy': 0,
+  'motion-violation': 0,
   'rng-violation': 0,
   'fake-chrome': 0,
 } as const;

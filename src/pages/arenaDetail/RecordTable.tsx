@@ -64,7 +64,7 @@ export function RecordTable({
               <TableRow
                 key={row.key}
                 className={cn(
-                  'h-11 border-white/5 transition-colors',
+                  'h-11 border-white/5 transition-colors motion-reduce:transition-none',
                   row.isPlayer ? 'bg-primary/[0.03] border-l-2 border-l-primary' : 'hover:bg-white/[0.02]'
                 )}
               >

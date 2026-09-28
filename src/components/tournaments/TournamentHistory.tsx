@@ -89,7 +89,7 @@ export function TournamentHistory({
                               onClick={() =>
                                 setExpandedId((prev) => (prev === t.id ? null : t.id))
                               }
-                              className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 hover:text-foreground transition-colors"
+                              className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 hover:text-foreground transition-colors motion-reduce:transition-none"
                             >
                               <Swords className="h-3 w-3" />
                               Bouts

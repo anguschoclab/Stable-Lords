@@ -12,7 +12,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#050506]">
+    <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))]">
       <div className="text-center font-mono">
         <div className="text-primary text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse motion-reduce:animate-none">
           Route Not Found

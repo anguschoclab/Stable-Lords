@@ -66,7 +66,7 @@ export function ChampionBlock({
         {reign && champStableIsPlayer && (
           <button
             onClick={onRelinquish}
-            className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] border border-destructive/30 text-destructive/80 hover:bg-destructive/10 transition-colors"
+            className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] border border-destructive/30 text-destructive/80 hover:bg-destructive/10 transition-colors motion-reduce:transition-none"
           >
             Relinquish Crown
           </button>

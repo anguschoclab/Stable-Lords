@@ -154,8 +154,31 @@
     --torch-glow: rgba(200, 120, 20, 0.1);
     --blood-glow-rgb: 135, 34, 40;
     --gold-glow-rgb: 201, 151, 42;
+    /* RGB triplets matching the HSL tokens above — for rgba(var(--x), a) */
+    --primary-rgb: 135, 29, 32; /* = --primary 358 65% 32% */
+    --accent-rgb: 177, 130, 47; /* = --accent 38 58% 44% */
+    --destructive-rgb: 175, 29, 33; /* = --destructive 358 72% 40% */
+    --arena-gold-rgb: 207, 149, 48; /* = --arena-gold 38 62% 50% */
+    --arena-blood-rgb: 156, 28, 32; /* = --arena-blood 358 70% 36% */
+    --arena-pop-rgb: 53, 165, 182; /* = --arena-pop 188 55% 46% */
     --marble-vein: rgba(255, 245, 220, 0.018);
     --parchment-texture: rgba(234, 209, 173, 0.025);
+
+    /* ── FTUE / broadsheet palette (rgb triplets for rgba(var(--x), a)) ── */
+    --oak-rgb: 60, 42, 22; /* weathered oak — FTUE borders */
+    --umber-rgb: 100, 70, 36; /* mid umber — FTUE trims */
+    --sepia-rgb: 80, 55, 30; /* sepia grain — surface borders */
+    --inkwash-rgb: 20, 15, 8; /* warm near-black wash */
+    --sheen-rgb: 255, 255, 255; /* specular sheen */
+    --sheen-warm-rgb: 255, 245, 220; /* marble-vein base */
+    --ember-rgb: 200, 130, 20; /* torchlight ember */
+    --ember-deep-rgb: 180, 100, 10; /* ember falloff */
+    --blood-mid-rgb: 160, 40, 48; /* mid blood glow */
+    --blood-deep-rgb: 100, 20, 26; /* deep blood shadow */
+    --blood-soft-rgb: 200, 80, 88; /* soft blood tint */
+    --blood-bright-rgb: 200, 0, 0; /* memorial ember */
+    --blush-rgb: 255, 200, 200; /* blood-blush highlight */
+    --void-rgb: 0, 0, 0; /* pure shadow */
 
     /* ── Sidebar ─────────────────────────────────────────── */
     --sidebar-background: 24 22% 3%;

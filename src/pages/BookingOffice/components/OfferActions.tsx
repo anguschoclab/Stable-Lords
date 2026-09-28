@@ -21,7 +21,7 @@ export function OfferActions({ isSigned, acceptDisabled, onAccept, onDecline }: 
       ) : (
         <>
           <Button
-            className="flex-1 h-12 bg-primary text-primary-foreground rounded-none gap-3 font-black uppercase text-[10px] tracking-[0.2em] hover:bg-primary/90 transition-all"
+            className="flex-1 h-12 bg-primary text-primary-foreground rounded-none gap-3 font-black uppercase text-[10px] tracking-[0.2em] hover:bg-primary/90 transition-all motion-reduce:transition-none"
             onClick={onAccept}
             disabled={acceptDisabled}
           >
@@ -29,7 +29,7 @@ export function OfferActions({ isSigned, acceptDisabled, onAccept, onDecline }: 
           </Button>
           <Button
             variant="outline"
-            className="w-12 h-12 rounded-none border-white/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 p-0 transition-all"
+            className="w-12 h-12 rounded-none border-white/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 p-0 transition-all motion-reduce:transition-none"
             onClick={onDecline}
           >
             <Ban className="h-4 w-4" />

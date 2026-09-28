@@ -26,7 +26,7 @@ export function CategoryNav({ activeCategory, onSelect }: CategoryNavProps) {
           key={cat.id}
           onClick={() => onSelect(cat.id)}
           className={cn(
-            'w-full flex items-center gap-4 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 group',
+            'w-full flex items-center gap-4 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 group motion-reduce:transition-none',
             activeCategory === cat.id
               ? 'bg-primary text-primary-foreground'
               : 'text-muted-foreground/60 hover:bg-white/5 hover:text-foreground'
@@ -34,7 +34,7 @@ export function CategoryNav({ activeCategory, onSelect }: CategoryNavProps) {
         >
           <cat.icon
             className={cn(
-              'h-4 w-4 transition-colors',
+              'h-4 w-4 transition-colors motion-reduce:transition-none',
               activeCategory === cat.id
                 ? 'text-primary-foreground'
                 : 'text-muted-foreground/40 group-hover:text-primary'

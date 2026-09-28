@@ -28,9 +28,9 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
       exit={{ opacity: 0, scale: 1.05 }}
       className="h-full p-6 flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,0,0,0.05)_0,transparent_100%)] mix-blend-screen" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--blood-bright-rgb), 0.05)_0,transparent_100%)] mix-blend-screen" />
       <div className="z-10 flex flex-col items-center max-w-full">
-        <Skull className="h-16 w-16 mb-4 text-muted-foreground animate-pulse motion-reduce:animate-none drop-shadow-[0_0_15px_rgba(200,0,0,0.3)]" />
+        <Skull className="h-16 w-16 mb-4 text-muted-foreground animate-pulse motion-reduce:animate-none drop-shadow-[0_0_15px_rgba(var(--blood-bright-rgb), 0.3)]" />
         <h2 className="text-3xl font-display text-center mb-8 uppercase tracking-widest text-foreground">
           {uiMeta.fanfare.memorial_title}
         </h2>

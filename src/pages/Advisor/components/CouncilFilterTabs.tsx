@@ -28,7 +28,7 @@ export function CouncilFilterTabs({ currentTab, onTabChange, counts }: CouncilFi
           key={id}
           onClick={() => onTabChange(id)}
           className={cn(
-            'flex items-center gap-2 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all rounded-none border',
+            'flex items-center gap-2 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all rounded-none border motion-reduce:transition-none',
             currentTab === id
               ? 'border-primary/40 bg-primary/10 text-primary shadow-[inset_0_-2px_0_0_hsl(var(--primary))]'
               : 'border-transparent text-muted-foreground/60 hover:text-foreground/80 hover:bg-white/[0.02]'

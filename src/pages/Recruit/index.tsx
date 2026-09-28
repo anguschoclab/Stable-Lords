@@ -101,13 +101,13 @@ export default function Recruit() {
         <TabsList className="w-full h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none">
           <TabsTrigger
             value="scout"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             Scout Market
           </TabsTrigger>
           <TabsTrigger
             value="custom"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             Custom Warrior
           </TabsTrigger>

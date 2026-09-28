@@ -15,15 +15,15 @@ export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
       className="p-7 space-y-6 text-center"
       style={{
         background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
-        border: '1px solid rgba(201,151,42,0.3)',
-        borderTopColor: 'rgba(201,151,42,0.6)',
+        border: '1px solid rgba(var(--gold-glow-rgb), 0.3)',
+        borderTopColor: 'rgba(var(--gold-glow-rgb), 0.6)',
       }}
     >
       <div
         className="absolute top-0 left-6 right-6 h-0.5 pointer-events-none"
         style={{
           background:
-            'linear-gradient(90deg, transparent, rgba(201,151,42,0.7) 30%, rgba(201,151,42,1) 50%, rgba(201,151,42,0.7) 70%, transparent)',
+            'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.7) 30%, rgba(var(--gold-glow-rgb), 1) 50%, rgba(var(--gold-glow-rgb), 0.7) 70%, transparent)',
         }}
       />
 
@@ -31,8 +31,8 @@ export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
         <div
           className="w-16 h-16 mx-auto flex items-center justify-center"
           style={{
-            background: 'linear-gradient(135deg, rgba(201,151,42,0.15), rgba(201,151,42,0.05))',
-            border: '1px solid rgba(201,151,42,0.3)',
+            background: 'linear-gradient(135deg, rgba(var(--gold-glow-rgb), 0.15), rgba(var(--gold-glow-rgb), 0.05))',
+            border: '1px solid rgba(var(--gold-glow-rgb), 0.3)',
           }}
         >
           <Flame className="h-8 w-8 text-accent" />
@@ -47,7 +47,7 @@ export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
         className="h-px"
         style={{
           background:
-            'linear-gradient(90deg, transparent, rgba(201,151,42,0.2) 40%, rgba(201,151,42,0.2) 60%, transparent)',
+            'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.2) 40%, rgba(var(--gold-glow-rgb), 0.2) 60%, transparent)',
         }}
       />
 

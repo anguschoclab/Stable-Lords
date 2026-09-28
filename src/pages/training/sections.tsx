@@ -30,7 +30,7 @@ export function TrainingReportBanner({
         </div>
         <button
           onClick={onDismiss}
-          className="text-muted-foreground hover:text-foreground transition-colors p-1"
+          className="text-muted-foreground hover:text-foreground transition-colors p-1 motion-reduce:transition-none"
           aria-label="Dismiss"
         >
           <X className="h-3.5 w-3.5" />

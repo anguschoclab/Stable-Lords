@@ -88,7 +88,7 @@ export default function ControlCenter() {
                   key={id}
                   onClick={() => setActiveTab(id)}
                   className={cn(
-                    'relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300',
+                    'relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 motion-reduce:transition-none',
                     activeTab === id
                       ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px shadow-[inset_0_-10px_20px_-10px_rgba(135,34,40,0.2)]'
                       : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
@@ -100,7 +100,7 @@ export default function ControlCenter() {
               ))}
             </div>
 
-            <div className="min-h-[400px] animate-in fade-in duration-500">
+            <div className="min-h-[400px] animate-in fade-in duration-500 motion-reduce:animate-none">
               {activeTab === 'overview' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="md:col-span-2">

@@ -64,7 +64,7 @@ function CrowdMoodWidget() {
   return (
     <Surface
       variant="glass"
-      className="flex items-center gap-8 p-5 border-l-4 border-l-accent/50 animate-in fade-in zoom-in-95 duration-500"
+      className="flex items-center gap-8 p-5 border-l-4 border-l-accent/50 animate-in fade-in zoom-in-95 duration-500 motion-reduce:animate-none"
     >
       <div className="flex items-center gap-4 shrink-0">
         <span className="text-4xl drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
@@ -88,7 +88,7 @@ function CrowdMoodWidget() {
       <div className="flex items-center gap-6 overflow-x-auto thin-scrollbar">
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05]">
+            <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05] motion-reduce:transition-none">
               <div className="text-right">
                 <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">
                   FAME MULT
@@ -111,7 +111,7 @@ function CrowdMoodWidget() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05]">
+            <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05] motion-reduce:transition-none">
               <div className="text-right">
                 <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">
                   LETHALITY
@@ -176,7 +176,7 @@ function ArenaLeaderboard() {
   return (
     <Surface
       variant="glass"
-      className="overflow-hidden p-0 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200"
+      className="overflow-hidden p-0 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 motion-reduce:animate-none"
     >
       <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -216,7 +216,7 @@ function ArenaLeaderboard() {
               <TableRow
                 key={w.id}
                 className={cn(
-                  'h-12 border-white/5 transition-colors',
+                  'h-12 border-white/5 transition-colors motion-reduce:transition-none',
                   entry.isPlayer
                     ? 'bg-primary/[0.03] border-l-2 border-l-primary'
                     : 'hover:bg-white/[0.02]'
@@ -272,7 +272,7 @@ function CircuitCrownsWidget() {
     <Link to="/world/arenas" className="group block">
       <Surface
         variant="glass"
-        className="p-5 transition-colors group-hover:border-arena-gold/30"
+        className="p-5 transition-colors group-hover:border-arena-gold/30 motion-reduce:transition-none"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -403,12 +403,12 @@ export default function ArenaHub() {
                   Stable Stats
                 </span>
               </div>
-              <Activity className="h-3.5 w-3.5 text-primary animate-pulse" />
+              <Activity className="h-3.5 w-3.5 text-primary animate-pulse motion-reduce:animate-none" />
             </div>
 
             <div className="space-y-4 pt-2">
               <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none">
                   Stable Renown
                 </span>
                 <span className="font-display font-black text-xl text-arena-fame tracking-tighter">
@@ -416,7 +416,7 @@ export default function ArenaHub() {
                 </span>
               </div>
               <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none">
                   Lifetime Kills
                 </span>
                 <span className="font-display font-black text-xl text-destructive tracking-tighter">
@@ -424,7 +424,7 @@ export default function ArenaHub() {
                 </span>
               </div>
               <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none">
                   Win Velocity
                 </span>
                 <span className="font-display font-black text-xl text-primary tracking-tighter">
@@ -448,7 +448,7 @@ export default function ArenaHub() {
       <ArenaLeaderboard />
 
       {/* Arena Status Strip */}
-      <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 px-6 border-t border-white/5 mt-12 transition-all duration-700">
+      <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 px-6 border-t border-white/5 mt-12 transition-all duration-700 motion-reduce:transition-none">
         <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
           <Swords className="h-3.5 w-3.5 text-primary" /> {gameState.season} · Wk {gameState.week}
         </div>

@@ -112,7 +112,7 @@ export default function StableDetail() {
           variant="ghost"
           size="sm"
           asChild
-          className="hover:bg-transparent -ml-4 opacity-40 hover:opacity-100 transition-all"
+          className="hover:bg-transparent -ml-4 opacity-40 hover:opacity-100 transition-all motion-reduce:transition-none"
         >
           <Link
             to="/world/scouting"
@@ -162,7 +162,7 @@ export default function StableDetail() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative',
+                  'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative motion-reduce:transition-none',
                   activeTab === tab.id
                     ? 'text-primary'
                     : 'text-muted-foreground/40 hover:text-foreground'

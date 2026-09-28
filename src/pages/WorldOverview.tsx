@@ -92,7 +92,7 @@ export default function WorldOverview() {
             <span>Lords Connected: {stableRows.length}</span>
             <div className="h-4 w-px bg-border/40" />
             {syncing ? (
-              <span className="text-primary italic animate-pulse">Loading...</span>
+              <span className="text-primary italic animate-pulse motion-reduce:animate-none">Loading...</span>
             ) : (
               <span className="text-primary">Arena Data Live</span>
             )}

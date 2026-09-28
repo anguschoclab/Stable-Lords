@@ -79,7 +79,7 @@ export default function ArenaCircuit() {
             >
               <Surface
                 variant="glass"
-                className="p-5 h-full transition-colors group-hover:border-primary/30"
+                className="p-5 h-full transition-colors group-hover:border-primary/30 motion-reduce:transition-none"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2 min-w-0">

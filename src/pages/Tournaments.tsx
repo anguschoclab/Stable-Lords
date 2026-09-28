@@ -187,7 +187,7 @@ export default function Tournaments() {
               <Link to="/stable/recruit">
                 <Button
                   variant="outline"
-                  className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all"
+                  className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all motion-reduce:transition-none"
                 >
                   <UserPlus className="h-3.5 w-3.5" /> Recruit Warriors
                 </Button>

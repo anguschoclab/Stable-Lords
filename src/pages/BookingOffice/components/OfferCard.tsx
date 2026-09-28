@@ -64,7 +64,7 @@ export function OfferCard({
     <Surface
       variant="glass"
       className={cn(
-        'border-white/5 overflow-hidden group hover:border-primary/20 transition-all duration-500',
+        'border-white/5 overflow-hidden group hover:border-primary/20 transition-all duration-500 motion-reduce:transition-none',
         isSigned && 'opacity-60 grayscale-[0.5]'
       )}
     >

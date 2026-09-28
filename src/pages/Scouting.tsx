@@ -134,7 +134,7 @@ export default function Scouting() {
               </span>
             </div>
             <div className="flex items-center gap-4 border-l border-white/5 pl-6">
-              <ImperialRing size="xs" variant="blood" className="animate-pulse">
+              <ImperialRing size="xs" variant="blood" className="animate-pulse motion-reduce:animate-none">
                 <Radio className="h-3 w-3 text-primary" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">
@@ -149,19 +149,19 @@ export default function Scouting() {
         <TabsList className="w-full h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none">
           <TabsTrigger
             value="scout"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             Reports
           </TabsTrigger>
           <TabsTrigger
             value="compare"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             Stable Dynamics
           </TabsTrigger>
           <TabsTrigger
             value="warriors"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             Warrior Face-Off
           </TabsTrigger>

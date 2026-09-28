@@ -40,7 +40,7 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
         <span>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="cursor-help hover:text-accent/60 transition-colors">
+              <span className="cursor-help hover:text-accent/60 transition-colors motion-reduce:transition-none">
                 Season {season} // Week {week}
               </span>
             </TooltipTrigger>
@@ -55,17 +55,17 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
 
       {/* Main title */}
       <div>
-        <h1 className="font-display font-black uppercase text-[clamp(2.2rem,6vw,4.5rem)] tracking-[0.08em] text-[#E7D3AF] [text-shadow:0_3px_16px_rgba(0,0,0,0.9),0_1px_0_rgba(0,0,0,0.95),0_0_40px_rgba(201,151,42,0.1)] leading-none">
+        <h1 className="font-display font-black uppercase text-[clamp(2.2rem,6vw,4.5rem)] tracking-[0.08em] text-[hsl(var(--foreground))] [text-shadow:0_3px_16px_rgba(var(--void-rgb), 0.9),0_1px_0_rgba(var(--void-rgb), 0.95),0_0_40px_rgba(var(--gold-glow-rgb), 0.1)] leading-none">
           THE ARENA GAZETTE
         </h1>
-        <p className="text-[11px] italic mt-2 text-[#E7D3AF]/45">
+        <p className="text-[11px] italic mt-2 text-[hsl(var(--foreground))]/45">
           BLOOD · GLORY · GOSSIP · TRANSCRIPTS
         </p>
       </div>
 
       {/* Live indicator */}
       <div className="flex items-center justify-center gap-2 mt-1">
-        <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />
+        <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse motion-reduce:animate-none" />
         <span className="text-[9px] font-black uppercase tracking-[0.35em] text-primary/50">
           Latest Edition
         </span>
@@ -192,7 +192,7 @@ export default function Gazette() {
   const hasContent = weeklyIssues.length > 0;
 
   return (
-    <div className="space-y-16 max-w-7xl mx-auto pb-32 animate-in fade-in duration-700">
+    <div className="space-y-16 max-w-7xl mx-auto pb-32 animate-in fade-in duration-700 motion-reduce:animate-none">
       {/* ── Masthead ──────────────────────────────────────────────────────────── */}
       <GazetteMasthead season={season} week={week} />
 
@@ -228,7 +228,7 @@ export default function Gazette() {
             <div
               className="flex-1 h-px"
               style={{
-                background: 'linear-gradient(90deg, transparent, rgba(201,151,42,0.25))',
+                background: 'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.25))',
               }}
             />
             <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30">
@@ -239,7 +239,7 @@ export default function Gazette() {
             <div
               className="flex-1 h-px"
               style={{
-                background: 'linear-gradient(90deg, rgba(201,151,42,0.25), transparent)',
+                background: 'linear-gradient(90deg, rgba(var(--gold-glow-rgb), 0.25), transparent)',
               }}
             />
           </div>
@@ -295,7 +295,7 @@ export default function Gazette() {
                   className="absolute inset-x-0 top-0 h-px"
                   style={{
                     background:
-                      'linear-gradient(90deg, transparent, rgba(201,151,42,0.15) 30%, rgba(201,151,42,0.15) 70%, transparent)',
+                      'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.15) 30%, rgba(var(--gold-glow-rgb), 0.15) 70%, transparent)',
                   }}
                 />
 
@@ -307,15 +307,15 @@ export default function Gazette() {
 
                 <button
                   onClick={loadMore}
-                  className="group relative flex items-center gap-3 px-16 h-14 transition-all duration-500 bg-[#110C07] border border-border/70 rounded-none hover:border-accent/50"
+                  className="group relative flex items-center gap-3 px-16 h-14 transition-all duration-500 bg-[hsl(var(--popover))] border border-border/70 rounded-none hover:border-accent/50 motion-reduce:transition-none"
                 >
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-arena-gold/5 to-arena-gold/0" />
-                  <div className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-transparent via-arena-gold/80 to-transparent" />
-                  <History className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent transition-colors" />
-                  <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-accent transition-colors">
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-arena-gold/5 to-arena-gold/0 motion-reduce:transition-none" />
+                  <div className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-transparent via-arena-gold/80 to-transparent motion-reduce:transition-none" />
+                  <History className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent transition-colors motion-reduce:transition-none" />
+                  <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-accent transition-colors motion-reduce:transition-none">
                     Historical Recall
                   </span>
-                  <ChevronDown className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-y-1 transition-all" />
+                  <ChevronDown className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-y-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
                 </button>
 
                 <div className="flex items-center gap-2 mt-4 opacity-20">

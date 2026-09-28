@@ -67,7 +67,7 @@ export default function StartGame() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: '#0C0806' }}
+      style={{ background: 'hsl(var(--background))' }}
     >
       <ColomseumArch />
 

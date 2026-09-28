@@ -41,20 +41,20 @@ export default function SaveSlotCard({
       className="group relative cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       style={{
         background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 50%, var(--card) 100%)',
-        border: '1px solid rgba(60, 42, 22, 0.8)',
-        borderTopColor: 'rgba(100, 70, 36, 0.45)',
-        borderLeftColor: 'rgba(80, 56, 28, 0.4)',
+        border: '1px solid rgba(var(--oak-rgb), 0.8)',
+        borderTopColor: 'rgba(var(--umber-rgb), 0.45)',
+        borderLeftColor: 'rgba(var(--sepia-rgb), 0.4)',
       }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[linear-gradient(90deg,transparent_0%,rgba(201,151,42,0.5)_30%,rgba(201,151,42,0.8)_50%,rgba(201,151,42,0.5)_70%,transparent_100%)] motion-reduce:transition-none" />
+      <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[linear-gradient(90deg,transparent_0%,rgba(var(--gold-glow-rgb), 0.5)_30%,rgba(var(--gold-glow-rgb), 0.8)_50%,rgba(var(--gold-glow-rgb), 0.5)_70%,transparent_100%)] motion-reduce:transition-none" />
       <div className="p-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div
             className="shrink-0 flex items-center justify-center w-9 h-9"
             style={{
               background:
-                'linear-gradient(135deg, rgba(201,151,42,0.12) 0%, rgba(201,151,42,0.04) 100%)',
-              border: '1px solid rgba(201, 151, 42, 0.25)',
+                'linear-gradient(135deg, rgba(var(--gold-glow-rgb), 0.12) 0%, rgba(var(--gold-glow-rgb), 0.04) 100%)',
+              border: '1px solid rgba(var(--gold-glow-rgb), 0.25)',
             }}
           >
             <Shield className="h-4 w-4 text-accent" />

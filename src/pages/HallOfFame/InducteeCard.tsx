@@ -69,9 +69,9 @@ export function InducteeCard({
         variant="gold"
         padding="none"
         data-testid="inductee-card"
-        className="hover:border-arena-gold/40 transition-all duration-500 overflow-hidden relative group"
+        className="hover:border-arena-gold/40 transition-all duration-500 overflow-hidden relative group motion-reduce:transition-none"
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-arena-gold/60 via-arena-gold/20 to-transparent opacity-40 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-arena-gold/60 via-arena-gold/20 to-transparent opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
 
         <CardContent className="p-6 space-y-5">
           {/* Header */}
@@ -88,7 +88,7 @@ export function InducteeCard({
                 >
                   {icon}
                 </div>
-                <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-arena-gold transition-colors">
+                <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-arena-gold transition-colors motion-reduce:transition-none">
                   {warrior.name}
                 </span>
               </div>

@@ -73,7 +73,7 @@ function BookmarkedEntityRow({
     <div
       onClick={onClick}
       className={cn(
-        'flex items-center gap-4 p-4 border border-white/5 hover:bg-white/[0.02] transition-all group cursor-pointer',
+        'flex items-center gap-4 p-4 border border-white/5 hover:bg-white/[0.02] transition-all group cursor-pointer motion-reduce:transition-none',
         onClick ? 'cursor-pointer' : ''
       )}
     >
@@ -225,7 +225,7 @@ export default function Bookmarks() {
                     <button
                       onClick={() => setSortBy((s) => (s === 'date' ? 'name' : 'date'))}
                       aria-label={sortBy === 'date' ? 'Sort by name' : 'Sort by date'}
-                      className="p-1.5 rounded-none border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/20 transition-all"
+                      className="p-1.5 rounded-none border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/20 transition-all motion-reduce:transition-none"
                     >
                       {sortBy === 'date' ? (
                         <ArrowDownAZ className="h-3 w-3" />

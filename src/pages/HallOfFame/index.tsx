@@ -60,13 +60,13 @@ export default function HallOfFame() {
         <TabsList className="bg-secondary/20 p-1 rounded-none h-12 w-full sm:w-auto">
           <TabsTrigger
             value="halloffame"
-            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             <Crown className="h-3.5 w-3.5" /> Hall of Fame
           </TabsTrigger>
           <TabsTrigger
             value="graveyard"
-            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all"
+            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
             <Skull className="h-3.5 w-3.5" /> Graveyard
           </TabsTrigger>

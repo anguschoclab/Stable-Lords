@@ -28,7 +28,7 @@ export function WarriorCouncilCard({ card, onApplyPlan, onSetFocus }: WarriorCou
     <Surface
       variant="glass"
       className={cn(
-        'p-6 border transition-all duration-300 relative overflow-hidden',
+        'p-6 border transition-all duration-300 relative overflow-hidden motion-reduce:transition-none',
         isBlocked
           ? 'border-destructive/30 bg-destructive/[0.02]'
           : isRest

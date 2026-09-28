@@ -56,7 +56,7 @@ export function RecruitFilters({
                   key={tier}
                   onClick={() => toggleTier(tier)}
                   className={cn(
-                    'group flex items-center justify-between p-4 border transition-all',
+                    'group flex items-center justify-between p-4 border transition-all motion-reduce:transition-none',
                     isActive
                       ? 'bg-white/[0.05] border-white/20'
                       : 'bg-transparent border-white/5 opacity-20 grayscale hover:opacity-100 hover:grayscale-0'
@@ -144,10 +144,10 @@ export function RecruitFilters({
         <Button
           onClick={onRefresh}
           disabled={!canRefresh}
-          className="w-full h-16 bg-white/[0.02] border border-white/10 text-foreground hover:bg-white/5 transition-all rounded-none flex items-center justify-between px-6 group"
+          className="w-full h-16 bg-white/[0.02] border border-white/10 text-foreground hover:bg-white/5 transition-all rounded-none flex items-center justify-between px-6 group motion-reduce:transition-none"
         >
           <div className="flex items-center gap-4">
-            <RefreshCw className="h-4 w-4 text-primary group-hover:rotate-180 transition-all duration-700" />
+            <RefreshCw className="h-4 w-4 text-primary group-hover:rotate-180 transition-all duration-700 motion-reduce:transition-none motion-reduce:transform-none" />
             <span className="text-[10px] font-black uppercase tracking-widest">Refresh Pool</span>
           </div>
           <div className="flex items-center gap-2">

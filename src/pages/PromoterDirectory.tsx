@@ -67,7 +67,7 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
   const capacityPercent = (capacityUsed / promoter.capacity) * 100;
 
   return (
-    <Card className="group hover:border-primary/50 transition-all duration-300">
+    <Card className="group hover:border-primary/50 transition-all duration-300 motion-reduce:transition-none">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start gap-2">
           <div className="space-y-1 min-w-0 flex-1">
@@ -133,7 +133,7 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
           </div>
           <div className="h-1.5 bg-muted rounded-none overflow-hidden">
             <div
-              className={`h-full rounded-none transition-all duration-500 ${
+              className={`h-full rounded-none transition-all duration-500 motion-reduce:transition-none ${
                 capacityPercent >= 80
                   ? 'bg-destructive'
                   : capacityPercent >= 50

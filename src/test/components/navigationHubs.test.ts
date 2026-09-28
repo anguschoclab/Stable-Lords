@@ -47,9 +47,9 @@ describe('HUBS extended structure', () => {
     expect(stable.pages).toHaveLength(15);
   });
 
-  it('world hub has exactly 8 pages', () => {
+  it('world hub has exactly 10 pages', () => {
     const world = HUBS.find((h) => h.id === 'world')!;
-    expect(world.pages).toHaveLength(8);
+    expect(world.pages).toHaveLength(10);
   });
 
   it('bookmarks hub has exactly 0 pages', () => {
@@ -132,6 +132,8 @@ describe('HUBS extended structure', () => {
     expect(labels).toContain('Hall of Fame');
     expect(labels).toContain('Graveyard');
     expect(labels).toContain('Hall of Fights');
+    expect(labels).toContain('Prep Mode');
+    expect(labels).toContain('Style Archives');
   });
 });
 

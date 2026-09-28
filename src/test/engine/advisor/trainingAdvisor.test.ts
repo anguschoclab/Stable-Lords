@@ -14,13 +14,7 @@ const mkWarrior = (style: FightingStyle = FightingStyle.AimedBlow, over: Partial
   attributes: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 10, SP: 12, DF: 14 },
   fame: 40,
   popularity: 20,
-  titles: [],
-  injuries: [],
-  flair: [],
   career: { wins: 3, losses: 1, kills: 0 },
-  champion: false,
-  status: 'Active',
-  traits: [],
   ...over,
 });
 

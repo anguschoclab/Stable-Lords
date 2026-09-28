@@ -30,7 +30,6 @@ import '@/test/_setup/setup';
 import { runBoutSimulationPass } from '@/engine/pipeline/passes/BoutSimulationPass';
 import { SeededRNGService } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
-import type { StableId } from '@/types/shared.types';
 
 const makeState = (week: number, year: number): GameState =>
   fixtureGameState({

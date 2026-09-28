@@ -48,16 +48,10 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     name: 'Brutus the Bold',
     style: 'Gladiator' as any,
     attributes: {} as any,
-    fame: 50,
     popularity: 30,
-    titles: [],
-    injuries: [],
-    flair: [],
     career: { wins: 10, losses: 5, kills: 2 },
-    champion: false,
     status: 'Active' as any,
     age: 25,
-    traits: [],
     ...overrides,
   } as any);
 

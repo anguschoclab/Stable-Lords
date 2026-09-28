@@ -8,17 +8,8 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
   fixtureWarrior({
     id: 'w1' as Warrior['id'],
     name: 'Test Warrior',
-    style: FightingStyle.BashingAttack,
     attributes: { ST: 15, CN: 12, SZ: 10, WT: 8, WL: 6, SP: 4, DF: 22 },
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
     equipment: { weapon: 'sword', armor: 'leather', shield: 'buckler' },
     plan: {
       style: FightingStyle.BashingAttack,

@@ -23,14 +23,6 @@ const makeWarrior = (name: string, style: FightingStyle, cn: number = 12): Warri
     style,
     attributes: { ST: 10, CN: cn, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     fame: 100,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     derivedStats: { hp: 100 } as any,
   } as any);
 

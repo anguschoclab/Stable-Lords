@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/state.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
@@ -10,18 +10,9 @@ const makeWarrior = (id: string): Warrior =>
     id: id as WarriorId,
     name: id,
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     baseSkills: {} as any,
     derivedStats: {} as any,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
   } as any);
 

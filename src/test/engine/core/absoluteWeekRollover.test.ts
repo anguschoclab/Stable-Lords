@@ -16,17 +16,8 @@ const makeWarrior = (id: string, fame: number = 50): Warrior =>
     id: id as WarriorId,
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     fame,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
-    fatigue: 0,
   } as any);
 
 const makeRival = (id: string, roster: Warrior[]): RivalStableData =>

@@ -98,19 +98,12 @@ describe('isFightReady', () => {
     id: 'test-warrior' as WarriorId,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     baseSkills: {} as any,
     derivedStats: {} as any,
     fame: 0,
-    popularity: 0,
-    titles: [],
     injuries: injuries || [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
     status,
     fatigue,
-    traits: [],
   });
 
   describe('status checks', () => {

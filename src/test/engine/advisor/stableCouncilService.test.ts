@@ -17,15 +17,8 @@ const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior =>
   name: `Warrior_${id}`,
   style: FightingStyle.LungingAttack,
   attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
-  fame: 50,
   popularity: 20,
-  titles: [],
-  injuries: [],
-  flair: [],
   career: { wins: 4, losses: 1, kills: 0 },
-  champion: false,
-  status: 'Active',
-  traits: [],
   ...over,
 });
 

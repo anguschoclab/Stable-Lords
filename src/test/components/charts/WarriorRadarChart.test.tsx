@@ -38,15 +38,7 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 12, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
     baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
-    injuries: [],
-    career: { wins: 0, losses: 0, kills: 0 },
     fame: 0,
-    popularity: 0,
-    titles: [],
-    flair: [],
-    champion: false,
-    status: 'Active',
     ...overrides,
   } as any);
 

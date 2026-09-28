@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { resolveImpacts } from '@/engine/impacts';
 import type { StateImpact } from '@/engine/impacts';
 import type { GameState } from '@/types/state.types';
-import type { StableId } from '@/types/shared.types';
 import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 const makeState = (lastSimReport?: any): GameState =>

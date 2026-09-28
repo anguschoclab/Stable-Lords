@@ -25,16 +25,8 @@ const makeWarrior = (id: string, name: string): Warrior =>
     id: id as Warrior['id'],
     name,
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     career: { wins: 1, losses: 0, kills: 0 },
-    status: 'Active',
-    injuries: [],
     fame: 10,
-    popularity: 0,
-    titles: [],
-    flair: [],
-    champion: false,
-    traits: [],
   } as any);
 
 function makeResult(by: 'Kill' | 'KO' | 'Decision', a: string, d: string): BoutResult {

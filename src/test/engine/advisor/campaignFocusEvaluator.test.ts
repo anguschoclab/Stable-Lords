@@ -12,15 +12,8 @@ const mkWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
   name: 'Marcus',
   style: FightingStyle.LungingAttack,
   attributes: { ST: 14, CN: 12, SZ: 11, WT: 12, WL: 10, SP: 14, DF: 10 },
-  fame: 50,
   popularity: 20,
-  titles: [],
-  injuries: [],
-  flair: [],
   career: { wins: 4, losses: 1, kills: 0 },
-  champion: false,
-  status: 'Active',
-  traits: [],
   ...overrides,
 });
 

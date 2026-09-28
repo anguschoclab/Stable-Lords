@@ -13,13 +13,7 @@ const mkWarrior = (id = 'w1'): Warrior =>
   attributes: { ST: 14, CN: 14, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
   fame: 100,
   popularity: 50,
-  titles: [],
-  injuries: [],
-  flair: [],
   career: { wins: 10, losses: 2, kills: 0 },
-  champion: false,
-  status: 'Active',
-  traits: [],
 });
 
 const mkState = (overrides: Partial<GameState> = {}): GameState =>

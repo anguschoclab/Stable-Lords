@@ -10,16 +10,7 @@ const makeWarrior = (id: string, overrides: Partial<Warrior> = {}): Warrior =>
     id: id as Warrior['id'],
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
     ...overrides,
   } as any);
 

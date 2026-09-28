@@ -25,14 +25,8 @@ const makeWarrior = (overrides: Record<string, any> = {}): Warrior =>
     style: FightingStyle.AimedBlow,
     attributes: {} as any,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
     career: { wins: 5, losses: 3, kills: 1 } as CareerRecord,
-    champion: false,
     status: (overrides.status ?? 'Active') as any,
-    traits: [],
     ...overrides,
   } as any);
 

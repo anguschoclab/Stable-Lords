@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateInjury, isTooInjuredToFight } from '@/engine/injuries';
-import { computeHealthImpact } from '@/engine/health';
+import { computeHealthImpact } from '@/engine/warrior/health';
 import { FightingStyle, type WarriorId, type InjuryId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';

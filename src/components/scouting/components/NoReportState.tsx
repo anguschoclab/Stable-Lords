@@ -2,7 +2,7 @@ import { Target, Terminal, Eye, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import type { ScoutQuality } from '@/types/game';
-import { getScoutCost } from '@/engine/scouting';
+import { getScoutCost } from '@/engine/scouting/scouting';
 
 interface NoReportStateProps {
   warriorName: string;

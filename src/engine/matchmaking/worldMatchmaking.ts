@@ -4,7 +4,7 @@ import { type BoutOfferId, type PromoterId } from '@/types/shared.types';
 import { selectArenaForMatchup } from './arenaFit';
 import { weekToTimestamp } from '@/constants';
 import { displayWeek } from '@/engine/core/absoluteWeek';
-import { isBookable } from '@/engine/warriorStatus';
+import { isBookable } from '@/engine/warrior/warriorStatus';
 import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
 import { collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';

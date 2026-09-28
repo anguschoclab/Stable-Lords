@@ -5,7 +5,7 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { clamp } from '@/utils/math';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 /**
  * Defines the shape of stable reputation.
  */

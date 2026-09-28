@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { runAutosim } from '@/engine/autosim';
+import { runAutosim } from '@/engine/autosim/autosim';
 import { applyWarriorPayload } from '@/engine/advisor/applyCouncilPlan';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';

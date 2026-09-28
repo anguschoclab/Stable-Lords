@@ -7,7 +7,7 @@ import {
   validateStrategy,
   estimateStaminaCurve,
   predictedCollapseMinute,
-} from '@/engine/strategyValidator';
+} from '@/engine/strategy/strategyValidator';
 import { FightingStyle, type FightPlan } from '@/types/shared.types';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import type { Warrior } from '@/types/warrior.types';

@@ -4,7 +4,7 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
-import { computeStrategyScore } from '@/engine/strategyAnalysis';
+import { computeStrategyScore } from '@/engine/strategy/strategyAnalysis';
 import { clamp } from '@/utils/math';
 
 const MIN_SCORE = 50;

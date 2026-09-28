@@ -9,7 +9,7 @@
  */
 import type { RivalStableData } from '@/types/state.types';
 import { logAgentAction } from '../agentCore';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /** Contenders rested per campaign week — the stable's tournament core. */
 const CAMPAIGN_REST_COUNT = 2;

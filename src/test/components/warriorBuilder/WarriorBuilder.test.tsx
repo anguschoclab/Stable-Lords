@@ -46,7 +46,7 @@ vi.mock('@/data/names', () => ({
   randomWarriorName: () => 'RandomWarrior',
 }));
 
-vi.mock('@/engine/skillCalc', () => ({
+vi.mock('@/engine/warrior/skillCalc', () => ({
   DAMAGE_LABELS: { BashingAttack: 'Blunt' },
   computeWarriorStats: () => ({
     derivedStats: { hp: 20, endurance: 15, damage: 'BashingAttack', encumbrance: 5 },

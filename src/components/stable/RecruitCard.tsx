@@ -1,6 +1,6 @@
-import { type PoolWarrior, type RecruitTier, TIER_STARS } from '@/engine/recruitment';
+import { type PoolWarrior, type RecruitTier, TIER_STARS } from '@/engine/recruitment/recruitment';
 import { TIER_CONFIG } from './recruitTierConfig';
-import { type PotentialScoutReport } from '@/engine/recruitScouting';
+import { type PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/game';
 import { Badge } from '@/components/ui/badge';
 import { StatBadge } from '@/components/ui/WarriorBadges';

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fameFromTags } from '@/engine/fame';
+import { fameFromTags } from '@/engine/bout/fame';
 
 describe('fameFromTags', () => {
   it('returns zero for no tags', () => {

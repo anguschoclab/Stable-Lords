@@ -1,7 +1,7 @@
 /**
  * Specialty Mods - Per-exchange trainer specialty calculations
  */
-import { getSpecialtyMods } from '../../trainerSpecialties';
+import { getSpecialtyMods } from '../../trainers/trainerSpecialties';
 import type { FighterState } from './types';
 import type { ResolutionContext } from './types';
 

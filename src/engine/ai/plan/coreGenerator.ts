@@ -29,7 +29,7 @@ import {
   getAIRangePreference,
   getAIFallbackCondition,
 } from '@/engine/ai/plan/levers';
-import { reconcileGearTwoHanded } from '@/engine/planBias';
+import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 
 /** Scouted plan tendencies older than this many weeks are ignored. */
 export const PLAN_INTEL_FRESH_WEEKS = 6;

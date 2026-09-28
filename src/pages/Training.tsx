@@ -24,7 +24,7 @@ import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 
 /**

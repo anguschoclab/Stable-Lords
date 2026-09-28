@@ -3,10 +3,10 @@ import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { resolveRng } from '@/utils/random';
-import { computeWarriorLiability } from '@/engine/warriorValue';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import { aiRosterMin } from '@/constants/ai';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { filterActive } from '@/utils/roster';
 
 /**

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeWarriorLiability } from '@/engine/warriorValue';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 
 const w = (over: any = {}) =>
   ({ traits: [], fame: 20, career: { wins: 5, losses: 5, kills: 1 }, age: 24, ...over }) as any;

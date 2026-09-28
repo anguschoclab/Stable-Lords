@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { autoTuneFromBias, reconcileGearTwoHanded } from '@/engine/planBias';
+import { autoTuneFromBias, reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { EquipmentLoadout } from '@/data/equipment';

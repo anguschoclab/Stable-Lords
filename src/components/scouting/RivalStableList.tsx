@@ -5,7 +5,7 @@ import type { RivalStableData } from '@/types/game';
 import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { useGameStore } from '@/state/useGameStore';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 interface RivalStableListProps {
   rivals: RivalStableData[];

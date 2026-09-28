@@ -8,7 +8,7 @@ import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { StatCard } from '@/components/ui/StatCard';
 import { StableCrest } from '@/components/crest';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { getChargeDescription } from '@/engine/crest/crestGenerator';
 
 interface StableDossierProps {

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { isActive, isDead } from '@/engine/warriorStatus';
+import { isActive, isDead } from '@/engine/warrior/warriorStatus';
 import { Badge } from '@/components/ui/badge';
 import { WarriorLink } from '@/components/EntityLink';
 import {

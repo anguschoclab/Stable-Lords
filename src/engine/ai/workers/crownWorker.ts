@@ -23,7 +23,7 @@ import type {
 } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import {
   isReigningChampion,
   buildContenderIndex,

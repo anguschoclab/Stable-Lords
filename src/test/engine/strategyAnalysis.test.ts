@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
+import { computeStrategyScore, getScoreColor } from '@/engine/strategy/strategyAnalysis';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';

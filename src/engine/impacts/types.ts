@@ -33,7 +33,7 @@ import type {
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { WarriorId, StableId, TournamentId, BoutOfferId } from '@/types/shared.types';
 
 // Re-export GameState for convenience

@@ -10,7 +10,7 @@ import {
   generateHiringPool,
   convertRetiredToTrainer,
   type TrainerTier,
-} from '@/engine/trainers';
+} from '@/engine/trainers/trainers';
 import { toast } from 'sonner';
 
 /**

@@ -21,7 +21,7 @@ vi.mock('sonner', () => ({
   },
 }));
 
-vi.mock('@/engine/workerProxy', () => ({
+vi.mock('@/engine/runtime/workerProxy', () => ({
   engineProxy: {
     skipToQuarterEnd: vi.fn(),
   },
@@ -35,7 +35,7 @@ vi.mock('@/engine/rivals', () => ({
 import { useAdminTools } from '@/pages/AdminTools/hooks/useAdminTools';
 import { useGameStore } from '@/state/useGameStore';
 import { toast } from 'sonner';
-import { engineProxy } from '@/engine/workerProxy';
+import { engineProxy } from '@/engine/runtime/workerProxy';
 import { generateRivalStables } from '@/engine/rivals';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 

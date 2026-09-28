@@ -2,7 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
-import { computeTrainerAging } from '@/engine/trainerAging';
+import { computeTrainerAging } from '@/engine/trainers/trainerAging';
 
 /**
  * Stable Lords — Trainer Pipeline Pass

@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { persistNPCPlans, agentPlanForWarrior } from '@/engine/ai/plan/agentPlan';
 import { getNPCPlan } from '@/engine/bout/services/boutResolution';
-import { generateScoutReport } from '@/engine/scouting';
+import { generateScoutReport } from '@/engine/scouting/scouting';
 import { SeededRNGService } from '@/utils/random';
 import {
   makeWarrior,

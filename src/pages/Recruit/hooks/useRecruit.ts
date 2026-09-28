@@ -2,7 +2,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
-import { REFRESH_COST } from '@/engine/recruitment';
+import { REFRESH_COST } from '@/engine/recruitment/recruitment';
 import { canTransact } from '@/engine/economy/utils';
 import { useRecruitFilters } from './useRecruitFilters';
 import { useRecruitActions } from './useRecruitActions';

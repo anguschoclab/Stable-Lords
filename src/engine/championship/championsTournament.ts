@@ -19,7 +19,7 @@ import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelec
 import { SeededRNGService } from '@/utils/random';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
-import { isFightReady } from '@/engine/warriorStatus';
+import { isFightReady } from '@/engine/warrior/warriorStatus';
 import { owningStableOf, type ChampionshipDelta } from './arenaChampionship';
 
 /**

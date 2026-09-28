@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import type { CareerRecord, AttributePotential, InjuryData } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 

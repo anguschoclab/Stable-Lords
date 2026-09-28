@@ -60,7 +60,7 @@ vi.mock('@/engine/gazette/gazetteDetections', () => ({
 vi.mock('@/engine/simulate', () => ({
   defaultPlanForWarrior: vi.fn(() => ({})),
 }));
-vi.mock('@/engine/warriorStatus', () => ({
+vi.mock('@/engine/warrior/warriorStatus', () => ({
   isActive: vi.fn(() => true),
 }));
 vi.mock('@/lib/obfuscation', () => ({
@@ -116,7 +116,7 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
 
 import WarriorDetail from '@/pages/WarriorDetail';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('WarriorDetail', () => {

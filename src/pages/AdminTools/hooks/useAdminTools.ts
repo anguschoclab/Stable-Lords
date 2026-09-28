@@ -5,8 +5,8 @@ import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { GameState, RivalStableData, Owner } from '@/types/state.types';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { toast } from 'sonner';
-import { engineProxy } from '@/engine/workerProxy';
-import { engineSession } from '@/engine/session';
+import { engineProxy } from '@/engine/runtime/workerProxy';
+import { engineSession } from '@/engine/runtime/session';
 import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
 
 /**

@@ -7,7 +7,7 @@
  * worker. enqueue() chains jobs FIFO; a rejected job does not poison the
  * queue for the next one.
  */
-import { telemetry, TelemetryEvents } from '@/engine/telemetry';
+import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
 
 /** FIFO async job queue contract. */
 export interface JobQueue {

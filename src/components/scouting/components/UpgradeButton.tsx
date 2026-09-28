@@ -1,7 +1,7 @@
 import { ArrowUp, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ScoutQuality } from '@/types/game';
-import { getScoutCost } from '@/engine/scouting';
+import { getScoutCost } from '@/engine/scouting/scouting';
 
 interface UpgradeButtonProps {
   currentQuality: ScoutQuality;

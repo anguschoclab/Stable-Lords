@@ -2,7 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { tickInjuries } from '@/engine/injuries';
-import type { StateImpact } from './impacts';
+import type { StateImpact } from '../impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 

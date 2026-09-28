@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import type { GameState, RankingEntry, SeasonalGrowth } from '@/types/state.types';
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import {
   week,
   day,

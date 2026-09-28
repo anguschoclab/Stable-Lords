@@ -2,7 +2,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { FightingStyle } from '@/types/shared.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
 
 // ─── Utility ────────────────────────────────────────────────────────────────

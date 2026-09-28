@@ -6,7 +6,7 @@
  * ranges/labels, never exact numbers.
  */
 import { describe, it, expect } from 'vitest';
-import { generateScoutReport } from '@/engine/scouting';
+import { generateScoutReport } from '@/engine/scouting/scouting';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import {
   makeGameState,

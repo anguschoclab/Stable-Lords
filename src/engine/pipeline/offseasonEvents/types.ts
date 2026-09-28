@@ -5,7 +5,7 @@ import type { GameState, LedgerEntry, InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { type WarriorId } from '@/types/shared.types';
 import type { NewsletterItem } from '@/types/shared.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { hasInjuries } from '@/engine/injuries/utils';
 
 /** Narrative definition for an offseason event — title, effect type, and newsletter text. */

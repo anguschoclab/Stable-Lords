@@ -5,7 +5,7 @@ import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { committeeSelection } from '@/engine/matchmaking/tournamentSelection/committee';
 import { TOURNAMENT_TIERS } from '@/engine/matchmaking/tournamentSelection/core';
 import { resolveImpacts } from '@/engine/impacts';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';

@@ -3,13 +3,13 @@
  * Extracted from factories.ts to follow SRP
  */
 import type { GameState, OwnerPersonality, RivalStableData } from '@/types/state.types';
-import { type PoolWarrior } from '@/engine/recruitment';
+import { type PoolWarrior } from '@/engine/recruitment/recruitment';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from './warriorFactory';
-import { generatePotential } from '@/engine/potential';
+import { generatePotential } from '@/engine/warrior/potential';
 import { BACKSTORY_IDS } from '@/data/backstories';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { SAVE_STATE_VERSION } from '@/constants/core';

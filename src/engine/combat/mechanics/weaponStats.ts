@@ -10,7 +10,7 @@
  */
 import type { FightingStyle } from '@/types/shared.types';
 import { WEAPONS } from '@/data/equipment/weapons';
-import { getWeaponSuitability, weaponSuitabilityDamageMod } from '@/engine/weaponSuitability';
+import { getWeaponSuitability, weaponSuitabilityDamageMod } from '@/engine/equipment/weaponSuitability';
 
 const WEAPON_BY_ID = new Map<string, (typeof WEAPONS)[0]>();
 for (const w of WEAPONS) {

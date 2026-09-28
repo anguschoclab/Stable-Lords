@@ -5,7 +5,7 @@
  * as verified intel.
  */
 import { describe, it, expect } from 'vitest';
-import { generateScoutReport } from '@/engine/scouting';
+import { generateScoutReport } from '@/engine/scouting/scouting';
 import {
   makeWarrior,
 } from '@/test/_fixtures/factories';

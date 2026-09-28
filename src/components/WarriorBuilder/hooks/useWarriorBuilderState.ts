@@ -9,7 +9,7 @@ import {
   ATTRIBUTE_TOTAL,
   type Attributes,
 } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { clamp } from '@/utils/math';
 
 interface UseWarriorBuilderStateDeps {

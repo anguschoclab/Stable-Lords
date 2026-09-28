@@ -9,7 +9,7 @@ import { FightingStyle, type TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import { generateFreelancer } from './utils';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Committee selection.

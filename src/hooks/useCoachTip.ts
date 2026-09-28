@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import type { GameState, Warrior } from '@/types/game';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Defines the shape of coach tip.

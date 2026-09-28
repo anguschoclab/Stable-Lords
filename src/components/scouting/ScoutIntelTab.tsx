@@ -5,7 +5,7 @@ import { RivalStableList } from './RivalStableList';
 import { RivalWarriorList } from './RivalWarriorList';
 import { ScoutReportDetails } from './ScoutReportDetails';
 import { Surface } from '@/components/ui/Surface';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 interface ScoutIntelTabProps {
   rivals: RivalStableData[];

@@ -16,7 +16,7 @@ import { ExecuteWeekButton } from '@/components/layout/ExecuteWeekButton';
 import { audioManager } from '@/lib/AudioManager';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { MOOD_ICONS, type CrowdMood } from '@/engine/crowdMood';
+import { MOOD_ICONS, type CrowdMood } from '@/engine/bout/crowdMood';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { MobileNav } from '@/components/layout/MobileNav';

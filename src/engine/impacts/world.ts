@@ -9,7 +9,7 @@ import type {
   WeatherType,
   SeasonalGrowth,
 } from '@/types/state.types';
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 
 /**
  * Apply week to state.

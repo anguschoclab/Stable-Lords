@@ -6,7 +6,7 @@ import {
   getOffensiveSuitability,
   getDefensiveSuitability,
   suitabilityMultiplier,
-} from '@/engine/tacticSuitability';
+} from '@/engine/strategy/tacticSuitability';
 import { FightingStyle, type OffensiveTactic, type DefensiveTactic } from '@/types/game';
 
 describe('Tactic Suitability', () => {

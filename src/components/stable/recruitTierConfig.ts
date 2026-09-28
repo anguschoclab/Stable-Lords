@@ -1,4 +1,4 @@
-import type { RecruitTier } from '@/engine/recruitment';
+import type { RecruitTier } from '@/engine/recruitment/recruitment';
 
 export const TIER_CONFIG: Record<
   RecruitTier,

@@ -1,5 +1,5 @@
 import { computeGainChance } from '@/engine/training';
-import { canGrow } from '@/engine/potential';
+import { canGrow } from '@/engine/warrior/potential';
 import {
   ATTRIBUTE_TRAINING,
   ATTRIBUTE_TOTAL_CAP,

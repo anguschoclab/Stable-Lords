@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import {
   scoreMatchup,
   scorePairwiseMatchup,
-} from '@/engine/schedulingAssistant';
+} from '@/engine/matchmaking/schedulingAssistant';
 import {
   makeGameState,
   makeRival,

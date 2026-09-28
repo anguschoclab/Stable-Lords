@@ -1,11 +1,11 @@
 import type { GameState, RivalStableData, AIIntent, AIStrategy } from '@/types/state.types';
-import { computeMetaDrift } from '../metaDrift';
+import { computeMetaDrift } from '../analytics/metaDrift';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
 import { hasInjuries } from '@/engine/injuries/utils';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { HAZARDOUS_WEATHER } from './weatherSuitability';
 import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
 

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
-import { computeMetaDrift } from '@/engine/metaDrift';
+import { computeMetaDrift } from '@/engine/analytics/metaDrift';
 
 /**
  *

@@ -5,7 +5,7 @@
 import { useMemo } from 'react';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import { estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategyValidator';
+import { estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategy/strategyValidator';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/constants/combat';
 import { getPhaseByMinute } from '@/engine/combat/phase';
 

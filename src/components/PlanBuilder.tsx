@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 import type { FightPlan, Warrior } from '@/types/game';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { getMatchupBonus } from '@/constants/combat';
-import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
-import { autoTuneFromBias, type Bias } from '@/engine/planBias';
+import { computeStrategyScore, getScoreColor } from '@/engine/strategy/strategyAnalysis';
+import { autoTuneFromBias, type Bias } from '@/engine/strategy/planBias';
 import { getStylePresets } from '@/engine/bout/stylePresets';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import TacticBank from './planBuilder/TacticBank';
@@ -20,7 +20,7 @@ import {
   validateStrategy,
   estimateStaminaCurve,
   predictedCollapseMinute,
-} from '@/engine/strategyValidator';
+} from '@/engine/strategy/strategyValidator';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import { ShieldCheck } from 'lucide-react';
 import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';

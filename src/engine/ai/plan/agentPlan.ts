@@ -12,7 +12,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
 import { aiPlanForWarrior } from './coreGenerator';
 import { getPairKey } from '@/utils/keyUtils';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { clamp } from '@/utils/math';
 
 /**

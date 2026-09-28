@@ -4,7 +4,7 @@
  * Eliminates DRY violations of roster filtering/mapping patterns
  */
 import type { GameState, Warrior } from '@/types/state.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Builds a Map<string, Warrior> from the game state

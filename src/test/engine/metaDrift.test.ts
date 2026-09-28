@@ -1,11 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import {
-  computeMetaDrift,
-  createDefaultMeta,
-  getMetaLabel,
-  getMetaColor,
-} from '@/engine/metaDrift';
+import { computeMetaDrift, createDefaultMeta } from '@/engine/analytics/metaDrift';
+import { getMetaLabel, getMetaColor } from '@/lib/metaDriftDisplay';
 import { FightingStyle, type FightSummary, type FightId, type WarriorId } from '@/types/game';
 
 function makeFight(overrides: Partial<FightSummary>): FightSummary {

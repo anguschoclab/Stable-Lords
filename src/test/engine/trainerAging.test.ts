@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { computeTrainerAging } from '@/engine/trainerAging';
+import { computeTrainerAging } from '@/engine/trainers/trainerAging';
 import { runTrainerPass } from '@/engine/pipeline/passes/TrainerPass';
 import { TRAINER_AGING } from '@/constants/aging';
 import type { GameState, Trainer, RivalStableData } from '@/types/state.types';

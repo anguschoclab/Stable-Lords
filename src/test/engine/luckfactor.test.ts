@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { rollLuckfactor, applyLuckfactor, computeBaseSkills } from '@/engine/skillCalc';
+import { rollLuckfactor, applyLuckfactor, computeBaseSkills } from '@/engine/warrior/skillCalc';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle, type BaseSkills } from '@/types/shared.types';
 

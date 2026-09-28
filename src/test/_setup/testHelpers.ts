@@ -1,7 +1,7 @@
 import { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import type { WarriorId } from '@/types/shared.types';
 
 /**

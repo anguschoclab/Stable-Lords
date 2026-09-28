@@ -10,7 +10,7 @@ import {
   getItemById,
   getLoadoutWeight,
 } from '@/data/equipment';
-import { getWeaponSuitability, type WeaponSuitability } from '@/engine/weaponSuitability';
+import { getWeaponSuitability, type WeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import {
   getEncumbranceRatio,
   getEncumbranceTier,

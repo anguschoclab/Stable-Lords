@@ -8,7 +8,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { WarriorId } from '@/types/game';
 
 // Mock localStorage for Vitest since autosim triggers stat rollup saves
-import { runAutosim } from '@/engine/autosim';
+import { runAutosim } from '@/engine/autosim/autosim';
 import { type GameState } from '@/types/game';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 

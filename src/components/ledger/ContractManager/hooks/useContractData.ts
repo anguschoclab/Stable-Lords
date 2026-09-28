@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
+import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers/trainers';
 import { TRAINER_SALARY_FALLBACK } from '@/constants/economy';
 import type { Trainer } from '@/types/game';
 

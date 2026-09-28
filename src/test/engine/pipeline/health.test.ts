@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeHealthImpact } from '@/engine/health';
+import { computeHealthImpact } from '@/engine/warrior/health';
 import { type GameState, type InjuryData } from '@/types/game';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId } from '@/types/shared.types';

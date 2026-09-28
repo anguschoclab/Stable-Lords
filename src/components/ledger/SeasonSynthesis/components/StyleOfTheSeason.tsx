@@ -1,7 +1,7 @@
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
-import { getMetaLabel, getMetaColor } from '@/engine/metaDrift';
+import { getMetaLabel, getMetaColor } from '@/lib/metaDriftDisplay';
 import { TrendingUp, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
 interface StyleOfTheSeasonProps {

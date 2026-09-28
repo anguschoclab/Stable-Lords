@@ -1,5 +1,5 @@
 import type { RivalStableData, AIEvent } from '@/types/state.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import {
   WARRIOR_UPKEEP_BASE,
   FAME_UPKEEP_MULTIPLIER,

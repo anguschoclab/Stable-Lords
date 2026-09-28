@@ -40,7 +40,7 @@ const store = {
 
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 
-vi.mock('@/engine/workerProxy', () => ({
+vi.mock('@/engine/runtime/workerProxy', () => ({
   engineProxy: {
     resolveTournamentRound: vi.fn(),
   },
@@ -79,7 +79,7 @@ vi.mock('@/utils/cryptoRandom', () => ({
 }));
 
 import Tournaments from '@/pages/Tournaments';
-import { engineProxy } from '@/engine/workerProxy';
+import { engineProxy } from '@/engine/runtime/workerProxy';
 import { toast } from 'sonner';
 import { audioManager } from '@/lib/AudioManager';
 

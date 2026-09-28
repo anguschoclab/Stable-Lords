@@ -1,6 +1,6 @@
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
-import { computeMetaDrift } from '@/engine/metaDrift';
+import { computeMetaDrift } from '@/engine/analytics/metaDrift';
 import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
@@ -15,7 +15,7 @@ import {
   type WeekPipelineContext,
 } from '@/engine/pipeline/pipelineStages';
 import { getEnginePool, type EnginePool } from '@/engine/pool/enginePool';
-import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/telemetry';
+import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/core/telemetry';
 
 /**
  * Options for week advancement

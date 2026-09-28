@@ -3,7 +3,7 @@ import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { RivalStableData } from '@/types/state.types';
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 
 function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return {

@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { aiDraftFromPool } from '@/engine/draftService';
+import { aiDraftFromPool } from '@/engine/recruitment/draftService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle, type StableId, type FightId } from '@/types/shared.types';
 import type { RivalStableData, GameState } from '@/types/state.types';
-import type { PoolWarrior } from '@/engine/recruitment';
-import { createDefaultMeta } from '@/engine/metaDrift';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
+import { createDefaultMeta } from '@/engine/analytics/metaDrift';
 
 function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return {

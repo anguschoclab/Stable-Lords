@@ -2,7 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
-import { partialRefreshPool, generateRecruit } from '@/engine/recruitment';
+import { partialRefreshPool, generateRecruit } from '@/engine/recruitment/recruitment';
 
 /**
  * Stable Lords — Recruitment Pipeline Pass

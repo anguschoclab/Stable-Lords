@@ -9,7 +9,7 @@ import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/econom
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.

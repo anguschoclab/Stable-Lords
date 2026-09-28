@@ -9,7 +9,7 @@ import {
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 
 function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };

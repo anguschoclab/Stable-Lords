@@ -11,7 +11,7 @@ vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 0),
 }));
 
-vi.mock('@/engine/potential', () => ({
+vi.mock('@/engine/warrior/potential', () => ({
   canGrow: vi.fn(() => true),
 }));
 

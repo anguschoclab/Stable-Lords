@@ -3,7 +3,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { styleRiposteBonus } from '@/engine/combat/resolution/resolution';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import type { Warrior } from '@/types/game';
 
 // Shim: styleRiposteBonus reads only style/momentum (PL) and endurance (TP).

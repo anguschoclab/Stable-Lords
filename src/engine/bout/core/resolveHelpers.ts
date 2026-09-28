@@ -1,10 +1,10 @@
 import { GameState, Warrior, BoutOffer } from '@/types/state.types';
 import type { StableId, FightId, LedgerEntryId } from '@/types/shared.types';
 import { StateImpact } from '@/engine/impacts';
-import { getMoodModifiers } from '@/engine/crowdMood';
+import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
-import { fameFromTags } from '@/engine/fame';
-import { isActive } from '@/engine/warriorStatus';
+import { fameFromTags } from '@/engine/bout/fame';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { generateId } from '@/utils/idUtils';
 
 /**

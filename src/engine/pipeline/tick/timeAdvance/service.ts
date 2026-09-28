@@ -3,7 +3,7 @@ import {
   advanceWeek,
   type WeekAdvanceOptions,
 } from '@/engine/pipeline/services/weekPipelineService';
-import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
+import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/core/telemetry';
 import { truncateState } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import type { AdvanceOptions, WeekSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';

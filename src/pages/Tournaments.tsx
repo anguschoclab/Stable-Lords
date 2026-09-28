@@ -14,12 +14,12 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Trophy, UserPlus } from 'lucide-react';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { audioManager } from '@/lib/AudioManager';
-import { engineProxy } from '@/engine/workerProxy';
+import { engineProxy } from '@/engine/runtime/workerProxy';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 
 // Modular Components
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import {
   ActiveTournamentManifest,
   TournamentHistory,

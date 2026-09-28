@@ -8,7 +8,7 @@ vi.mock('@/utils/logger', () => ({
   },
 }));
 
-import { onWarriorDeath, clearDeathHandlers } from '@/engine/deathNotifier';
+import { onWarriorDeath, clearDeathHandlers } from '@/engine/core/deathNotifier';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { logger } from '@/utils/logger';
 

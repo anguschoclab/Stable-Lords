@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createJobQueue } from '@/engine/jobQueue';
+import { createJobQueue } from '@/engine/runtime/jobQueue';
 
 function deferred<T>() {
   let resolve!: (v: T) => void;

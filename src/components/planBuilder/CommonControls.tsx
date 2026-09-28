@@ -10,7 +10,7 @@ import {
   getDefensiveSuitability,
   SUITABILITY_LABELS,
   SUITABILITY_COLORS,
-} from '@/engine/tacticSuitability';
+} from '@/engine/strategy/tacticSuitability';
 
 interface CommonControlsProps {
   plan: FightPlan;

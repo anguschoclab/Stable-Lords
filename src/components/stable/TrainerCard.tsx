@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 import type { Trainer as TrainerData, TrainerFocus, TrainerTier } from '@/types/state.types';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
-import { FOCUS_ICONS, FOCUS_DESCRIPTIONS, TIER_BONUS } from '@/engine/trainers';
+import { FOCUS_ICONS, FOCUS_DESCRIPTIONS, TIER_BONUS } from '@/engine/trainers/trainers';
 
 interface TrainerCardProps {
   trainer: TrainerData;

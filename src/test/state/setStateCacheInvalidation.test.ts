@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/engine/workerProxy', () => ({
+vi.mock('@/engine/runtime/workerProxy', () => ({
   engineProxy: {
     advanceWeek: vi.fn().mockResolvedValue({ week: 2, phase: 'planning' }),
     advanceDay: vi.fn().mockResolvedValue({ week: 1, day: 1, phase: 'planning' }),

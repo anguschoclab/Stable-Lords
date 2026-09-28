@@ -5,7 +5,7 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
 /**
  * Duplication guard — megaplan Phase-4 ratchet.
  *
- * Baseline (2026-09-27, exact-normalized, window 8): 967 pair-clusters —
+ * Baseline (2026-09-27, exact-normalized, 8-line blocks): 967 pair-clusters —
  * 84 src↔src, 780 test↔test, 103 mixed. The guard asserts the src↔src
  * count never grows, and enumerates every known src↔src pair so NEW
  * duplicate pairs fail loudly. Remove a pair from KNOWN_SRC_PAIRS as its
@@ -26,7 +26,7 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/components/dashboard/BriefingTab.tsx|src/components/dashboard/GazetteTab.tsx',
   'src/components/dashboard/BriefingTab.tsx|src/components/gazette/GazetteArticle.tsx',
   'src/components/dashboard/GazetteTab.tsx|src/components/gazette/GazetteArticle.tsx',
-  'src/engine/rivals/rivalNamePool.ts|src/engine/trainers.ts',
+  'src/engine/rivals/rivalNamePool.ts|src/engine/trainers/trainers.ts',
   'src/components/dashboard/ActionTimeline.tsx|src/components/dashboard/BriefingTab.tsx',
   'src/components/dashboard/ActionTimeline.tsx|src/components/dashboard/GazetteTab.tsx',
   'src/components/dashboard/ActionTimeline.tsx|src/components/gazette/GazetteArticle.tsx',
@@ -58,7 +58,7 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/components/layout/LeftNav.tsx|src/components/layout/MobileNav.tsx',
   'src/pages/ArenaDetail.tsx|src/pages/StartGame.tsx',
   'src/components/orphanage/StoryBeginsStep.tsx|src/components/startGame/NewGameForm.tsx',
-  'src/data/terrabloodCharts.ts|src/engine/skillCalc.ts',
+  'src/data/terrabloodCharts.ts|src/engine/warrior/skillCalc.ts',
   'src/components/layout/ResetDialog.tsx|src/pages/ArenaDetail.tsx',
   'src/components/layout/ResetDialog.tsx|src/pages/StartGame.tsx',
   'src/components/EventLog.tsx|src/components/eventLog/index.ts',

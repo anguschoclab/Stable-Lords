@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
-import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
+import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting/scouting';
 import { type ScoutReportData, type Warrior, type RivalStableData } from '@/types/game';
 import { Radio } from 'lucide-react';
 import { SeededRNGService } from '@/utils/random';

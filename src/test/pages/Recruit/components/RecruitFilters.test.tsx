@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import '@/test/_setup/setup';
 import { RecruitFilters } from '@/pages/Recruit/components/RecruitFilters';
 import { FightingStyle } from '@/types/shared.types';
-import type { RecruitTier } from '@/engine/recruitment';
+import type { RecruitTier } from '@/engine/recruitment/recruitment';
 
 const defaultProps = {
   activeTiers: new Set<RecruitTier>(['Common', 'Promising']),

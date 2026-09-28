@@ -45,7 +45,7 @@ export type {
 };
 import { type FightSummary, type FightOutcomeBy } from './combat.types';
 export type { FightSummary, FightOutcomeBy };
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { ContentPack } from '@/lib/contentPacks';
 export type { PoolWarrior };
 
@@ -770,7 +770,7 @@ export interface GameState {
   realmRankings: Record<WarriorId, RankingEntry>;
   awards: AnnualAward[];
   lastSimulationReport?: SimulationReport;
-  cachedMetaDrift?: import('@/engine/metaDrift').StyleMeta;
+  cachedMetaDrift?: import('@/engine/analytics/metaDrift').StyleMeta;
   warriorMap?: Map<WarriorId, import('@/types/warrior.types').Warrior>;
   warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;
   rivalMap?: Map<string, import('@/types/state.types').RivalStableData>;

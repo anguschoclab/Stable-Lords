@@ -1,11 +1,11 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
-import { isTooInjuredToFight } from './injuries';
+import { isTooInjuredToFight } from '../injuries';
 import { getMatchupBonus } from '@/constants/combat';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Defines the shape of head-to-head record.

@@ -6,12 +6,12 @@ vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 0),
 }));
 
-vi.mock('@/engine/potential', () => ({
+vi.mock('@/engine/warrior/potential', () => ({
   canGrow: vi.fn(() => true),
 }));
 
 import { computeGainChance } from '@/engine/training';
-import { canGrow } from '@/engine/potential';
+import { canGrow } from '@/engine/warrior/potential';
 import { getAttributeRowState } from '@/components/warrior/attributeRowState';
 
 function baseInput(over: Partial<Parameters<typeof getAttributeRowState>[0]> = {}) {

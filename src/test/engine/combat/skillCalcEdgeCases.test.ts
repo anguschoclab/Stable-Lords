@@ -5,7 +5,7 @@ import {
   computeEndurance,
   computeDamage,
   computeDerivedStats,
-} from '@/engine/skillCalc';
+} from '@/engine/warrior/skillCalc';
 import { FightingStyle } from '@/types/shared.types';
 import type { Attributes } from '@/types/shared.types';
 

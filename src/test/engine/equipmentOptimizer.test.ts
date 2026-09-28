@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
+import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipment/equipmentOptimizer';
 import { getLoadoutWeight } from '@/data/equipment';
 import { FightingStyle } from '@/types/shared.types';
 

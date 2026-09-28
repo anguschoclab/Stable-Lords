@@ -37,7 +37,7 @@ vi.mock('@/components/warrior/traits/TraitBadge', () => ({
   ),
 }));
 
-vi.mock('@/engine/potential', () => ({
+vi.mock('@/engine/warrior/potential', () => ({
   potentialRating: vi.fn(
     (p: Record<string, number>) =>
       Object.values(p).reduce((a, b) => a + b, 0) / Object.keys(p).length
@@ -51,7 +51,7 @@ vi.mock('@/engine/potential', () => ({
   }),
 }));
 
-vi.mock('@/engine/warriorValue', () => ({
+vi.mock('@/engine/warrior/warriorValue', () => ({
   computeWarriorLiability: vi.fn(() => ({
     score: 0,
     recommendation: 'Keep',
@@ -59,8 +59,8 @@ vi.mock('@/engine/warriorValue', () => ({
   })),
 }));
 
-import { potentialRating, potentialGrade } from '@/engine/potential';
-import { computeWarriorLiability } from '@/engine/warriorValue';
+import { potentialRating, potentialGrade } from '@/engine/warrior/potential';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import { RankStrip } from '@/components/stable/RankStrip';
 import { PotentialBadge } from '@/components/stable/PotentialBadge';
 import { LiabilityBadge } from '@/components/stable/LiabilityBadge';

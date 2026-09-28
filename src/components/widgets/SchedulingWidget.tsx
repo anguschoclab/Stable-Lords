@@ -5,7 +5,7 @@ import {
   getRecommendedChallenges,
   getMatchupsToAvoid,
   type MatchupScore,
-} from '@/engine/schedulingAssistant';
+} from '@/engine/matchmaking/schedulingAssistant';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

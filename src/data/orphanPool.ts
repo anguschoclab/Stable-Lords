@@ -6,7 +6,7 @@
 import { FightingStyle } from '@/types/game';
 import type { Attributes } from '@/types/game';
 import type { AttributePotential } from '@/types/warrior.types';
-import { generatePotential } from '@/engine/potential';
+import { generatePotential } from '@/engine/warrior/potential';
 import { TRAITS } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';

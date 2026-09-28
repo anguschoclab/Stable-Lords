@@ -27,7 +27,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
 import { SeededRNGService } from '@/utils/random';
-import { generateRecruit } from '@/engine/recruitment';
+import { generateRecruit } from '@/engine/recruitment/recruitment';
 
 // ── Test Helpers ────────────────────────────────────────────────────────────
 

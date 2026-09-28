@@ -6,7 +6,7 @@ import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan, FightOutcome } from '@/types/combat.types';
 import type { WeatherType } from '@/types/shared.types';
-import type { CrowdMood } from '@/engine/crowdMood';
+import type { CrowdMood } from '@/engine/bout/crowdMood';
 
 // Import from split modules
 import {

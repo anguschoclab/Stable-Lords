@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { useReputationState } from '@/state/selectors';
-import { computeStableReputation } from '@/engine/stableReputation';
+import { computeStableReputation } from '@/engine/stable/stableReputation';
 import { Star, Skull, Shield, Zap } from 'lucide-react';
 
 /**

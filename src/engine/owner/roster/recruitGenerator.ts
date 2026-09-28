@@ -3,13 +3,13 @@ import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
-import { computeWarriorStats, rollLuckfactor } from '@/engine/skillCalc';
+import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { generateTraits, TRAITS } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { getPhilosophyStyles } from '@/data/ownerData';
-import type { StyleMeta } from '@/engine/metaDrift';
+import type { StyleMeta } from '@/engine/analytics/metaDrift';
 
 /** Function type for meta-adaptation recruit style pickers. */
 type AdaptationStyleFn = (

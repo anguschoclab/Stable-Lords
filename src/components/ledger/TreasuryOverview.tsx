@@ -25,7 +25,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TreasurySparkline } from '@/components/charts/TreasurySparkline';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 interface GlobalTreasuryMatrixProps {
   gold: number;

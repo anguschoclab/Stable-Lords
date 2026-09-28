@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { RivalStableData } from '@/types/state.types';
-import type { StableReputationInput } from '@/engine/stableReputation';
-import { computeStableReputation, computeRivalReputation } from '@/engine/stableReputation';
+import type { StableReputationInput } from '@/engine/stable/stableReputation';
+import { computeStableReputation, computeRivalReputation } from '@/engine/stable/stableReputation';
 
 /**
  *

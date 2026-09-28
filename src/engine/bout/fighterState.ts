@@ -14,12 +14,12 @@ import {
   getEncumbranceTier,
   getEncumbrancePenalties,
 } from '@/data/equipment/encumbrance';
-import { getTrainingBonus } from '@/engine/trainers';
+import { getTrainingBonus } from '@/engine/trainers/trainers';
 import { getFavoriteWeaponBonus } from '@/engine/favorites';
 import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
-import { applyLuckfactor } from '@/engine/skillCalc';
+import { applyLuckfactor } from '@/engine/warrior/skillCalc';
 import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { type FighterState } from '../combat/resolution/types';
 import { clamp } from '@/utils/math';

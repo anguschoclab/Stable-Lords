@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import type { OrphanWarrior } from '@/data/orphanPool';
 import type { Attributes } from '@/types/shared.types';
 
-vi.mock('@/engine/skillCalc', () => ({
+vi.mock('@/engine/warrior/skillCalc', () => ({
   computeWarriorStats: () => ({
     derivedStats: { hp: 100 },
     baseStats: { att: 10, def: 10, ini: 10, par: 10, rip: 10, dec: 10 },

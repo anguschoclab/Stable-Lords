@@ -2,7 +2,7 @@
  * Unit tests for extracted stableReputation helpers: getTopFameWarriors, computeFameScore.
  */
 import { describe, it, expect } from 'vitest';
-import { getTopFameWarriors, computeFameScore } from '@/engine/stableReputation';
+import { getTopFameWarriors, computeFameScore } from '@/engine/stable/stableReputation';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';

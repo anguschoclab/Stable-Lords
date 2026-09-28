@@ -6,7 +6,7 @@ import {
   revealPotential,
   potentialRating,
   potentialGrade,
-} from '@/engine/potential';
+} from '@/engine/warrior/potential';
 import type { Attributes } from '@/types/shared.types';
 import type { AttributePotential } from '@/types/warrior.types';
 import { SeededRNGService } from '@/utils/random';

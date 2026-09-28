@@ -3,8 +3,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, Promoter } from '@/types/state.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generateRivalStables } from '@/engine/rivals';
-import { generateRecruitPool } from '@/engine/recruitment';
-import { generateHiringPool } from '@/engine/trainers';
+import { generateRecruitPool } from '@/engine/recruitment/recruitment';
+import { generateHiringPool } from '@/engine/trainers/trainers';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 

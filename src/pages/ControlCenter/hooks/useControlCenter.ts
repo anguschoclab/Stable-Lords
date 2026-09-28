@@ -3,7 +3,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { useReputationState } from '@/state/selectors';
 import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
-import { computeStableReputation } from '@/engine/stableReputation';
+import { computeStableReputation } from '@/engine/stable/stableReputation';
 
 /**
  *

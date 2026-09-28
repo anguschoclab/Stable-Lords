@@ -1,7 +1,7 @@
 import { GameState, RivalStableData } from '@/types/state.types';
 import type { StableId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { aiDraftFromPool } from '@/engine/draftService';
+import { aiDraftFromPool } from '@/engine/recruitment/draftService';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';

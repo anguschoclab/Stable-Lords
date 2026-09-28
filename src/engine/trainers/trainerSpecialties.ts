@@ -1,6 +1,6 @@
 import type { Trainer, TrainerSpecialty } from '@/types/shared.types';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
-import { TIER_BONUS } from '@/engine/trainers';
+import { TIER_BONUS } from '@/engine/trainers/trainers';
 import {
   KILL_WINDOW_ENDURANCE,
   TRAINER_IRONGUARD_ENDURANCE,

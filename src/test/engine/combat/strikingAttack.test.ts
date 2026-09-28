@@ -16,7 +16,7 @@ import {
   ST_EXECUTE_BONUS,
 } from '@/constants/combat/combat';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import type { Warrior } from '@/types/game';
 
 const ST = FightingStyle.StrikingAttack;

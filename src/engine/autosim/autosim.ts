@@ -2,12 +2,12 @@ import { type GameState } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
-import { resolveImpacts } from './impacts';
+import { resolveImpacts } from '../impacts';
 import { truncateState } from '@/engine/storage/truncation';
-import { evaluateStopConditions, type SoftStopCondition } from './pipeline/tick/timeAdvance';
+import { evaluateStopConditions, type SoftStopCondition } from '../pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getNamesFromTitle } from '@/utils/fightTitle';
-import { applyCouncilDecisions } from './advisor/applyCouncilPlan';
+import { applyCouncilDecisions } from '../advisor/applyCouncilPlan';
 
 /**
  * Defines the shape of autosim week summary.

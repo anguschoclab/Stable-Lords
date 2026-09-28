@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import '@/test/_setup/setup';
-import { runAutosim } from '@/engine/autosim';
+import { runAutosim } from '@/engine/autosim/autosim';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { truncateState } from '@/engine/storage/truncation';
 

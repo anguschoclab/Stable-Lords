@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { isExhausted } from '@/engine/core/fatigueUtils';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  *

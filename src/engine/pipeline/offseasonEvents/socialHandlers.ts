@@ -14,7 +14,7 @@ import {
   type OffseasonEventContext,
   getActiveWarriors,
 } from './types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  *

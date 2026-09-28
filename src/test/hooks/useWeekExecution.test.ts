@@ -8,7 +8,7 @@ vi.mock('@/engine/bout/core/pairings', () => ({
   })),
 }));
 
-vi.mock('@/engine/warriorStatus', () => ({
+vi.mock('@/engine/warrior/warriorStatus', () => ({
   isFightReady: vi.fn(() => true),
 }));
 
@@ -21,7 +21,7 @@ vi.mock('sonner', () => ({
   },
 }));
 
-vi.mock('@/engine/workerProxy', () => ({
+vi.mock('@/engine/runtime/workerProxy', () => ({
   engineProxy: {
     runAutosim: vi.fn(),
   },
@@ -96,7 +96,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { toast } from 'sonner';
-import { engineProxy } from '@/engine/workerProxy';
+import { engineProxy } from '@/engine/runtime/workerProxy';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 
 describe('useWeekExecution', () => {

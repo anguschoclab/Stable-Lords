@@ -3,8 +3,8 @@ import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useQuadrantDots } from '@/hooks/useQuadrantDots';
 import type { GameState, RivalStableData } from '@/types/state.types';
-import * as stableReputation from '@/engine/stableReputation';
-import type { StableReputationInput } from '@/engine/stableReputation';
+import * as stableReputation from '@/engine/stable/stableReputation';
+import type { StableReputationInput } from '@/engine/stable/stableReputation';
 
 beforeEach(() => {
   vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation(

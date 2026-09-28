@@ -2,7 +2,7 @@ import type { Rivalry } from '@/types/state.types';
 import type { StableId, RivalryId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { MatchScoringService } from '../matchmakingServices';
+import { MatchScoringService } from './matchmakingServices';
 import { calculateRivalryScore } from '../owner/grudges';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { getNamesFromTitle } from '@/utils/fightTitle';

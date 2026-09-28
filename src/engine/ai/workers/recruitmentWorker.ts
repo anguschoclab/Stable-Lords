@@ -4,10 +4,10 @@ import { logAgentAction, logFinanceEvent } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
-import type { StyleMeta } from '@/engine/metaDrift';
+import type { StyleMeta } from '@/engine/analytics/metaDrift';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 

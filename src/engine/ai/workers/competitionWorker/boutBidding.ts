@@ -8,8 +8,8 @@ import type {
   TrainingAssignment,
 } from '@/types/state.types';
 import type { BoutOfferId, PromoterId, StableId, WarriorId } from '@/types/shared.types';
-import { type CrowdMood } from '@/engine/crowdMood';
-import { scorePairwiseMatchup, type PairwiseHeadToHead } from '@/engine/schedulingAssistant';
+import { type CrowdMood } from '@/engine/bout/crowdMood';
+import { scorePairwiseMatchup, type PairwiseHeadToHead } from '@/engine/matchmaking/schedulingAssistant';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
 import { weatherBidModifier } from '@/engine/ai/weatherSuitability';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -17,9 +17,9 @@ import type { BoutBid } from './types';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
 import { displayWeek, boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
-import { computeRivalReputation } from '@/engine/stableReputation';
+import { computeRivalReputation } from '@/engine/stable/stableReputation';
 import { clamp } from '@/utils/math';
-import { isActive, isBookable } from '@/engine/warriorStatus';
+import { isActive, isBookable } from '@/engine/warrior/warriorStatus';
 import {
   isChampionBookingLocked,
   CHAMPIONSHIP_EXCLUDED_ARENAS,

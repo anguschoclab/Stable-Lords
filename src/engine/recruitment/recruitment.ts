@@ -4,15 +4,15 @@ import {
   type BaseSkills,
   type DerivedStats,
 } from '@/types/shared.types';
-import { type StyleMeta } from './metaDrift';
+import { type StyleMeta } from '../analytics/metaDrift';
 import {
   type AttributePotential,
   type WarriorFavorites,
   type WarriorLineage,
 } from '@/types/warrior.types';
-import { computeWarriorStats, rollLuckfactor } from './skillCalc';
-import { generatePotential } from './potential';
-import { generateFavorites } from './favorites';
+import { computeWarriorStats, rollLuckfactor } from '../warrior/skillCalc';
+import { generatePotential } from '../warrior/potential';
+import { generateFavorites } from '../favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';

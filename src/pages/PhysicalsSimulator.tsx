@@ -3,13 +3,13 @@ import { Badge } from '@/components/ui/badge';
 import { Activity } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FightingStyle, STYLE_ABBREV, type Warrior } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { FighterConfigCard, type FighterStats } from '@/components/stable/FighterConfigCard';
 import { SimulatorResults } from '@/components/stable/SimulatorResults';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Physicals simulator.

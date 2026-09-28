@@ -2,8 +2,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import type { PoolWarrior, RecruitTier } from '@/engine/recruitment';
-import type { PotentialScoutReport } from '@/engine/recruitScouting';
+import type { PoolWarrior, RecruitTier } from '@/engine/recruitment/recruitment';
+import type { PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
 import { FightingStyle } from '@/types/shared.types';
 import type { Attributes, BaseSkills, DerivedStats } from '@/types/game';
 

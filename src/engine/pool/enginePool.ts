@@ -5,13 +5,13 @@ import {
   type RivalShardInput,
   type RivalShardOutput,
 } from '@/engine/pipeline/passes/rivalStableShard';
-import { telemetry, TelemetryEvents } from '@/engine/telemetry';
+import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
 import type { GameState } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 import type { BoutContext, BoutImpact } from '@/engine/bout/services/boutProcessorTypes';
 import { resolveBout } from '@/engine/bout/services/boutResolution';
 import type { BoutPairing } from '@/engine/bout/core/pairings';
-import type { getMoodModifiers } from '@/engine/crowdMood';
+import type { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { collectBoutEvents, type BoutShardOutput } from '@/engine/pool/shardTypes';
 
 /**

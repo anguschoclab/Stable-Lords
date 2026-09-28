@@ -3,7 +3,7 @@ import {
   WEAPON_STYLE_SUITABILITY,
   getWeaponSuitability,
   weaponSuitabilityDamageMod,
-} from '@/engine/weaponSuitability';
+} from '@/engine/equipment/weaponSuitability';
 import { WEAPONS } from '@/data/equipment/weapons';
 import { FightingStyle } from '@/types/shared.types';
 

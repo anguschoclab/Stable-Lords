@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { engineSession, bumpEngineEpoch, engineQueueDepth } from '@/engine/session';
+import { engineSession, bumpEngineEpoch, engineQueueDepth } from '@/engine/runtime/session';
 
 function deferred<T>() {
   let resolve!: (v: T) => void;

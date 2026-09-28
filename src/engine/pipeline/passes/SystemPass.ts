@@ -19,7 +19,7 @@ import { generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { getStyleDefaultLoadout } from '@/data/equipment';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { WarriorId } from '@/types/shared.types';
 
 /**

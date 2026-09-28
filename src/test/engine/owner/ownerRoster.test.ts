@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
-import { aiDraftFromPool } from '@/engine/draftService';
+import { aiDraftFromPool } from '@/engine/recruitment/draftService';
 import type { GameState, PoolWarrior, RivalStableData } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeRival as fixtureRival } from '@/test/_fixtures/factories';

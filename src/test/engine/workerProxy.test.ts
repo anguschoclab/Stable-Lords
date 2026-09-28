@@ -15,7 +15,7 @@ describe('workerProxy — lazy Web Worker (no eager spawn, no dev-mode fallback)
   it('does NOT create a Worker on import — spawns on first method access', async () => {
     // The engine worker is heavy and must not start during module
     // initialization (tests, Node harnesses, nested worker contexts).
-    const { engineProxy } = await import('@/engine/workerProxy');
+    const { engineProxy } = await import('@/engine/runtime/workerProxy');
     expect(mockWorkerCtor).not.toHaveBeenCalled();
     expect(mockWrap).not.toHaveBeenCalled();
 

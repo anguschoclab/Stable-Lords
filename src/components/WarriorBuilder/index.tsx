@@ -5,7 +5,7 @@
 import { Button } from '@/components/ui/button';
 import { Shuffle } from 'lucide-react';
 import { ATTRIBUTE_TOTAL } from '@/types/game';
-import { DAMAGE_LABELS } from '@/engine/skillCalc';
+import { DAMAGE_LABELS } from '@/engine/warrior/skillCalc';
 import { useWarriorBuilderState } from './hooks/useWarriorBuilderState';
 import { IdentitySection } from './components/IdentitySection';
 import { AttributeSliders } from './components/AttributeSliders';

@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { runAutosim } from '@/engine/autosim';
+import { runAutosim } from '@/engine/autosim/autosim';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { CHAMPIONSHIP_DEBUG } from '@/engine/championship/arenaChampionship';

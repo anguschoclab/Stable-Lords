@@ -81,7 +81,7 @@ const mockAvoid = {
   notes: ['Style disadvantage'],
 };
 
-vi.mock('@/engine/schedulingAssistant', () => ({
+vi.mock('@/engine/matchmaking/schedulingAssistant', () => ({
   getRecommendedChallenges: () => [mockRecommendation],
   getMatchupsToAvoid: () => [mockAvoid],
 }));

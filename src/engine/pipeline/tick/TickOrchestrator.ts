@@ -11,7 +11,7 @@ import {
   type YearAdvanceResult,
   type AdvanceOptions,
 } from './timeAdvance';
-import { telemetry, TelemetryEvents } from '@/engine/telemetry';
+import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
 
 /**
  * Canonical tournament-day RNG seed. Both the interactive day tick

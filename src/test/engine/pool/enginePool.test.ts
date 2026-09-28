@@ -18,7 +18,7 @@ import {
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
-import { getMoodModifiers } from '@/engine/crowdMood';
+import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { buildActiveWarriorMap } from '@/utils/roster';
 import type { RivalStableData, GameState } from '@/types/state.types';
 

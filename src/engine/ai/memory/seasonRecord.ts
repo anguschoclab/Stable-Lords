@@ -4,7 +4,7 @@
  * the record was reset at week 1 but never incremented).
  */
 import type { RivalStableData, FightSummary } from '@/types/state.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { logAgentAction } from '@/engine/ai/agentCore';
 
 type SeasonRecord = NonNullable<

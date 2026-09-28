@@ -5,10 +5,10 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import type { BoutResult } from '@/engine/bout';
 import { generatePairings } from '@/engine/bout/core/pairings';
-import { isFightReady } from '@/engine/warriorStatus';
-import { engineProxy } from '@/engine/workerProxy';
-import { engineSession } from '@/engine/session';
-import type { AutosimResult } from '@/engine/autosim';
+import { isFightReady } from '@/engine/warrior/warriorStatus';
+import { engineProxy } from '@/engine/runtime/workerProxy';
+import { engineSession } from '@/engine/runtime/session';
+import type { AutosimResult } from '@/engine/autosim/autosim';
 import type { Warrior } from '@/types/warrior.types';
 
 /**

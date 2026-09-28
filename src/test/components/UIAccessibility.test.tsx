@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { vi } from 'vitest';
 
-vi.mock('@/engine/skillCalc', () => ({
+vi.mock('@/engine/warrior/skillCalc', () => ({
   computeWarriorStats: () => ({
     derivedStats: { hp: 100 },
     baseStats: { att: 10, def: 10, ini: 10, par: 10, rip: 10, dec: 10 },
@@ -26,7 +26,7 @@ vi.mock('@/data/orphanPool', () => ({
   },
 }));
 
-vi.mock('@/engine/potential', () => ({
+vi.mock('@/engine/warrior/potential', () => ({
   potentialRating: () => 75,
   potentialGrade: () => 'A',
 }));

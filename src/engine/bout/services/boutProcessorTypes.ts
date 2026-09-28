@@ -6,7 +6,7 @@ import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WeatherType } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
-import type { getMoodModifiers } from '@/engine/crowdMood';
+import type { getMoodModifiers } from '@/engine/bout/crowdMood';
 
 /**
  * Defines the shape of bout result.

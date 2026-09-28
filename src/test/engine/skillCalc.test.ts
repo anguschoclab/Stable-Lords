@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeEndurance } from '@/engine/skillCalc';
+import { computeEndurance } from '@/engine/warrior/skillCalc';
 import type { Attributes } from '@/types/game';
 
 describe('skillCalc - computeEndurance', () => {

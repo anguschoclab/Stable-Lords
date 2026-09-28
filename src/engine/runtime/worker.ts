@@ -1,15 +1,15 @@
 import * as Comlink from 'comlink';
-import { advanceWeek } from './pipeline/services/weekPipelineService';
-import { createFreshState } from './factories/gameStateFactory';
-import { TournamentSelectionService } from './matchmaking/tournamentSelection';
-import { TickOrchestrator } from './pipeline/tick/TickOrchestrator';
-import { runAutosim } from './autosim';
+import { advanceWeek } from '../pipeline/services/weekPipelineService';
+import { createFreshState } from '../factories/gameStateFactory';
+import { TournamentSelectionService } from '../matchmaking/tournamentSelection';
+import { TickOrchestrator } from '../pipeline/tick/TickOrchestrator';
+import { runAutosim } from '../autosim/autosim';
 import { loadCombatNarrative } from '@/data/narrative';
 import { createJobQueue } from './jobQueue';
-import { configureEnginePool, shutdownEnginePool } from './pool/enginePool';
+import { configureEnginePool, shutdownEnginePool } from '../pool/enginePool';
 import type { GameState } from '@/types/state.types';
-import type { WeekAdvanceOptions } from './pipeline/services/weekPipelineService';
-import type { AutosimOptions } from './autosim';
+import type { WeekAdvanceOptions } from '../pipeline/services/weekPipelineService';
+import type { AutosimOptions } from '../autosim/autosim';
 
 // Start loading combat data when the worker initializes; sim-bearing jobs
 // await it so the first request can't race the lazy JSON imports (each

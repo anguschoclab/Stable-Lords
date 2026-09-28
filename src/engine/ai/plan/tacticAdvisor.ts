@@ -3,7 +3,7 @@
  * Selects best offensive and defensive tactics based on fighting style compatibility.
  */
 import { FightingStyle, type OffensiveTactic, type DefensiveTactic } from '@/types/shared.types';
-import { getOffensiveSuitability, getDefensiveSuitability } from '@/engine/tacticSuitability';
+import { getOffensiveSuitability, getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
 import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,

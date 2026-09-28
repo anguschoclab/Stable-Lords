@@ -9,7 +9,7 @@
  */
 import { useEffect } from 'react';
 import { toast } from 'sonner';
-import { onWarriorDeath } from '@/engine/deathNotifier';
+import { onWarriorDeath } from '@/engine/core/deathNotifier';
 
 /**
  * React hook: use death notifications.

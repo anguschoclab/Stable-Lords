@@ -9,7 +9,7 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior, WarriorStatus } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
-import { computeWarriorStats } from '../skillCalc';
+import { computeWarriorStats } from '../warrior/skillCalc';
 import { type StateImpact } from '../impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateEntityInList } from '@/utils/stateUtils';

@@ -33,8 +33,8 @@ import {
   type WarriorId,
 } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import type { PoolWarrior } from '@/engine/recruitment';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { getStablePairKey } from '@/utils/keyUtils';
 
 let idCounter = 0;

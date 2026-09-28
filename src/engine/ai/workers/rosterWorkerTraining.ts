@@ -11,7 +11,7 @@ import type {
 import type { Attributes, Season, BaseSkills } from '@/types/shared.types';
 import { FightingStyle, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import { computeWarriorStats } from '../../skillCalc';
+import { computeWarriorStats } from '../../warrior/skillCalc';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import {
   processAttributeTraining,
@@ -30,7 +30,7 @@ import { rollTraitTraining, TRAIT_CAP } from '@/engine/training/trainingGains/tr
 import { assessBurnRisks } from '@/engine/training/burnAnalysis';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import type { Trainer } from '@/types/shared.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * AI training runs at ~80% player effectiveness per the Training Mechanics spec.

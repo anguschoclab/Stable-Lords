@@ -4,7 +4,7 @@ import {
   generateRecruitPool,
   fullRefreshPool,
   DEFAULT_POOL_SIZE,
-} from '@/engine/recruitment';
+} from '@/engine/recruitment/recruitment';
 import { SeededRNGService } from '@/utils/random';
 
 describe('partialRefreshPool', () => {

@@ -8,7 +8,7 @@ import {
 import { makeRival, makeWarrior, makeGameState } from '@/test/_fixtures/factories';
 import { aiRosterMax } from '@/constants/ai';
 import { policyFor } from '@/engine/ai/traitPolicy';
-import { computeWarriorLiability } from '@/engine/warriorValue';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import { WEEKS_PER_SEASON } from '@/constants/core';
 

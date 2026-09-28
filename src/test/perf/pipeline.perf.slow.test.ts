@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
-import { runAutosim } from '@/engine/autosim';
+import { runAutosim } from '@/engine/autosim/autosim';
 
 // Mock the archiver to avoid disk I/O during perf tests
 vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({

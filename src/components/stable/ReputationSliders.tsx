@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useReputationState } from '@/state/selectors';
-import { computeStableReputation } from '@/engine/stableReputation';
+import { computeStableReputation } from '@/engine/stable/stableReputation';
 import { Surface } from '@/components/ui/Surface';
 import { StatBattery } from '@/components/ui/StatBattery';
 import { Shield, Skull, Sparkles, Star, Eye, Info } from 'lucide-react';

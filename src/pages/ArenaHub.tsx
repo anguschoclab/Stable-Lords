@@ -16,7 +16,7 @@ import {
   MOOD_ICONS,
   getMoodModifiers,
   type CrowdMood,
-} from '@/engine/crowdMood';
+} from '@/engine/bout/crowdMood';
 import { Badge } from '@/components/ui/badge';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import {
@@ -51,7 +51,7 @@ import { IntelligenceHubWidget } from '@/components/dashboard/IntelligenceHubWid
 import { NextBoutWidget } from '@/components/widgets/NextBoutWidget';
 import { MetaDriftWidget } from '@/components/widgets/MetaDriftWidget';
 import { WeatherWidget } from '@/components/widgets/WeatherWidget';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 // ─── Crowd Mood Meter ──────────────────────────────────────────────────────
 

@@ -4,7 +4,7 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**

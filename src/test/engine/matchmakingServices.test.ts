@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { MatchScoringService } from '@/engine/matchmakingServices';
+import { MatchScoringService } from '@/engine/matchmaking/matchmakingServices';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 
 describe('matchmakingServices', () => {
@@ -147,7 +147,7 @@ describe('matchmakingServices', () => {
 
   describe('AIBoutService removal', () => {
     it('does not export AIBoutService', async () => {
-      const mod = await import('@/engine/matchmakingServices');
+      const mod = await import('@/engine/matchmaking/matchmakingServices');
       expect((mod as any).AIBoutService).toBeUndefined();
     });
   });

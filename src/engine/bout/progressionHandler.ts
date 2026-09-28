@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { calculateXP, applyXP } from '@/engine/progression';
+import { calculateXP, applyXP } from '@/engine/warrior/progression';
 import { checkDiscovery } from '@/engine/favorites';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';

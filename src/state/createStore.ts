@@ -4,14 +4,14 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { engineProxy } from '@/engine/workerProxy';
+import { engineProxy } from '@/engine/runtime/workerProxy';
 import { archiveService } from '@/engine/storage/archiveService';
 import {
   flushDeferredArchivesOffThread,
   onArchiveRetry,
 } from '@/engine/pipeline/adapters/opfsArchiver';
-import { engineSession, bumpEngineEpoch } from '@/engine/session';
-import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/telemetry';
+import { engineSession, bumpEngineEpoch } from '@/engine/runtime/session';
+import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/core/telemetry';
 import {
   stripNonSerializable,
   reconstructGameState,

@@ -1,8 +1,8 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { Trainer } from '@/types/state.types';
 import type { ResolutionContext, FighterState } from '@/engine/combat/resolution/types';
-import { getTrainingBonus } from '@/engine/trainers';
-import { getSpecialtyMods } from '@/engine/trainerSpecialties';
+import { getTrainingBonus } from '@/engine/trainers/trainers';
+import { getSpecialtyMods } from '@/engine/trainers/trainerSpecialties';
 
 /**
  * Get trainer mods.

@@ -1,8 +1,8 @@
 import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { generatePotential } from '@/engine/potential';
+import { generatePotential } from '@/engine/warrior/potential';
 import { generateRivalStables } from '@/engine/rivals';
-import { generateRecruitPool } from '@/engine/recruitment';
+import { generateRecruitPool } from '@/engine/recruitment/recruitment';
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';

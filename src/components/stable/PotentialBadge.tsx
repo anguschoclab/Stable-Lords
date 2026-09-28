@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { potentialRating, potentialGrade } from '@/engine/potential';
+import { potentialRating, potentialGrade } from '@/engine/warrior/potential';
 import type { AttributePotential } from '@/types/warrior.types';
 
 interface PotentialBadgeProps {

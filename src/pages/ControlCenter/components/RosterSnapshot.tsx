@@ -8,7 +8,7 @@ import { FormSparkline } from '@/components/charts/FormSparkline';
 import { STYLE_ABBREV } from '@/types/shared.types';
 import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { Swords, ChevronRight } from 'lucide-react';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  *

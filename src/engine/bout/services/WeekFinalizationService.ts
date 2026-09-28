@@ -6,7 +6,7 @@
 import type { GameState } from '@/types/state.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { BoutResult } from './boutProcessorService';
-import { computeCrowdMood } from '@/engine/crowdMood';
+import { computeCrowdMood } from '@/engine/bout/crowdMood';
 import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
 import { getFightsForWeek } from '@/engine/core/historyUtils';

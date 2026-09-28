@@ -4,7 +4,7 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { generateRecommendations } from '@/engine/equipmentOptimizer';
+import { generateRecommendations } from '@/engine/equipment/equipmentOptimizer';
 import { validateLoadout, checkWeaponRequirements } from '@/data/equipment';
 
 /**

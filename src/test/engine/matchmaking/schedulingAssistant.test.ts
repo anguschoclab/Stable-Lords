@@ -13,7 +13,7 @@ import {
   scorePairwiseMatchup,
   getRecommendedChallenges,
   getMatchupsToAvoid,
-} from '@/engine/schedulingAssistant';
+} from '@/engine/matchmaking/schedulingAssistant';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';

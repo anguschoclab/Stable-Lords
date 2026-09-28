@@ -3,7 +3,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { styleRiposteBonus } from '@/engine/combat/resolution/resolution';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { PR_COUNTER_ON_PARRY, PR_CHAIN_CAP } from '@/constants/combat/combat';
 import type { Warrior } from '@/types/game';
 

@@ -10,7 +10,7 @@ import { rollRange } from '@/engine/core/rng/rollRange';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { makeNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { filterActive, filterHealthy } from '@/utils/roster';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Stable Lords — Random Event Pipeline Pass

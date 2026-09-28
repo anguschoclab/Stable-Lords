@@ -5,13 +5,13 @@
  */
 import { BoutOffer, GameState } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
-import { getMoodModifiers } from '@/engine/crowdMood';
+import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { generatePairings } from '../core/pairings';
 import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildActiveWarriorMap } from '@/utils/roster';
-import { isFightReady } from '@/engine/warriorStatus';
+import { isFightReady } from '@/engine/warrior/warriorStatus';
 import { resolveBout } from './boutResolution';
 import { addMatchRecord } from '@/engine/matchmaking/historyLogic';
 import { engineEventBus } from '@/engine/core/EventBus';

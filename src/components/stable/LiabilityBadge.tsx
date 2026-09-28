@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { computeWarriorLiability } from '@/engine/warriorValue';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import type { Warrior } from '@/types/warrior.types';
 
 interface LiabilityBadgeProps {

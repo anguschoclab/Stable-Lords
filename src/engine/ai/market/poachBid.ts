@@ -1,7 +1,7 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import { computeWarriorLiability } from '@/engine/warriorValue';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import { checkBudget } from '@/engine/ai/workers/budgetWorker';
 import { logAgentAction, logFinanceEvent } from '@/engine/ai/agentCore';

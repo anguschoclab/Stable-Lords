@@ -21,7 +21,7 @@ vi.mock('@/engine/aging', () => ({
   computeAgingImpact: mockComputeAgingImpact,
 }));
 
-vi.mock('@/engine/health', () => ({
+vi.mock('@/engine/warrior/health', () => ({
   computeHealthImpact: mockComputeHealthImpact,
 }));
 

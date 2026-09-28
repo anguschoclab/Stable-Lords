@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
 import { FastForward, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
-import type { AutosimResult, AutosimWeekSummary as WeekSummary } from '@/engine/autosim';
+import type { AutosimResult, AutosimWeekSummary as WeekSummary } from '@/engine/autosim/autosim';
 
 interface AutosimConsoleProps {
   isSimulating: boolean;

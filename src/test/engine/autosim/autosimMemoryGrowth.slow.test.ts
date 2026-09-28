@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { runAutosim, extractWeekSummary } from '@/engine/autosim';
+import { runAutosim, extractWeekSummary } from '@/engine/autosim/autosim';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 

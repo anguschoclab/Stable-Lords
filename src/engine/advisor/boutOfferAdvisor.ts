@@ -18,7 +18,7 @@ import { getMatchupBonus } from '@/constants/combat/combat';
 import { acceptanceWeatherBlock } from '@/engine/ai/weatherSuitability';
 import { TRAINING_COST } from '@/constants/economy';
 import { deriveHeadToHead, getOpponentIntel, summarizeIntel } from './intelAdvisor';
-import { getScoutCost } from '@/engine/scouting';
+import { getScoutCost } from '@/engine/scouting/scouting';
 
 /** True when the warrior holds the live crown at the given arena. */
 function warriorOwnsArenaCrown(state: GameState, arenaId: string, warriorId: string): boolean {

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/game';
 import type { UseFavoritesActionsResult } from '@/hooks/useFavoritesActions';
-import { getWeaponSuitability, WEAPON_SUITABILITY_LABELS, WEAPON_SUITABILITY_COLORS } from '@/engine/weaponSuitability';
+import { getWeaponSuitability, WEAPON_SUITABILITY_LABELS, WEAPON_SUITABILITY_COLORS } from '@/engine/equipment/weaponSuitability';
 import { weaponDamageBonus } from '@/engine/combat/mechanics/weaponStats';
 
 interface WeaponAffinitySectionProps {

@@ -8,7 +8,7 @@ import {
   getTrainingBonus,
   TIER_COST,
   TIER_BONUS,
-} from '@/engine/trainers';
+} from '@/engine/trainers/trainers';
 import type { Trainer } from '@/types/shared.types';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';

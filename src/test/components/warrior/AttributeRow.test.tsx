@@ -12,7 +12,7 @@ vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 0),
 }));
 
-vi.mock('@/engine/potential', () => ({
+vi.mock('@/engine/warrior/potential', () => ({
   canGrow: vi.fn(() => true),
 }));
 
@@ -28,7 +28,7 @@ vi.mock('@/components/ui/tooltip', () => ({
 }));
 
 import { computeGainChance } from '@/engine/training';
-import { canGrow } from '@/engine/potential';
+import { canGrow } from '@/engine/warrior/potential';
 import { AttributeRow } from '@/components/warrior/AttributeRow';
 import { TooltipProvider } from '@/components/ui/tooltip';
 

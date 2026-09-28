@@ -13,7 +13,7 @@ import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { getStableTemplates } from '@/engine/rivals';
 import type { Warrior } from '@/types/game';
 import type { StableRow, WarriorRow } from '@/types/leaderboard';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 type SortField =
   'rank' | 'name' | 'fame' | 'wins' | 'losses' | 'kills' | 'winRate' | 'roster' | 'tier';

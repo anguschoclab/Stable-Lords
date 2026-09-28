@@ -5,7 +5,7 @@
 import type { RivalStableData, Warrior } from '@/types/state.types';
 import { SeededRNGService } from '@/utils/random';
 import { clamp } from '@/utils/math';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  * Randomly picks an eligible opponent from a pool of rival stables.

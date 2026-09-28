@@ -8,7 +8,7 @@ import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import { type SubNavTab } from '@/components/layout/SubNav';
 import { Separator } from '@/components/ui/separator';

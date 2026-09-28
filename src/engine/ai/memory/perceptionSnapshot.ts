@@ -5,9 +5,9 @@
  */
 import type { GameState, FightSummary, RankingEntry } from '@/types/state.types';
 import type { StableId, WarriorId } from '@/types/shared.types';
-import { computeMetaDrift, type StyleMeta } from '@/engine/metaDrift';
+import { computeMetaDrift, type StyleMeta } from '@/engine/analytics/metaDrift';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 
 /** The shared read-only world view consumed by every rival's agent context. */

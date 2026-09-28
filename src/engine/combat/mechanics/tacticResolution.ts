@@ -4,7 +4,7 @@ import {
   suitabilityMultiplier,
   getOffensiveSuitability,
   getDefensiveSuitability,
-} from '../../tacticSuitability';
+} from '../../strategy/tacticSuitability';
 import { OE_ATT_SCALING, OE_DEF_SCALING, AL_INI_SCALING } from '@/constants/combat';
 import { clamp } from '@/utils/math';
 

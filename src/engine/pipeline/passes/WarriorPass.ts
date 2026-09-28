@@ -2,10 +2,10 @@ import type { GameState } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
 import { computeTrainingImpact, trainingImpactToStateImpact } from '@/engine/training';
 import { computeAgingImpact } from '@/engine/aging';
-import { computeHealthImpact } from '@/engine/health';
+import { computeHealthImpact } from '@/engine/warrior/health';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { convertRetiredToTrainer } from '@/engine/trainers';
+import { convertRetiredToTrainer } from '@/engine/trainers/trainers';
 
 /**
  * Stable Lords — Warrior Pipeline Pass

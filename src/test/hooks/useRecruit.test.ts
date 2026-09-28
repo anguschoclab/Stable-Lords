@@ -7,9 +7,9 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior, Attributes, BaseSkills, DerivedStats } from '@/types/game';
 import type { GameState } from '@/types/state.types';
-import type { PoolWarrior } from '@/engine/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { makePoolWarrior as fixturePoolWarrior } from '@/test/_fixtures/factories';
-import { REFRESH_COST } from '@/engine/recruitment';
+import { REFRESH_COST } from '@/engine/recruitment/recruitment';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import '@/test/_setup/setup';
 

@@ -1,5 +1,5 @@
 import { FightingStyle, type Warrior, type FightPlan, type WarriorId } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 
 /**
  *

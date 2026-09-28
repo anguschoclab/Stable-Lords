@@ -2,7 +2,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Link } from '@tanstack/react-router';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
-import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
+import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers/trainers';
 import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

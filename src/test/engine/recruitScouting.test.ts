@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { revealRecruitPotential } from '@/engine/recruitScouting';
+import { revealRecruitPotential } from '@/engine/recruitment/recruitScouting';
 import type { AttributePotential } from '@/types/warrior.types';
 
 describe('recruitScouting', () => {

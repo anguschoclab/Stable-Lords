@@ -7,7 +7,7 @@ import { ComparisonHeader } from './ComparisonHeader';
 import { AttributeComparison } from './components/AttributeComparison';
 import { CareerComparison } from './components/CareerComparison';
 import { EmptyWarriorState } from './components/EmptyWarriorState';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 interface WarriorComparisonProps {
   rivals: RivalStableData[];

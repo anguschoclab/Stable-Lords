@@ -2,9 +2,9 @@ import { useState, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
-import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
+import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipment/equipmentOptimizer';
 import { toast } from 'sonner';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  *

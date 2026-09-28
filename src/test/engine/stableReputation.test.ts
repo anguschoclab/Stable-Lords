@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeStableReputation, computeRivalReputation } from '@/engine/stableReputation';
+import { computeStableReputation, computeRivalReputation } from '@/engine/stable/stableReputation';
 import type { GameState, Warrior, FightSummary } from '@/types/game';
 
 function createMockWarrior(overrides: Partial<Warrior> = {}): Warrior {

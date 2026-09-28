@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { shuffled, SeededRNG } from '@/utils/random';
-import { type PoolWarrior, type RecruitTier } from '@/engine/recruitment';
+import { type PoolWarrior, type RecruitTier } from '@/engine/recruitment/recruitment';
 import type { FightingStyle } from '@/types/game';
 
 type SortBy = 'cost-asc' | 'cost-desc' | 'random' | 'age-asc';

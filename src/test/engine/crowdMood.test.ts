@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getMoodModifiers, computeCrowdMood } from '@/engine/crowdMood';
+import { getMoodModifiers, computeCrowdMood } from '@/engine/bout/crowdMood';
 import type { FightSummary, FightId, WarriorId } from '@/types/game';
 
 // Helper to easily create a mocked FightSummary

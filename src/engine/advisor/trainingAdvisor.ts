@@ -18,7 +18,7 @@ import type { Trainer, TrainerTier } from '@/types/shared.types';
 import { assessBurnRisks } from '@/engine/training/burnAnalysis';
 import { computeGainChance } from '@/engine/training';
 import { FOCUS_ATTR_MAP } from '@/engine/training/coachLogic';
-import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
+import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers/trainers';
 
 const STYLE_PRIMARY_ATTRIBUTES: Record<FightingStyle, (keyof Attributes)[]> = {
   [FightingStyle.AimedBlow]: ['DF', 'WT', 'SP', 'CN'],

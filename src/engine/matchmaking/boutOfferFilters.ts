@@ -1,7 +1,7 @@
 import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { Promoter } from '@/types/state.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 const TIER_RANK: Record<string, number> = {

@@ -18,7 +18,7 @@ import { evaluateBoutOffers } from './boutOfferAdvisor';
 import { evaluateTrainingAdvice } from './trainingAdvisor';
 import { evaluateTacticsAdvice } from './tacticsAdvisorBridge';
 import { getOpponentIntel } from './intelAdvisor';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
 import { TRAINING_COST } from '@/constants/economy';
 import {
@@ -27,7 +27,7 @@ import {
   weeksUntilNextSeasonalTournament,
 } from '@/engine/core/absoluteWeek';
 import { findWarriorById } from '@/engine/core/warriorLookup';
-import { getScoutCost } from '@/engine/scouting';
+import { getScoutCost } from '@/engine/scouting/scouting';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 import { ARENA_TITLE } from '@/constants/arena';
 

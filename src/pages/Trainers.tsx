@@ -6,7 +6,7 @@ import {
   TIER_BONUS,
   TIER_COST,
   type TrainerTier,
-} from '@/engine/trainers';
+} from '@/engine/trainers/trainers';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {

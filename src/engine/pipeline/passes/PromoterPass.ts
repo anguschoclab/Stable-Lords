@@ -4,7 +4,7 @@ import type { WeatherType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { collectAllWarriors } from '@/engine/core/warriorCollection';
-import { isBookable } from '@/engine/warriorStatus';
+import { isBookable } from '@/engine/warrior/warriorStatus';
 import { buildRecentFightPairs } from '@/engine/core/historyUtils';
 import { RANK_REQUIREMENTS, PERSONALITY_GAP_THRESHOLDS } from '@/engine/promoters/promoterConfig';
 import {

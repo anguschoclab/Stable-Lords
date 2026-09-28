@@ -13,7 +13,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
 import { processRecovery } from '@/engine/training/trainingGains';
-import { isActive } from '@/engine/warriorStatus';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { FightingStyle } from '@/types/shared.types';
 import {
   performAITraining,

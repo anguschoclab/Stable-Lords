@@ -31,7 +31,7 @@ import {
 } from '@/engine/core/absoluteWeek';
 import { collectAllWarriors, collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import { findWarriorById } from '@/engine/core/warriorLookup';
-import { isActive, isFightReady, isDead, isRetired } from '@/engine/warriorStatus';
+import { isActive, isFightReady, isDead, isRetired } from '@/engine/warrior/warriorStatus';
 import { isTooInjuredToFight } from '@/engine/injuries';
 import type { InjuryData } from '@/types/warrior.types';
 

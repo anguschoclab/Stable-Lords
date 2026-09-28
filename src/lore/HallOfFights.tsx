@@ -5,15 +5,10 @@
 import React, { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { LoreArchive } from './LoreArchive';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Trophy, Swords, Skull, Sparkles, ScrollText, Zap, Newspaper } from 'lucide-react';
-import { STYLE_DISPLAY_NAMES } from '@/types/game';
+import { Trophy, Skull, Sparkles, ScrollText, Newspaper } from 'lucide-react';
 import type { FightSummary } from '@/types/state.types';
-import { Link } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
-import { WarriorLink } from '@/components/EntityLink';
+import { FightLogTab, LegendsTab, StyleStatsTab } from './hallOfFights/tabs';
 import Gazette from '@/pages/Gazette';
 import Graveyard from '@/pages/Graveyard';
 
@@ -129,166 +124,17 @@ export const HallOfFights: React.FC = () => {
 
         {/* Fight History */}
         <TabsContent value="history" className="space-y-4 mt-4">
-          {fightsByWeek.length === 0 ? (
-            <Card>
-              <CardContent className="p-8 text-center space-y-3">
-                <ScrollText className="h-10 w-10 mx-auto text-muted-foreground/50" />
-                <p className="text-muted-foreground">
-                  No fights recorded yet. Run some rounds to fill the archives.
-                </p>
-                <Link to="/stable/arena">
-                  <Button variant="outline" className="gap-2 mt-2">
-                    <Zap className="h-4 w-4" /> Run a Round
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ) : (
-            fightsByWeek.map(([week, fights]) => (
-              <Card key={week}>
-                <CardHeader className="pb-2">
-                  <CardTitle className="font-display text-sm text-muted-foreground">
-                    Week {week}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {fights.map((f) => {
-                    const isKill = f.by === 'Kill';
-                    const isKO = f.by === 'KO';
-                    const n = (f.title.split(' (')[0] ?? '').split(' vs ');
-                    const nameA = n[0] || 'Unknown';
-                    const nameD = n[1] || 'Unknown';
-                    return (
-                      <div
-                        key={f.id}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 py-2 border-b border-border last:border-0"
-                      >
-                        <div className="flex items-center gap-2 min-w-0">
-                          {isKill ? (
-                            <Skull className="h-4 w-4 text-destructive shrink-0" />
-                          ) : (
-                            <Swords className="h-4 w-4 text-muted-foreground shrink-0" />
-                          )}
-                          <WarriorLink name={nameA} className="text-sm font-medium" />
-                          <span className="text-xs text-muted-foreground">vs</span>
-                          <WarriorLink name={nameD} className="text-sm font-medium" />
-                        </div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 ml-6 sm:ml-0 flex-wrap">
-                          {f.flashyTags?.map((t: string) => (
-                            <Badge key={t} variant="secondary" className="text-[10px]">
-                              {t}
-                            </Badge>
-                          ))}
-                          <Badge
-                            variant={isKill ? 'destructive' : isKO ? 'default' : 'outline'}
-                            className="text-xs whitespace-nowrap"
-                          >
-                            {f.winner ? `${f.winner === 'A' ? nameA : nameD} — ${f.by}` : 'Draw'}
-                          </Badge>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </CardContent>
-              </Card>
-            ))
-          )}
+          <FightLogTab fightsByWeek={fightsByWeek} />
         </TabsContent>
 
         {/* Legends — Hall of Fame fights */}
         <TabsContent value="legends" className="space-y-4 mt-4">
-          {hallEntries.length === 0 ? (
-            <p className="text-muted-foreground italic">No legendary fights recorded yet.</p>
-          ) : (
-            hallEntries.map((h) => {
-              const f = fightMap.get(h.fightId);
-              if (!f) return null;
-              return (
-                <Card key={`${h.fightId}_${h.label}`}>
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Trophy className="h-5 w-5 text-arena-gold" />
-                        <span className="font-display font-semibold text-sm">{h.label}</span>
-                        <Badge variant="outline" className="text-xs">
-                          Week {h.week}
-                        </Badge>
-                      </div>
-                    </div>
-                    {(() => {
-                      const n = (f.title.split(' (')[0] ?? '').split(' vs ');
-                      const nameA = n[0] || 'Unknown';
-                      const nameD = n[1] || 'Unknown';
-                      return (
-                        <div className="text-sm">
-                          <WarriorLink name={nameA} className="font-medium" />
-                          {' vs '}
-                          <WarriorLink name={nameD} className="font-medium" />
-                          {f.by && ` — ${f.winner === 'A' ? nameA : nameD} by ${f.by}`}
-                        </div>
-                      );
-                    })()}
-                    {f.flashyTags && f.flashyTags.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {f.flashyTags.map((t: string) => (
-                          <Badge key={t} variant="secondary" className="text-xs">
-                            {t}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })
-          )}
+          <LegendsTab hallEntries={hallEntries} fightMap={fightMap} />
         </TabsContent>
 
         {/* Style Stats */}
         <TabsContent value="stats" className="mt-4">
-          {styleStats.length === 0 ? (
-            <p className="text-muted-foreground italic">No data yet.</p>
-          ) : (
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-secondary/50">
-                      <tr className="text-left text-muted-foreground">
-                        <th className="px-4 py-3 font-medium">Style</th>
-                        <th className="px-4 py-3 font-medium text-right">Fights</th>
-                        <th className="px-4 py-3 font-medium text-right">Wins</th>
-                        <th className="px-4 py-3 font-medium text-right">Losses</th>
-                        <th className="px-4 py-3 font-medium text-right">Kills</th>
-                        <th className="px-4 py-3 font-medium text-right">Win %</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {styleStats.map((s) => (
-                        <tr key={s.style} className="border-t border-border">
-                          <td className="px-4 py-2.5 font-medium">
-                            {STYLE_DISPLAY_NAMES[s.style as keyof typeof STYLE_DISPLAY_NAMES] ??
-                              s.style}
-                          </td>
-                          <td className="px-4 py-2.5 text-right font-mono">{s.fights}</td>
-                          <td className="px-4 py-2.5 text-right font-mono text-arena-pop">
-                            {s.wins}
-                          </td>
-                          <td className="px-4 py-2.5 text-right font-mono text-destructive">
-                            {s.losses}
-                          </td>
-                          <td className="px-4 py-2.5 text-right font-mono">{s.kills}</td>
-                          <td className="px-4 py-2.5 text-right font-mono font-semibold">
-                            {s.winRate}%
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          <StyleStatsTab styleStats={styleStats} />
         </TabsContent>
 
         {/* Gazette */}

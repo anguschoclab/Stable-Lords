@@ -61,136 +61,138 @@ function commitWorkerResult(store: GameStore, next: GameState, currentWeek: numb
   useGameStore.setState({ isSimulating: false });
 }
 
+/**
+ * Writes a loaded GameState into the draft — the field-by-field
+ * hydration shared by loadGame and worker-result commits.
+ */
+function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
+  draft.treasury = state.treasury;
+  draft.ledger = state.ledger;
+  draft.roster = state.roster;
+  draft.graveyard = state.graveyard;
+  draft.retired = state.retired;
+  draft.recruitPool = state.recruitPool;
+  draft.insightTokens = state.insightTokens;
+  draft.arenaHistory = state.arenaHistory;
+  draft.player = state.player;
+  draft.week = state.week;
+  draft.day = state.day;
+  draft.season = state.season;
+  draft.weather = state.weather;
+  draft.promoters = state.promoters || {};
+  draft.boutOffers = state.boutOffers || {};
+  draft.rivals = state.rivals;
+  draft.gazettes = state.gazettes;
+  draft.scoutReports = state.scoutReports || [];
+  draft.unacknowledgedDeaths = (state.unacknowledgedDeaths || []) as WarriorId[];
+  draft.rosterBonus = state.rosterBonus || 0;
+  draft.tournaments = state.tournaments || [];
+  draft.isTournamentWeek = state.isTournamentWeek || false;
+  draft.activeTournamentId = state.activeTournamentId;
+  draft.year = state.year || 1;
+  draft.absoluteWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
+
+  draft.popularity = state.popularity || 0;
+  draft.fame = state.fame || 0;
+  draft.realmRankings = state.realmRankings || {};
+  draft.awards = state.awards || [];
+  draft.arenaChampions = state.arenaChampions || {};
+  draft.grandChampions = state.grandChampions || [];
+  draft.trainers = state.trainers || [];
+  draft.hiringPool = state.hiringPool || [];
+  draft.trainingAssignments = state.trainingAssignments || [];
+  draft.seasonalGrowth = state.seasonalGrowth || [];
+  draft.restStates = state.restStates || [];
+  draft.crowdMood = state.crowdMood || 'Neutral';
+  draft.moodHistory = state.moodHistory || [];
+  draft.newsletter = state.newsletter || [];
+  draft.hallOfFame = state.hallOfFame || [];
+  draft.isFTUE = state.isFTUE || false;
+  draft.ftueStep = state.ftueStep || 0;
+  draft.ftueComplete = state.ftueComplete || false;
+  draft.coachDismissed = state.coachDismissed || [];
+  draft.houseRules = state.houseRules;
+  draft.contentPacks = state.contentPacks;
+  draft.lifetimeStats = state.lifetimeStats;
+  draft.rivalries = state.rivalries || [];
+  draft.matchHistory = state.matchHistory || [];
+  draft.ownerGrudges = state.ownerGrudges || [];
+  draft.phase = state.phase || 'planning';
+  draft.pendingResolutionData = state.pendingResolutionData;
+  draft.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
+  draft.playerChallenges = state.playerChallenges || [];
+  draft.playerAvoids = state.playerAvoids || [];
+  draft.bookmarks = state.bookmarks || [];
+  draft.progression = state.progression || DEFAULT_PROGRESSION;
+  draft.lastSimulationReport = state.lastSimulationReport;
+  draft.deferredBoutLogs = state.deferredBoutLogs || [];
+
+  draft.activeSlotId = slotId;
+  draft.atTitleScreen = false;
+  draft.lastSavedAt = new Date().toISOString();
+}
+
+/**
+ * Shared engine worker runner for doAdvanceWeek/doAdvanceDay —
+ * serialization, 15s timeout, epoch-guarded commit, telemetry, and
+ * the isSimulating lifecycle were previously duplicated inline.
+ */
+async function runEngineJob(
+    set: (fn: (draft: GameStore) => void) => void,
+    get: () => GameStore,
+    cleanState: GameState,
+    currentWeek: number,
+    job: () => Promise<GameState>,
+    opName: string
+  ) {
+  const store = get();
+  set((draft) => {
+    draft.isSimulating = true;
+  });
+
+  let timerId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
+  });
+
+  try {
+    // runExclusive serializes against every other engine caller
+    // (autosim, admin skips) and returns undefined when a loadGame/reset
+    // bumped the epoch while the worker computed — stale results are
+    // discarded instead of clobbering newer state.
+    const next = await engineSession.runExclusive(async () => {
+      const t0 = performance.now();
+      const resolved = await Promise.race([job(), timeout]);
+      if (timerId) clearTimeout(timerId);
+      telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, performance.now() - t0, {
+        op: opName,
+      });
+      if (isTelemetryEnabled()) {
+        telemetry.gauge(
+          TelemetryEvents.SERIALIZATION_PAYLOAD_BYTES,
+          JSON.stringify(cleanState).length
+        );
+      }
+      return resolved;
+    });
+    if (!next) {
+      set((draft) => {
+        draft.isSimulating = false;
+      });
+      return;
+    }
+    commitWorkerResult(store, next, currentWeek);
+  } catch (err) {
+    console.error('Worker advancement failed:', err);
+    set((draft) => {
+      draft.isSimulating = false;
+    });
+  }
+}
+
 export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore>()(
   subscribeWithSelector(
     immer((set, get, ...args) => {
-      /**
-       * Writes a loaded GameState into the draft — the field-by-field
-       * hydration shared by loadGame and worker-result commits.
-       */
-      const hydrateDraft = (draft: GameStore, state: GameState, slotId: string) => {
-        draft.treasury = state.treasury;
-        draft.ledger = state.ledger;
-        draft.roster = state.roster;
-        draft.graveyard = state.graveyard;
-        draft.retired = state.retired;
-        draft.recruitPool = state.recruitPool;
-        draft.insightTokens = state.insightTokens;
-        draft.arenaHistory = state.arenaHistory;
-        draft.player = state.player;
-        draft.week = state.week;
-        draft.day = state.day;
-        draft.season = state.season;
-        draft.weather = state.weather;
-        draft.promoters = state.promoters || {};
-        draft.boutOffers = state.boutOffers || {};
-        draft.rivals = state.rivals;
-        draft.gazettes = state.gazettes;
-        draft.scoutReports = state.scoutReports || [];
-        draft.unacknowledgedDeaths = (state.unacknowledgedDeaths || []) as WarriorId[];
-        draft.rosterBonus = state.rosterBonus || 0;
-        draft.tournaments = state.tournaments || [];
-        draft.isTournamentWeek = state.isTournamentWeek || false;
-        draft.activeTournamentId = state.activeTournamentId;
-        draft.year = state.year || 1;
-        draft.absoluteWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
-
-        draft.popularity = state.popularity || 0;
-        draft.fame = state.fame || 0;
-        draft.realmRankings = state.realmRankings || {};
-        draft.awards = state.awards || [];
-        draft.arenaChampions = state.arenaChampions || {};
-        draft.grandChampions = state.grandChampions || [];
-        draft.trainers = state.trainers || [];
-        draft.hiringPool = state.hiringPool || [];
-        draft.trainingAssignments = state.trainingAssignments || [];
-        draft.seasonalGrowth = state.seasonalGrowth || [];
-        draft.restStates = state.restStates || [];
-        draft.crowdMood = state.crowdMood || 'Neutral';
-        draft.moodHistory = state.moodHistory || [];
-        draft.newsletter = state.newsletter || [];
-        draft.hallOfFame = state.hallOfFame || [];
-        draft.isFTUE = state.isFTUE || false;
-        draft.ftueStep = state.ftueStep || 0;
-        draft.ftueComplete = state.ftueComplete || false;
-        draft.coachDismissed = state.coachDismissed || [];
-        draft.houseRules = state.houseRules;
-        draft.contentPacks = state.contentPacks;
-        draft.lifetimeStats = state.lifetimeStats;
-        draft.rivalries = state.rivalries || [];
-        draft.matchHistory = state.matchHistory || [];
-        draft.ownerGrudges = state.ownerGrudges || [];
-        draft.phase = state.phase || 'planning';
-        draft.pendingResolutionData = state.pendingResolutionData;
-        draft.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
-        draft.playerChallenges = state.playerChallenges || [];
-        draft.playerAvoids = state.playerAvoids || [];
-        draft.bookmarks = state.bookmarks || [];
-        draft.progression = state.progression || DEFAULT_PROGRESSION;
-        draft.lastSimulationReport = state.lastSimulationReport;
-        draft.deferredBoutLogs = state.deferredBoutLogs || [];
-
-        draft.activeSlotId = slotId;
-        draft.atTitleScreen = false;
-        draft.lastSavedAt = new Date().toISOString();
-      };
-
-      /**
-       * Shared engine worker runner for doAdvanceWeek/doAdvanceDay —
-       * serialization, 15s timeout, epoch-guarded commit, telemetry, and
-       * the isSimulating lifecycle were previously duplicated inline.
-       */
-      const runEngineJob = async (
-        cleanState: GameState,
-        currentWeek: number,
-        job: () => Promise<GameState>,
-        opName: string
-      ) => {
-        const store = get();
-        set((draft) => {
-          draft.isSimulating = true;
-        });
-
-        let timerId: ReturnType<typeof setTimeout> | undefined;
-        const timeout = new Promise<never>((_, reject) => {
-          timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
-        });
-
-        try {
-          // runExclusive serializes against every other engine caller
-          // (autosim, admin skips) and returns undefined when a loadGame/reset
-          // bumped the epoch while the worker computed — stale results are
-          // discarded instead of clobbering newer state.
-          const next = await engineSession.runExclusive(async () => {
-            const t0 = performance.now();
-            const resolved = await Promise.race([job(), timeout]);
-            if (timerId) clearTimeout(timerId);
-            telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, performance.now() - t0, {
-              op: opName,
-            });
-            if (isTelemetryEnabled()) {
-              telemetry.gauge(
-                TelemetryEvents.SERIALIZATION_PAYLOAD_BYTES,
-                JSON.stringify(cleanState).length
-              );
-            }
-            return resolved;
-          });
-          if (!next) {
-            set((draft) => {
-              draft.isSimulating = false;
-            });
-            return;
-          }
-          commitWorkerResult(store, next, currentWeek);
-        } catch (err) {
-          console.error('Worker advancement failed:', err);
-          set((draft) => {
-            draft.isSimulating = false;
-          });
-        }
-      };
-
       return {
         // ─── Sub-Slices ───
         ...createEconomySlice(set, get, ...args),
@@ -246,6 +248,8 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           const cleanState = stripNonSerializable(raw) as GameState;
           const currentWeek = cleanState.week;
           await runEngineJob(
+            set,
+            get,
             cleanState,
             currentWeek,
             () =>
@@ -262,7 +266,14 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           const raw = processedState || reconstructGameState(store);
           const cleanState = stripNonSerializable(raw) as GameState;
           const currentWeek = cleanState.week;
-          await runEngineJob(cleanState, currentWeek, () => engineProxy.advanceDay(cleanState), 'advanceDay');
+          await runEngineJob(
+            set,
+            get,
+            cleanState,
+            currentWeek,
+            () => engineProxy.advanceDay(cleanState),
+            'advanceDay'
+          );
         },
 
         saveCurrentState: async () => {

@@ -8,6 +8,7 @@ import { ReputationSliders } from '@/components/stable/ReputationSliders';
 import { RosterWall } from '@/components/stable/RosterWall';
 import { TrainerTable } from '@/components/stable/TrainerTable';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
+import { FavoritesCharting } from '@/components/warrior/favorites/FavoritesCharting';
 import { InsightManager } from '@/components/ledger';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
@@ -16,8 +17,13 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
  * Stable hall.
  */
 export default function StableHall() {
-  const { player, fame, insightTokens } = useGameStore(
-    useShallow((s) => ({ player: s.player, fame: s.fame, insightTokens: s.insightTokens }))
+  const { player, fame, insightTokens, roster } = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      fame: s.fame,
+      insightTokens: s.insightTokens,
+      roster: s.roster,
+    }))
   );
   const pendingTokens = (insightTokens ?? []).length;
 
@@ -65,6 +71,13 @@ export default function StableHall() {
             <SectionDivider label="Style Composition" />
             <div className="mt-8">
               <StyleMeterTable />
+            </div>
+          </section>
+
+          <section>
+            <SectionDivider label="Favorite Affinities" />
+            <div className="mt-8">
+              <FavoritesCharting warriors={roster ?? []} />
             </div>
           </section>
 

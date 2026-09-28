@@ -22,7 +22,7 @@ import '@/test/_setup/setup';
 const chartingModule = import.meta.glob('/src/components/warrior/favorites/FavoritesCharting.*');
 const prepModule = import.meta.glob('/src/pages/TournamentPrep.*');
 
-describe.skip('wiring: favorites charting toolkit (MEGAPLAN-G2)', () => {
+describe('wiring: favorites charting toolkit (MEGAPLAN-G2)', () => {
   it('exposes a roster-wide favorite-weapon charting surface', () => {
     // Expected surface: a section/page component aggregating favorites across
     // the roster (implementation name pinned here so Phase-5 lands it).
@@ -30,7 +30,7 @@ describe.skip('wiring: favorites charting toolkit (MEGAPLAN-G2)', () => {
   });
 });
 
-describe.skip('wiring: tournament prep mode (MEGAPLAN-G3)', () => {
+describe('wiring: tournament prep mode (MEGAPLAN-G3)', () => {
   it('exposes a tournament prep surface listing entrants + eligibility', () => {
     expect(Object.keys(prepModule).length, 'tournament prep surface missing').toBeGreaterThan(0);
   });

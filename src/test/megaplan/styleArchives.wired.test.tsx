@@ -22,7 +22,7 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
 }));
 
-describe.skip('Style Archives browser (MEGAPLAN-G1)', () => {
+describe('Style Archives browser (MEGAPLAN-G1)', () => {
   beforeEach(() => {});
 
   it('renders all 10 canonical fighting styles from the enum, not a hardcoded list', async () => {

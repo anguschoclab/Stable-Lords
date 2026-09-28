@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { Trophy, UserPlus } from 'lucide-react';
+import { Trophy, UserPlus, ShieldCheck } from 'lucide-react';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { audioManager } from '@/lib/AudioManager';
 import { engineProxy } from '@/engine/runtime/workerProxy';
@@ -165,6 +165,14 @@ export default function Tournaments() {
         subtitle={`${season.toUpperCase()} SEASON · YEAR ${year}`}
         actions={
           <div className="flex items-center gap-3">
+            <Link to="/world/tournament-prep">
+              <Button
+                variant="outline"
+                className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" /> Prep Mode
+              </Button>
+            </Link>
             {!currentTournament && activeWarriors.length < 2 && (
               <Link to="/stable/recruit">
                 <Button

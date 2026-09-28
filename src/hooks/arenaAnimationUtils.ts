@@ -52,7 +52,28 @@ export function getBubbleFromEvent(event: MinuteEvent, index: number): SpeechBub
 }
 
 /**
- *
+ * Clamp a fighter's movement `amt` pixels in `dir` (+1 right / -1 left),
+ * bounded by `cap` (arena edge or midline limit for that side).
+ */
+function clampMove(x: number, amt: number, dir: 1 | -1, cap: number): number {
+  return dir === 1 ? Math.min(x + amt, cap) : Math.max(x - amt, cap);
+}
+
+/**
+ * Move `mover` `amt` pixels toward the opponent's x, never closer than
+ * MIN_DISTANCE. `side` gives the mover's side (A moves right, D moves left).
+ */
+function toward(x: number, otherX: number, amt: number, side: 'A' | 'D'): number {
+  return side === 'A'
+    ? Math.min(x + amt, otherX - MIN_DISTANCE)
+    : Math.max(x - amt, otherX + MIN_DISTANCE);
+}
+
+/**
+ * Updates fighter poses for one bout event. The animation is side-mirrored:
+ * the actor advances rightward when fighting as A and leftward as D, so each
+ * case computes attacker/victim patches via the shared movement helpers and
+ * assigns them to fighterA/fighterD by side.
  */
 export function processArenaEvent(
   prev: ArenaState,
@@ -73,151 +94,64 @@ export function processArenaEvent(
 
   const actor = isActingA ? 'A' : 'D';
   const victim = actor === 'A' ? 'D' : 'A';
+  const dir: 1 | -1 = actor === 'A' ? 1 : -1;
+
+  const att = actor === 'A' ? prev.fighterA : prev.fighterD;
+  const vic = actor === 'A' ? prev.fighterD : prev.fighterA;
+  const setFighter = (
+    side: 'A' | 'D',
+    patch: Partial<ArenaState['fighterA']>
+  ) => {
+    if (side === 'A') newState.fighterA = { ...prev.fighterA, ...patch };
+    else newState.fighterD = { ...prev.fighterD, ...patch };
+  };
 
   // Update poses based on event type
   switch (type) {
     case 'hit':
     case 'crit':
       // Actor lunges forward, victim flinches
-      if (actor === 'A') {
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.min(prev.fighterA.x + 8, prev.fighterD.x - MIN_DISTANCE),
-          y: -3,
-          stance: 'lunging',
-        };
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.min(prev.fighterD.x + 2, 95),
-          stance: 'defending',
-        };
-      } else {
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.max(prev.fighterD.x - 8, prev.fighterA.x + MIN_DISTANCE),
-          y: -3,
-          stance: 'lunging',
-        };
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.max(prev.fighterA.x - 2, 5),
-          stance: 'defending',
-        };
-      }
+      setFighter(actor, { x: toward(att.x, vic.x, 8, actor), y: -3, stance: 'lunging' });
+      setFighter(victim, { x: clampMove(vic.x, 2, dir, dir === 1 ? 95 : 5), stance: 'defending' });
       break;
 
     case 'miss':
       // Actor overextends, victim retreats slightly
-      if (actor === 'A') {
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.min(prev.fighterA.x + 5, 45),
-          stance: 'advancing',
-        };
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.min(prev.fighterD.x + 3, 95),
-          stance: 'retreating',
-        };
-      } else {
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.max(prev.fighterD.x - 5, 55),
-          stance: 'advancing',
-        };
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.max(prev.fighterA.x - 3, 5),
-          stance: 'retreating',
-        };
-      }
+      setFighter(actor, {
+        x: clampMove(att.x, 5, dir, dir === 1 ? 45 : 55),
+        stance: 'advancing',
+      });
+      setFighter(victim, {
+        x: clampMove(vic.x, 3, dir, dir === 1 ? 95 : 5),
+        stance: 'retreating',
+      });
       break;
 
     case 'riposte':
-      // Both exchange positions
-      if (actor === 'A') {
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.min(prev.fighterA.x + 4, prev.fighterD.x - MIN_DISTANCE),
-          stance: 'defending',
-        };
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.max(prev.fighterD.x - 6, prev.fighterA.x + MIN_DISTANCE),
-          y: -2,
-          stance: 'lunging',
-        };
-      } else {
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.max(prev.fighterD.x - 4, prev.fighterA.x + MIN_DISTANCE),
-          stance: 'defending',
-        };
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.min(prev.fighterA.x + 6, prev.fighterD.x - MIN_DISTANCE),
-          y: -2,
-          stance: 'lunging',
-        };
-      }
+      // Both exchange positions — the victim counters back into the actor
+      setFighter(actor, { x: toward(att.x, vic.x, 4, actor), stance: 'defending' });
+      setFighter(victim, { x: toward(vic.x, att.x, 6, victim), y: -2, stance: 'lunging' });
       break;
 
     case 'death':
     case 'ko':
       // Victor stands triumphantly, victim falls
-      if (victim === 'A') {
-        newState.fighterA = {
-          ...prev.fighterA,
-          y: 15,
-          stance: 'defeated',
-        };
-        newState.fighterD = {
-          ...prev.fighterD,
-          stance: 'victorious',
-        };
-      } else {
-        newState.fighterD = {
-          ...prev.fighterD,
-          y: 15,
-          stance: 'defeated',
-        };
-        newState.fighterA = {
-          ...prev.fighterA,
-          stance: 'victorious',
-        };
-      }
+      setFighter(victim, { y: 15, stance: 'defeated' });
+      setFighter(actor, { stance: 'victorious' });
       break;
 
     case 'exhaust':
       // Fighter slows down
       if (text.includes(nameA?.toLowerCase() ?? '')) {
-        newState.fighterA = {
-          ...prev.fighterA,
-          stance: 'stunned',
-        };
+        setFighter('A', { stance: 'stunned' });
       } else {
-        newState.fighterD = {
-          ...prev.fighterD,
-          stance: 'stunned',
-        };
+        setFighter('D', { stance: 'stunned' });
       }
       break;
 
     case 'initiative':
       // Fighter seizes initiative - advances
-      if (actor === 'A') {
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: Math.min(prev.fighterA.x + 5, prev.fighterD.x - MIN_DISTANCE),
-          stance: 'advancing',
-        };
-      } else {
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: Math.max(prev.fighterD.x - 5, prev.fighterA.x + MIN_DISTANCE),
-          stance: 'advancing',
-        };
-      }
+      setFighter(actor, { x: toward(att.x, vic.x, 5, actor), stance: 'advancing' });
       break;
 
     default: {
@@ -251,3 +185,4 @@ export function processArenaEvent(
 
   return newState;
 }
+

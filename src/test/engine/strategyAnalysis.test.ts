@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeStrategyScore, getScoreColor } from '@/engine/strategy/strategyAnalysis';
+import { computeStrategyScore } from '@/engine/strategy/strategyAnalysis';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -302,31 +302,5 @@ describe('computeStrategyScore', () => {
       // 60 + 15 (off WS) + 15 (def WS) + 10 (OE high + ST high) + 10 (AL high + WT high) + 10 (tempo) = 120 → clamped to 100
       expect(computeStrategyScore(plan, warrior)).toBe(100);
     });
-  });
-});
-
-describe('getScoreColor', () => {
-  it('returns gold classes for score >= 85', () => {
-    expect(getScoreColor(90)).toBe(
-      'text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]'
-    );
-    expect(getScoreColor(85)).toBe(
-      'text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]'
-    );
-  });
-
-  it('returns primary class for score 70–84', () => {
-    expect(getScoreColor(75)).toBe('text-primary');
-    expect(getScoreColor(70)).toBe('text-primary');
-  });
-
-  it('returns arena-pop class for score 50–69', () => {
-    expect(getScoreColor(60)).toBe('text-arena-pop');
-    expect(getScoreColor(50)).toBe('text-arena-pop');
-  });
-
-  it('returns destructive class for score < 50', () => {
-    expect(getScoreColor(40)).toBe('text-destructive');
-    expect(getScoreColor(0)).toBe('text-destructive');
   });
 });

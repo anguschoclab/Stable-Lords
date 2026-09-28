@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { FightPlan, Warrior } from '@/types/game';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { StylePreset } from '@/engine/bout/stylePresets';
-import { getScoreColor } from '@/engine/strategy/strategyAnalysis';
+import { getScoreColor } from '@/lib/scoreDisplay';
 import type { StrategyWarning } from '@/engine/strategy/strategyValidator';
 import { ShieldCheck } from 'lucide-react';
 import StaminaCurve from './StaminaCurve';

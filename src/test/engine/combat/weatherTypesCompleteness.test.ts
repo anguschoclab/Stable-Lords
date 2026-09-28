@@ -54,7 +54,7 @@ describe('weather type registry completeness', () => {
   });
 
   it('WeatherType union in shared.types.ts has no duplicate members', () => {
-    const source = readFileSync('src/types/shared.types.ts', 'utf-8');
+    const source = readFileSync('src/types/shared/weather.ts', 'utf-8');
     const match = source.match(/export type WeatherType =\s*([\s\S]*?);/);
     expect(match).not.toBeNull();
     const unionBody = match?.[1] ?? '';

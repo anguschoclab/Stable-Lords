@@ -190,6 +190,122 @@ async function runEngineJob(
   }
 }
 
+type StoreSet = (fn: ((draft: GameStore) => void) | Partial<GameStore>) => void;
+type StoreGet = () => GameStore;
+
+/** Static defaults plus the trivial UI toggles that don't touch the engine. */
+function createCoreState(set: StoreSet): Partial<GameStore> {
+  return {
+    activeSlotId: null,
+    atTitleScreen: true,
+    lastSavedAt: null,
+    isSimulating: false,
+    isInitialized: false,
+    eventLogOpen: false,
+
+    toggleEventLog: () => {
+      set((draft) => {
+        draft.eventLogOpen = !draft.eventLogOpen;
+      });
+    },
+    setEventLogOpen: (open: boolean) => {
+      set((draft) => {
+        draft.eventLogOpen = open;
+      });
+    },
+
+    initialize: () => {
+      set((draft) => {
+        draft.isInitialized = true;
+      });
+    },
+
+    setSimulating: (simulating: boolean) => {
+      set((draft) => {
+        draft.isSimulating = simulating;
+      });
+    },
+  };
+}
+
+/** Game lifecycle actions: load, week/day advance, save, reset, title return. */
+function createCoreActions(set: StoreSet, get: StoreGet): Partial<GameStore> {
+  return {
+    loadGame: (slotId: string, state: GameState) => {
+      bumpEngineEpoch();
+      clearReconstructionCache();
+      StyleRollups._clearCaches();
+      set((draft) => hydrateDraft(draft, state, slotId));
+      archiveService.archiveHotState(slotId, state);
+    },
+
+    doAdvanceWeek: async (processedState?: GameState) => {
+      if (get().isSimulating) return;
+      const store = get();
+      const raw = processedState || reconstructGameState(store);
+      const cleanState = stripNonSerializable(raw) as GameState;
+      const currentWeek = cleanState.week;
+      await runEngineJob(
+        set,
+        get,
+        cleanState,
+        currentWeek,
+        () =>
+          cleanState.isTournamentWeek
+            ? engineProxy.skipToWeekEnd(cleanState)
+            : engineProxy.advanceWeek(cleanState),
+        cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek'
+      );
+    },
+
+    doAdvanceDay: async (processedState?: GameState) => {
+      if (get().isSimulating) return;
+      const store = get();
+      const raw = processedState || reconstructGameState(store);
+      const cleanState = stripNonSerializable(raw) as GameState;
+      const currentWeek = cleanState.week;
+      await runEngineJob(
+        set,
+        get,
+        cleanState,
+        currentWeek,
+        () => engineProxy.advanceDay(cleanState),
+        'advanceDay'
+      );
+    },
+
+    saveCurrentState: async () => {
+      const { activeSlotId } = get();
+      if (activeSlotId) {
+        const state = reconstructGameState(get());
+        await archiveService.archiveHotState(activeSlotId, state);
+        set({ lastSavedAt: new Date().toISOString() });
+      }
+    },
+
+    doReset: () => {
+      clearReconstructionCache();
+      StyleRollups._clearCaches();
+      const fresh = createFreshState('alpha-prime-10');
+      get().loadGame('autosave', fresh);
+      set({ atTitleScreen: true });
+    },
+
+    returnToTitle: async () => {
+      await get().saveCurrentState();
+      set((draft) => {
+        draft.atTitleScreen = true;
+        draft.activeSlotId = null;
+      });
+    },
+
+    setState: (fn: (state: GameStore) => void) => {
+      clearReconstructionCache();
+      set(fn);
+    },
+  };
+}
+
 export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore>()(
   subscribeWithSelector(
     immer((set, get, ...args) => {
@@ -203,108 +319,8 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
         ...createProgressionSlice(set, get, ...args),
 
         // ─── Core State ───
-        activeSlotId: null,
-        atTitleScreen: true,
-        lastSavedAt: null,
-        isSimulating: false,
-        isInitialized: false,
-        eventLogOpen: false,
-
-        toggleEventLog: () => {
-          set((draft) => {
-            draft.eventLogOpen = !draft.eventLogOpen;
-          });
-        },
-        setEventLogOpen: (open: boolean) => {
-          set((draft) => {
-            draft.eventLogOpen = open;
-          });
-        },
-
-        initialize: () => {
-          set((draft) => {
-            draft.isInitialized = true;
-          });
-        },
-
-        loadGame: (slotId: string, state: GameState) => {
-          bumpEngineEpoch();
-          clearReconstructionCache();
-          StyleRollups._clearCaches();
-          set((draft) => hydrateDraft(draft, state, slotId));
-          archiveService.archiveHotState(slotId, state);
-        },
-
-        setSimulating: (simulating: boolean) => {
-          set((draft) => {
-            draft.isSimulating = simulating;
-          });
-        },
-
-        doAdvanceWeek: async (processedState?: GameState) => {
-          if (get().isSimulating) return;
-          const store = get();
-          const raw = processedState || reconstructGameState(store);
-          const cleanState = stripNonSerializable(raw) as GameState;
-          const currentWeek = cleanState.week;
-          await runEngineJob(
-            set,
-            get,
-            cleanState,
-            currentWeek,
-            () =>
-              cleanState.isTournamentWeek
-                ? engineProxy.skipToWeekEnd(cleanState)
-                : engineProxy.advanceWeek(cleanState),
-            cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek'
-          );
-        },
-
-        doAdvanceDay: async (processedState?: GameState) => {
-          if (get().isSimulating) return;
-          const store = get();
-          const raw = processedState || reconstructGameState(store);
-          const cleanState = stripNonSerializable(raw) as GameState;
-          const currentWeek = cleanState.week;
-          await runEngineJob(
-            set,
-            get,
-            cleanState,
-            currentWeek,
-            () => engineProxy.advanceDay(cleanState),
-            'advanceDay'
-          );
-        },
-
-        saveCurrentState: async () => {
-          const { activeSlotId } = get();
-          if (activeSlotId) {
-            const state = reconstructGameState(get());
-            await archiveService.archiveHotState(activeSlotId, state);
-            set({ lastSavedAt: new Date().toISOString() });
-          }
-        },
-
-        doReset: () => {
-          clearReconstructionCache();
-          StyleRollups._clearCaches();
-          const fresh = createFreshState('alpha-prime-10');
-          get().loadGame('autosave', fresh);
-          set({ atTitleScreen: true });
-        },
-
-        returnToTitle: async () => {
-          await get().saveCurrentState();
-          set((draft) => {
-            draft.atTitleScreen = true;
-            draft.activeSlotId = null;
-          });
-        },
-
-        setState: (fn: (state: GameStore) => void) => {
-          clearReconstructionCache();
-          set(fn);
-        },
+        ...createCoreState(set),
+        ...createCoreActions(set, get),
       };
     })
   )

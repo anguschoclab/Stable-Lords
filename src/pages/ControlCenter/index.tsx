@@ -30,21 +30,99 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: 'rep', label: 'Reputation', icon: Crown },
 ];
 
+type ControlCenterState = ReturnType<typeof useControlCenter>;
+
+/** Tab strip for the intel column. */
+function TabBar({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: TabId;
+  setActiveTab: (id: TabId) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1 border-b border-white/5">
+      {TABS.map(({ id, label, icon: Icon }) => (
+        <button
+          key={id}
+          onClick={() => setActiveTab(id)}
+          className={cn(
+            'relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 motion-reduce:transition-none',
+            activeTab === id
+              ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px shadow-[inset_0_-10px_20px_-10px_rgba(135,34,40,0.2)]'
+              : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
+          )}
+        >
+          <Icon className="h-3.5 w-3.5" />
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** The three tab bodies: overview widget grid, roster snapshot, reputation stack. */
+function TabContent({ state }: { state: ControlCenterState }) {
+  const { activeTab, week, absoluteWeek, season, arenaHistory, boutOffers } = state;
+  return (
+    <div className="min-h-[400px] animate-in fade-in duration-500 motion-reduce:animate-none">
+      {activeTab === 'overview' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="md:col-span-2">
+            <CouncilBriefingWidget />
+          </div>
+          <SeasonWidget />
+          <QuestsWidget />
+          <ObjectivesWidget />
+          <WeeklyDigestWidget
+            week={week}
+            season={season}
+            arenaHistory={arenaHistory}
+            boutOffers={boutOffers ?? {}}
+            currentWeek={absoluteWeek}
+          />
+          <div className="md:col-span-2">
+            <RecentBoutsWidget />
+          </div>
+        </div>
+      )}
+      {activeTab === 'roster' && <RosterSnapshot />}
+      {activeTab === 'rep' && (
+        <div className="grid grid-cols-1 gap-8">
+          <ReputationQuadrant />
+          <ReputationTab />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Header action chip: arena standing derived from progression. */
+function StandingChip({ progression }: { progression: ControlCenterState['progression'] }) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="flex flex-col items-end px-4 border-r border-white/5">
+        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
+          Arena Standing
+        </span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-primary">
+          {progression && (progression.status === 'won' || progression.status === 'continued')
+            ? 'Realm Champion'
+            : progression && progression.totalStables > 0
+              ? `#${progression.stableStanding} of ${progression.totalStables}`
+              : 'Season Active'}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /**
- *
+ * Command Grid — KPI bar + tabbed intel column + monitoring rail.
  */
 export default function ControlCenter() {
-  const {
-    activeTab,
-    setActiveTab,
-    player,
-    week,
-    absoluteWeek,
-    season,
-    arenaHistory,
-    boutOffers,
-    progression,
-  } = useControlCenter();
+  const state = useControlCenter();
+  const { activeTab, setActiveTab, player, progression } = state;
 
   return (
     <PageFrame maxWidth="xl" className="pb-32">
@@ -53,22 +131,7 @@ export default function ControlCenter() {
         eyebrow="Your Stable"
         title={player?.stableName ?? 'Stable Overview'}
         subtitle="STABLE HQ · SEASON STANDING · BATTLE RECORD"
-        actions={
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-end px-4 border-r border-white/5">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Arena Standing
-              </span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">
-                {progression && (progression.status === 'won' || progression.status === 'continued')
-                  ? 'Realm Champion'
-                  : progression && progression.totalStables > 0
-                    ? `#${progression.stableStanding} of ${progression.totalStables}`
-                    : 'Season Active'}
-              </span>
-            </div>
-          </div>
-        }
+        actions={<StandingChip progression={progression} />}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -82,53 +145,8 @@ export default function ControlCenter() {
           </div>
 
           <div className="space-y-6">
-            <div className="flex items-center gap-1 border-b border-white/5">
-              {TABS.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setActiveTab(id)}
-                  className={cn(
-                    'relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 motion-reduce:transition-none',
-                    activeTab === id
-                      ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px shadow-[inset_0_-10px_20px_-10px_rgba(135,34,40,0.2)]'
-                      : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
-                  )}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <div className="min-h-[400px] animate-in fade-in duration-500 motion-reduce:animate-none">
-              {activeTab === 'overview' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="md:col-span-2">
-                    <CouncilBriefingWidget />
-                  </div>
-                  <SeasonWidget />
-                  <QuestsWidget />
-                  <ObjectivesWidget />
-                  <WeeklyDigestWidget
-                    week={week}
-                    season={season}
-                    arenaHistory={arenaHistory}
-                    boutOffers={boutOffers ?? {}}
-                    currentWeek={absoluteWeek}
-                  />
-                  <div className="md:col-span-2">
-                    <RecentBoutsWidget />
-                  </div>
-                </div>
-              )}
-              {activeTab === 'roster' && <RosterSnapshot />}
-              {activeTab === 'rep' && (
-                <div className="grid grid-cols-1 gap-8">
-                  <ReputationQuadrant />
-                  <ReputationTab />
-                </div>
-              )}
-            </div>
+            <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
+            <TabContent state={state} />
           </div>
         </div>
 

@@ -16,9 +16,79 @@ import { TraitTrainingSection } from './TraitTrainingSection';
 import type { Trainer } from '@/types/shared.types';
 import type { WarriorTrainingAdvice } from '@/engine/advisor/types';
 
-/**
- *
- */
+/** Recovery toggle for an injured warrior; highlighted when the council recommends rest. */
+function RecoveryButton({
+  isRecovery,
+  advisorRecommended,
+  onAssignRecovery,
+  onClear,
+}: {
+  isRecovery: boolean;
+  advisorRecommended: boolean;
+  onAssignRecovery: () => void;
+  onClear: () => void;
+}) {
+  return (
+    <Button
+      variant="outline"
+      onClick={isRecovery ? onClear : onAssignRecovery}
+      className={cn(
+        'w-full h-10 gap-2 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none text-[10px] font-black uppercase tracking-[0.2em]',
+        isRecovery
+          ? 'bg-destructive/20 text-destructive border-destructive/40 shadow-[0_0_15px_-5px_rgba(239,68,68,0.4)]'
+          : advisorRecommended
+            ? 'bg-arena-gold/10 border-arena-gold/40 text-foreground hover:bg-arena-gold/20 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
+            : 'bg-white/5 hover:bg-white/10'
+      )}
+    >
+      <Heart
+        className={cn('h-3.5 w-3.5', isRecovery ? 'text-destructive' : 'text-destructive')}
+      />
+      <span>{isRecovery ? 'CANCEL RECOVERY' : 'ACTIVE RECOVERY'}</span>
+      {advisorRecommended && (
+        <span
+          data-testid="advisor-recovery-badge"
+          className="ml-auto text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
+        >
+          <ShieldCheck className="h-2.5 w-2.5" />
+          Council Pick
+        </span>
+      )}
+    </Button>
+  );
+}
+
+/** Footer strip showing the active assignment with a terminate action. */
+function AssignmentFooter({
+  assignment,
+  isRecovery,
+  onClear,
+}: {
+  assignment: TrainingAssignment;
+  isRecovery: boolean;
+  onClear: () => void;
+}) {
+  return (
+    <div className="p-4 bg-white/5 border-t border-white/5 flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <Gauge className="h-3.5 w-3.5 text-primary opacity-60" />
+        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+          {isRecovery ? 'REST MODE' : `CORE DRILL: ${assignment.attribute}`}
+        </span>
+      </div>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onClear}
+        className="h-8 group-hover:bg-destructive/10 group-hover:text-destructive text-[10px] font-black tracking-widest uppercase"
+      >
+        <X className="h-3 w-3 mr-1.5" /> TERMINATE
+      </Button>
+    </div>
+  );
+}
+
+/** Per-warrior training card: header, recovery toggle, attribute rows, trait section. */
 export function WarriorTrainingCard({
   warrior,
   assignment,
@@ -52,32 +122,12 @@ export function WarriorTrainingCard({
 
       <div className="p-4 flex-1 space-y-4">
         {hasInjury && !isTraining && (
-          <Button
-            variant="outline"
-            onClick={isRecovery ? onClear : onAssignRecovery}
-            className={cn(
-              'w-full h-10 gap-2 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none text-[10px] font-black uppercase tracking-[0.2em]',
-              isRecovery
-                ? 'bg-destructive/20 text-destructive border-destructive/40 shadow-[0_0_15px_-5px_rgba(239,68,68,0.4)]'
-                : advisorAdvice?.mode === 'recovery'
-                  ? 'bg-arena-gold/10 border-arena-gold/40 text-foreground hover:bg-arena-gold/20 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
-                  : 'bg-white/5 hover:bg-white/10'
-            )}
-          >
-            <Heart
-              className={cn('h-3.5 w-3.5', isRecovery ? 'text-destructive' : 'text-destructive')}
-            />
-            <span>{isRecovery ? 'CANCEL RECOVERY' : 'ACTIVE RECOVERY'}</span>
-            {advisorAdvice?.mode === 'recovery' && (
-              <span
-                data-testid="advisor-recovery-badge"
-                className="ml-auto text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
-              >
-                <ShieldCheck className="h-2.5 w-2.5" />
-                Council Pick
-              </span>
-            )}
-          </Button>
+          <RecoveryButton
+            isRecovery={isRecovery}
+            advisorRecommended={advisorAdvice?.mode === 'recovery'}
+            onAssignRecovery={onAssignRecovery}
+            onClear={onClear}
+          />
         )}
 
         {!isRecovery && (
@@ -112,22 +162,7 @@ export function WarriorTrainingCard({
       />
 
       {assignment && (
-        <div className="p-4 bg-white/5 border-t border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Gauge className="h-3.5 w-3.5 text-primary opacity-60" />
-            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
-              {isRecovery ? 'REST MODE' : `CORE DRILL: ${assignment.attribute}`}
-            </span>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClear}
-            className="h-8 group-hover:bg-destructive/10 group-hover:text-destructive text-[10px] font-black tracking-widest uppercase"
-          >
-            <X className="h-3 w-3 mr-1.5" /> TERMINATE
-          </Button>
-        </div>
+        <AssignmentFooter assignment={assignment} isRecovery={isRecovery} onClear={onClear} />
       )}
     </Surface>
   );

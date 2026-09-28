@@ -119,42 +119,21 @@ interface ArenaViewProps {
   class name,
 }.
  */
-export default function ArenaView({
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  log,
-  winner,
-  visibleCount,
-  isPlaying,
-  isComplete = false,
-  arenaTier = 'standard',
-  weather = 'Clear',
-  arenaId,
-  maxHpA = DEFAULT_MAX_HP,
-  maxHpD = DEFAULT_MAX_HP,
-  weaponIdA,
-  weaponIdD,
-  className,
-}: ArenaViewProps) {
-  const arenaPrefs = useArenaPreferences();
-  const season = useGameStore((s) => s.season?.toLowerCase()) as
-    'spring' | 'summer' | 'fall' | 'winter' | 'tournament' | undefined;
-
-  // Arena animation state
-  const { fighterA, fighterD, bubbles, hpA, hpD, fpA, fpD, removeBubble } = useArenaAnimation(
+/** Arena animation + event/crowd/trail/status derivation for one bout view. */
+function useArenaScene(p: ArenaViewProps & { isComplete: boolean; weather: WeatherType }) {
+  const { log, visibleCount, maxHpA, maxHpD, winner, isComplete, nameA, nameD } = p;
+  const anim = useArenaAnimation(
     log,
     visibleCount,
-    maxHpA,
-    maxHpD,
+    maxHpA ?? DEFAULT_MAX_HP,
+    maxHpD ?? DEFAULT_MAX_HP,
     winner,
     isComplete,
     nameA,
     nameD
   );
 
-  // Extracted: Event tracking and crowd state
+  // Event tracking and crowd state
   const lastEventType = useLastEventType(log, visibleCount);
   const crowdState = useCrowdState(lastEventType, isComplete, visibleCount);
 
@@ -163,14 +142,73 @@ export default function ArenaView({
     lastEventType === 'hit' || lastEventType === 'crit' || lastEventType === 'riposte';
   const lastEvent = visibleCount > 0 ? log[visibleCount - 1] : undefined;
   const attackerSide = lastEvent?.events?.find((e) => e.actor)?.actor;
-  const trailWeaponId = attackerSide === 'D' ? weaponIdD : weaponIdA;
+  const trailWeaponId = attackerSide === 'D' ? p.weaponIdD : p.weaponIdA;
 
-  // Extracted: Fighter status calculations
-  const { isDeadA, isDeadD, isWinnerA, isWinnerD } = calculateFighterStatuses(winner, isComplete);
+  // Fighter status calculations
+  const statuses = calculateFighterStatuses(winner, isComplete);
+
+  return { anim, lastEventType, crowdState, isAttackEvent, trailWeaponId, attackerSide, statuses };
+}
+
+/** Fighter pair + speech bubbles + bottom mini-log — the live bout stage. */
+function BoutStage(p: ArenaViewProps & { scene: ReturnType<typeof useArenaScene> }) {
+  const { scene } = p;
+  const { anim, statuses } = scene;
+  return (
+    <>
+      {/* Speech Bubbles */}
+      <SpeechBubbles
+        bubbles={anim.bubbles}
+        fighterA={anim.fighterA}
+        fighterD={anim.fighterD}
+        onDismiss={anim.removeBubble}
+      />
+
+      {/* Fighter Pair */}
+      <FighterPair
+        nameA={p.nameA}
+        nameD={p.nameD}
+        styleA={p.styleA}
+        styleD={p.styleD}
+        fighterA={anim.fighterA}
+        fighterD={anim.fighterD}
+        hpA={anim.hpA}
+        hpD={anim.hpD}
+        fpA={anim.fpA}
+        fpD={anim.fpD}
+        maxHpA={p.maxHpA ?? DEFAULT_MAX_HP}
+        maxHpD={p.maxHpD ?? DEFAULT_MAX_HP}
+        isWinnerA={statuses.isWinnerA}
+        isWinnerD={statuses.isWinnerD}
+        isDeadA={statuses.isDeadA}
+        isDeadD={statuses.isDeadD}
+      />
+
+      {/* Mini Combat Log - positioned at bottom */}
+      <div className="absolute bottom-4 left-4 right-4 z-30">
+        <MiniCombatLog events={p.log} visibleCount={p.visibleCount} isPlaying={!!p.isPlaying} />
+      </div>
+    </>
+  );
+}
+
+/** Arena stage: background, ambient FX, fighters, mini combat log. */
+export default function ArenaView({
+  arenaTier = 'standard',
+  weather = 'Clear',
+  isComplete = false,
+  className,
+  ...rest
+}: ArenaViewProps) {
+  const props = { ...rest, arenaTier, weather, isComplete, className };
+  const arenaPrefs = useArenaPreferences();
+  const season = useGameStore((s) => s.season?.toLowerCase()) as
+    'spring' | 'summer' | 'fall' | 'winter' | 'tournament' | undefined;
+  const scene = useArenaScene(props);
 
   return (
     <ScreenShake
-      trigger={lastEventType}
+      trigger={scene.lastEventType}
       intensity={
         arenaPrefs.screenShakeIntensity === 'off' ? 'low' : arenaPrefs.screenShakeIntensity
       }
@@ -182,56 +220,25 @@ export default function ArenaView({
         tier={arenaTier}
         season={season}
         weather={weather}
-        arenaId={arenaId}
+        arenaId={rest.arenaId}
         className="absolute inset-0"
       />
 
       <AmbientFx
         effectsEnabled={arenaPrefs.effectsEnabled}
         arenaTier={arenaTier}
-        crowdState={crowdState}
+        crowdState={scene.crowdState}
         weather={weather}
-        arenaId={arenaId}
+        arenaId={rest.arenaId}
         arenaPrefs={arenaPrefs}
-        lastEventType={lastEventType}
-        isAttackEvent={isAttackEvent}
-        trailWeaponId={trailWeaponId}
-        attackerSide={attackerSide}
-        visibleCount={visibleCount}
+        lastEventType={scene.lastEventType}
+        isAttackEvent={scene.isAttackEvent}
+        trailWeaponId={scene.trailWeaponId}
+        attackerSide={scene.attackerSide}
+        visibleCount={rest.visibleCount}
       />
 
-      {/* Speech Bubbles */}
-      <SpeechBubbles
-        bubbles={bubbles}
-        fighterA={fighterA}
-        fighterD={fighterD}
-        onDismiss={removeBubble}
-      />
-
-      {/* Fighter Pair */}
-      <FighterPair
-        nameA={nameA}
-        nameD={nameD}
-        styleA={styleA}
-        styleD={styleD}
-        fighterA={fighterA}
-        fighterD={fighterD}
-        hpA={hpA}
-        hpD={hpD}
-        fpA={fpA}
-        fpD={fpD}
-        maxHpA={maxHpA}
-        maxHpD={maxHpD}
-        isWinnerA={isWinnerA}
-        isWinnerD={isWinnerD}
-        isDeadA={isDeadA}
-        isDeadD={isDeadD}
-      />
-
-      {/* Mini Combat Log - positioned at bottom */}
-      <div className="absolute bottom-4 left-4 right-4 z-30">
-        <MiniCombatLog events={log} visibleCount={visibleCount} isPlaying={!!isPlaying} />
-      </div>
+      <BoutStage {...props} scene={scene} />
     </ScreenShake>
   );
 }

@@ -58,27 +58,33 @@ function importSaveFile(
   reader.readAsText(file);
 }
 
-/** All title-screen orchestration: save slots, new-game creation, import/export/delete. */
-export function useStartGame() {
-  const loadGame = useGameStore((s) => s.loadGame);
-  const [screen, setScreen] = useState<Screen>('title');
+type LoadGame = ReturnType<typeof useGameStore.getState>['loadGame'];
+
+/** Build, save, and activate a fresh game state for a new stable. */
+async function createNewGame(
+  ownerName: string,
+  stableName: string,
+  playerCrest: CrestData,
+  backstoryId: BackstoryId,
+  loadGame: LoadGame
+): Promise<void> {
+  let fresh = createFreshState('alpha-prime-10');
+  fresh.player.name = ownerName.trim();
+  fresh.player.stableName = stableName.trim();
+  fresh.player.crest = playerCrest;
+  fresh.player.generation = 0;
+  const slotId = newSlotId();
+  const identitySeed = slotId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  applyBackstoryToPlayer(fresh, backstoryId, new SeededRNGService(identitySeed));
+  fresh = resolveImpacts(fresh, [runRankingsPass(fresh), runPromoterPass(fresh)]);
+  await saveToSlot(slotId, fresh.player.stableName, fresh);
+  loadGame(slotId, fresh);
+}
+
+/** Save-slot lifecycle: list, refresh-on-mount, load, delete, import, export. */
+function useSaveSlots(loadGame: LoadGame) {
   const [slots, setSlots] = useState<SaveSlotMeta[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<SaveSlotMeta | null>(null);
-  const [ownerName, setOwnerName] = useState('');
-  const [stableName, setStableName] = useState('');
-
-  const [playerCrest, setPlayerCrest] = useState<CrestData>(() =>
-    generateCrest({
-      seed: cryptoRandomInt(0, 99999),
-      philosophy: 'Balanced',
-      tier: 'Established',
-    })
-  );
-
-  const [backstoryId, setBackstoryId] = useState<BackstoryId | null>(null);
-
-  const canCreate =
-    ownerName.trim().length >= 2 && stableName.trim().length >= 2 && backstoryId != null;
 
   const refreshSlots = useCallback(async () => {
     const savedSlots = await listSaveSlots();
@@ -121,21 +127,6 @@ export function useStartGame() {
     setDeleteTarget(null);
   }, [deleteTarget, refreshSlots]);
 
-  const handleNewGame = useCallback(async () => {
-    if (!backstoryId) return;
-    let fresh = createFreshState('alpha-prime-10');
-    fresh.player.name = ownerName.trim();
-    fresh.player.stableName = stableName.trim();
-    fresh.player.crest = playerCrest;
-    fresh.player.generation = 0;
-    const slotId = newSlotId();
-    const identitySeed = slotId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    applyBackstoryToPlayer(fresh, backstoryId, new SeededRNGService(identitySeed));
-    fresh = resolveImpacts(fresh, [runRankingsPass(fresh), runPromoterPass(fresh)]);
-    await saveToSlot(slotId, fresh.player.stableName, fresh);
-    loadGame(slotId, fresh);
-  }, [ownerName, stableName, playerCrest, backstoryId, loadGame]);
-
   const handleImport = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -150,6 +141,45 @@ export function useStartGame() {
     exportSlot(slotId);
     toast.success('Save exported!');
   }, []);
+
+  return { slots, deleteTarget, setDeleteTarget, mostRecent, loadSlot, handleDelete, handleImport, handleExport };
+}
+
+/** All title-screen orchestration: save slots, new-game creation, import/export/delete. */
+export function useStartGame() {
+  const loadGame = useGameStore((s) => s.loadGame);
+  const [screen, setScreen] = useState<Screen>('title');
+  const [ownerName, setOwnerName] = useState('');
+  const [stableName, setStableName] = useState('');
+
+  const [playerCrest, setPlayerCrest] = useState<CrestData>(() =>
+    generateCrest({
+      seed: cryptoRandomInt(0, 99999),
+      philosophy: 'Balanced',
+      tier: 'Established',
+    })
+  );
+
+  const [backstoryId, setBackstoryId] = useState<BackstoryId | null>(null);
+
+  const canCreate =
+    ownerName.trim().length >= 2 && stableName.trim().length >= 2 && backstoryId != null;
+
+  const {
+    slots,
+    deleteTarget,
+    setDeleteTarget,
+    mostRecent,
+    loadSlot,
+    handleDelete,
+    handleImport,
+    handleExport,
+  } = useSaveSlots(loadGame);
+
+  const handleNewGame = useCallback(async () => {
+    if (!backstoryId) return;
+    await createNewGame(ownerName, stableName, playerCrest, backstoryId, loadGame);
+  }, [ownerName, stableName, playerCrest, backstoryId, loadGame]);
 
   return {
     screen,

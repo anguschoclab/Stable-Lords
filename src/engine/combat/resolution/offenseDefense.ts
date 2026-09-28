@@ -447,56 +447,80 @@ function deriveAttackView(args: OffenseDefenseArgs): AttackView {
   };
 }
 
+/** Assemble the shared context handed to the whiff/contested branch handlers. */
+function buildOffenseCtx(
+  args: OffenseDefenseArgs,
+  v: AttackView,
+  bonuses: ReturnType<typeof computeAttackBonuses>
+): OffenseDefenseCtx {
+  return {
+    ctx: args.ctx,
+    fA: args.fA,
+    fD: args.fD,
+    aGoesFirst: args.aGoesFirst,
+    OE_A: args.OE_A,
+    AL_A: args.AL_A,
+    OE_D: args.OE_D,
+    AL_D: args.AL_D,
+    fatA: args.fatA,
+    fatD: args.fatD,
+    offModsA: args.offModsA,
+    offModsD: args.offModsD,
+    defModsA: args.defModsA,
+    defModsD: args.defModsD,
+    passA: args.passA,
+    passD: args.passD,
+    biasDefA: args.biasDefA,
+    biasDefD: args.biasDefD,
+    tactA: args.tactA,
+    tactD: args.tactD,
+    dynTraitsA: args.dynTraitsA,
+    dynTraitsD: args.dynTraitsD,
+    feintDefBonus: args.feintDefBonus,
+    attCommit: args.attCommit,
+    defCommit: args.defCommit,
+    phaseKey: args.phaseKey,
+    stylePhase: args.stylePhase,
+    events: args.events,
+    att: v.att,
+    def: v.def,
+    attLabel: v.attLabel,
+    defLabel: v.defLabel,
+    curAttOE: v.curAttOE,
+    curAttAL: v.curAttAL,
+    curOffMods: v.curOffMods,
+    curPassA: v.curPassA,
+    defWeaponRangeMod: bonuses.defWeaponRangeMod,
+    defDynTraitPar: bonuses.defDynTraitPar,
+    defDynTraitDef: bonuses.defDynTraitDef,
+  };
+}
+
 function prepareOffenseDefense(args: OffenseDefenseArgs): {
   s: OffenseDefenseCtx;
   attSucc: boolean;
 } {
-  const {
-    ctx,
-    fA,
-    fD,
-    aGoesFirst,
-    OE_A,
-    AL_A,
-    OE_D,
-    AL_D,
-    fatA,
-    fatD,
-    offModsA,
-    offModsD,
-    passA,
-    passD,
-    tactA,
-    tactD,
-    psychA,
-    psychD,
-    dynTraitsA,
-    dynTraitsD,
-    feintAttBonus,
-    attCommit,
-    es,
-  } = args;
-  const { rng } = ctx;
+  const { rng } = args.ctx;
   const v = deriveAttackView(args);
-  const { att, def, attLabel, defLabel, curAttOE, curAttAL, curOffMods, curPassA } = v;
+  const { att, def, curAttOE, curOffMods, curPassA } = v;
 
   const bonuses = computeAttackBonuses(
-    ctx,
-    aGoesFirst,
+    args.ctx,
+    args.aGoesFirst,
     att,
     def,
-    psychA,
-    psychD,
-    dynTraitsA,
-    dynTraitsD
+    args.psychA,
+    args.psychD,
+    args.dynTraitsA,
+    args.dynTraitsD
   );
 
   const attSucc = performAttackCheck(
     rng,
     att,
     curAttOE,
-    aGoesFirst ? ctx.matchupA : ctx.matchupD,
-    aGoesFirst ? fatA : fatD,
+    args.aGoesFirst ? args.ctx.matchupA : args.ctx.matchupD,
+    args.aGoesFirst ? args.fatA : args.fatD,
     curOffMods,
     curPassA,
     v.curAntiSyn,
@@ -505,57 +529,15 @@ function prepareOffenseDefense(args: OffenseDefenseArgs): {
     v.curAttWepReq,
     bonuses.momentumBonus +
       bonuses.psychMod +
-      (aGoesFirst ? es.rangeModA : es.rangeModD) +
-      attCommit.attBonus +
-      feintAttBonus +
+      (args.aGoesFirst ? args.es.rangeModA : args.es.rangeModD) +
+      args.attCommit.attBonus +
+      args.feintAttBonus +
       bonuses.weaponRangeMod +
       bonuses.dynTraitAtt +
       bonuses.counterstrikeAtt
   );
 
-  const s: OffenseDefenseCtx = {
-    ctx,
-    fA,
-    fD,
-    aGoesFirst,
-    OE_A,
-    AL_A,
-    OE_D,
-    AL_D,
-    fatA,
-    fatD,
-    offModsA,
-    offModsD,
-    defModsA: args.defModsA,
-    defModsD: args.defModsD,
-    passA,
-    passD,
-    biasDefA: args.biasDefA,
-    biasDefD: args.biasDefD,
-    tactA,
-    tactD,
-    dynTraitsA,
-    dynTraitsD,
-    feintDefBonus: args.feintDefBonus,
-    attCommit,
-    defCommit: args.defCommit,
-    phaseKey: args.phaseKey,
-    stylePhase: args.stylePhase,
-    events: args.events,
-    att,
-    def,
-    attLabel,
-    defLabel,
-    curAttOE,
-    curAttAL,
-    curOffMods,
-    curPassA,
-    defWeaponRangeMod: bonuses.defWeaponRangeMod,
-    defDynTraitPar: bonuses.defDynTraitPar,
-    defDynTraitDef: bonuses.defDynTraitDef,
-  };
-
-  return { s, attSucc };
+  return { s: buildOffenseCtx(args, v, bonuses), attSucc };
 }
 
 /**

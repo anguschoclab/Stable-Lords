@@ -81,35 +81,12 @@ function commitFTUEState(
  * selection, plan, tutorial bout, and the finish-commit that builds the
  * initial GameState and navigates to the stable hub.
  */
-export function useFtueFlow() {
-  const navigate = useNavigate();
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      graveyard: s.graveyard,
-      ftueComplete: s.ftueComplete,
-      initializeStable: s.initializeStable,
-      setState: s.setState,
-      returnToTitle: s.returnToTitle,
-      saveCurrentState: s.saveCurrentState,
-    }))
-  );
-  const { initializeStable, setState, returnToTitle, saveCurrentState } = state;
-
-  const initialStep = !state.player.stableName ? 0 : 1;
-  const [step, setStep] = useState(initialStep);
-  const [stableInput, setStableInput] = useState(state.player.stableName || '');
-  const [ownerInput, setOwnerInput] = useState(state.player.name || '');
-
+/** Orphan pool state: seeded pool, up-to-3 selection set, derived picks. */
+function useOrphanSelection() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [poolSeedValue, setPoolSeedValue] = useState(() => cryptoRandomInt(0, 999999));
 
   const orphanPool = useMemo(() => generateOrphanPool(8, poolSeedValue), [poolSeedValue]);
-
-  const [boutResult, setBoutResult] = useState<BoutResult | null>(null);
-
-  const [playerPlan, setPlayerPlan] = useState<FightPlan | null>(null);
-  const [boutSeed] = useState(() => cryptoRandomInt(0, 0x7fffffff));
 
   const rerollPool = useCallback(() => {
     setPoolSeedValue((prev) => (prev * 1103515245 + 12345) & 0x7fffffff);
@@ -139,6 +116,43 @@ export function useFtueFlow() {
     if (!poolA) return null;
     return makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
   }, [selectedWarriors]);
+
+  return { selected, poolSeedValue, orphanPool, rerollPool, toggleWarrior, selectedWarriors, planWarrior };
+}
+
+export function useFtueFlow() {
+  const navigate = useNavigate();
+  const state = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      graveyard: s.graveyard,
+      ftueComplete: s.ftueComplete,
+      initializeStable: s.initializeStable,
+      setState: s.setState,
+      returnToTitle: s.returnToTitle,
+      saveCurrentState: s.saveCurrentState,
+    }))
+  );
+  const { initializeStable, setState, returnToTitle, saveCurrentState } = state;
+
+  const initialStep = !state.player.stableName ? 0 : 1;
+  const [step, setStep] = useState(initialStep);
+  const [stableInput, setStableInput] = useState(state.player.stableName || '');
+  const [ownerInput, setOwnerInput] = useState(state.player.name || '');
+
+  const {
+    selected,
+    poolSeedValue,
+    orphanPool,
+    rerollPool,
+    toggleWarrior,
+    selectedWarriors,
+    planWarrior,
+  } = useOrphanSelection();
+
+  const [boutResult, setBoutResult] = useState<BoutResult | null>(null);
+  const [playerPlan, setPlayerPlan] = useState<FightPlan | null>(null);
+  const [boutSeed] = useState(() => cryptoRandomInt(0, 0x7fffffff));
 
   const runTutorialBout = useCallback(() => {
     const result = simulateTutorialBout(selectedWarriors, playerPlan, boutSeed);

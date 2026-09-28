@@ -34,9 +34,75 @@ const SHIELD_PATHS: Record<ShieldShape, string> = {
   lozenge: 'M50,10 l40,40 l-40,40 l-40,-40 z',
 };
 
-/**
- *
- */
+/** Heraldic blazon text for the tooltip: "Or bendy with 2 Lions". */
+function heraldicDescription(crest: CrestData): string {
+  const metal = crest.metalColor === 'gold' ? 'Or' : 'Argent';
+  const field = crest.fieldType === 'solid' ? '' : ` ${crest.fieldType}`;
+  const charge =
+    crest.charge.count > 1 ? `${crest.charge.count} ${crest.charge.name}s` : crest.charge.name;
+  return `${metal}${field} with ${charge}`;
+}
+
+/** Shield SVG: field pattern, outline, mantling, helmet, charge. */
+function CrestSvg({
+  crest,
+  pixelSize,
+  shieldPath,
+  metalColor,
+  shouldShowMantling,
+  shouldShowHelmet,
+}: {
+  crest: CrestData;
+  pixelSize: number;
+  shieldPath: string;
+  metalColor: string;
+  shouldShowMantling: boolean;
+  shouldShowHelmet: boolean;
+}) {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      width={pixelSize}
+      height={pixelSize}
+      aria-label={`Stable crest: ${crest.charge.name} on ${crest.fieldType} field`}
+      className="transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 group-hover:drop-shadow-lg"
+    >
+      <defs>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="1" stdDeviation="1" floodOpacity="0.3" />
+        </filter>
+      </defs>
+
+      {shouldShowMantling && <Mantling color={crest.primaryColor} />}
+      {shouldShowHelmet && <Helmet metal={metalColor} />}
+
+      <g filter="url(#shadow)">
+        <clipPath id="shieldClip">
+          <path d={shieldPath} />
+        </clipPath>
+
+        <g clipPath="url(#shieldClip)">
+          {getFieldPattern(crest.fieldType, {
+            primary: crest.primaryColor,
+            secondary: crest.secondaryColor,
+            metal: metalColor,
+          })}
+        </g>
+
+        <path d={shieldPath} fill="none" stroke={metalColor} strokeWidth="3" />
+
+        <clipPath id="chargeClip">
+          <path d={shieldPath} />
+        </clipPath>
+        <g clipPath="url(#chargeClip)">
+          <ChargeComponent charge={crest.charge} metal={metalColor} />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
+/** Heraldic crest renderer — SVG shield + optional generation badge. */
 export function StableCrest({
   crest,
   size = 'md',
@@ -49,19 +115,10 @@ export function StableCrest({
   showGenerationBadge = true,
 }: StableCrestProps): React.ReactElement {
   const pixelSize = typeof size === 'number' ? size : SIZE_MAP[size];
-  const shouldShowMantling = showMantling ?? pixelSize >= 64;
-  const shouldShowHelmet = showHelmet ?? pixelSize >= 64;
   const shieldPath = SHIELD_PATHS[crest.shieldShape] || SHIELD_PATHS.heater;
   const metalColor = crest.metalColor === 'gold' ? '#D4AF37' : '#C0C0C0';
   const glowColor =
     crest.metalColor === 'gold' ? 'rgba(212, 175, 55, 0.3)' : 'rgba(192, 192, 192, 0.25)';
-
-  const glowStyle: React.CSSProperties =
-    pixelSize >= 64
-      ? {
-          filter: `drop-shadow(0 0 ${pixelSize * 0.15}px ${glowColor})`,
-        }
-      : {};
 
   const containerStyle: React.CSSProperties = {
     width: pixelSize,
@@ -70,19 +127,15 @@ export function StableCrest({
     position: 'relative',
     transition: 'transform 200ms ease-out, filter 200ms ease-out',
     willChange: 'transform',
-    ...glowStyle,
+    ...(pixelSize >= 64 && {
+      filter: `drop-shadow(0 0 ${pixelSize * 0.15}px ${glowColor})`,
+    }),
     ...(animate && {
       animation: 'crestFadeIn 0.3s ease-out',
     }),
   };
 
-  const heraldicDesc = useMemo(() => {
-    const metal = crest.metalColor === 'gold' ? 'Or' : 'Argent';
-    const field = crest.fieldType === 'solid' ? '' : ` ${crest.fieldType}`;
-    const charge =
-      crest.charge.count > 1 ? `${crest.charge.count} ${crest.charge.name}s` : crest.charge.name;
-    return `${metal}${field} with ${charge}`;
-  }, [crest]);
+  const heraldicDesc = useMemo(() => heraldicDescription(crest), [crest]);
 
   const hasGeneration = showGenerationBadge && crest.generation && crest.generation > 0;
 
@@ -93,45 +146,14 @@ export function StableCrest({
       title={showTooltip ? heraldicDesc : undefined}
     >
       <div className="w-full h-full transition-transform duration-200 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none">
-        <svg
-          viewBox="0 0 100 100"
-          width={pixelSize}
-          height={pixelSize}
-          aria-label={`Stable crest: ${crest.charge.name} on ${crest.fieldType} field`}
-          className="transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 group-hover:drop-shadow-lg"
-        >
-          <defs>
-            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="1" dy="1" stdDeviation="1" floodOpacity="0.3" />
-            </filter>
-          </defs>
-
-          {shouldShowMantling && <Mantling color={crest.primaryColor} />}
-          {shouldShowHelmet && <Helmet metal={metalColor} />}
-
-          <g filter="url(#shadow)">
-            <clipPath id="shieldClip">
-              <path d={shieldPath} />
-            </clipPath>
-
-            <g clipPath="url(#shieldClip)">
-              {getFieldPattern(crest.fieldType, {
-                primary: crest.primaryColor,
-                secondary: crest.secondaryColor,
-                metal: metalColor,
-              })}
-            </g>
-
-            <path d={shieldPath} fill="none" stroke={metalColor} strokeWidth="3" />
-
-            <clipPath id="chargeClip">
-              <path d={shieldPath} />
-            </clipPath>
-            <g clipPath="url(#chargeClip)">
-              <ChargeComponent charge={crest.charge} metal={metalColor} />
-            </g>
-          </g>
-        </svg>
+        <CrestSvg
+          crest={crest}
+          pixelSize={pixelSize}
+          shieldPath={shieldPath}
+          metalColor={metalColor}
+          shouldShowMantling={showMantling ?? pixelSize >= 64}
+          shouldShowHelmet={showHelmet ?? pixelSize >= 64}
+        />
       </div>
 
       {animate && (

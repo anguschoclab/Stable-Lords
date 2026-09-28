@@ -12,16 +12,118 @@ interface EditableTextProps {
   label?: string;
 }
 
-/**
- * Editable text.
- * @param  - {
+/** Input + confirm/cancel buttons shown while editing. */
+function EditingView({
+  tempValue,
+  setTempValue,
+  onSave,
+  onCancel,
+  className,
+  inputClassName,
+  inputRef,
+}: {
+  tempValue: string;
+  setTempValue: (v: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  className?: string;
+  inputClassName?: string;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 animate-in motion-reduce:animate-none fade-in zoom-in-95 duration-200',
+        className
+      )}
+    >
+      <Input
+        ref={inputRef}
+        value={tempValue}
+        onChange={(e) => setTempValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') onSave();
+          if (e.key === 'Escape') onCancel();
+        }}
+        onBlur={onSave}
+        className={cn(
+          'h-8 bg-neutral-900/60 border-primary/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]',
+          inputClassName
+        )}
+      />
+      <div className="flex items-center gap-1">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
+          onClick={onSave}
+          aria-label="Save"
+          tooltip="Save changes"
+        >
+          <Check className="h-4 w-4" />
+        </Button>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
+          onClick={onCancel}
+          aria-label="Cancel"
+          tooltip="Cancel changes"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/** Click-to-edit display arm with hover affordances. */
+function ReadView({
   value,
-  on save,
-  class name,
-  input class name,
   label,
-}.
- */
+  className,
+  onEdit,
+}: {
+  value: string;
+  label?: string;
+  className?: string;
+  onEdit: () => void;
+}) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label={`Edit ${label || value}`}
+      className={cn(
+        'group relative flex items-center gap-2 cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
+        className
+      )}
+      onClick={onEdit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onEdit();
+        }
+      }}
+    >
+      <span className="relative z-10">{value}</span>
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:transition-none">
+        <Edit2 className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary animate-pulse-slow motion-reduce:animate-none" />
+      </div>
+
+      {/* Subtle hover background effect */}
+      <div className="absolute -inset-2 rounded-none bg-primary/0 group-hover:bg-primary/5 border border-primary/0 group-hover:border-primary/10 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300" />
+
+      {label && (
+        <span className="absolute -top-4 left-0 text-[8px] uppercase tracking-[0.2em] font-black text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
+          {label}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** Inline click-to-edit text: Enter/blur saves, Escape cancels. */
 export function EditableText({
   value,
   onSave,
@@ -53,86 +155,21 @@ export function EditableText({
     setIsEditing(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSave();
-    if (e.key === 'Escape') handleCancel();
-  };
-
   if (isEditing) {
     return (
-      <div
-        className={cn(
-          'flex items-center gap-2 animate-in motion-reduce:animate-none fade-in zoom-in-95 duration-200',
-          className
-        )}
-      >
-        <Input
-          ref={inputRef}
-          value={tempValue}
-          onChange={(e) => setTempValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={handleSave}
-          className={cn(
-            'h-8 bg-neutral-900/60 border-primary/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]',
-            inputClassName
-          )}
-        />
-        <div className="flex items-center gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
-            onClick={handleSave}
-            aria-label="Save"
-            tooltip="Save changes"
-          >
-            <Check className="h-4 w-4" />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
-            onClick={handleCancel}
-            aria-label="Cancel"
-            tooltip="Cancel changes"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <EditingView
+        tempValue={tempValue}
+        setTempValue={setTempValue}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        className={className}
+        inputClassName={inputClassName}
+        inputRef={inputRef}
+      />
     );
   }
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label={`Edit ${label || value}`}
-      className={cn(
-        'group relative flex items-center gap-2 cursor-pointer transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
-        className
-      )}
-      onClick={() => setIsEditing(true)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          setIsEditing(true);
-        }
-      }}
-    >
-      <span className="relative z-10">{value}</span>
-      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:transition-none">
-        <Edit2 className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-primary animate-pulse-slow motion-reduce:animate-none" />
-      </div>
-
-      {/* Subtle hover background effect */}
-      <div className="absolute -inset-2 rounded-none bg-primary/0 group-hover:bg-primary/5 border border-primary/0 group-hover:border-primary/10 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300" />
-
-      {label && (
-        <span className="absolute -top-4 left-0 text-[8px] uppercase tracking-[0.2em] font-black text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
-          {label}
-        </span>
-      )}
-    </div>
+    <ReadView value={value} label={label} className={className} onEdit={() => setIsEditing(true)} />
   );
 }

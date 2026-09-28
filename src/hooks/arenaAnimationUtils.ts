@@ -139,6 +139,26 @@ function toward(x: number, otherX: number, amt: number, side: 'A' | 'D'): number
     : Math.max(x - amt, otherX + MIN_DISTANCE);
 }
 
+/** Idle events drift both fighters back toward a neutral 30px separation. */
+function driftTowardNeutralSpacing(prev: ArenaState, next: ArenaState): void {
+  const targetDist = 30;
+  const currentDist = prev.fighterD.x - prev.fighterA.x;
+  if (currentDist <= targetDist + 5) return;
+  const adjust = (currentDist - targetDist) / 4;
+  next.fighterA = {
+    ...prev.fighterA,
+    x: prev.fighterA.x + adjust * 0.3,
+    y: 0,
+    stance: prev.fighterA.stance === 'lunging' ? 'neutral' : prev.fighterA.stance,
+  };
+  next.fighterD = {
+    ...prev.fighterD,
+    x: prev.fighterD.x - adjust * 0.3,
+    y: 0,
+    stance: prev.fighterD.stance === 'lunging' ? 'neutral' : prev.fighterD.stance,
+  };
+}
+
 /**
  * Updates fighter poses for one bout event. The animation is side-mirrored:
  * the actor advances rightward when fighting as A and leftward as D, so each
@@ -224,27 +244,9 @@ export function processArenaEvent(
       setFighter(actor, { x: toward(att.x, vic.x, 5, actor), stance: 'advancing' });
       break;
 
-    default: {
-      // Gradual return to neutral spacing
-      const targetDist = 30;
-      const currentDist = prev.fighterD.x - prev.fighterA.x;
-      if (currentDist > targetDist + 5) {
-        const adjust = (currentDist - targetDist) / 4;
-        newState.fighterA = {
-          ...prev.fighterA,
-          x: prev.fighterA.x + adjust * 0.3,
-          y: 0,
-          stance: prev.fighterA.stance === 'lunging' ? 'neutral' : prev.fighterA.stance,
-        };
-        newState.fighterD = {
-          ...prev.fighterD,
-          x: prev.fighterD.x - adjust * 0.3,
-          y: 0,
-          stance: prev.fighterD.stance === 'lunging' ? 'neutral' : prev.fighterD.stance,
-        };
-      }
+    default:
+      driftTowardNeutralSpacing(prev, newState);
       break;
-    }
   }
 
   // Add speech bubble if appropriate

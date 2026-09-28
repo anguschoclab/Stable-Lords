@@ -14,8 +14,88 @@ import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './
 
 type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
 
+/** Ordered header badges; medical dims when nothing happened, graveyard only on deaths. */
+function StepBadges({
+  step,
+  hasInjuriesOrDeaths,
+  hasDeaths,
+}: {
+  step: RevealStep;
+  hasInjuriesOrDeaths: boolean;
+  hasDeaths: boolean;
+}) {
+  return (
+    <div className="flex gap-2">
+      <Badge variant={step === 'gazette' ? 'default' : 'secondary'}>1. The Gazette</Badge>
+      <Badge
+        variant={step === 'injuries' ? 'default' : 'secondary'}
+        className={!hasInjuriesOrDeaths ? 'opacity-30' : ''}
+      >
+        2. Medical Report
+      </Badge>
+      <Badge variant={step === 'bouts' ? 'default' : 'secondary'}>3. Combat Logs</Badge>
+      <Badge variant={step === 'math' ? 'default' : 'secondary'}>4. Simulation Math</Badge>
+      {hasDeaths && (
+        <Badge variant={step === 'memorial' ? 'destructive' : 'secondary'}>
+          5. The Graveyard
+        </Badge>
+      )}
+    </div>
+  );
+}
+
+/** Advance button — label flips to honor/planning on the terminal steps. */
+function NextButton({
+  step,
+  hasDeaths,
+  onNext,
+}: {
+  step: RevealStep;
+  hasDeaths: boolean;
+  onNext: () => void;
+}) {
+  return (
+    <div className="p-4 bg-secondary/20 border-t shrink-0 flex justify-end">
+      <Button
+        onClick={onNext}
+        className="gap-2"
+        size="lg"
+        variant={step === 'memorial' ? 'destructive' : 'default'}
+      >
+        {step === 'math' && hasDeaths
+          ? uiMeta.fanfare.btn_honor
+          : step === 'math' || step === 'memorial'
+            ? uiMeta.fanfare.btn_planning
+            : uiMeta.fanfare.btn_next}
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+}
+
+/** Resolve death names against the graveyard, preserving report order. */
+function useDeadWarriors(
+  data: { deaths: string[] } | undefined,
+  graveyard: GameStore['graveyard']
+) {
+  return React.useMemo(() => {
+    if (!data) return [];
+    const graveyardByName = new Map<string, NonNullable<typeof graveyard>[number]>();
+    for (const entry of graveyard ?? []) {
+      graveyardByName.set(entry.name, entry);
+    }
+    const result: NonNullable<typeof graveyard>[number][] = [];
+    for (const name of data.deaths) {
+      const w = graveyardByName.get(name);
+      if (w) result.push(w);
+    }
+    return result;
+  }, [data, graveyard]);
+}
+
 /**
- * Resolution reveal.
+ * Resolution reveal — the weekly results stepper (gazette → medical →
+ * combat logs → math → graveyard).
  */
 export default function ResolutionReveal() {
   const state = useGameStore(
@@ -32,20 +112,7 @@ export default function ResolutionReveal() {
   const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];
   const data = latestFight?.pendingResolutionData;
 
-  const graveyard = state.graveyard;
-  const deadWarriors = React.useMemo(() => {
-    if (!data) return [];
-    const graveyardByName = new Map<string, NonNullable<typeof graveyard>[number]>();
-    for (const entry of graveyard ?? []) {
-      graveyardByName.set(entry.name, entry);
-    }
-    const result: NonNullable<typeof graveyard>[number][] = [];
-    for (const name of data.deaths) {
-      const w = graveyardByName.get(name);
-      if (w) result.push(w);
-    }
-    return result;
-  }, [data, graveyard]);
+  const deadWarriors = useDeadWarriors(data, state.graveyard);
 
   if (!data) return null;
 
@@ -85,22 +152,11 @@ export default function ResolutionReveal() {
               </CardTitle>
               <CardDescription>Week {state.week - 1} Results</CardDescription>
             </div>
-            <div className="flex gap-2">
-              <Badge variant={step === 'gazette' ? 'default' : 'secondary'}>1. The Gazette</Badge>
-              <Badge
-                variant={step === 'injuries' ? 'default' : 'secondary'}
-                className={!hasInjuriesOrDeaths ? 'opacity-30' : ''}
-              >
-                2. Medical Report
-              </Badge>
-              <Badge variant={step === 'bouts' ? 'default' : 'secondary'}>3. Combat Logs</Badge>
-              <Badge variant={step === 'math' ? 'default' : 'secondary'}>4. Simulation Math</Badge>
-              {data.deaths.length > 0 && (
-                <Badge variant={step === 'memorial' ? 'destructive' : 'secondary'}>
-                  5. The Graveyard
-                </Badge>
-              )}
-            </div>
+            <StepBadges
+              step={step}
+              hasInjuriesOrDeaths={hasInjuriesOrDeaths}
+              hasDeaths={data.deaths.length > 0}
+            />
           </div>
         </CardHeader>
 
@@ -114,21 +170,7 @@ export default function ResolutionReveal() {
           </AnimatePresence>
         </CardContent>
 
-        <div className="p-4 bg-secondary/20 border-t shrink-0 flex justify-end">
-          <Button
-            onClick={handleNext}
-            className="gap-2"
-            size="lg"
-            variant={step === 'memorial' ? 'destructive' : 'default'}
-          >
-            {step === 'math' && data.deaths.length > 0
-              ? uiMeta.fanfare.btn_honor
-              : step === 'math' || step === 'memorial'
-                ? uiMeta.fanfare.btn_planning
-                : uiMeta.fanfare.btn_next}
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+        <NextButton step={step} hasDeaths={data.deaths.length > 0} onNext={handleNext} />
       </Card>
     </div>
   );

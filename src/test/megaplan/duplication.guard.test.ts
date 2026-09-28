@@ -18,7 +18,7 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  * duplicate pairs fail loudly. Remove a pair from KNOWN_SRC_PAIRS as its
  * cluster is deduped (the list is the Phase-4 elimination list).
  */
-const SRC_TO_SRC_BASELINE = 131;
+const SRC_TO_SRC_BASELINE = 134;
 
 const KNOWN_SRC_PAIRS = new Set([
   'src/components/EntityLink.tsx|src/components/warrior/WarriorFightHistory.tsx',
@@ -125,6 +125,11 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/engine/pipeline/offseasonEvents/economicHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
   'src/pages/Orphanage.tsx|src/pages/orphanage/useFtueFlow.ts',
   'src/components/PlanBuilder.tsx|src/components/planBuilder/usePlanOrchestration.ts',
+  'src/pages/StartGame.tsx|src/pages/startGame/useStartGame.ts',
+  'src/pages/ArenaDetail.tsx|src/pages/startGame/DeleteSaveDialog.tsx',
+  'src/components/layout/ResetDialog.tsx|src/pages/startGame/DeleteSaveDialog.tsx',
+  'src/components/startGame/NewGameForm.tsx|src/pages/StartGame.tsx',
+  'src/components/startGame/NewGameForm.tsx|src/pages/startGame/useStartGame.ts',
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/street.ts',
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',

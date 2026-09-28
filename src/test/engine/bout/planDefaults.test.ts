@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { defaultPlanForWarrior } from '@/engine/bout/planDefaults';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
@@ -6,29 +7,12 @@ import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
 
 function createMockWarrior(style: FightingStyle, wt: number = 10): Warrior {
-  return {
+  return makeWarrior({
     id: crypto.randomUUID() as WarriorId,
     name: 'Test Warrior',
     style,
-    attributes: {
-      ST: 10,
-      CN: 10,
-      SZ: 10,
-      WT: wt,
-      WL: 10,
-      SP: 10,
-      DF: 10,
-    },
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
-  };
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: wt, WL: 10, SP: 10, DF: 10 },
+  });
 }
 
 describe('defaultPlanForWarrior', () => {

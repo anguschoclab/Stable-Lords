@@ -6,15 +6,9 @@ import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-vi.mock('@/components/ui/Surface', () => ({
-  Surface: ({ children }: any) => <div>{children}</div>,
-}));
-vi.mock('@/components/ui/SectionDivider', () => ({
-  SectionDivider: ({ label }: any) => <div data-testid="section-divider">{label}</div>,
-}));
-vi.mock('@/components/ui/ImperialRing', () => ({
-  ImperialRing: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/SectionDivider', async () => await import('@/test/_mocks/uiSectionDivider'));
+vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
 vi.mock('@/components/PlanBuilder', () => ({
   default: () => <div data-testid="plan-builder" />,
 }));

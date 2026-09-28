@@ -1,0 +1,36 @@
+/** Shared page-test store state — the common GameStore-shaped literal. */
+export function makePageStoreState(over: Record<string, unknown> = {}) {
+  return {
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    hiringPool: [],
+    trainingAssignments: [],
+    fame: 0,
+    awards: [],
+    bookmarks: [],
+    isBookmarked: () => false,
+    ftueComplete: false,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+    ...over,
+  };
+}

@@ -3,44 +3,16 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { OfferCard } from '@/pages/BookingOffice/components/OfferCard';
-import { makeWarrior } from '@/test/_fixtures/factories';
-import type { StableId, WarriorId } from '@/types/shared.types';
-import type { BoutOffer } from '@/types/state.types';
-import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
+import type { StableId } from '@/types/shared.types';
+import { makeOffer, makeOfferCardProps } from '@/test/_fixtures/offerCard';
 
-vi.mock('@/components/bookmarks/BookmarkButton', () => ({
+vi.mock('@/components/bookmarks/BookmarkButton', async () => ({
   BookmarkButton: () => <div data-testid="bookmark" />,
 }));
-vi.mock('@/components/bout-viewer/FightForecastPanel', () => ({
-  FightForecastPanel: () => <div data-testid="forecast" />,
-}));
-vi.mock('@/engine/narrative/fightForecast', () => ({
-  buildFightForecast: () => undefined,
-}));
+vi.mock('@/components/bout-viewer/FightForecastPanel', async () => await import('@/test/_mocks/fightForecast'));
+vi.mock('@/engine/narrative/fightForecast', async () => await import('@/test/_mocks/fightForecastEngine'));
 
-const playerWarrior = makeWarrior({ id: 'pw-1' as WarriorId, name: 'My Fighter' });
-
-const makeOffer = (over: Partial<BoutOffer> = {}): BoutOffer =>
-  fixtureBoutOffer({
-    id: 'offer-1' as BoutOffer['id'],
-    promoterId: 'prom-1' as BoutOffer['promoterId'],
-    warriorIds: [playerWarrior.id, 'rw-1' as WarriorId],
-    boutWeek: 5,
-    expirationWeek: 6,
-    purse: 400,
-    hype: 50,
-    status: 'Proposed',
-    responses: {},
-    ...over,
-  } as any);
-
-const baseProps = {
-  promoters: { 'prom-1': { name: 'Grand Arena', tier: 'Major', personality: 'Showman' } },
-  roster: [playerWarrior],
-  rivalWarriorMap: {},
-  signedOfferIds: new Set<string>(),
-  onResponse: vi.fn(),
-};
+const baseProps = makeOfferCardProps();
 
 describe('OfferCard challenge badge (H.2)', () => {
   it('shows a Rival Challenge badge when the offer carries a rival proposerStableId', () => {

@@ -1,3 +1,4 @@
+import { ATTRS_10 } from '@/test/_fixtures/factories';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateTestState } from '@/test/_setup/testHelpers';
@@ -150,15 +151,7 @@ describe('ProgressionPass', () => {
 
   describe('FIRST_TOURNAMENT_WIN', () => {
     it('completes when champion is player warrior (by NAME)', () => {
-      const warrior = makeWarrior('w1' as WarriorId, 'Slasher Sam', FightingStyle.StrikingAttack, {
-        ST: 10,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
-      });
+      const warrior = makeWarrior('w1' as WarriorId, 'Slasher Sam', FightingStyle.StrikingAttack, ATTRS_10);
       state.roster = [warrior];
       state.tournaments = [
         {
@@ -185,15 +178,7 @@ describe('ProgressionPass', () => {
         'w1' as WarriorId,
         'Player One',
         FightingStyle.StrikingAttack,
-        {
-          ST: 10,
-          CN: 10,
-          SZ: 10,
-          WT: 10,
-          WL: 10,
-          SP: 10,
-          DF: 10,
-        }
+        ATTRS_10
       );
       state.roster = [playerWarrior];
       state.tournaments = [
@@ -240,15 +225,7 @@ describe('ProgressionPass', () => {
 
   describe('HALL_OF_FAMER', () => {
     it('completes when player warrior has WARRIOR_OF_YEAR award', () => {
-      const warrior = makeWarrior('w1' as WarriorId, 'Champ', FightingStyle.StrikingAttack, {
-        ST: 10,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
-      });
+      const warrior = makeWarrior('w1' as WarriorId, 'Champ', FightingStyle.StrikingAttack, ATTRS_10);
       state.roster = [warrior];
       state.awards = [
         {
@@ -270,15 +247,7 @@ describe('ProgressionPass', () => {
     });
 
     it('completes when player warrior has KILLER_OF_YEAR award', () => {
-      const warrior = makeWarrior('w1' as WarriorId, 'Killer', FightingStyle.StrikingAttack, {
-        ST: 10,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
-      });
+      const warrior = makeWarrior('w1' as WarriorId, 'Killer', FightingStyle.StrikingAttack, ATTRS_10);
       state.roster = [warrior];
       state.awards = [
         {
@@ -300,15 +269,7 @@ describe('ProgressionPass', () => {
     });
 
     it('does NOT complete for rival warrior award', () => {
-      const playerWarrior = makeWarrior('w1' as WarriorId, 'Player', FightingStyle.StrikingAttack, {
-        ST: 10,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
-      });
+      const playerWarrior = makeWarrior('w1' as WarriorId, 'Player', FightingStyle.StrikingAttack, ATTRS_10);
       state.roster = [playerWarrior];
       state.awards = [
         {
@@ -330,15 +291,7 @@ describe('ProgressionPass', () => {
     });
 
     it('does NOT complete for CLASS_MVP award', () => {
-      const warrior = makeWarrior('w1' as WarriorId, 'Champ', FightingStyle.StrikingAttack, {
-        ST: 10,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
-      });
+      const warrior = makeWarrior('w1' as WarriorId, 'Champ', FightingStyle.StrikingAttack, ATTRS_10);
       state.roster = [warrior];
       state.awards = [
         {

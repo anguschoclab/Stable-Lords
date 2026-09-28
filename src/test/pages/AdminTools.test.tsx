@@ -1,3 +1,4 @@
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -6,37 +7,11 @@ import '@/test/_setup/setup';
 
 import { useGameStore } from '@/state/useGameStore';
 
-const fakeStoreState = {
-  roster: [],
-  newsletter: [],
-  ledger: [],
-  matchHistory: [],
-  moodHistory: [],
-  graveyard: [],
-  retired: [],
-  week: 1,
-  season: 'Spring',
-  year: 1,
-  treasury: 500,
-  tournaments: [],
-  rivals: [],
-  arenaHistory: [],
-  trainers: [],
-  trainingAssignments: [],
-  fame: 0,
-  ftueComplete: false,
-  player: {
-    id: 'p1',
-    name: 'Player',
-    stableName: "Dragon's Hearth",
-    fame: 0,
-    renown: 0,
-    titles: 0,
-  },
+const fakeStoreState = makePageStoreState({
   setState: vi.fn(),
   doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
   doReset: vi.fn(),
-};
+});
 
 describe('AdminTools Page', () => {
   beforeEach(() => {

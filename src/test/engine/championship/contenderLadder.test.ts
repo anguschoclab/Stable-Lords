@@ -12,6 +12,7 @@ import {
   makeGameState,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 
@@ -20,29 +21,11 @@ beforeEach(() => resetFixtureIds());
 const ARENA = 'standard_arena';
 
 function venueWarrior(id: string, wins: number, losses = 0) {
-  return makeWarrior({
-    id: id as WarriorId,
-    career: {
-      wins,
-      losses,
-      kills: 0,
-      byArena: { [ARENA]: { wins, losses, kills: 0 } },
-    },
-  });
+  return makeVenueWarrior(id, { wins, losses, arenaId: ARENA });
 }
 
 function titleAt(championId: string | null): ArenaTitle {
-  return {
-    champion: championId
-      ? { warriorId: championId as WarriorId, startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 }
-      : null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-  };
+  return makeArenaTitle(championId);
 }
 
 describe('topContenders', () => {

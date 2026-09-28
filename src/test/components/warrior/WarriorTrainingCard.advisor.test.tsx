@@ -2,13 +2,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId } from '@/types/shared.types';
 import { WarriorTrainingCard } from '@/components/warrior/WarriorTrainingCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { WarriorTrainingAdvice } from '@/engine/advisor/types';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeTrainingWarrior, makeTrainingCardProps } from '@/test/_fixtures/trainingCard';
 
 vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 50),
@@ -24,29 +21,9 @@ vi.mock('@/engine/training/trainingGains/traitTraining', () => ({
   TRAIT_CAP: 3,
 }));
 
-const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: 'w1' as WarriorId,
-    name: 'Spartacus',
-    style: FightingStyle.StrikingAttack,
-    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    career: { wins: 5, losses: 3, kills: 1 },
-    fame: 7,
-    popularity: 3,
-    age: 24,
-    potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
-    potentialRevealed: { ST: true, CN: true, SZ: true, WT: true, WL: true, SP: true, DF: true },
-    ...overrides,
-  } as any);
+const makeWarrior = makeTrainingWarrior;
 
-const defaultProps = {
-  assignment: undefined,
-  seasonalGains: {},
-  trainers: [],
-  onAssign: vi.fn(),
-  onAssignRecovery: vi.fn(),
-  onClear: vi.fn(),
-};
+const defaultProps = makeTrainingCardProps();
 
 describe('WarriorTrainingCard Council Suggestions (Task 4.3)', () => {
   it('renders Council Pick badge on recommended attribute row', () => {

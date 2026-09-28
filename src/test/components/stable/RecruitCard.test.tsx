@@ -7,13 +7,9 @@ import type { PotentialScoutReport } from '@/engine/recruitment/recruitScouting'
 import { FightingStyle } from '@/types/shared.types';
 import type { Attributes, BaseSkills, DerivedStats } from '@/types/game';
 
-vi.mock('@/components/ui/Surface', () => ({
-  Surface: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
 
-vi.mock('@/components/ui/ImperialRing', () => ({
-  ImperialRing: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: ({ styleName }: { styleName: string }) => (

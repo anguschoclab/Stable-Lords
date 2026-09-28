@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
+
 import { History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
-import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
+
+import { useEntityNames } from '@/hooks/useEntityNames';
 
 interface ActionEvent {
   id?: string;
@@ -21,36 +21,11 @@ interface ActionTimelineProps {
  *
  */
 export function ActionTimeline({ events }: ActionTimelineProps) {
-  const state = useGameStore(
-    useShallow((s: GameStore) => ({
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
-      player: s.player,
-    }))
-  );
+  const { warriorNames, stableNames } = useEntityNames();
 
-  const warriorNames = useMemo(() => {
-    const names = new Set<string>(
-      [
-        ...(state.roster ?? []),
-        ...(state.graveyard ?? []),
-        ...(state.retired ?? []),
-        ...(state.rivals ?? []).flatMap((r) => r.roster),
-      ].map((w) => w.name)
-    );
-    return [...names];
-  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+  
 
-  const stableNames = useMemo(() => {
-    const names = new Set<string>();
-    if (state.player?.stableName) names.add(state.player.stableName);
-    for (const r of state.rivals ?? []) {
-      if (r.owner?.stableName) names.add(r.owner.stableName);
-    }
-    return [...names];
-  }, [state.player, state.rivals]);
+  
 
   return (
     <div className="space-y-3">

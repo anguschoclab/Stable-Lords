@@ -2,43 +2,19 @@
 import { describe, it, expect } from 'vitest';
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
-import { makeRival, makeWarrior, makeGameState } from '@/test/_fixtures/factories';
+import { makeRival, makeGameState } from '@/test/_fixtures/factories';
+import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
-import type { WarriorId } from '@/types/shared.types';
 
 const ARENA_A = 'standard_arena';
 const ARENA_B = 'mudpit_arena';
 
 function venueWarrior(id: string, arenaId: string, rec: { wins: number; losses: number }) {
-  return makeWarrior({
-    id: id as WarriorId,
-    career: {
-      wins: rec.wins,
-      losses: rec.losses,
-      kills: 0,
-      byArena: { [arenaId]: { wins: rec.wins, losses: rec.losses, kills: 0 } },
-    },
-  });
+  return makeVenueWarrior(id, { wins: rec.wins, losses: rec.losses, arenaId });
 }
 
 function titleAt(championId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: championId
-      ? {
-          warriorId: championId as WarriorId,
-          startedAbsoluteWeek: 1,
-          defenses: 0,
-          lastActivityWeek: 1,
-        }
-      : null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...over,
-  };
+  return makeArenaTitle(championId, over);
 }
 
 describe('buildContenderIndex', () => {

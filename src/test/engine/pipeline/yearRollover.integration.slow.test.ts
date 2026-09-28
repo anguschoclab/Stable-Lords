@@ -8,34 +8,7 @@ import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { BID_MATCHMAKING_ID } from '@/engine/ai/workers/competitionWorker';
 
-// OPFS archive is browser-only; mock it exactly as the headless harness does.
-vi.mock('@/engine/storage/opfsArchive', () => {
-  const m = {
-    isSupported: () => true,
-    archiveBoutLog: vi.fn().mockResolvedValue(undefined),
-    retrieveBoutLog: vi.fn().mockResolvedValue(null),
-    archiveGazette: vi.fn().mockResolvedValue(undefined),
-    retrieveGazette: vi.fn().mockResolvedValue(null),
-    archiveHotState: vi.fn().mockResolvedValue(undefined),
-    retrieveHotState: vi.fn().mockResolvedValue(null),
-    getArchivedBoutIdsForSeason: vi.fn().mockResolvedValue([]),
-  };
-  return {
-    OPFSArchiveService: class {
-      isSupported = m.isSupported;
-      archiveBoutLog = m.archiveBoutLog;
-      retrieveBoutLog = m.retrieveBoutLog;
-      archiveGazette = m.archiveGazette;
-      retrieveGazette = m.retrieveGazette;
-      archiveHotState = m.archiveHotState;
-      retrieveHotState = m.retrieveHotState;
-      getArchivedBoutIdsForSeason = m.getArchivedBoutIdsForSeason;
-    },
-    opfsArchive: m,
-    ArchiveConflictError: class extends Error {},
-    assertSafeFileNamePart: vi.fn(),
-  };
-});
+vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
 
 function reset() {
   let n = 0;

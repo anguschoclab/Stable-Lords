@@ -1,6 +1,6 @@
+import { makeBidWarrior, makeBidRival } from '@/test/_fixtures/bidRoster';
 import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData, GameState } from '@/types/state.types';
 import {
@@ -9,42 +9,15 @@ import {
   BID_MATCHMAKING_ID,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { SeededRNGService } from '@/utils/random';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
-  makeGameState,
-} from '@/test/_fixtures/factories';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const makeWarrior = (name: string, style: FightingStyle, fame: number = 100): Warrior =>
-  fixtureWarrior({
-    id: `w_${name}` as WarriorId,
-    name,
-    style,
-    attributes: { ST: 10, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    fame,
-    derivedStats: { hp: 100 } as any,
-  } as any);
+  makeBidWarrior(name, style, { fame });
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-  fixtureRival({
-    id: 'rival-1' as any,
-    owner: {
-      id: 'owner-1' as any,
-      name: 'Owner',
-      stableName: 'Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    roster: [],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
-    strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
-    ...overrides,
-  } as any);
+  makeBidRival(overrides);
 
 function makeMinimalState(rivals: RivalStableData[]): GameState {
   const warriorMap = new Map<string, Warrior>();

@@ -1,40 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runAutosim } from '@/engine/autosim/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
-import type { GameState, BoutOffer } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
-import {
-  makeBoutOffer as fixtureBoutOffer,
-  makeGameState as fixtureGameState,
-} from '@/test/_fixtures/factories';
+import { makeAutosimOffer, makeSimmableState } from '@/test/_fixtures/autosimCouncil';
 
-vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
-  advanceWeek: vi.fn(async (state: GameState) => state),
-}));
+vi.mock('@/engine/pipeline/services/weekPipelineService', async () => await import('@/test/_mocks/weekPipeline'));
 
-/** Offer scheduled for the upcoming week (absoluteWeek 1 → boutWeek 2). */
-const makeOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer =>
-  fixtureBoutOffer({
-    id: id as BoutOfferId,
-    promoterId: 'promoter-1' as any,
-    warriorIds: warriorIds as WarriorId[],
-    boutWeek: 2,
-    expirationWeek: 3,
-    purse: 50,
-    hype: 50,
-    status: 'Proposed',
-    responses: Object.fromEntries(warriorIds.map((w) => [w, 'Pending'])) as any,
-    conditions: [],
-    ...opts,
-  } as any);
+const makeOffer = makeAutosimOffer;
 
-const makeSimmableState = (overrides?: Partial<GameState>): GameState =>
-  fixtureGameState({
-    treasury: 5000,
-    roster: [makeAutosimWarrior('w1', 'Alice'), makeAutosimWarrior('w2', 'Bob')],
-    ...overrides,
-  });
 
 describe('runAutosim councilAutoPilot — crown decisions', () => {
   beforeEach(() => {

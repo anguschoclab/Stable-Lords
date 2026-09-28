@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
+import { runNarratedVsHeadless } from '@/test/_fixtures/narratedVsHeadless';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 
@@ -23,30 +24,7 @@ describe('Narration RNG isolation', () => {
         undefined,
         new SeededRNGService(seed + 100)
       );
-      const narrated = simulateFight(
-        defaultPlanForWarrior(A),
-        defaultPlanForWarrior(D),
-        A,
-        D,
-        seed,
-        undefined,
-        'Clear',
-        'standard_arena',
-        undefined,
-        false
-      );
-      const headless = simulateFight(
-        defaultPlanForWarrior(A),
-        defaultPlanForWarrior(D),
-        A,
-        D,
-        seed,
-        undefined,
-        'Clear',
-        'standard_arena',
-        undefined,
-        true
-      );
+      const { narrated, headless } = runNarratedVsHeadless(A, D, seed);
       expect(
         { w: narrated.winner, b: narrated.by, m: narrated.minutes },
         `seed ${seed} diverged`

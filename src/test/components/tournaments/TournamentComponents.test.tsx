@@ -25,38 +25,13 @@ vi.mock('framer-motion', () => ({
   },
 }));
 
-vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: (s: Record<string, unknown>) => unknown) => {
-    const state = { tournaments: [] };
-    return selector ? selector(state) : state;
-  },
-  useWorldState: () => ({ tournaments: [], warriors: [], stables: [] }),
-  useWarriorNameState: () => 'Unknown',
-}));
+vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreEmpty'));
 
-vi.mock('@/hooks/useTournamentSchedule', () => ({
-  useTournamentSchedule: () => ({
-    filter: 'all',
-    setFilter: vi.fn(),
-    expandedRounds: new Set(),
-    totalRounds: 1,
-    stats: { totalBouts: 0, completedBouts: 0, pendingBouts: 0 },
-    filteredRounds: [],
-    toggleRound: vi.fn(),
-    expandAll: vi.fn(),
-    collapseAll: vi.fn(),
-  }),
-}));
+vi.mock('@/hooks/useTournamentSchedule', async () => await import('@/test/_mocks/tournamentHooks'));
 
-vi.mock('@/components/bookmarks/BookmarkButton', () => ({
-  BookmarkButton: () => <div data-testid="bookmark-btn">Bookmark</div>,
-}));
+vi.mock('@/components/bookmarks/BookmarkButton', async () => await import('@/test/_mocks/bookmarkButton'));
 
-vi.mock('@/components/tournaments/schedule', () => ({
-  TournamentStatsHeader: () => <div data-testid="stats-header">Stats</div>,
-  TournamentFilterBar: () => <div data-testid="filter-bar">Filter</div>,
-  TournamentRoundCard: () => <div data-testid="round-card">Round</div>,
-}));
+vi.mock('@/components/tournaments/schedule', async () => await import('@/test/_mocks/tournamentScheduleUi'));
 
 vi.mock('@/components/ui/dialog', () => ({
   Dialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -77,9 +52,7 @@ vi.mock('@/components/ui/tooltip', () => ({
   TooltipProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-vi.mock('@/components/ui/Surface', () => ({
-  Surface: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
 
 vi.mock('@/engine/core/historyResolver', () => ({
   resolveWarriorName: (_s: unknown, _id: unknown, fallback?: string) => fallback ?? 'Unknown',

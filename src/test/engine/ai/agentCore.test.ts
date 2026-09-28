@@ -16,39 +16,14 @@ import type {
   AIEvent,
   RankingEntry,
 } from '@/types/state.types';
-import { makeGameState, makeRival, makeOwner} from '@/test/_fixtures/factories';
+import { makeAiTestRival, makeAiTestState } from '@/test/_fixtures/aiTestState';
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return makeRival({
-    id: 'rival_1' as any,
-    owner: makeOwner({ id: 'owner_1' as any, name: 'Test Owner', stableName: 'Test Stable' }),
-    ...overrides,
-  });
+  return makeAiTestRival(overrides);
 }
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
-  return makeGameState({
-    meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
-    ftueComplete: true,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    rivals: [],
-    recruitPool: [],
-    isFTUE: false,
-    progression: {
-      status: 'active',
-      stableStanding: 1,
-      totalStables: 10,
-      objectives: [],
-    },
-    ...overrides,
-  });
+  return makeAiTestState(overrides);
 }
 
 describe('agentCore — createAgentContext', () => {

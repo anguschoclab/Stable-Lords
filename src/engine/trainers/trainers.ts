@@ -4,6 +4,7 @@ import {
   type TrainerTier,
   type TrainerFocus,
 } from '@/types/shared.types';
+import { TRAINER_FIRST_NAMES } from '@/engine/rivals/rivalNamePool';
 import type { Warrior } from '@/types/warrior.types';
 import type { Trainer } from '@/types/state.types';
 
@@ -77,32 +78,6 @@ export const TIER_BONUS: Record<TrainerTier, number> = {
 // Trainer interface is imported from state.types.ts
 
 // ─── Name Generation ──────────────────────────────────────────────────────
-const TRAINER_FIRST_NAMES = [
-  'Aldric',
-  'Brenna',
-  'Caius',
-  'Dara',
-  'Eryx',
-  'Fenna',
-  'Galthor',
-  'Hessa',
-  'Ivor',
-  'Jelena',
-  'Korvin',
-  'Lysa',
-  'Maegor',
-  'Nira',
-  'Orvald',
-  'Petra',
-  'Quintus',
-  'Rhea',
-  'Soren',
-  'Thessa',
-  'Ulric',
-  'Vala',
-  'Wyrd',
-  'Xara',
-];
 
 const TRAINER_TITLES: Record<TrainerFocus, string[]> = {
   Aggression: ['the Fierce', 'Blade-Breaker', 'the Relentless'],

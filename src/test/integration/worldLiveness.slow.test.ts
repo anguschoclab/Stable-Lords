@@ -17,32 +17,7 @@ import { CHAMPIONS_TOURNEY, ARENA_TITLE } from '@/constants/arena';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/opfsArchive', () => {
-  const m = {
-    archiveBoutLog: vi.fn().mockResolvedValue(undefined),
-    retrieveBoutLog: vi.fn().mockResolvedValue(null),
-    archiveGazette: vi.fn().mockResolvedValue(undefined),
-    retrieveGazette: vi.fn().mockResolvedValue(null),
-    archiveHotState: vi.fn().mockResolvedValue(undefined),
-    retrieveHotState: vi.fn().mockResolvedValue(null),
-    getArchivedBoutIdsForSeason: vi.fn().mockResolvedValue([]),
-  };
-  return {
-    OPFSArchiveService: class {
-      isSupported = () => true;
-      archiveBoutLog = m.archiveBoutLog;
-      retrieveBoutLog = m.retrieveBoutLog;
-      archiveGazette = m.archiveGazette;
-      retrieveGazette = m.retrieveGazette;
-      archiveHotState = m.archiveHotState;
-      retrieveHotState = m.retrieveHotState;
-      getArchivedBoutIdsForSeason = m.getArchivedBoutIdsForSeason;
-    },
-    opfsArchive: m,
-    ArchiveConflictError: class extends Error {},
-    assertSafeFileNamePart: vi.fn(),
-  };
-});
+vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
 
 describe('world liveness — 104 weeks (Stage H)', () => {
   beforeAll(() => {

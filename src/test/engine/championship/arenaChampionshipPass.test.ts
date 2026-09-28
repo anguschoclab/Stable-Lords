@@ -5,6 +5,7 @@ import {
   makeBoutOffer,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import { runArenaChampionshipPass } from '@/engine/pipeline/passes/ArenaChampionshipPass';
 import { resolveImpacts } from '@/engine/impacts';
 import { WEEK_PIPELINE_PASSES } from '@/engine/pipeline/services/weekPipelineService';
@@ -14,7 +15,6 @@ import { collectUnavailableWarriorIds } from '@/engine/promoters/offerMatchmakin
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { ARENA_TITLE } from '@/constants/arena';
 import type { ArenaTitle, BoutOffer } from '@/types/state.types';
-import type { CareerRecord } from '@/types/warrior.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WeekPipelineContext } from '@/engine/pipeline/pipelineStages';
@@ -34,35 +34,13 @@ const ctx: WeekPipelineContext = {
   rootRng: rng,
 };
 
-function career(over: Partial<CareerRecord> = {}): CareerRecord {
-  return { wins: 0, losses: 0, kills: 0, ...over };
-}
 
 function warriorAtArena(id: string, arenaId: string, rec: { wins: number; losses: number; kills?: number }) {
-  return makeWarrior({
-    id: id as WarriorId,
-    career: career({
-      wins: rec.wins,
-      losses: rec.losses,
-      kills: rec.kills ?? 0,
-      byArena: { [arenaId]: { wins: rec.wins, losses: rec.losses, kills: rec.kills ?? 0 } },
-    }),
-  });
+  return makeVenueWarrior(id, { wins: rec.wins, losses: rec.losses, kills: rec.kills ?? 0, arenaId });
 }
 
 function activeTitle(champId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: champId
-      ? { warriorId: champId as WarriorId, startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 }
-      : null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...over,
-  };
+  return makeArenaTitle(champId, over);
 }
 
 beforeEach(() => {

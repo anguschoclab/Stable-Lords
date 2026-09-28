@@ -7,6 +7,7 @@ import {
   makeFightSummary,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { makeVenueWarrior, makeArenaTitle, makeCareerRecord } from '@/test/_fixtures/arenaTitle';
 import {
   isReigningChampion,
   isActiveChampion,
@@ -37,39 +38,15 @@ const rng = {
 } as unknown as IRNGService;
 
 function career(over: Partial<CareerRecord> = {}): CareerRecord {
-  return { wins: 0, losses: 0, kills: 0, ...over };
+  return makeCareerRecord(over);
 }
 
 function warriorAtArena(id: string, arenaId: string, rec: { wins: number; losses: number; kills?: number }) {
-  return makeWarrior({
-    id: id as WarriorId,
-    career: career({
-      wins: rec.wins,
-      losses: rec.losses,
-      kills: rec.kills ?? 0,
-      byArena: { [arenaId]: { wins: rec.wins, losses: rec.losses, kills: rec.kills ?? 0 } },
-    }),
-  });
+  return makeVenueWarrior(id, { wins: rec.wins, losses: rec.losses, kills: rec.kills ?? 0, arenaId });
 }
 
 function makeTitleAt(_arenaId: string, championId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: championId
-      ? {
-          warriorId: championId as WarriorId,
-          startedAbsoluteWeek: 1,
-          defenses: 0,
-          lastActivityWeek: 1,
-        }
-      : null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...over,
-  };
+  return makeArenaTitle(championId, over);
 }
 
 function titleOffer(champId: string, challengerId: string, arenaId: string, over: Partial<BoutOffer> = {}): BoutOffer {

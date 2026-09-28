@@ -15,9 +15,7 @@ vi.mock('zustand/react/shallow', () => ({
 
 vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
-vi.mock('@/components/ui/Surface', () => ({
-  Surface: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
 
 vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children }: any) => <span>{children}</span>,

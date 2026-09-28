@@ -6,46 +6,19 @@ import { describe, it, expect } from 'vitest';
 import { processStaff } from '@/engine/ai/workers/staffWorker';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
-import { makeGameState, makeRival, makeOwner, makeTrainer, makeStrategy } from '@/test/_fixtures/factories';
+import { makeTrainer } from '@/test/_fixtures/factories';
+import { makeAiTestRival, makeAiTestState } from '@/test/_fixtures/aiTestState';
 
 function createMockTrainer(overrides: Partial<Trainer> = {}): Trainer {
   return makeTrainer({ id: 't1' as any, name: 'Test Trainer', age: 30, ...overrides });
 }
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return makeRival({
-    id: 'rival_1' as any,
-    owner: makeOwner({ id: 'owner_1' as any, name: 'Test Owner', stableName: 'Test Stable' }),
-    trainers: [],
-    strategy: makeStrategy(),
-    ...overrides,
-  });
+  return makeAiTestRival(overrides);
 }
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
-  return makeGameState({
-    meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
-    ftueComplete: true,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    week: 5,
-    rivals: [],
-    recruitPool: [],
-    isFTUE: false,
-    progression: {
-      status: 'active',
-      stableStanding: 1,
-      totalStables: 10,
-      objectives: [],
-    },
-    ...overrides,
-  });
+  return makeAiTestState(overrides);
 }
 
 describe('staffWorker — processStaff hiring', () => {

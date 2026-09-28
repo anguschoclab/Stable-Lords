@@ -2,54 +2,20 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
-import { createEnginePool, type ShardWorkerApi } from '@/engine/pool/enginePool';
-import { runRivalShardChunk } from '@/engine/pipeline/passes/rivalStableShard';
-import { runBoutShardChunk } from '@/engine/pool/enginePool';
+import { createEnginePool } from '@/engine/pool/enginePool';
+import { fakeShardWorker } from '@/test/_fixtures/fakeShardWorker';
 import { engineEventBus, type EngineEvent } from '@/engine/core/EventBus';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { createHash } from 'crypto';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/opfsArchive', () => {
-  const m = {
-    archiveBoutLog: vi.fn().mockResolvedValue(undefined),
-    retrieveBoutLog: vi.fn().mockResolvedValue(null),
-    archiveGazette: vi.fn().mockResolvedValue(undefined),
-    retrieveGazette: vi.fn().mockResolvedValue(null),
-    archiveHotState: vi.fn().mockResolvedValue(undefined),
-    retrieveHotState: vi.fn().mockResolvedValue(null),
-    getArchivedBoutIdsForSeason: vi.fn().mockResolvedValue([]),
-  };
-  return {
-    OPFSArchiveService: class {
-      isSupported = () => true;
-      archiveBoutLog = m.archiveBoutLog;
-      retrieveBoutLog = m.retrieveBoutLog;
-      archiveGazette = m.archiveGazette;
-      retrieveGazette = m.retrieveGazette;
-      archiveHotState = m.archiveHotState;
-      retrieveHotState = m.retrieveHotState;
-      getArchivedBoutIdsForSeason = m.getArchivedBoutIdsForSeason;
-    },
-    opfsArchive: m,
-    ArchiveConflictError: class extends Error {},
-    assertSafeFileNamePart: vi.fn(),
-  };
-});
+vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
 
 /**
  * In-process shard worker: runs the real chunk functions on structured
  * clones, exactly reproducing the postMessage serialization boundary —
  * shared references are broken and non-serializable payloads would throw.
  */
-function fakeShardWorker(): ShardWorkerApi {
-  return {
-    runRivalShardChunk: async (inputs, ctx) =>
-      runRivalShardChunk(structuredClone(inputs), structuredClone(ctx)),
-    runBoutShardChunk: async (inputs, ctx) =>
-      runBoutShardChunk(structuredClone(inputs), structuredClone(ctx)),
-  };
-}
 
 function stateHash(state: GameState): string {
   const { warriorMap: _wm, warriorToStableMap: _ws, rivalMap: _rm, rivalryMap: _rv,

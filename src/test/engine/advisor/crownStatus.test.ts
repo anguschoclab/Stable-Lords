@@ -12,6 +12,7 @@ import {
   makeGameState,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 
@@ -21,30 +22,11 @@ const ARENA = 'standard_arena';
 const ARENA_B = 'brass_ring';
 
 function venueWarrior(id: string, arenaId: string, wins: number, losses = 0) {
-  return makeWarrior({
-    id: id as WarriorId,
-    age: 24,
-    career: {
-      wins,
-      losses,
-      kills: 0,
-      byArena: { [arenaId]: { wins, losses, kills: 0 } },
-    },
-  });
+  return makeVenueWarrior(id, { wins, losses, arenaId, age: 24 });
 }
 
-function titleAt(championId: string | null): ArenaTitle {
-  return {
-    champion: championId
-      ? { warriorId: championId as WarriorId, startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 }
-      : null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-  };
+function titleAt(championId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
+  return makeArenaTitle(championId, over);
 }
 
 describe('advisor crown standing', () => {

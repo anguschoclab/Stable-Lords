@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
+import { makeStatWarrior } from '@/test/_fixtures/statWarrior';
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId } from '@/types/shared.types';
 import {
   getFrontloadMult,
   getStCritChanceBonus,
@@ -16,7 +16,6 @@ import {
   ST_EXECUTE_BONUS,
 } from '@/constants/combat/combat';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import type { Warrior } from '@/types/game';
 
 const ST = FightingStyle.StrikingAttack;
@@ -61,26 +60,7 @@ describe('getExecuteBonus', () => {
 });
 
 function mk(style: FightingStyle, id: string): Warrior {
-  const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  return {
-    id: id as WarriorId,
-    name: id,
-    style,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-    traits: [],
-  };
+  return makeStatWarrior(style, id);
 }
 
 describe('ST all-in (integration)', () => {

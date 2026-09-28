@@ -13,6 +13,7 @@ import {
   makeOwner,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import { ARENA_COMMISSION_ID, ARENA_TITLE } from '@/constants/arena';
 import type { ArenaTitle, BoutOffer, GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -20,23 +21,7 @@ import type { WarriorId } from '@/types/shared.types';
 beforeEach(() => resetFixtureIds());
 
 function titleAt(championId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: championId
-      ? {
-          warriorId: championId as WarriorId,
-          startedAbsoluteWeek: 1,
-          defenses: 0,
-          lastActivityWeek: 1,
-        }
-      : null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...over,
-  };
+  return makeArenaTitle(championId, over);
 }
 
 function titleOffer(champId: string, challengerId: string, over: Partial<BoutOffer> = {}): BoutOffer {

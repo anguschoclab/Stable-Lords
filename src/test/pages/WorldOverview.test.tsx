@@ -1,3 +1,4 @@
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
@@ -10,35 +11,7 @@ import { makeNamedWarrior } from '@/test/_fixtures/factories';
 const mockStore = vi.hoisted(() => ({}) as any);
 let storeOverride: any = {};
 
-const defaultStoreState = {
-  roster: [],
-  newsletter: [],
-  ledger: [],
-  matchHistory: [],
-  moodHistory: [],
-  graveyard: [],
-  retired: [],
-  week: 1,
-  season: 'Spring',
-  year: 1,
-  treasury: 500,
-  tournaments: [],
-  rivals: [],
-  arenaHistory: [],
-  trainers: [],
-  trainingAssignments: [],
-  fame: 0,
-  bookmarks: [],
-  isBookmarked: () => false,
-  player: {
-    id: 'p1',
-    name: 'Player',
-    stableName: "Dragon's Hearth",
-    fame: 0,
-    renown: 0,
-    titles: 0,
-  },
-};
+const defaultStoreState = makePageStoreState();
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({

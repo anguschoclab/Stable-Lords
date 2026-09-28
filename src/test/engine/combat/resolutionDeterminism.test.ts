@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
+import { runNarratedVsHeadless } from '@/test/_fixtures/narratedVsHeadless';
 import { FightingStyle } from '@/types/shared.types';
 
 const ATTRS = { ST: 13, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 };
@@ -47,30 +48,7 @@ describe('combat resolution determinism characterization', () => {
       );
       const D = makeWarrior(undefined, 'D', FightingStyle.TotalParry, ATTRS, undefined, undefined);
 
-      const narrated = simulateFight(
-        defaultPlanForWarrior(A),
-        defaultPlanForWarrior(D),
-        A,
-        D,
-        seed,
-        undefined,
-        'Clear',
-        'standard_arena',
-        undefined,
-        false
-      );
-      const headless = simulateFight(
-        defaultPlanForWarrior(A),
-        defaultPlanForWarrior(D),
-        A,
-        D,
-        seed,
-        undefined,
-        'Clear',
-        'standard_arena',
-        undefined,
-        true
-      );
+      const { narrated, headless } = runNarratedVsHeadless(A, D, seed);
 
       expect(
         { w: narrated.winner, b: narrated.by, m: narrated.minutes },

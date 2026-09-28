@@ -2,18 +2,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ElectronArchiveService } from '@/engine/storage/electronArchive';
 import '@/test/_setup/setup';
+import { createMockElectronAPI } from '@/test/_fixtures/electronApi';
 
-function createMockElectronAPI(overrides?: Partial<typeof window.electronAPI>) {
-  return {
-    saveGame: vi.fn().mockResolvedValue({ success: true }),
-    loadGame: vi.fn().mockResolvedValue({ success: true, data: {} }),
-    archiveBoutLog: vi.fn().mockResolvedValue({ success: true }),
-    retrieveBoutLog: vi.fn().mockResolvedValue({ success: true, data: [] }),
-    archiveGazette: vi.fn().mockResolvedValue({ success: true }),
-    retrieveGazette: vi.fn().mockResolvedValue({ success: true, data: '' }),
-    ...overrides,
-  } as any as typeof window.electronAPI;
-}
 
 describe('ElectronArchiveService', () => {
   let service: ElectronArchiveService;

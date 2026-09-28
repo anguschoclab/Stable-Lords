@@ -13,38 +13,18 @@ import {
   makeGameState,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle, GameState, RankingEntry } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 
 beforeEach(() => resetFixtureIds());
 
 function venueWarrior(id: string, arenaId: string, wins: number, losses: number) {
-  return makeWarrior({
-    id: id as WarriorId,
-    career: {
-      wins,
-      losses,
-      kills: 0,
-      byArena: { [arenaId]: { wins, losses, kills: 0 } },
-    },
-  });
+  return makeVenueWarrior(id, { wins, losses, arenaId });
 }
 
 function titleAt(championId: string): ArenaTitle {
-  return {
-    champion: {
-      warriorId: championId as WarriorId,
-      startedAbsoluteWeek: 1,
-      defenses: 2,
-      lastActivityWeek: 1,
-    },
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-  };
+  return makeArenaTitle(championId, { defenses: 2 });
 }
 
 /** Rankings where the player's warrior is #1 of ten — 'Dominant' threat. */

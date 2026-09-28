@@ -1,13 +1,12 @@
-import { useMemo } from 'react';
+
 import { Surface } from '@/components/ui/Surface';
-import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import {
   ArticleMasthead,
   LeadStory,
   SideRegistry,
   type GazetteIssue,
 } from './gazetteArticle/sections';
+import { useEntityNames } from '@/hooks/useEntityNames';
 
 interface GazetteArticleProps {
   issue: GazetteIssue;
@@ -19,35 +18,11 @@ interface GazetteArticleProps {
  * @param - { issue, season }.
  */
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
-      player: s.player,
-    }))
-  );
+  const { warriorNames, stableNames } = useEntityNames();
 
-  const warriorNames = useMemo(() => {
-    const names = new Set<string>();
-    for (const w of state.roster ?? []) names.add(w.name);
-    for (const w of state.graveyard ?? []) names.add(w.name);
-    for (const w of state.retired ?? []) names.add(w.name);
-    for (const r of state.rivals ?? []) {
-      for (const w of r.roster) names.add(w.name);
-    }
-    return [...names];
-  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+  
 
-  const stableNames = useMemo(() => {
-    const names = new Set<string>();
-    if (state.player?.stableName) names.add(state.player.stableName);
-    for (const r of state.rivals ?? []) {
-      if (r.owner?.stableName) names.add(r.owner.stableName);
-    }
-    return [...names];
-  }, [state.player, state.rivals]);
+  
 
   const names = { warriorNames, stableNames };
 

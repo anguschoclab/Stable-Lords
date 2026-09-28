@@ -1,3 +1,4 @@
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 // Test utilities
 // @vitest-environment jsdom
 
@@ -16,34 +17,7 @@ let storeOverride: any = {
   ledger: [],
 };
 
-const defaultStoreState = {
-  roster: [],
-  newsletter: [],
-  ledger: [],
-  matchHistory: [],
-  moodHistory: [],
-  graveyard: [],
-  retired: [],
-  week: 1,
-  season: 'Spring',
-  year: 1,
-  treasury: 500,
-  tournaments: [],
-  rivals: [],
-  arenaHistory: [],
-  trainers: [],
-  hiringPool: [],
-  trainingAssignments: [],
-  fame: 0,
-  player: {
-    id: 'p1',
-    name: 'Player',
-    stableName: "Dragon's Hearth",
-    fame: 0,
-    renown: 0,
-    titles: 0,
-  },
-};
+const defaultStoreState = makePageStoreState();
 
 import { useGameStore } from '@/state/useGameStore';
 

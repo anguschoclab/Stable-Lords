@@ -78,7 +78,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         cond={cond}
         key_="OE"
         label="OE"
-        aria="Offensive Effort"
+        aria="OE"
         activeClass="text-arena-gold"
         setHoverClass="hover:text-arena-gold"
         onSliderChange={onSliderChange}
@@ -87,7 +87,7 @@ export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) 
         cond={cond}
         key_="AL"
         label="AL"
-        aria="Activity Level"
+        aria="AL"
         activeClass="text-arena-fame"
         setHoverClass="hover:text-arena-fame"
         onSliderChange={onSliderChange}

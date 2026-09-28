@@ -1,3 +1,4 @@
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, within } from '@testing-library/react';
@@ -11,34 +12,7 @@ import '@/test/_setup/setup';
 import { useGameStore } from '@/state/useGameStore';
 import { makeNamedWarrior } from '@/test/_fixtures/factories';
 
-const defaultStoreState = {
-  roster: [],
-  newsletter: [],
-  ledger: [],
-  matchHistory: [],
-  moodHistory: [],
-  graveyard: [],
-  retired: [],
-  week: 1,
-  season: 'Spring',
-  year: 1,
-  treasury: 500,
-  tournaments: [],
-  rivals: [],
-  arenaHistory: [],
-  trainers: [],
-  trainingAssignments: [],
-  fame: 0,
-  awards: [],
-  player: {
-    id: 'p1',
-    name: 'Player',
-    stableName: "Dragon's Hearth",
-    fame: 0,
-    renown: 0,
-    titles: 0,
-  },
-};
+const defaultStoreState = makePageStoreState();
 
 // Inject fake state into the real store — vi.mock's importOriginal arg does
 // not exist under bun:test. Call instead of assigning a store override.

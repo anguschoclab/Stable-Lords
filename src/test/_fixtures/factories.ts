@@ -20,7 +20,7 @@ import type {
   RivalStableData,
 } from '@/types/state.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
-import type { FightPlan, Trainer } from '@/types/shared.types';
+import type { Attributes, FightPlan, Trainer } from '@/types/shared.types';
 import type { Rivalry, OwnerGrudge } from '@/types/state.types';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 import type { WarriorRow } from '@/types/leaderboard';
@@ -51,6 +51,8 @@ export function resetFixtureIds(): void {
  * Schema-valid Warrior. Override any field via `over`; nested objects
  * (attributes/career/derivedStats) are replaced wholesale, not deep-merged.
  */
+export const ATTRS_10: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
+
 export function makeWarrior(over: Partial<Warrior> = {}): Warrior {
   const id = (over.id as string) ?? nextId('w');
   return {

@@ -5,6 +5,7 @@
  */
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { collectWarriorNames, collectStableNames } from '@/hooks/useEntityNames';
 import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from '@tanstack/react-router';
 import { ScrollText } from 'lucide-react';
@@ -45,27 +46,15 @@ export default function EventLog() {
   );
   const navigate = useNavigate();
 
-  // Collect all known warrior names for linkification
-  const allWarriorNames = useMemo(() => {
-    const names = new Set<string>();
-    for (const w of state.roster ?? []) names.add(w.name);
-    for (const w of state.graveyard) names.add(w.name);
-    for (const w of state.retired ?? []) names.add(w.name);
-    for (const r of state.rivals ?? []) {
-      for (const w of r.roster) names.add(w.name);
-    }
-    return [...names];
-  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+  const allWarriorNames = useMemo(
+    () => collectWarriorNames(state),
+    [state.roster, state.graveyard, state.retired, state.rivals]
+  );
 
-  // Collect all known stable names for linkification
-  const allStableNames = useMemo(() => {
-    const names = new Set<string>();
-    if (state.player?.stableName) names.add(state.player.stableName);
-    for (const r of state.rivals ?? []) {
-      if (r.owner?.stableName) names.add(r.owner.stableName);
-    }
-    return [...names];
-  }, [state.player, state.rivals]);
+  const allStableNames = useMemo(
+    () => collectStableNames(state),
+    [state.player, state.rivals]
+  );
 
   const events = useMemo(() => {
     const all: GameEvent[] = [

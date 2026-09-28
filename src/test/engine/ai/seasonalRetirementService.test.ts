@@ -1,3 +1,4 @@
+import { ATTRS_10 } from '@/test/_fixtures/factories';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/shared.types';
@@ -34,30 +35,14 @@ describe('SeasonalRetirementService', () => {
           undefined,
           'Old Warrior',
           FightingStyle.StrikingAttack,
-          {
-            ST: 10,
-            CN: 10,
-            SZ: 10,
-            WT: 10,
-            WL: 10,
-            SP: 10,
-            DF: 10,
-          },
+          ATTRS_10,
           { age: 45 }
         ),
         makeWarrior(
           undefined,
           'Young Warrior',
           FightingStyle.StrikingAttack,
-          {
-            ST: 10,
-            CN: 10,
-            SZ: 10,
-            WT: 10,
-            WL: 10,
-            SP: 10,
-            DF: 10,
-          },
+          ATTRS_10,
           { age: 20 }
         ),
       ];
@@ -75,15 +60,7 @@ describe('SeasonalRetirementService', () => {
           undefined,
           'Young Warrior',
           FightingStyle.StrikingAttack,
-          {
-            ST: 10,
-            CN: 10,
-            SZ: 10,
-            WT: 10,
-            WL: 10,
-            SP: 10,
-            DF: 10,
-          },
+          ATTRS_10,
           { age: 20 }
         ),
       ];
@@ -130,15 +107,7 @@ describe('SeasonalRetirementService', () => {
           undefined,
           'Average',
           FightingStyle.StrikingAttack,
-          {
-            ST: 10,
-            CN: 10,
-            SZ: 10,
-            WT: 10,
-            WL: 10,
-            SP: 10,
-            DF: 10,
-          },
+          ATTRS_10,
           { age: 40, fame: 30, career: { wins: 10, losses: 10, kills: 0 } }
         ),
       ];
@@ -157,15 +126,7 @@ describe('SeasonalRetirementService', () => {
           undefined,
           'Old Warrior',
           FightingStyle.StrikingAttack,
-          {
-            ST: 10,
-            CN: 10,
-            SZ: 10,
-            WT: 10,
-            WL: 10,
-            SP: 10,
-            DF: 10,
-          },
+          ATTRS_10,
           { age: 45 }
         ),
       ];

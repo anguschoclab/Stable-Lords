@@ -1,12 +1,11 @@
+import { makeBidWarrior, makeBidRival } from '@/test/_fixtures/bidRoster';
+import { makeGameState } from '@/test/_fixtures/factories';
 import { describe, it, expect, vi } from 'vitest';
-import type { WarriorId } from '@/types/shared.types';
 import type { RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
-  makeGameState,
-} from '@/test/_fixtures/factories';
+
 
 /**
  * Bout bidding integration tests.
@@ -17,35 +16,10 @@ import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const makeWarrior = (name: string, style: FightingStyle, cn: number = 12): Warrior =>
-  fixtureWarrior({
-    id: `w_${name}` as WarriorId,
-    name,
-    style,
-    attributes: { ST: 10, CN: cn, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    fame: 100,
-    derivedStats: { hp: 100 } as any,
-  } as any);
+  makeBidWarrior(name, style, { cn });
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-  fixtureRival({
-    id: 'rival-1' as any,
-    owner: {
-      id: 'owner-1' as any,
-      name: 'Owner',
-      stableName: 'Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    roster: [],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
-    strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
-    ...overrides,
-  } as any);
+  makeBidRival(overrides);
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 
@@ -56,27 +30,11 @@ const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
  */
 
 function makePerfWarrior(name: string, style: FightingStyle, fame: number = 100): Warrior {
-  return {
-    id: `w_${name}` as WarriorId,
-    name,
-    style,
-    attributes: { ST: 10, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    fame,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    derivedStats: { hp: 100 } as any,
-  } as Warrior;
+  return makeBidWarrior(name, style, { fame });
 }
 
 function makePerfRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
-    id: 'rival-1' as any,
+  return makeBidRival({
     owner: {
       id: 'owner-1' as any,
       name: 'Owner',
@@ -87,13 +45,9 @@ function makePerfRival(overrides: Partial<RivalStableData> = {}): RivalStableDat
       personality: 'Aggressive',
     },
     roster: [makePerfWarrior('Fighter1', FightingStyle.BashingAttack)],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
     strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: 'rival-2' as any },
     ...overrides,
-  } as RivalStableData;
+  });
 }
 
 describe('matchup scoring evaluates all opponents, not just first', () => {

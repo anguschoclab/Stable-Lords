@@ -92,13 +92,9 @@ vi.mock('@/engine/core/historyResolver', () => ({
   findWarrior: () => undefined,
 }));
 
-vi.mock('@/components/ui/Surface', () => ({
-  Surface: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
 
-vi.mock('@/components/ui/ImperialRing', () => ({
-  ImperialRing: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
 
 vi.mock('@/components/ui/SectionDivider', () => ({
   SectionDivider: ({ label }: { label: string }) => <div>{label}</div>,

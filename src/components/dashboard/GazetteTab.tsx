@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+
 import { Quote, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
-import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
+
 import type { GazetteStory } from '@/types/state.types';
+import { useEntityNames } from '@/hooks/useEntityNames';
 
 interface GazetteTabProps {
   stories: GazetteStory[];
@@ -14,35 +14,11 @@ interface GazetteTabProps {
  *
  */
 export function GazetteTab({ stories }: GazetteTabProps) {
-  const state = useGameStore(
-    useShallow((s: GameStore) => ({
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
-      player: s.player,
-    }))
-  );
+  const { warriorNames, stableNames } = useEntityNames();
 
-  const warriorNames = useMemo(() => {
-    const names = new Set<string>();
-    for (const w of state.roster ?? []) names.add(w.name);
-    for (const w of state.graveyard ?? []) names.add(w.name);
-    for (const w of state.retired ?? []) names.add(w.name);
-    for (const r of state.rivals ?? []) {
-      for (const w of r.roster) names.add(w.name);
-    }
-    return [...names];
-  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+  
 
-  const stableNames = useMemo(() => {
-    const names = new Set<string>();
-    if (state.player?.stableName) names.add(state.player.stableName);
-    for (const r of state.rivals ?? []) {
-      if (r.owner?.stableName) names.add(r.owner.stableName);
-    }
-    return [...names];
-  }, [state.player, state.rivals]);
+  
 
   return (
     <ScrollArea className="h-72 px-6">

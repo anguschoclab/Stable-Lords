@@ -3,41 +3,27 @@
  * Comprehensive test coverage for validateStrategy and estimateStaminaCurve
  */
 import { describe, it, expect } from 'vitest';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import {
   validateStrategy,
   estimateStaminaCurve,
   predictedCollapseMinute,
 } from '@/engine/strategy/strategyValidator';
-import { FightingStyle, type FightPlan } from '@/types/shared.types';
+import { FightingStyle, type FightPlan, type WarriorId } from '@/types/shared.types';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
 
 // Helper function to create mock warrior
 function createMockWarrior(style: FightingStyle, wt: number = 10): Warrior {
-  return {
-    id: crypto.randomUUID() as any,
+  return makeWarrior({
+    id: crypto.randomUUID() as WarriorId,
     name: 'Test Warrior',
     style,
-    attributes: {
-      ST: 10,
-      CN: 10,
-      SZ: 10,
-      WT: wt,
-      WL: 10,
-      SP: 10,
-      DF: 10,
-    },
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
-  };
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: wt, WL: 10, SP: 10, DF: 10 },
+    // no derivedStats — estimateStaminaCurve must use its maxStamina fallback
+    derivedStats: undefined,
+  });
 }
 
 // Helper function to create mock fight plan

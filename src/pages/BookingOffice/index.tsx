@@ -1,18 +1,14 @@
 import { useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { ImperialRing } from '@/components/ui/ImperialRing';
-import { Button } from '@/components/ui/button';
-import { Briefcase, Award, Target } from 'lucide-react';
 import { useGameStore, useBookmarks } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { useBookingOffice } from './hooks/useBookingOffice';
-import { OfferCard } from './components/OfferCard';
 import { AssetRegistry } from './components/AssetRegistry';
+import { HeaderStats, RosterStatusBar, OfferGrid } from './sections';
 
 /**
  *
@@ -66,72 +62,18 @@ export default function BookingOffice() {
         title="Bout Offers"
         subtitle={`ARENA · FIGHT OFFERS · WK ${week}`}
         actions={
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col items-end">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Open Offers
-              </span>
-              <span className="text-sm font-display font-black text-primary">
-                {thisWeekOffers.length + upcomingOffers.length} Bout Offers
-              </span>
-            </div>
-            <div className="flex flex-col items-end border-l border-white/5 pl-6">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Highest Purse
-              </span>
-              <span className="text-sm font-display font-black text-arena-gold">
-                {highestPurse.toLocaleString()}G
-              </span>
-            </div>
-          </div>
+          <HeaderStats
+            openOfferCount={thisWeekOffers.length + upcomingOffers.length}
+            highestPurse={highestPurse}
+          />
         }
       />
 
-      <Surface variant="glass" className="flex items-center gap-12 p-8 border-white/5 mb-12">
-        <div className="flex items-center gap-4">
-          <ImperialRing size="sm" variant="blood">
-            <Target className="h-4 w-4 text-primary" />
-          </ImperialRing>
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">
-            Roster Status
-          </span>
-        </div>
-
-        <div className="flex items-center gap-10">
-          <div className="flex flex-col">
-            <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest mb-1">
-              Unbooked Warriors
-            </span>
-            <span
-              className={
-                'font-display font-black text-lg leading-none ' +
-                (idleWarriors.length > 0 ? 'text-primary' : 'text-muted-foreground/40')
-              }
-            >
-              {idleWarriors.length}
-            </span>
-          </div>
-          <div className="h-8 w-px bg-white/5" />
-          <div className="flex flex-col">
-            <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest mb-1">
-              Warriors Booked
-            </span>
-            <span className="font-display font-black text-lg leading-none">
-              {roster.length - idleWarriors.length} / {roster.length}
-            </span>
-          </div>
-        </div>
-
-        <div className="ml-auto">
-          <Button
-            variant="outline"
-            className="h-10 px-6 rounded-none border-white/10 hover:bg-white/5 font-black uppercase text-[10px] tracking-widest flex items-center gap-3"
-            onClick={acceptAllHonorable}
-          >
-            <Award className="h-3.5 w-3.5 text-primary" /> Accept All Honorable Offers
-          </Button>
-        </div>
-      </Surface>
+      <RosterStatusBar
+        idleCount={idleWarriors.length}
+        rosterSize={roster.length}
+        onAcceptAll={acceptAllHonorable}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
         {/* Left Rail Asset Registry */}
@@ -173,103 +115,31 @@ export default function BookingOffice() {
                   count={bookmarkedCount}
                 />
               </div>
-              {filteredThisWeek.length === 0 ? (
-                <Surface
-                  variant="glass"
-                  className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
-                >
-                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
-                    <Briefcase className="h-8 w-8" />
-                  </ImperialRing>
-                  <div className="space-y-2">
-                    <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                      No Offers This Week
-                    </p>
-                    <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                      No bout offers have arrived for this week yet.
-                    </p>
-                  </div>
-                </Surface>
-              ) : (
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {filteredThisWeek.map((o) => {
-                    const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
-                    const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
-                    const isCouncilPick = advisorCard?.fightAdvice.recommendedOfferId === o.id;
-                    const isWarning =
-                      !isCouncilPick &&
-                      (advisorCard?.fightAdvice.dangerLevel === 'LETHAL' ||
-                        advisorCard?.fightAdvice.dangerLevel === 'HAZARDOUS');
-                    const councilWarning = isWarning
-                      ? advisorCard?.fightAdvice.warnings[0] ?? 'Hazardous Matchup'
-                      : undefined;
-
-                    return (
-                      <OfferCard
-                        key={o.id}
-                        offer={o}
-                        promoters={promoters}
-                        roster={roster}
-                        rivalWarriorMap={rivalWarriorMap}
-                        signedOfferIds={signedOfferIds}
-                        onResponse={handleResponse}
-                        isCouncilPick={isCouncilPick}
-                        councilWarning={councilWarning}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+              <OfferGrid
+                offers={filteredThisWeek}
+                emptyTitle="No Offers This Week"
+                emptyHint="No bout offers have arrived for this week yet."
+                roster={roster}
+                promoters={promoters}
+                rivalWarriorMap={rivalWarriorMap}
+                signedOfferIds={signedOfferIds}
+                advisorCardMap={advisorCardMap}
+                onResponse={handleResponse}
+              />
             </TabsContent>
 
             <TabsContent value="upcoming" className="mt-0 space-y-8">
-              {filteredUpcoming.length === 0 ? (
-                <Surface
-                  variant="glass"
-                  className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
-                >
-                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
-                    <Briefcase className="h-8 w-8" />
-                  </ImperialRing>
-                  <div className="space-y-2">
-                    <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                      No Upcoming Bouts
-                    </p>
-                    <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                      No fight offers are scheduled for future weeks.
-                    </p>
-                  </div>
-                </Surface>
-              ) : (
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {filteredUpcoming.map((o) => {
-                    const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
-                    const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
-                    const isCouncilPick = advisorCard?.fightAdvice.recommendedOfferId === o.id;
-                    const isWarning =
-                      !isCouncilPick &&
-                      (advisorCard?.fightAdvice.dangerLevel === 'LETHAL' ||
-                        advisorCard?.fightAdvice.dangerLevel === 'HAZARDOUS');
-                    const councilWarning = isWarning
-                      ? advisorCard?.fightAdvice.warnings[0] ?? 'Hazardous Matchup'
-                      : undefined;
-
-                    return (
-                      <OfferCard
-                        key={o.id}
-                        offer={o}
-                        promoters={promoters}
-                        roster={roster}
-                        rivalWarriorMap={rivalWarriorMap}
-                        signedOfferIds={signedOfferIds}
-                        onResponse={handleResponse}
-                        isCouncilPick={isCouncilPick}
-                        councilWarning={councilWarning}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+              <OfferGrid
+                offers={filteredUpcoming}
+                emptyTitle="No Upcoming Bouts"
+                emptyHint="No fight offers are scheduled for future weeks."
+                roster={roster}
+                promoters={promoters}
+                rivalWarriorMap={rivalWarriorMap}
+                signedOfferIds={signedOfferIds}
+                advisorCardMap={advisorCardMap}
+                onResponse={handleResponse}
+              />
             </TabsContent>
           </Tabs>
         </div>

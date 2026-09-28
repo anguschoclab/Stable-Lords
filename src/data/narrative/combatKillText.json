@@ -537,7 +537,9 @@
         "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands.",
         "A sickening final thud rings out as {{attacker}} crushes the last bit of life from {{defender}}.",
         "{{defender}} is battered into absolute stillness by the relentless fury of {{attacker}}.",
-        "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+        "A gruesome, concussive impact from {{attacker}} permanently caves in {{defender}}'s defenses.",
+        "The arena shudders as {{attacker}} brings down a shattering blow, pulverizing {{defender}}.",
+        "{{attacker}} swings with titanic force, turning {{defender}}'s armor and bones to dust."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",

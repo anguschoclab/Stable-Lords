@@ -1,0 +1,8 @@
+{
+  "combatStrikes.json.strikes.fist.solid": [
+    "{{attacker}} lands a heavy haymaker squarely on {{defender}}'s {{bodyPart}}."
+  ],
+  "combatKillText.json.kill_text.weapon_specific.bashing": [
+    "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+  ]
+}

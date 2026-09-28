@@ -2,10 +2,9 @@
  * Entity Links — Warriors and Stables.
  * Now triggers a side-panel <Sheet> (flyout) with full dossiers.
  */
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import {
   Sheet,
@@ -48,17 +47,8 @@ interface WarriorLinkProps {
  * @param props.children - Optional custom content for the link trigger
  * @returns A tooltip-wrapped sheet trigger or a plain span if the warrior cannot be resolved
  */
-export function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-    }))
-  );
-  const resolvedId = id ?? resolveWarriorId(name, state);
+export const WarriorLink = React.memo(function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
+  const resolvedId = useGameStore((s) => id ?? findWarrior(s, undefined, name)?.id);
 
   if (!resolvedId) {
     return <span className={className}>{children ?? name}</span>;
@@ -112,20 +102,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
       </SheetContent>
     </Sheet>
   );
-}
-
-/**
- * Resolves a warrior name to an ID using the current game state.
- *
- * @param name - The name of the warrior to resolve
- * @param state - The current game state
- * @returns The resolved warrior ID, or undefined if not found
- */
-function resolveWarriorId(name: string, state: NameResolutionState): string | undefined {
-  if (!state) return undefined;
-  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  return findWarrior(state, undefined, name)?.id;
-}
+});
 
 /**
  * Props for the StableLink component.
@@ -149,18 +126,9 @@ interface StableLinkProps {
  * @param [props.children] - Optional custom content to display inside the link.
  * @returns A clickable sheet trigger or a plain span if ID cannot be resolved.
  */
-export function StableLink({ name, className, children }: StableLinkProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-    }))
-  );
-
-  // Resolve stable name to owner ID
-  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  const resolvedStableId = findStableId(state as unknown as NameResolutionState, name);
-  const isPlayer = resolvedStableId === state.player.id;
+export const StableLink = React.memo(function StableLink({ name, className, children }: StableLinkProps) {
+  const resolvedStableId = useGameStore((s) => findStableId(s as unknown as NameResolutionState, name));
+  const isPlayer = useGameStore((s) => resolvedStableId === s.player.id);
   const stableId = isPlayer ? 'player' : resolvedStableId;
 
   if (!resolvedStableId) {
@@ -228,6 +196,6 @@ export function StableLink({ name, className, children }: StableLinkProps) {
       </SheetContent>
     </Sheet>
   );
-}
+});
 
 

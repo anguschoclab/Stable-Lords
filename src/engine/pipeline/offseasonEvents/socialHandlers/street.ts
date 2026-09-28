@@ -8,6 +8,7 @@ import {
   type OffseasonEventContext,
   pickActiveWarrior,
   announceOffseasonEvent,
+  withChosenWarrior,
 } from '../types';
 
 /**
@@ -20,8 +21,7 @@ export function handleShadowMarketRun(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const cost = 25 + Math.floor(rng.next() * 26);
     ctx.treasuryDelta -= cost;
     ctx.ledgerEntries.push(
@@ -29,9 +29,6 @@ export function handleShadowMarketRun(
     );
 
     const fameGained = 15;
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: (chosen.fame || 0) + fameGained,
-    });
 
     ctx.insightTokens.push(
       makeInsightToken(rng, {
@@ -44,12 +41,11 @@ export function handleShadowMarketRun(
       })
     );
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      gold: cost,
-      fame: fameGained,
-    });
-  }
+    return {
+      updates: { fame: (chosen.fame || 0) + fameGained },
+      announce: { gold: cost, fame: fameGained },
+    };
+  });
 }
 
 /**
@@ -71,20 +67,13 @@ export function handleLoyalStray(
   ctx.treasuryDelta -= cost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Dog Food & Treats', -cost, 'other'));
 
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
-    ctx.rosterUpdates.set(chosen.id, {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => ({
+    updates: {
       xp: (chosen.xp || 0) + 10,
       fame: (chosen.fame || 0) + 5,
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      xp: 10,
-      fame: 5,
-      gold: cost,
-    });
-  }
+    },
+    announce: { xp: 10, fame: 5, gold: cost },
+  }));
 }
 
 /**
@@ -102,8 +91,7 @@ export function handleBountyHunterVisit(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const goldGained = 150 + Math.floor(rng.next() * 101);
     ctx.treasuryDelta += goldGained;
     ctx.ledgerEntries.push(
@@ -111,16 +99,12 @@ export function handleBountyHunterVisit(
     );
 
     const fameGained = 10;
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: (chosen.fame || 0) + fameGained,
-    });
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      gold: goldGained,
-      fame: fameGained,
-    });
-  }
+    return {
+      updates: { fame: (chosen.fame || 0) + fameGained },
+      announce: { gold: goldGained, fame: fameGained },
+    };
+  });
 }
 
 /**
@@ -138,8 +122,7 @@ export function handleMidnightMarket(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const cost = 40;
     ctx.treasuryDelta -= cost;
     ctx.ledgerEntries.push(
@@ -147,9 +130,6 @@ export function handleMidnightMarket(
     );
 
     const xpGained = 20;
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-    });
 
     ctx.insightTokens.push(
       makeInsightToken(rng, {
@@ -162,11 +142,11 @@ export function handleMidnightMarket(
       })
     );
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      gold: cost,
-    });
-  }
+    return {
+      updates: { xp: (chosen.xp || 0) + xpGained },
+      announce: { gold: cost },
+    };
+  });
 }
 
 /**

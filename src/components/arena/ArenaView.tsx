@@ -18,6 +18,63 @@ import type { MinuteEvent } from '@/types/combat.types';
 import type { FightingStyle, WeatherType } from '@/types/game';
 import type { ArenaTier } from './ArenaBackground';
 
+/** Ambient layers — crowd reactions, audio, particles, weapon trail flash. */
+function AmbientFx({
+  effectsEnabled,
+  arenaTier,
+  crowdState,
+  weather,
+  arenaId,
+  arenaPrefs,
+  lastEventType,
+  isAttackEvent,
+  trailWeaponId,
+  attackerSide,
+  visibleCount,
+}: {
+  effectsEnabled: boolean;
+  arenaTier: ArenaTier;
+  crowdState: ReturnType<typeof useCrowdState>;
+  weather: WeatherType;
+  arenaId: string | undefined;
+  arenaPrefs: ReturnType<typeof useArenaPreferences>;
+  lastEventType: ReturnType<typeof useLastEventType>;
+  isAttackEvent: boolean;
+  trailWeaponId: string | undefined;
+  attackerSide: 'A' | 'D' | undefined;
+  visibleCount: number;
+}) {
+  return (
+    <>
+      {/* Crowd Reactions */}
+      {effectsEnabled && <CrowdReactions tier={arenaTier} state={crowdState} />}
+
+      {/* Audio Systems */}
+      <ArenaAudio
+        crowdState={crowdState}
+        weather={weather}
+        arenaId={arenaId}
+        arenaPrefs={arenaPrefs}
+      />
+
+      {/* Particle System */}
+      {effectsEnabled && <ParticleSystem trigger={lastEventType} sourceX={50} sourceY={50} />}
+
+      {/* Weapon Trail — keyed by visibleCount so consecutive attacks re-flash */}
+      {effectsEnabled && isAttackEvent && trailWeaponId && (
+        <WeaponTrail
+          key={visibleCount}
+          trigger
+          weaponType={weaponTrailTypeFor(trailWeaponId)}
+          direction={attackerSide === 'D' ? 'left' : 'right'}
+          sourceX={attackerSide === 'D' ? 72 : 28}
+          sourceY={45}
+        />
+      )}
+    </>
+  );
+}
+
 interface ArenaViewProps {
   nameA: string;
   nameD: string;
@@ -129,33 +186,19 @@ export default function ArenaView({
         className="absolute inset-0"
       />
 
-      {/* Crowd Reactions */}
-      {arenaPrefs.effectsEnabled && <CrowdReactions tier={arenaTier} state={crowdState} />}
-
-      {/* Audio Systems */}
-      <ArenaAudio
+      <AmbientFx
+        effectsEnabled={arenaPrefs.effectsEnabled}
+        arenaTier={arenaTier}
         crowdState={crowdState}
         weather={weather}
         arenaId={arenaId}
         arenaPrefs={arenaPrefs}
+        lastEventType={lastEventType}
+        isAttackEvent={isAttackEvent}
+        trailWeaponId={trailWeaponId}
+        attackerSide={attackerSide}
+        visibleCount={visibleCount}
       />
-
-      {/* Particle System */}
-      {arenaPrefs.effectsEnabled && (
-        <ParticleSystem trigger={lastEventType} sourceX={50} sourceY={50} />
-      )}
-
-      {/* Weapon Trail — keyed by visibleCount so consecutive attacks re-flash */}
-      {arenaPrefs.effectsEnabled && isAttackEvent && trailWeaponId && (
-        <WeaponTrail
-          key={visibleCount}
-          trigger
-          weaponType={weaponTrailTypeFor(trailWeaponId)}
-          direction={attackerSide === 'D' ? 'left' : 'right'}
-          sourceX={attackerSide === 'D' ? 72 : 28}
-          sourceY={45}
-        />
-      )}
 
       {/* Speech Bubbles */}
       <SpeechBubbles

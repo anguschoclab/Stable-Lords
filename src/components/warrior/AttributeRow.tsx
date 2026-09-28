@@ -10,6 +10,53 @@ import { getAttributeRowState } from './attributeRowState';
 import { AttributeRowStatus } from './AttributeRowStatus';
 import { AttributeRowTooltip } from './AttributeRowTooltip';
 
+/** Progress bar with potential-ceiling marker; color tracks improve chance. */
+function AttributeProgress({
+  attrKey,
+  val,
+  isRevealed,
+  potVal,
+  chance,
+}: {
+  attrKey: keyof Attributes;
+  val: number;
+  isRevealed: boolean;
+  potVal: number;
+  chance: number;
+}) {
+  return (
+    <div
+      className="flex-1 relative"
+      data-testid={`training-bar-${attrKey}`}
+      data-chance-class={
+        chance === 0 ? 'muted' : chance < 40 ? 'arena-gold' : chance < 70 ? 'primary' : 'arena-fame'
+      }
+    >
+      <Progress
+        value={(val / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}
+        className={cn(
+          'h-1 bg-white/5',
+          chance === 0
+            ? '[&>div]:bg-muted-foreground/30'
+            : chance < 40
+              ? '[&>div]:bg-arena-gold'
+              : chance < 70
+                ? '[&>div]:bg-primary'
+                : '[&>div]:bg-arena-fame'
+        )}
+      />
+      {isRevealed && (
+        <div
+          data-testid={`ceiling-marker-${attrKey}`}
+          className="absolute top-0 bottom-0 w-px bg-arena-gold/60 z-10"
+          style={{ left: `${(potVal / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}%` }}
+          title="Potential Ceiling"
+        />
+      )}
+    </div>
+  );
+}
+
 interface AttributeRowProps {
   warrior: Warrior;
   attributeKey: keyof Attributes;
@@ -81,41 +128,13 @@ export function AttributeRow({
           </div>
 
           {/* Progress Bar */}
-          <div
-            className="flex-1 relative"
-            data-testid={`training-bar-${key}`}
-            data-chance-class={
-              chance === 0
-                ? 'muted'
-                : chance < 40
-                  ? 'arena-gold'
-                  : chance < 70
-                    ? 'primary'
-                    : 'arena-fame'
-            }
-          >
-            <Progress
-              value={(val / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}
-              className={cn(
-                'h-1 bg-white/5',
-                chance === 0
-                  ? '[&>div]:bg-muted-foreground/30'
-                  : chance < 40
-                    ? '[&>div]:bg-arena-gold'
-                    : chance < 70
-                      ? '[&>div]:bg-primary'
-                      : '[&>div]:bg-arena-fame'
-              )}
-            />
-            {isRevealed && (
-              <div
-                data-testid={`ceiling-marker-${key}`}
-                className="absolute top-0 bottom-0 w-px bg-arena-gold/60 z-10"
-                style={{ left: `${(potVal / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}%` }}
-                title="Potential Ceiling"
-              />
-            )}
-          </div>
+          <AttributeProgress
+            attrKey={key}
+            val={val}
+            isRevealed={isRevealed}
+            potVal={potVal}
+            chance={chance}
+          />
 
           {isAdvisorRecommended && !isSelected && (
             <span

@@ -16,6 +16,77 @@ interface CoachWarning {
   color: string;
 }
 
+type CoachState = ReturnType<typeof useGameStore.getState>;
+
+/** Computes the active coach warnings: insolvency, critical injuries, gear mismatches. */
+function buildWarnings(
+  state: Pick<CoachState, 'roster' | 'arenaHistory'>,
+  rosterLength: number,
+  trainersLength: number,
+  treasury: number
+): CoachWarning[] {
+  const list: CoachWarning[] = [];
+
+  // 💰 Bankruptcy Check
+  const weeklyUpkeep = rosterLength * 10 + trainersLength * 50;
+  if (treasury < weeklyUpkeep) {
+    list.push({
+      id: 'bankruptcy',
+      type: 'CRITICAL',
+      label: 'Impending Insolvency',
+      description: `Treasury (${treasury}g) cannot cover upkeep (${weeklyUpkeep}g). Disband assets or win a bout immediately.`,
+      icon: Coins,
+      color: 'text-destructive border-destructive/20 bg-destructive/10',
+    });
+  }
+
+  // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
+  const { injuredActive } = state.roster.reduce(
+    (acc, w) => {
+      const inActiveBout = state.arenaHistory.some(
+        (f) => (f.warriorIdA === w.id || f.warriorIdD === w.id) && f.winner === null
+      );
+      if (!inActiveBout) return acc;
+      acc.activeFighters.push(w);
+      if ((w.derivedStats?.hp || 0) < 30) acc.injuredActive.push(w);
+      return acc;
+    },
+    {
+      activeFighters: [] as typeof state.roster,
+      injuredActive: [] as typeof state.roster,
+    }
+  );
+  if (injuredActive.length > 0) {
+    list.push({
+      id: 'crit_injury',
+      type: 'CRITICAL',
+      label: 'Critical Condition',
+      description: `${injuredActive[0]?.name ?? 'A fighter'} is entering the arena with <30% health. Mortality risk is extremely high.`,
+      icon: Activity,
+      color: 'text-arena-blood border-arena-blood/20 bg-arena-blood/10',
+    });
+  }
+
+  // ⚖️ Encumbrance Check (Heavy gear on fast style) - needs full roster for derivedStats
+  const mismatchedSprints = state.roster.filter((w) => {
+    const isFast = ['LUNGING ATTACK', 'SLASHING ATTACK'].includes(w.style);
+    const isHeavy = (w.derivedStats?.endurance || 0) < (w.derivedStats?.encumbrance || 0);
+    return isFast && isHeavy;
+  });
+  if (mismatchedSprints.length > 0) {
+    list.push({
+      id: 'encumbrance_mismatch',
+      type: 'WARNING',
+      label: 'Style Mismatch',
+      description: `${mismatchedSprints[0]?.name ?? 'A fighter'} loadout exceeds endurance. High fatigue penalties will apply.`,
+      icon: Zap,
+      color: 'text-arena-gold border-arena-gold/20 bg-arena-gold/10',
+    });
+  }
+
+  return list;
+}
+
 /**
  * Coach overlay.
  */
@@ -31,68 +102,10 @@ export function CoachOverlay() {
   const trainersLength = useGameStore(useShallow((s) => s.trainers.length));
   const treasury = useGameStore(useShallow((s) => s.treasury));
 
-  const warnings = useMemo(() => {
-    const list: CoachWarning[] = [];
-
-    // 💰 Bankruptcy Check
-    const weeklyUpkeep = rosterLength * 10 + trainersLength * 50;
-    if (treasury < weeklyUpkeep) {
-      list.push({
-        id: 'bankruptcy',
-        type: 'CRITICAL',
-        label: 'Impending Insolvency',
-        description: `Treasury (${treasury}g) cannot cover upkeep (${weeklyUpkeep}g). Disband assets or win a bout immediately.`,
-        icon: Coins,
-        color: 'text-destructive border-destructive/20 bg-destructive/10',
-      });
-    }
-
-    // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
-    const { activeFighters: _activeFighters, injuredActive } = state.roster.reduce(
-      (acc, w) => {
-        const inActiveBout = state.arenaHistory.some(
-          (f) => (f.warriorIdA === w.id || f.warriorIdD === w.id) && f.winner === null
-        );
-        if (!inActiveBout) return acc;
-        acc.activeFighters.push(w);
-        if ((w.derivedStats?.hp || 0) < 30) acc.injuredActive.push(w);
-        return acc;
-      },
-      {
-        activeFighters: [] as typeof state.roster,
-        injuredActive: [] as typeof state.roster,
-      }
-    );
-    if (injuredActive.length > 0) {
-      list.push({
-        id: 'crit_injury',
-        type: 'CRITICAL',
-        label: 'Critical Condition',
-        description: `${injuredActive[0]?.name ?? 'A fighter'} is entering the arena with <30% health. Mortality risk is extremely high.`,
-        icon: Activity,
-        color: 'text-arena-blood border-arena-blood/20 bg-arena-blood/10',
-      });
-    }
-
-    // ⚖️ Encumbrance Check (Heavy gear on fast style) - needs full roster for derivedStats
-    const mismatchedSprints = state.roster.filter((w) => {
-      const isFast = ['LUNGING ATTACK', 'SLASHING ATTACK'].includes(w.style);
-      const isHeavy = (w.derivedStats?.endurance || 0) < (w.derivedStats?.encumbrance || 0);
-      return isFast && isHeavy;
-    });
-    if (mismatchedSprints.length > 0) {
-      list.push({
-        id: 'encumbrance_mismatch',
-        type: 'WARNING',
-        label: 'Style Mismatch',
-        description: `${mismatchedSprints[0]?.name ?? 'A fighter'} loadout exceeds endurance. High fatigue penalties will apply.`,
-        icon: Zap,
-        color: 'text-arena-gold border-arena-gold/20 bg-arena-gold/10',
-      });
-    }
-
-    return list;
-  }, [state, rosterLength, trainersLength, treasury]);
+  const warnings = useMemo(
+    () => buildWarnings(state, rosterLength, trainersLength, treasury),
+    [state, rosterLength, trainersLength, treasury]
+  );
 
   if (warnings.length === 0) return null;
 

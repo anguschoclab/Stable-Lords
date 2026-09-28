@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useGameStore, reconstructGameState } from '@/state/useGameStore';
-import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import type { GameState, RivalStableData, Owner } from '@/types/state.types';
-import { GameStateSchema } from '@/schemas/gameStateSchema';
+import { useGameStore } from '@/state/useGameStore';
+import type { Owner } from '@/types/state.types';
 import { toast } from 'sonner';
-import { engineProxy } from '@/engine/runtime/workerProxy';
-import { engineSession } from '@/engine/runtime/session';
-import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
+import {
+  exportSessionState,
+  importSaveFile,
+  regenerateRivals,
+  skipToSeasonEnd,
+} from './adminActions';
 
 /**
  *
@@ -48,48 +49,10 @@ export function useAdminTools() {
 
   const [activeCategory, setActiveCategory] = useState<AdminCategory>('SYSTEM');
 
-  const handleExport = useCallback(() => {
-    const currentState = useGameStore.getState();
-    const data = JSON.stringify({ state: currentState }, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `stable-lords-export-w${week}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success('Current session state exported.');
-  }, [week]);
+  const handleExport = useCallback(() => exportSessionState(week), [week]);
 
   const handleImport = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const content = event.target?.result;
-          if (typeof content !== 'string') throw new Error('Invalid file content');
-          const data = JSON.parse(content);
-          if (data && data.state) {
-            const validatedState = GameStateSchema.parse(data.state) as GameState;
-            loadGame('autosave', validatedState);
-            toast.success('Save loaded successfully.');
-          } else {
-            toast.error('Invalid save file.');
-          }
-        } catch (err) {
-          if (err instanceof Error && err.name === 'ZodError') {
-            toast.error('Invalid save data: schema validation failed');
-            console.error('Zod validation error:', err);
-          } else {
-            toast.error(err instanceof Error ? err.message : 'Failed to load save.');
-          }
-        }
-      };
-      reader.onerror = () => toast.error('Failed to read save file.');
-      reader.readAsText(file);
-    },
+    (e: React.ChangeEvent<HTMLInputElement>) => importSaveFile(e, loadGame),
     [loadGame]
   );
 
@@ -99,31 +62,7 @@ export function useAdminTools() {
   }, [doAdvanceWeek]);
 
   const skipSeason = useCallback(async () => {
-    const store = useGameStore.getState();
-    if (store.isSimulating) {
-      toast.error('Simulation already in progress.');
-      return;
-    }
-    const currentState = reconstructGameState(store);
-    store.setSimulating(true);
-    try {
-      const result = await engineSession.runExclusive(() =>
-        engineProxy.skipToQuarterEnd(currentState)
-      );
-      // undefined → epoch moved mid-run (loadGame/reset); discard the result.
-      if (!result) return;
-      // Batch advancement never does I/O — flush drained transcripts here on
-      // the main thread where the Electron/OPFS switch is visible.
-      archiveBoutLogs(result.pendingArchives ?? []);
-      // WorldPass already computed the new season each week — no post-hoc fix needed.
-      store.loadGame(store.activeSlotId || 'autosave', result.state);
-      toast.success('Season rollover forced.');
-    } catch (err) {
-      console.error('Skip season failed:', err);
-      toast.error('Season rollover failed.');
-    } finally {
-      store.setSimulating(false);
-    }
+    await skipToSeasonEnd();
   }, []);
 
   const skipFTUE = useCallback(() => {
@@ -144,16 +83,7 @@ export function useAdminTools() {
   }, [setState]);
 
   const resetRivals = useCallback(() => {
-    import('@/engine/rivals').then(({ generateRivalStables }) => {
-      const newRivals = generateRivalStables(
-        23,
-        cryptoRandomInt(0, 2147483647)
-      ) as RivalStableData[];
-      setState((draft) => {
-        draft.rivals = newRivals;
-      });
-      toast.success('Rival ecosystem regenerated.');
-    });
+    regenerateRivals(setState);
   }, [setState]);
 
   const forceMastery = useCallback(() => {

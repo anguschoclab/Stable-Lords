@@ -16,6 +16,136 @@ import { isActive } from '@/engine/warrior/warriorStatus';
  * Stable Lords — Random Event Pipeline Pass
  */
 
+type Events = Record<string, EventNarrative>;
+
+interface EventCtx {
+  brawlRng: IRNGService;
+  nextWeek: number;
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>;
+  newsletterItems: NewsletterItem[];
+  ledgerEntries: LedgerEntry[];
+  treasuryDelta: number;
+}
+
+/** 🍺 Tavern Brawl Event */
+function rollTavernBrawl(state: GameState, events: Events, ctx: EventCtx): void {
+  if (ctx.brawlRng.next() >= 0.05 || state.roster.length === 0) return;
+  const activeWarriors = filterHealthy(state.roster);
+  if (activeWarriors.length === 0) return;
+  const brawler = ctx.brawlRng.pick(activeWarriors);
+  const e = events.tavern_brawl;
+  if (!brawler || !e) return;
+
+  ctx.rosterUpdates.set(brawler.id, {
+    fame: (brawler.fame || 0) + 5,
+    injuries: [
+      ...(brawler.injuries || []),
+      {
+        id: ctx.brawlRng.uuid() as InjuryId,
+        name: e.injury_name ?? 'Black Eye',
+        description: e.injury_desc ?? 'Caught a nasty right hook in the tavern.',
+        severity: 'Minor',
+        weeksRemaining: 1,
+        penalties: { ATT: -1 },
+      },
+    ],
+  });
+
+  ctx.newsletterItems.push(
+    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: brawler.name, fame: 5 }, 'event')
+  );
+}
+
+/** ☄️ Star-crossed Blessing Event */
+function rollCelestialBlessing(state: GameState, events: Events, ctx: EventCtx): void {
+  const blessingChance = state.weather === 'Mana Surge' ? 0.25 : 0.03;
+  if (ctx.brawlRng.next() >= blessingChance || state.roster.length === 0) return;
+  const youngWarriors = state.roster.filter((w) => isActive(w) && (w.age || 0) <= 25);
+  if (youngWarriors.length === 0) return;
+  const chosen = ctx.brawlRng.pick(youngWarriors);
+  const e = events.celestial_blessing;
+  if (!chosen || !e) return;
+
+  const existingUpdate = ctx.rosterUpdates.get(chosen.id) || {};
+  ctx.rosterUpdates.set(chosen.id, {
+    ...existingUpdate,
+    fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 15,
+    xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 2,
+  });
+
+  ctx.newsletterItems.push(
+    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 15, xp: 2 }, 'event')
+  );
+}
+
+/** 🏺 Lost Relic Discovery Event */
+function rollLostRelic(state: GameState, events: Events, ctx: EventCtx): void {
+  if (ctx.brawlRng.next() >= 0.04 || state.roster.length === 0) return;
+  const activeWarriors = filterActive(state.roster);
+  if (activeWarriors.length === 0) return;
+  const chosen = ctx.brawlRng.pick(activeWarriors);
+  const e = events.lost_relic;
+  if (!chosen || !e) return;
+
+  const existingUpdate = ctx.rosterUpdates.get(chosen.id) || {};
+  ctx.rosterUpdates.set(chosen.id, {
+    ...existingUpdate,
+    fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 10,
+    xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
+  });
+
+  ctx.newsletterItems.push(
+    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 10, xp: 5 }, 'event')
+  );
+}
+
+/** 💰 Mysterious Patron Event */
+function rollMysteriousPatron(events: Events, ctx: EventCtx): void {
+  if (ctx.brawlRng.next() >= 0.05) return;
+  const e = events.mysterious_patron;
+  if (!e) return;
+
+  const gold = rollRange(ctx.brawlRng, 100, 401); // 100-500 gold
+  ctx.treasuryDelta += gold;
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(ctx.brawlRng, ctx.nextWeek, 'Mysterious Patron Donation', gold, 'other')
+  );
+
+  ctx.newsletterItems.push(
+    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { gold }, 'event')
+  );
+}
+
+/** 👺 Goblin Merchant Event */
+function rollGoblinMerchant(state: GameState, events: Events, ctx: EventCtx): void {
+  if (
+    ctx.brawlRng.next() >= 0.04 ||
+    (state.treasury || 0) + ctx.treasuryDelta < 20 ||
+    state.roster.length === 0
+  ) {
+    return;
+  }
+  const activeWarriors = filterActive(state.roster);
+  if (activeWarriors.length === 0) return;
+  const chosen = ctx.brawlRng.pick(activeWarriors);
+  const e = events.goblin_merchant;
+  if (!chosen || !e) return;
+
+  const existingUpdate = ctx.rosterUpdates.get(chosen.id) || {};
+  const currentXp = existingUpdate.xp !== undefined ? existingUpdate.xp : chosen.xp || 0;
+  ctx.rosterUpdates.set(chosen.id, {
+    ...existingUpdate,
+    xp: currentXp + 5,
+  });
+
+  ctx.treasuryDelta -= 20;
+  ctx.ledgerEntries.push(makeLedgerEntry(ctx.brawlRng, ctx.nextWeek, 'Goblin Merchant', -20, 'other'));
+
+  ctx.newsletterItems.push(
+    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 5 }, 'event')
+  );
+}
+
 /**
  * Run event pass.
  * @param state -
@@ -27,161 +157,26 @@ export function runEventPass(
   nextWeek: number,
   rootRng?: IRNGService
 ): StateImpact {
-  const brawlRng = resolveRng(rootRng, nextWeek * 999 + 1);
-  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const newsletterItems: NewsletterItem[] = [];
-  let treasuryDelta = 0;
-  const ledgerEntries: LedgerEntry[] = [];
-  const events = narrativeContent.events as unknown as Record<string, EventNarrative>;
+  const events = narrativeContent.events as unknown as Events;
+  const ctx: EventCtx = {
+    brawlRng: resolveRng(rootRng, nextWeek * 999 + 1),
+    nextWeek,
+    rosterUpdates: new Map<WarriorId, Partial<Warrior>>(),
+    newsletterItems: [],
+    ledgerEntries: [],
+    treasuryDelta: 0,
+  };
 
-  // 🍺 Tavern Brawl Event
-  if (brawlRng.next() < 0.05 && state.roster.length > 0) {
-    const activeWarriors = filterHealthy(state.roster);
-    if (activeWarriors.length > 0) {
-      const brawler = brawlRng.pick(activeWarriors);
-      const e = events.tavern_brawl;
-      if (brawler && e) {
-        rosterUpdates.set(brawler.id, {
-          fame: (brawler.fame || 0) + 5,
-          injuries: [
-            ...(brawler.injuries || []),
-            {
-              id: brawlRng.uuid() as InjuryId,
-              name: e.injury_name ?? 'Black Eye',
-              description: e.injury_desc ?? 'Caught a nasty right hook in the tavern.',
-              severity: 'Minor',
-              weeksRemaining: 1,
-              penalties: { ATT: -1 },
-            },
-          ],
-        });
-
-        newsletterItems.push(
-          makeNewsletterItem(
-            brawlRng,
-            nextWeek,
-            e.title,
-            e.newsletter,
-            { name: brawler.name, fame: 5 },
-            'event'
-          )
-        );
-      }
-    }
-  }
-
-  // ☄️ Star-crossed Blessing Event
-  const blessingChance = state.weather === 'Mana Surge' ? 0.25 : 0.03;
-  if (brawlRng.next() < blessingChance && state.roster.length > 0) {
-    const youngWarriors = state.roster.filter((w) => isActive(w) && (w.age || 0) <= 25);
-    if (youngWarriors.length > 0) {
-      const chosen = brawlRng.pick(youngWarriors);
-      const e = events.celestial_blessing;
-      if (chosen && e) {
-        const existingUpdate = rosterUpdates.get(chosen.id) || {};
-        rosterUpdates.set(chosen.id, {
-          ...existingUpdate,
-          fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 15,
-          xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 2,
-        });
-
-        newsletterItems.push(
-          makeNewsletterItem(
-            brawlRng,
-            nextWeek,
-            e.title,
-            e.newsletter,
-            { name: chosen.name, fame: 15, xp: 2 },
-            'event'
-          )
-        );
-      }
-    }
-  }
-
-  // 🏺 Lost Relic Discovery Event
-  if (brawlRng.next() < 0.04 && state.roster.length > 0) {
-    const activeWarriors = filterActive(state.roster);
-    if (activeWarriors.length > 0) {
-      const chosen = brawlRng.pick(activeWarriors);
-      const e = events.lost_relic;
-      if (chosen && e) {
-        const existingUpdate = rosterUpdates.get(chosen.id) || {};
-        rosterUpdates.set(chosen.id, {
-          ...existingUpdate,
-          fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 10,
-          xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
-        });
-
-        newsletterItems.push(
-          makeNewsletterItem(
-            brawlRng,
-            nextWeek,
-            e.title,
-            e.newsletter,
-            { name: chosen.name, fame: 10, xp: 5 },
-            'event'
-          )
-        );
-      }
-    }
-  }
-
-  // 💰 Mysterious Patron Event
-  if (brawlRng.next() < 0.05) {
-    const e = events.mysterious_patron;
-    if (e) {
-      const gold = rollRange(brawlRng, 100, 401); // 100-500 gold
-      treasuryDelta += gold;
-      ledgerEntries.push(
-        makeLedgerEntry(brawlRng, nextWeek, 'Mysterious Patron Donation', gold, 'other')
-      );
-
-      newsletterItems.push(
-        makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { gold }, 'event')
-      );
-    }
-  }
-
-  // 👺 Goblin Merchant Event
-  if (
-    brawlRng.next() < 0.04 &&
-    (state.treasury || 0) + treasuryDelta >= 20 &&
-    state.roster.length > 0
-  ) {
-    const activeWarriors = filterActive(state.roster);
-    if (activeWarriors.length > 0) {
-      const chosen = brawlRng.pick(activeWarriors);
-      const e = events.goblin_merchant;
-      if (chosen && e) {
-        const existingUpdate = rosterUpdates.get(chosen.id) || {};
-        const currentXp = existingUpdate.xp !== undefined ? existingUpdate.xp : chosen.xp || 0;
-        rosterUpdates.set(chosen.id, {
-          ...existingUpdate,
-          xp: currentXp + 5,
-        });
-
-        treasuryDelta -= 20;
-        ledgerEntries.push(makeLedgerEntry(brawlRng, nextWeek, 'Goblin Merchant', -20, 'other'));
-
-        newsletterItems.push(
-          makeNewsletterItem(
-            brawlRng,
-            nextWeek,
-            e.title,
-            e.newsletter,
-            { name: chosen.name, xp: 5 },
-            'event'
-          )
-        );
-      }
-    }
-  }
+  rollTavernBrawl(state, events, ctx);
+  rollCelestialBlessing(state, events, ctx);
+  rollLostRelic(state, events, ctx);
+  rollMysteriousPatron(events, ctx);
+  rollGoblinMerchant(state, events, ctx);
 
   return {
-    rosterUpdates,
-    newsletterItems,
-    ...(ledgerEntries.length > 0 ? { ledgerEntries } : {}),
-    ...(treasuryDelta !== 0 ? { treasuryDelta } : {}),
+    rosterUpdates: ctx.rosterUpdates,
+    newsletterItems: ctx.newsletterItems,
+    ...(ctx.ledgerEntries.length > 0 ? { ledgerEntries: ctx.ledgerEntries } : {}),
+    ...(ctx.treasuryDelta !== 0 ? { treasuryDelta: ctx.treasuryDelta } : {}),
   };
 }

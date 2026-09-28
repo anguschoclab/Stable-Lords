@@ -102,6 +102,63 @@ async function flushDeferredLogs(
   return results.filter((l): l is DeferredBoutLog => l !== null);
 }
 
+/** Headless: auto-accept attractive contracts proposed to player warriors. */
+function autoRespondToPlayerOffers(state: GameState): void {
+  const playerIds = new Set(state.roster.map((w) => w.id));
+  const playerOffers = Object.values(state.boutOffers || {}).filter(
+    (o) => o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id))
+  );
+
+  playerOffers.forEach((offer) => {
+    const playerWarriorIds = offer.warriorIds.filter((id) => playerIds.has(id));
+
+    if (offer.hype >= 20 || offer.purse >= 50) {
+      playerWarriorIds.forEach((id) => {
+        offer.responses[id] = 'Accepted';
+      });
+
+      const allResponded = offer.warriorIds.every((wid) => offer.responses[wid] !== 'Pending');
+      if (allResponded) {
+        offer.status = 'Signed';
+      }
+    }
+  });
+}
+
+/** Fold the last week's per-pass timings into the aggregate table. */
+function aggregatePassProfile(passAgg: Map<string, PassProfileRow>): void {
+  for (const t of getLastPipelineProfile() ?? []) {
+    const row = passAgg.get(t.id) ?? {
+      id: t.id,
+      stage: t.stage,
+      weeks: 0,
+      totalMs: 0,
+      avgMs: 0,
+      maxMs: 0,
+    };
+    row.weeks++;
+    row.totalMs += t.ms;
+    row.avgMs = row.totalMs / row.weeks;
+    row.maxMs = Math.max(row.maxMs, t.ms);
+    passAgg.set(t.id, row);
+  }
+}
+
+/** Drain deferred bout transcripts into the archive sink, re-queuing failures. */
+async function drainArchive(
+  state: GameState,
+  archiveService?: BoutLogArchive
+): Promise<GameState> {
+  if (!archiveService) return state;
+  const logs = drainDeferredBoutLogs(state);
+  if (logs.length === 0) return state;
+  const failed = await flushDeferredLogs(logs, archiveService);
+  if (failed.length > 0) {
+    state.deferredBoutLogs = [...(state.deferredBoutLogs ?? []), ...failed];
+  }
+  return state;
+}
+
 /**
  * Run a headless simulation loop.
  * Asynchronous and deterministic.
@@ -137,99 +194,55 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
 
   try {
     for (let w = 1; w <= weeks; w++) {
-    // A. Weekly Decision Logic (AI/Player)
+      // A. Weekly Decision Logic (AI/Player)
+      autoRespondToPlayerOffers(state);
 
-    // Headless: Auto-Respond to Player Contracts
-    const playerIds = new Set(state.roster.map((w) => w.id));
-    const playerOffers = Object.values(state.boutOffers || {}).filter(
-      (o) => o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id))
-    );
+      // B. Advance Week
+      state = await advanceWeek(state);
 
-    playerOffers.forEach((offer) => {
-      const playerWarriorIds = offer.warriorIds.filter((id) => playerIds.has(id));
+      if (config.profile) aggregatePassProfile(passAgg);
 
-      if (offer.hype >= 20 || offer.purse >= 50) {
-        playerWarriorIds.forEach((id) => {
-          offer.responses[id] = 'Accepted';
+      // C. Record this week's new bouts/deaths/retirements by id — before any
+      // truncation can drop the underlying entries.
+      tracker.recordWeek(state);
+      config.onWeek?.(state, w);
+
+      // D. Drain deferred bout transcripts weekly when an archive sink is
+      // configured — keeps peak transcript memory at ~1 week of bouts.
+      // Failures are re-queued for next week's drain (same retry semantics as
+      // the app path) — transcripts are never silently dropped.
+      state = await drainArchive(state, archiveService);
+
+      let totalWarriors = 0;
+      state.rivals.forEach((r) => (totalWarriors += r.roster.length));
+
+      if (w % logFrequency === 0) {
+        console.log(
+          `[Harness] Week ${state.week} | Roster: ${state.roster.length} | Treasury: ${state.treasury}`
+        );
+        const cumulative = tracker.snapshot();
+        pulses.push({
+          ...collectPulse(state),
+          cumulativeBouts: cumulative.totalBouts,
+          cumulativeDeaths: cumulative.deaths,
+          cumulativeRetired: cumulative.retired,
         });
+      }
 
-        const allResponded = offer.warriorIds.every((wid) => offer.responses[wid] !== 'Pending');
-        if (allResponded) {
-          offer.status = 'Signed';
+      // E. Periodic truncation — same 50-week cadence as autosim. The tracker
+      // needs no reset: ids already counted stay counted even when truncation
+      // drops the retained entries.
+      if (truncateInterval > 0 && w % truncateInterval === 0) {
+        state = truncateState(state, config.truncationCaps);
+      }
+
+      // Stop Conditions (Optional)
+      if (!config.ignoreBankruptcy) {
+        if (state.treasury < -5000) {
+          console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
+          break;
         }
       }
-    });
-
-    // B. Advance Week
-    state = await advanceWeek(state);
-
-    if (config.profile) {
-      for (const t of getLastPipelineProfile() ?? []) {
-        const row = passAgg.get(t.id) ?? {
-          id: t.id,
-          stage: t.stage,
-          weeks: 0,
-          totalMs: 0,
-          avgMs: 0,
-          maxMs: 0,
-        };
-        row.weeks++;
-        row.totalMs += t.ms;
-        row.avgMs = row.totalMs / row.weeks;
-        row.maxMs = Math.max(row.maxMs, t.ms);
-        passAgg.set(t.id, row);
-      }
-    }
-
-    // C. Record this week's new bouts/deaths/retirements by id — before any
-    // truncation can drop the underlying entries.
-    tracker.recordWeek(state);
-    config.onWeek?.(state, w);
-
-    // D. Drain deferred bout transcripts weekly when an archive sink is
-    // configured — keeps peak transcript memory at ~1 week of bouts.
-    // Failures are re-queued for next week's drain (same retry semantics as
-    // the app path) — transcripts are never silently dropped.
-    if (archiveService) {
-      const logs = drainDeferredBoutLogs(state);
-      if (logs.length > 0) {
-        const failed = await flushDeferredLogs(logs, archiveService);
-        if (failed.length > 0) {
-          state.deferredBoutLogs = [...(state.deferredBoutLogs ?? []), ...failed];
-        }
-      }
-    }
-
-    let totalWarriors = 0;
-    state.rivals.forEach((r) => (totalWarriors += r.roster.length));
-
-    if (w % logFrequency === 0) {
-      console.log(
-        `[Harness] Week ${state.week} | Roster: ${state.roster.length} | Treasury: ${state.treasury}`
-      );
-      const cumulative = tracker.snapshot();
-      pulses.push({
-        ...collectPulse(state),
-        cumulativeBouts: cumulative.totalBouts,
-        cumulativeDeaths: cumulative.deaths,
-        cumulativeRetired: cumulative.retired,
-      });
-    }
-
-    // E. Periodic truncation — same 50-week cadence as autosim. The tracker
-    // needs no reset: ids already counted stay counted even when truncation
-    // drops the retained entries.
-    if (truncateInterval > 0 && w % truncateInterval === 0) {
-      state = truncateState(state, config.truncationCaps);
-    }
-
-    // Stop Conditions (Optional)
-    if (!config.ignoreBankruptcy) {
-      if (state.treasury < -5000) {
-        console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
-        break;
-      }
-    }
     }
   } finally {
     if (config.profile) {
@@ -241,15 +254,7 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
   // Final pass: flush any remaining transcripts and return a bounded state.
   // Unarchivable logs are retained in finalState (bounded by the truncation
   // below) rather than dropped.
-  if (archiveService) {
-    const logs = drainDeferredBoutLogs(state);
-    if (logs.length > 0) {
-      const failed = await flushDeferredLogs(logs, archiveService);
-      if (failed.length > 0) {
-        state.deferredBoutLogs = [...(state.deferredBoutLogs ?? []), ...failed];
-      }
-    }
-  }
+  state = await drainArchive(state, archiveService);
   if (truncateInterval > 0) {
     state = truncateState(state, config.truncationCaps);
   }

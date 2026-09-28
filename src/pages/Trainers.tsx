@@ -11,6 +11,53 @@ import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggl
 import { useTrainers } from '@/pages/Trainers/hooks/useTrainers';
 import { CurrentStaffTab, HireTab } from '@/pages/Trainers/tabs';
 
+/** Header stats cluster — staff capacity + budget. */
+function StaffStats({ staffCount, treasury }: { staffCount: number; treasury: number }) {
+  return (
+    <div className="flex items-center gap-6 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-none shadow-2xl">
+      <div className="flex flex-col items-center border-r border-white/10 pr-6">
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+          Staff Capacity
+        </span>
+        <span className="font-display font-black text-primary text-xl flex items-center gap-2 leading-none">
+          {staffCount} <span className="opacity-20">/</span> {TRAINER_MAX_PER_STABLE}
+        </span>
+      </div>
+      <div className="flex flex-col items-center">
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+          Budget
+        </span>
+        <span className="font-display font-black text-arena-gold text-xl flex items-center gap-2 leading-none">
+          {treasury.toLocaleString()}G
+        </span>
+      </div>
+    </div>
+  );
+}
+
+const TRAINER_TAB_TRIGGER =
+  'gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none';
+
+/** The four staff tabs — current, hire, mentors, legends. */
+function TrainerTabList() {
+  return (
+    <TabsList className="bg-white/[0.02] border border-white/5 p-1 h-14 rounded-none w-full justify-start overflow-x-auto no-scrollbar">
+      <TabsTrigger value="current" className={TRAINER_TAB_TRIGGER}>
+        <GraduationCap className="h-4 w-4" /> Current Staff
+      </TabsTrigger>
+      <TabsTrigger value="hire" className={TRAINER_TAB_TRIGGER}>
+        <UserPlus className="h-4 w-4" /> Hire
+      </TabsTrigger>
+      <TabsTrigger value="mentors" className={TRAINER_TAB_TRIGGER}>
+        <Award className="h-4 w-4" /> Legacy Mentors
+      </TabsTrigger>
+      <TabsTrigger value="legends" className={TRAINER_TAB_TRIGGER}>
+        <Skull className="h-4 w-4" /> Fallen Legends
+      </TabsTrigger>
+    </TabsList>
+  );
+}
+
 /**
  * Trainers.
  */
@@ -40,56 +87,11 @@ export default function Trainers() {
         eyebrow="Stable Staff"
         title="Trainers"
         subtitle="COACHING · DEVELOPMENT"
-        actions={
-          <div className="flex items-center gap-6 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-none shadow-2xl">
-            <div className="flex flex-col items-center border-r border-white/10 pr-6">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Staff Capacity
-              </span>
-              <span className="font-display font-black text-primary text-xl flex items-center gap-2 leading-none">
-                {currentTrainers.length} <span className="opacity-20">/</span>{' '}
-                {TRAINER_MAX_PER_STABLE}
-              </span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Budget
-              </span>
-              <span className="font-display font-black text-arena-gold text-xl flex items-center gap-2 leading-none">
-                {treasury.toLocaleString()}G
-              </span>
-            </div>
-          </div>
-        }
+        actions={<StaffStats staffCount={currentTrainers.length} treasury={treasury} />}
       />
 
       <Tabs defaultValue="current" className="space-y-12">
-        <TabsList className="bg-white/[0.02] border border-white/5 p-1 h-14 rounded-none w-full justify-start overflow-x-auto no-scrollbar">
-          <TabsTrigger
-            value="current"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
-          >
-            <GraduationCap className="h-4 w-4" /> Current Staff
-          </TabsTrigger>
-          <TabsTrigger
-            value="hire"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
-          >
-            <UserPlus className="h-4 w-4" /> Hire
-          </TabsTrigger>
-          <TabsTrigger
-            value="mentors"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
-          >
-            <Award className="h-4 w-4" /> Legacy Mentors
-          </TabsTrigger>
-          <TabsTrigger
-            value="legends"
-            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none"
-          >
-            <Skull className="h-4 w-4" /> Fallen Legends
-          </TabsTrigger>
-        </TabsList>
+        <TrainerTabList />
 
         <TabsContent
           value="current"

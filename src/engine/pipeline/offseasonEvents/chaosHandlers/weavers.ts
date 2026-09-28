@@ -11,7 +11,7 @@ import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
   pickActiveWarrior,
-  announceOffseasonEvent,
+  withChosenWarrior,
 } from '../types';
 
 /** Handler for the Shadow Tournament offseason event — unsanctioned fights with injury risk. */
@@ -126,35 +126,29 @@ export function handleChaosWeaverVisit(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const positiveTraits = Object.values(TRAITS).filter(
       (td): td is TraitDef => td !== undefined && td.sign === 'positive'
     );
     const grantedTrait = rng.pick(positiveTraits);
-    if (grantedTrait) {
-      const currentTraits = chosen.traits || [];
-      ctx.rosterUpdates.set(chosen.id, {
-        traits: [...currentTraits, grantedTrait.id],
-      });
+    if (!grantedTrait) return;
 
-      ctx.insightTokens.push(
-        makeInsightToken(rng, {
-          type: 'Style',
-          warriorId: chosen.id,
-          warriorName: chosen.name,
-          detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
-          origin: 'Chaos Weaver',
-          discoveredWeek: nextWeek,
-        })
-      );
+    ctx.insightTokens.push(
+      makeInsightToken(rng, {
+        type: 'Style',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
+        origin: 'Chaos Weaver',
+        discoveredWeek: nextWeek,
+      })
+    );
 
-      announceOffseasonEvent(ctx, rng, nextWeek, e, {
-        name: chosen.name,
-        trait: grantedTrait.name,
-      });
-    }
-  }
+    return {
+      updates: { traits: [...(chosen.traits || []), grantedTrait.id] },
+      announce: { trait: grantedTrait.name },
+    };
+  });
 }
 
 

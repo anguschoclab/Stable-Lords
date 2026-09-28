@@ -8,6 +8,7 @@ import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeWarrior } from './warriorFactory';
 import { generatePotential } from '@/engine/warrior/potential';
 import { BACKSTORY_IDS } from '@/data/backstories';
@@ -94,7 +95,14 @@ export function createFreshState(
     progression: DEFAULT_PROGRESSION,
   };
 
-  // 2. Generate Initial Rivals - Seeded selection
+  state.rivals = generateInitialRivals(rng);
+  state.recruitPool = generateInitialRecruitPool(rng);
+
+  return state;
+}
+
+/** Seeded selection of the initial rival stables. */
+function generateInitialRivals(rng: IRNGService): RivalStableData[] {
   const RIVAL_NAMES = (narrativeContent as NarrativeContent).recruitment.rival_stable_names;
   // Every seeded owner must map to a trait policy — the canonical list lives
   // in ai/traitPolicy so personalities can never drift out of coverage.
@@ -112,7 +120,7 @@ export function createFreshState(
     }
   }
 
-  state.rivals = pool.slice(0, INITIAL_RIVAL_COUNT).map((name): RivalStableData => {
+  return pool.slice(0, INITIAL_RIVAL_COUNT).map((name): RivalStableData => {
     const personalityIndex = Math.floor(rng.next() * PERSONALITIES.length);
     const backstoryIdx = Math.floor(rng.next() * BACKSTORY_IDS.length);
     const backstoryId = BACKSTORY_IDS[backstoryIdx];
@@ -141,8 +149,10 @@ export function createFreshState(
       trainingAssignments: [],
     };
   });
+}
 
-  // 3. Generate Initial Recruitment Pool (6 warriors) - Seeded stats
+/** Seeded 12-warrior initial recruitment pool (6 styles × 2). */
+function generateInitialRecruitPool(rng: IRNGService): PoolWarrior[] {
   const initialStyles = [
     FightingStyle.AimedBlow,
     FightingStyle.BashingAttack,
@@ -152,7 +162,7 @@ export function createFreshState(
     FightingStyle.WallOfSteel,
   ];
 
-  state.recruitPool = initialStyles
+  return initialStyles
     .concat(initialStyles)
     .slice(0, 12)
     .map((style, i) => {
@@ -185,6 +195,4 @@ export function createFreshState(
         potential: generatePotential(attrs, 'Common', rng),
       } as PoolWarrior;
     });
-
-  return state;
 }

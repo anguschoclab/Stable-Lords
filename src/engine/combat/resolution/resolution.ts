@@ -13,10 +13,11 @@ import {
   runFeint,
   runCommit,
   runRecovery,
+  type ExchangeState,
 } from './exchangeSubPhases';
 import { tickBleed } from './bleed';
 import { resolveInitiativePhase, resolveCombatOffenseDefense } from './phaseResolvers';
-import { prepareExchange } from './exchangePrep';
+import { prepareExchange, type ExchangeSetup } from './exchangePrep';
 import type { FighterState, ResolutionContext } from './types';
 import { type Phase as StylePhase } from '../../stylePassives';
 
@@ -79,11 +80,37 @@ export function resolveExchange(
   );
   events.push(iniEvent);
 
+  // Sub-phases 2–4: Feint → Commit → Attack/Defense → Endurance costs
+  runAttackExchange(ctx, fA, fD, s, es, aGoesFirst, phaseKey, events);
+
+  // Sub-phase 5: Recovery — write debt, handle zone transitions
+  runRecovery(fA, fD, es.recoveryDebtToWriteA, es.recoveryDebtToWriteD, events, ctx);
+
+  updateTacticStreaks(ctx, s.tactA.offTactic, s.tactD.offTactic);
+  tickBleedOnFighters(fA, fD, events);
+
+  return events;
+}
+
+/**
+ * Sub-phases 2–4: attacker feint, commit levels, offense/defense check, and
+ * endurance costs. Writes recovery debt into `es` for the recovery sub-phase.
+ */
+function runAttackExchange(
+  ctx: ResolutionContext,
+  fA: FighterState,
+  fD: FighterState,
+  s: ExchangeSetup,
+  es: ExchangeState,
+  aGoesFirst: boolean,
+  phaseKey: 'opening' | 'mid' | 'late',
+  events: CombatEvent[]
+): void {
   const att = aGoesFirst ? fA : fD;
   const def = aGoesFirst ? fD : fA;
 
   // Sub-phase 2: Feint (attacker only)
-  const feintResult = runFeint(rng, att, def);
+  const feintResult = runFeint(ctx.rng, att, def);
   events.push(...feintResult.events);
   const feintAttBonus = feintResult.feintBonus;
   const feintDefBonus = feintResult.feintFailed ? FEINT_FAILED_DEF_BONUS : 0;
@@ -128,7 +155,7 @@ export function resolveExchange(
     defCommit,
     es,
     phaseKey,
-    phase as StylePhase,
+    ctx.phase as StylePhase,
     events
   );
 
@@ -152,13 +179,14 @@ export function resolveExchange(
     s.OE_A,
     s.AL_A
   );
+}
 
-  // Sub-phase 5: Recovery — write debt, handle zone transitions
-  runRecovery(fA, fD, es.recoveryDebtToWriteA, es.recoveryDebtToWriteD, events, ctx);
-
-  // Track tactic streaks for overuse penalty
-  const currTacticA = s.tactA.offTactic;
-  const currTacticD = s.tactD.offTactic;
+/** Track tactic streaks for the overuse penalty. */
+function updateTacticStreaks(
+  ctx: ResolutionContext,
+  currTacticA: string,
+  currTacticD: string
+): void {
   ctx.tacticStreakA =
     currTacticA !== 'none' && ctx.lastOffTacticA === currTacticA
       ? ctx.tacticStreakA + 1
@@ -173,8 +201,14 @@ export function resolveExchange(
         : 0;
   ctx.lastOffTacticA = currTacticA;
   ctx.lastOffTacticD = currTacticD;
+}
 
-  // SL bleed: damage-over-time tick on any bleeding fighter, then decay.
+/** SL bleed: damage-over-time tick on any bleeding fighter, then decay. */
+function tickBleedOnFighters(
+  fA: FighterState,
+  fD: FighterState,
+  events: CombatEvent[]
+): void {
   for (const fighter of [fA, fD]) {
     const stacks = fighter.bleedStacks ?? 0;
     if (stacks > 0) {
@@ -191,6 +225,4 @@ export function resolveExchange(
       });
     }
   }
-
-  return events;
 }

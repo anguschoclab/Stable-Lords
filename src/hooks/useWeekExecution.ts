@@ -11,6 +11,54 @@ import { engineSession } from '@/engine/runtime/session';
 import type { AutosimResult } from '@/engine/autosim/autosim';
 import type { Warrior } from '@/types/warrior.types';
 
+/** Reads the post-advance store state into bout results + death toasts. */
+function applyPostAdvanceState(setResults: (r: BoutResult[]) => void): void {
+  const storeState = useGameStore.getState();
+  if (storeState.lastWeekBoutDisplay?.results) {
+    setResults(storeState.lastWeekBoutDisplay.results);
+  }
+
+  // Emit death toasts from lastWeekBoutDisplay (replaces engineEventBus-based toasts
+  // that only worked when processWeekBouts ran on the main thread)
+  if (storeState.lastWeekBoutDisplay?.deathNames) {
+    storeState.lastWeekBoutDisplay.deathNames.forEach((name) => {
+      toast(`${name} has fallen in the arena.`, {
+        description: 'The stands fall briefly silent.',
+        duration: 6000,
+      });
+    });
+  }
+}
+
+/**
+ * Runs the worker-pool autosim with progress callbacks, then loads the final
+ * state. `undefined` from runAutosim means the epoch moved mid-run — discard.
+ */
+async function runAutosimSession(
+  gameState: ReturnType<typeof useWorldState>,
+  weeks: number,
+  councilAutoPilot: boolean,
+  onProgress: (current: number, total: number) => void
+): Promise<AutosimResult | 'epoch-moved' | 'failed'> {
+  try {
+    const result = await engineSession.runExclusive(() =>
+      // onProgress must be a top-level arg: Comlink only detects proxy
+      // markers on direct arguments — a nested callback is structured-
+      // cloned into the worker and throws DataCloneError.
+      engineProxy.runAutosim(
+        gameState,
+        { weeksToSim: weeks, councilAutoPilot },
+        Comlink.proxy((currentWeek: number) => onProgress(currentWeek, weeks))
+      )
+    );
+    return result ?? 'epoch-moved';
+  } catch (err) {
+    console.error('Autosim failed', err);
+    toast.error('Auto-simulation failed.');
+    return 'failed';
+  }
+}
+
 /**
  * Self-contained hook that owns the entire week-execution lifecycle.
  * Can be called from any component — no props required.
@@ -69,21 +117,7 @@ export function useWeekExecution() {
       }
 
       // Populate results from store after advance completes
-      const storeState = useGameStore.getState();
-      if (storeState.lastWeekBoutDisplay?.results) {
-        setResults(storeState.lastWeekBoutDisplay.results);
-      }
-
-      // Emit death toasts from lastWeekBoutDisplay (replaces engineEventBus-based toasts
-      // that only worked when processWeekBouts ran on the main thread)
-      if (storeState.lastWeekBoutDisplay?.deathNames) {
-        storeState.lastWeekBoutDisplay.deathNames.forEach((name) => {
-          toast(`${name} has fallen in the arena.`, {
-            description: 'The stands fall briefly silent.',
-            duration: 6000,
-          });
-        });
-      }
+      applyPostAdvanceState(setResults);
     } finally {
       runningRef.current = false;
       setRunning(false);
@@ -103,29 +137,17 @@ export function useWeekExecution() {
       setSimulating(true);
       setAutosimResult(null);
       try {
-        const result = await engineSession.runExclusive(() =>
-          // onProgress must be a top-level arg: Comlink only detects proxy
-          // markers on direct arguments — a nested callback is structured-
-          // cloned into the worker and throws DataCloneError.
-          engineProxy.runAutosim(
-            gameState,
-            {
-              weeksToSim: weeks,
-              councilAutoPilot: options?.councilAutoPilot ?? false,
-            },
-            Comlink.proxy((currentWeek: number) => {
-              setAutosimProgress({ current: currentWeek, total: weeks });
-            })
-          )
+        const result = await runAutosimSession(
+          gameState,
+          weeks,
+          options?.councilAutoPilot ?? false,
+          (currentWeek, total) => setAutosimProgress({ current: currentWeek, total })
         );
-        // undefined → epoch moved mid-run (loadGame/reset); discard the result.
-        if (!result) return;
+        // 'epoch-moved' → epoch moved mid-run (loadGame/reset); discard the result.
+        if (result === 'epoch-moved' || result === 'failed') return;
         setAutosimResult(result);
         const currentStore = useGameStore.getState();
         loadGame(currentStore.activeSlotId || 'autosave', result.finalState);
-      } catch (err) {
-        console.error('Autosim failed', err);
-        toast.error('Auto-simulation failed.');
       } finally {
         autosimmingRef.current = false;
         setAutosimming(false);

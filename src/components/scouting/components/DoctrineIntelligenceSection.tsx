@@ -53,107 +53,107 @@ export function DoctrineIntelligenceSection({
         )}
       </div>
       <div className="p-6 grid grid-cols-2 gap-8">
-        {[
-          {
-            rival: rivalA,
-            mods: modsA,
-            color: 'text-primary',
-            borderColor: 'border-primary/20',
-            bgColor: 'bg-primary/5',
-          },
-          {
-            rival: rivalB,
-            mods: modsB,
-            color: 'text-accent',
-            borderColor: 'border-accent/20',
-            bgColor: 'bg-accent/5',
-          },
-        ].map(({ rival, mods, color, borderColor, bgColor }) => (
-          <div key={rival.owner.id} className={cn('p-4 border rounded-none', borderColor, bgColor)}>
-            <div
-              className={cn(
-                'text-[9px] font-black uppercase tracking-widest mb-3 opacity-60',
-                color
-              )}
-            >
-              {rival.owner.stableName}
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-[10px]">
-                <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
-                  Personality
-                </span>
-                <span className={cn('font-black', color)}>{rival.owner.personality}</span>
-              </div>
-              <div className="flex justify-between text-[10px]">
-                <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
-                  Philosophy
-                </span>
-                <span className="font-black text-foreground/80">{rival.philosophy ?? '—'}</span>
-              </div>
-              <div className="flex justify-between text-[10px]">
-                <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
-                  Adaptation
-                </span>
-                <span className="font-black text-foreground/60">
-                  {rival.owner.metaAdaptation ?? '—'}
-                </span>
-              </div>
-              {rival.owner.metaAdaptation && (
-                <p className="text-[9px] italic text-muted-foreground/50 leading-relaxed">
-                  {getRecruitQuote(rival.owner.metaAdaptation, contentPacks)}
-                </p>
-              )}
-              {Object.keys(mods).length > 0 && (
-                <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
-                  <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">
-                    Combat Modifiers
-                  </div>
-                  {(mods.OE ?? undefined) !== undefined && (
-                    <div className="flex justify-between text-[9px]">
-                      <span className="text-muted-foreground/50">Offensive Effort</span>
-                      <span
-                        className={cn(
-                          'font-mono font-black',
-                          (mods.OE ?? 0) > 0 ? 'text-arena-blood' : 'text-arena-pop'
-                        )}
-                      >
-                        {modLabel(mods.OE ?? 0)}
-                      </span>
-                    </div>
-                  )}
-                  {(mods.AL ?? undefined) !== undefined && (
-                    <div className="flex justify-between text-[9px]">
-                      <span className="text-muted-foreground/50">Activity Level</span>
-                      <span
-                        className={cn(
-                          'font-mono font-black',
-                          (mods.AL ?? 0) > 0 ? 'text-arena-blood' : 'text-arena-pop'
-                        )}
-                      >
-                        {modLabel(mods.AL ?? 0)}
-                      </span>
-                    </div>
-                  )}
-                  {(mods.killDesire ?? undefined) !== undefined && (
-                    <div className="flex justify-between text-[9px]">
-                      <span className="text-muted-foreground/50">Kill Desire</span>
-                      <span
-                        className={cn(
-                          'font-mono font-black',
-                          (mods.killDesire ?? 0) > 0 ? 'text-arena-blood' : 'text-arena-pop'
-                        )}
-                      >
-                        {modLabel(mods.killDesire ?? 0)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+        <DoctrineCard
+          rival={rivalA}
+          mods={modsA}
+          color="text-primary"
+          borderColor="border-primary/20"
+          bgColor="bg-primary/5"
+          contentPacks={contentPacks}
+        />
+        <DoctrineCard
+          rival={rivalB}
+          mods={modsB}
+          color="text-accent"
+          borderColor="border-accent/20"
+          bgColor="bg-accent/5"
+          contentPacks={contentPacks}
+        />
       </div>
     </Surface>
+  );
+}
+
+type ContentPacks = ReturnType<typeof useGameStore.getState>['contentPacks'];
+
+function ModifierRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex justify-between text-[9px]">
+      <span className="text-muted-foreground/50">{label}</span>
+      <span
+        className={cn('font-mono font-black', value > 0 ? 'text-arena-blood' : 'text-arena-pop')}
+      >
+        {modLabel(value)}
+      </span>
+    </div>
+  );
+}
+
+function DoctrineCard({
+  rival,
+  mods,
+  color,
+  borderColor,
+  bgColor,
+  contentPacks,
+}: {
+  rival: RivalStableData;
+  mods: Partial<FightPlan>;
+  color: string;
+  borderColor: string;
+  bgColor: string;
+  contentPacks: ContentPacks;
+}) {
+  return (
+    <div className={cn('p-4 border rounded-none', borderColor, bgColor)}>
+      <div
+        className={cn('text-[9px] font-black uppercase tracking-widest mb-3 opacity-60', color)}
+      >
+        {rival.owner.stableName}
+      </div>
+      <div className="space-y-2">
+        <div className="flex justify-between text-[10px]">
+          <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
+            Personality
+          </span>
+          <span className={cn('font-black', color)}>{rival.owner.personality}</span>
+        </div>
+        <div className="flex justify-between text-[10px]">
+          <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
+            Philosophy
+          </span>
+          <span className="font-black text-foreground/80">{rival.philosophy ?? '—'}</span>
+        </div>
+        <div className="flex justify-between text-[10px]">
+          <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
+            Adaptation
+          </span>
+          <span className="font-black text-foreground/60">
+            {rival.owner.metaAdaptation ?? '—'}
+          </span>
+        </div>
+        {rival.owner.metaAdaptation && (
+          <p className="text-[9px] italic text-muted-foreground/50 leading-relaxed">
+            {getRecruitQuote(rival.owner.metaAdaptation, contentPacks)}
+          </p>
+        )}
+        {Object.keys(mods).length > 0 && (
+          <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
+            <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">
+              Combat Modifiers
+            </div>
+            {(mods.OE ?? undefined) !== undefined && (
+              <ModifierRow label="Offensive Effort" value={mods.OE ?? 0} />
+            )}
+            {(mods.AL ?? undefined) !== undefined && (
+              <ModifierRow label="Activity Level" value={mods.AL ?? 0} />
+            )}
+            {(mods.killDesire ?? undefined) !== undefined && (
+              <ModifierRow label="Kill Desire" value={mods.killDesire ?? 0} />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

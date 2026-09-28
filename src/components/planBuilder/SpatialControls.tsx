@@ -32,61 +32,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
       </div>
 
       {/* Feint Tendency — read-only, derived from warrior WT */}
-      {warrior && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Feint Tendency
-              </Label>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <HelpCircle className="h-3 w-3 text-muted-foreground/40 cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  sideOffset={8}
-                  className="bg-neutral-950 border-white/10 p-3 space-y-1.5 w-56"
-                >
-                  <p className="text-[10px] font-black uppercase tracking-widest">Feint Tendency</p>
-                  <p className="text-[9px] leading-relaxed opacity-70">
-                    Derived from the warrior's WT. Higher Wit means more natural deception in
-                    combat. Traits like Cunning or Calculating amplify this further.
-                  </p>
-                  <p className="text-[9px] leading-relaxed text-arena-gold">
-                    Only triggers when WT ≥ 15 and OE ≥ 4.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-            <span
-              className={cn(
-                'text-sm font-mono font-bold',
-                warrior.attributes.WT >= 15 ? 'text-arena-gold' : 'text-muted-foreground/40'
-              )}
-            >
-              {plan.feintTendency ?? 0}
-            </span>
-          </div>
-          {warrior.attributes.WT < 15 && (
-            <p className="text-[9px] text-arena-gold/70 font-black uppercase tracking-wider">
-              ⚠ WT {warrior.attributes.WT} — needs WT ≥ 15 to trigger
-            </p>
-          )}
-          <div className="h-1.5 w-full bg-white/5 rounded-none overflow-hidden">
-            <div
-              className={cn(
-                'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
-                warrior.attributes.WT >= 15 ? 'bg-arena-gold/60' : 'bg-white/10'
-              )}
-              style={{ width: `${((plan.feintTendency ?? 0) / 10) * 100}%` }}
-            />
-          </div>
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
-            Set by warrior attributes &amp; traits
-          </p>
-        </div>
-      )}
+      {warrior && <FeintTendency warrior={warrior} plan={plan} />}
 
       {/* Range Preference */}
       <div className="space-y-3">
@@ -99,32 +45,15 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
           </p>
         )}
         <div className="grid grid-cols-4 gap-1">
-          {DISTANCE_RANGES.map((r) => {
-            const isNatural =
-              warrior?.equipment?.weapon && getWeaponPreferredRange(warrior.equipment.weapon) === r;
-            const isSelected =
-              (plan.rangePreference ?? getWeaponPreferredRange(warrior?.equipment?.weapon)) === r;
-            return (
-              <button
-                key={r}
-                aria-label={`Set Range Preference to ${r}`}
-                onClick={() => onPlanChange({ ...plan, rangePreference: r })}
-                className={cn(
-                  'py-1.5 text-[9px] font-black uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-                  isSelected
-                    ? 'bg-arena-steel/20 border-arena-steel/60 text-arena-steel'
-                    : 'bg-black/40 border-white/10 text-muted-foreground hover:border-white/30'
-                )}
-              >
-                {r}
-                {isNatural && (
-                  <span className="block text-[7px] text-arena-steel/60 normal-case font-normal">
-                    natural
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          {DISTANCE_RANGES.map((r) => (
+            <RangeButton
+              key={r}
+              range={r}
+              plan={plan}
+              warrior={warrior}
+              onPlanChange={onPlanChange}
+            />
+          ))}
         </div>
       </div>
 
@@ -135,32 +64,124 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
             Weapon ATT Modifiers
           </Label>
           <div className="grid grid-cols-4 gap-1">
-            {DISTANCE_RANGES.map((r) => {
-              const mod = getWeaponRangeMod(warrior.equipment?.weapon, r);
-              return (
-                <div key={r} className="bg-black/40 border border-white/5 p-2 text-center">
-                  <div className="text-[8px] uppercase tracking-wider text-muted-foreground/60 mb-1">
-                    {r}
-                  </div>
-                  <div
-                    className={cn(
-                      'text-xs font-mono font-black',
-                      mod > 0
-                        ? 'text-primary'
-                        : mod < 0
-                          ? 'text-destructive'
-                          : 'text-muted-foreground/40'
-                    )}
-                  >
-                    {mod > 0 ? '+' : ''}
-                    {mod}
-                  </div>
-                </div>
-              );
-            })}
+            {DISTANCE_RANGES.map((r) => (
+              <RangeModCell key={r} range={r} weapon={warrior.equipment?.weapon} />
+            ))}
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function FeintTendency({ warrior, plan }: { warrior: Warrior; plan: FightPlan }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            Feint Tendency
+          </Label>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <HelpCircle className="h-3 w-3 text-muted-foreground/40 cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              sideOffset={8}
+              className="bg-neutral-950 border-white/10 p-3 space-y-1.5 w-56"
+            >
+              <p className="text-[10px] font-black uppercase tracking-widest">Feint Tendency</p>
+              <p className="text-[9px] leading-relaxed opacity-70">
+                Derived from the warrior's WT. Higher Wit means more natural deception in
+                combat. Traits like Cunning or Calculating amplify this further.
+              </p>
+              <p className="text-[9px] leading-relaxed text-arena-gold">
+                Only triggers when WT ≥ 15 and OE ≥ 4.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <span
+          className={cn(
+            'text-sm font-mono font-bold',
+            warrior.attributes.WT >= 15 ? 'text-arena-gold' : 'text-muted-foreground/40'
+          )}
+        >
+          {plan.feintTendency ?? 0}
+        </span>
+      </div>
+      {warrior.attributes.WT < 15 && (
+        <p className="text-[9px] text-arena-gold/70 font-black uppercase tracking-wider">
+          ⚠ WT {warrior.attributes.WT} — needs WT ≥ 15 to trigger
+        </p>
+      )}
+      <div className="h-1.5 w-full bg-white/5 rounded-none overflow-hidden">
+        <div
+          className={cn(
+            'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none',
+            warrior.attributes.WT >= 15 ? 'bg-arena-gold/60' : 'bg-white/10'
+          )}
+          style={{ width: `${((plan.feintTendency ?? 0) / 10) * 100}%` }}
+        />
+      </div>
+      <p className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
+        Set by warrior attributes &amp; traits
+      </p>
+    </div>
+  );
+}
+
+function RangeButton({
+  range: r,
+  plan,
+  warrior,
+  onPlanChange,
+}: {
+  range: DistanceRange;
+  plan: FightPlan;
+  warrior?: Warrior;
+  onPlanChange: (plan: FightPlan) => void;
+}) {
+  const isNatural =
+    warrior?.equipment?.weapon && getWeaponPreferredRange(warrior.equipment.weapon) === r;
+  const isSelected =
+    (plan.rangePreference ?? getWeaponPreferredRange(warrior?.equipment?.weapon)) === r;
+  return (
+    <button
+      aria-label={`Set Range Preference to ${r}`}
+      onClick={() => onPlanChange({ ...plan, rangePreference: r })}
+      className={cn(
+        'py-1.5 text-[9px] font-black uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+        isSelected
+          ? 'bg-arena-steel/20 border-arena-steel/60 text-arena-steel'
+          : 'bg-black/40 border-white/10 text-muted-foreground hover:border-white/30'
+      )}
+    >
+      {r}
+      {isNatural && (
+        <span className="block text-[7px] text-arena-steel/60 normal-case font-normal">
+          natural
+        </span>
+      )}
+    </button>
+  );
+}
+
+function RangeModCell({ range: r, weapon }: { range: DistanceRange; weapon?: string }) {
+  const mod = getWeaponRangeMod(weapon, r);
+  return (
+    <div className="bg-black/40 border border-white/5 p-2 text-center">
+      <div className="text-[8px] uppercase tracking-wider text-muted-foreground/60 mb-1">{r}</div>
+      <div
+        className={cn(
+          'text-xs font-mono font-black',
+          mod > 0 ? 'text-primary' : mod < 0 ? 'text-destructive' : 'text-muted-foreground/40'
+        )}
+      >
+        {mod > 0 ? '+' : ''}
+        {mod}
+      </div>
     </div>
   );
 }

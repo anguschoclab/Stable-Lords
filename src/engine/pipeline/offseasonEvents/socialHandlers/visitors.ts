@@ -7,8 +7,7 @@ import { hasInjuries } from '@/engine/injuries/utils';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
-  pickActiveWarrior,
-  announceOffseasonEvent,
+  withChosenWarrior,
 } from '../types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
@@ -76,13 +75,8 @@ export function handleWanderingFortuneTeller(
   ctx.treasuryDelta -= cost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Fortune Teller Reading', -cost, 'other'));
 
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 15;
-
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-    });
 
     ctx.insightTokens.push(
       makeInsightToken(rng, {
@@ -95,11 +89,11 @@ export function handleWanderingFortuneTeller(
       })
     );
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      gold: cost,
-    });
-  }
+    return {
+      updates: { xp: (chosen.xp || 0) + xpGained },
+      announce: { gold: cost },
+    };
+  });
 }
 
 /**
@@ -117,13 +111,8 @@ export function handleDreamweaverVisit(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 15 + Math.floor(rng.next() * 11);
-
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-    });
 
     ctx.insightTokens.push(
       makeInsightToken(rng, {
@@ -136,11 +125,11 @@ export function handleDreamweaverVisit(
       })
     );
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      xp: xpGained,
-    });
-  }
+    return {
+      updates: { xp: (chosen.xp || 0) + xpGained },
+      announce: { xp: xpGained },
+    };
+  });
 }
 
 /** Handles the Goblin Merchant offseason event outcome. */
@@ -154,26 +143,25 @@ export function handleGoblinMerchant(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (!chosen) return;
-  const cost = 50 + Math.floor(rng.next() * 50);
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+    const cost = 50 + Math.floor(rng.next() * 50);
 
-  const attrs = chosen.attributes;
+    const attrs = chosen.attributes;
 
-  ctx.rosterUpdates.set(chosen.id, {
-    attributes: {
-      ...attrs,
-      CN: attrs.CN + 1,
-      WL: attrs.WL + 1,
-    },
-  });
+    ctx.treasuryDelta -= cost;
+    ctx.ledgerEntries.push(
+      makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other')
+    );
 
-  ctx.treasuryDelta -= cost;
-  ctx.ledgerEntries.push(
-    makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other')
-  );
-  announceOffseasonEvent(ctx, rng, nextWeek, e, {
-    name: chosen.name,
-    gold: cost,
+    return {
+      updates: {
+        attributes: {
+          ...attrs,
+          CN: attrs.CN + 1,
+          WL: attrs.WL + 1,
+        },
+      },
+      announce: { gold: cost },
+    };
   });
 }

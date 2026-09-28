@@ -62,6 +62,161 @@ function StatBar({ label, value, max = 21 }: { label: string; value: number; max
   );
 }
 
+function IntelPanel({
+  warrior,
+  isScouted,
+  onScout,
+  canAffordScout,
+  scoutReport,
+}: {
+  warrior: PoolWarrior;
+  isScouted: boolean;
+  onScout: (w: PoolWarrior) => void;
+  canAffordScout: boolean;
+  scoutReport?: PotentialScoutReport;
+}) {
+  if (!isScouted) {
+    return (
+      <div className="bg-white/[0.02] border border-white/5 p-6 flex items-center justify-between group/scout">
+        <div className="flex items-center gap-3 opacity-40">
+          <Info className="h-4 w-4" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+            Potential Unknown
+          </span>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 text-[9px] font-black uppercase tracking-widest border-white/10 hover:border-primary/50 transition-all motion-reduce:transition-none motion-reduce:transform-none rounded-none"
+          disabled={!canAffordScout}
+          onClick={() => onScout(warrior)}
+        >
+          Scout [25G]
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
+      <div className="flex items-center gap-3">
+        <Eye className="h-4 w-4 text-primary" />
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+          Scouted
+        </span>
+      </div>
+      {scoutReport && (
+        <p className="text-[11px] text-muted-foreground italic leading-relaxed">
+          "{scoutReport.summary}"
+        </p>
+      )}
+      {scoutReport &&
+        scoutReport.revealed &&
+        Object.keys(scoutReport.revealed).length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            {Object.entries(scoutReport.revealed)
+              .sort((a, b) => (b[1] as number) - (a[1] as number))
+              .map(([key, val]) => (
+                <Badge
+                  key={key}
+                  variant="outline"
+                  className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
+                >
+                  {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
+                </Badge>
+              ))}
+          </div>
+        )}
+    </div>
+  );
+}
+
+function VitalsGrid({ warrior }: { warrior: PoolWarrior }) {
+  return (
+    <div className="grid grid-cols-1 gap-5">
+      <div className="space-y-4 bg-white/[0.01] border border-white/5 p-6">
+        {ATTRIBUTE_KEYS.map((key) => (
+          <StatBar key={key} label={key} value={warrior.attributes[key]} />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
+          <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">
+            Health
+          </span>
+          <div className="flex items-center gap-3">
+            <Heart className="h-3.5 w-3.5 text-destructive" />
+            <span className="text-lg font-display font-black text-foreground">
+              {warrior.derivedStats.hp}
+            </span>
+          </div>
+        </div>
+        <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
+          <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">
+            Endurance
+          </span>
+          <div className="flex items-center gap-3">
+            <Zap className="h-3.5 w-3.5 text-arena-fame" />
+            <span className="text-lg font-display font-black text-foreground">
+              {warrior.derivedStats.endurance}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SignActions({
+  warrior,
+  canAfford,
+  rosterFull,
+  onRecruit,
+  canAffordBonus,
+}: {
+  warrior: PoolWarrior;
+  canAfford: boolean;
+  rosterFull: boolean;
+  onRecruit: (w: PoolWarrior, bonus?: boolean) => void;
+  canAffordBonus: boolean;
+}) {
+  return (
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 pt-8 border-t border-white/5">
+      <div className="flex flex-col">
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
+          Cost
+        </span>
+        <div className="flex items-center gap-2">
+          <Coins className="h-4 w-4 text-arena-gold" />
+          <span className="text-2xl font-display font-black text-arena-gold">
+            {warrior.cost}G
+          </span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Button
+          className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
+          disabled={!canAfford || rosterFull}
+          onClick={() => onRecruit(warrior, false)}
+        >
+          <UserPlus className="h-4 w-4 mr-3" />
+          Sign
+        </Button>
+        <Button
+          variant="outline"
+          className="flex-1 sm:flex-none h-14 px-6 border-arena-gold/30 text-arena-gold font-black uppercase text-[10px] tracking-widest rounded-none hover:bg-arena-gold/5 transition-all motion-reduce:transition-none motion-reduce:transform-none"
+          disabled={!canAffordBonus || rosterFull}
+          onClick={() => onRecruit(warrior, true)}
+          title="Pay a 50g signing bonus — warrior arrives eager (+2 XP) and gets a gazette mention."
+        >
+          + Bonus [50G]
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 interface RecruitCardProps {
   warrior: PoolWarrior;
   canAfford: boolean;
@@ -127,90 +282,16 @@ export function RecruitCard({
         </div>
 
         {/* Intelligence Overlay */}
-        {isScouted ? (
-          <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
-            <div className="flex items-center gap-3">
-              <Eye className="h-4 w-4 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                Scouted
-              </span>
-            </div>
-            {scoutReport && (
-              <p className="text-[11px] text-muted-foreground italic leading-relaxed">
-                "{scoutReport.summary}"
-              </p>
-            )}
-            {scoutReport &&
-              scoutReport.revealed &&
-              Object.keys(scoutReport.revealed).length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {Object.entries(scoutReport.revealed)
-                    .sort((a, b) => (b[1] as number) - (a[1] as number))
-                    .map(([key, val]) => (
-                      <Badge
-                        key={key}
-                        variant="outline"
-                        className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
-                      >
-                        {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
-                      </Badge>
-                    ))}
-                </div>
-              )}
-          </div>
-        ) : (
-          <div className="bg-white/[0.02] border border-white/5 p-6 flex items-center justify-between group/scout">
-            <div className="flex items-center gap-3 opacity-40">
-              <Info className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                Potential Unknown
-              </span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 text-[9px] font-black uppercase tracking-widest border-white/10 hover:border-primary/50 transition-all motion-reduce:transition-none motion-reduce:transform-none rounded-none"
-              disabled={!canAffordScout}
-              onClick={() => onScout(warrior)}
-            >
-              Scout [25G]
-            </Button>
-          </div>
-        )}
+        <IntelPanel
+          warrior={warrior}
+          isScouted={isScouted}
+          onScout={onScout}
+          canAffordScout={canAffordScout}
+          scoutReport={scoutReport}
+        />
 
         {/* Attributes Grid */}
-        <div className="grid grid-cols-1 gap-5">
-          <div className="space-y-4 bg-white/[0.01] border border-white/5 p-6">
-            {ATTRIBUTE_KEYS.map((key) => (
-              <StatBar key={key} label={key} value={warrior.attributes[key]} />
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">
-                Health
-              </span>
-              <div className="flex items-center gap-3">
-                <Heart className="h-3.5 w-3.5 text-destructive" />
-                <span className="text-lg font-display font-black text-foreground">
-                  {warrior.derivedStats.hp}
-                </span>
-              </div>
-            </div>
-            <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">
-                Endurance
-              </span>
-              <div className="flex items-center gap-3">
-                <Zap className="h-3.5 w-3.5 text-arena-fame" />
-                <span className="text-lg font-display font-black text-foreground">
-                  {warrior.derivedStats.endurance}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <VitalsGrid warrior={warrior} />
 
         {/* Lore / Quote */}
         <div className="relative pl-6 border-l border-white/10">
@@ -221,39 +302,13 @@ export function RecruitCard({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 pt-8 border-t border-white/5">
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-              Cost
-            </span>
-            <div className="flex items-center gap-2">
-              <Coins className="h-4 w-4 text-arena-gold" />
-              <span className="text-2xl font-display font-black text-arena-gold">
-                {warrior.cost}G
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Button
-              className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
-              disabled={!canAfford || rosterFull}
-              onClick={() => onRecruit(warrior, false)}
-            >
-              <UserPlus className="h-4 w-4 mr-3" />
-              Sign
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 sm:flex-none h-14 px-6 border-arena-gold/30 text-arena-gold font-black uppercase text-[10px] tracking-widest rounded-none hover:bg-arena-gold/5 transition-all motion-reduce:transition-none motion-reduce:transform-none"
-              disabled={!canAffordBonus || rosterFull}
-              onClick={() => onRecruit(warrior, true)}
-              title="Pay a 50g signing bonus — warrior arrives eager (+2 XP) and gets a gazette mention."
-            >
-              + Bonus [50G]
-            </Button>
-          </div>
-        </div>
+        <SignActions
+          warrior={warrior}
+          canAfford={canAfford}
+          rosterFull={rosterFull}
+          onRecruit={onRecruit}
+          canAffordBonus={canAffordBonus}
+        />
       </div>
     </Surface>
   );

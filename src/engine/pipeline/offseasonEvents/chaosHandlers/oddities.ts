@@ -5,8 +5,7 @@ import { makeInsightToken } from '@/engine/core/eventHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
-  pickActiveWarrior,
-  announceOffseasonEvent,
+  withChosenWarrior,
 } from '../types';
 
 /** Handler for the Suspicious Mushroom Stew offseason event — grants XP but may cause injury. */
@@ -17,29 +16,34 @@ export function handleSuspiciousMushroomStew(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng, true);
-  if (chosen) {
-    const xpGained = 20 + Math.floor(rng.next() * 16);
+  withChosenWarrior(
+    state,
+    nextWeek,
+    e,
+    rng,
+    ctx,
+    (chosen) => {
+      const xpGained = 20 + Math.floor(rng.next() * 16);
 
-    const newInjury = makeInjury(rng, {
-      name: 'Stomach Ache',
-      description: 'A gnawing ache from eating suspicious glowing mushrooms.',
-      severity: 'Minor',
-      weeksBase: 1,
-      weeksRange: 1,
-      penalties: { CN: -1, SP: -1 },
-    });
+      const newInjury = makeInjury(rng, {
+        name: 'Stomach Ache',
+        description: 'A gnawing ache from eating suspicious glowing mushrooms.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { CN: -1, SP: -1 },
+      });
 
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      injuries: [...(chosen.injuries || []), newInjury],
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      xp: xpGained,
-    });
-  }
+      return {
+        updates: {
+          xp: (chosen.xp || 0) + xpGained,
+          injuries: [...(chosen.injuries || []), newInjury],
+        },
+        announce: { xp: xpGained },
+      };
+    },
+    true
+  );
 }
 
 
@@ -51,18 +55,17 @@ export function handlePhantomSparringPartner(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 40;
     const fatigueGained = 10;
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      fatigue: (chosen.fatigue || 0) + fatigueGained,
-    });
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        fatigue: (chosen.fatigue || 0) + fatigueGained,
+      },
+      announce: {},
+    };
+  });
 }
 
 
@@ -74,8 +77,7 @@ export function handleDreamweaversMist(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 15;
     const newInjury = makeInjury(rng, {
       name: 'Magic Burn',
@@ -85,14 +87,14 @@ export function handleDreamweaversMist(
       weeksRange: 1,
       penalties: { CN: -1 },
     });
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      injuries: [...(chosen.injuries || []), newInjury],
-    });
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      },
+      announce: {},
+    };
+  });
 }
 
 
@@ -104,8 +106,7 @@ export function handlePrismaticGaleExposure(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 20;
 
     const newInjury = makeInjury(rng, {
@@ -115,11 +116,6 @@ export function handlePrismaticGaleExposure(
       weeksBase: 1,
       weeksRange: 1,
       penalties: { SP: -1, CN: -1 },
-    });
-
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      injuries: [...(chosen.injuries || []), newInjury],
     });
 
     ctx.insightTokens.push(
@@ -133,8 +129,12 @@ export function handlePrismaticGaleExposure(
       })
     );
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      },
+      announce: {},
+    };
+  });
 }

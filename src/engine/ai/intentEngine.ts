@@ -27,16 +27,22 @@ function findGrudge(
 }
 
 /**
- * Determines the weekly strategic intent for an AI owner.
- * Intent impacts recruitment, training, and matchmaking choices.
+ * Shared facts the intent rules reason over — computed once per pick.
  */
-export function pickWeeklyIntent(
-  rival: RivalStableData,
-  state: GameState,
-  seed?: number,
-  rng?: IRNGService
-): AIIntent {
-  const rngService = resolveRng(rng, seed ?? state.week * 131 + rival.owner.id.length);
+interface IntentContext {
+  rival: RivalStableData;
+  state: GameState;
+  personality: string;
+  activeRoster: RivalStableData['roster'];
+  injuryCount: number;
+  lungeCount: number;
+  isHazardousWeather: boolean;
+  meta: Record<string, number>;
+  metaIsHostile: boolean;
+  seasonWinRate: number | null;
+}
+
+function buildIntentContext(rival: RivalStableData, state: GameState): IntentContext {
   const personality = rival.owner.personality ?? 'Pragmatic';
   const { activeRoster, injuryCount, lungeCount } = rival.roster.reduce(
     (acc, w) => {
@@ -62,117 +68,127 @@ export function pickWeeklyIntent(
   const favoredStyles = rival.owner.favoredStyles || [];
   const metaIsHostile = favoredStyles.some((s) => (meta[s] || 0) < -2);
 
-  // Weather Pivot: Avoid the arena if the stable is precision-heavy and weather is hazardous
-  const precisionHeavy = activeRoster.length === 0 || lungeCount / activeRoster.length >= 0.5;
-  if (isHazardousWeather && precisionHeavy && personality !== 'Aggressive') {
-    return 'RECOVERY';
-  }
-
-  // 1. RECOVERY: High priority if stable is in crisis or season is going badly
   const seasonRecord = rival.agentMemory?.seasonRecord;
   const seasonFightsPlayed = (seasonRecord?.wins ?? 0) + (seasonRecord?.losses ?? 0);
   const seasonWinRate =
     seasonFightsPlayed >= 6 ? (seasonRecord?.wins ?? 0) / seasonFightsPlayed : null;
 
-  if (
-    rival.treasury < 200 ||
-    (activeRoster.length > 0 && injuryCount / activeRoster.length >= 0.4) ||
-    (metaIsHostile && personality === 'Methodical') ||
-    (seasonWinRate !== null && seasonWinRate < 0.3)
-  ) {
-    return 'RECOVERY';
-  }
+  return {
+    rival, state, personality, activeRoster, injuryCount, lungeCount,
+    isHazardousWeather, meta, metaIsHostile, seasonWinRate,
+  };
+}
 
-  // 2. VENDETTA: If there is a high-intensity grudge, or the player is dominant
-  const hasGrudge = findGrudge(state.grudgeMap, rival.owner.id) !== undefined;
+/** Weather Pivot: precision-heavy stables sit out hazardous weather. */
+function weatherPivotApplies(ctx: IntentContext): boolean {
+  const precisionHeavy =
+    ctx.activeRoster.length === 0 || ctx.lungeCount / ctx.activeRoster.length >= 0.5;
+  return ctx.isHazardousWeather && precisionHeavy && ctx.personality !== 'Aggressive';
+}
 
-  const playerThreat = computePlayerThreatLevel(state);
+/** RECOVERY: high priority if the stable is in crisis or the season is going badly. */
+function recoveryApplies(ctx: IntentContext): boolean {
+  return (
+    ctx.rival.treasury < 200 ||
+    (ctx.activeRoster.length > 0 && ctx.injuryCount / ctx.activeRoster.length >= 0.4) ||
+    (ctx.metaIsHostile && ctx.personality === 'Methodical') ||
+    (ctx.seasonWinRate !== null && ctx.seasonWinRate < 0.3)
+  );
+}
+
+/** VENDETTA: a high-intensity grudge or a dominant player can trigger the feud. */
+function vendettaApplies(ctx: IntentContext, rngService: IRNGService): boolean {
+  const hasGrudge = findGrudge(ctx.state.grudgeMap, ctx.rival.owner.id) !== undefined;
+
+  const playerThreat = computePlayerThreatLevel(ctx.state);
   const playerThreatVendettaChance =
     playerThreat === 'Dominant' &&
-    (personality === 'Aggressive' || personality === 'Showman' || personality === 'Tactician')
+    (ctx.personality === 'Aggressive' ||
+      ctx.personality === 'Showman' ||
+      ctx.personality === 'Tactician')
       ? 0.25
       : 0;
 
-  const vendettaChance = personality === 'Aggressive' ? 0.4 : personality === 'Showman' ? 0.2 : 0.1;
-  if (hasGrudge && rngService.next() < vendettaChance) {
-    return 'VENDETTA';
-  }
-  if (playerThreatVendettaChance > 0 && rngService.next() < playerThreatVendettaChance) {
-    return 'VENDETTA';
-  }
+  const vendettaChance =
+    ctx.personality === 'Aggressive' ? 0.4 : ctx.personality === 'Showman' ? 0.2 : 0.1;
+  if (hasGrudge && rngService.next() < vendettaChance) return true;
+  return playerThreatVendettaChance > 0 && rngService.next() < playerThreatVendettaChance;
+}
 
-  // 2.5. TOURNAMENT_CAMPAIGN: healthy stables peak in the run-up to each
-  // seasonal tournament (the campaign window ending on the event week).
-  // Preparation only — committee selection is rank-based (G13).
-  const inTournamentWindow = isTournamentPrepWeek(state.week);
-  if (inTournamentWindow && activeRoster.length >= 3 && rival.treasury >= 400) {
-    return 'TOURNAMENT_CAMPAIGN';
-  }
+/** TOURNAMENT_CAMPAIGN: healthy stables peak in the tournament run-up (G13). */
+function tournamentCampaignApplies(ctx: IntentContext): boolean {
+  return (
+    isTournamentPrepWeek(ctx.state.week) &&
+    ctx.activeRoster.length >= 3 &&
+    ctx.rival.treasury >= 400
+  );
+}
 
-  // 2.6. CROWN_CAMPAIGN: the crown worker's persisted assessment has found a
-  // winnable throne. A crown already claimed by the campaign warrior can't
-  // retrigger (the assessment refreshes after this pick — one tick of lag).
-  const crownTarget = rival.agentMemory?.crownAssessment;
-  if (
-    crownTarget &&
-    rival.treasury >= 400 &&
-    state.arenaChampions?.[crownTarget.arenaId]?.champion?.warriorId !== crownTarget.warriorId
-  ) {
-    return 'CROWN_CAMPAIGN';
-  }
+/** CROWN_CAMPAIGN: the crown worker's assessment found a winnable throne. */
+function crownCampaignPicked(ctx: IntentContext): boolean {
+  const crownTarget = ctx.rival.agentMemory?.crownAssessment;
+  return (
+    !!crownTarget &&
+    ctx.rival.treasury >= 400 &&
+    ctx.state.arenaChampions?.[crownTarget.arenaId]?.champion?.warriorId !==
+      crownTarget.warriorId
+  );
+}
 
-  // 3. WEALTH_ACCUMULATION: Thriving stables with full rosters hoard cash
-  if (
-    rival.treasury > 1500 &&
-    seasonWinRate !== null &&
-    seasonWinRate >= 0.6 &&
-    (personality === 'Methodical' || personality === 'Pragmatic')
-  ) {
-    return 'WEALTH_ACCUMULATION';
-  }
+/** WEALTH_ACCUMULATION: thriving stables hoard cash. */
+function wealthAccumulationApplies(ctx: IntentContext): boolean {
+  return (
+    ctx.rival.treasury > 1500 &&
+    ctx.seasonWinRate !== null &&
+    ctx.seasonWinRate >= 0.6 &&
+    (ctx.personality === 'Methodical' || ctx.personality === 'Pragmatic')
+  );
+}
 
-  // 4. AGGRESSIVE_EXPANSION: Dominant Aggressive stables push for prestige bouts
-  const maxRosterSize = personality === 'Aggressive' ? 10 : 8;
-  if (
-    activeRoster.length >= maxRosterSize &&
-    rival.treasury > 1200 &&
-    personality === 'Aggressive'
-  ) {
-    return 'AGGRESSIVE_EXPANSION';
-  }
+/** AGGRESSIVE_EXPANSION: dominant Aggressive stables push for prestige bouts. */
+function aggressiveExpansionApplies(ctx: IntentContext): boolean {
+  const maxRosterSize = ctx.personality === 'Aggressive' ? 10 : 8;
+  return (
+    ctx.activeRoster.length >= maxRosterSize &&
+    ctx.rival.treasury > 1200 &&
+    ctx.personality === 'Aggressive'
+  );
+}
 
-  // 5. ROSTER_DIVERSITY: Stables heavily concentrated in a meta-losing style diversify
-  const allStyles = activeRoster.map((w) => w.style);
-  if (allStyles.length >= 4) {
-    const styleCounts: Record<string, number> = {};
-    let dominantStyle: FightingStyle | null = null;
-    let maxCount = -1;
+/** ROSTER_DIVERSITY: stables concentrated in a meta-losing style diversify. */
+function rosterDiversityApplies(ctx: IntentContext): boolean {
+  const allStyles = ctx.activeRoster.map((w) => w.style);
+  if (allStyles.length < 4) return false;
 
-    // ⚡ Bolt: Replaced chained mapping and Object.entries().reduce() with a single-pass loop.
-    // This avoids intermediate allocations and finds the dominant style directly in O(N).
-    for (let i = 0; i < allStyles.length; i++) {
-      const s = allStyles[i];
-      if (s === undefined) continue;
-      const count = (styleCounts[s] || 0) + 1;
-      styleCounts[s] = count;
-      if (count > maxCount) {
-        maxCount = count;
-        dominantStyle = s;
-      }
-    }
+  const styleCounts: Record<string, number> = {};
+  let dominantStyle: FightingStyle | null = null;
+  let maxCount = -1;
 
-    const maxConcentration = maxCount / allStyles.length;
-    if (dominantStyle && maxConcentration >= 0.5 && (meta[dominantStyle] ?? 0) <= -3) {
-      return 'ROSTER_DIVERSITY';
+  // ⚡ Bolt: Replaced chained mapping and Object.entries().reduce() with a single-pass loop.
+  // This avoids intermediate allocations and finds the dominant style directly in O(N).
+  for (let i = 0; i < allStyles.length; i++) {
+    const s = allStyles[i];
+    if (s === undefined) continue;
+    const count = (styleCounts[s] || 0) + 1;
+    styleCounts[s] = count;
+    if (count > maxCount) {
+      maxCount = count;
+      dominantStyle = s;
     }
   }
 
-  // 6. EXPANSION: If roster is thin — boosted if a known rival has grown recently
-  const minSize = personality === 'Aggressive' ? 8 : personality === 'Methodical' ? 5 : 6;
-  const knownRivals = rival.agentMemory?.knownRivals ?? [];
+  const maxConcentration = maxCount / allStyles.length;
+  return !!dominantStyle && maxConcentration >= 0.5 && (ctx.meta[dominantStyle] ?? 0) <= -3;
+}
+
+/** EXPANSION: thin roster — boosted if a known rival has grown recently. */
+function expansionApplies(ctx: IntentContext): boolean {
+  const minSize =
+    ctx.personality === 'Aggressive' ? 8 : ctx.personality === 'Methodical' ? 5 : 6;
+  const knownRivals = ctx.rival.agentMemory?.knownRivals ?? [];
   // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
   const rivalsByOwnerId = new Map<string, RivalStableData>();
-  for (const rv of state.rivals || []) {
+  for (const rv of ctx.state.rivals || []) {
     rivalsByOwnerId.set(rv.owner.id, rv);
   }
   const rivalExpanding = knownRivals.some((rivalId) => {
@@ -184,11 +200,33 @@ export function pickWeeklyIntent(
     );
   });
   const expansionThreshold = rivalExpanding ? Math.floor(minSize * 0.8) : minSize;
-  if (activeRoster.length < expansionThreshold && rival.treasury > 300) {
-    return 'EXPANSION';
-  }
+  return ctx.activeRoster.length < expansionThreshold && ctx.rival.treasury > 300;
+}
 
-  // 7. CONSOLIDATION: Default (focus on training and base maintenance)
+/**
+ * Determines the weekly strategic intent for an AI owner.
+ * Intent impacts recruitment, training, and matchmaking choices.
+ */
+export function pickWeeklyIntent(
+  rival: RivalStableData,
+  state: GameState,
+  seed?: number,
+  rng?: IRNGService
+): AIIntent {
+  const rngService = resolveRng(rng, seed ?? state.week * 131 + rival.owner.id.length);
+  const ctx = buildIntentContext(rival, state);
+
+  if (weatherPivotApplies(ctx)) return 'RECOVERY';
+  if (recoveryApplies(ctx)) return 'RECOVERY';
+  if (vendettaApplies(ctx, rngService)) return 'VENDETTA';
+  if (tournamentCampaignApplies(ctx)) return 'TOURNAMENT_CAMPAIGN';
+  if (crownCampaignPicked(ctx)) return 'CROWN_CAMPAIGN';
+  if (wealthAccumulationApplies(ctx)) return 'WEALTH_ACCUMULATION';
+  if (aggressiveExpansionApplies(ctx)) return 'AGGRESSIVE_EXPANSION';
+  if (rosterDiversityApplies(ctx)) return 'ROSTER_DIVERSITY';
+  if (expansionApplies(ctx)) return 'EXPANSION';
+
+  // CONSOLIDATION: Default (focus on training and base maintenance)
   return 'CONSOLIDATION';
 }
 

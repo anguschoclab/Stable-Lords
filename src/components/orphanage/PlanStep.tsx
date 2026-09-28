@@ -16,6 +16,94 @@ const PLAN_TACTICS = [
   { id: 'Responsiveness', type: 'defensive' as const, label: 'RESP', icon: Clock },
 ];
 
+function PlanSlider({
+  id,
+  label,
+  value,
+  onChange,
+  lowLabel,
+  highLabel,
+  colorClass,
+}: {
+  id: string;
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  lowLabel: string;
+  highLabel: string;
+  colorClass: string;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <label
+          htmlFor={id}
+          className={cn(
+            'text-[10px] font-black uppercase tracking-widest cursor-pointer',
+            colorClass
+          )}
+        >
+          {label}
+        </label>
+        <span className={cn('text-sm font-mono font-bold', colorClass)}>{value}</span>
+      </div>
+      <Slider
+        id={id}
+        aria-label={label}
+        value={[value]}
+        onValueChange={([v]) => onChange(v ?? 5)}
+        min={1}
+        max={10}
+        step={1}
+      />
+      <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+        <span>{lowLabel}</span>
+        <span>{highLabel}</span>
+      </div>
+    </div>
+  );
+}
+
+function TacticGrid({
+  plan,
+  onSelect,
+}: {
+  plan: FightPlan;
+  onSelect: (t: (typeof PLAN_TACTICS)[number]) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <span className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
+        Tactics
+      </span>
+      <div className="grid grid-cols-2 gap-2">
+        {PLAN_TACTICS.map((t) => {
+          const isActive =
+            plan &&
+            ((t.type === 'offensive' && plan.offensiveTactic === t.id) ||
+              (t.type === 'defensive' && plan.defensiveTactic === t.id));
+          return (
+            <button
+              key={t.id}
+              onClick={() => onSelect(t)}
+              aria-label={`Select Tactic: ${t.label}`}
+              className={cn(
+                'flex items-center gap-2 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+                isActive
+                  ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
+                  : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground'
+              )}
+            >
+              <t.icon className="w-4 h-4 shrink-0" />
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 interface PlanStepProps {
   warrior: Warrior;
   plan: FightPlan;
@@ -66,116 +154,37 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           <Swords className="h-4 w-4 text-muted-foreground/30" />
         </div>
 
-        {/* Offensive Effort Slider */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label
-              htmlFor="plan-step-oe"
-              className="text-[10px] font-black uppercase tracking-widest text-arena-gold cursor-pointer"
-            >
-              Offensive Effort
-            </label>
-            <span className="text-sm font-mono font-bold text-arena-gold">{plan.OE}</span>
-          </div>
-          <Slider
-            id="plan-step-oe"
-            aria-label="Offensive Effort"
-            value={[plan.OE]}
-            onValueChange={([v]) => onPlanChange({ ...plan, OE: v ?? 5 })}
-            min={1}
-            max={10}
-            step={1}
-          />
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
-            <span>Cautious</span>
-            <span>Reckless</span>
-          </div>
-        </div>
+        <PlanSlider
+          id="plan-step-oe"
+          label="Offensive Effort"
+          value={plan.OE}
+          onChange={(v) => onPlanChange({ ...plan, OE: v })}
+          lowLabel="Cautious"
+          highLabel="Reckless"
+          colorClass="text-arena-gold"
+        />
 
-        {/* Activity Level Slider */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label
-              htmlFor="plan-step-al"
-              className="text-[10px] font-black uppercase tracking-widest text-arena-fame cursor-pointer"
-            >
-              Activity Level
-            </label>
-            <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
-          </div>
-          <Slider
-            id="plan-step-al"
-            aria-label="Activity Level"
-            value={[plan.AL ?? 5]}
-            onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
-            min={1}
-            max={10}
-            step={1}
-          />
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
-            <span>Passive</span>
-            <span>Active</span>
-          </div>
-        </div>
+        <PlanSlider
+          id="plan-step-al"
+          label="Activity Level"
+          value={plan.AL ?? 5}
+          onChange={(v) => onPlanChange({ ...plan, AL: v })}
+          lowLabel="Passive"
+          highLabel="Active"
+          colorClass="text-arena-fame"
+        />
 
-        {/* Kill Desire Slider */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label
-              htmlFor="plan-step-kd"
-              className="text-[10px] font-black uppercase tracking-widest text-destructive cursor-pointer"
-            >
-              Kill Desire
-            </label>
-            <span className="text-sm font-mono font-bold text-destructive">
-              {plan.killDesire ?? 5}
-            </span>
-          </div>
-          <Slider
-            id="plan-step-kd"
-            aria-label="Kill Desire"
-            value={[plan.killDesire ?? 5]}
-            onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v ?? 5 })}
-            min={1}
-            max={10}
-            step={1}
-          />
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
-            <span>Mercy</span>
-            <span>Kill</span>
-          </div>
-        </div>
+        <PlanSlider
+          id="plan-step-kd"
+          label="Kill Desire"
+          value={plan.killDesire ?? 5}
+          onChange={(v) => onPlanChange({ ...plan, killDesire: v })}
+          lowLabel="Mercy"
+          highLabel="Kill"
+          colorClass="text-destructive"
+        />
 
-        {/* Tactic Buttons */}
-        <div className="space-y-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
-            Tactics
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            {PLAN_TACTICS.map((t) => {
-              const isActive =
-                plan &&
-                ((t.type === 'offensive' && plan.offensiveTactic === t.id) ||
-                  (t.type === 'defensive' && plan.defensiveTactic === t.id));
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => handleTactic(t)}
-                  aria-label={`Select Tactic: ${t.label}`}
-                  className={cn(
-                    'flex items-center gap-2 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-                    isActive
-                      ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
-                      : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground'
-                  )}
-                >
-                  <t.icon className="w-4 h-4 shrink-0" />
-                  {t.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <TacticGrid plan={plan} onSelect={handleTactic} />
 
         <p className="text-[10px] text-muted-foreground/40 leading-relaxed italic">
           Your choices here determine how {warrior.name} fights. Different plans produce different

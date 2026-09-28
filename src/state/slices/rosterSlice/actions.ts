@@ -6,6 +6,46 @@ import { formatWeek } from '@/utils/format';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { updateEntityInList } from '@/utils/stateUtils';
 
+/** Apply an insight token's effect to a warrior draft. */
+function applyInsightToken(w: Warrior, token: InsightToken): Warrior {
+  const draft = { ...w };
+  if (!draft.favorites) {
+    draft.favorites = {
+      weaponId: 'broadsword',
+      rhythm: { oe: 0.5, al: 0.5 },
+      discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+    };
+  }
+
+  if (token.type === 'Weapon') {
+    draft.favorites.discovered.weapon = true;
+  } else if (token.type === 'Rhythm') {
+    draft.favorites.discovered.rhythm = true;
+  } else if (token.type === 'Style') {
+    if (draft.baseSkills) {
+      draft.baseSkills = { ...draft.baseSkills, ATT: draft.baseSkills.ATT + 1 };
+      const recalc = computeWarriorStats(draft.attributes, draft.style);
+      draft.derivedStats = recalc.derivedStats;
+    }
+  } else if (token.type === 'Attribute') {
+    const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
+    const attrKey = primaries[cryptoRandomInt(0, primaries.length - 1)];
+    if (attrKey) {
+      draft.attributes = {
+        ...draft.attributes,
+        [attrKey]: (draft.attributes[attrKey] || 10) + 1,
+      };
+      const recalc = computeWarriorStats(draft.attributes, draft.style);
+      draft.baseSkills = recalc.baseSkills;
+      draft.derivedStats = recalc.derivedStats;
+    }
+  } else if (token.type === 'Tactic') {
+    draft.flair = [...(draft.flair || []), 'Tactical Insight'];
+  }
+
+  return draft;
+}
+
 /**
  * Creates roster-related actions for the game store, including managing warriors,
  * insight tokens, equipment, and death acknowledgements.
@@ -87,47 +127,8 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         const token = state.insightTokens?.find((t: InsightToken) => t.id === tokenId);
         if (!token) return state;
 
-        const nextRoster = updateEntityInList(state.roster, warriorId, (w) => {
-          const draft = { ...w };
-          if (!draft.favorites) {
-            draft.favorites = {
-              weaponId: 'broadsword',
-              rhythm: { oe: 0.5, al: 0.5 },
-              discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
-            };
-          }
-
-          if (token.type === 'Weapon') {
-            draft.favorites.discovered.weapon = true;
-          } else if (token.type === 'Rhythm') {
-            draft.favorites.discovered.rhythm = true;
-          } else if (token.type === 'Style') {
-            if (draft.baseSkills) {
-              draft.baseSkills = { ...draft.baseSkills, ATT: draft.baseSkills.ATT + 1 };
-              const recalc = computeWarriorStats(draft.attributes, draft.style);
-              draft.derivedStats = recalc.derivedStats;
-            }
-          } else if (token.type === 'Attribute') {
-            const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
-            const attrKey = primaries[cryptoRandomInt(0, primaries.length - 1)];
-            if (attrKey) {
-              draft.attributes = {
-                ...draft.attributes,
-                [attrKey]: (draft.attributes[attrKey] || 10) + 1,
-              };
-              const recalc = computeWarriorStats(draft.attributes, draft.style);
-              draft.baseSkills = recalc.baseSkills;
-              draft.derivedStats = recalc.derivedStats;
-            }
-          } else if (token.type === 'Tactic') {
-            draft.flair = [...(draft.flair || []), 'Tactical Insight'];
-          }
-
-          return draft;
-        });
-
         return {
-          roster: nextRoster,
+          roster: updateEntityInList(state.roster, warriorId, (w) => applyInsightToken(w, token)),
           insightTokens: state.insightTokens.filter((t: InsightToken) => t.id !== tokenId),
         };
       });

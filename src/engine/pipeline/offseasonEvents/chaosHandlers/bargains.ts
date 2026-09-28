@@ -2,11 +2,10 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeInjury } from '@/engine/injuries/utils';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
-import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
-  pickActiveWarrior,
+  withChosenWarriorNews,
 } from '../types';
 
 /** Handler for the Abyssal Bargain offseason event — trades gold for warrior power at a cost. */
@@ -17,10 +16,8 @@ export function handleAbyssalBargain(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
     const roll = rng.next();
-    let effectMsg: string;
 
     if (roll < 0.6) {
       // They accept the bargain
@@ -40,24 +37,16 @@ export function handleAbyssalBargain(
         fame: Math.max(0, (chosen.fame || 0) - fameLost),
         injuries: [...(chosen.injuries || []), newInjury],
       });
-      effectMsg = `They accepted the bargain. Power surges within them, but their soul feels tarnished. (+${xpGained} XP, -${fameLost} Fame, Moderate Injury)`;
-    } else {
-      // They refuse
-      const fameGained = 15 + Math.floor(rng.next() * 11);
-      ctx.rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + fameGained,
-      });
-      effectMsg = `They bravely refused the shadowed figure! The town applauds their moral fortitude. (+${fameGained} Fame)`;
+      return `They accepted the bargain. Power surges within them, but their soul feels tarnished. (+${xpGained} XP, -${fameLost} Fame, Moderate Injury)`;
     }
 
-    const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
-    ctx.newsletterItems.push({
-      id: rng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [`${baseMsg} ${effectMsg}`],
+    // They refuse
+    const fameGained = 15 + Math.floor(rng.next() * 11);
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + fameGained,
     });
-  }
+    return `They bravely refused the shadowed figure! The town applauds their moral fortitude. (+${fameGained} Fame)`;
+  });
 }
 
 
@@ -69,10 +58,8 @@ export function handleFeyTrickster(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
     const roll = rng.next();
-    let effectMsg: string;
 
     if (roll < 0.6) {
       // Solved riddle
@@ -90,31 +77,23 @@ export function handleFeyTrickster(
           discoveredWeek: nextWeek,
         })
       );
-      effectMsg = `They solved the riddle! They gain strange insights. (+${xpGained} XP, Insight Gained)`;
-    } else {
-      // Tricked
-      const newInjury = makeInjury(rng, {
-        name: 'Fey Prank',
-        description: 'A deeply embarrassing magical prank.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
-        penalties: { WL: -1, SP: -1 },
-      });
-      ctx.rosterUpdates.set(chosen.id, {
-        injuries: [...(chosen.injuries || []), newInjury],
-      });
-      effectMsg = `They were made a fool of, suffering minor hexes. (Minor Injury)`;
+      return `They solved the riddle! They gain strange insights. (+${xpGained} XP, Insight Gained)`;
     }
 
-    const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
-    ctx.newsletterItems.push({
-      id: rng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [`${baseMsg} ${effectMsg}`],
+    // Tricked
+    const newInjury = makeInjury(rng, {
+      name: 'Fey Prank',
+      description: 'A deeply embarrassing magical prank.',
+      severity: 'Minor',
+      weeksBase: 1,
+      weeksRange: 1,
+      penalties: { WL: -1, SP: -1 },
     });
-  }
+    ctx.rosterUpdates.set(chosen.id, {
+      injuries: [...(chosen.injuries || []), newInjury],
+    });
+    return `They were made a fool of, suffering minor hexes. (Minor Injury)`;
+  });
 }
 
 
@@ -126,10 +105,8 @@ export function handleRogueAlchemist(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
     const roll = rng.next();
-    let effectMsg: string;
 
     if (roll < 0.5) {
       // Success
@@ -139,29 +116,21 @@ export function handleRogueAlchemist(
         xp: (chosen.xp || 0) + xpGained,
         fame: (chosen.fame || 0) + fameGained,
       });
-      effectMsg = `It was a mutagenic success! They feel incredibly powerful. (+${xpGained} XP, +${fameGained} Fame)`;
-    } else {
-      // Failure
-      const newInjury = makeInjury(rng, {
-        name: 'Alchemical Sickness',
-        description: 'Nausea, cold sweats, and strange bodily humming.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 2,
-        penalties: { SP: -1, CN: -1 },
-      });
-      ctx.rosterUpdates.set(chosen.id, {
-        injuries: [...(chosen.injuries || []), newInjury],
-      });
-      effectMsg = `It tasted like battery acid. They are violently ill. (Minor Injury)`;
+      return `It was a mutagenic success! They feel incredibly powerful. (+${xpGained} XP, +${fameGained} Fame)`;
     }
 
-    const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
-    ctx.newsletterItems.push({
-      id: rng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [`${baseMsg} ${effectMsg}`],
+    // Failure
+    const newInjury = makeInjury(rng, {
+      name: 'Alchemical Sickness',
+      description: 'Nausea, cold sweats, and strange bodily humming.',
+      severity: 'Minor',
+      weeksBase: 1,
+      weeksRange: 2,
+      penalties: { SP: -1, CN: -1 },
     });
-  }
+    ctx.rosterUpdates.set(chosen.id, {
+      injuries: [...(chosen.injuries || []), newInjury],
+    });
+    return `It tasted like battery acid. They are violently ill. (Minor Injury)`;
+  });
 }

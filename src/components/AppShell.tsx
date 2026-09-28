@@ -68,6 +68,70 @@ function EventLogRail({ eventLogOpen, children }: EventLogRailProps) {
   );
 }
 
+// ─── Route-aware Event Log Toggling ─────────────────────────────────────────
+// We open the Event Log on the dashboard and high-stakes command screens.
+// We close it on management-heavy screens (Stable/World) to maximize workspace.
+
+function useRouteAwareEventLog(activePath: string) {
+  useEffect(() => {
+    const autoOpenPaths = ['/', '/stable/arena', '/stable/planner'];
+    const autoClosePaths = ['/stable', '/world', '/stable/roster', '/stable/training'];
+
+    if (autoOpenPaths.includes(activePath)) {
+      useGameStore.getState().setEventLogOpen(true);
+    } else if (autoClosePaths.some((p) => activePath.startsWith(p))) {
+      useGameStore.getState().setEventLogOpen(false);
+    }
+  }, [activePath]);
+}
+
+/** Central column: results banner, animated page outlet, overlays. */
+function MainColumn({
+  week,
+  isInitialized,
+  results,
+  clearResults,
+  pathname,
+  children,
+}: {
+  week: number;
+  isInitialized: boolean;
+  results: ReturnType<typeof useWeekExecution>['results'];
+  clearResults: () => void;
+  pathname: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <main className="flex-1 flex flex-col relative bg-background overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
+
+      <ResultsBanner week={week} results={results} onDismiss={clearResults} />
+      <div className="flex-1 relative overflow-y-auto overflow-x-hidden p-6 md:p-10 pb-20 md:pb-20">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{
+              duration: 0.4,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="relative z-10"
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <CoachOverlay />
+      <TacticalBar />
+
+      <LoadingOverlay isInitialized={isInitialized} />
+    </main>
+  );
+}
+
 /**
  * App shell.
  * @param - { children }.
@@ -118,19 +182,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     initialize();
   }, [initialize]);
 
-  useEffect(() => {
-    // Strategic Route-Aware Event Log Toggling
-    // We open the Event Log on the dashboard and high-stakes command screens.
-    // We close it on management-heavy screens (Stable/World) to maximize workspace.
-    const autoOpenPaths = ['/', '/stable/arena', '/stable/planner'];
-    const autoClosePaths = ['/stable', '/world', '/stable/roster', '/stable/training'];
-
-    if (autoOpenPaths.includes(activePath)) {
-      useGameStore.getState().setEventLogOpen(true);
-    } else if (autoClosePaths.some((p) => activePath.startsWith(p))) {
-      useGameStore.getState().setEventLogOpen(false);
-    }
-  }, [activePath]);
+  useRouteAwareEventLog(activePath);
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
@@ -155,33 +207,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* ─── Main Content Area ─── */}
-        <main className="flex-1 flex flex-col relative bg-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
-
-          <ResultsBanner week={week} results={results} onDismiss={clearResults} />
-          <div className="flex-1 relative overflow-y-auto overflow-x-hidden p-6 md:p-10 pb-20 md:pb-20">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="relative z-10"
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          <CoachOverlay />
-          <TacticalBar />
-
-          <LoadingOverlay isInitialized={isInitialized} />
-        </main>
+        <MainColumn
+          week={week}
+          isInitialized={isInitialized}
+          results={results}
+          clearResults={clearResults}
+          pathname={location.pathname}
+        >
+          {children}
+        </MainColumn>
 
         {/* ─── Event Log Right Rail ─── */}
         <EventLogRail eventLogOpen={eventLogOpen}>

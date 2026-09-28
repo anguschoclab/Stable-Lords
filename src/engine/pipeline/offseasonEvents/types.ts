@@ -7,6 +7,7 @@ import { type WarriorId } from '@/types/shared.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
+import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { hasInjuries } from '@/engine/injuries/utils';
 
@@ -112,4 +113,56 @@ export function announceOffseasonEvent(
   category?: NewsletterItem['category']
 ): void {
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, data, category);
+}
+
+/** Outcome returned by a `withChosenWarrior` apply callback. */
+export interface ChosenWarriorOutcome {
+  updates?: Partial<Warrior>;
+  announce?: Record<string, string | number>;
+}
+
+/**
+ * Pick a random active warrior, run `apply` for side effects (ledger,
+ * treasury, insight tokens) and to produce the outcome, then stamp the
+ * roster update and announce the event with the warrior's name.
+ */
+export function withChosenWarrior(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext,
+  apply: (chosen: Warrior) => ChosenWarriorOutcome | undefined,
+  healthyOnly = false
+): void {
+  const chosen = pickActiveWarrior(state, rng, healthyOnly);
+  if (!chosen) return;
+  const outcome = apply(chosen);
+  if (!outcome) return;
+  if (outcome.updates) ctx.rosterUpdates.set(chosen.id, outcome.updates);
+  announceOffseasonEvent(ctx, rng, nextWeek, e, { name: chosen.name, ...outcome.announce });
+}
+
+/**
+ * Pick a random active warrior, run `apply` for its branch effects (returning
+ * the effect message), then push a newsletter item of `baseMsg + effectMsg`.
+ */
+export function withChosenWarriorNews(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext,
+  apply: (chosen: Warrior) => string
+): void {
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
+  const effectMsg = apply(chosen);
+  const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [`${baseMsg} ${effectMsg}`],
+  });
 }

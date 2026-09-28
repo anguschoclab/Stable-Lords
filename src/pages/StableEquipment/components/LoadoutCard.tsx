@@ -24,6 +24,95 @@ interface LoadoutRec {
   };
 }
 
+function EncumbranceMeter({
+  totalWeight,
+  carryCap,
+}: {
+  totalWeight: number;
+  carryCap: number;
+}) {
+  const over = totalWeight > carryCap;
+  return (
+    <div className="space-y-2 pt-6 mt-auto">
+      <div className="flex justify-between text-[9px] font-black uppercase tracking-[0.3em] mb-1">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1 text-muted-foreground/40 italic cursor-help">
+                System Encumbrance
+                <HelpCircle className="h-2.5 w-2.5 text-muted-foreground/30 shrink-0" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              className="max-w-[240px] text-[10px] leading-relaxed space-y-1.5 p-3"
+            >
+              <p className="font-black uppercase tracking-wider text-foreground">Encumbrance</p>
+              <p className="text-muted-foreground">
+                Total weight of all equipped gear (weapon + armor + shield + helm). Exceeding a
+                warrior&apos;s carry threshold reduces Speed (SP) and increases fatigue per
+                bout.
+              </p>
+              <p className="text-muted-foreground">
+                High-ST warriors tolerate heavier loads. Recommended: keep under {carryCap}{' '}
+                units for balanced fighters.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <span
+          className={cn(
+            'font-mono font-black',
+            over ? 'text-destructive' : 'text-primary'
+          )}
+        >
+          {totalWeight} / {carryCap} WT
+        </span>
+      </div>
+      <div className="h-1 bg-white/5 overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{
+            width: `${Math.min(100, (totalWeight / carryCap) * 100)}%`,
+          }}
+          className={cn(
+            'h-full',
+            over
+              ? 'bg-destructive shadow-[0_0_10px_rgba(var(--destructive),0.5)]'
+              : 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]'
+          )}
+        />
+      </div>
+    </div>
+  );
+}
+
+function RequirementFailures({
+  reqCheck,
+}: {
+  reqCheck: { met: boolean; failures: { stat: string; current: number; required: number }[] };
+}) {
+  return (
+    <div className="p-3 bg-destructive/10 border border-destructive/20 space-y-2 mt-4">
+      <div className="flex items-center gap-2 text-[8px] font-black uppercase text-destructive tracking-[0.3em]">
+        <AlertTriangle className="h-3 w-3" /> Stat Requirement Failed
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {reqCheck.failures.map(
+          (f: { stat: string; current: number; required: number }, fi: number) => (
+            <div
+              key={fi}
+              className="text-[9px] font-mono font-black text-destructive/80 uppercase"
+            >
+              {`[${f.stat}: ${f.current} < ${f.required}]`}
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface LoadoutCardProps {
   rec: LoadoutRec;
   index: number;
@@ -112,77 +201,9 @@ export function LoadoutCard({
           />
         </div>
 
-        {reqCheck && !reqCheck.met && (
-          <div className="p-3 bg-destructive/10 border border-destructive/20 space-y-2 mt-4">
-            <div className="flex items-center gap-2 text-[8px] font-black uppercase text-destructive tracking-[0.3em]">
-              <AlertTriangle className="h-3 w-3" /> Stat Requirement Failed
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {reqCheck.failures.map(
-                (f: { stat: string; current: number; required: number }, fi: number) => (
-                  <div
-                    key={fi}
-                    className="text-[9px] font-mono font-black text-destructive/80 uppercase"
-                  >
-                    {`[${f.stat}: ${f.current} < ${f.required}]`}
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        )}
+        {reqCheck && !reqCheck.met && <RequirementFailures reqCheck={reqCheck} />}
 
-        <div className="space-y-2 pt-6 mt-auto">
-          <div className="flex justify-between text-[9px] font-black uppercase tracking-[0.3em] mb-1">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="flex items-center gap-1 text-muted-foreground/40 italic cursor-help">
-                    System Encumbrance
-                    <HelpCircle className="h-2.5 w-2.5 text-muted-foreground/30 shrink-0" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  className="max-w-[240px] text-[10px] leading-relaxed space-y-1.5 p-3"
-                >
-                  <p className="font-black uppercase tracking-wider text-foreground">Encumbrance</p>
-                  <p className="text-muted-foreground">
-                    Total weight of all equipped gear (weapon + armor + shield + helm). Exceeding a
-                    warrior&apos;s carry threshold reduces Speed (SP) and increases fatigue per
-                    bout.
-                  </p>
-                  <p className="text-muted-foreground">
-                    High-ST warriors tolerate heavier loads. Recommended: keep under {carryCap}{' '}
-                    units for balanced fighters.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <span
-              className={cn(
-                'font-mono font-black',
-                rec.totalWeight > carryCap ? 'text-destructive' : 'text-primary'
-              )}
-            >
-              {rec.totalWeight} / {carryCap} WT
-            </span>
-          </div>
-          <div className="h-1 bg-white/5 overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{
-                width: `${Math.min(100, (rec.totalWeight / carryCap) * 100)}%`,
-              }}
-              className={cn(
-                'h-full',
-                rec.totalWeight > carryCap
-                  ? 'bg-destructive shadow-[0_0_10px_rgba(var(--destructive),0.5)]'
-                  : 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]'
-              )}
-            />
-          </div>
-        </div>
+        <EncumbranceMeter totalWeight={rec.totalWeight} carryCap={carryCap} />
       </div>
 
       <div className="p-4 bg-black/40 border-t border-white/5">

@@ -15,6 +15,105 @@ interface StableEntry {
   titles: number;
 }
 
+/** Per-objective completion predicate. */
+function objectiveMet(
+  id: string,
+  state: GameState,
+  nextWeek: number,
+  stableStanding: number,
+  playerWarriorIds: Set<string>,
+  playerWarriorNames: Set<string>
+): boolean {
+  switch (id) {
+    case 'TOP_10_STABLE':
+      return stableStanding <= 10;
+    case 'TOP_3_STABLE':
+      return stableStanding <= 3;
+    case 'FIRST_TOURNAMENT_WIN':
+      return (state.tournaments || []).some(
+        (t) => t.completed && t.champion && playerWarriorNames.has(t.champion)
+      );
+    case 'HALL_OF_FAMER':
+      return (state.awards || []).some(
+        (a) =>
+          (a.type === 'WARRIOR_OF_YEAR' || a.type === 'KILLER_OF_YEAR') &&
+          a.warriorId &&
+          playerWarriorIds.has(a.warriorId)
+      );
+    case 'REALM_CHAMPION':
+      return stableStanding === 1 && nextWeek === 1;
+    case 'ARENA_TITLE':
+      return championsHeldByStable(state, state.player.id).length > 0;
+    case 'CIRCUIT_LORD': {
+      // Three titles across three DIFFERENT warriors — one crown per
+      // warrior means three crowned warriors, not three reigns.
+      const crownedIds = new Set(
+        Object.values(state.arenaChampions ?? {}).flatMap((t) => {
+          const wid = t.champion?.warriorId;
+          return wid != null && owningStableOf(state, wid)?.stableId === state.player.id
+            ? [wid]
+            : [];
+        })
+      );
+      return crownedIds.size >= 3;
+    }
+    case 'GRAND_CHAMPION':
+      return (state.grandChampions ?? []).some(
+        (e) => owningStableOf(state, e.warriorId)?.isPlayer === true
+      );
+  }
+  return false;
+}
+
+/**
+ * Evaluate all uncompleted objectives; marks completions on `current` and
+ * appends newsletter/gazette items. Returns true if REALM_CHAMPION completed.
+ */
+function evaluateObjectives(
+  current: ProgressionState,
+  state: GameState,
+  nextWeek: number,
+  stableStanding: number,
+  newsletterItems: NewsletterItem[],
+  gazettes: GazetteStory[]
+): boolean {
+  const playerWarriorIds = new Set(state.roster.map((w) => w.id));
+  const playerWarriorNames = new Set(state.roster.map((w) => w.name));
+  let realmChampionCompleted = false;
+
+  for (const obj of current.objectives) {
+    if (obj.completed) continue;
+
+    if (!objectiveMet(obj.id, state, nextWeek, stableStanding, playerWarriorIds, playerWarriorNames))
+      continue;
+
+    obj.completed = true;
+    obj.completedWeek = state.week;
+    obj.completedYear = state.year;
+
+    newsletterItems.push({
+      id: `progression-${obj.id}-${state.year}-${state.week}`,
+      week: state.week,
+      title: 'Objective Completed',
+      items: [`${obj.label}: ${obj.description}`],
+      category: 'news',
+    });
+
+    if (obj.id === 'REALM_CHAMPION') {
+      realmChampionCompleted = true;
+      gazettes.push({
+        id: `gazette-realm-champion-${state.year}` as NewsId,
+        headline: 'Realm Champion Crowned!',
+        body: `${state.player.stableName} has finished Year ${state.year} as the #1 stable in the realm. A new champion is etched into the annals of history.`,
+        mood: 'Festive',
+        tags: ['progression', 'champion', 'milestone'],
+        week: state.week,
+      });
+    }
+  }
+  return realmChampionCompleted;
+}
+
 /**
  *
  */
@@ -57,91 +156,17 @@ export function runProgressionPass(
   current.stableStanding = stableStanding;
   current.totalStables = totalStables;
 
-  const playerWarriorIds = new Set(state.roster.map((w) => w.id));
-  const playerWarriorNames = new Set(state.roster.map((w) => w.name));
-
   const newsletterItems: NewsletterItem[] = [];
   const gazettes: GazetteStory[] = [];
-  let realmChampionCompleted = false;
 
-  for (const obj of current.objectives) {
-    if (obj.completed) continue;
-
-    let completed = false;
-
-    switch (obj.id) {
-      case 'TOP_10_STABLE':
-        completed = stableStanding <= 10;
-        break;
-      case 'TOP_3_STABLE':
-        completed = stableStanding <= 3;
-        break;
-      case 'FIRST_TOURNAMENT_WIN':
-        completed = (state.tournaments || []).some(
-          (t) => t.completed && t.champion && playerWarriorNames.has(t.champion)
-        );
-        break;
-      case 'HALL_OF_FAMER':
-        completed = (state.awards || []).some(
-          (a) =>
-            (a.type === 'WARRIOR_OF_YEAR' || a.type === 'KILLER_OF_YEAR') &&
-            a.warriorId &&
-            playerWarriorIds.has(a.warriorId)
-        );
-        break;
-      case 'REALM_CHAMPION':
-        completed = stableStanding === 1 && nextWeek === 1;
-        break;
-      case 'ARENA_TITLE':
-        completed = championsHeldByStable(state, state.player.id).length > 0;
-        break;
-      case 'CIRCUIT_LORD': {
-        // Three titles across three DIFFERENT warriors — one crown per
-        // warrior means three crowned warriors, not three reigns.
-        const crownedIds = new Set(
-          Object.values(state.arenaChampions ?? {}).flatMap((t) => {
-            const wid = t.champion?.warriorId;
-            return wid != null && owningStableOf(state, wid)?.stableId === state.player.id
-              ? [wid]
-              : [];
-          })
-        );
-        completed = crownedIds.size >= 3;
-        break;
-      }
-      case 'GRAND_CHAMPION':
-        completed = (state.grandChampions ?? []).some(
-          (e) => owningStableOf(state, e.warriorId)?.isPlayer === true
-        );
-        break;
-    }
-
-    if (completed) {
-      obj.completed = true;
-      obj.completedWeek = state.week;
-      obj.completedYear = state.year;
-
-      newsletterItems.push({
-        id: `progression-${obj.id}-${state.year}-${state.week}`,
-        week: state.week,
-        title: 'Objective Completed',
-        items: [`${obj.label}: ${obj.description}`],
-        category: 'news',
-      });
-
-      if (obj.id === 'REALM_CHAMPION') {
-        realmChampionCompleted = true;
-        gazettes.push({
-          id: `gazette-realm-champion-${state.year}` as NewsId,
-          headline: 'Realm Champion Crowned!',
-          body: `${state.player.stableName} has finished Year ${state.year} as the #1 stable in the realm. A new champion is etched into the annals of history.`,
-          mood: 'Festive',
-          tags: ['progression', 'champion', 'milestone'],
-          week: state.week,
-        });
-      }
-    }
-  }
+  const realmChampionCompleted = evaluateObjectives(
+    current,
+    state,
+    nextWeek,
+    stableStanding,
+    newsletterItems,
+    gazettes
+  );
 
   if (realmChampionCompleted && current.status !== 'continued') {
     current.status = 'won';

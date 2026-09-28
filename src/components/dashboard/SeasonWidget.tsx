@@ -8,6 +8,90 @@ import { WeatherBadge } from './WeatherBadge';
 import { SeasonProgressBar } from './SeasonProgressBar';
 import { SeasonPhaseTicks } from './SeasonPhaseTicks';
 
+/** Season name + week counter headline row. */
+function SeasonMetaRow({ season, week }: { season: string; week: number }) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
+          CURRENT SEASON
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-2xl font-display font-black text-foreground uppercase tracking-tighter">
+            {season}
+          </span>
+          <Badge
+            variant="outline"
+            className="text-[9px] font-mono font-black border-primary/20 bg-primary/10 text-primary uppercase tracking-widest"
+          >
+            ACTIVE
+          </Badge>
+        </div>
+      </div>
+
+      <div className="text-right">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
+          WEEK
+        </span>
+        <div className="text-xl font-mono font-black text-foreground/80">{week} / 13</div>
+      </div>
+    </div>
+  );
+}
+
+/** Week-1 offseason event banner (festival / winter / merchant). */
+function OffseasonBanner({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="flex items-center gap-3 p-3 bg-arena-gold/10 border border-arena-gold/20 rounded-none animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
+      <PartyPopper className="h-5 w-5 text-arena-gold" />
+      <div className="flex flex-col">
+        <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
+          {title}
+        </span>
+        <span className="text-[9px] font-medium text-arena-gold/70 leading-tight">{body}</span>
+      </div>
+    </div>
+  );
+}
+
+/** Footer — season phase tooltip + weather badge. */
+function PhaseWeatherFooter({
+  phase,
+  phaseDesc,
+  weather,
+}: {
+  phase: string;
+  phaseDesc: string;
+  weather: string;
+}) {
+  return (
+    <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex flex-col gap-1 cursor-help group/stat">
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors motion-reduce:transition-none">
+              Season Phase
+            </span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
+              <Hexagon className="h-2.5 w-2.5 text-primary opacity-60" /> {phase}
+            </span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-52">
+          {phaseDesc}
+        </TooltipContent>
+      </Tooltip>
+
+      <div className="flex flex-col gap-1 items-end text-right">
+        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
+          Weather Condition
+        </span>
+        <WeatherBadge weather={weather} />
+      </div>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -66,74 +150,20 @@ export function SeasonWidget() {
         </div>
 
         <div className="space-y-8 relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
-                CURRENT SEASON
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-display font-black text-foreground uppercase tracking-tighter">
-                  {season}
-                </span>
-                <Badge
-                  variant="outline"
-                  className="text-[9px] font-mono font-black border-primary/20 bg-primary/10 text-primary uppercase tracking-widest"
-                >
-                  ACTIVE
-                </Badge>
-              </div>
-            </div>
-
-            <div className="text-right">
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
-                WEEK
-              </span>
-              <div className="text-xl font-mono font-black text-foreground/80">{week} / 13</div>
-            </div>
-          </div>
+          <SeasonMetaRow season={season} week={week} />
 
           {isOffseason && latestOffseasonEvent && (
-            <div className="flex items-center gap-3 p-3 bg-arena-gold/10 border border-arena-gold/20 rounded-none animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
-              <PartyPopper className="h-5 w-5 text-arena-gold" />
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
-                  {latestOffseasonEvent.title}
-                </span>
-                <span className="text-[9px] font-medium text-arena-gold/70 leading-tight">
-                  {latestOffseasonEvent.items?.[0] ?? ''}
-                </span>
-              </div>
-            </div>
+            <OffseasonBanner
+              title={latestOffseasonEvent.title}
+              body={latestOffseasonEvent.items?.[0] ?? ''}
+            />
           )}
 
           <SeasonProgressBar progress={progress} />
 
           <SeasonPhaseTicks currentWeek={week} className="mt-6 pt-1" />
 
-          <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex flex-col gap-1 cursor-help group/stat">
-                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors motion-reduce:transition-none">
-                    Season Phase
-                  </span>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
-                    <Hexagon className="h-2.5 w-2.5 text-primary opacity-60" /> {phase}
-                  </span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-52">
-                {phaseDesc}
-              </TooltipContent>
-            </Tooltip>
-
-            <div className="flex flex-col gap-1 items-end text-right">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
-                Weather Condition
-              </span>
-              <WeatherBadge weather={weather} />
-            </div>
-          </div>
+          <PhaseWeatherFooter phase={phase} phaseDesc={phaseDesc} weather={weather} />
         </div>
       </div>
     </Surface>

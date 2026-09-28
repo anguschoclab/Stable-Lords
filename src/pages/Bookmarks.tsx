@@ -208,60 +208,82 @@ export default function Bookmarks() {
         </Surface>
       ) : (
         <div className="space-y-12">
-          {(Object.keys(grouped) as BookmarkEntityType[]).map((type) => {
-            let items = grouped[type];
-            if (items.length === 0) return null;
-            const cfg = ENTITY_CONFIG[type];
-
-            if (sortBy === 'name') {
-              items = [...items].sort((a, b) => a.name.localeCompare(b.name));
-            }
-
-            return (
-              <section key={type}>
-                <div className="flex items-center justify-between">
-                  <SectionDivider label={cfg.label} />
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setSortBy((s) => (s === 'date' ? 'name' : 'date'))}
-                      aria-label={sortBy === 'date' ? 'Sort by name' : 'Sort by date'}
-                      className="p-1.5 rounded-none border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/20 transition-all motion-reduce:transition-none"
-                    >
-                      {sortBy === 'date' ? (
-                        <ArrowDownAZ className="h-3 w-3" />
-                      ) : (
-                        <ArrowUpDown className="h-3 w-3" />
-                      )}
-                    </button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => clearBookmarksByType(type)}
-                      className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 rounded-none h-7 px-2"
-                    >
-                      <Trash2 className="h-3 w-3 mr-1.5" />
-                      Clear
-                    </Button>
-                  </div>
-                </div>
-                <div className="mt-6 space-y-2">
-                  {items.map((item) => (
-                    <BookmarkedEntityRow
-                      key={item.id}
-                      type={type}
-                      id={item.id}
-                      name={item.name}
-                      subtitle={item.subtitle}
-                      createdAt={item.createdAt}
-                      onClick={item.onClick}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+          {(Object.keys(grouped) as BookmarkEntityType[]).map((type) => (
+            <BookmarkGroup
+              key={type}
+              type={type}
+              items={grouped[type]}
+              sortBy={sortBy}
+              onToggleSort={() => setSortBy((s) => (s === 'date' ? 'name' : 'date'))}
+              onClear={() => clearBookmarksByType(type)}
+            />
+          ))}
         </div>
       )}
     </PageFrame>
+  );
+}
+
+type GroupedItem = ReturnType<typeof groupBookmarks>[BookmarkEntityType][number];
+
+function BookmarkGroup({
+  type,
+  items,
+  sortBy,
+  onToggleSort,
+  onClear,
+}: {
+  type: BookmarkEntityType;
+  items: GroupedItem[];
+  sortBy: 'date' | 'name';
+  onToggleSort: () => void;
+  onClear: () => void;
+}) {
+  if (items.length === 0) return null;
+  const cfg = ENTITY_CONFIG[type];
+  const sorted =
+    sortBy === 'name' ? [...items].sort((a, b) => a.name.localeCompare(b.name)) : items;
+
+  return (
+    <section>
+      <div className="flex items-center justify-between">
+        <SectionDivider label={cfg.label} />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onToggleSort}
+            aria-label={sortBy === 'date' ? 'Sort by name' : 'Sort by date'}
+            className="p-1.5 rounded-none border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/20 transition-all motion-reduce:transition-none"
+          >
+            {sortBy === 'date' ? (
+              <ArrowDownAZ className="h-3 w-3" />
+            ) : (
+              <ArrowUpDown className="h-3 w-3" />
+            )}
+          </button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClear}
+            className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 rounded-none h-7 px-2"
+          >
+            <Trash2 className="h-3 w-3 mr-1.5" />
+            Clear
+          </Button>
+        </div>
+      </div>
+      <div className="mt-6 space-y-2">
+        {sorted.map((item) => (
+          <BookmarkedEntityRow
+            key={item.id}
+            type={type}
+            id={item.id}
+            name={item.name}
+            subtitle={item.subtitle}
+            createdAt={item.createdAt}
+            onClick={item.onClick}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

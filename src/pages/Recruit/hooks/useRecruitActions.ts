@@ -22,6 +22,46 @@ interface UseRecruitActionsParams {
 }
 
 /**
+ * Draft mutation for a signed recruit: builds the warrior, applies the signing
+ * bonus, pushes to roster, removes from pool, writes the newsletter entry.
+ */
+function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, totalCost: number) {
+  const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
+  const warrior = makeWarrior(
+    recruitRng.uuid('warrior') as WarriorId,
+    w.name,
+    w.style,
+    w.attributes,
+    { age: w.age, potential: w.potential }
+  );
+
+  if (bonus) {
+    warrior.xp = (warrior.xp ?? 0) + 2;
+    const currentFlair = warrior.flair ?? [];
+    warrior.flair = [...currentFlair, 'Eager'];
+  }
+
+  draft.roster.push(warrior);
+  draft.recruitPool = (draft.recruitPool ?? []).filter((p: PoolWarrior) => p.id !== w.id);
+
+  const items = [
+    `${draft.player.stableName} signed ${w.name}, a ${w.tier.toLowerCase()} ${STYLE_DISPLAY_NAMES[w.style]}.`,
+  ];
+  if (bonus)
+    items.push(
+      `A 50g signing bonus sealed the deal — ${w.name} arrived eager to prove themselves.`
+    );
+  draft.newsletter.push({
+    id: String(hashStr(`${draft.week}-recruitment-${w.name}`)),
+    week: draft.week,
+    title: 'Recruitment',
+    items,
+  });
+
+  toast.success(`${w.name} has joined your stable! (-${totalCost}g)`);
+}
+
+/**
  *
  */
 export function useRecruitActions({
@@ -47,41 +87,7 @@ export function useRecruitActions({
         return;
       }
 
-      setState((draft: GameStore) => {
-        const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
-        const warrior = makeWarrior(
-          recruitRng.uuid('warrior') as WarriorId,
-          w.name,
-          w.style,
-          w.attributes,
-          { age: w.age, potential: w.potential }
-        );
-
-        if (bonus) {
-          warrior.xp = (warrior.xp ?? 0) + 2;
-          const currentFlair = warrior.flair ?? [];
-          warrior.flair = [...currentFlair, 'Eager'];
-        }
-
-        draft.roster.push(warrior);
-        draft.recruitPool = (draft.recruitPool ?? []).filter((p: PoolWarrior) => p.id !== w.id);
-
-        const items = [
-          `${draft.player.stableName} signed ${w.name}, a ${w.tier.toLowerCase()} ${STYLE_DISPLAY_NAMES[w.style]}.`,
-        ];
-        if (bonus)
-          items.push(
-            `A 50g signing bonus sealed the deal — ${w.name} arrived eager to prove themselves.`
-          );
-        draft.newsletter.push({
-          id: String(hashStr(`${draft.week}-recruitment-${w.name}`)),
-          week: draft.week,
-          title: 'Recruitment',
-          items,
-        });
-
-        toast.success(`${w.name} has joined your stable! (-${totalCost}g)`);
-      });
+      setState((draft: GameStore) => applyRecruitDraft(draft, w, bonus, totalCost));
     },
     [rosterFull, setState, deductFunds]
   );

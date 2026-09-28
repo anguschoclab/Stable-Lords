@@ -11,6 +11,132 @@ import BoutViewer from '@/components/BoutViewer';
 import { cn } from '@/lib/utils';
 import { getNamesFromTitle } from '@/utils/fightTitle';
 
+type H2HRecord = { wins: number; losses: number; draws: number; kills: number; deaths: number };
+
+/** Per-opponent win/loss/kill tallies across the warrior's fight history. */
+function buildHeadToHead(fights: FightSummary[], warriorId: string): Map<string, H2HRecord> {
+  const map = new Map<string, H2HRecord>();
+  for (const f of fights) {
+    const n = getNamesFromTitle(f.title);
+    const isA = f.warriorIdA === warriorId;
+    const opponent = isA ? n.d : n.a;
+    let rec = map.get(opponent);
+    if (!rec) {
+      rec = { wins: 0, losses: 0, draws: 0, kills: 0, deaths: 0 };
+      map.set(opponent, rec);
+    }
+    const won = (isA && f.winner === 'A') || (!isA && f.winner === 'D');
+    const lost = (isA && f.winner === 'D') || (!isA && f.winner === 'A');
+    if (won) {
+      rec.wins++;
+      if (f.by === 'Kill') rec.kills++;
+    } else if (lost) {
+      rec.losses++;
+      if (f.by === 'Kill') rec.deaths++;
+    } else {
+      rec.draws++;
+    }
+  }
+  return map;
+}
+
+type NameResolutionState = {
+  player: ReturnType<typeof useGameStore.getState>['player'];
+  rivals: ReturnType<typeof useGameStore.getState>['rivals'];
+  roster: ReturnType<typeof useGameStore.getState>['roster'];
+  graveyard: ReturnType<typeof useGameStore.getState>['graveyard'];
+  retired: ReturnType<typeof useGameStore.getState>['retired'];
+};
+
+function FightRow({
+  fight,
+  warriorId,
+  record,
+  isExpanded,
+  onToggle,
+  nameResolutionState,
+}: {
+  fight: FightSummary;
+  warriorId: string;
+  record?: H2HRecord;
+  isExpanded: boolean;
+  onToggle: () => void;
+  nameResolutionState: NameResolutionState;
+}) {
+  const f = fight;
+  const n = getNamesFromTitle(f.title);
+  const isA = f.warriorIdA === warriorId;
+  const opponent = isA ? n.d : n.a;
+  const won = (isA && f.winner === 'A') || (!isA && f.winner === 'D');
+  const hasTranscript = f.transcript && f.transcript.length > 0;
+
+  return (
+    <Surface variant="glass" className="p-0 border-white/5 rounded-none overflow-hidden">
+      <button
+        className={cn('w-full flex items-center justify-between py-2.5 px-3 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none',
+          isExpanded ? 'bg-primary/5' : 'hover:bg-white/[0.02]'
+        )}
+        onClick={onToggle}
+        aria-expanded={isExpanded}
+        aria-label={`${isExpanded ? 'Collapse' : 'Expand'} bout details between ${n.a} and ${n.d}`}
+      >
+        <div className="flex items-center gap-2">
+          <Badge
+            variant={won ? 'default' : f.winner ? 'destructive' : 'secondary'}
+            className="text-xs w-8 justify-center rounded-none"
+          >
+            {won ? 'W' : f.winner ? 'L' : 'D'}
+          </Badge>
+          <span className="text-sm">
+            vs <span className="font-medium">{opponent}</span>
+          </span>
+          {record && record.wins + record.losses + record.draws >= 2 && (
+            <span className="text-[10px] font-mono text-muted-foreground bg-black/20 px-1.5 py-0.5">
+              H2H: {record.wins}-{record.losses}
+              {record.draws > 0 ? `-${record.draws}` : ''}
+              {record.kills > 0 && (
+                <span className="text-destructive ml-1">☠{record.kills}</span>
+              )}
+            </span>
+          )}
+          {record && record.losses >= 3 && (
+            <Badge variant="destructive" className="text-[10px] gap-1 rounded-none">
+              NEMESIS
+            </Badge>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {f.by && (
+            <Badge variant="outline" className="text-xs rounded-none border-white/10">
+              {f.by}
+            </Badge>
+          )}
+          <span className="text-xs text-muted-foreground">Wk {f.week}</span>
+          {hasTranscript && <span className="text-[10px] text-primary">▶</span>}
+        </div>
+      </button>
+
+      {isExpanded && hasTranscript && (
+        <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
+          <BoutViewer
+            nameA={n.a}
+            nameD={n.d}
+            styleA={f.styleA}
+            styleD={f.styleD}
+            log={(f.transcript || []).map((text, i) => ({ minute: i + 1, text }))}
+            winner={f.winner}
+            by={f.by}
+            isRivalry={f.isRivalry}
+            analysis={f.analysis}
+            weaponIdA={findWarrior(nameResolutionState, f.warriorIdA)?.equipment?.weapon}
+            weaponIdD={findWarrior(nameResolutionState, f.warriorIdD)?.equipment?.weapon}
+          />
+        </div>
+      )}
+    </Surface>
+  );
+}
+
 /**
  * Warrior fight history.
  */
@@ -32,35 +158,7 @@ export function WarriorFightHistory({
     }))
   );
   const fights = getAllFightsForWarrior(arenaHistory, warriorId);
-
-  const h2h = useMemo(() => {
-    const map = new Map<
-      string,
-      { wins: number; losses: number; draws: number; kills: number; deaths: number }
-    >();
-    for (const f of fights) {
-      const n = getNamesFromTitle(f.title);
-      const isA = f.warriorIdA === warriorId;
-      const opponent = isA ? n.d : n.a;
-      let rec = map.get(opponent);
-      if (!rec) {
-        rec = { wins: 0, losses: 0, draws: 0, kills: 0, deaths: 0 };
-        map.set(opponent, rec);
-      }
-      const won = (isA && f.winner === 'A') || (!isA && f.winner === 'D');
-      const lost = (isA && f.winner === 'D') || (!isA && f.winner === 'A');
-      if (won) {
-        rec.wins++;
-        if (f.by === 'Kill') rec.kills++;
-      } else if (lost) {
-        rec.losses++;
-        if (f.by === 'Kill') rec.deaths++;
-      } else {
-        rec.draws++;
-      }
-    }
-    return map;
-  }, [fights, warriorId]);
+  const h2h = useMemo(() => buildHeadToHead(fights, warriorId), [fights, warriorId]);
 
   if (fights.length === 0) {
     return (
@@ -82,79 +180,16 @@ export function WarriorFightHistory({
           const n = getNamesFromTitle(f.title);
           const isA = f.warriorIdA === warriorId;
           const opponent = isA ? n.d : n.a;
-          const won = (isA && f.winner === 'A') || (!isA && f.winner === 'D');
-          const isExpanded = expandedId === f.id;
-          const hasTranscript = f.transcript && f.transcript.length > 0;
-          const record = h2h.get(opponent);
-
           return (
-            <Surface
+            <FightRow
               key={f.id}
-              variant="glass"
-              className="p-0 border-white/5 rounded-none overflow-hidden"
-            >
-              <button
-                className={cn('w-full flex items-center justify-between py-2.5 px-3 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none',
-                  isExpanded ? 'bg-primary/5' : 'hover:bg-white/[0.02]'
-                )}
-                onClick={() => setExpandedId(isExpanded ? null : f.id)}
-                aria-expanded={isExpanded}
-                aria-label={`${isExpanded ? 'Collapse' : 'Expand'} bout details between ${n.a} and ${n.d}`}
-              >
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant={won ? 'default' : f.winner ? 'destructive' : 'secondary'}
-                    className="text-xs w-8 justify-center rounded-none"
-                  >
-                    {won ? 'W' : f.winner ? 'L' : 'D'}
-                  </Badge>
-                  <span className="text-sm">
-                    vs <span className="font-medium">{opponent}</span>
-                  </span>
-                  {record && record.wins + record.losses + record.draws >= 2 && (
-                    <span className="text-[10px] font-mono text-muted-foreground bg-black/20 px-1.5 py-0.5">
-                      H2H: {record.wins}-{record.losses}
-                      {record.draws > 0 ? `-${record.draws}` : ''}
-                      {record.kills > 0 && (
-                        <span className="text-destructive ml-1">☠{record.kills}</span>
-                      )}
-                    </span>
-                  )}
-                  {record && record.losses >= 3 && (
-                    <Badge variant="destructive" className="text-[10px] gap-1 rounded-none">
-                      NEMESIS
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  {f.by && (
-                    <Badge variant="outline" className="text-xs rounded-none border-white/10">
-                      {f.by}
-                    </Badge>
-                  )}
-                  <span className="text-xs text-muted-foreground">Wk {f.week}</span>
-                  {hasTranscript && <span className="text-[10px] text-primary">▶</span>}
-                </div>
-              </button>
-
-              {isExpanded && hasTranscript && (
-                <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
-                  <BoutViewer
-                    nameA={n.a}
-                    nameD={n.d}
-                    styleA={f.styleA}
-                    styleD={f.styleD}
-                    log={(f.transcript || []).map((text, i) => ({ minute: i + 1, text }))}
-                    winner={f.winner}
-                    by={f.by}
-                    isRivalry={f.isRivalry}
-                    analysis={f.analysis}
-                    weaponIdA={findWarrior(nameResolutionState, f.warriorIdA)?.equipment?.weapon}
-                    weaponIdD={findWarrior(nameResolutionState, f.warriorIdD)?.equipment?.weapon}
-                  />
-                </div>
-              )}
-            </Surface>
+              fight={f}
+              warriorId={warriorId}
+              record={h2h.get(opponent)}
+              isExpanded={expandedId === f.id}
+              onToggle={() => setExpandedId(expandedId === f.id ? null : f.id)}
+              nameResolutionState={nameResolutionState}
+            />
           );
         })}
     </div>

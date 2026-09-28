@@ -20,6 +20,62 @@ export interface BoutResult {
   summary: FightSummary;
 }
 
+type PoolWarrior = ReturnType<typeof generateOrphanPool>[number];
+
+/** Run the FTUE exhibition bout between the first two selected orphans. */
+function simulateTutorialBout(
+  selectedWarriors: PoolWarrior[],
+  playerPlan: FightPlan | null,
+  boutSeed: number
+): BoutResult | null {
+  if (selectedWarriors.length < 2) return null;
+  const poolA = selectedWarriors[0];
+  const poolB = selectedWarriors[1];
+  if (!poolA || !poolB) return null;
+  const wA = makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
+  const wB = makeWarrior(poolB.id as WarriorId, poolB.name, poolB.style, poolB.attrs);
+  const planA = playerPlan ?? defaultPlanForWarrior(wA);
+  const planB = defaultPlanForWarrior(wB);
+  const outcome = simulateFight(planA, planB, wA, wB, boutSeed);
+  const tags = outcome.post?.tags ?? [];
+
+  const summary = createBoutSummary(
+    wA,
+    wB,
+    outcome,
+    1,
+    {
+      uuid: () => generateId(undefined, 'ftue'),
+    },
+    'standard_arena' // simulateFight defaults to the standard arena
+  );
+  summary.flashyTags = tags;
+  summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;
+  summary.fameDeltaD = outcome.winner === 'D' ? 1 : 0;
+
+  return { a: wA, d: wB, outcome, summary };
+}
+
+/** Commit the built FTUE result into the store draft. */
+function commitFTUEState(
+  setState: (fn: (draft: GameStore) => void) => void,
+  result: ReturnType<typeof buildFTUEInitialState>,
+  graveyard: Warrior[]
+): void {
+  setState((draft: GameStore) => {
+    draft.isFTUE = false;
+    draft.ftueComplete = true;
+    draft.roster = result.aliveWarriors;
+    draft.graveyard = [...graveyard, ...result.deadWarriors];
+    draft.rivals = result.rivals;
+    draft.recruitPool = result.recruitPool;
+    draft.arenaHistory = result.arenaHistory as FightSummary[];
+    draft.promoters = result.promoters;
+    draft.boutOffers = result.boutOffers;
+    draft.realmRankings = result.realmRankings;
+  });
+}
+
 /**
  * Orphanage FTUE orchestration: step state, identity inputs, orphan pool,
  * selection, plan, tutorial bout, and the finish-commit that builds the
@@ -85,32 +141,8 @@ export function useFtueFlow() {
   }, [selectedWarriors]);
 
   const runTutorialBout = useCallback(() => {
-    if (selectedWarriors.length < 2) return;
-    const poolA = selectedWarriors[0];
-    const poolB = selectedWarriors[1];
-    if (!poolA || !poolB) return;
-    const wA = makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
-    const wB = makeWarrior(poolB.id as WarriorId, poolB.name, poolB.style, poolB.attrs);
-    const planA = playerPlan ?? defaultPlanForWarrior(wA);
-    const planB = defaultPlanForWarrior(wB);
-    const outcome = simulateFight(planA, planB, wA, wB, boutSeed);
-    const tags = outcome.post?.tags ?? [];
-
-    const summary = createBoutSummary(
-      wA,
-      wB,
-      outcome,
-      1,
-      {
-        uuid: () => generateId(undefined, 'ftue'),
-      },
-      'standard_arena' // simulateFight defaults to the standard arena
-    );
-    summary.flashyTags = tags;
-    summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;
-    summary.fameDeltaD = outcome.winner === 'D' ? 1 : 0;
-
-    setBoutResult({ a: wA, d: wB, outcome, summary });
+    const result = simulateTutorialBout(selectedWarriors, playerPlan, boutSeed);
+    if (result) setBoutResult(result);
   }, [selectedWarriors, playerPlan, boutSeed]);
 
   const finishFTUE = useCallback(() => {
@@ -127,18 +159,7 @@ export function useFtueFlow() {
       playerPlan
     );
 
-    setState((draft: GameStore) => {
-      draft.isFTUE = false;
-      draft.ftueComplete = true;
-      draft.roster = result.aliveWarriors;
-      draft.graveyard = [...state.graveyard, ...result.deadWarriors];
-      draft.rivals = result.rivals;
-      draft.recruitPool = result.recruitPool;
-      draft.arenaHistory = result.arenaHistory as FightSummary[];
-      draft.promoters = result.promoters;
-      draft.boutOffers = result.boutOffers;
-      draft.realmRankings = result.realmRankings;
-    });
+    commitFTUEState(setState, result, state.graveyard);
     saveCurrentState();
 
     // Navigate to the Stable hub after FTUE

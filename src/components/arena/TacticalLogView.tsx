@@ -136,6 +136,66 @@ const TacticalLogEntry = memo(
   }
 );
 
+/** Minute-step pager under the log — prev/next jumps to minute boundaries. */
+function StepControls({
+  log,
+  currentIndex,
+  prevPageIndex,
+  nextPageIndex,
+  onHighlightChange,
+}: {
+  log: TacticalLogViewProps['log'];
+  currentIndex: number;
+  prevPageIndex: number;
+  nextPageIndex: number;
+  onHighlightChange: TacticalLogViewProps['onHighlightChange'];
+}) {
+  const isAtStart = currentIndex <= 0;
+  const isAtEnd = currentIndex >= log.length - 1;
+  const btnClass = (disabled: boolean) =>
+    cn(
+      'flex items-center justify-center h-8 w-8 transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+      disabled
+        ? 'opacity-30 cursor-not-allowed'
+        : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+    );
+
+  return (
+    <div
+      className="flex items-center justify-between px-4 py-2"
+      style={{
+        background: 'var(--background)',
+        border: '1px solid rgba(60,42,22,0.8)',
+        borderTop: 'none',
+      }}
+    >
+      <button
+        onClick={() => onHighlightChange?.(prevPageIndex)}
+        disabled={isAtStart}
+        aria-label="Previous"
+        className={btnClass(isAtStart)}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      <div className="flex items-center gap-2 font-mono text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <span className="text-primary">{currentIndex + 1}</span>
+        <span className="opacity-20">/</span>
+        <span>{log.length}</span>
+      </div>
+
+      <button
+        onClick={() => onHighlightChange?.(nextPageIndex)}
+        disabled={isAtEnd}
+        aria-label="Next"
+        className={btnClass(isAtEnd)}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
 /**
  * Tactical log view.
  * @param - { log, visible count, class name }.
@@ -171,9 +231,6 @@ export default function TacticalLogView({
   const visibleEvents = log.slice(0, visibleCount);
   const hasHighlight = highlightIndex != null;
   const currentIndex = highlightIndex ?? 0;
-  const isAtStart = currentIndex <= 0;
-  const isAtEnd = currentIndex >= log.length - 1;
-
   const currentMinute = log[currentIndex]?.minute ?? 0;
   const prevPageIndex = (() => {
     for (let i = currentIndex - 1; i >= 0; i--) {
@@ -225,48 +282,13 @@ export default function TacticalLogView({
       </ScrollArea>
 
       {showStepControls && (
-        <div
-          className="flex items-center justify-between px-4 py-2"
-          style={{
-            background: 'var(--background)',
-            border: '1px solid rgba(60,42,22,0.8)',
-            borderTop: 'none',
-          }}
-        >
-          <button
-            onClick={() => onHighlightChange?.(prevPageIndex)}
-            disabled={isAtStart}
-            aria-label="Previous"
-            className={cn(
-              'flex items-center justify-center h-8 w-8 transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-              isAtStart
-                ? 'opacity-30 cursor-not-allowed'
-                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
-            )}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-
-          <div className="flex items-center gap-2 font-mono text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            <span className="text-primary">{currentIndex + 1}</span>
-            <span className="opacity-20">/</span>
-            <span>{log.length}</span>
-          </div>
-
-          <button
-            onClick={() => onHighlightChange?.(nextPageIndex)}
-            disabled={isAtEnd}
-            aria-label="Next"
-            className={cn(
-              'flex items-center justify-center h-8 w-8 transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-              isAtEnd
-                ? 'opacity-30 cursor-not-allowed'
-                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
-            )}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
+        <StepControls
+          log={log}
+          currentIndex={currentIndex}
+          prevPageIndex={prevPageIndex}
+          nextPageIndex={nextPageIndex}
+          onHighlightChange={onHighlightChange}
+        />
       )}
     </>
   );

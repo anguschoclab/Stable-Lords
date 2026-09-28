@@ -15,6 +15,43 @@ interface BoutRowProps {
   onToggleExpand: (id: string | null) => void;
 }
 
+/** Fighter name cell — accent bar + name, winner highlighted; mirrored via `right`. */
+function FighterCell({ name, isWinner, right }: { name: string; isWinner: boolean; right?: boolean }) {
+  const bar = (
+    <div
+      className={cn(
+        'w-1.5 h-6 rounded-none',
+        isWinner ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]' : 'bg-white/5'
+      )}
+    />
+  );
+  const label = (
+    <span
+      className={cn(
+        'font-display font-black uppercase text-xs tracking-tight',
+        isWinner ? 'text-primary' : 'text-muted-foreground/40'
+      )}
+    >
+      {name}
+    </span>
+  );
+  return (
+    <div className={cn('flex items-center gap-3 min-w-36', right && 'justify-end text-right')}>
+      {right ? (
+        <>
+          {label}
+          {bar}
+        </>
+      ) : (
+        <>
+          {bar}
+          {label}
+        </>
+      )}
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -56,24 +93,7 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
         <CollapsibleTrigger asChild>
           <div className="p-4 cursor-pointer flex items-center justify-between group">
             <div className="flex items-center gap-6 flex-1">
-              <div className="flex items-center gap-3 min-w-36">
-                <div
-                  className={cn(
-                    'w-1.5 h-6 rounded-none',
-                    isWinnerA
-                      ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]'
-                      : 'bg-white/5'
-                  )}
-                />
-                <span
-                  className={cn(
-                    'font-display font-black uppercase text-xs tracking-tight',
-                    isWinnerA ? 'text-primary' : 'text-muted-foreground/40'
-                  )}
-                >
-                  {res.a.name}
-                </span>
-              </div>
+              <FighterCell name={res.a.name} isWinner={isWinnerA} />
 
               <div className="flex flex-col items-center gap-1.5 px-4">
                 <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em]">
@@ -87,24 +107,7 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
                 </Badge>
               </div>
 
-              <div className="flex items-center gap-3 min-w-36 justify-end text-right">
-                <span
-                  className={cn(
-                    'font-display font-black uppercase text-xs tracking-tight',
-                    isWinnerD ? 'text-primary' : 'text-muted-foreground/40'
-                  )}
-                >
-                  {res.d.name}
-                </span>
-                <div
-                  className={cn(
-                    'w-1.5 h-6 rounded-none',
-                    isWinnerD
-                      ? 'bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]'
-                      : 'bg-white/5'
-                  )}
-                />
-              </div>
+              <FighterCell name={res.d.name} isWinner={isWinnerD} right />
             </div>
 
             <div className="flex items-center gap-4 ml-6">

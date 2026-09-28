@@ -69,38 +69,20 @@ export function StableComparison({ rivals }: StableComparisonProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-8">
-            <Surface variant="glass" padding="none" className="border-primary/20 overflow-hidden">
-              <div className="p-4 border-b border-white/5 bg-primary/5">
-                <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
-                  {rivalA.owner.stableName} Doctrines
-                </h3>
-              </div>
-              <div className="p-4">
-                <DoctrinePanel
-                  stableName={rivalA.owner.stableName}
-                  styleCounts={statsA.styleCounts}
-                  activeCount={statsA.activeCount}
-                  colorVariant="primary"
-                  textAlign="left"
-                />
-              </div>
-            </Surface>
-            <Surface variant="glass" padding="none" className="border-accent/20 overflow-hidden">
-              <div className="p-4 border-b border-white/5 bg-accent/5 text-right">
-                <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-accent">
-                  {rivalB.owner.stableName} Doctrines
-                </h3>
-              </div>
-              <div className="p-4">
-                <DoctrinePanel
-                  stableName={rivalB.owner.stableName}
-                  styleCounts={statsB.styleCounts}
-                  activeCount={statsB.activeCount}
-                  colorVariant="accent"
-                  textAlign="right"
-                />
-              </div>
-            </Surface>
+            <DoctrineSurface
+              stableName={rivalA.owner.stableName}
+              styleCounts={statsA.styleCounts}
+              activeCount={statsA.activeCount}
+              colorVariant="primary"
+              textAlign="left"
+            />
+            <DoctrineSurface
+              stableName={rivalB.owner.stableName}
+              styleCounts={statsB.styleCounts}
+              activeCount={statsB.activeCount}
+              colorVariant="accent"
+              textAlign="right"
+            />
           </div>
 
           <DoctrineIntelligenceSection
@@ -113,28 +95,8 @@ export function StableComparison({ rivals }: StableComparisonProps) {
           />
 
           <DominantCombatantsSection
-            topWarriorA={
-              statsA.topWarrior
-                ? {
-                    ...statsA.topWarrior,
-                    isChampion: statsA.topWarrior.champion,
-                    injuryCount: statsA.topWarrior.injuries.length,
-                    isDead: statsA.topWarrior.isDead ?? false,
-                    age: statsA.topWarrior.age ?? 0,
-                  }
-                : null
-            }
-            topWarriorB={
-              statsB.topWarrior
-                ? {
-                    ...statsB.topWarrior,
-                    isChampion: statsB.topWarrior.champion,
-                    injuryCount: statsB.topWarrior.injuries.length,
-                    isDead: statsB.topWarrior.isDead ?? false,
-                    age: statsB.topWarrior.age ?? 0,
-                  }
-                : null
-            }
+            topWarriorA={topWarriorShape(statsA.topWarrior)}
+            topWarriorB={topWarriorShape(statsB.topWarrior)}
           />
 
           <HeadToHead rosterA={rivalA.roster} rosterB={rivalB.roster} />
@@ -144,4 +106,60 @@ export function StableComparison({ rivals }: StableComparisonProps) {
       {(!statsA || !statsB) && <EmptyStateSurface />}
     </div>
   );
+}
+
+type StableStats = ReturnType<typeof useStableComparison>['statsA'];
+
+/** Framed doctrine panel for one side of the comparison. */
+function DoctrineSurface({
+  stableName,
+  styleCounts,
+  activeCount,
+  colorVariant,
+  textAlign,
+}: {
+  stableName: string;
+  styleCounts: NonNullable<StableStats>['styleCounts'];
+  activeCount: number;
+  colorVariant: 'primary' | 'accent';
+  textAlign: 'left' | 'right';
+}) {
+  return (
+    <Surface
+      variant="glass"
+      padding="none"
+      className={`${colorVariant === 'primary' ? 'border-primary/20' : 'border-accent/20'} overflow-hidden`}
+    >
+      <div
+        className={`p-4 border-b border-white/5 ${colorVariant === 'primary' ? 'bg-primary/5' : 'bg-accent/5 text-right'}`}
+      >
+        <h3
+          className={`text-[9px] font-black uppercase tracking-[0.2em] ${colorVariant === 'primary' ? 'text-primary' : 'text-accent'}`}
+        >
+          {stableName} Doctrines
+        </h3>
+      </div>
+      <div className="p-4">
+        <DoctrinePanel
+          stableName={stableName}
+          styleCounts={styleCounts}
+          activeCount={activeCount}
+          colorVariant={colorVariant}
+          textAlign={textAlign}
+        />
+      </div>
+    </Surface>
+  );
+}
+
+/** Shapes a top-warrior record for DominantCombatantsSection. */
+function topWarriorShape(topWarrior: NonNullable<StableStats>['topWarrior']) {
+  if (!topWarrior) return null;
+  return {
+    ...topWarrior,
+    isChampion: topWarrior.champion,
+    injuryCount: topWarrior.injuries.length,
+    isDead: topWarrior.isDead ?? false,
+    age: topWarrior.age ?? 0,
+  };
 }

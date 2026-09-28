@@ -4,25 +4,24 @@ import { getRecentFights } from '@/engine/core/historyUtils';
 import { PERSONALITY_CLASH } from '@/data/ownerData';
 import { addCapped, clamp } from '@/utils/math';
 
-/**
- * Detect and escalate owner-to-owner grudges based on personality clashes
- * and recent kill/loss history between stables.
- */
-export function processOwnerGrudges(
-  state: GameState,
-  existingGrudges: OwnerGrudge[]
-): { grudges: OwnerGrudge[]; gazetteItems: string[] } {
-  const grudges = existingGrudges.map((g) => ({ ...g }));
-  const gazetteItems: string[] = [];
-  const rivals = state.rivals || [];
+/** Fight outcomes aggregated per rival-pair / rival-vs-player, single pass. */
+interface FightAggregation {
+  rivalPairAgg: Map<string, { hasCrossFight: boolean; hasKill: boolean }>;
+  rivalKillVsPlayer: Set<number>;
+  rivalUpsetVsPlayer: Set<number>;
+}
 
-  // Check for personality clashes between stables that have recently fought
+/**
+ * Resolve each fight's warriors to their owning roster once, instead of
+ * re-scanning all recentFights for every rival pair (O(R²·F)) and again for
+ * every rival×player pair (O(R·F)).
+ */
+function aggregateRecentFights(
+  state: GameState,
+  rivals: GameState['rivals']
+): FightAggregation {
   const recentFights = getRecentFights(state.arenaHistory, state.week - 13);
 
-  // ── Single-pass aggregation ────────────────────────────────────────────────
-  // Resolve each fight's warriors to their owning roster once, instead of
-  // re-scanning all recentFights for every rival pair (O(R²·F)) and again for
-  // every rival×player pair (O(R·F)).
   const warriorToRival = new Map<WarriorId, number>();
   rivals.forEach((r, idx) => {
     for (const w of r.roster) {
@@ -77,15 +76,23 @@ export function processOwnerGrudges(
     }
   }
 
-  // Order-independent owner-pair lookup replaces the per-pair `grudges.find`
-  // scan (was O(R²·G)).
-  const ownerPairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
-  const grudgeByPair = new Map<string, OwnerGrudge>();
-  for (const g of grudges) {
-    const k = ownerPairKey(g.ownerIdA, g.ownerIdB);
-    if (!grudgeByPair.has(k)) grudgeByPair.set(k, g);
-  }
+  return { rivalPairAgg, rivalKillVsPlayer, rivalUpsetVsPlayer };
+}
 
+// Order-independent owner-pair lookup replaces the per-pair `grudges.find`
+// scan (was O(R²·G)).
+const ownerPairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+const rivalIdxKey = (i: number, j: number) => (i < j ? `${i}|${j}` : `${j}|${i}`);
+
+/** Rival×rival pairs: personality clashes escalate into grudges on kills. */
+function processRivalPairs(
+  state: GameState,
+  rivals: GameState['rivals'],
+  agg: FightAggregation,
+  grudges: OwnerGrudge[],
+  grudgeByPair: Map<string, OwnerGrudge>,
+  gazetteItems: string[]
+): void {
   for (let i = 0; i < rivals.length; i++) {
     const rA = rivals[i];
     if (!rA) continue;
@@ -101,9 +108,9 @@ export function processOwnerGrudges(
         PERSONALITY_CLASH[persA]?.includes(persB) || PERSONALITY_CLASH[persB]?.includes(persA);
       if (!clash) continue;
 
-      const agg = rivalPairAgg.get(pairKey(i, j));
-      if (!agg?.hasCrossFight) continue;
-      const hasKill = agg.hasKill;
+      const pairAgg = agg.rivalPairAgg.get(rivalIdxKey(i, j));
+      if (!pairAgg?.hasCrossFight) continue;
+      const hasKill = pairAgg.hasKill;
 
       const existing = grudgeByPair.get(ownerPairKey(rA.owner.id, rB.owner.id));
 
@@ -140,52 +147,96 @@ export function processOwnerGrudges(
       }
     }
   }
+}
 
-  // ── Player × rival pairs (G5b): kills/upsets against the player's roster
-  // create real grudges. Unlike rival×rival pairs these need no personality
-  // clash — bloodshed is reason enough.
-  if (playerWarriorIds.size > 0) {
-    for (let idx = 0; idx < rivals.length; idx++) {
-      const r = rivals[idx];
-      if (!r) continue;
-      const hasKill = rivalKillVsPlayer.has(idx);
-      const hasUpset = rivalUpsetVsPlayer.has(idx);
+/**
+ * Player × rival pairs (G5b): kills/upsets against the player's roster
+ * create real grudges. Unlike rival×rival pairs these need no personality
+ * clash — bloodshed is reason enough.
+ */
+function processPlayerPairs(
+  state: GameState,
+  rivals: GameState['rivals'],
+  agg: FightAggregation,
+  playerWarriorCount: number,
+  grudges: OwnerGrudge[],
+  grudgeByPair: Map<string, OwnerGrudge>,
+  gazetteItems: string[]
+): void {
+  if (playerWarriorCount === 0) return;
 
-      if (!hasKill && !hasUpset) continue;
+  for (let idx = 0; idx < rivals.length; idx++) {
+    const r = rivals[idx];
+    if (!r) continue;
+    const hasKill = agg.rivalKillVsPlayer.has(idx);
+    const hasUpset = agg.rivalUpsetVsPlayer.has(idx);
 
-      const existing = grudgeByPair.get(ownerPairKey(r.owner.id, state.player.id));
+    if (!hasKill && !hasUpset) continue;
 
-      if (existing) {
-        if (hasKill && existing.lastEscalation < state.week - 4) {
-          existing.intensity = addCapped(existing.intensity, 1, 5);
-          existing.lastEscalation = state.week;
-          existing.reason = `Blood spilled between ${r.owner.stableName} and the player's stable`;
-          gazetteItems.push(
-            `🔥 GRUDGE DEEPENS: ${r.owner.name} vows vengeance on the player's stable after another kill!`
-          );
-        }
-      } else {
-        const created: OwnerGrudge = {
-          id: `grudge_${r.owner.id}_${state.player.id}` as import('@/types/shared.types').GrudgeId,
-          ownerIdA: r.owner.id,
-          ownerIdB: state.player.id,
-          intensity: hasKill ? 2 : 1,
-          reason: hasKill
-            ? `${r.owner.stableName} suffered a kill at the player's hands`
-            : `${r.owner.stableName} was humiliated by an underdog defeat`,
-          startWeek: state.week,
-          lastEscalation: state.week,
-        };
-        grudges.push(created);
-        grudgeByPair.set(ownerPairKey(created.ownerIdA, created.ownerIdB), created);
+    const existing = grudgeByPair.get(ownerPairKey(r.owner.id, state.player.id));
+
+    if (existing) {
+      if (hasKill && existing.lastEscalation < state.week - 4) {
+        existing.intensity = addCapped(existing.intensity, 1, 5);
+        existing.lastEscalation = state.week;
+        existing.reason = `Blood spilled between ${r.owner.stableName} and the player's stable`;
         gazetteItems.push(
-          hasKill
-            ? `⚔️ BLOOD FEUD: ${r.owner.name} has sworn vengeance on the player's stable!`
-            : `😤 SLIGHTED: ${r.owner.name} seethes after an upset loss to the player's stable.`
+          `🔥 GRUDGE DEEPENS: ${r.owner.name} vows vengeance on the player's stable after another kill!`
         );
       }
+    } else {
+      const created: OwnerGrudge = {
+        id: `grudge_${r.owner.id}_${state.player.id}` as import('@/types/shared.types').GrudgeId,
+        ownerIdA: r.owner.id,
+        ownerIdB: state.player.id,
+        intensity: hasKill ? 2 : 1,
+        reason: hasKill
+          ? `${r.owner.stableName} suffered a kill at the player's hands`
+          : `${r.owner.stableName} was humiliated by an underdog defeat`,
+        startWeek: state.week,
+        lastEscalation: state.week,
+      };
+      grudges.push(created);
+      grudgeByPair.set(ownerPairKey(created.ownerIdA, created.ownerIdB), created);
+      gazetteItems.push(
+        hasKill
+          ? `⚔️ BLOOD FEUD: ${r.owner.name} has sworn vengeance on the player's stable!`
+          : `😤 SLIGHTED: ${r.owner.name} seethes after an upset loss to the player's stable.`
+      );
     }
   }
+}
+
+/**
+ * Detect and escalate owner-to-owner grudges based on personality clashes
+ * and recent kill/loss history between stables.
+ */
+export function processOwnerGrudges(
+  state: GameState,
+  existingGrudges: OwnerGrudge[]
+): { grudges: OwnerGrudge[]; gazetteItems: string[] } {
+  const grudges = existingGrudges.map((g) => ({ ...g }));
+  const gazetteItems: string[] = [];
+  const rivals = state.rivals || [];
+
+  const agg = aggregateRecentFights(state, rivals);
+
+  const grudgeByPair = new Map<string, OwnerGrudge>();
+  for (const g of grudges) {
+    const k = ownerPairKey(g.ownerIdA, g.ownerIdB);
+    if (!grudgeByPair.has(k)) grudgeByPair.set(k, g);
+  }
+
+  processRivalPairs(state, rivals, agg, grudges, grudgeByPair, gazetteItems);
+  processPlayerPairs(
+    state,
+    rivals,
+    agg,
+    (state.roster || []).length,
+    grudges,
+    grudgeByPair,
+    gazetteItems
+  );
 
   // Decay old grudges — after 4 consecutive weeks with no cross-stable fight the
   // intensity drops by 1. This replaces the old 26-week cliff.

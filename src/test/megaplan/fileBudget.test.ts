@@ -11,7 +11,7 @@ import { collectSizes } from '../../../scripts/function-length.mjs';
  */
 const FILE_LINE_CEILING = 1600;
 const DATA_FILE_CEILING = 1300;
-const FN_LINE_CEILING = 450; // ratchet target: 120 (Phase 3/6 drives it down)
+const FN_LINE_CEILING = 120; // ratcheted to target — 0 violations at lock-in
 
 const EXEMPT_FILES = new Set([
   'src/routeTree.gen.ts', // generated
@@ -45,9 +45,9 @@ describe('megaplan: file & function budgets', () => {
     ).toEqual([]);
   });
 
-  it('counts stay non-decreasingly-better than baseline (239 fns >80, 5 files >800)', () => {
+  it('counts stay non-decreasingly-better than baseline (203 fns >80, 2 files >800)', () => {
     // Ratchet: ceilings only ever tighten. Update numbers DOWN as phases land.
-    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(239);
-    expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(5);
+    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(203);
+    expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(2);
   });
 });

@@ -8,18 +8,19 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
-import type { Promoter, BoutOffer, PromoterPersonality } from '@/types/state.types';
+import type { Promoter, BoutOffer } from '@/types/state.types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Users, Sword, History, ArrowRight, Building2, DollarSign } from 'lucide-react';
+import { Calendar, Sword, ArrowRight, Building2 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { DirectoryStatsGrid, PersonalityGuide } from './promoterDirectory/sections';
 
 const TIER_COLORS: Record<Promoter['tier'], string> = {
   Local: 'bg-muted/40 text-muted-foreground border-border/40',
@@ -46,11 +47,6 @@ function calculatePromoterStats(
   );
 
   return { activeThisWeek, pendingProposals, totalOffers };
-}
-
-/** Format large numbers with commas */
-function formatNumber(num: number): string {
-  return num.toLocaleString();
 }
 
 interface PromoterCardProps {
@@ -261,65 +257,10 @@ export default function PromoterDirectory() {
       />
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <Card className="bg-gradient-to-br from-primary/5 to-transparent">
-          <CardContent className="p-4 space-y-1">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
-              <Building2 className="h-3 w-3" /> Promoters
-            </div>
-            <div className="text-2xl font-black font-mono">{stats.totalPromoters}</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-arena-gold/5 to-transparent">
-          <CardContent className="p-4 space-y-1">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
-              <DollarSign className="h-3 w-3" /> Total Purse Paid
-            </div>
-            <div className="text-2xl font-black font-mono">{formatNumber(stats.totalPurse)}</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-arena-fame/5 to-transparent">
-          <CardContent className="p-4 space-y-1">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
-              <History className="h-3 w-3" /> Notable Bouts
-            </div>
-            <div className="text-2xl font-black font-mono">{stats.totalNotableBouts}</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-arena-pop/5 to-transparent">
-          <CardContent className="p-4 space-y-1">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
-              <Users className="h-3 w-3" /> Total Capacity
-            </div>
-            <div className="text-2xl font-black font-mono">
-              {stats.totalActiveOffers}/{stats.totalCapacity}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <DirectoryStatsGrid stats={stats} />
 
       {/* Legend */}
-      <div className="mb-6 p-4 border border-border/50 rounded-none bg-muted/20">
-        <h3 className="text-[11px] uppercase tracking-wider font-bold mb-3 text-muted-foreground">
-          Personality Guide
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {(Object.keys(PERSONALITY_CONFIG) as PromoterPersonality[]).map((p) => (
-            <div
-              key={p}
-              className={`p-2 rounded border text-[10px] space-y-1 ${PERSONALITY_CONFIG[p].color}`}
-            >
-              <div className="flex items-center gap-1.5 font-bold">
-                {PERSONALITY_CONFIG[p].icon}
-                {PERSONALITY_CONFIG[p].label}
-              </div>
-              <div className="opacity-80 leading-tight text-[9px]">
-                {PERSONALITY_CONFIG[p].description}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <PersonalityGuide />
 
       {/* Promoter Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

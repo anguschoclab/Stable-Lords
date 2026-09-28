@@ -2,10 +2,7 @@
  * Stable Lords — Seasonal Tournaments (Refactored)
  * Modularized for better maintainability and strict type safety.
  */
-import React, { useState, useMemo } from 'react';
-import { useShallow } from 'zustand/react/shallow';
-import { useGameStore } from '@/state/useGameStore';
-import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -13,12 +10,17 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Trophy, UserPlus, ShieldCheck } from 'lucide-react';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { audioManager } from '@/lib/AudioManager';
+import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
 import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
 import { useExecuteTournamentRound } from '@/hooks/useExecuteTournamentRound';
+import {
+  SEASON_ICONS,
+  SEASON_NAMES,
+  useTournamentState,
+} from '@/pages/tournaments/useTournamentState';
 
 // Modular Components
-import { isActive } from '@/engine/warrior/warriorStatus';
 import {
   ActiveTournamentManifest,
   TournamentHistory,
@@ -26,99 +28,53 @@ import {
   WarriorReadinessBanner,
 } from '@/components/tournaments';
 
-const SEASON_NAMES: Record<string, string> = {
-  Spring: 'Spring Classic',
-  Summer: 'Summer Cup',
-  Fall: 'Fall Clash',
-  Winter: 'Winter Crown',
-};
-
-const SEASON_ICONS: Record<string, string> = {
-  Spring: '🌿',
-  Summer: '☀️',
-  Fall: '🍂',
-  Winter: '❄️',
-};
+/** Header actions — Prep Mode link + conditional recruit prompt. */
+function HeaderActions({ needsRecruits }: { needsRecruits: boolean }) {
+  const btnClass =
+    'h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all motion-reduce:transition-none';
+  return (
+    <div className="flex items-center gap-3">
+      <Link to="/world/tournament-prep">
+        <Button variant="outline" className={cn(btnClass, 'motion-reduce:transform-none')}>
+          <ShieldCheck className="h-3.5 w-3.5" /> Prep Mode
+        </Button>
+      </Link>
+      {needsRecruits && (
+        <Link to="/stable/recruit">
+          <Button variant="outline" className={btnClass}>
+            <UserPlus className="h-3.5 w-3.5" /> Recruit Warriors
+          </Button>
+        </Link>
+      )}
+    </div>
+  );
+}
 
 /**
  * Tournaments.
  */
 export default function Tournaments() {
-  const {
-    tournaments,
-    season,
-    roster,
-    week,
-    year,
-    arenaHistory,
-    player,
-    activeSlotId,
-    loadGame,
-    setSimulating,
-    isSimulating,
-    bookmarks,
-    activeTournamentId,
-  } = useGameStore(
-    useShallow((s) => ({
-      tournaments: s.tournaments,
-      season: s.season,
-      activeTournamentId: s.activeTournamentId,
-      roster: s.roster,
-      week: s.week,
-      year: s.year,
-      arenaHistory: s.arenaHistory,
-      player: s.player,
-      activeSlotId: s.activeSlotId,
-      loadGame: s.loadGame,
-      setSimulating: s.setSimulating,
-      isSimulating: s.isSimulating,
-      bookmarks: s.bookmarks,
-    }))
-  );
-
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
   const [isPrepOpen, setIsPrepOpen] = useState(false);
   const [hasShownPrep, setHasShownPrep] = useState(false);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
-  // The active tournament is whichever the engine marked live this week.
-  // Leftover tiers from previous years share season/week, so a bare
-  // `!completed` match would resurrect a stale bracket — scope by id first.
-  const currentTournament = useMemo(
-    () =>
-      tournaments.find((t) => t.id === activeTournamentId) ??
-      tournaments.find((t) => t.week === week && !t.completed),
-    [tournaments, activeTournamentId, week]
-  );
-
-  const activeWarriors = useMemo(() => roster.filter((w) => isActive(w)), [roster]);
-
-  // Warriors belonging to the player that are in the active tournament
-  const playerWarriorsInTournament = useMemo(() => {
-    if (!currentTournament || !player) return [];
-    return currentTournament.participants.filter((w) => w.stableId === player.id);
-  }, [currentTournament, player]);
-
-  const allPastTournaments = useMemo(
-    () => tournaments.filter((t) => t.completed).reverse(),
-    [tournaments]
-  );
-  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
-  const pastTournaments = useMemo(() => {
-    if (!showBookmarkedOnly) return allPastTournaments;
-    const ids = bookmarkIds.get('tournament');
-    return allPastTournaments.filter((t) => ids?.has(t.id));
-  }, [allPastTournaments, showBookmarkedOnly, bookmarkIds]);
-
-  const bookmarkedCount = allPastTournaments.filter(
-    (t) => bookmarkIds.get('tournament')?.has(t.id)
-  ).length;
-
-  // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
-  const isTournamentReadyToStart = useMemo(() => {
-    if (!currentTournament) return false;
-    return currentTournament.bracket.every((b) => b.winner === undefined);
-  }, [currentTournament]);
+  const {
+    season,
+    week,
+    year,
+    arenaHistory,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+    currentTournament,
+    activeWarriors,
+    playerWarriorsInTournament,
+    pastTournaments,
+    bookmarkedCount,
+    isTournamentReadyToStart,
+  } = useTournamentState(showBookmarkedOnly);
 
   React.useEffect(() => {
     const hasAlreadyStarted = currentTournament?.bracket.some((b) => b.winner !== undefined);
@@ -154,26 +110,7 @@ export default function Tournaments() {
         title="Tournaments"
         subtitle={`${season.toUpperCase()} SEASON · YEAR ${year}`}
         actions={
-          <div className="flex items-center gap-3">
-            <Link to="/world/tournament-prep">
-              <Button
-                variant="outline"
-                className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none"
-              >
-                <ShieldCheck className="h-3.5 w-3.5" /> Prep Mode
-              </Button>
-            </Link>
-            {!currentTournament && activeWarriors.length < 2 && (
-              <Link to="/stable/recruit">
-                <Button
-                  variant="outline"
-                  className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all motion-reduce:transition-none"
-                >
-                  <UserPlus className="h-3.5 w-3.5" /> Recruit Warriors
-                </Button>
-              </Link>
-            )}
-          </div>
+          <HeaderActions needsRecruits={!currentTournament && activeWarriors.length < 2} />
         }
       />
 

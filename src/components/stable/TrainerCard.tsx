@@ -16,6 +16,144 @@ interface TrainerCardProps {
   action?: ReactNode;
 }
 
+function TrainerHeader({ trainer, icon }: { trainer: TrainerData; icon: string }) {
+  return (
+    <div className="flex items-center gap-6">
+      {/* Visual Avatar Container */}
+      <div className="relative group-hover:scale-105 transition-transform duration-500 overflow-visible motion-reduce:transition-none motion-reduce:transform-none">
+        <div className="absolute inset-0 bg-primary/20 blur-xl rounded-none opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
+        <div className="w-16 h-16 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center relative z-10 shadow-inner text-3xl">
+          {icon}
+        </div>
+        {trainer.tier === 'Master' && (
+          <div className="absolute -top-2 -right-2 bg-arena-gold text-primary-foreground p-1 rounded-none shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+            <Trophy className="h-3 w-3" />
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-1">
+        <div className="flex items-center gap-3">
+          <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground leading-none">
+            {trainer.name}
+          </h3>
+          {trainer.retiredFromWarrior && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="p-1 rounded-none bg-arena-fame/10 border border-arena-fame/20">
+                  <GraduationCap className="h-3 w-3 text-arena-fame" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest">
+                LEGENDARY VETERAN: {trainer.retiredFromWarrior}
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div
+            className={cn(
+              'px-2 py-0.5 rounded-none border text-[9px] font-black uppercase tracking-widest',
+              trainer.tier === 'Master'
+                ? 'bg-arena-gold/20 border-arena-gold/40 text-arena-gold'
+                : 'bg-white/5 border-white/10 text-muted-foreground/60'
+            )}
+          >
+            {trainer.tier} CONTRACT
+          </div>
+          <div className="flex items-center gap-1 text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
+            <Target className="h-3 w-3" /> {trainer.focus}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TrainerFooter({
+  trainer,
+  owned,
+  bonus,
+  desc,
+}: {
+  trainer: TrainerData;
+  owned: boolean;
+  bonus: number;
+  desc: string;
+}) {
+  return (
+    <div className="mt-6 flex items-center justify-between gap-6">
+      <div className="flex-1 flex items-center gap-4">
+        <div className="flex-1 bg-black/40 rounded-none border border-white/5 p-3 flex items-center justify-between group/intel">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+            </div>
+            <div>
+              <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
+                Impact Bonus
+              </span>
+              <span className="text-[11px] font-black text-primary uppercase tracking-tight">
+                +{bonus} {trainer.focus} pts/wk
+              </span>
+            </div>
+          </div>
+          {trainer.styleBonusStyle && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="text-right border-l border-white/10 pl-4 cursor-help">
+                  <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
+                    Style Affinity
+                  </span>
+                  <span className="text-[10px] font-black text-arena-gold uppercase tracking-widest">
+                    {STYLE_DISPLAY_NAMES[
+                      trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
+                    ] ?? trainer.styleBonusStyle}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-xs text-[10px]">
+                +5% gain chance for{' '}
+                {STYLE_DISPLAY_NAMES[
+                  trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
+                ] ?? trainer.styleBonusStyle}{' '}
+                warriors during training sessions
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+      </div>
+
+      <div className="shrink-0 w-48">
+        {owned ? (
+          <div className="bg-neutral-900 rounded-none border border-white/5 p-3 transition-all motion-reduce:transition-none motion-reduce:transform-none">
+            <StatBattery
+              label="TNR"
+              value={Math.min(100, (trainer.contractWeeksLeft / 24) * 100)}
+              max={100}
+              labelValue={`${trainer.contractWeeksLeft}W`}
+              colorClass={trainer.contractWeeksLeft < 4 ? 'bg-destructive' : 'bg-primary/40'}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-1 px-4">
+            <div className="flex items-center gap-2 text-primary/60">
+              <Briefcase className="h-3 w-3" />
+              <span className="text-[9px] font-black uppercase tracking-widest leading-none">
+                Job Summary
+              </span>
+            </div>
+            <p className="text-[10px] text-muted-foreground/60 italic leading-tight line-clamp-2">
+              {desc}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Trainer card.
  * @param - { trainer, on fire, owned, action }.
@@ -52,56 +190,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
 
         <div className="p-6 flex-1 flex flex-col justify-between">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-6">
-              {/* Visual Avatar Container */}
-              <div className="relative group-hover:scale-105 transition-transform duration-500 overflow-visible motion-reduce:transition-none motion-reduce:transform-none">
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-none opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
-                <div className="w-16 h-16 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center relative z-10 shadow-inner text-3xl">
-                  {icon}
-                </div>
-                {trainer.tier === 'Master' && (
-                  <div className="absolute -top-2 -right-2 bg-arena-gold text-primary-foreground p-1 rounded-none shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-                    <Trophy className="h-3 w-3" />
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-display text-xl font-black uppercase tracking-tight text-foreground leading-none">
-                    {trainer.name}
-                  </h3>
-                  {trainer.retiredFromWarrior && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="p-1 rounded-none bg-arena-fame/10 border border-arena-fame/20">
-                          <GraduationCap className="h-3 w-3 text-arena-fame" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest">
-                        LEGENDARY VETERAN: {trainer.retiredFromWarrior}
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      'px-2 py-0.5 rounded-none border text-[9px] font-black uppercase tracking-widest',
-                      trainer.tier === 'Master'
-                        ? 'bg-arena-gold/20 border-arena-gold/40 text-arena-gold'
-                        : 'bg-white/5 border-white/10 text-muted-foreground/60'
-                    )}
-                  >
-                    {trainer.tier} CONTRACT
-                  </div>
-                  <div className="flex items-center gap-1 text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
-                    <Target className="h-3 w-3" /> {trainer.focus}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <TrainerHeader trainer={trainer} icon={icon} />
 
             <div className="flex items-center gap-2">
               <BookmarkButton entityType="trainer" entityId={trainer.id} size="sm" />
@@ -124,74 +213,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
           </div>
 
           {/* Performance & Status Footer */}
-          <div className="mt-6 flex items-center justify-between gap-6">
-            <div className="flex-1 flex items-center gap-4">
-              <div className="flex-1 bg-black/40 rounded-none border border-white/5 p-3 flex items-center justify-between group/intel">
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
-                    <Sparkles className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
-                      Impact Bonus
-                    </span>
-                    <span className="text-[11px] font-black text-primary uppercase tracking-tight">
-                      +{bonus} {trainer.focus} pts/wk
-                    </span>
-                  </div>
-                </div>
-                {trainer.styleBonusStyle && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="text-right border-l border-white/10 pl-4 cursor-help">
-                        <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
-                          Style Affinity
-                        </span>
-                        <span className="text-[10px] font-black text-arena-gold uppercase tracking-widest">
-                          {STYLE_DISPLAY_NAMES[
-                            trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                          ] ?? trainer.styleBonusStyle}
-                        </span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="max-w-xs text-[10px]">
-                      +5% gain chance for{' '}
-                      {STYLE_DISPLAY_NAMES[
-                        trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                      ] ?? trainer.styleBonusStyle}{' '}
-                      warriors during training sessions
-                    </TooltipContent>
-                  </Tooltip>
-                )}
-              </div>
-            </div>
-
-            <div className="shrink-0 w-48">
-              {owned ? (
-                <div className="bg-neutral-900 rounded-none border border-white/5 p-3 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-                  <StatBattery
-                    label="TNR"
-                    value={Math.min(100, (trainer.contractWeeksLeft / 24) * 100)}
-                    max={100}
-                    labelValue={`${trainer.contractWeeksLeft}W`}
-                    colorClass={trainer.contractWeeksLeft < 4 ? 'bg-destructive' : 'bg-primary/40'}
-                  />
-                </div>
-              ) : (
-                <div className="flex flex-col gap-1 px-4">
-                  <div className="flex items-center gap-2 text-primary/60">
-                    <Briefcase className="h-3 w-3" />
-                    <span className="text-[9px] font-black uppercase tracking-widest leading-none">
-                      Job Summary
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground/60 italic leading-tight line-clamp-2">
-                    {desc}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+          <TrainerFooter trainer={trainer} owned={owned} bonus={bonus} desc={desc} />
         </div>
       </div>
     </Surface>

@@ -56,132 +56,154 @@ export function generateRivalStables(
   }
 
   for (const item of picked) {
-    const tmpl = item.tmpl;
-    const iteration = item.iteration;
-    const stableId = rng.uuid() as StableId;
-
-    // Procedural name variance for duplicates
-    const nameSuffix =
-      iteration > 0
-        ? ` [${iteration === 1 ? 'II' : iteration === 2 ? 'III' : iteration === 3 ? 'IV' : 'V'}]`
-        : '';
-    const stableName = `${tmpl.stableName}${nameSuffix}`;
-    const owner: Owner = {
-      id: stableId,
-      name:
-        iteration > 0
-          ? `${tmpl.ownerName} ${String.fromCharCode(64 + iteration + 1)}`
-          : tmpl.ownerName,
-      stableName: stableName,
-      fame:
-        tmpl.fameRange[0] + Math.floor(rng.next() * (tmpl.fameRange[1] - tmpl.fameRange[0] + 1)),
-      renown: tmpl.tier === 'Legendary' ? 5 : tmpl.tier === 'Major' ? 2 : 0,
-      titles:
-        tmpl.tier === 'Legendary'
-          ? 2 + Math.floor(rng.next() * 3)
-          : tmpl.tier === 'Major'
-            ? Math.floor(rng.next() * 3)
-            : 0,
-      personality: tmpl.personality,
-      metaAdaptation: tmpl.metaAdaptation,
-      favoredStyles: tmpl.preferredStyles,
-      backstoryId: tmpl.backstoryId,
-    };
-
-    const [minR, maxR] = tmpl.rosterRange;
-    const warriorCount = minR + Math.floor(rng.next() * (maxR - minR + 1));
-    const warriors: Warrior[] = [];
-    const namePool = [...tmpl.warriorNames].sort(() => rng.next() - 0.5);
-
-    for (let j = 0; j < warriorCount; j++) {
-      let wName = namePool.find((n) => !usedWarriorNames.has(n));
-      if (!wName) wName = `${tmpl.stableName.split(' ').pop()?.toUpperCase()}_${j}`;
-      usedWarriorNames.add(wName);
-
-      let style: FightingStyle;
-      if (rng.next() < 0.7 && tmpl.preferredStyles.length > 0) {
-        const preferred =
-          tmpl.preferredStyles[Math.floor(rng.next() * tmpl.preferredStyles.length)];
-        if (!preferred) {
-          throw new Error('Style selection from preferredStyles failed');
-        }
-        style = preferred;
-      } else {
-        const allStyles = Object.values(FightingStyle);
-        const randomStyle = allStyles[Math.floor(rng.next() * allStyles.length)];
-        if (!randomStyle) {
-          throw new Error('Style selection from all styles failed');
-        }
-        style = randomStyle;
-      }
-
-      // Catch-up Attribute Scaling: +1 point per week (cap +40)
-      const catchupStats = Math.min(40, week);
-      const attrs = biasedAttrs(() => rng.next(), tmpl.attrBias, catchupStats);
-
-      const wId = rng.uuid('warrior');
-      const warrior = createRivalWarrior(wId, wName, style, attrs, stableId, tmpl.fameRange, rng);
-
-      warriors.push(warrior);
-    }
-
-    const [minT, maxT] = tmpl.trainerRange;
-    const trainers = generateStableTrainers(
-      () => rng.next(),
-      stableId,
-      tmpl.philosophy,
-      minT + Math.floor(rng.next() * (maxT - minT + 1)),
-      tmpl.tier
-    );
-
-    const catchupGold = week * 50;
-    const initialGold =
-      (tmpl.tier === 'Legendary'
-        ? 2000
-        : tmpl.tier === 'Major'
-          ? 1200
-          : tmpl.tier === 'Established'
-            ? 800
-            : 500) + catchupGold;
-
-    // Generate crest for this stable
-    const crestSeed = Math.floor(rng.next() * 100000);
-    const crest = generateCrest({
-      seed: crestSeed,
-      philosophy: tmpl.philosophy,
-      tier: tmpl.tier,
-    });
-
-    rivals.push({
-      id: stableId,
-      owner: {
-        ...owner,
-        generation: 0,
-      },
-      roster: warriors,
-      treasury: initialGold,
-      motto: tmpl.motto,
-      origin: tmpl.origin,
-      philosophy: tmpl.philosophy,
-      tier: tmpl.tier,
-      trainers,
-      strategy: {
-        intent: iteration % 3 === 0 ? 'EXPANSION' : 'CONSOLIDATION',
-        planWeeksRemaining: 4 + Math.floor(rng.next() * 4),
-      },
-      agentMemory: {
-        lastTreasury: initialGold,
-        burnRate: 0,
-        metaAwareness: {},
-        knownRivals: [],
-        opponentDossiers: {},
-      },
-      actionHistory: [],
-      fame: iteration > 0 ? 50 + iteration * 100 : 0,
-      ledger: [],
-      trainingAssignments: [],
-      crest,
-    });
+    rivals.push(buildRivalStable(item.tmpl, item.iteration, week, rng, usedWarriorNames));
   }
   return rivals;
+}
+
+/** Build one rival stable from a template pick. */
+function buildRivalStable(
+  tmpl: StableTemplate,
+  iteration: number,
+  week: number,
+  rng: SeededRNGService,
+  usedWarriorNames: Set<string>
+): RivalStableData {
+  const stableId = rng.uuid() as StableId;
+
+  // Procedural name variance for duplicates
+  const nameSuffix =
+    iteration > 0
+      ? ` [${iteration === 1 ? 'II' : iteration === 2 ? 'III' : iteration === 3 ? 'IV' : 'V'}]`
+      : '';
+  const stableName = `${tmpl.stableName}${nameSuffix}`;
+  const owner: Owner = {
+    id: stableId,
+    name:
+      iteration > 0
+        ? `${tmpl.ownerName} ${String.fromCharCode(64 + iteration + 1)}`
+        : tmpl.ownerName,
+    stableName: stableName,
+    fame:
+      tmpl.fameRange[0] + Math.floor(rng.next() * (tmpl.fameRange[1] - tmpl.fameRange[0] + 1)),
+    renown: tmpl.tier === 'Legendary' ? 5 : tmpl.tier === 'Major' ? 2 : 0,
+    titles:
+      tmpl.tier === 'Legendary'
+        ? 2 + Math.floor(rng.next() * 3)
+        : tmpl.tier === 'Major'
+          ? Math.floor(rng.next() * 3)
+          : 0,
+    personality: tmpl.personality,
+    metaAdaptation: tmpl.metaAdaptation,
+    favoredStyles: tmpl.preferredStyles,
+    backstoryId: tmpl.backstoryId,
+  };
+
+  const warriors = buildRoster(tmpl, stableId, week, rng, usedWarriorNames);
+
+  const [minT, maxT] = tmpl.trainerRange;
+  const trainers = generateStableTrainers(
+    () => rng.next(),
+    stableId,
+    tmpl.philosophy,
+    minT + Math.floor(rng.next() * (maxT - minT + 1)),
+    tmpl.tier
+  );
+
+  const catchupGold = week * 50;
+  const initialGold =
+    (tmpl.tier === 'Legendary'
+      ? 2000
+      : tmpl.tier === 'Major'
+        ? 1200
+        : tmpl.tier === 'Established'
+          ? 800
+          : 500) + catchupGold;
+
+  // Generate crest for this stable
+  const crestSeed = Math.floor(rng.next() * 100000);
+  const crest = generateCrest({
+    seed: crestSeed,
+    philosophy: tmpl.philosophy,
+    tier: tmpl.tier,
+  });
+
+  return {
+    id: stableId,
+    owner: {
+      ...owner,
+      generation: 0,
+    },
+    roster: warriors,
+    treasury: initialGold,
+    motto: tmpl.motto,
+    origin: tmpl.origin,
+    philosophy: tmpl.philosophy,
+    tier: tmpl.tier,
+    trainers,
+    strategy: {
+      intent: iteration % 3 === 0 ? 'EXPANSION' : 'CONSOLIDATION',
+      planWeeksRemaining: 4 + Math.floor(rng.next() * 4),
+    },
+    agentMemory: {
+      lastTreasury: initialGold,
+      burnRate: 0,
+      metaAwareness: {},
+      knownRivals: [],
+      opponentDossiers: {},
+    },
+    actionHistory: [],
+    fame: iteration > 0 ? 50 + iteration * 100 : 0,
+    ledger: [],
+    trainingAssignments: [],
+    crest,
+  };
+}
+
+/** Roll a warrior's style — biased toward the template's preferred styles. */
+function pickWarriorStyle(tmpl: StableTemplate, rng: SeededRNGService): FightingStyle {
+  if (rng.next() < 0.7 && tmpl.preferredStyles.length > 0) {
+    const preferred =
+      tmpl.preferredStyles[Math.floor(rng.next() * tmpl.preferredStyles.length)];
+    if (!preferred) {
+      throw new Error('Style selection from preferredStyles failed');
+    }
+    return preferred;
+  }
+  const allStyles = Object.values(FightingStyle);
+  const randomStyle = allStyles[Math.floor(rng.next() * allStyles.length)];
+  if (!randomStyle) {
+    throw new Error('Style selection from all styles failed');
+  }
+  return randomStyle;
+}
+
+/** Build the stable's starting warrior roster from the template. */
+function buildRoster(
+  tmpl: StableTemplate,
+  stableId: StableId,
+  week: number,
+  rng: SeededRNGService,
+  usedWarriorNames: Set<string>
+): Warrior[] {
+  const [minR, maxR] = tmpl.rosterRange;
+  const warriorCount = minR + Math.floor(rng.next() * (maxR - minR + 1));
+  const warriors: Warrior[] = [];
+  const namePool = [...tmpl.warriorNames].sort(() => rng.next() - 0.5);
+
+  for (let j = 0; j < warriorCount; j++) {
+    let wName = namePool.find((n) => !usedWarriorNames.has(n));
+    if (!wName) wName = `${tmpl.stableName.split(' ').pop()?.toUpperCase()}_${j}`;
+    usedWarriorNames.add(wName);
+
+    const style = pickWarriorStyle(tmpl, rng);
+
+    // Catch-up Attribute Scaling: +1 point per week (cap +40)
+    const catchupStats = Math.min(40, week);
+    const attrs = biasedAttrs(() => rng.next(), tmpl.attrBias, catchupStats);
+
+    const wId = rng.uuid('warrior');
+    warriors.push(createRivalWarrior(wId, wName, style, attrs, stableId, tmpl.fameRange, rng));
+  }
+  return warriors;
 }

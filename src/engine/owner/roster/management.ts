@@ -17,6 +17,103 @@ import { filterActive } from '@/utils/roster';
  * @param rng - Optional RNG service
  * @returns Updated rivals list and gazette news items
  */
+/**
+ * Runs the culling/retirement pass for a single rival, mutates the cloned
+ * rival `r`, and appends gazette items. Returns the cull count.
+ */
+function cullRivalRoster(
+  r: RivalStableData,
+  state: GameState,
+  isOnWinStreak: (w: Warrior) => boolean,
+  rngSnapshot: IRNGService,
+  gazetteItems: string[]
+): number {
+  const personality = r.owner.personality ?? 'Pragmatic';
+  let culledThisTick = 0;
+
+  const retire = (w: Warrior) => {
+    w.status = 'Retired';
+    w.retiredWeek = state.week;
+    culledThisTick++;
+  };
+
+  // Methodical/Tactician owners cull underperformers
+  if (personality === 'Methodical' || personality === 'Tactician') {
+    const candidates = r.roster.filter(
+      (w) =>
+        isActive(w) &&
+        w.career.wins + w.career.losses >= 5 &&
+        w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
+        (w.age ?? 18) >= 25 &&
+        !isOnWinStreak(w)
+    );
+    for (const c of candidates.slice(0, 1)) {
+      retire(c);
+      gazetteItems.push(
+        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${c.name} — "Not meeting expectations."`
+      );
+    }
+  }
+
+  // Aggressive owners cull warriors with 0 kills after many fights
+  if (personality === 'Aggressive') {
+    const killless = r.roster.filter(
+      (w) =>
+        isActive(w) &&
+        w.career.kills === 0 &&
+        w.career.wins + w.career.losses >= 8 &&
+        (w.age ?? 18) >= 24 &&
+        !isOnWinStreak(w)
+    );
+    for (const c of killless.slice(0, 1)) {
+      retire(c);
+      gazetteItems.push(
+        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${c.name} — "No killer instinct."`
+      );
+    }
+  }
+
+  // Liability-based culling: release flaw-loaded warriors per personality threshold
+  const traitPolicy = policyFor(r.owner.personality);
+  const liabilityCandidates = r.roster.filter((w) => {
+    if (!isActive(w)) return false;
+    if (isOnWinStreak(w)) return false;
+    const liability = computeWarriorLiability(w);
+    return (
+      liability.score >= traitPolicy.cutLiabilityThreshold ||
+      liability.recommendation === 'Release'
+    );
+  });
+  for (const c of liabilityCandidates.slice(0, 1)) {
+    retire(c);
+    gazetteItems.push(
+      `📋 ${r.owner.name} (${r.owner.stableName}) releases ${c.name} — too many flaws.`
+    );
+  }
+
+  // Age-based retirement
+  const elderly = r.roster.filter((w) => isActive(w) && (w.age ?? 18) >= 30);
+  for (const old of elderly.slice(0, 1)) {
+    if (rngSnapshot.next() < 0.15) {
+      old.status = 'Retired';
+      old.retiredWeek = state.week;
+      gazetteItems.push(
+        `🏠 ${old.name} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
+      );
+    }
+  }
+
+  return culledThisTick;
+}
+
+/**
+ * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
+ * and releasing underperforming assets based on current owner personality and budget.
+ *
+ * @param state - The current game state
+ * @param rng - Optional RNG service
+ * @returns Updated rivals list and gazette news items
+ */
 export function processAIRosterManagement(
   state: GameState,
   rng?: IRNGService
@@ -32,9 +129,6 @@ export function processAIRosterManagement(
 
     const personality = r.owner.personality ?? 'Pragmatic';
 
-    // 1) Retirement / Culling Logic
-    let culledThisTick = 0;
-
     // Trajectory guard: warriors on a hot streak (3+ wins in last 5 fights) are
     // protected from any personality-based culling regardless of career win-rate.
     const isOnWinStreak = (w: Warrior) => {
@@ -49,77 +143,8 @@ export function processAIRosterManagement(
       return recentWins >= 3;
     };
 
-    // Methodical/Tactician owners cull underperformers
-    if (personality === 'Methodical' || personality === 'Tactician') {
-      const candidates = r.roster.filter(
-        (w) =>
-          isActive(w) &&
-          w.career.wins + w.career.losses >= 5 &&
-          w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
-          (w.age ?? 18) >= 25 &&
-          !isOnWinStreak(w)
-      );
-      for (const c of candidates.slice(0, 1)) {
-        c.status = 'Retired';
-        c.retiredWeek = state.week;
-        culledThisTick++;
-        gazetteItems.push(
-          `📋 ${r.owner.name} (${r.owner.stableName}) retires ${c.name} — "Not meeting expectations."`
-        );
-      }
-    }
-
-    // Aggressive owners cull warriors with 0 kills after many fights
-    if (personality === 'Aggressive') {
-      const killless = r.roster.filter(
-        (w) =>
-          isActive(w) &&
-          w.career.kills === 0 &&
-          w.career.wins + w.career.losses >= 8 &&
-          (w.age ?? 18) >= 24 &&
-          !isOnWinStreak(w)
-      );
-      for (const c of killless.slice(0, 1)) {
-        c.status = 'Retired';
-        c.retiredWeek = state.week;
-        culledThisTick++;
-        gazetteItems.push(
-          `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${c.name} — "No killer instinct."`
-        );
-      }
-    }
-
-    // Liability-based culling: release flaw-loaded warriors per personality threshold
-    const traitPolicy = policyFor(r.owner.personality);
-    const liabilityCandidates = r.roster.filter((w) => {
-      if (!isActive(w)) return false;
-      if (isOnWinStreak(w)) return false;
-      const liability = computeWarriorLiability(w);
-      return (
-        liability.score >= traitPolicy.cutLiabilityThreshold ||
-        liability.recommendation === 'Release'
-      );
-    });
-    for (const c of liabilityCandidates.slice(0, 1)) {
-      c.status = 'Retired';
-      c.retiredWeek = state.week;
-      culledThisTick++;
-      gazetteItems.push(
-        `📋 ${r.owner.name} (${r.owner.stableName}) releases ${c.name} — too many flaws.`
-      );
-    }
-
-    // Age-based retirement
-    const elderly = r.roster.filter((w) => isActive(w) && (w.age ?? 18) >= 30);
-    for (const old of elderly.slice(0, 1)) {
-      if (rngSnapshot.next() < 0.15) {
-        old.status = 'Retired';
-        old.retiredWeek = state.week;
-        gazetteItems.push(
-          `🏠 ${old.name} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
-        );
-      }
-    }
+    // 1) Retirement / Culling Logic
+    const culledThisTick = cullRivalRoster(r, state, isOnWinStreak, rngSnapshot, gazetteItems);
 
     // 2) Recruitment flag — signing is unified in aiDraftFromPool /
     // processRecruitment (G9). Management only declares the need; the draft

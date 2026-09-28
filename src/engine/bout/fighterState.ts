@@ -44,27 +44,25 @@ function getTrainerMods(trainers: Trainer[], style: FightingStyle) {
   };
 }
 
-/**
- * Prepares the combat state for a single fighter.
- */
-export function createFighterState(
-  label: 'A' | 'D',
-  plan: FightPlan,
-  warrior?: Warrior,
-  trainers?: Trainer[]
-): FighterState {
-  const attrs = warrior?.attributes ?? { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-  // Apply the hidden luckfactor (canonical ±4/skill) at combat time — the overview
-  // shows luck-free baseSkills, but the arena uses the luck-adjusted values.
-  const skills = applyLuckfactor(
-    warrior?.baseSkills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
-    warrior?.luckfactor
-  );
-  const derived = warrior?.derivedStats ?? { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
+/** Equipment/encumbrance/trait context gathered once for skill aggregation. */
+interface ModifierContext {
+  warrior?: Warrior;
+  trainers?: Trainer[];
+  plan: FightPlan;
+  attrs: Warrior['attributes'];
+  skills: BaseSkills;
+  equip: NonNullable<Warrior['equipment']>;
+}
 
-  // Style-aware fallback: if warrior has no equipment, use the style's classic loadout
-  // (was DEFAULT_LOADOUT — broadsword for everyone, which silently advantaged ST).
-  const equip = warrior?.equipment ?? getStyleDefaultLoadout(plan.style);
+/** Aggregate every flat modifier into the fighter's effective skill scores. */
+function computeEffectiveSkills(ctx: ModifierContext): {
+  effSkills: BaseSkills;
+  mastery: ReturnType<typeof getMasteryBonus>;
+  traitMods: ReturnType<typeof getStaticTraitMods>;
+  encPenalties: ReturnType<typeof getEncumbrancePenalties>;
+} {
+  const { warrior, trainers, plan, attrs, skills, equip } = ctx;
+
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
   const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
   const isMastered = favWeapon > 0;
@@ -84,19 +82,13 @@ export function createFighterState(
   });
 
   // 5-tier encumbrance system
-  const encRatio = getEncumbranceRatio(equip, derived.encumbrance);
-  const encTier = getEncumbranceTier(encRatio);
-  const encPenalties = getEncumbrancePenalties(encTier);
-  const encumbranceIniPenalty = encPenalties.iniPenalty;
-  const encumbranceDefPenalty = encPenalties.defPenalty;
-  const encumbranceParPenalty = encPenalties.parPenalty;
-  const encumbranceEndMult = encPenalties.enduranceMult;
+  const encPenalties = getEncumbrancePenalties(
+    getEncumbranceTier(getEncumbranceRatio(equip, warrior?.derivedStats?.encumbrance ?? 0))
+  );
 
   // Equipment defense modifiers (armor + helm)
-  const armorItem = getItemById(equip.armor);
-  const helmItem = getItemById(equip.helm);
-  const armorDefMod = armorItem?.defenseMod ?? 0;
-  const helmDefMod = helmItem?.defenseMod ?? 0;
+  const armorDefMod = getItemById(equip.armor)?.defenseMod ?? 0;
+  const helmDefMod = getItemById(equip.helm)?.defenseMod ?? 0;
 
   const classicBonus = warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0;
 
@@ -124,7 +116,7 @@ export function createFighterState(
       skills.PAR +
       (trainerMods?.parMod ?? 0) +
       totalShieldDef +
-      encumbranceParPenalty +
+      encPenalties.parPenalty +
       (drills.PAR ?? 0) +
       traitMods.parMod +
       (injuryPenalties['PAR'] ?? 0),
@@ -134,7 +126,7 @@ export function createFighterState(
       totalShieldDef +
       armorDefMod +
       helmDefMod +
-      encumbranceDefPenalty +
+      encPenalties.defPenalty +
       veteranDef +
       mastery.def +
       (drills.DEF ?? 0) +
@@ -143,7 +135,7 @@ export function createFighterState(
     INI:
       skills.INI +
       (trainerMods?.iniMod ?? 0) +
-      encumbranceIniPenalty +
+      encPenalties.iniPenalty +
       mastery.ini +
       (drills.INI ?? 0) +
       traitMods.iniMod +
@@ -162,9 +154,15 @@ export function createFighterState(
       (injuryPenalties['DEC'] ?? 0),
   };
 
-  // Personality trait FightPlan mods (Aggressive +OE, Cunning +feint, etc.)
-  // Bake into the BASE plan so evaluateConditions (which resets activePlan to
-  // plan each exchange) doesn't silently erase personality-driven behaviour.
+  return { effSkills, mastery, traitMods, encPenalties };
+}
+
+/**
+ * Personality trait FightPlan mods (Aggressive +OE, Cunning +feint, etc.)
+ * baked into the BASE plan so evaluateConditions (which resets activePlan to
+ * plan each exchange) doesn't silently erase personality-driven behaviour.
+ */
+function applyTraitPlanMods(plan: FightPlan, warrior?: Warrior): FightPlan {
   const aiMods = getTraitFightPlanMods(warrior);
   const traitPlan = { ...plan };
   if (aiMods.OE != null) traitPlan.OE = clamp(traitPlan.OE + aiMods.OE, 0, 10);
@@ -179,6 +177,42 @@ export function createFighterState(
       0,
       Math.min(100, (traitPlan.feintTendency ?? 0) + aiMods.feintTendency)
     );
+  return traitPlan;
+}
+
+/**
+ * Prepares the combat state for a single fighter.
+ */
+export function createFighterState(
+  label: 'A' | 'D',
+  plan: FightPlan,
+  warrior?: Warrior,
+  trainers?: Trainer[]
+): FighterState {
+  const attrs = warrior?.attributes ?? { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
+  // Apply the hidden luckfactor (canonical ±4/skill) at combat time — the overview
+  // shows luck-free baseSkills, but the arena uses the luck-adjusted values.
+  const skills = applyLuckfactor(
+    warrior?.baseSkills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+    warrior?.luckfactor
+  );
+  const derived = warrior?.derivedStats ?? { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
+
+  // Style-aware fallback: if warrior has no equipment, use the style's classic loadout
+  // (was DEFAULT_LOADOUT — broadsword for everyone, which silently advantaged ST).
+  const equip = warrior?.equipment ?? getStyleDefaultLoadout(plan.style);
+  const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
+
+  const { effSkills, mastery, traitMods, encPenalties } = computeEffectiveSkills({
+    warrior,
+    trainers,
+    plan,
+    attrs,
+    skills,
+    equip,
+  });
+
+  const traitPlan = applyTraitPlanMods(plan, warrior);
 
   return {
     label,
@@ -207,10 +241,10 @@ export function createFighterState(
     staticEnduranceMult: traitMods.enduranceMult,
     totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
     encumbrancePenalty: {
-      iniPenalty: encumbranceIniPenalty,
-      defPenalty: encumbranceDefPenalty,
-      parPenalty: encumbranceParPenalty,
-      enduranceMult: encumbranceEndMult,
+      iniPenalty: encPenalties.iniPenalty,
+      defPenalty: encPenalties.defPenalty,
+      parPenalty: encPenalties.parPenalty,
+      enduranceMult: encPenalties.enduranceMult,
     },
     weaponId: equip.weapon,
     armorId: equip.armor,

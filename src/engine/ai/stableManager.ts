@@ -11,30 +11,9 @@ import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
-/**
- * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
- * Implements "Hierarchical Delegation" and "Context Isolation".
- */
-export function processAIStable(
-  rival: RivalStableData,
-  state: GameState,
-  perception?: import('./memory/perceptionSnapshot').PerceptionSnapshot
-): {
-  updatedRival: RivalStableData;
-  isBankrupt: boolean;
-  gazetteItems: string[];
-  updatedHiringPool: Trainer[];
-  impact: StateImpact;
-} {
-  // 1. Initialize Context & Skeptical Memory
-  const context = createAgentContext(rival, state, perception);
-  let updatedRival = { ...context.rival };
-  let currentHiringPool = [...(state.hiringPool || [])];
-  const gazetteItems: string[] = [];
-  const impacts: StateImpact[] = [];
-
-  // ── Fatigue Decay & HP Recovery for AI Warriors ──
-  updatedRival.roster = updatedRival.roster.map((w): Warrior => {
+/** Passive recovery for active warriors: fatigue -25, HP +20% (cap 100). */
+function decayFatigueAndHeal(roster: Warrior[]): Warrior[] {
+  return roster.map((w): Warrior => {
     // Intentional deviation: single-item status check inside map
     if (isActive(w)) {
       const fatigue = Math.max(0, (w.fatigue || 0) - 25);
@@ -48,23 +27,14 @@ export function processAIStable(
     }
     return w;
   });
+}
 
-  // 2. Delegate to Workers (Hierarchical Delegation)
-
-  // A) StaffWorker (Hiring/Firing)
-  const staffResult = processStaff(updatedRival, state, currentHiringPool, context);
-  updatedRival = staffResult.updatedRival;
-  currentHiringPool = staffResult.updatedHiringPool;
-  gazetteItems.push(...staffResult.gazetteItems);
-  impacts.push({ hiringPool: currentHiringPool });
-
-  // B) RosterWorker (Training/Gear)
-  const rosterSeed = state.week * 8123 + updatedRival.owner.id.length * 101;
-  // `processRoster` takes 5 args; the previous 6th (`context`) was silently
-  // dropped and has been removed. Agent context flows via `updatedRival` state.
-  updatedRival = processRoster(updatedRival, state.week, state.season, rosterSeed);
-
-  // 3. Calculate Weekly Economy via shared player path
+/** Weekly economy: compute the breakdown, apply treasury, append ledger entries. */
+function applyWeeklyEconomy(
+  updatedRival: RivalStableData,
+  state: GameState,
+  perception?: import('./memory/perceptionSnapshot').PerceptionSnapshot
+): RivalStableData {
   const economyInput: StableEconomyInput = {
     week: state.week,
     roster: updatedRival.roster,
@@ -106,6 +76,76 @@ export function processAIStable(
     });
   }
   updatedRival.ledger = [...(updatedRival.ledger || []), ...newEntries].slice(-500);
+  return updatedRival;
+}
+
+/**
+ * Milestone detection — narrow parity with the player's own-stable gazette.
+ * Fires once per threshold crossing this tick: fame (100, 250, 500), cumulative
+ * roster wins (50, 100, 250). Uses `rival` (pre-tick) vs `updatedRival` to
+ * detect the crossing edge so we don't re-fire every week once over-threshold.
+ */
+function detectMilestones(rival: RivalStableData, updatedRival: RivalStableData): string[] {
+  const items: string[] = [];
+  const fameBefore = rival.owner.fame ?? 0;
+  const fameAfter = updatedRival.owner.fame ?? 0;
+  for (const t of [100, 250, 500]) {
+    if (fameBefore < t && fameAfter >= t) {
+      items.push(`🏛 ${updatedRival.owner.stableName} has reached ${t} fame.`);
+    }
+  }
+  const winsBefore = rival.roster.reduce((s, w) => s + (w.career?.wins ?? 0), 0);
+  const winsAfter = updatedRival.roster.reduce((s, w) => s + (w.career?.wins ?? 0), 0);
+  for (const t of [50, 100, 250]) {
+    if (winsBefore < t && winsAfter >= t) {
+      items.push(`⚔ ${updatedRival.owner.stableName} tallied its ${t}th career win.`);
+    }
+  }
+  return items;
+}
+
+/**
+ * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
+ * Implements "Hierarchical Delegation" and "Context Isolation".
+ */
+export function processAIStable(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: import('./memory/perceptionSnapshot').PerceptionSnapshot
+): {
+  updatedRival: RivalStableData;
+  isBankrupt: boolean;
+  gazetteItems: string[];
+  updatedHiringPool: Trainer[];
+  impact: StateImpact;
+} {
+  // 1. Initialize Context & Skeptical Memory
+  const context = createAgentContext(rival, state, perception);
+  let updatedRival = { ...context.rival };
+  let currentHiringPool = [...(state.hiringPool || [])];
+  const gazetteItems: string[] = [];
+  const impacts: StateImpact[] = [];
+
+  // ── Fatigue Decay & HP Recovery for AI Warriors ──
+  updatedRival.roster = decayFatigueAndHeal(updatedRival.roster);
+
+  // 2. Delegate to Workers (Hierarchical Delegation)
+
+  // A) StaffWorker (Hiring/Firing)
+  const staffResult = processStaff(updatedRival, state, currentHiringPool, context);
+  updatedRival = staffResult.updatedRival;
+  currentHiringPool = staffResult.updatedHiringPool;
+  gazetteItems.push(...staffResult.gazetteItems);
+  impacts.push({ hiringPool: currentHiringPool });
+
+  // B) RosterWorker (Training/Gear)
+  const rosterSeed = state.week * 8123 + updatedRival.owner.id.length * 101;
+  // `processRoster` takes 5 args; the previous 6th (`context`) was silently
+  // dropped and has been removed. Agent context flows via `updatedRival` state.
+  updatedRival = processRoster(updatedRival, state.week, state.season, rosterSeed);
+
+  // 3. Calculate Weekly Economy via shared player path, then apply it.
+  updatedRival = applyWeeklyEconomy(updatedRival, state, perception);
 
   // Clear training assignments (mirrors player finalizeState)
   updatedRival.trainingAssignments = [];
@@ -113,24 +153,7 @@ export function processAIStable(
   // 4. Bankruptcy check (aligned with player threshold)
   const isBankrupt = updatedRival.treasury < BANKRUPTCY_THRESHOLD;
 
-  // Milestone detection — narrow parity with the player's own-stable gazette.
-  // Fires once per threshold crossing this tick: fame (100, 250, 500), cumulative
-  // roster wins (50, 100, 250). Uses `rival` (pre-tick) vs `updatedRival` to
-  // detect the crossing edge so we don't re-fire every week once over-threshold.
-  const fameBefore = rival.owner.fame ?? 0;
-  const fameAfter = updatedRival.owner.fame ?? 0;
-  for (const t of [100, 250, 500]) {
-    if (fameBefore < t && fameAfter >= t) {
-      gazetteItems.push(`🏛 ${updatedRival.owner.stableName} has reached ${t} fame.`);
-    }
-  }
-  const winsBefore = rival.roster.reduce((s, w) => s + (w.career?.wins ?? 0), 0);
-  const winsAfter = updatedRival.roster.reduce((s, w) => s + (w.career?.wins ?? 0), 0);
-  for (const t of [50, 100, 250]) {
-    if (winsBefore < t && winsAfter >= t) {
-      gazetteItems.push(`⚔ ${updatedRival.owner.stableName} tallied its ${t}th career win.`);
-    }
-  }
+  gazetteItems.push(...detectMilestones(rival, updatedRival));
 
   // 6. Background Consolidation: record this week's bout outcomes into
   // seasonRecord + typed BOUT events, then prune logs and update burn rate.

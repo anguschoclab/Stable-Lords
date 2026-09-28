@@ -129,138 +129,152 @@ interface OfferScoreContext {
   pursePriority: boolean;
 }
 
+/** Qualitative assessment of one offer — warnings, reasons, danger, flags. */
+function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
+  const { state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate } = s;
+  const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
+  const opponent = opponentId ? findWarriorById(state, opponentId) ?? null : null;
+  const styleEdge = opponent ? getMatchupBonus(warrior.style, opponent.style) : 0;
+  const weatherReason = acceptanceWeatherBlock(warrior, state.weather ?? 'Clear');
+  const promoter = state.promoters?.[offer.promoterId];
+
+  const warnings: string[] = [];
+  const reasons: string[] = [];
+  let dangerLevel: CombatDangerLevel = 'SAFE';
+
+  // Scout intel & head-to-head history for this specific opponent
+  const intel = opponentId
+    ? getOpponentIntel(state, opponentId, { tokens: ctx?.insightTokens })
+    : [];
+  for (const line of summarizeIntel(intel)) {
+    reasons.push(`Scout intel: ${line}`);
+  }
+  const h2h = opponent ? deriveHeadToHead(state, warrior.id, opponent.id) : null;
+  const rematchLosing = !!h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins;
+
+  // Lethality
+  const kills = opponent?.career?.kills ?? 0;
+  if (kills > 0) {
+    dangerLevel = 'LETHAL';
+    warnings.push(`Opponent ${opponent?.name} has ${kills} arena kill(s)! High risk of permadeath.`);
+  }
+
+  // Weather
+  if (weatherReason) {
+    if (dangerLevel !== 'LETHAL') dangerLevel = 'HAZARDOUS';
+    warnings.push(`Weather hazard (${state.weather}): ${weatherReason}`);
+  }
+
+  // Style Matchup
+  if (styleEdge >= 2) {
+    reasons.push(`Hard style counter (+${styleEdge} advantage vs ${opponent?.style})`);
+  } else if (styleEdge === 1) {
+    reasons.push(`Favorable style matchup (+1 advantage)`);
+  } else if (styleEdge === -1) {
+    if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
+    warnings.push(`Unfavorable style matchup (-1 disadvantage vs ${opponent?.style})`);
+  } else if (styleEdge <= -2) {
+    if (dangerLevel !== 'LETHAL') dangerLevel = 'HAZARDOUS';
+    warnings.push(
+      `Severe style counter against you (${styleEdge} disadvantage vs ${opponent?.style})`
+    );
+  }
+
+  // Promoter
+  if (promoter?.personality === 'Sadistic') {
+    if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
+    warnings.push('Sadistic promoter: Elevated combat lethality and underdog bias.');
+  }
+
+  // Rematch caution (recent head-to-head record)
+  if (h2h && rematchLosing) {
+    if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
+    warnings.push(
+      `Rematch caution: ${h2h.wins}-${h2h.losses} career record vs ${opponent?.name}.`
+    );
+  }
+
+  // Title Bout — the crown is at stake. Headline + large score bump: this
+  // is not an ordinary purse decision.
+  const isTitleBout = !!offer.titleArenaId;
+  if (isTitleBout) {
+    reasons.push(
+      warriorOwnsArenaCrown(state, offer.titleArenaId as string, warrior.id)
+        ? 'TITLE DEFENSE — your arena crown is on the line. Refusal can cost the title.'
+        : 'TITLE BOUT — victory claims the arena crown.'
+    );
+  }
+
+  // Crown bid — a venue bout on a ladder where the warrior is ranked is a
+  // step toward the title challenge, worth more than the purse alone.
+  const onLadderHere =
+    campaignFocus === 'CROWN_BID' &&
+    !!offer.arenaId &&
+    (ctx?.contenderIndex?.get(offer.arenaId)?.includes(warrior.id) ?? false);
+  if (onLadderHere) {
+    reasons.push(
+      `Crown bid: a ${offer.arenaId} bout builds your contender standing for the title.`
+    );
+  }
+
+  // Purse Incentive
+  reasons.push(`Purse: ${offer.purse} gold`);
+  if (treasuryDesperate) {
+    reasons.push('Treasury pressure: prioritizing purse income over matchup purity.');
+  } else if (campaignFocus === 'PURSE_HUNTER') {
+    reasons.push('Purse-hunter campaign: weighting purse income over matchup purity.');
+  }
+
+  // Blind bout: no dossier on the opponent — flag the scouting opportunity
+  // when a Basic report is affordable.
+  const scoutCost = getScoutCost('Basic');
+  if (opponent && intel.length === 0 && evalTreasury !== undefined && evalTreasury >= scoutCost) {
+    reasons.push(
+      `No scout dossier on ${opponent.name} — commission a Basic scout report (${scoutCost}G) before signing.`
+    );
+  }
+
+  return {
+    opponent,
+    styleEdge,
+    weatherReason,
+    promoter,
+    kills,
+    rematchLosing,
+    isTitleBout,
+    onLadderHere,
+    dangerLevel,
+    warnings,
+    reasons,
+  };
+}
+
 /** Scores one candidate offer: matchup, lethality, weather, promoter, purse. */
 function scoreOffer(offer: BoutOffer, s: OfferScoreContext): ScoredOffer {
-  const { state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate, pursePriority } = s;
-const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
-const opponent = opponentId ? findWarriorById(state, opponentId) ?? null : null;
-const styleEdge = opponent ? getMatchupBonus(warrior.style, opponent.style) : 0;
-const weatherReason = acceptanceWeatherBlock(warrior, state.weather ?? 'Clear');
-const promoter = state.promoters?.[offer.promoterId];
+  const { pursePriority } = s;
+  const a = assessOffer(offer, s);
 
-const warnings: string[] = [];
-const reasons: string[] = [];
-let dangerLevel: CombatDangerLevel = 'SAFE';
+  // Numerical Composite Score
+  let score = 50;
+  score += a.styleEdge * 20;
+  if (a.isTitleBout) score += 60;
+  if (a.onLadderHere) score += 20;
+  score += pursePriority ? Math.min(60, offer.purse / 5) : Math.min(30, offer.purse / 10);
+  if (a.kills > 0) score -= 60;
+  if (a.weatherReason) score -= 35;
+  if (a.styleEdge <= -2) score -= 40;
+  if (a.promoter?.personality === 'Sadistic') score -= 15;
+  if (a.rematchLosing) score -= 10;
 
-// Scout intel & head-to-head history for this specific opponent
-const intel = opponentId
-  ? getOpponentIntel(state, opponentId, { tokens: ctx?.insightTokens })
-  : [];
-for (const line of summarizeIntel(intel)) {
-  reasons.push(`Scout intel: ${line}`);
-}
-const h2h = opponent ? deriveHeadToHead(state, warrior.id, opponent.id) : null;
-const rematchLosing =
-  !!h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins;
-
-// Lethality
-const kills = opponent?.career?.kills ?? 0;
-if (kills > 0) {
-  dangerLevel = 'LETHAL';
-  warnings.push(`Opponent ${opponent?.name} has ${kills} arena kill(s)! High risk of permadeath.`);
-}
-
-// Weather
-if (weatherReason) {
-  if (dangerLevel !== 'LETHAL') dangerLevel = 'HAZARDOUS';
-  warnings.push(`Weather hazard (${state.weather}): ${weatherReason}`);
-}
-
-// Style Matchup
-if (styleEdge >= 2) {
-  reasons.push(`Hard style counter (+${styleEdge} advantage vs ${opponent?.style})`);
-} else if (styleEdge === 1) {
-  reasons.push(`Favorable style matchup (+1 advantage)`);
-} else if (styleEdge === -1) {
-  if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
-  warnings.push(`Unfavorable style matchup (-1 disadvantage vs ${opponent?.style})`);
-} else if (styleEdge <= -2) {
-  if (dangerLevel !== 'LETHAL') dangerLevel = 'HAZARDOUS';
-  warnings.push(`Severe style counter against you (${styleEdge} disadvantage vs ${opponent?.style})`);
-}
-
-// Promoter
-if (promoter?.personality === 'Sadistic') {
-  if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
-  warnings.push('Sadistic promoter: Elevated combat lethality and underdog bias.');
-}
-
-// Rematch caution (recent head-to-head record)
-if (h2h && rematchLosing) {
-  if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
-  warnings.push(
-    `Rematch caution: ${h2h.wins}-${h2h.losses} career record vs ${opponent?.name}.`
-  );
-}
-
-// Title Bout — the crown is at stake. Headline + large score bump: this
-// is not an ordinary purse decision.
-const isTitleBout = !!offer.titleArenaId;
-if (isTitleBout) {
-  reasons.push(
-    warriorOwnsArenaCrown(state, offer.titleArenaId as string, warrior.id)
-      ? 'TITLE DEFENSE — your arena crown is on the line. Refusal can cost the title.'
-      : 'TITLE BOUT — victory claims the arena crown.'
-  );
-}
-
-// Crown bid — a venue bout on a ladder where the warrior is ranked is a
-// step toward the title challenge, worth more than the purse alone.
-const onLadderHere =
-  campaignFocus === 'CROWN_BID' &&
-  !!offer.arenaId &&
-  (ctx?.contenderIndex?.get(offer.arenaId)?.includes(warrior.id) ?? false);
-if (onLadderHere) {
-  reasons.push(
-    `Crown bid: a ${offer.arenaId} bout builds your contender standing for the title.`
-  );
-}
-
-// Purse Incentive
-reasons.push(`Purse: ${offer.purse} gold`);
-if (treasuryDesperate) {
-  reasons.push('Treasury pressure: prioritizing purse income over matchup purity.');
-} else if (campaignFocus === 'PURSE_HUNTER') {
-  reasons.push('Purse-hunter campaign: weighting purse income over matchup purity.');
-}
-
-// Blind bout: no dossier on the opponent — flag the scouting opportunity
-// when a Basic report is affordable.
-const scoutCost = getScoutCost('Basic');
-if (
-  opponent &&
-  intel.length === 0 &&
-  evalTreasury !== undefined &&
-  evalTreasury >= scoutCost
-) {
-  reasons.push(
-    `No scout dossier on ${opponent.name} — commission a Basic scout report (${scoutCost}G) before signing.`
-  );
-}
-
-// Numerical Composite Score
-let score = 50;
-score += styleEdge * 20;
-if (isTitleBout) score += 60;
-if (onLadderHere) score += 20;
-score += pursePriority
-  ? Math.min(60, offer.purse / 5)
-  : Math.min(30, offer.purse / 10);
-if (kills > 0) score -= 60;
-if (weatherReason) score -= 35;
-if (styleEdge <= -2) score -= 40;
-if (promoter?.personality === 'Sadistic') score -= 15;
-if (rematchLosing) score -= 10;
-
-return {
-  offer,
-  opponent,
-  styleEdge,
-  score,
-  dangerLevel,
-  warnings,
-  reasons,
-};
+  return {
+    offer,
+    opponent: a.opponent,
+    styleEdge: a.styleEdge,
+    score,
+    dangerLevel: a.dangerLevel,
+    warnings: a.warnings,
+    reasons: a.reasons,
+  };
 }
 
 /**

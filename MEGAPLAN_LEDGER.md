@@ -10,7 +10,7 @@
 ## 0. Baseline Metrics (captured @ `3bc5476e`)
 
 | Metric | Baseline | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `bun run type-check` | **0 errors** | was 6 errors at `a8cf7ca2` — repaired `3bc5476e` |
 | `bun run lint` | **0 errors / 0 warnings** | |
 | `bun x vitest run` (default) | **692 files / 8,172 pass / 2 skip / 1 flaky** | 47.93s; `advanceWeekPerformance` timing-ratio flake (passes isolated — not a regression) |
@@ -30,7 +30,7 @@ Full table lives in `MEGAPLAN_FINDINGS.md` §0. Headline confirmed findings: 7 e
 ## Disposition Ledger
 
 | Commit | Phase | Batch | Disposition |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `3bc5476e` | 0 | baseline repair | 6 type-check errors fixed (pre-existing at tag) |
 | `ad2a3806` | 0 | baseline + findings docs | MEGAPLAN_FINDINGS seeded with validated V-ledger |
 | `6fbd0422` | 1a | scan tooling | function-length / dup-scan / ui-audit scanners |
@@ -93,7 +93,7 @@ Full table lives in `MEGAPLAN_FINDINGS.md` §0. Headline confirmed findings: 7 e
 ## Phase-5 dispositions
 
 | Commit | Phase | Batch | Disposition |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `8880837a` | 5 | G1–G3 wiring | Style Archives (`/world/style-archives` + styleCompendium data module + World-hub nav), FavoritesCharting (roster-wide, wired into StableHall), Tournament Prep (`/world/tournament-prep` + nav + Tournaments header action). G1/G2/G3 specs unskipped and green. |
 
 ### Dormant-export triage (Phase-5 wire-or-remove audit)
@@ -102,7 +102,7 @@ Triage of the AI/analytics orphan-scan flags resolved **all** headline candidate
 already-wired or intentional API — no production rewiring required:
 
 | Flagged export | Verdict | Evidence |
-|---|---|---|
+| --- | --- | --- |
 | `pickWeeklyIntent`, `intentStillApplies` | **Wired** (internal) | called inside `updateAIStrategy` at `intentEngine.ts:382/394`; the pass entry-point `RivalStrategyPass` imports `updateAIStrategy` |
 | `deriveBoutIntent` | **Wired** (internal) | called at `intentStates.ts:106` inside the module's live export |
 | `preferredTrainerFocus`, `checkBudget` | **Wired** (internal) | called inside `processStaff` (`staffWorker.ts:84/111`) → `stableManager.processAIStable` → `rivalStableShard` |
@@ -124,7 +124,7 @@ inside live modules, not orphaned features.
 ## Phase-6 dispositions
 
 | Commit | Phase | Batch | Disposition |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `91ee9218` | 6 | L1 CTA registry | `src/components/layout/primaryCta.ts` — `PRIMARY_CTA_BY_ROUTE` + `resolvePrimaryCta(pathname)` keyed by route prefix, longest-prefix resolution, detail/lore → null. `PrimaryCtaButton` in `AppHeader` replaces the static `ExecuteWeekButton`. Intents: `advance` → week/day pipeline via `ExecuteWeekButton` (label override prop added; default `/` label per bible is now `EXECUTE WEEK N`); `page` → zustand `useCtaRegistry` populated by `useRegisterCtaAction` (Tournaments registers real `handleExecuteRound` enabled only while a live bracket exists; ArenaHub registers scroll-to-`#fight-card` enabled only when a card exists; Recruit registers sign-selected enabled only when an affordable, non-full selection exists — new `selectedId` state + `RecruitCard` `selected`/`onSelect` props); `navigate` → Scouting's SIGN CONTRACT links to `/stable/recruit` (rival warriors are not signable — poaching is AI-side). L1 spec unskipped, green. |
 | `91ee9218` | 6 | L2 page primitives | Conformance spec corrected to enumerate routed page modules from `src/routes/**` imports (helper modules like `sections.tsx`/`tabs.tsx` were false positives). 10 routed pages wrapped in `PageFrame`; `HallOfFights` gained `PageHeader`; `Gazette`/`PromoterDetail` keep bespoke masthead/hero under documented `data-bible-exempt`. Spec green. |
 
@@ -138,7 +138,7 @@ inside live modules, not orphaned features.
 ### Phase-6 token/motion sweep (L3–L5)
 
 | Commit | Phase | Batch | Disposition |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `cd8d0038` | 6 | L5 screaming-copy | All 93 scanner hits audited: every one was a code-position const/enum reference (`BATTERY_THRESHOLDS.HIGH`, `=== 'ACCEPT_OFFER'`, `option value=`), none user-facing copy. Scanner rule tightened to only flag SCREAMING_SNAKE inside JSX text children and label/title/aria attributes — then ratcheted to 0. Rule re-verified against a synthetic display-copy hit. |
 | `cd8d0038` | 6 | L4 motion-reduce | 114 hits codemodded: `motion-reduce:` companions appended inside class-string literals. Manual fixes: `useRivalryAlerts` `classList.add/remove` converted to two-arg form (whitespace in a single arg breaks DOMTokenList); two AdminTools prose toasts reworded out of class-string classification; two template-literal boundaries fixed by hand. Post-edit `transition-*`/`animate-*` usage verified unchanged; count 114 → 0, ceiling ratcheted. |
 | `cd8d0038` | 6 | L3 token violations | 89 → 0. Minted 14 `--*-rgb` triplets in `index.css` (oak/umber/sepia/inkwash/sheen/ember/blood/blush/void) for the FTUE/broadsheet palette; codemodded `rgba(R,G,B,α)` → `rgba(var(--X-rgb), α)` preserving alpha — zero visual change. `hexToRgba` helper added for user crest colors (data-driven paint, not a token). `chart.tsx` `'#ccc'`/`'#fff'` hits were CSS attribute selectors targeting recharts internals — allowlisted. Rivalry flash overlay `hsl()` → blood token. Tailwind arbitrary values `border-[rgba(...)]` converted to underscore syntax (spaces invalid in `[...]`). |
@@ -150,7 +150,7 @@ Test updates this batch: `navigationHubs.test.ts` world-hub page count 8 → 10 
 ## Phase-7 dispositions
 
 | Commit | Phase | Batch | Disposition |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `83b0ece5` | 7 | e2e additions + re-verify | Extracted duplicated FTUE bootstrap + `clickNavLink` into `e2e/helpers.ts`; updated `golden-path.spec.ts` nav lists for Phase-5/6 surface changes (added War Council, Simulator, Prep Mode, Style Archives, Hall of Fights; Hall of Fights reordered last — landing on `/lore/hall-of-fights` collapses the world-hub page list); step 5 now exercises the route-aware CTA (VIEW CARD on Arena → BEGIN CYCLE on Bouts runs the week pipeline). New `e2e/primary-cta.spec.ts` asserts the full §1 contract end-to-end: all 7 mapped labels, selection-gated SIGN CONTRACT, disabled ADVANCE BRACKET without a live bracket, scouting→recruit navigate intent, and zero CTA on a warrior detail route. |
 | `83b0ece5` | 7 | Registry detail-depth guard | `page.goto('/stable')` revealed `/` is the title screen — the in-app overview is `/stable`, which resolved to no CTA (conformance gap). Added `/stable` → EXECUTE WEEK; added a depth guard so a prefix match with ≥2 trailing segments resolves null (`/stable/promoter/p1` stays CTA-free per spec). L1 spec still green. |
 | `81161e2f` | 8 | Gate prep | Terminology banned-list vs bible conflict resolved: `EXECUTE WEEK`/`EXECUTE DAY` were banned as pre-bible sci-fi jargon, but DESIGN_PAGE_SYSTEM §1 mandates `EXECUTE WEEK N` — bans removed. `useAdminTools` test expectations updated for the motion-sweep toast reword. M1 dispositioned: `advanceWeekPerformance` promoted to `.slow.test.ts` (timing-ratio flake under parallel load; passes isolated and under `vitest.config.slow.ts`). Lint warnings zeroed: JSDoc on Phase-3/4 extracted exports; `FOCUS_LABELS` moved to `councilCardConfig.ts` (react-refresh). Seasonal soak updated for the per-route CTA: `ADVANCE_RE` → `/(EXECUTE WEEK\|ADVANCE DAY) \d+/`; `ensureAdvanceRoute` navigates to the overview before polling/clicking advance. |
@@ -160,7 +160,7 @@ Test updates this batch: `navigationHubs.test.ts` world-hub page count 8 → 10 
 ## Final Metrics (post-megaplan, vs baseline @ `3bc5476e`)
 
 | Metric | Baseline | Final | Δ |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | src files / LOC | 989 / 118,248 | 1,113 / 121,571 | +124 files / +3,323 LOC (new pages, hooks, guards, extracted modules) |
 | test files / LOC | — | 742 / 125,487 | test surface now exceeds source LOC |
 | functions >80 / >120 / >200 | 239 / 112 / 25 | 239 / 95 / **0** | −17 >120, all >200 decomposed |

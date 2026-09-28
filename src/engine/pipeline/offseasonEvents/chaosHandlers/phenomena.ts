@@ -6,8 +6,7 @@ import { makeInsightToken } from '@/engine/core/eventHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
-  pickActiveWarrior,
-  announceOffseasonEvent,
+  withChosenWarrior,
 } from '../types';
 
 /** Handler for the Temporal Anomaly offseason event — time distortion affecting warrior age and stats. */
@@ -18,8 +17,7 @@ export function handleTemporalAnomaly(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 35;
     const currentTraits = chosen.traits || [];
     const newTraits = [...currentTraits];
@@ -27,11 +25,6 @@ export function handleTemporalAnomaly(
       const removedTraitIndex = Math.floor(rng.next() * newTraits.length);
       newTraits.splice(removedTraitIndex, 1);
     }
-
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      traits: newTraits,
-    });
 
     ctx.insightTokens.push(
       makeInsightToken(rng, {
@@ -44,10 +37,14 @@ export function handleTemporalAnomaly(
       })
     );
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        traits: newTraits,
+      },
+      announce: {},
+    };
+  });
 }
 
 
@@ -59,8 +56,7 @@ export function handleCursedTreasureDiscovery(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const goldGained = 300 + Math.floor(rng.next() * 201);
     const fameLost = 10 + Math.floor(rng.next() * 11);
 
@@ -78,17 +74,14 @@ export function handleCursedTreasureDiscovery(
       penalties: { WL: -2, CN: -1 },
     });
 
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: Math.max(0, (chosen.fame || 0) - fameLost),
-      injuries: [...(chosen.injuries || []), newInjury],
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      gold: goldGained,
-      fame: fameLost,
-    });
-  }
+    return {
+      updates: {
+        fame: Math.max(0, (chosen.fame || 0) - fameLost),
+        injuries: [...(chosen.injuries || []), newInjury],
+      },
+      announce: { gold: goldGained, fame: fameLost },
+    };
+  });
 }
 
 
@@ -100,8 +93,7 @@ export function handleAbyssalTempestRitual(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 25;
 
     const newInjury = makeInjury(rng, {
@@ -113,15 +105,14 @@ export function handleAbyssalTempestRitual(
       penalties: { SP: -1, CN: -1 },
     });
 
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      injuries: [...(chosen.injuries || []), newInjury],
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      },
+      announce: {},
+    };
+  });
 }
 
 
@@ -133,8 +124,7 @@ export function handleUnexplainedMonolith(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 15;
     const fameGained = 10;
 
@@ -156,18 +146,17 @@ export function handleUnexplainedMonolith(
 
     const newTraits = currentTraits.includes('precise') ? currentTraits : [...currentTraits, 'precise'];
 
-    ctx.rosterUpdates.set(chosen.id, {
-      ...existingUpdate,
-      xp: currentXp + xpGained,
-      fame: currentFame + fameGained,
-      injuries: [...currentInjuries, newInjury],
-      traits: newTraits,
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        ...existingUpdate,
+        xp: currentXp + xpGained,
+        fame: currentFame + fameGained,
+        injuries: [...currentInjuries, newInjury],
+        traits: newTraits,
+      },
+      announce: {},
+    };
+  });
 }
 
 
@@ -179,20 +168,17 @@ export function handleShatteredSkiesRitual(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 25;
     const fatigueGained = 15;
-
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      fatigue: (chosen.fatigue || 0) + fatigueGained,
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        fatigue: (chosen.fatigue || 0) + fatigueGained,
+      },
+      announce: {},
+    };
+  });
 }
 
 
@@ -204,11 +190,8 @@ export function handleWeepingSkies(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
-    ctx.rosterUpdates.set(chosen.id, { xp: (chosen.xp || 0) + 20 });
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-    });
-  }
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => ({
+    updates: { xp: (chosen.xp || 0) + 20 },
+    announce: {},
+  }));
 }

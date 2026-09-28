@@ -19,6 +19,85 @@ const AGILE_STYLES = new Set([
   FightingStyle.AimedBlow,
 ]);
 
+const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
+
+/** Working plan accumulators mutated by the opponent-intel pass. */
+interface MutableTacticsPlan {
+  suggestedOE: number;
+  suggestedAL: number;
+  gearNotes: string[];
+  suggestedConditions: PlanCondition[];
+}
+
+/**
+ * Opponent-specific adaptation: a losing record vs this specific opponent
+ * shifts the plan patient — mirrors the G11 deltas applied to NPC stables
+ * (lower OE, higher AL, scaled by how lopsided the record is, capped at ±2).
+ */
+function applyOpponentIntel(
+  plan: MutableTacticsPlan,
+  warrior: Warrior,
+  opponent: Warrior,
+  state: GameState,
+  preservational: boolean
+): void {
+  const h2h = deriveHeadToHead(state, warrior.id, opponent.id);
+  const losingRematch = h2h.meetings >= 2 && h2h.losses > h2h.wins;
+  if (losingRematch) {
+    const delta = Math.min(2, h2h.losses - h2h.wins);
+    plan.suggestedOE = clamp(plan.suggestedOE - delta, 1, 10);
+    plan.suggestedAL = clamp(plan.suggestedAL + delta, 1, 10);
+    plan.gearNotes.push(
+      `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${opponent.name} — fight more patiently.`
+    );
+  }
+
+  // Tempo shield — mirrors the dossier counter-condition rival AI pushes
+  // when the opponent has killed or beaten them before: shell up the moment
+  // the opponent seizes tempo.
+  if ((opponent.career?.kills ?? 0) > 0 || losingRematch) {
+    plan.suggestedConditions.push({
+      trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
+      override: { AL: bounded(plan.suggestedAL, +2), OE: bounded(plan.suggestedOE, -1) },
+      label: `Shell up when ${opponent.name} seizes tempo`,
+    });
+  }
+
+  // Kill-window press — unless the council is preserving this fighter.
+  if (!preservational) {
+    plan.suggestedConditions.push({
+      trigger: { type: 'OPPONENT_HP_BELOW', value: 30 },
+      override: {
+        killDesire: clamp((warrior.plan?.killDesire ?? 5) + 2, 1, 10),
+        OE: bounded(plan.suggestedOE, +1),
+      },
+      label: 'Press the kill window when they are hurt',
+    });
+  }
+
+  // Counter-tempo: a 'Tactic' dossier token (Expert scouting) reads the
+  // opponent's suspected plan. Meet a high-OE aggressor with patience;
+  // press a passive opponent before they can settle in.
+  const tacticIntel = getOpponentIntel(state, opponent.id).find((t) => t.type === 'Tactic');
+  const suspected = tacticIntel?.detail.match(/Suspected OE: (\w+), AL: (\w+)/);
+  if (suspected?.[1] === 'High') {
+    plan.suggestedOE = clamp(plan.suggestedOE - 1, 1, 10);
+    plan.suggestedAL = clamp(plan.suggestedAL + 1, 1, 10);
+    plan.gearNotes.push(
+      `Counter-tempo: scouts report ${opponent.name} fights at high offensive eagerness — absorb and counter.`
+    );
+  } else if (suspected?.[1] === 'Low') {
+    plan.suggestedOE = clamp(plan.suggestedOE + 1, 1, 10);
+    plan.suggestedAL = clamp(plan.suggestedAL - 1, 1, 10);
+    plan.gearNotes.push(`Scouts report ${opponent.name} fights passively — press the tempo.`);
+    plan.suggestedConditions.push({
+      trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 40 },
+      override: { OE: bounded(plan.suggestedOE, +2) },
+      label: 'Swarm when they gas out',
+    });
+  }
+}
+
 /**
  * Evaluate and recommend optimal battle plan tactics and loadout audit for a warrior.
  */
@@ -54,7 +133,6 @@ export function evaluateTacticsAdvice(
   // Conditional plan recommendations — the same opponent-state triggers the
   // rival AI emits for its own fighters, offered to the player. Each is
   // labelled so the editor/debug surfaces show it as council advice.
-  const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
   const suggestedConditions: PlanCondition[] = [];
 
   // Survival ramp — mirrors the universal AI safety condition.
@@ -87,70 +165,14 @@ export function evaluateTacticsAdvice(
     }
   }
 
-  // 4. Rematch adaptation: a losing record vs this specific opponent shifts the
-  // plan patient — mirrors the G11 deltas applied to NPC stables (lower OE,
-  // higher AL, scaled by how lopsided the record is, capped at ±2).
+  // 4. Opponent-specific adaptation (rematch record, tempo shield, kill
+  // window, counter-tempo intel) — mutates the working plan.
+  const plan: MutableTacticsPlan = { suggestedOE, suggestedAL, gearNotes, suggestedConditions };
   if (ctx?.opponent && ctx.state) {
-    const h2h = deriveHeadToHead(ctx.state, warrior.id, ctx.opponent.id);
-    const losingRematch = h2h.meetings >= 2 && h2h.losses > h2h.wins;
-    if (losingRematch) {
-      const delta = Math.min(2, h2h.losses - h2h.wins);
-      suggestedOE = clamp(suggestedOE - delta, 1, 10);
-      suggestedAL = clamp(suggestedAL + delta, 1, 10);
-      gearNotes.push(
-        `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${ctx.opponent.name} — fight more patiently.`
-      );
-    }
-
-    // Tempo shield — mirrors the dossier counter-condition rival AI pushes
-    // when the opponent has killed or beaten them before: shell up the moment
-    // the opponent seizes tempo.
-    if ((ctx.opponent.career?.kills ?? 0) > 0 || losingRematch) {
-      suggestedConditions.push({
-        trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
-        override: { AL: bounded(suggestedAL, +2), OE: bounded(suggestedOE, -1) },
-        label: `Shell up when ${ctx.opponent.name} seizes tempo`,
-      });
-    }
-
-    // Kill-window press — unless the council is preserving this fighter.
-    if (!preservational) {
-      suggestedConditions.push({
-        trigger: { type: 'OPPONENT_HP_BELOW', value: 30 },
-        override: {
-          killDesire: clamp((warrior.plan?.killDesire ?? 5) + 2, 1, 10),
-          OE: bounded(suggestedOE, +1),
-        },
-        label: 'Press the kill window when they are hurt',
-      });
-    }
-
-    // Counter-tempo: a 'Tactic' dossier token (Expert scouting) reads the
-    // opponent's suspected plan. Meet a high-OE aggressor with patience;
-    // press a passive opponent before they can settle in.
-    const tacticIntel = getOpponentIntel(ctx.state, ctx.opponent.id).find(
-      (t) => t.type === 'Tactic'
-    );
-    const suspected = tacticIntel?.detail.match(/Suspected OE: (\w+), AL: (\w+)/);
-    if (suspected?.[1] === 'High') {
-      suggestedOE = clamp(suggestedOE - 1, 1, 10);
-      suggestedAL = clamp(suggestedAL + 1, 1, 10);
-      gearNotes.push(
-        `Counter-tempo: scouts report ${ctx.opponent.name} fights at high offensive eagerness — absorb and counter.`
-      );
-    } else if (suspected?.[1] === 'Low') {
-      suggestedOE = clamp(suggestedOE + 1, 1, 10);
-      suggestedAL = clamp(suggestedAL - 1, 1, 10);
-      gearNotes.push(
-        `Scouts report ${ctx.opponent.name} fights passively — press the tempo.`
-      );
-      suggestedConditions.push({
-        trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 40 },
-        override: { OE: bounded(suggestedOE, +2) },
-        label: 'Swarm when they gas out',
-      });
-    }
+    applyOpponentIntel(plan, warrior, ctx.opponent, ctx.state, preservational);
   }
+  suggestedOE = plan.suggestedOE;
+  suggestedAL = plan.suggestedAL;
 
   return {
     bestOffensiveTactic,

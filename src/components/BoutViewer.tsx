@@ -85,17 +85,8 @@ export default function BoutViewer({
   const [viewMode, setViewMode] = useState<ViewMode>(arenaPrefs.defaultViewMode);
   const logEndRef = useRef<HTMLDivElement>(null);
 
-  const {
-    visibleCount,
-    isPlaying,
-    speed,
-    setSpeed,
-    isComplete,
-    totalEvents,
-    reset,
-    skipToEnd,
-    togglePlay,
-  } = useBoutPlayback(log);
+  const playback = useBoutPlayback(log);
+  const { visibleCount, totalEvents } = playback;
 
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -131,75 +122,170 @@ export default function BoutViewer({
       />
 
       {expanded && (
-        <div className="animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
-          {/* Simulation Controls */}
-          <BoutControls
-            viewMode={viewMode}
-            onViewModeChange={(mode) => {
-              setViewMode(mode);
-              // Persist as new default if user explicitly changes
-              setArenaPreferences({ defaultViewMode: mode });
-            }}
-            isPlaying={isPlaying}
-            speed={speed}
-            setSpeed={setSpeed}
-            visibleCount={visibleCount}
-            totalEvents={totalEvents}
-            onReset={reset}
-            onTogglePlay={togglePlay}
-            onSkipToEnd={skipToEnd}
-          />
-
-          {/* Content Area - Arena or Log */}
-          {viewMode === 'arena' ? (
-            <ArenaView
-              nameA={nameA}
-              nameD={nameD}
-              styleA={styleA as FightingStyle}
-              styleD={styleD as FightingStyle}
-              log={log}
-              winner={winner}
-              visibleCount={visibleCount}
-              isPlaying={isPlaying}
-              isComplete={isComplete}
-              arenaTier={arenaTier}
-              weather={effectiveWeather as import('@/types/game').WeatherType}
-              arenaId={arenaId}
-              maxHpA={50}
-              maxHpD={50}
-              weaponIdA={weaponIdA}
-              weaponIdD={weaponIdD}
-            />
-          ) : (
-            <TacticalLogView log={log} visibleCount={visibleCount} />
-          )}
-
-          {/* Highlight Reel — curated notable minutes */}
-          <HighlightLog log={log} visibleCount={visibleCount} />
-
-          {/* Cinematic Resolution Banner, fallbacks, and comms link overlay */}
-          <BoutResolution
-            isComplete={isComplete}
-            winner={winner}
-            winnerName={winnerName}
-            by={by}
-            minutes={minutes}
-            totalEvents={totalEvents}
-            announcement={announcement}
-          />
-
-          {/* Fight Analysis Panel */}
-          <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
-
-          {/* Dev-only AI telemetry drawer */}
-          <AIDebugDrawer
-            exchangeLog={exchangeLog}
-            warriorA={warriorA}
-            warriorD={warriorD}
-            scoutReports={scoutReports}
-          />
-        </div>
+        <BoutBody
+          nameA={nameA}
+          nameD={nameD}
+          styleA={styleA}
+          styleD={styleD}
+          log={log}
+          winner={winner}
+          winnerName={winnerName}
+          by={by}
+          announcement={announcement}
+          arenaTier={arenaTier}
+          effectiveWeather={effectiveWeather}
+          arenaId={arenaId}
+          minutes={minutes}
+          viewMode={viewMode}
+          onViewModeChange={(mode) => {
+            setViewMode(mode);
+            // Persist as new default if user explicitly changes
+            setArenaPreferences({ defaultViewMode: mode });
+          }}
+          playback={playback}
+          analysis={analysis}
+          exchangeLog={exchangeLog}
+          weaponIdA={weaponIdA}
+          weaponIdD={weaponIdD}
+          warriorA={warriorA}
+          warriorD={warriorD}
+          scoutReports={scoutReports}
+        />
       )}
     </Surface>
+  );
+}
+
+interface BoutBodyProps extends Pick<
+  BoutViewerProps,
+  | 'nameA'
+  | 'nameD'
+  | 'styleA'
+  | 'styleD'
+  | 'log'
+  | 'winner'
+  | 'by'
+  | 'announcement'
+  | 'arenaTier'
+  | 'arenaId'
+  | 'analysis'
+  | 'exchangeLog'
+  | 'weaponIdA'
+  | 'weaponIdD'
+  | 'warriorA'
+  | 'warriorD'
+> {
+  winnerName: string | null;
+  effectiveWeather: string;
+  minutes: number;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  playback: ReturnType<typeof useBoutPlayback>;
+  scoutReports: ReturnType<typeof useGameStore.getState>['scoutReports'];
+}
+
+/** The expanded viewer body: controls, arena/log, highlights, resolution, panels. */
+function BoutBody({
+  nameA,
+  nameD,
+  styleA,
+  styleD,
+  log,
+  winner,
+  winnerName,
+  by,
+  announcement,
+  arenaTier,
+  effectiveWeather,
+  arenaId,
+  minutes,
+  viewMode,
+  onViewModeChange,
+  playback,
+  analysis,
+  exchangeLog,
+  weaponIdA,
+  weaponIdD,
+  warriorA,
+  warriorD,
+  scoutReports,
+}: BoutBodyProps) {
+  const {
+    isPlaying,
+    speed,
+    setSpeed,
+    visibleCount,
+    totalEvents,
+    isComplete,
+    reset,
+    skipToEnd,
+    togglePlay,
+  } = playback;
+
+  return (
+    <div className="animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
+      {/* Simulation Controls */}
+      <BoutControls
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        isPlaying={isPlaying}
+        speed={speed}
+        setSpeed={setSpeed}
+        visibleCount={visibleCount}
+        totalEvents={totalEvents}
+        onReset={reset}
+        onTogglePlay={togglePlay}
+        onSkipToEnd={skipToEnd}
+      />
+
+      {/* Content Area - Arena or Log */}
+      {viewMode === 'arena' ? (
+        <ArenaView
+          nameA={nameA}
+          nameD={nameD}
+          styleA={styleA as FightingStyle}
+          styleD={styleD as FightingStyle}
+          log={log}
+          winner={winner}
+          visibleCount={visibleCount}
+          isPlaying={isPlaying}
+          isComplete={isComplete}
+          arenaTier={arenaTier}
+          weather={effectiveWeather as import('@/types/game').WeatherType}
+          arenaId={arenaId}
+          maxHpA={50}
+          maxHpD={50}
+          weaponIdA={weaponIdA}
+          weaponIdD={weaponIdD}
+        />
+      ) : (
+        <TacticalLogView log={log} visibleCount={visibleCount} />
+      )}
+
+      {/* Highlight Reel — curated notable minutes */}
+      <HighlightLog log={log} visibleCount={visibleCount} />
+
+      {/* Cinematic Resolution Banner, fallbacks, and comms link overlay */}
+      <BoutResolution
+        isComplete={isComplete}
+        winner={winner}
+        winnerName={winnerName}
+        by={by}
+        minutes={minutes}
+        totalEvents={totalEvents}
+        announcement={announcement}
+      />
+
+      {/* Fight Analysis Panel */}
+      <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
+
+      {/* Dev-only AI telemetry drawer */}
+      <AIDebugDrawer
+        exchangeLog={exchangeLog}
+        warriorA={warriorA}
+        warriorD={warriorD}
+        scoutReports={scoutReports}
+      />
+    </div>
   );
 }

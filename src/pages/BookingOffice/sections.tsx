@@ -1,4 +1,6 @@
 import { Award, Briefcase, Target } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import type { BoutOffer, Warrior } from '@/types/state.types';
 import type { WarriorAdvisorCard } from '@/engine/advisor/types';
 import { Surface } from '@/components/ui/Surface';
@@ -176,5 +178,94 @@ export function OfferGrid({
         );
       })}
     </div>
+  );
+}
+
+/** This-week / upcoming offer tabs with bookmark filtering. */
+export function OfferTabs({
+  activeTab,
+  onTabChange,
+  thisWeekOffers,
+  upcomingOffers,
+  showBookmarkedOnly,
+  onToggleBookmarked,
+  bookmarkedCount,
+  roster,
+  promoters,
+  rivalWarriorMap,
+  signedOfferIds,
+  advisorCardMap,
+  onResponse,
+}: {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  thisWeekOffers: BoutOffer[];
+  upcomingOffers: BoutOffer[];
+  showBookmarkedOnly: boolean;
+  onToggleBookmarked: () => void;
+  bookmarkedCount: number;
+  roster: Warrior[];
+  promoters: Record<string, { name?: string; tier?: string; personality?: string }>;
+  rivalWarriorMap: RivalWarriorMap;
+  signedOfferIds: Set<string>;
+  advisorCardMap: Map<string, WarriorAdvisorCard>;
+  onResponse: (
+    offerId: string,
+    warriorId: string | undefined,
+    response: 'Accepted' | 'Declined'
+  ) => void;
+}) {
+  const gridProps = {
+    roster,
+    promoters,
+    rivalWarriorMap,
+    signedOfferIds,
+    advisorCardMap,
+    onResponse,
+  };
+  return (
+    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+      <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
+        <TabsList className="flex w-full h-full bg-transparent p-0 gap-1 rounded-none">
+          <TabsTrigger
+            value="this-week"
+            className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
+          >
+            This Week [{thisWeekOffers.length}]
+          </TabsTrigger>
+          <TabsTrigger
+            value="upcoming"
+            className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
+          >
+            Upcoming Bouts [{upcomingOffers.length}]
+          </TabsTrigger>
+        </TabsList>
+      </div>
+
+      <TabsContent value="this-week" className="mt-0 space-y-8">
+        <div className="flex justify-end">
+          <BookmarkFilterToggle
+            active={showBookmarkedOnly}
+            onToggle={onToggleBookmarked}
+            count={bookmarkedCount}
+          />
+        </div>
+        <OfferGrid
+          offers={thisWeekOffers}
+          emptyTitle="No Offers This Week"
+          emptyHint="No bout offers have arrived for this week yet."
+          {...gridProps}
+        />
+      </TabsContent>
+
+      <TabsContent value="upcoming" className="mt-0 space-y-8">
+        <OfferGrid
+          offers={upcomingOffers}
+          emptyTitle="No Upcoming Bouts"
+          emptyHint="No fight offers are scheduled for future weeks."
+          {...gridProps}
+        />
+      </TabsContent>
+    </Tabs>
   );
 }

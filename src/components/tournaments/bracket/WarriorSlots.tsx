@@ -16,6 +16,72 @@ interface WarriorSlotsProps {
   isExpanded: boolean;
 }
 
+/** One warrior slot row — accent bar, name, bye icon, champion trophy. */
+function SlotRow({
+  label,
+  isChosen,
+  otherChosen,
+  championship,
+  isBye,
+  byeClass,
+  showByeIcon = false,
+  ariaLabel,
+  onClick,
+}: {
+  label: string;
+  isChosen: boolean;
+  otherChosen: boolean;
+  championship: boolean;
+  isBye: boolean;
+  /** Class applied to this slot when the bout is a bye. */
+  byeClass: string;
+  /** Show the step-forward icon (warrior A row only). */
+  showByeIcon?: boolean;
+  ariaLabel: string;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label={ariaLabel}
+      className={cn('flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
+        isChosen
+          ? 'bg-primary/10 text-primary font-bold shadow-inner'
+          : otherChosen
+            ? 'opacity-30 grayscale'
+            : 'bg-background/40',
+        isBye && byeClass,
+        isChosen && championship && 'bg-arena-gold/20 text-arena-gold'
+      )}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+    >
+      <div className="flex items-center gap-2 truncate">
+        <div
+          className={cn(
+            'w-1 h-4 rounded-full',
+            isChosen ? (championship ? 'bg-arena-gold' : 'bg-primary') : 'bg-muted-foreground/20'
+          )}
+        />
+        <span className="text-xs truncate">{label}</span>
+        {isBye && showByeIcon && <StepForward className="h-3 w-3 text-muted-foreground/50" />}
+      </div>
+      {isChosen && championship && (
+        <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />
+      )}
+      {isChosen && !championship && (
+        <Trophy className="h-3 w-3 animate-bounce motion-reduce:animate-none shadow-glow text-arena-gold" />
+      )}
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -37,47 +103,17 @@ export function WarriorSlots({
 
   return (
     <div className="p-3 space-y-1">
-      {/* Warrior A */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label={`Select ${resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}`}
-        className={cn('flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
-          isAChosen
-            ? 'bg-primary/10 text-primary font-bold shadow-inner'
-            : isDChosen
-              ? 'opacity-30 grayscale'
-              : 'bg-background/40',
-          isBye && 'bg-muted/30',
-          isAChosen && championship && 'bg-arena-gold/20 text-arena-gold'
-        )}
+      <SlotRow
+        label={resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}
+        ariaLabel={`Select ${resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}`}
+        isChosen={isAChosen}
+        otherChosen={isDChosen}
+        championship={championship}
+        isBye={isBye}
+        byeClass="bg-muted/30"
+        showByeIcon
         onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick();
-          }
-        }}
-      >
-        <div className="flex items-center gap-2 truncate">
-          <div
-            className={cn(
-              'w-1 h-4 rounded-full',
-              isAChosen ? (championship ? 'bg-arena-gold' : 'bg-primary') : 'bg-muted-foreground/20'
-            )}
-          />
-          <span className="text-xs truncate">
-            {resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}
-          </span>
-          {isBye && <StepForward className="h-3 w-3 text-muted-foreground/50" />}
-        </div>
-        {isAChosen && championship && (
-          <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />
-        )}
-        {isAChosen && !championship && (
-          <Trophy className="h-3 w-3 animate-bounce motion-reduce:animate-none shadow-glow text-arena-gold" />
-        )}
-      </div>
+      />
 
       {/* VS indicator - hide for byes */}
       {!isBye && (
@@ -102,47 +138,18 @@ export function WarriorSlots({
         </div>
       )}
 
-      {/* Warrior D */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label={
+      <SlotRow
+        label={isBye ? '(bye)' : resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
+        ariaLabel={
           isBye ? 'Bye' : `Select ${resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}`
         }
-        className={cn('flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
-          isDChosen
-            ? 'bg-primary/10 text-primary font-bold shadow-inner'
-            : isAChosen
-              ? 'opacity-30 grayscale'
-              : 'bg-background/40',
-          isBye && 'opacity-50 italic text-muted-foreground'
-        )}
+        isChosen={isDChosen}
+        otherChosen={isAChosen}
+        championship={championship}
+        isBye={isBye}
+        byeClass="opacity-50 italic text-muted-foreground"
         onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick();
-          }
-        }}
-      >
-        <div className="flex items-center gap-2 truncate">
-          <div
-            className={cn(
-              'w-1 h-4 rounded-full',
-              isDChosen ? (championship ? 'bg-arena-gold' : 'bg-primary') : 'bg-muted-foreground/20'
-            )}
-          />
-          <span className="text-xs truncate">
-            {isBye ? '(bye)' : resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
-          </span>
-        </div>
-        {isDChosen && championship && (
-          <Trophy className="h-3 w-3 text-arena-gold animate-pulse motion-reduce:animate-none" />
-        )}
-        {isDChosen && !championship && (
-          <Trophy className="h-3 w-3 animate-bounce motion-reduce:animate-none shadow-glow text-arena-gold" />
-        )}
-      </div>
+      />
     </div>
   );
 }

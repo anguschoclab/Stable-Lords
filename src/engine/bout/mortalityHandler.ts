@@ -21,6 +21,98 @@ import { weekToTimestamp } from '@/constants';
  * @param rivalStableId -
  * @param rng -
  */
+/**
+ * House rule (Design Bible §21.2): fatal blows maim instead of kill. The
+ * victim survives with a Critical permanent injury; no graveyard entry,
+ * no death narrative, no fame-from-death.
+ */
+function applySevereInjuryRule(
+  s: GameState,
+  wA: Warrior,
+  wD: Warrior,
+  outcome: FightOutcome,
+  week: number,
+  rivalStableId: string | undefined,
+  rng: IRNGService
+) {
+  const spared = outcome.winner === 'A' ? wD : wA;
+  const injury: InjuryData = {
+    id: rng.uuid() as InjuryId,
+    name: 'Near-Fatal Wound',
+    description:
+      'A blow that should have been lethal. The crowd calls it a miracle; the healers call it a career question.',
+    severity: 'Critical',
+    location: 'Head',
+    weeksRemaining: 24,
+    penalties: { ST: -4, SP: -3, ATT: -3, DF: -3, CN: -2 },
+  };
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  if (s.roster.some((w) => w.id === spared.id))
+    rosterUpdates.set(spared.id, { injuries: [...spared.injuries, injury] });
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
+  if (rivalStableId) {
+    const rival = s.rivalMap?.get(rivalStableId as StableId);
+    if (rival?.roster.some((w) => w.id === spared.id))
+      rivalsUpdates.set(rivalStableId as StableId, {
+        roster: rival.roster.map((w) =>
+          w.id === spared.id ? { ...w, injuries: [...w.injuries, injury] } : w
+        ),
+      });
+  }
+  const impact: StateImpact = {
+    rosterUpdates,
+    rivalsUpdates,
+    newsletterItems: [
+        {
+          id: rng.uuid(),
+          week,
+          title: 'Miraculous Survival',
+          items: [
+            `${spared.name} was left for dead by ${outcome.winner === 'A' ? wA.name : wD.name}, but the healers refused to give up. (House rule: severe injury instead of death)`,
+          ],
+        },
+      ],
+  };
+  return {
+    impact,
+    death: false,
+    playerDeath: false,
+    deathNames: [],
+  };
+}
+
+/**
+ * Derive the canonical DeathCauseBucket. Precedence:
+ *   RIVALRY_FINISH (if the two stables were rivals at the time of the kill)
+ *   > whatever the combat resolver stamped (EXECUTION / CRITICAL_CHAIN / ARMOR_FAILURE / FATIGUE_COLLAPSE)
+ *   > FATAL_DAMAGE as the catch-all.
+ */
+function deriveCauseBucket(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome): string {
+  const stableIds = [wA.stableId, wD.stableId].filter(
+    (x): x is import('@/types/shared.types').StableId => !!x
+  );
+  const isRivalryKill =
+    stableIds.length === 2 &&
+    (s.rivalries ?? []).some(
+      (r) =>
+        (r.stableIdA === stableIds[0] && r.stableIdB === stableIds[1]) ||
+        (r.stableIdA === stableIds[1] && r.stableIdB === stableIds[0])
+    );
+  const stampedCause = outcome.post?.causeBucket;
+  return isRivalryKill ? 'RIVALRY_FINISH' : (stampedCause ?? 'FATAL_DAMAGE');
+}
+
+/**
+ * Handle death.
+ * @param s -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param week -
+ * @param tags -
+ * @param rivalStableId -
+ * @param rng -
+ */
 export function handleDeath(
   s: GameState,
   wA: Warrior,
@@ -34,53 +126,8 @@ export function handleDeath(
   if (outcome.by !== 'Kill')
     return { impact: {}, death: false, playerDeath: false, deathNames: [] };
 
-  // House rule (Design Bible §21.2): fatal blows maim instead of kill. The
-  // victim survives with a Critical permanent injury; no graveyard entry,
-  // no death narrative, no fame-from-death.
   if (s.houseRules?.severeInjuryInsteadOfDeath) {
-    const spared = outcome.winner === 'A' ? wD : wA;
-    const injury: InjuryData = {
-      id: rng.uuid() as InjuryId,
-      name: 'Near-Fatal Wound',
-      description:
-        'A blow that should have been lethal. The crowd calls it a miracle; the healers call it a career question.',
-      severity: 'Critical',
-      location: 'Head',
-      weeksRemaining: 24,
-      penalties: { ST: -4, SP: -3, ATT: -3, DF: -3, CN: -2 },
-    };
-    const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-    if (s.roster.some((w) => w.id === spared.id))
-      rosterUpdates.set(spared.id, { injuries: [...spared.injuries, injury] });
-    const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
-    if (rivalStableId) {
-      const rival = s.rivalMap?.get(rivalStableId as StableId);
-      if (rival?.roster.some((w) => w.id === spared.id))
-        rivalsUpdates.set(rivalStableId as StableId, {
-          roster: rival.roster.map((w) =>
-            w.id === spared.id ? { ...w, injuries: [...w.injuries, injury] } : w
-          ),
-        });
-    }
-    return {
-      impact: {
-        rosterUpdates,
-        rivalsUpdates,
-        newsletterItems: [
-          {
-            id: rng.uuid(),
-            week,
-            title: 'Miraculous Survival',
-            items: [
-              `${spared.name} was left for dead by ${outcome.winner === 'A' ? wA.name : wD.name}, but the healers refused to give up. (House rule: severe injury instead of death)`,
-            ],
-          },
-        ],
-      },
-      death: false,
-      playerDeath: false,
-      deathNames: [],
-    };
+    return applySevereInjuryRule(s, wA, wD, outcome, week, rivalStableId, rng);
   }
 
   const victim = outcome.winner === 'A' ? wD : wA;
@@ -113,23 +160,7 @@ export function handleDeath(
     deathSummary: narrative,
     memorialTags: tags,
   };
-
-  // Derive the canonical DeathCauseBucket. Precedence:
-  //   RIVALRY_FINISH (if the two stables were rivals at the time of the kill)
-  //   > whatever the combat resolver stamped (EXECUTION / CRITICAL_CHAIN / ARMOR_FAILURE / FATIGUE_COLLAPSE)
-  //   > FATAL_DAMAGE as the catch-all.
-  const stableIds = [wA.stableId, wD.stableId].filter(
-    (x): x is import('@/types/shared.types').StableId => !!x
-  );
-  const isRivalryKill =
-    stableIds.length === 2 &&
-    (s.rivalries ?? []).some(
-      (r) =>
-        (r.stableIdA === stableIds[0] && r.stableIdB === stableIds[1]) ||
-        (r.stableIdA === stableIds[1] && r.stableIdB === stableIds[0])
-    );
-  const stampedCause = outcome.post?.causeBucket;
-  const causeBucket: string = isRivalryKill ? 'RIVALRY_FINISH' : (stampedCause ?? 'FATAL_DAMAGE');
+  const causeBucket = deriveCauseBucket(s, wA, wD, outcome);
 
   // Pure State Transformation for Death.
   // Deep-copy the victim: a shallow spread would leave nested mutables

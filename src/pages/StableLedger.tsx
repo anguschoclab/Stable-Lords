@@ -63,94 +63,10 @@ export default function StableLedger() {
       />
 
       {/* Band 2 — Financial Runway Alert */}
-      <Surface
-        variant={isEmergency ? 'blood' : 'glass'}
-        className={cn(
-          'flex items-center justify-between p-6 border-l-4',
-          isEmergency ? 'border-l-primary shadow-lg shadow-primary/10' : 'border-l-accent/40'
-        )}
-      >
-        <div className="flex items-center gap-5">
-          <div
-            className={cn(
-              'p-3 transform rotate-45 border',
-              isEmergency
-                ? 'bg-destructive/20 border-destructive/40 animate-pulse motion-reduce:animate-none'
-                : 'bg-accent/10 border-accent/30'
-            )}
-          >
-            <div className="transform -rotate-45">
-              {isEmergency ? (
-                <AlertCircle className="h-5 w-5 text-destructive" />
-              ) : (
-                <Hourglass className="h-5 w-5 text-accent" />
-              )}
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
-                Treasury Runway
-              </span>
-              {isEmergency && (
-                <Badge className="bg-destructive text-foreground text-[8px] font-black h-4 px-2 rounded-none">
-                  CRITICAL
-                </Badge>
-              )}
-            </div>
-            <p className="text-2xl font-display font-black uppercase tracking-tight text-foreground leading-none mt-2">
-              {runway === 99 ? 'UNLIMITED' : `${runway} CYCLES`} REMAINING
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-10">
-          <div className="text-right">
-            <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1.5">
-              Weekly Burn
-            </div>
-            <div className="font-mono font-black text-destructive text-xl leading-none">
-              -{breakdown.totalExpenses} <span className="text-xs opacity-30">G</span>
-            </div>
-          </div>
-          <div className="h-10 w-px bg-white/5" />
-          <div className="text-right">
-            <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1.5">
-              Net Variance
-            </div>
-            <div
-              className={cn(
-                'font-mono font-black text-xl leading-none',
-                breakdown.net >= 0 ? 'text-primary' : 'text-destructive'
-              )}
-            >
-              {breakdown.net >= 0 ? '+' : ''}
-              {breakdown.net} <span className="text-xs opacity-30">G</span>
-            </div>
-          </div>
-        </div>
-      </Surface>
+      <RunwayBanner runway={runway} isEmergency={isEmergency} breakdown={breakdown} />
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full grid grid-cols-2 md:grid-cols-6 h-auto p-1 bg-[hsl(var(--background))] border border-white/5 backdrop-blur-2xl rounded-none mb-10 overflow-hidden">
-          {[
-            { value: 'overview', icon: Coins, label: 'Ledger' },
-            { value: 'tokens', icon: Sparkles, label: 'Vault' },
-            { value: 'contracts', icon: GraduationCap, label: 'Contracts' },
-            { value: 'chronicle', icon: ScrollText, label: 'Archive' },
-            { value: 'hall', icon: Skull, label: 'Monolith' },
-            { value: 'year-end', icon: CalendarDays, label: 'Cycle End' },
-          ].map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              value={tab.value}
-              className="text-[9px] font-black uppercase tracking-[0.2em] py-4 gap-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-4px_0_hsl(var(--primary))] transition-all duration-300 rounded-none border-r border-white/5 last:border-0 motion-reduce:transition-none"
-            >
-              <tab.icon className="h-3.5 w-3.5 opacity-60" />
-              <span className="hidden sm:inline">{tab.label}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <LedgerTabList />
 
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none">
           <TabsContent value="overview" className="focus-visible:outline-none">
@@ -176,5 +92,111 @@ export default function StableLedger() {
         </div>
       </Tabs>
     </PageFrame>
+  );
+}
+
+const LEDGER_TABS = [
+  { value: 'overview', icon: Coins, label: 'Ledger' },
+  { value: 'tokens', icon: Sparkles, label: 'Vault' },
+  { value: 'contracts', icon: GraduationCap, label: 'Contracts' },
+  { value: 'chronicle', icon: ScrollText, label: 'Archive' },
+  { value: 'hall', icon: Skull, label: 'Monolith' },
+  { value: 'year-end', icon: CalendarDays, label: 'Cycle End' },
+];
+
+function LedgerTabList() {
+  return (
+    <TabsList className="w-full grid grid-cols-2 md:grid-cols-6 h-auto p-1 bg-[hsl(var(--background))] border border-white/5 backdrop-blur-2xl rounded-none mb-10 overflow-hidden">
+      {LEDGER_TABS.map((tab) => (
+        <TabsTrigger
+          key={tab.value}
+          value={tab.value}
+          className="text-[9px] font-black uppercase tracking-[0.2em] py-4 gap-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-4px_0_hsl(var(--primary))] transition-all duration-300 rounded-none border-r border-white/5 last:border-0 motion-reduce:transition-none"
+        >
+          <tab.icon className="h-3.5 w-3.5 opacity-60" />
+          <span className="hidden sm:inline">{tab.label}</span>
+        </TabsTrigger>
+      ))}
+    </TabsList>
+  );
+}
+
+function RunwayBanner({
+  runway,
+  isEmergency,
+  breakdown,
+}: {
+  runway: number;
+  isEmergency: boolean;
+  breakdown: ReturnType<typeof computeWeeklyBreakdown>;
+}) {
+  return (
+    <Surface
+      variant={isEmergency ? 'blood' : 'glass'}
+      className={cn(
+        'flex items-center justify-between p-6 border-l-4',
+        isEmergency ? 'border-l-primary shadow-lg shadow-primary/10' : 'border-l-accent/40'
+      )}
+    >
+      <div className="flex items-center gap-5">
+        <div
+          className={cn(
+            'p-3 transform rotate-45 border',
+            isEmergency
+              ? 'bg-destructive/20 border-destructive/40 animate-pulse motion-reduce:animate-none'
+              : 'bg-accent/10 border-accent/30'
+          )}
+        >
+          <div className="transform -rotate-45">
+            {isEmergency ? (
+              <AlertCircle className="h-5 w-5 text-destructive" />
+            ) : (
+              <Hourglass className="h-5 w-5 text-accent" />
+            )}
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
+              Treasury Runway
+            </span>
+            {isEmergency && (
+              <Badge className="bg-destructive text-foreground text-[8px] font-black h-4 px-2 rounded-none">
+                CRITICAL
+              </Badge>
+            )}
+          </div>
+          <p className="text-2xl font-display font-black uppercase tracking-tight text-foreground leading-none mt-2">
+            {runway === 99 ? 'UNLIMITED' : `${runway} CYCLES`} REMAINING
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-10">
+        <div className="text-right">
+          <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1.5">
+            Weekly Burn
+          </div>
+          <div className="font-mono font-black text-destructive text-xl leading-none">
+            -{breakdown.totalExpenses} <span className="text-xs opacity-30">G</span>
+          </div>
+        </div>
+        <div className="h-10 w-px bg-white/5" />
+        <div className="text-right">
+          <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1.5">
+            Net Variance
+          </div>
+          <div
+            className={cn(
+              'font-mono font-black text-xl leading-none',
+              breakdown.net >= 0 ? 'text-primary' : 'text-destructive'
+            )}
+          >
+            {breakdown.net >= 0 ? '+' : ''}
+            {breakdown.net} <span className="text-xs opacity-30">G</span>
+          </div>
+        </div>
+      </div>
+    </Surface>
   );
 }

@@ -347,6 +347,218 @@ function computeAttackBonuses(
 }
 
 /**
+ * All raw inputs to a single offense/defense resolution — kept as a bag so the
+ * attacker/defender derivation + attack-check prelude can live apart from the
+ * branch dispatch without 30+ positional args.
+ */
+export interface OffenseDefenseArgs {
+  ctx: ResolutionContext;
+  fA: FighterState;
+  fD: FighterState;
+  aGoesFirst: boolean;
+  OE_A: number;
+  AL_A: number;
+  OE_D: number;
+  AL_D: number;
+  fatA: number;
+  fatD: number;
+  offModsA: OffensiveMods;
+  offModsD: OffensiveMods;
+  defModsA: DefensiveMods;
+  defModsD: DefensiveMods;
+  passA: StylePassiveResult;
+  passD: StylePassiveResult;
+  biasAttA: number;
+  biasDefA: number;
+  biasAttD: number;
+  biasDefD: number;
+  tactA: ResolvedTactics;
+  tactD: ResolvedTactics;
+  psychA: PsychStateMod;
+  psychD: PsychStateMod;
+  dynTraitsA: DynamicTraitMods;
+  dynTraitsD: DynamicTraitMods;
+  feintAttBonus: number;
+  feintDefBonus: number;
+  attCommit: CommitResult;
+  defCommit: CommitResult;
+  es: ExchangeState;
+  phaseKey: 'opening' | 'mid' | 'late';
+  stylePhase: StylePhase;
+  events: CombatEvent[];
+}
+
+/**
+ * Derives the attacker/defender view, rolls the attack check, and bundles the
+ * shared context handed to the whiff/contested branch handlers.
+ */
+/** Attacker-side view of the raw inputs — resolves the A/D swap once. */
+interface AttackView {
+  att: FighterState;
+  def: FighterState;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+  curAttOE: number;
+  curAttAL: number;
+  curOffMods: OffensiveMods;
+  curPassA: StylePassiveResult;
+  curBiasAtt: number;
+  curAntiSyn: ReturnType<typeof getStyleAntiSynergy>;
+  overAtt: number;
+  curAttWepReq: OffenseDefenseArgs['ctx']['weaponReqA'];
+}
+
+function deriveAttackView(args: OffenseDefenseArgs): AttackView {
+  const {
+    ctx,
+    fA,
+    fD,
+    aGoesFirst,
+    OE_A,
+    AL_A,
+    OE_D,
+    AL_D,
+    offModsA,
+    offModsD,
+    passA,
+    passD,
+    biasAttA,
+    biasAttD,
+    tactA,
+    tactD,
+  } = args;
+  const att = aGoesFirst ? fA : fD;
+  const curAttTact = aGoesFirst ? tactA : tactD;
+  return {
+    att,
+    def: aGoesFirst ? fD : fA,
+    attLabel: aGoesFirst ? 'A' : 'D',
+    defLabel: aGoesFirst ? 'D' : 'A',
+    curAttOE: aGoesFirst ? OE_A : OE_D,
+    curAttAL: aGoesFirst ? AL_A : AL_D,
+    curOffMods: aGoesFirst ? offModsA : offModsD,
+    curPassA: aGoesFirst ? passA : passD,
+    curBiasAtt: aGoesFirst ? biasAttA : biasAttD,
+    curAntiSyn: getStyleAntiSynergy(att.style, curAttTact.offTactic, curAttTact.defTactic),
+    overAtt: aGoesFirst
+      ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA)
+      : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD),
+    curAttWepReq: aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD,
+  };
+}
+
+function prepareOffenseDefense(args: OffenseDefenseArgs): {
+  s: OffenseDefenseCtx;
+  attSucc: boolean;
+} {
+  const {
+    ctx,
+    fA,
+    fD,
+    aGoesFirst,
+    OE_A,
+    AL_A,
+    OE_D,
+    AL_D,
+    fatA,
+    fatD,
+    offModsA,
+    offModsD,
+    passA,
+    passD,
+    tactA,
+    tactD,
+    psychA,
+    psychD,
+    dynTraitsA,
+    dynTraitsD,
+    feintAttBonus,
+    attCommit,
+    es,
+  } = args;
+  const { rng } = ctx;
+  const v = deriveAttackView(args);
+  const { att, def, attLabel, defLabel, curAttOE, curAttAL, curOffMods, curPassA } = v;
+
+  const bonuses = computeAttackBonuses(
+    ctx,
+    aGoesFirst,
+    att,
+    def,
+    psychA,
+    psychD,
+    dynTraitsA,
+    dynTraitsD
+  );
+
+  const attSucc = performAttackCheck(
+    rng,
+    att,
+    curAttOE,
+    aGoesFirst ? ctx.matchupA : ctx.matchupD,
+    aGoesFirst ? fatA : fatD,
+    curOffMods,
+    curPassA,
+    v.curAntiSyn,
+    v.curBiasAtt,
+    v.overAtt,
+    v.curAttWepReq,
+    bonuses.momentumBonus +
+      bonuses.psychMod +
+      (aGoesFirst ? es.rangeModA : es.rangeModD) +
+      attCommit.attBonus +
+      feintAttBonus +
+      bonuses.weaponRangeMod +
+      bonuses.dynTraitAtt +
+      bonuses.counterstrikeAtt
+  );
+
+  const s: OffenseDefenseCtx = {
+    ctx,
+    fA,
+    fD,
+    aGoesFirst,
+    OE_A,
+    AL_A,
+    OE_D,
+    AL_D,
+    fatA,
+    fatD,
+    offModsA,
+    offModsD,
+    defModsA: args.defModsA,
+    defModsD: args.defModsD,
+    passA,
+    passD,
+    biasDefA: args.biasDefA,
+    biasDefD: args.biasDefD,
+    tactA,
+    tactD,
+    dynTraitsA,
+    dynTraitsD,
+    feintDefBonus: args.feintDefBonus,
+    attCommit,
+    defCommit: args.defCommit,
+    phaseKey: args.phaseKey,
+    stylePhase: args.stylePhase,
+    events: args.events,
+    att,
+    def,
+    attLabel,
+    defLabel,
+    curAttOE,
+    curAttAL,
+    curOffMods,
+    curPassA,
+    defWeaponRangeMod: bonuses.defWeaponRangeMod,
+    defDynTraitPar: bonuses.defDynTraitPar,
+    defDynTraitDef: bonuses.defDynTraitDef,
+  };
+
+  return { s, attSucc };
+}
+
+/**
  * Resolve the attack and defense checks, including ripostes and successful hits.
  */
 export function resolveCombatOffenseDefense(
@@ -385,61 +597,7 @@ export function resolveCombatOffenseDefense(
   stylePhase: StylePhase,
   events: CombatEvent[]
 ): void {
-  const { rng } = ctx;
-  const att = aGoesFirst ? fA : fD;
-  const def = aGoesFirst ? fD : fA;
-  const attLabel = aGoesFirst ? 'A' : 'D';
-  const defLabel = aGoesFirst ? 'D' : 'A';
-
-  const curAttOE = aGoesFirst ? OE_A : OE_D;
-  const curAttAL = aGoesFirst ? AL_A : AL_D;
-  const curOffMods = aGoesFirst ? offModsA : offModsD;
-  const curPassA = aGoesFirst ? passA : passD;
-  const curBiasAtt = aGoesFirst ? biasAttA : biasAttD;
-  const curAntiSyn = getStyleAntiSynergy(
-    att.style,
-    (aGoesFirst ? tactA : tactD).offTactic,
-    (aGoesFirst ? tactA : tactD).defTactic
-  );
-  const overAtt = aGoesFirst
-    ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA)
-    : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD);
-  const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
-
-  const bonuses = computeAttackBonuses(
-    ctx,
-    aGoesFirst,
-    att,
-    def,
-    psychA,
-    psychD,
-    dynTraitsA,
-    dynTraitsD
-  );
-
-  const attSucc = performAttackCheck(
-    rng,
-    att,
-    curAttOE,
-    aGoesFirst ? ctx.matchupA : ctx.matchupD,
-    aGoesFirst ? fatA : fatD,
-    curOffMods,
-    curPassA,
-    curAntiSyn,
-    curBiasAtt,
-    overAtt,
-    curAttWepReq,
-    bonuses.momentumBonus +
-      bonuses.psychMod +
-      (aGoesFirst ? es.rangeModA : es.rangeModD) +
-      attCommit.attBonus +
-      feintAttBonus +
-      bonuses.weaponRangeMod +
-      bonuses.dynTraitAtt +
-      bonuses.counterstrikeAtt
-  );
-
-  const s: OffenseDefenseCtx = {
+  const { s, attSucc } = prepareOffenseDefense({
     ctx,
     fA,
     fD,
@@ -456,30 +614,25 @@ export function resolveCombatOffenseDefense(
     defModsD,
     passA,
     passD,
+    biasAttA,
     biasDefA,
+    biasAttD,
     biasDefD,
     tactA,
     tactD,
+    psychA,
+    psychD,
     dynTraitsA,
     dynTraitsD,
+    feintAttBonus,
     feintDefBonus,
     attCommit,
     defCommit,
+    es,
     phaseKey,
     stylePhase,
     events,
-    att,
-    def,
-    attLabel,
-    defLabel,
-    curAttOE,
-    curAttAL,
-    curOffMods,
-    curPassA,
-    defWeaponRangeMod: bonuses.defWeaponRangeMod,
-    defDynTraitPar: bonuses.defDynTraitPar,
-    defDynTraitDef: bonuses.defDynTraitDef,
-  };
+  });
 
   if (!attSucc) {
     resolveWhiffRiposte(s);

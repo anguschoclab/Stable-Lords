@@ -41,6 +41,120 @@ function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | nul
   return best;
 }
 
+/* ── Subcomponents ───────────────────────────────────────── */
+
+function CareerStatsGrid({ warrior }: { warrior: Warrior }) {
+  return (
+    <div className="grid grid-cols-4 gap-2">
+      {[
+        { label: 'WINS', val: warrior.career.wins, color: 'text-foreground' },
+        { label: 'LOSS', val: warrior.career.losses, color: 'text-muted-foreground/40' },
+        { label: 'KILL', val: warrior.career.kills, color: 'text-destructive' },
+        { label: 'FAME', val: warrior.fame ?? 0, color: 'text-arena-gold' },
+      ].map((s) => (
+        <div
+          key={s.label}
+          className="bg-secondary/20 rounded-none p-2 border border-border/10 text-center"
+        >
+          <div className={cn('text-sm font-mono font-black', s.color)}>{s.val}</div>
+          <div className="text-[8px] font-black uppercase tracking-tighter text-muted-foreground/40">
+            {s.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PerformanceRatio({ winRate }: { winRate: number }) {
+  return (
+    <div className="space-y-2 py-2">
+      <div className="flex items-center justify-between text-[10px] font-black tracking-[0.2em] text-muted-foreground/60">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="flex items-center gap-1.5 cursor-help">
+                <Activity className="h-3 w-3" /> PERFORMANCE RATIO
+                <Info className="h-2.5 w-2.5 text-muted-foreground/40" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-[180px] text-center">
+              <p className="text-[10px] font-black uppercase tracking-wider">Win Rate</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">
+                Wins ÷ (Wins + Losses)
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <span className="font-mono text-foreground">{winRate}%</span>
+      </div>
+      <div className="h-1.5 bg-secondary/20 rounded-full overflow-hidden shadow-inner">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${winRate}%` }}
+          className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full"
+        />
+      </div>
+    </div>
+  );
+}
+
+function CareerPeakFight({ best, warrior }: { best: FightSummary; warrior: Warrior }) {
+  const n = getNamesFromTitle(best.title);
+  const warriorIsA = best.warriorIdA === warrior.id;
+  return (
+    <div className="bg-black/20 rounded-none p-4 border border-border/10 mt-auto">
+      <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-3 flex items-center justify-between">
+        <span>Career Peak</span>
+        <span>Week {best.week}</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span
+          className={cn(
+            'text-[11px] font-display font-black uppercase tracking-tight',
+            (best.winner === 'A' && warriorIsA) || (best.winner === 'D' && !warriorIsA)
+              ? 'text-foreground'
+              : 'text-muted-foreground/40'
+          )}
+        >
+          {n.a}
+        </span>
+        <div className="flex flex-col items-center gap-1">
+          <Swords className="h-3 w-3 text-muted-foreground/40" />
+          <Badge
+            variant="outline"
+            className="text-[8px] font-black py-0 px-1 border-muted-foreground/20"
+          >
+            {best.by}
+          </Badge>
+        </div>
+        <span
+          className={cn(
+            'text-[11px] font-display font-black uppercase tracking-tight text-right',
+            (best.winner === 'D' && !warriorIsA) || (best.winner === 'A' && warriorIsA)
+              ? 'text-foreground'
+              : 'text-muted-foreground/40'
+          )}
+        >
+          {n.d}
+        </span>
+      </div>
+      {best.flashyTags && best.flashyTags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-3 justify-center">
+          {best.flashyTags.map((t) => (
+            <span
+              key={t}
+              className="text-[8px] font-black uppercase tracking-widest text-arena-gold/60 border border-arena-gold/10 bg-arena-gold/5 px-2 py-0.5 rounded-full"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Inductee Card ───────────────────────────────────────── */
 
 /**
@@ -107,54 +221,10 @@ export function InducteeCard({
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-4 gap-2">
-            {[
-              { label: 'WINS', val: warrior.career.wins, color: 'text-foreground' },
-              { label: 'LOSS', val: warrior.career.losses, color: 'text-muted-foreground/40' },
-              { label: 'KILL', val: warrior.career.kills, color: 'text-destructive' },
-              { label: 'FAME', val: warrior.fame ?? 0, color: 'text-arena-gold' },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="bg-secondary/20 rounded-none p-2 border border-border/10 text-center"
-              >
-                <div className={cn('text-sm font-mono font-black', s.color)}>{s.val}</div>
-                <div className="text-[8px] font-black uppercase tracking-tighter text-muted-foreground/40">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
+          <CareerStatsGrid warrior={warrior} />
 
           {/* Performance Sector */}
-          <div className="space-y-2 py-2">
-            <div className="flex items-center justify-between text-[10px] font-black tracking-[0.2em] text-muted-foreground/60">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="flex items-center gap-1.5 cursor-help">
-                      <Activity className="h-3 w-3" /> PERFORMANCE RATIO
-                      <Info className="h-2.5 w-2.5 text-muted-foreground/40" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-[180px] text-center">
-                    <p className="text-[10px] font-black uppercase tracking-wider">Win Rate</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
-                      Wins ÷ (Wins + Losses)
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <span className="font-mono text-foreground">{winRate}%</span>
-            </div>
-            <div className="h-1.5 bg-secondary/20 rounded-full overflow-hidden shadow-inner">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${winRate}%` }}
-                className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full"
-              />
-            </div>
-          </div>
+          <PerformanceRatio winRate={winRate} />
 
           {/* Titles */}
           {warrior.titles.length > 0 && (
@@ -172,63 +242,7 @@ export function InducteeCard({
           )}
 
           {/* Greatest fight — Tactical Box */}
-          {best && (
-            <div className="bg-black/20 rounded-none p-4 border border-border/10 mt-auto">
-              <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-3 flex items-center justify-between">
-                <span>Career Peak</span>
-                <span>Week {best.week}</span>
-              </div>
-              {(() => {
-                const n = getNamesFromTitle(best.title);
-                const warriorIsA = best.warriorIdA === warrior.id;
-                return (
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={cn(
-                        'text-[11px] font-display font-black uppercase tracking-tight',
-                        (best.winner === 'A' && warriorIsA) || (best.winner === 'D' && !warriorIsA)
-                          ? 'text-foreground'
-                          : 'text-muted-foreground/40'
-                      )}
-                    >
-                      {n.a}
-                    </span>
-                    <div className="flex flex-col items-center gap-1">
-                      <Swords className="h-3 w-3 text-muted-foreground/40" />
-                      <Badge
-                        variant="outline"
-                        className="text-[8px] font-black py-0 px-1 border-muted-foreground/20"
-                      >
-                        {best.by}
-                      </Badge>
-                    </div>
-                    <span
-                      className={cn(
-                        'text-[11px] font-display font-black uppercase tracking-tight text-right',
-                        (best.winner === 'D' && !warriorIsA) || (best.winner === 'A' && warriorIsA)
-                          ? 'text-foreground'
-                          : 'text-muted-foreground/40'
-                      )}
-                    >
-                      {n.d}
-                    </span>
-                  </div>
-                );
-              })()}
-              {best.flashyTags && best.flashyTags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-3 justify-center">
-                  {best.flashyTags.map((t) => (
-                    <span
-                      key={t}
-                      className="text-[8px] font-black uppercase tracking-widest text-arena-gold/60 border border-arena-gold/10 bg-arena-gold/5 px-2 py-0.5 rounded-full"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {best && <CareerPeakFight best={best} warrior={warrior} />}
         </CardContent>
       </Surface>
     </motion.div>

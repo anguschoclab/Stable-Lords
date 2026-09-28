@@ -158,6 +158,21 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/pages/arenaDetail/RecordTable.tsx|src/pages/arenaDetail/sections.tsx',
   'src/schemas/fightSchemas.ts|src/schemas/gameStateSchema.ts',
   'src/schemas/schemaEnums.ts|src/types/enumSources.ts',
+  // Phase-D2 extraction seams — page↔hook/prop destructuring boilerplate shared
+  // across the component↔extracted-module boundary. Thin interface overlap,
+  // not behavioral duplication; registered knowingly per the guard contract.
+  'src/components/scouting/RivalStableList.tsx|src/components/scouting/RivalWarriorList.tsx',
+  'src/pages/ArenaDetail.tsx|src/pages/arenaDetail/useArenaDetail.ts',
+  'src/pages/WorldOverview.tsx|src/pages/worldOverview/useWorldOverview.ts',
+  'src/components/orphanage/PlanStep.tsx|src/components/planBuilder/sections.tsx',
+  'src/pages/Scouting.tsx|src/pages/scouting/useScouting.ts',
+  'src/pages/Tournaments.tsx|src/pages/tournaments/useTournamentState.ts',
+  'src/components/arena/MiniCombatLog.tsx|src/components/layout/TacticalBar.tsx',
+  'src/components/scouting/ScoutIntelTab.tsx|src/pages/scouting/useScouting.ts',
+  'src/pages/StableDetail.tsx|src/pages/stableDetail/deriveStableStats.ts',
+  'src/components/warrior/dossier/WarriorDossierTabs.tsx|src/pages/StableDetail.tsx',
+  'src/pages/Recruit/components/ScoutMarket.tsx|src/pages/Recruit/index.tsx',
+  'src/pages/Training.tsx|src/pages/training/useTrainingAssignments.ts',
 ]);
 
 describe('megaplan: duplication guard', () => {

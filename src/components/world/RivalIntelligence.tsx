@@ -1,12 +1,10 @@
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Zap, Activity } from 'lucide-react';
-import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { Brain, Zap } from 'lucide-react';
 import { MetaDriftWidget } from '@/components/widgets';
-import { STYLE_DISPLAY_NAMES, type FightingStyle, type RivalStableData } from '@/types/game';
-import { getAllArenas } from '@/data/arenas';
+import type { RivalStableData } from '@/types/game';
 import type { ArenaTitle } from '@/types/state.types';
-import { cn } from '@/lib/utils';
+import { RivalIntelligenceRow } from './RivalIntelligenceRow';
 
 interface RivalIntelligenceProps {
   rivals: RivalStableData[];
@@ -14,26 +12,53 @@ interface RivalIntelligenceProps {
   arenaChampions?: Record<string, ArenaTitle>;
 }
 
-const arenaDisplayName = (arenaId: string): string =>
-  getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId;
-
-/**
- * Title posture for one stable: which crowns its roster holds, and whether a
- * crown campaign is underway — both read from real state, nothing inferred.
- */
-function titlePosture(
-  rival: RivalStableData,
-  arenaChampions: Record<string, ArenaTitle> | undefined
-): { kind: 'reigning' | 'campaigning'; arenaId: string } | undefined {
-  const rosterIds = new Set(rival.roster.map((w) => w.id));
-  const held = Object.entries(arenaChampions ?? {}).find(
-    ([, t]) => t.champion && rosterIds.has(t.champion.warriorId)
+function NetworkHeader({ count }: { count: number }) {
+  return (
+    <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
+          <Brain className="h-4 w-4 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display text-sm font-black uppercase tracking-tight">
+            Rival Network
+          </h3>
+          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
+            Rival Stables Overview
+          </p>
+        </div>
+      </div>
+      <Badge
+        variant="outline"
+        className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-primary/20 bg-primary/5 text-primary"
+      >
+        RIVALS: {count}
+      </Badge>
+    </div>
   );
-  if (held) return { kind: 'reigning', arenaId: held[0] };
-  if (rival.strategy?.intent === 'CROWN_CAMPAIGN' && rival.strategy.targetArenaId) {
-    return { kind: 'campaigning', arenaId: rival.strategy.targetArenaId };
-  }
-  return undefined;
+}
+
+function ScoutSummaryCard() {
+  return (
+    <Surface variant="glass" className="bg-primary/5 border-primary/20 border-dashed">
+      <div className="flex items-start gap-4">
+        <div className="p-2 rounded-none bg-primary/10">
+          <Zap className="h-4 w-4 text-primary" />
+        </div>
+        <div className="space-y-1">
+          <h5 className="text-[10px] font-black uppercase tracking-widest text-primary">
+            Scout Summary
+          </h5>
+          <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
+            Rival owners react to meta shifts with varying latency.{' '}
+            <span className="text-foreground font-black">Innovators</span> anticipate trends,
+            while <span className="text-foreground font-black">Traditionalists</span> provide
+            predictable matchups. Study their patterns to exploit weaknesses in future bouts.
+          </p>
+        </div>
+      </div>
+    </Surface>
+  );
 }
 
 /**
@@ -48,193 +73,18 @@ export function RivalIntelligence({ rivals, arenaChampions }: RivalIntelligenceP
       </div>
       <div className="lg:col-span-2 space-y-6">
         <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
-          <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
-                <Brain className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-display text-sm font-black uppercase tracking-tight">
-                  Rival Network
-                </h3>
-                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
-                  Rival Stables Overview
-                </p>
-              </div>
-            </div>
-            <Badge
-              variant="outline"
-              className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-primary/20 bg-primary/5 text-primary"
-            >
-              RIVALS: {rivals.length}
-            </Badge>
-          </div>
-
+          <NetworkHeader count={rivals.length} />
           <div className="divide-y divide-white/5">
             {rivals.map((rival) => (
-              <div
+              <RivalIntelligenceRow
                 key={rival.owner.id}
-                className="p-5 hover:bg-white/[0.02] transition-all motion-reduce:transition-none motion-reduce:transform-none group relative overflow-hidden"
-              >
-                {/* Header row */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 shrink-0 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-                    {rival.owner.stableName.slice(0, 2).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-display font-black uppercase text-sm tracking-tight text-foreground group-hover:text-primary transition-colors truncate motion-reduce:transition-none">
-                      {rival.owner.stableName}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[9px] text-muted-foreground/50 font-black uppercase tracking-widest truncate">
-                        {rival.owner.name}
-                      </span>
-                      <span className="h-1 w-1 rounded-full bg-border/50 shrink-0" />
-                      <span className="text-[9px] text-primary/60 font-black uppercase tracking-widest shrink-0">
-                        {rival.owner.personality || 'Calculated'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <BookmarkButton entityType="rival" entityId={rival.owner.id} size="sm" />
-                    <span
-                      data-testid="intel-quality-chip"
-                      className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm bg-neutral-900 border border-white/5 text-muted-foreground/70 tabular-nums"
-                    >
-                      {Object.keys(rival.agentMemory?.opponentDossiers ?? {}).length > 0
-                        ? `${Object.keys(rival.agentMemory?.opponentDossiers ?? {}).length} dossiers`
-                        : 'No intel'}
-                    </span>
-                    {(() => {
-                      const posture = titlePosture(rival, arenaChampions);
-                      return posture ? (
-                        <Badge
-                          data-testid="title-posture-chip"
-                          variant="outline"
-                          className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
-                        >
-                          {posture.kind === 'reigning' ? 'Crown held' : 'Crown bid'} ·{' '}
-                          {arenaDisplayName(posture.arenaId)}
-                        </Badge>
-                      ) : null;
-                    })()}
-                    {rival.strategy?.intent === 'TOURNAMENT_CAMPAIGN' && (
-                      <Badge
-                        data-testid="tournament-posture-chip"
-                        variant="outline"
-                        className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
-                      >
-                        Tournament prep
-                      </Badge>
-                    )}
-                    <Badge
-                      className={cn(
-                        'text-[9px] font-black border-none uppercase tracking-widest px-2 py-0.5 shrink-0',
-                        rival.strategy?.intent === 'VENDETTA'
-                          ? 'bg-destructive/20 text-destructive'
-                          : rival.strategy?.intent === 'EXPANSION'
-                            ? 'bg-muted-foreground/20 text-muted-foreground'
-                            : rival.strategy?.intent === 'RECOVERY'
-                              ? 'bg-arena-blood/20 text-arena-blood'
-                              : 'bg-primary/20 text-primary'
-                      )}
-                    >
-                      {rival.strategy?.intent || 'STABLE'}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Info grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pl-13">
-                  {/* Doctrine */}
-                  <div className="sm:col-span-1 space-y-1">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30 block">
-                      Doctrine
-                    </span>
-                    <p className="text-[10px] leading-relaxed italic border-l-2 border-primary/20 pl-3 text-foreground/60">
-                      "{rival.philosophy || 'Martial purity above all.'}"
-                    </p>
-                  </div>
-
-                  {/* Capital + Staff */}
-                  <div className="space-y-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30 block">
-                      Capital
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={cn(
-                          'h-1.5 w-1.5 rounded-full shrink-0 animate-pulse motion-reduce:animate-none',
-                          rival.treasury < 150
-                            ? 'bg-destructive'
-                            : rival.treasury < 500
-                              ? 'bg-arena-blood'
-                              : 'bg-primary'
-                        )}
-                      />
-                      <span className="text-[10px] font-black uppercase tracking-tight text-foreground/70">
-                        {rival.treasury < 150
-                          ? 'Debt'
-                          : rival.treasury < 500
-                            ? 'Depleted'
-                            : rival.treasury < 1200
-                              ? 'Active'
-                              : 'Surplus'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest">
-                      <Activity className="h-2.5 w-2.5" /> {rival.trainers?.length || 0} staff
-                    </div>
-                  </div>
-
-                  {/* Favored styles */}
-                  <div className="space-y-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30 block">
-                      Favored Classes
-                    </span>
-                    <div className="flex flex-wrap gap-1">
-                      {rival.owner.favoredStyles &&
-                      (rival.owner.favoredStyles as FightingStyle[]).length > 0 ? (
-                        (rival.owner.favoredStyles as FightingStyle[]).map((s) => (
-                          <Badge
-                            key={s}
-                            variant="outline"
-                            className="text-[9px] font-black uppercase tracking-widest py-0.5 px-2 bg-neutral-900 border-white/5"
-                          >
-                            {STYLE_DISPLAY_NAMES[s]}
-                          </Badge>
-                        ))
-                      ) : (
-                        <span className="text-[9px] text-muted-foreground/30 italic">No bias</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute right-0 top-0 h-full w-0.5 bg-primary/20 transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
-              </div>
+                rival={rival}
+                arenaChampions={arenaChampions}
+              />
             ))}
           </div>
         </Surface>
-
-        <Surface variant="glass" className="bg-primary/5 border-primary/20 border-dashed">
-          <div className="flex items-start gap-4">
-            <div className="p-2 rounded-none bg-primary/10">
-              <Zap className="h-4 w-4 text-primary" />
-            </div>
-            <div className="space-y-1">
-              <h5 className="text-[10px] font-black uppercase tracking-widest text-primary">
-                Scout Summary
-              </h5>
-              <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                Rival owners react to meta shifts with varying latency.{' '}
-                <span className="text-foreground font-black">Innovators</span> anticipate trends,
-                while <span className="text-foreground font-black">Traditionalists</span> provide
-                predictable matchups. Study their patterns to exploit weaknesses in future bouts.
-              </p>
-            </div>
-          </div>
-        </Surface>
+        <ScoutSummaryCard />
       </div>
     </div>
   );

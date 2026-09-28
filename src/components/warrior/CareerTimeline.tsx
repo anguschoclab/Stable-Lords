@@ -12,6 +12,122 @@ import { isDead, isRetired } from '@/engine/warrior/warriorStatus';
   arena history,
 }.
  */
+interface Milestone {
+  week: number;
+  label: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+/** Builds the ordered milestone list for a warrior's career. */
+function buildMilestones(warrior: Warrior, arenaHistory: FightSummary[]): Milestone[] {
+  const events: Milestone[] = [];
+  const fights = getAllFightsForWarrior(arenaHistory, warrior.id);
+  const sorted = [...fights].sort((a, b) => a.week - b.week);
+
+  const firstBout = sorted[0];
+  if (firstBout) {
+    events.push({
+      week: firstBout.week,
+      label: 'First Blood',
+      icon: <Swords className="h-3.5 w-3.5" />,
+      color: 'bg-primary',
+    });
+  }
+
+  const firstWin = sorted.find((f) => {
+    const isA = f.warriorIdA === warrior.id;
+    return (isA && f.winner === 'A') || (!isA && f.winner === 'D');
+  });
+  if (firstWin) {
+    events.push({
+      week: firstWin.week,
+      label: 'First Triumph',
+      icon: <Trophy className="h-3.5 w-3.5" />,
+      color: 'bg-arena-gold',
+    });
+  }
+
+  const firstKill = sorted.find((f) => {
+    const isA = f.warriorIdA === warrior.id;
+    return ((isA && f.winner === 'A') || (!isA && f.winner === 'D')) && f.by === 'Kill';
+  });
+  if (firstKill) {
+    events.push({
+      week: firstKill.week,
+      label: 'First Kill',
+      icon: <Skull className="h-3.5 w-3.5" />,
+      color: 'bg-destructive',
+    });
+  }
+
+  if (warrior.champion) {
+    const champFight = sorted.find(
+      (f) =>
+        f.tournamentId &&
+        ((f.warriorIdA === warrior.id && f.winner === 'A') ||
+          (f.warriorIdD === warrior.id && f.winner === 'D'))
+    );
+    events.push({
+      week: champFight?.week ?? warrior.career.wins,
+      label: 'Champion',
+      icon: <Star className="h-3.5 w-3.5" />,
+      color: 'bg-arena-fame',
+    });
+  }
+
+  if (isRetired(warrior) && warrior.retiredWeek) {
+    events.push({
+      week: warrior.retiredWeek,
+      label: 'Granted Rudis',
+      icon: <Armchair className="h-3.5 w-3.5" />,
+      color: 'bg-muted-foreground',
+    });
+  }
+
+  if (isDead(warrior) && warrior.deathWeek) {
+    events.push({
+      week: warrior.deathWeek,
+      label: warrior.deathCause ?? 'Fallen',
+      icon: <Skull className="h-3.5 w-3.5" />,
+      color: 'bg-destructive',
+    });
+  }
+
+  const seen = new Set<string>();
+  return events
+    .filter((e) => {
+      if (seen.has(e.label)) return false;
+      seen.add(e.label);
+      return true;
+    })
+    .sort((a, b) => a.week - b.week);
+}
+
+/** One milestone: icon disc on the vertical line plus label/week text. */
+function MilestoneRow({ milestone }: { milestone: Milestone }) {
+  return (
+    <div className="flex items-start gap-3 relative">
+      <div
+        className={`relative z-10 flex items-center justify-center h-8 w-8 rounded-full ${milestone.color} text-primary-foreground shrink-0 shadow-sm`}
+      >
+        {milestone.icon}
+      </div>
+      <div className="pt-1">
+        <div className="text-sm font-semibold">{milestone.label}</div>
+        <div className="text-xs text-muted-foreground font-mono">Week {milestone.week}</div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Career timeline.
+ * @param  - {
+ warrior,
+ arena history,
+}.
+ */
 export function CareerTimeline({
   warrior,
   arenaHistory,
@@ -19,89 +135,7 @@ export function CareerTimeline({
   warrior: Warrior;
   arenaHistory: FightSummary[];
 }) {
-  const milestones = useMemo(() => {
-    const events: { week: number; label: string; icon: React.ReactNode; color: string }[] = [];
-    const fights = getAllFightsForWarrior(arenaHistory, warrior.id);
-    const sorted = [...fights].sort((a, b) => a.week - b.week);
-
-    const firstBout = sorted[0];
-    if (firstBout) {
-      events.push({
-        week: firstBout.week,
-        label: 'First Blood',
-        icon: <Swords className="h-3.5 w-3.5" />,
-        color: 'bg-primary',
-      });
-    }
-
-    const firstWin = sorted.find((f) => {
-      const isA = f.warriorIdA === warrior.id;
-      return (isA && f.winner === 'A') || (!isA && f.winner === 'D');
-    });
-    if (firstWin) {
-      events.push({
-        week: firstWin.week,
-        label: 'First Triumph',
-        icon: <Trophy className="h-3.5 w-3.5" />,
-        color: 'bg-arena-gold',
-      });
-    }
-
-    const firstKill = sorted.find((f) => {
-      const isA = f.warriorIdA === warrior.id;
-      return ((isA && f.winner === 'A') || (!isA && f.winner === 'D')) && f.by === 'Kill';
-    });
-    if (firstKill) {
-      events.push({
-        week: firstKill.week,
-        label: 'First Kill',
-        icon: <Skull className="h-3.5 w-3.5" />,
-        color: 'bg-destructive',
-      });
-    }
-
-    if (warrior.champion) {
-      const champFight = sorted.find(
-        (f) =>
-          f.tournamentId &&
-          ((f.warriorIdA === warrior.id && f.winner === 'A') ||
-            (f.warriorIdD === warrior.id && f.winner === 'D'))
-      );
-      events.push({
-        week: champFight?.week ?? warrior.career.wins,
-        label: 'Champion',
-        icon: <Star className="h-3.5 w-3.5" />,
-        color: 'bg-arena-fame',
-      });
-    }
-
-    if (isRetired(warrior) && warrior.retiredWeek) {
-      events.push({
-        week: warrior.retiredWeek,
-        label: 'Granted Rudis',
-        icon: <Armchair className="h-3.5 w-3.5" />,
-        color: 'bg-muted-foreground',
-      });
-    }
-
-    if (isDead(warrior) && warrior.deathWeek) {
-      events.push({
-        week: warrior.deathWeek,
-        label: warrior.deathCause ?? 'Fallen',
-        icon: <Skull className="h-3.5 w-3.5" />,
-        color: 'bg-destructive',
-      });
-    }
-
-    const seen = new Set<string>();
-    return events
-      .filter((e) => {
-        if (seen.has(e.label)) return false;
-        seen.add(e.label);
-        return true;
-      })
-      .sort((a, b) => a.week - b.week);
-  }, [warrior, arenaHistory]);
+  const milestones = useMemo(() => buildMilestones(warrior, arenaHistory), [warrior, arenaHistory]);
 
   if (milestones.length === 0) return null;
 
@@ -117,17 +151,7 @@ export function CareerTimeline({
           <div className="absolute left-[15px] top-3 bottom-3 w-px bg-border" />
           <div className="space-y-4">
             {milestones.map((m, i) => (
-              <div key={`${m.label}-${m.week}-${i}`} className="flex items-start gap-3 relative">
-                <div
-                  className={`relative z-10 flex items-center justify-center h-8 w-8 rounded-full ${m.color} text-primary-foreground shrink-0 shadow-sm`}
-                >
-                  {m.icon}
-                </div>
-                <div className="pt-1">
-                  <div className="text-sm font-semibold">{m.label}</div>
-                  <div className="text-xs text-muted-foreground font-mono">Week {m.week}</div>
-                </div>
-              </div>
+              <MilestoneRow key={`${m.label}-${m.week}-${i}`} milestone={m} />
             ))}
           </div>
         </div>

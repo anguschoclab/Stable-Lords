@@ -25,6 +25,39 @@ import { SeededRNGService } from '@/utils/random';
 /** Which start screen is currently shown. */
 export type Screen = 'title' | 'newGame';
 
+/**
+ * Reads a save file, imports it into a fresh slot, then loads it — with toast
+ * feedback at each failure boundary.
+ */
+function importSaveFile(
+  file: File,
+  loadGame: ReturnType<typeof useGameStore.getState>['loadGame'],
+  refreshSlots: () => Promise<void>
+): void {
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    try {
+      const json = ev.target?.result as string;
+      const slotId = await importSaveToNewSlot(json);
+      if (!slotId) throw new Error('Import failed');
+      refreshSlots();
+      toast.success('Save imported! Loading now…');
+      const state = await loadFromSlot(slotId);
+      if (state) {
+        loadGame(slotId, state);
+      } else {
+        toast.error(
+          'Imported save could not be loaded — incompatible or corrupted. A backup has been saved.'
+        );
+      }
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Failed to import save file.');
+    }
+  };
+  reader.onerror = () => toast.error('Failed to read save file.');
+  reader.readAsText(file);
+}
+
 /** All title-screen orchestration: save slots, new-game creation, import/export/delete. */
 export function useStartGame() {
   const loadGame = useGameStore((s) => s.loadGame);
@@ -107,28 +140,7 @@ export function useStartGame() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async (ev) => {
-        try {
-          const json = ev.target?.result as string;
-          const slotId = await importSaveToNewSlot(json);
-          if (!slotId) throw new Error('Import failed');
-          refreshSlots();
-          toast.success('Save imported! Loading now…');
-          const state = await loadFromSlot(slotId);
-          if (state) {
-            loadGame(slotId, state);
-          } else {
-            toast.error(
-              'Imported save could not be loaded — incompatible or corrupted. A backup has been saved.'
-            );
-          }
-        } catch (err) {
-          toast.error((err as Error)?.message ?? 'Failed to import save file.');
-        }
-      };
-      reader.onerror = () => toast.error('Failed to read save file.');
-      reader.readAsText(file);
+      importSaveFile(file, loadGame, refreshSlots);
       e.target.value = '';
     },
     [loadGame, refreshSlots]

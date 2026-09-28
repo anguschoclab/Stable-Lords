@@ -7,20 +7,11 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
-import { Terminal, BarChart3, Radio, History, ChevronDown, Sparkles, Scroll } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
-
+import { Terminal, Radio } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
-import { Badge } from '@/components/ui/badge';
-import { GazetteArticle } from '@/components/gazette/GazetteArticle';
-import { TacticalStyleAnalysis, StyleMatchupHeatmap } from '@/components/gazette/MetaAnalytics';
-import {
-  GazetteLeaderboard,
-  BestByStyle,
-  RisingStars,
-} from '@/components/gazette/GazetteLeaderboards';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { GazetteSectionHeader } from './gazette/GazetteSectionHeader';
+import { AnalyticsRegistry, NarrativeFeed } from './gazette/sections';
 
 // ─── Gazette Masthead ──────────────────────────────────────────────────────────
 
@@ -80,69 +71,6 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
   );
 }
 
-// ─── Gazette Section Header ────────────────────────────────────────────────────────────
-
-function GazetteSectionHeader({
-  icon: Icon,
-  title,
-  subtitle,
-  badge,
-  badgeStyle = 'primary',
-}: {
-  icon: React.ElementType;
-  title: string;
-  subtitle: string;
-  badge: string;
-  badgeStyle?: 'primary' | 'gold';
-}) {
-  return (
-    <div className="flex items-center justify-between px-1">
-      <div className="flex items-center gap-4">
-        <div
-          className={cn(
-            'p-2.5 border rounded-none',
-            badgeStyle === 'gold'
-              ? 'bg-arena-gold/10 border-arena-gold/20'
-              : 'bg-arena-blood/10 border-arena-blood/20'
-          )}
-        >
-          <Icon
-            className={cn(
-              'h-4 w-4',
-              badgeStyle === 'gold' ? 'text-arena-gold' : 'text-arena-blood'
-            )}
-          />
-        </div>
-        <div>
-          <h3 className="text-base font-display font-black uppercase tracking-tight">{title}</h3>
-          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            {subtitle}
-          </p>
-        </div>
-      </div>
-      <div
-        className={cn(
-          'hidden md:block flex-1 h-px mx-8',
-          badgeStyle === 'gold'
-            ? 'bg-gradient-to-r from-arena-gold/20 via-border/20 to-transparent'
-            : 'bg-gradient-to-r from-arena-blood/20 via-border/20 to-transparent'
-        )}
-      />
-      <Badge
-        variant="outline"
-        className={cn(
-          'hidden md:flex text-[9px] font-mono font-black tracking-widest px-3 h-7 rounded-none',
-          badgeStyle === 'gold'
-            ? 'border-arena-gold/25 bg-arena-gold/5 text-arena-gold'
-            : 'border-arena-blood/25 bg-arena-blood/5 text-arena-blood'
-        )}
-      >
-        {badge}
-      </Badge>
-    </div>
-  );
-}
-
 // ─── Empty State ───────────────────────────────────────────────────────────────
 
 function GazetteEmptyState() {
@@ -197,54 +125,7 @@ export default function Gazette() {
       <GazetteMasthead season={season} week={week} />
 
       {/* ── Analytics Registry ────────────────────────────────────────────────── */}
-      {hasContent && (
-        <section className="space-y-10">
-          <GazetteSectionHeader
-            icon={BarChart3}
-            title="Arena Stats"
-            subtitle="Historical Aggregates"
-            badge="Live"
-            badgeStyle="primary"
-          />
-
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            <TacticalStyleAnalysis allFights={allFights} />
-            <StyleMatchupHeatmap allFights={allFights} />
-          </div>
-
-          <GazetteLeaderboard allFights={allFights} />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8">
-              <BestByStyle allFights={allFights} />
-            </div>
-            <div className="lg:col-span-4">
-              <RisingStars allFights={allFights} />
-            </div>
-          </div>
-
-          {/* Ornamental break before narrative feed */}
-          <div className="flex items-center gap-4 py-4">
-            <div
-              className="flex-1 h-px"
-              style={{
-                background: 'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.25))',
-              }}
-            />
-            <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30">
-              <Scroll className="h-3 w-3" />
-              <span>Narrative Archive</span>
-              <Scroll className="h-3 w-3" />
-            </div>
-            <div
-              className="flex-1 h-px"
-              style={{
-                background: 'linear-gradient(90deg, rgba(var(--gold-glow-rgb), 0.25), transparent)',
-              }}
-            />
-          </div>
-        </section>
-      )}
+      {hasContent && <AnalyticsRegistry allFights={allFights} />}
 
       {/* ── Narrative Feed ────────────────────────────────────────────────────── */}
       <section className="space-y-12">
@@ -259,77 +140,13 @@ export default function Gazette() {
         {!hasContent ? (
           <GazetteEmptyState />
         ) : (
-          <div className="space-y-24">
-            <AnimatePresence mode="popLayout">
-              {visibleIssues.map((issue, idx) => {
-                const paragraphs = issue.body
-                  .split('\n\n')
-                  .filter((p: string) => p.trim().length > 0);
-                const mappedIssue = {
-                  week: issue.week,
-                  mainHeadline: issue.headline,
-                  mainStory: paragraphs[0] || '',
-                  sideStories: paragraphs.slice(1),
-                };
-
-                return (
-                  <motion.div
-                    key={issue.week}
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: idx * 0.1,
-                      duration: 0.8,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    <GazetteArticle issue={mappedIssue} season={season} />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-
-            {hasMore && (
-              <div className="flex flex-col items-center gap-6 pt-12 relative">
-                <div
-                  className="absolute inset-x-0 top-0 h-px"
-                  style={{
-                    background:
-                      'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.15) 30%, rgba(var(--gold-glow-rgb), 0.15) 70%, transparent)',
-                  }}
-                />
-
-                <div className="flex flex-col items-center gap-2">
-                  <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] opacity-40">
-                    Archive Remainder: {weeklyIssues.length - shown} Editions
-                  </span>
-                </div>
-
-                <button
-                  onClick={loadMore}
-                  className="group relative flex items-center gap-3 px-16 h-14 transition-all duration-500 bg-[hsl(var(--popover))] border border-border/70 rounded-none hover:border-accent/50 motion-reduce:transition-none"
-                >
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-arena-gold/5 to-arena-gold/0 motion-reduce:transition-none" />
-                  <div className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-transparent via-arena-gold/80 to-transparent motion-reduce:transition-none" />
-                  <History className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent transition-colors motion-reduce:transition-none" />
-                  <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-accent transition-colors motion-reduce:transition-none">
-                    Historical Recall
-                  </span>
-                  <ChevronDown className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-y-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
-                </button>
-
-                <div className="flex items-center gap-2 mt-4 opacity-20">
-                  <Sparkles
-                    className="h-3 w-3 text-primary"
-                    style={{ animation: 'livePulse 2s ease-in-out infinite' }}
-                  />
-                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                    All issues loaded
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
+          <NarrativeFeed
+            visibleIssues={visibleIssues}
+            season={season}
+            hasMore={hasMore}
+            remaining={weeklyIssues.length - shown}
+            onLoadMore={loadMore}
+          />
         )}
       </section>
     </div>

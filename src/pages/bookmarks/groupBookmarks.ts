@@ -2,6 +2,7 @@ import type { useNavigate } from '@tanstack/react-router';
 import { buildWarriorMap } from '@/engine/core/warriorCollection';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 import type { GameStore } from '@/state/store.types';
+import type { Bookmark } from '@/types/bookmark.types';
 
 /** A display row derived from a bookmarked entity. */
 export interface BookmarkRow {
@@ -22,29 +23,15 @@ type Slice = Pick<
   | 'promoters' | 'trainers' | 'tournaments' | 'boutOffers' | 'scoutReports'
 >;
 
-/**
- * Groups bookmarks by entity type, resolving each entity's display name,
- * subtitle, and click navigation. Lookup maps are built once per type —
- * only for types actually bookmarked — rather than re-scanning per row.
- */
-export function groupBookmarks(
-  s: Slice,
-  navigate: Navigate
-): BookmarkGroups {
-  const { bookmarks, roster, graveyard, retired, rivals, promoters, trainers, tournaments, boutOffers, scoutReports } = s;
-  const groups: BookmarkGroups = {
-    warrior: [],
-    rival: [],
-    promoter: [],
-    trainer: [],
-    tournament: [],
-    boutOffer: [],
-    scoutReport: [],
-  };
+type LookupMaps = ReturnType<typeof buildLookupMaps>;
 
-  // Build per-type lookup maps once — only for entity types actually
-  // bookmarked — instead of re-scanning arrays inside the loop.
-  const typesPresent = new Set(bookmarks.map((b) => b.entityType));
+/**
+ * Build per-type lookup maps once — only for entity types actually
+ * bookmarked — instead of re-scanning arrays inside the row loop.
+ */
+function buildLookupMaps(s: Slice) {
+  const { roster, graveyard, retired, rivals, promoters, trainers, tournaments, boutOffers, scoutReports } = s;
+  const typesPresent = new Set(s.bookmarks.map((b) => b.entityType));
 
   const warriorMap = typesPresent.has('warrior')
     ? buildWarriorMap({ roster, graveyard, retired, rivals })
@@ -96,98 +83,112 @@ export function groupBookmarks(
     for (const r of scoutReports ?? []) scoutReportMap.set(r.id, r);
   }
 
-  for (const b of bookmarks) {
-    let name = 'Unknown Entity';
-    let subtitle: string | undefined;
-    let onClick: (() => void) | undefined;
+  return { warriorMap, rivalMap, promoterMap, trainerMap, tournamentMap, boutOfferMap, scoutReportMap };
+}
 
-    switch (b.entityType) {
-      case 'warrior': {
-        const w = warriorMap?.get(b.entityId);
-        if (w) {
-          name = w.name;
-          subtitle = w.style;
-          onClick = () => navigate({ to: '/warrior/$id', params: { id: w.id } });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
-      case 'rival': {
-        const r = rivalMap?.get(b.entityId);
-        if (r) {
-          name = r.owner.stableName;
-          subtitle = r.owner.name;
-          onClick = () => navigate({ to: '/world/stable/$id', params: { id: r.owner.id } });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
-      case 'promoter': {
-        const p = promoterMap?.get(b.entityId);
-        if (p) {
-          name = p.name;
-          subtitle = `${p.tier} · ${p.personality}`;
-          onClick = () => navigate({ to: '/stable/promoter/$id', params: { id: p.id } });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
-      case 'trainer': {
-        const t = trainerMap?.get(b.entityId);
-        if (t) {
-          name = t.name;
-          subtitle = `${t.tier} · ${t.focus}`;
-          onClick = () => navigate({ to: '/stable/trainers' });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
-      case 'tournament': {
-        const tour = tournamentMap?.get(b.entityId);
-        if (tour) {
-          name = tour.name;
-          subtitle = `${tour.season} · Year ${tour.week}`;
-          onClick = () => navigate({ to: '/world/tournaments' });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
-      case 'boutOffer': {
-        const offer = boutOfferMap?.get(b.entityId);
-        if (offer) {
-          const promoter = promoterMap?.get(offer.promoterId);
-          name = promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`;
-          subtitle = offer.id;
-          onClick = () => navigate({ to: '/stable/bouts' });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
-      case 'scoutReport': {
-        const report = scoutReportMap?.get(b.entityId);
-        if (report) {
-          name = report.warriorName;
-          subtitle = `${report.quality} Report · Week ${report.week}`;
-          onClick = () => navigate({ to: '/world/scouting' });
-        } else {
-          name = '[Entity Removed]';
-        }
-        break;
-      }
+/** Resolve a single bookmark's display name, subtitle, and navigation. */
+function resolveBookmarkRow(
+  b: Bookmark,
+  maps: LookupMaps,
+  navigate: Navigate
+): Pick<BookmarkRow, 'name' | 'subtitle' | 'onClick'> {
+  switch (b.entityType) {
+    case 'warrior': {
+      const w = maps.warriorMap?.get(b.entityId);
+      if (!w) return { name: '[Entity Removed]' };
+      return {
+        name: w.name,
+        subtitle: w.style,
+        onClick: () => navigate({ to: '/warrior/$id', params: { id: w.id } }),
+      };
     }
+    case 'rival': {
+      const r = maps.rivalMap?.get(b.entityId);
+      if (!r) return { name: '[Entity Removed]' };
+      return {
+        name: r.owner.stableName,
+        subtitle: r.owner.name,
+        onClick: () => navigate({ to: '/world/stable/$id', params: { id: r.owner.id } }),
+      };
+    }
+    case 'promoter': {
+      const p = maps.promoterMap?.get(b.entityId);
+      if (!p) return { name: '[Entity Removed]' };
+      return {
+        name: p.name,
+        subtitle: `${p.tier} · ${p.personality}`,
+        onClick: () => navigate({ to: '/stable/promoter/$id', params: { id: p.id } }),
+      };
+    }
+    case 'trainer': {
+      const t = maps.trainerMap?.get(b.entityId);
+      if (!t) return { name: '[Entity Removed]' };
+      return {
+        name: t.name,
+        subtitle: `${t.tier} · ${t.focus}`,
+        onClick: () => navigate({ to: '/stable/trainers' }),
+      };
+    }
+    case 'tournament': {
+      const tour = maps.tournamentMap?.get(b.entityId);
+      if (!tour) return { name: '[Entity Removed]' };
+      return {
+        name: tour.name,
+        subtitle: `${tour.season} · Year ${tour.week}`,
+        onClick: () => navigate({ to: '/world/tournaments' }),
+      };
+    }
+    case 'boutOffer': {
+      const offer = maps.boutOfferMap?.get(b.entityId);
+      if (!offer) return { name: '[Entity Removed]' };
+      const promoter = maps.promoterMap?.get(offer.promoterId);
+      return {
+        name: promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`,
+        subtitle: offer.id,
+        onClick: () => navigate({ to: '/stable/bouts' }),
+      };
+    }
+    case 'scoutReport': {
+      const report = maps.scoutReportMap?.get(b.entityId);
+      if (!report) return { name: '[Entity Removed]' };
+      return {
+        name: report.warriorName,
+        subtitle: `${report.quality} Report · Week ${report.week}`,
+        onClick: () => navigate({ to: '/world/scouting' }),
+      };
+    }
+  }
+}
 
+/**
+ * Groups bookmarks by entity type, resolving each entity's display name,
+ * subtitle, and click navigation. Lookup maps are built once per type —
+ * only for types actually bookmarked — rather than re-scanning per row.
+ */
+export function groupBookmarks(
+  s: Slice,
+  navigate: Navigate
+): BookmarkGroups {
+  const groups: BookmarkGroups = {
+    warrior: [],
+    rival: [],
+    promoter: [],
+    trainer: [],
+    tournament: [],
+    boutOffer: [],
+    scoutReport: [],
+  };
+
+  const maps = buildLookupMaps(s);
+
+  for (const b of s.bookmarks) {
+    const resolved = resolveBookmarkRow(b, maps, navigate) ?? { name: 'Unknown Entity' };
     groups[b.entityType].push({
       id: b.entityId,
-      name,
-      subtitle,
+      name: resolved.name,
+      subtitle: resolved.subtitle,
       createdAt: b.createdAt,
-      onClick,
+      onClick: resolved.onClick,
     });
   }
 

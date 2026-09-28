@@ -148,6 +148,41 @@ function runBoutSimulation(
   );
 }
 
+/** lastBoutWeek stamps for both combatants plus owning-rival roster rebuilds. */
+function rosterUpdateImpacts(
+  state: GameState,
+  validCW: Warrior,
+  validCO: Warrior,
+  week: number
+): StateImpact[] {
+  const rosterUpdates = new Map();
+  rosterUpdates.set(validCW.id, { lastBoutWeek: week });
+  rosterUpdates.set(validCO.id, { lastBoutWeek: week });
+  const impacts: StateImpact[] = [{ rosterUpdates }];
+  for (const rival of state.rivals || []) {
+    const hasCombatant = rival.roster.some((w) => w.id === validCW.id || w.id === validCO.id);
+    if (hasCombatant) {
+      const rivalRosterUpdates = new Map();
+      // Combatant entries are rebuilt from the validated warriors — not the
+      // state.rivals roster refs — so in-place post-bout writes (favorites
+      // discovery in handleProgressions mutates validCW/validCO) survive
+      // shard-worker boundaries, where state and combatants are separate
+      // clones. In sequential execution these are the same objects.
+      rivalRosterUpdates.set(rival.id, {
+        roster: rival.roster.map((w) =>
+          w.id === validCW.id
+            ? { ...validCW, lastBoutWeek: week }
+            : w.id === validCO.id
+              ? { ...validCO, lastBoutWeek: week }
+              : w
+        ),
+      });
+      impacts.push({ rivalsUpdates: rivalRosterUpdates });
+    }
+  }
+  return impacts;
+}
+
 function collectBoutImpacts(
   state: GameState,
   ctx: BoutContext,
@@ -214,31 +249,7 @@ function collectBoutImpacts(
     handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, rng)
   );
 
-  const rosterUpdates = new Map();
-  rosterUpdates.set(validCW.id, { lastBoutWeek: ctx.week });
-  rosterUpdates.set(validCO.id, { lastBoutWeek: ctx.week });
-  impacts.push({ rosterUpdates });
-  for (const rival of state.rivals || []) {
-    const hasCombatant = rival.roster.some((w) => w.id === validCW.id || w.id === validCO.id);
-    if (hasCombatant) {
-      const rivalRosterUpdates = new Map();
-      // Combatant entries are rebuilt from the validated warriors — not the
-      // state.rivals roster refs — so in-place post-bout writes (favorites
-      // discovery in handleProgressions mutates validCW/validCO) survive
-      // shard-worker boundaries, where state and combatants are separate
-      // clones. In sequential execution these are the same objects.
-      rivalRosterUpdates.set(rival.id, {
-        roster: rival.roster.map((w) =>
-          w.id === validCW.id
-            ? { ...validCW, lastBoutWeek: ctx.week }
-            : w.id === validCO.id
-              ? { ...validCO, lastBoutWeek: ctx.week }
-              : w
-        ),
-      });
-      impacts.push({ rivalsUpdates: rivalRosterUpdates });
-    }
-  }
+  impacts.push(...rosterUpdateImpacts(state, validCW, validCO, ctx.week));
 
   const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
   const { summary, announcement } = handleReporting(

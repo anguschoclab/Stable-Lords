@@ -33,49 +33,43 @@ export {
  * RosterWorker: Handles training and equipment.
  * Implements "Risk-Tiered Execution" for gear.
  */
-export function processRoster(
-  rival: RivalStableData,
-  currentWeek: number,
-  season?: Season,
-  seed?: number,
-  rng?: IRNGService
-): RivalStableData {
-  const rngService = resolveRng(rng, seed ?? currentWeek * 7919 + 101);
-  let updatedRival = { ...rival };
-  let seasonalGrowth: SeasonalGrowth[] = updatedRival.seasonalGrowth ?? [];
-  const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
-
-  // 0. Recovery — tick injuries for all active wounded warriors, applying any
-  // healing trainer bonus exactly as the player path does in training.ts.
-  const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
-  for (const wounded of updatedRival.roster) {
+/**
+ * Tick injuries for all active wounded warriors, applying any healing trainer
+ * bonus exactly as the player path does in training.ts.
+ */
+function tickRecoveries(rival: RivalStableData, healingBonus: number): void {
+  for (const wounded of rival.roster) {
     if (!isActive(wounded)) continue;
     if ((wounded.injuries ?? []).length === 0) continue;
     const { updatedInjuries } = processRecovery(wounded, healingBonus);
-    updatedRival.roster = updateEntityInList(updatedRival.roster, wounded.id, (w) => ({
+    rival.roster = updateEntityInList(rival.roster, wounded.id, (w) => ({
       ...w,
       injuries: updatedInjuries,
     }));
   }
+}
 
-  // ⚡ Bolt Optimization: Using updateEntityInList instead of .map()
-  // 💡 What: Replaced .map() traversal with a targeted index update.
-  // 🎯 Why: Avoids O(N) allocations and redundant iterations when modifying a single element.
-  // 📊 Impact: Significantly reduces GC pressure during hot loops updating game state arrays.
+/**
+ * AI training pass — ⚡ TSA: prioritize champion/high-fame units.
+ * Injured warriors are excluded (they're in the recovery path) and warriors on
+ * a 'recovery' assignment (tournament prep, crown posture) rest — no drills
+ * means no training-injury roll before a booked engagement.
+ */
+function runAITraining(
+  rival: RivalStableData,
+  season: Season | undefined,
+  healingBonus: number,
+  rngService: IRNGService
+): void {
+  let seasonalGrowth: SeasonalGrowth[] = rival.seasonalGrowth ?? [];
 
-  // 1. Training (Low Risk)
-  // ⚡ TSA: Prioritize Champion or high-fame units for training.
-  // Injured warriors are excluded — they are already in the recovery path above
-  // and training them would stack the injury penalty from trainingGains.ts.
-  // Warriors on a 'recovery' assignment (tournament prep, crown posture) rest —
-  // no drills means no training-injury roll before a booked engagement.
   const restingIds = new Set(
-    (updatedRival.trainingAssignments ?? [])
+    (rival.trainingAssignments ?? [])
       .filter((a) => a.type === 'recovery')
       .map((a) => a.warriorId)
   );
-  const trainingLimit = updatedRival.treasury > 500 ? 3 : 1;
-  const { champions, nonChampions } = updatedRival.roster.reduce(
+  const trainingLimit = rival.treasury > 500 ? 3 : 1;
+  const { champions, nonChampions } = rival.roster.reduce(
     (acc, w) => {
       if (!isActive(w) || (w.injuries ?? []).length > 0) return acc;
       if (restingIds.has(w.id)) return acc;
@@ -84,15 +78,15 @@ export function processRoster(
       return acc;
     },
     {
-      champions: [] as typeof updatedRival.roster,
-      nonChampions: [] as typeof updatedRival.roster,
+      champions: [] as typeof rival.roster,
+      nonChampions: [] as typeof rival.roster,
     }
   );
   nonChampions.sort((a, b) => (b.fame || 0) - (a.fame || 0));
   const trainees = [...champions, ...nonChampions].slice(0, trainingLimit);
 
   for (const trainee of trainees) {
-    const budgetReport = checkBudget(updatedRival, TRAINING_COST, 'ROSTER');
+    const budgetReport = checkBudget(rival, TRAINING_COST, 'ROSTER');
 
     if (budgetReport.isAffordable) {
       // With the `skillDrilling` feature flag on, roughly 1-in-4 AI training
@@ -102,11 +96,11 @@ export function processRoster(
       // the rest of the time.
       const doDrill = rngService.next() < 0.25;
       if (doDrill) {
-        updatedRival.roster = updateEntityInList(updatedRival.roster, trainee.id, (w) =>
-          performAISkillDrill(w, updatedRival, rngService)
+        rival.roster = updateEntityInList(rival.roster, trainee.id, (w) =>
+          performAISkillDrill(w, rival, rngService)
         );
-        updatedRival.trainingAssignments = [
-          ...(updatedRival.trainingAssignments || []),
+        rival.trainingAssignments = [
+          ...(rival.trainingAssignments || []),
           { warriorId: trainee.id, type: 'skillDrill' } as TrainingAssignment,
         ];
       } else {
@@ -116,24 +110,84 @@ export function processRoster(
           chosen,
         } = performAITraining(
           trainee,
-          updatedRival,
+          rival,
           season,
           seasonalGrowth,
           rngService,
           healingBonus
         );
         seasonalGrowth = nextGrowth;
-        updatedRival.roster = updateEntityInList(updatedRival.roster, warrior.id, () => warrior);
+        rival.roster = updateEntityInList(rival.roster, warrior.id, () => warrior);
         if (chosen) {
-          updatedRival.trainingAssignments = [
-            ...(updatedRival.trainingAssignments || []),
+          rival.trainingAssignments = [
+            ...(rival.trainingAssignments || []),
             { warriorId: trainee.id, type: 'attribute', attribute: chosen } as TrainingAssignment,
           ];
         }
       }
     }
   }
-  updatedRival.seasonalGrowth = seasonalGrowth;
+  rival.seasonalGrowth = seasonalGrowth;
+}
+
+/** Purchase a gear upgrade for one warrior: deduct cost, apply, log both books. */
+function buyGearUpgrade(
+  rival: RivalStableData,
+  warrior: RivalStableData['roster'][number],
+  gearCost: number,
+  currentWeek: number,
+  rngService: IRNGService,
+  isChampion: boolean
+): RivalStableData {
+  const budgetReport = checkBudget(rival, gearCost, 'ROSTER');
+  if (!budgetReport.isAffordable) return rival;
+
+  rival.treasury -= gearCost;
+  rival.roster = updateEntityInList(rival.roster, warrior.id, (w) =>
+    applyGearUpgrade(w, rngService)
+  );
+  let updated = logFinanceEvent(rival, {
+    label: `Gear upgrade — ${warrior.name}`,
+    amount: -gearCost,
+    week: currentWeek,
+    category: 'other',
+    description: `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warrior.name}.`,
+    riskTier: budgetReport.riskTier,
+  });
+  updated = logAgentAction(
+    updated,
+    'ROSTER',
+    `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warrior.name}.`,
+    budgetReport.riskTier,
+    currentWeek
+  );
+  return updated;
+}
+
+/**
+ * RosterWorker: Handles training and equipment.
+ * Implements "Risk-Tiered Execution" for gear.
+ */
+export function processRoster(
+  rival: RivalStableData,
+  currentWeek: number,
+  season?: Season,
+  seed?: number,
+  rng?: IRNGService
+): RivalStableData {
+  const rngService = resolveRng(rng, seed ?? currentWeek * 7919 + 101);
+  let updatedRival = { ...rival };
+  const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
+
+  const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
+  tickRecoveries(updatedRival, healingBonus);
+
+  // ⚡ Bolt Optimization: Using updateEntityInList instead of .map()
+  // 💡 What: Replaced .map() traversal with a targeted index update.
+  // 🎯 Why: Avoids O(N) allocations and redundant iterations when modifying a single element.
+  // 📊 Impact: Significantly reduces GC pressure during hot loops updating game state arrays.
+
+  runAITraining(updatedRival, season, healingBonus, rngService);
 
   // 1b. Trait Development — delegates to processTraitDevelopment in rosterWorkerTraining.
   updatedRival.roster = processTraitDevelopment(
@@ -146,38 +200,21 @@ export function processRoster(
   // 2. Equipment (High Risk)
   // Champions always get gear consideration regardless of intent (treasury gate only).
   // activeForGear is derived fresh (post-training) so gear candidates reflect current state.
+  const GEAR_COST = 150;
   const activeForGear = updatedRival.roster.filter((w) => isActive(w));
   const champWarrior = activeForGear.find((w) => w.champion);
   if (champWarrior && updatedRival.treasury > 800) {
-    const gearCost = 150;
-    const budgetReport = checkBudget(updatedRival, gearCost, 'ROSTER');
-    if (budgetReport.isAffordable) {
-      updatedRival.treasury -= gearCost;
-      updatedRival.roster = updateEntityInList(updatedRival.roster, champWarrior.id, (w) =>
-        applyGearUpgrade(w, rngService)
-      );
-      updatedRival = logFinanceEvent(updatedRival, {
-        label: `Gear upgrade — ${champWarrior.name}`,
-        amount: -gearCost,
-        week: currentWeek,
-        category: 'other',
-        description: `Invested ${gearCost}g in gear for champion ${champWarrior.name}.`,
-        riskTier: budgetReport.riskTier,
-      });
-      updatedRival = logAgentAction(
-        updatedRival,
-        'ROSTER',
-        `Invested 150g in gear for champion ${champWarrior.name}.`,
-        budgetReport.riskTier,
-        currentWeek
-      );
-    }
+    updatedRival = buyGearUpgrade(
+      updatedRival,
+      champWarrior,
+      GEAR_COST,
+      currentWeek,
+      rngService,
+      true
+    );
   }
   if (intent === 'EXPANSION' || (intent === 'VENDETTA' && updatedRival.treasury > 1000)) {
-    const gearCost = 150;
-    const budgetReport = checkBudget(updatedRival, gearCost, 'ROSTER');
-
-    if (budgetReport.isAffordable && activeForGear.length > 0) {
+    if (activeForGear.length > 0) {
       // ⚡ TSA: Role-Based Gearing (Prioritize Champion or the 'Muddy' Basher for rain insurance)
       const gearCandidate =
         champWarrior ??
@@ -185,24 +222,13 @@ export function processRoster(
         rngService.pick(activeForGear);
 
       if (gearCandidate) {
-        updatedRival.treasury -= gearCost;
-        updatedRival.roster = updateEntityInList(updatedRival.roster, gearCandidate.id, (w) =>
-          applyGearUpgrade(w, rngService)
-        );
-        updatedRival = logFinanceEvent(updatedRival, {
-          label: `Gear upgrade — ${gearCandidate.name}`,
-          amount: -gearCost,
-          week: currentWeek,
-          category: 'other',
-          description: `Invested ${gearCost}g in gear for ${gearCandidate.name}.`,
-          riskTier: budgetReport.riskTier,
-        });
-        updatedRival = logAgentAction(
+        updatedRival = buyGearUpgrade(
           updatedRival,
-          'ROSTER',
-          `Invested 150g in gear for ${gearCandidate.name}.`,
-          budgetReport.riskTier,
-          currentWeek
+          gearCandidate,
+          GEAR_COST,
+          currentWeek,
+          rngService,
+          false
         );
       }
     }

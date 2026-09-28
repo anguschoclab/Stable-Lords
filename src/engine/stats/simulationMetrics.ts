@@ -69,19 +69,10 @@ export interface SimPulse {
   cornerAdviceEvents: number;
 }
 
-/**
- * Collect a snapshot of metrics from the current game state.
- */
-export function collectPulse(state: GameState): SimPulse {
-  const activeRivals = state.rivals || [];
-  let totalTreasury = 0;
-  for (const r of activeRivals) {
-    totalTreasury += r.treasury;
-  }
-  const avgRivalTreasury = activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
-
-  // World-wide trait accounting: player roster + every rival roster.
-  // Using direct loops instead of a generator to avoid allocating temporary iterator objects in the simulation hot path.
+/** World-wide trait emergence counts (player roster + every rival roster). */
+function collectTraitMetrics(state: GameState, activeRivals: GameState['rivals']) {
+  // Using direct loops instead of a generator to avoid allocating temporary
+  // iterator objects in the simulation hot path.
   let traitedWarriors = 0;
   let totalTraits = 0;
   let flawInstances = 0;
@@ -118,7 +109,18 @@ export function collectPulse(state: GameState): SimPulse {
     }
   }
 
-  // ─── AI behavior metrics ───
+  return {
+    traitedWarriors,
+    totalTraits,
+    flawInstances,
+    multiFlawWarriors,
+    classTraitInstances,
+    signatureInstances,
+  };
+}
+
+/** Stage I AI-behavior metrics: intent distribution, dossier coverage, offers. */
+function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['rivals']) {
   const intentDistribution: Record<string, number> = {};
   let vendettaCount = 0;
   let totalDossiers = 0;
@@ -144,7 +146,11 @@ export function collectPulse(state: GameState): SimPulse {
     }
   }
 
-  // ─── Championship metrics ───
+  return { intentDistribution, vendettaCount, totalDossiers, playerChallenged, offerCount, counteredCount };
+}
+
+/** Championship metrics (Phase-2 megaplan Stage A baselines). */
+function collectChampionshipMetrics(state: GameState) {
   let aiCrownsHeld = 0;
   let playerCrownsHeld = 0;
   const reignEndings: Record<string, number> = {};
@@ -161,8 +167,11 @@ export function collectPulse(state: GameState): SimPulse {
   const liveTitleOffers = Object.values(state.boutOffers ?? {}).filter(
     (o) => o?.titleArenaId && (o.status === 'Proposed' || o.status === 'Signed')
   ).length;
+  return { aiCrownsHeld, playerCrownsHeld, reignEndings, liveTitleOffers };
+}
 
-  // ─── Stage H metrics ───
+/** Stage H: AI-depth + championship liveness metrics. */
+function collectStageHMetrics(state: GameState, activeRivals: GameState['rivals']) {
   const titleOfferStatuses: Record<string, number> = {};
   for (const o of Object.values(state.boutOffers ?? {})) {
     if (!o?.titleArenaId) continue;
@@ -215,6 +224,33 @@ export function collectPulse(state: GameState): SimPulse {
   }
 
   return {
+    titleOfferStatuses,
+    maskedScoutReports,
+    avgPlanIntelStaleness: intelCount > 0 ? Math.round(intelSum / intelCount) : 0,
+    grandChampFieldSize,
+    grandChampCancellations,
+    avgChampionFatigue: champFatigueCount > 0 ? Math.round(champFatigueSum / champFatigueCount) : 0,
+    cornerAdviceEvents,
+  };
+}
+
+/**
+ * Collect a snapshot of metrics from the current game state.
+ */
+export function collectPulse(state: GameState): SimPulse {
+  const activeRivals = state.rivals || [];
+  let totalTreasury = 0;
+  for (const r of activeRivals) {
+    totalTreasury += r.treasury;
+  }
+  const avgRivalTreasury = activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
+
+  const traits = collectTraitMetrics(state, activeRivals);
+  const ai = collectAiBehaviorMetrics(state, activeRivals);
+  const champs = collectChampionshipMetrics(state);
+  const stageH = collectStageHMetrics(state, activeRivals);
+
+  return {
     week: state.week,
     playerTreasury: state.treasury,
     rosterSize: state.roster.length,
@@ -223,32 +259,33 @@ export function collectPulse(state: GameState): SimPulse {
     rivalCount: activeRivals.length,
     avgRivalTreasury: Math.round(avgRivalTreasury),
     totalBouts: state.arenaHistory.length,
-    traitedWarriors,
-    totalTraits,
-    flawInstances,
-    multiFlawWarriors,
-    classTraitInstances,
-    signatureInstances,
-    intentDistribution,
-    playerChallengedWeeks: playerChallenged ? 1 : 0,
-    vendettaCount,
+    traitedWarriors: traits.traitedWarriors,
+    totalTraits: traits.totalTraits,
+    flawInstances: traits.flawInstances,
+    multiFlawWarriors: traits.multiFlawWarriors,
+    classTraitInstances: traits.classTraitInstances,
+    signatureInstances: traits.signatureInstances,
+    intentDistribution: ai.intentDistribution,
+    playerChallengedWeeks: ai.playerChallenged ? 1 : 0,
+    vendettaCount: ai.vendettaCount,
     avgDossierCoverage:
-      activeRivals.length > 0 ? Math.round((totalDossiers / activeRivals.length) * 100) / 100 : 0,
-    counterOfferRate: offerCount > 0 ? counteredCount / offerCount : 0,
-    aiCrownsHeld,
-    playerCrownsHeld,
-    liveTitleOffers,
-    reignEndings,
+      activeRivals.length > 0
+        ? Math.round((ai.totalDossiers / activeRivals.length) * 100) / 100
+        : 0,
+    counterOfferRate: ai.offerCount > 0 ? ai.counteredCount / ai.offerCount : 0,
+    aiCrownsHeld: champs.aiCrownsHeld,
+    playerCrownsHeld: champs.playerCrownsHeld,
+    liveTitleOffers: champs.liveTitleOffers,
+    reignEndings: champs.reignEndings,
     grandChampionsCount: state.grandChampions?.length ?? 0,
-    crownCampaignsActive: intentDistribution['CROWN_CAMPAIGN'] ?? 0,
-    titleOfferStatuses,
-    avgPlanIntelStaleness: intelCount > 0 ? Math.round(intelSum / intelCount) : 0,
-    maskedScoutReports,
-    grandChampFieldSize,
-    grandChampCancellations,
-    avgChampionFatigue:
-      champFatigueCount > 0 ? Math.round(champFatigueSum / champFatigueCount) : 0,
-    cornerAdviceEvents,
+    crownCampaignsActive: ai.intentDistribution['CROWN_CAMPAIGN'] ?? 0,
+    titleOfferStatuses: stageH.titleOfferStatuses,
+    avgPlanIntelStaleness: stageH.avgPlanIntelStaleness,
+    maskedScoutReports: stageH.maskedScoutReports,
+    grandChampFieldSize: stageH.grandChampFieldSize,
+    grandChampCancellations: stageH.grandChampCancellations,
+    avgChampionFatigue: stageH.avgChampionFatigue,
+    cornerAdviceEvents: stageH.cornerAdviceEvents,
   };
 }
 

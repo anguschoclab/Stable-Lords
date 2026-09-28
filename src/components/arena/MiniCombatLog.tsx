@@ -42,33 +42,6 @@ export default function MiniCombatLog({
   const visibleEvents = events.slice(0, visibleCount);
   const recentEvents = visibleEvents.slice(-5); // Show last 5 events
 
-  const getEventIcon = (type: ReturnType<typeof classifyEvent>) => {
-    switch (type) {
-      case 'hit':
-        return 'HIT';
-      case 'crit':
-        return 'CRT';
-      case 'death':
-        return 'KIL';
-      case 'ko':
-        return 'KO';
-      case 'miss':
-        return 'MISS';
-      case 'riposte':
-        return 'RIP';
-      case 'initiative':
-        return 'INI';
-      case 'exhaust':
-        return 'EXH';
-      case 'phase':
-        return 'PHS';
-      case 'spatial':
-        return 'SPT';
-      default:
-        return '•';
-    }
-  };
-
   return (
     <div
       className={cn(
@@ -77,111 +50,184 @@ export default function MiniCombatLog({
         className
       )}
     >
-      {/* Header */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-expanded={isExpanded}
-        aria-label={isExpanded ? 'Collapse combat log' : 'Expand combat log'}
-        className={cn(
-          'flex items-center justify-between gap-2 px-3 py-2',
-          'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
-          'rounded-none cursor-pointer hover:border-white/20 transition-colors motion-reduce:transition-none',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
+      <LogHeader
+        isExpanded={isExpanded}
+        isPlaying={isPlaying}
+        onToggle={() => setIsExpanded(!isExpanded)}
+        onClose={onClose}
+      />
+      {isExpanded && (
+        <LogBody
+          visibleCount={visibleCount}
+          recentEvents={recentEvents}
+          logEndRef={logEndRef}
+        />
+      )}
+    </div>
+  );
+}
+
+function getEventIcon(type: ReturnType<typeof classifyEvent>): string {
+  switch (type) {
+    case 'hit':
+      return 'HIT';
+    case 'crit':
+      return 'CRT';
+    case 'death':
+      return 'KIL';
+    case 'ko':
+      return 'KO';
+    case 'miss':
+      return 'MISS';
+    case 'riposte':
+      return 'RIP';
+    case 'initiative':
+      return 'INI';
+    case 'exhaust':
+      return 'EXH';
+    case 'phase':
+      return 'PHS';
+    case 'spatial':
+      return 'SPT';
+    default:
+      return '•';
+  }
+}
+
+function LogHeader({
+  isExpanded,
+  isPlaying,
+  onToggle,
+  onClose,
+}: {
+  isExpanded: boolean;
+  isPlaying: boolean;
+  onToggle: () => void;
+  onClose?: () => void;
+}) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      aria-expanded={isExpanded}
+      aria-label={isExpanded ? 'Collapse combat log' : 'Expand combat log'}
+      className={cn(
+        'flex items-center justify-between gap-2 px-3 py-2',
+        'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
+        'rounded-none cursor-pointer hover:border-white/20 transition-colors motion-reduce:transition-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
+      )}
+      onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <History className="h-3.5 w-3.5 text-arena-gold" />
+        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+          Combat Log
+        </span>
+        {isPlaying && (
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
         )}
-        onClick={() => setIsExpanded(!isExpanded)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setIsExpanded(!isExpanded);
-          }
-        }}
+      </div>
+      <div className="flex items-center gap-1">
+        {isExpanded ? (
+          <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+        ) : (
+          <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+        )}
+        {onClose && (
+          <button
+            aria-label="Close combat log"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-1 hover:bg-white/10 rounded-none transition-colors motion-reduce:transition-none ml-1"
+          >
+            <X className="h-3 w-3 text-muted-foreground" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LogBody({
+  visibleCount,
+  recentEvents,
+  logEndRef,
+}: {
+  visibleCount: number;
+  recentEvents: MinuteEvent[];
+  logEndRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  if (visibleCount === 0) {
+    return (
+      <div
+        className={cn(
+          'w-64 max-h-48 overflow-y-auto',
+          'bg-neutral-950/90 border border-white/10 border-t-0',
+          'backdrop-blur-md scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent'
+        )}
       >
-        <div className="flex items-center gap-2">
-          <History className="h-3.5 w-3.5 text-arena-gold" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            Combat Log
-          </span>
-          {isPlaying && (
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
-          )}
-        </div>
-        <div className="flex items-center gap-1">
-          {isExpanded ? (
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-          ) : (
-            <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
-          )}
-          {onClose && (
-            <button
-              aria-label="Close combat log"
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
-              className="p-1 hover:bg-white/10 rounded-none transition-colors motion-reduce:transition-none ml-1"
-            >
-              <X className="h-3 w-3 text-muted-foreground" />
-            </button>
-          )}
+        <div className="px-3 py-4 text-center">
+          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Playback initializing...
+          </p>
         </div>
       </div>
+    );
+  }
+  return (
+    <div
+      className={cn(
+        'w-64 max-h-48 overflow-y-auto',
+        'bg-neutral-950/90 border border-white/10 border-t-0',
+        'backdrop-blur-md scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent'
+      )}
+    >
+      <div className="py-2 space-y-1">
+        {recentEvents.map((event, idx) => (
+          <LogEntry key={idx} event={event} isLatest={idx === recentEvents.length - 1} />
+        ))}
+        <div ref={logEndRef} className="h-1" />
+      </div>
+    </div>
+  );
+}
 
-      {/* Log Content */}
-      {isExpanded && (
-        <div
+function LogEntry({ event, isLatest }: { event: MinuteEvent; isLatest: boolean }) {
+  const type = classifyEvent(event);
+  return (
+    <div
+      className={cn(
+        'px-3 py-1.5 flex items-start gap-2',
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
+        isLatest && 'bg-white/5'
+      )}
+    >
+      <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">
+        {getEventIcon(type)}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p
           className={cn(
-            'w-64 max-h-48 overflow-y-auto',
-            'bg-neutral-950/90 border border-white/10 border-t-0',
-            'backdrop-blur-md scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent'
+            'text-[10px] leading-tight',
+            isLatest ? 'text-foreground font-medium' : 'text-muted-foreground/60',
+            type === 'death' && 'text-arena-blood font-black',
+            type === 'crit' && 'text-destructive font-black'
           )}
         >
-          {visibleCount === 0 ? (
-            <div className="px-3 py-4 text-center">
-              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Playback initializing...
-              </p>
-            </div>
-          ) : (
-            <div className="py-2 space-y-1">
-              {recentEvents.map((event, idx) => {
-                const type = classifyEvent(event);
-                const isLatest = idx === recentEvents.length - 1;
-
-                return (
-                  <div
-                    key={idx}
-                    className={cn(
-                      'px-3 py-1.5 flex items-start gap-2',
-                      'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300',
-                      isLatest && 'bg-white/5'
-                    )}
-                  >
-                    <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">
-                      {getEventIcon(type)}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={cn(
-                          'text-[10px] leading-tight',
-                          isLatest ? 'text-foreground font-medium' : 'text-muted-foreground/60',
-                          type === 'death' && 'text-arena-blood font-black',
-                          type === 'crit' && 'text-destructive font-black'
-                        )}
-                      >
-                        {event.text.length > COMBAT_LOG_TRUNCATION
-                          ? event.text.substring(0, COMBAT_LOG_TRUNCATION) + '...'
-                          : event.text}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-              <div ref={logEndRef} className="h-1" />
-            </div>
-          )}
-        </div>
-      )}
+          {event.text.length > COMBAT_LOG_TRUNCATION
+            ? event.text.substring(0, COMBAT_LOG_TRUNCATION) + '...'
+            : event.text}
+        </p>
+      </div>
     </div>
   );
 }

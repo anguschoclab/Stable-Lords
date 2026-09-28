@@ -10,6 +10,77 @@ import { Surface } from '@/components/ui/Surface';
 import { Trophy, Skull, Coins, Swords, Users, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+function RecapStat({
+  label,
+  value,
+  tone,
+  Icon,
+}: {
+  label: string;
+  value: React.ReactNode;
+  tone: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <Surface
+      variant="glass"
+      className={cn('px-5 py-4 border-border/30 flex items-center gap-4', tone)}
+    >
+      <Icon className="h-5 w-5 opacity-60" />
+      <div>
+        <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+          {label}
+        </div>
+        <div className="text-sm font-black">{value}</div>
+      </div>
+    </Surface>
+  );
+}
+
+/** Top-rivalry callout + memorial roll below the stat grid. */
+function RecapCallouts({
+  topRivalry,
+  memorials,
+}: {
+  topRivalry: { intensity?: number; stableIdA: string; stableIdB: string } | undefined;
+  memorials: { id: string; name: string; fame?: number; career?: { kills?: number } }[];
+}) {
+  return (
+    <>
+      {topRivalry && (
+        <Surface variant="glass" className="px-5 py-4 border-destructive/30">
+          <div className="text-[9px] font-black uppercase tracking-widest text-destructive mb-1">
+            Headline Rivalry
+          </div>
+          <div className="text-sm">
+            Intensity {topRivalry.intensity ?? 0} — {topRivalry.stableIdA} vs{' '}
+            {topRivalry.stableIdB}
+          </div>
+        </Surface>
+      )}
+
+      {memorials.length > 0 && (
+        <Surface variant="glass" className="px-5 py-4 border-border/30">
+          <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">
+            In Memoriam
+          </div>
+          <ul className="space-y-1">
+            {memorials.map((w) => (
+              <li key={w.id} className="text-xs flex items-center gap-2">
+                <Skull className="h-3 w-3 text-destructive" />
+                <span className="font-black">{w.name}</span>
+                <span className="text-muted-foreground/60">
+                  — fame {w.fame ?? 0}, {w.career?.kills ?? 0} kills
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Surface>
+      )}
+    </>
+  );
+}
+
 /**
  * Year end recap.
  */
@@ -56,26 +127,6 @@ export function YearEndRecap() {
     return { topWarrior, mostKills, totalKills, net, memorials, topRivalry };
   }, [rosterFameData, graveyard, ledger, rivalries]);
 
-  const stat = (
-    label: string,
-    value: React.ReactNode,
-    tone: string,
-    Icon: React.ComponentType<{ className?: string }>
-  ) => (
-    <Surface
-      variant="glass"
-      className={cn('px-5 py-4 border-border/30 flex items-center gap-4', tone)}
-    >
-      <Icon className="h-5 w-5 opacity-60" />
-      <div>
-        <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-          {label}
-        </div>
-        <div className="text-sm font-black">{value}</div>
-      </div>
-    </Surface>
-  );
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 px-1">
@@ -86,66 +137,49 @@ export function YearEndRecap() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-        {recap.topWarrior &&
-          stat(
-            'Top Warrior',
-            `${recap.topWarrior.name} · ${recap.topWarrior.fame}G fame`,
-            'text-arena-gold',
-            Trophy
-          )}
-        {recap.mostKills &&
-          stat(
-            'Most Lethal',
-            `${recap.mostKills.name} · ${recap.mostKills.career?.kills ?? 0} kills`,
-            'text-destructive',
-            Flame
-          )}
-        {stat('Total Arena Kills', recap.totalKills, 'text-destructive', Skull)}
-        {stat(
-          'Net Treasury',
-          `${recap.net >= 0 ? '+' : ''}${recap.net}G`,
-          recap.net >= 0 ? 'text-primary' : 'text-destructive',
-          Coins
+        {recap.topWarrior && (
+          <RecapStat
+            label="Top Warrior"
+            value={`${recap.topWarrior.name} · ${recap.topWarrior.fame}G fame`}
+            tone="text-arena-gold"
+            Icon={Trophy}
+          />
         )}
-        {stat('Active Roster', `${roster.length} warriors`, 'text-primary', Users)}
-        {stat(
-          'Retired / Fallen',
-          `${retired.length} / ${graveyard.length}`,
-          'text-muted-foreground',
-          Swords
+        {recap.mostKills && (
+          <RecapStat
+            label="Most Lethal"
+            value={`${recap.mostKills.name} · ${recap.mostKills.career?.kills ?? 0} kills`}
+            tone="text-destructive"
+            Icon={Flame}
+          />
         )}
+        <RecapStat
+          label="Total Arena Kills"
+          value={recap.totalKills}
+          tone="text-destructive"
+          Icon={Skull}
+        />
+        <RecapStat
+          label="Net Treasury"
+          value={`${recap.net >= 0 ? '+' : ''}${recap.net}G`}
+          tone={recap.net >= 0 ? 'text-primary' : 'text-destructive'}
+          Icon={Coins}
+        />
+        <RecapStat
+          label="Active Roster"
+          value={`${roster.length} warriors`}
+          tone="text-primary"
+          Icon={Users}
+        />
+        <RecapStat
+          label="Retired / Fallen"
+          value={`${retired.length} / ${graveyard.length}`}
+          tone="text-muted-foreground"
+          Icon={Swords}
+        />
       </div>
 
-      {recap.topRivalry && (
-        <Surface variant="glass" className="px-5 py-4 border-destructive/30">
-          <div className="text-[9px] font-black uppercase tracking-widest text-destructive mb-1">
-            Headline Rivalry
-          </div>
-          <div className="text-sm">
-            Intensity {recap.topRivalry.intensity ?? 0} — {recap.topRivalry.stableIdA} vs{' '}
-            {recap.topRivalry.stableIdB}
-          </div>
-        </Surface>
-      )}
-
-      {recap.memorials.length > 0 && (
-        <Surface variant="glass" className="px-5 py-4 border-border/30">
-          <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">
-            In Memoriam
-          </div>
-          <ul className="space-y-1">
-            {recap.memorials.map((w) => (
-              <li key={w.id} className="text-xs flex items-center gap-2">
-                <Skull className="h-3 w-3 text-destructive" />
-                <span className="font-black">{w.name}</span>
-                <span className="text-muted-foreground/60">
-                  — fame {w.fame ?? 0}, {w.career?.kills ?? 0} kills
-                </span>
-              </li>
-            ))}
-          </ul>
-        </Surface>
-      )}
+      <RecapCallouts topRivalry={recap.topRivalry} memorials={recap.memorials} />
     </div>
   );
 }

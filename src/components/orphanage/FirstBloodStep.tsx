@@ -48,32 +48,7 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-4 py-4">
-          <div className="text-center">
-            <span className="font-display font-bold text-base text-foreground">
-              {boutResult.a.name}
-            </span>
-            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
-              {STYLE_DISPLAY_NAMES[boutResult.a.style as FightingStyle] || boutResult.a.style}
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center gap-1">
-            <Swords className="h-5 w-5 text-muted-foreground/30" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
-              vs
-            </span>
-          </div>
-
-          <div className="text-center">
-            <span className="font-display font-bold text-base text-foreground">
-              {boutResult.d.name}
-            </span>
-            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
-              {STYLE_DISPLAY_NAMES[boutResult.d.style as FightingStyle] || boutResult.d.style}
-            </div>
-          </div>
-        </div>
+        <MatchupDisplay a={boutResult.a} d={boutResult.d} />
 
         <TacticalLogView
           log={boutResult.outcome.log}
@@ -84,47 +59,7 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
           onHighlightChange={setHighlightIndex}
         />
 
-        <div
-          className="p-4 text-center"
-          style={{
-            background:
-              boutResult.outcome.by === 'Kill' ? 'rgba(var(--blood-glow-rgb), 0.12)' : 'rgba(var(--gold-glow-rgb), 0.06)',
-            border: `1px solid ${
-              boutResult.outcome.by === 'Kill' ? 'rgba(var(--blood-glow-rgb), 0.4)' : 'rgba(var(--gold-glow-rgb), 0.25)'
-            }`,
-          }}
-        >
-          {boutResult.outcome.winner ? (
-            <div>
-              <div
-                className="font-display font-black text-lg uppercase tracking-wide"
-                style={{
-                  color:
-                    boutResult.outcome.by === 'Kill'
-                      ? 'hsl(var(--arena-blood))'
-                      : 'hsl(var(--arena-gold))',
-                  textShadow:
-                    boutResult.outcome.by === 'Kill'
-                      ? '0 0 12px hsl(var(--arena-blood)/0.5)'
-                      : '0 0 12px hsl(var(--arena-gold)/0.4)',
-                }}
-              >
-                {boutResult.outcome.winner === 'A' ? boutResult.a.name : boutResult.d.name}{' '}
-                victorious
-              </div>
-              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1">
-                by {boutResult.outcome.by ?? 'decision'}
-                {boutResult.outcome.by === 'Kill' && (
-                  <Skull className="h-3 w-3 inline ml-1.5 text-destructive/70" />
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="font-display font-black text-lg uppercase tracking-wide text-muted-foreground">
-              Draw
-            </div>
-          )}
-        </div>
+        <OutcomeBanner boutResult={boutResult} />
       </div>
 
       <div className="flex gap-3">
@@ -142,6 +77,76 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
           Continue <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
+    </div>
+  );
+}
+
+type BoutResult = FirstBloodStepProps['boutResult'];
+
+/** Centered "name vs name" matchup with style labels. */
+function MatchupDisplay({ a, d }: { a: Warrior; d: Warrior }) {
+  return (
+    <div className="flex items-center justify-center gap-4 py-4">
+      <div className="text-center">
+        <span className="font-display font-bold text-base text-foreground">{a.name}</span>
+        <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
+          {STYLE_DISPLAY_NAMES[a.style as FightingStyle] || a.style}
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center gap-1">
+        <Swords className="h-5 w-5 text-muted-foreground/30" />
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+          vs
+        </span>
+      </div>
+
+      <div className="text-center">
+        <span className="font-display font-bold text-base text-foreground">{d.name}</span>
+        <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
+          {STYLE_DISPLAY_NAMES[d.style as FightingStyle] || d.style}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Winner/Draw banner, blood-tinted on a kill. */
+function OutcomeBanner({ boutResult }: { boutResult: BoutResult }) {
+  const isKill = boutResult.outcome.by === 'Kill';
+
+  return (
+    <div
+      className="p-4 text-center"
+      style={{
+        background: isKill ? 'rgba(var(--blood-glow-rgb), 0.12)' : 'rgba(var(--gold-glow-rgb), 0.06)',
+        border: `1px solid ${isKill ? 'rgba(var(--blood-glow-rgb), 0.4)' : 'rgba(var(--gold-glow-rgb), 0.25)'}`,
+      }}
+    >
+      {boutResult.outcome.winner ? (
+        <div>
+          <div
+            className="font-display font-black text-lg uppercase tracking-wide"
+            style={{
+              color: isKill ? 'hsl(var(--arena-blood))' : 'hsl(var(--arena-gold))',
+              textShadow: isKill
+                ? '0 0 12px hsl(var(--arena-blood)/0.5)'
+                : '0 0 12px hsl(var(--arena-gold)/0.4)',
+            }}
+          >
+            {boutResult.outcome.winner === 'A' ? boutResult.a.name : boutResult.d.name}{' '}
+            victorious
+          </div>
+          <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1">
+            by {boutResult.outcome.by ?? 'decision'}
+            {isKill && <Skull className="h-3 w-3 inline ml-1.5 text-destructive/70" />}
+          </div>
+        </div>
+      ) : (
+        <div className="font-display font-black text-lg uppercase tracking-wide text-muted-foreground">
+          Draw
+        </div>
+      )}
     </div>
   );
 }

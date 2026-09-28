@@ -87,6 +87,46 @@ function selectTrainerForAdvice(
   return { trainer: best, downgraded };
 }
 
+/** Pick the training target: seasonal affinity first, then style primaries. */
+function chooseTrainableAttr(
+  trainableKeys: (keyof Attributes)[],
+  stylePrimaries: (keyof Attributes)[],
+  season: GameState['season']
+): keyof Attributes | undefined {
+  // Seasonal affinity bonus
+  if (season === 'Spring' && trainableKeys.includes('CN') && stylePrimaries.includes('CN')) {
+    return 'CN';
+  }
+  if (season === 'Summer' && trainableKeys.includes('ST') && stylePrimaries.includes('ST')) {
+    return 'ST';
+  }
+
+  // Fallback to highest priority style primary
+  const primary = stylePrimaries.find((attr) => trainableKeys.includes(attr));
+  if (primary) return primary;
+
+  // Fallback to any remaining trainable attribute
+  return trainableKeys[0];
+}
+
+/** Med Bay recommendation with an affordable coach pick attached. */
+function recoveryAdvice(
+  warrior: Warrior,
+  state: GameState,
+  headline: string,
+  reasoningBase: string
+): WarriorTrainingAdvice {
+  const pick = selectTrainerForAdvice(warrior, state.trainers, 'recovery', undefined, state.treasury);
+  return {
+    mode: 'recovery',
+    targetTrainerId: pick?.trainer.id,
+    headline,
+    reasoning: `${reasoningBase}${pick ? ` Recommended coach: ${pick.trainer.name}.` : ''}${
+      pick?.downgraded ? ' Treasury covers only lower-tier coaching this week.' : ''
+    }`,
+  };
+}
+
 /**
  * Evaluate and recommend the optimal training assignment for a warrior.
  */
@@ -100,29 +140,23 @@ export function evaluateTrainingAdvice(
   );
   if (hasActiveInjury) {
     const worst = warrior.injuries[0];
-    const pick = selectTrainerForAdvice(warrior, state.trainers, 'recovery', undefined, state.treasury);
-    return {
-      mode: 'recovery',
-      targetTrainerId: pick?.trainer.id,
-      headline: 'Assign to Med Bay Recovery',
-      reasoning: `Warrior carries active injury (${worst?.name ?? 'Injury'}). Active recovery reduces weeks remaining and eliminates training injury risk.${
-        pick ? ` Recommended coach: ${pick.trainer.name}.` : ''
-      }${pick?.downgraded ? ' Treasury covers only lower-tier coaching this week.' : ''}`,
-    };
+    return recoveryAdvice(
+      warrior,
+      state,
+      'Assign to Med Bay Recovery',
+      `Warrior carries active injury (${worst?.name ?? 'Injury'}). Active recovery reduces weeks remaining and eliminates training injury risk.`
+    );
   }
 
   // 2. Hard Gate: Fatigue -> Med Bay Recovery
   const fatigue = warrior.fatigue ?? 0;
   if (fatigue >= 40) {
-    const pick = selectTrainerForAdvice(warrior, state.trainers, 'recovery', undefined, state.treasury);
-    return {
-      mode: 'recovery',
-      targetTrainerId: pick?.trainer.id,
-      headline: 'Assign to Med Bay (Rest & Recuperation)',
-      reasoning: `Fatigue level is elevated (${fatigue}%). Rest in the Med Bay clears fatigue and restores peak stamina for upcoming bouts.${
-        pick ? ` Recommended coach: ${pick.trainer.name}.` : ''
-      }${pick?.downgraded ? ' Treasury covers only lower-tier coaching this week.' : ''}`,
-    };
+    return recoveryAdvice(
+      warrior,
+      state,
+      'Assign to Med Bay (Rest & Recuperation)',
+      `Fatigue level is elevated (${fatigue}%). Rest in the Med Bay clears fatigue and restores peak stamina for upcoming bouts.`
+    );
   }
 
   // 3. Potential Ceilings & Burn Risks
@@ -149,24 +183,7 @@ export function evaluateTrainingAdvice(
 
   // 5. Select Best Synergistic Attribute
   const stylePrimaries = STYLE_PRIMARY_ATTRIBUTES[warrior.style] ?? ['ST', 'CN', 'WT'];
-
-  // Seasonal affinity bonus
-  let chosenAttr: keyof Attributes | undefined;
-  if (state.season === 'Spring' && trainableKeys.includes('CN') && stylePrimaries.includes('CN')) {
-    chosenAttr = 'CN';
-  } else if (state.season === 'Summer' && trainableKeys.includes('ST') && stylePrimaries.includes('ST')) {
-    chosenAttr = 'ST';
-  }
-
-  // Fallback to highest priority style primary
-  if (!chosenAttr) {
-    chosenAttr = stylePrimaries.find((attr) => trainableKeys.includes(attr));
-  }
-
-  // Fallback to any remaining trainable attribute
-  if (!chosenAttr && trainableKeys.length > 0) {
-    chosenAttr = trainableKeys[0];
-  }
+  const chosenAttr = chooseTrainableAttr(trainableKeys, stylePrimaries, state.season);
 
   // 6. If an attribute was found, return attribute training recommendation
   if (chosenAttr) {

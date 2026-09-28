@@ -28,10 +28,8 @@ const stepTransition = {
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-/**
- * Orphanage.
- */
-export default function Orphanage() {
+/** The five FTUE steps rendered inside AnimatePresence. */
+function FtueSteps({ flow }: { flow: ReturnType<typeof useFtueFlow> }) {
   const {
     step,
     setStep,
@@ -51,7 +49,88 @@ export default function Orphanage() {
     finishFTUE,
     initializeStable,
     returnToTitle,
-  } = useFtueFlow();
+  } = flow;
+
+  return (
+    <AnimatePresence mode="wait">
+      {/* ── Step 0: Identity ────────────────────────────────────────────────── */}
+      {step === 0 && (
+        <StepShell key="identity">
+          <IdentityStep
+            ownerInput={ownerInput}
+            setOwnerInput={setOwnerInput}
+            stableInput={stableInput}
+            setStableInput={setStableInput}
+            onBack={returnToTitle}
+            onSubmit={() => {
+              initializeStable(ownerInput.trim(), stableInput.trim());
+              setStep(1);
+            }}
+          />
+        </StepShell>
+      )}
+
+      {/* ── Step 1: Choose Warriors ──────────────────────────────────────────── */}
+      {step === 1 && (
+        <StepShell key="warrior-selection">
+          <WarriorSelectionStep
+            orphanPool={orphanPool}
+            selected={selected}
+            onToggleWarrior={toggleWarrior}
+            onRerollPool={rerollPool}
+            onBack={() => setStep(0)}
+            onNext={() => {
+              if (planWarrior) {
+                setPlayerPlan(defaultPlanForWarrior(planWarrior));
+              }
+              setStep(2);
+            }}
+          />
+        </StepShell>
+      )}
+
+      {/* ── Step 2: Set the Plan ─────────────────────────────────────────────── */}
+      {step === 2 && planWarrior && playerPlan && (
+        <StepShell key="set-the-plan">
+          <PlanStep
+            warrior={planWarrior}
+            plan={playerPlan}
+            onPlanChange={setPlayerPlan}
+            onBack={() => setStep(1)}
+            onNext={() => {
+              runTutorialBout();
+              setStep(3);
+            }}
+          />
+        </StepShell>
+      )}
+
+      {/* ── Step 3: First Blood ──────────────────────────────────────────────── */}
+      {step === 3 && boutResult && (
+        <StepShell key="first-blood">
+          <FirstBloodStep
+            boutResult={boutResult}
+            onBack={() => setStep(2)}
+            onNext={() => setStep(4)}
+          />
+        </StepShell>
+      )}
+
+      {/* ── Step 4: Your Story Begins ────────────────────────────────────────── */}
+      {step === 4 && (
+        <StepShell key="story-begins">
+          <StoryBeginsStep onFinish={finishFTUE} />
+        </StepShell>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/**
+ * Orphanage.
+ */
+export default function Orphanage() {
+  const flow = useFtueFlow();
 
   // ─── Shell ──────────────────────────────────────────────────────────────────
 
@@ -80,116 +159,26 @@ export default function Orphanage() {
 
       <div className="relative z-10 w-full max-w-xl space-y-6">
         {/* Progress */}
-        <StepProgress step={step} total={5} />
+        <StepProgress step={flow.step} total={5} />
 
         {/* ── Step Content with AnimatePresence ─────────────────────────────────── */}
-        <AnimatePresence mode="wait">
-          {/* ── Step 0: Identity ────────────────────────────────────────────────── */}
-          {step === 0 && (
-            <motion.div
-              key="identity"
-              variants={stepVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={stepTransition}
-            >
-              <IdentityStep
-                ownerInput={ownerInput}
-                setOwnerInput={setOwnerInput}
-                stableInput={stableInput}
-                setStableInput={setStableInput}
-                onBack={returnToTitle}
-                onSubmit={() => {
-                  initializeStable(ownerInput.trim(), stableInput.trim());
-                  setStep(1);
-                }}
-              />
-            </motion.div>
-          )}
-
-          {/* ── Step 1: Choose Warriors ──────────────────────────────────────────── */}
-          {step === 1 && (
-            <motion.div
-              key="warrior-selection"
-              variants={stepVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={stepTransition}
-            >
-              <WarriorSelectionStep
-                orphanPool={orphanPool}
-                selected={selected}
-                onToggleWarrior={toggleWarrior}
-                onRerollPool={rerollPool}
-                onBack={() => setStep(0)}
-                onNext={() => {
-                  if (planWarrior) {
-                    setPlayerPlan(defaultPlanForWarrior(planWarrior));
-                  }
-                  setStep(2);
-                }}
-              />
-            </motion.div>
-          )}
-
-          {/* ── Step 2: Set the Plan ─────────────────────────────────────────────── */}
-          {step === 2 && planWarrior && playerPlan && (
-            <motion.div
-              key="set-the-plan"
-              variants={stepVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={stepTransition}
-            >
-              <PlanStep
-                warrior={planWarrior}
-                plan={playerPlan}
-                onPlanChange={setPlayerPlan}
-                onBack={() => setStep(1)}
-                onNext={() => {
-                  runTutorialBout();
-                  setStep(3);
-                }}
-              />
-            </motion.div>
-          )}
-
-          {/* ── Step 3: First Blood ──────────────────────────────────────────────── */}
-          {step === 3 && boutResult && (
-            <motion.div
-              key="first-blood"
-              variants={stepVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={stepTransition}
-            >
-              <FirstBloodStep
-                boutResult={boutResult}
-                onBack={() => setStep(2)}
-                onNext={() => setStep(4)}
-              />
-            </motion.div>
-          )}
-
-          {/* ── Step 4: Your Story Begins ────────────────────────────────────────── */}
-          {step === 4 && (
-            <motion.div
-              key="story-begins"
-              variants={stepVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={stepTransition}
-            >
-              <StoryBeginsStep onFinish={finishFTUE} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <FtueSteps flow={flow} />
       </div>
     </div>
+  );
+}
+
+/** Animated wrapper shared by every FTUE step. */
+function StepShell({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      variants={stepVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={stepTransition}
+    >
+      {children}
+    </motion.div>
   );
 }

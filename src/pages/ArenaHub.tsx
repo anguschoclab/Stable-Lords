@@ -3,12 +3,12 @@ import { Link } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { buildMatchCard } from '@/components/run-round/buildMatchCard';
+import { ArenaAnalyticsSurface, ArenaStatusStrip, FightCardPreview } from './arenaHub/sections';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
 import { AutosimConsole } from '@/components/run-round/AutosimConsole';
 import { PreAdvanceChecklist } from '@/components/widgets/PreAdvanceChecklist';
-import { MatchCard } from '@/components/run-round/MatchCard';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import {
   MOOD_DESCRIPTIONS,
@@ -26,23 +26,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Trophy,
-  Swords,
-  Star,
-  Skull,
-  Eye,
-  Activity,
-  Shield,
-  BarChart3,
-} from 'lucide-react';
+import { Trophy, Swords, Eye, Activity } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { ImperialRing } from '@/components/ui/ImperialRing';
 import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
 
 // Unified Widgets
@@ -378,55 +368,11 @@ export default function ArenaHub() {
           <CircuitCrownsWidget />
 
           <SectionDivider label="Arena Analytics" />
-          <Surface
-            variant="glass"
-            className="p-6 space-y-6 bg-gradient-to-br from-white/[0.01] to-white/[0.03]"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <ImperialRing size="sm" variant="blood">
-                  <BarChart3 className="h-3.5 w-3.5 text-primary" />
-                </ImperialRing>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                  Stable Stats
-                </span>
-              </div>
-              <Activity className="h-3.5 w-3.5 text-primary animate-pulse motion-reduce:animate-none" />
-            </div>
-
-            <div className="space-y-4 pt-2">
-              <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none">
-                  Stable Renown
-                </span>
-                <span className="font-display font-black text-xl text-arena-fame tracking-tighter">
-                  {player.renown}
-                </span>
-              </div>
-              <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none">
-                  Lifetime Kills
-                </span>
-                <span className="font-display font-black text-xl text-destructive tracking-tighter">
-                  {lifetimeKills}
-                </span>
-              </div>
-              <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none">
-                  Win Velocity
-                </span>
-                <span className="font-display font-black text-xl text-primary tracking-tighter">
-                  {Math.round(stableStats.winRate * 100)}%
-                </span>
-              </div>
-            </div>
-
-            <div className="pt-6 border-t border-white/5">
-              <p className="text-[9px] text-muted-foreground/30 leading-relaxed uppercase tracking-[0.2em] font-black italic">
-                Season record updated after each bout.
-              </p>
-            </div>
-          </Surface>
+          <ArenaAnalyticsSurface
+            renown={player.renown}
+            lifetimeKills={lifetimeKills}
+            winRate={stableStats.winRate}
+          />
         </div>
       </div>
 
@@ -436,44 +382,14 @@ export default function ArenaHub() {
       <ArenaLeaderboard />
 
       {/* Arena Status Strip */}
-      <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 px-6 border-t border-white/5 mt-12 transition-all duration-700 motion-reduce:transition-none">
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
-          <Swords className="h-3.5 w-3.5 text-primary" /> {gameState.season} · Wk {gameState.week}
-        </div>
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
-          <Shield className="h-3.5 w-3.5 text-accent" /> {roster.filter((w) => isActive(w)).length} Active Warriors
-        </div>
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
-          <Star className="h-3.5 w-3.5 text-arena-gold" /> {gameState.rivals.length} Rival Stables
-        </div>
-        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60">
-          <Skull className="h-3.5 w-3.5 text-destructive" /> {lifetimeKills} Career Kills
-        </div>
-      </div>
+      <ArenaStatusStrip
+        gameState={gameState}
+        roster={roster}
+        lifetimeKills={lifetimeKills}
+      />
 
       {/* ── Fight Card Preview ── */}
-      {matchCard.length > 0 && (
-        <>
-          <span id="fight-card" className="block scroll-mt-24" />
-          <SectionDivider label="This Week's Fight Card" variant="primary" />
-          <Surface variant="glass" className="p-6 space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              {matchCard.map((p, i) => (
-                <MatchCard
-                  key={i}
-                  pairing={{
-                    a: p.playerWarrior,
-                    d: p.rivalWarrior,
-                    rivalStable: p.rivalStable?.owner?.stableName || 'Rival Stable',
-                    isRivalry: p.isRivalryBout,
-                  }}
-                  crowdMood={gameState.crowdMood}
-                />
-              ))}
-            </div>
-          </Surface>
-        </>
-      )}
+      <FightCardPreview matchCard={matchCard} crowdMood={gameState.crowdMood} />
 
       {/* ── Pre-Advance Council Checklist ── */}
       <SectionDivider label="War Council Checklist" />

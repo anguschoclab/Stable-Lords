@@ -23,6 +23,42 @@ interface NewGameFormProps {
   canCreate: boolean;
 }
 
+/** Randomize handlers for names, crest, and backstory. */
+function useRandomizers({
+  setOwnerName,
+  setStableName,
+  setPlayerCrest,
+  setBackstoryId,
+}: Pick<
+  NewGameFormProps,
+  'setOwnerName' | 'setStableName' | 'setPlayerCrest' | 'setBackstoryId'
+>) {
+  const randomizeCrest = () => {
+    const newCrest = generateCrest({
+      seed: cryptoRandomInt(0, 99999),
+      philosophy: 'Balanced',
+      tier: 'Established',
+    });
+    setPlayerCrest(newCrest);
+  };
+
+  const randomizeBackstory = () => {
+    const id = BACKSTORY_IDS[cryptoRandomInt(0, BACKSTORY_IDS.length - 1)];
+    if (id) {
+      setBackstoryId(id);
+    }
+  };
+
+  const randomizeAll = () => {
+    setOwnerName(randomOwnerName());
+    setStableName(randomStableName());
+    randomizeCrest();
+    randomizeBackstory();
+  };
+
+  return { randomizeAll, randomizeCrest, randomizeBackstory };
+}
+
 /**
  * New game form.
  * @param  - {
@@ -52,28 +88,12 @@ export default function NewGameForm({
   onSubmit,
   canCreate,
 }: NewGameFormProps) {
-  const randomizeCrest = () => {
-    const newCrest = generateCrest({
-      seed: cryptoRandomInt(0, 99999),
-      philosophy: 'Balanced',
-      tier: 'Established',
-    });
-    setPlayerCrest(newCrest);
-  };
-
-  const randomizeBackstory = () => {
-    const id = BACKSTORY_IDS[cryptoRandomInt(0, BACKSTORY_IDS.length - 1)];
-    if (id) {
-      setBackstoryId(id);
-    }
-  };
-
-  const randomizeAll = () => {
-    setOwnerName(randomOwnerName());
-    setStableName(randomStableName());
-    randomizeCrest();
-    randomizeBackstory();
-  };
+  const { randomizeAll, randomizeCrest, randomizeBackstory } = useRandomizers({
+    setOwnerName,
+    setStableName,
+    setPlayerCrest,
+    setBackstoryId,
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative bg-background">

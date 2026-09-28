@@ -13,6 +13,135 @@ import {
   resolveStableName,
   findWarrior,
 } from '@/engine/core/historyResolver';
+import type { GameState } from '@/types/state.types';
+
+interface NextBout {
+  type: string;
+  name?: string;
+  a?: string;
+  d?: string;
+  warriorIdA: string | undefined;
+  warriorIdD: string | undefined;
+  stableA?: string;
+  stableD?: string;
+  stableIdA: string | undefined;
+  stableIdD: string | undefined;
+}
+
+/** The player's next actionable bout: live tournament match, else a scrimmage preview. */
+function resolveNextBout(state: GameState): NextBout | null {
+  // Check tournaments first — only the engine-marked live tournament can
+  // have a player-actionable next bout; leftover/generated tiers don't.
+  const activeTourney = state.tournaments.find(
+    (t) => t.id === state.activeTournamentId && !t.completed
+  );
+  if (activeTourney) {
+    const pendingMatch = activeTourney.bracket.find((m) => !m.winner);
+    if (pendingMatch) {
+      return {
+        type: 'Tournament',
+        name: activeTourney.name,
+        warriorIdA: pendingMatch.warriorIdA,
+        warriorIdD: pendingMatch.warriorIdD,
+        stableIdA: pendingMatch.stableIdA,
+        stableIdD: pendingMatch.stableIdD,
+      };
+    }
+  }
+
+  // Check regular bouts? (If any)
+  // For simplicity, let's just use the current roster of the primary rival
+  const primaryRival = state.rivals[0];
+  const playerWarrior = state.roster[0];
+  const rivalWarrior = primaryRival?.roster[0];
+  if (primaryRival && playerWarrior && rivalWarrior) {
+    return {
+      type: 'Standard Matchup',
+      name: 'Upcoming Scrimmage',
+      a: playerWarrior.name,
+      d: rivalWarrior.name,
+      warriorIdA: playerWarrior.id,
+      warriorIdD: rivalWarrior.id,
+      stableA: state.player.stableName,
+      stableD: primaryRival.owner.stableName,
+      stableIdA: state.player.id,
+      stableIdD: primaryRival.id,
+    };
+  }
+
+  return null;
+}
+
+/** Attribute-sum estimate of side A's win share (0–100). */
+function estimateOdds(state: GameState, nextBout: NextBout): number {
+  // ⚡ Bolt: Use O(1) cache lookup for warriors rather than array .find scans
+  const warriorA = findWarrior(state, nextBout.warriorIdA);
+  const warriorD = findWarrior(state, nextBout.warriorIdD);
+
+  if (!warriorA || !warriorD) return 50;
+
+  const sumA = ATTRIBUTE_KEYS.reduce((s, k) => s + warriorA.attributes[k], 0);
+  const sumD = ATTRIBUTE_KEYS.reduce((s, k) => s + warriorD.attributes[k], 0);
+
+  return Math.round((sumA / (sumA + sumD)) * 100);
+}
+
+function BoutCard({ state, nextBout, odds }: { state: GameState; nextBout: NextBout; odds: number }) {
+  return (
+    <div className="space-y-4">
+      <div className="p-3 bg-secondary/20 rounded-none border border-border/50">
+        <div className="flex justify-between items-center mb-2">
+          <Badge
+            variant="outline"
+            className="text-[10px] font-mono px-1.5 py-0 h-5 bg-background shadow-sm ring-1 ring-primary/20"
+          >
+            {nextBout.type}
+          </Badge>
+          <div className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+            EST ODDS:
+            <span
+              className={cn(
+                'font-bold',
+                odds > ODDS_THRESHOLDS.FAVORITE
+                  ? 'text-primary'
+                  : odds < ODDS_THRESHOLDS.UNDERDOG
+                    ? 'text-destructive'
+                    : 'text-arena-gold'
+              )}
+            >
+              {odds}%
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-2 py-1">
+          <div className="flex-1 text-center">
+            <p className="text-[11px] font-black truncate">
+              {resolveWarriorName(state, nextBout.warriorIdA, 'Unknown')}
+            </p>
+            <p className="text-[9px] text-muted-foreground truncate uppercase">
+              {resolveStableName(state, nextBout.stableIdA, 'Unknown')}
+            </p>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] font-bold text-muted-foreground/50">VS</span>
+            {nextBout.type === 'Tournament' && (
+              <Trophy className="h-3 w-3 text-secondary-foreground" />
+            )}
+          </div>
+          <div className="flex-1 text-center">
+            <p className="text-[11px] font-black truncate">
+              {resolveWarriorName(state, nextBout.warriorIdD, 'Unknown')}
+            </p>
+            <p className="text-[9px] text-muted-foreground truncate uppercase">
+              {resolveStableName(state, nextBout.stableIdD, 'Unknown')}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Next bout widget.
@@ -20,69 +149,9 @@ import {
 export function NextBoutWidget() {
   const state = useWorldState();
 
-  const nextBout = useMemo(() => {
-    // Check tournaments first — only the engine-marked live tournament can
-    // have a player-actionable next bout; leftover/generated tiers don't.
-    const activeTourney = state.tournaments.find(
-      (t) => t.id === state.activeTournamentId && !t.completed
-    );
-    if (activeTourney) {
-      const pendingMatch = activeTourney.bracket.find((m) => !m.winner);
-      if (pendingMatch) {
-        return {
-          type: 'Tournament',
-          name: activeTourney.name,
-          warriorIdA: pendingMatch.warriorIdA,
-          warriorIdD: pendingMatch.warriorIdD,
-          stableIdA: pendingMatch.stableIdA,
-          stableIdD: pendingMatch.stableIdD,
-        };
-      }
-    }
+  const nextBout = useMemo(() => resolveNextBout(state), [state]);
 
-    // Check regular bouts? (If any)
-    // For simplicity, let's just use the current roster of the primary rival
-    const primaryRival = state.rivals[0];
-    const playerWarrior = state.roster[0];
-    const rivalWarrior = primaryRival?.roster[0];
-    if (primaryRival && playerWarrior && rivalWarrior) {
-      return {
-        type: 'Standard Matchup',
-        name: 'Upcoming Scrimmage',
-        a: playerWarrior.name,
-        d: rivalWarrior.name,
-        warriorIdA: playerWarrior.id,
-        warriorIdD: rivalWarrior.id,
-        stableA: state.player.stableName,
-        stableD: primaryRival.owner.stableName,
-        stableIdA: state.player.id,
-        stableIdD: primaryRival.id,
-      };
-    }
-
-    return null;
-  }, [
-    state.tournaments,
-    state.activeTournamentId,
-    state.roster,
-    state.rivals,
-    state.player.id,
-    state.player.stableName,
-  ]);
-
-  const odds = useMemo(() => {
-    if (!nextBout) return 50;
-    // ⚡ Bolt: Use O(1) cache lookup for warriors rather than array .find scans
-    const warriorA = findWarrior(state, nextBout.warriorIdA);
-    const warriorD = findWarrior(state, nextBout.warriorIdD);
-
-    if (!warriorA || !warriorD) return 50;
-
-    const sumA = ATTRIBUTE_KEYS.reduce((s, k) => s + warriorA.attributes[k], 0);
-    const sumD = ATTRIBUTE_KEYS.reduce((s, k) => s + warriorD.attributes[k], 0);
-
-    return Math.round((sumA / (sumA + sumD)) * 100);
-  }, [nextBout, state]);
+  const odds = useMemo(() => (nextBout ? estimateOdds(state, nextBout) : 50), [nextBout, state]);
 
   return (
     <Card className="h-full border-l-4 border-l-primary/50 shadow-md">
@@ -101,58 +170,7 @@ export function NextBoutWidget() {
             <p className="text-[10px] font-bold uppercase tracking-widest">No Bouts Scheduled</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            <div className="p-3 bg-secondary/20 rounded-none border border-border/50">
-              <div className="flex justify-between items-center mb-2">
-                <Badge
-                  variant="outline"
-                  className="text-[10px] font-mono px-1.5 py-0 h-5 bg-background shadow-sm ring-1 ring-primary/20"
-                >
-                  {nextBout.type}
-                </Badge>
-                <div className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
-                  EST ODDS:
-                  <span
-                    className={cn(
-                      'font-bold',
-                      odds > ODDS_THRESHOLDS.FAVORITE
-                        ? 'text-primary'
-                        : odds < ODDS_THRESHOLDS.UNDERDOG
-                          ? 'text-destructive'
-                          : 'text-arena-gold'
-                    )}
-                  >
-                    {odds}%
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between gap-2 py-1">
-                <div className="flex-1 text-center">
-                  <p className="text-[11px] font-black truncate">
-                    {resolveWarriorName(state, nextBout.warriorIdA, 'Unknown')}
-                  </p>
-                  <p className="text-[9px] text-muted-foreground truncate uppercase">
-                    {resolveStableName(state, nextBout.stableIdA, 'Unknown')}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-[10px] font-bold text-muted-foreground/50">VS</span>
-                  {nextBout.type === 'Tournament' && (
-                    <Trophy className="h-3 w-3 text-secondary-foreground" />
-                  )}
-                </div>
-                <div className="flex-1 text-center">
-                  <p className="text-[11px] font-black truncate">
-                    {resolveWarriorName(state, nextBout.warriorIdD, 'Unknown')}
-                  </p>
-                  <p className="text-[9px] text-muted-foreground truncate uppercase">
-                    {resolveStableName(state, nextBout.stableIdD, 'Unknown')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <BoutCard state={state} nextBout={nextBout} odds={odds} />
         )}
       </CardContent>
     </Card>

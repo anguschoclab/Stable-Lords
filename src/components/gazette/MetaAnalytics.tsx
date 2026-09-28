@@ -131,6 +131,56 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   );
 }
 
+/** One cell of the matchup heatmap — win-rate tint + tooltip. */
+function MatchupCell({
+  rowStyle,
+  colStyle,
+  data,
+}: {
+  rowStyle: string;
+  colStyle: string;
+  data: { wins: number; total: number };
+}) {
+  const rate = data.total > 0 ? (data.wins / data.total) * 100 : 50;
+  const isNeutral = data.total === 0;
+
+  return (
+    <td className="p-1">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className={cn(
+              'h-10 w-full rounded-none border border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 cursor-help',
+              isNeutral
+                ? 'bg-white/[0.02] opacity-20'
+                : rate > 65
+                  ? 'bg-arena-pop/40 border-arena-pop/40 shadow-[inset_0_0_10px_rgba(var(--arena-pop-rgb),0.2)]'
+                  : rate > 55
+                    ? 'bg-arena-pop/20 border-arena-pop/20'
+                    : rate > 45
+                      ? 'bg-primary/20 border-primary/20'
+                      : rate > 35
+                        ? 'bg-destructive/20 border-destructive/20'
+                        : 'bg-destructive/40 border-destructive/40 shadow-[inset_0_0_10px_rgba(255,0,0,0.2)]'
+            )}
+          >
+            {!isNeutral && (
+              <div className="h-full w-full flex items-center justify-center">
+                <span className="text-[10px] font-mono font-black text-foreground/60">
+                  {rate.toFixed(0)}
+                </span>
+              </div>
+            )}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+          {rowStyle} vs {colStyle}: {rate.toFixed(1)}% Win Rate ({data.wins}/{data.total})
+        </TooltipContent>
+      </Tooltip>
+    </td>
+  );
+}
+
 /**
  * Style matchup heatmap.
  * @param - { all fights }.
@@ -202,50 +252,14 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
                 <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground/60 text-right pr-4 group-hover/row:text-arena-gold transition-colors motion-reduce:transition-none">
                   {rowStyle}
                 </td>
-                {TACTICAL_STYLES.map((colStyle) => {
-                  const data = matchupStats[rowStyle]?.[colStyle] || { wins: 0, total: 0 };
-                  const rate = data.total > 0 ? (data.wins / data.total) * 100 : 50;
-                  const isNeutral = data.total === 0;
-                  const wins = data.wins;
-                  const matchesLength = data.total;
-
-                  return (
-                    <td key={colStyle} className="p-1">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            className={cn(
-                              'h-10 w-full rounded-none border border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 cursor-help',
-                              isNeutral
-                                ? 'bg-white/[0.02] opacity-20'
-                                : rate > 65
-                                  ? 'bg-arena-pop/40 border-arena-pop/40 shadow-[inset_0_0_10px_rgba(var(--arena-pop-rgb),0.2)]'
-                                  : rate > 55
-                                    ? 'bg-arena-pop/20 border-arena-pop/20'
-                                    : rate > 45
-                                      ? 'bg-primary/20 border-primary/20'
-                                      : rate > 35
-                                        ? 'bg-destructive/20 border-destructive/20'
-                                        : 'bg-destructive/40 border-destructive/40 shadow-[inset_0_0_10px_rgba(255,0,0,0.2)]'
-                            )}
-                          >
-                            {!isNeutral && (
-                              <div className="h-full w-full flex items-center justify-center">
-                                <span className="text-[10px] font-mono font-black text-foreground/60">
-                                  {rate.toFixed(0)}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                          {rowStyle} vs {colStyle}: {rate.toFixed(1)}% Win Rate ({wins}/
-                          {matchesLength})
-                        </TooltipContent>
-                      </Tooltip>
-                    </td>
-                  );
-                })}
+                {TACTICAL_STYLES.map((colStyle) => (
+                  <MatchupCell
+                    key={colStyle}
+                    rowStyle={rowStyle}
+                    colStyle={colStyle}
+                    data={matchupStats[rowStyle]?.[colStyle] || { wins: 0, total: 0 }}
+                  />
+                ))}
               </tr>
             ))}
           </tbody>

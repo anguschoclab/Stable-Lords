@@ -1,4 +1,7 @@
+import { Link } from '@tanstack/react-router';
 import { Shield, Users, Swords, Skull, Trophy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { Badge } from '@/components/ui/badge';
 import { WarriorLink } from '@/components/EntityLink';
 import { StableCrest } from '@/components/crest/StableCrest';
@@ -8,6 +11,32 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { cn } from '@/lib/utils';
 import type { RivalStableData } from '@/types/game';
 import type { Warrior } from '@/types/warrior.types';
+
+/** Full-page fallback when the route id matches no rival stable. */
+export function StableNotFound() {
+  return (
+    <PageFrame
+      maxWidth="xl"
+      className="flex flex-col items-center justify-center py-48 text-center"
+    >
+      <ImperialRing size="lg" variant="bronze" className="opacity-20 mb-8">
+        <Shield className="h-10 w-10" />
+      </ImperialRing>
+      <div className="space-y-6">
+        <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+          Stable Identifier Not Found
+        </p>
+        <Button
+          variant="outline"
+          asChild
+          className="h-12 px-8 font-black uppercase text-[10px] tracking-widest rounded-none border-white/10 hover:bg-white/5"
+        >
+          <Link to="/world/scouting">Return to World Overview</Link>
+        </Button>
+      </div>
+    </PageFrame>
+  );
+}
 
 /** Display config for a rival-stable tier badge/ring. */
 export interface TierConfig {

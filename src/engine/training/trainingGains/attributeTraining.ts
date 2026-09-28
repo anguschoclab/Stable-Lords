@@ -39,6 +39,91 @@ export function computeGainChance(
   return clamp(raw, GAIN_CHANCE_MIN, GAIN_CHANCE_MAX);
 }
 
+type AttributeTrainingOutcome = {
+  updatedWarrior: Warrior | null;
+  updatedSeasonalGrowth: SeasonalGrowth[] | null;
+  result: TrainingResult;
+  hardCapped?: boolean;
+};
+
+function blockedResult(warrior: Warrior, message = '', hardCapped = false): AttributeTrainingOutcome {
+  return {
+    updatedWarrior: null,
+    updatedSeasonalGrowth: null,
+    result: { type: 'blocked', warriorId: warrior.id, message },
+    ...(hardCapped ? { hardCapped: true } : {}),
+  };
+}
+
+/** Successful +1 gain: bump attribute, recompute stats, reveal ceiling if near. */
+function applyAttributeGain(
+  warrior: Warrior,
+  attr: keyof Attributes,
+  currentVal: number,
+  state: GameState,
+  seasonalGrowth: SeasonalGrowth[]
+): AttributeTrainingOutcome {
+  const potentialVal = warrior.potential?.[attr];
+  const newAttrs = { ...warrior.attributes, [attr]: currentVal + 1 };
+  const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, warrior.style);
+
+  const newRevealed = { ...(warrior.potentialRevealed || {}) };
+  let newlyRevealed = false;
+
+  const nearCeiling = potentialVal !== undefined && currentVal + 1 >= potentialVal;
+  if (nearCeiling && !newRevealed[attr]) {
+    newRevealed[attr] = true;
+    newlyRevealed = true;
+  }
+
+  const ceilingNote = nearCeiling ? ' (reached potential ceiling)' : '';
+
+  return {
+    updatedWarrior: {
+      ...warrior,
+      attributes: newAttrs,
+      baseSkills,
+      derivedStats,
+      potentialRevealed: newRevealed,
+    },
+    updatedSeasonalGrowth: updateSeasonalGains(
+      seasonalGrowth,
+      warrior.id,
+      state.season,
+      attr
+    ),
+    result: {
+      type: 'gain',
+      warriorId: warrior.id,
+      attr,
+      gain: 1,
+      message: `${warrior.name} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ''}`,
+    },
+  };
+}
+
+/** Failed roll — 20% chance the effort still reveals the attribute's potential. */
+function maybeRevealFromEffort(
+  warrior: Warrior,
+  attr: keyof Attributes,
+  rng: IRNGService
+): AttributeTrainingOutcome {
+  const isRevealed = warrior.potentialRevealed?.[attr];
+  if (!isRevealed && rng.next() < 0.2) {
+    const newRevealed = { ...(warrior.potentialRevealed || {}), [attr]: true };
+    return {
+      updatedWarrior: { ...warrior, potentialRevealed: newRevealed },
+      updatedSeasonalGrowth: null,
+      result: {
+        type: 'gain',
+        warriorId: warrior.id,
+        message: `${warrior.name} didn't improve their ${attr} this week, but their true potential in it was revealed from their efforts!`,
+      },
+    };
+  }
+  return blockedResult(warrior);
+}
+
 /**
  *
  */
@@ -48,23 +133,13 @@ export function processAttributeTraining(
   state: GameState,
   seasonalGrowth: SeasonalGrowth[],
   rng: IRNGService
-): {
-  updatedWarrior: Warrior | null;
-  updatedSeasonalGrowth: SeasonalGrowth[] | null;
-  result: TrainingResult;
-  hardCapped?: boolean;
-} {
+): AttributeTrainingOutcome {
   // SZ cannot be trained
   if (attr === 'SZ') {
-    return {
-      updatedWarrior: null,
-      updatedSeasonalGrowth: null,
-      result: {
-        type: 'blocked',
-        warriorId: warrior.id,
-        message: `${warrior.name} cannot train Size — it is fixed at creation.`,
-      },
-    };
+    return blockedResult(
+      warrior,
+      `${warrior.name} cannot train Size — it is fixed at creation.`
+    );
   }
 
   const currentVal = warrior.attributes[attr];
@@ -72,100 +147,26 @@ export function processAttributeTraining(
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0);
 
   // Hard caps
-  if (currentVal >= ATTRIBUTE_MAX || total >= TOTAL_CAP)
-    return {
-      updatedWarrior: null,
-      updatedSeasonalGrowth: null,
-      result: { type: 'blocked', warriorId: warrior.id, message: '' },
-      hardCapped: true,
-    };
-  if (!canGrow(currentVal, potentialVal))
-    return {
-      updatedWarrior: null,
-      updatedSeasonalGrowth: null,
-      result: { type: 'blocked', warriorId: warrior.id, message: '' },
-      hardCapped: true,
-    };
+  if (currentVal >= ATTRIBUTE_MAX || total >= TOTAL_CAP) return blockedResult(warrior, '', true);
+  if (!canGrow(currentVal, potentialVal)) return blockedResult(warrior, '', true);
 
   // Seasonal growth cap
   const seasonGains = getSeasonalGains(seasonalGrowth, warrior.id, state.season);
   if ((seasonGains[attr] ?? 0) >= SEASONAL_CAP_PER_ATTR) {
-    return {
-      updatedWarrior: null,
-      updatedSeasonalGrowth: null,
-      result: {
-        type: 'blocked',
-        warriorId: warrior.id,
-        message: `${warrior.name} has reached the seasonal cap for ${attr} (${SEASONAL_CAP_PER_ATTR} gains this season).`,
-      },
-    };
+    return blockedResult(
+      warrior,
+      `${warrior.name} has reached the seasonal cap for ${attr} (${SEASONAL_CAP_PER_ATTR} gains this season).`
+    );
   }
 
   // Compute gain chance with all modifiers
   const gainChance = computeGainChance(warrior, attr, state.trainers ?? []);
 
   // Roll for gain
-  const roll = rng.next();
-  if (roll < gainChance) {
-    const newAttrs = { ...warrior.attributes, [attr]: currentVal + 1 };
-    const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, warrior.style);
-
-    const newRevealed = { ...(warrior.potentialRevealed || {}) };
-    let newlyRevealed = false;
-
-    const nearCeiling = potentialVal !== undefined && currentVal + 1 >= potentialVal;
-    if (nearCeiling && !newRevealed[attr]) {
-      newRevealed[attr] = true;
-      newlyRevealed = true;
-    }
-
-    const ceilingNote = nearCeiling ? ' (reached potential ceiling)' : '';
-
-    const updatedWarrior = {
-      ...warrior,
-      attributes: newAttrs,
-      baseSkills,
-      derivedStats,
-      potentialRevealed: newRevealed,
-    };
-    const updatedSeasonalGrowth = updateSeasonalGains(
-      seasonalGrowth,
-      warrior.id,
-      state.season,
-      attr
-    );
-
-    return {
-      updatedWarrior,
-      updatedSeasonalGrowth,
-      result: {
-        type: 'gain',
-        warriorId: warrior.id,
-        attr,
-        gain: 1,
-        message: `${warrior.name} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ''}`,
-      },
-    };
-  } else {
-    // Failed to gain, but might still reveal potential from hard work!
-    const isRevealed = warrior.potentialRevealed?.[attr];
-    if (!isRevealed && rng.next() < 0.2) {
-      const newRevealed = { ...(warrior.potentialRevealed || {}), [attr]: true };
-      return {
-        updatedWarrior: { ...warrior, potentialRevealed: newRevealed },
-        updatedSeasonalGrowth: null,
-        result: {
-          type: 'gain',
-          warriorId: warrior.id,
-          message: `${warrior.name} didn't improve their ${attr} this week, but their true potential in it was revealed from their efforts!`,
-        },
-      };
-    }
+  if (rng.next() < gainChance) {
+    return applyAttributeGain(warrior, attr, currentVal, state, seasonalGrowth);
   }
 
-  return {
-    updatedWarrior: null,
-    updatedSeasonalGrowth: null,
-    result: { type: 'blocked', warriorId: warrior.id, message: '' },
-  };
+  // Failed to gain, but might still reveal potential from hard work!
+  return maybeRevealFromEffort(warrior, attr, rng);
 }

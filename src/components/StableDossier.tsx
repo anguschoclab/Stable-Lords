@@ -60,58 +60,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
     <ScrollArea className="h-full pr-4">
       <div className="space-y-6 pb-20">
         {/* Header Section with Crest */}
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0">
-            {'crest' in stable && stable.crest ? (
-              <div className="relative">
-                <StableCrest crest={stable.crest} size="lg" showMantling />
-                {stable.owner?.generation !== undefined && stable.owner.generation > 0 && (
-                  <Badge
-                    variant="outline"
-                    className="absolute -bottom-1 -right-1 text-[8px] px-1 py-0"
-                    title={`Generation ${stable.owner.generation} - Inherited crest`}
-                  >
-                    G{stable.owner.generation}
-                  </Badge>
-                )}
-              </div>
-            ) : (
-              <div className="h-16 w-16 rounded-none border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-secondary/20">
-                <span className="text-xs text-muted-foreground">?</span>
-              </div>
-            )}
-          </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-display font-black tracking-tight">
-                {stable.owner.stableName}
-              </h2>
-              {stable.isPlayer ? (
-                <Badge className="bg-arena-fame text-primary-foreground">Your Stable</Badge>
-              ) : (
-                <Badge variant="outline">Rival</Badge>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Master: <span className="font-bold text-foreground">{stable.owner.name}</span>
-            </p>
-            {stable.owner.ageRetired !== undefined && (
-              <p className="text-[10px] text-muted-foreground/70">
-                Ascended to the mantle in week {stable.owner.ageRetired}
-                {stable.owner.generation ? ` · Generation ${stable.owner.generation}` : ''}
-              </p>
-            )}
-            {'crest' in stable && stable.crest && (
-              <p className="text-[10px] text-muted-foreground italic">
-                {stable.crest.charge.count > 1 ? `${stable.crest.charge.count} ` : ''}
-                {stable.crest.charge.name}
-                {stable.crest.charge.posture ? ` (${stable.crest.charge.posture})` : ''}
-                {' — '}
-                {getChargeDescription(stable.crest.charge)}
-              </p>
-            )}
-          </div>
-        </div>
+        <DossierHeader stable={stable} />
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
@@ -163,5 +112,69 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
         </div>
       </div>
     </ScrollArea>
+  );
+}
+
+type StableLike = {
+  owner: ReturnType<typeof useGameStore.getState>['player'] & { generation?: number };
+  roster: ReturnType<typeof useGameStore.getState>['roster'];
+  isPlayer: boolean;
+  crest?: Parameters<typeof StableCrest>[0]['crest'];
+};
+
+function DossierHeader({ stable }: { stable: StableLike }) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="flex-shrink-0">
+        {stable.crest ? (
+          <div className="relative">
+            <StableCrest crest={stable.crest} size="lg" showMantling />
+            {stable.owner?.generation !== undefined && stable.owner.generation > 0 && (
+              <Badge
+                variant="outline"
+                className="absolute -bottom-1 -right-1 text-[8px] px-1 py-0"
+                title={`Generation ${stable.owner.generation} - Inherited crest`}
+              >
+                G{stable.owner.generation}
+              </Badge>
+            )}
+          </div>
+        ) : (
+          <div className="h-16 w-16 rounded-none border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-secondary/20">
+            <span className="text-xs text-muted-foreground">?</span>
+          </div>
+        )}
+      </div>
+      <div className="flex-1 space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-display font-black tracking-tight">
+            {stable.owner.stableName}
+          </h2>
+          {stable.isPlayer ? (
+            <Badge className="bg-arena-fame text-primary-foreground">Your Stable</Badge>
+          ) : (
+            <Badge variant="outline">Rival</Badge>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Master: <span className="font-bold text-foreground">{stable.owner.name}</span>
+        </p>
+        {stable.owner.ageRetired !== undefined && (
+          <p className="text-[10px] text-muted-foreground/70">
+            Ascended to the mantle in week {stable.owner.ageRetired}
+            {stable.owner.generation ? ` · Generation ${stable.owner.generation}` : ''}
+          </p>
+        )}
+        {stable.crest && (
+          <p className="text-[10px] text-muted-foreground italic">
+            {stable.crest.charge.count > 1 ? `${stable.crest.charge.count} ` : ''}
+            {stable.crest.charge.name}
+            {stable.crest.charge.posture ? ` (${stable.crest.charge.posture})` : ''}
+            {' — '}
+            {getChargeDescription(stable.crest.charge)}
+          </p>
+        )}
+      </div>
+    </div>
   );
 }

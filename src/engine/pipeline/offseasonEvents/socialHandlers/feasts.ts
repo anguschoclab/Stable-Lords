@@ -5,8 +5,8 @@ import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
   getActiveWarriors,
-  pickActiveWarrior,
   announceOffseasonEvent,
+  withChosenWarrior,
 } from '../types';
 
 /**
@@ -97,8 +97,7 @@ export function handleStreetPerformance(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const fameGained = 15;
     const goldGained = 50 + Math.floor(rng.next() * 50);
     ctx.treasuryDelta += goldGained;
@@ -112,17 +111,14 @@ export function handleStreetPerformance(
       ? currentFlair
       : [...currentFlair, 'Local Hero'];
 
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: (chosen.fame || 0) + fameGained,
-      flair: newFlair,
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      fame: fameGained,
-      gold: goldGained,
-    });
-  }
+    return {
+      updates: {
+        fame: (chosen.fame || 0) + fameGained,
+        flair: newFlair,
+      },
+      announce: { fame: fameGained, gold: goldGained },
+    };
+  });
 }
 
 /**
@@ -140,8 +136,7 @@ export function handleTravelingCircus(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const chosen = pickActiveWarrior(state, rng);
-  if (chosen) {
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const xpGained = 20 + Math.floor(rng.next() * 21);
     const fameGained = 15 + Math.floor(rng.next() * 11);
     const cost = 25;
@@ -151,17 +146,14 @@ export function handleTravelingCircus(
       makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
     );
 
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-      fame: (chosen.fame || 0) + fameGained,
-    });
-
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
-      name: chosen.name,
-      xp: xpGained,
-      fame: fameGained,
-    });
-  }
+    return {
+      updates: {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+      },
+      announce: { xp: xpGained, fame: fameGained },
+    };
+  });
 }
 
 /**

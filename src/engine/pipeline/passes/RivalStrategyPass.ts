@@ -33,52 +33,15 @@ import type { EnginePool } from '@/engine/pool/enginePool';
 export { buildSuccessorIndex, handleOwnerLifecycle } from './rivalStableShard';
 
 /**
- * Stable Lords — Rival Strategy Pipeline Pass
- *
- * The per-rival stage-1 loop runs through `rivalStableShard.processRivalStable`
- * — in-line by default, or distributed across the engine pool's shard workers
- * when `pool.size > 1`. Shard output is order-preserving, so both paths merge
- * identically.
+ * World matchmaking, per-rival bid generation, and offer conversion — the
+ * full "who is fighting whom" stage for the coming week. Returns the merged
+ * boutOffers map (existing + pruned + world bouts + bid offers).
  */
-export function runRivalStrategyPass(
+function buildWeekOffers(
   state: GameState,
-  nextWeek: number,
-  rootRng?: IRNGService,
-  headless?: boolean
-): StateImpact;
-export function runRivalStrategyPass(
-  state: GameState,
-  nextWeek: number,
-  rootRng: IRNGService | undefined,
-  headless: boolean | undefined,
-  pool: EnginePool | undefined
-): StateImpact | Promise<StateImpact>;
-export function runRivalStrategyPass(
-  state: GameState,
-  nextWeek: number,
-  rootRng?: IRNGService,
-  headless?: boolean,
-  pool?: EnginePool
-): StateImpact | Promise<StateImpact> {
-  const rng = resolveRng(rootRng, state.absoluteWeek * 7919 + 13);
-
-  // 0. Build successor index: maps stableId → first famous retired warrior (fame > 200)
-  const successorByStable = buildSuccessorIndex(state.retired);
-
-  // 0.5 Shared perception — built once per tick, consumed by every rival's
-  // agent context so per-rival memory work never re-scans the world (B.1).
-  const perception = buildPerceptionSnapshot(state);
-
-  const shardCtx: RivalShardContext = { state, perception, successorByStable, nextWeek };
-  const inputs = (state.rivals || []).map((rival, index) => ({ rival, index }));
-
-  const finish = (shardOutputs: RivalShardOutput[]): StateImpact => {
-    const impacts: StateImpact[] = [];
-    const globalGazetteItems: string[] = shardOutputs.flatMap((o) => o.gazetteItems);
-
-    // 1. Process Individual Rival Stables (Economy/Strategy)
-    let currentRivals = shardOutputs.map((o) => o.rival);
-
+  currentRivals: RivalStableData[],
+  rng: IRNGService
+): Record<BoutOfferId, (typeof state.boutOffers)[BoutOfferId]> {
   // 1.5. World Matchmaking: NPCs propose bouts to each other
   const worldBouts = planWorldBouts(state, rng);
   let boutOffersWithWorld: Record<BoutOfferId, (typeof state.boutOffers)[BoutOfferId]> = {
@@ -137,7 +100,29 @@ export function runRivalStrategyPass(
   for (const offer of bidOffers) {
     boutOffersWithWorld[offer.id] = offer;
   }
+  return boutOffersWithWorld;
+}
 
+/**
+ * Merge stage-1 shard outputs with the world-scope follow-on passes:
+ * matchmaking, bids, roster management, draft, poach, offers, plans, and
+ * tournament emission.
+ */
+function finishRivalPass(
+  shardOutputs: RivalShardOutput[],
+  state: GameState,
+  nextWeek: number,
+  rng: IRNGService,
+  headless: boolean | undefined
+): StateImpact {
+  const impacts: StateImpact[] = [];
+  const globalGazetteItems: string[] = shardOutputs.flatMap((o) => o.gazetteItems);
+
+  // 1. Process Individual Rival Stables (Economy/Strategy)
+  let currentRivals = shardOutputs.map((o) => o.rival);
+
+  // 1.5–1.7. Matchmaking + bids → offers
+  const boutOffersWithWorld = buildWeekOffers(state, currentRivals, rng);
   impacts.push({ boutOffers: boutOffersWithWorld });
 
   // 2. AI Roster Management — culling/retirement first, then flag
@@ -204,21 +189,63 @@ export function runRivalStrategyPass(
     impacts.push(buildChampionsTournament(state, nextWeek, rng, headless));
   }
 
-    if (globalGazetteItems.length > 0) {
-      impacts.push({
-        newsletterItems: [
-          {
-            id: rng.uuid(),
-            week: nextWeek,
-            title: 'Intelligence & Strategy Report',
-            items: globalGazetteItems,
-          },
-        ],
-      });
-    }
+  if (globalGazetteItems.length > 0) {
+    impacts.push({
+      newsletterItems: [
+        {
+          id: rng.uuid(),
+          week: nextWeek,
+          title: 'Intelligence & Strategy Report',
+          items: globalGazetteItems,
+        },
+      ],
+    });
+  }
 
-    return mergeImpacts(impacts);
-  };
+  return mergeImpacts(impacts);
+}
+
+/**
+ * Stable Lords — Rival Strategy Pipeline Pass
+ *
+ * The per-rival stage-1 loop runs through `rivalStableShard.processRivalStable`
+ * — in-line by default, or distributed across the engine pool's shard workers
+ * when `pool.size > 1`. Shard output is order-preserving, so both paths merge
+ * identically.
+ */
+export function runRivalStrategyPass(
+  state: GameState,
+  nextWeek: number,
+  rootRng?: IRNGService,
+  headless?: boolean
+): StateImpact;
+export function runRivalStrategyPass(
+  state: GameState,
+  nextWeek: number,
+  rootRng: IRNGService | undefined,
+  headless: boolean | undefined,
+  pool: EnginePool | undefined
+): StateImpact | Promise<StateImpact>;
+export function runRivalStrategyPass(
+  state: GameState,
+  nextWeek: number,
+  rootRng?: IRNGService,
+  headless?: boolean,
+  pool?: EnginePool
+): StateImpact | Promise<StateImpact> {
+  const rng = resolveRng(rootRng, state.absoluteWeek * 7919 + 13);
+
+  // 0. Build successor index: maps stableId → first famous retired warrior (fame > 200)
+  const successorByStable = buildSuccessorIndex(state.retired);
+
+  // 0.5 Shared perception — built once per tick, consumed by every rival's
+  // agent context so per-rival memory work never re-scans the world (B.1).
+  const perception = buildPerceptionSnapshot(state);
+
+  const shardCtx: RivalShardContext = { state, perception, successorByStable, nextWeek };
+  const inputs = (state.rivals || []).map((rival, index) => ({ rival, index }));
+  const finish = (shardOutputs: RivalShardOutput[]) =>
+    finishRivalPass(shardOutputs, state, nextWeek, rng, headless);
 
   // In-line by default; distributed across shard workers when a pool is
   // configured. Both paths run the same processRivalStable shard function

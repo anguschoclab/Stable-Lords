@@ -24,6 +24,122 @@ interface RecruitFiltersProps {
   canRefresh: boolean;
 }
 
+/** Tier toggle grid — each tier row shows cost and dims when inactive. */
+function TierFilter({
+  activeTiers,
+  toggleTier,
+}: Pick<RecruitFiltersProps, 'activeTiers' | 'toggleTier'>) {
+  return (
+    <div className="space-y-4">
+      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+        Tier
+      </label>
+      <div className="grid grid-cols-1 gap-3">
+        {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map((tier) => {
+          const isActive = activeTiers.has(tier);
+          const config = TIER_CONFIG[tier];
+          return (
+            <button
+              key={tier}
+              onClick={() => toggleTier(tier)}
+              className={cn(
+                'group flex items-center justify-between p-4 border transition-all motion-reduce:transition-none',
+                isActive
+                  ? 'bg-white/[0.05] border-white/20'
+                  : 'bg-transparent border-white/5 opacity-20 grayscale hover:opacity-100 hover:grayscale-0'
+              )}
+            >
+              <div className="flex items-center gap-4">
+                <div className={cn('w-1.5 h-1.5', config.bg)} />
+                <span
+                  className={cn(
+                    'text-[10px] font-black uppercase tracking-widest',
+                    isActive ? 'text-foreground' : 'text-muted-foreground'
+                  )}
+                >
+                  {tier}
+                </span>
+              </div>
+              <span className="font-display font-black text-[10px] text-arena-gold">
+                {TIER_COST[tier]}G
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** Fighting-style dropdown filter. */
+function StyleFilter({
+  activeStyle,
+  setActiveStyle,
+}: Pick<RecruitFiltersProps, 'activeStyle' | 'setActiveStyle'>) {
+  return (
+    <div className="space-y-4">
+      <label
+        htmlFor="recruit-style-select"
+        className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
+      >
+        Fighting Style
+      </label>
+      <Select
+        value={activeStyle}
+        onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}
+      >
+        <SelectTrigger
+          id="recruit-style-select"
+          className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest"
+        >
+          <SelectValue placeholder="All Styles" />
+        </SelectTrigger>
+        <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
+          <SelectItem value="all">ALL STYLES</SelectItem>
+          {Object.entries(STYLE_DISPLAY_NAMES).map(([k, v]) => (
+            <SelectItem key={k} value={k}>
+              {v.toUpperCase()}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+/** Sort-order dropdown. */
+function SortFilter({ sortBy, setSortBy }: Pick<RecruitFiltersProps, 'sortBy' | 'setSortBy'>) {
+  return (
+    <div className="space-y-4">
+      <label
+        htmlFor="recruit-sort-select"
+        className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
+      >
+        Sort By
+      </label>
+      <Select
+        value={sortBy}
+        onValueChange={(v) =>
+          setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'random' | 'age-asc')
+        }
+      >
+        <SelectTrigger
+          id="recruit-sort-select"
+          className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
+          <SelectItem value="random">ORDER: RANDOM</SelectItem>
+          <SelectItem value="cost-asc">VALUE: LOW TO HIGH</SelectItem>
+          <SelectItem value="cost-desc">VALUE: HIGH TO LOW</SelectItem>
+          <SelectItem value="age-asc">AGE: YOUNGEST FIRST</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -42,103 +158,9 @@ export function RecruitFilters({
       <SectionDivider label="Filters" />
 
       <div className="space-y-8">
-        {/* Tiers */}
-        <div className="space-y-4">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-            Tier
-          </label>
-          <div className="grid grid-cols-1 gap-3">
-            {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map((tier) => {
-              const isActive = activeTiers.has(tier);
-              const config = TIER_CONFIG[tier];
-              return (
-                <button
-                  key={tier}
-                  onClick={() => toggleTier(tier)}
-                  className={cn(
-                    'group flex items-center justify-between p-4 border transition-all motion-reduce:transition-none',
-                    isActive
-                      ? 'bg-white/[0.05] border-white/20'
-                      : 'bg-transparent border-white/5 opacity-20 grayscale hover:opacity-100 hover:grayscale-0'
-                  )}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={cn('w-1.5 h-1.5', config.bg)} />
-                    <span
-                      className={cn(
-                        'text-[10px] font-black uppercase tracking-widest',
-                        isActive ? 'text-foreground' : 'text-muted-foreground'
-                      )}
-                    >
-                      {tier}
-                    </span>
-                  </div>
-                  <span className="font-display font-black text-[10px] text-arena-gold">
-                    {TIER_COST[tier]}G
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Style */}
-        <div className="space-y-4">
-          <label
-            htmlFor="recruit-style-select"
-            className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
-          >
-            Fighting Style
-          </label>
-          <Select
-            value={activeStyle}
-            onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}
-          >
-            <SelectTrigger
-              id="recruit-style-select"
-              className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest"
-            >
-              <SelectValue placeholder="All Styles" />
-            </SelectTrigger>
-            <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
-              <SelectItem value="all">ALL STYLES</SelectItem>
-              {Object.entries(STYLE_DISPLAY_NAMES).map(([k, v]) => (
-                <SelectItem key={k} value={k}>
-                  {v.toUpperCase()}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Sort */}
-        <div className="space-y-4">
-          <label
-            htmlFor="recruit-sort-select"
-            className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
-          >
-            Sort By
-          </label>
-          <Select
-            value={sortBy}
-            onValueChange={(v) =>
-              setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'random' | 'age-asc')
-            }
-          >
-            <SelectTrigger
-              id="recruit-sort-select"
-              className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
-              <SelectItem value="random">ORDER: RANDOM</SelectItem>
-              <SelectItem value="cost-asc">VALUE: LOW TO HIGH</SelectItem>
-              <SelectItem value="cost-desc">VALUE: HIGH TO LOW</SelectItem>
-              <SelectItem value="age-asc">AGE: YOUNGEST FIRST</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <TierFilter activeTiers={activeTiers} toggleTier={toggleTier} />
+        <StyleFilter activeStyle={activeStyle} setActiveStyle={setActiveStyle} />
+        <SortFilter sortBy={sortBy} setSortBy={setSortBy} />
 
         {/* Refresh */}
         <Button

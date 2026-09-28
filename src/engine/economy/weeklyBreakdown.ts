@@ -67,13 +67,28 @@ export interface StableEconomyInput {
   isPlayer?: boolean;
 }
 
+function arenaTier(arenaId?: string): 1 | 2 | 3 {
+  if (!arenaId) return 1;
+  try {
+    return getArenaById(arenaId).tier;
+  } catch {
+    return 1; // unknown/legacy arena id → treat as tier 1
+  }
+}
+
+interface PurseTotals {
+  fightCount: number;
+  winCount: number;
+  scaledPurse: number;
+  scaledWinBonus: number;
+}
+
 /**
- * Compute a projected breakdown for the current state (before advancing).
- *
- * @param input - The stable economy input (GameState or AI rival subset)
- * @returns A detailed breakdown of income and expenses
+ * ⚡ Bolt: Fast backward scan of this week's fight purses — O(week's bouts)
+ * instead of an O(N) filter, breaking early because `arenaHistory` is
+ * guaranteed chronological.
  */
-export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdown {
+function sumFightPurses(input: StableEconomyInput): PurseTotals {
   const week = input.week;
   const stableWarriorIds = new Set(input.roster.map((w) => w.id));
 
@@ -82,17 +97,6 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
   let scaledPurse = 0;
   let scaledWinBonus = 0;
 
-  const arenaTier = (arenaId?: string): 1 | 2 | 3 => {
-    if (!arenaId) return 1;
-    try {
-      return getArenaById(arenaId).tier;
-    } catch {
-      return 1; // unknown/legacy arena id → treat as tier 1
-    }
-  };
-
-  // ⚡ Bolt: Fast backward search in O(1) instead of an O(N) filter.
-  // We can break early because `arenaHistory` is guaranteed chronological.
   for (let i = input.arenaHistory.length - 1; i >= 0; i--) {
     const f = input.arenaHistory[i];
     if (!f) break;
@@ -102,28 +106,16 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     // Skip them here to avoid double-counting income from the same fight.
     if (input.isPlayer && f.contractId) continue;
 
-    const aIsStable = stableWarriorIds.has(f.warriorIdA);
-    const dIsStable = stableWarriorIds.has(f.warriorIdD);
     const tier = arenaTier(f.arenaId);
 
-    if (aIsStable) {
+    for (const side of ['A', 'D'] as const) {
+      const warriorId = side === 'A' ? f.warriorIdA : f.warriorIdD;
+      if (!stableWarriorIds.has(warriorId)) continue;
       fightCount++;
-      const won = f.winner === 'A';
+      const won = f.winner === side;
       if (won) winCount++;
       const { purse, winBonus } = computeFightEconomics({
-        fame: f.fameA ?? 0,
-        arenaTier: tier,
-        won,
-      });
-      scaledPurse += purse;
-      scaledWinBonus += winBonus;
-    }
-    if (dIsStable) {
-      fightCount++;
-      const won = f.winner === 'D';
-      if (won) winCount++;
-      const { purse, winBonus } = computeFightEconomics({
-        fame: f.fameD ?? 0,
+        fame: (side === 'A' ? f.fameA : f.fameD) ?? 0,
         arenaTier: tier,
         won,
       });
@@ -132,11 +124,25 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
     }
   }
 
-  const income: { label: string; amount: number; category: LedgerEntry['category'] }[] = [];
-  if (fightCount > 0)
-    income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse, category: 'fight' });
-  if (winCount > 0)
-    income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus, category: 'fight' });
+  return { fightCount, winCount, scaledPurse, scaledWinBonus };
+}
+
+type BreakdownItem = { label: string; amount: number; category: LedgerEntry['category'] };
+
+function buildIncome(input: StableEconomyInput, purses: PurseTotals): BreakdownItem[] {
+  const income: BreakdownItem[] = [];
+  if (purses.fightCount > 0)
+    income.push({
+      label: `Fight purses (${purses.fightCount})`,
+      amount: purses.scaledPurse,
+      category: 'fight',
+    });
+  if (purses.winCount > 0)
+    income.push({
+      label: `Win bonuses (${purses.winCount})`,
+      amount: purses.scaledWinBonus,
+      category: 'fight',
+    });
   if (input.fame > 0)
     income.push({
       label: 'Fame dividends',
@@ -144,7 +150,7 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
       category: 'other',
     });
 
-  if (input.applyStipend !== false && fightCount === 0 && input.roster.length > 0) {
+  if (input.applyStipend !== false && purses.fightCount === 0 && input.roster.length > 0) {
     income.push({ label: 'Idle Stipend', amount: IDLE_STIPEND, category: 'other' });
   }
 
@@ -159,7 +165,6 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
 
   // ⚡ Bolt: Single-pass loop for roster economy logic, avoiding multiple .reduce() allocations
   let patronageIncome = 0;
-  let rosterUpkeep = 0;
   for (let i = 0; i < input.roster.length; i++) {
     const w = input.roster[i];
     if (!w) continue;
@@ -172,10 +177,6 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
           (wFame - WEATHER_ECONOMICS.PATRONAGE_THRESHOLD) / WEATHER_ECONOMICS.PATRONAGE_DIVISOR
         ) * WEATHER_ECONOMICS.PATRONAGE_MULTIPLIER;
     }
-
-    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
-    const famePremium = Math.round(wFame * FAME_UPKEEP_MULTIPLIER);
-    rosterUpkeep += WARRIOR_UPKEEP_BASE + famePremium;
   }
 
   if (patronageIncome > 0)
@@ -185,7 +186,22 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
       category: 'other',
     });
 
-  const expenses: { label: string; amount: number; category: LedgerEntry['category'] }[] = [];
+  return income;
+}
+
+function buildExpenses(input: StableEconomyInput): BreakdownItem[] {
+  const expenses: BreakdownItem[] = [];
+
+  // ⚡ Bolt: Single-pass roster upkeep sum, same loop shape as patronage.
+  let rosterUpkeep = 0;
+  for (let i = 0; i < input.roster.length; i++) {
+    const w = input.roster[i];
+    if (!w) continue;
+    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
+    const famePremium = Math.round((w.fame || 0) * FAME_UPKEEP_MULTIPLIER);
+    rosterUpkeep += WARRIOR_UPKEEP_BASE + famePremium;
+  }
+
   if (input.roster.length > 0) {
     expenses.push({
       label: `Warrior upkeep (${input.roster.length})`,
@@ -236,6 +252,20 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
       amount: trainingCount * TRAINING_COST,
       category: 'training',
     });
+
+  return expenses;
+}
+
+/**
+ * Compute a projected breakdown for the current state (before advancing).
+ *
+ * @param input - The stable economy input (GameState or AI rival subset)
+ * @returns A detailed breakdown of income and expenses
+ */
+export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdown {
+  const purses = sumFightPurses(input);
+  const income = buildIncome(input, purses);
+  const expenses = buildExpenses(input);
 
   // ⚡ Bolt: Optimized calculation over constant size small arrays without .reduce() overhead.
   let totalIncome = 0;

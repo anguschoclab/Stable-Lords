@@ -1,7 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 import { CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import type { FightPlan, Warrior } from '@/types/game';
+import type { FightPlan, Warrior, OffensiveTactic, DefensiveTactic } from '@/types/game';
+import {
+  getOffensiveSuitability,
+  getDefensiveSuitability,
+  SUITABILITY_LABELS,
+  SUITABILITY_COLORS,
+} from '@/engine/strategy/tacticSuitability';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { StylePreset } from '@/engine/bout/stylePresets';
 import { getScoreColor } from '@/lib/scoreDisplay';
@@ -190,6 +198,101 @@ export function PresetBar({
       </div>
       <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
         <span>Targeting: Optimized for {plan.target || 'Any'}</span>
+      </div>
+    </div>
+  );
+}
+
+/** Labeled 1–10 plan slider with live value readout (OE / AL / Kill Desire). */
+export function PlanValueSlider({
+  id,
+  label,
+  toneClass,
+  value,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  toneClass: string;
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Label
+          htmlFor={id}
+          className={cn('text-[10px] font-black uppercase tracking-widest', toneClass)}
+        >
+          {label}
+        </Label>
+        <span className={cn('text-sm font-mono font-bold', toneClass)}>{value}</span>
+      </div>
+      <Slider
+        id={id}
+        aria-label={label}
+        value={[value]}
+        onValueChange={([v]) => onChange(v ?? 5)}
+        min={1}
+        max={10}
+        step={1}
+      />
+    </div>
+  );
+}
+
+/** Selected offensive/defensive tactic badges with per-style suitability marks. */
+export function TacticBadgeStrip({ plan }: { plan: FightPlan }) {
+  return (
+    <div className="min-h-[60px] border-2 border-dashed flex items-center justify-center p-4 bg-black/20 border-white/10">
+      <div className="flex gap-2">
+        {plan.offensiveTactic && plan.offensiveTactic !== 'none' && (
+          <Badge>
+            {plan.offensiveTactic}
+            {plan.style && (
+              <span
+                className={cn(
+                  'ml-1 text-[8px]',
+                  SUITABILITY_COLORS[
+                    getOffensiveSuitability(plan.style, plan.offensiveTactic as OffensiveTactic)
+                  ]
+                )}
+              >
+                {
+                  SUITABILITY_LABELS[
+                    getOffensiveSuitability(plan.style, plan.offensiveTactic as OffensiveTactic)
+                  ]
+                }
+              </span>
+            )}
+          </Badge>
+        )}
+        {plan.defensiveTactic && plan.defensiveTactic !== 'none' && (
+          <Badge className="bg-arena-gold text-primary-foreground rounded-none uppercase font-black tracking-widest px-3 py-1">
+            {plan.defensiveTactic}
+            {plan.style && (
+              <span
+                className={cn(
+                  'ml-1 text-[8px]',
+                  SUITABILITY_COLORS[
+                    getDefensiveSuitability(plan.style, plan.defensiveTactic as DefensiveTactic)
+                  ]
+                )}
+              >
+                {
+                  SUITABILITY_LABELS[
+                    getDefensiveSuitability(plan.style, plan.defensiveTactic as DefensiveTactic)
+                  ]
+                }
+              </span>
+            )}
+          </Badge>
+        )}
+        {!plan.offensiveTactic && !plan.defensiveTactic && (
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
+            Select tactics from the bank
+          </span>
+        )}
       </div>
     </div>
   );

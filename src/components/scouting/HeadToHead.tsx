@@ -15,6 +15,121 @@ interface HeadToHeadProps {
   rosterB: Warrior[];
 }
 
+/** Challenger-vs-defender win tally with proportional split bar. */
+function WinTally({
+  winsA,
+  winsB,
+  draws,
+  h2hLength,
+}: {
+  winsA: number;
+  winsB: number;
+  draws: number;
+  h2hLength: number;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between font-display">
+        <div className="text-left">
+          <div className="text-[8px] font-black uppercase tracking-[0.3em] text-primary mb-1">
+            Challenger
+          </div>
+          <div className="text-lg font-black text-foreground leading-none">{winsA}W</div>
+        </div>
+        <div className="text-center opacity-20">
+          <Zap className="h-4 w-4 text-arena-gold" />
+        </div>
+        <div className="text-right">
+          <div className="text-[8px] font-black uppercase tracking-[0.3em] text-accent mb-1">
+            Defender
+          </div>
+          <div className="text-lg font-black text-foreground leading-none">{winsB}W</div>
+        </div>
+      </div>
+
+      <div className="h-2 rounded-full overflow-hidden flex bg-neutral-900 border border-white/5 shadow-inner">
+        {winsA > 0 && (
+          <div
+            className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
+            style={{ width: `${(winsA / h2hLength) * 100}%` }}
+          />
+        )}
+        {draws > 0 && (
+          <div
+            className="h-full bg-muted-foreground/20 transition-all motion-reduce:transition-none motion-reduce:transform-none"
+            style={{ width: `${(draws / h2hLength) * 100}%` }}
+          />
+        )}
+        {winsB > 0 && (
+          <div
+            className="h-full bg-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
+            style={{ width: `${(winsB / h2hLength) * 100}%` }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+type H2HFight = ReturnType<typeof useHeadToHeadData>['h2hReversed'][number];
+
+/** One engagement row — week, resolved fighter names, outcome mark. */
+function EngagementRow({
+  f,
+  idsA,
+  idsB,
+  state,
+}: {
+  f: H2HFight;
+  idsA: Set<string>;
+  idsB: Set<string>;
+  state: ReturnType<typeof useWorldState>;
+}) {
+  const aIsStableA = idsA.has(f.warriorIdA);
+  const winnerIsA =
+    (idsA.has(f.warriorIdA) && f.winner === 'A') ||
+    (idsA.has(f.warriorIdD) && f.winner === 'D');
+  const winnerIsB =
+    (idsB.has(f.warriorIdA) && f.winner === 'A') ||
+    (idsB.has(f.warriorIdD) && f.winner === 'D');
+
+  const warriorIdLeft = aIsStableA ? f.warriorIdA : f.warriorIdD;
+  const warriorIdRight = aIsStableA ? f.warriorIdD : f.warriorIdA;
+
+  return (
+    <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none motion-reduce:transition-none">
+      <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">
+        W{f.week}
+      </div>
+      <div
+        className={cn(
+          'flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
+          winnerIsA ? 'text-primary' : 'text-muted-foreground/40'
+        )}
+      >
+        {resolveWarriorName(state, warriorIdLeft, 'Unknown')}
+      </div>
+      <div className="flex items-center gap-1 mx-4">
+        <Target className="h-3 w-3 text-arena-gold/40" />
+        <Badge
+          variant="outline"
+          className="text-[8px] h-4 py-0 uppercase tracking-widest border-white/10 text-muted-foreground/40 font-mono italic"
+        >
+          {f.by || 'D'}
+        </Badge>
+      </div>
+      <div
+        className={cn(
+          'flex-1 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
+          winnerIsB ? 'text-accent' : 'text-muted-foreground/40'
+        )}
+      >
+        {resolveWarriorName(state, warriorIdRight, 'Unknown')}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Head to head.
  * @param - { roster a, roster b }.
@@ -58,96 +173,11 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
           </div>
         ) : (
           <>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between font-display">
-                <div className="text-left">
-                  <div className="text-[8px] font-black uppercase tracking-[0.3em] text-primary mb-1">
-                    Challenger
-                  </div>
-                  <div className="text-lg font-black text-foreground leading-none">{winsA}W</div>
-                </div>
-                <div className="text-center opacity-20">
-                  <Zap className="h-4 w-4 text-arena-gold" />
-                </div>
-                <div className="text-right">
-                  <div className="text-[8px] font-black uppercase tracking-[0.3em] text-accent mb-1">
-                    Defender
-                  </div>
-                  <div className="text-lg font-black text-foreground leading-none">{winsB}W</div>
-                </div>
-              </div>
-
-              <div className="h-2 rounded-full overflow-hidden flex bg-neutral-900 border border-white/5 shadow-inner">
-                {winsA > 0 && (
-                  <div
-                    className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
-                    style={{ width: `${(winsA / h2hLength) * 100}%` }}
-                  />
-                )}
-                {draws > 0 && (
-                  <div
-                    className="h-full bg-muted-foreground/20 transition-all motion-reduce:transition-none motion-reduce:transform-none"
-                    style={{ width: `${(draws / h2hLength) * 100}%` }}
-                  />
-                )}
-                {winsB > 0 && (
-                  <div
-                    className="h-full bg-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
-                    style={{ width: `${(winsB / h2hLength) * 100}%` }}
-                  />
-                )}
-              </div>
-            </div>
-
+            <WinTally winsA={winsA} winsB={winsB} draws={draws} h2hLength={h2hLength} />
             <div className="space-y-1.5 max-h-64 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-              {h2hReversed.map((f) => {
-                const aIsStableA = idsA.has(f.warriorIdA);
-                const winnerIsA =
-                  (idsA.has(f.warriorIdA) && f.winner === 'A') ||
-                  (idsA.has(f.warriorIdD) && f.winner === 'D');
-                const winnerIsB =
-                  (idsB.has(f.warriorIdA) && f.winner === 'A') ||
-                  (idsB.has(f.warriorIdD) && f.winner === 'D');
-
-                const warriorIdLeft = aIsStableA ? f.warriorIdA : f.warriorIdD;
-                const warriorNameLeft = 'Unknown';
-                const warriorIdRight = aIsStableA ? f.warriorIdD : f.warriorIdA;
-                const warriorNameRight = 'Unknown';
-
-                return (
-                  <div
-                    key={f.id}
-                    className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none motion-reduce:transition-none"
-                  >
-                    <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">
-                      W{f.week}
-                    </div>
-                    <div
-                      className={cn('flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
-                        winnerIsA ? 'text-primary' : 'text-muted-foreground/40'
-                      )}
-                    >
-                      {resolveWarriorName(state, warriorIdLeft, warriorNameLeft)}
-                    </div>
-                    <div className="flex items-center gap-1 mx-4">
-                      <Target className="h-3 w-3 text-arena-gold/40" />
-                      <Badge
-                        variant="outline"
-                        className="text-[8px] h-4 py-0 uppercase tracking-widest border-white/10 text-muted-foreground/40 font-mono italic"
-                      >
-                        {f.by || 'D'}
-                      </Badge>
-                    </div>
-                    <div
-                      className={cn('flex-1 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
-                        winnerIsB ? 'text-accent' : 'text-muted-foreground/40'
-                      )}
-                    >
-                      {resolveWarriorName(state, warriorIdRight, warriorNameRight)}
-                    </div>
-                  </div>
-                );
-              })}
+              {h2hReversed.map((f) => (
+                <EngagementRow key={f.id} f={f} idsA={idsA} idsB={idsB} state={state} />
+              ))}
             </div>
           </>
         )}

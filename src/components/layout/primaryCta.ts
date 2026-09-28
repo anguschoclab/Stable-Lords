@@ -21,7 +21,10 @@ export interface PrimaryCtaDef {
 }
 
 export const PRIMARY_CTA_BY_ROUTE: Record<string, PrimaryCtaDef> = {
+  // `/` is the title screen (no app shell); `/stable` is the overview the
+  // bible's "EXECUTE WEEK N" route maps to in this route table.
   '/': { label: 'EXECUTE WEEK', intent: 'advance' },
+  '/stable': { label: 'EXECUTE WEEK', intent: 'advance' },
   '/stable/bouts': { label: 'BEGIN CYCLE', intent: 'advance' },
   '/stable/arena': { label: 'VIEW CARD', intent: 'page' },
   '/world/tournaments': { label: 'ADVANCE BRACKET', intent: 'page' },
@@ -38,14 +41,8 @@ export const PRIMARY_CTA_BY_ROUTE: Record<string, PrimaryCtaDef> = {
  * routes resolve to null — no primary CTA there per spec.
  */
 export function resolvePrimaryCta(pathname: string): PrimaryCtaDef | null {
-  const exact = PRIMARY_CTA_BY_ROUTE[pathname];
-  if (exact) return exact;
-  let best: string | null = null;
-  for (const key of Object.keys(PRIMARY_CTA_BY_ROUTE)) {
-    if (key === '/') continue;
-    if (pathname.startsWith(`${key}/`) && (!best || key.length > best.length)) best = key;
-  }
-  return best ? (PRIMARY_CTA_BY_ROUTE[best] ?? null) : null;
+  const key = resolvePrimaryCtaKey(pathname);
+  return key ? (PRIMARY_CTA_BY_ROUTE[key] ?? null) : null;
 }
 
 /** A live page-registered handler for a `page`-intent CTA. */
@@ -77,5 +74,9 @@ export function resolvePrimaryCtaKey(pathname: string): string | null {
     if (key === '/') continue;
     if (pathname.startsWith(`${key}/`) && (!best || key.length > best.length)) best = key;
   }
-  return best;
+  if (!best) return null;
+  // A prefix match with ≥2 trailing segments is a detail page
+  // (e.g. `/stable/promoter/p1` under `/stable`) — no primary CTA per spec.
+  const trailing = pathname.slice(best.length + 1);
+  return trailing.split('/').filter(Boolean).length >= 2 ? null : best;
 }

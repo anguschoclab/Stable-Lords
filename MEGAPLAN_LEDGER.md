@@ -146,3 +146,10 @@ inside live modules, not orphaned features.
 
 Test updates this batch: `navigationHubs.test.ts` world-hub page count 8 → 10 + two label assertions (same stale Phase-5 expectation class as SubPageList).
 | `dafc665e` | 6 | L7 engine-layer CSS | `getMetaColor`/`getMetaLabel` were already moved to `lib/metaDriftDisplay` during Phase-3 splits. `getScoreColor` was still in `engine/strategy/strategyAnalysis.ts` — moved to new `src/lib/scoreDisplay.ts`; its describe block moved from `test/engine/strategyAnalysis.test.ts` to new `test/lib/scoreDisplay.test.ts`; `planBuilder/sections.tsx` repointed. Engine grep for `return 'text-'/'bg-'` now clean. |
+
+## Phase-7 dispositions
+
+| Commit | Phase | Batch | Disposition |
+|---|---|---|---|
+| PENDING | 7 | e2e additions + re-verify | Extracted duplicated FTUE bootstrap + `clickNavLink` into `e2e/helpers.ts`; updated `golden-path.spec.ts` nav lists for Phase-5/6 surface changes (added War Council, Simulator, Prep Mode, Style Archives, Hall of Fights; Hall of Fights reordered last — landing on `/lore/hall-of-fights` collapses the world-hub page list); step 5 now exercises the route-aware CTA (VIEW CARD on Arena → BEGIN CYCLE on Bouts runs the week pipeline). New `e2e/primary-cta.spec.ts` asserts the full §1 contract end-to-end: all 7 mapped labels, selection-gated SIGN CONTRACT, disabled ADVANCE BRACKET without a live bracket, scouting→recruit navigate intent, and zero CTA on a warrior detail route. |
+| PENDING | 7 | Registry detail-depth guard | `page.goto('/stable')` revealed `/` is the title screen — the in-app overview is `/stable`, which resolved to no CTA (conformance gap). Added `/stable` → EXECUTE WEEK; added a depth guard so a prefix match with ≥2 trailing segments resolves null (`/stable/promoter/p1` stays CTA-free per spec). L1 spec still green. |

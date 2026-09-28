@@ -1,6 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-
-const BASE_URL = 'http://localhost:8080';
+import { startNewGame } from './helpers';
 
 /**
  * Seasonal Tournament E2E — full game year soak:
@@ -652,44 +651,8 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     }
   };
 
-  // ── 1. Title Screen → New Game ──────────────────────────────────────────
-  await page.goto(BASE_URL + '/');
-  await page.waitForSelector('text=NEW GAME', { timeout: 15_000 });
-  await page.getByRole('button', { name: /NEW GAME/ }).click();
-
-  // ── 2. New Game Form ────────────────────────────────────────────────────
-  await page.waitForSelector('#owner-name', { timeout: 10_000 });
-  await page.fill('#owner-name', 'Tourney Owner');
-  await page.fill('#stable-name', 'Tourney Stable');
-
-  const backstoryOption = page
-    .locator('button[type="button"]')
-    .filter({
-      hasText:
-        /Former|Mercenary|Noble|Gladiator|Scholar|Thief|Priest|Merchant|Soldier|Hunter|Sailor|Blacksmith|Innkeeper|Farmer|Healer|Beggar/,
-    })
-    .first();
-  await backstoryOption.click();
-
-  await page.getByRole('button', { name: /ENTER THE ORPHANAGE/ }).click();
-
-  // ── 3. Orphanage FTUE ───────────────────────────────────────────────────
-  await page.waitForSelector('text=To the Arena', { timeout: 15_000 });
-  const warriorCards = page.locator('div.cursor-pointer');
-  await warriorCards.nth(0).click();
-  await warriorCards.nth(1).click();
-  await warriorCards.nth(2).click();
-  await page.getByRole('button', { name: /To the Arena/ }).click();
-
-  await page.waitForSelector('text=Set the Plan', { timeout: 15_000 });
-  await expect(page.getByRole('button', { name: /To the Arena/ })).toHaveCount(1);
-  await page.getByRole('button', { name: /To the Arena/ }).click();
-
-  await page.waitForSelector('text=Continue', { timeout: 15_000 });
-  await page.getByRole('button', { name: /Continue/ }).click();
-
-  await page.waitForSelector('text=Enter the Arena Hub', { timeout: 15_000 });
-  await page.getByRole('button', { name: /Enter the Arena Hub/ }).click();
+  // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────
+  await startNewGame(page, { owner: 'Tourney Owner', stable: 'Tourney Stable' });
 
   await page.waitForSelector(isMobile ? 'button[aria-label="Open navigation menu"]' : 'nav', {
     timeout: 15_000,

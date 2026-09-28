@@ -1,13 +1,12 @@
 import { test, expect, type Page } from '@playwright/test';
-
-const BASE_URL = 'http://localhost:8080';
+import { clickNavLink, startNewGame } from './helpers';
 
 /**
  * Golden path E2E test:
  * 1. Start a new game (title → new game form → orphanage FTUE)
  * 2. Click through every side-panel menu item in Stable + World hubs
- * 3. Enter a warrior into a fight on the Arena Hub
- * 4. Advance a week and dismiss the resolution modal
+ * 3. Verify the route-aware primary CTA (VIEW CARD on Arena)
+ * 4. Advance a week via BEGIN CYCLE and dismiss the resolution modal
  */
 
 test('golden path: new game → navigate all pages → fight → advance week', async ({
@@ -20,73 +19,11 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // Mobile runs are slower (sheet open/close animation per nav click).
   test.setTimeout(isMobile ? 240_000 : 120_000);
 
-  // On mobile viewports the side nav is hidden; links live inside the
-  // hamburger sheet (role=dialog) and the sheet auto-closes after each
-  // navigation. Hub links embed alert badges, so their accessible names
-  // carry a suffix like "Stable 3 alerts for Stable" — match them loosely.
-  const clickNavLink = async (name: string, opts: { exact?: boolean } = { exact: true }) => {
-    if (isMobile) {
-      await page.getByRole('button', { name: 'Open navigation menu' }).click();
-      await page.getByRole('dialog').getByRole('link', { name, exact: opts.exact }).first().click();
-    } else {
-      await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
-    }
-  };
+  const nav = (name: string, opts: { exact?: boolean } = { exact: true }) =>
+    clickNavLink(page, isMobile, name, opts);
 
-  // ── 1. Title Screen → New Game ──────────────────────────────────────────
-  await page.goto(BASE_URL + '/');
-  // Wait for the title screen to render
-  await page.waitForSelector('text=NEW GAME', { timeout: 15_000 });
-  await page.getByRole('button', { name: /NEW GAME/ }).click();
-
-  // ── 2. New Game Form ────────────────────────────────────────────────────
-  await page.waitForSelector('#owner-name', { timeout: 10_000 });
-  await page.fill('#owner-name', 'Test Owner');
-  await page.fill('#stable-name', 'Test Stable');
-
-  // Pick the first backstory option
-  // BackstoryPicker buttons are <button> elements inside a grid
-  const backstoryOption = page
-    .locator('button[type="button"]')
-    .filter({
-      hasText:
-        /Former|Mercenary|Noble|Gladiator|Scholar|Thief|Priest|Merchant|Soldier|Hunter|Sailor|Blacksmith|Innkeeper|Farmer|Healer|Beggar/,
-    })
-    .first();
-  await backstoryOption.click();
-
-  // Click "ENTER THE ORPHANAGE"
-  await page.getByRole('button', { name: /ENTER THE ORPHANAGE/ }).click();
-
-  // ── 3. Orphanage FTUE ───────────────────────────────────────────────────
-  // The Orphanage may start at step 1 (Warrior Selection) since we already
-  // set owner/stable name in the New Game form.
-  // Wait for warrior selection cards to appear
-  await page.waitForSelector('text=To the Arena', { timeout: 15_000 });
-
-  // Select 3 warrior cards (they are div.cursor-pointer elements)
-  const warriorCards = page.locator('div.cursor-pointer');
-  await warriorCards.nth(0).click();
-  await warriorCards.nth(1).click();
-  await warriorCards.nth(2).click();
-
-  // Click "To the Arena"
-  await page.getByRole('button', { name: /To the Arena/ }).click();
-
-  // Step 2: Set the Plan — click \"To the Arena\" again
-  await page.waitForSelector('text=Set the Plan', { timeout: 15_000 });
-  // Wait for the exiting step-1 subtree to unmount — its button shares the
-  // same label, and clicking it is a no-op (slow browsers race this).
-  await expect(page.getByRole('button', { name: /To the Arena/ })).toHaveCount(1);
-  await page.getByRole('button', { name: /To the Arena/ }).click();
-
-  // Step 2: First Blood — click "Continue"
-  await page.waitForSelector('text=Continue', { timeout: 15_000 });
-  await page.getByRole('button', { name: /Continue/ }).click();
-
-  // Step 3: Story Begins — click "Enter the Arena Hub"
-  await page.waitForSelector('text=Enter the Arena Hub', { timeout: 15_000 });
-  await page.getByRole('button', { name: /Enter the Arena Hub/ }).click();
+  // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────
+  await startNewGame(page);
 
   // ── 4. Main App — Navigate Side Panel Menu Items ────────────────────────
   // Wait for the app shell to load (left nav on desktop, hamburger on mobile)
@@ -101,6 +38,7 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // --- Stable Hub pages ---
   const stablePages = [
     'Overview',
+    'War Council',
     'Roster',
     'Training',
     'Planner',
@@ -112,10 +50,13 @@ test('golden path: new game → navigate all pages → fight → advance week', 
     'Finance',
     'Recruit',
     'Offseason',
+    'Simulator',
+    // 'Tournaments' also appears in the stable hub but lands on a world route;
+    // it is covered in the worldPages sweep below.
   ];
 
   for (const label of stablePages) {
-    await clickNavLink(label);
+    await nav(label);
     // Wait for page transition animation + content
     await page.waitForTimeout(800);
     // Verify no crash — check that main content area still exists
@@ -123,39 +64,48 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   }
 
   // --- Switch to World hub ---
-  await clickNavLink('World', { exact: false });
+  await nav('World', { exact: false });
   await page.waitForTimeout(500);
 
   const worldPages = [
     'Rankings',
     'Arenas',
     'Tournaments',
+    'Prep Mode',
     'Scouting',
+    'Style Archives',
     'Chronicle',
     'Hall of Fame',
     'Graveyard',
+    // Lore route — leaving the world hub collapses its page list, so it must
+    // be visited last.
+    'Hall of Fights',
   ];
 
   for (const label of worldPages) {
-    await clickNavLink(label);
+    await nav(label);
     await page.waitForTimeout(800);
     await expect(page.locator('main').first()).toBeVisible();
   }
 
   // --- Switch to Bookmarks hub ---
-  await clickNavLink('Bookmarks', { exact: false });
+  await nav('Bookmarks', { exact: false });
   await page.waitForTimeout(500);
   await expect(page.locator('main').first()).toBeVisible();
 
   // ── 5. Arena Hub → Execute Week (Fight) ─────────────────────────────────
-  // Navigate to Arena
-  await clickNavLink('Stable', { exact: false });
+  // Navigate to Arena — the route-aware CTA here is VIEW CARD (page-registered
+  // scroll action), not the week pipeline.
+  await nav('Stable', { exact: false });
   await page.waitForTimeout(500);
-  await clickNavLink('Arena');
+  await nav('Arena');
   await page.waitForTimeout(1000);
+  await expect(page.getByRole('button', { name: /VIEW CARD/ })).toBeVisible();
 
-  // Click "ADVANCE WEEK" button to run the week pipeline
-  const advanceWeekBtn = page.getByRole('button', { name: /ADVANCE WEEK|ADVANCE DAY/ });
+  // Navigate to Bouts — its CTA is BEGIN CYCLE, which runs the week pipeline.
+  await nav('Bouts');
+  await page.waitForTimeout(1000);
+  const advanceWeekBtn = page.getByRole('button', { name: /BEGIN CYCLE/ });
   await advanceWeekBtn.click();
 
   // Wait for the week advancement to complete (resolution modal appears)

@@ -8,8 +8,10 @@ import { startNewGame } from './helpers';
  *    - SEASONAL_TOURNAMENT_WEEKS (10/20/30/42) are tournament weeks — the
  *      active tier is played through the UI (prep dialog → EXECUTE NEXT BOUT
  *      → ADVANCE DAY ticks) to completion.
- *    - Week 52 hosts the champions-only Grand Championship — resolved via
- *      ADVANCE DAY ticks, crowned through recordGrandChampions.
+ *    - Week 52 may host the champions-only Grand Championship — resolved via
+ *      ADVANCE DAY ticks, crowned through recordGrandChampions. It is
+ *      cancelled when fewer than MIN_FIELD arena crowns are held that year,
+ *      so the year-1 tournament count is asserted as 16 or 17 accordingly.
  *    - Every completed tournament is verified: champion crowned, archive
  *      entry, prize purse + fame + medals paid out to player/NPC stables.
  *    - Season boundaries (Spring→Summer→Fall→Winter→Spring) are asserted.
@@ -909,10 +911,15 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   expect(yearTwoStartSnap.isTournamentWeek, 'tournament-week flag should clear').toBe(false);
   expect(yearTwoStartSnap.season, 'season should wrap back to Spring').toBe('Spring');
 
-  // The week-52 rollover must have resolved every year-1 bracket — all 17
-  // generated tournaments (4 tiers × 4 seasonal weeks + the champions
-  // bracket) completed, none stale.
-  expect(yearTwoStartSnap.tournaments.length, 'expected 17 year-1 tournaments').toBe(17);
+  // The week-52 rollover must have resolved every year-1 bracket — the 16
+  // seasonal tournaments (4 tiers × 4 seasonal weeks) always generate, while
+  // the champions-only Grand Championship is cancelled when fewer than
+  // MIN_FIELD arena crowns are held that year.
+  const champsRan = yearTwoStartSnap.tournaments.some((t) => t.tierId === 'Champions');
+  expect(
+    yearTwoStartSnap.tournaments.length,
+    'expected 16 year-1 tournaments (+1 when the champions bracket fields enough crowns)'
+  ).toBe(champsRan ? 17 : 16);
   expect(
     yearTwoStartSnap.tournaments.every((t) => t.completed),
     'no stale incomplete tournament may survive the year boundary'
@@ -928,24 +935,25 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   );
 
   // One played tournament per seasonal week in year 1 plus the week-52
-  // champions bracket, plus year 2's spring tournament proving the new-year
-  // brackets resolve.
+  // champions bracket (when it ran), plus year 2's spring tournament proving
+  // the new-year brackets resolve.
+  const yearOneWeeks = [10, 20, 30, 42, ...(champsRan ? [52] : [])];
   expect(
     completedTourneys.length,
-    'expected 6 tournaments (5 in year 1 + year-2 spring)'
-  ).toBe(6);
+    `expected ${yearOneWeeks.length + 1} tournaments (${yearOneWeeks.length} in year 1 + year-2 spring)`
+  ).toBe(yearOneWeeks.length + 1);
   expect(
     completedTourneys
       .filter((t) => t.year === 1)
       .map((t) => t.week)
       .sort((a, b) => a - b)
-  ).toEqual([10, 20, 30, 42, 52]);
+  ).toEqual(yearOneWeeks);
   expect(completedTourneys.filter((t) => t.year === 1).map((t) => t.season)).toEqual([
     'Spring',
     'Summer',
     'Fall',
     'Winter',
-    'Winter',
+    ...(champsRan ? ['Winter'] : []),
   ]);
   expect(completedTourneys.filter((t) => t.year === 2).map((t) => t.week)).toEqual([10]);
 

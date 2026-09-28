@@ -173,7 +173,7 @@ Test updates this batch: `navigationHubs.test.ts` world-hub page count 8 → 10 
 | dup pair-clusters | ~967 | **241** (src↔src 92 · test↔test 110 · mixed 39) | −75%; src↔src 92 ≤ 128 ratchet ceiling; residuals are sanctioned seams/canaries |
 | default vitest | 692 files / 8,172 pass / 2 skip / 1 flaky | 706 files / **8,204 pass** / 2 skip / 0 fail | flake promoted to `.slow` config |
 | slow vitest | deferred | 26 files / 176 tests green | includes relocated `advanceWeekPerformance` (median-ratio now, not single-sample) |
-| bun test --isolate | n/a | 699 files / **8,166 pass** / 1 skip / 0 fail | compat fixes; `import.meta.glob` specs excluded (vite-only) |
+| bun test --isolate | n/a | 699 files / **8,167 pass** / 1 skip / 0 fail | compat fixes; `import.meta.glob` specs excluded (vite-only) |
 | coverage | — | 85.36 / 75.11 / 80.46 / 86.97 | floors 84/74/78/85.5 — all held |
 | type-check / lint | 0 err / 0 warn | 0 err / 0 warn | maintained |
 | UI audit | 89 token + 114 motion + 93 copy + fake-chrome/rng hits | **0** across all 5 categories | 7 pre-existing undefined CSS vars fixed |

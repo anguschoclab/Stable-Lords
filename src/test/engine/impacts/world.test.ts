@@ -15,31 +15,10 @@ import {
   realmRankings,
   worldHandlers,
 } from '@/engine/impacts/world';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeAiTestState } from '@/test/_fixtures/aiTestState';
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
-  return makeGameState({
-    meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
-    ftueComplete: true,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    rivals: [],
-    recruitPool: [],
-    isFTUE: false,
-    progression: {
-      status: 'active',
-      stableStanding: 1,
-      totalStables: 10,
-      objectives: [],
-    },
-    ...overrides,
-  });
+  return makeAiTestState(overrides);
 }
 
 describe('world impacts — week', () => {

@@ -46,9 +46,7 @@ vi.mock('framer-motion', () => ({
   },
 }));
 
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: (s: Record<string, unknown>) => unknown) => fn,
-}));
+vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
 
 vi.mock('@/components/ui/tooltip', () => ({
   Tooltip: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,

@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import StepNav from '@/components/orphanage/StepNav';
 
 interface IdentityStepProps {
   ownerInput: string;
@@ -94,22 +93,13 @@ export default function IdentityStep({
         </div>
       </div>
 
-      <div className="flex gap-3 pt-1">
-        <Button
-          variant="outline"
-          onClick={onBack}
-          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
-        <Button
-          disabled={!ownerInput.trim() || !stableInput.trim()}
-          onClick={onSubmit}
-          className="flex-1 gap-2 font-display font-bold tracking-wider uppercase"
-        >
-          Proceed <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
+      <StepNav
+        onBack={onBack}
+        onNext={onSubmit}
+        nextLabel="Proceed"
+        nextDisabled={!ownerInput.trim() || !stableInput.trim()}
+        className="flex gap-3 pt-1"
+      />
     </div>
   );
 }

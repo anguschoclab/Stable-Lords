@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import type { Warrior } from '@/types/game';
@@ -18,23 +19,14 @@ const applyStore = (override: any = {}) =>
   useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return {
-    id,
+  return makeWarrior({
+    id: id as Warrior['id'],
     name: `Warrior ${id}`,
-    status: 'Active',
-    fame: 0,
-    popularity: 0,
     style: FightingStyle.StrikingAttack,
-    champion: false,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    potential: undefined,
-    traits: [],
+    fame: 0,
+    derivedStats: undefined,
     ...overrides,
-  } as Warrior;
+  });
 }
 
 describe('useActiveRoster', () => {

@@ -15,9 +15,7 @@ vi.mock('@/state/useGameStore', () => ({
   }),
 }));
 
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
 
 vi.mock('@tanstack/react-router', () => ({
   useLocation: () => ({ pathname: mockPathname }),

@@ -23,9 +23,7 @@ vi.mock('@/state/useGameStore', () => ({
   useWorldState: () => ({ stables: [], warriors: [] }),
 }));
 
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: (s: Record<string, unknown>) => unknown) => fn,
-}));
+vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
 
 vi.mock('@/components/bookmarks/BookmarkButton', () => ({
   BookmarkButton: () => <div data-testid="bookmark-btn">Bookmark</div>,

@@ -1,24 +1,18 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { mockStateRef } from '@/test/_mocks/gameStoreSelector';
+
+vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreSelector'));
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { GazetteStory } from '@/types/state.types';
 
-let mockState: any = {};
 
-vi.mock('@/state/useGameStore', () => ({
-  useGameStore: vi.fn((selector?: any) => (selector ? selector(mockState) : mockState)),
-}));
-
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
 
 vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
-vi.mock('@/components/ui/scroll-area', () => ({
-  ScrollArea: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/scroll-area', async () => await import('@/test/_mocks/scrollArea'));
 
 import { GazetteTab } from '@/components/dashboard/GazetteTab';
 
@@ -36,7 +30,7 @@ function makeStory(overrides: Partial<GazetteStory> = {}): GazetteStory {
 
 describe('GazetteTab', () => {
   beforeEach(() => {
-    mockState = {
+    mockStateRef.current = {
       roster: [
         { id: 'w1', name: 'Brutus' },
         { id: 'w2', name: 'Cassius' },

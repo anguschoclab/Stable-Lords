@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import type { Warrior } from '@/types/warrior.types';
@@ -13,23 +14,14 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return {
+  return makeWarrior({
     id: id as Warrior['id'],
     name: `Warrior ${id}`,
-    status: 'Active',
-    fame: 0,
-    popularity: 0,
     style: FightingStyle.StrikingAttack,
-    champion: false,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    traits: [],
-    fatigue: 0,
+    fame: 0,
+    derivedStats: undefined,
     ...overrides,
-  } as Warrior;
+  });
 }
 
 describe('useAtRiskWarriors', () => {

@@ -1,24 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/engine/runtime/workerProxy', () => ({
-  engineProxy: {
-    advanceWeek: vi.fn().mockResolvedValue({ week: 2, phase: 'planning' }),
-    advanceDay: vi.fn().mockResolvedValue({ week: 1, day: 1, phase: 'planning' }),
-    skipToWeekEnd: vi.fn().mockResolvedValue({ week: 2, phase: 'planning' }),
-    runAutosim: vi.fn(),
-  },
-}));
+vi.mock('@/engine/runtime/workerProxy', async () => await import('@/test/_mocks/engineProxy'));
 
-vi.mock('@/engine/storage/opfsArchive', () => ({
-  opfsArchive: {
-    archiveHotState: vi.fn().mockResolvedValue(undefined),
-  },
-  OPFSArchiveService: class {
-    archiveHotState() {
-      return Promise.resolve(undefined);
-    }
-  },
-}));
+vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
 
 import '@/test/_setup/setup';
 import { useGameStore } from '@/state/createStore';

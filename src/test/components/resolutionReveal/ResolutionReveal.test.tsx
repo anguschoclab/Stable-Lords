@@ -16,9 +16,7 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/components/ui/scroll-area', () => ({
-  ScrollArea: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/scroll-area', async () => await import('@/test/_mocks/scrollArea'));
 
 vi.mock('@/components/ui/separator', () => ({
   Separator: () => <hr />,

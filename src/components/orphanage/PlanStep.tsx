@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
+import StepNav from '@/components/orphanage/StepNav';
 import { Slider } from '@/components/ui/slider';
-import { ArrowLeft, Swords, Zap, Shield, Activity, Target, Flame, Clock } from 'lucide-react';
+import { Swords, Zap, Shield, Activity, Target, Flame, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import type { Warrior, FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
@@ -192,22 +192,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
         </p>
       </div>
 
-      <div className="flex gap-3">
-        <Button
-          variant="outline"
-          onClick={onBack}
-          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
-        <Button
-          onClick={onNext}
-          className="flex-1 gap-2 font-display font-bold tracking-wider uppercase"
-          size="lg"
-        >
-          To the Arena <Swords className="h-4 w-4" />
-        </Button>
-      </div>
+      <StepNav onBack={onBack} onNext={onNext} nextLabel="To the Arena" nextIcon={Swords} nextSize="lg" />
     </div>
   );
 }

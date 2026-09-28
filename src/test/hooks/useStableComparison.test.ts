@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { renderHook, act } from '@testing-library/react';
 import { stableStats, useStableComparison } from '@/hooks/useScoutingStableComparison';
 import type { RivalStableData, Warrior, OwnerGrudge } from '@/types/game';
@@ -19,21 +20,14 @@ const applyStore = (override: any = {}) =>
   useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return {
+  return makeWarrior({
     id: id as WarriorId,
     name: `Warrior ${id}`,
-    status: 'Active',
-    fame: 0,
-    popularity: 0,
     style: FightingStyle.StrikingAttack,
-    champion: false,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    fame: 0,
+    derivedStats: undefined,
     ...overrides,
-  } as Warrior;
+  });
 }
 
 function createMockRival(id: string, overrides?: Partial<RivalStableData>): RivalStableData {

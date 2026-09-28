@@ -6,7 +6,7 @@ import { getStylePassive } from '@/engine/stylePassives';
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 import { INITIATIVE_PRESS_BONUS, GLOBAL_ATT_BONUS } from '@/constants/combat';
 import type { FighterState } from '@/engine/combat/resolution/types';
-import { makeFighterState } from '@/test/_fixtures/factories';
+import { makeCombatFighter } from '@/test/_fixtures/combatFighter';
 
 /**
  * Attack Check — exhaustive coverage for performAttackCheck modifier accumulation
@@ -14,20 +14,7 @@ import { makeFighterState } from '@/test/_fixtures/factories';
  */
 
 function createMockFighter(overrides: Partial<FighterState> = {}): FighterState {
-  const combatPlan = {
-    style: FightingStyle.StrikingAttack,
-    OE: 5,
-    AL: 5,
-    killDesire: 5,
-    target: 'Any',
-  } as any;
-  return makeFighterState({
-    derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 10 },
-    plan: combatPlan,
-    activePlan: combatPlan,
-    psychState: 'CRUISING' as any,
-    ...overrides,
-  });
+  return makeCombatFighter(overrides);
 }
 
 const zeroOffMods = getOffensiveTacticMods('none', FightingStyle.StrikingAttack);

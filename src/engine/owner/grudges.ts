@@ -2,7 +2,8 @@ import type { GameState, OwnerGrudge } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import { PERSONALITY_CLASH } from '@/data/ownerData';
-import { addCapped, clamp } from '@/utils/math';
+import { addCapped } from '@/utils/math';
+import { calculateRivalryScore } from '@/engine/rivals/rivalUtils';
 
 /** Fight outcomes aggregated per rival-pair / rival-vs-player, single pass. */
 interface FightAggregation {
@@ -249,18 +250,4 @@ export function processOwnerGrudges(
   return { grudges: grudges.filter((g) => g.intensity > 0), gazetteItems };
 }
 
-/**
- * Calculate rivalry intensity adjustment based on match outcomes.
- * Base (bouts fought) + Death (+5) + Upset (+3).
- */
-export function calculateRivalryScore(
-  boutsFought: number,
-  deathsCount: number,
-  upsetsCount: number
-): number {
-  let score = 0;
-  score += Math.floor(boutsFought / 3);
-  score += deathsCount * 5;
-  score += upsetsCount * 3;
-  return clamp(score, 1, 5);
-}
+export { calculateRivalryScore };

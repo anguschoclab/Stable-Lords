@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import type { Warrior, GameState } from '@/types/game';
-import { FightingStyle } from '@/types/game';
+import type { WarriorId } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
 vi.mock('sonner', () => ({
@@ -21,24 +22,7 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return {
-    id,
-    name: `Warrior ${id}`,
-    status: 'Active',
-    fame: 0,
-    popularity: 0,
-    style: FightingStyle.StrikingAttack,
-    champion: false,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    potential: undefined,
-    traits: [],
-    fatigue: 0,
-    ...overrides,
-  } as Warrior;
+  return makeWarrior({ id: id as WarriorId, name: `Warrior ${id}`, potential: undefined, fatigue: 0, ...overrides });
 }
 
 function setStore(overrides: Partial<GameState> = {}) {

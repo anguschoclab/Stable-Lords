@@ -16,9 +16,7 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: vi.fn((selector?: any) => (selector ? selector(mockState) : mockState)),
 }));
 
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
 
 import { WeeklyDigestMini } from '@/components/dashboard/WeeklyDigestMini';
 

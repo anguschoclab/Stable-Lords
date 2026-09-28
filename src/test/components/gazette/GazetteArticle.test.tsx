@@ -1,17 +1,13 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { mockStateRef } from '@/test/_mocks/gameStoreSelector';
+
+vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreSelector'));
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-let mockState: any = {};
 
-vi.mock('@/state/useGameStore', () => ({
-  useGameStore: vi.fn((selector?: any) => (selector ? selector(mockState) : mockState)),
-}));
-
-vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
-}));
+vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
 
 vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
@@ -29,7 +25,7 @@ import { GazetteArticle } from '@/components/gazette/GazetteArticle';
 
 describe('GazetteArticle', () => {
   beforeEach(() => {
-    mockState = {
+    mockStateRef.current = {
       roster: [
         { id: 'w1', name: 'Brutus' },
         { id: 'w2', name: 'Cassius' },

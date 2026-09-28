@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Swords, ArrowLeft, ArrowRight, Skull } from 'lucide-react';
+import StepNav from '@/components/orphanage/StepNav';
+import { Swords, Skull } from 'lucide-react';
 import type { Warrior, FightSummary, FightOutcome } from '@/types/game';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import TacticalLogView from '@/components/arena/TacticalLogView';
@@ -62,21 +62,7 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
         <OutcomeBanner boutResult={boutResult} />
       </div>
 
-      <div className="flex gap-3">
-        <Button
-          variant="outline"
-          onClick={onBack}
-          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
-        <Button
-          onClick={onNext}
-          className="flex-1 gap-2 font-display font-bold tracking-wider uppercase"
-        >
-          Continue <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
+      <StepNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
     </div>
   );
 }

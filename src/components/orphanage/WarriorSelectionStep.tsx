@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Swords, ArrowLeft, RefreshCw } from 'lucide-react';
+import StepNav from '@/components/orphanage/StepNav';
+import { Swords, RefreshCw } from 'lucide-react';
 import WarriorCard from '@/components/orphanage/WarriorCard';
 
 interface WarriorSelectionStepProps {
@@ -79,23 +79,15 @@ export default function WarriorSelectionStep({
         ))}
       </div>
 
-      <div className="flex gap-3 pt-1">
-        <Button
-          variant="outline"
-          onClick={onBack}
-          className="gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-transparent hover:bg-white/5 text-muted-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
-        <Button
-          onClick={onNext}
-          disabled={selected.size < 3}
-          className="flex-1 gap-2 font-display font-bold tracking-wider uppercase"
-          size="lg"
-        >
-          To the Arena <Swords className="h-4 w-4" />
-        </Button>
-      </div>
+      <StepNav
+        onBack={onBack}
+        onNext={onNext}
+        nextLabel="To the Arena"
+        nextIcon={Swords}
+        nextDisabled={selected.size < 3}
+        nextSize="lg"
+        className="flex gap-3 pt-1"
+      />
     </div>
   );
 }

@@ -63,126 +63,90 @@ function commitWorkerResult(store: GameStore, next: GameState, currentWeek: numb
 
 export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore>()(
   subscribeWithSelector(
-    immer((set, get, ...args) => ({
-      // ─── Sub-Slices ───
-      ...createEconomySlice(set, get, ...args),
-      ...createRosterSlice(set, get, ...args),
-      ...createWorldSlice(set, get, ...args),
-      ...createTournamentSlice(set, get, ...args),
-      ...createBookmarksSlice(set, get, ...args),
-      ...createProgressionSlice(set, get, ...args),
+    immer((set, get, ...args) => {
+      /**
+       * Writes a loaded GameState into the draft — the field-by-field
+       * hydration shared by loadGame and worker-result commits.
+       */
+      const hydrateDraft = (draft: GameStore, state: GameState, slotId: string) => {
+        draft.treasury = state.treasury;
+        draft.ledger = state.ledger;
+        draft.roster = state.roster;
+        draft.graveyard = state.graveyard;
+        draft.retired = state.retired;
+        draft.recruitPool = state.recruitPool;
+        draft.insightTokens = state.insightTokens;
+        draft.arenaHistory = state.arenaHistory;
+        draft.player = state.player;
+        draft.week = state.week;
+        draft.day = state.day;
+        draft.season = state.season;
+        draft.weather = state.weather;
+        draft.promoters = state.promoters || {};
+        draft.boutOffers = state.boutOffers || {};
+        draft.rivals = state.rivals;
+        draft.gazettes = state.gazettes;
+        draft.scoutReports = state.scoutReports || [];
+        draft.unacknowledgedDeaths = (state.unacknowledgedDeaths || []) as WarriorId[];
+        draft.rosterBonus = state.rosterBonus || 0;
+        draft.tournaments = state.tournaments || [];
+        draft.isTournamentWeek = state.isTournamentWeek || false;
+        draft.activeTournamentId = state.activeTournamentId;
+        draft.year = state.year || 1;
+        draft.absoluteWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
 
-      // ─── Core State ───
-      activeSlotId: null,
-      atTitleScreen: true,
-      lastSavedAt: null,
-      isSimulating: false,
-      isInitialized: false,
-      eventLogOpen: false,
+        draft.popularity = state.popularity || 0;
+        draft.fame = state.fame || 0;
+        draft.realmRankings = state.realmRankings || {};
+        draft.awards = state.awards || [];
+        draft.arenaChampions = state.arenaChampions || {};
+        draft.grandChampions = state.grandChampions || [];
+        draft.trainers = state.trainers || [];
+        draft.hiringPool = state.hiringPool || [];
+        draft.trainingAssignments = state.trainingAssignments || [];
+        draft.seasonalGrowth = state.seasonalGrowth || [];
+        draft.restStates = state.restStates || [];
+        draft.crowdMood = state.crowdMood || 'Neutral';
+        draft.moodHistory = state.moodHistory || [];
+        draft.newsletter = state.newsletter || [];
+        draft.hallOfFame = state.hallOfFame || [];
+        draft.isFTUE = state.isFTUE || false;
+        draft.ftueStep = state.ftueStep || 0;
+        draft.ftueComplete = state.ftueComplete || false;
+        draft.coachDismissed = state.coachDismissed || [];
+        draft.houseRules = state.houseRules;
+        draft.contentPacks = state.contentPacks;
+        draft.lifetimeStats = state.lifetimeStats;
+        draft.rivalries = state.rivalries || [];
+        draft.matchHistory = state.matchHistory || [];
+        draft.ownerGrudges = state.ownerGrudges || [];
+        draft.phase = state.phase || 'planning';
+        draft.pendingResolutionData = state.pendingResolutionData;
+        draft.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
+        draft.playerChallenges = state.playerChallenges || [];
+        draft.playerAvoids = state.playerAvoids || [];
+        draft.bookmarks = state.bookmarks || [];
+        draft.progression = state.progression || DEFAULT_PROGRESSION;
+        draft.lastSimulationReport = state.lastSimulationReport;
+        draft.deferredBoutLogs = state.deferredBoutLogs || [];
 
-      toggleEventLog: () => {
-        set((draft) => {
-          draft.eventLogOpen = !draft.eventLogOpen;
-        });
-      },
-      setEventLogOpen: (open: boolean) => {
-        set((draft) => {
-          draft.eventLogOpen = open;
-        });
-      },
+        draft.activeSlotId = slotId;
+        draft.atTitleScreen = false;
+        draft.lastSavedAt = new Date().toISOString();
+      };
 
-      initialize: () => {
-        set((draft) => {
-          draft.isInitialized = true;
-        });
-      },
-
-      loadGame: (slotId: string, state: GameState) => {
-        bumpEngineEpoch();
-        clearReconstructionCache();
-        StyleRollups._clearCaches();
-        set((draft) => {
-          draft.treasury = state.treasury;
-          draft.ledger = state.ledger;
-          draft.roster = state.roster;
-          draft.graveyard = state.graveyard;
-          draft.retired = state.retired;
-          draft.recruitPool = state.recruitPool;
-          draft.insightTokens = state.insightTokens;
-          draft.arenaHistory = state.arenaHistory;
-          draft.player = state.player;
-          draft.week = state.week;
-          draft.day = state.day;
-          draft.season = state.season;
-          draft.weather = state.weather;
-          draft.promoters = state.promoters || {};
-          draft.boutOffers = state.boutOffers || {};
-          draft.rivals = state.rivals;
-          draft.gazettes = state.gazettes;
-          draft.scoutReports = state.scoutReports || [];
-          draft.unacknowledgedDeaths = (state.unacknowledgedDeaths || []) as WarriorId[];
-          draft.rosterBonus = state.rosterBonus || 0;
-          draft.tournaments = state.tournaments || [];
-          draft.isTournamentWeek = state.isTournamentWeek || false;
-          draft.activeTournamentId = state.activeTournamentId;
-          draft.year = state.year || 1;
-          draft.absoluteWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
-
-          draft.popularity = state.popularity || 0;
-          draft.fame = state.fame || 0;
-          draft.realmRankings = state.realmRankings || {};
-          draft.awards = state.awards || [];
-          draft.arenaChampions = state.arenaChampions || {};
-          draft.grandChampions = state.grandChampions || [];
-          draft.trainers = state.trainers || [];
-          draft.hiringPool = state.hiringPool || [];
-          draft.trainingAssignments = state.trainingAssignments || [];
-          draft.seasonalGrowth = state.seasonalGrowth || [];
-          draft.restStates = state.restStates || [];
-          draft.crowdMood = state.crowdMood || 'Neutral';
-          draft.moodHistory = state.moodHistory || [];
-          draft.newsletter = state.newsletter || [];
-          draft.hallOfFame = state.hallOfFame || [];
-          draft.isFTUE = state.isFTUE || false;
-          draft.ftueStep = state.ftueStep || 0;
-          draft.ftueComplete = state.ftueComplete || false;
-          draft.coachDismissed = state.coachDismissed || [];
-          draft.houseRules = state.houseRules;
-          draft.contentPacks = state.contentPacks;
-          draft.lifetimeStats = state.lifetimeStats;
-          draft.rivalries = state.rivalries || [];
-          draft.matchHistory = state.matchHistory || [];
-          draft.ownerGrudges = state.ownerGrudges || [];
-          draft.phase = state.phase || 'planning';
-          draft.pendingResolutionData = state.pendingResolutionData;
-          draft.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
-          draft.playerChallenges = state.playerChallenges || [];
-          draft.playerAvoids = state.playerAvoids || [];
-          draft.bookmarks = state.bookmarks || [];
-          draft.progression = state.progression || DEFAULT_PROGRESSION;
-          draft.lastSimulationReport = state.lastSimulationReport;
-          draft.deferredBoutLogs = state.deferredBoutLogs || [];
-
-          draft.activeSlotId = slotId;
-          draft.atTitleScreen = false;
-          draft.lastSavedAt = new Date().toISOString();
-        });
-        archiveService.archiveHotState(slotId, state);
-      },
-
-      setSimulating: (simulating: boolean) => {
-        set((draft) => {
-          draft.isSimulating = simulating;
-        });
-      },
-
-      doAdvanceWeek: async (processedState?: GameState) => {
-        if (get().isSimulating) return;
+      /**
+       * Shared engine worker runner for doAdvanceWeek/doAdvanceDay —
+       * serialization, 15s timeout, epoch-guarded commit, telemetry, and
+       * the isSimulating lifecycle were previously duplicated inline.
+       */
+      const runEngineJob = async (
+        cleanState: GameState,
+        currentWeek: number,
+        job: () => Promise<GameState>,
+        opName: string
+      ) => {
         const store = get();
-        const raw = processedState || reconstructGameState(store);
-        const cleanState = stripNonSerializable(raw) as GameState;
-        const currentWeek = cleanState.week;
-
         set((draft) => {
           draft.isSimulating = true;
         });
@@ -199,61 +163,10 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
           // discarded instead of clobbering newer state.
           const next = await engineSession.runExclusive(async () => {
             const t0 = performance.now();
-            const job = cleanState.isTournamentWeek
-              ? engineProxy.skipToWeekEnd(cleanState)
-              : engineProxy.advanceWeek(cleanState);
-            const resolved = await Promise.race([job, timeout]);
-            if (timerId) clearTimeout(timerId);
-            const elapsed = performance.now() - t0;
-            telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, elapsed, {
-              op: cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek',
-            });
-            if (isTelemetryEnabled()) {
-              telemetry.gauge(
-                TelemetryEvents.SERIALIZATION_PAYLOAD_BYTES,
-                JSON.stringify(cleanState).length
-              );
-            }
-            return resolved;
-          });
-          if (!next) {
-            set((draft) => {
-              draft.isSimulating = false;
-            });
-            return;
-          }
-          commitWorkerResult(store, next, currentWeek);
-        } catch (err) {
-          console.error('Worker advancement failed:', err);
-          set((draft) => {
-            draft.isSimulating = false;
-          });
-        }
-      },
-
-      doAdvanceDay: async (processedState?: GameState) => {
-        if (get().isSimulating) return;
-        const store = get();
-        const raw = processedState || reconstructGameState(store);
-        const cleanState = stripNonSerializable(raw) as GameState;
-        const currentWeek = cleanState.week;
-
-        set((draft) => {
-          draft.isSimulating = true;
-        });
-
-        let timerId: ReturnType<typeof setTimeout> | undefined;
-        const timeout = new Promise<never>((_, reject) => {
-          timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
-        });
-
-        try {
-          const next = await engineSession.runExclusive(async () => {
-            const t0 = performance.now();
-            const resolved = await Promise.race([engineProxy.advanceDay(cleanState), timeout]);
+            const resolved = await Promise.race([job(), timeout]);
             if (timerId) clearTimeout(timerId);
             telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, performance.now() - t0, {
-              op: 'advanceDay',
+              op: opName,
             });
             if (isTelemetryEnabled()) {
               telemetry.gauge(
@@ -276,38 +189,113 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
             draft.isSimulating = false;
           });
         }
-      },
+      };
 
-      saveCurrentState: async () => {
-        const { activeSlotId } = get();
-        if (activeSlotId) {
-          const state = reconstructGameState(get());
-          await archiveService.archiveHotState(activeSlotId, state);
-          set({ lastSavedAt: new Date().toISOString() });
-        }
-      },
+      return {
+        // ─── Sub-Slices ───
+        ...createEconomySlice(set, get, ...args),
+        ...createRosterSlice(set, get, ...args),
+        ...createWorldSlice(set, get, ...args),
+        ...createTournamentSlice(set, get, ...args),
+        ...createBookmarksSlice(set, get, ...args),
+        ...createProgressionSlice(set, get, ...args),
 
-      doReset: () => {
-        clearReconstructionCache();
-        StyleRollups._clearCaches();
-        const fresh = createFreshState('alpha-prime-10');
-        get().loadGame('autosave', fresh);
-        set({ atTitleScreen: true });
-      },
+        // ─── Core State ───
+        activeSlotId: null,
+        atTitleScreen: true,
+        lastSavedAt: null,
+        isSimulating: false,
+        isInitialized: false,
+        eventLogOpen: false,
 
-      returnToTitle: async () => {
-        await get().saveCurrentState();
-        set((draft) => {
-          draft.atTitleScreen = true;
-          draft.activeSlotId = null;
-        });
-      },
+        toggleEventLog: () => {
+          set((draft) => {
+            draft.eventLogOpen = !draft.eventLogOpen;
+          });
+        },
+        setEventLogOpen: (open: boolean) => {
+          set((draft) => {
+            draft.eventLogOpen = open;
+          });
+        },
 
-      setState: (fn: (state: GameStore) => void) => {
-        clearReconstructionCache();
-        set(fn);
-      },
-    }))
+        initialize: () => {
+          set((draft) => {
+            draft.isInitialized = true;
+          });
+        },
+
+        loadGame: (slotId: string, state: GameState) => {
+          bumpEngineEpoch();
+          clearReconstructionCache();
+          StyleRollups._clearCaches();
+          set((draft) => hydrateDraft(draft, state, slotId));
+          archiveService.archiveHotState(slotId, state);
+        },
+
+        setSimulating: (simulating: boolean) => {
+          set((draft) => {
+            draft.isSimulating = simulating;
+          });
+        },
+
+        doAdvanceWeek: async (processedState?: GameState) => {
+          if (get().isSimulating) return;
+          const store = get();
+          const raw = processedState || reconstructGameState(store);
+          const cleanState = stripNonSerializable(raw) as GameState;
+          const currentWeek = cleanState.week;
+          await runEngineJob(
+            cleanState,
+            currentWeek,
+            () =>
+              cleanState.isTournamentWeek
+                ? engineProxy.skipToWeekEnd(cleanState)
+                : engineProxy.advanceWeek(cleanState),
+            cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek'
+          );
+        },
+
+        doAdvanceDay: async (processedState?: GameState) => {
+          if (get().isSimulating) return;
+          const store = get();
+          const raw = processedState || reconstructGameState(store);
+          const cleanState = stripNonSerializable(raw) as GameState;
+          const currentWeek = cleanState.week;
+          await runEngineJob(cleanState, currentWeek, () => engineProxy.advanceDay(cleanState), 'advanceDay');
+        },
+
+        saveCurrentState: async () => {
+          const { activeSlotId } = get();
+          if (activeSlotId) {
+            const state = reconstructGameState(get());
+            await archiveService.archiveHotState(activeSlotId, state);
+            set({ lastSavedAt: new Date().toISOString() });
+          }
+        },
+
+        doReset: () => {
+          clearReconstructionCache();
+          StyleRollups._clearCaches();
+          const fresh = createFreshState('alpha-prime-10');
+          get().loadGame('autosave', fresh);
+          set({ atTitleScreen: true });
+        },
+
+        returnToTitle: async () => {
+          await get().saveCurrentState();
+          set((draft) => {
+            draft.atTitleScreen = true;
+            draft.activeSlotId = null;
+          });
+        },
+
+        setState: (fn: (state: GameStore) => void) => {
+          clearReconstructionCache();
+          set(fn);
+        },
+      };
+    })
   )
 );
 

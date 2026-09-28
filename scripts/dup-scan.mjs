@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = path.join(ROOT, 'src');
@@ -93,83 +94,92 @@ function normalize(text, ident) {
 
 const hash = (s) => crypto.createHash('sha1').update(s).digest('hex').slice(0, 16);
 
-// Pass 1: index every window → files/lines
-const windows = new Map(); // hash → [{file, line}]
-const fileLines = new Map(); // file → normalized lines[]
-for (const file of walk(SRC)) {
-  const r = rel(file);
-  const lines = normalize(fs.readFileSync(file, 'utf8'), IDENT);
-  fileLines.set(r, lines);
-  for (let i = 0; i + WINDOW <= lines.length; i++) {
-    const h = hash(lines.slice(i, i + WINDOW).map((x) => x.l).join('\n'));
-    if (!windows.has(h)) windows.set(h, []);
-    windows.get(h).push({ file: r, line: lines[i].line });
+/** Collect duplication clusters. Returns { window, ident, clusters, counts }. */
+export function collectDuplicates({ ident = IDENT, window = WINDOW, minBlock = MIN_BLOCK } = {}) {
+  const windows = new Map();
+  for (const file of walk(SRC)) {
+    const r = rel(file);
+    const lines = normalize(fs.readFileSync(file, 'utf8'), ident);
+    for (let i = 0; i + window <= lines.length; i++) {
+      const h = hash(lines.slice(i, i + window).map((x) => x.l).join('\n'));
+      if (!windows.has(h)) windows.set(h, []);
+      windows.get(h).push({ file: r, line: lines[i].line });
+    }
   }
+
+  const occurrences = [...windows.entries()].filter(([, v]) => {
+    const fs2 = new Set(v.map((x) => x.file));
+    return fs2.size > 1;
+  });
+
+  const pairBlocks = new Map();
+  for (const [, occs] of occurrences) {
+    const byFile = new Map();
+    for (const o of occs) {
+      if (!byFile.has(o.file)) byFile.set(o.file, []);
+      byFile.get(o.file).push(o);
+    }
+    const fsKeys = [...byFile.keys()].sort();
+    for (let a = 0; a < fsKeys.length; a++)
+      for (let b = a + 1; b < fsKeys.length; b++) {
+        const key = `${fsKeys[a]}|${fsKeys[b]}`;
+        if (!pairBlocks.has(key)) pairBlocks.set(key, []);
+        pairBlocks.get(key).push(...byFile.get(fsKeys[a]), ...byFile.get(fsKeys[b]));
+      }
+  }
+
+  const clusters = [];
+  for (const [pair, occs] of pairBlocks) {
+    const blocks = mergeBlocks(occs, window, minBlock);
+    if (blocks.length) {
+      const [a, b] = pair.split('|');
+      clusters.push({ pair: [a, b], blocks, totalDupeLines: blocks.reduce((s, x) => s + x.end - x.start + 1, 0) / 2 });
+    }
+  }
+  clusters.sort((a, b) => b.totalDupeLines - a.totalDupeLines);
+
+  const testPairCount = clusters.filter((c) => c.pair.every(isTest)).length;
+  const srcPairCount = clusters.filter((c) => c.pair.every((f) => !isTest(f))).length;
+  return {
+    window,
+    ident,
+    clusters,
+    counts: { total: clusters.length, srcToSrc: srcPairCount, testToTest: testPairCount, mixed: clusters.length - testPairCount - srcPairCount },
+  };
 }
 
-// Pass 2: expand duplicated windows into maximal blocks per file-pair
-const occurrences = [...windows.entries()].filter(([, v]) => {
-  const files = new Set(v.map((x) => x.file));
-  return files.size > 1; // cross-file only; intra-file dupes reported separately
-});
-
 // Merge overlapping same-file occurrences into blocks
-function mergeBlocks(occs) {
+function mergeBlocks(occs, window, minBlock) {
   const sorted = [...occs].sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);
   const blocks = [];
   let cur = null;
   for (const o of sorted) {
     if (cur && o.file === cur.file && o.line <= cur.end + 1) {
-      cur.end = Math.max(cur.end, o.line + WINDOW - 1);
+      cur.end = Math.max(cur.end, o.line + window - 1);
     } else {
       if (cur) blocks.push(cur);
-      cur = { file: o.file, start: o.line, end: o.line + WINDOW - 1 };
+      cur = { file: o.file, start: o.line, end: o.line + window - 1 };
     }
   }
   if (cur) blocks.push(cur);
-  return blocks.filter((b) => b.end - b.start + 1 >= MIN_BLOCK);
+  return blocks.filter((b) => b.end - b.start + 1 >= minBlock);
 }
 
-// Group windows into clusters by hash-connected file pairs
-const pairBlocks = new Map(); // "fileA|fileB" → [{file,line}]
-for (const [, occs] of occurrences) {
-  const byFile = new Map();
-  for (const o of occs) {
-    if (!byFile.has(o.file)) byFile.set(o.file, []);
-    byFile.get(o.file).push(o);
+function main() {
+  const { clusters, counts } = collectDuplicates({ ident: IDENT, window: WINDOW, minBlock: MIN_BLOCK });
+
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  const outFile = path.join(OUT_DIR, IDENT ? 'dup-scan-ident.json' : 'dup-scan.json');
+  fs.writeFileSync(outFile, JSON.stringify({ window: WINDOW, ident: IDENT, clusters }, null, 2));
+
+  console.log(`mode=${IDENT ? 'identifier-normalized' : 'exact-normalized'} window=${WINDOW} min-block=${MIN_BLOCK}`);
+  console.log(`duplicate pair-clusters: ${counts.total} (src↔src ${counts.srcToSrc} · test↔test ${counts.testToTest} · mixed ${counts.mixed})`);
+  console.log('\nTop 30 clusters by duplicated lines:');
+  for (const c of clusters.slice(0, 30)) {
+    console.log(`  ~${Math.round(c.totalDupeLines)} lines × ${c.blocks.length} block(s)`);
+    console.log(`    ${c.pair[0]}\n    ${c.pair[1]}`);
   }
-  const fsKeys = [...byFile.keys()].sort();
-  for (let a = 0; a < fsKeys.length; a++)
-    for (let b = a + 1; b < fsKeys.length; b++) {
-      const key = `${fsKeys[a]}|${fsKeys[b]}`;
-      if (!pairBlocks.has(key)) pairBlocks.set(key, []);
-      pairBlocks.get(key).push(...byFile.get(fsKeys[a]), ...byFile.get(fsKeys[b]));
-    }
+  console.log(`\nwrote ${rel(outFile)}`);
 }
 
-const clusters = [];
-for (const [pair, occs] of pairBlocks) {
-  const blocks = mergeBlocks(occs);
-  if (blocks.length) {
-    const [a, b] = pair.split('|');
-    clusters.push({ pair: [a, b], blocks, totalDupeLines: blocks.reduce((s, x) => s + x.end - x.start + 1, 0) / 2 });
-  }
-}
-clusters.sort((a, b) => b.totalDupeLines - a.totalDupeLines);
-
-const testPairCount = clusters.filter((c) => c.pair.every(isTest)).length;
-const srcPairCount = clusters.filter((c) => c.pair.every((f) => !isTest(f))).length;
-const mixedPairCount = clusters.length - testPairCount - srcPairCount;
-
-fs.mkdirSync(OUT_DIR, { recursive: true });
-const outFile = path.join(OUT_DIR, IDENT ? 'dup-scan-ident.json' : 'dup-scan.json');
-fs.writeFileSync(outFile, JSON.stringify({ window: WINDOW, ident: IDENT, clusters }, null, 2));
-
-console.log(`mode=${IDENT ? 'identifier-normalized' : 'exact-normalized'} window=${WINDOW} min-block=${MIN_BLOCK}`);
-console.log(`duplicate pair-clusters: ${clusters.length} (src↔src ${srcPairCount} · test↔test ${testPairCount} · mixed ${mixedPairCount})`);
-console.log('\nTop 30 clusters by duplicated lines:');
-for (const c of clusters.slice(0, 30)) {
-  console.log(`  ~${Math.round(c.totalDupeLines)} lines × ${c.blocks.length} block(s)`);
-  console.log(`    ${c.pair[0]}\n    ${c.pair[1]}`);
-}
-console.log(`\nwrote ${rel(outFile)}`);
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();

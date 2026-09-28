@@ -113,9 +113,30 @@ async function dismissBlockingOverlays(page: Page, maxPasses = 12) {
   }
 }
 
-const ADVANCE_RE = /ADVANCE (WEEK|DAY) \d+/;
+type NavFn = (name: string, opts?: { exact?: boolean }) => Promise<void>;
 
-async function advanceLabel(page: Page): Promise<string> {
+const ADVANCE_RE = /(EXECUTE WEEK|ADVANCE DAY) \d+/;
+
+/**
+ * Ensures the app is on a route whose top-bar CTA is the week/day advance.
+ * Per DESIGN_PAGE_SYSTEM_v1.0 §1 the shared CTA swaps by route — only the
+ * overview (`EXECUTE WEEK N`, or `ADVANCE DAY N` during tournament weeks)
+ * carries a numbered advance label. Other routes show static or
+ * page-specific CTAs that don't drive the year loop.
+ */
+async function ensureAdvanceRoute(page: Page, nav: NavFn): Promise<void> {
+  const btn = page.getByRole('button', { name: ADVANCE_RE });
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (await btn.isVisible({ timeout: 1_500 }).catch(() => false)) return;
+    await nav('Stable', { exact: false });
+    await page.waitForTimeout(300);
+    await nav('Overview');
+    await page.waitForTimeout(300);
+  }
+}
+
+async function advanceLabel(page: Page, nav: NavFn): Promise<string> {
+  await ensureAdvanceRoute(page, nav);
   const btn = page.getByRole('button', { name: ADVANCE_RE });
   return (await btn.getAttribute('aria-label')) ?? '';
 }
@@ -125,12 +146,12 @@ async function advanceLabel(page: Page): Promise<string> {
  * Returns 'busy' while the engine is resolving (label becomes
  * "Resolving Bouts…") or the button isn't in an advance state.
  */
-async function settledAdvanceLabel(page: Page): Promise<string> {
+async function settledAdvanceLabel(page: Page, nav: NavFn): Promise<string> {
   // Full pass budget: a death-bearing Cycle Resolution needs 5 sequential
   // step clicks alone, so a shallow pass count can leave it stuck on the
   // memorial step while the advance label already reads as settled.
   await dismissBlockingOverlays(page);
-  const label = await advanceLabel(page);
+  const label = await advanceLabel(page, nav);
   return ADVANCE_RE.test(label) ? label : 'busy';
 }
 
@@ -139,8 +160,8 @@ async function settledAdvanceLabel(page: Page): Promise<string> {
  * off `prev` — i.e. the week/day actually rolled over. Without this, the
  * transient "Resolving Bouts…" state would read as progress.
  */
-async function progressedLabel(page: Page, prev: string): Promise<string> {
-  const label = await settledAdvanceLabel(page);
+async function progressedLabel(page: Page, nav: NavFn, prev: string): Promise<string> {
+  const label = await settledAdvanceLabel(page, nav);
   return label === 'busy' || label === prev ? 'busy' : label;
 }
 
@@ -148,7 +169,8 @@ async function progressedLabel(page: Page, prev: string): Promise<string> {
  * Clicks the advance button, retrying through covering modals and the
  * in-flight "Resolving Bouts…" state instead of stalling on actionability.
  */
-async function clickAdvance(page: Page): Promise<void> {
+async function clickAdvance(page: Page, nav: NavFn): Promise<void> {
+  await ensureAdvanceRoute(page, nav);
   const btn = page.getByRole('button', { name: ADVANCE_RE });
   for (let attempt = 0; attempt < 8; attempt++) {
     await dismissBlockingOverlays(page);
@@ -721,23 +743,23 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     let preFinalSnap: StateSnap | undefined;
     for (let day = 0; day < 6; day++) {
       await expect
-        .poll(() => settledAdvanceLabel(page), { timeout: 120_000 })
+        .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
         .not.toBe('busy');
 
       const prog = await tourneyProgress();
       if (prog.done) break;
 
-      const label = await advanceLabel(page);
+      const label = await advanceLabel(page, clickNavLink);
       if (!/ADVANCE DAY/.test(label)) break; // week rolled over unexpectedly
 
       // Snapshot before each day — the last iteration captures the pre-prizes
       // state right before the tournament completes.
       preFinalSnap = await snapshotState(page);
-      await clickAdvance(page);
+      await clickAdvance(page, clickNavLink);
 
       // A day tick resolves the current round and pops the resolution overlay.
       await expect
-        .poll(() => progressedLabel(page, label), { timeout: 120_000 })
+        .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
         .not.toBe('busy');
 
       await expect
@@ -806,7 +828,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   for (let guard = 0; guard < 160; guard++) {
     // Wait until any in-flight resolution finishes and overlays are clear.
     await expect
-      .poll(() => settledAdvanceLabel(page), { timeout: 120_000 })
+      .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
       .not.toBe('busy');
 
     const snap = await snapshotState(page);
@@ -832,13 +854,13 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
       continue;
     }
 
-    const label = await advanceLabel(page);
-    await clickAdvance(page);
+    const label = await advanceLabel(page, clickNavLink);
+    await clickAdvance(page, clickNavLink);
 
     // Confirm the tick rolled over — the poll keeps dismissing resolution /
     // death overlays until the header shows the next week (or tournament day).
     await expect
-      .poll(() => progressedLabel(page, label), { timeout: 120_000 })
+      .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
       .not.toBe('busy');
   }
 
@@ -899,8 +921,8 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
 
   // Header shows the settled week-advance state.
   await expect
-    .poll(() => settledAdvanceLabel(page), { timeout: 60_000 })
-    .toMatch(/ADVANCE WEEK 14/);
+    .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 60_000 })
+    .toMatch(/EXECUTE WEEK 14/);
 
   // ── 7. World-systems coverage — arenas, events, mortality, AI, economy ──
   const killRate = cov.peakKills / Math.max(1, cov.peakBouts);

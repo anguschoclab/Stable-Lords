@@ -461,6 +461,7 @@ function buildOffer(
     arenaId,
   };
 }
+/** Converts arena bids into bout offers the player stable can evaluate. */
 export function convertBidsToOffers(
   allBids: { bid: BoutBid; rivalId: string }[],
   rivals: RivalStableData[],

@@ -12,6 +12,7 @@ import { generateOrphanPool } from '@/data/orphanPool';
 import { createBoutSummary } from '@/engine/core/fightSummaryFactory';
 import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
 
+/** A completed FTUE exhibition bout: combatants, outcome, and fight summary. */
 export interface BoutResult {
   a: Warrior;
   d: Warrior;

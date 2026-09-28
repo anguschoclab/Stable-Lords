@@ -15,6 +15,7 @@ import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 export const TOURNEY_PLAYER_ID = 'stable-player' as StableId;
 export const TOURNEY_RIVAL_ID = 'stable-rival-1' as StableId;
 
+/** Builds a minimal tournament-ready GameState fixture for the given week. */
 export const makeTournamentBaseState = (week = 1): GameState =>
   fixtureGameState({
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
@@ -57,6 +58,7 @@ export const makeTournamentBaseState = (week = 1): GameState =>
     isFTUE: false,
   });
 
+/** Creates a tournament fixture warrior on the given stable's roster. */
 export function makeTournamentWarrior(
   id: string,
   name: string,
@@ -73,6 +75,7 @@ export function makeTournamentWarrior(
   );
 }
 
+/** Builds a completed tournament bracket fixture with winners decided. */
 export function makeCompletedTournament(
   warriors: Warrior[],
   winnerFirst: 'A' | 'D' = 'A',

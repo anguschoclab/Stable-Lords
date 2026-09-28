@@ -228,6 +228,7 @@ function applyStrategicLayer(
   plan.conditions = allConditions.slice(0, conditionCap);
 }
 
+/** Generates a full weekly plan for one AI warrior given owner personality. */
 export function aiPlanForWarrior(
   w: Warrior,
   personality: OwnerPersonality,

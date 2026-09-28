@@ -2,8 +2,8 @@ import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import type { WarriorAdvisorCard, CampaignFocus } from '@/engine/advisor/types';
 import type { WarriorId } from '@/types/shared.types';
+import { FOCUS_LABELS } from './councilCardConfig';
 import {
-  FOCUS_LABELS,
   CouncilCardHeader,
   CombatColumn,
   TrainingColumn,

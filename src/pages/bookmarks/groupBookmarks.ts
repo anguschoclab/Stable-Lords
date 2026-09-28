@@ -3,6 +3,7 @@ import { buildWarriorMap } from '@/engine/core/warriorCollection';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 import type { GameStore } from '@/state/store.types';
 
+/** A display row derived from a bookmarked entity. */
 export interface BookmarkRow {
   id: string;
   name: string;
@@ -11,6 +12,7 @@ export interface BookmarkRow {
   onClick?: () => void;
 }
 
+/** Bookmark rows grouped by entity type for the bookmarks page sections. */
 export type BookmarkGroups = Record<BookmarkEntityType, BookmarkRow[]>;
 
 type Navigate = ReturnType<typeof useNavigate>;

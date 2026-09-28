@@ -114,7 +114,7 @@ describe('useAdminTools', () => {
       'test-slot',
       expect.objectContaining({ week: 13 })
     );
-    expect(toast.success).toHaveBeenCalledWith('Seasonal transition forced.');
+    expect(toast.success).toHaveBeenCalledWith('Season rollover forced.');
     expect(useGameStore.getState().isSimulating).toBe(false);
   });
 
@@ -145,7 +145,7 @@ describe('useAdminTools', () => {
     });
 
     expect(loadGame).not.toHaveBeenCalled();
-    expect(toast.error).toHaveBeenCalledWith('Seasonal transition failed.');
+    expect(toast.error).toHaveBeenCalledWith('Season rollover failed.');
     expect(consoleSpy).toHaveBeenCalledWith('Skip season failed:', expect.any(Error));
   });
 

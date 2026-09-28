@@ -22,6 +22,7 @@ import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
 import { SeededRNGService } from '@/utils/random';
 
+/** Which start screen is currently shown. */
 export type Screen = 'title' | 'newGame';
 
 /** All title-screen orchestration: save slots, new-game creation, import/export/delete. */

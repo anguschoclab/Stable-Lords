@@ -138,8 +138,7 @@ const bannedTerms = [
   'BIOMETRICS',
   'Bio-Rhythm',
   'Materiel Affinity',
-  'EXECUTE WEEK',
-  'EXECUTE DAY',
+
   'All systems operational',
   'No breakthrough signals',
   'Dormant Phase',

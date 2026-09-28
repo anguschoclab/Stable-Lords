@@ -40,7 +40,7 @@ describe('deriveHeadToHead', () => {
   });
 
   it('returns zeroed record when the pair never met', () => {
-    const state = makeGameState({ arenaHistory: [] });
+    const state = makeGameState({});
     expect(deriveHeadToHead(state, 'w1' as WarriorId, 'opp1' as WarriorId)).toEqual({
       wins: 0,
       losses: 0,

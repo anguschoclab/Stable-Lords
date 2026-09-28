@@ -52,7 +52,7 @@ describe('TOURNAMENT_CAMPAIGN', () => {
       agentMemory: makeAgentMemory(),
     });
     // Week 1 of the new season — window closed
-    const state = makeGameState({ rivals: [rival], week: 1, weather: 'Clear', arenaHistory: [] });
+    const state = makeGameState({ rivals: [rival], weather: 'Clear', arenaHistory: [] });
     const next = updateAIStrategy(rival, state, 42);
     expect(next.intent).not.toBe('TOURNAMENT_CAMPAIGN');
   });
@@ -70,10 +70,7 @@ describe('TOURNAMENT_CAMPAIGN', () => {
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4 },
     });
     const state = makeGameState({
-      rivals: [crisis, eager],
-      realmRankings: {},
-      arenaHistory: [],
-    });
+      rivals: [crisis, eager],});
     // Give every warrior a ranking so they're eligible
     for (const r of state.rivals) {
       for (const w of r.roster) {

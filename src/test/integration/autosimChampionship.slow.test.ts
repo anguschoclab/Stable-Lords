@@ -6,6 +6,7 @@
  * stays because a regression here is only debuggable through these numbers.
  */
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { stubLocalStorage } from '@/test/_setup/stubLocalStorage';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { runAutosim } from '@/engine/autosim/autosim';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
@@ -16,17 +17,7 @@ import type { GameState } from '@/types/game';
 describe('championship autosim — week 52+', () => {
   let errorSpy: any;
   beforeAll(() => {
-    Object.defineProperty(globalThis, 'localStorage', {
-      value: {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn(),
-        length: 0,
-        key: vi.fn(),
-      },
-      configurable: true,
-    });
+    stubLocalStorage();
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
   afterAll(() => {

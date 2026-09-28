@@ -13,7 +13,7 @@ import {
   verifyBoutAcceptance,
   evaluateBoutOffer,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makePragmaticRival } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -41,24 +41,7 @@ function makeOpponent(
 }
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-  fixtureRival({
-    id: 'rival-1' as any,
-    owner: {
-      id: 'owner-1' as any,
-      name: 'Owner',
-      stableName: 'Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    roster: [],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
-    ...overrides,
-  } as any);
+  makePragmaticRival(overrides);
 
 const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
   fixtureBoutOffer({

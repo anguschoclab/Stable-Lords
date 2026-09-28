@@ -92,6 +92,23 @@ export function makeComputedWarrior(
   return makeWarrior({ attributes, baseSkills, derivedStats, style, ...over });
 }
 
+/**
+ * Canonical "named test warrior" — the Spartacus profile shared across
+ * component tests (StrikingAttack, all-10 base skills, 5-3-1 career, fame 7).
+ */
+export function makeSpartacusWarrior(over: Partial<Warrior> = {}): Warrior {
+  return makeWarrior({
+    id: (over.id ?? 'w1') as WarriorId,
+    name: 'Spartacus',
+    style: FightingStyle.StrikingAttack,
+    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
+    career: { wins: 5, losses: 3, kills: 1 },
+    fame: 7,
+    popularity: 3,
+    ...over,
+  });
+}
+
 /** Schema-valid Owner. */
 export function makeOwner(over: Partial<Owner> = {}): Owner {
   const id = (over.id as string) ?? nextId('owner');
@@ -161,6 +178,53 @@ export function makeRival(over: Partial<RivalStableData> = {}): RivalStableData 
     ...over,
     roster,
   };
+}
+
+/**
+ * Rival with a named owner and roster — the "Established rival" shape shared
+ * across AI/pipeline tests.
+ */
+export function makeRivalStable(
+  id: string,
+  roster: Warrior[],
+  over: Partial<RivalStableData> = {}
+): RivalStableData {
+  return makeRival({
+    id: id as StableId,
+    fame: 50,
+    owner: makeOwner({
+      id: `owner-${id}` as StableId,
+      name: `Owner ${id}`,
+      fame: 50,
+      stableName: `Stable ${id}`,
+      renown: 5,
+      titles: 0,
+    }),
+    roster,
+    treasury: 1000,
+    tier: 'Established',
+    ...over,
+  });
+}
+
+/**
+ * Rival with the canonical "Owner / Stable / Pragmatic" owner — the default
+ * rival shape shared across AI worker tests.
+ */
+export function makePragmaticRival(
+  over: Partial<RivalStableData> = {},
+  ownerOver: Partial<Owner> = {}
+): RivalStableData {
+  return makeRival({
+    id: 'rival-1' as any,
+    owner: makeOwner({
+      id: 'owner-1' as any,
+      name: 'Owner',
+      stableName: 'Stable',
+      ...ownerOver,
+    }),
+    ...over,
+  });
 }
 
 /**

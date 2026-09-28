@@ -44,11 +44,7 @@ vi.mock('@/components/ui/sheet', () => ({
   SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({
-  Tooltip: ({ children }: any) => <div>{children}</div>,
-  TooltipContent: ({ children }: any) => <div>{children}</div>,
-  TooltipTrigger: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,

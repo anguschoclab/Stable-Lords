@@ -12,7 +12,7 @@ import type { GameState } from '@/types/state.types';
 
 describe('PlanBuilder Council Tactics (Task 4.4)', () => {
   beforeEach(() => {
-    const fresh = makeGameState({ week: 1, season: 'Spring' });
+    const fresh = makeGameState({});
     useGameStore.getState().loadGame('test-slot', fresh as GameState);
   });
 

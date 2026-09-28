@@ -3,12 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId, Trainer } from '@/types/shared.types';
 import type { TrainingAssignment } from '@/types/state.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TraitTrainingSection } from '@/components/warrior/TraitTrainingSection';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/training/trainingGains/traitTraining', () => ({
   traitTrainingPool: vi.fn(() => []),
@@ -24,17 +23,10 @@ vi.mock('@/components/warrior/traits/TraitBadge', () => ({
 }));
 
 const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: 'w1' as WarriorId,
-    name: 'Spartacus',
-    style: FightingStyle.StrikingAttack,
-    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    career: { wins: 5, losses: 3, kills: 1 },
-    fame: 7,
-    popularity: 3,
+  makeSpartacusWarrior({
     age: 24,
     ...overrides,
-  } as any);
+  });
 
 const trainers: Trainer[] = [
   {

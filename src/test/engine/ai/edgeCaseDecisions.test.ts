@@ -4,8 +4,8 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import type { WarriorId } from '@/types/shared.types';
+import { makeWarrior as fixtureWarrior, makeRivalStable } from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, name: string, status: string = 'Active'): Warrior =>
   fixtureWarrior({
@@ -20,23 +20,7 @@ const makeWarrior = (id: string, name: string, status: string = 'Active'): Warri
   } as any);
 
 const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
-  fixtureRival({
-    id: id as StableId,
-    fame: 50,
-    owner: {
-      id: `owner-${id}` as any,
-      name: `Owner ${id}`,
-      fame: 50,
-      stableName: `Stable ${id}`,
-      renown: 5,
-      titles: 0,
-    },
-    roster,
-    treasury: 1000,
-    tier: 'Established' as any,
-    ledger: [],
-    trainingAssignments: [],
-  } as any);
+  makeRivalStable(id, roster);
 
 describe('AI edgeCaseDecisions', () => {
   it('AI with empty roster does not crash advanceWeek', async () => {

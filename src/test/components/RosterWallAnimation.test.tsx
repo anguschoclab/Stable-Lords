@@ -42,21 +42,9 @@ vi.mock('@/hooks/useActiveRoster', () => ({
   useActiveRoster: () => mockRoster,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({
-  Tooltip: ({ children }: any) => <div>{children}</div>,
-  TooltipContent: ({ children }: any) => <div>{children}</div>,
-  TooltipTrigger: ({ children }: any) => <div>{children}</div>,
-  TooltipProvider: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
-vi.mock('@/components/ui/sheet', () => ({
-  Sheet: ({ children }: any) => <div>{children}</div>,
-  SheetContent: ({ children }: any) => <div>{children}</div>,
-  SheetHeader: ({ children }: any) => <div>{children}</div>,
-  SheetTitle: ({ children }: any) => <div>{children}</div>,
-  SheetDescription: ({ children }: any) => <div>{children}</div>,
-  SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-}));
+vi.mock('@/components/ui/sheet', async () => await import('@/test/_mocks/sheet'));
 
 vi.mock('@/components/stable/RosterWarriorRow', () => ({
   RosterWarriorRow: ({ warrior }: any) => (

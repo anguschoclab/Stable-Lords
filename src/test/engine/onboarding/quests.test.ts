@@ -4,7 +4,7 @@ import { makeGameState, makeFightSummary, makeWarrior } from '@/test/_fixtures/f
 
 describe('onboarding quests (G4)', () => {
   it('starts with all quests incomplete on a fresh state', () => {
-    const s = makeGameState({ arenaHistory: [], scoutReports: [], trainers: [] });
+    const s = makeGameState({});
     const qs = evaluateQuests(s);
     expect(qs.length).toBe(ONBOARDING_QUESTS.length);
     expect(qs.every((q) => !q.complete)).toBe(true);

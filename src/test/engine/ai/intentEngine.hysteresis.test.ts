@@ -60,7 +60,7 @@ describe('verifyIntentSkepticism — typed-cause checks', () => {
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: 'ghost-stable' as never },
       agentMemory: makeAgentMemory(),
     });
-    const state = makeGameState({ rivals: [rival], ownerGrudges: [], arenaHistory: [] });
+    const state = makeGameState({ rivals: [rival],});
     expect(verifyIntentSkepticism(rival, state)).toBe(true);
   });
 

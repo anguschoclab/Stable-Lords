@@ -2,17 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { FightingStyle } from '@/types/shared.types';
-import type { Attributes, WarriorId } from '@/types/shared.types';
-import type { Warrior, CareerRecord, AttributePotential } from '@/types/warrior.types';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import type { Attributes } from '@/types/shared.types';
+import type { Warrior, AttributePotential } from '@/types/warrior.types';
+import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
-vi.mock('@/components/ui/tooltip', () => ({
-  TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
   WarriorNameTag: ({ name }: { name: string }) => <span data-testid="warrior-name">{name}</span>,
@@ -69,22 +63,14 @@ import { TacticalSummary } from '@/components/stable/TacticalSummary';
 import { RosterWarriorRow } from '@/components/stable/RosterWarriorRow';
 
 const baseAttrs: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-const career: CareerRecord = { wins: 5, losses: 3, kills: 1 };
 
 const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: 'w1' as WarriorId,
-    name: 'Spartacus',
-    style: FightingStyle.StrikingAttack,
+  makeSpartacusWarrior({
     attributes: { ...baseAttrs },
-    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    career,
-    fame: 7,
-    popularity: 3,
     age: 24,
     potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
     ...overrides,
-  } as any);
+  });
 
 // ─── RankStrip ─────────────────────────────────────────────────────────────
 

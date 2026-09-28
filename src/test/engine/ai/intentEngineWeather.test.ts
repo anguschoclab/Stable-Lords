@@ -8,30 +8,12 @@ import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { pickWeeklyIntent, verifyIntentSkepticism } from '@/engine/ai/intentEngine';
-import { makeRival as fixtureRival, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeGameState as fixtureGameState, makePragmaticRival } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-  fixtureRival({
-    id: 'rival-1' as any,
-    owner: {
-      id: 'owner-1' as any,
-      name: 'Owner',
-      stableName: 'Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-      favoredStyles: [],
-    },
-    roster: [],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
-    ...overrides,
-  } as any);
+  makePragmaticRival(overrides, { favoredStyles: [] });
 
 function makeLungeRoster(): any[] {
   // 3 LungingAttack + 1 BashingAttack = 75% precision-heavy

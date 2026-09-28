@@ -3,11 +3,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId } from '@/types/shared.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { TrainingCardHeader } from '@/components/warrior/TrainingCardHeader';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
   WarriorNameTag: ({ name }: { name: string }) => <span data-testid="warrior-name">{name}</span>,
@@ -15,17 +13,10 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
 }));
 
 const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: 'w1' as WarriorId,
-    name: 'Spartacus',
-    style: FightingStyle.StrikingAttack,
-    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    career: { wins: 5, losses: 3, kills: 1 },
-    fame: 7,
-    popularity: 3,
+  makeSpartacusWarrior({
     age: 24,
     ...overrides,
-  } as any);
+  });
 
 function renderHeader(warrior = makeWarrior(), total = 70, hasInjury = false) {
   return render(

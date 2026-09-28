@@ -4,26 +4,7 @@
  * remain duplicate-free after the expansion.
  */
 import { describe, it, expect } from 'vitest';
-import * as fs from 'fs';
-import * as path from 'path';
-
-const LORE_SOURCE = ['origins', 'childhoodTraits', 'definingMoments']
-  .map((f) => fs.readFileSync(path.resolve(__dirname, `../../../engine/narrative/lore/${f}.ts`), 'utf-8'))
-  .join('\n');
-
-function extractStringArray(source: string, varName: string): string[] {
-  const regex = new RegExp(`(?:export )?const ${varName}.*?= \\[([\\s\\S]*?)\\];`);
-  const m = regex.exec(source);
-  if (!m || !m[1]) throw new Error(`Could not find ${varName} in loreGenerator.ts`);
-  const items = m[1].match(/'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g);
-  if (!items) return [];
-  return items.map((s) => {
-    const quote = s[0];
-    const content = s.slice(1, -1);
-    if (quote === "'") return content.replace(/\\'/g, "'");
-    return content.replace(/\\"/g, '"');
-  });
-}
+import { LORE_SOURCE, extractStringArray } from './_helpers/loreSource';
 
 describe('new loreGenerator entries', () => {
   const source = LORE_SOURCE;

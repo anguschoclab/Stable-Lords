@@ -1,19 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import { makeStubRng, makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 import { handleDreamweaversMist } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
-import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import type { OffseasonEventNarrative } from '@/engine/pipeline/offseasonEvents/types';
 
 describe('handleDreamweaversMist', () => {
   it('awards 15 XP and inflicts Magic Burn minor injury', () => {
-    const mockRng: IRNGService = {
-      pick: vi.fn((arr: readonly any[]) => arr[0]),
-      next: () => 0.5,
-      uuid: () => 'uuid-1',
-      roll: (min: number) => min,
-    } as unknown as IRNGService;
+    const mockRng = makeStubRng();
 
     const warrior: Partial<Warrior> = {
       id: 'w-1' as WarriorId,
@@ -33,13 +28,7 @@ describe('handleDreamweaversMist', () => {
       newsletter: ['{{name}} breathed the strange mist.'],
     };
 
-    const ctx: OffseasonEventContext = {
-      treasuryDelta: 0,
-      ledgerEntries: [],
-      newsletterItems: [],
-      rosterUpdates: new Map(),
-      retiredIds: [],
-    } as any;
+    const ctx = makeOffseasonCtx();
 
     handleDreamweaversMist(state as GameState, 5, narrative, mockRng, ctx);
 

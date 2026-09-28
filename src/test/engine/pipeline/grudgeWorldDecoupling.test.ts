@@ -82,9 +82,7 @@ describe('grudge/rivalry world decoupling (G5)', () => {
       rivals: [a, b],
       week: 5,
       absoluteWeek: 5,
-      arenaHistory: [killBetween(4)],
-      ownerGrudges: [],
-    });
+      arenaHistory: [killBetween(4)],});
     const impact = runNarrativePass(state, 5, 6);
     // Gazette work stays; ownerGrudges must NOT be re-emitted here
     expect(impact.ownerGrudges).toBeUndefined();

@@ -139,7 +139,7 @@ describe('evaluateTacticsAdvice', () => {
         },
       ],
     });
-    const none = makeGameState({ insightTokens: [] });
+    const none = makeGameState({});
 
     const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
     const vsMedium = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER', { opponent, state: medium });

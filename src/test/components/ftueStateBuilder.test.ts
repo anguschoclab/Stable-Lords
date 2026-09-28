@@ -1,59 +1,26 @@
 import { describe, it, expect } from 'vitest';
 import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
-import { makeGameState } from '@/test/_fixtures/factories';
+import {
+  makeFtueResult,
+  FTUE_KO_RESULT as koResult,
+  FTUE_MINIMAL_BASE_STATE as minimalBaseState,
+  FTUE_TWO_WARRIORS as twoWarriors,
+  FTUE_THREE_WARRIORS as threeWarriors,
+  FTUE_SEED as SEED,
+} from '@/test/_fixtures/ftue';
 
 const ZERO_CAREER = { wins: 0, losses: 0, kills: 0 };
 
-const baseAttrs = { ST: 12, CN: 10, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 10 };
+const killResult = makeFtueResult(
+  { winner: 'A', by: 'Kill', minutes: 5, log: [] },
+  'test-kill-summary'
+);
 
-const pw = (name: string) => ({
-  name,
-  style: FightingStyle.LungingAttack,
-  attrs: baseAttrs,
-  age: 20,
-  trait: 'iron_will',
-  lore: '',
-  origin: '',
-  potential: undefined,
-});
-
-const wA = makeWarrior('w-a' as any, 'Varak', FightingStyle.LungingAttack, baseAttrs);
-const wD = makeWarrior('w-d' as any, 'Dren', FightingStyle.TotalParry, baseAttrs);
-
-const koResult = {
-  a: wA,
-  d: wD,
-  outcome: { winner: 'A' as const, by: 'KO', minutes: 3, log: [] },
-  summary: { id: 'test-summary' as any, week: 1 } as any,
-};
-
-const killResult = {
-  a: wA,
-  d: wD,
-  outcome: { winner: 'A' as const, by: 'Kill', minutes: 5, log: [] },
-  summary: { id: 'test-kill-summary' as any, week: 1 } as any,
-};
-
-const flashyResult = {
-  a: wA,
-  d: wD,
-  outcome: { winner: 'A' as const, by: 'KO', minutes: 3, log: [], post: { tags: ['Flashy'] } },
-  summary: { id: 'test-flashy-summary' as any, week: 1 } as any,
-};
-
-const minimalBaseState: Partial<GameState> = makeGameState({
-  season: 'Year 1',
-  player: { id: 'player-1' as any, name: 'Owner', stableName: 'Stable', fame: 0, gold: 500 } as any,
-  rivals: [],
-});
-
-const twoWarriors = [pw('Varak'), pw('Dren')];
-const threeWarriors = [pw('Varak'), pw('Dren'), pw('Calix')];
-
-const SEED = 42;
+const flashyResult = makeFtueResult(
+  { winner: 'A', by: 'KO', minutes: 3, log: [], post: { tags: ['Flashy'] } },
+  'test-flashy-summary'
+);
 
 describe('buildFTUEInitialState — career record', () => {
   it('winner career is 0-0-0 (not 1-0-0)', () => {

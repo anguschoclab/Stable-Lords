@@ -125,8 +125,6 @@ describe('boutProcessor - generatePairings', () => {
   it('should dedupe deterministically regardless of offer map insertion order', () => {
     const mkState = (offerOrder: string[]): any =>
       makeGameState({
-        week: 1,
-        absoluteWeek: 1,
         roster: [makeWarrior({ id: 'w1' as WarriorId })],
         rivals: [
           makeRival({

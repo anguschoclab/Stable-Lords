@@ -21,11 +21,7 @@ vi.mock('@/components/ui/table', () => ({
   TableCell: ({ children }: any) => <td>{children}</td>,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({
-  Tooltip: ({ children }: any) => <div>{children}</div>,
-  TooltipContent: ({ children }: any) => <div>{children}</div>,
-  TooltipTrigger: ({ children }: any) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
 import {
   GazetteLeaderboard,

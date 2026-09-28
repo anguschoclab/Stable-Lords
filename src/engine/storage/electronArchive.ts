@@ -1,35 +1,9 @@
 import type { GameState } from '@/types/state.types';
 import { ArchiveConflictError } from './ArchiveConflictError';
-
-/**
- * Defines the shape of archive service.
- */
-export interface ArchiveService {
-  isSupported: () => boolean;
-
-  // Bout Logs (JSON)
-  archiveBoutLog: (
-    year: number,
-    season: number,
-    boutId: string,
-    logData: string[],
-    overwrite?: boolean
-  ) => Promise<void>;
-  retrieveBoutLog: (year: number, season: number, boutId: string) => Promise<string[] | null>;
-
-  // Gazettes (Markdown)
-  archiveGazette: (season: number, week: number, markdown: string) => Promise<void>;
-  retrieveGazette: (season: number, week: number) => Promise<string | null>;
-
-  // Hot State Save/Load (JSON)
-  archiveHotState: (slotId: string, stateData: GameState) => Promise<void>;
-  retrieveHotState: (slotId: string) => Promise<GameState | null>;
-
-  // Utility
-  getArchivedBoutIdsForSeason: (season: number) => Promise<string[]>;
-}
+import type { ArchiveService } from './opfsArchive/types';
 
 export { ArchiveConflictError };
+export type { ArchiveService };
 
 /**
  * The ElectronArchiveService class.

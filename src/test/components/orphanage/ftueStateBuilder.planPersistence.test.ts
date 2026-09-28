@@ -1,42 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import type { FightPlan } from '@/types/shared.types';
-import { makeGameState } from '@/test/_fixtures/factories';
-
-const baseAttrs = { ST: 12, CN: 10, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 10 };
-
-const pw = (name: string) => ({
-  name,
-  style: FightingStyle.LungingAttack,
-  attrs: baseAttrs,
-  age: 20,
-  trait: 'iron_will',
-  lore: '',
-  origin: '',
-  potential: undefined,
-});
-
-const wA = makeWarrior('w-a' as any, 'Varak', FightingStyle.LungingAttack, baseAttrs);
-const wD = makeWarrior('w-d' as any, 'Dren', FightingStyle.TotalParry, baseAttrs);
-
-const koResult = {
-  a: wA,
-  d: wD,
-  outcome: { winner: 'A' as const, by: 'KO', minutes: 3, log: [] },
-  summary: { id: 'test-summary' as any, week: 1 } as any,
-};
-
-const minimalBaseState: Partial<GameState> = makeGameState({
-  season: 'Year 1',
-  player: { id: 'player-1' as any, name: 'Owner', stableName: 'Stable', fame: 0, gold: 500 } as any,
-  rivals: [],
-});
-
-const SEED = 42;
-const threeWarriors = [pw('Varak'), pw('Dren'), pw('Calix')];
+import {
+  FTUE_KO_RESULT as koResult,
+  FTUE_MINIMAL_BASE_STATE as minimalBaseState,
+  FTUE_THREE_WARRIORS as threeWarriors,
+  FTUE_SEED as SEED,
+} from '@/test/_fixtures/ftue';
 
 const customPlan: FightPlan = {
   style: FightingStyle.LungingAttack,

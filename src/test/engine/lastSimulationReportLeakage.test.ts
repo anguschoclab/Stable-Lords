@@ -9,7 +9,6 @@ const makeState = (lastSimReport?: any): GameState =>
     fame: 50,
     rivals: [],
     recruitPool: [],
-    activeTournamentId: undefined,
     lastSimulationReport: lastSimReport,
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);

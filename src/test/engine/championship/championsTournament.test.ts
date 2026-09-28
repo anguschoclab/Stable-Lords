@@ -60,7 +60,6 @@ function crownedState(n: number, opts: { rivalChamps?: number } = {}): GameState
   });
   return makeGameState({
     week: 51,
-    year: 1,
     arenaChampions,
     roster: playerIds.map((id) => champ(id)),
     rivals: rivalIds.length
@@ -278,7 +277,7 @@ describe('ArenaChampionshipPass grand-champion wiring', () => {
 
 describe('calendar migration', () => {
   it('an unfinished legacy-cadence tournament still resolves at the week boundary', () => {
-    const state = makeGameState({ week: 13, year: 1 });
+    const state = makeGameState({ week: 13,});
     const old: TournamentEntry = {
       id: 't-gold-spring-y1-w13' as TournamentId,
       season: 'Spring',

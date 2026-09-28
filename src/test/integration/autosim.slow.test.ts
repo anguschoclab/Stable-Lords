@@ -4,6 +4,7 @@
  * Tests the autosim system that allows multi-week advancement with stop conditions.
  */
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
+import { stubLocalStorage } from '@/test/_setup/stubLocalStorage';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { WarriorId } from '@/types/game';
 
@@ -19,17 +20,7 @@ describe('Autosim Integration', () => {
 
   beforeAll(() => {
     originalLocalStorage = globalThis.localStorage;
-    Object.defineProperty(globalThis, 'localStorage', {
-      value: {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn(),
-        length: 0,
-        key: vi.fn(),
-      },
-      configurable: true,
-    });
+    stubLocalStorage();
 
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });

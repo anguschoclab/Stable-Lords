@@ -44,7 +44,7 @@ describe('intelWorker', () => {
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
       agentMemory: makeAgentMemory(),
     });
-    const state = makeGameState({ rivals: [scout, dangerous, harmless], fame: 0 });
+    const state = makeGameState({ rivals: [scout, dangerous, harmless],});
     const { updatedRival } = processIntel(scout, state, buildPerceptionSnapshot(state));
     const dossier = updatedRival.agentMemory!.opponentDossiers[dangerous.id];
     expect(dossier!.planIntel).toBeDefined();

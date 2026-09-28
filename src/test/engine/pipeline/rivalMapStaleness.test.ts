@@ -4,7 +4,7 @@ import type { StateImpact } from '@/engine/impacts';
 import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState, makeRivalStable } from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, name: string): Warrior =>
   fixtureWarrior({
@@ -18,23 +18,7 @@ const makeWarrior = (id: string, name: string): Warrior =>
   } as any);
 
 const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
-  fixtureRival({
-    id: id as StableId,
-    fame: 50,
-    owner: {
-      id: `owner-${id}` as any,
-      name: `Owner ${id}`,
-      fame: 50,
-      stableName: `Stable ${id}`,
-      renown: 5,
-      titles: 0,
-    },
-    roster,
-    treasury: 1000,
-    tier: 'Established' as any,
-    ledger: [],
-    trainingAssignments: [],
-  } as any);
+  makeRivalStable(id, roster);
 
 const makeState = (rivals: RivalStableData[]): GameState =>
   fixtureGameState({

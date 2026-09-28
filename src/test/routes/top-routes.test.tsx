@@ -1,10 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import {
-  expectRouteDefinition,
-  expectRouteComponent,
-  renderRouteComponent,
-} from './_helpers/routeTestHelper';
+import { describeRoutes } from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/AdminTools', () => ({
   default: () => <div data-testid="admin-tools">AdminTools</div>,
@@ -49,22 +45,7 @@ const routes = [
   { name: 'warrior/$id', path: '/warrior/$id', importPath: '@/routes/warrior/$id' },
 ];
 
-describe.each(routes)('Route: $name', (routeConfig) => {
-  it('has correct definition', async () => {
-    const mod = await import(routeConfig.importPath);
-    expectRouteDefinition(mod.Route, routeConfig.path);
-  });
-
-  it('has a component defined', async () => {
-    const mod = await import(routeConfig.importPath);
-    expectRouteComponent(mod.Route);
-  });
-
-  it('renders component without crashing', async () => {
-    const mod = await import(routeConfig.importPath);
-    renderRouteComponent(mod.Route);
-  });
-});
+describeRoutes(routes);
 
 describe('Route: arena-hub (legacy alias)', () => {
   it('redirects to the canonical /stable/arena surface', async () => {

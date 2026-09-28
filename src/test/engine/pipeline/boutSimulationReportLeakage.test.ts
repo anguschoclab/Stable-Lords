@@ -30,7 +30,6 @@ const makeState = (week: number, year: number, prevReport?: any): GameState =>
     absoluteWeek: (year - 1) * 52 + week,
     rivals: [],
     recruitPool: [],
-    activeTournamentId: undefined,
     lastSimulationReport: prevReport,
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);

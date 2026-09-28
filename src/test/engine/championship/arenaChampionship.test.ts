@@ -226,7 +226,6 @@ describe('selectTitleContender', () => {
     const wOk = warriorAtArena('w-ok', arenaId, { wins: 4, losses: 1 });
     const state = makeGameState({
       week: 10,
-      year: 1,
       absoluteWeek: 10,
       roster: [champ, wCool, wOk],
       arenaChampions: {
@@ -297,7 +296,6 @@ describe('resolveTitleBoutResults', () => {
     const state = makeGameState({
       absoluteWeek: 50,
       week: 50,
-      year: 1,
       roster: [champ, cont],
       arenaChampions: {
         [arenaId]: makeTitleAt(arenaId, 'w-champ', {
@@ -333,7 +331,6 @@ describe('resolveTitleBoutResults', () => {
     const state = makeGameState({
       absoluteWeek: 50,
       week: 50,
-      year: 1,
       roster: [champ, cont],
       arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
       arenaHistory: [
@@ -501,7 +498,6 @@ describe('applyLifecycleTransitions', () => {
       absoluteWeek: 21,
       week: 21,
       roster: [champ, cont],
-      boutOffers: {},
       arenaChampions: {
         [arenaId]: makeTitleAt(arenaId, 'w-champ', { status: 'pendingReengagement' }),
       },

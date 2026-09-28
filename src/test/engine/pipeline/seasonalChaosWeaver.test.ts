@@ -22,7 +22,6 @@ import {
 
 const makeTestState = (): GameState =>
   fixtureGameState({
-    year: 1,
     roster: [
       {
         id: 'w-test' as WarriorId,

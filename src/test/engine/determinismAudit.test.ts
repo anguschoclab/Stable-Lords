@@ -1,20 +1,8 @@
 import { describe, it, expect } from 'vitest';
+import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
-function readDirRecursive(dir: string, exts: string[]): string[] {
-  const results: string[] = [];
-  if (!fs.existsSync(dir)) return results;
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...readDirRecursive(full, exts));
-    } else if (exts.some((ext) => entry.name.endsWith(ext))) {
-      results.push(full);
-    }
-  }
-  return results;
-}
 
 function isInside(child: string, parent: string): boolean {
   const rel = path.relative(parent, child);

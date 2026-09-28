@@ -13,12 +13,7 @@ import { RosterWarriorRow } from '@/components/stable/RosterWarriorRow';
 import type { FightingStyle } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
-vi.mock('@/components/ui/tooltip', () => ({
-  TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
 const baseWarrior = {
   id: 'w1',

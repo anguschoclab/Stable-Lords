@@ -1,19 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import { makeStubRng, makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 import { handleGoblinMerchant } from '@/engine/pipeline/offseasonEvents/socialHandlers';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { GameState } from '@/types/state.types';
-import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import type { OffseasonEventNarrative } from '@/engine/pipeline/offseasonEvents/types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 
 describe('handleGoblinMerchant', () => {
   it('should increase CN and WL, and deduct gold', () => {
-    const mockRng: IRNGService = {
-      pick: vi.fn((arr: readonly any[]) => arr[0]),
-      next: () => 0.5, // Will result in 50 + Math.floor(0.5 * 50) = 75
-      uuid: () => 'uuid-1',
-      roll: (min: number) => min,
-    } as unknown as IRNGService;
+    const mockRng = makeStubRng();
 
     const w: Partial<Warrior> = {
       id: 'w-1' as WarriorId,
@@ -32,14 +27,7 @@ describe('handleGoblinMerchant', () => {
       newsletter: ['{{name}} got +1 CN and WL for {{gold}}G'],
     };
 
-    const ctx: OffseasonEventContext = {
-      rosterUpdates: new Map(),
-      newsletterItems: [],
-      ledgerEntries: [],
-      insightTokens: [],
-      treasuryDelta: 0,
-      retiredIds: [],
-    } as any;
+    const ctx = makeOffseasonCtx();
 
     handleGoblinMerchant(state as GameState, 1, e, mockRng, ctx);
 

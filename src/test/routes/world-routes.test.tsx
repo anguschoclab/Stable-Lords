@@ -1,10 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, vi } from 'vitest';
-import {
-  expectRouteDefinition,
-  expectRouteComponent,
-  renderRouteComponent,
-} from './_helpers/routeTestHelper';
+import { describe, expect, it, vi } from 'vitest';
+import { describeRoutes } from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/WorldOverview', () => ({
   default: () => <div data-testid="world-overview">WorldOverview</div>,
@@ -54,22 +50,7 @@ const routes = [
   { name: 'world/stable/$id', path: '/world/stable/$id', importPath: '@/routes/world/stable/$id' },
 ];
 
-describe.each(routes)('Route: $name', (routeConfig) => {
-  it('has correct definition', async () => {
-    const mod = await import(routeConfig.importPath);
-    expectRouteDefinition(mod.Route, routeConfig.path);
-  });
-
-  it('has a component defined', async () => {
-    const mod = await import(routeConfig.importPath);
-    expectRouteComponent(mod.Route);
-  });
-
-  it('renders component without crashing', async () => {
-    const mod = await import(routeConfig.importPath);
-    renderRouteComponent(mod.Route);
-  });
-});
+describeRoutes(routes);
 
 describe('Route: world/arena-leaderboards (legacy redirect)', () => {
   it('redirects to /world/arenas', async () => {

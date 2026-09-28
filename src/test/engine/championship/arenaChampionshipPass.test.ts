@@ -63,7 +63,6 @@ describe('ArenaChampionshipPass registration', () => {
     const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ],
       arenaChampions: {
@@ -87,7 +86,7 @@ describe('ArenaChampionshipPass behavior', () => {
   it('seeds champions into state via resolveImpacts', () => {
     const arenaId = 'standard_arena';
     const w = warriorAtArena('w-top', arenaId, { wins: 5, losses: 1 });
-    const state = makeGameState({ week: 29, year: 1, absoluteWeek: 29, roster: [w] });
+    const state = makeGameState({ week: 29, absoluteWeek: 29, roster: [w] });
     const impact = runArenaChampionshipPass(state, ctx);
     const next = resolveImpacts(state, [impact]);
     expect(next.arenaChampions?.[arenaId]?.champion?.warriorId).toBe('w-top');
@@ -100,7 +99,6 @@ describe('ArenaChampionshipPass behavior', () => {
     const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ, cont],
       arenaChampions: {
@@ -129,7 +127,6 @@ describe('ArenaChampionshipPass behavior', () => {
     const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ, cont],
       arenaChampions: {
@@ -174,7 +171,6 @@ describe('generatePairings champion choke point', () => {
     const offer = signedOffer('o1', 'w-champ', 'w-other');
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ, other],
       boutOffers: { [offer.id]: offer },
@@ -191,7 +187,6 @@ describe('generatePairings champion choke point', () => {
     const offer = signedOffer('o1', 'w-champ', 'w-other');
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ, other],
       boutOffers: { [offer.id]: offer },
@@ -210,7 +205,6 @@ describe('generatePairings champion choke point', () => {
     const offer = signedOffer('o1', 'w-champ', 'w-other');
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ, other],
       boutOffers: { [offer.id]: offer },
@@ -228,7 +222,6 @@ describe('generatePairings champion choke point', () => {
     const offer = signedOffer('o-title', 'w-champ', 'w-cont', arenaId);
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [champ, cont],
       boutOffers: { [offer.id]: offer },
@@ -249,12 +242,9 @@ describe('generatePairings champion choke point', () => {
     const ordinary = signedOffer('a-early-id', 'w-a', 'w-c');
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       roster: [a, b, c],
-      boutOffers: { [titleOffer.id]: titleOffer, [ordinary.id]: ordinary },
-      arenaChampions: {},
-    });
+      boutOffers: { [titleOffer.id]: titleOffer, [ordinary.id]: ordinary },});
     const { pairings, voidedOffers } = generatePairings(state);
     expect(pairings).toHaveLength(1);
     expect(pairings[0]!.contractId).toBe('z-ordinary-id');
@@ -288,7 +278,6 @@ describe('producer exclusion of booking-locked champions', () => {
     const rival = makeRival({ roster: [champ, w1, w2] });
     const state = makeGameState({
       week: 29,
-      year: 1,
       absoluteWeek: 29,
       rivals: [rival],
       arenaChampions: { [arenaId]: activeTitle('w-champ') },

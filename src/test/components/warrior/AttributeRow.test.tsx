@@ -3,10 +3,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { TrainingAssignment, Attributes } from '@/types/game';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/training', () => ({
   computeGainChance: vi.fn(() => 0),
@@ -20,12 +19,7 @@ vi.mock('@/components/ui/progress', () => ({
   Progress: ({ value }: { value: number }) => <div data-testid="progress" data-value={value} />,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({
-  TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
 import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/warrior/potential';
@@ -33,19 +27,12 @@ import { AttributeRow } from '@/components/warrior/AttributeRow';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: 'w1' as WarriorId,
-    name: 'Spartacus',
-    style: FightingStyle.StrikingAttack,
-    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    career: { wins: 5, losses: 3, kills: 1 },
-    fame: 7,
-    popularity: 3,
+  makeSpartacusWarrior({
     age: 24,
     potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
     potentialRevealed: { ST: true, CN: true, SZ: true, WT: true, WL: true, SP: true, DF: true },
     ...overrides,
-  } as any);
+  });
 
 const baseProps = {
   assignment: undefined as TrainingAssignment | undefined,

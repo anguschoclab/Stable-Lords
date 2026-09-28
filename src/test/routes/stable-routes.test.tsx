@@ -1,10 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, vi } from 'vitest';
-import {
-  expectRouteDefinition,
-  expectRouteComponent,
-  renderRouteComponent,
-} from './_helpers/routeTestHelper';
+import { vi } from 'vitest';
+import { describeRoutes } from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/ControlCenter', () => ({
   default: () => <div data-testid="control-center">ControlCenter</div>,
@@ -66,19 +62,4 @@ const routes = [
   { name: 'stable/training', path: '/stable/training', importPath: '@/routes/stable/training' },
 ];
 
-describe.each(routes)('Route: $name', (routeConfig) => {
-  it('has correct definition', async () => {
-    const mod = await import(routeConfig.importPath);
-    expectRouteDefinition(mod.Route, routeConfig.path);
-  });
-
-  it('has a component defined', async () => {
-    const mod = await import(routeConfig.importPath);
-    expectRouteComponent(mod.Route);
-  });
-
-  it('renders component without crashing', async () => {
-    const mod = await import(routeConfig.importPath);
-    renderRouteComponent(mod.Route);
-  });
-});
+describeRoutes(routes);

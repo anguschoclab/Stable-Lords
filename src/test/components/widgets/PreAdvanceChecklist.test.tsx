@@ -1,12 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { seedAdvisorScenario } from '@/test/_fixtures/advisorSeed';
 import { render, screen } from '@testing-library/react';
 import { PreAdvanceChecklist } from '@/components/widgets/PreAdvanceChecklist';
 import { useGameStore } from '@/state/useGameStore';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { FightingStyle } from '@/types/shared.types';
-import type { GameState, BoutOffer } from '@/types/state.types';
+import type { BoutOffer } from '@/types/state.types';
 import '@/test/_setup/setup';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -17,27 +15,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
-
-function seed(over: Partial<GameState> = {}) {
-  const fresh = createFreshState('test-seed');
-  const w1 = makeWarrior('w1' as any, 'Aulus', FightingStyle.AimedBlow, baseAttrs);
-  const rival = makeWarrior('r1' as any, 'Brutus', FightingStyle.WallOfSteel, baseAttrs);
-  fresh.roster = [w1];
-  fresh.rivals = [{ id: 'rs', roster: [rival], owner: { stableName: 'Rivals' } } as any];
-  fresh.week = 5;
-  fresh.absoluteWeek = 5;
-  fresh.year = 1;
-  fresh.season = 'Spring';
-  fresh.weather = 'Clear';
-  fresh.realmRankings = {};
-  fresh.boutOffers = {};
-  fresh.trainingAssignments = [];
-  fresh.treasury = 500;
-  Object.assign(fresh, over);
-  useGameStore.getState().loadGame('test-slot', fresh as GameState);
-  return { w1, rival };
-}
+const seed = seedAdvisorScenario;
 
 describe('PreAdvanceChecklist', () => {
   beforeEach(() => seed());

@@ -5,12 +5,7 @@ import '@testing-library/jest-dom';
 import type { OrphanWarrior } from '@/data/orphanPool';
 import type { Attributes } from '@/types/shared.types';
 
-vi.mock('@/engine/warrior/skillCalc', () => ({
-  computeWarriorStats: () => ({
-    derivedStats: { hp: 100 },
-    baseStats: { att: 10, def: 10, ini: 10, par: 10, rip: 10, dec: 10 },
-  }),
-}));
+vi.mock('@/engine/warrior/skillCalc', async () => await import('@/test/_mocks/skillCalc'))
 
 vi.mock('@/data/orphanPool', () => ({
   TRAIT_DATA: {
@@ -43,12 +38,7 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({
-  Tooltip: ({ children }: any) => children,
-  TooltipTrigger: ({ children }: any) => children,
-  TooltipContent: ({ children }: any) => <div>{children}</div>,
-  TooltipProvider: ({ children }: any) => children,
-}));
+vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
 
 import WarriorCard from '@/components/orphanage/WarriorCard';
 import { FightingStyle } from '@/types/shared.types';

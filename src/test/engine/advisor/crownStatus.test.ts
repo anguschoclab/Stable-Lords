@@ -98,9 +98,7 @@ describe('advisor crown standing', () => {
       week: 5,
       absoluteWeek: 5,
       roster: [green],
-      arenaChampions: { [ARENA]: titleAt(null) },
-      boutOffers: {},
-    });
+      arenaChampions: { [ARENA]: titleAt(null) },});
     const report = computeStableCouncilReport(state);
     const card = report.cards.find((c) => c.warriorId === 'w1');
     expect(card?.crownStanding).toBeUndefined();

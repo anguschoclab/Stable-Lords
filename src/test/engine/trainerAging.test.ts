@@ -98,7 +98,7 @@ describe('computeTrainerAging — basic aging', () => {
 describe('computeTrainerAging — contract expiration', () => {
   it('decrements contractWeeksLeft by 1 every week for active trainers', () => {
     const trainer = makeTrainer({ contractWeeksLeft: 10 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
     const { updatedTrainers } = computeTrainerAging(state);
 
     expect(updatedTrainers[0]!.contractWeeksLeft).toBe(9);
@@ -106,7 +106,7 @@ describe('computeTrainerAging — contract expiration', () => {
 
   it('removes active trainer when contract expires', () => {
     const trainer = makeTrainer({ contractWeeksLeft: 1 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
     const { updatedTrainers, news } = computeTrainerAging(state);
 
     expect(updatedTrainers).toHaveLength(0);
@@ -117,7 +117,7 @@ describe('computeTrainerAging — contract expiration', () => {
 
   it('does not expire contracts for hiring pool trainers', () => {
     const trainer = makeTrainer({ contractWeeksLeft: 1 });
-    const state = makeGameState({ week: 1, hiringPool: [trainer] });
+    const state = makeGameState({ hiringPool: [trainer] });
     const { updatedHiringPool } = computeTrainerAging(state);
 
     expect(updatedHiringPool).toHaveLength(1);
@@ -146,7 +146,7 @@ describe('computeTrainerAging — retirement', () => {
 
   it('retires a trainer when RNG roll is below finalChance', () => {
     const trainer = makeTrainer({ age: 65 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
 
     const mockRng = makeMockRng(0);
     const { updatedTrainers, news } = computeTrainerAging(state, mockRng);
@@ -159,7 +159,7 @@ describe('computeTrainerAging — retirement', () => {
 
   it('keeps trainer when RNG roll is above finalChance', () => {
     const trainer = makeTrainer({ age: 65 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
 
     const mockRng = makeMockRng(0.99);
     const { updatedTrainers } = computeTrainerAging(state, mockRng);
@@ -169,7 +169,7 @@ describe('computeTrainerAging — retirement', () => {
 
   it('uses "passed away" message above DEATH_THRESHOLD', () => {
     const trainer = makeTrainer({ age: 81 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
 
     const mockRng = makeMockRng(0);
     const { news } = computeTrainerAging(state, mockRng);
@@ -179,7 +179,7 @@ describe('computeTrainerAging — retirement', () => {
 
   it('uses "retired" message below DEATH_THRESHOLD', () => {
     const trainer = makeTrainer({ age: 70 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
 
     const mockRng = makeMockRng(0);
     const { news } = computeTrainerAging(state, mockRng);
@@ -191,8 +191,8 @@ describe('computeTrainerAging — retirement', () => {
     const lowFame = makeTrainer({ age: 65, fame: 0 });
     const highFame = makeTrainer({ age: 65, fame: 100 });
 
-    const stateLow = makeGameState({ week: 1, trainers: [lowFame] });
-    const stateHigh = makeGameState({ week: 1, trainers: [highFame] });
+    const stateLow = makeGameState({ trainers: [lowFame] });
+    const stateHigh = makeGameState({ trainers: [highFame] });
 
     // Roll exactly at the high-fame discounted threshold:
     // baseChance = 0.05 + (65-65)*0.02 = 0.05
@@ -212,8 +212,8 @@ describe('computeTrainerAging — retirement', () => {
     const normal = makeTrainer({ age: 65, fame: 0 });
     const legacy = makeTrainer({ age: 65, fame: 0, retiredFromWarrior: 'Warrior1' });
 
-    const stateNormal = makeGameState({ week: 1, trainers: [normal] });
-    const stateLegacy = makeGameState({ week: 1, trainers: [legacy] });
+    const stateNormal = makeGameState({ trainers: [normal] });
+    const stateLegacy = makeGameState({ trainers: [legacy] });
 
     // baseChance = 0.05
     // legacy final = max(0.01, 0.05 - 0.05) = 0.01
@@ -229,7 +229,7 @@ describe('computeTrainerAging — retirement', () => {
 
   it('respects MIN_CHANCE floor', () => {
     const trainer = makeTrainer({ age: 65, fame: 1000, retiredFromWarrior: 'W1' });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
 
     // Even with huge fame + legacy, min chance is 0.01
     // Roll 0.005 < 0.01 => still retires
@@ -255,7 +255,7 @@ describe('computeTrainerAging — hiring pool', () => {
 
   it('does not expire contracts in hiring pool', () => {
     const trainer = makeTrainer({ contractWeeksLeft: 1 });
-    const state = makeGameState({ week: 1, hiringPool: [trainer] });
+    const state = makeGameState({ hiringPool: [trainer] });
     const { updatedHiringPool } = computeTrainerAging(state);
 
     expect(updatedHiringPool[0]!.contractWeeksLeft).toBe(1);
@@ -263,7 +263,7 @@ describe('computeTrainerAging — hiring pool', () => {
 
   it('retires hiring pool trainers above retirement age', () => {
     const trainer = makeTrainer({ age: 65 });
-    const state = makeGameState({ week: 1, hiringPool: [trainer] });
+    const state = makeGameState({ hiringPool: [trainer] });
 
     const mockRng = makeMockRng(0);
     const { updatedHiringPool, news } = computeTrainerAging(state, mockRng);
@@ -290,7 +290,7 @@ describe('computeTrainerAging — rival trainers', () => {
 
   it('expires rival trainer contracts', () => {
     const rival = makeRival('r1', [makeTrainer({ id: 'rt1', contractWeeksLeft: 1 })]);
-    const state = makeGameState({ week: 1, rivals: [rival] });
+    const state = makeGameState({ rivals: [rival] });
     const { rivalsUpdates, news } = computeTrainerAging(state);
 
     expect(rivalsUpdates.size).toBe(1);
@@ -301,7 +301,7 @@ describe('computeTrainerAging — rival trainers', () => {
 
   it('retires rival trainers above retirement age', () => {
     const rival = makeRival('r1', [makeTrainer({ id: 'rt1', age: 65 })]);
-    const state = makeGameState({ week: 1, rivals: [rival] });
+    const state = makeGameState({ rivals: [rival] });
 
     const mockRng = makeMockRng(0);
     const { rivalsUpdates } = computeTrainerAging(state, mockRng);
@@ -313,7 +313,7 @@ describe('computeTrainerAging — rival trainers', () => {
 
   it('produces rivalsUpdates when rival contracts decrement', () => {
     const rival = makeRival('r1', [makeTrainer({ id: 'rt1', age: 45, contractWeeksLeft: 52 })]);
-    const state = makeGameState({ week: 1, rivals: [rival] }); // not aging week
+    const state = makeGameState({ rivals: [rival] }); // not aging week
     const { rivalsUpdates } = computeTrainerAging(state);
 
     // Active rival trainers always have contracts ticked down
@@ -325,14 +325,14 @@ describe('computeTrainerAging — rival trainers', () => {
   it('handles rivals without trainers property', () => {
     const rival = makeRival('r1');
     delete (rival as Partial<RivalStableData>).trainers;
-    const state = makeGameState({ week: 1, rivals: [rival] });
+    const state = makeGameState({ rivals: [rival] });
     const { rivalsUpdates } = computeTrainerAging(state);
 
     expect(rivalsUpdates.size).toBe(0);
   });
 
   it('handles empty rivals array', () => {
-    const state = makeGameState({ week: 1, rivals: [] });
+    const state = makeGameState({ rivals: [] });
     const { rivalsUpdates } = computeTrainerAging(state);
 
     expect(rivalsUpdates.size).toBe(0);
@@ -369,7 +369,7 @@ describe('computeTrainerAging — combined scenarios', () => {
 describe('runTrainerPass', () => {
   it('returns StateImpact with trainers and hiringPool', () => {
     const trainer = makeTrainer({ age: 45, contractWeeksLeft: 52 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
     const impact = runTrainerPass(state);
 
     expect(impact.trainers).toBeDefined();
@@ -379,7 +379,7 @@ describe('runTrainerPass', () => {
 
   it('includes newsletter items when there are news events', () => {
     const trainer = makeTrainer({ contractWeeksLeft: 1 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
     const impact = runTrainerPass(state);
 
     expect(impact.newsletterItems).toBeDefined();
@@ -390,7 +390,7 @@ describe('runTrainerPass', () => {
 
   it('does not include newsletter items when nothing happens', () => {
     const trainer = makeTrainer({ age: 30, contractWeeksLeft: 52 });
-    const state = makeGameState({ week: 1, trainers: [trainer] });
+    const state = makeGameState({ trainers: [trainer] });
     const impact = runTrainerPass(state);
 
     expect(impact.newsletterItems).toBeUndefined();
@@ -398,7 +398,7 @@ describe('runTrainerPass', () => {
 
   it('passes rivalsUpdates through the impact', () => {
     const rival = makeRival('r1', [makeTrainer({ id: 'rt1', contractWeeksLeft: 1 })]);
-    const state = makeGameState({ week: 1, rivals: [rival] });
+    const state = makeGameState({ rivals: [rival] });
     const impact = runTrainerPass(state);
 
     expect(impact.rivalsUpdates).toBeDefined();

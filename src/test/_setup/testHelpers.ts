@@ -1,8 +1,8 @@
 import { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import type { WarriorId } from '@/types/shared.types';
+import { makeComputedWarrior } from '@/test/_fixtures/factories';
 
 /**
  * Populates a GameState with a realistic number of warriors for testing.
@@ -92,25 +92,9 @@ export function makeAutosimWarrior(
   name: string,
   overrides?: Partial<Warrior>
 ): Warrior {
-  const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
-  return {
-    id: id as WarriorId,
-    name,
-    style: FightingStyle.StrikingAttack,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-    ...overrides,
-  };
+  return makeComputedWarrior(
+    { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
+    FightingStyle.StrikingAttack,
+    { id: id as WarriorId, name, fame: 0, age: 20, ...overrides }
+  );
 }

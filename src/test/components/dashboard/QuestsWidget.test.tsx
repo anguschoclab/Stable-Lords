@@ -9,7 +9,7 @@ import { makeGameState, makeFightSummary } from '@/test/_fixtures/factories';
 
 describe('QuestsWidget (G4)', () => {
   beforeEach(() => {
-    useGameStore.setState({ ...makeGameState({ arenaHistory: [], scoutReports: [], trainers: [] }) } as never);
+    useGameStore.setState({ ...makeGameState({}) } as never);
   });
 
   it('renders the checklist on a fresh state', () => {

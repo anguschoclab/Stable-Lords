@@ -1,19 +1,8 @@
 import { describe, it, expect } from 'vitest';
+import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import * as fs from 'fs';
 import * as path from 'path';
 
-function readDirRecursive(dir: string, ext: string, results: string[] = []): string[] {
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      readDirRecursive(fullPath, ext, results);
-    } else if (item.name.endsWith(ext)) {
-      results.push(fullPath);
-    }
-  }
-  return results;
-}
 
 describe('NF7: hardcoded year 2024', () => {
   const srcDir = path.resolve(__dirname, '../../engine');

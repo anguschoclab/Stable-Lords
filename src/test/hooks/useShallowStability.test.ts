@@ -1,20 +1,8 @@
 import { describe, it, expect } from 'vitest';
+import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
-function readDirRecursive(dir: string, ext: string): string[] {
-  const results: string[] = [];
-  if (!fs.existsSync(dir)) return results;
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...readDirRecursive(full, ext));
-    } else if (entry.name.endsWith(ext)) {
-      results.push(full);
-    }
-  }
-  return results;
-}
 
 describe('useShallow stability audit', () => {
   const srcDir = path.resolve(__dirname, '../../');

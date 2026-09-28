@@ -1,13 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { makeTestWarrior, makeDefaultPlan } from '@/test/_fixtures/namedWarrior';
 import { render, screen } from '@testing-library/react';
 import TrainingPlanner from '@/pages/TrainingPlanner';
 import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import type { FightPlan, Warrior } from '@/types/game';
-import { makePlan as fixturePlan } from '@/test/_fixtures/factories';
+import type { Warrior } from '@/types/game';
 import type { GameState } from '@/types/state.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import '@/test/_setup/setup';
@@ -18,23 +17,8 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const baseAttrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
+const makePlan = makeDefaultPlan;
 
-function makeTestWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
-  return makeWarrior(id as any, name, FightingStyle.StrikingAttack, baseAttrs, {
-    ...overrides,
-  });
-}
-
-const makePlan = (style: FightingStyle = FightingStyle.StrikingAttack): FightPlan =>
-  fixturePlan({
-    style,
-    OE: 5,
-    AL: 5,
-    killDesire: 5,
-    offensiveTactic: 'Decisiveness',
-    defensiveTactic: 'none',
-  });
 
 function renderPlanner(roster: Warrior[]) {
   const state = createFreshState('test-seed');

@@ -1,4 +1,4 @@
-import { expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import type { ComponentType } from 'react';
 
@@ -36,4 +36,30 @@ export function renderRouteComponent(route: RouteLike) {
   const result = render(<Component />);
   expect(result.container).toBeInTheDocument();
   return result;
+}
+
+interface RouteConfig {
+  name: string;
+  path: string;
+  importPath: string;
+}
+
+/** Shared spec block: every route defines a component that renders. */
+export function describeRoutes(routes: RouteConfig[]) {
+  describe.each(routes)('Route: $name', (routeConfig) => {
+    it('has correct definition', async () => {
+      const mod = await import(routeConfig.importPath);
+      expectRouteDefinition(mod.Route, routeConfig.path);
+    });
+
+    it('has a component defined', async () => {
+      const mod = await import(routeConfig.importPath);
+      expectRouteComponent(mod.Route);
+    });
+
+    it('renders component without crashing', async () => {
+      const mod = await import(routeConfig.importPath);
+      renderRouteComponent(mod.Route);
+    });
+  });
 }

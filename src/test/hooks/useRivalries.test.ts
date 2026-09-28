@@ -36,13 +36,9 @@ const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
 
 const makeState = (overrides: Partial<RivalryStateSlice> = {}): RivalryStateSlice =>
   fixtureGameState({
-    roster: [],
-    graveyard: [],
     rivals: [],
-    arenaHistory: [],
     week: 10,
-    ...overrides,
-  } as any);
+    ...overrides,} as any);
 
 describe('useRivalriesList', () => {
   it('returns empty array when no arena history', () => {

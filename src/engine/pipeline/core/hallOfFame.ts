@@ -11,6 +11,100 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
+
+interface WarriorStats {
+  w: Warrior;
+  wins: number;
+  kills: number;
+  fame: number;
+}
+
+/** Award bookkeeping bundle: roster + rival-roster update maps. */
+interface AwardLedger {
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>;
+  rivalsUpdates: Map<StableId, Partial<RivalStableData>>;
+  awards: AnnualAward[];
+  hofNews: string[];
+}
+
+/** Collects the per-year stat deltas (career minus yearly snapshot). */
+function collectEligible(state: GameState, completedYear: number): WarriorStats[] {
+  const eligible: WarriorStats[] = [];
+  const collect = (w: Warrior) => {
+    const snapshot = w.yearlySnapshots?.[completedYear] || {
+      wins: 0,
+      losses: 0,
+      kills: 0,
+      fame: 0,
+    };
+    const wins = (w.career?.wins || 0) - (snapshot.wins || 0);
+    const kills = (w.career?.kills || 0) - (snapshot.kills || 0);
+    const fameGain = (w.fame || 0) - (snapshot.fame || 0);
+    eligible.push({
+      w,
+      wins: Math.max(0, wins),
+      kills: Math.max(0, kills),
+      fame: Math.max(0, fameGain),
+    });
+  };
+
+  state.roster.forEach(collect);
+  state.rivals.forEach((r) => r.roster.forEach(collect));
+  return eligible;
+}
+
+/**
+ * Single-pass argmax over eligible warriors: `score` picks the metric,
+ * `tiebreak` (fame/wins) resolves ties. Returns undefined for empty lists.
+ */
+function pickBest(
+  eligible: WarriorStats[],
+  score: (e: WarriorStats) => number,
+  tiebreak: (e: WarriorStats) => number
+): WarriorStats | undefined {
+  let best = eligible[0];
+  for (let i = 1; i < eligible.length; i++) {
+    const curr = eligible[i];
+    if (!curr || !best) continue;
+    if (score(curr) > score(best) || (score(curr) === score(best) && tiebreak(curr) > tiebreak(best))) {
+      best = curr;
+    }
+  }
+  return best;
+}
+
+/**
+ * Applies an award's fame bump and records the updated warrior in the
+ * player-roster or rival-roster update map for its owning stable.
+ */
+function recordAward(
+  state: GameState,
+  recipient: WarriorStats,
+  award: AnnualAward,
+  fameBonus: number,
+  ledger: AwardLedger
+): void {
+  const { updatedWarrior } = applyAward(recipient.w, award, fameBonus);
+  if (recipient.w.stableId === state.player.id) {
+    ledger.rosterUpdates.set(recipient.w.id, updatedWarrior);
+  } else if (recipient.w.stableId) {
+    const stableId = recipient.w.stableId;
+    const currentRoster =
+      ledger.rivalsUpdates.get(stableId)?.roster ||
+      state.rivalMap?.get(stableId)?.roster ||
+      [];
+    const updatedRoster = [...currentRoster];
+    const index = updatedRoster.findIndex((w: Warrior) => w.id === recipient.w.id);
+    if (index !== -1) {
+      updatedRoster[index] = updatedWarrior;
+    } else {
+      updatedRoster.push(updatedWarrior);
+    }
+    ledger.rivalsUpdates.set(stableId, { roster: updatedRoster });
+  }
+  ledger.awards.push(award);
+}
+
 /**
  * Process hall of fame awards for the completed year.
  *
@@ -32,52 +126,17 @@ export function processHallOfFame(
   const completedYear = state.week === 1 ? state.year - 1 : state.year;
 
   if (newWeek !== 1 || completedYear < 1) return {};
-  const hofNews: string[] = [];
-  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
-  const awards: AnnualAward[] = [];
-
-  interface WarriorStats {
-    w: Warrior;
-    wins: number;
-    kills: number;
-    fame: number;
-  }
-  const eligible: WarriorStats[] = [];
-
-  const collect = (w: Warrior) => {
-    const snapshot = w.yearlySnapshots?.[completedYear] || {
-      wins: 0,
-      losses: 0,
-      kills: 0,
-      fame: 0,
-    };
-    const wins = (w.career?.wins || 0) - (snapshot.wins || 0);
-    const kills = (w.career?.kills || 0) - (snapshot.kills || 0);
-    const fameGain = (w.fame || 0) - (snapshot.fame || 0);
-    eligible.push({
-      w,
-      wins: Math.max(0, wins),
-      kills: Math.max(0, kills),
-      fame: Math.max(0, fameGain),
-    });
+  const ledger: AwardLedger = {
+    rosterUpdates: new Map<WarriorId, Partial<Warrior>>(),
+    rivalsUpdates: new Map<StableId, Partial<RivalStableData>>(),
+    awards: [],
+    hofNews: [],
   };
 
-  state.roster.forEach(collect);
-  state.rivals.forEach((r) => r.roster.forEach(collect));
-
+  const eligible = collectEligible(state, completedYear);
   if (eligible.length === 0) return {};
 
-  // ⚡ Bolt Optimization: Using single-pass loop instead of .reduce() to avoid redundant score evaluations.
-  let woty = eligible[0];
-  if (!woty) return {};
-  for (let i = 1; i < eligible.length; i++) {
-    const curr = eligible[i];
-    if (!curr) continue;
-    if (curr.wins > woty.wins || (curr.wins === woty.wins && curr.fame > woty.fame)) {
-      woty = curr;
-    }
-  }
+  const woty = pickBest(eligible, (e) => e.wins, (e) => e.fame);
   if (woty && woty.wins > 0) {
     const award: AnnualAward = {
       year: completedYear,
@@ -88,38 +147,13 @@ export function processHallOfFame(
       value: woty.wins,
       reason: `Recorded ${woty.wins} victories in Year ${completedYear}`,
     };
-    const { updatedWarrior } = applyAward(woty.w, award, 50);
-    if (woty.w.stableId === state.player.id) {
-      rosterUpdates.set(woty.w.id, updatedWarrior);
-    } else if (woty.w.stableId) {
-      const stableId = woty.w.stableId;
-      const currentRoster =
-        rivalsUpdates.get(stableId)?.roster || state.rivalMap?.get(stableId)?.roster || [];
-      const updatedRoster = [...currentRoster];
-      const index = updatedRoster.findIndex((w: Warrior) => w.id === woty.w.id);
-      if (index !== -1) {
-        updatedRoster[index] = updatedWarrior;
-      } else {
-        updatedRoster.push(updatedWarrior);
-      }
-      rivalsUpdates.set(stableId, { roster: updatedRoster });
-    }
-    awards.push(award);
-    hofNews.push(
+    recordAward(state, woty, award, 50, ledger);
+    ledger.hofNews.push(
       `🏛️ WARRIOR OF THE YEAR: ${woty.w.name} is the champion of Year ${completedYear} with ${woty.wins} wins!`
     );
   }
 
-  // ⚡ Bolt Optimization: Using single-pass loop instead of .reduce() to avoid redundant score evaluations.
-  let koty = eligible[0];
-  if (!koty) return {};
-  for (let i = 1; i < eligible.length; i++) {
-    const curr = eligible[i];
-    if (!curr) continue;
-    if (curr.kills > koty.kills || (curr.kills === koty.kills && curr.wins > koty.wins)) {
-      koty = curr;
-    }
-  }
+  const koty = pickBest(eligible, (e) => e.kills, (e) => e.wins);
   if (koty && koty.kills > 0) {
     const award: AnnualAward = {
       year: completedYear,
@@ -130,39 +164,15 @@ export function processHallOfFame(
       value: koty.kills,
       reason: `Claimed ${koty.kills} lives in Year ${completedYear}`,
     };
-    const { updatedWarrior } = applyAward(koty.w, award, 50);
-    if (koty.w.stableId === state.player.id) {
-      rosterUpdates.set(koty.w.id, updatedWarrior);
-    } else if (koty.w.stableId) {
-      const existingRoster = rivalsUpdates.get(koty.w.stableId)?.roster || [];
-      const updatedRoster = [...existingRoster];
-      const index = updatedRoster.findIndex((w) => w.id === koty.w.id);
-      if (index !== -1) {
-        updatedRoster[index] = updatedWarrior;
-      } else {
-        updatedRoster.push(updatedWarrior);
-      }
-      rivalsUpdates.set(koty.w.stableId, { roster: updatedRoster });
-    }
-    awards.push(award);
-    hofNews.push(
+    recordAward(state, koty, award, 50, ledger);
+    ledger.hofNews.push(
       `💀 KILLER OF THE YEAR: ${koty.w.name} earned the 'Reaper's Gaze' with ${koty.kills} kills.`
     );
   }
 
-  Object.values(FightingStyle).forEach((style) => {
+  for (const style of Object.values(FightingStyle)) {
     const styleEligible = eligible.filter((e) => e.w.style === style);
-    // ⚡ Bolt Optimization: Using single-pass loop instead of .reduce() to avoid redundant score evaluations.
-    const firstStyle = styleEligible[0];
-    if (!firstStyle) return;
-    let mvp = firstStyle;
-    for (let i = 1; i < styleEligible.length; i++) {
-      const curr = styleEligible[i];
-      if (!curr) continue;
-      if (curr.wins > mvp.wins || (curr.wins === mvp.wins && curr.fame > mvp.fame)) {
-        mvp = curr;
-      }
-    }
+    const mvp = pickBest(styleEligible, (e) => e.wins, (e) => e.fame);
     if (mvp && mvp.wins > 0) {
       const award: AnnualAward = {
         year: completedYear,
@@ -174,40 +184,26 @@ export function processHallOfFame(
         value: mvp.wins,
         reason: `Leading ${style} specialist in Year ${completedYear}`,
       };
-      const { updatedWarrior } = applyAward(mvp.w, award, 20);
-      if (mvp.w.stableId === state.player.id) {
-        rosterUpdates.set(mvp.w.id, updatedWarrior);
-      } else if (mvp.w.stableId) {
-        const existingRoster = rivalsUpdates.get(mvp.w.stableId)?.roster || [];
-        const updatedRoster = [...existingRoster];
-        const index = updatedRoster.findIndex((w) => w.id === mvp.w.id);
-        if (index !== -1) {
-          updatedRoster[index] = updatedWarrior;
-        } else {
-          updatedRoster.push(updatedWarrior);
-        }
-        rivalsUpdates.set(mvp.w.stableId, { roster: updatedRoster });
-      }
-      awards.push(award);
-      hofNews.push(
+      recordAward(state, mvp, award, 20, ledger);
+      ledger.hofNews.push(
         `⚔️ ${style.toUpperCase()} MVP: ${mvp.w.name} honored as the elite of their class.`
       );
     }
-  });
+  }
 
   const impact: StateImpact = {
-    awards: [...(state.awards || []), ...awards],
-    rosterUpdates,
-    rivalsUpdates,
+    awards: [...(state.awards || []), ...ledger.awards],
+    rosterUpdates: ledger.rosterUpdates,
+    rivalsUpdates: ledger.rivalsUpdates,
   };
 
-  if (hofNews.length > 0) {
+  if (ledger.hofNews.length > 0) {
     impact.newsletterItems = [
       {
         id: rngService.uuid(),
         week: newWeek,
         title: 'Hall of Fame Inductions',
-        items: hofNews,
+        items: ledger.hofNews,
       },
     ];
   }

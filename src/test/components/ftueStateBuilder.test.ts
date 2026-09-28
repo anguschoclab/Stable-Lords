@@ -3,6 +3,7 @@ import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 const ZERO_CAREER = { wins: 0, losses: 0, kills: 0 };
 
@@ -43,25 +44,11 @@ const flashyResult = {
   summary: { id: 'test-flashy-summary' as any, week: 1 } as any,
 };
 
-const minimalBaseState: Partial<GameState> = {
-  week: 1,
-  year: 1,
+const minimalBaseState: Partial<GameState> = makeGameState({
   season: 'Year 1',
   player: { id: 'player-1' as any, name: 'Owner', stableName: 'Stable', fame: 0, gold: 500 } as any,
-  graveyard: [],
-  retired: [],
-  newsletter: [],
-  gazettes: [],
-  hallOfFame: [],
-  arenaHistory: [],
-  realmRankings: {},
-  boutOffers: {},
   rivals: [],
-  promoters: {},
-  roster: [],
-  isFTUE: true,
-  ftueComplete: false,
-} as any;
+});
 
 const twoWarriors = [pw('Varak'), pw('Dren')];
 const threeWarriors = [pw('Varak'), pw('Dren'), pw('Calix')];

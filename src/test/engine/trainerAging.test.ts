@@ -39,15 +39,6 @@ const makeGameState = (overrides?: Partial<GameState>): GameState =>
   fixtureGameState({
     meta: { gameName: 'Test', version: '1.0', createdAt: '' },
     ftueComplete: true,
-    coachDismissed: [],
-    player: {
-      id: 'stable-player' as StableId,
-      name: 'You',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
     fame: 0,
     popularity: 0,
     treasury: 1000,

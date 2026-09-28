@@ -7,7 +7,9 @@ import { FightingStyle } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
-import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState,
+  makeGameState,
+} from '@/test/_fixtures/factories';
 
 const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior =>
   fixtureWarrior({
@@ -59,22 +61,16 @@ describe('buildStableCouncilReport', () => {
     const rival = mkWarrior('r1', { style: FightingStyle.WallOfSteel });
     const offer = mkOffer('off_1', 'w1', 'r1', 220);
 
-    const state = {
+    const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
       roster: [w1, w2],
       rivals: [{ id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } }],
       boutOffers: { off_1: offer },
-      trainingAssignments: [],
       realmRankings: {
         w1: { overallRank: 40, classRank: 3, compositeScore: 180 },
       },
-      tournaments: [],
-      isTournamentWeek: false,
-    } as unknown as GameState;
+    });
 
     const report = buildStableCouncilReport(state);
 
@@ -117,20 +113,12 @@ describe('buildStableCouncilReport', () => {
       career: { wins: 6, losses: 4, kills: 0 },
     });
 
-    const state = {
+    const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
       roster: [w],
       rivals: [],
-      boutOffers: {},
-      trainingAssignments: [],
-      realmRankings: {},
-      tournaments: [],
-      isTournamentWeek: false,
-    } as unknown as GameState;
+    });
 
     const report = buildStableCouncilReport(state);
     const card = report.cards[0]!;
@@ -141,20 +129,12 @@ describe('buildStableCouncilReport', () => {
 
   it('memoizes reports per state snapshot so concurrent subscribers share one computation', () => {
     const w = mkWarrior('w9');
-    const state = {
+    const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
       roster: [w],
       rivals: [],
-      boutOffers: {},
-      trainingAssignments: [],
-      realmRankings: {},
-      tournaments: [],
-      isTournamentWeek: false,
-    } as unknown as GameState;
+    });
 
     const first = buildStableCouncilReport(state);
     const second = buildStableCouncilReport(state);
@@ -171,20 +151,12 @@ describe('buildStableCouncilReport', () => {
     // Autosim advances weeks via mutableInput — the same GameState object is
     // mutated in place, so engine-side callers must bypass the ref-keyed cache.
     const w = mkWarrior('w10');
-    const state = {
+    const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
       roster: [w],
       rivals: [],
-      boutOffers: {},
-      trainingAssignments: [],
-      realmRankings: {},
-      tournaments: [],
-      isTournamentWeek: false,
-    } as unknown as GameState;
+    });
 
     const before = computeStableCouncilReport(state);
     expect(before.summary.rehabCount).toBe(0);
@@ -196,21 +168,13 @@ describe('buildStableCouncilReport', () => {
 
   it('surfaces treasury solvency — directives and warning when projected costs exceed funds', () => {
     const roster = [mkWarrior('s1'), mkWarrior('s2'), mkWarrior('s3')];
-    const state = {
+    const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
       roster,
       rivals: [],
-      boutOffers: {},
-      trainingAssignments: [],
-      realmRankings: {},
-      tournaments: [],
-      isTournamentWeek: false,
       treasury: 10, // projected training = 3 * 20 = 60
-    } as unknown as GameState;
+    });
 
     const report = buildStableCouncilReport(state);
     expect(report.summary.treasury).toBe(10);
@@ -225,16 +189,7 @@ describe('buildStableCouncilReport', () => {
   fixtureGameState({
         week: 5,
         absoluteWeek: 5,
-        year: 1,
-        season: 'Spring',
-        weather: 'Clear',
-        roster: [],
         rivals: [],
-        boutOffers: {},
-        trainingAssignments: [],
-        realmRankings: {},
-        tournaments: [],
-        isTournamentWeek: false,
         treasury: 5000,
         ...over,
       });

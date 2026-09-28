@@ -6,6 +6,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runWarriorPass } from '@/engine/pipeline/passes/WarriorPass';
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 const mockComputeTrainingImpact = vi.hoisted(() => vi.fn());
 const mockTrainingImpactToStateImpact = vi.hoisted(() => vi.fn());
@@ -36,47 +37,14 @@ function makeMockRNG(nextValue: number = 0.5): IRNGService {
 }
 
 function makeMockState(overrides: Partial<GameState> = {}): GameState {
-  return {
+  return makeGameState({
     week: 5,
-    year: 1,
-    weather: 'Clear',
-    roster: [],
-    graveyard: [],
-    retired: [],
-    hiringPool: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    hallOfFame: [],
-    crowdMood: 'Calm',
-    tournaments: [],
-    trainers: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
     rivals: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
     recruitPool: [],
-    rosterBonus: 0,
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
     isFTTE: false,
-    unacknowledgedDeaths: [],
-    day: 0,
-    isTournamentWeek: false,
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
-    bookmarks: [],
     progression: {} as any,
     ...overrides,
-  } as GameState;
+  });
 }
 
 describe('runWarriorPass', () => {

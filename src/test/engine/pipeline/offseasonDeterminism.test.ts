@@ -30,7 +30,6 @@ const makeState = (
   warriors: { id: string; name: string; status?: string; injuries?: unknown[] }[]
 ): Partial<GameState> =>
   fixtureGameState({
-    year: 1,
     roster: warriors.map((w) => ({
       id: w.id as WarriorId,
       name: w.name,
@@ -39,11 +38,7 @@ const makeState = (
       fame: 0,
       xp: 0,
     })) as any[],
-    newsletter: [],
-    treasury: 1000,
     rivals: [],
-    graveyard: [],
-    retired: [],
   } as any);
 
 describe('offseason determinism characterization', () => {

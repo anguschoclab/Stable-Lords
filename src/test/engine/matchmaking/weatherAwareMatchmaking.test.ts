@@ -12,7 +12,9 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { SeededRNGService } from '@/utils/random';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
+  makeGameState,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -63,28 +65,12 @@ const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
   } as any);
 
 function makeBaseState(overrides: Partial<GameState> = {}): GameState {
-  return {
+  return makeGameState({
     meta: { gameName: '', version: '', createdAt: '' },
     week: 5,
     absoluteWeek: 5,
-    year: 1,
-    season: 'Spring',
-    weather: 'Clear',
-    crowdMood: 'Calm',
-    treasury: 1000,
-    fame: 0,
-    roster: [],
     rivals: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    graveyard: [],
-    trainers: [],
-    hiringPool: [],
     recruitPool: [],
-    scoutReports: [],
-    hallOfFame: [],
-    retired: [],
     player: {
       id: 'player-1' as any,
       name: 'Player',
@@ -93,35 +79,11 @@ function makeBaseState(overrides: Partial<GameState> = {}): GameState {
       renown: 0,
       titles: 0,
     } as any,
-    moodHistory: [],
-    tournaments: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    ownerGrudges: [],
-    insightTokens: [],
-    unacknowledgedDeaths: [],
-    day: 0,
-    isTournamentWeek: false,
     activeTournamentId: undefined,
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
-    phase: 'planning',
-    ledger: [],
-    popularity: 0,
-    rosterBonus: 0,
     ftueComplete: true,
-    ftueStep: 0,
-    coachDismissed: [],
     isFTUE: false,
     ...overrides,
-  } as unknown as GameState;
+  });
 }
 
 // ─── Tests ──────────────────────────────────────────────────────────────────

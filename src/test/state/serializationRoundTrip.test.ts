@@ -5,6 +5,7 @@ import {
   clearReconstructionCache,
 } from '@/state/serialization';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('serializationRoundTrip', () => {
   it('stripNonSerializable removes all 7 cached maps', () => {
@@ -43,59 +44,15 @@ describe('serializationRoundTrip', () => {
   it('reconstructGameState cache invalidates on store change', () => {
     clearReconstructionCache();
 
-    const store1 = {
-      treasury: 1000,
-      roster: [],
+    const store1: any = makeGameState({
       rivals: [],
-      week: 1,
-      year: 1,
-      day: 0,
-      season: 'Spring',
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      ledger: [],
-      graveyard: [],
-      retired: [],
       recruitPool: [],
-      insightTokens: [],
-      arenaHistory: [],
       player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
-      promoters: {},
-      boutOffers: {},
-      gazettes: [],
-      scoutReports: [],
-      unacknowledgedDeaths: [],
-      rosterBonus: 0,
-      tournaments: [],
-      isTournamentWeek: false,
       activeTournamentId: undefined,
-      popularity: 0,
-      fame: 0,
-      realmRankings: {},
-      awards: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
-      restStates: [],
-      moodHistory: [],
-      newsletter: [],
-      hallOfFame: [],
-      isFTUE: true,
-      ftueStep: 0,
-      ftueComplete: false,
-      coachDismissed: [],
-      rivalries: [],
-      matchHistory: [],
-      ownerGrudges: [],
-      phase: 'planning',
-      playerChallenges: [],
-      playerAvoids: [],
       lastSimulationReport: undefined,
-      bookmarks: [],
       progression: undefined,
       lastSavedAt: '',
-    } as any;
+    });
 
     const result1 = reconstructGameState(store1);
     expect(result1.treasury).toBe(1000);
@@ -110,59 +67,15 @@ describe('serializationRoundTrip', () => {
   it('NF4: reconstructGameState returns stale data when store mutated via setState (demonstrating bug)', () => {
     clearReconstructionCache();
 
-    const store = {
-      treasury: 1000,
-      roster: [],
+    const store: any = makeGameState({
       rivals: [],
-      week: 1,
-      year: 1,
-      day: 0,
-      season: 'Spring',
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      ledger: [],
-      graveyard: [],
-      retired: [],
       recruitPool: [],
-      insightTokens: [],
-      arenaHistory: [],
       player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
-      promoters: {},
-      boutOffers: {},
-      gazettes: [],
-      scoutReports: [],
-      unacknowledgedDeaths: [],
-      rosterBonus: 0,
-      tournaments: [],
-      isTournamentWeek: false,
       activeTournamentId: undefined,
-      popularity: 0,
-      fame: 0,
-      realmRankings: {},
-      awards: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
-      restStates: [],
-      moodHistory: [],
-      newsletter: [],
-      hallOfFame: [],
-      isFTUE: true,
-      ftueStep: 0,
-      ftueComplete: false,
-      coachDismissed: [],
-      rivalries: [],
-      matchHistory: [],
-      ownerGrudges: [],
-      phase: 'planning',
-      playerChallenges: [],
-      playerAvoids: [],
       lastSimulationReport: undefined,
-      bookmarks: [],
       progression: undefined,
       lastSavedAt: '',
-    } as any;
+    });
 
     // First call populates cache
     const result1 = reconstructGameState(store);
@@ -188,59 +101,15 @@ describe('serializationRoundTrip', () => {
       summary: 'Test summary',
     } as any;
 
-    const store = {
-      treasury: 1000,
-      roster: [],
+    const store: any = makeGameState({
       rivals: [],
-      week: 1,
-      year: 1,
-      day: 0,
-      season: 'Spring',
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      ledger: [],
-      graveyard: [],
-      retired: [],
       recruitPool: [],
-      insightTokens: [],
-      arenaHistory: [],
       player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
-      promoters: {},
-      boutOffers: {},
-      gazettes: [],
-      scoutReports: [],
-      unacknowledgedDeaths: [],
-      rosterBonus: 0,
-      tournaments: [],
-      isTournamentWeek: false,
       activeTournamentId: undefined,
-      popularity: 0,
-      fame: 0,
-      realmRankings: {},
-      awards: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
-      restStates: [],
-      moodHistory: [],
-      newsletter: [],
-      hallOfFame: [],
-      isFTUE: true,
-      ftueStep: 0,
-      ftueComplete: false,
-      coachDismissed: [],
-      rivalries: [],
-      matchHistory: [],
-      ownerGrudges: [],
-      phase: 'planning',
-      playerChallenges: [],
-      playerAvoids: [],
       lastSimulationReport: report,
-      bookmarks: [],
       progression: undefined,
       lastSavedAt: '',
-    } as any;
+    });
 
     const result = reconstructGameState(store);
     expect(result.lastSimulationReport).toEqual(report);

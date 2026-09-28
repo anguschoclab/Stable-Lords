@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { stripNonSerializable, reconstructGameState } from '@/state/serialization';
 import type { Bookmark } from '@/types/bookmark.types';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('Bookmarks Persistence', () => {
   it('createFreshState initializes with empty bookmarks', () => {
@@ -44,54 +45,16 @@ describe('Bookmarks Persistence', () => {
   });
 
   it('reconstructGameState preserves bookmarks', () => {
-    const mockStore = {
+    const mockStore: any = makeGameState({
       treasury: 500,
-      ledger: [],
-      roster: [],
-      graveyard: [],
-      retired: [],
       recruitPool: [],
       insightTokens: 0,
-      arenaHistory: [],
       player: { id: 'p1', name: 'Player', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
-      week: 1,
       day: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      promoters: {},
-      boutOffers: {},
       rivals: [],
-      gazettes: [],
-      scoutReports: [],
-      unacknowledgedDeaths: [],
-      rosterBonus: 0,
-      tournaments: [],
-      isTournamentWeek: false,
       activeTournamentId: undefined,
-      year: 1,
-      popularity: 0,
-      fame: 0,
-      realmRankings: {},
-      awards: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
-      restStates: [],
       crowdMood: 'Neutral',
-      moodHistory: [],
-      newsletter: [],
-      hallOfFame: [],
       isFTUE: false,
-      ftueStep: 0,
-      ftueComplete: false,
-      coachDismissed: [],
-      rivalries: [],
-      matchHistory: [],
-      ownerGrudges: [],
-      phase: 'planning',
-      playerChallenges: [],
-      playerAvoids: [],
       lastSimulationReport: undefined,
       bookmarks: [
         { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
@@ -103,7 +66,7 @@ describe('Bookmarks Persistence', () => {
       isSimulating: false,
       isInitialized: true,
       eventLogOpen: false,
-    } as any;
+    });
 
     const reconstructed = reconstructGameState(mockStore);
     expect(reconstructed.bookmarks).toHaveLength(2);
@@ -118,55 +81,16 @@ describe('Bookmarks Persistence', () => {
   });
 
   it('handles empty bookmarks array in reconstructGameState', () => {
-    const mockStore = {
-      bookmarks: [],
+    const mockStore: any = makeGameState({
       treasury: 0,
-      ledger: [],
-      roster: [],
-      graveyard: [],
-      retired: [],
       recruitPool: [],
       insightTokens: 0,
-      arenaHistory: [],
       player: { id: 'p1', name: 'Player', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
-      week: 1,
       day: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      promoters: {},
-      boutOffers: {},
       rivals: [],
-      gazettes: [],
-      scoutReports: [],
-      unacknowledgedDeaths: [],
-      rosterBonus: 0,
-      tournaments: [],
-      isTournamentWeek: false,
       activeTournamentId: undefined,
-      year: 1,
-      popularity: 0,
-      fame: 0,
-      realmRankings: {},
-      awards: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
-      restStates: [],
       crowdMood: 'Neutral',
-      moodHistory: [],
-      newsletter: [],
-      hallOfFame: [],
       isFTUE: false,
-      ftueStep: 0,
-      ftueComplete: false,
-      coachDismissed: [],
-      rivalries: [],
-      matchHistory: [],
-      ownerGrudges: [],
-      phase: 'planning',
-      playerChallenges: [],
-      playerAvoids: [],
       lastSimulationReport: undefined,
       atTitleScreen: false,
       lastSavedAt: null,
@@ -174,7 +98,7 @@ describe('Bookmarks Persistence', () => {
       isSimulating: false,
       isInitialized: true,
       eventLogOpen: false,
-    } as any;
+    });
 
     const reconstructed = reconstructGameState(mockStore);
     expect(reconstructed.bookmarks).toEqual([]);

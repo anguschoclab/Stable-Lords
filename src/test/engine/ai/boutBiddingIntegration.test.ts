@@ -9,7 +9,9 @@ import {
   BID_MATCHMAKING_ID,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { SeededRNGService } from '@/utils/random';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
+  makeGameState,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -65,11 +67,10 @@ function makeMinimalState(rivals: RivalStableData[]): GameState {
     }
   }
 
-  return {
+  return makeGameState({
     meta: { gameName: '', version: '', createdAt: '' },
     ftueComplete: true,
     ftueStep: undefined,
-    coachDismissed: [],
     player: {
       id: 'player-1' as any,
       name: 'Player',
@@ -78,56 +79,18 @@ function makeMinimalState(rivals: RivalStableData[]): GameState {
       renown: 0,
       titles: 0,
     },
-    fame: 0,
-    popularity: 0,
-    treasury: 1000,
-    ledger: [],
     week: 5,
     absoluteWeek: 5,
-    year: 1,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
     rivals,
-    gazettes: [],
-    hallOfFame: [],
-    crowdMood: 'Calm',
-    tournaments: [],
-    trainers: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
     recruitPool: [],
-    rosterBonus: 0,
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    unacknowledgedDeaths: [],
     isFTUE: false,
     day: 1,
-    isTournamentWeek: false,
-    promoters: {},
-    boutOffers: {},
     activeTournamentId: undefined,
-    realmRankings: {},
-    awards: [],
-    bookmarks: [],
     progression: {} as any,
     warriorMap,
     warriorToStableMap,
     rivalMap,
-  } as any;
+  });
 }
 
 // ─── Unit tests for convertBidsToOffers ─────────────────────────────────────

@@ -28,13 +28,6 @@ const mkState = (overrides: Partial<GameState> = {}): GameState =>
   fixtureGameState({
     week: 5,
     absoluteWeek: 5,
-    year: 1,
-    season: 'Spring',
-    roster: [],
-    realmRankings: {},
-    boutOffers: {},
-    tournaments: [],
-    isTournamentWeek: false,
     ...overrides,
   });
 

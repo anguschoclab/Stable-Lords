@@ -192,9 +192,7 @@ const ChartTooltipContent = React.forwardRef<
 );
 ChartTooltipContent.displayName = 'ChartTooltip';
 
-type TooltipItem = NonNullable<
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip>['payload']
->[number];
+type TooltipItem = TooltipPayload[number];
 
 /** One row of the tooltip body — indicator swatch + label + value. */
 function ChartTooltipItem({
@@ -218,7 +216,13 @@ function ChartTooltipItem({
   nestLabel: boolean;
   tooltipLabel: React.ReactNode;
   hideIndicator: boolean;
-  formatter?: React.ComponentProps<typeof RechartsPrimitive.Tooltip>['formatter'];
+  formatter?: (
+    value: number | string,
+    name: string,
+    item: TooltipItem,
+    index: number,
+    payload: TooltipPayload
+  ) => React.ReactNode;
   color?: string;
   nameKey?: string;
 }) {

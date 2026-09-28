@@ -24,7 +24,9 @@ import type {
   TournamentEntry,
 } from '@/types/state.types';
 import type { CrowdMoodType, WeatherType } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeFightSummary as fixtureFightSummary,
+  makeGameState,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, name: string): Warrior =>
   fixtureWarrior({
@@ -47,49 +49,14 @@ const makeWarrior = (id: string, name: string): Warrior =>
   } as any);
 
 function makeMinimalGameState(): GameState {
-  return {
-    treasury: 1000,
+  return makeGameState({
     fame: 50,
-    week: 1,
-    season: 'Spring',
-    weather: 'Clear',
-    day: 0,
-    year: 1,
     roster: [makeWarrior('w1', 'Alice'), makeWarrior('w2', 'Bob')],
     rivals: [],
-    newsletter: [],
-    ledger: [],
-    arenaHistory: [],
-    graveyard: [],
-    retired: [],
-    hallOfFame: [],
-    matchHistory: [],
-    moodHistory: [],
-    scoutReports: [],
-    insightTokens: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    coachDismissed: [],
-    restStates: [],
-    unacknowledgedDeaths: [],
-    awards: [],
-    seasonalGrowth: [],
     recruitPool: [],
-    tournaments: [],
-    realmRankings: {},
-    boutOffers: {},
-    promoters: {},
-    trainers: [],
-    hiringPool: [],
-    gazettes: [],
-    ownerGrudges: [],
-    rivalries: [],
-    trainingAssignments: [],
-    isTournamentWeek: false,
     activeTournamentId: undefined,
-    crowdMood: 'Calm',
     lastSimulationReport: undefined,
-  } as any;
+  });
 }
 
 const makeFightSummary = (id: string = 'fight-1'): FightSummary =>

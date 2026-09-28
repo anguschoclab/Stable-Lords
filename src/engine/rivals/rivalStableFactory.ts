@@ -11,6 +11,7 @@
  * player sees. Do not alter the factory bias without also replacing the
  * startup-state warrior generator.
  */
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { RivalStableData, Owner } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { StableTemplate } from '@/data/templates';
@@ -66,7 +67,7 @@ function buildRivalStable(
   tmpl: StableTemplate,
   iteration: number,
   week: number,
-  rng: SeededRNGService,
+  rng: IRNGService,
   usedWarriorNames: Set<string>
 ): RivalStableData {
   const stableId = rng.uuid() as StableId;
@@ -161,7 +162,7 @@ function buildRivalStable(
 }
 
 /** Roll a warrior's style — biased toward the template's preferred styles. */
-function pickWarriorStyle(tmpl: StableTemplate, rng: SeededRNGService): FightingStyle {
+function pickWarriorStyle(tmpl: StableTemplate, rng: IRNGService): FightingStyle {
   if (rng.next() < 0.7 && tmpl.preferredStyles.length > 0) {
     const preferred =
       tmpl.preferredStyles[Math.floor(rng.next() * tmpl.preferredStyles.length)];
@@ -183,7 +184,7 @@ function buildRoster(
   tmpl: StableTemplate,
   stableId: StableId,
   week: number,
-  rng: SeededRNGService,
+  rng: IRNGService,
   usedWarriorNames: Set<string>
 ): Warrior[] {
   const [minR, maxR] = tmpl.rosterRange;

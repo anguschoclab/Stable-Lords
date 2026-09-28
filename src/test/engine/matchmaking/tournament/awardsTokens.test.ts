@@ -13,6 +13,7 @@ import {
   makeTournamentBaseState,
   makeTournamentWarrior,
   makeCompletedTournament,
+  makeTournamentRival,
 } from '@/test/_fixtures/tournamentState';
 
 // ─── Constants ───
@@ -25,22 +26,7 @@ const makeBaseState = () => makeTournamentBaseState(5);
 function makePlayerState(w1: Warrior, ...rivalWarriors: Warrior[]): GameState {
   const state = makeBaseState();
   state.roster = [w1];
-  state.rivals = [
-    {
-      id: RIVAL_ID,
-      owner: {
-        id: RIVAL_ID,
-        name: 'Rival',
-        stableName: 'Rival Stable',
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
-      roster: rivalWarriors,
-      treasury: 500,
-      fame: 0,
-    } as any,
-  ];
+  state.rivals = [makeTournamentRival(rivalWarriors)];
   return state;
 }
 

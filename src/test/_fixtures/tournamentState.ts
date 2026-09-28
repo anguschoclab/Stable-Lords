@@ -2,7 +2,13 @@
  * Shared tournament test fixtures — base GameState, warriors, completed brackets.
  * Extracted from awardsTokens.test.ts / tournamentSelection.test.ts (identical copies).
  */
-import type { GameState, TournamentEntry, TournamentBout, Warrior } from '@/types/state.types';
+import type {
+  GameState,
+  RivalStableData,
+  TournamentEntry,
+  TournamentBout,
+  Warrior,
+} from '@/types/state.types';
 import {
   FightingStyle,
   type WarriorId,
@@ -14,6 +20,23 @@ import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 export const TOURNEY_PLAYER_ID = 'stable-player' as StableId;
 export const TOURNEY_RIVAL_ID = 'stable-rival-1' as StableId;
+
+/** The rival-stable literal shared by tournament tests. */
+export const makeTournamentRival = (roster: Warrior[] = []): RivalStableData =>
+  ({
+    id: TOURNEY_RIVAL_ID,
+    owner: {
+      id: TOURNEY_RIVAL_ID,
+      name: 'Rival',
+      stableName: 'Rival Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+    roster,
+    treasury: 500,
+    fame: 0,
+  }) as RivalStableData;
 
 /** Builds a minimal tournament-ready GameState fixture for the given week. */
 export const makeTournamentBaseState = (week = 1): GameState =>

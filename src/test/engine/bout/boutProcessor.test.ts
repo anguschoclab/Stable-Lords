@@ -14,9 +14,7 @@ import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
 
 describe('boutProcessor - generatePairings', () => {
   it('should generate pairings for player and rival', () => {
-    const state: any = {
-      week: 1,
-      absoluteWeek: 1,
+    const state: any = makeGameState({
       player: { id: 'p1', stableName: 'Player' },
       roster: [
         {
@@ -44,13 +42,6 @@ describe('boutProcessor - generatePairings', () => {
           ],
         },
       ],
-      trainingAssignments: [],
-      restStates: [],
-      rivalries: [],
-      matchHistory: [],
-      arenaHistory: [],
-      playerChallenges: [],
-      playerAvoids: [],
       boutOffers: {
         offer1: {
           id: 'offer1',
@@ -61,7 +52,7 @@ describe('boutProcessor - generatePairings', () => {
           purse: 100,
         },
       },
-    };
+    });
     const { pairings, voidedOffers } = generatePairings(state);
     expect(pairings.length).toBe(1);
     expect(pairings[0]!.a.id).toBe('w1');
@@ -302,19 +293,11 @@ describe('boutProcessor - resolveBout', () => {
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     style: FightingStyle.TotalParry,
   };
-  const mockState: any = {
-    week: 1,
+  const mockState: any = makeGameState({
     roster: [mockWarrior],
     rivals: [{ owner: { id: 'r1', stableName: 'Stab' }, roster: [mockOpponent] }],
-    arenaHistory: [],
-    newsletter: [],
-    trainers: [],
     player: { id: 'p1' },
-    crowdMood: 'Calm',
-    rivalries: [],
-    matchHistory: [],
-    graveyard: [],
-  };
+  });
 
   it('should update records after a bout', () => {
     const ctx: any = {

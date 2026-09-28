@@ -13,6 +13,7 @@ import {
   makeTournamentBaseState,
   makeTournamentWarrior,
   makeCompletedTournament,
+  makeTournamentRival,
 } from '@/test/_fixtures/tournamentState';
 // ─── Mock simulateFight before importing resolution ───
 vi.mock('@/engine/simulate', () => ({
@@ -122,22 +123,7 @@ describe('awardTournamentPrizes', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2, w3, w4],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2, w3, w4])];
 
     const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A');
     const updated = awardTournamentPrizes(tournament, state);
@@ -160,22 +146,7 @@ describe('awardTournamentPrizes', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2, w3, w4],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2, w3, w4])];
 
     const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'D');
     const updated = awardTournamentPrizes(tournament, state);
@@ -194,22 +165,7 @@ describe('awardTournamentPrizes', () => {
     const state = makeBaseState();
     state.treasury = 1000;
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2, w3, w4],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2, w3, w4])];
 
     const tournament = makeCompletedTournament([w1, w2, w3, w4]);
     const updated = awardTournamentPrizes(tournament, state);
@@ -227,22 +183,7 @@ describe('awardTournamentPrizes', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2, w3, w4],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2, w3, w4])];
 
     const tournament = makeCompletedTournament([w1, w2, w3, w4]);
     const updated = awardTournamentPrizes(tournament, state);
@@ -259,22 +200,7 @@ describe('awardTournamentPrizes', () => {
     const state = makeBaseState();
     state.treasury = 0;
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2, w3, w4],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2, w3, w4])];
 
     const tournament = makeCompletedTournament([w1, w2, w3, w4]);
     tournament.tierId = 'Silver';
@@ -291,22 +217,7 @@ describe('awardTournamentPrizes', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const tournament = makeCompletedTournament([w1, w2, w1, w2]);
     tournament.bracket = tournament.bracket.filter((b) => b.matchIndex !== 1);
@@ -372,22 +283,7 @@ describe('modifyWarrior (awards.ts)', () => {
   it('updates warrior in rival roster', () => {
     const w = makeTournamentWarrior('w1', 'RivalWarrior', FightingStyle.StrikingAttack, RIVAL_ID);
     const state = makeBaseState();
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w])];
 
     const updated = modifyWarrior(state, 'w1', (draft) => {
       draft.fame = 888;
@@ -447,22 +343,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 
     const state = makeBaseState();
     state.roster = warriors.filter((_, i) => i % 2 === 0);
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: warriors.filter((_, i) => i % 2 === 1),
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
 
     const tournament = makeTournamentWithR1(warriors);
     state.tournaments = [tournament];
@@ -495,22 +376,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 
     const state = makeBaseState();
     state.roster = warriors.filter((_, i) => i % 2 === 0);
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: warriors.filter((_, i) => i % 2 === 1),
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
 
     const tournament = makeTournamentWithR1(warriors);
     state.tournaments = [tournament];
@@ -567,22 +433,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 
     const state = makeBaseState();
     state.roster = warriors.filter((_, i) => i % 2 === 0);
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: warriors.filter((_, i) => i % 2 === 1),
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
 
     const bracket: TournamentBout[] = [
       {
@@ -632,22 +483,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     // The code requires currentRound >= 7 for completion, so create a round-7 bout
     const tournament: TournamentEntry = {
@@ -690,22 +526,7 @@ describe('resolveCompleteTournament', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     // Use a round-7 bout so isComplete (currentRound >= 7) triggers
     const tournament: TournamentEntry = {
@@ -819,22 +640,7 @@ describe('applyBoutResults', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
@@ -850,22 +656,7 @@ describe('applyBoutResults', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
@@ -885,22 +676,7 @@ describe('applyBoutResults', () => {
     const state = makeBaseState();
     state.isTournamentWeek = true;
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
@@ -919,22 +695,7 @@ describe('applyBoutResults', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
@@ -953,22 +714,7 @@ describe('applyBoutResults', () => {
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
@@ -1108,22 +854,7 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
 
     const state = makeBaseState();
     state.roster = warriors.filter((_, i) => i % 2 === 0);
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: warriors.filter((_, i) => i % 2 === 1),
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
 
     const tournament = makeTournamentWithR1(warriors);
     state.tournaments = [tournament];
@@ -1162,22 +893,7 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
 
     const state = makeBaseState();
     state.roster = warriors.filter((_, i) => i % 2 === 0);
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: warriors.filter((_, i) => i % 2 === 1),
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
 
     const tournament = makeTournamentWithR1(warriors);
     state.tournaments = [tournament];
@@ -1194,22 +910,7 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
 
     const state = makeBaseState();
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     const tournament: TournamentEntry = {
       id: 't-gold-spring-1' as TournamentId,
@@ -1257,22 +958,7 @@ describe('resolveRound — updatedTournament return field (tournamentSelection)'
 
     const state = makeBaseState();
     state.roster = warriors.filter((_, i) => i % 2 === 0);
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: warriors.filter((_, i) => i % 2 === 1),
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
 
     const tournament = makeTournamentWithR1(warriors);
     state.tournaments = [tournament];
@@ -1316,22 +1002,7 @@ describe('applyBoutResults — deathWeek at year boundary', () => {
     state.year = 2;
     state.absoluteWeek = 53;
     state.roster = [w1];
-    state.rivals = [
-      {
-        id: RIVAL_ID,
-        owner: {
-          id: RIVAL_ID,
-          name: 'Rival',
-          stableName: 'Rival Stable',
-          fame: 0,
-          renown: 0,
-          titles: 0,
-        },
-        roster: [w2],
-        treasury: 500,
-        fame: 0,
-      } as any,
-    ];
+    state.rivals = [makeTournamentRival([w2])];
 
     vi.mocked(simulateFight).mockReturnValue({
       winner: 'A',

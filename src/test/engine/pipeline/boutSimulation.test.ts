@@ -4,6 +4,7 @@ import { GameState, BoutOffer, Promoter } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('Bout Simulation Integration - getFromArchive function issue', () => {
   it('should simulate a signed bout and update state accordingly', async () => {
@@ -57,12 +58,8 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
       },
     };
 
-    const initialState: Partial<GameState> = {
+    const initialState: Partial<GameState> = makeGameState({
       meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-      week: 1,
-      absoluteWeek: 1,
-      year: 1,
-      treasury: 1000,
       fame: 10,
       roster: [warriorA],
       rivals: [
@@ -83,15 +80,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
       ],
       boutOffers: { ['offer-1' as import('@/types/shared.types').BoutOfferId]: offer as any },
       promoters: { ['promoter-1' as import('@/types/shared.types').PromoterId]: promoter as any },
-      arenaHistory: [],
-      newsletter: [],
-      gazettes: [],
-      graveyard: [],
-      trainers: [],
-      hiringPool: [],
       recruitPool: [],
-      scoutReports: [],
-      hallOfFame: [],
       player: {
         id: 'player-1',
         name: 'Player',
@@ -100,7 +89,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
         renown: 0,
         titles: 0,
       } as any,
-    };
+    });
 
     // 2. Advance the week (which should trigger the simulation)
     const nextState = await advanceWeek(initialState as GameState);

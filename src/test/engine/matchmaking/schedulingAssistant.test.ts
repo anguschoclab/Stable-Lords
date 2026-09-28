@@ -17,6 +17,7 @@ import {
 import { getStablePairKey } from '@/utils/keyUtils';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('Scheduling Assistant Engine', () => {
   // Helper to generate minimal mock warrior
@@ -68,11 +69,9 @@ describe('Scheduling Assistant Engine', () => {
       },
     ];
 
-    return {
+    return makeGameState({
       meta: { gameName: 'test', version: '1', createdAt: 'now' },
       ftueComplete: true,
-      coachDismissed: [],
-      bookmarks: [],
       player: {
         id: 'p1' as any,
         name: 'Player',
@@ -81,51 +80,14 @@ describe('Scheduling Assistant Engine', () => {
         renown: 0,
         titles: 0,
       },
-      fame: 0,
-      popularity: 0,
       treasury: 0,
-      ledger: [],
-      week: 1,
-      year: 1,
-      absoluteWeek: 1,
-      phase: 'planning',
-      season: 'Spring',
-      weather: 'Clear',
       day: 1,
-      isTournamentWeek: false,
-      roster: [],
-      graveyard: [],
-      retired: [],
-      arenaHistory: [],
-      newsletter: [],
-      gazettes: [],
-      hallOfFame: [],
-      crowdMood: 'Calm',
-      tournaments: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
       rivals: rivalData,
-      scoutReports: [],
-      restStates: [],
       rivalries,
-      matchHistory: [],
       recruitPool: [],
-      rosterBonus: 0,
-      ownerGrudges: [],
-      insightTokens: [],
-      moodHistory: [],
-      playerChallenges: [],
-      playerAvoids: [],
       isFTUE: false,
-      unacknowledgedDeaths: [],
-      promoters: {},
-      boutOffers: {},
-      realmRankings: {},
-      awards: [],
       progression: structuredClone(DEFAULT_PROGRESSION),
-    };
+    });
   };
 
   // Helper to generate mock rivalry
@@ -517,8 +479,9 @@ describe('Scheduling Assistant Engine', () => {
 
         const state = mockState([rival], [rivalry1, rivalry2]);
         const score = scoreMatchup(player, rival, state);
-        // Base 100 + (3 * 50) = 250 (first rivalry in array)
-        expect(score).toBe(250);
+        // rivalryMap (built last-wins like buildWeekCaches) takes precedence over
+        // the array — Base 100 + (7 * 50) = 450
+        expect(score).toBe(450);
       });
 
       it('allows rivalry with same stableId on both sides', () => {

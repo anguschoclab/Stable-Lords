@@ -28,10 +28,6 @@ const mkState = (over: Partial<GameState> = {}): GameState =>
   fixtureGameState({
     week: 3,
     absoluteWeek: 3,
-    year: 1,
-    season: 'Spring',
-    roster: [],
-    trainers: [],
     ...over,
   });
 

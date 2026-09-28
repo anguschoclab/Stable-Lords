@@ -1,58 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { isPlausibleGameState } from '@/engine/storage/opfsArchive/plausibility';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 /** Minimal valid GameState-shaped object with ALL required fields. */
 function makeMinimalGameState(): Record<string, unknown> {
-  return {
+  return makeGameState({
     meta: { gameName: 'Test', version: '1.0', createdAt: '2024-01-01T00:00:00.000Z' },
     ftueComplete: true,
     isFTUE: false,
-    isTournamentWeek: false,
-    week: 1,
-    year: 1,
-    fame: 0,
-    popularity: 0,
     treasury: 100,
-    rosterBonus: 0,
-    day: 0,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    crowdMood: 'Calm',
     player: { id: 'p1', name: 'P', stableName: 'S', fame: 0, renown: 0, titles: 0 },
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
     progression: { status: 'active', stableStanding: 0, totalStables: 0, objectives: [] },
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    hallOfFame: [],
-    tournaments: [],
-    trainers: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
     rivals: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
     recruitPool: [],
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    unacknowledgedDeaths: [],
-    awards: [],
-    bookmarks: [],
-    coachDismissed: [],
-    ledger: [],
-  };
+  }) as any;
 }
 
 describe('isPlausibleGameState', () => {

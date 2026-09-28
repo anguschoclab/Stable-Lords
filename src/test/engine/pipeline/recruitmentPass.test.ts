@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { SeededRNGService } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('RecruitmentPass — year rollover boundary', () => {
   it('should grant post-death recruitment bonus when deathWeek matches absoluteWeek at year boundary', () => {
@@ -46,11 +47,7 @@ describe('RecruitmentPass — year rollover boundary', () => {
 describe('RecruitmentPass — usedNames excludes rival roster names', () => {
   it('should not generate recruits whose name matches a rival roster warrior name', () => {
     const rivalWarriorName = 'UniqueRivalName';
-    const baseState = {
-      week: 1,
-      year: 1,
-      absoluteWeek: 1,
-      roster: [],
+    const baseState = makeGameState({
       rivals: [
         {
           id: 'rival-1' as any,
@@ -71,12 +68,8 @@ describe('RecruitmentPass — usedNames excludes rival roster names', () => {
           trainingAssignments: [],
         } as any,
       ],
-      graveyard: [],
-      retired: [],
       recruitPool: [],
-      weather: 'Clear',
-      season: 'Spring',
-    } as any as GameState;
+    });
 
     const rng = new SeededRNGService(99);
     const result = runRecruitmentPass(baseState, rng);

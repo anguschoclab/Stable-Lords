@@ -17,6 +17,7 @@ import {
 import { getFightsForArena } from '@/engine/core/historyUtils';
 import type { GameState, ArenaTitle } from '@/types/state.types';
 
+/** Maps an arena title's reign state to a display label and badge styling. */
 export function statusBadge(title: ArenaTitle | undefined): { label: string; className: string } {
   if (!title?.champion)
     return { label: 'TITLE VACANT', className: 'border-white/15 text-muted-foreground/70' };

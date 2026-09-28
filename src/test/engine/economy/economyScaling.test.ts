@@ -7,12 +7,7 @@ import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 const makeState = (over: Partial<GameState> = {}): GameState =>
   fixtureGameState({
     week: 5,
-    fame: 0,
-    weather: 'Clear',
     roster: [{ id: 'p1', name: 'Hero', fame: 30 } as any],
-    trainers: [],
-    trainingAssignments: [],
-    arenaHistory: [],
     ...over,
   } as any);
 

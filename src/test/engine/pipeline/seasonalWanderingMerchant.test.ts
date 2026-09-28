@@ -4,18 +4,12 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
-  return {
-    year: 1,
-    season: 'Spring',
+  return makeGameState({
     day: 1,
-    week: 1,
-    treasury: 1000,
-    fame: 0,
-    roster: [],
     rivals: [],
     events: [],
     ...overrides,
-  } as unknown as GameState;
+  });
 }
 
 import { type WarriorId } from '@/types/shared.types';
@@ -63,3 +57,4 @@ describe('seasonal pass - wandering_merchant_strange_brew', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe("Wandering Merchant's Strange Brew");
   });
 });
+import { makeGameState } from '@/test/_fixtures/factories';

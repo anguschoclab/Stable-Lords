@@ -6,6 +6,7 @@ import { describe, it, expect } from 'vitest';
 import { processStaff } from '@/engine/ai/workers/staffWorker';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 function createMockTrainer(overrides: Partial<Trainer> = {}): Trainer {
   return {
@@ -44,10 +45,9 @@ function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableD
 }
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
-  return {
+  return makeGameState({
     meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },
     ftueComplete: true,
-    coachDismissed: [],
     player: {
       id: 'p1',
       name: 'Player',
@@ -56,48 +56,10 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
       renown: 0,
       titles: 0,
     },
-    fame: 0,
-    popularity: 0,
-    treasury: 1000,
-    ledger: [],
     week: 5,
-    year: 1,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    hallOfFame: [],
-    crowdMood: 'Calm',
-    tournaments: [],
-    trainers: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
     rivals: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
     recruitPool: [],
-    rosterBonus: 0,
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
     isFTUE: false,
-    unacknowledgedDeaths: [],
-    day: 0,
-    isTournamentWeek: false,
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
     progression: {
       status: 'active',
       stableStanding: 1,
@@ -105,7 +67,7 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
       objectives: [],
     },
     ...overrides,
-  } as unknown as GameState;
+  });
 }
 
 describe('staffWorker — processStaff hiring', () => {

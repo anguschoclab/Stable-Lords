@@ -74,15 +74,10 @@ function makeLungeRoster(): any[] {
 const makeState = (weather: string): GameState =>
   fixtureGameState({
     week: 5,
-    season: 'Spring',
-    year: 1,
     weather: weather as any,
-    treasury: 1000,
     fame: 500,
     popularity: 500,
-    roster: [],
     rivals: [],
-    arenaHistory: [],
   } as any);
 
 // ─── Tests ──────────────────────────────────────────────────────────────────

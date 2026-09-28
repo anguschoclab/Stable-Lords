@@ -3,6 +3,7 @@ import { processWeekBouts } from '@/engine/bout/services/boutProcessorService';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 function makeMinimalWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
@@ -24,25 +25,10 @@ function makeMinimalWarrior(overrides: Partial<Warrior> = {}): Warrior {
 }
 
 function makeBaseState(): GameState {
-  return {
+  return makeGameState({
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-    week: 1,
-    absoluteWeek: 1,
-    year: 1,
-    treasury: 1000,
-    fame: 0,
-    roster: [],
     rivals: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    graveyard: [],
-    trainers: [],
-    hiringPool: [],
     recruitPool: [],
-    scoutReports: [],
-    hallOfFame: [],
-    retired: [],
     player: {
       id: 'player-1',
       name: 'Player',
@@ -51,37 +37,8 @@ function makeBaseState(): GameState {
       renown: 0,
       titles: 0,
     } as any,
-    crowdMood: 'Calm',
-    moodHistory: [],
-    tournaments: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    ownerGrudges: [],
-    insightTokens: [],
-    unacknowledgedDeaths: [],
-    day: 0,
-    isTournamentWeek: false,
     activeTournamentId: undefined,
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    ledger: [],
-    popularity: 0,
-    rosterBonus: 0,
-    ftueComplete: false,
-    ftueStep: 0,
-    coachDismissed: [],
-    isFTUE: true,
-  } as unknown as GameState;
+  });
 }
 
 describe('processWeekBouts — Minimum Viable Arena', () => {

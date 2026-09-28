@@ -345,21 +345,21 @@ export function makeFightSummary(over: Partial<FightSummary> = {}): FightSummary
  * rivalryMap / grudgeMap) wired exactly as `buildWeekCaches` does in the
  * week pipeline — so tests exercise the same lookup surface the engine sees.
  */
-export function makeGameState(over: Partial<GameState> = {}): GameState {
+export function makeGameState(over: Partial<GameState> | Record<string, any> = {}): GameState {
   const base = createFreshState('fixture-seed', '2026-01-01T00:00:00Z');
-  const state: GameState = { ...base, ...over };
+  const state: GameState = { ...base, ...(over as Partial<GameState>) };
 
   const warriorMap = new Map<WarriorId, Warrior>();
-  state.roster.forEach((w) => warriorMap.set(w.id, w));
-  (state.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
+  state.roster.forEach((w) => w && warriorMap.set(w.id, w));
+  (state.rivals || []).forEach((r) => (r.roster || []).forEach((w) => w && warriorMap.set(w.id, w)));
   state.warriorMap = warriorMap;
 
   const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
   state.roster.forEach((w) =>
-    warriorToStableMap.set(w.id, { stableId: state.player.id, isPlayer: true })
+    w && warriorToStableMap.set(w.id, { stableId: state.player.id, isPlayer: true })
   );
   (state.rivals || []).forEach((r) =>
-    r.roster.forEach((w) => warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
+    (r.roster || []).forEach((w) => w && warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
   );
   state.warriorToStableMap = warriorToStableMap;
 

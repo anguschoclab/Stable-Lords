@@ -9,6 +9,7 @@ import {
   getMockOPFSDirHandleCalls,
 } from '@/test/_setup/setup';
 import { SAVE_STATE_VERSION } from '@/constants/core';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('OPFS Archival System', () => {
   beforeEach(() => {
@@ -348,7 +349,7 @@ describe('OPFS Archival System', () => {
   });
 
   describe('Suite 13: retrieveHotState with plausibility check', () => {
-    const minimalState = {
+    const minimalState: any = makeGameState({
       meta: {
         gameName: 'Test',
         version: SAVE_STATE_VERSION,
@@ -356,52 +357,12 @@ describe('OPFS Archival System', () => {
       },
       ftueComplete: true,
       isFTUE: false,
-      isTournamentWeek: false,
-      week: 1,
-      year: 1,
-      fame: 0,
-      popularity: 0,
       treasury: 100,
-      rosterBonus: 0,
-      day: 0,
-      phase: 'planning',
-      season: 'Spring',
-      weather: 'Clear',
-      crowdMood: 'Calm',
       player: { id: 'p1', name: 'P', stableName: 'S', fame: 0, renown: 0, titles: 0 },
-      promoters: {},
-      boutOffers: {},
-      realmRankings: {},
       progression: { status: 'active', stableStanding: 0, totalStables: 0, objectives: [] },
-      roster: [],
-      graveyard: [],
-      retired: [],
-      arenaHistory: [],
-      newsletter: [],
-      gazettes: [],
-      hallOfFame: [],
-      tournaments: [],
-      trainers: [],
-      hiringPool: [],
-      trainingAssignments: [],
-      seasonalGrowth: [],
       rivals: [],
-      scoutReports: [],
-      restStates: [],
-      rivalries: [],
-      matchHistory: [],
-      playerChallenges: [],
-      playerAvoids: [],
       recruitPool: [],
-      ownerGrudges: [],
-      insightTokens: [],
-      moodHistory: [],
-      unacknowledgedDeaths: [],
-      awards: [],
-      bookmarks: [],
-      coachDismissed: [],
-      ledger: [],
-    };
+    });
 
     it('Test 13.1: Valid plausible JSON → returns parsed object', async () => {
       const service = new OPFSArchiveService();

@@ -5,6 +5,7 @@ import type { GameState, BoutOffer, Promoter } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 function makeBoutState(): GameState {
   const rng = new SeededRNGService(1);
@@ -56,12 +57,8 @@ function makeBoutState(): GameState {
     },
   };
 
-  return {
+  return makeGameState({
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-    week: 1,
-    absoluteWeek: 1,
-    year: 1,
-    treasury: 1000,
     fame: 10,
     roster: [warriorA],
     rivals: [
@@ -82,15 +79,7 @@ function makeBoutState(): GameState {
     ],
     boutOffers: { ['offer-1' as import('@/types/shared.types').BoutOfferId]: offer as any },
     promoters: { ['promoter-1' as import('@/types/shared.types').PromoterId]: promoter as any },
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    graveyard: [],
-    trainers: [],
-    hiringPool: [],
     recruitPool: [],
-    scoutReports: [],
-    hallOfFame: [],
     player: {
       id: 'player-1',
       name: 'Player',
@@ -99,7 +88,7 @@ function makeBoutState(): GameState {
       renown: 0,
       titles: 0,
     } as any,
-  } as unknown as GameState;
+  });
 }
 
 describe('BoutSimulationPass returns display data', () => {

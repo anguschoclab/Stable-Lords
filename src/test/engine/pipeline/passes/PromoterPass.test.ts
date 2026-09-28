@@ -15,6 +15,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import {
   makePromoter as fixturePromoter,
   makeGameState as fixtureGameState,
+  makeGameState,
 } from '@/test/_fixtures/factories';
 
 // Helper to create a promoter with specific personality
@@ -900,14 +901,9 @@ describe('Score-window matching', () => {
 
 describe('Edge cases for optimized matching', () => {
   it('should generate 0 offers with a single eligible warrior', () => {
-    const state = {
+    const state = makeGameState({
       meta: { gameName: '', version: '', createdAt: '' },
       week: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 0,
       roster: [
         makeWarrior(
           'solo' as WarriorId,
@@ -927,11 +923,10 @@ describe('Edge cases for optimized matching', () => {
           5
         ),
       } as any,
-      boutOffers: {},
       realmRankings: {
         solo: { overallRank: 1, classRank: 1, compositeScore: 50 },
       } as any,
-    } as unknown as GameState;
+    });
 
     const result = runPromoterPass(state);
     const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
@@ -955,14 +950,9 @@ describe('Edge cases for optimized matching', () => {
       realmRankings[id] = { overallRank: i + 1, classRank: 1, compositeScore: 50 + (i % 20) * 5 };
     }
 
-    const state = {
+    const state = makeGameState({
       meta: { gameName: '', version: '', createdAt: '' },
       week: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 0,
       roster: warriors,
       rivals: [],
       promoters: {
@@ -974,9 +964,8 @@ describe('Edge cases for optimized matching', () => {
           50
         ),
       } as any,
-      boutOffers: {},
       realmRankings,
-    } as unknown as GameState;
+    });
 
     const result = runPromoterPass(state);
     const offers = Object.values(result.boutOffers || {}) as BoutOffer[];

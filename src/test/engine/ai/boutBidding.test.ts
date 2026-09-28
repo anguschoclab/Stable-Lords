@@ -4,7 +4,9 @@ import type { RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
+  makeGameState,
+} from '@/test/_fixtures/factories';
 
 /**
  * Bout bidding integration tests.
@@ -379,22 +381,11 @@ describe('generateBoutBids is called from RivalStrategyPass', () => {
     const rival1 = makeRival({ roster: [warrior1] });
     const rival2 = makeRival({ id: 'rival-2' as any, roster: [warrior2] });
 
-    const state = {
+    const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
-      year: 1,
-      season: 'Spring',
-      weather: 'Clear',
-      crowdMood: 'Calm',
       rivals: [rival1, rival2],
-      roster: [],
-      arenaHistory: [],
-      boutOffers: {},
-      tournaments: [],
-      isTournamentWeek: false,
       recruitPool: [],
-      hiringPool: [],
-      trainers: [],
       player: {
         id: 'player-1' as any,
         name: 'Player',
@@ -403,8 +394,6 @@ describe('generateBoutBids is called from RivalStrategyPass', () => {
         renown: 0,
         titles: 0,
       },
-      realmRankings: {},
-      promoters: {},
       rivalMap: new Map([
         ['rival-1', rival1],
         ['rival-2', rival2],
@@ -417,8 +406,7 @@ describe('generateBoutBids is called from RivalStrategyPass', () => {
         [warrior1.id, { stableId: 'rival-1', isPlayer: false }],
         [warrior2.id, { stableId: 'rival-2', isPlayer: false }],
       ]) as any,
-      ownerGrudges: [],
-    } as any;
+    });
 
     const impact = runRivalStrategyPass(state, 6, undefined as any, true);
 

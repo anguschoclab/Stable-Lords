@@ -31,16 +31,9 @@ const makeState = (arenaHistory: FightSummary[]): GameState =>
   fixtureGameState({
     meta: { gameName: '', version: '', createdAt: '' },
     week: 5,
-    year: 1,
     absoluteWeek: 5,
-    season: 'Spring',
     arenaHistory,
-    graveyard: [],
-    gazettes: [],
-    newsletter: [],
-    roster: [],
     rivals: [],
-    crowdMood: 'Calm',
   } as any);
 
 describe('runNarrativePass — weekly newsletter issue (D15 wiring)', () => {

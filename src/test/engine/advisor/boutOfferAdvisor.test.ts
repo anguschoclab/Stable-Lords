@@ -50,18 +50,11 @@ const mkState = (over: Partial<GameState> = {}): GameState =>
   fixtureGameState({
     week: 5,
     absoluteWeek: 5,
-    year: 1,
-    season: 'Spring',
-    weather: 'Clear',
-    roster: [],
     rivals: [],
     promoters: {
       promoter_1: { id: 'promoter_1', name: 'Cassius', personality: 'Honorable', tier: 'Regional' } as unknown as Promoter,
       promoter_sadistic: { id: 'promoter_sadistic', name: 'Nero', personality: 'Sadistic', tier: 'Regional' } as unknown as Promoter,
     },
-    boutOffers: {},
-    tournaments: [],
-    isTournamentWeek: false,
     ...over,
   } as any);
 

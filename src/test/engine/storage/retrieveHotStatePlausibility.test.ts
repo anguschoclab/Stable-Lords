@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { setMockOPFSFileText } from '@/test/_setup/setup';
 import { SAVE_STATE_VERSION } from '@/constants/core';
+import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('retrieveHotState plausibility check', () => {
   beforeEach(() => {
@@ -12,56 +13,16 @@ describe('retrieveHotState plausibility check', () => {
     vi.restoreAllMocks();
   });
 
-  const validState = {
+  const validState: any = makeGameState({
     meta: { gameName: 'Stable Lords', version: SAVE_STATE_VERSION, createdAt: '2024-01-01' },
     ftueComplete: true,
     isFTUE: false,
-    isTournamentWeek: false,
-    week: 1,
-    year: 1,
-    fame: 0,
-    popularity: 0,
     treasury: 100,
-    rosterBonus: 0,
-    day: 0,
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    crowdMood: 'Calm',
     player: { id: 'p1', name: 'P', stableName: 'S', fame: 0, renown: 0, titles: 0 },
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
     progression: { status: 'active', stableStanding: 0, totalStables: 0, objectives: [] },
-    roster: [],
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    hallOfFame: [],
-    tournaments: [],
-    trainers: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
     rivals: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
     recruitPool: [],
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    unacknowledgedDeaths: [],
-    awards: [],
-    bookmarks: [],
-    coachDismissed: [],
-    ledger: [],
-  };
+  });
 
   it('returns parsed state when JSON passes plausibility check', async () => {
     const service = new OPFSArchiveService();

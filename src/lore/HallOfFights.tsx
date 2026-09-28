@@ -6,6 +6,8 @@ import React, { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { LoreArchive } from './LoreArchive';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Trophy, Skull, Sparkles, ScrollText, Newspaper } from 'lucide-react';
 import type { FightSummary } from '@/types/state.types';
 import { FightLogTab, LegendsTab, StyleStatsTab } from './hallOfFights/tabs';
@@ -81,13 +83,13 @@ export const HallOfFights: React.FC = () => {
   const lifetime = state.lifetimeStats;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-display font-bold">Chronicle</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Arena history, legendary bouts, and style analytics.
-        </p>
-      </div>
+    <PageFrame className="space-y-6">
+      <PageHeader
+        eyebrow="World"
+        title="Chronicle"
+        subtitle="LORE · ARENA HISTORY · LEGENDARY BOUTS"
+        icon={ScrollText}
+      />
 
       {lifetime && lifetime.bouts > 0 && (
         <div className="flex flex-wrap gap-6 text-xs text-muted-foreground" data-testid="lifetime-stats">
@@ -147,7 +149,7 @@ export const HallOfFights: React.FC = () => {
           <Graveyard />
         </TabsContent>
       </Tabs>
-    </div>
+    </PageFrame>
   );
 };
 

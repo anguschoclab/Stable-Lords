@@ -44,6 +44,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
 
 // Unified Widgets
 import { MedicalAuditWidget } from '@/components/dashboard/MedicalAuditWidget';
@@ -328,6 +329,15 @@ export default function ArenaHub() {
   );
   const stableStats = useMemo(() => calculateStableStats(roster), [roster]);
 
+  // Top-bar VIEW CARD CTA — scrolls to the fight card; disabled when no card exists.
+  useRegisterCtaAction('/stable/arena', {
+    enabled: matchCard.length > 0,
+    run: () =>
+      document
+        .getElementById('fight-card')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+  });
+
   return (
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
@@ -456,6 +466,7 @@ export default function ArenaHub() {
       {/* ── Fight Card Preview ── */}
       {matchCard.length > 0 && (
         <>
+          <span id="fight-card" className="block scroll-mt-24" />
           <SectionDivider label="This Week's Fight Card" variant="primary" />
           <Surface variant="glass" className="p-6 space-y-4">
             <div className="grid grid-cols-1 gap-4">

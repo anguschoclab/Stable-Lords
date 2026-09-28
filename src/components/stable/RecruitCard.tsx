@@ -72,6 +72,8 @@ interface RecruitCardProps {
   canAffordScout: boolean;
   canAffordBonus: boolean;
   scoutReport?: PotentialScoutReport;
+  selected?: boolean;
+  onSelect?: (w: PoolWarrior) => void;
 }
 
 /**
@@ -87,13 +89,20 @@ export function RecruitCard({
   canAffordScout,
   canAffordBonus,
   scoutReport,
+  selected,
+  onSelect,
 }: RecruitCardProps) {
   const config = TIER_CONFIG[warrior.tier];
 
   return (
     <Surface
       variant="glass"
-      className="group p-0 border-white/5 hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 overflow-hidden"
+      onClick={onSelect ? () => onSelect(warrior) : undefined}
+      className={cn(
+        'group p-0 border-white/5 hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 overflow-hidden',
+        onSelect && 'cursor-pointer',
+        selected && 'border-primary/60 ring-1 ring-primary/40'
+      )}
     >
       <div className="p-8 space-y-8">
         {/* Header */}

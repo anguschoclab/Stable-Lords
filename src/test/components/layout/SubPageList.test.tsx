@@ -25,9 +25,9 @@ describe('SubPageList', () => {
     expect(screen.getAllByRole('link')).toHaveLength(15);
   });
 
-  it('renders correct number of pages for world hub (8)', () => {
+  it('renders correct number of pages for world hub (10)', () => {
     render(<SubPageList activeHubId="world" currentPath="/world" />);
-    expect(screen.getAllByRole('link')).toHaveLength(8);
+    expect(screen.getAllByRole('link')).toHaveLength(10);
   });
 
   it('renders no pages for bookmarks hub (0 pages)', () => {

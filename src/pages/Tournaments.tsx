@@ -17,6 +17,7 @@ import { audioManager } from '@/lib/AudioManager';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
 
 // Modular Components
 import { isActive } from '@/engine/warrior/warriorStatus';
@@ -155,6 +156,15 @@ export default function Tournaments() {
       setSimulating(false);
     }
   }, [currentTournament, activeSlotId, loadGame, setSimulating]);
+
+  // Top-bar ADVANCE BRACKET CTA — resolves the next round of the live bracket;
+  // disabled when no unresolved tournament is on the card.
+  const bracketOpen =
+    !!currentTournament && !currentTournament.completed && !isSimulating;
+  useRegisterCtaAction('/world/tournaments', {
+    enabled: bracketOpen,
+    run: handleExecuteRound,
+  });
 
   return (
     <PageFrame maxWidth="xl" className="pb-32">

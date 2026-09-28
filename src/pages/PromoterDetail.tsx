@@ -13,6 +13,8 @@ import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { PERSONALITY_CONFIG, TIER_COLORS, calculateStats } from './promoterDetail/config';
 import { OverviewTab, HistoryTab, OffersTab } from './promoterDetail/tabs';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { PageHeader } from '@/components/ui/PageHeader';
 import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
 
 const TABS: SubNavTab[] = [
@@ -68,22 +70,25 @@ export default function PromoterDetail() {
   const tierStyle = TIER_COLORS[promoter.tier];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Link to="/stable/promoters">
-          <Button variant="ghost" className="gap-2">
-            <ArrowLeft className="h-4 w-4" /> Back to Directory
-          </Button>
-        </Link>
-      </div>
+    <PageFrame className="space-y-6">
+      <PageHeader
+        eyebrow="Promoter"
+        title={promoter.name}
+        subtitle={`OPS · PROMOTERS · ${promoter.tier.toUpperCase()} CIRCUIT`}
+        actions={
+          <Link to="/stable/promoters">
+            <Button variant="ghost" className="gap-2">
+              <ArrowLeft className="h-4 w-4" /> Back to Directory
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Hero Section */}
       <div className={`p-6 rounded-none border ${tierStyle.bg} ${tierStyle.badge} border-current`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-3xl font-black uppercase tracking-wider">{promoter.name}</h1>
               <Badge variant="outline" className={`text-xs ${tierStyle.badge}`}>
                 {promoter.tier}
               </Badge>
@@ -110,6 +115,6 @@ export default function PromoterDetail() {
       )}
       {activeTab === 'history' && <HistoryTab promoter={promoter} />}
       {activeTab === 'offers' && <OffersTab offers={promoterOffers} />}
-    </div>
+    </PageFrame>
   );
 }

@@ -3,6 +3,7 @@
  * shows yearly accolades, global legends, and fallen warriors.
  */
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, Skull } from 'lucide-react';
 import { useHallOfFame } from './hooks/useHallOfFame';
@@ -29,7 +30,7 @@ export default function HallOfFame() {
   } = useHallOfFame();
 
   return (
-    <div className="space-y-8">
+    <PageFrame className="space-y-8">
       <PageHeader
         icon={Crown}
         title="History"
@@ -93,6 +94,6 @@ export default function HallOfFame() {
           <GraveyardTabs myFallen={myFallen} graveyard={graveyard} season={season} />
         </TabsContent>
       </Tabs>
-    </div>
+    </PageFrame>
   );
 }

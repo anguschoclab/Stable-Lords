@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { Surface } from '@/components/ui/Surface';
 import { Shield, Package, Star, Lightbulb, HelpCircle } from 'lucide-react';
 import { useStableEquipment } from './hooks/useStableEquipment';
@@ -31,7 +32,7 @@ export default function StableEquipment() {
   } = useStableEquipment();
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-20">
+    <PageFrame maxWidth="lg" className="space-y-8 pb-20">
       <PageHeader title="The Armory" subtitle="ARMORY · LOADOUTS" icon={Shield} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -141,6 +142,6 @@ export default function StableEquipment() {
           </div>
         </div>
       </div>
-    </div>
+    </PageFrame>
   );
 }

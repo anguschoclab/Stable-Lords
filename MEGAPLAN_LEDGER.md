@@ -120,3 +120,17 @@ already-wired or intentional API — no production rewiring required:
 Net Phase-5 outcome: the three spec-encoded surfaces were the only real
 wiring gaps; the AI system's apparent dead code was internal-helper exports
 inside live modules, not orphaned features.
+
+## Phase-6 dispositions
+
+| Commit | Phase | Batch | Disposition |
+|---|---|---|---|
+| (pending) | 6 | L1 CTA registry | `src/components/layout/primaryCta.ts` — `PRIMARY_CTA_BY_ROUTE` + `resolvePrimaryCta(pathname)` keyed by route prefix, longest-prefix resolution, detail/lore → null. `PrimaryCtaButton` in `AppHeader` replaces the static `ExecuteWeekButton`. Intents: `advance` → week/day pipeline via `ExecuteWeekButton` (label override prop added; default `/` label per bible is now `EXECUTE WEEK N`); `page` → zustand `useCtaRegistry` populated by `useRegisterCtaAction` (Tournaments registers real `handleExecuteRound` enabled only while a live bracket exists; ArenaHub registers scroll-to-`#fight-card` enabled only when a card exists; Recruit registers sign-selected enabled only when an affordable, non-full selection exists — new `selectedId` state + `RecruitCard` `selected`/`onSelect` props); `navigate` → Scouting's SIGN CONTRACT links to `/stable/recruit` (rival warriors are not signable — poaching is AI-side). L1 spec unskipped, green. |
+| (pending) | 6 | L2 page primitives | Conformance spec corrected to enumerate routed page modules from `src/routes/**` imports (helper modules like `sections.tsx`/`tabs.tsx` were false positives). 10 routed pages wrapped in `PageFrame`; `HallOfFights` gained `PageHeader`; `Gazette`/`PromoterDetail` keep bespoke masthead/hero under documented `data-bible-exempt`. Spec green. |
+
+### Phase-6 known trade-offs
+
+- `ExecuteWeekButton` idle label changed `ADVANCE WEEK N` → `EXECUTE WEEK N` (bible §1). Existing test updated accordingly.
+- Detail/lore routes now render **no** top-bar CTA (spec). Week advance remains reachable from all mapped hub routes.
+- `SubPageList` world-hub count expectation updated 8 → 10 (Phase-5 nav additions: Prep Mode, Style Archives — stale assertion, not a regression).
+- `Gazette`/`Graveyard` are also embedded inside `HallOfFights` tabs; nested `PageFrame` padding under embed accepted for now — flagged for Phase-7 visual/e2e review.

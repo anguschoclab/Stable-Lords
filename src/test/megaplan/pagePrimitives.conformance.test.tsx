@@ -15,8 +15,9 @@ import path from 'node:path';
  * rendering all 30+ pages needs per-page store scaffolding that the
  * per-page pinning specs already provide; here we assert primitive usage.
  */
-const PAGES_DIR = path.resolve(__dirname, '../../pages');
-const LORE_DIR = path.resolve(__dirname, '../../lore');
+const SRC_DIR = path.resolve(__dirname, '../..');
+const ROUTES_DIR = path.join(SRC_DIR, 'routes');
+const PAGES_DIR = path.join(SRC_DIR, 'pages');
 
 const EXEMPT = new Set([
   'StartGame.tsx', // FTUE — outside AppShell by spec
@@ -24,22 +25,45 @@ const EXEMPT = new Set([
   'NotFound.tsx', // chrome-free error surface
 ]);
 
-function pageFiles(dir: string): string[] {
+/** All files under a dir (recursive). */
+function walk(dir: string): string[] {
   const out: string[] = [];
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) {
-      const idx = path.join(p, 'index.tsx');
-      try { readFileSync(idx); out.push(idx); } catch { /* subdir without index — descend */ out.push(...pageFiles(p)); }
-    } else if (e.name.endsWith('.tsx') && !e.name.includes('.test.')) {
-      out.push(p);
-    }
+    if (e.isDirectory()) out.push(...walk(p));
+    else out.push(p);
   }
   return out;
 }
 
-describe.skip('page primitives conformance (MEGAPLAN-L2)', () => {
-  const files = [...pageFiles(PAGES_DIR), ...pageFiles(LORE_DIR)];
+/**
+ * The pages this spec actually governs: modules imported as route components
+ * from `src/routes/**`. Helper files inside page dirs (sections.tsx, tabs.tsx,
+ * hooks) are components consumed by the entry — never routed — and out of scope.
+ */
+function routedPageFiles(): string[] {
+  const out = new Set<string>();
+  for (const f of walk(ROUTES_DIR).filter((p) => p.endsWith('.tsx'))) {
+    const src = readFileSync(f, 'utf8');
+    for (const m of src.matchAll(/from ['"]@\/(pages|lore)\/([^'"]+)['"]/g)) {
+      if (!m[1] || !m[2]) continue;
+      const rel = path.join(SRC_DIR, m[1], m[2]);
+      for (const cand of [`${rel}.tsx`, `${rel}.ts`, path.join(rel, 'index.tsx')]) {
+        try {
+          readFileSync(cand);
+          out.add(cand);
+          break;
+        } catch {
+          /* next candidate */
+        }
+      }
+    }
+  }
+  return [...out];
+}
+
+describe('page primitives conformance (MEGAPLAN-L2)', () => {
+  const files = routedPageFiles();
 
   it('every non-exempt page uses PageFrame', () => {
     const missing = files

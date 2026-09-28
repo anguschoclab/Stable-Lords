@@ -1,6 +1,8 @@
 /**
  * Stable Lords — The Arena Gazette
  * Codex Sanguis design: Roman acta diurna / historical broadsheet aesthetic
+ * data-bible-exempt: the broadsheet GazetteMasthead IS this page's header —
+ * a standard PageHeader above it would duplicate the masthead title.
  */
 import { useMemo, useState, useCallback } from 'react';
 import { useWorldState } from '@/state/useGameStore';

@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Users, Sword, History, ArrowRight, Building2, DollarSign } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 
 const TIER_COLORS: Record<Promoter['tier'], string> = {
@@ -233,7 +234,7 @@ export default function PromoterDirectory() {
   }, [promoters, boutOffers, showBookmarkedOnly, bookmarks]);
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <PageFrame maxWidth="lg">
       <PageHeader
         icon={Building2}
         title="Promoter Directory"
@@ -344,6 +345,6 @@ export default function PromoterDirectory() {
           </CardContent>
         </Card>
       )}
-    </div>
+    </PageFrame>
   );
 }

@@ -40,9 +40,9 @@ describe('ExecuteWeekButton', () => {
     useGameStore.setState({ week: 5, isTournamentWeek: false, day: 0, isSimulating: false } as never);
   });
 
-  it('renders "ADVANCE WEEK 5" with correct week number', () => {
+  it('renders "EXECUTE WEEK 5" with correct week number', () => {
     render(<ExecuteWeekButton />);
-    expect(screen.getByText(/ADVANCE WEEK 5/i)).toBeTruthy();
+    expect(screen.getByText(/EXECUTE WEEK 5/i)).toBeTruthy();
   });
 
   it('renders "ADVANCE DAY" label when isTournamentWeek=true', async () => {

@@ -6,10 +6,12 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 
 /**
- * Self-contained Execute Week button. Drop it anywhere — it reads all
- * required state internally via useWeekExecution and the game store.
+ * Self-contained advance button — runs the week/day pipeline via
+ * useWeekExecution. `ctaLabel` overrides the idle label for route-aware
+ * contexts (e.g. "BEGIN CYCLE", "CLOSE SEASON"); pass the EXECUTE WEEK
+ * sentinel to keep the dynamic week counter.
  */
-export function ExecuteWeekButton() {
+export function ExecuteWeekButton({ ctaLabel }: { ctaLabel?: string }) {
   const { week, day, isTournamentWeek, isSimulating } = useGameStore(
     useShallow((s) => ({
       week: s.week,
@@ -29,7 +31,9 @@ export function ExecuteWeekButton() {
     ? 'Resolving Bouts…'
     : isTournamentWeek
       ? `ADVANCE DAY ${day + 1}`
-      : `ADVANCE WEEK ${week}`;
+      : !ctaLabel || ctaLabel === 'EXECUTE WEEK'
+        ? `EXECUTE WEEK ${week}`
+        : ctaLabel;
 
   return (
     <Button

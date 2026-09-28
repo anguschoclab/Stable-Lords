@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -143,7 +144,7 @@ function AccessibilitySettings() {
  */
 export default function Help() {
   return (
-    <div className="space-y-6 max-w-3xl">
+    <PageFrame maxWidth="sm" className="space-y-6">
       <PageHeader icon={BookOpen} title="Codex · Help" subtitle="RULES · STRATEGY · REFERENCE" />
 
       <Accordion
@@ -180,6 +181,6 @@ export default function Help() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
+    </PageFrame>
   );
 }

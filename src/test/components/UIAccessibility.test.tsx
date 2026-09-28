@@ -66,8 +66,13 @@ describe('AppHeader accessibility', () => {
     expect(source).toMatch(/aria-label.*[Mm]ute/);
   });
 
-  it('ExecuteWeekButton has aria-label', () => {
-    expect(source).toMatch(/aria-label.*[Ww]eek|[Ee]xecute/);
+  it('PrimaryCtaButton has aria-label', () => {
+    const ctaSource = fs.readFileSync(
+      path.join(COMPONENTS_DIR, 'layout', 'PrimaryCtaButton.tsx'),
+      'utf-8'
+    );
+    expect(ctaSource).toMatch(/aria-label/);
+    expect(ctaSource).toMatch(/EXECUTE WEEK|PrimaryCta|def\.label/);
   });
 
   it('uses focus-visible styles (not just focus:)', () => {

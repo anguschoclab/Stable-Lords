@@ -6,6 +6,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skull, Zap } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { cn } from '@/lib/utils';
 import { VirtualizedFallenGrid } from '@/components/fallen/VirtualizedFallenGrid';
 
@@ -21,7 +22,7 @@ export default function Graveyard() {
   const worldFallen = graveyard;
 
   return (
-    <div className="space-y-8 pb-12">
+    <PageFrame className="space-y-8 pb-12">
       <PageHeader
         icon={Skull}
         title="The Graveyard"
@@ -81,7 +82,7 @@ export default function Graveyard() {
           />
         </TabsContent>
       </Tabs>
-    </div>
+    </PageFrame>
   );
 }
 

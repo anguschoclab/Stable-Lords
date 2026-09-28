@@ -31,7 +31,7 @@ async function loadRegistry(): Promise<Record<string, unknown> | null> {
   return loader ? await loader() : null;
 }
 
-describe.skip('appShell per-route primary CTA (MEGAPLAN-L1)', () => {
+describe('appShell per-route primary CTA (MEGAPLAN-L1)', () => {
   it('exposes a CTA registry keyed by route prefix', async () => {
     const mod = await loadRegistry();
     expect(mod, 'primaryCta registry module missing').not.toBeNull();

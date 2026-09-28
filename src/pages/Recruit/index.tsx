@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -9,6 +10,8 @@ import { RecruitCard } from '@/components/stable/RecruitCard';
 import { canTransact } from '@/engine/economy/utils';
 import { useRecruit } from './hooks/useRecruit';
 import { RecruitFilters } from './components/RecruitFilters';
+import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 
 /**
  *
@@ -35,6 +38,20 @@ export default function Recruit() {
     handleRefresh,
     handleCustomCreate,
   } = useRecruit();
+
+  // Contract selection drives the top-bar SIGN CONTRACT CTA — disabled until
+  // a recruit is picked, then signs that recruit (base contract, no bonus).
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = recruitPool.find((w: PoolWarrior) => w.id === selectedId);
+  const selectedAffordable = !!selected && canTransact(treasury, selected.cost);
+
+  useRegisterCtaAction('/stable/recruit', {
+    enabled: selectedAffordable && !rosterFull,
+    run: () => {
+      if (selected) handleRecruit(selected, false);
+      setSelectedId(null);
+    },
+  });
 
   return (
     <PageFrame>
@@ -135,6 +152,8 @@ export default function Recruit() {
                       canAffordScout={canTransact(treasury, 25)}
                       canAffordBonus={canTransact(treasury, w.cost + 50)}
                       scoutReport={scoutReports[w.id]}
+                      selected={selectedId === w.id}
+                      onSelect={(p) => setSelectedId(p.id)}
                     />
                   ))}
                 </div>

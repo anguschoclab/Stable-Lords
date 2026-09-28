@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Activity } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { FightingStyle, STYLE_ABBREV, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { useGameStore } from '@/state/useGameStore';
@@ -111,7 +112,7 @@ export default function PhysicalsSimulator() {
   }, [styleA, styleB, statsA, statsB]);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-20">
+    <PageFrame maxWidth="lg" className="space-y-8 pb-20">
       <PageHeader
         icon={Activity}
         title="Physicals Simulator"
@@ -205,6 +206,6 @@ export default function PhysicalsSimulator() {
           <SimulatorResults simulation={simulation} />
         </main>
       </div>
-    </div>
+    </PageFrame>
   );
 }

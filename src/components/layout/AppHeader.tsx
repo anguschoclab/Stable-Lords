@@ -12,7 +12,7 @@ import {
   Coins,
   Crown,
 } from 'lucide-react';
-import { ExecuteWeekButton } from '@/components/layout/ExecuteWeekButton';
+import { PrimaryCtaButton } from '@/components/layout/PrimaryCtaButton';
 import { audioManager } from '@/lib/AudioManager';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -364,7 +364,7 @@ function HeaderActions({
 }: HeaderActionsProps) {
   return (
     <div className="flex items-center gap-3">
-      <ExecuteWeekButton />
+      <PrimaryCtaButton />
       <Separator orientation="vertical" className="h-6 bg-white/5" />
       <MuteButton />
       <SaveButton lastSavedAt={lastSavedAt} />

@@ -4,6 +4,7 @@ import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { WorldStats } from '@/components/world/WorldStats';
 import { StableRankings } from '@/components/world/StableRankings';
@@ -81,7 +82,7 @@ export default function WorldOverview() {
   const topStableId = stableRows[0]?.id ?? null;
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto pb-20">
+    <PageFrame maxWidth="lg" className="space-y-12 pb-20">
       <PageHeader
         title="World Overview"
         subtitle={`WORLD · ${state.season} · RANKINGS`}
@@ -195,6 +196,6 @@ export default function WorldOverview() {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageFrame>
   );
 }

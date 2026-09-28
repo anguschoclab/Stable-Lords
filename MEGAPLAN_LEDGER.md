@@ -155,3 +155,19 @@ Test updates this batch: `navigationHubs.test.ts` world-hub page count 8 → 10 
 | `83b0ece5` | 7 | Registry detail-depth guard | `page.goto('/stable')` revealed `/` is the title screen — the in-app overview is `/stable`, which resolved to no CTA (conformance gap). Added `/stable` → EXECUTE WEEK; added a depth guard so a prefix match with ≥2 trailing segments resolves null (`/stable/promoter/p1` stays CTA-free per spec). L1 spec still green. |
 | `81161e2f` | 8 | Gate prep | Terminology banned-list vs bible conflict resolved: `EXECUTE WEEK`/`EXECUTE DAY` were banned as pre-bible sci-fi jargon, but DESIGN_PAGE_SYSTEM §1 mandates `EXECUTE WEEK N` — bans removed. `useAdminTools` test expectations updated for the motion-sweep toast reword. M1 dispositioned: `advanceWeekPerformance` promoted to `.slow.test.ts` (timing-ratio flake under parallel load; passes isolated and under `vitest.config.slow.ts`). Lint warnings zeroed: JSDoc on Phase-3/4 extracted exports; `FOCUS_LABELS` moved to `councilCardConfig.ts` (react-refresh). Seasonal soak updated for the per-route CTA: `ADVANCE_RE` → `/(EXECUTE WEEK\|ADVANCE DAY) \d+/`; `ensureAdvanceRoute` navigates to the overview before polling/clicking advance. |
 | `78947f9c` | 8 | Seasonal soak schedule repair | `e2e/seasonal-tournament.spec.ts` encoded the pre-rework schedule (tournaments on season-final weeks 13/26/39/52); the engine schedules `SEASONAL_TOURNAMENT_WEEKS = [10,20,30,42]` plus the champions-only Grand Championship at 52 — spec stale since the championship rework, not an engine regression. Repairs: `EXPECTED_SEASON` → 10→Spring/20→Summer/30→Fall/42→Winter/52→Winter (seasons span weeks 1–13/14–26/27–39/40–52); year-1 tournament count 16 → 17 (4 tiers × 4 seasonal weeks + champions bracket); week-52 dispatched to a new `runChampionsWeek` path — champions-only bracket resolves via pure day ticks (`resolveTournamentDay` in `TickOrchestrator` is tier-agnostic), crowned via `recordGrandChampions`, which bypasses tier purses so `verifyPrizePayout` intentionally does not apply; completed-tourney assertions → year-1 weeks [10,20,30,42,52] seasons [Spring,Summer,Fall,Winter,Winter]; year-2 endpoint rolled from week 13/14 to the actual spring tournament week 10 → ends week 11 (still Spring), header `EXECUTE WEEK 11`. |
+| pending-2 | 8 | >200 fn re-decomposition | ArenaHub (202) and Tournaments (202) crept over the Phase-3c zero-`>200` achievement via Phase-5/6 additions. `handleExecuteRound` extracted to `src/hooks/useExecuteTournamentRound.ts`; `matchCard` memo extracted to `src/components/run-round/buildMatchCard.ts`. Function census back to 0 fns >200 (239 >80, 95 >120 unchanged at ratchet). |
+
+## Final Metrics (post-megaplan, vs baseline @ `3bc5476e`)
+
+| Metric | Baseline | Final | Δ |
+|---|---|---|---|
+| src files / LOC | 989 / 118,248 | 1,113 / 121,571 | +124 files / +3,323 LOC (new pages, hooks, guards, extracted modules) |
+| test files / LOC | — | 742 / 125,487 | test surface now exceeds source LOC |
+| functions >80 / >120 / >200 | 239 / 112 / 25 | 239 / 95 / **0** | −17 >120, all >200 decomposed |
+| files >800 lines | ≥5 | 2 | monoliths split (`arenas`, `traitDefs`, `state.types`, `chaosHandlers`, `loreData`, `weekPipelineService`…) |
+| src↔src dup pairs | 84 | 128 | +44 — Phase-3 splits legitimately duplicated handler-signature shapes; enumerated + ratcheted (no novel pairs allowed) |
+| default vitest | 692 files / 8,172 pass / 2 skip / 1 flaky | 706 files / **8,204 pass** / 2 skip / 0 fail | flake promoted to `.slow` config |
+| slow vitest | deferred | 3 tests green | includes relocated `advanceWeekPerformance` |
+| type-check / lint | 0 err / 0 warn | 0 err / 0 warn | maintained |
+| UI audit | 89 token + 114 motion + 93 copy + fake-chrome/rng hits | **0** across all 5 categories | 7 pre-existing undefined CSS vars fixed |
+| e2e (chromium) | deferred | 3/3 specs green | golden-path 37s, primary-cta, seasonal soak 13.5m (full year + rollover) |

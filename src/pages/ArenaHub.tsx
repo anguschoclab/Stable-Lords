@@ -2,8 +2,7 @@ import { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
-import { generatePairings } from '@/engine/bout/core/pairings';
-import type { RivalStableData } from '@/types/game';
+import { buildMatchCard } from '@/components/run-round/buildMatchCard';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
@@ -307,18 +306,7 @@ export default function ArenaHub() {
   );
   const gameState = useWorldState();
 
-  const matchCard = useMemo(
-    () =>
-      generatePairings(gameState).pairings.map((p) => ({
-        playerWarrior: p.a,
-        rivalWarrior: p.d,
-        rivalStable:
-          gameState.rivals.find((r: RivalStableData) => r.owner.id === p.rivalStableId) ||
-          ({ owner: { id: p.rivalStableId, stableName: p.rivalStable } } as RivalStableData),
-        isRivalryBout: p.isRivalry,
-      })),
-    [gameState]
-  );
+  const matchCard = useMemo(() => buildMatchCard(gameState), [gameState]);
 
   const { handleStartAutosim, autosimming, autosimProgress, autosimResult, setAutosimResult } =
     useWeekExecution();

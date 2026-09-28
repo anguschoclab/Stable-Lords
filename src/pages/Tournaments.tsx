@@ -2,11 +2,10 @@
  * Stable Lords — Seasonal Tournaments (Refactored)
  * Modularized for better maintainability and strict type safety.
  */
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useGameStore, reconstructGameState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
-import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -14,10 +13,9 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Trophy, UserPlus, ShieldCheck } from 'lucide-react';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { audioManager } from '@/lib/AudioManager';
-import { engineProxy } from '@/engine/runtime/workerProxy';
 import { Link } from '@tanstack/react-router';
-import { toast } from 'sonner';
 import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
+import { useExecuteTournamentRound } from '@/hooks/useExecuteTournamentRound';
 
 // Modular Components
 import { isActive } from '@/engine/warrior/warriorStatus';
@@ -132,30 +130,12 @@ export default function Tournaments() {
     }
   }, [isTournamentReadyToStart, hasShownPrep, currentTournament]);
 
-  const handleExecuteRound = useCallback(async () => {
-    if (!currentTournament) return;
-
-    setSimulating(true);
-    try {
-      const state = useGameStore.getState();
-      const currentFullState = reconstructGameState(state);
-
-      const { updatedState, roundResults } = await engineProxy.resolveTournamentRound(
-        currentFullState,
-        currentTournament.id,
-        cryptoRandomInt(0, 2147483647)
-      );
-
-      loadGame(activeSlotId || 'autosave', updatedState);
-      audioManager.play('clash');
-      toast.success(roundResults.length > 0 ? 'Round resolved.' : 'Tournament complete.');
-    } catch (error) {
-      console.error('Tournament resolution failed:', error);
-      toast.error('Resolution failed.');
-    } finally {
-      setSimulating(false);
-    }
-  }, [currentTournament, activeSlotId, loadGame, setSimulating]);
+  const handleExecuteRound = useExecuteTournamentRound({
+    tournament: currentTournament,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+  });
 
   // Top-bar ADVANCE BRACKET CTA — resolves the next round of the live bracket;
   // disabled when no unresolved tournament is on the card.

@@ -1,147 +1,26 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { GameState, TournamentEntry, TournamentBout, Warrior } from '@/types/state.types';
+import type { GameState, TournamentEntry, Warrior } from '@/types/state.types';
 import {
   FightingStyle,
   type WarriorId,
-  type StableId,
   type TournamentId,
 } from '@/types/shared.types';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { clearWarriorCache } from '@/engine/core/warriorLookup';
 import { awardTournamentPrizes } from '@/engine/matchmaking/tournamentSelection/awards';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  TOURNEY_PLAYER_ID,
+  TOURNEY_RIVAL_ID,
+  makeTournamentBaseState,
+  makeTournamentWarrior,
+  makeCompletedTournament,
+} from '@/test/_fixtures/tournamentState';
 
 // ─── Constants ───
 
-const PLAYER_ID = 'stable-player' as StableId;
-const RIVAL_ID = 'stable-rival-1' as StableId;
+const PLAYER_ID = TOURNEY_PLAYER_ID;
+const RIVAL_ID = TOURNEY_RIVAL_ID;
 
-// ─── Helpers ───
-
-const makeBaseState = (): GameState =>
-  fixtureGameState({
-    meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-    player: {
-      id: PLAYER_ID,
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    week: 5,
-    year: 1,
-    treasury: 1000,
-    fame: 0,
-    popularity: 0,
-    roster: [],
-    rivals: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    graveyard: [],
-    retired: [],
-    trainers: [],
-    hiringPool: [],
-    recruitPool: [],
-    scoutReports: [],
-    hallOfFame: [],
-    tournaments: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    isFTUE: false,
-    unacknowledgedDeaths: [],
-    crowdMood: 'Calm',
-    day: 0,
-    isTournamentWeek: false,
-    activeTournamentId: undefined,
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    ledger: [],
-    rosterBonus: 0,
-    ftueComplete: true,
-    ftueStep: 0,
-    coachDismissed: [],
-    rivalMap: new Map(),
-    warriorMap: new Map(),
-  });
-
-function makeTestWarrior(
-  id: string,
-  name: string,
-  style: FightingStyle = FightingStyle.StrikingAttack,
-  stableId: StableId = PLAYER_ID,
-  overrides: Partial<Warrior> = {}
-): Warrior {
-  return makeWarrior(
-    id as WarriorId,
-    name,
-    style,
-    { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    { stableId, ...overrides }
-  );
-}
-
-function makeCompletedTournament(
-  warriors: Warrior[],
-  winnerFirst: 'A' | 'D' = 'A',
-  winnerThird: 'A' | 'D' = 'A',
-  tierId = 'Gold',
-  tournamentId = 't-gold-spring-1'
-): TournamentEntry {
-  const wA = warriors[0]!;
-  const wB = warriors[1]!;
-  const wC = warriors[2]!;
-  const wD = warriors[3]!;
-
-  const bracket: TournamentBout[] = [
-    {
-      round: 6,
-      matchIndex: 0,
-      warriorIdA: wA.id,
-      warriorIdD: wB.id,
-      stableIdA: wA.stableId,
-      stableIdD: wB.stableId,
-      winner: winnerFirst,
-      by: 'Stoppage',
-    },
-    {
-      round: 6,
-      matchIndex: 1,
-      warriorIdA: wC.id,
-      warriorIdD: wD.id,
-      stableIdA: wC.stableId,
-      stableIdD: wD.stableId,
-      winner: winnerThird,
-      by: 'Stoppage',
-    },
-  ];
-
-  return {
-    id: tournamentId as TournamentId,
-    season: 'Spring',
-    week: 1,
-    tierId,
-    name: 'Imperial Gold Cup',
-    bracket,
-    participants: warriors,
-    completed: true,
-    champion: winnerFirst === 'A' ? wA.name : wB.name,
-  };
-}
+const makeBaseState = () => makeTournamentBaseState(5);
 
 function makePlayerState(w1: Warrior, ...rivalWarriors: Warrior[]): GameState {
   const state = makeBaseState();
@@ -167,25 +46,25 @@ function makePlayerState(w1: Warrior, ...rivalWarriors: Warrior[]): GameState {
 
 function makeFourWarriors(playerIndex = 0): [Warrior, Warrior, Warrior, Warrior] {
   return [
-    makeTestWarrior(
+    makeTournamentWarrior(
       'w1',
       'Champ',
       FightingStyle.StrikingAttack,
       0 === playerIndex ? PLAYER_ID : RIVAL_ID
     ),
-    makeTestWarrior(
+    makeTournamentWarrior(
       'w2',
       'Runner',
       FightingStyle.StrikingAttack,
       1 === playerIndex ? PLAYER_ID : RIVAL_ID
     ),
-    makeTestWarrior(
+    makeTournamentWarrior(
       'w3',
       'Bronzer',
       FightingStyle.StrikingAttack,
       2 === playerIndex ? PLAYER_ID : RIVAL_ID
     ),
-    makeTestWarrior(
+    makeTournamentWarrior(
       'w4',
       'Fourth',
       FightingStyle.StrikingAttack,

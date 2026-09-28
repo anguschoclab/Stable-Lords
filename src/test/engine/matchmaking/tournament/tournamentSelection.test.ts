@@ -3,14 +3,17 @@ import type { GameState, TournamentEntry, TournamentBout, Warrior } from '@/type
 import type { FightOutcome, FightOutcomeBy } from '@/types/combat.types';
 import {
   FightingStyle,
-  type WarriorId,
-  type StableId,
   type TournamentId,
 } from '@/types/shared.types';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNG } from '@/utils/random';
 import { getPairKey } from '@/utils/keyUtils';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  TOURNEY_PLAYER_ID,
+  TOURNEY_RIVAL_ID,
+  makeTournamentBaseState,
+  makeTournamentWarrior,
+  makeCompletedTournament,
+} from '@/test/_fixtures/tournamentState';
 // ─── Mock simulateFight before importing resolution ───
 vi.mock('@/engine/simulate', () => ({
   simulateFight: vi.fn(() => ({
@@ -68,85 +71,10 @@ import { simulateFight } from '@/engine/simulate';
 
 // ─── Helpers ───
 
-const PLAYER_ID = 'stable-player' as StableId;
-const RIVAL_ID = 'stable-rival-1' as StableId;
+const PLAYER_ID = TOURNEY_PLAYER_ID;
+const RIVAL_ID = TOURNEY_RIVAL_ID;
 
-const makeBaseState = (): GameState =>
-  fixtureGameState({
-    meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
-    player: {
-      id: PLAYER_ID,
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    week: 1,
-    year: 1,
-    treasury: 1000,
-    fame: 0,
-    popularity: 0,
-    roster: [],
-    rivals: [],
-    arenaHistory: [],
-    newsletter: [],
-    gazettes: [],
-    graveyard: [],
-    retired: [],
-    trainers: [],
-    hiringPool: [],
-    recruitPool: [],
-    scoutReports: [],
-    hallOfFame: [],
-    tournaments: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    isFTUE: false,
-    unacknowledgedDeaths: [],
-    crowdMood: 'Calm',
-    day: 0,
-    isTournamentWeek: false,
-    activeTournamentId: undefined,
-    promoters: {},
-    boutOffers: {},
-    realmRankings: {},
-    awards: [],
-    phase: 'planning',
-    season: 'Spring',
-    weather: 'Clear',
-    ledger: [],
-    rosterBonus: 0,
-    ftueComplete: true,
-    ftueStep: 0,
-    coachDismissed: [],
-    rivalMap: new Map(),
-    warriorMap: new Map(),
-  });
-
-function makeTestWarrior(
-  id: string,
-  name: string,
-  style: FightingStyle = FightingStyle.StrikingAttack,
-  stableId: StableId = PLAYER_ID,
-  overrides: Partial<Warrior> = {}
-): Warrior {
-  return makeWarrior(
-    id as WarriorId,
-    name,
-    style,
-    { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    { stableId, ...overrides }
-  );
-}
+const makeBaseState = () => makeTournamentBaseState(1);
 
 function makeFightOutcome(winner: 'A' | 'D', by: FightOutcomeBy = 'Stoppage'): FightOutcome {
   return {
@@ -157,52 +85,6 @@ function makeFightOutcome(winner: 'A' | 'D', by: FightOutcomeBy = 'Stoppage'): F
     exchangeLog: [],
     post: { tags: [] } as any,
   } as FightOutcome;
-}
-
-function makeCompletedTournament(
-  warriors: Warrior[],
-  winnerFirst: 'A' | 'D' = 'A',
-  winnerThird: 'A' | 'D' = 'A'
-): TournamentEntry {
-  const wA = warriors[0]!;
-  const wB = warriors[1]!;
-  const wC = warriors[2]!;
-  const wD = warriors[3]!;
-
-  const bracket: TournamentBout[] = [
-    {
-      round: 6,
-      matchIndex: 0,
-      warriorIdA: wA.id,
-      warriorIdD: wB.id,
-      stableIdA: wA.stableId,
-      stableIdD: wB.stableId,
-      winner: winnerFirst,
-      by: 'Stoppage',
-    },
-    {
-      round: 6,
-      matchIndex: 1,
-      warriorIdA: wC.id,
-      warriorIdD: wD.id,
-      stableIdA: wC.stableId,
-      stableIdD: wD.stableId,
-      winner: winnerThird,
-      by: 'Stoppage',
-    },
-  ];
-
-  return {
-    id: 't-gold-spring-1' as TournamentId,
-    season: 'Spring',
-    week: 1,
-    tierId: 'Gold',
-    name: 'Imperial Gold Cup',
-    bracket,
-    participants: warriors,
-    completed: true,
-    champion: winnerFirst === 'A' ? wA.name : wB.name,
-  };
 }
 
 function makeTournamentWithR1(warriors: Warrior[]): TournamentEntry {
@@ -233,10 +115,10 @@ function makeTournamentWithR1(warriors: Warrior[]): TournamentEntry {
 
 describe('awardTournamentPrizes', () => {
   it('awards medals to 1st, 2nd, and 3rd place warriors', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w3 = makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w4 = makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -271,10 +153,10 @@ describe('awardTournamentPrizes', () => {
   });
 
   it('awards correct fame amounts', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w3 = makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w4 = makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -304,10 +186,10 @@ describe('awardTournamentPrizes', () => {
   });
 
   it('awards treasury and creates ledger entry for player', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w3 = makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w4 = makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.treasury = 1000;
@@ -338,10 +220,10 @@ describe('awardTournamentPrizes', () => {
   });
 
   it('grants roster bonus for 1st place', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w3 = makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w4 = makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -369,10 +251,10 @@ describe('awardTournamentPrizes', () => {
   });
 
   it('derives correct tier and purse from tournament data', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w3 = makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w4 = makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.treasury = 0;
@@ -404,8 +286,8 @@ describe('awardTournamentPrizes', () => {
   });
 
   it('handles missing bronze match (only 1st and 2nd awarded)', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -438,10 +320,10 @@ describe('awardTournamentPrizes', () => {
   });
 
   it('updates rival stable treasury and fame', () => {
-    const w1 = makeTestWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w3 = makeTestWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
-    const w4 = makeTestWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'Champ', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'Runner', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('w3', 'Bronzer', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('w4', 'Fourth', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -476,7 +358,7 @@ describe('awardTournamentPrizes', () => {
 
 describe('modifyWarrior (awards.ts)', () => {
   it('updates warrior in player roster', () => {
-    const w = makeTestWarrior('w1', 'PlayerWarrior', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w = makeTournamentWarrior('w1', 'PlayerWarrior', FightingStyle.StrikingAttack, PLAYER_ID);
     const state = makeBaseState();
     state.roster = [w];
 
@@ -488,7 +370,7 @@ describe('modifyWarrior (awards.ts)', () => {
   });
 
   it('updates warrior in rival roster', () => {
-    const w = makeTestWarrior('w1', 'RivalWarrior', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w = makeTournamentWarrior('w1', 'RivalWarrior', FightingStyle.StrikingAttack, RIVAL_ID);
     const state = makeBaseState();
     state.rivals = [
       {
@@ -515,7 +397,7 @@ describe('modifyWarrior (awards.ts)', () => {
   });
 
   it('does not mutate original state', () => {
-    const w = makeTestWarrior('w1', 'PlayerWarrior', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w = makeTournamentWarrior('w1', 'PlayerWarrior', FightingStyle.StrikingAttack, PLAYER_ID);
     const state = makeBaseState();
     state.roster = [w];
 
@@ -538,8 +420,8 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
   });
 
   it('returns empty results for completed tournament', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     const tournament = makeCompletedTournament([w1, w2, w1, w2]);
@@ -554,7 +436,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const warriors: Warrior[] = [];
     for (let i = 0; i < 4; i++) {
       warriors.push(
-        makeTestWarrior(
+        makeTournamentWarrior(
           `w${i}`,
           `Warrior ${i}`,
           FightingStyle.StrikingAttack,
@@ -602,7 +484,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const warriors: Warrior[] = [];
     for (let i = 0; i < 6; i++) {
       warriors.push(
-        makeTestWarrior(
+        makeTournamentWarrior(
           `w${i}`,
           `Warrior ${i}`,
           FightingStyle.StrikingAttack,
@@ -653,7 +535,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
   });
 
   it('handles missing warrior by auto-advancing the opponent', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -674,7 +556,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const warriors: Warrior[] = [];
     for (let i = 0; i < 8; i++) {
       warriors.push(
-        makeTestWarrior(
+        makeTournamentWarrior(
           `w${i}`,
           `Warrior ${i}`,
           FightingStyle.StrikingAttack,
@@ -745,8 +627,8 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
   });
 
   it('marks tournament complete after finals and sets champion', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -803,8 +685,8 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 
 describe('resolveCompleteTournament', () => {
   it('resolves all rounds to completion', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -855,8 +737,8 @@ describe('resolveCompleteTournament', () => {
   });
 
   it('returns same state if tournament is already completed', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     const tournament = makeCompletedTournament([w1, w2, w1, w2]);
@@ -872,7 +754,7 @@ describe('resolveCompleteTournament', () => {
       const ws: Warrior[] = [];
       for (let i = 0; i < 8; i++) {
         ws.push(
-          makeTestWarrior(
+          makeTournamentWarrior(
             `gw${i}`,
             `Golden Warrior ${i}`,
             FightingStyle.StrikingAttack,
@@ -932,8 +814,8 @@ describe('resolveCompleteTournament', () => {
 
 describe('applyBoutResults', () => {
   it('creates fight summary and appends to arena history', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -963,8 +845,8 @@ describe('applyBoutResults', () => {
   });
 
   it('updates fatigue for both warriors', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, { fatigue: 0 });
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, { fatigue: 0 });
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, { fatigue: 0 });
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, { fatigue: 0 });
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -997,8 +879,8 @@ describe('applyBoutResults', () => {
   });
 
   it('skips fatigue when isTournamentWeek is true', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, { fatigue: 10 });
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, { fatigue: 10 });
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, { fatigue: 10 });
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, { fatigue: 10 });
 
     const state = makeBaseState();
     state.isTournamentWeek = true;
@@ -1032,8 +914,8 @@ describe('applyBoutResults', () => {
   });
 
   it('handles death by adding victim to graveyard and removing from rosters', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -1066,8 +948,8 @@ describe('applyBoutResults', () => {
   });
 
   it('updates career stats for winner and loser', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -1104,7 +986,7 @@ describe('applyBoutResults', () => {
 
 describe('getAIPlan', () => {
   it('returns default plan with killDesire 7 for non-rival warrior', () => {
-    const w = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
     const state = makeBaseState();
 
     const plan = getAIPlan(state, w);
@@ -1114,7 +996,7 @@ describe('getAIPlan', () => {
   });
 
   it('uses rivalMap for rival lookup', () => {
-    const w = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, RIVAL_ID);
     const state = makeBaseState();
     state.rivalMap = new Map([
       [
@@ -1143,7 +1025,7 @@ describe('getAIPlan', () => {
   });
 
   it('passes grudge intensity when owner grudge exists', () => {
-    const w = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, RIVAL_ID);
     const state = makeBaseState();
     state.rivalMap = new Map([
       [
@@ -1215,7 +1097,7 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
     const warriors: Warrior[] = [];
     for (let i = 0; i < 4; i++) {
       warriors.push(
-        makeTestWarrior(
+        makeTournamentWarrior(
           `w${i}`,
           `Warrior ${i}`,
           FightingStyle.StrikingAttack,
@@ -1269,7 +1151,7 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
     const warriors: Warrior[] = [];
     for (let i = 0; i < 4; i++) {
       warriors.push(
-        makeTestWarrior(
+        makeTournamentWarrior(
           `w${i}`,
           `Warrior ${i}`,
           FightingStyle.StrikingAttack,
@@ -1307,8 +1189,8 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
   });
 
   it('resolveCompleteTournament uses returned isComplete', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -1364,7 +1246,7 @@ describe('resolveRound — updatedTournament return field (tournamentSelection)'
     const warriors: Warrior[] = [];
     for (let i = 0; i < 4; i++) {
       warriors.push(
-        makeTestWarrior(
+        makeTournamentWarrior(
           `w${i}`,
           `Warrior ${i}`,
           FightingStyle.StrikingAttack,
@@ -1410,8 +1292,8 @@ describe('resolveRound — updatedTournament return field (tournamentSelection)'
   });
 
   it('returns updatedTournament as undefined when tournament already completed', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     const tournament = makeCompletedTournament([w1, w2, w1, w2]);
@@ -1426,8 +1308,8 @@ describe('resolveRound — updatedTournament return field (tournamentSelection)'
 
 describe('applyBoutResults — deathWeek at year boundary', () => {
   it('should set deathWeek to absoluteWeek (not display week) for tournament kills', () => {
-    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
-    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
     state.week = 1;
@@ -1478,7 +1360,7 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
       const isSlotA = i % 2 === 0;
       const stableId = isSlotA === (aWins === 'player') ? PLAYER_ID : RIVAL_ID;
       ws.push(
-        makeTestWarrior(`bw${i}`, `Bracket Warrior ${i}`, FightingStyle.StrikingAttack, stableId)
+        makeTournamentWarrior(`bw${i}`, `Bracket Warrior ${i}`, FightingStyle.StrikingAttack, stableId)
       );
     }
     return ws;

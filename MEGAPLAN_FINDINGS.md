@@ -121,10 +121,10 @@ No new AI-only gaps surfaced by scan; prior audit's intentional-divergence NOTES
 | I7 | `narrative/lore/loreData.ts` | 659 | APPROVED → thematic shards + index |
 | I8 | `pipeline/services/weekPipelineService.ts` | 611 | APPROVED → `weekPipeline/{passes,context,caches,runner,index}` |
 | I9 | `types/shared.types.ts` | 568 | APPROVED → split by domain + barrel (same pattern as I6) |
-| I10 | `constants/arena/weather.ts` | 532 | verdict pending deep read — likely data-shardable |
-| I11 | `constants/combat/combat.ts` | 509 | pending read (combat-balance skill governs) |
-| I12 | `data/equipment/weapons.ts` | 508 | data; keep-or-shard by verdict |
-| I13 | `types/narrative.types.ts` | 503 | pending read |
+| I10 | `constants/arena/weather.ts` | 532 | **DONE** → `arena/weather/{config,penalties,index}` + `weatherStats`/`weatherAmbience` |
+| I11 | `constants/combat/combat.ts` | 509 | **DONE** → `combat/{global,balance,matchup,meta}` + 4-line re-export barrel |
+| I12 | `data/equipment/weapons.ts` | 508 | **DONE** → `weapons/items.ts` (+ `weaponStyles`); `weapons.ts` is now a 25-line re-export barrel |
+| I13 | `types/narrative.types.ts` | 503 | **DONE** → `types/narrative/{conclusions,events,fanfare,gazette,memorials,meta,passives,pbp,personas,recruitment,root,strikes,uxMetadata}` + 13-line barrel |
 | I14 | `pages/ArenaDetail.tsx` 568 | — | decomposed via J-table (not a file split) |
 
 ## J. Long functions — authoritative (239 >80; top 25 >200 list)

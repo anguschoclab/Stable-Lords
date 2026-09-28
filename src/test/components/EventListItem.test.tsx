@@ -6,22 +6,7 @@ import { EventListItem } from '@/components/eventLog/EventListItem';
 import type { GameEvent } from '@/types/eventLog';
 import { ScrollText } from 'lucide-react';
 
-vi.mock('@/components/EntityLink', () => ({
-  WarriorLink: ({ name }: { name: string }) => (
-    <span
-      data-testid="warrior-link"
-      data-name={name}
-      aria-label={`Open details for warrior ${name}`}
-    >
-      {name}
-    </span>
-  ),
-  StableLink: ({ name }: { name: string }) => (
-    <span data-testid="stable-link" data-name={name} aria-label={`Open details for stable ${name}`}>
-      {name}
-    </span>
-  ),
-}));
+vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
 function makeEvent(overrides: Partial<GameEvent> = {}): GameEvent {
   return {

@@ -6,6 +6,7 @@ import { getStylePassive } from '@/engine/stylePassives';
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 import { INITIATIVE_PRESS_BONUS, GLOBAL_ATT_BONUS } from '@/constants/combat';
 import type { FighterState } from '@/engine/combat/resolution/types';
+import { makeFighterState } from '@/test/_fixtures/factories';
 
 /**
  * Attack Check — exhaustive coverage for performAttackCheck modifier accumulation
@@ -13,44 +14,20 @@ import type { FighterState } from '@/engine/combat/resolution/types';
  */
 
 function createMockFighter(overrides: Partial<FighterState> = {}): FighterState {
-  return {
-    label: 'A',
+  const combatPlan = {
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    OE: 5,
+    AL: 5,
+    killDesire: 5,
+    target: 'Any',
+  } as any;
+  return makeFighterState({
     derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 10 },
-    plan: {
-      style: FightingStyle.StrikingAttack,
-      OE: 5,
-      AL: 5,
-      killDesire: 5,
-      target: 'Any',
-    } as any,
-    activePlan: {
-      style: FightingStyle.StrikingAttack,
-      OE: 5,
-      AL: 5,
-      killDesire: 5,
-      target: 'Any',
-    } as any,
+    plan: combatPlan,
+    activePlan: combatPlan,
     psychState: 'CRUISING' as any,
-    hp: 100,
-    maxHp: 100,
-    endurance: 100,
-    maxEndurance: 100,
-    hitsLanded: 0,
-    hitsTaken: 0,
-    ripostes: 0,
-    consecutiveHits: 0,
-    armHits: 0,
-    legHits: 0,
-    totalFights: 0,
-    momentum: 0,
-    committed: false,
-    survivalStrike: false,
-    recoveryDebt: 0,
     ...overrides,
-  } as FighterState;
+  });
 }
 
 const zeroOffMods = getOffensiveTacticMods('none', FightingStyle.StrikingAttack);

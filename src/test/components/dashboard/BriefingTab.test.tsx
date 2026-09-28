@@ -14,22 +14,7 @@ vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: any) => fn,
 }));
 
-vi.mock('@/components/EntityLink', () => ({
-  WarriorLink: ({ name }: { name: string }) => (
-    <span
-      data-testid="warrior-link"
-      data-name={name}
-      aria-label={`Open details for warrior ${name}`}
-    >
-      {name}
-    </span>
-  ),
-  StableLink: ({ name }: { name: string }) => (
-    <span data-testid="stable-link" data-name={name} aria-label={`Open details for stable ${name}`}>
-      {name}
-    </span>
-  ),
-}));
+vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
 vi.mock('@/components/ui/scroll-area', () => ({
   ScrollArea: ({ children }: any) => <div>{children}</div>,

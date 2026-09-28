@@ -19,7 +19,7 @@ import type {
   Promoter,
   RivalStableData,
 } from '@/types/state.types';
-import type { FightSummary } from '@/types/combat.types';
+import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import type { FightPlan, Trainer } from '@/types/shared.types';
 import type { Rivalry, OwnerGrudge } from '@/types/state.types';
 import type { DerivedRivalry } from '@/types/rivalry.types';
@@ -257,6 +257,32 @@ export function makePoolWarrior(over: Partial<PoolWarrior> = {}): PoolWarrior {
   } as PoolWarrior;
 }
 
+/** 'Promising'-tier recruit preset shared by the recruitment/draft tests. */
+export function makeTestRecruit(over: Partial<PoolWarrior> = {}): PoolWarrior {
+  return {
+    id: 'recruit_test',
+    name: 'Test Recruit',
+    style: FightingStyle.StrikingAttack,
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    potential: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+    baseSkills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+    derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 12 },
+    tier: 'Promising',
+    cost: 100,
+    age: 18,
+    lore: 'A test recruit.',
+    traits: ['IronWill'],
+    addedWeek: 1,
+    favorites: {
+      weaponId: 'longsword',
+      rhythm: { oe: 7, al: 5 },
+      discovered: { weapon: true, rhythm: false, weaponHints: 1, rhythmHints: 0 },
+    },
+    lineage: { generation: 1, pedigree: 'Commoner' },
+    ...over,
+  } as any;
+}
+
 /** Leaderboard row — rank varies by index so tables render sorted data. */
 export function makeWarriorRow(i: number, over: Partial<WarriorRow> = {}): WarriorRow {
   return {
@@ -444,4 +470,79 @@ export function makeDerivedRivalry(over: Partial<DerivedRivalry> = {}): DerivedR
     playerLosses: 4,
     ...over,
   } as DerivedRivalry;
+}
+
+/** FightOutcome with a 3-exchange kill log (fatal crit on exchange 2). */
+export function makeKillOutcome(over: Partial<FightOutcome> = {}): FightOutcome {
+  return {
+    winner: 'A',
+    by: 'Kill',
+    minutes: 7,
+    log: [],
+    exchangeLog: [
+      {
+        exchangeIndex: 0,
+        minute: 1,
+        iniWinner: 'A',
+        attResult: 'hit',
+        damage: 4,
+        endDeltas: { a: -3, d: -5 },
+      },
+      {
+        exchangeIndex: 1,
+        minute: 2,
+        iniWinner: 'A',
+        attResult: 'hit',
+        damage: 6,
+        endDeltas: { a: -3, d: -6 },
+      },
+      {
+        exchangeIndex: 2,
+        minute: 3,
+        iniWinner: 'A',
+        attResult: 'crit',
+        damage: 12,
+        killWindow: true,
+        executionFlag: true,
+        reasonCodes: ['AI_PUSH_FATIGUE'],
+      },
+    ],
+    post: {
+      xpA: 10,
+      xpD: 2,
+      hitsA: 3,
+      hitsD: 0,
+      gotKillA: true,
+      causeBucket: 'FATAL_DAMAGE',
+      fatalExchangeIndex: 2,
+    },
+    ...over,
+  };
+}
+
+/** Positional warrior preset used by the page-level component tests. */
+export function makeNamedWarrior(
+  name: string,
+  status: Warrior['status'],
+  wins: number,
+  losses: number,
+  fame: number,
+  over: Partial<Warrior> = {}
+): Warrior {
+  return {
+    id: name,
+    name,
+    status,
+    style: FightingStyle.AimedBlow,
+    age: 20,
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    fame,
+    popularity: 0,
+    career: { wins, losses, kills: 0 },
+    titles: [],
+    injuries: [],
+    flair: [],
+    champion: false,
+    ...over,
+  } as Warrior;
 }

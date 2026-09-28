@@ -9,7 +9,8 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeSeasonalTestState } from '@/test/_fixtures/seasonalState';
 
 const makeWarrior = (name: string): Warrior =>
   fixtureWarrior({
@@ -22,73 +23,7 @@ const makeWarrior = (name: string): Warrior =>
   } as any);
 
 const makeState = (roster: Warrior[] = []): GameState =>
-  fixtureGameState({
-    meta: { gameName: '', version: '', createdAt: '' },
-    ftueComplete: true,
-    ftueStep: undefined,
-    coachDismissed: [],
-    player: {
-      id: 'p1' as any,
-      name: 'Player',
-      stableName: 'Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-    },
-    fame: 100,
-    popularity: 50,
-    treasury: 1000,
-    ledger: [],
-    week: 13,
-    year: 1,
-    absoluteWeek: 13,
-    phase: 'planning',
-    season: 'Winter',
-    weather: 'Clear',
-    roster,
-    graveyard: [],
-    retired: [],
-    arenaHistory: [],
-    newsletter: [],
-    rivals: [],
-    gazettes: [],
-    hallOfFame: [],
-    crowdMood: 'Calm',
-    tournaments: [],
-    trainers: [],
-    hiringPool: [],
-    trainingAssignments: [],
-    seasonalGrowth: [],
-    scoutReports: [],
-    restStates: [],
-    rivalries: [],
-    matchHistory: [],
-    recruitPool: [],
-    rosterBonus: 0,
-    ownerGrudges: [],
-    insightTokens: [],
-    moodHistory: [],
-    playerChallenges: [],
-    playerAvoids: [],
-    unacknowledgedDeaths: [],
-    isFTUE: false,
-    day: 1,
-    isTournamentWeek: false,
-    promoters: {},
-    boutOffers: {},
-    activeTournamentId: undefined,
-    realmRankings: {},
-    awards: [],
-    bookmarks: [],
-    progression: {
-      phase: 'Early',
-      playerFame: 100,
-      rivalCount: 0,
-      tournamentCount: 0,
-      deaths: 0,
-      weeksElapsed: 13,
-    } as any,
-  } as any);
+  makeSeasonalTestState(roster);
 
 describe('chaos_weavers_gift offseason event', () => {
   it('runSeasonalPass does not throw with empty roster', () => {

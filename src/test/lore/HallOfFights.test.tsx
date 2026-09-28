@@ -59,29 +59,10 @@ vi.mock('@/lore/LoreArchive', () => {
 import { LoreArchive } from '@/lore/LoreArchive';
 
 // Mock the router components
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
-    <a href={to}>{children}</a>
-  ),
-}));
+vi.mock('@tanstack/react-router', async () => await import('@/test/_mocks/routerLink'));
 
 // Mock Radix UI Tabs to always render both contents for easy testing
-vi.mock('@/components/ui/tabs', () => {
-  return {
-    Tabs: ({ children, defaultValue }: any) => (
-      <div data-testid="tabs" data-default={defaultValue}>
-        {children}
-      </div>
-    ),
-    TabsList: ({ children }: any) => <div data-testid="tabs-list">{children}</div>,
-    TabsTrigger: ({ value, children }: any) => (
-      <button data-testid={`tab-trigger-${value}`}>{children}</button>
-    ),
-    TabsContent: ({ value, children }: any) => (
-      <div data-testid={`tab-content-${value}`}>{children}</div>
-    ),
-  };
-});
+vi.mock('@/components/ui/tabs', async () => await import('@/test/_mocks/radixTabs'));
 
 describe('HallOfFights Component', () => {
   let mockState: GameState;

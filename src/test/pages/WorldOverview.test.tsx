@@ -3,9 +3,9 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import WorldOverview from '@/pages/WorldOverview';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { FightingStyle } from '@/types/game';
 import type { Warrior, GameState } from '@/types/game';
 import '@/test/_setup/setup';
+import { makeNamedWarrior } from '@/test/_fixtures/factories';
 
 const mockStore = vi.hoisted(() => ({}) as any);
 let storeOverride: any = {};
@@ -50,62 +50,18 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 // Mock the router components
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
-    <a href={to}>{children}</a>
-  ),
-}));
+vi.mock('@tanstack/react-router', async () => await import('@/test/_mocks/routerLink'));
 
 // Mock Radix UI Tabs to always render both contents for easy testing
-vi.mock('@/components/ui/tabs', () => {
-  return {
-    Tabs: ({ children, defaultValue }: any) => (
-      <div data-testid="tabs" data-default={defaultValue}>
-        {children}
-      </div>
-    ),
-    TabsList: ({ children }: any) => <div data-testid="tabs-list">{children}</div>,
-    TabsTrigger: ({ value, children }: any) => (
-      <button data-testid={`tab-trigger-${value}`}>{children}</button>
-    ),
-    TabsContent: ({ value, children }: any) => (
-      <div data-testid={`tab-content-${value}`}>{children}</div>
-    ),
-  };
-});
+vi.mock('@/components/ui/tabs', async () => await import('@/test/_mocks/radixTabs'));
 
-/**
- * Utility to create a dummy warrior for testing.
- * @param name - The warrior's name.
- * @param status - The warrior's status.
- * @param wins - Number of wins.
- * @param losses - Number of losses.
- * @param fame - Fame value.
- * @returns A warrior object for testing.
- */
-function createDummyWarrior(
+const createDummyWarrior = (
   name: string,
   status: Warrior['status'],
   wins: number,
   losses: number,
   fame: number
-): Warrior {
-  return {
-    id: name,
-    name,
-    status,
-    style: FightingStyle.AimedBlow,
-    age: 20,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    fame,
-    popularity: 0,
-    career: { wins, losses, kills: 0 },
-    titles: [],
-    injuries: [],
-    flair: [],
-    champion: false,
-  } as any;
-}
+): Warrior => makeNamedWarrior(name, status, wins, losses, fame);
 
 describe('WorldOverview Component', () => {
   let mockState: GameState;

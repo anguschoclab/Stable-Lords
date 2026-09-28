@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
 import type { FightOutcome } from '@/types/combat.types';
+import { makeKillOutcome } from '@/test/_fixtures/factories';
 
 const baseWarrior = (over: Partial<any> = {}) => ({
   id: 'w1',
@@ -11,50 +12,7 @@ const baseWarrior = (over: Partial<any> = {}) => ({
   ...over,
 });
 
-const outcome = (over: Partial<FightOutcome> = {}): FightOutcome => ({
-  winner: 'A',
-  by: 'Kill',
-  minutes: 7,
-  log: [],
-  exchangeLog: [
-    {
-      exchangeIndex: 0,
-      minute: 1,
-      iniWinner: 'A',
-      attResult: 'hit',
-      damage: 4,
-      endDeltas: { a: -3, d: -5 },
-    },
-    {
-      exchangeIndex: 1,
-      minute: 2,
-      iniWinner: 'A',
-      attResult: 'hit',
-      damage: 6,
-      endDeltas: { a: -3, d: -6 },
-    },
-    {
-      exchangeIndex: 2,
-      minute: 3,
-      iniWinner: 'A',
-      attResult: 'crit',
-      damage: 12,
-      killWindow: true,
-      executionFlag: true,
-      reasonCodes: ['AI_PUSH_FATIGUE'],
-    },
-  ],
-  post: {
-    xpA: 10,
-    xpD: 2,
-    hitsA: 3,
-    hitsD: 0,
-    gotKillA: true,
-    causeBucket: 'FATAL_DAMAGE',
-    fatalExchangeIndex: 2,
-  },
-  ...over,
-});
+const outcome = (over: Partial<FightOutcome> = {}): FightOutcome => makeKillOutcome(over);
 
 describe('buildFightAnalysis', () => {
   it('identifies the decisive exchange from the fatal exchange index', () => {

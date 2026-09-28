@@ -22,9 +22,7 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: ({ styleName }: { styleName: string }) => <span>{styleName}</span>,
 }));
 
-vi.mock('@/components/EntityLink', () => ({
-  StableLink: ({ name }: { name: string }) => <span>{name}</span>,
-}));
+vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,

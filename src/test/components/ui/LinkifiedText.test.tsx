@@ -4,28 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
 
-vi.mock('@/components/EntityLink', () => ({
-  WarriorLink: ({ name, className }: { name: string; className?: string }) => (
-    <span
-      data-testid="warrior-link"
-      data-name={name}
-      className={className}
-      aria-label={`Open details for warrior ${name}`}
-    >
-      {name}
-    </span>
-  ),
-  StableLink: ({ name, className }: { name: string; className?: string }) => (
-    <span
-      data-testid="stable-link"
-      data-name={name}
-      className={className}
-      aria-label={`Open details for stable ${name}`}
-    >
-      {name}
-    </span>
-  ),
-}));
+vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
 describe('LinkifiedText', () => {
   it('renders warrior names as WarriorLink', () => {

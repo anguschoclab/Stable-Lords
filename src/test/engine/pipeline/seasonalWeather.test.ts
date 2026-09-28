@@ -8,61 +8,9 @@ import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { SeededRNGService } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
+import { SEASONABLE_WEATHER_TYPES } from '@/test/_fixtures/weather';
 
-const ALL_WEATHER_TYPES: WeatherType[] = [
-  'Clear',
-  'Rainy',
-  'Sweltering',
-  'Breezy',
-  'Overcast',
-  'Blazing Sun',
-  'Gale',
-  'Blood Moon',
-  'Eclipse',
-  'Sandstorm',
-  'Zephyr',
-  'Tornado',
-  'Blizzard',
-  'Dense Fog',
-  'Mist',
-  'Thunderstorm',
-  'Gravity Anomaly',
-  'Ashfall',
-  'Acid Rain',
-  'Mana Surge',
-  'Rainbow',
-  'Scorching Wind',
-  'Wild Magic',
-  'Spooky Night',
-  'Meteor Shower',
-  'Solar Flare',
-  'Abyssal Gloom',
-  'Cursed Miasma',
-  'Hailstorm',
-  'Arcane Storm',
-  'Blood Rain',
-  'Locust Swarm',
-  'Aurora Borealis',
-  'Chaotic Winds',
-  'Aether Storm',
-  'Mirage',
-  'Ember Rain',
-  'Wildfire Smoke',
-  'Blood Fog',
-  'Shimmering Heat',
-  'Crystal Rain',
-  'Rain of Frogs',
-  'Astral Dust',
-  'Chaos Storm',
-  'Chaos Squall',
-  'Prismatic Gale',
-  'Crimson Snow',
-  'Whispering Winds',
-  'Glittering Frost',
-  'Temporal Rift',
-  'Stardust Gale',
-  'Abyssal Tempest',
-];
+const ALL_WEATHER_TYPES: WeatherType[] = SEASONABLE_WEATHER_TYPES;
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
 

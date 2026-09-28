@@ -6,7 +6,7 @@ import {
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeKillOutcome } from '@/test/_fixtures/factories';
 
 describe('fightSummaryFactory attaches analysis', () => {
   it('includes analysis built from the outcome exchangeLog', () => {
@@ -48,49 +48,7 @@ describe('fightSummaryFactory attaches analysis', () => {
       traits: [],
     };
 
-    const outcome: FightOutcome = {
-      winner: 'A',
-      by: 'Kill',
-      minutes: 7,
-      log: [],
-      exchangeLog: [
-        {
-          exchangeIndex: 0,
-          minute: 1,
-          iniWinner: 'A',
-          attResult: 'hit',
-          damage: 4,
-          endDeltas: { a: -3, d: -5 },
-        },
-        {
-          exchangeIndex: 1,
-          minute: 2,
-          iniWinner: 'A',
-          attResult: 'hit',
-          damage: 6,
-          endDeltas: { a: -3, d: -6 },
-        },
-        {
-          exchangeIndex: 2,
-          minute: 3,
-          iniWinner: 'A',
-          attResult: 'crit',
-          damage: 12,
-          killWindow: true,
-          executionFlag: true,
-          reasonCodes: ['AI_PUSH_FATIGUE'],
-        },
-      ],
-      post: {
-        xpA: 10,
-        xpD: 2,
-        hitsA: 3,
-        hitsD: 0,
-        gotKillA: true,
-        causeBucket: 'FATAL_DAMAGE',
-        fatalExchangeIndex: 2,
-      },
-    };
+    const outcome: FightOutcome = makeKillOutcome();
 
     const summary = createFightSummary({
       warriorA,

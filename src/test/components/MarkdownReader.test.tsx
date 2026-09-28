@@ -4,22 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { MarkdownReader } from '@/components/MarkdownReader';
 import '@testing-library/jest-dom';
 
-vi.mock('@/components/EntityLink', () => ({
-  WarriorLink: ({ name }: { name: string }) => (
-    <span
-      data-testid="warrior-link"
-      data-name={name}
-      aria-label={`Open details for warrior ${name}`}
-    >
-      {name}
-    </span>
-  ),
-  StableLink: ({ name }: { name: string }) => (
-    <span data-testid="stable-link" data-name={name} aria-label={`Open details for stable ${name}`}>
-      {name}
-    </span>
-  ),
-}));
+vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
 describe('MarkdownReader', () => {
   it('renders markdown headings', () => {

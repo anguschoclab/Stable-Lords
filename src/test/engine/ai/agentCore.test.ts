@@ -16,27 +16,14 @@ import type {
   AIEvent,
   RankingEntry,
 } from '@/types/state.types';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeOwner} from '@/test/_fixtures/factories';
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+  return makeRival({
     id: 'rival_1' as any,
-    owner: {
-      id: 'owner_1' as any,
-      name: 'Test Owner',
-      stableName: 'Test Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    fame: 100,
-    roster: [],
-    treasury: 1000,
-    ledger: [],
-    trainingAssignments: [],
+    owner: makeOwner({ id: 'owner_1' as any, name: 'Test Owner', stableName: 'Test Stable' }),
     ...overrides,
-  } as RivalStableData;
+  });
 }
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {

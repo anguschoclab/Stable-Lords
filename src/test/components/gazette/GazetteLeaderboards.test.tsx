@@ -4,18 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { FightSummary } from '@/types/game';
 
-vi.mock('@/components/EntityLink', () => ({
-  WarriorLink: ({ name, className }: { name: string; className?: string }) => (
-    <span
-      data-testid="warrior-link"
-      data-name={name}
-      className={className}
-      aria-label={`Open details for warrior ${name}`}
-    >
-      {name}
-    </span>
-  ),
-}));
+vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children }: any) => <div>{children}</div>,

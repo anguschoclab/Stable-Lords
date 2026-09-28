@@ -6,42 +6,20 @@ import { describe, it, expect } from 'vitest';
 import { processStaff } from '@/engine/ai/workers/staffWorker';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeOwner, makeTrainer, makeStrategy } from '@/test/_fixtures/factories';
 
 function createMockTrainer(overrides: Partial<Trainer> = {}): Trainer {
-  return {
-    id: 't1',
-    name: 'Test Trainer',
-    tier: 'Novice',
-    focus: 'Aggression',
-    fame: 0,
-    age: 30,
-    contractWeeksLeft: 10,
-    ...overrides,
-  } as Trainer;
+  return makeTrainer({ id: 't1' as any, name: 'Test Trainer', age: 30, ...overrides });
 }
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return {
+  return makeRival({
     id: 'rival_1' as any,
-    owner: {
-      id: 'owner_1' as any,
-      name: 'Test Owner',
-      stableName: 'Test Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    fame: 100,
-    roster: [],
-    treasury: 1000,
-    ledger: [],
-    trainingAssignments: [],
+    owner: makeOwner({ id: 'owner_1' as any, name: 'Test Owner', stableName: 'Test Stable' }),
     trainers: [],
-    strategy: { intent: 'CONSOLIDATION' } as any,
+    strategy: makeStrategy(),
     ...overrides,
-  } as RivalStableData;
+  });
 }
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {

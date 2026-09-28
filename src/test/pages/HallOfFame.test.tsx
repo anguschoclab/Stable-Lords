@@ -9,6 +9,7 @@ import type { FightSummary as FightSummaryType } from '@/types/combat.types';
 import '@/test/_setup/setup';
 
 import { useGameStore } from '@/state/useGameStore';
+import { makeNamedWarrior } from '@/test/_fixtures/factories';
 
 const defaultStoreState = {
   roster: [],
@@ -72,31 +73,14 @@ vi.mock('@tanstack/react-router', () => ({
  * @param overrides - Optional partial warrior properties to override defaults.
  * @returns A warrior object for testing.
  */
-function createDummyWarrior(
+const createDummyWarrior = (
   name: string,
   status: Warrior['status'],
   wins: number,
   losses: number,
   fame: number,
   overrides?: Partial<Warrior>
-): Warrior {
-  return {
-    id: name,
-    name,
-    status,
-    style: FightingStyle.AimedBlow,
-    age: 20,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    fame,
-    popularity: 0,
-    career: { wins, losses, kills: 0 },
-    titles: [],
-    injuries: [],
-    flair: [],
-    champion: false,
-    ...overrides,
-  } as Warrior;
-}
+): Warrior => makeNamedWarrior(name, status, wins, losses, fame, overrides);
 
 describe('HallOfFame Component', () => {
   let mockState: GameState;

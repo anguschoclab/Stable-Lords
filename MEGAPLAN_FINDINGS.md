@@ -161,6 +161,8 @@ Policy: engine/AI/matchmaking functions decompose to ≤~80 via extract-fn (beha
 | M1 | `advanceWeekPerformance` timing-ratio flake under parallel load (passes isolated) | **NOTE** — pre-existing flake; candidate for `.slow` promotion in Phase 7 |
 | M2 | Test-plan table (change → tests → status) | see below |
 | M3 | No colocated tests outside `src/test/` | **DISPROVED** (as a problem — clean) |
+| M4 | Registry enumeration order is observable — two splits reordered it | **CONFIRMED + FIXED** — `b6d1caa5` arena registration regrouped seed→variants→late; `b6e62956` re-sharded `TRAITS` keys by tier. Both shifted seeded sim trajectories (worldLiveness 104-wk diverged by wk5/wk9, `stripped` endings 0). Fixed in `4584df58`: legacy registration order restored + pinned by test, `LEGACY_TRAIT_ORDER` + drift guard. Post-fix seeded trajectory byte-identical to `3bc5476e` baseline. |
+| M5 | `bun test` deadlocks on user-authored async `vi.mock` factories | **CONFIRMED + FIXED** — dynamic-import/async factories hang the runner silently (stale processes spin at ~100% CPU). All converted to sync factories backed by `__SHARED_MOCKS` registry; `bunRunnerSafety` canary regex repaired (it previously missed `async () =>` shapes). |
 
 ### M2. Test-plan table — test-first inventory
 

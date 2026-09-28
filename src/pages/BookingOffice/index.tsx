@@ -12,24 +12,21 @@ import { HeaderStats, RosterStatusBar, OfferTabs } from './sections';
  *
  */
 export default function BookingOffice() {
+  const office = useBookingOffice();
   const {
     week,
-    promoters,
     roster,
     boutOffers,
     activeTab,
     setActiveTab,
-    signedOfferIds,
     selectedWarriorId,
     setSelectedWarriorId,
-    rivalWarriorMap,
     thisWeekOffers,
     upcomingOffers,
     idleWarriors,
     highestPurse,
-    handleResponse,
     acceptAllHonorable,
-  } = useBookingOffice();
+  } = office;
   const { cards } = useStableAdvisor();
   const advisorCardMap = useMemo(() => {
     const map = new Map<string, (typeof cards)[0]>();
@@ -80,23 +77,48 @@ export default function BookingOffice() {
 
         {/* Right Rail Viewport */}
         <div className="lg:col-span-3 space-y-8">
-          <OfferTabs
+          <OffersViewport
+            office={office}
             activeTab={activeTab}
-            onTabChange={setActiveTab}
-            thisWeekOffers={filteredThisWeek}
-            upcomingOffers={filteredUpcoming}
-            showBookmarkedOnly={showBookmarkedOnly}
-            onToggleBookmarked={toggleBookmarked}
-            bookmarkedCount={bookmarkedCount}
-            roster={roster}
-            promoters={promoters}
-            rivalWarriorMap={rivalWarriorMap}
-            signedOfferIds={signedOfferIds}
+            setActiveTab={setActiveTab}
+            filter={{ showBookmarkedOnly, toggleBookmarked, filteredThisWeek, filteredUpcoming, bookmarkedCount }}
             advisorCardMap={advisorCardMap}
-            onResponse={handleResponse}
           />
         </div>
       </div>
     </PageFrame>
+  );
+}
+
+/** Right rail: the tabbed offer lists wired to the office + bookmark state. */
+function OffersViewport({
+  office,
+  activeTab,
+  setActiveTab,
+  filter,
+  advisorCardMap,
+}: {
+  office: ReturnType<typeof useBookingOffice>;
+  activeTab: ReturnType<typeof useBookingOffice>['activeTab'];
+  setActiveTab: ReturnType<typeof useBookingOffice>['setActiveTab'];
+  filter: ReturnType<typeof useOfferBookmarkFilter>;
+  advisorCardMap: Map<string, ReturnType<typeof useStableAdvisor>['cards'][number]>;
+}) {
+  return (
+    <OfferTabs
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      thisWeekOffers={filter.filteredThisWeek}
+      upcomingOffers={filter.filteredUpcoming}
+      showBookmarkedOnly={filter.showBookmarkedOnly}
+      onToggleBookmarked={filter.toggleBookmarked}
+      bookmarkedCount={filter.bookmarkedCount}
+      roster={office.roster}
+      promoters={office.promoters}
+      rivalWarriorMap={office.rivalWarriorMap}
+      signedOfferIds={office.signedOfferIds}
+      advisorCardMap={advisorCardMap}
+      onResponse={office.handleResponse}
+    />
   );
 }

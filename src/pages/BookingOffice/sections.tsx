@@ -225,22 +225,7 @@ export function OfferTabs({
   };
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
-        <TabsList className="flex w-full h-full bg-transparent p-0 gap-1 rounded-none">
-          <TabsTrigger
-            value="this-week"
-            className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
-          >
-            This Week [{thisWeekOffers.length}]
-          </TabsTrigger>
-          <TabsTrigger
-            value="upcoming"
-            className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
-          >
-            Upcoming Bouts [{upcomingOffers.length}]
-          </TabsTrigger>
-        </TabsList>
-      </div>
+      <OfferTabBar thisWeekCount={thisWeekOffers.length} upcomingCount={upcomingOffers.length} />
 
       <TabsContent value="this-week" className="mt-0 space-y-8">
         <div className="flex justify-end">
@@ -267,5 +252,29 @@ export function OfferTabs({
         />
       </TabsContent>
     </Tabs>
+  );
+}
+
+/** This-week / upcoming tab strip with per-tab offer counts. */
+function OfferTabBar({
+  thisWeekCount,
+  upcomingCount,
+}: {
+  thisWeekCount: number;
+  upcomingCount: number;
+}) {
+  const triggerClass =
+    'flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0';
+  return (
+    <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
+      <TabsList className="flex w-full h-full bg-transparent p-0 gap-1 rounded-none">
+        <TabsTrigger value="this-week" className={triggerClass}>
+          This Week [{thisWeekCount}]
+        </TabsTrigger>
+        <TabsTrigger value="upcoming" className={triggerClass}>
+          Upcoming Bouts [{upcomingCount}]
+        </TabsTrigger>
+      </TabsList>
+    </div>
   );
 }

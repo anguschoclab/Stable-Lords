@@ -305,35 +305,17 @@ function checkKillWindow(
   let causeBucket: string = 'EXECUTION';
 
   if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
-    const killPos = phase === 'LATE' ? 2 : phase === 'MID' ? 1 : 0;
-    const effectiveDec = attacker.skills.DEC + killMech.decBonus;
-    const specKillBonus = ctx
-      ? attacker.label === 'A'
-        ? (ctx.trainerModsA.killWindowBonus ?? 0)
-        : (ctx.trainerModsD.killWindowBonus ?? 0)
-      : 0;
-    const attackerTraitKill = attacker.traits
-      ? getDynamicTraitMods(attacker, {
-          phase: phase as 'OPENING' | 'MID' | 'LATE',
-          hpRatio: attacker.hp / attacker.maxHp,
-          endRatio: attacker.endurance / attacker.maxEndurance,
-          consecutiveHits: attacker.consecutiveHits,
-        }).killWindowBonus
-      : 0;
-    const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
-    const killThreshold = calculateKillWindow(
-      defender.hp / defender.maxHp,
-      defender.endurance / defender.maxEndurance,
+    const killThreshold = gatherKillThreshold(
+      attacker,
+      defender,
+      ctx,
       hitLoc,
-      attKD + killMech.killBonus,
-      killPos,
+      killMech,
+      phase,
+      attKD,
       attOE,
       attAL,
-      attMatchup,
-      effectiveDec,
-      attacker.momentum,
-      specKillBonus + attackerTraitKill,
-      crowdKillBonus
+      attMatchup
     );
     if (rng() < killThreshold * (ctx?.deathRateMult ?? 1)) {
       defender.hp = 0;
@@ -364,6 +346,51 @@ function checkKillWindow(
       });
     }
   }
+}
+
+/** Gather all modifiers feeding `calculateKillWindow` — pure math, no RNG. */
+function gatherKillThreshold(
+  attacker: FighterState,
+  defender: FighterState,
+  ctx: ResolutionContext | undefined,
+  hitLoc: HitLocation,
+  killMech: ReturnType<typeof getKillMechanic>,
+  phase: string,
+  attKD: number,
+  attOE: number,
+  attAL: number,
+  attMatchup: number
+): number {
+  const killPos = phase === 'LATE' ? 2 : phase === 'MID' ? 1 : 0;
+  const effectiveDec = attacker.skills.DEC + killMech.decBonus;
+  const specKillBonus = ctx
+    ? attacker.label === 'A'
+      ? (ctx.trainerModsA.killWindowBonus ?? 0)
+      : (ctx.trainerModsD.killWindowBonus ?? 0)
+    : 0;
+  const attackerTraitKill = attacker.traits
+    ? getDynamicTraitMods(attacker, {
+        phase: phase as 'OPENING' | 'MID' | 'LATE',
+        hpRatio: attacker.hp / attacker.maxHp,
+        endRatio: attacker.endurance / attacker.maxEndurance,
+        consecutiveHits: attacker.consecutiveHits,
+      }).killWindowBonus
+    : 0;
+  const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
+  return calculateKillWindow(
+    defender.hp / defender.maxHp,
+    defender.endurance / defender.maxEndurance,
+    hitLoc,
+    attKD + killMech.killBonus,
+    killPos,
+    attOE,
+    attAL,
+    attMatchup,
+    effectiveDec,
+    attacker.momentum,
+    specKillBonus + attackerTraitKill,
+    crowdKillBonus
+  );
 }
 
 /**

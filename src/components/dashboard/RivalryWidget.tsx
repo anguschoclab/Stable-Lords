@@ -72,30 +72,11 @@ export function RivalryWidget() {
       </div>
 
       <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar p-6">
-        {rivalries.length === 0 ? (
-          <div className="py-12 text-center opacity-20 italic">
-            <p className="text-[10px] uppercase tracking-[0.3em]">
-              No significant vendettas detected
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {rivalries.slice(0, 4).map((r) => (
-                <RivalryCard key={r.ownerId} rivalry={r} rosterNames={rosterNames} />
-              ))}
-            </div>
-
-            {mostWanted && (
-              <MostWantedBanner
-                name={mostWanted.name}
-                stable={mostWanted.stable}
-                wins={mostWanted.wins}
-                kills={mostWanted.kills}
-              />
-            )}
-          </div>
-        )}
+        <RivalryList
+          rivalries={rivalries}
+          rosterNames={rosterNames}
+          mostWanted={mostWanted}
+        />
       </div>
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
@@ -109,5 +90,46 @@ export function RivalryWidget() {
         </Button>
       </div>
     </Surface>
+  );
+}
+
+type RivalryListData = ReturnType<typeof useRivalriesList>;
+type MostWantedData = ReturnType<typeof useMostWantedRival>;
+
+function RivalryList({
+  rivalries,
+  rosterNames,
+  mostWanted,
+}: {
+  rivalries: RivalryListData;
+  rosterNames: Set<string>;
+  mostWanted: MostWantedData;
+}) {
+  if (rivalries.length === 0) {
+    return (
+      <div className="py-12 text-center opacity-20 italic">
+        <p className="text-[10px] uppercase tracking-[0.3em]">
+          No significant vendettas detected
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {rivalries.slice(0, 4).map((r) => (
+          <RivalryCard key={r.ownerId} rivalry={r} rosterNames={rosterNames} />
+        ))}
+      </div>
+
+      {mostWanted && (
+        <MostWantedBanner
+          name={mostWanted.name}
+          stable={mostWanted.stable}
+          wins={mostWanted.wins}
+          kills={mostWanted.kills}
+        />
+      )}
+    </div>
   );
 }

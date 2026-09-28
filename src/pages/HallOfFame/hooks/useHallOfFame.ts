@@ -9,6 +9,42 @@ import type { UpsetEntry } from '@/components/awards/UpsetsList';
 /**
  *
  */
+type Fight = ReturnType<typeof ArenaHistory.all>[number];
+
+/** Per-year query helpers over the full fight log + fame index. */
+function makeYearQueries(allFights: Fight[], fameByWarriorId: Map<string, number>) {
+  const getFightsForYear = (yr: number) => {
+    const weekStart = (yr - 1) * 52 + 1;
+    const weekEnd = yr * 52;
+    return allFights.filter((f) => f.week >= weekStart && f.week <= weekEnd);
+  };
+
+  const getUpsetsForYear = (yr: number): UpsetEntry[] => {
+    return getFightsForYear(yr)
+      .map((f) => {
+        const fameA = fameByWarriorId.get(f.warriorIdA ?? '') ?? 0;
+        const fameD = fameByWarriorId.get(f.warriorIdD ?? '') ?? 0;
+        const n = (f.title.split(' (')[0] ?? '').split(' vs ');
+        const nameA = n[0] || 'Unknown';
+        const nameD = n[1] || 'Unknown';
+        const winnerName = f.winner === 'A' ? nameA : nameD;
+        const loserName = f.winner === 'A' ? nameD : nameA;
+        const winnerFame = f.winner === 'A' ? fameA : fameD;
+        const loserFame = f.winner === 'A' ? fameD : fameA;
+        const fameDiff = loserFame - winnerFame;
+        return { winner: winnerName, loser: loserName, by: f.by, fameDiff, week: f.week };
+      })
+      .filter((u) => u.fameDiff >= 10)
+      .sort((a, b) => b.fameDiff - a.fameDiff)
+      .slice(0, 5);
+  };
+
+  return { getFightsForYear, getUpsetsForYear };
+}
+
+/**
+ *
+ */
 export function useHallOfFame() {
   const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore(
     useShallow((s) => ({
@@ -60,31 +96,7 @@ export function useHallOfFame() {
     return map;
   }, [allWarriors]);
 
-  const getFightsForYear = (yr: number) => {
-    const weekStart = (yr - 1) * 52 + 1;
-    const weekEnd = yr * 52;
-    return allFights.filter((f) => f.week >= weekStart && f.week <= weekEnd);
-  };
-
-  const getUpsetsForYear = (yr: number): UpsetEntry[] => {
-    return getFightsForYear(yr)
-      .map((f) => {
-        const fameA = fameByWarriorId.get(f.warriorIdA ?? '') ?? 0;
-        const fameD = fameByWarriorId.get(f.warriorIdD ?? '') ?? 0;
-        const n = (f.title.split(' (')[0] ?? '').split(' vs ');
-        const nameA = n[0] || 'Unknown';
-        const nameD = n[1] || 'Unknown';
-        const winnerName = f.winner === 'A' ? nameA : nameD;
-        const loserName = f.winner === 'A' ? nameD : nameA;
-        const winnerFame = f.winner === 'A' ? fameA : fameD;
-        const loserFame = f.winner === 'A' ? fameD : fameA;
-        const fameDiff = loserFame - winnerFame;
-        return { winner: winnerName, loser: loserName, by: f.by, fameDiff, week: f.week };
-      })
-      .filter((u) => u.fameDiff >= 10)
-      .sort((a, b) => b.fameDiff - a.fameDiff)
-      .slice(0, 5);
-  };
+  const { getFightsForYear, getUpsetsForYear } = makeYearQueries(allFights, fameByWarriorId);
 
   return {
     year,

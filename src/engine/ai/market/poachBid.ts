@@ -186,55 +186,67 @@ export function processPoachMarket(
       continue;
     }
 
-    const seller = byId.get(bid.sellerStableId);
-    const target = seller?.roster.find((w) => w.id === bid.warriorId);
-    if (!seller || !target) continue;
-
-    const moved: Warrior = { ...target, stableId: rival.id };
-    const buyerAfter = logFinanceEvent(
-      {
-        ...stamped,
-        treasury: stamped.treasury - bid.price,
-        roster: [...stamped.roster, moved],
-      },
-      {
-        label: `Poach purchase — ${target.name}`,
-        amount: -bid.price,
-        week: state.week,
-        category: 'recruit',
-        description: `Paid ${bid.price}g to poach ${target.name} from ${seller.owner.name}.`,
-        riskTier: 'Medium',
-      }
-    );
-    byId.set(rival.id, buyerAfter);
-    byId.set(
-      seller.id,
-      logFinanceEvent(
-        {
-          ...seller,
-          treasury: seller.treasury + bid.price,
-          roster: seller.roster.filter((w) => w.id !== bid.warriorId),
-        },
-        {
-          label: `Poach sale — ${target.name}`,
-          amount: bid.price,
-          week: state.week,
-          category: 'recruit',
-          description: `Sold ${target.name} to ${rival.owner.name} for ${bid.price}g.`,
-          riskTier: 'Medium',
-        }
-      )
-    );
-
-    const desc = `Poached ${target.name} from ${seller.owner.name} for ${bid.price}g`;
-    gazetteItems.push(`[POACH] ${desc}`);
-    byId.set(
-      rival.id,
-      logAgentAction(buyerAfter, 'ROSTER', desc, 'Medium', state.absoluteWeek)
-    );
-    if (isAIDebugEnabled())
-      console.debug(`[poach] ${rival.id} -> ${seller.id} ${bid.warriorId} @ ${bid.price}g`);
+    settleAIPoach(byId, bid, rival.id, stamped, state, gazetteItems);
   }
 
   return { updatedRivals: rivals.map((r) => byId.get(r.id) ?? r), gazetteItems };
+}
+
+/** Settle one AI-to-AI poach: move the warrior, settle both treasuries, log. */
+function settleAIPoach(
+  byId: Map<string, RivalStableData>,
+  bid: NonNullable<ReturnType<typeof computePoachBid>>,
+  buyerId: string,
+  stamped: RivalStableData,
+  state: GameState,
+  gazetteItems: string[]
+): void {
+  const seller = byId.get(bid.sellerStableId);
+  const target = seller?.roster.find((w) => w.id === bid.warriorId);
+  if (!seller || !target) return;
+
+  const moved: Warrior = { ...target, stableId: buyerId };
+  const buyerAfter = logFinanceEvent(
+    {
+      ...stamped,
+      treasury: stamped.treasury - bid.price,
+      roster: [...stamped.roster, moved],
+    },
+    {
+      label: `Poach purchase — ${target.name}`,
+      amount: -bid.price,
+      week: state.week,
+      category: 'recruit',
+      description: `Paid ${bid.price}g to poach ${target.name} from ${seller.owner.name}.`,
+      riskTier: 'Medium',
+    }
+  );
+  byId.set(buyerId, buyerAfter);
+  byId.set(
+    seller.id,
+    logFinanceEvent(
+      {
+        ...seller,
+        treasury: seller.treasury + bid.price,
+        roster: seller.roster.filter((w) => w.id !== bid.warriorId),
+      },
+      {
+        label: `Poach sale — ${target.name}`,
+        amount: bid.price,
+        week: state.week,
+        category: 'recruit',
+        description: `Sold ${target.name} to ${stamped.owner.name} for ${bid.price}g.`,
+        riskTier: 'Medium',
+      }
+    )
+  );
+
+  const desc = `Poached ${target.name} from ${seller.owner.name} for ${bid.price}g`;
+  gazetteItems.push(`[POACH] ${desc}`);
+  byId.set(
+    buyerId,
+    logAgentAction(buyerAfter, 'ROSTER', desc, 'Medium', state.absoluteWeek)
+  );
+  if (isAIDebugEnabled())
+    console.debug(`[poach] ${buyerId} -> ${seller.id} ${bid.warriorId} @ ${bid.price}g`);
 }

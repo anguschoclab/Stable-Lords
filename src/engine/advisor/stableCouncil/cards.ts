@@ -95,30 +95,13 @@ export function composeHeadline(
   return `${trainingAdvice.headline}.`;
 }
 
-/** Builds one warrior's advisor card from the shared evaluation context. */
-export function buildWarriorCard(
+/** Fatigue/injury status + whether the council holds the warrior for booking. */
+function deriveBookingStatus(
   warrior: GameState['roster'][number],
-  ctx: CardBuildContext
-): WarriorAdvisorCard {
-  const { state, contenderIndex } = ctx;
-  const campaignFocus = evaluateCampaignFocus(warrior, state, contenderIndex);
-  // What the council would recommend absent the player's pin — lets the UI
-  // surface "Suggested: X" when the pin diverges from auto-detection.
-  const suggestedCampaignFocus = evaluateCampaignFocus(
-    { ...warrior, campaignFocus: undefined },
-    state,
-    contenderIndex
-  );
-  const tournamentAdvice = evaluateTournamentAdvice(warrior, state);
-  const fightAdvice = evaluateBoutOffers(warrior, state, campaignFocus, tournamentAdvice, {
-    contenderIndex,
-  });
-  const trainingAdvice = evaluateTrainingAdvice(warrior, state);
-  const tacticsAdvice = evaluateTacticsAdvice(warrior, campaignFocus, {
-    opponent: fightAdvice.opponent ?? undefined,
-    state,
-  });
-
+  campaignFocus: ReturnType<typeof evaluateCampaignFocus>,
+  tournamentAdvice: ReturnType<typeof evaluateTournamentAdvice>,
+  fightAdvice: ReturnType<typeof evaluateBoutOffers>
+) {
   const fatigue = warrior.fatigue ?? 0;
   const fatigueStatus = {
     band: getFatigueBand(fatigue),
@@ -143,14 +126,17 @@ export function buildWarriorCard(
   const holdsForBooking =
     fightAdvice.action === 'NO_VIABLE_OFFERS' && wantsBooking;
 
-  const trainingAssignment = buildTrainingAssignment(
-    warrior,
-    fightAdvice,
-    trainingAdvice,
-    holdsForBooking
-  );
+  return { fatigueStatus, injuryStatus, holdsForBooking };
+}
 
-  const actionPayload: WarriorActionPayload = {
+/** One-shot action payload the Apply-All commit feeds back into the store. */
+function buildActionPayload(
+  warrior: GameState['roster'][number],
+  trainingAssignment: ReturnType<typeof buildTrainingAssignment>,
+  fightAdvice: ReturnType<typeof evaluateBoutOffers>,
+  tacticsAdvice: ReturnType<typeof evaluateTacticsAdvice>
+): WarriorActionPayload {
+  return {
     warriorId: warrior.id,
     trainingAssignment,
     boutOfferIdToAccept:
@@ -166,6 +152,47 @@ export function buildWarriorCard(
         : {}),
     },
   };
+}
+
+/** Builds one warrior's advisor card from the shared evaluation context. */
+export function buildWarriorCard(
+  warrior: GameState['roster'][number],
+  ctx: CardBuildContext
+): WarriorAdvisorCard {
+  const { state, contenderIndex } = ctx;
+  const campaignFocus = evaluateCampaignFocus(warrior, state, contenderIndex);
+  // What the council would recommend absent the player's pin — lets the UI
+  // surface "Suggested: X" when the pin diverges from auto-detection.
+  const suggestedCampaignFocus = evaluateCampaignFocus(
+    { ...warrior, campaignFocus: undefined },
+    state,
+    contenderIndex
+  );
+  const tournamentAdvice = evaluateTournamentAdvice(warrior, state);
+  const fightAdvice = evaluateBoutOffers(warrior, state, campaignFocus, tournamentAdvice, {
+    contenderIndex,
+  });
+  const trainingAdvice = evaluateTrainingAdvice(warrior, state);
+  const tacticsAdvice = evaluateTacticsAdvice(warrior, campaignFocus, {
+    opponent: fightAdvice.opponent ?? undefined,
+    state,
+  });
+
+  const { fatigueStatus, injuryStatus, holdsForBooking } = deriveBookingStatus(
+    warrior,
+    campaignFocus,
+    tournamentAdvice,
+    fightAdvice
+  );
+
+  const trainingAssignment = buildTrainingAssignment(
+    warrior,
+    fightAdvice,
+    trainingAdvice,
+    holdsForBooking
+  );
+
+  const actionPayload = buildActionPayload(warrior, trainingAssignment, fightAdvice, tacticsAdvice);
 
   const crownStanding = resolveCrownStanding(warrior.id, ctx);
   const headlineSummary = composeHeadline(fightAdvice, tournamentAdvice, trainingAdvice);

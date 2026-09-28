@@ -31,6 +31,23 @@ interface MobileNavProps {
   className?: string;
 }
 
+/** SheetClose wrapper for links — closes the drawer on navigation. */
+const SheetCloseLink = ({
+  to,
+  children,
+  className,
+}: {
+  to: string;
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <SheetClose asChild>
+    <Link to={to} className={className}>
+      {children}
+    </Link>
+  </SheetClose>
+);
+
 /**
  *
  */
@@ -42,23 +59,6 @@ export function MobileNav({ className }: MobileNavProps) {
 
   const activeHubId = (HUBS.find((h) => currentPath === h.to || currentPath.startsWith(`${h.to}/`))
     ?.id ?? null) as HubId | null;
-
-  // SheetClose wrapper for links
-  const SheetCloseLink = ({
-    to,
-    children,
-    className,
-  }: {
-    to: string;
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <SheetClose asChild>
-      <Link to={to} className={className}>
-        {children}
-      </Link>
-    </SheetClose>
-  );
 
   return (
     <div className={cn('flex md:hidden', className)}>
@@ -121,3 +121,4 @@ export function MobileNav({ className }: MobileNavProps) {
     </div>
   );
 }
+

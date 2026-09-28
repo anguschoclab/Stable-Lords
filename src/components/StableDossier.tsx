@@ -87,31 +87,38 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
         </div>
 
         {/* Roster List */}
-        <div className="space-y-3">
-          <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1">
-            <Users className="h-3 w-3 text-primary" /> Active Roster
-          </h3>
-          <div className="grid gap-2">
-            {stable.roster
-              .filter((w) => isActive(w))
-              .map((w) => (
-                <div
-                  key={w.id}
-                  className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <StatBadge styleName={w.style} />
-                    <span className="text-sm font-medium">{w.name}</span>
-                  </div>
-                  <div className="text-[10px] font-mono text-muted-foreground">
-                    {w.career.wins}-{w.career.losses}
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
+        <RosterList stable={stable} />
       </div>
     </ScrollArea>
+  );
+}
+
+/** Active-roster list: style badge, name, W-L record per warrior. */
+function RosterList({ stable }: { stable: StableLike }) {
+  return (
+    <div className="space-y-3">
+      <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1">
+        <Users className="h-3 w-3 text-primary" /> Active Roster
+      </h3>
+      <div className="grid gap-2">
+        {stable.roster
+          .filter((w) => isActive(w))
+          .map((w) => (
+            <div
+              key={w.id}
+              className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
+            >
+              <div className="flex items-center gap-2">
+                <StatBadge styleName={w.style} />
+                <span className="text-sm font-medium">{w.name}</span>
+              </div>
+              <div className="text-[10px] font-mono text-muted-foreground">
+                {w.career.wins}-{w.career.losses}
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
   );
 }
 

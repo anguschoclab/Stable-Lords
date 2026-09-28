@@ -142,21 +142,11 @@ export function ActiveTournamentManifest({
           </div>
 
           {isComplete && (
-            <div className="grid gap-4 px-8 pb-8 md:grid-cols-2">
-              {championId && (
-                <ChampionDisplay
-                  championName={participantName(championId)}
-                  championId={championId}
-                  tournamentName={tournament.name}
-                />
-              )}
-              {bronzeId && (
-                <BronzeHighlight
-                  thirdPlaceName={participantName(bronzeId)}
-                  thirdPlaceId={bronzeId}
-                />
-              )}
-            </div>
+            <CompletedPodium
+              tournament={tournament}
+              championId={championId}
+              bronzeId={bronzeId}
+            />
           )}
 
           {tournament.bracket.some((b) => b.winner === undefined) && (
@@ -193,6 +183,38 @@ function ManifestHeader({ name, seasonIcon }: { name: string; seasonIcon: string
       <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] px-6 py-2 rounded-none animate-pulse motion-reduce:animate-none">
         LIVE PHASE
       </Badge>
+    </div>
+  );
+}
+
+/** Champion + third-place highlights shown once the bracket resolves. */
+function CompletedPodium({
+  tournament,
+  championId,
+  bronzeId,
+}: {
+  tournament: ActiveTournamentManifestProps['tournament'];
+  championId: string | undefined;
+  bronzeId: string | undefined;
+}) {
+  const participantName = (id: string | undefined) =>
+    tournament.participants?.find((w) => w.id === id)?.name ?? 'Unknown';
+
+  return (
+    <div className="grid gap-4 px-8 pb-8 md:grid-cols-2">
+      {championId && (
+        <ChampionDisplay
+          championName={participantName(championId)}
+          championId={championId}
+          tournamentName={tournament.name}
+        />
+      )}
+      {bronzeId && (
+        <BronzeHighlight
+          thirdPlaceName={participantName(bronzeId)}
+          thirdPlaceId={bronzeId}
+        />
+      )}
     </div>
   );
 }

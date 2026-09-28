@@ -189,36 +189,7 @@ export function InducteeCard({
 
         <CardContent className="p-6 space-y-5">
           {/* Header */}
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <div
-                  className={cn(
-                    'p-1.5 rounded-none border',
-                    title.includes('Fame') || title.includes('Greatest')
-                      ? 'bg-arena-gold/10 border-arena-gold/30'
-                      : 'bg-primary/10 border-primary/30'
-                  )}
-                >
-                  {icon}
-                </div>
-                <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-arena-gold transition-colors motion-reduce:transition-none">
-                  {warrior.name}
-                </span>
-              </div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
-                <span>{STYLE_DISPLAY_NAMES[warrior.style]}</span>
-                <span className="opacity-40">·</span>
-                <span>AGE {warrior.age ?? '??'}</span>
-              </div>
-            </div>
-            <Badge
-              variant="outline"
-              className="text-[9px] font-black tracking-widest uppercase text-arena-gold bg-arena-gold/5 border-arena-gold/20 py-1 px-2"
-            >
-              {title}
-            </Badge>
-          </div>
+          <InducteeHeader warrior={warrior} title={title} icon={icon} />
 
           {/* Stats grid */}
           <CareerStatsGrid warrior={warrior} />
@@ -246,5 +217,49 @@ export function InducteeCard({
         </CardContent>
       </Surface>
     </motion.div>
+  );
+}
+
+/** Inductee header: honor icon, name, style/age line, and the induction badge. */
+function InducteeHeader({
+  warrior,
+  title,
+  icon,
+}: {
+  warrior: Warrior;
+  title: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start justify-between">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <div
+            className={cn(
+              'p-1.5 rounded-none border',
+              title.includes('Fame') || title.includes('Greatest')
+                ? 'bg-arena-gold/10 border-arena-gold/30'
+                : 'bg-primary/10 border-primary/30'
+            )}
+          >
+            {icon}
+          </div>
+          <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-arena-gold transition-colors motion-reduce:transition-none">
+            {warrior.name}
+          </span>
+        </div>
+        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+          <span>{STYLE_DISPLAY_NAMES[warrior.style]}</span>
+          <span className="opacity-40">·</span>
+          <span>AGE {warrior.age ?? '??'}</span>
+        </div>
+      </div>
+      <Badge
+        variant="outline"
+        className="text-[9px] font-black tracking-widest uppercase text-arena-gold bg-arena-gold/5 border-arena-gold/20 py-1 px-2"
+      >
+        {title}
+      </Badge>
+    </div>
   );
 }

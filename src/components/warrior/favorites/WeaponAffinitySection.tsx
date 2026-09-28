@@ -92,17 +92,22 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
           )}
         </div>
       </div>
-      <div className="h-1 w-full bg-white/5 overflow-hidden">
-        <div
-          className={cn(
-            'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
-            isWeaponDiscovered
-              ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]'
-              : 'bg-white/10'
-          )}
-          style={{ width: `${weaponProgress}%` }}
-        />
-      </div>
+      <ProgressBar pct={weaponProgress} revealed={isWeaponDiscovered} />
+    </div>
+  );
+}
+
+/** Hint-progress bar — gold-lit once the affinity is discovered. */
+function ProgressBar({ pct, revealed }: { pct: number; revealed: boolean }) {
+  return (
+    <div className="h-1 w-full bg-white/5 overflow-hidden">
+      <div
+        className={cn(
+          'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
+          revealed ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]' : 'bg-white/10'
+        )}
+        style={{ width: `${pct}%` }}
+      />
     </div>
   );
 }

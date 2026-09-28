@@ -227,6 +227,36 @@ function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
   const dangerLevel = danger.dangerLevel;
   const kills = opponent?.career?.kills ?? 0;
 
+  const { isTitleBout, onLadderHere } = appendOfferReasons(offer, s, opponent, intel, reasons);
+
+  return {
+    opponent,
+    styleEdge,
+    weatherReason,
+    promoter,
+    kills,
+    rematchLosing,
+    isTitleBout,
+    onLadderHere,
+    dangerLevel,
+    warnings,
+    reasons,
+  };
+}
+
+/**
+ * Append title-bout, crown-bid, purse, and blind-bout reasons (in that order).
+ * Returns the derived flags the caller needs.
+ */
+function appendOfferReasons(
+  offer: BoutOffer,
+  s: OfferScoreContext,
+  opponent: Warrior | null,
+  intel: ReturnType<typeof getOpponentIntel>,
+  reasons: string[]
+): { isTitleBout: boolean; onLadderHere: boolean } {
+  const { state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate } = s;
+
   // Title Bout — the crown is at stake. Headline + large score bump: this
   // is not an ordinary purse decision.
   const isTitleBout = !!offer.titleArenaId;
@@ -267,19 +297,7 @@ function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
     );
   }
 
-  return {
-    opponent,
-    styleEdge,
-    weatherReason,
-    promoter,
-    kills,
-    rematchLosing,
-    isTitleBout,
-    onLadderHere,
-    dangerLevel,
-    warnings,
-    reasons,
-  };
+  return { isTitleBout, onLadderHere };
 }
 
 /** Scores one candidate offer: matchup, lethality, weather, promoter, purse. */

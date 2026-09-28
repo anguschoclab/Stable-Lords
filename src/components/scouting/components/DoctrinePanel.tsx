@@ -47,46 +47,16 @@ export function DoctrinePanel({
       <div className="space-y-2">
         {Object.entries(styleCounts)
           .sort(([, a], [, b]) => b - a) // Sort by count descending
-          .map(([style, count]) => {
-            const percentage = totalFights > 0 ? (count / totalFights) * 100 : 0;
-            const displayName =
-              STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] || style;
-
-            return (
-              <div key={style} className="flex items-center gap-3">
-                {textAlign === 'right' && (
-                  <div className="flex items-center gap-2 flex-1">
-                    <span className="text-[10px] font-mono font-black text-foreground min-w-[3rem] text-right">
-                      {count}
-                    </span>
-                    <span className="text-[9px] text-muted-foreground/60 min-w-[8rem] text-right">
-                      {displayName}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex-1 max-w-[120px]">
-                  <div className="h-2 bg-neutral-900 rounded-none border border-white/5 overflow-hidden">
-                    <div
-                      className={`h-full transition-all motion-reduce:transition-none motion-reduce:transform-none ${colors.bar}`}
-                      style={{ width: `${percentage}%` }}
-                    />
-                  </div>
-                </div>
-
-                {textAlign === 'left' && (
-                  <div className="flex items-center gap-2 flex-1">
-                    <span className="text-[9px] text-muted-foreground/60 min-w-[8rem]">
-                      {displayName}
-                    </span>
-                    <span className="text-[10px] font-mono font-black text-foreground min-w-[3rem]">
-                      {count}
-                    </span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          .map(([style, count]) => (
+            <StyleBarRow
+              key={style}
+              style={style}
+              count={count}
+              percentage={totalFights > 0 ? (count / totalFights) * 100 : 0}
+              barClass={colors.bar}
+              textAlign={textAlign}
+            />
+          ))}
       </div>
 
       <div
@@ -94,6 +64,59 @@ export function DoctrinePanel({
       >
         {activeCount} Active Warriors
       </div>
+    </div>
+  );
+}
+
+/** One style-share row: labels (mirrored by alignment) + share bar. */
+function StyleBarRow({
+  style,
+  count,
+  percentage,
+  barClass,
+  textAlign,
+}: {
+  style: string;
+  count: number;
+  percentage: number;
+  barClass: string;
+  textAlign: 'left' | 'right';
+}) {
+  const displayName =
+    STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] || style;
+
+  return (
+    <div className="flex items-center gap-3">
+      {textAlign === 'right' && (
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-[10px] font-mono font-black text-foreground min-w-[3rem] text-right">
+            {count}
+          </span>
+          <span className="text-[9px] text-muted-foreground/60 min-w-[8rem] text-right">
+            {displayName}
+          </span>
+        </div>
+      )}
+
+      <div className="flex-1 max-w-[120px]">
+        <div className="h-2 bg-neutral-900 rounded-none border border-white/5 overflow-hidden">
+          <div
+            className={`h-full transition-all motion-reduce:transition-none motion-reduce:transform-none ${barClass}`}
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+      </div>
+
+      {textAlign === 'left' && (
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-[9px] text-muted-foreground/60 min-w-[8rem]">
+            {displayName}
+          </span>
+          <span className="text-[10px] font-mono font-black text-foreground min-w-[3rem]">
+            {count}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

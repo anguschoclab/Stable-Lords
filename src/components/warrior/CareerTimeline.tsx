@@ -24,6 +24,9 @@ function buildMilestones(warrior: Warrior, arenaHistory: FightSummary[]): Milest
   const events: Milestone[] = [];
   const fights = getAllFightsForWarrior(arenaHistory, warrior.id);
   const sorted = [...fights].sort((a, b) => a.week - b.week);
+  const wonBout = (f: FightSummary) =>
+    (f.warriorIdA === warrior.id && f.winner === 'A') ||
+    (f.warriorIdD === warrior.id && f.winner === 'D');
 
   const firstBout = sorted[0];
   if (firstBout) {
@@ -35,10 +38,7 @@ function buildMilestones(warrior: Warrior, arenaHistory: FightSummary[]): Milest
     });
   }
 
-  const firstWin = sorted.find((f) => {
-    const isA = f.warriorIdA === warrior.id;
-    return (isA && f.winner === 'A') || (!isA && f.winner === 'D');
-  });
+  const firstWin = sorted.find(wonBout);
   if (firstWin) {
     events.push({
       week: firstWin.week,
@@ -48,10 +48,7 @@ function buildMilestones(warrior: Warrior, arenaHistory: FightSummary[]): Milest
     });
   }
 
-  const firstKill = sorted.find((f) => {
-    const isA = f.warriorIdA === warrior.id;
-    return ((isA && f.winner === 'A') || (!isA && f.winner === 'D')) && f.by === 'Kill';
-  });
+  const firstKill = sorted.find((f) => wonBout(f) && f.by === 'Kill');
   if (firstKill) {
     events.push({
       week: firstKill.week,
@@ -62,12 +59,7 @@ function buildMilestones(warrior: Warrior, arenaHistory: FightSummary[]): Milest
   }
 
   if (warrior.champion) {
-    const champFight = sorted.find(
-      (f) =>
-        f.tournamentId &&
-        ((f.warriorIdA === warrior.id && f.winner === 'A') ||
-          (f.warriorIdD === warrior.id && f.winner === 'D'))
-    );
+    const champFight = sorted.find((f) => f.tournamentId && wonBout(f));
     events.push({
       week: champFight?.week ?? warrior.career.wins,
       label: 'Champion',

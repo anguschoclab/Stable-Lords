@@ -90,15 +90,7 @@ function FightRow({
           <span className="text-sm">
             vs <span className="font-medium">{opponent}</span>
           </span>
-          {record && record.wins + record.losses + record.draws >= 2 && (
-            <span className="text-[10px] font-mono text-muted-foreground bg-black/20 px-1.5 py-0.5">
-              H2H: {record.wins}-{record.losses}
-              {record.draws > 0 ? `-${record.draws}` : ''}
-              {record.kills > 0 && (
-                <span className="text-destructive ml-1">☠{record.kills}</span>
-              )}
-            </span>
-          )}
+          <H2HBadge record={record} />
           {record && record.losses >= 3 && (
             <Badge variant="destructive" className="text-[10px] gap-1 rounded-none">
               NEMESIS
@@ -117,23 +109,50 @@ function FightRow({
       </button>
 
       {isExpanded && hasTranscript && (
-        <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
-          <BoutViewer
-            nameA={n.a}
-            nameD={n.d}
-            styleA={f.styleA}
-            styleD={f.styleD}
-            log={(f.transcript || []).map((text, i) => ({ minute: i + 1, text }))}
-            winner={f.winner}
-            by={f.by}
-            isRivalry={f.isRivalry}
-            analysis={f.analysis}
-            weaponIdA={findWarrior(nameResolutionState, f.warriorIdA)?.equipment?.weapon}
-            weaponIdD={findWarrior(nameResolutionState, f.warriorIdD)?.equipment?.weapon}
-          />
-        </div>
+        <ExpandedBout f={f} n={n} nameResolutionState={nameResolutionState} />
       )}
     </Surface>
+  );
+}
+
+/** Head-to-head chip shown once the pair have met twice. */
+function H2HBadge({ record }: { record?: H2HRecord }) {
+  if (!record || record.wins + record.losses + record.draws < 2) return null;
+  return (
+    <span className="text-[10px] font-mono text-muted-foreground bg-black/20 px-1.5 py-0.5">
+      H2H: {record.wins}-{record.losses}
+      {record.draws > 0 ? `-${record.draws}` : ''}
+      {record.kills > 0 && <span className="text-destructive ml-1">☠{record.kills}</span>}
+    </span>
+  );
+}
+
+/** Expanded inline BoutViewer for the fight's transcript. */
+function ExpandedBout({
+  f,
+  n,
+  nameResolutionState,
+}: {
+  f: FightSummary;
+  n: ReturnType<typeof getNamesFromTitle>;
+  nameResolutionState: NameResolutionState;
+}) {
+  return (
+    <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
+      <BoutViewer
+        nameA={n.a}
+        nameD={n.d}
+        styleA={f.styleA}
+        styleD={f.styleD}
+        log={(f.transcript || []).map((text, i) => ({ minute: i + 1, text }))}
+        winner={f.winner}
+        by={f.by}
+        isRivalry={f.isRivalry}
+        analysis={f.analysis}
+        weaponIdA={findWarrior(nameResolutionState, f.warriorIdA)?.equipment?.weapon}
+        weaponIdD={findWarrior(nameResolutionState, f.warriorIdD)?.equipment?.weapon}
+      />
+    </div>
   );
 }
 

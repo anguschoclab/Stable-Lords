@@ -15,6 +15,36 @@ interface UseTournamentScheduleResult {
   collapseAll: () => void;
 }
 
+/** Sorted round list filtered by the schedule filter mode. */
+function filterRounds(
+  roundsMap: Map<number, TournamentBout[]>,
+  filter: FilterStatus
+): Array<[number, TournamentBout[]]> {
+  const rounds = Array.from(roundsMap.entries()).sort((a, b) => a[0] - b[0]);
+
+  if (filter === 'all') return rounds;
+
+  return rounds.filter(([round, bouts]) => {
+    const hasCompleted = bouts.some((b) => b.winner !== undefined);
+    const hasPending = bouts.some((b) => b.winner === undefined);
+
+    switch (filter) {
+      case 'completed':
+        return hasCompleted;
+      case 'upcoming':
+        return hasPending;
+      case 'current-round': {
+        const firstPendingRound = Array.from(roundsMap.entries()).find(([_, bs]) =>
+          bs.some((b) => b.winner === undefined)
+        );
+        return round === firstPendingRound?.[0];
+      }
+      default:
+        return true;
+    }
+  });
+}
+
 /**
  *
  */
@@ -52,31 +82,7 @@ export function useTournamentSchedule(tournament: TournamentEntry): UseTournamen
     return { total, completed, byes, upcoming };
   }, [tournament.bracket]);
 
-  const filteredRounds = useMemo(() => {
-    const rounds = Array.from(roundsMap.entries()).sort((a, b) => a[0] - b[0]);
-
-    if (filter === 'all') return rounds;
-
-    return rounds.filter(([round, bouts]) => {
-      const hasCompleted = bouts.some((b) => b.winner !== undefined);
-      const hasPending = bouts.some((b) => b.winner === undefined);
-
-      switch (filter) {
-        case 'completed':
-          return hasCompleted;
-        case 'upcoming':
-          return hasPending;
-        case 'current-round': {
-          const firstPendingRound = Array.from(roundsMap.entries()).find(([_, bs]) =>
-            bs.some((b) => b.winner === undefined)
-          );
-          return round === firstPendingRound?.[0];
-        }
-        default:
-          return true;
-      }
-    });
-  }, [roundsMap, filter]);
+  const filteredRounds = useMemo(() => filterRounds(roundsMap, filter), [roundsMap, filter]);
 
   const toggleRound = (round: number) => {
     const newExpanded = new Set(expandedRounds);

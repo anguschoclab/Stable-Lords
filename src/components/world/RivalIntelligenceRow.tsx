@@ -106,49 +106,7 @@ export function RivalIntelligenceRow({ rival, arenaChampions }: RivalRowProps) {
   return (
     <div className="p-5 hover:bg-white/[0.02] transition-all motion-reduce:transition-none motion-reduce:transform-none group relative overflow-hidden">
       {/* Header row */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 shrink-0 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-          {rival.owner.stableName.slice(0, 2).toUpperCase()}
-        </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="font-display font-black uppercase text-sm tracking-tight text-foreground group-hover:text-primary transition-colors truncate motion-reduce:transition-none">
-            {rival.owner.stableName}
-          </h4>
-          <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-[9px] text-muted-foreground/50 font-black uppercase tracking-widest truncate">
-              {rival.owner.name}
-            </span>
-            <span className="h-1 w-1 rounded-full bg-border/50 shrink-0" />
-            <span className="text-[9px] text-primary/60 font-black uppercase tracking-widest shrink-0">
-              {rival.owner.personality || 'Calculated'}
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <BookmarkButton entityType="rival" entityId={rival.owner.id} size="sm" />
-          <span
-            data-testid="intel-quality-chip"
-            className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm bg-neutral-900 border border-white/5 text-muted-foreground/70 tabular-nums"
-          >
-            {dossierCount > 0 ? `${dossierCount} dossiers` : 'No intel'}
-          </span>
-          <PostureChips rival={rival} arenaChampions={arenaChampions} />
-          <Badge
-            className={cn(
-              'text-[9px] font-black border-none uppercase tracking-widest px-2 py-0.5 shrink-0',
-              rival.strategy?.intent === 'VENDETTA'
-                ? 'bg-destructive/20 text-destructive'
-                : rival.strategy?.intent === 'EXPANSION'
-                  ? 'bg-muted-foreground/20 text-muted-foreground'
-                  : rival.strategy?.intent === 'RECOVERY'
-                    ? 'bg-arena-blood/20 text-arena-blood'
-                    : 'bg-primary/20 text-primary'
-            )}
-          >
-            {rival.strategy?.intent || 'STABLE'}
-          </Badge>
-        </div>
-      </div>
+      <RowHeader rival={rival} arenaChampions={arenaChampions} dossierCount={dossierCount} />
 
       {/* Info grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pl-13">
@@ -183,6 +141,63 @@ export function RivalIntelligenceRow({ rival, arenaChampions }: RivalRowProps) {
       </div>
 
       <div className="absolute right-0 top-0 h-full w-0.5 bg-primary/20 transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
+    </div>
+  );
+}
+
+/** Row header: stable monogram, owner/personality, intel + posture + intent chips. */
+function RowHeader({
+  rival,
+  arenaChampions,
+  dossierCount,
+}: {
+  rival: RivalStableData;
+  arenaChampions?: Record<string, ArenaTitle>;
+  dossierCount: number;
+}) {
+  return (
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-10 h-10 shrink-0 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none">
+        {rival.owner.stableName.slice(0, 2).toUpperCase()}
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="font-display font-black uppercase text-sm tracking-tight text-foreground group-hover:text-primary transition-colors truncate motion-reduce:transition-none">
+          {rival.owner.stableName}
+        </h4>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="text-[9px] text-muted-foreground/50 font-black uppercase tracking-widest truncate">
+            {rival.owner.name}
+          </span>
+          <span className="h-1 w-1 rounded-full bg-border/50 shrink-0" />
+          <span className="text-[9px] text-primary/60 font-black uppercase tracking-widest shrink-0">
+            {rival.owner.personality || 'Calculated'}
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <BookmarkButton entityType="rival" entityId={rival.owner.id} size="sm" />
+        <span
+          data-testid="intel-quality-chip"
+          className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm bg-neutral-900 border border-white/5 text-muted-foreground/70 tabular-nums"
+        >
+          {dossierCount > 0 ? `${dossierCount} dossiers` : 'No intel'}
+        </span>
+        <PostureChips rival={rival} arenaChampions={arenaChampions} />
+        <Badge
+          className={cn(
+            'text-[9px] font-black border-none uppercase tracking-widest px-2 py-0.5 shrink-0',
+            rival.strategy?.intent === 'VENDETTA'
+              ? 'bg-destructive/20 text-destructive'
+              : rival.strategy?.intent === 'EXPANSION'
+                ? 'bg-muted-foreground/20 text-muted-foreground'
+                : rival.strategy?.intent === 'RECOVERY'
+                  ? 'bg-arena-blood/20 text-arena-blood'
+                  : 'bg-primary/20 text-primary'
+          )}
+        >
+          {rival.strategy?.intent || 'STABLE'}
+        </Badge>
+      </div>
     </div>
   );
 }

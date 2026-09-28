@@ -245,19 +245,10 @@ function ChartTooltipItem({
             <itemConfig.icon />
           ) : (
             !hideIndicator && (
-              <div
-                className={cn('shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]', {
-                  'h-2.5 w-2.5': indicator === 'dot',
-                  'w-1': indicator === 'line',
-                  'w-0 border-l-2 border-dashed bg-transparent': indicator === 'dashed',
-                  'my-0.5': nestLabel && indicator === 'dashed',
-                })}
-                style={
-                  {
-                    '--color-bg': indicatorColor,
-                    '--color-border': indicatorColor,
-                  } as React.CSSProperties
-                }
+              <TooltipIndicator
+                indicator={indicator}
+                indicatorColor={indicatorColor}
+                nestLabel={nestLabel}
               />
             )
           )}
@@ -280,6 +271,34 @@ function ChartTooltipItem({
         </>
       )}
     </div>
+  );
+}
+
+/** Indicator swatch for a tooltip row — dot, line, or dashed line. */
+function TooltipIndicator({
+  indicator,
+  indicatorColor,
+  nestLabel,
+}: {
+  indicator: 'line' | 'dot' | 'dashed';
+  indicatorColor?: string;
+  nestLabel: boolean;
+}) {
+  return (
+    <div
+      className={cn('shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]', {
+        'h-2.5 w-2.5': indicator === 'dot',
+        'w-1': indicator === 'line',
+        'w-0 border-l-2 border-dashed bg-transparent': indicator === 'dashed',
+        'my-0.5': nestLabel && indicator === 'dashed',
+      })}
+      style={
+        {
+          '--color-bg': indicatorColor,
+          '--color-border': indicatorColor,
+        } as React.CSSProperties
+      }
+    />
   );
 }
 

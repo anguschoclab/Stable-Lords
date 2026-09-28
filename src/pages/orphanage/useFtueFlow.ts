@@ -120,6 +120,46 @@ function useOrphanSelection() {
   return { selected, poolSeedValue, orphanPool, rerollPool, toggleWarrior, selectedWarriors, planWarrior };
 }
 
+/** Build the post-FTUE game state, commit it, persist, and enter the Stable hub. */
+function commitFtue({
+  state,
+  selectedWarriors,
+  boutResult,
+  poolSeedValue,
+  playerPlan,
+  setState,
+  saveCurrentState,
+  navigate,
+}: {
+  state: ReturnType<typeof useGameStore.getState>;
+  selectedWarriors: Parameters<typeof buildFTUEInitialState>[1];
+  boutResult: BoutResult | null;
+  poolSeedValue: number;
+  playerPlan: FightPlan | null;
+  setState: ReturnType<typeof useGameStore.getState>['setState'];
+  saveCurrentState: () => void;
+  navigate: ReturnType<typeof useNavigate>;
+}) {
+  if (state.ftueComplete) {
+    navigate({ to: '/stable' });
+    return;
+  }
+
+  const result = buildFTUEInitialState(
+    state as unknown as GameState,
+    selectedWarriors,
+    boutResult as Parameters<typeof buildFTUEInitialState>[2],
+    poolSeedValue,
+    playerPlan
+  );
+
+  commitFTUEState(setState, result, state.graveyard);
+  saveCurrentState();
+
+  // Navigate to the Stable hub after FTUE
+  navigate({ to: '/stable' });
+}
+
 export function useFtueFlow() {
   const navigate = useNavigate();
   const state = useGameStore(
@@ -160,24 +200,16 @@ export function useFtueFlow() {
   }, [selectedWarriors, playerPlan, boutSeed]);
 
   const finishFTUE = useCallback(() => {
-    if (state.ftueComplete) {
-      navigate({ to: '/stable' });
-      return;
-    }
-
-    const result = buildFTUEInitialState(
-      state as unknown as GameState,
+    commitFtue({
+      state,
       selectedWarriors,
-      boutResult as Parameters<typeof buildFTUEInitialState>[2],
+      boutResult,
       poolSeedValue,
-      playerPlan
-    );
-
-    commitFTUEState(setState, result, state.graveyard);
-    saveCurrentState();
-
-    // Navigate to the Stable hub after FTUE
-    navigate({ to: '/stable' });
+      playerPlan,
+      setState,
+      saveCurrentState,
+      navigate,
+    });
   }, [
     state,
     setState,

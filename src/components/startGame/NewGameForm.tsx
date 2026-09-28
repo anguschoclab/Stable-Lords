@@ -117,26 +117,8 @@ function IdentityFields({
   can create,
 }.
  */
-export default function NewGameForm({
-  ownerName,
-  setOwnerName,
-  stableName,
-  setStableName,
-  playerCrest,
-  setPlayerCrest,
-  backstoryId,
-  setBackstoryId,
-  onBack,
-  onSubmit,
-  canCreate,
-}: NewGameFormProps) {
-  const { randomizeAll, randomizeCrest, randomizeBackstory } = useRandomizers({
-    setOwnerName,
-    setStableName,
-    setPlayerCrest,
-    setBackstoryId,
-  });
-
+/** The lacquered-oak card frame with the gold thread divider. */
+function FormShell({ onBack, children }: { onBack: () => void; children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative bg-background">
       <div className="relative z-10 w-full max-w-xl space-y-6">
@@ -164,48 +146,74 @@ export default function NewGameForm({
                 'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.5) 30%, rgba(var(--gold-glow-rgb), 0.8) 50%, rgba(var(--gold-glow-rgb), 0.5) 70%, transparent)',
             }}
           />
-
-          <FormHeader />
-
-          <GoldDivider faint />
-
-          <Button
-            variant="outline"
-            type="button"
-            onClick={randomizeAll}
-            title="Randomize everything"
-            className="w-full h-10 gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
-          >
-            <Dices className="h-4 w-4 text-accent/70" />
-            RANDOMIZE ALL
-          </Button>
-
-          <IdentityFields
-            ownerName={ownerName}
-            setOwnerName={setOwnerName}
-            stableName={stableName}
-            setStableName={setStableName}
-            playerCrest={playerCrest}
-            onRandomizeCrest={randomizeCrest}
-          />
-
-          <BackstoryPicker
-            value={backstoryId}
-            onChange={setBackstoryId}
-            onRandomize={randomizeBackstory}
-          />
-
-          <Button
-            onClick={onSubmit}
-            disabled={!canCreate}
-            className="w-full h-12 gap-2 font-display font-bold text-sm tracking-wider uppercase"
-            size="lg"
-          >
-            ENTER THE ORPHANAGE
-            <ArrowRight className="h-4 w-4" />
-          </Button>
+          {children}
         </div>
       </div>
     </div>
+  );
+}
+
+export default function NewGameForm({
+  ownerName,
+  setOwnerName,
+  stableName,
+  setStableName,
+  playerCrest,
+  setPlayerCrest,
+  backstoryId,
+  setBackstoryId,
+  onBack,
+  onSubmit,
+  canCreate,
+}: NewGameFormProps) {
+  const { randomizeAll, randomizeCrest, randomizeBackstory } = useRandomizers({
+    setOwnerName,
+    setStableName,
+    setPlayerCrest,
+    setBackstoryId,
+  });
+
+  return (
+    <FormShell onBack={onBack}>
+      <FormHeader />
+
+      <GoldDivider faint />
+
+      <Button
+        variant="outline"
+        type="button"
+        onClick={randomizeAll}
+        title="Randomize everything"
+        className="w-full h-10 gap-2 border-[rgba(var(--oak-rgb),_0.8)] bg-background hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
+      >
+        <Dices className="h-4 w-4 text-accent/70" />
+        RANDOMIZE ALL
+      </Button>
+
+      <IdentityFields
+        ownerName={ownerName}
+        setOwnerName={setOwnerName}
+        stableName={stableName}
+        setStableName={setStableName}
+        playerCrest={playerCrest}
+        onRandomizeCrest={randomizeCrest}
+      />
+
+      <BackstoryPicker
+        value={backstoryId}
+        onChange={setBackstoryId}
+        onRandomize={randomizeBackstory}
+      />
+
+      <Button
+        onClick={onSubmit}
+        disabled={!canCreate}
+        className="w-full h-12 gap-2 font-display font-bold text-sm tracking-wider uppercase"
+        size="lg"
+      >
+        ENTER THE ORPHANAGE
+        <ArrowRight className="h-4 w-4" />
+      </Button>
+    </FormShell>
   );
 }

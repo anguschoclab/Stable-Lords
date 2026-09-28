@@ -76,35 +76,50 @@ export default function SaveSlotCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-0.5 shrink-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150 motion-reduce:transition-none"
-            onClick={(e) => {
-              e.stopPropagation();
-              onExport();
-            }}
-            tooltip="Export save"
-            aria-label={`Export save for ${slot.name}`}
-          >
-            <Download className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150 motion-reduce:transition-none"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            tooltip="Delete save"
-            aria-label={`Delete save for ${slot.name}`}
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-        </div>
+        <SlotActions slot={slot} onExport={onExport} onDelete={onDelete} />
       </div>
+    </div>
+  );
+}
+
+/** Export/delete icon buttons; clicks stopPropagation so the card isn't loaded. */
+function SlotActions({
+  slot,
+  onExport,
+  onDelete,
+}: {
+  slot: SaveSlotMeta;
+  onExport: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-0.5 shrink-0">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150 motion-reduce:transition-none"
+        onClick={(e) => {
+          e.stopPropagation();
+          onExport();
+        }}
+        tooltip="Export save"
+        aria-label={`Export save for ${slot.name}`}
+      >
+        <Download className="h-3.5 w-3.5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150 motion-reduce:transition-none"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+        tooltip="Delete save"
+        aria-label={`Delete save for ${slot.name}`}
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </Button>
     </div>
   );
 }

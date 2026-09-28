@@ -56,26 +56,19 @@ interface BoutViewerProps {
   arena id,
 }.
  */
-export default function BoutViewer({
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  log,
-  winner,
-  by,
-  announcement,
-  isRivalry,
-  arenaTier = 'standard',
-  weather = 'Clear',
-  arenaId,
-  analysis,
-  exchangeLog,
-  weaponIdA,
-  weaponIdD,
-  warriorA,
-  warriorD,
-}: BoutViewerProps) {
+export default function BoutViewer(props: BoutViewerProps) {
+  const {
+    nameA,
+    nameD,
+    styleA,
+    styleD,
+    log,
+    winner,
+    isRivalry,
+    arenaTier = 'standard',
+    weather = 'Clear',
+    arenaId,
+  } = props;
   const {
     expanded,
     setExpanded,
@@ -114,28 +107,14 @@ export default function BoutViewer({
 
       {expanded && (
         <BoutBody
-          nameA={nameA}
-          nameD={nameD}
-          styleA={styleA}
-          styleD={styleD}
-          log={log}
-          winner={winner}
-          winnerName={winnerName}
-          by={by}
-          announcement={announcement}
+          {...props}
           arenaTier={arenaTier}
+          winnerName={winnerName}
           effectiveWeather={effectiveWeather}
-          arenaId={arenaId}
           minutes={minutes}
           viewMode={viewMode}
           onViewModeChange={onViewModeChange}
           playback={playback}
-          analysis={analysis}
-          exchangeLog={exchangeLog}
-          weaponIdA={weaponIdA}
-          weaponIdD={weaponIdD}
-          warriorA={warriorA}
-          warriorD={warriorD}
           scoutReports={scoutReports}
         />
       )}

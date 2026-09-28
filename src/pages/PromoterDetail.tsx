@@ -23,11 +23,10 @@ const TABS: SubNavTab[] = [
   { id: 'offers', label: 'Active Offers', icon: <Calendar className="h-4 w-4" /> },
 ];
 
-/**
- * Promoter detail.
- */
-export default function PromoterDetail() {
-  const { id } = useParams({ strict: false }) as { id: string };
+type Promoter = NonNullable<ReturnType<typeof usePromoterLookup>['promoter']>;
+
+/** Resolve the promoter, derived stats, and the sorted offer list for `id`. */
+function usePromoterLookup(id: string) {
   const { promoters, boutOffers, absoluteWeek } = useGameStore(
     useShallow((s) => ({
       promoters: s.promoters,
@@ -35,7 +34,6 @@ export default function PromoterDetail() {
       absoluteWeek: s.absoluteWeek,
     }))
   );
-  const [activeTab, setActiveTab] = useState('overview');
 
   const promoter = useMemo(() => {
     return Object.values(promoters || {}).find((p) => p.id === id);
@@ -53,21 +51,66 @@ export default function PromoterDetail() {
       .sort((a, b) => boutOfferAbsoluteWeek(a) - boutOfferAbsoluteWeek(b));
   }, [promoter, boutOffers]);
 
-  if (!promoter || !stats) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <p className="text-muted-foreground">Promoter not found.</p>
-        <Link to="/stable/promoters">
-          <Button variant="outline">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Directory
-          </Button>
-        </Link>
+  return { promoter, stats, promoterOffers };
+}
+
+/** Tier-styled hero band: tier badge, personality blurb, bookmark. */
+function PromoterHero({ promoter }: { promoter: Promoter }) {
+  const personality = PERSONALITY_CONFIG[promoter.personality];
+  const tierStyle = TIER_COLORS[promoter.tier];
+
+  return (
+    <div className={`p-6 rounded-none border ${tierStyle.bg} ${tierStyle.badge} border-current`}>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3 flex-wrap">
+            <Badge variant="outline" className={`text-xs ${tierStyle.badge}`}>
+              {promoter.tier}
+            </Badge>
+          </div>
+          <p className="text-sm opacity-80">{personality.description}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <BookmarkButton entityType="promoter" entityId={promoter.id} size="md" />
+          <div className={`p-4 rounded-none ${personality.bgColor} flex items-center gap-3`}>
+            <div className={personality.color}>{personality.icon}</div>
+            <div>
+              <div className={`font-bold ${personality.color}`}>{personality.label}</div>
+              <div className="text-xs opacity-60">Personality</div>
+            </div>
+          </div>
+        </div>
       </div>
-    );
+    </div>
+  );
+}
+
+function PromoterNotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+      <p className="text-muted-foreground">Promoter not found.</p>
+      <Link to="/stable/promoters">
+        <Button variant="outline">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Directory
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
+/**
+ * Promoter detail.
+ */
+export default function PromoterDetail() {
+  const { id } = useParams({ strict: false }) as { id: string };
+  const { promoter, stats, promoterOffers } = usePromoterLookup(id);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  if (!promoter || !stats) {
+    return <PromoterNotFound />;
   }
 
   const personality = PERSONALITY_CONFIG[promoter.personality];
-  const tierStyle = TIER_COLORS[promoter.tier];
 
   return (
     <PageFrame className="space-y-6">
@@ -85,28 +128,7 @@ export default function PromoterDetail() {
       />
 
       {/* Hero Section */}
-      <div className={`p-6 rounded-none border ${tierStyle.bg} ${tierStyle.badge} border-current`}>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 flex-wrap">
-              <Badge variant="outline" className={`text-xs ${tierStyle.badge}`}>
-                {promoter.tier}
-              </Badge>
-            </div>
-            <p className="text-sm opacity-80">{personality.description}</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <BookmarkButton entityType="promoter" entityId={promoter.id} size="md" />
-            <div className={`p-4 rounded-none ${personality.bgColor} flex items-center gap-3`}>
-              <div className={personality.color}>{personality.icon}</div>
-              <div>
-                <div className={`font-bold ${personality.color}`}>{personality.label}</div>
-                <div className="text-xs opacity-60">Personality</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PromoterHero promoter={promoter} />
 
       <SubNav tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 

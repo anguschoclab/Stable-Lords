@@ -30,44 +30,19 @@ export function TournamentBoutRow({ bout, state, round: _round }: TournamentBout
       <div className="flex items-center gap-3">
         <div className="text-xs text-muted-foreground font-mono w-8">#{bout.matchIndex + 1}</div>
         <div className="space-y-1">
-          <div
-            className={cn(
-              'flex items-center gap-2',
-              bout.winner === 'A' && 'text-primary font-bold',
-              bout.winner === 'D' && 'opacity-40'
-            )}
-          >
-            <div
-              className={cn(
-                'w-1.5 h-1.5 rounded-full',
-                bout.winner === 'A' ? 'bg-primary' : 'bg-muted-foreground/30'
-              )}
-            />
-            <span className="text-sm truncate max-w-32">
-              {resolveWarriorName(state, bout.warriorIdA, 'Unknown')}
-            </span>
-            {bout.winner === 'A' && <Trophy className="h-3 w-3 text-arena-gold" />}
-          </div>
-
+          <ParticipantLine
+            state={state}
+            warriorId={bout.warriorIdA}
+            won={bout.winner === 'A'}
+            dimmed={bout.winner === 'D'}
+          />
           {!isBye ? (
-            <div
-              className={cn(
-                'flex items-center gap-2',
-                bout.winner === 'D' && 'text-primary font-bold',
-                bout.winner === 'A' && 'opacity-40'
-              )}
-            >
-              <div
-                className={cn(
-                  'w-1.5 h-1.5 rounded-full',
-                  bout.winner === 'D' ? 'bg-primary' : 'bg-muted-foreground/30'
-                )}
-              />
-              <span className="text-sm truncate max-w-32">
-                {resolveWarriorName(state, bout.warriorIdD, 'Unknown')}
-              </span>
-              {bout.winner === 'D' && <Trophy className="h-3 w-3 text-arena-gold" />}
-            </div>
+            <ParticipantLine
+              state={state}
+              warriorId={bout.warriorIdD}
+              won={bout.winner === 'D'}
+              dimmed={bout.winner === 'A'}
+            />
           ) : (
             <div className="flex items-center gap-2 opacity-50 italic">
               <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
@@ -97,6 +72,36 @@ export function TournamentBoutRow({ bout, state, round: _round }: TournamentBout
           </Badge>
         )}
       </div>
+    </div>
+  );
+}
+
+/** One bracket entrant line: seed dot, name, winner trophy. */
+function ParticipantLine({
+  state,
+  warriorId,
+  won,
+  dimmed,
+}: {
+  state: NameResolutionState;
+  warriorId: TournamentBout['warriorIdA'];
+  won: boolean;
+  dimmed: boolean;
+}) {
+  return (
+    <div
+      className={cn('flex items-center gap-2', won && 'text-primary font-bold', dimmed && 'opacity-40')}
+    >
+      <div
+        className={cn(
+          'w-1.5 h-1.5 rounded-full',
+          won ? 'bg-primary' : 'bg-muted-foreground/30'
+        )}
+      />
+      <span className="text-sm truncate max-w-32">
+        {resolveWarriorName(state, warriorId, 'Unknown')}
+      </span>
+      {won && <Trophy className="h-3 w-3 text-arena-gold" />}
     </div>
   );
 }

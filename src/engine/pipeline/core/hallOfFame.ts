@@ -136,6 +136,36 @@ export function processHallOfFame(
   const eligible = collectEligible(state, completedYear);
   if (eligible.length === 0) return {};
 
+  awardTopHonors(state, eligible, completedYear, ledger);
+  awardClassMvps(state, eligible, completedYear, ledger);
+
+  const impact: StateImpact = {
+    awards: [...(state.awards || []), ...ledger.awards],
+    rosterUpdates: ledger.rosterUpdates,
+    rivalsUpdates: ledger.rivalsUpdates,
+  };
+
+  if (ledger.hofNews.length > 0) {
+    impact.newsletterItems = [
+      {
+        id: rngService.uuid(),
+        week: newWeek,
+        title: 'Hall of Fame Inductions',
+        items: ledger.hofNews,
+      },
+    ];
+  }
+
+  return impact;
+}
+
+/** Warrior of the Year + Killer of the Year headline awards. */
+function awardTopHonors(
+  state: GameState,
+  eligible: ReturnType<typeof collectEligible>,
+  completedYear: number,
+  ledger: AwardLedger
+): void {
   const woty = pickBest(eligible, (e) => e.wins, (e) => e.fame);
   if (woty && woty.wins > 0) {
     recordAward(
@@ -179,27 +209,6 @@ export function processHallOfFame(
       `💀 KILLER OF THE YEAR: ${koty.w.name} earned the 'Reaper's Gaze' with ${koty.kills} kills.`
     );
   }
-
-  awardClassMvps(state, eligible, completedYear, ledger);
-
-  const impact: StateImpact = {
-    awards: [...(state.awards || []), ...ledger.awards],
-    rosterUpdates: ledger.rosterUpdates,
-    rivalsUpdates: ledger.rivalsUpdates,
-  };
-
-  if (ledger.hofNews.length > 0) {
-    impact.newsletterItems = [
-      {
-        id: rngService.uuid(),
-        week: newWeek,
-        title: 'Hall of Fame Inductions',
-        items: ledger.hofNews,
-      },
-    ];
-  }
-
-  return impact;
 }
 
 /** Per-style MVP awards — leading specialist of each class. */

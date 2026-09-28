@@ -15,54 +15,21 @@ import { DeleteSaveDialog } from '@/pages/startGame/DeleteSaveDialog';
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-/**
- * Start game.
- */
-export default function StartGame() {
+type StartGameFlow = ReturnType<typeof useStartGame>;
+
+/** The imperial title screen: hero, actions, save list, delete dialog. */
+function TitleScreen({ flow }: { flow: StartGameFlow }) {
   const {
-    screen,
     setScreen,
     slots,
     deleteTarget,
     setDeleteTarget,
-    ownerName,
-    setOwnerName,
-    stableName,
-    setStableName,
-    playerCrest,
-    setPlayerCrest,
-    backstoryId,
-    setBackstoryId,
-    canCreate,
     mostRecent,
     loadSlot,
     handleDelete,
-    handleNewGame,
     handleImport,
     handleExport,
-  } = useStartGame();
-
-  // ── New Game Screen ────────────────────────────────────────────────────────
-
-  if (screen === 'newGame') {
-    return (
-      <NewGameForm
-        ownerName={ownerName}
-        setOwnerName={setOwnerName}
-        stableName={stableName}
-        setStableName={setStableName}
-        playerCrest={playerCrest}
-        setPlayerCrest={setPlayerCrest}
-        backstoryId={backstoryId}
-        setBackstoryId={setBackstoryId}
-        onBack={() => setScreen('title')}
-        onSubmit={handleNewGame}
-        canCreate={canCreate}
-      />
-    );
-  }
-
-  // ── Title Screen ──────────────────────────────────────────────────────────
+  } = flow;
 
   return (
     <div
@@ -109,4 +76,49 @@ export default function StartGame() {
       />
     </div>
   );
+}
+
+/**
+ * Start game.
+ */
+export default function StartGame() {
+  const flow = useStartGame();
+  const {
+    screen,
+    setScreen,
+    ownerName,
+    setOwnerName,
+    stableName,
+    setStableName,
+    playerCrest,
+    setPlayerCrest,
+    backstoryId,
+    setBackstoryId,
+    canCreate,
+    handleNewGame,
+  } = flow;
+
+  // ── New Game Screen ────────────────────────────────────────────────────────
+
+  if (screen === 'newGame') {
+    return (
+      <NewGameForm
+        ownerName={ownerName}
+        setOwnerName={setOwnerName}
+        stableName={stableName}
+        setStableName={setStableName}
+        playerCrest={playerCrest}
+        setPlayerCrest={setPlayerCrest}
+        backstoryId={backstoryId}
+        setBackstoryId={setBackstoryId}
+        onBack={() => setScreen('title')}
+        onSubmit={handleNewGame}
+        canCreate={canCreate}
+      />
+    );
+  }
+
+  // ── Title Screen ──────────────────────────────────────────────────────────
+
+  return <TitleScreen flow={flow} />;
 }

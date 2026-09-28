@@ -146,40 +146,12 @@ export function StableOverviewTab({
 }) {
   return (
     <div className="space-y-12">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          {
-            label: 'Active Roster',
-            value: activeRoster.length,
-            icon: Users,
-            color: 'text-foreground',
-          },
-          { label: 'Victories', value: totalWins, icon: Trophy, color: 'text-arena-pop' },
-          { label: 'Losses', value: totalLosses, icon: Skull, color: 'text-destructive' },
-          {
-            label: 'Confirmed Kills',
-            value: totalKills,
-            icon: Swords,
-            color: 'text-arena-blood',
-          },
-        ].map((stat) => (
-          <Surface
-            key={stat.label}
-            variant="glass"
-            className="p-6 border-white/5 space-y-3"
-          >
-            <stat.icon className={cn('h-4 w-4 opacity-40', stat.color)} />
-            <div>
-              <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                {stat.label}
-              </div>
-              <div className={cn('text-2xl font-display font-black', stat.color)}>
-                {stat.value}
-              </div>
-            </div>
-          </Surface>
-        ))}
-      </div>
+      <OverviewStatTiles
+        activeCount={activeRoster.length}
+        totalWins={totalWins}
+        totalLosses={totalLosses}
+        totalKills={totalKills}
+      />
 
       <section>
         <SectionDivider label="Retirement" />
@@ -212,6 +184,43 @@ export function StableOverviewTab({
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+/** Overview stat tiles: active roster, victories, losses, confirmed kills. */
+function OverviewStatTiles({
+  activeCount,
+  totalWins,
+  totalLosses,
+  totalKills,
+}: {
+  activeCount: number;
+  totalWins: number;
+  totalLosses: number;
+  totalKills: number;
+}) {
+  const stats = [
+    { label: 'Active Roster', value: activeCount, icon: Users, color: 'text-foreground' },
+    { label: 'Victories', value: totalWins, icon: Trophy, color: 'text-arena-pop' },
+    { label: 'Losses', value: totalLosses, icon: Skull, color: 'text-destructive' },
+    { label: 'Confirmed Kills', value: totalKills, icon: Swords, color: 'text-arena-blood' },
+  ];
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {stats.map((stat) => (
+        <Surface key={stat.label} variant="glass" className="p-6 border-white/5 space-y-3">
+          <stat.icon className={cn('h-4 w-4 opacity-40', stat.color)} />
+          <div>
+            <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
+              {stat.label}
+            </div>
+            <div className={cn('text-2xl font-display font-black', stat.color)}>
+              {stat.value}
+            </div>
+          </div>
+        </Surface>
+      ))}
     </div>
   );
 }

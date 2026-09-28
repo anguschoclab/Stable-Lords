@@ -99,40 +99,53 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
           {isSelected && <CheckCircle2 className="h-3 w-3 text-foreground" />}
         </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-            <span className="font-display font-bold text-sm text-foreground">{warrior.name}</span>
-            <StatBadge styleName={warrior.style} variant="secondary" showFullName />
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 border border-arena-gold/30 bg-arena-gold/5 text-arena-gold cursor-help">
-                    {TRAIT_DATA[warrior.trait]?.name ?? warrior.trait}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs text-[10px]">
-                  <TraitTooltipContent trait={warrior.trait} />
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          <p className="text-[10px] text-muted-foreground/80 font-medium mb-1">{warrior.origin}</p>
-          <p className="text-[10px] text-muted-foreground/50 italic leading-relaxed line-clamp-2">
-            {warrior.lore}
-          </p>
-        </div>
-
-        <div className="shrink-0 text-right space-y-1">
-          <div className="flex items-center justify-end gap-1">
-            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              HP
-            </span>
-            <span className="text-[11px] font-mono font-black text-foreground/80">
-              {stats.derivedStats.hp}
-            </span>
-          </div>
-        </div>
+        <CardBody warrior={warrior} hp={stats.derivedStats.hp} />
       </div>
     </div>
+  );
+}
+
+/** Name, style badge, trait chip, origin/lore blurb, and the HP readout. */
+function CardBody({
+  warrior,
+  hp,
+}: {
+  warrior: WarriorCardProps['warrior'];
+  hp: number;
+}) {
+  return (
+    <>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+          <span className="font-display font-bold text-sm text-foreground">{warrior.name}</span>
+          <StatBadge styleName={warrior.style} variant="secondary" showFullName />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 border border-arena-gold/30 bg-arena-gold/5 text-arena-gold cursor-help">
+                  {TRAIT_DATA[warrior.trait]?.name ?? warrior.trait}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-xs text-[10px]">
+                <TraitTooltipContent trait={warrior.trait} />
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+        <p className="text-[10px] text-muted-foreground/80 font-medium mb-1">{warrior.origin}</p>
+        <p className="text-[10px] text-muted-foreground/50 italic leading-relaxed line-clamp-2">
+          {warrior.lore}
+        </p>
+      </div>
+
+      <div className="shrink-0 text-right space-y-1">
+        <div className="flex items-center justify-end gap-1">
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+            HP
+          </span>
+          <span className="text-[11px] font-mono font-black text-foreground/80">{hp}</span>
+        </div>
+      </div>
+    </>
   );
 }

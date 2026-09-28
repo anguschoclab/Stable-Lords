@@ -39,57 +39,50 @@ function cullRivalRoster(
 
   // Methodical/Tactician owners cull underperformers
   if (personality === 'Methodical' || personality === 'Tactician') {
-    const candidates = r.roster.filter(
+    cullWhere(
+      r,
       (w) =>
-        isActive(w) &&
         w.career.wins + w.career.losses >= 5 &&
         w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
-        (w.age ?? 18) >= 25 &&
-        !isOnWinStreak(w)
+        (w.age ?? 18) >= 25,
+      isOnWinStreak,
+      retire,
+      gazetteItems,
+      (c) => `📋 ${r.owner.name} (${r.owner.stableName}) retires ${c.name} — "Not meeting expectations."`
     );
-    for (const c of candidates.slice(0, 1)) {
-      retire(c);
-      gazetteItems.push(
-        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${c.name} — "Not meeting expectations."`
-      );
-    }
   }
 
   // Aggressive owners cull warriors with 0 kills after many fights
   if (personality === 'Aggressive') {
-    const killless = r.roster.filter(
+    cullWhere(
+      r,
       (w) =>
-        isActive(w) &&
         w.career.kills === 0 &&
         w.career.wins + w.career.losses >= 8 &&
-        (w.age ?? 18) >= 24 &&
-        !isOnWinStreak(w)
+        (w.age ?? 18) >= 24,
+      isOnWinStreak,
+      retire,
+      gazetteItems,
+      (c) => `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${c.name} — "No killer instinct."`
     );
-    for (const c of killless.slice(0, 1)) {
-      retire(c);
-      gazetteItems.push(
-        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${c.name} — "No killer instinct."`
-      );
-    }
   }
 
   // Liability-based culling: release flaw-loaded warriors per personality threshold
   const traitPolicy = policyFor(r.owner.personality);
-  const liabilityCandidates = r.roster.filter((w) => {
-    if (!isActive(w)) return false;
-    if (isOnWinStreak(w)) return false;
-    const liability = computeWarriorLiability(w);
-    return (
-      liability.score >= traitPolicy.cutLiabilityThreshold ||
-      liability.recommendation === 'Release'
-    );
-  });
-  for (const c of liabilityCandidates.slice(0, 1)) {
-    retire(c);
-    gazetteItems.push(
-      `📋 ${r.owner.name} (${r.owner.stableName}) releases ${c.name} — too many flaws.`
-    );
-  }
+  cullWhere(
+    r,
+    (w) => {
+      const liability = computeWarriorLiability(w);
+      return (
+        liability.score >= traitPolicy.cutLiabilityThreshold ||
+        liability.recommendation === 'Release'
+      );
+    },
+    isOnWinStreak,
+    retire,
+    gazetteItems,
+    (c) => `📋 ${r.owner.name} (${r.owner.stableName}) releases ${c.name} — too many flaws.`
+  );
 
   // Age-based retirement
   const elderly = r.roster.filter((w) => isActive(w) && (w.age ?? 18) >= 30);
@@ -104,6 +97,22 @@ function cullRivalRoster(
   }
 
   return culledThisTick;
+}
+
+/** Retire the first active, non-streaking warrior matching `matches`; log it. */
+function cullWhere(
+  r: RivalStableData,
+  matches: (w: Warrior) => boolean,
+  isOnWinStreak: (w: Warrior) => boolean,
+  retire: (w: Warrior) => void,
+  gazetteItems: string[],
+  describe: (w: Warrior) => string
+): void {
+  const candidates = r.roster.filter((w) => isActive(w) && !isOnWinStreak(w) && matches(w));
+  for (const c of candidates.slice(0, 1)) {
+    retire(c);
+    gazetteItems.push(describe(c));
+  }
 }
 
 /**

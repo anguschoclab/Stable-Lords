@@ -159,6 +159,18 @@ function runAttackExchange(
     events
   );
 
+  applyExchangeEndurance(events, ctx, fA, fD, s, aGoesFirst);
+}
+
+/** Sub-phase 4b: endurance costs for the attack exchange (att/def-derived OE/AL/weapon reqs). */
+function applyExchangeEndurance(
+  events: CombatEvent[],
+  ctx: ResolutionContext,
+  fA: FighterState,
+  fD: FighterState,
+  s: ExchangeSetup,
+  aGoesFirst: boolean
+): void {
   const curAttOE = aGoesFirst ? s.OE_A : s.OE_D;
   const curAttAL = aGoesFirst ? s.AL_A : s.AL_D;
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;

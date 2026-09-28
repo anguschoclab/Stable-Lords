@@ -136,36 +136,10 @@ export function useRivalryAlerts() {
     return m;
   }, [state.rivals]);
 
-  const currentRivalries = useMemo((): RivalrySnapshot[] => {
-    const map: Record<string, { stableName: string; kills: number; bouts: number }> =
-      Object.create(null);
-    const result: { stableName: string; kills: number; bouts: number }[] = [];
-
-    for (const bout of state.arenaHistory) {
-      const aIsPlayer = allRosterIds.has(bout.warriorIdA);
-      const dIsPlayer = allRosterIds.has(bout.warriorIdD);
-      if (!aIsPlayer && !dIsPlayer) continue;
-
-      const rivalId = aIsPlayer ? bout.warriorIdD : bout.warriorIdA;
-      const stable = rivalWarriorStable[rivalId];
-      if (!stable) continue;
-
-      let r = map[stable];
-      if (!r) {
-        r = { stableName: stable, kills: 0, bouts: 0 };
-        map[stable] = r;
-        result.push(r);
-      }
-      r.bouts++;
-      if (bout.by === 'Kill' && bout.winner) r.kills++;
-    }
-
-    return result.map((r) => {
-      let intensity = Math.min(r.kills * 2, 4) + (r.bouts >= 5 ? 1 : 0);
-      intensity = clamp(intensity, 1, 5);
-      return { stableName: r.stableName, intensity };
-    });
-  }, [state.arenaHistory, allRosterIds, rivalWarriorStable]);
+  const currentRivalries = useMemo(
+    () => computeRivalrySnapshots(state.arenaHistory, allRosterIds, rivalWarriorStable),
+    [state.arenaHistory, allRosterIds, rivalWarriorStable]
+  );
 
   const prevRef = useRef<Map<string, number>>(new Map());
 
@@ -175,25 +149,7 @@ export function useRivalryAlerts() {
     for (const r of currentRivalries) {
       const oldIntensity = prev.get(r.stableName) ?? 0;
       if (r.intensity > oldIntensity && oldIntensity > 0) {
-        const label = INTENSITY_LABELS[r.intensity] ?? 'Escalated';
-
-        // Dramatic effects for Bitter (4) and Blood Feud (5)
-        if (r.intensity >= 4) {
-          triggerScreenShake(r.intensity);
-          playImpactSFX(r.intensity);
-        }
-
-        toast({
-          title:
-            r.intensity >= 5
-              ? `💀 BLOOD FEUD: ${r.stableName}`
-              : `🔥 Rivalry Escalated: ${r.stableName}`,
-          description:
-            r.intensity >= 5
-              ? `The hatred between your stables has reached its peak. There will be no mercy.`
-              : `Your feud with ${r.stableName} has intensified to "${label}" (${r.intensity}/5)!`,
-          variant: r.intensity >= 4 ? 'destructive' : 'default',
-        });
+        fireEscalation(r);
       }
     }
 
@@ -202,4 +158,66 @@ export function useRivalryAlerts() {
     for (const r of currentRivalries) next.set(r.stableName, r.intensity);
     prevRef.current = next;
   }, [currentRivalries]);
+}
+
+/**
+ * Tally player-vs-stable kills/bouts from arena history into a per-stable
+ * intensity snapshot (1-5 scale).
+ */
+function computeRivalrySnapshots(
+  arenaHistory: NonNullable<ReturnType<typeof useWorldState>>['arenaHistory'],
+  allRosterIds: Set<WarriorId>,
+  rivalWarriorStable: Record<WarriorId, string>
+): RivalrySnapshot[] {
+  const map: Record<string, { stableName: string; kills: number; bouts: number }> =
+    Object.create(null);
+  const result: { stableName: string; kills: number; bouts: number }[] = [];
+
+  for (const bout of arenaHistory) {
+    const aIsPlayer = allRosterIds.has(bout.warriorIdA);
+    const dIsPlayer = allRosterIds.has(bout.warriorIdD);
+    if (!aIsPlayer && !dIsPlayer) continue;
+
+    const rivalId = aIsPlayer ? bout.warriorIdD : bout.warriorIdA;
+    const stable = rivalWarriorStable[rivalId];
+    if (!stable) continue;
+
+    let r = map[stable];
+    if (!r) {
+      r = { stableName: stable, kills: 0, bouts: 0 };
+      map[stable] = r;
+      result.push(r);
+    }
+    r.bouts++;
+    if (bout.by === 'Kill' && bout.winner) r.kills++;
+  }
+
+  return result.map((r) => {
+    let intensity = Math.min(r.kills * 2, 4) + (r.bouts >= 5 ? 1 : 0);
+    intensity = clamp(intensity, 1, 5);
+    return { stableName: r.stableName, intensity };
+  });
+}
+
+/** Toast + (at Bitter/Blood Feud) screen shake and impact SFX for an escalation. */
+function fireEscalation(r: RivalrySnapshot) {
+  const label = INTENSITY_LABELS[r.intensity] ?? 'Escalated';
+
+  // Dramatic effects for Bitter (4) and Blood Feud (5)
+  if (r.intensity >= 4) {
+    triggerScreenShake(r.intensity);
+    playImpactSFX(r.intensity);
+  }
+
+  toast({
+    title:
+      r.intensity >= 5
+        ? `💀 BLOOD FEUD: ${r.stableName}`
+        : `🔥 Rivalry Escalated: ${r.stableName}`,
+    description:
+      r.intensity >= 5
+        ? `The hatred between your stables has reached its peak. There will be no mercy.`
+        : `Your feud with ${r.stableName} has intensified to "${label}" (${r.intensity}/5)!`,
+    variant: r.intensity >= 4 ? 'destructive' : 'default',
+  });
 }

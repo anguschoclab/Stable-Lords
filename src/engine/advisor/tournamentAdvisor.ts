@@ -49,28 +49,7 @@ export function evaluateTournamentAdvice(
 
   // 1. Live tournament week
   if (state.isTournamentWeek || weeksUntilTournament === 0) {
-    if (isParticipant) {
-      return {
-        qualifiedTier: tierInfo?.tierId ?? null,
-        tierName: tierInfo?.tierName ?? currentTournament?.name ?? null,
-        overallRank,
-        isParticipant: true,
-        weeksUntilTournament: 0,
-        status: 'ACTIVE_ROUND',
-        headline: `🏆 Live Bracket Active: ${currentTournament?.name ?? 'Seasonal Tournament'}`,
-        details: 'Tournament bouts take priority. Tune battle plan tactics for each opponent in the bracket.',
-      };
-    }
-    return {
-      qualifiedTier: tierInfo?.tierId ?? null,
-      tierName: tierInfo?.tierName ?? null,
-      overallRank,
-      isParticipant: false,
-      weeksUntilTournament: 0,
-      status: 'OFF_SEASON',
-      headline: 'Tournament Week (Non-Participant)',
-      details: 'Focus on rest, recovery, and preparation for next season.',
-    };
+    return liveTournamentAdvice(tierInfo, currentTournament, isParticipant, overallRank);
   }
 
   // 2. Unqualified
@@ -111,5 +90,36 @@ export function evaluateTournamentAdvice(
     status: 'QUALIFYING',
     headline: `Contending for ${tierInfo.tierName} (Rank #${overallRank})`,
     details: `Currently seeded in ${tierInfo.tierName}. ${weeksUntilTournament} weeks remaining to build fame and secure seeding.`,
+  };
+}
+
+/** Advice for a live tournament week — participant or spectator. */
+function liveTournamentAdvice(
+  tierInfo: TierInfo | null,
+  currentTournament: GameState['tournaments'] extends (infer T)[] | undefined ? T : never,
+  isParticipant: boolean,
+  overallRank: number | null
+): WarriorTournamentAdvice {
+  if (isParticipant) {
+    return {
+      qualifiedTier: tierInfo?.tierId ?? null,
+      tierName: tierInfo?.tierName ?? currentTournament?.name ?? null,
+      overallRank,
+      isParticipant: true,
+      weeksUntilTournament: 0,
+      status: 'ACTIVE_ROUND',
+      headline: `🏆 Live Bracket Active: ${currentTournament?.name ?? 'Seasonal Tournament'}`,
+      details: 'Tournament bouts take priority. Tune battle plan tactics for each opponent in the bracket.',
+    };
+  }
+  return {
+    qualifiedTier: tierInfo?.tierId ?? null,
+    tierName: tierInfo?.tierName ?? null,
+    overallRank,
+    isParticipant: false,
+    weeksUntilTournament: 0,
+    status: 'OFF_SEASON',
+    headline: 'Tournament Week (Non-Participant)',
+    details: 'Focus on rest, recovery, and preparation for next season.',
   };
 }

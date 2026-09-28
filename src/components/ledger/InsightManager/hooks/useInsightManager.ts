@@ -55,25 +55,11 @@ export function useInsightManager({
     setIsRevealing(true);
 
     timerRef.current = setTimeout(() => {
-      const type = selectedToken.type;
-      let result = 'Unknown';
-
-      if (type === 'Weapon') {
-        result = selectedWarrior.favorites?.weaponId || 'Gladius';
-      } else if (type === 'Rhythm') {
-        const r = selectedWarrior.favorites?.rhythm || { oe: 5, al: 5 };
-        result = `OE:${r.oe} / AL:${r.al}`;
-      } else if (type === 'Style') {
-        result = '+1 ATT Permanently Applied';
-      } else if (type === 'Attribute') {
-        result = 'Primary Attribute Enhanced (+1)';
-      } else if (type === 'Tactic') {
-        result = 'Tactical Insight Unlocked';
-      }
+      const result = resolveInsightResult(selectedToken, selectedWarrior);
 
       setRevealData({
         name: selectedWarrior.name,
-        type: type,
+        type: selectedToken.type,
         result: result,
       });
 
@@ -98,4 +84,18 @@ export function useInsightManager({
     setRevealData,
     handleReveal,
   };
+}
+
+/** Human-readable reveal result for the token type against this warrior. */
+function resolveInsightResult(token: InsightToken, warrior: Warrior): string {
+  const type = token.type;
+  if (type === 'Weapon') return warrior.favorites?.weaponId || 'Gladius';
+  if (type === 'Rhythm') {
+    const r = warrior.favorites?.rhythm || { oe: 5, al: 5 };
+    return `OE:${r.oe} / AL:${r.al}`;
+  }
+  if (type === 'Style') return '+1 ATT Permanently Applied';
+  if (type === 'Attribute') return 'Primary Attribute Enhanced (+1)';
+  if (type === 'Tactic') return 'Tactical Insight Unlocked';
+  return 'Unknown';
 }

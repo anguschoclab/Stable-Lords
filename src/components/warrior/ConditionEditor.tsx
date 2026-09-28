@@ -58,14 +58,14 @@ function useConditionMutations(
     updateCondition(idx, { trigger: { ...cond.trigger, value } });
   }
 
-  function updateOverrideSlider(
+  function setOverrideKey(
     idx: number,
-    key: 'OE' | 'AL' | 'killDesire',
-    val: number | undefined
+    key: keyof PlanCondition['override'],
+    val: number | string | undefined
   ) {
     const cond = conditions[idx];
     if (!cond) return;
-    if (val === undefined) {
+    if (val === undefined || val === 'none') {
       const { [key]: _removed, ...rest } = cond.override;
       updateCondition(idx, { override: rest });
     } else {
@@ -73,20 +73,17 @@ function useConditionMutations(
     }
   }
 
-  function updateOverrideTactic(
+  const updateOverrideSlider = (
+    idx: number,
+    key: 'OE' | 'AL' | 'killDesire',
+    val: number | undefined
+  ) => setOverrideKey(idx, key, val);
+
+  const updateOverrideTactic = (
     idx: number,
     key: 'offensiveTactic' | 'defensiveTactic',
     val: string
-  ) {
-    const cond = conditions[idx];
-    if (!cond) return;
-    if (val === 'none') {
-      const { [key]: _removed, ...rest } = cond.override;
-      updateCondition(idx, { override: rest });
-    } else {
-      updateCondition(idx, { override: { ...cond.override, [key]: val } });
-    }
-  }
+  ) => setOverrideKey(idx, key, val);
 
   return {
     addCondition,

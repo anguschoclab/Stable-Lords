@@ -21,11 +21,50 @@ export function committeeSelection(
   lockedIds: Set<string>
 ): { warriors: Warrior[]; updatedLockedIds: Set<string> } {
   const rng = new SeededRNG(seed);
-  const rankings = state.realmRankings || {};
   const qualified: Warrior[] = [];
   const newLocks = new Set<string>();
 
-  // Gather all active, unlocked warriors
+  // Sort pool by rank
+  const sortedPool = collectEligiblePool(state, lockedIds).sort((a, b) => a.rank - b.rank);
+
+  // 1. Mandatory Invites (Top 40 of available)
+  const top40 = sortedPool.slice(0, 40);
+  top40.forEach((p) => {
+    qualified.push(p.w);
+    newLocks.add(p.w.id);
+  });
+
+  // 2. Style Champions Auto-Bid (Top 1 of each style not yet invited)
+  addStyleChampions(sortedPool, qualified, newLocks);
+
+  // 3. Bubble Watch (Fill to 64 from the next 40 candidates)
+  const remainingNeeded = 64 - qualified.length;
+  const bubblePool = sortedPool.filter((p) => !newLocks.has(p.w.id)).slice(0, 40);
+  const shuffledBubble = rng.shuffle(bubblePool);
+
+  shuffledBubble.slice(0, remainingNeeded).forEach((p) => {
+    qualified.push(p.w);
+    newLocks.add(p.w.id);
+  });
+
+  // 4. Emergency Fillers (If world population is decimated)
+  if (qualified.length < 64) {
+    const fillersNeeded = 64 - qualified.length;
+    for (let i = 0; i < fillersNeeded; i++) {
+      const freelancer = generateFreelancer(tier, i, rng);
+      qualified.push(freelancer);
+    }
+  }
+
+  return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
+}
+
+/** Gather all active, unlocked, ranked warriors across player + rival stables. */
+function collectEligiblePool(
+  state: GameState,
+  lockedIds: Set<string>
+): { w: Warrior; rank: number; score: number }[] {
+  const rankings = state.realmRankings || {};
   const pool: { w: Warrior; rank: number; score: number }[] = [];
 
   const collect = (roster: Warrior[], stable?: (typeof state.rivals)[number]) => {
@@ -49,21 +88,20 @@ export function committeeSelection(
 
   collect(state.roster);
   state.rivals.forEach((r) => collect(r.roster, r));
+  return pool;
+}
 
-  // Sort pool by rank
-  const sortedPool = pool.sort((a, b) => a.rank - b.rank);
-
-  // 1. Mandatory Invites (Top 40 of available)
-  const top40 = sortedPool.slice(0, 40);
-  top40.forEach((p) => {
-    qualified.push(p.w);
-    newLocks.add(p.w.id);
-  });
-
-  // 2. Style Champions Auto-Bid (Top 1 of each style not yet invited)
-  // Single pass over the rank-sorted pool: first unlocked entry per style is
-  // that style's champion. Equivalent to a per-style find() — warriors carry
-  // exactly one style, so a lead locked for one style can never lead another.
+/**
+ * Style Champions Auto-Bid (Top 1 of each style not yet invited).
+ * Single pass over the rank-sorted pool: first unlocked entry per style is
+ * that style's champion. Equivalent to a per-style find() — warriors carry
+ * exactly one style, so a lead locked for one style can never lead another.
+ */
+function addStyleChampions(
+  sortedPool: { w: Warrior; rank: number; score: number }[],
+  qualified: Warrior[],
+  newLocks: Set<string>
+): void {
   const styleLeads = new Map<FightingStyle, (typeof sortedPool)[number]>();
   for (const p of sortedPool) {
     if (newLocks.has(p.w.id)) continue;
@@ -77,27 +115,6 @@ export function committeeSelection(
       newLocks.add(lead.w.id);
     }
   }
-
-  // 3. Bubble Watch (Fill to 64 from the next 40 candidates)
-  const remainingNeeded = 64 - qualified.length;
-  const bubblePool = sortedPool.filter((p) => !newLocks.has(p.w.id)).slice(0, 40);
-  const shuffledBubble = rng.shuffle(bubblePool);
-
-  shuffledBubble.slice(0, remainingNeeded).forEach((p) => {
-    qualified.push(p.w);
-    newLocks.add(p.w.id);
-  });
-
-  // 4. Emergency Fillers (If world population is decimated)
-  if (qualified.length < 64) {
-    const fillersNeeded = 64 - qualified.length;
-    for (let i = 0; i < fillersNeeded; i++) {
-      const freelancer = generateFreelancer(tier, i, rng);
-      qualified.push(freelancer);
-    }
-  }
-
-  return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
 }
 
 /**

@@ -66,44 +66,72 @@ export function TraitTrainingSection({
           </Button>
         </div>
       ) : (
-        <>
-          <select
-            value={selectedTrainerId ?? ''}
-            onChange={(e) => setSelectedTrainerId(e.target.value || null)}
-            aria-label="Select trainer for trait training"
-            className="w-full bg-black/40 border border-white/10 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
-          >
-            <option value="">Select trainer for trait training…</option>
-            {trainers.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name} · {t.tier}
-              </option>
-            ))}
-          </select>
-          {pool.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {pool.map((t) => (
-                <TraitBadge key={t.id} traitId={t.id} />
-              ))}
-            </div>
-          )}
-          {selectedTrainer && pool.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onAssignTraitTraining(selectedTrainer.id)}
-              className="w-full h-8 text-[9px] font-black uppercase tracking-widest border-arena-fame/30 bg-arena-fame/10 hover:bg-arena-fame/20 text-arena-fame rounded-none"
-            >
-              Begin Trait Training with {selectedTrainer.name}
-            </Button>
-          )}
-          {selectedTrainer && pool.length === 0 && (
-            <p className="text-[9px] text-muted-foreground/60 italic">
-              No reachable traits for this warrior with {selectedTrainer.name}.
-            </p>
-          )}
-        </>
+        <TrainerPicker
+          trainers={trainers}
+          pool={pool}
+          selectedTrainerId={selectedTrainerId}
+          setSelectedTrainerId={setSelectedTrainerId}
+          selectedTrainer={selectedTrainer}
+          onAssign={onAssignTraitTraining}
+        />
       )}
     </div>
+  );
+}
+
+/** Trainer select + reachable-trait pool + begin button. */
+function TrainerPicker({
+  trainers,
+  pool,
+  selectedTrainerId,
+  setSelectedTrainerId,
+  selectedTrainer,
+  onAssign,
+}: {
+  trainers: Trainer[];
+  pool: ReturnType<typeof traitTrainingPool>;
+  selectedTrainerId: string | null;
+  setSelectedTrainerId: (id: string | null) => void;
+  selectedTrainer: Trainer | null;
+  onAssign: (trainerId: string) => void;
+}) {
+  return (
+    <>
+      <select
+        value={selectedTrainerId ?? ''}
+        onChange={(e) => setSelectedTrainerId(e.target.value || null)}
+        aria-label="Select trainer for trait training"
+        className="w-full bg-black/40 border border-white/10 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+      >
+        <option value="">Select trainer for trait training…</option>
+        {trainers.map((t) => (
+          <option key={t.id} value={t.id}>
+            {t.name} · {t.tier}
+          </option>
+        ))}
+      </select>
+      {pool.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {pool.map((t) => (
+            <TraitBadge key={t.id} traitId={t.id} />
+          ))}
+        </div>
+      )}
+      {selectedTrainer && pool.length > 0 && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onAssign(selectedTrainer.id)}
+          className="w-full h-8 text-[9px] font-black uppercase tracking-widest border-arena-fame/30 bg-arena-fame/10 hover:bg-arena-fame/20 text-arena-fame rounded-none"
+        >
+          Begin Trait Training with {selectedTrainer.name}
+        </Button>
+      )}
+      {selectedTrainer && pool.length === 0 && (
+        <p className="text-[9px] text-muted-foreground/60 italic">
+          No reachable traits for this warrior with {selectedTrainer.name}.
+        </p>
+      )}
+    </>
   );
 }

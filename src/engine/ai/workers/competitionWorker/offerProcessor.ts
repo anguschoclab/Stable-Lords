@@ -202,6 +202,20 @@ function respondForWarrior(
     return;
   }
 
+  applyWarriorResponse(state, currentOffers, offer, trackedOffer, wId, rivalWarrior, response, explain);
+}
+
+/** Commit one response to the offer map; title bouts persist the verdict reason. */
+function applyWarriorResponse(
+  state: GameState,
+  currentOffers: OfferMap,
+  offer: BoutOffer,
+  trackedOffer: BoutOffer,
+  wId: WarriorId,
+  rivalWarrior: Warrior,
+  response: Parameters<typeof respondToBoutOffer>[3],
+  explain: { reason?: string }
+): void {
   const impact = respondToBoutOffer(
     { ...state, boutOffers: currentOffers },
     offer.id as BoutOfferId,

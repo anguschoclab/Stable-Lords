@@ -63,33 +63,12 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-2">
-          {isRhythmDiscovered &&
-            (alreadyApplied ? (
-              <span className="text-[8px] font-black uppercase text-primary tracking-widest px-2 py-0.5 border border-primary/20 bg-primary/5">
-                IN EFFECT
-              </span>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleApplyRhythm}
-                className="h-8 px-4 border-arena-gold/20 hover:bg-arena-gold/10 text-arena-gold text-[9px] font-black uppercase rounded-none tracking-widest"
-              >
-                Apply
-              </Button>
-            ))}
-          {!isRhythmDiscovered && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleInsight('rhythm')}
-              className="h-8 w-8 p-0 border-white/10 hover:bg-white/5 rounded-none"
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
+        <RhythmActions
+          isRhythmDiscovered={isRhythmDiscovered}
+          alreadyApplied={!!alreadyApplied}
+          onApply={handleApplyRhythm}
+          onInsight={handleInsight}
+        />
       </div>
       <div className="h-1 w-full bg-white/5 overflow-hidden">
         <div
@@ -102,6 +81,49 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
           style={{ width: `${rhythmProgress}%` }}
         />
       </div>
+    </div>
+  );
+}
+
+/** Right-side actions: Apply / IN EFFECT chip when discovered, insight eye otherwise. */
+function RhythmActions({
+  isRhythmDiscovered,
+  alreadyApplied,
+  onApply,
+  onInsight,
+}: {
+  isRhythmDiscovered: boolean;
+  alreadyApplied: boolean;
+  onApply: () => void;
+  onInsight: (kind: 'rhythm') => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      {isRhythmDiscovered &&
+        (alreadyApplied ? (
+          <span className="text-[8px] font-black uppercase text-primary tracking-widest px-2 py-0.5 border border-primary/20 bg-primary/5">
+            IN EFFECT
+          </span>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onApply}
+            className="h-8 px-4 border-arena-gold/20 hover:bg-arena-gold/10 text-arena-gold text-[9px] font-black uppercase rounded-none tracking-widest"
+          >
+            Apply
+          </Button>
+        ))}
+      {!isRhythmDiscovered && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onInsight('rhythm')}
+          className="h-8 w-8 p-0 border-white/10 hover:bg-white/5 rounded-none"
+        >
+          <Eye className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }

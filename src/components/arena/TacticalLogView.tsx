@@ -200,6 +200,57 @@ function StepControls({
  * Tactical log view.
  * @param - { log, visible count, class name }.
  */
+type LogEvent = TacticalLogViewProps['log'][number];
+
+/** Index of the first entry of the previous minute block (for page-step back). */
+function prevMinuteIndex(log: LogEvent[], currentIndex: number): number {
+  const currentMinute = log[currentIndex]?.minute ?? 0;
+  for (let i = currentIndex - 1; i >= 0; i--) {
+    if ((log[i]?.minute ?? currentMinute) < currentMinute) {
+      const targetMinute = log[i]?.minute ?? 0;
+      const first = log.findIndex((e) => e.minute === targetMinute);
+      return first >= 0 ? first : 0;
+    }
+  }
+  return 0;
+}
+
+/** Index of the first entry of the next minute block (for page-step forward). */
+function nextMinuteIndex(log: LogEvent[], currentIndex: number): number {
+  const currentMinute = log[currentIndex]?.minute ?? 0;
+  for (let i = currentIndex + 1; i < log.length; i++) {
+    if ((log[i]?.minute ?? currentMinute) > currentMinute) return i;
+  }
+  return log.length - 1;
+}
+
+/** Auto-scroll to latest event, or to the highlighted entry in step mode. */
+function useLogScroll(
+  visibleCount: number,
+  highlightIndex: number | null | undefined,
+  entryRefs: React.RefObject<(HTMLDivElement | null)[]>,
+  endRef: React.RefObject<HTMLDivElement | null>
+) {
+  useEffect(() => {
+    if (highlightIndex == null) {
+      endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [visibleCount, highlightIndex]);
+
+  useEffect(() => {
+    if (highlightIndex != null && entryRefs.current?.[highlightIndex]) {
+      entryRefs.current[highlightIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [highlightIndex]);
+}
+
+/**
+ * Tactical log view.
+ * @param - { log, visible count, class name }.
+ */
 export default function TacticalLogView({
   log,
   visibleCount,
@@ -211,43 +262,13 @@ export default function TacticalLogView({
   const entryRefs = useRef<(HTMLDivElement | null)[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to latest event (only when not in highlight mode)
-  useEffect(() => {
-    if (highlightIndex == null) {
-      endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, [visibleCount, highlightIndex]);
-
-  // Scroll highlighted entry into view
-  useEffect(() => {
-    if (highlightIndex != null && entryRefs.current[highlightIndex]) {
-      entryRefs.current[highlightIndex]?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }, [highlightIndex]);
+  useLogScroll(visibleCount, highlightIndex, entryRefs, endRef);
 
   const visibleEvents = log.slice(0, visibleCount);
   const hasHighlight = highlightIndex != null;
   const currentIndex = highlightIndex ?? 0;
-  const currentMinute = log[currentIndex]?.minute ?? 0;
-  const prevPageIndex = (() => {
-    for (let i = currentIndex - 1; i >= 0; i--) {
-      if ((log[i]?.minute ?? currentMinute) < currentMinute) {
-        const targetMinute = log[i]?.minute ?? 0;
-        const first = log.findIndex((e) => e.minute === targetMinute);
-        return first >= 0 ? first : 0;
-      }
-    }
-    return 0;
-  })();
-  const nextPageIndex = (() => {
-    for (let i = currentIndex + 1; i < log.length; i++) {
-      if ((log[i]?.minute ?? currentMinute) > currentMinute) return i;
-    }
-    return log.length - 1;
-  })();
+  const prevPageIndex = prevMinuteIndex(log, currentIndex);
+  const nextPageIndex = nextMinuteIndex(log, currentIndex);
 
   return (
     <>

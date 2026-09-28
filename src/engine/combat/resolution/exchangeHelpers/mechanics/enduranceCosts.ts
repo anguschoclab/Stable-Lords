@@ -31,19 +31,15 @@ export function applyEnduranceCosts(
   const att = aGoesFirst ? fA : fD;
   const def = aGoesFirst ? fD : fA;
 
-  const arenaEndMult = ctx.surfaceMod?.enduranceMult ?? 1;
-  const psychEndMultA = PSYCH_STATE_MODS[fA.psychState]?.enduranceCostMult ?? 1;
-  const psychEndMultD = PSYCH_STATE_MODS[fD.psychState]?.enduranceCostMult ?? 1;
-  const traitEndMultAtt = att.staticEnduranceMult ?? 1;
-  const traitEndMultDef = def.staticEnduranceMult ?? 1;
-
-  // Equipment endurance cost modifiers (armor + helm)
-  const attArmor = att.armorId ? getItemById(att.armorId) : undefined;
-  const attHelm = att.helmId ? getItemById(att.helmId) : undefined;
-  const attEquipEndMult = (attArmor?.enduranceCostMod ?? 1.0) * (attHelm?.enduranceCostMod ?? 1.0);
-  const defArmor = def.armorId ? getItemById(def.armorId) : undefined;
-  const defHelm = def.helmId ? getItemById(def.helmId) : undefined;
-  const defEquipEndMult = (defArmor?.enduranceCostMod ?? 1.0) * (defHelm?.enduranceCostMod ?? 1.0);
+  const {
+    arenaEndMult,
+    psychEndMultA,
+    psychEndMultD,
+    traitEndMultAtt,
+    traitEndMultDef,
+    attEquipEndMult,
+    defEquipEndMult,
+  } = enduranceMultipliers(ctx, fA, fD, att, def);
 
   att.endurance -= Math.round(
     enduranceCost(curAttOE, curAttAL, ctx.weather) *
@@ -71,36 +67,77 @@ export function applyEnduranceCosts(
     )
   );
 
+  checkExhaustionStoppage(events, fA, fD);
+}
+
+/**
+ * Gather the multiplicative endurance-cost modifiers: arena surface, psych
+ * state, trait statics, and armor/helm equipment mods for both fighters.
+ */
+function enduranceMultipliers(
+  ctx: ResolutionContext,
+  fA: FighterState,
+  fD: FighterState,
+  att: FighterState,
+  def: FighterState
+) {
+  const arenaEndMult = ctx.surfaceMod?.enduranceMult ?? 1;
+  const psychEndMultA = PSYCH_STATE_MODS[fA.psychState]?.enduranceCostMult ?? 1;
+  const psychEndMultD = PSYCH_STATE_MODS[fD.psychState]?.enduranceCostMult ?? 1;
+  const traitEndMultAtt = att.staticEnduranceMult ?? 1;
+  const traitEndMultDef = def.staticEnduranceMult ?? 1;
+
+  // Equipment endurance cost modifiers (armor + helm)
+  const attArmor = att.armorId ? getItemById(att.armorId) : undefined;
+  const attHelm = att.helmId ? getItemById(att.helmId) : undefined;
+  const attEquipEndMult = (attArmor?.enduranceCostMod ?? 1.0) * (attHelm?.enduranceCostMod ?? 1.0);
+  const defArmor = def.armorId ? getItemById(def.armorId) : undefined;
+  const defHelm = def.helmId ? getItemById(def.helmId) : undefined;
+  const defEquipEndMult = (defArmor?.enduranceCostMod ?? 1.0) * (defHelm?.enduranceCostMod ?? 1.0);
+
+  return {
+    arenaEndMult,
+    psychEndMultA,
+    psychEndMultD,
+    traitEndMultAtt,
+    traitEndMultDef,
+    attEquipEndMult,
+    defEquipEndMult,
+  };
+}
+
+/**
+ * Safety stoppage: a collapsed fighter only ends the bout when also hurt below
+ * the defenselessness threshold. A fighter who merely gassed out keeps fighting
+ * under fatigue penalties until hurt, KO'd, or decided by the judges.
+ */
+function checkExhaustionStoppage(events: CombatEvent[], fA: FighterState, fD: FighterState) {
   const collapsedA = fA.endurance <= 0;
   const collapsedD = fD.endurance <= 0;
   if (
-    (collapsedA || collapsedD) &&
-    !events.some((e) => e.result === 'Kill' || e.result === 'KO')
+    !(collapsedA || collapsedD) ||
+    events.some((e) => e.result === 'Kill' || e.result === 'KO')
   ) {
-    // Exhaustion/stoppage is a *safety* rule, not a win condition: a collapsed
-    // fighter is only stopped when they are also hurt enough that they can no
-    // longer defend themselves. A fighter who merely gassed out keeps fighting
-    // under the existing heavy fatigue penalties until hurt, KO'd, or decided
-    // by the judges.
-    const hurtA = collapsedA && fA.hp < fA.maxHp * EXHAUSTION_STOP_HP_RATIO;
-    const hurtD = collapsedD && fD.hp < fD.maxHp * EXHAUSTION_STOP_HP_RATIO;
-    if (hurtA && hurtD) {
-      // Double collapse of two already-beaten fighters — the rare mutual draw.
-      events.push({
-        type: 'BOUT_END',
-        actor: 'A',
-        result: 'Exhaustion',
-        metadata: { cause: 'FATIGUE_COLLAPSE' },
-      });
-    } else if (hurtA || hurtD) {
-      const collapsed = hurtA ? fA : fD;
-      const cause = collapsed.hp < collapsed.maxHp * 0.15 ? 'FATIGUE_COLLAPSE' : undefined;
-      events.push({
-        type: 'BOUT_END',
-        actor: hurtA ? 'A' : 'D',
-        result: 'Stoppage',
-        metadata: cause ? { cause } : undefined,
-      });
-    }
+    return;
+  }
+  const hurtA = collapsedA && fA.hp < fA.maxHp * EXHAUSTION_STOP_HP_RATIO;
+  const hurtD = collapsedD && fD.hp < fD.maxHp * EXHAUSTION_STOP_HP_RATIO;
+  if (hurtA && hurtD) {
+    // Double collapse of two already-beaten fighters — the rare mutual draw.
+    events.push({
+      type: 'BOUT_END',
+      actor: 'A',
+      result: 'Exhaustion',
+      metadata: { cause: 'FATIGUE_COLLAPSE' },
+    });
+  } else if (hurtA || hurtD) {
+    const collapsed = hurtA ? fA : fD;
+    const cause = collapsed.hp < collapsed.maxHp * 0.15 ? 'FATIGUE_COLLAPSE' : undefined;
+    events.push({
+      type: 'BOUT_END',
+      actor: hurtA ? 'A' : 'D',
+      result: 'Stoppage',
+      metadata: cause ? { cause } : undefined,
+    });
   }
 }

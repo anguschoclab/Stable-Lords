@@ -36,72 +36,89 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
       {phaseMode && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {(['opening', 'mid', 'late'] as const).map((p) => (
-            <div key={p} className="p-4 border border-white/5 bg-black/40 min-h-[120px] space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                  {p}
-                </span>
-                {plan.phases?.[p] && (
-                  <button
-                    onClick={() => {
-                      if (!plan.phases) return;
-                      const { [p]: _, ...rest } = plan.phases;
-                      onPlanChange({
-                        ...plan,
-                        phases: Object.keys(rest).length ? rest : undefined,
-                      });
-                    }}
-                    className="text-[9px] font-black uppercase text-arena-blood hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-none px-1"
-                    aria-label={`Clear phase ${p}`}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-1">
-                {plan.phases?.[p]?.offensiveTactic && (
-                  <Badge className="bg-arena-blood/20 text-arena-blood border border-arena-blood/30 text-[9px] uppercase font-black px-1.5 py-0.5">
-                    {plan.phases[p]?.offensiveTactic}
-                  </Badge>
-                )}
-                {plan.phases?.[p]?.defensiveTactic && (
-                  <Badge className="bg-arena-gold/20 text-arena-gold border border-arena-gold/30 text-[9px] uppercase font-black px-1.5 py-0.5">
-                    {plan.phases[p]?.defensiveTactic}
-                  </Badge>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-[9px] uppercase font-bold text-muted-foreground/60">
-                  <Label htmlFor={`phase-${p}-oe`}>OE</Label>
-                  <span>{plan.phases?.[p]?.OE ?? plan.OE}</span>
-                </div>
-                <Slider
-                  id={`phase-${p}-oe`}
-                  aria-label={`${p} phase Offensive Effort`}
-                  value={[plan.phases?.[p]?.OE ?? plan.OE]}
-                  onValueChange={([v]) => {
-                    const next = { ...(plan.phases || {}) };
-                    next[p] = {
-                      ...(next[p] || {
-                        OE: plan.OE,
-                        AL: plan.AL ?? 5,
-                        killDesire: plan.killDesire ?? 5,
-                      }),
-                      OE: v ?? plan.OE,
-                    };
-                    onPlanChange({ ...plan, phases: next });
-                  }}
-                  min={1}
-                  max={10}
-                  step={1}
-                />
-              </div>
-            </div>
+            <PhaseCard key={p} phase={p} plan={plan} onPlanChange={onPlanChange} />
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+type PhaseKey = 'opening' | 'mid' | 'late';
+
+/** One phase cell: clear button, tactic badges, and the OE slider. */
+function PhaseCard({
+  phase: p,
+  plan,
+  onPlanChange,
+}: {
+  phase: PhaseKey;
+  plan: FightPlan;
+  onPlanChange: (plan: FightPlan) => void;
+}) {
+  return (
+    <div className="p-4 border border-white/5 bg-black/40 min-h-[120px] space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+          {p}
+        </span>
+        {plan.phases?.[p] && (
+          <button
+            onClick={() => {
+              if (!plan.phases) return;
+              const { [p]: _, ...rest } = plan.phases;
+              onPlanChange({
+                ...plan,
+                phases: Object.keys(rest).length ? rest : undefined,
+              });
+            }}
+            className="text-[9px] font-black uppercase text-arena-blood hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-none px-1"
+            aria-label={`Clear phase ${p}`}
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-1">
+        {plan.phases?.[p]?.offensiveTactic && (
+          <Badge className="bg-arena-blood/20 text-arena-blood border border-arena-blood/30 text-[9px] uppercase font-black px-1.5 py-0.5">
+            {plan.phases[p]?.offensiveTactic}
+          </Badge>
+        )}
+        {plan.phases?.[p]?.defensiveTactic && (
+          <Badge className="bg-arena-gold/20 text-arena-gold border border-arena-gold/30 text-[9px] uppercase font-black px-1.5 py-0.5">
+            {plan.phases[p]?.defensiveTactic}
+          </Badge>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex justify-between text-[9px] uppercase font-bold text-muted-foreground/60">
+          <Label htmlFor={`phase-${p}-oe`}>OE</Label>
+          <span>{plan.phases?.[p]?.OE ?? plan.OE}</span>
+        </div>
+        <Slider
+          id={`phase-${p}-oe`}
+          aria-label={`${p} phase Offensive Effort`}
+          value={[plan.phases?.[p]?.OE ?? plan.OE]}
+          onValueChange={([v]) => {
+            const next = { ...(plan.phases || {}) };
+            next[p] = {
+              ...(next[p] || {
+                OE: plan.OE,
+                AL: plan.AL ?? 5,
+                killDesire: plan.killDesire ?? 5,
+              }),
+              OE: v ?? plan.OE,
+            };
+            onPlanChange({ ...plan, phases: next });
+          }}
+          min={1}
+          max={10}
+          step={1}
+        />
+      </div>
     </div>
   );
 }

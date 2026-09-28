@@ -160,6 +160,37 @@ function driftTowardNeutralSpacing(prev: ArenaState, next: ArenaState): void {
 }
 
 /**
+ * Resolve which fighter acts vs. receives for one event, and build the
+ * side-aware patch writer that assigns fighterA/fighterD onto `newState`.
+ */
+function roleContext(
+  prev: ArenaState,
+  newState: ArenaState,
+  text: string,
+  nameA: string,
+  nameD: string
+) {
+  // Determine which fighter is acting
+  const isActingA =
+    text.includes(nameA?.toLowerCase() ?? '') ||
+    (!text.includes(nameD?.toLowerCase() ?? '') &&
+      (text.includes('attacks') || text.includes('strikes')));
+
+  const actor = isActingA ? 'A' : 'D';
+  const victim = actor === 'A' ? 'D' : 'A';
+  const dir: 1 | -1 = actor === 'A' ? 1 : -1;
+
+  const att = actor === 'A' ? prev.fighterA : prev.fighterD;
+  const vic = actor === 'A' ? prev.fighterD : prev.fighterA;
+  const setFighter = (side: 'A' | 'D', patch: Partial<ArenaState['fighterA']>) => {
+    if (side === 'A') newState.fighterA = { ...prev.fighterA, ...patch };
+    else newState.fighterD = { ...prev.fighterD, ...patch };
+  };
+
+  return { actor, victim, dir, att, vic, setFighter };
+}
+
+/**
  * Updates fighter poses for one bout event. The animation is side-mirrored:
  * the actor advances rightward when fighting as A and leftward as D, so each
  * case computes attacker/victim patches via the shared movement helpers and
@@ -175,26 +206,13 @@ export function processArenaEvent(
   const type = classifyEvent(event);
   const text = event.text.toLowerCase();
   const newState = { ...prev };
-
-  // Determine which fighter is acting
-  const isActingA =
-    text.includes(nameA?.toLowerCase() ?? '') ||
-    (!text.includes(nameD?.toLowerCase() ?? '') &&
-      (text.includes('attacks') || text.includes('strikes')));
-
-  const actor = isActingA ? 'A' : 'D';
-  const victim = actor === 'A' ? 'D' : 'A';
-  const dir: 1 | -1 = actor === 'A' ? 1 : -1;
-
-  const att = actor === 'A' ? prev.fighterA : prev.fighterD;
-  const vic = actor === 'A' ? prev.fighterD : prev.fighterA;
-  const setFighter = (
-    side: 'A' | 'D',
-    patch: Partial<ArenaState['fighterA']>
-  ) => {
-    if (side === 'A') newState.fighterA = { ...prev.fighterA, ...patch };
-    else newState.fighterD = { ...prev.fighterD, ...patch };
-  };
+  const { actor, victim, dir, att, vic, setFighter } = roleContext(
+    prev,
+    newState,
+    text,
+    nameA,
+    nameD
+  );
 
   // Update poses based on event type
   switch (type) {

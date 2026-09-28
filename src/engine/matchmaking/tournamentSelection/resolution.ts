@@ -286,20 +286,13 @@ export function resolveRound(
   // week rolls over on day 7, so a seventh bracket round could never resolve
   // before the season (and with it the tournament's UI window) advanced.
   const isComplete = bracket.every((b) => b.winner !== undefined);
-  // Champion = winner of the championship bout: latest non-bronze bout.
-  const finalsBout = [...bracket]
-    .filter((b) => !b.isBronzeMatch)
-    .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
-  const championId =
-    isComplete && finalsBout?.winner
-        ? finalsBout.winner === 'A'
-          ? finalsBout.warriorIdA
-          : finalsBout.warriorIdD
-        : undefined;
-  const champion = championId
-    ? (winners.find((w) => w.id === championId)?.name ??
-      findWarriorById(updatedState, championId, resolvedTournament)?.name)
-    : undefined;
+  const champion = resolveChampionName(
+    bracket,
+    isComplete,
+    winners,
+    updatedState,
+    resolvedTournament
+  );
 
   let updatedTournament: TournamentEntry | undefined;
   updatedState.tournaments = updateEntityInList(
@@ -327,6 +320,32 @@ export function resolveRound(
     isComplete,
     updatedTournament,
   };
+}
+
+/**
+ * Champion name = winner of the championship bout (latest non-bronze bout).
+ * Resolved only when the bracket is complete.
+ */
+function resolveChampionName(
+  bracket: TournamentBout[],
+  isComplete: boolean,
+  winners: BracketWarrior[],
+  state: GameState,
+  tournament: TournamentEntry
+): string | undefined {
+  const finalsBout = [...bracket]
+    .filter((b) => !b.isBronzeMatch)
+    .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
+  const championId =
+    isComplete && finalsBout?.winner
+      ? finalsBout.winner === 'A'
+        ? finalsBout.warriorIdA
+        : finalsBout.warriorIdD
+      : undefined;
+  return championId
+    ? (winners.find((w) => w.id === championId)?.name ??
+        findWarriorById(state, championId, tournament)?.name)
+    : undefined;
 }
 
 /**

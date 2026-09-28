@@ -57,20 +57,7 @@ export default function EventLog() {
     [player, rivals]
   );
 
-  const events = useMemo(() => {
-    const all: GameEvent[] = [
-      ...processFightEvents(state.arenaHistory),
-      ...processDeathEvents(state.graveyard),
-      ...processRetirementEvents(state.retired),
-      ...processInjuryEvents(state.roster, state.week),
-      ...processTrainingEvents(state.trainingAssignments ?? [], state, state.week),
-      ...processNewsletterEvents(state.newsletter),
-      ...processTournamentEvents(state.tournaments),
-      ...processGazetteEvents(state.gazettes ?? []),
-    ];
-    all.sort((a, b) => b.week - a.week || b.id.localeCompare(a.id));
-    return all;
-  }, [state]);
+  const events = useMemo(() => collectEvents(state), [state]);
 
   const grouped = useMemo(() => groupEventsByWeek(events), [events]);
 
@@ -114,4 +101,20 @@ export default function EventLog() {
       </ScrollArea>
     </div>
   );
+}
+
+/** Gather all event streams into a single reverse-chronological feed. */
+function collectEvents(state: ReturnType<typeof useGameStore.getState>): GameEvent[] {
+  const all: GameEvent[] = [
+    ...processFightEvents(state.arenaHistory),
+    ...processDeathEvents(state.graveyard),
+    ...processRetirementEvents(state.retired),
+    ...processInjuryEvents(state.roster, state.week),
+    ...processTrainingEvents(state.trainingAssignments ?? [], state, state.week),
+    ...processNewsletterEvents(state.newsletter),
+    ...processTournamentEvents(state.tournaments),
+    ...processGazetteEvents(state.gazettes ?? []),
+  ];
+  all.sort((a, b) => b.week - a.week || b.id.localeCompare(a.id));
+  return all;
 }

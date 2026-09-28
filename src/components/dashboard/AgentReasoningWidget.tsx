@@ -126,38 +126,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
 
       <CardContent className="space-y-6 relative">
         {/* Active Intent */}
-        <div className="p-4 rounded-none bg-black/40 border border-white/5 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icon className={cn('w-4 h-4', metric.color)} />
-              <span className={cn('text-xs font-black uppercase tracking-[0.2em]', metric.color)}>
-                {metric.label}
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="h-1 w-1 rounded-full bg-primary animate-ping motion-reduce:animate-none" />
-              <span className="text-[8px] font-black uppercase text-primary/60">ACTIVE INTENT</span>
-            </div>
-          </div>
-          <p className="text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
-            {metric.description}
-          </p>
-          {rival.strategy?.reason && (
-            <p className="text-[10px] text-foreground/70 leading-relaxed border-l-2 border-primary/20 pl-2">
-              {rival.strategy.reason}
-            </p>
-          )}
-          {rival.agentMemory?.seasonRecord && (
-            <div
-              data-testid="season-record"
-              className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 tabular-nums"
-            >
-              Season {rival.agentMemory.seasonRecord.wins}-
-              {rival.agentMemory.seasonRecord.losses}-
-              {rival.agentMemory.seasonRecord.kills} W-L-K
-            </div>
-          )}
-        </div>
+        <IntentPanel rival={rival} metric={metric} Icon={Icon} />
 
         <ActionTimeline events={rival.actionHistory || []} />
 
@@ -175,5 +144,51 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+/** Active-intent panel: label, description, strategy reason, season record. */
+function IntentPanel({
+  rival,
+  metric,
+  Icon,
+}: {
+  rival: RivalStableData;
+  metric: (typeof INTENT_METRICS)[AIIntent];
+  Icon: LucideIcon;
+}) {
+  return (
+    <div className="p-4 rounded-none bg-black/40 border border-white/5 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Icon className={cn('w-4 h-4', metric.color)} />
+          <span className={cn('text-xs font-black uppercase tracking-[0.2em]', metric.color)}>
+            {metric.label}
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="h-1 w-1 rounded-full bg-primary animate-ping motion-reduce:animate-none" />
+          <span className="text-[8px] font-black uppercase text-primary/60">ACTIVE INTENT</span>
+        </div>
+      </div>
+      <p className="text-[11px] text-muted-foreground/80 leading-relaxed font-medium">
+        {metric.description}
+      </p>
+      {rival.strategy?.reason && (
+        <p className="text-[10px] text-foreground/70 leading-relaxed border-l-2 border-primary/20 pl-2">
+          {rival.strategy.reason}
+        </p>
+      )}
+      {rival.agentMemory?.seasonRecord && (
+        <div
+          data-testid="season-record"
+          className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 tabular-nums"
+        >
+          Season {rival.agentMemory.seasonRecord.wins}-
+          {rival.agentMemory.seasonRecord.losses}-
+          {rival.agentMemory.seasonRecord.kills} W-L-K
+        </div>
+      )}
+    </div>
   );
 }

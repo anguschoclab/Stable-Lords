@@ -120,6 +120,74 @@ function biggestSkillGap(
   return best;
 }
 
+/** Ranked analysis factors: style edge, skill gap, fatigue, damage, outcome. */
+function buildFactors(
+  ctx: {
+    edge: number;
+    skillGap: ReturnType<typeof biggestSkillGap>;
+    fatigue: ReturnType<typeof findFatigueCrossover>;
+    tale: ReturnType<typeof summarizeTale>;
+    decisiveExchangeSummary: string;
+  },
+  outcome: FightOutcome,
+  warriorA: AnalysisWarrior,
+  warriorD: AnalysisWarrior
+): AnalysisFactor[] {
+  const factors: AnalysisFactor[] = [];
+
+  if (ctx.edge !== 0) {
+    factors.push({
+      label: 'Style matchup',
+      detail: `${warriorA.style} vs ${warriorD.style} favored ${ctx.edge > 0 ? warriorA.name : warriorD.name} (${ctx.edge > 0 ? '+' : ''}${ctx.edge}).`,
+      favored: ctx.edge > 0 ? 'A' : 'D',
+      weight: Math.min(1, Math.abs(ctx.edge) / 4),
+    });
+  }
+
+  if (ctx.skillGap.gap >= 3) {
+    const who = ctx.skillGap.favored === 'A' ? warriorA.name : warriorD.name;
+    factors.push({
+      label: `${ctx.skillGap.skill} edge`,
+      detail: `${who} held a ${ctx.skillGap.gap}-point ${ctx.skillGap.skill} advantage.`,
+      favored: ctx.skillGap.favored,
+      weight: Math.min(1, ctx.skillGap.gap / 8),
+    });
+  }
+
+  if (ctx.fatigue.fatiguedSide) {
+    const tiredName = ctx.fatigue.fatiguedSide === 'A' ? warriorA.name : warriorD.name;
+    factors.push({
+      label: 'Endurance',
+      detail:
+        ctx.fatigue.crossoverExchange != null
+          ? `${tiredName} began gassing out around exchange ${ctx.fatigue.crossoverExchange}.`
+          : `${tiredName} finished the more drained fighter.`,
+      favored: ctx.fatigue.fatiguedSide === 'A' ? 'D' : 'A',
+      weight: 0.5,
+    });
+  }
+
+  const dmgGap = ctx.tale.damageA - ctx.tale.damageD;
+  if (Math.abs(dmgGap) >= 4) {
+    factors.push({
+      label: 'Damage output',
+      detail: `${dmgGap > 0 ? warriorA.name : warriorD.name} dealt ${Math.abs(dmgGap)} more total damage.`,
+      favored: dmgGap > 0 ? 'A' : 'D',
+      weight: Math.min(1, Math.abs(dmgGap) / 20),
+    });
+  }
+
+  factors.push({
+    label: 'Outcome',
+    detail: ctx.decisiveExchangeSummary,
+    favored: outcome.winner,
+    weight: 0.1,
+  });
+
+  factors.sort((x, y) => y.weight - x.weight);
+  return factors.slice(0, 5);
+}
+
 /**
  *
  */
@@ -152,59 +220,12 @@ export function buildFightAnalysis(
         : `${winnerName} won by ${outcome.by ?? 'decision'}.`,
   };
 
-  const factors: AnalysisFactor[] = [];
-
-  if (edge !== 0) {
-    factors.push({
-      label: 'Style matchup',
-      detail: `${warriorA.style} vs ${warriorD.style} favored ${edge > 0 ? warriorA.name : warriorD.name} (${edge > 0 ? '+' : ''}${edge}).`,
-      favored: edge > 0 ? 'A' : 'D',
-      weight: Math.min(1, Math.abs(edge) / 4),
-    });
-  }
-
-  if (skillGap.gap >= 3) {
-    const who = skillGap.favored === 'A' ? warriorA.name : warriorD.name;
-    factors.push({
-      label: `${skillGap.skill} edge`,
-      detail: `${who} held a ${skillGap.gap}-point ${skillGap.skill} advantage.`,
-      favored: skillGap.favored,
-      weight: Math.min(1, skillGap.gap / 8),
-    });
-  }
-
-  if (fatigue.fatiguedSide) {
-    const tiredName = fatigue.fatiguedSide === 'A' ? warriorA.name : warriorD.name;
-    factors.push({
-      label: 'Endurance',
-      detail:
-        fatigue.crossoverExchange != null
-          ? `${tiredName} began gassing out around exchange ${fatigue.crossoverExchange}.`
-          : `${tiredName} finished the more drained fighter.`,
-      favored: fatigue.fatiguedSide === 'A' ? 'D' : 'A',
-      weight: 0.5,
-    });
-  }
-
-  const dmgGap = tale.damageA - tale.damageD;
-  if (Math.abs(dmgGap) >= 4) {
-    factors.push({
-      label: 'Damage output',
-      detail: `${dmgGap > 0 ? warriorA.name : warriorD.name} dealt ${Math.abs(dmgGap)} more total damage.`,
-      favored: dmgGap > 0 ? 'A' : 'D',
-      weight: Math.min(1, Math.abs(dmgGap) / 20),
-    });
-  }
-
-  factors.push({
-    label: 'Outcome',
-    detail: decisiveExchange.summary,
-    favored: outcome.winner,
-    weight: 0.1,
-  });
-
-  factors.sort((x, y) => y.weight - x.weight);
-  const ranked = factors.slice(0, 5);
+  const ranked = buildFactors(
+    { edge, skillGap, fatigue, tale, decisiveExchangeSummary: decisiveExchange.summary },
+    outcome,
+    warriorA,
+    warriorD
+  );
 
   return {
     styleMatchup: { styleA: warriorA.style, styleD: warriorD.style, edge },

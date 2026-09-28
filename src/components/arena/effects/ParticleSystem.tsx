@@ -35,6 +35,45 @@ interface ParticleSystemProps {
   class name,
 }.
  */
+/** Spawn a radial particle burst for a trigger at the source position. */
+function spawnParticles(trigger: string, sourceX: number, sourceY: number): Particle[] {
+  const newParticles: Particle[] = [];
+  const count = trigger === 'crit' ? 12 : trigger === 'death' ? 20 : 6;
+  const type: ParticleType =
+    trigger === 'crit' || trigger === 'death' ? 'blood' : trigger === 'hit' ? 'spark' : 'dust';
+
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + (cryptoRandom() - 0.5) * 0.5;
+    const speed = 2 + cryptoRandom() * 3;
+
+    newParticles.push({
+      id: crypto.randomUUID(),
+      type,
+      x: sourceX,
+      y: sourceY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - (type === 'blood' ? 1 : 0),
+      life: 1,
+      maxLife: 30 + cryptoRandom() * 20,
+      size: type === 'blood' ? 3 + cryptoRandom() * 4 : 2 + cryptoRandom() * 2,
+    });
+  }
+  return newParticles;
+}
+
+/** Advance particles one animation tick: move, gravity/buoyancy, decay. */
+function tickParticles(prev: Particle[]): Particle[] {
+  return prev
+    .map((p) => ({
+      ...p,
+      x: p.x + p.vx * 0.5,
+      y: p.y + p.vy * 0.5,
+      vy: p.vy + (p.type === 'blood' ? 0.15 : p.type === 'dust' ? -0.02 : 0),
+      life: p.life - 1,
+    }))
+    .filter((p) => p.life > 0);
+}
+
 export default function ParticleSystem({
   trigger,
   sourceX,
@@ -46,27 +85,7 @@ export default function ParticleSystem({
   useEffect(() => {
     if (!trigger) return;
 
-    const newParticles: Particle[] = [];
-    const count = trigger === 'crit' ? 12 : trigger === 'death' ? 20 : 6;
-    const type: ParticleType =
-      trigger === 'crit' || trigger === 'death' ? 'blood' : trigger === 'hit' ? 'spark' : 'dust';
-
-    for (let i = 0; i < count; i++) {
-      const angle = (Math.PI * 2 * i) / count + (cryptoRandom() - 0.5) * 0.5;
-      const speed = 2 + cryptoRandom() * 3;
-
-      newParticles.push({
-        id: crypto.randomUUID(),
-        type,
-        x: sourceX,
-        y: sourceY,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - (type === 'blood' ? 1 : 0),
-        life: 1,
-        maxLife: 30 + cryptoRandom() * 20,
-        size: type === 'blood' ? 3 + cryptoRandom() * 4 : 2 + cryptoRandom() * 2,
-      });
-    }
+    const newParticles = spawnParticles(trigger, sourceX, sourceY);
 
     // eslint-disable-next-line react-hooks/set-state-in-effect -- particle generation is trigger-driven
     setParticles((prev) => [...prev, ...newParticles]);
@@ -77,19 +96,7 @@ export default function ParticleSystem({
     if (particles.length === 0) return;
 
     const interval = setInterval(() => {
-      setParticles((prev) => {
-        const updated = prev
-          .map((p) => ({
-            ...p,
-            x: p.x + p.vx * 0.5,
-            y: p.y + p.vy * 0.5,
-            vy: p.vy + (p.type === 'blood' ? 0.15 : p.type === 'dust' ? -0.02 : 0),
-            life: p.life - 1,
-          }))
-          .filter((p) => p.life > 0);
-
-        return updated;
-      });
+      setParticles(tickParticles);
     }, 33); // ~30fps
 
     return () => clearInterval(interval);

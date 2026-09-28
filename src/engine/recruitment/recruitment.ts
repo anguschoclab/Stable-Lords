@@ -126,6 +126,59 @@ function rollTier(rng: IRNGService): RecruitTier {
  * @param legacyCandidates - Optional list of former warriors for lineage generation
  * @returns A new PoolWarrior object
  */
+/**
+ * Pick the recruit's style + optional bloodline lineage. Consumes RNG draws in
+ * the original order: legacy roll → parent/style pick.
+ */
+function pickStyleAndLineage(
+  rng: IRNGService,
+  meta: StyleMeta | undefined,
+  legacyCandidates: import('@/types/warrior.types').Warrior[]
+): { style: FightingStyle; lineage: import('@/types/warrior.types').WarriorLineage | undefined } {
+  // 🧬 Genetic Bloodlines: 5% chance to be a Legacy recruit
+  const isLegacy = rng.next() < 0.05 && legacyCandidates.length > 0;
+  if (isLegacy) {
+    const parent = rng.pick(legacyCandidates);
+    return {
+      style: parent.style,
+      lineage: {
+        parentId: parent.id,
+        generation: (parent.lineage?.generation ?? 1) + 1,
+        pedigree: parent.fame > 2000 ? 'Noble Blood' : 'Legacy',
+        mentorName: parent.name,
+      },
+    };
+  }
+  if (meta) {
+    // ⚡ Institutional Style Drift: Bias toward current meta
+    const stylesByWeight: FightingStyle[] = [];
+    for (const s of Object.values(FightingStyle)) {
+      const drift = meta[s] ?? 0;
+      const weight = Math.max(1, 5 + drift); // Scale drift (-10..10) to weights (1..15)
+      for (let w = 0; w < weight; w++) stylesByWeight.push(s);
+    }
+    return { style: rng.pick(stylesByWeight), lineage: undefined };
+  }
+  return { style: rng.pick(Object.values(FightingStyle)), lineage: undefined };
+}
+
+/** Pick a unique archetype name; falls back to the generic pool, capped at 200 tries. */
+function pickRecruitName(
+  rng: IRNGService,
+  archetype: keyof typeof ARCHETYPE_NAMES,
+  usedNames: Set<string>
+): string {
+  let name: string;
+  let attempts = 0;
+  const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank];
+  do {
+    name = namePool.length > 0 ? rng.pick(namePool) : rng.pick(NAME_POOL);
+    attempts++;
+  } while (usedNames.has(name) && attempts < 200);
+  usedNames.add(name);
+  return name;
+}
+
 // Include new origins/traits in generateRecruit() pools. No manual wiring needed due to dynamic nature.
 export function generateRecruit(
   rng: IRNGService,
@@ -136,33 +189,7 @@ export function generateRecruit(
   legacyCandidates: import('@/types/warrior.types').Warrior[] = []
 ): PoolWarrior {
   const tier = forceTier ?? rollTier(rng);
-  const styles = Object.values(FightingStyle);
-  let style: FightingStyle;
-  let lineage: import('@/types/warrior.types').WarriorLineage | undefined;
-
-  // 🧬 Genetic Bloodlines: 5% chance to be a Legacy recruit
-  const isLegacy = rng.next() < 0.05 && legacyCandidates.length > 0;
-  if (isLegacy) {
-    const parent = rng.pick(legacyCandidates);
-    style = parent.style;
-    lineage = {
-      parentId: parent.id,
-      generation: (parent.lineage?.generation ?? 1) + 1,
-      pedigree: parent.fame > 2000 ? 'Noble Blood' : 'Legacy',
-      mentorName: parent.name,
-    };
-  } else if (meta) {
-    // ⚡ Institutional Style Drift: Bias toward current meta
-    const stylesByWeight: FightingStyle[] = [];
-    for (const s of Object.values(FightingStyle)) {
-      const drift = meta[s] ?? 0;
-      const weight = Math.max(1, 5 + drift); // Scale drift (-10..10) to weights (1..15)
-      for (let w = 0; w < weight; w++) stylesByWeight.push(s);
-    }
-    style = rng.pick(stylesByWeight);
-  } else {
-    style = rng.pick(styles);
-  }
+  const { style, lineage } = pickStyleAndLineage(rng, meta, legacyCandidates);
 
   const archetype = STYLE_ARCHETYPE[style];
   const attributes = generateArchetypeAttrs(style, rng);
@@ -182,14 +209,7 @@ export function generateRecruit(
   }
 
   // Pick unique name based on Archetype
-  let name: string;
-  let attempts = 0;
-  const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank];
-  do {
-    name = namePool.length > 0 ? rng.pick(namePool) : rng.pick(NAME_POOL);
-    attempts++;
-  } while (usedNames.has(name) && attempts < 200);
-  usedNames.add(name);
+  const name = pickRecruitName(rng, archetype, usedNames);
 
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
   const potential = generatePotential(attributes, tier, rng);

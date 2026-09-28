@@ -14,6 +14,26 @@ interface WarriorComparisonProps {
   playerRoster: Warrior[];
 }
 
+/** Flatten player + rival rosters into a stable-annotated active-warrior list. */
+function collectActiveWarriors(
+  rivals: RivalStableData[],
+  playerRoster: Warrior[]
+): { warrior: Warrior; stable: string }[] {
+  const list: { warrior: Warrior; stable: string }[] = [];
+  for (const w of playerRoster) {
+    if (!isActive(w)) continue;
+    list.push({ warrior: w, stable: 'User Stable' });
+  }
+  for (const r of rivals) {
+    const stableName = r.owner.stableName;
+    for (const w of r.roster) {
+      if (!isActive(w)) continue;
+      list.push({ warrior: w, stable: stableName });
+    }
+  }
+  return list;
+}
+
 /**
  * Warrior comparison.
  * @param - { rivals, player roster }.
@@ -22,21 +42,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
   const [wIdA, setWIdA] = useState<string | null>(null);
   const [wIdB, setWIdB] = useState<string | null>(null);
 
-  const allWarriors = useMemo(() => {
-    const list: { warrior: Warrior; stable: string }[] = [];
-    for (const w of playerRoster) {
-      if (!isActive(w)) continue;
-      list.push({ warrior: w, stable: 'User Stable' });
-    }
-    for (const r of rivals) {
-      const stableName = r.owner.stableName;
-      for (const w of r.roster) {
-        if (!isActive(w)) continue;
-        list.push({ warrior: w, stable: stableName });
-      }
-    }
-    return list;
-  }, [rivals, playerRoster]);
+  const allWarriors = useMemo(() => collectActiveWarriors(rivals, playerRoster), [rivals, playerRoster]);
 
   const warriorMap = useMemo(() => {
     const map = new Map<string, { warrior: Warrior; stable: string }>();

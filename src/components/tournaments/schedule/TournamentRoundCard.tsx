@@ -55,32 +55,14 @@ export function TournamentRoundCard({
         onClick={() => toggleRound(round)}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className={cn(
-                'w-8 h-8 rounded-full flex items-center justify-center text-xs font-black',
-                isComplete
-                  ? 'bg-primary/20 text-primary'
-                  : isCurrent
-                    ? 'bg-primary/20 text-primary animate-pulse motion-reduce:animate-none'
-                    : 'bg-muted text-muted-foreground'
-              )}
-            >
-              {isComplete ? '✓' : round}
-            </div>
-            <div>
-              <CardTitle className="text-sm font-bold uppercase tracking-wider">
-                {getRoundName(round, totalRounds)}
-              </CardTitle>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Calendar className="h-3 w-3" />
-                <span>Week {estimatedWeek}</span>
-                {isPast && <span className="text-primary">(Completed)</span>}
-                {isCurrent && <span className="text-primary font-bold">(Current)</span>}
-                {!isPast && !isCurrent && <span>(Upcoming)</span>}
-              </div>
-            </div>
-          </div>
+          <RoundIdentity
+            round={round}
+            totalRounds={totalRounds}
+            estimatedWeek={estimatedWeek}
+            isComplete={isComplete}
+            isCurrent={isCurrent}
+            isPast={isPast}
+          />
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-[10px]">
               {completedCount}/{bouts.length} matches
@@ -108,5 +90,51 @@ export function TournamentRoundCard({
         </CardContent>
       )}
     </Card>
+  );
+}
+
+/** Round number chip + name + estimated-week status line. */
+function RoundIdentity({
+  round,
+  totalRounds,
+  estimatedWeek,
+  isComplete,
+  isCurrent,
+  isPast,
+}: {
+  round: number;
+  totalRounds: number;
+  estimatedWeek: number;
+  isComplete: boolean;
+  isCurrent: boolean;
+  isPast: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <div
+        className={cn(
+          'w-8 h-8 rounded-full flex items-center justify-center text-xs font-black',
+          isComplete
+            ? 'bg-primary/20 text-primary'
+            : isCurrent
+              ? 'bg-primary/20 text-primary animate-pulse motion-reduce:animate-none'
+              : 'bg-muted text-muted-foreground'
+        )}
+      >
+        {isComplete ? '✓' : round}
+      </div>
+      <div>
+        <CardTitle className="text-sm font-bold uppercase tracking-wider">
+          {getRoundName(round, totalRounds)}
+        </CardTitle>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Calendar className="h-3 w-3" />
+          <span>Week {estimatedWeek}</span>
+          {isPast && <span className="text-primary">(Completed)</span>}
+          {isCurrent && <span className="text-primary font-bold">(Current)</span>}
+          {!isPast && !isCurrent && <span>(Upcoming)</span>}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -21,22 +21,9 @@ export const SEASON_ICONS: Record<string, string> = {
 /**
  * Store selection + derived tournament state for the Tournaments page.
  */
-export function useTournamentState(showBookmarkedOnly: boolean) {
-  const {
-    tournaments,
-    season,
-    roster,
-    week,
-    year,
-    arenaHistory,
-    player,
-    activeSlotId,
-    loadGame,
-    setSimulating,
-    isSimulating,
-    bookmarks,
-    activeTournamentId,
-  } = useGameStore(
+/** Raw store slice the tournaments page reads. */
+function useTournamentStoreSlice() {
+  return useGameStore(
     useShallow((s) => ({
       tournaments: s.tournaments,
       season: s.season,
@@ -53,6 +40,24 @@ export function useTournamentState(showBookmarkedOnly: boolean) {
       bookmarks: s.bookmarks,
     }))
   );
+}
+
+export function useTournamentState(showBookmarkedOnly: boolean) {
+  const {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+    bookmarks,
+    activeTournamentId,
+  } = useTournamentStoreSlice();
 
   // The active tournament is whichever the engine marked live this week.
   // Leftover tiers from previous years share season/week, so a bare

@@ -75,52 +75,18 @@ function CrowdMoodWidget() {
       <div className="h-10 w-px bg-white/5 shrink-0" />
 
       <div className="flex items-center gap-6 overflow-x-auto thin-scrollbar">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05] motion-reduce:transition-none">
-              <div className="text-right">
-                <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">
-                  FAME MULT
-                </div>
-                <div
-                  className={cn(
-                    'text-lg font-display font-black tracking-tighter leading-none',
-                    mods.fameMultiplier > 1 ? 'text-primary' : 'text-muted-foreground'
-                  )}
-                >
-                  ×{mods.fameMultiplier.toFixed(1)}
-                </div>
-              </div>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent className="text-[10px] uppercase font-black tracking-widest">
-            Multiplies all fame gains from this week's bouts.
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05] motion-reduce:transition-none">
-              <div className="text-right">
-                <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">
-                  LETHALITY
-                </div>
-                <div
-                  className={cn(
-                    'text-lg font-display font-black tracking-tighter leading-none',
-                    mods.killChanceBonus > 0 ? 'text-destructive' : 'text-muted-foreground'
-                  )}
-                >
-                  {mods.killChanceBonus > 0 ? '+' : ''}
-                  {(mods.killChanceBonus * 100).toFixed(0)}%
-                </div>
-              </div>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent className="text-[10px] uppercase font-black tracking-widest">
-            Probability bonus added to all fatal blow checks.
-          </TooltipContent>
-        </Tooltip>
+        <MoodStat
+          label="Fame Mult"
+          value={`×${mods.fameMultiplier.toFixed(1)}`}
+          highlight={mods.fameMultiplier > 1 ? 'text-primary' : 'text-muted-foreground'}
+          tooltip="Multiplies all fame gains from this week's bouts."
+        />
+        <MoodStat
+          label="Lethality"
+          value={`${mods.killChanceBonus > 0 ? '+' : ''}${(mods.killChanceBonus * 100).toFixed(0)}%`}
+          highlight={mods.killChanceBonus > 0 ? 'text-destructive' : 'text-muted-foreground'}
+          tooltip="Probability bonus added to all fatal blow checks."
+        />
       </div>
 
       <Badge
@@ -130,6 +96,39 @@ function CrowdMoodWidget() {
         {mood.toUpperCase()}
       </Badge>
     </Surface>
+  );
+}
+
+/** One mood-modifier stat tile with explanatory tooltip. */
+function MoodStat({
+  label,
+  value,
+  highlight,
+  tooltip,
+}: {
+  label: string;
+  value: string;
+  highlight: string;
+  tooltip: string;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05] motion-reduce:transition-none">
+          <div className="text-right">
+            <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">
+              {label}
+            </div>
+            <div className={cn('text-lg font-display font-black tracking-tighter leading-none', highlight)}>
+              {value}
+            </div>
+          </div>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent className="text-[10px] uppercase font-black tracking-widest">
+        {tooltip}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -394,22 +393,7 @@ export default function ArenaHub() {
 
   return (
     <PageFrame maxWidth="xl" className="pb-32">
-      <PageHeader
-        icon={Swords}
-        eyebrow="Combat Operations"
-        title="Arena"
-        subtitle="ARENA · BOUTS · RANKINGS"
-        actions={
-          <div className="flex gap-3">
-            <Badge
-              variant="outline"
-              className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
-            >
-              {roster.filter((w) => isActive(w)).length} WARRIORS ACTIVE
-            </Badge>
-          </div>
-        }
-      />
+      <HubHeader roster={roster} />
 
       {/* Band 2 — Crowd Mood full-width strip */}
       <CrowdMoodWidget />
@@ -452,5 +436,27 @@ export default function ArenaHub() {
         onReset={() => setAutosimResult(null)}
       />
     </PageFrame>
+  );
+}
+
+/** Hub page header with the active-warrior count badge. */
+function HubHeader({ roster }: { roster: ReturnType<typeof useGameStore.getState>['roster'] }) {
+  return (
+    <PageHeader
+      icon={Swords}
+      eyebrow="Combat Operations"
+      title="Arena"
+      subtitle="ARENA · BOUTS · RANKINGS"
+      actions={
+        <div className="flex gap-3">
+          <Badge
+            variant="outline"
+            className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
+          >
+            {roster.filter((w) => isActive(w)).length} WARRIORS ACTIVE
+          </Badge>
+        </div>
+      }
+    />
   );
 }

@@ -15,6 +15,43 @@ import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import type { FighterState, ResolutionContext } from './types';
 
+/** Sum one fighter's initiative: skills + tactics + passives + mods. Pure — no RNG. */
+function sumInitiative(
+  f: FighterState,
+  AL: number,
+  matchup: number,
+  fat: number,
+  defMods: DefensiveMods,
+  pass: StylePassiveResult,
+  psych: PsychStateMod,
+  dynTraits: DynamicTraitMods,
+  trainerIniMod: number,
+  masteryIni: number,
+  ctx: ResolutionContext,
+  stylePhase: StylePhase
+): number {
+  const styleWeatherMod = getStyleWeatherModifier(f.style, ctx.weather, ctx.arenaConfig.tags);
+  return (
+    f.skills.INI +
+    alIniMod(AL) +
+    matchup +
+    fat +
+    defMods.iniBonus +
+    getTempoBonus(f.style, stylePhase) +
+    pass.iniBonus +
+    masteryIni -
+    f.legHits +
+    psych.iniMod +
+    f.momentum * MOMENTUM_INI_MULT +
+    trainerIniMod +
+    ctx.weatherEffect.initiativeMod +
+    ctx.surfaceMod.initiativeMod +
+    styleWeatherMod.initiativeMod +
+    getWeaponInitiativeMod(f.weaponId) +
+    dynTraits.iniMod
+  );
+}
+
 /**
  * Resolve the initiative phase — determines which fighter attacks first.
  */
@@ -48,47 +85,14 @@ export function resolveInitiativePhase(
   const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA, OE_A, AL_A) : 0;
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
-  // Calculate style-weather modifiers
-  const styleWeatherModA = getStyleWeatherModifier(fA.style, ctx.weather, ctx.arenaConfig.tags);
-  const styleWeatherModD = getStyleWeatherModifier(fD.style, ctx.weather, ctx.arenaConfig.tags);
-
-  const iniA =
-    fA.skills.INI +
-    alIniMod(AL_A) +
-    ctx.matchupA +
-    fatA +
-    defModsA.iniBonus +
-    getTempoBonus(fA.style, stylePhase) +
-    passA.iniBonus +
-    masteryIniA -
-    fA.legHits +
-    psychA.iniMod +
-    fA.momentum * MOMENTUM_INI_MULT +
-    (ctx.trainerModsA.iniMod ?? 0) +
-    ctx.weatherEffect.initiativeMod +
-    ctx.surfaceMod.initiativeMod +
-    styleWeatherModA.initiativeMod +
-    getWeaponInitiativeMod(fA.weaponId) +
-    dynTraitsA.iniMod;
-
-  const iniD =
-    fD.skills.INI +
-    alIniMod(AL_D) +
-    ctx.matchupD +
-    fatD +
-    defModsD.iniBonus +
-    getTempoBonus(fD.style, stylePhase) +
-    passD.iniBonus +
-    masteryIniD -
-    fD.legHits +
-    psychD.iniMod +
-    fD.momentum * MOMENTUM_INI_MULT +
-    (ctx.trainerModsD.iniMod ?? 0) +
-    ctx.weatherEffect.initiativeMod +
-    ctx.surfaceMod.initiativeMod +
-    styleWeatherModD.initiativeMod +
-    getWeaponInitiativeMod(fD.weaponId) +
-    dynTraitsD.iniMod;
+  const iniA = sumInitiative(
+    fA, AL_A, ctx.matchupA, fatA, defModsA, passA, psychA, dynTraitsA,
+    ctx.trainerModsA.iniMod ?? 0, masteryIniA, ctx, stylePhase
+  );
+  const iniD = sumInitiative(
+    fD, AL_D, ctx.matchupD, fatD, defModsD, passD, psychD, dynTraitsD,
+    ctx.trainerModsD.iniMod ?? 0, masteryIniD, ctx, stylePhase
+  );
 
   const aGoesFirst = contestCheck(rng, iniA, iniD);
   const attLabel = aGoesFirst ? 'A' : 'D';

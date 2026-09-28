@@ -17,6 +17,28 @@ interface CrowdReactionsProps {
  * Crowd reactions.
  * @param - { tier, state, class name }.
  */
+const CROWD_ANIMATION: Record<CrowdState, string> = {
+  idle: '',
+  anticipation: '',
+  cheer: 'crowd-cheer',
+  roar: 'crowd-cheer',
+  gasp: 'crowd-gasp',
+  silence: '',
+  chant: 'crowd-chant',
+};
+
+const DENSITY: Record<Exclude<ArenaTier, 'training'>, number> = {
+  standard: 12,
+  championship: 20,
+  grand: 30,
+};
+
+function crowdOpacity(state: CrowdState, tier: ArenaTier): number {
+  if (state === 'anticipation') return 0.3;
+  if (state === 'silence') return 0.15;
+  return tier === 'grand' ? 0.5 : tier === 'championship' ? 0.4 : 0.25;
+}
+
 export default function CrowdReactions({
   tier,
   state: currentState,
@@ -25,37 +47,9 @@ export default function CrowdReactions({
   // No crowd for training tier
   if (tier === 'training') return null;
 
-  const density = {
-    standard: 12,
-    championship: 20,
-    grand: 30,
-  }[tier];
-
-  const getCrowdAnimation = () => {
-    switch (currentState) {
-      case 'cheer':
-        return 'crowd-cheer';
-      case 'roar':
-        return 'crowd-cheer';
-      case 'gasp':
-        return 'crowd-gasp';
-      case 'chant':
-        return 'crowd-chant';
-      default:
-        return '';
-    }
-  };
-
-  const getOpacity = () => {
-    switch (currentState) {
-      case 'anticipation':
-        return 0.3;
-      case 'silence':
-        return 0.15;
-      default:
-        return tier === 'grand' ? 0.5 : tier === 'championship' ? 0.4 : 0.25;
-    }
-  };
+  const density = DENSITY[tier];
+  const animation = CROWD_ANIMATION[currentState];
+  const opacity = crowdOpacity(currentState, tier);
 
   return (
     <div
@@ -73,11 +67,11 @@ export default function CrowdReactions({
           const delay = i * 0.05;
 
           return (
-            <g key={i} className={getCrowdAnimation()} style={{ animationDelay: `${delay}s` }}>
+            <g key={i} className={animation} style={{ animationDelay: `${delay}s` }}>
               <path
                 d={`M${x} 25 L${x} ${25 - height} Q${x + width / 2} ${25 - height - 2} ${x + width} ${25 - height} L${x + width} 25 Z`}
                 fill="rgba(0,0,0,0.7)"
-                opacity={getOpacity()}
+                opacity={opacity}
               />
             </g>
           );

@@ -35,6 +35,29 @@ const HIGH_AGGRESSION_STYLES = new Set<FightingStyle>([
 // ─── Core scoring ─────────────────────────────────────────────────────────────
 
 /**
+ * Range fit: reward when the preferred range is reachable under the arena cap
+ * (closer to the arena's natural start range = better); penalise overshoot.
+ */
+function rangeFitScore(
+  prefIdx: number,
+  maxIdx: number,
+  profile: (typeof ARENA_SIZE_PROFILES)[keyof typeof ARENA_SIZE_PROFILES]
+): number {
+  const startIdx = RANGE_ORDER.indexOf(profile.startRange);
+  if (prefIdx <= maxIdx) {
+    // Preferred range is reachable — reward proximity to preference
+    const distanceFromPref = Math.abs(prefIdx - startIdx);
+    return (
+      ARENA_FIT.RANGE_FIT_MAX -
+      Math.min(ARENA_FIT.RANGE_FIT_MAX, distanceFromPref * ARENA_FIT.RANGE_DISTANCE_PENALTY)
+    );
+  }
+  // Preferred range is beyond the cap — penalise
+  const overshoot = prefIdx - maxIdx;
+  return -overshoot * ARENA_FIT.RANGE_OVERSHOOT_PENALTY;
+}
+
+/**
  * Score how well an arena suits a warrior. Higher = better fit.
  * Pure function — no RNG, no side effects.
  *
@@ -57,19 +80,8 @@ export function scoreArenaFitForWarrior(
   const profile = ARENA_SIZE_PROFILES[arena.size];
   const prefIdx = RANGE_ORDER.indexOf(prefRange);
   const maxIdx = RANGE_ORDER.indexOf(profile.maxRange);
-  const startIdx = RANGE_ORDER.indexOf(profile.startRange);
 
-  if (prefIdx <= maxIdx) {
-    // Preferred range is reachable — reward proximity to preference
-    const distanceFromPref = Math.abs(prefIdx - startIdx);
-    score +=
-      ARENA_FIT.RANGE_FIT_MAX -
-      Math.min(ARENA_FIT.RANGE_FIT_MAX, distanceFromPref * ARENA_FIT.RANGE_DISTANCE_PENALTY);
-  } else {
-    // Preferred range is beyond the cap — penalise
-    const overshoot = prefIdx - maxIdx;
-    score -= overshoot * ARENA_FIT.RANGE_OVERSHOOT_PENALTY;
-  }
+  score += rangeFitScore(prefIdx, maxIdx, profile);
 
   // 2. Riposte style vs surfaceMod.riposteMod
   if (RIPOSTE_STYLES.has(warrior.style)) {

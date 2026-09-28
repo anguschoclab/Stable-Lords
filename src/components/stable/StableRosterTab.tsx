@@ -48,81 +48,87 @@ export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
         {activeRoster
           .sort((a, b) => b.fame - a.fame)
           .map((w) => (
-            <Surface
-              key={w.id}
-              variant="glass"
-              className="p-0 border-white/5 overflow-hidden group hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
-            >
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <ImperialRing size="sm" variant="bronze">
-                      <Activity className="h-4 w-4 text-muted-foreground/40" />
-                    </ImperialRing>
-                    <div>
-                      <WarriorLink
-                        name={w.name}
-                        id={w.id}
-                        className="text-lg font-display font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors block mb-1 motion-reduce:transition-none"
-                      />
-                      <div className="flex items-center gap-3">
-                        <StatBadge styleName={w.style} showFullName />
-                        <span className="text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest">
-                          Age {w.age}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[11px] font-display font-black text-arena-gold">
-                      {w.fame} FAME
-                    </div>
-                    <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
-                      {w.popularity} POP
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-7 gap-4 py-4 border-y border-white/5 mb-6">
-                  {ATTRIBUTE_KEYS.map((k) => (
-                    <StatBar key={k} label={k} value={w.attributes[k]} />
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-8">
-                    <div className="flex items-center gap-3">
-                      <ConditionBattery value={100 - (w.fatigue ?? 0)} className="h-1.5 w-16" />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                        Condition
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <FormSparkline warriorId={w.id} />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                        Form
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <Heart className="h-3.5 w-3.5 text-destructive" />
-                      <span className="text-sm font-display font-black text-foreground">
-                        {w.derivedStats?.hp}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Zap className="h-3.5 w-3.5 text-arena-fame" />
-                      <span className="text-sm font-display font-black text-foreground">
-                        {w.derivedStats?.endurance}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Surface>
+            <RosterCard key={w.id} w={w} />
           ))}
       </div>
     </div>
+  );
+}
+
+/** Per-warrior roster card: identity, attribute bars, condition/form, HP/END. */
+function RosterCard({ w }: { w: Warrior }) {
+  return (
+    <Surface
+      variant="glass"
+      className="p-0 border-white/5 overflow-hidden group hover:border-primary/20 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500"
+    >
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <ImperialRing size="sm" variant="bronze">
+              <Activity className="h-4 w-4 text-muted-foreground/40" />
+            </ImperialRing>
+            <div>
+              <WarriorLink
+                name={w.name}
+                id={w.id}
+                className="text-lg font-display font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors block mb-1 motion-reduce:transition-none"
+              />
+              <div className="flex items-center gap-3">
+                <StatBadge styleName={w.style} showFullName />
+                <span className="text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest">
+                  Age {w.age}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-[11px] font-display font-black text-arena-gold">
+              {w.fame} FAME
+            </div>
+            <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
+              {w.popularity} POP
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-7 gap-4 py-4 border-y border-white/5 mb-6">
+          {ATTRIBUTE_KEYS.map((k) => (
+            <StatBar key={k} label={k} value={w.attributes[k]} />
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-3">
+              <ConditionBattery value={100 - (w.fatigue ?? 0)} className="h-1.5 w-16" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                Condition
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <FormSparkline warriorId={w.id} />
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                Form
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Heart className="h-3.5 w-3.5 text-destructive" />
+              <span className="text-sm font-display font-black text-foreground">
+                {w.derivedStats?.hp}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Zap className="h-3.5 w-3.5 text-arena-fame" />
+              <span className="text-sm font-display font-black text-foreground">
+                {w.derivedStats?.endurance}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Surface>
   );
 }

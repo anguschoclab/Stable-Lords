@@ -55,47 +55,61 @@ export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) 
       <SectionDivider label="Fallen Legends" variant="blood" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {fallen.map((w, i) => (
-          <Surface
-            key={`${w.kind}-${w.name}-${i}`}
-            variant="glass"
-            className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all motion-reduce:transition-none motion-reduce:transform-none"
-          >
-            <div className="flex items-center gap-6">
-              <div
-                className={cn(
-                  'p-3 border transition-all motion-reduce:transition-none motion-reduce:transform-none',
-                  w.kind === 'fallen'
-                    ? 'bg-destructive/5 border-destructive/20 text-destructive'
-                    : 'bg-white/5 border-white/10 text-muted-foreground/40'
-                )}
-              >
-                {w.kind === 'fallen' ? (
-                  <Skull className="h-4 w-4" />
-                ) : (
-                  <Armchair className="h-4 w-4" />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[12px] font-black uppercase tracking-tight text-foreground">
-                  {w.name}
-                </span>
-                <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
-                  {STYLE_DISPLAY_NAMES[w.style as FightingStyle] ?? w.style} ·{' '}
-                  {w.kind === 'fallen' ? 'Fallen' : 'Retired'} · Wk {w.week}
-                </span>
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-muted-foreground/30 text-[8px] font-black uppercase tracking-widest block mb-1">
-                Fame
-              </span>
-              <span className="font-display font-black text-arena-gold text-xl leading-none">
-                {w.fame}
-              </span>
-            </div>
-          </Surface>
+          <LegendCard key={`${w.kind}-${w.name}-${i}`} legend={w} />
         ))}
       </div>
     </div>
+  );
+}
+
+type Legend = {
+  name: string;
+  style: string;
+  kind: 'fallen' | 'retired';
+  fame: number;
+  week: number | undefined;
+};
+
+/** Memorial card: skull/armchair icon, name, style + fate, fame. */
+function LegendCard({ legend: w }: { legend: Legend }) {
+  return (
+    <Surface
+      variant="glass"
+      className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all motion-reduce:transition-none motion-reduce:transform-none"
+    >
+      <div className="flex items-center gap-6">
+        <div
+          className={cn(
+            'p-3 border transition-all motion-reduce:transition-none motion-reduce:transform-none',
+            w.kind === 'fallen'
+              ? 'bg-destructive/5 border-destructive/20 text-destructive'
+              : 'bg-white/5 border-white/10 text-muted-foreground/40'
+          )}
+        >
+          {w.kind === 'fallen' ? (
+            <Skull className="h-4 w-4" />
+          ) : (
+            <Armchair className="h-4 w-4" />
+          )}
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[12px] font-black uppercase tracking-tight text-foreground">
+            {w.name}
+          </span>
+          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
+            {STYLE_DISPLAY_NAMES[w.style as FightingStyle] ?? w.style} ·{' '}
+            {w.kind === 'fallen' ? 'Fallen' : 'Retired'} · Wk {w.week}
+          </span>
+        </div>
+      </div>
+      <div className="text-right">
+        <span className="text-muted-foreground/30 text-[8px] font-black uppercase tracking-widest block mb-1">
+          Fame
+        </span>
+        <span className="font-display font-black text-arena-gold text-xl leading-none">
+          {w.fame}
+        </span>
+      </div>
+    </Surface>
   );
 }

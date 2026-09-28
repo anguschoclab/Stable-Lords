@@ -49,22 +49,34 @@ export const PLAN_INTEL_FRESH_WEEKS = 6;
  * @param now - Current absolute week; fresh `dossier.planIntel` (scouted
  *              suspected OE/AL) drives counter-planning deltas. Stale intel
  *              older than PLAN_INTEL_FRESH_WEEKS is ignored.
- * @returns A computed fight plan for the warrior
- */
-export function aiPlanForWarrior(
-  w: Warrior,
-  personality: OwnerPersonality,
-  philosophy: string,
-  opponentStyle?: FightingStyle,
-  intent?: AIIntent,
-  grudgeIntensity: number = 0,
-  dossier?: OpponentDossier,
-  now?: number
-): FightPlan {
-  const base = defaultPlanForWarrior(w);
-  const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
-  const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
+ * @returns A computed fight plan for the warrior/** Axis deltas and adaptation flags computed before plan assembly. */
+interface PlanModifiers {
+  intentOE: number;
+  intentAL: number;
+  intentKD: number;
+  grudgeKD: number;
+  grudgeAL: number;
+  intelOE: number;
+  intelAL: number;
+  intelKD: number;
+  intelHotOpener: boolean;
+  intelFragile: boolean;
+  rematchOE: number;
+  rematchAL: number;
+  rematchKD: number;
+  changeTactics: boolean;
+}
 
+/**
+ * Computes the contextual axis modifiers: intent shaping, grudge escalation,
+ * scouted-plan counter-deltas, and rematch (G11) adaptation.
+ */
+function computePlanModifiers(
+  intent: AIIntent | undefined,
+  grudgeIntensity: number,
+  dossier: OpponentDossier | undefined,
+  now: number | undefined
+): PlanModifiers {
   // Intent-based modifiers
   let intentOE = 0;
   let intentAL = 0;
@@ -132,54 +144,26 @@ export function aiPlanForWarrior(
     }
   }
 
-  // Per-style matchup heuristics
-  const matchup = opponentStyle
-    ? getStyleMatchupMods(w.style, opponentStyle)
-    : { oe: 0, al: 0, kd: 0 };
-
-  // Generate initial plan
-  const plan: FightPlan = {
-    ...base,
-    OE: clamp(
-      (base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE + rematchOE + intelOE,
-      1,
-      10
-    ),
-    AL: clamp(
-      (base.AL ?? 5) +
-        (pMod.AL ?? 0) +
-        (phMod.AL ?? 0) +
-        matchup.al +
-        intentAL +
-        grudgeAL +
-        rematchAL +
-        intelAL,
-      1,
-      10
-    ),
-    killDesire: clamp(
-      (base.killDesire ?? 5) +
-        (pMod.killDesire ?? 0) +
-        (phMod.killDesire ?? 0) +
-        matchup.kd +
-        intentKD +
-        grudgeKD +
-        rematchKD +
-        intelKD,
-      1,
-      10
-    ),
+  return {
+    intentOE, intentAL, intentKD, grudgeKD, grudgeAL,
+    intelOE, intelAL, intelKD, intelHotOpener, intelFragile,
+    rematchOE, rematchAL, rematchKD, changeTactics,
   };
+}
 
-  // Strategy score validation with retry logic
-  validateAndAdjustPlan(plan, w);
-
-  // Tactic suitability validation - adjust OE/AL based on style compatibility
-  // High OE is more suitable for aggressive styles, high AL for defensive styles
-  const styleSuitabilityBias = getStyleSuitabilityBias(w.style);
-  plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
-  plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
-
+/**
+ * Applies the strategic layer after core axes validate: tactic overrides for
+ * rematch losers, target/protect/aggression/opening/range levers, phase
+ * curves, desperate plan, fallback condition, and WIT-gated conditions.
+ */
+function applyStrategicLayer(
+  plan: FightPlan,
+  w: Warrior,
+  personality: OwnerPersonality,
+  intent: AIIntent | undefined,
+  dossier: OpponentDossier | undefined,
+  mods: PlanModifiers
+): void {
   // Offensive/defensive tactics come from the base plan (defaultPlanForWarrior →
   // getAITactics), which assigns each style its canonical Duel II Favorite Tactics.
   // We intentionally do NOT override them here: some styles canonically run a
@@ -187,7 +171,7 @@ export function aiPlanForWarrior(
   // commit offense and carry no defensive tactic), and that choice must survive.
   // The exception is rematch adaptation: a stable that keeps losing to this
   // opponent scraps the signature gameplan for the advisor's optimal picks.
-  if (changeTactics) {
+  if (mods.changeTactics) {
     plan.offensiveTactic = getBestOffensiveTactic(w.style);
     plan.defensiveTactic = getBestDefensiveTactic(w.style);
   }
@@ -199,8 +183,8 @@ export function aiPlanForWarrior(
   plan.protect = getAIProtect(w.style, personality, intent);
   // Intel-driven target selection: a scouted hot opener gets the head guard;
   // a scouted fragile defense invites the kill shot.
-  if (intelHotOpener) plan.protect = 'Head';
-  if (intelFragile) plan.target = 'Head';
+  if (mods.intelHotOpener) plan.protect = 'Head';
+  if (mods.intelFragile) plan.target = 'Head';
   plan.aggressionBias = getAIAggressionBias(personality, intent);
   plan.openingMove = getAIOpeningMove(personality);
   const rangePref = getAIRangePreference(w.style);
@@ -242,6 +226,71 @@ export function aiPlanForWarrior(
   const conditionCap =
     wt >= 7 ? allConditions.length : wt >= 4 ? universalConditions.length + 1 : universalConditions.length;
   plan.conditions = allConditions.slice(0, conditionCap);
+}
+
+export function aiPlanForWarrior(
+  w: Warrior,
+  personality: OwnerPersonality,
+  philosophy: string,
+  opponentStyle?: FightingStyle,
+  intent?: AIIntent,
+  grudgeIntensity: number = 0,
+  dossier?: OpponentDossier,
+  now?: number
+): FightPlan {  const base = defaultPlanForWarrior(w);
+  const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
+  const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
+  const mods = computePlanModifiers(intent, grudgeIntensity, dossier, now);
+
+  // Per-style matchup heuristics
+  const matchup = opponentStyle
+    ? getStyleMatchupMods(w.style, opponentStyle)
+    : { oe: 0, al: 0, kd: 0 };
+
+  // Generate initial plan
+  const plan: FightPlan = {
+    ...base,
+    OE: clamp(
+      (base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + mods.intentOE + mods.rematchOE + mods.intelOE,
+      1,
+      10
+    ),
+    AL: clamp(
+      (base.AL ?? 5) +
+        (pMod.AL ?? 0) +
+        (phMod.AL ?? 0) +
+        matchup.al +
+        mods.intentAL +
+        mods.grudgeAL +
+        mods.rematchAL +
+        mods.intelAL,
+      1,
+      10
+    ),
+    killDesire: clamp(
+      (base.killDesire ?? 5) +
+        (pMod.killDesire ?? 0) +
+        (phMod.killDesire ?? 0) +
+        matchup.kd +
+        mods.intentKD +
+        mods.grudgeKD +
+        mods.rematchKD +
+        mods.intelKD,
+      1,
+      10
+    ),
+  };
+
+  // Strategy score validation with retry logic
+  validateAndAdjustPlan(plan, w);
+
+  // Tactic suitability validation - adjust OE/AL based on style compatibility
+  // High OE is more suitable for aggressive styles, high AL for defensive styles
+  const styleSuitabilityBias = getStyleSuitabilityBias(w.style);
+  plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
+  plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
+
+  applyStrategicLayer(plan, w, personality, intent, dossier, mods);
 
   // Reconcile two-handed weapon + shield conflict
   if (w.equipment) {
@@ -250,6 +299,7 @@ export function aiPlanForWarrior(
 
   return plan;
 }
+
 
 // Re-export for backward compatibility
 export { getStyleMatchupMods } from '@/engine/ai/matchup/styleMatcher';

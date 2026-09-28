@@ -229,14 +229,28 @@ export function generateBoutBids(
  * Player-bound bids (targetStableId === state.player.id) draw opponents from
  * the player roster and are capped per-rival and globally.
  */
-export function convertBidsToOffers(
-  allBids: { bid: BoutBid; rivalId: string }[],
-  rivals: RivalStableData[],
+/** Per-call lookup maps and memoized predicates for bid conversion. */
+interface BidConversionCtx {
+  state: GameState;
+  rng: IRNGService;
+  rivalMap: Map<string, RivalStableData>;
+  proposerById: Map<string, Warrior>;
+  paired: Set<string>;
+  playerStableId: string;
+  playerAvoidSet: Set<string>;
+  h2hCache: Map<string, PairwiseHeadToHead>;
+  playerOffersByStable: Map<string, number>;
+  playerOfferTotal: number;
+  isBookableMemo: (w: Warrior, assignments: TrainingAssignment[] | undefined) => boolean;
+}
+
+/** Builds the per-call conversion context: lookup maps + bookable memo. */
+function buildConversionCtx(
   state: GameState,
   rng: IRNGService,
+  rivals: RivalStableData[],
   existingOfferWarriorIds: Set<string>
-): BoutOffer[] {
-  const sorted = [...allBids].sort((a, b) => b.bid.priority - a.bid.priority);
+): BidConversionCtx {
   const paired = new Set<string>(existingOfferWarriorIds);
   // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
   const rivalMap = new Map<string, RivalStableData>();
@@ -246,21 +260,7 @@ export function convertBidsToOffers(
     if (r.owner.id !== r.id) rivalMap.set(r.owner.id as string, r);
     for (const w of r.roster) proposerById.set(w.id as string, w);
   }
-  const offers: BoutOffer[] = [];
-  const playerStableId = state.player.id as string;
   const targetWeek = state.absoluteWeek + 1;
-
-  // Player-bound offer caps (offer spam protection).
-  const playerOffersByStable = new Map<string, number>();
-  let playerOfferTotal = 0;
-
-  // Hoisted once per call instead of scanning the array per bid.
-  const playerAvoidSet = new Set<string>(state.playerAvoids ?? []);
-
-  // One h2h memo for the whole conversion — scorePairwiseMatchup scans all of
-  // arenaHistory per call, so sharing this turns O(bids × candidates × F) into
-  // O(unique pairs × F).
-  const h2hCache = new Map<string, PairwiseHeadToHead>();
 
   // bookable() depends only on (warrior, restStates, trainingAssignments,
   // targetWeek) — all fixed for the call except the assignments list, which
@@ -284,12 +284,199 @@ export function convertBidsToOffers(
     return v;
   };
 
+  return {
+    state,
+    rng,
+    rivalMap,
+    proposerById,
+    paired,
+    playerStableId: state.player.id as string,
+    playerAvoidSet: new Set<string>(state.playerAvoids ?? []),
+    h2hCache: new Map<string, PairwiseHeadToHead>(),
+    playerOffersByStable: new Map<string, number>(),
+    playerOfferTotal: 0,
+    isBookableMemo,
+  };
+}
+
+/** Collects candidate opponent warriors matching the bid's target scope. */
+function collectCandidates(
+  bid: BoutBid,
+  cx: BidConversionCtx,
+  proposerStable: { stableId: string; isPlayer: boolean },
+  rivals: RivalStableData[]
+): { warrior: Warrior; stableId: string }[] {
+  const { state } = cx;
+  let candidates: { warrior: Warrior; stableId: string }[] = [];
+
+  if (bid.targetStableId === cx.playerStableId) {
+    for (const w of state.roster) {
+      if (!isActive(w)) continue;
+      if (isChampionBookingLocked(state, w.id)) continue;
+      if (!cx.isBookableMemo(w, state.trainingAssignments)) continue;
+      candidates.push({ warrior: w, stableId: cx.playerStableId });
+    }
+  } else if (bid.targetStableId) {
+    // VENDETTA: target a specific rival stable
+    const targetRival = cx.rivalMap.get(bid.targetStableId);
+    if (targetRival) {
+      candidates = [];
+      for (const w of targetRival.roster) {
+        if (!isActive(w)) continue;
+        if (isChampionBookingLocked(state, w.id)) continue;
+        if (!cx.isBookableMemo(w, targetRival.trainingAssignments)) continue;
+        candidates.push({ warrior: w, stableId: targetRival.id as string });
+      }
+    }
+  } else {
+    // All other intents: search all rival stables
+    for (const rival of rivals) {
+      if (rival.id === proposerStable.stableId || rival.owner.id === proposerStable.stableId)
+        continue;
+      for (const w of rival.roster) {
+        if (!isActive(w)) continue;
+        if (isChampionBookingLocked(state, w.id)) continue;
+        if (!cx.isBookableMemo(w, rival.trainingAssignments)) continue;
+        candidates.push({ warrior: w, stableId: rival.id as string });
+      }
+    }
+  }
+  return candidates;
+}
+
+/** Filters candidates by pairing exclusivity and the bid's fame band. */
+function fameFilter(
+  candidates: { warrior: Warrior; stableId: string }[],
+  bid: BoutBid,
+  paired: Set<string>
+): { warrior: Warrior; stableId: string }[] {
+  return candidates.filter((c) => {
+    if (paired.has(c.warrior.id)) return false;
+    if (bid.maxFame !== undefined && (c.warrior.fame ?? 0) > bid.maxFame) return false;
+    if (bid.minFame !== undefined && (c.warrior.fame ?? 0) < bid.minFame) return false;
+    return true;
+  });
+}
+
+/** Picks the highest-scoring candidate opponent (pairwise; h2h memoized). */
+function pickBestCandidate(
+  proposer: Warrior,
+  candidates: { warrior: Warrior; stableId: string }[],
+  proposerStableId: string,
+  cx: BidConversionCtx
+): { warrior: Warrior; stableId: string } | undefined {
+  const { state } = cx;
+  let bestCandidate = candidates[0];
+  if (!bestCandidate) return undefined;
+  let bestScore = -Infinity;
+  for (const candidate of candidates) {
+    const score = scorePairwiseMatchup(proposer, candidate.warrior, {
+      rankings: state.realmRankings,
+      arenaHistory: state.arenaHistory,
+      rivalries: state.rivalries,
+      rivalryMap: state.rivalryMap,
+      aStableId: proposerStableId,
+      bStableId: candidate.stableId,
+      week: state.week,
+      h2hCache: cx.h2hCache,
+    });
+    if (score > bestScore) {
+      bestScore = score;
+      bestCandidate = candidate;
+    }
+  }
+  return bestCandidate;
+}
+
+/**
+ * Contender-venue bias: a warrior with a qualifying record at an arena is
+ * climbing that venue's title ladder — their bids keep booking there so a
+ * real contender emerges instead of diffusing across the circuit.
+ */
+function resolveArenaId(
+  bid: BoutBid,
+  proposer: Warrior,
+  opponent: Warrior,
+  cx: BidConversionCtx
+): string | undefined {
+  let contenderVenue: string | undefined;
+  let contenderVenueWins = -1;
+  for (const [venueId, rec] of Object.entries(proposer.career?.byArena ?? {})) {
+    if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(venueId)) continue;
+    if ((rec.wins ?? 0) + (rec.losses ?? 0) < ARENA_TITLE.MIN_BOUTS) continue;
+    if ((rec.wins ?? 0) > contenderVenueWins) {
+      contenderVenue = venueId;
+      contenderVenueWins = rec.wins ?? 0;
+    }
+  }
+  return (
+    bid.arenaId ??
+    contenderVenue ??
+    selectArenaForMatchup(proposer, opponent, cx.rng, {
+      weather: cx.state.weather,
+    })
+  );
+}
+
+/** Builds the BoutOffer record for a matched bid pair. */
+function buildOffer(
+  bid: BoutBid,
+  proposer: Warrior,
+  opponent: Warrior,
+  proposerStable: { stableId: string; isPlayer: boolean },
+  arenaId: string | undefined,
+  cx: BidConversionCtx
+): BoutOffer {
+  const { state, rng } = cx;
+  const offerId = `bid_${rng.uuid()}` as BoutOfferId;
+
+  // Stable notoriety sells tickets — butcher stables draw a bigger crowd.
+  const proposerRoster = proposerStable.isPlayer
+    ? state.roster
+    : cx.rivalMap.get(proposerStable.stableId)?.roster;
+  const notorietyHype = proposerRoster
+    ? Math.floor(computeRivalReputation(proposerRoster).notoriety / 2)
+    : 0;
+
+  return {
+    id: offerId,
+    promoterId: BID_MATCHMAKING_ID,
+    proposerStableId: proposerStable.stableId as StableId,
+    warriorIds: [bid.proposingWarriorId as WarriorId, opponent.id as WarriorId],
+    boutWeek: displayWeek(state.absoluteWeek + 2),
+    expirationWeek: displayWeek(state.absoluteWeek + 1),
+    createdAbsoluteWeek: state.absoluteWeek,
+    purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
+    hype: Math.max(
+      40,
+      Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) +
+        bid.priority * 5 +
+        notorietyHype
+    ),
+    status: 'Proposed',
+    responses: {
+      [bid.proposingWarriorId as WarriorId]: 'Accepted',
+      [opponent.id as WarriorId]: 'Pending',
+    },
+    arenaId,
+  };
+}
+export function convertBidsToOffers(
+  allBids: { bid: BoutBid; rivalId: string }[],
+  rivals: RivalStableData[],
+  state: GameState,
+  rng: IRNGService,
+  existingOfferWarriorIds: Set<string>
+): BoutOffer[] {
+  const cx = buildConversionCtx(state, rng, rivals, existingOfferWarriorIds);
+  const sorted = [...allBids].sort((a, b) => b.bid.priority - a.bid.priority);
+  const offers: BoutOffer[] = [];
   for (const { bid, rivalId } of sorted) {
-    if (paired.has(bid.proposingWarriorId)) continue;
+    if (cx.paired.has(bid.proposingWarriorId)) continue;
 
     const proposer =
       state.warriorMap?.get(bid.proposingWarriorId as WarriorId) ??
-      proposerById.get(bid.proposingWarriorId);
+      cx.proposerById.get(bid.proposingWarriorId);
     if (!proposer) continue;
     // Booking-locked arena champions only fight title bouts — a stale bid
     // generated before a title went pending must not produce an offer.
@@ -302,147 +489,39 @@ export function convertBidsToOffers(
       isPlayer: false,
     };
 
-    const bidTargetsPlayer = bid.targetStableId === playerStableId;
+    const bidTargetsPlayer = bid.targetStableId === cx.playerStableId;
 
     // The player's avoid list vetoes the proposer for player-bound offers.
-    if (bidTargetsPlayer && playerAvoidSet.has(bid.proposingWarriorId)) continue;
+    if (bidTargetsPlayer && cx.playerAvoidSet.has(bid.proposingWarriorId)) continue;
 
     // Player-bound caps: ≤1 per proposing stable, ≤3 globally.
     if (bidTargetsPlayer) {
-      if (playerOfferTotal >= MAX_PLAYER_OFFERS_GLOBAL) continue;
-      if ((playerOffersByStable.get(proposerStable.stableId) ?? 0) >= MAX_PLAYER_OFFERS_PER_RIVAL)
+      if (cx.playerOfferTotal >= MAX_PLAYER_OFFERS_GLOBAL) continue;
+      if ((cx.playerOffersByStable.get(proposerStable.stableId) ?? 0) >= MAX_PLAYER_OFFERS_PER_RIVAL)
         continue;
     }
 
     // Find candidate opponents based on bid criteria
-    let candidates: { warrior: typeof proposer; stableId: string }[] = [];
-
-    if (bidTargetsPlayer) {
-      for (const w of state.roster) {
-        if (!isActive(w)) continue;
-        if (isChampionBookingLocked(state, w.id)) continue;
-        if (!isBookableMemo(w, state.trainingAssignments)) continue;
-        candidates.push({ warrior: w, stableId: playerStableId });
-      }
-    } else if (bid.targetStableId) {
-      // VENDETTA: target a specific rival stable
-      const targetRival = rivalMap.get(bid.targetStableId);
-      if (targetRival) {
-        candidates = [];
-        for (const w of targetRival.roster) {
-          if (!isActive(w)) continue;
-          if (isChampionBookingLocked(state, w.id)) continue;
-          if (!isBookableMemo(w, targetRival.trainingAssignments)) continue;
-          candidates.push({ warrior: w, stableId: targetRival.id as string });
-        }
-      }
-    } else {
-      // All other intents: search all rival stables
-      for (const rival of rivals) {
-        if (rival.id === proposerStable.stableId || rival.owner.id === proposerStable.stableId)
-          continue;
-        for (const w of rival.roster) {
-          if (!isActive(w)) continue;
-          if (isChampionBookingLocked(state, w.id)) continue;
-          if (!isBookableMemo(w, rival.trainingAssignments)) continue;
-          candidates.push({ warrior: w, stableId: rival.id as string });
-        }
-      }
-    }
-
-    // Apply fame filters
-    candidates = candidates.filter((c) => {
-      if (paired.has(c.warrior.id)) return false;
-      if (bid.maxFame !== undefined && (c.warrior.fame ?? 0) > bid.maxFame) return false;
-      if (bid.minFame !== undefined && (c.warrior.fame ?? 0) < bid.minFame) return false;
-      return true;
-    });
-
+    let candidates = collectCandidates(bid, cx, proposerStable, rivals);
+    candidates = fameFilter(candidates, bid, cx.paired);
     if (candidates.length === 0) continue;
 
     // Pick the best matchup opponent (pairwise — player marks never leak, G18)
-    let bestCandidate = candidates[0];
+    const bestCandidate = pickBestCandidate(proposer, candidates, proposerStable.stableId, cx);
     if (!bestCandidate) continue;
-    let bestScore = -Infinity;
-    for (const candidate of candidates) {
-      const score = scorePairwiseMatchup(proposer, candidate.warrior, {
-        rankings: state.realmRankings,
-        arenaHistory: state.arenaHistory,
-        rivalries: state.rivalries,
-        rivalryMap: state.rivalryMap,
-        aStableId: proposerStable.stableId as string,
-        bStableId: candidate.stableId,
-        week: state.week,
-        h2hCache,
-      });
-      if (score > bestScore) {
-        bestScore = score;
-        bestCandidate = candidate;
-      }
-    }
-
     const opponent = bestCandidate.warrior;
-    // Contender-venue bias: a warrior with a qualifying record at an arena is
-    // climbing that venue's title ladder — their bids keep booking there so a
-    // real contender emerges instead of diffusing across the circuit. Most
-    // venue wins wins the tie; deterministic, so no RNG consumption.
-    let contenderVenue: string | undefined;
-    let contenderVenueWins = -1;
-    for (const [venueId, rec] of Object.entries(proposer.career?.byArena ?? {})) {
-      if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(venueId)) continue;
-      if ((rec.wins ?? 0) + (rec.losses ?? 0) < ARENA_TITLE.MIN_BOUTS) continue;
-      if ((rec.wins ?? 0) > contenderVenueWins) {
-        contenderVenue = venueId;
-        contenderVenueWins = rec.wins ?? 0;
-      }
-    }
-    const arenaId =
-      bid.arenaId ??
-      contenderVenue ??
-      selectArenaForMatchup(proposer, opponent, rng, {
-        weather: state.weather,
-      });
-    const offerId = `bid_${rng.uuid()}` as BoutOfferId;
 
-    // Stable notoriety sells tickets — butcher stables draw a bigger crowd.
-    const proposerRoster = proposerStable.isPlayer
-      ? state.roster
-      : rivalMap.get(proposerStable.stableId)?.roster;
-    const notorietyHype = proposerRoster
-      ? Math.floor(computeRivalReputation(proposerRoster).notoriety / 2)
-      : 0;
-
-    const offer: BoutOffer = {
-      id: offerId,
-      promoterId: BID_MATCHMAKING_ID,
-      proposerStableId: proposerStable.stableId as StableId,
-      warriorIds: [bid.proposingWarriorId as WarriorId, opponent.id as WarriorId],
-      boutWeek: displayWeek(state.absoluteWeek + 2),
-      expirationWeek: displayWeek(state.absoluteWeek + 1),
-      createdAbsoluteWeek: state.absoluteWeek,
-      purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
-      hype: Math.max(
-        40,
-        Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) +
-          bid.priority * 5 +
-          notorietyHype
-      ),
-      status: 'Proposed',
-      responses: {
-        [bid.proposingWarriorId as WarriorId]: 'Accepted',
-        [opponent.id as WarriorId]: 'Pending',
-      },
-      arenaId,
-    };
+    const arenaId = resolveArenaId(bid, proposer, opponent, cx);
+    const offer = buildOffer(bid, proposer, opponent, proposerStable, arenaId, cx);
 
     offers.push(offer);
-    paired.add(bid.proposingWarriorId);
-    paired.add(opponent.id);
+    cx.paired.add(bid.proposingWarriorId);
+    cx.paired.add(opponent.id);
     if (bidTargetsPlayer) {
-      playerOfferTotal++;
-      playerOffersByStable.set(
+      cx.playerOfferTotal++;
+      cx.playerOffersByStable.set(
         proposerStable.stableId,
-        (playerOffersByStable.get(proposerStable.stableId) ?? 0) + 1
+        (cx.playerOffersByStable.get(proposerStable.stableId) ?? 0) + 1
       );
     }
   }

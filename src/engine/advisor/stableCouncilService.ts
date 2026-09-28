@@ -1,35 +1,20 @@
-/**
- * Master Stable Council Service
- * Synthesizes per-warrior advisories into an executive War Council briefing,
- * computing stable-wide KPIs, prioritized directives, and atomic execution payloads.
- */
-import type { GameState, TrainingAssignment, BoutOffer } from '@/types/state.types';
+import type { GameState, BoutOffer } from '@/types/state.types';
 import type {
   WarriorAdvisorCard,
   StableAdvisorSummary,
   StableCouncilReport,
-  WarriorActionPayload,
-  CouncilDirective,
   CouncilLookahead,
 } from './types';
-import { evaluateCampaignFocus } from './campaignFocusEvaluator';
-import { evaluateTournamentAdvice } from './tournamentAdvisor';
-import { evaluateBoutOffers } from './boutOfferAdvisor';
-import { evaluateTrainingAdvice } from './trainingAdvisor';
-import { evaluateTacticsAdvice } from './tacticsAdvisorBridge';
-import { getOpponentIntel } from './intelAdvisor';
 import { isActive } from '@/engine/warrior/warriorStatus';
-import { getFatigueBand } from '@/engine/core/fatigueUtils';
 import { TRAINING_COST } from '@/constants/economy';
 import {
-  boutOfferAbsoluteWeek,
   deriveAbsoluteWeek,
   weeksUntilNextSeasonalTournament,
 } from '@/engine/core/absoluteWeek';
-import { findWarriorById } from '@/engine/core/warriorLookup';
-import { getScoutCost } from '@/engine/scouting/scouting';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
-import { ARENA_TITLE } from '@/constants/arena';
+import { buildWarriorCard, type CardBuildContext } from './stableCouncil/cards';
+import { computeCardKpis, buildStableDirectives, collectUnresolvedDirectives } from './stableCouncil/directives';
+import { listFutureCommitments, listRecoveryEtas, listTitleDefenses } from './stableCouncil/lookahead';
 
 /**
  * Compute a complete Stable Council Report evaluating all active roster warriors.
@@ -43,7 +28,6 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   // One ladder rank for the whole report — the same shared perception
   // primitive rival crown campaigns use, not a per-warrior re-scan.
   const contenderIndex = buildContenderIndex(state);
-  const evalCtx = { contenderIndex };
 
   // warriorId → the arena they reign over — the crown a champion defends is
   // state the card surfaces as "defending", not a ladder rank.
@@ -52,158 +36,10 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     if (t?.champion) championArenaByWarrior.set(t.champion.warriorId, arenaId);
   }
 
-  const cards: WarriorAdvisorCard[] = activeWarriors.map((warrior) => {
-    const campaignFocus = evaluateCampaignFocus(warrior, state, contenderIndex);
-    // What the council would recommend absent the player's pin — lets the UI
-    // surface "Suggested: X" when the pin diverges from auto-detection.
-    const suggestedCampaignFocus = evaluateCampaignFocus(
-      { ...warrior, campaignFocus: undefined },
-      state,
-      contenderIndex
-    );
-    const tournamentAdvice = evaluateTournamentAdvice(warrior, state);
-    const fightAdvice = evaluateBoutOffers(warrior, state, campaignFocus, tournamentAdvice, evalCtx);
-    const trainingAdvice = evaluateTrainingAdvice(warrior, state);
-    const tacticsAdvice = evaluateTacticsAdvice(warrior, campaignFocus, {
-      opponent: fightAdvice.opponent ?? undefined,
-      state,
-    });
+  const ctx: CardBuildContext = { state, contenderIndex, championArenaByWarrior };
+  const cards: WarriorAdvisorCard[] = activeWarriors.map((w) => buildWarriorCard(w, ctx));
 
-    const fatigue = warrior.fatigue ?? 0;
-    const fatigueStatus = {
-      band: getFatigueBand(fatigue),
-      value: fatigue,
-    };
-
-    const injuryStatus = {
-      isInjured: (warrior.injuries || []).some((i) => (i.weeksRemaining ?? 1) > 0),
-      severities: (warrior.injuries || []).map((i) => i.severity),
-      requiresRecovery: campaignFocus === 'REHABILITATION',
-    };
-
-    // Construct Training Assignment — but only when this warrior's week is
-    // training rather than fighting. isBookable() excludes warriors holding
-    // any assignment, so a warrior booked to fight (ACCEPT_OFFER) or a
-    // fight-focused warrior waiting for offers must carry none, or the
-    // promoter/challenge pipeline can never book them (autopilot starvation).
-    const requiresRecovery =
-      campaignFocus === 'REHABILITATION' || injuryStatus.requiresRecovery;
-    const wantsBooking =
-      !requiresRecovery &&
-      (campaignFocus === 'PURSE_HUNTER' ||
-        campaignFocus === 'VETERAN_TWILIGHT' ||
-        campaignFocus === 'CROWN_BID' ||
-        (campaignFocus === 'TOURNAMENT_PUSH' &&
-          tournamentAdvice.status === 'QUALIFYING'));
-    const holdsForBooking =
-      fightAdvice.action === 'NO_VIABLE_OFFERS' && wantsBooking;
-
-    let trainingAssignment: TrainingAssignment | undefined;
-    if (fightAdvice.action === 'ACCEPT_OFFER' || holdsForBooking) {
-      trainingAssignment = undefined;
-    } else if (trainingAdvice.mode === 'recovery') {
-      trainingAssignment = { warriorId: warrior.id, type: 'recovery' };
-    } else if (trainingAdvice.mode === 'skillDrill') {
-      trainingAssignment = {
-        warriorId: warrior.id,
-        type: 'skillDrill',
-        skill: trainingAdvice.targetSkill ?? 'ATT',
-      };
-    } else if (trainingAdvice.mode === 'trait') {
-      trainingAssignment = {
-        warriorId: warrior.id,
-        type: 'trait',
-        trainerId: trainingAdvice.targetTrainerId,
-        weeksRemaining: 4,
-      };
-    } else {
-      trainingAssignment = {
-        warriorId: warrior.id,
-        type: 'attribute',
-        attribute: trainingAdvice.targetAttribute ?? 'ST',
-      };
-    }
-
-    const actionPayload: WarriorActionPayload = {
-      warriorId: warrior.id,
-      trainingAssignment,
-      boutOfferIdToAccept:
-        fightAdvice.action === 'ACCEPT_OFFER' ? fightAdvice.recommendedOfferId : undefined,
-      tacticsPlanPatch: {
-        offensiveTactic: tacticsAdvice.bestOffensiveTactic,
-        defensiveTactic: tacticsAdvice.bestDefensiveTactic,
-        OE: tacticsAdvice.suggestedOE,
-        AL: tacticsAdvice.suggestedAL,
-        fallbackCondition: tacticsAdvice.fallbackCondition,
-        ...(tacticsAdvice.suggestedConditions?.length
-          ? { conditions: tacticsAdvice.suggestedConditions }
-          : {}),
-      },
-    };
-
-    // Crown standing — the warrior's best title-ladder position, read off the
-    // shared contender index (same ordering rivals campaign against). A
-    // reigning champion reports the arena they defend instead.
-    let crownStanding: WarriorAdvisorCard['crownStanding'];
-    const championArena = championArenaByWarrior.get(warrior.id);
-    if (championArena) {
-      crownStanding = { arenaId: championArena, isChampion: true };
-    } else {
-      let bestArena: string | undefined;
-      let bestRank = Infinity;
-      for (const [arenaId, ids] of contenderIndex) {
-        const idx = ids.indexOf(warrior.id);
-        if (idx >= 0 && idx + 1 < bestRank) {
-          bestRank = idx + 1;
-          bestArena = arenaId;
-        }
-      }
-      if (bestArena) crownStanding = { arenaId: bestArena, rank: bestRank, isChampion: false };
-    }
-
-    // Synthesize concise 1-sentence headline summary
-    let headlineSummary = `${trainingAdvice.headline}.`;
-    if (fightAdvice.action === 'ACCEPT_OFFER') {
-      headlineSummary = `${fightAdvice.headline} · ${trainingAdvice.headline}`;
-    } else if (fightAdvice.action === 'BLOCKED_BY_INJURY') {
-      headlineSummary = `Med Bay recovery mandated · Combat blocked by injury`;
-    } else if (tournamentAdvice.status === 'CONTENDER_REST') {
-      headlineSummary = `Resting for ${tournamentAdvice.tierName} · ${trainingAdvice.headline}`;
-    }
-
-    return {
-      warriorId: warrior.id,
-      warriorName: warrior.name,
-      style: warrior.style,
-      campaignFocus,
-      suggestedCampaignFocus,
-      crownStanding,
-      fatigueStatus,
-      injuryStatus,
-      fightAdvice,
-      tournamentAdvice,
-      trainingAdvice,
-      tacticsAdvice,
-      headlineSummary,
-      actionPayload,
-    };
-  });
-
-  // Calculate Stable-wide KPIs in a single pass
-  let combatReadyCount = 0;
-  let rehabCount = 0;
-  let tournamentContenderCount = 0;
-  let projectedPurseGold = 0;
-  for (const c of cards) {
-    if (c.fightAdvice.action === 'ACCEPT_OFFER') {
-      combatReadyCount++;
-      if (c.fightAdvice.recommendedOffer) {
-        projectedPurseGold += c.fightAdvice.recommendedOffer.purse ?? 0;
-      }
-    }
-    if (c.campaignFocus === 'REHABILITATION') rehabCount++;
-    if (c.tournamentAdvice.qualifiedTier !== null) tournamentContenderCount++;
-  }
+  const kpis = computeCardKpis(cards);
 
   const assignedWarriorIds = new Set(
     (state.trainingAssignments || []).map((a) => a.warriorId)
@@ -228,207 +64,31 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
         ? `Treasury (${treasury}G) cannot cover projected training costs (${projectedTrainingCost}G).`
         : undefined;
 
-  // Synthesize High-Priority Stable Directives
-  const stableDirectives: string[] = [];
-  if (treasury < 0) {
-    stableDirectives.push(
-      `🛑 Treasury deficit (${treasury}G): accept purse bouts and suspend paid coaching before bankruptcy.`
-    );
-  } else if (treasury < projectedTrainingCost) {
-    stableDirectives.push(
-      `💰 Treasury (${treasury}G) cannot cover projected training (${projectedTrainingCost}G): prioritize purse bouts and defer paid coaching.`
-    );
-  }
-  if (rehabCount > 0) {
-    stableDirectives.push(
-      `⚠️ ${rehabCount} warrior${rehabCount > 1 ? 's' : ''} require Med Bay recovery due to active injuries or elevated fatigue.`
-    );
-  }
-  if (combatReadyCount > 0) {
-    stableDirectives.push(
-      `⚔️ ${combatReadyCount} warrior${combatReadyCount > 1 ? 's have' : ' has'} favorable bout offers with predicted matchup advantages.`
-    );
-  }
-  const crownBids = cards.filter((c) => c.campaignFocus === 'CROWN_BID');
-  if (crownBids.length > 0) {
-    stableDirectives.push(
-      `👑 ${crownBids.length} warrior${crownBids.length > 1 ? 's are' : ' is'} ranked arena contender${crownBids.length > 1 ? 's' : ''} — venue bouts build the title challenge.`
-    );
-  }
-  const restingContenders = cards.filter(
-    (c) => c.tournamentAdvice.status === 'CONTENDER_REST'
-  ).length;
-  if (restingContenders > 0) {
-    stableDirectives.push(
-      `🏆 ${restingContenders} contender${restingContenders > 1 ? 's are' : ' is'} tapering combat to peak for upcoming seasonal tournament brackets.`
-    );
-  }
-  if (unassignedTrainingCount > 0) {
-    stableDirectives.push(
-      `🏋️ ${unassignedTrainingCount} warrior${unassignedTrainingCount > 1 ? 's need' : ' needs'} weekly training assignments.`
-    );
-  }
-  // Deeper scouting: flag recommended bouts where the opponent has no dossier
-  // and a Basic report is affordable — intel feeds both scoring and tactics.
-  const blindOpponents = cards
-    .filter(
-      (c) =>
-        c.fightAdvice.action === 'ACCEPT_OFFER' &&
-        c.fightAdvice.opponent &&
-        getOpponentIntel(state, c.fightAdvice.opponent.id).length === 0
-    )
-    .map((c) => c.fightAdvice.opponent?.name ?? 'Unknown Opponent');
-  const basicScoutCost = getScoutCost('Basic');
-  if (blindOpponents.length > 0 && treasury >= basicScoutCost) {
-    stableDirectives.push(
-      `🕵️ No scout dossier on ${blindOpponents.slice(0, 3).join(', ')}${
-        blindOpponents.length > 3 ? ` and ${blindOpponents.length - 3} more` : ''
-      } — commission a Basic scout report (${basicScoutCost}G) before signing.`
-    );
-  }
+  const stableDirectives = buildStableDirectives(
+    state,
+    cards,
+    kpis,
+    unassignedTrainingCount,
+    projectedTrainingCost,
+    treasury
+  );
 
-  if (stableDirectives.length === 0) {
-    stableDirectives.push('Stable operations are balanced. Review individual warrior profiles below.');
-  }
-
-  // ── Pre-advance checklist: council recommendations not yet in live state ──
   const currentAbsWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
   const upcomingAbsWeek = currentAbsWeek + 1;
-  const fightingIds = new Set(
-    cards.filter((c) => c.fightAdvice.action === 'ACCEPT_OFFER').map((c) => c.warriorId)
+
+  const unresolvedDirectives = collectUnresolvedDirectives(
+    state,
+    cards,
+    activeWarriors,
+    playerWarriorIds,
+    assignedWarriorIds,
+    upcomingAbsWeek
   );
-  for (const o of Object.values(state.boutOffers || {})) {
-    if (o.status === 'Signed' && boutOfferAbsoluteWeek(o) === upcomingAbsWeek) {
-      for (const wid of o.warriorIds) {
-        if (playerWarriorIds.has(wid)) fightingIds.add(wid);
-      }
-    }
-  }
-
-  const unresolvedDirectives: CouncilDirective[] = [];
-  for (const card of cards) {
-    const warrior = activeWarriors.find((w) => w.id === card.warriorId);
-    if (!warrior) continue;
-
-    const offerId = card.actionPayload.boutOfferIdToAccept;
-    if (offerId) {
-      const offer = state.boutOffers?.[offerId];
-      const response = offer?.responses?.[card.warriorId];
-      if (offer && response !== 'Accepted' && response !== 'Declined') {
-        unresolvedDirectives.push({
-          kind: 'unsigned-offer',
-          warriorId: card.warriorId,
-          warriorName: card.warriorName,
-          label: `Sign bout contract vs ${card.fightAdvice.opponent?.name ?? 'opponent'} (${offer.purse}G)`,
-        });
-      }
-    }
-
-    const assignment = card.actionPayload.trainingAssignment;
-    if (assignment && !assignedWarriorIds.has(card.warriorId)) {
-      unresolvedDirectives.push({
-        kind: 'unassigned-training',
-        warriorId: card.warriorId,
-        warriorName: card.warriorName,
-        label: `Assign ${assignment.type} training`,
-      });
-    }
-
-    if (fightingIds.has(card.warriorId) && card.actionPayload.tacticsPlanPatch) {
-      const plan = warrior.plan;
-      const patch = card.actionPayload.tacticsPlanPatch;
-      // A suggested condition counts as unapplied only when no authored
-      // condition already covers the same trigger type.
-      const uncoveredSuggestion = (patch.conditions ?? []).some(
-        (c) => !(plan?.conditions ?? []).some((p) => p.trigger.type === c.trigger.type)
-      );
-      const diverged =
-        !plan ||
-        plan.OE !== patch.OE ||
-        plan.AL !== patch.AL ||
-        plan.offensiveTactic !== patch.offensiveTactic ||
-        plan.defensiveTactic !== patch.defensiveTactic ||
-        plan.fallbackCondition !== patch.fallbackCondition ||
-        uncoveredSuggestion;
-      if (diverged) {
-        unresolvedDirectives.push({
-          kind: 'unapplied-tactics',
-          warriorId: card.warriorId,
-          warriorName: card.warriorName,
-          label: 'Apply recommended tactics plan',
-        });
-      }
-    }
-  }
 
   // ── Multi-week lookahead ──
-  const futureCommitments = Object.values(state.boutOffers || {})
-    .filter((o) => {
-      const playerId = o.warriorIds.find((wid) => playerWarriorIds.has(wid));
-      return (
-        playerId !== undefined &&
-        boutOfferAbsoluteWeek(o) > upcomingAbsWeek &&
-        (o.status === 'Signed' || o.responses[playerId] === 'Accepted')
-      );
-    })
-    .map((o) => {
-      const playerId = o.warriorIds.find((wid) => playerWarriorIds.has(wid));
-      if (playerId === undefined) return null;
-      const opponentId = o.warriorIds.find((wid) => wid !== playerId);
-      return {
-        offerId: o.id,
-        warriorId: playerId,
-        warriorName: cards.find((c) => c.warriorId === playerId)?.warriorName ?? playerId,
-        opponentName: opponentId
-          ? (findWarriorById(state, opponentId)?.name ?? 'Unknown Opponent')
-          : 'Unknown Opponent',
-        absoluteWeek: boutOfferAbsoluteWeek(o),
-        purse: o.purse,
-      };
-    })
-    .filter((e): e is NonNullable<typeof e> => e !== null)
-    .sort((a, b) => a.absoluteWeek - b.absoluteWeek);
-
-  const recoveryEtas = activeWarriors
-    .map((w) => {
-      const weeks = Math.max(
-        0,
-        ...(w.injuries || []).map((i) => i.weeksRemaining ?? 0)
-      );
-      return weeks > 0
-        ? {
-            warriorId: w.id,
-            warriorName: w.name,
-            weeksRemaining: weeks,
-            returnsAbsoluteWeek: currentAbsWeek + weeks,
-          }
-        : null;
-    })
-    .filter((e): e is NonNullable<typeof e> => e !== null);
-
-  // Title-defense obligations: crowns the player holds become due when the
-  // reign's activity gap reaches DEFENSE_INTERVAL_WEEKS — surfaced so the
-  // council can plan around a forced title bout.
-  const titleDefenses = Object.entries(state.arenaChampions ?? {})
-    .flatMap(([arenaId, t]) => {
-      const champ = t.champion;
-      if (!champ || !playerWarriorIds.has(champ.warriorId)) return [];
-      return [
-        {
-          arenaId,
-          warriorId: champ.warriorId,
-          warriorName:
-            cards.find((c) => c.warriorId === champ.warriorId)?.warriorName ??
-            champ.warriorId,
-          dueAbsoluteWeek: champ.lastActivityWeek + ARENA_TITLE.DEFENSE_INTERVAL_WEEKS,
-        },
-      ];
-    })
-    .sort((a, b) => a.dueAbsoluteWeek - b.dueAbsoluteWeek);
-
   const lookahead: CouncilLookahead = {
-    futureCommitments,
-    recoveryEtas,
+    futureCommitments: listFutureCommitments(state, cards, playerWarriorIds, upcomingAbsWeek),
+    recoveryEtas: listRecoveryEtas(activeWarriors, currentAbsWeek),
     // isTournamentWeek is authoritative (matches evaluateTournamentAdvice) —
     // brackets run day-by-day. The countdown tracks seasonals only: the
     // Grand Championship isn't a bracket most warriors can enter.
@@ -442,19 +102,19 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
         warriorName: c.warriorName,
         tierName: c.tournamentAdvice.tierName ?? c.tournamentAdvice.qualifiedTier ?? 'Unknown Tier',
       })),
-    titleDefenses,
+    titleDefenses: listTitleDefenses(state, cards, playerWarriorIds),
   };
 
   const allActionPayloads = cards.map((c) => c.actionPayload);
 
   const summary: StableAdvisorSummary = {
     totalWarriors: activeWarriors.length,
-    combatReadyCount,
-    rehabCount,
-    tournamentContenderCount,
+    combatReadyCount: kpis.combatReadyCount,
+    rehabCount: kpis.rehabCount,
+    tournamentContenderCount: kpis.tournamentContenderCount,
     unassignedTrainingCount,
     pendingBoutOffersCount,
-    projectedPurseGold,
+    projectedPurseGold: kpis.projectedPurseGold,
     projectedTrainingCost,
     treasury,
     solvencyWarning,

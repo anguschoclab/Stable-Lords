@@ -22,7 +22,6 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers.ts',
   'src/schemas/schemaEnums.ts|src/types/enumSources.ts',
   'src/engine/pipeline/seasonal.ts|src/engine/pipeline/seasonalHandlers.ts',
-  'src/engine/traitData/traitTypes.ts|src/engine/traitDefs.ts',
   'src/components/dashboard/BriefingTab.tsx|src/components/dashboard/GazetteTab.tsx',
   'src/components/dashboard/BriefingTab.tsx|src/components/gazette/GazetteArticle.tsx',
   'src/components/dashboard/GazetteTab.tsx|src/components/gazette/GazetteArticle.tsx',

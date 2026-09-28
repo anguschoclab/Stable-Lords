@@ -1,5 +1,5 @@
 import { FightingStyle } from '@/types/shared.types';
-import type { TraitDef } from '@/engine/traitData/traitTypes';
+import type { TraitDef } from '../types';
 
 const S = FightingStyle;
 

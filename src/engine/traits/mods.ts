@@ -3,7 +3,7 @@
  * Extracted from traits.ts for SRP separation.
  */
 import type { Warrior } from '@/types/warrior.types';
-import { TRAITS } from './traitDefs';
+import { TRAITS } from './registry';
 
 /**
  * Sums static skill mods from a warrior's traits. Applied once at fighterState build.

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { getStaticTraitMods, getDynamicTraitMods, getTraitFightPlanMods } from '@/engine/traitMods';
+import { getStaticTraitMods, getDynamicTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import type { Warrior } from '@/types/warrior.types';
-import type { DynamicTraitContext } from '@/engine/traitMods';
+import type { DynamicTraitContext } from '@/engine/traits';
 
 describe('traitMods', () => {
   describe('getStaticTraitMods', () => {

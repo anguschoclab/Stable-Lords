@@ -1,7 +1,51 @@
-import type { TraitDef } from '@/engine/traitData/traitTypes';
+import type { TraitDef } from '../types';
 
-/** New negative traits — the botch/bad-start pool. Each has a tooltip. */
-export const NEW_FLAWS: Record<string, TraitDef> = {
+export const FLAWS_TRAITS: Record<string, TraitDef> = {
+  ashen_lung: {
+    id: 'ashen_lung',
+    name: 'Ashen Lung',
+    description: 'Breathed the soot of the forges too long. Prone to coughing fits when exhausted.',
+    effect: { enduranceMult: 1.1, attModLate: -1 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.4,
+  },
+  jumpy: {
+    id: 'jumpy',
+    name: 'Jumpy',
+    description: 'Always expects a knife in the back. Better defense and parry, but lower attack.',
+    effect: { defMod: 1, parMod: 1, attMod: -1 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.7,
+  },
+  orphan_fragility: {
+    id: 'orphan_fragility',
+    name: 'Orphan Fragility',
+    description: 'Malnourished in youth. Susceptible to early damage.',
+    effect: { defModEarly: -1, enduranceMult: 0.9 },
+    tier: 'Flaw',
+    sign: 'negative',
+    weight: 0.1,
+  },
+  fragile: {
+    id: 'fragile',
+    name: 'Fragile',
+    description: '−2 defense baseline — drops guard easily.',
+    effect: { defMod: -2 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  slow: {
+    id: 'slow',
+    name: 'Slow',
+    description: '−1 initiative — late on the draw.',
+    effect: { iniMod: -1 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },  // ── New negative traits — the botch/bad-start pool (was traitData/flaws.ts) ──
   glass_jaw: {
     id: 'glass_jaw',
     name: 'Glass Jaw',

@@ -5,9 +5,11 @@ import { startNewGame } from './helpers';
  * Seasonal Tournament E2E — full game year soak:
  * 1. Start a new game (title → new game form → orphanage FTUE)
  * 2. Advance through all 52 weeks of year 1:
- *    - Each season's final week (13/26/39/52) is a tournament week — the
+ *    - SEASONAL_TOURNAMENT_WEEKS (10/20/30/42) are tournament weeks — the
  *      active tier is played through the UI (prep dialog → EXECUTE NEXT BOUT
  *      → ADVANCE DAY ticks) to completion.
+ *    - Week 52 hosts the champions-only Grand Championship — resolved via
+ *      ADVANCE DAY ticks, crowned through recordGrandChampions.
  *    - Every completed tournament is verified: champion crowned, archive
  *      entry, prize purse + fame + medals paid out to player/NPC stables.
  *    - Season boundaries (Spring→Summer→Fall→Winter→Spring) are asserted.
@@ -15,7 +17,7 @@ import { startNewGame } from './helpers';
  *    day/week fields reset, tournament-week flags cleared, and no stale
  *    incomplete tournament may linger (leftover tiers auto-resolve at the
  *    tournament-week rollover).
- * 4. Year 2's spring tournament (week 13) must work end-to-end — same
+ * 4. Year 2's spring tournament (week 10) must work end-to-end — same
  *    season+week as year 1's, so it proves tournament ids are unique across
  *    years rather than colliding on `t-{tier}-{season}-{week}`.
  */
@@ -804,15 +806,46 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     return { id: activeId, week: tourneyWeek, season: tourneySeason, year: weekSnap.year };
   };
 
+  // Week-52 Grand Championship: champions-only bracket resolved purely by
+  // day ticks (no player prep manifest), crowned via recordGrandChampions —
+  // a separate award path from tier purses, so prize verification is skipped.
+  const runChampionsWeek = async (weekSnap: StateSnap) => {
+    const activeId = weekSnap.activeTournamentId;
+    if (!activeId) throw new Error('champions week without activeTournamentId');
+
+    for (let day = 0; day < 8; day++) {
+      await expect
+        .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
+        .not.toBe('busy');
+      const t = (await snapshotState(page)).tournaments.find((x) => x.id === activeId);
+      if (t?.completed) break;
+      const label = await advanceLabel(page, clickNavLink);
+      if (!/ADVANCE DAY/.test(label)) break; // week rolled over
+      await clickAdvance(page, clickNavLink);
+      await expect
+        .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
+        .not.toBe('busy');
+    }
+
+    const snap = await snapshotState(page);
+    const t = snap.tournaments.find((x) => x.id === activeId);
+    expect(t?.completed, 'champions bracket should complete').toBe(true);
+    expect(t?.champion, 'champions bracket should crown a champion').toBeTruthy();
+    return { id: activeId, week: weekSnap.week, season: weekSnap.season, year: weekSnap.year };
+  };
+
   // ── 5. Year loop — every week of year 1 ─────────────────────────────────
-  // Season boundaries sit on weeks 13/26/39/52; each of those is a
-  // tournament week played to completion. The loop ends when the year rolls
-  // over to Year 2 · Week 1.
+  // SEASONAL_TOURNAMENT_WEEKS are 10/20/30/42 (Spring/Summer/Fall/Winter
+  // respectively — seasons span weeks 1–13/14–26/27–39/40–52) plus the
+  // champions-only Grand Championship at week 52. The loop ends when the
+  // year rolls over to Year 2 · Week 1.
+  const CHAMPIONS_WEEK = 52;
   const EXPECTED_SEASON: Record<number, string> = {
-    13: 'Spring',
-    26: 'Summer',
-    39: 'Fall',
-    52: 'Winter',
+    10: 'Spring',
+    20: 'Summer',
+    30: 'Fall',
+    42: 'Winter',
+    [CHAMPIONS_WEEK]: 'Winter',
   };
   const completedTourneys: { id: string; week: number; season?: string; year: number }[] = [];
   let yearTwoStartSnap: StateSnap | undefined;
@@ -840,8 +873,8 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
       yearTwoStartSnap = snap;
     }
 
-    // Done once year 2's spring tournament week has rolled over to week 14.
-    if (snap.year === 2 && snap.week > 13) break;
+    // Done once year 2's spring tournament week (10) has rolled over.
+    if (snap.year === 2 && snap.week > 10) break;
 
     const active = snap.tournaments.find((t) => t.id === snap.activeTournamentId);
     if (snap.isTournamentWeek && active && !active.completed) {
@@ -850,7 +883,11 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
         snap.season,
         `tournament week ${snap.week} should be ${EXPECTED_SEASON[snap.week]}`
       ).toBe(EXPECTED_SEASON[snap.week]);
-      completedTourneys.push(await runTournamentWeek(snap));
+      completedTourneys.push(
+        snap.week === CHAMPIONS_WEEK
+          ? await runChampionsWeek(snap)
+          : await runTournamentWeek(snap)
+      );
       continue;
     }
 
@@ -872,9 +909,10 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   expect(yearTwoStartSnap.isTournamentWeek, 'tournament-week flag should clear').toBe(false);
   expect(yearTwoStartSnap.season, 'season should wrap back to Spring').toBe('Spring');
 
-  // The week-52 rollover must have resolved every year-1 bracket — all 16
-  // generated tournaments (4 tiers × 4 seasons) completed, none stale.
-  expect(yearTwoStartSnap.tournaments.length, 'expected 16 year-1 tournaments').toBe(16);
+  // The week-52 rollover must have resolved every year-1 bracket — all 17
+  // generated tournaments (4 tiers × 4 seasonal weeks + the champions
+  // bracket) completed, none stale.
+  expect(yearTwoStartSnap.tournaments.length, 'expected 17 year-1 tournaments').toBe(17);
   expect(
     yearTwoStartSnap.tournaments.every((t) => t.completed),
     'no stale incomplete tournament may survive the year boundary'
@@ -889,22 +927,27 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     allIds.length
   );
 
-  // One completed tournament per season boundary in year 1, plus year 2's
-  // spring tournament proving the new-year brackets resolve.
-  expect(completedTourneys.length, 'expected 5 tournaments (4 in year 1 + year-2 spring)').toBe(5);
+  // One played tournament per seasonal week in year 1 plus the week-52
+  // champions bracket, plus year 2's spring tournament proving the new-year
+  // brackets resolve.
+  expect(
+    completedTourneys.length,
+    'expected 6 tournaments (5 in year 1 + year-2 spring)'
+  ).toBe(6);
   expect(
     completedTourneys
       .filter((t) => t.year === 1)
       .map((t) => t.week)
       .sort((a, b) => a - b)
-  ).toEqual([13, 26, 39, 52]);
+  ).toEqual([10, 20, 30, 42, 52]);
   expect(completedTourneys.filter((t) => t.year === 1).map((t) => t.season)).toEqual([
     'Spring',
     'Summer',
     'Fall',
     'Winter',
+    'Winter',
   ]);
-  expect(completedTourneys.filter((t) => t.year === 2).map((t) => t.week)).toEqual([13]);
+  expect(completedTourneys.filter((t) => t.year === 2).map((t) => t.week)).toEqual([10]);
 
   for (const t of completedTourneys) {
     const tourney = endSnap.tournaments.find((x) => x.id === t.id);
@@ -912,17 +955,17 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     expect(tourney?.champion, `${t.id} should have a champion`).toBeTruthy();
   }
 
-  // End state: year 2, week 14 — past year 2's tournament week, and the
-  // season boundary has ticked over to Summer.
+  // End state: year 2, week 11 — past year 2's tournament week, still in
+  // the Spring season window (weeks 1–13).
   expect(endSnap.year).toBe(2);
-  expect(endSnap.week).toBe(14);
+  expect(endSnap.week).toBe(11);
   expect(endSnap.isTournamentWeek).toBe(false);
-  expect(endSnap.season).toBe('Summer');
+  expect(endSnap.season).toBe('Spring');
 
   // Header shows the settled week-advance state.
   await expect
     .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 60_000 })
-    .toMatch(/EXECUTE WEEK 14/);
+    .toMatch(/EXECUTE WEEK 11/);
 
   // ── 7. World-systems coverage — arenas, events, mortality, AI, economy ──
   const killRate = cov.peakKills / Math.max(1, cov.peakBouts);

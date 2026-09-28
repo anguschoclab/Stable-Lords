@@ -1,4 +1,4 @@
-import { defaultPlanForWarrior } from './bout/planDefaults';
+import { defaultPlanForWarrior } from '../bout/planDefaults';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
@@ -13,10 +13,10 @@ import {
   initializeRng,
   initializeFighters,
   initializeResolutionContext,
-} from './simulate/initialization';
-import { runSimulationLoop } from './simulate/simulationLoop';
-import { generateIntroductions } from './simulate/narrative';
-import { processPostFight } from './simulate/postFight';
+} from './initialization';
+import { runSimulationLoop } from './simulationLoop';
+import { generateIntroductions } from './narrative';
+import { processPostFight } from './postFight';
 
 export { defaultPlanForWarrior };
 

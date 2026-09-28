@@ -2,7 +2,7 @@ import type { GameState, SeasonalGrowth, TrainingAssignment } from '@/types/stat
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { type StateImpact } from './impacts';
+import { type StateImpact } from '../impacts';
 import {
   computeGainChance,
   processRecovery,
@@ -10,9 +10,9 @@ import {
   processSkillDrillTraining,
   rollForTrainingInjury,
   type TrainingResult,
-} from './training/trainingGains';
-import { getHealingTrainerBonus } from './training/coachLogic';
-import { rollTraitTraining } from './training/trainingGains/traitTraining';
+} from './trainingGains';
+import { getHealingTrainerBonus } from './coachLogic';
+import { rollTraitTraining } from './trainingGains/traitTraining';
 import { TRAITS } from '@/engine/traits';
 
 // ─── Exports for backward compatibility ───

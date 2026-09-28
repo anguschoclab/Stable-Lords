@@ -159,6 +159,7 @@ function useShellState() {
   );
 }
 
+/** Application shell: header, CTA, and routed content frame. */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {
     week,

@@ -230,7 +230,7 @@ async function runWeek(
  * Asynchronous and deterministic.
  */
 export async function runSimulation(config: SimulationConfig): Promise<SimulationResult> {
-  const { weeks, seed, logFrequency = 1, archiveService } = config;
+  const { weeks, seed, archiveService } = config;
   const truncateInterval = config.truncateIntervalWeeks ?? 50;
 
   // 1. Initialize State — an injected initialState replaces the default

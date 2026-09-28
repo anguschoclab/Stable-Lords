@@ -85,6 +85,7 @@ function buildFTUEWarrior(
   return w;
 }
 
+/** Builds the post-FTUE game state: seeded roster, bout outcome, pool seed. */
 export function buildFTUEInitialState(
   baseState: GameState,
   selectedWarriors: SelectedWarrior[],

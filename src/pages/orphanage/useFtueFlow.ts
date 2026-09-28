@@ -175,6 +175,7 @@ function useFtueStore() {
   );
 }
 
+/** FTUE flow orchestration: steps, identity fields, orphan picks, finish commit. */
 export function useFtueFlow() {
   const navigate = useNavigate();
   const state = useFtueStore();

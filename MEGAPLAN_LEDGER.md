@@ -161,16 +161,17 @@ Test updates this batch: `navigationHubs.test.ts` world-hub page count 8 → 10 
 | `d9847592` | 8 | D6 e2e matrix | New `e2e/residual-routes.spec.ts` covers `/mods`, `/import-export`, `/admin`, `/lore/hall-of-fights` — asserts visible `PageHeader` headings + zero header CTA inside a resumed in-app session (direct `goto` lands on the title screen; `navigateInApp` pushes the route client-side). Firefox FTUE transition race fixed via retry-safe advance in `e2e/helpers.ts`. Matrix: 3 fast specs × {chromium, firefox, webkit, Mobile Chrome, Mobile Safari} all green; seasonal soak green on chromium + webkit (one webkit podium flake was a probabilistic all-player podium — clean rerun). |
 | `d9847592` | 8 | D7 coverage + bun runner | Coverage floors hold: **85.36 stmts / 75.11 branch / 80.46 fn / 86.97 lines** (floors 84/74/78/85.5), 706 files / 8,204 tests. `bun test --isolate` green: 8,166 pass / 1 skip / 0 fail after compat fixes — user-authored async `vi.mock` factories deadlock bun (converted to shared sync mocks), Radix `TooltipProvider` wrap for `ArenaDetail`, top-level RTL import in styleArchives, `narrativeValidate` timeout bump, `import.meta.glob` specs excluded via `bunfig` (vite-only transform), `retirementTiming` missing `beforeEach` import. Safety-canary regex fixed to actually catch async factories. |
 | `4584df58` | 8 | Seeded-trajectory regressions found+fixed | Stage-H soak caught two RNG-order violations from the file splits, bisected via a 9-week treasury signature: `b6d1caa5` regrouped arena registration seed→variants→late (fixed: `data/arenas/index.ts` re-registers in legacy literal order) and `b6e62956` re-sharded `TRAITS` by tier, scrambling `Object.keys` order (fixed: explicit `LEGACY_TRAIT_ORDER` + drift guard throw). Post-fix the 104-week seeded log is byte-identical to baseline `3bc5476e`. Arena order now pinned by a characterization test. |
+| `03ebcf78`–`13d64670` | J-table | Residual >80 decomposition (batches 10–11) | 201 → **0 fns >80**: order-preserving engine extractions (vendetta target, scout plan-bias prior, council report sections, pairwise h2h delta, bout post-resolution impacts w/ RNG order preserved, trainer retirement roll, tactics fallback plan, ACCEPT-offer payload), hook selectors (`useFtueStore`, `useWarriorDetailStore`, `useArenaDetailStore`/`useArenaBoards`, `useWeekAdvance`, `useTooltipLabel`), UI row/card/panel extraction across ~30 components, `classifyEvent` → ordered keyword rule table, `WeaponIcon`/`FighterBodyPart` shape lookups, `ReputationTab` literal bar classes (Tailwind static scan). Ratchet tightened to `≤0 fns >80`. Dup clusters 241 → 229 (src↔src 79). |
 
 ## Final Metrics (post-megaplan, vs baseline @ `3bc5476e`)
 
 | Metric | Baseline | Final | Δ |
 | --- | --- | --- | --- |
-| src files / LOC | 989 / 118,248 | 1,135 / 122,739 | +146 files / +4,491 LOC (new pages, hooks, guards, extracted modules) |
-| test files / LOC | — | 787 / 120,757 | test surface now exceeds source LOC |
-| functions >80 / >120 / >200 | 239 / 112 / 25 | 201 / **0** / **0** | −38 >80, all >120 and >200 decomposed |
+| src files / LOC | 989 / 118,248 | 1,141 / 127,614 | +152 files / +9,366 LOC (new pages, hooks, guards, extracted modules) |
+| test files / LOC | — | 787 / 121,602 | test surface now exceeds source LOC |
+| functions >80 / >120 / >200 | 239 / 112 / 25 | **0** / **0** / **0** | all long functions decomposed; J-table target met |
 | files >800 lines | ≥5 | 2 | only `routeTree.gen.ts` (generated) and `warriorNames.ts` (data) remain |
-| dup pair-clusters | ~967 | **241** (src↔src 92 · test↔test 110 · mixed 39) | −75%; src↔src 92 ≤ 128 ratchet ceiling; residuals are sanctioned seams/canaries |
+| dup pair-clusters | ~967 | **229** (src↔src 79 · test↔test 110 · mixed 40) | −76%; src↔src 79 ≤ 128 ratchet ceiling; residuals are sanctioned seams/canaries |
 | default vitest | 692 files / 8,172 pass / 2 skip / 1 flaky | 706 files / **8,204 pass** / 2 skip / 0 fail | flake promoted to `.slow` config |
 | slow vitest | deferred | 26 files / 176 tests green | includes relocated `advanceWeekPerformance` (median-ratio now, not single-sample) |
 | bun test --isolate | n/a | 699 files / **8,167 pass** / 1 skip / 0 fail | compat fixes; `import.meta.glob` specs excluded (vite-only) |

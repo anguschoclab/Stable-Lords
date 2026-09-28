@@ -105,9 +105,6 @@ export function ActiveTournamentManifest({
     bronzeId,
   } = deriveBracketStatus(tournament);
 
-  const participantName = (id: string | undefined) =>
-    tournament.participants?.find((w) => w.id === id)?.name ?? 'Unknown';
-
   return (
     <div className="pt-8">
       <SectionDivider label="Active Manifest" variant="primary" />

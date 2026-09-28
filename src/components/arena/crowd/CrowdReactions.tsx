@@ -39,6 +39,7 @@ function crowdOpacity(state: CrowdState, tier: ArenaTier): number {
   return tier === 'grand' ? 0.5 : tier === 'championship' ? 0.4 : 0.25;
 }
 
+/** Crowd reaction overlay — mood glyphs + sway driven by tier and bout state. */
 export default function CrowdReactions({
   tier,
   state: currentState,

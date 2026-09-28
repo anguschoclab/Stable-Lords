@@ -131,6 +131,7 @@ function AnnouncementOverlay({ announcement }: { announcement: string }) {
   );
 }
 
+/** Post-bout resolution overlay: victory banner, draw banner, and comms line. */
 export default function BoutResolution({
   isComplete,
   winner,

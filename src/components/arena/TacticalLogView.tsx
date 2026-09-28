@@ -235,7 +235,7 @@ function useLogScroll(
     if (highlightIndex == null) {
       endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [visibleCount, highlightIndex]);
+  }, [visibleCount, highlightIndex, endRef]);
 
   useEffect(() => {
     if (highlightIndex != null && entryRefs.current?.[highlightIndex]) {
@@ -244,7 +244,7 @@ function useLogScroll(
         block: 'center',
       });
     }
-  }, [highlightIndex]);
+  }, [highlightIndex, entryRefs]);
 }
 
 /**

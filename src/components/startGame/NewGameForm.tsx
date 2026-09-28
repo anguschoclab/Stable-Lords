@@ -153,6 +153,7 @@ function FormShell({ onBack, children }: { onBack: () => void; children: React.R
   );
 }
 
+/** New-game form: owner/stable identity, crest, and world seed fields. */
 export default function NewGameForm({
   ownerName,
   setOwnerName,

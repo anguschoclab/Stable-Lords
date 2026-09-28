@@ -74,6 +74,7 @@ function tickParticles(prev: Particle[]): Particle[] {
     .filter((p) => p.life > 0);
 }
 
+/** Burst particle overlay — spawns a ring of particles on `trigger` change. */
 export default function ParticleSystem({
   trigger,
   sourceX,

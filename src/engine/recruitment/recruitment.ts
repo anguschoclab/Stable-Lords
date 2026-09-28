@@ -180,6 +180,7 @@ function pickRecruitName(
 }
 
 // Include new origins/traits in generateRecruit() pools. No manual wiring needed due to dynamic nature.
+/** Generates a recruit: style/lineage, unique name, stats, lore payload. */
 export function generateRecruit(
   rng: IRNGService,
   usedNames: Set<string>,

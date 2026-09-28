@@ -37,14 +37,12 @@ function LoreSurface({ effects }: { effects: string[] }) {
 function RelinquishDialog({
   open,
   onOpenChange,
-  arenaId,
   arenaName,
   champName,
   onConfirm,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  arenaId: string;
   arenaName: string;
   champName: string | undefined;
   onConfirm: () => void;
@@ -168,7 +166,6 @@ export default function ArenaDetail() {
       <RelinquishDialog
         open={confirmRelinquish}
         onOpenChange={setConfirmRelinquish}
-        arenaId={arenaId}
         arenaName={arena.name}
         champName={champWarrior?.name}
         onConfirm={() => store.relinquishArenaTitle(arenaId)}

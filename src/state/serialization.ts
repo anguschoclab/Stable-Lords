@@ -183,6 +183,7 @@ function collectStoreValues(store: GameStore): GameStateValues {
   };
 }
 
+/** Rebuilds a GameState view from the store, memoized on tracked fields. */
 export function reconstructGameState(store: GameStore): GameState {
   const currentValues = collectStoreValues(store);
 

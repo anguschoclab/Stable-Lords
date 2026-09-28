@@ -127,11 +127,11 @@ No new AI-only gaps surfaced by scan; prior audit's intentional-divergence NOTES
 | I13 | `types/narrative.types.ts` | 503 | **DONE** → `types/narrative/{conclusions,events,fanfare,gazette,memorials,meta,passives,pbp,personas,recruitment,root,strikes,uxMetadata}` + 13-line barrel |
 | I14 | `pages/ArenaDetail.tsx` 568 | — | decomposed via J-table (not a file split) |
 
-## J. Long functions — authoritative (239 >80; top 25 >200 list)
+## J. Long functions — authoritative (239 >80; top 25 >200 list) — **COMPLETE: 0 fns >80**
 
 `computeStableCouncilReport` 431 · `ArenaDetail` 420 · `Help` 383 · `Bookmarks` 325 · `narrateEvents` 307 · `StableDetail`/`WorldOverview` 301 · `PromoterDetail` 297 · `HallOfFights` 284 · `Training` 284 · `evaluateBoutOffers` 276 · `Orphanage` 274 · `Trainers` 269 · `BookingOffice` 260 · `processAllRivalsBoutOffers` 253 · `runSimulationLoop` 250 · `WarriorCouncilCard` 249 · `evaluateBoutOffer` 248 · `createStore` anon 245 · `NewGameForm` 233 · `PlanBuilder` 220 · `convertBidsToOffers` 220 · `resolveRound` 214 · `WarriorDetail` 211 · `StartGame` 202.
 
-Policy: engine/AI/matchmaking functions decompose to ≤~80 via extract-fn (behavior-pinned by existing tests); page components decompose via sub-component extraction into `components/<domain>/` + hooks (Phase 3 for engine, Phase 6 batches for pages). Ratchet guard enforces ≤120 ceiling now, ≤80 target.
+Policy: engine/AI/matchmaking functions decompose to ≤~80 via extract-fn (behavior-pinned by existing tests); page components decompose via sub-component extraction into `components/<domain>/` + hooks (Phase 3 for engine, Phase 6 batches for pages). Ratchet guard enforces ≤120 ceiling; **the ≤80 target was reached in batches 10–11** — census `0 fns >80 / 0 >120 / 0 >200`, ratchet tightened to `≤0` in `fileBudget.test.ts`.
 
 ## K. Duplicate clusters (dup-scan: 967 pair-clusters; src↔src 84)
 

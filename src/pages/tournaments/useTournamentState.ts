@@ -42,6 +42,7 @@ function useTournamentStoreSlice() {
   );
 }
 
+/** Tournaments page state: store slice, derived lists, and actions. */
 export function useTournamentState(showBookmarkedOnly: boolean) {
   const {
     tournaments,

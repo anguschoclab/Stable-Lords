@@ -145,6 +145,7 @@ function scoreThrone(
   return { score: score + ctx.rankBonus, reason };
 }
 
+/** Scores the rival's best crown-bid opportunity across arenas. */
 export function assessCrownOpportunity(
   rival: RivalStableData,
   state: GameState,
@@ -331,6 +332,7 @@ function applyProtectionRests(
   return updatedRival;
 }
 
+/** Weekly crown-posture pass: reign upkeep, protection, and campaign ticks. */
 export function processCrownPosture(
   rival: RivalStableData,
   state: GameState,

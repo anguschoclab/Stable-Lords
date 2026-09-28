@@ -194,7 +194,7 @@ function collectDangerSignals(input: {
 
 /** Qualitative assessment of one offer — warnings, reasons, danger, flags. */
 function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
-  const { state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate } = s;
+  const { state, warrior, ctx } = s;
   const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
   const opponent = opponentId ? findWarriorById(state, opponentId) ?? null : null;
   const styleEdge = opponent ? getMatchupBonus(warrior.style, opponent.style) : 0;

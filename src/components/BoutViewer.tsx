@@ -41,20 +41,7 @@ interface BoutViewerProps {
 
 /**
  * Bout viewer.
- * @param  - {
-  name a,
-  name d,
-  style a,
-  style d,
-  log,
-  winner,
-  by,
-  announcement,
-  is rivalry,
-  arena tier = 'standard',
-  weather = 'clear',
-  arena id,
-}.
+ * @param props - the bout payload (names, styles, log, outcome, arena context).
  */
 export default function BoutViewer(props: BoutViewerProps) {
   const {

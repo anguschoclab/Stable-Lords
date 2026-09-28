@@ -195,10 +195,7 @@ function MatchupCell({
   );
 }
 
-/**
- * Style matchup heatmap.
- * @param - { all fights }.
- */
+/** Heatmap section header. */
 function HeatmapHeader() {
   return (
     <div className="flex items-center gap-4 mb-8 relative z-10">

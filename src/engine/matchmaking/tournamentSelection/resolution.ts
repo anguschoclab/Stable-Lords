@@ -18,35 +18,27 @@ import { updateEntityInList } from '@/utils/stateUtils';
 import { findCurrentRoundBouts } from '../tournament/bracketUtils';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { selectArenaForTournamentBout } from '../tournament/tournamentArenaSelection';
+interface BracketWarrior {
+  id: WarriorId;
+  name: string;
+  stableId?: StableId;
+}
 
 /**
- * Resolve round.
+ * Resolves every bout in the current round: byes advance, missing warriors
+ * forfeit, live bouts simulate (with sudden-death overtime for draws —
+ * tournament bouts cannot end drawn), and results apply into state.
+ * Bronze-match winners medal but do not advance.
  */
-export function resolveRound(
-  state: GameState,
-  tournamentId: string,
-  seed: number,
-  headless?: boolean,
-  tournament?: TournamentEntry
-): {
-  updatedState: GameState;
-  roundResults: string[];
-  isComplete: boolean;
-  updatedTournament?: TournamentEntry;
-} {
-  const rng = new SeededRNG(seed);
-  let updatedState = { ...state };
-  const resolvedTournament =
-    tournament ?? (updatedState.tournaments || []).find((t) => t.id === tournamentId);
-  if (!resolvedTournament || resolvedTournament.completed)
-    return { updatedState, roundResults: [], isComplete: false };
-
-  const bracket = [...resolvedTournament.bracket];
-  const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
-  if (currentRound === null) return { updatedState, roundResults: [], isComplete: false };
-  const winners: { id: WarriorId; name: string; stableId?: StableId }[] = [];
-  const losers: { id: WarriorId; name: string; stableId?: StableId }[] = [];
-
+function resolveRoundBouts(
+  updatedState: GameState,
+  resolvedTournament: TournamentEntry,
+  roundBouts: TournamentBout[],
+  rng: SeededRNG,
+  headless: boolean | undefined,
+  winners: BracketWarrior[],
+  losers: BracketWarrior[]
+): GameState {
   for (const bout of roundBouts) {
     // The third-place playoff is terminal: its winner medals but does not
     // feed the next round's pairings.
@@ -139,55 +131,106 @@ export function resolveRound(
       arenaId
     );
   }
+  return updatedState;
+}
 
-  // Generate next round pairings
-  if (winners.length > 1) {
-    const nextRound = currentRound + 1;
+/**
+ * Seeds the next bracket round from this round's winners (bye on odd count)
+ * and injects the bronze playoff when the semi-finals just resolved.
+ */
+function seedNextRound(
+  bracket: TournamentBout[],
+  currentRound: number,
+  winners: BracketWarrior[],
+  losers: BracketWarrior[]
+): void {
+  if (winners.length <= 1) return;
+  const nextRound = currentRound + 1;
 
-    // Standard Bracket progression
-    for (let i = 0; i < winners.length; i += 2) {
-      const wA = winners[i];
-      if (!wA) continue;
-      if (i + 1 < winners.length) {
-        const wD = winners[i + 1];
-        if (!wD) continue;
-        bracket.push({
-          round: nextRound,
-          matchIndex: i / 2,
-          warriorIdA: wA.id,
-          warriorIdD: wD.id,
-          stableIdA: wA.stableId,
-          stableIdD: wD.stableId,
-        });
-      } else {
-        bracket.push({
-          round: nextRound,
-          matchIndex: i / 2,
-          warriorIdA: wA.id,
-          warriorIdD: 'bye' as unknown as WarriorId,
-          winner: 'A',
-        });
-      }
-    }
-
-    // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
-    if (currentRound === 5 && losers.length === 2) {
-      const bA = losers[0];
-      const bD = losers[1];
-      if (bA && bD) {
-        const bronzeBout: TournamentBout = {
-          round: 6, // Bronze Match happens alongside the Finals
-          matchIndex: 1, // Finals is index 0
-          warriorIdA: bA.id,
-          warriorIdD: bD.id,
-          stableIdA: bA.stableId,
-          stableIdD: bD.stableId,
-          isBronzeMatch: true,
-        };
-        bracket.push(bronzeBout);
-      }
+  // Standard Bracket progression
+  for (let i = 0; i < winners.length; i += 2) {
+    const wA = winners[i];
+    if (!wA) continue;
+    if (i + 1 < winners.length) {
+      const wD = winners[i + 1];
+      if (!wD) continue;
+      bracket.push({
+        round: nextRound,
+        matchIndex: i / 2,
+        warriorIdA: wA.id,
+        warriorIdD: wD.id,
+        stableIdA: wA.stableId,
+        stableIdD: wD.stableId,
+      });
+    } else {
+      bracket.push({
+        round: nextRound,
+        matchIndex: i / 2,
+        warriorIdA: wA.id,
+        warriorIdD: 'bye' as unknown as WarriorId,
+        winner: 'A',
+      });
     }
   }
+
+  // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
+  if (currentRound === 5 && losers.length === 2) {
+    const bA = losers[0];
+    const bD = losers[1];
+    if (bA && bD) {
+      const bronzeBout: TournamentBout = {
+        round: 6, // Bronze Match happens alongside the Finals
+        matchIndex: 1, // Finals is index 0
+        warriorIdA: bA.id,
+        warriorIdD: bD.id,
+        stableIdA: bA.stableId,
+        stableIdD: bD.stableId,
+        isBronzeMatch: true,
+      };
+      bracket.push(bronzeBout);
+    }
+  }
+}
+
+/**
+ * Resolve round.
+ */
+export function resolveRound(
+  state: GameState,
+  tournamentId: string,
+  seed: number,
+  headless?: boolean,
+  tournament?: TournamentEntry
+): {
+  updatedState: GameState;
+  roundResults: string[];
+  isComplete: boolean;
+  updatedTournament?: TournamentEntry;
+} {
+  const rng = new SeededRNG(seed);
+  let updatedState = { ...state };
+  const resolvedTournament =
+    tournament ?? (updatedState.tournaments || []).find((t) => t.id === tournamentId);
+  if (!resolvedTournament || resolvedTournament.completed)
+    return { updatedState, roundResults: [], isComplete: false };
+
+  const bracket = [...resolvedTournament.bracket];
+  const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
+  if (currentRound === null) return { updatedState, roundResults: [], isComplete: false };
+  const winners: BracketWarrior[] = [];
+  const losers: BracketWarrior[] = [];
+
+  updatedState = resolveRoundBouts(
+    updatedState,
+    resolvedTournament,
+    roundBouts,
+    rng,
+    headless,
+    winners,
+    losers
+  );
+
+  seedNextRound(bracket, currentRound, winners, losers);
 
   // 🏆 6-round tournament: R1(32) → R2(16) → R3(8) → QF(4) → SF(2) → Finals+3rd(2).
   // Six rounds map onto the six playable days of a tournament week — the
@@ -200,10 +243,10 @@ export function resolveRound(
     .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
   const championId =
     isComplete && finalsBout?.winner
-      ? finalsBout.winner === 'A'
-        ? finalsBout.warriorIdA
-        : finalsBout.warriorIdD
-      : undefined;
+        ? finalsBout.winner === 'A'
+          ? finalsBout.warriorIdA
+          : finalsBout.warriorIdD
+        : undefined;
   const champion = championId
     ? (winners.find((w) => w.id === championId)?.name ??
       findWarriorById(updatedState, championId, resolvedTournament)?.name)

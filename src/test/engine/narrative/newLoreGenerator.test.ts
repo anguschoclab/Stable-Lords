@@ -7,7 +7,9 @@ import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const LORE_FILE = path.resolve(__dirname, '../../../engine/narrative/lore/loreData.ts');
+const LORE_SOURCE = ['origins', 'childhoodTraits', 'definingMoments']
+  .map((f) => fs.readFileSync(path.resolve(__dirname, `../../../engine/narrative/lore/${f}.ts`), 'utf-8'))
+  .join('\n');
 
 function extractStringArray(source: string, varName: string): string[] {
   const regex = new RegExp(`(?:export )?const ${varName}.*?= \\[([\\s\\S]*?)\\];`);
@@ -24,7 +26,7 @@ function extractStringArray(source: string, varName: string): string[] {
 }
 
 describe('new loreGenerator entries', () => {
-  const source = fs.readFileSync(LORE_FILE, 'utf-8');
+  const source = LORE_SOURCE;
   const origins = extractStringArray(source, 'ORIGINS');
   const childhoodTraits = extractStringArray(source, 'CHILDHOOD_TRAITS');
   const definingMoments = extractStringArray(source, 'DEFINING_MOMENTS');

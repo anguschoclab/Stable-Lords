@@ -8,7 +8,9 @@ import { SeededRNGService } from '@/utils/random';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const LORE_FILE = path.resolve(__dirname, '../../../engine/narrative/lore/loreData.ts');
+const LORE_SOURCE = ['origins', 'childhoodTraits', 'definingMoments']
+  .map((f) => fs.readFileSync(path.resolve(__dirname, `../../../engine/narrative/lore/${f}.ts`), 'utf-8'))
+  .join('\n');
 
 function extractStringArray(source: string, varName: string): string[] {
   const regex = new RegExp(`(?:export )?const ${varName}.*?= \\[([\\s\\S]*?)\\];`);
@@ -51,14 +53,14 @@ describe('loreGenerator', () => {
   });
 
   it('ORIGINS array has no duplicate entries', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const origins = extractStringArray(source, 'ORIGINS');
     const unique = new Set(origins);
     expect(unique.size, `${origins.length - unique.size} duplicate origins`).toBe(origins.length);
   });
 
   it('CHILDHOOD_TRAITS array has no duplicate entries', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
     const unique = new Set(traits);
     expect(unique.size, `${traits.length - unique.size} duplicate childhood traits`).toBe(
@@ -67,7 +69,7 @@ describe('loreGenerator', () => {
   });
 
   it('DEFINING_MOMENTS array has no duplicate entries', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const moments = extractStringArray(source, 'DEFINING_MOMENTS');
     const unique = new Set(moments);
     expect(unique.size, `${moments.length - unique.size} duplicate defining moments`).toBe(
@@ -76,7 +78,7 @@ describe('loreGenerator', () => {
   });
 
   it('ORIGINS contains new entries from both narrative branches', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const origins = extractStringArray(source, 'ORIGINS');
     const expectedNew = [
       'Left shivering in a discarded coal sack near the Silent Keep',
@@ -91,7 +93,7 @@ describe('loreGenerator', () => {
   });
 
   it('CHILDHOOD_TRAITS contains new entries from both narrative branches', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
     const expectedNew = [
       'was known for collecting the teeth of feral dogs slain in the alleys',
@@ -105,7 +107,7 @@ describe('loreGenerator', () => {
   });
 
   it('DEFINING_MOMENTS contains new entries from both narrative branches', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const moments = extractStringArray(source, 'DEFINING_MOMENTS');
     const expectedNew = [
       'until they strangled a corrupted guard with the very chains meant to bind them',
@@ -119,7 +121,7 @@ describe('loreGenerator', () => {
   });
 
   it('ORIGINS contains new entries from narrative-content-expansion', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const origins = extractStringArray(source, 'ORIGINS');
     const expectedNew = [
       'Born in the sunless cells of the Deep Ward penitentiary',
@@ -134,7 +136,7 @@ describe('loreGenerator', () => {
   });
 
   it('CHILDHOOD_TRAITS contains new entries from narrative-content-expansion', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
     const expectedNew = [
       'would compulsively trace the veins of slaughtered livestock to learn anatomy',
@@ -147,7 +149,7 @@ describe('loreGenerator', () => {
   });
 
   it('DEFINING_MOMENTS contains new entries from narrative-content-expansion', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const moments = extractStringArray(source, 'DEFINING_MOMENTS');
     const expectedNew = [
       'until they shattered a warden\u2019s jaw with a single, perfectly timed kick',
@@ -159,7 +161,7 @@ describe('loreGenerator', () => {
   });
 
   it('removed entries are not in source arrays', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
     const moments = extractStringArray(source, 'DEFINING_MOMENTS');
     expect(traits).not.toContain('learned to sleep with one eye open after the workhouse riots');
@@ -169,7 +171,7 @@ describe('loreGenerator', () => {
   });
 
   it('ORIGINS array entries are all valid string literals', () => {
-    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const source = LORE_SOURCE;
     const origins = extractStringArray(source, 'ORIGINS');
     expect(origins.length).toBeGreaterThan(0);
     for (const entry of origins) {

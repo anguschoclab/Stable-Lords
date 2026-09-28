@@ -33,9 +33,14 @@ export function registerArena(arena: ArenaConfig): void {
 
 
 
-// Fallback arena for unknown ids — injected by index.ts (registry must not
-// import venue data or it would create a module cycle).
+/** Fallback arena for unknown ids — injected by index.ts (registry must not
+ * import venue data or it would create a module cycle). */
 let defaultArena: ArenaConfig | null = null;
+
+/**
+ * Set the fallback arena returned for unknown ids.
+ * @param arena - Arena configuration to use as the default.
+ */
 export function setDefaultArena(arena: ArenaConfig): void {
   defaultArena = arena;
 }

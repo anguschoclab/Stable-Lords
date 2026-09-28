@@ -5,7 +5,7 @@
  * `lore/loreData.ts` for SRP separation of data from logic.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { ORIGINS, CHILDHOOD_TRAITS, DEFINING_MOMENTS } from './lore/loreData';
+import { ORIGINS, CHILDHOOD_TRAITS, DEFINING_MOMENTS } from './lore';
 
 /**
  * Generate warrior lore by combining a childhood trait and defining moment.

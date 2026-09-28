@@ -38,7 +38,7 @@ import type {
   ArenaConfig, TrainerSpecialty,
 } from '@/types/shared.types';
 
-// Referenced so unused-import lint stays quiet and tsc resolves each name.
+/** Referenced so unused-import lint stays quiet and tsc resolves each name. */
 type _StateSurface =
   | Warrior | DeathEvent | WeatherType | Season | CrowdMoodType | NewsletterItem
   | TrainerTier | TrainerFocus | Trainer | ScoutQuality | CrestData | FightSummary
@@ -52,6 +52,7 @@ type _StateSurface =
   | InsightToken | HallEntry | SimulationReport | AnnualAwardType | AnnualAward
   | ObjectiveId | ProgressionObjective | ProgressionStatus | ProgressionState
   | DeferredBoutLog | HouseRules | LifetimeStats | GameState | UIPrefs;
+/** Referenced so unused-import lint stays quiet and tsc resolves each name. */
 type _SharedSurface =
   | Brand<unknown, string> | WarriorId | StableId | PromoterId | TrainerId | FightId | TournamentId
   | BoutOfferId | InjuryId | LedgerEntryId | ScoutReportId | NewsId | GrudgeId

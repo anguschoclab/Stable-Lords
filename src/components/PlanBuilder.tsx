@@ -1,32 +1,14 @@
-import { useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
 import type { FightPlan, Warrior } from '@/types/game';
-import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
-import { getMatchupBonus } from '@/constants/combat';
-import { computeStrategyScore, getScoreColor } from '@/engine/strategy/strategyAnalysis';
-import { autoTuneFromBias, type Bias } from '@/engine/strategy/planBias';
-import { getStylePresets } from '@/engine/bout/stylePresets';
-import { defaultPlanForWarrior } from '@/engine/simulate';
+import type { FightingStyle } from '@/types/game';
 import TacticBank from './planBuilder/TacticBank';
 import CommonControls from './planBuilder/CommonControls';
 import SpatialControls from './planBuilder/SpatialControls';
 import PhaseOverrides from './planBuilder/PhaseOverrides';
 import StylePassives from './planBuilder/StylePassives';
 import ContingencyPlans from './planBuilder/ContingencyPlans';
-import StaminaCurve from './planBuilder/StaminaCurve';
-import {
-  validateStrategy,
-  estimateStaminaCurve,
-  predictedCollapseMinute,
-} from '@/engine/strategy/strategyValidator';
-import { BOUT_DURATION_MINUTES } from '@/constants/combat';
-import { ShieldCheck } from 'lucide-react';
-import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';
-import { evaluateCampaignFocus } from '@/engine/advisor';
-import { reconstructGameState } from '@/state/serialization';
-import { useGameStore } from '@/state/useGameStore';
+import { usePlanOrchestration } from './planBuilder/usePlanOrchestration';
+import { PlanHeader, WarningsRow, PresetBar } from './planBuilder/sections';
 
 /* ── Sub-components ─────────────────────────────────────── */
 
@@ -42,151 +24,26 @@ interface PlanBuilderProps {
  * @param - { plan, on plan change, warrior, rival style }.
  */
 export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }: PlanBuilderProps) {
-  const matchupAdv = useMemo(() => {
-    if (!rivalStyle) return 0;
-    return getMatchupBonus(plan.style, rivalStyle);
-  }, [plan.style, rivalStyle]);
-
-  const score = useMemo(() => computeStrategyScore(plan, warrior), [plan, warrior]);
-  const warnings = useMemo(() => validateStrategy(plan, warrior), [plan, warrior]);
-
-  const stylePresets = useMemo(() => getStylePresets(plan.style), [plan.style]);
-
-  const collapseWarning = useMemo(() => {
-    const curve = estimateStaminaCurve(plan, warrior);
-    const collapse = predictedCollapseMinute(curve);
-    if (collapse !== null && collapse < BOUT_DURATION_MINUTES) {
-      return {
-        code: 'PREDICTED_COLLAPSE',
-        severity: 'warn' as const,
-        message: `Warrior predicted to collapse at minute ${collapse}. Reduce OE/AL or add phase overrides.`,
-      };
-    }
-    return null;
-  }, [plan, warrior]);
-
-  const allWarnings = collapseWarning ? [...warnings, collapseWarning] : warnings;
-
-  const applyPreset = (presetPlan: FightPlan) => {
-    onPlanChange({ ...presetPlan });
-  };
-
-  const restoreDefault = () => {
-    if (warrior) {
-      onPlanChange(defaultPlanForWarrior(warrior));
-    }
-  };
-
-  const applyCouncilTactics = () => {
-    if (!warrior) return;
-    const state = reconstructGameState(useGameStore.getState());
-    const focus = evaluateCampaignFocus(warrior, state);
-    const tacticsAdvice = evaluateTacticsAdvice(warrior, focus);
-    onPlanChange({
-      ...plan,
-      offensiveTactic: tacticsAdvice.bestOffensiveTactic,
-      defensiveTactic: tacticsAdvice.bestDefensiveTactic,
-      OE: tacticsAdvice.suggestedOE,
-      AL: tacticsAdvice.suggestedAL,
-      fallbackCondition: tacticsAdvice.fallbackCondition,
-    });
-  };
-
-  const biasPresets: { label: string; bias: Bias }[] = [
-    { label: 'HEAD-HUNT', bias: 'head-hunt' },
-    { label: 'HAMSTRING', bias: 'hamstring' },
-    { label: 'GUT', bias: 'gut' },
-    { label: 'GUARD-BREAK', bias: 'guard-break' },
-    { label: 'BALANCED', bias: 'balanced' },
-  ];
-
-  const applyBias = (bias: Bias) => {
-    onPlanChange({ ...plan, ...autoTuneFromBias(plan, bias) });
-  };
+  const {
+    matchupAdv,
+    score,
+    allWarnings,
+    stylePresets,
+    applyPreset,
+    restoreDefault,
+    applyCouncilTactics,
+    applyBias,
+  } = usePlanOrchestration(plan, onPlanChange, warrior, rivalStyle);
 
   return (
     <Card className="bg-background border-arena-blood/20 shadow-2xl relative overflow-hidden">
       {/* Decorative pulse */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-arena-blood/5 blur-[80px] rounded-full -mr-16 -mt-16" />
 
-      <CardHeader className="pb-4 border-b border-white/5">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <CardTitle className="font-display text-xl font-black italic uppercase tracking-tighter text-arena-blood">
-              Battle Strategy
-            </CardTitle>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
-              {STYLE_DISPLAY_NAMES[plan.style]} · Engineering
-            </p>
-          </div>
-
-          <div className="text-right flex items-center gap-6">
-            {matchupAdv !== 0 && (
-              <div className="text-right">
-                <Badge
-                  className={cn(
-                    'rounded-none border-none font-black text-[10px] tracking-tight px-1.5 py-0.5',
-                    matchupAdv > 0
-                      ? 'bg-primary/20 text-primary'
-                      : 'bg-destructive/20 text-destructive'
-                  )}
-                >
-                  {matchupAdv > 0 ? 'MATCHUP ADV' : 'MATCHUP PENALTY'}
-                </Badge>
-                <div
-                  className={cn(
-                    'text-lg font-mono font-black italic',
-                    matchupAdv > 0 ? 'text-primary' : 'text-destructive'
-                  )}
-                >
-                  {matchupAdv > 0 ? '+' : ''}
-                  {matchupAdv}
-                </div>
-              </div>
-            )}
-
-            <div className="text-right">
-              <div
-                className={cn(
-                  'text-3xl font-display font-black tracking-tighter leading-none transition-all motion-reduce:transition-none motion-reduce:transform-none',
-                  getScoreColor(score)
-                )}
-              >
-                {score}
-                <span className="text-xs ml-0.5 opacity-50">/100</span>
-              </div>
-              <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-1">
-                Strategy Score
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
+      <PlanHeader plan={plan} matchupAdv={matchupAdv} score={score} />
 
       <CardContent className="pt-6 space-y-8">
-        <div className="flex flex-wrap items-start justify-between gap-6 pb-4 border-b border-white/5">
-          <StaminaCurve plan={plan} warrior={warrior} />
-          {allWarnings.length > 0 && (
-            <ul className="flex-1 min-w-60 space-y-1">
-              {allWarnings.map((w) => (
-                <li
-                  key={w.code}
-                  className={cn(
-                    'text-[10px] font-mono uppercase tracking-wide px-2 py-1 border rounded-none',
-                    w.severity === 'error'
-                      ? 'text-destructive border-destructive/40 bg-destructive/5'
-                      : w.severity === 'warn'
-                        ? 'text-arena-gold border-arena-gold/30 bg-arena-gold/5'
-                        : 'text-muted-foreground border-white/10 bg-black/40'
-                  )}
-                >
-                  <span className="opacity-60 mr-2">[{w.severity.toUpperCase()}]</span>
-                  {w.message}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <WarningsRow plan={plan} warrior={warrior} warnings={allWarnings} />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
@@ -202,61 +59,15 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/5 space-y-4">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mr-2">
-              Style Presets
-            </span>
-            {stylePresets.map((preset) => (
-              <button
-                key={preset.name}
-                aria-label={preset.name}
-                onClick={() => applyPreset(preset.plan)}
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors motion-reduce:transition-none"
-              >
-                {preset.name}
-              </button>
-            ))}
-            {warrior && (
-              <>
-                <button
-                  aria-label="Restore Default"
-                  onClick={restoreDefault}
-                  className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors motion-reduce:transition-none"
-                >
-                  Restore Default
-                </button>
-                <button
-                  aria-label="Apply Council Tactics"
-                  data-testid="apply-council-tactics-btn"
-                  onClick={applyCouncilTactics}
-                  className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-arena-gold/40 text-arena-gold bg-arena-gold/10 hover:bg-arena-gold/20 flex items-center gap-1.5 transition-colors motion-reduce:transition-none"
-                >
-                  <ShieldCheck className="h-3 w-3" />
-                  Apply Council Tactics
-                </button>
-              </>
-            )}
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mr-2">
-              Targeting
-            </span>
-            {biasPresets.map((preset) => (
-              <button
-                key={preset.label}
-                aria-label={preset.label}
-                onClick={() => applyBias(preset.bias)}
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors motion-reduce:transition-none"
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
-            <span>Targeting: Optimized for {plan.target || 'Any'}</span>
-          </div>
-        </div>
+        <PresetBar
+          plan={plan}
+          warrior={warrior}
+          stylePresets={stylePresets}
+          onApplyPreset={applyPreset}
+          onRestoreDefault={restoreDefault}
+          onApplyCouncilTactics={applyCouncilTactics}
+          onApplyBias={applyBias}
+        />
       </CardContent>
     </Card>
   );

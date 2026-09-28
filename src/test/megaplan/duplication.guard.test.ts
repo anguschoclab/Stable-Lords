@@ -124,6 +124,7 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/engine/pipeline/offseasonEvents/chaosHandlers/weavers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
   'src/engine/pipeline/offseasonEvents/economicHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
   'src/pages/Orphanage.tsx|src/pages/orphanage/useFtueFlow.ts',
+  'src/components/PlanBuilder.tsx|src/components/planBuilder/usePlanOrchestration.ts',
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/street.ts',
   'src/engine/pipeline/offseasonEvents/injuryHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',

@@ -45,52 +45,22 @@ export default function IdentityStep({
       </div>
 
       <div className="space-y-4">
-        <div className="space-y-1.5">
-          <label
-            htmlFor="owner-name"
-            className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
-          >
-            YOUR NAME
-          </label>
-          <input
-            id="owner-name"
-            type="text"
-            maxLength={24}
-            value={ownerInput}
-            onChange={(e) => setOwnerInput(e.target.value)}
-            className="w-full h-10 px-3 text-sm"
-            placeholder="e.g. Master Thorne"
-            style={{
-              background: 'var(--background)',
-              border: '1px solid rgba(var(--oak-rgb), 0.8)',
-              color: 'hsl(var(--foreground))',
-              outline: 'none',
-            }}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label
-            htmlFor="stable-name"
-            className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
-          >
-            STABLE NAME
-          </label>
-          <input
-            id="stable-name"
-            type="text"
-            maxLength={30}
-            value={stableInput}
-            onChange={(e) => setStableInput(e.target.value)}
-            className="w-full h-10 px-3 text-sm"
-            placeholder="e.g. The Iron Sentinels"
-            style={{
-              background: 'var(--background)',
-              border: '1px solid rgba(var(--oak-rgb), 0.8)',
-              color: 'hsl(var(--foreground))',
-              outline: 'none',
-            }}
-          />
-        </div>
+        <IdentityField
+          id="owner-name"
+          label="YOUR NAME"
+          maxLength={24}
+          value={ownerInput}
+          onChange={setOwnerInput}
+          placeholder="e.g. Master Thorne"
+        />
+        <IdentityField
+          id="stable-name"
+          label="STABLE NAME"
+          maxLength={30}
+          value={stableInput}
+          onChange={setStableInput}
+          placeholder="e.g. The Iron Sentinels"
+        />
       </div>
 
       <StepNav
@@ -99,6 +69,49 @@ export default function IdentityStep({
         nextLabel="Proceed"
         nextDisabled={!ownerInput.trim() || !stableInput.trim()}
         className="flex gap-3 pt-1"
+      />
+    </div>
+  );
+}
+
+/** Labelled identity text input (owner name / stable name). */
+function IdentityField({
+  id,
+  label,
+  maxLength,
+  value,
+  onChange,
+  placeholder,
+}: {
+  id: string;
+  label: string;
+  maxLength: number;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label
+        htmlFor={id}
+        className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
+      >
+        {label}
+      </label>
+      <input
+        id={id}
+        type="text"
+        maxLength={maxLength}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full h-10 px-3 text-sm"
+        placeholder={placeholder}
+        style={{
+          background: 'var(--background)',
+          border: '1px solid rgba(var(--oak-rgb), 0.8)',
+          color: 'hsl(var(--foreground))',
+          outline: 'none',
+        }}
       />
     </div>
   );

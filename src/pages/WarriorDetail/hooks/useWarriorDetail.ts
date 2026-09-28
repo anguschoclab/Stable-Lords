@@ -61,6 +61,23 @@ function useWarriorMutations(
   return { handlePlanChange, handleRetire, handleEquipmentChange };
 }
 
+/** Store slice for the warrior detail page. */
+function useWarriorDetailStore() {
+  return useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      arenaHistory: s.arenaHistory,
+      arenaChampions: s.arenaChampions,
+      insightTokens: s.insightTokens,
+      setState: s.setState,
+      retireWarrior: s.retireWarrior,
+    }))
+  );
+}
+
 /**
  *
  */
@@ -78,19 +95,7 @@ export function useWarriorDetail() {
     insightTokens,
     setState,
     retireWarrior,
-  } = useGameStore(
-    useShallow((s) => ({
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
-      arenaHistory: s.arenaHistory,
-      arenaChampions: s.arenaChampions,
-      insightTokens: s.insightTokens,
-      setState: s.setState,
-      retireWarrior: s.retireWarrior,
-    }))
-  );
+  } = useWarriorDetailStore();
 
   const [activeTab, setActiveTab] = useState('biometrics');
 

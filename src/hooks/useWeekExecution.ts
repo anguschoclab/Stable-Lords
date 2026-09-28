@@ -114,6 +114,23 @@ function useAutosim(
   };
 }
 
+/** Day-or-week advance with its conclusion toast. */
+function useWeekAdvance(
+  gameState: ReturnType<typeof useWorldState>,
+  doAdvanceDay: () => Promise<unknown>,
+  doAdvanceWeek: () => Promise<unknown>
+) {
+  return useCallback(async () => {
+    if (gameState.isTournamentWeek) {
+      await doAdvanceDay();
+      toast.success(`Empire Day ${gameState.day + 1} — Week ${gameState.week} concluded.`);
+    } else {
+      await doAdvanceWeek();
+      toast.success(`Week ${gameState.week} concluded.`);
+    }
+  }, [gameState, doAdvanceDay, doAdvanceWeek]);
+}
+
 /**
  * Self-contained hook that owns the entire week-execution lifecycle.
  * Can be called from any component — no props required.
@@ -131,6 +148,7 @@ export function useWeekExecution() {
   );
 
   const gameState = useWorldState();
+  const advance = useWeekAdvance(gameState, doAdvanceDay, doAdvanceWeek);
 
   const [running, setRunning] = useState(false);
   const runningRef = useRef(false);
@@ -165,13 +183,7 @@ export function useWeekExecution() {
     setResults([]);
 
     try {
-      if (gameState.isTournamentWeek) {
-        await doAdvanceDay();
-        toast.success(`Empire Day ${gameState.day + 1} — Week ${gameState.week} concluded.`);
-      } else {
-        await doAdvanceWeek();
-        toast.success(`Week ${gameState.week} concluded.`);
-      }
+      await advance();
 
       // Populate results from store after advance completes
       applyPostAdvanceState(setResults);
@@ -179,7 +191,7 @@ export function useWeekExecution() {
       runningRef.current = false;
       setRunning(false);
     }
-  }, [gameState, matchCardLength, fightReadyCount, doAdvanceDay, doAdvanceWeek]);
+  }, [matchCardLength, fightReadyCount, advance]);
 
   const clearResults = useCallback(() => {
     setResults([]);

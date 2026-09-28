@@ -73,24 +73,31 @@ export function WeatherWidget() {
       </div>
 
       <div className="mt-auto pt-2">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all motion-reduce:transition-none motion-reduce:transform-none hover:bg-white/[0.05] hover:border-white/10 flex items-center justify-between">
-                <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">
-                  Combat Modifiers
-                </span>
-                <Info className="h-3 w-3 text-muted-foreground/40" />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent className="bg-black/90 border-white/10 p-3 w-full max-w-xs">
-              <p className="text-[10px] font-mono leading-relaxed text-primary/80 uppercase tracking-wider">
-                {WEATHER_STATS[weather as WeatherType] || ''}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <CombatModifiersTooltip weather={weather as WeatherType} />
       </div>
     </Surface>
+  );
+}
+
+/** Hover tooltip listing the weather's combat modifiers. */
+function CombatModifiersTooltip({ weather }: { weather: WeatherType }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all motion-reduce:transition-none motion-reduce:transform-none hover:bg-white/[0.05] hover:border-white/10 flex items-center justify-between">
+            <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">
+              Combat Modifiers
+            </span>
+            <Info className="h-3 w-3 text-muted-foreground/40" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-black/90 border-white/10 p-3 w-full max-w-xs">
+          <p className="text-[10px] font-mono leading-relaxed text-primary/80 uppercase tracking-wider">
+            {WEATHER_STATS[weather] || ''}
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

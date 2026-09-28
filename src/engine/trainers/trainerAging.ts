@@ -5,6 +5,39 @@ import { resolveRng } from '@/utils/random';
 import { TRAINER_AGING, RETIREMENT_CHANCES } from '@/constants/aging';
 
 /**
+ * Retirement roll for a trainer past RETIREMENT_START — base chance plus an
+ * age increment, discounted by fame and legend (retired-warrior) protection.
+ * Consumes one RNG draw per eligible trainer; records the LEGACY news line.
+ */
+function rollRetirement(
+  t: Trainer,
+  currentAge: number,
+  rngService: IRNGService,
+  news: string[]
+): boolean {
+  if (currentAge < TRAINER_AGING.RETIREMENT_START) return false;
+
+  const baseChance =
+    RETIREMENT_CHANCES.BASE +
+    (currentAge - TRAINER_AGING.RETIREMENT_START) * RETIREMENT_CHANCES.AGE_INCREMENT;
+  const fameDiscount = Math.min(RETIREMENT_CHANCES.FAME_DISCOUNT_MAX, (t.fame || 0) * 0.001);
+  const legacyDiscount = t.retiredFromWarrior ? RETIREMENT_CHANCES.LEGACY_DISCOUNT : 0;
+  const finalChance = Math.max(
+    RETIREMENT_CHANCES.MIN_CHANCE,
+    baseChance - fameDiscount - legacyDiscount
+  );
+
+  if (rngService.next() >= finalChance) return false;
+
+  const verb =
+    currentAge > TRAINER_AGING.DEATH_THRESHOLD
+      ? 'passed away peacefully'
+      : 'retired to the countryside';
+  news.push(`LEGACY: ${t.name} (${t.focus} Trainer) has ${verb} at age ${currentAge}.`);
+  return true;
+}
+
+/**
  * Trainer Aging System
  *
  * - Trainers age +1 year every 52 weeks.
@@ -40,30 +73,7 @@ export function computeTrainerAging(
         t = { ...t, contractWeeksLeft: weeksLeft };
       }
 
-      let retired = false;
-      if (currentAge >= TRAINER_AGING.RETIREMENT_START) {
-        const baseChance =
-          RETIREMENT_CHANCES.BASE +
-          (currentAge - TRAINER_AGING.RETIREMENT_START) * RETIREMENT_CHANCES.AGE_INCREMENT;
-
-        const fameDiscount = Math.min(RETIREMENT_CHANCES.FAME_DISCOUNT_MAX, (t.fame || 0) * 0.001);
-
-        const legacyDiscount = t.retiredFromWarrior ? RETIREMENT_CHANCES.LEGACY_DISCOUNT : 0;
-
-        const finalChance = Math.max(
-          RETIREMENT_CHANCES.MIN_CHANCE,
-          baseChance - fameDiscount - legacyDiscount
-        );
-
-        if (rngService.next() < finalChance) {
-          retired = true;
-          const verb =
-            currentAge > TRAINER_AGING.DEATH_THRESHOLD
-              ? 'passed away peacefully'
-              : 'retired to the countryside';
-          news.push(`LEGACY: ${t.name} (${t.focus} Trainer) has ${verb} at age ${currentAge}.`);
-        }
-      }
+      const retired = rollRetirement(t, currentAge, rngService, news);
 
       if (!retired) {
         kept.push({ ...t, age: currentAge });

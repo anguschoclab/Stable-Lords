@@ -454,6 +454,37 @@ function afterHitEvents(
 }
 
 /**
+ * Pre-damage pass: survival strike short-circuits the hit; otherwise the
+ * commit mechanic fires (attacker at low HP with high kill desire commits).
+ * Returns true when the exchange is fully resolved and the caller must return.
+ */
+function preHitResolved(
+  events: CombatEvent[],
+  rng: () => number,
+  attacker: FighterState,
+  defender: FighterState,
+  attTactics: ReturnType<typeof resolveEffectiveTactics>,
+  defPassive: ReturnType<typeof getStylePassive> | undefined,
+  attLabel: 'A' | 'D',
+  defLabel: 'A' | 'D',
+  attKD: number
+): boolean {
+  if (
+    handleSurvivalStrike(events, rng, attacker, defender, attTactics, defPassive, attLabel, defLabel)
+  ) {
+    return true;
+  }
+
+  const kdForCommit = attacker.activePlan.killDesire ?? attKD;
+  const isAtLowHp = attacker.hp / attacker.maxHp < COMMIT_HP_THRESHOLD;
+  if (!attacker.committed && isAtLowHp && kdForCommit >= COMMIT_KILL_DESIRE) {
+    attacker.committed = true;
+    events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
+  }
+  return false;
+}
+
+/**
  * Execute hit.
  */
 export function executeHit(
@@ -476,26 +507,9 @@ export function executeHit(
   defPassive?: ReturnType<typeof getStylePassive>
 ) {
   if (
-    handleSurvivalStrike(
-      events,
-      rng,
-      attacker,
-      defender,
-      attTactics,
-      defPassive,
-      attLabel,
-      defLabel
-    )
+    preHitResolved(events, rng, attacker, defender, attTactics, defPassive, attLabel, defLabel, attKD)
   ) {
     return;
-  }
-
-  // ── Commit mechanic: attacker at low HP with high kill desire commits ──
-  const kdForCommit = attacker.activePlan.killDesire ?? attKD;
-  const isAtLowHp = attacker.hp / attacker.maxHp < COMMIT_HP_THRESHOLD;
-  if (!attacker.committed && isAtLowHp && kdForCommit >= COMMIT_KILL_DESIRE) {
-    attacker.committed = true;
-    events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
   }
 
   const { hitLoc, preArmor } = computePreArmorDamage(

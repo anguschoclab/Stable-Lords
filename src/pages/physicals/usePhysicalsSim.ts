@@ -7,6 +7,35 @@ import type { FighterStats } from '@/components/stable/FighterConfigCard';
 
 const DEFAULT_STATS: FighterStats = { strength: 10, quickness: 10, vitality: 10 };
 
+type DerivedCalc = ReturnType<typeof computeWarriorStats>['derivedStats'];
+
+/**
+ * 10-minute attrition loop: A strikes first each minute, B retaliates while
+ * standing. Returns the surviving endurance/HP and elapsed minutes.
+ */
+function simulateAttrition(calcA: DerivedCalc, calcB: DerivedCalc) {
+  let endA = calcA.endurance;
+  let endB = calcB.endurance;
+  let hpA = calcA.hp;
+  let hpB = calcB.hp;
+
+  let minutesPassed = 0;
+  while (minutesPassed < 10 && endA > 0 && endB > 0 && hpA > 0 && hpB > 0) {
+    minutesPassed++;
+    hpB -= Math.max(1, calcA.damage);
+    endA -= 10;
+    endB -= 5;
+
+    if (hpB > 0) {
+      hpA -= Math.max(1, calcB.damage);
+      endB -= 10;
+      endA -= 5;
+    }
+  }
+
+  return { endA, endB, hpA, hpB, minutesPassed };
+}
+
 function toAttributes(stats: FighterStats) {
   return {
     ST: stats.strength,
@@ -61,34 +90,9 @@ export function usePhysicalsSim() {
   };
 
   const simulation = useMemo(() => {
-    const resultA = computeWarriorStats(toAttributes(statsA), styleA);
-    const resultB = computeWarriorStats(toAttributes(statsB), styleB);
-
-    const calcA = resultA.derivedStats;
-    const calcB = resultB.derivedStats;
-
-    let endA = calcA.endurance;
-    let endB = calcB.endurance;
-    let hpA = calcA.hp;
-    let hpB = calcB.hp;
-
-    let minutesPassed = 0;
-    while (minutesPassed < 10 && endA > 0 && endB > 0 && hpA > 0 && hpB > 0) {
-      minutesPassed++;
-      const dmgA = Math.max(1, calcA.damage);
-      hpB -= dmgA;
-      endA -= 10;
-      endB -= 5;
-
-      if (hpB > 0) {
-        const dmgB = Math.max(1, calcB.damage);
-        hpA -= dmgB;
-        endB -= 10;
-        endA -= 5;
-      }
-    }
-
-    return { calcA, calcB, endA, endB, hpA, hpB, minutesPassed };
+    const calcA = computeWarriorStats(toAttributes(statsA), styleA).derivedStats;
+    const calcB = computeWarriorStats(toAttributes(statsB), styleB).derivedStats;
+    return { calcA, calcB, ...simulateAttrition(calcA, calcB) };
   }, [styleA, styleB, statsA, statsB]);
 
   return {

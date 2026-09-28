@@ -401,6 +401,34 @@ export function intentStillApplies(
 }
 
 /**
+ * Vendetta target: the other party in the rival's active grudge; else dossier
+ * intel (whoever has beaten/threatens them most); else the player stable.
+ */
+function resolveVendettaTarget(
+  rival: RivalStableData,
+  state: GameState
+): AIStrategy['targetStableId'] {
+  const grudgeTarget = findGrudge(state.grudgeMap, rival.owner.id);
+  if (grudgeTarget !== undefined) {
+    return (grudgeTarget.ownerIdA === rival.owner.id
+      ? grudgeTarget.ownerIdB
+      : grudgeTarget.ownerIdA) as AIStrategy['targetStableId'];
+  }
+  // No grudge target — fall back to dossier intel.
+  const dossiers = rival.agentMemory?.opponentDossiers ?? {};
+  let bestId: string | undefined;
+  let bestScore = 0;
+  for (const [id, d] of Object.entries(dossiers)) {
+    const score = d.recordVs.l * 2 + d.recordVs.k * 3 + d.estimatedThreat;
+    if (score > bestScore) {
+      bestScore = score;
+      bestId = id;
+    }
+  }
+  return (bestId ?? state.player?.id) as AIStrategy['targetStableId'];
+}
+
+/**
  * Updates the AI strategy, either continuing the current plan or picking a new one.
  */
 export function updateAIStrategy(
@@ -442,29 +470,7 @@ export function updateAIStrategy(
             ? 3
             : 4;
 
-    let targetStableId = undefined;
-    if (intent === 'VENDETTA') {
-      const grudgeTarget = findGrudge(state.grudgeMap, rival.owner.id);
-      if (grudgeTarget !== undefined) {
-        targetStableId =
-          grudgeTarget.ownerIdA === rival.owner.id ? grudgeTarget.ownerIdB : grudgeTarget.ownerIdA;
-      }
-      // No grudge target — fall back to dossier intel: whoever has beaten us
-      // most (or threatens us most), else the player stable.
-      if (!targetStableId) {
-        const dossiers = rival.agentMemory?.opponentDossiers ?? {};
-        let bestId: string | undefined;
-        let bestScore = 0;
-        for (const [id, d] of Object.entries(dossiers)) {
-          const score = d.recordVs.l * 2 + d.recordVs.k * 3 + d.estimatedThreat;
-          if (score > bestScore) {
-            bestScore = score;
-            bestId = id;
-          }
-        }
-        targetStableId = (bestId ?? state.player?.id) as AIStrategy['targetStableId'];
-      }
-    }
+    const targetStableId = intent === 'VENDETTA' ? resolveVendettaTarget(rival, state) : undefined;
 
     const crownTarget = rival.agentMemory?.crownAssessment;
     return {

@@ -19,11 +19,6 @@ interface StableComparisonProps {
  * Stable comparison.
  * @param - { rivals }.
  */
-
-/**
- * Stable comparison.
- * @param - { rivals }.
- */
 export function StableComparison({ rivals }: StableComparisonProps) {
   const {
     idA,
@@ -50,57 +45,21 @@ export function StableComparison({ rivals }: StableComparisonProps) {
       <StableSelector rivals={rivals} idA={idA} setIdA={setIdA} idB={idB} setIdB={setIdB} />
 
       {statsA && statsB && rivalA && rivalB && (
-        <div className="space-y-6">
-          <ComparisonHeader kind="stable" rivalA={rivalA} rivalB={rivalB} />
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <KeyMetricsSection
-              rivalA={rivalA}
-              rivalB={rivalB}
-              statsA={statsA}
-              statsB={statsB}
-              maxWins={maxWins}
-              maxKills={maxKills}
-              maxFame={maxFame}
-              maxActive={maxRoster}
-            />
-
-            <AverageAttributesSection statsA={statsA} statsB={statsB} maxAttr={maxAttr} />
-          </div>
-
-          <div className="grid grid-cols-2 gap-8">
-            <DoctrineSurface
-              stableName={rivalA.owner.stableName}
-              styleCounts={statsA.styleCounts}
-              activeCount={statsA.activeCount}
-              colorVariant="primary"
-              textAlign="left"
-            />
-            <DoctrineSurface
-              stableName={rivalB.owner.stableName}
-              styleCounts={statsB.styleCounts}
-              activeCount={statsB.activeCount}
-              colorVariant="accent"
-              textAlign="right"
-            />
-          </div>
-
-          <DoctrineIntelligenceSection
-            rivalA={rivalA}
-            rivalB={rivalB}
-            modsA={modsA}
-            modsB={modsB}
-            clashes={clashes}
-            grudge={grudge}
-          />
-
-          <DominantCombatantsSection
-            topWarriorA={topWarriorShape(statsA.topWarrior)}
-            topWarriorB={topWarriorShape(statsB.topWarrior)}
-          />
-
-          <HeadToHead rosterA={rivalA.roster} rosterB={rivalB.roster} />
-        </div>
+        <ComparisonBody
+          rivalA={rivalA}
+          rivalB={rivalB}
+          statsA={statsA}
+          statsB={statsB}
+          grudge={grudge}
+          clashes={clashes}
+          modsA={modsA}
+          modsB={modsB}
+          maxWins={maxWins}
+          maxKills={maxKills}
+          maxFame={maxFame}
+          maxRoster={maxRoster}
+          maxAttr={maxAttr}
+        />
       )}
 
       {(!statsA || !statsB) && <EmptyStateSurface />}
@@ -108,7 +67,111 @@ export function StableComparison({ rivals }: StableComparisonProps) {
   );
 }
 
+/** Full comparison surface once both stables resolve. */
+function ComparisonBody({
+  rivalA,
+  rivalB,
+  statsA,
+  statsB,
+  grudge,
+  clashes,
+  modsA,
+  modsB,
+  maxWins,
+  maxKills,
+  maxFame,
+  maxRoster,
+  maxAttr,
+}: Pick<
+  ReturnType<typeof useStableComparison>,
+  | 'grudge'
+  | 'clashes'
+  | 'modsA'
+  | 'modsB'
+  | 'maxWins'
+  | 'maxKills'
+  | 'maxFame'
+  | 'maxRoster'
+  | 'maxAttr'
+> & {
+  rivalA: RivalStableData;
+  rivalB: RivalStableData;
+  statsA: NonNullable<StableStats>;
+  statsB: NonNullable<StableStats>;
+}) {
+  return (
+    <div className="space-y-6">
+      <ComparisonHeader kind="stable" rivalA={rivalA} rivalB={rivalB} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <KeyMetricsSection
+          rivalA={rivalA}
+          rivalB={rivalB}
+          statsA={statsA}
+          statsB={statsB}
+          maxWins={maxWins}
+          maxKills={maxKills}
+          maxFame={maxFame}
+          maxActive={maxRoster}
+        />
+
+        <AverageAttributesSection statsA={statsA} statsB={statsB} maxAttr={maxAttr} />
+      </div>
+
+      <DoctrinePair statsA={statsA} statsB={statsB} rivalA={rivalA} rivalB={rivalB} />
+
+      <DoctrineIntelligenceSection
+        rivalA={rivalA}
+        rivalB={rivalB}
+        modsA={modsA}
+        modsB={modsB}
+        clashes={clashes}
+        grudge={grudge}
+      />
+
+      <DominantCombatantsSection
+        topWarriorA={topWarriorShape(statsA.topWarrior)}
+        topWarriorB={topWarriorShape(statsB.topWarrior)}
+      />
+
+      <HeadToHead rosterA={rivalA.roster} rosterB={rivalB.roster} />
+    </div>
+  );
+}
+
 type StableStats = ReturnType<typeof useStableComparison>['statsA'];
+
+/** Side-by-side doctrine panels for the two compared stables. */
+function DoctrinePair({
+  statsA,
+  statsB,
+  rivalA,
+  rivalB,
+}: {
+  statsA: NonNullable<StableStats>;
+  statsB: NonNullable<StableStats>;
+  rivalA: RivalStableData;
+  rivalB: RivalStableData;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-8">
+      <DoctrineSurface
+        stableName={rivalA.owner.stableName}
+        styleCounts={statsA.styleCounts}
+        activeCount={statsA.activeCount}
+        colorVariant="primary"
+        textAlign="left"
+      />
+      <DoctrineSurface
+        stableName={rivalB.owner.stableName}
+        styleCounts={statsB.styleCounts}
+        activeCount={statsB.activeCount}
+        colorVariant="accent"
+        textAlign="right"
+      />
+    </div>
+  );
+}
 
 /** Framed doctrine panel for one side of the comparison. */
 function DoctrineSurface({

@@ -172,16 +172,69 @@ interface SchedulingWidgetProps {
   warrior: Warrior;
 }
 
+type Matchup = ReturnType<typeof getRecommendedChallenges>[number];
+
+type MatchupFlags = {
+  playerChallenges: string[] | undefined;
+  playerAvoids: string[] | undefined;
+  toggleChallenge: (id: string) => void;
+  toggleAvoid: (id: string) => void;
+};
+
+/** One matchup column: divider label, cards, or an empty-state notice. */
+function MatchupColumn({
+  label,
+  variant,
+  matchups,
+  type,
+  emptyText,
+  flags,
+}: {
+  label: string;
+  variant?: 'blood';
+  matchups: Matchup[];
+  type: 'recommend' | 'avoid';
+  emptyText: string;
+  flags: MatchupFlags;
+}) {
+  return (
+    <div className="space-y-6">
+      <SectionDivider label={label} variant={variant} />
+      <div className="space-y-4">
+        {matchups.length > 0 ? (
+          matchups.map((m) => (
+            <MatchupCard
+              key={m.rivalStableName}
+              matchup={m}
+              type={type}
+              isChallenged={flags.playerChallenges?.includes(m.rivalWarrior.id) ?? false}
+              isAvoided={flags.playerAvoids?.includes(m.rivalWarrior.id) ?? false}
+              onToggleChallenge={() => flags.toggleChallenge(m.rivalWarrior.id)}
+              onToggleAvoid={() => flags.toggleAvoid(m.rivalWarrior.id)}
+            />
+          ))
+        ) : (
+          <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
+            {emptyText}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Scheduling widget.
  * @param - { warrior }.
  */
 export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
   const state = useWorldState();
-  const playerChallenges = useGameStore((s) => s.playerChallenges);
-  const playerAvoids = useGameStore((s) => s.playerAvoids);
-  const toggleChallenge = useGameStore((s) => s.toggleChallenge);
-  const toggleAvoid = useGameStore((s) => s.toggleAvoid);
+  const flags = {
+    playerChallenges: useGameStore((s) => s.playerChallenges),
+    playerAvoids: useGameStore((s) => s.playerAvoids),
+    toggleChallenge: useGameStore((s) => s.toggleChallenge),
+    toggleAvoid: useGameStore((s) => s.toggleAvoid),
+  };
 
   const recommendations = useMemo(
     () => getRecommendedChallenges(state, warrior, 2),
@@ -193,53 +246,21 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
   return (
     <div className="space-y-12">
       <div className="grid gap-12 md:grid-cols-2">
-        {/* Recommendations */}
-        <div className="space-y-6">
-          <SectionDivider label="Upcoming Bouts" />
-          <div className="space-y-4">
-            {recommendations.length > 0 ? (
-              recommendations.map((m) => (
-                <MatchupCard
-                  key={m.rivalStableName}
-                  matchup={m}
-                  type="recommend"
-                  isChallenged={playerChallenges?.includes(m.rivalWarrior.id) ?? false}
-                  isAvoided={playerAvoids?.includes(m.rivalWarrior.id) ?? false}
-                  onToggleChallenge={() => toggleChallenge(m.rivalWarrior.id)}
-                  onToggleAvoid={() => toggleAvoid(m.rivalWarrior.id)}
-                />
-              ))
-            ) : (
-              <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
-                No prime targets available.
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* To Avoid */}
-        <div className="space-y-6">
-          <SectionDivider label="High Risk Vectors" variant="blood" />
-          <div className="space-y-4">
-            {toAvoid.length > 0 ? (
-              toAvoid.map((m) => (
-                <MatchupCard
-                  key={m.rivalStableName}
-                  matchup={m}
-                  type="avoid"
-                  isChallenged={playerChallenges?.includes(m.rivalWarrior.id) ?? false}
-                  isAvoided={playerAvoids?.includes(m.rivalWarrior.id) ?? false}
-                  onToggleChallenge={() => toggleChallenge(m.rivalWarrior.id)}
-                  onToggleAvoid={() => toggleAvoid(m.rivalWarrior.id)}
-                />
-              ))
-            ) : (
-              <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
-                No imminent threats detected.
-              </p>
-            )}
-          </div>
-        </div>
+        <MatchupColumn
+          label="Upcoming Bouts"
+          matchups={recommendations}
+          type="recommend"
+          emptyText="No prime targets available."
+          flags={flags}
+        />
+        <MatchupColumn
+          label="High Risk Vectors"
+          variant="blood"
+          matchups={toAvoid}
+          type="avoid"
+          emptyText="No imminent threats detected."
+          flags={flags}
+        />
       </div>
 
       <Surface variant="glass" className="p-8 border-white/5 bg-white/[0.01]">

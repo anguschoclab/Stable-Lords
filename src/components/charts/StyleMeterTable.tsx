@@ -64,48 +64,47 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
       )}
 
       <div className="flex flex-col gap-2">
-        {rows.map((row) => {
-          const pct = Math.round(row.winRate * 100);
-          const barColor =
-            pct >= WIN_RATE_THRESHOLDS.HIGH
-              ? 'bg-primary'
-              : pct >= WIN_RATE_THRESHOLDS.MID
-                ? 'bg-arena-gold'
-                : 'bg-destructive';
-
-          return (
-            <div key={row.style} className="flex items-center gap-3">
-              <div className="w-8 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 shrink-0 text-right">
-                {row.abbrev}
-              </div>
-              <div className="flex-1 h-1.5 bg-white/5 rounded-none overflow-hidden">
-                <div
-                  className={cn(
-                    'h-full rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500',
-                    barColor
-                  )}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-              <div
-                className={cn(
-                  'w-10 text-right font-mono font-black text-[10px] shrink-0',
-                  pct >= WIN_RATE_THRESHOLDS.HIGH
-                    ? 'text-primary'
-                    : pct >= WIN_RATE_THRESHOLDS.MID
-                      ? 'text-arena-gold'
-                      : 'text-destructive'
-                )}
-              >
-                {pct}%
-              </div>
-              <div className="w-12 text-right text-[8px] text-muted-foreground/30 font-mono shrink-0">
-                {row.wins}W/{row.losses}L
-              </div>
-            </div>
-          );
-        })}
+        {rows.map((row) => (
+          <StyleMeterRow key={row.style} row={row} />
+        ))}
       </div>
     </Surface>
+  );
+}
+
+/** One style's win-rate bar: abbrev, meter, percentage, record. */
+function StyleMeterRow({ row }: { row: StyleRow }) {
+  const pct = Math.round(row.winRate * 100);
+  const tier =
+    pct >= WIN_RATE_THRESHOLDS.HIGH ? 'high' : pct >= WIN_RATE_THRESHOLDS.MID ? 'mid' : 'low';
+  const barColor = { high: 'bg-primary', mid: 'bg-arena-gold', low: 'bg-destructive' }[tier];
+  const textColor = { high: 'text-primary', mid: 'text-arena-gold', low: 'text-destructive' }[tier];
+
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-8 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 shrink-0 text-right">
+        {row.abbrev}
+      </div>
+      <div className="flex-1 h-1.5 bg-white/5 rounded-none overflow-hidden">
+        <div
+          className={cn(
+            'h-full rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500',
+            barColor
+          )}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <div
+        className={cn(
+          'w-10 text-right font-mono font-black text-[10px] shrink-0',
+          textColor
+        )}
+      >
+        {pct}%
+      </div>
+      <div className="w-12 text-right text-[8px] text-muted-foreground/30 font-mono shrink-0">
+        {row.wins}W/{row.losses}L
+      </div>
+    </div>
   );
 }

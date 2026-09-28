@@ -128,30 +128,15 @@ const ChartTooltipContent = React.forwardRef<
   ) => {
     const { config } = useChart();
 
-    const tooltipLabel = React.useMemo(() => {
-      if (hideLabel || !payload?.length) {
-        return null;
-      }
-
-      const [item] = payload;
-      if (!item) return null;
-      const key = `${labelKey || item.dataKey || item.name || 'value'}`;
-      const itemConfig = getResolvedConfig(config, key);
-      const value =
-        !labelKey && typeof label === 'string' ? config[label]?.label || label : itemConfig?.label;
-
-      if (labelFormatter) {
-        return (
-          <div className={cn('font-medium', labelClassName)}>{labelFormatter(value, payload)}</div>
-        );
-      }
-
-      if (!value) {
-        return null;
-      }
-
-      return <div className={cn('font-medium', labelClassName)}>{value}</div>;
-    }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+    const tooltipLabel = useTooltipLabel({
+      hideLabel,
+      payload,
+      labelKey,
+      label,
+      labelFormatter,
+      labelClassName,
+      config,
+    });
 
     if (!active || !payload?.length) {
       return null;
@@ -193,6 +178,50 @@ const ChartTooltipContent = React.forwardRef<
 ChartTooltipContent.displayName = 'ChartTooltip';
 
 type TooltipItem = TooltipPayload[number];
+
+/** Resolved tooltip label node: formatter output, config label, or raw label. */
+function useTooltipLabel({
+  hideLabel,
+  payload,
+  labelKey,
+  label,
+  labelFormatter,
+  labelClassName,
+  config,
+}: {
+  hideLabel: boolean;
+  payload?: TooltipPayload;
+  labelKey?: string;
+  label?: React.ReactNode;
+  labelFormatter?: (value: React.ReactNode, payload: TooltipPayload) => React.ReactNode;
+  labelClassName?: string;
+  config: ChartConfig;
+}) {
+  return React.useMemo(() => {
+    if (hideLabel || !payload?.length) {
+      return null;
+    }
+
+    const [item] = payload;
+    if (!item) return null;
+    const key = `${labelKey || item.dataKey || item.name || 'value'}`;
+    const itemConfig = getResolvedConfig(config, key);
+    const value =
+      !labelKey && typeof label === 'string' ? config[label]?.label || label : itemConfig?.label;
+
+    if (labelFormatter) {
+      return (
+        <div className={cn('font-medium', labelClassName)}>{labelFormatter(value, payload)}</div>
+      );
+    }
+
+    if (!value) {
+      return null;
+    }
+
+    return <div className={cn('font-medium', labelClassName)}>{value}</div>;
+  }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+}
 
 /** One row of the tooltip body — indicator swatch + label + value. */
 function ChartTooltipItem({

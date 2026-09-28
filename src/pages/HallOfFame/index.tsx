@@ -11,6 +11,33 @@ import { YearAwardsSection } from './components/YearAwardsSection';
 import { AllTimeGreats } from './components/AllTimeGreats';
 import { GraveyardTabs } from './components/GraveyardTabs';
 
+/** Header stat pair: total fallen vs player-stable fallen. */
+function FallenStats({
+  graveyardCount,
+  myFallenCount,
+}: {
+  graveyardCount: number;
+  myFallenCount: number;
+}) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="flex flex-col items-end">
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+          Fallen
+        </span>
+        <span className="text-xl font-mono font-black text-destructive">{graveyardCount}</span>
+      </div>
+      <div className="w-px h-8 bg-border/20" />
+      <div className="flex flex-col items-end">
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+          My Fallen
+        </span>
+        <span className="text-xl font-mono font-black text-primary">{myFallenCount}</span>
+      </div>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -35,25 +62,7 @@ export default function HallOfFame() {
         icon={Crown}
         title="History"
         subtitle={`IMPERIAL · LEGENDS & FALLEN · YEAR ${year}`}
-        actions={
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-end">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Fallen
-              </span>
-              <span className="text-xl font-mono font-black text-destructive">
-                {graveyard.length}
-              </span>
-            </div>
-            <div className="w-px h-8 bg-border/20" />
-            <div className="flex flex-col items-end">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                My Fallen
-              </span>
-              <span className="text-xl font-mono font-black text-primary">{myFallen.length}</span>
-            </div>
-          </div>
-        }
+        actions={<FallenStats graveyardCount={graveyard.length} myFallenCount={myFallen.length} />}
       />
 
       <Tabs defaultValue="halloffame" className="w-full">

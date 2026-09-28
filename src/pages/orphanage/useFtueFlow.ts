@@ -160,9 +160,9 @@ function commitFtue({
   navigate({ to: '/stable' });
 }
 
-export function useFtueFlow() {
-  const navigate = useNavigate();
-  const state = useGameStore(
+/** Store slice for the FTUE flow — player identity, graveyard, and actions. */
+function useFtueStore() {
+  return useGameStore(
     useShallow((s) => ({
       player: s.player,
       graveyard: s.graveyard,
@@ -173,6 +173,11 @@ export function useFtueFlow() {
       saveCurrentState: s.saveCurrentState,
     }))
   );
+}
+
+export function useFtueFlow() {
+  const navigate = useNavigate();
+  const state = useFtueStore();
   const { initializeStable, setState, returnToTitle, saveCurrentState } = state;
 
   const initialStep = !state.player.stableName ? 0 : 1;

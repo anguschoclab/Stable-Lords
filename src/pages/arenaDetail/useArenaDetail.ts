@@ -28,33 +28,13 @@ export function statusBadge(title: ArenaTitle | undefined): { label: string; cla
   return { label: 'REIGNING CHAMPION', className: 'border-arena-gold/40 text-arena-gold' };
 }
 
-/** All arena-detail derived state: champion, boards, ladder, history, bouts. */
-export function useArenaDetail(arenaId: string) {
-  const arena = useMemo(() => getAllArenas().find((a) => a.id === arenaId), [arenaId]);
-
-  const store = useGameStore(
-    useShallow((s) => ({
-      arenaChampions: s.arenaChampions,
-      roster: s.roster,
-      rivals: s.rivals,
-      player: s.player,
-      arenaHistory: s.arenaHistory,
-      relinquishArenaTitle: s.relinquishArenaTitle,
-    }))
-  );
-  const state = store as unknown as GameState;
-
-  const title = store.arenaChampions[arenaId];
-  const reign = title?.champion ?? null;
-  const champWarrior = reign ? findWarriorById(state, reign.warriorId) : undefined;
-  const champStable = reign ? owningStableOf(state, reign.warriorId) : null;
-  const isExcluded = CHAMPIONSHIP_EXCLUDED_ARENAS.has(arenaId);
-  const badge = statusBadge(title);
-  const effects = useMemo(
-    () => (arena ? describeArenaEffects(arenaId) : []),
-    [arena, arenaId]
-  );
-
+/** Arena leaderboard, style leaders, and stable standings memos. */
+function useArenaBoards(
+  arena: ReturnType<typeof getAllArenas>[number] | undefined,
+  arenaId: string,
+  store: ReturnType<typeof useArenaDetailStore>,
+  state: GameState
+) {
   const lb = useMemo(
     () =>
       arena
@@ -74,6 +54,41 @@ export function useArenaDetail(arenaId: string) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [arena, arenaId, store.roster, store.rivals, store.arenaChampions]
   );
+  return { lb, styleLeaders, stableStandings };
+}
+
+function useArenaDetailStore() {
+  return useGameStore(
+    useShallow((s) => ({
+      arenaChampions: s.arenaChampions,
+      roster: s.roster,
+      rivals: s.rivals,
+      player: s.player,
+      arenaHistory: s.arenaHistory,
+      relinquishArenaTitle: s.relinquishArenaTitle,
+    }))
+  );
+}
+
+/** All arena-detail derived state: champion, boards, ladder, history, bouts. */
+export function useArenaDetail(arenaId: string) {
+  const arena = useMemo(() => getAllArenas().find((a) => a.id === arenaId), [arenaId]);
+
+  const store = useArenaDetailStore();
+  const state = store as unknown as GameState;
+
+  const title = store.arenaChampions[arenaId];
+  const reign = title?.champion ?? null;
+  const champWarrior = reign ? findWarriorById(state, reign.warriorId) : undefined;
+  const champStable = reign ? owningStableOf(state, reign.warriorId) : null;
+  const isExcluded = CHAMPIONSHIP_EXCLUDED_ARENAS.has(arenaId);
+  const badge = statusBadge(title);
+  const effects = useMemo(
+    () => (arena ? describeArenaEffects(arenaId) : []),
+    [arena, arenaId]
+  );
+
+  const { lb, styleLeaders, stableStandings } = useArenaBoards(arena, arenaId, store, state);
 
   const recentBouts = useMemo(
     () => getFightsForArena(store.arenaHistory, arenaId).slice(-8).reverse(),

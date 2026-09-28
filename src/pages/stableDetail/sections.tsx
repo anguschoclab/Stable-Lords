@@ -76,28 +76,13 @@ export function StableSidebar({
         </div>
 
         <div className="w-full px-8 space-y-6 pt-8 border-t border-white/5">
-          <div className="flex items-center justify-between">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Personality
-            </span>
-            <span className="text-[10px] font-black uppercase text-foreground">
-              {rival.owner.personality}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Tier
-            </span>
-            <span className={cn('text-[10px] font-black uppercase', tierCfg.text)}>
-              {rival.tier || 'Minor'}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Win Rate
-            </span>
-            <span className="text-[10px] font-mono font-black text-primary">{winRate}%</span>
-          </div>
+          <SidebarStatRow label="Personality" value={rival.owner.personality} />
+          <SidebarStatRow label="Tier" value={rival.tier || 'Minor'} valueClass={tierCfg.text} />
+          <SidebarStatRow
+            label="Win Rate"
+            value={`${winRate}%`}
+            valueClass="font-mono text-primary"
+          />
         </div>
       </div>
 
@@ -127,6 +112,28 @@ export function StableSidebar({
         </div>
       </section>
     </aside>
+  );
+}
+
+/** Label/value row inside the sidebar identity card. */
+function SidebarStatRow({
+  label,
+  value,
+  valueClass,
+}: {
+  label: string;
+  value: string | number;
+  valueClass?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+        {label}
+      </span>
+      <span className={cn('text-[10px] font-black uppercase text-foreground', valueClass)}>
+        {value}
+      </span>
+    </div>
   );
 }
 

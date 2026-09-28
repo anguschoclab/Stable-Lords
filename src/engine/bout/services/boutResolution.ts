@@ -224,6 +224,49 @@ function collectBoutImpacts(
     )
   );
 
+  const { deathRes, injuryRes } = postResolutionImpacts(
+    state,
+    ctx,
+    validCW,
+    validCO,
+    outcome,
+    tags,
+    rng,
+    boutSeed,
+    impacts
+  );
+
+  const { summary, announcement } = reportBout(
+    state,
+    ctx,
+    validCW,
+    validCO,
+    outcome,
+    tags,
+    { fameA, popA, fameD, popD },
+    rng,
+    boutSeed,
+    impacts
+  );
+
+  return { impacts, deathRes, injuryRes, announcement, summary };
+}
+
+/**
+ * Death, injury, and progression resolution plus roster-update impacts.
+ * RNG draw order (death pass → injury pass → progressions) is load-bearing.
+ */
+function postResolutionImpacts(
+  state: GameState,
+  ctx: BoutContext,
+  validCW: Warrior,
+  validCO: Warrior,
+  outcome: FightOutcome,
+  tags: string[],
+  rng: SeededRNGService,
+  boutSeed: number,
+  impacts: StateImpact[]
+): { deathRes: ReturnType<typeof handleDeath>; injuryRes: ReturnType<typeof handleInjuries> } {
   const deathRes = handleDeath(
     state,
     validCW,
@@ -246,25 +289,10 @@ function collectBoutImpacts(
   impacts.push(
     deathRes.impact,
     injuryRes.impact,
-    handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, rng)
+    handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, rng),
+    ...rosterUpdateImpacts(state, validCW, validCO, ctx.week)
   );
-
-  impacts.push(...rosterUpdateImpacts(state, validCW, validCO, ctx.week));
-
-  const { summary, announcement } = reportBout(
-    state,
-    ctx,
-    validCW,
-    validCO,
-    outcome,
-    tags,
-    { fameA, popA, fameD, popD },
-    rng,
-    boutSeed,
-    impacts
-  );
-
-  return { impacts, deathRes, injuryRes, announcement, summary };
+  return { deathRes, injuryRes };
 }
 
 /**

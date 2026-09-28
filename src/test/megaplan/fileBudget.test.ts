@@ -44,9 +44,11 @@ describe('megaplan: file & function budgets', () => {
     ).toEqual([]);
   });
 
-  it('counts stay non-decreasingly-better than baseline (201 fns >80, 2 files >800)', () => {
+  it('counts stay non-decreasingly-better than baseline (0 fns >80, 2 files >800)', () => {
     // Ratchet: ceilings only ever tighten. Update numbers DOWN as phases land.
-    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(201);
+    // The ≤80 target was reached in the residual-decomposition batches —
+    // a new 81+ fn must be decomposed or the budget consciously revisited.
+    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(0);
     expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(2);
   });
 });

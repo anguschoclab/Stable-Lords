@@ -120,29 +120,34 @@ export function scorePairwiseMatchup(
     }
   }
 
-  // Head-to-head history modifier
-  if (ctx.arenaHistory && ctx.arenaHistory.length > 0) {
-    const hh = headToHeadFor(a, b, ctx.arenaHistory, ctx.h2hCache);
-    if (hh.total === 0) {
-      score += 3; // Novelty bonus
-    } else {
-      if (hh.lastWinner === 'a') score += 5;
-      if (hh.lastWinner === 'b') score += 10;
-      if (hh.total >= 3 && hh.wins === hh.total) score -= 5; // Repetitive farm
-      if (hh.total >= 3 && hh.losses === hh.total) score -= 15; // Curb stomp
-    }
-    // Recency penalty — rematches within last 2 weeks
-    if (
-      hh.lastFightWeek !== undefined &&
-      ctx.week !== undefined &&
-      ctx.week - hh.lastFightWeek >= 0 &&
-      ctx.week - hh.lastFightWeek <= 2
-    ) {
-      score -= 15;
-    }
-  }
+  score += headToHeadDelta(a, b, ctx);
 
   return score;
+}
+
+/** Head-to-head history modifier: novelty, streak, and recency terms. */
+function headToHeadDelta(a: Warrior, b: Warrior, ctx: PairwiseMatchupContext): number {
+  if (!ctx.arenaHistory || ctx.arenaHistory.length === 0) return 0;
+  const hh = headToHeadFor(a, b, ctx.arenaHistory, ctx.h2hCache);
+  let delta = 0;
+  if (hh.total === 0) {
+    delta += 3; // Novelty bonus
+  } else {
+    if (hh.lastWinner === 'a') delta += 5;
+    if (hh.lastWinner === 'b') delta += 10;
+    if (hh.total >= 3 && hh.wins === hh.total) delta -= 5; // Repetitive farm
+    if (hh.total >= 3 && hh.losses === hh.total) delta -= 15; // Curb stomp
+  }
+  // Recency penalty — rematches within last 2 weeks
+  if (
+    hh.lastFightWeek !== undefined &&
+    ctx.week !== undefined &&
+    ctx.week - hh.lastFightWeek >= 0 &&
+    ctx.week - hh.lastFightWeek <= 2
+  ) {
+    delta -= 15;
+  }
+  return delta;
 }
 
 /**

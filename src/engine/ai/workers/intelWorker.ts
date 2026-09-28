@@ -107,6 +107,30 @@ function pickScoutTarget(rival: RivalStableData, state: GameState): string | und
 }
 
 /**
+ * Plan bias prior from the target owner's personality, blended with observed
+ * tells when recent enough — a good scout weighs what they saw over the
+ * owner's reputation.
+ */
+function effectivePlanBias(
+  targetRival: RivalStableData | undefined,
+  tells: { oe: number; al: number; samples: number; lastSeenWeek: number } | undefined,
+  week: number,
+  quality: number
+): { oe: number; al: number } {
+  const bias =
+    PERSONALITY_PLAN_BIAS[targetRival?.owner.personality ?? ''] ?? { oe: 0.5, al: 0.5 };
+  const observed =
+    tells && tells.samples > 0 && week - tells.lastSeenWeek <= PLAN_TELL_WINDOW
+      ? { oe: tells.oe, al: tells.al }
+      : undefined;
+  if (!observed) return bias;
+  return {
+    oe: bias.oe * (1 - quality) + observed.oe * quality,
+    al: bias.al * (1 - quality) + observed.al * quality,
+  };
+}
+
+/**
  * Weekly scouting pass. Mutates nothing outside `rival.agentMemory`.
  * Returns the updated rival plus gazette items.
  */
@@ -125,29 +149,10 @@ export function processIntel(
   if (!targetId) return { updatedRival: rival, gazetteItems };
 
   const quality = SCOUT_QUALITY[rival.owner.personality ?? 'Pragmatic'] ?? 0.6;
-
-  // Plan bias: from the target owner's personality when known (rival stables);
-  // the player's plan is inferred from observed styles (neutral baseline).
   const targetRival = (state.rivals ?? []).find(
     (r) => r.id === targetId || r.owner.id === targetId
   );
-  const bias =
-    PERSONALITY_PLAN_BIAS[targetRival?.owner.personality ?? ''] ?? { oe: 0.5, al: 0.5 };
-
-  // Observed tells override the prior: dossier tells persisted from fights
-  // this stable actually witnessed outweigh the owner's reputation — a good
-  // scout weighs what they saw over what they'd expect.
-  const tells = dossiers[targetId]?.observedTells;
-  const observed =
-    tells && tells.samples > 0 && week - tells.lastSeenWeek <= PLAN_TELL_WINDOW
-      ? { oe: tells.oe, al: tells.al }
-      : undefined;
-  const effectiveBias = observed
-    ? {
-        oe: bias.oe * (1 - quality) + observed.oe * quality,
-        al: bias.al * (1 - quality) + observed.al * quality,
-      }
-    : bias;
+  const effectiveBias = effectivePlanBias(targetRival, dossiers[targetId]?.observedTells, week, quality);
 
   const estimate = estimatePlan(rival.owner.id, targetId, week, quality, effectiveBias);
 

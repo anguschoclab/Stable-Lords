@@ -20,41 +20,13 @@ export interface UseFavoritesActionsResult {
   rhythmProgress: number;
 }
 
-/**
- *
- */
-export function useFavoritesActions(
+/** Rhythm-apply and weapon-equip mutations for a warrior's discovered favorites. */
+function applyActions(
   warrior: Warrior,
+  favDisplay: ReturnType<typeof getFavoritesDisplay>,
+  mutateRosterWarrior: (fn: (w: Warrior) => void) => void,
   onUpdate: () => void
-): UseFavoritesActionsResult {
-  const setState = useGameStore((s) => s.setState);
-  const favDisplay = getFavoritesDisplay(warrior);
-
-  const isWeaponDiscovered = !!warrior.favorites?.discovered.weapon;
-  const isRhythmDiscovered = !!warrior.favorites?.discovered.rhythm;
-
-  const weaponHints = warrior.favorites?.discovered.weaponHints ?? 0;
-  const rhythmHints = warrior.favorites?.discovered.rhythmHints ?? 0;
-
-  const weaponProgress = isWeaponDiscovered ? 100 : (weaponHints / 2) * 100;
-  const rhythmProgress = isRhythmDiscovered ? 100 : (rhythmHints / 2) * 100;
-
-  const mutateRosterWarrior = (fn: (w: typeof warrior) => void) => {
-    setState((s) => {
-      const w = s.roster.find((x) => x.id === warrior.id);
-      if (w) fn(w);
-    });
-  };
-
-  const handleInsight = (type: 'weapon' | 'rhythm') => {
-    const msg = applyInsightToken(warrior, type);
-    mutateRosterWarrior((w) => {
-      if (w.favorites) w.favorites = warrior.favorites;
-    });
-    toast.success(msg);
-    onUpdate();
-  };
-
+) {
   const handleApplyRhythm = () => {
     const fav = warrior.favorites;
     if (!fav?.discovered.rhythm) return;
@@ -90,6 +62,51 @@ export function useFavoritesActions(
     toast.success(`Biological Lock: ${weaponName} equipped.`);
     onUpdate();
   };
+
+  return { handleApplyRhythm, handleEquipFavoriteWeapon };
+}
+
+/**
+ *
+ */
+export function useFavoritesActions(
+  warrior: Warrior,
+  onUpdate: () => void
+): UseFavoritesActionsResult {
+  const setState = useGameStore((s) => s.setState);
+  const favDisplay = getFavoritesDisplay(warrior);
+
+  const isWeaponDiscovered = !!warrior.favorites?.discovered.weapon;
+  const isRhythmDiscovered = !!warrior.favorites?.discovered.rhythm;
+
+  const weaponHints = warrior.favorites?.discovered.weaponHints ?? 0;
+  const rhythmHints = warrior.favorites?.discovered.rhythmHints ?? 0;
+
+  const weaponProgress = isWeaponDiscovered ? 100 : (weaponHints / 2) * 100;
+  const rhythmProgress = isRhythmDiscovered ? 100 : (rhythmHints / 2) * 100;
+
+  const mutateRosterWarrior = (fn: (w: typeof warrior) => void) => {
+    setState((s) => {
+      const w = s.roster.find((x) => x.id === warrior.id);
+      if (w) fn(w);
+    });
+  };
+
+  const handleInsight = (type: 'weapon' | 'rhythm') => {
+    const msg = applyInsightToken(warrior, type);
+    mutateRosterWarrior((w) => {
+      if (w.favorites) w.favorites = warrior.favorites;
+    });
+    toast.success(msg);
+    onUpdate();
+  };
+
+  const { handleApplyRhythm, handleEquipFavoriteWeapon } = applyActions(
+    warrior,
+    favDisplay,
+    mutateRosterWarrior,
+    onUpdate
+  );
 
   return {
     handleInsight,

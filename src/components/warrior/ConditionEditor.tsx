@@ -13,23 +13,11 @@ const DEFAULT_CONDITION: PlanCondition = {
   override: { OE: 4 },
 };
 
-/** Condition list mutations bound to the current conditions array. */
-function useConditionMutations(
+/** Trigger-type and trigger-value mutations for one condition row. */
+function triggerMutations(
   conditions: PlanCondition[],
-  onChange: (conditions: PlanCondition[]) => void
+  updateCondition: (idx: number, partial: Partial<PlanCondition>) => void
 ) {
-  function addCondition() {
-    onChange([...conditions, { ...DEFAULT_CONDITION, override: { OE: 4 } }]);
-  }
-
-  function removeCondition(idx: number) {
-    onChange(conditions.filter((_, i) => i !== idx));
-  }
-
-  function updateCondition(idx: number, partial: Partial<PlanCondition>) {
-    onChange(conditions.map((c, i) => (i === idx ? { ...c, ...partial } : c)));
-  }
-
   function updateTrigger(idx: number, type: ConditionTriggerType) {
     const opt = TRIGGER_OPTIONS.find((o) => o.type === type);
     if (!opt) return;
@@ -57,6 +45,28 @@ function useConditionMutations(
     }
     updateCondition(idx, { trigger: { ...cond.trigger, value } });
   }
+
+  return { updateTrigger, updateTriggerValue };
+}
+
+/** Condition list mutations bound to the current conditions array. */
+function useConditionMutations(
+  conditions: PlanCondition[],
+  onChange: (conditions: PlanCondition[]) => void
+) {
+  function addCondition() {
+    onChange([...conditions, { ...DEFAULT_CONDITION, override: { OE: 4 } }]);
+  }
+
+  function removeCondition(idx: number) {
+    onChange(conditions.filter((_, i) => i !== idx));
+  }
+
+  function updateCondition(idx: number, partial: Partial<PlanCondition>) {
+    onChange(conditions.map((c, i) => (i === idx ? { ...c, ...partial } : c)));
+  }
+
+  const { updateTrigger, updateTriggerValue } = triggerMutations(conditions, updateCondition);
 
   function setOverrideKey(
     idx: number,

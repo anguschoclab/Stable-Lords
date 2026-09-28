@@ -388,12 +388,26 @@ export function evaluateBoutOffers(
     };
   }
 
-  // An offer already signed player-side (council execution or autopilot) is a
-  // commitment, not a pending decision — the headline says so honestly.
+  return acceptOfferAdvice(best, warrior);
+}
+
+/**
+ * ACCEPT_OFFER payload for the winning offer. An offer already signed
+ * player-side (council execution or autopilot) is a commitment, not a
+ * pending decision — the headline says so honestly.
+ */
+function acceptOfferAdvice(best: ScoredOffer, warrior: Warrior): WarriorFightAdvice {
   const alreadySigned =
     best.offer.status === 'Signed' || best.offer.responses?.[warrior.id] === 'Accepted';
-
   const isTitleBout = !!best.offer.titleArenaId;
+  const opp = best.opponent?.name ?? 'Opponent';
+  const headline = isTitleBout
+    ? `Title Bout vs ${opp} (+${best.offer.purse}G)`
+    : alreadySigned
+      ? `Signed Bout vs ${opp} (+${best.offer.purse}G)`
+      : best.dangerLevel === 'SAFE'
+        ? `Favorable Bout vs ${opp} (+${best.offer.purse}G)`
+        : `Accept Bout vs ${opp} (+${best.offer.purse}G)`;
 
   return {
     action: 'ACCEPT_OFFER',
@@ -402,13 +416,7 @@ export function evaluateBoutOffers(
     opponent: best.opponent,
     matchupEdge: best.styleEdge,
     dangerLevel: best.dangerLevel,
-    headline: isTitleBout
-      ? `Title Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
-      : alreadySigned
-        ? `Signed Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
-        : best.dangerLevel === 'SAFE'
-          ? `Favorable Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`
-          : `Accept Bout vs ${best.opponent?.name ?? 'Opponent'} (+${best.offer.purse}G)`,
+    headline,
     reasoning: best.reasons,
     warnings: best.warnings,
   };

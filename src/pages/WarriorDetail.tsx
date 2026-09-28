@@ -136,30 +136,24 @@ export default function WarriorDetail() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8 space-y-8">
-          <WarriorHeroHeader
-            warrior={displayWarrior}
-            record={record}
-            streakLabel={streakLabel}
-            streakVal={streakVal}
-            id={id}
-            isPlayerOwned={isPlayerOwned}
-            insightTokens={insightTokens}
-            arenaCrowns={arenaCrowns}
-          />
-
-          <DetailTabStrip tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
-          <DetailTabBody
-            activeTab={activeTab}
-            warrior={warrior}
-            displayWarrior={displayWarrior}
-            arenaHistory={arenaHistory}
-            currentPlan={currentPlan}
-            currentLoadout={currentLoadout}
-            onPlanChange={handlePlanChange}
-            onEquipmentChange={handleEquipmentChange}
-          />
-        </div>
+        <DetailMainColumn
+          warrior={warrior}
+          displayWarrior={displayWarrior}
+          record={record}
+          streakLabel={streakLabel}
+          streakVal={streakVal}
+          id={id}
+          isPlayerOwned={isPlayerOwned}
+          insightTokens={insightTokens}
+          arenaCrowns={arenaCrowns}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          arenaHistory={arenaHistory}
+          currentPlan={currentPlan}
+          currentLoadout={currentLoadout}
+          onPlanChange={handlePlanChange}
+          onEquipmentChange={handleEquipmentChange}
+        />
 
         <DetailSidebar
           displayWarrior={displayWarrior}
@@ -169,5 +163,71 @@ export default function WarriorDetail() {
         />
       </div>
     </PageFrame>
+  );
+}
+
+/** Main column: hero header, tab strip, and the active tab body. */
+function DetailMainColumn({
+  warrior,
+  displayWarrior,
+  record,
+  streakLabel,
+  streakVal,
+  id,
+  isPlayerOwned,
+  insightTokens,
+  arenaCrowns,
+  activeTab,
+  setActiveTab,
+  arenaHistory,
+  currentPlan,
+  currentLoadout,
+  onPlanChange,
+  onEquipmentChange,
+}: {
+  warrior: NonNullable<ReturnType<typeof useWarriorDetail>['warrior']>;
+  displayWarrior: NonNullable<ReturnType<typeof useWarriorDetail>['displayWarrior']>;
+  record: string;
+  streakLabel: string | null;
+  streakVal: number;
+  currentPlan: import('@/types/game').FightPlan;
+  currentLoadout: import('@/data/equipment').EquipmentLoadout;
+  onPlanChange: (p: import('@/types/game').FightPlan) => void;
+  onEquipmentChange: (l: import('@/data/equipment').EquipmentLoadout) => void;
+} & Pick<
+    ReturnType<typeof useWarriorDetail>,
+    | 'id'
+    | 'isPlayerOwned'
+    | 'insightTokens'
+    | 'arenaCrowns'
+    | 'activeTab'
+    | 'setActiveTab'
+    | 'arenaHistory'
+  >) {
+  return (
+    <div className="lg:col-span-8 space-y-8">
+      <WarriorHeroHeader
+        warrior={displayWarrior}
+        record={record}
+        streakLabel={streakLabel}
+        streakVal={streakVal}
+        id={id}
+        isPlayerOwned={isPlayerOwned}
+        insightTokens={insightTokens}
+        arenaCrowns={arenaCrowns}
+      />
+
+      <DetailTabStrip tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
+      <DetailTabBody
+        activeTab={activeTab}
+        warrior={warrior}
+        displayWarrior={displayWarrior}
+        arenaHistory={arenaHistory}
+        currentPlan={currentPlan}
+        currentLoadout={currentLoadout}
+        onPlanChange={onPlanChange}
+        onEquipmentChange={onEquipmentChange}
+      />
+    </div>
   );
 }

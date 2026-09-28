@@ -118,35 +118,16 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     solvencyWarning,
   } = computeSummarySignals(state, activeWarriors, playerWarriorIds);
 
-  const stableDirectives = buildStableDirectives(
+  const { stableDirectives, unresolvedDirectives, lookahead } = buildCouncilSections(
     state,
     cards,
     kpis,
-    unassignedTrainingCount,
-    projectedTrainingCost,
-    treasury
-  );
-
-  const currentAbsWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
-  const upcomingAbsWeek = currentAbsWeek + 1;
-
-  const unresolvedDirectives = collectUnresolvedDirectives(
-    state,
-    cards,
     activeWarriors,
     playerWarriorIds,
     assignedWarriorIds,
-    upcomingAbsWeek
-  );
-
-  // ── Multi-week lookahead ──
-  const lookahead = buildLookahead(
-    state,
-    cards,
-    activeWarriors,
-    playerWarriorIds,
-    currentAbsWeek,
-    upcomingAbsWeek
+    unassignedTrainingCount,
+    projectedTrainingCost,
+    treasury
   );
 
   const allActionPayloads = cards.map((c) => c.actionPayload);
@@ -171,6 +152,57 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     cards,
     unresolvedDirectives,
     lookahead,
+  };
+}
+
+/** Stable directives, unresolved directive queue, and the multi-week lookahead. */
+function buildCouncilSections(
+  state: GameState,
+  cards: WarriorAdvisorCard[],
+  kpis: ReturnType<typeof computeCardKpis>,
+  activeWarriors: GameState['roster'],
+  playerWarriorIds: Set<string>,
+  assignedWarriorIds: Set<string>,
+  unassignedTrainingCount: number,
+  projectedTrainingCost: number,
+  treasury: number
+): {
+  stableDirectives: ReturnType<typeof buildStableDirectives>;
+  unresolvedDirectives: ReturnType<typeof collectUnresolvedDirectives>;
+  lookahead: ReturnType<typeof buildLookahead>;
+} {
+  const stableDirectives = buildStableDirectives(
+    state,
+    cards,
+    kpis,
+    unassignedTrainingCount,
+    projectedTrainingCost,
+    treasury
+  );
+
+  const currentAbsWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
+  const upcomingAbsWeek = currentAbsWeek + 1;
+
+  const unresolvedDirectives = collectUnresolvedDirectives(
+    state,
+    cards,
+    activeWarriors,
+    playerWarriorIds,
+    assignedWarriorIds,
+    upcomingAbsWeek
+  );
+
+  return {
+    stableDirectives,
+    unresolvedDirectives,
+    lookahead: buildLookahead(
+      state,
+      cards,
+      activeWarriors,
+      playerWarriorIds,
+      currentAbsWeek,
+      upcomingAbsWeek
+    ),
   };
 }
 

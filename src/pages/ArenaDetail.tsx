@@ -70,6 +70,34 @@ function RelinquishDialog({
   );
 }
 
+/** Guard surface for an arenaId that matches no venue. */
+function UnknownArenaPage({ arenaId }: { arenaId: string }) {
+  return (
+    <PageFrame>
+      <PageHeader title="Unknown Arena" subtitle={`No venue answers to “${arenaId}”`} />
+      <UnknownArena />
+    </PageFrame>
+  );
+}
+
+/** Title history and recent bouts — the page's record tail. */
+function ArenaDetailTail({
+  arenaId,
+  history,
+  recentBouts,
+}: {
+  arenaId: string;
+  history: ReturnType<typeof useArenaDetail>['history'];
+  recentBouts: ReturnType<typeof useArenaDetail>['recentBouts'];
+}) {
+  return (
+    <>
+      <TitleHistory history={history} />
+      <RecentBouts bouts={recentBouts} arenaId={arenaId} />
+    </>
+  );
+}
+
 /**
  * Arena card — the venue's lore and real effects, its reigning champion and
  * title history, and the four record boards (wins, kills, best-in-class,
@@ -98,14 +126,7 @@ export default function ArenaDetail() {
     champId,
   } = useArenaDetail(arenaId);
 
-  if (!arena) {
-    return (
-      <PageFrame>
-        <PageHeader title="Unknown Arena" subtitle={`No venue answers to “${arenaId}”`} />
-        <UnknownArena />
-      </PageFrame>
-    );
-  }
+  if (!arena) return <UnknownArenaPage arenaId={arenaId} />;
 
   return (
     <PageFrame>
@@ -142,8 +163,7 @@ export default function ArenaDetail() {
         champId={champId}
       />
 
-      <TitleHistory history={history} />
-      <RecentBouts bouts={recentBouts} arenaId={arenaId} />
+      <ArenaDetailTail arenaId={arenaId} history={history} recentBouts={recentBouts} />
 
       <RelinquishDialog
         open={confirmRelinquish}

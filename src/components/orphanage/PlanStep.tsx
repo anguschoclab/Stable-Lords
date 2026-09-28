@@ -112,6 +112,24 @@ interface PlanStepProps {
   onNext: () => void;
 }
 
+/** Warrior identity row for the plan card. */
+function PlanWarriorRow({ warrior }: { warrior: Warrior }) {
+  return (
+    <div
+      className="flex items-center gap-3 p-3"
+      style={{ background: 'rgba(var(--inkwash-rgb), 0.6)', border: '1px solid rgba(var(--oak-rgb), 0.5)' }}
+    >
+      <div className="flex-1">
+        <span className="font-display font-bold text-base text-foreground">{warrior.name}</span>
+        <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
+          {STYLE_DISPLAY_NAMES[warrior.style as FightingStyle] || warrior.style}
+        </div>
+      </div>
+      <Swords className="h-4 w-4 text-muted-foreground/30" />
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -141,18 +159,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           </p>
         </div>
 
-        <div
-          className="flex items-center gap-3 p-3"
-          style={{ background: 'rgba(var(--inkwash-rgb), 0.6)', border: '1px solid rgba(var(--oak-rgb), 0.5)' }}
-        >
-          <div className="flex-1">
-            <span className="font-display font-bold text-base text-foreground">{warrior.name}</span>
-            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
-              {STYLE_DISPLAY_NAMES[warrior.style as FightingStyle] || warrior.style}
-            </div>
-          </div>
-          <Swords className="h-4 w-4 text-muted-foreground/30" />
-        </div>
+        <PlanWarriorRow warrior={warrior} />
 
         <PlanSlider
           id="plan-step-oe"

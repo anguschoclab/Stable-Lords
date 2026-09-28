@@ -85,44 +85,7 @@ function TrainerFooter({
   return (
     <div className="mt-6 flex items-center justify-between gap-6">
       <div className="flex-1 flex items-center gap-4">
-        <div className="flex-1 bg-black/40 rounded-none border border-white/5 p-3 flex items-center justify-between group/intel">
-          <div className="flex items-center gap-3">
-            <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-            </div>
-            <div>
-              <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
-                Impact Bonus
-              </span>
-              <span className="text-[11px] font-black text-primary uppercase tracking-tight">
-                +{bonus} {trainer.focus} pts/wk
-              </span>
-            </div>
-          </div>
-          {trainer.styleBonusStyle && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="text-right border-l border-white/10 pl-4 cursor-help">
-                  <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
-                    Style Affinity
-                  </span>
-                  <span className="text-[10px] font-black text-arena-gold uppercase tracking-widest">
-                    {STYLE_DISPLAY_NAMES[
-                      trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                    ] ?? trainer.styleBonusStyle}
-                  </span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="max-w-xs text-[10px]">
-                +5% gain chance for{' '}
-                {STYLE_DISPLAY_NAMES[
-                  trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                ] ?? trainer.styleBonusStyle}{' '}
-                warriors during training sessions
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </div>
+        <IntelBlock trainer={trainer} bonus={bonus} />
       </div>
 
       <div className="shrink-0 w-48">
@@ -150,6 +113,49 @@ function TrainerFooter({
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Impact-bonus readout with the optional style-affinity tooltip. */
+function IntelBlock({ trainer, bonus }: { trainer: TrainerData; bonus: number }) {
+  const styleName = trainer.styleBonusStyle
+    ? (STYLE_DISPLAY_NAMES[
+        trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
+      ] ?? trainer.styleBonusStyle)
+    : null;
+  return (
+    <div className="flex-1 bg-black/40 rounded-none border border-white/5 p-3 flex items-center justify-between group/intel">
+      <div className="flex items-center gap-3">
+        <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+        </div>
+        <div>
+          <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
+            Impact Bonus
+          </span>
+          <span className="text-[11px] font-black text-primary uppercase tracking-tight">
+            +{bonus} {trainer.focus} pts/wk
+          </span>
+        </div>
+      </div>
+      {styleName && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="text-right border-l border-white/10 pl-4 cursor-help">
+              <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest block leading-none mb-1">
+                Style Affinity
+              </span>
+              <span className="text-[10px] font-black text-arena-gold uppercase tracking-widest">
+                {styleName}
+              </span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="max-w-xs text-[10px]">
+            +5% gain chance for {styleName} warriors during training sessions
+          </TooltipContent>
+        </Tooltip>
+      )}
     </div>
   );
 }

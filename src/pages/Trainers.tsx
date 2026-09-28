@@ -113,26 +113,16 @@ export default function Trainers() {
           />
         </TabsContent>
 
-        <TabsContent
-          value="hire"
-          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 motion-reduce:animate-none"
-        >
-          <HireTab
-            currentHiringPool={currentHiringPool}
-            treasury={treasury}
-            canHire={canHire}
-            refreshPool={refreshPool}
-            hireTrainer={hireTrainer}
-          />
-        </TabsContent>
-
-        <TabsContent value="mentors" className="mt-0">
-          <LegacyMentorsTab currentTrainers={currentTrainers} />
-        </TabsContent>
-
-        <TabsContent value="legends" className="mt-0">
-          <FallenLegendsTab graveyard={graveyard} retired={retired} />
-        </TabsContent>
+        <TrainerSecondaryTabs
+          currentHiringPool={currentHiringPool}
+          treasury={treasury}
+          canHire={canHire}
+          refreshPool={refreshPool}
+          hireTrainer={hireTrainer}
+          currentTrainers={currentTrainers}
+          graveyard={graveyard}
+          retired={retired}
+        />
       </Tabs>
 
       {/* Convert Dialog */}
@@ -143,5 +133,45 @@ export default function Trainers() {
         onConvert={convertWarrior}
       />
     </PageFrame>
+  );
+}
+
+/** Hire / mentors / fallen-legends tab contents. */
+function TrainerSecondaryTabs(
+  t: Pick<
+    ReturnType<typeof useTrainers>,
+    | 'currentHiringPool'
+    | 'treasury'
+    | 'canHire'
+    | 'refreshPool'
+    | 'hireTrainer'
+    | 'currentTrainers'
+    | 'graveyard'
+    | 'retired'
+  >
+) {
+  return (
+    <>
+      <TabsContent
+        value="hire"
+        className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 motion-reduce:animate-none"
+      >
+        <HireTab
+          currentHiringPool={t.currentHiringPool}
+          treasury={t.treasury}
+          canHire={t.canHire}
+          refreshPool={t.refreshPool}
+          hireTrainer={t.hireTrainer}
+        />
+      </TabsContent>
+
+      <TabsContent value="mentors" className="mt-0">
+        <LegacyMentorsTab currentTrainers={t.currentTrainers} />
+      </TabsContent>
+
+      <TabsContent value="legends" className="mt-0">
+        <FallenLegendsTab graveyard={t.graveyard} retired={t.retired} />
+      </TabsContent>
+    </>
   );
 }

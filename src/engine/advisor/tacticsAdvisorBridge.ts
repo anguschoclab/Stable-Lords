@@ -99,6 +99,37 @@ function applyOpponentIntel(
 }
 
 /**
+ * Fallback threshold plus labelled conditional plan recommendations — the
+ * same opponent-state triggers the rival AI emits for its own fighters.
+ */
+function fallbackAndSurvivalPlan(
+  defaultPlan: FightPlan,
+  preservational: boolean,
+  fatigue: number,
+  suggestedOE: number,
+  suggestedAL: number
+): {
+  fallbackCondition: 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None';
+  suggestedConditions: PlanCondition[];
+} {
+  // Surrender / Fallback Threshold: Cautious preservation for wounded or aging veterans
+  const fallbackCondition: 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None' = preservational
+    ? 'YIELD'
+    : (defaultPlan.fallbackCondition ?? 'TURTLE');
+
+  const suggestedConditions: PlanCondition[] = [];
+  // Survival ramp — mirrors the universal AI safety condition.
+  if (preservational || fatigue >= 30) {
+    suggestedConditions.push({
+      trigger: { type: 'ENDURANCE_BELOW', value: 30 },
+      override: { OE: bounded(suggestedOE, -2), AL: bounded(suggestedAL, +2) },
+      label: 'Conserve energy when gassed',
+    });
+  }
+  return { fallbackCondition, suggestedConditions };
+}
+
+/**
  * Evaluate and recommend optimal battle plan tactics and loadout audit for a warrior.
  */
 export function evaluateTacticsAdvice(
@@ -120,29 +151,15 @@ export function evaluateTacticsAdvice(
     suggestedAL = Math.min(suggestedAL, 5);
   }
 
-  // 2. Surrender / Fallback Threshold: Cautious preservation for wounded or aging veterans
-  let fallbackCondition: 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None' =
-    defaultPlan.fallbackCondition ?? 'TURTLE';
-
   const preservational =
     campaignFocus === 'REHABILITATION' || campaignFocus === 'VETERAN_TWILIGHT';
-  if (preservational) {
-    fallbackCondition = 'YIELD';
-  }
-
-  // Conditional plan recommendations — the same opponent-state triggers the
-  // rival AI emits for its own fighters, offered to the player. Each is
-  // labelled so the editor/debug surfaces show it as council advice.
-  const suggestedConditions: PlanCondition[] = [];
-
-  // Survival ramp — mirrors the universal AI safety condition.
-  if (preservational || fatigue >= 30) {
-    suggestedConditions.push({
-      trigger: { type: 'ENDURANCE_BELOW', value: 30 },
-      override: { OE: bounded(suggestedOE, -2), AL: bounded(suggestedAL, +2) },
-      label: 'Conserve energy when gassed',
-    });
-  }
+  const { fallbackCondition, suggestedConditions } = fallbackAndSurvivalPlan(
+    defaultPlan,
+    preservational,
+    fatigue,
+    suggestedOE,
+    suggestedAL
+  );
 
   // 3. Equipment & Loadout Audit
   const gearNotes: string[] = [

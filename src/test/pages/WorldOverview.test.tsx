@@ -23,10 +23,10 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 // Mock the router components
-vi.mock('@tanstack/react-router', async () => await import('@/test/_mocks/routerLink'));
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 // Mock Radix UI Tabs to always render both contents for easy testing
-vi.mock('@/components/ui/tabs', async () => await import('@/test/_mocks/radixTabs'));
+vi.mock('@/components/ui/tabs', () => ({ ...__SHARED_MOCKS.radixTabs }));
 
 const createDummyWarrior = (
   name: string,

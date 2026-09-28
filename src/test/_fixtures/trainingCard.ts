@@ -21,6 +21,7 @@ export const makeTrainingWarrior = (overrides: Partial<Warrior> = {}): Warrior =
     ...overrides,
   } as any);
 
+/** make Training Card Props. */
 export const makeTrainingCardProps = (): {
   assignment: undefined;
   seasonalGains: Partial<Record<keyof Attributes, number>>;

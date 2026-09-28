@@ -19,6 +19,7 @@ export const makeAutosimOffer = (id: string, warriorIds: string[], opts?: Partia
     ...opts,
   } as any);
 
+/** make Simmable State. */
 export const makeSimmableState = (overrides?: Partial<GameState>): GameState =>
   makeGameState({
     treasury: 5000,

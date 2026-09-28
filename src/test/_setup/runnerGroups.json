@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-28T00:29:53.564Z",
+  "generatedAt": "2026-09-28T11:47:15.726Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -122,6 +122,7 @@
     "src/test/components/widgets/Widgets.test.tsx",
     "src/test/components/world/RivalIntelligence.test.tsx",
     "src/test/components/world/World.test.tsx",
+    "src/test/config/bunRunnerSafety.test.ts",
     "src/test/config/electronMain.test.ts",
     "src/test/config/environmentSplitCanary.test.ts",
     "src/test/engine/advisor/boutOfferAdvisor.test.ts",
@@ -186,7 +187,6 @@
     "src/test/hooks/useWarriorLeaderboard.test.ts",
     "src/test/hooks/useWeekExecution.test.ts",
     "src/test/integration/autosim.slow.test.ts",
-    "src/test/integration/autosimChampionship.slow.test.ts",
     "src/test/integration/autosimCouncil.crown.test.ts",
     "src/test/integration/worldLiveness.slow.test.ts",
     "src/test/lib/AudioManager.test.ts",

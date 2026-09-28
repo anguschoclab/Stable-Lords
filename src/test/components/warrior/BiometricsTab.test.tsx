@@ -33,11 +33,11 @@ vi.mock('@/components/warrior/GrowthHelpers', () => ({
   overallGrowthNarrative: () => 'Growth narrative text',
 }));
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
-vi.mock('@/components/ui/SectionDivider', async () => await import('@/test/_mocks/uiSectionDivider'));
+vi.mock('@/components/ui/SectionDivider', () => ({ ...__SHARED_MOCKS.uiSectionDivider }));
 
-vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
+vi.mock('@/components/ui/ImperialRing', () => ({ ...__SHARED_MOCKS.uiImperialRing }));
 
 vi.mock('@/components/ui/separator', () => ({
   Separator: () => <hr />,

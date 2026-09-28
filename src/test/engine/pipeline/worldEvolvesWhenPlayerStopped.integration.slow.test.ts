@@ -7,7 +7,7 @@ import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
+vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
 function reset() {
   let n = 0;

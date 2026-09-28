@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { MarkdownReader } from '@/components/MarkdownReader';
 import '@testing-library/jest-dom';
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
 describe('MarkdownReader', () => {
   it('renders markdown headings', () => {

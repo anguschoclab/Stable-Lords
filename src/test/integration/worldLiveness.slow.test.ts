@@ -17,7 +17,7 @@ import { CHAMPIONS_TOURNEY, ARENA_TITLE } from '@/constants/arena';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
+vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
 describe('world liveness — 104 weeks (Stage H)', () => {
   beforeAll(() => {

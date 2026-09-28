@@ -72,9 +72,15 @@ export async function startNewGame(
   // Step 2: Set the Plan — click "To the Arena" again.
   // Wait for the exiting step-1 subtree to unmount — its button shares the
   // same label, and clicking it is a no-op (slow browsers race this).
+  // Even after the count settles, Firefox/WebKit can still be mid-transition
+  // with pointer-events disabled — retry the click until the step advances.
   await page.waitForSelector('text=Set the Plan', { timeout: 15_000 });
-  await expect(page.getByRole('button', { name: /To the Arena/ })).toHaveCount(1);
-  await page.getByRole('button', { name: /To the Arena/ }).click();
+  const toArena = page.getByRole('button', { name: /To the Arena/ });
+  await expect(toArena).toHaveCount(1);
+  await expect(async () => {
+    if (await toArena.count()) await toArena.click();
+    await page.waitForSelector('text=Continue', { timeout: 3_000 });
+  }).toPass({ timeout: 20_000 });
 
   // Step 2: First Blood — click "Continue"
   await page.waitForSelector('text=Continue', { timeout: 15_000 });
@@ -83,4 +89,17 @@ export async function startNewGame(
   // Step 3: Story Begins — click "Enter the Arena Hub"
   await page.waitForSelector('text=Enter the Arena Hub', { timeout: 15_000 });
   await page.getByRole('button', { name: /Enter the Arena Hub/ }).click();
+}
+
+/**
+ * Client-side navigation to an in-app route that has no nav link
+ * (/mods, /import-export, /admin, …). A full `page.goto` reloads the SPA and
+ * lands back on the title screen, so instead we pushState + dispatch
+ * popstate, which TanStack Router's history listener picks up.
+ */
+export async function gotoInApp(page: Page, path: string) {
+  await page.evaluate((p) => {
+    window.history.pushState({}, '', p);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, path);
 }

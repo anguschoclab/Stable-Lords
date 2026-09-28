@@ -23,7 +23,7 @@ const makeBout = (id: string) =>
     createdAt: '2025-01-01T00:00:00.000Z',
   }) as any;
 
-vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
+vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
 function reset() {
   let n = 0;

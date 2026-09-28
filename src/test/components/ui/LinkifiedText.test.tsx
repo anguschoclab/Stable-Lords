@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
 describe('LinkifiedText', () => {
   it('renders warrior names as WarriorLink', () => {

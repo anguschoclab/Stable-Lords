@@ -22,9 +22,9 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: ({ styleName }: { styleName: string }) => <span>{styleName}</span>,
 }));
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
 vi.mock('@/components/ui/collapsible', () => ({
   Collapsible: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,

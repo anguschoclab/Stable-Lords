@@ -7,7 +7,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 let mockState: { roster: Warrior[] } = { roster: [] };
 

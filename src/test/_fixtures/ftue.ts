@@ -5,6 +5,7 @@ import { makeGameState } from '@/test/_fixtures/factories';
 
 export const FTUE_BASE_ATTRS = { ST: 12, CN: 10, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 10 };
 
+/** make Plan Warrior. */
 export const makePlanWarrior = (name: string) => ({
   name,
   style: FightingStyle.LungingAttack,
@@ -19,6 +20,7 @@ export const makePlanWarrior = (name: string) => ({
 export const FTUE_W_A = makeWarrior('w-a' as any, 'Varak', FightingStyle.LungingAttack, FTUE_BASE_ATTRS);
 export const FTUE_W_D = makeWarrior('w-d' as any, 'Dren', FightingStyle.TotalParry, FTUE_BASE_ATTRS);
 
+/** make Ftue Result. */
 export const makeFtueResult = (
   outcome: {
     winner: 'A' | 'D';

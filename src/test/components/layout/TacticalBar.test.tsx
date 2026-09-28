@@ -15,7 +15,7 @@ vi.mock('@/state/useGameStore', () => ({
   }),
 }));
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 vi.mock('@tanstack/react-router', () => ({
   useLocation: () => ({ pathname: mockPathname }),

@@ -9,9 +9,9 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: vi.fn((selector?: any) => (selector ? selector(mockState) : mockState)),
 }));
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
 import { ActionTimeline } from '@/components/dashboard/ActionTimeline';
 

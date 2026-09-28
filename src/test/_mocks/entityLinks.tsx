@@ -9,6 +9,7 @@ export const WarriorLink = ({ name, className }: { name: string; className?: str
     {name}
   </span>
 );
+/** Stable Link. */
 export const StableLink = ({ name, className }: { name: string; className?: string }) => (
   <span
     data-testid="stable-link"

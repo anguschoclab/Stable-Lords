@@ -28,11 +28,11 @@ const DOM_GLOBALS = /\b(document|window|HTMLElement|HTMLMediaElement|navigator)\
 const RTL_RE = /@testing-library\/react|\brender(Hook)?\s*\(/;
 const FACTORY_DEF_RE = /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
 // Local names bound to shared builders — `import { makeWarrior as fixtureW }`
-// or plain `import { makeWarrior }` from _fixtures/factories.
+// or plain `import { makeWarrior }` from any _fixtures module.
 function fixtureAliases(content) {
   const names = new Set();
   for (const m of content.matchAll(
-    /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/factories|engine\/factories\/\w+)['"]/g
+    /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/[\w-]+|engine\/factories\/\w+)['"]/g
   )) {
     for (const part of m[1].split(',')) {
       const alias = part.trim().split(/\s+as\s+/).pop()?.trim();

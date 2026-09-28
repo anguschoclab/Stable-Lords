@@ -6,11 +6,9 @@ import { OfferCard } from '@/pages/BookingOffice/components/OfferCard';
 import type { BoutOffer } from '@/types/state.types';
 import { makeOffer, makeOfferCardProps } from '@/test/_fixtures/offerCard';
 
-vi.mock('@/components/bookmarks/BookmarkButton', async () => ({
-  BookmarkButton: () => <div data-testid="bookmark" />,
-}));
-vi.mock('@/components/bout-viewer/FightForecastPanel', async () => await import('@/test/_mocks/fightForecast'));
-vi.mock('@/engine/narrative/fightForecast', async () => await import('@/test/_mocks/fightForecastEngine'));
+vi.mock('@/components/bookmarks/BookmarkButton', () => ({ ...__SHARED_MOCKS.bookmarkButton }));
+vi.mock('@/components/bout-viewer/FightForecastPanel', () => ({ ...__SHARED_MOCKS.fightForecast }));
+vi.mock('@/engine/narrative/fightForecast', () => ({ ...__SHARED_MOCKS.fightForecastEngine }));
 
 const baseProps = makeOfferCardProps();
 

@@ -46,13 +46,14 @@ export function useEntityNames(): { warriorNames: string[]; stableNames: string[
     }))
   );
 
+  const { roster, graveyard, retired, rivals, player } = state;
   const warriorNames = useMemo(
-    () => collectWarriorNames(state),
-    [state.roster, state.graveyard, state.retired, state.rivals]
+    () => collectWarriorNames({ roster, graveyard, retired, rivals }),
+    [roster, graveyard, retired, rivals]
   );
   const stableNames = useMemo(
-    () => collectStableNames(state),
-    [state.player, state.rivals]
+    () => collectStableNames({ player, rivals }),
+    [player, rivals]
   );
 
   return { warriorNames, stableNames };

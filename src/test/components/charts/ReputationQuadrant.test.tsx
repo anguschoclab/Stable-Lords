@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { QuadrantDot } from '@/hooks/useQuadrantDots';
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 let mockState: { rivals: unknown[] } = { rivals: [] };
 let mockWorldState: unknown = {};

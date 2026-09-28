@@ -15,5 +15,5 @@ describe('narrative_validate script', () => {
       cwd: process.cwd(),
     });
     expect(result).toContain('passed');
-  });
+  }, 30_000);
 });

@@ -25,13 +25,13 @@ vi.mock('framer-motion', () => ({
   },
 }));
 
-vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreEmpty'));
+vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreEmpty }));
 
-vi.mock('@/hooks/useTournamentSchedule', async () => await import('@/test/_mocks/tournamentHooks'));
+vi.mock('@/hooks/useTournamentSchedule', () => ({ ...__SHARED_MOCKS.tournamentHooks }));
 
-vi.mock('@/components/bookmarks/BookmarkButton', async () => await import('@/test/_mocks/bookmarkButton'));
+vi.mock('@/components/bookmarks/BookmarkButton', () => ({ ...__SHARED_MOCKS.bookmarkButton }));
 
-vi.mock('@/components/tournaments/schedule', async () => await import('@/test/_mocks/tournamentScheduleUi'));
+vi.mock('@/components/tournaments/schedule', () => ({ ...__SHARED_MOCKS.tournamentScheduleUi }));
 
 vi.mock('@/components/ui/dialog', () => ({
   Dialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -45,9 +45,9 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: ({ styleName }: { styleName: string }) => <span>{styleName}</span>,
 }));
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
 vi.mock('@/engine/core/historyResolver', () => ({
   resolveWarriorName: (_s: unknown, _id: unknown, fallback?: string) => fallback ?? 'Unknown',

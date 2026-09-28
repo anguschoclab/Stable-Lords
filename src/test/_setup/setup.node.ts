@@ -3,6 +3,7 @@
  * Anything that touches `document`, React Testing Library, or jest-dom lives
  * in setup.dom.ts instead.
  */
+import './sharedMocks';
 import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorLookup';
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';

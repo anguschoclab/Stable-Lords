@@ -12,6 +12,7 @@ interface StepNavProps {
   className?: string;
 }
 
+/** Helper. */
 export default function StepNav({
   onBack,
   onNext,

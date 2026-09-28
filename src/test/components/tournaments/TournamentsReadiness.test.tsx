@@ -19,15 +19,15 @@ vi.mock('framer-motion', () => ({
   },
 }));
 
-vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreEmpty'));
+vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreEmpty }));
 
-vi.mock('@/hooks/useTournamentSchedule', async () => await import('@/test/_mocks/tournamentHooks'));
+vi.mock('@/hooks/useTournamentSchedule', () => ({ ...__SHARED_MOCKS.tournamentHooks }));
 
-vi.mock('@/components/bookmarks/BookmarkButton', async () => await import('@/test/_mocks/bookmarkButton'));
+vi.mock('@/components/bookmarks/BookmarkButton', () => ({ ...__SHARED_MOCKS.bookmarkButton }));
 
-vi.mock('@/components/tournaments/schedule', async () => await import('@/test/_mocks/tournamentScheduleUi'));
+vi.mock('@/components/tournaments/schedule', () => ({ ...__SHARED_MOCKS.tournamentScheduleUi }));
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
 vi.mock('@/components/ui/SectionDivider', () => ({
   SectionDivider: ({ label }: { label: string }) => <div data-testid="divider">{label}</div>,

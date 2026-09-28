@@ -2,17 +2,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockStateRef } from '@/test/_mocks/gameStoreSelector';
 
-vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreSelector'));
+vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreSelector }));
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { NewsletterItem } from '@/types/state.types';
 
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
-vi.mock('@/components/ui/scroll-area', async () => await import('@/test/_mocks/scrollArea'));
+vi.mock('@/components/ui/scroll-area', () => ({ ...__SHARED_MOCKS.scrollArea }));
 
 import { BriefingTab } from '@/components/dashboard/BriefingTab';
 

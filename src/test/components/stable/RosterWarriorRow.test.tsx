@@ -6,7 +6,7 @@ import type { Attributes } from '@/types/shared.types';
 import type { Warrior, AttributePotential } from '@/types/warrior.types';
 import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
   WarriorNameTag: ({ name }: { name: string }) => <span data-testid="warrior-name">{name}</span>,

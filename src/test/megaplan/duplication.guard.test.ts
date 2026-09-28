@@ -136,7 +136,6 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts|src/engine/pipeline/offseasonEvents/socialHandlers/street.ts',
   'src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
   'src/engine/pipeline/offseasonEvents/socialHandlers/street.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
-  'src/engine/pipeline/seasonal.ts|src/engine/pipeline/seasonalHandlers.ts',
   'src/engine/rivals/rivalNamePool.ts|src/engine/trainers/trainers.ts',
   'src/engine/simulate/simulateFight.ts|src/engine/simulate/simulationLoop.ts',
   'src/engine/storage/electronArchive.ts|src/engine/storage/opfsArchive/service.ts',

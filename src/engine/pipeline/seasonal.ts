@@ -3,7 +3,7 @@
  * The Chaos Weaver 🎲
  *
  * Orchestrator: selects an offseason event and dispatches to the appropriate handler.
- * Handler implementations live in seasonalHandlers.ts.
+ * Handler implementations live in offseasonEvents/.
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';

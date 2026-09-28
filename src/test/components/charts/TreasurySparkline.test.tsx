@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { LedgerEntry } from '@/types/game';
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 let mockState: { treasury: number; ledger: LedgerEntry[]; week: number } = {
   treasury: 1000,

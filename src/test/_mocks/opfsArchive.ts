@@ -11,6 +11,7 @@ const m: Record<string, any> = {
   getArchivedBoutIdsForSeason: vi.fn().mockResolvedValue([]),
 };
 
+/** Helper. */
 export class OPFSArchiveService {
   isSupported = () => true;
   archiveBoutLog = m.archiveBoutLog;
@@ -22,5 +23,6 @@ export class OPFSArchiveService {
   getArchivedBoutIdsForSeason = m.getArchivedBoutIdsForSeason;
 }
 export const opfsArchive = m;
+/** Helper. */
 export class ArchiveConflictError extends Error {}
 export const assertSafeFileNamePart: (...args: any[]) => void = vi.fn();

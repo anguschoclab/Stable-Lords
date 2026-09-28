@@ -6,7 +6,7 @@ import { EventListItem } from '@/components/eventLog/EventListItem';
 import type { GameEvent } from '@/types/eventLog';
 import { ScrollText } from 'lucide-react';
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
 function makeEvent(overrides: Partial<GameEvent> = {}): GameEvent {
   return {

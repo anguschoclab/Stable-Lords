@@ -42,9 +42,9 @@ vi.mock('@/hooks/useActiveRoster', () => ({
   useActiveRoster: () => mockRoster,
 }));
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
-vi.mock('@/components/ui/sheet', async () => await import('@/test/_mocks/sheet'));
+vi.mock('@/components/ui/sheet', () => ({ ...__SHARED_MOCKS.sheet }));
 
 vi.mock('@/components/stable/RosterWarriorRow', () => ({
   RosterWarriorRow: ({ warrior }: any) => (

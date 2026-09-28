@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/engine/runtime/workerProxy', async () => await import('@/test/_mocks/engineProxy'));
+vi.mock('@/engine/runtime/workerProxy', () => ({ ...__SHARED_MOCKS.engineProxy }));
 
-vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
+vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
 import '@/test/_setup/setup';
 import { useGameStore } from '@/state/createStore';

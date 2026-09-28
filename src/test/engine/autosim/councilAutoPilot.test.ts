@@ -7,7 +7,7 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import { makeAutosimOffer, makeSimmableState } from '@/test/_fixtures/autosimCouncil';
 
-vi.mock('@/engine/pipeline/services/weekPipelineService', async () => await import('@/test/_mocks/weekPipeline'));
+vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({ ...__SHARED_MOCKS.weekPipeline }));
 
 const makeOffer = makeAutosimOffer;
 

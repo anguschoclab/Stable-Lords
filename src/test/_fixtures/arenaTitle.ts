@@ -24,6 +24,7 @@ export function makeVenueWarrior(
   });
 }
 
+/** make Arena Title. */
 export function makeArenaTitle(
   championId: string | null,
   opts: { defenses?: number } & Partial<ArenaTitle> = {},

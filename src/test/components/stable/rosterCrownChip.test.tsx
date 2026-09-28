@@ -13,7 +13,7 @@ import { RosterWarriorRow } from '@/components/stable/RosterWarriorRow';
 import type { FightingStyle } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
 const baseWarrior = {
   id: 'w1',

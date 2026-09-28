@@ -46,9 +46,9 @@ vi.mock('framer-motion', () => ({
   },
 }));
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
@@ -85,9 +85,9 @@ vi.mock('@/engine/core/historyResolver', () => ({
   findWarrior: () => undefined,
 }));
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
-vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
+vi.mock('@/components/ui/ImperialRing', () => ({ ...__SHARED_MOCKS.uiImperialRing }));
 
 vi.mock('@/components/ui/SectionDivider', () => ({
   SectionDivider: ({ label }: { label: string }) => <div>{label}</div>,

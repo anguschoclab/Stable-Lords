@@ -4,9 +4,9 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { FightSummary } from '@/types/game';
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
 vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children }: any) => <span>{children}</span>,
@@ -21,7 +21,7 @@ vi.mock('@/components/ui/table', () => ({
   TableCell: ({ children }: any) => <td>{children}</td>,
 }));
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
 import {
   GazetteLeaderboard,

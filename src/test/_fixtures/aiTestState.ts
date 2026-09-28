@@ -12,6 +12,7 @@ export function makeAiTestRival(overrides: Partial<RivalStableData> = {}): Rival
   });
 }
 
+/** make Ai Test State. */
 export function makeAiTestState(overrides: Record<string, unknown> = {}): GameState {
   return makeGameState({
     meta: { gameName: 'test', version: '1.0', createdAt: '2025-01-01' },

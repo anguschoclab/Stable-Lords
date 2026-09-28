@@ -6,8 +6,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
-vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
+vi.mock('@/components/ui/ImperialRing', () => ({ ...__SHARED_MOCKS.uiImperialRing }));
 vi.mock('@/components/ui/EditableText', () => ({
   EditableText: ({ value }: any) => <span>{value}</span>,
 }));

@@ -9,7 +9,7 @@ import { setMockIdGenerator } from '@/utils/idUtils';
 import { createHash } from 'crypto';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/opfsArchive', async () => await import('@/test/_mocks/opfsArchive'));
+vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
 /**
  * In-process shard worker: runs the real chunk functions on structured

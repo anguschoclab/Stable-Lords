@@ -14,7 +14,7 @@ import type { ScoutReportData } from '@/types/state.types';
 vi.mock('@/components/bookmarks/BookmarkButton', () => ({
   BookmarkButton: () => <div data-testid="bookmark" />,
 }));
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
 const report = (over: Partial<ScoutReportData> = {}): ScoutReportData => ({
   id: 'rep-1' as never,

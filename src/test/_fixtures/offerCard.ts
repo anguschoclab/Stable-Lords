@@ -6,6 +6,7 @@ import { makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
 /** Shared OfferCard test setup — player warrior, pending offer, base props. */
 export const playerWarrior = makeWarrior({ id: 'pw-1' as WarriorId, name: 'My Fighter' });
 
+/** make Offer. */
 export const makeOffer = (over: Partial<BoutOffer> = {}): BoutOffer =>
   makeBoutOffer({
     id: 'offer-1' as BoutOffer['id'],
@@ -20,6 +21,7 @@ export const makeOffer = (over: Partial<BoutOffer> = {}): BoutOffer =>
     ...over,
   } as any);
 
+/** make Offer Card Props. */
 export const makeOfferCardProps = (): {
   promoters: Record<string, { name: string; tier: string; personality: string }>;
   roster: ReturnType<typeof makeWarrior>[];

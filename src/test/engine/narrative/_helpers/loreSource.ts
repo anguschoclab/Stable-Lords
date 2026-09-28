@@ -11,6 +11,7 @@ export const LORE_SOURCE = ['origins', 'childhoodTraits', 'definingMoments']
   )
   .join('\n');
 
+/** extract String Array. */
 export function extractStringArray(source: string, varName: string): string[] {
   const regex = new RegExp(`(?:export )?const ${varName}.*?= \\[([\\s\\S]*?)\\];`);
   const m = regex.exec(source);

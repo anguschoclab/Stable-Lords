@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import '@/test/_setup/setup';
 
 /**
@@ -27,7 +28,6 @@ describe('Style Archives browser (MEGAPLAN-G1)', () => {
 
   it('renders all 10 canonical fighting styles from the enum, not a hardcoded list', async () => {
     const { FightingStyle, STYLE_DISPLAY_NAMES } = await import('@/types/shared.types');
-    const { render, screen } = await import('@testing-library/react');
     // Glob so the spec compiles before the page exists.
     const files = import.meta.glob('/src/pages/StyleArchives.*');
     const loader = Object.values(files)[0] as (() => Promise<Record<string, React.ComponentType>>) | undefined;

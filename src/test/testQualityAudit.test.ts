@@ -22,7 +22,7 @@ const LOCAL_FACTORY_RE =
 function fixtureAliases(content: string): Set<string> {
   const names = new Set<string>();
   for (const m of content.matchAll(
-    /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/factories|engine\/factories\/\w+)['"]/g
+    /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/[\w-]+|engine\/factories\/\w+)['"]/g
   )) {
     for (const part of m[1]!.split(',')) {
       const alias = part.trim().split(/\s+as\s+/).pop()?.trim();

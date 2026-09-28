@@ -11,7 +11,7 @@ describe('aria-label presence on interactive components', () => {
     'src/components/equipment/SlotSelector.tsx',
     'src/components/layout/ArenaSettings.tsx',
     'src/components/orphanage/PlanStep.tsx',
-    'src/components/planBuilder/CommonControls.tsx',
+    'src/components/planBuilder/sections.tsx',
     'src/components/planBuilder/ContingencyPlans.tsx',
     'src/components/planBuilder/PhaseOverrides.tsx',
     'src/components/planBuilder/StylePassives.tsx',

@@ -13,6 +13,7 @@ export const makeBidWarrior = (name: string, style: FightingStyle, over: { cn?: 
     derivedStats: { hp: 100 } as any,
   } as any);
 
+/** make Bid Rival. */
 export const makeBidRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
   makeRival({
     id: 'rival-1' as any,

@@ -10,7 +10,7 @@ let mockState: any = {};
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: vi.fn((selector?: any) => (selector ? selector(mockState) : mockState)),
 }));
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 describe('AgentReasoningWidget (H.1)', () => {
   beforeEach(() => {

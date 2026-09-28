@@ -13,5 +13,7 @@ preload = ["./src/test/_setup/bunViPolyfill.ts", "./src/test/_setup/bun-setup.ts
 # copy of src/test plus dependency test files that must never be collected.
 # bibleIndex.test.ts and HelpA11y.test.tsx transitively import src/lib/bibleIndex.ts,
 # which relies on Vite's `import.meta.glob` transform (?raw/eager) and cannot run
-# under Bun's test runner. They remain covered by the vitest suite.
-pathIgnorePatterns = ["e2e/**", "out/**", "src/test/config/environmentNodeCanary.test.ts", "src/test/config/electronMain.test.ts", "**/*.slow.test.ts", "src/test/lib/bibleIndex.test.ts", "src/test/pages/HelpA11y.test.tsx"]
+# under Bun's test runner. The megaplan wired-guard specs call `import.meta.glob`
+# directly for the same compile-before-implementation pattern. All remain covered
+# by the vitest suite.
+pathIgnorePatterns = ["e2e/**", "out/**", "src/test/config/environmentNodeCanary.test.ts", "src/test/config/electronMain.test.ts", "**/*.slow.test.ts", "src/test/lib/bibleIndex.test.ts", "src/test/pages/HelpA11y.test.tsx", "src/test/megaplan/appShell.cta.test.tsx", "src/test/megaplan/styleArchives.wired.test.tsx", "src/test/megaplan/wiring.wired.test.tsx"]

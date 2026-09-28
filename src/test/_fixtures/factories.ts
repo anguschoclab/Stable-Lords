@@ -53,6 +53,7 @@ export function resetFixtureIds(): void {
  */
 export const ATTRS_10: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
 
+/** make Warrior. */
 export function makeWarrior(over: Partial<Warrior> = {}): Warrior {
   const id = (over.id as string) ?? nextId('w');
   return {

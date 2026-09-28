@@ -46,14 +46,15 @@ export default function EventLog() {
   );
   const navigate = useNavigate();
 
+  const { roster, graveyard, retired, rivals, player } = state;
   const allWarriorNames = useMemo(
-    () => collectWarriorNames(state),
-    [state.roster, state.graveyard, state.retired, state.rivals]
+    () => collectWarriorNames({ roster, graveyard, retired, rivals }),
+    [roster, graveyard, retired, rivals]
   );
 
   const allStableNames = useMemo(
-    () => collectStableNames(state),
-    [state.player, state.rivals]
+    () => collectStableNames({ player, rivals }),
+    [player, rivals]
   );
 
   const events = useMemo(() => {

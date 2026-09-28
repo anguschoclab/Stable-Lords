@@ -34,9 +34,10 @@ describe('bun-runner safety contract (N-A)', () => {
   // Verified empirically during the test-megaplan audit: a vi.mock factory that
   // dynamically imports a module (`() => import('…')`) deadlocks bun:test —
   // the whole file never completes. `vi.hoisted(async …)` is equally unsafe
-  // (polyfill shim does not await). Shared-mock extraction via importable
-  // modules is therefore impossible under bun; keep per-file factories or use
-  // the documented vi.spyOn pattern.
+  // (polyfill shim does not await). Shared mocks instead live in
+  // src/test/_mocks/*, which _setup/sharedMocks.ts installs on the
+  // `__SHARED_MOCKS` global — call sites use the bun-safe sync factory
+  // `vi.mock(path, () => ({ ...__SHARED_MOCKS.x }))`.
   it('no test uses dynamic-import vi.mock factories (bun deadlock)', () => {
     const testDir = path.join(root, 'src');
     const offenders: string[] = [];
@@ -50,7 +51,13 @@ describe('bun-runner safety contract (N-A)', () => {
           // skip self — this file contains the pattern literals it scans for
           if (entry.name === 'bunRunnerSafety.test.ts') continue;
           const src = fs.readFileSync(p, 'utf-8');
-          if (/vi\.mock\([^)]*=>?\s*import\s*\(/s.test(src)) {
+          // `vi.mock(path, (async) (…) => (await) import('…'))` — the `[^)]*`
+          // class can't be used here: the params' own parens would stop it.
+          if (
+            /vi\.mock\(\s*['"][^'"]+['"]\s*,\s*(?:async\s+)?\([^)]*\)\s*=>\s*(?:await\s+)?import\s*\(/s.test(
+              src
+            )
+          ) {
             offenders.push(path.relative(root, p));
           }
           if (/vi\.hoisted\s*\(\s*async/.test(src)) {

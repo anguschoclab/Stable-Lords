@@ -2,16 +2,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockStateRef } from '@/test/_mocks/gameStoreSelector';
 
-vi.mock('@/state/useGameStore', async () => await import('@/test/_mocks/gameStoreSelector'));
+vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreSelector }));
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 
-vi.mock('zustand/react/shallow', async () => await import('@/test/_mocks/useShallow'));
+vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
-vi.mock('@/components/EntityLink', async () => await import('@/test/_mocks/entityLinks'));
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
 vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children }: any) => <span>{children}</span>,

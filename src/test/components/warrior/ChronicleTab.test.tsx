@@ -5,9 +5,9 @@ import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
-vi.mock('@/components/ui/Surface', async () => await import('@/test/_mocks/uiSurface'));
-vi.mock('@/components/ui/SectionDivider', async () => await import('@/test/_mocks/uiSectionDivider'));
-vi.mock('@/components/ui/ImperialRing', async () => await import('@/test/_mocks/uiImperialRing'));
+vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
+vi.mock('@/components/ui/SectionDivider', () => ({ ...__SHARED_MOCKS.uiSectionDivider }));
+vi.mock('@/components/ui/ImperialRing', () => ({ ...__SHARED_MOCKS.uiImperialRing }));
 vi.mock('@/components/warrior/CareerTimeline', () => ({
   CareerTimeline: () => <div data-testid="career-timeline" />,
 }));

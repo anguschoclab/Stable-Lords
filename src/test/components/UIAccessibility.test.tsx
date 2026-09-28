@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { vi } from 'vitest';
 
-vi.mock('@/engine/warrior/skillCalc', async () => await import('@/test/_mocks/skillCalc'))
+vi.mock('@/engine/warrior/skillCalc', () => ({ ...__SHARED_MOCKS.skillCalc }))
 
 vi.mock('@/data/orphanPool', () => ({
   TRAIT_DATA: {
@@ -30,7 +30,7 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: () => <span data-testid="stat-badge">Style</span>,
 }));
 
-vi.mock('@/components/ui/tooltip', async () => await import('@/test/_mocks/tooltip'))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
 
 import WarriorCard from '@/components/orphanage/WarriorCard';
 

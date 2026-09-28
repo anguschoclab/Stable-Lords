@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ArenaCircuit from '@/pages/ArenaCircuit';
 import ArenaDetail from '@/pages/ArenaDetail';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useGameStore } from '@/state/useGameStore';
 import { STANDARD_ARENA } from '@/data/arenas';
 import type { ArenaTitle } from '@/types/state.types';
@@ -125,7 +126,7 @@ describe('ArenaDetail', () => {
 
   it('renders the unknown-arena guard for a bad id', () => {
     params.arenaId = 'not_a_real_arena';
-    render(<ArenaDetail />);
+    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
     expect(screen.getByText('Unknown Arena')).toBeInTheDocument();
     expect(screen.getByText(/does not exist in the circuit/)).toBeInTheDocument();
     params.arenaId = STANDARD_ARENA.id;
@@ -155,7 +156,7 @@ describe('ArenaDetail', () => {
         }),
       },
     });
-    render(<ArenaDetail />);
+    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
     expect(screen.getByText(STANDARD_ARENA.name)).toBeInTheDocument();
     expect(screen.getByText('Arena Champion')).toBeInTheDocument();
     expect(screen.getByText('Aurelia the Bold')).toBeInTheDocument();
@@ -181,7 +182,7 @@ describe('ArenaDetail', () => {
       },
       relinquishArenaTitle: spy,
     });
-    render(<ArenaDetail />);
+    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
     const btn = screen.getByRole('button', { name: 'Relinquish Crown' });
     fireEvent.click(btn);
     fireEvent.click(screen.getByRole('button', { name: 'Relinquish' }));
@@ -208,7 +209,7 @@ describe('ArenaDetail', () => {
         }),
       },
     });
-    render(<ArenaDetail />);
+    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
     expect(screen.getByText('Aurelia the Bold')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Relinquish Crown' })).not.toBeInTheDocument();
   });

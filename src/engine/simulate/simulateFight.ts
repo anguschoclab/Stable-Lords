@@ -34,19 +34,19 @@ export { defaultPlanForWarrior };
  * @param crowdMood - Current mood of the arena crowd
  * @returns Detailed outcome of the fight simulation
  */
-export function simulateFight(
+/** Per-bout setup: RNG streams, initialized fighters, and resolution context. */
+function prepareBout(
   planA: FightPlan,
   planD: FightPlan,
-  warriorA?: Warrior,
-  warriorD?: Warrior,
-  providedRng?: IRNGService | number,
-  trainers?: Trainer[],
-  weather: WeatherType = 'Clear',
-  arenaId: string = 'standard_arena',
-  crowdMood?: CrowdMood,
-  headless?: boolean,
-  deathRateMult?: number
-): FightOutcome {
+  warriorA: Warrior | undefined,
+  warriorD: Warrior | undefined,
+  providedRng: IRNGService | number | undefined,
+  trainers: Trainer[] | undefined,
+  weather: WeatherType,
+  arenaId: string,
+  crowdMood: CrowdMood | undefined,
+  deathRateMult: number | undefined
+) {
   // 1. Initialize RNG
   const { rng, seed: boutSeed } = initializeRng(providedRng);
 
@@ -83,6 +83,60 @@ export function simulateFight(
     deathRateMult
   );
   resCtx.rng = rng;
+
+  return { rng, narRngService, nameA, nameD, weaponA, weaponD, fA, fD, effectiveWeather, resCtx };
+}
+
+/**
+ * Simulates a fight between two plans/warriors.
+ *
+ * @param planA - Strategy for fighter A
+ * @param planD - Strategy for fighter D
+ * @param warriorA - Warrior data for A (optional)
+ * @param warriorD - Warrior data for D (optional)
+ * @param providedRng - Seeded RNG service or numeric seed (optional, generates one if missing)
+ * @param trainers - Active trainers providing global modifiers
+ * @param weather - Current weather conditions
+ * @param arenaId - Identifier for the arena where the bout takes place
+ * @param crowdMood - Current mood of the arena crowd
+ * @returns Detailed outcome of the fight simulation
+ */
+export function simulateFight(
+  planA: FightPlan,
+  planD: FightPlan,
+  warriorA?: Warrior,
+  warriorD?: Warrior,
+  providedRng?: IRNGService | number,
+  trainers?: Trainer[],
+  weather: WeatherType = 'Clear',
+  arenaId: string = 'standard_arena',
+  crowdMood?: CrowdMood,
+  headless?: boolean,
+  deathRateMult?: number
+): FightOutcome {
+  const {
+    rng,
+    narRngService,
+    nameA,
+    nameD,
+    weaponA,
+    weaponD,
+    fA,
+    fD,
+    effectiveWeather,
+    resCtx,
+  } = prepareBout(
+    planA,
+    planD,
+    warriorA,
+    warriorD,
+    providedRng,
+    trainers,
+    weather,
+    arenaId,
+    crowdMood,
+    deathRateMult
+  );
 
   // 4. Generate introductions
   const arenaConfig = resCtx.arenaConfig;

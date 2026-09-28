@@ -1,20 +1,14 @@
-import { useMemo, useCallback, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
-import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import type { Trainer } from '@/types/shared.types';
-import {
-  TRAINER_MAX_PER_STABLE,
-  TIER_COST,
-  generateHiringPool,
-  convertRetiredToTrainer,
-  type TrainerTier,
-} from '@/engine/trainers/trainers';
-import { toast } from 'sonner';
+import { TRAINER_MAX_PER_STABLE } from '@/engine/trainers/trainers';
+import { useHiringPool } from './useHiringPool';
+import { useTrainerActions } from './useTrainerActions';
 
 /**
- *
+ * Trainer-directory state: current roster of coaches, filtered by bookmark
+ * when requested, plus the hiring pool and hire/fire/convert actions.
  */
 export function useTrainers(showBookmarkedOnly: boolean) {
   const {
@@ -54,68 +48,19 @@ export function useTrainers(showBookmarkedOnly: boolean) {
   const bookmarkedCount = allTrainers.filter(
     (t) => bookmarkIds.get('trainer')?.has(t.id)
   ).length;
-  const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 
-  useEffect(() => {
-    if (currentHiringPool.length === 0) {
-      const pool = generateHiringPool(4, week * 1000 + cryptoRandomInt(0, 2147483647));
-      setState((draft) => {
-        draft.hiringPool = pool;
-      });
-    }
-  }, [currentHiringPool.length, week, setState]);
-
-  const refreshPool = useCallback(() => {
-    const pool = generateHiringPool(4, week * 1000 + cryptoRandomInt(0, 2147483647));
-    setState((draft) => {
-      draft.hiringPool = pool;
-    });
-    toast.success('New trainers available.');
-  }, [week, setState]);
-
-  const hireTrainer = useCallback(
-    (trainer: Trainer) => {
-      const cost = TIER_COST[trainer.tier as TrainerTier] ?? 50;
-      if (!deductFunds(cost, `Hire: ${trainer.name}`, 'trainer')) {
-        toast.error(`Not enough gold. ${trainer.name} costs ${cost}G.`);
-        return;
-      }
-      setState((draft) => {
-        draft.trainers.push(trainer);
-        draft.hiringPool = draft.hiringPool.filter((t) => t.id !== trainer.id);
-      });
-      toast.success(`${trainer.name} has signed with your stable.`);
-    },
-    [deductFunds, setState]
-  );
-
-  const fireTrainer = useCallback(
-    (trainerId: string) => {
-      setState((draft) => {
-        draft.trainers = draft.trainers.filter((t) => t.id !== trainerId);
-      });
-    },
-    [setState]
-  );
+  const { currentHiringPool, refreshPool } = useHiringPool(hiringPool, week, setState);
+  const { hireTrainer, fireTrainer, convertWarrior } = useTrainerActions({
+    setState,
+    deductFunds,
+    retired,
+    setConvertDialogOpen,
+  });
 
   const convertableRetired = useMemo(
     () => retired.filter((w) => !currentTrainers.some((t) => t.retiredFromWarrior === w.name)),
     [retired, currentTrainers]
-  );
-
-  const convertWarrior = useCallback(
-    (warriorId: string) => {
-      const warrior = retired.find((w) => w.id === warriorId);
-      if (!warrior) return;
-      const trainer = convertRetiredToTrainer(warrior);
-      setState((draft) => {
-        draft.trainers.push(trainer);
-      });
-      toast.success(`${warrior.name} retired to coaching. Specialization: ${trainer.focus}.`);
-      setConvertDialogOpen(false);
-    },
-    [retired, setState]
   );
 
   return {

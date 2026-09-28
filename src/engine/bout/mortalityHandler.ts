@@ -113,26 +113,20 @@ function deriveCauseBucket(s: GameState, wA: Warrior, wD: Warrior, outcome: Figh
  * @param rivalStableId -
  * @param rng -
  */
-export function handleDeath(
+/**
+ * Builds the narrative + memorial event + graveyard entry for a kill — the
+ * immutable artifacts recorded before state impact assembly.
+ */
+function buildDeathArtifacts(
   s: GameState,
   wA: Warrior,
   wD: Warrior,
   outcome: FightOutcome,
   week: number,
   tags: string[],
-  rivalStableId?: string,
-  rng: IRNGService = new SeededRNGService(week * 9973 + 123)
+  victim: Warrior,
+  rng: IRNGService
 ) {
-  if (outcome.by !== 'Kill')
-    return { impact: {}, death: false, playerDeath: false, deathNames: [] };
-
-  if (s.houseRules?.severeInjuryInsteadOfDeath) {
-    return applySevereInjuryRule(s, wA, wD, outcome, week, rivalStableId, rng);
-  }
-
-  const victim = outcome.winner === 'A' ? wD : wA;
-  const isPlayerVictim = outcome.winner === 'A' && !!rivalStableId ? false : outcome.winner !== 'A';
-
   const boutId = rng.uuid();
   const narrative = generateFightNarrative(
     {
@@ -178,6 +172,51 @@ export function handleDeath(
     dateOfDeath: formatDateOfDeath(week, s.season),
     deathEvent: { ...event, causeBucket } as typeof event & { causeBucket: string },
   };
+
+  return { narrative, graveyardEntry };
+}
+
+/**
+ * Handle death.
+ * @param s -
+ * @param wA -
+ * @param wD -
+ * @param outcome -
+ * @param week -
+ * @param tags -
+ * @param rivalStableId -
+ * @param rng -
+ */
+export function handleDeath(
+  s: GameState,
+  wA: Warrior,
+  wD: Warrior,
+  outcome: FightOutcome,
+  week: number,
+  tags: string[],
+  rivalStableId?: string,
+  rng: IRNGService = new SeededRNGService(week * 9973 + 123)
+) {
+  if (outcome.by !== 'Kill')
+    return { impact: {}, death: false, playerDeath: false, deathNames: [] };
+
+  if (s.houseRules?.severeInjuryInsteadOfDeath) {
+    return applySevereInjuryRule(s, wA, wD, outcome, week, rivalStableId, rng);
+  }
+
+  const victim = outcome.winner === 'A' ? wD : wA;
+  const isPlayerVictim = outcome.winner === 'A' && !!rivalStableId ? false : outcome.winner !== 'A';
+
+  const { narrative, graveyardEntry } = buildDeathArtifacts(
+    s,
+    wA,
+    wD,
+    outcome,
+    week,
+    tags,
+    victim,
+    rng
+  );
 
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();

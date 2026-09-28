@@ -1,21 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { FighterPose, SpeechBubble, ArenaState } from '@/types/arena.types';
 import type { MinuteEvent } from '@/types/combat.types';
-import { processArenaEvent } from './arenaAnimationUtils';
-
-const DEFAULT_POSE_A: FighterPose = {
-  x: 25,
-  y: 0,
-  facing: 'right',
-  stance: 'neutral',
-};
-
-const DEFAULT_POSE_D: FighterPose = {
-  x: 75,
-  y: 0,
-  facing: 'left',
-  stance: 'neutral',
-};
+import {
+  processArenaEvent,
+  initialArenaState,
+  applyVictoryPoses,
+  appendBubble,
+  removeBubbleById,
+  patchFighterPose,
+} from './arenaAnimationUtils';
 
 /**
  * Defines the shape of use arena animation return.
@@ -44,15 +37,7 @@ export function useArenaAnimation(
   fighterNameA: string = '',
   fighterNameD: string = ''
 ): UseArenaAnimationReturn {
-  const [state, setState] = useState<ArenaState>({
-    fighterA: { ...DEFAULT_POSE_A },
-    fighterD: { ...DEFAULT_POSE_D },
-    bubbles: [],
-    hpA: maxHpA,
-    hpD: maxHpD,
-    fpA: 100,
-    fpD: 100,
-  });
+  const [state, setState] = useState<ArenaState>(() => initialArenaState(maxHpA, maxHpD));
 
   // Process event and update poses
   const processEvent = useCallback(
@@ -85,57 +70,24 @@ export function useArenaAnimation(
   useEffect(() => {
     if (isComplete && winner) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- victory pose is completion-driven
-      setState((prev) => ({
-        ...prev,
-        fighterA: {
-          ...prev.fighterA,
-          stance: winner === 'A' ? 'victorious' : 'defeated',
-          y: winner === 'A' ? 0 : 15,
-        },
-        fighterD: {
-          ...prev.fighterD,
-          stance: winner === 'D' ? 'victorious' : 'defeated',
-          y: winner === 'D' ? 0 : 15,
-        },
-      }));
+      setState((prev) => applyVictoryPoses(prev, winner));
     }
   }, [isComplete, winner]);
 
   const addBubble = useCallback((bubble: Omit<SpeechBubble, 'id'>) => {
-    const id = `bubble-${crypto.randomUUID()}`;
-    setState((prev) => ({
-      ...prev,
-      bubbles: [...prev.bubbles, { ...bubble, id }],
-    }));
+    setState((prev) => appendBubble(prev, bubble));
   }, []);
 
   const removeBubble = useCallback((id: string) => {
-    setState((prev) => ({
-      ...prev,
-      bubbles: prev.bubbles.filter((b) => b.id !== id),
-    }));
+    setState((prev) => removeBubbleById(prev, id));
   }, []);
 
   const reset = useCallback(() => {
-    setState({
-      fighterA: { ...DEFAULT_POSE_A },
-      fighterD: { ...DEFAULT_POSE_D },
-      bubbles: [],
-      hpA: maxHpA,
-      hpD: maxHpD,
-      fpA: 100,
-      fpD: 100,
-    });
+    setState(initialArenaState(maxHpA, maxHpD));
   }, [maxHpA, maxHpD]);
 
   const updatePose = useCallback((fighter: 'A' | 'D', pose: Partial<FighterPose>) => {
-    setState((prev) => ({
-      ...prev,
-      [fighter === 'A' ? 'fighterA' : 'fighterD']: {
-        ...prev[fighter === 'A' ? 'fighterA' : 'fighterD'],
-        ...pose,
-      },
-    }));
+    setState((prev) => patchFighterPose(prev, fighter, pose));
   }, []);
 
   return {

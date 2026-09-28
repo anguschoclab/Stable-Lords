@@ -16,7 +16,6 @@ const FN_LINE_CEILING = 120; // ratcheted to target — 0 violations at lock-in
 const EXEMPT_FILES = new Set([
   'src/routeTree.gen.ts', // generated
   'src/data/names/warriorNames.ts', // homogeneous name data (V10)
-  'src/data/arenas.ts', // I1 — exempt until the Phase-3 venue-registry split lands
 ]);
 
 const isDataFile = (f: string) =>
@@ -45,9 +44,9 @@ describe('megaplan: file & function budgets', () => {
     ).toEqual([]);
   });
 
-  it('counts stay non-decreasingly-better than baseline (203 fns >80, 2 files >800)', () => {
+  it('counts stay non-decreasingly-better than baseline (201 fns >80, 2 files >800)', () => {
     // Ratchet: ceilings only ever tighten. Update numbers DOWN as phases land.
-    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(203);
+    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(201);
     expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(2);
   });
 });

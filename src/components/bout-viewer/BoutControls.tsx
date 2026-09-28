@@ -17,21 +17,108 @@ interface BoutControlsProps {
   onSkipToEnd: () => void;
 }
 
-/**
- * Bout controls.
- * @param  - {
-  view mode,
-  on view mode change,
-  is playing,
+/** Reset / play-pause / skip-to-end transport cluster. */
+function TransportControls({
+  isPlaying,
+  onReset,
+  onTogglePlay,
+  onSkipToEnd,
+}: Pick<BoutControlsProps, 'isPlaying' | 'onReset' | 'onTogglePlay' | 'onSkipToEnd'>) {
+  return (
+    <div className="flex items-center px-4 py-2 rounded-none bg-black border border-white/5 gap-4">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onClick={onReset}
+            aria-label="Reset bout viewer"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
+          RESET BUFFER
+        </TooltipContent>
+      </Tooltip>
+
+      <div className="h-4 w-px bg-white/10" />
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={onTogglePlay}
+            className={cn(
+              'flex items-center justify-center p-2.5 rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              isPlaying
+                ? 'bg-foreground/10 text-foreground'
+                : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.6)] hover:bg-primary/90'
+            )}
+            aria-label={isPlaying ? 'Pause playback' : 'Play bout'}
+          >
+            {isPlaying ? (
+              <Pause className="h-4 w-4" />
+            ) : (
+              <Play className="h-4 w-4 ml-0.5 fill-current" />
+            )}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
+          {isPlaying ? 'PAUSE PLAYBACK' : 'PLAY BOUT'}
+        </TooltipContent>
+      </Tooltip>
+
+      <div className="h-4 w-px bg-white/10" />
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onClick={onSkipToEnd}
+            aria-label="Skip to end of bout"
+          >
+            <SkipForward className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
+          SKIP TO RESOLVE
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  );
+}
+
+/** 1x / 2x / 3x playback-speed selector. */
+function SpeedSelector({
   speed,
-  set speed,
-  visible count,
-  total events,
-  on reset,
-  on toggle play,
-  on skip to end,
-}.
- */
+  setSpeed,
+}: Pick<BoutControlsProps, 'speed' | 'setSpeed'>) {
+  return (
+    <div className="flex items-center bg-black border border-white/5 rounded-none p-1">
+      {[1, 2, 3].map((s) => (
+        <button
+          key={s}
+          onClick={() => setSpeed(s as 1 | 2 | 3)}
+          className={cn(
+            'px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary hover:bg-white/5',
+            speed === s
+              ? 'bg-foreground/10 text-foreground'
+              : 'text-muted-foreground/20 hover:text-muted-foreground/60'
+          )}
+          aria-label={`Set playback speed to ${s}x`}
+          aria-pressed={speed === s}
+        >
+          {s}X
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Bout controls: view-mode toggle, transport cluster, speed, entry counter. */
 export default function BoutControls({
   viewMode,
   onViewModeChange,
@@ -52,88 +139,14 @@ export default function BoutControls({
 
         <div className="h-6 w-px bg-white/10" />
 
-        <div className="flex items-center px-4 py-2 rounded-none bg-black border border-white/5 gap-4">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                onClick={onReset}
-                aria-label="Reset bout viewer"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
-              RESET BUFFER
-            </TooltipContent>
-          </Tooltip>
+        <TransportControls
+          isPlaying={isPlaying}
+          onReset={onReset}
+          onTogglePlay={onTogglePlay}
+          onSkipToEnd={onSkipToEnd}
+        />
 
-          <div className="h-4 w-px bg-white/10" />
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={onTogglePlay}
-                className={cn(
-                  'flex items-center justify-center p-2.5 rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                  isPlaying
-                    ? 'bg-foreground/10 text-foreground'
-                    : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.6)] hover:bg-primary/90'
-                )}
-                aria-label={isPlaying ? 'Pause playback' : 'Play bout'}
-              >
-                {isPlaying ? (
-                  <Pause className="h-4 w-4" />
-                ) : (
-                  <Play className="h-4 w-4 ml-0.5 fill-current" />
-                )}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
-              {isPlaying ? 'PAUSE PLAYBACK' : 'PLAY BOUT'}
-            </TooltipContent>
-          </Tooltip>
-
-          <div className="h-4 w-px bg-white/10" />
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                onClick={onSkipToEnd}
-                aria-label="Skip to end of bout"
-              >
-                <SkipForward className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
-              SKIP TO RESOLVE
-            </TooltipContent>
-          </Tooltip>
-        </div>
-
-        <div className="flex items-center bg-black border border-white/5 rounded-none p-1">
-          {[1, 2, 3].map((s) => (
-            <button
-              key={s}
-              onClick={() => setSpeed(s as 1 | 2 | 3)}
-              className={cn(
-                'px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary hover:bg-white/5',
-                speed === s
-                  ? 'bg-foreground/10 text-foreground'
-                  : 'text-muted-foreground/20 hover:text-muted-foreground/60'
-              )}
-              aria-label={`Set playback speed to ${s}x`}
-              aria-pressed={speed === s}
-            >
-              {s}X
-            </button>
-          ))}
-        </div>
+        <SpeedSelector speed={speed} setSpeed={setSpeed} />
       </div>
 
       <div className="flex items-center gap-6">

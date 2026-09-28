@@ -373,9 +373,91 @@ function buildThreatContext(
 }
 
 /**
+ * Negotiation stage — runs after every gate has passed: matchup skepticism,
+ * venue/purse counters, campaign-role accepts, and personality defaults.
+ */
+function evaluateNegotiationStage(
+  offer: BoutOffer,
+  rival: RivalStableData,
+  warrior: Warrior,
+  opponent: Warrior | undefined,
+  state: GameState | undefined,
+  promoter: GameState['promoters'][string] | undefined,
+  isTournamentHungry: boolean,
+  currentHP: number,
+  playerThreat: PlayerThreatLevel,
+  observedDanger: number
+): BoutEvaluation {
+  // Personality Logic
+  const personality = rival.owner.personality;
+  const hype = offer.hype;
+  const purse = offer.purse;
+
+  if (isTournamentHungry) {
+    return 'Accepted';
+  }
+
+  const skeptical = matchupSkepticism(warrior, opponent, personality, playerThreat, observedDanger);
+  if (skeptical) return skeptical;
+
+  // Venue counter — the arena itself is the sticking point. A CROWN_BID
+  // contender drags the bout onto their ladder arena; any warrior with a
+  // losing record at the offered venue counters toward their best stage.
+  // Runs before the CROWN_BID blanket accept and the purse counter: venue is
+  // a harder constraint than either, and a single negotiation round total
+  // (either counter tag makes the offer take-it-or-leave-it).
+  const alreadyVenueOrPurseCountered =
+    (offer.conditions?.includes(COUNTERED_VENUE_CONDITION) ?? false) ||
+    (offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false);
+  if (!alreadyVenueOrPurseCountered && personality !== 'Aggressive') {
+    if (venueCounterTarget(offer, warrior, rival, state)) {
+      return 'CounteredVenue';
+    }
+  }
+
+  // Dominant-player upset chase: a Showman takes the fight raw — beating
+  // the realm's top stable IS the spectacle, no purse negotiation needed.
+  // Runs after the venue counter (a Showman still won't fight on a bad stage).
+  if (playerThreat === 'Dominant' && personality === 'Showman') {
+    return 'Accepted';
+  }
+
+  // Campaign roles — shared advisor semantics: a CROWN_BID contender takes
+  // venue bouts where they hold a record (the ladder standing is the real
+  // payout); a PURSE_HUNTER takes volume and never holds out for a marquee.
+  if (warrior.campaignFocus === 'CROWN_BID' && offer.arenaId) {
+    const venue = warrior.career?.byArena?.[offer.arenaId];
+    if (((venue?.wins ?? 0) + (venue?.losses ?? 0)) > 0) {
+      return 'Accepted';
+    }
+  }
+
+  // Counter logic: famous warriors hold out for a purse worthy of their name.
+  const counted = purseCounter(
+    offer,
+    warrior,
+    rival,
+    promoter,
+    playerThreat,
+    alreadyVenueOrPurseCountered
+  );
+  if (counted) return counted;
+
+  if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
+  if (personality === 'Methodical' && currentHP < 85) {
+    return 'Declined';
+  }
+  if (personality === 'Showman' && hype > 120) return 'Accepted';
+  if (personality === 'Pragmatic' && purse > 250) return 'Accepted';
+
+  // Default
+  return 'Accepted';
+}
+
+/**
  * Evaluates a bout offer for a rival stable: hard gates, title-bout
  * resolution, risk refusals, desperation acceptance, survivability gates,
- * matchup skepticism, venue/purse counters, and personality accepts.
+ * then the negotiation stage (skepticism/venue/purse/personality).
  */
 export function evaluateBoutOffer(
   offer: BoutOffer,
@@ -435,61 +517,16 @@ export function evaluateBoutOffer(
   const survivable = survivabilityGates(warrior, rival, isDesperateForBout, currentHP);
   if (survivable) return survivable;
 
-  // Personality Logic
-  const personality = rival.owner.personality;
-  const hype = offer.hype;
-  const purse = offer.purse;
-
-  if (isTournamentHungry) {
-    return 'Accepted';
-  }
-
-  const skeptical = matchupSkepticism(warrior, opponent, personality, playerThreat, observedDanger);
-  if (skeptical) return skeptical;
-
-  // Venue counter — the arena itself is the sticking point. A CROWN_BID
-  // contender drags the bout onto their ladder arena; any warrior with a
-  // losing record at the offered venue counters toward their best stage.
-  // Runs before the CROWN_BID blanket accept and the purse counter: venue is
-  // a harder constraint than either, and a single negotiation round total
-  // (either counter tag makes the offer take-it-or-leave-it).
-  const alreadyVenueOrPurseCountered =
-    (offer.conditions?.includes(COUNTERED_VENUE_CONDITION) ?? false) ||
-    (offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false);
-  if (!alreadyVenueOrPurseCountered && personality !== 'Aggressive') {
-    if (venueCounterTarget(offer, warrior, rival, state)) {
-      return 'CounteredVenue';
-    }
-  }
-
-  // Dominant-player upset chase: a Showman takes the fight raw — beating
-  // the realm's top stable IS the spectacle, no purse negotiation needed.
-  // Runs after the venue counter (a Showman still won't fight on a bad stage).
-  if (playerThreat === 'Dominant' && personality === 'Showman') {
-    return 'Accepted';
-  }
-
-  // Campaign roles — shared advisor semantics: a CROWN_BID contender takes
-  // venue bouts where they hold a record (the ladder standing is the real
-  // payout); a PURSE_HUNTER takes volume and never holds out for a marquee.
-  if (warrior.campaignFocus === 'CROWN_BID' && offer.arenaId) {
-    const venue = warrior.career?.byArena?.[offer.arenaId];
-    if (((venue?.wins ?? 0) + (venue?.losses ?? 0)) > 0) {
-      return 'Accepted';
-    }
-  }
-
-  // Counter logic: famous warriors hold out for a purse worthy of their name.
-  const counted = purseCounter(offer, warrior, rival, promoter, playerThreat, alreadyVenueOrPurseCountered);
-  if (counted) return counted;
-
-  if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
-  if (personality === 'Methodical' && currentHP < 85) {
-    return 'Declined';
-  }
-  if (personality === 'Showman' && hype > 120) return 'Accepted';
-  if (personality === 'Pragmatic' && purse > 250) return 'Accepted';
-
-  // Default
-  return 'Accepted';
+  return evaluateNegotiationStage(
+    offer,
+    rival,
+    warrior,
+    opponent,
+    state,
+    promoter,
+    isTournamentHungry,
+    currentHP,
+    playerThreat,
+    observedDanger
+  );
 }

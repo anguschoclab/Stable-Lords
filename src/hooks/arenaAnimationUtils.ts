@@ -1,8 +1,78 @@
-import type { SpeechBubble, ArenaState } from '@/types/arena.types';
+import type { FighterPose, SpeechBubble, ArenaState } from '@/types/arena.types';
 import type { MinuteEvent } from '@/types/combat.types';
 import { classifyEvent } from '@/lib/boutUtils';
 
 const MIN_DISTANCE = 20; // Minimum distance between fighters
+
+const DEFAULT_POSE_A: FighterPose = {
+  x: 25,
+  y: 0,
+  facing: 'right',
+  stance: 'neutral',
+};
+
+const DEFAULT_POSE_D: FighterPose = {
+  x: 75,
+  y: 0,
+  facing: 'left',
+  stance: 'neutral',
+};
+
+/** Fresh arena state: default fighter poses, full health/fatigue, no bubbles. */
+export function initialArenaState(maxHpA: number, maxHpD: number): ArenaState {
+  return {
+    fighterA: { ...DEFAULT_POSE_A },
+    fighterD: { ...DEFAULT_POSE_D },
+    bubbles: [],
+    hpA: maxHpA,
+    hpD: maxHpD,
+    fpA: 100,
+    fpD: 100,
+  };
+}
+
+/** Apply end-of-bout stances: winner victorious, loser defeated and lowered. */
+export function applyVictoryPoses(prev: ArenaState, winner: 'A' | 'D'): ArenaState {
+  return {
+    ...prev,
+    fighterA: {
+      ...prev.fighterA,
+      stance: winner === 'A' ? 'victorious' : 'defeated',
+      y: winner === 'A' ? 0 : 15,
+    },
+    fighterD: {
+      ...prev.fighterD,
+      stance: winner === 'D' ? 'victorious' : 'defeated',
+      y: winner === 'D' ? 0 : 15,
+    },
+  };
+}
+
+/** Append a speech bubble, assigning it a fresh id. */
+export function appendBubble(
+  prev: ArenaState,
+  bubble: Omit<SpeechBubble, 'id'>
+): ArenaState {
+  return {
+    ...prev,
+    bubbles: [...prev.bubbles, { ...bubble, id: `bubble-${crypto.randomUUID()}` }],
+  };
+}
+
+/** Drop a speech bubble by id. */
+export function removeBubbleById(prev: ArenaState, id: string): ArenaState {
+  return { ...prev, bubbles: prev.bubbles.filter((b) => b.id !== id) };
+}
+
+/** Merge a partial pose patch onto one fighter. */
+export function patchFighterPose(
+  prev: ArenaState,
+  fighter: 'A' | 'D',
+  pose: Partial<FighterPose>
+): ArenaState {
+  const key = fighter === 'A' ? 'fighterA' : 'fighterD';
+  return { ...prev, [key]: { ...prev[key], ...pose } };
+}
 
 /**
  *

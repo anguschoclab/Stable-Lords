@@ -16,29 +16,14 @@ export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): b
 }
 
 /**
- * Applies week-boundary bookkeeping to the settled state: week/year rollover,
- * tournament-mode release, lifetime counters, training decay, rest pruning,
- * bout-offer cleanup, season-boundary resets, and deferred bout archiving.
+ * Accumulate the all-time counters — immune to the periodic truncation of
+ * arenaHistory. next === prev.slice(K) ++ appended (truncation only ever
+ * drops a prefix), so the boundary is located by scanning backwards for
+ * prev's last id — O(appended) instead of an O(history) Set-diff per array.
+ * Falls back to the diff if the expected suffix structure doesn't hold
+ * (defensive).
  */
-export function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
-  state.week = ctx.nextWeek;
-  state.year = ctx.nextYear;
-  state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
-  state.day = 0;
-
-  // Release tournament mode when entering a non-tournament week. The impact
-  // system can't write `undefined`, and headless/batch advances never run the
-  // day ticks that clear these flags — leaving them stuck on forever.
-  if (!isTournamentWeekOfYear(ctx.nextWeek)) {
-    state.isTournamentWeek = false;
-    state.activeTournamentId = undefined;
-  }
-
-  // All-time counters — immune to the periodic truncation of arenaHistory.
-  // next === prev.slice(K) ++ appended (truncation only ever drops a prefix),
-  // so the boundary is located by scanning backwards for prev's last id —
-  // O(appended) instead of an O(history) Set-diff per array. Falls back to
-  // the diff if the expected suffix structure doesn't hold (defensive).
+function accumulateLifetimeStats(state: GameState, oldState: GameState): void {
   const prevLifetime = state.lifetimeStats ?? { bouts: 0, kills: 0, retirements: 0 };
   const newIds = <T extends { id: unknown }>(next: T[] | undefined, prev: T[] | undefined) => {
     const n = next ?? [];
@@ -64,6 +49,77 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
     kills: prevLifetime.kills + newIds(state.graveyard, oldState.graveyard),
     retirements: prevLifetime.retirements + newIds(state.retired, oldState.retired),
   };
+}
+
+/**
+ * Season boundary crossed — prune season-scoped growth, reset the season
+ * points race for every warrior (player + rivals), then resync caches since
+ * roster identities changed.
+ */
+function applySeasonBoundaryReset(state: GameState, oldState: GameState): void {
+  if (state.season === oldState.season) return;
+  state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
+  // Season points race resets at the season boundary for every warrior.
+  state.roster = state.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w));
+  if (state.rivals) {
+    state.rivals = state.rivals.map((r) => ({
+      ...r,
+      seasonalGrowth: r.seasonalGrowth?.filter((sg) => sg.season === state.season),
+      roster: r.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w)),
+    }));
+  }
+  // Season boundary changed roster identities — resync caches.
+  buildWeekCaches(state);
+}
+
+/**
+ * Collect transcripts from this week's bout summaries for off-thread OPFS
+ * archiving, then clear them from state. Never performs I/O — the queue is
+ * drained by the main-thread caller.
+ */
+function deferBoutArchives(state: GameState, currentWeek: number): void {
+  const pendingArchives: Array<{
+    year: number;
+    season: number;
+    boutId: string;
+    transcript: string[];
+  }> = [];
+  for (const summary of state.arenaHistory || []) {
+    if (summary.transcript && summary.transcript.length > 0 && summary.week === currentWeek) {
+      const seasonIdx = ['Spring', 'Summer', 'Fall', 'Winter'].indexOf(state.season);
+      pendingArchives.push({
+        year: state.year,
+        season: seasonIdx >= 0 ? seasonIdx : 0,
+        boutId: summary.id,
+        transcript: summary.transcript,
+      });
+      // Clear transcript to save memory
+      summary.transcript = undefined;
+    }
+  }
+  state.deferredBoutLogs = [...(state.deferredBoutLogs || []), ...pendingArchives];
+}
+
+/**
+ * Applies week-boundary bookkeeping to the settled state: week/year rollover,
+ * tournament-mode release, lifetime counters, training decay, rest pruning,
+ * bout-offer cleanup, season-boundary resets, and deferred bout archiving.
+ */
+export function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
+  state.week = ctx.nextWeek;
+  state.year = ctx.nextYear;
+  state.absoluteWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek);
+  state.day = 0;
+
+  // Release tournament mode when entering a non-tournament week. The impact
+  // system can't write `undefined`, and headless/batch advances never run the
+  // day ticks that clear these flags — leaving them stuck on forever.
+  if (!isTournamentWeekOfYear(ctx.nextWeek)) {
+    state.isTournamentWeek = false;
+    state.activeTournamentId = undefined;
+  }
+
+  accumulateLifetimeStats(state, oldState);
 
   state.trainingAssignments = (state.trainingAssignments ?? [])
     .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
@@ -93,44 +149,9 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
   }
   state.warriorToOfferIds = warriorToOfferIds;
 
-  if (state.season !== oldState.season) {
-    state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
-    // Season points race resets at the season boundary for every warrior.
-    state.roster = state.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w));
-    if (state.rivals) {
-      state.rivals = state.rivals.map((r) => ({
-        ...r,
-        seasonalGrowth: r.seasonalGrowth?.filter((sg) => sg.season === state.season),
-        roster: r.roster.map((w) => (w.seasonPoints ? { ...w, seasonPoints: 0 } : w)),
-      }));
-    }
-    // Season boundary changed roster identities — resync caches.
-    buildWeekCaches(state);
-  }
+  applySeasonBoundaryReset(state, oldState);
 
   // Handle OPFS archiving — always defer to off-thread flush for consistency
-  const pendingArchives: Array<{
-    year: number;
-    season: number;
-    boutId: string;
-    transcript: string[];
-  }> = [];
-  for (const summary of state.arenaHistory || []) {
-    if (summary.transcript && summary.transcript.length > 0 && summary.week === ctx.currentWeek) {
-      const seasonIdx = ['Spring', 'Summer', 'Fall', 'Winter'].indexOf(state.season);
-      pendingArchives.push({
-        year: state.year,
-        season: seasonIdx >= 0 ? seasonIdx : 0,
-        boutId: summary.id,
-        transcript: summary.transcript,
-      });
-      // Clear transcript to save memory
-      summary.transcript = undefined;
-    }
-  }
-
-  // Store in state for batch flushing (drained by the main-thread caller —
-  // this function never performs I/O itself).
-  state.deferredBoutLogs = [...(state.deferredBoutLogs || []), ...pendingArchives];
+  deferBoutArchives(state, ctx.currentWeek);
   return state;
 }

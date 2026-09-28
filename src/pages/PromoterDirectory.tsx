@@ -49,6 +49,84 @@ function calculatePromoterStats(
   return { activeThisWeek, pendingProposals, totalOffers };
 }
 
+/** Preferred-styles badge row (or the no-preferences placeholder). */
+function StyleBiasBadges({ biases }: { biases: Promoter['biases'] }) {
+  return (
+    <div className="space-y-1.5">
+      <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
+        <Sword className="h-3 w-3" /> Preferred Styles
+      </span>
+      <div className="flex flex-wrap gap-1">
+        {biases.length > 0 ? (
+          biases.map((style) => (
+            <Badge key={style} variant="secondary" className="text-[9px] uppercase">
+              {STYLE_DISPLAY_NAMES[style]}
+            </Badge>
+          ))
+        ) : (
+          <span className="text-[10px] italic text-muted-foreground">No style preferences</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const CAPACITY_TEXT_TONE = {
+  high: 'text-destructive',
+  mid: 'text-arena-gold',
+  low: 'text-primary',
+} as const;
+
+const CAPACITY_BAR_TONE = {
+  high: 'bg-destructive',
+  mid: 'bg-arena-gold',
+  low: 'bg-primary',
+} as const;
+
+/** Weekly capacity meter — color escalates with utilization. */
+function CapacityBar({ used, capacity }: { used: number; capacity: number }) {
+  const percent = (used / capacity) * 100;
+  const tone = percent >= 80 ? 'high' : percent >= 50 ? 'mid' : 'low';
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between text-[10px] uppercase tracking-wider">
+        <span className="text-muted-foreground font-bold flex items-center gap-1">
+          <Calendar className="h-3 w-3" /> Weekly Capacity
+        </span>
+        <span className={`font-mono font-bold ${CAPACITY_TEXT_TONE[tone]}`}>
+          {used}/{capacity}
+        </span>
+      </div>
+      <div className="h-1.5 bg-muted rounded-none overflow-hidden">
+        <div
+          className={`h-full rounded-none transition-all duration-500 motion-reduce:transition-none ${CAPACITY_BAR_TONE[tone]}`}
+          style={{ width: `${Math.min(percent, 100)}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Three-up offer stats: active this week, pending proposals, lifetime total. */
+function OfferStatsGrid({ stats }: { stats: ReturnType<typeof calculatePromoterStats> }) {
+  return (
+    <div className="grid grid-cols-3 gap-2 pt-2 border-t border-border/50">
+      <div className="text-center space-y-0.5">
+        <div className="text-[10px] uppercase text-muted-foreground tracking-wider">Active</div>
+        <div className="text-lg font-black font-mono">{stats.activeThisWeek}</div>
+      </div>
+      <div className="text-center space-y-0.5 border-x border-border/50">
+        <div className="text-[10px] uppercase text-muted-foreground tracking-wider">Pending</div>
+        <div className="text-lg font-black font-mono">{stats.pendingProposals}</div>
+      </div>
+      <div className="text-center space-y-0.5">
+        <div className="text-[10px] uppercase text-muted-foreground tracking-wider">Total</div>
+        <div className="text-lg font-black font-mono">{stats.totalOffers}</div>
+      </div>
+    </div>
+  );
+}
+
 interface PromoterCardProps {
   promoter: Promoter;
   offers: Record<string, BoutOffer>;
@@ -59,8 +137,6 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
   const personality = PERSONALITY_CONFIG[promoter.personality];
   const tierColor = TIER_COLORS[promoter.tier];
   const stats = calculatePromoterStats(promoter.id, offers, currentWeek);
-  const capacityUsed = stats.activeThisWeek;
-  const capacityPercent = (capacityUsed / promoter.capacity) * 100;
 
   return (
     <Card className="group hover:border-primary/50 transition-all duration-300 motion-reduce:transition-none">
@@ -96,68 +172,9 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
         <p className="text-[11px] text-muted-foreground leading-relaxed">
           {personality.description}
         </p>
-
-        {/* Style Biases */}
-        <div className="space-y-1.5">
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
-            <Sword className="h-3 w-3" /> Preferred Styles
-          </span>
-          <div className="flex flex-wrap gap-1">
-            {promoter.biases.length > 0 ? (
-              promoter.biases.map((style) => (
-                <Badge key={style} variant="secondary" className="text-[9px] uppercase">
-                  {STYLE_DISPLAY_NAMES[style]}
-                </Badge>
-              ))
-            ) : (
-              <span className="text-[10px] italic text-muted-foreground">No style preferences</span>
-            )}
-          </div>
-        </div>
-
-        {/* Capacity Bar */}
-        <div className="space-y-1.5">
-          <div className="flex justify-between text-[10px] uppercase tracking-wider">
-            <span className="text-muted-foreground font-bold flex items-center gap-1">
-              <Calendar className="h-3 w-3" /> Weekly Capacity
-            </span>
-            <span
-              className={`font-mono font-bold ${capacityPercent >= 80 ? 'text-destructive' : capacityPercent >= 50 ? 'text-arena-gold' : 'text-primary'}`}
-            >
-              {capacityUsed}/{promoter.capacity}
-            </span>
-          </div>
-          <div className="h-1.5 bg-muted rounded-none overflow-hidden">
-            <div
-              className={`h-full rounded-none transition-all duration-500 motion-reduce:transition-none ${
-                capacityPercent >= 80
-                  ? 'bg-destructive'
-                  : capacityPercent >= 50
-                    ? 'bg-arena-gold'
-                    : 'bg-primary'
-              }`}
-              style={{ width: `${Math.min(capacityPercent, 100)}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-border/50">
-          <div className="text-center space-y-0.5">
-            <div className="text-[10px] uppercase text-muted-foreground tracking-wider">Active</div>
-            <div className="text-lg font-black font-mono">{stats.activeThisWeek}</div>
-          </div>
-          <div className="text-center space-y-0.5 border-x border-border/50">
-            <div className="text-[10px] uppercase text-muted-foreground tracking-wider">
-              Pending
-            </div>
-            <div className="text-lg font-black font-mono">{stats.pendingProposals}</div>
-          </div>
-          <div className="text-center space-y-0.5">
-            <div className="text-[10px] uppercase text-muted-foreground tracking-wider">Total</div>
-            <div className="text-lg font-black font-mono">{stats.totalOffers}</div>
-          </div>
-        </div>
+        <StyleBiasBadges biases={promoter.biases} />
+        <CapacityBar used={stats.activeThisWeek} capacity={promoter.capacity} />
+        <OfferStatsGrid stats={stats} />
       </CardContent>
 
       <CardFooter className="pt-0 flex gap-2">

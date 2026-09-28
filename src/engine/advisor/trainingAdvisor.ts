@@ -187,28 +187,55 @@ export function evaluateTrainingAdvice(
 
   // 6. If an attribute was found, return attribute training recommendation
   if (chosenAttr) {
-    const gainChance = computeGainChance(warrior, chosenAttr, trainers);
-    const label = ATTRIBUTE_LABELS[chosenAttr];
-    const pick = selectTrainerForAdvice(warrior, trainers, 'attribute', chosenAttr, state.treasury);
-    return {
-      mode: 'attribute',
-      targetAttribute: chosenAttr,
-      targetTrainerId: pick?.trainer.id,
-      gainChance,
-      headline: `Train ${label} (${Math.round(gainChance * 100)}% gain chance)`,
-      reasoning: `${label} strongly synergizes with ${warrior.style} fighting style.${
-        (state.season === 'Spring' && chosenAttr === 'CN') ||
-        (state.season === 'Summer' && chosenAttr === 'ST')
-          ? ` Accelerated by ${state.season} seasonal growth bonus.`
-          : ''
-      }${pick ? ` Recommended coach: ${pick.trainer.name}.` : ''}${
-        pick?.downgraded ? ' Treasury covers only lower-tier coaching this week.' : ''
-      }`,
-      burnWarning: burnSummary,
-    };
+    return attributeAdvice(warrior, state, trainers, chosenAttr, burnSummary);
   }
 
   // 7. If all trainable attributes are capped, fallback to Skill Drilling or Trait Training
+  return cappedFallbackAdvice(warrior, state, trainers, burnSummary);
+}
+
+/**
+ * Attribute-training recommendation for a chosen trainable attribute:
+ * gain chance, style synergy text, seasonal bonus note, coach pick.
+ */
+function attributeAdvice(
+  warrior: Warrior,
+  state: GameState,
+  trainers: Trainer[],
+  chosenAttr: keyof Attributes,
+  burnSummary: string | undefined
+): WarriorTrainingAdvice {
+  const gainChance = computeGainChance(warrior, chosenAttr, trainers);
+  const label = ATTRIBUTE_LABELS[chosenAttr];
+  const pick = selectTrainerForAdvice(warrior, trainers, 'attribute', chosenAttr, state.treasury);
+  return {
+    mode: 'attribute',
+    targetAttribute: chosenAttr,
+    targetTrainerId: pick?.trainer.id,
+    gainChance,
+    headline: `Train ${label} (${Math.round(gainChance * 100)}% gain chance)`,
+    reasoning: `${label} strongly synergizes with ${warrior.style} fighting style.${
+      (state.season === 'Spring' && chosenAttr === 'CN') ||
+      (state.season === 'Summer' && chosenAttr === 'ST')
+        ? ` Accelerated by ${state.season} seasonal growth bonus.`
+        : ''
+    }${pick ? ` Recommended coach: ${pick.trainer.name}.` : ''}${
+      pick?.downgraded ? ' Treasury covers only lower-tier coaching this week.' : ''
+    }`,
+    burnWarning: burnSummary,
+  };
+}
+
+/**
+ * Fallback recommendation once every trainable attribute is capped: skill
+ * drilling while a drill slot remains, otherwise trait development.
+ */
+function cappedFallbackAdvice(
+  warrior: Warrior,
+  state: GameState,
+  trainers: Trainer[],
+  burnSummary: string | undefined
+): WarriorTrainingAdvice {
   const drillKeys: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'];
   const drilledSkill = drillKeys.find((s) => (warrior.skillDrills?.[s] ?? 0) < 3);
 

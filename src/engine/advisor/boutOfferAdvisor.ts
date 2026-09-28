@@ -129,28 +129,23 @@ interface OfferScoreContext {
   pursePriority: boolean;
 }
 
-/** Qualitative assessment of one offer — warnings, reasons, danger, flags. */
-function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
-  const { state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate } = s;
-  const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
-  const opponent = opponentId ? findWarriorById(state, opponentId) ?? null : null;
-  const styleEdge = opponent ? getMatchupBonus(warrior.style, opponent.style) : 0;
-  const weatherReason = acceptanceWeatherBlock(warrior, state.weather ?? 'Clear');
-  const promoter = state.promoters?.[offer.promoterId];
-
+/**
+ * Danger escalation pass — lethality, weather hazard, style counter,
+ * sadistic promoter, rematch caution. Returns the danger level plus the
+ * warnings/reasons it produced.
+ */
+function collectDangerSignals(input: {
+  opponent: Warrior | null;
+  styleEdge: number;
+  weatherReason: string | null;
+  weather: GameState['weather'];
+  promoterPersonality: string | undefined;
+  h2h: ReturnType<typeof deriveHeadToHead> | null;
+}): { dangerLevel: CombatDangerLevel; warnings: string[]; reasons: string[] } {
+  const { opponent, styleEdge, weatherReason, weather, promoterPersonality, h2h } = input;
   const warnings: string[] = [];
   const reasons: string[] = [];
   let dangerLevel: CombatDangerLevel = 'SAFE';
-
-  // Scout intel & head-to-head history for this specific opponent
-  const intel = opponentId
-    ? getOpponentIntel(state, opponentId, { tokens: ctx?.insightTokens })
-    : [];
-  for (const line of summarizeIntel(intel)) {
-    reasons.push(`Scout intel: ${line}`);
-  }
-  const h2h = opponent ? deriveHeadToHead(state, warrior.id, opponent.id) : null;
-  const rematchLosing = !!h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins;
 
   // Lethality
   const kills = opponent?.career?.kills ?? 0;
@@ -162,7 +157,7 @@ function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
   // Weather
   if (weatherReason) {
     if (dangerLevel !== 'LETHAL') dangerLevel = 'HAZARDOUS';
-    warnings.push(`Weather hazard (${state.weather}): ${weatherReason}`);
+    warnings.push(`Weather hazard (${weather}): ${weatherReason}`);
   }
 
   // Style Matchup
@@ -181,18 +176,56 @@ function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
   }
 
   // Promoter
-  if (promoter?.personality === 'Sadistic') {
+  if (promoterPersonality === 'Sadistic') {
     if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
     warnings.push('Sadistic promoter: Elevated combat lethality and underdog bias.');
   }
 
   // Rematch caution (recent head-to-head record)
-  if (h2h && rematchLosing) {
+  if (h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins) {
     if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
     warnings.push(
       `Rematch caution: ${h2h.wins}-${h2h.losses} career record vs ${opponent?.name}.`
     );
   }
+
+  return { dangerLevel, warnings, reasons };
+}
+
+/** Qualitative assessment of one offer — warnings, reasons, danger, flags. */
+function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
+  const { state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate } = s;
+  const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
+  const opponent = opponentId ? findWarriorById(state, opponentId) ?? null : null;
+  const styleEdge = opponent ? getMatchupBonus(warrior.style, opponent.style) : 0;
+  const weatherReason = acceptanceWeatherBlock(warrior, state.weather ?? 'Clear');
+  const promoter = state.promoters?.[offer.promoterId];
+
+  const warnings: string[] = [];
+  const reasons: string[] = [];
+
+  // Scout intel & head-to-head history for this specific opponent
+  const intel = opponentId
+    ? getOpponentIntel(state, opponentId, { tokens: ctx?.insightTokens })
+    : [];
+  for (const line of summarizeIntel(intel)) {
+    reasons.push(`Scout intel: ${line}`);
+  }
+  const h2h = opponent ? deriveHeadToHead(state, warrior.id, opponent.id) : null;
+  const rematchLosing = !!h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins;
+
+  const danger = collectDangerSignals({
+    opponent,
+    styleEdge,
+    weatherReason,
+    weather: state.weather,
+    promoterPersonality: promoter?.personality,
+    h2h,
+  });
+  warnings.push(...danger.warnings);
+  reasons.push(...danger.reasons);
+  const dangerLevel = danger.dangerLevel;
+  const kills = opponent?.career?.kills ?? 0;
 
   // Title Bout — the crown is at stake. Headline + large score bump: this
   // is not an ordinary purse decision.

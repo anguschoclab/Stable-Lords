@@ -1,4 +1,4 @@
-import type { GameState, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
+import type { GameState, RivalStableData, Warrior, WeatherType, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId, StableId } from '@/types/shared.types';
 import {
   respondToBoutOffer,
@@ -44,6 +44,89 @@ function applyOfferImpact(currentOffers: OfferMap, impact: StateImpact): void {
 }
 
 /**
+ * Weather-skepticism pre-gate: verifyBoutAcceptance runs before the full
+ * evaluation — title offers are flagged so crown obligations bypass the soft
+ * gates. Returns true when the warrior declined (impact applied).
+ */
+function weatherGateDeclined(
+  state: GameState,
+  currentOffers: OfferMap,
+  offer: BoutOffer,
+  trackedOffer: BoutOffer,
+  wId: WarriorId,
+  owningRival: RivalStableData,
+  rivalWarrior: Warrior,
+  opponent: Warrior | undefined
+): boolean {
+  if (!opponent) return false;
+  const acceptance = boutAcceptance.verifyBoutAcceptance(
+    owningRival,
+    rivalWarrior,
+    opponent,
+    state.weather as WeatherType,
+    { isTitleBout: !!trackedOffer.titleArenaId }
+  );
+  if (acceptance.accepted) return false;
+  const impact = respondToBoutOffer(
+    { ...state, boutOffers: currentOffers },
+    offer.id as BoutOfferId,
+    rivalWarrior.id as WarriorId,
+    'Declined'
+  );
+  applyOfferImpact(currentOffers, impact);
+  return true;
+}
+
+/**
+ * Applies a counter response (venue first, purse fallback) and returns true
+ * when the counter resolved the offer — false for non-counter responses.
+ */
+function applyCounterResponse(
+  response: string,
+  state: GameState,
+  currentOffers: OfferMap,
+  offer: BoutOffer,
+  trackedOffer: BoutOffer,
+  owningRival: RivalStableData,
+  rivalWarrior: Warrior,
+  wId: WarriorId
+): boolean {
+  if (response === 'CounteredVenue') {
+    // Venue counter: swap the arena, re-pend the other side — the purse
+    // is untouched and the counter tag closes the negotiation round.
+    const target = boutAcceptance.venueCounterTarget(
+      trackedOffer,
+      rivalWarrior,
+      owningRival,
+      state
+    );
+    if (target) {
+      const impact = counterBoutVenue(
+        { ...state, boutOffers: currentOffers },
+        offer.id as BoutOfferId,
+        wId,
+        target
+      );
+      applyOfferImpact(currentOffers, impact);
+      return true;
+    }
+    // No venue to counter toward — fall through to the purse counter.
+  }
+
+  if (response === 'Countered' || response === 'CounteredVenue') {
+    // One negotiation round: sweeten the purse and re-pend the other side.
+    const impact = counterBoutOffer(
+      { ...state, boutOffers: currentOffers },
+      offer.id as BoutOfferId,
+      wId
+    );
+    applyOfferImpact(currentOffers, impact);
+    return true;
+  }
+  return false;
+}
+
+/**
  * Resolves one warrior's response to one offer within a rival slate.
  * Returns true when the warrior is committed (accepted) this week.
  */
@@ -73,26 +156,19 @@ function respondForWarrior(
   const opponentId = offer.warriorIds.find((id) => id !== wId);
   const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
 
-  // Call verifyBoutAcceptance first for weather skepticism — title
-  // offers are flagged so crown obligations bypass the soft gates.
-  if (opponent) {
-    const acceptance = boutAcceptance.verifyBoutAcceptance(
+  if (
+    weatherGateDeclined(
+      state,
+      currentOffers,
+      offer,
+      trackedOffer,
+      wId,
       owningRival,
       rivalWarrior,
-      opponent,
-      state.weather as WeatherType,
-      { isTitleBout: !!trackedOffer.titleArenaId }
-    );
-    if (!acceptance.accepted) {
-      const impact = respondToBoutOffer(
-        { ...state, boutOffers: currentOffers },
-        offer.id as BoutOfferId,
-        rivalWarrior.id as WarriorId,
-        'Declined'
-      );
-      applyOfferImpact(currentOffers, impact);
-      return;
-    }
+      opponent
+    )
+  ) {
+    return;
   }
 
   const explain: { reason?: string } = {};
@@ -111,36 +187,18 @@ function respondForWarrior(
     pickedWarriors.add(wId);
   }
 
-  if (response === 'CounteredVenue') {
-    // Venue counter: swap the arena, re-pend the other side — the purse
-    // is untouched and the counter tag closes the negotiation round.
-    const target = boutAcceptance.venueCounterTarget(
+  if (
+    applyCounterResponse(
+      response,
+      state,
+      currentOffers,
+      offer,
       trackedOffer,
-      rivalWarrior,
       owningRival,
-      state
-    );
-    if (target) {
-      const impact = counterBoutVenue(
-        { ...state, boutOffers: currentOffers },
-        offer.id as BoutOfferId,
-        rivalWarrior.id as WarriorId,
-        target
-      );
-      applyOfferImpact(currentOffers, impact);
-      return;
-    }
-    // No venue to counter toward — fall through to the purse counter.
-  }
-
-  if (response === 'Countered' || response === 'CounteredVenue') {
-    // One negotiation round: sweeten the purse and re-pend the other side.
-    const impact = counterBoutOffer(
-      { ...state, boutOffers: currentOffers },
-      offer.id as BoutOfferId,
-      rivalWarrior.id as WarriorId
-    );
-    applyOfferImpact(currentOffers, impact);
+      rivalWarrior,
+      wId
+    )
+  ) {
     return;
   }
 

@@ -35,6 +35,56 @@ interface BoutResult {
 /**
  *
  */
+/** Build one FTUE warrior record; applies bout-outcome fame/popularity when the orphan fought. */
+function buildFTUEWarrior(
+  pw: SelectedWarrior,
+  idx: number,
+  boutResult: BoutResult | null,
+  playerPlan: FightPlan | null | undefined,
+  finishRng: SeededRNGService
+) {
+  // Use the orphan's pre-generated potential (or regenerate if somehow missing)
+  const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);
+  // Build base plan and merge trait-based modifiers
+  const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
+  const traitData = TRAIT_DATA[pw.trait];
+  const traitMods = traitData?.effect.fightPlanMod ?? {};
+  // warrior[0] is the plan warrior — apply player's custom plan if provided
+  const plan =
+    idx === 0 && playerPlan ? { ...playerPlan, ...traitMods } : { ...basePlan, ...traitMods };
+  const w = makeWarrior(
+    finishRng.uuid() as import('@/types/shared.types').WarriorId,
+    pw.name,
+    pw.style,
+    pw.attrs,
+    {
+      potential,
+      age: pw.age,
+      plan,
+      traits: [pw.trait],
+      lore: pw.lore,
+      origin: pw.origin,
+    },
+    finishRng
+  );
+  if (boutResult) {
+    const wasA = pw.name === boutResult.a.name;
+    const wasD = pw.name === boutResult.d.name;
+    if (wasA || wasD) {
+      const won =
+        (wasA && boutResult.outcome.winner === 'A') ||
+        (wasD && boutResult.outcome.winner === 'D');
+      return {
+        ...w,
+        fame: won ? 1 : 0,
+        popularity: won ? 1 : 0,
+        flair: (boutResult.outcome.post?.tags ?? []).includes('Flashy') && won ? ['Flashy'] : [],
+      };
+    }
+  }
+  return w;
+}
+
 export function buildFTUEInitialState(
   baseState: GameState,
   selectedWarriors: SelectedWarrior[],
@@ -44,48 +94,9 @@ export function buildFTUEInitialState(
 ) {
   const finishRng = new SeededRNGService(poolSeedValue + 999);
 
-  const warriors = selectedWarriors.map((pw, idx) => {
-    // Use the orphan's pre-generated potential (or regenerate if somehow missing)
-    const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);
-    // Build base plan and merge trait-based modifiers
-    const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
-    const traitData = TRAIT_DATA[pw.trait];
-    const traitMods = traitData?.effect.fightPlanMod ?? {};
-    // warrior[0] is the plan warrior — apply player's custom plan if provided
-    const plan =
-      idx === 0 && playerPlan ? { ...playerPlan, ...traitMods } : { ...basePlan, ...traitMods };
-    const w = makeWarrior(
-      finishRng.uuid() as import('@/types/shared.types').WarriorId,
-      pw.name,
-      pw.style,
-      pw.attrs,
-      {
-        potential,
-        age: pw.age,
-        plan,
-        traits: [pw.trait],
-        lore: pw.lore,
-        origin: pw.origin,
-      },
-      finishRng
-    );
-    if (boutResult) {
-      const wasA = pw.name === boutResult.a.name;
-      const wasD = pw.name === boutResult.d.name;
-      if (wasA || wasD) {
-        const won =
-          (wasA && boutResult.outcome.winner === 'A') ||
-          (wasD && boutResult.outcome.winner === 'D');
-        return {
-          ...w,
-          fame: won ? 1 : 0,
-          popularity: won ? 1 : 0,
-          flair: (boutResult.outcome.post?.tags ?? []).includes('Flashy') && won ? ['Flashy'] : [],
-        };
-      }
-    }
-    return w;
-  });
+  const warriors = selectedWarriors.map((pw, idx) =>
+    buildFTUEWarrior(pw, idx, boutResult, playerPlan, finishRng)
+  );
 
   const deadWarriorName =
     boutResult?.outcome.by === 'Kill'

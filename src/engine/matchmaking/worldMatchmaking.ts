@@ -19,17 +19,17 @@ const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
  * Ensures the world evolves (XP, fame, mortality) even without player input.
  */
 
+type EligibleWarrior = { warrior: Warrior; stable: RivalStableData };
+
 /**
- * Plan world bouts.
- * @param state - The current game state.
- * @param rng - RNG service.
+ * Collect eligible warriors.
  */
-export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
-  const targetWeek = state.absoluteWeek + 1;
-  // World bouts are scheduled for absoluteWeek + 2 (see offer.boutWeek below);
-  // exclude warriors already signed for that week to prevent double-booking.
-  const bookedIds = collectBookedWarriorIds(state, state.absoluteWeek + 2);
-  const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
+function collectEligibleWarriors(
+  state: GameState,
+  bookedIds: Set<string>,
+  targetWeek: number
+): EligibleWarrior[] {
+  const eligibleWarriors: EligibleWarrior[] = [];
 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
@@ -55,6 +55,101 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
     }
   });
 
+  return eligibleWarriors;
+}
+
+/**
+ * Find opponent.
+ */
+function findOpponent(
+  entryA: EligibleWarrior,
+  i: number,
+  pool: EligibleWarrior[],
+  pairedIds: Set<string>,
+  recentFightPairs: Set<string>
+): EligibleWarrior | null {
+  // Find a suitable opponent (proximity in fame + different stable)
+  // If the stable is on a VENDETTA intent with a target, bias toward that stable's warriors.
+  const vendettaTargetId =
+    entryA.stable.strategy?.intent === 'VENDETTA'
+      ? entryA.stable.strategy.targetStableId
+      : undefined;
+
+  let bestOpponent: EligibleWarrior | null = null;
+  let minFameGap = Infinity;
+
+  for (let j = 0; j < pool.length; j++) {
+    if (i === j) continue;
+    const entryD = pool[j];
+    if (!entryD || pairedIds.has(entryD.warrior.id)) continue;
+    if (entryA.stable.id === entryD.stable.id) continue;
+    if (recentFightPairs.has(getPairKey(entryA.warrior.id, entryD.warrior.id))) continue;
+
+    const fameGap = Math.abs((entryA.warrior.fame || 0) - (entryD.warrior.fame || 0));
+
+    // Prefer vendetta target if fame is within ±200
+    if (vendettaTargetId && entryD.stable.id === vendettaTargetId && fameGap <= 200) {
+      bestOpponent = entryD;
+      break;
+    }
+
+    if (fameGap < minFameGap) {
+      minFameGap = fameGap;
+      bestOpponent = entryD;
+    }
+
+    if (fameGap < 50) break; // Good enough for background sim
+  }
+
+  return bestOpponent;
+}
+
+/**
+ * Build world bout offer.
+ */
+function buildWorldBoutOffer(
+  entryA: EligibleWarrior,
+  bestOpponent: EligibleWarrior,
+  state: GameState,
+  rng: IRNGService
+): BoutOffer {
+  const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
+  const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng, {
+    weather: state.weather,
+  });
+  return {
+    id: offerId,
+    promoterId: WORLD_MATCHMAKING,
+    proposerStableId: entryA.stable.id,
+    warriorIds: [entryA.warrior.id, bestOpponent.warrior.id],
+    boutWeek: displayWeek(state.absoluteWeek + 2),
+    expirationWeek: displayWeek(state.absoluteWeek + 1),
+    createdAbsoluteWeek: state.absoluteWeek,
+    purse: 300 + Math.floor(rng.next() * 200), // Variable purses
+    hype: 100 + Math.floor(rng.next() * 100),
+    status: 'Proposed',
+    responses: {
+      [entryA.warrior.id]: 'Pending',
+      [bestOpponent.warrior.id]: 'Pending',
+    },
+    conditions: [],
+    createdAt: weekToTimestamp(state.absoluteWeek || state.week),
+    arenaId,
+  };
+}
+
+/**
+ * Plan world bouts.
+ * @param state - The current game state.
+ * @param rng - RNG service.
+ */
+export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
+  const targetWeek = state.absoluteWeek + 1;
+  // World bouts are scheduled for absoluteWeek + 2 (see offer.boutWeek below);
+  // exclude warriors already signed for that week to prevent double-booking.
+  const bookedIds = collectBookedWarriorIds(state, state.absoluteWeek + 2);
+  const eligibleWarriors = collectEligibleWarriors(state, bookedIds, targetWeek);
+
   if (eligibleWarriors.length < 2) return [];
 
   const recentFightPairs = buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4);
@@ -78,67 +173,12 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
     const entryA = pool[i];
     if (!entryA || pairedIds.has(entryA.warrior.id)) continue;
 
-    // Find a suitable opponent (proximity in fame + different stable)
-    // If the stable is on a VENDETTA intent with a target, bias toward that stable's warriors.
-    const vendettaTargetId =
-      entryA.stable.strategy?.intent === 'VENDETTA'
-        ? entryA.stable.strategy.targetStableId
-        : undefined;
-
-    let bestOpponent: typeof entryA | null = null;
-    let minFameGap = Infinity;
-
-    for (let j = 0; j < pool.length; j++) {
-      if (i === j) continue;
-      const entryD = pool[j];
-      if (!entryD || pairedIds.has(entryD.warrior.id)) continue;
-      if (entryA.stable.id === entryD.stable.id) continue;
-      if (recentFightPairs.has(getPairKey(entryA.warrior.id, entryD.warrior.id))) continue;
-
-      const fameGap = Math.abs((entryA.warrior.fame || 0) - (entryD.warrior.fame || 0));
-
-      // Prefer vendetta target if fame is within ±200
-      if (vendettaTargetId && entryD.stable.id === vendettaTargetId && fameGap <= 200) {
-        bestOpponent = entryD;
-        break;
-      }
-
-      if (fameGap < minFameGap) {
-        minFameGap = fameGap;
-        bestOpponent = entryD;
-      }
-
-      if (fameGap < 50) break; // Good enough for background sim
-    }
+    const bestOpponent = findOpponent(entryA, i, pool, pairedIds, recentFightPairs);
 
     if (bestOpponent) {
       pairedIds.add(entryA.warrior.id);
       pairedIds.add(bestOpponent.warrior.id);
-
-      const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
-      const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng, {
-        weather: state.weather,
-      });
-      const offer: BoutOffer = {
-        id: offerId,
-        promoterId: WORLD_MATCHMAKING,
-        proposerStableId: entryA.stable.id,
-        warriorIds: [entryA.warrior.id, bestOpponent.warrior.id],
-        boutWeek: displayWeek(state.absoluteWeek + 2),
-        expirationWeek: displayWeek(state.absoluteWeek + 1),
-        createdAbsoluteWeek: state.absoluteWeek,
-        purse: 300 + Math.floor(rng.next() * 200), // Variable purses
-        hype: 100 + Math.floor(rng.next() * 100),
-        status: 'Proposed',
-        responses: {
-          [entryA.warrior.id]: 'Pending',
-          [bestOpponent.warrior.id]: 'Pending',
-        },
-        conditions: [],
-        createdAt: weekToTimestamp(state.absoluteWeek || state.week),
-        arenaId,
-      };
-      offers.push(offer);
+      offers.push(buildWorldBoutOffer(entryA, bestOpponent, state, rng));
     }
   }
 

@@ -15,15 +15,147 @@ interface TournamentHistoryProps {
   arenaHistory?: FightSummary[];
 }
 
-/**
- * Tournament history.
- * @param  - {
-  past tournaments,
-  season icons,
-  season names,
-  current season,
-}.
- */
+/** One archived tournament row with an expandable bout list. */
+function TournamentEntryRow({
+  entry,
+  arenaHistory,
+  expanded,
+  onToggle,
+}: {
+  entry: TournamentEntry;
+  arenaHistory: FightSummary[];
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  const bouts = expanded ? getFightsForTournament(arenaHistory, entry.id) : [];
+
+  return (
+    <div className="bg-black/20 border border-white/5">
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <Trophy className="h-4 w-4 text-arena-gold drop-shadow-[0_0_8px_hsla(var(--arena-gold),0.6)]" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+            Wk {entry.week}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <BookmarkButton entityType="tournament" entityId={entry.id} size="sm" />
+          <span className="font-display font-black text-xs text-arena-gold uppercase tracking-tight">
+            {entry.champion ?? 'VACANT'}
+          </span>
+          <button
+            type="button"
+            onClick={onToggle}
+            className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 hover:text-foreground transition-colors motion-reduce:transition-none"
+          >
+            <Swords className="h-3 w-3" />
+            Bouts
+            {expanded ? (
+              <ChevronDown className="h-3 w-3" />
+            ) : (
+              <ChevronRight className="h-3 w-3" />
+            )}
+          </button>
+        </div>
+      </div>
+      {expanded && (
+        <div className="px-3 pb-3 space-y-1.5">
+          {bouts.length === 0 ? (
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/30 py-2">
+              No recorded bouts in archive
+            </p>
+          ) : (
+            bouts.map((f) => (
+              <div
+                key={f.id}
+                className="flex items-center justify-between text-[10px] py-1.5 px-2 bg-white/[0.02] border-l-2 border-arena-gold/30"
+              >
+                <span className="text-foreground/80">{f.title}</span>
+                <span className="font-black uppercase tracking-widest text-muted-foreground/50">
+                  {f.by}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** One season column: archive entries or the empty-season placeholder. */
+function SeasonCard({
+  season,
+  tournaments,
+  seasonIcons,
+  seasonNames,
+  isCurrent,
+  arenaHistory,
+  expandedId,
+  onToggleEntry,
+}: {
+  season: string;
+  tournaments: TournamentEntry[];
+  seasonIcons: Record<string, string>;
+  seasonNames: Record<string, string>;
+  isCurrent: boolean;
+  arenaHistory: FightSummary[];
+  expandedId: string | null;
+  onToggleEntry: (id: string) => void;
+}) {
+  return (
+    <Surface
+      variant={isCurrent ? 'gold' : 'glass'}
+      padding="none"
+      className={cn(
+        'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 overflow-hidden relative group',
+        !isCurrent && 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'
+      )}
+    >
+      {isCurrent && (
+        <div className="absolute top-0 right-0 p-3">
+          <div className="h-2 w-2 rounded-full bg-arena-gold animate-ping motion-reduce:animate-none" />
+        </div>
+      )}
+      <div className="p-4 border-b border-white/5 bg-secondary/5 flex items-center gap-3">
+        <span className="text-xl group-hover:scale-125 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none">
+          {seasonIcons[season]}
+        </span>
+        <span className="font-display font-black uppercase text-[10px] tracking-[0.2em]">
+          {seasonNames[season]}
+        </span>
+      </div>
+      <div className="p-5">
+        {tournaments.length > 0 ? (
+          <div className="space-y-4">
+            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+              Champion Archives
+            </div>
+            {tournaments.map((t) => (
+              <TournamentEntryRow
+                key={t.id}
+                entry={t}
+                arenaHistory={arenaHistory}
+                expanded={expandedId === t.id}
+                onToggle={() => onToggleEntry(t.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="py-8 text-center text-muted-foreground/20 border border-dashed border-white/5">
+            <p className="text-[9px] font-black uppercase tracking-widest leading-relaxed">
+              No Champions Recorded
+              <br />
+              For This Season
+            </p>
+          </div>
+        )}
+      </div>
+    </Surface>
+  );
+}
+
+/** Past champions grouped into a four-season grid. */
 export function TournamentHistory({
   pastTournaments,
   seasonIcons,
@@ -34,111 +166,19 @@ export function TournamentHistory({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {['Spring', 'Summer', 'Fall', 'Winter'].map((s) => {
-        const pastForSeason = pastTournaments.filter((t) => t.season === s);
-        const isCurrent = s === currentSeason;
-
-        return (
-          <Surface
-            key={s}
-            variant={isCurrent ? 'gold' : 'glass'}
-            padding="none"
-            className={cn(
-              'transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 overflow-hidden relative group',
-              !isCurrent && 'opacity-40 grayscale hover:grayscale-0 hover:opacity-100'
-            )}
-          >
-            {isCurrent && (
-              <div className="absolute top-0 right-0 p-3">
-                <div className="h-2 w-2 rounded-full bg-arena-gold animate-ping motion-reduce:animate-none" />
-              </div>
-            )}
-            <div className="p-4 border-b border-white/5 bg-secondary/5 flex items-center gap-3">
-              <span className="text-xl group-hover:scale-125 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none">
-                {seasonIcons[s]}
-              </span>
-              <span className="font-display font-black uppercase text-[10px] tracking-[0.2em]">
-                {seasonNames[s]}
-              </span>
-            </div>
-            <div className="p-5">
-              {pastForSeason.length > 0 ? (
-                <div className="space-y-4">
-                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-                    Champion Archives
-                  </div>
-                  {pastForSeason.map((t) => {
-                    const bouts =
-                      expandedId === t.id ? getFightsForTournament(arenaHistory, t.id) : [];
-                    return (
-                      <div key={t.id} className="bg-black/20 border border-white/5">
-                        <div className="flex items-center justify-between p-3">
-                          <div className="flex items-center gap-3">
-                            <Trophy className="h-4 w-4 text-arena-gold drop-shadow-[0_0_8px_hsla(var(--arena-gold),0.6)]" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                              Wk {t.week}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <BookmarkButton entityType="tournament" entityId={t.id} size="sm" />
-                            <span className="font-display font-black text-xs text-arena-gold uppercase tracking-tight">
-                              {t.champion ?? 'VACANT'}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setExpandedId((prev) => (prev === t.id ? null : t.id))
-                              }
-                              className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 hover:text-foreground transition-colors motion-reduce:transition-none"
-                            >
-                              <Swords className="h-3 w-3" />
-                              Bouts
-                              {expandedId === t.id ? (
-                                <ChevronDown className="h-3 w-3" />
-                              ) : (
-                                <ChevronRight className="h-3 w-3" />
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                        {expandedId === t.id && (
-                          <div className="px-3 pb-3 space-y-1.5">
-                            {bouts.length === 0 ? (
-                              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/30 py-2">
-                                No recorded bouts in archive
-                              </p>
-                            ) : (
-                              bouts.map((f) => (
-                                <div
-                                  key={f.id}
-                                  className="flex items-center justify-between text-[10px] py-1.5 px-2 bg-white/[0.02] border-l-2 border-arena-gold/30"
-                                >
-                                  <span className="text-foreground/80">{f.title}</span>
-                                  <span className="font-black uppercase tracking-widest text-muted-foreground/50">
-                                    {f.by}
-                                  </span>
-                                </div>
-                              ))
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="py-8 text-center text-muted-foreground/20 border border-dashed border-white/5">
-                  <p className="text-[9px] font-black uppercase tracking-widest leading-relaxed">
-                    No Champions Recorded
-                    <br />
-                    For This Season
-                  </p>
-                </div>
-              )}
-            </div>
-          </Surface>
-        );
-      })}
+      {['Spring', 'Summer', 'Fall', 'Winter'].map((s) => (
+        <SeasonCard
+          key={s}
+          season={s}
+          tournaments={pastTournaments.filter((t) => t.season === s)}
+          seasonIcons={seasonIcons}
+          seasonNames={seasonNames}
+          isCurrent={s === currentSeason}
+          arenaHistory={arenaHistory}
+          expandedId={expandedId}
+          onToggleEntry={(id) => setExpandedId((prev) => (prev === id ? null : id))}
+        />
+      ))}
     </div>
   );
 }

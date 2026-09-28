@@ -46,6 +46,53 @@ function applyInsightToken(w: Warrior, token: InsightToken): Warrior {
   return draft;
 }
 
+/** Move `warriorId` from the roster into the graveyard with death metadata. */
+function retireToGraveyard(
+  state: GameStore,
+  warriorId: WarriorId,
+  killedBy: string,
+  cause: string,
+  deathEvent: Parameters<GameStore['killWarrior']>[3]
+): Partial<GameStore> {
+  const victim = state.roster.find((w: Warrior) => w.id === warriorId);
+  if (!victim) return state;
+
+  const dead: Warrior = {
+    ...victim,
+    status: 'Dead',
+    deathWeek: state.week,
+    deathCause: cause,
+    killedBy,
+    deathEvent,
+    isDead: true,
+    dateOfDeath: formatWeek(state.week, state.season),
+    causeOfDeath: cause,
+  };
+
+  return {
+    roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
+    graveyard: [...state.graveyard, dead],
+    unacknowledgedDeaths: [...(state.unacknowledgedDeaths || []), warriorId],
+  };
+}
+
+/** Move `warriorId` from the roster into the retired list. */
+function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameStore> {
+  const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+  if (!warrior) return state;
+
+  const ret: Warrior = {
+    ...warrior,
+    status: 'Retired',
+    retiredWeek: state.week,
+  };
+
+  return {
+    roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
+    retired: [...state.retired, ret],
+  };
+}
+
 /**
  * Creates roster-related actions for the game store, including managing warriors,
  * insight tokens, equipment, and death acknowledgements.
@@ -62,64 +109,15 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       cause: string,
       deathEvent?: Parameters<GameStore['killWarrior']>[3]
     ) => {
-      set((state) => {
-        const victim = state.roster.find((w: Warrior) => w.id === warriorId);
-        if (!victim) return state;
-
-        const dead: Warrior = {
-          ...victim,
-          status: 'Dead',
-          deathWeek: state.week,
-          deathCause: cause,
-          killedBy,
-          deathEvent,
-          isDead: true,
-          dateOfDeath: formatWeek(state.week, state.season),
-          causeOfDeath: cause,
-        };
-
-        return {
-          roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
-          graveyard: [...state.graveyard, dead],
-          unacknowledgedDeaths: [...(state.unacknowledgedDeaths || []), warriorId],
-        };
-      });
+      set((state) => retireToGraveyard(state, warriorId, killedBy, cause, deathEvent));
     },
 
     retireWarrior: (warriorId: WarriorId) => {
-      set((state) => {
-        const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
-        if (!warrior) return state;
-
-        const ret: Warrior = {
-          ...warrior,
-          status: 'Retired',
-          retiredWeek: state.week,
-        };
-
-        return {
-          roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
-          retired: [...state.retired, ret],
-        };
-      });
+      set((state) => retireFromRoster(state, warriorId));
     },
 
     releaseWarrior: (warriorId: WarriorId, _reason = 'Released') => {
-      set((state) => {
-        const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
-        if (!warrior) return state;
-
-        const ret: Warrior = {
-          ...warrior,
-          status: 'Retired',
-          retiredWeek: state.week,
-        };
-
-        return {
-          roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
-          retired: [...state.retired, ret],
-        };
-      });
+      set((state) => retireFromRoster(state, warriorId));
     },
 
     consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => {

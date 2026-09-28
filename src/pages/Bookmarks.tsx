@@ -1,7 +1,4 @@
-import { useMemo, useState } from 'react';
-import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
-import { useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 import {
   Bookmark,
   Users,
@@ -25,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 import { groupBookmarks } from './bookmarks/groupBookmarks';
+import { useBookmarkGroups } from './bookmarks/useBookmarkGroups';
 
 const ENTITY_CONFIG: Record<
   BookmarkEntityType,
@@ -104,54 +102,8 @@ function BookmarkedEntityRow({
  *
  */
 export default function Bookmarks() {
-  const navigate = useNavigate();
-
-  const {
-    bookmarks,
-    roster,
-    graveyard,
-    retired,
-    rivals,
-    promoters,
-    trainers,
-    tournaments,
-    boutOffers,
-    scoutReports,
-    clearBookmarks,
-    clearBookmarksByType,
-  } = useGameStore(
-    useShallow((s) => ({
-      bookmarks: s.bookmarks,
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
-      promoters: s.promoters,
-      trainers: s.trainers,
-      tournaments: s.tournaments,
-      boutOffers: s.boutOffers,
-      scoutReports: s.scoutReports,
-      clearBookmarks: s.clearBookmarks,
-      clearBookmarksByType: s.clearBookmarksByType,
-    }))
-  );
-
+  const { bookmarks, grouped, clearBookmarks, clearBookmarksByType } = useBookmarkGroups();
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
-
-  const grouped = useMemo(
-    () =>
-      groupBookmarks(
-        {
-          bookmarks, roster, graveyard, retired, rivals, promoters,
-          trainers, tournaments, boutOffers, scoutReports,
-        },
-        navigate
-      ),
-    [
-      bookmarks, roster, graveyard, retired, rivals, promoters,
-      trainers, tournaments, boutOffers, scoutReports, navigate,
-    ]
-  );
 
   const totalBookmarks = bookmarks.length;
   const hasBookmarks = totalBookmarks > 0;

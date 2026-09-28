@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { getAllArenas } from '@/data/arenas';
@@ -16,22 +16,12 @@ import {
   calculateArenaStableStandings,
 } from '@/engine/core/leaderboards';
 import { getFightsForArena } from '@/engine/core/historyUtils';
-import { displayWeek } from '@/engine/core/absoluteWeek';
 import type { GameState, ArenaTitle } from '@/types/state.types';
 import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/badge';
-import { SectionDivider } from '@/components/ui/SectionDivider';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,16 +32,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Crown, MapPin, ScrollText, Skull, Swords, Trophy, Building2 } from 'lucide-react';
+import { Crown, ScrollText, Skull, Swords, Trophy, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const END_REASON_LABEL: Record<string, string> = {
-  died: 'Died in the arena',
-  defeated: 'Defeated for the crown',
-  retired: 'Retired',
-  stripped: 'Stripped for refusing to defend',
-  relinquished: 'Relinquished the crown',
-};
+import { ChampionBlock } from './arenaDetail/ChampionBlock';
+import { RecordTable } from './arenaDetail/RecordTable';
+import { RecentBouts, TitleHistory, UnknownArena } from './arenaDetail/sections';
 
 function statusBadge(title: ArenaTitle | undefined): { label: string; className: string } {
   if (!title?.champion)
@@ -140,18 +125,7 @@ export default function ArenaDetail() {
     return (
       <PageFrame>
         <PageHeader title="Unknown Arena" subtitle={`No venue answers to “${arenaId}”`} />
-        <Surface variant="glass" className="p-10 text-center">
-          <MapPin className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-            This arena does not exist in the circuit
-          </p>
-          <Link
-            to="/world/arenas"
-            className="inline-block mt-4 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
-          >
-            Back to the Arena Circuit
-          </Link>
-        </Surface>
+        <UnknownArena />
       </PageFrame>
     );
   }
@@ -187,84 +161,15 @@ export default function ArenaDetail() {
 
       {/* Champion block */}
       {!isExcluded && (
-        <Surface variant="glass" className="p-5 mb-6 border-l-4 border-l-arena-gold/50">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Crown
-                className={cn('h-5 w-5', reign ? 'text-arena-gold' : 'text-muted-foreground/20')}
-              />
-              <div>
-                <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">
-                  Arena Champion
-                </div>
-                {reign ? (
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <WarriorNameTag
-                      id={reign.warriorId}
-                      name={champWarrior?.name ?? reign.warriorId}
-                      isChampion
-                    />
-                    <span className="text-[9px] text-muted-foreground/50 italic">
-                      {champStable?.stableName ?? 'Unknown stable'}
-                    </span>
-                    <span className="text-[8px] font-mono text-muted-foreground/40">
-                      since wk {displayWeek(reign.startedAbsoluteWeek)} · {reign.defenses} defenses
-                    </span>
-                  </div>
-                ) : (
-                  <div className="text-[10px] text-muted-foreground/60 mt-0.5">
-                    The crown is vacant — the two leading contenders will fight for it.
-                  </div>
-                )}
-              </div>
-            </div>
-            {reign && champStable?.isPlayer && (
-              <button
-                onClick={() => setConfirmRelinquish(true)}
-                className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] border border-destructive/30 text-destructive/80 hover:bg-destructive/10 transition-colors"
-              >
-                Relinquish Crown
-              </button>
-            )}
-          </div>
-
-          {/* Contender queue — the real eligibility ladder */}
-          {ladder.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-white/5">
-              <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">
-                Next in line
-              </div>
-              <div className="flex flex-wrap gap-x-6 gap-y-1.5">
-                {ladder.map((c, i) => {
-                  const owner = owningStableOf(state, c.warrior.id);
-                  const isPlayerContender = owner?.isPlayer ?? false;
-                  return (
-                    <div key={c.warrior.id} className="flex items-center gap-2 text-[10px]">
-                      <span className="font-mono font-black text-arena-gold/70 w-4 text-right">
-                        {i + 1}
-                      </span>
-                      <WarriorNameTag id={c.warrior.id} name={c.warrior.name} />
-                      <span className="text-muted-foreground/40 italic">
-                        {owner?.stableName ?? '—'}
-                      </span>
-                      <span className="font-mono text-muted-foreground/50 tabular-nums">
-                        {c.wins}W {c.losses}L
-                      </span>
-                      {isPlayerContender && (
-                        <Badge
-                          variant="outline"
-                          className="text-[7px] font-black tracking-widest border-primary/40 text-primary"
-                        >
-                          YOURS
-                        </Badge>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </Surface>
+        <ChampionBlock
+          state={state}
+          reign={reign}
+          champWarrior={champWarrior}
+          champStableName={champStable?.stableName}
+          champStableIsPlayer={champStable?.isPlayer ?? false}
+          ladder={ladder}
+          onRelinquish={() => setConfirmRelinquish(true)}
+        />
       )}
 
       {/* Four record boards */}
@@ -384,78 +289,8 @@ export default function ArenaDetail() {
         />
       </div>
 
-      {/* Title history */}
-      {history.length > 0 && (
-        <>
-          <SectionDivider label="Title History" variant="gold" />
-          <Surface variant="glass" className="overflow-hidden p-0">
-            <Table>
-              <TableHeader className="bg-white/[0.03]">
-                <TableRow className="h-10 hover:bg-transparent border-white/5">
-                  <TableHead className="pl-6 text-[9px] font-black uppercase tracking-widest">CHAMPION</TableHead>
-                  <TableHead className="text-[9px] font-black uppercase tracking-widest">STABLE</TableHead>
-                  <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">REIGN</TableHead>
-                  <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">DEF</TableHead>
-                  <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">ENDED</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {history.map((r, i) => (
-                  <TableRow key={`${r.warriorId}-${r.startedAbsoluteWeek}-${i}`} className="h-11 border-white/5">
-                    <TableCell className="pl-6">
-                      <WarriorNameTag id={r.warriorId} name={r.warriorName} />
-                    </TableCell>
-                    <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
-                      {r.stableName ?? '—'}
-                    </TableCell>
-                    <TableCell className="text-center font-mono text-[10px] text-muted-foreground/60">
-                      wk {displayWeek(r.startedAbsoluteWeek)} → wk {displayWeek(r.endedAbsoluteWeek)}
-                    </TableCell>
-                    <TableCell className="text-center font-mono text-[10px] font-black text-arena-gold">
-                      {r.defenses}
-                    </TableCell>
-                    <TableCell className="pr-6 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-                      {END_REASON_LABEL[r.endReason] ?? r.endReason}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Surface>
-        </>
-      )}
-
-      {/* Recent bouts */}
-      {recentBouts.length > 0 && (
-        <>
-          <SectionDivider label="Recent Bouts" variant="primary" />
-          <Surface variant="glass" className="p-0">
-            <div className="divide-y divide-white/5">
-              {recentBouts.map((f) => (
-                <div key={f.id} className="flex items-center justify-between px-6 py-3 text-[10px]">
-                  <span className="text-foreground/80 flex items-center gap-2">
-                    {f.title}
-                    {f.titleArenaId === arenaId && (
-                      <Badge
-                        variant="outline"
-                        className="text-[7px] font-black tracking-widest border-arena-gold/40 text-arena-gold"
-                      >
-                        TITLE
-                      </Badge>
-                    )}
-                  </span>
-                  <span className="flex items-center gap-3">
-                    <span className="font-black uppercase tracking-widest text-muted-foreground/50">
-                      {f.by}
-                    </span>
-                    <span className="font-mono text-muted-foreground/40">Wk {f.week}</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Surface>
-        </>
-      )}
+      <TitleHistory history={history} />
+      <RecentBouts bouts={recentBouts} arenaId={arenaId} />
 
       <AlertDialog open={confirmRelinquish} onOpenChange={setConfirmRelinquish}>
         <AlertDialogContent className="bg-neutral-900 border-arena-gold/20">
@@ -486,82 +321,5 @@ export default function ArenaDetail() {
         </AlertDialogContent>
       </AlertDialog>
     </PageFrame>
-  );
-}
-
-interface RecordRow {
-  key: string;
-  rank: number;
-  cells: React.ReactNode[];
-  isPlayer: boolean;
-}
-
-function RecordTable({
-  title,
-  icon,
-  head,
-  rows,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  head: string[];
-  rows: RecordRow[];
-}) {
-  return (
-    <Surface variant="glass" className="overflow-hidden p-0">
-      <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
-        {icon}
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-          {title}
-        </span>
-      </div>
-      {rows.length === 0 ? (
-        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest font-black py-8 text-center">
-          No records yet
-        </p>
-      ) : (
-        <Table>
-          <TableHeader className="bg-white/[0.03]">
-            <TableRow className="h-10 hover:bg-transparent border-white/5">
-              <TableHead className="w-10 pl-6 text-[9px] font-black uppercase tracking-widest">#</TableHead>
-              {head.map((h, i) => (
-                <TableHead
-                  key={h}
-                  className={cn(
-                    'text-[9px] font-black uppercase tracking-widest',
-                    i === head.length - 1 && 'pr-6 text-right'
-                  )}
-                >
-                  {h}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.key}
-                className={cn(
-                  'h-11 border-white/5 transition-colors',
-                  row.isPlayer ? 'bg-primary/[0.03] border-l-2 border-l-primary' : 'hover:bg-white/[0.02]'
-                )}
-              >
-                <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">
-                  {String(row.rank).padStart(2, '0')}
-                </TableCell>
-                {row.cells.map((c, i) => (
-                  <TableCell
-                    key={i}
-                    className={cn(i === row.cells.length - 1 && 'pr-6 text-right')}
-                  >
-                    {c}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
-    </Surface>
   );
 }

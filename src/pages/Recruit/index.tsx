@@ -96,31 +96,13 @@ function CustomWarriorTab({
 /**
  *
  */
-export default function Recruit() {
-  const {
-    roster,
-    treasury,
-    MAX_ROSTER,
-    rosterFull,
-    activeTiers,
-    activeStyle,
-    sortBy,
-    canRefresh,
-    scoutedIds,
-    scoutReports,
-    filteredPool,
-    recruitPool,
-    setActiveStyle,
-    setSortBy,
-    toggleTier,
-    handleRecruit,
-    handleScout,
-    handleRefresh,
-    handleCustomCreate,
-  } = useRecruit();
-
-  // Contract selection drives the top-bar SIGN CONTRACT CTA — disabled until
-  // a recruit is picked, then signs that recruit (base contract, no bonus).
+/** Contract-selection state + top-bar SIGN CONTRACT CTA wiring. */
+function useContractCta(
+  recruitPool: PoolWarrior[],
+  treasury: number,
+  rosterFull: boolean,
+  handleRecruit: (w: PoolWarrior, bonus?: boolean) => void
+) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = recruitPool.find((w: PoolWarrior) => w.id === selectedId);
   const selectedAffordable = !!selected && canTransact(treasury, selected.cost);
@@ -132,6 +114,64 @@ export default function Recruit() {
       setSelectedId(null);
     },
   });
+
+  return { selectedId, setSelectedId };
+}
+
+function ScoutMarketTab({
+  recruit,
+  treasury,
+  rosterFull,
+  selectedId,
+  onSelect,
+}: {
+  recruit: ReturnType<typeof useRecruit>;
+  treasury: number;
+  rosterFull: boolean;
+  selectedId: string | null;
+  onSelect: (p: PoolWarrior) => void;
+}) {
+  return (
+    <TabsContent value="scout" className="mt-0 focus-visible:outline-none">
+      <ScoutMarket
+        activeTiers={recruit.activeTiers}
+        activeStyle={recruit.activeStyle}
+        sortBy={recruit.sortBy}
+        canRefresh={recruit.canRefresh}
+        scoutedIds={recruit.scoutedIds}
+        scoutReports={recruit.scoutReports}
+        filteredPool={recruit.filteredPool}
+        recruitPool={recruit.recruitPool}
+        treasury={treasury}
+        rosterFull={rosterFull}
+        selectedId={selectedId}
+        onSelect={onSelect}
+        setActiveStyle={recruit.setActiveStyle}
+        setSortBy={recruit.setSortBy}
+        toggleTier={recruit.toggleTier}
+        handleRecruit={recruit.handleRecruit}
+        handleScout={recruit.handleScout}
+        handleRefresh={recruit.handleRefresh}
+      />
+    </TabsContent>
+  );
+}
+
+/**
+ *
+ */
+export default function Recruit() {
+  const recruit = useRecruit();
+  const { roster, treasury, MAX_ROSTER, rosterFull, recruitPool, handleRecruit } = recruit;
+
+  // Contract selection drives the top-bar SIGN CONTRACT CTA — disabled until
+  // a recruit is picked, then signs that recruit (base contract, no bonus).
+  const { selectedId, setSelectedId } = useContractCta(
+    recruitPool,
+    treasury,
+    rosterFull,
+    handleRecruit
+  );
 
   return (
     <PageFrame>
@@ -159,31 +199,16 @@ export default function Recruit() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="scout" className="mt-0 focus-visible:outline-none">
-          <ScoutMarket
-            activeTiers={activeTiers}
-            activeStyle={activeStyle}
-            sortBy={sortBy}
-            canRefresh={canRefresh}
-            scoutedIds={scoutedIds}
-            scoutReports={scoutReports}
-            filteredPool={filteredPool}
-            recruitPool={recruitPool}
-            treasury={treasury}
-            rosterFull={rosterFull}
-            selectedId={selectedId}
-            onSelect={(p) => setSelectedId(p.id)}
-            setActiveStyle={setActiveStyle}
-            setSortBy={setSortBy}
-            toggleTier={toggleTier}
-            handleRecruit={handleRecruit}
-            handleScout={handleScout}
-            handleRefresh={handleRefresh}
-          />
-        </TabsContent>
+        <ScoutMarketTab
+          recruit={recruit}
+          treasury={treasury}
+          rosterFull={rosterFull}
+          selectedId={selectedId}
+          onSelect={(p) => setSelectedId(p.id)}
+        />
 
         <CustomWarriorTab
-          onCreate={handleCustomCreate}
+          onCreate={recruit.handleCustomCreate}
           maxRoster={MAX_ROSTER}
           rosterSize={roster.length}
         />

@@ -38,101 +38,120 @@ function EmptyAcademy() {
   );
 }
 
-function TrainerRow({ t }: { t: (ReturnType<typeof useGameStore.getState>['trainers'])[number] }) {
-  const weeksLeft = t.contractWeeksLeft;
+type Trainer = (ReturnType<typeof useGameStore.getState>['trainers'])[number];
+
+/** Row header — name, tier badge, bookmark, weekly salary. */
+function TrainerRowHeader({ t }: { t: Trainer }) {
+  return (
+    <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-display font-black uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none">
+          {t.name}
+        </span>
+        <Badge
+          variant="outline"
+          className={cn(
+            'text-[8px] font-black border-none uppercase tracking-widest px-1.5 h-4',
+            t.tier === 'Master'
+              ? 'bg-arena-gold text-primary-foreground'
+              : 'bg-primary text-primary-foreground'
+          )}
+        >
+          {t.tier}
+        </Badge>
+      </div>
+      <div className="flex items-center gap-2">
+        <BookmarkButton entityType="trainer" entityId={t.id} size="sm" />
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-mono font-black text-destructive">
+            -{TRAINER_WEEKLY_SALARY[t.tier] ?? 35}G
+          </span>
+          <Coins className="h-3 w-3 text-arena-gold opacity-60" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Focus + optional style-affinity tooltip. */
+function TrainerFocus({ t }: { t: Trainer }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-1.5 opacity-60">
+        <Target className="h-3 w-3 text-primary" />
+        <span className="text-[9px] font-black uppercase tracking-widest">
+          {t.focus} Specialist
+        </span>
+      </div>
+      {t.styleBonusStyle && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-1.5 opacity-80 cursor-help">
+              <Zap className="h-3 w-3 text-arena-gold" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-arena-gold">
+                Affinity:{' '}
+                {STYLE_DISPLAY_NAMES[
+                  t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
+                ] ?? t.styleBonusStyle}
+              </span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="max-w-xs text-[10px]">
+            +5% training gain chance for{' '}
+            {STYLE_DISPLAY_NAMES[
+              t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
+            ] ?? t.styleBonusStyle}{' '}
+            warriors
+          </TooltipContent>
+        </Tooltip>
+      )}
+    </div>
+  );
+}
+
+/** Contract countdown bar. */
+function TenureMeter({ weeksLeft }: { weeksLeft: number }) {
   const pct = Math.min((weeksLeft / 52) * 100, 100);
   const isExpiring = weeksLeft <= 4;
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <div className="flex items-center gap-2 w-full justify-end">
+        <Progress
+          value={pct}
+          className={cn(
+            'h-1 flex-1',
+            isExpiring ? 'bg-destructive/20' : 'bg-primary/20'
+          )}
+        />
+        <span
+          className={cn(
+            'text-[10px] font-mono font-black',
+            isExpiring
+              ? 'text-destructive animate-pulse motion-reduce:animate-none'
+              : 'text-muted-foreground'
+          )}
+        >
+          {weeksLeft}W
+        </span>
+      </div>
+      <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">
+        Tenure Remainder
+      </span>
+    </div>
+  );
+}
 
+function TrainerRow({ t }: { t: Trainer }) {
   return (
     <Surface
       variant="paper"
       padding="sm"
       className="bg-neutral-900/60 border border-white/5 hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none group"
     >
-      <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-display font-black uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none">
-            {t.name}
-          </span>
-          <Badge
-            variant="outline"
-            className={cn(
-              'text-[8px] font-black border-none uppercase tracking-widest px-1.5 h-4',
-              t.tier === 'Master'
-                ? 'bg-arena-gold text-primary-foreground'
-                : 'bg-primary text-primary-foreground'
-            )}
-          >
-            {t.tier}
-          </Badge>
-        </div>
-        <div className="flex items-center gap-2">
-          <BookmarkButton entityType="trainer" entityId={t.id} size="sm" />
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-mono font-black text-destructive">
-              -{TRAINER_WEEKLY_SALARY[t.tier] ?? 35}G
-            </span>
-            <Coins className="h-3 w-3 text-arena-gold opacity-60" />
-          </div>
-        </div>
-      </div>
-
+      <TrainerRowHeader t={t} />
       <div className="grid grid-cols-2 gap-4 items-end">
-        <div className="space-y-2">
-          <div className="flex items-center gap-1.5 opacity-60">
-            <Target className="h-3 w-3 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-widest">
-              {t.focus} Specialist
-            </span>
-          </div>
-          {t.styleBonusStyle && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5 opacity-80 cursor-help">
-                  <Zap className="h-3 w-3 text-arena-gold" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-arena-gold">
-                    Affinity:{' '}
-                    {STYLE_DISPLAY_NAMES[
-                      t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                    ] ?? t.styleBonusStyle}
-                  </span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="max-w-xs text-[10px]">
-                +5% training gain chance for{' '}
-                {STYLE_DISPLAY_NAMES[
-                  t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                ] ?? t.styleBonusStyle}{' '}
-                warriors
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </div>
-
-        <div className="flex flex-col items-end gap-1">
-          <div className="flex items-center gap-2 w-full justify-end">
-            <Progress
-              value={pct}
-              className={cn(
-                'h-1 flex-1',
-                isExpiring ? 'bg-destructive/20' : 'bg-primary/20'
-              )}
-            />
-            <span
-              className={cn(
-                'text-[10px] font-mono font-black',
-                isExpiring
-                  ? 'text-destructive animate-pulse motion-reduce:animate-none'
-                  : 'text-muted-foreground'
-              )}
-            >
-              {weeksLeft}W
-            </span>
-          </div>
-          <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">
-            Tenure Remainder
-          </span>
-        </div>
+        <TrainerFocus t={t} />
+        <TenureMeter weeksLeft={t.contractWeeksLeft} />
       </div>
     </Surface>
   );

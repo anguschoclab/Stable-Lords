@@ -70,6 +70,49 @@ function EmptyRoster({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
+/** Grid of active-warrior training cards, wired to assignment handlers. */
+function RosterGrid({
+  state,
+  assignments,
+  advisorCardMap,
+}: {
+  state: ReturnType<typeof useWorldState>;
+  assignments: ReturnType<typeof useTrainingAssignments>;
+  advisorCardMap: Map<string, ReturnType<typeof useStableAdvisor>['cards'][number]>;
+}) {
+  const {
+    assignmentMap,
+    seasonalGainsMap,
+    handleAssign,
+    handleAssignRecovery,
+    handleAssignTraitTraining,
+    handleClear,
+  } = assignments;
+
+  return (
+    <div className="grid gap-6 sm:grid-cols-2">
+      {state.roster
+        .filter((warrior: Warrior) => isActive(warrior))
+        .map((warrior: Warrior) => (
+          <WarriorTrainingCard
+            key={warrior.id}
+            warrior={warrior}
+            assignment={assignmentMap.get(warrior.id)}
+            seasonalGains={seasonalGainsMap.get(warrior.id) ?? {}}
+            trainers={state.trainers ?? []}
+            onAssign={(attr) => handleAssign(warrior.id, attr)}
+            onAssignRecovery={() => handleAssignRecovery(warrior.id)}
+            onClear={() => handleClear(warrior.id)}
+            onAssignTraitTraining={(trainerId) =>
+              handleAssignTraitTraining(warrior.id, trainerId)
+            }
+            advisorAdvice={advisorCardMap.get(warrior.id)?.trainingAdvice}
+          />
+        ))}
+    </div>
+  );
+}
+
 /**
  * Training.
  */
@@ -77,18 +120,8 @@ export default function Training() {
   const navigate = useNavigate();
   const state = useWorldState();
   const { cards } = useStableAdvisor();
-  const {
-    assignmentMap,
-    seasonalGainsMap,
-    assignedCount,
-    recoveryCount,
-    trainingCount,
-    handleAssign,
-    handleAssignRecovery,
-    handleAssignTraitTraining,
-    handleClear,
-    handleClearAll,
-  } = useTrainingAssignments();
+  const assignments = useTrainingAssignments();
+  const { assignedCount, recoveryCount, trainingCount, handleClearAll } = assignments;
 
   const advisorCardMap = useMemo(() => {
     const map = new Map<string, (typeof cards)[0]>();
@@ -141,26 +174,11 @@ export default function Training() {
           {state.roster.length === 0 ? (
             <EmptyRoster onNavigate={() => navigate({ to: '/stable/recruit' })} />
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {state.roster
-                .filter((warrior: Warrior) => isActive(warrior))
-                .map((warrior: Warrior) => (
-                  <WarriorTrainingCard
-                    key={warrior.id}
-                    warrior={warrior}
-                    assignment={assignmentMap.get(warrior.id)}
-                    seasonalGains={seasonalGainsMap.get(warrior.id) ?? {}}
-                    trainers={state.trainers ?? []}
-                    onAssign={(attr) => handleAssign(warrior.id, attr)}
-                    onAssignRecovery={() => handleAssignRecovery(warrior.id)}
-                    onClear={() => handleClear(warrior.id)}
-                    onAssignTraitTraining={(trainerId) =>
-                      handleAssignTraitTraining(warrior.id, trainerId)
-                    }
-                    advisorAdvice={advisorCardMap.get(warrior.id)?.trainingAdvice}
-                  />
-                ))}
-            </div>
+            <RosterGrid
+              state={state}
+              assignments={assignments}
+              advisorCardMap={advisorCardMap}
+            />
           )}
         </div>
       </div>

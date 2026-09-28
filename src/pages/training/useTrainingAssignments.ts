@@ -5,14 +5,8 @@ import { ATTRIBUTE_LABELS, type TrainingAssignment, type Attributes } from '@/ty
 import type { WarriorId } from '@/types/shared.types';
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
 
-/**
- * Training-assignment state and handlers: per-warrior assignment map,
- * seasonal-gain map, and the assign/clear mutations with their toasts.
- */
-export function useTrainingAssignments() {
-  const state = useWorldState();
-  const setState = useGameStore((s) => s.setState);
-
+/** Derived lookup maps: assignment, seasonal gains, and roster names. */
+function useAssignmentMaps(state: ReturnType<typeof useWorldState>) {
   const assignmentMap = useMemo(() => {
     const map = new Map<string, TrainingAssignment>();
     for (const a of state.trainingAssignments ?? []) map.set(a.warriorId, a);
@@ -37,8 +31,14 @@ export function useTrainingAssignments() {
     return map;
   }, [state.roster]);
 
-  const assignments = state.trainingAssignments ?? [];
+  return { assignmentMap, seasonalGainsMap, rosterNameMap };
+}
 
+/** Assign/clear mutations with their confirmation toasts. */
+function useAssignmentMutations(
+  setState: GameStore['setState'],
+  rosterNameMap: Map<string, string>
+) {
   const replaceAssignment = (warriorId: WarriorId, next: TrainingAssignment) =>
     setState((s: GameStore) => {
       s.trainingAssignments = [
@@ -87,6 +87,22 @@ export function useTrainingAssignments() {
     toast('All training assignments cleared.');
   };
 
+  return { handleAssign, handleAssignRecovery, handleAssignTraitTraining, handleClear, handleClearAll };
+}
+
+/**
+ * Training-assignment state and handlers: per-warrior assignment map,
+ * seasonal-gain map, and the assign/clear mutations with their toasts.
+ */
+export function useTrainingAssignments() {
+  const state = useWorldState();
+  const setState = useGameStore((s) => s.setState);
+
+  const { assignmentMap, seasonalGainsMap, rosterNameMap } = useAssignmentMaps(state);
+  const mutations = useAssignmentMutations(setState, rosterNameMap);
+
+  const assignments = state.trainingAssignments ?? [];
+
   const assignedCount = assignments.length;
   const recoveryCount = assignments.filter(
     (a: TrainingAssignment) => a.type === 'recovery'
@@ -100,10 +116,6 @@ export function useTrainingAssignments() {
     assignedCount,
     recoveryCount,
     trainingCount,
-    handleAssign,
-    handleAssignRecovery,
-    handleAssignTraitTraining,
-    handleClear,
-    handleClearAll,
+    ...mutations,
   };
 }

@@ -90,55 +90,82 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
       />
 
       <div ref={scrollRef} className="max-h-[70vh] overflow-auto overflow-x-auto">
-        <table className="w-full caption-bottom text-sm" aria-rowcount={filtered.length}>
-          <TableHeader className="sticky top-0 z-10">
-            <TableRow className="hover:bg-transparent border-white/5 bg-black/20">
-              {COLUMNS.map((col) => (
-                <TableHead key={col.key} className={col.className}>
-                  <SortHeader
-                    label={col.label}
-                    active={sort.field === col.key}
-                    dir={sort.dir}
-                    onClick={() => onSort(col.key)}
-                  />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {useFallback ? (
-              filtered.map((row, i) => (
-                <WarriorLeaderboardRow key={row.id} row={row} index={i} isFiltered={isFiltered} />
-              ))
-            ) : (
-              <>
-                {items[0] && (
-                  <tr style={{ height: items[0].start }}>
-                    <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
-                  </tr>
-                )}
-                {items.map((vi) => (
-                  <VirtualizedRow
-                    key={vi.key}
-                    vi={vi}
-                    filtered={filtered}
-                    isFiltered={isFiltered}
-                  />
-                ))}
-                {items[items.length - 1] && (
-                  <tr
-                    style={{
-                      height: virtualizer.getTotalSize() - (items[items.length - 1]?.end ?? 0),
-                    }}
-                  >
-                    <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
-                  </tr>
-                )}
-              </>
-            )}
-          </TableBody>
-        </table>
+        <LeaderboardTable
+          sort={sort}
+          onSort={onSort}
+          filtered={filtered}
+          isFiltered={isFiltered}
+          virtualizer={virtualizer}
+          useFallback={useFallback}
+        />
       </div>
     </Surface>
+  );
+}
+
+/** The sortable, virtualized leaderboard table (plain row map as fallback). */
+function LeaderboardTable({
+  sort,
+  onSort,
+  filtered,
+  isFiltered,
+  virtualizer,
+  useFallback,
+}: Pick<WarriorLeaderboardProps, 'sort' | 'onSort'> & {
+  filtered: WarriorRow[];
+  isFiltered: boolean;
+  virtualizer: ReturnType<typeof useVirtualizer<HTMLDivElement, Element>>;
+  useFallback: boolean;
+}) {
+  const items = virtualizer.getVirtualItems();
+  return (
+    <table className="w-full caption-bottom text-sm" aria-rowcount={filtered.length}>
+      <TableHeader className="sticky top-0 z-10">
+        <TableRow className="hover:bg-transparent border-white/5 bg-black/20">
+          {COLUMNS.map((col) => (
+            <TableHead key={col.key} className={col.className}>
+              <SortHeader
+                label={col.label}
+                active={sort.field === col.key}
+                dir={sort.dir}
+                onClick={() => onSort(col.key)}
+              />
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {useFallback ? (
+          filtered.map((row, i) => (
+            <WarriorLeaderboardRow key={row.id} row={row} index={i} isFiltered={isFiltered} />
+          ))
+        ) : (
+          <>
+            {items[0] && (
+              <tr style={{ height: items[0].start }}>
+                <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
+              </tr>
+            )}
+            {items.map((vi) => (
+              <VirtualizedRow
+                key={vi.key}
+                vi={vi}
+                filtered={filtered}
+                isFiltered={isFiltered}
+              />
+            ))}
+            {items[items.length - 1] && (
+              <tr
+                style={{
+                  height: virtualizer.getTotalSize() - (items[items.length - 1]?.end ?? 0),
+                }}
+              >
+                <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
+              </tr>
+            )}
+          </>
+        )}
+      </TableBody>
+    </table>
   );
 }

@@ -58,45 +58,7 @@ export function WorldStats({
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {stats.map((item, idx) => {
         const isDominant = item.label === 'DOMINANT STABLE';
-        const inner = (
-          <Surface
-            key={idx}
-            variant="glass"
-            padding="none"
-            className={cn(
-              'group overflow-hidden border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none',
-              isDominant && topStableId
-                ? 'hover:border-arena-gold/40 cursor-pointer'
-                : 'hover:border-white/10'
-            )}
-          >
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all motion-reduce:transition-none motion-reduce:transform-none group-hover:scale-110">
-              <item.icon className={cn('h-12 w-12', item.color)} />
-            </div>
-            <div className="p-5 flex flex-col justify-center min-h-[90px] relative z-10">
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 mb-1 leading-none">
-                {item.label}
-              </span>
-              <p
-                className={cn(
-                  'font-display font-black truncate drop-shadow-md',
-                  item.smallValue
-                    ? 'text-sm uppercase tracking-tight'
-                    : 'text-3xl tracking-tighter',
-                  item.color
-                )}
-              >
-                {item.value}
-              </p>
-            </div>
-            <div
-              className={cn(
-                'absolute bottom-0 left-0 w-full h-[2px] opacity-20 bg-gradient-to-r from-transparent via-current to-transparent',
-                item.color
-              )}
-            />
-          </Surface>
-        );
+        const inner = <StatTile item={item} isDominant={isDominant} topStableId={topStableId} />;
 
         if (isDominant && topStableId) {
           return (
@@ -108,5 +70,61 @@ export function WorldStats({
         return <div key={idx}>{inner}</div>;
       })}
     </div>
+  );
+}
+
+type StatItem = {
+  icon: typeof Trophy;
+  label: string;
+  value: number | string;
+  color: string;
+  glow: string;
+  smallValue?: boolean;
+};
+
+function StatTile({
+  item,
+  isDominant,
+  topStableId,
+}: {
+  item: StatItem;
+  isDominant: boolean;
+  topStableId: string | null;
+}) {
+  return (
+    <Surface
+      variant="glass"
+      padding="none"
+      className={cn(
+        'group overflow-hidden border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none',
+        isDominant && topStableId
+          ? 'hover:border-arena-gold/40 cursor-pointer'
+          : 'hover:border-white/10'
+      )}
+    >
+      <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all motion-reduce:transition-none motion-reduce:transform-none group-hover:scale-110">
+        <item.icon className={cn('h-12 w-12', item.color)} />
+      </div>
+      <div className="p-5 flex flex-col justify-center min-h-[90px] relative z-10">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 mb-1 leading-none">
+          {item.label}
+        </span>
+        <p
+          className={cn(
+            'font-display font-black truncate drop-shadow-md',
+            item.smallValue ? 'text-sm uppercase tracking-tight' : 'text-3xl tracking-tighter',
+            item.color
+          )}
+        >
+          {item.value}
+        </p>
+      </div>
+      <div
+        className={cn(
+          'absolute bottom-0 left-0 w-full h-[2px] opacity-20 bg-gradient-to-r from-transparent via-current to-transparent',
+          item.color
+        )}
+      />
+    </Surface>
   );
 }

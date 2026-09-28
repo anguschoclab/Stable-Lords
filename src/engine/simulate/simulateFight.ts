@@ -87,6 +87,58 @@ function prepareBout(
   return { rng, narRngService, nameA, nameD, weaponA, weaponD, fA, fD, effectiveWeather, resCtx };
 }
 
+type BoutPrep = ReturnType<typeof prepareBout>;
+
+/** Introductions + simulation loop; returns the merged log and loop outputs. */
+function runBoutLoop(
+  prep: BoutPrep,
+  planA: FightPlan,
+  planD: FightPlan,
+  warriorA: Warrior | undefined,
+  warriorD: Warrior | undefined,
+  arenaId: string,
+  crowdMood: CrowdMood | undefined,
+  headless: boolean | undefined
+) {
+  const { narRngService, nameA, nameD, weaponA, weaponD, fA, fD, effectiveWeather, resCtx } = prep;
+
+  // 4. Generate introductions
+  const introLog = headless
+    ? []
+    : generateIntroductions(
+        narRngService,
+        nameA,
+        nameD,
+        planA,
+        planD,
+        warriorA,
+        warriorD,
+        effectiveWeather,
+        arenaId,
+        resCtx.arenaConfig
+      );
+
+  // 5. Run simulation loop
+  const loop = runSimulationLoop(
+    fA,
+    fD,
+    resCtx,
+    nameA,
+    nameD,
+    weaponA,
+    weaponD,
+    warriorA,
+    warriorD,
+    planA,
+    planD,
+    crowdMood,
+    headless ?? false,
+    narRngService
+  );
+
+  return { ...loop, log: headless ? [] : [...introLog, ...loop.log] };
+}
+
 /**
  * Simulates a fight between two plans/warriors.
  *
@@ -114,18 +166,7 @@ export function simulateFight(
   headless?: boolean,
   deathRateMult?: number
 ): FightOutcome {
-  const {
-    rng,
-    narRngService,
-    nameA,
-    nameD,
-    weaponA,
-    weaponD,
-    fA,
-    fD,
-    effectiveWeather,
-    resCtx,
-  } = prepareBout(
+  const prep = prepareBout(
     planA,
     planD,
     warriorA,
@@ -138,26 +179,8 @@ export function simulateFight(
     deathRateMult
   );
 
-  // 4. Generate introductions
-  const arenaConfig = resCtx.arenaConfig;
-  const introLog = headless
-    ? []
-    : generateIntroductions(
-        narRngService,
-        nameA,
-        nameD,
-        planA,
-        planD,
-        warriorA,
-        warriorD,
-        effectiveWeather,
-        arenaId,
-        arenaConfig
-      );
-
-  // 5. Run simulation loop
   const {
-    log: loopLog,
+    log,
     exchangeLog,
     winner,
     by,
@@ -165,34 +188,17 @@ export function simulateFight(
     fatalHitLocation,
     fatalExchangeIndex,
     fightMinutes,
-  } = runSimulationLoop(
-    fA,
-    fD,
-    resCtx,
-    nameA,
-    nameD,
-    weaponA,
-    weaponD,
-    warriorA,
-    warriorD,
-    planA,
-    planD,
-    crowdMood,
-    headless ?? false,
-    narRngService
-  );
-
-  const log = headless ? [] : [...introLog, ...loopLog];
+  } = runBoutLoop(prep, planA, planD, warriorA, warriorD, arenaId, crowdMood, headless);
 
   // 6. Process post-fight: tags, stats, and final outcome assembly
   return processPostFight(
     winner,
     by,
-    fA,
-    fD,
-    nameA,
-    nameD,
-    rng,
+    prep.fA,
+    prep.fD,
+    prep.nameA,
+    prep.nameD,
+    prep.rng,
     log,
     exchangeLog,
     headless ?? false,

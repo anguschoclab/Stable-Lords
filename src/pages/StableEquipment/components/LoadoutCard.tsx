@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Shield, Swords, HardHat, Shirt, HelpCircle, AlertTriangle } from 'lucide-react';
-import { checkWeaponRequirements } from '@/data/equipment';
+import { checkWeaponRequirements, type WeaponReqResult } from '@/data/equipment';
 import { GearRow } from './GearRow';
 import type { Warrior } from '@/types/state.types';
 import type { EquipmentLoadout } from '@/data/equipment';
@@ -125,6 +125,108 @@ interface LoadoutCardProps {
 /**
  *
  */
+/** Synergy badge, loadout label, flavor quote. */
+function CardHead({ rec, isTop }: { rec: LoadoutRec; isTop: boolean }) {
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <Badge className="bg-primary/20 text-primary border-primary/20 font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border">
+          {rec.synergy}% SYNERGY
+        </Badge>
+        {isTop && (
+          <Badge className="bg-arena-gold text-primary-foreground font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">
+            OPTIMAL PATH
+          </Badge>
+        )}
+      </div>
+
+      <div className="space-y-1">
+        <h3 className="font-display text-lg font-black uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
+          {rec.label}
+        </h3>
+        <p className="text-[10px] text-muted-foreground/80 leading-relaxed italic pr-4">
+          &ldquo;{rec.description}&rdquo;
+        </p>
+      </div>
+    </>
+  );
+}
+
+/** The four gear rows — weapon, armor, shield, helm. */
+function GearList({
+  rec,
+  reqCheck,
+  isTop,
+}: {
+  rec: LoadoutRec;
+  reqCheck: WeaponReqResult | null;
+  isTop: boolean;
+}) {
+  return (
+    <div className="space-y-2.5 pt-4 border-t border-white/5">
+      <GearRow
+        icon={Swords}
+        name={rec.breakdown.weapon.item.name}
+        weight={rec.breakdown.weapon.item.weight}
+        error={!!(reqCheck && !reqCheck.met)}
+        high={isTop}
+      />
+      <GearRow
+        icon={Shirt}
+        name={rec.breakdown.armor.item.name}
+        weight={rec.breakdown.armor.item.weight}
+        high={isTop}
+      />
+      <GearRow
+        icon={Shield}
+        name={rec.breakdown.shield.item.name}
+        weight={rec.breakdown.shield.item.weight}
+        blocked={rec.breakdown.shield.blocked}
+        high={isTop}
+      />
+      <GearRow
+        icon={HardHat}
+        name={rec.breakdown.helm.item.name}
+        weight={rec.breakdown.helm.item.weight}
+        high={isTop}
+      />
+    </div>
+  );
+}
+
+/** Apply footer. */
+function ApplyFooter({
+  rec,
+  isTop,
+  disabled,
+  onApply,
+}: {
+  rec: LoadoutRec;
+  isTop: boolean;
+  disabled: boolean;
+  onApply: (loadout: EquipmentLoadout, label: string) => void;
+}) {
+  return (
+    <div className="p-4 bg-black/40 border-t border-white/5">
+      <Button
+        className={cn(
+          'w-full h-12 font-black uppercase text-[10px] tracking-[0.4em] transition-all motion-reduce:transition-none',
+          isTop
+            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+            : 'bg-white/[0.05] border-white/10 hover:bg-white/[0.1] text-foreground'
+        )}
+        onClick={() => onApply(rec.loadout, rec.label)}
+        disabled={disabled}
+      >
+        Apply Loadout
+      </Button>
+    </div>
+  );
+}
+
+/**
+ *
+ */
 export function LoadoutCard({
   rec,
   index,
@@ -152,74 +254,15 @@ export function LoadoutCard({
       <div
         className={cn('p-6 space-y-4 flex-1 flex flex-col', isTop ? 'bg-primary/5' : 'bg-black/20')}
       >
-        <div className="flex items-center justify-between">
-          <Badge className="bg-primary/20 text-primary border-primary/20 font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border">
-            {rec.synergy}% SYNERGY
-          </Badge>
-          {isTop && (
-            <Badge className="bg-arena-gold text-primary-foreground font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">
-              OPTIMAL PATH
-            </Badge>
-          )}
-        </div>
-
-        <div className="space-y-1">
-          <h3 className="font-display text-lg font-black uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
-            {rec.label}
-          </h3>
-          <p className="text-[10px] text-muted-foreground/80 leading-relaxed italic pr-4">
-            &ldquo;{rec.description}&rdquo;
-          </p>
-        </div>
-
-        <div className="space-y-2.5 pt-4 border-t border-white/5">
-          <GearRow
-            icon={Swords}
-            name={rec.breakdown.weapon.item.name}
-            weight={rec.breakdown.weapon.item.weight}
-            error={!!(reqCheck && !reqCheck.met)}
-            high={isTop}
-          />
-          <GearRow
-            icon={Shirt}
-            name={rec.breakdown.armor.item.name}
-            weight={rec.breakdown.armor.item.weight}
-            high={isTop}
-          />
-          <GearRow
-            icon={Shield}
-            name={rec.breakdown.shield.item.name}
-            weight={rec.breakdown.shield.item.weight}
-            blocked={rec.breakdown.shield.blocked}
-            high={isTop}
-          />
-          <GearRow
-            icon={HardHat}
-            name={rec.breakdown.helm.item.name}
-            weight={rec.breakdown.helm.item.weight}
-            high={isTop}
-          />
-        </div>
+        <CardHead rec={rec} isTop={isTop} />
+        <GearList rec={rec} reqCheck={reqCheck} isTop={isTop} />
 
         {reqCheck && !reqCheck.met && <RequirementFailures reqCheck={reqCheck} />}
 
         <EncumbranceMeter totalWeight={rec.totalWeight} carryCap={carryCap} />
       </div>
 
-      <div className="p-4 bg-black/40 border-t border-white/5">
-        <Button
-          className={cn(
-            'w-full h-12 font-black uppercase text-[10px] tracking-[0.4em] transition-all motion-reduce:transition-none',
-            isTop
-              ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-              : 'bg-white/[0.05] border-white/10 hover:bg-white/[0.1] text-foreground'
-          )}
-          onClick={() => onApply(rec.loadout, rec.label)}
-          disabled={disabled}
-        >
-          Apply Loadout
-        </Button>
-      </div>
+      <ApplyFooter rec={rec} isTop={isTop} disabled={disabled} onApply={onApply} />
     </Surface>
   );
 }

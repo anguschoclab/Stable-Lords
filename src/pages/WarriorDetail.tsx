@@ -27,6 +27,63 @@ const TABS: SubNavTab[] = [
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
 ];
 
+/** Not-found guard render. */
+function UnknownWarrior() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+      <p className="text-muted-foreground">No gladiator bears this mark.</p>
+      <Link to="/">
+        <Button variant="outline">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Return to the Ludus
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
+/** Active-tab body: biometrics / war plan / chronicle. */
+function DetailTabBody({
+  activeTab,
+  warrior,
+  displayWarrior,
+  arenaHistory,
+  currentPlan,
+  currentLoadout,
+  onPlanChange,
+  onEquipmentChange,
+}: {
+  activeTab: string;
+  warrior: import('@/types/game').Warrior;
+  displayWarrior: import('@/lib/obfuscation').ObfuscatedWarrior;
+  arenaHistory: import('@/types/game').FightSummary[];
+  currentPlan: import('@/types/game').FightPlan;
+  currentLoadout: import('@/data/equipment').EquipmentLoadout;
+  onPlanChange: (p: import('@/types/game').FightPlan) => void;
+  onEquipmentChange: (l: import('@/data/equipment').EquipmentLoadout) => void;
+}) {
+  return (
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none">
+      {activeTab === 'biometrics' && (
+        <BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />
+      )}
+
+      {activeTab === 'mission' && (
+        <MissionControlTab
+          warrior={warrior}
+          currentPlan={currentPlan}
+          currentLoadout={currentLoadout}
+          onPlanChange={onPlanChange}
+          onEquipmentChange={onEquipmentChange}
+        />
+      )}
+
+      {activeTab === 'chronicle' && (
+        <ChronicleTab warrior={warrior} arenaHistory={arenaHistory} />
+      )}
+    </div>
+  );
+}
+
 /**
  * Warrior detail.
  */
@@ -46,18 +103,7 @@ export default function WarriorDetail() {
     handleEquipmentChange,
   } = useWarriorDetail();
 
-  if (!warrior || !displayWarrior) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <p className="text-muted-foreground">No gladiator bears this mark.</p>
-        <Link to="/">
-          <Button variant="outline">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Return to the Ludus
-          </Button>
-        </Link>
-      </div>
-    );
-  }
+  if (!warrior || !displayWarrior) return <UnknownWarrior />;
 
   const currentPlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
   const currentLoadout = warrior.equipment ?? DEFAULT_LOADOUT;
@@ -103,26 +149,16 @@ export default function WarriorDetail() {
           />
 
           <DetailTabStrip tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
-
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none">
-            {activeTab === 'biometrics' && (
-              <BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />
-            )}
-
-            {activeTab === 'mission' && (
-              <MissionControlTab
-                warrior={warrior}
-                currentPlan={currentPlan}
-                currentLoadout={currentLoadout}
-                onPlanChange={handlePlanChange}
-                onEquipmentChange={handleEquipmentChange}
-              />
-            )}
-
-            {activeTab === 'chronicle' && (
-              <ChronicleTab warrior={warrior} arenaHistory={arenaHistory} />
-            )}
-          </div>
+          <DetailTabBody
+            activeTab={activeTab}
+            warrior={warrior}
+            displayWarrior={displayWarrior}
+            arenaHistory={arenaHistory}
+            currentPlan={currentPlan}
+            currentLoadout={currentLoadout}
+            onPlanChange={handlePlanChange}
+            onEquipmentChange={handleEquipmentChange}
+          />
         </div>
 
         <DetailSidebar

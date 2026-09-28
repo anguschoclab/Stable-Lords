@@ -160,6 +160,72 @@ async function drainArchive(
 }
 
 /**
+ * One simulated week: AI decisions → advance → track → archive-drain →
+ * pulse log → periodic truncation. Returns the next state and whether the
+ * bankruptcy stop condition fired.
+ */
+async function runWeek(
+  state: GameState,
+  w: number,
+  config: SimulationConfig,
+  tracker: ReturnType<typeof createCumulativeTracker>,
+  pulses: SimPulse[],
+  passAgg: Map<string, PassProfileRow>
+): Promise<{ state: GameState; bankrupt: boolean }> {
+  const { logFrequency = 1, archiveService } = config;
+  const truncateInterval = config.truncateIntervalWeeks ?? 50;
+
+  // A. Weekly Decision Logic (AI/Player)
+  autoRespondToPlayerOffers(state);
+
+  // B. Advance Week
+  state = await advanceWeek(state);
+
+  if (config.profile) aggregatePassProfile(passAgg);
+
+  // C. Record this week's new bouts/deaths/retirements by id — before any
+  // truncation can drop the underlying entries.
+  tracker.recordWeek(state);
+  config.onWeek?.(state, w);
+
+  // D. Drain deferred bout transcripts weekly when an archive sink is
+  // configured — keeps peak transcript memory at ~1 week of bouts.
+  // Failures are re-queued for next week's drain (same retry semantics as
+  // the app path) — transcripts are never silently dropped.
+  state = await drainArchive(state, archiveService);
+
+  let totalWarriors = 0;
+  state.rivals.forEach((r) => (totalWarriors += r.roster.length));
+
+  if (w % logFrequency === 0) {
+    console.log(
+      `[Harness] Week ${state.week} | Roster: ${state.roster.length} | Treasury: ${state.treasury}`
+    );
+    const cumulative = tracker.snapshot();
+    pulses.push({
+      ...collectPulse(state),
+      cumulativeBouts: cumulative.totalBouts,
+      cumulativeDeaths: cumulative.deaths,
+      cumulativeRetired: cumulative.retired,
+    });
+  }
+
+  // E. Periodic truncation — same 50-week cadence as autosim. The tracker
+  // needs no reset: ids already counted stay counted even when truncation
+  // drops the retained entries.
+  if (truncateInterval > 0 && w % truncateInterval === 0) {
+    state = truncateState(state, config.truncationCaps);
+  }
+
+  // Stop Conditions (Optional)
+  if (!config.ignoreBankruptcy && state.treasury < -5000) {
+    console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
+    return { state, bankrupt: true };
+  }
+  return { state, bankrupt: false };
+}
+
+/**
  * Run a headless simulation loop.
  * Asynchronous and deterministic.
  */
@@ -194,55 +260,9 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
 
   try {
     for (let w = 1; w <= weeks; w++) {
-      // A. Weekly Decision Logic (AI/Player)
-      autoRespondToPlayerOffers(state);
-
-      // B. Advance Week
-      state = await advanceWeek(state);
-
-      if (config.profile) aggregatePassProfile(passAgg);
-
-      // C. Record this week's new bouts/deaths/retirements by id — before any
-      // truncation can drop the underlying entries.
-      tracker.recordWeek(state);
-      config.onWeek?.(state, w);
-
-      // D. Drain deferred bout transcripts weekly when an archive sink is
-      // configured — keeps peak transcript memory at ~1 week of bouts.
-      // Failures are re-queued for next week's drain (same retry semantics as
-      // the app path) — transcripts are never silently dropped.
-      state = await drainArchive(state, archiveService);
-
-      let totalWarriors = 0;
-      state.rivals.forEach((r) => (totalWarriors += r.roster.length));
-
-      if (w % logFrequency === 0) {
-        console.log(
-          `[Harness] Week ${state.week} | Roster: ${state.roster.length} | Treasury: ${state.treasury}`
-        );
-        const cumulative = tracker.snapshot();
-        pulses.push({
-          ...collectPulse(state),
-          cumulativeBouts: cumulative.totalBouts,
-          cumulativeDeaths: cumulative.deaths,
-          cumulativeRetired: cumulative.retired,
-        });
-      }
-
-      // E. Periodic truncation — same 50-week cadence as autosim. The tracker
-      // needs no reset: ids already counted stay counted even when truncation
-      // drops the retained entries.
-      if (truncateInterval > 0 && w % truncateInterval === 0) {
-        state = truncateState(state, config.truncationCaps);
-      }
-
-      // Stop Conditions (Optional)
-      if (!config.ignoreBankruptcy) {
-        if (state.treasury < -5000) {
-          console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
-          break;
-        }
-      }
+      const step = await runWeek(state, w, config, tracker, pulses, passAgg);
+      state = step.state;
+      if (step.bankrupt) break;
     }
   } finally {
     if (config.profile) {

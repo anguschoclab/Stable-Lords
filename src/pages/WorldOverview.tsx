@@ -45,6 +45,84 @@ function SectionLabel({ label, children }: { label: string; children?: React.Rea
   );
 }
 
+type OverviewData = ReturnType<typeof useWorldOverview>;
+
+/** Stables / Warriors / Scouting tab body. */
+function OverviewTabs({
+  overview,
+  showBookmarkedOnly,
+  onToggleBookmarked,
+}: {
+  overview: OverviewData;
+  showBookmarkedOnly: boolean;
+  onToggleBookmarked: () => void;
+}) {
+  const {
+    state,
+    stableSort,
+    warriorSort,
+    filteredStableRows,
+    stableBookmarkedCount,
+    filteredWarriorRows,
+    warriorBookmarkedCount,
+    toggleStableSort,
+    toggleWarriorSort,
+  } = overview;
+
+  return (
+    <Tabs defaultValue="stables" className="w-full">
+      <TabsList className="bg-neutral-900/60 border border-white/5 p-1 mb-6">
+        <OverviewTab value="stables" label="Stables" Icon={Trophy} />
+        <OverviewTab value="warriors" label="Warriors" Icon={Swords} />
+        <OverviewTab value="intel" label="Scouting" Icon={Brain} />
+      </TabsList>
+
+      <TabsContent value="stables" className="space-y-6">
+        <SectionLabel label="LEAGUE RANKINGS">
+          <BookmarkFilterToggle
+            active={showBookmarkedOnly}
+            onToggle={onToggleBookmarked}
+            count={stableBookmarkedCount}
+          />
+        </SectionLabel>
+        <StableRankings
+          rows={filteredStableRows}
+          sort={stableSort}
+          onSort={toggleStableSort}
+        />
+      </TabsContent>
+
+      <TabsContent value="warriors" className="space-y-6">
+        <SectionLabel label="VANGUARD BOARD">
+          <BookmarkFilterToggle
+            active={showBookmarkedOnly}
+            onToggle={onToggleBookmarked}
+            count={warriorBookmarkedCount}
+          />
+        </SectionLabel>
+        <WarriorLeaderboard
+          rows={filteredWarriorRows}
+          sort={warriorSort}
+          onSort={toggleWarriorSort}
+        />
+      </TabsContent>
+
+      <TabsContent value="intel" className="space-y-6">
+        <SectionLabel label="Rival Stables" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <RivalIntelligence
+              rivals={state.rivals || []}
+              arenaChampions={state.arenaChampions}
+            />
+          </div>
+          <ReputationQuadrant />
+        </div>
+      </TabsContent>
+    </Tabs>
+  );
+}
+
 /**
  *
  */
@@ -56,22 +134,8 @@ export default function WorldOverview() {
     return () => clearTimeout(t);
   }, []);
 
-  const {
-    state,
-    stableSort,
-    warriorSort,
-    filteredStableRows,
-    stableBookmarkedCount,
-    filteredWarriorRows,
-    warriorBookmarkedCount,
-    totalWarriors,
-    totalKills,
-    topStable,
-    topStableId,
-    totalStables,
-    toggleStableSort,
-    toggleWarriorSort,
-  } = useWorldOverview(showBookmarkedOnly);
+  const overview = useWorldOverview(showBookmarkedOnly);
+  const { state, totalWarriors, totalKills, topStable, topStableId, totalStables } = overview;
 
   return (
     <PageFrame maxWidth="lg" className="space-y-12 pb-20">
@@ -100,56 +164,11 @@ export default function WorldOverview() {
         topStableId={topStableId}
       />
 
-      <Tabs defaultValue="stables" className="w-full">
-        <TabsList className="bg-neutral-900/60 border border-white/5 p-1 mb-6">
-          <OverviewTab value="stables" label="Stables" Icon={Trophy} />
-          <OverviewTab value="warriors" label="Warriors" Icon={Swords} />
-          <OverviewTab value="intel" label="Scouting" Icon={Brain} />
-        </TabsList>
-
-        <TabsContent value="stables" className="space-y-6">
-          <SectionLabel label="LEAGUE RANKINGS">
-            <BookmarkFilterToggle
-              active={showBookmarkedOnly}
-              onToggle={() => setShowBookmarkedOnly((v) => !v)}
-              count={stableBookmarkedCount}
-            />
-          </SectionLabel>
-          <StableRankings
-            rows={filteredStableRows}
-            sort={stableSort}
-            onSort={toggleStableSort}
-          />
-        </TabsContent>
-
-        <TabsContent value="warriors" className="space-y-6">
-          <SectionLabel label="VANGUARD BOARD">
-            <BookmarkFilterToggle
-              active={showBookmarkedOnly}
-              onToggle={() => setShowBookmarkedOnly((v) => !v)}
-              count={warriorBookmarkedCount}
-            />
-          </SectionLabel>
-          <WarriorLeaderboard
-            rows={filteredWarriorRows}
-            sort={warriorSort}
-            onSort={toggleWarriorSort}
-          />
-        </TabsContent>
-
-        <TabsContent value="intel" className="space-y-6">
-          <SectionLabel label="Rival Stables" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <RivalIntelligence
-                rivals={state.rivals || []}
-                arenaChampions={state.arenaChampions}
-              />
-            </div>
-            <ReputationQuadrant />
-          </div>
-        </TabsContent>
-      </Tabs>
+      <OverviewTabs
+        overview={overview}
+        showBookmarkedOnly={showBookmarkedOnly}
+        onToggleBookmarked={() => setShowBookmarkedOnly((v) => !v)}
+      />
     </PageFrame>
   );
 }

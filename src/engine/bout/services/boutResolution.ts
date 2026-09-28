@@ -251,16 +251,48 @@ function collectBoutImpacts(
 
   impacts.push(...rosterUpdateImpacts(state, validCW, validCO, ctx.week));
 
+  const { summary, announcement } = reportBout(
+    state,
+    ctx,
+    validCW,
+    validCO,
+    outcome,
+    tags,
+    { fameA, popA, fameD, popD },
+    rng,
+    boutSeed,
+    impacts
+  );
+
+  return { impacts, deathRes, injuryRes, announcement, summary };
+}
+
+/**
+ * Build the fight summary + announcement, stamp the title-bout channel, push
+ * the arenaHistory impact, and emit BOUT_COMPLETED when headed.
+ */
+function reportBout(
+  state: GameState,
+  ctx: BoutContext,
+  validCW: Warrior,
+  validCO: Warrior,
+  outcome: FightOutcome,
+  tags: string[],
+  fame: { fameA: number; popA: number; fameD: number; popD: number },
+  rng: SeededRNGService,
+  boutSeed: number,
+  impacts: StateImpact[]
+): { summary: FightSummary; announcement: unknown } {
   const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
   const { summary, announcement } = handleReporting(
     validCW,
     validCO,
     outcome,
     tags,
-    fameA,
-    popA,
-    fameD,
-    popD,
+    fame.fameA,
+    fame.popA,
+    fame.fameD,
+    fame.popD,
     ctx.displayWeek ?? ctx.week,
     ctx.rivalStableId,
     ctx.isRivalry,
@@ -283,7 +315,7 @@ function collectBoutImpacts(
     });
   }
 
-  return { impacts, deathRes, injuryRes, announcement, summary };
+  return { summary, announcement };
 }
 
 /**

@@ -367,6 +367,66 @@ function checkKillWindow(
 }
 
 /**
+ * Post-damage event chain: knockdown, momentum, survival-strike counter arm,
+ * insight roll, and kill-window check — in that exact RNG order.
+ */
+function afterHitEvents(
+  events: CombatEvent[],
+  rng: () => number,
+  attacker: FighterState,
+  defender: FighterState,
+  hitLoc: string,
+  damage: number,
+  rawDamage: number,
+  attTactics: ReturnType<typeof resolveEffectiveTactics>,
+  attLabel: 'A' | 'D',
+  defLabel: 'A' | 'D',
+  stylePhase: StylePhase,
+  phase: string,
+  attKD: number,
+  attOE: number,
+  attAL: number,
+  attMatchup: number,
+  ctx?: ResolutionContext
+) {
+  checkKnockdown(events, rng, defender, damage, defLabel);
+  applyMomentumShift(events, attacker, defender, attLabel, defLabel);
+
+  // ── Survival Strike: committed attacker who doesn't kill enables defender counter ──
+  if (attacker.committed && defender.hp > 0) {
+    defender.survivalStrike = true;
+    events.push({ type: 'STATE_CHANGE', actor: defLabel, result: 'SURVIVAL_STRIKE' });
+  }
+
+  if (damage > 0 && rng() < INSIGHT_CHANCE) {
+    const attrs = ['ST', 'SP', 'DF', 'WL'];
+    events.push({
+      type: 'INSIGHT',
+      actor: attLabel,
+      metadata: { attribute: attrs[Math.floor(rng() * attrs.length)] },
+    });
+  }
+
+  checkKillWindow(
+    events,
+    rng,
+    attacker,
+    defender,
+    ctx,
+    hitLoc,
+    rawDamage,
+    attTactics,
+    attLabel,
+    stylePhase,
+    phase,
+    attKD,
+    attOE,
+    attAL,
+    attMatchup
+  );
+}
+
+/**
  * Execute hit.
  */
 export function executeHit(
@@ -432,39 +492,23 @@ export function executeHit(
     defLabel
   );
 
-  checkKnockdown(events, rng, defender, damage, defLabel);
-  applyMomentumShift(events, attacker, defender, attLabel, defLabel);
-
-  // ── Survival Strike: committed attacker who doesn't kill enables defender counter ──
-  if (attacker.committed && defender.hp > 0) {
-    defender.survivalStrike = true;
-    events.push({ type: 'STATE_CHANGE', actor: defLabel, result: 'SURVIVAL_STRIKE' });
-  }
-
-  if (damage > 0 && rng() < INSIGHT_CHANCE) {
-    const attrs = ['ST', 'SP', 'DF', 'WL'];
-    events.push({
-      type: 'INSIGHT',
-      actor: attLabel,
-      metadata: { attribute: attrs[Math.floor(rng() * attrs.length)] },
-    });
-  }
-
-  checkKillWindow(
+  afterHitEvents(
     events,
     rng,
     attacker,
     defender,
-    ctx,
     hitLoc,
+    damage,
     rawDamage,
     attTactics,
     attLabel,
+    defLabel,
     stylePhase,
     phase,
     attKD,
     attOE,
     attAL,
-    attMatchup
+    attMatchup,
+    ctx
   );
 }

@@ -1,10 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { useGameStore, useBookmarks } from '@/state/useGameStore';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { useBookingOffice } from './hooks/useBookingOffice';
+import { useOfferBookmarkFilter } from './hooks/useOfferBookmarkFilter';
 import { AssetRegistry } from './components/AssetRegistry';
 import { HeaderStats, RosterStatusBar, OfferTabs } from './sections';
 
@@ -39,20 +39,13 @@ export default function BookingOffice() {
     return map;
   }, [cards]);
 
-  const isBookmarked = useGameStore((s) => s.isBookmarked);
-  useBookmarks(); // trigger re-render on bookmark changes
-  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
-
-  const filteredThisWeek = showBookmarkedOnly
-    ? thisWeekOffers.filter((o) => isBookmarked('boutOffer', o.id))
-    : thisWeekOffers;
-  const filteredUpcoming = showBookmarkedOnly
-    ? upcomingOffers.filter((o) => isBookmarked('boutOffer', o.id))
-    : upcomingOffers;
-
-  const bookmarkedCount =
-    thisWeekOffers.filter((o) => isBookmarked('boutOffer', o.id)).length +
-    upcomingOffers.filter((o) => isBookmarked('boutOffer', o.id)).length;
+  const {
+    showBookmarkedOnly,
+    toggleBookmarked,
+    filteredThisWeek,
+    filteredUpcoming,
+    bookmarkedCount,
+  } = useOfferBookmarkFilter(thisWeekOffers, upcomingOffers);
 
   return (
     <PageFrame>
@@ -93,7 +86,7 @@ export default function BookingOffice() {
             thisWeekOffers={filteredThisWeek}
             upcomingOffers={filteredUpcoming}
             showBookmarkedOnly={showBookmarkedOnly}
-            onToggleBookmarked={() => setShowBookmarkedOnly((v) => !v)}
+            onToggleBookmarked={toggleBookmarked}
             bookmarkedCount={bookmarkedCount}
             roster={roster}
             promoters={promoters}

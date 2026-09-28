@@ -69,61 +69,80 @@ export default function ImportExport() {
       />
 
       <div className="space-y-8">
-        <div>
-          <SectionDivider label="Export" variant="gold" />
-          <Surface variant="glass" className="p-6 mt-4">
-            <p className="text-xs text-muted-foreground mb-4">
-              Export the current save as a Stable Lords pack. Packs embed the full game
-              state and validate on import.
-            </p>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => doExport('json')}
-                className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 rounded-none transition-colors motion-reduce:transition-none"
-              >
-                <FileJson className="h-3.5 w-3.5" />
-                Export JSON
-              </button>
-              <button
-                type="button"
-                onClick={() => doExport('yaml')}
-                className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-arena-gold/40 bg-arena-gold/10 text-arena-gold hover:bg-arena-gold/20 rounded-none transition-colors motion-reduce:transition-none"
-              >
-                <FileText className="h-3.5 w-3.5" />
-                Export YAML
-              </button>
-            </div>
-          </Surface>
-        </div>
-
-        <div>
-          <SectionDivider label="Import" variant="gold" />
-          <Surface variant="glass" className="p-6 mt-4">
-            <p className="text-xs text-muted-foreground mb-4">
-              Import a Stable Lords pack (.json or .yaml). The embedded state is
-              validated against the save schema before loading. This replaces the
-              current session.
-            </p>
-            <input
-              ref={fileRef}
-              type="file"
-              accept=".json,.yaml,.yml,application/json,application/x-yaml"
-              className="hidden"
-              onChange={doImport}
-              aria-label="Choose save pack file"
-            />
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/10 text-foreground/80 hover:bg-white/5 rounded-none transition-colors motion-reduce:transition-none"
-            >
-              <Upload className="h-3.5 w-3.5" />
-              Choose Pack File
-            </button>
-          </Surface>
-        </div>
+        <ExportSection onExport={doExport} />
+        <ImportSection fileRef={fileRef} onImport={doImport} />
       </div>
     </PageFrame>
+  );
+}
+
+/** Export card — download the current save as a JSON or YAML pack. */
+function ExportSection({ onExport }: { onExport: (format: 'json' | 'yaml') => void }) {
+  return (
+    <div>
+      <SectionDivider label="Export" variant="gold" />
+      <Surface variant="glass" className="p-6 mt-4">
+        <p className="text-xs text-muted-foreground mb-4">
+          Export the current save as a Stable Lords pack. Packs embed the full game
+          state and validate on import.
+        </p>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => onExport('json')}
+            className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 rounded-none transition-colors motion-reduce:transition-none"
+          >
+            <FileJson className="h-3.5 w-3.5" />
+            Export JSON
+          </button>
+          <button
+            type="button"
+            onClick={() => onExport('yaml')}
+            className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-arena-gold/40 bg-arena-gold/10 text-arena-gold hover:bg-arena-gold/20 rounded-none transition-colors motion-reduce:transition-none"
+          >
+            <FileText className="h-3.5 w-3.5" />
+            Export YAML
+          </button>
+        </div>
+      </Surface>
+    </div>
+  );
+}
+
+/** Import card — pick a pack file and replace the current session. */
+function ImportSection({
+  fileRef,
+  onImport,
+}: {
+  fileRef: React.RefObject<HTMLInputElement | null>;
+  onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div>
+      <SectionDivider label="Import" variant="gold" />
+      <Surface variant="glass" className="p-6 mt-4">
+        <p className="text-xs text-muted-foreground mb-4">
+          Import a Stable Lords pack (.json or .yaml). The embedded state is
+          validated against the save schema before loading. This replaces the
+          current session.
+        </p>
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".json,.yaml,.yml,application/json,application/x-yaml"
+          className="hidden"
+          onChange={onImport}
+          aria-label="Choose save pack file"
+        />
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/10 text-foreground/80 hover:bg-white/5 rounded-none transition-colors motion-reduce:transition-none"
+        >
+          <Upload className="h-3.5 w-3.5" />
+          Choose Pack File
+        </button>
+      </Surface>
+    </div>
   );
 }

@@ -50,54 +50,7 @@ export function TournamentPrepDialog({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto pr-3 thin-scrollbar">
             {activeWarriors.map((w) => (
-              <Surface
-                key={w.id}
-                variant="glass"
-                padding="none"
-                className="group hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none border-white/5 bg-black/20"
-              >
-                <div className="p-4 border-b border-white/5 bg-secondary/10 flex items-center justify-between">
-                  <WarriorNameTag id={w.id} name={w.name} isChampion={w.champion} />
-                  <StatBadge styleName={w.style} />
-                </div>
-                <div className="p-5 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                      Fame Index
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn(
-                          'font-mono font-black text-xs',
-                          (w.fame ?? 0) > 80
-                            ? 'text-destructive shadow-[0_0_10px_hsl(var(--destructive)/0.4)]'
-                            : 'text-foreground/80'
-                        )}
-                      >
-                        {(w.fame ?? 0).toString().padStart(3, '0')}
-                      </span>
-                      {(w.fame ?? 0) > 80 && (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />
-                            </TooltipTrigger>
-                            <TooltipContent>Near Retirement Age</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                      Record
-                    </span>
-                    <span className="font-mono font-black text-[10px] text-foreground/60">
-                      {w.career.wins}W - {w.career.losses}L
-                    </span>
-                  </div>
-                </div>
-              </Surface>
+              <PrepWarriorCard key={w.id} warrior={w} />
             ))}
           </div>
 
@@ -116,6 +69,59 @@ export function TournamentPrepDialog({
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** One roster card in the prep grid: name, style, fame index, record. */
+function PrepWarriorCard({ warrior: w }: { warrior: Warrior }) {
+  return (
+    <Surface
+      variant="glass"
+      padding="none"
+      className="group hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none border-white/5 bg-black/20"
+    >
+      <div className="p-4 border-b border-white/5 bg-secondary/10 flex items-center justify-between">
+        <WarriorNameTag id={w.id} name={w.name} isChampion={w.champion} />
+        <StatBadge styleName={w.style} />
+      </div>
+      <div className="p-5 space-y-4">
+        <div className="flex justify-between items-center">
+          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Fame Index
+          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                'font-mono font-black text-xs',
+                (w.fame ?? 0) > 80
+                  ? 'text-destructive shadow-[0_0_10px_hsl(var(--destructive)/0.4)]'
+                  : 'text-foreground/80'
+              )}
+            >
+              {(w.fame ?? 0).toString().padStart(3, '0')}
+            </span>
+            {(w.fame ?? 0) > 80 && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />
+                  </TooltipTrigger>
+                  <TooltipContent>Near Retirement Age</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+        </div>
+        <div className="flex justify-between items-center text-xs">
+          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Record
+          </span>
+          <span className="font-mono font-black text-[10px] text-foreground/60">
+            {w.career.wins}W - {w.career.losses}L
+          </span>
+        </div>
+      </div>
+    </Surface>
   );
 }
 

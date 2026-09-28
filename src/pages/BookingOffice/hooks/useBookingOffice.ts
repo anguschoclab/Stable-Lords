@@ -80,15 +80,13 @@ export interface RivalWarriorMap {
 /**
  *
  */
-export function useBookingOffice() {
-  const state = useWorldState();
-  const setState = useGameStore((s) => s.setState);
-  const { promoters, boutOffers, roster, week, absoluteWeek, rivals } = state;
-  const [activeTab, setActiveTab] = useState('this-week');
-  const [signedOfferIds, setSignedOfferIds] = useState<Set<string>>(new Set());
-  const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
+/** Reset transient selections when the week rolls over. */
+function useWeekReset(
+  week: number,
+  setSignedOfferIds: (v: Set<string>) => void,
+  setSelectedWarriorId: (v: string | null) => void
+) {
   const [trackedWeek, setTrackedWeek] = useState(week);
-
   useEffect(() => {
     if (week !== trackedWeek) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- reset state on week change
@@ -96,30 +94,17 @@ export function useBookingOffice() {
       setSignedOfferIds(new Set());
       setSelectedWarriorId(null);
     }
-  }, [week, trackedWeek]);
+  }, [week, trackedWeek, setSignedOfferIds, setSelectedWarriorId]);
+}
 
-  const rivalWarriorMap = useMemo<RivalWarriorMap>(() => {
-    const map: RivalWarriorMap = {};
-    for (const rival of rivals || []) {
-      for (const warrior of rival.roster) {
-        map[warrior.id] = { ...warrior, stableName: rival.owner.stableName };
-      }
-    }
-    return map;
-  }, [rivals]);
-
-  const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(
-    () =>
-      filterAndSortOffers(
-        boutOffers,
-        roster,
-        absoluteWeek,
-        promoters,
-        signedOfferIds,
-        selectedWarriorId
-      ),
-    [boutOffers, roster, absoluteWeek, promoters, signedOfferIds, selectedWarriorId]
-  );
+/** Accept/decline mutations + the accept-all-honorable batch action. */
+function useOfferActions(
+  state: ReturnType<typeof useWorldState>,
+  setState: GameStore['setState'],
+  setSignedOfferIds: React.Dispatch<React.SetStateAction<Set<string>>>,
+  thisWeekOffers: ReturnType<typeof filterAndSortOffers>['thisWeekOffers']
+) {
+  const { promoters, roster } = state;
 
   const handleResponse = (
     offerId: string,
@@ -162,6 +147,52 @@ export function useBookingOffice() {
     });
     toast.success(`${accepted} bouts accepted.`);
   };
+
+  return { handleResponse, acceptAllHonorable };
+}
+
+/**
+ *
+ */
+export function useBookingOffice() {
+  const state = useWorldState();
+  const setState = useGameStore((s) => s.setState);
+  const { promoters, boutOffers, roster, week, absoluteWeek, rivals } = state;
+  const [activeTab, setActiveTab] = useState('this-week');
+  const [signedOfferIds, setSignedOfferIds] = useState<Set<string>>(new Set());
+  const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
+
+  useWeekReset(week, setSignedOfferIds, setSelectedWarriorId);
+
+  const rivalWarriorMap = useMemo<RivalWarriorMap>(() => {
+    const map: RivalWarriorMap = {};
+    for (const rival of rivals || []) {
+      for (const warrior of rival.roster) {
+        map[warrior.id] = { ...warrior, stableName: rival.owner.stableName };
+      }
+    }
+    return map;
+  }, [rivals]);
+
+  const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(
+    () =>
+      filterAndSortOffers(
+        boutOffers,
+        roster,
+        absoluteWeek,
+        promoters,
+        signedOfferIds,
+        selectedWarriorId
+      ),
+    [boutOffers, roster, absoluteWeek, promoters, signedOfferIds, selectedWarriorId]
+  );
+
+  const { handleResponse, acceptAllHonorable } = useOfferActions(
+    state,
+    setState,
+    setSignedOfferIds,
+    thisWeekOffers
+  );
 
   return {
     week,

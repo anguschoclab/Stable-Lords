@@ -110,6 +110,79 @@ interface AttributeRowProps {
   isAdvisorRecommended?: boolean;
 }
 
+/** The assignable row button: label, progress, advisor badge, status, ceiling glow. */
+function RowButton({
+  warriorName,
+  attrKey,
+  state,
+  atCap,
+  isAdvisorRecommended,
+  onAssign,
+}: {
+  warriorName: string;
+  attrKey: keyof Attributes;
+  state: ReturnType<typeof getAttributeRowState>;
+  atCap: boolean;
+  isAdvisorRecommended?: boolean;
+  onAssign: (attr: keyof Attributes) => void;
+}) {
+  const { val, isRevealed, potVal, chance, isSelected, disabled, lockReason, maxed, ceilingHit, seasonCapped, nearCeiling } =
+    state;
+
+  return (
+    <button
+      disabled={disabled}
+      onClick={() => onAssign(attrKey)}
+      className={cn(
+        'group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all motion-reduce:transition-none motion-reduce:transform-none',
+        isSelected
+          ? 'bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]'
+          : disabled
+            ? 'bg-white/[0.02] border-white/5 opacity-40 cursor-not-allowed'
+            : isAdvisorRecommended
+              ? 'bg-arena-gold/5 border-arena-gold/30 hover:border-arena-gold/50 hover:bg-arena-gold/10 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
+              : 'bg-white/[0.03] border-white/5 hover:border-white/20 hover:bg-white/[0.08]'
+      )}
+      aria-label={`Assign ${ATTRIBUTE_LABELS[attrKey]} training for ${warriorName}`}
+    >
+      {/* Label & Value */}
+      <RowLabel
+        attrKey={attrKey}
+        val={val}
+        isRevealed={isRevealed}
+        potVal={potVal}
+        showLock={!!lockReason && !isSelected}
+      />
+
+      {/* Progress Bar */}
+      <AttributeProgress
+        attrKey={attrKey}
+        val={val}
+        isRevealed={isRevealed}
+        potVal={potVal}
+        chance={chance}
+      />
+
+      {isAdvisorRecommended && !isSelected && <AdvisorBadge />}
+
+      <AttributeRowStatus
+        isSelected={isSelected}
+        maxed={maxed}
+        ceilingHit={ceilingHit}
+        atCap={atCap}
+        seasonCapped={seasonCapped}
+        disabled={disabled}
+        chance={chance}
+      />
+
+      {/* Overlay for "Near Ceiling" */}
+      {nearCeiling && (
+        <div className="absolute inset-0 bg-arena-gold/5 pointer-events-none rounded-none border border-arena-gold/10" />
+      )}
+    </button>
+  );
+}
+
 /**
  *
  */
@@ -123,86 +196,31 @@ export function AttributeRow({
   onAssign,
   isAdvisorRecommended,
 }: AttributeRowProps) {
-  const {
-    val,
-    isSZ,
-    maxed,
-    seasonCapped,
-    isRevealed,
-    potVal,
-    ceilingHit,
-    nearCeiling,
-    isSelected,
-    disabled,
-    lockReason,
-    chance,
-  } = getAttributeRowState({ warrior, key, assignment, seasonalGains, trainers, atCap });
+  const state = getAttributeRowState({ warrior, key, assignment, seasonalGains, trainers, atCap });
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
-          disabled={disabled}
-          onClick={() => onAssign(key)}
-          className={cn(
-            'group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all motion-reduce:transition-none motion-reduce:transform-none',
-            isSelected
-              ? 'bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]'
-              : disabled
-                ? 'bg-white/[0.02] border-white/5 opacity-40 cursor-not-allowed'
-                : isAdvisorRecommended
-                  ? 'bg-arena-gold/5 border-arena-gold/30 hover:border-arena-gold/50 hover:bg-arena-gold/10 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
-                  : 'bg-white/[0.03] border-white/5 hover:border-white/20 hover:bg-white/[0.08]'
-          )}
-          aria-label={`Assign ${ATTRIBUTE_LABELS[key]} training for ${warrior.name}`}
-        >
-          {/* Label & Value */}
-          <RowLabel
-            attrKey={key}
-            val={val}
-            isRevealed={isRevealed}
-            potVal={potVal}
-            showLock={!!lockReason && !isSelected}
-          />
-
-          {/* Progress Bar */}
-          <AttributeProgress
-            attrKey={key}
-            val={val}
-            isRevealed={isRevealed}
-            potVal={potVal}
-            chance={chance}
-          />
-
-          {isAdvisorRecommended && !isSelected && <AdvisorBadge />}
-
-          <AttributeRowStatus
-            isSelected={isSelected}
-            maxed={maxed}
-            ceilingHit={ceilingHit}
-            atCap={atCap}
-            seasonCapped={seasonCapped}
-            disabled={disabled}
-            chance={chance}
-          />
-
-          {/* Overlay for "Near Ceiling" */}
-          {nearCeiling && (
-            <div className="absolute inset-0 bg-arena-gold/5 pointer-events-none rounded-none border border-arena-gold/10" />
-          )}
-        </button>
+        <RowButton
+          warriorName={warrior.name}
+          attrKey={key}
+          state={state}
+          atCap={atCap}
+          isAdvisorRecommended={isAdvisorRecommended}
+          onAssign={onAssign}
+        />
       </TooltipTrigger>
       <AttributeRowTooltip
         attributeKey={key}
-        chance={chance}
-        isSZ={isSZ}
-        maxed={maxed}
-        ceilingHit={ceilingHit}
+        chance={state.chance}
+        isSZ={state.isSZ}
+        maxed={state.maxed}
+        ceilingHit={state.ceilingHit}
         atCap={atCap}
-        seasonCapped={seasonCapped}
-        isSelected={isSelected}
-        isRevealed={isRevealed}
-        nearCeiling={nearCeiling}
+        seasonCapped={state.seasonCapped}
+        isSelected={state.isSelected}
+        isRevealed={state.isRevealed}
+        nearCeiling={state.nearCeiling}
       />
     </Tooltip>
   );

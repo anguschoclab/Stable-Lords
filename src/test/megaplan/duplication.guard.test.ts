@@ -53,6 +53,9 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/components/ledger/TreasuryOverview.tsx|src/pages/ArenaHub.tsx',
   'src/components/ledger/TreasuryOverview.tsx|src/pages/arenaDetail/RecordTable.tsx',
   'src/components/ledger/TreasuryOverview.tsx|src/pages/arenaDetail/sections.tsx',
+  // ArenaHub↔sections share the stat-row styling idiom extracted during the
+  // J-table decomposition — sanctioned until the stat-row component is shared.
+  'src/pages/ArenaHub.tsx|src/pages/arenaHub/sections.tsx',
   'src/components/orphanage/FirstBloodStep.tsx|src/components/orphanage/IdentityStep.tsx',
   'src/components/orphanage/FirstBloodStep.tsx|src/components/orphanage/PlanStep.tsx',
   'src/components/orphanage/FirstBloodStep.tsx|src/components/orphanage/WarriorSelectionStep.tsx',

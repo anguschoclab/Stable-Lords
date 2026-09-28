@@ -54,25 +54,19 @@ interface ModifierContext {
   equip: NonNullable<Warrior['equipment']>;
 }
 
-/** Aggregate every flat modifier into the fighter's effective skill scores. */
-function computeEffectiveSkills(ctx: ModifierContext): {
-  effSkills: BaseSkills;
-  mastery: ReturnType<typeof getMasteryBonus>;
-  traitMods: ReturnType<typeof getStaticTraitMods>;
-  encPenalties: ReturnType<typeof getEncumbrancePenalties>;
-} {
-  const { warrior, trainers, plan, attrs, skills, equip } = ctx;
+/** Every flat skill modifier gathered once — trainers, favorites/mastery,
+ * shields, weapon reqs, encumbrance, armor, classic bonus, drills, traits,
+ * injuries. Conditional traits are applied per-exchange in resolution.ts. */
+function gatherSkillModifiers(ctx: ModifierContext) {
+  const { warrior, trainers, plan, attrs, equip } = ctx;
 
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
   const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
-  const isMastered = favWeapon > 0;
-  const mastery = getMasteryBonus(plan.style, isMastered);
+  const mastery = getMasteryBonus(plan.style, favWeapon > 0);
   const veteranDef = warrior ? getVeteranDefBonus(warrior.age ?? 18, attrs.WL) : 0;
 
   const wShield = getShieldModifiers(equip.weapon);
   const oShield = getShieldModifiers(equip.shield);
-  const totalShieldDef = wShield.def + oShield.def;
-  const totalShieldAtt = wShield.att + oShield.att;
 
   const weaponReq = checkWeaponRequirements(equip.weapon, {
     ST: attrs.ST,
@@ -86,20 +80,38 @@ function computeEffectiveSkills(ctx: ModifierContext): {
     getEncumbranceTier(getEncumbranceRatio(equip, warrior?.derivedStats?.encumbrance ?? 0))
   );
 
-  // Equipment defense modifiers (armor + helm)
-  const armorDefMod = getItemById(equip.armor)?.defenseMod ?? 0;
-  const helmDefMod = getItemById(equip.helm)?.defenseMod ?? 0;
+  return {
+    trainerMods,
+    mastery,
+    veteranDef,
+    totalShieldDef: wShield.def + oShield.def,
+    totalShieldAtt: wShield.att + oShield.att,
+    weaponReq,
+    encPenalties,
+    // Equipment defense modifiers (armor + helm)
+    armorDefMod: getItemById(equip.armor)?.defenseMod ?? 0,
+    helmDefMod: getItemById(equip.helm)?.defenseMod ?? 0,
+    classicBonus: warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0,
+    // Skill drilling bonuses — flat additive modifiers from dedicated drill training.
+    drills: warrior?.skillDrills ?? {},
+    // Static trait mods (Quick, Heavy-Handed, Agile, etc.). Conditional traits
+    // (Berserker, Patient, etc.) are applied per-exchange in resolution.ts.
+    traitMods: getStaticTraitMods(warrior),
+    injuryPenalties: getInjuryPenalties(warrior?.injuries ?? []),
+  };
+}
 
-  const classicBonus = warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0;
-
-  // Skill drilling bonuses — flat additive modifiers from dedicated drill training.
-  const drills = warrior?.skillDrills ?? {};
-
-  // Static trait mods (Quick, Heavy-Handed, Agile, etc.). Conditional traits
-  // (Berserker, Patient, etc.) are applied per-exchange in resolution.ts.
-  const traitMods = getStaticTraitMods(warrior);
-
-  const injuryPenalties = getInjuryPenalties(warrior?.injuries ?? []);
+/** Aggregate every flat modifier into the fighter's effective skill scores. */
+function computeEffectiveSkills(ctx: ModifierContext): {
+  effSkills: BaseSkills;
+  mastery: ReturnType<typeof getMasteryBonus>;
+  traitMods: ReturnType<typeof getStaticTraitMods>;
+  encPenalties: ReturnType<typeof getEncumbrancePenalties>;
+} {
+  const { skills } = ctx;
+  const m = gatherSkillModifiers(ctx);
+  const { trainerMods, mastery, veteranDef, totalShieldDef, totalShieldAtt, weaponReq,
+    encPenalties, armorDefMod, helmDefMod, classicBonus, drills, traitMods, injuryPenalties } = m;
 
   const effSkills: BaseSkills = {
     ATT:

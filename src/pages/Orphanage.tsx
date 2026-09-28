@@ -28,98 +28,98 @@ const stepTransition = {
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
+type FtueFlow = ReturnType<typeof useFtueFlow>;
+
+/** Step 0: owner + stable identity. */
+function IdentityBranch({ flow }: { flow: FtueFlow }) {
+  const { setStep, stableInput, setStableInput, ownerInput, setOwnerInput, initializeStable, returnToTitle } = flow;
+  return (
+    <StepShell key="identity">
+      <IdentityStep
+        ownerInput={ownerInput}
+        setOwnerInput={setOwnerInput}
+        stableInput={stableInput}
+        setStableInput={setStableInput}
+        onBack={returnToTitle}
+        onSubmit={() => {
+          initializeStable(ownerInput.trim(), stableInput.trim());
+          setStep(1);
+        }}
+      />
+    </StepShell>
+  );
+}
+
+/** Step 1: orphan warrior selection. */
+function WarriorSelectionBranch({ flow }: { flow: FtueFlow }) {
+  const { setStep, selected, orphanPool, setPlayerPlan, planWarrior, rerollPool, toggleWarrior } = flow;
+  return (
+    <StepShell key="warrior-selection">
+      <WarriorSelectionStep
+        orphanPool={orphanPool}
+        selected={selected}
+        onToggleWarrior={toggleWarrior}
+        onRerollPool={rerollPool}
+        onBack={() => setStep(0)}
+        onNext={() => {
+          if (planWarrior) {
+            setPlayerPlan(defaultPlanForWarrior(planWarrior));
+          }
+          setStep(2);
+        }}
+      />
+    </StepShell>
+  );
+}
+
+/** Step 2: first war-plan assignment. */
+function PlanBranch({ flow }: { flow: FtueFlow }) {
+  const { setStep, playerPlan, setPlayerPlan, planWarrior, runTutorialBout } = flow;
+  if (!planWarrior || !playerPlan) return null;
+  return (
+    <StepShell key="set-the-plan">
+      <PlanStep
+        warrior={planWarrior}
+        plan={playerPlan}
+        onPlanChange={setPlayerPlan}
+        onBack={() => setStep(1)}
+        onNext={() => {
+          runTutorialBout();
+          setStep(3);
+        }}
+      />
+    </StepShell>
+  );
+}
+
+/** Step 3: tutorial bout result. */
+function FirstBloodBranch({ flow }: { flow: FtueFlow }) {
+  const { setStep, boutResult } = flow;
+  if (!boutResult) return null;
+  return (
+    <StepShell key="first-blood">
+      <FirstBloodStep
+        boutResult={boutResult}
+        onBack={() => setStep(2)}
+        onNext={() => setStep(4)}
+      />
+    </StepShell>
+  );
+}
+
 /** The five FTUE steps rendered inside AnimatePresence. */
-function FtueSteps({ flow }: { flow: ReturnType<typeof useFtueFlow> }) {
-  const {
-    step,
-    setStep,
-    stableInput,
-    setStableInput,
-    ownerInput,
-    setOwnerInput,
-    selected,
-    orphanPool,
-    boutResult,
-    playerPlan,
-    setPlayerPlan,
-    planWarrior,
-    rerollPool,
-    toggleWarrior,
-    runTutorialBout,
-    finishFTUE,
-    initializeStable,
-    returnToTitle,
-  } = flow;
+function FtueSteps({ flow }: { flow: FtueFlow }) {
+  const { step } = flow;
 
   return (
     <AnimatePresence mode="wait">
-      {/* ── Step 0: Identity ────────────────────────────────────────────────── */}
-      {step === 0 && (
-        <StepShell key="identity">
-          <IdentityStep
-            ownerInput={ownerInput}
-            setOwnerInput={setOwnerInput}
-            stableInput={stableInput}
-            setStableInput={setStableInput}
-            onBack={returnToTitle}
-            onSubmit={() => {
-              initializeStable(ownerInput.trim(), stableInput.trim());
-              setStep(1);
-            }}
-          />
-        </StepShell>
-      )}
-
-      {/* ── Step 1: Choose Warriors ──────────────────────────────────────────── */}
-      {step === 1 && (
-        <StepShell key="warrior-selection">
-          <WarriorSelectionStep
-            orphanPool={orphanPool}
-            selected={selected}
-            onToggleWarrior={toggleWarrior}
-            onRerollPool={rerollPool}
-            onBack={() => setStep(0)}
-            onNext={() => {
-              if (planWarrior) {
-                setPlayerPlan(defaultPlanForWarrior(planWarrior));
-              }
-              setStep(2);
-            }}
-          />
-        </StepShell>
-      )}
-
-      {/* ── Step 2: Set the Plan ─────────────────────────────────────────────── */}
-      {step === 2 && planWarrior && playerPlan && (
-        <StepShell key="set-the-plan">
-          <PlanStep
-            warrior={planWarrior}
-            plan={playerPlan}
-            onPlanChange={setPlayerPlan}
-            onBack={() => setStep(1)}
-            onNext={() => {
-              runTutorialBout();
-              setStep(3);
-            }}
-          />
-        </StepShell>
-      )}
-
-      {/* ── Step 3: First Blood ──────────────────────────────────────────────── */}
-      {step === 3 && boutResult && (
-        <StepShell key="first-blood">
-          <FirstBloodStep
-            boutResult={boutResult}
-            onBack={() => setStep(2)}
-            onNext={() => setStep(4)}
-          />
-        </StepShell>
-      )}
-
-      {/* ── Step 4: Your Story Begins ────────────────────────────────────────── */}
+      {step === 0 && <IdentityBranch key="identity" flow={flow} />}
+      {step === 1 && <WarriorSelectionBranch key="warrior-selection" flow={flow} />}
+      {step === 2 && <PlanBranch key="set-the-plan" flow={flow} />}
+      {step === 3 && <FirstBloodBranch key="first-blood" flow={flow} />}
       {step === 4 && (
         <StepShell key="story-begins">
-          <StoryBeginsStep onFinish={finishFTUE} />
+          <StoryBeginsStep onFinish={flow.finishFTUE} />
         </StepShell>
       )}
     </AnimatePresence>

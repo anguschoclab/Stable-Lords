@@ -136,23 +136,9 @@ function MainColumn({
  * App shell.
  * @param - { children }.
  */
-export default function AppShell({ children }: { children: React.ReactNode }) {
-  const {
-    week,
-    day,
-    isTournamentWeek,
-    treasury,
-    fame,
-    crowdMood,
-    weather,
-    doReset,
-    returnToTitle,
-    lastSavedAt,
-    isSimulating,
-    isInitialized,
-    eventLogOpen,
-    initialize,
-  } = useGameStore(
+/** Shell chrome state: header fields, simulation/reset plumbing, event log. */
+function useShellState() {
+  return useGameStore(
     useShallow((s: GameStore) => ({
       week: s.week,
       day: s.day,
@@ -171,6 +157,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       initialize: s.initialize,
     }))
   );
+}
+
+export default function AppShell({ children }: { children: React.ReactNode }) {
+  const {
+    week,
+    day,
+    isTournamentWeek,
+    treasury,
+    fame,
+    crowdMood,
+    weather,
+    doReset,
+    returnToTitle,
+    lastSavedAt,
+    isSimulating,
+    isInitialized,
+    eventLogOpen,
+    initialize,
+  } = useShellState();
   const location = useLocation();
   const activePath = location.pathname;
   const [resetOpen, setResetOpen] = useState(false);

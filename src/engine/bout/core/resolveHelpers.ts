@@ -45,6 +45,78 @@ export function calculateBoutFame(
 }
 
 /**
+ * Player-side purse/show-fee impacts.
+ *
+ * Player payouts go via treasuryDelta. Rival payouts are handled in
+ * stableManager.weeklyIncome (which iterates arenaHistory and adds
+ * FIGHT_PURSE / WIN_BONUS per bout) — paying them twice causes treasuries
+ * to balloon into the millions, so when the winner fights for a rival stable
+ * these impacts are skipped entirely.
+ */
+function buildPurseImpacts(
+  state: GameState,
+  contract: BoutOffer,
+  purse: number,
+  showFee: number,
+  winnerId: string | null,
+  currentWId: string,
+  currentOId: string,
+  isRivalBout: boolean
+): StateImpact[] {
+  if (isRivalBout) return [];
+  const ledgerEntry = (label: string, amount: number) => ({
+    id: generateId(undefined, 'ledger') as LedgerEntryId,
+    week: state.week,
+    label,
+    amount,
+    category: 'fight' as const,
+  });
+  if (winnerId === currentWId) {
+    return [
+      { treasuryDelta: purse },
+      { ledgerEntries: [ledgerEntry(`Purse — ${contract.id}`, purse)] },
+    ];
+  }
+  if (winnerId === currentOId) {
+    return [
+      { treasuryDelta: showFee },
+      { ledgerEntries: [ledgerEntry(`Show fee — ${contract.id}`, showFee)] },
+    ];
+  }
+  // Draw
+  return [
+    { treasuryDelta: showFee },
+    { ledgerEntries: [ledgerEntry(`Show fee (draw) — ${contract.id}`, showFee)] },
+  ];
+}
+
+/** Book the purse and bout into the promoter's history. */
+function updatePromoterHistory(
+  state: GameState,
+  contract: BoutOffer,
+  purse: number,
+  currentWId: string,
+  currentOId: string
+): GameState['promoters'] {
+  const updatedPromoters = { ...state.promoters };
+  const promoter = updatedPromoters[contract.promoterId];
+  if (promoter) {
+    updatedPromoters[contract.promoterId] = {
+      ...promoter,
+      history: {
+        ...promoter.history,
+        totalPursePaid: (promoter.history.totalPursePaid || 0) + purse,
+        notableBouts: [
+          ...(promoter.history.notableBouts || []).slice(-9),
+          `bout_${state.week}_${currentWId}_vs_${currentOId}` as FightId,
+        ],
+      },
+    };
+  }
+  return updatedPromoters;
+}
+
+/**
  * Process contract payouts.
  */
 export function processContractPayouts(
@@ -67,81 +139,13 @@ export function processContractPayouts(
   const rivalA =
     stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
 
-  // Player payouts go via treasuryDelta. Rival payouts are handled in
-  // stableManager.weeklyIncome (which iterates arenaHistory and adds
-  // FIGHT_PURSE / WIN_BONUS per bout) — paying them twice causes treasuries
-  // to balloon into the millions. Multi-bout-per-tick clobbering on
-  // rivalsUpdates' mapMerge would also lose payouts here, so the canonical
-  // path is stableManager only.
-  if (winnerId === currentWId) {
-    if (!rivalA) {
-      impacts.push({ treasuryDelta: purse });
-      impacts.push({
-        ledgerEntries: [
-          {
-            id: generateId(undefined, 'ledger') as LedgerEntryId,
-            week: state.week,
-            label: `Purse — ${contract.id}`,
-            amount: purse,
-            category: 'fight' as const,
-          },
-        ],
-      });
-    }
-  } else if (winnerId === currentOId) {
-    if (!rivalA) {
-      impacts.push({ treasuryDelta: showFee });
-      impacts.push({
-        ledgerEntries: [
-          {
-            id: generateId(undefined, 'ledger') as LedgerEntryId,
-            week: state.week,
-            label: `Show fee — ${contract.id}`,
-            amount: showFee,
-            category: 'fight' as const,
-          },
-        ],
-      });
-    }
-  } else {
-    // Draw
-    if (!rivalA) {
-      impacts.push({ treasuryDelta: showFee });
-      impacts.push({
-        ledgerEntries: [
-          {
-            id: generateId(undefined, 'ledger') as LedgerEntryId,
-            week: state.week,
-            label: `Show fee (draw) — ${contract.id}`,
-            amount: showFee,
-            category: 'fight' as const,
-          },
-        ],
-      });
-    }
-  }
+  impacts.push(...buildPurseImpacts(state, contract, purse, showFee, winnerId, currentWId, currentOId, rivalA != null));
 
   if (rivalsUpdates.size > 0) {
     impacts.push({ rivalsUpdates });
   }
 
-  // Update Promoter History
-  const updatedPromoters = { ...state.promoters };
-  const promoter = updatedPromoters[contract.promoterId];
-  if (promoter) {
-    updatedPromoters[contract.promoterId] = {
-      ...promoter,
-      history: {
-        ...promoter.history,
-        totalPursePaid: (promoter.history.totalPursePaid || 0) + purse,
-        notableBouts: [
-          ...(promoter.history.notableBouts || []).slice(-9),
-          `bout_${state.week}_${currentWId}_vs_${currentOId}` as FightId,
-        ],
-      },
-    };
-  }
-  impacts.push({ promoters: updatedPromoters });
+  impacts.push({ promoters: updatePromoterHistory(state, contract, purse, currentWId, currentOId) });
 
   // Close the contract
   const { [contract.id]: _removed, ...remainingBoutOffers } = state.boutOffers;

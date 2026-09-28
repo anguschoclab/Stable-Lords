@@ -209,6 +209,107 @@ function Unlocked(props: SVGProps<SVGSVGElement>) {
   return <Unlock {...props} />;
 }
 
+type TokensByType = {
+  weaponTokens: InsightToken[];
+  rhythmTokens: InsightToken[];
+  statTokens: InsightToken[];
+};
+
+/** Vault header card: title, description, and the three token sections. */
+function VaultHeader({ tokensByType }: { tokensByType: TokensByType }) {
+  const { weaponTokens, rhythmTokens, statTokens } = tokensByType;
+  return (
+    <Surface
+      variant="glass"
+      className="border-arena-gold/30 bg-neutral-900/40 relative overflow-hidden"
+    >
+      <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+        <Database className="h-32 w-32 text-arena-gold" />
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center gap-8 relative z-10">
+        <div className="p-4 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_20px_rgba(255,215,0,0.1)]">
+          <Unlock className="h-8 w-8 text-arena-gold" />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2">
+            <h3>The Insight Vault</h3>
+            <Badge className="bg-arena-gold/20 text-arena-gold border-arena-gold/30 font-mono font-black text-[10px] px-2">
+              Active
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl font-medium">
+            Insights are secrets discovered in the arena. When a warrior exhibits their preferred
+            weapon or innate rhythm, these secrets surface. Reveal enough fragments to unlock
+            permanent martial superiority and strategic dominance over your rivals.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 relative z-10">
+        <TokenSection config={TOKEN_SECTIONS[0]} tokens={statTokens} />
+        <TokenSection config={TOKEN_SECTIONS[1]} tokens={weaponTokens} />
+        <TokenSection config={TOKEN_SECTIONS[2]} tokens={rhythmTokens} />
+      </div>
+    </Surface>
+  );
+}
+
+/** Summary strip: totals per token family + the awaiting-discovery status. */
+function InsightSummary({
+  total,
+  tokensByType,
+}: {
+  total: number;
+  tokensByType: TokensByType;
+}) {
+  return (
+    <Surface
+      variant="glass"
+      padding="none"
+      className="border-border/10 bg-black/40 overflow-hidden shadow-2xl relative"
+    >
+      <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+      <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/5">
+        <StatItem
+          icon={Search}
+          label="Total"
+          value={`${total}G`}
+          sublabel="Found"
+          variant="default"
+        />
+        <StatItem
+          icon={Box}
+          label="Weapons"
+          value={`${tokensByType.weaponTokens.length}S`}
+          sublabel="Discovered"
+          variant="gold"
+        />
+        <StatItem
+          icon={Binary}
+          label="Combat Flow"
+          value={`${tokensByType.rhythmTokens.length}K`}
+          sublabel="Discovered"
+          variant="pop"
+        />
+        <div className="p-8 bg-secondary/5 flex flex-col justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none motion-reduce:transition-none" />
+          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">
+            Status
+          </span>
+          <div className="flex items-center gap-3">
+            <Unlocked className="h-4 w-4 text-primary animate-pulse motion-reduce:animate-none" />
+            <span className="text-xs font-black uppercase tracking-widest text-primary drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.3)]">
+              Awaiting Discovery
+            </span>
+          </div>
+        </div>
+      </div>
+    </Surface>
+  );
+}
+
 /**
  * Insight vault component displaying discovered intelligence tokens.
  */
@@ -216,7 +317,7 @@ export function InsightVault() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
   const insightTokens = useGameStore((s) => s.insightTokens);
   const tokens = insightTokens ?? [];
-  const { weaponTokens, rhythmTokens, statTokens } = tokens.reduce(
+  const tokensByType = tokens.reduce(
     (acc, t) => {
       if (t.type === 'Weapon') acc.weaponTokens.push(t);
       if (t.type === 'Rhythm') acc.rhythmTokens.push(t);
@@ -232,85 +333,8 @@ export function InsightVault() {
 
   return (
     <div className="space-y-8 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
-      {/* ─── The Insight Vault Header ─── */}
-      <Surface
-        variant="glass"
-        className="border-arena-gold/30 bg-neutral-900/40 relative overflow-hidden"
-      >
-        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-          <Database className="h-32 w-32 text-arena-gold" />
-        </div>
-
-        <div className="flex flex-col md:flex-row md:items-center gap-8 relative z-10">
-          <div className="p-4 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_20px_rgba(255,215,0,0.1)]">
-            <Unlock className="h-8 w-8 text-arena-gold" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <h3>The Insight Vault</h3>
-              <Badge className="bg-arena-gold/20 text-arena-gold border-arena-gold/30 font-mono font-black text-[10px] px-2">
-                Active
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl font-medium">
-              Insights are secrets discovered in the arena. When a warrior exhibits their preferred
-              weapon or innate rhythm, these secrets surface. Reveal enough fragments to unlock
-              permanent martial superiority and strategic dominance over your rivals.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 relative z-10">
-          <TokenSection config={TOKEN_SECTIONS[0]} tokens={statTokens} />
-          <TokenSection config={TOKEN_SECTIONS[1]} tokens={weaponTokens} />
-          <TokenSection config={TOKEN_SECTIONS[2]} tokens={rhythmTokens} />
-        </div>
-      </Surface>
-
-      {/* ─── Insight Summary ─── */}
-      <Surface
-        variant="glass"
-        padding="none"
-        className="border-border/10 bg-black/40 overflow-hidden shadow-2xl relative"
-      >
-        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-
-        <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/5">
-          <StatItem
-            icon={Search}
-            label="Total"
-            value={`${tokens.length}G`}
-            sublabel="Found"
-            variant="default"
-          />
-          <StatItem
-            icon={Box}
-            label="Weapons"
-            value={`${weaponTokens.length}S`}
-            sublabel="Discovered"
-            variant="gold"
-          />
-          <StatItem
-            icon={Binary}
-            label="Combat Flow"
-            value={`${rhythmTokens.length}K`}
-            sublabel="Discovered"
-            variant="pop"
-          />
-          <div className="p-8 bg-secondary/5 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none motion-reduce:transition-none" />
-            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">
-              Status
-            </span>
-            <div className="flex items-center gap-3">
-              <Unlocked className="h-4 w-4 text-primary animate-pulse motion-reduce:animate-none" />
-              <span className="text-xs font-black uppercase tracking-widest text-primary drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.3)]">
-                Awaiting Discovery
-              </span>
-            </div>
-          </div>
-        </div>
-      </Surface>
+      <VaultHeader tokensByType={tokensByType} />
+      <InsightSummary total={tokens.length} tokensByType={tokensByType} />
     </div>
   );
 }

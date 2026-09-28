@@ -85,6 +85,66 @@ function venueWinRate(warrior: Warrior | undefined, arenaId: string): number {
  * throne is most winnable (vacant > dormant > weak champion > strong one).
  * Returns undefined when the stable has no credible crown path.
  */
+/**
+ * Score one (warrior, arena) throne bid — vacant > fading > winnable > climb,
+ * plus dethrone pressure on a dominant player's crown and the witnessed-tells
+ * penalty when the holder's camp is known to brawl.
+ */
+function scoreThrone(
+  w: Warrior,
+  arenaId: string,
+  title: GameState['arenaChampions'][string],
+  ctx: {
+    eligible: boolean;
+    rankBonus: number;
+    champion: Warrior | undefined;
+    dethroneBonus: number;
+    playerWarriorIds: Set<WarriorId>;
+    rival: RivalStableData;
+    state: GameState;
+  }
+): { score: number; reason: string } {
+  let score = ctx.eligible ? 2 : 1;
+  let reason: string;
+  if (!title.champion) {
+    score += 2;
+    reason = `Vacant crown at ${arenaId}`;
+  } else if (title.status !== 'active') {
+    score += 1;
+    reason = `Fading reign at ${arenaId}`;
+  } else {
+    const champRate = venueWinRate(ctx.champion, arenaId);
+    const ownRate = venueWinRate(w, arenaId);
+    if (ownRate > champRate) {
+      score += 2;
+      reason = `Winnable throne at ${arenaId}`;
+    } else {
+      reason = `Crown climb at ${arenaId}`;
+    }
+    if (ctx.dethroneBonus > 0 && ctx.playerWarriorIds.has(ctx.champion?.id ?? ('' as WarriorId))) {
+      score += ctx.dethroneBonus;
+      reason = `Dethrone bid at ${arenaId} — the dominant player's crown is the prize`;
+    }
+    // Witnessed-tells danger: a dossier that saw the champion's stable
+    // brawl high-OE marks this throne as a bloodier climb.
+    if (ctx.champion && ctx.rival.owner.personality !== 'Aggressive') {
+      const champStableId = ctx.state.warriorToStableMap?.get(ctx.champion.id)?.stableId;
+      const tells = champStableId
+        ? ctx.rival.agentMemory?.opponentDossiers?.[champStableId]?.observedTells
+        : undefined;
+      if (
+        tells &&
+        tells.samples >= OBSERVED_TELLS_MIN_SAMPLES &&
+        tells.oe >= OBSERVED_TELLS_HOT_OE
+      ) {
+        score -= OBSERVED_TELLS_PENALTY;
+        reason = `Bloody throne at ${arenaId} — the holder's camp brawls`;
+      }
+    }
+  }
+  return { score: score + ctx.rankBonus, reason };
+}
+
 export function assessCrownOpportunity(
   rival: RivalStableData,
   state: GameState,
@@ -129,45 +189,15 @@ export function assessCrownOpportunity(
       const champion = title.champion
         ? warriorById.get(title.champion.warriorId)
         : undefined;
-      let score = eligible ? 2 : 1;
-      let reason: string;
-      if (!title.champion) {
-        score += 2;
-        reason = `Vacant crown at ${arenaId}`;
-      } else if (title.status !== 'active') {
-        score += 1;
-        reason = `Fading reign at ${arenaId}`;
-      } else {
-        const champRate = venueWinRate(champion, arenaId);
-        const ownRate = venueWinRate(w, arenaId);
-        if (ownRate > champRate) {
-          score += 2;
-          reason = `Winnable throne at ${arenaId}`;
-        } else {
-          reason = `Crown climb at ${arenaId}`;
-        }
-        if (dethroneBonus > 0 && playerWarriorIds.has(champion?.id ?? ('' as WarriorId))) {
-          score += dethroneBonus;
-          reason = `Dethrone bid at ${arenaId} — the dominant player's crown is the prize`;
-        }
-        // Witnessed-tells danger: a dossier that saw the champion's stable
-        // brawl high-OE marks this throne as a bloodier climb.
-        if (champion && rival.owner.personality !== 'Aggressive') {
-          const champStableId = state.warriorToStableMap?.get(champion.id)?.stableId;
-          const tells = champStableId
-            ? rival.agentMemory?.opponentDossiers?.[champStableId]?.observedTells
-            : undefined;
-          if (
-            tells &&
-            tells.samples >= OBSERVED_TELLS_MIN_SAMPLES &&
-            tells.oe >= OBSERVED_TELLS_HOT_OE
-          ) {
-            score -= OBSERVED_TELLS_PENALTY;
-            reason = `Bloody throne at ${arenaId} — the holder's camp brawls`;
-          }
-        }
-      }
-      score += rankBonus;
+      const { score, reason } = scoreThrone(w, arenaId, title, {
+        eligible,
+        rankBonus,
+        champion,
+        dethroneBonus,
+        playerWarriorIds,
+        rival,
+        state,
+      });
 
       if (!best || score > best.score || (score === best.score && w.id < best.warrior.id)) {
         best = { warrior: w, arenaId, score, reason };

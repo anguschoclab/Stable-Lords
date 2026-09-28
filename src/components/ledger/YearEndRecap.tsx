@@ -81,6 +81,97 @@ function RecapCallouts({
   );
 }
 
+type RecapData = ReturnType<typeof computeRecap>;
+
+/** Fold the year's collections into the headline recap figures. */
+function computeRecap(
+  rosterFameData: { id: string; name: string; fame: number | undefined; career: Warrior['career'] }[],
+  graveyard: Warrior[],
+  ledger: { amount: number }[],
+  rivalries: { intensity?: number }[] | undefined
+) {
+  // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan for finding max values. Avoids extra array allocations.
+  let topWarrior = rosterFameData[0];
+  let mostKills = rosterFameData[0];
+  for (const w of rosterFameData) {
+    if ((w.fame ?? 0) > (topWarrior?.fame ?? 0)) topWarrior = w;
+    if ((w.career?.kills ?? 0) > (mostKills?.career?.kills ?? 0)) mostKills = w;
+  }
+
+  const totalKills =
+    rosterFameData.reduce((s, w) => s + (w.career?.kills ?? 0), 0) +
+    graveyard.reduce((s, w) => s + (w.career?.kills ?? 0), 0);
+  const net = (ledger ?? []).reduce((s, e) => s + e.amount, 0);
+  const memorials = graveyard.slice(-5);
+
+  let topRivalry = rivalries?.[0];
+  if (rivalries) {
+    for (const r of rivalries) {
+      if ((r.intensity ?? 0) > (topRivalry?.intensity ?? 0)) topRivalry = r;
+    }
+  }
+
+  return { topWarrior, mostKills, totalKills, net, memorials, topRivalry };
+}
+
+/** The six headline stat tiles. */
+function RecapGrid({
+  recap,
+  rosterSize,
+  retiredCount,
+  graveyardCount,
+}: {
+  recap: RecapData;
+  rosterSize: number;
+  retiredCount: number;
+  graveyardCount: number;
+}) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+      {recap.topWarrior && (
+        <RecapStat
+          label="Top Warrior"
+          value={`${recap.topWarrior.name} · ${recap.topWarrior.fame}G fame`}
+          tone="text-arena-gold"
+          Icon={Trophy}
+        />
+      )}
+      {recap.mostKills && (
+        <RecapStat
+          label="Most Lethal"
+          value={`${recap.mostKills.name} · ${recap.mostKills.career?.kills ?? 0} kills`}
+          tone="text-destructive"
+          Icon={Flame}
+        />
+      )}
+      <RecapStat
+        label="Total Arena Kills"
+        value={recap.totalKills}
+        tone="text-destructive"
+        Icon={Skull}
+      />
+      <RecapStat
+        label="Net Treasury"
+        value={`${recap.net >= 0 ? '+' : ''}${recap.net}G`}
+        tone={recap.net >= 0 ? 'text-primary' : 'text-destructive'}
+        Icon={Coins}
+      />
+      <RecapStat
+        label="Active Roster"
+        value={`${rosterSize} warriors`}
+        tone="text-primary"
+        Icon={Users}
+      />
+      <RecapStat
+        label="Retired / Fallen"
+        value={`${retiredCount} / ${graveyardCount}`}
+        tone="text-muted-foreground"
+        Icon={Swords}
+      />
+    </div>
+  );
+}
+
 /**
  * Year end recap.
  */
@@ -102,30 +193,10 @@ export function YearEndRecap() {
     [roster]
   );
 
-  const recap = useMemo(() => {
-    // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan for finding max values. Avoids extra array allocations.
-    let topWarrior = rosterFameData[0];
-    let mostKills = rosterFameData[0];
-    for (const w of rosterFameData) {
-      if ((w.fame ?? 0) > (topWarrior?.fame ?? 0)) topWarrior = w;
-      if ((w.career?.kills ?? 0) > (mostKills?.career?.kills ?? 0)) mostKills = w;
-    }
-
-    const totalKills =
-      rosterFameData.reduce((s, w) => s + (w.career?.kills ?? 0), 0) +
-      graveyard.reduce((s, w) => s + (w.career?.kills ?? 0), 0);
-    const net = (ledger ?? []).reduce((s, e) => s + e.amount, 0);
-    const memorials = graveyard.slice(-5);
-
-    let topRivalry = rivalries?.[0];
-    if (rivalries) {
-      for (const r of rivalries) {
-        if ((r.intensity ?? 0) > (topRivalry?.intensity ?? 0)) topRivalry = r;
-      }
-    }
-
-    return { topWarrior, mostKills, totalKills, net, memorials, topRivalry };
-  }, [rosterFameData, graveyard, ledger, rivalries]);
+  const recap = useMemo(
+    () => computeRecap(rosterFameData, graveyard, ledger, rivalries),
+    [rosterFameData, graveyard, ledger, rivalries]
+  );
 
   return (
     <div className="space-y-6">
@@ -136,48 +207,12 @@ export function YearEndRecap() {
         <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/30 via-border/20 to-transparent" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-        {recap.topWarrior && (
-          <RecapStat
-            label="Top Warrior"
-            value={`${recap.topWarrior.name} · ${recap.topWarrior.fame}G fame`}
-            tone="text-arena-gold"
-            Icon={Trophy}
-          />
-        )}
-        {recap.mostKills && (
-          <RecapStat
-            label="Most Lethal"
-            value={`${recap.mostKills.name} · ${recap.mostKills.career?.kills ?? 0} kills`}
-            tone="text-destructive"
-            Icon={Flame}
-          />
-        )}
-        <RecapStat
-          label="Total Arena Kills"
-          value={recap.totalKills}
-          tone="text-destructive"
-          Icon={Skull}
-        />
-        <RecapStat
-          label="Net Treasury"
-          value={`${recap.net >= 0 ? '+' : ''}${recap.net}G`}
-          tone={recap.net >= 0 ? 'text-primary' : 'text-destructive'}
-          Icon={Coins}
-        />
-        <RecapStat
-          label="Active Roster"
-          value={`${roster.length} warriors`}
-          tone="text-primary"
-          Icon={Users}
-        />
-        <RecapStat
-          label="Retired / Fallen"
-          value={`${retired.length} / ${graveyard.length}`}
-          tone="text-muted-foreground"
-          Icon={Swords}
-        />
-      </div>
+      <RecapGrid
+        recap={recap}
+        rosterSize={roster.length}
+        retiredCount={retired.length}
+        graveyardCount={graveyard.length}
+      />
 
       <RecapCallouts topRivalry={recap.topRivalry} memorials={recap.memorials} />
     </div>

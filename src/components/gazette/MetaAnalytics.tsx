@@ -199,6 +199,89 @@ function MatchupCell({
  * Style matchup heatmap.
  * @param - { all fights }.
  */
+function HeatmapHeader() {
+  return (
+    <div className="flex items-center gap-4 mb-8 relative z-10">
+      <div className="p-2.5 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+        <Binary className="h-5 w-5 text-arena-gold" />
+      </div>
+      <div>
+        <h3 className="font-display text-base font-black uppercase tracking-tight">
+          Style Matchups
+        </h3>
+        <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
+          Heatmap
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function HeatmapTable({
+  matchupStats,
+}: {
+  matchupStats: Record<string, Record<string, { wins: number; total: number }>>;
+}) {
+  return (
+    <div className="overflow-x-auto custom-scrollbar relative z-10">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr>
+            <th className="p-2"></th>
+            {TACTICAL_STYLES.map((s) => (
+              <th
+                key={s}
+                className="p-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 text-center w-16 group/header"
+              >
+                <div className="rotate-45 mb-4 group-hover/header:text-primary transition-colors motion-reduce:transition-none">
+                  {s}
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {TACTICAL_STYLES.map((rowStyle) => (
+            <tr key={rowStyle} className="group/row">
+              <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground/60 text-right pr-4 group-hover/row:text-arena-gold transition-colors motion-reduce:transition-none">
+                {rowStyle}
+              </td>
+              {TACTICAL_STYLES.map((colStyle) => (
+                <MatchupCell
+                  key={colStyle}
+                  rowStyle={rowStyle}
+                  colStyle={colStyle}
+                  data={matchupStats[rowStyle]?.[colStyle] || { wins: 0, total: 0 }}
+                />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function HeatmapLegend() {
+  return (
+    <div className="mt-8 flex items-center justify-center gap-6 opacity-40 text-[8px] font-black uppercase tracking-widest relative z-10">
+      <div className="flex items-center gap-1.5 text-arena-pop">
+        <div className="h-2 w-2 rounded-none bg-arena-pop/40" /> Superior
+      </div>
+      <div className="flex items-center gap-1.5 text-primary">
+        <div className="h-2 w-2 rounded-none bg-primary/40" /> Neutral
+      </div>
+      <div className="flex items-center gap-1.5 text-destructive">
+        <div className="h-2 w-2 rounded-none bg-destructive/40" /> Vulnerable
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Style matchup heatmap.
+ * @param - { all fights }.
+ */
 export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S^2 * N) nested filtering to O(N) single-pass aggregation and memoized result
   const matchupStats = useMemo(() => {
@@ -229,68 +312,9 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
         <LayoutGrid className="h-24 w-24 text-arena-gold" />
       </div>
 
-      <div className="flex items-center gap-4 mb-8 relative z-10">
-        <div className="p-2.5 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
-          <Binary className="h-5 w-5 text-arena-gold" />
-        </div>
-        <div>
-          <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Style Matchups
-          </h3>
-          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Heatmap
-          </p>
-        </div>
-      </div>
-
-      <div className="overflow-x-auto custom-scrollbar relative z-10">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="p-2"></th>
-              {TACTICAL_STYLES.map((s) => (
-                <th
-                  key={s}
-                  className="p-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 text-center w-16 group/header"
-                >
-                  <div className="rotate-45 mb-4 group-hover/header:text-primary transition-colors motion-reduce:transition-none">
-                    {s}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {TACTICAL_STYLES.map((rowStyle) => (
-              <tr key={rowStyle} className="group/row">
-                <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground/60 text-right pr-4 group-hover/row:text-arena-gold transition-colors motion-reduce:transition-none">
-                  {rowStyle}
-                </td>
-                {TACTICAL_STYLES.map((colStyle) => (
-                  <MatchupCell
-                    key={colStyle}
-                    rowStyle={rowStyle}
-                    colStyle={colStyle}
-                    data={matchupStats[rowStyle]?.[colStyle] || { wins: 0, total: 0 }}
-                  />
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="mt-8 flex items-center justify-center gap-6 opacity-40 text-[8px] font-black uppercase tracking-widest relative z-10">
-        <div className="flex items-center gap-1.5 text-arena-pop">
-          <div className="h-2 w-2 rounded-none bg-arena-pop/40" /> Superior
-        </div>
-        <div className="flex items-center gap-1.5 text-primary">
-          <div className="h-2 w-2 rounded-none bg-primary/40" /> Neutral
-        </div>
-        <div className="flex items-center gap-1.5 text-destructive">
-          <div className="h-2 w-2 rounded-none bg-destructive/40" /> Vulnerable
-        </div>
-      </div>
+      <HeatmapHeader />
+      <HeatmapTable matchupStats={matchupStats} />
+      <HeatmapLegend />
     </Surface>
   );
 }

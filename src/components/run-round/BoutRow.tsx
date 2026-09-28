@@ -52,13 +52,56 @@ function FighterCell({ name, isWinner, right }: { name: string; isWinner: boolea
   );
 }
 
-/**
- *
- */
-export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
+/** Collapsed row face — fighters, outcome badge, expand chevron. */
+function RowTrigger({ res, isExpanded }: { res: BoutResult; isExpanded: boolean }) {
   const isWinnerA = res.outcome.winner === 'A';
   const isWinnerD = res.outcome.winner === 'D';
+  return (
+    <CollapsibleTrigger asChild>
+      <div className="p-4 cursor-pointer flex items-center justify-between group">
+        <div className="flex items-center gap-6 flex-1">
+          <FighterCell name={res.a.name} isWinner={isWinnerA} />
 
+          <div className="flex flex-col items-center gap-1.5 px-4">
+            <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em]">
+              VS
+            </span>
+            <Badge
+              variant="outline"
+              className="text-[8px] font-black uppercase tracking-widest h-4 bg-white/[0.02] border-white/5 px-2"
+            >
+              {res.outcome.by}
+            </Badge>
+          </div>
+
+          <FighterCell name={res.d.name} isWinner={isWinnerD} right />
+        </div>
+
+        <div className="flex items-center gap-4 ml-6">
+          <div className="flex items-center gap-2">
+            <OutcomeIcon by={res.outcome.by} />
+          </div>
+          <div
+            className={cn('h-8 w-8 flex items-center justify-center border border-white/5 transition-colors motion-reduce:transition-none',
+              isExpanded
+                ? 'bg-primary/20 text-primary border-primary/40'
+                : 'bg-white/[0.02] text-muted-foreground/40 group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20'
+            )}
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </div>
+        </div>
+      </div>
+    </CollapsibleTrigger>
+  );
+}
+
+/** Expanded bout body — full BoutViewer with fight analysis. */
+function ExpandedViewer({ res }: { res: BoutResult }) {
   const zeroSkills = { ATT: 0, PAR: 0, DEF: 0, INI: 0, RIP: 0, DEC: 0 };
   const analysis = buildFightAnalysis(
     res.outcome,
@@ -77,7 +120,35 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
       skills: res.d.baseSkills ?? zeroSkills,
     }
   );
+  return (
+    <CollapsibleContent>
+      <div className="px-4 pb-4 border-t border-white/5 bg-black/20 pt-4">
+        <BoutViewer
+          nameA={res.a.name}
+          nameD={res.d.name}
+          styleA={res.a.style}
+          styleD={res.d.style}
+          log={res.outcome.log}
+          winner={res.outcome.winner}
+          by={res.outcome.by}
+          announcement={res.announcement}
+          isRivalry={res.isRivalry}
+          analysis={analysis}
+          exchangeLog={res.outcome.exchangeLog}
+          weaponIdA={res.a.equipment?.weapon}
+          weaponIdD={res.d.equipment?.weapon}
+          warriorA={res.a}
+          warriorD={res.d}
+        />
+      </div>
+    </CollapsibleContent>
+  );
+}
 
+/**
+ *
+ */
+export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
   return (
     <Collapsible open={isExpanded} onOpenChange={() => onToggleExpand(isExpanded ? null : id)}>
       <Surface
@@ -90,68 +161,8 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
             : 'hover:border-white/20'
         )}
       >
-        <CollapsibleTrigger asChild>
-          <div className="p-4 cursor-pointer flex items-center justify-between group">
-            <div className="flex items-center gap-6 flex-1">
-              <FighterCell name={res.a.name} isWinner={isWinnerA} />
-
-              <div className="flex flex-col items-center gap-1.5 px-4">
-                <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em]">
-                  VS
-                </span>
-                <Badge
-                  variant="outline"
-                  className="text-[8px] font-black uppercase tracking-widest h-4 bg-white/[0.02] border-white/5 px-2"
-                >
-                  {res.outcome.by}
-                </Badge>
-              </div>
-
-              <FighterCell name={res.d.name} isWinner={isWinnerD} right />
-            </div>
-
-            <div className="flex items-center gap-4 ml-6">
-              <div className="flex items-center gap-2">
-                <OutcomeIcon by={res.outcome.by} />
-              </div>
-              <div
-                className={cn('h-8 w-8 flex items-center justify-center border border-white/5 transition-colors motion-reduce:transition-none',
-                  isExpanded
-                    ? 'bg-primary/20 text-primary border-primary/40'
-                    : 'bg-white/[0.02] text-muted-foreground/40 group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20'
-                )}
-              >
-                {isExpanded ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
-              </div>
-            </div>
-          </div>
-        </CollapsibleTrigger>
-
-        <CollapsibleContent>
-          <div className="px-4 pb-4 border-t border-white/5 bg-black/20 pt-4">
-            <BoutViewer
-              nameA={res.a.name}
-              nameD={res.d.name}
-              styleA={res.a.style}
-              styleD={res.d.style}
-              log={res.outcome.log}
-              winner={res.outcome.winner}
-              by={res.outcome.by}
-              announcement={res.announcement}
-              isRivalry={res.isRivalry}
-              analysis={analysis}
-              exchangeLog={res.outcome.exchangeLog}
-              weaponIdA={res.a.equipment?.weapon}
-              weaponIdD={res.d.equipment?.weapon}
-              warriorA={res.a}
-              warriorD={res.d}
-            />
-          </div>
-        </CollapsibleContent>
+        <RowTrigger res={res} isExpanded={isExpanded} />
+        <ExpandedViewer res={res} />
       </Surface>
     </Collapsible>
   );

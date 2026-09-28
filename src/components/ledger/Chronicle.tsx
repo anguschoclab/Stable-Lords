@@ -32,6 +32,100 @@ function ChronicleEmptyState() {
   );
 }
 
+function TimelineMarker() {
+  return (
+    <div className="absolute -left-[41px] md:-left-[57px] top-6 flex items-center justify-center">
+      <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full animate-pulse motion-reduce:animate-none" />
+      <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-black border-2 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center relative z-10">
+        <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary" />
+      </div>
+      <div className="absolute left-8 h-px w-8 md:w-12 bg-gradient-to-r from-primary to-transparent opacity-40" />
+    </div>
+  );
+}
+
+function TimelineItemHeader({ item }: { item: NewsletterItem }) {
+  return (
+    <div className="p-6 md:p-8 border-b border-white/5 bg-neutral-900/40 relative">
+      <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity motion-reduce:transition-none">
+        <ScrollText className="h-20 w-20" />
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+        <div className="space-y-1">
+          <h4>{item.title}</h4>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
+              Logged
+            </span>
+            <div className="h-1 w-1 rounded-full bg-white/10" />
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
+              System Event
+            </span>
+          </div>
+        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge
+              variant="outline"
+              className="text-[10px] font-mono font-black border-primary/20 bg-primary/5 text-primary h-8 px-4 tracking-widest shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]"
+            >
+              Week {item.week}
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+            Discovered: Phase {item.week}
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
+  );
+}
+
+function TimelineEntryList({ entries }: { entries: string[] }) {
+  return (
+    <div className="p-6 md:p-8 bg-black/20">
+      <ul className="space-y-4">
+        {entries.map((entry, j) => (
+          <li key={j} className="flex items-start gap-4 group/item">
+            <div className="mt-1.5 shrink-0 flex flex-col items-center gap-1 group/btn">
+              <ChevronRight className="h-3 w-3 text-primary opacity-40 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
+              <div className="w-0.5 h-full bg-white/5 min-h-[12px] group-hover/item:bg-primary/20 transition-colors motion-reduce:transition-none" />
+            </div>
+            <span className="text-xs md:text-sm font-medium text-foreground/70 group-hover/item:text-foreground leading-relaxed transition-colors tracking-wide motion-reduce:transition-none">
+              {entry}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function TimelineItemFooter() {
+  return (
+    <div className="px-8 py-3 bg-neutral-900/40 border-t border-white/5 flex items-center justify-between opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1.5">
+          <Activity className="h-3 w-3 text-muted-foreground" />
+          <span className="text-[8px] font-black uppercase tracking-widest">
+            Integrity: PASS
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <ShieldCheck className="h-3 w-3 text-muted-foreground" />
+          <span className="text-[8px] font-black uppercase tracking-widest">
+            Auth_Lvl: ADMIN
+          </span>
+        </div>
+      </div>
+      <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground">
+        LOG_FINALIZED
+      </span>
+    </div>
+  );
+}
+
 function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: number }) {
   return (
     <motion.div
@@ -42,88 +136,16 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
       className="relative"
     >
       {/* Timeline Marker */}
-      <div className="absolute -left-[41px] md:-left-[57px] top-6 flex items-center justify-center">
-        <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full animate-pulse motion-reduce:animate-none" />
-        <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-black border-2 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center relative z-10">
-          <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary" />
-        </div>
-        <div className="absolute left-8 h-px w-8 md:w-12 bg-gradient-to-r from-primary to-transparent opacity-40" />
-      </div>
+      <TimelineMarker />
 
       <Surface
         variant="glass"
         padding="none"
         className="border-border/10 hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500 group overflow-hidden shadow-xl"
       >
-        <div className="p-6 md:p-8 border-b border-white/5 bg-neutral-900/40 relative">
-          <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity motion-reduce:transition-none">
-            <ScrollText className="h-20 w-20" />
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-            <div className="space-y-1">
-              <h4>{item.title}</h4>
-              <div className="flex items-center gap-3">
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
-                  Logged
-                </span>
-                <div className="h-1 w-1 rounded-full bg-white/10" />
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
-                  System Event
-                </span>
-              </div>
-            </div>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge
-                  variant="outline"
-                  className="text-[10px] font-mono font-black border-primary/20 bg-primary/5 text-primary h-8 px-4 tracking-widest shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]"
-                >
-                  Week {item.week}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                Discovered: Phase {item.week}
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
-
-        <div className="p-6 md:p-8 bg-black/20">
-          <ul className="space-y-4">
-            {item.items.map((entry, j) => (
-              <li key={j} className="flex items-start gap-4 group/item">
-                <div className="mt-1.5 shrink-0 flex flex-col items-center gap-1 group/btn">
-                  <ChevronRight className="h-3 w-3 text-primary opacity-40 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
-                  <div className="w-0.5 h-full bg-white/5 min-h-[12px] group-hover/item:bg-primary/20 transition-colors motion-reduce:transition-none" />
-                </div>
-                <span className="text-xs md:text-sm font-medium text-foreground/70 group-hover/item:text-foreground leading-relaxed transition-colors tracking-wide motion-reduce:transition-none">
-                  {entry}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="px-8 py-3 bg-neutral-900/40 border-t border-white/5 flex items-center justify-between opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              <Activity className="h-3 w-3 text-muted-foreground" />
-              <span className="text-[8px] font-black uppercase tracking-widest">
-                Integrity: PASS
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="h-3 w-3 text-muted-foreground" />
-              <span className="text-[8px] font-black uppercase tracking-widest">
-                Auth_Lvl: ADMIN
-              </span>
-            </div>
-          </div>
-          <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground">
-            LOG_FINALIZED
-          </span>
-        </div>
+        <TimelineItemHeader item={item} />
+        <TimelineEntryList entries={item.items} />
+        <TimelineItemFooter />
       </Surface>
     </motion.div>
   );

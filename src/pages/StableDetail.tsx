@@ -58,6 +58,75 @@ function DossierTabs({
   );
 }
 
+/** Back-to-scouting link. */
+function BackLink() {
+  return (
+    <div className="mb-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        asChild
+        className="hover:bg-transparent -ml-4 opacity-40 hover:opacity-100 transition-all motion-reduce:transition-none"
+      >
+        <Link
+          to="/world/scouting"
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
+        >
+          <ArrowLeft className="h-3 w-3" /> Back to Scouting
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
+/** Header actions: bookmark + fame readout. */
+function HeaderActions({ rival }: { rival: RivalStableData }) {
+  return (
+    <div className="flex items-center gap-8">
+      <BookmarkButton entityType="rival" entityId={rival.owner.id} size="md" />
+      <div className="flex flex-col items-end">
+        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
+          Fame
+        </span>
+        <span className="text-xl font-display font-black text-arena-gold">
+          {rival.owner.fame}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** Active tab body. */
+function TabBody({
+  activeTab,
+  stats,
+}: {
+  activeTab: DetailTab;
+  stats: ReturnType<typeof deriveStableStats>;
+}) {
+  const { activeRoster, deadWarriors, totalWins, totalLosses, totalKills, stableWarriorIds, recentBouts } =
+    stats;
+  return (
+    <div className="pt-4">
+      {activeTab === 'OVERVIEW' && (
+        <StableOverviewTab
+          activeRoster={activeRoster}
+          deadWarriors={deadWarriors}
+          totalWins={totalWins}
+          totalLosses={totalLosses}
+          totalKills={totalKills}
+        />
+      )}
+
+      {activeTab === 'ROSTER' && <StableRosterTab activeRoster={activeRoster} />}
+
+      {activeTab === 'LOGS' && (
+        <StableLogsTab recentBouts={recentBouts} stableWarriorIds={stableWarriorIds} />
+      )}
+    </div>
+  );
+}
+
 /**
  * Stable detail.
  */
@@ -84,81 +153,28 @@ export default function StableDetail() {
 
   if (!rival) return <StableNotFound />;
 
-  const {
-    activeRoster,
-    deadWarriors,
-    totalWins,
-    totalLosses,
-    totalKills,
-    winRate,
-    tierCfg,
-    stableWarriorIds,
-    recentBouts,
-  } = deriveStableStats(rival, state.arenaHistory);
+  const stats = deriveStableStats(rival, state.arenaHistory);
 
   return (
     <PageFrame maxWidth="xl">
-      <div className="mb-8">
-        <Button
-          variant="ghost"
-          size="sm"
-          asChild
-          className="hover:bg-transparent -ml-4 opacity-40 hover:opacity-100 transition-all motion-reduce:transition-none"
-        >
-          <Link
-            to="/world/scouting"
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
-          >
-            <ArrowLeft className="h-3 w-3" /> Back to Scouting
-          </Link>
-        </Button>
-      </div>
+      <BackLink />
 
       <PageHeader
         eyebrow="Rival Stable"
         title={rival.owner.stableName}
         subtitle={`${(rival.owner.personality ?? '').toUpperCase()} · ${rival.tier?.toUpperCase() || 'MINOR'} CLASS`}
         icon={Shield}
-        actions={
-          <div className="flex items-center gap-8">
-            <BookmarkButton entityType="rival" entityId={rival.owner.id} size="md" />
-            <div className="flex flex-col items-end">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Fame
-              </span>
-              <span className="text-xl font-display font-black text-arena-gold">
-                {rival.owner.fame}
-              </span>
-            </div>
-          </div>
-        }
+        actions={<HeaderActions rival={rival} />}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
-        <StableSidebar rival={rival} tierCfg={tierCfg} winRate={winRate} />
+        <StableSidebar rival={rival} tierCfg={stats.tierCfg} winRate={stats.winRate} />
 
 
         {/* Main Content: Tabbed Analysis */}
         <div className="lg:col-span-8 space-y-8">
           <DossierTabs activeTab={activeTab} onChange={setActiveTab} />
-
-          <div className="pt-4">
-            {activeTab === 'OVERVIEW' && (
-              <StableOverviewTab
-                activeRoster={activeRoster}
-                deadWarriors={deadWarriors}
-                totalWins={totalWins}
-                totalLosses={totalLosses}
-                totalKills={totalKills}
-              />
-            )}
-
-            {activeTab === 'ROSTER' && <StableRosterTab activeRoster={activeRoster} />}
-
-            {activeTab === 'LOGS' && (
-              <StableLogsTab recentBouts={recentBouts} stableWarriorIds={stableWarriorIds} />
-            )}
-          </div>
+          <TabBody activeTab={activeTab} stats={stats} />
         </div>
       </div>
     </PageFrame>

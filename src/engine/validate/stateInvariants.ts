@@ -33,14 +33,8 @@ function checkWarrior(w: Warrior, where: string, out: InvariantViolation[]): voi
     out.push({ id: 'no-nan', message: `${where}: ${w.name} has NaN fame` });
 }
 
-/**
- * Validates structural invariants on a GameState. Returns all violations
- * found (empty array = clean). Pure — never mutates state.
- */
-export function validateStateInvariants(state: GameState): InvariantViolation[] {
-  const out: InvariantViolation[] = [];
-
-  // ── Roster id uniqueness across every stable ─────────────────────────
+/** Roster id uniqueness across every stable + per-warrior NaN checks. */
+function checkRosterIntegrity(state: GameState, out: InvariantViolation[]): void {
   const seen = new Map<string, string>();
   const claim = (id: string | undefined, where: string) => {
     if (!id) return;
@@ -71,8 +65,10 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
       checkWarrior(w, `rival ${r.id}`, out);
     }
   }
+}
 
-  // ── Treasury / ledger sanity ─────────────────────────────────────────
+/** Treasury / ledger sanity. */
+function checkFinances(state: GameState, out: InvariantViolation[]): void {
   if (typeof state.treasury === 'number' && Number.isNaN(state.treasury)) {
     out.push({ id: 'no-nan', message: 'treasury is NaN' });
   }
@@ -81,10 +77,14 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
       out.push({ id: 'no-nan', message: `ledger entry ${entry.id} has NaN amount` });
     }
   }
+}
 
-  // ── Map ↔ collection coherence (week caches) ─────────────────────────
-  // warriorToOfferIds must only reference offers that exist and that list
-  // the warrior; every offer's warriors must be indexed.
+/**
+ * Map ↔ collection coherence (week caches): warriorToOfferIds must only
+ * reference offers that exist and that list the warrior; warriorMap must be
+ * a faithful index of all rosters when present.
+ */
+function checkCacheCoherence(state: GameState, out: InvariantViolation[]): void {
   if (state.warriorToOfferIds && state.boutOffers) {
     for (const [wId, offerIds] of state.warriorToOfferIds) {
       for (const oId of offerIds) {
@@ -104,7 +104,6 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
     }
   }
 
-  // warriorMap must be a faithful index of all rosters when present.
   if (state.warriorMap) {
     for (const w of state.roster ?? []) {
       if (state.warriorMap.get(w.id) !== w) {
@@ -125,6 +124,18 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
       }
     }
   }
+}
+
+/**
+ * Validates structural invariants on a GameState. Returns all violations
+ * found (empty array = clean). Pure — never mutates state.
+ */
+export function validateStateInvariants(state: GameState): InvariantViolation[] {
+  const out: InvariantViolation[] = [];
+
+  checkRosterIntegrity(state, out);
+  checkFinances(state, out);
+  checkCacheCoherence(state, out);
 
   // ── Calendar sanity ──────────────────────────────────────────────────
   if (state.week !== undefined && (state.week < 1 || state.week > 52)) {

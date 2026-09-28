@@ -78,6 +78,106 @@ export function DetailTabStrip({
   );
 }
 
+/** Renown / crowd-favor / season-points stat stack. */
+function StandingSurface({ displayWarrior }: { displayWarrior: ObfuscatedWarrior }) {
+  return (
+    <Surface variant="glass" className="p-8 space-y-8 border-white/5">
+      <div className="flex items-center justify-between">
+        <StatCard
+          label="Renown"
+          value={displayWarrior.fame}
+          variant="fame"
+          valueClassName="text-3xl leading-none"
+        />
+        <ImperialRing size="md" variant="gold">
+          <Trophy className="h-5 w-5 text-arena-fame" />
+        </ImperialRing>
+      </div>
+
+      <Separator className="bg-white/5" />
+
+      <div className="flex items-center justify-between">
+        <StatCard
+          label="Crowd Favor"
+          value={displayWarrior.popularity}
+          valueClassName="text-3xl leading-none text-arena-pop"
+        />
+        <ImperialRing size="md" variant="silver">
+          <Users className="h-5 w-5 text-arena-pop" />
+        </ImperialRing>
+      </div>
+
+      <Separator className="bg-white/5" />
+
+      <div className="flex items-center justify-between">
+        <StatCard
+          label="Season Points"
+          value={displayWarrior.seasonPoints ?? 0}
+          valueClassName="text-3xl leading-none tabular-nums"
+        />
+        <ImperialRing size="md" variant="bronze">
+          <Medal className="h-5 w-5 text-arena-fame" />
+        </ImperialRing>
+      </div>
+    </Surface>
+  );
+}
+
+/** Career record, streak badge, and championship flag. */
+function BloodLedgerSurface({
+  displayWarrior,
+  streakLabel,
+  streakVal,
+  champion,
+}: {
+  displayWarrior: ObfuscatedWarrior;
+  streakLabel: string | null;
+  streakVal: number;
+  champion: boolean | undefined;
+}) {
+  return (
+    <Surface variant="glass" className="p-8 space-y-6 border-white/5">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-1">
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Bouts Fought
+          </span>
+          <p className="text-sm font-display font-black">
+            {displayWarrior.career.wins + displayWarrior.career.losses}
+          </p>
+        </div>
+        <div className="space-y-1 text-right">
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Slain
+          </span>
+          <p className="text-sm font-display font-black text-primary">
+            {displayWarrior.career.kills}
+          </p>
+        </div>
+      </div>
+
+      {streakLabel && (
+        <div
+          className={cn(
+            'p-3 text-center border font-black uppercase text-[10px] tracking-[0.2em]',
+            streakVal > 0
+              ? 'border-primary/20 bg-primary/5 text-primary'
+              : 'border-destructive/20 bg-destructive/5 text-destructive'
+          )}
+        >
+          {streakLabel}
+        </div>
+      )}
+
+      {champion && (
+        <div className="p-3 text-center border border-arena-gold/20 bg-arena-gold/10 text-arena-gold font-black uppercase text-[10px] tracking-[0.2em]">
+          Champion of the Arena
+        </div>
+      )}
+    </Surface>
+  );
+}
+
 /** Right-rail surfaces: standing stats plus the blood ledger. */
 export function DetailSidebar({
   displayWarrior,
@@ -93,86 +193,15 @@ export function DetailSidebar({
   return (
     <div className="lg:col-span-4 space-y-8">
       <SectionDivider label="Standing" />
-      <Surface variant="glass" className="p-8 space-y-8 border-white/5">
-        <div className="flex items-center justify-between">
-          <StatCard
-            label="Renown"
-            value={displayWarrior.fame}
-            variant="fame"
-            valueClassName="text-3xl leading-none"
-          />
-          <ImperialRing size="md" variant="gold">
-            <Trophy className="h-5 w-5 text-arena-fame" />
-          </ImperialRing>
-        </div>
-
-        <Separator className="bg-white/5" />
-
-        <div className="flex items-center justify-between">
-          <StatCard
-            label="Crowd Favor"
-            value={displayWarrior.popularity}
-            valueClassName="text-3xl leading-none text-arena-pop"
-          />
-          <ImperialRing size="md" variant="silver">
-            <Users className="h-5 w-5 text-arena-pop" />
-          </ImperialRing>
-        </div>
-
-        <Separator className="bg-white/5" />
-
-        <div className="flex items-center justify-between">
-          <StatCard
-            label="Season Points"
-            value={displayWarrior.seasonPoints ?? 0}
-            valueClassName="text-3xl leading-none tabular-nums"
-          />
-          <ImperialRing size="md" variant="bronze">
-            <Medal className="h-5 w-5 text-arena-fame" />
-          </ImperialRing>
-        </div>
-      </Surface>
+      <StandingSurface displayWarrior={displayWarrior} />
 
       <SectionDivider label="Blood Ledger" />
-      <Surface variant="glass" className="p-8 space-y-6 border-white/5">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-1">
-            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Bouts Fought
-            </span>
-            <p className="text-sm font-display font-black">
-              {displayWarrior.career.wins + displayWarrior.career.losses}
-            </p>
-          </div>
-          <div className="space-y-1 text-right">
-            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Slain
-            </span>
-            <p className="text-sm font-display font-black text-primary">
-              {displayWarrior.career.kills}
-            </p>
-          </div>
-        </div>
-
-        {streakLabel && (
-          <div
-            className={cn(
-              'p-3 text-center border font-black uppercase text-[10px] tracking-[0.2em]',
-              streakVal > 0
-                ? 'border-primary/20 bg-primary/5 text-primary'
-                : 'border-destructive/20 bg-destructive/5 text-destructive'
-            )}
-          >
-            {streakLabel}
-          </div>
-        )}
-
-        {champion && (
-          <div className="p-3 text-center border border-arena-gold/20 bg-arena-gold/10 text-arena-gold font-black uppercase text-[10px] tracking-[0.2em]">
-            Champion of the Arena
-          </div>
-        )}
-      </Surface>
+      <BloodLedgerSurface
+        displayWarrior={displayWarrior}
+        streakLabel={streakLabel}
+        streakVal={streakVal}
+        champion={champion}
+      />
     </div>
   );
 }

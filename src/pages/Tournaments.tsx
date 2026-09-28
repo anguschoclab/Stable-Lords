@@ -107,6 +107,74 @@ function CampaignArchives({
   );
 }
 
+/** Readiness banner, live manifest, and campaign archives. */
+function TournamentBody({
+  tournamentState,
+  expandedBout,
+  onToggleExpand,
+  isSimulating,
+  onExecuteRound,
+  onOpenPrep,
+  showBookmarkedOnly,
+  onToggleBookmarked,
+}: {
+  tournamentState: ReturnType<typeof useTournamentState>;
+  expandedBout: string | null;
+  onToggleExpand: (id: string | null) => void;
+  isSimulating: boolean;
+  onExecuteRound: () => void;
+  onOpenPrep: () => void;
+  showBookmarkedOnly: boolean;
+  onToggleBookmarked: () => void;
+}) {
+  const {
+    season,
+    week,
+    arenaHistory,
+    currentTournament,
+    playerWarriorsInTournament,
+    pastTournaments,
+    bookmarkedCount,
+    isTournamentReadyToStart,
+  } = tournamentState;
+
+  return (
+    <>
+      {/* ── Pre-tournament readiness banner ── */}
+      {currentTournament && playerWarriorsInTournament.length > 0 && (
+        <WarriorReadinessBanner
+          tournament={currentTournament}
+          warriors={playerWarriorsInTournament}
+        />
+      )}
+
+      {currentTournament && (
+        <ActiveTournamentManifest
+          tournament={currentTournament}
+          arenaHistory={arenaHistory}
+          week={week}
+          expandedBout={expandedBout}
+          onToggleExpand={onToggleExpand}
+          isReadyToStart={isTournamentReadyToStart}
+          onExecuteRound={onExecuteRound}
+          isSimulating={isSimulating}
+          onOpenPrep={onOpenPrep}
+          seasonIcon={SEASON_ICONS[season] ?? ''}
+        />
+      )}
+
+      <CampaignArchives
+        showBookmarkedOnly={showBookmarkedOnly}
+        onToggleBookmarked={onToggleBookmarked}
+        bookmarkedCount={bookmarkedCount}
+        pastTournaments={pastTournaments}
+        season={season}
+        arenaHistory={arenaHistory}
+      />
+    </>
+  );
+}
+
 /**
  * Tournaments.
  */
@@ -114,22 +182,18 @@ export default function Tournaments() {
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
+  const tournamentState = useTournamentState(showBookmarkedOnly);
   const {
     season,
-    week,
     year,
-    arenaHistory,
     activeSlotId,
     loadGame,
     setSimulating,
     isSimulating,
     currentTournament,
     activeWarriors,
-    playerWarriorsInTournament,
-    pastTournaments,
-    bookmarkedCount,
     isTournamentReadyToStart,
-  } = useTournamentState(showBookmarkedOnly);
+  } = tournamentState;
 
   const hasAlreadyStarted = currentTournament?.bracket.some((b) => b.winner !== undefined);
   const { isPrepOpen, setIsPrepOpen } = usePrepDialog(
@@ -165,36 +229,15 @@ export default function Tournaments() {
         }
       />
 
-      {/* ── Pre-tournament readiness banner ── */}
-      {currentTournament && playerWarriorsInTournament.length > 0 && (
-        <WarriorReadinessBanner
-          tournament={currentTournament}
-          warriors={playerWarriorsInTournament}
-        />
-      )}
-
-      {currentTournament && (
-        <ActiveTournamentManifest
-          tournament={currentTournament}
-          arenaHistory={arenaHistory}
-          week={week}
-          expandedBout={expandedBout}
-          onToggleExpand={setExpandedBout}
-          isReadyToStart={isTournamentReadyToStart}
-          onExecuteRound={handleExecuteRound}
-          isSimulating={isSimulating}
-          onOpenPrep={() => setIsPrepOpen(true)}
-          seasonIcon={SEASON_ICONS[season] ?? ''}
-        />
-      )}
-
-      <CampaignArchives
+      <TournamentBody
+        tournamentState={tournamentState}
+        expandedBout={expandedBout}
+        onToggleExpand={setExpandedBout}
+        isSimulating={isSimulating}
+        onExecuteRound={handleExecuteRound}
+        onOpenPrep={() => setIsPrepOpen(true)}
         showBookmarkedOnly={showBookmarkedOnly}
         onToggleBookmarked={() => setShowBookmarkedOnly((v) => !v)}
-        bookmarkedCount={bookmarkedCount}
-        pastTournaments={pastTournaments}
-        season={season}
-        arenaHistory={arenaHistory}
       />
       <TournamentPrepDialog
         isOpen={isPrepOpen}

@@ -203,29 +203,7 @@ export function computeTrainingImpact(
 
     // ── Trait Training (multi-week) ──
     if (assignment.type === 'trait') {
-      const remaining = (assignment.weeksRemaining ?? 1) - 1;
-      if (remaining > 0) continue; // still training; survives finalizeState
-      const trainer = (state.trainers ?? []).find((t) => t.id === assignment.trainerId);
-      if (!trainer) continue;
-      const roll = rollTraitTraining(warrior, trainer, rng);
-      if (roll.outcome !== 'none' && roll.traitId) {
-        const updated = { ...warrior, traits: [...(warrior.traits ?? []), roll.traitId] };
-        currentRoster.set(warrior.id, updated);
-        results.push({
-          warriorId: warrior.id,
-          type: 'gain',
-          message:
-            roll.outcome === 'success'
-              ? `${warrior.name} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
-              : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
-        });
-      } else {
-        results.push({
-          warriorId: warrior.id,
-          type: 'gain',
-          message: `${warrior.name}'s trait training yielded nothing.`,
-        });
-      }
+      processTraitAssignment(assignment, warrior, state, rng, currentRoster, results);
       continue;
     }
 
@@ -250,6 +228,45 @@ export function computeTrainingImpact(
     updatedSeasonalGrowth: seasonalGrowth,
     results,
   };
+}
+
+/**
+ * Resolve a multi-week trait-training assignment for one warrior. No-ops while
+ * weeks remain (the assignment survives finalizeState) or if the trainer is gone.
+ */
+function processTraitAssignment(
+  assignment: TrainingAssignment,
+  warrior: Warrior,
+  state: GameState,
+  rng: IRNGService,
+  currentRoster: Map<WarriorId, Warrior>,
+  results: TrainingResult[]
+): void {
+  const remaining = (assignment.weeksRemaining ?? 1) - 1;
+  if (remaining > 0) return; // still training; survives finalizeState
+  const trainer = (state.trainers ?? []).find((t) => t.id === assignment.trainerId);
+  if (!trainer) return;
+  const roll = rollTraitTraining(warrior, trainer, rng);
+  if (roll.outcome !== 'none' && roll.traitId) {
+    currentRoster.set(warrior.id, {
+      ...warrior,
+      traits: [...(warrior.traits ?? []), roll.traitId],
+    });
+    results.push({
+      warriorId: warrior.id,
+      type: 'gain',
+      message:
+        roll.outcome === 'success'
+          ? `${warrior.name} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
+          : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
+    });
+  } else {
+    results.push({
+      warriorId: warrior.id,
+      type: 'gain',
+      message: `${warrior.name}'s trait training yielded nothing.`,
+    });
+  }
 }
 
 /**

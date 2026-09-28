@@ -138,16 +138,21 @@ export function processHallOfFame(
 
   const woty = pickBest(eligible, (e) => e.wins, (e) => e.fame);
   if (woty && woty.wins > 0) {
-    const award: AnnualAward = {
-      year: completedYear,
-      type: 'WARRIOR_OF_YEAR',
-      warriorId: woty.w.id,
-      warriorName: woty.w.name,
-      stableId: woty.w.stableId,
-      value: woty.wins,
-      reason: `Recorded ${woty.wins} victories in Year ${completedYear}`,
-    };
-    recordAward(state, woty, award, 50, ledger);
+    recordAward(
+      state,
+      woty,
+      {
+        year: completedYear,
+        type: 'WARRIOR_OF_YEAR',
+        warriorId: woty.w.id,
+        warriorName: woty.w.name,
+        stableId: woty.w.stableId,
+        value: woty.wins,
+        reason: `Recorded ${woty.wins} victories in Year ${completedYear}`,
+      },
+      50,
+      ledger
+    );
     ledger.hofNews.push(
       `🏛️ WARRIOR OF THE YEAR: ${woty.w.name} is the champion of Year ${completedYear} with ${woty.wins} wins!`
     );
@@ -155,41 +160,27 @@ export function processHallOfFame(
 
   const koty = pickBest(eligible, (e) => e.kills, (e) => e.wins);
   if (koty && koty.kills > 0) {
-    const award: AnnualAward = {
-      year: completedYear,
-      type: 'KILLER_OF_YEAR',
-      warriorId: koty.w.id,
-      warriorName: koty.w.name,
-      stableId: koty.w.stableId,
-      value: koty.kills,
-      reason: `Claimed ${koty.kills} lives in Year ${completedYear}`,
-    };
-    recordAward(state, koty, award, 50, ledger);
+    recordAward(
+      state,
+      koty,
+      {
+        year: completedYear,
+        type: 'KILLER_OF_YEAR',
+        warriorId: koty.w.id,
+        warriorName: koty.w.name,
+        stableId: koty.w.stableId,
+        value: koty.kills,
+        reason: `Claimed ${koty.kills} lives in Year ${completedYear}`,
+      },
+      50,
+      ledger
+    );
     ledger.hofNews.push(
       `💀 KILLER OF THE YEAR: ${koty.w.name} earned the 'Reaper's Gaze' with ${koty.kills} kills.`
     );
   }
 
-  for (const style of Object.values(FightingStyle)) {
-    const styleEligible = eligible.filter((e) => e.w.style === style);
-    const mvp = pickBest(styleEligible, (e) => e.wins, (e) => e.fame);
-    if (mvp && mvp.wins > 0) {
-      const award: AnnualAward = {
-        year: completedYear,
-        type: 'CLASS_MVP',
-        warriorId: mvp.w.id,
-        warriorName: mvp.w.name,
-        stableId: mvp.w.stableId,
-        style,
-        value: mvp.wins,
-        reason: `Leading ${style} specialist in Year ${completedYear}`,
-      };
-      recordAward(state, mvp, award, 20, ledger);
-      ledger.hofNews.push(
-        `⚔️ ${style.toUpperCase()} MVP: ${mvp.w.name} honored as the elite of their class.`
-      );
-    }
-  }
+  awardClassMvps(state, eligible, completedYear, ledger);
 
   const impact: StateImpact = {
     awards: [...(state.awards || []), ...ledger.awards],
@@ -209,6 +200,40 @@ export function processHallOfFame(
   }
 
   return impact;
+}
+
+/** Per-style MVP awards — leading specialist of each class. */
+function awardClassMvps(
+  state: GameState,
+  eligible: ReturnType<typeof collectEligible>,
+  completedYear: number,
+  ledger: AwardLedger
+): void {
+  for (const style of Object.values(FightingStyle)) {
+    const styleEligible = eligible.filter((e) => e.w.style === style);
+    const mvp = pickBest(styleEligible, (e) => e.wins, (e) => e.fame);
+    if (mvp && mvp.wins > 0) {
+      recordAward(
+        state,
+        mvp,
+        {
+          year: completedYear,
+          type: 'CLASS_MVP',
+          warriorId: mvp.w.id,
+          warriorName: mvp.w.name,
+          stableId: mvp.w.stableId,
+          style,
+          value: mvp.wins,
+          reason: `Leading ${style} specialist in Year ${completedYear}`,
+        },
+        20,
+        ledger
+      );
+      ledger.hofNews.push(
+        `⚔️ ${style.toUpperCase()} MVP: ${mvp.w.name} honored as the elite of their class.`
+      );
+    }
+  }
 }
 
 function applyAward(

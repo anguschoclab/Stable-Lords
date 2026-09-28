@@ -71,43 +71,71 @@ function processTournamentPlaceAward(
       );
     }
   } else {
-    // warrior.stableId is rival.id (StableId), not owner.id
-    // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
-    updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId as string, (r) =>
-      logFinanceEvent(
-        {
-          ...r,
-          treasury: r.treasury + prizeGold,
-          fame: (r.fame || 0) + prizeFame,
-        },
-        {
-          label: `${tournament.name} (${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'})`,
-          amount: prizeGold,
-          week: updatedState.week,
-          category: 'prize',
-          description: `${w.name} took ${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'} at ${tournament.name} — ${prizeGold}g prize.`,
-          riskTier: 'Low',
-        }
-      )
+    updatedState = applyRivalAward(
+      updatedState,
+      w,
+      place,
+      prizeGold,
+      prizeFame,
+      tokens,
+      awardRng,
+      tournament
     );
-    // Apply token effects directly to rival warriors (no pool — rivals don't manage tokens via UI)
-    const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
-    for (const tokenType of tokens) {
-      updatedState = modifyWarrior(updatedState, w.id, (draft) => {
-        if (tokenType === 'Weapon' && draft.favorites) {
-          draft.favorites.discovered.weapon = true;
-        } else if (tokenType === 'Rhythm' && draft.favorites) {
-          draft.favorites.discovered.rhythm = true;
-        } else if (tokenType === 'Style' && draft.baseSkills) {
-          draft.baseSkills.ATT = (draft.baseSkills.ATT || 0) + 1;
-        } else if (tokenType === 'Attribute') {
-          const attrKey = awardRng.pick([...primaries]);
-          draft.attributes[attrKey] = (draft.attributes[attrKey] || 10) + 1;
-        }
-      });
-    }
   }
 
+  return updatedState;
+}
+
+/**
+ * Pay a rival stable's placement: treasury/fame ledger entry, then apply the
+ * token effects directly to the warrior (rivals don't manage a token pool).
+ */
+function applyRivalAward(
+  state: GameState,
+  w: Warrior,
+  place: 1 | 2 | 3,
+  prizeGold: number,
+  prizeFame: number,
+  tokens: string[],
+  awardRng: SeededRNG,
+  tournament: TournamentEntry
+): GameState {
+  let updatedState = { ...state };
+  // warrior.stableId is rival.id (StableId), not owner.id
+  // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
+  updatedState.rivals = updateEntityInList(updatedState.rivals, w.stableId as string, (r) =>
+    logFinanceEvent(
+      {
+        ...r,
+        treasury: r.treasury + prizeGold,
+        fame: (r.fame || 0) + prizeFame,
+      },
+      {
+        label: `${tournament.name} (${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'})`,
+        amount: prizeGold,
+        week: updatedState.week,
+        category: 'prize',
+        description: `${w.name} took ${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'} at ${tournament.name} — ${prizeGold}g prize.`,
+        riskTier: 'Low',
+      }
+    )
+  );
+  // Apply token effects directly to rival warriors (no pool — rivals don't manage tokens via UI)
+  const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
+  for (const tokenType of tokens) {
+    updatedState = modifyWarrior(updatedState, w.id, (draft) => {
+      if (tokenType === 'Weapon' && draft.favorites) {
+        draft.favorites.discovered.weapon = true;
+      } else if (tokenType === 'Rhythm' && draft.favorites) {
+        draft.favorites.discovered.rhythm = true;
+      } else if (tokenType === 'Style' && draft.baseSkills) {
+        draft.baseSkills.ATT = (draft.baseSkills.ATT || 0) + 1;
+      } else if (tokenType === 'Attribute') {
+        const attrKey = awardRng.pick([...primaries]);
+        draft.attributes[attrKey] = (draft.attributes[attrKey] || 10) + 1;
+      }
+    });
+  }
   return updatedState;
 }
 

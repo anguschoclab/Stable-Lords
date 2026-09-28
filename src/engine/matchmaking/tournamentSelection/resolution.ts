@@ -25,6 +25,136 @@ interface BracketWarrior {
 }
 
 /**
+ * Simulate one live bracket bout: pick plans, draw the venue, run the fight,
+ * force a winner via sudden-death overtime on draws (tournament bouts cannot
+ * end drawn).
+ */
+function simulateTournamentBout(
+  updatedState: GameState,
+  resolvedTournament: TournamentEntry,
+  wA: Warrior,
+  wD: Warrior,
+  rng: SeededRNG,
+  headless: boolean | undefined
+): { outcome: FightOutcome; arenaId: string } {
+  const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
+  const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
+
+  // The Grand Championship is always fought at Bloodsands — the realm's
+  // neutral championship ground; seasonals keep the weighted venue draw.
+  const arenaId =
+    resolvedTournament.tierId === CHAMPIONS_TOURNEY.TIER_ID
+      ? 'bloodsands_arena'
+      : selectArenaForTournamentBout(() => rng.next());
+  const outcome = simulateFight(
+    planA,
+    planD,
+    wA,
+    wD,
+    rng.roll(0, 1000000),
+    updatedState.trainers,
+    updatedState.weather ?? 'Clear',
+    arenaId,
+    updatedState.crowdMood,
+    headless,
+    updatedState.houseRules?.deathRateMult
+  );
+
+  // Tournament bouts cannot end in a draw — the bracket needs a winner.
+  // Sudden-death overtime: the busier fighter (more hits landed) advances;
+  // a true tie falls to a seeded coin flip. Without this, a drawn bout would
+  // silently advance the defender via the `winner === 'A'` ternary below.
+  if (outcome.winner === null) {
+    const hitsA = outcome.post?.hitsA ?? 0;
+    const hitsD = outcome.post?.hitsD ?? 0;
+    outcome.winner = hitsA === hitsD ? (rng.next() < 0.5 ? 'A' : 'D') : hitsA > hitsD ? 'A' : 'D';
+  }
+
+  return { outcome, arenaId };
+}
+
+/**
+ * Resolve one bracket bout: bye/forfeit short-circuits, live simulate with
+ * sudden-death overtime for draws, then apply results into state.
+ */
+function resolveBout(
+  bout: TournamentBout,
+  updatedState: GameState,
+  resolvedTournament: TournamentEntry,
+  rng: SeededRNG,
+  headless: boolean | undefined,
+  winners: BracketWarrior[],
+  losers: BracketWarrior[]
+): GameState {
+  // The third-place playoff is terminal: its winner medals but does not
+  // feed the next round's pairings.
+  const advancesWinner = !bout.isBronzeMatch;
+  if (bout.warriorIdD === 'bye') {
+    bout.winner = 'A';
+    const wABye = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
+    if (advancesWinner) {
+      winners.push({
+        id: bout.warriorIdA,
+        name: wABye?.name ?? 'Unknown',
+        stableId: bout.stableIdA,
+      });
+    }
+    return updatedState;
+  }
+
+  const wA = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
+  const wD = findWarriorById(updatedState, bout.warriorIdD, resolvedTournament);
+
+  if (!wA || !wD) {
+    bout.winner = wA ? 'A' : 'D';
+    const winnerObj = wA
+      ? { id: wA.id, name: wA.name, stableId: wA.stableId }
+      : wD
+        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
+        : undefined;
+    if (winnerObj && advancesWinner) winners.push(winnerObj);
+    return updatedState;
+  }
+
+  const { outcome, arenaId } = simulateTournamentBout(
+    updatedState,
+    resolvedTournament,
+    wA,
+    wD,
+    rng,
+    headless
+  );
+
+  bout.winner = outcome.winner;
+  bout.by = outcome.by;
+  bout.fightId = rng.uuid('bout') as FightId;
+
+  if (advancesWinner) {
+    winners.push(
+      outcome.winner === 'A'
+        ? { id: wA.id, name: wA.name, stableId: wA.stableId }
+        : { id: wD.id, name: wD.name, stableId: wD.stableId }
+    );
+    losers.push(
+      outcome.winner === 'A'
+        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
+        : { id: wA.id, name: wA.name, stableId: wA.stableId }
+    );
+  }
+  return applyBoutResults(
+    updatedState,
+    wA,
+    wD,
+    outcome,
+    resolvedTournament.id,
+    resolvedTournament.name,
+    rng,
+    undefined,
+    arenaId
+  );
+}
+
+/**
  * Resolves every bout in the current round: byes advance, missing warriors
  * forfeit, live bouts simulate (with sudden-death overtime for draws —
  * tournament bouts cannot end drawn), and results apply into state.
@@ -40,95 +170,14 @@ function resolveRoundBouts(
   losers: BracketWarrior[]
 ): GameState {
   for (const bout of roundBouts) {
-    // The third-place playoff is terminal: its winner medals but does not
-    // feed the next round's pairings.
-    const advancesWinner = !bout.isBronzeMatch;
-    if (bout.warriorIdD === 'bye') {
-      bout.winner = 'A';
-      const wABye = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
-      if (advancesWinner) {
-        winners.push({
-          id: bout.warriorIdA,
-          name: wABye?.name ?? 'Unknown',
-          stableId: bout.stableIdA,
-        });
-      }
-      continue;
-    }
-
-    const wA = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
-    const wD = findWarriorById(updatedState, bout.warriorIdD, resolvedTournament);
-
-    if (!wA || !wD) {
-      bout.winner = wA ? 'A' : 'D';
-      const winnerObj = wA
-        ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-        : wD
-          ? { id: wD.id, name: wD.name, stableId: wD.stableId }
-          : undefined;
-      if (winnerObj && advancesWinner) winners.push(winnerObj);
-      continue;
-    }
-
-    const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
-    const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
-
-    // The Grand Championship is always fought at Bloodsands — the realm's
-    // neutral championship ground; seasonals keep the weighted venue draw.
-    const arenaId =
-      resolvedTournament.tierId === CHAMPIONS_TOURNEY.TIER_ID
-        ? 'bloodsands_arena'
-        : selectArenaForTournamentBout(() => rng.next());
-    const outcome = simulateFight(
-      planA,
-      planD,
-      wA,
-      wD,
-      rng.roll(0, 1000000),
-      updatedState.trainers,
-      updatedState.weather ?? 'Clear',
-      arenaId,
-      updatedState.crowdMood,
-      headless,
-      updatedState.houseRules?.deathRateMult
-    );
-
-    // Tournament bouts cannot end in a draw — the bracket needs a winner.
-    // Sudden-death overtime: the busier fighter (more hits landed) advances;
-    // a true tie falls to a seeded coin flip. Without this, a drawn bout would
-    // silently advance the defender via the `winner === 'A'` ternary below.
-    if (outcome.winner === null) {
-      const hitsA = outcome.post?.hitsA ?? 0;
-      const hitsD = outcome.post?.hitsD ?? 0;
-      outcome.winner = hitsA === hitsD ? (rng.next() < 0.5 ? 'A' : 'D') : hitsA > hitsD ? 'A' : 'D';
-    }
-
-    bout.winner = outcome.winner;
-    bout.by = outcome.by;
-    bout.fightId = rng.uuid('bout') as FightId;
-
-    if (advancesWinner) {
-      winners.push(
-        outcome.winner === 'A'
-          ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-          : { id: wD.id, name: wD.name, stableId: wD.stableId }
-      );
-      losers.push(
-        outcome.winner === 'A'
-          ? { id: wD.id, name: wD.name, stableId: wD.stableId }
-          : { id: wA.id, name: wA.name, stableId: wA.stableId }
-      );
-    }
-    updatedState = applyBoutResults(
+    updatedState = resolveBout(
+      bout,
       updatedState,
-      wA,
-      wD,
-      outcome,
-      resolvedTournament.id,
-      resolvedTournament.name,
+      resolvedTournament,
       rng,
-      undefined,
-      arenaId
+      headless,
+      winners,
+      losers
     );
   }
   return updatedState;

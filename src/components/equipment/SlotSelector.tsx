@@ -62,6 +62,99 @@ function groupWeaponsByStatus(
 /**
  *
  */
+/** Label row — icon, label, encumbrance badge, preferred star. */
+function LabelRow({
+  slot,
+  label,
+  icon,
+  selected,
+  isPreferred,
+}: {
+  slot: EquipmentSlot;
+  label: string;
+  icon: ReactNode;
+  selected: ReturnType<typeof getItemById>;
+  isPreferred: boolean | null | undefined;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-muted-foreground">{icon}</span>
+      <label htmlFor={`slot-select-${slot}`} className="text-sm font-medium cursor-pointer">
+        {label}
+      </label>
+      {selected && selected.weight > 0 && (
+        <Badge variant="outline" className="text-xs ml-auto font-mono">
+          {selected.weight} enc
+        </Badge>
+      )}
+      {isPreferred && <Star className="h-3.5 w-3.5 text-arena-gold fill-arena-gold" />}
+    </div>
+  );
+}
+
+/** Weapon items grouped by class-affinity + requirement status, or a flat list for non-weapon slots. */
+function ItemOptions({
+  slot,
+  items,
+  style,
+  warriorAttrs,
+}: {
+  slot: EquipmentSlot;
+  items: ReturnType<typeof getAvailableItems>;
+  style: FightingStyle;
+  warriorAttrs?: { ST: number; SZ: number; WT: number; DF: number };
+}) {
+  if (slot !== 'weapon' || !warriorAttrs) {
+    return (
+      <>
+        {items.map((item) => (
+          <SelectItem key={item.id} value={item.id}>
+            <span>{item.name}</span>
+          </SelectItem>
+        ))}
+      </>
+    );
+  }
+
+  const { classReady, offClassReady, classUnmet } = groupWeaponsByStatus(
+    items,
+    style,
+    warriorAttrs
+  );
+
+  return (
+    <>
+      {classReady.length > 0 && (
+        <>
+          <WeaponGroupHeader type="class" />
+          {classReady.map(({ item, preferred, req }) => (
+            <WeaponSelectItem key={item.id} item={item} preferred={preferred} req={req} />
+          ))}
+        </>
+      )}
+      {offClassReady.length > 0 && (
+        <>
+          <WeaponGroupHeader type="available" />
+          {offClassReady.map(({ item, preferred, req }) => (
+            <WeaponSelectItem key={item.id} item={item} preferred={preferred} req={req} />
+          ))}
+        </>
+      )}
+      {classUnmet.length > 0 && (
+        <>
+          <WeaponGroupHeader type="unmet" />
+          {classUnmet.map(({ item, preferred, req }) => (
+            <WeaponSelectItem key={item.id} item={item} preferred={preferred} req={req} />
+          ))}
+        </>
+      )}
+    </>
+  );
+}
+
+/**
+ *
+ */
 export function SlotSelector({
   slot,
   label,
@@ -80,18 +173,7 @@ export function SlotSelector({
 
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center gap-2">
-        <span className="text-muted-foreground">{icon}</span>
-        <label htmlFor={`slot-select-${slot}`} className="text-sm font-medium cursor-pointer">
-          {label}
-        </label>
-        {selected && selected.weight > 0 && (
-          <Badge variant="outline" className="text-xs ml-auto font-mono">
-            {selected.weight} enc
-          </Badge>
-        )}
-        {isPreferred && <Star className="h-3.5 w-3.5 text-arena-gold fill-arena-gold" />}
-      </div>
+      <LabelRow slot={slot} label={label} icon={icon} selected={selected} isPreferred={isPreferred} />
       <Select value={selectedId} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger
           id={`slot-select-${slot}`}
@@ -101,50 +183,7 @@ export function SlotSelector({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {(() => {
-            if (slot !== 'weapon' || !warriorAttrs) {
-              return items.map((item) => (
-                <SelectItem key={item.id} value={item.id}>
-                  <span>{item.name}</span>
-                </SelectItem>
-              ));
-            }
-
-            const { classReady, offClassReady, classUnmet } = groupWeaponsByStatus(
-              items,
-              style,
-              warriorAttrs
-            );
-
-            return (
-              <>
-                {classReady.length > 0 && (
-                  <>
-                    <WeaponGroupHeader type="class" />
-                    {classReady.map(({ item, preferred, req }) => (
-                      <WeaponSelectItem key={item.id} item={item} preferred={preferred} req={req} />
-                    ))}
-                  </>
-                )}
-                {offClassReady.length > 0 && (
-                  <>
-                    <WeaponGroupHeader type="available" />
-                    {offClassReady.map(({ item, preferred, req }) => (
-                      <WeaponSelectItem key={item.id} item={item} preferred={preferred} req={req} />
-                    ))}
-                  </>
-                )}
-                {classUnmet.length > 0 && (
-                  <>
-                    <WeaponGroupHeader type="unmet" />
-                    {classUnmet.map(({ item, preferred, req }) => (
-                      <WeaponSelectItem key={item.id} item={item} preferred={preferred} req={req} />
-                    ))}
-                  </>
-                )}
-              </>
-            );
-          })()}
+          <ItemOptions slot={slot} items={items} style={style} warriorAttrs={warriorAttrs} />
         </SelectContent>
       </Select>
       {selected && <p className="text-xs text-muted-foreground pl-6">{selected.description}</p>}

@@ -156,29 +156,7 @@ function finishRivalPass(
   const finalizedRivals = currentRivals;
   impacts.push({ recruitPool: draft.updatedPool });
 
-  // 4. Final Aggregation of Rival Updates
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
-  finalizedRivals.forEach((r) => {
-    rivalsUpdates.set(r.id as StableId, r);
-  });
-  impacts.push({ rivalsUpdates });
-
-  // 4.5. Contract Decision Phase: AI Stables accept/decline pending boutique offers
-  const stateWithWorldBouts = { ...state, boutOffers: boutOffersWithWorld };
-  const boutOffersImpact = processAllRivalsBoutOffers(stateWithWorldBouts, finalizedRivals);
-  impacts.push(boutOffersImpact);
-
-  // 4.6. Plan Commitment (E.1): NPC warriors whose bouts Signed this tick get
-  // a persisted plan — observable by Expert scouting, input to rematch logic.
-  const resolvedOffers = Object.values(
-    boutOffersImpact.boutOffers ?? boutOffersWithWorld
-  );
-  const plannedRivals = persistNPCPlans(finalizedRivals, resolvedOffers, stateWithWorldBouts);
-  const planUpdates = new Map<StableId, Partial<RivalStableData>>();
-  plannedRivals.forEach((r, i) => {
-    if (r !== finalizedRivals[i]) planUpdates.set(r.id as StableId, r);
-  });
-  if (planUpdates.size > 0) impacts.push({ rivalsUpdates: planUpdates });
+  impacts.push(...resolveRivalOffersAndPlans(state, boutOffersWithWorld, finalizedRivals));
 
   // 5. Tournament Emission — seasonals at SEASONAL_TOURNAMENT_WEEKS; the
   // champions-only Grand Championship owns week 52 (no seasonal pools that
@@ -203,6 +181,44 @@ function finishRivalPass(
   }
 
   return mergeImpacts(impacts);
+}
+
+/**
+ * Steps 4–4.6: aggregate rival updates, run the contract-decision phase, and
+ * commit plans for NPC warriors whose bouts Signed this tick.
+ */
+function resolveRivalOffersAndPlans(
+  state: GameState,
+  boutOffersWithWorld: GameState['boutOffers'],
+  finalizedRivals: RivalStableData[]
+): StateImpact[] {
+  const impacts: StateImpact[] = [];
+
+  // 4. Final Aggregation of Rival Updates
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
+  finalizedRivals.forEach((r) => {
+    rivalsUpdates.set(r.id as StableId, r);
+  });
+  impacts.push({ rivalsUpdates });
+
+  // 4.5. Contract Decision Phase: AI Stables accept/decline pending boutique offers
+  const stateWithWorldBouts = { ...state, boutOffers: boutOffersWithWorld };
+  const boutOffersImpact = processAllRivalsBoutOffers(stateWithWorldBouts, finalizedRivals);
+  impacts.push(boutOffersImpact);
+
+  // 4.6. Plan Commitment (E.1): NPC warriors whose bouts Signed this tick get
+  // a persisted plan — observable by Expert scouting, input to rematch logic.
+  const resolvedOffers = Object.values(
+    boutOffersImpact.boutOffers ?? boutOffersWithWorld
+  );
+  const plannedRivals = persistNPCPlans(finalizedRivals, resolvedOffers, stateWithWorldBouts);
+  const planUpdates = new Map<StableId, Partial<RivalStableData>>();
+  plannedRivals.forEach((r, i) => {
+    if (r !== finalizedRivals[i]) planUpdates.set(r.id as StableId, r);
+  });
+  if (planUpdates.size > 0) impacts.push({ rivalsUpdates: planUpdates });
+
+  return impacts;
 }
 
 /**

@@ -24,50 +24,47 @@ interface MatchupCardProps {
   onToggleAvoid: () => void;
 }
 
-function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge, onToggleAvoid }: MatchupCardProps) {
-  const w = matchup.rivalWarrior;
-  const isGood = type === 'recommend';
-
+/** Card head — direction icon + warrior name + profile link. */
+function CardHeader({ w, isGood }: { w: MatchupScore['rivalWarrior']; isGood: boolean }) {
   return (
-    <Surface
-      variant="glass"
-      className={cn(
-        'p-4 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none group hover:bg-white/[0.02]',
-        isGood ? 'hover:border-primary/20' : 'hover:border-destructive/20'
-      )}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <ImperialRing size="xs" variant={isGood ? 'bronze' : 'blood'}>
-            {isGood ? (
-              <TrendingUp className="h-3 w-3 text-primary" />
-            ) : (
-              <TrendingDown className="h-3 w-3 text-destructive" />
-            )}
-          </ImperialRing>
-          <span className="font-display font-black text-[11px] uppercase tracking-tight text-foreground">
-            {w.name}
-          </span>
-        </div>
-        <Link to="/warrior/$id" params={{ id: w.id }}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none"
-            tooltip="View warrior profile"
-            aria-label="View warrior profile"
-          >
-            <ExternalLink className="h-3 w-3" />
-          </Button>
-        </Link>
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-3">
+        <ImperialRing size="xs" variant={isGood ? 'bronze' : 'blood'}>
+          {isGood ? (
+            <TrendingUp className="h-3 w-3 text-primary" />
+          ) : (
+            <TrendingDown className="h-3 w-3 text-destructive" />
+          )}
+        </ImperialRing>
+        <span className="font-display font-black text-[11px] uppercase tracking-tight text-foreground">
+          {w.name}
+        </span>
       </div>
+      <Link to="/warrior/$id" params={{ id: w.id }}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none"
+          tooltip="View warrior profile"
+          aria-label="View warrior profile"
+        >
+          <ExternalLink className="h-3 w-3" />
+        </Button>
+      </Link>
+    </div>
+  );
+}
 
+/** Style/stable badges + the analyst's note list. */
+function MatchupDetails({ matchup, isGood }: { matchup: MatchupScore; isGood: boolean }) {
+  return (
+    <>
       <div className="flex flex-wrap gap-2 mb-4">
         <Badge
           variant="outline"
           className="text-[8px] font-black uppercase tracking-widest px-2 py-0 rounded-none border-white/5 bg-white/5"
         >
-          {STYLE_DISPLAY_NAMES[w.style]}
+          {STYLE_DISPLAY_NAMES[matchup.rivalWarrior.style]}
         </Badge>
         <Badge
           variant="outline"
@@ -88,7 +85,28 @@ function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge
           </div>
         ))}
       </div>
+    </>
+  );
+}
 
+/** Priority score readout + challenge/avoid toggles. */
+function CardFooter({
+  score,
+  isGood,
+  isChallenged,
+  isAvoided,
+  onToggleChallenge,
+  onToggleAvoid,
+}: {
+  score: number;
+  isGood: boolean;
+  isChallenged: boolean;
+  isAvoided: boolean;
+  onToggleChallenge: () => void;
+  onToggleAvoid: () => void;
+}) {
+  return (
+    <>
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
         <div className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.2em]">
           Priority_Index
@@ -99,7 +117,7 @@ function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge
             isGood ? 'text-primary' : 'text-destructive'
           )}
         >
-          {Math.round(matchup.score)}
+          {Math.round(score)}
         </div>
       </div>
 
@@ -121,6 +139,31 @@ function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge
           {isAvoided ? 'Avoided' : 'Avoid'}
         </Button>
       </div>
+    </>
+  );
+}
+
+function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge, onToggleAvoid }: MatchupCardProps) {
+  const isGood = type === 'recommend';
+
+  return (
+    <Surface
+      variant="glass"
+      className={cn(
+        'p-4 border-white/5 transition-all motion-reduce:transition-none motion-reduce:transform-none group hover:bg-white/[0.02]',
+        isGood ? 'hover:border-primary/20' : 'hover:border-destructive/20'
+      )}
+    >
+      <CardHeader w={matchup.rivalWarrior} isGood={isGood} />
+      <MatchupDetails matchup={matchup} isGood={isGood} />
+      <CardFooter
+        score={matchup.score}
+        isGood={isGood}
+        isChallenged={isChallenged}
+        isAvoided={isAvoided}
+        onToggleChallenge={onToggleChallenge}
+        onToggleAvoid={onToggleAvoid}
+      />
     </Surface>
   );
 }

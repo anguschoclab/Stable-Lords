@@ -15,6 +15,48 @@ import {
  */
 export type AdminCategory = 'SYSTEM' | 'ECONOMY' | 'WORLD' | 'TELEMETRY' | 'PREFERENCES';
 
+/** State-mutating admin actions: FTUE bypass, rival regen, favorite mastery. */
+function useAdminActions(setState: ReturnType<typeof useGameStore.getState>['setState']) {
+  const skipFTUE = useCallback(() => {
+    setState((draft) => {
+      const defaultPlayer = {
+        id: 'admin-0',
+        name: 'Master Admin',
+        stableName: 'The Admin Lords',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      };
+      draft.ftueComplete = true;
+      draft.isFTUE = false;
+      draft.player = { ...defaultPlayer, ...(draft.player || {}) } as Owner;
+    });
+    toast.success('FTUE constraints bypassed.');
+  }, [setState]);
+
+  const resetRivals = useCallback(() => {
+    regenerateRivals(setState);
+  }, [setState]);
+
+  const forceMastery = useCallback(() => {
+    setState((draft) => {
+      draft.roster.forEach((w) => {
+        if (w.favorites) {
+          w.favorites.discovered = {
+            weapon: true,
+            rhythm: true,
+            weaponHints: 10,
+            rhythmHints: 10,
+          };
+        }
+      });
+    });
+    toast.success('Omniscient mastery achieved.');
+  }, [setState]);
+
+  return { skipFTUE, resetRivals, forceMastery };
+}
+
 /**
  *
  */
@@ -65,42 +107,7 @@ export function useAdminTools() {
     await skipToSeasonEnd();
   }, []);
 
-  const skipFTUE = useCallback(() => {
-    setState((draft) => {
-      const defaultPlayer = {
-        id: 'admin-0',
-        name: 'Master Admin',
-        stableName: 'The Admin Lords',
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      };
-      draft.ftueComplete = true;
-      draft.isFTUE = false;
-      draft.player = { ...defaultPlayer, ...(draft.player || {}) } as Owner;
-    });
-    toast.success('FTUE constraints bypassed.');
-  }, [setState]);
-
-  const resetRivals = useCallback(() => {
-    regenerateRivals(setState);
-  }, [setState]);
-
-  const forceMastery = useCallback(() => {
-    setState((draft) => {
-      draft.roster.forEach((w) => {
-        if (w.favorites) {
-          w.favorites.discovered = {
-            weapon: true,
-            rhythm: true,
-            weaponHints: 10,
-            rhythmHints: 10,
-          };
-        }
-      });
-    });
-    toast.success('Omniscient mastery achieved.');
-  }, [setState]);
+  const { skipFTUE, resetRivals, forceMastery } = useAdminActions(setState);
 
   return {
     activeCategory,

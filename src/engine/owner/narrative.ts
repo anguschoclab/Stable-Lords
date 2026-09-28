@@ -23,66 +23,7 @@ export function generateOwnerNarratives(
   const rivals = state.rivals || [];
 
   for (const rival of rivals) {
-    const personality = rival.owner.personality ?? 'Pragmatic';
-    const ids = new Set(rival.roster.map((w) => w.id));
-
-    const { wins, losses, kills, deaths } = calculateRecentRecord(recentFights, ids);
-
-    const totalFights = wins + losses;
-    if (totalFights === 0) continue;
-    const winRate = wins / totalFights;
-
-    // Aggressive owner losing badly
-    if (personality === 'Aggressive' && winRate < 0.35 && totalFights >= 4) {
-      const templates = [
-        `${rival.owner.name} (${rival.owner.stableName}) rages: "Heads will roll if results don't improve!"`,
-        `${rival.owner.name} fires ${rival.owner.stableName}'s head trainer after a dismal ${state.season}!`,
-        `${rival.owner.name} declares: "Next season, we fight with fury or not at all!"`,
-      ];
-      gazetteItems.push(rngService.pick(templates));
-    }
-
-    // Methodical owner on a winning streak
-    if (personality === 'Methodical' && winRate >= 0.7 && totalFights >= 4) {
-      gazetteItems.push(
-        `${rival.owner.name} (${rival.owner.stableName}): "Our preparation is paying dividends — ${wins}W/${losses}L this ${state.season}."`
-      );
-    }
-
-    // Showman with lots of kills
-    if (personality === 'Showman' && kills >= 2) {
-      gazetteItems.push(
-        `${rival.owner.name} (${rival.owner.stableName}) boasts: "${kills} kills this ${state.season}! The crowd demands blood, and we deliver!"`
-      );
-    }
-
-    // Pragmatic owner suffering deaths
-    if (personality === 'Pragmatic' && deaths >= 2) {
-      gazetteItems.push(
-        `${rival.owner.name} (${rival.owner.stableName}) grimly assesses: "${deaths} warriors lost this ${state.season}. Costs are unsustainable."`
-      );
-    }
-
-    // Tactician dominating
-    if (personality === 'Tactician' && winRate >= 0.65 && kills === 0 && totalFights >= 3) {
-      gazetteItems.push(
-        `${rival.owner.name} (${rival.owner.stableName}): "Clean victories, no unnecessary bloodshed — ${wins}W/${losses}L. Strategy prevails."`
-      );
-    }
-
-    // Any owner with a dominant season
-    if (winRate >= 0.8 && totalFights >= 5) {
-      gazetteItems.push(
-        `${rival.owner.stableName} dominated ${state.season} with a record of ${wins}-${losses}!`
-      );
-    }
-
-    // Any owner with devastating losses
-    if (deaths >= 3) {
-      gazetteItems.push(
-        `A grim ${state.season} for ${rival.owner.stableName} — ${deaths} warriors fell in the arena.`
-      );
-    }
+    gazetteItems.push(...rivalSeasonNarratives(rival, recentFights, state.season, rngService));
   }
 
   // Add Blood Feud public taunts for player rivalry
@@ -104,6 +45,78 @@ export function generateOwnerNarratives(
   }
 
   return gazetteItems;
+}
+
+/** Personality-driven gazette lines for one rival's just-finished season. */
+function rivalSeasonNarratives(
+  rival: GameState['rivals'][number],
+  recentFights: FightSummary[],
+  season: Season,
+  rngService: IRNGService
+): string[] {
+  const items: string[] = [];
+  const personality = rival.owner.personality ?? 'Pragmatic';
+  const ids = new Set(rival.roster.map((w) => w.id));
+
+  const { wins, losses, kills, deaths } = calculateRecentRecord(recentFights, ids);
+
+  const totalFights = wins + losses;
+  if (totalFights === 0) return items;
+  const winRate = wins / totalFights;
+
+  // Aggressive owner losing badly
+  if (personality === 'Aggressive' && winRate < 0.35 && totalFights >= 4) {
+    const templates = [
+      `${rival.owner.name} (${rival.owner.stableName}) rages: "Heads will roll if results don't improve!"`,
+      `${rival.owner.name} fires ${rival.owner.stableName}'s head trainer after a dismal ${season}!`,
+      `${rival.owner.name} declares: "Next season, we fight with fury or not at all!"`,
+    ];
+    items.push(rngService.pick(templates));
+  }
+
+  // Methodical owner on a winning streak
+  if (personality === 'Methodical' && winRate >= 0.7 && totalFights >= 4) {
+    items.push(
+      `${rival.owner.name} (${rival.owner.stableName}): "Our preparation is paying dividends — ${wins}W/${losses}L this ${season}."`
+    );
+  }
+
+  // Showman with lots of kills
+  if (personality === 'Showman' && kills >= 2) {
+    items.push(
+      `${rival.owner.name} (${rival.owner.stableName}) boasts: "${kills} kills this ${season}! The crowd demands blood, and we deliver!"`
+    );
+  }
+
+  // Pragmatic owner suffering deaths
+  if (personality === 'Pragmatic' && deaths >= 2) {
+    items.push(
+      `${rival.owner.name} (${rival.owner.stableName}) grimly assesses: "${deaths} warriors lost this ${season}. Costs are unsustainable."`
+    );
+  }
+
+  // Tactician dominating
+  if (personality === 'Tactician' && winRate >= 0.65 && kills === 0 && totalFights >= 3) {
+    items.push(
+      `${rival.owner.name} (${rival.owner.stableName}): "Clean victories, no unnecessary bloodshed — ${wins}W/${losses}L. Strategy prevails."`
+    );
+  }
+
+  // Any owner with a dominant season
+  if (winRate >= 0.8 && totalFights >= 5) {
+    items.push(
+      `${rival.owner.stableName} dominated ${season} with a record of ${wins}-${losses}!`
+    );
+  }
+
+  // Any owner with devastating losses
+  if (deaths >= 3) {
+    items.push(
+      `A grim ${season} for ${rival.owner.stableName} — ${deaths} warriors fell in the arena.`
+    );
+  }
+
+  return items;
 }
 
 function calculateRecentRecord(recentFights: FightSummary[], rosterIds: Set<string>) {

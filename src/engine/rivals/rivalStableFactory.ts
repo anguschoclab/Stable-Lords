@@ -62,23 +62,15 @@ export function generateRivalStables(
   return rivals;
 }
 
-/** Build one rival stable from a template pick. */
-function buildRivalStable(
+/** Build the stable's owner — procedural name/fame/titles for duplicates. */
+function buildOwner(
   tmpl: StableTemplate,
+  stableId: StableId,
   iteration: number,
-  week: number,
-  rng: IRNGService,
-  usedWarriorNames: Set<string>
-): RivalStableData {
-  const stableId = rng.uuid() as StableId;
-
-  // Procedural name variance for duplicates
-  const nameSuffix =
-    iteration > 0
-      ? ` [${iteration === 1 ? 'II' : iteration === 2 ? 'III' : iteration === 3 ? 'IV' : 'V'}]`
-      : '';
-  const stableName = `${tmpl.stableName}${nameSuffix}`;
-  const owner: Owner = {
+  stableName: string,
+  rng: IRNGService
+): Owner {
+  return {
     id: stableId,
     name:
       iteration > 0
@@ -99,6 +91,25 @@ function buildRivalStable(
     favoredStyles: tmpl.preferredStyles,
     backstoryId: tmpl.backstoryId,
   };
+}
+
+/** Build one rival stable from a template pick. */
+function buildRivalStable(
+  tmpl: StableTemplate,
+  iteration: number,
+  week: number,
+  rng: IRNGService,
+  usedWarriorNames: Set<string>
+): RivalStableData {
+  const stableId = rng.uuid() as StableId;
+
+  // Procedural name variance for duplicates
+  const nameSuffix =
+    iteration > 0
+      ? ` [${iteration === 1 ? 'II' : iteration === 2 ? 'III' : iteration === 3 ? 'IV' : 'V'}]`
+      : '';
+  const stableName = `${tmpl.stableName}${nameSuffix}`;
+  const owner = buildOwner(tmpl, stableId, iteration, stableName, rng);
 
   const warriors = buildRoster(tmpl, stableId, week, rng, usedWarriorNames);
 

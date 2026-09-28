@@ -36,23 +36,16 @@ function compareOffersForPairing(a: BoutOffer, b: BoutOffer): number {
 }
 
 /**
- * Generate pairings.
+ * Collect this day's tournament pairings. Tournament combatants take
+ * precedence over signed offers (they reserve the warriors first), but their
+ * pairings are still emitted after contract pairings to preserve the
+ * established ordering.
  */
-export function generatePairings(state: GameState): PairingsResult {
-  const currentWeek = state.absoluteWeek;
-  const pairings: BoutPairing[] = [];
-  const voidedOffers: BoutOffer[] = [];
-
-  // ⚡ Bolt: Use cached warriorMap if available, otherwise build it
-  const warriorMap = state.warriorMap || buildActiveWarriorMap(state);
-
-  // Warriors already committed this week (tournament combatants first — the
-  // bracket is authoritative — then signed contracts). One bout per warrior.
-  const committedWarriors = new Set<string>();
-
-  // Tournament combatants for the current day take precedence over signed
-  // offers. Their pairings are still emitted after contract pairings below to
-  // preserve the established ordering.
+function collectTournamentPairings(
+  state: GameState,
+  warriorMap: Map<string, Warrior>,
+  committedWarriors: Set<string>
+): BoutPairing[] {
   const tournamentPairings: BoutPairing[] = [];
   if (state.isTournamentWeek && state.activeTournamentId) {
     const tournament = state.tournaments.find((t) => t.id === state.activeTournamentId);
@@ -82,6 +75,73 @@ export function generatePairings(state: GameState): PairingsResult {
       });
     }
   }
+  return tournamentPairings;
+}
+
+/** Resolve a signed offer into a pairing — or void it (champion choke point / double-booking). */
+function resolveContractOffer(
+  offer: BoutOffer,
+  state: GameState,
+  warriorMap: Map<string, Warrior>,
+  committedWarriors: Set<string>,
+  activeChampionIds: Set<string>,
+  pairings: BoutPairing[],
+  voidedOffers: BoutOffer[]
+): void {
+  const idA = offer.warriorIds[0];
+  const idD = offer.warriorIds[1];
+  if (
+    !offer.titleArenaId &&
+    ((idA && activeChampionIds.has(idA)) || (idD && activeChampionIds.has(idD)))
+  ) {
+    voidedOffers.push(offer);
+    return;
+  }
+  const wA = idA ? warriorMap.get(idA) : undefined;
+  const wD = idD ? warriorMap.get(idD) : undefined;
+
+  if (wA && wD) {
+    // A warrior can only fight once per week — later contracts are voided
+    // by the caller so no ghost Signed offer is left dangling.
+    if (committedWarriors.has(wA.id) || committedWarriors.has(wD.id)) {
+      voidedOffers.push(offer);
+      return;
+    }
+    committedWarriors.add(wA.id);
+    committedWarriors.add(wD.id);
+
+    // Find which stable wD belongs to using O(1) map lookup
+    const stableInfo = state.warriorToStableMap?.get(wD.id);
+    const rivalStable =
+      stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
+
+    pairings.push({
+      a: wA,
+      d: wD,
+      isRivalry: (offer.hype || 0) > 150, // Use hype as a proxy for rivalry
+      rivalStable: rivalStable?.owner.stableName,
+      rivalStableId: rivalStable?.id,
+      contractId: offer.id,
+    });
+  }
+}
+
+/**
+ * Generate pairings.
+ */
+export function generatePairings(state: GameState): PairingsResult {
+  const currentWeek = state.absoluteWeek;
+  const pairings: BoutPairing[] = [];
+  const voidedOffers: BoutOffer[] = [];
+
+  // ⚡ Bolt: Use cached warriorMap if available, otherwise build it
+  const warriorMap = state.warriorMap || buildActiveWarriorMap(state);
+
+  // Warriors already committed this week (tournament combatants first — the
+  // bracket is authoritative — then signed contracts). One bout per warrior.
+  const committedWarriors = new Set<string>();
+
+  const tournamentPairings = collectTournamentPairings(state, warriorMap, committedWarriors);
 
   // Derive pairings from Signed Contracts for this week
   const allOffers = Object.values(state.boutOffers || {});
@@ -100,44 +160,17 @@ export function generatePairings(state: GameState): PairingsResult {
       )
   );
 
-  currentOffers.forEach((offer) => {
-    const idA = offer.warriorIds[0];
-    const idD = offer.warriorIds[1];
-    if (
-      !offer.titleArenaId &&
-      ((idA && activeChampionIds.has(idA)) || (idD && activeChampionIds.has(idD)))
-    ) {
-      voidedOffers.push(offer);
-      return;
-    }
-    const wA = idA ? warriorMap.get(idA) : undefined;
-    const wD = idD ? warriorMap.get(idD) : undefined;
-
-    if (wA && wD) {
-      // A warrior can only fight once per week — later contracts are voided
-      // by the caller so no ghost Signed offer is left dangling.
-      if (committedWarriors.has(wA.id) || committedWarriors.has(wD.id)) {
-        voidedOffers.push(offer);
-        return;
-      }
-      committedWarriors.add(wA.id);
-      committedWarriors.add(wD.id);
-
-      // Find which stable wD belongs to using O(1) map lookup
-      const stableInfo = state.warriorToStableMap?.get(wD.id);
-      const rivalStable =
-        stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
-
-      pairings.push({
-        a: wA,
-        d: wD,
-        isRivalry: (offer.hype || 0) > 150, // Use hype as a proxy for rivalry
-        rivalStable: rivalStable?.owner.stableName,
-        rivalStableId: rivalStable?.id,
-        contractId: offer.id,
-      });
-    }
-  });
+  currentOffers.forEach((offer) =>
+    resolveContractOffer(
+      offer,
+      state,
+      warriorMap,
+      committedWarriors,
+      activeChampionIds,
+      pairings,
+      voidedOffers
+    )
+  );
 
   return { pairings: [...pairings, ...tournamentPairings], voidedOffers };
 }

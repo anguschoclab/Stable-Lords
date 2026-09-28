@@ -14,6 +14,49 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
+/** Header actions: report count + live-scouts indicator. */
+function HeaderStats({ reportCount }: { reportCount: number }) {
+  return (
+    <div className="flex items-center gap-6">
+      <div className="flex flex-col items-end">
+        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+          Scout Reports
+        </span>
+        <span className="text-sm font-display font-black text-foreground">
+          {reportCount} Filed
+        </span>
+      </div>
+      <div className="flex items-center gap-4 border-l border-white/5 pl-6">
+        <ImperialRing size="xs" variant="blood" className="animate-pulse motion-reduce:animate-none">
+          <Radio className="h-3 w-3 text-primary" />
+        </ImperialRing>
+        <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">
+          Scouts at work...
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** Three-tab trigger row (Reports / Stable Dynamics / Warrior Face-Off). */
+function ScoutTabsList() {
+  const triggerClass =
+    'flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none';
+  return (
+    <TabsList className="w-full h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none">
+      <TabsTrigger value="scout" className={triggerClass}>
+        Reports
+      </TabsTrigger>
+      <TabsTrigger value="compare" className={triggerClass}>
+        Stable Dynamics
+      </TabsTrigger>
+      <TabsTrigger value="warriors" className={triggerClass}>
+        Warrior Face-Off
+      </TabsTrigger>
+    </TabsList>
+  );
+}
+
 /**
  * Scouting.
  */
@@ -38,49 +81,11 @@ export default function Scouting() {
       <PageHeader
         title="Rival Scouting"
         subtitle="WORLD · RIVAL STABLES · SCOUTING REPORTS"
-        actions={
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col items-end">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Scout Reports
-              </span>
-              <span className="text-sm font-display font-black text-foreground">
-                {scoutReports?.length || 0} Filed
-              </span>
-            </div>
-            <div className="flex items-center gap-4 border-l border-white/5 pl-6">
-              <ImperialRing size="xs" variant="blood" className="animate-pulse motion-reduce:animate-none">
-                <Radio className="h-3 w-3 text-primary" />
-              </ImperialRing>
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">
-                Scouts at work...
-              </span>
-            </div>
-          </div>
-        }
+        actions={<HeaderStats reportCount={scoutReports?.length || 0} />}
       />
 
       <Tabs defaultValue="scout" className="w-full space-y-12">
-        <TabsList className="w-full h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none">
-          <TabsTrigger
-            value="scout"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
-          >
-            Reports
-          </TabsTrigger>
-          <TabsTrigger
-            value="compare"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
-          >
-            Stable Dynamics
-          </TabsTrigger>
-          <TabsTrigger
-            value="warriors"
-            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
-          >
-            Warrior Face-Off
-          </TabsTrigger>
-        </TabsList>
+        <ScoutTabsList />
 
         <TabsContent value="scout" className="mt-0 focus-visible:outline-none">
           <div className="flex justify-end mb-4">

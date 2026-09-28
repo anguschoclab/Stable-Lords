@@ -32,6 +32,105 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   announcement,
 }.
  */
+/** Cinematic winner banner — outcome-styled title plus bout stats. */
+function VictoryBanner({
+  winnerName,
+  by,
+  minutes,
+  totalEvents,
+}: {
+  winnerName: string | null;
+  by: FightOutcomeBy;
+  minutes: number;
+  totalEvents: number;
+}) {
+  const outcomeStyle = getOutcomeStyles(by);
+  return (
+    <div
+      className={cn(
+        'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 motion-reduce:animate-none motion-reduce:transform-none bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
+        outcomeStyle.bgClasses
+      )}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+
+      <div className="flex items-center gap-8 relative z-10 w-full justify-center">
+        <div className={outcomeStyle.textClass}>
+          {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
+        </div>
+        <div className="text-center space-y-2">
+          <h2
+            className={cn(
+              'font-display font-black text-3xl uppercase tracking-tighter italic',
+              outcomeStyle.textClass
+            )}
+          >
+            {winnerName} VICTORY
+          </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-white/10" />
+            <div className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+              BY WAY OF {(by ?? 'RESOLUTION').toUpperCase()}
+            </div>
+            <span className="h-px w-8 bg-white/10" />
+          </div>
+        </div>
+        <div className={outcomeStyle.textClass}>
+          {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-8 relative z-10">
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest leading-none mb-1">
+            Resolution Time
+          </span>
+          <span>{minutes}:00</span>
+        </div>
+        <div className="h-8 w-px bg-white/5" />
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest leading-none mb-1">
+            Engagements
+          </span>
+          <span>{totalEvents}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Mutual-depletion draw banner. */
+function DrawBanner({ minutes }: { minutes: number }) {
+  return (
+    <div className="p-12 border-t border-white/5 flex flex-col items-center gap-4 bg-neutral-900 animate-in slide-in-from-bottom-8 duration-1000 motion-reduce:animate-none motion-reduce:transform-none">
+      <Crosshair className="h-10 w-10 text-muted-foreground opacity-40 mb-2" />
+      <h2 className="font-display font-black text-3xl uppercase tracking-tighter italic text-muted-foreground/60">
+        MUTUAL_DEPLETION_DRAW
+      </h2>
+      <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.5em]">
+        {minutes} MINUTES // NO RESOLUTION
+      </div>
+    </div>
+  );
+}
+
+/** Comms-link overlay — the herald's announcement quote. */
+function AnnouncementOverlay({ announcement }: { announcement: string }) {
+  return (
+    <div className="px-8 py-6 border-t border-white/5 bg-black relative overflow-hidden group">
+      <div className="absolute top-0 left-0 w-full h-px bg-arena-gold/30 animate-pulse motion-reduce:animate-none" />
+      <div className="relative z-10 flex items-start gap-4">
+        <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 shrink-0">
+          <Activity className="h-4 w-4 text-arena-gold" />
+        </div>
+        <p className="text-[13px] italic text-muted-foreground/80 leading-relaxed font-display py-0.5">
+          " {announcement} "
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function BoutResolution({
   isComplete,
   winner,
@@ -43,90 +142,16 @@ export default function BoutResolution({
 }: BoutResolutionProps) {
   if (!isComplete) return null;
 
-  const outcomeStyle = getOutcomeStyles(by);
-
   return (
     <>
-      {/* Cinematic Resolution Banner */}
-      {winner && (
-        <div
-          className={cn(
-            'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 motion-reduce:animate-none motion-reduce:transform-none bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
-            outcomeStyle.bgClasses
-          )}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-
-          <div className="flex items-center gap-8 relative z-10 w-full justify-center">
-            <div className={outcomeStyle.textClass}>
-              {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
-            </div>
-            <div className="text-center space-y-2">
-              <h2
-                className={cn(
-                  'font-display font-black text-3xl uppercase tracking-tighter italic',
-                  outcomeStyle.textClass
-                )}
-              >
-                {winnerName} VICTORY
-              </h2>
-              <div className="flex items-center justify-center gap-3">
-                <span className="h-px w-8 bg-white/10" />
-                <div className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em]">
-                  BY WAY OF {(by ?? 'RESOLUTION').toUpperCase()}
-                </div>
-                <span className="h-px w-8 bg-white/10" />
-              </div>
-            </div>
-            <div className={outcomeStyle.textClass}>
-              {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-8 relative z-10">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest leading-none mb-1">
-                Resolution Time
-              </span>
-              <span>{minutes}:00</span>
-            </div>
-            <div className="h-8 w-px bg-white/5" />
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest leading-none mb-1">
-                Engagements
-              </span>
-              <span>{totalEvents}</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!winner && (
-        <div className="p-12 border-t border-white/5 flex flex-col items-center gap-4 bg-neutral-900 animate-in slide-in-from-bottom-8 duration-1000 motion-reduce:animate-none motion-reduce:transform-none">
-          <Crosshair className="h-10 w-10 text-muted-foreground opacity-40 mb-2" />
-          <h2 className="font-display font-black text-3xl uppercase tracking-tighter italic text-muted-foreground/60">
-            MUTUAL_DEPLETION_DRAW
-          </h2>
-          <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.5em]">
-            {minutes} MINUTES // NO RESOLUTION
-          </div>
-        </div>
+      {winner ? (
+        <VictoryBanner winnerName={winnerName} by={by} minutes={minutes} totalEvents={totalEvents} />
+      ) : (
+        <DrawBanner minutes={minutes} />
       )}
 
       {/* Comms Link Overlay */}
-      {announcement && (
-        <div className="px-8 py-6 border-t border-white/5 bg-black relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-full h-px bg-arena-gold/30 animate-pulse motion-reduce:animate-none" />
-          <div className="relative z-10 flex items-start gap-4">
-            <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 shrink-0">
-              <Activity className="h-4 w-4 text-arena-gold" />
-            </div>
-            <p className="text-[13px] italic text-muted-foreground/80 leading-relaxed font-display py-0.5">
-              " {announcement} "
-            </p>
-          </div>
-        </div>
-      )}
+      {announcement && <AnnouncementOverlay announcement={announcement} />}
     </>
   );
 }

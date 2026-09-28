@@ -121,8 +121,9 @@ let lastStoreValues: GameStateValues | null = null;
  * @param store - The game store
  * @returns The reconstructed game state
  */
-export function reconstructGameState(store: GameStore): GameState {
-  const currentValues = {
+/** Pluck every GameState field off the store — the change-detection input. */
+function collectStoreValues(store: GameStore): GameStateValues {
+  return {
     treasury: store.treasury,
     ledger: store.ledger,
     roster: store.roster,
@@ -180,6 +181,10 @@ export function reconstructGameState(store: GameStore): GameState {
     progression: store.progression,
     deferredBoutLogs: store.deferredBoutLogs,
   };
+}
+
+export function reconstructGameState(store: GameStore): GameState {
+  const currentValues = collectStoreValues(store);
 
   if (lastResult && lastStoreValues) {
     let changed = false;

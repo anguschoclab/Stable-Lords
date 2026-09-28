@@ -142,13 +142,68 @@ const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
   return [];
 };
 
+/** Lead-in attack line — emitted when the hit follows a riposte or an undefended blow. */
+function hitAttackLead(
+  event: Parameters<EventNarrator>[0],
+  h: Parameters<EventNarrator>[1],
+  minute: number,
+  events: Parameters<EventNarrator>[3],
+  isMastery: boolean,
+  opponentName: string,
+  weapon: string
+): MinuteEvent[] {
+  const showAttack =
+    events.some(
+      (e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE' && e.actor === event.actor
+    ) || !events.some((e) => e.type === 'DEFENSE' && e.actor === event.target);
+  if (!showAttack) return [];
+  return [
+    {
+      minute,
+      text: narrateAttack(
+        h.rng,
+        h.displayName(event.actor),
+        weapon,
+        isMastery,
+        opponentName,
+        h.getStyle(event.actor)
+      ),
+    },
+  ];
+}
+
+/** Post-hit reactions: severity line, hp-ratio state change, crowd response. */
+function hitReactions(
+  event: Parameters<EventNarrator>[0],
+  h: Parameters<EventNarrator>[1],
+  minute: number,
+  actorName: string,
+  opponentName: string
+): MinuteEvent[] {
+  const out: MinuteEvent[] = [];
+  if (!event.value) return out;
+  const { rng, ctx } = h;
+  const target = event.target as 'A' | 'D';
+
+  const sevLine = damageSeverityLine(rng, event.value, h.getMaxHp(target), opponentName);
+  if (sevLine) out.push({ minute, text: sevLine });
+
+  const prevRatio = target === 'A' ? ctx.prevHpRatioA : ctx.prevHpRatioD;
+  const newHpRatio = h.getPostHitRatio(target, event);
+  const sLine = stateChangeLine(rng, opponentName, newHpRatio, prevRatio);
+  if (sLine) out.push({ minute, text: sLine });
+
+  const crowd = crowdReaction(rng, opponentName, actorName, newHpRatio, ctx.crowdMood);
+  if (crowd) out.push({ minute, text: crowd });
+  return out;
+}
+
 const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
   if (!event.location) return [];
-  const { rng, ctx } = h;
+  const { rng } = h;
   const actorName = h.getName(event.actor);
   const opponentName = h.getOpponentName(event.actor);
   const weapon = h.getWeapon(event.actor);
-  const out: MinuteEvent[] = [];
   const isMastery = !!event.metadata?.isMastery;
   const isSuperFlashy =
     isMastery &&
@@ -156,35 +211,9 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
       (event.value && event.value > 5) ||
       events.some((e) => e.type === 'BOUT_END'));
 
-  if (
-    events.some(
-      (e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE' && e.actor === event.actor
-    )
-  ) {
-    out.push({
-      minute,
-      text: narrateAttack(
-        rng,
-        h.displayName(event.actor),
-        weapon,
-        isMastery,
-        opponentName,
-        h.getStyle(event.actor)
-      ),
-    });
-  } else if (!events.some((e) => e.type === 'DEFENSE' && e.actor === event.target)) {
-    out.push({
-      minute,
-      text: narrateAttack(
-        rng,
-        h.displayName(event.actor),
-        weapon,
-        isMastery,
-        opponentName,
-        h.getStyle(event.actor)
-      ),
-    });
-  }
+  const out: MinuteEvent[] = [
+    ...hitAttackLead(event, h, minute, events, isMastery, opponentName, weapon),
+  ];
 
   const isFatal = !!event.metadata?.lethal;
   const isCrit = !!event.metadata?.crit;
@@ -221,24 +250,7 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
     });
   }
 
-  if (event.value) {
-    const sevLine = damageSeverityLine(
-      rng,
-      event.value,
-      h.getMaxHp(event.target as 'A' | 'D'),
-      opponentName
-    );
-    if (sevLine) out.push({ minute, text: sevLine });
-
-    const target = event.target as 'A' | 'D';
-    const prevRatio = target === 'A' ? ctx.prevHpRatioA : ctx.prevHpRatioD;
-    const newHpRatio = h.getPostHitRatio(target, event);
-    const sLine = stateChangeLine(rng, opponentName, newHpRatio, prevRatio);
-    if (sLine) out.push({ minute, text: sLine });
-
-    const crowd = crowdReaction(rng, opponentName, actorName, newHpRatio, ctx.crowdMood);
-    if (crowd) out.push({ minute, text: crowd });
-  }
+  out.push(...hitReactions(event, h, minute, actorName, opponentName));
   return out;
 };
 

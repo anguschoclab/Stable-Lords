@@ -61,6 +61,35 @@ function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, tot
   toast.success(`${w.name} has joined your stable! (-${totalCost}g)`);
 }
 
+/** Draft mutation for a paid pool refresh: reseeds avoiding all known names. */
+function applyPoolRefreshDraft(draft: GameStore) {
+  const usedNames = new Set<string>();
+  draft.roster.forEach((w: Warrior) => usedNames.add(w.name));
+  draft.graveyard.forEach((w: Warrior) => usedNames.add(w.name));
+  draft.retired.forEach((w: Warrior) => usedNames.add(w.name));
+  (draft.rivals ?? []).forEach((r) => r.roster.forEach((w: Warrior) => usedNames.add(w.name)));
+
+  const newPool = fullRefreshPool(draft.week, usedNames);
+  draft.recruitPool = newPool;
+  toast.success(`Scout pool refreshed! (-${REFRESH_COST}g)`);
+}
+
+/** Draft mutation for a custom-built recruit; navigates to the new warrior. */
+function applyCustomCreateDraft(
+  draft: GameStore,
+  data: { name: string; style: FightingStyle; attributes: Attributes },
+  navigate: (opts: { to: string }) => void
+) {
+  const rng = new SeededRNGService(draft.week + hashStr(data.name));
+  const id = rng.uuid('warrior') as WarriorId;
+  const warrior = makeWarrior(id, data.name, data.style, data.attributes);
+
+  draft.roster.push(warrior);
+
+  toast.success(`${data.name} has joined your stable! (-${CUSTOM_COST}g)`);
+  setTimeout(() => navigate({ to: `/warrior/${id}` }), 0);
+}
+
 /**
  *
  */
@@ -112,17 +141,7 @@ export function useRecruitActions({
       return;
     }
 
-    setState((draft: GameStore) => {
-      const usedNames = new Set<string>();
-      draft.roster.forEach((w: Warrior) => usedNames.add(w.name));
-      draft.graveyard.forEach((w: Warrior) => usedNames.add(w.name));
-      draft.retired.forEach((w: Warrior) => usedNames.add(w.name));
-      (draft.rivals ?? []).forEach((r) => r.roster.forEach((w: Warrior) => usedNames.add(w.name)));
-
-      const newPool = fullRefreshPool(draft.week, usedNames);
-      draft.recruitPool = newPool;
-      toast.success(`Scout pool refreshed! (-${REFRESH_COST}g)`);
-    });
+    setState(applyPoolRefreshDraft);
   }, [deductFunds, setState]);
 
   const handleCustomCreate = useCallback(
@@ -136,16 +155,7 @@ export function useRecruitActions({
         return;
       }
 
-      setState((draft: GameStore) => {
-        const rng = new SeededRNGService(draft.week + hashStr(data.name));
-        const id = rng.uuid('warrior') as WarriorId;
-        const warrior = makeWarrior(id, data.name, data.style, data.attributes);
-
-        draft.roster.push(warrior);
-
-        toast.success(`${data.name} has joined your stable! (-${CUSTOM_COST}g)`);
-        setTimeout(() => navigate({ to: `/warrior/${id}` }), 0);
-      });
+      setState((draft: GameStore) => applyCustomCreateDraft(draft, data, navigate));
     },
     [setState, navigate, rosterFull, deductFunds]
   );

@@ -3,40 +3,65 @@
  * Extracted from gameStateSchema.ts for SRP separation.
  */
 import { z } from 'zod';
+import { FightingStyle } from '@/types/shared/fightingStyles';
+import {
+  SEASONS,
+  WEATHER_TYPES,
+  TRAINER_TIERS,
+  TRAINER_FOCI,
+  TRAINER_SPECIALTIES,
+  SCOUT_QUALITIES,
+  WARRIOR_STATUSES,
+  INJURY_SEVERITIES,
+  INJURY_LOCATIONS,
+  PROMOTER_PERSONALITIES,
+  PROMOTER_TIERS,
+  OWNER_PERSONALITIES,
+  META_ADAPTATIONS,
+  ATTACK_TARGETS,
+  PROTECT_TARGETS,
+  OFFENSIVE_TACTICS,
+  DEFENSIVE_TACTICS,
+  CONDITION_TRIGGERS,
+  PSYCH_STATES,
+  DISTANCE_RANGES,
+  ARENA_ZONES,
+  COMMIT_LEVELS,
+  ARENA_TAGS,
+  SHIELD_SHAPES,
+  FIELD_TYPES,
+  METAL_COLORS,
+  CHARGE_TYPES,
+  BEAST_POSTURES,
+  ARMOR_WEIGHTS,
+  WEAPON_TYPES,
+  EQUIPMENT_SLOTS,
+  BOUT_OFFER_STATUSES,
+  BOUT_OFFER_RESPONSES,
+  FIGHT_OUTCOME_BY,
+  DEATH_CAUSE_BUCKETS,
+  AI_INTENTS,
+  ANNUAL_AWARD_TYPES,
+  CROWD_MOODS,
+  COMBAT_EVENT_TYPES,
+} from '@/types/enumSources';
 
 // ─── Base Schemas for Primitive Types ───────────────────────────────────────
 
 /**
  * FightingStyle enum schema
  */
-export const FightingStyleSchema = z.enum([
-  'AIMED BLOW',
-  'BASHING ATTACK',
-  'LUNGING ATTACK',
-  'PARRY-LUNGE',
-  'PARRY-RIPOSTE',
-  'PARRY-STRIKE',
-  'SLASHING ATTACK',
-  'STRIKING ATTACK',
-  'TOTAL PARRY',
-  'WALL OF STEEL',
-]);
+export const FightingStyleSchema = z.enum(FightingStyle);
 
 /**
  * Season enum schema
  */
-export const SeasonSchema = z.enum(['Spring', 'Summer', 'Fall', 'Winter']);
+export const SeasonSchema = z.enum(SEASONS);
 
 /**
  * Canonical crowd-mood values — engine/constants derive from this tuple.
  */
-export const CROWD_MOOD_VALUES = [
-  'Calm',
-  'Bloodthirsty',
-  'Theatrical',
-  'Solemn',
-  'Festive',
-] as const;
+export const CROWD_MOOD_VALUES = CROWD_MOODS;
 
 /**
  * CrowdMoodType enum schema
@@ -46,419 +71,184 @@ export const CrowdMoodTypeSchema = z.enum(CROWD_MOOD_VALUES);
 /**
  * WeatherType enum schema
  */
-export const WeatherTypeSchema = z.enum([
-  'Clear',
-  'Crimson Snow',
-  'Rainy',
-  'Sweltering',
-  'Breezy',
-  'Overcast',
-  'Blazing Sun',
-  'Gale',
-  'Blood Moon',
-  'Weeping Skies',
-  'Eclipse of Chaos',
-  'Eclipse',
-  'Whispering Winds',
-  'Sandstorm',
-  'Zephyr',
-  'Tornado',
-  'Blizzard',
-  'Dense Fog',
-  'Mist',
-  'Glittering Frost',
-  'Thunderstorm',
-  'Gravity Anomaly',
-  'Ashfall',
-  'Eldritch Eclipse',
-  'Prismatic Rain',
-  'Moonlight Duel',
-  'Acid Rain',
-  'Mana Surge',
-  'Rainbow',
-  'Astral Dust',
-  'Scorching Wind',
-  'Spooky Night',
-  'Meteor Shower',
-  'Solar Flare',
-  'Wild Magic',
-  'Abyssal Gloom',
-  'Cursed Miasma',
-  'Hailstorm',
-  'Arcane Storm',
-  'Blood Rain',
-  'Locust Swarm',
-  'Aurora Borealis',
-  'Chaotic Winds',
-  'Aether Storm',
-  'Mirage',
-  'Ember Rain',
-  'Wildfire Smoke',
-  'Blood Fog',
-  'Shimmering Heat',
-  'Crystal Rain',
-  'Rain of Frogs',
-  'Winds of Chaos',
-  'Chaos Storm',
-  'Chaos Squall',
-  'Prismatic Gale',
-  'Diamond Rain',
-  'Cosmic Anomaly',
-  'Abyssal Tempest',
-  'Temporal Rift',
-  'Stardust Gale',
-  'Mana Storm',
-  'Dreamweavers Mist',
-  'Shattered Skies',
-]);
+export const WeatherTypeSchema = z.enum(WEATHER_TYPES);
 
 /**
  * TrainerTier enum schema
  */
-export const TrainerTierSchema = z.enum(['Novice', 'Seasoned', 'Master']);
+export const TrainerTierSchema = z.enum(TRAINER_TIERS);
 
 /**
  * TrainerFocus enum schema
  */
-export const TrainerFocusSchema = z.enum(['Aggression', 'Defense', 'Endurance', 'Mind', 'Healing']);
+export const TrainerFocusSchema = z.enum(TRAINER_FOCI);
 
 /**
  * TrainerSpecialty enum schema
  */
-export const TrainerSpecialtySchema = z.enum([
-  'KillerInstinct',
-  'IronConditioning',
-  'CounterFighter',
-  'Footwork',
-  'IronGuard',
-  'Finisher',
-  'RopeADope',
-]);
+export const TrainerSpecialtySchema = z.enum(TRAINER_SPECIALTIES);
 
 /**
  * ScoutQuality enum schema
  */
-export const ScoutQualitySchema = z.enum(['Basic', 'Detailed', 'Expert']);
+export const ScoutQualitySchema = z.enum(SCOUT_QUALITIES);
 
 /**
  * WarriorStatus enum schema
  */
-export const WarriorStatusSchema = z.enum(['Active', 'Dead', 'Retired']);
+export const WarriorStatusSchema = z.enum(WARRIOR_STATUSES);
 
 /**
  * InjurySeverity enum schema
  */
-export const InjurySeveritySchema = z.enum([
-  'Minor',
-  'Moderate',
-  'Severe',
-  'Critical',
-  'Permanent',
-]);
+export const InjurySeveritySchema = z.enum(INJURY_SEVERITIES);
 
 /**
  * InjuryLocation enum schema
  */
-export const InjuryLocationSchema = z.enum([
-  'Head',
-  'Chest',
-  'Abdomen',
-  'Right Arm',
-  'Left Arm',
-  'Right Leg',
-  'Left Leg',
-  'General',
-]);
+export const InjuryLocationSchema = z.enum(INJURY_LOCATIONS);
 
 /**
  * PromoterPersonality enum schema
  */
-export const PromoterPersonalitySchema = z.enum([
-  'Greedy',
-  'Honorable',
-  'Sadistic',
-  'Flashy',
-  'Corporate',
-]);
+export const PromoterPersonalitySchema = z.enum(PROMOTER_PERSONALITIES);
 
 /**
  * PromoterTier enum schema
  */
-export const PromoterTierSchema = z.enum(['Local', 'Regional', 'National', 'Legendary']);
+export const PromoterTierSchema = z.enum(PROMOTER_TIERS);
 
 /**
  * OwnerPersonality enum schema
  */
-export const OwnerPersonalitySchema = z.enum([
-  'Aggressive',
-  'Methodical',
-  'Showman',
-  'Pragmatic',
-  'Tactician',
-]);
+export const OwnerPersonalitySchema = z.enum(OWNER_PERSONALITIES);
 
 /**
  * MetaAdaptation enum schema
  */
-export const MetaAdaptationSchema = z.enum([
-  'MetaChaser',
-  'Traditionalist',
-  'Opportunist',
-  'Innovator',
-]);
+export const MetaAdaptationSchema = z.enum(META_ADAPTATIONS);
 
 /**
  * AttackTarget enum schema
  */
-export const AttackTargetSchema = z.enum([
-  'Head',
-  'Chest',
-  'Abdomen',
-  'Right Arm',
-  'Left Arm',
-  'Right Leg',
-  'Left Leg',
-  'Any',
-]);
+export const AttackTargetSchema = z.enum(ATTACK_TARGETS);
 
 /**
  * ProtectTarget enum schema
  */
-export const ProtectTargetSchema = z.enum(['Head', 'Body', 'Arms', 'Legs', 'Any']);
+export const ProtectTargetSchema = z.enum(PROTECT_TARGETS);
 
 /**
  * OffensiveTactic enum schema
  */
-export const OffensiveTacticSchema = z.enum(['Lunge', 'Slash', 'Bash', 'Decisiveness', 'none']);
+export const OffensiveTacticSchema = z.enum(OFFENSIVE_TACTICS);
 
 /**
  * DefensiveTactic enum schema
  */
-export const DefensiveTacticSchema = z.enum([
-  'Dodge',
-  'Parry',
-  'Riposte',
-  'Responsiveness',
-  'none',
-]);
+export const DefensiveTacticSchema = z.enum(DEFENSIVE_TACTICS);
 
 /**
  * ConditionTriggerType enum schema
  */
-export const ConditionTriggerTypeSchema = z.enum([
-  'HP_BELOW',
-  'HP_ABOVE',
-  'MOMENTUM_LEAD',
-  'MOMENTUM_DEFICIT',
-  'PHASE_IS',
-  'ENDURANCE_BELOW',
-  'OPPONENT_HP_BELOW',
-  'OPPONENT_ENDURANCE_BELOW',
-  'OPPONENT_MOMENTUM_LEAD',
-  'PSYCH_IS',
-]);
+export const ConditionTriggerTypeSchema = z.enum(CONDITION_TRIGGERS);
 
 /**
  * PsychState enum schema
  */
-export const PsychStateSchema = z.enum([
-  'Neutral',
-  'InTheZone',
-  'Rattled',
-  'Desperate',
-  'Cruising',
-  'FatiguePanic',
-]);
+export const PsychStateSchema = z.enum(PSYCH_STATES);
 
 /**
  * DistanceRange enum schema
  */
-export const DistanceRangeSchema = z.enum(['Grapple', 'Tight', 'Striking', 'Extended']);
+export const DistanceRangeSchema = z.enum(DISTANCE_RANGES);
 
 /**
  * ArenaZone enum schema
  */
-export const ArenaZoneSchema = z.enum(['Center', 'Edge', 'Corner', 'Obstacle']);
+export const ArenaZoneSchema = z.enum(ARENA_ZONES);
 
 /**
  * CommitLevel enum schema
  */
-export const CommitLevelSchema = z.enum(['Cautious', 'Standard', 'Full']);
+export const CommitLevelSchema = z.enum(COMMIT_LEVELS);
 
 /**
  * ArenaTag enum schema
  */
-export const ArenaTagSchema = z.enum([
-  'outdoor',
-  'indoor',
-  'elevated',
-  'water',
-  'cramped',
-  'open',
-  'premium',
-]);
+export const ArenaTagSchema = z.enum(ARENA_TAGS);
 
 /**
  * ShieldShape enum schema
  */
-export const ShieldShapeSchema = z.enum(['heater', 'french', 'swiss', 'spanish', 'lozenge']);
+export const ShieldShapeSchema = z.enum(SHIELD_SHAPES);
 
 /**
  * FieldType enum schema
  */
-export const FieldTypeSchema = z.enum([
-  'solid',
-  'fess',
-  'pale',
-  'bend',
-  'chevron',
-  'cross',
-  'saltire',
-  'per-pale',
-  'per-fess',
-  'gyronny',
-  'bend-sinister',
-  'pale-environ',
-  'chevron-inverted',
-  'quarterly',
-]);
+export const FieldTypeSchema = z.enum(FIELD_TYPES);
 
 /**
  * MetalColor enum schema
  */
-export const MetalColorSchema = z.enum(['gold', 'silver']);
+export const MetalColorSchema = z.enum(METAL_COLORS);
 
 /**
  * ChargeType enum schema
  */
-export const ChargeTypeSchema = z.enum([
-  'beast',
-  'weapon',
-  'symbol',
-  'nature',
-  'celestial',
-  'mythical',
-]);
+export const ChargeTypeSchema = z.enum(CHARGE_TYPES);
 
 /**
  * BeastPosture enum schema
  */
-export const BeastPostureSchema = z.enum([
-  'rampant',
-  'passant',
-  'sejant',
-  'couchant',
-  'statant',
-  'forcene',
-]);
+export const BeastPostureSchema = z.enum(BEAST_POSTURES);
 
 /**
  * ArmorWeight enum schema
  */
-export const ArmorWeightSchema = z.enum(['None', 'Light', 'Medium', 'Heavy', 'Ultra-Heavy']);
+export const ArmorWeightSchema = z.enum(ARMOR_WEIGHTS);
 
 /**
  * WeaponType enum schema
  */
-export const WeaponTypeSchema = z.enum(['slashing', 'bashing', 'piercing', 'fist']);
+export const WeaponTypeSchema = z.enum(WEAPON_TYPES);
 
 /**
  * EquipmentSlot enum schema
  */
-export const EquipmentSlotSchema = z.enum(['weapon', 'armor', 'shield', 'helm']);
+export const EquipmentSlotSchema = z.enum(EQUIPMENT_SLOTS);
 
 /**
  * BoutOfferStatus enum schema
  */
-export const BoutOfferStatusSchema = z.enum([
-  'Proposed',
-  'Signed',
-  'Rejected',
-  'Canceled',
-  'Expired',
-]);
+export const BoutOfferStatusSchema = z.enum(BOUT_OFFER_STATUSES);
 
 /**
  * BoutOfferResponse enum schema
  */
-export const BoutOfferResponseSchema = z.enum([
-  'Pending',
-  'Accepted',
-  'Declined',
-  'Countered',
-]);
+export const BoutOfferResponseSchema = z.enum(BOUT_OFFER_RESPONSES);
 
 /**
  * FightOutcomeBy enum schema
  */
-export const FightOutcomeBySchema = z.enum([
-  'Kill',
-  'KO',
-  'Exhaustion',
-  'Stoppage',
-  'Draw',
-  'Decision',
-  'Yield',
-  'null',
-]);
+export const FightOutcomeBySchema = z.enum(FIGHT_OUTCOME_BY);
 
 /**
  * CombatEventType enum schema
  */
-export const CombatEventTypeSchema = z.enum([
-  'INITIATIVE',
-  'ATTACK',
-  'DEFENSE',
-  'HIT',
-  'CONTEST',
-  'ENDURANCE',
-  'FATIGUE',
-  'STATE_CHANGE',
-  'BOUT_END',
-  'PASSIVE',
-  'INSIGHT',
-  'MOMENTUM_SHIFT',
-  'RANGE_SHIFT',
-  'FEINT_SUCCESS',
-  'FEINT_FAIL',
-  'ZONE_SHIFT',
-]);
+export const CombatEventTypeSchema = z.enum(COMBAT_EVENT_TYPES);
 
 /**
  * DeathCauseBucket enum schema
  */
-export const DeathCauseBucketSchema = z.enum([
-  'FATAL_DAMAGE',
-  'EXECUTION',
-  'CRITICAL_CHAIN',
-  'FATIGUE_COLLAPSE',
-  'ARMOR_FAILURE',
-  'RIVALRY_FINISH',
-]);
+export const DeathCauseBucketSchema = z.enum(DEATH_CAUSE_BUCKETS);
 
 /**
  * AIIntent enum schema
  */
-export const AIIntentSchema = z.enum([
-  'EXPANSION',
-  'CONSOLIDATION',
-  'VENDETTA',
-  'RECOVERY',
-  'SURVIVAL',
-  'WEALTH_ACCUMULATION',
-  'AGGRESSIVE_EXPANSION',
-  'ROSTER_DIVERSITY',
-  'TOURNAMENT_CAMPAIGN',
-  'CROWN_CAMPAIGN',
-]);
+export const AIIntentSchema = z.enum(AI_INTENTS);
 
 /**
  * AnnualAwardType enum schema
  */
-export const AnnualAwardTypeSchema = z.enum([
-  'WARRIOR_OF_YEAR',
-  'KILLER_OF_YEAR',
-  'STABLE_OF_YEAR',
-  'CLASS_MVP',
-  'TOURNAMENT_RANK',
-]);
+export const AnnualAwardTypeSchema = z.enum(ANNUAL_AWARD_TYPES);

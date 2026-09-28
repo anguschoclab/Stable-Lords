@@ -113,6 +113,10 @@ export const CONDITION_TRIGGERS = [
   'MOMENTUM_DEFICIT',
   'PHASE_IS',
   'ENDURANCE_BELOW',
+  'OPPONENT_HP_BELOW',
+  'OPPONENT_ENDURANCE_BELOW',
+  'OPPONENT_MOMENTUM_LEAD',
+  'PSYCH_IS',
 ] as const;
 
 export const PSYCH_STATES = [
@@ -198,7 +202,7 @@ export const BOUT_OFFER_STATUSES = [
   'Expired',
 ] as const;
 
-export const BOUT_OFFER_RESPONSES = ['Pending', 'Accepted', 'Declined'] as const;
+export const BOUT_OFFER_RESPONSES = ['Pending', 'Accepted', 'Declined', 'Countered'] as const;
 
 export const FIGHT_OUTCOME_BY = ['Kill', 'KO', 'Exhaustion', 'Stoppage', 'Decision', 'Yield', 'Draw', 'null'] as const;
 
@@ -270,4 +274,26 @@ export const META_ADAPTATIONS = [
   'Traditionalist',
   'Opportunist',
   'Innovator',
+] as const;
+
+export const COMBAT_EVENT_TYPES = [
+  'INITIATIVE',
+  'ATTACK',
+  'DEFENSE',
+  'HIT',
+  'CONTEST',
+  'ENDURANCE',
+  'FATIGUE',
+  'STATE_CHANGE',
+  'BOUT_END',
+  'PASSIVE',
+  'INSIGHT',
+  'MOMENTUM_SHIFT',
+  'RANGE_SHIFT',
+  'FEINT_SUCCESS',
+  'FEINT_FAIL',
+  'ZONE_SHIFT',
+  'KNOCKDOWN',
+  'RECOVERY',
+  'AI_INTENT',
 ] as const;

@@ -1,3 +1,4 @@
+import { COMBAT_EVENT_TYPES } from './enumSources';
 import {
   FightingStyle,
   type NewsletterItem,
@@ -78,26 +79,7 @@ export type FightOutcomeBy =
 /**
  * Combat event type type.
  */
-export type CombatEventType =
-  | 'INITIATIVE'
-  | 'ATTACK'
-  | 'DEFENSE'
-  | 'HIT'
-  | 'CONTEST'
-  | 'ENDURANCE'
-  | 'FATIGUE'
-  | 'STATE_CHANGE'
-  | 'BOUT_END'
-  | 'PASSIVE'
-  | 'INSIGHT'
-  | 'MOMENTUM_SHIFT'
-  | 'RANGE_SHIFT'
-  | 'FEINT_SUCCESS'
-  | 'FEINT_FAIL'
-  | 'ZONE_SHIFT'
-  | 'KNOCKDOWN'
-  | 'RECOVERY'
-  | 'AI_INTENT';
+export type CombatEventType = (typeof COMBAT_EVENT_TYPES)[number];
 
 /**
  * Defines the shape of combat event.

@@ -32,5 +32,35 @@ Full table lives in `MEGAPLAN_FINDINGS.md` §0. Headline confirmed findings: 7 e
 | Commit | Phase | Batch | Disposition |
 |---|---|---|---|
 | `3bc5476e` | 0 | baseline repair | 6 type-check errors fixed (pre-existing at tag) |
-
-*(populated as batches land)*
+| `ad2a3806` | 0 | baseline + findings docs | MEGAPLAN_FINDINGS seeded with validated V-ledger |
+| `6fbd0422` | 1a | scan tooling | function-length / dup-scan / ui-audit scanners |
+| `d9824c7f` | 1-2 | guards + specs | structural guards (fn budgets, dup ratchet, orphan, UI honesty, type parity, skip-count) + characterization + ticketed spec-encoding tests — committed before ANY implementation (test-first invariant) |
+| `173fd0db` | 3a | shadow fold | 7 engine-root file/dir shadows → domain dirs w/ barrels |
+| `e14d31e7` | 3b | root normalization | ~34 flat engine files → domain dirs; 225 files repointed; metaDrift UI helpers → lib/ |
+| `b6e62956` | 3c | traits fold | traits.ts compat barrel deleted; traitDefs 997L → tiered shards; traitTypes dedupe |
+| `ed7d98e2` | 3 | type shards | state.types 791L→barrel+6; shared.types 568L→14 shards; export-parity green |
+| `b6d1caa5` | 3 | data split | arenas.ts 1,559L → data/arenas/{registry,venues,lore}; injectable default-arena breaks venue↔registry cycle; snapshot/restore test helpers |
+| `969c3805` | 3 | lore split | loreData → narrative/lore/ shards; path-dependent tests repointed |
+| `c9fee7a8` | 3 | pipeline split | weekPipelineService 611L → context/caches/passes/profiling/stages/finalize; semantics pinned |
+| `064eed0f` | 3 | championship split | arenaChampionship 922L → core/queries/phases/*; owningStableOf moved to core (cycle break) |
+| `a7277e79` | 3 | chaos handlers | chaosHandlers 828L → 5 thematic shards via offseasonEvents barrel |
+| `21780e38` | 3 | social handlers | socialHandlers 513L → socialHandlers/ shards |
+| `2586fe42` | 3 | narrative types | narrative.types 503L → types/narrative/ domain shards |
+| `54ed3420` | 3 | constants/data shards | weather.ts, combat.ts, weapons.ts → config/penalties/items shards (mechanical; zero value changes — balance untouched) |
+| `39e15f4e` | 3 | advisor decomp | computeStableCouncilReport 431L → cards/directives/lookahead modules |
+| `52740c4c` | 3 | combat narrate | narrateEvents 307L → dispatch-table handlers (event order preserved) |
+| `e4debdd9` | 3 | advisor decomp | evaluateBoutOffers 276L → gates/filter/scoring/recommendation |
+| `7b69855f` | 3 | AI worker decomp | processAllRivalsBoutOffers 253L → group/slate/counter phases |
+| `8d457b90` | 3 | simulation decomp | runSimulationLoop 250L → loop-phase helpers |
+| `0c6b6ce0` | 3 | AI worker decomp | evaluateBoutOffer 248L → gate-chain helpers |
+| `c6fefe04` | 3 | AI worker decomp | convertBidsToOffers 220L → BidConversionCtx + per-bid phases |
+| `c01ec7fd` | 3 | matchmaking decomp | resolveRound 214L → resolveRoundBouts/seedNextRound |
+| `41cc6c14` | 3 | AI plan decomp | aiPlanForWarrior 199L → computePlanModifiers/applyStrategicLayer |
+| `810211f1` | 3 | pipeline decomp | processHallOfFame 195L → collectEligible/pickBest/recordAward (kills 3x dup bookkeeping) |
+| `16f79da4` | 3 | AI worker decomp | processRecruitment 192L → signGeneratedRecruit/scoreCandidates/signPoolRecruit |
+| `381f3e6e` | 3 | anim decomp | processArenaEvent 197L → side-parameterized movement (clampMove/toward/setFighter) |
+| `e5751ac0` | 3 | store decomp | createStore → hydrateDraft + runEngineJob (dedupes doAdvanceWeek/doAdvanceDay runners) |
+| `8690a7fc` | 3c | page decomp | ArenaDetail 420L fn → arenaDetail/{ChampionBlock,RecordTable,sections}; dup-guard rebaselined 84→130 (relocated handler boilerplate — Phase-4 target, see FINDINGS) |
+| `35e80150` | 3c | page decomp | Help 383L → help/sections (8 codex accordion items) |
+| `621a7a8d` | 3c | page decomp | Bookmarks 325L → bookmarks/groupBookmarks (pure grouping helper) |
+| `47da672d` | 3c | page decomp | StableDetail 301L → stableDetail/{StableSidebar,StableOverviewTab} |

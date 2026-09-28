@@ -5,6 +5,8 @@ import type { GameState, LedgerEntry, InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { type WarriorId } from '@/types/shared.types';
 import type { NewsletterItem } from '@/types/shared.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { hasInjuries } from '@/engine/injuries/utils';
 
@@ -87,4 +89,27 @@ export function getActiveWarriors(state: GameState, healthyOnly = false): Warrio
   return state.roster.filter(
     (w) => isActive(w) && (!healthyOnly || !hasInjuries(w))
   );
+}
+
+/** Pick a random active warrior, or undefined when none are eligible. */
+export function pickActiveWarrior(
+  state: GameState,
+  rng: IRNGService,
+  healthyOnly = false
+): Warrior | undefined {
+  const pool = getActiveWarriors(state, healthyOnly);
+  if (pool.length === 0) return undefined;
+  return rng.pick(pool) ?? undefined;
+}
+
+/** Append a newsletter entry for an offseason event. */
+export function announceOffseasonEvent(
+  ctx: OffseasonEventContext,
+  rng: IRNGService,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  data: Record<string, string | number>,
+  category?: NewsletterItem['category']
+): void {
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, data, category);
 }

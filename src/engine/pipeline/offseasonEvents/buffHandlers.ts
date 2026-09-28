@@ -3,12 +3,12 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
-  getActiveWarriors,
+  pickActiveWarrior,
+  announceOffseasonEvent,
 } from './types';
 
 /**
@@ -21,18 +21,15 @@ export function handleFameBoost(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (!chosen) return;
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: (chosen.fame || 0) + 25,
-    });
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-      name: chosen.name,
-      fame: 25,
-    });
-  }
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
+  ctx.rosterUpdates.set(chosen.id, {
+    fame: (chosen.fame || 0) + 25,
+  });
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    name: chosen.name,
+    fame: 25,
+  });
 }
 
 /**
@@ -45,32 +42,29 @@ export function handleEpiphany(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (!chosen) return;
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
 
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: (chosen.fame || 0) + 10,
-      xp: (chosen.xp || 0) + 15,
-    });
+  ctx.rosterUpdates.set(chosen.id, {
+    fame: (chosen.fame || 0) + 10,
+    xp: (chosen.xp || 0) + 15,
+  });
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Attribute',
-        targetKey: 'ST',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden reserve of strength during offseason meditation.',
-        origin: 'Epiphany',
-        discoveredWeek: nextWeek,
-      })
-    );
+  ctx.insightTokens.push(
+    makeInsightToken(rng, {
+      type: 'Attribute',
+      targetKey: 'ST',
+      warriorId: chosen.id,
+      warriorName: chosen.name,
+      detail: 'Discovered a hidden reserve of strength during offseason meditation.',
+      origin: 'Epiphany',
+      discoveredWeek: nextWeek,
+    })
+  );
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-      name: chosen.name,
-    });
-  }
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    name: chosen.name,
+  });
 }
 
 /**
@@ -83,19 +77,16 @@ export function handleBardsSong(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (!chosen) return;
-    const fameGained = 15 + Math.floor(rng.next() * 20);
-    ctx.rosterUpdates.set(chosen.id, {
-      fame: (chosen.fame || 0) + fameGained,
-    });
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-      name: chosen.name,
-      fame: fameGained,
-    });
-  }
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
+  const fameGained = 15 + Math.floor(rng.next() * 20);
+  ctx.rosterUpdates.set(chosen.id, {
+    fame: (chosen.fame || 0) + fameGained,
+  });
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    name: chosen.name,
+    fame: fameGained,
+  });
 }
 
 /**
@@ -108,22 +99,19 @@ export function handleMysticVision(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (!chosen) return;
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
 
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + 15,
-      fame: (chosen.fame || 0) + 10,
-    });
+  ctx.rosterUpdates.set(chosen.id, {
+    xp: (chosen.xp || 0) + 15,
+    fame: (chosen.fame || 0) + 10,
+  });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-      name: chosen.name,
-      xp: 15,
-      fame: 10,
-    });
-  }
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    name: chosen.name,
+    xp: 15,
+    fame: 10,
+  });
 }
 
 /**
@@ -136,22 +124,19 @@ export function handleStrangeDream(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (!chosen) return;
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
 
-    const xpGained = 5 + Math.floor(rng.next() * 11);
+  const xpGained = 5 + Math.floor(rng.next() * 11);
 
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + xpGained,
-    });
+  ctx.rosterUpdates.set(chosen.id, {
+    xp: (chosen.xp || 0) + xpGained,
+  });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-      name: chosen.name,
-      xp: xpGained,
-    });
-  }
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    name: chosen.name,
+    xp: xpGained,
+  });
 }
 
 /**
@@ -164,24 +149,21 @@ export function handleMeteorShower(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 15 + Math.floor(rng.next() * 11);
-      const fameGained = 10 + Math.floor(rng.next() * 6);
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 15 + Math.floor(rng.next() * 11);
+    const fameGained = 10 + Math.floor(rng.next() * 6);
 
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+      fame: (chosen.fame || 0) + fameGained,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-        fame: fameGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+      fame: fameGained,
+    });
   }
 }
 
@@ -195,24 +177,21 @@ export function handleGladiatorOlympics(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 15 + Math.floor(rng.next() * 11);
-      const fameGained = 10 + Math.floor(rng.next() * 11);
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 15 + Math.floor(rng.next() * 11);
+    const fameGained = 10 + Math.floor(rng.next() * 11);
 
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+      fame: (chosen.fame || 0) + fameGained,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-        fame: fameGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+      fame: fameGained,
+    });
   }
 }
 
@@ -226,19 +205,16 @@ export function handleLoyalStrayDog(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 10;
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-      });
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 10;
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+    });
   }
 }
 
@@ -252,23 +228,20 @@ export function handleWanderingMystic(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const currentTraits = chosen.traits || [];
-      const newTraits = currentTraits.includes('chaos_touched')
-        ? currentTraits
-        : [...currentTraits, 'chaos_touched'];
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const currentTraits = chosen.traits || [];
+    const newTraits = currentTraits.includes('chaos_touched')
+      ? currentTraits
+      : [...currentTraits, 'chaos_touched'];
 
-      ctx.rosterUpdates.set(chosen.id, {
-        traits: newTraits,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      traits: newTraits,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+    });
   }
 }
 
@@ -282,27 +255,24 @@ export function handleChaosSpores(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 20 + Math.floor(rng.next() * 11);
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 20 + Math.floor(rng.next() * 11);
 
-      const currentTraits = chosen.traits || [];
-      const newTraits = currentTraits.includes('spore_kissed')
-        ? currentTraits
-        : [...currentTraits, 'spore_kissed'];
+    const currentTraits = chosen.traits || [];
+    const newTraits = currentTraits.includes('spore_kissed')
+      ? currentTraits
+      : [...currentTraits, 'spore_kissed'];
 
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-        traits: newTraits,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+      traits: newTraits,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+    });
   }
 }
 
@@ -316,31 +286,28 @@ export function handleChaosWeaversGift(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 30;
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-      });
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 30;
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+    });
 
-      ctx.insightTokens.push(
-        makeInsightToken(rng, {
-          type: 'Tactic',
-          warriorId: chosen.id,
-          warriorName: chosen.name,
-          detail: 'A chaotic revelation sparked a new combat tactic.',
-          origin: 'Chaos Weaver',
-          discoveredWeek: nextWeek,
-        })
-      );
+    ctx.insightTokens.push(
+      makeInsightToken(rng, {
+        type: 'Tactic',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'A chaotic revelation sparked a new combat tactic.',
+        origin: 'Chaos Weaver',
+        discoveredWeek: nextWeek,
+      })
+    );
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+    });
   }
 }
 
@@ -354,24 +321,21 @@ export function handleShadowTraining(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 20 + Math.floor(rng.next() * 11);
-      const fameLost = 5 + Math.floor(rng.next() * 6);
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 20 + Math.floor(rng.next() * 11);
+    const fameLost = 5 + Math.floor(rng.next() * 6);
 
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: Math.max(0, (chosen.fame || 0) - fameLost),
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+      fame: Math.max(0, (chosen.fame || 0) - fameLost),
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-        fame: fameLost,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+      fame: fameLost,
+    });
   }
 }
 
@@ -385,21 +349,18 @@ export function handleOffseasonTrainingCamp(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 40 + Math.floor(rng.next() * 21);
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 40 + Math.floor(rng.next() * 21);
 
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+    });
   }
 }
 
@@ -411,20 +372,17 @@ export function handleWanderingMerchantStrangeBrew(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (!chosen) return;
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
 
-    ctx.rosterUpdates.set(chosen.id, {
-      xp: (chosen.xp || 0) + 20,
-      fame: (chosen.fame || 0) + 10,
-    });
+  ctx.rosterUpdates.set(chosen.id, {
+    xp: (chosen.xp || 0) + 20,
+    fame: (chosen.fame || 0) + 10,
+  });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-      name: chosen.name,
-      xp: 20,
-      fame: 10,
-    });
-  }
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    name: chosen.name,
+    xp: 20,
+    fame: 10,
+  });
 }

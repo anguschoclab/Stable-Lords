@@ -4,11 +4,11 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
   getActiveWarriors,
+  announceOffseasonEvent,
 } from './types';
 
 /**
@@ -26,7 +26,7 @@ export function handleWinterChill(
   ctx.ledgerEntries.push(
     makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other')
   );
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: cost });
+  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold: cost });
 }
 
 /**
@@ -42,7 +42,7 @@ export function handleMerchantBlessing(
   const gold = 200 + Math.floor(rng.next() * 200);
   ctx.treasuryDelta += gold;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Offseason Sponsorship', gold, 'other'));
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
+  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold });
 }
 
 /**
@@ -61,7 +61,7 @@ export function handleBlackMarketRaid(
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Black Market Fines', -goldLost, 'other'));
 
   const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
     name: chosen ? chosen.name : 'Someone',
     gold: goldLost,
   });
@@ -84,7 +84,7 @@ export function handleMysteriousPatron(
     makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other')
   );
 
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+  announceOffseasonEvent(ctx, rng, nextWeek, e, {
     gold: goldGained,
   });
 }
@@ -102,5 +102,5 @@ export function handleBountifulHarvest(
   const gold = 200;
   ctx.treasuryDelta += gold;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bountiful Harvest', gold, 'other'));
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
+  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold });
 }

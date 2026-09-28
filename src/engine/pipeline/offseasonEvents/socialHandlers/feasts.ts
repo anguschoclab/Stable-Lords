@@ -1,11 +1,12 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
   getActiveWarriors,
+  pickActiveWarrior,
+  announceOffseasonEvent,
 } from '../types';
 
 /**
@@ -31,7 +32,7 @@ export function handleGrandFeast(
     });
   }
 
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldCost });
+  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold: goldCost });
 }
 
 /**
@@ -65,14 +66,14 @@ export function handleMidnightFeast(
       fame: (chosen.fame || 0) + fameGained,
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
       name: chosen.name,
       xp: xpGained,
       fame: fameGained,
       gold: cost,
     });
   } else {
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
       name: 'Someone',
       xp: 0,
       fame: 0,
@@ -96,34 +97,31 @@ export function handleStreetPerformance(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const fameGained = 15;
-      const goldGained = 50 + Math.floor(rng.next() * 50);
-      ctx.treasuryDelta += goldGained;
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const fameGained = 15;
+    const goldGained = 50 + Math.floor(rng.next() * 50);
+    ctx.treasuryDelta += goldGained;
 
-      ctx.ledgerEntries.push(
-        makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other')
-      );
+    ctx.ledgerEntries.push(
+      makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other')
+    );
 
-      const currentFlair = chosen.flair || [];
-      const newFlair = currentFlair.includes('Local Hero')
-        ? currentFlair
-        : [...currentFlair, 'Local Hero'];
+    const currentFlair = chosen.flair || [];
+    const newFlair = currentFlair.includes('Local Hero')
+      ? currentFlair
+      : [...currentFlair, 'Local Hero'];
 
-      ctx.rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + fameGained,
-        flair: newFlair,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + fameGained,
+      flair: newFlair,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        fame: fameGained,
-        gold: goldGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      fame: fameGained,
+      gold: goldGained,
+    });
   }
 }
 
@@ -142,30 +140,27 @@ export function handleTravelingCircus(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  const activeWarriors = getActiveWarriors(state);
-  if (activeWarriors.length > 0) {
-    const chosen = rng.pick(activeWarriors);
-    if (chosen) {
-      const xpGained = 20 + Math.floor(rng.next() * 21);
-      const fameGained = 15 + Math.floor(rng.next() * 11);
-      const cost = 25;
+  const chosen = pickActiveWarrior(state, rng);
+  if (chosen) {
+    const xpGained = 20 + Math.floor(rng.next() * 21);
+    const fameGained = 15 + Math.floor(rng.next() * 11);
+    const cost = 25;
 
-      ctx.treasuryDelta -= cost;
-      ctx.ledgerEntries.push(
-        makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
-      );
+    ctx.treasuryDelta -= cost;
+    ctx.ledgerEntries.push(
+      makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
+    );
 
-      ctx.rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-      });
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+      fame: (chosen.fame || 0) + fameGained,
+    });
 
-      pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
-        name: chosen.name,
-        xp: xpGained,
-        fame: fameGained,
-      });
-    }
+    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+      name: chosen.name,
+      xp: xpGained,
+      fame: fameGained,
+    });
   }
 }
 

@@ -146,6 +146,206 @@ export function venueCounterTarget(
  * the verdict is written into `explain.reason` so the offer processor can
  * persist it onto the offer for UI transparency.
  */
+/** Hard gates that cannot be bought off by desperation: injury + weather. */
+function hardGates(warrior: Warrior, weather: WeatherType): BoutEvaluation | null {
+  // Injury Gate — blocking injuries decline at any treasury
+  const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
+    (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
+  );
+  if (hasBlockingInjury) {
+    return 'Declined';
+  }
+
+  // Weather Skepticism — consolidated gate (G16)
+  if (offerWeatherDecline(warrior, weather)) {
+    return 'Declined';
+  }
+  return null;
+}
+
+/**
+ * Title-bout resolution — the Arena Commission doesn't negotiate: a crown
+ * shot outweighs any purse, so counter/fame-floor logic is skipped. Runs
+ * BEFORE the RECOVERY refusal so reign obligations are decided by title
+ * economics (strip risk, defense health floors) rather than ordinary bout
+ * risk aversion — the unified gate fixes the old double-gate where a
+ * RECOVERY champion could quietly refuse defenses into a strip.
+ */
+function resolveTitleBout(
+  offer: BoutOffer,
+  rival: RivalStableData,
+  warrior: Warrior,
+  opponent: Warrior | undefined,
+  state: GameState | undefined,
+  observedDanger: boolean,
+  explain?: { reason?: string }
+): BoutEvaluation {
+  const arenaId = offer.titleArenaId as string;
+  const personality = rival.owner.personality;
+  const title = state?.arenaChampions?.[arenaId];
+  const isChampion = title?.champion?.warriorId === warrior.id;
+
+  if (isChampion && title) {
+      // Declining counts toward stripping — when the next refusal would cost
+      // the crown, the champion fights hurt rather than abdicate by accident.
+      const wouldStrip = title.refusals + 1 >= ARENA_TITLE.REFUSALS_TO_STRIP;
+      if (!wouldStrip && personality !== 'Aggressive') {
+        const hp = warrior.derivedStats?.hp ?? 100;
+        const fatigue = warrior.fatigue ?? 0;
+        if (hp < 45 || fatigue >= 85) {
+          if (explain) explain.reason = 'title-defense-health';
+          return 'Declined';
+        }
+        if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) {
+          if (explain) explain.reason = 'title-defense-threat';
+          return 'Declined';
+        }
+      }
+      if (explain) explain.reason = 'crown-defense';
+      return 'Accepted';
+    }
+
+    // Challenger side — a declined shot costs only the challenger cooldown,
+    // so a known killer champion is a legitimate pass for calculating stables.
+    if (
+      opponent &&
+      personality !== 'Aggressive' &&
+      (opponent.career?.kills ?? 0) >= 3 &&
+      (warrior.career?.kills ?? 0) === 0
+    ) {
+      if (explain) explain.reason = 'killer-champion';
+      return 'Declined';
+    }
+    if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+      const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+      if (edge <= (observedDanger ? -1 : -2)) {
+        if (explain) explain.reason = 'title-shot-mismatch';
+        return 'Declined';
+      }
+    }
+    if (explain) explain.reason = 'title-shot';
+    return 'Accepted';
+}
+
+/** RECOVERY risk refusal + sadistic-promoter death-show check. */
+function riskRefusal(
+  intent: string,
+  warrior: Warrior,
+  opponent: Warrior | undefined,
+  rival: RivalStableData,
+  promoter: { personality?: string } | undefined
+): BoutEvaluation | null {
+  // RECOVERY risk refusal — killers and severe mismatches are never accepted,
+  // even when the treasury is empty.
+  if (intent === 'RECOVERY' && opponent) {
+    if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
+      return 'Declined';
+    }
+  }
+
+  // Promoter awareness — rivals read the promoter's reputation like the
+  // advisor does. A Sadistic promoter booking a killer is a death-show:
+  // cautious personalities pass regardless of purse. Aggressive and Showman
+  // stables don't flinch — blood sells.
+  const personalityPre = rival.owner.personality;
+  if (
+    promoter?.personality === 'Sadistic' &&
+    opponent &&
+    (opponent.career?.kills ?? 0) > 0 &&
+    (warrior.career?.kills ?? 0) === 0 &&
+    personalityPre !== 'Aggressive' &&
+    personalityPre !== 'Showman'
+  ) {
+    return 'Declined';
+  }
+  return null;
+}
+
+/** Health/fatigue guards scaled by bout desperation. */
+function survivabilityGates(
+  warrior: Warrior,
+  rival: RivalStableData,
+  isDesperateForBout: boolean,
+  currentHP: number
+): BoutEvaluation | null {
+  // Health Guard
+  const hpThreshold = isDesperateForBout ? 50 : 70;
+  if (currentHP < hpThreshold && rival.owner.personality !== 'Aggressive') {
+    return 'Declined';
+  }
+
+  // Fatigue Gate
+  const fatigueThreshold = isDesperateForBout ? 90 : 70;
+  const fatigue = warrior.fatigue ?? 0;
+  if (fatigue > fatigueThreshold && rival.owner.personality !== 'Aggressive') {
+    return 'Declined';
+  }
+  return null;
+}
+
+/**
+ * Matchup skepticism — calculating stables decline a strongly unfavorable
+ * style matchup when they can afford to (same forecast the player sees).
+ * Witnessed high-OE tells tighten the tolerance one notch.
+ */
+function matchupSkepticism(
+  warrior: Warrior,
+  opponent: Warrior | undefined,
+  personality: RivalStableData['owner']['personality'],
+  playerThreat: PlayerThreatLevel,
+  observedDanger: boolean
+): BoutEvaluation | null {
+  if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+    const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+    // Methodical camps refuse to feed a dominant player on a coin flip —
+    // anything short of a clear edge is a pass.
+    const skepticismFloor =
+      personality === 'Methodical' && playerThreat === 'Dominant'
+        ? 0
+        : observedDanger
+          ? -1
+          : -2;
+    if (edge <= skepticismFloor) {
+      return 'Declined';
+    }
+  }
+  return null;
+}
+
+/**
+ * Purse counter — famous warriors hold out for a purse worthy of their name.
+ * One round only; an offer already tagged COUNTERED_* is final.
+ */
+function purseCounter(
+  offer: BoutOffer,
+  warrior: Warrior,
+  rival: RivalStableData,
+  promoter: { personality?: string } | undefined,
+  playerThreat: PlayerThreatLevel,
+  alreadyCountered: boolean
+): BoutEvaluation | null {
+  if (
+    !alreadyCountered &&
+    rival.owner.personality !== 'Aggressive' &&
+    warrior.campaignFocus !== 'PURSE_HUNTER'
+  ) {
+    // Greedy promoters lowball — their fame floor sits closer to asking price.
+    // A dominant player's stable can afford to pay up — squeeze harder.
+    const squeeze =
+      promoter?.personality === 'Greedy' || playerThreat === 'Dominant';
+    const purseFloor = (warrior.fame ?? 0) - (squeeze ? 20 : 50);
+    if (purseFloor > 0 && offer.purse < purseFloor) {
+      return 'Countered';
+    }
+  }
+  return null;
+}
+
+/**
+ * Evaluates a bout offer for a rival stable: hard gates, title-bout
+ * resolution, risk refusals, desperation acceptance, survivability gates,
+ * matchup skepticism, venue/purse counters, and personality accepts.
+ */
 export function evaluateBoutOffer(
   offer: BoutOffer,
   rival: RivalStableData,
@@ -196,84 +396,16 @@ export function evaluateBoutOffer(
     return 'Declined';
   }
 
-  // ── Title bouts ──
-  // The Arena Commission doesn't negotiate: a crown shot outweighs any purse,
-  // so the counter/fame-floor logic below is skipped entirely. This branch
-  // runs BEFORE the RECOVERY refusal so reign obligations are decided by
-  // title economics (strip risk, defense health floors) rather than ordinary
-  // bout risk aversion — the unified gate fixes the old double-gate where a
-  // RECOVERY champion could quietly refuse defenses into a strip.
+  const gate = hardGates(warrior, weather);
+  if (gate) return gate;
+
   if (offer.titleArenaId) {
-    const personality = rival.owner.personality;
-    const title = state?.arenaChampions?.[offer.titleArenaId];
-    const isChampion = title?.champion?.warriorId === warrior.id;
-
-    if (isChampion && title) {
-      // Declining counts toward stripping — when the next refusal would cost
-      // the crown, the champion fights hurt rather than abdicate by accident.
-      const wouldStrip = title.refusals + 1 >= ARENA_TITLE.REFUSALS_TO_STRIP;
-      if (!wouldStrip && personality !== 'Aggressive') {
-        const hp = warrior.derivedStats?.hp ?? 100;
-        const fatigue = warrior.fatigue ?? 0;
-        if (hp < 45 || fatigue >= 85) {
-          if (explain) explain.reason = 'title-defense-health';
-          return 'Declined';
-        }
-        if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) {
-          if (explain) explain.reason = 'title-defense-threat';
-          return 'Declined';
-        }
-      }
-      if (explain) explain.reason = 'crown-defense';
-      return 'Accepted';
-    }
-
-    // Challenger side — a declined shot costs only the challenger cooldown,
-    // so a known killer champion is a legitimate pass for calculating stables.
-    if (
-      opponent &&
-      personality !== 'Aggressive' &&
-      (opponent.career?.kills ?? 0) >= 3 &&
-      (warrior.career?.kills ?? 0) === 0
-    ) {
-      if (explain) explain.reason = 'killer-champion';
-      return 'Declined';
-    }
-    if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
-      const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-      if (edge <= (observedDanger ? -1 : -2)) {
-        if (explain) explain.reason = 'title-shot-mismatch';
-        return 'Declined';
-      }
-    }
-    if (explain) explain.reason = 'title-shot';
-    return 'Accepted';
+    return resolveTitleBout(offer, rival, warrior, opponent, state, observedDanger, explain);
   }
 
-  // RECOVERY risk refusal — killers and severe mismatches are never accepted,
-  // even when the treasury is empty.
-  if (intent === 'RECOVERY' && opponent) {
-    if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
-      return 'Declined';
-    }
-  }
-
-  // Promoter awareness — rivals read the promoter's reputation like the
-  // advisor does. A Sadistic promoter booking a killer is a death-show:
-  // cautious personalities pass regardless of purse. Aggressive and Showman
-  // stables don't flinch — blood sells.
   const promoter = offer.promoterId ? state?.promoters?.[offer.promoterId] : undefined;
-  const personalityPre = rival.owner.personality;
-  if (
-    promoter?.personality === 'Sadistic' &&
-    opponent &&
-    (opponent.career?.kills ?? 0) > 0 &&
-    (warrior.career?.kills ?? 0) === 0 &&
-    personalityPre !== 'Aggressive' &&
-    personalityPre !== 'Showman'
-  ) {
-    return 'Declined';
-  }
+  const refused = riskRefusal(intent, warrior, opponent, rival, promoter);
+  if (refused) return refused;
 
   // ── Desperation Gate: critically low treasury accepts anything survivable ──
   if (rival.treasury < 500) {
@@ -290,19 +422,9 @@ export function evaluateBoutOffer(
   const weeksSinceBout = lastBoutWeek != null ? currentWeek - lastBoutWeek : 10;
   const isDesperateForBout = weeksSinceBout > 4 || isTournamentHungry;
 
-  // Health Guard
-  const hpThreshold = isDesperateForBout ? 50 : 70;
   const currentHP = warrior.derivedStats?.hp ?? 100;
-  if (currentHP < hpThreshold && rival.owner.personality !== 'Aggressive') {
-    return 'Declined';
-  }
-
-  // Fatigue Gate
-  const fatigueThreshold = isDesperateForBout ? 90 : 70;
-  const fatigue = warrior.fatigue ?? 0;
-  if (fatigue > fatigueThreshold && rival.owner.personality !== 'Aggressive') {
-    return 'Declined';
-  }
+  const survivable = survivabilityGates(warrior, rival, isDesperateForBout, currentHP);
+  if (survivable) return survivable;
 
   // Personality Logic
   const personality = rival.owner.personality;
@@ -313,24 +435,8 @@ export function evaluateBoutOffer(
     return 'Accepted';
   }
 
-  // Matchup Skepticism — calculating stables decline a strongly unfavorable
-  // style matchup when they can afford to (same forecast the player sees).
-  // Witnessed high-OE tells tighten the tolerance one notch: a mildly bad
-  // draw against a known brawling camp is a pass.
-  if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
-    const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-    // Methodical camps refuse to feed a dominant player on a coin flip —
-    // anything short of a clear edge is a pass.
-    const skepticismFloor =
-      personality === 'Methodical' && playerThreat === 'Dominant'
-        ? 0
-        : observedDanger
-          ? -1
-          : -2;
-    if (edge <= skepticismFloor) {
-      return 'Declined';
-    }
-  }
+  const skeptical = matchupSkepticism(warrior, opponent, personality, playerThreat, observedDanger);
+  if (skeptical) return skeptical;
 
   // Venue counter — the arena itself is the sticking point. A CROWN_BID
   // contender drags the bout onto their ladder arena; any warrior with a
@@ -365,24 +471,8 @@ export function evaluateBoutOffer(
   }
 
   // Counter logic: famous warriors hold out for a purse worthy of their name.
-  // The fame floor precedes the personality accepts — a Pragmatic does not
-  // take 300g for a name worth 2000 just because it clears the generic bar.
-  // One round only — an offer already tagged COUNTERED_PURSE is final.
-  const alreadyCountered = alreadyVenueOrPurseCountered;
-  if (
-    !alreadyCountered &&
-    personality !== 'Aggressive' &&
-    warrior.campaignFocus !== 'PURSE_HUNTER'
-  ) {
-    // Greedy promoters lowball — their fame floor sits closer to asking price.
-    // A dominant player's stable can afford to pay up — squeeze harder.
-    const squeeze =
-      promoter?.personality === 'Greedy' || playerThreat === 'Dominant';
-    const purseFloor = (warrior.fame ?? 0) - (squeeze ? 20 : 50);
-    if (purseFloor > 0 && offer.purse < purseFloor) {
-      return 'Countered';
-    }
-  }
+  const counted = purseCounter(offer, warrior, rival, promoter, playerThreat, alreadyVenueOrPurseCountered);
+  if (counted) return counted;
 
   if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
   if (personality === 'Methodical' && currentHP < 85) {

@@ -23,10 +23,11 @@ describe('advanceWeekPerformance', () => {
       times.push(performance.now() - start);
     }
 
-    // The last week should not be more than 30x slower than the first
-    // (allowing for variance in parallel test environment)
-    const firstTime = Math.max(times[0]!, 5);
-    const ratio = times[times.length - 1]! / firstTime;
+    // Compare halves by median — single-sample ratios flake under parallel
+    // load when a GC pause lands on one week. A real degradation trend raises
+    // the late-half median, not just one sample.
+    const median = (a: number[]) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)]!;
+    const ratio = median(times.slice(5)) / Math.max(median(times.slice(0, 5)), 5);
     expect(ratio).toBeLessThan(30);
   });
 

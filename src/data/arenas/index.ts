@@ -62,12 +62,11 @@ import {
 } from './venues/late';
 
 // ─── Auto-register ────────────────────────────────────────────────────────────
+// Registration order is observable: getAllArenas() iterates in insert order and
+// seeded sims map RNG draws onto that order. Keep it identical to the pre-split
+// arenas.ts array order — do not regroup by venue shard.
 [
   STANDARD_ARENA,
-  MIST_SHROUDED_RUINS,
-  THE_GALLOWS_TREE,
-  BRASS_RING,
-  NARROW_BRIDGE,
   MUDPIT_ARENA,
   BLOODSANDS_ARENA,
   UNDERPIT_ARENA,
@@ -87,15 +86,19 @@ import {
   GLACIAL_RIFT,
   SKY_PLATFORM,
   MISTY_VALLEY,
+  BRASS_RING,
+  NARROW_BRIDGE,
   THE_MEAT_GRINDER,
-  JUNGLE_RUINS,
   THE_ABYSSAL_PIT,
-  THE_SUNKEN_VAULT,
-  IRON_FORGE,
+  JUNGLE_RUINS,
   THE_BRAMBLE_RING,
   THUNDER_PEAK,
   SUN_BAKED_PLATEAU,
   ANCIENT_AQUEDUCT,
+  THE_SUNKEN_VAULT,
+  IRON_FORGE,
+  MIST_SHROUDED_RUINS,
+  THE_GALLOWS_TREE,
   FORGOTTEN_CRYPT,
   RUSTED_GORGE,
   THE_ASYLUM,

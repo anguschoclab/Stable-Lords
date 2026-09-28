@@ -7,7 +7,7 @@
  *  - old champions still retire eventually — deferral, not immunity
  */
 // @vitest-environment node
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   SeasonalRetirementService,
   retireChanceFor,

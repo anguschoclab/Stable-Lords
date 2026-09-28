@@ -89,3 +89,34 @@ Full table lives in `MEGAPLAN_FINDINGS.md` §0. Headline confirmed findings: 7 e
 - **369 zero-prod-consumer exports** — triage: dormant AI systems (intentEngine, poachBid, intelDossier, agentPlanForWarrior, assessCrownOpportunity, preferredTrainerFocus, budgetWorker, metaDrift::createDefaultMeta, killAnalytics, seasonalRetirementService) → Phase-5 wire-or-remove. Type-only exports + ui/ library surface → intentional API, retained.
 - **test↔test 780 pairs** — fixture/setup boilerplate; worst cluster (270L tournament) extracted; remainder dispositioned as acceptable per-file isolation.
 - **`src/engine/validate/stateInvariants.ts`** — test-only reachable; Phase-5 wiring candidate (post-load validation or removal).
+
+## Phase-5 dispositions
+
+| Commit | Phase | Batch | Disposition |
+|---|---|---|---|
+| `8880837a` | 5 | G1–G3 wiring | Style Archives (`/world/style-archives` + styleCompendium data module + World-hub nav), FavoritesCharting (roster-wide, wired into StableHall), Tournament Prep (`/world/tournament-prep` + nav + Tournaments header action). G1/G2/G3 specs unskipped and green. |
+
+### Dormant-export triage (Phase-5 wire-or-remove audit)
+
+Triage of the AI/analytics orphan-scan flags resolved **all** headline candidates as
+already-wired or intentional API — no production rewiring required:
+
+| Flagged export | Verdict | Evidence |
+|---|---|---|
+| `pickWeeklyIntent`, `intentStillApplies` | **Wired** (internal) | called inside `updateAIStrategy` at `intentEngine.ts:382/394`; the pass entry-point `RivalStrategyPass` imports `updateAIStrategy` |
+| `deriveBoutIntent` | **Wired** (internal) | called at `intentStates.ts:106` inside the module's live export |
+| `preferredTrainerFocus`, `checkBudget` | **Wired** (internal) | called inside `processStaff` (`staffWorker.ts:84/111`) → `stableManager.processAIStable` → `rivalStableShard` |
+| `projectedWeeklyUpkeep` | **Wired** (internal) | called by `checkBudget` (`budgetWorker.ts:63`) |
+| `assessCrownOpportunity` | **Wired** (internal) | called by `processCrownPosture` (`crownWorker.ts:227`) |
+| `agentPlanForWarrior` | **Wired** (internal) | called by `persistNPCPlans` (`agentPlan.ts:125`) → `RivalStrategyPass` |
+| `computePoachBid`, `isPoachingEnabled`, `seasonIndexFor` | **Wired** (internal helpers + feature flag) | `processPoachMarket` (same module) imported by `RivalStrategyPass:18` |
+| `decayDossiers` | **Wired** (internal) | called at `intelDossier.ts:133` inside the live dossier update path |
+| `computeKillAnalytics` | **Wired** | `KillAnalyticsPanel` → `GraveyardTabs` → Hall of Fame; dead flag was the `KillAnalytics` type name only |
+| `retireChanceFor`, `SeasonalRetirementService` | **Wired** | `worldManagement.processSeasonalChurn` → `SystemPass` seasonal rollover |
+| `createDefaultMeta` | **Wired** (internal) | called by `computeMetaDrift` (`metaDrift.ts:32`) → `weekPipeline/stages.ts` |
+| `stateInvariants.ts` | **Intentional** (test/soak-only) | module doc-comment declares itself a soak/CI invariant checker — kept reachable via `stateInvariants.slow.test.ts`; allowlisted in orphan guard |
+| Remaining dead-export tail (~300) | **Intentional** | dominated by stub files, ambient decls, UI library surface (`dialog.tsx`/`select.tsx` primitives), per-field impact writers, and type-only exports — no gameplay system left dormant |
+
+Net Phase-5 outcome: the three spec-encoded surfaces were the only real
+wiring gaps; the AI system's apparent dead code was internal-helper exports
+inside live modules, not orphaned features.

@@ -18,7 +18,7 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  * duplicate pairs fail loudly. Remove a pair from KNOWN_SRC_PAIRS as its
  * cluster is deduped (the list is the Phase-4 elimination list).
  */
-const SRC_TO_SRC_BASELINE = 134;
+const SRC_TO_SRC_BASELINE = 131;
 
 const KNOWN_SRC_PAIRS = new Set([
   'src/components/EntityLink.tsx|src/components/warrior/WarriorFightHistory.tsx',

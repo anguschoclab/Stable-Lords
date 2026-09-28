@@ -389,6 +389,7 @@ async function snapshotState(page: Page): Promise<StateSnap> {
           warriorIdA: b.warriorIdA,
           warriorIdD: b.warriorIdD,
           winner: b.winner,
+          isBronzeMatch: b.isBronzeMatch,
         })),
       })),
       coverage: {
@@ -454,9 +455,20 @@ function verifyPrizePayout(
   tourney: CompletedTourney
 ) {
   const bracket = tourney.bracket ?? [];
-  const maxRound = Math.max(...bracket.map((b) => b.round));
-  const finals = bracket.find((b) => b.round === maxRound && b.matchIndex === 0);
-  const bronzeMatch = bracket.find((b) => b.round === maxRound && b.matchIndex === 1);
+  // Mirror awardTournamentPrizes' podium derivation exactly: the championship
+  // bout is the latest non-bronze bout (round desc, matchIndex asc) and the
+  // playoff is the isBronzeMatch-flagged bout (round-6/matchIndex-1 fallback
+  // covers legacy serialized brackets). Deriving by (maxRound, 1) instead
+  // mispredicts third place whenever the bracket geometry is irregular —
+  // e.g. an odd semifinal count pushes a pre-resolved bye into (6, 1), which
+  // is not flagged isBronzeMatch yet still gets awarded by the engine's
+  // positional fallback.
+  const finals = [...bracket]
+    .filter((b) => !b.isBronzeMatch)
+    .sort((x, y) => y.round - x.round || x.matchIndex - y.matchIndex)[0];
+  const bronzeMatch =
+    bracket.find((b) => b.isBronzeMatch) ??
+    bracket.find((b) => b.round === 6 && b.matchIndex === 1);
   expect(finals?.winner, 'finals bout should have a winner').toBeTruthy();
 
   const winnerOf = (b?: { winner?: 'A' | 'D' | null; warriorIdA: string; warriorIdD: string }) =>

@@ -14,6 +14,53 @@ import {
 import { getAllArenas } from '@/data/arenas';
 import { toast } from 'sonner';
 
+/** Roster-mutation handlers bound to the viewed warrior. */
+function useWarriorMutations(
+  warrior: Warrior | undefined,
+  setState: ReturnType<typeof useGameStore.getState>['setState'],
+  retireWarrior: ReturnType<typeof useGameStore.getState>['retireWarrior'],
+  navigate: ReturnType<typeof useNavigate>
+) {
+  const updateRosterWarrior = useCallback(
+    (id: string, mutate: (w: Warrior) => void) => {
+      setState((draft) => {
+        const target = draft.roster.find((w: Warrior) => w.id === id);
+        if (target) mutate(target);
+      });
+    },
+    [setState]
+  );
+
+  const handlePlanChange = useCallback(
+    (newPlan: FightPlan) => {
+      if (!warrior) return;
+      updateRosterWarrior(warrior.id, (w) => {
+        w.plan = newPlan;
+      });
+    },
+    [warrior, updateRosterWarrior]
+  );
+
+  const handleRetire = useCallback(() => {
+    if (!warrior) return;
+    retireWarrior(warrior.id);
+    toast.success(`${warrior.name} has been granted the rudis — free at last.`);
+    navigate({ to: '/' });
+  }, [warrior, retireWarrior, navigate]);
+
+  const handleEquipmentChange = useCallback(
+    (newLoadout: EquipmentLoadout) => {
+      if (!warrior) return;
+      updateRosterWarrior(warrior.id, (w) => {
+        w.equipment = newLoadout;
+      });
+    },
+    [warrior, updateRosterWarrior]
+  );
+
+  return { handlePlanChange, handleRetire, handleEquipmentChange };
+}
+
 /**
  *
  */
@@ -76,41 +123,11 @@ export function useWarriorDetail() {
     };
   }, [id, arenaChampions]);
 
-  const updateRosterWarrior = useCallback(
-    (id: string, mutate: (w: Warrior) => void) => {
-      setState((draft) => {
-        const target = draft.roster.find((w: Warrior) => w.id === id);
-        if (target) mutate(target);
-      });
-    },
-    [setState]
-  );
-
-  const handlePlanChange = useCallback(
-    (newPlan: FightPlan) => {
-      if (!warrior) return;
-      updateRosterWarrior(warrior.id, (w) => {
-        w.plan = newPlan;
-      });
-    },
-    [warrior, updateRosterWarrior]
-  );
-
-  const handleRetire = useCallback(() => {
-    if (!warrior) return;
-    retireWarrior(warrior.id);
-    toast.success(`${warrior.name} has been granted the rudis — free at last.`);
-    navigate({ to: '/' });
-  }, [warrior, retireWarrior, navigate]);
-
-  const handleEquipmentChange = useCallback(
-    (newLoadout: EquipmentLoadout) => {
-      if (!warrior) return;
-      updateRosterWarrior(warrior.id, (w) => {
-        w.equipment = newLoadout;
-      });
-    },
-    [warrior, updateRosterWarrior]
+  const { handlePlanChange, handleRetire, handleEquipmentChange } = useWarriorMutations(
+    warrior,
+    setState,
+    retireWarrior,
+    navigate
   );
 
   return {

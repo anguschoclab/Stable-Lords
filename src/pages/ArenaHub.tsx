@@ -135,6 +135,76 @@ function CrowdMoodWidget() {
 
 // ─── Arena Leaderboard ────────────────────────────────────────────────────
 
+/** Rankings table header. */
+function LeaderboardHead() {
+  return (
+    <TableHeader className="bg-white/[0.03]">
+      <TableRow className="h-10 hover:bg-transparent border-white/5">
+        <TableHead className="w-12 pl-6 text-[9px] font-black uppercase tracking-widest">
+          RANK
+        </TableHead>
+        <TableHead className="text-[9px] font-black uppercase tracking-widest">
+          WARRIOR
+        </TableHead>
+        <TableHead className="text-[9px] font-black uppercase tracking-widest">
+          STABLE
+        </TableHead>
+        <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
+          W / L / K
+        </TableHead>
+        <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">
+          FAME
+        </TableHead>
+      </TableRow>
+    </TableHeader>
+  );
+}
+
+/** One leaderboard row. */
+function LeaderboardRow({
+  entry,
+  rank,
+  championIds,
+}: {
+  entry: { warrior: { id: string; name: string; career: { wins: number; losses: number; kills: number }; fame: number }; isPlayer: boolean; stableName: string };
+  rank: number;
+  championIds: Set<string>;
+}) {
+  const w = entry.warrior;
+  return (
+    <TableRow
+      className={cn(
+        'h-12 border-white/5 transition-colors motion-reduce:transition-none',
+        entry.isPlayer
+          ? 'bg-primary/[0.03] border-l-2 border-l-primary'
+          : 'hover:bg-white/[0.02]'
+      )}
+    >
+      <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">
+        {String(rank).padStart(2, '0')}
+      </TableCell>
+      <TableCell>
+        <WarriorNameTag id={w.id} name={w.name} isChampion={championIds.has(w.id)} />
+      </TableCell>
+      <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
+        {entry.stableName}
+      </TableCell>
+      <TableCell className="text-center font-mono text-[10px]">
+        <span className="text-primary font-bold">{w.career.wins}</span>
+        <span className="mx-1 opacity-20">/</span>
+        <span className="text-destructive font-bold">{w.career.losses}</span>
+        <span className="mx-1 opacity-20">/</span>
+        <span className="text-arena-blood font-black">{w.career.kills}</span>
+      </TableCell>
+      <TableCell className="pr-6 text-right">
+        <span className="font-display font-black text-arena-fame text-lg tracking-tighter">
+          {w.fame}
+        </span>
+      </TableCell>
+    </TableRow>
+  );
+}
+
 function ArenaLeaderboard() {
   const { roster, rivals, player, arenaChampions } = useGameStore(
     useShallow((s) => ({
@@ -179,62 +249,16 @@ function ArenaLeaderboard() {
         </div>
       </div>
       <Table>
-        <TableHeader className="bg-white/[0.03]">
-          <TableRow className="h-10 hover:bg-transparent border-white/5">
-            <TableHead className="w-12 pl-6 text-[9px] font-black uppercase tracking-widest">
-              RANK
-            </TableHead>
-            <TableHead className="text-[9px] font-black uppercase tracking-widest">
-              WARRIOR
-            </TableHead>
-            <TableHead className="text-[9px] font-black uppercase tracking-widest">
-              STABLE
-            </TableHead>
-            <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
-              W / L / K
-            </TableHead>
-            <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">
-              FAME
-            </TableHead>
-          </TableRow>
-        </TableHeader>
+        <LeaderboardHead />
         <TableBody>
-          {allWarriors.map((entry, i) => {
-            const w = entry.warrior;
-            return (
-              <TableRow
-                key={w.id}
-                className={cn(
-                  'h-12 border-white/5 transition-colors motion-reduce:transition-none',
-                  entry.isPlayer
-                    ? 'bg-primary/[0.03] border-l-2 border-l-primary'
-                    : 'hover:bg-white/[0.02]'
-                )}
-              >
-                <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">
-                  {String(i + 1).padStart(2, '0')}
-                </TableCell>
-                <TableCell>
-                  <WarriorNameTag id={w.id} name={w.name} isChampion={championIds.has(w.id)} />
-                </TableCell>
-                <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
-                  {entry.stableName}
-                </TableCell>
-                <TableCell className="text-center font-mono text-[10px]">
-                  <span className="text-primary font-bold">{w.career.wins}</span>
-                  <span className="mx-1 opacity-20">/</span>
-                  <span className="text-destructive font-bold">{w.career.losses}</span>
-                  <span className="mx-1 opacity-20">/</span>
-                  <span className="text-arena-blood font-black">{w.career.kills}</span>
-                </TableCell>
-                <TableCell className="pr-6 text-right">
-                  <span className="font-display font-black text-arena-fame text-lg tracking-tighter">
-                    {w.fame}
-                  </span>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {allWarriors.map((entry, i) => (
+            <LeaderboardRow
+              key={entry.warrior.id}
+              entry={entry}
+              rank={i + 1}
+              championIds={championIds}
+            />
+          ))}
         </TableBody>
       </Table>
     </Surface>
@@ -282,6 +306,58 @@ function CircuitCrownsWidget() {
         </p>
       </Surface>
     </Link>
+  );
+}
+
+/** Left column: chronicle, next bout, medical audit. */
+function CommandColumn() {
+  return (
+    <div className="lg:col-span-8 flex flex-col gap-8">
+      <SectionDivider label="Arena Chronicle" variant="gold" />
+      <IntelligenceHubWidget />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-4">
+          <SectionDivider label="Next Bout" />
+          <NextBoutWidget />
+        </div>
+        <div className="flex flex-col gap-4">
+          <SectionDivider label="Medical Audit" />
+          <MedicalAuditWidget />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Right column: conditions, style meta, crowns, analytics. */
+function ConditionsColumn({
+  renown,
+  lifetimeKills,
+  winRate,
+}: {
+  renown: number;
+  lifetimeKills: number;
+  winRate: number;
+}) {
+  return (
+    <div className="lg:col-span-4 flex flex-col gap-8">
+      <SectionDivider label="Arena Conditions" />
+      <WeatherWidget />
+
+      <SectionDivider label="Style Meta" />
+      <MetaDriftWidget />
+
+      <SectionDivider label="Arena Crowns" />
+      <CircuitCrownsWidget />
+
+      <SectionDivider label="Arena Analytics" />
+      <ArenaAnalyticsSurface
+        renown={renown}
+        lifetimeKills={lifetimeKills}
+        winRate={winRate}
+      />
+    </div>
   );
 }
 
@@ -339,41 +415,12 @@ export default function ArenaHub() {
       <CrowdMoodWidget />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
-        {/* Left Column: Command & Pairings */}
-        <div className="lg:col-span-8 flex flex-col gap-8">
-          <SectionDivider label="Arena Chronicle" variant="gold" />
-          <IntelligenceHubWidget />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex flex-col gap-4">
-              <SectionDivider label="Next Bout" />
-              <NextBoutWidget />
-            </div>
-            <div className="flex flex-col gap-4">
-              <SectionDivider label="Medical Audit" />
-              <MedicalAuditWidget />
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Environmental & Tactical Feed */}
-        <div className="lg:col-span-4 flex flex-col gap-8">
-          <SectionDivider label="Arena Conditions" />
-          <WeatherWidget />
-
-          <SectionDivider label="Style Meta" />
-          <MetaDriftWidget />
-
-          <SectionDivider label="Arena Crowns" />
-          <CircuitCrownsWidget />
-
-          <SectionDivider label="Arena Analytics" />
-          <ArenaAnalyticsSurface
-            renown={player.renown}
-            lifetimeKills={lifetimeKills}
-            winRate={stableStats.winRate}
-          />
-        </div>
+        <CommandColumn />
+        <ConditionsColumn
+          renown={player.renown}
+          lifetimeKills={lifetimeKills}
+          winRate={stableStats.winRate}
+        />
       </div>
 
       <SectionDivider label="Global Arena Rankings" variant="primary" />

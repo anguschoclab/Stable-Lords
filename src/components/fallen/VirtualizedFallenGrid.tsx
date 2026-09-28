@@ -124,6 +124,65 @@ function VirtualizedInner({
   );
 }
 
+/** Death-quote panel: epitaph, fatal strike, recovery note. */
+function EpitaphSurface({ w, season }: { w: Warrior; season: string }) {
+  return (
+    <Surface variant="blood" className="p-5 mb-8 relative border-destructive/10">
+      <Skull className="absolute top-3 right-3 w-12 h-12 text-destructive/5 pointer-events-none" />
+      <p className="text-xs text-foreground/90 italic font-medium leading-relaxed mb-4 pr-8">
+        &quot;
+        {w.deathEvent?.deathSummary || w.causeOfDeath || w.deathCause || 'Killed in the arena.'}
+        &quot;
+      </p>
+      <div className="space-y-3 border-t border-destructive/10 pt-4 mt-auto">
+        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+          <Crosshair className="w-3.5 h-3.5 text-destructive" />
+          {w.killedBy ? (
+            <>
+              Fatal strike by: <span className="text-foreground">{w.killedBy}</span>
+            </>
+          ) : (
+            <>Killed in arena combat</>
+          )}
+        </div>
+        <div className="flex items-center justify-between text-[10px] font-mono font-black text-muted-foreground/30">
+          <span>
+            Week {w.deathWeek || '??'} &middot; {season?.toUpperCase()}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Activity className="h-3 w-3" /> Remains recovered
+          </span>
+        </div>
+      </div>
+    </Surface>
+  );
+}
+
+/** Medal badges row (only when the fallen warrior earned any). */
+function MedalRow({ w }: { w: Warrior }) {
+  const m = w.career?.medals;
+  if (!m || (m.gold <= 0 && m.silver <= 0 && m.bronze <= 0)) return null;
+  return (
+    <div className="flex flex-wrap gap-2 pt-6 mt-6 border-t border-white/5">
+      {m.gold > 0 && (
+        <span className="text-[9px] uppercase font-black tracking-widest text-arena-gold bg-arena-gold/10 px-2.5 py-1.5 border border-arena-gold/20">
+          GOLD &middot; VALOR
+        </span>
+      )}
+      {m.silver > 0 && (
+        <span className="text-[9px] uppercase font-black tracking-widest text-muted-foreground bg-foreground/5 px-2.5 py-1.5 border border-border/20">
+          SILVER &middot; TOKEN
+        </span>
+      )}
+      {m.bronze > 0 && (
+        <span className="text-[9px] uppercase font-black tracking-widest text-arena-gold bg-arena-gold/10 px-2.5 py-1.5 border border-arena-gold/20">
+          BRONZE &middot; ELITE
+        </span>
+      )}
+    </div>
+  );
+}
+
 function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }) {
   return (
     <Surface
@@ -159,34 +218,7 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
           </div>
         </div>
 
-        <Surface variant="blood" className="p-5 mb-8 relative border-destructive/10">
-          <Skull className="absolute top-3 right-3 w-12 h-12 text-destructive/5 pointer-events-none" />
-          <p className="text-xs text-foreground/90 italic font-medium leading-relaxed mb-4 pr-8">
-            &quot;
-            {w.deathEvent?.deathSummary || w.causeOfDeath || w.deathCause || 'Killed in the arena.'}
-            &quot;
-          </p>
-          <div className="space-y-3 border-t border-destructive/10 pt-4 mt-auto">
-            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-              <Crosshair className="w-3.5 h-3.5 text-destructive" />
-              {w.killedBy ? (
-                <>
-                  Fatal strike by: <span className="text-foreground">{w.killedBy}</span>
-                </>
-              ) : (
-                <>Killed in arena combat</>
-              )}
-            </div>
-            <div className="flex items-center justify-between text-[10px] font-mono font-black text-muted-foreground/30">
-              <span>
-                Week {w.deathWeek || '??'} &middot; {season?.toUpperCase()}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Activity className="h-3 w-3" /> Remains recovered
-              </span>
-            </div>
-          </div>
-        </Surface>
+        <EpitaphSurface w={w} season={season} />
 
         <div className="grid grid-cols-2 gap-4 mt-auto">
           <div className="bg-white/[0.02] p-4 border border-white/5 text-center">
@@ -205,28 +237,7 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
           </div>
         </div>
 
-        {w.career?.medals &&
-          (w.career.medals.gold > 0 ||
-            w.career.medals.silver > 0 ||
-            w.career.medals.bronze > 0) && (
-            <div className="flex flex-wrap gap-2 pt-6 mt-6 border-t border-white/5">
-              {w.career.medals.gold > 0 && (
-                <span className="text-[9px] uppercase font-black tracking-widest text-arena-gold bg-arena-gold/10 px-2.5 py-1.5 border border-arena-gold/20">
-                  GOLD &middot; VALOR
-                </span>
-              )}
-              {w.career.medals.silver > 0 && (
-                <span className="text-[9px] uppercase font-black tracking-widest text-muted-foreground bg-foreground/5 px-2.5 py-1.5 border border-border/20">
-                  SILVER &middot; TOKEN
-                </span>
-              )}
-              {w.career.medals.bronze > 0 && (
-                <span className="text-[9px] uppercase font-black tracking-widest text-arena-gold bg-arena-gold/10 px-2.5 py-1.5 border border-arena-gold/20">
-                  BRONZE &middot; ELITE
-                </span>
-              )}
-            </div>
-          )}
+        <MedalRow w={w} />
       </div>
     </Surface>
   );

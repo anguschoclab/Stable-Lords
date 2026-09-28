@@ -18,6 +18,79 @@ import {
   History,
 } from 'lucide-react';
 
+const SEASON_ACTIONS = [
+  {
+    to: '/stable/recruit',
+    label: 'Refresh Roster',
+    sub: 'Scout new warriors',
+    icon: UserPlus,
+    variant: 'blood' as const,
+  },
+  {
+    to: '/stable/trainers',
+    label: 'Revise Staff',
+    sub: 'Review coaching staff',
+    icon: GraduationCap,
+    variant: 'gold' as const,
+  },
+  {
+    to: '/stable/finance',
+    label: 'Ledger Audit',
+    sub: 'Full fiscal retrospective',
+    icon: BookOpen,
+    variant: 'bronze' as const,
+  },
+];
+
+/** Right column: season action links + historical-context note. */
+function DirectivesColumn() {
+  return (
+    <div className="lg:col-span-4 space-y-12">
+      <div className="space-y-6">
+        <SectionDivider label="Season Actions" />
+        <div className="flex flex-col gap-4">
+          {SEASON_ACTIONS.map((item) => (
+            <Link key={item.to} to={item.to}>
+              <Surface
+                variant="glass"
+                className="p-5 border-white/5 hover:border-primary/40 transition-all group flex items-center gap-4 motion-reduce:transition-none"
+              >
+                <ImperialRing size="sm" variant={item.variant}>
+                  <item.icon className="h-4 w-4" />
+                </ImperialRing>
+                <div className="flex-1">
+                  <div className="text-[11px] font-black uppercase tracking-widest group-hover:text-primary transition-colors motion-reduce:transition-none">
+                    {item.label}
+                  </div>
+                  <div className="text-[9px] text-muted-foreground/40 uppercase font-black tracking-tight mt-0.5">
+                    {item.sub}
+                  </div>
+                </div>
+                <ArrowRight className="h-3 w-3 text-muted-foreground/20 group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:transform-none" />
+              </Surface>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <SectionDivider label="Historical Context" />
+        <Surface variant="glass" className="p-6 border-white/5 bg-white/[0.01]">
+          <div className="flex items-start gap-4">
+            <ImperialRing size="xs" variant="bronze">
+              <History className="h-3 w-3 text-muted-foreground/40" />
+            </ImperialRing>
+            <div className="text-[10px] text-muted-foreground/60 leading-relaxed uppercase font-black tracking-tight">
+              <span className="text-foreground">Note:</span> The offseason is the only window
+              for making roster changes without penalty. Aging is paused during this period.
+            </div>
+          </div>
+        </Surface>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Offseason.
  */
@@ -57,72 +130,7 @@ export default function Offseason() {
           </div>
         </div>
 
-        {/* Right Column: Operational Directives */}
-        <div className="lg:col-span-4 space-y-12">
-          <div className="space-y-6">
-            <SectionDivider label="Season Actions" />
-            <div className="flex flex-col gap-4">
-              {[
-                {
-                  to: '/stable/recruit',
-                  label: 'Refresh Roster',
-                  sub: 'Scout new warriors',
-                  icon: UserPlus,
-                  variant: 'blood' as const,
-                },
-                {
-                  to: '/stable/trainers',
-                  label: 'Revise Staff',
-                  sub: 'Review coaching staff',
-                  icon: GraduationCap,
-                  variant: 'gold' as const,
-                },
-                {
-                  to: '/stable/finance',
-                  label: 'Ledger Audit',
-                  sub: 'Full fiscal retrospective',
-                  icon: BookOpen,
-                  variant: 'bronze' as const,
-                },
-              ].map((item) => (
-                <Link key={item.to} to={item.to}>
-                  <Surface
-                    variant="glass"
-                    className="p-5 border-white/5 hover:border-primary/40 transition-all group flex items-center gap-4 motion-reduce:transition-none"
-                  >
-                    <ImperialRing size="sm" variant={item.variant}>
-                      <item.icon className="h-4 w-4" />
-                    </ImperialRing>
-                    <div className="flex-1">
-                      <div className="text-[11px] font-black uppercase tracking-widest group-hover:text-primary transition-colors motion-reduce:transition-none">
-                        {item.label}
-                      </div>
-                      <div className="text-[9px] text-muted-foreground/40 uppercase font-black tracking-tight mt-0.5">
-                        {item.sub}
-                      </div>
-                    </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground/20 group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:transform-none" />
-                  </Surface>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <SectionDivider label="Historical Context" />
-            <Surface variant="glass" className="p-6 border-white/5 bg-white/[0.01]">
-              <div className="flex items-start gap-4">
-                <ImperialRing size="xs" variant="bronze">
-                  <History className="h-3 w-3 text-muted-foreground/40" />
-                </ImperialRing>
-                <div className="text-[10px] text-muted-foreground/60 leading-relaxed uppercase font-black tracking-tight">
-                  <span className="text-foreground">Note:</span> The offseason is the only window
-                  for making roster changes without penalty. Aging is paused during this period.
-                </div>
-              </div>
-            </Surface>
-          </div>
-        </div>
+        <DirectivesColumn />
       </div>
     </PageFrame>
   );

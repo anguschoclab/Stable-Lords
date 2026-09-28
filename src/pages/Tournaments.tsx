@@ -50,13 +50,68 @@ function HeaderActions({ needsRecruits }: { needsRecruits: boolean }) {
   );
 }
 
+/** Prep-dialog lifecycle: auto-opens once when a tournament is ready to start. */
+function usePrepDialog(
+  isTournamentReadyToStart: boolean,
+  hasAlreadyStarted: boolean | undefined
+) {
+  const [isPrepOpen, setIsPrepOpen] = useState(false);
+  const [hasShownPrep, setHasShownPrep] = useState(false);
+
+  React.useEffect(() => {
+    if (isTournamentReadyToStart && !hasShownPrep && !hasAlreadyStarted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- auto-open prep dialog when tournament is ready
+      setIsPrepOpen(true);
+      setHasShownPrep(true);
+      audioManager.play('clash'); // Thematic entrance sound
+    }
+  }, [isTournamentReadyToStart, hasShownPrep, hasAlreadyStarted]);
+
+  return { isPrepOpen, setIsPrepOpen };
+}
+
+/** Campaign archives section: bookmark filter + history list. */
+function CampaignArchives({
+  showBookmarkedOnly,
+  onToggleBookmarked,
+  bookmarkedCount,
+  pastTournaments,
+  season,
+  arenaHistory,
+}: {
+  showBookmarkedOnly: boolean;
+  onToggleBookmarked: () => void;
+  bookmarkedCount: number;
+  pastTournaments: Parameters<typeof TournamentHistory>[0]['pastTournaments'];
+  season: Parameters<typeof TournamentHistory>[0]['currentSeason'];
+  arenaHistory: Parameters<typeof TournamentHistory>[0]['arenaHistory'];
+}) {
+  return (
+    <div className="space-y-6 pt-12">
+      <div className="flex items-center justify-between">
+        <SectionDivider label="Campaign Archives" />
+        <BookmarkFilterToggle
+          active={showBookmarkedOnly}
+          onToggle={onToggleBookmarked}
+          count={bookmarkedCount}
+        />
+      </div>
+      <TournamentHistory
+        pastTournaments={pastTournaments}
+        seasonIcons={SEASON_ICONS}
+        seasonNames={SEASON_NAMES}
+        currentSeason={season}
+        arenaHistory={arenaHistory}
+      />
+    </div>
+  );
+}
+
 /**
  * Tournaments.
  */
 export default function Tournaments() {
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
-  const [isPrepOpen, setIsPrepOpen] = useState(false);
-  const [hasShownPrep, setHasShownPrep] = useState(false);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const {
@@ -76,15 +131,11 @@ export default function Tournaments() {
     isTournamentReadyToStart,
   } = useTournamentState(showBookmarkedOnly);
 
-  React.useEffect(() => {
-    const hasAlreadyStarted = currentTournament?.bracket.some((b) => b.winner !== undefined);
-    if (isTournamentReadyToStart && !hasShownPrep && !hasAlreadyStarted) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- auto-open prep dialog when tournament is ready
-      setIsPrepOpen(true);
-      setHasShownPrep(true);
-      audioManager.play('clash'); // Thematic entrance sound
-    }
-  }, [isTournamentReadyToStart, hasShownPrep, currentTournament]);
+  const hasAlreadyStarted = currentTournament?.bracket.some((b) => b.winner !== undefined);
+  const { isPrepOpen, setIsPrepOpen } = usePrepDialog(
+    isTournamentReadyToStart,
+    hasAlreadyStarted
+  );
 
   const handleExecuteRound = useExecuteTournamentRound({
     tournament: currentTournament,
@@ -137,23 +188,14 @@ export default function Tournaments() {
         />
       )}
 
-      <div className="space-y-6 pt-12">
-        <div className="flex items-center justify-between">
-          <SectionDivider label="Campaign Archives" />
-          <BookmarkFilterToggle
-            active={showBookmarkedOnly}
-            onToggle={() => setShowBookmarkedOnly((v) => !v)}
-            count={bookmarkedCount}
-          />
-        </div>
-        <TournamentHistory
-          pastTournaments={pastTournaments}
-          seasonIcons={SEASON_ICONS}
-          seasonNames={SEASON_NAMES}
-          currentSeason={season}
-          arenaHistory={arenaHistory}
-        />
-      </div>
+      <CampaignArchives
+        showBookmarkedOnly={showBookmarkedOnly}
+        onToggleBookmarked={() => setShowBookmarkedOnly((v) => !v)}
+        bookmarkedCount={bookmarkedCount}
+        pastTournaments={pastTournaments}
+        season={season}
+        arenaHistory={arenaHistory}
+      />
       <TournamentPrepDialog
         isOpen={isPrepOpen}
         onOpenChange={setIsPrepOpen}

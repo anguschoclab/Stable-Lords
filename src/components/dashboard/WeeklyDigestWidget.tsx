@@ -26,6 +26,87 @@ export interface WeeklyDigestProps {
   currentWeek: number;
 }
 
+/** Wins/losses/kills/upcoming stat grid. */
+function DigestStats({ summary }: { summary: ReturnType<typeof useDigestSummary> }) {
+  return (
+    <div className="grid grid-cols-4 gap-2">
+      <StatBox
+        icon={<Trophy className="h-3.5 w-3.5" />}
+        label="Wins"
+        value={summary.wins}
+        color="primary"
+      />
+      <StatBox
+        icon={<TrendingDown className="h-3.5 w-3.5" />}
+        label="Losses"
+        value={summary.losses}
+        color="destructive"
+      />
+      <StatBox
+        icon={<Flame className="h-3.5 w-3.5" />}
+        label="Kills"
+        value={summary.kills}
+        color="arena-gold"
+      />
+      <StatBox
+        icon={<Swords className="h-3.5 w-3.5" />}
+        label="Upcoming"
+        value={summary.upcomingBouts}
+        color="accent"
+      />
+    </div>
+  );
+}
+
+/** Death + pending-offer alerts. */
+function DigestAlerts({ summary }: { summary: ReturnType<typeof useDigestSummary> }) {
+  if (summary.deaths <= 0 && summary.pendingOffers <= 0) return null;
+  return (
+    <div className="space-y-2">
+      {summary.deaths > 0 && (
+        <AlertBox
+          type="death"
+          message={`${summary.deaths} warrior${summary.deaths > 1 ? 's' : ''} lost this week`}
+        />
+      )}
+      {summary.pendingOffers > 0 && (
+        <AlertBox
+          type="offer"
+          message={`${summary.pendingOffers} bout offer${summary.pendingOffers > 1 ? 's' : ''} awaiting response`}
+        />
+      )}
+    </div>
+  );
+}
+
+/** This week's scheduled bouts block + schedule link. */
+function ScheduleBlock({
+  week,
+  signedOffers,
+}: {
+  week: number;
+  signedOffers: number;
+}) {
+  if (signedOffers <= 0) return null;
+  return (
+    <div className="p-3 bg-secondary/30 rounded-none">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+        <Target className="h-3.5 w-3.5" />
+        <span className="font-bold uppercase">Scheduled This Week</span>
+      </div>
+      <p className="text-sm">
+        <span className="font-bold text-primary">{signedOffers}</span> bout
+        {signedOffers > 1 ? 's' : ''} scheduled for Week {week}
+      </p>
+      <Button asChild variant="ghost" size="sm" className="mt-2 h-7 text-[10px] uppercase">
+        <Link to="/stable/bouts">
+          View Schedule <ChevronRight className="h-3 w-3 ml-1" />
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -70,70 +151,9 @@ export function WeeklyDigestWidget({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Quick Stats Grid */}
-        <div className="grid grid-cols-4 gap-2">
-          <StatBox
-            icon={<Trophy className="h-3.5 w-3.5" />}
-            label="Wins"
-            value={summary.wins}
-            color="primary"
-          />
-          <StatBox
-            icon={<TrendingDown className="h-3.5 w-3.5" />}
-            label="Losses"
-            value={summary.losses}
-            color="destructive"
-          />
-          <StatBox
-            icon={<Flame className="h-3.5 w-3.5" />}
-            label="Kills"
-            value={summary.kills}
-            color="arena-gold"
-          />
-          <StatBox
-            icon={<Swords className="h-3.5 w-3.5" />}
-            label="Upcoming"
-            value={summary.upcomingBouts}
-            color="accent"
-          />
-        </div>
-
-        {/* Alerts Section */}
-        {(summary.deaths > 0 || summary.pendingOffers > 0) && (
-          <div className="space-y-2">
-            {summary.deaths > 0 && (
-              <AlertBox
-                type="death"
-                message={`${summary.deaths} warrior${summary.deaths > 1 ? 's' : ''} lost this week`}
-              />
-            )}
-            {summary.pendingOffers > 0 && (
-              <AlertBox
-                type="offer"
-                message={`${summary.pendingOffers} bout offer${summary.pendingOffers > 1 ? 's' : ''} awaiting response`}
-              />
-            )}
-          </div>
-        )}
-
-        {/* This Week's Schedule */}
-        {summary.signedOffers > 0 && (
-          <div className="p-3 bg-secondary/30 rounded-none">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-              <Target className="h-3.5 w-3.5" />
-              <span className="font-bold uppercase">Scheduled This Week</span>
-            </div>
-            <p className="text-sm">
-              <span className="font-bold text-primary">{summary.signedOffers}</span> bout
-              {summary.signedOffers > 1 ? 's' : ''} scheduled for Week {week}
-            </p>
-            <Button asChild variant="ghost" size="sm" className="mt-2 h-7 text-[10px] uppercase">
-              <Link to="/stable/bouts">
-                View Schedule <ChevronRight className="h-3 w-3 ml-1" />
-              </Link>
-            </Button>
-          </div>
-        )}
+        <DigestStats summary={summary} />
+        <DigestAlerts summary={summary} />
+        <ScheduleBlock week={week} signedOffers={summary.signedOffers} />
       </CardContent>
     </Card>
   );

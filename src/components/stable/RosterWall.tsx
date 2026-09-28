@@ -41,6 +41,54 @@ function EmptyRosterState() {
   );
 }
 
+/** Wall header: roster count, style donut, bookmark filter, recruit CTA. */
+function WallHeader({
+  rosterSize,
+  rosterStyles,
+  showBookmarkedOnly,
+  onToggleBookmarked,
+}: {
+  rosterSize: number;
+  rosterStyles: FightingStyle[];
+  showBookmarkedOnly: boolean;
+  onToggleBookmarked: () => void;
+}) {
+  return (
+    <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-neutral-900/40 backdrop-blur-md">
+      <div className="flex items-center gap-4">
+        <div className="p-3 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
+          <Users className="h-6 w-6 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display text-base font-black uppercase tracking-tight">Roster</h3>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
+              Warriors: {rosterSize}
+            </span>
+            <div className="h-1 w-1 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
+            {rosterSize > 0 && (
+              <StyleCompositionDonut
+                styles={rosterStyles}
+                size={28}
+                className="ml-1 opacity-70 hover:opacity-100 transition-opacity motion-reduce:transition-none"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <BookmarkFilterToggle active={showBookmarkedOnly} onToggle={onToggleBookmarked} />
+        <Link to="/stable/recruit">
+          <Button variant="outline" size="sm">
+            Initialize Recruitment <ChevronRight className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -91,41 +139,12 @@ export function RosterWall() {
     <Surface variant="glass" padding="none" className="border-border/10 relative shadow-2xl">
       <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/40 via-arena-gold/40 to-primary/40 opacity-30" />
 
-      <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-neutral-900/40 backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
-            <Users className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-display text-base font-black uppercase tracking-tight">Roster</h3>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
-                Warriors: {sortedRoster.length}
-              </span>
-              <div className="h-1 w-1 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />
-              {sortedRoster.length > 0 && (
-                <StyleCompositionDonut
-                  styles={rosterStyles}
-                  size={28}
-                  className="ml-1 opacity-70 hover:opacity-100 transition-opacity motion-reduce:transition-none"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <BookmarkFilterToggle
-            active={showBookmarkedOnly}
-            onToggle={() => setShowBookmarkedOnly((v) => !v)}
-          />
-          <Link to="/stable/recruit">
-            <Button variant="outline" size="sm">
-              Initialize Recruitment <ChevronRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <WallHeader
+        rosterSize={sortedRoster.length}
+        rosterStyles={rosterStyles}
+        showBookmarkedOnly={showBookmarkedOnly}
+        onToggleBookmarked={() => setShowBookmarkedOnly((v) => !v)}
+      />
 
       <div className="p-8">
         {filteredRoster.length === 0 ? (

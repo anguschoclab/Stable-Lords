@@ -56,6 +56,110 @@ function dossierObservedStyles(rival: RivalStableData): FightingStyle[] {
   return styles;
 }
 
+/** Mutable working state threaded through the hire/fire stages. */
+interface StaffPass {
+  rival: RivalStableData;
+  trainers: Trainer[];
+  treasury: number;
+  pool: Trainer[];
+  gazetteItems: string[];
+}
+
+/** Hiring stage (Medium/High Risk): pick best affordable trainer, preferring the intel/intent focus. */
+function tryHireTrainer(pass: StaffPass, intent: string, week: number): void {
+  if (intent === 'RECOVERY' || pass.trainers.length >= 2 || pass.pool.length === 0) return;
+
+  const affordable = pass.pool.filter((t) => (HIRE_COST[t.tier] ?? 0) < pass.treasury - 300);
+  if (affordable.length === 0) return;
+
+  // Specialty preference: the dossier's observed opponent field wins over
+  // the intent default — the stable hires for the field it expects (G21).
+  const intelFocus = preferredTrainerFocus(dossierObservedStyles(pass.rival));
+  const preferredFocus =
+    intelFocus ??
+    (intent === 'VENDETTA' || intent === 'AGGRESSIVE_EXPANSION'
+      ? 'Aggression'
+      : intent === 'EXPANSION'
+        ? 'Endurance'
+        : null);
+
+  const focusCandidates = preferredFocus
+    ? affordable.filter((t) => t.focus === preferredFocus)
+    : [];
+  const pool = focusCandidates.length > 0 ? focusCandidates : affordable;
+
+  const first = pool[0];
+  if (!first) {
+    throw new Error('Pool is unexpectedly empty');
+  }
+  // ⚡ Bolt Optimization: Replace .reduce() with a for loop to avoid iterator overhead in hot loop
+  let best = first;
+  for (let i = 1; i < pool.length; i++) {
+    const current = pool[i];
+    if (current && (HIRE_COST[current.tier] ?? 0) > (HIRE_COST[best.tier] ?? 0)) {
+      best = current;
+    }
+  }
+  const hireCost = HIRE_COST[best.tier] ?? 0;
+  const budgetReport = checkBudget(pass.rival, hireCost, 'STAFF');
+
+  if (!budgetReport.isAffordable) return;
+
+  pass.treasury -= hireCost;
+  pass.trainers.push(best);
+  pass.pool = pass.pool.filter((t) => t.id !== best.id);
+
+  pass.rival = { ...pass.rival, treasury: pass.treasury, trainers: pass.trainers };
+  pass.rival = logFinanceEvent(pass.rival, {
+    label: `Trainer hired — ${best.name}`,
+    amount: -hireCost,
+    week,
+    category: 'trainer',
+    description: `Paid ${hireCost}g to hire ${best.name} (${best.tier}).`,
+    riskTier: budgetReport.riskTier,
+  });
+  pass.rival = logAgentAction(
+    pass.rival,
+    'STAFF',
+    `Hired trainer ${best.name} (${best.tier}).`,
+    budgetReport.riskTier,
+    week
+  );
+  pass.gazetteItems.push(
+    `👔 STAFF: ${pass.rival.owner.stableName} hired ${best.name} (${best.tier}) to lead their training camp.`
+  );
+}
+
+/** Firing stage (RECOVERY tier + regional risk): release the most recent trainer under pressure. */
+function maybeFireTrainer(pass: StaffPass, intent: string, state: GameState, week: number): void {
+  const isSolemn = state.crowdMood === 'Solemn';
+  const isRainy = state.weather === 'Rainy';
+  const underPressure = pass.treasury < 500 && (isSolemn || isRainy);
+
+  if (!(intent === 'RECOVERY' || pass.treasury < 100 || underPressure)) return;
+  if (pass.trainers.length === 0) return;
+
+  const fired = pass.trainers.pop();
+  if (!fired) return;
+
+  pass.rival = { ...pass.rival, treasury: pass.treasury, trainers: pass.trainers };
+  const riskReason = isSolemn
+    ? 'solemn crowd dampening income'
+    : isRainy
+      ? 'stormy weather risks'
+      : 'budget constraints';
+  pass.rival = logAgentAction(
+    pass.rival,
+    'STAFF',
+    `Released trainer ${fired.name} due to ${riskReason}.`,
+    'Low',
+    week
+  );
+  pass.gazetteItems.push(
+    `📉 DOWNSIZING: ${pass.rival.owner.stableName} has released trainer ${fired.name} due to ${riskReason}.`
+  );
+}
+
 /**
  * StaffWorker: Handles hiring and firing of trainers.
  * Implements "Risk-Tiered Execution" for staffing.
@@ -66,106 +170,23 @@ export function processStaff(
   hiringPool: Trainer[],
   _context?: AgentContext
 ): { updatedRival: RivalStableData; gazetteItems: string[]; updatedHiringPool: Trainer[] } {
-  let updatedRival = { ...rival };
-  const currentTrainers = [...(updatedRival.trainers || [])];
-  let currentTreasury = updatedRival.treasury;
-  let currentPool = [...hiringPool];
-  const gazetteItems: string[] = [];
+  const pass: StaffPass = {
+    rival: { ...rival },
+    trainers: [...(rival.trainers || [])],
+    treasury: rival.treasury,
+    pool: [...hiringPool],
+    gazetteItems: [],
+  };
 
-  const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
+  const intent = pass.rival.strategy?.intent ?? 'CONSOLIDATION';
   const week = state.week;
 
-  // 1. Hiring logic (Medium/High Risk)
-  if (intent !== 'RECOVERY' && currentTrainers.length < 2 && currentPool.length > 0) {
-    const affordable = currentPool.filter((t) => (HIRE_COST[t.tier] ?? 0) < currentTreasury - 300);
-    if (affordable.length > 0) {
-      // Specialty preference: the dossier's observed opponent field wins over
-      // the intent default — the stable hires for the field it expects (G21).
-      const intelFocus = preferredTrainerFocus(dossierObservedStyles(updatedRival));
-      const preferredFocus =
-        intelFocus ??
-        (intent === 'VENDETTA' || intent === 'AGGRESSIVE_EXPANSION'
-          ? 'Aggression'
-          : intent === 'EXPANSION'
-            ? 'Endurance'
-            : null);
+  tryHireTrainer(pass, intent, week);
+  maybeFireTrainer(pass, intent, state, week);
 
-      const focusCandidates = preferredFocus
-        ? affordable.filter((t) => t.focus === preferredFocus)
-        : [];
-      const pool = focusCandidates.length > 0 ? focusCandidates : affordable;
-
-      const first = pool[0];
-      if (!first) {
-        throw new Error('Pool is unexpectedly empty');
-      }
-      // ⚡ Bolt Optimization: Replace .reduce() with a for loop to avoid iterator overhead in hot loop
-      let best = first;
-      for (let i = 1; i < pool.length; i++) {
-        const current = pool[i];
-        if (current && (HIRE_COST[current.tier] ?? 0) > (HIRE_COST[best.tier] ?? 0)) {
-          best = current;
-        }
-      }
-      const hireCost = HIRE_COST[best.tier] ?? 0;
-      const budgetReport = checkBudget(updatedRival, hireCost, 'STAFF');
-
-      if (budgetReport.isAffordable) {
-        currentTreasury -= hireCost;
-        currentTrainers.push(best);
-        currentPool = currentPool.filter((t) => t.id !== best.id);
-
-        updatedRival = { ...updatedRival, treasury: currentTreasury, trainers: currentTrainers };
-        updatedRival = logFinanceEvent(updatedRival, {
-          label: `Trainer hired — ${best.name}`,
-          amount: -hireCost,
-          week,
-          category: 'trainer',
-          description: `Paid ${hireCost}g to hire ${best.name} (${best.tier}).`,
-          riskTier: budgetReport.riskTier,
-        });
-        updatedRival = logAgentAction(
-          updatedRival,
-          'STAFF',
-          `Hired trainer ${best.name} (${best.tier}).`,
-          budgetReport.riskTier,
-          week
-        );
-        gazetteItems.push(
-          `👔 STAFF: ${updatedRival.owner.stableName} hired ${best.name} (${best.tier}) to lead their training camp.`
-        );
-      }
-    }
-  }
-
-  // 2. Firing logic (RECOVERY Tier + Regional Risk)
-  const isSolemn = state.crowdMood === 'Solemn';
-  const isRainy = state.weather === 'Rainy';
-  const underPressure = currentTreasury < 500 && (isSolemn || isRainy);
-
-  if (intent === 'RECOVERY' || currentTreasury < 100 || underPressure) {
-    if (currentTrainers.length > 0) {
-      const fired = currentTrainers.pop();
-      if (fired) {
-        updatedRival = { ...updatedRival, treasury: currentTreasury, trainers: currentTrainers };
-        const riskReason = isSolemn
-          ? 'solemn crowd dampening income'
-          : isRainy
-            ? 'stormy weather risks'
-            : 'budget constraints';
-        updatedRival = logAgentAction(
-          updatedRival,
-          'STAFF',
-          `Released trainer ${fired.name} due to ${riskReason}.`,
-          'Low',
-          week
-        );
-        gazetteItems.push(
-          `📉 DOWNSIZING: ${updatedRival.owner.stableName} has released trainer ${fired.name} due to ${riskReason}.`
-        );
-      }
-    }
-  }
-
-  return { updatedRival, gazetteItems, updatedHiringPool: currentPool };
+  return {
+    updatedRival: pass.rival,
+    gazetteItems: pass.gazetteItems,
+    updatedHiringPool: pass.pool,
+  };
 }

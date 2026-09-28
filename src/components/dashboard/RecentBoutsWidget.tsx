@@ -10,6 +10,81 @@ import type { FightSummary } from '@/types/game';
 import { BoutTableRow } from './BoutTableRow';
 import { EmptyBoutsState } from './EmptyBoutsState';
 
+/** Widget header: icon, title, bout-count badge. */
+function BoutsHeader() {
+  return (
+    <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+          <Activity className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display text-base font-black uppercase tracking-tight">
+            Combat Record
+          </h3>
+          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
+            Recent Bouts
+          </p>
+        </div>
+      </div>
+      <Badge
+        variant="outline"
+        className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest"
+      >
+        LAST 5 BOUTS
+      </Badge>
+    </div>
+  );
+}
+
+/** Recent bouts table. */
+function BoutsTable({
+  recentBouts,
+  playerStableId,
+  state,
+}: {
+  recentBouts: FightSummary[];
+  playerStableId: string;
+  state: Parameters<typeof BoutTableRow>[0]['state'];
+}) {
+  return (
+    <div className="flex-1 overflow-x-auto relative z-10 custom-scrollbar">
+      <Table>
+        <TableHeader className="bg-black/20">
+          <TableRow className="hover:bg-transparent border-white/5">
+            <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-6 py-4">
+              Week
+            </TableHead>
+            <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">
+              Warrior
+            </TableHead>
+            <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">
+              Outcome
+            </TableHead>
+            <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-6 py-4">
+              Method
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {recentBouts.length === 0 ? (
+            <EmptyBoutsState />
+          ) : (
+            recentBouts.map((bout) => (
+              <BoutTableRow
+                key={bout.id}
+                bout={bout}
+                playerStableId={playerStableId}
+                state={state}
+              />
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -50,62 +125,8 @@ export function RecentBoutsWidget() {
         <Swords className="h-48 w-48 text-primary" />
       </div>
 
-      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
-            <Activity className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Combat Record
-            </h3>
-            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Recent Bouts
-            </p>
-          </div>
-        </div>
-        <Badge
-          variant="outline"
-          className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest"
-        >
-          LAST 5 BOUTS
-        </Badge>
-      </div>
-
-      <div className="flex-1 overflow-x-auto relative z-10 custom-scrollbar">
-        <Table>
-          <TableHeader className="bg-black/20">
-            <TableRow className="hover:bg-transparent border-white/5">
-              <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-6 py-4">
-                Week
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">
-                Warrior
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">
-                Outcome
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-6 py-4">
-                Method
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {recentBouts.length === 0 ? (
-              <EmptyBoutsState />
-            ) : (
-              recentBouts.map((bout) => (
-                <BoutTableRow
-                  key={bout.id}
-                  bout={bout}
-                  playerStableId={state.player.id}
-                  state={state}
-                />
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <BoutsHeader />
+      <BoutsTable recentBouts={recentBouts} playerStableId={state.player.id} state={state} />
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
         <Link

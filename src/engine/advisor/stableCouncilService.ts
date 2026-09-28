@@ -16,6 +16,73 @@ import { buildWarriorCard, type CardBuildContext } from './stableCouncil/cards';
 import { computeCardKpis, buildStableDirectives, collectUnresolvedDirectives } from './stableCouncil/directives';
 import { listFutureCommitments, listRecoveryEtas, listTitleDefenses } from './stableCouncil/lookahead';
 
+/** Unassigned-training count, pending-offer count, and solvency warning. */
+function computeSummarySignals(
+  state: GameState,
+  activeWarriors: GameState['roster'],
+  playerWarriorIds: Set<string>
+) {
+  const assignedWarriorIds = new Set(
+    (state.trainingAssignments || []).map((a) => a.warriorId)
+  );
+  const unassignedTrainingCount = activeWarriors.filter(
+    (w) => !assignedWarriorIds.has(w.id)
+  ).length;
+
+  const pendingBoutOffersCount = Object.values(state.boutOffers || {}).filter(
+    (o: BoutOffer) =>
+      o.status === 'Proposed' &&
+      o.warriorIds.some((wid) => playerWarriorIds.has(wid) && o.responses[wid] === 'Pending')
+  ).length;
+
+  const projectedTrainingCost = activeWarriors.length * TRAINING_COST;
+  const treasury = state.treasury ?? 0;
+  const solvencyWarning =
+    treasury < 0
+      ? `Treasury in deficit (${treasury}G) — stable is approaching bankruptcy.`
+      : treasury < projectedTrainingCost
+        ? `Treasury (${treasury}G) cannot cover projected training costs (${projectedTrainingCost}G).`
+        : undefined;
+
+  return {
+    assignedWarriorIds,
+    unassignedTrainingCount,
+    pendingBoutOffersCount,
+    projectedTrainingCost,
+    treasury,
+    solvencyWarning,
+  };
+}
+
+/** Multi-week lookahead: commitments, recoveries, tournament countdown, defenses. */
+function buildLookahead(
+  state: GameState,
+  cards: WarriorAdvisorCard[],
+  activeWarriors: GameState['roster'],
+  playerWarriorIds: Set<string>,
+  currentAbsWeek: number,
+  upcomingAbsWeek: number
+): CouncilLookahead {
+  return {
+    futureCommitments: listFutureCommitments(state, cards, playerWarriorIds, upcomingAbsWeek),
+    recoveryEtas: listRecoveryEtas(activeWarriors, currentAbsWeek),
+    // isTournamentWeek is authoritative (matches evaluateTournamentAdvice) —
+    // brackets run day-by-day. The countdown tracks seasonals only: the
+    // Grand Championship isn't a bracket most warriors can enter.
+    weeksUntilTournament: state.isTournamentWeek
+      ? 0
+      : weeksUntilNextSeasonalTournament(state.week),
+    projectedContenders: cards
+      .filter((c) => c.tournamentAdvice.qualifiedTier !== null)
+      .map((c) => ({
+        warriorId: c.warriorId,
+        warriorName: c.warriorName,
+        tierName: c.tournamentAdvice.tierName ?? c.tournamentAdvice.qualifiedTier ?? 'Unknown Tier',
+      })),
+    titleDefenses: listTitleDefenses(state, cards, playerWarriorIds),
+  };
+}
+
 /**
  * Compute a complete Stable Council Report evaluating all active roster warriors.
  * Uncached — safe for callers that mutate a GameState in place (e.g. the autosim
@@ -41,28 +108,15 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
 
   const kpis = computeCardKpis(cards);
 
-  const assignedWarriorIds = new Set(
-    (state.trainingAssignments || []).map((a) => a.warriorId)
-  );
-  const unassignedTrainingCount = activeWarriors.filter(
-    (w) => !assignedWarriorIds.has(w.id)
-  ).length;
-
   const playerWarriorIds = new Set(activeWarriors.map((w) => w.id));
-  const pendingBoutOffersCount = Object.values(state.boutOffers || {}).filter(
-    (o: BoutOffer) =>
-      o.status === 'Proposed' &&
-      o.warriorIds.some((wid) => playerWarriorIds.has(wid) && o.responses[wid] === 'Pending')
-  ).length;
-
-  const projectedTrainingCost = activeWarriors.length * TRAINING_COST;
-  const treasury = state.treasury ?? 0;
-  const solvencyWarning =
-    treasury < 0
-      ? `Treasury in deficit (${treasury}G) — stable is approaching bankruptcy.`
-      : treasury < projectedTrainingCost
-        ? `Treasury (${treasury}G) cannot cover projected training costs (${projectedTrainingCost}G).`
-        : undefined;
+  const {
+    assignedWarriorIds,
+    unassignedTrainingCount,
+    pendingBoutOffersCount,
+    projectedTrainingCost,
+    treasury,
+    solvencyWarning,
+  } = computeSummarySignals(state, activeWarriors, playerWarriorIds);
 
   const stableDirectives = buildStableDirectives(
     state,
@@ -86,24 +140,14 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   );
 
   // ── Multi-week lookahead ──
-  const lookahead: CouncilLookahead = {
-    futureCommitments: listFutureCommitments(state, cards, playerWarriorIds, upcomingAbsWeek),
-    recoveryEtas: listRecoveryEtas(activeWarriors, currentAbsWeek),
-    // isTournamentWeek is authoritative (matches evaluateTournamentAdvice) —
-    // brackets run day-by-day. The countdown tracks seasonals only: the
-    // Grand Championship isn't a bracket most warriors can enter.
-    weeksUntilTournament: state.isTournamentWeek
-      ? 0
-      : weeksUntilNextSeasonalTournament(state.week),
-    projectedContenders: cards
-      .filter((c) => c.tournamentAdvice.qualifiedTier !== null)
-      .map((c) => ({
-        warriorId: c.warriorId,
-        warriorName: c.warriorName,
-        tierName: c.tournamentAdvice.tierName ?? c.tournamentAdvice.qualifiedTier ?? 'Unknown Tier',
-      })),
-    titleDefenses: listTitleDefenses(state, cards, playerWarriorIds),
-  };
+  const lookahead = buildLookahead(
+    state,
+    cards,
+    activeWarriors,
+    playerWarriorIds,
+    currentAbsWeek,
+    upcomingAbsWeek
+  );
 
   const allActionPayloads = cards.map((c) => c.actionPayload);
 

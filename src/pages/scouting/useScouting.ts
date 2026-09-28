@@ -8,6 +8,51 @@ import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';
 import { toast } from 'sonner';
 
+/** Purchase a scout report for the target warrior: dedupe, ledger, treasury. */
+function purchaseScoutReport(
+  activeWarrior: Warrior,
+  quality: ScoutQuality,
+  deps: {
+    treasury: number | undefined;
+    week: number;
+    scoutReports: ScoutReportData[] | undefined;
+    setState: (fn: (draft: GameStore) => void) => void;
+  }
+): void {
+  const { treasury, week, scoutReports, setState } = deps;
+  const cost = getScoutCost(quality);
+  if ((treasury ?? 0) < cost) {
+    toast.error(`Insufficient funds! Scouting requires ${cost}g.`);
+    return;
+  }
+
+  const rng = new SeededRNGService(week + hashStr(activeWarrior.name));
+  const { report } = generateScoutReport(activeWarrior, quality, week, rng);
+
+  // Ensure we don't have duplicate reports for the same warrior
+  const newReports = [
+    ...(scoutReports ?? []).filter(
+      (r: ScoutReportData) => r.warriorName !== activeWarrior.name
+    ),
+    report as ScoutReportData,
+  ];
+
+  setState((draft: GameStore) => {
+    draft.scoutReports = newReports;
+    draft.treasury = (treasury ?? 0) - cost;
+    draft.ledger.push({
+      id: String(
+        hashStr(`${week}-${activeWarrior.name}-${quality}`)
+      ) as import('@/types/shared.types').LedgerEntryId,
+      week: week,
+      label: `Scouting: ${activeWarrior.name} (${quality})`,
+      amount: -cost,
+      category: 'other',
+    });
+  });
+  toast.success(`Report filed for ${activeWarrior.name}. (-${cost}g)`);
+}
+
 /**
  * Store selection, rival/warrior selection state, and the scout-report
  * purchase action for the Scouting page.
@@ -61,37 +106,7 @@ export function useScouting(showBookmarkedOnly: boolean) {
   const handleScout = useCallback(
     (quality: ScoutQuality) => {
       if (!activeWarrior) return;
-      const cost = getScoutCost(quality);
-      if ((treasury ?? 0) < cost) {
-        toast.error(`Insufficient funds! Scouting requires ${cost}g.`);
-        return;
-      }
-
-      const rng = new SeededRNGService(week + hashStr(activeWarrior.name));
-      const { report } = generateScoutReport(activeWarrior, quality, week, rng);
-
-      // Ensure we don't have duplicate reports for the same warrior
-      const newReports = [
-        ...(scoutReports ?? []).filter(
-          (r: ScoutReportData) => r.warriorName !== activeWarrior.name
-        ),
-        report as ScoutReportData,
-      ];
-
-      setState((draft: GameStore) => {
-        draft.scoutReports = newReports;
-        draft.treasury = (treasury ?? 0) - cost;
-        draft.ledger.push({
-          id: String(
-            hashStr(`${week}-${activeWarrior.name}-${quality}`)
-          ) as import('@/types/shared.types').LedgerEntryId,
-          week: week,
-          label: `Scouting: ${activeWarrior.name} (${quality})`,
-          amount: -cost,
-          category: 'other',
-        });
-      });
-      toast.success(`Report filed for ${activeWarrior.name}. (-${cost}g)`);
+      purchaseScoutReport(activeWarrior, quality, { treasury, week, scoutReports, setState });
     },
     [treasury, week, scoutReports, setState, activeWarrior]
   );

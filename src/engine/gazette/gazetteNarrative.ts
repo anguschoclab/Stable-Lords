@@ -152,41 +152,13 @@ export function generateGazetteHeadline(
   }
 }
 
-/**
- * Generates gazette body based on detections.
- */
-export function generateGazetteBody(
+/** Featured-narrative paragraphs: streaks, rivalry, rising stars, upsets, debuts. */
+function featuredParagraphs(
   detections: GazetteDetections,
-  fights: FightSummary[],
-  mood: CrowdMoodType,
-  week: number,
-  graveyard: Warrior[],
-  rngService: IRNGService,
-  tone: { adjectives: string[]; opener: string[]; closer: string[] }
-): string {
-  const paragraphs: string[] = [rngService.pick(tone.opener)];
-  const gf = (narrativeContent as NarrativeContent).gazette.featured;
-  const kills = fights.filter((f) => f.by === 'Kill');
-
-  // Summary stats
-  if (fights.length > 0) {
-    paragraphs.push(
-      `${fights.length} bout${fights.length !== 1 ? 's' : ''} were contested this week${kills.length > 0 ? `, with ${kills.length} ending in death` : ''}.`
-    );
-  }
-
-  // Individual fight narratives (top 3 by "score")
-  const scoredFights = fights
-    .map((f) => ({
-      fight: f,
-      score: (f.by === 'Kill' ? 5 : f.by === 'KO' ? 3 : 1) + (f.flashyTags?.length ?? 0),
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
-
-  for (const { fight } of scoredFights) {
-    paragraphs.push(generateFightNarrative(fight, mood, rngService));
-  }
+  gf: NarrativeContent['gazette']['featured'],
+  rngService: IRNGService
+): string[] {
+  const paragraphs: string[] = [];
 
   // Streak narratives
   for (const s of detections.hotStreakers) {
@@ -235,30 +207,78 @@ export function generateGazetteBody(
     paragraphs.push(`${names} ${verb} their debut in the arena this week.`);
   }
 
-  // Graveyard + named memorials.
-  if (graveyard.length > 0) {
-    const recent = graveyard.filter((w) => w.deathWeek === week);
-    if (recent.length > 0) {
-      paragraphs.push(
-        t(rngService.pick(gf.Graveyard), {
-          count: recent.length,
-          plural: recent.length !== 1 ? 's' : '',
-        })
-      );
-      const names = recent
-        .map((w) => w.name)
-        .slice(0, 5)
-        .join(', ');
-      const tributes = (narrativeContent as NarrativeContent).memorials?.tributes;
-      if (tributes && Array.isArray(tributes) && tributes.length > 0) {
-        const tributeTemplate = rngService.pick(tributes);
-        const tributeLine = t(tributeTemplate, { name: recent[0]?.name ?? names });
-        paragraphs.push(`${tributeLine} In memoriam: ${names}.`);
-      } else {
-        paragraphs.push(`In memoriam: ${names}. May their names echo in the stands.`);
-      }
-    }
+  return paragraphs;
+}
+
+/** Graveyard count + tribute/memorial lines for warriors who died this week. */
+function graveyardParagraphs(
+  graveyard: Warrior[],
+  week: number,
+  gf: NarrativeContent['gazette']['featured'],
+  rngService: IRNGService
+): string[] {
+  const recent = graveyard.filter((w) => w.deathWeek === week);
+  if (graveyard.length === 0 || recent.length === 0) return [];
+
+  const paragraphs = [
+    t(rngService.pick(gf.Graveyard), {
+      count: recent.length,
+      plural: recent.length !== 1 ? 's' : '',
+    }),
+  ];
+  const names = recent
+    .map((w) => w.name)
+    .slice(0, 5)
+    .join(', ');
+  const tributes = (narrativeContent as NarrativeContent).memorials?.tributes;
+  if (tributes && Array.isArray(tributes) && tributes.length > 0) {
+    const tributeTemplate = rngService.pick(tributes);
+    const tributeLine = t(tributeTemplate, { name: recent[0]?.name ?? names });
+    paragraphs.push(`${tributeLine} In memoriam: ${names}.`);
+  } else {
+    paragraphs.push(`In memoriam: ${names}. May their names echo in the stands.`);
   }
+  return paragraphs;
+}
+
+/**
+ * Generates gazette body based on detections.
+ */
+export function generateGazetteBody(
+  detections: GazetteDetections,
+  fights: FightSummary[],
+  mood: CrowdMoodType,
+  week: number,
+  graveyard: Warrior[],
+  rngService: IRNGService,
+  tone: { adjectives: string[]; opener: string[]; closer: string[] }
+): string {
+  const paragraphs: string[] = [rngService.pick(tone.opener)];
+  const gf = (narrativeContent as NarrativeContent).gazette.featured;
+  const kills = fights.filter((f) => f.by === 'Kill');
+
+  // Summary stats
+  if (fights.length > 0) {
+    paragraphs.push(
+      `${fights.length} bout${fights.length !== 1 ? 's' : ''} were contested this week${kills.length > 0 ? `, with ${kills.length} ending in death` : ''}.`
+    );
+  }
+
+  // Individual fight narratives (top 3 by "score")
+  const scoredFights = fights
+    .map((f) => ({
+      fight: f,
+      score: (f.by === 'Kill' ? 5 : f.by === 'KO' ? 3 : 1) + (f.flashyTags?.length ?? 0),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+
+  for (const { fight } of scoredFights) {
+    paragraphs.push(generateFightNarrative(fight, mood, rngService));
+  }
+
+  paragraphs.push(...featuredParagraphs(detections, gf, rngService));
+  paragraphs.push(...graveyardParagraphs(graveyard, week, gf, rngService));
 
   paragraphs.push(rngService.pick(tone.closer));
 

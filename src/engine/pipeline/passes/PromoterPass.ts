@@ -21,9 +21,94 @@ import {
  * Logic incorporates Hype Matrix, Rank Requirements, and Personality biases.
  */
 
+/** Shared scan context for one promoter pass: ranking lookup + pairing constraints. */
+interface PromoterPassContext {
+  state: GameState;
+  rngService: IRNGService;
+  rankings: GameState['realmRankings'];
+  weather: WeatherType;
+  weatherSuitableWarriors: Warrior[];
+  playerWarriorIds: Set<string>;
+  challengeSet: Set<string>;
+  avoidSet: Set<string>;
+  recentFightPairs: ReturnType<typeof buildRecentFightPairs>;
+}
+
 /**
- *
+ * One promoter's booking sweep: shuffle-eligible warriors, window by score,
+ * match pairs under the personality gap threshold, emit offers into
+ * `newOffers` up to the promoter's weekly capacity.
  */
+function generatePromoterOffers(
+  promoter: GameState['promoters'][string],
+  ctx: PromoterPassContext,
+  newOffers: Record<string, ReturnType<typeof createBoutOffer>>
+): void {
+  const { state, rngService, rankings, weather } = ctx;
+  const capacity = promoter.capacity;
+  let generated = 0;
+
+  // Shuffle full array first (preserves RNG state consumption)
+  const shuffledWarriors = rngService.shuffle(ctx.weatherSuitableWarriors);
+
+  // Post-shuffle rank filter (RNG-free)
+  const rankReq = RANK_REQUIREMENTS[promoter.tier];
+  const shuffledEligible = shuffledWarriors.filter(
+    (w) => (rankings[w.id]?.overallRank ?? 999) <= rankReq
+  );
+
+  if (shuffledEligible.length < 2) return;
+
+  // Get personality-specific gap threshold
+  const gapThreshold = PERSONALITY_GAP_THRESHOLDS[promoter.personality] ?? 0.25;
+
+  // Build score-sorted array for binary-search windowing
+  const scoreOf = (w: Warrior) => rankings[w.id]?.compositeScore ?? 0;
+  const sortedByScore = [...shuffledEligible].sort((a, b) => scoreOf(a) - scoreOf(b));
+  const sortedScores: number[] = new Array(sortedByScore.length);
+  for (let i = 0; i < sortedByScore.length; i++) {
+    const w = sortedByScore[i];
+    if (w) sortedScores[i] = scoreOf(w);
+  }
+
+  // Track matched warriors to prevent reuse within this promoter's pass
+  const matchedIds = new Set<string>();
+  const searchCtx = {
+    promoter,
+    matchedIds,
+    recentFightPairs: ctx.recentFightPairs,
+    playerWarriorIds: ctx.playerWarriorIds,
+    avoidSet: ctx.avoidSet,
+    challengeSet: ctx.challengeSet,
+    gapThreshold,
+  };
+  const offerCtx = { playerWarriorIds: ctx.playerWarriorIds, weather };
+
+  for (const warriorA of shuffledEligible) {
+    if (generated >= capacity) break;
+    if (matchedIds.has(warriorA.id)) continue;
+
+    const scoreA = scoreOf(warriorA);
+    const opponentB = findBestOpponent(
+      warriorA,
+      scoreA,
+      sortedByScore,
+      sortedScores,
+      searchCtx
+    );
+
+    if (opponentB) {
+      matchedIds.add(warriorA.id);
+      matchedIds.add(opponentB.id);
+
+      const offer = createBoutOffer(warriorA, opponentB, promoter, state, rngService, offerCtx);
+      newOffers[offer.id] = offer;
+      generated++;
+    }
+  }
+}
+
+/** Promoters scan the world and dispatch bout offers for week+2. */
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = resolveRng(rng, state.week * 881 + 17);
   const rankings = state.realmRankings || {};
@@ -57,76 +142,23 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   const playerWarriorIds = new Set<string>();
   for (const w of state.roster || []) playerWarriorIds.add(w.id);
 
-  // Player challenge/avoid sets for bout offer biasing
-  const challengeSet = new Set(state.playerChallenges || []);
-  const avoidSet = new Set(state.playerAvoids || []);
-
-  // Repeat-opponent avoidance: build set of warrior pairs that fought within last 4 weeks
-  const recentFightPairs = buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4);
+  const ctx: PromoterPassContext = {
+    state,
+    rngService,
+    rankings,
+    weather,
+    weatherSuitableWarriors,
+    playerWarriorIds,
+    // Player challenge/avoid sets for bout offer biasing
+    challengeSet: new Set(state.playerChallenges || []),
+    avoidSet: new Set(state.playerAvoids || []),
+    // Repeat-opponent avoidance: pairs that fought within last 4 weeks
+    recentFightPairs: buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4),
+  };
 
   // 2. Iterate through Promoters
   Object.values(state.promoters || []).forEach((promoter) => {
-    const capacity = promoter.capacity;
-    let generated = 0;
-
-    // Shuffle full array first (preserves RNG state consumption)
-    const shuffledWarriors = rngService.shuffle(weatherSuitableWarriors);
-
-    // Post-shuffle rank filter (RNG-free)
-    const rankReq = RANK_REQUIREMENTS[promoter.tier];
-    const shuffledEligible = shuffledWarriors.filter(
-      (w) => (rankings[w.id]?.overallRank ?? 999) <= rankReq
-    );
-
-    if (shuffledEligible.length < 2) return;
-
-    // Get personality-specific gap threshold
-    const gapThreshold = PERSONALITY_GAP_THRESHOLDS[promoter.personality] ?? 0.25;
-
-    // Build score-sorted array for binary-search windowing
-    const scoreOf = (w: Warrior) => rankings[w.id]?.compositeScore ?? 0;
-    const sortedByScore = [...shuffledEligible].sort((a, b) => scoreOf(a) - scoreOf(b));
-    const sortedScores: number[] = new Array(sortedByScore.length);
-    for (let i = 0; i < sortedByScore.length; i++) {
-      const w = sortedByScore[i];
-      if (w) sortedScores[i] = scoreOf(w);
-    }
-
-    // Track matched warriors to prevent reuse within this promoter's pass
-    const matchedIds = new Set<string>();
-    const searchCtx = {
-      promoter,
-      matchedIds,
-      recentFightPairs,
-      playerWarriorIds,
-      avoidSet,
-      challengeSet,
-      gapThreshold,
-    };
-    const offerCtx = { playerWarriorIds, weather };
-
-    for (const warriorA of shuffledEligible) {
-      if (generated >= capacity) break;
-      if (matchedIds.has(warriorA.id)) continue;
-
-      const scoreA = scoreOf(warriorA);
-      const opponentB = findBestOpponent(
-        warriorA,
-        scoreA,
-        sortedByScore,
-        sortedScores,
-        searchCtx
-      );
-
-      if (opponentB) {
-        matchedIds.add(warriorA.id);
-        matchedIds.add(opponentB.id);
-
-        const offer = createBoutOffer(warriorA, opponentB, promoter, state, rngService, offerCtx);
-        newOffers[offer.id] = offer;
-        generated++;
-      }
-    }
+    generatePromoterOffers(promoter, ctx, newOffers);
   });
 
   return {

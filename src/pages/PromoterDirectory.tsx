@@ -193,10 +193,8 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
   );
 }
 
-/**
- * Promoter directory.
- */
-export default function PromoterDirectory() {
+/** Derived directory state: sorted list, aggregate stats, bookmark count. */
+function usePromoterDirectory(showBookmarkedOnly: boolean) {
   const { promoters, boutOffers, week, absoluteWeek, bookmarks } = useGameStore(
     useShallow((s) => ({
       promoters: s.promoters,
@@ -206,7 +204,6 @@ export default function PromoterDirectory() {
       bookmarks: s.bookmarks,
     }))
   );
-  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const { sortedPromoters, stats, bookmarkedCount } = useMemo(() => {
     const allPromoters = Object.values(promoters || {});
@@ -246,6 +243,48 @@ export default function PromoterDirectory() {
     };
   }, [promoters, boutOffers, showBookmarkedOnly, bookmarks]);
 
+  return { boutOffers, week, absoluteWeek, sortedPromoters, stats, bookmarkedCount };
+}
+
+/** Header actions: bookmark filter + Booking Office link. */
+function DirectoryActions({
+  showBookmarkedOnly,
+  onToggle,
+  bookmarkedCount,
+}: {
+  showBookmarkedOnly: boolean;
+  onToggle: () => void;
+  bookmarkedCount: number;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <BookmarkFilterToggle
+        active={showBookmarkedOnly}
+        onToggle={onToggle}
+        count={bookmarkedCount}
+      />
+      <Button
+        asChild
+        variant="outline"
+        className="h-9 text-[11px] uppercase font-black tracking-widest gap-2"
+      >
+        <Link to="/stable/bouts">
+          <Calendar className="h-3.5 w-3.5" />
+          Booking Office
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * Promoter directory.
+ */
+export default function PromoterDirectory() {
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+  const { boutOffers, week, absoluteWeek, sortedPromoters, stats, bookmarkedCount } =
+    usePromoterDirectory(showBookmarkedOnly);
+
   return (
     <PageFrame maxWidth="lg">
       <PageHeader
@@ -253,23 +292,11 @@ export default function PromoterDirectory() {
         title="Promoter Directory"
         subtitle={`OPS · PROMOTERS · WEEK ${week}`}
         actions={
-          <div className="flex items-center gap-3">
-            <BookmarkFilterToggle
-              active={showBookmarkedOnly}
-              onToggle={() => setShowBookmarkedOnly((v) => !v)}
-              count={bookmarkedCount}
-            />
-            <Button
-              asChild
-              variant="outline"
-              className="h-9 text-[11px] uppercase font-black tracking-widest gap-2"
-            >
-              <Link to="/stable/bouts">
-                <Calendar className="h-3.5 w-3.5" />
-                Booking Office
-              </Link>
-            </Button>
-          </div>
+          <DirectoryActions
+            showBookmarkedOnly={showBookmarkedOnly}
+            onToggle={() => setShowBookmarkedOnly((v) => !v)}
+            bookmarkedCount={bookmarkedCount}
+          />
         }
       />
 

@@ -11,6 +11,85 @@ import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
  * ExpansionService - Handles stable expansion.
  * Manages generation of new rival stables.
  */
+type LegacyCandidate = {
+  name: string;
+  stableName: string;
+  parentStableId?: string;
+  warriorId?: string;
+  fightingStyle?: FightingStyle;
+};
+
+/**
+ * Overlay a retired-warrior legacy founder onto a freshly generated stable:
+ * owner identity, personality/favored-style derivation from the gladiator
+ * backstory weights, and crest inheritance from the parent stable.
+ */
+function applyLegacyFounder(
+  newStable: RivalStableData,
+  legacy: LegacyCandidate,
+  rivalsById: Map<string, RivalStableData>,
+  rng: IRNGService
+): void {
+  // Set legacy founder details
+  newStable.owner.name = legacy.name;
+  newStable.owner.stableName = legacy.stableName;
+  newStable.owner.backstoryId = 'gladiator'; // Legacy founders are former arena warriors
+  newStable.owner.foundedByWarriorId =
+    legacy.warriorId as import('@/types/shared.types').WarriorId;
+  // Derive personality/favoredStyles from the backstory seed + warrior's style
+  // rather than hardcoding "Aggressive" for every legacy founder.
+  const seedBasis = legacy.warriorId ?? legacy.name;
+  const seedRng = new SeededRNGService(
+    seedBasis.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  );
+  const gladDef = BACKSTORIES.gladiator;
+  const personalityEntries = Object.entries(gladDef.identitySeed.personalityWeights) as [
+    NonNullable<typeof newStable.owner.personality>,
+    number,
+  ][];
+  const totalP = personalityEntries.reduce((s, [, w]) => s + w, 0);
+  let rollP = seedRng.next() * totalP;
+  for (const [key, w] of personalityEntries) {
+    rollP -= w;
+    if (rollP <= 0) {
+      newStable.owner.personality = key;
+      break;
+    }
+  }
+  if (legacy.fightingStyle) {
+    newStable.owner.favoredStyles = [legacy.fightingStyle];
+  }
+
+  // Find parent stable for crest inheritance
+  let parentCrest = undefined;
+  let parentGeneration = 0;
+
+  if (legacy.parentStableId) {
+    const parentStable = rivalsById.get(
+      legacy.parentStableId as import('@/types/shared.types').StableId
+    );
+    if (parentStable?.crest) {
+      parentCrest = parentStable.crest;
+      parentGeneration = parentStable.owner?.generation ?? 0;
+    }
+  }
+
+  // Inherit or generate crest
+  if (parentCrest) {
+    const crestSeed = Math.floor(rng.next() * 100000);
+    newStable.crest = inheritCrest(parentCrest, crestSeed);
+    newStable.owner.generation = parentGeneration + 1;
+  } else {
+    // Generate new crest for legacy founder without parent
+    const crestSeed = Math.floor(rng.next() * 100000);
+    const baseCrest = newStable.crest;
+    if (baseCrest) {
+      newStable.crest = inheritCrest(baseCrest, crestSeed);
+    }
+    newStable.owner.generation = 1;
+  }
+}
+
 export const ExpansionService = {
   /**
    * Processes expansion by generating new rival stables.
@@ -21,13 +100,7 @@ export const ExpansionService = {
     state: GameState,
     rng: IRNGService,
     targetCount: number = INITIAL_RIVAL_COUNT,
-    legacyCandidates?: {
-      name: string;
-      stableName: string;
-      parentStableId?: string;
-      warriorId?: string;
-      fightingStyle?: FightingStyle;
-    }[]
+    legacyCandidates?: LegacyCandidate[]
   ): { updatedState: GameState; newStables: RivalStableData[] } {
     const updatedState = { ...state };
     const currentCount = updatedState.rivals?.length || 0;
@@ -55,64 +128,7 @@ export const ExpansionService = {
         const newStable = generatedStables[0];
 
         if (newStable && legacy) {
-          // Set legacy founder details
-          newStable.owner.name = legacy.name;
-          newStable.owner.stableName = legacy.stableName;
-          newStable.owner.backstoryId = 'gladiator'; // Legacy founders are former arena warriors
-          newStable.owner.foundedByWarriorId =
-            legacy.warriorId as import('@/types/shared.types').WarriorId;
-          // Derive personality/favoredStyles from the backstory seed + warrior's style
-          // rather than hardcoding "Aggressive" for every legacy founder.
-          const seedBasis = legacy.warriorId ?? legacy.name;
-          const seedRng = new SeededRNGService(
-            seedBasis.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
-          );
-          const gladDef = BACKSTORIES.gladiator;
-          const personalityEntries = Object.entries(gladDef.identitySeed.personalityWeights) as [
-            NonNullable<typeof newStable.owner.personality>,
-            number,
-          ][];
-          const totalP = personalityEntries.reduce((s, [, w]) => s + w, 0);
-          let rollP = seedRng.next() * totalP;
-          for (const [key, w] of personalityEntries) {
-            rollP -= w;
-            if (rollP <= 0) {
-              newStable.owner.personality = key;
-              break;
-            }
-          }
-          if (legacy.fightingStyle) {
-            newStable.owner.favoredStyles = [legacy.fightingStyle];
-          }
-
-          // Find parent stable for crest inheritance
-          let parentCrest = undefined;
-          let parentGeneration = 0;
-
-          if (legacy.parentStableId) {
-            const parentStable = rivalsById.get(
-              legacy.parentStableId as import('@/types/shared.types').StableId
-            );
-            if (parentStable?.crest) {
-              parentCrest = parentStable.crest;
-              parentGeneration = parentStable.owner?.generation ?? 0;
-            }
-          }
-
-          // Inherit or generate crest
-          if (parentCrest) {
-            const crestSeed = Math.floor(rng.next() * 100000);
-            newStable.crest = inheritCrest(parentCrest, crestSeed);
-            newStable.owner.generation = parentGeneration + 1;
-          } else {
-            // Generate new crest for legacy founder without parent
-            const crestSeed = Math.floor(rng.next() * 100000);
-            const baseCrest = newStable.crest;
-            if (baseCrest) {
-              newStable.crest = inheritCrest(baseCrest, crestSeed);
-            }
-            newStable.owner.generation = 1;
-          }
+          applyLegacyFounder(newStable, legacy, rivalsById, rng);
         }
 
         if (newStable) {

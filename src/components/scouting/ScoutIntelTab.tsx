@@ -18,6 +18,76 @@ interface ScoutIntelTabProps {
   onScout: (quality: ScoutQuality) => void;
 }
 
+/** Empty state when no rival stables exist yet. */
+function EmptyRivalsState() {
+  return (
+    <Surface
+      variant="glass"
+      className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4"
+    >
+      <Search className="h-12 w-12 text-muted-foreground opacity-20" />
+      <div className="space-y-1">
+        <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">
+          No Rival Stables Known
+        </p>
+        <p className="text-xs text-muted-foreground/60 italic">
+          Advance the season to uncover rival stables in the arena.
+        </p>
+      </div>
+    </Surface>
+  );
+}
+
+/** Third column: dossier header + report details / select-warrior prompt. */
+function DossierColumn({
+  activeWarrior,
+  existingReport,
+  treasury,
+  onScout,
+}: {
+  activeWarrior: RivalStableData['roster'][number] | undefined;
+  existingReport: ScoutReportData | null | undefined;
+  treasury: number;
+  onScout: (quality: ScoutQuality) => void;
+}) {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 px-2">
+        <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
+          <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">
+            Warrior Dossier
+          </span>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
+      </div>
+
+      {activeWarrior ? (
+        <ScoutReportDetails
+          report={existingReport ?? null}
+          warriorName={activeWarrior.name}
+          treasury={treasury}
+          onScout={onScout}
+        />
+      ) : (
+        <Surface
+          variant="glass"
+          className="py-20 text-center border-dashed border-border/30 flex flex-col items-center gap-4"
+        >
+          <Target className="h-12 w-12 text-muted-foreground opacity-20" />
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
+              Select a Warrior to Scout
+            </p>
+            <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">
+              Establish lock-on to proceed with deep scan
+            </p>
+          </div>
+        </Surface>
+      )}
+    </div>
+  );
+}
+
 /**
  * Scout intel tab.
  * @param  - {
@@ -64,24 +134,7 @@ export function ScoutIntelTab({
     [reports, activeWarrior]
   );
 
-  if (rivals.length === 0) {
-    return (
-      <Surface
-        variant="glass"
-        className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4"
-      >
-        <Search className="h-12 w-12 text-muted-foreground opacity-20" />
-        <div className="space-y-1">
-          <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">
-            No Rival Stables Known
-          </p>
-          <p className="text-xs text-muted-foreground/60 italic">
-            Advance the season to uncover rival stables in the arena.
-          </p>
-        </div>
-      </Surface>
-    );
-  }
+  if (rivals.length === 0) return <EmptyRivalsState />;
 
   return (
     <div className="grid gap-6 lg:grid-cols-3 mt-4">
@@ -99,40 +152,12 @@ export function ScoutIntelTab({
         stableName={activeRival?.owner.stableName}
       />
 
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 px-2">
-          <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
-            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">
-              Warrior Dossier
-            </span>
-          </div>
-          <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
-        </div>
-
-        {activeWarrior ? (
-          <ScoutReportDetails
-            report={existingReport ?? null}
-            warriorName={activeWarrior.name}
-            treasury={treasury}
-            onScout={onScout}
-          />
-        ) : (
-          <Surface
-            variant="glass"
-            className="py-20 text-center border-dashed border-border/30 flex flex-col items-center gap-4"
-          >
-            <Target className="h-12 w-12 text-muted-foreground opacity-20" />
-            <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
-                Select a Warrior to Scout
-              </p>
-              <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">
-                Establish lock-on to proceed with deep scan
-              </p>
-            </div>
-          </Surface>
-        )}
-      </div>
+      <DossierColumn
+        activeWarrior={activeWarrior}
+        existingReport={existingReport}
+        treasury={treasury}
+        onScout={onScout}
+      />
     </div>
   );
 }

@@ -13,11 +13,11 @@ const DEFAULT_CONDITION: PlanCondition = {
   override: { OE: 4 },
 };
 
-/**
- * Condition editor.
- * @param - { conditions, on change }.
- */
-export default function ConditionEditor({ conditions, onChange }: ConditionEditorProps) {
+/** Condition list mutations bound to the current conditions array. */
+function useConditionMutations(
+  conditions: PlanCondition[],
+  onChange: (conditions: PlanCondition[]) => void
+) {
   function addCondition() {
     onChange([...conditions, { ...DEFAULT_CONDITION, override: { OE: 4 } }]);
   }
@@ -87,6 +87,32 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
       updateCondition(idx, { override: { ...cond.override, [key]: val } });
     }
   }
+
+  return {
+    addCondition,
+    removeCondition,
+    updateCondition,
+    updateTrigger,
+    updateTriggerValue,
+    updateOverrideSlider,
+    updateOverrideTactic,
+  };
+}
+
+/**
+ * Condition editor.
+ * @param - { conditions, on change }.
+ */
+export default function ConditionEditor({ conditions, onChange }: ConditionEditorProps) {
+  const {
+    addCondition,
+    removeCondition,
+    updateCondition,
+    updateTrigger,
+    updateTriggerValue,
+    updateOverrideSlider,
+    updateOverrideTactic,
+  } = useConditionMutations(conditions, onChange);
 
   return (
     <div className="space-y-4">

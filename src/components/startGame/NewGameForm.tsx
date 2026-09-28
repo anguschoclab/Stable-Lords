@@ -59,6 +59,48 @@ function useRandomizers({
   return { randomizeAll, randomizeCrest, randomizeBackstory };
 }
 
+/** Name + crest field cluster. */
+function IdentityFields({
+  ownerName,
+  setOwnerName,
+  stableName,
+  setStableName,
+  playerCrest,
+  onRandomizeCrest,
+}: Pick<
+  NewGameFormProps,
+  'ownerName' | 'setOwnerName' | 'stableName' | 'setStableName' | 'playerCrest'
+> & { onRandomizeCrest: () => void }) {
+  return (
+    <div className="space-y-5">
+      <NameField
+        id="owner-name"
+        label="YOUR NAME"
+        placeholder="e.g. Master Thorne"
+        value={ownerName}
+        onChange={setOwnerName}
+        maxLength={24}
+        autoFocus
+        onRandomize={() => setOwnerName(randomOwnerName())}
+        randomizeLabel="Randomize your name"
+      />
+
+      <NameField
+        id="stable-name"
+        label="STABLE NAME"
+        placeholder="e.g. The Iron Wolves"
+        value={stableName}
+        onChange={setStableName}
+        maxLength={30}
+        onRandomize={() => setStableName(randomStableName())}
+        randomizeLabel="Randomize stable name"
+      />
+
+      <CrestPanel crest={playerCrest} onRandomize={onRandomizeCrest} />
+    </div>
+  );
+}
+
 /**
  * New game form.
  * @param  - {
@@ -138,32 +180,14 @@ export default function NewGameForm({
             RANDOMIZE ALL
           </Button>
 
-          <div className="space-y-5">
-            <NameField
-              id="owner-name"
-              label="YOUR NAME"
-              placeholder="e.g. Master Thorne"
-              value={ownerName}
-              onChange={setOwnerName}
-              maxLength={24}
-              autoFocus
-              onRandomize={() => setOwnerName(randomOwnerName())}
-              randomizeLabel="Randomize your name"
-            />
-
-            <NameField
-              id="stable-name"
-              label="STABLE NAME"
-              placeholder="e.g. The Iron Wolves"
-              value={stableName}
-              onChange={setStableName}
-              maxLength={30}
-              onRandomize={() => setStableName(randomStableName())}
-              randomizeLabel="Randomize stable name"
-            />
-
-            <CrestPanel crest={playerCrest} onRandomize={randomizeCrest} />
-          </div>
+          <IdentityFields
+            ownerName={ownerName}
+            setOwnerName={setOwnerName}
+            stableName={stableName}
+            setStableName={setStableName}
+            playerCrest={playerCrest}
+            onRandomizeCrest={randomizeCrest}
+          />
 
           <BackstoryPicker
             value={backstoryId}

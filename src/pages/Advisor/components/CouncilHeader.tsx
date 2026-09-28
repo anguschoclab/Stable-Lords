@@ -9,6 +9,61 @@ interface CouncilHeaderProps {
   onExecuteAll: () => void;
 }
 
+/** One KPI tile. */
+function KpiCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+}) {
+  return (
+    <Surface variant="glass" className="p-4 border-white/5 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        {icon}
+        <div className="flex flex-col">
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">{label}</span>
+          <span className="text-base font-display font-black text-foreground">{value}</span>
+        </div>
+      </div>
+    </Surface>
+  );
+}
+
+const KPI_DEFS = [
+  { icon: <Swords className="h-4 w-4 text-primary" />, label: 'Combat Ready', key: 'combatReadyCount' },
+  { icon: <Heart className="h-4 w-4 text-destructive" />, label: 'Med Bay Rehab', key: 'rehabCount' },
+  { icon: <Trophy className="h-4 w-4 text-arena-gold" />, label: 'Contenders', key: 'tournamentContenderCount' },
+  { icon: <Dumbbell className="h-4 w-4 text-arena-pop" />, label: 'Unassigned Drills', key: 'unassignedTrainingCount' },
+] as const;
+
+/** Purse/training/treasury projection + insolvency badge. */
+function PurseProjection({ summary }: { summary: StableAdvisorSummary }) {
+  return (
+    <div className="flex flex-col items-end px-4 border-l border-white/10 hidden sm:flex">
+      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">
+        Purse Projection
+      </span>
+      <span className="font-display font-black text-sm text-arena-gold">
+        +{summary.projectedPurseGold}G
+      </span>
+      <span className="text-[8px] text-muted-foreground/40 font-mono">
+        Training: -{summary.projectedTrainingCost}G · Treasury: {summary.treasury}G
+      </span>
+      {summary.solvencyWarning && (
+        <span
+          data-testid="solvency-warning"
+          className="mt-1 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/20 text-destructive border border-destructive/40"
+        >
+          Insolvent
+        </span>
+      )}
+    </div>
+  );
+}
+
 /** War Council banner: stable-wide directives, purse/solvency projection, KPI bar, and the Execute-All action. */
 export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
   const hasActionable = summary.allActionPayloads.length > 0;
@@ -37,25 +92,7 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-            <div className="flex flex-col items-end px-4 border-l border-white/10 hidden sm:flex">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">
-                Purse Projection
-              </span>
-              <span className="font-display font-black text-sm text-arena-gold">
-                +{summary.projectedPurseGold}G
-              </span>
-              <span className="text-[8px] text-muted-foreground/40 font-mono">
-                Training: -{summary.projectedTrainingCost}G · Treasury: {summary.treasury}G
-              </span>
-              {summary.solvencyWarning && (
-                <span
-                  data-testid="solvency-warning"
-                  className="mt-1 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/20 text-destructive border border-destructive/40"
-                >
-                  Insolvent
-                </span>
-              )}
-            </div>
+            <PurseProjection summary={summary} />
 
             <Button
               size="lg"
@@ -72,45 +109,9 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
 
       {/* KPI Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Surface variant="glass" className="p-4 border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Swords className="h-4 w-4 text-primary" />
-            <div className="flex flex-col">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">Combat Ready</span>
-              <span className="text-base font-display font-black text-foreground">{summary.combatReadyCount}</span>
-            </div>
-          </div>
-        </Surface>
-
-        <Surface variant="glass" className="p-4 border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Heart className="h-4 w-4 text-destructive" />
-            <div className="flex flex-col">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">Med Bay Rehab</span>
-              <span className="text-base font-display font-black text-foreground">{summary.rehabCount}</span>
-            </div>
-          </div>
-        </Surface>
-
-        <Surface variant="glass" className="p-4 border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Trophy className="h-4 w-4 text-arena-gold" />
-            <div className="flex flex-col">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">Contenders</span>
-              <span className="text-base font-display font-black text-foreground">{summary.tournamentContenderCount}</span>
-            </div>
-          </div>
-        </Surface>
-
-        <Surface variant="glass" className="p-4 border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Dumbbell className="h-4 w-4 text-arena-pop" />
-            <div className="flex flex-col">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">Unassigned Drills</span>
-              <span className="text-base font-display font-black text-foreground">{summary.unassignedTrainingCount}</span>
-            </div>
-          </div>
-        </Surface>
+        {KPI_DEFS.map((d) => (
+          <KpiCard key={d.key} icon={d.icon} label={d.label} value={summary[d.key]} />
+        ))}
       </div>
     </div>
   );

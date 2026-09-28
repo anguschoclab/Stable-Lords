@@ -196,8 +196,63 @@ function resolveDynamicTraits(
 }
 
 /**
- *
+ * AI intent telemetry (Stage F) — labels which existing plan/state
+ * selection is active (condition override / psych / desperate / kill
+ * window). Pure annotation: emits on transitions only, touches no math.
  */
+function emitIntentTelemetry(
+  fA: FighterState,
+  fD: FighterState,
+  ctx: ResolutionContext,
+  condResultA: ReturnType<typeof evaluateConditions>,
+  condResultD: ReturnType<typeof evaluateConditions>,
+  events: CombatEvent[]
+): void {
+  if (!ctx.aiIntentTelemetry) return;
+  const intentA = evaluateBoutIntent(fA, fD, ctx);
+  if (intentA) events.push(intentA);
+  const intentD = evaluateBoutIntent(fD, fA, ctx);
+  if (intentD) events.push(intentD);
+  // Condition-fire annotations — which trigger actually swapped the plan,
+  // marked @CORNER when corner advice forced the off-cadence re-check.
+  const cornerTag = ctx.cornerAdvice ? '@CORNER' : '';
+  if (condResultA.firedTrigger) {
+    events.push({
+      type: 'STATE_CHANGE',
+      actor: 'A',
+      result: `CONDITION_${condResultA.firedTrigger}${cornerTag}`,
+    });
+  }
+  if (condResultD.firedTrigger) {
+    events.push({
+      type: 'STATE_CHANGE',
+      actor: 'D',
+      result: `CONDITION_${condResultD.firedTrigger}${cornerTag}`,
+    });
+  }
+}
+
+/** Endurance-derived fatigue penalty plus psych def/par mods, per side. */
+function resolveFatigueMods(
+  fA: FighterState,
+  fD: FighterState,
+  ctx: ResolutionContext,
+  psychA: ReturnType<typeof getPsychStateMods>['psychA'],
+  psychD: ReturnType<typeof getPsychStateMods>['psychD']
+): { fatA: number; fatD: number } {
+  return {
+    fatA:
+      fatiguePenalty(fA.endurance, fA.maxEndurance, ctx.trainerModsA.fatiguePenaltyReduction ?? 0) +
+      psychA.defMod +
+      psychA.parMod,
+    fatD:
+      fatiguePenalty(fD.endurance, fD.maxEndurance, ctx.trainerModsD.fatiguePenaltyReduction ?? 0) +
+      psychD.defMod +
+      psychD.parMod,
+  };
+}
+
+/** Pre-exchange setup: recovery, conditions, psych, tactics, fatigue, passives, traits. */
 export function prepareExchange(
   ctx: ResolutionContext,
   fA: FighterState,
@@ -239,45 +294,11 @@ export function prepareExchange(
   // ── Desperate state handling ──
   events.push(...handleDesperateState(fA, fD));
 
-  // ── AI intent telemetry (Stage F) — labels which existing plan/state
-  //    selection is active (condition override / psych / desperate / kill
-  //    window). Pure annotation: emits on transitions only, touches no math. ──
-  if (ctx.aiIntentTelemetry) {
-    const intentA = evaluateBoutIntent(fA, fD, ctx);
-    if (intentA) events.push(intentA);
-    const intentD = evaluateBoutIntent(fD, fA, ctx);
-    if (intentD) events.push(intentD);
-    // Condition-fire annotations — which trigger actually swapped the plan,
-    // marked @CORNER when corner advice forced the off-cadence re-check.
-    const cornerTag = ctx.cornerAdvice ? '@CORNER' : '';
-    if (condResultA.firedTrigger) {
-      events.push({
-        type: 'STATE_CHANGE',
-        actor: 'A',
-        result: `CONDITION_${condResultA.firedTrigger}${cornerTag}`,
-      });
-    }
-    if (condResultD.firedTrigger) {
-      events.push({
-        type: 'STATE_CHANGE',
-        actor: 'D',
-        result: `CONDITION_${condResultD.firedTrigger}${cornerTag}`,
-      });
-    }
-  }
+  emitIntentTelemetry(fA, fD, ctx, condResultA, condResultD, events);
 
   const tac = resolveTacticsAndBias(fA, fD, phaseKey);
   const oal = resolveOEAL(fA, fD, phaseKey, exchange);
-
-  // Apply psych state mods and RopeADope fatigue penalty reduction
-  const fatA =
-    fatiguePenalty(fA.endurance, fA.maxEndurance, ctx.trainerModsA.fatiguePenaltyReduction ?? 0) +
-    psychA.defMod +
-    psychA.parMod;
-  const fatD =
-    fatiguePenalty(fD.endurance, fD.maxEndurance, ctx.trainerModsD.fatiguePenaltyReduction ?? 0) +
-    psychD.defMod +
-    psychD.parMod;
+  const { fatA, fatD } = resolveFatigueMods(fA, fD, ctx, psychA, psychD);
 
   const { passA, passD } = resolveStylePassives(
     rng,

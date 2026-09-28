@@ -57,6 +57,48 @@ function AttributeProgress({
   );
 }
 
+/** Label + value/potential cell at the row's left edge. */
+function RowLabel({
+  attrKey,
+  val,
+  isRevealed,
+  potVal,
+  showLock,
+}: {
+  attrKey: keyof Attributes;
+  val: number;
+  isRevealed: boolean;
+  potVal: number;
+  showLock: boolean;
+}) {
+  return (
+    <div className="w-16 shrink-0">
+      <div className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+        {showLock && <Lock className="h-2.5 w-2.5 opacity-60 shrink-0" />}
+        {attrKey}
+      </div>
+      <div className="text-[10px] font-mono opacity-60">
+        {val}
+        <span className="opacity-40">/</span>
+        {isRevealed ? potVal : '??'}
+      </div>
+    </div>
+  );
+}
+
+/** "Council Pick" advisor recommendation badge. */
+function AdvisorBadge() {
+  return (
+    <span
+      data-testid="advisor-attribute-badge"
+      className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1 shrink-0"
+    >
+      <ShieldCheck className="h-2.5 w-2.5" />
+      Council Pick
+    </span>
+  );
+}
+
 interface AttributeRowProps {
   warrior: Warrior;
   attributeKey: keyof Attributes;
@@ -115,17 +157,13 @@ export function AttributeRow({
           aria-label={`Assign ${ATTRIBUTE_LABELS[key]} training for ${warrior.name}`}
         >
           {/* Label & Value */}
-          <div className="w-16 shrink-0">
-            <div className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
-              {lockReason && !isSelected && <Lock className="h-2.5 w-2.5 opacity-60 shrink-0" />}
-              {key}
-            </div>
-            <div className="text-[10px] font-mono opacity-60">
-              {val}
-              <span className="opacity-40">/</span>
-              {isRevealed ? potVal : '??'}
-            </div>
-          </div>
+          <RowLabel
+            attrKey={key}
+            val={val}
+            isRevealed={isRevealed}
+            potVal={potVal}
+            showLock={!!lockReason && !isSelected}
+          />
 
           {/* Progress Bar */}
           <AttributeProgress
@@ -136,15 +174,7 @@ export function AttributeRow({
             chance={chance}
           />
 
-          {isAdvisorRecommended && !isSelected && (
-            <span
-              data-testid="advisor-attribute-badge"
-              className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1 shrink-0"
-            >
-              <ShieldCheck className="h-2.5 w-2.5" />
-              Council Pick
-            </span>
-          )}
+          {isAdvisorRecommended && !isSelected && <AdvisorBadge />}
 
           <AttributeRowStatus
             isSelected={isSelected}

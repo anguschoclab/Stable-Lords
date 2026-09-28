@@ -12,6 +12,65 @@ interface MetaAnalyticsProps {
 
 const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'];
 
+/** One style row: name, rate badge, animated win-density bar. */
+function StyleRateRow({
+  idx,
+  stat,
+}: {
+  idx: number;
+  stat: { style: string; wins: number; total: number; rate: number };
+}) {
+  const s = stat;
+  return (
+    <div className="space-y-2.5 group">
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-mono font-black text-foreground/20">
+            0{idx + 1}
+          </span>
+          <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
+            {s.style}
+          </span>
+        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-mono font-black text-primary/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
+                {s.rate.toFixed(1)}%
+              </span>
+              <Badge
+                variant="outline"
+                className="text-[8px] font-mono font-black border-white/5 bg-white/5 text-muted-foreground/60 h-5 px-2"
+              >
+                {s.wins} / {s.total}
+              </Badge>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+            Win Density: {s.wins} Wins in {s.total} Registered Bouts
+          </TooltipContent>
+        </Tooltip>
+      </div>
+
+      <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${s.rate}%` }}
+          transition={{ duration: 1, delay: idx * 0.1 }}
+          className={cn(
+            'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
+            s.rate > 55
+              ? 'bg-arena-pop shadow-[0_0_10px_rgba(var(--arena-pop-rgb),0.4)]'
+              : s.rate > 45
+                ? 'bg-primary'
+                : 'bg-muted-foreground/40'
+          )}
+        />
+      </div>
+    </div>
+  );
+}
+
 /**
  * Tactical style analysis.
  * @param - { all fights }.
@@ -69,52 +128,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
 
       <div className="space-y-6 relative z-10">
         {stats.map((s, idx) => (
-          <div key={s.style} className="space-y-2.5 group">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] font-mono font-black text-foreground/20">
-                  0{idx + 1}
-                </span>
-                <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
-                  {s.style}
-                </span>
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono font-black text-primary/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
-                      {s.rate.toFixed(1)}%
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="text-[8px] font-mono font-black border-white/5 bg-white/5 text-muted-foreground/60 h-5 px-2"
-                    >
-                      {s.wins} / {s.total}
-                    </Badge>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                  Win Density: {s.wins} Wins in {s.total} Registered Bouts
-                </TooltipContent>
-              </Tooltip>
-            </div>
-
-            <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${s.rate}%` }}
-                transition={{ duration: 1, delay: idx * 0.1 }}
-                className={cn(
-                  'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
-                  s.rate > 55
-                    ? 'bg-arena-pop shadow-[0_0_10px_rgba(var(--arena-pop-rgb),0.4)]'
-                    : s.rate > 45
-                      ? 'bg-primary'
-                      : 'bg-muted-foreground/40'
-                )}
-              />
-            </div>
-          </div>
+          <StyleRateRow key={s.style} idx={idx} stat={s} />
         ))}
       </div>
 

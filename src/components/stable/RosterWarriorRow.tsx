@@ -35,6 +35,54 @@ interface RosterWarriorRowProps {
   contenderBadge?: { arenaName: string; rank: number };
 }
 
+/** Fame chip: star icon + gold-tinted fame value. */
+function FameChip({ fame }: { fame: number }) {
+  const hot = fame > FAME_STAR_THRESHOLD;
+  return (
+    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none">
+      <Star
+        className={cn('h-3 w-3', hot ? 'text-arena-gold' : 'text-muted-foreground/60')}
+      />
+      <span
+        className={cn(
+          'text-[10px] font-mono font-black',
+          hot ? 'text-arena-gold' : 'text-muted-foreground'
+        )}
+      >
+        {fame}G
+      </span>
+    </div>
+  );
+}
+
+/** Win-rate + kills stat plate shown at the row's right edge. */
+function RecordStats({ winRate, kills }: { winRate: number; kills: number }) {
+  return (
+    <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all motion-reduce:transition-none motion-reduce:transform-none">
+      <div className="text-center">
+        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
+          Victory
+        </span>
+        <span className="font-mono font-black text-primary text-sm">{winRate}%</span>
+      </div>
+      <div className="h-8 w-px bg-white/5" />
+      <div className="text-center">
+        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
+          Kills
+        </span>
+        <span
+          className={cn(
+            'font-mono font-black text-sm',
+            kills > 0 ? 'text-destructive' : 'text-muted-foreground/40'
+          )}
+        >
+          {kills}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -85,26 +133,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick, contenderBadge }
                 )}
                 <div className="flex items-center gap-3">
                   <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-                    <Star
-                      className={cn(
-                        'h-3 w-3',
-                        warrior.fame > FAME_STAR_THRESHOLD
-                          ? 'text-arena-gold'
-                          : 'text-muted-foreground/60'
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        'text-[10px] font-mono font-black',
-                        warrior.fame > FAME_STAR_THRESHOLD
-                          ? 'text-arena-gold'
-                          : 'text-muted-foreground'
-                      )}
-                    >
-                      {warrior.fame}G
-                    </span>
-                  </div>
+                  <FameChip fame={warrior.fame} />
                   <PotentialBadge potential={warrior.potential} />
                   {warrior.traits && <LiabilityBadge warrior={warrior as Warrior} />}
                   {warrior.traits?.slice(0, 3).map((t) => (
@@ -115,28 +144,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick, contenderBadge }
 
               <div className="flex items-center gap-4">
                 <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
-                <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-                  <div className="text-center">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
-                      Victory
-                    </span>
-                    <span className="font-mono font-black text-primary text-sm">{winRate}%</span>
-                  </div>
-                  <div className="h-8 w-px bg-white/5" />
-                  <div className="text-center">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
-                      Kills
-                    </span>
-                    <span
-                      className={cn(
-                        'font-mono font-black text-sm',
-                        warrior.career.kills > 0 ? 'text-destructive' : 'text-muted-foreground/40'
-                      )}
-                    >
-                      {warrior.career.kills}
-                    </span>
-                  </div>
-                </div>
+                <RecordStats winRate={winRate} kills={warrior.career.kills} />
               </div>
             </div>
 

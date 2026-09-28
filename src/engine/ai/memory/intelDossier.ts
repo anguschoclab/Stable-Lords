@@ -118,6 +118,53 @@ function pruneDossiers(
 }
 
 /**
+ * Fold one witnessed fight into the dossier map: observed styles + witnessed
+ * tells for both sides, and recordVs when this stable fought.
+ */
+function foldFight(
+  dossiers: Record<string, OpponentDossier>,
+  fight: FightSummary,
+  rival: RivalStableData,
+  selfIds: Set<string>,
+  stableOf: (wid: FightSummary['warriorIdA']) => string | undefined,
+  observeTells: (wid: FightSummary['warriorIdA'], stableId: string | undefined) => void,
+  week: number
+): void {
+  const stableA = stableOf(fight.warriorIdA);
+  const stableD = stableOf(fight.warriorIdD);
+  if (stableA && stableA !== rival.id) {
+    const d = dossiers[stableA] ?? (dossiers[stableA] = blankDossier(week));
+    d.lastSeenWeek = week;
+    observeStyle(d, fight.styleA);
+  }
+  if (stableD && stableD !== rival.id) {
+    const d = dossiers[stableD] ?? (dossiers[stableD] = blankDossier(week));
+    d.lastSeenWeek = week;
+    observeStyle(d, fight.styleD);
+  }
+  observeTells(fight.warriorIdA, stableA);
+  observeTells(fight.warriorIdD, stableD);
+
+  // recordVs only moves when THIS stable fought.
+  const selfSide = selfIds.has(fight.warriorIdA)
+    ? 'A'
+    : selfIds.has(fight.warriorIdD)
+      ? 'D'
+      : null;
+  if (!selfSide || !fight.winner) return;
+  const oppId = selfSide === 'A' ? stableD : stableA;
+  if (!oppId || oppId === rival.id) return;
+  const d = dossiers[oppId] ?? (dossiers[oppId] = blankDossier(week));
+  d.lastSeenWeek = week;
+  if (fight.winner === selfSide) {
+    d.recordVs.w++;
+    if (fight.by === 'Kill') d.recordVs.k++;
+  } else {
+    d.recordVs.l++;
+  }
+}
+
+/**
  * Refresh a stable's opponent dossiers from current world state:
  * 1. stale-week decay on prior beliefs,
  * 2. observe every extant stable (incl. the player) — decayed fame estimate,
@@ -192,38 +239,7 @@ export function updateDossiers(
   };
 
   for (const fight of fights) {
-    const stableA = stableOf(fight.warriorIdA);
-    const stableD = stableOf(fight.warriorIdD);
-    if (stableA && stableA !== rival.id) {
-      const d = dossiers[stableA] ?? (dossiers[stableA] = blankDossier(week));
-      d.lastSeenWeek = week;
-      observeStyle(d, fight.styleA);
-    }
-    if (stableD && stableD !== rival.id) {
-      const d = dossiers[stableD] ?? (dossiers[stableD] = blankDossier(week));
-      d.lastSeenWeek = week;
-      observeStyle(d, fight.styleD);
-    }
-    observeTells(fight.warriorIdA, stableA);
-    observeTells(fight.warriorIdD, stableD);
-
-    // recordVs only moves when THIS stable fought.
-    const selfSide = selfIds.has(fight.warriorIdA)
-      ? 'A'
-      : selfIds.has(fight.warriorIdD)
-        ? 'D'
-        : null;
-    if (!selfSide || !fight.winner) continue;
-    const oppId = selfSide === 'A' ? stableD : stableA;
-    if (!oppId || oppId === rival.id) continue;
-    const d = dossiers[oppId] ?? (dossiers[oppId] = blankDossier(week));
-    d.lastSeenWeek = week;
-    if (fight.winner === selfSide) {
-      d.recordVs.w++;
-      if (fight.by === 'Kill') d.recordVs.k++;
-    } else {
-      d.recordVs.l++;
-    }
+    foldFight(dossiers, fight, rival, selfIds, stableOf, observeTells, week);
   }
 
   return pruneDossiers(dossiers);

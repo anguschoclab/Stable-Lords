@@ -215,49 +215,19 @@ export function assignCampaignRoles(
  * extra booking before a title engagement (signed challengers, champions
  * approaching the Grand Championship bracket).
  */
-export function processCrownPosture(
-  rival: RivalStableData,
-  state: GameState,
-  perception?: PerceptionSnapshot
-): { updatedRival: RivalStableData; gazetteItems: string[] } {
-  let updatedRival = { ...rival };
-  const gazetteItems: string[] = [];
-  const week = state.absoluteWeek ?? state.week;
-
-  const assessment = assessCrownOpportunity(updatedRival, state, perception);
-  const memory: AIAgentMemory = {
-    ...(updatedRival.agentMemory ?? {
-      lastTreasury: updatedRival.treasury,
-      burnRate: 0,
-      metaAwareness: {},
-      knownRivals: [],
-      opponentDossiers: {},
-    }),
-    crownAssessment: assessment,
-  };
-  updatedRival.agentMemory = memory;
-
-  // Clear a consumed or obsolete relinquish marker — the pass vacated the
-  // throne (or it ended by other means), so there is nothing left to give up.
-  const pendingArena = memory.pendingRelinquish;
-  if (pendingArena) {
-    const holderId =
-      perception?.championByArena.get(pendingArena) ??
-      state.arenaChampions?.[pendingArena]?.champion?.warriorId;
-    if (!holderId || !updatedRival.roster.some((w) => w.id === holderId)) {
-      delete memory.pendingRelinquish;
-    }
-  }
-
-  // Reign management: vacate a crown whose champion is past their prime and
-  // losing, or permanently unable to defend. Declared as intent — the
-  // championship pass performs the actual relinquish through its reign delta.
+/**
+ * Reign management: vacate a crown whose champion is past their prime and
+ * losing, or permanently unable to defend. Declared as intent — the
+ * championship pass performs the actual relinquish through its reign delta.
+ */
+function markCrownsForRelinquish(
+  updatedRival: RivalStableData,
+  crownsHeld: (readonly [string, string | undefined])[],
+  memory: AIAgentMemory,
+  week: number,
+  gazetteItems: string[]
+): RivalStableData {
   const seasonRecord = memory.seasonRecord;
-  const crownsHeld = perception
-    ? [...perception.championByArena.entries()]
-    : Object.entries(state.arenaChampions ?? {}).map(
-        ([arenaId, t]) => [arenaId, t?.champion?.warriorId] as const
-      );
   for (const [arenaId, champId] of crownsHeld) {
     if (!champId) continue;
     const champ = updatedRival.roster.find((w) => w.id === champId);
@@ -281,9 +251,19 @@ export function processCrownPosture(
       );
     }
   }
+  return updatedRival;
+}
 
-  // Protection: signed title-bout warriors and champions inside the Grand
-  // Championship prep window rest — no training injury, no extra bookings.
+/**
+ * Protection: signed title-bout warriors and champions inside the Grand
+ * Championship prep window rest — no training injury, no extra bookings.
+ */
+function applyProtectionRests(
+  updatedRival: RivalStableData,
+  state: GameState,
+  crownsHeld: (readonly [string, string | undefined])[],
+  week: number
+): RivalStableData {
   const signed = signedTitleBoutIds(state);
   const inGrandChampPrep =
     weeksUntilChampionsTournament(state.week) <= GRAND_CHAMP_PREP_WEEKS &&
@@ -318,6 +298,51 @@ export function processCrownPosture(
   if (assignments.length !== (updatedRival.trainingAssignments ?? []).length) {
     updatedRival.trainingAssignments = assignments;
   }
+  return updatedRival;
+}
+
+export function processCrownPosture(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: PerceptionSnapshot
+): { updatedRival: RivalStableData; gazetteItems: string[] } {
+  let updatedRival = { ...rival };
+  const gazetteItems: string[] = [];
+  const week = state.absoluteWeek ?? state.week;
+
+  const assessment = assessCrownOpportunity(updatedRival, state, perception);
+  const memory: AIAgentMemory = {
+    ...(updatedRival.agentMemory ?? {
+      lastTreasury: updatedRival.treasury,
+      burnRate: 0,
+      metaAwareness: {},
+      knownRivals: [],
+      opponentDossiers: {},
+    }),
+    crownAssessment: assessment,
+  };
+  updatedRival.agentMemory = memory;
+
+  // Clear a consumed or obsolete relinquish marker — the pass vacated the
+  // throne (or it ended by other means), so there is nothing left to give up.
+  const pendingArena = memory.pendingRelinquish;
+  if (pendingArena) {
+    const holderId =
+      perception?.championByArena.get(pendingArena) ??
+      state.arenaChampions?.[pendingArena]?.champion?.warriorId;
+    if (!holderId || !updatedRival.roster.some((w) => w.id === holderId)) {
+      delete memory.pendingRelinquish;
+    }
+  }
+
+  const crownsHeld = perception
+    ? [...perception.championByArena.entries()]
+    : Object.entries(state.arenaChampions ?? {}).map(
+        ([arenaId, t]) => [arenaId, t?.champion?.warriorId] as const
+      );
+
+  updatedRival = markCrownsForRelinquish(updatedRival, crownsHeld, memory, week, gazetteItems);
+  updatedRival = applyProtectionRests(updatedRival, state, crownsHeld, week);
 
   return { updatedRival, gazetteItems };
 }

@@ -14,6 +14,85 @@ interface RivalWarriorListProps {
   stableName: string | undefined;
 }
 
+/** One selectable rival-warrior row with intel badge + tooltip. */
+function WarriorListItem({
+  warrior,
+  hasReport,
+  isSelected,
+  onSelect,
+}: {
+  warrior: Warrior;
+  hasReport: boolean;
+  isSelected: boolean;
+  onSelect: () => void;
+}) {
+  const w = warrior;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          aria-label={`Select rival warrior ${w.name} (${w.career.wins}W/${w.career.losses}L)`}
+          className={cn(
+            'w-full text-left group relative outline-none',
+            isSelected ? 'z-10' : 'z-0'
+          )}
+          onClick={onSelect}
+        >
+          <Surface
+            variant={isSelected ? 'paper' : 'glass'}
+            padding="none"
+            className={cn(
+              'transition-all motion-reduce:transition-none motion-reduce:transform-none border bg-neutral-900/60 overflow-hidden',
+              isSelected
+                ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]'
+                : 'border-white/5 hover:border-white/20 hover:bg-white/5'
+            )}
+          >
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <WarriorNameTag id={w.id} name={w.name} useCrown={false} />
+                  {hasReport && (
+                    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse motion-reduce:animate-none">
+                      <Eye className="h-2.5 w-2.5" /> INTEL
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <StatBadge styleName={w.style as import('@/types/game').FightingStyle} />
+                  <div className="flex items-center gap-2 text-[10px] font-mono font-black text-muted-foreground/60">
+                    <span className="text-primary">{w.career.wins}W</span>
+                    <span className="opacity-20">/</span>
+                    <span className="text-destructive/60">{w.career.losses}L</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <BookmarkButton entityType="warrior" entityId={w.id} size="sm" />
+                {isSelected ? (
+                  <Target className="h-4 w-4 text-primary animate-pulse motion-reduce:animate-none" />
+                ) : (
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
+                )}
+              </div>
+            </div>
+            {isSelected && (
+              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
+            )}
+          </Surface>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="right" className="bg-neutral-950 border-white/10">
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+          SELECT WARRIOR
+        </p>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 /**
  * Rival warrior list.
  * @param  - {
@@ -43,75 +122,15 @@ export function RivalWarriorList({
       </div>
 
       <div className="grid grid-cols-1 gap-2 overflow-y-auto max-h-[60vh] pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-        {warriors.map((w) => {
-          const hasReport = reports.some((r) => r.warriorName === w.name);
-          const isSelected = selectedWarriorId === w.id;
-
-          return (
-            <Tooltip key={w.id}>
-              <TooltipTrigger asChild>
-                <button
-                  aria-label={`Select rival warrior ${w.name} (${w.career.wins}W/${w.career.losses}L)`}
-                  className={cn(
-                    'w-full text-left group relative outline-none',
-                    isSelected ? 'z-10' : 'z-0'
-                  )}
-                  onClick={() => onSelectWarrior(w.id)}
-                >
-                  <Surface
-                    variant={isSelected ? 'paper' : 'glass'}
-                    padding="none"
-                    className={cn(
-                      'transition-all motion-reduce:transition-none motion-reduce:transform-none border bg-neutral-900/60 overflow-hidden',
-                      isSelected
-                        ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]'
-                        : 'border-white/5 hover:border-white/20 hover:bg-white/5'
-                    )}
-                  >
-                    <div className="p-4 flex items-center justify-between">
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-3">
-                          <WarriorNameTag id={w.id} name={w.name} useCrown={false} />
-                          {hasReport && (
-                            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse motion-reduce:animate-none">
-                              <Eye className="h-2.5 w-2.5" /> INTEL
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                          <StatBadge styleName={w.style as import('@/types/game').FightingStyle} />
-                          <div className="flex items-center gap-2 text-[10px] font-mono font-black text-muted-foreground/60">
-                            <span className="text-primary">{w.career.wins}W</span>
-                            <span className="opacity-20">/</span>
-                            <span className="text-destructive/60">{w.career.losses}L</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <BookmarkButton entityType="warrior" entityId={w.id} size="sm" />
-                        {isSelected ? (
-                          <Target className="h-4 w-4 text-primary animate-pulse motion-reduce:animate-none" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />
-                        )}
-                      </div>
-                    </div>
-                    {isSelected && (
-                      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
-                    )}
-                  </Surface>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-neutral-950 border-white/10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">
-                  SELECT WARRIOR
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
+        {warriors.map((w) => (
+          <WarriorListItem
+            key={w.id}
+            warrior={w}
+            hasReport={reports.some((r) => r.warriorName === w.name)}
+            isSelected={selectedWarriorId === w.id}
+            onSelect={() => onSelectWarrior(w.id)}
+          />
+        ))}
 
         {warriors.length === 0 && (
           <Surface

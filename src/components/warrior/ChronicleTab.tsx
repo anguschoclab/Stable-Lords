@@ -11,6 +11,91 @@ interface ChronicleTabProps {
   arenaHistory: FightSummary[];
 }
 
+/** Annals card: renown, laurels, lifetime purse. */
+function ChronicleOfMerit({ warrior }: { warrior: Warrior }) {
+  return (
+    <div className="space-y-8">
+      <SectionDivider label="Annals" />
+      <Surface variant="glass" className="border-white/5">
+        <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
+          <ImperialRing size="xs" variant="gold">
+            <Trophy className="h-3 w-3 text-arena-gold" />
+          </ImperialRing>
+          <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+            Chronicle of Merit
+          </span>
+        </div>
+        <div className="p-8 space-y-6">
+          <div className="flex justify-between items-center">
+            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+              Highest Renown
+            </span>
+            <span className="text-sm font-display font-black text-foreground">
+              {warrior.fame} PT
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+              Laurels Won
+            </span>
+            <span className="text-sm font-display font-black text-foreground">
+              {warrior.career.wins > 10 ? 1 : 0}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+              Purse Earned
+            </span>
+            <span className="text-sm font-display font-black text-arena-gold">
+              {(warrior.career.wins * 150).toLocaleString()}G
+            </span>
+          </div>
+        </div>
+      </Surface>
+    </div>
+  );
+}
+
+/** Honors section: award list with year/type/reason. */
+function HonorsSection({ warrior }: { warrior: Warrior }) {
+  if (!warrior.awards || warrior.awards.length === 0) return null;
+  return (
+    <div className="space-y-8">
+      <SectionDivider label="Honors" />
+      <Surface variant="glass" className="border-white/5">
+        <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
+          <ImperialRing size="sm" variant="blood">
+            <Star className="h-3 w-3 text-primary" />
+          </ImperialRing>
+          <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+            Distinctions
+          </span>
+        </div>
+        <div className="p-8 space-y-8">
+          {warrior.awards.map((award, i) => (
+            <div key={`${award.year}-${award.type}-${i}`} className="space-y-3">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <span className="text-[8px] font-black uppercase text-primary tracking-[0.3em]">
+                    Year {award.year}
+                  </span>
+                  <div className="text-[11px] font-black uppercase tracking-widest text-foreground">
+                    {award.type.replace(/_/g, ' ')}
+                  </div>
+                </div>
+                <Award className="h-4 w-4 text-arena-gold opacity-40" />
+              </div>
+              <p className="text-[10px] text-muted-foreground/60 leading-relaxed italic border-l border-white/10 pl-4 py-1">
+                {award.reason}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Surface>
+    </div>
+  );
+}
+
 /**
  * Chronicle tab.
  * @param - { warrior, arena history }.
@@ -24,81 +109,8 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
           <CareerTimeline warrior={warrior} arenaHistory={arenaHistory} />
         </div>
 
-        <div className="space-y-8">
-          <SectionDivider label="Annals" />
-          <Surface variant="glass" className="border-white/5">
-            <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
-              <ImperialRing size="xs" variant="gold">
-                <Trophy className="h-3 w-3 text-arena-gold" />
-              </ImperialRing>
-              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                Chronicle of Merit
-              </span>
-            </div>
-            <div className="p-8 space-y-6">
-              <div className="flex justify-between items-center">
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Highest Renown
-                </span>
-                <span className="text-sm font-display font-black text-foreground">
-                  {warrior.fame} PT
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Laurels Won
-                </span>
-                <span className="text-sm font-display font-black text-foreground">
-                  {warrior.career.wins > 10 ? 1 : 0}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Purse Earned
-                </span>
-                <span className="text-sm font-display font-black text-arena-gold">
-                  {(warrior.career.wins * 150).toLocaleString()}G
-                </span>
-              </div>
-            </div>
-          </Surface>
-        </div>
-
-        {warrior.awards && warrior.awards.length > 0 && (
-          <div className="space-y-8">
-            <SectionDivider label="Honors" />
-            <Surface variant="glass" className="border-white/5">
-              <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
-                <ImperialRing size="sm" variant="blood">
-                  <Star className="h-3 w-3 text-primary" />
-                </ImperialRing>
-                <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                  Distinctions
-                </span>
-              </div>
-              <div className="p-8 space-y-8">
-                {warrior.awards.map((award, i) => (
-                  <div key={`${award.year}-${award.type}-${i}`} className="space-y-3">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <span className="text-[8px] font-black uppercase text-primary tracking-[0.3em]">
-                          Year {award.year}
-                        </span>
-                        <div className="text-[11px] font-black uppercase tracking-widest text-foreground">
-                          {award.type.replace(/_/g, ' ')}
-                        </div>
-                      </div>
-                      <Award className="h-4 w-4 text-arena-gold opacity-40" />
-                    </div>
-                    <p className="text-[10px] text-muted-foreground/60 leading-relaxed italic border-l border-white/10 pl-4 py-1">
-                      {award.reason}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </Surface>
-          </div>
-        )}
+        <ChronicleOfMerit warrior={warrior} />
+        <HonorsSection warrior={warrior} />
       </div>
 
       <div className="lg:col-span-8 space-y-8">

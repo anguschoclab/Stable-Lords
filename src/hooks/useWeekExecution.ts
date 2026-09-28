@@ -59,6 +59,61 @@ async function runAutosimSession(
   }
 }
 
+/** Autosim lifecycle state + the start handler. */
+function useAutosim(
+  gameState: ReturnType<typeof useWorldState>,
+  setSimulating: (b: boolean) => void,
+  loadGame: ReturnType<typeof useGameStore.getState>['loadGame']
+) {
+  const [autosimming, setAutosimming] = useState(false);
+  const autosimmingRef = useRef(false);
+  const [autosimProgress, setAutosimProgress] = useState<{
+    current: number;
+    total: number;
+  } | null>(null);
+  const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
+
+  const handleStartAutosim = useCallback(
+    async (weeks: number, options?: { councilAutoPilot?: boolean }) => {
+      if (autosimmingRef.current || useGameStore.getState().isSimulating) return;
+      autosimmingRef.current = true;
+      setAutosimming(true);
+      setSimulating(true);
+      setAutosimResult(null);
+      try {
+        const result = await runAutosimSession(
+          gameState,
+          weeks,
+          options?.councilAutoPilot ?? false,
+          (currentWeek, total) => setAutosimProgress({ current: currentWeek, total })
+        );
+        // 'epoch-moved' → epoch moved mid-run (loadGame/reset); discard the result.
+        if (result === 'epoch-moved' || result === 'failed') return;
+        setAutosimResult(result);
+        const currentStore = useGameStore.getState();
+        loadGame(currentStore.activeSlotId || 'autosave', result.finalState);
+      } finally {
+        autosimmingRef.current = false;
+        setAutosimming(false);
+        setSimulating(false);
+        setAutosimProgress(null);
+      }
+    },
+    [gameState, loadGame, setSimulating]
+  );
+
+  const clearAutosimResult = useCallback(() => setAutosimResult(null), []);
+
+  return {
+    handleStartAutosim,
+    autosimming,
+    autosimProgress,
+    autosimResult,
+    setAutosimResult,
+    clearAutosimResult,
+  };
+}
+
 /**
  * Self-contained hook that owns the entire week-execution lifecycle.
  * Can be called from any component — no props required.
@@ -80,13 +135,15 @@ export function useWeekExecution() {
   const [running, setRunning] = useState(false);
   const runningRef = useRef(false);
   const [results, setResults] = useState<BoutResult[]>([]);
-  const [autosimming, setAutosimming] = useState(false);
-  const autosimmingRef = useRef(false);
-  const [autosimProgress, setAutosimProgress] = useState<{
-    current: number;
-    total: number;
-  } | null>(null);
-  const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
+
+  const {
+    handleStartAutosim,
+    autosimming,
+    autosimProgress,
+    autosimResult,
+    setAutosimResult,
+    clearAutosimResult,
+  } = useAutosim(gameState, setSimulating, loadGame);
 
   const fightReadyCount = useMemo(
     () => gameState.roster.filter((w: Warrior) => isFightReady(w)).length,
@@ -126,37 +183,8 @@ export function useWeekExecution() {
 
   const clearResults = useCallback(() => {
     setResults([]);
-    setAutosimResult(null);
-  }, []);
-
-  const handleStartAutosim = useCallback(
-    async (weeks: number, options?: { councilAutoPilot?: boolean }) => {
-      if (autosimmingRef.current || useGameStore.getState().isSimulating) return;
-      autosimmingRef.current = true;
-      setAutosimming(true);
-      setSimulating(true);
-      setAutosimResult(null);
-      try {
-        const result = await runAutosimSession(
-          gameState,
-          weeks,
-          options?.councilAutoPilot ?? false,
-          (currentWeek, total) => setAutosimProgress({ current: currentWeek, total })
-        );
-        // 'epoch-moved' → epoch moved mid-run (loadGame/reset); discard the result.
-        if (result === 'epoch-moved' || result === 'failed') return;
-        setAutosimResult(result);
-        const currentStore = useGameStore.getState();
-        loadGame(currentStore.activeSlotId || 'autosave', result.finalState);
-      } finally {
-        autosimmingRef.current = false;
-        setAutosimming(false);
-        setSimulating(false);
-        setAutosimProgress(null);
-      }
-    },
-    [gameState, loadGame, setSimulating]
-  );
+    clearAutosimResult();
+  }, [clearAutosimResult]);
 
   return {
     executeWeek,

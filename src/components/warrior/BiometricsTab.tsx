@@ -19,6 +19,67 @@ interface BiometricsTabProps {
   displayWarrior: ObfuscatedWarrior;
 }
 
+/** Left column: radar chart, form sparkline, growth narrative, affinities. */
+function PhysiqueColumn({ warrior }: { warrior: Warrior }) {
+  return (
+    <div className="lg:col-span-4 space-y-8">
+      <SectionDivider label="Physique" />
+      <Surface variant="glass" className="border-white/5 overflow-hidden">
+        <div className="p-8">
+          <Suspense
+            fallback={
+              <div className="w-full aspect-square max-w-md mx-auto animate-pulse motion-reduce:animate-none rounded-none bg-white/5" />
+            }
+          >
+            <WarriorRadarChart warrior={warrior} />
+          </Suspense>
+          <div className="mt-12 space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.3em]">
+                Arena Form
+              </span>
+              <FormSparkline warriorId={warrior.id} />
+            </div>
+            <Separator className="bg-white/5" />
+            <div className="pt-2 flex items-start gap-3">
+              <TrendingUp className="h-4 w-4 text-primary mt-1 shrink-0" />
+              <p className="text-[11px] font-medium text-muted-foreground/80 italic leading-relaxed">
+                {overallGrowthNarrative(warrior)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Surface>
+
+      <SectionDivider label="Combat Affinities" />
+      <FavoritesCard warrior={warrior} onUpdate={() => {}} />
+    </div>
+  );
+}
+
+/** Body attributes card (ST/CN/DF/SP/SZ). */
+function BodyAttrsCard({ warrior }: { warrior: Warrior }) {
+  return (
+    <Surface variant="glass" className="border-white/5">
+      <div className="p-6 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
+        <ImperialRing size="xs" variant="silver">
+          <Activity className="h-3 w-3 text-muted-foreground" />
+        </ImperialRing>
+        <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+          Body
+        </span>
+      </div>
+      <div className="p-8 space-y-6">
+        <AttrBar label="Strength" value={warrior.attributes.ST} potential={warrior.potential?.ST} />
+        <AttrBar label="Constitution" value={warrior.attributes.CN} potential={warrior.potential?.CN} />
+        <AttrBar label="Deftness" value={warrior.attributes.DF} potential={warrior.potential?.DF} />
+        <AttrBar label="Speed" value={warrior.attributes.SP} potential={warrior.potential?.SP} />
+        <AttrBar label="Size" value={warrior.attributes.SZ} potential={warrior.potential?.SZ} />
+      </div>
+    </Surface>
+  );
+}
+
 /**
  * Biometrics tab.
  * @param - { warrior, display warrior }.
@@ -26,79 +87,12 @@ interface BiometricsTabProps {
 export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (
     <div className="grid gap-8 lg:grid-cols-12 animate-in motion-reduce:animate-none fade-in slide-in-from-bottom-4 duration-500">
-      <div className="lg:col-span-4 space-y-8">
-        <SectionDivider label="Physique" />
-        <Surface variant="glass" className="border-white/5 overflow-hidden">
-          <div className="p-8">
-            <Suspense
-              fallback={
-                <div className="w-full aspect-square max-w-md mx-auto animate-pulse motion-reduce:animate-none rounded-none bg-white/5" />
-              }
-            >
-              <WarriorRadarChart warrior={warrior} />
-            </Suspense>
-            <div className="mt-12 space-y-6">
-              <div className="flex items-center justify-between">
-                <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.3em]">
-                  Arena Form
-                </span>
-                <FormSparkline warriorId={warrior.id} />
-              </div>
-              <Separator className="bg-white/5" />
-              <div className="pt-2 flex items-start gap-3">
-                <TrendingUp className="h-4 w-4 text-primary mt-1 shrink-0" />
-                <p className="text-[11px] font-medium text-muted-foreground/80 italic leading-relaxed">
-                  {overallGrowthNarrative(warrior)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </Surface>
-
-        <SectionDivider label="Combat Affinities" />
-        <FavoritesCard warrior={warrior} onUpdate={() => {}} />
-      </div>
+      <PhysiqueColumn warrior={warrior} />
 
       <div className="lg:col-span-8 space-y-8">
         <SectionDivider label="Combat Vitals" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Surface variant="glass" className="border-white/5">
-            <div className="p-6 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
-              <ImperialRing size="xs" variant="silver">
-                <Activity className="h-3 w-3 text-muted-foreground" />
-              </ImperialRing>
-              <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                Body
-              </span>
-            </div>
-            <div className="p-8 space-y-6">
-              <AttrBar
-                label="Strength"
-                value={warrior.attributes.ST}
-                potential={warrior.potential?.ST}
-              />
-              <AttrBar
-                label="Constitution"
-                value={warrior.attributes.CN}
-                potential={warrior.potential?.CN}
-              />
-              <AttrBar
-                label="Deftness"
-                value={warrior.attributes.DF}
-                potential={warrior.potential?.DF}
-              />
-              <AttrBar
-                label="Speed"
-                value={warrior.attributes.SP}
-                potential={warrior.potential?.SP}
-              />
-              <AttrBar
-                label="Size"
-                value={warrior.attributes.SZ}
-                potential={warrior.potential?.SZ}
-              />
-            </div>
-          </Surface>
+          <BodyAttrsCard warrior={warrior} />
 
           <Surface variant="glass" className="border-white/5">
             <div className="p-6 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">

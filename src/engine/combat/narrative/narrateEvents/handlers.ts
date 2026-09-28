@@ -37,8 +37,8 @@ export interface NarrateHelpers {
   getStyle: (actor: Actor) => NarrationContext['styleA'];
   getMaxHp: (actor: Actor) => number;
   getFame: (actor: Actor) => number;
-  getIsFavorite: (actor: Actor) => boolean;
-  getSpeed: (actor: Actor) => number;
+  getIsFavorite: (actor: Actor) => boolean | undefined;
+  getSpeed: (actor: Actor) => number | undefined;
   displayName: (actor: Actor) => string;
   getPostHitRatio: (target: Actor, event: CombatEvent) => number;
 }

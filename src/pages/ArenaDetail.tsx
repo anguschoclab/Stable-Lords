@@ -19,18 +19,9 @@ import { getFightsForArena } from '@/engine/core/historyUtils';
 import type { GameState, ArenaTitle } from '@/types/state.types';
 import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
+import { ConfirmDestructiveDialog } from '@/components/ui/ConfirmDestructiveDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/badge';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { ScrollText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChampionBlock } from './arenaDetail/ChampionBlock';
@@ -181,34 +172,23 @@ export default function ArenaDetail() {
       <TitleHistory history={history} />
       <RecentBouts bouts={recentBouts} arenaId={arenaId} />
 
-      <AlertDialog open={confirmRelinquish} onOpenChange={setConfirmRelinquish}>
-        <AlertDialogContent className="bg-neutral-900 border-arena-gold/20">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="font-display font-black text-2xl uppercase tracking-tighter text-arena-gold">
-              Relinquish the Crown?
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-muted-foreground font-medium">
-              {champWarrior?.name ?? 'Your champion'} will give up the {arena.name} title. The
-              crown falls vacant, and they cannot contend here again for{' '}
-              <span className="text-arena-gold font-black">26 weeks</span>.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-6">
-            <AlertDialogCancel className="bg-secondary/40 border-white/5 hover:bg-white/10 hover:text-foreground">
-              Keep the Crown
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest"
-              onClick={() => {
-                store.relinquishArenaTitle(arenaId);
-                setConfirmRelinquish(false);
-              }}
-            >
-              Relinquish
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDestructiveDialog
+        open={confirmRelinquish}
+        onOpenChange={setConfirmRelinquish}
+        title="Relinquish the Crown?"
+        description={
+          <>
+            {champWarrior?.name ?? 'Your champion'} will give up the {arena.name} title. The
+            crown falls vacant, and they cannot contend here again for{' '}
+            <span className="text-arena-gold font-black">26 weeks</span>.
+          </>
+        }
+        cancelLabel="Keep the Crown"
+        confirmLabel="Relinquish"
+        onConfirm={() => store.relinquishArenaTitle(arenaId)}
+        contentClassName="bg-neutral-900 border-arena-gold/20"
+        titleClassName="font-display font-black text-2xl uppercase tracking-tighter text-arena-gold"
+      />
     </PageFrame>
   );
 }

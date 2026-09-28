@@ -76,7 +76,7 @@ export function StableSidebar({
         </div>
 
         <div className="w-full px-8 space-y-6 pt-8 border-t border-white/5">
-          <SidebarStatRow label="Personality" value={rival.owner.personality} />
+          <SidebarStatRow label="Personality" value={rival.owner.personality || 'Pragmatic'} />
           <SidebarStatRow label="Tier" value={rival.tier || 'Minor'} valueClass={tierCfg.text} />
           <SidebarStatRow
             label="Win Rate"

@@ -40,6 +40,8 @@ export interface ArenaTitleReign {
 export interface ArenaReignRecord {
   warriorId: WarriorId;
   warriorName: string;
+  /** Epithet held when the reign ended — stamped as a historical fact like warriorName. */
+  warriorEpithet?: string;
   stableName?: string;
   startedAbsoluteWeek: number;
   endedAbsoluteWeek: number;

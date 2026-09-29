@@ -14,6 +14,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Link } from '@tanstack/react-router';
 import { Swords, ExternalLink, TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface MatchupCardProps {
   matchup: MatchupScore;
@@ -37,7 +38,7 @@ function CardHeader({ w, isGood }: { w: MatchupScore['rivalWarrior']; isGood: bo
           )}
         </ImperialRing>
         <span className="font-display font-black text-[11px] uppercase tracking-tight text-foreground">
-          {w.name}
+          {warriorDisplayName(w)}
         </span>
       </div>
       <Link to="/warrior/$id" params={{ id: w.id }}>

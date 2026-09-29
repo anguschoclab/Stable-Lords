@@ -11,6 +11,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { cn } from '@/lib/utils';
 import type { RivalStableData } from '@/types/game';
 import type { Warrior } from '@/types/warrior.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /** Full-page fallback when the route id matches no rival stable. */
 export function StableNotFound() {
@@ -176,7 +177,7 @@ export function StableOverviewTab({
                     id={w.id}
                     className="mr-2 hover:text-destructive"
                   >
-                    {w.name}
+                    {warriorDisplayName(w)}
                   </WarriorLink>
                   <span className="opacity-40">
                     {w.career.wins}W-{w.career.losses}L

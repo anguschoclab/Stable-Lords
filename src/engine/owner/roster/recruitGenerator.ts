@@ -7,7 +7,8 @@ import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc'
 import { generateTraits, TRAITS } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
-import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
+import { generateWarriorName } from '@/data/names/nameGenerator';
+import { cultureForOwner, cultureForArchetype } from '@/data/names/cultures';
 import { getPhilosophyStyles } from '@/data/ownerData';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
 
@@ -121,7 +122,8 @@ export function generateAIRecruit(
   rival: RivalStableData,
   week: number,
   meta?: StyleMeta,
-  seed?: number
+  seed?: number,
+  usedNames?: Set<string>
 ): Warrior | null {
   const rng = new SeededRNGService(seed ?? week * 42 + rival.owner.id.length);
   const philosophy = rival.philosophy ?? 'Balanced';
@@ -151,9 +153,16 @@ export function generateAIRecruit(
     style
   );
 
-  // Use archetype-based naming like player recruits
-  const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank];
-  const name = rng.pick(namePool);
+  // Culture-aware naming: the stable's personality shapes recruit names,
+  // with the archetype as a secondary influence.
+  const name = generateWarriorName({
+    rng,
+    culture: [
+      { culture: cultureForOwner(rival.owner.personality, philosophy), weight: 0.6 },
+      { culture: cultureForArchetype(archetype), weight: 0.4 },
+    ],
+    usedNames,
+  });
 
   // Generate origin and lore (parity with player recruits)
   const origin = generateOrigin(rng);

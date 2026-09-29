@@ -8,7 +8,8 @@ import type { Attributes } from '@/types/game';
 import type { AttributePotential } from '@/types/warrior.types';
 import { generatePotential } from '@/engine/warrior/potential';
 import { TRAITS } from '@/engine/traits';
-import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
+import { generateWarriorName } from '@/data/names/nameGenerator';
+import { cultureForArchetype } from '@/data/names/cultures';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { shuffled } from '@/utils/random';
@@ -67,11 +68,15 @@ export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarr
     const style = i < guaranteedStyles.length && guaranteed ? guaranteed : rng.pick(styles);
     const archetype = STYLE_ARCHETYPE[style];
 
-    // Combine the archetype name pool with the generic "tank" mixed pool for variety
-    const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank].filter(
-      (n) => !usedNames.has(n)
-    );
-    const name = namePool.length > 0 ? rng.pick(namePool) : `ORPHAN_${i}`;
+    // Orphans blend gutter-stock naming with their archetype's culture.
+    const name = generateWarriorName({
+      rng,
+      culture: [
+        { culture: 'lowborn', weight: 0.5 },
+        { culture: cultureForArchetype(archetype), weight: 0.5 },
+      ],
+      usedNames,
+    });
     usedNames.add(name);
 
     const age = Math.floor(rng.next() * 5) + 15;

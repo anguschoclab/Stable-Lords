@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { CheckCircle2 } from 'lucide-react';
 import type { Warrior } from '@/types/state.types';
 import { getFatigueStatus } from '../hooks/useBookingOffice';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface AssetRegistryProps {
   roster: Warrior[];
@@ -47,7 +48,7 @@ export function AssetRegistry({
                   isSelected ? 'text-foreground' : 'text-muted-foreground'
                 )}
               >
-                {warrior.name}
+                {warriorDisplayName(warrior)}
               </span>
               {hasAccepted && <CheckCircle2 className="h-3 w-3 text-primary" />}
             </div>

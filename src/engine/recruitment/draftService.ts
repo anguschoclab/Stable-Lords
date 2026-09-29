@@ -5,6 +5,7 @@ import { processRecruitment } from '../ai/workers/recruitmentWorker';
 import { computeMetaDrift } from '../analytics/metaDrift';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { getStablePairKey } from '@/utils/keyUtils';
+import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
 /**
  * AI Draft Service
@@ -26,6 +27,7 @@ export function aiDraftFromPool(
 
   let currentPool = [...pool];
   const globalGazetteItems: string[] = [];
+  const usedNames = collectUsedWarriorNames(state);
 
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
   const rivalryMap = new Map(
@@ -73,7 +75,8 @@ export function aiDraftFromPool(
       week,
       rngService,
       isMajorDraftWeek,
-      customMeta
+      customMeta,
+      usedNames
     );
 
     draftResults[updatedRival.owner.id] = updatedRival;

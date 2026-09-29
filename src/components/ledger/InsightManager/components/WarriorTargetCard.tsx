@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { CheckCircle2, Target } from 'lucide-react';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorTargetCardProps {
-  warrior: { id: string; name: string; style: string };
+  warrior: { id: string; name: string; epithet?: string; style: string };
   isSelected: boolean;
   isRevealed: boolean;
   isRevealing: boolean;
@@ -40,7 +41,7 @@ export function WarriorTargetCard({
         className="w-full p-3 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
       >
         <span className="block text-[10px] font-black uppercase tracking-widest mb-1 truncate">
-          {warrior.name}
+          {warriorDisplayName(warrior)}
         </span>
         {isRevealed ? (
           <CheckCircle2 className="h-4 w-4 mx-auto text-primary" />

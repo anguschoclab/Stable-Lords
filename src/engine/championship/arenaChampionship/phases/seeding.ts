@@ -1,7 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import { getAllArenas } from '@/data/arenas';
 import type { ChampionshipDelta } from '../core';
-import { titleOf, ensureTitle, crown, CHAMPIONSHIP_EXCLUDED_ARENAS } from '../core';
+import { titleOf, ensureTitle, crown, awardEpithet, CHAMPIONSHIP_EXCLUDED_ARENAS } from '../core';
 import type { RankedContender } from '../queries';
 import { rankContenders } from '../queries';
 
@@ -61,5 +61,6 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
     if (!pick) continue;
     const t = ensureTitle(state, delta, arenaId);
     crown(t, pick.warrior.id, state.absoluteWeek);
+    awardEpithet(state, delta, pick.warrior.id, 'arena_champion');
   }
 }

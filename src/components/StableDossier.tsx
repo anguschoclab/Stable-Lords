@@ -10,6 +10,7 @@ import { StatCard } from '@/components/ui/StatCard';
 import { StableCrest } from '@/components/crest';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { getChargeDescription } from '@/engine/crest/crestGenerator';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface StableDossierProps {
   stableId?: string;
@@ -110,7 +111,7 @@ function RosterList({ stable }: { stable: StableLike }) {
             >
               <div className="flex items-center gap-2">
                 <StatBadge styleName={w.style} />
-                <span className="text-sm font-medium">{w.name}</span>
+                <span className="text-sm font-medium">{warriorDisplayName(w)}</span>
               </div>
               <div className="text-[10px] font-mono text-muted-foreground">
                 {w.career.wins}-{w.career.losses}

@@ -16,6 +16,7 @@ import { updateEntityInList } from '@/utils/stateUtils';
 import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { WARRIOR_AGING } from '@/constants/aging';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
+import { retireWithHonors } from '@/engine/warrior/retirement';
 
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
 // ~6% per-bout kill rate (lifespan ~0.7y in calendar terms even after lethality
@@ -135,7 +136,7 @@ function processWarriorAging(
   );
 
   if (retired) {
-    const retiredObj = buildRetiredWarrior(w, currentAge, state.week);
+    const retiredObj = retireWithHonors(w, state.week, currentAge);
     return { retired: true, retiredObj, ageEvent: retireEvent ?? penaltyEvent };
   }
 

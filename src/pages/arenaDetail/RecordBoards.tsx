@@ -53,7 +53,7 @@ const topWarriorRows = (lb: Leaderboard | undefined, champId: WarriorId | undefi
     key: e.warriorId,
     rank: i + 1,
     cells: [
-      <WarriorNameTag key="n" id={e.warriorId} name={e.name} isChampion={e.warriorId === champId} />,
+      <WarriorNameTag key="n" id={e.warriorId} name={e.name} epithet={e.epithet} isChampion={e.warriorId === champId} />,
       <StableCell key="s" name={e.stableName} />,
       <RecordCells key="r" wins={e.wins} losses={e.losses} kills={e.kills} />,
       <span key="w" className="font-mono font-black text-[11px] text-arena-gold">
@@ -68,7 +68,7 @@ const topKillerRows = (lb: Leaderboard | undefined, champId: WarriorId | undefin
     key: e.warriorId,
     rank: i + 1,
     cells: [
-      <WarriorNameTag key="n" id={e.warriorId} name={e.name} isChampion={e.warriorId === champId} />,
+      <WarriorNameTag key="n" id={e.warriorId} name={e.name} epithet={e.epithet} isChampion={e.warriorId === champId} />,
       <StableCell key="s" name={e.stableName} />,
       <RecordCells key="r" wins={e.wins} losses={e.losses} kills={e.kills} killsFirst />,
       <span key="k" className="font-mono font-black text-[11px] text-arena-blood">
@@ -93,6 +93,7 @@ const styleLeaderRows = (styleLeaders: StyleLeaders, champId: WarriorId | undefi
                 key="n"
                 id={(e as StyleLeaderEntry).warriorId}
                 name={(e as StyleLeaderEntry).name}
+                epithet={(e as StyleLeaderEntry).epithet}
                 isChampion={(e as StyleLeaderEntry).warriorId === champId}
               />,
               <StableCell key="s" name={(e as StyleLeaderEntry).stableName} />,

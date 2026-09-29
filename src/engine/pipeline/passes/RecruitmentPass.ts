@@ -3,6 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { partialRefreshPool, generateRecruit } from '@/engine/recruitment/recruitment';
+import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
 /**
  * Stable Lords — Recruitment Pipeline Pass
@@ -12,11 +13,7 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
   const rng = resolveRng(rootRng, state.week * 701 + 13);
 
   // 1. Refresh recruitment pool
-  const usedNames = new Set<string>();
-  for (const w of state.roster) usedNames.add(w.name);
-  for (const r of state.rivals || []) {
-    for (const w of r.roster) usedNames.add(w.name);
-  }
+  const usedNames = collectUsedWarriorNames(state);
 
   // Collect legacy candidates (fame > 1000)
   const legacyCandidates = [...(state.graveyard || []), ...(state.retired || [])].filter(

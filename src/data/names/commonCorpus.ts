@@ -1,9 +1,10 @@
 /**
- * Warrior name collections for Stable Lords.
+ * The legacy flat warrior-name corpus, preserved as the 'common' naming
+ * culture's seed vocabulary for the procedural generator.
  * Arena-flavored, gritty, fantasy gladiatorial names.
  */
 
-export const WARRIOR_NAMES = [
+export const COMMON_CORPUS = [
   'AARON',
   'ABBEY',
   'ABBIE',

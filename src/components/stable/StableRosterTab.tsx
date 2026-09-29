@@ -1,6 +1,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { WarriorLink } from '@/components/EntityLink';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { Activity, Heart, Zap } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { FormSparkline } from '@/components/charts/FormSparkline';
@@ -70,7 +71,7 @@ function RosterCard({ w }: { w: Warrior }) {
             </ImperialRing>
             <div>
               <WarriorLink
-                name={w.name}
+                name={warriorDisplayName(w)}
                 id={w.id}
                 className="text-lg font-display font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors block mb-1 motion-reduce:transition-none"
               />

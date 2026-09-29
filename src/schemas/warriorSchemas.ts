@@ -233,6 +233,7 @@ export const WarriorSchema = z.object({
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),
+  epithet: z.string().optional(),
   titles: z.array(z.string()),
   injuries: z.array(InjuryDataSchema),
   flair: z.array(z.string()),

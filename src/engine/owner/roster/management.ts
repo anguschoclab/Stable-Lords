@@ -7,6 +7,7 @@ import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import { aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { retireWithHonors } from '@/engine/warrior/retirement';
 import { filterActive } from '@/utils/roster';
 
 /**
@@ -32,8 +33,7 @@ function cullRivalRoster(
   let culledThisTick = 0;
 
   const retire = (w: Warrior) => {
-    w.status = 'Retired';
-    w.retiredWeek = state.week;
+    Object.assign(w, retireWithHonors(w, state.week));
     culledThisTick++;
   };
 
@@ -88,8 +88,7 @@ function cullRivalRoster(
   const elderly = r.roster.filter((w) => isActive(w) && (w.age ?? 18) >= 30);
   for (const old of elderly.slice(0, 1)) {
     if (rngSnapshot.next() < 0.15) {
-      old.status = 'Retired';
-      old.retiredWeek = state.week;
+      Object.assign(old, retireWithHonors(old, state.week));
       gazetteItems.push(
         `🏠 ${old.name} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
       );

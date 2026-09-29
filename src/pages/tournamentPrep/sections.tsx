@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { STYLE_DISPLAY_NAMES, type WeatherType } from '@/types/shared.types';
 import { fightExperience, prepIssues, type PrepIssue } from './prepChecks';
 import type { Warrior, TournamentEntry } from '@/types/state.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 function EntrantName({ w, isPlayerOwned }: { w: Warrior; isPlayerOwned: boolean }) {
   return (
@@ -17,11 +18,11 @@ function EntrantName({ w, isPlayerOwned }: { w: Warrior; isPlayerOwned: boolean 
           params={{ id: w.id }}
           className="text-[11px] font-black uppercase tracking-tight text-foreground hover:text-primary transition-colors motion-reduce:transition-none"
         >
-          {w.name}
+          {warriorDisplayName(w)}
         </Link>
       ) : (
         <span className="text-[11px] font-black uppercase tracking-tight text-foreground">
-          {w.name}
+          {warriorDisplayName(w)}
         </span>
       )}
       {isPlayerOwned && (

@@ -5,6 +5,7 @@ import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 interface TopWarrior {
   id: string;
   name: string;
+  epithet?: string;
   isChampion: boolean;
   injuryCount: number;
   isDead: boolean;
@@ -66,6 +67,7 @@ export function DominantCombatantsSection({
                   <WarriorNameTag
                     id={warrior.id}
                     name={warrior.name}
+                    epithet={warrior.epithet}
                     isChampion={warrior.isChampion}
                     injuryCount={warrior.injuryCount}
                     isDead={warrior.isDead}

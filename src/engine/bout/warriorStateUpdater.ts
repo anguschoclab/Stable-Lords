@@ -1,5 +1,6 @@
 import type { Warrior } from '@/types/warrior.types';
 import { SEASON_POINTS } from '@/constants/core/core';
+import { milestoneEpithet } from '@/data/names/epithets';
 
 /**
  * Update a warrior's state after a bout
@@ -39,17 +40,22 @@ export function updateWarriorAfterBout(
         }
       : prevByArena;
 
+  const career = {
+    ...warrior.career,
+    wins: (warrior.career.wins || 0) + (isWinner ? 1 : 0),
+    losses: (warrior.career.losses || 0) + (!isWinner ? 1 : 0),
+    kills: (warrior.career.kills || 0) + (wasKilled ? 1 : 0),
+    byArena,
+  };
+
+  // Milestone epithet — only a winner upgrades; never downgrades.
+  const epithet = isWinner ? milestoneEpithet(warrior.id, career, warrior.epithet) : undefined;
+
   return {
     ...warrior,
     fame: Math.max(0, (warrior.fame || 0) + fameDelta),
     popularity: Math.max(0, (warrior.popularity || 0) + popularityDelta),
-    career: {
-      ...warrior.career,
-      wins: (warrior.career.wins || 0) + (isWinner ? 1 : 0),
-      losses: (warrior.career.losses || 0) + (!isWinner ? 1 : 0),
-      kills: (warrior.career.kills || 0) + (wasKilled ? 1 : 0),
-      byArena,
-    },
+    career,
     flair:
       isWinner && tags.includes('Flashy')
         ? Array.from(new Set([...(warrior.flair || []), 'Flashy']))
@@ -58,5 +64,6 @@ export function updateWarriorAfterBout(
     seasonPoints:
       (warrior.seasonPoints ?? 0) +
       (isWinner ? SEASON_POINTS.WIN + (wasKilled ? SEASON_POINTS.KILL_BONUS : 0) : 0),
+    ...(epithet ? { epithet } : {}),
   };
 }

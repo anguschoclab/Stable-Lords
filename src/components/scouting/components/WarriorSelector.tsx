@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import type { Warrior } from '@/types/game';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorSelectorProps {
   warriors: { warrior: Warrior; stable: string }[];
@@ -139,7 +140,7 @@ function WarriorSelectionCard({
                 isSelected ? colors.text : 'text-muted-foreground'
               )}
             >
-              {warrior.name}
+              {warriorDisplayName(warrior)}
             </div>
             <div className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">
               {stable}

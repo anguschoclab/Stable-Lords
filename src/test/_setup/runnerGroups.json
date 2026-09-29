@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-28T11:47:15.726Z",
+  "generatedAt": "2026-09-29T07:37:21.600Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -100,6 +100,7 @@
     "src/test/components/ui/IconMedallion.test.tsx",
     "src/test/components/ui/LinkifiedText.test.tsx",
     "src/test/components/ui/VitalityRing.test.tsx",
+    "src/test/components/ui/WarriorBadges.test.tsx",
     "src/test/components/warrior/AttributeRow.test.tsx",
     "src/test/components/warrior/BiometricsTab.test.tsx",
     "src/test/components/warrior/CareerTimeline.test.tsx",

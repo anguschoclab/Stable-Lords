@@ -63,7 +63,7 @@ export function TitleHistory({ history }: { history: ArenaTitle['history'] }) {
             {history.map((r, i) => (
               <TableRow key={`${r.warriorId}-${r.startedAbsoluteWeek}-${i}`} className="h-11 border-white/5">
                 <TableCell className="pl-6">
-                  <WarriorNameTag id={r.warriorId} name={r.warriorName} />
+                  <WarriorNameTag id={r.warriorId} name={r.warriorName} epithet={r.warriorEpithet} />
                 </TableCell>
                 <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
                   {r.stableName ?? '—'}

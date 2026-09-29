@@ -4,11 +4,12 @@
  */
 import { GameState, Warrior } from '@/types/state.types';
 import type { FightingStyle } from '@/types/shared.types';
-import { type FightOutcome, type FightPlan } from '@/types/combat.types';
+import { type FightOutcome, type FightPlan, type FightSummary } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { SeededRNGService } from '@/utils/random';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { selectArenaForTournamentBout } from '@/engine/matchmaking/tournament/tournamentArenaSelection';
 import { ARENA_SELECTION } from '@/constants/arena';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
@@ -263,7 +264,7 @@ function postResolutionImpacts(
   validCO: Warrior,
   outcome: FightOutcome,
   tags: string[],
-  rng: SeededRNGService,
+  rng: IRNGService,
   boutSeed: number,
   impacts: StateImpact[]
 ): { deathRes: ReturnType<typeof handleDeath>; injuryRes: ReturnType<typeof handleInjuries> } {
@@ -307,10 +308,10 @@ function reportBout(
   outcome: FightOutcome,
   tags: string[],
   fame: { fameA: number; popA: number; fameD: number; popD: number },
-  rng: SeededRNGService,
+  rng: IRNGService,
   boutSeed: number,
   impacts: StateImpact[]
-): { summary: FightSummary; announcement: unknown } {
+): { summary: FightSummary; announcement: string } {
   const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
   const { summary, announcement } = handleReporting(
     validCW,

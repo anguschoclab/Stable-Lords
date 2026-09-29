@@ -9,6 +9,8 @@ import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Trophy, Skull, Coins, Swords, Users, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Warrior, Rivalry } from '@/types/state.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 function RecapStat({
   label,
@@ -43,7 +45,7 @@ function RecapCallouts({
   memorials,
 }: {
   topRivalry: { intensity?: number; stableIdA: string; stableIdB: string } | undefined;
-  memorials: { id: string; name: string; fame?: number; career?: { kills?: number } }[];
+  memorials: { id: string; name: string; epithet?: string; fame?: number; career?: { kills?: number } }[];
 }) {
   return (
     <>
@@ -68,7 +70,7 @@ function RecapCallouts({
             {memorials.map((w) => (
               <li key={w.id} className="text-xs flex items-center gap-2">
                 <Skull className="h-3 w-3 text-destructive" />
-                <span className="font-black">{w.name}</span>
+                <span className="font-black">{warriorDisplayName(w)}</span>
                 <span className="text-muted-foreground/60">
                   — fame {w.fame ?? 0}, {w.career?.kills ?? 0} kills
                 </span>
@@ -85,10 +87,10 @@ type RecapData = ReturnType<typeof computeRecap>;
 
 /** Fold the year's collections into the headline recap figures. */
 function computeRecap(
-  rosterFameData: { id: string; name: string; fame: number | undefined; career: Warrior['career'] }[],
+  rosterFameData: { id: string; name: string; epithet?: string; fame: number | undefined; career: Warrior['career'] }[],
   graveyard: Warrior[],
   ledger: { amount: number }[],
-  rivalries: { intensity?: number }[] | undefined
+  rivalries: Rivalry[] | undefined
 ) {
   // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan for finding max values. Avoids extra array allocations.
   let topWarrior = rosterFameData[0];
@@ -131,7 +133,7 @@ function RecapGrid({
       {recap.topWarrior && (
         <RecapStat
           label="Top Warrior"
-          value={`${recap.topWarrior.name} · ${recap.topWarrior.fame}G fame`}
+          value={`${warriorDisplayName(recap.topWarrior)} · ${recap.topWarrior.fame}G fame`}
           tone="text-arena-gold"
           Icon={Trophy}
         />
@@ -139,7 +141,7 @@ function RecapGrid({
       {recap.mostKills && (
         <RecapStat
           label="Most Lethal"
-          value={`${recap.mostKills.name} · ${recap.mostKills.career?.kills ?? 0} kills`}
+          value={`${warriorDisplayName(recap.mostKills)} · ${recap.mostKills.career?.kills ?? 0} kills`}
           tone="text-destructive"
           Icon={Flame}
         />
@@ -189,7 +191,7 @@ export function YearEndRecap() {
   );
 
   const rosterFameData = useMemo(
-    () => roster.map((w) => ({ id: w.id, name: w.name, fame: w.fame, career: w.career })),
+    () => roster.map((w) => ({ id: w.id, name: w.name, epithet: w.epithet, fame: w.fame, career: w.career })),
     [roster]
   );
 

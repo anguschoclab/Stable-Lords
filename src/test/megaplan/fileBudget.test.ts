@@ -15,7 +15,7 @@ const FN_LINE_CEILING = 120; // ratcheted to target — 0 violations at lock-in
 
 const EXEMPT_FILES = new Set([
   'src/routeTree.gen.ts', // generated
-  'src/data/names/warriorNames.ts', // homogeneous name data (V10)
+  'src/data/names/commonCorpus.ts', // homogeneous name data (V10)
 ]);
 
 const isDataFile = (f: string) =>

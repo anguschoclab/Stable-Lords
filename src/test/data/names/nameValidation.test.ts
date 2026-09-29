@@ -16,25 +16,42 @@ import {
   filterValidOwnerNames,
   filterValidStableNames,
 } from '@/data/names/nameValidation';
-import { WARRIOR_NAMES, OWNER_FIRST, OWNER_LAST, STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from '@/data/names';
+import { OWNER_FIRST, OWNER_LAST, STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from '@/data/names';
+import { generateWarriorName } from '@/data/names/nameGenerator';
+import { SeededRNGService } from '@/utils/random';
 
 describe('isValidWarriorName', () => {
-  it('returns true for an exact uppercase match', () => {
-    expect(isValidWarriorName(WARRIOR_NAMES[0]!)).toBe(true);
+  it('returns true for a valid uppercase name', () => {
+    expect(isValidWarriorName('KRAGOS')).toBe(true);
   });
 
   it('returns true for lowercase input (case-insensitive)', () => {
-    expect(isValidWarriorName((WARRIOR_NAMES[0]!).toLowerCase())).toBe(true);
+    expect(isValidWarriorName('kragos')).toBe(true);
   });
 
   it('returns true for mixed-case input (case-insensitive)', () => {
-    const name = WARRIOR_NAMES[0]!;
-    const mixed = name.charAt(0) + name.slice(1).toLowerCase();
-    expect(isValidWarriorName(mixed)).toBe(true);
+    expect(isValidWarriorName('Kragos')).toBe(true);
   });
 
-  it('returns false for a non-existent name', () => {
-    expect(isValidWarriorName('NOT_A_REAL_WARRIOR_NAME_XYZ')).toBe(false);
+  it('returns true for generated names', () => {
+    const rng = new SeededRNGService(77);
+    for (let i = 0; i < 50; i++) {
+      const n = generateWarriorName({ rng });
+      expect(isValidWarriorName(n), `generated name ${n} rejected`).toBe(true);
+    }
+  });
+
+  it('returns false for names over 20 characters', () => {
+    expect(isValidWarriorName('A'.repeat(21))).toBe(false);
+  });
+
+  it('returns false for names that would break "A vs B" fight titles', () => {
+    expect(isValidWarriorName('GRIM VS MALLOCK')).toBe(false);
+  });
+
+  it('returns false for names with invalid characters', () => {
+    expect(isValidWarriorName('KRAG@S')).toBe(false);
+    expect(isValidWarriorName('KRAG1S')).toBe(false);
   });
 
   it('returns false for an empty string', () => {
@@ -195,8 +212,8 @@ describe('getStableNameFormat', () => {
 
 describe('filterValidWarriorNames', () => {
   it('keeps only valid warrior names (case-insensitive)', () => {
-    const valid = WARRIOR_NAMES[0]!;
-    const input = [valid, valid.toLowerCase(), 'NOT_A_REAL_WARRIOR_XYZ'];
+    const valid = 'KRAGOS';
+    const input = [valid, valid.toLowerCase(), 'A'.repeat(21), 'BAD@NAME'];
     const out = filterValidWarriorNames(input);
     expect(out).toEqual([valid, valid.toLowerCase()]);
   });

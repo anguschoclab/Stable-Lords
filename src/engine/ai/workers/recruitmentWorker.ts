@@ -31,12 +31,14 @@ function signGeneratedRecruit(
   updatedRival: RivalStableData,
   week: number,
   meta: StyleMeta | undefined,
-  gazetteItems: string[]
+  gazetteItems: string[],
+  usedNames?: Set<string>
 ): RecruitmentResult | null {
   const budgetReport = checkBudget(updatedRival, AI_GENERATED_RECRUIT_COST, 'ROSTER');
   if (!budgetReport.isAffordable) return null;
-  const generated = generateAIRecruit(updatedRival, week, meta);
+  const generated = generateAIRecruit(updatedRival, week, meta, undefined, usedNames);
   if (!generated) return null;
+  usedNames?.add(generated.name);
   updatedRival = {
     ...updatedRival,
     treasury: updatedRival.treasury - AI_GENERATED_RECRUIT_COST,
@@ -194,7 +196,8 @@ export function processRecruitment(
   week: number,
   rng: IRNGService,
   isMajorDraftWeek: boolean,
-  meta?: StyleMeta
+  meta?: StyleMeta,
+  usedNames?: Set<string>
 ): RecruitmentResult {
   let updatedRival = { ...rival };
   const gazetteItems: string[] = [];
@@ -233,7 +236,7 @@ export function processRecruitment(
     if (!needsRecruit) {
       return { updatedRival, updatedPool: remainingPool, gazetteItems };
     }
-    const signed = signGeneratedRecruit(updatedRival, week, meta, gazetteItems);
+    const signed = signGeneratedRecruit(updatedRival, week, meta, gazetteItems, usedNames);
     if (!signed) {
       return { updatedRival, updatedPool: remainingPool, gazetteItems };
     }

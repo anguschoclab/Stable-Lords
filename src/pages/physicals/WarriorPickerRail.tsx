@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { FightingStyle, STYLE_ABBREV, type Warrior } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorPickerRailProps {
   warriors: Warrior[];
@@ -53,7 +54,7 @@ export function WarriorPickerRail({
                     inA ? 'text-primary' : inB ? 'text-destructive' : ''
                   )}
                 >
-                  {warrior.name}
+                  {warriorDisplayName(warrior)}
                 </p>
                 <p className="text-[9px] text-muted-foreground uppercase mt-1">
                   {STYLE_ABBREV[warrior.style as FightingStyle] ?? warrior.style}

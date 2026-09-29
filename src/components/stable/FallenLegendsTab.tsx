@@ -5,6 +5,7 @@ import { Skull, Armchair } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface FallenLegendsTabProps {
   graveyard: Warrior[];
@@ -17,14 +18,14 @@ interface FallenLegendsTabProps {
 export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) {
   const fallen = [
     ...(graveyard ?? []).map((w) => ({
-      name: w.name,
+      name: warriorDisplayName(w),
       style: w.style,
       kind: 'fallen' as const,
       fame: w.fame ?? 0,
       week: w.deathWeek,
     })),
     ...(retired ?? []).map((w) => ({
-      name: w.name,
+      name: warriorDisplayName(w),
       style: w.style,
       kind: 'retired' as const,
       fame: w.fame ?? 0,

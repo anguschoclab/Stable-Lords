@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import type { GameState } from '@/types/state.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 type NameSource = Pick<GameState, 'roster' | 'graveyard' | 'retired' | 'rivals' | 'player'>;
 
@@ -10,11 +11,16 @@ export function collectWarriorNames(
   state: Pick<NameSource, 'roster' | 'graveyard' | 'retired' | 'rivals'>
 ): string[] {
   const names = new Set<string>();
-  for (const w of state.roster ?? []) names.add(w.name);
-  for (const w of state.graveyard ?? []) names.add(w.name);
-  for (const w of state.retired ?? []) names.add(w.name);
+  const collect = (w: { name: string; epithet?: string }) => {
+    names.add(w.name);
+    const display = warriorDisplayName(w);
+    if (display !== w.name) names.add(display);
+  };
+  for (const w of state.roster ?? []) collect(w);
+  for (const w of state.graveyard ?? []) collect(w);
+  for (const w of state.retired ?? []) collect(w);
   for (const r of state.rivals ?? []) {
-    for (const w of r.roster) names.add(w.name);
+    for (const w of r.roster) collect(w);
   }
   return [...names];
 }

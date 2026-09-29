@@ -5,6 +5,7 @@ import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { formatWeek } from '@/utils/format';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { updateEntityInList } from '@/utils/stateUtils';
+import { retireWithHonors } from '@/engine/warrior/retirement';
 
 /** Apply an insight token's effect to a warrior draft. */
 function applyInsightToken(w: Warrior, token: InsightToken): Warrior {
@@ -81,11 +82,7 @@ function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameS
   const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
   if (!warrior) return state;
 
-  const ret: Warrior = {
-    ...warrior,
-    status: 'Retired',
-    retiredWeek: state.week,
-  };
+  const ret: Warrior = retireWithHonors(warrior, state.week);
 
   return {
     roster: state.roster.filter((w: Warrior) => w.id !== warriorId),

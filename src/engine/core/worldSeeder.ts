@@ -5,6 +5,8 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generateRivalStables } from '@/engine/rivals';
 import { generateRecruitPool } from '@/engine/recruitment/recruitment';
 import { generateHiringPool } from '@/engine/trainers/trainers';
+import { generateWarriorName } from '@/data/names/nameGenerator';
+import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 
@@ -38,7 +40,7 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
     FightingStyle.LungingAttack,
   ];
 
-  const playerRoster: Warrior[] = styles.map((style, i) => {
+  const playerRoster: Warrior[] = styles.map((style) => {
     const attrs = {
       ST: 8 + Math.floor(rngService.next() * 4),
       CN: 8 + Math.floor(rngService.next() * 4),
@@ -48,7 +50,14 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
       SP: 8 + Math.floor(rngService.next() * 4),
       DF: 8 + Math.floor(rngService.next() * 4),
     };
-    const w = makeWarrior(undefined, `Starter_${i}`, style, attrs, {}, rngService);
+    const w = makeWarrior(
+      undefined,
+      generateWarriorName({ rng: rngService, archetype: STYLE_ARCHETYPE[style], usedNames }),
+      style,
+      attrs,
+      {},
+      rngService
+    );
     usedNames.add(w.name);
     return w;
   });

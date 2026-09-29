@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/state.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorSelectorProps {
   warriors: Warrior[];
@@ -33,7 +34,7 @@ export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelec
                 isSelected ? 'text-foreground' : 'text-muted-foreground'
               )}
             >
-              {warrior.name}
+              {warriorDisplayName(warrior)}
             </span>
             <span
               className={cn(

@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { WarriorLink } from '@/components/EntityLink';
 import type { AtRiskWarrior } from '@/hooks/useAtRiskWarriors';
 import { hasInjuries } from '@/engine/injuries/utils';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorAuditCardProps {
   warrior: AtRiskWarrior;
@@ -25,7 +26,9 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
             name={warrior.name}
             id={warrior.id}
             className="text-xs font-black uppercase tracking-tight text-foreground/80 hover:text-primary transition-colors motion-reduce:transition-none"
-          />
+          >
+            {warriorDisplayName(warrior)}
+          </WarriorLink>
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
             ID: {warrior.id.slice(0, 8)}
           </span>

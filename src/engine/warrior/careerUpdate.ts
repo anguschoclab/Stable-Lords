@@ -5,6 +5,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorStatus, CareerRecord } from '@/types/warrior.types';
 import { SEASON_POINTS } from '@/constants/core/core';
+import { milestoneEpithet } from '@/data/names/epithets';
 
 /**
  * Defines the shape of career update input.
@@ -32,6 +33,8 @@ export interface CareerUpdateResult {
   popularity?: number;
   flair?: string[];
   seasonPoints?: number;
+  /** Newly-earned milestone epithet — only present on an upgrade. */
+  epithet?: string;
 }
 
 /**
@@ -102,6 +105,12 @@ export function calculateCareerUpdate(
     seasonPoints,
   };
 
+  // Milestone epithet — only a living winner can earn one; upgrades only.
+  if (!isVictim) {
+    const epithet = milestoneEpithet(warrior.id, career, warrior.epithet);
+    if (epithet) result.epithet = epithet;
+  }
+
   // Only include optional fields if they have values
   if (popularityDelta !== 0) {
     result.popularity = Math.max(0, (warrior.popularity || 0) + popularityDelta);
@@ -129,6 +138,10 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
 
   if (result.flair !== undefined) {
     update.flair = result.flair;
+  }
+
+  if (result.epithet !== undefined) {
+    update.epithet = result.epithet;
   }
 
   return { ...warrior, ...update };

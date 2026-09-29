@@ -7,6 +7,7 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { EPITHET_TABLES } from '@/data/names/epithets';
 
 describe('SeasonalRetirementService', () => {
   let state: GameState;
@@ -154,6 +155,44 @@ describe('SeasonalRetirementService', () => {
       );
 
       expect(candidates1.length).toBe(candidates2.length);
+    });
+
+    it('earns a legend epithet when a distinguished career retires', () => {
+      state.rivals[0]!.roster = [
+        makeWarrior(
+          undefined,
+          'Legend Warrior',
+          FightingStyle.StrikingAttack,
+          ATTRS_10,
+          {
+            age: 45,
+            career: { wins: 60, losses: 10, kills: 0 },
+          }
+        ),
+      ];
+
+      const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
+      const retired = updatedState.rivals[0]!.roster.find((w) => w.name === 'Legend Warrior');
+      expect(retired?.status).toBe('Retired');
+      expect(retired?.epithet).toBeDefined();
+      expect(EPITHET_TABLES.legend).toContain(retired!.epithet);
+    });
+
+    it('leaves journeymen without an epithet on retirement', () => {
+      state.rivals[0]!.roster = [
+        makeWarrior(
+          undefined,
+          'Plain Warrior',
+          FightingStyle.StrikingAttack,
+          ATTRS_10,
+          { age: 45, career: { wins: 5, losses: 10, kills: 0 }, fame: 50 }
+        ),
+      ];
+
+      const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
+      const retired = updatedState.rivals[0]!.roster.find((w) => w.name === 'Plain Warrior');
+      expect(retired?.status).toBe('Retired');
+      expect(retired?.epithet).toBeUndefined();
     });
   });
 });

@@ -1,6 +1,6 @@
 import { STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from './src/data/names/stableNames.ts';
 import { OWNER_FIRST, OWNER_LAST } from './src/data/names/ownerNames.ts';
-import { WARRIOR_NAMES } from './src/data/names/warriorNames.ts';
+import { COMMON_CORPUS } from './src/data/names/commonCorpus.ts';
 
 function findDupes(arr, label) {
   const seen = new Map();
@@ -28,4 +28,4 @@ findDupes(STABLE_SUFFIXES, 'STABLE_SUFFIXES');
 findDupes(STABLE_ALT, 'STABLE_ALT');
 findDupes(OWNER_FIRST, 'OWNER_FIRST');
 findDupes(OWNER_LAST, 'OWNER_LAST');
-findDupes(WARRIOR_NAMES, 'WARRIOR_NAMES');
+findDupes(COMMON_CORPUS, 'COMMON_CORPUS');

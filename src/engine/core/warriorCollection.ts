@@ -86,6 +86,31 @@ export function collectAllKnownWarriors(state: {
 }
 
 /**
+ * Collects every warrior name currently in use across player roster, rival
+ * rosters, graveyard, retired warriors, and the recruit pool. This is the
+ * uniqueness domain for generated names.
+ */
+export function collectUsedWarriorNames(state: {
+  roster?: Warrior[];
+  graveyard?: Warrior[];
+  retired?: Warrior[];
+  rivals?: { roster: Warrior[] }[];
+  recruitPool?: { name: string }[];
+}): Set<string> {
+  const names = new Set<string>();
+  for (const w of collectAllKnownWarriors({
+    roster: state.roster ?? [],
+    graveyard: state.graveyard ?? [],
+    retired: state.retired ?? [],
+    rivals: state.rivals ?? [],
+  })) {
+    names.add(w.name);
+  }
+  for (const w of state.recruitPool ?? []) names.add(w.name);
+  return names;
+}
+
+/**
  * Builds a Map of warrior id → warrior for fast lookups.
  * Includes all warriors (roster, graveyard, retired, rivals).
  * Later entries overwrite earlier ones.

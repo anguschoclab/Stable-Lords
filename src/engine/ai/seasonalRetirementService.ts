@@ -2,6 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { retireWithHonors } from '@/engine/warrior/retirement';
 
 /**
  * SeasonalRetirementService - Handles retirement and legacy founder system.
@@ -82,7 +83,7 @@ export const SeasonalRetirementService = {
               fightingStyle: w.style,
             });
           }
-          return { ...w, status: 'Retired' as const, retiredWeek: state.week } as Warrior;
+          return retireWithHonors(w, state.week);
         }
         return w;
       });

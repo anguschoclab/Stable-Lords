@@ -3,7 +3,6 @@
  * Provides validation functions for warrior, owner, and stable names.
  */
 
-import { WARRIOR_NAMES } from './warriorNames';
 import { OWNER_FIRST, OWNER_LAST } from './ownerNames';
 import { STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from './stableNames';
 
@@ -54,14 +53,24 @@ function matchesPrefixedStableName(stableName: string): boolean {
   return false;
 }
 
+/** Warrior names are 2-20 chars, uppercase letters with spaces/'/- allowed. */
+const WARRIOR_NAME_RE = /^[A-Z][A-Z '-]{1,19}$/;
+
 /**
  * Validates if a name is a valid warrior name.
  *
+ * Since names are procedurally generated, validation is format-based rather
+ * than a list membership check: 2-20 chars, letters/spaces/'/-, and no " VS "
+ * substring (which would corrupt "A vs B" fight-title parsing).
+ *
  * @param name - The name to validate
- * @returns True if the name is in the WARRIOR_NAMES array
+ * @returns True if the name matches the warrior-name format
  */
 export function isValidWarriorName(name: string): boolean {
-  return isInNameList(name, WARRIOR_NAMES, true);
+  const n = name.toUpperCase();
+  if (!WARRIOR_NAME_RE.test(n)) return false;
+  if (/\sVS\s/.test(n)) return false;
+  return true;
 }
 
 /**

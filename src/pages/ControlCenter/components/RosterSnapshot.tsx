@@ -9,6 +9,7 @@ import { STYLE_ABBREV } from '@/types/shared.types';
 import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { Swords, ChevronRight } from 'lucide-react';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  *
@@ -35,7 +36,7 @@ export function RosterSnapshot() {
                   </div>
                   <div className="min-w-0">
                     <div className="font-display font-black text-sm uppercase tracking-tight truncate group-hover:text-primary transition-colors motion-reduce:transition-none">
-                      {w.name}
+                      {warriorDisplayName(w)}
                     </div>
                     <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
                       <span>{STYLE_ABBREV[w.style] ?? w.style}</span>

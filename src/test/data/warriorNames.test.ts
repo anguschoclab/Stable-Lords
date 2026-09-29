@@ -1,10 +1,12 @@
 /**
- * Warrior names — verifies new chaotic names are present and no duplicates.
+ * Common corpus — verifies the legacy name pool is preserved, deduplicated,
+ * and feeds the procedural generator's 'common' culture.
  */
 import { describe, it, expect } from 'vitest';
-import { WARRIOR_NAMES } from '@/data/names/warriorNames';
+import { COMMON_CORPUS } from '@/data/names/commonCorpus';
+import { CULTURE_SEEDS } from '@/data/names/cultures';
 
-describe('warrior names', () => {
+describe('common corpus', () => {
   const NEW_CHAOTIC_NAMES = [
     'VOIDBRINGER',
     'STARFALL',
@@ -18,16 +20,22 @@ describe('warrior names', () => {
     'NEONBLADE',
   ];
 
-  it('all 10 new chaotic names are present', () => {
+  it('all 10 chaotic names are preserved in the corpus', () => {
     for (const name of NEW_CHAOTIC_NAMES) {
-      expect(WARRIOR_NAMES, `missing name: ${name}`).toContain(name);
+      expect(COMMON_CORPUS, `missing name: ${name}`).toContain(name);
     }
   });
 
-  it('WARRIOR_NAMES has no duplicate entries', () => {
-    const unique = new Set(WARRIOR_NAMES);
-    expect(unique.size, `${WARRIOR_NAMES.length - unique.size} duplicate names`).toBe(
-      WARRIOR_NAMES.length
+  it('COMMON_CORPUS has no duplicate entries', () => {
+    const unique = new Set(COMMON_CORPUS);
+    expect(unique.size, `${COMMON_CORPUS.length - unique.size} duplicate names`).toBe(
+      COMMON_CORPUS.length
     );
+  });
+
+  it('the common culture seeds include the full corpus', () => {
+    for (const name of NEW_CHAOTIC_NAMES) {
+      expect(CULTURE_SEEDS.common).toContain(name);
+    }
   });
 });

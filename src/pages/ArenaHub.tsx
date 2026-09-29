@@ -165,7 +165,7 @@ function LeaderboardRow({
   rank,
   championIds,
 }: {
-  entry: { warrior: { id: string; name: string; career: { wins: number; losses: number; kills: number }; fame: number }; isPlayer: boolean; stableName: string };
+  entry: { warrior: { id: string; name: string; epithet?: string; career: { wins: number; losses: number; kills: number }; fame: number }; isPlayer: boolean; stableName: string };
   rank: number;
   championIds: Set<string>;
 }) {
@@ -183,7 +183,12 @@ function LeaderboardRow({
         {String(rank).padStart(2, '0')}
       </TableCell>
       <TableCell>
-        <WarriorNameTag id={w.id} name={w.name} isChampion={championIds.has(w.id)} />
+        <WarriorNameTag
+          id={w.id}
+          name={w.name}
+          epithet={w.epithet}
+          isChampion={championIds.has(w.id)}
+        />
       </TableCell>
       <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
         {entry.stableName}

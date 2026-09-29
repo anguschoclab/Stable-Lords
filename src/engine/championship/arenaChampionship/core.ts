@@ -15,6 +15,7 @@ import type {
 } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { earnEpithet, type EpithetCause } from '@/data/names/epithets';
 
 export const CHAMPIONSHIP_EXCLUDED_ARENAS: ReadonlySet<string> = new Set(['bloodsands_arena']);
 
@@ -146,6 +147,7 @@ export function endReign(
   pushHistory(title, {
     warriorId: reign.warriorId,
     warriorName: warrior?.name ?? reign.warriorId,
+    warriorEpithet: warrior?.epithet,
     stableName: stable?.stableName,
     startedAbsoluteWeek: reign.startedAbsoluteWeek,
     endedAbsoluteWeek: now,
@@ -174,6 +176,38 @@ export function crown(title: ArenaTitle, warriorId: WarriorId, now: number): voi
   title.refusals = 0;
   title.deferrals = 0;
   title.noContenderStreak = 0;
+}
+
+/**
+ * Awards an earned epithet to a warrior through the delta — never mutates
+ * state, never touches the canonical name, never downgrades a higher-ranked
+ * epithet. Writes to rosterUpdates (player) or rivalsUpdates (rival).
+ */
+export function awardEpithet(
+  state: GameState,
+  delta: ChampionshipDelta,
+  warriorId: WarriorId,
+  cause: EpithetCause
+): void {
+  const w = findWarriorById(state, warriorId);
+  if (!w) return;
+  const owner = owningStableOf(state, warriorId);
+  if (owner?.isPlayer) {
+    const existing = delta.rosterUpdates.get(warriorId) ?? {};
+    const epithet = earnEpithet(cause, warriorId, existing.epithet ?? w.epithet);
+    if (epithet) delta.rosterUpdates.set(warriorId, { ...existing, epithet });
+    return;
+  }
+  const rival = (state.rivals ?? []).find((r) => r.id === owner?.stableId);
+  if (!rival) return;
+  const pending = delta.rivalsUpdates.get(rival.id);
+  const baseRoster = pending?.roster ?? rival.roster;
+  const roster = baseRoster.map((x) => {
+    if (x.id !== warriorId) return x;
+    const epithet = earnEpithet(cause, warriorId, x.epithet);
+    return epithet ? { ...x, epithet } : x;
+  });
+  delta.rivalsUpdates.set(rival.id, { ...(pending ?? {}), roster });
 }
 
 /** Queues a newsletter item into the delta. */

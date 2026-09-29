@@ -41,7 +41,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
       <div className="p-5 grid grid-cols-[1fr_auto_1fr] items-center gap-8">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <WarriorNameTag id={wA.id} name={wA.name} isChampion={wA.champion} />
+            <WarriorNameTag id={wA.id} name={wA.name} epithet={wA.epithet} isChampion={wA.champion} />
             <StatBadge styleName={wA.style} />
           </div>
           <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary/60">
@@ -62,7 +62,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
         <div className="space-y-3 text-right">
           <div className="flex items-center justify-end gap-3">
             <StatBadge styleName={wB.style} />
-            <WarriorNameTag id={wB.id} name={wB.name} isChampion={wB.champion} />
+            <WarriorNameTag id={wB.id} name={wB.name} epithet={wB.epithet} isChampion={wB.champion} />
           </div>
           <div className="flex items-center justify-end gap-2 text-[9px] font-black uppercase tracking-widest text-accent/60">
             <StableLink

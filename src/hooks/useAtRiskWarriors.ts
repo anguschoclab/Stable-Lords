@@ -9,6 +9,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 export interface AtRiskWarrior {
   id: string;
   name: string;
+  epithet?: string;
   fatigue: number;
   injuries: { name: string }[] | string[];
 }
@@ -28,6 +29,7 @@ export function useAtRiskWarriors() {
         result.push({
           id: w.id,
           name: w.name,
+          epithet: w.epithet,
           fatigue: w.fatigue ?? 0,
           injuries: w.injuries,
         });

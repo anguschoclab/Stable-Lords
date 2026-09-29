@@ -10,6 +10,7 @@ import {
   type Attributes,
 } from '@/types/game';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
+import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { clamp } from '@/utils/math';
 
 interface UseWarriorBuilderStateDeps {
@@ -70,7 +71,7 @@ export function useWarriorBuilderState({
     const styleIdx = cryptoRandomInt(0, styles.length - 1);
     const chosenStyle = styles[styleIdx];
     if (chosenStyle) setStyle(chosenStyle);
-    setName(randomWarriorName());
+    setName(randomWarriorName(chosenStyle ? STYLE_ARCHETYPE[chosenStyle] : undefined));
   }, []);
 
   const handleCreate = useCallback(() => {

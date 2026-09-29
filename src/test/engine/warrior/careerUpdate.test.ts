@@ -14,6 +14,7 @@ import {
   updateWarriorFromBoutOutcome,
   CareerUpdateInput,
 } from '@/engine/warrior/careerUpdate';
+import { EPITHET_TABLES } from '@/data/names/epithets';
 
 describe('careerUpdate', () => {
   const rng = new SeededRNGService(12345);
@@ -570,6 +571,65 @@ describe('careerUpdate', () => {
       warrior = updateWarriorFromBoutOutcome(warrior, true, 'A', false, skipFatigue);
 
       expect(warrior.fatigue).toBe(100);
+    });
+  });
+
+  describe('milestone epithets', () => {
+    it('awards a kill epithet when kills cross a threshold', () => {
+      const warrior = createTestWarrior(0, 5, 5, 2); // 2 kills
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: true,
+        isVictim: false,
+      });
+      expect(result.career.kills).toBe(3);
+      expect(result.epithet).toBeDefined();
+      expect(EPITHET_TABLES.kill_3).toContain(result.epithet);
+    });
+
+    it('applies the epithet through applyCareerUpdate', () => {
+      const warrior = createTestWarrior(0, 5, 5, 4);
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: true,
+        isVictim: false,
+      });
+      const updated = applyCareerUpdate(warrior, result);
+      expect(updated.epithet).toBe(result.epithet);
+      expect(EPITHET_TABLES.kill_5).toContain(updated.epithet);
+      expect(updated.name).toBe('TestWarrior'); // name never mutates
+    });
+
+    it('does not award an epithet below thresholds', () => {
+      const warrior = createTestWarrior(0, 5, 5, 0);
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: false,
+        isVictim: false,
+      });
+      expect(result.epithet).toBeUndefined();
+    });
+
+    it('never downgrades an existing champion epithet', () => {
+      const warrior = createTestWarrior(0, 5, 5, 2);
+      warrior.epithet = EPITHET_TABLES.arena_champion[0]!;
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: true,
+        isKill: true,
+        isVictim: false,
+      });
+      expect(result.epithet).toBeUndefined(); // no downgrade emitted
+    });
+
+    it('does not award milestone epithets to a dead victim', () => {
+      const warrior = createTestWarrior(0, 10, 5, 9);
+      const result = calculateCareerUpdate(warrior, {
+        isWinner: false,
+        isKill: true,
+        isVictim: true,
+      });
+      expect(result.status).toBe('Dead');
+      expect(result.epithet).toBeUndefined();
     });
   });
 });

@@ -116,6 +116,7 @@ export function StatBadge({
 export function WarriorNameTag({
   id,
   name,
+  epithet,
   isChampion,
   injuryCount = 0,
   useCrown = false,
@@ -137,6 +138,7 @@ export function WarriorNameTag({
         ) : (
           name
         )}
+        {epithet && <span className="font-normal italic text-arena-gold/80"> {epithet}</span>}
       </span>
       {isDead && <Skull className="h-3 w-3 text-muted-foreground shrink-0" />}
       {isChampion && <ChampionIcon className="h-3 w-3 text-arena-gold shrink-0" />}

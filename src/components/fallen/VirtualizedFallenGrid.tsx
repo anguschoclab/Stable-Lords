@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Surface } from '@/components/ui/Surface';
 import { Shield, Skull, Crosshair, Activity } from 'lucide-react';
 import { WarriorLink } from '@/components/EntityLink';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { Warrior } from '@/types/game';
 import type { FightingStyle } from '@/types/game';
@@ -195,7 +196,7 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
         <div className="flex justify-between items-start mb-8">
           <div className="flex flex-col">
             <WarriorLink
-              name={w.name}
+              name={warriorDisplayName(w)}
               id={w.id}
               className="font-display font-black text-2xl uppercase tracking-tighter group-hover:text-destructive transition-colors motion-reduce:transition-none"
             />

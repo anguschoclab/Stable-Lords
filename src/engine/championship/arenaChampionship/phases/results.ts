@@ -2,7 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import type { ChampionshipDelta } from '../core';
-import { ensureTitle, endReign, crown, news, cancelAllOpenOffersInvolving, CHAMPIONSHIP_DEBUG } from '../core';
+import { ensureTitle, endReign, crown, news, cancelAllOpenOffersInvolving, awardEpithet, CHAMPIONSHIP_DEBUG } from '../core';
 
 // ─── 3. Result resolution ───────────────────────────────────────────────────
 
@@ -29,6 +29,7 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
     if (champId == null) {
       // Vacant title bout — decisive winner takes the crown.
       crown(title, winnerId, now);
+      awardEpithet(state, delta, winnerId, 'arena_champion');
       news(delta, state.week, `New Champion Crowned`, [
         `${findWarriorById(state, winnerId)?.name ?? winnerId} claims the vacant crown.`,
       ], `crown-${arenaId}-${now}`);
@@ -68,6 +69,7 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
       }
     }
     crown(title, winnerId, now);
+    awardEpithet(state, delta, winnerId, 'arena_champion');
     // Coronation cancels the new champion's unresolved ordinary offers.
     cancelAllOpenOffersInvolving(state, delta, winnerId);
     news(delta, state.week, `Title Changes Hands`, [

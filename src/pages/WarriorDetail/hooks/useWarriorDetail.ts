@@ -12,6 +12,7 @@ import {
   getPastArenaTitles,
 } from '@/engine/championship/arenaChampionship';
 import { getAllArenas } from '@/data/arenas';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { toast } from 'sonner';
 
 /** Roster-mutation handlers bound to the viewed warrior. */
@@ -44,7 +45,7 @@ function useWarriorMutations(
   const handleRetire = useCallback(() => {
     if (!warrior) return;
     retireWarrior(warrior.id);
-    toast.success(`${warrior.name} has been granted the rudis — free at last.`);
+    toast.success(`${warriorDisplayName(warrior)} has been granted the rudis — free at last.`);
     navigate({ to: '/' });
   }, [warrior, retireWarrior, navigate]);
 

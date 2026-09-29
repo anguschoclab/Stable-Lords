@@ -20,7 +20,7 @@ import { SeededRNGService } from '@/utils/random';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { isFightReady } from '@/engine/warrior/warriorStatus';
-import { owningStableOf, type ChampionshipDelta } from './arenaChampionship';
+import { owningStableOf, awardEpithet, type ChampionshipDelta } from './arenaChampionship';
 
 /**
  * The week-52 field: every reigning arena champion, fight-ready. Dormant and
@@ -166,6 +166,8 @@ export function recordGrandChampions(state: GameState, delta: ChampionshipDelta)
         });
       }
     }
+
+    awardEpithet(state, delta, winnerId, 'grand_champion');
 
     delta.newsletterItems.push({
       id: `champ-gc-${t.id}`,

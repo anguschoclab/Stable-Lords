@@ -54,7 +54,7 @@ export function TargetPanel({
                 return (
                   <WarriorTargetCard
                     key={w.id}
-                    warrior={{ id: w.id, name: w.name, style: w.style }}
+                    warrior={{ id: w.id, name: w.name, epithet: w.epithet, style: w.style }}
                     isSelected={selectedWarriorId === w.id}
                     isRevealed={!!isRevealed}
                     isRevealing={isRevealing}

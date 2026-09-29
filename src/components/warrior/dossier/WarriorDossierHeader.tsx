@@ -6,6 +6,7 @@ import { StatBadge } from '@/components/ui/WarriorBadges';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { useGameStore } from '@/state/useGameStore';
 import type { Warrior } from '@/types/warrior.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorDossierHeaderProps {
   warrior: Warrior;
@@ -33,7 +34,7 @@ export function WarriorDossierHeader({ warrior, record, rankings, isPlayerOwned 
     <div className="flex items-center justify-between">
       <div className="space-y-1">
         <h2 className="text-2xl font-display font-black tracking-tight uppercase">
-          {warrior.name}
+          {warriorDisplayName(warrior)}
         </h2>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase opacity-60 tracking-widest">

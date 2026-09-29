@@ -7,6 +7,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { convertRetiredToTrainer } from '@/engine/trainers/trainers';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightingStyle } from '@/types/shared.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface VeteranReassignmentDialogProps {
   open: boolean;
@@ -48,7 +49,7 @@ export function VeteranReassignmentDialog({
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-4">
-                    <span className="text-lg font-black uppercase tracking-tight">{w.name}</span>
+                    <span className="text-lg font-black uppercase tracking-tight">{warriorDisplayName(w)}</span>
                     <StatBadge styleName={w.style as FightingStyle} />
                   </div>
                   <div className="flex items-center gap-3">

@@ -3,9 +3,12 @@ import {
   partialRefreshPool,
   generateRecruitPool,
   fullRefreshPool,
+  generateRecruit,
   DEFAULT_POOL_SIZE,
 } from '@/engine/recruitment/recruitment';
 import { SeededRNGService } from '@/utils/random';
+import { makeWarrior } from '@/test/_fixtures/factories';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 describe('partialRefreshPool', () => {
   it('returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool', () => {
@@ -169,5 +172,43 @@ describe('fullRefreshPool', () => {
     // This test documents the intentional design choice
     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
     // The key is that fullRefreshPool doesn't accept legacyCandidates at all
+  });
+});
+
+describe('legacy (dynastic) recruit naming', () => {
+  /** RNG whose next() is pinned low — every <0.05 legacy roll succeeds. */
+  function legacyRng(seed = 5): IRNGService {
+    const inner = new SeededRNGService(seed);
+    return {
+      next: () => 0.01,
+      pick: (arr) => inner.pick(arr),
+      uuid: (p) => inner.uuid(p),
+      roll: (a, b) => inner.roll(a, b),
+      shuffle: (a) => inner.shuffle(a),
+      rollWeighted: (w) => inner.rollWeighted(w),
+      chance: (p) => inner.chance(p),
+    } as IRNGService;
+  }
+
+  it('gives legacy recruits a name referencing their parent', () => {
+    const parent = makeWarrior({ name: 'KRAGOS' });
+    const usedNames = new Set<string>();
+    const recruit = generateRecruit(legacyRng(), usedNames, 1, undefined, undefined, [parent]);
+    expect(recruit.lineage?.parentId).toBe(parent.id);
+    expect(recruit.name).not.toBe('KRAGOS');
+    expect(
+      /KRAG/i.test(recruit.name) || /( II| III| IV| V)$/.test(recruit.name) || /SON|Younger|Heir/i.test(recruit.name),
+      `name ${recruit.name} doesn't reference parent KRAGOS`
+    ).toBe(true);
+  });
+
+  it('keeps generated pool names unique and arena-format', () => {
+    const usedNames = new Set<string>();
+    const pool = generateRecruitPool(30, 1, usedNames, new SeededRNGService(31));
+    const names = pool.map((w) => w.name);
+    expect(new Set(names).size).toBe(names.length);
+    for (const n of names) {
+      expect(n, `bad format: ${n}`).toMatch(/^[A-Z][A-Z '-]{1,19}$/);
+    }
   });
 });

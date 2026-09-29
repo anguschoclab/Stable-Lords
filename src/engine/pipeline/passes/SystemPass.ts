@@ -15,7 +15,9 @@ import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import { computeNextSeason } from './WorldPass';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { generateArchetypeAttrs } from '@/engine/factories/statGeneration';
+import { generateArchetypeAttrs, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import { generateWarriorName } from '@/data/names/nameGenerator';
+import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 import { getStyleDefaultLoadout } from '@/data/equipment';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -178,7 +180,11 @@ function materializeFloorRecruit(
   const attrs = generateArchetypeAttrs(style, rng);
   const warrior = makeWarrior(
     rng.uuid() as WarriorId,
-    `Floor Recruit ${rng.uuid().slice(-4)}`,
+    generateWarriorName({
+      rng,
+      archetype: STYLE_ARCHETYPE[style],
+      usedNames: collectUsedWarriorNames(state),
+    }),
     style,
     attrs,
     {},

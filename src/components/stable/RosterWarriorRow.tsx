@@ -18,6 +18,7 @@ interface RosterWarriorRowProps {
   warrior: {
     id: string;
     name: string;
+    epithet?: string;
     fame: number;
     style: string;
     champion: boolean;
@@ -121,6 +122,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick, contenderBadge }
                 <WarriorNameTag
                   id={warrior.id}
                   name={warrior.name}
+                  epithet={warrior.epithet}
                   isChampion={warrior.champion}
                   injuryCount={injuryCount}
                   useCrown

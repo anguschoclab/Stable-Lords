@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import type { Warrior } from '@/types/state.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorSelectorProps {
   warriors: Warrior[];
@@ -47,7 +48,7 @@ export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelec
                   selectedId === w.id ? 'text-primary' : 'text-foreground'
                 )}
               >
-                {w.name}
+                {warriorDisplayName(w)}
               </span>
               <span className="text-[8px] font-mono text-muted-foreground/60 mt-0.5">
                 FAME: {w.fame}

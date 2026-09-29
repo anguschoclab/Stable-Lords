@@ -10,6 +10,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 
 interface ObfuscatedWarrior {
   name: string;
+  epithet?: string;
   champion: boolean;
   style: FightingStyle | 'UNKNOWN';
   career: { wins: number; losses: number; kills: number };
@@ -81,6 +82,11 @@ export function WarriorHeroHeader({
                 <h1 className="text-4xl font-display font-black uppercase tracking-tight">
                   {warrior.name}
                 </h1>
+              )}
+              {warrior.epithet && (
+                <span className="text-2xl font-display italic text-arena-gold/80 tracking-tight">
+                  {warrior.epithet}
+                </span>
               )}
             </div>
           </div>

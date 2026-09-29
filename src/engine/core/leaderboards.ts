@@ -85,6 +85,7 @@ export function calculateGlobalFameLeaderboard(
 export interface ArenaWarriorEntry {
   warriorId: string;
   name: string;
+  epithet?: string;
   stableName: string;
   isPlayer: boolean;
   style: FightingStyle;
@@ -119,6 +120,7 @@ function buildEntry(
   return {
     warriorId: warrior.id,
     name: warrior.name,
+    epithet: warrior.epithet,
     stableName,
     isPlayer,
     style: warrior.style,

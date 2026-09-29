@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import type { Warrior } from '@/types/warrior.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import { hashStr } from '@/utils/random';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
@@ -44,7 +45,7 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
                 className="bg-muted/40 border border-border/60 p-6 rounded-none text-center min-w-72 shadow-2xl relative"
               >
                 <h3 className="text-2xl font-display font-bold text-destructive mb-1 drop-shadow-md">
-                  {w.name}
+                  {warriorDisplayName(w)}
                 </h3>
                 {tribute && (
                   <p className="text-sm text-arena-gold mb-2 italic leading-relaxed">

@@ -4,6 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { updateWarriorAfterBout } from '@/engine/bout/warriorStateUpdater';
+import { EPITHET_TABLES } from '@/data/names/epithets';
 import type { Warrior } from '@/types/warrior.types';
 
 describe('warriorStateUpdater', () => {
@@ -139,6 +140,31 @@ describe('warriorStateUpdater', () => {
 
       expect(result.name).toBe('Special Name');
       expect(result.id).toBe('special-id');
+    });
+
+    it('awards a kill milestone epithet crossing a threshold', () => {
+      const warrior = createMockWarrior({ career: { wins: 3, losses: 2, kills: 2 } });
+      const result = updateWarriorAfterBout(warrior, 10, 5, true, true, []);
+      expect(result.career.kills).toBe(3);
+      expect(result.epithet).toBeDefined();
+      expect(EPITHET_TABLES.kill_3).toContain(result.epithet);
+      expect(result.name).toBe('Test Warrior');
+    });
+
+    it('never downgrades an existing higher-ranked epithet', () => {
+      const warrior = createMockWarrior({
+        career: { wins: 3, losses: 2, kills: 2 },
+        epithet: EPITHET_TABLES.arena_champion[0]!,
+      });
+      const result = updateWarriorAfterBout(warrior, 10, 5, true, true, []);
+      expect(result.epithet).toBe(EPITHET_TABLES.arena_champion[0]);
+    });
+
+    it('does not epithet losers or sub-threshold careers', () => {
+      const loser = createMockWarrior();
+      expect(updateWarriorAfterBout(loser, 0, 0, false, false, []).epithet).toBeUndefined();
+      const winner = createMockWarrior({ career: { wins: 3, losses: 2, kills: 1 } });
+      expect(updateWarriorAfterBout(winner, 5, 3, true, true, []).epithet).toBeUndefined();
     });
   });
 });

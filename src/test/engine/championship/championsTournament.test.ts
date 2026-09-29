@@ -15,6 +15,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { resolveCompleteTournament } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena/arenaChampionship';
+import { EPITHET_TABLES } from '@/data/names/epithets';
 import { SEASONAL_TOURNAMENT_WEEKS, LEGACY_TOURNAMENT_WEEKS } from '@/constants/core/dates';
 import {
   makeGameState,
@@ -173,6 +174,28 @@ describe('recordGrandChampions', () => {
     const delta = createChampionshipDelta();
     recordGrandChampions(state, delta);
     expect(delta.grandChampions).toHaveLength(0);
+  });
+
+  it('awards a grand_champion epithet to a player winner', () => {
+    const state = crownedState(5);
+    state.tournaments = [championsTournament('w2')];
+    const delta = createChampionshipDelta();
+    recordGrandChampions(state, delta);
+    const upd = delta.rosterUpdates.get('w2' as WarriorId)!;
+    expect(upd.epithet).toBeDefined();
+    expect(EPITHET_TABLES.grand_champion).toContain(upd.epithet);
+    expect(upd.name).toBeUndefined(); // canonical name never rewritten
+  });
+
+  it('awards a grand_champion epithet to a rival winner', () => {
+    const state = crownedState(5, { rivalChamps: 1 });
+    state.tournaments = [championsTournament('w4')];
+    const delta = createChampionshipDelta();
+    recordGrandChampions(state, delta);
+    const upd = delta.rivalsUpdates.get('r1' as StableId)!;
+    const w4 = (upd.roster ?? []).find((w) => w.id === 'w4')!;
+    expect(EPITHET_TABLES.grand_champion).toContain(w4.epithet);
+    expect(w4.name).toBe('Champ w4'); // unchanged
   });
 });
 

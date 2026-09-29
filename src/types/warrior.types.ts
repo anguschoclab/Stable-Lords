@@ -48,6 +48,8 @@ export interface StatBadgeProps {
 export interface WarriorNameTagProps {
   id?: string;
   name: string;
+  /** Earned epithet rendered alongside the name (e.g. "the Red"). */
+  epithet?: string;
   isChampion?: boolean;
   injuryCount?: number;
   useCrown?: boolean;
@@ -153,6 +155,10 @@ export interface Warrior {
   derivedStats?: DerivedStats;
   fame: number;
   popularity: number;
+  /** Earned epithet suffix (e.g. 'the Red', 'the Crowned') awarded at
+   *  coronations, career milestones, retirement honors, and dynastic
+   *  succession. `name` stays immutable — display via warriorDisplayName. */
+  epithet?: string;
   titles: string[];
   injuries: InjuryData[];
   flair: string[];

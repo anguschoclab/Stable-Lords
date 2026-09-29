@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getNamesFromTitle } from '@/utils/fightTitle';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /* ── helpers ─────────────────────────────────────────────── */
 
@@ -245,7 +246,7 @@ function InducteeHeader({
             {icon}
           </div>
           <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-arena-gold transition-colors motion-reduce:transition-none">
-            {warrior.name}
+            {warriorDisplayName(warrior)}
           </span>
         </div>
         <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">

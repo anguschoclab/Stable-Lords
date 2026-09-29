@@ -27,7 +27,12 @@ export function TrainingCardHeader({
     <div className="p-4 bg-white/5 border-b border-white/5">
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <WarriorNameTag id={warrior.id} name={warrior.name} isChampion={warrior.champion} />
+          <WarriorNameTag
+            id={warrior.id}
+            name={warrior.name}
+            epithet={warrior.epithet}
+            isChampion={warrior.champion}
+          />
           <div className="flex items-center gap-2 opacity-60">
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">
               {STYLE_DISPLAY_NAMES[warrior.style]}

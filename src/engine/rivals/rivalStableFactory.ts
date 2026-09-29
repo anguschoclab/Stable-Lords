@@ -22,6 +22,8 @@ import { FightingStyle } from '@/types/shared.types';
 import { generateCrest } from '../crest/crestGenerator';
 import { biasedAttrs, createRivalWarrior } from './rivalWarriorFactory';
 import { generateStableTrainers } from './rivalTrainerFactory';
+import { generateWarriorName } from '@/data/names/nameGenerator';
+import { cultureForOwner } from '@/data/names/cultures';
 
 /**
  * Gets stable templates.
@@ -201,11 +203,15 @@ function buildRoster(
   const [minR, maxR] = tmpl.rosterRange;
   const warriorCount = minR + Math.floor(rng.next() * (maxR - minR + 1));
   const warriors: Warrior[] = [];
-  const namePool = [...tmpl.warriorNames].sort(() => rng.next() - 0.5);
+  const culture = cultureForOwner(tmpl.personality, tmpl.philosophy);
 
   for (let j = 0; j < warriorCount; j++) {
-    let wName = namePool.find((n) => !usedWarriorNames.has(n));
-    if (!wName) wName = `${tmpl.stableName.split(' ').pop()?.toUpperCase()}_${j}`;
+    const wName = generateWarriorName({
+      rng,
+      culture,
+      seedPool: tmpl.warriorNames,
+      usedNames: usedWarriorNames,
+    });
     usedWarriorNames.add(wName);
 
     const style = pickWarriorStyle(tmpl, rng);

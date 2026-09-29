@@ -51,7 +51,7 @@ function WarriorListItem({
             <div className="p-4 flex items-center justify-between">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                  <WarriorNameTag id={w.id} name={w.name} useCrown={false} />
+                  <WarriorNameTag id={w.id} name={w.name} epithet={w.epithet} useCrown={false} />
                   {hasReport && (
                     <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse motion-reduce:animate-none">
                       <Eye className="h-2.5 w-2.5" /> INTEL

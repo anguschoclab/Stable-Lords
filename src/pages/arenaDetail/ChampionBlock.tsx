@@ -86,6 +86,7 @@ function ReignSummary({
       <WarriorNameTag
         id={reign.warriorId}
         name={champWarrior?.name ?? reign.warriorId}
+        epithet={champWarrior?.epithet}
         isChampion
       />
       <span className="text-[9px] text-muted-foreground/50 italic">
@@ -120,7 +121,7 @@ function ContenderLadder({
               <span className="font-mono font-black text-arena-gold/70 w-4 text-right">
                 {i + 1}
               </span>
-              <WarriorNameTag id={c.warrior.id} name={c.warrior.name} />
+              <WarriorNameTag id={c.warrior.id} name={c.warrior.name} epithet={c.warrior.epithet} />
               <span className="text-muted-foreground/40 italic">
                 {owner?.stableName ?? '—'}
               </span>

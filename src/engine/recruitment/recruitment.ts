@@ -18,7 +18,11 @@ import { resolveRng } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
-import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
+import type { Archetype } from '@/data/names/archetypeNames';
+import {
+  generateWarriorName,
+  generateDynasticWarriorName,
+} from '@/data/names/nameGenerator';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { clamp } from '@/utils/math';
@@ -92,10 +96,8 @@ const REFRESH_COST = 50;
 const DEFAULT_POOL_SIZE = 12; // Increased from 5 to maintain world population
 export { REFRESH_COST, DEFAULT_POOL_SIZE };
 
-// ─── Name Pool ────────────────────────────────────────────────────────────
-
-// Name pool is now fetched from narrative domain files
-const NAME_POOL = (narrativeContent as NarrativeContent).recruitment.names;
+// Names come from the procedural generator (src/data/names/nameGenerator.ts);
+// the narrative recruitment corpus is folded into the 'common' culture.
 
 // Removed manual seededRng implementation in favor of utils/random
 
@@ -162,19 +164,16 @@ function pickStyleAndLineage(
   return { style: rng.pick(Object.values(FightingStyle)), lineage: undefined };
 }
 
-/** Pick a unique archetype name; falls back to the generic pool, capped at 200 tries. */
+/** Pick a unique archetype-cultured name; legacy recruits get dynastic names. */
 function pickRecruitName(
   rng: IRNGService,
-  archetype: keyof typeof ARCHETYPE_NAMES,
-  usedNames: Set<string>
+  archetype: Archetype,
+  usedNames: Set<string>,
+  lineage?: WarriorLineage
 ): string {
-  let name: string;
-  let attempts = 0;
-  const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank];
-  do {
-    name = namePool.length > 0 ? rng.pick(namePool) : rng.pick(NAME_POOL);
-    attempts++;
-  } while (usedNames.has(name) && attempts < 200);
+  const name = lineage?.mentorName
+    ? generateDynasticWarriorName(lineage.mentorName, { rng, usedNames })
+    : generateWarriorName({ rng, archetype, usedNames });
   usedNames.add(name);
   return name;
 }
@@ -209,8 +208,8 @@ export function generateRecruit(
     }
   }
 
-  // Pick unique name based on Archetype
-  const name = pickRecruitName(rng, archetype, usedNames);
+  // Pick unique name based on Archetype — legacy recruits take dynastic names
+  const name = pickRecruitName(rng, archetype, usedNames, lineage);
 
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
   const potential = generatePotential(attributes, tier, rng);

@@ -26,6 +26,7 @@ import {
   type ChampionshipDelta,
 } from '@/engine/championship/arenaChampionship';
 import { ARENA_TITLE, ARENA_COMMISSION_ID } from '@/constants/arena';
+import { EPITHET_TABLES } from '@/data/names/epithets';
 import type { ArenaTitle, BoutOffer, GameState } from '@/types/state.types';
 import type { Warrior, CareerRecord } from '@/types/warrior.types';
 import type { WarriorId, BoutOfferId } from '@/types/shared.types';
@@ -839,5 +840,47 @@ describe('applyChampionPerks', () => {
     );
     expect(delta.rosterUpdates.get('w-stale' as WarriorId)).toBeUndefined();
     expect(delta.rosterUpdates.get('w-dormant' as WarriorId)).toBeUndefined();
+  });
+});
+
+// ─── Coronation epithets ────────────────────────────────────────────────────
+
+describe('coronation epithets', () => {
+  const arenaId = 'standard_arena';
+
+  it('crowns a challenger with an arena_champion epithet', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const state = makeGameState({
+      absoluteWeek: 50,
+      roster: [champ, cont],
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
+      arenaHistory: [
+        makeFightSummary({
+          titleArenaId: arenaId,
+          warriorIdA: 'w-champ' as WarriorId,
+          warriorIdD: 'w-cont' as WarriorId,
+          winner: 'D',
+          absoluteWeek: 50,
+        }),
+      ],
+    });
+    const delta = createChampionshipDelta();
+    resolveTitleBoutResults(state, delta);
+    const epithet = delta.rosterUpdates.get('w-cont' as WarriorId)?.epithet;
+    expect(epithet).toBeDefined();
+    expect(EPITHET_TABLES.arena_champion).toContain(epithet);
+    // Canonical name is never touched.
+    expect(delta.rosterUpdates.get('w-cont' as WarriorId)?.name).toBeUndefined();
+  });
+
+  it('seeded champions earn an arena_champion epithet', () => {
+    const wTop = warriorAtArena('w-top', arenaId, { wins: 5, losses: 1 });
+    const state = makeGameState({ roster: [wTop] });
+    const delta = createChampionshipDelta();
+    seedChampions(state, delta);
+    const upd = delta.rosterUpdates.get('w-top' as WarriorId);
+    expect(upd?.epithet).toBeDefined();
+    expect(EPITHET_TABLES.arena_champion).toContain(upd!.epithet);
   });
 });

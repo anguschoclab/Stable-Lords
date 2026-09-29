@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
 import { hasInjuries, countInjuries } from '@/engine/injuries/utils';
 import type { Warrior } from '@/types/game';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 const FATIGUE_LABELS = {
   fresh: { label: 'Fresh', color: 'text-primary', bar: 'bg-primary' },
@@ -28,7 +29,7 @@ export function WarriorReadinessCard({ warrior }: WarriorReadinessCardProps) {
     <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-all motion-reduce:transition-none">
       <div className="flex flex-col gap-0.5">
         <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90">
-          {warrior.name}
+          {warriorDisplayName(warrior)}
         </span>
         {injured ? (
           <div className="flex items-center gap-1.5 text-destructive animate-pulse motion-reduce:animate-none">

@@ -3,20 +3,20 @@
  * Provides functions to generate random names for warriors, owners, and stables.
  */
 
-import { WARRIOR_NAMES } from './warriorNames';
 import { OWNER_FIRST, OWNER_LAST } from './ownerNames';
 import { STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from './stableNames';
 import { randomPick } from '@/utils/random';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import { generateWarriorName } from './nameGenerator';
 
 /**
- * Generates a random warrior name from the WARRIOR_NAMES array.
+ * Generates a random warrior name via the procedural generator (entropy-seeded —
+ * UI convenience only; engine paths call generateWarriorName with an IRNGService).
  *
- * @param rng - Optional random number generator function
  * @returns A random warrior name
  */
-export function randomWarriorName(rng?: () => number): string {
-  return randomPick(WARRIOR_NAMES, rng ?? cryptoRandom);
+export function randomWarriorName(archetype?: string): string {
+  return generateWarriorName({ archetype });
 }
 
 /**

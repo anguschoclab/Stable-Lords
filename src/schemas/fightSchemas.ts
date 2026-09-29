@@ -325,6 +325,7 @@ export const ArenaTitleReignSchema = z.object({
 export const ArenaReignRecordSchema = z.object({
   warriorId: z.string(),
   warriorName: z.string(),
+  warriorEpithet: z.string().optional(),
   stableName: z.string().optional(),
   startedAbsoluteWeek: z.number(),
   endedAbsoluteWeek: z.number(),

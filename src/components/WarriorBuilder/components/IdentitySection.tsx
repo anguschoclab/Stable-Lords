@@ -12,6 +12,7 @@ import {
 import { Dices } from 'lucide-react';
 import { randomWarriorName } from '@/data/names';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
+import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 
 interface IdentitySectionProps {
   name: string;
@@ -45,7 +46,7 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
               variant="outline"
               size="icon"
               type="button"
-              onClick={() => setName(randomWarriorName())}
+              onClick={() => setName(randomWarriorName(STYLE_ARCHETYPE[style]))}
               tooltip="Random name"
               aria-label="Randomize warrior name"
               className="shrink-0"

@@ -10,6 +10,7 @@ import {
   runRivalStrategyPass,
 } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { SeededRNG } from '@/utils/random';
+import { resolveImpacts } from '@/engine/impacts';
 import {
   makeWarrior as fixtureWarrior,
   makeRival as fixtureRival,
@@ -461,5 +462,32 @@ describe('runRivalStrategyPass — seasonal tournament headless gating', () => {
 
     const titles = (impact.newsletterItems ?? []).map((n) => n.title);
     expect(titles).toContain('🎖️ TOURNAMENT ANNOUNCEMENT');
+  });
+});
+
+describe('runRivalStrategyPass — bankruptcy succession', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('replaces a bankrupt stable with its successor instead of leaving a ghost', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const bankrupt = makeRival({
+      treasury: -100_000,
+      roster: [makeWarrior('w_old', 'Old Guard', { stableId: 'rival-1' as StableId })],
+    });
+    const state = makeMinimalState([bankrupt]);
+    state.recruitPool = [];
+
+    const impact = runRivalStrategyPass(state, 6, undefined as any, true);
+
+    const successor = impact.rivalReplacements?.get('rival-1' as StableId);
+    expect(successor).toBeDefined();
+    expect(successor!.id).not.toBe('rival-1');
+
+    const out = resolveImpacts(structuredClone(state), [impact]);
+    const ids = out.rivals.map((r) => r.id);
+    expect(ids).toEqual([successor!.id]);
+    expect(out.rivals.flatMap((r) => r.roster).some((w) => w.id === 'w_old')).toBe(false);
   });
 });

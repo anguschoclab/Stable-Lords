@@ -47,11 +47,14 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
   for (let i = 0; i < impacts.length; i++) {
     const impact = impacts[i];
     if (!impact) continue;
+    // Stable replacements apply first: later keys (rivalsUpdates) may target
+    // the successor's new id, which only exists once the swap is done.
+    if (impact.rivalReplacements) impactHandlers.rivalReplacements(state, impact.rivalReplacements);
     for (const key in impact) {
       if (Object.prototype.hasOwnProperty.call(impact, key)) {
         const k = key as keyof StateImpact;
         const value = impact[k];
-        if (value === undefined) continue;
+        if (value === undefined || k === 'rivalReplacements') continue;
         // Epithet awards apply last — whole-roster replacements within the
         // same tick (rivalsUpdates) would otherwise orphan the objects they
         // were written to.
@@ -97,6 +100,7 @@ const MERGE_CONFIG: MergeConfig = {
   rivalsUpdates: { strategy: 'mapMerge', defaultValue: new Map() },
   rivalWarriorPatches: { strategy: 'mapMerge', defaultValue: new Map() },
   rivalRosterRemovals: { strategy: 'append', defaultValue: [] },
+  rivalReplacements: { strategy: 'mapMerge', defaultValue: new Map() },
   newsletterItems: { strategy: 'append', defaultValue: [] },
   ledgerEntries: { strategy: 'append', defaultValue: [] },
   graveyard: { strategy: 'append', defaultValue: [] },

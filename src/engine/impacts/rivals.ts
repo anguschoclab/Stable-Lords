@@ -73,10 +73,28 @@ export const rivalRosterRemovals = (state: GameState, value: WarriorId[]) => {
 };
 
 /**
+ * Swap bankrupt stables for their successors, keeping world order. A
+ * successor whose id is already live is dropped (the bankrupt stable stays
+ * and is retried next tick) rather than duplicating a stable id.
+ */
+export const rivalReplacements = (state: GameState, value: Map<StableId, RivalStableData>) => {
+  if (value.size === 0) return;
+  const liveIds = new Set<string>(state.rivals.map((r) => r.id));
+  state.rivals = state.rivals.map((r) => {
+    const successor = value.get(r.id);
+    if (!successor || liveIds.has(successor.id)) return r;
+    liveIds.add(successor.id);
+    return successor;
+  });
+  rebuildRivalMap(state);
+};
+
+/**
  * Rivals impact handlers map.
  */
 export const rivalsHandlers = {
   rivalsUpdates,
   rivalWarriorPatches,
   rivalRosterRemovals,
+  rivalReplacements,
 };

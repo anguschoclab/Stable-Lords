@@ -81,6 +81,15 @@ export interface StateImpact {
   rivalWarriorPatches?: Map<WarriorId, Partial<Warrior>>;
   /** Rival-owned warriors to remove from their roster (e.g. killed in a bout). */
   rivalRosterRemovals?: WarriorId[];
+  /**
+   * Bankruptcy succession: the stable keyed by the old id is swapped, in
+   * place, for the successor stable (which carries a new id). Applied before
+   * every other impact key so same-tick `rivalsUpdates` keyed by the
+   * successor's id land on it. `rivalsUpdates` alone cannot express this —
+   * it only patches stables already in `state.rivals`, so a successor was
+   * silently dropped and the bankrupt stable lived on as an unprocessed ghost.
+   */
+  rivalReplacements?: Map<StableId, RivalStableData>;
 
   // World
   week?: number;

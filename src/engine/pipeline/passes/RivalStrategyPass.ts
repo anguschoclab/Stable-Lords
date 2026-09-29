@@ -104,6 +104,18 @@ function buildWeekOffers(
 }
 
 /**
+ * Bankruptcy successors carry a new id, which rivalsUpdates can't reach —
+ * swap them in explicitly or the bankrupt stable lingers as a ghost.
+ */
+function successorReplacements(shardOutputs: RivalShardOutput[]): StateImpact[] {
+  const rivalReplacements = new Map<StableId, RivalStableData>();
+  for (const o of shardOutputs) {
+    if (o.replacesStableId) rivalReplacements.set(o.replacesStableId, o.rival);
+  }
+  return rivalReplacements.size > 0 ? [{ rivalReplacements }] : [];
+}
+
+/**
  * Merge stage-1 shard outputs with the world-scope follow-on passes:
  * matchmaking, bids, roster management, draft, poach, offers, plans, and
  * tournament emission.
@@ -120,6 +132,7 @@ function finishRivalPass(
 
   // 1. Process Individual Rival Stables (Economy/Strategy)
   let currentRivals = shardOutputs.map((o) => o.rival);
+  impacts.push(...successorReplacements(shardOutputs));
 
   // 1.5–1.7. Matchmaking + bids → offers
   const boutOffersWithWorld = buildWeekOffers(state, currentRivals, rng);

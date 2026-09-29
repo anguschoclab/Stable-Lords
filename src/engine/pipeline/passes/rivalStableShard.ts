@@ -106,6 +106,8 @@ export interface RivalShardInput {
 export interface RivalShardOutput {
   rival: RivalStableData;
   gazetteItems: string[];
+  /** Set when `rival` is a bankruptcy successor: the id of the stable it replaces. */
+  replacesStableId?: RivalStableData['id'];
 }
 
 /**
@@ -184,7 +186,7 @@ export function processRivalStable(
       gazetteItems.push(
         `🆕 RECRUITMENT: ${replacement.owner.stableName} has debuted in the league under ${replacement.owner.name}!`
       );
-      return { rival: replacement, gazetteItems };
+      return { rival: replacement, gazetteItems, replacesStableId: rival.id };
     }
   }
   return { rival: updatedRival, gazetteItems };

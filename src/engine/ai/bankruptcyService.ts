@@ -7,6 +7,7 @@ import {
   DEBT_FLOOR,
   EMERGENCY_LOAN,
 } from '@/constants/economy';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  * BankruptcyService - Handles bankruptcy detection and processing.
@@ -71,7 +72,7 @@ export const BankruptcyService = {
           title: 'Bankruptcy Crisis',
           items: [
             `Your stable has gone bankrupt with treasury at ${state.treasury}g.`,
-            `${highestFameWarrior.name} has been sold for ${sellValue}g to cover debts.`,
+            `${warriorDisplayName(highestFameWarrior)} has been sold for ${sellValue}g to cover debts.`,
             `Your reputation has suffered (-50 popularity).`,
           ],
         };

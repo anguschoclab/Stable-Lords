@@ -39,10 +39,13 @@ export function getStableTemplates(): StableTemplate[] {
 export function generateRivalStables(
   count: number,
   seed: number,
-  week: number = 0
+  week: number = 0,
+  seedNames?: ReadonlySet<string>
 ): RivalStableData[] {
   const rng = new SeededRNGService(seed);
-  const usedWarriorNames = new Set<string>();
+  // Pre-seeded with the world's used names when a mid-game caller passes them —
+  // otherwise regenerated stables re-mint names already carried by the living.
+  const usedWarriorNames = new Set<string>(seedNames ?? []);
   const rivals: RivalStableData[] = [];
 
   // Support for count > templates.length via over-sampling with procedural variance

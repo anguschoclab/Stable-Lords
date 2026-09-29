@@ -867,7 +867,7 @@ describe('coronation epithets', () => {
     });
     const delta = createChampionshipDelta();
     resolveTitleBoutResults(state, delta);
-    const epithet = delta.rosterUpdates.get('w-cont' as WarriorId)?.epithet;
+    const epithet = delta.warriorEpithets['w-cont' as WarriorId];
     expect(epithet).toBeDefined();
     expect(EPITHET_TABLES.arena_champion).toContain(epithet);
     // Canonical name is never touched.
@@ -879,8 +879,8 @@ describe('coronation epithets', () => {
     const state = makeGameState({ roster: [wTop] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
-    const upd = delta.rosterUpdates.get('w-top' as WarriorId);
-    expect(upd?.epithet).toBeDefined();
-    expect(EPITHET_TABLES.arena_champion).toContain(upd!.epithet);
+    const epithet = delta.warriorEpithets['w-top' as WarriorId];
+    expect(epithet).toBeDefined();
+    expect(EPITHET_TABLES.arena_champion).toContain(epithet);
   });
 });

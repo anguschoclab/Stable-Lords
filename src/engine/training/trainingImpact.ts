@@ -14,6 +14,7 @@ import {
 import { getHealingTrainerBonus } from './coachLogic';
 import { rollTraitTraining } from './trainingGains/traitTraining';
 import { TRAITS } from '@/engine/traits';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // ─── Exports for backward compatibility ───
 export { computeGainChance };
@@ -257,14 +258,14 @@ function processTraitAssignment(
       type: 'gain',
       message:
         roll.outcome === 'success'
-          ? `${warrior.name} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
-          : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
+          ? `${warriorDisplayName(warrior)} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
+          : `${warriorDisplayName(warrior)}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
     });
   } else {
     results.push({
       warriorId: warrior.id,
       type: 'gain',
-      message: `${warrior.name}'s trait training yielded nothing.`,
+      message: `${warriorDisplayName(warrior)}'s trait training yielded nothing.`,
     });
   }
 }

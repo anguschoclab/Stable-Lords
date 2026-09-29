@@ -15,6 +15,7 @@ import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 import { updateEntityInList } from '@/utils/stateUtils';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { findCurrentRoundBouts } from '../tournament/bracketUtils';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { selectArenaForTournamentBout } from '../tournament/tournamentArenaSelection';
@@ -286,13 +287,14 @@ export function resolveRound(
   // week rolls over on day 7, so a seventh bracket round could never resolve
   // before the season (and with it the tournament's UI window) advanced.
   const isComplete = bracket.every((b) => b.winner !== undefined);
-  const champion = resolveChampionName(
+  const championWarrior = resolveChampion(
     bracket,
     isComplete,
     winners,
     updatedState,
     resolvedTournament
   );
+  const champion = championWarrior?.name;
 
   let updatedTournament: TournamentEntry | undefined;
   updatedState.tournaments = updateEntityInList(
@@ -314,8 +316,8 @@ export function resolveRound(
   return {
     updatedState,
     roundResults:
-      isComplete && champion
-        ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`]
+      isComplete && championWarrior
+        ? [`🏆 CHAMPION: ${warriorDisplayName(championWarrior)} has won the ${resolvedTournament.name}!`]
         : [],
     isComplete,
     updatedTournament,
@@ -323,16 +325,18 @@ export function resolveRound(
 }
 
 /**
- * Champion name = winner of the championship bout (latest non-bronze bout).
- * Resolved only when the bracket is complete.
+ * Champion = winner of the championship bout (latest non-bronze bout).
+ * Resolved only when the bracket is complete. Returns the warrior (or
+ * bracket stub) so the canonical `name` stays a snapshot field while
+ * news strings can decorate with the earned epithet.
  */
-function resolveChampionName(
+function resolveChampion(
   bracket: TournamentBout[],
   isComplete: boolean,
   winners: BracketWarrior[],
   state: GameState,
   tournament: TournamentEntry
-): string | undefined {
+): { name: string; epithet?: string } | undefined {
   const finalsBout = [...bracket]
     .filter((b) => !b.isBronzeMatch)
     .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
@@ -343,8 +347,8 @@ function resolveChampionName(
         : finalsBout.warriorIdD
       : undefined;
   return championId
-    ? (winners.find((w) => w.id === championId)?.name ??
-        findWarriorById(state, championId, tournament)?.name)
+    ? (findWarriorById(state, championId, tournament) ??
+        winners.find((w) => w.id === championId))
     : undefined;
 }
 

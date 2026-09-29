@@ -8,10 +8,12 @@ import type { GameState } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { CampaignFocus, WarriorTacticsAdvice } from './types';
 import type { PlanCondition } from '@/types/shared.types';
+import type { FightPlan } from '@/types/combat.types';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { deriveHeadToHead, getOpponentIntel } from './intelAdvisor';
 import { clamp } from '@/utils/math';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 const AGILE_STYLES = new Set([
   FightingStyle.SlashingAttack,
@@ -48,7 +50,7 @@ function applyOpponentIntel(
     plan.suggestedOE = clamp(plan.suggestedOE - delta, 1, 10);
     plan.suggestedAL = clamp(plan.suggestedAL + delta, 1, 10);
     plan.gearNotes.push(
-      `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${opponent.name} — fight more patiently.`
+      `Rematch adjustment: ${h2h.wins}-${h2h.losses} recent record vs ${warriorDisplayName(opponent)} — fight more patiently.`
     );
   }
 
@@ -59,7 +61,7 @@ function applyOpponentIntel(
     plan.suggestedConditions.push({
       trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
       override: { AL: bounded(plan.suggestedAL, +2), OE: bounded(plan.suggestedOE, -1) },
-      label: `Shell up when ${opponent.name} seizes tempo`,
+      label: `Shell up when ${warriorDisplayName(opponent)} seizes tempo`,
     });
   }
 
@@ -84,12 +86,12 @@ function applyOpponentIntel(
     plan.suggestedOE = clamp(plan.suggestedOE - 1, 1, 10);
     plan.suggestedAL = clamp(plan.suggestedAL + 1, 1, 10);
     plan.gearNotes.push(
-      `Counter-tempo: scouts report ${opponent.name} fights at high offensive eagerness — absorb and counter.`
+      `Counter-tempo: scouts report ${warriorDisplayName(opponent)} fights at high offensive eagerness — absorb and counter.`
     );
   } else if (suspected?.[1] === 'Low') {
     plan.suggestedOE = clamp(plan.suggestedOE + 1, 1, 10);
     plan.suggestedAL = clamp(plan.suggestedAL - 1, 1, 10);
-    plan.gearNotes.push(`Scouts report ${opponent.name} fights passively — press the tempo.`);
+    plan.gearNotes.push(`Scouts report ${warriorDisplayName(opponent)} fights passively — press the tempo.`);
     plan.suggestedConditions.push({
       trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 40 },
       override: { OE: bounded(plan.suggestedOE, +2) },

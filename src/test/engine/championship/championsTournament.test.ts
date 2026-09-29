@@ -181,10 +181,10 @@ describe('recordGrandChampions', () => {
     state.tournaments = [championsTournament('w2')];
     const delta = createChampionshipDelta();
     recordGrandChampions(state, delta);
-    const upd = delta.rosterUpdates.get('w2' as WarriorId)!;
-    expect(upd.epithet).toBeDefined();
-    expect(EPITHET_TABLES.grand_champion).toContain(upd.epithet);
-    expect(upd.name).toBeUndefined(); // canonical name never rewritten
+    const epithet = delta.warriorEpithets['w2' as WarriorId];
+    expect(epithet).toBeDefined();
+    expect(EPITHET_TABLES.grand_champion).toContain(epithet);
+    expect(delta.rosterUpdates.get('w2' as WarriorId)?.name).toBeUndefined(); // canonical name never rewritten
   });
 
   it('awards a grand_champion epithet to a rival winner', () => {
@@ -192,9 +192,9 @@ describe('recordGrandChampions', () => {
     state.tournaments = [championsTournament('w4')];
     const delta = createChampionshipDelta();
     recordGrandChampions(state, delta);
-    const upd = delta.rivalsUpdates.get('r1' as StableId)!;
-    const w4 = (upd.roster ?? []).find((w) => w.id === 'w4')!;
-    expect(EPITHET_TABLES.grand_champion).toContain(w4.epithet);
+    const epithet = delta.warriorEpithets['w4' as WarriorId];
+    expect(EPITHET_TABLES.grand_champion).toContain(epithet);
+    const w4 = state.rivals[0]!.roster.find((w) => w.id === 'w4')!;
     expect(w4.name).toBe('Champ w4'); // unchanged
   });
 });

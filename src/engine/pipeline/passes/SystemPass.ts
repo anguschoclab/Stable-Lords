@@ -1,6 +1,7 @@
 import type { GameState, Season } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
 import {
@@ -94,7 +95,7 @@ function processSeasonalChurnAndPhilosophy(
     const pointsNews =
       pointsLeader && (pointsLeader.seasonPoints ?? 0) > 0
         ? [
-            `🏅 POINTS RACE: ${pointsLeader.name} tops the ${prevSeason} standings with ${pointsLeader.seasonPoints} season points.`,
+            `🏅 POINTS RACE: ${warriorDisplayName(pointsLeader)} tops the ${prevSeason} standings with ${pointsLeader.seasonPoints} season points.`,
           ]
         : [];
 
@@ -200,7 +201,7 @@ function materializeFloorRecruit(
 export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
   const nextYear = nextWeek === 1 ? state.year + 1 : state.year;
-  const rng = resolveRng(rootRng, state.week * 881 + 17);
+  const rng = resolveRng(rootRng, (state.absoluteWeek ?? state.week) * 881 + 17);
 
   // 1. Systemic Progression (Draft-heavy)
   const impact = processSystemicProgression(state, nextWeek, nextYear);
@@ -215,7 +216,7 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
   const bankruptcyRemovals = bankruptcyResult.impact.rosterRemovals?.length ?? 0;
   const effectiveRosterSize = state.roster.length - bankruptcyRemovals;
   if (effectiveRosterSize < 1) {
-    const floorRng = new SeededRNGService(state.week * 6151 + 29);
+    const floorRng = new SeededRNGService((state.absoluteWeek ?? state.week) * 6151 + 29);
     const recruit = materializeFloorRecruit(state, floorRng);
     if (recruit) {
       impact.rosterAdditions = [...(impact.rosterAdditions ?? []), recruit.warrior];

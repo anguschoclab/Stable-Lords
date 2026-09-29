@@ -31,6 +31,12 @@ export interface ChampionshipDelta {
   rosterUpdates: Map<WarriorId, Partial<Warrior>>;
   /** stableId → { roster } partial for rival-owned warrior updates. */
   rivalsUpdates: Map<StableId, Partial<RivalStableData>>;
+  /**
+   * warriorId → epithet earned this tick. Emitted as `warriorEpithets` on the
+   * impact — a deferred channel applied after all roster churn, since whole-
+   * rival writes later in the week replace `rivalsUpdates.roster` wholesale.
+   */
+  warriorEpithets: Record<WarriorId, string>;
   /** Grand Championship winners recorded this tick. */
   grandChampions: GrandChampionEntry[];
   /** Player-stable purse award from a Grand Championship win. */
@@ -56,6 +62,7 @@ export function createChampionshipDelta(): ChampionshipDelta {
     newsletterItems: [],
     rosterUpdates: new Map(),
     rivalsUpdates: new Map(),
+    warriorEpithets: {},
     grandChampions: [],
     treasuryDelta: 0,
   };
@@ -181,7 +188,8 @@ export function crown(title: ArenaTitle, warriorId: WarriorId, now: number): voi
 /**
  * Awards an earned epithet to a warrior through the delta — never mutates
  * state, never touches the canonical name, never downgrades a higher-ranked
- * epithet. Writes to rosterUpdates (player) or rivalsUpdates (rival).
+ * epithet. Goes through `warriorEpithets` — the deferred impact channel —
+ * because later same-week passes rewrite `rivalsUpdates.roster` wholesale.
  */
 export function awardEpithet(
   state: GameState,
@@ -189,25 +197,14 @@ export function awardEpithet(
   warriorId: WarriorId,
   cause: EpithetCause
 ): void {
-  const w = findWarriorById(state, warriorId);
+  // findWarriorById covers roster + rivals; tournament-only warriors (e.g.
+  // emergency freelancers) can hold titles too — fall back to participants.
+  const w =
+    findWarriorById(state, warriorId) ??
+    (state.tournaments ?? []).flatMap((t) => t.participants ?? []).find((p) => p.id === warriorId);
   if (!w) return;
-  const owner = owningStableOf(state, warriorId);
-  if (owner?.isPlayer) {
-    const existing = delta.rosterUpdates.get(warriorId) ?? {};
-    const epithet = earnEpithet(cause, warriorId, existing.epithet ?? w.epithet);
-    if (epithet) delta.rosterUpdates.set(warriorId, { ...existing, epithet });
-    return;
-  }
-  const rival = (state.rivals ?? []).find((r) => r.id === owner?.stableId);
-  if (!rival) return;
-  const pending = delta.rivalsUpdates.get(rival.id);
-  const baseRoster = pending?.roster ?? rival.roster;
-  const roster = baseRoster.map((x) => {
-    if (x.id !== warriorId) return x;
-    const epithet = earnEpithet(cause, warriorId, x.epithet);
-    return epithet ? { ...x, epithet } : x;
-  });
-  delta.rivalsUpdates.set(rival.id, { ...(pending ?? {}), roster });
+  const epithet = earnEpithet(cause, warriorId, delta.warriorEpithets[warriorId] ?? w.epithet);
+  if (epithet) delta.warriorEpithets[warriorId] = epithet;
 }
 
 /** Queues a newsletter item into the delta. */

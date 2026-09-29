@@ -39,6 +39,12 @@ import type { WarriorId, StableId, TournamentId, BoutOfferId } from '@/types/sha
 // Re-export GameState for convenience
 export type { GameState };
 
+/** A single earned epithet award for a warrior (player- or rival-owned). */
+export interface WarriorEpithetAward {
+  warriorId: WarriorId;
+  epithet: string;
+}
+
 /**
  * Defines the shape of state impact.
  * Each field represents a potential change to game state.
@@ -53,6 +59,11 @@ export interface StateImpact {
 
   // Warriors
   rosterUpdates?: Map<WarriorId, Partial<Warrior>>;
+  /**
+   * Earned epithet awards — deferred until after every other impact applies,
+   * so same-tick whole-roster replacements (rivalsUpdates) can't erase them.
+   */
+  warriorEpithets?: WarriorEpithetAward[];
   rosterRemovals?: WarriorId[];
   rosterAdditions?: Warrior[];
   graveyard?: Warrior[];
@@ -60,6 +71,16 @@ export interface StateImpact {
 
   // Rivals
   rivalsUpdates?: Map<StableId, Partial<RivalStableData>>;
+  /**
+   * Per-warrior patches for rival-owned warriors, keyed by warrior id and
+   * applied to whichever rival roster holds that warrior. Bout resolution
+   * must use this (never a whole-roster `rivalsUpdates.roster` write): every
+   * bout in a week resolves against the same pre-week state, so whole-roster
+   * writes from separate bouts clobber each other under last-wins merging.
+   */
+  rivalWarriorPatches?: Map<WarriorId, Partial<Warrior>>;
+  /** Rival-owned warriors to remove from their roster (e.g. killed in a bout). */
+  rivalRosterRemovals?: WarriorId[];
 
   // World
   week?: number;

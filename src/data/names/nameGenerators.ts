@@ -8,15 +8,46 @@ import { STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from './stableNames';
 import { randomPick } from '@/utils/random';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 import { generateWarriorName } from './nameGenerator';
+import type { WarriorNameOptions } from './nameGenerator';
+import { cultureForArchetype, cultureForOwner } from './cultures';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
- * Generates a random warrior name via the procedural generator (entropy-seeded —
- * UI convenience only; engine paths call generateWarriorName with an IRNGService).
+ * Generates a random warrior name via the procedural generator.
+ * Entropy-seeded when no `rng` is given — deterministic callers should pass
+ * an IRNGService (engine paths call generateWarriorName directly).
  *
+ * @param opts.archetype - Warrior archetype; its culture flavors the draw.
+ * @param opts.personality - Owning stable's personality; blended 50/50 with the
+ *   archetype's culture so recruits match the stable's naming tradition.
+ * @param opts.culture - Explicit culture or weighted mix; overrides the
+ *   personality/archetype blend.
+ * @param opts.rng - Deterministic RNG service for reproducible draws.
+ * @param opts.usedNames - Name registry to avoid; the caller owns the set.
  * @returns A random warrior name
  */
-export function randomWarriorName(archetype?: string): string {
-  return generateWarriorName({ archetype });
+export function randomWarriorName(opts?: {
+  archetype?: string;
+  personality?: string | null;
+  culture?: WarriorNameOptions['culture'];
+  rng?: IRNGService;
+  usedNames?: ReadonlySet<string>;
+}): string {
+  const archetype = opts?.archetype;
+  const culture =
+    opts?.culture ??
+    (opts?.personality
+      ? [
+          { culture: cultureForOwner(opts.personality), weight: 0.5 },
+          ...(archetype ? [{ culture: cultureForArchetype(archetype), weight: 0.5 }] : []),
+        ]
+      : undefined);
+  return generateWarriorName({
+    archetype,
+    culture,
+    rng: opts?.rng,
+    usedNames: opts?.usedNames,
+  });
 }
 
 /**

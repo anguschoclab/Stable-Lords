@@ -14,6 +14,7 @@ import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { WEAPONS, getAvailableItems } from '@/data/equipment';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // ─── Generation ─────────────────────────────────────────────────────────
 
@@ -117,13 +118,13 @@ export function checkDiscovery(
       weaponRevealed = true;
       const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
       const sparkLine = isUsingFav
-        ? `EUREKA! ${warrior.name} has mastered the ${weaponItem?.name ?? fav.weaponId}!`
-        : `Insight: ${warrior.name} realizes their true weapon preference is the ${weaponItem?.name ?? fav.weaponId}.`;
+        ? `EUREKA! ${warriorDisplayName(warrior)} has mastered the ${weaponItem?.name ?? fav.weaponId}!`
+        : `Insight: ${warriorDisplayName(warrior)} realizes their true weapon preference is the ${weaponItem?.name ?? fav.weaponId}.`;
       hints.push(sparkLine);
       updated = true;
     } else if (r() < CHANCE_HINT && fav.discovered.weaponHints < 2) {
       fav.discovered.weaponHints++;
-      hints.push(`Observing: ${warrior.name} is developing a distinct feel for certain weapons...`);
+      hints.push(`Observing: ${warriorDisplayName(warrior)} is developing a distinct feel for certain weapons...`);
       updated = true;
     }
   }
@@ -140,13 +141,13 @@ export function checkDiscovery(
       fav.discovered.rhythm = true;
       rhythmRevealed = true;
       hints.push(
-        `EUREKA! ${warrior.name} has found their natural soul-rhythm: OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}!`
+        `EUREKA! ${warriorDisplayName(warrior)} has found their natural soul-rhythm: OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}!`
       );
       updated = true;
     } else if (r() < CHANCE_HINT && fav.discovered.rhythmHints < 2) {
       fav.discovered.rhythmHints++;
       hints.push(
-        `Observing: ${warrior.name} is finding their own unique rhythm in the chaos of battle.`
+        `Observing: ${warriorDisplayName(warrior)} is finding their own unique rhythm in the chaos of battle.`
       );
       updated = true;
     }
@@ -195,16 +196,16 @@ export function getFavoriteRhythmBonus(
 /** Apply Insight Token — instantly reveals weapon or rhythm */
 export function applyInsightToken(warrior: Warrior, type: 'weapon' | 'rhythm'): string {
   const fav = warrior.favorites;
-  if (!fav) return `${warrior.name} has no hidden favorites.`;
+  if (!fav) return `${warriorDisplayName(warrior)} has no hidden favorites.`;
 
   if (type === 'weapon') {
-    if (fav.discovered.weapon) return `${warrior.name} already knows their favorite weapon.`;
+    if (fav.discovered.weapon) return `${warriorDisplayName(warrior)} already knows their favorite weapon.`;
     fav.discovered.weapon = true;
     const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
-    return `Weapon Insight Token used! ${warrior.name}'s favorite weapon is the ${weaponItem?.name ?? fav.weaponId}.`;
+    return `Weapon Insight Token used! ${warriorDisplayName(warrior)}'s favorite weapon is the ${weaponItem?.name ?? fav.weaponId}.`;
   } else {
-    if (fav.discovered.rhythm) return `${warrior.name} already knows their natural rhythm.`;
+    if (fav.discovered.rhythm) return `${warriorDisplayName(warrior)} already knows their natural rhythm.`;
     fav.discovered.rhythm = true;
-    return `Rhythm Insight Token used! ${warrior.name}'s natural rhythm is OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}.`;
+    return `Rhythm Insight Token used! ${warriorDisplayName(warrior)}'s natural rhythm is OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}.`;
   }
 }

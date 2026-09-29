@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { applyRecords } from '@/engine/bout/recordHandler';
-import type { GameState, RivalStableData } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 
@@ -93,47 +93,28 @@ describe('applyRecords', () => {
     expect(updatedD.flair).toContain('Flashy');
   });
 
-  it('populates rivalsUpdates correctly when rivalStableId is provided', () => {
-    const wD = createMockWarrior('D');
-    const rival = {
-      id: 'rival-1' as import('@/types/shared.types').StableId,
-      owner: {
-        id: 'rival-1' as import('@/types/shared.types').StableId,
-        name: 'Rival Stable',
-        personality: 'Aggressive',
-        stableName: 'RS',
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
-      fame: 0,
-      treasury: 0,
-      roster: [wD],
-      targetClass: 1,
-      baseFame: 10,
-      weeklyMultiplier: 1,
-      baseStats: { minFame: 1, maxFame: 10, popModifier: 1 },
-    } as unknown as RivalStableData;
-    const s = createMockState({ rivals: [rival] });
-    const wA = createMockWarrior('A');
-
+  it('patches both rival-owned sides of a world bout (rival vs rival)', () => {
+    type WId = import('@/types/shared.types').WarriorId;
+    const wA = createMockWarrior('A', { stableId: 'rival-2' as never });
+    const wD = createMockWarrior('D', { stableId: 'rival-1' as never });
+    const s = createMockState({ player: { id: 'player-1' } as never, roster: [] });
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
 
     const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1, 'rival-1');
 
-    expect(impact.rosterUpdates?.has('D' as import('@/types/shared.types').WarriorId)).toBeFalsy();
-    expect(
-      impact.rivalsUpdates?.has('rival-1' as import('@/types/shared.types').StableId)
-    ).toBeTruthy();
+    // Neither side touches the player roster, and no whole-roster rival write.
+    expect(impact.rosterUpdates?.size ?? 0).toBe(0);
+    expect(impact.rivalsUpdates).toBeUndefined();
 
-    const updatedRivalData = impact.rivalsUpdates!.get(
-      'rival-1' as import('@/types/shared.types').StableId
-    )!;
-    expect(updatedRivalData.roster).toBeDefined();
-    const updatedWD = updatedRivalData.roster?.find((w) => w.id === 'D');
-    expect(updatedWD).toBeDefined();
-    expect(updatedWD?.career?.losses).toBe(1);
-    expect(updatedWD?.popularity).toBe(10); // Rival popularity delta is 0, so it remains at the initial value
+    const pA = impact.rivalWarriorPatches!.get('A' as WId)!;
+    const pD = impact.rivalWarriorPatches!.get('D' as WId)!;
+    expect(pA.career?.wins).toBe(1);
+    expect(pA.fame).toBe(15);
+    expect(pD.career?.losses).toBe(1);
+    // Rival popularity delta is 0, so popularity is unchanged and not patched.
+    expect(pD.popularity).toBeUndefined();
+    // Patches carry only changed fields, so later handlers can't clobber them.
+    expect(pD).not.toHaveProperty('name');
   });
 
   it('skips fatigue accrual for tournament participants during tournament week', () => {

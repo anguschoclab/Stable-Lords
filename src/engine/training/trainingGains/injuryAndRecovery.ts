@@ -9,6 +9,7 @@ import {
   TRAINING_INJURIES,
 } from './constants';
 import type { TrainingResult } from './types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  *
@@ -53,7 +54,7 @@ export function rollForTrainingInjury(
       result: {
         type: 'injury',
         warriorId: warrior.id,
-        message: `${warrior.name} suffered a ${template.name} during training! (${injury.weeksRemaining} week recovery)`,
+        message: `${warriorDisplayName(warrior)} suffered a ${template.name} during training! (${injury.weeksRemaining} week recovery)`,
       },
     };
   }
@@ -71,7 +72,7 @@ export function processRecovery(
   if ((warrior.injuries || []).length === 0) {
     return {
       updatedInjuries: warrior.injuries as InjuryData[],
-      message: `${warrior.name} rested but has no injuries to heal.`,
+      message: `${warriorDisplayName(warrior)} rested but has no injuries to heal.`,
     };
   }
 
@@ -89,6 +90,6 @@ export function processRecovery(
 
   return {
     updatedInjuries,
-    message: `${warrior.name} underwent active recovery (${healAmount} weeks of healing).`,
+    message: `${warriorDisplayName(warrior)} underwent active recovery (${healAmount} weeks of healing).`,
   };
 }

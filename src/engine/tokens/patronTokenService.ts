@@ -3,6 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  * PatronTokenService — Manages Tournament Reward Favors.
@@ -101,7 +102,7 @@ export const PatronTokenService = {
           week: state.week,
           title: 'Patronage Internalized',
           items: [
-            `${warrior.name} has internalized the ${token.type} Patron's Favor from the stable archives.`,
+            `${warriorDisplayName(warrior)} has internalized the ${token.type} Patron's Favor from the stable archives.`,
           ],
         },
       ],

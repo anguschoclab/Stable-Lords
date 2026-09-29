@@ -111,6 +111,38 @@ export function collectUsedWarriorNames(state: {
 }
 
 /**
+ * Collects every warrior id across player roster, rival rosters, graveyard,
+ * retired warriors, recruit pool, and tournament participants — the
+ * uniqueness domain for generated warrior ids. Ids are minted from seeded
+ * streams and CAN collide across generation paths (e.g. a mid-game stable
+ * regeneration whose seed lands in another caller's domain re-mints a
+ * byte-identical clone); id-keyed systems conflate the two warriors.
+ */
+export function collectUsedWarriorIds(state: {
+  roster?: Warrior[];
+  graveyard?: Warrior[];
+  retired?: Warrior[];
+  rivals?: { roster: Warrior[] }[];
+  recruitPool?: { id: string }[];
+  tournaments?: { participants?: { id: string }[] }[];
+}): Set<string> {
+  const ids = new Set<string>();
+  for (const w of collectAllKnownWarriors({
+    roster: state.roster ?? [],
+    graveyard: state.graveyard ?? [],
+    retired: state.retired ?? [],
+    rivals: state.rivals ?? [],
+  })) {
+    ids.add(w.id);
+  }
+  for (const w of state.recruitPool ?? []) ids.add(w.id);
+  for (const t of state.tournaments ?? []) {
+    for (const p of t.participants ?? []) ids.add(p.id);
+  }
+  return ids;
+}
+
+/**
  * Builds a Map of warrior id → warrior for fast lookups.
  * Includes all warriors (roster, graveyard, retired, rivals).
  * Later entries overwrite earlier ones.

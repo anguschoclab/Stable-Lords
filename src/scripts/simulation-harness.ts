@@ -179,7 +179,10 @@ async function runWeek(
   autoRespondToPlayerOffers(state);
 
   // B. Advance Week
-  state = await advanceWeek(state);
+  // Week 1 may run on a caller-supplied initialState, so it clones; every
+  // later week runs on advanceWeek's own output, which this loop exclusively
+  // owns — skip the per-week full-state structuredClone (mirrors autosim).
+  state = await advanceWeek(state, { mutableInput: w > 1 });
 
   if (config.profile) aggregatePassProfile(passAgg);
 

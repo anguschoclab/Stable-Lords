@@ -6,14 +6,13 @@
  * stables use stoic Latin names, aggressive ones Norse or Celtic)."
  *
  * Culture seed lists serve double duty: they are drawn from directly (to
- * preserve curated flavor) and they train the per-culture Markov name model.
+ * preserve curated flavor) alongside the syllable-composition path below.
  */
 import { NAMES_BRUTAL, NAMES_AGILE, NAMES_CUNNING, NAMES_MIXED } from './archetypeNames';
 import { COMMON_CORPUS } from './commonCorpus';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 
-/** Naming culture — the language family a warrior name is drawn from. */
 /** Naming culture identifiers — flavor buckets for generated warrior names. */
 export type NamingCulture = 'norse' | 'latin' | 'shadow' | 'exotic' | 'common' | 'lowborn';
 
@@ -261,8 +260,73 @@ const ARCHETYPE_CULTURE: Record<string, NamingCulture> = {
   cunning: 'shadow',
 };
 
-/** Maps a warrior archetype (brutal/agile/cunning/tank) to its default culture. */
 /** Maps a warrior archetype to a naming culture; falls back to 'common'. */
 export function cultureForArchetype(archetype: string): NamingCulture {
   return ARCHETYPE_CULTURE[archetype] ?? 'common';
 }
+
+/**
+ * Phoneme inventory for the syllable composer. `onsets` open syllables,
+ * `nuclei` are vowel cores, `codas` close them, and `affixes` are the
+ * culture's characteristic endings — the part that makes a composed name
+ * read as Norse vs Latin vs gutter-stock.
+ */
+export interface SyllableTable {
+  onsets: readonly string[];
+  nuclei: readonly string[];
+  codas: readonly string[];
+  affixes: readonly string[];
+}
+
+/**
+ * Per-culture syllable frames used when the generator composes a novel name
+ * (as opposed to drawing a curated seed).
+ */
+export const SYLLABLE_TABLES: Record<NamingCulture, SyllableTable> = {
+  norse: {
+    onsets: [
+      'B', 'BR', 'BJ', 'D', 'DR', 'F', 'G', 'GR', 'H', 'K', 'KR', 'M', 'R', 'S', 'SK', 'ST',
+      'TH', 'V', 'W', 'Y',
+    ],
+    nuclei: ['A', 'E', 'I', 'O', 'U', 'Y', 'AL', 'AR', 'OR', 'UR'],
+    codas: [
+      'R', 'N', 'K', 'G', 'RN', 'RK', 'LD', 'TH', 'NN', 'TT', 'SON', 'GAR', 'ULF', 'RIK',
+    ],
+    affixes: ['SON', 'GAR', 'ULF', 'RIK', 'HEIM', 'BJORN', 'STEIN', 'VALD', 'BORN', 'HALL'],
+  },
+  latin: {
+    onsets: [
+      'C', 'L', 'M', 'N', 'P', 'QU', 'S', 'T', 'V', 'AU', 'FL', 'PR', 'COR', 'MAX', 'SEN',
+    ],
+    nuclei: ['A', 'E', 'I', 'O', 'U', 'AE', 'IA', 'IO'],
+    codas: ['S', 'X', 'L', 'R', 'N', 'M', 'US', 'IS', 'AX', 'IX', 'NUS', 'RIUS', 'CIL'],
+    affixes: ['IUS', 'US', 'OR', 'IX', 'AX', 'ANUS', 'ICUS', 'ULUS', 'ORIUS'],
+  },
+  shadow: {
+    onsets: ['SH', 'Z', 'X', 'V', 'TH', 'N', 'M', 'D', 'K', 'S', 'GH', 'VR', 'NY'],
+    nuclei: ['A', 'E', 'I', 'O', 'U', 'Y', 'AE'],
+    codas: ['TH', 'SH', 'X', 'K', 'N', 'R', 'SS', 'Z', 'NX', 'RK', 'PH'],
+    affixes: ['SHADE', 'DUSK', 'WRAITH', 'MOURNE', 'VEIL', 'NIGHT', 'FANG', 'GRIM'],
+  },
+  exotic: {
+    onsets: ['Z', 'X', 'K', 'J', 'V', 'S', 'T', 'N', 'M', 'R', 'Q', 'DJ', 'KH', 'ZH'],
+    nuclei: ['A', 'E', 'I', 'O', 'U', 'AI', 'EI', 'OA', 'UA', 'II'],
+    codas: ['S', 'N', 'L', 'R', 'X', 'Z', 'SH', 'TH'],
+    affixes: ['ARA', 'AZA', 'IRIS', 'ORIS', 'ATH', 'ANI', 'URA', 'ELLE'],
+  },
+  common: {
+    onsets: [
+      'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'W',
+      'BR', 'CR', 'ST', 'TR',
+    ],
+    nuclei: ['A', 'E', 'I', 'O', 'U', 'EA', 'OA'],
+    codas: ['R', 'N', 'K', 'D', 'L', 'S', 'T', 'RD', 'RT', 'CK', 'SH'],
+    affixes: ['ER', 'SON', 'WOOD', 'STONE', 'HARD', 'BOLD'],
+  },
+  lowborn: {
+    onsets: ['B', 'D', 'G', 'GR', 'H', 'K', 'M', 'P', 'R', 'S', 'SN', 'W', 'FL', 'DR'],
+    nuclei: ['A', 'E', 'I', 'O', 'U', 'OO'],
+    codas: ['G', 'N', 'K', 'D', 'R', 'T', 'CH', 'TCH', 'SH', 'BB', 'GG'],
+    affixes: ['DIRT', 'MUD', 'RAG', 'ASH', 'GUT', 'RAT', 'DOB', 'FENN'],
+  },
+};

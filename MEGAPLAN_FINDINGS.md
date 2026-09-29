@@ -20,7 +20,7 @@
 | V7 | `weekPipelineService.ts` 611 splittable | **APPROVED** | seams: pass table, context prep, `buildWeekCaches`, stage runner |
 | V8 | `state.types.ts` 791 domain-splittable | **APPROVED** | ≥10 type domains; barrel kept (types umbrella is public API — see game.ts) |
 | V9 | `chaosHandlers.ts` 829 / `loreData.ts` 659 | **APPROVED** | handler family duplicated (see K1); lore is homogeneous data → thematic shards |
-| V10 | `warriorNames.ts` 1,222 keepable | **NOTE → EXEMPT** | homogeneous data arrays; exempt from size budget via explicit token |
+| V10 | `commonCorpus.ts` (was `warriorNames.ts`) keepable | **NOTE → EXEMPT** | homogeneous data arrays; exempt from size budget via explicit token |
 | V11 | Per-route primary CTA missing | **VIOLATION CONFIRMED** | `AppHeader.tsx:367` static `ExecuteWeekButton`; spec route names stale → mapping amendment needed |
 | V12 | Page primitives universal | **CORRECTED → gap confirmed** | see L2 |
 | V13 | Raw hex/rgba = violations | **CORRECTED (scope)** | 90 classified hits in 24 files; allowlist for SVG paints/data palettes |
@@ -113,7 +113,7 @@ No new AI-only gaps surfaced by scan; prior audit's intentional-divergence NOTES
 | # | File | Lines | Verdict / split |
 |---|---|---|---|
 | I1 | `data/arenas.ts` | 1,559 | APPROVED → `data/arenas/{types,registry,venues/*.ts,lore,index}` |
-| I2 | `data/names/warriorNames.ts` | 1,222 | **EXEMPT** (homogeneous data; explicit budget exemption) |
+| I2 | `data/names/commonCorpus.ts` (was `warriorNames.ts`) | ~1,222 | **EXEMPT** (homogeneous data; explicit budget exemption) |
 | I3 | `engine/traitDefs.ts` | 998 | APPROVED → `traits/{types,common,notable,exceptional,signature,flaw,index}` |
 | I4 | `engine/championship/arenaChampionship.ts` | 922 | APPROVED → `{lifecycle,titleOffers,perks,delta}` + `championsTournament.ts` |
 | I5 | `pipeline/offseasonEvents/chaosHandlers.ts` | 829 | APPROVED → handler-DSL refactor w/ K1 dedup (do together) |
@@ -183,7 +183,7 @@ Policy: engine/AI/matchmaking functions decompose to ≤~80 via extract-fn (beha
 | G2 favorites charting (P5) | `megaplan/wiring.wired.test.tsx` | ✅ built (2b, `describe.skip` MEGAPLAN-G2) |
 | G3 tourney prep (P5) | `megaplan/wiring.wired.test.tsx` | ✅ built (2b, `describe.skip` MEGAPLAN-G3) |
 | Guard: orphans | `megaplan/orphanScan.guard.test.ts` — runs scripts/orphan-scan.mjs, baseline-capped | ✅ built (2c, green) |
-| Guard: budgets | `megaplan/fileBudget.test.ts` — 800-line file ceiling + exemptions (`routeTree.gen`, `warriorNames`, `arenas.ts` pending I1 split) | ✅ built (2c, green) |
+| Guard: budgets | `megaplan/fileBudget.test.ts` — 800-line file ceiling + exemptions (`routeTree.gen`, `commonCorpus`, `arenas.ts` pending I1 split) | ✅ built (2c, green) |
 | Guard: dup ceiling | `megaplan/duplication.guard.test.ts` — 84 src↔src pair baseline embedded; new clusters fail | ✅ built (2c, green) |
 | Guard: skip count | `megaplan/skipCount.guard.test.ts` — no hard `.skip` outside megaplan; every megaplan skip names a registered ticket; count ≤ 5 | ✅ built (2c, green) |
 | Schema changes (P5) | zod round-trip + `SAVE_STATE_VERSION` bump assert | only if B/D rows land a schema change (currently none) |

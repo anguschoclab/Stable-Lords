@@ -6,6 +6,7 @@
 import type { AnalysisFactor } from '@/engine/narrative/fightAnalysis';
 import { getMatchupBonus } from '@/constants/combat/combat';
 import { hasInjuryOfSeverity } from '@/engine/injuries/utils';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
 /**
@@ -21,6 +22,7 @@ export interface FightForecast {
 export interface ForecastWarrior {
   id: string;
   name: string;
+  epithet?: string;
   style: string;
   attributes: Attributes;
   baseSkills?: BaseSkills;
@@ -52,7 +54,7 @@ function readinessRisk(w: ForecastWarrior): AnalysisFactor | null {
   );
   return {
     label: 'Readiness',
-    detail: `${w.name} carries ${active.length} active injur${active.length === 1 ? 'y' : 'ies'}${worst ? ' (serious)' : ''} into this bout.`,
+    detail: `${warriorDisplayName(w)} carries ${active.length} active injur${active.length === 1 ? 'y' : 'ies'}${worst ? ' (serious)' : ''} into this bout.`,
     favored: 'D',
     weight: worst ? 0.7 : 0.4,
   };
@@ -74,7 +76,7 @@ export function buildFightForecast(
   if (opponent && edge !== 0) {
     factors.push({
       label: 'Style matchup',
-      detail: `${player.style} vs ${opponent.style} favors ${edge > 0 ? player.name : opponent.name} (${edge > 0 ? '+' : ''}${edge}).`,
+      detail: `${player.style} vs ${opponent.style} favors ${warriorDisplayName(edge > 0 ? player : opponent)} (${edge > 0 ? '+' : ''}${edge}).`,
       favored: edge > 0 ? 'A' : 'D',
       weight: Math.min(1, Math.abs(edge) / 4),
     });
@@ -83,7 +85,7 @@ export function buildFightForecast(
   if (opponent) {
     const gap = biggestSkillGap(player, opponent);
     if (gap.gap >= 3) {
-      const who = gap.favored === 'A' ? player.name : opponent.name;
+      const who = warriorDisplayName(gap.favored === 'A' ? player : opponent);
       factors.push({
         label: `${gap.skill} edge`,
         detail: `${who} projects a ${gap.gap}-point ${gap.skill} advantage.`,
@@ -100,8 +102,8 @@ export function buildFightForecast(
     factors.push({
       label: opponent ? 'Even fight' : 'Unknown opponent',
       detail: opponent
-        ? `No decisive pre-fight edge — expect a close bout against ${opponent.name}.`
-        : `Opponent details are unknown. Scout them to forecast the matchup; ${player.name} appears fit to fight.`,
+        ? `No decisive pre-fight edge — expect a close bout against ${warriorDisplayName(opponent)}.`
+        : `Opponent details are unknown. Scout them to forecast the matchup; ${warriorDisplayName(player)} appears fit to fight.`,
       favored: null,
       weight: 0.1,
     });

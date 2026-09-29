@@ -27,7 +27,10 @@ describe('championship autosim — week 52+', () => {
   it('simulates a full year and reports championship aggregates', async () => {
     // Seed chosen so the trajectory exercises the asserted invariants
     // (title defenses resolved, dethronements via 'defeated' endReasons).
-    const state: GameState = createFreshState('probe-c');
+    // Re-probed after the naming-generator rewrite shifted RNG streams;
+    // 'probe-f' yields 9 title bouts, 4 'defeated' reigns, rival title
+    // participation, and a completed Grand Championship.
+    const state: GameState = createFreshState('probe-f');
     state.treasury = 1_000_000; // sim horizon is 60 weeks; the player economy isn't the subject
     state.roster = Array.from({ length: 6 }, (_, i) =>
       makeAutosimWarrior(`pw${i}`, `Player Warrior ${i}`, { fame: 10, popularity: 5 })

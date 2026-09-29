@@ -313,6 +313,28 @@ describe('aiDraftFromPool', () => {
       expect(result1.updatedRivals.length).toBe(result2.updatedRivals.length);
       expect(result1.gazetteItems.length).toBe(result2.gazetteItems.length);
     });
+
+    it('mints distinct warrior ids across years at the same relative week', () => {
+      // Regression: seeds derived from season-relative `week` (1–52) replayed
+      // every year, so a year-2 draft re-minted identical warrior ids — two
+      // different warriors shared an id across rosters. Seeds must derive
+      // from absoluteWeek, which never repeats.
+      const yearOne = makeMinimalGameState({ absoluteWeek: 4 as never });
+      const yearTwo = makeMinimalGameState({ absoluteWeek: 56 as never });
+      const richRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 5000 }));
+
+      const mintedIds = (s: GameState) =>
+        new Set(
+          aiDraftFromPool(pool, richRivals, 4, s).updatedRivals.flatMap((r) =>
+            r.roster.map((w) => w.id)
+          )
+        );
+
+      const idsOne = mintedIds(yearOne);
+      const idsTwo = mintedIds(yearTwo);
+      expect(idsOne.size).toBeGreaterThan(0);
+      for (const id of idsTwo) expect(idsOne.has(id)).toBe(false);
+    });
   });
 
   // 6. Gazette Item Generation Tests

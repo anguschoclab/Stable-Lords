@@ -177,13 +177,3 @@ export const NAMES_MIXED = [
  * Archetype type.
  */
 export type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank';
-
-/**
- * Archetype_names.
- */
-export const ARCHETYPE_NAMES: Record<Archetype, string[]> = {
-  brutal: NAMES_BRUTAL,
-  agile: NAMES_AGILE,
-  cunning: NAMES_CUNNING,
-  tank: NAMES_MIXED,
-};

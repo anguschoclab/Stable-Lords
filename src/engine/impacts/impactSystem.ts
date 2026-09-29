@@ -1,4 +1,4 @@
-import type { GameState, StateImpact, ImpactHandler } from './types';
+import type { GameState, StateImpact, ImpactHandler, WarriorEpithetAward } from './types';
 import { economyHandlers } from './economy';
 import { warriorsHandlers } from './warriors';
 import { worldHandlers } from './world';
@@ -43,6 +43,7 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
  * @returns The mutated game state with impacts applied
  */
 export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameState {
+  const deferredEpithets: WarriorEpithetAward[] = [];
   for (let i = 0; i < impacts.length; i++) {
     const impact = impacts[i];
     if (!impact) continue;
@@ -50,14 +51,32 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
       if (Object.prototype.hasOwnProperty.call(impact, key)) {
         const k = key as keyof StateImpact;
         const value = impact[k];
-        if (value !== undefined) {
-          const handler = impactHandlers[k];
-          if (handler) {
-            handler(state, value as never);
-          }
+        if (value === undefined) continue;
+        // Epithet awards apply last — whole-roster replacements within the
+        // same tick (rivalsUpdates) would otherwise orphan the objects they
+        // were written to.
+        if (k === 'warriorEpithets') {
+          deferredEpithets.push(...(value as typeof deferredEpithets));
+          continue;
+        }
+        const handler = impactHandlers[k];
+        if (handler) {
+          handler(state, value as never);
         }
       }
     }
+  }
+  if (deferredEpithets.length > 0) impactHandlers.warriorEpithets(state, deferredEpithets);
+  if (process.env.EPITHET_DEBUG) {
+    const before = (resolveImpacts as any).__epiCount ?? 0;
+    let count = 0;
+    const scan = (w: { epithet?: string }) => { if (w.epithet) count++; };
+    (state.roster ?? []).forEach(scan);
+    (state.rivals ?? []).forEach((r) => r.roster.forEach(scan));
+    if (count < before) {
+      console.error(`[epithet-drop] wk${state.absoluteWeek}: ${before}→${count} keys=${impacts.flatMap((i) => Object.keys(i ?? {})).join(',')}`);
+    }
+    (resolveImpacts as any).__epiCount = count;
   }
   return state;
 }
@@ -74,7 +93,10 @@ const MERGE_CONFIG: MergeConfig = {
   fameDelta: { strategy: 'accumulate', defaultValue: 0 },
   popularityDelta: { strategy: 'accumulate', defaultValue: 0 },
   rosterUpdates: { strategy: 'mapMerge', defaultValue: new Map() },
+  warriorEpithets: { strategy: 'append', defaultValue: [] },
   rivalsUpdates: { strategy: 'mapMerge', defaultValue: new Map() },
+  rivalWarriorPatches: { strategy: 'mapMerge', defaultValue: new Map() },
+  rivalRosterRemovals: { strategy: 'append', defaultValue: [] },
   newsletterItems: { strategy: 'append', defaultValue: [] },
   ledgerEntries: { strategy: 'append', defaultValue: [] },
   graveyard: { strategy: 'append', defaultValue: [] },

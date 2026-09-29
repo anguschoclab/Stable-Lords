@@ -21,6 +21,7 @@ import {
   processTraitDevelopment,
 } from './rosterWorkerTraining';
 import { applyGearUpgrade } from './rosterWorkerEquipment';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // Re-export public symbols for backward compatibility
 export {
@@ -147,17 +148,17 @@ function buyGearUpgrade(
     applyGearUpgrade(w, rngService)
   );
   let updated = logFinanceEvent(rival, {
-    label: `Gear upgrade — ${warrior.name}`,
+    label: `Gear upgrade — ${warriorDisplayName(warrior)}`,
     amount: -gearCost,
     week: currentWeek,
     category: 'other',
-    description: `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warrior.name}.`,
+    description: `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warriorDisplayName(warrior)}.`,
     riskTier: budgetReport.riskTier,
   });
   updated = logAgentAction(
     updated,
     'ROSTER',
-    `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warrior.name}.`,
+    `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warriorDisplayName(warrior)}.`,
     budgetReport.riskTier,
     currentWeek
   );

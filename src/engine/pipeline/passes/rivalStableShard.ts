@@ -5,6 +5,7 @@ import { updateAIStrategy, verifyIntentSkepticism } from '@/engine/ai/intentEngi
 import { logAgentAction } from '@/engine/ai/agentCore';
 import { processAIStable } from '@/engine/ai/stableManager';
 import { generateRivalStables } from '@/engine/rivals';
+import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import { processCrownPosture, assignCampaignRoles } from '@/engine/ai/workers/crownWorker';
@@ -178,10 +179,27 @@ export function processRivalStable(
   const updatedRival = assignCampaignRoles(prep.updatedRival, state, perception);
 
   if (isBankrupt) {
+    // Seeds overlap across generation call sites — a colliding seed re-mints a
+    // byte-identical clone of a live stable (same stableId + warrior ids),
+    // conflating every id-keyed update. Re-seed until the stable is new.
+    const usedStableIds = new Set((state.rivals ?? []).map((r) => r.id));
+    const usedWarriorIds = collectUsedWarriorIds(state);
+    const usedNames = collectUsedWarriorNames(state);
     const retirementSeed = state.absoluteWeek + index * 1000;
-    const generated = generateRivalStables(1, retirementSeed);
-    const newStable = generated[0];
-    if (newStable) {
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const newStable = generateRivalStables(
+        1,
+        retirementSeed + attempt * 7919,
+        0,
+        usedNames
+      )[0];
+      if (!newStable) break;
+      if (
+        usedStableIds.has(newStable.id) ||
+        newStable.roster.some((w) => usedWarriorIds.has(w.id))
+      ) {
+        continue;
+      }
       gazetteItems.push(
         `🆕 RECRUITMENT: ${newStable.owner.stableName} has debuted in the league under ${newStable.owner.name}!`
       );

@@ -5,6 +5,7 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { aiPlanForWarrior } from '@/engine';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import { getPairKey } from '@/utils/keyUtils';
+import { generateWarriorName } from '@/data/names/nameGenerator';
 
 /**
  * Get ai plan.
@@ -46,9 +47,17 @@ export function getAIPlan(
 }
 
 /**
- * Generate freelancer.
+ * Generate a tournament emergency-fill freelancer. Named via the unified
+ * generator with the 'lowborn' culture (unattached pit-fighters) —
+ * `usedNames` should cover the world plus already-filled bracket slots;
+ * the caller owns the set and adds each returned name.
  */
-export function generateFreelancer(tier: string, index: number, rng: SeededRNG): Warrior {
+export function generateFreelancer(
+  tier: string,
+  _index: number,
+  rng: SeededRNG,
+  usedNames?: ReadonlySet<string>
+): Warrior {
   const styles = Object.values(FightingStyle);
   const style = rng.pick(styles);
   const pool = tier === 'Gold' ? 120 : tier === 'Silver' ? 100 : tier === 'Bronze' ? 85 : 70;
@@ -62,12 +71,6 @@ export function generateFreelancer(tier: string, index: number, rng: SeededRNG):
       remaining--;
     }
   }
-  return makeWarrior(
-    undefined,
-    `Freelancer ${rng.pick(['Thrax', 'Murmillo', 'Kaeso'])} #${index}`,
-    style,
-    attrs,
-    {},
-    rng
-  );
+  const name = generateWarriorName({ rng, culture: 'lowborn', usedNames });
+  return makeWarrior(undefined, name, style, attrs, {}, rng);
 }

@@ -11,6 +11,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 interface WarriorStats {
   w: Warrior;
@@ -184,7 +185,7 @@ function awardTopHonors(
       ledger
     );
     ledger.hofNews.push(
-      `🏛️ WARRIOR OF THE YEAR: ${woty.w.name} is the champion of Year ${completedYear} with ${woty.wins} wins!`
+      `🏛️ WARRIOR OF THE YEAR: ${warriorDisplayName(woty.w)} is the champion of Year ${completedYear} with ${woty.wins} wins!`
     );
   }
 
@@ -206,7 +207,7 @@ function awardTopHonors(
       ledger
     );
     ledger.hofNews.push(
-      `💀 KILLER OF THE YEAR: ${koty.w.name} earned the 'Reaper's Gaze' with ${koty.kills} kills.`
+      `💀 KILLER OF THE YEAR: ${warriorDisplayName(koty.w)} earned the 'Reaper's Gaze' with ${koty.kills} kills.`
     );
   }
 }
@@ -239,7 +240,7 @@ function awardClassMvps(
         ledger
       );
       ledger.hofNews.push(
-        `⚔️ ${style.toUpperCase()} MVP: ${mvp.w.name} honored as the elite of their class.`
+        `⚔️ ${style.toUpperCase()} MVP: ${warriorDisplayName(mvp.w)} honored as the elite of their class.`
       );
     }
   }

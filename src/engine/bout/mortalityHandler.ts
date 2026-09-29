@@ -1,5 +1,5 @@
-import type { GameState, RivalStableData, NewsletterItem } from '@/types/state.types';
-import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
+import type { GameState, NewsletterItem } from '@/types/state.types';
+import type { WarriorId, InjuryId } from '@/types/shared.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
@@ -7,7 +7,9 @@ import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { formatDateOfDeath } from '@/utils/format';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { StateImpact } from '@/engine/impacts';
+import { patchRivalWarrior } from './warriorRouting';
 import { weekToTimestamp } from '@/constants';
 
 /**
@@ -49,26 +51,21 @@ function applySevereInjuryRule(
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   if (s.roster.some((w) => w.id === spared.id))
     rosterUpdates.set(spared.id, { injuries: [...spared.injuries, injury] });
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
-  if (rivalStableId) {
-    const rival = s.rivalMap?.get(rivalStableId as StableId);
-    if (rival?.roster.some((w) => w.id === spared.id))
-      rivalsUpdates.set(rivalStableId as StableId, {
-        roster: rival.roster.map((w) =>
-          w.id === spared.id ? { ...w, injuries: [...w.injuries, injury] } : w
-        ),
-      });
+  const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
+  if (!s.roster.some((w) => w.id === spared.id)) {
+    patchRivalWarrior(rivalWarriorPatches, spared, { injuries: [...spared.injuries, injury] });
   }
+  void rivalStableId;
   const impact: StateImpact = {
     rosterUpdates,
-    rivalsUpdates,
+    rivalWarriorPatches,
     newsletterItems: [
         {
           id: rng.uuid(),
           week,
           title: 'Miraculous Survival',
           items: [
-            `${spared.name} was left for dead by ${outcome.winner === 'A' ? wA.name : wD.name}, but the healers refused to give up. (House rule: severe injury instead of death)`,
+            `${warriorDisplayName(spared)} was left for dead by ${warriorDisplayName(outcome.winner === 'A' ? wA : wD)}, but the healers refused to give up. (House rule: severe injury instead of death)`,
           ],
         },
       ],
@@ -219,7 +216,6 @@ export function handleDeath(
   );
 
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   const newsletterItems: NewsletterItem[] = [];
 
   // Remove victim from roster
@@ -244,25 +240,23 @@ export function handleDeath(
     payload: { warriorId: victim.id, name: victim.name },
   });
 
-  if (rivalStableId && outcome.winner === 'A') {
-    // Player killed a rival. rivalStableId is rival.id (StableId), not owner.id —
-    // looking up by owner.id silently failed, so the dead warrior stayed in
-    // the rival's roster while ALSO being added to the graveyard.
-    const rival = s.rivalMap?.get(rivalStableId as StableId);
-    if (rival) {
-      const updatedRoster = rival.roster.filter((w: Warrior) => w.id !== wD.id);
-      rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
-    }
-  }
+  // Any rival-owned victim leaves its roster — not only the player-kills-rival
+  // case. World bouts are rival vs rival, and the old whole-roster
+  // rivalsUpdates write was clobbered by later bout impacts either way, so
+  // killed rival warriors kept fighting ("zombies") and could be re-killed
+  // or crowned after death.
+  const rivalRosterRemovals: WarriorId[] = s.roster.some((w) => w.id === victim.id)
+    ? []
+    : [victim.id];
 
   const impact: StateImpact = {
     graveyard: [graveyardEntry],
     unacknowledgedDeaths: [victim.id],
     rosterUpdates,
-    rivalsUpdates,
+    rivalRosterRemovals,
     newsletterItems,
     fameDelta: isPlayerVictim ? 5 : 0,
   };
 
-  return { impact, death: true, playerDeath: isPlayerVictim, deathNames: [victim.name] };
+  return { impact, death: true, playerDeath: isPlayerVictim, deathNames: [warriorDisplayName(victim)] };
 }

@@ -34,6 +34,7 @@ export default function WarriorBuilder({
   const {
     name,
     setName,
+    personality,
     style,
     setStyle,
     attrs,
@@ -70,7 +71,13 @@ export default function WarriorBuilder({
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
-          <IdentitySection name={name} setName={setName} style={style} setStyle={setStyle} />
+          <IdentitySection
+            name={name}
+            setName={setName}
+            style={style}
+            setStyle={setStyle}
+            personality={personality}
+          />
           <AttributeSliders
             attrs={attrs}
             updateAttr={updateAttr}

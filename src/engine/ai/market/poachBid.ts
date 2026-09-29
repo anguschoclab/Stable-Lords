@@ -8,6 +8,7 @@ import { logAgentAction, logFinanceEvent } from '@/engine/ai/agentCore';
 import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
 import { WEEKS_PER_SEASON } from '@/constants/core';
 import { isAIDebugEnabled } from '@/engine/ai/debug';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /** A tabled poach bid: the buyer pays `price` to `sellerStableId` for `warriorId`. */
 export interface PoachBid {
@@ -174,7 +175,7 @@ export function processPoachMarket(
         state.warriorMap?.get(bid.warriorId) ??
         state.roster.find((w) => w.id === bid.warriorId);
       const desc =
-        `Poach bid on your warrior ${target?.name ?? String(bid.warriorId)} — ` +
+        `Poach bid on your warrior ${target ? warriorDisplayName(target) : String(bid.warriorId)} — ` +
         `${rival.owner.name} offers ${bid.price}g (publicized, awaits your decision)`;
       gazetteItems.push(`[POACH] ${desc}`);
       byId.set(
@@ -194,9 +195,9 @@ export function processPoachMarket(
 
 /** Settle one AI-to-AI poach: move the warrior, settle both treasuries, log. */
 function settleAIPoach(
-  byId: Map<string, RivalStableData>,
+  byId: Map<StableId, RivalStableData>,
   bid: NonNullable<ReturnType<typeof computePoachBid>>,
-  buyerId: string,
+  buyerId: StableId,
   stamped: RivalStableData,
   state: GameState,
   gazetteItems: string[]
@@ -213,11 +214,11 @@ function settleAIPoach(
       roster: [...stamped.roster, moved],
     },
     {
-      label: `Poach purchase — ${target.name}`,
+      label: `Poach purchase — ${warriorDisplayName(target)}`,
       amount: -bid.price,
       week: state.week,
       category: 'recruit',
-      description: `Paid ${bid.price}g to poach ${target.name} from ${seller.owner.name}.`,
+      description: `Paid ${bid.price}g to poach ${warriorDisplayName(target)} from ${seller.owner.name}.`,
       riskTier: 'Medium',
     }
   );
@@ -231,17 +232,17 @@ function settleAIPoach(
         roster: seller.roster.filter((w) => w.id !== bid.warriorId),
       },
       {
-        label: `Poach sale — ${target.name}`,
+        label: `Poach sale — ${warriorDisplayName(target)}`,
         amount: bid.price,
         week: state.week,
         category: 'recruit',
-        description: `Sold ${target.name} to ${stamped.owner.name} for ${bid.price}g.`,
+        description: `Sold ${warriorDisplayName(target)} to ${stamped.owner.name} for ${bid.price}g.`,
         riskTier: 'Medium',
       }
     )
   );
 
-  const desc = `Poached ${target.name} from ${seller.owner.name} for ${bid.price}g`;
+  const desc = `Poached ${warriorDisplayName(target)} from ${seller.owner.name} for ${bid.price}g`;
   gazetteItems.push(`[POACH] ${desc}`);
   byId.set(
     buyerId,

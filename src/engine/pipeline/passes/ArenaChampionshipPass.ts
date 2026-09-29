@@ -10,7 +10,7 @@
  *   → grand-champion recording (independent award step — last)
  */
 import type { GameState, BoutOffer } from '@/types/state.types';
-import type { BoutOfferId } from '@/types/shared.types';
+import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { WeekPipelineContext } from '@/engine/pipeline/pipelineStages';
 import {
@@ -58,6 +58,13 @@ export function runArenaChampionshipPass(state: GameState, ctx: WeekPipelineCont
   if (delta.newsletterItems.length > 0) impact.newsletterItems = delta.newsletterItems;
   if (delta.rosterUpdates.size > 0) impact.rosterUpdates = delta.rosterUpdates;
   if (delta.rivalsUpdates.size > 0) impact.rivalsUpdates = delta.rivalsUpdates;
+  const epithets = Object.entries(delta.warriorEpithets);
+  if (epithets.length > 0) {
+    impact.warriorEpithets = epithets.map(([warriorId, epithet]) => ({
+      warriorId: warriorId as WarriorId,
+      epithet,
+    }));
+  }
 
   return impact;
 }

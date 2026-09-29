@@ -5,6 +5,8 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import type { WarriorEpithetAward } from './types';
+import { epithetRankOf } from '@/data/names/epithets';
 import { removeFromRoster, updateRoster } from '@/utils/roster';
 
 /**
@@ -62,6 +64,27 @@ export const retired = (state: GameState, value: Warrior[]) => {
 };
 
 /**
+ * Apply earned epithets to final-state warriors — rank-guarded so entries can
+ * never downgrade an existing or earlier-queued higher epithet. Iterates the
+ * live rosters directly (the findWarriorById cache may hold stale objects
+ * after same-tick roster replacements).
+ */
+export const warriorEpithets = (
+  state: GameState,
+  value: readonly WarriorEpithetAward[]
+) => {
+  for (const { warriorId, epithet } of value) {
+    const w =
+      state.roster.find((x) => x.id === warriorId) ??
+      (state.rivals ?? []).flatMap((r) => r.roster).find((x) => x.id === warriorId) ??
+      // Tournament-only warriors (emergency freelancers) can hold titles.
+      (state.tournaments ?? []).flatMap((t) => t.participants ?? []).find((x) => x.id === warriorId);
+    if (!w) continue;
+    if (epithetRankOf(epithet) > epithetRankOf(w.epithet)) w.epithet = epithet;
+  }
+};
+
+/**
  * Warriors impact handlers map.
  */
 export const warriorsHandlers = {
@@ -70,4 +93,5 @@ export const warriorsHandlers = {
   rosterAdditions,
   graveyard,
   retired,
+  warriorEpithets,
 };

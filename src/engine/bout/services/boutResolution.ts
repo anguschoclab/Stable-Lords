@@ -23,6 +23,7 @@ import {
 } from '../core/resolveHelpers';
 import { applyRecords } from '../recordHandler';
 import { handleDeath } from '../mortalityHandler';
+import { isPlayerOwned } from '../warriorRouting';
 import { handleInjuries } from '../injuryHandler';
 import { handleProgressions } from '../progressionHandler';
 import { handleReporting } from '../reportingHandler';
@@ -149,7 +150,13 @@ function runBoutSimulation(
   );
 }
 
-/** lastBoutWeek stamps for both combatants plus owning-rival roster rebuilds. */
+/**
+ * lastBoutWeek stamps for both combatants. Rival-owned combatants get a
+ * per-warrior patch; this used to rebuild the owning rival's whole roster
+ * from the pre-bout snapshot, which — merged last-wins — discarded that
+ * bout's record, injury, XP and death updates for every rival warrior.
+ * Favorites discovered in-place are routed explicitly by handleProgressions.
+ */
 function rosterUpdateImpacts(
   state: GameState,
   validCW: Warrior,
@@ -159,29 +166,11 @@ function rosterUpdateImpacts(
   const rosterUpdates = new Map();
   rosterUpdates.set(validCW.id, { lastBoutWeek: week });
   rosterUpdates.set(validCO.id, { lastBoutWeek: week });
-  const impacts: StateImpact[] = [{ rosterUpdates }];
-  for (const rival of state.rivals || []) {
-    const hasCombatant = rival.roster.some((w) => w.id === validCW.id || w.id === validCO.id);
-    if (hasCombatant) {
-      const rivalRosterUpdates = new Map();
-      // Combatant entries are rebuilt from the validated warriors — not the
-      // state.rivals roster refs — so in-place post-bout writes (favorites
-      // discovery in handleProgressions mutates validCW/validCO) survive
-      // shard-worker boundaries, where state and combatants are separate
-      // clones. In sequential execution these are the same objects.
-      rivalRosterUpdates.set(rival.id, {
-        roster: rival.roster.map((w) =>
-          w.id === validCW.id
-            ? { ...validCW, lastBoutWeek: week }
-            : w.id === validCO.id
-              ? { ...validCO, lastBoutWeek: week }
-              : w
-        ),
-      });
-      impacts.push({ rivalsUpdates: rivalRosterUpdates });
-    }
+  const rivalWarriorPatches = new Map<Warrior['id'], Partial<Warrior>>();
+  for (const w of [validCW, validCO]) {
+    if (!isPlayerOwned(state, w)) rivalWarriorPatches.set(w.id, { lastBoutWeek: week });
   }
-  return impacts;
+  return [{ rosterUpdates, rivalWarriorPatches }];
 }
 
 function collectBoutImpacts(

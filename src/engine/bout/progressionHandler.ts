@@ -1,17 +1,17 @@
-import type { GameState, NewsletterItem, RivalStableData } from '@/types/state.types';
+import type { GameState, NewsletterItem } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { calculateXP, applyXP } from '@/engine/warrior/progression';
 import { checkDiscovery } from '@/engine/favorites';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
-import { updateEntityInList } from '@/utils/stateUtils';
+import { patchRivalWarrior } from './warriorRouting';
 
 /**
  * Routes a per-warrior update to either the player's rosterUpdates map or to
- * the warrior's owning rival's rivalsUpdates map. Resolves ownership by:
+ * a per-warrior rivalWarriorPatches entry. Resolves ownership by:
  *   1. warrior.stableId (set on rival warriors by recruitment / aging)
  *   2. presence in state.roster (player)
  *   3. fallback: scan rivals.roster for warrior.id
@@ -19,14 +19,16 @@ import { updateEntityInList } from '@/utils/stateUtils';
  * Pre-2026-04 the entire progression handler only wrote to rosterUpdates,
  * which silently dropped every update for rival warriors — meaning rival
  * warriors NEVER gained XP and NEVER discovered favorites. All progression
- * was player-only. World bouts produced zero rival progression.
+ * was player-only. World bouts produced zero rival progression. The
+ * follow-up routed them through whole-roster rivalsUpdates writes, which
+ * later bout impacts clobbered, so rival progression was still lost.
  */
 function routeUpdate(
   s: GameState,
   warrior: Warrior,
   partial: Partial<Warrior>,
   rosterUpdates: Map<WarriorId, Partial<Warrior>>,
-  rivalsUpdates: Map<StableId, Partial<RivalStableData>>
+  rivalWarriorPatches: Map<WarriorId, Partial<Warrior>>
 ): void {
   const isPlayer =
     s.player?.id === warrior.stableId || (s.roster || []).some((w) => w.id === warrior.id);
@@ -35,15 +37,9 @@ function routeUpdate(
     rosterUpdates.set(warrior.id, { ...existing, ...partial });
     return;
   }
-  // Find owning rival via O(1) maps
-  const stableInfo = s.warriorToStableMap?.get(warrior.id);
-  const rival =
-    stableInfo && !stableInfo.isPlayer ? s.rivalMap?.get(stableInfo.stableId) : undefined;
-  if (!rival) return;
-  const existingRival = rivalsUpdates.get(rival.id);
-  const baseRoster = (existingRival?.roster as Warrior[] | undefined) ?? rival.roster;
-  const updatedRoster = updateEntityInList(baseRoster, warrior.id, (w) => ({ ...w, ...partial }));
-  rivalsUpdates.set(rival.id, { ...existingRival, roster: updatedRoster });
+  // Rival-owned: per-warrior patch of just the changed fields. The old
+  // whole-roster rivalsUpdates write was clobbered by later bout impacts.
+  patchRivalWarrior(rivalWarriorPatches, warrior, partial);
 }
 
 /**
@@ -59,15 +55,15 @@ export function handleProgressions(
   rng?: IRNGService
 ): StateImpact {
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
+  const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];
 
   // XP for both fighters — routed to the right roster regardless of ownership
   const updatedA = applyXP(wA, calculateXP(outcome, 'A', tags), rng).warrior;
-  routeUpdate(s, wA, updatedA, rosterUpdates, rivalsUpdates);
+  routeUpdate(s, wA, updatedA, rosterUpdates, rivalWarriorPatches);
 
   const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags), rng).warrior;
-  routeUpdate(s, wD, updatedD, rosterUpdates, rivalsUpdates);
+  routeUpdate(s, wD, updatedD, rosterUpdates, rivalWarriorPatches);
 
   // Favorites discovery — also for both fighters (was player-only)
   const discRng = rng;
@@ -86,7 +82,7 @@ export function handleProgressions(
       }
     );
     if (disc.updated) {
-      routeUpdate(s, w, { favorites: w.favorites }, rosterUpdates, rivalsUpdates);
+      routeUpdate(s, w, { favorites: w.favorites }, rosterUpdates, rivalWarriorPatches);
       if (disc.hints.length > 0) {
         newsletterItems.push({
           id: discRng ? discRng.uuid() : generateId(undefined, 'newsletter'),
@@ -112,12 +108,12 @@ export function handleProgressions(
         winner,
         { flair: [...(winner.flair || []), 'Giant Killer'] },
         rosterUpdates,
-        rivalsUpdates
+        rivalWarriorPatches
       );
     }
   }
 
-  const impact: StateImpact = { rosterUpdates, rivalsUpdates };
+  const impact: StateImpact = { rosterUpdates, rivalWarriorPatches };
   if (newsletterItems.length > 0) impact.newsletterItems = newsletterItems;
   return impact;
 }

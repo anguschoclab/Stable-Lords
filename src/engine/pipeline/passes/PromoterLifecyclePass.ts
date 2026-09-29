@@ -1,7 +1,7 @@
 import { GameState, Promoter, PromoterPersonality } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
-import { generateDynasticName } from '@/utils/nameLogic';
+import { generateDynasticName } from '@/data/names/nameGenerator';
 import { StateImpact } from '@/engine/impacts';
 
 /**
@@ -23,7 +23,7 @@ const PERSONALITIES: PromoterPersonality[] = [
  * @param rng -
  */
 export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): StateImpact {
-  const rngService = resolveRng(rng, state.week * 777 + 1);
+  const rngService = resolveRng(rng, (state.absoluteWeek ?? state.week) * 777 + 1);
   let newPromoters: Record<string, Promoter> = { ...state.promoters };
   const news: string[] = [];
   const WEEKS_PER_YEAR = 52;

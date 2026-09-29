@@ -110,7 +110,7 @@ function generatePromoterOffers(
 
 /** Promoters scan the world and dispatch bout offers for week+2. */
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
-  const rngService = resolveRng(rng, state.week * 881 + 17);
+  const rngService = resolveRng(rng, (state.absoluteWeek ?? state.week) * 881 + 17);
   const rankings = state.realmRankings || {};
 
   // 0. Garbage Collection: Prune expired or stale bout offers

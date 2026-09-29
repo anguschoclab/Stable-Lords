@@ -22,7 +22,7 @@ export function aiDraftFromPool(
   seed?: number,
   rng?: IRNGService
 ): { updatedPool: PoolWarrior[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  const rngService = resolveRng(rng, seed ?? week * 7919 + 101);
+  const rngService = resolveRng(rng, seed ?? (state.absoluteWeek ?? week) * 7919 + 101);
   const isMajorDraftWeek = week % 4 === 0;
 
   let currentPool = [...pool];

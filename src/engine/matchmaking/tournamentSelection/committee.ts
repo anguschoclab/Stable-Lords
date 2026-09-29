@@ -10,6 +10,7 @@ import { SeededRNG } from '@/utils/random';
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import { generateFreelancer } from './utils';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
 /**
  * Committee selection.
@@ -50,8 +51,11 @@ export function committeeSelection(
   // 4. Emergency Fillers (If world population is decimated)
   if (qualified.length < 64) {
     const fillersNeeded = 64 - qualified.length;
+    const usedNames = collectUsedWarriorNames(state);
+    for (const w of qualified) usedNames.add(w.name);
     for (let i = 0; i < fillersNeeded; i++) {
-      const freelancer = generateFreelancer(tier, i, rng);
+      const freelancer = generateFreelancer(tier, i, rng, usedNames);
+      usedNames.add(freelancer.name);
       qualified.push(freelancer);
     }
   }

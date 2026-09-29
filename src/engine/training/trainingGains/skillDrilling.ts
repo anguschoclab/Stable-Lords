@@ -11,6 +11,7 @@ import {
 } from './constants';
 import type { TrainingResult } from './types';
 import { clamp } from '@/utils/math';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  *
@@ -56,7 +57,7 @@ export function processSkillDrillTraining(
       result: {
         type: 'blocked',
         warriorId: warrior.id,
-        message: `${warrior.name} has already mastered ${skill} drilling (cap ${SKILL_DRILL_CAP}).`,
+        message: `${warriorDisplayName(warrior)} has already mastered ${skill} drilling (cap ${SKILL_DRILL_CAP}).`,
       },
       hardCapped: true,
     };
@@ -70,7 +71,7 @@ export function processSkillDrillTraining(
       result: {
         type: 'gain',
         warriorId: warrior.id,
-        message: `${warrior.name} sharpened their ${skill} through focused drilling (+1, now +${current + 1}).`,
+        message: `${warriorDisplayName(warrior)} sharpened their ${skill} through focused drilling (+1, now +${current + 1}).`,
       },
     };
   }
@@ -79,7 +80,7 @@ export function processSkillDrillTraining(
     result: {
       type: 'blocked',
       warriorId: warrior.id,
-      message: `${warrior.name} drilled ${skill} but made no measurable progress this week.`,
+      message: `${warriorDisplayName(warrior)} drilled ${skill} but made no measurable progress this week.`,
     },
   };
 }

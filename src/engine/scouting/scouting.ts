@@ -15,6 +15,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { narrativeContent } from '@/data/narrative';
 import type { PersonaDescriptor, PersonaGood } from '@/types/narrative.types';
 import { generateScoutInsights, type ScoutQuality } from './scoutInsights';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // Re-export ScoutQuality for backward compatibility
 export type { ScoutQuality };
@@ -196,15 +197,15 @@ function personaReportLines(warrior: Warrior): string[] {
 function generateScoutReportNotes(warrior: Warrior, quality: ScoutQuality, record: string): string {
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
   if (quality === 'Basic') {
-    return `${warrior.name} fights as a ${styleName}. Limited information available.`;
+    return `${warriorDisplayName(warrior)} fights as a ${styleName}. Limited information available.`;
   }
   if (quality === 'Detailed') {
-    return `${warrior.name} is a ${styleName} with ${record}. ${
+    return `${warriorDisplayName(warrior)} is a ${styleName} with ${record}. ${
       warrior.fame > 3 ? 'Well-known in the arena.' : 'Relatively unknown.'
     }`;
   }
   const persona = personaReportLines(warrior);
-  return `${warrior.name} is an experienced ${styleName} (${record}). ${
+  return `${warriorDisplayName(warrior)} is an experienced ${styleName} (${record}). ${
     warrior.career.kills > 0
       ? `Known killer (${warrior.career.kills} kills).`
       : 'No kills on record.'

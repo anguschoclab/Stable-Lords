@@ -13,7 +13,7 @@ This document summarizes the comprehensive refactoring of Stable Lords' monolith
 #### Files Decomposed:
 
 1. **randomNames.ts** (1,198 lines) → Modular Name System
-   - `/src/data/names/warriorNames.ts` - Warrior name arrays
+   - `/src/data/names/commonCorpus.ts` - Warrior name corpus (seed vocabulary for the procedural generator)
    - `/src/data/names/ownerNames.ts` - Owner name arrays
    - `/src/data/names/stableNames.ts` - Stable name arrays
    - `/src/data/names/nameGenerators.ts` - Random generation functions
@@ -148,7 +148,7 @@ This document summarizes the comprehensive refactoring of Stable Lords' monolith
 ```
 src/data/
 ├── names/                    # Modular name system
-│   ├── warriorNames.ts
+│   ├── commonCorpus.ts
 │   ├── ownerNames.ts
 │   ├── stableNames.ts
 │   ├── nameGenerators.ts

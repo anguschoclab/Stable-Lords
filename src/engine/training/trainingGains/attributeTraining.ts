@@ -17,6 +17,7 @@ import {
 import type { TrainingResult } from './types';
 import { clamp } from '@/utils/math';
 import { AGING_PENALTY_START } from '@/constants/combat/combat';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  *
@@ -97,7 +98,7 @@ function applyAttributeGain(
       warriorId: warrior.id,
       attr,
       gain: 1,
-      message: `${warrior.name} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ''}`,
+      message: `${warriorDisplayName(warrior)} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ''}`,
     },
   };
 }
@@ -117,7 +118,7 @@ function maybeRevealFromEffort(
       result: {
         type: 'gain',
         warriorId: warrior.id,
-        message: `${warrior.name} didn't improve their ${attr} this week, but their true potential in it was revealed from their efforts!`,
+        message: `${warriorDisplayName(warrior)} didn't improve their ${attr} this week, but their true potential in it was revealed from their efforts!`,
       },
     };
   }
@@ -138,7 +139,7 @@ export function processAttributeTraining(
   if (attr === 'SZ') {
     return blockedResult(
       warrior,
-      `${warrior.name} cannot train Size — it is fixed at creation.`
+      `${warriorDisplayName(warrior)} cannot train Size — it is fixed at creation.`
     );
   }
 
@@ -155,7 +156,7 @@ export function processAttributeTraining(
   if ((seasonGains[attr] ?? 0) >= SEASONAL_CAP_PER_ATTR) {
     return blockedResult(
       warrior,
-      `${warrior.name} has reached the seasonal cap for ${attr} (${SEASONAL_CAP_PER_ATTR} gains this season).`
+      `${warriorDisplayName(warrior)} has reached the seasonal cap for ${attr} (${SEASONAL_CAP_PER_ATTR} gains this season).`
     );
   }
 

@@ -7,6 +7,7 @@ import { isFightReady } from '@/engine/warrior/warriorStatus';
 import { isTooInjuredToFight } from '@/engine/injuries';
 import type { ChampionshipDelta } from '../core';
 import { titleOf, ensureTitle, endReign, news, CHAMPIONSHIP_DEBUG } from '../core';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // ─── 4. Refusal sweep ───────────────────────────────────────────────────────
 
@@ -67,7 +68,7 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
       }
       t.refusals += 1;
       if (t.refusals >= ARENA_TITLE.REFUSALS_TO_STRIP) {
-        const champName = champ?.name ?? declinerId;
+        const champName = champ ? warriorDisplayName(champ) : declinerId;
         endReign(state, t, 'stripped', now);
         news(delta, state.week, `Champion Stripped`, [
           `${champName} is stripped of the crown for refusing to defend.`,

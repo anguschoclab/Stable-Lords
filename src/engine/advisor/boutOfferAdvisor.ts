@@ -4,6 +4,7 @@
  * lethality hazards (career kills), promoter reputation, and weather suitability.
  */
 import type { Warrior } from '@/types/warrior.types';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type {
   CampaignFocus,
@@ -149,9 +150,11 @@ function collectDangerSignals(input: {
 
   // Lethality
   const kills = opponent?.career?.kills ?? 0;
-  if (kills > 0) {
+  if (kills > 0 && opponent) {
     dangerLevel = 'LETHAL';
-    warnings.push(`Opponent ${opponent?.name} has ${kills} arena kill(s)! High risk of permadeath.`);
+    warnings.push(
+      `Opponent ${warriorDisplayName(opponent)} has ${kills} arena kill(s)! High risk of permadeath.`
+    );
   }
 
   // Weather
@@ -185,7 +188,7 @@ function collectDangerSignals(input: {
   if (h2h && h2h.meetings >= 2 && h2h.losses > h2h.wins) {
     if (dangerLevel === 'SAFE') dangerLevel = 'MODERATE';
     warnings.push(
-      `Rematch caution: ${h2h.wins}-${h2h.losses} career record vs ${opponent?.name}.`
+      `Rematch caution: ${h2h.wins}-${h2h.losses} career record vs ${opponent ? warriorDisplayName(opponent) : 'opponent'}.`
     );
   }
 
@@ -293,7 +296,7 @@ function appendOfferReasons(
   const scoutCost = getScoutCost('Basic');
   if (opponent && intel.length === 0 && evalTreasury !== undefined && evalTreasury >= scoutCost) {
     reasons.push(
-      `No scout dossier on ${opponent.name} — commission a Basic scout report (${scoutCost}G) before signing.`
+      `No scout dossier on ${warriorDisplayName(opponent)} — commission a Basic scout report (${scoutCost}G) before signing.`
     );
   }
 
@@ -346,7 +349,7 @@ export function evaluateBoutOffers(
     return {
       action: 'NO_VIABLE_OFFERS',
       dangerLevel: 'SAFE',
-      headline: `No Bout Offers for ${warrior.name} This Week`,
+      headline: `No Bout Offers for ${warriorDisplayName(warrior)} This Week`,
       reasoning: ['Promoters have not submitted contracts for this warrior for the upcoming week.'],
       warnings: [],
     };
@@ -400,7 +403,7 @@ function acceptOfferAdvice(best: ScoredOffer, warrior: Warrior): WarriorFightAdv
   const alreadySigned =
     best.offer.status === 'Signed' || best.offer.responses?.[warrior.id] === 'Accepted';
   const isTitleBout = !!best.offer.titleArenaId;
-  const opp = best.opponent?.name ?? 'Opponent';
+  const opp = best.opponent ? warriorDisplayName(best.opponent) : 'Opponent';
   const headline = isTitleBout
     ? `Title Bout vs ${opp} (+${best.offer.purse}G)`
     : alreadySigned

@@ -3,13 +3,27 @@
  * Handles rival stable updates.
  */
 import type { GameState, RivalStableData } from '@/types/state.types';
-import type { StableId } from '@/types/shared.types';
+import type { StableId, WarriorId } from '@/types/shared.types';
+import type { Warrior } from '@/types/warrior.types';
 
 /**
  * Apply rivals updates to state.
  */
 export const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<RivalStableData>>) => {
   if (value.size === 0) return;
+  if (process.env.EPITHET_DEBUG) {
+    for (const r of state.rivals) {
+      const update = value.get(r.id);
+      if (!update?.roster) continue;
+      for (const w of r.roster) {
+        if (w.epithet) {
+          const next = update.roster.find((x) => x.id === w.id);
+          if (next && !next.epithet) console.error(`[roster-wipe] wk${state.absoluteWeek} ${r.owner?.stableName}: ${w.name} loses '${w.epithet}'`);
+          else if (!next) console.error(`[roster-drop] wk${state.absoluteWeek} ${r.owner?.stableName}: ${w.name} removed (had '${w.epithet}')`);
+        }
+      }
+    }
+  }
   state.rivals = state.rivals.map((r) => {
     const update = value.get(r.id);
     return update ? { ...r, ...update } : r;
@@ -20,9 +34,49 @@ export const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<Riv
   }
 };
 
+function rebuildRivalMap(state: GameState): void {
+  if (state.rivalMap) {
+    state.rivalMap = new Map(state.rivals.map((r) => [r.id, r] as const));
+  }
+}
+
+/**
+ * Apply per-warrior patches to rival-owned warriors, wherever they are rostered.
+ */
+export const rivalWarriorPatches = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
+  if (value.size === 0) return;
+  state.rivals = state.rivals.map((r) => {
+    if (!r.roster.some((w) => value.has(w.id))) return r;
+    return {
+      ...r,
+      roster: r.roster.map((w) => {
+        const patch = value.get(w.id);
+        return patch ? ({ ...w, ...patch } as Warrior) : w;
+      }),
+    };
+  });
+  rebuildRivalMap(state);
+};
+
+/**
+ * Remove rival-owned warriors (e.g. killed in a bout) from their rosters.
+ */
+export const rivalRosterRemovals = (state: GameState, value: WarriorId[]) => {
+  if (value.length === 0) return;
+  const ids = new Set<string>(value);
+  state.rivals = state.rivals.map((r) =>
+    r.roster.some((w) => ids.has(w.id))
+      ? { ...r, roster: r.roster.filter((w) => !ids.has(w.id)) }
+      : r
+  );
+  rebuildRivalMap(state);
+};
+
 /**
  * Rivals impact handlers map.
  */
 export const rivalsHandlers = {
   rivalsUpdates,
+  rivalWarriorPatches,
+  rivalRosterRemovals,
 };

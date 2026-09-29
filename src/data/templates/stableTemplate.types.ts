@@ -25,7 +25,8 @@ export interface StableTemplate {
     | 'Specialist';
   preferredStyles: FightingStyle[];
   attrBias: Partial<Record<'ST' | 'CN' | 'SZ' | 'WT' | 'WL' | 'SP' | 'DF', number>>;
-  warriorNames: string[];
+  /** Curated seed vocabulary blended into the stable's culture-flavored name generation. Optional — the generator covers themeless stables. */
+  warriorNames?: string[];
   fameRange: [number, number];
   rosterRange: [number, number];
   tier: 'Minor' | 'Established' | 'Major' | 'Legendary';

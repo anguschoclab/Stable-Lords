@@ -1,10 +1,10 @@
-import type { GameState, RivalStableData, RestState } from '@/types/state.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
+import type { GameState, RestState } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { generateInjury } from '@/engine/injuries';
 import { addRestState } from '@/engine/matchmaking/historyLogic';
-import { updateEntityInList } from '@/utils/stateUtils';
+import { patchRivalWarrior } from './warriorRouting';
 import { StateImpact } from '@/engine/impacts';
 
 /**
@@ -14,7 +14,7 @@ import { StateImpact } from '@/engine/impacts';
  * @param wD -
  * @param outcome -
  * @param week -
- * @param rivalStableId -
+ * @param _rivalStableId - unused; ownership is resolved per warrior
  * @param seed -
  */
 export function handleInjuries(
@@ -23,13 +23,13 @@ export function handleInjuries(
   wD: Warrior,
   outcome: FightOutcome,
   week: number,
-  rivalStableId?: string,
+  _rivalStableId?: string,
   seed?: number
 ) {
   let injured = false;
   const names: string[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
+  const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
   const restStates: RestState[] = [];
 
   if (outcome.by === 'KO') {
@@ -42,22 +42,15 @@ export function handleInjuries(
   if (injA) {
     injured = true;
     names.push(wA.name);
-    const isPlayer = s.roster.some((w) => w.id === wA.id);
-    if (isPlayer) {
+    if (s.roster.some((w) => w.id === wA.id)) {
       const existing = rosterUpdates.get(wA.id) || wA;
       rosterUpdates.set(wA.id, { ...existing, injuries: [...(existing.injuries || []), injA] });
-    } else if (rivalStableId) {
-      // rivalStableId is set from `rival.id` (StableId) by pairings/world bouts,
-      // not owner.id. Looking up by owner.id silently dropped every rival
-      // injury — they remained completely unmaimed across the whole sim.
-      const rival = s.rivalMap?.get(rivalStableId as StableId);
-      if (rival) {
-        const updatedRoster = updateEntityInList(rival.roster, wA.id, (w) => ({
-          ...w,
-          injuries: [...(w.injuries || []), injA],
-        }));
-        rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
-      }
+    } else {
+      // Rival-owned (either side of a world bout): per-warrior patch. The old
+      // whole-roster rivalsUpdates write was clobbered by later bout impacts.
+      patchRivalWarrior(rivalWarriorPatches, wA, {
+        injuries: [...(wA.injuries || []), injA],
+      });
     }
   }
 
@@ -66,28 +59,21 @@ export function handleInjuries(
   if (injD) {
     injured = true;
     names.push(wD.name);
-    const isPlayer = s.roster.some((w) => w.id === wD.id);
-    if (isPlayer) {
+    if (s.roster.some((w) => w.id === wD.id)) {
       const existing = rosterUpdates.get(wD.id) || wD;
       rosterUpdates.set(wD.id, { ...existing, injuries: [...(existing.injuries || []), injD] });
-    } else if (rivalStableId) {
-      // rivalStableId is set from `rival.id` (StableId) by pairings/world bouts,
-      // not owner.id. Looking up by owner.id silently dropped every rival
-      // injury — they remained completely unmaimed across the whole sim.
-      const rival = s.rivalMap?.get(rivalStableId as StableId);
-      if (rival) {
-        const updatedRoster = updateEntityInList(rival.roster, wD.id, (w) => ({
-          ...w,
-          injuries: [...(w.injuries || []), injD],
-        }));
-        rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
-      }
+    } else {
+      // Rival-owned (either side of a world bout): per-warrior patch. The old
+      // whole-roster rivalsUpdates write was clobbered by later bout impacts.
+      patchRivalWarrior(rivalWarriorPatches, wD, {
+        injuries: [...(wD.injuries || []), injD],
+      });
     }
   }
 
   const impact: StateImpact = {
     rosterUpdates,
-    rivalsUpdates,
+    rivalWarriorPatches,
     restStates,
   };
 

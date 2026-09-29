@@ -5,6 +5,7 @@ import { tickInjuries } from '@/engine/injuries';
 import type { StateImpact } from '../impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  * Health Impact calculation — extracted from the legacy pipeline.
@@ -30,7 +31,7 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
     if (injuryObjects.length > 0) {
       const result = tickInjuries(injuryObjects);
       if (result.healed.length > 0) {
-        injuryNews.push(`${w.name} recovered from ${result.healed.join(', ')}.`);
+        injuryNews.push(`${warriorDisplayName(w)} recovered from ${result.healed.join(', ')}.`);
       }
       updates.injuries = result.active;
       changed = true;

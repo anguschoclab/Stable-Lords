@@ -9,6 +9,7 @@ import { aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { filterActive } from '@/utils/roster';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
@@ -48,7 +49,8 @@ function cullRivalRoster(
       isOnWinStreak,
       retire,
       gazetteItems,
-      (c) => `📋 ${r.owner.name} (${r.owner.stableName}) retires ${c.name} — "Not meeting expectations."`
+      (c) =>
+        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`
     );
   }
 
@@ -63,7 +65,8 @@ function cullRivalRoster(
       isOnWinStreak,
       retire,
       gazetteItems,
-      (c) => `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${c.name} — "No killer instinct."`
+      (c) =>
+        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`
     );
   }
 
@@ -81,7 +84,7 @@ function cullRivalRoster(
     isOnWinStreak,
     retire,
     gazetteItems,
-    (c) => `📋 ${r.owner.name} (${r.owner.stableName}) releases ${c.name} — too many flaws.`
+    (c) => `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`
   );
 
   // Age-based retirement
@@ -90,7 +93,7 @@ function cullRivalRoster(
     if (rngSnapshot.next() < 0.15) {
       Object.assign(old, retireWithHonors(old, state.week));
       gazetteItems.push(
-        `🏠 ${old.name} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
+        `🏠 ${warriorDisplayName(old)} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
       );
     }
   }
@@ -126,7 +129,7 @@ export function processAIRosterManagement(
   state: GameState,
   rng?: IRNGService
 ): { updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  const rngSnapshot = resolveRng(rng, state.week * 7919 + 101);
+  const rngSnapshot = resolveRng(rng, (state.absoluteWeek ?? state.week) * 7919 + 101);
   const gazetteItems: string[] = [];
   const updatedRivals = (state.rivals || []).map((rival) => {
     const r = {

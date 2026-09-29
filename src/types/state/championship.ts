@@ -79,6 +79,8 @@ export interface GrandChampionEntry {
   year: number;
   warriorId: WarriorId;
   warriorName: string;
+  /** Epithet held at crowning — historical snapshot, not a live read. */
+  warriorEpithet?: string;
   stableName?: string;
 }
 

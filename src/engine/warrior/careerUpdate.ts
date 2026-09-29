@@ -23,6 +23,56 @@ export interface CareerUpdateInput {
 }
 
 /**
+ * Shared career-record arithmetic for a single bout outcome.
+ * `didKill` means "this warrior scored the kill" — victim bookkeeping
+ * (status, `killedBy`, graveyard) lives in the mortality path, not here.
+ */
+export function nextCareerRecord(
+  prev: CareerRecord,
+  o: { isWinner: boolean; didKill: boolean; arenaId?: string }
+): CareerRecord {
+  const prevByArena = prev?.byArena ?? {};
+  const arenaRecord = o.arenaId ? (prevByArena[o.arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
+  return {
+    ...prev,
+    wins: (prev?.wins || 0) + (o.isWinner ? 1 : 0),
+    losses: (prev?.losses || 0) + (o.isWinner ? 0 : 1),
+    kills: (prev?.kills || 0) + (o.didKill ? 1 : 0),
+    byArena:
+      o.arenaId && arenaRecord
+        ? {
+            ...prevByArena,
+            [o.arenaId]: {
+              wins: arenaRecord.wins + (o.isWinner ? 1 : 0),
+              losses: arenaRecord.losses + (o.isWinner ? 0 : 1),
+              kills: arenaRecord.kills + (o.didKill ? 1 : 0),
+            },
+          }
+        : prevByArena,
+  };
+}
+
+/** Season-points race contribution for a bout result. */
+export function boutSeasonPoints(
+  prev: number | undefined,
+  isWinner: boolean,
+  didKill: boolean
+): number {
+  return (prev ?? 0) + (isWinner ? SEASON_POINTS.WIN + (didKill ? SEASON_POINTS.KILL_BONUS : 0) : 0);
+}
+
+/** 'Flashy' flair tag earned on a flashy-tagged win; `undefined` when unchanged. */
+export function flashyFlair(
+  warrior: Warrior,
+  isWinner: boolean,
+  tags: string[]
+): string[] | undefined {
+  return isWinner && tags.includes('Flashy')
+    ? Array.from(new Set([...(warrior.flair || []), 'Flashy']))
+    : undefined;
+}
+
+/**
  * Defines the shape of career update result.
  */
 export interface CareerUpdateResult {
@@ -57,34 +107,14 @@ export function calculateCareerUpdate(
   const didKill = isWinner && isKill;
 
   // Calculate new career stats — preserve the full record (byArena, medals, …)
-  const prevByArena = warrior.career?.byArena ?? {};
-  const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
-  const career: CareerRecord = {
-    ...warrior.career,
-    wins: (warrior.career?.wins || 0) + (isWinner ? 1 : 0),
-    losses: (warrior.career?.losses || 0) + (isWinner ? 0 : 1),
-    kills: (warrior.career?.kills || 0) + (didKill ? 1 : 0),
-    byArena:
-      arenaId && arenaRecord
-        ? {
-            ...prevByArena,
-            [arenaId]: {
-              wins: arenaRecord.wins + (isWinner ? 1 : 0),
-              losses: arenaRecord.losses + (isWinner ? 0 : 1),
-              kills: arenaRecord.kills + (didKill ? 1 : 0),
-            },
-          }
-        : prevByArena,
-  };
+  const career = nextCareerRecord(warrior.career, { isWinner, didKill, arenaId });
 
   // Calculate fame gain: +1 for win, +3 for kill
   const fameGain = isWinner ? (didKill ? 3 : 1) : 0;
   const fame = Math.max(0, (warrior.fame || 0) + fameGain + fameDelta);
 
   // Season points race: +WIN per victory, +KILL_BONUS extra for a kill
-  const seasonPoints =
-    (warrior.seasonPoints ?? 0) +
-    (isWinner ? SEASON_POINTS.WIN + (didKill ? SEASON_POINTS.KILL_BONUS : 0) : 0);
+  const seasonPoints = boutSeasonPoints(warrior.seasonPoints, isWinner, didKill);
 
   // Calculate new status
   const status: WarriorStatus = isVictim ? 'Dead' : 'Active';
@@ -170,9 +200,8 @@ export function updateWarriorAfterBout(
   const result = calculateCareerUpdate(warrior, input);
 
   // Add "Flashy" flair tag if applicable
-  if (isWinner && tags.includes('Flashy')) {
-    result.flair = Array.from(new Set([...(warrior.flair || []), 'Flashy']));
-  }
+  const flair = flashyFlair(warrior, isWinner, tags);
+  if (flair) result.flair = flair;
 
   return applyCareerUpdate(warrior, result);
 }

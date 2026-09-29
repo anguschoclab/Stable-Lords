@@ -4,6 +4,7 @@ import { PatronTokenService } from '@/engine/tokens/patronTokenService';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { logFinanceEvent } from '@/engine/ai/agentCore';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
  * Standalone helper to process and apply tournament rewards for a specific place finish.
@@ -115,7 +116,7 @@ function applyRivalAward(
         amount: prizeGold,
         week: updatedState.week,
         category: 'prize',
-        description: `${w.name} took ${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'} at ${tournament.name} — ${prizeGold}g prize.`,
+        description: `${warriorDisplayName(w)} took ${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'} at ${tournament.name} — ${prizeGold}g prize.`,
         riskTier: 'Low',
       }
     )
@@ -150,9 +151,18 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
   const finals = bracket
     .filter((b) => !b.isBronzeMatch)
     .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
+  // Legacy fallback (brackets serialized before `isBronzeMatch` existed): the
+  // positional (round 6, matchIndex 1) slot is only a bronze playoff when it
+  // sits in the championship round. Anywhere else it's an ordinary bout (M6).
   const bronze =
     bracket.find((b) => b.isBronzeMatch) ??
-    bracket.find((b) => b.round === 6 && b.matchIndex === 1);
+    bracket.find(
+      (b) =>
+        b.round === 6 &&
+        b.matchIndex === 1 &&
+        b.round === finals?.round &&
+        (b.warriorIdD as unknown as string) !== 'bye'
+    );
 
   if (!finals) return state;
 

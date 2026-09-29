@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateDynasticName } from '@/utils/nameLogic';
+import { generateDynasticName } from '@/data/names/nameGenerator';
 
 describe('nameLogic', () => {
   describe('generateDynasticName', () => {

@@ -281,7 +281,7 @@ function handleSeasonalTournaments(
     state,
     week,
     state.season,
-    week * 881
+    ((state.absoluteWeek ?? week - 1) + 1) * 881
   );
   const tournamentNews: string[] = tournaments.map(
     (tour) => `🏆 ${tour.name} announced! Brackets set for the coming week.`

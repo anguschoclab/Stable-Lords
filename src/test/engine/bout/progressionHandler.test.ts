@@ -67,7 +67,7 @@ describe('progressionHandler', () => {
       expect(result.rosterUpdates?.has('warrior-a' as WarriorId)).toBe(true);
     });
 
-    it('routes rival warrior updates to rivalsUpdates', () => {
+    it('routes rival warrior updates to rivalWarriorPatches', () => {
       const rivalId = 'rival-1' as StableId;
       const warriorId = 'rival-warrior' as WarriorId;
       const wA = createMockWarrior();
@@ -83,7 +83,9 @@ describe('progressionHandler', () => {
 
       const result = handleProgressions(s, wA, wD, outcome, [], 1);
 
-      expect(result.rivalsUpdates?.has(rivalId)).toBe(true);
+      expect(result.rivalWarriorPatches?.has(warriorId)).toBe(true);
+      // Never a whole-roster write: those clobber other bouts' updates.
+      expect(result.rivalsUpdates).toBeUndefined();
     });
 
     it('detects Giant Killer flair for upsets', () => {
@@ -181,7 +183,7 @@ describe('progressionHandler', () => {
 
       // Result should have impact structure
       expect(result).toHaveProperty('rosterUpdates');
-      expect(result).toHaveProperty('rivalsUpdates');
+      expect(result).toHaveProperty('rivalWarriorPatches');
     });
 
     it('generates StateImpact structure', () => {
@@ -194,7 +196,7 @@ describe('progressionHandler', () => {
 
       // Returns proper StateImpact
       expect(result).toHaveProperty('rosterUpdates');
-      expect(result).toHaveProperty('rivalsUpdates');
+      expect(result).toHaveProperty('rivalWarriorPatches');
     });
 
     it('works without rivalStableId parameter', () => {
@@ -216,7 +218,7 @@ describe('progressionHandler', () => {
       const result = handleProgressions(s, wA, wD, outcome, [], 1);
 
       expect(result).toHaveProperty('rosterUpdates');
-      expect(result).toHaveProperty('rivalsUpdates');
+      expect(result).toHaveProperty('rivalWarriorPatches');
     });
 
     it('handles Kill outcome', () => {
@@ -228,7 +230,7 @@ describe('progressionHandler', () => {
       const result = handleProgressions(s, wA, wD, outcome, [], 1);
 
       expect(result).toHaveProperty('rosterUpdates');
-      expect(result).toHaveProperty('rivalsUpdates');
+      expect(result).toHaveProperty('rivalWarriorPatches');
     });
 
     it('returns proper StateImpact structure', () => {

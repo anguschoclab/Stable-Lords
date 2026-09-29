@@ -17,6 +17,7 @@ import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { WARRIOR_AGING } from '@/constants/aging';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import { retireWithHonors } from '@/engine/warrior/retirement';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
 // ~6% per-bout kill rate (lifespan ~0.7y in calendar terms even after lethality
@@ -61,7 +62,7 @@ export function applyAgePenalty(
         const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
         Object.assign(update, { attributes: newAttrs, baseSkills, derivedStats });
         if (isPlayer) {
-          ageEvent = `${w.name} shows signs of aging (SP/DF declining).`;
+          ageEvent = `${warriorDisplayName(w)} shows signs of aging (SP/DF declining).`;
         }
       }
     }

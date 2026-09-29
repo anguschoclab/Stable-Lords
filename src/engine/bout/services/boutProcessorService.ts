@@ -28,53 +28,13 @@ interface WeekBoutsOutput {
   summary: WeekBoutSummary;
 }
 
-/**
- * Stitch post-bout combatant mutations into the merged rival-roster updates.
- *
- * `resolveBout` performs a small amount of in-place post-bout writing on the
- * validated combatants (favorites discovery in `handleProgressions` mutates
- * `w.favorites.discovered`). In sequential execution those combatants ARE the
- * state.rivals roster objects, so the writes are visible to every later
- * roster rebuild — including a *later* bout's `lastBoutWeek` roster, which
- * wholesale-replaces a rival's `roster` partial (last-writer-wins) and would
- * otherwise drop an earlier bout's mutations. Shard workers hold separate
- * clones, so the coordinator replays the accumulated combatant state here:
- * for every rival containing a combatant, the winning roster partial is
- * patched with each combatant's post-bout object (lastBoutWeek stamps set by
- * impact partials are preserved). In sequential execution this is a
- * content-identical rewrite.
- */
-function stitchCombatantMutations(
-  state: GameState,
-  results: BoutResult[],
-  merged: StateImpact
-): void {
-  if (results.length === 0) return;
-  const overlay = new Map<string, BoutResult['a']>();
-  for (const res of results) {
-    overlay.set(res.a.id, res.a);
-    overlay.set(res.d.id, res.d);
-  }
-  const rivalsUpdates =
-    merged.rivalsUpdates ??
-    (merged.rivalsUpdates = new Map<
-      import('@/types/shared.types').StableId,
-      Partial<import('@/types/state.types').RivalStableData>
-    >());
-  for (const rival of state.rivals || []) {
-    if (!rival.roster.some((w) => overlay.has(w.id))) continue;
-    const existing = rivalsUpdates.get(rival.id);
-    const base = (existing?.roster as BoutResult['a'][] | undefined) ?? rival.roster;
-    rivalsUpdates.set(rival.id, {
-      ...existing,
-      roster: base.map((w) => {
-        const m = overlay.get(w.id);
-        if (!m) return w;
-        return w.lastBoutWeek !== undefined ? { ...m, lastBoutWeek: w.lastBoutWeek } : m;
-      }),
-    });
-  }
-}
+// Note: an earlier `stitchCombatantMutations` step rewrote every combatant's
+// rival roster wholesale from the post-bout combatant objects so that in-place
+// favorites discovery survived shard-worker boundaries. Those objects never
+// carry the bout's record / injury / XP updates (they live in impacts), so the
+// rewrite reverted them for every rival warrior. Rival post-bout state now
+// travels as per-warrior `rivalWarriorPatches`, and handleProgressions routes
+// discovered favorites explicitly, so the stitch is gone.
 
 /**
  * Shared post-resolution tail: voided-contract cancels, side-effect impact +
@@ -204,7 +164,6 @@ export function processWeekBouts(state: GameState, headless?: boolean): WeekBout
 
   finalizeBoutResults(state, results, impacts, voidedOffers);
   const merged = mergeImpacts(impacts);
-  stitchCombatantMutations(state, results, merged);
   return { impact: merged, results, summary };
 }
 
@@ -254,6 +213,5 @@ export async function processWeekBoutsSharded(
 
   finalizeBoutResults(state, results, impacts, voidedOffers);
   const merged = mergeImpacts(impacts);
-  stitchCombatantMutations(state, results, merged);
   return { impact: merged, results, summary };
 }

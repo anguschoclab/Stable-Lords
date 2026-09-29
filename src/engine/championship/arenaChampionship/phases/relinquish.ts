@@ -1,5 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import type { ChampionshipDelta } from '../core';
 import { titleOf, ensureTitle, endReign, news } from '../core';
 
@@ -16,9 +17,10 @@ export function relinquishCrown(
   const t = ensureTitle(state, delta, arenaId);
   const champId = t.champion?.warriorId;
   if (!champId) return;
-  const name = findWarriorById(state, champId)?.name ?? champId;
+  const name = findWarriorById(state, champId);
+  const nameLabel = name ? warriorDisplayName(name) : champId;
   endReign(state, t, 'relinquished', state.absoluteWeek);
-  news(delta, state.week, `Crown Relinquished`, [`${name} gives up the crown.`], `relinq-${arenaId}-${state.absoluteWeek}`);
+  news(delta, state.week, `Crown Relinquished`, [`${nameLabel} gives up the crown.`], `relinq-${arenaId}-${state.absoluteWeek}`);
 }
 
 /**

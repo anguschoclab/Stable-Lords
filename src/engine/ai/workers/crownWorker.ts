@@ -35,6 +35,7 @@ import {
 } from '@/engine/core/absoluteWeek';
 import { logAgentAction, computePlayerThreatLevel } from '../agentCore';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /** Weeks before the Grand Championship bracket in which champions rest. */
 const GRAND_CHAMP_PREP_WEEKS = 2;
@@ -272,7 +273,7 @@ function markCrownsForRelinquish(
       updatedRival = logAgentAction(
         updatedRival,
         'STRATEGY',
-        `Signals intent to vacate the ${arenaId} crown — ${champ.name} is past defending it.`,
+        `Signals intent to vacate the ${arenaId} crown — ${warriorDisplayName(champ)} is past defending it.`,
         'Medium',
         week,
         'CROWN_RELINQUISH'
@@ -309,7 +310,7 @@ function applyProtectionRests(
       updatedRival = logAgentAction(
         updatedRival,
         'STRATEGY',
-        `${w.name} rests ahead of a signed title bout.`,
+        `${warriorDisplayName(w)} rests ahead of a signed title bout.`,
         'Low',
         week,
         'CROWN_DEFENSE'
@@ -319,7 +320,7 @@ function applyProtectionRests(
       updatedRival = logAgentAction(
         updatedRival,
         'STRATEGY',
-        `${w.name} rests for the Grand Championship bracket.`,
+        `${warriorDisplayName(w)} rests for the Grand Championship bracket.`,
         'Low',
         week,
         'CROWN_PREP'

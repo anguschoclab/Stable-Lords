@@ -10,7 +10,7 @@ import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
  * Handles the weekly refresh of the recruitment pool.
  */
 export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): StateImpact {
-  const rng = resolveRng(rootRng, state.week * 701 + 13);
+  const rng = resolveRng(rootRng, (state.absoluteWeek ?? state.week) * 701 + 13);
 
   // 1. Refresh recruitment pool
   const usedNames = collectUsedWarriorNames(state);

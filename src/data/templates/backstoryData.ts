@@ -62,7 +62,7 @@ export function getBackstoryCounts(): Record<StableTemplate['backstoryId'], numb
 export function getTemplatesByWarriorNameTheme(theme: string): StableTemplate[] {
   const lowerTheme = theme.toLowerCase();
   return ALL_TEMPLATES.filter((template) =>
-    template.warriorNames.some((name) => name.toLowerCase().includes(lowerTheme))
+    (template.warriorNames ?? []).some((name) => name.toLowerCase().includes(lowerTheme))
   );
 }
 

@@ -2,6 +2,7 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { generateRivalStables } from '../rivals';
+import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 import { inheritCrest } from '../crest/crestGenerator';
 import { BACKSTORIES } from '@/data/backstories';
 import type { FightingStyle } from '@/types/shared.types';
@@ -117,21 +118,43 @@ export const ExpansionService = {
       rivalsById.set(r.id, r);
     }
 
+    const usedWarriorIds = collectUsedWarriorIds(state);
+    const usedNames = collectUsedWarriorNames(state);
+
     for (let i = 0; i < neededCount; i++) {
       if (rng.next() < 0.3) {
         const legacy = legacyCandidates?.shift();
-        const generatedStables = generateRivalStables(
-          1,
-          Math.floor(rng.next() * 10001),
-          state.week
-        );
-        const newStable = generatedStables[0];
+        // Minted ids derive from the seed — a colliding seed re-mints a
+        // byte-identical clone of a live stable, conflating every id-keyed
+        // update. Re-roll until the stable is genuinely new.
+        let newStable: RivalStableData | undefined;
+        for (let attempt = 0; attempt < 8 && !newStable; attempt++) {
+          const candidate = generateRivalStables(
+            1,
+            Math.floor(rng.next() * 10001),
+            state.week,
+            usedNames
+          )[0];
+          if (!candidate) break;
+          if (
+            rivalsById.has(candidate.id) ||
+            candidate.roster.some((w) => usedWarriorIds.has(w.id))
+          ) {
+            continue;
+          }
+          newStable = candidate;
+        }
 
         if (newStable && legacy) {
           applyLegacyFounder(newStable, legacy, rivalsById, rng);
         }
 
         if (newStable) {
+          rivalsById.set(newStable.id, newStable);
+          for (const w of newStable.roster) {
+            usedWarriorIds.add(w.id);
+            usedNames.add(w.name);
+          }
           newStables.push(newStable);
         }
       }

@@ -132,7 +132,7 @@ describe('injuryHandler', () => {
       expect(result).toHaveProperty('injuredNames');
       expect(result.impact).toHaveProperty('restStates');
       expect(result.impact).toHaveProperty('rosterUpdates');
-      expect(result.impact).toHaveProperty('rivalsUpdates');
+      expect(result.impact).toHaveProperty('rivalWarriorPatches');
     });
 
     it('handles Draw outcome (no KO, no winner)', () => {

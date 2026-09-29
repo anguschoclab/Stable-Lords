@@ -19,12 +19,13 @@ interface IdentitySectionProps {
   setName: (n: string) => void;
   style: FightingStyle;
   setStyle: (s: FightingStyle) => void;
+  personality?: string;
 }
 
 /**
  *
  */
-export function IdentitySection({ name, setName, style, setStyle }: IdentitySectionProps) {
+export function IdentitySection({ name, setName, style, setStyle, personality }: IdentitySectionProps) {
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -46,7 +47,9 @@ export function IdentitySection({ name, setName, style, setStyle }: IdentitySect
               variant="outline"
               size="icon"
               type="button"
-              onClick={() => setName(randomWarriorName(STYLE_ARCHETYPE[style]))}
+              onClick={() =>
+                setName(randomWarriorName({ archetype: STYLE_ARCHETYPE[style], personality }))
+              }
               tooltip="Random name"
               aria-label="Randomize warrior name"
               className="shrink-0"

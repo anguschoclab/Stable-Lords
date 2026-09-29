@@ -9,7 +9,7 @@ import { computeTrainerAging } from '@/engine/trainers/trainerAging';
  * Handles aging, retirement, and pool management for trainers.
  */
 export function runTrainerPass(state: GameState, rootRng?: IRNGService): StateImpact {
-  const rng = resolveRng(rootRng, state.week * 1337 + 7);
+  const rng = resolveRng(rootRng, (state.absoluteWeek ?? state.week) * 1337 + 7);
   const { updatedTrainers, news, updatedHiringPool, rivalsUpdates } = computeTrainerAging(
     state,
     rng

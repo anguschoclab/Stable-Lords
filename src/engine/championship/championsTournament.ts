@@ -75,7 +75,7 @@ export function buildChampionsTournament(
     field,
     week,
     state.season,
-    new SeededRNGService(week * 733),
+    new SeededRNGService(((state.absoluteWeek ?? week - 1) + 1) * 733),
     state.year ?? 1
   );
 
@@ -128,6 +128,7 @@ export function recordGrandChampions(state: GameState, delta: ChampionshipDelta)
       year: state.year ?? 1,
       warriorId: w.id,
       warriorName: w.name,
+      warriorEpithet: w.epithet,
       stableName: owner?.stableName,
     });
 

@@ -4,7 +4,7 @@
  */
 
 // Types
-export type { StateImpact, ImpactHandler, GameState } from './types';
+export type { StateImpact, ImpactHandler, GameState, WarriorEpithetAward } from './types';
 
 // Domain handlers
 export { economyHandlers } from './economy';

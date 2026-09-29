@@ -348,5 +348,6 @@ export const GrandChampionEntrySchema = z.object({
   year: z.number(),
   warriorId: z.string(),
   warriorName: z.string(),
+  warriorEpithet: z.string().optional(),
   stableName: z.string().optional(),
 });

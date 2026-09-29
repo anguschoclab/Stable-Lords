@@ -81,8 +81,12 @@ export function handleProgressions(
         chance: () => false,
       }
     );
-    if (disc.updated) {
-      routeUpdate(s, w, { favorites: w.favorites }, rosterUpdates, rivalWarriorPatches);
+    if (disc.updated && w.favorites) {
+      // checkDiscovery mutates w.favorites in place; route a fresh copy so the
+      // rival patch diff (by reference) sees the change. Shard workers hold
+      // clones, so without a patch the discovery would be lost off-thread.
+      const favorites = { ...w.favorites, discovered: { ...w.favorites.discovered } };
+      routeUpdate(s, w, { favorites }, rosterUpdates, rivalWarriorPatches);
       if (disc.hints.length > 0) {
         newsletterItems.push({
           id: discRng ? discRng.uuid() : generateId(undefined, 'newsletter'),

@@ -276,7 +276,25 @@ describe('Week Advancement Integration', () => {
       const state = {
         ...initialState,
         rivals: [], // no rivals → no fights → w2 cannot die in combat
-        roster: [makeWarrior('w1', 'Warrior 1'), makeWarrior('w2', 'Warrior 2')],
+        roster: [
+          makeWarrior('w1', 'Warrior 1'),
+          // Long-term injury keeps w2 out of tournament eligibility (the
+          // committee only selects Active warriors) — tournaments are lethal,
+          // so a conscripted w2 could die and break the survival assertion.
+          makeWarrior('w2', 'Warrior 2', {
+            status: 'Injured' as const,
+            injuries: [
+              {
+                id: 'inj_w2' as never,
+                name: 'Broken Ribs',
+                description: 'test',
+                severity: 'Moderate' as never,
+                weeksRemaining: 52,
+                penalties: {},
+              },
+            ],
+          }),
+        ],
         graveyard: [],
       };
 

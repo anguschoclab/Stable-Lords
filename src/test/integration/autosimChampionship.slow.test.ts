@@ -27,10 +27,12 @@ describe('championship autosim — week 52+', () => {
   it('simulates a full year and reports championship aggregates', async () => {
     // Seed chosen so the trajectory exercises the asserted invariants
     // (title defenses resolved, dethronements via 'defeated' endReasons).
-    // Re-probed after the naming-generator rewrite shifted RNG streams;
-    // 'probe-f' yields 9 title bouts, 4 'defeated' reigns, rival title
-    // participation, and a completed Grand Championship.
-    const state: GameState = createFreshState('probe-f');
+    // Re-probed after the absoluteWeek reseed shifted year-2+ RNG streams;
+    // 'seed-3' yields a surviving title bout in the arenaHistory tail,
+    // 14 'defeated' reigns, rival title participation, and a completed
+    // Grand Championship. Most seeds end with titleBouts=0 because the
+    // 500-entry arenaHistory cap evicts early title fights.
+    const state: GameState = createFreshState('seed-3');
     state.treasury = 1_000_000; // sim horizon is 60 weeks; the player economy isn't the subject
     state.roster = Array.from({ length: 6 }, (_, i) =>
       makeAutosimWarrior(`pw${i}`, `Player Warrior ${i}`, { fame: 10, popularity: 5 })

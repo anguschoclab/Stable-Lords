@@ -179,34 +179,40 @@ export function processRivalStable(
   const updatedRival = assignCampaignRoles(prep.updatedRival, state, perception);
 
   if (isBankrupt) {
-    // Seeds overlap across generation call sites — a colliding seed re-mints a
-    // byte-identical clone of a live stable (same stableId + warrior ids),
-    // conflating every id-keyed update. Re-seed until the stable is new.
-    const usedStableIds = new Set((state.rivals ?? []).map((r) => r.id));
-    const usedWarriorIds = collectUsedWarriorIds(state);
-    const usedNames = collectUsedWarriorNames(state);
-    const retirementSeed = state.absoluteWeek + index * 1000;
-    for (let attempt = 0; attempt < 8; attempt++) {
-      const newStable = generateRivalStables(
-        1,
-        retirementSeed + attempt * 7919,
-        0,
-        usedNames
-      )[0];
-      if (!newStable) break;
-      if (
-        usedStableIds.has(newStable.id) ||
-        newStable.roster.some((w) => usedWarriorIds.has(w.id))
-      ) {
-        continue;
-      }
+    const replacement = mintSuccessorStable(state, index);
+    if (replacement) {
       gazetteItems.push(
-        `🆕 RECRUITMENT: ${newStable.owner.stableName} has debuted in the league under ${newStable.owner.name}!`
+        `🆕 RECRUITMENT: ${replacement.owner.stableName} has debuted in the league under ${replacement.owner.name}!`
       );
-      return { rival: newStable as RivalStableData, gazetteItems };
+      return { rival: replacement, gazetteItems };
     }
   }
   return { rival: updatedRival, gazetteItems };
+}
+
+/**
+ * Mint a bankruptcy-replacement stable. Seeds overlap across generation call
+ * sites — a colliding seed re-mints a byte-identical clone of a live stable
+ * (same stableId + warrior ids), conflating every id-keyed update. Re-seed
+ * until the minted stable id and all warrior ids are world-unique.
+ */
+function mintSuccessorStable(state: GameState, index: number): RivalStableData | undefined {
+  const usedStableIds = new Set((state.rivals ?? []).map((r) => r.id));
+  const usedWarriorIds = collectUsedWarriorIds(state);
+  const usedNames = collectUsedWarriorNames(state);
+  const retirementSeed = state.absoluteWeek + index * 1000;
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const newStable = generateRivalStables(1, retirementSeed + attempt * 7919, 0, usedNames)[0];
+    if (!newStable) return undefined;
+    if (
+      usedStableIds.has(newStable.id) ||
+      newStable.roster.some((w) => usedWarriorIds.has(w.id))
+    ) {
+      continue;
+    }
+    return newStable as RivalStableData;
+  }
+  return undefined;
 }
 
 /**

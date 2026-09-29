@@ -53,7 +53,6 @@ function weatherGateDeclined(
   currentOffers: OfferMap,
   offer: BoutOffer,
   trackedOffer: BoutOffer,
-  wId: WarriorId,
   owningRival: RivalStableData,
   rivalWarrior: Warrior,
   opponent: Warrior | undefined
@@ -78,11 +77,12 @@ function weatherGateDeclined(
 }
 
 /**
- * Applies a counter response (venue first, purse fallback) and returns true
- * when the counter resolved the offer — false for non-counter responses.
+ * Applies a counter response (venue first, purse fallback). Always resolves
+ * the offer — a venue counter with no target falls through to the purse
+ * counter.
  */
 function applyCounterResponse(
-  response: string,
+  response: 'Countered' | 'CounteredVenue',
   state: GameState,
   currentOffers: OfferMap,
   offer: BoutOffer,
@@ -90,7 +90,7 @@ function applyCounterResponse(
   owningRival: RivalStableData,
   rivalWarrior: Warrior,
   wId: WarriorId
-): boolean {
+): void {
   if (response === 'CounteredVenue') {
     // Venue counter: swap the arena, re-pend the other side — the purse
     // is untouched and the counter tag closes the negotiation round.
@@ -108,22 +108,18 @@ function applyCounterResponse(
         target
       );
       applyOfferImpact(currentOffers, impact);
-      return true;
+      return;
     }
     // No venue to counter toward — fall through to the purse counter.
   }
 
-  if (response === 'Countered' || response === 'CounteredVenue') {
-    // One negotiation round: sweeten the purse and re-pend the other side.
-    const impact = counterBoutOffer(
-      { ...state, boutOffers: currentOffers },
-      offer.id as BoutOfferId,
-      wId
-    );
-    applyOfferImpact(currentOffers, impact);
-    return true;
-  }
-  return false;
+  // One negotiation round: sweeten the purse and re-pend the other side.
+  const impact = counterBoutOffer(
+    { ...state, boutOffers: currentOffers },
+    offer.id as BoutOfferId,
+    wId
+  );
+  applyOfferImpact(currentOffers, impact);
 }
 
 /**
@@ -162,7 +158,6 @@ function respondForWarrior(
       currentOffers,
       offer,
       trackedOffer,
-      wId,
       owningRival,
       rivalWarrior,
       opponent
@@ -187,7 +182,7 @@ function respondForWarrior(
     pickedWarriors.add(wId);
   }
 
-  if (
+  if (response === 'Countered' || response === 'CounteredVenue') {
     applyCounterResponse(
       response,
       state,
@@ -197,8 +192,7 @@ function respondForWarrior(
       owningRival,
       rivalWarrior,
       wId
-    )
-  ) {
+    );
     return;
   }
 

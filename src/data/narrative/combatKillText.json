@@ -345,7 +345,8 @@
         "{{attacker}}'s blade completes its deadly arc, leaving {{defender}} in bloody ruin.",
         "With a final, grisly sweep, {{attacker}} completely severs the last threads of {{defender}}'s life.",
         "With a final, sickening sound of rending flesh, {{attacker}} executes {{defender}} in a fountain of crimson.",
-        "{{attacker}} delivers a macabre, finishing slash, leaving {{defender}} to bleed out on the cold stones."
+        "{{attacker}} delivers a macabre, finishing slash, leaving {{defender}} to bleed out on the cold stones.",
+        "{{attacker}}'s blade sings a terrible song, separating {{defender}}'s life from their flesh in one fluid, grisly motion."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
@@ -442,7 +443,8 @@
         "The arena falls silent as {{attacker}}'s blade punches perfectly through {{defender}}'s heart.",
         "{{attacker}} twists the blade deep, extinguishing the fight in {{defender}}'s eyes.",
         "A final, fatal thrust from {{attacker}} pins {{defender}} lifelessly to the dirt.",
-        "Like a pinned insect, {{defender}} goes still as {{attacker}} drives the final, fatal thrust home."
+        "Like a pinned insect, {{defender}} goes still as {{attacker}} drives the final, fatal thrust home.",
+        "A perfect, chilling thrust from {{attacker}} finds the heart, and {{defender}}'s eyes go instantly hollow."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
@@ -537,7 +539,7 @@
         "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands.",
         "A sickening final thud rings out as {{attacker}} crushes the last bit of life from {{defender}}.",
         "{{defender}} is battered into absolute stillness by the relentless fury of {{attacker}}.",
-        "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+        "{{defender}} is utterly reduced to ruin as {{attacker}} brings down the final, bone-obliterating strike, leaving nothing but an unrecognizable heap."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
@@ -634,7 +636,8 @@
         "The crowd winces as {{attacker}} literally beats {{defender}} to death with their bare hands.",
         "A final, devastating blow from {{attacker}}'s bare knuckles puts {{defender}} to sleep forever.",
         "{{attacker}} beats {{defender}} into the dirt until movement stops completely.",
-        "A devastating final blow from {{attacker}} silences {{defender}} for good, ending the bout."
+        "A devastating final blow from {{attacker}} silences {{defender}} for good, ending the bout.",
+        "With a final, sickening crack of knuckles against skull, {{attacker}} extinguishes the light behind {{defender}}'s eyes forever."
       ]
     },
     "default": [
@@ -716,7 +719,11 @@
       "{{attacker}} ends it, driving their {{weapon}} into {{defender}}'s heart.",
       "The crowd roars as {{attacker}} finishes {{defender}} with brutal finality.",
       "{{defender}} collapses, their life bleeding into the unforgiving sand.",
-      "A final, devastating blow from {{attacker}} leaves {{defender}} motionless."
+      "A final, devastating blow from {{attacker}} leaves {{defender}} motionless.",
+      "The arena's silence is deafening as {{defender}}'s body hits the sand, the finality of {{attacker}}'s blow utterly clinical.",
+      "With theatrical brilliance, {{attacker}} strikes a final, devastating blow, as {{defender}} collapses in a spectacular spray of arterial red.",
+      "{{attacker}} steps over the twitching remains of {{defender}}, proving once again that in this arena, gravity and steel are the only true victors.",
+      "A bleak, joyless end. {{defender}} simply slumps over, their life extinguished like a candle in the harsh wind, while {{attacker}} coldly wipes their blade."
     ]
   }
 }

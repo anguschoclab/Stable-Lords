@@ -293,7 +293,10 @@
         "{{defender}} shrieks as {{attacker}}'s blade completely massacres their {{bodyPart}}.",
         "A sickening chunk of {{defender}}'s {{bodyPart}} is cleaved away by {{attacker}}'s savage blow!",
         "{{attacker}} opens a horrifying gash across {{defender}}'s {{bodyPart}}, painting the sand red.",
-        "A masterfully precise slash from {{attacker}} severs muscle and tendon in {{defender}}'s {{bodyPart}}."
+        "A masterfully precise slash from {{attacker}} severs muscle and tendon in {{defender}}'s {{bodyPart}}.",
+        "A masterful, sweeping arc of steel from {{attacker}} completely bypasses {{defender}}'s guard, leaving a catastrophic gash across their {{bodyPart}}.",
+        "{{attacker}}'s blade sings a deadly tune, painting the sands crimson as it effortlessly parts the flesh of {{defender}}'s {{bodyPart}}.",
+        "With an explosive surge, {{attacker}} executes a devastating slash that nearly severs {{defender}}'s {{bodyPart}}, drawing horrified gasps from the crowd."
       ]
     },
     "bashing": {
@@ -568,7 +571,10 @@
         "A catastrophic, thundering strike from {{attacker}} completely ruins {{defender}}'s {{bodyPart}}!",
         "{{attacker}} lands a skull-rattling, bone-powdering smash on {{defender}}'s {{bodyPart}}!",
         "The sickening crunch of bone shrapnel fills the air as {{attacker}}'s {{weapon}} pulverizes {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} caves in {{defender}}'s {{bodyPart}} with a terrifying, devastating swing."
+        "{{attacker}} caves in {{defender}}'s {{bodyPart}} with a terrifying, devastating swing.",
+        "The horrifying sound of shattering bone echoes through the coliseum as {{attacker}}'s weapon completely caves in {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} unleashes a titanic, earth-shattering blow that completely collapses the defense and structure of {{defender}}'s {{bodyPart}}.",
+        "A pulverizing impact from {{attacker}} sends a shockwave through {{defender}}'s {{bodyPart}}, turning solid bone into jagged shrapnel."
       ]
     },
     "piercing": {
@@ -687,7 +693,6 @@
         "{{attacker}} buries their weapon in {{defender}}'s {{bodyPart}} with a vicious twist.",
         "A precise, agonizing stab connects with {{defender}}'s {{bodyPart}}.",
         "{{attacker}} finds an opening, sinking the point deep into {{defender}}'s {{bodyPart}}.",
-        "With cruel precision, {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
         "A lightning-fast lunge from {{attacker}} finds its mark in {{defender}}'s {{bodyPart}}.",
         "{{attacker}} executes a clinically precise thrust into {{defender}}.",
         "A swift piercing strike from {{attacker}} finds the mark on {{defender}}.",
@@ -838,7 +843,10 @@
         "{{attacker}}'s vicious lunge obliterates the flesh and bone of {{defender}}'s {{bodyPart}}!",
         "With brutal precision, {{attacker}} drives the point clear through {{defender}}'s {{bodyPart}}!",
         "{{attacker}}'s {{weapon}} drives brutally deep into {{defender}}'s {{bodyPart}}, striking vital organs.",
-        "A savage lunge sees {{attacker}} completely impale {{defender}} through the {{bodyPart}}."
+        "A savage lunge sees {{attacker}} completely impale {{defender}} through the {{bodyPart}}.",
+        "{{attacker}} executes a surgically perfect lunge, slipping past all defenses to impale {{defender}}'s {{bodyPart}} in a spray of scarlet.",
+        "With snake-like speed, {{attacker}}'s point completely skewers the {{bodyPart}} of {{defender}}, pinning them momentarily in sheer agony.",
+        "A devastatingly precise thrust from {{attacker}} punches clean through armor and bone, annihilating {{defender}}'s {{bodyPart}}."
       ]
     },
     "fist": {
@@ -985,7 +993,6 @@
         "{{attacker}} rains relentless punches down upon {{defender}}.",
         "The sickening thud of bone on flesh rings out as {{attacker}} connects.",
         "{{defender}} reels from a punishing combination delivered by {{attacker}}.",
-        "{{attacker}} lands a heavy haymaker squarely on {{defender}}'s {{bodyPart}}.",
         "A sickening thud echoes as {{attacker}} drives a vicious hook into the {{bodyPart}}."
       ],
       "mastery": [
@@ -1105,7 +1112,10 @@
         "With explosive force, {{attacker}} caves in {{defender}}'s {{bodyPart}} with a critical punch!",
         "{{defender}}'s eyes roll back as {{attacker}} lands a brutal, bone-breaking strike to the {{bodyPart}}.",
         "A savage, bloody beatdown from {{attacker}} leaves {{defender}}'s {{bodyPart}} a ruined mess!",
-        "{{attacker}} delivers a savage, knuckle-busting hammer blow that destroys {{defender}}'s {{bodyPart}}!"
+        "{{attacker}} delivers a savage, knuckle-busting hammer blow that destroys {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} connects with a terrifyingly heavy haymaker, sending a concussive shockwave through {{defender}}'s {{bodyPart}} that shatters their resolve.",
+        "A brutal, bare-knuckle uppercut from {{attacker}} completely destroys the structural integrity of {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} delivers a sickeningly perfect strike to the {{bodyPart}}, the explosive force leaving {{defender}} reeling and broken."
       ]
     }
   }

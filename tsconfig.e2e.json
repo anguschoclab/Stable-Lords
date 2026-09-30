@@ -19,12 +19,7 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "e2e/**/*.ts",

@@ -107,7 +107,7 @@ function buildRecommendations(m: ReturnType<typeof computeMetrics>): string {
       recommendations += `- **Meta Anomaly**: ${style} win rate is too high (${(rate * 100).toFixed(2)}%). Suggest reducing base bonus.\n`;
       hasAnomalies = true;
     } else if (rate < 0.35) {
-      recommendations += `- **Meta Anomaly**: ${style} win rate is too low (${(rate * 100).toFixed(2)}%). Suggest increasing base bonus.\n`;
+      recommendations += `- **Meta Anomaly**: ${style} win rate is too low (${(rate * 100).toFixed(2)}%). Check style-attr fit first (ARCHETYPE_STAT_WEIGHTS blend in generateRecruitAttrs) before touching combat constants.\n`;
       hasAnomalies = true;
     }
   }
@@ -160,7 +160,10 @@ async function main() {
     ignoreBankruptcy: true,
     // Archive fight transcripts to disk (mirrors OPFS layout) and truncate
     // historical arrays every 50 weeks so the 1000-week run stays bounded.
-    archiveService: new NodeArchiveService(ARCHIVE_DIR),
+    // Transcript archival is opt-in via ORACLE_ARCHIVE=1 — the metrics only
+    // need the in-memory run, and transcript writes are i/o-bound on synced
+    // volumes (~80k files over 1000 weeks).
+    archiveService: process.env.ORACLE_ARCHIVE ? new NodeArchiveService(ARCHIVE_DIR) : undefined,
   });
 
   console.log('Simulation complete. Analyzing data...');

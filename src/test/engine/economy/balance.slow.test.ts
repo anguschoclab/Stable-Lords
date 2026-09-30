@@ -305,7 +305,7 @@ describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () 
     for (const [pi, philosophy] of PHILOSOPHIES.entries()) {
       for (const [si, style] of ALL_STYLES.entries()) {
         const rng = new SeededRNGService(1000 + pi * 97 + si);
-        const attrs = generateRecruitAttrs(philosophy, rng);
+        const attrs = generateRecruitAttrs(philosophy, rng, style);
         pools[style]!.push(
           fixtureComputedWarrior(attrs, style, {
             id: `real_${style}_${pi}` as import('@/types/shared.types').WarriorId,

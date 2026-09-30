@@ -6,7 +6,7 @@ import { SeededRNGService } from '@/utils/random';
 import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { generateTraits, TRAITS } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
-import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import { STYLE_ARCHETYPE, ARCHETYPE_STAT_WEIGHTS } from '@/engine/factories/statGeneration';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner, cultureForArchetype } from '@/data/names/cultures';
 import { getPhilosophyStyles } from '@/data/ownerData';
@@ -80,7 +80,8 @@ function pickRecruitStyle(
  */
 export function generateRecruitAttrs(
   philosophy: string,
-  rng: IRNGService
+  rng: IRNGService,
+  style?: FightingStyle
 ): { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number } {
   const biasMap: Record<string, Partial<Record<string, number>>> = {
     'Brute Force': { ST: 3, CN: 2, SZ: 2 },
@@ -97,9 +98,22 @@ export function generateRecruitAttrs(
   let pool = 70 - 21;
   const keys: (keyof typeof attrs)[] = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'];
 
+  // Style-aware blend: the recruit's fighting style mixes its archetype
+  // key-stats into the ticket pool alongside the philosophy bias — roughly
+  // half the weight (high=3, mid=2, low=1 tickets ≈ 14 style tickets vs
+  // ~7–11 philosophy tickets). Style-blind recruits left tank styles (WALL
+  // OF STEEL ~31% world win rate) starved of CN/WL/SZ.
+  const styleWeights = style ? ARCHETYPE_STAT_WEIGHTS[STYLE_ARCHETYPE[style]] : undefined;
+  const styleTickets = (k: keyof typeof attrs): number => {
+    if (!styleWeights) return 0;
+    if (styleWeights.high.includes(k)) return 3;
+    if (styleWeights.mid.includes(k)) return 2;
+    return 1;
+  };
+
   const weighted: (keyof typeof attrs)[] = [];
   for (const k of keys) {
-    const w = (bias as Record<string, number>)[k] ?? 1;
+    const w = ((bias as Record<string, number>)[k] ?? 1) + styleTickets(k);
     for (let i = 0; i < w; i++) weighted.push(k);
   }
 
@@ -134,7 +148,7 @@ export function generateAIRecruit(
   const favoredStyles = rival.owner.favoredStyles ?? [];
 
   const style = pickRecruitStyle(adaptation, philosophy, favoredStyles, meta, rng);
-  const attrs = generateRecruitAttrs(philosophy, rng);
+  const attrs = generateRecruitAttrs(philosophy, rng, style);
 
   // Generate archetype-based traits and name (parity with player recruits)
   const archetype = STYLE_ARCHETYPE[style];

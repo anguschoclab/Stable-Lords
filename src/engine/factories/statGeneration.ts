@@ -20,7 +20,7 @@ export const STYLE_ARCHETYPE: Record<FightingStyle, Archetype> = {
   [FightingStyle.WallOfSteel]: 'tank',
 };
 
-const ARCHETYPE_STAT_WEIGHTS: Record<
+export const ARCHETYPE_STAT_WEIGHTS: Record<
   Archetype,
   { high: (keyof Attributes)[]; mid: (keyof Attributes)[]; low: (keyof Attributes)[] }
 > = {

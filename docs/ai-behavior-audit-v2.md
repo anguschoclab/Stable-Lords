@@ -120,11 +120,14 @@ of the bisection — not flake.
 
 ### Residual observations (honest — not regressions, but worth a product look)
 
-- Reign endings remain death-dominated (died 34, defeated 1 in the 120-wk
-  autosim): champions almost never lose the belt *in* a title bout — they
-  die in ordinary bookings first. `defensesBooked` stayed 0. The dethrone
-  path exists but the world rarely reaches it; if a living-defense meta is
-  desired, title-defense cadence vs. open-market bookings needs tuning.
+- ~~Reign endings remain death-dominated~~ **RESOLVED (world-sim
+  correctness program)**: the "died-dominated" reading was corrupted by the
+  rival post-bout roster bug — champions vanished from rosters and the
+  vacancy fallback mislabeled them. Post-fix 200-wk measurement:
+  `displaced` ≈ 53% (folded-stable champions — honest, distinct from
+  `retired`), `defeated` ≈ 26%, `died` ≈ 6%, `stripped` ≈ 1%,
+  defenses book at ~0.3/reign. Remaining watch item: `displaced` share
+  reflects stable churn more than title mechanics.
 - `counterOfferRate` baseline was 0.00; venue/purse counters now exist for
   AI but the metric only counts standing offers — watch post-H soaks for
   actual counter frequency.

@@ -34,6 +34,8 @@ const byEra: Record<string, Record<string, [number, number]>> = {};
 const lossBy: Record<string, Record<string, number>> = {};
 // weekly population snapshot
 const pop: Record<string, Acc> = {};
+// style -> exp bucket -> profile
+const profByExp: Record<string, Record<string, Acc>> = {};
 
 const bump = (t: Record<string, Record<string, [number, number]>>, a: string, b: string, win: boolean) => {
   const cell = ((t[a] ??= {})[b] ??= [0, 0]);
@@ -97,6 +99,7 @@ function onWeek(state: GameState, week: number) {
       if (!self) continue;
       add((atBout[selfStyle] ??= acc()), row(self));
       bump(byExp, selfStyle, expBucket(fights(self)), won);
+      add(((profByExp[selfStyle] ??= {})[expBucket(fights(self))] ??= acc()), row(self));
       if (opp) {
         const diff = fights(self) - fights(opp);
         bump(byExpDiff, selfStyle, diff <= -5 ? 'greener' : diff >= 5 ? 'veteran' : 'even', won);
@@ -108,6 +111,15 @@ function onWeek(state: GameState, week: number) {
 const pct = (c?: [number, number]) => (c && c[1] ? ((100 * c[0]) / c[1]).toFixed(1).padStart(5) + `(${c[1]})` : '   -   ');
 const avg = (a: Acc, k: string) => ((a.sum[k] ?? 0) / Math.max(1, a.n)).toFixed(1).padStart(6);
 
+// Optional counterfactual: TANK=mid promotes WT out of the tank `low` tier.
+if (process.env.TANK === 'mid') {
+  const { ARCHETYPE_STAT_WEIGHTS } = await import('@/engine/factories/statGeneration');
+  ARCHETYPE_STAT_WEIGHTS.tank = { high: ['CN', 'WL', 'SZ'], mid: ['ST', 'WT'], low: ['SP', 'DF'] };
+}
+if (process.env.TANK === 'wtOnly') {
+  const { ARCHETYPE_STAT_WEIGHTS } = await import('@/engine/factories/statGeneration');
+  ARCHETYPE_STAT_WEIGHTS.tank = { high: ['CN', 'WL', 'SZ'], mid: ['WT'], low: ['ST', 'SP', 'DF'] };
+}
 const origLog = console.log;
 console.log = () => {};
 const result = await runSimulation({ weeks: WEEKS, seed: SEED, logFrequency: 50, ignoreBankruptcy: true, onWeek });
@@ -152,4 +164,12 @@ for (const s of styles) {
   const t = lossBy[s] ?? {};
   const n = Object.values(t).reduce((x, y) => x + y, 0);
   console.log(s.padEnd(18), Object.entries(t).sort((x, y) => y[1] - x[1]).map(([k, v]) => `${k} ${((100 * v) / n).toFixed(0)}%`).join('  '));
+}
+
+console.log('\n# Development at equal experience: TOT / WT / SK / drills / age');
+for (const s of ['WALL OF STEEL', 'TOTAL PARRY', 'BASHING ATTACK', 'STRIKING ATTACK', 'PARRY-LUNGE', 'LUNGING ATTACK']) {
+  console.log(s.padEnd(18), ['0-3', '4-10', '11-25', '26+'].map((k) => {
+    const a = profByExp[s]?.[k];
+    return a ? `${k}: ${avg(a, 'TOT')}${avg(a, 'WT')}${avg(a, 'SK')}${avg(a, 'drills')}${avg(a, 'age')}` : '';
+  }).join(' | '));
 }

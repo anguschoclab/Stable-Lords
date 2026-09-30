@@ -176,8 +176,8 @@ function roleContext(
     (!text.includes(nameD?.toLowerCase() ?? '') &&
       (text.includes('attacks') || text.includes('strikes')));
 
-  const actor = isActingA ? 'A' : 'D';
-  const victim = actor === 'A' ? 'D' : 'A';
+  const actor: 'A' | 'D' = isActingA ? 'A' : 'D';
+  const victim: 'A' | 'D' = actor === 'A' ? 'D' : 'A';
   const dir: 1 | -1 = actor === 'A' ? 1 : -1;
 
   const att = actor === 'A' ? prev.fighterA : prev.fighterD;

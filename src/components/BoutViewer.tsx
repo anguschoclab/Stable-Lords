@@ -119,7 +119,7 @@ function useBoutViewerState({
   weather,
 }: Pick<BoutViewerProps, 'log' | 'winner' | 'nameA' | 'nameD' | 'arenaId' | 'weather'>) {
   const isIndoor = isIndoorArena(arenaId);
-  const effectiveWeather = isIndoor ? 'Clear' : weather;
+  const effectiveWeather = isIndoor ? 'Clear' : (weather ?? 'Clear');
   const scoutReports = useGameStore((s) => s.scoutReports);
   const arenaPrefs = useArenaPreferences();
   const setArenaPreferences = useGameStore((s) => s.setArenaPreferences);

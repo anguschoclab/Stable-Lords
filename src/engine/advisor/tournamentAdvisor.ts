@@ -6,6 +6,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import type { WarriorTournamentAdvice } from './types';
+import type { TournamentEntry } from '@/types/state/game';
 import { TOURNAMENT_TIERS } from '@/engine/matchmaking/tournamentSelection/core';
 import { weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
 
@@ -96,7 +97,7 @@ export function evaluateTournamentAdvice(
 /** Advice for a live tournament week — participant or spectator. */
 function liveTournamentAdvice(
   tierInfo: TierInfo | null,
-  currentTournament: GameState['tournaments'] extends (infer T)[] | undefined ? T : never,
+  currentTournament: TournamentEntry | undefined,
   isParticipant: boolean,
   overallRank: number | null
 ): WarriorTournamentAdvice {

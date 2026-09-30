@@ -257,7 +257,7 @@ function ChartTooltipItem({
 }) {
   const key = `${nameKey || item.name || item.dataKey || 'value'}`;
   const itemConfig = getResolvedConfig(config, key);
-  const indicatorColor = color || item.payload?.fill || item.color;
+  const indicatorColor = color || (item.payload?.fill as string | undefined) || item.color;
 
   return (
     <div

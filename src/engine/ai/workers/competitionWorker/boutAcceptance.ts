@@ -17,6 +17,7 @@ import {
 } from '@/engine/bout/mutations/contractMutations';
 import { contenderRankAtArena } from '@/engine/championship/arenaChampionship';
 import { computePlayerThreatLevel, type PlayerThreatLevel } from '@/engine/ai/agentCore';
+import type { Promoter } from '@/types/state/championship';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
 
 /**
@@ -382,11 +383,11 @@ function evaluateNegotiationStage(
   warrior: Warrior,
   opponent: Warrior | undefined,
   state: GameState | undefined,
-  promoter: GameState['promoters'][string] | undefined,
+  promoter: Promoter | undefined,
   isTournamentHungry: boolean,
   currentHP: number,
   playerThreat: PlayerThreatLevel,
-  observedDanger: number
+  observedDanger: boolean
 ): BoutEvaluation {
   // Personality Logic
   const personality = rival.owner.personality;

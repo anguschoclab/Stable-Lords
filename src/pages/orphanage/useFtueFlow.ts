@@ -131,7 +131,7 @@ function commitFtue({
   saveCurrentState,
   navigate,
 }: {
-  state: ReturnType<typeof useGameStore.getState>;
+  state: Pick<GameStore, 'player' | 'graveyard' | 'ftueComplete'>;
   selectedWarriors: Parameters<typeof buildFTUEInitialState>[1];
   boutResult: BoutResult | null;
   poolSeedValue: number;

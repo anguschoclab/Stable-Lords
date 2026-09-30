@@ -4,7 +4,7 @@
  * Entity names are rendered as clickable links via WarriorLink.
  */
 import { useMemo } from 'react';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { collectWarriorNames, collectStableNames } from '@/hooks/useEntityNames';
 import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from '@tanstack/react-router';
@@ -104,7 +104,22 @@ export default function EventLog() {
 }
 
 /** Gather all event streams into a single reverse-chronological feed. */
-function collectEvents(state: ReturnType<typeof useGameStore.getState>): GameEvent[] {
+function collectEvents(
+  state: Pick<
+    GameStore,
+    | 'arenaHistory'
+    | 'graveyard'
+    | 'retired'
+    | 'roster'
+    | 'week'
+    | 'trainingAssignments'
+    | 'newsletter'
+    | 'tournaments'
+    | 'gazettes'
+    | 'player'
+    | 'rivals'
+  >
+): GameEvent[] {
   const all: GameEvent[] = [
     ...processFightEvents(state.arenaHistory),
     ...processDeathEvents(state.graveyard),

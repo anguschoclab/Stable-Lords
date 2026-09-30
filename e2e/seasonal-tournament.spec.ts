@@ -225,6 +225,7 @@ interface StateSnap {
       warriorIdA: string;
       warriorIdD: string;
       winner?: 'A' | 'D' | null;
+      isBronzeMatch?: boolean;
     }[];
   }[];
   /**
@@ -272,6 +273,7 @@ interface RawTournamentBout {
   warriorIdA: string;
   warriorIdD: string;
   winner?: 'A' | 'D' | null;
+  isBronzeMatch?: boolean;
 }
 
 /**

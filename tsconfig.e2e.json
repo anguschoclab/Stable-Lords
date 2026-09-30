@@ -30,6 +30,7 @@
     "scripts/strip-junk-jsdoc.ts",
     "scripts/advisor-e2e.ts",
     "scripts/advisor-probe.ts",
-    "scripts/emergent-report.ts"
+    "scripts/emergent-report.ts",
+    "scripts/liveness-diag.ts"
   ]
 }

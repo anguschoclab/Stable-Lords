@@ -50,7 +50,7 @@ function ArenaCard({
   state: GameState;
   playerStableName: string;
 }) {
-  const title = state.arenaChampions[arena.id];
+  const title = state.arenaChampions?.[arena.id];
   const reign = getArenaChampion(state, arena.id);
   const excluded = CHAMPIONSHIP_EXCLUDED_ARENAS.has(arena.id);
   const badge = statusBadge(title);

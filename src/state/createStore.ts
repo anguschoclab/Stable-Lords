@@ -194,7 +194,21 @@ type StoreSet = (fn: ((draft: GameStore) => void) | Partial<GameStore>) => void;
 type StoreGet = () => GameStore;
 
 /** Static defaults plus the trivial UI toggles that don't touch the engine. */
-function createCoreState(set: StoreSet): Partial<GameStore> {
+function createCoreState(
+  set: StoreSet
+): Pick<
+  GameStore,
+  | 'activeSlotId'
+  | 'atTitleScreen'
+  | 'lastSavedAt'
+  | 'isSimulating'
+  | 'isInitialized'
+  | 'eventLogOpen'
+  | 'toggleEventLog'
+  | 'setEventLogOpen'
+  | 'initialize'
+  | 'setSimulating'
+> {
   return {
     activeSlotId: null,
     atTitleScreen: true,
@@ -229,7 +243,19 @@ function createCoreState(set: StoreSet): Partial<GameStore> {
 }
 
 /** Game lifecycle actions: load, week/day advance, save, reset, title return. */
-function createCoreActions(set: StoreSet, get: StoreGet): Partial<GameStore> {
+function createCoreActions(
+  set: StoreSet,
+  get: StoreGet
+): Pick<
+  GameStore,
+  | 'loadGame'
+  | 'doAdvanceWeek'
+  | 'doAdvanceDay'
+  | 'saveCurrentState'
+  | 'doReset'
+  | 'returnToTitle'
+  | 'setState'
+> {
   return {
     loadGame: (slotId: string, state: GameState) => {
       bumpEngineEpoch();

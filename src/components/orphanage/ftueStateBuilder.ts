@@ -1,4 +1,4 @@
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG, SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generatePotential } from '@/engine/warrior/potential';
 import { generateRivalStables } from '@/engine/rivals';
@@ -41,7 +41,7 @@ function buildFTUEWarrior(
   idx: number,
   boutResult: BoutResult | null,
   playerPlan: FightPlan | null | undefined,
-  finishRng: SeededRNGService
+  finishRng: SeededRNG
 ) {
   // Use the orphan's pre-generated potential (or regenerate if somehow missing)
   const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);

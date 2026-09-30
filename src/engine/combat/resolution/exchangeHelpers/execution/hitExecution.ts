@@ -402,7 +402,7 @@ function afterHitEvents(
   rng: () => number,
   attacker: FighterState,
   defender: FighterState,
-  hitLoc: string,
+  hitLoc: HitLocation,
   damage: number,
   rawDamage: number,
   attTactics: ReturnType<typeof resolveEffectiveTactics>,

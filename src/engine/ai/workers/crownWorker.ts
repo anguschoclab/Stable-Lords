@@ -35,6 +35,7 @@ import {
 } from '@/engine/core/absoluteWeek';
 import { logAgentAction, computePlayerThreatLevel } from '../agentCore';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
+import type { ArenaTitle } from '@/types/state/championship';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /** Weeks before the Grand Championship bracket in which champions rest. */
@@ -94,7 +95,7 @@ function venueWinRate(warrior: Warrior | undefined, arenaId: string): number {
 function scoreThrone(
   w: Warrior,
   arenaId: string,
-  title: GameState['arenaChampions'][string],
+  title: ArenaTitle,
   ctx: {
     eligible: boolean;
     rankBonus: number;

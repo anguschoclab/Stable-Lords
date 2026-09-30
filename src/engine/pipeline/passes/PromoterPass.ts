@@ -1,4 +1,5 @@
 import { GameState, Warrior } from '@/types/state.types';
+import type { Promoter } from '@/types/state/championship';
 import { StateImpact } from '@/engine/impacts';
 import type { WeatherType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -40,7 +41,7 @@ interface PromoterPassContext {
  * `newOffers` up to the promoter's weekly capacity.
  */
 function generatePromoterOffers(
-  promoter: GameState['promoters'][string],
+  promoter: Promoter,
   ctx: PromoterPassContext,
   newOffers: Record<string, ReturnType<typeof createBoutOffer>>
 ): void {

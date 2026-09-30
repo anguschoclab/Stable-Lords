@@ -4,15 +4,15 @@
  *
  *   bun run scripts/ws-ladder.ts [fightsPerCell=300]
  */
-import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { generateArchetypeAttrs, ARCHETYPE_STAT_WEIGHTS } from '@/engine/factories/statGeneration';
-import { SeededRNGService } from '@/utils/random';
-import { PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
-import { FightingStyle, type Attributes } from '@/types/shared.types';
-import type { Warrior } from '@/types/warrior.types';
-import type { FightPlan } from '@/types/combat.types';
+import { simulateFight, defaultPlanForWarrior } from '../src/engine/simulate';
+import { aiPlanForWarrior } from '../src/engine/ai/plan/coreGenerator';
+import { makeWarrior } from '../src/engine/factories/warriorFactory';
+import { generateArchetypeAttrs, ARCHETYPE_STAT_WEIGHTS } from '../src/engine/factories/statGeneration';
+import { SeededRNGService } from '../src/utils/random';
+import { PHILOSOPHY_PLAN_MODS } from '../src/data/ownerData';
+import { FightingStyle, type Attributes } from '../src/types/shared.types';
+import type { Warrior } from '../src/types/warrior.types';
+import type { FightPlan } from '../src/types/combat.types';
 
 const N = Number(process.argv[2] ?? 300);
 const POP = 40;
@@ -95,7 +95,7 @@ function run(rung: Rung, tank?: (typeof ARCHETYPE_STAT_WEIGHTS)['tank']) {
 }
 
 
-import { STYLE_PENALTIES } from '@/engine/warrior/skillBreakpoints';
+import { STYLE_PENALTIES } from '../src/engine/warrior/skillBreakpoints';
 const WS = FightingStyle.WallOfSteel;
 const T = ARCHETYPE_STAT_WEIGHTS.tank;
 type W = (typeof ARCHETYPE_STAT_WEIGHTS)['tank'];

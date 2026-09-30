@@ -4,10 +4,10 @@
  *
  *   bun run scripts/ws-diag.ts [weeks=1000] [seed=12345]
  */
-import { runSimulation } from '@/scripts/simulation-harness';
-import type { GameState } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
-import { ATTRIBUTE_KEYS } from '@/types/shared.types';
+import { runSimulation } from '../src/scripts/simulation-harness';
+import type { GameState } from '../src/types/state.types';
+import type { Warrior } from '../src/types/warrior.types';
+import { ATTRIBUTE_KEYS } from '../src/types/shared.types';
 
 const WEEKS = Number(process.argv[2] ?? 1000);
 const SEED = Number(process.argv[3] ?? 12345);
@@ -113,11 +113,11 @@ const avg = (a: Acc, k: string) => ((a.sum[k] ?? 0) / Math.max(1, a.n)).toFixed(
 
 // Optional counterfactual: TANK=mid promotes WT out of the tank `low` tier.
 if (process.env.TANK === 'mid') {
-  const { ARCHETYPE_STAT_WEIGHTS } = await import('@/engine/factories/statGeneration');
+  const { ARCHETYPE_STAT_WEIGHTS } = await import('../src/engine/factories/statGeneration');
   ARCHETYPE_STAT_WEIGHTS.tank = { high: ['CN', 'WL', 'SZ'], mid: ['ST', 'WT'], low: ['SP', 'DF'] };
 }
 if (process.env.TANK === 'wtOnly') {
-  const { ARCHETYPE_STAT_WEIGHTS } = await import('@/engine/factories/statGeneration');
+  const { ARCHETYPE_STAT_WEIGHTS } = await import('../src/engine/factories/statGeneration');
   ARCHETYPE_STAT_WEIGHTS.tank = { high: ['CN', 'WL', 'SZ'], mid: ['WT'], low: ['ST', 'SP', 'DF'] };
 }
 const origLog = console.log;

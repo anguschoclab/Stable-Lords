@@ -3,8 +3,14 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM"],
-    "types": ["node", "@playwright/test"],
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "node",
+      "@playwright/test"
+    ],
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -13,7 +19,12 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "e2e/**/*.ts",
@@ -31,6 +42,8 @@
     "scripts/advisor-e2e.ts",
     "scripts/advisor-probe.ts",
     "scripts/emergent-report.ts",
-    "scripts/liveness-diag.ts"
+    "scripts/liveness-diag.ts",
+    "scripts/ws-diag.ts",
+    "scripts/ws-ladder.ts"
   ]
 }

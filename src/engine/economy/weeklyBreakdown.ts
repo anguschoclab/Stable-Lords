@@ -32,6 +32,11 @@ import {
   WEATHER_ECONOMICS,
   computeFightEconomics,
 } from '@/constants/economy';
+import {
+  AI_PRESTIGE_FREE_TREASURY,
+  AI_PRESTIGE_RATE,
+  AI_PRESTIGE_CAP_RATE,
+} from '@/constants/ai';
 import { getArenaById } from '@/data/arenas';
 
 /**
@@ -65,6 +70,13 @@ export interface StableEconomyInput {
   trainingAssignments: TrainingAssignment[];
   applyStipend?: boolean;
   isPlayer?: boolean;
+  /**
+   * Current treasury — used only for the AI prestige-upkeep sink. Rival
+   * stables pass it so wealthy stables pay proportional facilities costs;
+   * omitted for the player (the player pays prestige upkeep through their
+   * own discretionary spending, not an automatic levy).
+   */
+  treasury?: number;
 }
 
 function arenaTier(arenaId?: string): 1 | 2 | 3 {
@@ -252,6 +264,26 @@ function buildExpenses(input: StableEconomyInput): BreakdownItem[] {
       amount: trainingCount * TRAINING_COST,
       category: 'training',
     });
+
+  // AI prestige upkeep: wealthy rival stables spend proportionally on
+  // facilities, retainers, and patron feasts. This is the equilibrating sink
+  // that keeps rival treasuries from growing linearly forever — net cost
+  // rises with wealth and is hard-capped so it can never bankrupt a stable
+  // in a single week.
+  if (!input.isPlayer && (input.treasury ?? 0) > AI_PRESTIGE_FREE_TREASURY) {
+    const treasury = input.treasury ?? 0;
+    const prestige = Math.min(
+      Math.floor((treasury - AI_PRESTIGE_FREE_TREASURY) * AI_PRESTIGE_RATE),
+      Math.floor(treasury * AI_PRESTIGE_CAP_RATE)
+    );
+    if (prestige > 0) {
+      expenses.push({
+        label: 'Stable prestige & facilities upkeep',
+        amount: prestige,
+        category: 'upkeep',
+      });
+    }
+  }
 
   return expenses;
 }

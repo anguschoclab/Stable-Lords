@@ -3,6 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { StateImpact } from '@/engine/impacts';
 import {
   BANKRUPTCY_THRESHOLD,
+  BANKRUPTCY_GRACE_WEEKS,
   MIN_BANKRUPTCY_ROSTER,
   DEBT_FLOOR,
   EMERGENCY_LOAN,
@@ -25,8 +26,13 @@ export const BankruptcyService = {
     const updatedState = { ...state };
     const bankruptStables: string[] = [];
 
+    const now = state.absoluteWeek ?? state.week;
     updatedState.rivals = updatedState.rivals.filter((rival) => {
       if (rival.treasury < BANKRUPTCY_THRESHOLD) {
+        // Same grace as the weekly path: a stable younger than
+        // BANKRUPTCY_GRACE_WEEKS is still ramping and does not fold.
+        const stableAge = now - (rival.establishedAbsoluteWeek ?? 0);
+        if (stableAge < BANKRUPTCY_GRACE_WEEKS) return true;
         bankruptStables.push(rival.owner.stableName);
         return false;
       }

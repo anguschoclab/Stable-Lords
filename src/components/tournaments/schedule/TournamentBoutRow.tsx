@@ -9,15 +9,16 @@ interface TournamentBoutRowProps {
   bout: TournamentBout;
   state: NameResolutionState;
   round: number;
+  totalRounds?: number;
 }
 
 /**
  *
  */
-export function TournamentBoutRow({ bout, state, round: _round }: TournamentBoutRowProps) {
+export function TournamentBoutRow({ bout, state, round: _round, totalRounds }: TournamentBoutRowProps) {
   const isBye = isByeMatch(bout);
   const isResolved = bout.winner !== undefined;
-  const bronze = isBronzeMatch(bout);
+  const bronze = isBronzeMatch(bout, totalRounds);
 
   return (
     <div

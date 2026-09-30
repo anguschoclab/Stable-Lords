@@ -73,12 +73,18 @@ export function applyAgePenalty(
 
 /**
  * Check whether a warrior should be forcibly retired based on age and RNG.
+ *
+ * Reigning champions defer the probabilistic window — the crown keeps them
+ * fighting (mirroring the seasonal-churn deferral in
+ * seasonalRetirementService). The hard cap at FORCED_RETIRE_MAX still
+ * applies: the body gives out even under a crown.
  */
 export function checkForcedRetirement(
   currentAge: number,
   isPlayer: boolean,
   rng: IRNGService,
-  warriorName: string
+  warriorName: string,
+  isChampion = false
 ): { retired: boolean; ageEvent?: string } {
   if (currentAge >= FORCED_RETIRE_MAX) {
     return {
@@ -89,7 +95,7 @@ export function checkForcedRetirement(
     };
   }
 
-  if (currentAge >= FORCED_RETIRE_MIN) {
+  if (currentAge >= FORCED_RETIRE_MIN && !isChampion) {
     const retireChance =
       ((currentAge - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN)) * 0.15;
     if (rng.next() < retireChance) {
@@ -126,14 +132,16 @@ function processWarriorAging(
   _rivalId: string | undefined,
   state: GameState,
   rng: IRNGService,
-  isAgeTick: boolean
+  isAgeTick: boolean,
+  isChampion = false
 ): AgingResult {
   const { currentAge, update, ageEvent: penaltyEvent } = applyAgePenalty(w, isAgeTick, isPlayer);
   const { retired, ageEvent: retireEvent } = checkForcedRetirement(
     currentAge,
     isPlayer,
     rng,
-    w.name
+    w.name,
+    isChampion
   );
 
   if (retired) {
@@ -170,8 +178,24 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
 
   const isAgeTick = state.week % WEEKS_PER_YEAR === 0;
 
+  // Reigning champions defer the probabilistic retirement window — the same
+  // rule the seasonal retirement service applies to its own churn path.
+  const championIds = new Set(
+    Object.values(state.arenaChampions ?? {})
+      .map((t) => t.champion?.warriorId)
+      .filter((id): id is NonNullable<typeof id> => id != null)
+  );
+
   for (const { w, isPlayer, rivalId } of allWarriors) {
-    const result = processWarriorAging(w, isPlayer, rivalId, state, rng, isAgeTick);
+    const result = processWarriorAging(
+      w,
+      isPlayer,
+      rivalId,
+      state,
+      rng,
+      isAgeTick,
+      championIds.has(w.id)
+    );
 
     if (result.ageEvent) {
       ageEvents.push(result.ageEvent);

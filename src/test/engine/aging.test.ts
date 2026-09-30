@@ -7,6 +7,7 @@ import { SeededRNGService } from '@/utils/random';
 import {
   makeGameState as fixtureGameState,
   makeComputedWarrior as fixtureComputedWarrior,
+  makeRival as fixtureRival,
 } from '@/test/_fixtures/factories';
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
@@ -154,5 +155,79 @@ describe('computeAgingImpact — forced retirement', () => {
     const newState = resolveImpacts(state, [impact]);
 
     expect(newState.roster.length).toBe(1);
+  });
+});
+
+describe('computeAgingImpact — champion deferral', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const reigningState = (w: Warrior, onRivalRoster: boolean): GameState =>
+    fixtureGameState({
+      meta: { gameName: 'Test', version: '1.0', createdAt: '' },
+      ftueComplete: true,
+      player: { id: 'p1', name: 'Player', stableName: 'Stable', fame: 0, renown: 0, titles: 0 },
+      treasury: 0,
+      week: 12,
+      roster: onRivalRoster ? [] : [w],
+      rivals: onRivalRoster
+        ? [fixtureRival({ id: 'r1' as any, roster: [w] })]
+        : [],
+      arenaChampions: {
+        arena_1: {
+          champion: {
+            warriorId: w.id,
+            startedAbsoluteWeek: 1,
+            defenses: 0,
+            lastActivityWeek: 1,
+          },
+          status: 'active',
+          history: [],
+          refusals: 0,
+          deferrals: 0,
+          noContenderStreak: 0,
+          declinedContenders: {},
+        },
+      },
+      recruitPool: [],
+      phase: 'Planning',
+      isFTUE: false,
+    } as any);
+
+  it('defers a reigning player champion through the probabilistic window', () => {
+    // Age 29, roll 0.01 → a non-champion retires; a reigning champion does not.
+    const w = makeWarrior('champ', 29);
+    const state = reigningState(w, false);
+    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
+    const rng = new SeededRNGService(state.week * 997 + 3);
+    const impact = computeAgingImpact(state, rng);
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.retired.length).toBe(0);
+    expect(newState.roster.length).toBe(1);
+  });
+
+  it('defers a reigning rival champion through the probabilistic window', () => {
+    const w = makeWarrior('rchamp', 29);
+    const state = reigningState(w, true);
+    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
+    const rng = new SeededRNGService(state.week * 997 + 3);
+    const impact = computeAgingImpact(state, rng);
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.retired.length).toBe(0);
+    expect(newState.rivals[0]!.roster.length).toBe(1);
+  });
+
+  it('still forces a reigning champion at FORCED_RETIRE_MAX', () => {
+    const w = makeWarrior('oldchamp', 32);
+    const state = reigningState(w, true);
+    const rng = new SeededRNGService(state.week * 997 + 3);
+    const impact = computeAgingImpact(state, rng);
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.retired.length).toBe(1);
+    expect(newState.rivals[0]!.roster.length).toBe(0);
   });
 });

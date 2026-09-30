@@ -5,7 +5,7 @@
  * Pipeline: offerProcessor (rivalStrategy) marks the ownerless champion's
  * response Declined+voided → resolveImpacts swaps the bankrupt stable for
  * its successor → sweepTitleRefusals records NO refusal → next tick
- * enforceVacancies ends the reign 'retired' — never 'stripped'.
+ * enforceVacancies ends the reign 'displaced' — never 'stripped'.
  */
 import { describe, it, expect } from 'vitest';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
@@ -94,7 +94,7 @@ describe('dissolved-stable champion — offer voids instead of refusing', () => 
     enforceVacancies(resolved, delta2);
     const retired = delta2.arenaChampions[arenaId]!;
     expect(retired.champion).toBeNull();
-    expect(retired.history[0]!.endReason).toBe('retired');
+    expect(retired.history[0]!.endReason).toBe('displaced');
     expect(retired.history[0]!.warriorId).toBe('w-champ');
   });
 });

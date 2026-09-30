@@ -67,6 +67,35 @@ function checkRosterIntegrity(state: GameState, out: InvariantViolation[]): void
   }
 }
 
+/**
+ * Graveyard coherence: a dead warrior must never remain on any roster. The
+ * weekly-bout pipeline once left rival victims Active on their stable's
+ * roster — they kept fighting, were "killed" repeatedly, and could even be
+ * crowned posthumously before the vacancy sweep noticed.
+ */
+function checkGraveyardCoherence(state: GameState, out: InvariantViolation[]): void {
+  const deadIds = new Set((state.graveyard ?? []).map((w) => w.id));
+  if (deadIds.size === 0) return;
+  for (const w of state.roster ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({
+        id: 'graveyard-roster-disjoint',
+        message: `dead warrior ${w.id} still on player roster`,
+      });
+    }
+  }
+  for (const r of state.rivals ?? []) {
+    for (const w of r.roster ?? []) {
+      if (deadIds.has(w.id)) {
+        out.push({
+          id: 'graveyard-roster-disjoint',
+          message: `dead warrior ${w.id} still on rival ${r.id} roster`,
+        });
+      }
+    }
+  }
+}
+
 /** Treasury / ledger sanity. */
 function checkFinances(state: GameState, out: InvariantViolation[]): void {
   if (typeof state.treasury === 'number' && Number.isNaN(state.treasury)) {
@@ -134,6 +163,7 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
   const out: InvariantViolation[] = [];
 
   checkRosterIntegrity(state, out);
+  checkGraveyardCoherence(state, out);
   checkFinances(state, out);
   checkCacheCoherence(state, out);
 
@@ -161,6 +191,7 @@ const END_REASONS: ReadonlySet<ArenaReignEndReason> = new Set([
   'retired',
   'stripped',
   'relinquished',
+  'displaced',
 ]);
 
 /**

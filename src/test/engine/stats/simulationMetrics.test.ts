@@ -68,6 +68,7 @@ describe('simulationMetrics', () => {
         retiredCount: 3,
         rivalCount: 3,
         avgRivalTreasury: 2000,
+        medianRivalTreasury: 2000,
         totalBouts: 2,
         ...ZERO_TRAIT_FIELDS,
         ...ZERO_AI_FIELDS,
@@ -104,6 +105,27 @@ describe('simulationMetrics', () => {
 
       expect(pulse.avgRivalTreasury).toBe(1167);
     });
+
+    it('should compute median rival treasury for odd and even counts', () => {
+      mockState.rivals = [
+        { treasury: 100 } as RivalStableData,
+        { treasury: 5000 } as RivalStableData,
+        { treasury: 300 } as RivalStableData,
+      ];
+      expect(collectPulse(mockState).medianRivalTreasury).toBe(300);
+
+      mockState.rivals = [
+        { treasury: 100 } as RivalStableData,
+        { treasury: 5000 } as RivalStableData,
+        { treasury: 300 } as RivalStableData,
+        { treasury: 200 } as RivalStableData,
+      ];
+      // sorted [100,200,300,5000] → median (200+300)/2 = 250 — median is
+      // robust where the 5000 outlier drags the mean to 1400.
+      const pulse = collectPulse(mockState);
+      expect(pulse.medianRivalTreasury).toBe(250);
+      expect(pulse.avgRivalTreasury).toBe(1400);
+    });
   });
 
   describe('formatPulseTable', () => {
@@ -120,6 +142,7 @@ describe('simulationMetrics', () => {
         retiredCount: 1,
         rivalCount: 2,
         avgRivalTreasury: 3000,
+        medianRivalTreasury: 3000,
         totalBouts: 5,
         ...ZERO_TRAIT_FIELDS,
         ...ZERO_AI_FIELDS,
@@ -146,6 +169,7 @@ describe('simulationMetrics', () => {
           retiredCount: 0,
           rivalCount: 4,
           avgRivalTreasury: 1500,
+          medianRivalTreasury: 1500,
           totalBouts: 0,
           ...ZERO_TRAIT_FIELDS,
           ...ZERO_AI_FIELDS,
@@ -158,6 +182,7 @@ describe('simulationMetrics', () => {
           retiredCount: 2,
           rivalCount: 3,
           avgRivalTreasury: 4200,
+          medianRivalTreasury: 4200,
           totalBouts: 50,
           ...ZERO_TRAIT_FIELDS,
           ...ZERO_AI_FIELDS,

@@ -6,7 +6,7 @@ import { resolveRng } from '@/utils/random';
 import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import { aiRosterMin } from '@/constants/ai';
-import { isActive } from '@/engine/warrior/warriorStatus';
+import { isActive, isRetired } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { filterActive } from '@/utils/roster';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
@@ -21,20 +21,28 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
  */
 /**
  * Runs the culling/retirement pass for a single rival, mutates the cloned
- * rival `r`, and appends gazette items. Returns the cull count.
+ * rival `r`, and appends gazette items. Returns the cull count and pushes
+ * each culled warrior into `retiredWarriors` so the caller can route them
+ * to `state.retired` — culled warriors leave a record, they don't vanish.
+ * Reigning champions are never culled: the crown protects them from
+ * personality and liability cuts alike (voluntary exits flow through the
+ * relinquish path).
  */
 function cullRivalRoster(
   r: RivalStableData,
   state: GameState,
   isOnWinStreak: (w: Warrior) => boolean,
   rngSnapshot: IRNGService,
-  gazetteItems: string[]
+  gazetteItems: string[],
+  retiredWarriors: Warrior[],
+  championIds: Set<string>
 ): number {
   const personality = r.owner.personality ?? 'Pragmatic';
   let culledThisTick = 0;
 
   const retire = (w: Warrior) => {
     Object.assign(w, retireWithHonors(w, state.week));
+    retiredWarriors.push({ ...w });
     culledThisTick++;
   };
 
@@ -50,7 +58,8 @@ function cullRivalRoster(
       retire,
       gazetteItems,
       (c) =>
-        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`
+        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`,
+      championIds
     );
   }
 
@@ -66,7 +75,8 @@ function cullRivalRoster(
       retire,
       gazetteItems,
       (c) =>
-        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`
+        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`,
+      championIds
     );
   }
 
@@ -84,14 +94,18 @@ function cullRivalRoster(
     isOnWinStreak,
     retire,
     gazetteItems,
-    (c) => `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`
+    (c) => `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`,
+    championIds
   );
 
   // Age-based retirement
-  const elderly = r.roster.filter((w) => isActive(w) && (w.age ?? 18) >= 30);
+  const elderly = r.roster.filter(
+    (w) => isActive(w) && !championIds.has(w.id) && (w.age ?? 18) >= 30
+  );
   for (const old of elderly.slice(0, 1)) {
     if (rngSnapshot.next() < 0.15) {
       Object.assign(old, retireWithHonors(old, state.week));
+      retiredWarriors.push({ ...old });
       gazetteItems.push(
         `🏠 ${warriorDisplayName(old)} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
       );
@@ -101,16 +115,19 @@ function cullRivalRoster(
   return culledThisTick;
 }
 
-/** Retire the first active, non-streaking warrior matching `matches`; log it. */
+/** Retire the first active, non-streaking, non-champion warrior matching `matches`; log it. */
 function cullWhere(
   r: RivalStableData,
   matches: (w: Warrior) => boolean,
   isOnWinStreak: (w: Warrior) => boolean,
   retire: (w: Warrior) => void,
   gazetteItems: string[],
-  describe: (w: Warrior) => string
+  describe: (w: Warrior) => string,
+  championIds: Set<string>
 ): void {
-  const candidates = r.roster.filter((w) => isActive(w) && !isOnWinStreak(w) && matches(w));
+  const candidates = r.roster.filter(
+    (w) => isActive(w) && !isOnWinStreak(w) && !championIds.has(w.id) && matches(w)
+  );
   for (const c of candidates.slice(0, 1)) {
     retire(c);
     gazetteItems.push(describe(c));
@@ -128,9 +145,19 @@ function cullWhere(
 export function processAIRosterManagement(
   state: GameState,
   rng?: IRNGService
-): { updatedRivals: RivalStableData[]; gazetteItems: string[] } {
+): { updatedRivals: RivalStableData[]; gazetteItems: string[]; retiredWarriors: Warrior[] } {
   const rngSnapshot = resolveRng(rng, (state.absoluteWeek ?? state.week) * 7919 + 101);
   const gazetteItems: string[] = [];
+  const retiredWarriors: Warrior[] = [];
+
+  // Reigning champions are immune to culling — a stable does not cut its
+  // titleholder. (Same deferral rule as agingSystem/seasonalRetirementService.)
+  const championIds = new Set(
+    Object.values(state.arenaChampions ?? {})
+      .map((t) => t.champion?.warriorId)
+      .filter((id): id is NonNullable<typeof id> => id != null)
+  );
+
   const updatedRivals = (state.rivals || []).map((rival) => {
     const r = {
       ...rival,
@@ -155,7 +182,15 @@ export function processAIRosterManagement(
     };
 
     // 1) Retirement / Culling Logic
-    const culledThisTick = cullRivalRoster(r, state, isOnWinStreak, rngSnapshot, gazetteItems);
+    const culledThisTick = cullRivalRoster(
+      r,
+      state,
+      isOnWinStreak,
+      rngSnapshot,
+      gazetteItems,
+      retiredWarriors,
+      championIds
+    );
 
     // 2) Recruitment flag — signing is unified in aiDraftFromPool /
     // processRecruitment (G9). Management only declares the need; the draft
@@ -168,9 +203,19 @@ export function processAIRosterManagement(
     r.needsRecruit =
       currentActive < aiRosterMin(personality) && culledThisTick === 0 && intent !== 'RECOVERY';
 
+    // Preserve every warrior leaving the roster in a Retired state —
+    // culls from this pass plus retirements applied upstream (seasonal churn,
+    // aging) that were sitting on the roster with status 'Retired'. Without
+    // this, retired warriors silently vanish instead of reaching
+    // state.retired.
+    const seen = new Set(retiredWarriors.map((w) => w.id));
+    for (const w of r.roster) {
+      if (isRetired(w) && !seen.has(w.id)) retiredWarriors.push(w);
+    }
+
     r.roster = filterActive(r.roster);
     return r;
   });
 
-  return { updatedRivals, gazetteItems };
+  return { updatedRivals, gazetteItems, retiredWarriors };
 }

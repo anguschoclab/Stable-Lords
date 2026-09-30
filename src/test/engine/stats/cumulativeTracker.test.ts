@@ -156,3 +156,33 @@ describe('createCumulativeTracker', () => {
     expect(s2.totalBouts).toBe(1);
   });
 });
+
+describe('weekly vs tournament bout split', () => {
+  it('splits bouts and kill outcomes by tournamentId', () => {
+    const state = createFreshState('tracker-split');
+    state.arenaHistory = [
+      makeBout({ by: 'Kill' }),                                     // weekly kill
+      makeBout({ by: 'KO' }),                                       // weekly non-kill
+      makeBout({ by: 'Kill', tournamentId: 't1' as never }),        // tournament kill
+      makeBout({ by: 'Decision', tournamentId: 't1' as never }),    // tournament non-kill
+    ];
+
+    const s = createCumulativeTracker(state).snapshot();
+
+    expect(s.totalBouts).toBe(4);
+    expect(s.weeklyBouts).toBe(2);
+    expect(s.weeklyKills).toBe(1);
+    expect(s.tournamentBouts).toBe(2);
+    expect(s.tournamentKills).toBe(1);
+  });
+
+  it('exhaustion draws still count toward the per-class totals', () => {
+    const state = createFreshState('tracker-draw');
+    state.arenaHistory = [
+      makeBout({ winner: null, by: 'Exhaustion' as FightSummary['by'] }),
+    ];
+    const s = createCumulativeTracker(state).snapshot();
+    expect(s.weeklyBouts).toBe(1);
+    expect(s.weeklyKills).toBe(0);
+  });
+});

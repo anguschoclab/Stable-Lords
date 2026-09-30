@@ -13,6 +13,8 @@ import { setMockIdGenerator } from '../src/utils/idUtils';
 import { engineEventBus } from '../src/engine/core/EventBus';
 import { NewsletterFeed } from '../src/engine/newsletter/feed';
 import { TRAITS } from '../src/engine/traits';
+import { getStyleDefaultLoadout } from '../src/data/equipment';
+import { veteranSigningPatch } from '../src/engine/recruitment/recruitment';
 import type { GameState } from '../src/types/state.types';
 import type { Warrior } from '../src/types/warrior.types';
 
@@ -80,7 +82,9 @@ async function main() {
       }
     });
 
-    state = await advanceWeek(state);
+    // The loop owns the state exclusively — mutableInput skips the per-week
+    // structuredClone (~2× faster; same contract as simulation-harness).
+    state = await advanceWeek(state, { mutableInput: true });
 
     // Non-headless weeks append a full transcript per bout to
     // deferredBoutLogs — drain weekly so the 52-week loop stays bounded
@@ -89,7 +93,22 @@ async function main() {
 
     // keep player alive so the sim doesn't stall (auto-recruit on empty)
     if (state.roster.length === 0 && state.recruitPool.length > 0) {
-      state.roster.push({ ...state.recruitPool[0] } as Warrior);
+      const recruit = state.recruitPool[0];
+      state.roster.push({
+        ...recruit,
+        id: recruit.id as Warrior['id'],
+        fame: 0,
+        popularity: 0,
+        titles: [],
+        injuries: [],
+        flair: [],
+        career: { wins: 0, losses: 0, kills: 0 },
+        champion: false,
+        status: 'Active',
+        equipment: getStyleDefaultLoadout(recruit.style),
+        stableId: state.player?.id,
+        ...veteranSigningPatch(recruit),
+      });
       state.recruitPool.shift();
     }
 

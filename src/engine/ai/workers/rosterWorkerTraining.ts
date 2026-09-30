@@ -29,6 +29,12 @@ import {
 import { rollTraitTraining, TRAIT_CAP } from '@/engine/training/trainingGains/traitTraining';
 import { assessBurnRisks } from '@/engine/training/burnAnalysis';
 import { policyFor } from '@/engine/ai/traitPolicy';
+import {
+  AI_TRAIT_DEV_COST,
+  AI_TRAIT_DEV_RESERVE,
+  AI_TRAIT_DEV_WEALTH_TREASURY,
+  AI_TRAIT_DEV_WEALTH_APPETITE_MULT,
+} from '@/constants/ai';
 import type { Trainer } from '@/types/shared.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
@@ -221,18 +227,36 @@ export function performAISkillDrill(
 }
 
 /**
+ * Weekly training-slot limit for AI stables, banded by treasury so wealth
+ * translates into a real (and costly) training program rather than sitting
+ * idle: ≤500 → 1 slot, ≤2k → 3, ≤10k → 5, else → 8.
+ */
+export function aiTrainingLimit(treasury: number): number {
+  if (treasury <= 500) return 1;
+  if (treasury <= 2_000) return 3;
+  if (treasury <= 10_000) return 5;
+  return 8;
+}
+
+/**
  * Trait development pass for AI stables — per active warrior, with probability
  * trainAppetite (gated by treasury), resolve one rollTraitTraining against a
  * synthetic trainer at the policy ceiling.
+ *
+ * Development hours cost AI_TRAIT_DEV_COST per attempted roll, whether or not
+ * the roll produces a trait — the stable is paying coaches for the time.
+ * Spending stops at AI_TRAIT_DEV_RESERVE so development can never push a
+ * stable toward bankruptcy, and stables above AI_TRAIT_DEV_WEALTH_TREASURY
+ * run a premium program (appetite × AI_TRAIT_DEV_WEALTH_APPETITE_MULT).
  */
 export function processTraitDevelopment(
   roster: Warrior[],
   treasury: number,
   ownerPersonality: OwnerPersonality | undefined,
   rng: IRNGService
-): Warrior[] {
+): { roster: Warrior[]; spent: number } {
   const traitPolicy = policyFor(ownerPersonality);
-  if (treasury <= 300) return roster;
+  if (treasury <= AI_TRAIT_DEV_RESERVE) return { roster, spent: 0 };
 
   const aiTrainer: Trainer = {
     id: 'ai',
@@ -244,15 +268,24 @@ export function processTraitDevelopment(
     contractWeeksLeft: 99,
   };
 
-  return roster.map((w) => {
+  const appetiteScale =
+    treasury > AI_TRAIT_DEV_WEALTH_TREASURY ? AI_TRAIT_DEV_WEALTH_APPETITE_MULT : 1;
+  let spent = 0;
+
+  const developed = roster.map((w) => {
     if (!isActive(w)) return w;
     const traits = w.traits ?? [];
     if (traits.length >= TRAIT_CAP) return w;
 
     const canDevelop = meritsTraitDevelopment(w) && traits.length < traitCapacity(w);
     if (canDevelop) {
-      const devChance = Math.max(traitPolicy.trainAppetite, QUALIFIED_DEV_APPETITE);
+      if (treasury - spent <= AI_TRAIT_DEV_RESERVE) return w;
+      const devChance = Math.min(
+        1,
+        Math.max(traitPolicy.trainAppetite, QUALIFIED_DEV_APPETITE) * appetiteScale
+      );
       if (rng.next() > devChance) return w;
+      spent += AI_TRAIT_DEV_COST;
       const roll = rollTraitTraining(w, aiTrainer, rng);
       if (roll.outcome !== 'none' && roll.traitId) {
         return { ...w, traits: [...traits, roll.traitId] };
@@ -267,4 +300,5 @@ export function processTraitDevelopment(
     }
     return w;
   });
+  return { roster: developed, spent };
 }

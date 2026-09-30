@@ -223,13 +223,17 @@ function seedNextRound(
     }
   }
 
-  // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
-  if (currentRound === 5 && losers.length === 2) {
+  // 🥉 Bronze Match Injection: the just-resolved round was the semi-final iff
+  // it produced exactly 2 winners (who meet in the final) AND 2 losers (who
+  // playoff for third). Works for any bracket size — 64-man (semis at round
+  // 5), 8-man (round 2), 4-man (round 1) — and byes never reach `losers`, so
+  // an irregular 3-man "semifinal" yields one loser and no playoff.
+  if (winners.length === 2 && losers.length === 2) {
     const bA = losers[0];
     const bD = losers[1];
     if (bA && bD) {
       const bronzeBout: TournamentBout = {
-        round: 6, // Bronze Match happens alongside the Finals
+        round: nextRound, // Bronze Match happens alongside the Finals
         matchIndex: 1, // Finals is index 0
         warriorIdA: bA.id,
         warriorIdD: bD.id,

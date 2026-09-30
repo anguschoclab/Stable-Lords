@@ -17,13 +17,30 @@ describe('tournamentHelpers', () => {
     }) as unknown as TournamentBout;
 
   describe('isBronzeMatch', () => {
-    it('returns true when round is 6 and matchIndex is 1', () => {
-      expect(isBronzeMatch(t(6, 1))).toBe(true);
+    it('honours the explicit flag regardless of position', () => {
+      expect(isBronzeMatch({ ...t(3, 2), isBronzeMatch: true })).toBe(true);
+      expect(isBronzeMatch({ ...t(6, 1), isBronzeMatch: true }, 6)).toBe(true);
     });
 
-    it('returns false for other rounds and match indices', () => {
-      expect(isBronzeMatch(t(6, 0))).toBe(false);
-      expect(isBronzeMatch(t(5, 1))).toBe(false);
+    it('treats an explicit false flag as authoritative', () => {
+      expect(isBronzeMatch({ ...t(6, 1), isBronzeMatch: false }, 6)).toBe(false);
+    });
+
+    it('accepts the legacy positional slot only in the championship round', () => {
+      expect(isBronzeMatch(t(6, 1), 6)).toBe(true);
+      // 7-round bracket: a round-6 slot-1 bout is a semi-final, not bronze (M6)
+      expect(isBronzeMatch(t(6, 1), 7)).toBe(false);
+    });
+
+    it('rejects byes and non-final positions in the positional slot', () => {
+      expect(isBronzeMatch(t(6, 1, 'bye'), 6)).toBe(false);
+      expect(isBronzeMatch(t(6, 0), 6)).toBe(false);
+      expect(isBronzeMatch(t(5, 1), 6)).toBe(false);
+    });
+
+    it('is flag-only when no finals round is known', () => {
+      expect(isBronzeMatch(t(6, 1))).toBe(false);
+      expect(isBronzeMatch({ ...t(6, 1), isBronzeMatch: true })).toBe(true);
     });
   });
 

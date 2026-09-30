@@ -136,3 +136,34 @@ describe('validateArenaChampions', () => {
     expect(validateArenaChampions(state)).toEqual([]);
   });
 });
+
+describe('graveyard ↔ roster disjointness', () => {
+  it('flags a dead warrior still on a rival roster', () => {
+    const dead = makeWarrior({ id: 'dead-1' as WarriorId });
+    const state = makeGameState({
+      graveyard: [dead],
+      rivals: [makeRival({ id: 'r1' as StableId, roster: [dead] })],
+    });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'graveyard-roster-disjoint')).toBe(true);
+  });
+
+  it('flags a dead warrior still on the player roster', () => {
+    const dead = makeWarrior({ id: 'dead-2' as WarriorId });
+    const state = makeGameState({ graveyard: [dead], roster: [dead] });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'graveyard-roster-disjoint')).toBe(true);
+  });
+
+  it('passes when graveyard and rosters are disjoint', () => {
+    const dead = makeWarrior({ id: 'dead-3' as WarriorId });
+    const alive = makeWarrior({ id: 'alive-1' as WarriorId });
+    const state = makeGameState({
+      graveyard: [dead],
+      rivals: [makeRival({ id: 'r1' as StableId, roster: [alive] })],
+      arenaChampions: {},
+    });
+    const v = validateStateInvariants(state);
+    expect(v.filter((x) => x.id === 'graveyard-roster-disjoint')).toEqual([]);
+  });
+});

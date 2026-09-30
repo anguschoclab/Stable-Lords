@@ -238,6 +238,10 @@ export interface RivalStableData {
   strategy?: AIStrategy;
   agentMemory?: AIAgentMemory;
   actionHistory?: AIEvent[];
+  /** Absolute week this stable entered the world (world-seeded stables are
+   *  undefined/0; successor stables minted mid-run carry their mint week so
+   *  liveness checks don't flag a stable that has had no week to act). */
+  establishedAbsoluteWeek?: number;
   motto?: string;
   origin?: string;
   philosophy?: string;

@@ -9,7 +9,7 @@ import { SeededRNGService } from '@/utils/random';
 import { formatDateOfDeath } from '@/utils/format';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { StateImpact } from '@/engine/impacts';
-import { patchRivalWarrior } from './warriorRouting';
+import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
 import { weekToTimestamp } from '@/constants';
 
 /**
@@ -202,7 +202,10 @@ export function handleDeath(
   }
 
   const victim = outcome.winner === 'A' ? wD : wA;
-  const isPlayerVictim = outcome.winner === 'A' && !!rivalStableId ? false : outcome.winner !== 'A';
+  // Ownership, not side: the victim may sit on either side of the pairing and
+  // `rivalStableId` only ever names the D-side stable. AI-vs-AI deaths granted
+  // the player +5 fame, and player victims on the D side never flagged.
+  const isPlayerVictim = isPlayerOwned(s, victim);
 
   const { narrative, graveyardEntry } = buildDeathArtifacts(
     s,

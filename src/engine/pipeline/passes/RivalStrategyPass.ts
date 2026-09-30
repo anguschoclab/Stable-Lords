@@ -165,7 +165,11 @@ function finishRivalPass(
   // `needsRecruit` so the unified draft below can fill same-tick (G9).
   const rosterSeed = state.absoluteWeek * 13 + 7;
   const rosterRng = new SeededRNGService(rosterSeed);
-  const { updatedRivals: managedRivals, gazetteItems: rosterGazette } = processAIRosterManagement(
+  const {
+    updatedRivals: managedRivals,
+    gazetteItems: rosterGazette,
+    retiredWarriors,
+  } = processAIRosterManagement(
     {
       ...state,
       week: nextWeek,
@@ -176,6 +180,9 @@ function finishRivalPass(
   );
   globalGazetteItems.push(...rosterGazette);
   currentRivals = managedRivals;
+  // Culled warriors must land in `state.retired` — without this they vanish
+  // from the world entirely (and the vacancy phase can only guess 'retired').
+  if (retiredWarriors.length > 0) impacts.push({ retired: retiredWarriors });
 
   // 3. Draft from Recruitment Pool — sole signing path; honors needsRecruit.
   const draft = aiDraftFromPool(state.recruitPool, currentRivals, nextWeek, state);

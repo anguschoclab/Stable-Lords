@@ -355,10 +355,13 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     );
     expect(r1Bouts.every((b: TournamentBout) => b.winner !== undefined)).toBe(true);
 
+    // A 4-man round-1 IS the semifinal, so round 2 carries the finals bout
+    // plus the flagged bronze playoff (M6 small-bracket fix).
     const r2Bouts = updatedState.tournaments[0]!.bracket.filter(
       (b: TournamentBout) => b.round === 2
     );
-    expect(r2Bouts.length).toBe(1);
+    expect(r2Bouts.length).toBe(2);
+    expect(r2Bouts.filter((b: TournamentBout) => b.isBronzeMatch)).toHaveLength(1);
   });
 
   it('handles bye matches', () => {
@@ -1103,6 +1106,55 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
     const champId = finals!.winner === 'A' ? finals!.warriorIdA : finals!.warriorIdD;
     const champWarrior = warriors.find((w) => w.id === champId);
     expect(tour.champion).toBe(champWarrior?.name);
+  });
+
+  it('8-man bracket still produces a flagged bronze playoff (M6 small brackets)', () => {
+    vi.mocked(simulateFight).mockReturnValue(stopOutcome as any);
+    const warriors = makeBracketWarriors(8);
+    let state = makeBracketState(warriors);
+    let tour = state.tournaments[0]!;
+
+    for (let i = 0; i < 10 && !tour.completed; i++) {
+      const res = resolveRound(state, tour.id, 4000 + i, true, tour);
+      state = res.updatedState;
+      tour = res.updatedTournament ?? tour;
+    }
+
+    // R1 quarters (4) → R2 semis (2) → R3 finals + bronze = 8 bouts.
+    expect(tour.bracket.length).toBe(8);
+    expect(tour.completed).toBe(true);
+
+    const bronze = tour.bracket.find((b: TournamentBout) => b.isBronzeMatch);
+    expect(bronze).toBeDefined();
+    expect(bronze!.round).toBe(3);
+    expect(bronze!.matchIndex).toBe(1);
+    expect(bronze!.winner).toBeDefined();
+    // The bronze playoff must not feed a phantom extra round.
+    expect(tour.bracket.some((b: TournamentBout) => b.round > 3)).toBe(false);
+  });
+
+  it('4-man bracket (semis in round 1) still produces bronze + awards 3rd', () => {
+    vi.mocked(simulateFight).mockReturnValue(stopOutcome as any);
+    const warriors = makeBracketWarriors(4);
+    let state = makeBracketState(warriors);
+    let tour = state.tournaments[0]!;
+
+    for (let i = 0; i < 10 && !tour.completed; i++) {
+      const res = resolveRound(state, tour.id, 5000 + i, true, tour);
+      state = res.updatedState;
+      tour = res.updatedTournament ?? tour;
+    }
+
+    // R1 semis (2) → R2 finals + bronze = 4 bouts.
+    expect(tour.bracket.length).toBe(4);
+    expect(tour.completed).toBe(true);
+    const bronze = tour.bracket.find((b: TournamentBout) => b.isBronzeMatch);
+    expect(bronze).toBeDefined();
+    const bronzeWinner =
+      bronze!.winner === 'A' ? bronze!.warriorIdA : bronze!.warriorIdD;
+    const podium = state.rivals[0]!.roster.concat(state.roster);
+    const third = podium.find((w: Warrior) => w.id === bronzeWinner);
+    expect(third?.career.medals?.bronze).toBe(1);
   });
 
   it('prizes land on NPC winners — rival stable gets purse + fame + token effects', () => {

@@ -285,6 +285,20 @@ describe('enforceVacancies', () => {
     expect(effTitle(state, delta, arenaId)!.champion).toBeNull();
     expect(effTitle(state, delta, arenaId)!.history[0]!.endReason).toBe('retired');
   });
+
+  it('ends the reign as displaced (not retired) when the champion vanished with a folded stable', () => {
+    // The champion is nowhere: not on any roster, not retired, not dead.
+    // Their stable folded and they left as a free agent — 'retired' would be
+    // a lie about why the crown opened.
+    const state = makeGameState({
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-gone') },
+    });
+    const delta = createChampionshipDelta();
+    enforceVacancies(state, delta);
+    const title = effTitle(state, delta, arenaId)!;
+    expect(title.champion).toBeNull();
+    expect(title.history[0]!.endReason).toBe('displaced');
+  });
 });
 
 // ─── Result resolution ──────────────────────────────────────────────────────

@@ -19,6 +19,7 @@ import {
   performAITraining,
   performAISkillDrill,
   processTraitDevelopment,
+  aiTrainingLimit,
 } from './rosterWorkerTraining';
 import { applyGearUpgrade } from './rosterWorkerEquipment';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
@@ -69,7 +70,7 @@ function runAITraining(
       .filter((a) => a.type === 'recovery')
       .map((a) => a.warriorId)
   );
-  const trainingLimit = rival.treasury > 500 ? 3 : 1;
+  const trainingLimit = aiTrainingLimit(rival.treasury);
   const { champions, nonChampions } = rival.roster.reduce(
     (acc, w) => {
       if (!isActive(w) || (w.injuries ?? []).length > 0) return acc;
@@ -190,13 +191,26 @@ export function processRoster(
 
   runAITraining(updatedRival, season, healingBonus, rngService);
 
-  // 1b. Trait Development — delegates to processTraitDevelopment in rosterWorkerTraining.
-  updatedRival.roster = processTraitDevelopment(
+  // 1b. Trait Development — delegates to processTraitDevelopment in
+  // rosterWorkerTraining; coaching hours debit the treasury.
+  const traitDev = processTraitDevelopment(
     updatedRival.roster,
     updatedRival.treasury ?? 0,
     updatedRival.owner.personality,
     rngService
   );
+  updatedRival.roster = traitDev.roster;
+  if (traitDev.spent > 0) {
+    updatedRival.treasury -= traitDev.spent;
+    updatedRival = logFinanceEvent(updatedRival, {
+      label: 'Trait development program',
+      amount: -traitDev.spent,
+      week: currentWeek,
+      category: 'training',
+      description: `Paid ${traitDev.spent}g in coaching fees for trait development.`,
+      riskTier: 'Low',
+    });
+  }
 
   // 2. Equipment (High Risk)
   // Champions always get gear consideration regardless of intent (treasury gate only).

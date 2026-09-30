@@ -8,7 +8,7 @@ import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNGService } from '@/utils/random';
-import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
+import { BANKRUPTCY_THRESHOLD, BANKRUPTCY_GRACE_WEEKS } from '@/constants/economy';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /** Passive recovery for active warriors: fatigue -25, HP +20% (cap 100). */
@@ -47,6 +47,7 @@ function applyWeeklyEconomy(
     trainingAssignments: updatedRival.trainingAssignments ?? [],
     applyStipend: (state.rivals || []).length <= 45,
     isPlayer: false,
+    treasury: updatedRival.treasury,
   };
 
   const breakdown = computeWeeklyBreakdown(economyInput);
@@ -150,8 +151,14 @@ export function processAIStable(
   // Clear training assignments (mirrors player finalizeState)
   updatedRival.trainingAssignments = [];
 
-  // 4. Bankruptcy check (aligned with player threshold)
-  const isBankrupt = updatedRival.treasury < BANKRUPTCY_THRESHOLD;
+  // 4. Bankruptcy check (aligned with player threshold). Stables inside
+  // BANKRUPTCY_GRACE_WEEKS of their establishment are shielded — a fresh mint
+  // bleeds while its roster ramps into bookings and must be allowed to turn
+  // the corner.
+  const stableAge =
+    (state.absoluteWeek ?? state.week) - (rival.establishedAbsoluteWeek ?? 0);
+  const isBankrupt =
+    updatedRival.treasury < BANKRUPTCY_THRESHOLD && stableAge >= BANKRUPTCY_GRACE_WEEKS;
 
   gazetteItems.push(...detectMilestones(rival, updatedRival));
 

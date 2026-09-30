@@ -1,10 +1,21 @@
 import type { TournamentBout } from '@/types/game';
 
 /**
- *
+ * Flag-first bronze check. When `isBronzeMatch` is set (all brackets built by
+ * the current engine) it is authoritative. For brackets serialized before the
+ * flag existed, the positional (round 6, matchIndex 1) slot only counts when
+ * it actually sits in the championship round — in a larger bracket that slot
+ * is an ordinary bout (M6). Callers with bracket context should pass
+ * `finalsRound` (= max round); without it the check is flag-only.
  */
-export function isBronzeMatch(bout: TournamentBout): boolean {
-  return bout.round === 6 && bout.matchIndex === 1;
+export function isBronzeMatch(bout: TournamentBout, finalsRound?: number): boolean {
+  if (bout.isBronzeMatch !== undefined) return bout.isBronzeMatch;
+  return (
+    bout.round === 6 &&
+    bout.matchIndex === 1 &&
+    bout.round === finalsRound &&
+    (bout.warriorIdD as unknown as string) !== 'bye'
+  );
 }
 
 /**

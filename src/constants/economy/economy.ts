@@ -51,6 +51,14 @@ export const SCOUT_COST = 25;
  */
 export const BANKRUPTCY_THRESHOLD = -500;
 
+/**
+ * Weeks a freshly minted stable (incl. bankruptcy successors) is shielded
+ * from the weekly bankruptcy check. New stables bleed treasury while their
+ * roster ramps into bookings — without a grace window the world churns
+ * through a treadmill of instant-failure successor stables.
+ */
+export const BANKRUPTCY_GRACE_WEEKS = 13;
+
 export const MIN_BANKRUPTCY_ROSTER = 2;
 
 export const DEBT_FLOOR = -800;

@@ -16,6 +16,7 @@ export interface SimPulse {
   retiredCount: number;
   rivalCount: number;
   avgRivalTreasury: number;
+  medianRivalTreasury: number;
   totalBouts: number;
   // ─── Trait / churn emergence (world-wide: player + all rivals) ───
   traitedWarriors: number;
@@ -244,6 +245,14 @@ export function collectPulse(state: GameState): SimPulse {
     totalTreasury += r.treasury;
   }
   const avgRivalTreasury = activeRivals.length > 0 ? totalTreasury / activeRivals.length : 0;
+  const sortedTreasuries = activeRivals.map((r) => r.treasury).sort((a, b) => a - b);
+  const mid = Math.floor(sortedTreasuries.length / 2);
+  const medianRivalTreasury =
+    sortedTreasuries.length === 0
+      ? 0
+      : sortedTreasuries.length % 2 === 1
+        ? (sortedTreasuries[mid] ?? 0)
+        : ((sortedTreasuries[mid - 1] ?? 0) + (sortedTreasuries[mid] ?? 0)) / 2;
 
   const traits = collectTraitMetrics(state, activeRivals);
   const ai = collectAiBehaviorMetrics(state, activeRivals);
@@ -258,6 +267,7 @@ export function collectPulse(state: GameState): SimPulse {
     retiredCount: state.retired.length,
     rivalCount: activeRivals.length,
     avgRivalTreasury: Math.round(avgRivalTreasury),
+    medianRivalTreasury: Math.round(medianRivalTreasury),
     totalBouts: state.arenaHistory.length,
     traitedWarriors: traits.traitedWarriors,
     totalTraits: traits.totalTraits,

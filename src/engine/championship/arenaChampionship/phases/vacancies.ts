@@ -21,11 +21,13 @@ export function enforceVacancies(state: GameState, delta: ChampionshipDelta): vo
     const w = findWarriorById(state, reign.warriorId);
     const dead = deadIds.has(reign.warriorId) || (w ? isDead(w) : false);
     const retired = retiredIds.has(reign.warriorId) || (w ? isRetired(w) : false);
-    // Champion missing from all rosters AND not in graveyard/retired — treat as vacated
-    // via retirement to avoid a stuck crown.
+    // Champion missing from all rosters AND not in graveyard/retired — their
+    // stable folded and they left as a free agent. The crown vacates because
+    // a pool-bound champion can't sign defenses, but the end reason is
+    // 'displaced', not 'retired' — the warrior never hung up the blade.
     if (!w && !dead && !retired) {
       const t = ensureTitle(state, delta, arenaId);
-      endReign(state, t, 'retired', now);
+      endReign(state, t, 'displaced', now);
       continue;
     }
     if (dead || retired) {

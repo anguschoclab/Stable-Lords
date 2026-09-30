@@ -125,6 +125,9 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 30,
           status: 'Active',
+          // trainability 0 → traitCapacity 0 → no trait-development spend;
+          // keeps this assertion focused on the upkeep formula itself.
+          trainability: 0,
           attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
           career: { wins: 0, losses: 0, kills: 0 },
         } as any,
@@ -211,6 +214,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 50,
           status: 'Active',
+          trainability: 0,
           attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
           career: { wins: 0, losses: 0, kills: 0 },
         } as any,

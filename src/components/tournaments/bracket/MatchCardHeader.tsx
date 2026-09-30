@@ -15,7 +15,7 @@ interface MatchCardHeaderProps {
  *
  */
 export function MatchCardHeader({ bout, totalRounds, isPending, isBye }: MatchCardHeaderProps) {
-  const bronze = isBronzeMatch(bout);
+  const bronze = isBronzeMatch(bout, totalRounds);
   const championship = isChampionshipFinal(bout, totalRounds);
 
   return (

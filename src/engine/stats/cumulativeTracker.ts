@@ -10,6 +10,12 @@ import type { Warrior } from '@/types/warrior.types';
  */
 export interface CumulativeStats {
   totalBouts: number;
+  /** Ordinary weekly arena bouts (non-tournament) — the denominator the
+   *  design bible's 8–15% mortality target applies to. */
+  weeklyBouts: number;
+  weeklyKills: number;
+  tournamentBouts: number;
+  tournamentKills: number;
   deaths: number;
   retired: number;
   styleWins: Record<string, number>;
@@ -46,10 +52,23 @@ export function createCumulativeTracker(initialState: GameState): CumulativeTrac
   const seenRetiredIds = new Set<Warrior['id']>();
   const styleWins: Record<string, number> = {};
   const styleLosses: Record<string, number> = {};
+  let weeklyBouts = 0;
+  let weeklyKills = 0;
+  let tournamentBouts = 0;
+  let tournamentKills = 0;
 
   const recordBout = (bout: FightSummary): void => {
     if (seenBoutIds.has(bout.id)) return;
     seenBoutIds.add(bout.id);
+
+    const isTournament = bout.tournamentId != null;
+    if (isTournament) {
+      tournamentBouts++;
+      if (bout.by === 'Kill') tournamentKills++;
+    } else {
+      weeklyBouts++;
+      if (bout.by === 'Kill') weeklyKills++;
+    }
 
     // Seed both styles' keys so winless styles still appear in reports.
     const aStyle = bout.styleA || 'Unknown';
@@ -85,6 +104,10 @@ export function createCumulativeTracker(initialState: GameState): CumulativeTrac
     recordWeek: ingest,
     snapshot: () => ({
       totalBouts: seenBoutIds.size,
+      weeklyBouts,
+      weeklyKills,
+      tournamentBouts,
+      tournamentKills,
       deaths: seenDeadIds.size,
       retired: seenRetiredIds.size,
       styleWins: { ...styleWins },

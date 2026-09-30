@@ -41,7 +41,7 @@ export function BracketMatchNode({
   const isDChosen = bout.winner === 'D';
   const isPending = bout.winner === undefined;
   const isBye = bout.warriorIdD === 'bye';
-  const bronze = isBronzeMatch(bout);
+  const bronze = isBronzeMatch(bout, totalRounds);
   const championship = isChampionshipFinal(bout, totalRounds);
 
   return (

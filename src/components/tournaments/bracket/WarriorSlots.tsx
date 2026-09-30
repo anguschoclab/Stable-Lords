@@ -96,7 +96,7 @@ export function WarriorSlots({
   onToggleExpand,
   isExpanded,
 }: WarriorSlotsProps) {
-  const bronze = isBronzeMatch(bout);
+  const bronze = isBronzeMatch(bout, totalRounds);
   const championship = isChampionshipFinal(bout, totalRounds);
 
   const handleClick = () => onToggleExpand(isExpanded ? null : boutKey);

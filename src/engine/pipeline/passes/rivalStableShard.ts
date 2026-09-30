@@ -212,7 +212,10 @@ function mintSuccessorStable(state: GameState, index: number): RivalStableData |
     ) {
       continue;
     }
-    return newStable as RivalStableData;
+    return {
+      ...newStable,
+      establishedAbsoluteWeek: state.absoluteWeek,
+    } as RivalStableData;
   }
   return undefined;
 }

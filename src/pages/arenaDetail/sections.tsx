@@ -22,6 +22,7 @@ const END_REASON_LABEL: Record<string, string> = {
   retired: 'Retired',
   stripped: 'Stripped for refusing to defend',
   relinquished: 'Relinquished the crown',
+  displaced: 'Stable folded — champion displaced',
 };
 
 /** Unknown-venue empty state for a bad arenaId param. */

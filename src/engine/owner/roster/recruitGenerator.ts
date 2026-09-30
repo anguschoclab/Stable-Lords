@@ -74,8 +74,11 @@ function pickRecruitStyle(
 
 /**
  * Generates base attributes for a recruit based on owner philosophy.
+ * Exported for the balance harness's realistic-population scenario — the
+ * guardrail fixture (uniform 15s = 105 pts) does not represent the 70-point
+ * philosophy-biased recruits the world actually fields.
  */
-function generateRecruitAttrs(
+export function generateRecruitAttrs(
   philosophy: string,
   rng: IRNGService
 ): { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number } {

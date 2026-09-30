@@ -18,8 +18,18 @@ export type TitleStatus = 'active' | 'pendingReengagement' | 'dormant';
 
 
 
-/** How a reign ended. */
-export type ArenaReignEndReason = 'defeated' | 'died' | 'retired' | 'stripped' | 'relinquished';
+/**
+ * How a reign ended. `displaced` = the champion's stable folded and the
+ * warrior left as a free agent — distinct from `retired`, which means the
+ * warrior actually hung up the blade.
+ */
+export type ArenaReignEndReason =
+  | 'defeated'
+  | 'died'
+  | 'retired'
+  | 'stripped'
+  | 'relinquished'
+  | 'displaced';
 
 
 

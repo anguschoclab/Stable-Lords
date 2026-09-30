@@ -28,11 +28,44 @@ function computeMetrics(result: Awaited<ReturnType<typeof runSimulation>>) {
 
   const deaths = cumulative.deaths;
   const bouts = cumulative.totalBouts;
-  const mortalityRate = bouts > 0 ? deaths / bouts : 0;
-  const avgEconomy =
-    pulses.length > 0 ? pulses.reduce((sum, p) => sum + p.playerTreasury, 0) / pulses.length : 0;
+  const weeklyBouts = cumulative.weeklyBouts;
+  const weeklyKills = cumulative.weeklyKills;
+  const tournamentBouts = cumulative.tournamentBouts;
+  const tournamentKills = cumulative.tournamentKills;
+  // Kill-outcome rate over ordinary weekly arena bouts — the denominator the
+  // design target (8–15% per bout) actually refers to. Tournament bouts are
+  // excluded: their geometry and stakes are not the weekly arena baseline.
+  const killRate = weeklyBouts > 0 ? weeklyKills / weeklyBouts : 0;
+  const mortalityRate = killRate;
+  // Unique deaths must track kill outcomes ~1:1. When the roster-removal bug
+  // was live, kill victims stayed on rival rosters and were "killed" again,
+  // while the graveyard id-dedup hid the repeats — kills >> deaths signals
+  // that corruption class resurfacing.
+  const killOutcomes = weeklyKills + tournamentKills;
+  const killDeathDivergence = killOutcomes - deaths;
 
-  return { styleWinRates, deaths, bouts, mortalityRate, avgEconomy };
+  // Economy = the rival stables, which are the real population. The player is
+  // one autopiloted stable and is not representative.
+  const last = pulses[pulses.length - 1];
+  const rivalTreasuryMean = last?.avgRivalTreasury ?? 0;
+  const rivalTreasuryMedian = last?.medianRivalTreasury ?? 0;
+  const avgEconomy = rivalTreasuryMean;
+
+  return {
+    styleWinRates,
+    deaths,
+    bouts,
+    weeklyBouts,
+    weeklyKills,
+    tournamentBouts,
+    tournamentKills,
+    killRate,
+    mortalityRate,
+    killDeathDivergence,
+    rivalTreasuryMean,
+    rivalTreasuryMedian,
+    avgEconomy,
+  };
 }
 
 /** Rule-of-thumb balance suggestions from the headline metrics. */
@@ -40,14 +73,32 @@ function buildRecommendations(m: ReturnType<typeof computeMetrics>): string {
   let recommendations = '';
   let hasAnomalies = false;
 
-  // Rule: If mortality rate is above 15%, suggest nerfing CRIT_DAMAGE_MULT.
-  // If it's below 8%, suggest buffing it.
+  // State-integrity check first: corrupted rosters poison every other metric.
+  if (m.killDeathDivergence > 0) {
+    recommendations += `- **State Corruption**: ${m.killDeathDivergence} kill outcomes produced no unique death — dead warriors may still be on rosters. Investigate graveyard↔roster disjointness BEFORE tuning anything.\n`;
+    hasAnomalies = true;
+  }
+
+  // Lethality semantics, corrected after the post-bout roster fix (2026):
+  // the 8–15% band in the original report was authored against the 105-point
+  // STD_ATTRS fixture (measured ~6.6% kills). The deployed population is
+  // ~70-point philosophy-biased recruits, where canonical mechanics yield
+  // ~2–3%. Those are different certified surfaces — the balance harness
+  // (balance.slow.test.ts) owns the mechanics band; this world rate is a
+  // population-signature metric. Hard checks: a sub-1% world rate means the
+  // kill path is effectively dead (regression); above 15% means mechanics are
+  // overheating. In between, divergence is informational — see
+  // docs/combat-subsystems-2026-06.md (levers: KILL_WINDOW_HP_SCALE,
+  // deathRateMult, MAX_EXCHANGES; NOT CRIT_DAMAGE_MULT, which only scales
+  // crit damage — a 0-HP defender is a KO either way).
   if (m.mortalityRate > 0.15) {
-    recommendations += `- **Lethality High**: Mortality rate is ${(m.mortalityRate * 100).toFixed(2)}% (Target: 8% - 15%). Suggest reducing CRIT_DAMAGE_MULT.\n`;
+    recommendations += `- **Lethality High**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% (Target: 8% - 15%). Levers: lower KILL_WINDOW_HP_SCALE or deathRateMult; NOT CRIT_DAMAGE_MULT (KO-only effect).\n`;
+    hasAnomalies = true;
+  } else if (m.mortalityRate < 0.01) {
+    recommendations += `- **Lethality Dead**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% — the kill path is effectively non-firing on the deployed population. Investigate checkKillWindow gating before tuning.\n`;
     hasAnomalies = true;
   } else if (m.mortalityRate < 0.08) {
-    recommendations += `- **Lethality Low**: Mortality rate is ${(m.mortalityRate * 100).toFixed(2)}% (Target: 8% - 15%). Suggest increasing CRIT_DAMAGE_MULT.\n`;
-    hasAnomalies = true;
+    recommendations += `- **Lethality Note**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% — below the legacy 8–15% band, consistent with the ~70-pt recruit population (certified fixture band is 6–16%, see balance.slow.test.ts). Raising the world rate further needs a population-conditional approach, not a global constant (fixture overshoots 3–5× faster).\n`;
   }
 
   // Adjust style winrates
@@ -61,12 +112,12 @@ function buildRecommendations(m: ReturnType<typeof computeMetrics>): string {
     }
   }
 
-  // Check economy
+  // Check economy — rival stables are the meaningful population.
   if (m.avgEconomy < -20000) {
-    recommendations += `- **Economy Warning**: Average stable economy is deeply negative (${m.avgEconomy.toFixed(0)} gold). Suggest increasing FIGHT_PURSE or reducing costs.\n`;
+    recommendations += `- **Economy Warning**: Average rival treasury is deeply negative (${m.avgEconomy.toFixed(0)} gold, median ${m.rivalTreasuryMedian.toFixed(0)}). Suggest increasing FIGHT_PURSE or reducing costs.\n`;
     hasAnomalies = true;
   } else if (m.avgEconomy > 50000) {
-    recommendations += `- **Economy Warning**: Hyper-inflation detected (${m.avgEconomy.toFixed(0)} gold). Suggest introducing new gold sinks or decreasing FIGHT_PURSE.\n`;
+    recommendations += `- **Economy Warning**: Rival hyper-inflation detected (mean ${m.rivalTreasuryMean.toFixed(0)} gold, median ${m.rivalTreasuryMedian.toFixed(0)}). Rivals earn purses+bonuses but rarely spend — prefer AI-purchasable sinks (recruits, trainers, training) over purse cuts.\n`;
     hasAnomalies = true;
   }
 
@@ -82,10 +133,11 @@ function buildReport(m: ReturnType<typeof computeMetrics>, recommendations: stri
 
 ## Simulation Results
 - **Weeks Simulated:** ${WEEKS_TO_SIMULATE}
-- **Total Bouts:** ${m.bouts}
-- **Total Deaths:** ${m.deaths}
-- **Mortality Rate:** ${(m.mortalityRate * 100).toFixed(2)}%
-- **Average Stable Gold:** ${m.avgEconomy.toFixed(0)}
+- **Total Bouts:** ${m.bouts} (${m.weeklyBouts} weekly / ${m.tournamentBouts} tournament)
+- **Kill Outcomes:** ${m.weeklyKills + m.tournamentKills} (${m.weeklyKills} weekly / ${m.tournamentKills} tournament)
+- **Unique Deaths:** ${m.deaths}
+- **Weekly Kill Rate:** ${(m.killRate * 100).toFixed(2)}% (design target 8–15%)
+- **Rival Stable Gold:** mean ${m.rivalTreasuryMean.toFixed(0)} / median ${m.rivalTreasuryMedian.toFixed(0)} (final week)
 
 ## Style Win Rates
 ${Object.entries(m.styleWinRates)
@@ -118,8 +170,9 @@ async function main() {
 
   console.log('=== Autobalance Engine Metrics ===');
   console.log(formatPulseTable(pulses.slice(-20))); // trailing 20-week pulse window
-  console.log(`Mortality Rate: ${(metrics.mortalityRate * 100).toFixed(2)}%`);
-  console.log(`Average Economy: ${metrics.avgEconomy.toFixed(0)} gold`);
+  console.log(`Weekly Kill Rate: ${(metrics.killRate * 100).toFixed(2)}% (${metrics.weeklyKills}/${metrics.weeklyBouts})`);
+  console.log(`Unique Deaths: ${metrics.deaths} (kill-death divergence: ${metrics.killDeathDivergence})`);
+  console.log(`Rival Economy: mean ${metrics.rivalTreasuryMean} / median ${metrics.rivalTreasuryMedian} gold`);
   console.log(`Win Rates:`);
   for (const [style, rate] of Object.entries(metrics.styleWinRates).sort((a, b) => b[1] - a[1])) {
     console.log(`- ${style}: ${(rate * 100).toFixed(2)}%`);

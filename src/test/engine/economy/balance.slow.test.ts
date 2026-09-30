@@ -10,6 +10,8 @@ import { FightingStyle, type Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { loadCombatNarrative } from '@/data/narrative';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
+import { generateRecruitAttrs } from '@/engine/owner/roster/recruitGenerator';
+import { SeededRNGService } from '@/utils/random';
 import type { FightPlan } from '@/types/combat.types';
 import {
   findAntisymmetryViolations,
@@ -20,7 +22,10 @@ import {
 
 const ALL_STYLES = Object.values(FightingStyle);
 
-// Standard 70-point warrior for each style
+// Homogeneous mechanics fixture — all-15s = 105 attribute points (NOT the
+// "70-point" warrior the old comment claimed). It isolates style mechanics on
+// an equal-stats field; the world-population baseline lives in the
+// "Realistic population" block below (68–74pt philosophy-biased recruits).
 const STD_ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 
 const makeTestWarrior = (style: FightingStyle, id: string): Warrior =>
@@ -266,5 +271,96 @@ describe('OE/KD Variability', () => {
       highKD.killRate,
       `High KD kill rate ${(highKD.killRate * 100).toFixed(1)}% should exceed low KD ${(lowKD.killRate * 100).toFixed(1)}%`
     ).toBeGreaterThan(lowKD.killRate);
+  });
+});
+
+// ── Realistic-population baseline ────────────────────────────────────────────
+// The guardrail matrix certifies style MECHANICS on a homogeneous 105-point
+// fixture. The world actually fields ~70-point philosophy-biased recruits,
+// and measured outcomes differ sharply under that population (kill rate ~1%
+// vs ~6.6% on the fixture). This block re-runs a light matrix on generated
+// recruit attributes so the deployed balance picture is characterized
+// separately — and so tuning decisions never lean on the 105-point fixture.
+describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () => {
+  const PHILOSOPHIES = [
+    'Brute Force', 'Speed Kills', 'Iron Defense', 'Balanced',
+    'Spectacle', 'Cunning', 'Endurance', 'Specialist',
+  ];
+  const REAL_FIGHTS_PER_MATCHUP = 30;
+
+  const realWins: Record<string, number> = {};
+  const realFights: Record<string, number> = {};
+  let realKills = 0;
+  let realTotal = 0;
+
+  beforeAll(() => {
+    for (const s of ALL_STYLES) {
+      realWins[s] = 0;
+      realFights[s] = 0;
+    }
+    // One attr-draw per (style, philosophy, sample) — the same generator the
+    // AI recruitment path uses, minus the style-picker.
+    const pools: Record<string, ReturnType<typeof makeTestWarrior>[]> = {};
+    for (const s of ALL_STYLES) pools[s] = [];
+    for (const [pi, philosophy] of PHILOSOPHIES.entries()) {
+      for (const [si, style] of ALL_STYLES.entries()) {
+        const rng = new SeededRNGService(1000 + pi * 97 + si);
+        const attrs = generateRecruitAttrs(philosophy, rng);
+        pools[style]!.push(
+          fixtureComputedWarrior(attrs, style, {
+            id: `real_${style}_${pi}` as import('@/types/shared.types').WarriorId,
+            name: `real_${style}_${pi}`,
+            fame: 0,
+            age: 20,
+          })
+        );
+      }
+    }
+
+    for (const [ai, styleA] of ALL_STYLES.entries()) {
+      for (const [di, styleD] of ALL_STYLES.entries()) {
+        for (let i = 0; i < REAL_FIGHTS_PER_MATCHUP; i++) {
+          const wA = pools[styleA]![i % pools[styleA]!.length]!;
+          const wD = pools[styleD]![i % pools[styleD]!.length]!;
+          const outcome = simulateFight(
+            defaultPlanForWarrior(wA),
+            defaultPlanForWarrior(wD),
+            wA,
+            wD,
+            (ai * 10 + di) * 30011 + i * 104729 + 7
+          );
+          realFights[styleA]!++;
+          realFights[styleD]!++;
+          realTotal++;
+          if (outcome.winner === 'A') realWins[styleA]!++;
+          else if (outcome.winner === 'D') realWins[styleD]!++;
+          if (outcome.by === 'Kill') realKills++;
+        }
+      }
+    }
+  });
+
+  it('kill rate on the world population stays in the measured low band', () => {
+    const rate = realKills / realTotal;
+    // Measured ~1.1% on generated recruits (vs ~6.6% on the 105-pt fixture).
+    // Wide band [0.2%, 6%] catches gross regressions in either direction
+    // without coupling this layer to cosmetic tuning drift.
+    expect(
+      rate,
+      `realistic-population kill rate ${(rate * 100).toFixed(2)}% outside [0.2%, 6%]`
+    ).toBeGreaterThanOrEqual(0.002);
+    expect(rate).toBeLessThanOrEqual(0.06);
+  });
+
+  it('no style collapses under the real population (wide 25–75% band)', () => {
+    const problems: string[] = [];
+    for (const s of ALL_STYLES) {
+      const rate = realWins[s]! / realFights[s]!;
+      if (rate < 0.25 || rate > 0.75) problems.push(`${s}: ${(rate * 100).toFixed(1)}%`);
+    }
+    const report = ALL_STYLES.map(
+      (s) => `  ${s.padEnd(22)} ${((realWins[s]! / realFights[s]!) * 100).toFixed(1)}%`
+    ).join('\n');
+    expect(problems.length, `\n=== REALISTIC-POP WIN RATES ===\n${report}`).toBe(0);
   });
 });

@@ -59,6 +59,11 @@ export interface SimulationConfig {
    * Optional per-week observer invoked after each `advanceWeek` with the
    * post-week state and 1-based week index — used by soak.mjs to run
    * invariant checks without re-entering the loop.
+   *
+   * ⚠️ Aliasing: the harness advances weeks with `mutableInput`, so the
+   * GameState handed to `onWeek` is the same object that later weeks will
+   * mutate. Read fields synchronously; do not retain the reference to
+   * compare "earlier" states (use the emitted pulses instead).
    */
   onWeek?: (state: GameState, weekIndex: number) => void;
 }

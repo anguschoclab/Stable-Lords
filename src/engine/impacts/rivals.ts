@@ -90,6 +90,32 @@ export const rivalReplacements = (state: GameState, value: Map<StableId, RivalSt
 };
 
 /**
+ * Add stables outright (seasonal expansion). Ids already live are skipped —
+ * joining the world must never overwrite an existing stable.
+ */
+export const rivalsAdditions = (state: GameState, value: RivalStableData[]) => {
+  if (value.length === 0) return;
+  const liveIds = new Set<string>(state.rivals.map((r) => r.id));
+  for (const addition of value) {
+    if (liveIds.has(addition.id)) continue;
+    liveIds.add(addition.id);
+    state.rivals.push(addition);
+  }
+  rebuildRivalMap(state);
+};
+
+/**
+ * Remove stables outright (seasonal bankruptcy without a successor).
+ * Updates keyed to a removed id become no-ops once it is gone.
+ */
+export const rivalsRemovals = (state: GameState, value: StableId[]) => {
+  if (value.length === 0) return;
+  const ids = new Set<string>(value);
+  state.rivals = state.rivals.filter((r) => !ids.has(r.id));
+  rebuildRivalMap(state);
+};
+
+/**
  * Rivals impact handlers map.
  */
 export const rivalsHandlers = {
@@ -97,4 +123,6 @@ export const rivalsHandlers = {
   rivalWarriorPatches,
   rivalRosterRemovals,
   rivalReplacements,
+  rivalsAdditions,
+  rivalsRemovals,
 };

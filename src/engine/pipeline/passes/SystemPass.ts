@@ -1,4 +1,4 @@
-import type { GameState, Season } from '@/types/state.types';
+import type { GameState, Season, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
@@ -10,7 +10,8 @@ import {
   recordWeeklyHallOfFame,
 } from '../core/hallOfFame';
 import { processTierProgression } from '../core/tierProgression';
-import { WorldManagementService } from '@/engine/ai/worldManagement';
+import { WorldManagementService, diffRivalMembership } from '@/engine/ai/worldManagement';
+import { warriorToPoolWarrior } from '@/engine/recruitment/recruitment';
 import { evolvePhilosophies } from '@/engine/owner/philosophy';
 import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
@@ -61,6 +62,42 @@ function processSystemicProgression(
 }
 
 /**
+ * Wire seasonal churn results into the impact: stable removals/additions and
+ * the displaced-roster free agents. Without this the churn result was a dead
+ * write — bankrupt stables stayed live and expansion stables never arrived.
+ */
+function applySeasonalChurnMembership(
+  state: GameState,
+  churnedRivals: RivalStableData[],
+  nextWeek: number,
+  seasonSeed: number,
+  impact: StateImpact
+): void {
+  const churn = diffRivalMembership(state.rivals ?? [], churnedRivals);
+  if (churn.removedIds.length > 0) {
+    impact.rivalsRemovals = [...(impact.rivalsRemovals ?? []), ...churn.removedIds];
+  }
+  if (churn.additions.length > 0) {
+    impact.rivalsAdditions = [...(impact.rivalsAdditions ?? []), ...churn.additions];
+  }
+  // Displaced warriors survive as free agents; the already-retired join the
+  // retired roll; the dead stay in the graveyard.
+  const displaced = churn.removedRosters.flat();
+  const veterans = displaced.filter((w) => w.status === 'Active');
+  const lateRetirees = displaced.filter((w) => w.status === 'Retired');
+  if (veterans.length > 0) {
+    const poolRng = new SeededRNGService(seasonSeed + 77);
+    impact.recruitPool = [
+      ...(impact.recruitPool ?? state.recruitPool ?? []),
+      ...veterans.map((w) => warriorToPoolWarrior(w, nextWeek, poolRng)),
+    ];
+  }
+  if (lateRetirees.length > 0) {
+    impact.retired = [...(impact.retired ?? []), ...lateRetirees];
+  }
+}
+
+/**
  * Helper to process seasonal churn and evolution of AI philosophies on season change.
  */
 function processSeasonalChurnAndPhilosophy(
@@ -75,10 +112,15 @@ function processSeasonalChurnAndPhilosophy(
   if (prevSeason !== nextSeasonName) {
     const seasonSeed = nextWeek * 133;
     const rngContext = new RNGContext(seasonSeed + 55);
-    const { news } = WorldManagementService.processSeasonalChurn(state, rngContext);
+    // Churn returns the post-season rival world — wire it into the impact.
+    const { updatedRivals: churnedRivals, news } = WorldManagementService.processSeasonalChurn(
+      state,
+      rngContext
+    );
+    applySeasonalChurnMembership(state, churnedRivals, nextWeek, seasonSeed, impact);
 
     const { updatedRivals: philRivals, gazetteItems } = evolvePhilosophies(
-      state,
+      { ...state, rivals: churnedRivals },
       nextSeason,
       rngContext.getRNG()
     );
@@ -136,8 +178,11 @@ function applyWeeklyPrestigeDecay(state: GameState, impact: StateImpact): void {
   }
 
   if (state.rivals && state.rivals.length > 0) {
+    // Stables already marked for removal this tick must not accrue updates.
+    const removedIds = new Set<string>(impact.rivalsRemovals ?? []);
     const rivalDecayMap = impact.rivalsUpdates ?? new Map();
     for (const r of state.rivals) {
+      if (removedIds.has(r.id)) continue;
       const loss = decayAmount(r.fame ?? 0);
       if (loss <= 0) continue;
       const prev = rivalDecayMap.get(r.id) ?? {};

@@ -8,6 +8,14 @@ export const COUNTER_PURSE_MULTIPLIER = 1.25;
 export const COUNTERED_PURSE_CONDITION = 'COUNTERED_PURSE';
 /** Condition tag marking that an offer's arena has already been countered once. */
 export const COUNTERED_VENUE_CONDITION = 'COUNTERED_VENUE';
+/**
+ * Response-note tag for warriors whose owning stable left the world
+ * mid-negotiation (dissolution, churn removal, roster cull). The response is
+ * written 'Declined' so the offer can resolve, but the tag marks it as
+ * operational rather than deliberate — the championship refusal sweep never
+ * counts a voided decline as ducking and applies no contender cooldown.
+ */
+export const STABLE_DISSOLVED_REASON = 'stable-dissolved';
 
 /**
  * Respond to bout offer.

@@ -1,7 +1,9 @@
 import type { GameState } from '@/types/state.types';
 import type { InjuryData } from '@/types/warrior.types';
+import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { isFightReady } from '@/engine/warrior/warriorStatus';
 import { isTooInjuredToFight } from '@/engine/injuries';
@@ -42,14 +44,27 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
     if (offer.status === 'Rejected') CHAMPIONSHIP_DEBUG.rejectedSeen++;
     else CHAMPIONSHIP_DEBUG.expiredSeen++;
 
-    // Rejected → the explicit Declined party. Expired/lapsed → whoever never
-    // accepted; the champion is checked first (silence = ducking).
+    // A 'stable-dissolved' note marks an operational decline — the warrior's
+    // stable left the world mid-negotiation, so the silence was never theirs.
+    // Voided responses count for neither refusals nor contender cooldowns.
+    const isVoidDecline = (id: WarriorId | undefined) =>
+      id != null && offer.responseNotes?.[id] === STABLE_DISSOLVED_REASON;
+
+    // Rejected → the explicit Declined party (skip voided parties — they are
+    // bookkeeping, not blame). Expired/lapsed → whoever never accepted; the
+    // champion is checked first (silence = ducking).
     const declinerId =
       offer.status === 'Rejected'
-        ? offer.warriorIds.find((id) => offer.responses?.[id] === 'Declined')
-        : title.champion && offer.responses?.[title.champion.warriorId] !== 'Accepted'
+        ? offer.warriorIds.find(
+            (id) => offer.responses?.[id] === 'Declined' && !isVoidDecline(id)
+          )
+        : title.champion &&
+            offer.responses?.[title.champion.warriorId] !== 'Accepted' &&
+            !isVoidDecline(title.champion.warriorId)
           ? title.champion.warriorId
-          : offer.warriorIds.find((id) => offer.responses?.[id] !== 'Accepted');
+          : offer.warriorIds.find(
+              (id) => offer.responses?.[id] !== 'Accepted' && !isVoidDecline(id)
+            );
     if (!declinerId) continue;
     const t = ensureTitle(state, delta, arenaId);
 

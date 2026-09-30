@@ -9,6 +9,7 @@ import {
   type AttributePotential,
   type WarriorFavorites,
   type WarriorLineage,
+  type Warrior,
 } from '@/types/warrior.types';
 import { computeWarriorStats, rollLuckfactor } from '../warrior/skillCalc';
 import { generatePotential } from '../warrior/potential';
@@ -360,6 +361,48 @@ export function fullRefreshPool(
 ): PoolWarrior[] {
   const rngService = resolveRng(rng, week * 1337 + 7);
   return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rngService);
+}
+
+/**
+ * Project a roster warrior into the recruit pool — when a stable dissolves
+ * (bankruptcy, seasonal churn), its live warriors re-enter the world as free
+ * agents instead of silently vanishing. The pool entry keeps the warrior's
+ * identity and build; the signing path still re-mints id/fame/career, so this
+ * is genetic survival, not career continuity.
+ */
+export function warriorToPoolWarrior(
+  w: Warrior,
+  week: number,
+  rng: IRNGService
+): PoolWarrior {
+  const fame = w.fame ?? 0;
+  const tier: RecruitTier =
+    fame >= 200
+      ? 'Prodigy'
+      : fame >= 80
+        ? 'Exceptional'
+        : fame >= 30
+          ? 'Promising'
+          : 'Common';
+  return {
+    id: w.id as string,
+    name: w.name,
+    style: w.style,
+    attributes: { ...w.attributes },
+    potential: w.potential ?? generatePotential(w.attributes, tier, rng),
+    baseSkills: w.baseSkills ?? ({} as BaseSkills),
+    derivedStats: w.derivedStats ?? ({} as DerivedStats),
+    tier,
+    cost: TIER_COST[tier],
+    age: w.age ?? 20,
+    lore: w.lore ?? `${w.name}, veteran free agent.`,
+    origin: w.origin,
+    traits: [...(w.traits ?? [])],
+    addedWeek: week,
+    favorites: w.favorites ?? generateFavorites(w.style, rng),
+    lineage: w.lineage,
+    luckfactor: w.luckfactor ?? rollLuckfactor(rng),
+  };
 }
 
 // AI Draft behavior has been moved to src/engine/draftService.ts

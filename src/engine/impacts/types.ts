@@ -90,6 +90,13 @@ export interface StateImpact {
    * silently dropped and the bankrupt stable lived on as an unprocessed ghost.
    */
   rivalReplacements?: Map<StableId, RivalStableData>;
+  /**
+   * Stable membership changes that `rivalReplacements` cannot express:
+   * seasonal-churn expansion adds stables outright; seasonal bankruptcy
+   * shutters them with no successor. Additions skip ids already live.
+   */
+  rivalsAdditions?: RivalStableData[];
+  rivalsRemovals?: StableId[];
 
   // World
   week?: number;

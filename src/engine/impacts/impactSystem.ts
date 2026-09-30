@@ -101,6 +101,8 @@ const MERGE_CONFIG: MergeConfig = {
   rivalWarriorPatches: { strategy: 'mapMerge', defaultValue: new Map() },
   rivalRosterRemovals: { strategy: 'append', defaultValue: [] },
   rivalReplacements: { strategy: 'mapMerge', defaultValue: new Map() },
+  rivalsAdditions: { strategy: 'append', defaultValue: [] },
+  rivalsRemovals: { strategy: 'append', defaultValue: [] },
   newsletterItems: { strategy: 'append', defaultValue: [] },
   ledgerEntries: { strategy: 'append', defaultValue: [] },
   graveyard: { strategy: 'append', defaultValue: [] },

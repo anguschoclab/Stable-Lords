@@ -490,4 +490,21 @@ describe('runRivalStrategyPass — bankruptcy succession', () => {
     expect(ids).toEqual([successor!.id]);
     expect(out.rivals.flatMap((r) => r.roster).some((w) => w.id === 'w_old')).toBe(false);
   });
+
+  it('routes the dissolved stable roster into the recruit pool as veterans', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const bankrupt = makeRival({
+      treasury: -100_000,
+      roster: [makeWarrior('w_old', 'Old Guard', { stableId: 'rival-1' as StableId })],
+    });
+    const state = makeMinimalState([bankrupt]);
+    state.recruitPool = [];
+
+    const impact = runRivalStrategyPass(state, 6, undefined as any, true);
+
+    expect(impact.rivalReplacements?.has('rival-1' as StableId)).toBe(true);
+    const poolIds = (impact.recruitPool ?? []).map((p) => p.id);
+    // The dissolved warrior survives as a free agent — not silently lost.
+    expect(poolIds).toContain('w_old');
+  });
 });

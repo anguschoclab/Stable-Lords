@@ -1,10 +1,38 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
+import type { StableId } from '@/types/shared.types';
 import type { IRNGContext } from '@/engine/core/rng/IRNGContext';
 
 // Import extracted modules
 import { SeasonalRetirementService } from './seasonalRetirementService';
 import { BankruptcyService } from './bankruptcyService';
 import { ExpansionService } from './expansionService';
+
+/**
+ * Diff two rival rosters-of-the-world by membership: which stables were
+ * removed, which were added, which survived. `removedRosters` carries the
+ * displaced warriors so callers can route them to the recruit pool instead
+ * of silently losing them.
+ */
+export function diffRivalMembership(
+  prev: RivalStableData[],
+  next: RivalStableData[]
+): {
+  removedIds: StableId[];
+  additions: RivalStableData[];
+  retained: RivalStableData[];
+  removedRosters: Warrior[][];
+} {
+  const nextIds = new Set(next.map((r) => r.id));
+  const prevIds = new Set(prev.map((r) => r.id));
+  const removed = prev.filter((r) => !nextIds.has(r.id));
+  return {
+    removedIds: removed.map((r) => r.id),
+    additions: next.filter((r) => !prevIds.has(r.id)),
+    retained: next.filter((r) => prevIds.has(r.id)),
+    removedRosters: removed.map((r) => r.roster),
+  };
+}
 
 /**
  * WorldManagementService - Orchestrates stable bankruptcy, world-wide retirement,

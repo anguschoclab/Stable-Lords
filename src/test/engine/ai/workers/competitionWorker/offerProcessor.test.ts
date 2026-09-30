@@ -9,6 +9,7 @@ import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
+import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
 import {
   makeWarrior as fixtureWarrior,
   makeRival as fixtureRival,
@@ -150,5 +151,109 @@ describe('processAllRivalsBoutOffers', () => {
 
     const result = processAllRivalsBoutOffers(state, rivals);
     expect(result.boutOffers).toBeDefined();
+  });
+});
+
+describe('finalized-roster ownership', () => {
+  it('groups an offer under the finalized owner when the snapshot stable map is stale', () => {
+    // Mid-tick poach/move: the week-start maps still credit w1 to r-stale,
+    // but the finalized rival list carries w1 on r-final. The response must
+    // be a real verdict for r-final — not silence, not a void decline.
+    const w1 = makeWarrior('w1', 'Fighter1');
+    const staleRival = makeRival('r-stale', [w1]);
+    const finalRival = { ...makeRival('r-final', [w1]), treasury: 100 };
+
+    const offer = makeOffer('o1', ['w1']);
+    const state = makeState([offer], [staleRival]);
+
+    const result = processAllRivalsBoutOffers(state, [finalRival]);
+    const out = (result.boutOffers as Record<string, BoutOffer>)['o1']!;
+    expect(out.responses['w1' as WarriorId]).toBe('Accepted');
+    expect(out.responseNotes?.['w1' as WarriorId]).not.toBe(STABLE_DISSOLVED_REASON);
+  });
+});
+
+describe('ownerless warriors — void-marked declines', () => {
+  it('marks a Pending warrior with no finalized owner as Declined with a stable-dissolved note', () => {
+    // w-gone's stable dissolved mid-tick — it is on no roster and unmapped.
+    const w1 = makeWarrior('w1', 'Fighter1');
+    const rival = { ...makeRival('r1', [w1]), treasury: 100 };
+
+    const offer = makeOffer('o1', ['w-gone', 'w1']);
+    const state = makeState([offer], [rival]);
+
+    const result = processAllRivalsBoutOffers(state, [rival]);
+    const out = (result.boutOffers as Record<string, BoutOffer>)['o1']!;
+    expect(out.responses['w-gone' as WarriorId]).toBe('Declined');
+    expect(out.responseNotes?.['w-gone' as WarriorId]).toBe(STABLE_DISSOLVED_REASON);
+    // w1 accepted (broke stable takes anything) → all parties answered → the
+    // offer resolves Rejected instead of silently lapsing.
+    expect(out.responses['w1' as WarriorId]).toBe('Accepted');
+    expect(out.status).toBe('Rejected');
+  });
+
+  it('marks every ownerless warrior; the offer resolves Rejected once all are marked', () => {
+    const rival = makeRival('r1', [makeWarrior('w1', 'F1')]);
+    const offer = makeOffer('o1', ['w-gone-a', 'w-gone-b']);
+    const state = makeState([offer], [rival]);
+
+    const result = processAllRivalsBoutOffers(state, [rival]);
+    const out = (result.boutOffers as Record<string, BoutOffer>)['o1']!;
+    expect(out.responses['w-gone-a' as WarriorId]).toBe('Declined');
+    expect(out.responses['w-gone-b' as WarriorId]).toBe('Declined');
+    expect(out.responseNotes?.['w-gone-a' as WarriorId]).toBe(STABLE_DISSOLVED_REASON);
+    expect(out.responseNotes?.['w-gone-b' as WarriorId]).toBe(STABLE_DISSOLVED_REASON);
+    expect(out.status).toBe('Rejected');
+  });
+
+  it('never marks player-owned warriors — a pending player response is left for the UI', () => {
+    const wP = makeWarrior('wP', 'Player Fighter');
+    const rival = makeRival('r1', [makeWarrior('w1', 'F1')]);
+    const offer = makeOffer('o1', ['wP', 'w-gone']);
+    const state = makeState([offer], [rival], [wP]);
+
+    const result = processAllRivalsBoutOffers(state, [rival]);
+    const out = (result.boutOffers as Record<string, BoutOffer>)['o1']!;
+    expect(out.responses['wP' as WarriorId]).toBe('Pending');
+    expect(out.responseNotes?.['wP' as WarriorId]).toBeUndefined();
+    expect(out.responses['w-gone' as WarriorId]).toBe('Declined');
+    expect(out.status).toBe('Proposed');
+  });
+
+  it('does not void a Pending response for a warrior still on a finalized roster', () => {
+    // w1 commits to the richer offer first, so the cheap offer keeps w1
+    // Pending — a live-rostered warrior must never be void-marked.
+    const w1 = makeWarrior('w1', 'Fighter1');
+    const rival = { ...makeRival('r1', [w1]), treasury: 100 };
+
+    const hi = makeOffer('o-hi', ['w1', 'w-x'], { hype: 900, purse: 900 });
+    const lo = makeOffer('o-lo', ['w1', 'w-y'], { hype: 1, purse: 1 });
+    const state = makeState([hi, lo], [rival]);
+
+    const result = processAllRivalsBoutOffers(state, [rival]);
+    const loOut = (result.boutOffers as Record<string, BoutOffer>)['o-lo']!;
+    expect(loOut.responses['w1' as WarriorId]).toBe('Pending');
+    expect(loOut.responseNotes?.['w1' as WarriorId]).toBeUndefined();
+    // The ownerless opponent still voids, resolving the leftover offer.
+    expect(loOut.responses['w-y' as WarriorId]).toBe('Declined');
+    expect(loOut.responseNotes?.['w-y' as WarriorId]).toBe(STABLE_DISSOLVED_REASON);
+  });
+
+  it('marks a pending counter-party as dissolved instead of leaving the counter in limbo', () => {
+    // w1 countered; w2's stable dissolved before the counter resolved.
+    const w1 = makeWarrior('w1', 'Fighter1');
+    const rival = makeRival('r1', [w1]);
+    const offer = makeOffer('o1', ['w1', 'w2'], {
+      responses: { w1: 'Countered', w2: 'Pending' } as BoutOffer['responses'],
+      counterPurseBump: 25,
+      proposerStableId: 'r1' as StableId,
+    });
+    const state = makeState([offer], [rival]);
+
+    const result = processAllRivalsBoutOffers(state, [rival]);
+    const out = (result.boutOffers as Record<string, BoutOffer>)['o1']!;
+    expect(out.responses['w2' as WarriorId]).toBe('Declined');
+    expect(out.responseNotes?.['w2' as WarriorId]).toBe(STABLE_DISSOLVED_REASON);
+    expect(out.status).toBe('Rejected');
   });
 });

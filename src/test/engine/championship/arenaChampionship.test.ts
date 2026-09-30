@@ -26,6 +26,7 @@ import {
   type ChampionshipDelta,
 } from '@/engine/championship/arenaChampionship';
 import { ARENA_TITLE, ARENA_COMMISSION_ID } from '@/constants/arena';
+import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
 import { EPITHET_TABLES } from '@/data/names/epithets';
 import type { ArenaTitle, BoutOffer, GameState } from '@/types/state.types';
 import type { Warrior, CareerRecord } from '@/types/warrior.types';
@@ -615,6 +616,96 @@ describe('sweepTitleRefusals', () => {
     const title = effTitle(state, delta, arenaId)!;
     expect(title.declinedContenders['w-cont']).toBe(10 + ARENA_TITLE.CHALLENGER_COOLDOWN_WEEKS);
     expect(title.champion?.warriorId).toBe('w-champ');
+  });
+
+  it('a voided champion decline (stable dissolved) is operational — no refusal, no strip', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const offer = titleOffer('w-champ', 'w-cont', arenaId, {
+      status: 'Rejected',
+      responses: { 'w-champ': 'Declined', 'w-cont': 'Accepted' } as BoutOffer['responses'],
+      responseNotes: { 'w-champ': STABLE_DISSOLVED_REASON } as BoutOffer['responseNotes'],
+    });
+    const state = makeGameState({
+      absoluteWeek: 10,
+      roster: [champ, cont],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: ARENA_TITLE.REFUSALS_TO_STRIP - 1 }) },
+    });
+    const delta = createChampionshipDelta();
+    sweepTitleRefusals(state, delta);
+    const title = effTitle(state, delta, arenaId)!;
+    // One shy of the strip threshold — a false refusal would strip here.
+    expect(title.refusals).toBe(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
+    expect(title.champion?.warriorId).toBe('w-champ');
+    expect(title.declinedContenders['w-champ']).toBeUndefined();
+  });
+
+  it('a voided challenger decline carries no contender cooldown', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const offer = titleOffer('w-champ', 'w-cont', arenaId, {
+      status: 'Rejected',
+      responses: { 'w-champ': 'Accepted', 'w-cont': 'Declined' } as BoutOffer['responses'],
+      responseNotes: { 'w-cont': STABLE_DISSOLVED_REASON } as BoutOffer['responseNotes'],
+    });
+    const state = makeGameState({
+      absoluteWeek: 10,
+      roster: [champ, cont],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
+    });
+    const delta = createChampionshipDelta();
+    sweepTitleRefusals(state, delta);
+    const title = effTitle(state, delta, arenaId)!;
+    expect(title.declinedContenders['w-cont']).toBeUndefined();
+  });
+
+  it('a lapsed offer does not count a voided champion response as a refusal', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    // Offer still Proposed past its expiration — the void-marked Declined was
+    // written by the offer processor before the stable vanished from rosters.
+    const offer = titleOffer('w-champ', 'w-cont', arenaId, {
+      status: 'Proposed',
+      boutWeek: 5,
+      expirationWeek: 5,
+      responses: { 'w-champ': 'Declined', 'w-cont': 'Accepted' } as BoutOffer['responses'],
+      responseNotes: { 'w-champ': STABLE_DISSOLVED_REASON } as BoutOffer['responseNotes'],
+    });
+    const state = makeGameState({
+      absoluteWeek: 10,
+      roster: [champ, cont],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
+    });
+    const delta = createChampionshipDelta();
+    sweepTitleRefusals(state, delta);
+    const title = effTitle(state, delta, arenaId)!;
+    expect(title.refusals).toBe(0);
+    expect(title.champion?.warriorId).toBe('w-champ');
+  });
+
+  it('a lapsed offer where a live champion never answered still accrues a refusal', () => {
+    // Guard rail: the void marker only exempts operationally-dead offers —
+    // genuine silence from a rostered champion is still ducking.
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const offer = titleOffer('w-champ', 'w-cont', arenaId, {
+      status: 'Proposed',
+      boutWeek: 5,
+      expirationWeek: 5,
+      responses: { 'w-champ': 'Pending', 'w-cont': 'Accepted' } as BoutOffer['responses'],
+    });
+    const state = makeGameState({
+      absoluteWeek: 10,
+      roster: [champ, cont],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
+    });
+    const delta = createChampionshipDelta();
+    sweepTitleRefusals(state, delta);
+    expect(effTitle(state, delta, arenaId)!.refusals).toBe(1);
   });
 });
 

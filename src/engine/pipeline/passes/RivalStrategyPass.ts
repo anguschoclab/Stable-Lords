@@ -2,6 +2,7 @@ import { GameState, RivalStableData } from '@/types/state.types';
 import type { StableId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { aiDraftFromPool } from '@/engine/recruitment/draftService';
+import { warriorToPoolWarrior, type PoolWarrior } from '@/engine/recruitment/recruitment';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
@@ -116,6 +117,28 @@ function successorReplacements(shardOutputs: RivalShardOutput[]): StateImpact[] 
 }
 
 /**
+ * Warriors of stables dissolved by this tick's bankruptcy swap re-enter the
+ * world as free-agent recruits instead of silently vanishing (Dead and
+ * Retired warriors keep their existing destinations).
+ */
+function collectFreedRecruits(
+  shardOutputs: RivalShardOutput[],
+  state: GameState,
+  nextWeek: number
+): PoolWarrior[] {
+  const rng = new SeededRNGService(state.absoluteWeek * 31 + 101);
+  const freed: PoolWarrior[] = [];
+  for (const o of shardOutputs) {
+    if (!o.replacesStableId) continue;
+    const dissolved = (state.rivals ?? []).find((r) => r.id === o.replacesStableId);
+    for (const w of dissolved?.roster ?? []) {
+      if (w.status === 'Active') freed.push(warriorToPoolWarrior(w, nextWeek, rng));
+    }
+  }
+  return freed;
+}
+
+/**
  * Merge stage-1 shard outputs with the world-scope follow-on passes:
  * matchmaking, bids, roster management, draft, poach, offers, plans, and
  * tournament emission.
@@ -167,7 +190,12 @@ function finishRivalPass(
   currentRivals = poach.updatedRivals;
 
   const finalizedRivals = currentRivals;
-  impacts.push({ recruitPool: draft.updatedPool });
+  impacts.push({
+    recruitPool: [
+      ...(draft.updatedPool ?? state.recruitPool ?? []),
+      ...collectFreedRecruits(shardOutputs, state, nextWeek),
+    ],
+  });
 
   impacts.push(...resolveRivalOffersAndPlans(state, boutOffersWithWorld, finalizedRivals));
 

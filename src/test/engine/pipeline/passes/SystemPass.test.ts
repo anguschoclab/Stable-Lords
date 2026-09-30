@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { runSystemPass } from '@/engine/pipeline/passes/SystemPass';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { WarriorId } from '@/types/shared.types';
+import { WarriorId, StableId } from '@/types/shared.types';
+import { makeRival, makeWarrior } from '@/test/_fixtures/factories';
+import type { RivalStableData } from '@/types/state.types';
 
 describe('SystemPass Snapshotting Logic', () => {
   it('creates initial yearly snapshots on Year 1 Week 1 if absent', () => {
@@ -91,5 +93,67 @@ describe('SystemPass Snapshotting Logic', () => {
     // No snapshot should be created here — the Year 2 baseline was already
     // captured during the Week 52 → Week 1 transition tick.
     expect(impact.rosterUpdates).toBeUndefined();
+  });
+});
+
+describe('SystemPass — seasonal churn wiring', () => {
+  // Week 13 → 14 crosses Spring → Summer, so processSeasonalChurn fires.
+  const churnState = (rivals: RivalStableData[]) => {
+    const state = createFreshState('churn-seed');
+    state.week = 13;
+    state.year = 1;
+    state.season = 'Spring';
+    state.absoluteWeek = 13;
+    state.rivals = rivals;
+    state.recruitPool = [];
+    return state;
+  };
+
+  it('removes a bankrupt stable via rivalsRemovals instead of discarding the churn result', () => {
+    const bankrupt = makeRival({
+      id: 'r-dead' as StableId,
+      treasury: -10_000,
+      roster: [makeWarrior({ id: 'w-displaced' as WarriorId })],
+    });
+    const healthy = makeRival({ id: 'r-ok' as StableId, treasury: 5_000, roster: [] });
+
+    const impact = runSystemPass(churnState([bankrupt, healthy]));
+
+    expect(impact.rivalsRemovals).toContain('r-dead');
+  });
+
+  it('routes the removed stable roster into the recruit pool', () => {
+    const bankrupt = makeRival({
+      id: 'r-dead' as StableId,
+      treasury: -10_000,
+      roster: [makeWarrior({ id: 'w-displaced' as WarriorId })],
+    });
+
+    const impact = runSystemPass(churnState([bankrupt]));
+
+    expect((impact.recruitPool ?? []).map((p) => p.id)).toContain('w-displaced');
+  });
+
+  it('keeps rival updates off removed stables and on retained ones', () => {
+    const bankrupt = makeRival({ id: 'r-dead' as StableId, treasury: -10_000, roster: [] });
+    const healthy = makeRival({ id: 'r-ok' as StableId, treasury: 5_000, roster: [] });
+
+    const impact = runSystemPass(churnState([bankrupt, healthy]));
+
+    // Philosophy/churn updates target the post-churn world — the shuttered
+    // stable must not receive updates, and the survivor still gets them.
+    expect(impact.rivalsUpdates?.has('r-dead' as StableId)).toBe(false);
+    expect(impact.rivalsUpdates?.has('r-ok' as StableId)).toBe(true);
+  });
+
+  it('still emits the seasonal summary newsletter with collapse news', () => {
+    const bankrupt = makeRival({ id: 'r-dead' as StableId, treasury: -10_000, roster: [] });
+
+    const impact = runSystemPass(churnState([bankrupt]));
+
+    const items = impact.newsletterItems ?? [];
+    expect(
+      items.some((n) => (n.items ?? []).some((i) => i.includes('COLLAPSE')))
+    ).toBe(true);
   });
 });

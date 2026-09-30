@@ -4,6 +4,7 @@ import {
   respondToBoutOffer,
   counterBoutOffer,
   counterBoutVenue,
+  STABLE_DISSOLVED_REASON,
 } from '@/engine/bout/mutations/contractMutations';
 import { checkBudget } from '../budgetWorker';
 import { StateImpact } from '@/engine/impacts';
@@ -11,18 +12,32 @@ import * as boutAcceptance from './boutAcceptance';
 
 type OfferMap = Record<string, BoutOffer>;
 
-/** Groups pending offers by the rival stable that owns each warrior. */
+/**
+ * warriorId → finalized owning rival. Built from the post-shard rival list
+ * rather than the week-start `warriorToStableMap`/`rivalMap` snapshot — those
+ * maps go stale the moment a stable dissolves, swaps, or poaches mid-tick,
+ * and stale ownership is how whole offer slates used to go silently
+ * unanswered (the zombie-stable strip bug).
+ */
+type FinalizedIndex = Map<string, RivalStableData>;
+
+function buildFinalizedIndex(rivals: RivalStableData[]): FinalizedIndex {
+  const index: FinalizedIndex = new Map();
+  for (const rival of rivals) {
+    for (const w of rival.roster) index.set(w.id, rival);
+  }
+  return index;
+}
+
+/** Groups pending offers by the finalized rival that owns each warrior. */
 function groupOffersByRival(
-  state: GameState,
-  pendingOffers: BoutOffer[]
+  pendingOffers: BoutOffer[],
+  finalizedIndex: FinalizedIndex
 ): Map<string, BoutOffer[]> {
   const offersByRival = new Map<string, BoutOffer[]>();
   pendingOffers.forEach((offer) => {
     offer.warriorIds.forEach((wId) => {
-      // Find which rival owns this warrior using O(1) map lookup
-      const stableInfo = state.warriorToStableMap?.get(wId);
-      const owningRival =
-        stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
+      const owningRival = finalizedIndex.get(wId);
       if (!owningRival) return;
 
       let offersForRival = offersByRival.get(owningRival.id);
@@ -274,7 +289,8 @@ function processRivalSlate(
 function resolveCounteredOffers(
   state: GameState,
   currentOffers: OfferMap,
-  rivalMap: Map<StableId | string, RivalStableData>
+  rivalMap: Map<StableId | string, RivalStableData>,
+  finalizedIndex: FinalizedIndex
 ): void {
   for (const offer of Object.values(currentOffers)) {
     if (offer.status !== 'Proposed') continue;
@@ -284,9 +300,9 @@ function resolveCounteredOffers(
 
     for (const wId of offer.warriorIds) {
       if (responses[wId] !== 'Pending') continue;
-      const stableInfo = state.warriorToStableMap?.get(wId);
-      if (!stableInfo || stableInfo.isPlayer) continue; // player's call
-      const owningRival = rivalMap.get(stableInfo.stableId) ?? state.rivalMap?.get(stableInfo.stableId);
+      // Player-owned pending responses are the player's call; ownerless
+      // warriors fall through to the void-marker pass below.
+      const owningRival = finalizedIndex.get(wId);
       if (!owningRival) continue;
 
       const pendingWarrior = state.warriorMap?.get(wId);
@@ -341,6 +357,43 @@ function resolveCounteredOffers(
 }
 
 /**
+ * Void resolution: a Pending warrior who belongs to no finalized rival — and
+ * is not player-owned — has nobody left to speak for them (stable dissolved,
+ * churn removal, mid-tick cull). Mark the response Declined with a
+ * stable-dissolved note so the offer resolves instead of silently lapsing;
+ * the refusal sweep reads the note and treats it as operational, not ducking.
+ */
+function markOwnerlessResponses(
+  state: GameState,
+  currentOffers: OfferMap,
+  finalizedIndex: FinalizedIndex
+): void {
+  const playerIds = new Set<string>((state.roster ?? []).map((w) => w.id));
+  for (const offer of Object.values(currentOffers)) {
+    if (offer.status !== 'Proposed') continue;
+    for (const wId of offer.warriorIds) {
+      if (offer.responses?.[wId] !== 'Pending') continue;
+      if (finalizedIndex.has(wId) || playerIds.has(wId)) continue;
+
+      const impact = respondToBoutOffer(
+        { ...state, boutOffers: currentOffers },
+        offer.id as BoutOfferId,
+        wId as WarriorId,
+        'Declined'
+      );
+      applyOfferImpact(currentOffers, impact);
+      const tracked = currentOffers[offer.id];
+      if (tracked) {
+        tracked.responseNotes = {
+          ...(tracked.responseNotes ?? {}),
+          [wId]: STABLE_DISSOLVED_REASON,
+        };
+      }
+    }
+  }
+}
+
+/**
  * Processes all pending bout offers for rival stables: groups offers per
  * rival, resolves each slate (accept/counter/decline), then sweeps countered
  * offers for the proposer-side bump resolution.
@@ -352,8 +405,9 @@ export function processAllRivalsBoutOffers(
   const currentOffers = { ...state.boutOffers };
   const pendingOffers = Object.values(currentOffers).filter((o) => o.status === 'Proposed');
 
-  // Group offers by stableId (each rival gets their weekly slate)
-  const offersByRival = groupOffersByRival(state, pendingOffers);
+  // Group offers by finalized roster ownership (each rival gets their slate)
+  const finalizedIndex = buildFinalizedIndex(rivals);
+  const offersByRival = groupOffersByRival(pendingOffers, finalizedIndex);
 
   // Process each rival's slate
   // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
@@ -368,7 +422,8 @@ export function processAllRivalsBoutOffers(
     processRivalSlate(state, currentOffers, rivalOffers, owningRival);
   });
 
-  resolveCounteredOffers(state, currentOffers, rivalMap);
+  resolveCounteredOffers(state, currentOffers, rivalMap, finalizedIndex);
+  markOwnerlessResponses(state, currentOffers, finalizedIndex);
 
   return { boutOffers: currentOffers };
 }

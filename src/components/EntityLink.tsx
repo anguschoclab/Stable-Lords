@@ -2,10 +2,9 @@
  * Entity Links — Warriors and Stables.
  * Now triggers a side-panel <Sheet> (flyout) with full dossiers.
  */
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import {
   Sheet,
@@ -48,17 +47,12 @@ interface WarriorLinkProps {
  * @param props.children - Optional custom content for the link trigger
  * @returns A tooltip-wrapped sheet trigger or a plain span if the warrior cannot be resolved
  */
-export function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-    }))
-  );
-  const resolvedId = id ?? resolveWarriorId(name, state);
+export const WarriorLink = React.memo(function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
+  // Subscribe only to the resolved ID, not the entire heavy slices
+  const resolvedId = useGameStore((state) => {
+    if (id) return id;
+    return resolveWarriorId(name, state);
+  });
 
   if (!resolvedId) {
     return <span className={className}>{children ?? name}</span>;
@@ -112,7 +106,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
       </SheetContent>
     </Sheet>
   );
-}
+});
 
 /**
  * Resolves a warrior name to an ID using the current game state.
@@ -149,19 +143,17 @@ interface StableLinkProps {
  * @param [props.children] - Optional custom content to display inside the link.
  * @returns A clickable sheet trigger or a plain span if ID cannot be resolved.
  */
-export function StableLink({ name, className, children }: StableLinkProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-    }))
-  );
-
-  // Resolve stable name to owner ID
-  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  const resolvedStableId = findStableId(state as unknown as NameResolutionState, name);
-  const isPlayer = resolvedStableId === state.player.id;
-  const stableId = isPlayer ? 'player' : resolvedStableId;
+export const StableLink = React.memo(function StableLink({ name, className, children }: StableLinkProps) {
+  // Compute derived IDs directly in the selector
+  const { stableId, resolvedStableId, isPlayer } = useGameStore((state) => {
+    const resolvedId = findStableId(state as unknown as NameResolutionState, name);
+    const isP = resolvedId === state.player.id;
+    return {
+      resolvedStableId: resolvedId,
+      isPlayer: isP,
+      stableId: isP ? 'player' : resolvedId
+    };
+  }, (a, b) => a.stableId === b.stableId && a.resolvedStableId === b.resolvedStableId && a.isPlayer === b.isPlayer);
 
   if (!resolvedStableId) {
     return <span className={className}>{children ?? name}</span>;
@@ -228,6 +220,6 @@ export function StableLink({ name, className, children }: StableLinkProps) {
       </SheetContent>
     </Sheet>
   );
-}
+});
 
 

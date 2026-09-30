@@ -19,7 +19,12 @@ function findGrudge(
 ): import('@/types/state.types').OwnerGrudge | undefined {
   if (!grudgeMap) return undefined;
   for (const g of grudgeMap.values()) {
-    if ((g.ownerIdA === ownerId || g.ownerIdB === ownerId) && g.intensity >= 3) {
+    // Intensity 2 is already a blood feud — grudges are only created by a
+    // kill (or a player upset), so a live grudge is itself the grievance.
+    // Requiring 3+ demands a second kill on the same pair, which honest
+    // lethality rates make unreachable; decayed grudges floor at 1 and stop
+    // feeding vendettas.
+    if ((g.ownerIdA === ownerId || g.ownerIdB === ownerId) && g.intensity >= 2) {
       return g;
     }
   }
@@ -217,8 +222,11 @@ export function pickWeeklyIntent(
   const ctx = buildIntentContext(rival, state);
 
   if (weatherPivotApplies(ctx)) return 'RECOVERY';
-  if (recoveryApplies(ctx)) return 'RECOVERY';
+  // Vendetta precedes recovery: a fresh blood feud outranks belt-tightening —
+  // otherwise a broke grudge-holder can never answer the grievance (RECOVERY
+  // crowds the pick on every cash-strapped week).
   if (vendettaApplies(ctx, rngService)) return 'VENDETTA';
+  if (recoveryApplies(ctx)) return 'RECOVERY';
   if (tournamentCampaignApplies(ctx)) return 'TOURNAMENT_CAMPAIGN';
   if (crownCampaignPicked(ctx)) return 'CROWN_CAMPAIGN';
   if (wealthAccumulationApplies(ctx)) return 'WEALTH_ACCUMULATION';

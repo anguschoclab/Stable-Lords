@@ -265,27 +265,32 @@ function buildExpenses(input: StableEconomyInput): BreakdownItem[] {
       category: 'training',
     });
 
-  // AI prestige upkeep: wealthy rival stables spend proportionally on
-  // facilities, retainers, and patron feasts. This is the equilibrating sink
-  // that keeps rival treasuries from growing linearly forever — net cost
-  // rises with wealth and is hard-capped so it can never bankrupt a stable
-  // in a single week.
-  if (!input.isPlayer && (input.treasury ?? 0) > AI_PRESTIGE_FREE_TREASURY) {
-    const treasury = input.treasury ?? 0;
-    const prestige = Math.min(
-      Math.floor((treasury - AI_PRESTIGE_FREE_TREASURY) * AI_PRESTIGE_RATE),
-      Math.floor(treasury * AI_PRESTIGE_CAP_RATE)
-    );
-    if (prestige > 0) {
-      expenses.push({
-        label: 'Stable prestige & facilities upkeep',
-        amount: prestige,
-        category: 'upkeep',
-      });
-    }
+  const prestige = prestigeUpkeep(input);
+  if (prestige > 0) {
+    expenses.push({
+      label: 'Stable prestige & facilities upkeep',
+      amount: prestige,
+      category: 'upkeep',
+    });
   }
 
   return expenses;
+}
+
+/**
+ * AI prestige upkeep: wealthy rival stables spend proportionally on
+ * facilities, retainers, and patron feasts. This is the equilibrating sink
+ * that keeps rival treasuries from growing linearly forever — net cost
+ * rises with wealth and is hard-capped so it can never bankrupt a stable
+ * in a single week.
+ */
+function prestigeUpkeep(input: StableEconomyInput): number {
+  const treasury = input.treasury ?? 0;
+  if (input.isPlayer || treasury <= AI_PRESTIGE_FREE_TREASURY) return 0;
+  return Math.min(
+    Math.floor((treasury - AI_PRESTIGE_FREE_TREASURY) * AI_PRESTIGE_RATE),
+    Math.floor(treasury * AI_PRESTIGE_CAP_RATE)
+  );
 }
 
 /**

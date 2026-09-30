@@ -30,8 +30,13 @@ export const BankruptcyService = {
     updatedState.rivals = updatedState.rivals.filter((rival) => {
       if (rival.treasury < BANKRUPTCY_THRESHOLD) {
         // Same grace as the weekly path: a stable younger than
-        // BANKRUPTCY_GRACE_WEEKS is still ramping and does not fold.
-        const stableAge = now - (rival.establishedAbsoluteWeek ?? 0);
+        // BANKRUPTCY_GRACE_WEEKS is still ramping and does not fold. A
+        // missing establishment stamp means the stable predates tracking —
+        // not provably new, so no grace.
+        const stableAge =
+          rival.establishedAbsoluteWeek == null
+            ? BANKRUPTCY_GRACE_WEEKS
+            : now - rival.establishedAbsoluteWeek;
         if (stableAge < BANKRUPTCY_GRACE_WEEKS) return true;
         bankruptStables.push(rival.owner.stableName);
         return false;

@@ -98,7 +98,20 @@ function cullRivalRoster(
     championIds
   );
 
-  // Age-based retirement
+  retireElderlyWarrior(r, state, rngSnapshot, gazetteItems, retiredWarriors, championIds);
+
+  return culledThisTick;
+}
+
+/** 15% weekly chance the oldest active non-champion (age 30+) retires of age. */
+function retireElderlyWarrior(
+  r: RivalStableData,
+  state: GameState,
+  rngSnapshot: IRNGService,
+  gazetteItems: string[],
+  retiredWarriors: Warrior[],
+  championIds: Set<string>
+): void {
   const elderly = r.roster.filter(
     (w) => isActive(w) && !championIds.has(w.id) && (w.age ?? 18) >= 30
   );
@@ -111,8 +124,6 @@ function cullRivalRoster(
       );
     }
   }
-
-  return culledThisTick;
 }
 
 /** Retire the first active, non-streaking, non-champion warrior matching `matches`; log it. */

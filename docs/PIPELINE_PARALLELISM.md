@@ -48,9 +48,13 @@ execution too:
    roster rebuild read `state.rivals[].roster`, silently depending on
    `checkDiscovery`'s in-place favorites mutation being visible through
    shared references; shard clones lost it. Roster entries are now built
-   from the validated combatants, plus `stitchCombatantMutations` replays
-   each bout's post-resolution combatant into the merged roster updates
-   (last-writer-wins `roster` partials otherwise drop earlier bouts).
+   from the validated combatants. (The interim `stitchCombatantMutations`
+   overlay was later removed entirely: per-bout full-roster rebuilds could
+   not compose across `mergeImpacts` — two combatants from one stable in a
+   week dropped each other's writes, and the stitch re-overlaid dead
+   victims. The current architecture routes per-warrior
+   `rivalWarriorPatches` plus explicit `rivalRosterRemovals` through
+   `warriorRouting.ts` instead — see `boutResolution.ts`.)
 3. **Graveyard aliasing** (`mortalityHandler.ts`): `graveyardEntry = {...victim}`
    shared `favorites` with the still-live roster object; post-death
    `checkDiscovery` writes (rival victims stay addressable via stale roster
@@ -64,18 +68,27 @@ execution too:
 ## Ship gate — FAILED (as designed)
 
 Measured on this machine (Bun, real module workers, headless harness,
-seed 20260919, 26 weeks):
+seed 20260919, 26 weeks, pre-`mutableInput` serial baseline):
 
 | run | wall-clock |
-|-----|-----------|
+| --- | --------- |
 | pool=1 (sequential) | 2,902 ms |
 | pool=4 (distributed) | 7,593 ms |
 | **speedup** | **0.38× — gate requires ≥1.30×** |
 
+> **Staleness note (post-`mutableInput`):** the harness now passes
+> `mutableInput` so `advanceWeek` no longer deep-clones the world each week —
+> a measured ~2× serial speedup (≈586→285 ms/week). The parallel path still
+> pays `structuredClone` per shard chunk, so the true ratio is now ≈0.19× —
+> the failure margin doubled, the conclusion is unchanged and stronger.
+
 `structuredClone` of the full `GameState` per chunk costs far more than the
 rival-strategy/bout-resolution compute it displaces — the shard workloads
 (tens of ms per week across all stables/bouts) cannot amortize ~ms-scale
-serializations of a multi-MB state graph per chunk per week.
+serializations of a multi-MB state graph per chunk per week. A later CPU
+profile confirmed the split: ~100 ms/week sits in `rivalStrategy`, bouts
+are only ~30–80 ms/week, and the former serial `structuredClone` (now
+removed) was ~43% of all CPU.
 
 **Decision:** machinery ships opt-in (`configureEnginePool`), default stays
 `poolSize=1`. The pool is still useful if a future profile shows shard

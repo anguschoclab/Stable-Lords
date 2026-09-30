@@ -13,67 +13,46 @@ import { applyRecords } from '@/engine/bout/recordHandler';
 import { handleInjuries } from '@/engine/bout/injuryHandler';
 import { handleProgressions } from '@/engine/bout/progressionHandler';
 import { mergeImpacts, resolveImpacts } from '@/engine/impacts';
+import {
+  makeGameState,
+  makeKillOutcome,
+  makeRival,
+  makeWarrior,
+} from '@/test/_fixtures/factories';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 
-const ATTRS = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-
 const warrior = (id: string, stableId: string, extra: Partial<Warrior> = {}): Warrior =>
-  ({
+  makeWarrior({
     id: id as WarriorId,
-    name: id.toUpperCase(),
     stableId: stableId as StableId,
-    status: 'Active',
-    career: { wins: 0, losses: 0, kills: 0 },
     fame: 0,
-    popularity: 0,
-    fatigue: 0,
-    seasonPoints: 0,
-    attributes: { ...ATTRS },
-    style: 'BashingAttack',
-    injuries: [],
-    flair: [],
     xp: 0,
+    seasonPoints: 0,
     ...extra,
-  }) as unknown as Warrior;
+  });
 
 const rival = (id: string, roster: Warrior[]): RivalStableData =>
-  ({
-    id: id as StableId,
-    owner: { id: `owner-${id}`, stableName: `Stable ${id}`, personality: 'Pragmatic' },
-    roster,
-    treasury: 0,
-  }) as unknown as RivalStableData;
+  makeRival({ id: id as StableId, roster, treasury: 0 });
 
 const makeState = (rivals: RivalStableData[], roster: Warrior[] = []): GameState =>
-  ({
+  makeGameState({
     week: 7,
     absoluteWeek: 7,
     roster,
-    graveyard: [],
     rivals,
-    rivalMap: new Map(rivals.map((r) => [r.id, r])),
-    rivalries: [],
+    graveyard: [],
     boutOffers: {},
-    player: { id: 'player-1' },
-  }) as unknown as GameState;
+  });
 
-const killOutcome = (winner: 'A' | 'D'): FightOutcome => ({
-  winner,
-  by: 'Kill',
-  minutes: 5,
-  log: [],
-});
+const killOutcome = (winner: 'A' | 'D'): FightOutcome =>
+  makeKillOutcome({ winner, minutes: 5 });
 
-const winOutcome = (winner: 'A' | 'D'): FightOutcome => ({
-  winner,
-  by: 'Decision',
-  minutes: 15,
-  log: [],
-});
+const winOutcome = (winner: 'A' | 'D'): FightOutcome =>
+  makeKillOutcome({ winner, by: 'Decision', minutes: 15, exchangeLog: [], post: undefined });
 
 describe('rival post-bout state — impact composition', () => {
   it('rival-vs-rival Kill removes a D-side victim from its own roster', () => {

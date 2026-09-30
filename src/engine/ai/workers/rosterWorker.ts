@@ -191,18 +191,31 @@ export function processRoster(
 
   runAITraining(updatedRival, season, healingBonus, rngService);
 
-  // 1b. Trait Development — delegates to processTraitDevelopment in
-  // rosterWorkerTraining; coaching hours debit the treasury.
+  updatedRival = applyTraitDevelopment(updatedRival, currentWeek, rngService);
+  updatedRival = applyGearPolicy(updatedRival, intent, currentWeek, rngService);
+
+  return updatedRival;
+}
+
+/**
+ * Trait Development — delegates to processTraitDevelopment in
+ * rosterWorkerTraining; coaching hours debit the treasury.
+ */
+function applyTraitDevelopment(
+  rival: RivalStableData,
+  currentWeek: number,
+  rngService: IRNGService
+): RivalStableData {
   const traitDev = processTraitDevelopment(
-    updatedRival.roster,
-    updatedRival.treasury ?? 0,
-    updatedRival.owner.personality,
+    rival.roster,
+    rival.treasury ?? 0,
+    rival.owner.personality,
     rngService
   );
-  updatedRival.roster = traitDev.roster;
+  let updated = { ...rival, roster: traitDev.roster };
   if (traitDev.spent > 0) {
-    updatedRival.treasury -= traitDev.spent;
-    updatedRival = logFinanceEvent(updatedRival, {
+    updated.treasury -= traitDev.spent;
+    updated = logFinanceEvent(updated, {
       label: 'Trait development program',
       amount: -traitDev.spent,
       week: currentWeek,
@@ -211,43 +224,36 @@ export function processRoster(
       riskTier: 'Low',
     });
   }
+  return updated;
+}
 
-  // 2. Equipment (High Risk)
-  // Champions always get gear consideration regardless of intent (treasury gate only).
-  // activeForGear is derived fresh (post-training) so gear candidates reflect current state.
+/**
+ * Equipment (High Risk). Champions always get gear consideration regardless
+ * of intent (treasury gate only); EXPANSION/VENDETTA intents gear one more
+ * active warrior, preferring the champion or the 'Muddy' Basher.
+ */
+function applyGearPolicy(
+  rival: RivalStableData,
+  intent: string,
+  currentWeek: number,
+  rngService: IRNGService
+): RivalStableData {
   const GEAR_COST = 150;
-  const activeForGear = updatedRival.roster.filter((w) => isActive(w));
+  let updated = rival;
+  const activeForGear = updated.roster.filter((w) => isActive(w));
   const champWarrior = activeForGear.find((w) => w.champion);
-  if (champWarrior && updatedRival.treasury > 800) {
-    updatedRival = buyGearUpgrade(
-      updatedRival,
-      champWarrior,
-      GEAR_COST,
-      currentWeek,
-      rngService,
-      true
-    );
+  if (champWarrior && updated.treasury > 800) {
+    updated = buyGearUpgrade(updated, champWarrior, GEAR_COST, currentWeek, rngService, true);
   }
-  if (intent === 'EXPANSION' || (intent === 'VENDETTA' && updatedRival.treasury > 1000)) {
-    if (activeForGear.length > 0) {
-      // ⚡ TSA: Role-Based Gearing (Prioritize Champion or the 'Muddy' Basher for rain insurance)
-      const gearCandidate =
-        champWarrior ??
-        activeForGear.find((w) => w.style === FightingStyle.BashingAttack) ??
-        rngService.pick(activeForGear);
+  if (intent === 'EXPANSION' || (intent === 'VENDETTA' && updated.treasury > 1000)) {
+    const gearCandidate =
+      champWarrior ??
+      activeForGear.find((w) => w.style === FightingStyle.BashingAttack) ??
+      (activeForGear.length > 0 ? rngService.pick(activeForGear) : undefined);
 
-      if (gearCandidate) {
-        updatedRival = buyGearUpgrade(
-          updatedRival,
-          gearCandidate,
-          GEAR_COST,
-          currentWeek,
-          rngService,
-          false
-        );
-      }
+    if (gearCandidate) {
+      updated = buyGearUpgrade(updated, gearCandidate, GEAR_COST, currentWeek, rngService, false);
     }
   }
-
-  return updatedRival;
+  return updated;
 }

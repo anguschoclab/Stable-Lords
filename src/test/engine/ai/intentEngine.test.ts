@@ -110,6 +110,53 @@ describe('pickWeeklyIntent', () => {
     expect(intent).toBe('RECOVERY');
   });
 
+  it('returns VENDETTA for a fresh intensity-2 grudge, even when broke', () => {
+    // A live grudge is itself a kill-sparked feud; RECOVERY must not preempt
+    // it — otherwise cash-strapped stables can never answer a grievance.
+    const rival = createMockRival({ treasury: 100 });
+    const state = createMockState({
+      grudgeMap: new Map([
+        [
+          'owner-1|owner-2',
+          {
+            id: 'g1',
+            ownerIdA: 'owner-1',
+            ownerIdB: 'owner-2',
+            intensity: 2,
+            reason: 'Personality clash',
+            startWeek: 1,
+            lastEscalation: 1,
+          },
+        ],
+      ]),
+    } as Partial<GameState>);
+    const rng = { next: () => 0, uuid: () => 'u' } as any;
+    expect(pickWeeklyIntent(rival, state, undefined, rng)).toBe('VENDETTA');
+  });
+
+  it('does not pick VENDETTA for a grudge decayed to intensity 1', () => {
+    const rival = createMockRival({ treasury: 100 });
+    const state = createMockState({
+      grudgeMap: new Map([
+        [
+          'owner-1|owner-2',
+          {
+            id: 'g1',
+            ownerIdA: 'owner-1',
+            ownerIdB: 'owner-2',
+            intensity: 1,
+            reason: 'Personality clash',
+            startWeek: 1,
+            lastEscalation: 1,
+          },
+        ],
+      ]),
+    } as Partial<GameState>);
+    const rng = { next: () => 0, uuid: () => 'u' } as any;
+    // Grudge dormant → falls through to RECOVERY on the empty treasury.
+    expect(pickWeeklyIntent(rival, state, undefined, rng)).toBe('RECOVERY');
+  });
+
   it('returns CONSOLIDATION as default', () => {
     const rival = createMockRival({ treasury: 500 }); // Lower treasury to avoid EXPANSION trigger
     const state = createMockState();

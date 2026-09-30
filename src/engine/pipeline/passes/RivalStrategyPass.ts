@@ -139,6 +139,40 @@ function collectFreedRecruits(
 }
 
 /**
+ * AI Roster Management — culling/retirement first, then flag `needsRecruit`
+ * so the unified draft can fill same-tick (G9). Returns the managed rivals;
+ * appends gazette items and routes culled warriors into `state.retired` —
+ * without the retired impact they vanish from the world entirely (and the
+ * vacancy phase can only guess 'retired').
+ */
+function runRosterManagement(
+  state: GameState,
+  currentRivals: RivalStableData[],
+  nextWeek: number,
+  boutOffersWithWorld: Record<BoutOfferId, (typeof state.boutOffers)[BoutOfferId]>,
+  globalGazetteItems: string[],
+  impacts: StateImpact[]
+): RivalStableData[] {
+  const rosterRng = new SeededRNGService(state.absoluteWeek * 13 + 7);
+  const {
+    updatedRivals,
+    gazetteItems,
+    retiredWarriors,
+  } = processAIRosterManagement(
+    {
+      ...state,
+      week: nextWeek,
+      rivals: currentRivals,
+      boutOffers: boutOffersWithWorld,
+    },
+    rosterRng
+  );
+  globalGazetteItems.push(...gazetteItems);
+  if (retiredWarriors.length > 0) impacts.push({ retired: retiredWarriors });
+  return updatedRivals;
+}
+
+/**
  * Merge stage-1 shard outputs with the world-scope follow-on passes:
  * matchmaking, bids, roster management, draft, poach, offers, plans, and
  * tournament emission.
@@ -161,28 +195,14 @@ function finishRivalPass(
   const boutOffersWithWorld = buildWeekOffers(state, currentRivals, rng);
   impacts.push({ boutOffers: boutOffersWithWorld });
 
-  // 2. AI Roster Management — culling/retirement first, then flag
-  // `needsRecruit` so the unified draft below can fill same-tick (G9).
-  const rosterSeed = state.absoluteWeek * 13 + 7;
-  const rosterRng = new SeededRNGService(rosterSeed);
-  const {
-    updatedRivals: managedRivals,
-    gazetteItems: rosterGazette,
-    retiredWarriors,
-  } = processAIRosterManagement(
-    {
-      ...state,
-      week: nextWeek,
-      rivals: currentRivals,
-      boutOffers: boutOffersWithWorld,
-    },
-    rosterRng
+  currentRivals = runRosterManagement(
+    state,
+    currentRivals,
+    nextWeek,
+    boutOffersWithWorld,
+    globalGazetteItems,
+    impacts
   );
-  globalGazetteItems.push(...rosterGazette);
-  currentRivals = managedRivals;
-  // Culled warriors must land in `state.retired` — without this they vanish
-  // from the world entirely (and the vacancy phase can only guess 'retired').
-  if (retiredWarriors.length > 0) impacts.push({ retired: retiredWarriors });
 
   // 3. Draft from Recruitment Pool — sole signing path; honors needsRecruit.
   const draft = aiDraftFromPool(state.recruitPool, currentRivals, nextWeek, state);

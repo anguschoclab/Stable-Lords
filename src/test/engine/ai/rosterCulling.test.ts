@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';

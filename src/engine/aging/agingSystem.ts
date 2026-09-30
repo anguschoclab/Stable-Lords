@@ -156,6 +156,27 @@ function processWarriorAging(
   };
 }
 
+/** Remove retired rival-owned warriors from their rosters via rivalsUpdates. */
+function removeRetiredFromRivalRosters(
+  state: GameState,
+  retiredWarriors: Warrior[],
+  rivalsUpdates: Map<StableId, Partial<RivalStableData>>
+): void {
+  retiredWarriors.forEach((rw) => {
+    if (rw.stableId && rw.stableId !== state.player.id) {
+      const rivalId = rw.stableId as unknown as StableId;
+      const currentRival = state.rivalMap?.get(rivalId);
+      if (currentRival) {
+        const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };
+        if (rUpdate.roster) {
+          rUpdate.roster = rUpdate.roster.filter((w) => w.id !== rw.id);
+        }
+        rivalsUpdates.set(rivalId, rUpdate);
+      }
+    }
+  });
+}
+
 /**
  * Compute the aging impact of the current week.
  *
@@ -223,20 +244,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
     }
   }
 
-  // Handle rival retirements (filtering out retired ones)
-  retiredWarriors.forEach((rw) => {
-    if (rw.stableId && rw.stableId !== state.player.id) {
-      const rivalId = rw.stableId as unknown as StableId;
-      const currentRival = state.rivalMap?.get(rivalId);
-      if (currentRival) {
-        const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };
-        if (rUpdate.roster) {
-          rUpdate.roster = rUpdate.roster.filter((w) => w.id !== rw.id);
-        }
-        rivalsUpdates.set(rivalId, rUpdate);
-      }
-    }
-  });
+  removeRetiredFromRivalRosters(state, retiredWarriors, rivalsUpdates);
 
   return {
     rosterUpdates,

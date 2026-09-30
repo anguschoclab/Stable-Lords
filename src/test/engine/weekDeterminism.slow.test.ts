@@ -126,10 +126,15 @@ describe('Quarter/Year Advancement Determinism', () => {
     // Advance using batch method
     const batchResult = await TimeAdvanceService.advanceYear(stateBatch);
 
-    // Advance using sequential method
+    // Advance using sequential method. advanceQuarter truncates state at each
+    // quarter boundary (bounded memory for skip-ahead), and capped arrays like
+    // arenaHistory feed downstream behavior (e.g. win-streak culls) — the
+    // sequential path must apply the same cadence or trajectories legitimately
+    // diverge.
     let sequentialState = stateSequential;
     for (let i = 0; i < 52; i++) {
       sequentialState = await advanceWeek(sequentialState);
+      if ((i + 1) % 13 === 0) sequentialState = truncateState(sequentialState);
     }
 
     // Compare functional state (week, year, treasury, roster size, etc.)

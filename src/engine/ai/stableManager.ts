@@ -156,7 +156,9 @@ export function processAIStable(
   // bleeds while its roster ramps into bookings and must be allowed to turn
   // the corner.
   const stableAge =
-    (state.absoluteWeek ?? state.week) - (rival.establishedAbsoluteWeek ?? 0);
+    rival.establishedAbsoluteWeek == null
+      ? BANKRUPTCY_GRACE_WEEKS
+      : (state.absoluteWeek ?? state.week) - rival.establishedAbsoluteWeek;
   const isBankrupt =
     updatedRival.treasury < BANKRUPTCY_THRESHOLD && stableAge >= BANKRUPTCY_GRACE_WEEKS;
 

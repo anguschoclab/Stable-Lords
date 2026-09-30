@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { computeAgingImpact } from '@/engine/aging';
 import { resolveImpacts } from '@/engine/impacts';

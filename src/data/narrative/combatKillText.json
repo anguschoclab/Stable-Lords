@@ -245,7 +245,12 @@
       "A horrific wound spills {{defender}}'s lifeblood across the arena, ending their fighting days forever.",
       "Blood flows in rivers as {{defender}} takes a hit they cannot walk away from, their life pouring into the hungry sands.",
       "The final strike is unceremonious and brutal, snuffing out {{defender}}'s life with dull, wet finality.",
-      "{{defender}} takes one last, shuddering breath before collapsing into a lifeless heap. {{attacker}} merely turns away, job done."
+      "{{defender}} takes one last, shuddering breath before collapsing into a lifeless heap. {{attacker}} merely turns away, job done.",
+      "The sheer trauma of the blow is too much; {{defender}} expires before they hit the ground.",
+      "{{attacker}} inflicts catastrophic damage, immediately ending {{defender}}'s life.",
+      "A horrifying spray of vital fluids marks the instant {{defender}}'s body fails completely.",
+      "{{defender}}'s form is utterly broken by {{attacker}}'s devastating, lethal attack.",
+      "The fatal impact tears through bone and organ, leaving {{defender}} lifeless in the dirt."
     ],
     "weapon_specific": {
       "slashing": [
@@ -536,8 +541,7 @@
         "A terrifying, bone-pulverizing hit from {{attacker}} ends {{defender}}'s life instantly.",
         "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands.",
         "A sickening final thud rings out as {{attacker}} crushes the last bit of life from {{defender}}.",
-        "{{defender}} is battered into absolute stillness by the relentless fury of {{attacker}}.",
-        "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+        "{{defender}} is battered into absolute stillness by the relentless fury of {{attacker}}."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
@@ -716,7 +720,12 @@
       "{{attacker}} ends it, driving their {{weapon}} into {{defender}}'s heart.",
       "The crowd roars as {{attacker}} finishes {{defender}} with brutal finality.",
       "{{defender}} collapses, their life bleeding into the unforgiving sand.",
-      "A final, devastating blow from {{attacker}} leaves {{defender}} motionless."
+      "A final, devastating blow from {{attacker}} leaves {{defender}} motionless.",
+      "{{defender}} crumples into the bloodstained sand, their journey brutally ended by {{attacker}}.",
+      "With a terrifying display of force, {{attacker}} extinguishes the last spark of life in {{defender}}.",
+      "The crowd falls briefly silent as {{attacker}} delivers a harrowing killing blow to {{defender}}.",
+      "{{defender}} falls motionless, joining the countless souls claimed by the arena's cruel sands.",
+      "{{attacker}} shows no mercy, finishing {{defender}} with a cold, calculated final strike."
     ]
   }
 }

@@ -1,0 +1,17 @@
+[
+  {
+    "path": "kill_text.weapon_specific.bashing",
+    "kept": "A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s defenses.",
+    "removed": "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+  },
+  {
+    "path": "strikes.slashing.glancing",
+    "kept": "A hasty slash from {{attacker}} catches nothing but the wind and a loose thread on {{defender}}.",
+    "removed": "A quick slash from {{attacker}} catches nothing but the wind and a loose thread on {{defender}}."
+  },
+  {
+    "path": "strikes.bashing.glancing",
+    "kept": "{{attacker}}'s swing goes wide, merely brushing against {{defender}}.",
+    "removed": "{{attacker}}'s desperate swing goes wide, merely brushing against {{defender}}."
+  }
+]

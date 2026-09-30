@@ -11,7 +11,7 @@ const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
 const ARCHIVE_DIR = path.join(process.cwd(), 'archives');
 
 /** Fold the simulation result into headline metrics. */
-function computeMetrics(result: Awaited<ReturnType<typeof runSimulation>>) {
+export function computeMetrics(result: Awaited<ReturnType<typeof runSimulation>>) {
   const { pulses, cumulative } = result;
 
   // All-time counters accumulated before each truncation pass, so they

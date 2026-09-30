@@ -193,11 +193,7 @@ async function runEngineJob(
 type StoreSet = (fn: ((draft: GameStore) => void) | Partial<GameStore>) => void;
 type StoreGet = () => GameStore;
 
-/** Static defaults plus the trivial UI toggles that don't touch the engine. */
-function createCoreState(
-  set: StoreSet
-): Pick<
-  GameStore,
+type CoreStateFields =
   | 'activeSlotId'
   | 'atTitleScreen'
   | 'lastSavedAt'
@@ -207,8 +203,19 @@ function createCoreState(
   | 'toggleEventLog'
   | 'setEventLogOpen'
   | 'initialize'
-  | 'setSimulating'
-> {
+  | 'setSimulating';
+
+type CoreActionFields =
+  | 'loadGame'
+  | 'doAdvanceWeek'
+  | 'doAdvanceDay'
+  | 'saveCurrentState'
+  | 'doReset'
+  | 'returnToTitle'
+  | 'setState';
+
+/** Static defaults plus the trivial UI toggles that don't touch the engine. */
+function createCoreState(set: StoreSet): Pick<GameStore, CoreStateFields> {
   return {
     activeSlotId: null,
     atTitleScreen: true,
@@ -246,16 +253,7 @@ function createCoreState(
 function createCoreActions(
   set: StoreSet,
   get: StoreGet
-): Pick<
-  GameStore,
-  | 'loadGame'
-  | 'doAdvanceWeek'
-  | 'doAdvanceDay'
-  | 'saveCurrentState'
-  | 'doReset'
-  | 'returnToTitle'
-  | 'setState'
-> {
+): Pick<GameStore, CoreActionFields> {
   return {
     loadGame: (slotId: string, state: GameState) => {
       bumpEngineEpoch();

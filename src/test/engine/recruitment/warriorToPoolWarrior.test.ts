@@ -67,6 +67,25 @@ describe('warriorToPoolWarrior — dissolved-stable veterans enter the recruit p
     }
   });
 
+  it('carries a veteran snapshot preserving fame, popularity, career, and titles', () => {
+    const w = veteran({
+      fame: 120,
+      popularity: 66,
+      career: { wins: 9, losses: 3, kills: 1 },
+      titles: ['arena_champion'],
+    });
+    const pool = warriorToPoolWarrior(w, 14, rng());
+
+    expect(pool.veteran).toEqual({
+      fame: 120,
+      popularity: 66,
+      career: { wins: 9, losses: 3, kills: 1 },
+      titles: ['arena_champion'],
+    });
+    // Identity survives the pool hop — the signing path reuses it.
+    expect(pool.id).toBe('w-vet');
+  });
+
   it('does not mutate the source warrior', () => {
     const w = veteran();
     const snapshot = structuredClone(w);

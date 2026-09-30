@@ -7,6 +7,7 @@ import { getStyleDefaultLoadout } from '@/data/equipment';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
+import { veteranSigningPatch } from '@/engine/recruitment/recruitment';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
@@ -171,6 +172,9 @@ function signPoolRecruit(
     equipment: getStyleDefaultLoadout(recruit.style),
     isStarInvestment: recruit.tier === 'Prodigy',
   };
+  // Veterans (displaced by dissolution) keep their identity and career;
+  // ordinary recruits take the fresh-prospect defaults above.
+  Object.assign(newWarrior, veteranSigningPatch(recruit));
 
   updatedRival.roster = [...updatedRival.roster, newWarrior];
   updatedRival = logAgentAction(

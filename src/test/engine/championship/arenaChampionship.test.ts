@@ -327,6 +327,58 @@ describe('resolveTitleBoutResults', () => {
     expect(title.champion?.lastActivityWeek).toBe(50);
   });
 
+  it('a won defense decays refusals by one rather than resetting them', () => {
+    // refusals accrue only while the champion keeps ducking — each completed
+    // defense erodes one refusal instead of wiping the slate clean.
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const state = makeGameState({
+      absoluteWeek: 50,
+      week: 50,
+      roster: [champ, cont],
+      arenaChampions: {
+        [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: 2 }),
+      },
+      arenaHistory: [
+        makeFightSummary({
+          titleArenaId: arenaId,
+          warriorIdA: 'w-champ' as WarriorId,
+          warriorIdD: 'w-cont' as WarriorId,
+          winner: 'A',
+          absoluteWeek: 50,
+        }),
+      ],
+    });
+    const delta = createChampionshipDelta();
+    resolveTitleBoutResults(state, delta);
+    const title = effTitle(state, delta, arenaId)!;
+    expect(title.refusals).toBe(1);
+    expect(title.champion?.warriorId).toBe('w-champ');
+  });
+
+  it('a won defense never pushes refusals below zero', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const state = makeGameState({
+      absoluteWeek: 50,
+      week: 50,
+      roster: [champ, cont],
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: 0 }) },
+      arenaHistory: [
+        makeFightSummary({
+          titleArenaId: arenaId,
+          warriorIdA: 'w-champ' as WarriorId,
+          warriorIdD: 'w-cont' as WarriorId,
+          winner: 'A',
+          absoluteWeek: 50,
+        }),
+      ],
+    });
+    const delta = createChampionshipDelta();
+    resolveTitleBoutResults(state, delta);
+    expect(effTitle(state, delta, arenaId)!.refusals).toBe(0);
+  });
+
   it('challenger win ends the reign and crowns the challenger', () => {
     const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
     const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
@@ -706,6 +758,53 @@ describe('sweepTitleRefusals', () => {
     const delta = createChampionshipDelta();
     sweepTitleRefusals(state, delta);
     expect(effTitle(state, delta, arenaId)!.refusals).toBe(1);
+  });
+
+  it('a Signed offer does not clear accumulated refusals — only a fought defense erodes them', () => {
+    // Repeat-duck leak: signing a defense offer is not defending. A champion
+    // who refuses, signs the next offer, then refuses again must accumulate
+    // toward the strip threshold instead of resetting at each signature.
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const offer = titleOffer('w-champ', 'w-cont', arenaId, {
+      status: 'Signed',
+      responses: { 'w-champ': 'Accepted', 'w-cont': 'Accepted' } as BoutOffer['responses'],
+    });
+    const state = makeGameState({
+      absoluteWeek: 10,
+      roster: [champ, cont],
+      boutOffers: { [offer.id]: offer },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: 1 }) },
+    });
+    const delta = createChampionshipDelta();
+    sweepTitleRefusals(state, delta);
+    expect(effTitle(state, delta, arenaId)!.refusals).toBe(1);
+  });
+
+  it('repeat ducks accumulate: a refusal after a signed-but-unfought defense still strips', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const cont2 = warriorAtArena('w-cont2', arenaId, { wins: 4, losses: 0 });
+    const signedOffer = titleOffer('w-champ', 'w-cont', arenaId, {
+      status: 'Signed',
+      responses: { 'w-champ': 'Accepted', 'w-cont': 'Accepted' } as BoutOffer['responses'],
+    });
+    const refusedOffer = titleOffer('w-champ', 'w-cont2', arenaId, {
+      status: 'Rejected',
+      responses: { 'w-champ': 'Declined', 'w-cont2': 'Accepted' } as BoutOffer['responses'],
+    });
+    const state = makeGameState({
+      absoluteWeek: 10,
+      roster: [champ, cont, cont2],
+      boutOffers: { [signedOffer.id]: signedOffer, [refusedOffer.id]: refusedOffer },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: 1 }) },
+    });
+    const delta = createChampionshipDelta();
+    sweepTitleRefusals(state, delta);
+    const title = effTitle(state, delta, arenaId)!;
+    // 1 prior refusal + signed (no relief) + this refusal = strip threshold.
+    expect(title.champion).toBeNull();
+    expect(title.history[0]!.endReason).toBe('stripped');
   });
 });
 

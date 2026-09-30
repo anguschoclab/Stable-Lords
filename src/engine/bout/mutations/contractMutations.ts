@@ -18,6 +18,20 @@ export const COUNTERED_VENUE_CONDITION = 'COUNTERED_VENUE';
 export const STABLE_DISSOLVED_REASON = 'stable-dissolved';
 
 /**
+ * All response-note tags that mark a decline as operational rather than
+ * deliberate. The championship refusal sweep voids responses carrying any of
+ * these — no refusal accrual, no contender cooldown. Register new operational
+ * reasons here (e.g. a future 'roster-departed') so the sweep and tests share
+ * one source of truth.
+ */
+export const VOID_DECLINE_REASONS: ReadonlySet<string> = new Set([STABLE_DISSOLVED_REASON]);
+
+/** Whether a response note marks the decline as operational/void. */
+export function isVoidDeclineReason(note: string | undefined): boolean {
+  return note != null && VOID_DECLINE_REASONS.has(note);
+}
+
+/**
  * Respond to bout offer.
  */
 export function respondToBoutOffer(

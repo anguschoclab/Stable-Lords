@@ -66,3 +66,42 @@ describe('processRecruitment — warrior field propagation (Bug 1)', () => {
     expect(updatedRival.roster[0]?.favorites).toBeDefined();
   });
 });
+
+describe('processRecruitment — veteran free agency', () => {
+  const veteranSnapshot = {
+    fame: 120,
+    popularity: 60,
+    career: { wins: 9, losses: 3, kills: 1 },
+    titles: ['arena_champion'],
+  };
+
+  it('preserves identity, fame, and career when signing a veteran', () => {
+    const rival = makeMinimalRival();
+    const recruit = makePoolWarrior({ id: 'w-vet', veteran: veteranSnapshot });
+    const rng = new SeededRNGService(42);
+
+    const { updatedRival } = processRecruitment(rival, [recruit], 2, rng, true);
+    const signed = updatedRival.roster[0];
+
+    expect(signed?.id).toBe('w-vet');
+    expect(signed?.fame).toBe(120);
+    expect(signed?.popularity).toBe(60);
+    expect(signed?.career).toEqual({ wins: 9, losses: 3, kills: 1 });
+    expect(signed?.titles).toEqual(['arena_champion']);
+    expect(signed?.stableId).toBe(updatedRival.id);
+    expect(signed?.status).toBe('Active');
+  });
+
+  it('re-mints identity for ordinary pool recruits (control)', () => {
+    const rival = makeMinimalRival();
+    const recruit = makePoolWarrior({ id: 'pw-ordinary' });
+    const rng = new SeededRNGService(42);
+
+    const { updatedRival } = processRecruitment(rival, [recruit], 2, rng, true);
+    const signed = updatedRival.roster[0];
+
+    expect(signed?.id).not.toBe('pw-ordinary');
+    expect(signed?.fame).toBe(10);
+    expect(signed?.career).toEqual({ wins: 0, losses: 0, kills: 0 });
+  });
+});

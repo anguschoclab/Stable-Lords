@@ -3,7 +3,7 @@ import type { InjuryData } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
-import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
+import { isVoidDeclineReason } from '@/engine/bout/mutations/contractMutations';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { isFightReady } from '@/engine/warrior/warriorStatus';
 import { isTooInjuredToFight } from '@/engine/injuries';
@@ -16,7 +16,8 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 /**
  * Reads resolved title-offer responses. Champion Declined with a blocking
  * injury is a postponement; otherwise refusals++ and strip at REFUSALS_TO_STRIP.
- * Challenger decline → CHALLENGER_COOLDOWN. A Signed title offer clears refusals.
+ * Challenger decline → CHALLENGER_COOLDOWN. A Signed title offer no longer
+ * clears refusals — only a won defense decays them by one.
  */
 export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): void {
   const now = state.absoluteWeek;
@@ -28,7 +29,10 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
 
     if (offer.status === 'Signed') {
       CHAMPIONSHIP_DEBUG.signedSeen++;
-      if (title.refusals !== 0) ensureTitle(state, delta, arenaId).refusals = 0;
+      // Signing a defense is a commitment, not a completed defense — refusals
+      // persist until the bout is fought and won (see resolveTitleBoutResults,
+      // which decays refusals on a champion win). Otherwise a duck could
+      // alternate refuse→sign forever and never reach the strip threshold.
       continue;
     }
     // Nothing ever writes 'Expired' — unsigned offers are silently pruned once
@@ -44,11 +48,11 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
     if (offer.status === 'Rejected') CHAMPIONSHIP_DEBUG.rejectedSeen++;
     else CHAMPIONSHIP_DEBUG.expiredSeen++;
 
-    // A 'stable-dissolved' note marks an operational decline — the warrior's
+    // A registered void note marks an operational decline — the warrior's
     // stable left the world mid-negotiation, so the silence was never theirs.
     // Voided responses count for neither refusals nor contender cooldowns.
     const isVoidDecline = (id: WarriorId | undefined) =>
-      id != null && offer.responseNotes?.[id] === STABLE_DISSOLVED_REASON;
+      id != null && isVoidDeclineReason(offer.responseNotes?.[id]);
 
     // Rejected → the explicit Declined party (skip voided parties — they are
     // bookkeeping, not blame). Expired/lapsed → whoever never accepted; the

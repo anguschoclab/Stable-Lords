@@ -3,10 +3,12 @@ import {
   type Attributes,
   type BaseSkills,
   type DerivedStats,
+  type WarriorId,
 } from '@/types/shared.types';
 import { type StyleMeta } from '../analytics/metaDrift';
 import {
   type AttributePotential,
+  type CareerRecord,
   type WarriorFavorites,
   type WarriorLineage,
   type Warrior,
@@ -61,6 +63,17 @@ export interface PoolWarrior {
   favorites: WarriorFavorites;
   lineage?: WarriorLineage;
   luckfactor: BaseSkills;
+  /**
+   * Present when this pool entry is a displaced roster veteran — a warrior
+   * whose stable dissolved (bankruptcy, seasonal churn). Signing paths must
+   * preserve identity and career instead of minting a fresh prospect.
+   */
+  veteran?: {
+    fame: number;
+    popularity: number;
+    career: CareerRecord;
+    titles: string[];
+  };
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────
@@ -366,9 +379,9 @@ export function fullRefreshPool(
 /**
  * Project a roster warrior into the recruit pool — when a stable dissolves
  * (bankruptcy, seasonal churn), its live warriors re-enter the world as free
- * agents instead of silently vanishing. The pool entry keeps the warrior's
- * identity and build; the signing path still re-mints id/fame/career, so this
- * is genetic survival, not career continuity.
+ * agents instead of silently vanishing. The `veteran` snapshot keeps fame,
+ * popularity, career, and titles so the signing path restores the warrior's
+ * identity rather than minting a fresh prospect.
  */
 export function warriorToPoolWarrior(
   w: Warrior,
@@ -402,6 +415,28 @@ export function warriorToPoolWarrior(
     favorites: w.favorites ?? generateFavorites(w.style, rng),
     lineage: w.lineage,
     luckfactor: w.luckfactor ?? rollLuckfactor(rng),
+    veteran: {
+      fame: w.fame ?? 0,
+      popularity: w.popularity ?? 0,
+      career: { ...(w.career ?? { wins: 0, losses: 0, kills: 0 }) },
+      titles: [...(w.titles ?? [])],
+    },
+  };
+}
+
+/**
+ * Signing-path patch for displaced veterans: restores the warrior's original
+ * id, fame, popularity, career, and titles. Returns `{}` for ordinary pool
+ * recruits, so call sites can spread it unconditionally.
+ */
+export function veteranSigningPatch(recruit: PoolWarrior): Partial<Warrior> {
+  if (!recruit.veteran) return {};
+  return {
+    id: recruit.id as WarriorId,
+    fame: recruit.veteran.fame,
+    popularity: recruit.veteran.popularity,
+    career: { ...recruit.veteran.career },
+    titles: [...recruit.veteran.titles],
   };
 }
 

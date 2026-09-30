@@ -313,6 +313,40 @@ describe('useRecruitActions', () => {
     expect(setState).toHaveBeenCalled();
   });
 
+  it('handleRecruit preserves identity, fame, and career for veteran free agents', () => {
+    const result = renderActionsHook();
+    const w = makePoolWarrior({
+      id: 'w-vet',
+      name: 'Old Veteran',
+      cost: 50,
+      veteran: {
+        fame: 120,
+        popularity: 60,
+        career: { wins: 9, losses: 3, kills: 1 },
+        titles: ['arena_champion'],
+      },
+    });
+    act(() => result.current.handleRecruit(w, false));
+    expect(setState).toHaveBeenCalled();
+
+    const draft = {
+      week: 1,
+      roster: [] as Warrior[],
+      recruitPool: [w],
+      player: { stableName: 'Test Stable' },
+      newsletter: [] as { id: string; week: number; title: string; items: string[] }[],
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    const signed = draft.roster[0]!;
+    expect(signed.id).toBe('w-vet');
+    expect(signed.fame).toBe(120);
+    expect(signed.popularity).toBe(60);
+    expect(signed.career).toEqual({ wins: 9, losses: 3, kills: 1 });
+    expect(signed.titles).toEqual(['arena_champion']);
+    expect(draft.recruitPool).toHaveLength(0);
+  });
+
   // ── handleScout ──
 
   it('handleScout calls deductFunds with 25g', () => {

@@ -9,7 +9,10 @@
  */
 import { describe, it, expect } from 'vitest';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
-import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
+import {
+  STABLE_DISSOLVED_REASON,
+  isVoidDeclineReason,
+} from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from '@/engine/impacts';
 import { buildWeekCaches } from '@/engine/pipeline/services/weekPipeline/caches';
 import {
@@ -93,5 +96,18 @@ describe('dissolved-stable champion — offer voids instead of refusing', () => 
     expect(retired.champion).toBeNull();
     expect(retired.history[0]!.endReason).toBe('retired');
     expect(retired.history[0]!.warriorId).toBe('w-champ');
+  });
+});
+
+describe('isVoidDeclineReason — the void-reason registry', () => {
+  it('recognizes the stable-dissolved marker', () => {
+    expect(isVoidDeclineReason(STABLE_DISSOLVED_REASON)).toBe(true);
+  });
+
+  it('rejects unknown or missing notes — only registered reasons void', () => {
+    expect(isVoidDeclineReason('ducked')).toBe(false);
+    expect(isVoidDeclineReason('injury')).toBe(false);
+    expect(isVoidDeclineReason(undefined)).toBe(false);
+    expect(isVoidDeclineReason('')).toBe(false);
   });
 });

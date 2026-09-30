@@ -42,7 +42,8 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
         reign.defenses += 1;
         reign.lastActivityWeek = now;
       }
-      title.refusals = 0;
+      // A completed defense erodes one refusal — signing alone does not.
+      title.refusals = Math.max(0, title.refusals - 1);
       continue;
     }
 

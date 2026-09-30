@@ -2,7 +2,12 @@ import { useState, useCallback } from 'react';
 import { type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService, hashStr } from '@/utils/random';
-import { fullRefreshPool, type PoolWarrior, REFRESH_COST } from '@/engine/recruitment/recruitment';
+import {
+  fullRefreshPool,
+  type PoolWarrior,
+  REFRESH_COST,
+  veteranSigningPatch,
+} from '@/engine/recruitment/recruitment';
 import { revealRecruitPotential, type PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { FightingStyle, Attributes, WarriorId, Warrior } from '@/types/game';
@@ -34,6 +39,8 @@ function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, tot
     w.attributes,
     { age: w.age, potential: w.potential }
   );
+  // Displaced veterans keep identity, fame, and career through signing.
+  Object.assign(warrior, veteranSigningPatch(w));
 
   if (bonus) {
     warrior.xp = (warrior.xp ?? 0) + 2;

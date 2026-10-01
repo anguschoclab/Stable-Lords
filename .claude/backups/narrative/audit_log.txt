@@ -1,0 +1,34 @@
+=== Duplicates Found (> 85% similarity) ===
+[combatKillText.json] kill_text.weapon_specific.bashing (88.6%)
+  Keep: A sickening crunch echoes through the arena as {{attacker}} caves in {{defender}}'s defenses.
+  Drop: A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses.
+[combatPbp.json] pbp.defenses.dodge.confident (93.2%)
+  Keep: With casual elegance, {{defender}} sways just out of range.
+  Drop: With casual elegance, {{defender}} sways just out of reach.
+[combatPbp.json] pbp.defenses.parry.theatrical (87.5%)
+  Keep: {{defender}} deflects the blow with a flourishing spin of their blade.
+  Drop: {{defender}} deflects the blow with a flourishing twirl of their weapon.
+[combatPbp.json] pbp.recoveries (91.8%)
+  Keep: Spitting blood and sand, {{defender}} forces themselves painfully back to their feet.
+  Drop: Spitting blood and sand, {{name}} forces themselves painfully back to their feet.
+[combatPbp.json] pbp.recoveries (90.9%)
+  Keep: {{defender}} rolls with the momentum, scrambling upright with ragged breaths.
+  Drop: {{name}} rolls with the momentum, scrambling upright with ragged breaths.
+[combatPbp.json] pbp.recoveries (92.0%)
+  Keep: Pushing off the stained ground, {{defender}} rises unsteadily but refuses to stay down.
+  Drop: Pushing off the stained ground, {{name}} rises unsteadily but refuses to stay down.
+[combatStrikes.json] strikes.slashing.glancing (85.7%)
+  Keep: A hurried slash from {{attacker}} scores a minor line across {{defender}}'s {{bodyPart}}.
+  Drop: A frantic slash from {{attacker}} scores a shallow line across {{defender}}'s {{bodyPart}}.
+[combatStrikes.json] strikes.piercing.glancing (86.0%)
+  Keep: A rapid lunge from {{attacker}} merely scratches the surface of {{defender}}'s {{bodyPart}}.
+  Drop: A quick thrust from {{attacker}} barely scratches the surface of {{defender}}'s {{bodyPart}}.
+[combatStrikes.json] strikes.piercing.solid (86.1%)
+  Keep: With a precise motion, {{attacker}} skewers {{defender}}'s {{bodyPart}}.
+  Drop: With cruel precision, {{attacker}} skewers {{defender}}'s {{bodyPart}}.
+[combatStrikes.json] strikes.piercing.solid (86.2%)
+  Keep: {{attacker}} lunges forward, sinking their point deep into {{defender}}'s flesh.
+  Drop: {{attacker}} lunges forward, sinking their point deep into {{defender}}'s {{bodyPart}}.
+[combatStrikes.json] strikes.fist.solid (89.5%)
+  Keep: {{attacker}} lands a heavy cross squarely on {{defender}}'s {{bodyPart}}.
+  Drop: {{attacker}} lands a heavy haymaker squarely on {{defender}}'s {{bodyPart}}.

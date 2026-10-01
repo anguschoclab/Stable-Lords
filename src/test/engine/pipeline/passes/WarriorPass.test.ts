@@ -4,6 +4,10 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runWarriorPass } from '@/engine/pipeline/passes/WarriorPass';
+import {
+  LEGACY_FOUNDER_FAME_MIN,
+  LEGACY_FOUNDER_TRAINER_CHANCE,
+} from '@/constants/world';
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeGameState } from '@/test/_fixtures/factories';
@@ -63,12 +67,12 @@ describe('runWarriorPass', () => {
     expect(result).toBeDefined();
   });
 
-  it('retired warrior with fame > 500 and RNG < 0.1 becomes trainer', () => {
+  it('retired warrior above founder fame floor with lucky RNG becomes trainer', () => {
     const retiredWarrior = {
       id: 'w1',
       name: 'Old Veteran',
       style: 'BASHING ATTACK',
-      fame: 600,
+      fame: LEGACY_FOUNDER_FAME_MIN + 100,
       career: { wins: 10, losses: 5, kills: 2 },
     } as any;
 
@@ -77,7 +81,7 @@ describe('runWarriorPass', () => {
     });
 
     const state = makeMockState({ hiringPool: [] });
-    const rng = makeMockRNG(0.05); // < 0.1 threshold
+    const rng = makeMockRNG(LEGACY_FOUNDER_TRAINER_CHANCE - 0.01);
     const result = runWarriorPass(state, rng);
     expect(result).toBeDefined();
     // The hiringPool should include a new trainer
@@ -85,12 +89,12 @@ describe('runWarriorPass', () => {
     expect(result.hiringPool!.length).toBeGreaterThan(0);
   });
 
-  it('retired warrior with fame <= 500 does not become trainer', () => {
+  it('retired warrior at or below the founder fame floor does not become trainer', () => {
     const retiredWarrior = {
       id: 'w1',
       name: 'Modest Veteran',
       style: 'BASHING ATTACK',
-      fame: 400,
+      fame: LEGACY_FOUNDER_FAME_MIN,
       career: { wins: 5, losses: 5, kills: 0 },
     } as any;
 
@@ -99,18 +103,18 @@ describe('runWarriorPass', () => {
     });
 
     const state = makeMockState({ hiringPool: [] });
-    const rng = makeMockRNG(0.05);
+    const rng = makeMockRNG(LEGACY_FOUNDER_TRAINER_CHANCE - 0.01);
     const result = runWarriorPass(state, rng);
     // hiringPool should not have new trainers
     expect(result.hiringPool ?? []).toHaveLength(0);
   });
 
-  it('retired warrior with fame > 500 but RNG >= 0.1 does not become trainer', () => {
+  it('retired warrior above fame floor but RNG >= trainer chance does not become trainer', () => {
     const retiredWarrior = {
       id: 'w1',
       name: 'Lucky Veteran',
       style: 'BASHING ATTACK',
-      fame: 700,
+      fame: LEGACY_FOUNDER_FAME_MIN + 100,
       career: { wins: 15, losses: 3, kills: 5 },
     } as any;
 
@@ -119,7 +123,7 @@ describe('runWarriorPass', () => {
     });
 
     const state = makeMockState({ hiringPool: [] });
-    const rng = makeMockRNG(0.5); // >= 0.1 threshold
+    const rng = makeMockRNG(LEGACY_FOUNDER_TRAINER_CHANCE); // boundary: >= chance => no trainer
     const result = runWarriorPass(state, rng);
     expect(result.hiringPool ?? []).toHaveLength(0);
   });

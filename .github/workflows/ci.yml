@@ -65,6 +65,9 @@ jobs:
         run: |
           set -e
           for d in src/test/engine/*/ src/test/components src/test/config src/test/data src/test/hooks src/test/integration src/test/lib src/test/megaplan src/test/pages src/test/routes src/test/schemas src/test/scripts src/test/state src/test/ui src/test/utils; do
+            # Skip dirs whose only tests are .slow/bun-ignored — a zero-match
+            # filter makes bun exit 1.
+            find "$d" -name '*.test.ts' -o -name '*.test.tsx' | grep -v '\.slow\.test\.' | grep -qv . || continue
             echo "=== bun shard: $d"
             bun --smol test --isolate --timeout 30000 "$d"
           done

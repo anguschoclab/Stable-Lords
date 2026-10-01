@@ -38,7 +38,7 @@ export function WarriorTargetCard({
         aria-label={`Select warrior ${warrior.name} for insight`}
         disabled={isRevealed || isRevealing}
         onClick={onSelect}
-        className="w-full p-3 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+        className="w-full p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
       >
         <span className="block text-[10px] font-black uppercase tracking-widest mb-1 truncate">
           {warriorDisplayName(warrior)}

@@ -28,7 +28,13 @@ function leafArrays(node: Json, out: string[][] = []): string[][] {
 }
 
 /** All string leaves under any key named like knockdown/recovery, at any depth. */
-const KNOCKDOWN_KEYS = new Set(['knockdown', 'knocked_down', 'knockedDown', 'recovery']);
+const KNOCKDOWN_KEYS = new Set([
+  'knockdown',
+  'knockdowns',
+  'knocked_down',
+  'knockedDown',
+  'recovery',
+]);
 function knockdownStrings(node: Json, out: string[] = []): string[] {
   if (!node || typeof node !== 'object' || Array.isArray(node)) return out;
   for (const [k, v] of Object.entries(node)) {

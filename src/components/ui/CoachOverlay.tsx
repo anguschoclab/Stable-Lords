@@ -98,9 +98,10 @@ export function CoachOverlay() {
     }))
   );
 
-  const rosterLength = useGameStore(useShallow((s) => s.roster.length));
-  const trainersLength = useGameStore(useShallow((s) => s.trainers.length));
-  const treasury = useGameStore(useShallow((s) => s.treasury));
+  // No need for useShallow since these return primitive scalar values
+  const rosterLength = useGameStore((s) => s.roster.length);
+  const trainersLength = useGameStore((s) => s.trainers.length);
+  const treasury = useGameStore((s) => s.treasury);
 
   const warnings = useMemo(
     () => buildWarnings(state, rosterLength, trainersLength, treasury),

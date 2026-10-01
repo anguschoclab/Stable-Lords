@@ -113,9 +113,9 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: test
-    # seasonal-tournament spec self-sets 25min; the living world roughly
-    # doubles bout volume, so 15min is no longer sufficient headroom.
-    timeout-minutes: 30
+    # seasonal-tournament spec self-sets 25min on a starved runner (~17min
+    # locally) and shares the worker with 3 other specs after install.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2

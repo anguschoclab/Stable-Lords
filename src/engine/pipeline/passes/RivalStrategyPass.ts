@@ -190,6 +190,53 @@ function runRosterManagement(
 }
 
 /**
+ * Starvation fold + free-agent reconciliation. A stable that has sat below
+ * its roster minimum for STABLE_STARVATION_WEEKS and still can't afford even
+ * the cheapest recruit collapses — its warriors reach the free-agent list.
+ * Deltas, never a replace: the system pass's seasonal churn appends displaced
+ * veterans in this same stage snapshot.
+ */
+function runStarvationAndFreeAgents(
+  currentRivals: RivalStableData[],
+  shardOutputs: RivalShardOutput[],
+  draft: ReturnType<typeof aiDraftFromPool>,
+  state: GameState,
+  nextWeek: number,
+  globalGazetteItems: string[],
+  impacts: StateImpact[]
+): RivalStableData[] {
+  const folded: RivalStableData[] = [];
+  currentRivals = currentRivals.filter((r) => {
+    if ((r.weeksBelowMin ?? 0) < STABLE_STARVATION_WEEKS) return true;
+    if (!checkBudget(r, AI_GENERATED_RECRUIT_COST, 'ROSTER').isAffordable) {
+      folded.push(r);
+      globalGazetteItems.push(
+        `💀 COLLAPSE: ${r.owner.stableName} has folded — ${r.owner.name} could no longer field a roster.`
+      );
+      return false;
+    }
+    return true;
+  });
+  if (folded.length > 0) {
+    impacts.push({ rivalsRemovals: folded.map((r) => r.id as StableId) });
+  }
+
+  impacts.push({
+    recruitPool: draft.updatedPool ?? state.recruitPool ?? [],
+  });
+  const draftedOut = (state.freeAgents ?? [])
+    .filter((w) => !(draft.updatedFreeAgents ?? []).some((u) => u.id === w.id))
+    .map((w) => w.id);
+  if (draftedOut.length > 0) impacts.push({ freeAgentRemovals: draftedOut });
+  const freed = [
+    ...collectFreedRecruits(shardOutputs, state, nextWeek),
+    ...collectStarvedRecruits(folded, nextWeek),
+  ];
+  if (freed.length > 0) impacts.push({ freeAgentAdditions: freed });
+  return currentRivals;
+}
+
+/**
  * Merge stage-1 shard outputs with the world-scope follow-on passes:
  * matchmaking, bids, roster management, draft, poach, offers, plans, and
  * tournament emission.
@@ -235,40 +282,18 @@ function finishRivalPass(
   globalGazetteItems.push(...poach.gazetteItems);
   currentRivals = poach.updatedRivals;
 
-  // 3.9. Starvation fold: a stable that has sat below its roster minimum for
-  //      STABLE_STARVATION_WEEKS and still can't afford even the cheapest
-  //      recruit collapses — its warriors reach the free-agent list.
-  const folded: RivalStableData[] = [];
-  currentRivals = currentRivals.filter((r) => {
-    if ((r.weeksBelowMin ?? 0) < STABLE_STARVATION_WEEKS) return true;
-    if (!checkBudget(r, AI_GENERATED_RECRUIT_COST, 'ROSTER').isAffordable) {
-      folded.push(r);
-      globalGazetteItems.push(
-        `💀 COLLAPSE: ${r.owner.stableName} has folded — ${r.owner.name} could no longer field a roster.`
-      );
-      return false;
-    }
-    return true;
-  });
-  if (folded.length > 0) {
-    impacts.push({ rivalsRemovals: folded.map((r) => r.id as StableId) });
-  }
+  // 3.9. Starvation fold + free-agent delta merge.
+  currentRivals = runStarvationAndFreeAgents(
+    currentRivals,
+    shardOutputs,
+    draft,
+    state,
+    nextWeek,
+    globalGazetteItems,
+    impacts
+  );
 
   const finalizedRivals = currentRivals;
-  impacts.push({
-    recruitPool: draft.updatedPool ?? state.recruitPool ?? [],
-  });
-  // Free-agent deltas, never a replace — the system pass's seasonal churn
-  // appends displaced veterans in this same stage snapshot.
-  const draftedOut = (state.freeAgents ?? [])
-    .filter((w) => !(draft.updatedFreeAgents ?? []).some((u) => u.id === w.id))
-    .map((w) => w.id);
-  if (draftedOut.length > 0) impacts.push({ freeAgentRemovals: draftedOut });
-  const freed = [
-    ...collectFreedRecruits(shardOutputs, state, nextWeek),
-    ...collectStarvedRecruits(folded, nextWeek),
-  ];
-  if (freed.length > 0) impacts.push({ freeAgentAdditions: freed });
 
   impacts.push(...resolveRivalOffersAndPlans(state, boutOffersWithWorld, finalizedRivals));
 

@@ -68,35 +68,50 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
               (id) => offer.responses?.[id] !== 'Accepted' && !isVoidDecline(id)
             );
     if (!declinerId) continue;
-    const t = ensureTitle(state, delta, arenaId);
+    applyDecline(state, delta, arenaId, title.champion?.warriorId, declinerId, now);
+  }
+}
 
-    if (declinerId === title.champion?.warriorId) {
-      const champ = findWarriorById(state, declinerId);
-      const blocking =
-        champ &&
-        !isFightReady(champ) &&
-        (champ.injuries ?? []).some(
-          (i): i is InjuryData => typeof i !== 'string' && isTooInjuredToFight([i])
-        );
-      if (blocking) {
-        // Medical postponement — not a refusal.
-        t.deferrals += 1;
-        continue;
-      }
-      t.refusals += 1;
-      if (t.refusals >= ARENA_TITLE.REFUSALS_TO_STRIP) {
-        const champName = champ ? warriorDisplayName(champ) : declinerId;
-        endReign(state, t, 'stripped', now);
-        news(
-          delta,
-          state.week,
-          `Champion Stripped`,
-          [`${champName} is stripped of the crown for refusing to defend.`],
-          `stripped-${arenaId}-${now}`
-        );
-      }
-    } else {
-      t.declinedContenders[declinerId] = now + ARENA_TITLE.CHALLENGER_COOLDOWN_WEEKS;
-    }
+/**
+ * Apply a declined title offer: champion refusal → refusals++ or a medical
+ * deferral for blocking injuries, with a strip at REFUSALS_TO_STRIP;
+ * challenger decline → CHALLENGER_COOLDOWN.
+ */
+function applyDecline(
+  state: GameState,
+  delta: ChampionshipDelta,
+  arenaId: string,
+  championId: WarriorId | undefined,
+  declinerId: WarriorId,
+  now: number
+): void {
+  const t = ensureTitle(state, delta, arenaId);
+  if (declinerId !== championId) {
+    t.declinedContenders[declinerId] = now + ARENA_TITLE.CHALLENGER_COOLDOWN_WEEKS;
+    return;
+  }
+  const champ = findWarriorById(state, declinerId);
+  const blocking =
+    champ &&
+    !isFightReady(champ) &&
+    (champ.injuries ?? []).some(
+      (i): i is InjuryData => typeof i !== 'string' && isTooInjuredToFight([i])
+    );
+  if (blocking) {
+    // Medical postponement — not a refusal.
+    t.deferrals += 1;
+    return;
+  }
+  t.refusals += 1;
+  if (t.refusals >= ARENA_TITLE.REFUSALS_TO_STRIP) {
+    const champName = champ ? warriorDisplayName(champ) : declinerId;
+    endReign(state, t, 'stripped', now);
+    news(
+      delta,
+      state.week,
+      `Champion Stripped`,
+      [`${champName} is stripped of the crown for refusing to defend.`],
+      `stripped-${arenaId}-${now}`
+    );
   }
 }

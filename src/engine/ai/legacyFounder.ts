@@ -9,7 +9,7 @@
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior, Attributes } from '@/types/warrior.types';
-import type { OwnerPersonality } from '@/types/state.types';
+import type { GameState, OwnerPersonality } from '@/types/state.types';
 import type { Trainer, TrainerFocus, TrainerSpecialty } from '@/types/shared.types';
 import { qualifiesForLegend } from '@/data/names/epithets';
 import { convertRetiredToTrainer } from '@/engine/trainers/trainers';
@@ -58,15 +58,19 @@ const ATTR_FOCUS: Record<keyof Attributes, TrainerFocus> = {
 };
 
 /**
- * Founder caliber: Hall-of-Fame careers (50+ wins, 10+ kills, 1500+ fame, or
- * any title) plus near-legend records and annual award winners. One gate for
- * every retirement path — a warrior is either founder material or not.
+ * Founder caliber — the elite tail of the actual career distribution:
+ * any arena crown (past or present), legend records, elite win/kill/fame
+ * ceilings, or a headline annual award. One gate for every retirement
+ * path — a warrior is either founder material or not.
+ *
+ * `crownedIds` is built once per sweep via `collectCrownedWarriorIds`;
+ * arena titles live on `state.arenaChampions`, not on the warrior record.
  */
-export function isLegacyFounderCaliber(w: Warrior): boolean {
+export function isLegacyFounderCaliber(w: Warrior, crownedIds?: ReadonlySet<string>): boolean {
+  if (crownedIds?.has(w.id)) return true;
   if (qualifiesForLegend(w)) return true;
-  if ((w.fame ?? 0) >= LEGACY_FOUNDER_FAME_MIN && (w.career?.wins ?? 0) >= LEGACY_FOUNDER_WINS_MIN) {
-    return true;
-  }
+  if ((w.fame ?? 0) >= LEGACY_FOUNDER_FAME_MIN) return true;
+  if ((w.career?.wins ?? 0) >= LEGACY_FOUNDER_WINS_MIN) return true;
   if ((w.career?.kills ?? 0) >= LEGACY_FOUNDER_KILLS_MIN) return true;
   if (
     (w.awards ?? []).some((a) => a.type === 'WARRIOR_OF_YEAR' || a.type === 'KILLER_OF_YEAR')
@@ -74,6 +78,22 @@ export function isLegacyFounderCaliber(w: Warrior): boolean {
     return true;
   }
   return false;
+}
+
+/**
+ * Every warrior who has ever held an arena crown — current champions plus
+ * every historical reign. Arena titles never touch the warrior record, so
+ * "any title" caliber must be checked against the championship registry.
+ */
+export function collectCrownedWarriorIds(
+  state: Pick<GameState, 'arenaChampions'>
+): Set<string> {
+  const ids = new Set<string>();
+  for (const t of Object.values(state.arenaChampions ?? {})) {
+    if (t.champion) ids.add(t.champion.warriorId);
+    for (const r of t.history ?? []) ids.add(r.warriorId);
+  }
+  return ids;
 }
 
 /**

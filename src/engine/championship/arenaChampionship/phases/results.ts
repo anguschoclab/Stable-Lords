@@ -1,4 +1,5 @@
 import type { GameState } from '@/types/state.types';
+import type { FightSummary } from '@/types/combat.types';
 import type { WarriorId } from '@/types/shared.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import type { ChampionshipDelta } from '../core';
@@ -61,38 +62,58 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
       continue;
     }
 
-    // Challenger won — did the champion die? A 'Kill' outcome means the loser
-    // was killed; deathEventData.killerId confirms who dealt it.
-    const champDied =
-      loserId === champId &&
-      (summary.by === 'Kill' ||
-        (summary.isDeathEvent === true && summary.deathEventData?.killerId === winnerId));
-    endReign(state, title, champDied ? 'died' : 'defeated', now);
-    // Defensive single-crown enforcement: if the new champion somehow holds
-    // another crown, that reign ends as relinquished.
-    for (const [otherArena, other] of Object.entries(delta.arenaChampions)) {
-      if (otherArena === arenaId) continue;
-      if (other.champion?.warriorId === winnerId) {
-        endReign(state, other, 'relinquished', now);
-      }
-    }
-    for (const [otherArena, other] of Object.entries(state.arenaChampions ?? {})) {
-      if (otherArena === arenaId || delta.arenaChampions[otherArena]) continue;
-      if (other.champion?.warriorId === winnerId) {
-        const t = ensureTitle(state, delta, otherArena);
-        endReign(state, t, 'relinquished', now);
-      }
-    }
-    crown(title, winnerId, now);
-    awardEpithet(state, delta, winnerId, 'arena_champion');
-    // Coronation cancels the new champion's unresolved ordinary offers.
-    cancelAllOpenOffersInvolving(state, delta, winnerId);
-    news(
-      delta,
-      state.week,
-      `Title Changes Hands`,
-      [`${findWarriorById(state, winnerId)?.name ?? winnerId} takes the crown.`],
-      `upset-${arenaId}-${now}`
-    );
+    transferCrown(state, delta, title, arenaId, champId, winnerId, loserId, summary, now);
   }
+}
+
+/**
+ * Challenger won — transfer the crown. The old reign ends as 'died' when the
+ * champion was killed in the bout; the new champion's other crowns (if any)
+ * are relinquished (single-crown enforcement), and coronation cancels their
+ * unresolved ordinary offers.
+ */
+function transferCrown(
+  state: GameState,
+  delta: ChampionshipDelta,
+  title: ReturnType<typeof ensureTitle>,
+  arenaId: string,
+  champId: WarriorId | null,
+  winnerId: WarriorId,
+  loserId: WarriorId,
+  summary: FightSummary,
+  now: number
+): void {
+  // Did the champion die? A 'Kill' outcome means the loser was killed;
+  // deathEventData.killerId confirms who dealt it.
+  const champDied =
+    loserId === champId &&
+    (summary.by === 'Kill' ||
+      (summary.isDeathEvent === true && summary.deathEventData?.killerId === winnerId));
+  endReign(state, title, champDied ? 'died' : 'defeated', now);
+  // Defensive single-crown enforcement: if the new champion somehow holds
+  // another crown, that reign ends as relinquished.
+  for (const [otherArena, other] of Object.entries(delta.arenaChampions)) {
+    if (otherArena === arenaId) continue;
+    if (other.champion?.warriorId === winnerId) {
+      endReign(state, other, 'relinquished', now);
+    }
+  }
+  for (const [otherArena, other] of Object.entries(state.arenaChampions ?? {})) {
+    if (otherArena === arenaId || delta.arenaChampions[otherArena]) continue;
+    if (other.champion?.warriorId === winnerId) {
+      const t = ensureTitle(state, delta, otherArena);
+      endReign(state, t, 'relinquished', now);
+    }
+  }
+  crown(title, winnerId, now);
+  awardEpithet(state, delta, winnerId, 'arena_champion');
+  // Coronation cancels the new champion's unresolved ordinary offers.
+  cancelAllOpenOffersInvolving(state, delta, winnerId);
+  news(
+    delta,
+    state.week,
+    `Title Changes Hands`,
+    [`${findWarriorById(state, winnerId)?.name ?? winnerId} takes the crown.`],
+    `upset-${arenaId}-${now}`
+  );
 }

@@ -18,7 +18,11 @@ import { WARRIOR_AGING } from '@/constants/aging';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
-import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from '@/engine/ai/legacyFounder';
+import {
+  isLegacyFounderCaliber,
+  buildLegacyFounderQueueEntry,
+  collectCrownedWarriorIds,
+} from '@/engine/ai/legacyFounder';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
@@ -179,6 +183,23 @@ function removeRetiredFromRivalRosters(
   });
 }
 
+/** Route a per-warrior aging update onto its rival stable's roster delta. */
+function routeRivalAgingUpdate(
+  state: GameState,
+  rivalId: StableId,
+  warriorId: WarriorId,
+  update: Partial<Warrior>,
+  rivalsUpdates: Map<StableId, Partial<RivalStableData>>
+): void {
+  const rival = state.rivalMap?.get(rivalId);
+  if (!rival) return;
+  const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...rival.roster] };
+  if (rUpdate.roster) {
+    rUpdate.roster = updateEntityInList(rUpdate.roster, warriorId, (rw) => ({ ...rw, ...update }));
+  }
+  rivalsUpdates.set(rivalId, rUpdate);
+}
+
 /**
  * Compute the aging impact of the current week.
  *
@@ -212,6 +233,8 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       .map((t) => t.champion?.warriorId)
       .filter((id): id is NonNullable<typeof id> => id != null)
   );
+  // Past or present crown-holders are founder caliber when they retire.
+  const crownedIds = collectCrownedWarriorIds(state);
 
   for (const { w, isPlayer, rivalId } of allWarriors) {
     const result = processWarriorAging(
@@ -230,7 +253,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
 
     if (result.retired && result.retiredObj) {
       retiredWarriors.push(result.retiredObj);
-      if (isLegacyFounderCaliber(result.retiredObj) && rng.next() < LEGACY_FOUND_CHANCE) {
+      if (isLegacyFounderCaliber(result.retiredObj, crownedIds) && rng.next() < LEGACY_FOUND_CHANCE) {
         founderEnqueued.push(buildLegacyFounderQueueEntry(result.retiredObj));
       }
       if (isPlayer) {
@@ -241,14 +264,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       if (isPlayer) {
         rosterUpdates.set(w.id, update);
       } else if (rivalId) {
-        const rKey = rivalId as StableId;
-        const rival = state.rivalMap?.get(rivalId);
-        if (!rival) continue;
-        const rUpdate = rivalsUpdates.get(rKey) || { roster: [...rival.roster] };
-        if (rUpdate.roster) {
-          rUpdate.roster = updateEntityInList(rUpdate.roster, w.id, (rw) => ({ ...rw, ...update }));
-        }
-        rivalsUpdates.set(rKey, rUpdate);
+        routeRivalAgingUpdate(state, rivalId as StableId, w.id, update, rivalsUpdates);
       }
     }
   }

@@ -273,6 +273,9 @@ function applyAward(
     ...warrior,
     fame: (warrior.fame || 0) + fameBonus,
     flair: [...(warrior.flair || []), award.type],
+    // The award record itself must live on the warrior — the legacy-founder
+    // gate and the Chronicle tab read `warrior.awards`, not `flair`.
+    awards: [...(warrior.awards ?? []), award],
   };
 
   return { updatedWarrior };

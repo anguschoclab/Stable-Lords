@@ -92,9 +92,33 @@ function computePlanModifiers(
   const grudgeKD = grudgeIntensity; // +1 to +5
   const grudgeAL = Math.floor(grudgeIntensity / 2);
 
-  // Counter-planning off scouted plan tendencies: a fresh dossier estimate
-  // of the opponent's OE/AL shifts our axes — cover up against hot openers,
-  // press passive shells, raise the kill tempo against brittle defenses.
+  const intel = intelModifiers(dossier, now);
+  const rematch = rematchModifiers(dossier);
+
+  return {
+    intentOE,
+    intentAL,
+    intentKD,
+    grudgeKD,
+    grudgeAL,
+    intelOE: intel.intelOE,
+    intelAL: intel.intelAL,
+    intelKD: intel.intelKD,
+    intelHotOpener: intel.intelHotOpener,
+    intelFragile: intel.intelFragile,
+    rematchOE: rematch.rematchOE,
+    rematchAL: rematch.rematchAL,
+    rematchKD: rematch.rematchKD,
+    changeTactics: rematch.changeTactics,
+  };
+}
+
+/**
+ * Counter-planning off scouted plan tendencies: a fresh dossier estimate of
+ * the opponent's OE/AL shifts our axes — cover up against hot openers, press
+ * passive shells, raise the kill tempo against brittle defenses.
+ */
+function intelModifiers(dossier: OpponentDossier | undefined, now: number | undefined) {
   let intelOE = 0;
   let intelAL = 0;
   let intelKD = 0;
@@ -120,10 +144,15 @@ function computePlanModifiers(
       intelFragile = true;
     }
   }
+  return { intelOE, intelAL, intelKD, intelHotOpener, intelFragile };
+}
 
-  // Rematch adaptation (G11): a losing record against this specific opponent
-  // makes the stable fight more patiently — patience scales with how lopsided
-  // the record is; a kill suffered adds personal edge to killDesire.
+/**
+ * Rematch adaptation (G11): a losing record against this specific opponent
+ * makes the stable fight more patiently — patience scales with how lopsided
+ * the record is; a kill suffered adds personal edge to killDesire.
+ */
+function rematchModifiers(dossier: OpponentDossier | undefined) {
   let rematchOE = 0;
   let rematchAL = 0;
   let rematchKD = 0;
@@ -140,23 +169,7 @@ function computePlanModifiers(
       changeTactics = true;
     }
   }
-
-  return {
-    intentOE,
-    intentAL,
-    intentKD,
-    grudgeKD,
-    grudgeAL,
-    intelOE,
-    intelAL,
-    intelKD,
-    intelHotOpener,
-    intelFragile,
-    rematchOE,
-    rematchAL,
-    rematchKD,
-    changeTactics,
-  };
+  return { rematchOE, rematchAL, rematchKD, changeTactics };
 }
 
 /**

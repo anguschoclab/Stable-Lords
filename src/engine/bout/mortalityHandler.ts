@@ -218,6 +218,19 @@ export function handleDeath(
     rng
   );
 
+  return assembleDeathImpact(s, victim, isPlayerVictim, graveyardEntry, narrative, week, rng);
+}
+
+/** Assemble the death impact: roster updates, obituary, event, fame delta. */
+function assembleDeathImpact(
+  s: GameState,
+  victim: Warrior,
+  isPlayerVictim: boolean,
+  graveyardEntry: Warrior,
+  narrative: string,
+  week: number,
+  rng: IRNGService
+) {
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];
 

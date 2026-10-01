@@ -112,6 +112,35 @@ export interface RivalShardOutput {
 }
 
 /**
+ * Weekly strategy pick + audit trail. The issuance gate is exactly
+ * updateAIStrategy's re-pick gate (no plan, expired plan, or disproved plan).
+ * Recomputing the gate here beats inferring issuance from
+ * planWeeksRemaining deltas, which can't distinguish a weekly tick from a
+ * disproved plan being replaced by a shorter one.
+ */
+function applyStrategyUpdate(
+  rival: RivalStableData,
+  state: GameState,
+  strategySeed: number
+): RivalStableData {
+  const planIssued =
+    !rival.strategy ||
+    rival.strategy.planWeeksRemaining <= 0 ||
+    verifyIntentSkepticism(rival, state);
+  const strategy = updateAIStrategy(rival, state, strategySeed);
+  return planIssued
+    ? logAgentAction(
+        { ...rival, strategy },
+        'STRATEGY',
+        strategy.reason ?? `Adopted ${strategy.intent}`,
+        'Low',
+        state.week,
+        strategy.intent
+      )
+    : { ...rival, strategy };
+}
+
+/**
  * Processes a single rival stable for the week: strategy update, owner
  * lifecycle, economy/strategy delegation, intel refresh, tournament prep, and
  * bankruptcy succession. Deterministic — every random draw derives from
@@ -127,25 +156,7 @@ export function processRivalStable(
   const gazetteItems: string[] = [];
 
   const strategySeed = state.absoluteWeek * 31 + index * 997 + (rival.owner.id || '').length;
-  // Audit trail: issuance is exactly updateAIStrategy's re-pick gate (no plan,
-  // expired plan, or disproved plan). Recomputing the gate here beats inferring
-  // issuance from planWeeksRemaining deltas, which can't distinguish a weekly
-  // tick from a disproved plan being replaced by a shorter one.
-  const planIssued =
-    !rival.strategy ||
-    rival.strategy.planWeeksRemaining <= 0 ||
-    verifyIntentSkepticism(rival, state);
-  const strategy = updateAIStrategy(rival, state, strategySeed);
-  const rivalWithStrategy = planIssued
-    ? logAgentAction(
-        { ...rival, strategy },
-        'STRATEGY',
-        strategy.reason ?? `Adopted ${strategy.intent}`,
-        'Low',
-        state.week,
-        strategy.intent
-      )
-    : { ...rival, strategy };
+  const rivalWithStrategy = applyStrategyUpdate(rival, state, strategySeed);
 
   // 🎂 1.0 Hardening: Handle Aging & Succession
   const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } = handleOwnerLifecycle(

@@ -152,6 +152,78 @@ function scoreCandidates(
 }
 
 /**
+ * Weekly draft loop: up to `slotsAvailable` signings, best-scored candidate
+ * first, with the quality gate dropped for desperate stables and a skip-to-
+ * next-best path when the top candidate is unaffordable.
+ */
+function draftPoolSignings(
+  updatedRival: RivalStableData,
+  remainingPool: PoolWarrior[],
+  visible: PoolWarrior[],
+  week: number,
+  rng: IRNGService,
+  meta: StyleMeta | undefined,
+  personality: string,
+  favoredStyles: FightingStyle[] | undefined,
+  ctx: {
+    slotsAvailable: number;
+    needsRecruit: boolean;
+    minRoster: number;
+    isMajorDraftWeek: boolean;
+    gazetteItems: string[];
+  }
+): { updatedRival: RivalStableData; signings: number } {
+  let signings = 0;
+  let activeCount = 0;
+  for (const w of updatedRival.roster) {
+    if (isActive(w)) activeCount++;
+  }
+
+  for (let slot = 0; slot < ctx.slotsAvailable; slot++) {
+    const { bestIdx, bestScore } = scoreCandidates(
+      visible,
+      updatedRival.roster,
+      personality,
+      week,
+      meta,
+      favoredStyles
+    );
+    if (bestIdx < 0) break;
+    const recruit = visible[bestIdx];
+    if (!recruit) break;
+
+    const qualityGate = bestScore > 0;
+    const desperation =
+      ctx.needsRecruit || activeCount < ctx.minRoster || ctx.isMajorDraftWeek;
+    if (!qualityGate && !desperation) break;
+
+    const signed = signPoolRecruit(
+      updatedRival,
+      recruit,
+      recruit.cost,
+      week,
+      rng,
+      ctx.gazetteItems
+    );
+    if (!signed) {
+      // Can't afford the best candidate — remove it and try the next-best
+      // (a Pragmatic stable should still find value buys further down).
+      const vIdx = visible.findIndex((p) => p.id === recruit.id);
+      if (vIdx >= 0) visible.splice(vIdx, 1);
+      if (remainingPool.some((p) => p.id === recruit.id)) continue;
+      break;
+    }
+    updatedRival = signed;
+    const idx = remainingPool.findIndex((p) => p.id === recruit.id);
+    if (idx >= 0) remainingPool.splice(idx, 1);
+    visible.splice(bestIdx, 1);
+    signings++;
+    activeCount++;
+  }
+  return { updatedRival, signings };
+}
+
+/**
  * Signs the scored pool recruit: risk-tiered budget check, treasury debit,
  * finance/agent logs, and conversion of the pool entry into a roster Warrior.
  */
@@ -273,41 +345,20 @@ export function processRecruitment(
   // AI_RECRUITS_PER_WEEK_MAX signings per week; below-minimum stables drop
   // the quality gate so they never stall behind a weak pool.
   const slotsAvailable = Math.min(AI_RECRUITS_PER_WEEK_MAX, maxRoster - activeCount);
-  let signings = 0;
-  for (let slot = 0; slot < slotsAvailable; slot++) {
-    const { bestIdx, bestScore } = scoreCandidates(
-      visible,
-      updatedRival.roster,
-      personality,
-      week,
-      meta,
-      favoredStyles
-    );
-    if (bestIdx < 0) break;
-    const recruit = visible[bestIdx];
-    if (!recruit) break;
-
-    const qualityGate = bestScore > 0;
-    const desperation = needsRecruit || activeCount < minRoster || isMajorDraftWeek;
-    if (!qualityGate && !desperation) break;
-
-    const signed = signPoolRecruit(updatedRival, recruit, recruit.cost, week, rng, gazetteItems);
-    if (!signed) {
-      // Can't afford the best candidate — remove it and try the next-best
-      // (a Pragmatic stable should still find value buys further down).
-      const idx = remainingPool.findIndex((p) => p.id === recruit.id);
-      const vIdx = visible.findIndex((p) => p.id === recruit.id);
-      if (vIdx >= 0) visible.splice(vIdx, 1);
-      if (idx >= 0) continue;
-      break;
-    }
-    updatedRival = signed;
-    const idx = remainingPool.findIndex((p) => p.id === recruit.id);
-    if (idx >= 0) remainingPool.splice(idx, 1);
-    visible.splice(bestIdx, 1);
-    signings++;
-    activeCount++;
-  }
+  const drafted = draftPoolSignings(
+    updatedRival,
+    remainingPool,
+    visible,
+    week,
+    rng,
+    meta,
+    personality,
+    favoredStyles,
+    { slotsAvailable, needsRecruit, minRoster, isMajorDraftWeek, gazetteItems }
+  );
+  updatedRival = drafted.updatedRival;
+  const signings = drafted.signings;
+  activeCount += signings;
 
   // Generated fallback: only when the pools couldn't serve a stable that
   // declared a need or sits below its minimum — cheap, so poor stables can
@@ -317,11 +368,9 @@ export function processRecruitment(
     (needsRecruit || activeCount < minRoster) &&
     intent !== 'RECOVERY'
   ) {
+    // signGeneratedRecruit appends directly into `gazetteItems`.
     const signed = signGeneratedRecruit(updatedRival, week, meta, gazetteItems, usedNames);
-    if (signed) {
-      updatedRival = signed.updatedRival;
-      gazetteItems.push(...signed.gazetteItems);
-    }
+    if (signed) updatedRival = signed.updatedRival;
   }
 
   return { updatedRival, updatedPool: remainingPool, gazetteItems };

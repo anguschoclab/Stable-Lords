@@ -3,7 +3,11 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
-import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from './legacyFounder';
+import {
+  isLegacyFounderCaliber,
+  buildLegacyFounderQueueEntry,
+  collectCrownedWarriorIds,
+} from './legacyFounder';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /**
@@ -55,6 +59,8 @@ export const SeasonalRetirementService = {
         .map((t) => t.champion?.warriorId)
         .filter((id): id is NonNullable<typeof id> => id != null)
     );
+    // Past or present crown-holders are founder caliber when they retire.
+    const crownedIds = collectCrownedWarriorIds(state);
 
     updatedState.rivals = (updatedState.rivals || []).map((rival) => {
       const updatedRoster = rival.roster.map((w) => {
@@ -65,7 +71,7 @@ export const SeasonalRetirementService = {
         if (rng.next() < retireChance) {
           // Hall-of-Fame-caliber retirees may found a stable of their own —
           // the queue is persisted on state (consumed by the expansion pass).
-          if (isLegacyFounderCaliber(w) && rng.next() < LEGACY_FOUND_CHANCE) {
+          if (isLegacyFounderCaliber(w, crownedIds) && rng.next() < LEGACY_FOUND_CHANCE) {
             founderQueue.push(buildLegacyFounderQueueEntry(w));
           }
           return retireWithHonors(w, state.week);

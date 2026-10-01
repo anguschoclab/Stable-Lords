@@ -67,6 +67,14 @@ export const EMERGENCY_LOAN = 300;
 
 export const IDLE_STIPEND = 25;
 
+/**
+ * League subsidy — the league underwrites part of an AI stable's
+ * purse-vs-upkeep gap so young stables ramp instead of instantly folding.
+ * The caller scales it by world pressure (full at/below the rival floor,
+ * fading to zero at the soft cap) — see `stipendScale` on the economy input.
+ */
+export const LEAGUE_SUBSIDY_RATE = 0.65;
+
 // ─── AI Treasury Thresholds ───────────────────────────────────────────────
 /**
  * AI economic behavior thresholds

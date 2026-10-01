@@ -8,8 +8,25 @@ import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNGService } from '@/utils/random';
-import { BANKRUPTCY_THRESHOLD, BANKRUPTCY_GRACE_WEEKS } from '@/constants/economy';
-import { WORLD_RIVAL_FLOOR } from '@/constants/world';
+import {
+  BANKRUPTCY_THRESHOLD,
+  BANKRUPTCY_GRACE_WEEKS,
+  LEAGUE_SUBSIDY_RATE,
+} from '@/constants/economy';
+import { WORLD_RIVAL_FLOOR, WORLD_RIVAL_SOFT_CAP } from '@/constants/world';
+
+/**
+ * League-subsidy ramp: full `LEAGUE_SUBSIDY_RATE` at/below the rival floor,
+ * fading linearly to zero at the soft cap. Above the soft cap the world's
+ * economics must stand alone — that's what keeps growth bounded.
+ */
+function leagueSubsidyScale(rivalCount: number): number {
+  const ramp = Math.min(
+    1,
+    Math.max(0, (WORLD_RIVAL_SOFT_CAP - rivalCount) / (WORLD_RIVAL_SOFT_CAP - WORLD_RIVAL_FLOOR))
+  );
+  return LEAGUE_SUBSIDY_RATE * ramp;
+}
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
@@ -43,7 +60,11 @@ function applyWeeklyEconomy(
       getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
-    applyStipend: (state.rivals || []).length <= WORLD_RIVAL_FLOOR,
+    // League subsidy fades from full support at the rival floor to zero at
+    // the soft cap — the world can grow past the floor without every young
+    // stable being born insolvent, and above the soft cap economics bite.
+    applyStipend: (state.rivals || []).length < WORLD_RIVAL_SOFT_CAP,
+    stipendScale: leagueSubsidyScale((state.rivals || []).length),
     isPlayer: false,
     treasury: updatedRival.treasury,
   };

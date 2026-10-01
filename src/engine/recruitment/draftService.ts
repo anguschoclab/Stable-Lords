@@ -2,10 +2,39 @@ import { type RivalStableData, type PoolWarrior, type GameState } from '@/types/
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { processRecruitment } from '../ai/workers/recruitmentWorker';
-import { computeMetaDrift } from '../analytics/metaDrift';
+import { computeMetaDrift, type StyleMeta } from '../analytics/metaDrift';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+
+/**
+ * Rivalry counter-meta (moved from processAIRosterManagement, G9): a rival
+ * locked in a heated feud with the player drafts to counter the player's
+ * observed style mix rather than the global meta.
+ */
+function rivalDraftMeta(
+  rival: RivalStableData,
+  state: GameState,
+  meta: StyleMeta,
+  rivalryMap: Map<string, (typeof state.rivalries)[number]>
+): StyleMeta {
+  const adaptation = rival.owner.metaAdaptation ?? 'Opportunist';
+  // Rivalry entries key on stable ids; older fixtures may key on owner ids.
+  const rivalry =
+    rivalryMap.get(getStablePairKey(state.player.id, rival.id as string)) ??
+    rivalryMap.get(getStablePairKey(state.player.id, rival.owner.id));
+  if (!rivalry || rivalry.intensity < 3 || adaptation === 'Traditionalist') return meta;
+  // Player-stable fights are resolved through the stable map — fight
+  // summaries carry warrior ids, not the player's stable id.
+  const playerFights = (state.arenaHistory ?? [])
+    .filter(
+      (f) =>
+        state.warriorToStableMap?.get(f.warriorIdA)?.stableId === state.player.id ||
+        state.warriorToStableMap?.get(f.warriorIdD)?.stableId === state.player.id
+    )
+    .slice(-10);
+  return playerFights.length > 0 ? computeMetaDrift(playerFights, 10) : meta;
+}
 
 /**
  * AI Draft Service
@@ -59,28 +88,7 @@ export function aiDraftFromPool(
   const draftResults: Record<string, RivalStableData> = {};
 
   for (const rival of sortedRivals) {
-    // Rivalry counter-meta (moved from processAIRosterManagement, G9): a rival
-    // locked in a heated feud with the player drafts to counter the player's
-    // observed style mix rather than the global meta.
-    let customMeta = meta;
-    const adaptation = rival.owner.metaAdaptation ?? 'Opportunist';
-    // Rivalry entries key on stable ids; older fixtures may key on owner ids.
-    const rivalry =
-      rivalryMap.get(getStablePairKey(state.player.id, rival.id as string)) ??
-      rivalryMap.get(getStablePairKey(state.player.id, rival.owner.id));
-    if (rivalry && rivalry.intensity >= 3 && adaptation !== 'Traditionalist') {
-      // Player-stable fights are resolved through the stable map — fight
-      // summaries carry warrior ids, not the player's stable id.
-      const playerFights = (state.arenaHistory ?? [])
-        .filter(
-          (f) =>
-            state.warriorToStableMap?.get(f.warriorIdA)?.stableId === state.player.id ||
-            state.warriorToStableMap?.get(f.warriorIdD)?.stableId === state.player.id
-        )
-        .slice(-10);
-      if (playerFights.length > 0) customMeta = computeMetaDrift(playerFights, 10);
-    }
-
+    const customMeta = rivalDraftMeta(rival, state, meta, rivalryMap);
     const { updatedRival, updatedPool, gazetteItems } = processRecruitment(
       rival,
       currentPool,

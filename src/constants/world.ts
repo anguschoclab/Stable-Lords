@@ -24,14 +24,14 @@ export const EXPANSION_MAX_PER_CHURN = 10;
 
 /** Per-churn chance of organic licensing when the world economy is healthy
  *  and the count sits between floor and soft cap. */
-export const ORGANIC_LICENSE_CHANCE = 0.15;
+export const ORGANIC_LICENSE_CHANCE = 0.5;
 
 /** Organic licensing batch size bounds (rolled per churn when it fires). */
-export const ORGANIC_LICENSE_BATCH_MIN = 1;
-export const ORGANIC_LICENSE_BATCH_MAX = 3;
+export const ORGANIC_LICENSE_BATCH_MIN = 2;
+export const ORGANIC_LICENSE_BATCH_MAX = 4;
 
 /** Chance a caliber retiree elects to found a stable (replaces the 0.25 roll). */
-export const LEGACY_FOUND_CHANCE = 0.60;
+export const LEGACY_FOUND_CHANCE = 0.75;
 
 /** Re-mint attempts when a generated stable collides with live ids/names. */
 export const EXPANSION_MINT_ATTEMPTS = 8;
@@ -66,17 +66,20 @@ export const FREE_AGENT_SHELF_WEEKS = 26;
 
 // ─── Legacy founders ────────────────────────────────────────────────────────
 
-/** Fame at which a retiree is Hall-of-Fame caliber for founding purposes. */
-export const LEGACY_FOUNDER_FAME_HOF = 1500;
+/** Fame at which a retiree is Hall-of-Fame caliber for founding purposes.
+ *  Calibrated to the fame economy (+1/win, +3/kill, +20-50/award): reachable
+ *  only by decorated veterans, not ordinary careers (~90 fame ceiling). */
+export const LEGACY_FOUNDER_FAME_HOF = 150;
 
 /** Lower fame bound that still counts toward founder caliber with a record. */
-export const LEGACY_FOUNDER_FAME_MIN = 500;
+export const LEGACY_FOUNDER_FAME_MIN = 90;
 
-/** Career wins that mark a retiree as founder caliber. */
-export const LEGACY_FOUNDER_WINS_MIN = 30;
+/** Career wins that mark a retiree as founder caliber (elite tail of the
+ *  observed career distribution — most warriors retire under 15 wins). */
+export const LEGACY_FOUNDER_WINS_MIN = 16;
 
 /** Career kills that mark a retiree as founder caliber. */
-export const LEGACY_FOUNDER_KILLS_MIN = 8;
+export const LEGACY_FOUNDER_KILLS_MIN = 4;
 
 /** Chance a qualifying retiree converts to a hiring-pool trainer instead of
  *  (or alongside eligibility for) founding — moved from WarriorPass literal. */

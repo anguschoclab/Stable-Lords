@@ -5,6 +5,7 @@ import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { deriveAbsoluteWeek, isTournamentWeekOfYear } from '@/engine/core/absoluteWeek';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
+import { endReign } from '@/engine/championship/arenaChampionship';
 import { buildWeekCaches } from './caches';
 import type { WeekContext } from './context';
 /**
@@ -101,6 +102,39 @@ function deferBoutArchives(state: GameState, currentWeek: number): void {
 }
 
 /**
+ * Backstop for the championship pass's vacancy sweep: any pass that dissolves
+ * a stable mid-stage (starvation fold, bankruptcy churn, succession swap) can
+ * leave a reign pointing at a warrior who is no longer in any roster. Ending
+ * it here — after all stage impacts have merged — guarantees the committed
+ * state never holds an orphaned crown, whatever order passes wrote in.
+ */
+function sweepOrphanedReigns(state: GameState): void {
+  const titles = state.arenaChampions;
+  if (!titles) return;
+  const rosteredIds = new Set<string>();
+  for (const w of state.roster ?? []) rosteredIds.add(w.id);
+  for (const r of state.rivals ?? []) {
+    for (const w of r.roster) rosteredIds.add(w.id);
+  }
+  const deadIds = new Set((state.graveyard ?? []).map((w) => w.id));
+  const retiredIds = new Set((state.retired ?? []).map((w) => w.id));
+  for (const title of Object.values(titles)) {
+    const reign = title.champion;
+    if (!reign) continue;
+    const gone = !rosteredIds.has(reign.warriorId);
+    const dead = deadIds.has(reign.warriorId);
+    const retired = retiredIds.has(reign.warriorId);
+    if (!gone && !dead && !retired) continue;
+    endReign(
+      state,
+      title,
+      dead ? 'died' : retired ? 'retired' : 'displaced',
+      state.absoluteWeek
+    );
+  }
+}
+
+/**
  * Applies week-boundary bookkeeping to the settled state: week/year rollover,
  * tournament-mode release, lifetime counters, training decay, rest pruning,
  * bout-offer cleanup, season-boundary resets, and deferred bout archiving.
@@ -150,6 +184,8 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
   state.warriorToOfferIds = warriorToOfferIds;
 
   applySeasonBoundaryReset(state, oldState);
+
+  sweepOrphanedReigns(state);
 
   // Handle OPFS archiving — always defer to off-thread flush for consistency
   deferBoutArchives(state, ctx.currentWeek);

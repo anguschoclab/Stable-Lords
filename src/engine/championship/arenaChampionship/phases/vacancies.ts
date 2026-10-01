@@ -33,3 +33,4 @@ export function enforceVacancies(state: GameState, delta: ChampionshipDelta): vo
     }
   }
 }
+

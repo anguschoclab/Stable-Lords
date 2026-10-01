@@ -10,7 +10,11 @@ import { isActive, isRetired } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { filterActive } from '@/utils/roster';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
-import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from '@/engine/ai/legacyFounder';
+import {
+  isLegacyFounderCaliber,
+  buildLegacyFounderQueueEntry,
+  collectCrownedWarriorIds,
+} from '@/engine/ai/legacyFounder';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /**
@@ -38,7 +42,8 @@ function cullRivalRoster(
   gazetteItems: string[],
   retiredWarriors: Warrior[],
   championIds: Set<string>,
-  founderQueue: Warrior[]
+  founderQueue: Warrior[],
+  crownedIds: Set<string>
 ): number {
   const personality = r.owner.personality ?? 'Pragmatic';
   let culledThisTick = 0;
@@ -46,42 +51,13 @@ function cullRivalRoster(
   const retire = (w: Warrior) => {
     Object.assign(w, retireWithHonors(w, state.week));
     retiredWarriors.push({ ...w });
-    if (isLegacyFounderCaliber(w) && rngSnapshot.next() < LEGACY_FOUND_CHANCE) {
+    if (isLegacyFounderCaliber(w, crownedIds) && rngSnapshot.next() < LEGACY_FOUND_CHANCE) {
       founderQueue.push(buildLegacyFounderQueueEntry(w));
     }
     culledThisTick++;
   };
 
-  // Methodical/Tactician owners cull underperformers
-  if (personality === 'Methodical' || personality === 'Tactician') {
-    cullWhere(
-      r,
-      (w) =>
-        w.career.wins + w.career.losses >= 5 &&
-        w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
-        (w.age ?? 18) >= 25,
-      isOnWinStreak,
-      retire,
-      gazetteItems,
-      (c) =>
-        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`,
-      championIds
-    );
-  }
-
-  // Aggressive owners cull warriors with 0 kills after many fights
-  if (personality === 'Aggressive') {
-    cullWhere(
-      r,
-      (w) => w.career.kills === 0 && w.career.wins + w.career.losses >= 8 && (w.age ?? 18) >= 24,
-      isOnWinStreak,
-      retire,
-      gazetteItems,
-      (c) =>
-        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`,
-      championIds
-    );
-  }
+  cullByPersonality(r, personality, isOnWinStreak, retire, gazetteItems, championIds);
 
   // Liability-based culling: release flaw-loaded warriors per personality threshold
   const traitPolicy = policyFor(r.owner.personality);
@@ -109,7 +85,8 @@ function cullRivalRoster(
     gazetteItems,
     retiredWarriors,
     championIds,
-    founderQueue
+    founderQueue,
+    crownedIds
   );
 
   return culledThisTick;
@@ -123,7 +100,8 @@ function retireElderlyWarrior(
   gazetteItems: string[],
   retiredWarriors: Warrior[],
   championIds: Set<string>,
-  founderQueue: Warrior[]
+  founderQueue: Warrior[],
+  crownedIds: Set<string>
 ): void {
   const elderly = r.roster.filter(
     (w) => isActive(w) && !championIds.has(w.id) && (w.age ?? 18) >= 30
@@ -132,13 +110,53 @@ function retireElderlyWarrior(
     if (rngSnapshot.next() < 0.15) {
       Object.assign(old, retireWithHonors(old, state.week));
       retiredWarriors.push({ ...old });
-      if (isLegacyFounderCaliber(old) && rngSnapshot.next() < LEGACY_FOUND_CHANCE) {
+      if (isLegacyFounderCaliber(old, crownedIds) && rngSnapshot.next() < LEGACY_FOUND_CHANCE) {
         founderQueue.push(buildLegacyFounderQueueEntry(old));
       }
       gazetteItems.push(
         `🏠 ${warriorDisplayName(old)} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
       );
     }
+  }
+}
+
+/** Personality culls: Methodical/Tactician cut underperformers; Aggressive
+ *  cuts warriors with no killer instinct. */
+function cullByPersonality(
+  r: RivalStableData,
+  personality: string,
+  isOnWinStreak: (w: Warrior) => boolean,
+  retire: (w: Warrior) => void,
+  gazetteItems: string[],
+  championIds: Set<string>
+): void {
+  if (personality === 'Methodical' || personality === 'Tactician') {
+    cullWhere(
+      r,
+      (w) =>
+        w.career.wins + w.career.losses >= 5 &&
+        w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
+        (w.age ?? 18) >= 25,
+      isOnWinStreak,
+      retire,
+      gazetteItems,
+      (c) =>
+        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`,
+      championIds
+    );
+  }
+
+  if (personality === 'Aggressive') {
+    cullWhere(
+      r,
+      (w) => w.career.kills === 0 && w.career.wins + w.career.losses >= 8 && (w.age ?? 18) >= 24,
+      isOnWinStreak,
+      retire,
+      gazetteItems,
+      (c) =>
+        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`,
+      championIds
+    );
   }
 }
 
@@ -190,77 +208,109 @@ export function processAIRosterManagement(
       .map((t) => t.champion?.warriorId)
       .filter((id): id is NonNullable<typeof id> => id != null)
   );
+  // Past or present crown-holders are founder caliber when they retire.
+  const crownedIds = collectCrownedWarriorIds(state);
 
-  const updatedRivals = (state.rivals || []).map((rival) => {
-    const r = {
-      ...rival,
-      roster: rival.roster.map((w) => ({ ...w, career: { ...w.career } })),
-      owner: { ...rival.owner },
-    };
-
-    const personality = r.owner.personality ?? 'Pragmatic';
-
-    // Trajectory guard: warriors on a hot streak (3+ wins in last 5 fights) are
-    // protected from any personality-based culling regardless of career win-rate.
-    const isOnWinStreak = (w: Warrior) => {
-      const total = w.career.wins + w.career.losses;
-      if (total < 5) return false;
-      const wId = w.id;
-      const recentFights = getRecentFightsForWarrior(state.arenaHistory, wId, 5);
-      const recentWins = recentFights.filter(
-        (f) =>
-          (f.warriorIdA === wId && f.winner === 'A') || (f.warriorIdD === wId && f.winner === 'D')
-      ).length;
-      return recentWins >= 3;
-    };
-
-    // 1) Retirement / Culling Logic
-    const culledThisTick = cullRivalRoster(
-      r,
+  const updatedRivals = (state.rivals || []).map((rival) =>
+    manageOneRival(
+      rival,
       state,
-      isOnWinStreak,
       rngSnapshot,
       gazetteItems,
       retiredWarriors,
+      legacyFounders,
       championIds,
-      legacyFounders
-    );
-
-    // 2) Recruitment flag — signing is unified in aiDraftFromPool /
-    // processRecruitment (G9). Management only declares the need; the draft
-    // path owns caps, budgets, and pool-vs-generated sourcing.
-    let currentActive = 0;
-    for (const w of r.roster) {
-      if (isActive(w)) currentActive++;
-    }
-    const intent = r.strategy?.intent ?? 'CONSOLIDATION';
-    r.needsRecruit =
-      currentActive < aiRosterMin(personality) && culledThisTick === 0 && intent !== 'RECOVERY';
-
-    // Preserve every warrior leaving the roster in a Retired state —
-    // culls from this pass plus retirements applied upstream (seasonal churn,
-    // aging) that were sitting on the roster with status 'Retired'. Without
-    // this, retired warriors silently vanish instead of reaching
-    // state.retired.
-    const seen = new Set(retiredWarriors.map((w) => w.id));
-    const queued = new Set((state.legacyFounderQueue ?? []).map((w) => w.id));
-    for (const w of r.roster) {
-      if (isRetired(w) && !seen.has(w.id)) {
-        retiredWarriors.push(w);
-        if (
-          !queued.has(w.id) &&
-          !legacyFounders.some((f) => f.id === w.id) &&
-          isLegacyFounderCaliber(w) &&
-          rngSnapshot.next() < LEGACY_FOUND_CHANCE
-        ) {
-          legacyFounders.push(buildLegacyFounderQueueEntry(w));
-        }
-      }
-    }
-
-    r.roster = filterActive(r.roster);
-    return r;
-  });
+      crownedIds
+    )
+  );
 
   return { updatedRivals, gazetteItems, retiredWarriors, legacyFounders };
+}
+
+/**
+ * Trajectory guard: warriors on a hot streak (3+ wins in last 5 fights) are
+ * protected from any personality-based culling regardless of career win-rate.
+ */
+function winStreakGuard(arenaHistory: GameState['arenaHistory']) {
+  return (w: Warrior) => {
+    const total = w.career.wins + w.career.losses;
+    if (total < 5) return false;
+    const wId = w.id;
+    const recentFights = getRecentFightsForWarrior(arenaHistory, wId, 5);
+    const recentWins = recentFights.filter(
+      (f) =>
+        (f.warriorIdA === wId && f.winner === 'A') || (f.warriorIdD === wId && f.winner === 'D')
+    ).length;
+    return recentWins >= 3;
+  };
+}
+
+/**
+ * Per-rival roster management: cull/retire, flag `needsRecruit`, then
+ * preserve every warrior leaving the roster in a Retired state — culls from
+ * this pass plus retirements applied upstream (seasonal churn, aging) that
+ * were sitting on the roster with status 'Retired'. Without this, retired
+ * warriors silently vanish instead of reaching `state.retired`.
+ */
+function manageOneRival(
+  rival: RivalStableData,
+  state: GameState,
+  rngSnapshot: IRNGService,
+  gazetteItems: string[],
+  retiredWarriors: Warrior[],
+  legacyFounders: Warrior[],
+  championIds: Set<string>,
+  crownedIds: Set<string>
+): RivalStableData {
+  const r = {
+    ...rival,
+    roster: rival.roster.map((w) => ({ ...w, career: { ...w.career } })),
+    owner: { ...rival.owner },
+  };
+
+  const personality = r.owner.personality ?? 'Pragmatic';
+  const isOnWinStreak = winStreakGuard(state.arenaHistory);
+
+  // 1) Retirement / Culling Logic
+  const culledThisTick = cullRivalRoster(
+    r,
+    state,
+    isOnWinStreak,
+    rngSnapshot,
+    gazetteItems,
+    retiredWarriors,
+    championIds,
+    legacyFounders,
+    crownedIds
+  );
+
+  // 2) Recruitment flag — signing is unified in aiDraftFromPool /
+  // processRecruitment (G9). Management only declares the need; the draft
+  // path owns caps, budgets, and pool-vs-generated sourcing.
+  let currentActive = 0;
+  for (const w of r.roster) {
+    if (isActive(w)) currentActive++;
+  }
+  const intent = r.strategy?.intent ?? 'CONSOLIDATION';
+  r.needsRecruit =
+    currentActive < aiRosterMin(personality) && culledThisTick === 0 && intent !== 'RECOVERY';
+
+  const seen = new Set(retiredWarriors.map((w) => w.id));
+  const queued = new Set((state.legacyFounderQueue ?? []).map((w) => w.id));
+  for (const w of r.roster) {
+    if (isRetired(w) && !seen.has(w.id)) {
+      retiredWarriors.push(w);
+      if (
+        !queued.has(w.id) &&
+        !legacyFounders.some((f) => f.id === w.id) &&
+        isLegacyFounderCaliber(w, crownedIds) &&
+        rngSnapshot.next() < LEGACY_FOUND_CHANCE
+      ) {
+        legacyFounders.push(buildLegacyFounderQueueEntry(w));
+      }
+    }
+  }
+
+  r.roster = filterActive(r.roster);
+  return r;
 }

@@ -17,18 +17,9 @@ import { SAVE_STATE_VERSION } from '@/constants/core';
 import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
 import { OWNER_PERSONALITIES_WITH_POLICY } from '@/engine/ai/traitPolicy';
 
-/**
- * Creates the initial, deterministic game state for a new game.
- */
-export function createFreshState(
-  seed: string,
-  createdAt: string = new Date().toISOString()
-): GameState {
-  const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const rng = new SeededRNGService(numericSeed);
-
-  // 1. Core State
-  const state: GameState = {
+/** The empty-but-complete GameState literal every fresh save starts from. */
+function baseFreshState(createdAt: string): GameState {
+  return {
     meta: {
       gameName: 'Stable Lords',
       version: SAVE_STATE_VERSION,
@@ -96,7 +87,19 @@ export function createFreshState(
     bookmarks: [],
     progression: DEFAULT_PROGRESSION,
   };
+}
 
+/**
+ * Creates the initial, deterministic game state for a new game.
+ */
+export function createFreshState(
+  seed: string,
+  createdAt: string = new Date().toISOString()
+): GameState {
+  const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const rng = new SeededRNGService(numericSeed);
+
+  const state = baseFreshState(createdAt);
   state.rivals = generateInitialRivals(rng);
   state.recruitPool = generateInitialRecruitPool(rng);
 

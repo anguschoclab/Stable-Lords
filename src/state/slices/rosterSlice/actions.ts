@@ -6,7 +6,11 @@ import { formatWeek } from '@/utils/format';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { retireWithHonors } from '@/engine/warrior/retirement';
-import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from '@/engine/ai/legacyFounder';
+import {
+  isLegacyFounderCaliber,
+  buildLegacyFounderQueueEntry,
+  collectCrownedWarriorIds,
+} from '@/engine/ai/legacyFounder';
 import { SeededRNGService } from '@/utils/random';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
@@ -84,7 +88,7 @@ function retireToGraveyard(
  *  retirements may also join the world's legacy-founder queue — a player's
  *  legend can open a rival stable with lineage back to the player's stable. */
 function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameStore> {
-  const warrior = state.roster.find((w: Warrior) => w.id !== warriorId);
+  const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
   if (!warrior) return state;
 
   const ret: Warrior = retireWithHonors(warrior, state.week);
@@ -97,7 +101,10 @@ function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameS
   const founderRng = new SeededRNGService(
     (state.absoluteWeek ?? state.week) * 977 + state.retired.length
   );
-  if (isLegacyFounderCaliber(ret) && founderRng.next() < LEGACY_FOUND_CHANCE) {
+  if (
+    isLegacyFounderCaliber(ret, collectCrownedWarriorIds(state)) &&
+    founderRng.next() < LEGACY_FOUND_CHANCE
+  ) {
     update.legacyFounderQueue = [
       ...(state.legacyFounderQueue ?? []),
       buildLegacyFounderQueueEntry(ret),

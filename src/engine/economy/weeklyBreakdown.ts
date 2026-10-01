@@ -65,6 +65,12 @@ export interface StableEconomyInput {
   trainers: Trainer[];
   trainingAssignments: TrainingAssignment[];
   applyStipend?: boolean;
+  /**
+   * League-subsidy scale (0–1) for AI stables: the subsidy covers this
+   * fraction of the week's roster-upkeep-vs-purse gap. Callers fade it with
+   * world pressure — full at/below the rival floor, zero at the soft cap.
+   */
+  stipendScale?: number;
   isPlayer?: boolean;
   /**
    * Current treasury — used only for the AI prestige-upkeep sink. Rival
@@ -137,6 +143,17 @@ function sumFightPurses(input: StableEconomyInput): PurseTotals {
 
 type BreakdownItem = { label: string; amount: number; category: LedgerEntry['category'] };
 
+/** Weekly roster upkeep — base rate plus the fame premium per warrior. */
+function rosterUpkeepTotal(roster: Warrior[]): number {
+  let upkeep = 0;
+  for (let i = 0; i < roster.length; i++) {
+    const w = roster[i];
+    if (!w) continue;
+    upkeep += WARRIOR_UPKEEP_BASE + Math.round((w.fame || 0) * FAME_UPKEEP_MULTIPLIER);
+  }
+  return upkeep;
+}
+
 function buildIncome(input: StableEconomyInput, purses: PurseTotals): BreakdownItem[] {
   const income: BreakdownItem[] = [];
   if (purses.fightCount > 0)
@@ -160,6 +177,17 @@ function buildIncome(input: StableEconomyInput, purses: PurseTotals): BreakdownI
 
   if (input.applyStipend !== false && purses.fightCount === 0 && input.roster.length > 0) {
     income.push({ label: 'Idle Stipend', amount: IDLE_STIPEND, category: 'other' });
+  }
+
+  // League subsidy: covers `stipendScale` of the upkeep-vs-purse gap for AI
+  // stables — booked-out stables earn their way off support automatically.
+  const scale = Math.min(1, Math.max(0, input.stipendScale ?? 0));
+  if (!input.isPlayer && scale > 0 && input.roster.length > 0) {
+    const purseIncome = purses.scaledPurse + purses.scaledWinBonus;
+    const subsidy = Math.round(scale * Math.max(0, rosterUpkeepTotal(input.roster) - purseIncome));
+    if (subsidy > 0) {
+      income.push({ label: 'League subsidy', amount: subsidy, category: 'other' });
+    }
   }
 
   // 🌩️ Weather Impact: Mana Surge Gift
@@ -200,15 +228,9 @@ function buildIncome(input: StableEconomyInput, purses: PurseTotals): BreakdownI
 function buildExpenses(input: StableEconomyInput): BreakdownItem[] {
   const expenses: BreakdownItem[] = [];
 
-  // ⚡ Bolt: Single-pass roster upkeep sum, same loop shape as patronage.
-  let rosterUpkeep = 0;
-  for (let i = 0; i < input.roster.length; i++) {
-    const w = input.roster[i];
-    if (!w) continue;
-    // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
-    const famePremium = Math.round((w.fame || 0) * FAME_UPKEEP_MULTIPLIER);
-    rosterUpkeep += WARRIOR_UPKEEP_BASE + famePremium;
-  }
+  // Elite Maintenance (Legendary warriors demand luxury overhead) — fame
+  // premium is priced inside rosterUpkeepTotal.
+  const rosterUpkeep = rosterUpkeepTotal(input.roster);
 
   if (input.roster.length > 0) {
     expenses.push({

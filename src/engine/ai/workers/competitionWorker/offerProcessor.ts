@@ -187,6 +187,31 @@ function respondForWarrior(
     return;
   }
 
+  resolveEvaluatedResponse(
+    state,
+    currentOffers,
+    offer,
+    trackedOffer,
+    wId,
+    owningRival,
+    rivalWarrior,
+    opponent,
+    pickedWarriors
+  );
+}
+
+/** Evaluate the offer and apply the verdict: accept, counter, or respond. */
+function resolveEvaluatedResponse(
+  state: GameState,
+  currentOffers: OfferMap,
+  offer: BoutOffer,
+  trackedOffer: BoutOffer,
+  wId: WarriorId,
+  owningRival: RivalStableData,
+  rivalWarrior: Warrior,
+  opponent: Warrior | undefined,
+  pickedWarriors: Set<string>
+): void {
   const explain: { reason?: string } = {};
   const response = boutAcceptance.evaluateBoutOffer(
     trackedOffer,

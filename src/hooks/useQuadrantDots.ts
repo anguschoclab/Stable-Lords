@@ -7,6 +7,7 @@ import { computeStableReputation, computeRivalReputation } from '@/engine/stable
  *
  */
 export interface QuadrantDot {
+  id: string;
   label: string;
   fame: number;
   notoriety: number;
@@ -24,6 +25,7 @@ export function useQuadrantDots(
     const playerRep = computeStableReputation(worldState);
     const result: QuadrantDot[] = [
       {
+        id: 'player',
         label: worldState.player?.stableName ?? 'Your Stable',
         fame: playerRep.fame,
         notoriety: playerRep.notoriety,
@@ -33,6 +35,7 @@ export function useQuadrantDots(
     for (const rival of rivals ?? []) {
       const rep = computeRivalReputation(rival.roster);
       result.push({
+        id: rival.id,
         label: rival.owner.stableName,
         fame: rep.fame,
         notoriety: rep.notoriety,

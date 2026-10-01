@@ -20,8 +20,8 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
     <Surface variant="glass" className="p-0 border-white/5 overflow-hidden">
       <div className="divide-y divide-white/5">
         {recentBouts.length > 0 ? (
-          recentBouts.map((f) => (
-            <BoutLogRow key={f.id} f={f} stableWarriorIds={stableWarriorIds} />
+          recentBouts.map((f, i) => (
+            <BoutLogRow key={`${f.id}-${i}`} f={f} stableWarriorIds={stableWarriorIds} />
           ))
         ) : (
           <div className="p-24 text-center text-muted-foreground/20 italic text-[10px] uppercase font-black tracking-widest">

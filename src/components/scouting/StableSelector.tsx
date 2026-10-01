@@ -2,6 +2,9 @@ import { Shield, Hexagon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { RivalStableData } from '@/types/game';
+import { ListToolbar } from './rivalListShell';
+import { RIVAL_SORTS, rivalSearchText } from './utils/rivalListUtils';
+import { useListShell } from '@/hooks/useListShell';
 
 interface StableSelectorProps {
   rivals: RivalStableData[];
@@ -165,29 +168,45 @@ function StableRow({
  *
  */
 export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelectorProps) {
+  // One filter across both columns — the pair comparison reads better when
+  // both sides scan the same (search + sort + windowed) list.
+  const list = useListShell(rivals, {
+    searchText: rivalSearchText,
+    sorts: RIVAL_SORTS,
+    pageSize: 40,
+  });
+
   return (
-    <div className="grid grid-cols-2 gap-8">
-      <StableColumn
-        rivals={rivals}
-        title="Stable Prime"
-        ariaRole="Stable Prime"
-        tooltip="MARK PRIME"
-        selectedId={idA}
-        otherId={idB}
-        onSelect={setIdA}
-        tone="primary"
+    <div className="space-y-4">
+      <ListToolbar
+        list={list}
+        sorts={RIVAL_SORTS}
+        placeholder="Search stables…"
+        ariaLabel="Filter comparison stables"
       />
-      <StableColumn
-        rivals={rivals}
-        title="Stable Challenger"
-        ariaRole="Stable Challenger"
-        tooltip="MARK CHALLENGER"
-        selectedId={idB}
-        otherId={idA}
-        onSelect={setIdB}
-        tone="accent"
-        rightAlign
-      />
+      <div className="grid grid-cols-2 gap-8">
+        <StableColumn
+          rivals={list.visible}
+          title="Stable Prime"
+          ariaRole="Stable Prime"
+          tooltip="MARK PRIME"
+          selectedId={idA}
+          otherId={idB}
+          onSelect={setIdA}
+          tone="primary"
+        />
+        <StableColumn
+          rivals={list.visible}
+          title="Stable Challenger"
+          ariaRole="Stable Challenger"
+          tooltip="MARK CHALLENGER"
+          selectedId={idB}
+          otherId={idA}
+          onSelect={setIdB}
+          tone="accent"
+          rightAlign
+        />
+      </div>
     </div>
   );
 }

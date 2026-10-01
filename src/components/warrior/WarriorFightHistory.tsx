@@ -196,13 +196,13 @@ export function WarriorFightHistory({
       {fights
         .slice(-10)
         .reverse()
-        .map((f) => {
+        .map((f, i) => {
           const n = getNamesFromTitle(f.title);
           const isA = f.warriorIdA === warriorId;
           const opponent = isA ? n.d : n.a;
           return (
             <FightRow
-              key={f.id}
+              key={`${f.id}-${i}`}
               fight={f}
               warriorId={warriorId}
               record={h2h.get(opponent)}

@@ -6,6 +6,9 @@ import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { useGameStore } from '@/state/useGameStore';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { ListToolbar } from './rivalListShell';
+import { RIVAL_SORTS, rivalSearchText } from './utils/rivalListUtils';
+import { useListShell } from '@/hooks/useListShell';
 
 interface RivalStableListProps {
   rivals: RivalStableData[];
@@ -150,6 +153,11 @@ function RivalRow({
  */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {
   const ownerGrudges = useGameStore((s) => s.ownerGrudges) ?? [];
+  const list = useListShell(rivals, {
+    searchText: rivalSearchText,
+    sorts: RIVAL_SORTS,
+    pageSize: 25,
+  });
 
   return (
     <div className="space-y-4">
@@ -160,8 +168,10 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
         <div className="h-px flex-1 bg-border/20" />
       </div>
 
+      <ListToolbar list={list} sorts={RIVAL_SORTS} placeholder="Search stables…" />
+
       <div className="grid grid-cols-1 gap-2">
-        {rivals.map((rival) => (
+        {list.visible.map((rival) => (
           <RivalRow
             key={rival.owner.id}
             rival={rival}

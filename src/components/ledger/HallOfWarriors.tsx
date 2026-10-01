@@ -204,8 +204,8 @@ export function HallOfWarriors() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {safeRetired.map((w) => (
-                    <RetiredWarriorRow key={w.id} warrior={w} />
+                  {safeRetired.map((w, i) => (
+                    <RetiredWarriorRow key={`${w.id}-${i}`} warrior={w} />
                   ))}
                 </TableBody>
               </Table>

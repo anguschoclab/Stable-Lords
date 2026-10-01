@@ -8,6 +8,7 @@ import type { QuadrantDot } from '@/hooks/useQuadrantDots';
 
 describe('QuadrantDotItem', () => {
   const playerDot: QuadrantDot = {
+    id: 'player',
     label: 'Player Stable',
     fame: 50,
     notoriety: 60,
@@ -15,6 +16,7 @@ describe('QuadrantDotItem', () => {
   };
 
   const rivalDot: QuadrantDot = {
+    id: 'r1',
     label: 'Rival Stable',
     fame: 30,
     notoriety: 40,

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { RivalIntelligence } from '@/components/world/RivalIntelligence';
 import { makeRival, makeWarrior } from '@/test/_fixtures/factories';
@@ -121,5 +121,25 @@ describe('RivalIntelligence (H.2)', () => {
     });
     const { container } = render(<RivalIntelligence rivals={[idle]} arenaChampions={{}} />);
     expect(container.querySelectorAll('[data-testid="title-posture-chip"]')).toHaveLength(0);
+  });
+
+  it('filters the rival list through the shared shell search', () => {
+    const a = makeRival({
+      id: 'r1' as StableId,
+      owner: { ...makeRival().owner, stableName: 'Iron Wolves' },
+      agentMemory: baseMemory(),
+    });
+    const b = makeRival({
+      id: 'r2' as StableId,
+      owner: { ...makeRival().owner, stableName: 'Ash Reapers' },
+      agentMemory: baseMemory(),
+    });
+    render(<RivalIntelligence rivals={[a, b]} />);
+
+    fireEvent.change(screen.getByLabelText('Filter rival intelligence'), {
+      target: { value: 'wolves' },
+    });
+    expect(screen.getByText('Iron Wolves')).toBeInTheDocument();
+    expect(screen.queryByText('Ash Reapers')).not.toBeInTheDocument();
   });
 });

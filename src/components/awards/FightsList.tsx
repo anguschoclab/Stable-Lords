@@ -29,14 +29,14 @@ export default function FightsList({
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="mt-2 space-y-1">
-          {fights.map((f) => {
+          {fights.map((f, i) => {
             const round = getRound ? getRound(f.id) : undefined;
             const n = (f.title.split(' (')[0] ?? '').split(' vs ');
             const nameA = n[0] || 'Unknown';
             const nameD = n[1] || 'Unknown';
             return (
               <div
-                key={f.id}
+                key={`${f.id}-${i}`}
                 className="flex items-center justify-between py-1.5 px-3 rounded-none bg-secondary/30 border border-border/20 text-xs"
               >
                 <div className="flex items-center gap-2">

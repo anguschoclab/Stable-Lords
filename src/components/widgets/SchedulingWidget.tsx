@@ -212,7 +212,7 @@ function MatchupColumn({
         {matchups.length > 0 ? (
           matchups.map((m) => (
             <MatchupCard
-              key={m.rivalStableName}
+              key={m.rivalWarrior.id}
               matchup={m}
               type={type}
               isChallenged={flags.playerChallenges?.includes(m.rivalWarrior.id) ?? false}

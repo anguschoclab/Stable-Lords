@@ -32,38 +32,38 @@ describe('ReputationQuadrant', () => {
   });
 
   it('renders without crashing', () => {
-    mockDots = [{ label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
+    mockDots = [{ id: 'dot1', label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
     const { container } = render(<ReputationQuadrant />);
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders "Reputation Quadrant" header text', () => {
-    mockDots = [{ label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
+    mockDots = [{ id: 'dot2', label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
     const { container } = render(<ReputationQuadrant />);
     expect(container.textContent).toContain('Reputation Quadrant');
   });
 
   it('renders "You" legend item', () => {
-    mockDots = [{ label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
+    mockDots = [{ id: 'dot3', label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
     const { container } = render(<ReputationQuadrant />);
     expect(container.textContent).toContain('You');
   });
 
   it('renders "Rivals" legend item', () => {
-    mockDots = [{ label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
+    mockDots = [{ id: 'dot4', label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
     const { container } = render(<ReputationQuadrant />);
     expect(container.textContent).toContain('Rivals');
   });
 
   it('renders player dot indicator with bg-primary in legend', () => {
-    mockDots = [{ label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
+    mockDots = [{ id: 'dot5', label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
     const { container } = render(<ReputationQuadrant />);
     const primaryEl = container.querySelector('.bg-primary');
     expect(primaryEl).toBeInTheDocument();
   });
 
   it('renders rival dot indicator with bg-white/20 in legend', () => {
-    mockDots = [{ label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
+    mockDots = [{ id: 'dot6', label: 'Player', fame: 50, notoriety: 30, isPlayer: true }];
     const { container } = render(<ReputationQuadrant />);
     const rivalIndicator = container.querySelector('.bg-white\\/20');
     expect(rivalIndicator).toBeInTheDocument();
@@ -71,9 +71,9 @@ describe('ReputationQuadrant', () => {
 
   it('renders dots from useQuadrantDots — 3 dots → 3 dot elements', () => {
     mockDots = [
-      { label: 'Player', fame: 50, notoriety: 30, isPlayer: true },
-      { label: 'Rival A', fame: 40, notoriety: 60, isPlayer: false },
-      { label: 'Rival B', fame: 20, notoriety: 10, isPlayer: false },
+      { id: 'dot7', label: 'Player', fame: 50, notoriety: 30, isPlayer: true },
+      { id: 'dot8', label: 'Rival A', fame: 40, notoriety: 60, isPlayer: false },
+      { id: 'dot9', label: 'Rival B', fame: 20, notoriety: 10, isPlayer: false },
     ];
     const { container } = render(<ReputationQuadrant />);
     // Each QuadrantDotItem renders a positioned div inside QuadrantPlot

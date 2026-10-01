@@ -70,9 +70,9 @@ function BoutsTable({
           {recentBouts.length === 0 ? (
             <EmptyBoutsState />
           ) : (
-            recentBouts.map((bout) => (
+            recentBouts.map((bout, i) => (
               <BoutTableRow
-                key={bout.id}
+                key={`${bout.id}-${i}`}
                 bout={bout}
                 playerStableId={playerStableId}
                 state={state}

@@ -5,6 +5,9 @@ import { MetaDriftWidget } from '@/components/widgets';
 import type { RivalStableData } from '@/types/game';
 import type { ArenaTitle } from '@/types/state.types';
 import { RivalIntelligenceRow } from './RivalIntelligenceRow';
+import { ListToolbar } from '@/components/scouting/rivalListShell';
+import { RIVAL_SORTS, rivalSearchText } from '@/components/scouting/utils/rivalListUtils';
+import { useListShell } from '@/hooks/useListShell';
 
 interface RivalIntelligenceProps {
   rivals: RivalStableData[];
@@ -66,6 +69,12 @@ function ScoutSummaryCard() {
  * @param - { rivals }.
  */
 export function RivalIntelligence({ rivals, arenaChampions }: RivalIntelligenceProps) {
+  const list = useListShell(rivals, {
+    searchText: rivalSearchText,
+    sorts: RIVAL_SORTS,
+    pageSize: 25,
+  });
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-1">
@@ -74,8 +83,16 @@ export function RivalIntelligence({ rivals, arenaChampions }: RivalIntelligenceP
       <div className="lg:col-span-2 space-y-6">
         <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
           <NetworkHeader count={rivals.length} />
+          <div className="py-3 border-b border-white/5">
+            <ListToolbar
+              list={list}
+              sorts={RIVAL_SORTS}
+              placeholder="Search rivals…"
+              ariaLabel="Filter rival intelligence"
+            />
+          </div>
           <div className="divide-y divide-white/5">
-            {rivals.map((rival) => (
+            {list.visible.map((rival) => (
               <RivalIntelligenceRow
                 key={rival.owner.id}
                 rival={rival}

@@ -9,6 +9,7 @@ import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/state/useGameStore';
 import type { RivalStableData } from '@/types/game';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
@@ -110,9 +111,51 @@ export function StableSidebar({
               </p>
             </div>
           )}
+          <LineageBlock rival={rival} />
         </div>
       </section>
     </aside>
+  );
+}
+
+/** Legacy-founder lineage: "Founded by <warrior>, formerly of <parent>". */
+function LineageBlock({ rival }: { rival: RivalStableData }) {
+  const rivals = useGameStore((s) => s.rivals);
+  const founderName = rival.owner.foundedByWarriorName;
+  const parentName = rival.owner.parentStableId
+    ? rivals?.find((r) => r.id === rival.owner.parentStableId)?.owner.stableName
+    : undefined;
+  if (!founderName && !parentName) return null;
+
+  return (
+    <div className="space-y-3 pt-6 border-t border-white/5">
+      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+        Lineage
+      </span>
+      <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
+        Founded by{' '}
+        {rival.owner.foundedByWarriorId ? (
+          <WarriorLink
+            name={founderName ?? ''}
+            id={rival.owner.foundedByWarriorId}
+            className="text-foreground font-black hover:text-primary"
+          >
+            {founderName}
+          </WarriorLink>
+        ) : (
+          <span className="text-foreground font-black">{founderName}</span>
+        )}
+        {parentName ? (
+          <>
+            {' '}
+            after a career at <span className="text-foreground font-black">{parentName}</span>
+          </>
+        ) : (
+          ' after retiring from the sands'
+        )}
+        .
+      </p>
+    </div>
   );
 }
 

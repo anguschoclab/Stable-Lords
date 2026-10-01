@@ -16,7 +16,7 @@ import type { GameStore } from '@/state/useGameStore';
  *
  */
 export function processFightEvents(arenaHistory: FightSummary[]): GameEvent[] {
-  return arenaHistory.map((f) => {
+  return arenaHistory.map((f, i) => {
     const isKill = f.by === 'Kill';
     const n = (f.title.split(' (')[0] ?? '').split(' vs ');
     const nameA = n[0] || 'Unknown';
@@ -24,7 +24,9 @@ export function processFightEvents(arenaHistory: FightSummary[]): GameEvent[] {
     const winnerName = f.winner === 'A' ? nameA : f.winner === 'D' ? nameD : null;
     const eventType: EventType = isKill ? 'kill' : 'fight';
     return {
-      id: `fight-${f.id}`,
+      // Index suffix keeps React keys unique when a long-lived save carries
+      // duplicate bout ids (seeded-stream collisions in mature worlds).
+      id: `fight-${f.id}-${i}`,
       week: f.week,
       type: eventType,
       title: winnerName
@@ -43,11 +45,11 @@ export function processFightEvents(arenaHistory: FightSummary[]): GameEvent[] {
  *
  */
 export function processDeathEvents(graveyard: Warrior[]): GameEvent[] {
-  return graveyard.map((w) => {
+  return graveyard.map((w, i) => {
     const names = [w.name];
     if (w.killedBy) names.push(w.killedBy);
     return {
-      id: `death-${w.id}`,
+      id: `death-${w.id}-${i}`,
       week: w.deathWeek ?? 0,
       type: 'death' as EventType,
       title: `${w.name} Slain`,
@@ -65,9 +67,9 @@ export function processDeathEvents(graveyard: Warrior[]): GameEvent[] {
  */
 export function processRetirementEvents(retired: Warrior[]): GameEvent[] {
   return retired.map(
-    (w) =>
+    (w, i) =>
       ({
-        id: `retire-${w.id}`,
+        id: `retire-${w.id}-${i}`,
         week: w.retiredWeek ?? 0,
         type: 'retirement' as EventType,
         title: `${w.name} Retired`,
@@ -85,12 +87,12 @@ export function processRetirementEvents(retired: Warrior[]): GameEvent[] {
  */
 export function processInjuryEvents(roster: Warrior[], week: number): GameEvent[] {
   const events: GameEvent[] = [];
-  roster.forEach((w) => {
+  roster.forEach((w, i) => {
     if (!hasInjuries(w)) return;
     w.injuries.forEach((inj, idx) => {
       if (typeof inj === 'string') return;
       events.push({
-        id: `injury-${w.id}-${inj.id ?? idx}`,
+        id: `injury-${w.id}-${inj.id ?? idx}-${i}`,
         week,
         type: 'injury' as EventType,
         title: `${w.name} — ${inj.name}`,
@@ -114,13 +116,13 @@ export function processTrainingEvents(
   week: number
 ): GameEvent[] {
   return assignments
-    .map((a) => {
+    .map((a, i) => {
       const w = findWarrior(state, a.warriorId);
       if (!w) return null;
       const isRecovery = a.type === 'recovery';
       const eventType: EventType = isRecovery ? 'recovery' : 'training';
       return {
-        id: `train-${a.warriorId}`,
+        id: `train-${a.warriorId}-${i}`,
         week,
         type: eventType,
         title: isRecovery
@@ -140,11 +142,11 @@ export function processTrainingEvents(
  *
  */
 export function processNewsletterEvents(newsletter: NewsletterItem[]): GameEvent[] {
-  return newsletter.map((n) => {
+  return newsletter.map((n, i) => {
     const isEvent = n.category === 'event';
     const eventType: EventType = isEvent ? 'event' : 'news';
     return {
-      id: `news-${n.id || n.title}`,
+      id: `news-${n.id || n.title}-${i}`,
       week: n.week,
       type: eventType,
       title: n.title,
@@ -162,11 +164,11 @@ export function processNewsletterEvents(newsletter: NewsletterItem[]): GameEvent
 export function processTournamentEvents(tournaments: TournamentEntry[]): GameEvent[] {
   return tournaments
     .filter((t) => t.completed)
-    .map((t) => {
+    .map((t, i) => {
       const names: string[] = [];
       if (t.champion) names.push(t.champion);
       return {
-        id: `tourney-${t.id}`,
+        id: `tourney-${t.id}-${i}`,
         week: t.week,
         type: 'tournament' as EventType,
         title: t.name,
@@ -184,9 +186,9 @@ export function processTournamentEvents(tournaments: TournamentEntry[]): GameEve
  */
 export function processGazetteEvents(gazettes: GazetteStory[]): GameEvent[] {
   return gazettes.map(
-    (g) =>
+    (g, i) =>
       ({
-        id: `gazette-${g.id}`,
+        id: `gazette-${g.id}-${i}`,
         week: g.week,
         type: 'news' as EventType,
         title: g.headline,

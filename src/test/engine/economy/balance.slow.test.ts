@@ -1,9 +1,13 @@
 /**
  * Style Balance — simulates fights across all style matchups.
  * Enforces that no style dominates (>65%) or is helpless (<35%) in aggregate.
- * Also tests kill rate (~10%) and OE/KD variability.
+ * Also tests the fixture kill rate and OE/KD variability.
  *
- * Run with: bunx vitest run src/test/balance.test.ts
+ * This file certifies style MECHANICS on synthetic populations. The deployed
+ * world (developed warriors, AI plans, matchmaking) is certified separately by
+ * worldBalance.slow.test.ts.
+ *
+ * Run with: npx vitest run --config vitest.config.slow.ts src/test/engine/economy/balance.slow.test.ts
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { FightingStyle, type Warrior } from '@/types/game';
@@ -11,6 +15,7 @@ import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { loadCombatNarrative } from '@/data/narrative';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 import { generateRecruitAttrs } from '@/engine/owner/roster/recruitGenerator';
+import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { SeededRNGService } from '@/utils/random';
 import type { FightPlan } from '@/types/combat.types';
 import {
@@ -206,16 +211,20 @@ describe('Style Balance', () => {
   });
 });
 
-// ── Test 2: Kill rate ~10% ────────────────────────────────────────────────
+// ── Test 2: Fixture kill rate ─────────────────────────────────────────────
 describe('Kill Rate', () => {
-  it('should be approximately 10% (between 6% and 16%)', () => {
-    const uniqueFights = totalFightsRun / 2; // each fight counted for both fighters
-    const killRate = totalKills / uniqueFights;
+  // Kills per bout on the all-15s fixture. (This used to divide by
+  // totalFightsRun / 2 although totalFightsRun counts each bout once, so the
+  // old "6–16%" band was really 3–8% per bout.) The fixture runs hotter than
+  // the world — 105-point warriors land far more blows — so its band sits
+  // above the ~8% weekly world rate that worldBalance.slow.test.ts certifies.
+  it('should sit between 9% and 19% of bouts on the all-15s fixture', () => {
+    const killRate = totalKills / totalFightsRun;
     const pct = (killRate * 100).toFixed(1);
-    expect(killRate, `Kill rate ${pct}% — expected between 6% and 16%`).toBeGreaterThanOrEqual(
-      0.06
+    expect(killRate, `Kill rate ${pct}% — expected between 9% and 19%`).toBeGreaterThanOrEqual(
+      0.09
     );
-    expect(killRate, `Kill rate ${pct}% — expected between 6% and 16%`).toBeLessThanOrEqual(0.16);
+    expect(killRate, `Kill rate ${pct}% — expected between 9% and 19%`).toBeLessThanOrEqual(0.19);
   });
 });
 
@@ -276,11 +285,12 @@ describe('OE/KD Variability', () => {
 
 // ── Realistic-population baseline ────────────────────────────────────────────
 // The guardrail matrix certifies style MECHANICS on a homogeneous 105-point
-// fixture. The world actually fields ~70-point philosophy-biased recruits,
-// and measured outcomes differ sharply under that population (kill rate ~1%
-// vs ~6.6% on the fixture). This block re-runs a light matrix on generated
-// recruit attributes so the deployed balance picture is characterized
-// separately — and so tuning decisions never lean on the 105-point fixture.
+// fixture. The world actually fields ~70-point philosophy-biased recruits.
+// This block re-runs a light matrix on generated recruit attributes — armed
+// the way the world arms them, with a weapon fitted to their stats — as a
+// sanity check that no style collapses on raw, undeveloped recruits. It is a
+// small sample (8 warriors per style, default plans), hence the wide bands;
+// the developed world is certified by worldBalance.slow.test.ts.
 describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () => {
   const PHILOSOPHIES = [
     'Brute Force', 'Speed Kills', 'Iron Defense', 'Balanced',
@@ -312,6 +322,7 @@ describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () 
             name: `real_${style}_${pi}`,
             fame: 0,
             age: 20,
+            equipment: getFittedLoadout(style, attrs),
           })
         );
       }
@@ -340,16 +351,16 @@ describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () 
     }
   });
 
-  it('kill rate on the world population stays in the measured low band', () => {
+  it('kill rate on raw recruits stays in its measured band', () => {
     const rate = realKills / realTotal;
-    // Measured ~1.1% on generated recruits (vs ~6.6% on the 105-pt fixture).
-    // Wide band [0.2%, 6%] catches gross regressions in either direction
-    // without coupling this layer to cosmetic tuning drift.
+    // Measured ~11% on fitted recruits. Wide band [4%, 18%] catches gross
+    // regressions in either direction (a dead kill path, or mechanics
+    // overheating) without coupling this layer to cosmetic tuning drift.
     expect(
       rate,
-      `realistic-population kill rate ${(rate * 100).toFixed(2)}% outside [0.2%, 6%]`
-    ).toBeGreaterThanOrEqual(0.002);
-    expect(rate).toBeLessThanOrEqual(0.06);
+      `realistic-population kill rate ${(rate * 100).toFixed(2)}% outside [4%, 18%]`
+    ).toBeGreaterThanOrEqual(0.04);
+    expect(rate).toBeLessThanOrEqual(0.18);
   });
 
   it('no style collapses under the real population (wide 25–75% band)', () => {

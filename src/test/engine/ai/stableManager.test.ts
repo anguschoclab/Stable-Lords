@@ -243,4 +243,49 @@ describe('processAIStable', () => {
       if (e.label.startsWith('Warrior upkeep')) expect(e.category).toBe('upkeep');
     }
   });
+
+  it('never inflates a warrior\'s max HP while recovering fatigue', () => {
+    // Regression: weekly recovery used to treat derivedStats.hp (the max-HP
+    // stat, ~20–55) as a health percentage and add +20 per week up to 100,
+    // so rival warriors fought with 2–3× the hit points of player warriors.
+    const state = createFreshState('hp-regression');
+    state.week = 10;
+    state.absoluteWeek = 10;
+    const rivalId = 'rival-hp' as any;
+    const rival: RivalStableData = {
+      id: rivalId,
+      owner: {
+        id: rivalId,
+        name: 'Test Owner',
+        stableName: 'Test Stable',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
+      fame: 0,
+      roster: [
+        {
+          id: 'warHp' as any,
+          name: 'Warrior HP',
+          style: FightingStyle.StrikingAttack,
+          fame: 0,
+          status: 'Active',
+          age: 20,
+          fatigue: 60,
+          injuries: [],
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } as any,
+          derivedStats: { hp: 27, endurance: 20, damage: 2, encumbrance: 6 } as any,
+        } as any,
+      ],
+      treasury: 1000,
+      ledger: [],
+      trainingAssignments: [],
+    };
+
+    const result = processAIStable(rival, state);
+    const after = result.updatedRival.roster.find((w) => w.id === ('warHp' as any))!;
+
+    expect(after.derivedStats?.hp).toBe(27);
+    expect(after.fatigue).toBe(35);
+  });
 });

@@ -3,7 +3,7 @@ import { PERSONALITY_STYLE_PREFS } from '@/data/ownerData';
 import { logAgentAction, logFinanceEvent } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { getStyleDefaultLoadout } from '@/data/equipment';
+import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
@@ -169,7 +169,7 @@ function signPoolRecruit(
     lineage: recruit.lineage,
     traits: recruit.traits,
     favorites: recruit.favorites,
-    equipment: getStyleDefaultLoadout(recruit.style),
+    equipment: getFittedLoadout(recruit.style, recruit.attributes),
     isStarInvestment: recruit.tier === 'Prodigy',
   };
   // Veterans (displaced by dissolution) keep their identity and career;

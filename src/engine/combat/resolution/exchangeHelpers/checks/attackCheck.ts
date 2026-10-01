@@ -23,7 +23,9 @@ export function performAttackCheck(
   curAntiSyn: ReturnType<typeof getStyleAntiSynergy>,
   curBiasAtt: number,
   overAtt: number,
-  curAttWepReq: { attPenalty: number },
+  // Weapon-requirement ATT penalty is already folded into att.skills.ATT by
+  // createFighterState; adding it here again doubled it to −4 per deficit point.
+  _curAttWepReq: { attPenalty: number },
   extraBonus: number = 0
 ) {
   // Commit mode: attacker throws caution aside — +10 ATT bonus but defender gets compensating bonus in defense
@@ -42,7 +44,6 @@ export function performAttackCheck(
       curBiasAtt -
       overAtt -
       att.armHits +
-      curAttWepReq.attPenalty +
       extraBonus +
       commitBonus
   );

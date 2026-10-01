@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { computeHitDamage, calculateKillWindow } from '@/engine/combat/mechanics/damageCalc';
-import { KILL_WINDOW_ENDURANCE } from '@/constants/combat';
+import { KILL_WINDOW, KILL_WINDOW_ENDURANCE } from '@/constants/combat';
 
 
 
@@ -123,13 +123,28 @@ describe('damageCalc mechanics', () => {
       );
     });
 
-    it('clamps to max 0.04', () => {
-      expect(calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(0.04);
+    it('leaves a clean head shot below the cap so situational modifiers register', () => {
+      // 0.012 * 6.0 = 0.072 — under the 0.12 cap
+      const win = calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      expect(win).toBeCloseTo(0.072, 5);
+      expect(win).toBeLessThan(KILL_WINDOW.CAP);
+    });
+
+    it('raises the head-shot threshold for an exhausted, critically hurt defender', () => {
+      const fresh = calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const spent = calculateKillWindow(0.2, 0.1, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      expect(spent).toBeGreaterThan(fresh);
+    });
+
+    it('raises the head-shot threshold with kill desire', () => {
+      const low = calculateKillWindow(1.0, 1.0, 'head', 1, 0, 5, 5, 0, 10, 0, 0, 0);
+      const high = calculateKillWindow(1.0, 1.0, 'head', 10, 0, 5, 5, 0, 10, 0, 0, 0);
+      expect(high).toBeGreaterThan(low);
     });
 
     it('applies modifiers and boundary thresholds correctly', () => {
       const win = calculateKillWindow(0.2, 0.1, 'head', 10, 2, 10, 10, 2, 15, 3);
-      expect(win).toBe(0.04);
+      expect(win).toBe(KILL_WINDOW.CAP);
     });
 
     it('calculates properly for lower boundary cases without hitting max clamp', () => {
@@ -223,9 +238,9 @@ describe('damageCalc mechanics', () => {
 
     it('tests enduranceRatio at exact 0.2 boundary (not < 0.2, falls to < KILL_WINDOW_ENDURANCE tier)', () => {
       const win = calculateKillWindow(1.0, 0.2, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
-      // enduranceRatio = 0.2: not < 0.2, but < 0.4 (KILL_WINDOW_ENDURANCE) → +0.003
-      // threshold = (0.012 + 0.003) * 0.1 = 0.0015
-      expect(win).toBeCloseTo(0.0015, 5);
+      // enduranceRatio = 0.2: not < 0.2, but < 0.4 (KILL_WINDOW_ENDURANCE) → +0.006
+      // threshold = (0.012 + 0.006) * 0.1 = 0.0018
+      expect(win).toBeCloseTo(0.0018, 5);
     });
 
     it('tests enduranceRatio at exact KILL_WINDOW_ENDURANCE (0.4) boundary', () => {
@@ -244,14 +259,14 @@ describe('damageCalc mechanics', () => {
 
     it('applies chest kill multiplier (3.5)', () => {
       const win = calculateKillWindow(1.0, 1.0, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0);
-      // threshold = 0.012 * 3.5 = 0.042 → clamped to 0.04
-      expect(win).toBe(0.04);
+      // threshold = 0.012 * 3.5 = 0.042 (below the 0.12 cap)
+      expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('applies abdomen kill multiplier (3.5)', () => {
       const win = calculateKillWindow(1.0, 1.0, 'abdomen', 5, 0, 5, 5, 0, 10, 0, 0, 0);
-      // threshold = 0.012 * 3.5 = 0.042 → clamped to 0.04
-      expect(win).toBe(0.04);
+      // threshold = 0.012 * 3.5 = 0.042 (below the 0.12 cap)
+      expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('applies crowdKillBonus in isolation', () => {
@@ -306,42 +321,48 @@ describe('Damage Calculation', () => {
 
     it('calculates threshold correctly with various modifiers', () => {
       // Base: 0.012
-      // hpRatio: 0.2 < 0.3 -> +0.004
+      // hpRatio: 0.2 < 0.3 -> +0.008
       // endRatio: 0.5 < 0.6 -> +0.001
       // locMult (head): 6.0
-      // current threshold: (0.012 + 0.004 + 0.001) * 6.0 = 0.017 * 6.0 = 0.102
+      // current threshold: (0.012 + 0.008 + 0.001) * 6.0 = 0.021 * 6.0 = 0.126
       // attOE + attAL = 15 - 10 = 5 * 0.00025 = 0.00125
       // matchupBonus = 2 * 0.001 = 0.002
-      // killDesire = 8 - 5 = 3 * 0.002 = 0.006
+      // killDesire = 8 - 5 = 3 * 0.003 = 0.009
       // decSkill = 15 - 10 = 5 * 0.0003 = 0.0015
       // phaseLevel = 2 * 0.0015 = 0.003
       // momentum = 2 -> +0.004
       // specialtyBonus = 0.005
       // crowdKillBonus = 0.001
-      // Expected pre-clamp: 0.102 + 0.00125 + 0.002 + 0.006 + 0.0015 + 0.003 + 0.004 + 0.005 + 0.001 = 0.12575
-      // Clamped to 0.04
-      expect(calculateKillWindow(0.2, 0.5, 'head', 8, 2, 8, 7, 2, 15, 2, 0.005, 0.001)).toBe(0.04);
+      // Expected pre-clamp: 0.126 + 0.00125 + 0.002 + 0.009 + 0.0015 + 0.003 + 0.004 + 0.005 + 0.001 = 0.15275
+      // Clamped to the cap
+      expect(calculateKillWindow(0.2, 0.5, 'head', 8, 2, 8, 7, 2, 15, 2, 0.005, 0.001)).toBe(
+        KILL_WINDOW.CAP
+      );
     });
 
     it('handles mid hpRatio and low endurance ratio correctly', () => {
         // Base: 0.012
         // hpRatio: 0.4 < 0.5 -> +0.001
-        // endRatio: 0.1 < 0.2 -> +0.006
+        // endRatio: 0.1 < 0.2 -> +0.012
         // locMult (chest): 3.5
-        // current threshold: (0.012 + 0.001 + 0.006) * 3.5 = 0.019 * 3.5 = 0.0665
-        // The rest are default -> 0 additions.
-        // Clamped to 0.04
-        expect(calculateKillWindow(0.4, 0.1, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(0.04);
+        // current threshold: (0.012 + 0.001 + 0.012) * 3.5 = 0.025 * 3.5 = 0.0875
+        // The rest are default -> 0 additions; below the cap.
+        expect(calculateKillWindow(0.4, 0.1, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+          0.0875,
+          5
+        );
     });
 
     it('handles KILL_WINDOW_ENDURANCE correctly', () => {
         // Base: 0.012
         // hpRatio: 1.0 -> 0
-        // endRatio: 0.25 (assuming < KILL_WINDOW_ENDURANCE) -> +0.003
+        // endRatio: 0.25 (assuming < KILL_WINDOW_ENDURANCE) -> +0.006
         // locMult (chest): 3.5
-        // threshold: (0.012 + 0.003) * 3.5 = 0.0525
-        // Clamped to 0.04
-        expect(calculateKillWindow(1.0, 0.25, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(0.04);
+        // threshold: (0.012 + 0.006) * 3.5 = 0.063 (below the cap)
+        expect(calculateKillWindow(1.0, 0.25, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+          0.063,
+          5
+        );
     });
 
     it('handles momentum >= 3 correctly', () => {

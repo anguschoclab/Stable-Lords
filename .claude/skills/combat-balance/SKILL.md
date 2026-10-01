@@ -26,7 +26,7 @@ spaces in double quotes.
 
 | Concern                                                    | Lives in                                                                               | Means                              |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------- |
-| **Absolute power** — is a style globally over/under-tuned? | `STYLE_PENALTIES` in `src/engine/skillCalc.ts` (`[ATT,PAR,DEF,INI,RIP,DEC]` per style) | how strong a style is _on average_ |
+| **Absolute power** — is a style globally over/under-tuned? | `STYLE_PENALTIES` (+ `STYLE_SKILL_FLOORS` for the world) in `src/engine/warrior/skillBreakpoints.ts` (`[ATT,PAR,DEF,INI,RIP,DEC]` per style) | how strong a style is _on average_ |
 | **Matchup identity** — who counters whom?                  | `MATCHUP_MATRIX` in `src/constants/combat/combat.ts`                                   | the rock-paper-scissors edges      |
 
 The matrix is kept **near-antisymmetric** (if A beats B by +x, B is −x vs A). Its
@@ -39,15 +39,59 @@ A guardrail enforces this: `findAntisymmetryViolations()` in `combat.ts` fails t
 build if any matrix pair sums outside ±1. If you change the matrix and it trips,
 you put power in the wrong place.
 
-## The guardrail harness is the definition of "balanced"
+## Two populations, two guardrails
 
-`src/test/engine/economy/balance.test.ts` runs ~10k headless fights with identical
+Balance is certified on **two surfaces**, and they do not move together:
+
+| Surface | What it is | Guardrail |
+| --- | --- | --- |
+| **Fixture** | identical all-15s warriors (105 pts), default plans | `src/test/engine/economy/balance.slow.test.ts` |
+| **World** | what players meet: 70–90 pt warriors, fitted weapons, training, AI plans, matchmaking | `src/test/engine/economy/worldBalance.slow.test.ts` + `Daily_Balance_Report.md` |
+
+The fixture isolates mechanics; the world is the truth. They diverge because
+`STYLE_PENALTIES` are sized for 105-point attribute sums — real warriors' raw
+skills mostly sit _below_ the penalty, on the clamp floor. Consequences:
+
+- A penalty change to a skill that is floored in the world moves the fixture
+  and **does nothing in the world**. Check before tuning: `scripts/style-probe.ts`
+  prints each style's effective skills on a world snapshot.
+- The world-only lever is **`STYLE_SKILL_FLOORS`** (`skillBreakpoints.ts`): the
+  minimum a style's signature skills take whatever the attributes. A floor only
+  touches warriors below it, so it leaves the fixture exactly unchanged — keep
+  every floor below the fixture's value for that skill (a test enforces this).
+- A **passive** (`stylePassives/strategies.ts`) moves both surfaces.
+
+So: lift a style that is weak only in the world with a floor; move a style
+that is off on both surfaces with its penalty row or passive; re-ratchet the
+fixture with penalties.
+
+**Measure, don't guess** (all read-only, none need a dev server):
+
+- `bun run scripts/balance-lab.ts snap.json` — fixture + world-snapshot win
+  rates and kill rate in ~3 s. `LAB='{"floor":{"WS":[11,3,1,16,1,1]}}'` tries a
+  change without editing source (`scripts/lab-overrides.ts` lists the keys).
+- `SNAP=snap.json bun run scripts/world-diag.ts 1000 12345` — the real world
+  run (~100 s): matchup matrix, win rate by career stage and era, population
+  share by era, kills; also writes the snapshot the lab reads.
+- The snapshot proxy exaggerates gaps (random pairing, no survivorship
+  feedback) — use it to rank options, then confirm in the world on 3 seeds
+  (12345 / 777 / 2024). Seed noise is about ±2pp per style, ±1pp on kills.
+
+Before tuning a weak style, rule out the non-balance causes that were behind
+the 2026-09 pass: warriors carrying a weapon they cannot wield
+(`loadoutFitting.ts` now fits one), a modifier applied twice, or a stat being
+read with the wrong meaning (`derivedStats.hp` is max HP, not a health %).
+
+## The fixture harness
+
+`src/test/engine/economy/balance.slow.test.ts` runs ~10k fights with identical
 attributes per style, then asserts:
 
 - **Antisymmetry** — matrix carries no absolute-power bias (tolerance 1).
 - **Mirror-match band** — each style's self-match ≈ 50% (catches engine A/D bias).
 - **Absolute-power band** — every style's overall win rate in **[0.40, 0.60]**.
-- **Kill-rate** — global kills in ~[4.5%, 16%].
+- **Kill-rate** — kills in [9%, 19%] of fixture bouts (the fixture runs hotter than
+  the ~8% weekly world rate; the world dial is `KILL_WINDOW.SCALE`).
 
 These bands are tunable constants in `combat.ts` (`ABSOLUTE_POWER_LOW/HIGH`,
 `MIRROR_MATCH_BAND`, `MATRIX_ANTISYMMETRY_TOLERANCE`). "Balanced" is not a vibe —
@@ -115,8 +159,10 @@ So, before calling any balance change done:
 - Run the **whole** suite: `npx vitest run` (not just your new file). Other code
   consumes `getMatchupBonus`, damage magnitudes, and HP timing.
 - `bunx tsc --noEmit --project tsconfig.app.json` → 0 errors.
+- Run the slow suite too: `npx vitest run --config vitest.config.slow.ts` — the
+  fixture and world guardrails both live there.
 - Confirm all four harness guardrails pass, and that **all ten** styles are in the
-  40–60% band (not just the one you touched).
+  40–60% band (not just the one you touched) — on the fixture **and** in the world.
 - **Independently measure** any win-rate claim with a throwaway `bunx tsx` script
   over `simulateFight` rather than trusting a number — seeds and positions matter
   (e.g. PS-vs-BA reads ~20% as A-side, which is why its test floor is 15%, not 30%).

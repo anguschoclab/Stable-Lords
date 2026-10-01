@@ -24,6 +24,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import {
+  KILL_WINDOW,
   CRIT_DAMAGE_MULT,
   AB_ARMOR_BYPASS_MAX,
   AB_ARMOR_BYPASS_DF_DIVISOR,
@@ -317,7 +318,7 @@ function checkKillWindow(
       attAL,
       attMatchup
     );
-    if (rng() < killThreshold * (ctx?.deathRateMult ?? 1)) {
+    if (rng() < killThreshold * KILL_WINDOW.SCALE * (ctx?.deathRateMult ?? 1)) {
       defender.hp = 0;
       didKill = true;
       if (attacker.consecutiveHits >= CRITICAL_CHAIN_HITS) {

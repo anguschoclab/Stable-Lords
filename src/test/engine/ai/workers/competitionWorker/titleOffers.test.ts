@@ -77,6 +77,12 @@ describe('verifyBoutAcceptance — title bout awareness', () => {
   });
 });
 
+// Three non-blocking knocks: fighting condition 40 — below the champion's
+// health floor without tripping the medical (blocking-injury) gate.
+const HURT = [1, 2, 3].map(
+  (n) => ({ id: `bruise-${n}`, name: 'Bruising', severity: 'Minor', weeksRemaining: 1, penalties: {} }) as never
+);
+
 describe('evaluateBoutOffer — reign management', () => {
   const stateWithTitle = (refusals: number, champId = 'w1'): GameState =>
     makeGameState({
@@ -86,7 +92,7 @@ describe('evaluateBoutOffer — reign management', () => {
   it('a champion one refusal from stripping fights hurt rather than lose the crown', () => {
     const champ = makeWarrior({
       id: 'w1' as WarriorId,
-      derivedStats: { hp: 30, endurance: 100, damage: 5, encumbrance: 0 },
+      injuries: HURT,
     });
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
@@ -99,7 +105,7 @@ describe('evaluateBoutOffer — reign management', () => {
   it('a champion who can still afford a refusal may decline at critical health', () => {
     const champ = makeWarrior({
       id: 'w1' as WarriorId,
-      derivedStats: { hp: 30, endurance: 100, damage: 5, encumbrance: 0 },
+      injuries: HURT,
     });
     const rival = makeRival({
       roster: [champ],
@@ -178,7 +184,7 @@ describe('title-bout verdict reasons (Plan G — offer card transparency)', () =
   it('records the refusal reason when a champion declines a defense hurt', () => {
     const champ = makeWarrior({
       id: 'w1' as WarriorId,
-      derivedStats: { hp: 30, endurance: 100, damage: 5, encumbrance: 0 },
+      injuries: HURT,
     });
     const rival = makeRival({
       roster: [champ],

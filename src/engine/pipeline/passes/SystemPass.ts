@@ -20,7 +20,7 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generateArchetypeAttrs, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
-import { getStyleDefaultLoadout } from '@/data/equipment';
+import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
@@ -216,7 +216,7 @@ function materializeFloorRecruit(
       career: { wins: 0, losses: 0, kills: 0 },
       champion: false,
       status: 'Active',
-      equipment: getStyleDefaultLoadout(poolWarrior.style),
+      equipment: getFittedLoadout(poolWarrior.style, poolWarrior.attributes),
       stableId: state.player?.id,
     } as unknown as Warrior;
     return { warrior, updatedPool: state.recruitPool.slice(1) };

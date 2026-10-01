@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { computeEndurance } from '@/engine/warrior/skillCalc';
+import { computeBaseSkills, computeEndurance } from '@/engine/warrior/skillCalc';
+import { STYLE_PENALTIES, STYLE_SKILL_FLOORS } from '@/engine/warrior/skillBreakpoints';
+import { FightingStyle } from '@/types/shared.types';
 import type { Attributes } from '@/types/game';
 
 describe('skillCalc - computeEndurance', () => {
@@ -79,5 +81,51 @@ describe('skillCalc - computeEndurance', () => {
       // score 100: WL 20, ST 20, CN 20 (60 + 20 + 20 = 100) -> Tier A (65)
       expect(computeEndurance(createAttrs({ WL: 20, ST: 20, CN: 20 }))).toBe(65);
     });
+  });
+});
+
+describe('skillCalc - style skill floors', () => {
+  const SKILLS = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'] as const;
+  const ALL_STYLES = Object.values(FightingStyle);
+  const WEAK: Attributes = { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 };
+  const FLAT_15: Attributes = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
+
+  it('never lets a skill fall below its style floor', () => {
+    for (const style of ALL_STYLES) {
+      const skills = computeBaseSkills(WEAK, style);
+      SKILLS.forEach((k, i) => {
+        expect(skills[k], `${style} ${k}`).toBeGreaterThanOrEqual(STYLE_SKILL_FLOORS[style][i]!);
+      });
+    }
+  });
+
+  it('pins a weak warrior to the floor on a floored signature skill', () => {
+    const ws = computeBaseSkills(WEAK, FightingStyle.WallOfSteel);
+    expect(ws.ATT).toBe(STYLE_SKILL_FLOORS[FightingStyle.WallOfSteel][0]);
+    expect(ws.INI).toBe(STYLE_SKILL_FLOORS[FightingStyle.WallOfSteel][3]);
+  });
+
+  it('keeps every floor at or above 1 and at most 20', () => {
+    for (const style of ALL_STYLES) {
+      for (const floor of STYLE_SKILL_FLOORS[style]) {
+        expect(floor).toBeGreaterThanOrEqual(1);
+        expect(floor).toBeLessThanOrEqual(20);
+      }
+    }
+  });
+
+  it('stays below what the all-15s balance fixture produces, so floors never touch it', () => {
+    // A floor the fixture reaches stops being a population-only lever and
+    // would silently shift the certified guardrail numbers.
+    for (const style of ALL_STYLES) {
+      const pen = STYLE_PENALTIES[style];
+      const skills = computeBaseSkills(FLAT_15, style);
+      SKILLS.forEach((k, i) => {
+        const floor = STYLE_SKILL_FLOORS[style][i]!;
+        if (floor > 1) {
+          expect(skills[k], `${style} ${k} (penalty ${pen[i]})`).toBeGreaterThan(floor);
+        }
+      });
+    }
   });
 });

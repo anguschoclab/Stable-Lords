@@ -11,19 +11,16 @@ import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD, BANKRUPTCY_GRACE_WEEKS } from '@/constants/economy';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
-/** Passive recovery for active warriors: fatigue -25, HP +20% (cap 100). */
-function decayFatigueAndHeal(roster: Warrior[]): Warrior[] {
+/**
+ * Passive recovery for active warriors: fatigue -25 per week. Hit points are
+ * not touched — `derivedStats.hp` is the warrior's maximum HP stat, and damage
+ * taken in a bout never persists past it (lasting harm is modelled as injuries).
+ */
+function decayFatigue(roster: Warrior[]): Warrior[] {
   return roster.map((w): Warrior => {
     // Intentional deviation: single-item status check inside map
-    if (isActive(w)) {
-      const fatigue = Math.max(0, (w.fatigue || 0) - 25);
-      const currentHP = w.derivedStats?.hp ?? 100;
-      const hp = Math.min(100, currentHP + 20); // Passive heal +20%
-      return {
-        ...w,
-        fatigue,
-        derivedStats: { ...(w.derivedStats || {}), hp },
-      } as Warrior;
+    if (isActive(w) && (w.fatigue ?? 0) > 0) {
+      return { ...w, fatigue: Math.max(0, (w.fatigue ?? 0) - 25) };
     }
     return w;
   });
@@ -128,7 +125,7 @@ export function processAIStable(
   const impacts: StateImpact[] = [];
 
   // ── Fatigue Decay & HP Recovery for AI Warriors ──
-  updatedRival.roster = decayFatigueAndHeal(updatedRival.roster);
+  updatedRival.roster = decayFatigue(updatedRival.roster);
 
   // 2. Delegate to Workers (Hierarchical Delegation)
 

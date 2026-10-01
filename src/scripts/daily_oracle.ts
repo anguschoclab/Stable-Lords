@@ -79,35 +79,31 @@ function buildRecommendations(m: ReturnType<typeof computeMetrics>): string {
     hasAnomalies = true;
   }
 
-  // Lethality semantics, corrected after the post-bout roster fix (2026):
-  // the 8–15% band in the original report was authored against the 105-point
-  // STD_ATTRS fixture (measured ~6.6% kills). The deployed population is
-  // ~70-point philosophy-biased recruits, where canonical mechanics yield
-  // ~2–3%. Those are different certified surfaces — the balance harness
-  // (balance.slow.test.ts) owns the mechanics band; this world rate is a
-  // population-signature metric. Hard checks: a sub-1% world rate means the
-  // kill path is effectively dead (regression); above 15% means mechanics are
-  // overheating. In between, divergence is informational — see
-  // docs/combat-subsystems-2026-06.md (levers: KILL_WINDOW_HP_SCALE,
-  // deathRateMult, MAX_EXCHANGES; NOT CRIT_DAMAGE_MULT, which only scales
-  // crit damage — a 0-HP defender is a KO either way).
+  // Lethality: the design band for ordinary weekly arena bouts is 8–15% (Kill,
+  // Death & Permadeath spec §6.1); the 2026-09 kill pass tuned the world to the
+  // low end of it. World dial: KILL_WINDOW.SCALE (constants/combat) — it scales
+  // the kill roll without reshaping which conditions produce kills; the shape
+  // lives in the other KILL_WINDOW fields. NOT CRIT_DAMAGE_MULT, which only
+  // scales crit damage — a 0-HP defender is a KO either way. Seed-to-seed
+  // spread is about ±1pp, so only flag a rate clearly outside the band.
   if (m.mortalityRate > 0.15) {
-    recommendations += `- **Lethality High**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% (Target: 8% - 15%). Levers: lower KILL_WINDOW_HP_SCALE or deathRateMult; NOT CRIT_DAMAGE_MULT (KO-only effect).\n`;
+    recommendations += `- **Lethality High**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% (Target: 8% - 15%). Lever: lower KILL_WINDOW.SCALE; NOT CRIT_DAMAGE_MULT (KO-only effect).\n`;
     hasAnomalies = true;
   } else if (m.mortalityRate < 0.01) {
     recommendations += `- **Lethality Dead**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% — the kill path is effectively non-firing on the deployed population. Investigate checkKillWindow gating before tuning.\n`;
     hasAnomalies = true;
-  } else if (m.mortalityRate < 0.08) {
-    recommendations += `- **Lethality Note**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% — below the legacy 8–15% band, consistent with the ~70-pt recruit population (certified fixture band is 6–16%, see balance.slow.test.ts). Raising the world rate further needs a population-conditional approach, not a global constant (fixture overshoots 3–5× faster).\n`;
+  } else if (m.mortalityRate < 0.06) {
+    recommendations += `- **Lethality Low**: Weekly kill rate is ${(m.mortalityRate * 100).toFixed(2)}% (Target: 8% - 15%). Lever: raise KILL_WINDOW.SCALE. If it collapsed suddenly, check first that rival max HP is not inflating (derivedStats.hp is a stat, not a health percentage).\n`;
+    hasAnomalies = true;
   }
 
   // Adjust style winrates
   for (const [style, rate] of Object.entries(m.styleWinRates)) {
     if (rate > 0.65) {
-      recommendations += `- **Meta Anomaly**: ${style} win rate is too high (${(rate * 100).toFixed(2)}%). Suggest reducing base bonus.\n`;
+      recommendations += `- **Meta Anomaly**: ${style} win rate is too high (${(rate * 100).toFixed(2)}%). Trim its STYLE_PENALTIES row or passive — see .claude/skills/combat-balance.\n`;
       hasAnomalies = true;
     } else if (rate < 0.35) {
-      recommendations += `- **Meta Anomaly**: ${style} win rate is too low (${(rate * 100).toFixed(2)}%). Check style-attr fit first (ARCHETYPE_STAT_WEIGHTS blend in generateRecruitAttrs) before touching combat constants.\n`;
+      recommendations += `- **Meta Anomaly**: ${style} win rate is too low (${(rate * 100).toFixed(2)}%). Check what its warriors actually carry and roll first (scripts/style-probe.ts: weapon fit, effective skills); the world-only lever is STYLE_SKILL_FLOORS, since penalties do not reach skills already on the floor.\n`;
       hasAnomalies = true;
     }
   }

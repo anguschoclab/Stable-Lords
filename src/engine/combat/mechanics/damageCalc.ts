@@ -2,7 +2,7 @@
  * Damage calculation and kill window computation.
  */
 
-import { KILL_WINDOW_ENDURANCE } from '@/constants/combat';
+import { KILL_WINDOW, KILL_WINDOW_ENDURANCE } from '@/constants/combat';
 import { LOCATION_DAMAGE_MULT, LOCATION_KILL_MULT, type HitLocation } from './hitLocation';
 import { clamp } from '@/utils/math';
 
@@ -42,30 +42,31 @@ export function calculateKillWindow(
   crowdKillBonus: number = 0
 ): number {
   if (momentum < 0) return 0;
+  const K = KILL_WINDOW;
 
-  let threshold = 0.012;
+  let threshold = K.BASE;
 
-  if (hpRatio < 0.3) threshold += 0.004;
-  else if (hpRatio < 0.5) threshold += 0.001;
+  if (hpRatio < K.HP_CRITICAL_RATIO) threshold += K.HP_CRITICAL_ADD;
+  else if (hpRatio < K.HP_HURT_RATIO) threshold += K.HP_HURT_ADD;
 
-  if (enduranceRatio < 0.2) threshold += 0.006;
-  else if (enduranceRatio < KILL_WINDOW_ENDURANCE) threshold += 0.003;
-  else if (enduranceRatio < 0.6) threshold += 0.001;
+  if (enduranceRatio < K.END_SPENT_RATIO) threshold += K.END_SPENT_ADD;
+  else if (enduranceRatio < KILL_WINDOW_ENDURANCE) threshold += K.END_TIRED_ADD;
+  else if (enduranceRatio < K.END_WINDED_RATIO) threshold += K.END_WINDED_ADD;
 
   const locMult = LOCATION_KILL_MULT[location] ?? 1.0;
   threshold *= locMult;
 
-  threshold += (attOE + attAL - 10) * 0.00025;
-  threshold += matchupBonus * 0.001;
-  threshold += (killDesire - 5) * 0.002;
-  threshold += (decSkill - 10) * 0.0003;
-  threshold += phaseLevel * 0.0015;
+  threshold += (attOE + attAL - 10) * K.EFFORT_COEFF;
+  threshold += matchupBonus * K.MATCHUP_COEFF;
+  threshold += (killDesire - 5) * K.KILL_DESIRE_COEFF;
+  threshold += (decSkill - 10) * K.DEC_COEFF;
+  threshold += phaseLevel * K.PHASE_COEFF;
 
-  if (momentum >= 3) threshold += 0.0075;
-  else if (momentum >= 2) threshold += 0.004;
+  if (momentum >= 3) threshold += K.MOMENTUM_FULL_ADD;
+  else if (momentum >= 2) threshold += K.MOMENTUM_HIGH_ADD;
 
   threshold += specialtyBonus;
   threshold += crowdKillBonus;
 
-  return clamp(threshold, 0, 0.04);
+  return clamp(threshold, 0, K.CAP);
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-30T11:12:21.461Z",
+  "generatedAt": "2026-09-30T13:57:38.178Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -139,6 +139,7 @@
     "src/test/engine/combat/hitExecution.test.ts",
     "src/test/engine/combat/strikingAttack.test.ts",
     "src/test/engine/deathNotifier.test.ts",
+    "src/test/engine/economy/worldBalance.slow.test.ts",
     "src/test/engine/history/arenaHistory.test.ts",
     "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts",
     "src/test/engine/metaDrift.test.ts",

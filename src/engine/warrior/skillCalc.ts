@@ -50,6 +50,7 @@ import {
   SZ_PAR_MOD,
   SZ_DEF_MOD,
   STYLE_PENALTIES,
+  STYLE_SKILL_FLOORS,
 } from './skillBreakpoints';
 
 // ─── Base Skill Computation ───────────────────────────────────────────────
@@ -60,7 +61,7 @@ import {
  *
  * Uses canonical Terrablood breakpoint tables with per-attribute, per-skill
  * contribution values. SZ adjusts INI/PAR/DEF. Style penalty applied as flat
- * modifier. Result clamped to [1, 20].
+ * modifier. Result clamped to [style floor, 20] (see STYLE_SKILL_FLOORS).
  *
  * @param attrs - The warrior's base attributes
  * @param style - The warrior's fighting style
@@ -69,6 +70,7 @@ import {
 export function computeBaseSkills(attrs: Attributes, style: FightingStyle): BaseSkills {
   const { ST, SZ, WT, WL, SP, DF } = attrs;
   const pen = STYLE_PENALTIES[style];
+  const floor = STYLE_SKILL_FLOORS[style];
 
   const ATT_raw = bp(ST_ATT, ST) + bp(WT_ATT, WT) + bp(WL_ATT, WL) + bp(DF_ATT, DF) + pen[0];
   const PAR_raw = bp(ST_PAR, ST) + szMod(SZ_PAR_MOD, SZ) + bp(WL_PAR, WL) + bp(DF_PAR, DF) + pen[1];
@@ -84,12 +86,12 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
   const DEC_raw = bp(WT_DEC, WT) + bp(WL_DEC, WL) + bp(SP_DEC, SP) + pen[5];
 
   return {
-    ATT: clamp(ATT_raw, 1, 20),
-    PAR: clamp(PAR_raw, 1, 20),
-    DEF: clamp(DEF_raw, 1, 20),
-    INI: clamp(INI_raw, 1, 20),
-    RIP: clamp(RIP_raw, 1, 20),
-    DEC: clamp(DEC_raw, 1, 20),
+    ATT: clamp(ATT_raw, floor[0], 20),
+    PAR: clamp(PAR_raw, floor[1], 20),
+    DEF: clamp(DEF_raw, floor[2], 20),
+    INI: clamp(INI_raw, floor[3], 20),
+    RIP: clamp(RIP_raw, floor[4], 20),
+    DEC: clamp(DEC_raw, floor[5], 20),
   };
 }
 

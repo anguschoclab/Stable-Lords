@@ -81,6 +81,48 @@ export const EXHAUSTION_STOP_HP_RATIO = 0.45;
 export const KILL_WINDOW_ENDURANCE = 0.4;
 
 /**
+ * Kill-window threshold model (per qualifying hit, see calculateKillWindow).
+ *
+ *   threshold = (BASE + hp add + endurance add) × location multiplier
+ *             + plan / skill / phase / momentum adds
+ *             + specialty + crowd, clamped to [0, CAP]
+ *
+ * Every magnitude lives here so the kill rate is tuned in one place. The
+ * world-facing dial is SCALE: the kill roll multiplies the finished threshold
+ * by it (alongside the player's deathRateMult house rule), so it moves the
+ * kill rate without reshaping which conditions produce kills.
+ *
+ * 2026-09 pass: CAP 0.04 → 0.12. At 0.04 every head/chest/abdomen hit was
+ * already pinned to the cap (head alone is BASE × 6 = 0.072), so exhaustion,
+ * critical HP and kill desire could not register. The cap now sits above a
+ * clean head shot, the exhaustion and critical-HP adds are doubled so
+ * late-bout fatigue carries the most fatality pressure, and SCALE lands the
+ * weekly world rate at the ~8% floor of the design band (measured 1000-week,
+ * 3-seed world runs; the all-15s balance fixture reads ~14%).
+ */
+export const KILL_WINDOW = {
+  BASE: 0.012,
+  CAP: 0.12,
+  SCALE: 1.1,
+  HP_CRITICAL_RATIO: 0.3,
+  HP_CRITICAL_ADD: 0.008,
+  HP_HURT_RATIO: 0.5,
+  HP_HURT_ADD: 0.001,
+  END_SPENT_RATIO: 0.2,
+  END_SPENT_ADD: 0.012,
+  END_TIRED_ADD: 0.006,
+  END_WINDED_RATIO: 0.6,
+  END_WINDED_ADD: 0.001,
+  EFFORT_COEFF: 0.00025,
+  MATCHUP_COEFF: 0.001,
+  KILL_DESIRE_COEFF: 0.003,
+  DEC_COEFF: 0.0003,
+  PHASE_COEFF: 0.0015,
+  MOMENTUM_FULL_ADD: 0.0075,
+  MOMENTUM_HIGH_ADD: 0.004,
+};
+
+/**
  * Tactic overuse cap
  */
 export const TACTIC_OVERUSE_CAP = 3;

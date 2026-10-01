@@ -29,7 +29,7 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
       console.log(`--- SIMULATION AUDIT RESULTS (WEEK 52) ---`);
       console.log(`Final Rival Stables: ${finalRivalCount} (Target: 30-45)`);
       console.log(`Total Deaths: ${totalDeaths}`);
-      console.log(`Est. Annual Mortality: ${(annualDeathRate * 100).toFixed(2)}% (Target: ~10%)`);
+      console.log(`First-year deaths / starting population: ${(annualDeathRate * 100).toFixed(2)}%`);
       console.log(`Championships Run: ${state.tournaments?.length || 0}`);
     }
 
@@ -39,10 +39,16 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
     expect(finalRivalCount).toBeGreaterThanOrEqual(30);
     expect(finalRivalCount).toBeLessThanOrEqual(45);
 
-    // 2. Mortality: Should be around the 10% target (allowing for variance 0% - 35%)
-    // Note: 0 deaths is acceptable for this seed - game balance may vary
-    expect(annualDeathRate).toBeGreaterThanOrEqual(0);
-    expect(annualDeathRate).toBeLessThan(0.35);
+    // 2. Mortality: first-year deaths as a fraction of the starting population.
+    // This follows from the per-bout kill rate: warriors average ~0.4 bouts a
+    // week, so the design band for weekly arena bouts (8–15% kills, Kill/Death
+    // spec §6.1) puts first-year deaths at roughly 0.6–1.0 of the starting
+    // population, replaced by recruitment (the stable-count check above is the
+    // density guard). Measured 0.79 on this seed after the 2026-09 kill pass
+    // (it was ~0.33 when the world sat at ~3% kills per bout). The bounds
+    // catch a dead kill path and a world dying faster than it can restock.
+    expect(annualDeathRate).toBeGreaterThan(0.3);
+    expect(annualDeathRate).toBeLessThan(1.0);
 
     // 3. Tournament Cycle: Should have run 8 seasons of tournaments (4 per year * 2 years)
     // Actually, each season has 4 tiers. So 8 seasons * 4 tiers = 32 tournaments.

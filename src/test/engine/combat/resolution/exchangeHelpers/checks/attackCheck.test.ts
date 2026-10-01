@@ -204,41 +204,19 @@ describe('attackCheck — performAttackCheck', () => {
     expect(withExtra).toBe(true);
   });
 
-  it('applies weapon requirement attPenalty', () => {
+  it('does not re-apply the weapon requirement penalty (already folded into skills.ATT)', () => {
     const att = createMockFighter({
       skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
     });
-    const rng = () => 0.5; // roll = 11
-    // Without penalty: target=14 → 11 ≤ 14 → success
-    const noPenalty = performAttackCheck(
-      rng,
-      att,
-      5,
-      0,
-      0,
-      zeroOffMods,
-      zeroPass,
-      zeroAntiSyn,
-      0,
-      0,
-      { attPenalty: 0 }
-    );
-    // attPenalty is added to modifier, so -10 simulates a penalty: modifier = 4.5 + (-10) = -5.5, target=4 → fail
-    const withPenalty = performAttackCheck(
-      rng,
-      att,
-      5,
-      0,
-      0,
-      zeroOffMods,
-      zeroPass,
-      zeroAntiSyn,
-      0,
-      0,
-      { attPenalty: -10 }
-    );
-    expect(noPenalty).toBe(true);
-    expect(withPenalty).toBe(false);
+    const rng = () => 0.5; // roll = 11; target = 10 + 3.5 → success either way
+    const check = (attPenalty: number) =>
+      performAttackCheck(rng, att, 5, 0, 0, zeroOffMods, zeroPass, zeroAntiSyn, 0, 0, {
+        attPenalty,
+      });
+    // createFighterState subtracts the requirement penalty from skills.ATT once;
+    // the check itself must ignore it or the penalty doubles to −4 per point.
+    expect(check(0)).toBe(true);
+    expect(check(-10)).toBe(true);
   });
 
   it('applies overAtt penalty (subtracted from modifier)', () => {

@@ -3,6 +3,7 @@
  * Style Passives Tests — combat mechanics, tempo, mastery, kill mechanics
  */
 import { describe, it, expect } from 'vitest';
+import { WS_WALL_PAR } from '@/constants/combat';
 import {
   getTempoBonus,
   getEnduranceMult,
@@ -286,6 +287,17 @@ describe('Style Passives', () => {
       });
 
       expect(late.defBonus).toBeGreaterThanOrEqual(early.defBonus);
+    });
+
+    it('should give Wall of Steel its standing guard from the first exchange', () => {
+      const opening = getStylePassive(FightingStyle.WallOfSteel, { ...baseContext, exchange: 0 });
+      const thickened = getStylePassive(FightingStyle.WallOfSteel, {
+        ...baseContext,
+        exchange: 15,
+      });
+
+      expect(opening.parBonus).toBe(WS_WALL_PAR);
+      expect(thickened.parBonus).toBeGreaterThan(opening.parBonus);
     });
 
     it('should scale bonuses with mastery', () => {

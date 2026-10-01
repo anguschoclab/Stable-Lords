@@ -1,8 +1,16 @@
 /**
- * Throwaway diagnostic: why does WALL OF STEEL sit at ~31% in the world sim?
- * Attributes the gap to attributes / development / matchup composition.
+ * World diagnostic — an instrumented run of the world simulation that explains
+ * style balance in the DEPLOYED population (developed warriors, AI plans,
+ * matchmaking), not on a fixture. Prints per-style win rate, fighter profile at
+ * bout time, the world matchup matrix, win rate by career stage / experience
+ * gap / era, loss methods, population share by era (the emergent meta), kill
+ * rates, and a one-line SUMMARY for comparing runs.
  *
- *   bun run scripts/ws-diag.ts [weeks=1000] [seed=12345]
+ *   bun run scripts/world-diag.ts [weeks=1000] [seed=12345]
+ *   SNAP=snap.json bun run scripts/world-diag.ts   # also dump living warriors
+ *                                                  # for scripts/balance-lab.ts
+ *   LAB='{"floor":{"WS":[11,3,1,16,1,1]}}' bun run scripts/world-diag.ts
+ *                                                  # what-if (see lab-overrides.ts)
  */
 import { runSimulation } from '@/scripts/simulation-harness';
 import type { GameState } from '@/types/state.types';
@@ -34,6 +42,11 @@ const byEra: Record<string, Record<string, [number, number]>> = {};
 const lossBy: Record<string, Record<string, number>> = {};
 // weekly population snapshot
 const pop: Record<string, Acc> = {};
+// era -> style -> warrior-weeks (population share = the emergent meta)
+const share: Record<string, Record<string, number>> = {};
+// kills by killer style / bouts by style
+const killsBy: Record<string, number> = {};
+const snapshots: unknown[] = [];
 // style -> exp bucket -> profile
 const profByExp: Record<string, Record<string, Acc>> = {};
 
@@ -79,10 +92,18 @@ function onWeek(state: GameState, week: number) {
   push(state.graveyard);
   push(state.retired);
 
-  for (const r of state.rivals)
-    for (const w of r.roster) add((pop[w.style] ??= acc()), row(w));
-
   const era = week <= 100 ? 'w1-100' : week <= 300 ? 'w101-300' : week <= 600 ? 'w301-600' : 'w601+';
+  for (const r of state.rivals)
+    for (const w of r.roster) {
+      add((pop[w.style] ??= acc()), row(w));
+      (share[era] ??= {})[w.style] = (share[era]![w.style] ?? 0) + 1;
+    }
+  if (process.env.SNAP && week % 125 === 0 && week >= 250) {
+    for (const r of state.rivals)
+      for (const w of r.roster)
+        if (w.status === 'Active')
+          snapshots.push({ w: structuredClone(w), personality: r.owner.personality, philosophy: r.philosophy });
+  }
   for (const b of state.arenaHistory ?? []) {
     if (seen.has(b.id)) continue;
     seen.add(b.id);
@@ -95,7 +116,8 @@ function onWeek(state: GameState, week: number) {
     ] as const) {
       bump(mm, selfStyle, oppStyle, won);
       bump(byEra, selfStyle, era, won);
-      if (!won) ((lossBy[selfStyle] ??= {})[b.by] = (lossBy[selfStyle]![b.by] ?? 0) + 1);
+      if (!won) ((lossBy[selfStyle] ??= {})[String(b.by)] = (lossBy[selfStyle]![String(b.by)] ?? 0) + 1);
+      if (won && b.by === 'Kill') killsBy[selfStyle] = (killsBy[selfStyle] ?? 0) + 1;
       if (!self) continue;
       add((atBout[selfStyle] ??= acc()), row(self));
       bump(byExp, selfStyle, expBucket(fights(self)), won);
@@ -111,15 +133,8 @@ function onWeek(state: GameState, week: number) {
 const pct = (c?: [number, number]) => (c && c[1] ? ((100 * c[0]) / c[1]).toFixed(1).padStart(5) + `(${c[1]})` : '   -   ');
 const avg = (a: Acc, k: string) => ((a.sum[k] ?? 0) / Math.max(1, a.n)).toFixed(1).padStart(6);
 
-// Optional counterfactual: TANK=mid promotes WT out of the tank `low` tier.
-if (process.env.TANK === 'mid') {
-  const { ARCHETYPE_STAT_WEIGHTS } = await import('@/engine/factories/statGeneration');
-  ARCHETYPE_STAT_WEIGHTS.tank = { high: ['CN', 'WL', 'SZ'], mid: ['ST', 'WT'], low: ['SP', 'DF'] };
-}
-if (process.env.TANK === 'wtOnly') {
-  const { ARCHETYPE_STAT_WEIGHTS } = await import('@/engine/factories/statGeneration');
-  ARCHETYPE_STAT_WEIGHTS.tank = { high: ['CN', 'WL', 'SZ'], mid: ['WT'], low: ['ST', 'SP', 'DF'] };
-}
+const { applyLabOverrides, STYLE_CODE } = await import('./lab-overrides');
+applyLabOverrides();
 const origLog = console.log;
 console.log = () => {};
 const result = await runSimulation({ weeks: WEEKS, seed: SEED, logFrequency: 50, ignoreBankruptcy: true, onWeek });
@@ -172,4 +187,23 @@ for (const s of ['WALL OF STEEL', 'TOTAL PARRY', 'BASHING ATTACK', 'STRIKING ATT
     const a = profByExp[s]?.[k];
     return a ? `${k}: ${avg(a, 'TOT')}${avg(a, 'WT')}${avg(a, 'SK')}${avg(a, 'drills')}${avg(a, 'age')}` : '';
   }).join(' | '));
+}
+
+console.log('\n# Population share by era (%) — the emergent meta');
+const eras = ['w1-100', 'w101-300', 'w301-600', 'w601+'];
+console.log(''.padEnd(18), eras.map((k) => k.padStart(10)).join(''));
+for (const s of styles) console.log(s.padEnd(18), eras.map((e) => {
+  const t = Object.values(share[e] ?? {}).reduce((x, y) => x + y, 0);
+  return ((100 * (share[e]?.[s] ?? 0)) / Math.max(1, t)).toFixed(1).padStart(10);
+}).join(''));
+const lastPulse = result.pulses[result.pulses.length - 1];
+const living = result.finalState.rivals.reduce((n, r) => n + r.roster.length, 0);
+console.log(`\n# Kills: weekly ${c.weeklyKills}/${c.weeklyBouts} = ${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)}%  tournament ${c.tournamentKills}/${c.tournamentBouts} = ${((100 * c.tournamentKills) / Math.max(1, c.tournamentBouts)).toFixed(2)}%  deaths=${c.deaths} retired=${c.retired} rivals=${result.finalState.rivals.length} living=${living} rivalGoldMean=${lastPulse?.avgRivalTreasury}`);
+console.log('# Kill share of wins by style: ' + styles.map((s) => `${s.slice(0, 9)} ${((100 * (killsBy[s] ?? 0)) / Math.max(1, c.styleWins[s] ?? 0)).toFixed(1)}`).join(' | '));
+const wr = styles.map((s) => (100 * (c.styleWins[s] ?? 0)) / ((c.styleWins[s] ?? 0) + (c.styleLosses[s] ?? 0)));
+console.log(`SUMMARY seed=${SEED} weeks=${WEEKS} kill=${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)} min=${Math.min(...wr).toFixed(1)} max=${Math.max(...wr).toFixed(1)} | ` + styles.map((s, i) => `${STYLE_CODE[s as never]} ${wr[i]!.toFixed(1)}`).join(' '));
+if (process.env.SNAP) {
+  const fs = await import('fs');
+  fs.writeFileSync(process.env.SNAP, JSON.stringify(snapshots));
+  console.log(`snapshot: ${snapshots.length} warriors -> ${process.env.SNAP}`);
 }

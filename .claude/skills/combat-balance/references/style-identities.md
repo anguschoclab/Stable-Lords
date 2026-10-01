@@ -21,7 +21,7 @@ WT·DF·WL) · **Agile** (LU/SL, SP·DF·WT) · **Brutal** (BA/ST, ST·CN·SZ) �
 | **SL** Slashing      | attrition / DoT     | **Bleed** stacks (flurry = multiple stacks per hit), tick + decay each exchange.                             | `[-12,-14,-15,-4,-7,-2]` — INI kept as identity; everything else heavy.                                                                          |
 | **ST** Striking      | all-in burst        | **Front-load** (decays by exchange) + **crit specialist** + **execute** (vs <30% HP).                        | `[-7,-6,-9,-2,-2,+2]` — ATT-led damage dealer. High variance; re-ratchet ATT after buffs. Note: its lethality removes knockdowns vs low-HP foes. |
 | **TP** Total Parry   | outlast → punish    | **Fatigue-exploit counter**: as the opponent tires, TP's riposte chance + damage rise.                       | `[-12,+1,-9,-4,-2,0]` — PAR **buff** is the identity. Crippled ATT is intended; do not "fix" it with ATT.                                        |
-| **WS** Wall of Steel | anti-tempo brick    | **Immovable**: negates LU/PL momentum payoffs aimed at it + a small attrition floor.                         | `[-4,-2,-9,0,-2,0]` — slowest style (low INI); denies tempo rather than gaining it. Weak: re-ratchet usually _lightens_.                         |
+| **WS** Wall of Steel | anti-tempo brick    | **Immovable**: negates LU/PL momentum payoffs aimed at it + a small attrition floor; **standing guard** (`WS_WALL_PAR`, parry from exchange 0). | `[-8,-6,-10,0,-4,-2]` — INI is its _least_-penalised skill (fixture INI 17). World strength comes from its floors `[11,3,1,16,1,1]`: the whirl is drilled, not derived from wit. |
 
 ## Cross-cutting notes
 
@@ -34,6 +34,17 @@ WT·DF·WL) · **Agile** (LU/SL, SP·DF·WT) · **Brutal** (BA/ST, ST·CN·SZ) �
   trait generation is archetype-gated so traits amplify identity rather than adding
   matrix-invisible noise; aging trades lost SP/DF for WL-scaled DEF so veterans
   drift to a patient profile instead of just declining.
+- **Skill floors** (`STYLE_SKILL_FLOORS`): BA/ST `[6,1,1,9,1,1]` (get the blow in
+  first and land it), WS as above. Floors are the world-only level knob — raise or
+  lower one to move a style in the deployed population without touching the
+  fixture. Keep them on signature skills and below the fixture's value.
+- **Weapons:** warriors carry the best weapon they can wield, not always the
+  classic (`loadoutFitting.ts`). A style whose archetype rarely meets its
+  favorite's requirements (WS/Morning Star, AB/Quarterstaff) mostly fights with
+  something else — balance against that, not the classic loadout.
 - **Re-ratchet target:** every style's overall win rate in **[0.40, 0.60]** with the
-  spread ≤ ~20pp. After any mechanic change, all ten must still land in band — not
-  just the one you touched.
+  spread ≤ ~20pp, on the fixture and in the world. After any mechanic change, all
+  ten must still land in band — not just the one you touched. Do not chase 50%:
+  the world should keep a top and a bottom that counters can move (2026-09 world:
+  TP/PR ~54–55 down to WS/SL ~44–45, and every style with a losing matchup —
+  worst cells 28–45%, e.g. BA beats TP, ST beats BA, PS beats ST).

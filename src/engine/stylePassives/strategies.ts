@@ -3,6 +3,7 @@
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { StyleStrategy, MasteryInfo, StylePassiveResult } from './types';
+import { WS_WALL_PAR } from '@/constants/combat/combat/balance';
 
 const EMPTY_PASSIVE: StylePassiveResult = {
   attBonus: 0,
@@ -284,7 +285,7 @@ export const STYLES: Record<FightingStyle, StyleStrategy> = {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
         defBonus: scale(wallBonus, m),
-        parBonus: wallBonus > 0 ? 1 : 0,
+        parBonus: WS_WALL_PAR + (wallBonus > 0 ? 1 : 0),
         iniBonus: scale(wallBonus, m),
         hasPassiveNarrative: wallBonus >= 1,
       };

@@ -19,6 +19,7 @@ import { contenderRankAtArena } from '@/engine/championship/arenaChampionship';
 import { computePlayerThreatLevel, type PlayerThreatLevel } from '@/engine/ai/agentCore';
 import type { Promoter } from '@/types/state/championship';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
+import { fightingCondition } from '@/engine/warrior/condition';
 
 /**
  * Pre-evaluation sanity gate. Title bouts bypass the soft refusal gates
@@ -191,7 +192,7 @@ function resolveTitleBout(
       // the crown, the champion fights hurt rather than abdicate by accident.
       const wouldStrip = title.refusals + 1 >= ARENA_TITLE.REFUSALS_TO_STRIP;
       if (!wouldStrip && personality !== 'Aggressive') {
-        const hp = warrior.derivedStats?.hp ?? 100;
+        const hp = fightingCondition(warrior);
         const fatigue = warrior.fatigue ?? 0;
         if (hp < 45 || fatigue >= 85) {
           if (explain) explain.reason = 'title-defense-health';
@@ -514,7 +515,7 @@ export function evaluateBoutOffer(
   const weeksSinceBout = lastBoutWeek != null ? currentWeek - lastBoutWeek : 10;
   const isDesperateForBout = weeksSinceBout > 4 || isTournamentHungry;
 
-  const currentHP = warrior.derivedStats?.hp ?? 100;
+  const currentHP = fightingCondition(warrior);
   const survivable = survivabilityGates(warrior, rival, isDesperateForBout, currentHP);
   if (survivable) return survivable;
 

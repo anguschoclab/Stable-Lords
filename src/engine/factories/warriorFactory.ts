@@ -8,7 +8,7 @@ import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc'
 import { generateFavorites } from '@/engine/favorites';
 import { generateTraits } from '@/engine/traits';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
-import { getStyleDefaultLoadout } from '@/data/equipment';
+import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { generateId } from '@/utils/idUtils';
 import { entropyRng } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -38,10 +38,11 @@ export function makeWarrior(
   // overrides win via the spread below.
   const traits = overrides?.traits ?? (rng ? generateTraits(rng, STYLE_ARCHETYPE[style]) : []);
   const trainability = overrides?.trainability ?? (rng ? 0.4 + rng.next() * 0.5 : 0.65);
-  // Seed equipment with the style's classic weapon so we no longer hand every
-  // default-built warrior a broadsword (which silently buffed Striking Attack
-  // and penalized everyone else via weapon-stat reqs / classic-weapon misses).
-  const equipment = overrides?.equipment ?? getStyleDefaultLoadout(style);
+  // Seed equipment with the style's classic loadout, weapon fitted to this
+  // warrior's attributes: the favorite when they meet its canonical stat
+  // requirements, otherwise the best weapon the style allows that they can
+  // actually wield (an unusable favorite costs −2 ATT per missing point).
+  const equipment = overrides?.equipment ?? getFittedLoadout(style, attrs);
 
   return {
     id: id ?? (rng ? (rng.uuid() as WarriorId) : (generateId(undefined, 'warrior') as WarriorId)),

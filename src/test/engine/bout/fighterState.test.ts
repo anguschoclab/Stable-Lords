@@ -272,6 +272,28 @@ describe('fighterState', () => {
 
   // ─── T5: Equipment defense / encumbrance tier / shield wiring ───────────────
 
+  describe('weapon requirement penalty', () => {
+    it('costs exactly −2 ATT per missing requirement point', () => {
+      // Morning Star: ST 13 / SZ 3 / WT 9 / DF 11. All-10s is 3 ST + 1 DF short.
+      const fits = createFighterState(
+        'A',
+        createMockPlan(),
+        createMockWarrior({
+          attributes: { ST: 13, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 11 },
+          equipment: { weapon: 'morning_star', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+        })
+      );
+      const short = createFighterState(
+        'A',
+        createMockPlan(),
+        createMockWarrior({
+          equipment: { weapon: 'morning_star', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+        })
+      );
+      expect(fits.skills.ATT - short.skills.ATT).toBe(4 * 2);
+    });
+  });
+
   describe('equipment defenseMod integration', () => {
     it('armor defenseMod raises effSkills.DEF', () => {
       const base = createMockWarrior({

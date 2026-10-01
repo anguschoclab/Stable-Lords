@@ -21,7 +21,7 @@ import {
   processTraitDevelopment,
   aiTrainingLimit,
 } from './rosterWorkerTraining';
-import { applyGearUpgrade } from './rosterWorkerEquipment';
+import { applyGearUpgrade, refitRosterWeapons } from './rosterWorkerEquipment';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // Re-export public symbols for backward compatibility
@@ -193,6 +193,7 @@ export function processRoster(
 
   updatedRival = applyTraitDevelopment(updatedRival, currentWeek, rngService);
   updatedRival = applyGearPolicy(updatedRival, intent, currentWeek, rngService);
+  updatedRival.roster = refitRosterWeapons(updatedRival.roster);
 
   return updatedRival;
 }

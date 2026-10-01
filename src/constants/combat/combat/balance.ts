@@ -17,6 +17,8 @@ export const ABSOLUTE_POWER_HIGH = 0.6;
 export const LU_MOMENTUM_DMG_COEFF = 0.5;
 /** Flat attrition damage on a Wall of Steel landed hit so the immovable brick still closes fights. */
 export const WS_ATTRITION_FLOOR = 0.5;
+/** Wall of Steel standing guard: parry bonus from the first exchange (the wall is up before it thickens). Balance knob. */
+export const WS_WALL_PAR = 2;
 
 /** Flat ATT bonus on a Parry-Strike fighter's next attack after a successful parry. Balance knob. */
 export const PS_COUNTERSTRIKE_ATT = 2;

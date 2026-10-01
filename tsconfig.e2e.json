@@ -31,6 +31,10 @@
     "scripts/advisor-e2e.ts",
     "scripts/advisor-probe.ts",
     "scripts/emergent-report.ts",
-    "scripts/liveness-diag.ts"
+    "scripts/liveness-diag.ts",
+    "scripts/world-diag.ts",
+    "scripts/balance-lab.ts",
+    "scripts/lab-overrides.ts",
+    "scripts/style-probe.ts"
   ]
 }

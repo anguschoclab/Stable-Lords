@@ -278,7 +278,7 @@ export const STYLE_PENALTIES: Record<
 
   // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
   [FightingStyle.LungingAttack]: /*LU*/ [-6, -8, -9, -3, -3, 0], // lightened further: -40 → -29 to lift 38.3% toward 40%
-  [FightingStyle.SlashingAttack]: /*SL*/ [-12, -14, -15, -4, -7, -2], // unchanged: 48.0% is near target
+  [FightingStyle.SlashingAttack]: /*SL*/ [-10, -14, -15, -4, -7, -2], // 2026-09: lightened ATT -12→-10 — SL sat at the bottom of both surfaces (fixture 45.5%, world 44%)
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
   [FightingStyle.BashingAttack]: /*BA*/ [-9, -11, -15, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15, RIP -4→-5; BA was 64.8% pre-existing, now 61.6%
@@ -287,4 +287,40 @@ export const STYLE_PENALTIES: Record<
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
   [FightingStyle.TotalParry]: /*TP*/ [-15, -1, -12, -6, -4, -2], // deepened further: -32 → -40 to bring 56.5% toward 60%
   [FightingStyle.WallOfSteel]: /*WS*/ [-8, -6, -10, 0, -4, -2], // re-ratchet: lightened DEF -13→-10, INI -2→0 to offset encumbrance penalties from equipment changes
+};
+
+// ─── Style Skill Floors ───────────────────────────────────────────────────
+// The lowest value each base skill can take for a style, whatever the
+// attributes: what the style's training drills in regardless of raw talent.
+//
+// Why this exists: STYLE_PENALTIES are calibrated on the 105-point balance
+// fixture, where attribute breakpoints yield 14–18 raw points per skill. Real
+// warriors are 70–90 points, so their raw sums sit BELOW most penalties and a
+// uniform floor of 1 erased every difference between styles — and left
+// penalty changes with no effect on the deployed population. A per-style
+// floor is the lever that acts on real warriors and leaves the fixture (whose
+// skills are far above any floor) untouched.
+//
+// Keep floors on a style's SIGNATURE skills only, and below the value the
+// fixture produces for that skill — a floor the fixture reaches stops being
+// population-only and must be re-ratcheted like a penalty.
+//
+// Format: [ATT, PAR, DEF, INI, RIP, DEC]
+export const STYLE_SKILL_FLOORS: Record<
+  FightingStyle,
+  [number, number, number, number, number, number]
+> = {
+  [FightingStyle.AimedBlow]: /*AB*/ [1, 1, 1, 1, 1, 1],
+  [FightingStyle.ParryRiposte]: /*PR*/ [1, 1, 1, 1, 1, 1],
+  [FightingStyle.ParryStrike]: /*PS*/ [1, 1, 1, 1, 1, 1],
+  [FightingStyle.ParryLunge]: /*PL*/ [1, 1, 1, 1, 1, 1],
+  [FightingStyle.LungingAttack]: /*LU*/ [1, 1, 1, 1, 1, 1],
+  [FightingStyle.SlashingAttack]: /*SL*/ [1, 1, 1, 1, 1, 1],
+  // Brutal: the style is built on getting the blow in first and landing it.
+  [FightingStyle.BashingAttack]: /*BA*/ [6, 1, 1, 9, 1, 1],
+  [FightingStyle.StrikingAttack]: /*ST*/ [6, 1, 1, 9, 1, 1],
+  [FightingStyle.TotalParry]: /*TP*/ [1, 1, 1, 1, 1, 1],
+  // Wall of Steel: the whirling arc is attack, guard and tempo at once — it
+  // comes from the drill, not from wit or deftness.
+  [FightingStyle.WallOfSteel]: /*WS*/ [11, 3, 1, 16, 1, 1],
 };

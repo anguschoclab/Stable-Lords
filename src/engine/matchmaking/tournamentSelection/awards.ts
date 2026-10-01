@@ -1,4 +1,5 @@
 import type { GameState, Warrior, TournamentEntry, InsightTokenType } from '@/types/state.types';
+import { ATTRIBUTE_MAX } from '@/types/warrior.types';
 import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
 import { updateEntityInList } from '@/utils/stateUtils';
@@ -133,7 +134,10 @@ function applyRivalAward(
         draft.baseSkills.ATT = (draft.baseSkills.ATT || 0) + 1;
       } else if (tokenType === 'Attribute') {
         const attrKey = awardRng.pick([...primaries]);
-        draft.attributes[attrKey] = (draft.attributes[attrKey] || 10) + 1;
+        draft.attributes[attrKey] = Math.min(
+          ATTRIBUTE_MAX,
+          (draft.attributes[attrKey] || 10) + 1
+        );
       }
     });
   }

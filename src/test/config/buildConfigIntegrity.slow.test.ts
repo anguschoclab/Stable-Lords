@@ -3,6 +3,45 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
+/**
+ * Strip // and /* *\/ comments from JSONC without touching string contents —
+ * a naive regex eats `"@/*"` path mappings as block-comment openers.
+ */
+function stripJsonComments(raw: string): string {
+  let out = '';
+  let inString = false;
+  let i = 0;
+  while (i < raw.length) {
+    const ch = raw[i];
+    if (inString) {
+      out += ch;
+      if (ch === '\\') out += raw[++i] ?? '';
+      else if (ch === '"') inString = false;
+      i++;
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      out += ch;
+      i++;
+      continue;
+    }
+    if (ch === '/' && raw[i + 1] === '/') {
+      while (i < raw.length && raw[i] !== '\n') i++;
+      continue;
+    }
+    if (ch === '/' && raw[i + 1] === '*') {
+      i += 2;
+      while (i < raw.length && !(raw[i] === '*' && raw[i + 1] === '/')) i++;
+      i += 2;
+      continue;
+    }
+    out += ch;
+    i++;
+  }
+  return out;
+}
+
 describe('buildConfigIntegrity', () => {
   const projectRoot = path.resolve(__dirname, '../../..');
 
@@ -49,9 +88,7 @@ describe('tsconfig reference graph', () => {
 
   function readJson(filePath: string): Record<string, any> {
     const raw = fs.readFileSync(filePath, 'utf-8');
-    // Strip JSON5-style comments (// and /* */) for tsconfig files
-    const stripped = raw.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-    return JSON.parse(stripped);
+    return JSON.parse(stripJsonComments(raw));
   }
 
   it('root tsconfig.json references all 4 build projects', () => {
@@ -109,8 +146,7 @@ describe('CI and package.json scripts', () => {
 
   function readJson(filePath: string): Record<string, any> {
     const raw = fs.readFileSync(filePath, 'utf-8');
-    const stripped = raw.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-    return JSON.parse(stripped);
+    return JSON.parse(stripJsonComments(raw));
   }
 
   it('package.json type-check script uses tsc --build', () => {

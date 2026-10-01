@@ -313,6 +313,7 @@ export const ArenaReignEndReasonSchema = z.enum([
   'retired',
   'stripped',
   'relinquished',
+  'displaced',
 ]);
 
 export const ArenaTitleReignSchema = z.object({

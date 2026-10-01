@@ -1,5 +1,5 @@
 import type { RivalStableData, MetaAdaptation } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
+import { ATTRIBUTE_MAX, type Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
@@ -159,7 +159,8 @@ export function generateAIRecruit(
     const traitData = TRAITS[tid];
     if (traitData?.effect.attrBonus) {
       for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
-        attrs[key as keyof typeof attrs] += bonus as number;
+        const k = key as keyof typeof attrs;
+        attrs[k] = Math.min(ATTRIBUTE_MAX, attrs[k] + (bonus as number));
       }
     }
   }

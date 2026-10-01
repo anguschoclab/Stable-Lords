@@ -7,6 +7,7 @@ import {
 } from '@/types/shared.types';
 import { type StyleMeta } from '../analytics/metaDrift';
 import {
+  ATTRIBUTE_MAX,
   type AttributePotential,
   type CareerRecord,
   type WarriorFavorites,
@@ -264,7 +265,8 @@ export function generateRecruit(
     const tdef = TRAITS[tid];
     if (tdef?.effect.attrBonus) {
       for (const [key, bonus] of Object.entries(tdef.effect.attrBonus)) {
-        attributes[key as keyof Attributes] += bonus as number;
+        const k = key as keyof Attributes;
+        attributes[k] = Math.min(ATTRIBUTE_MAX, attributes[k] + (bonus as number));
       }
     }
   }

@@ -5,7 +5,7 @@
  */
 import { FightingStyle } from '@/types/game';
 import type { Attributes } from '@/types/game';
-import type { AttributePotential } from '@/types/warrior.types';
+import { ATTRIBUTE_MAX, type AttributePotential } from '@/types/warrior.types';
 import { generatePotential } from '@/engine/warrior/potential';
 import { TRAITS } from '@/engine/traits';
 import { generateWarriorName } from '@/data/names/nameGenerator';
@@ -94,7 +94,8 @@ export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarr
     const traitData = TRAITS[trait];
     if (traitData?.effect.attrBonus) {
       for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
-        attrs[key as keyof Attributes] += bonus as number;
+        const k = key as keyof Attributes;
+        attrs[k] = Math.min(ATTRIBUTE_MAX, attrs[k] + (bonus as number));
       }
     }
 

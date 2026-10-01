@@ -1,4 +1,4 @@
-import { runSimulation } from '@/scripts/simulation-harness';
+import { runSimulation } from './simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';

@@ -16,7 +16,10 @@ const isolatedGlobs = runnerGroups.isolated.map((f) => '**/' + f.slice('src/test
 const baseTest = {
   environment: 'node' as const,
   globals: true,
-  alias: { '@': path.resolve(import.meta.dirname, './src') },
+  alias: {
+    '@': path.resolve(import.meta.dirname, './src'),
+    '#scripts': path.resolve(import.meta.dirname, './scripts'),
+  },
   testTimeout: 120000,
   hookTimeout: 10000,
   pool: 'threads' as const,

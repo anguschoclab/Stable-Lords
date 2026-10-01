@@ -3,7 +3,7 @@
  * and reports, per fighting style: championships, podium spots, and purse gold
  * earned across every seasonal tier (played or sweep-resolved).
  *
- * Run: bun run src/scripts/tournament-dominance.ts
+ * Run: bun run scripts/tournament-dominance.ts
  */
 import { runSimulation } from './simulation-harness';
 import { loadCombatNarrative } from '@/data/narrative';

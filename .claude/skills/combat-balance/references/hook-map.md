@@ -24,7 +24,7 @@ tests. Run the full suite.
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | Guardrail tests (antisymmetry, mirror, 40–60% band, kill-rate) | `src/test/engine/economy/balance.slow.test.ts` (fixture), `worldBalance.slow.test.ts` (world)           |
 | Lab tooling                                                    | `scripts/balance-lab.ts`, `scripts/style-probe.ts`, `scripts/world-diag.ts`, `scripts/lab-overrides.ts` |
-| Live headless sim                                              | `src/scripts/simulation-harness.ts`, `src/scripts/daily_oracle.ts` → `Daily_Balance_Report.md`          |
+| Live headless sim                                              | `scripts/simulation-harness.ts`, `scripts/daily_oracle.ts` → `Daily_Balance_Report.md`          |
 | Per-style rollups                                              | `src/engine/stats/styleRollups.ts`, `simulationMetrics.ts`                                              |
 
 The balance test builds `styleWins`/`styleFights`/`matchupWins` once with identical

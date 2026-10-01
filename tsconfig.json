@@ -16,7 +16,8 @@
   ],
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "#scripts/*": ["./scripts/*"]
     }
   }
 }

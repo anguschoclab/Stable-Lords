@@ -8,7 +8,7 @@
  *   <root>/season_{n}/gazettes/week_{w}.md
  *   <root>/hot_state/{slotId}.json
  *
- * Lives in src/scripts/ deliberately — it imports node:fs and must never be
+ * Lives in scripts/ deliberately — it imports node:fs and must never be
  * pulled into the browser/engine bundle.
  */
 import { mkdir, readFile, readdir, writeFile } from 'fs/promises';

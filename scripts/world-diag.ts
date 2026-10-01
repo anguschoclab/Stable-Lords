@@ -12,7 +12,7 @@
  *   LAB='{"floor":{"WS":[11,3,1,16,1,1]}}' bun run scripts/world-diag.ts
  *                                                  # what-if (see lab-overrides.ts)
  */
-import { runSimulation } from '@/scripts/simulation-harness';
+import { runSimulation } from './simulation-harness';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/shared.types';
@@ -49,6 +49,14 @@ const killsBy: Record<string, number> = {};
 const snapshots: unknown[] = [];
 // style -> exp bucket -> profile
 const profByExp: Record<string, Record<string, Acc>> = {};
+// ── megaplan world-health metrics ──────────────────────────────────────────
+// rival stable count per week (floor/soft-cap/hard-cap behavior)
+const stableSeries: number[] = [];
+// arenaId -> bout count (registered-arena coverage)
+const arenaBouts: Record<string, number> = {};
+// weekly rival roster fill (warriors) vs stable count
+let rosterFillSum = 0;
+let rosterFillWeeks = 0;
 
 const bump = (
   t: Record<string, Record<string, [number, number]>>,
@@ -114,10 +122,15 @@ function onWeek(state: GameState, week: number) {
             philosophy: r.philosophy,
           });
   }
+  stableSeries.push(state.rivals.length);
+  rosterFillSum += state.rivals.reduce((n, r) => n + r.roster.length, 0) / Math.max(1, state.rivals.length);
+  rosterFillWeeks++;
+
   for (const b of state.arenaHistory ?? []) {
     if (seen.has(b.id)) continue;
     seen.add(b.id);
     if (b.winner == null) continue;
+    if (b.arenaId) arenaBouts[b.arenaId] = (arenaBouts[b.arenaId] ?? 0) + 1;
     const a = byId.get(b.warriorIdA);
     const d = byId.get(b.warriorIdD);
     for (const [self, opp, selfStyle, oppStyle, won] of [
@@ -149,6 +162,7 @@ const { applyLabOverrides, STYLE_CODE } = await import('./lab-overrides');
 applyLabOverrides();
 const origLog = console.log;
 console.log = () => {};
+const simStarted = performance.now();
 const result = await runSimulation({
   weeks: WEEKS,
   seed: SEED,
@@ -156,6 +170,7 @@ const result = await runSimulation({
   ignoreBankruptcy: true,
   onWeek,
 });
+const simMs = performance.now() - simStarted;
 console.log = origLog;
 
 const styles = Object.keys(mm).sort();
@@ -279,6 +294,47 @@ console.log(
       )
       .join(' | ')
 );
+// ── Megaplan world health ────────────────────────────────────────────────────
+const fs0 = result.finalState;
+const { getAllArenas } = await import('@/data/arenas/registry');
+const allArenas = getAllArenas();
+const darkArenas = allArenas.filter((a) => !arenaBouts[a.id]);
+const legacyFounded = fs0.rivals.filter((r) => r.owner.foundedByWarriorId);
+const generations = legacyFounded.reduce<Record<number, number>>((m, r) => {
+  const g = r.owner.generation ?? 1;
+  m[g] = (m[g] ?? 0) + 1;
+  return m;
+}, {});
+const crownCounts = new Map<string, number>();
+let occupiedCrowns = 0;
+for (const t of Object.values(fs0.arenaChampions ?? {})) {
+  if (!t.champion) continue;
+  occupiedCrowns++;
+  crownCounts.set(t.champion.warriorId, (crownCounts.get(t.champion.warriorId) ?? 0) + 1);
+}
+const maxCrowns = Math.max(0, ...crownCounts.values());
+
+console.log('\n# Megaplan world health');
+console.log(
+  `stables: start=${stableSeries[0]} end=${fs0.rivals.length} min=${Math.min(...stableSeries)} max=${Math.max(...stableSeries)}`
+);
+console.log(`roster fill: avg ${(rosterFillSum / Math.max(1, rosterFillWeeks)).toFixed(1)} warriors/stable`);
+console.log(
+  `legacy-founded stables: ${legacyFounded.length} (generations: ${Object.entries(generations)
+    .sort(([a], [b]) => Number(a) - Number(b))
+    .map(([g, n]) => `gen${g}=${n}`)
+    .join(' ') || 'none'})`
+);
+console.log(`freeAgents=${fs0.freeAgents?.length ?? 0} recruitPool=${fs0.recruitPool?.length ?? 0} founderQueue=${fs0.legacyFounderQueue?.length ?? 0}`);
+console.log(
+  `arena coverage: ${allArenas.length - darkArenas.length}/${allArenas.length} arenas saw a bout` +
+    (darkArenas.length ? ` — dark: ${darkArenas.map((a) => a.id).join(', ')}` : '')
+);
+console.log(
+  `crowns: ${occupiedCrowns} reigning / ${crownCounts.size} unique champions / max ${maxCrowns} per warrior`
+);
+console.log(`perf: ${(simMs / WEEKS).toFixed(0)} ms/week (${(simMs / 1000).toFixed(1)}s total)`);
+
 const wr = styles.map(
   (s) => (100 * (c.styleWins[s] ?? 0)) / ((c.styleWins[s] ?? 0) + (c.styleLosses[s] ?? 0))
 );

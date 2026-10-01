@@ -16,7 +16,7 @@ jobs:
         with:
           bun-version: 1.4.0
       - run: bun install
-      - run: bun run src/scripts/daily_oracle.ts
+      - run: bun run scripts/daily_oracle.ts
       - name: Commit and Push Report
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"

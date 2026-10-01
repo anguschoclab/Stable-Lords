@@ -259,7 +259,6 @@ for (const [abs, relPath] of allFiles) {
   if (relPath === 'src/main.tsx') prodRoots.add(relPath);
   else if (relPath === 'electron/main.ts') prodRoots.add(relPath);
   else if (relPath.startsWith('src/routes/')) prodRoots.add(relPath);
-  else if (relPath.startsWith('src/scripts/')) prodRoots.add(relPath);
   else if (relPath.startsWith('scripts/')) prodRoots.add(relPath);
   else if (relPath.endsWith('.mjs')) prodRoots.add(relPath);
   else if (relPath === 'src/engine/worker.ts') prodRoots.add(relPath);

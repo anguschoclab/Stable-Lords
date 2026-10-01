@@ -95,7 +95,7 @@ attributes per style, then asserts:
 
 These bands are tunable constants in `combat.ts` (`ABSOLUTE_POWER_LOW/HIGH`,
 `MIRROR_MATCH_BAND`, `MATRIX_ANTISYMMETRY_TOLERANCE`). "Balanced" is not a vibe —
-it is this file passing. There is also a live `src/scripts/simulation-harness.ts`
+it is this file passing. There is also a live `scripts/simulation-harness.ts`
 
 - daily balance report; prefer measuring over guessing.
 

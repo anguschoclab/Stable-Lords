@@ -140,7 +140,7 @@ export default tseslint.config(
     /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions.
        scripts/stubs are intentionally minimal headless shims — JSDoc and
        constructor-shape rules add no value there. */
-    files: ['scratch/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}', 'src/scripts/**/*.{ts,tsx}', '*.ts'],
+    files: ['scratch/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}', '*.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       'jsdoc/require-jsdoc': 'off',

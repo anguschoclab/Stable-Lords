@@ -5,7 +5,7 @@
  * Run: bun run scripts/parallel-bench.mjs [--weeks N] [--seed N] [--pool N]
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { runSimulation } from '../src/scripts/simulation-harness.ts';
+import { runSimulation } from './simulation-harness.ts';
 import {
   configureEnginePool,
   shutdownEnginePool,

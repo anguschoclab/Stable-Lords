@@ -10,7 +10,7 @@
  *                   0 disables). Violations are printed and fail the run.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { runSimulation } from '../src/scripts/simulation-harness.ts';
+import { runSimulation } from './simulation-harness.ts';
 import { formatPulseTable } from '../src/engine/stats/simulationMetrics.ts';
 import { validateStateInvariants } from '../src/engine/validate/stateInvariants.ts';
 

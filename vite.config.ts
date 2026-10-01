@@ -133,6 +133,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
+      '#scripts': path.resolve(import.meta.dirname, './scripts'),
     },
   },
   build: {

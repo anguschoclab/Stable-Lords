@@ -16,7 +16,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "#scripts/*": ["./scripts/*"]
     },
     "skipLibCheck": true,
     "strict": true,
@@ -25,5 +26,13 @@
     "types": ["vitest/globals", "@testing-library/jest-dom/vitest"],
     "useDefineForClassFields": true
   },
-  "include": ["src", "electron/main.ts"]
+  "include": [
+    "src",
+    "electron/main.ts",
+    "scripts/daily_bard.ts",
+    "scripts/daily_oracle.ts",
+    "scripts/nodeArchiveService.ts",
+    "scripts/simulation-harness.ts",
+    "scripts/tournament-dominance.ts"
+  ]
 }

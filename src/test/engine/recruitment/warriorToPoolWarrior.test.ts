@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorToPoolWarrior } from '@/engine/recruitment/recruitment';
-import { TIER_COST } from '@/engine/recruitment/recruitment';
 import { makeWarrior, makePoolWarrior } from '@/test/_fixtures/factories';
 import { SeededRNGService } from '@/utils/random';
 
@@ -54,7 +53,7 @@ describe('warriorToPoolWarrior — dissolved-stable veterans enter the recruit p
 
     expect(legendary.tier).not.toBe('Common');
     expect(nobody.tier).toBe('Common');
-    expect(legendary.cost).toBe(TIER_COST[legendary.tier]);
+    // Megaplan: free-agent cost is computed by warrior value, not the tier table.
     expect(legendary.cost).toBeGreaterThanOrEqual(nobody.cost);
   });
 

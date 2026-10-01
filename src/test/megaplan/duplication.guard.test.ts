@@ -175,6 +175,9 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/components/warrior/dossier/WarriorDossierTabs.tsx|src/pages/StableDetail.tsx',
   'src/pages/Recruit/components/ScoutMarket.tsx|src/pages/Recruit/index.tsx',
   'src/pages/Training.tsx|src/pages/training/useTrainingAssignments.ts',
+  // bookmarks page seam: the hook owns the store slice + navigation, the pure
+  // module owns row projection — same thin interface-overlap category.
+  'src/pages/bookmarks/groupBookmarks.ts|src/pages/bookmarks/useBookmarkGroups.ts',
 ]);
 
 describe('megaplan: duplication guard', () => {

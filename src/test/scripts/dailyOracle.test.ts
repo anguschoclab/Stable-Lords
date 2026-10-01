@@ -5,7 +5,7 @@
  * over weekly bouts only, and kill/death divergence exposes roster corruption.
  */
 import { describe, it, expect } from 'vitest';
-import { computeMetrics } from '@/scripts/daily_oracle';
+import { computeMetrics } from '#scripts/daily_oracle';
 import type { SimPulse } from '@/engine/stats/simulationMetrics';
 
 const makePulse = (over: Partial<SimPulse> = {}): SimPulse => ({

@@ -9,7 +9,7 @@
  * a violation means the ecosystem went quiet, not that a test is strict.
  */
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
-import { runSimulation } from '@/scripts/simulation-harness';
+import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';

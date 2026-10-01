@@ -122,7 +122,7 @@ describe('SystemPass — seasonal churn wiring', () => {
     expect(impact.rivalsRemovals).toContain('r-dead');
   });
 
-  it('routes the removed stable roster into the recruit pool', () => {
+  it('routes the removed stable roster onto the free-agent shelf', () => {
     const bankrupt = makeRival({
       id: 'r-dead' as StableId,
       treasury: -10_000,
@@ -131,7 +131,7 @@ describe('SystemPass — seasonal churn wiring', () => {
 
     const impact = runSystemPass(churnState([bankrupt]));
 
-    expect((impact.recruitPool ?? []).map((p) => p.id)).toContain('w-displaced');
+    expect((impact.freeAgentAdditions ?? []).map((p) => p.id)).toContain('w-displaced');
   });
 
   it('keeps rival updates off removed stables and on retained ones', () => {

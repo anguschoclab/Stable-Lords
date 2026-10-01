@@ -25,10 +25,10 @@ describe('workflow-config', () => {
     expect(tsconfig.compilerOptions.paths['@/*']).toBeDefined();
   });
 
-  it('daily_sim.yml references src/scripts/daily_oracle.ts, not benchmark.ts', () => {
+  it('daily_sim.yml references scripts/daily_oracle.ts, not benchmark.ts', () => {
     const yml = readFile('.github/workflows/daily_sim.yml');
     expect(yml).not.toContain('benchmark.ts');
-    expect(yml).toContain('src/scripts/daily_oracle.ts');
+    expect(yml).toContain('scripts/daily_oracle.ts');
   });
 
   it('both workflow YAMLs pin bun-version: 1.4.0', () => {
@@ -50,7 +50,7 @@ describe('workflow-config', () => {
   });
 
   it('daily_oracle.ts awaits runSimulation', () => {
-    const src = readFile('src/scripts/daily_oracle.ts');
+    const src = readFile('scripts/daily_oracle.ts');
     expect(src).toContain('await runSimulation');
   });
 

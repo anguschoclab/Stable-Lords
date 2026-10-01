@@ -11,6 +11,7 @@ import {
   DefensiveTacticSchema,
   GameStateSchema,
 } from '@/schemas/gameStateSchema';
+import type { StableId } from '@/types/shared.types';
 
 describe('gameStateSchema — enum schemas', () => {
   it('FightingStyleSchema accepts valid styles', () => {
@@ -126,5 +127,37 @@ describe('gameStateSchema — GameStateSchema', () => {
       meta: { gameName: 'T', version: '1', createdAt: '2024', extra: true },
     });
     expect(result.success).toBe(false);
+  });
+
+  it('megaplan fields survive a JSON save/load round-trip', async () => {
+    const { createFreshState } = await import('@/engine/factories/gameStateFactory');
+    const { populateInitialWorld } = await import('@/engine/core/worldSeeder');
+
+    const state = populateInitialWorld(createFreshState('rt-seed'), 42);
+    // Founder queue: queue a real seeded warrior.
+    const founder = state.roster[0]!;
+    state.legacyFounderQueue = [founder];
+    // Free-agent shelf: reuse a pool warrior shape.
+    state.freeAgents = [
+      { ...state.recruitPool[0]!, id: 'fa-1', addedWeek: 5, weeksOnMarket: 2 },
+    ] as any;
+    // Founder lineage on a rival owner.
+    const rival = state.rivals[0]!;
+    rival.owner.foundedByWarriorId = founder.id;
+    rival.owner.foundedByWarriorName = founder.name;
+    rival.owner.parentStableId = 'rival-parent-1' as StableId;
+    rival.owner.generation = 2;
+    rival.weeksBelowMin = 3;
+
+    const parsed = GameStateSchema.parse(JSON.parse(JSON.stringify(state)));
+
+    expect(parsed.legacyFounderQueue.map((w: any) => w.id)).toEqual([founder.id]);
+    expect(parsed.freeAgents[0].id).toBe('fa-1');
+    const parsedRival = parsed.rivals[0]!;
+    expect(parsedRival.owner.foundedByWarriorId).toBe(founder.id);
+    expect(parsedRival.owner.foundedByWarriorName).toBe(founder.name);
+    expect(parsedRival.owner.parentStableId).toBe('rival-parent-1');
+    expect(parsedRival.owner.generation).toBe(2);
+    expect(parsedRival.weeksBelowMin).toBe(3);
   });
 });

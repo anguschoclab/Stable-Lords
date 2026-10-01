@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { runSimulation } from '@/scripts/simulation-harness';
+import { runSimulation } from '#scripts/simulation-harness';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { setMockIdGenerator } from '@/utils/idUtils';

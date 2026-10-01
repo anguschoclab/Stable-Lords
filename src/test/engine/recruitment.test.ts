@@ -40,44 +40,33 @@ describe('partialRefreshPool', () => {
 
     expect(refreshedPool.length).toBe(DEFAULT_POOL_SIZE);
 
-    // According to partialRefreshPool:
-    // removeCount = Math.min(4, Math.max(2, Math.floor(pool.length * 0.3)));
-    // If length is 12, 12 * 0.3 = 3.6 -> floor is 3. Max(2, 3) is 3. Min(4, 3) is 3.
-    // So 3 oldest warriors should be removed.
-    // They are pool[0], pool[1], and one of the others.
-
-    // Count how many warriors are from the nextWeek
+    // Megaplan cadence: a sixth of the world-scaled target turns over each
+    // week — removeCount = max(2, ceil(45/6)) = 8 at the floor target of 45.
+    const expectedTurnover = Math.max(2, Math.ceil(DEFAULT_POOL_SIZE / 6));
     const newWarriors = refreshedPool.filter((w) => w.addedWeek === nextWeek);
-    expect(newWarriors.length).toBe(3);
+    expect(newWarriors.length).toBe(expectedTurnover);
 
     // Verify older ones were removed. The one from week 1 should definitely be gone.
     const hasWeek1 = refreshedPool.some((w) => w.addedWeek === 1);
     expect(hasWeek1).toBe(false);
   });
 
-  it('maintains minimum and maximum limits for removal count', () => {
+  it('refreshes a sixth of the world-scaled target and tops up to it', () => {
     const usedNames = new Set<string>();
-    // Test minimum removal: array size 5 -> floor(1.5) = 1 -> max(2, 1) = 2
+    const turnover = Math.max(2, Math.ceil(DEFAULT_POOL_SIZE / 6));
+
+    // Small pool: turnover exceeds the pool, so every entry is replaced.
     let smallPool = generateRecruitPool(5, 1, usedNames);
     smallPool = partialRefreshPool(smallPool, 2, usedNames);
-    // Since original was 5, it should expand to DEFAULT_POOL_SIZE
     expect(smallPool.length).toBe(DEFAULT_POOL_SIZE);
-    const addedInWeek2 = smallPool.filter((w) => w.addedWeek === 2);
-    // 2 removed from the original 5, so 3 remain. So we need to add 9 to reach 12.
-    // So there should be 9 warriors with addedWeek = 2.
-    expect(addedInWeek2.length).toBe(9);
+    expect(smallPool.every((w) => w.addedWeek === 2)).toBe(true);
 
-    // Test maximum removal: array size 20 -> floor(6) -> min(4, 6) = 4
+    // Larger pool: 8 oldest removed, the rest survive, topped back to target.
     const largePool = generateRecruitPool(20, 1, usedNames);
     const refreshedLarge = partialRefreshPool(largePool, 2, usedNames);
-    // Doesn't truncate down to DEFAULT_POOL_SIZE if it was larger, only expands up to it.
-    // wait, does it? The code says:
-    // const result = [...remaining, ...newWarriors];
-    // while (result.length < DEFAULT_POOL_SIZE) result.push(...);
-    // So if result.length is 20 - 4 + 4 = 20, it stays 20.
-    expect(refreshedLarge.length).toBe(20);
-    const addedInWeek2Large = refreshedLarge.filter((w) => w.addedWeek === 2);
-    expect(addedInWeek2Large.length).toBe(4);
+    expect(refreshedLarge.length).toBe(DEFAULT_POOL_SIZE);
+    const survivors = refreshedLarge.filter((w) => w.addedWeek === 1);
+    expect(survivors.length).toBe(20 - turnover);
   });
 
   it('avoids reusing names that are in the remaining pool or previously used', () => {

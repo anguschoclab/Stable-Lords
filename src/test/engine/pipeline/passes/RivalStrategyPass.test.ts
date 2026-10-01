@@ -503,7 +503,7 @@ describe('runRivalStrategyPass — bankruptcy succession', () => {
     const impact = runRivalStrategyPass(state, 6, undefined as any, true);
 
     expect(impact.rivalReplacements?.has('rival-1' as StableId)).toBe(true);
-    const poolIds = (impact.recruitPool ?? []).map((p) => p.id);
+    const poolIds = (impact.freeAgentAdditions ?? []).map((p) => p.id);
     // The dissolved warrior survives as a free agent — not silently lost.
     expect(poolIds).toContain('w_old');
   });

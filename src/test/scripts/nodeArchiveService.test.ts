@@ -3,7 +3,7 @@ import { mkdtemp, rm, readFile } from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
 
-import { NodeArchiveService } from '@/scripts/nodeArchiveService';
+import { NodeArchiveService } from '#scripts/nodeArchiveService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 let tmpDir: string;

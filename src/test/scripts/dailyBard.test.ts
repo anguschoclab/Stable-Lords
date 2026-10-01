@@ -10,7 +10,7 @@ import {
   isStringArray,
   resolveNarrativeArray,
   DRY_RUN,
-} from '@/scripts/daily_bard';
+} from '#scripts/daily_bard';
 import { promises as fsp, readFileSync, readdirSync, promises as fsPromises } from 'fs';
 import { resolve } from 'path';
 import path from 'path';

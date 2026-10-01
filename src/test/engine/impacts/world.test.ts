@@ -221,10 +221,23 @@ describe('world impacts — realmRankings', () => {
 });
 
 describe('world impacts — worldHandlers map', () => {
-  it('has all 7 handler keys', () => {
-    expect(Object.keys(worldHandlers)).toHaveLength(7);
+  it('has all 12 handler keys', () => {
+    expect(Object.keys(worldHandlers)).toHaveLength(12);
     expect(Object.keys(worldHandlers).sort()).toEqual(
-      ['day', 'recruitPool', 'realmRankings', 'season', 'seasonalGrowth', 'weather', 'week'].sort()
+      [
+        'day',
+        'freeAgents',
+        'freeAgentAdditions',
+        'freeAgentRemovals',
+        'legacyFounderEnqueue',
+        'legacyFounderQueue',
+        'recruitPool',
+        'realmRankings',
+        'season',
+        'seasonalGrowth',
+        'weather',
+        'week',
+      ].sort()
     );
   });
 

@@ -45,7 +45,7 @@ describe('truncateState', () => {
       coachDismissed: makeArray(105) as any,
       restStates: makeArray(505) as any,
       hiringPool: makeArray(25) as any,
-      recruitPool: makeArray(55) as any,
+      recruitPool: makeArray(310) as any,
       trainers: makeArray(55) as any,
       rivals: makeArray(55) as any,
     });
@@ -73,9 +73,13 @@ describe('truncateState', () => {
     expect(truncated.coachDismissed.length).toBe(100);
     expect(truncated.restStates.length).toBe(500);
     expect(truncated.hiringPool.length).toBe(20);
-    expect(truncated.recruitPool.length).toBe(50);
+    // Megaplan: the recruit pool cap scales with world population
+    // (WORLD_RIVAL_HARD_CAP × RECRUIT_POOL_PER_STABLE × 3 = 300).
+    expect(truncated.recruitPool.length).toBe(300);
     expect(truncated.trainers.length).toBe(50);
-    expect(truncated.rivals.length).toBe(50);
+    // Megaplan: live rival stables are no longer truncated — the world must
+    // hold its population floor; only per-rival internals are capped.
+    expect(truncated.rivals.length).toBe(55);
   });
 
   it('removes transcripts from arenaHistory for flights older than the last 20', () => {

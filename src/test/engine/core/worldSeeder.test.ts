@@ -3,6 +3,8 @@ import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
+import { WORLD_RIVAL_FLOOR, PROMOTERS_PER_STABLE, PROMOTER_COUNT_MIN } from '@/constants/world';
+import { computeRecruitPoolSize } from '@/engine/recruitment/recruitment';
 
 describe('populateInitialWorld', () => {
   const baseState = createFreshState('test-seed');
@@ -12,9 +14,9 @@ describe('populateInitialWorld', () => {
     expect(result).not.toBe(baseState);
   });
 
-  it('generates exactly 45 rival stables', () => {
+  it('seeds the world at the rival-stable floor', () => {
     const result = populateInitialWorld(baseState, 42);
-    expect(result.rivals).toHaveLength(45);
+    expect(result.rivals).toHaveLength(WORLD_RIVAL_FLOOR);
   });
 
   it('generates exactly 4 player roster warriors', () => {
@@ -59,9 +61,9 @@ describe('populateInitialWorld', () => {
     expect(result.realmRankings).toEqual({});
   });
 
-  it('generates a non-empty recruitPool with 12 entries', () => {
+  it('seeds a recruit pool scaled to the world floor', () => {
     const result = populateInitialWorld(baseState, 42);
-    expect(result.recruitPool).toHaveLength(12);
+    expect(result.recruitPool).toHaveLength(computeRecruitPoolSize(WORLD_RIVAL_FLOOR));
   });
 
   it('generates a non-empty hiringPool with 8 entries', () => {
@@ -69,9 +71,11 @@ describe('populateInitialWorld', () => {
     expect(result.hiringPool).toHaveLength(8);
   });
 
-  it('generates promoters with 30 entries', () => {
+  it('seeds promoters scaled to the world floor', () => {
     const result = populateInitialWorld(baseState, 42);
-    expect(Object.keys(result.promoters)).toHaveLength(30);
+    expect(Object.keys(result.promoters)).toHaveLength(
+      Math.max(PROMOTER_COUNT_MIN, Math.round(WORLD_RIVAL_FLOOR * PROMOTERS_PER_STABLE))
+    );
   });
 
   it('all rival rosters are non-empty', () => {

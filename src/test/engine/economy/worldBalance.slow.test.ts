@@ -16,7 +16,7 @@
  * Run with: npx vitest run --config vitest.config.slow.ts src/test/engine/economy/worldBalance.slow.test.ts
  */
 import { describe, it, expect, vi, beforeAll } from 'vitest';
-import { runSimulation, type CumulativeStats } from '@/scripts/simulation-harness';
+import { runSimulation, type CumulativeStats } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';

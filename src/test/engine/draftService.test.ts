@@ -86,12 +86,13 @@ describe('aiDraftFromPool', () => {
       expect(Array.isArray(result.gazetteItems)).toBe(true);
     });
 
-    it('handles empty pool', () => {
+    it('handles empty pool — needy stables still sign generated fallback recruits', () => {
       const result = aiDraftFromPool([], rivals, 1, state);
 
       expect(result.updatedPool).toEqual([]);
       expect(result.updatedRivals.length).toBe(rivals.length);
-      expect(result.gazetteItems).toEqual([]);
+      // Generated-fallback signings are real signings — the gazette hears.
+      expect(result.gazetteItems.length).toBeGreaterThan(0);
     });
 
     it('handles empty rivals list', () => {

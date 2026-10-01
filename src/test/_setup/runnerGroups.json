@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-30T13:57:38.178Z",
+  "generatedAt": "2026-10-01T19:20:46.573Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -25,6 +25,7 @@
     "src/test/components/StableRankingsRow.test.tsx",
     "src/test/components/TacticalLogView.test.tsx",
     "src/test/components/UIAccessibility.test.tsx",
+    "src/test/components/ViewModeToggleA11y.test.tsx",
     "src/test/components/VirtualizedFallenGrid.test.tsx",
     "src/test/components/WarriorDossier.test.tsx",
     "src/test/components/WarriorLeaderboardVirtualized.test.tsx",
@@ -55,6 +56,7 @@
     "src/test/components/dashboard/RivalryWidget.test.tsx",
     "src/test/components/dashboard/SeasonPhaseTicks.test.tsx",
     "src/test/components/dashboard/WeeklyDigestMini.test.tsx",
+    "src/test/components/entityLink.perf.test.tsx",
     "src/test/components/equipment/EncumbranceBar.test.tsx",
     "src/test/components/equipment/SlotSelector.test.tsx",
     "src/test/components/eventLog/EventLog.test.tsx",

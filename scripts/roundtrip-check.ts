@@ -41,3 +41,10 @@ const gens = founded.reduce((m: Map<number, number>, r) => {
   return m;
 }, new Map<number, number>());
 console.log(`  generations=${[...gens.entries()].map(([g, n]) => `gen${g}:${n}`).join(' ') || 'none'}`);
+
+// OUT=file.json writes an importable save (start screen → import slot).
+if (process.env.OUT) {
+  const fs = await import('node:fs');
+  fs.writeFileSync(process.env.OUT, json);
+  console.log(`save file: ${process.env.OUT}`);
+}

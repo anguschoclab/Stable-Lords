@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { skillCheck, contestCheck } from '@/engine/combat/mechanics/combatMath';
 
-
-
 describe('combatMath engine', () => {
   describe('skillCheck', () => {
     it('auto-succeeds on a natural 1 (rng = 0), regardless of low skill', () => {
@@ -38,7 +36,6 @@ describe('combatMath engine', () => {
       expect(skillCheck(rng, 9.9)).toBe(false);
     });
   });
-
 
   describe('contestCheck', () => {
     it('returns true if rollA > rollD', () => {
@@ -94,7 +91,6 @@ describe('combatMath engine', () => {
 });
 
 describe('Combat Math Mechanics', () => {
-
   describe('skillCheck', () => {
     it('succeeds on a natural 1 regardless of target', () => {
       const rng = vi.fn().mockReturnValue(0); // Math.floor(0 * 20) + 1 = 1

@@ -6,19 +6,27 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer, Promoter, InsightToken } from '@/types/state.types';
 import type { WarriorTournamentAdvice } from '@/engine/advisor/types';
 import { makeFightSummary } from '@/test/_fixtures/factories';
-import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeBoutOffer as fixtureBoutOffer,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
-const mkWarrior = (id: string, style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior =>
+const mkWarrior = (
+  id: string,
+  style: FightingStyle = FightingStyle.LungingAttack,
+  over: Partial<Warrior> = {}
+): Warrior =>
   fixtureWarrior({
-  id: id as any,
-  name: `Warrior_${id}`,
-  style,
-  attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
-  fame: 60,
-  popularity: 30,
-  career: { wins: 5, losses: 1, kills: 0 },
-  ...over,
-} as any);
+    id: id as any,
+    name: `Warrior_${id}`,
+    style,
+    attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
+    fame: 60,
+    popularity: 30,
+    career: { wins: 5, losses: 1, kills: 0 },
+    ...over,
+  } as any);
 
 const mkOffer = (
   id: string,
@@ -27,18 +35,18 @@ const mkOffer = (
   over: Partial<BoutOffer> = {}
 ): BoutOffer =>
   fixtureBoutOffer({
-  id: id as any,
-  promoterId: 'promoter_1' as any,
-  warriorIds: [warriorIdA as any, warriorIdB as any],
-  boutWeek: 6,
-  createdAbsoluteWeek: 5,
-  expirationWeek: 6,
-  purse: 180,
-  hype: 20,
-  status: 'Proposed',
-  responses: { [warriorIdA]: 'Pending', [warriorIdB]: 'Pending' } as any,
-  ...over,
-} as any);
+    id: id as any,
+    promoterId: 'promoter_1' as any,
+    warriorIds: [warriorIdA as any, warriorIdB as any],
+    boutWeek: 6,
+    createdAbsoluteWeek: 5,
+    expirationWeek: 6,
+    purse: 180,
+    hype: 20,
+    status: 'Proposed',
+    responses: { [warriorIdA]: 'Pending', [warriorIdB]: 'Pending' } as any,
+    ...over,
+  } as any);
 
 const mkState = (over: Partial<GameState> = {}): GameState =>
   fixtureGameState({
@@ -46,8 +54,18 @@ const mkState = (over: Partial<GameState> = {}): GameState =>
     absoluteWeek: 5,
     rivals: [],
     promoters: {
-      promoter_1: { id: 'promoter_1', name: 'Cassius', personality: 'Honorable', tier: 'Regional' } as unknown as Promoter,
-      promoter_sadistic: { id: 'promoter_sadistic', name: 'Nero', personality: 'Sadistic', tier: 'Regional' } as unknown as Promoter,
+      promoter_1: {
+        id: 'promoter_1',
+        name: 'Cassius',
+        personality: 'Honorable',
+        tier: 'Regional',
+      } as unknown as Promoter,
+      promoter_sadistic: {
+        id: 'promoter_sadistic',
+        name: 'Nero',
+        personality: 'Sadistic',
+        tier: 'Regional',
+      } as unknown as Promoter,
     },
     ...over,
   } as any);
@@ -131,7 +149,9 @@ describe('evaluateBoutOffers', () => {
     const offer = mkOffer('offer_killer', 'p1', 'killer_1');
     const state = mkState({
       roster: [warrior],
-      rivals: [{ id: 'rival_stable', roster: [killerRival], owner: { stableName: 'Bloody Hands' } } as any],
+      rivals: [
+        { id: 'rival_stable', roster: [killerRival], owner: { stableName: 'Bloody Hands' } } as any,
+      ],
       boutOffers: { offer_killer: offer } as any,
     });
 
@@ -147,7 +167,9 @@ describe('evaluateBoutOffers', () => {
     const offer = mkOffer('offer_good', 'p1', 'ws_1', { purse: 250 });
     const state = mkState({
       roster: [warrior],
-      rivals: [{ id: 'rival_stable', roster: [favoredOpponent], owner: { stableName: 'Rivals' } } as any],
+      rivals: [
+        { id: 'rival_stable', roster: [favoredOpponent], owner: { stableName: 'Rivals' } } as any,
+      ],
       boutOffers: { offer_good: offer } as any,
     });
 
@@ -276,9 +298,9 @@ describe('evaluateBoutOffers', () => {
 
     const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER');
     expect(advice.action).toBe('ACCEPT_OFFER');
-    expect(
-      advice.reasoning.some((r) => /scout report|dossier/i.test(r) && /25/.test(r))
-    ).toBe(true);
+    expect(advice.reasoning.some((r) => /scout report|dossier/i.test(r) && /25/.test(r))).toBe(
+      true
+    );
   });
 
   it('omits scout-purchase advice when the treasury cannot cover a Basic report', () => {

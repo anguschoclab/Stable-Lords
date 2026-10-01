@@ -45,7 +45,7 @@ export const FLAWS_TRAITS: Record<string, TraitDef> = {
     weight: 0.4,
     tier: 'Flaw',
     sign: 'negative',
-  },  // ── New negative traits — the botch/bad-start pool (was traitData/flaws.ts) ──
+  }, // ── New negative traits — the botch/bad-start pool (was traitData/flaws.ts) ──
   glass_jaw: {
     id: 'glass_jaw',
     name: 'Glass Jaw',

@@ -21,11 +21,18 @@ export function aiDraftFromPool(
   state: GameState,
   seed?: number,
   rng?: IRNGService
-): { updatedPool: PoolWarrior[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
+): {
+  updatedPool: PoolWarrior[];
+  updatedFreeAgents: PoolWarrior[];
+  updatedRivals: RivalStableData[];
+  gazetteItems: string[];
+} {
   const rngService = resolveRng(rng, seed ?? (state.absoluteWeek ?? week) * 7919 + 101);
   const isMajorDraftWeek = week % 4 === 0;
 
-  let currentPool = [...pool];
+  // One supply chain: free agents and the orphanage pool share the draft.
+  // `source` tags survive the merge so the caller can split them back out.
+  let currentPool = [...(state.freeAgents ?? []), ...pool];
   const globalGazetteItems: string[] = [];
   const usedNames = collectUsedWarriorNames(state);
 
@@ -34,10 +41,15 @@ export function aiDraftFromPool(
     (state.rivalries || []).map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
   );
 
-  // 🐍 Snake Draft Priority: Sort rivals by "Need"
-  // Priority 1: Fewest active warriors
-  // Priority 2: Lowest treasury
-  const sortedRivals = [...rivals].sort((a, b) => {
+  // 🐍 Snake Draft Priority: rotate the order by week so the same stables
+  // don't always pick first, then need-sort (stable sort keeps the rotation
+  // inside each need tier — fewest active warriors still pick first).
+  const rotated = [...rivals];
+  if (rotated.length > 0) {
+    const rot = week % rotated.length;
+    rotated.push(...rotated.splice(0, rot));
+  }
+  const sortedRivals = rotated.sort((a, b) => {
     const aActive = a.roster.filter((w) => isActive(w)).length;
     const bActive = b.roster.filter((w) => isActive(w)).length;
     if (aActive !== bActive) return aActive - bActive;
@@ -87,8 +99,14 @@ export function aiDraftFromPool(
   // Restore original rival order to maintain pipeline stability
   const finalizedRivals = rivals.map((r) => draftResults[r.owner.id] || r);
 
+  // Split the merged candidate pool back into the free-agent shelf and the
+  // orphanage pool — the `source` tag stamped at intake is the partition key.
+  const updatedFreeAgents = currentPool.filter((w) => w.source === 'freeAgent' || w.veteran);
+  const updatedPool = currentPool.filter((w) => w.source !== 'freeAgent' && !w.veteran);
+
   return {
-    updatedPool: currentPool,
+    updatedPool,
+    updatedFreeAgents,
     updatedRivals: finalizedRivals,
     gazetteItems: globalGazetteItems,
   };

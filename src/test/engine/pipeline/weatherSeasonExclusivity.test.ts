@@ -3,11 +3,7 @@
  * SEASON_EXCLUSIVE_WEATHER buckets, and that Rain of Frogs is Fall-only.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  SEASONAL_WEATHER,
-  rollWeather,
-  getWeatherSeason,
-} from '@/engine/weather/seasonalWeather';
+import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { SeededRNGService } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
 import { SEASONABLE_WEATHER_TYPES } from '@/test/_fixtures/weather';

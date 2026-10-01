@@ -51,7 +51,10 @@ describe('championship autosim — week 52+', () => {
       {} as Record<string, number>
     );
     const titleBouts = (s.arenaHistory ?? []).filter((f) => f.titleArenaId);
-    const defensesBooked = Object.values(titles).reduce((n, t) => n + (t.champion?.defenses ?? 0), 0);
+    const defensesBooked = Object.values(titles).reduce(
+      (n, t) => n + (t.champion?.defenses ?? 0),
+      0
+    );
     const historyReigns = Object.values(titles).reduce((n, t) => n + t.history.length, 0);
     const titleOffers = Object.values(s.boutOffers ?? {}).filter((o) => o.titleArenaId);
     const titleOfferStatus = titleOffers.reduce((acc: Record<string, number>, o) => {
@@ -59,7 +62,8 @@ describe('championship autosim — week 52+', () => {
       return acc;
     }, {});
     const endReasons = Object.values(titles).reduce((acc: Record<string, number>, t) => {
-      for (const r of t.history) acc[r.endReason ?? 'unknown'] = (acc[r.endReason ?? 'unknown'] ?? 0) + 1;
+      for (const r of t.history)
+        acc[r.endReason ?? 'unknown'] = (acc[r.endReason ?? 'unknown'] ?? 0) + 1;
       return acc;
     }, {});
     const champsT = (s.tournaments ?? []).filter((t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID);
@@ -117,8 +121,8 @@ describe('championship autosim — week 52+', () => {
           warriorsWithAnyRecord,
           maxBoutsAtOneArena,
           arenasWithEligibleContenders: arenaBoutCounts.size,
-          totalBoutsRecorded: Object.values(s.arenaHistory ?? {}).length ||
-            (s.arenaHistory ?? []).length,
+          totalBoutsRecorded:
+            Object.values(s.arenaHistory ?? {}).length || (s.arenaHistory ?? []).length,
           arenaHistoryLen: (s.arenaHistory ?? []).length,
           sampleRecords: allWarriors
             .filter((w) => Object.keys(w.career?.byArena ?? {}).length > 0)
@@ -165,9 +169,7 @@ describe('championship autosim — week 52+', () => {
     // Rival title participation: signed/resolved title offers involve rival
     //    warriors, not just player-side bookings.
     const rivalWarriorIds = new Set(
-      Object.values(s.rivals ?? {}).flatMap((r: any) =>
-        (r.roster ?? []).map((w: any) => w.id)
-      )
+      Object.values(s.rivals ?? {}).flatMap((r: any) => (r.roster ?? []).map((w: any) => w.id))
     );
     const rivalTitleOffers = titleOffers.filter((o) =>
       o.warriorIds.some((id) => rivalWarriorIds.has(id))
@@ -180,9 +182,7 @@ describe('championship autosim — week 52+', () => {
     expect(rivalTitleOffers.length + rivalTitleBouts.length).toBeGreaterThan(0);
     // Seasonal tournaments run and complete across the two-plus-year horizon;
     //    an emitted seasonal bracket that never resolved would be a lifecycle bug.
-    const seasonals = (s.tournaments ?? []).filter(
-      (t) => t.tierId !== CHAMPIONS_TOURNEY.TIER_ID
-    );
+    const seasonals = (s.tournaments ?? []).filter((t) => t.tierId !== CHAMPIONS_TOURNEY.TIER_ID);
     expect(seasonals.length).toBeGreaterThan(0);
     expect(seasonals.every((t) => t.completed)).toBe(true);
     // The Grand Championship emits at week 52, completes, and records a winner.

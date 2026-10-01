@@ -45,10 +45,8 @@ export function TrainingReportBanner({
               className={cn(
                 'flex items-start gap-2 px-3 py-2 text-[10px] uppercase font-black tracking-tight',
                 kind === 'gain' && 'bg-primary/5 text-primary border border-primary/10',
-                kind === 'injury' &&
-                  'bg-arena-gold/5 text-arena-gold border border-arena-gold/10',
-                kind === 'recovery' &&
-                  'bg-arena-pop/5 text-arena-pop border border-arena-pop/10'
+                kind === 'injury' && 'bg-arena-gold/5 text-arena-gold border border-arena-gold/10',
+                kind === 'recovery' && 'bg-arena-pop/5 text-arena-pop border border-arena-pop/10'
               )}
             >
               {kind === 'gain' ? (

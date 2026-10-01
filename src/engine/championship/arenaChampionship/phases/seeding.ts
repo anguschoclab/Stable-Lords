@@ -53,8 +53,9 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
     const title = titleOf(state, delta, arenaId);
     if (title?.champion) continue;
     const rows = rankedByArena.get(arenaId) ?? [];
-    const pick = rows.find((r) => claimed.get(r.warrior.id)?.arenaId === arenaId)
-      ?? rows.find((r) => {
+    const pick =
+      rows.find((r) => claimed.get(r.warrior.id)?.arenaId === arenaId) ??
+      rows.find((r) => {
         const c = claimed.get(r.warrior.id);
         return !c; // unclaimed warrior
       });

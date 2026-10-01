@@ -26,7 +26,10 @@ describe('wiring: favorites charting toolkit (MEGAPLAN-G2)', () => {
   it('exposes a roster-wide favorite-weapon charting surface', () => {
     // Expected surface: a section/page component aggregating favorites across
     // the roster (implementation name pinned here so Phase-5 lands it).
-    expect(Object.keys(chartingModule).length, 'favorites charting surface missing').toBeGreaterThan(0);
+    expect(
+      Object.keys(chartingModule).length,
+      'favorites charting surface missing'
+    ).toBeGreaterThan(0);
   });
 });
 

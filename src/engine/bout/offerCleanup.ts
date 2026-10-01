@@ -1,9 +1,6 @@
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
-import {
-  boutOfferAbsoluteWeek,
-  boutOfferExpirationAbsoluteWeek,
-} from '@/engine/core/absoluteWeek';
+import { boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
  * Stable Lords — Bout Offer Cleanup

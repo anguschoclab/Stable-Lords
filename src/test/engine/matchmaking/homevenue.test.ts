@@ -5,13 +5,20 @@ import { makeWarrior } from '@/test/_fixtures/factories';
 import { ARENA_SELECTION } from '@/constants/arena';
 import type { WarriorId } from '@/types/shared.types';
 
-const withRecord = (id: string, byArena: Record<string, { wins: number; losses: number; kills: number }>) => {
+const withRecord = (
+  id: string,
+  byArena: Record<string, { wins: number; losses: number; kills: number }>
+) => {
   const w = makeWarrior({ id: id as WarriorId });
   w.career.byArena = byArena;
   return w;
 };
 
-const countPicks = (a: ReturnType<typeof withRecord>, b: ReturnType<typeof withRecord>, n = 300) => {
+const countPicks = (
+  a: ReturnType<typeof withRecord>,
+  b: ReturnType<typeof withRecord>,
+  n = 300
+) => {
   const rng = new SeededRNGService(42);
   const counts: Record<string, number> = {};
   for (let i = 0; i < n; i++) {
@@ -43,9 +50,7 @@ describe('record-book venue stickiness', () => {
     const a = withRecord('a', { the_meat_grinder: { wins: 4, losses: 0, kills: 0 } });
     const b = withRecord('b', { underpit_arena: { wins: 1, losses: 1, kills: 0 } });
     const counts = countPicks(a, b);
-    expect(counts['the_meat_grinder'] ?? 0).toBeGreaterThan(
-      (counts['underpit_arena'] ?? 0) + 50
-    );
+    expect(counts['the_meat_grinder'] ?? 0).toBeGreaterThan((counts['underpit_arena'] ?? 0) + 50);
   });
 
   it('never homes in on a championship-excluded venue', () => {

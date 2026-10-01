@@ -77,8 +77,8 @@ export function WarriorPickerRail({
 
       <div className="p-4 bg-secondary/10 border border-white/5">
         <p className="text-[10px] text-muted-foreground leading-relaxed italic">
-          "Calculated risk is the bridge between a legend and a corpse. Run the numbers before
-          you run the sand."
+          "Calculated risk is the bridge between a legend and a corpse. Run the numbers before you
+          run the sand."
         </p>
       </div>
     </aside>

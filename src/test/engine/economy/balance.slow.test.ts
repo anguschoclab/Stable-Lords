@@ -293,8 +293,14 @@ describe('OE/KD Variability', () => {
 // the developed world is certified by worldBalance.slow.test.ts.
 describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () => {
   const PHILOSOPHIES = [
-    'Brute Force', 'Speed Kills', 'Iron Defense', 'Balanced',
-    'Spectacle', 'Cunning', 'Endurance', 'Specialist',
+    'Brute Force',
+    'Speed Kills',
+    'Iron Defense',
+    'Balanced',
+    'Spectacle',
+    'Cunning',
+    'Endurance',
+    'Specialist',
   ];
   const REAL_FIGHTS_PER_MATCHUP = 30;
 

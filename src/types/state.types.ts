@@ -2,7 +2,16 @@
 // (Split per MEGAPLAN I6; keep this file a pure barrel.)
 
 export type { Warrior, DeathEvent } from './warrior.types';
-export type { WeatherType, Season, CrowdMoodType, NewsletterItem, TrainerTier, TrainerFocus, Trainer, ScoutQuality } from './shared.types';
+export type {
+  WeatherType,
+  Season,
+  CrowdMoodType,
+  NewsletterItem,
+  TrainerTier,
+  TrainerFocus,
+  Trainer,
+  ScoutQuality,
+} from './shared.types';
 export type { CrestData } from './crest.types';
 export type { FightSummary, FightOutcomeBy } from './combat.types';
 export type { PoolWarrior } from '@/engine/recruitment/recruitment';

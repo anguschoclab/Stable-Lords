@@ -65,7 +65,10 @@ export default function AdvisorPage() {
         <CouncilFilterTabs currentTab={activeTab} onTabChange={setActiveTab} counts={counts} />
 
         {filteredCards.length === 0 ? (
-          <Surface variant="glass" className="py-24 text-center border-dashed border-white/5 space-y-3">
+          <Surface
+            variant="glass"
+            className="py-24 text-center border-dashed border-white/5 space-y-3"
+          >
             <Users className="h-8 w-8 mx-auto text-muted-foreground/30" />
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
               No Warriors in Current Category

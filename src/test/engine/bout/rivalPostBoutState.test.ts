@@ -13,12 +13,7 @@ import { applyRecords } from '@/engine/bout/recordHandler';
 import { handleInjuries } from '@/engine/bout/injuryHandler';
 import { handleProgressions } from '@/engine/bout/progressionHandler';
 import { mergeImpacts, resolveImpacts } from '@/engine/impacts';
-import {
-  makeGameState,
-  makeKillOutcome,
-  makeRival,
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeKillOutcome, makeRival, makeWarrior } from '@/test/_fixtures/factories';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
@@ -48,8 +43,7 @@ const makeState = (rivals: RivalStableData[], roster: Warrior[] = []): GameState
     boutOffers: {},
   });
 
-const killOutcome = (winner: 'A' | 'D'): FightOutcome =>
-  makeKillOutcome({ winner, minutes: 5 });
+const killOutcome = (winner: 'A' | 'D'): FightOutcome => makeKillOutcome({ winner, minutes: 5 });
 
 const winOutcome = (winner: 'A' | 'D'): FightOutcome =>
   makeKillOutcome({ winner, by: 'Decision', minutes: 15, exchangeLog: [], post: undefined });
@@ -154,15 +148,7 @@ describe('rival post-bout state — impact composition', () => {
     const wD = warrior('rd', 's2');
     const s = makeState([rival('s1', [wA]), rival('s2', [wD])]);
 
-    const impact = handleProgressions(
-      s,
-      wA,
-      wD,
-      winOutcome('A'),
-      [],
-      7,
-      new SeededRNGService(11)
-    );
+    const impact = handleProgressions(s, wA, wD, winOutcome('A'), [], 7, new SeededRNGService(11));
     const out = resolveImpacts(s, [impact]);
 
     const a = out.rivals[0]!.roster.find((w) => w.id === 'ra')!;
@@ -175,10 +161,7 @@ describe('rival post-bout state — impact composition', () => {
     const survivor = warrior('r3', 's1');
     const k1 = warrior('ka', 's2');
     const k2 = warrior('kb', 's2');
-    const s = makeState([
-      rival('s1', [v1, v2, survivor]),
-      rival('s2', [k1, k2]),
-    ]);
+    const s = makeState([rival('s1', [v1, v2, survivor]), rival('s2', [k1, k2])]);
 
     // Two independent bouts' impacts merged like processWeekBouts does.
     const d1 = handleDeath(s, v1, k1, killOutcome('D'), 7, [], 's2');
@@ -196,7 +179,16 @@ describe('rival post-bout state — impact composition', () => {
     const s = makeState([rival('s1', [killer]), rival('s2', [victim])]);
     s.houseRules = { severeInjuryInsteadOfDeath: true } as GameState['houseRules'];
 
-    const res = handleDeath(s, killer, victim, killOutcome('A'), 7, [], 's2', new SeededRNGService(3));
+    const res = handleDeath(
+      s,
+      killer,
+      victim,
+      killOutcome('A'),
+      7,
+      [],
+      's2',
+      new SeededRNGService(3)
+    );
     expect(res.death).toBe(false);
 
     const out = resolveImpacts(s, [res.impact]);

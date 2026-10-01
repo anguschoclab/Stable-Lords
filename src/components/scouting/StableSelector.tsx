@@ -135,7 +135,8 @@ function StableRow({
                 <Shield className="h-4 w-4" />
               </div>
               <span
-                className={cn('font-display font-black text-xs uppercase tracking-tight transition-colors motion-reduce:transition-none',
+                className={cn(
+                  'font-display font-black text-xs uppercase tracking-tight transition-colors motion-reduce:transition-none',
                   selectedId === r.owner.id ? t.selectedName : 'text-muted-foreground'
                 )}
               >

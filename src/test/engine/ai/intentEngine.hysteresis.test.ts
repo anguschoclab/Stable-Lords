@@ -57,10 +57,14 @@ describe('verifyIntentSkepticism — typed-cause checks', () => {
     const rival = makeRival({
       roster: roster(),
       treasury: 1000,
-      strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: 'ghost-stable' as never },
+      strategy: {
+        intent: 'VENDETTA',
+        planWeeksRemaining: 4,
+        targetStableId: 'ghost-stable' as never,
+      },
       agentMemory: makeAgentMemory(),
     });
-    const state = makeGameState({ rivals: [rival],});
+    const state = makeGameState({ rivals: [rival] });
     expect(verifyIntentSkepticism(rival, state)).toBe(true);
   });
 

@@ -298,5 +298,4 @@ describe('pipeline/health', () => {
       expect(impact.newsletterItems?.[0]?.items).toEqual(['Healer recovered from Bruised Ribs.']);
     });
   });
-
 });

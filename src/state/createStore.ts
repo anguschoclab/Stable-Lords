@@ -82,6 +82,8 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.promoters = state.promoters || {};
   draft.boutOffers = state.boutOffers || {};
   draft.rivals = state.rivals;
+  draft.legacyFounderQueue = state.legacyFounderQueue ?? [];
+  draft.freeAgents = state.freeAgents ?? [];
   draft.gazettes = state.gazettes;
   draft.scoutReports = state.scoutReports || [];
   draft.unacknowledgedDeaths = (state.unacknowledgedDeaths || []) as WarriorId[];
@@ -138,13 +140,13 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
  * the isSimulating lifecycle were previously duplicated inline.
  */
 async function runEngineJob(
-    set: (fn: (draft: GameStore) => void) => void,
-    get: () => GameStore,
-    cleanState: GameState,
-    currentWeek: number,
-    job: () => Promise<GameState>,
-    opName: string
-  ) {
+  set: (fn: (draft: GameStore) => void) => void,
+  get: () => GameStore,
+  cleanState: GameState,
+  currentWeek: number,
+  job: () => Promise<GameState>,
+  opName: string
+) {
   const store = get();
   set((draft) => {
     draft.isSimulating = true;
@@ -250,10 +252,7 @@ function createCoreState(set: StoreSet): Pick<GameStore, CoreStateFields> {
 }
 
 /** Game lifecycle actions: load, week/day advance, save, reset, title return. */
-function createCoreActions(
-  set: StoreSet,
-  get: StoreGet
-): Pick<GameStore, CoreActionFields> {
+function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreActionFields> {
   return {
     loadGame: (slotId: string, state: GameState) => {
       bumpEngineEpoch();

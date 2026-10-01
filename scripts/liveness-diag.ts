@@ -9,8 +9,20 @@ async function main() {
   setMockIdGenerator(() => `id_${++n}`);
   engineEventBus.clear();
   NewsletterFeed.clear();
-  const { finalState } = await runSimulation({ weeks: 6, seed: 20261101, logFrequency: 999, ignoreBankruptcy: true });
+  const { finalState } = await runSimulation({
+    weeks: 6,
+    seed: 20261101,
+    logFrequency: 999,
+    ignoreBankruptcy: true,
+  });
   const s = finalState as GameState;
-  console.log('SIG', s.treasury, s.week, s.roster.length, s.rivals.length, (s.arenaHistory ?? []).length);
+  console.log(
+    'SIG',
+    s.treasury,
+    s.week,
+    s.roster.length,
+    s.rivals.length,
+    (s.arenaHistory ?? []).length
+  );
 }
 main();

@@ -48,7 +48,8 @@ export function TournamentRoundCard({
       )}
     >
       <CardHeader
-        className={cn('p-3 cursor-pointer hover:bg-secondary/20 transition-colors motion-reduce:transition-none',
+        className={cn(
+          'p-3 cursor-pointer hover:bg-secondary/20 transition-colors motion-reduce:transition-none',
           isComplete && 'bg-primary/5',
           isCurrent && 'bg-primary/5'
         )}
@@ -84,7 +85,13 @@ export function TournamentRoundCard({
         <CardContent className="p-0">
           <div className="divide-y divide-border/30">
             {bouts.map((bout, idx) => (
-              <TournamentBoutRow key={`${round}-${idx}`} bout={bout} state={state} round={round} totalRounds={totalRounds} />
+              <TournamentBoutRow
+                key={`${round}-${idx}`}
+                bout={bout}
+                state={state}
+                round={round}
+                totalRounds={totalRounds}
+              />
             ))}
           </div>
         </CardContent>

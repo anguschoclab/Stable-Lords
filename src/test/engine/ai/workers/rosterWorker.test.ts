@@ -14,8 +14,8 @@ const alwaysTrainRng = {
   next: () => 0,
   roll: (min: number) => min,
   chance: () => true,
-  pick: <T,>(arr: T[]) => arr[0] as T,
-  shuffle: <T,>(arr: T[]) => arr,
+  pick: <T>(arr: T[]) => arr[0] as T,
+  shuffle: <T>(arr: T[]) => arr,
   uuid: () => 'test-uuid',
   rollWeighted: <K extends string>(weights: Partial<Record<K, number>>) =>
     Object.keys(weights)[0] as K,

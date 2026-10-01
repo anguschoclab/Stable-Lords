@@ -10,7 +10,6 @@ import { ElectronArchiveService } from '@/engine/storage/electronArchive';
 import '@/test/_setup/setup';
 import { createMockElectronAPI } from '@/test/_fixtures/electronApi';
 
-
 describe('Electron IPC payload bounds', () => {
   let service: ElectronArchiveService;
   let originalWindow: typeof window;

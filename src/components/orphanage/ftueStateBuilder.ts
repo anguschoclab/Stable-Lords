@@ -72,8 +72,7 @@ function buildFTUEWarrior(
     const wasD = pw.name === boutResult.d.name;
     if (wasA || wasD) {
       const won =
-        (wasA && boutResult.outcome.winner === 'A') ||
-        (wasD && boutResult.outcome.winner === 'D');
+        (wasA && boutResult.outcome.winner === 'A') || (wasD && boutResult.outcome.winner === 'D');
       return {
         ...w,
         fame: won ? 1 : 0,

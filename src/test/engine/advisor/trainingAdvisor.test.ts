@@ -4,19 +4,25 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
-const mkWarrior = (style: FightingStyle = FightingStyle.AimedBlow, over: Partial<Warrior> = {}): Warrior =>
+const mkWarrior = (
+  style: FightingStyle = FightingStyle.AimedBlow,
+  over: Partial<Warrior> = {}
+): Warrior =>
   fixtureWarrior({
-  id: 'w1' as any,
-  name: 'Aulus',
-  style,
-  attributes: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 10, SP: 12, DF: 14 },
-  fame: 40,
-  popularity: 20,
-  career: { wins: 3, losses: 1, kills: 0 },
-  ...over,
-});
+    id: 'w1' as any,
+    name: 'Aulus',
+    style,
+    attributes: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 10, SP: 12, DF: 14 },
+    fame: 40,
+    popularity: 20,
+    career: { wins: 3, losses: 1, kills: 0 },
+    ...over,
+  });
 
 const mkState = (over: Partial<GameState> = {}): GameState =>
   fixtureGameState({
@@ -131,7 +137,11 @@ describe('evaluateTrainingAdvice', () => {
 
     it('skips trainers with expired contracts', () => {
       const warrior = mkWarrior(FightingStyle.AimedBlow, { fatigue: 45 });
-      const expired = mkTrainer('t-old', { focus: 'Healing', tier: 'Master', contractWeeksLeft: 0 });
+      const expired = mkTrainer('t-old', {
+        focus: 'Healing',
+        tier: 'Master',
+        contractWeeksLeft: 0,
+      });
       const active = mkTrainer('t-new', { focus: 'Aggression', tier: 'Novice' });
       const state = mkState({ trainers: [expired, active] });
 

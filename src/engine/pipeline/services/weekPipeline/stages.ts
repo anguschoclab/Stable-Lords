@@ -14,20 +14,16 @@ import type { WeekAdvanceOptions } from '../weekPipelineService';
  * the bout impact, and resyncs week caches (impact handlers replace warrior
  * objects, so maps must point at post-impact identities).
  */
-export async function runBoutPhase(
-  state: GameState,
-  ctx: WeekContext
-): Promise<GameState> {
+export async function runBoutPhase(state: GameState, ctx: WeekContext): Promise<GameState> {
   // Safety net: ensure combat narrative data is loaded before bout resolution
   // (memoized promise — a resolved-promise no-op after first load).
   await loadCombatNarrative();
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  const { impact: boutImpact, results, summary } = await runBoutSimulationPass(
-    state,
-    ctx.rootRng,
-    ctx.headless,
-    ctx.pool
-  );
+  const {
+    impact: boutImpact,
+    results,
+    summary,
+  } = await runBoutSimulationPass(state, ctx.rootRng, ctx.headless, ctx.pool);
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
@@ -76,7 +72,10 @@ export async function runStage(
  * Preview the core-stage impacts without applying them. The bankruptcy gate
  * needs the projected treasury delta before commit.
  */
-export async function collectCoreImpacts(state: GameState, ctx: WeekContext): Promise<StateImpact[]> {
+export async function collectCoreImpacts(
+  state: GameState,
+  ctx: WeekContext
+): Promise<StateImpact[]> {
   const impacts: StateImpact[] = [];
   const profiling = isPipelineProfiling();
   for (const spec of WEEK_PIPELINE_PASSES) {

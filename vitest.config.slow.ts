@@ -6,10 +6,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
-    setupFiles: [
-      './src/test/_setup/setup.node.ts',
-      './src/test/_setup/setup.dom.ts',
-    ],
+    setupFiles: ['./src/test/_setup/setup.node.ts', './src/test/_setup/setup.dom.ts'],
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
     },

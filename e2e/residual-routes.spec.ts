@@ -13,7 +13,8 @@ test('residual routes render and expose no primary CTA', async ({ page }) => {
   await startNewGame(page);
   await page.waitForSelector('header', { timeout: 15_000 });
 
-  const ctaLabels = /EXECUTE WEEK|BEGIN CYCLE|VIEW CARD|ADVANCE BRACKET|COMMIT REGIMEN|SIGN CONTRACT|CLOSE SEASON/i;
+  const ctaLabels =
+    /EXECUTE WEEK|BEGIN CYCLE|VIEW CARD|ADVANCE BRACKET|COMMIT REGIMEN|SIGN CONTRACT|CLOSE SEASON/i;
   const cases: { path: string; title: RegExp }[] = [
     { path: '/mods', title: /Mods & House Rules/i },
     { path: '/import-export', title: /Import \/ Export/i },
@@ -29,14 +30,12 @@ test('residual routes render and expose no primary CTA', async ({ page }) => {
       await gotoInApp(page, path);
       // PageHeader renders the title in an h1 — assert the heading role so
       // hidden duplicate labels (mobile-only chrome) don't satisfy the check.
-      await expect(
-        page.getByRole('heading', { name: title, level: 1 })
-      ).toBeVisible({ timeout: 5_000 });
+      await expect(page.getByRole('heading', { name: title, level: 1 })).toBeVisible({
+        timeout: 5_000,
+      });
     }).toPass({ timeout: 30_000 });
     await expect(page.locator('main').first()).toBeVisible({ timeout: 15_000 });
     // No primary CTA in the shared top bar on unmapped routes
-    await expect(
-      page.locator('header').getByRole('button', { name: ctaLabels })
-    ).toHaveCount(0);
+    await expect(page.locator('header').getByRole('button', { name: ctaLabels })).toHaveCount(0);
   }
 });

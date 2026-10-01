@@ -115,7 +115,10 @@ describe('styleMatcher', () => {
     });
 
     it('returns { oe: 0, al: 0, kd: 0 } for unmapped matchers', () => {
-      const mods = getStyleMatchupMods('UnknownStyle' as FightingStyle, FightingStyle.BashingAttack);
+      const mods = getStyleMatchupMods(
+        'UnknownStyle' as FightingStyle,
+        FightingStyle.BashingAttack
+      );
       expect(mods.oe).toBe(0);
       expect(mods.al).toBe(0);
       expect(mods.kd).toBe(0);

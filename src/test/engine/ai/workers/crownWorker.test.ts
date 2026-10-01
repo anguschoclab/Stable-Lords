@@ -1,9 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  assessCrownOpportunity,
-  processCrownPosture,
-} from '@/engine/ai/workers/crownWorker';
+import { assessCrownOpportunity, processCrownPosture } from '@/engine/ai/workers/crownWorker';
 import {
   makeRival,
   makeWarrior,

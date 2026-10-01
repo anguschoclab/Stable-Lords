@@ -106,9 +106,7 @@ function DoctrineCard({
 }) {
   return (
     <div className={cn('p-4 border rounded-none', borderColor, bgColor)}>
-      <div
-        className={cn('text-[9px] font-black uppercase tracking-widest mb-3 opacity-60', color)}
-      >
+      <div className={cn('text-[9px] font-black uppercase tracking-widest mb-3 opacity-60', color)}>
         {rival.owner.stableName}
       </div>
       <div className="space-y-2">
@@ -128,9 +126,7 @@ function DoctrineCard({
           <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
             Adaptation
           </span>
-          <span className="font-black text-foreground/60">
-            {rival.owner.metaAdaptation ?? '—'}
-          </span>
+          <span className="font-black text-foreground/60">{rival.owner.metaAdaptation ?? '—'}</span>
         </div>
         {rival.owner.metaAdaptation && (
           <p className="text-[9px] italic text-muted-foreground/50 leading-relaxed">

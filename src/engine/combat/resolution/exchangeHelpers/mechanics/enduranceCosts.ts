@@ -114,10 +114,7 @@ function enduranceMultipliers(
 function checkExhaustionStoppage(events: CombatEvent[], fA: FighterState, fD: FighterState) {
   const collapsedA = fA.endurance <= 0;
   const collapsedD = fD.endurance <= 0;
-  if (
-    !(collapsedA || collapsedD) ||
-    events.some((e) => e.result === 'Kill' || e.result === 'KO')
-  ) {
+  if (!(collapsedA || collapsedD) || events.some((e) => e.result === 'Kill' || e.result === 'KO')) {
     return;
   }
   const hurtA = collapsedA && fA.hp < fA.maxHp * EXHAUSTION_STOP_HP_RATIO;

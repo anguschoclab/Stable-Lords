@@ -117,8 +117,7 @@ function effectivePlanBias(
   week: number,
   quality: number
 ): { oe: number; al: number } {
-  const bias =
-    PERSONALITY_PLAN_BIAS[targetRival?.owner.personality ?? ''] ?? { oe: 0.5, al: 0.5 };
+  const bias = PERSONALITY_PLAN_BIAS[targetRival?.owner.personality ?? ''] ?? { oe: 0.5, al: 0.5 };
   const observed =
     tells && tells.samples > 0 && week - tells.lastSeenWeek <= PLAN_TELL_WINDOW
       ? { oe: tells.oe, al: tells.al }
@@ -152,7 +151,12 @@ export function processIntel(
   const targetRival = (state.rivals ?? []).find(
     (r) => r.id === targetId || r.owner.id === targetId
   );
-  const effectiveBias = effectivePlanBias(targetRival, dossiers[targetId]?.observedTells, week, quality);
+  const effectiveBias = effectivePlanBias(
+    targetRival,
+    dossiers[targetId]?.observedTells,
+    week,
+    quality
+  );
 
   const estimate = estimatePlan(rival.owner.id, targetId, week, quality, effectiveBias);
 

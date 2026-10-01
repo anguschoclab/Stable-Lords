@@ -20,18 +20,36 @@ function warriorWithWt(wt: number): Warrior {
 
 describe('F.3 — WIT-gated condition density (mistake-shaped plans)', () => {
   it('high-WIT warriors keep the full adaptive condition set', () => {
-    const plan = aiPlanForWarrior(warriorWithWt(15), 'Aggressive', 'Expansionist', undefined, 'VENDETTA');
+    const plan = aiPlanForWarrior(
+      warriorWithWt(15),
+      'Aggressive',
+      'Expansionist',
+      undefined,
+      'VENDETTA'
+    );
     // universal + base + personality adaptations (Aggressive under kill intent yields ≥2)
     expect(plan.conditions?.length ?? 0).toBeGreaterThanOrEqual(3);
   });
 
   it('mid-WIT warriors keep only a sparse condition set', () => {
-    const plan = aiPlanForWarrior(warriorWithWt(5), 'Aggressive', 'Expansionist', undefined, 'VENDETTA');
+    const plan = aiPlanForWarrior(
+      warriorWithWt(5),
+      'Aggressive',
+      'Expansionist',
+      undefined,
+      'VENDETTA'
+    );
     expect(plan.conditions?.length ?? 0).toBeLessThanOrEqual(2);
   });
 
   it('low-WIT warriors carry only the universal safety condition', () => {
-    const plan = aiPlanForWarrior(warriorWithWt(3), 'Aggressive', 'Expansionist', undefined, 'VENDETTA');
+    const plan = aiPlanForWarrior(
+      warriorWithWt(3),
+      'Aggressive',
+      'Expansionist',
+      undefined,
+      'VENDETTA'
+    );
     expect(plan.conditions?.length).toBe(1);
     expect(plan.conditions?.[0]?.trigger.type).toBe('ENDURANCE_BELOW');
   });

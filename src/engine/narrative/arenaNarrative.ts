@@ -23,7 +23,7 @@ const TAG_PROSE: Partial<Record<ArenaTag, string>> = {
   magical: 'An unnatural presence hangs over the grounds.',
   living: 'The arena itself seems alive and hostile.',
   cursed: 'A curse clings to this place; fighters feel it in their bones.',
-  premium: 'The realm\'s premium venue — the crowds expect spectacle.',
+  premium: "The realm's premium venue — the crowds expect spectacle.",
 };
 
 function zonePenaltyProse(zone: string, penalty: number): string {

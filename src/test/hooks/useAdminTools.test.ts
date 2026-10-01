@@ -40,9 +40,7 @@ import { generateRivalStables } from '@/engine/rivals';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 
 const seedStore = () => {
-  useGameStore
-    .getState()
-    .loadGame('test-slot', createFreshState('test-seed') as GameState);
+  useGameStore.getState().loadGame('test-slot', createFreshState('test-seed') as GameState);
   useGameStore.setState({ atTitleScreen: false, isInitialized: true });
 };
 
@@ -110,10 +108,7 @@ describe('useAdminTools', () => {
     expect(engineProxy.skipToQuarterEnd).toHaveBeenCalledOnce();
     // WorldPass already computes the season inside the engine — the caller
     // must NOT post-hoc overwrite it.
-    expect(loadGame).toHaveBeenCalledWith(
-      'test-slot',
-      expect.objectContaining({ week: 13 })
-    );
+    expect(loadGame).toHaveBeenCalledWith('test-slot', expect.objectContaining({ week: 13 }));
     expect(toast.success).toHaveBeenCalledWith('Season rollover forced.');
     expect(useGameStore.getState().isSimulating).toBe(false);
   });
@@ -205,13 +200,13 @@ describe('useAdminTools', () => {
       (URL as any).createObjectURL = createObjectURL;
       (URL as any).revokeObjectURL = revokeObjectURL;
       let anchor: HTMLAnchorElement | undefined;
-      const clickSpy = vi
-        .spyOn(HTMLAnchorElement.prototype, 'click')
-        .mockImplementation(function (this: HTMLAnchorElement) {
-          // bun:test's spy does not populate mock.instances — capture `this`.
-          // eslint-disable-next-line @typescript-eslint/no-this-alias
-          anchor = this;
-        });
+      const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
+        this: HTMLAnchorElement
+      ) {
+        // bun:test's spy does not populate mock.instances — capture `this`.
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        anchor = this;
+      });
 
       const { result } = renderHook(() => useAdminTools());
       act(() => {
@@ -281,9 +276,7 @@ describe('useAdminTools', () => {
       const { result } = renderHook(() => useAdminTools());
       fireImport(result);
 
-      expect(toast.error).toHaveBeenCalledWith(
-        'Invalid save data: schema validation failed'
-      );
+      expect(toast.error).toHaveBeenCalledWith('Invalid save data: schema validation failed');
     });
 
     it('does nothing when no file is selected', () => {

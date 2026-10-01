@@ -10,10 +10,7 @@ vi.mock('@/engine/matchmaking/tournamentSelection', () => ({
   },
 }));
 
-import {
-  TickOrchestrator,
-  tournamentDaySeed,
-} from '@/engine/pipeline/tick/TickOrchestrator';
+import { TickOrchestrator, tournamentDaySeed } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
@@ -25,9 +22,7 @@ describe('tournament day seed parity', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(
-      async (s: GameState) => s
-    );
+    vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (s: GameState) => s);
     state = createFreshState('seed-parity');
     state.day = 2;
     state.week = 9;
@@ -49,9 +44,7 @@ describe('tournament day seed parity', () => {
   it('skipToWeekEnd resolves each remaining day with the same seed formula', async () => {
     await TickOrchestrator.skipToWeekEnd(state);
 
-    const seeds = vi
-      .mocked(TournamentSelectionService.resolveRound)
-      .mock.calls.map((c) => c[2]);
+    const seeds = vi.mocked(TournamentSelectionService.resolveRound).mock.calls.map((c) => c[2]);
     expect(seeds).toEqual([
       tournamentDaySeed(3, 9, 3),
       tournamentDaySeed(3, 9, 4),

@@ -83,7 +83,11 @@ export function StyleCard({ style }: { style: FightingStyle }) {
   const weapons = useMemo(() => signatureWeapons(style), [style]);
 
   return (
-    <Surface variant="glass" padding="none" className="border-white/5 bg-white/[0.01] overflow-hidden">
+    <Surface
+      variant="glass"
+      padding="none"
+      className="border-white/5 bg-white/[0.01] overflow-hidden"
+    >
       <div className="p-5 border-b border-white/5 bg-secondary/10 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-9 w-9 flex items-center justify-center border border-arena-gold/30 bg-arena-gold/5 shrink-0">

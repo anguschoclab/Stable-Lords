@@ -8,10 +8,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
-import {
-  getBestOffensiveTactic,
-  getBestDefensiveTactic,
-} from '@/engine/ai/plan/tacticAdvisor';
+import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import type { OpponentDossier } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';

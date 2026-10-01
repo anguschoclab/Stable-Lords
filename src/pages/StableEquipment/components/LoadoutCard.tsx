@@ -24,13 +24,7 @@ interface LoadoutRec {
   };
 }
 
-function EncumbranceMeter({
-  totalWeight,
-  carryCap,
-}: {
-  totalWeight: number;
-  carryCap: number;
-}) {
+function EncumbranceMeter({ totalWeight, carryCap }: { totalWeight: number; carryCap: number }) {
   const over = totalWeight > carryCap;
   return (
     <div className="space-y-2 pt-6 mt-auto">
@@ -50,22 +44,16 @@ function EncumbranceMeter({
               <p className="font-black uppercase tracking-wider text-foreground">Encumbrance</p>
               <p className="text-muted-foreground">
                 Total weight of all equipped gear (weapon + armor + shield + helm). Exceeding a
-                warrior&apos;s carry threshold reduces Speed (SP) and increases fatigue per
-                bout.
+                warrior&apos;s carry threshold reduces Speed (SP) and increases fatigue per bout.
               </p>
               <p className="text-muted-foreground">
-                High-ST warriors tolerate heavier loads. Recommended: keep under {carryCap}{' '}
-                units for balanced fighters.
+                High-ST warriors tolerate heavier loads. Recommended: keep under {carryCap} units
+                for balanced fighters.
               </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <span
-          className={cn(
-            'font-mono font-black',
-            over ? 'text-destructive' : 'text-primary'
-          )}
-        >
+        <span className={cn('font-mono font-black', over ? 'text-destructive' : 'text-primary')}>
           {totalWeight} / {carryCap} WT
         </span>
       </div>
@@ -100,10 +88,7 @@ function RequirementFailures({
       <div className="flex flex-wrap gap-2">
         {reqCheck.failures.map(
           (f: { stat: string; current: number; required: number }, fi: number) => (
-            <div
-              key={fi}
-              className="text-[9px] font-mono font-black text-destructive/80 uppercase"
-            >
+            <div key={fi} className="text-[9px] font-mono font-black text-destructive/80 uppercase">
               {`[${f.stat}: ${f.current} < ${f.required}]`}
             </div>
           )

@@ -36,6 +36,8 @@ export const defaultWorldState: Omit<
   promoters: {},
   boutOffers: {},
   rivals: [],
+  legacyFounderQueue: [],
+  freeAgents: [],
   gazettes: [],
   scoutReports: [],
   arenaHistory: [],

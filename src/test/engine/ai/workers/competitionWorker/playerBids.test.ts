@@ -9,11 +9,7 @@ import {
   generateBoutBids,
   convertBidsToOffers,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
-import {
-  makeGameState,
-  makeRival,
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
 import { SeededRNGService } from '@/utils/random';
 import type { StableId } from '@/types/shared.types';
 
@@ -25,11 +21,7 @@ function vendettaRivalTargeting(targetId: StableId) {
 }
 
 function playerRoster() {
-  return [
-    makeWarrior({ fame: 60 }),
-    makeWarrior({ fame: 100 }),
-    makeWarrior({ fame: 140 }),
-  ];
+  return [makeWarrior({ fame: 60 }), makeWarrior({ fame: 100 }), makeWarrior({ fame: 140 })];
 }
 
 describe('player-directed bids', () => {
@@ -56,9 +48,7 @@ describe('player-directed bids', () => {
     const offer = offers[0]!;
     expect(offer.proposerStableId).toBe(rival.id);
     const playerWarriorIds = new Set(state.roster.map((w) => w.id as string));
-    expect(
-      offer.warriorIds.some((id) => playerWarriorIds.has(id as string))
-    ).toBe(true);
+    expect(offer.warriorIds.some((id) => playerWarriorIds.has(id as string))).toBe(true);
   });
 
   it('playerAvoids hard-skips the marked rival warrior for player-bound bids', () => {
@@ -92,13 +82,7 @@ describe('player-directed bids', () => {
       const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', rivals, state);
       for (const bid of bids) allBids.push({ bid, rivalId: rival.id as string });
     }
-    const offers = convertBidsToOffers(
-      allBids,
-      rivals,
-      state,
-      new SeededRNGService(7),
-      new Set()
-    );
+    const offers = convertBidsToOffers(allBids, rivals, state, new SeededRNGService(7), new Set());
     const playerIds = new Set(state.roster.map((w) => w.id as string));
     const playerBound = offers.filter((o) =>
       o.warriorIds.some((id) => playerIds.has(id as string))
@@ -119,9 +103,7 @@ describe('player-directed bids', () => {
     const stateWithTraining = makeGameState({
       roster,
       rivals: [rival],
-      trainingAssignments: [
-        { warriorId: playerTarget.id, type: 'attribute', attribute: 'ST' },
-      ],
+      trainingAssignments: [{ warriorId: playerTarget.id, type: 'attribute', attribute: 'ST' }],
     });
     rival.strategy!.targetStableId = stateWithTraining.player.id;
     const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], stateWithTraining);

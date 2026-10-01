@@ -42,8 +42,8 @@ export function useWorldOverview(showBookmarkedOnly: boolean) {
     return stableRows.filter((r) => ids?.has(r.id));
   }, [stableRows, showBookmarkedOnly, bookmarkIds]);
 
-  const stableBookmarkedCount = stableRows.filter(
-    (r) => bookmarkIds.get('rival')?.has(r.id)
+  const stableBookmarkedCount = stableRows.filter((r) =>
+    bookmarkIds.get('rival')?.has(r.id)
   ).length;
 
   const warriorRows = useMemo<WarriorRow[]>(
@@ -57,8 +57,8 @@ export function useWorldOverview(showBookmarkedOnly: boolean) {
     return warriorRows.filter((r) => ids?.has(r.id));
   }, [warriorRows, showBookmarkedOnly, bookmarkIds]);
 
-  const warriorBookmarkedCount = warriorRows.filter(
-    (r) => bookmarkIds.get('warrior')?.has(r.id)
+  const warriorBookmarkedCount = warriorRows.filter((r) =>
+    bookmarkIds.get('warrior')?.has(r.id)
   ).length;
 
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);

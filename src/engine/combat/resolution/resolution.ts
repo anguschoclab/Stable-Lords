@@ -216,11 +216,7 @@ function updateTacticStreaks(
 }
 
 /** SL bleed: damage-over-time tick on any bleeding fighter, then decay. */
-function tickBleedOnFighters(
-  fA: FighterState,
-  fD: FighterState,
-  events: CombatEvent[]
-): void {
+function tickBleedOnFighters(fA: FighterState, fD: FighterState, events: CombatEvent[]): void {
   for (const fighter of [fA, fD]) {
     const stacks = fighter.bleedStacks ?? 0;
     if (stacks > 0) {

@@ -45,10 +45,7 @@ const makePulse = (over: Partial<SimPulse> = {}): SimPulse => ({
   ...over,
 });
 
-const makeResult = (
-  cumulative: Record<string, unknown>,
-  pulses: SimPulse[] = [makePulse()]
-) =>
+const makeResult = (cumulative: Record<string, unknown>, pulses: SimPulse[] = [makePulse()]) =>
   ({
     pulses,
     cumulative: {

@@ -1,5 +1,3 @@
-
-
 /**
  * Defines the shape of derived stats.
  */

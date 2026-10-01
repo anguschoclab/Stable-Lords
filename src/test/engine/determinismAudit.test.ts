@@ -3,7 +3,6 @@ import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
-
 function isInside(child: string, parent: string): boolean {
   const rel = path.relative(parent, child);
   return rel !== '' && !rel.startsWith('..') && !path.isAbsolute(rel);

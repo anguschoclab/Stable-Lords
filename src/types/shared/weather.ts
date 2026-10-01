@@ -1,5 +1,3 @@
-
-
 /**
  * Weather type type.
  */
@@ -67,8 +65,6 @@ export type WeatherType =
   | 'Mana Storm'
   | 'Dreamweavers Mist'
   | 'Shattered Skies';
-
-
 
 /**
  * Defines the shape of death event.

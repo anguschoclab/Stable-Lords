@@ -114,9 +114,7 @@ describe('StartGame', () => {
   });
 
   it('shows the error message when importSaveToNewSlot rejects with an Error', async () => {
-    vi.mocked(saveSlots.importSaveToNewSlot).mockRejectedValue(
-      new Error('corrupt payload')
-    );
+    vi.mocked(saveSlots.importSaveToNewSlot).mockRejectedValue(new Error('corrupt payload'));
 
     const mockFileReader = {
       readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {

@@ -14,7 +14,8 @@ export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
     <div
       className="p-7 space-y-6 text-center"
       style={{
-        background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
+        background:
+          'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
         border: '1px solid rgba(var(--gold-glow-rgb), 0.3)',
         borderTopColor: 'rgba(var(--gold-glow-rgb), 0.6)',
       }}
@@ -31,7 +32,8 @@ export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
         <div
           className="w-16 h-16 mx-auto flex items-center justify-center"
           style={{
-            background: 'linear-gradient(135deg, rgba(var(--gold-glow-rgb), 0.15), rgba(var(--gold-glow-rgb), 0.05))',
+            background:
+              'linear-gradient(135deg, rgba(var(--gold-glow-rgb), 0.15), rgba(var(--gold-glow-rgb), 0.05))',
             border: '1px solid rgba(var(--gold-glow-rgb), 0.3)',
           }}
         >

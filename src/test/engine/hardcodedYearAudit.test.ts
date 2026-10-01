@@ -3,7 +3,6 @@ import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import * as fs from 'fs';
 import * as path from 'path';
 
-
 describe('NF7: hardcoded year 2024', () => {
   const srcDir = path.resolve(__dirname, '../../engine');
   const stateDir = path.resolve(__dirname, '../../state');

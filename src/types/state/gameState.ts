@@ -1,16 +1,45 @@
 import type { Bookmark } from '../bookmark.types';
 import type { FightSummary } from '../combat.types';
-import type { BoutOfferId, CrowdMoodType, NewsletterItem, PromoterId, Season, TournamentId, Trainer, WarriorId, WeatherType } from '../shared.types';
+import type {
+  BoutOfferId,
+  CrowdMoodType,
+  NewsletterItem,
+  PromoterId,
+  Season,
+  TournamentId,
+  Trainer,
+  WarriorId,
+  WeatherType,
+} from '../shared.types';
 import type { Warrior } from '../warrior.types';
 import type { ArenaTitle, GrandChampionEntry, Promoter } from './championship';
-import type { GazetteStory, HallEntry, InsightToken, LedgerEntry, MatchRecord, OwnerGrudge, RestState, RivalStableData, Rivalry, ScoutReportData, SeasonalGrowth, TournamentEntry, TrainingAssignment } from './game';
+import type {
+  GazetteStory,
+  HallEntry,
+  InsightToken,
+  LedgerEntry,
+  MatchRecord,
+  OwnerGrudge,
+  RestState,
+  RivalStableData,
+  Rivalry,
+  ScoutReportData,
+  SeasonalGrowth,
+  TournamentEntry,
+  TrainingAssignment,
+} from './game';
 import type { Owner } from './owner';
 import type { BoutOffer, RankingEntry } from './rankings';
-import type { AnnualAward, DeferredBoutLog, HouseRules, LifetimeStats, ProgressionState, SimulationReport } from './simulation';
+import type {
+  AnnualAward,
+  DeferredBoutLog,
+  HouseRules,
+  LifetimeStats,
+  ProgressionState,
+  SimulationReport,
+} from './simulation';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { ContentPack } from '@/lib/contentPacks';
-
-
 
 /**
  * Defines the shape of game state.
@@ -73,6 +102,15 @@ export interface GameState {
   trainingAssignments: TrainingAssignment[];
   seasonalGrowth: SeasonalGrowth[];
   rivals: RivalStableData[];
+  /** Hall-of-Fame-caliber retirees waiting to found their own stables.
+   *  Persisted (replaces the old module-level candidate list): enqueued by
+   *  every retirement path, consumed by the seasonal expansion pass. */
+  legacyFounderQueue: Warrior[];
+  /** Released/displaced veterans available to every stable — the recruit
+   *  pool's veteran lane pulled into first-class state so AI drafting and
+   *  the player Recruit UI draw from the same list. Entries expire after
+   *  `FREE_AGENT_SHELF_WEEKS`. */
+  freeAgents: PoolWarrior[];
   scoutReports: ScoutReportData[];
   restStates: RestState[];
   rivalries: Rivalry[];
@@ -86,7 +124,7 @@ export interface GameState {
   moodHistory: { week: number; mood: CrowdMoodType }[];
   isFTUE: boolean;
   unacknowledgedDeaths: string[];
-    day: number; // 0-7
+  day: number; // 0-7
   isTournamentWeek: boolean;
   activeTournamentId?: TournamentId;
   // ─── Promoter System ───
@@ -110,8 +148,6 @@ export interface GameState {
   deferredBoutLogs?: DeferredBoutLog[];
   progression: ProgressionState;
 }
-
-
 
 /**
  * Defines the shape of ui prefs.

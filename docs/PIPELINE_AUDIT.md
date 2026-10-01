@@ -5,14 +5,14 @@ Findings are marked **fixed** (implemented and test-covered) or **open**.
 
 ## Time scales
 
-| Scale | Entry point | Notes |
-| --- | --- | --- |
-| Day | `TickOrchestrator.advanceDay` (`src/engine/pipeline/tick/TickOrchestrator.ts`) | Tournament rounds only; week boundary delegates to `advanceWeek`. |
-| Week | `advanceWeek` (`src/engine/pipeline/services/weekPipelineService.ts`) | 15 passes emitting `StateImpact`s, resolved in three staged snapshots. |
-| Quarter | `TimeAdvanceService.advanceQuarter` (`src/engine/pipeline/tick/timeAdvance/service.ts`) | 13-week loop, headless mode, per-week stop conditions. |
-| Year | `TimeAdvanceService.advanceYear` | 4 quarters; `mutableInput` ownership chains across quarters after the first. |
-| Autosim | `runAutosim` (`src/engine/autosim.ts`) | Single sequential week loop; per-week stop evaluation. |
-| Month | — | **Does not exist.** No month abstraction; do not invent one without product sign-off. |
+| Scale   | Entry point                                                                             | Notes                                                                                 |
+| ------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Day     | `TickOrchestrator.advanceDay` (`src/engine/pipeline/tick/TickOrchestrator.ts`)          | Tournament rounds only; week boundary delegates to `advanceWeek`.                     |
+| Week    | `advanceWeek` (`src/engine/pipeline/services/weekPipelineService.ts`)                   | 15 passes emitting `StateImpact`s, resolved in three staged snapshots.                |
+| Quarter | `TimeAdvanceService.advanceQuarter` (`src/engine/pipeline/tick/timeAdvance/service.ts`) | 13-week loop, headless mode, per-week stop conditions.                                |
+| Year    | `TimeAdvanceService.advanceYear`                                                        | 4 quarters; `mutableInput` ownership chains across quarters after the first.          |
+| Autosim | `runAutosim` (`src/engine/autosim.ts`)                                                  | Single sequential week loop; per-week stop evaluation.                                |
+| Month   | —                                                                                       | **Does not exist.** No month abstraction; do not invent one without product sign-off. |
 
 ## Confirmed findings and resolutions
 
@@ -26,7 +26,7 @@ Findings are marked **fixed** (implemented and test-covered) or **open**.
 2. **Stale results overwriting a freshly loaded game** — a result computed before
    `loadGame`/reset could be committed after it. **Fixed:**
    `src/engine/session.ts` (`engineSession`) serializes main-thread engine calls and
-   captures an epoch at job *start*; if `bumpEngineEpoch` fires while the job runs,
+   captures an epoch at job _start_; if `bumpEngineEpoch` fires while the job runs,
    the result resolves `undefined` and is discarded.
 3. **Deferred bout-log retry was dead on the UI path** — failed archive writes were
    requeued onto an ephemeral worker-state array, and `loadGame` /

@@ -91,7 +91,9 @@ function applyOpponentIntel(
   } else if (suspected?.[1] === 'Low') {
     plan.suggestedOE = clamp(plan.suggestedOE + 1, 1, 10);
     plan.suggestedAL = clamp(plan.suggestedAL - 1, 1, 10);
-    plan.gearNotes.push(`Scouts report ${warriorDisplayName(opponent)} fights passively — press the tempo.`);
+    plan.gearNotes.push(
+      `Scouts report ${warriorDisplayName(opponent)} fights passively — press the tempo.`
+    );
     plan.suggestedConditions.push({
       trigger: { type: 'OPPONENT_ENDURANCE_BELOW', value: 40 },
       override: { OE: bounded(plan.suggestedOE, +2) },
@@ -153,8 +155,7 @@ export function evaluateTacticsAdvice(
     suggestedAL = Math.min(suggestedAL, 5);
   }
 
-  const preservational =
-    campaignFocus === 'REHABILITATION' || campaignFocus === 'VETERAN_TWILIGHT';
+  const preservational = campaignFocus === 'REHABILITATION' || campaignFocus === 'VETERAN_TWILIGHT';
   const { fallbackCondition, suggestedConditions } = fallbackAndSurvivalPlan(
     defaultPlan,
     preservational,

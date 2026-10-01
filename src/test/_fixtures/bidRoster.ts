@@ -3,7 +3,11 @@ import type { WarriorId, FightingStyle } from '@/types/shared.types';
 import { makeWarrior, makeRival } from '@/test/_fixtures/factories';
 
 /** Shared bout-bidding roster builders — plain warrior + default rival stable. */
-export const makeBidWarrior = (name: string, style: FightingStyle, over: { cn?: number; fame?: number } = {}): Warrior =>
+export const makeBidWarrior = (
+  name: string,
+  style: FightingStyle,
+  over: { cn?: number; fame?: number } = {}
+): Warrior =>
   makeWarrior({
     id: `w_${name}` as WarriorId,
     name,

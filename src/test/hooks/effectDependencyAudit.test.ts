@@ -3,7 +3,6 @@ import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
-
 describe('effect dependency audit', () => {
   const srcDir = path.resolve(__dirname, '../../src');
 

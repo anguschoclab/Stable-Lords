@@ -42,7 +42,10 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
   const [wIdA, setWIdA] = useState<string | null>(null);
   const [wIdB, setWIdB] = useState<string | null>(null);
 
-  const allWarriors = useMemo(() => collectActiveWarriors(rivals, playerRoster), [rivals, playerRoster]);
+  const allWarriors = useMemo(
+    () => collectActiveWarriors(rivals, playerRoster),
+    [rivals, playerRoster]
+  );
 
   const warriorMap = useMemo(() => {
     const map = new Map<string, { warrior: Warrior; stable: string }>();

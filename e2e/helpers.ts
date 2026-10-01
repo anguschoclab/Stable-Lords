@@ -26,10 +26,7 @@ export async function clickNavLink(
  * Drives the full new-game bootstrap: title → new game form → orphanage
  * FTUE → lands on the main app shell (arena hub), ready for navigation.
  */
-export async function startNewGame(
-  page: Page,
-  names: { owner?: string; stable?: string } = {}
-) {
+export async function startNewGame(page: Page, names: { owner?: string; stable?: string } = {}) {
   // ── Title Screen → New Game ─────────────────────────────────────────────
   await page.goto(BASE_URL + '/');
   // Wait for the title screen to render

@@ -25,9 +25,7 @@ function StyleRateRow({
     <div className="space-y-2.5 group">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-mono font-black text-foreground/20">
-            0{idx + 1}
-          </span>
+          <span className="text-[10px] font-mono font-black text-foreground/20">0{idx + 1}</span>
           <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
             {s.style}
           </span>

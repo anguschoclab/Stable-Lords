@@ -14,7 +14,12 @@ interface CombatAnalysisProps {
 /**
  *
  */
-export function CombatAnalysis({ suspectedOE, suspectedAL, knownInjuries, possiblyMaskedPlan }: CombatAnalysisProps) {
+export function CombatAnalysis({
+  suspectedOE,
+  suspectedAL,
+  knownInjuries,
+  possiblyMaskedPlan,
+}: CombatAnalysisProps) {
   const hasCombatData = suspectedOE || knownInjuries.length > 0 || possiblyMaskedPlan;
 
   if (!hasCombatData) return null;

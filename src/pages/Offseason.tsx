@@ -9,14 +9,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { YearEndRecap, SeasonSynthesis } from '@/components/ledger';
-import {
-  CalendarDays,
-  UserPlus,
-  GraduationCap,
-  BookOpen,
-  ArrowRight,
-  History,
-} from 'lucide-react';
+import { CalendarDays, UserPlus, GraduationCap, BookOpen, ArrowRight, History } from 'lucide-react';
 
 const SEASON_ACTIONS = [
   {
@@ -81,8 +74,8 @@ function DirectivesColumn() {
               <History className="h-3 w-3 text-muted-foreground/40" />
             </ImperialRing>
             <div className="text-[10px] text-muted-foreground/60 leading-relaxed uppercase font-black tracking-tight">
-              <span className="text-foreground">Note:</span> The offseason is the only window
-              for making roster changes without penalty. Aging is paused during this period.
+              <span className="text-foreground">Note:</span> The offseason is the only window for
+              making roster changes without penalty. Aging is paused during this period.
             </div>
           </div>
         </Surface>

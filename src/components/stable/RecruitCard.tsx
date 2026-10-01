@@ -10,7 +10,6 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Eye, Heart, Zap, Quote, Star, Coins, Sword, Info, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-
 function TierBadge({ tier }: { tier: RecruitTier }) {
   const stars = TIER_STARS[tier];
   const config = TIER_CONFIG[tier];
@@ -109,23 +108,21 @@ function IntelPanel({
           "{scoutReport.summary}"
         </p>
       )}
-      {scoutReport &&
-        scoutReport.revealed &&
-        Object.keys(scoutReport.revealed).length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2">
-            {Object.entries(scoutReport.revealed)
-              .sort((a, b) => (b[1] as number) - (a[1] as number))
-              .map(([key, val]) => (
-                <Badge
-                  key={key}
-                  variant="outline"
-                  className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
-                >
-                  {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
-                </Badge>
-              ))}
-          </div>
-        )}
+      {scoutReport && scoutReport.revealed && Object.keys(scoutReport.revealed).length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-2">
+          {Object.entries(scoutReport.revealed)
+            .sort((a, b) => (b[1] as number) - (a[1] as number))
+            .map(([key, val]) => (
+              <Badge
+                key={key}
+                variant="outline"
+                className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-none border-primary/30 text-primary"
+              >
+                {ATTRIBUTE_LABELS[key as keyof typeof ATTRIBUTE_LABELS] ?? key} {val}
+              </Badge>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -188,9 +185,7 @@ function SignActions({
         </span>
         <div className="flex items-center gap-2">
           <Coins className="h-4 w-4 text-arena-gold" />
-          <span className="text-2xl font-display font-black text-arena-gold">
-            {warrior.cost}G
-          </span>
+          <span className="text-2xl font-display font-black text-arena-gold">{warrior.cost}G</span>
         </div>
       </div>
 

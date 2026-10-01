@@ -37,14 +37,13 @@ export const narrativeContent: NarrativeContent = {
 export function loadCombatNarrative(): Promise<void> {
   if (combatCache) return combatCache;
   combatCache = (async () => {
-    const [pbpData, strikesData, killTextData, conclusionsData, passivesData] =
-      await Promise.all([
-        import('./combatPbp.json'),
-        import('./combatStrikes.json'),
-        import('./combatKillText.json'),
-        import('./combatConclusions.json'),
-        import('./combatPassives.json'),
-      ]);
+    const [pbpData, strikesData, killTextData, conclusionsData, passivesData] = await Promise.all([
+      import('./combatPbp.json'),
+      import('./combatStrikes.json'),
+      import('./combatKillText.json'),
+      import('./combatConclusions.json'),
+      import('./combatPassives.json'),
+    ]);
     narrativeContent.pbp = pbpData.default.pbp;
     narrativeContent.crowd_reactions = pbpData.default.crowd_reactions;
     narrativeContent.strikes = strikesData.default.strikes;

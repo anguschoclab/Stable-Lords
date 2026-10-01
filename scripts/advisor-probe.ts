@@ -20,7 +20,12 @@ state.treasury += 5000;
 const pool = [...(state.recruitPool ?? [])].sort((a, b) => a.cost - b.cost);
 for (const w of pool.slice(0, 5)) {
   const rng = new SeededRNGService(state.week + hashStr(w.name));
-  state.roster.push(makeWarrior(rng.uuid('warrior') as WarriorId, w.name, w.style, w.attributes, { age: w.age, potential: w.potential }));
+  state.roster.push(
+    makeWarrior(rng.uuid('warrior') as WarriorId, w.name, w.style, w.attributes, {
+      age: w.age,
+      potential: w.potential,
+    })
+  );
 }
 const ids = new Set(state.roster.map((w) => w.id));
 
@@ -31,7 +36,9 @@ for (let i = 0; i < 10; i++) {
   // generator only iterates rivals not in their stable's trainingAssignments.
   const challengeable = state.rivals.flatMap((r) => {
     const assigned = new Set((r.trainingAssignments ?? []).map((a) => a.warriorId));
-    return r.roster.filter((w) => (w.status ?? 'Active') === 'Active' && !w.isDead && !assigned.has(w.id));
+    return r.roster.filter(
+      (w) => (w.status ?? 'Active') === 'Active' && !w.isDead && !assigned.has(w.id)
+    );
   });
   if (challengeable.length > 0) {
     state.playerChallenges = challengeable.map((w) => w.id);

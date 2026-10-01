@@ -28,8 +28,8 @@ describe('vi compat surface (vitest + bun)', () => {
           () => {
             expect(true).toBe(false);
           },
-          { timeout: 100, interval: 10 },
-        ),
+          { timeout: 100, interval: 10 }
+        )
       ).rejects.toThrow();
     });
   });

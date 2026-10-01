@@ -29,7 +29,10 @@ export function computeGainChance(
 ): number {
   const trainerBonus = computeTrainerBonus(attribute, trainers, warrior.style);
   const wtBonus = ((warrior.attributes.WT ?? 10) - 10) * 0.01;
-  const agePenalty = (warrior.age ?? 18) > AGING_PENALTY_START ? ((warrior.age ?? 18) - AGING_PENALTY_START) * 0.02 : 0;
+  const agePenalty =
+    (warrior.age ?? 18) > AGING_PENALTY_START
+      ? ((warrior.age ?? 18) - AGING_PENALTY_START) * 0.02
+      : 0;
   const hasInjury = warrior.injuries.length > 0;
   const injuryPenalty = hasInjury ? 0.1 : 0;
 
@@ -47,7 +50,11 @@ type AttributeTrainingOutcome = {
   hardCapped?: boolean;
 };
 
-function blockedResult(warrior: Warrior, message = '', hardCapped = false): AttributeTrainingOutcome {
+function blockedResult(
+  warrior: Warrior,
+  message = '',
+  hardCapped = false
+): AttributeTrainingOutcome {
   return {
     updatedWarrior: null,
     updatedSeasonalGrowth: null,
@@ -87,12 +94,7 @@ function applyAttributeGain(
       derivedStats,
       potentialRevealed: newRevealed,
     },
-    updatedSeasonalGrowth: updateSeasonalGains(
-      seasonalGrowth,
-      warrior.id,
-      state.season,
-      attr
-    ),
+    updatedSeasonalGrowth: updateSeasonalGains(seasonalGrowth, warrior.id, state.season, attr),
     result: {
       type: 'gain',
       warriorId: warrior.id,

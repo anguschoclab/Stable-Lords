@@ -9,6 +9,7 @@ import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/econom
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD, BANKRUPTCY_GRACE_WEEKS } from '@/constants/economy';
+import { WORLD_RIVAL_FLOOR } from '@/constants/world';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
@@ -42,7 +43,7 @@ function applyWeeklyEconomy(
       getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
-    applyStipend: (state.rivals || []).length <= 45,
+    applyStipend: (state.rivals || []).length <= WORLD_RIVAL_FLOOR,
     isPlayer: false,
     treasury: updatedRival.treasury,
   };

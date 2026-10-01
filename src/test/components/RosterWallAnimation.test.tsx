@@ -42,7 +42,7 @@ vi.mock('@/hooks/useActiveRoster', () => ({
   useActiveRoster: () => mockRoster,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 vi.mock('@/components/ui/sheet', () => ({ ...__SHARED_MOCKS.sheet }));
 

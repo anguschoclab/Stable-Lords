@@ -3,12 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
 import { computeStableCouncilReport } from '@/engine/advisor/stableCouncilService';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
-import {
-  makeWarrior,
-  makeGameState,
-  makeRival,
-  resetFixtureIds,
-} from '@/test/_fixtures/factories';
+import { makeWarrior, makeGameState, makeRival, resetFixtureIds } from '@/test/_fixtures/factories';
 import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -92,8 +87,6 @@ describe('stable council — crown contention surfacing', () => {
     const report = computeStableCouncilReport(state);
     const card = report.cards.find((c) => c.warriorId === contender.id);
     expect(card?.campaignFocus).toBe('CROWN_BID');
-    expect(
-      report.summary.stableDirectives.some((d) => /crown|title/i.test(d))
-    ).toBe(true);
+    expect(report.summary.stableDirectives.some((d) => /crown|title/i.test(d))).toBe(true);
   });
 });

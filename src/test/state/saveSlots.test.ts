@@ -167,11 +167,9 @@ describe('saveSlots', () => {
       const metas = [meta('slot_1'), meta('slot_2'), meta('slot_3')];
       seedMetas(metas);
 
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw quotaError();
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw quotaError();
+      });
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
@@ -197,11 +195,9 @@ describe('saveSlots', () => {
       const metas = [meta('slot_1'), meta('slot_2'), meta('slot_3')];
       seedMetas(metas);
 
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw quotaError();
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw quotaError();
+      });
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await deleteSlot('slot_1');
@@ -214,11 +210,9 @@ describe('saveSlots', () => {
     });
 
     it('does not retry when quota is exceeded and no existing metas are stored', async () => {
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw quotaError();
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw quotaError();
+      });
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;
@@ -230,11 +224,9 @@ describe('saveSlots', () => {
     it('logs a generic error and does not retry for non-quota failures', async () => {
       seedMetas([meta('slot_1')]);
 
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw new Error('boom');
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw new Error('boom');
+      });
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const state = { week: 1, year: 1, meta: { version: '1' } } as unknown as GameState;

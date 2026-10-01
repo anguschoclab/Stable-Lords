@@ -280,14 +280,24 @@ describe('fighterState', () => {
         createMockPlan(),
         createMockWarrior({
           attributes: { ST: 13, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 11 },
-          equipment: { weapon: 'morning_star', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+          equipment: {
+            weapon: 'morning_star',
+            armor: 'leather',
+            helm: 'none_helm',
+            shield: 'none_shield',
+          },
         })
       );
       const short = createFighterState(
         'A',
         createMockPlan(),
         createMockWarrior({
-          equipment: { weapon: 'morning_star', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+          equipment: {
+            weapon: 'morning_star',
+            armor: 'leather',
+            helm: 'none_helm',
+            shield: 'none_shield',
+          },
         })
       );
       expect(fits.skills.ATT - short.skills.ATT).toBe(4 * 2);

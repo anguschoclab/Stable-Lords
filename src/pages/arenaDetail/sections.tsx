@@ -53,18 +53,35 @@ export function TitleHistory({ history }: { history: ArenaTitle['history'] }) {
         <Table>
           <TableHeader className="bg-white/[0.03]">
             <TableRow className="h-10 hover:bg-transparent border-white/5">
-              <TableHead className="pl-6 text-[9px] font-black uppercase tracking-widest">CHAMPION</TableHead>
-              <TableHead className="text-[9px] font-black uppercase tracking-widest">STABLE</TableHead>
-              <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">REIGN</TableHead>
-              <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">DEF</TableHead>
-              <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">ENDED</TableHead>
+              <TableHead className="pl-6 text-[9px] font-black uppercase tracking-widest">
+                CHAMPION
+              </TableHead>
+              <TableHead className="text-[9px] font-black uppercase tracking-widest">
+                STABLE
+              </TableHead>
+              <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
+                REIGN
+              </TableHead>
+              <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
+                DEF
+              </TableHead>
+              <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">
+                ENDED
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {history.map((r, i) => (
-              <TableRow key={`${r.warriorId}-${r.startedAbsoluteWeek}-${i}`} className="h-11 border-white/5">
+              <TableRow
+                key={`${r.warriorId}-${r.startedAbsoluteWeek}-${i}`}
+                className="h-11 border-white/5"
+              >
                 <TableCell className="pl-6">
-                  <WarriorNameTag id={r.warriorId} name={r.warriorName} epithet={r.warriorEpithet} />
+                  <WarriorNameTag
+                    id={r.warriorId}
+                    name={r.warriorName}
+                    epithet={r.warriorEpithet}
+                  />
                 </TableCell>
                 <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
                   {r.stableName ?? '—'}
@@ -88,13 +105,7 @@ export function TitleHistory({ history }: { history: ArenaTitle['history'] }) {
 }
 
 /** Recent-bouts strip — the last eight fights at this venue. */
-export function RecentBouts({
-  bouts,
-  arenaId,
-}: {
-  bouts: FightSummary[];
-  arenaId: string;
-}) {
+export function RecentBouts({ bouts, arenaId }: { bouts: FightSummary[]; arenaId: string }) {
   if (bouts.length === 0) return null;
   return (
     <>

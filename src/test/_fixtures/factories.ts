@@ -262,9 +262,7 @@ export function makeFighterState(over: Partial<FighterState> = {}): FighterState
 }
 
 /** Schema-valid ResolutionContext for combat-exchange tests. */
-export function makeResolutionContext(
-  over: Partial<ResolutionContext> = {}
-): ResolutionContext {
+export function makeResolutionContext(over: Partial<ResolutionContext> = {}): ResolutionContext {
   return {
     rng: () => 0.5,
     phase: 'OPENING',
@@ -444,15 +442,19 @@ export function makeGameState(over: Partial<GameState> | Record<string, any> = {
 
   const warriorMap = new Map<WarriorId, Warrior>();
   state.roster.forEach((w) => w && warriorMap.set(w.id, w));
-  (state.rivals || []).forEach((r) => (r.roster || []).forEach((w) => w && warriorMap.set(w.id, w)));
+  (state.rivals || []).forEach((r) =>
+    (r.roster || []).forEach((w) => w && warriorMap.set(w.id, w))
+  );
   state.warriorMap = warriorMap;
 
   const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
-  state.roster.forEach((w) =>
-    w && warriorToStableMap.set(w.id, { stableId: state.player.id, isPlayer: true })
+  state.roster.forEach(
+    (w) => w && warriorToStableMap.set(w.id, { stableId: state.player.id, isPlayer: true })
   );
   (state.rivals || []).forEach((r) =>
-    (r.roster || []).forEach((w) => w && warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
+    (r.roster || []).forEach(
+      (w) => w && warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false })
+    )
   );
   state.warriorToStableMap = warriorToStableMap;
 
@@ -461,11 +463,15 @@ export function makeGameState(over: Partial<GameState> | Record<string, any> = {
   state.rivalMap = rivalMap;
 
   const rivalryMap = new Map<string, (typeof state.rivalries)[number]>();
-  (state.rivalries || []).forEach((rv) => rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), rv));
+  (state.rivalries || []).forEach((rv) =>
+    rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), rv)
+  );
   state.rivalryMap = rivalryMap;
 
   const grudgeMap = new Map<string, (typeof state.ownerGrudges)[number]>();
-  (state.ownerGrudges || []).forEach((g) => grudgeMap.set(getStablePairKey(g.ownerIdA, g.ownerIdB), g));
+  (state.ownerGrudges || []).forEach((g) =>
+    grudgeMap.set(getStablePairKey(g.ownerIdA, g.ownerIdB), g)
+  );
   state.grudgeMap = grudgeMap;
 
   return state;

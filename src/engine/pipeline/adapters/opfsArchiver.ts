@@ -63,15 +63,13 @@ export function getPendingArchiveRetries(): readonly DeferredBoutLog[] {
 function archiveDirectly(logs: DeferredBoutLog[]): Promise<void> {
   return Promise.all(
     logs.map((log) =>
-      archiveService
-        .archiveBoutLog(log.year, log.season, log.boutId, log.transcript, true)
-        .then(
-          () => null,
-          (err) => {
-            console.error(`Failed to archive bout ${log.boutId}:`, err);
-            return log;
-          }
-        )
+      archiveService.archiveBoutLog(log.year, log.season, log.boutId, log.transcript, true).then(
+        () => null,
+        (err) => {
+          console.error(`Failed to archive bout ${log.boutId}:`, err);
+          return log;
+        }
+      )
     )
   ).then((results) => {
     for (const log of results) {

@@ -9,10 +9,7 @@ import type {
   GrandChampionEntry,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type {
-  WarriorId,
-  StableId,
-} from '@/types/shared.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { earnEpithet, type EpithetCause } from '@/data/names/epithets';
@@ -71,12 +68,20 @@ export function createChampionshipDelta(): ChampionshipDelta {
 // ─── Internal state/delta overlay ───────────────────────────────────────────
 
 /** Live title record for an arena, preferring the in-flight delta over state. */
-export function titleOf(state: GameState, delta: ChampionshipDelta | undefined, arenaId: string): ArenaTitle | undefined {
+export function titleOf(
+  state: GameState,
+  delta: ChampionshipDelta | undefined,
+  arenaId: string
+): ArenaTitle | undefined {
   return delta?.arenaChampions[arenaId] ?? state.arenaChampions?.[arenaId];
 }
 
 /** Get-or-create a delta copy of the title for an arena (never mutates state). */
-export function ensureTitle(state: GameState, delta: ChampionshipDelta, arenaId: string): ArenaTitle {
+export function ensureTitle(
+  state: GameState,
+  delta: ChampionshipDelta,
+  arenaId: string
+): ArenaTitle {
   const pending = delta.arenaChampions[arenaId];
   if (pending) return pending;
   const existing = state.arenaChampions?.[arenaId];
@@ -101,7 +106,10 @@ export function ensureTitle(state: GameState, delta: ChampionshipDelta, arenaId:
 }
 
 /** All offers with delta overlay applied (canceled removed, new appended). */
-export function effectiveOffers(state: GameState, delta: ChampionshipDelta | undefined): BoutOffer[] {
+export function effectiveOffers(
+  state: GameState,
+  delta: ChampionshipDelta | undefined
+): BoutOffer[] {
   const canceled = new Set(Object.keys(delta?.canceledOffers ?? {}));
   const base = Object.values(state.boutOffers ?? {}).filter((o) => o && !canceled.has(o.id));
   return [...base, ...(delta?.newOffers ?? [])];
@@ -111,7 +119,6 @@ export function effectiveOffers(state: GameState, delta: ChampionshipDelta | und
 export function isOpenOffer(o: BoutOffer): boolean {
   return o.status === 'Proposed' || o.status === 'Signed';
 }
-
 
 /** Stable (player or rival) that owns the given warrior, or null. */
 export function owningStableOf(
@@ -128,7 +135,6 @@ export function owningStableOf(
   }
   return null;
 }
-
 
 // ─── Reign transitions ──────────────────────────────────────────────────────
 
@@ -208,7 +214,13 @@ export function awardEpithet(
 }
 
 /** Queues a newsletter item into the delta. */
-export function news(delta: ChampionshipDelta, week: number, title: string, items: string[], idSeed: string): void {
+export function news(
+  delta: ChampionshipDelta,
+  week: number,
+  title: string,
+  items: string[],
+  idSeed: string
+): void {
   delta.newsletterItems.push({ id: `champ-${idSeed}`, week, title, items });
 }
 
@@ -239,7 +251,6 @@ export function cancelAllOpenOffersInvolving(
     delta.canceledOffers[o.id] = { ...o, status: 'Canceled' };
   }
 }
-
 
 /** Arena ids with titles, in stable order (delta-aware). */
 export function sortedTitleKeys(state: GameState, delta: ChampionshipDelta | undefined): string[] {

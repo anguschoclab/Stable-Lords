@@ -66,6 +66,8 @@ const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
   'seasonalGrowth',
   'tournaments',
   'recruitPool',
+  'legacyFounderQueue',
+  'freeAgents',
   'realmRankings',
   'promoters',
   'trainers',

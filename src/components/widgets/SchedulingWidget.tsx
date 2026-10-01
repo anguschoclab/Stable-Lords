@@ -144,7 +144,14 @@ function CardFooter({
   );
 }
 
-function MatchupCard({ matchup, type, isChallenged, isAvoided, onToggleChallenge, onToggleAvoid }: MatchupCardProps) {
+function MatchupCard({
+  matchup,
+  type,
+  isChallenged,
+  isAvoided,
+  onToggleChallenge,
+  onToggleAvoid,
+}: MatchupCardProps) {
   const isGood = type === 'recommend';
 
   return (

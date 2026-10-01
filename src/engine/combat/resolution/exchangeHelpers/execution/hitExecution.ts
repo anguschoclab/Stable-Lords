@@ -471,7 +471,16 @@ function preHitResolved(
   attKD: number
 ): boolean {
   if (
-    handleSurvivalStrike(events, rng, attacker, defender, attTactics, defPassive, attLabel, defLabel)
+    handleSurvivalStrike(
+      events,
+      rng,
+      attacker,
+      defender,
+      attTactics,
+      defPassive,
+      attLabel,
+      defLabel
+    )
   ) {
     return true;
   }
@@ -508,7 +517,17 @@ export function executeHit(
   defPassive?: ReturnType<typeof getStylePassive>
 ) {
   if (
-    preHitResolved(events, rng, attacker, defender, attTactics, defPassive, attLabel, defLabel, attKD)
+    preHitResolved(
+      events,
+      rng,
+      attacker,
+      defender,
+      attTactics,
+      defPassive,
+      attLabel,
+      defLabel,
+      attKD
+    )
   ) {
     return;
   }

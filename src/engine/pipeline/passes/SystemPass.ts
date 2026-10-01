@@ -87,8 +87,8 @@ function applySeasonalChurnMembership(
   const lateRetirees = displaced.filter((w) => w.status === 'Retired');
   if (veterans.length > 0) {
     const poolRng = new SeededRNGService(seasonSeed + 77);
-    impact.recruitPool = [
-      ...(impact.recruitPool ?? state.recruitPool ?? []),
+    impact.freeAgentAdditions = [
+      ...(impact.freeAgentAdditions ?? []),
       ...veterans.map((w) => warriorToPoolWarrior(w, nextWeek, poolRng)),
     ];
   }
@@ -112,15 +112,17 @@ function processSeasonalChurnAndPhilosophy(
   if (prevSeason !== nextSeasonName) {
     const seasonSeed = nextWeek * 133;
     const rngContext = new RNGContext(seasonSeed + 55);
-    // Churn returns the post-season rival world — wire it into the impact.
-    const { updatedRivals: churnedRivals, news } = WorldManagementService.processSeasonalChurn(
+    // Churn returns the post-season world — rivals plus the surviving
+    // legacy-founder queue — wire both into the impact.
+    const { updatedState: churnedState, news } = WorldManagementService.processSeasonalChurn(
       state,
       rngContext
     );
-    applySeasonalChurnMembership(state, churnedRivals, nextWeek, seasonSeed, impact);
+    applySeasonalChurnMembership(state, churnedState.rivals ?? [], nextWeek, seasonSeed, impact);
+    impact.legacyFounderQueue = churnedState.legacyFounderQueue ?? [];
 
     const { updatedRivals: philRivals, gazetteItems } = evolvePhilosophies(
-      { ...state, rivals: churnedRivals },
+      { ...state, rivals: churnedState.rivals ?? [] },
       nextSeason,
       rngContext.getRNG()
     );

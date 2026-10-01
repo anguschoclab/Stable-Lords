@@ -13,7 +13,6 @@ import { SEASONS } from '@/types/enumSources';
  * Handles seasonal transitions and weather changes.
  */
 
-
 /**
  * Compute next season.
  */

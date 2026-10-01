@@ -50,11 +50,7 @@ function TournamentEntryRow({
           >
             <Swords className="h-3 w-3" />
             Bouts
-            {expanded ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
+            {expanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
           </button>
         </div>
       </div>

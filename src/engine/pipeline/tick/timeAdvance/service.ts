@@ -138,10 +138,7 @@ export const TimeAdvanceService = {
     };
   },
 
-  async skipToQuarterEnd(
-    state: GameState,
-    opts?: AdvanceOptions
-  ): Promise<QuarterAdvanceResult> {
+  async skipToQuarterEnd(state: GameState, opts?: AdvanceOptions): Promise<QuarterAdvanceResult> {
     return this.advanceQuarter(state, {
       ...opts,
       headless: true,

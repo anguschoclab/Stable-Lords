@@ -19,7 +19,7 @@ vi.mock('@/components/ui/progress', () => ({
   Progress: ({ value }: { value: number }) => <div data-testid="progress" data-value={value} />,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/warrior/potential';

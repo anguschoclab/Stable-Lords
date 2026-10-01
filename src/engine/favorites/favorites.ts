@@ -124,7 +124,9 @@ export function checkDiscovery(
       updated = true;
     } else if (r() < CHANCE_HINT && fav.discovered.weaponHints < 2) {
       fav.discovered.weaponHints++;
-      hints.push(`Observing: ${warriorDisplayName(warrior)} is developing a distinct feel for certain weapons...`);
+      hints.push(
+        `Observing: ${warriorDisplayName(warrior)} is developing a distinct feel for certain weapons...`
+      );
       updated = true;
     }
   }
@@ -199,12 +201,14 @@ export function applyInsightToken(warrior: Warrior, type: 'weapon' | 'rhythm'): 
   if (!fav) return `${warriorDisplayName(warrior)} has no hidden favorites.`;
 
   if (type === 'weapon') {
-    if (fav.discovered.weapon) return `${warriorDisplayName(warrior)} already knows their favorite weapon.`;
+    if (fav.discovered.weapon)
+      return `${warriorDisplayName(warrior)} already knows their favorite weapon.`;
     fav.discovered.weapon = true;
     const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
     return `Weapon Insight Token used! ${warriorDisplayName(warrior)}'s favorite weapon is the ${weaponItem?.name ?? fav.weaponId}.`;
   } else {
-    if (fav.discovered.rhythm) return `${warriorDisplayName(warrior)} already knows their natural rhythm.`;
+    if (fav.discovered.rhythm)
+      return `${warriorDisplayName(warrior)} already knows their natural rhythm.`;
     fav.discovered.rhythm = true;
     return `Rhythm Insight Token used! ${warriorDisplayName(warrior)}'s natural rhythm is OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}.`;
   }

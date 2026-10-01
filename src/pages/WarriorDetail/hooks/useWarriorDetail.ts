@@ -7,10 +7,7 @@ import { obfuscateWarrior } from '@/lib/obfuscation';
 import { type FightPlan } from '@/types/game';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { EquipmentLoadout } from '@/data/equipment';
-import {
-  getCurrentArenaTitles,
-  getPastArenaTitles,
-} from '@/engine/championship/arenaChampionship';
+import { getCurrentArenaTitles, getPastArenaTitles } from '@/engine/championship/arenaChampionship';
 import { getAllArenas } from '@/data/arenas';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { toast } from 'sonner';

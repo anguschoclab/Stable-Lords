@@ -34,9 +34,17 @@ const ctx: WeekPipelineContext = {
   rootRng: rng,
 };
 
-
-function warriorAtArena(id: string, arenaId: string, rec: { wins: number; losses: number; kills?: number }) {
-  return makeVenueWarrior(id, { wins: rec.wins, losses: rec.losses, kills: rec.kills ?? 0, arenaId });
+function warriorAtArena(
+  id: string,
+  arenaId: string,
+  rec: { wins: number; losses: number; kills?: number }
+) {
+  return makeVenueWarrior(id, {
+    wins: rec.wins,
+    losses: rec.losses,
+    kills: rec.kills ?? 0,
+    arenaId,
+  });
 }
 
 function activeTitle(champId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
@@ -116,9 +124,7 @@ describe('ArenaChampionshipPass behavior', () => {
     const next = resolveImpacts(state, [impact]);
     const titleOffers = Object.values(next.boutOffers).filter((o) => o.titleArenaId === arenaId);
     expect(titleOffers).toHaveLength(1);
-    expect(titleOffers[0]!.warriorIds).toEqual(
-      expect.arrayContaining(['w-champ', 'w-cont'])
-    );
+    expect(titleOffers[0]!.warriorIds).toEqual(expect.arrayContaining(['w-champ', 'w-cont']));
   });
 
   it('pendingReengagement → active lands a defense offer in the same pass', () => {
@@ -244,7 +250,8 @@ describe('generatePairings champion choke point', () => {
       week: 29,
       absoluteWeek: 29,
       roster: [a, b, c],
-      boutOffers: { [titleOffer.id]: titleOffer, [ordinary.id]: ordinary },});
+      boutOffers: { [titleOffer.id]: titleOffer, [ordinary.id]: ordinary },
+    });
     const { pairings, voidedOffers } = generatePairings(state);
     expect(pairings).toHaveLength(1);
     expect(pairings[0]!.contractId).toBe('z-ordinary-id');

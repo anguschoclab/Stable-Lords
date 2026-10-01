@@ -26,7 +26,8 @@ const TIMINGS_FILE = path.join(OUT_DIR, 'baseline-test-timings.tsv');
 const TEST_RE = /\.(test|spec)\.(ts|tsx|js|jsx)$/;
 const DOM_GLOBALS = /\b(document|window|HTMLElement|HTMLMediaElement|navigator)\b/;
 const RTL_RE = /@testing-library\/react|\brender(Hook)?\s*\(/;
-const FACTORY_DEF_RE = /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
+const FACTORY_DEF_RE =
+  /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
 // Local names bound to shared builders — `import { makeWarrior as fixtureW }`
 // or plain `import { makeWarrior }` from any _fixtures module.
 function fixtureAliases(content) {
@@ -35,7 +36,11 @@ function fixtureAliases(content) {
     /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/[\w-]+|engine\/factories\/\w+)['"]/g
   )) {
     for (const part of m[1].split(',')) {
-      const alias = part.trim().split(/\s+as\s+/).pop()?.trim();
+      const alias = part
+        .trim()
+        .split(/\s+as\s+/)
+        .pop()
+        ?.trim();
       if (alias) names.add(alias);
     }
   }
@@ -57,9 +62,13 @@ function hasLocalFactory(content) {
     if (aliasAssign && aliases.has(aliasAssign[1])) continue;
     const exprCall = tail.match(/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\n?\s*(\w+)\s*\(/);
     if (exprCall && aliases.has(exprCall[1])) continue;
-    const blockCall = tail.match(/^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/);
+    const blockCall = tail.match(
+      /^const\s+\w+\s*=\s*\([^)]*\)[^=]*=>\s*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/
+    );
     if (blockCall && aliases.has(blockCall[1])) continue;
-    const fnCall = tail.match(/^function\s+\w+\s*\([^)]*\)[^{]*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/);
+    const fnCall = tail.match(
+      /^function\s+\w+\s*\([^)]*\)[^{]*\{[\s\S]{0,1200}?\breturn\s+(\w+)\s*\(/
+    );
     if (fnCall && aliases.has(fnCall[1])) continue;
     return true;
   }
@@ -127,9 +136,7 @@ const testFiles = walk(SRC)
 
 // Also pick up e2e specs (recorded but excluded from vitest verdicts)
 const e2eDir = path.join(ROOT, 'e2e');
-const e2eFiles = fs.existsSync(e2eDir)
-  ? walk(e2eDir).filter((f) => TEST_RE.test(f))
-  : [];
+const e2eFiles = fs.existsSync(e2eDir) ? walk(e2eDir).filter((f) => TEST_RE.test(f)) : [];
 
 // Runtime join
 const timings = new Map();
@@ -166,9 +173,7 @@ const records = testFiles.map((file) => {
   const explicitNode = hasPragma === 'node';
   const domGlobalLines = explicitNode
     ? []
-    : content
-        .split('\n')
-        .filter((l) => DOM_GLOBALS.test(l) && !l.trim().startsWith('//'));
+    : content.split('\n').filter((l) => DOM_GLOBALS.test(l) && !l.trim().startsWith('//'));
   // Stubber heuristic: line assigns/defines the global rather than reading it
   const domStubber =
     domGlobalLines.length > 0 &&
@@ -201,7 +206,9 @@ const records = testFiles.map((file) => {
       domConsumer ||
       domStubber ||
       hasPragma === 'jsdom' ||
-      /vi\.mock\(|mock\.module\(|vi\.stubGlobal|vi\.stubEnv|(?:globalThis|global)\.\w+\s*=(?!=)|Object\.defineProperty\(\s*(?:globalThis|global)\b|@vitest-isolate\b/.test(content),
+      /vi\.mock\(|mock\.module\(|vi\.stubGlobal|vi\.stubEnv|(?:globalThis|global)\.\w+\s*=(?!=)|Object\.defineProperty\(\s*(?:globalThis|global)\b|@vitest-isolate\b/.test(
+        content
+      ),
   };
 });
 
@@ -256,7 +263,17 @@ const summary = {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(
   OUT_FILE,
-  JSON.stringify({ generatedAt: new Date().toISOString(), summary, basenameCollisions, importSetClusters, records }, null, 2)
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      summary,
+      basenameCollisions,
+      importSetClusters,
+      records,
+    },
+    null,
+    2
+  )
 );
 
 // Baseline allowlist for testQualityAudit.test.ts structural guards — the set
@@ -273,7 +290,10 @@ const baseline = {
     .map((g) => g.files.sort())
     .map((files) => files.join(' <-> '))
     .sort(),
-  localFactoryFiles: records.filter((r) => r.localFactory).map((r) => r.file).sort(),
+  localFactoryFiles: records
+    .filter((r) => r.localFactory)
+    .map((r) => r.file)
+    .sort(),
   missingJsdomPragma: records
     .filter((r) => r.needsDom && !r.envPragma)
     .map((r) => r.file)
@@ -294,7 +314,10 @@ fs.writeFileSync(
   JSON.stringify(
     {
       generatedAt: new Date().toISOString(),
-      isolated: records.filter((r) => r.needsIsolation).map((r) => r.file).sort(),
+      isolated: records
+        .filter((r) => r.needsIsolation)
+        .map((r) => r.file)
+        .sort(),
     },
     null,
     2

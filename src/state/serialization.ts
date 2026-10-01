@@ -68,6 +68,8 @@ type GameStateValues = {
   promoters: GameState['promoters'];
   boutOffers: GameState['boutOffers'];
   rivals: GameState['rivals'];
+  legacyFounderQueue: GameState['legacyFounderQueue'];
+  freeAgents: GameState['freeAgents'];
   gazettes: GameState['gazettes'];
   scoutReports: GameState['scoutReports'];
   unacknowledgedDeaths: GameState['unacknowledgedDeaths'];
@@ -140,6 +142,8 @@ function collectStoreValues(store: GameStore): GameStateValues {
     promoters: store.promoters,
     boutOffers: store.boutOffers,
     rivals: store.rivals,
+    legacyFounderQueue: store.legacyFounderQueue,
+    freeAgents: store.freeAgents,
     gazettes: store.gazettes,
     scoutReports: store.scoutReports,
     unacknowledgedDeaths: store.unacknowledgedDeaths,

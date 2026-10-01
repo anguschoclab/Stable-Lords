@@ -21,11 +21,7 @@ multi-tier escalating arc (Option 3) for MVP — defer.
 
 ```ts
 export type ObjectiveId =
-  | 'TOP_10_STABLE'
-  | 'TOP_3_STABLE'
-  | 'FIRST_TOURNAMENT_WIN'
-  | 'HALL_OF_FAMER'
-  | 'REALM_CHAMPION'; // REALM_CHAMPION = the win condition
+  'TOP_10_STABLE' | 'TOP_3_STABLE' | 'FIRST_TOURNAMENT_WIN' | 'HALL_OF_FAMER' | 'REALM_CHAMPION'; // REALM_CHAMPION = the win condition
 
 export interface ProgressionObjective {
   id: ObjectiveId;

@@ -51,9 +51,9 @@ function ScoutSummaryCard() {
           </h5>
           <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
             Rival owners react to meta shifts with varying latency.{' '}
-            <span className="text-foreground font-black">Innovators</span> anticipate trends,
-            while <span className="text-foreground font-black">Traditionalists</span> provide
-            predictable matchups. Study their patterns to exploit weaknesses in future bouts.
+            <span className="text-foreground font-black">Innovators</span> anticipate trends, while{' '}
+            <span className="text-foreground font-black">Traditionalists</span> provide predictable
+            matchups. Study their patterns to exploit weaknesses in future bouts.
           </p>
         </div>
       </div>

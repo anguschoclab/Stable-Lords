@@ -146,7 +146,12 @@ export default function BoutResolution({
   return (
     <>
       {winner ? (
-        <VictoryBanner winnerName={winnerName} by={by} minutes={minutes} totalEvents={totalEvents} />
+        <VictoryBanner
+          winnerName={winnerName}
+          by={by}
+          minutes={minutes}
+          totalEvents={totalEvents}
+        />
       ) : (
         <DrawBanner minutes={minutes} />
       )}

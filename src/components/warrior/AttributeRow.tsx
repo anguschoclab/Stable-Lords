@@ -126,8 +126,19 @@ function RowButton({
   isAdvisorRecommended?: boolean;
   onAssign: (attr: keyof Attributes) => void;
 }) {
-  const { val, isRevealed, potVal, chance, isSelected, disabled, lockReason, maxed, ceilingHit, seasonCapped, nearCeiling } =
-    state;
+  const {
+    val,
+    isRevealed,
+    potVal,
+    chance,
+    isSelected,
+    disabled,
+    lockReason,
+    maxed,
+    ceilingHit,
+    seasonCapped,
+    nearCeiling,
+  } = state;
 
   return (
     <button

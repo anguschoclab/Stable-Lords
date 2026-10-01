@@ -37,7 +37,7 @@ Rules:
 ## Factories
 
 Use `src/test/_fixtures/factories.ts` builders instead of local `make*`
-helpers. The audit gate allows thin per-file adapters that *delegate* to a
+helpers. The audit gate allows thin per-file adapters that _delegate_ to a
 fixture builder (or to a production factory under `@/engine/factories/`,
 e.g. `makeWarrior` from `warriorFactory`), but fails on real local factory
 implementations — including `function`-declared and block-bodied ones.
@@ -124,11 +124,11 @@ bun scripts/test-audit-scan.mjs
 
 Three complementary, report-only scanners (none gate CI):
 
-| Command | Tool | Detects |
-| --- | --- | --- |
-| `bun run dead-code` | knip | Unused files, exports, exported types, dependencies, duplicate exports |
-| `bun run dead-code:report` | knip | Same, as JSON → `scripts/out/knip-report.json` |
-| `bun run dupes` | jscpd | Copy-pasted blocks ≥10 lines / 100 tokens → `scripts/out/jscpd/` |
+| Command                       | Tool   | Detects                                                                     |
+| ----------------------------- | ------ | --------------------------------------------------------------------------- |
+| `bun run dead-code`           | knip   | Unused files, exports, exported types, dependencies, duplicate exports      |
+| `bun run dead-code:report`    | knip   | Same, as JSON → `scripts/out/knip-report.json`                              |
+| `bun run dupes`               | jscpd  | Copy-pasted blocks ≥10 lines / 100 tokens → `scripts/out/jscpd/`            |
 | `bun scripts/orphan-scan.mjs` | custom | Domain audit: state-field liveness, route/nav links, test-only reachability |
 
 Division of labor: knip is the canonical unused-code check (compiler-accurate);

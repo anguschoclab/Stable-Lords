@@ -56,14 +56,17 @@ describe('computePoachBid (G.2)', () => {
     expect(bid!.playerBound).toBe(false);
     expect(bid!.price).toBeGreaterThan(0);
     // Liability really is above the seller's cut threshold — the bid is honest
-    expect(
-      computeWarriorLiability(seller.roster[0]!).score
-    ).toBeGreaterThanOrEqual(policyFor(seller.owner.personality).cutLiabilityThreshold);
+    expect(computeWarriorLiability(seller.roster[0]!).score).toBeGreaterThanOrEqual(
+      policyFor(seller.owner.personality).cutLiabilityThreshold
+    );
   });
 
   it('returns null for non-WEALTH_ACCUMULATION buyers', () => {
     const buyer = wealthyBuyer({ strategy: { intent: 'EXPANSION', planWeeksRemaining: 3 } });
-    const seller = makeRival({ id: 'seller-1' as StableId, roster: [poachableWarrior('sw-1', 'seller-1')] });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
     const state = makeGameState({ rivals: [buyer, seller] });
     expect(computePoachBid(buyer, [buyer, seller], state, 0)).toBeNull();
   });
@@ -74,21 +77,30 @@ describe('computePoachBid (G.2)', () => {
         makeWarrior({ id: `bw-${i}` as WarriorId, stableId: 'buyer-1' as StableId })
       ),
     });
-    const seller = makeRival({ id: 'seller-1' as StableId, roster: [poachableWarrior('sw-1', 'seller-1')] });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
     const state = makeGameState({ rivals: [buyer, seller] });
     expect(computePoachBid(buyer, [buyer, seller], state, 0)).toBeNull();
   });
 
   it('respects the shared budget check — cannot bid beyond reserve', () => {
     const buyer = wealthyBuyer({ treasury: 100 }); // below BASE_RESERVE + upkeep
-    const seller = makeRival({ id: 'seller-1' as StableId, roster: [poachableWarrior('sw-1', 'seller-1')] });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
     const state = makeGameState({ rivals: [buyer, seller] });
     expect(computePoachBid(buyer, [buyer, seller], state, 0)).toBeNull();
   });
 
   it('once per season — a stamped lastPoachSeason suppresses further bids', () => {
     const buyer = wealthyBuyer({ lastPoachSeason: 2 });
-    const seller = makeRival({ id: 'seller-1' as StableId, roster: [poachableWarrior('sw-1', 'seller-1')] });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
     const state = makeGameState({ rivals: [buyer, seller] });
     expect(computePoachBid(buyer, [buyer, seller], state, 2)).toBeNull();
     // ...but a new season re-arms the stable
@@ -99,7 +111,14 @@ describe('computePoachBid (G.2)', () => {
     const buyer = wealthyBuyer();
     const seller = makeRival({
       id: 'seller-1' as StableId,
-      roster: [makeWarrior({ id: 'sw-1' as WarriorId, stableId: 'seller-1' as StableId, traits: ['steady_hand'], career: { wins: 8, losses: 1, kills: 0 } })],
+      roster: [
+        makeWarrior({
+          id: 'sw-1' as WarriorId,
+          stableId: 'seller-1' as StableId,
+          traits: ['steady_hand'],
+          career: { wins: 8, losses: 1, kills: 0 },
+        }),
+      ],
     });
     const state = makeGameState({ rivals: [buyer, seller] });
     expect(computePoachBid(buyer, [buyer, seller], state, 0)).toBeNull();
@@ -120,7 +139,10 @@ describe('computePoachBid (G.2)', () => {
     (globalThis as { AI_POACHING?: boolean }).AI_POACHING = false;
     expect(isPoachingEnabled()).toBe(false);
     const buyer = wealthyBuyer();
-    const seller = makeRival({ id: 'seller-1' as StableId, roster: [poachableWarrior('sw-1', 'seller-1')] });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
     const state = makeGameState({ rivals: [buyer, seller] });
     expect(computePoachBid(buyer, [buyer, seller], state, 0)).toBeNull();
   });
@@ -136,7 +158,10 @@ describe('processPoachMarket (G.2)', () => {
     const seller = makeRival({
       id: 'seller-1' as StableId,
       treasury: 500,
-      roster: [poachableWarrior('sw-1', 'seller-1'), makeWarrior({ id: 'sw-2' as WarriorId, stableId: 'seller-1' as StableId })],
+      roster: [
+        poachableWarrior('sw-1', 'seller-1'),
+        makeWarrior({ id: 'sw-2' as WarriorId, stableId: 'seller-1' as StableId }),
+      ],
     });
     const state = makeGameState({ rivals: [buyer, seller], absoluteWeek: 5 });
 
@@ -162,14 +187,19 @@ describe('processPoachMarket (G.2)', () => {
 
     expect(newBuyer.roster.some((w) => w.id === 'pw-1')).toBe(false);
     expect(state.roster.some((w) => w.id === 'pw-1')).toBe(true);
-    expect(gazetteItems.some((g) => g.toLowerCase().includes('poach') || g.includes('pw-1'))).toBe(true);
+    expect(gazetteItems.some((g) => g.toLowerCase().includes('poach') || g.includes('pw-1'))).toBe(
+      true
+    );
     expect(newBuyer.lastPoachSeason).toBe(seasonIndexFor(5));
   });
 
   it('does nothing when AI_POACHING is disabled', () => {
     (globalThis as { AI_POACHING?: boolean }).AI_POACHING = false;
     const buyer = wealthyBuyer();
-    const seller = makeRival({ id: 'seller-1' as StableId, roster: [poachableWarrior('sw-1', 'seller-1')] });
+    const seller = makeRival({
+      id: 'seller-1' as StableId,
+      roster: [poachableWarrior('sw-1', 'seller-1')],
+    });
     const state = makeGameState({ rivals: [buyer, seller], absoluteWeek: 5 });
     const { updatedRivals, gazetteItems } = processPoachMarket(state, [buyer, seller]);
     expect(updatedRivals).toEqual([buyer, seller]);

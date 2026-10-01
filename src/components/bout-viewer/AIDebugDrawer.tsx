@@ -47,7 +47,12 @@ function PlanLine({
  * reason codes verbatim — only when the dev AI debug flag is set on
  * globalThis, so production pays nothing.
  */
-export function AIDebugDrawer({ exchangeLog, warriorA, warriorD, scoutReports }: AIDebugDrawerProps) {
+export function AIDebugDrawer({
+  exchangeLog,
+  warriorA,
+  warriorD,
+  scoutReports,
+}: AIDebugDrawerProps) {
   if (!isAIDebugEnabled()) return null;
 
   const rows = (exchangeLog ?? []).filter((e) => (e.reasonCodes?.length ?? 0) > 0);
@@ -62,8 +67,18 @@ export function AIDebugDrawer({ exchangeLog, warriorA, warriorD, scoutReports }:
       </div>
       {(warriorA?.plan || warriorD?.plan) && (
         <div className="border-b border-primary/10">
-          <PlanLine testId="ai-plan-a" label="side A" warrior={warriorA} scoutReports={scoutReports} />
-          <PlanLine testId="ai-plan-d" label="side D" warrior={warriorD} scoutReports={scoutReports} />
+          <PlanLine
+            testId="ai-plan-a"
+            label="side A"
+            warrior={warriorA}
+            scoutReports={scoutReports}
+          />
+          <PlanLine
+            testId="ai-plan-d"
+            label="side D"
+            warrior={warriorD}
+            scoutReports={scoutReports}
+          />
         </div>
       )}
       {rows.length === 0 ? (

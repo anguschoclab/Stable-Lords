@@ -160,7 +160,7 @@ export function OfferGrid({
           (advisorCard?.fightAdvice.dangerLevel === 'LETHAL' ||
             advisorCard?.fightAdvice.dangerLevel === 'HAZARDOUS');
         const councilWarning = isWarning
-          ? advisorCard?.fightAdvice.warnings[0] ?? 'Hazardous Matchup'
+          ? (advisorCard?.fightAdvice.warnings[0] ?? 'Hazardous Matchup')
           : undefined;
 
         return (

@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import type { OrphanWarrior } from '@/data/orphanPool';
 import type { Attributes } from '@/types/shared.types';
 
-vi.mock('@/engine/warrior/skillCalc', () => ({ ...__SHARED_MOCKS.skillCalc }))
+vi.mock('@/engine/warrior/skillCalc', () => ({ ...__SHARED_MOCKS.skillCalc }));
 
 vi.mock('@/data/orphanPool', () => ({
   TRAIT_DATA: {
@@ -38,7 +38,7 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 import WarriorCard from '@/components/orphanage/WarriorCard';
 import { FightingStyle } from '@/types/shared.types';

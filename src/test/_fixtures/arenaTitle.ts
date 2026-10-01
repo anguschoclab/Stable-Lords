@@ -11,7 +11,7 @@ export function makeCareerRecord(over: Partial<CareerRecord> = {}): CareerRecord
 /** Shared arena/championship test helpers — venue warrior record + title holder. */
 export function makeVenueWarrior(
   id: string,
-  rec: { wins: number; losses?: number; kills?: number; arenaId?: string; age?: number },
+  rec: { wins: number; losses?: number; kills?: number; arenaId?: string; age?: number }
 ) {
   const wins = rec.wins;
   const losses = rec.losses ?? 0;
@@ -27,12 +27,17 @@ export function makeVenueWarrior(
 /** make Arena Title. */
 export function makeArenaTitle(
   championId: string | null,
-  opts: { defenses?: number } & Partial<ArenaTitle> = {},
+  opts: { defenses?: number } & Partial<ArenaTitle> = {}
 ): ArenaTitle {
   const { defenses = 0, ...over } = opts;
   return {
     champion: championId
-      ? { warriorId: championId as WarriorId, startedAbsoluteWeek: 1, defenses, lastActivityWeek: 1 }
+      ? {
+          warriorId: championId as WarriorId,
+          startedAbsoluteWeek: 1,
+          defenses,
+          lastActivityWeek: 1,
+        }
       : null,
     status: 'active',
     history: [],

@@ -92,4 +92,5 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
     weight: 0.5,
     tier: 'Common',
     sign: 'positive',
-  },};
+  },
+};

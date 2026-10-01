@@ -34,13 +34,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
 }
 
 /** One bout log row: outcome stripe, matchup links, week, kill ring, verdict. */
-function BoutLogRow({
-  f,
-  stableWarriorIds,
-}: {
-  f: FightSummary;
-  stableWarriorIds: Set<string>;
-}) {
+function BoutLogRow({ f, stableWarriorIds }: { f: FightSummary; stableWarriorIds: Set<string> }) {
   const n = getNamesFromTitle(f.title);
   const isStableA = stableWarriorIds.has(f.warriorIdA);
   const won = (f.winner === 'A' && isStableA) || (f.winner === 'D' && !isStableA);

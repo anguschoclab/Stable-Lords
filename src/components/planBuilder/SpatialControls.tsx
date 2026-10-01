@@ -93,8 +93,8 @@ function FeintTendency({ warrior, plan }: { warrior: Warrior; plan: FightPlan })
             >
               <p className="text-[10px] font-black uppercase tracking-widest">Feint Tendency</p>
               <p className="text-[9px] leading-relaxed opacity-70">
-                Derived from the warrior's WT. Higher Wit means more natural deception in
-                combat. Traits like Cunning or Calculating amplify this further.
+                Derived from the warrior's WT. Higher Wit means more natural deception in combat.
+                Traits like Cunning or Calculating amplify this further.
               </p>
               <p className="text-[9px] leading-relaxed text-arena-gold">
                 Only triggers when WT ≥ 15 and OE ≥ 4.

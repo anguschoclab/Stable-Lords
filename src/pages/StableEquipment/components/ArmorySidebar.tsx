@@ -29,10 +29,7 @@ function StyleSelect({
       >
         Select Style
       </label>
-      <Select
-        value={selectedStyle}
-        onValueChange={(v) => onStyleChange(v as FightingStyle)}
-      >
+      <Select value={selectedStyle} onValueChange={(v) => onStyleChange(v as FightingStyle)}>
         <SelectTrigger
           id="style-select"
           className="h-10 bg-black/40 border-white/10 font-black text-[10px] uppercase tracking-widest px-4"

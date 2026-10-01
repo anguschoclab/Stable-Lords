@@ -55,7 +55,10 @@ describe('megaplan: skip-count guard', () => {
           if (HARD_SKIP.test(line)) offenders.push(`${file}:${i + 1}`);
         });
     }
-    expect(offenders, 'hard .skip found outside megaplan — give it a MEGAPLAN- ticket or fix the test').toEqual([]);
+    expect(
+      offenders,
+      'hard .skip found outside megaplan — give it a MEGAPLAN- ticket or fix the test'
+    ).toEqual([]);
   });
 
   it('every megaplan skip names a registered MEGAPLAN- ticket', () => {
@@ -74,13 +77,10 @@ describe('megaplan: skip-count guard', () => {
             unregistered.push(`${file}:${i + 1} → ${ticket ?? 'no ticket'}`);
         });
     }
-    expect(
-      unregistered,
-      'megaplan .skip without a registered MEGAPLAN- ticket',
-    ).toEqual([]);
+    expect(unregistered, 'megaplan .skip without a registered MEGAPLAN- ticket').toEqual([]);
     expect(
       total,
-      `megaplan skip count grew past the ${REGISTERED_SKIP_TICKETS.size} registered tickets`,
+      `megaplan skip count grew past the ${REGISTERED_SKIP_TICKETS.size} registered tickets`
     ).toBeLessThanOrEqual(REGISTERED_SKIP_TICKETS.size);
   });
 });

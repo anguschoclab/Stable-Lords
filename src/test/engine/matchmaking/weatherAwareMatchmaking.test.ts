@@ -12,7 +12,9 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { SeededRNGService } from '@/utils/random';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival,
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
   makeGameState,
 } from '@/test/_fixtures/factories';
 

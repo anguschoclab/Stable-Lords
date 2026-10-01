@@ -152,8 +152,6 @@ describe('SystemPass — seasonal churn wiring', () => {
     const impact = runSystemPass(churnState([bankrupt]));
 
     const items = impact.newsletterItems ?? [];
-    expect(
-      items.some((n) => (n.items ?? []).some((i) => i.includes('COLLAPSE')))
-    ).toBe(true);
+    expect(items.some((n) => (n.items ?? []).some((i) => i.includes('COLLAPSE')))).toBe(true);
   });
 });

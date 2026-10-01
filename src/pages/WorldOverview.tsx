@@ -11,7 +11,6 @@ import { RivalIntelligence } from '@/components/world/RivalIntelligence';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { useWorldOverview } from './worldOverview/useWorldOverview';
 
-
 /** Tab trigger row — shared chrome for Stables / Warriors / Scouting. */
 function OverviewTab({
   value,
@@ -85,11 +84,7 @@ function OverviewTabs({
             count={stableBookmarkedCount}
           />
         </SectionLabel>
-        <StableRankings
-          rows={filteredStableRows}
-          sort={stableSort}
-          onSort={toggleStableSort}
-        />
+        <StableRankings rows={filteredStableRows} sort={stableSort} onSort={toggleStableSort} />
       </TabsContent>
 
       <TabsContent value="warriors" className="space-y-6">
@@ -111,10 +106,7 @@ function OverviewTabs({
         <SectionLabel label="Rival Stables" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <RivalIntelligence
-              rivals={state.rivals || []}
-              arenaChampions={state.arenaChampions}
-            />
+            <RivalIntelligence rivals={state.rivals || []} arenaChampions={state.arenaChampions} />
           </div>
           <ReputationQuadrant />
         </div>
@@ -148,7 +140,9 @@ export default function WorldOverview() {
             <span>Lords Connected: {totalStables}</span>
             <div className="h-4 w-px bg-border/40" />
             {syncing ? (
-              <span className="text-primary italic animate-pulse motion-reduce:animate-none">Loading...</span>
+              <span className="text-primary italic animate-pulse motion-reduce:animate-none">
+                Loading...
+              </span>
             ) : (
               <span className="text-primary">Arena Data Live</span>
             )}

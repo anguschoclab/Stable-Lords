@@ -178,44 +178,44 @@ export const GameStateSchema = z
     ftueComplete: z.boolean(),
     ftueStep: z.number().optional(),
     coachDismissed: z.array(z.string()),
-  houseRules: z
-    .object({
-      deathRateMult: z.number().min(0).max(1),
-      severeInjuryInsteadOfDeath: z.boolean(),
-    })
-    .optional(),
-  contentPacks: z
-    .array(
-      z.object({
-        id: z.string().min(1),
-        name: z.string().min(1),
-        arenaLore: z
-          .array(
-            z.object({
-              id: z.string().min(1),
-              arenaId: z.string().min(1),
-              type: z.enum([
-                'historical_battle',
-                'famous_death',
-                'architectural_quirk',
-                'hazard',
-              ]),
-              title: z.string().min(1),
-              narrative: z.string().min(1),
-            })
-          )
-          .optional(),
-        recruitQuotes: z.record(z.string(), z.string()).optional(),
+    houseRules: z
+      .object({
+        deathRateMult: z.number().min(0).max(1),
+        severeInjuryInsteadOfDeath: z.boolean(),
       })
-    )
-    .optional(),
-  lifetimeStats: z
-    .object({
-      bouts: z.number().int().nonnegative(),
-      kills: z.number().int().nonnegative(),
-      retirements: z.number().int().nonnegative(),
-    })
-    .optional(),
+      .optional(),
+    contentPacks: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          name: z.string().min(1),
+          arenaLore: z
+            .array(
+              z.object({
+                id: z.string().min(1),
+                arenaId: z.string().min(1),
+                type: z.enum([
+                  'historical_battle',
+                  'famous_death',
+                  'architectural_quirk',
+                  'hazard',
+                ]),
+                title: z.string().min(1),
+                narrative: z.string().min(1),
+              })
+            )
+            .optional(),
+          recruitQuotes: z.record(z.string(), z.string()).optional(),
+        })
+      )
+      .optional(),
+    lifetimeStats: z
+      .object({
+        bouts: z.number().int().nonnegative(),
+        kills: z.number().int().nonnegative(),
+        retirements: z.number().int().nonnegative(),
+      })
+      .optional(),
     player: OwnerSchema,
     fame: z.number(),
     popularity: z.number(),
@@ -241,6 +241,8 @@ export const GameStateSchema = z
     trainingAssignments: z.array(TrainingAssignmentSchema),
     seasonalGrowth: z.array(SeasonalGrowthSchema),
     rivals: z.array(RivalStableDataSchema),
+    legacyFounderQueue: z.array(WarriorSchema).default([]),
+    freeAgents: z.array(z.any()).default([]), // PoolWarrior - using any
     scoutReports: z.array(ScoutReportDataSchema),
     restStates: z.array(RestStateSchema),
     rivalries: z.array(RivalrySchema),

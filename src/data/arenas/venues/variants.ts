@@ -1,8 +1,6 @@
 // Split from data/arenas.ts — venue data
 import type { ArenaConfig } from '@/types/shared.types';
 
-
-
 // ─── New Arena Variations ────────────────────────────────────────────────────
 
 // Outdoor, uneven, ruins — ancient arena with treacherous footing
@@ -19,8 +17,6 @@ export const SUNDERED_COLISEUM: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 // Indoor, water, cramped, uneven — flooded sacred site
 export const SUNKEN_TEMPLE: ArenaConfig = {
   id: 'sunken_temple',
@@ -34,8 +30,6 @@ export const SUNKEN_TEMPLE: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: -2 },
   startingZone: 'Center',
 };
-
-
 
 // Indoor, cramped, magical — crystal chamber with magical resonance
 export const CRYSTAL_CAVERN: ArenaConfig = {
@@ -51,8 +45,6 @@ export const CRYSTAL_CAVERN: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 // Outdoor, open, uneven, living — shifting forest floor
 export const WHISPERING_GROVE: ArenaConfig = {
   id: 'whispering_grove',
@@ -66,8 +58,6 @@ export const WHISPERING_GROVE: ArenaConfig = {
   surfaceMod: { initiativeMod: -1, enduranceMult: 1.0, riposteMod: 1 },
   startingZone: 'Center',
 };
-
-
 
 // Indoor, cramped, elevated, cursed — built over mass graves
 export const CHARNEL_PITS: ArenaConfig = {
@@ -83,8 +73,6 @@ export const CHARNEL_PITS: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 // Outdoor, uneven, living, cursed — carnivorous flora
 export const FLESH_GARDENS: ArenaConfig = {
   id: 'flesh_gardens',
@@ -98,8 +86,6 @@ export const FLESH_GARDENS: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: 0 },
   startingZone: 'Center',
 };
-
-
 
 /**
  * Historical events, famous deaths, and architectural quirks for arenas.
@@ -119,8 +105,6 @@ export const GUTTER_PIT: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 // Outdoor, elevated, open — stormy terrace
 export const STORMTOP_TERRACE: ArenaConfig = {
   id: 'stormtop_terrace',
@@ -135,8 +119,6 @@ export const STORMTOP_TERRACE: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const GLACIAL_RIFT: ArenaConfig = {
   id: 'glacial_rift',
   name: 'The Glacial Rift',
@@ -148,8 +130,6 @@ export const GLACIAL_RIFT: ArenaConfig = {
   surfaceMod: { initiativeMod: -1, enduranceMult: 1.1, riposteMod: 1 },
   startingZone: 'Center',
 };
-
-
 
 export const SKY_PLATFORM: ArenaConfig = {
   id: 'sky_platform',
@@ -164,8 +144,6 @@ export const SKY_PLATFORM: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const MISTY_VALLEY: ArenaConfig = {
   id: 'misty_valley',
   name: 'The Misty Valley',
@@ -179,8 +157,6 @@ export const MISTY_VALLEY: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const THE_MEAT_GRINDER: ArenaConfig = {
   id: 'the_meat_grinder',
   name: 'The Meat Grinder',
@@ -192,8 +168,6 @@ export const THE_MEAT_GRINDER: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: 1 },
   startingZone: 'Center',
 };
-
-
 
 export const JUNGLE_RUINS: ArenaConfig = {
   id: 'jungle_ruins',
@@ -210,8 +184,6 @@ export const JUNGLE_RUINS: ArenaConfig = {
   },
 };
 
-
-
 export const THE_ABYSSAL_PIT: ArenaConfig = {
   id: 'the_abyssal_pit',
   name: 'The Abyssal Pit',
@@ -224,8 +196,6 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const THE_SUNKEN_VAULT: ArenaConfig = {
   id: 'the_sunken_vault',
   name: 'The Sunken Vault',
@@ -236,8 +206,6 @@ export const THE_SUNKEN_VAULT: ArenaConfig = {
   zoneDef: { Edge: -1, Corner: -3 },
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: 1 },
 };
-
-
 
 export const IRON_FORGE: ArenaConfig = {
   id: 'iron_forge',

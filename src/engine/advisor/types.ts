@@ -50,10 +50,7 @@ export interface StableEvalContext {
  * Fight recommendation action directive.
  */
 export type FightRecommendationAction =
-  | 'ACCEPT_OFFER'
-  | 'REST_RECOMMENDED'
-  | 'NO_VIABLE_OFFERS'
-  | 'BLOCKED_BY_INJURY';
+  'ACCEPT_OFFER' | 'REST_RECOMMENDED' | 'NO_VIABLE_OFFERS' | 'BLOCKED_BY_INJURY';
 
 /**
  * Danger assessment tier for combat.

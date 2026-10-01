@@ -41,9 +41,7 @@ function FameChip({ fame }: { fame: number }) {
   const hot = fame > FAME_STAR_THRESHOLD;
   return (
     <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none">
-      <Star
-        className={cn('h-3 w-3', hot ? 'text-arena-gold' : 'text-muted-foreground/60')}
-      />
+      <Star className={cn('h-3 w-3', hot ? 'text-arena-gold' : 'text-muted-foreground/60')} />
       <span
         className={cn(
           'text-[10px] font-mono font-black',
@@ -87,7 +85,12 @@ function RecordStats({ winRate, kills }: { winRate: number; kills: number }) {
 /**
  *
  */
-export function RosterWarriorRow({ warrior, rankIndex, onClick, contenderBadge }: RosterWarriorRowProps) {
+export function RosterWarriorRow({
+  warrior,
+  rankIndex,
+  onClick,
+  contenderBadge,
+}: RosterWarriorRowProps) {
   const fights = warrior.career.wins + warrior.career.losses;
   const winRate = fights > 0 ? Math.round((warrior.career.wins / fights) * 100) : 0;
   const injuryCount = (warrior.injuries ?? []).length;

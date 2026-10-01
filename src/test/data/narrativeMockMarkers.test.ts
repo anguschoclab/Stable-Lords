@@ -1,15 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
 
-const PLACEHOLDER_MARKERS = [
-  '(Mock',
-  'TODO',
-  'FIXME',
-  'PLACEHOLDER',
-  'LOREM',
-  'XXX',
-  'TBD',
-];
+const PLACEHOLDER_MARKERS = ['(Mock', 'TODO', 'FIXME', 'PLACEHOLDER', 'LOREM', 'XXX', 'TBD'];
 
 function collectAllStrings(obj: unknown, path: string = ''): { text: string; path: string }[] {
   const out: { text: string; path: string }[] = [];
@@ -40,7 +32,10 @@ describe('narrative content has no mock/placeholder markers (N1)', () => {
       }
     }
 
-    expect(offenders, `Found ${offenders.length} strings with placeholder markers:\n${offenders.map(o => `  ${o.path}: "${o.text}" (marker: ${o.marker})`).join('\n')}`).toEqual([]);
+    expect(
+      offenders,
+      `Found ${offenders.length} strings with placeholder markers:\n${offenders.map((o) => `  ${o.path}: "${o.text}" (marker: ${o.marker})`).join('\n')}`
+    ).toEqual([]);
   });
 
   it('combatPassives has no (Mock N) entries', () => {
@@ -61,7 +56,7 @@ describe('narrative content has no mock/placeholder markers (N1)', () => {
   it('canonical %A-style tokens are NOT flagged as placeholders', () => {
     // This test passes NOW — it guards against the validator over-correcting.
     const canonicalTokenStrings = [
-      '%A drives their %W into %D\'s %BP',
+      "%A drives their %W into %D's %BP",
       '%H heals the wound',
       'The %W bites deep',
     ];

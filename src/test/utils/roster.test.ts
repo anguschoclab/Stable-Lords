@@ -155,7 +155,6 @@ describe('filterActive', () => {
   });
 });
 
-
 describe('filterHealthy', () => {
   it('filters to active warriors with no injuries', () => {
     const roster = [

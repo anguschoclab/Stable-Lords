@@ -2,7 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import type { BoutOffer, Promoter, Warrior } from '@/types/state.types';
 import type { WarriorId, PromoterId, BoutOfferId } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeBoutOffer as fixtureBoutOffer,
+} from '@/test/_fixtures/factories';
 
 const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
   fixtureBoutOffer({

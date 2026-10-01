@@ -98,7 +98,8 @@ function triggerScreenShake(intensity: number) {
 
   // Blood-red flash overlay
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 pointer-events-none z-[9999] animate-blood-flash motion-reduce:animate-none';
+  overlay.className =
+    'fixed inset-0 pointer-events-none z-[9999] animate-blood-flash motion-reduce:animate-none';
   overlay.style.backgroundColor =
     intensity >= 5 ? 'rgba(var(--blood-bright-rgb), 0.2)' : 'rgba(var(--blood-bright-rgb), 0.12)';
   document.body.appendChild(overlay);
@@ -211,9 +212,7 @@ function fireEscalation(r: RivalrySnapshot) {
 
   toast({
     title:
-      r.intensity >= 5
-        ? `💀 BLOOD FEUD: ${r.stableName}`
-        : `🔥 Rivalry Escalated: ${r.stableName}`,
+      r.intensity >= 5 ? `💀 BLOOD FEUD: ${r.stableName}` : `🔥 Rivalry Escalated: ${r.stableName}`,
     description:
       r.intensity >= 5
         ? `The hatred between your stables has reached its peak. There will be no mercy.`

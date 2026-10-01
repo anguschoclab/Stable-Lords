@@ -60,10 +60,8 @@ interface CtaRegistryState {
 /** Registry of live page-provided CTA actions, keyed by registry route key. */
 export const useCtaRegistry = create<CtaRegistryState>((set) => ({
   actions: {},
-  register: (routeKey, action) =>
-    set((s) => ({ actions: { ...s.actions, [routeKey]: action } })),
-  unregister: (routeKey) =>
-    set((s) => ({ actions: { ...s.actions, [routeKey]: undefined } })),
+  register: (routeKey, action) => set((s) => ({ actions: { ...s.actions, [routeKey]: action } })),
+  unregister: (routeKey) => set((s) => ({ actions: { ...s.actions, [routeKey]: undefined } })),
 }));
 
 /** Resolves the registry route key for a pathname (used for action lookup). */

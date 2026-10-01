@@ -11,11 +11,7 @@ const srcDir = 'src';
 const e2eDir = 'e2e';
 
 // Files/dirs exempt from display-text rules (debug tools, engine internals)
-const EXEMPT = [
-  'debug/',
-  '.test.',
-  'routeTree.gen.ts',
-];
+const EXEMPT = ['debug/', '.test.', 'routeTree.gen.ts'];
 
 function normalizePath(p: string): string {
   return p.replace(/\\/g, '/');
@@ -82,8 +78,18 @@ function stripInterpolations(s: string): string {
 // `id`, `key`, `type`, `error`, `text`, `header`, `footer` that frequently
 // hold data/identifiers rather than display copy. Extend as needed.
 const DISPLAY_PROPS = [
-  'label', 'title', 'placeholder', 'aria-label', 'description', 'alt',
-  'subtitle', 'heading', 'caption', 'tooltip', 'message', 'helperText',
+  'label',
+  'title',
+  'placeholder',
+  'aria-label',
+  'description',
+  'alt',
+  'subtitle',
+  'heading',
+  'caption',
+  'tooltip',
+  'message',
+  'helperText',
   'errorMessage',
 ];
 // NOTE: the `g` flag is REQUIRED — without it, RegExp.exec() in a while
@@ -91,7 +97,7 @@ const DISPLAY_PROPS = [
 // test suite.
 const DISPLAY_PROP_RE = new RegExp(
   `(?:^|\\s)(${DISPLAY_PROPS.join('|')})\\s*=\\s*\\{?\\s*(['"\`])([^'"\`]*)\\2`,
-  'g',
+  'g'
 );
 
 // Narrower skip for the display-string checks: does NOT reuse isCodeLine

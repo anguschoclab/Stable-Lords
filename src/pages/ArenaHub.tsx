@@ -119,7 +119,12 @@ function MoodStat({
             <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">
               {label}
             </div>
-            <div className={cn('text-lg font-display font-black tracking-tighter leading-none', highlight)}>
+            <div
+              className={cn(
+                'text-lg font-display font-black tracking-tighter leading-none',
+                highlight
+              )}
+            >
               {value}
             </div>
           </div>
@@ -142,12 +147,8 @@ function LeaderboardHead() {
         <TableHead className="w-12 pl-6 text-[9px] font-black uppercase tracking-widest">
           RANK
         </TableHead>
-        <TableHead className="text-[9px] font-black uppercase tracking-widest">
-          WARRIOR
-        </TableHead>
-        <TableHead className="text-[9px] font-black uppercase tracking-widest">
-          STABLE
-        </TableHead>
+        <TableHead className="text-[9px] font-black uppercase tracking-widest">WARRIOR</TableHead>
+        <TableHead className="text-[9px] font-black uppercase tracking-widest">STABLE</TableHead>
         <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
           W / L / K
         </TableHead>
@@ -165,7 +166,17 @@ function LeaderboardRow({
   rank,
   championIds,
 }: {
-  entry: { warrior: { id: string; name: string; epithet?: string; career: { wins: number; losses: number; kills: number }; fame: number }; isPlayer: boolean; stableName: string };
+  entry: {
+    warrior: {
+      id: string;
+      name: string;
+      epithet?: string;
+      career: { wins: number; losses: number; kills: number };
+      fame: number;
+    };
+    isPlayer: boolean;
+    stableName: string;
+  };
   rank: number;
   championIds: Set<string>;
 }) {
@@ -174,9 +185,7 @@ function LeaderboardRow({
     <TableRow
       className={cn(
         'h-12 border-white/5 transition-colors motion-reduce:transition-none',
-        entry.isPlayer
-          ? 'bg-primary/[0.03] border-l-2 border-l-primary'
-          : 'hover:bg-white/[0.02]'
+        entry.isPlayer ? 'bg-primary/[0.03] border-l-2 border-l-primary' : 'hover:bg-white/[0.02]'
       )}
     >
       <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">
@@ -356,11 +365,7 @@ function ConditionsColumn({
       <CircuitCrownsWidget />
 
       <SectionDivider label="Arena Analytics" />
-      <ArenaAnalyticsSurface
-        renown={renown}
-        lifetimeKills={lifetimeKills}
-        winRate={winRate}
-      />
+      <ArenaAnalyticsSurface renown={renown} lifetimeKills={lifetimeKills} winRate={winRate} />
     </div>
   );
 }
@@ -391,9 +396,7 @@ export default function ArenaHub() {
   useRegisterCtaAction('/stable/arena', {
     enabled: matchCard.length > 0,
     run: () =>
-      document
-        .getElementById('fight-card')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+      document.getElementById('fight-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
   });
 
   return (
@@ -418,11 +421,7 @@ export default function ArenaHub() {
       <ArenaLeaderboard />
 
       {/* Arena Status Strip */}
-      <ArenaStatusStrip
-        gameState={gameState}
-        roster={roster}
-        lifetimeKills={lifetimeKills}
-      />
+      <ArenaStatusStrip gameState={gameState} roster={roster} lifetimeKills={lifetimeKills} />
 
       {/* ── Fight Card Preview ── */}
       <FightCardPreview matchCard={matchCard} crowdMood={gameState.crowdMood} />

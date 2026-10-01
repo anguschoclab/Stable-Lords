@@ -199,7 +199,7 @@ function collectDangerSignals(input: {
 function assessOffer(offer: BoutOffer, s: OfferScoreContext) {
   const { state, warrior, ctx } = s;
   const opponentId = offer.warriorIds.find((id) => id !== warrior.id);
-  const opponent = opponentId ? findWarriorById(state, opponentId) ?? null : null;
+  const opponent = opponentId ? (findWarriorById(state, opponentId) ?? null) : null;
   const styleEdge = opponent ? getMatchupBonus(warrior.style, opponent.style) : 0;
   const weatherReason = acceptanceWeatherBlock(warrior, state.weather ?? 'Clear');
   const promoter = state.promoters?.[offer.promoterId];
@@ -361,12 +361,17 @@ export function evaluateBoutOffers(
   const evalTreasury = ctx?.treasury ?? state.treasury;
   const projectedWeeklyCost =
     Math.max(1, ctx?.rosterSize ?? state.roster?.length ?? 1) * TRAINING_COST;
-  const treasuryDesperate =
-    evalTreasury !== undefined && evalTreasury < projectedWeeklyCost;
+  const treasuryDesperate = evalTreasury !== undefined && evalTreasury < projectedWeeklyCost;
   const pursePriority = treasuryDesperate || campaignFocus === 'PURSE_HUNTER';
 
   const s: OfferScoreContext = {
-    state, warrior, campaignFocus, ctx, evalTreasury, treasuryDesperate, pursePriority,
+    state,
+    warrior,
+    campaignFocus,
+    ctx,
+    evalTreasury,
+    treasuryDesperate,
+    pursePriority,
   };
   const scored: ScoredOffer[] = candidateOffers.map((offer) => scoreOffer(offer, s));
 

@@ -58,9 +58,8 @@ describe('TOURNAMENT_CAMPAIGN', () => {
   });
 
   it('crisis stables decline tournament conscription (G13 decline hook)', async () => {
-    const { committeeSelection } = await import(
-      '@/engine/matchmaking/tournamentSelection/committee'
-    );
+    const { committeeSelection } =
+      await import('@/engine/matchmaking/tournamentSelection/committee');
     const crisis = makeRival({
       roster: contenders().map((w, i) => ({ ...w, id: `crisis-${i}` as never })),
       strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 },
@@ -70,7 +69,8 @@ describe('TOURNAMENT_CAMPAIGN', () => {
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4 },
     });
     const state = makeGameState({
-      rivals: [crisis, eager],});
+      rivals: [crisis, eager],
+    });
     // Give every warrior a ranking so they're eligible
     for (const r of state.rivals) {
       for (const w of r.roster) {

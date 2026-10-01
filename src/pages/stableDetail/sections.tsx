@@ -172,11 +172,7 @@ export function StableOverviewTab({
                   variant="outline"
                   className="h-10 px-4 rounded-none border-white/5 bg-white/[0.02] text-muted-foreground/40 font-black uppercase text-[10px] tracking-widest"
                 >
-                  <WarriorLink
-                    name={w.name}
-                    id={w.id}
-                    className="mr-2 hover:text-destructive"
-                  >
+                  <WarriorLink name={w.name} id={w.id} className="mr-2 hover:text-destructive">
                     {warriorDisplayName(w)}
                   </WarriorLink>
                   <span className="opacity-40">
@@ -223,9 +219,7 @@ function OverviewStatTiles({
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
               {stat.label}
             </div>
-            <div className={cn('text-2xl font-display font-black', stat.color)}>
-              {stat.value}
-            </div>
+            <div className={cn('text-2xl font-display font-black', stat.color)}>{stat.value}</div>
           </div>
         </Surface>
       ))}

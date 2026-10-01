@@ -16,10 +16,7 @@ import {
   buildUniversalConditions,
 } from '@/engine/ai/plan/phasePlanner';
 import { getPersonalityAdaptations } from '@/engine/ai/plan/personalityEngine';
-import {
-  getBestOffensiveTactic,
-  getBestDefensiveTactic,
-} from '@/engine/ai/plan/tacticAdvisor';
+import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import {
   getAITarget,
@@ -145,9 +142,20 @@ function computePlanModifiers(
   }
 
   return {
-    intentOE, intentAL, intentKD, grudgeKD, grudgeAL,
-    intelOE, intelAL, intelKD, intelHotOpener, intelFragile,
-    rematchOE, rematchAL, rematchKD, changeTactics,
+    intentOE,
+    intentAL,
+    intentKD,
+    grudgeKD,
+    grudgeAL,
+    intelOE,
+    intelAL,
+    intelKD,
+    intelHotOpener,
+    intelFragile,
+    rematchOE,
+    rematchAL,
+    rematchKD,
+    changeTactics,
   };
 }
 
@@ -224,7 +232,11 @@ function applyStrategicLayer(
   // The universal ENDURANCE_BELOW safety is always retained.
   const wt = w.attributes?.WT ?? 10;
   const conditionCap =
-    wt >= 7 ? allConditions.length : wt >= 4 ? universalConditions.length + 1 : universalConditions.length;
+    wt >= 7
+      ? allConditions.length
+      : wt >= 4
+        ? universalConditions.length + 1
+        : universalConditions.length;
   plan.conditions = allConditions.slice(0, conditionCap);
 }
 
@@ -238,7 +250,8 @@ export function aiPlanForWarrior(
   grudgeIntensity: number = 0,
   dossier?: OpponentDossier,
   now?: number
-): FightPlan {  const base = defaultPlanForWarrior(w);
+): FightPlan {
+  const base = defaultPlanForWarrior(w);
   const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
   const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
   const mods = computePlanModifiers(intent, grudgeIntensity, dossier, now);
@@ -252,7 +265,13 @@ export function aiPlanForWarrior(
   const plan: FightPlan = {
     ...base,
     OE: clamp(
-      (base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + mods.intentOE + mods.rematchOE + mods.intelOE,
+      (base.OE ?? 5) +
+        (pMod.OE ?? 0) +
+        (phMod.OE ?? 0) +
+        matchup.oe +
+        mods.intentOE +
+        mods.rematchOE +
+        mods.intelOE,
       1,
       10
     ),
@@ -300,7 +319,6 @@ export function aiPlanForWarrior(
 
   return plan;
 }
-
 
 // Re-export for backward compatibility
 export { getStyleMatchupMods } from '@/engine/ai/matchup/styleMatcher';

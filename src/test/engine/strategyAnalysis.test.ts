@@ -3,10 +3,7 @@ import { computeStrategyScore } from '@/engine/strategy/strategyAnalysis';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import {
-  makePlan as fixturePlan,
-  makeWarrior as fixtureWarrior,
-} from '@/test/_fixtures/factories';
+import { makePlan as fixturePlan, makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 const createPlan = (style: FightingStyle, overrides: Partial<FightPlan> = {}): FightPlan =>
   fixturePlan({ style, OE: 5, AL: 5, ...overrides });

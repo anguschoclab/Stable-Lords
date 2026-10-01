@@ -37,9 +37,7 @@ interface VirtualizedRowProps {
 function VirtualizedRow({ vi, filtered, isFiltered }: VirtualizedRowProps) {
   const row = filtered[vi.index];
   if (!row) return null;
-  return (
-    <WarriorLeaderboardRow row={row} index={vi.index} isFiltered={isFiltered} />
-  );
+  return <WarriorLeaderboardRow row={row} index={vi.index} isFiltered={isFiltered} />;
 }
 
 /**
@@ -147,12 +145,7 @@ function LeaderboardTable({
               </tr>
             )}
             {items.map((vi) => (
-              <VirtualizedRow
-                key={vi.key}
-                vi={vi}
-                filtered={filtered}
-                isFiltered={isFiltered}
-              />
+              <VirtualizedRow key={vi.key} vi={vi} filtered={filtered} isFiltered={isFiltered} />
             ))}
             {items[items.length - 1] && (
               <tr

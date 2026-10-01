@@ -321,7 +321,9 @@ export function resolveRound(
     updatedState,
     roundResults:
       isComplete && championWarrior
-        ? [`🏆 CHAMPION: ${warriorDisplayName(championWarrior)} has won the ${resolvedTournament.name}!`]
+        ? [
+            `🏆 CHAMPION: ${warriorDisplayName(championWarrior)} has won the ${resolvedTournament.name}!`,
+          ]
         : [],
     isComplete,
     updatedTournament,
@@ -351,8 +353,7 @@ function resolveChampion(
         : finalsBout.warriorIdD
       : undefined;
   return championId
-    ? (findWarriorById(state, championId, tournament) ??
-        winners.find((w) => w.id === championId))
+    ? (findWarriorById(state, championId, tournament) ?? winners.find((w) => w.id === championId))
     : undefined;
 }
 

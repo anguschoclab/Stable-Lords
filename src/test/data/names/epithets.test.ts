@@ -29,9 +29,7 @@ describe('epithetFor', () => {
   });
 
   it('varies across warriors', () => {
-    const seen = new Set(
-      Array.from({ length: 40 }, (_, i) => epithetFor('kill_5', `w${i}`))
-    );
+    const seen = new Set(Array.from({ length: 40 }, (_, i) => epithetFor('kill_5', `w${i}`)));
     expect(seen.size).toBeGreaterThan(1);
   });
 });

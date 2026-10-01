@@ -18,7 +18,9 @@ import '@/test/_setup/setup';
  *   - Routed at `/world/style-archives` (or lore route) + nav-linked.
  */
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
+  ),
   useParams: () => ({}),
   useNavigate: () => vi.fn(),
 }));
@@ -30,7 +32,8 @@ describe('Style Archives browser (MEGAPLAN-G1)', () => {
     const { FightingStyle, STYLE_DISPLAY_NAMES } = await import('@/types/shared.types');
     // Glob so the spec compiles before the page exists.
     const files = import.meta.glob('/src/pages/StyleArchives.*');
-    const loader = Object.values(files)[0] as (() => Promise<Record<string, React.ComponentType>>) | undefined;
+    const loader = Object.values(files)[0] as
+      (() => Promise<Record<string, React.ComponentType>>) | undefined;
     const mod = loader ? await loader() : null;
     expect(mod, 'StyleArchives page missing').not.toBeNull();
     const Component = (mod!.default ?? mod!.StyleArchives) as React.ComponentType;

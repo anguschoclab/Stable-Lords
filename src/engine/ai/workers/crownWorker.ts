@@ -24,15 +24,9 @@ import type {
 import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { isActive } from '@/engine/warrior/warriorStatus';
-import {
-  isReigningChampion,
-  buildContenderIndex,
-} from '@/engine/championship/arenaChampionship';
+import { isReigningChampion, buildContenderIndex } from '@/engine/championship/arenaChampionship';
 import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
-import {
-  weeksUntilChampionsTournament,
-  boutOfferAbsoluteWeek,
-} from '@/engine/core/absoluteWeek';
+import { weeksUntilChampionsTournament, boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { logAgentAction, computePlayerThreatLevel } from '../agentCore';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import type { ArenaTitle } from '@/types/state/championship';
@@ -167,7 +161,11 @@ export function assessCrownOpportunity(
   // dominant stable than pick off a weaker rival crown of equal difficulty.
   const playerThreat = computePlayerThreatLevel(state);
   const dethroneBonus =
-    playerThreat === 'Dominant' ? DETHRONE_BONUS.Dominant : playerThreat === 'Moderate' ? DETHRONE_BONUS.Moderate : 0;
+    playerThreat === 'Dominant'
+      ? DETHRONE_BONUS.Dominant
+      : playerThreat === 'Moderate'
+        ? DETHRONE_BONUS.Moderate
+        : 0;
   const playerWarriorIds = new Set((state.roster ?? []).map((w) => w.id));
 
   let best: CrownCandidate | undefined;
@@ -189,9 +187,7 @@ export function assessCrownOpportunity(
       const rank = perception?.contenderIndexByArena.get(arenaId)?.indexOf(w.id);
       const rankBonus = rank != null && rank >= 0 ? (rank === 0 ? 2 : rank <= 2 ? 1 : 0) : 0;
 
-      const champion = title.champion
-        ? warriorById.get(title.champion.warriorId)
-        : undefined;
+      const champion = title.champion ? warriorById.get(title.champion.warriorId) : undefined;
       const { score, reason } = scoreThrone(w, arenaId, title, {
         eligible,
         rankBonus,
@@ -266,8 +262,7 @@ function markCrownsForRelinquish(
     const champ = updatedRival.roster.find((w) => w.id === champId);
     if (!champ) continue;
     const declining =
-      (champ.age ?? 0) >= RELINQUISH_AGE &&
-      (seasonRecord?.losses ?? 0) > (seasonRecord?.wins ?? 0);
+      (champ.age ?? 0) >= RELINQUISH_AGE && (seasonRecord?.losses ?? 0) > (seasonRecord?.wins ?? 0);
     const permanentlyHurt = (champ.injuries ?? []).some((i) => i.permanent);
     if ((declining || permanentlyHurt) && memory.pendingRelinquish == null) {
       memory.pendingRelinquish = arenaId;

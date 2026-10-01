@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import { WORLD_RIVAL_FLOOR, WORLD_RIVAL_HARD_CAP } from '@/constants/world';
 
 describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
   it('runs a 52-week high-stakes career simulation', async () => {
@@ -27,17 +28,21 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
 
     if (process.env.DEBUG_SIM) {
       console.log(`--- SIMULATION AUDIT RESULTS (WEEK 52) ---`);
-      console.log(`Final Rival Stables: ${finalRivalCount} (Target: 30-45)`);
+      console.log(`Final Rival Stables: ${finalRivalCount} (Floor: ${WORLD_RIVAL_FLOOR})`);
       console.log(`Total Deaths: ${totalDeaths}`);
-      console.log(`First-year deaths / starting population: ${(annualDeathRate * 100).toFixed(2)}%`);
+      console.log(
+        `First-year deaths / starting population: ${(annualDeathRate * 100).toFixed(2)}%`
+      );
       console.log(`Championships Run: ${state.tournaments?.length || 0}`);
     }
 
     // --- Assertions ---
 
-    // 1. World Density: Stable count should stay in the fluid 30-45 range
-    expect(finalRivalCount).toBeGreaterThanOrEqual(30);
-    expect(finalRivalCount).toBeLessThanOrEqual(45);
+    // 1. World Density: the living-world floor is refilled each churn, so the
+    //    count never drops below WORLD_RIVAL_FLOOR and never exceeds the hard
+    //    cap. Organic licensing/legacy founders push a year-old world above it.
+    expect(finalRivalCount).toBeGreaterThanOrEqual(WORLD_RIVAL_FLOOR);
+    expect(finalRivalCount).toBeLessThanOrEqual(WORLD_RIVAL_HARD_CAP);
 
     // 2. Mortality: first-year deaths as a fraction of the starting population.
     // This follows from the per-bout kill rate: warriors average ~0.4 bouts a

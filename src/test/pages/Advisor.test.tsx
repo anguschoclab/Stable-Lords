@@ -55,9 +55,7 @@ describe('AdvisorPage', () => {
 
   it('renders a solvency warning chip when the treasury cannot cover projected costs', () => {
     const fresh = createFreshState('test-seed-broke');
-    fresh.roster = [
-      makeWarrior('w9' as any, 'Cassian', FightingStyle.AimedBlow, baseAttrs),
-    ];
+    fresh.roster = [makeWarrior('w9' as any, 'Cassian', FightingStyle.AimedBlow, baseAttrs)];
     fresh.week = 5;
     fresh.absoluteWeek = 5;
     fresh.season = 'Spring';

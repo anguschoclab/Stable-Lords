@@ -94,11 +94,7 @@ describe('weaponStyles module', () => {
     });
 
     it('CRUSHING_PREFERRED_STYLES = [bashing, striking, wall-of-steel]', () => {
-      expect(CRUSHING_PREFERRED_STYLES).toEqual([
-        S.BashingAttack,
-        S.StrikingAttack,
-        S.WallOfSteel,
-      ]);
+      expect(CRUSHING_PREFERRED_STYLES).toEqual([S.BashingAttack, S.StrikingAttack, S.WallOfSteel]);
     });
   });
 
@@ -108,11 +104,7 @@ describe('weaponStyles module', () => {
     });
 
     it('SPEAR_RESTRICTED_STYLES = [bashing, slashing, wall-of-steel]', () => {
-      expect(SPEAR_RESTRICTED_STYLES).toEqual([
-        S.BashingAttack,
-        S.SlashingAttack,
-        S.WallOfSteel,
-      ]);
+      expect(SPEAR_RESTRICTED_STYLES).toEqual([S.BashingAttack, S.SlashingAttack, S.WallOfSteel]);
     });
 
     it('HEAVY_RESTRICTED_STYLES = [aimed-blow, lunging, parry-lunge, parry-riposte]', () => {

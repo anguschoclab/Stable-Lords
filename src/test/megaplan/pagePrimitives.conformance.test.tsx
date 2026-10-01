@@ -70,7 +70,10 @@ describe('page primitives conformance (MEGAPLAN-L2)', () => {
       .filter((f) => !EXEMPT.has(path.basename(f)))
       .filter((f) => {
         const src = readFileSync(f, 'utf8');
-        return !src.includes('data-bible-exempt') && !/from ['"]@\/components\/ui\/PageFrame['"]/.test(src);
+        return (
+          !src.includes('data-bible-exempt') &&
+          !/from ['"]@\/components\/ui\/PageFrame['"]/.test(src)
+        );
       })
       .map((f) => path.relative(PAGES_DIR, f));
     expect(missing, 'pages missing PageFrame — conform or mark data-bible-exempt').toEqual([]);
@@ -81,7 +84,10 @@ describe('page primitives conformance (MEGAPLAN-L2)', () => {
       .filter((f) => !EXEMPT.has(path.basename(f)))
       .filter((f) => {
         const src = readFileSync(f, 'utf8');
-        return !src.includes('data-bible-exempt') && !/from ['"]@\/components\/ui\/PageHeader['"]/.test(src);
+        return (
+          !src.includes('data-bible-exempt') &&
+          !/from ['"]@\/components\/ui\/PageHeader['"]/.test(src)
+        );
       })
       .map((f) => path.relative(PAGES_DIR, f));
     expect(missing).toEqual([]);

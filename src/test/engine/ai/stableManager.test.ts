@@ -244,7 +244,7 @@ describe('processAIStable', () => {
     }
   });
 
-  it('never inflates a warrior\'s max HP while recovering fatigue', () => {
+  it("never inflates a warrior's max HP while recovering fatigue", () => {
     // Regression: weekly recovery used to treat derivedStats.hp (the max-HP
     // stat, ~20–55) as a health percentage and add +20 per week up to 100,
     // so rival warriors fought with 2–3× the hit points of player warriors.

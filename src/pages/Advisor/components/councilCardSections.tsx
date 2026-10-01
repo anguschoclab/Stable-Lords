@@ -63,7 +63,10 @@ export function CouncilCardHeader({
         </div>
 
         {card.injuryStatus.isInjured && (
-          <Badge variant="destructive" className="text-[8px] font-black uppercase tracking-widest gap-1">
+          <Badge
+            variant="destructive"
+            className="text-[8px] font-black uppercase tracking-widest gap-1"
+          >
             <AlertTriangle className="h-2.5 w-2.5" />
             {card.injuryStatus.severities[0] ?? 'Injured'}
           </Badge>
@@ -107,14 +110,15 @@ export function CombatColumn({
           </Badge>
           {card.fightAdvice.matchupEdge !== undefined && card.fightAdvice.matchupEdge !== 0 && (
             <span className="text-[9px] font-mono text-primary font-bold">
-              {card.fightAdvice.matchupEdge > 0 ? `+${card.fightAdvice.matchupEdge}` : card.fightAdvice.matchupEdge} Edge
+              {card.fightAdvice.matchupEdge > 0
+                ? `+${card.fightAdvice.matchupEdge}`
+                : card.fightAdvice.matchupEdge}{' '}
+              Edge
             </span>
           )}
         </div>
 
-        <p className="text-[11px] font-bold text-foreground">
-          {card.fightAdvice.headline}
-        </p>
+        <p className="text-[11px] font-bold text-foreground">{card.fightAdvice.headline}</p>
 
         {card.fightAdvice.warnings.map((warn, i) => (
           <p key={i} className="text-[10px] text-destructive flex items-center gap-1.5 font-medium">
@@ -178,9 +182,7 @@ export function TrainingColumn({ card }: { card: WarriorAdvisorCard }) {
           )}
         </div>
 
-        <p className="text-[11px] font-bold text-foreground">
-          {card.trainingAdvice.headline}
-        </p>
+        <p className="text-[11px] font-bold text-foreground">{card.trainingAdvice.headline}</p>
 
         <p className="text-[10px] text-muted-foreground/80 leading-relaxed">
           {card.trainingAdvice.reasoning}
@@ -211,7 +213,10 @@ export function TacticsColumn({ card }: { card: WarriorAdvisorCard }) {
             OE {card.tacticsAdvice.suggestedOE} / AL {card.tacticsAdvice.suggestedAL}
           </Badge>
           {card.tacticsAdvice.fallbackCondition && (
-            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-white/10 text-muted-foreground/80">
+            <Badge
+              variant="outline"
+              className="text-[8px] font-black uppercase tracking-widest border-white/10 text-muted-foreground/80"
+            >
               {card.tacticsAdvice.fallbackCondition}
             </Badge>
           )}

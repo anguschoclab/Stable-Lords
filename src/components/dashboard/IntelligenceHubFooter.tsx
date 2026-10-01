@@ -11,7 +11,8 @@ export function IntelligenceHubFooter() {
         to="/world/chronicle"
         className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group motion-reduce:transition-none"
       >
-        Read All <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
+        Read All{' '}
+        <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
       </Link>
       <Link
         to="/world/scouting"

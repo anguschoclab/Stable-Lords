@@ -37,10 +37,18 @@ function walk(dir, out = []) {
 }
 
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
-const isTest = (r) => r.includes('/test/') || /\.(test|spec)\.tsx?$/.test(r) || r.includes('/_fixtures/') || r.includes('/_setup/');
+const isTest = (r) =>
+  r.includes('/test/') ||
+  /\.(test|spec)\.tsx?$/.test(r) ||
+  r.includes('/_fixtures/') ||
+  r.includes('/_setup/');
 
 function fnName(node) {
-  if (ts.isFunctionDeclaration(node) || ts.isMethodDeclaration(node) || ts.isMethodSignature?.(node))
+  if (
+    ts.isFunctionDeclaration(node) ||
+    ts.isMethodDeclaration(node) ||
+    ts.isMethodSignature?.(node)
+  )
     return node.name ? node.name.getText() : '<anonymous>';
   const p = node.parent;
   if (p) {
@@ -74,14 +82,21 @@ export function collectSizes() {
     files.push({ file: r, lines, test: isTest(r) });
     if (isTest(r)) continue;
 
-    const sf = ts.createSourceFile(r, text, ts.ScriptTarget.Latest, true, r.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    const sf = ts.createSourceFile(
+      r,
+      text,
+      ts.ScriptTarget.Latest,
+      true,
+      r.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+    );
     const visit = (node) => {
       for (const [pred, kind] of KINDS) {
         if (pred(node)) {
           const start = sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1;
           const end = sf.getLineAndCharacterOfPosition(node.getEnd()).line + 1;
           const len = end - start + 1;
-          if (len >= FN_LIMITS.report) functions.push({ file: r, name: fnName(node), kind, line: start, len });
+          if (len >= FN_LIMITS.report)
+            functions.push({ file: r, name: fnName(node), kind, line: start, len });
           break;
         }
       }
@@ -108,17 +123,27 @@ export function collectSizes() {
 }
 
 function main() {
-  const { summary, files: { source: srcFiles, test: testFiles }, functions } = collectSizes();
+  const {
+    summary,
+    files: { source: srcFiles, test: testFiles },
+    functions,
+  } = collectSizes();
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
-  fs.writeFileSync(OUT_FILE, JSON.stringify({ summary, files: { source: srcFiles, test: testFiles }, functions }, null, 2));
+  fs.writeFileSync(
+    OUT_FILE,
+    JSON.stringify({ summary, files: { source: srcFiles, test: testFiles }, functions }, null, 2)
+  );
 
   console.log(`source: ${summary.totalSourceFiles} files / ${summary.totalSourceLoc} loc`);
   console.log(`test:   ${summary.totalTestFiles} files / ${summary.totalTestLoc} loc`);
-  console.log(`functions >80: ${summary.functionsOver80}  >120: ${summary.functionsOver120}  >200: ${summary.functionsOver200}`);
+  console.log(
+    `functions >80: ${summary.functionsOver80}  >120: ${summary.functionsOver120}  >200: ${summary.functionsOver200}`
+  );
   console.log(`files >800 lines: ${summary.filesOver800.length}`);
   console.log('\nTop 25 functions:');
-  for (const f of functions.slice(0, 25)) console.log(`  ${String(f.len).padStart(4)}  ${f.file}:${f.line}  ${f.name} (${f.kind})`);
+  for (const f of functions.slice(0, 25))
+    console.log(`  ${String(f.len).padStart(4)}  ${f.file}:${f.line}  ${f.name} (${f.kind})`);
   console.log('\nTop 15 source files:');
   for (const f of srcFiles.slice(0, 15)) console.log(`  ${String(f.lines).padStart(5)}  ${f.file}`);
   console.log(`\nwrote ${rel(OUT_FILE)}`);

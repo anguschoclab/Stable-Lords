@@ -7,7 +7,6 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { GazetteStory } from '@/types/state.types';
 
-
 vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));

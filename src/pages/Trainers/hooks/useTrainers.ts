@@ -45,9 +45,7 @@ export function useTrainers(showBookmarkedOnly: boolean) {
     return allTrainers.filter((t) => ids?.has(t.id));
   }, [allTrainers, showBookmarkedOnly, bookmarkIds]);
 
-  const bookmarkedCount = allTrainers.filter(
-    (t) => bookmarkIds.get('trainer')?.has(t.id)
-  ).length;
+  const bookmarkedCount = allTrainers.filter((t) => bookmarkIds.get('trainer')?.has(t.id)).length;
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 
   const { currentHiringPool, refreshPool } = useHiringPool(hiringPool, week, setState);

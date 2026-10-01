@@ -109,9 +109,7 @@ function AccessibilitySettings() {
       <div className="flex items-center justify-between gap-4">
         <div>
           <div className="text-sm font-semibold text-foreground">Text Size</div>
-          <p className="text-xs text-muted-foreground">
-            Scales all interface text and layout.
-          </p>
+          <p className="text-xs text-muted-foreground">Scales all interface text and layout.</p>
         </div>
         <div className="flex gap-1">
           {TEXT_SCALE_OPTIONS.map((scale) => (

@@ -169,9 +169,15 @@ async function main() {
 
   console.log('=== Autobalance Engine Metrics ===');
   console.log(formatPulseTable(pulses.slice(-20))); // trailing 20-week pulse window
-  console.log(`Weekly Kill Rate: ${(metrics.killRate * 100).toFixed(2)}% (${metrics.weeklyKills}/${metrics.weeklyBouts})`);
-  console.log(`Unique Deaths: ${metrics.deaths} (kill-death divergence: ${metrics.killDeathDivergence})`);
-  console.log(`Rival Economy: mean ${metrics.rivalTreasuryMean} / median ${metrics.rivalTreasuryMedian} gold`);
+  console.log(
+    `Weekly Kill Rate: ${(metrics.killRate * 100).toFixed(2)}% (${metrics.weeklyKills}/${metrics.weeklyBouts})`
+  );
+  console.log(
+    `Unique Deaths: ${metrics.deaths} (kill-death divergence: ${metrics.killDeathDivergence})`
+  );
+  console.log(
+    `Rival Economy: mean ${metrics.rivalTreasuryMean} / median ${metrics.rivalTreasuryMedian} gold`
+  );
   console.log(`Win Rates:`);
   for (const [style, rate] of Object.entries(metrics.styleWinRates).sort((a, b) => b[1] - a[1])) {
     console.log(`- ${style}: ${(rate * 100).toFixed(2)}%`);

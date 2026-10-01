@@ -173,7 +173,13 @@ export function SlotSelector({
 
   return (
     <div className="space-y-1.5">
-      <LabelRow slot={slot} label={label} icon={icon} selected={selected} isPreferred={isPreferred} />
+      <LabelRow
+        slot={slot}
+        label={label}
+        icon={icon}
+        selected={selected}
+        isPreferred={isPreferred}
+      />
       <Select value={selectedId} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger
           id={`slot-select-${slot}`}

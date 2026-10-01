@@ -5,11 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
-import {
-  makeBoutOffer,
-  makeRival,
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeBoutOffer, makeRival, makeWarrior } from '@/test/_fixtures/factories';
 import type { InjuryId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';
 
@@ -43,9 +39,7 @@ describe('desperation gate', () => {
       purse: 400,
       hype: 120,
     });
-    expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', killer)
-    ).toBe('Declined');
+    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', killer)).toBe('Declined');
   });
 
   it('RECOVERY stable with low treasury still declines a huge fame mismatch', () => {
@@ -61,9 +55,7 @@ describe('desperation gate', () => {
       purse: 400,
       hype: 120,
     });
-    expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', superstar)
-    ).toBe('Declined');
+    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', superstar)).toBe('Declined');
   });
 
   it('blocking injuries decline regardless of treasury', () => {
@@ -78,7 +70,15 @@ describe('desperation gate', () => {
     const rival = makeRival({
       roster: [warrior],
       treasury: 100,
-      owner: { id: 'agg-owner' as never, name: 'A', stableName: 'A', fame: 100, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 'agg-owner' as never,
+        name: 'A',
+        stableName: 'A',
+        fame: 100,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const offer = makeBoutOffer({ warriorIds: [warrior.id], purse: 400, hype: 120 });
     expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear')).toBe('Declined');

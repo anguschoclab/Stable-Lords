@@ -30,8 +30,18 @@ describe('RivalIntelligence (H.2)', () => {
       id: 'r1' as StableId,
       agentMemory: baseMemory({
         opponentDossiers: {
-          's-a': { lastSeenWeek: 4, recordVs: { w: 1, l: 0, k: 0 }, knownStyles: [], estimatedThreat: 0.6 },
-          's-b': { lastSeenWeek: 4, recordVs: { w: 0, l: 2, k: 0 }, knownStyles: [], estimatedThreat: 0.7 },
+          's-a': {
+            lastSeenWeek: 4,
+            recordVs: { w: 1, l: 0, k: 0 },
+            knownStyles: [],
+            estimatedThreat: 0.6,
+          },
+          's-b': {
+            lastSeenWeek: 4,
+            recordVs: { w: 0, l: 2, k: 0 },
+            knownStyles: [],
+            estimatedThreat: 0.7,
+          },
         },
       }),
     });

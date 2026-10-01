@@ -25,9 +25,7 @@ export function handleWanderingHealer(
   ctx.treasuryDelta -= goldCost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep'));
 
-  const activeInjured = state.roster.filter(
-    (w) => isActive(w) && hasInjuries(w)
-  );
+  const activeInjured = state.roster.filter((w) => isActive(w) && hasInjuries(w));
 
   const chosen = activeInjured.length > 0 ? rng.pick(activeInjured) : null;
   if (chosen) {
@@ -59,7 +57,6 @@ export function handleWanderingHealer(
 /**
  *
  */
-
 
 /**
  *
@@ -100,7 +97,6 @@ export function handleWanderingFortuneTeller(
  *
  */
 
-
 /**
  *
  */
@@ -134,7 +130,6 @@ export function handleDreamweaverVisit(
 
 /** Handles the Goblin Merchant offseason event outcome. */
 
-
 /** Handles the Goblin Merchant offseason event outcome. */
 export function handleGoblinMerchant(
   state: GameState,
@@ -149,9 +144,7 @@ export function handleGoblinMerchant(
     const attrs = chosen.attributes;
 
     ctx.treasuryDelta -= cost;
-    ctx.ledgerEntries.push(
-      makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other')
-    );
+    ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other'));
 
     return {
       updates: {

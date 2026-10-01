@@ -45,7 +45,9 @@ export function RecordTable({
         <Table>
           <TableHeader className="bg-white/[0.03]">
             <TableRow className="h-10 hover:bg-transparent border-white/5">
-              <TableHead className="w-10 pl-6 text-[9px] font-black uppercase tracking-widest">#</TableHead>
+              <TableHead className="w-10 pl-6 text-[9px] font-black uppercase tracking-widest">
+                #
+              </TableHead>
               {head.map((h, i) => (
                 <TableHead
                   key={h}
@@ -65,7 +67,9 @@ export function RecordTable({
                 key={row.key}
                 className={cn(
                   'h-11 border-white/5 transition-colors motion-reduce:transition-none',
-                  row.isPlayer ? 'bg-primary/[0.03] border-l-2 border-l-primary' : 'hover:bg-white/[0.02]'
+                  row.isPlayer
+                    ? 'bg-primary/[0.03] border-l-2 border-l-primary'
+                    : 'hover:bg-white/[0.02]'
                 )}
               >
                 <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">

@@ -435,7 +435,8 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-arena-fame',
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
-    description: 'A shimmering wind of colorful energy that invigorates combatants, reducing stamina drain and increasing damage.',
+    description:
+      'A shimmering wind of colorful energy that invigorates combatants, reducing stamina drain and increasing damage.',
   },
   'Diamond Rain': {
     icon: Sparkles,
@@ -479,7 +480,8 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-purple-400',
     bgClass: 'bg-purple-900/10',
     borderClass: 'border-purple-500/20',
-    description: 'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
+    description:
+      'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
 };
 
@@ -488,4 +490,3 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
   return WEATHER_CONFIG[weather as WeatherType] ?? WEATHER_CONFIG.Clear;
 }
-

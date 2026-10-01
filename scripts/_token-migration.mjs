@@ -42,9 +42,7 @@ const HEX = {
   '#872228': 'hsl(var(--primary))',
 };
 
-const files = new Set(
-  collectUiAudit().findings['token-violation'].map((r) => r.file)
-);
+const files = new Set(collectUiAudit().findings['token-violation'].map((r) => r.file));
 
 let changed = 0;
 const misses = [];
@@ -52,18 +50,26 @@ for (const f of files) {
   let src = fs.readFileSync(f, 'utf8');
   const orig = src;
 
-  src = src.replace(/rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([0-9.]+)\s*\)/g,
+  src = src.replace(
+    /rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([0-9.]+)\s*\)/g,
     (m, r, g, b, a) => {
       const key = `${r},${g},${b}`;
       const v = TRIPLET[key];
-      if (!v) { misses.push(`${f} ${m}`); return m; }
+      if (!v) {
+        misses.push(`${f} ${m}`);
+        return m;
+      }
       changed++;
       return `rgba(var(${v}), ${a})`;
-    });
+    }
+  );
 
   src = src.replace(/#([0-9a-fA-F]{6})\b/g, (m) => {
     const v = HEX[m.toLowerCase()];
-    if (!v) { misses.push(`${f} ${m}`); return m; }
+    if (!v) {
+      misses.push(`${f} ${m}`);
+      return m;
+    }
     changed++;
     return v;
   });

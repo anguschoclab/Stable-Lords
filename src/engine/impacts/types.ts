@@ -104,6 +104,22 @@ export interface StateImpact {
   season?: Season;
   weather?: WeatherType;
   recruitPool?: PoolWarrior[];
+  /** Queued legacy-founder warriors (replace — producers compute the next
+   *  queue wholesale). Exclusive: only the seasonal churn consumes the queue. */
+  legacyFounderQueue?: Warrior[];
+  /** Delta enqueue of founder-caliber retirees (append — safe across
+   *  same-snapshot passes that can't see each other's queue writes). */
+  legacyFounderEnqueue?: Warrior[];
+  /** Free-agent list (replace — producers compute the next list wholesale).
+   *  Exclusive per stage: recruitment pass ages the shelf; rivalStrategy
+   *  writes the post-draft remainder. */
+  freeAgents?: PoolWarrior[];
+  /** Delta additions of displaced/freed veterans (append — safe across
+   *  same-snapshot passes). */
+  freeAgentAdditions?: PoolWarrior[];
+  /** Delta removals of signed veterans by id (append — safe across
+   *  same-snapshot passes). */
+  freeAgentRemovals?: string[];
   seasonalGrowth?: SeasonalGrowth[];
 
   // Rankings

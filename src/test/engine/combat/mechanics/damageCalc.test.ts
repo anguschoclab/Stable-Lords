@@ -2,8 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { computeHitDamage, calculateKillWindow } from '@/engine/combat/mechanics/damageCalc';
 import { KILL_WINDOW, KILL_WINDOW_ENDURANCE } from '@/constants/combat';
 
-
-
 describe('damageCalc mechanics', () => {
   describe('computeHitDamage', () => {
     it('computes minimum damage with 0 rng', () => {
@@ -341,42 +339,45 @@ describe('Damage Calculation', () => {
     });
 
     it('handles mid hpRatio and low endurance ratio correctly', () => {
-        // Base: 0.012
-        // hpRatio: 0.4 < 0.5 -> +0.001
-        // endRatio: 0.1 < 0.2 -> +0.012
-        // locMult (chest): 3.5
-        // current threshold: (0.012 + 0.001 + 0.012) * 3.5 = 0.025 * 3.5 = 0.0875
-        // The rest are default -> 0 additions; below the cap.
-        expect(calculateKillWindow(0.4, 0.1, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
-          0.0875,
-          5
-        );
+      // Base: 0.012
+      // hpRatio: 0.4 < 0.5 -> +0.001
+      // endRatio: 0.1 < 0.2 -> +0.012
+      // locMult (chest): 3.5
+      // current threshold: (0.012 + 0.001 + 0.012) * 3.5 = 0.025 * 3.5 = 0.0875
+      // The rest are default -> 0 additions; below the cap.
+      expect(calculateKillWindow(0.4, 0.1, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+        0.0875,
+        5
+      );
     });
 
     it('handles KILL_WINDOW_ENDURANCE correctly', () => {
-        // Base: 0.012
-        // hpRatio: 1.0 -> 0
-        // endRatio: 0.25 (assuming < KILL_WINDOW_ENDURANCE) -> +0.006
-        // locMult (chest): 3.5
-        // threshold: (0.012 + 0.006) * 3.5 = 0.063 (below the cap)
-        expect(calculateKillWindow(1.0, 0.25, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
-          0.063,
-          5
-        );
+      // Base: 0.012
+      // hpRatio: 1.0 -> 0
+      // endRatio: 0.25 (assuming < KILL_WINDOW_ENDURANCE) -> +0.006
+      // locMult (chest): 3.5
+      // threshold: (0.012 + 0.006) * 3.5 = 0.063 (below the cap)
+      expect(calculateKillWindow(1.0, 0.25, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+        0.063,
+        5
+      );
     });
 
     it('handles momentum >= 3 correctly', () => {
-        // Base: 0.012
-        // locMult (right arm): 0.1
-        // threshold: 0.012 * 0.1 = 0.0012
-        // momentum: 3 -> +0.0075
-        // total = 0.0087
-        expect(calculateKillWindow(1.0, 1.0, 'right arm', 5, 0, 5, 5, 0, 10, 3, 0, 0)).toBeCloseTo(0.0087, 4);
+      // Base: 0.012
+      // locMult (right arm): 0.1
+      // threshold: 0.012 * 0.1 = 0.0012
+      // momentum: 3 -> +0.0075
+      // total = 0.0087
+      expect(calculateKillWindow(1.0, 1.0, 'right arm', 5, 0, 5, 5, 0, 10, 3, 0, 0)).toBeCloseTo(
+        0.0087,
+        4
+      );
     });
 
     it('clamps minimum threshold to 0', () => {
-        // negative bonuses to push below 0
-        expect(calculateKillWindow(1.0, 1.0, 'right arm', 0, 0, 0, 0, -50, 0, 0, 0, 0)).toBe(0);
+      // negative bonuses to push below 0
+      expect(calculateKillWindow(1.0, 1.0, 'right arm', 0, 0, 0, 0, -50, 0, 0, 0, 0)).toBe(0);
     });
   });
 });

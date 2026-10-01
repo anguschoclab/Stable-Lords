@@ -43,8 +43,6 @@ describe('contentPacks', () => {
   it('pack quotes override canonical; canonical is the fallback', () => {
     expect(getRecruitQuote('Traditionalist', [PACK])).toBe('"Pack quote."');
     expect(getRecruitQuote('Innovator', [PACK])).toBe(META_RECRUIT_QUOTES.Innovator);
-    expect(getRecruitQuote('Traditionalist', undefined)).toBe(
-      META_RECRUIT_QUOTES.Traditionalist
-    );
+    expect(getRecruitQuote('Traditionalist', undefined)).toBe(META_RECRUIT_QUOTES.Traditionalist);
   });
 });

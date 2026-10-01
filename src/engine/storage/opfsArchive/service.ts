@@ -47,9 +47,7 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  private async getHotStateDirectory(
-    create = true
-  ): Promise<FileSystemDirectoryHandle | null> {
+  private async getHotStateDirectory(create = true): Promise<FileSystemDirectoryHandle | null> {
     if (!this.isSupported()) return null;
     try {
       const rootHandle = await navigator.storage.getDirectory();

@@ -4,7 +4,11 @@ import type { StateImpact } from '@/engine/impacts';
 import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState, makeRivalStable } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeGameState as fixtureGameState,
+  makeRivalStable,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, name: string): Warrior =>
   fixtureWarrior({
@@ -17,8 +21,7 @@ const makeWarrior = (id: string, name: string): Warrior =>
     age: 20,
   } as any);
 
-const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
-  makeRivalStable(id, roster);
+const makeRival = (id: string, roster: Warrior[]): RivalStableData => makeRivalStable(id, roster);
 
 const makeState = (rivals: RivalStableData[]): GameState =>
   fixtureGameState({

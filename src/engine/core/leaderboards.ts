@@ -153,9 +153,7 @@ export function calculatePerArenaLeaderboards(
 
   const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
 
-  return arenas.map((arena) =>
-    buildArenaLeaderboard(arena.id, arena.name, allEntries, limit)
-  );
+  return arenas.map((arena) => buildArenaLeaderboard(arena.id, arena.name, allEntries, limit));
 }
 
 function buildArenaLeaderboard(

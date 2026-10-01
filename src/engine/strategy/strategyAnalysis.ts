@@ -1,7 +1,10 @@
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { getTempoBonus } from '@/engine/stylePassives';
-import { getOffensiveSuitability, getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
+import {
+  getOffensiveSuitability,
+  getDefensiveSuitability,
+} from '@/engine/strategy/tacticSuitability';
 import { clamp } from '@/utils/math';
 
 /**
@@ -51,4 +54,3 @@ export function computeStrategyScore(plan: FightPlan, warrior?: Warrior): number
 
   return clamp(score, 0, 100);
 }
-

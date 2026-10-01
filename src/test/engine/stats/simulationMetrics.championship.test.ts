@@ -62,7 +62,9 @@ function championsTourney(participants: number, completed = true): TournamentEnt
     tierId: CHAMPIONS_TOURNEY.TIER_ID,
     name: CHAMPIONS_TOURNEY.NAME,
     bracket: [],
-    participants: Array.from({ length: participants }, (_, i) => makeWarrior({ id: `cw${i}` as WarriorId })),
+    participants: Array.from({ length: participants }, (_, i) =>
+      makeWarrior({ id: `cw${i}` as WarriorId })
+    ),
     completed,
   };
 }
@@ -139,9 +141,7 @@ describe('SimPulse championship metrics (Stage H)', () => {
   });
 
   it('reports the most recent Grand Championship field size', () => {
-    const pulse = collectPulse(
-      makeGameState({ tournaments: [championsTourney(6)] as never })
-    );
+    const pulse = collectPulse(makeGameState({ tournaments: [championsTourney(6)] as never }));
     expect(pulse.grandChampFieldSize).toBe(6);
     expect(collectPulse(makeGameState({})).grandChampFieldSize).toBe(0);
   });
@@ -190,7 +190,11 @@ describe('SimPulse championship metrics (Stage H)', () => {
           exchangeLog: [
             { exchangeIndex: 0, minute: 1, reasonCodes: ['CONDITION_HP_BELOW@CORNER'] },
             { exchangeIndex: 1, minute: 2, reasonCodes: ['AI_INTENT_PRESS'] },
-            { exchangeIndex: 2, minute: 3, reasonCodes: ['CONDITION_ENDURANCE_BELOW@CORNER', 'PSYCH_DESPERATE'] },
+            {
+              exchangeIndex: 2,
+              minute: 3,
+              reasonCodes: ['CONDITION_ENDURANCE_BELOW@CORNER', 'PSYCH_DESPERATE'],
+            },
           ],
         },
       } as unknown as BoutResult,

@@ -87,11 +87,7 @@ function LegendCard({ legend: w }: { legend: Legend }) {
               : 'bg-white/5 border-white/10 text-muted-foreground/40'
           )}
         >
-          {w.kind === 'fallen' ? (
-            <Skull className="h-4 w-4" />
-          ) : (
-            <Armchair className="h-4 w-4" />
-          )}
+          {w.kind === 'fallen' ? <Skull className="h-4 w-4" /> : <Armchair className="h-4 w-4" />}
         </div>
         <div className="flex flex-col">
           <span className="text-[12px] font-black uppercase tracking-tight text-foreground">

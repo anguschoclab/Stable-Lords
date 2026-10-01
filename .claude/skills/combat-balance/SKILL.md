@@ -24,10 +24,10 @@ spaces in double quotes.
 
 ## The one idea: two orthogonal layers
 
-| Concern                                                    | Lives in                                                                               | Means                              |
-| ---------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------- |
+| Concern                                                    | Lives in                                                                                                                                     | Means                              |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | **Absolute power** — is a style globally over/under-tuned? | `STYLE_PENALTIES` (+ `STYLE_SKILL_FLOORS` for the world) in `src/engine/warrior/skillBreakpoints.ts` (`[ATT,PAR,DEF,INI,RIP,DEC]` per style) | how strong a style is _on average_ |
-| **Matchup identity** — who counters whom?                  | `MATCHUP_MATRIX` in `src/constants/combat/combat.ts`                                   | the rock-paper-scissors edges      |
+| **Matchup identity** — who counters whom?                  | `MATCHUP_MATRIX` in `src/constants/combat/combat.ts`                                                                                         | the rock-paper-scissors edges      |
 
 The matrix is kept **near-antisymmetric** (if A beats B by +x, B is −x vs A). Its
 job is _only_ relative matchups. The moment you encode "style X is weak" by making
@@ -43,10 +43,10 @@ you put power in the wrong place.
 
 Balance is certified on **two surfaces**, and they do not move together:
 
-| Surface | What it is | Guardrail |
-| --- | --- | --- |
-| **Fixture** | identical all-15s warriors (105 pts), default plans | `src/test/engine/economy/balance.slow.test.ts` |
-| **World** | what players meet: 70–90 pt warriors, fitted weapons, training, AI plans, matchmaking | `src/test/engine/economy/worldBalance.slow.test.ts` + `Daily_Balance_Report.md` |
+| Surface     | What it is                                                                            | Guardrail                                                                       |
+| ----------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **Fixture** | identical all-15s warriors (105 pts), default plans                                   | `src/test/engine/economy/balance.slow.test.ts`                                  |
+| **World**   | what players meet: 70–90 pt warriors, fitted weapons, training, AI plans, matchmaking | `src/test/engine/economy/worldBalance.slow.test.ts` + `Daily_Balance_Report.md` |
 
 The fixture isolates mechanics; the world is the truth. They diverge because
 `STYLE_PENALTIES` are sized for 105-point attribute sums — real warriors' raw

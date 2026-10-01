@@ -51,10 +51,7 @@ function HeaderActions({ needsRecruits }: { needsRecruits: boolean }) {
 }
 
 /** Prep-dialog lifecycle: auto-opens once when a tournament is ready to start. */
-function usePrepDialog(
-  isTournamentReadyToStart: boolean,
-  hasAlreadyStarted: boolean | undefined
-) {
+function usePrepDialog(isTournamentReadyToStart: boolean, hasAlreadyStarted: boolean | undefined) {
   const [isPrepOpen, setIsPrepOpen] = useState(false);
   const [hasShownPrep, setHasShownPrep] = useState(false);
 
@@ -196,10 +193,7 @@ export default function Tournaments() {
   } = tournamentState;
 
   const hasAlreadyStarted = currentTournament?.bracket.some((b) => b.winner !== undefined);
-  const { isPrepOpen, setIsPrepOpen } = usePrepDialog(
-    isTournamentReadyToStart,
-    hasAlreadyStarted
-  );
+  const { isPrepOpen, setIsPrepOpen } = usePrepDialog(isTournamentReadyToStart, hasAlreadyStarted);
 
   const handleExecuteRound = useExecuteTournamentRound({
     tournament: currentTournament,
@@ -210,8 +204,7 @@ export default function Tournaments() {
 
   // Top-bar ADVANCE BRACKET CTA — resolves the next round of the live bracket;
   // disabled when no unresolved tournament is on the card.
-  const bracketOpen =
-    !!currentTournament && !currentTournament.completed && !isSimulating;
+  const bracketOpen = !!currentTournament && !currentTournament.completed && !isSimulating;
   useRegisterCtaAction('/world/tournaments', {
     enabled: bracketOpen,
     run: handleExecuteRound,
@@ -224,9 +217,7 @@ export default function Tournaments() {
         eyebrow="Seasonal Campaigns"
         title="Tournaments"
         subtitle={`${season.toUpperCase()} SEASON · YEAR ${year}`}
-        actions={
-          <HeaderActions needsRecruits={!currentTournament && activeWarriors.length < 2} />
-        }
+        actions={<HeaderActions needsRecruits={!currentTournament && activeWarriors.length < 2} />}
       />
 
       <TournamentBody

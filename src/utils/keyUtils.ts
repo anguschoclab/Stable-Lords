@@ -13,4 +13,3 @@ export function getPairKey(id1: string, id2: string): string {
 
 /** Alias for stable-specific usage (backward compatible). */
 export const getStablePairKey = getPairKey;
-

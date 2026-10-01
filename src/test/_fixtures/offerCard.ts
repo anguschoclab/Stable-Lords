@@ -27,11 +27,18 @@ export const makeOfferCardProps = (): {
   roster: ReturnType<typeof makeWarrior>[];
   rivalWarriorMap: Record<string, never>;
   signedOfferIds: Set<string>;
-  onResponse: (offerId: string, warriorId: string | undefined, response: 'Accepted' | 'Declined') => void;
+  onResponse: (
+    offerId: string,
+    warriorId: string | undefined,
+    response: 'Accepted' | 'Declined'
+  ) => void;
 } => ({
   promoters: { 'prom-1': { name: 'Grand Arena', tier: 'Major', personality: 'Showman' } },
   roster: [playerWarrior],
   rivalWarriorMap: {},
   signedOfferIds: new Set<string>(),
-  onResponse: vi.fn<(offerId: string, warriorId: string | undefined, response: 'Accepted' | 'Declined') => void>(),
+  onResponse:
+    vi.fn<
+      (offerId: string, warriorId: string | undefined, response: 'Accepted' | 'Declined') => void
+    >(),
 });

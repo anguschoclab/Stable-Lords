@@ -82,8 +82,7 @@ function buildOwner(
         ? `${tmpl.ownerName} ${String.fromCharCode(64 + iteration + 1)}`
         : tmpl.ownerName,
     stableName: stableName,
-    fame:
-      tmpl.fameRange[0] + Math.floor(rng.next() * (tmpl.fameRange[1] - tmpl.fameRange[0] + 1)),
+    fame: tmpl.fameRange[0] + Math.floor(rng.next() * (tmpl.fameRange[1] - tmpl.fameRange[0] + 1)),
     renown: tmpl.tier === 'Legendary' ? 5 : tmpl.tier === 'Major' ? 2 : 0,
     titles:
       tmpl.tier === 'Legendary'
@@ -180,8 +179,7 @@ function buildRivalStable(
 /** Roll a warrior's style — biased toward the template's preferred styles. */
 function pickWarriorStyle(tmpl: StableTemplate, rng: IRNGService): FightingStyle {
   if (rng.next() < 0.7 && tmpl.preferredStyles.length > 0) {
-    const preferred =
-      tmpl.preferredStyles[Math.floor(rng.next() * tmpl.preferredStyles.length)];
+    const preferred = tmpl.preferredStyles[Math.floor(rng.next() * tmpl.preferredStyles.length)];
     if (!preferred) {
       throw new Error('Style selection from preferredStyles failed');
     }

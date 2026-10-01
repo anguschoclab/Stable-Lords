@@ -5,10 +5,7 @@
  * leaking into AI-vs-AI scoring.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  scoreMatchup,
-  scorePairwiseMatchup,
-} from '@/engine/matchmaking/schedulingAssistant';
+import { scoreMatchup, scorePairwiseMatchup } from '@/engine/matchmaking/schedulingAssistant';
 import {
   makeGameState,
   makeRival,

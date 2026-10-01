@@ -13,10 +13,22 @@ import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 
 const KILLER_ATTRS: Attributes = {
-  ST: 25, CN: 21, SZ: 21, WT: 21, WL: 21, SP: 21, DF: 17,
+  ST: 25,
+  CN: 21,
+  SZ: 21,
+  WT: 21,
+  WL: 21,
+  SP: 21,
+  DF: 17,
 };
 const FRAIL_ATTRS: Attributes = {
-  ST: 5, CN: 3, SZ: 9, WT: 9, WL: 9, SP: 9, DF: 5,
+  ST: 5,
+  CN: 3,
+  SZ: 9,
+  WT: 9,
+  WL: 9,
+  SP: 9,
+  DF: 5,
 };
 
 const makeWarrior = (id: string, style: FightingStyle, attrs: Attributes): Warrior =>
@@ -72,7 +84,12 @@ describe('house rules — severe injury instead of death', () => {
   const outcome: FightOutcome = { winner: 'A', by: 'Kill', minutes: 5, log: [] };
 
   it('converts a Kill into a Critical injury with no graveyard entry', () => {
-    const wA = { id: 'wa' as WarriorId, name: 'A', stableId: 'player-1' as StableId, injuries: [] } as unknown as Warrior;
+    const wA = {
+      id: 'wa' as WarriorId,
+      name: 'A',
+      stableId: 'player-1' as StableId,
+      injuries: [],
+    } as unknown as Warrior;
     const wD = {
       id: 'wd' as WarriorId,
       name: 'D',
@@ -100,7 +117,12 @@ describe('house rules — severe injury instead of death', () => {
   });
 
   it('canonical rules still produce a death', () => {
-    const wA = { id: 'wa' as WarriorId, name: 'A', stableId: 'player-1' as StableId, injuries: [] } as unknown as Warrior;
+    const wA = {
+      id: 'wa' as WarriorId,
+      name: 'A',
+      stableId: 'player-1' as StableId,
+      injuries: [],
+    } as unknown as Warrior;
     const wD = {
       id: 'wd' as WarriorId,
       name: 'D',

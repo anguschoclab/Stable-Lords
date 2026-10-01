@@ -13,7 +13,11 @@ function stripWorkerRefresh(): Plugin {
     name: 'strip-worker-refresh',
     enforce: 'post',
     transform(code, id) {
-      if (!id.match(/engine\/(worker|storage\/archiveWorker)\.ts/) && !id.match(/engine\/(worker|storage\/archiveWorker)\?/)) return;
+      if (
+        !id.match(/engine\/(worker|storage\/archiveWorker)\.ts/) &&
+        !id.match(/engine\/(worker|storage\/archiveWorker)\?/)
+      )
+        return;
       // Remove the RefreshRuntime preamble block inserted by the SWC plugin
       return {
         code: code
@@ -73,7 +77,10 @@ function fixHowler(): Plugin {
     // (main thread only). In workers, globalThis.Howl is undefined, so we
     // fall back to a no-op constructor to avoid crashes. The worker doesn't
     // actually use howler — it just gets pulled into the module graph.
-    cachedCode = core + spatial + `
+    cachedCode =
+      core +
+      spatial +
+      `
 var __howl = globalThis.Howl || function() { this.play = function(){}; this.stop = function(){}; this.volume = function(){}; this.mute = function(){}; this.unload = function(){}; this.state = function(){return 'unloaded';}; this.on = function(){return this;}; this.once = function(){return this;}; this.off = function(){return this;}; };
 var __howler = globalThis.Howler || { ctx: null, _enabled: false, _muted: false, mute: function(){}, volume: function(){}, stop: function(){}, unload: function(){}, codecs: function(){return false;}, usingWebAudio: false, usingHTML5Audio: false, noAudio: false, autoUnlock: false, autoSuspend: false, mobileAutoEnable: false, _pos: [0,0,0], _orientation: [0,0,-1,0,1,0] };
 export { __howl as Howl, __howler as Howler };
@@ -138,10 +145,7 @@ export default defineConfig({
             id.includes('node_modules/framer-motion/')
           )
             return 'vendor-core';
-          if (
-            id.includes('node_modules/lucide-react/') ||
-            id.includes('node_modules/date-fns/')
-          )
+          if (id.includes('node_modules/lucide-react/') || id.includes('node_modules/date-fns/'))
             return 'vendor-ui';
           if (
             id.includes('src/engine/simulate.ts') ||

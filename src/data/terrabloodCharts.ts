@@ -74,12 +74,7 @@ export function computeHP(cn: number, sz: number, wl: number): number {
  * Hp rating type.
  */
 export type HPRating =
-  | 'Very Frail'
-  | 'Cannot Take a Lot'
-  | 'Average'
-  | 'A Lot'
-  | 'Tremendous'
-  | 'Seemingly Unaffected';
+  'Very Frail' | 'Cannot Take a Lot' | 'Average' | 'A Lot' | 'Tremendous' | 'Seemingly Unaffected';
 
 /**
  * Get hp rating.

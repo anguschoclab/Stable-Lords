@@ -32,7 +32,15 @@ type FtueFlow = ReturnType<typeof useFtueFlow>;
 
 /** Step 0: owner + stable identity. */
 function IdentityBranch({ flow }: { flow: FtueFlow }) {
-  const { setStep, stableInput, setStableInput, ownerInput, setOwnerInput, initializeStable, returnToTitle } = flow;
+  const {
+    setStep,
+    stableInput,
+    setStableInput,
+    ownerInput,
+    setOwnerInput,
+    initializeStable,
+    returnToTitle,
+  } = flow;
   return (
     <StepShell key="identity">
       <IdentityStep
@@ -52,7 +60,8 @@ function IdentityBranch({ flow }: { flow: FtueFlow }) {
 
 /** Step 1: orphan warrior selection. */
 function WarriorSelectionBranch({ flow }: { flow: FtueFlow }) {
-  const { setStep, selected, orphanPool, setPlayerPlan, planWarrior, rerollPool, toggleWarrior } = flow;
+  const { setStep, selected, orphanPool, setPlayerPlan, planWarrior, rerollPool, toggleWarrior } =
+    flow;
   return (
     <StepShell key="warrior-selection">
       <WarriorSelectionStep
@@ -98,11 +107,7 @@ function FirstBloodBranch({ flow }: { flow: FtueFlow }) {
   if (!boutResult) return null;
   return (
     <StepShell key="first-blood">
-      <FirstBloodStep
-        boutResult={boutResult}
-        onBack={() => setStep(2)}
-        onNext={() => setStep(4)}
-      />
+      <FirstBloodStep boutResult={boutResult} onBack={() => setStep(2)} onNext={() => setStep(4)} />
     </StepShell>
   );
 }

@@ -49,13 +49,7 @@
   export type ArenaZone = 'Center' | 'Edge' | 'Corner' | 'Obstacle';
   export type CommitLevel = 'Cautious' | 'Standard' | 'Full';
   export type ArenaTag =
-    | 'outdoor'
-    | 'indoor'
-    | 'elevated'
-    | 'water'
-    | 'cramped'
-    | 'open'
-    | 'premium';
+    'outdoor' | 'indoor' | 'elevated' | 'water' | 'cramped' | 'open' | 'premium';
 
   export interface SurfaceMod {
     initiativeMod: number; // flat bonus/penalty to INI rolls each exchange

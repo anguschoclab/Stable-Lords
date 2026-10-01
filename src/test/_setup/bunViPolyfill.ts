@@ -32,7 +32,7 @@ if (!v.waitFor) {
   // Iteration-bounded (not Date.now) so faked clocks can't break the deadline.
   v.waitFor = async (
     cb: () => unknown | Promise<unknown>,
-    opts: { timeout?: number; interval?: number } = {},
+    opts: { timeout?: number; interval?: number } = {}
   ) => {
     const { timeout = 1000, interval = 50 } = opts;
     const maxChecks = Math.max(1, Math.ceil(timeout / interval));
@@ -74,10 +74,7 @@ if (!v.importActual) {
 if (!v.__mockWrappedForImportOriginal) {
   const origMock = v.mock.bind(v);
   v.mock = (path: string, factory?: (importOriginal?: any) => unknown) =>
-    origMock(
-      path,
-      factory ? async () => factory(() => import(actualUrl(path))) : factory,
-    );
+    origMock(path, factory ? async () => factory(() => import(actualUrl(path))) : factory);
   v.__mockWrappedForImportOriginal = true;
 }
 
@@ -91,19 +88,12 @@ if (v.spyOn && !v.__spyOnHandlesAccessors) {
   const origSpyOn = v.spyOn.bind(v);
   v.spyOn = (obj: object, prop: string | symbol) => {
     const ownDesc = Object.getOwnPropertyDescriptor(obj, prop);
-    if (
-      ownDesc &&
-      typeof ownDesc.value === 'function' &&
-      ownDesc.value.__accessorShim
-    ) {
+    if (ownDesc && typeof ownDesc.value === 'function' && ownDesc.value.__accessorShim) {
       return ownDesc.value;
     }
     let holder: any = obj;
     let desc: PropertyDescriptor | undefined;
-    while (
-      holder != null &&
-      !(desc = Object.getOwnPropertyDescriptor(holder, prop))
-    ) {
+    while (holder != null && !(desc = Object.getOwnPropertyDescriptor(holder, prop))) {
       holder = Object.getPrototypeOf(holder);
     }
     if (!desc || typeof desc.get !== 'function') {
@@ -298,7 +288,7 @@ for (const suite of [it, test, describe] as any[]) {
 
 const unsupported = (name: string) => () => {
   throw new Error(
-    `vi.${name} is not supported under bun:test — restructure the test or run under vitest`,
+    `vi.${name} is not supported under bun:test — restructure the test or run under vitest`
   );
 };
 for (const name of [

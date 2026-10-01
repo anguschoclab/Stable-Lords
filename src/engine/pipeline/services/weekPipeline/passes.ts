@@ -156,7 +156,6 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
   },
 ];
 
-
 let pipelineValidated = false;
 
 /** Validates the pass table once per process (throws on illegal declaration). */

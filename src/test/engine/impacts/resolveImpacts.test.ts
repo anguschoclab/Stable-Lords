@@ -24,7 +24,10 @@ import type {
   TournamentEntry,
 } from '@/types/state.types';
 import type { CrowdMoodType, WeatherType } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeFightSummary as fixtureFightSummary,
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+  makeFightSummary as fixtureFightSummary,
   makeGameState,
 } from '@/test/_fixtures/factories';
 

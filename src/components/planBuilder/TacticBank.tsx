@@ -8,7 +8,6 @@ import {
   SUITABILITY_COLORS,
 } from '@/engine/strategy/tacticSuitability';
 
-
 interface TacticBankProps {
   plan?: FightPlan;
   onPlanChange?: (plan: FightPlan) => void;

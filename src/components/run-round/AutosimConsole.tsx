@@ -46,9 +46,7 @@ export function AutosimConsole({
           />
         )}
 
-        {isSimulating && progress && (
-          <ProgressView progress={progress} percent={percent} />
-        )}
+        {isSimulating && progress && <ProgressView progress={progress} percent={percent} />}
 
         {result && <ResultView result={result} onReset={onReset} />}
       </CardContent>
@@ -152,13 +150,7 @@ function ProgressView({
   );
 }
 
-function ResultView({
-  result,
-  onReset,
-}: {
-  result: AutosimResult;
-  onReset?: () => void;
-}) {
+function ResultView({ result, onReset }: { result: AutosimResult; onReset?: () => void }) {
   return (
     <div className="space-y-4 animate-in motion-reduce:animate-none zoom-in-95 duration-300">
       <div

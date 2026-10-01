@@ -25,7 +25,7 @@ vi.mock('@/components/ui/badge', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 import { RecruitCard } from '@/components/stable/RecruitCard';
 

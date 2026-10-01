@@ -17,11 +17,11 @@ import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { processPoachMarket } from '@/engine/ai/market/poachBid';
-import {
-  isSeasonalTournamentWeek,
-  isChampionsTournamentWeek,
-} from '@/engine/core/absoluteWeek';
+import { isSeasonalTournamentWeek, isChampionsTournamentWeek } from '@/engine/core/absoluteWeek';
 import { buildChampionsTournament } from '@/engine/championship/championsTournament';
+import { checkBudget } from '@/engine/ai/workers/budgetWorker';
+import { AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
+import { STABLE_STARVATION_WEEKS } from '@/constants/world';
 import {
   buildSuccessorIndex,
   runRivalShardChunk,
@@ -138,6 +138,21 @@ function collectFreedRecruits(
   return freed;
 }
 
+/** Active warriors of starvation-folded stables re-enter as free agents. */
+function collectStarvedRecruits(
+  folded: RivalStableData[],
+  nextWeek: number
+): PoolWarrior[] {
+  const rng = new SeededRNGService(nextWeek * 131 + 17);
+  const freed: PoolWarrior[] = [];
+  for (const r of folded) {
+    for (const w of r.roster) {
+      if (w.status === 'Active') freed.push(warriorToPoolWarrior(w, nextWeek, rng));
+    }
+  }
+  return freed;
+}
+
 /**
  * AI Roster Management — culling/retirement first, then flag `needsRecruit`
  * so the unified draft can fill same-tick (G9). Returns the managed rivals;
@@ -154,21 +169,23 @@ function runRosterManagement(
   impacts: StateImpact[]
 ): RivalStableData[] {
   const rosterRng = new SeededRNGService(state.absoluteWeek * 13 + 7);
-  const {
-    updatedRivals,
-    gazetteItems,
-    retiredWarriors,
-  } = processAIRosterManagement(
-    {
-      ...state,
-      week: nextWeek,
-      rivals: currentRivals,
-      boutOffers: boutOffersWithWorld,
-    },
-    rosterRng
-  );
+  const { updatedRivals, gazetteItems, retiredWarriors, legacyFounders } =
+    processAIRosterManagement(
+      {
+        ...state,
+        week: nextWeek,
+        rivals: currentRivals,
+        boutOffers: boutOffersWithWorld,
+      },
+      rosterRng
+    );
   globalGazetteItems.push(...gazetteItems);
   if (retiredWarriors.length > 0) impacts.push({ retired: retiredWarriors });
+  if (legacyFounders.length > 0) {
+    // Append-delta: the queue's wholesale write belongs to the system pass's
+    // churn in this same stage — a same-snapshot replace would clobber it.
+    impacts.push({ legacyFounderEnqueue: legacyFounders });
+  }
   return updatedRivals;
 }
 
@@ -205,6 +222,8 @@ function finishRivalPass(
   );
 
   // 3. Draft from Recruitment Pool — sole signing path; honors needsRecruit.
+  //    Free agents share the draft pool; unsold veterans come back out on
+  //    the free-agent shelf.
   const draft = aiDraftFromPool(state.recruitPool, currentRivals, nextWeek, state);
   globalGazetteItems.push(...draft.gazetteItems);
   currentRivals = draft.updatedRivals;
@@ -216,13 +235,40 @@ function finishRivalPass(
   globalGazetteItems.push(...poach.gazetteItems);
   currentRivals = poach.updatedRivals;
 
+  // 3.9. Starvation fold: a stable that has sat below its roster minimum for
+  //      STABLE_STARVATION_WEEKS and still can't afford even the cheapest
+  //      recruit collapses — its warriors reach the free-agent list.
+  const folded: RivalStableData[] = [];
+  currentRivals = currentRivals.filter((r) => {
+    if ((r.weeksBelowMin ?? 0) < STABLE_STARVATION_WEEKS) return true;
+    if (!checkBudget(r, AI_GENERATED_RECRUIT_COST, 'ROSTER').isAffordable) {
+      folded.push(r);
+      globalGazetteItems.push(
+        `💀 COLLAPSE: ${r.owner.stableName} has folded — ${r.owner.name} could no longer field a roster.`
+      );
+      return false;
+    }
+    return true;
+  });
+  if (folded.length > 0) {
+    impacts.push({ rivalsRemovals: folded.map((r) => r.id as StableId) });
+  }
+
   const finalizedRivals = currentRivals;
   impacts.push({
-    recruitPool: [
-      ...(draft.updatedPool ?? state.recruitPool ?? []),
-      ...collectFreedRecruits(shardOutputs, state, nextWeek),
-    ],
+    recruitPool: draft.updatedPool ?? state.recruitPool ?? [],
   });
+  // Free-agent deltas, never a replace — the system pass's seasonal churn
+  // appends displaced veterans in this same stage snapshot.
+  const draftedOut = (state.freeAgents ?? [])
+    .filter((w) => !(draft.updatedFreeAgents ?? []).some((u) => u.id === w.id))
+    .map((w) => w.id);
+  if (draftedOut.length > 0) impacts.push({ freeAgentRemovals: draftedOut });
+  const freed = [
+    ...collectFreedRecruits(shardOutputs, state, nextWeek),
+    ...collectStarvedRecruits(folded, nextWeek),
+  ];
+  if (freed.length > 0) impacts.push({ freeAgentAdditions: freed });
 
   impacts.push(...resolveRivalOffersAndPlans(state, boutOffersWithWorld, finalizedRivals));
 
@@ -276,9 +322,7 @@ function resolveRivalOffersAndPlans(
 
   // 4.6. Plan Commitment (E.1): NPC warriors whose bouts Signed this tick get
   // a persisted plan — observable by Expert scouting, input to rematch logic.
-  const resolvedOffers = Object.values(
-    boutOffersImpact.boutOffers ?? boutOffersWithWorld
-  );
+  const resolvedOffers = Object.values(boutOffersImpact.boutOffers ?? boutOffersWithWorld);
   const plannedRivals = persistNPCPlans(finalizedRivals, resolvedOffers, stateWithWorldBouts);
   const planUpdates = new Map<StableId, Partial<RivalStableData>>();
   plannedRivals.forEach((r, i) => {
@@ -371,9 +415,7 @@ function handleSeasonalTournaments(
               title: '🎖️ TOURNAMENT ANNOUNCEMENT',
               items: tournamentNews,
             },
-      ],
+          ],
     },
   ]);
 }
-
-

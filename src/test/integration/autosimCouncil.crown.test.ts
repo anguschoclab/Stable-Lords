@@ -5,10 +5,11 @@ import type { GameState } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { makeAutosimOffer, makeSimmableState } from '@/test/_fixtures/autosimCouncil';
 
-vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({ ...__SHARED_MOCKS.weekPipeline }));
+vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
+  ...__SHARED_MOCKS.weekPipeline,
+}));
 
 const makeOffer = makeAutosimOffer;
-
 
 describe('runAutosim councilAutoPilot — crown decisions', () => {
   beforeEach(() => {

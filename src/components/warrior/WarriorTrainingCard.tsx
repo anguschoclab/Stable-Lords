@@ -41,9 +41,7 @@ function RecoveryButton({
             : 'bg-white/5 hover:bg-white/10'
       )}
     >
-      <Heart
-        className={cn('h-3.5 w-3.5', isRecovery ? 'text-destructive' : 'text-destructive')}
-      />
+      <Heart className={cn('h-3.5 w-3.5', isRecovery ? 'text-destructive' : 'text-destructive')} />
       <span>{isRecovery ? 'CANCEL RECOVERY' : 'ACTIVE RECOVERY'}</span>
       {advisorRecommended && (
         <span
@@ -118,7 +116,12 @@ export function WarriorTrainingCard({
 
   return (
     <Surface variant="glass" className="overflow-hidden flex flex-col group h-full">
-      <TrainingCardHeader warrior={warrior} total={total} hasInjury={hasInjury} trainers={trainers} />
+      <TrainingCardHeader
+        warrior={warrior}
+        total={total}
+        hasInjury={hasInjury}
+        trainers={trainers}
+      />
 
       <div className="p-4 flex-1 space-y-4">
         {hasInjury && !isTraining && (
@@ -143,8 +146,7 @@ export function WarriorTrainingCard({
                 atCap={atCap}
                 onAssign={onAssign}
                 isAdvisorRecommended={
-                  advisorAdvice?.mode === 'attribute' &&
-                  advisorAdvice.targetAttribute === key
+                  advisorAdvice?.mode === 'attribute' && advisorAdvice.targetAttribute === key
                 }
               />
             ))}

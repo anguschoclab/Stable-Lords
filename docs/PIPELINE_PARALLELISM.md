@@ -70,11 +70,11 @@ execution too:
 Measured on this machine (Bun, real module workers, headless harness,
 seed 20260919, 26 weeks, pre-`mutableInput` serial baseline):
 
-| run | wall-clock |
-| --- | --------- |
-| pool=1 (sequential) | 2,902 ms |
-| pool=4 (distributed) | 7,593 ms |
-| **speedup** | **0.38× — gate requires ≥1.30×** |
+| run                  | wall-clock                       |
+| -------------------- | -------------------------------- |
+| pool=1 (sequential)  | 2,902 ms                         |
+| pool=4 (distributed) | 7,593 ms                         |
+| **speedup**          | **0.38× — gate requires ≥1.30×** |
 
 > **Staleness note (post-`mutableInput`):** the harness now passes
 > `mutableInput` so `advanceWeek` no longer deep-clones the world each week —

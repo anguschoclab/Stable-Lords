@@ -119,9 +119,7 @@ describe('player×rival grudges', () => {
     });
 
     const { grudges, gazetteItems } = processOwnerGrudges(state, []);
-    const g = grudges.find(
-      (x) => x.ownerIdA === 'ownA' || x.ownerIdB === 'ownA'
-    );
+    const g = grudges.find((x) => x.ownerIdA === 'ownA' || x.ownerIdB === 'ownA');
     expect(g).toBeDefined();
     expect(g!.intensity).toBe(1);
     expect(gazetteItems.some((i) => i.includes('SLIGHTED'))).toBe(true);
@@ -181,8 +179,8 @@ describe('player×rival grudges', () => {
       ],
     });
     const { grudges } = processOwnerGrudges(state, []);
-    expect(grudges.every((g) => g.ownerIdA !== state.player.id && g.ownerIdB !== state.player.id)).toBe(
-      true
-    );
+    expect(
+      grudges.every((g) => g.ownerIdA !== state.player.id && g.ownerIdB !== state.player.id)
+    ).toBe(true);
   });
 });

@@ -233,7 +233,9 @@ export function validateArenaChampions(state: GameState): InvariantViolation[] {
         push(`${arenaId}: history entry for ${h.warriorId} has invalid endReason '${h.endReason}'`);
       }
       if (h.endedAbsoluteWeek < h.startedAbsoluteWeek) {
-        push(`${arenaId}: reign ${h.warriorId} ends (${h.endedAbsoluteWeek}) before it starts (${h.startedAbsoluteWeek})`);
+        push(
+          `${arenaId}: reign ${h.warriorId} ends (${h.endedAbsoluteWeek}) before it starts (${h.startedAbsoluteWeek})`
+        );
       }
     }
 
@@ -260,7 +262,9 @@ export function validateArenaChampions(state: GameState): InvariantViolation[] {
 
   for (const [warriorId, arenas] of crownsByWarrior) {
     if (arenas.length > 1) {
-      push(`${warriorId} reigns over ${arenas.length} arenas (${arenas.join(', ')}) — single crown violated`);
+      push(
+        `${warriorId} reigns over ${arenas.length} arenas (${arenas.join(', ')}) — single crown violated`
+      );
     }
   }
 

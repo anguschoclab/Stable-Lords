@@ -1,4 +1,10 @@
-import type { GameState, RivalStableData, Warrior, WeatherType, BoutOffer } from '@/types/state.types';
+import type {
+  GameState,
+  RivalStableData,
+  Warrior,
+  WeatherType,
+  BoutOffer,
+} from '@/types/state.types';
 import type { BoutOfferId, WarriorId, StableId } from '@/types/shared.types';
 import {
   respondToBoutOffer,
@@ -211,7 +217,16 @@ function respondForWarrior(
     return;
   }
 
-  applyWarriorResponse(state, currentOffers, offer, trackedOffer, wId, rivalWarrior, response, explain);
+  applyWarriorResponse(
+    state,
+    currentOffers,
+    offer,
+    trackedOffer,
+    wId,
+    rivalWarrior,
+    response,
+    explain
+  );
 }
 
 /** Commit one response to the offer map; title bouts persist the verdict reason. */
@@ -319,8 +334,7 @@ function resolveCounteredOffers(
       const affordable =
         !proposerSide ||
         bump === 0 ||
-        (proposerStable !== undefined &&
-          checkBudget(proposerStable, bump, 'OTHER').isAffordable);
+        (proposerStable !== undefined && checkBudget(proposerStable, bump, 'OTHER').isAffordable);
 
       let final: 'Accepted' | 'Declined';
       if (!affordable) {

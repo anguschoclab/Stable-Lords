@@ -21,7 +21,9 @@ enableMapSet();
 vi.unmock('@/engine/storage/opfsArchive');
 
 // Eagerly load combat narrative data for all tests
-beforeAll(async () => { await loadCombatNarrative(); });
+beforeAll(async () => {
+  await loadCombatNarrative();
+});
 
 /**
  * Mock localStorage implementation for Bun/Vitest environment.
@@ -263,9 +265,7 @@ afterEach(() => {
 // (MockWorker never answers Comlink) and hang forever.
 afterEach(async () => {
   try {
-    const { shutdownEnginePool, configureEnginePool } = await import(
-      '@/engine/pool/enginePool'
-    );
+    const { shutdownEnginePool, configureEnginePool } = await import('@/engine/pool/enginePool');
     shutdownEnginePool();
     configureEnginePool(1);
   } catch {

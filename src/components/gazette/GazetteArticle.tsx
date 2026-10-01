@@ -1,4 +1,3 @@
-
 import { Surface } from '@/components/ui/Surface';
 import {
   ArticleMasthead,
@@ -19,10 +18,6 @@ interface GazetteArticleProps {
  */
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {
   const { warriorNames, stableNames } = useEntityNames();
-
-  
-
-  
 
   const names = { warriorNames, stableNames };
 

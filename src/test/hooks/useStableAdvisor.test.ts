@@ -71,7 +71,9 @@ describe('useStableAdvisor', () => {
     act(() => {
       state.setState((draft) => {
         draft.roster = [w1];
-        draft.rivals = [{ id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } } as any];
+        draft.rivals = [
+          { id: 'rival_stable', roster: [rival], owner: { stableName: 'Rivals' } } as any,
+        ];
         draft.boutOffers = { off_1: offer } as any;
       });
     });

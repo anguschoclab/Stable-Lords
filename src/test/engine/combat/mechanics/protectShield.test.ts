@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { applyProtectMod, applyShieldZoneMod } from '@/engine/combat/mechanics/protectShield';
 
-
-
 describe('protectShield', () => {
   describe('applyProtectMod', () => {
     it('reduces damage by 25% if location is covered', () => {

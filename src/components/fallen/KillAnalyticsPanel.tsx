@@ -43,7 +43,15 @@ function BreakdownRow({ label, count, max }: { label: string; count: number; max
   );
 }
 
-function Breakdown({ title, icon, rows }: { title: string; icon: React.ReactNode; rows: [string, number][] }) {
+function Breakdown({
+  title,
+  icon,
+  rows,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  rows: [string, number][];
+}) {
   if (rows.length === 0) return null;
   return (
     <div>

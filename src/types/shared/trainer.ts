@@ -1,8 +1,6 @@
 import { FightingStyle } from './fightingStyles';
 import type { TrainerFocus, TrainerSpecialty, TrainerTier } from './trainerTypes';
 
-
-
 /**
  * Defines the shape of trainer.
  */

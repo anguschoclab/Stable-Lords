@@ -104,8 +104,7 @@ function voidedOffersImpact(state: GameState, voidedOffers: BoutOffer[]): StateI
         week: state.absoluteWeek,
         title: 'Bout Contract Voided',
         items: voidedOffers.map(
-          (o) =>
-            `Contract ${o.id} was voided — a warrior cannot be booked twice in one week.`
+          (o) => `Contract ${o.id} was voided — a warrior cannot be booked twice in one week.`
         ),
         category: 'news',
       },

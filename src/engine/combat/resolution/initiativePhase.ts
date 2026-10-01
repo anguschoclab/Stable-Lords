@@ -86,12 +86,32 @@ export function resolveInitiativePhase(
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
   const iniA = sumInitiative(
-    fA, AL_A, ctx.matchupA, fatA, defModsA, passA, psychA, dynTraitsA,
-    ctx.trainerModsA.iniMod ?? 0, masteryIniA, ctx, stylePhase
+    fA,
+    AL_A,
+    ctx.matchupA,
+    fatA,
+    defModsA,
+    passA,
+    psychA,
+    dynTraitsA,
+    ctx.trainerModsA.iniMod ?? 0,
+    masteryIniA,
+    ctx,
+    stylePhase
   );
   const iniD = sumInitiative(
-    fD, AL_D, ctx.matchupD, fatD, defModsD, passD, psychD, dynTraitsD,
-    ctx.trainerModsD.iniMod ?? 0, masteryIniD, ctx, stylePhase
+    fD,
+    AL_D,
+    ctx.matchupD,
+    fatD,
+    defModsD,
+    passD,
+    psychD,
+    dynTraitsD,
+    ctx.trainerModsD.iniMod ?? 0,
+    masteryIniD,
+    ctx,
+    stylePhase
   );
 
   const aGoesFirst = contestCheck(rng, iniA, iniD);

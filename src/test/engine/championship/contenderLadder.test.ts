@@ -7,11 +7,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
 import { topContenders } from '@/engine/championship/arenaChampionship';
-import {
-  makeWarrior,
-  makeGameState,
-  resetFixtureIds,
-} from '@/test/_fixtures/factories';
+import { makeWarrior, makeGameState, resetFixtureIds } from '@/test/_fixtures/factories';
 import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -47,7 +43,10 @@ describe('topContenders', () => {
   it('excludes the reigning champion and sub-MIN_BOUTS warriors', () => {
     const champ = venueWarrior('reigning', 10);
     const contender = venueWarrior('w1', 4);
-    const green = makeWarrior({ id: 'green' as WarriorId, career: { wins: 0, losses: 0, kills: 0 } });
+    const green = makeWarrior({
+      id: 'green' as WarriorId,
+      career: { wins: 0, losses: 0, kills: 0 },
+    });
     const state = makeGameState({
       week: 5,
       absoluteWeek: 5,

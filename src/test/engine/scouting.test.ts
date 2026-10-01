@@ -195,10 +195,7 @@ describe('Scouting System', () => {
       const warrior = makeWarrior();
       const { report } = generateScoutReport(warrior, 'Expert', 1, TEST_RNG);
       const personaTexts = new Set<string>();
-      for (const table of [
-        narrativeContent.persona.good,
-        narrativeContent.persona.bad,
-      ]) {
+      for (const table of [narrativeContent.persona.good, narrativeContent.persona.bad]) {
         for (const skill of Object.values(table)) {
           for (const t of [...skill.high, ...skill.low]) personaTexts.add(t.text);
         }
@@ -214,4 +211,3 @@ describe('Scouting System', () => {
     });
   });
 });
-

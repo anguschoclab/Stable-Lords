@@ -1,6 +1,5 @@
 import type { CrowdMoodType } from '../shared.types';
 
-
 /**
  * Defines the shape of mood tone record.
  */
@@ -9,7 +8,6 @@ export interface MoodToneRecord {
   opener: string[];
   closer: string[];
 }
-
 
 /**
  * Defines the shape of ux metadata.

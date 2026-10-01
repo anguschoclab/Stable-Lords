@@ -218,10 +218,13 @@ export function selectArenaForMatchup(
   // for warriors without records.
   const homeA = homeVenueOf(favorWarrior);
   const homeB = homeVenueOf(otherWarrior);
-  const homeArenaId =
-    !homeA ? homeB?.arenaId :
-    !homeB ? homeA.arenaId :
-    homeA.bouts >= homeB.bouts ? homeA.arenaId : homeB.arenaId;
+  const homeArenaId = !homeA
+    ? homeB?.arenaId
+    : !homeB
+      ? homeA.arenaId
+      : homeA.bouts >= homeB.bouts
+        ? homeA.arenaId
+        : homeB.arenaId;
   if (
     homeArenaId &&
     arenas.some((a) => a.id === homeArenaId) &&

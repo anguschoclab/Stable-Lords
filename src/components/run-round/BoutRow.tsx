@@ -16,7 +16,15 @@ interface BoutRowProps {
 }
 
 /** Fighter name cell — accent bar + name, winner highlighted; mirrored via `right`. */
-function FighterCell({ name, isWinner, right }: { name: string; isWinner: boolean; right?: boolean }) {
+function FighterCell({
+  name,
+  isWinner,
+  right,
+}: {
+  name: string;
+  isWinner: boolean;
+  right?: boolean;
+}) {
   const bar = (
     <div
       className={cn(
@@ -82,17 +90,14 @@ function RowTrigger({ res, isExpanded }: { res: BoutResult; isExpanded: boolean 
             <OutcomeIcon by={res.outcome.by} />
           </div>
           <div
-            className={cn('h-8 w-8 flex items-center justify-center border border-white/5 transition-colors motion-reduce:transition-none',
+            className={cn(
+              'h-8 w-8 flex items-center justify-center border border-white/5 transition-colors motion-reduce:transition-none',
               isExpanded
                 ? 'bg-primary/20 text-primary border-primary/40'
                 : 'bg-white/[0.02] text-muted-foreground/40 group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20'
             )}
           >
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
+            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </div>
         </div>
       </div>

@@ -108,10 +108,7 @@ describe('Tournaments page — handleExecuteRound', () => {
     expect(mockLoadGame).not.toHaveBeenCalled();
     // setSimulating(true) on entry, setSimulating(false) in finally
     expect(mockSetSimulating.mock.calls).toEqual([[true], [false]]);
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Tournament resolution failed:',
-      expect.any(Error)
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('Tournament resolution failed:', expect.any(Error));
   });
 
   it('loads updated state and posts success toast on resolution', async () => {

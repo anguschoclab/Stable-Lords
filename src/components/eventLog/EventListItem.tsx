@@ -34,7 +34,8 @@ export function EventListItem({
           onClick();
         }
       }}
-      className={cn('w-full text-left px-4 py-2.5 flex items-start gap-3 transition-colors border-b border-border/30 motion-reduce:transition-none',
+      className={cn(
+        'w-full text-left px-4 py-2.5 flex items-start gap-3 transition-colors border-b border-border/30 motion-reduce:transition-none',
         'hover:bg-secondary/60 cursor-pointer group'
       )}
     >

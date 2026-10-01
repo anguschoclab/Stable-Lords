@@ -4,8 +4,7 @@ import { CalendarClock, HeartPulse, Trophy, Swords, Crown } from 'lucide-react';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { getAllArenas } from '@/data/arenas';
 
-const arenaName = (id: string): string =>
-  getAllArenas().find((a) => a.id === id)?.name ?? id;
+const arenaName = (id: string): string => getAllArenas().find((a) => a.id === id)?.name ?? id;
 
 /** One horizon column: icon + label, then items or an empty-state line. */
 function HorizonColumn<T>({

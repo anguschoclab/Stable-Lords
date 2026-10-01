@@ -87,9 +87,7 @@ export interface OffseasonEventContext {
 
 /** Active warriors, optionally restricted to those carrying no injuries. */
 export function getActiveWarriors(state: GameState, healthyOnly = false): Warrior[] {
-  return state.roster.filter(
-    (w) => isActive(w) && (!healthyOnly || !hasInjuries(w))
-  );
+  return state.roster.filter((w) => isActive(w) && (!healthyOnly || !hasInjuries(w)));
 }
 
 /** Pick a random active warrior, or undefined when none are eligible. */

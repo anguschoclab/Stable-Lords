@@ -66,6 +66,8 @@ export const OwnerSchema = z.object({
   crest: CrestDataSchema.optional(),
   backstoryId: z.string().optional(),
   foundedByWarriorId: z.string().optional(),
+  foundedByWarriorName: z.string().optional(),
+  parentStableId: z.string().optional(),
   age: z.number().optional(),
   ageRetired: z.number().optional(),
 });
@@ -239,6 +241,7 @@ export const RivalStableDataSchema = z.object({
   ledger: z.array(LedgerEntrySchema),
   trainingAssignments: z.array(TrainingAssignmentSchema),
   needsRecruit: z.boolean().optional(),
+  weeksBelowMin: z.number().int().nonnegative().optional(),
   lastPoachSeason: z.number().int().nonnegative().optional(),
 });
 

@@ -84,9 +84,7 @@ function RosterCard({ w }: { w: Warrior }) {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-[11px] font-display font-black text-arena-gold">
-              {w.fame} FAME
-            </div>
+            <div className="text-[11px] font-display font-black text-arena-gold">{w.fame} FAME</div>
             <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
               {w.popularity} POP
             </div>

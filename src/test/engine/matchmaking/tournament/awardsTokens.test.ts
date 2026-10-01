@@ -1,10 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import type { GameState, TournamentEntry, Warrior } from '@/types/state.types';
-import {
-  FightingStyle,
-  type WarriorId,
-  type TournamentId,
-} from '@/types/shared.types';
+import { FightingStyle, type WarriorId, type TournamentId } from '@/types/shared.types';
 import { clearWarriorCache } from '@/engine/core/warriorLookup';
 import { awardTournamentPrizes } from '@/engine/matchmaking/tournamentSelection/awards';
 import {

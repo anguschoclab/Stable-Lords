@@ -43,14 +43,13 @@ function getStatement(
   highThreshold: number,
   isGoodWit: boolean,
   wt: number,
-  personaData: Persona,
+  personaData: Persona
 ): string {
   const witKey = isGoodWit ? 'good' : 'bad';
   const orderKey = baseValue >= highThreshold ? 'high' : 'low';
-  const category = (personaData[witKey] as unknown as Record<
-    string,
-    Record<string, StatementEntry[]>
-  >)?.[skillKey];
+  const category = (
+    personaData[witKey] as unknown as Record<string, Record<string, StatementEntry[]>>
+  )?.[skillKey];
   const entries = category?.[orderKey];
   // Personas in the archive use the WT itself for the sub-selection min values
   return pickFromArchive(entries, wt);

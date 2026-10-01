@@ -44,9 +44,10 @@ describe('dataIntegrityArenas', () => {
     for (const tier of [1, 2, 3] as const) {
       const count = getArenasByTier(tier).length;
       const cap = ARENA_ROSTER_LIMITS.TIER_CAPS[tier];
-      expect(count, `tier ${tier} has ${count} arenas — target ceiling is ${cap}`).toBeLessThanOrEqual(
-        cap
-      );
+      expect(
+        count,
+        `tier ${tier} has ${count} arenas — target ceiling is ${cap}`
+      ).toBeLessThanOrEqual(cap);
     }
   });
 

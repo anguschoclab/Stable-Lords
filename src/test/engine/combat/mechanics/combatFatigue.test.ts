@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { enduranceCost, fatiguePenalty } from '@/engine/combat/mechanics/combatFatigue';
 import type { WeatherType } from '@/types/shared.types';
 
-
-
 describe('combatFatigue mechanics', () => {
   describe('enduranceCost', () => {
     it('scales appropriately with OE and AL in Clear weather', () => {
@@ -137,7 +135,7 @@ describe('Combat Fatigue Mechanics', () => {
     });
 
     it('handles zero maxEndurance gracefully by returning heavy penalty', () => {
-       expect(fatiguePenalty(0, 0)).toBe(-8);
+      expect(fatiguePenalty(0, 0)).toBe(-8);
     });
   });
 });

@@ -1,4 +1,3 @@
-
 /**
  * Defines the shape of tier config.
  */
@@ -7,7 +6,6 @@ export interface TierConfig {
   cost: number;
   stars: number;
 }
-
 
 /**
  * Defines the shape of recruitment.

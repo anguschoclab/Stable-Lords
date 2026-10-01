@@ -1,4 +1,3 @@
-
 import { History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
@@ -22,10 +21,6 @@ interface ActionTimelineProps {
  */
 export function ActionTimeline({ events }: ActionTimelineProps) {
   const { warriorNames, stableNames } = useEntityNames();
-
-  
-
-  
 
   return (
     <div className="space-y-3">

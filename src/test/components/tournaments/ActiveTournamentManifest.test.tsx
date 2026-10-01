@@ -13,7 +13,13 @@ import type { TournamentEntry } from '@/types/game';
 import type { FightSummary } from '@/types/game';
 
 function makeBracket(
-  rounds: { round: number; matchIndex: number; winner?: 'A' | 'D'; warriorIdA: string; warriorIdD: string }[]
+  rounds: {
+    round: number;
+    matchIndex: number;
+    winner?: 'A' | 'D';
+    warriorIdA: string;
+    warriorIdD: string;
+  }[]
 ) {
   return rounds.map((r, i) => ({
     id: `bout-${i}`,

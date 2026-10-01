@@ -83,7 +83,8 @@ const RE_DYNAMIC = /\bimport\(\s*['"]([^'"]+)['"]\s*\)/g;
 const RE_REQUIRE = /\brequire\(\s*['"]([^'"]+)['"]\s*\)/g;
 const RE_WORKER_URL = /new\s+URL\(\s*['"]([^'"]+)['"]\s*,\s*import\.meta\.url\s*\)/g;
 const RE_NAMED_IMPORT = /(?:import|export)\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g;
-const RE_DEFAULT_IMPORT = /import\s+(?!type\b)([\w$]+)\s*(?:,\s*\{[^}]*\})?\s*from\s*['"]([^'"]+)['"]/g;
+const RE_DEFAULT_IMPORT =
+  /import\s+(?!type\b)([\w$]+)\s*(?:,\s*\{[^}]*\})?\s*from\s*['"]([^'"]+)['"]/g;
 const RE_NS_IMPORT = /import\s+(?!type\b)\*\s+as\s+[\w$]+\s+from\s*['"]([^'"]+)['"]/g;
 const RE_EXPORT_STAR = /export\s+\*\s+from\s*['"]([^'"]+)['"]/g;
 
@@ -397,8 +398,7 @@ function bucketOf(relPath) {
   if (relPath.includes('initialState')) return 'initialState';
   if (relPath.startsWith('src/engine/factories/')) return 'factory';
   if (relPath.startsWith('src/types/')) return 'types';
-  if (relPath.startsWith('src/components/') || relPath.startsWith('src/pages/'))
-    return 'ui';
+  if (relPath.startsWith('src/components/') || relPath.startsWith('src/pages/')) return 'ui';
   if (relPath.startsWith('src/engine/ai/')) return 'ai';
   return 'other-production';
 }
@@ -431,9 +431,7 @@ for (const { name, file } of AUDITED_INTERFACES) {
         readers.get(bucket).add(relF);
       }
     }
-    const readerBuckets = Object.fromEntries(
-      [...readers.entries()].map(([b, s]) => [b, s.size])
-    );
+    const readerBuckets = Object.fromEntries([...readers.entries()].map(([b, s]) => [b, s.size]));
     const nonInfraReaders = ['ui', 'ai', 'other-production'].reduce(
       (n, b) => n + (readerBuckets[b] || 0),
       0
@@ -442,12 +440,7 @@ for (const { name, file } of AUDITED_INTERFACES) {
       writerSites: writers.size,
       readersByBucket: readerBuckets,
       liveReaders: nonInfraReaders,
-      status:
-        nonInfraReaders === 0
-          ? 'NO_LIVE_READERS'
-          : writers.size === 0
-            ? 'NO_WRITERS'
-            : 'ok',
+      status: nonInfraReaders === 0 ? 'NO_LIVE_READERS' : writers.size === 0 ? 'NO_WRITERS' : 'ok',
     };
   }
   stateFieldReport[name] = { file: rel(abs), fields: fieldData };
@@ -494,7 +487,9 @@ function routePathOf(relPath) {
 const routeReport = routeFiles.map((r) => {
   const rp = routePathOf(r);
   const navMatch = rp
-    ? [...navHrefs].some((h) => h === rp || (rp !== '/' && h.startsWith(rp + '/')) || h.startsWith(rp + '?'))
+    ? [...navHrefs].some(
+        (h) => h === rp || (rp !== '/' && h.startsWith(rp + '/')) || h.startsWith(rp + '?')
+      )
     : true;
   return { file: r, path: rp, navLinked: navMatch, pageImports: routePages[r] };
 });

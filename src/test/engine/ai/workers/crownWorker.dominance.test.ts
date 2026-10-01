@@ -7,12 +7,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
 import { assessCrownOpportunity } from '@/engine/ai/workers/crownWorker';
-import {
-  makeRival,
-  makeWarrior,
-  makeGameState,
-  resetFixtureIds,
-} from '@/test/_fixtures/factories';
+import { makeRival, makeWarrior, makeGameState, resetFixtureIds } from '@/test/_fixtures/factories';
 import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle, GameState, RankingEntry } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';

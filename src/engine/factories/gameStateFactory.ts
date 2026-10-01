@@ -69,6 +69,8 @@ export function createFreshState(
     trainingAssignments: [],
     seasonalGrowth: [],
     rivals: [],
+    legacyFounderQueue: [],
+    freeAgents: [],
     scoutReports: [],
     restStates: [],
     rivalries: [],

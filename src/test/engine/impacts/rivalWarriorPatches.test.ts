@@ -5,7 +5,12 @@ import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 
 const W = (id: string) =>
-  ({ id: id as WarriorId, name: id, career: { wins: 0, losses: 0, kills: 0 }, fame: 0 }) as unknown as Warrior;
+  ({
+    id: id as WarriorId,
+    name: id,
+    career: { wins: 0, losses: 0, kills: 0 },
+    fame: 0,
+  }) as unknown as Warrior;
 const rival = (id: string, roster: Warrior[]) =>
   ({ id: id as StableId, roster }) as unknown as RivalStableData;
 
@@ -17,7 +22,9 @@ describe('rival warrior patches (same-week bout merging)', () => {
     // Bout 1: a beats someone. Bout 2: b loses and is killed. Both resolved
     // against the same pre-week state, merged last-wins per map key.
     const bout1: StateImpact = {
-      rivalWarriorPatches: new Map([['a' as WarriorId, { career: { wins: 1, losses: 0, kills: 0 } }]]),
+      rivalWarriorPatches: new Map([
+        ['a' as WarriorId, { career: { wins: 1, losses: 0, kills: 0 } }],
+      ]),
     };
     const bout2: StateImpact = {
       rivalWarriorPatches: new Map([

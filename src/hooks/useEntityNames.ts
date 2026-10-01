@@ -26,9 +26,7 @@ export function collectWarriorNames(
 }
 
 /** All known stable names — the player's and each rival owner's. */
-export function collectStableNames(
-  state: Pick<NameSource, 'player' | 'rivals'>
-): string[] {
+export function collectStableNames(state: Pick<NameSource, 'player' | 'rivals'>): string[] {
   const names = new Set<string>();
   if (state.player?.stableName) names.add(state.player.stableName);
   for (const r of state.rivals ?? []) {
@@ -57,10 +55,7 @@ export function useEntityNames(): { warriorNames: string[]; stableNames: string[
     () => collectWarriorNames({ roster, graveyard, retired, rivals }),
     [roster, graveyard, retired, rivals]
   );
-  const stableNames = useMemo(
-    () => collectStableNames({ player, rivals }),
-    [player, rivals]
-  );
+  const stableNames = useMemo(() => collectStableNames({ player, rivals }), [player, rivals]);
 
   return { warriorNames, stableNames };
 }

@@ -1,10 +1,4 @@
-import {
-  Sparkles,
-  Building2,
-  DollarSign,
-  Award,
-  AlertTriangle,
-} from 'lucide-react';
+import { Sparkles, Building2, DollarSign, Award, AlertTriangle } from 'lucide-react';
 import type { Promoter, PromoterPersonality, BoutOffer } from '@/types/state.types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 

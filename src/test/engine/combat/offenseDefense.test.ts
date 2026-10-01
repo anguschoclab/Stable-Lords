@@ -29,8 +29,6 @@ const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
   });
 const makeCtx = makeResolutionContext;
 
-
-
 interface SetupResult {
   ctx: ResolutionContext;
   fA: FighterState;

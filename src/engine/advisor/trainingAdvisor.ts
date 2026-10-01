@@ -116,7 +116,13 @@ function recoveryAdvice(
   headline: string,
   reasoningBase: string
 ): WarriorTrainingAdvice {
-  const pick = selectTrainerForAdvice(warrior, state.trainers, 'recovery', undefined, state.treasury);
+  const pick = selectTrainerForAdvice(
+    warrior,
+    state.trainers,
+    'recovery',
+    undefined,
+    state.treasury
+  );
   return {
     mode: 'recovery',
     targetTrainerId: pick?.trainer.id,
@@ -130,14 +136,9 @@ function recoveryAdvice(
 /**
  * Evaluate and recommend the optimal training assignment for a warrior.
  */
-export function evaluateTrainingAdvice(
-  warrior: Warrior,
-  state: GameState
-): WarriorTrainingAdvice {
+export function evaluateTrainingAdvice(warrior: Warrior, state: GameState): WarriorTrainingAdvice {
   // 1. Hard Gate: Active Injuries -> Med Bay Recovery
-  const hasActiveInjury = (warrior.injuries || []).some(
-    (inj) => (inj.weeksRemaining ?? 1) > 0
-  );
+  const hasActiveInjury = (warrior.injuries || []).some((inj) => (inj.weeksRemaining ?? 1) > 0);
   if (hasActiveInjury) {
     const worst = warrior.injuries[0];
     return recoveryAdvice(
@@ -172,7 +173,9 @@ export function evaluateTrainingAdvice(
   }
 
   if (cappedAttrs.size > 0) {
-    const cappedNames = Array.from(cappedAttrs).map((k) => ATTRIBUTE_LABELS[k]).join(', ');
+    const cappedNames = Array.from(cappedAttrs)
+      .map((k) => ATTRIBUTE_LABELS[k])
+      .join(', ');
     burnSummary = `Potential ceiling reached for: ${cappedNames}. Shifting focus to uncapped stats.`;
   }
 
@@ -255,8 +258,7 @@ function cappedFallbackAdvice(
 
   const pick = selectTrainerForAdvice(warrior, trainers, 'trait', undefined, state.treasury);
   const anyActiveTrainer = (trainers ?? []).some((t) => t.contractWeeksLeft > 0);
-  const traitDeferred =
-    !pick && anyActiveTrainer && state.treasury !== undefined;
+  const traitDeferred = !pick && anyActiveTrainer && state.treasury !== undefined;
   return {
     mode: 'trait',
     targetTrainerId: pick?.trainer.id,

@@ -22,7 +22,12 @@ interface WarriorDossierHeaderProps {
  * Warrior dossier header.
  * @param - { warrior, record, rankings }.
  */
-export function WarriorDossierHeader({ warrior, record, rankings, isPlayerOwned = true }: WarriorDossierHeaderProps) {
+export function WarriorDossierHeader({
+  warrior,
+  record,
+  rankings,
+  isPlayerOwned = true,
+}: WarriorDossierHeaderProps) {
   const playerChallenges = useGameStore((s) => s.playerChallenges);
   const playerAvoids = useGameStore((s) => s.playerAvoids);
   const toggleChallenge = useGameStore((s) => s.toggleChallenge);

@@ -24,7 +24,8 @@ export function ComparisonBar({ label, valA, valB, maxVal, colorA, colorB }: Com
     <div className="space-y-1 group/bar">
       <div className="flex items-center justify-between text-[10px] font-black tracking-widest uppercase">
         <span
-          className={cn('font-mono transition-colors motion-reduce:transition-none',
+          className={cn(
+            'font-mono transition-colors motion-reduce:transition-none',
             aWins ? colorA.replace('bg-', 'text-') + ' drop-shadow-sm' : 'text-muted-foreground/40'
           )}
         >
@@ -34,7 +35,8 @@ export function ComparisonBar({ label, valA, valB, maxVal, colorA, colorB }: Com
           {label}
         </span>
         <span
-          className={cn('font-mono transition-colors motion-reduce:transition-none',
+          className={cn(
+            'font-mono transition-colors motion-reduce:transition-none',
             bWins ? colorB.replace('bg-', 'text-') + ' drop-shadow-sm' : 'text-muted-foreground/40'
           )}
         >

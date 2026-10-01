@@ -96,7 +96,14 @@ function pickPoachTarget(
       liability.score > best.liabilityScore ||
       (liability.score === best.liabilityScore && warrior.id < best.warrior.id)
     ) {
-      best = { warrior, sellerStableId, sellerPersonality, playerBound, liabilityScore: liability.score, traitValue };
+      best = {
+        warrior,
+        sellerStableId,
+        sellerPersonality,
+        playerBound,
+        liabilityScore: liability.score,
+        traitValue,
+      };
     }
   };
 
@@ -150,10 +157,7 @@ export function computePoachBid(
  * treasuries. Player-bound bids surface a gazette decision item only — the
  * player's roster is never mutated.
  */
-export function processPoachMarket(
-  state: GameState,
-  rivals: RivalStableData[]
-): PoachMarketResult {
+export function processPoachMarket(state: GameState, rivals: RivalStableData[]): PoachMarketResult {
   const gazetteItems: string[] = [];
   if (!isPoachingEnabled()) return { updatedRivals: rivals, gazetteItems };
 
@@ -172,16 +176,12 @@ export function processPoachMarket(
 
     if (bid.playerBound) {
       const target =
-        state.warriorMap?.get(bid.warriorId) ??
-        state.roster.find((w) => w.id === bid.warriorId);
+        state.warriorMap?.get(bid.warriorId) ?? state.roster.find((w) => w.id === bid.warriorId);
       const desc =
         `Poach bid on your warrior ${target ? warriorDisplayName(target) : String(bid.warriorId)} — ` +
         `${rival.owner.name} offers ${bid.price}g (publicized, awaits your decision)`;
       gazetteItems.push(`[POACH] ${desc}`);
-      byId.set(
-        rival.id,
-        logAgentAction(stamped, 'ROSTER', desc, 'Medium', state.absoluteWeek)
-      );
+      byId.set(rival.id, logAgentAction(stamped, 'ROSTER', desc, 'Medium', state.absoluteWeek));
       if (isAIDebugEnabled())
         console.debug(`[poach] ${rival.id} -> player ${bid.warriorId} @ ${bid.price}g`);
       continue;
@@ -244,10 +244,7 @@ function settleAIPoach(
 
   const desc = `Poached ${warriorDisplayName(target)} from ${seller.owner.name} for ${bid.price}g`;
   gazetteItems.push(`[POACH] ${desc}`);
-  byId.set(
-    buyerId,
-    logAgentAction(buyerAfter, 'ROSTER', desc, 'Medium', state.absoluteWeek)
-  );
+  byId.set(buyerId, logAgentAction(buyerAfter, 'ROSTER', desc, 'Medium', state.absoluteWeek));
   if (isAIDebugEnabled())
     console.debug(`[poach] ${buyerId} -> ${seller.id} ${bid.warriorId} @ ${bid.price}g`);
 }

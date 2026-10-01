@@ -32,7 +32,7 @@ function traveler(opts: { arenaId: string; wins: number; losses: number }[]) {
 }
 
 describe('venue counter', () => {
-  it('counters toward the warrior\'s best arena when the offered venue is a losing one', () => {
+  it("counters toward the warrior's best arena when the offered venue is a losing one", () => {
     const warrior = traveler([
       { arenaId: 'the_gallows_tree', wins: 1, losses: 5 },
       { arenaId: 'standard_arena', wins: 6, losses: 1 },
@@ -62,9 +62,7 @@ describe('venue counter', () => {
       hype: 90,
     });
     const state = makeGameState({ rivals: [rival] });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe(
-      'Accepted'
-    );
+    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe('Accepted');
   });
 
   it('counterBoutVenue swaps the arena, tags the offer, and re-pends the other side', () => {
@@ -176,8 +174,6 @@ describe('venue counter', () => {
       hype: 90,
     });
     const state = makeGameState({ rivals: [rival] });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe(
-      'Accepted'
-    );
+    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe('Accepted');
   });
 });

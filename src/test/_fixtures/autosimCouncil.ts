@@ -4,7 +4,11 @@ import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import { makeBoutOffer, makeGameState } from '@/test/_fixtures/factories';
 
 /** Offer scheduled for the upcoming week (absoluteWeek 1 → boutWeek 2). */
-export const makeAutosimOffer = (id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer =>
+export const makeAutosimOffer = (
+  id: string,
+  warriorIds: string[],
+  opts?: Partial<BoutOffer>
+): BoutOffer =>
   makeBoutOffer({
     id: id as BoutOfferId,
     promoterId: 'promoter-1' as any,

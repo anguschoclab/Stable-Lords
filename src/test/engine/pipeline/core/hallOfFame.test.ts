@@ -163,9 +163,7 @@ describe('recordWeeklyHallOfFame', () => {
     const fight = mkFight('f1');
     const state = {
       ...weekState([fight]),
-      hallOfFame: [
-        { id: 'h1', week: 7, label: 'Fight of the Week' as const, fightId: 'f1' },
-      ],
+      hallOfFame: [{ id: 'h1', week: 7, label: 'Fight of the Week' as const, fightId: 'f1' }],
     } as unknown as GameState;
 
     expect(recordWeeklyHallOfFame(state)).toEqual({});

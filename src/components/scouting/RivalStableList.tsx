@@ -16,13 +16,7 @@ interface RivalStableListProps {
 type OwnerGrudge = NonNullable<ReturnType<typeof useGameStore.getState>['ownerGrudges']>[number];
 
 /** Crest + stable name + roster/personality/philosophy chip row. */
-function RivalIdentity({
-  rival,
-  isSelected,
-}: {
-  rival: RivalStableData;
-  isSelected: boolean;
-}) {
+function RivalIdentity({ rival, isSelected }: { rival: RivalStableData; isSelected: boolean }) {
   return (
     <div className="flex items-center gap-4 min-w-0">
       <div
@@ -43,7 +37,8 @@ function RivalIdentity({
       </div>
       <div className="space-y-1 min-w-0">
         <span
-          className={cn('block font-display font-black text-sm uppercase tracking-tight transition-colors truncate motion-reduce:transition-none',
+          className={cn(
+            'block font-display font-black text-sm uppercase tracking-tight transition-colors truncate motion-reduce:transition-none',
             isSelected ? 'text-primary' : 'text-foreground'
           )}
         >
@@ -65,9 +60,7 @@ function RivalIdentity({
           {rival.owner.metaAdaptation && (
             <>
               <span className="h-1 w-1 rounded-full bg-border/40" />
-              <span className="text-muted-foreground/40">
-                {rival.owner.metaAdaptation}
-              </span>
+              <span className="text-muted-foreground/40">{rival.owner.metaAdaptation}</span>
             </>
           )}
         </div>

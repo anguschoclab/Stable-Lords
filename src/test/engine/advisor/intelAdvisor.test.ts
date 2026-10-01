@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  deriveHeadToHead,
-  getOpponentIntel,
-  summarizeIntel,
-} from '@/engine/advisor/intelAdvisor';
+import { deriveHeadToHead, getOpponentIntel, summarizeIntel } from '@/engine/advisor/intelAdvisor';
 import { makeFightSummary, makeGameState } from '@/test/_fixtures/factories';
 import type { InsightToken } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -24,14 +20,34 @@ describe('deriveHeadToHead', () => {
     const state = makeGameState({
       arenaHistory: [
         // w1 wins as side A
-        makeFightSummary({ warriorIdA: 'w1' as WarriorId, warriorIdD: 'opp1' as WarriorId, winner: 'A' }),
+        makeFightSummary({
+          warriorIdA: 'w1' as WarriorId,
+          warriorIdD: 'opp1' as WarriorId,
+          winner: 'A',
+        }),
         // w1 loses twice (as D and as A)
-        makeFightSummary({ warriorIdA: 'w1' as WarriorId, warriorIdD: 'opp1' as WarriorId, winner: 'D' }),
-        makeFightSummary({ warriorIdA: 'opp1' as WarriorId, warriorIdD: 'w1' as WarriorId, winner: 'A' }),
+        makeFightSummary({
+          warriorIdA: 'w1' as WarriorId,
+          warriorIdD: 'opp1' as WarriorId,
+          winner: 'D',
+        }),
+        makeFightSummary({
+          warriorIdA: 'opp1' as WarriorId,
+          warriorIdD: 'w1' as WarriorId,
+          winner: 'A',
+        }),
         // Unrelated fight — ignored
-        makeFightSummary({ warriorIdA: 'x1' as WarriorId, warriorIdD: 'x2' as WarriorId, winner: 'A' }),
+        makeFightSummary({
+          warriorIdA: 'x1' as WarriorId,
+          warriorIdD: 'x2' as WarriorId,
+          winner: 'A',
+        }),
         // Unresolved — excluded
-        makeFightSummary({ warriorIdA: 'w1' as WarriorId, warriorIdD: 'opp1' as WarriorId, winner: null }),
+        makeFightSummary({
+          warriorIdA: 'w1' as WarriorId,
+          warriorIdD: 'opp1' as WarriorId,
+          winner: null,
+        }),
       ],
     });
 
@@ -68,9 +84,7 @@ describe('getOpponentIntel', () => {
 
 describe('summarizeIntel', () => {
   it('renders one readable line per token', () => {
-    const lines = summarizeIntel([
-      mkToken({ type: 'Rhythm', detail: 'Slow starter' }),
-    ]);
+    const lines = summarizeIntel([mkToken({ type: 'Rhythm', detail: 'Slow starter' })]);
     expect(lines[0]).toContain('Rhythm');
     expect(lines[0]).toContain('Slow starter');
   });

@@ -11,14 +11,12 @@ import type { Recruitment } from './recruitment';
 import type { Meta } from './meta';
 import type { Passives } from './passives';
 
-
 /**
  * Defines the shape of kill text.
  */
 export interface KillText {
   [key: string]: string[] | Record<string, string[]>;
 }
-
 
 /**
  * Defines the shape of narrative content.

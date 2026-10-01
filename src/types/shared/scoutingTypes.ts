@@ -1,4 +1,3 @@
-
 // Endurance: fatigue penalty reduced 30%
 
 /**

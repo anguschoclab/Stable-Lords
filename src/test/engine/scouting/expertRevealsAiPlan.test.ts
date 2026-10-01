@@ -8,12 +8,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateScoutReport } from '@/engine/scouting/scouting';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
-import {
-  makeGameState,
-  makeRival,
-  makeWarrior,
-  makeBoutOffer,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
 import { SeededRNGService } from '@/utils/random';
 
 describe('Expert scouting reveals AI plan', () => {
@@ -30,9 +25,7 @@ describe('Expert scouting reveals AI plan', () => {
     });
 
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const scouted = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const scouted = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
 
     const { report } = generateScoutReport(scouted, 'Expert', state.week, new SeededRNGService(1));
     expect(report.suspectedOE).toBeDefined();

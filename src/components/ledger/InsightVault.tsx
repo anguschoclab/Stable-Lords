@@ -189,7 +189,9 @@ function StatItem({ icon: Icon, label, value, sublabel, variant }: StatItemProps
       <div
         className={`p-3 rounded-none ${v.bg} ${v.border} ${v.hoverBorder} transition-all motion-reduce:transition-none motion-reduce:transform-none`}
       >
-        <Icon className={`h-5 w-5 ${v.text} ${v.hoverText} transition-colors motion-reduce:transition-none`} />
+        <Icon
+          className={`h-5 w-5 ${v.text} ${v.hoverText} transition-colors motion-reduce:transition-none`}
+        />
       </div>
       <div>
         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">
@@ -256,13 +258,7 @@ function VaultHeader({ tokensByType }: { tokensByType: TokensByType }) {
 }
 
 /** Summary strip: totals per token family + the awaiting-discovery status. */
-function InsightSummary({
-  total,
-  tokensByType,
-}: {
-  total: number;
-  tokensByType: TokensByType;
-}) {
+function InsightSummary({ total, tokensByType }: { total: number; tokensByType: TokensByType }) {
   return (
     <Surface
       variant="glass"

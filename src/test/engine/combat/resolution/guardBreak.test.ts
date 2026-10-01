@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { accumulateGuardBreak } from '@/engine/combat/resolution/guardBreak';
 import { BA_PARDEGRADE_PER_HIT, BA_PARDEGRADE_CAP } from '@/constants/combat/combat';
 
-
-
 describe('accumulateGuardBreak', () => {
   it('adds one increment from zero', () => {
     expect(accumulateGuardBreak(0)).toBe(BA_PARDEGRADE_PER_HIT);

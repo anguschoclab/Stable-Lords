@@ -28,10 +28,7 @@ describe('NodeArchiveService', () => {
     await service.archiveBoutLog(3, 2, 'bout_42', transcript, true);
 
     // Layout mirrors OPFS: <root>/season_{n}/bouts/{year}_{boutId}.json
-    const raw = await readFile(
-      path.join(tmpDir, 'season_2', 'bouts', '3_bout_42.json'),
-      'utf8'
-    );
+    const raw = await readFile(path.join(tmpDir, 'season_2', 'bouts', '3_bout_42.json'), 'utf8');
     expect(JSON.parse(raw)).toEqual(transcript);
 
     const retrieved = await service.retrieveBoutLog(3, 2, 'bout_42');
@@ -63,10 +60,7 @@ describe('NodeArchiveService', () => {
 
   it('archives and retrieves gazette markdown', async () => {
     await service.archiveGazette(1, 7, '# Week 7\nHello');
-    const raw = await readFile(
-      path.join(tmpDir, 'season_1', 'gazettes', 'week_7.md'),
-      'utf8'
-    );
+    const raw = await readFile(path.join(tmpDir, 'season_1', 'gazettes', 'week_7.md'), 'utf8');
     expect(raw).toContain('Hello');
     expect(await service.retrieveGazette(1, 7)).toBe('# Week 7\nHello');
     expect(await service.retrieveGazette(1, 99)).toBeNull();

@@ -10,8 +10,6 @@ import { makeFighterState as makeFighter, makeResolutionContext } from '@/test/_
 
 const makeCtx = makeResolutionContext;
 
-
-
 describe('prepareExchange — recovery from knockdown', () => {
   it('clears knockedDown on fighter A and pushes RECOVERY event', () => {
     const fA = makeFighter({ knockedDown: true });

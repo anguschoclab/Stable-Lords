@@ -14,7 +14,7 @@ import type { ScoutReportData } from '@/types/state.types';
 vi.mock('@/components/bookmarks/BookmarkButton', () => ({
   BookmarkButton: () => <div data-testid="bookmark" />,
 }));
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 const report = (over: Partial<ScoutReportData> = {}): ScoutReportData => ({
   id: 'rep-1' as never,
@@ -47,7 +47,18 @@ describe('scout report — masked plan uncertainty display', () => {
   it('still surfaces the warning when the report has no plan tendencies', () => {
     // A masked stable with no committed plan — the report stays honest about
     // what it could not verify rather than hiding the doubt.
-    render(<ScoutReportDetails report={report({ suspectedOE: undefined, suspectedAL: undefined, possiblyMaskedPlan: true })} warriorName="Masked Blade" treasury={500} onScout={vi.fn()} />);
+    render(
+      <ScoutReportDetails
+        report={report({
+          suspectedOE: undefined,
+          suspectedAL: undefined,
+          possiblyMaskedPlan: true,
+        })}
+        warriorName="Masked Blade"
+        treasury={500}
+        onScout={vi.fn()}
+      />
+    );
     expect(screen.getByTestId('masked-plan-warning')).toBeInTheDocument();
   });
 });

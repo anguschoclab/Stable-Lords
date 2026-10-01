@@ -13,9 +13,7 @@ export function isHighKillWarrior(w: Warrior): boolean {
 
 /** Check if warrior has injury-prone characteristics */
 export function hasInjuryRisk(w: Warrior): boolean {
-  return (['Moderate', 'Severe', 'Critical'] as const).some((sev) =>
-    hasInjuryOfSeverity(w, sev)
-  );
+  return (['Moderate', 'Severe', 'Critical'] as const).some((sev) => hasInjuryOfSeverity(w, sev));
 }
 
 /** Check if warrior is "showy" (for Flashy promoter) */

@@ -10,21 +10,15 @@ interface CouncilHeaderProps {
 }
 
 /** One KPI tile. */
-function KpiCard({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-}) {
+function KpiCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
     <Surface variant="glass" className="p-4 border-white/5 flex items-center justify-between">
       <div className="flex items-center gap-3">
         {icon}
         <div className="flex flex-col">
-          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">{label}</span>
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">
+            {label}
+          </span>
           <span className="text-base font-display font-black text-foreground">{value}</span>
         </div>
       </div>
@@ -33,10 +27,26 @@ function KpiCard({
 }
 
 const KPI_DEFS = [
-  { icon: <Swords className="h-4 w-4 text-primary" />, label: 'Combat Ready', key: 'combatReadyCount' },
-  { icon: <Heart className="h-4 w-4 text-destructive" />, label: 'Med Bay Rehab', key: 'rehabCount' },
-  { icon: <Trophy className="h-4 w-4 text-arena-gold" />, label: 'Contenders', key: 'tournamentContenderCount' },
-  { icon: <Dumbbell className="h-4 w-4 text-arena-pop" />, label: 'Unassigned Drills', key: 'unassignedTrainingCount' },
+  {
+    icon: <Swords className="h-4 w-4 text-primary" />,
+    label: 'Combat Ready',
+    key: 'combatReadyCount',
+  },
+  {
+    icon: <Heart className="h-4 w-4 text-destructive" />,
+    label: 'Med Bay Rehab',
+    key: 'rehabCount',
+  },
+  {
+    icon: <Trophy className="h-4 w-4 text-arena-gold" />,
+    label: 'Contenders',
+    key: 'tournamentContenderCount',
+  },
+  {
+    icon: <Dumbbell className="h-4 w-4 text-arena-pop" />,
+    label: 'Unassigned Drills',
+    key: 'unassignedTrainingCount',
+  },
 ] as const;
 
 /** Purse/training/treasury projection + insolvency badge. */
@@ -71,7 +81,10 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
   return (
     <div className="space-y-6">
       {/* Top Directive & Master Action Banner */}
-      <Surface variant="glass" className="p-8 border-primary/20 bg-gradient-to-r from-primary/10 via-background to-background relative overflow-hidden">
+      <Surface
+        variant="glass"
+        className="p-8 border-primary/20 bg-gradient-to-r from-primary/10 via-background to-background relative overflow-hidden"
+      >
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -84,7 +97,10 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
             </div>
             <div className="space-y-1.5 pl-1">
               {summary.stableDirectives.map((directive, i) => (
-                <p key={i} className="text-xs font-semibold text-foreground/90 leading-relaxed flex items-center gap-2">
+                <p
+                  key={i}
+                  className="text-xs font-semibold text-foreground/90 leading-relaxed flex items-center gap-2"
+                >
                   <span>{directive}</span>
                 </p>
               ))}

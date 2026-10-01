@@ -9,8 +9,6 @@ import {
 } from '@/engine/combat/mechanics/combatDamage';
 import * as combatDamage from '@/engine/combat/mechanics/combatDamage';
 
-
-
 describe('combatDamage engine', () => {
   describe('protectCovers', () => {
     it('returns empty array for no protection', () => {

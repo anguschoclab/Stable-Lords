@@ -46,10 +46,17 @@ export function ConfirmDestructiveDialog({
 }: ConfirmDestructiveDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className={contentClassName} style={contentStyle} aria-describedby={descriptionId}>
+      <AlertDialogContent
+        className={contentClassName}
+        style={contentStyle}
+        aria-describedby={descriptionId}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle className={titleClassName}>{title}</AlertDialogTitle>
-          <AlertDialogDescription id={descriptionId} className={descriptionClassName ?? 'text-muted-foreground font-medium'}>
+          <AlertDialogDescription
+            id={descriptionId}
+            className={descriptionClassName ?? 'text-muted-foreground font-medium'}
+          >
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>

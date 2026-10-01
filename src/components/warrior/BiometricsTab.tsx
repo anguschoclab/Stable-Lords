@@ -71,7 +71,11 @@ function BodyAttrsCard({ warrior }: { warrior: Warrior }) {
       </div>
       <div className="p-8 space-y-6">
         <AttrBar label="Strength" value={warrior.attributes.ST} potential={warrior.potential?.ST} />
-        <AttrBar label="Constitution" value={warrior.attributes.CN} potential={warrior.potential?.CN} />
+        <AttrBar
+          label="Constitution"
+          value={warrior.attributes.CN}
+          potential={warrior.potential?.CN}
+        />
         <AttrBar label="Deftness" value={warrior.attributes.DF} potential={warrior.potential?.DF} />
         <AttrBar label="Speed" value={warrior.attributes.SP} potential={warrior.potential?.SP} />
         <AttrBar label="Size" value={warrior.attributes.SZ} potential={warrior.potential?.SZ} />

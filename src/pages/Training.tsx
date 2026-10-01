@@ -103,9 +103,7 @@ function RosterGrid({
             onAssign={(attr) => handleAssign(warrior.id, attr)}
             onAssignRecovery={() => handleAssignRecovery(warrior.id)}
             onClear={() => handleClear(warrior.id)}
-            onAssignTraitTraining={(trainerId) =>
-              handleAssignTraitTraining(warrior.id, trainerId)
-            }
+            onAssignTraitTraining={(trainerId) => handleAssignTraitTraining(warrior.id, trainerId)}
             advisorAdvice={advisorCardMap.get(warrior.id)?.trainingAdvice}
           />
         ))}
@@ -174,11 +172,7 @@ export default function Training() {
           {state.roster.length === 0 ? (
             <EmptyRoster onNavigate={() => navigate({ to: '/stable/recruit' })} />
           ) : (
-            <RosterGrid
-              state={state}
-              assignments={assignments}
-              advisorCardMap={advisorCardMap}
-            />
+            <RosterGrid state={state} assignments={assignments} advisorCardMap={advisorCardMap} />
           )}
         </div>
       </div>

@@ -92,14 +92,9 @@ export async function skipToSeasonEnd(): Promise<void> {
 /**
  * Regenerate the entire rival ecosystem with a fresh seed.
  */
-export function regenerateRivals(
-  setState: (fn: (draft: GameStore) => void) => void
-): void {
+export function regenerateRivals(setState: (fn: (draft: GameStore) => void) => void): void {
   import('@/engine/rivals').then(({ generateRivalStables }) => {
-    const newRivals = generateRivalStables(
-      23,
-      cryptoRandomInt(0, 2147483647)
-    ) as RivalStableData[];
+    const newRivals = generateRivalStables(23, cryptoRandomInt(0, 2147483647)) as RivalStableData[];
     setState((draft) => {
       draft.rivals = newRivals;
     });

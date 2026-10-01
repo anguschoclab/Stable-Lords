@@ -565,11 +565,16 @@ describe('buildNamesByFightId', () => {
 
 describe('names cache integration', () => {
   it('detectUpsets reads names from the cache, not by re-parsing titles', () => {
-    const f = createFight({ id: 'x1', a: 'Underdog', d: 'Favorite', winner: 'A', fameA: 10, fameD: 30 });
+    const f = createFight({
+      id: 'x1',
+      a: 'Underdog',
+      d: 'Favorite',
+      winner: 'A',
+      fameA: 10,
+      fameD: 30,
+    });
     // Cache names deliberately diverge from what getNamesFromTitle(title) would return
-    const namesByFightId = new Map([
-      ['x1' as FightId, { a: 'CACHED_A', d: 'CACHED_D' }],
-    ]);
+    const namesByFightId = new Map([['x1' as FightId, { a: 'CACHED_A', d: 'CACHED_D' }]]);
     const upsets = detectUpsets([f], namesByFightId);
     expect(upsets).toHaveLength(1);
     expect(upsets[0]!.winner).toBe('CACHED_A');

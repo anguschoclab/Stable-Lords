@@ -1,27 +1,19 @@
 import type { WeatherType } from './weather';
 
-
-
 /**
  * Distance range type.
  */
 export type DistanceRange = 'Grapple' | 'Tight' | 'Striking' | 'Extended';
-
-
 
 /**
  * Arena zone type.
  */
 export type ArenaZone = 'Center' | 'Edge' | 'Corner' | 'Obstacle';
 
-
-
 /**
  * Commit level type.
  */
 export type CommitLevel = 'Cautious' | 'Standard' | 'Full';
-
-
 
 /**
  * Arena tag type.
@@ -40,8 +32,6 @@ export type ArenaTag =
   | 'living'
   | 'cursed';
 
-
-
 /**
  * Defines the shape of surface mod.
  */
@@ -51,8 +41,6 @@ export interface SurfaceMod {
   riposteMod: number; // flat bonus/penalty to riposte checks
 }
 
-
-
 /**
  * Defines the shape of arena weather mod.
  */
@@ -61,8 +49,6 @@ export interface ArenaWeatherMod {
   zoneDef?: Partial<Record<ArenaZone, number>>;
   surfaceMod?: Partial<SurfaceMod>;
 }
-
-
 
 /**
  * Defines the shape of arena config.

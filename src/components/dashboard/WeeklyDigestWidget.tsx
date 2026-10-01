@@ -80,13 +80,7 @@ function DigestAlerts({ summary }: { summary: ReturnType<typeof useDigestSummary
 }
 
 /** This week's scheduled bouts block + schedule link. */
-function ScheduleBlock({
-  week,
-  signedOffers,
-}: {
-  week: number;
-  signedOffers: number;
-}) {
+function ScheduleBlock({ week, signedOffers }: { week: number; signedOffers: number }) {
   if (signedOffers <= 0) return null;
   return (
     <div className="p-3 bg-secondary/30 rounded-none">

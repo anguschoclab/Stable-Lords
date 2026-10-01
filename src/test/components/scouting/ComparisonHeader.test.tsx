@@ -4,7 +4,10 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ComparisonHeader } from '@/components/scouting/ComparisonHeader';
 import type { RivalStableData, Warrior } from '@/types/game';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+} from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children, className }: any) => (

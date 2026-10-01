@@ -63,7 +63,15 @@ function deriveBracketStatus(tournament: TournamentEntry) {
         : bronzeBout.warriorIdD
       : undefined;
 
-  return { isComplete, totalRounds, currentRound, completedMatches, totalMatches, championId, bronzeId };
+  return {
+    isComplete,
+    totalRounds,
+    currentRound,
+    completedMatches,
+    totalMatches,
+    championId,
+    bronzeId,
+  };
 }
 
 interface ActiveTournamentManifestProps {
@@ -139,11 +147,7 @@ export function ActiveTournamentManifest({
           </div>
 
           {isComplete && (
-            <CompletedPodium
-              tournament={tournament}
-              championId={championId}
-              bronzeId={bronzeId}
-            />
+            <CompletedPodium tournament={tournament} championId={championId} bronzeId={bronzeId} />
           )}
 
           {tournament.bracket.some((b) => b.winner === undefined) && (
@@ -207,10 +211,7 @@ function CompletedPodium({
         />
       )}
       {bronzeId && (
-        <BronzeHighlight
-          thirdPlaceName={participantName(bronzeId)}
-          thirdPlaceId={bronzeId}
-        />
+        <BronzeHighlight thirdPlaceName={participantName(bronzeId)} thirdPlaceId={bronzeId} />
       )}
     </div>
   );

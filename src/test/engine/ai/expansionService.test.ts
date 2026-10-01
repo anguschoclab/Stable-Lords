@@ -2,7 +2,34 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { ExpansionService } from '@/engine/ai/expansionService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { SeededRNGService } from '@/utils/random';
-import type { GameState } from '@/types/state.types';
+import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { ATTRS_10 } from '@/test/_fixtures/factories';
+import { FightingStyle } from '@/types/shared.types';
+import type { GameState, RivalStableData, Warrior } from '@/types/state.types';
+import type { StableId } from '@/types/shared.types';
+import {
+  WORLD_RIVAL_FLOOR,
+  WORLD_RIVAL_HARD_CAP,
+  EXPANSION_MAX_PER_CHURN,
+} from '@/constants/world';
+
+function makeFounder(name: string): Warrior {
+  return makeWarrior(undefined, name, FightingStyle.StrikingAttack, ATTRS_10, {
+    age: 45,
+    fame: 1600,
+    career: { wins: 60, losses: 12, kills: 4 },
+  });
+}
+
+/** Clone a template stable `count` times with distinct branded ids/names. */
+function padRivals(template: RivalStableData, count: number): RivalStableData[] {
+  return Array.from({ length: count }, (_, i) => ({
+    ...template,
+    id: `rival-${i}` as StableId,
+    owner: { ...template.owner, stableName: `Stable ${i}` },
+    roster: [],
+  }));
+}
 
 describe('ExpansionService', () => {
   let state: GameState;
@@ -10,147 +37,115 @@ describe('ExpansionService', () => {
   beforeEach(() => {
     state = createFreshState('test-seed');
     state.rivals = state.rivals.slice(0, 5); // Reduce to 5 stables
+    state.legacyFounderQueue = [];
   });
 
   describe('processExpansion', () => {
-    it('should process expansion for rival stables', () => {
-      const { updatedState, newStables } = ExpansionService.processExpansion(
+    it('returns updated state plus minted stables with origin tags', () => {
+      const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(12345),
-        8
+        new SeededRNGService(12345)
       );
 
       expect(Array.isArray(updatedState.rivals)).toBe(true);
-      expect(Array.isArray(newStables)).toBe(true);
+      expect(Array.isArray(minted)).toBe(true);
+      minted.forEach((m) => {
+        expect(['legacy', 'floor-refill', 'organic']).toContain(m.origin);
+      });
     });
 
-    it('should add new stables when below target count', () => {
-      // Use a seed that will pass the 0.3 threshold check
-      const { updatedState, newStables } = ExpansionService.processExpansion(
+    it('refills toward the floor, bounded by EXPANSION_MAX_PER_CHURN', () => {
+      const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(1),
-        8
+        new SeededRNGService(1)
       );
 
-      expect(newStables.length).toBeGreaterThan(0);
-      expect(updatedState.rivals.length).toBeGreaterThan(state.rivals.length);
+      expect(minted.length).toBeGreaterThan(0);
+      expect(minted.length).toBeLessThanOrEqual(EXPANSION_MAX_PER_CHURN);
+      expect(updatedState.rivals.length).toBe(5 + minted.length);
+      minted.forEach((m) => expect(m.origin).toBe('floor-refill'));
     });
 
-    it('should not add stables when at target count', () => {
-      const { updatedState, newStables } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        5
-      );
+    it('does not refill when the world is already at the floor', () => {
+      state.rivals = padRivals(state.rivals[0]!, WORLD_RIVAL_FLOOR);
 
-      expect(newStables.length).toBe(0);
-      expect(updatedState.rivals.length).toBe(state.rivals.length);
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+
+      // No floor refill; organic licensing may fire but the count must not
+      // exceed floor + batch budget.
+      minted.forEach((m) => expect(m.origin).not.toBe('floor-refill'));
     });
 
-    it('should not add stables when above target count', () => {
-      const { updatedState, newStables } = ExpansionService.processExpansion(
+    it('consumes legacy founders from state.legacyFounderQueue additively', () => {
+      state.rivals = padRivals(state.rivals[0]!, WORLD_RIVAL_FLOOR);
+      state.legacyFounderQueue = [makeFounder('Legend A'), makeFounder('Legend B')];
+
+      const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(12345),
-        3
+        new SeededRNGService(12345)
       );
 
-      expect(newStables.length).toBe(0);
-      expect(updatedState.rivals.length).toBe(state.rivals.length);
+      const legacy = minted.filter((m) => m.origin === 'legacy');
+      expect(legacy.length).toBe(2);
+      expect(updatedState.legacyFounderQueue?.length ?? 0).toBe(0);
+      // Additive: founders open stables even at the floor
+      expect(updatedState.rivals.length).toBeGreaterThan(WORLD_RIVAL_FLOOR);
     });
 
-    it('should integrate legacy founders when provided', () => {
-      const legacyCandidates = [{ name: 'Legend', stableName: "Legend's Academy" }];
+    it('legacy founders get lineage fields and a head trainer', () => {
+      const founder = makeFounder('Legend A');
+      state.legacyFounderQueue = [founder];
 
-      const { newStables } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        8,
-        legacyCandidates
-      );
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
 
-      if (newStables.length > 0) {
-        const hasLegacy = newStables.some((s) => s.owner.name === 'Legend');
-        expect(hasLegacy).toBe(true);
+      const legacy = minted.find((m) => m.origin === 'legacy');
+      expect(legacy).toBeDefined();
+      if (legacy) {
+        const o = legacy.stable.owner;
+        expect(o.name).toBe('Legend A');
+        expect(o.backstoryId).toBe('gladiator');
+        expect(o.foundedByWarriorId).toBe(founder.id);
+        expect(o.foundedByWarriorName).toBe('Legend A');
+        expect(o.personality).toBeDefined();
+        expect(o.favoredStyles).toContain(FightingStyle.StrikingAttack);
+        expect((legacy.stable.trainers ?? []).length).toBeGreaterThan(0);
       }
     });
 
-    it('should tag legacy founders with gladiator backstory and derive personality', () => {
-      const legacyCandidates = [
-        { name: 'Legend', stableName: "Legend's Academy", warriorId: 'w-legend-1' },
-      ];
+    it('leaves queued founders past the hard cap waiting', () => {
+      state.rivals = padRivals(state.rivals[0]!, WORLD_RIVAL_HARD_CAP);
+      state.legacyFounderQueue = [makeFounder('Waiting Legend')];
 
-      const { newStables } = ExpansionService.processExpansion(
+      const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(12345),
-        8,
-        legacyCandidates
+        new SeededRNGService(12345)
       );
 
-      if (newStables.length > 0) {
-        const legacyStable = newStables.find((s) => s.owner.name === 'Legend');
-        if (legacyStable) {
-          expect(legacyStable.owner.backstoryId).toBe('gladiator');
-          expect(legacyStable.owner.foundedByWarriorId).toBe('w-legend-1');
-          expect(legacyStable.owner.personality).toBeDefined();
-        }
-      }
+      expect(minted.length).toBe(0);
+      expect(updatedState.rivals.length).toBe(WORLD_RIVAL_HARD_CAP);
+      expect(updatedState.legacyFounderQueue?.some((w) => w.name === 'Waiting Legend')).toBe(true);
     });
 
-    it('should generate new stables with valid structure', () => {
-      const { newStables } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        8
-      );
+    it('generated stables have valid structure', () => {
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
 
-      newStables.forEach((stable) => {
+      minted.forEach(({ stable }) => {
         expect(stable.id).toBeDefined();
         expect(stable.owner).toBeDefined();
         expect(stable.owner.name).toBeDefined();
         expect(stable.owner.stableName).toBeDefined();
-        expect(stable.roster).toBeDefined();
         expect(Array.isArray(stable.roster)).toBe(true);
       });
     });
 
-    it('should be deterministic with same seed', () => {
-      const { newStables: stables1 } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        8
-      );
-      const { newStables: stables2 } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        8
-      );
+    it('is deterministic with the same seed', () => {
+      const { minted: m1 } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      const { minted: m2 } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
 
-      expect(stables1.length).toBe(stables2.length);
-      if (stables1.length > 0 && stables2.length > 0) {
-        expect(stables1[0]!.owner.name).toBe(stables2[0]!.owner.name);
+      expect(m1.length).toBe(m2.length);
+      if (m1.length > 0 && m2.length > 0) {
+        expect(m1[0]!.stable.owner.name).toBe(m2[0]!.stable.owner.name);
       }
-    });
-
-    it('should handle empty rivals list', () => {
-      state.rivals = [];
-
-      const { updatedState, newStables } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        5
-      );
-
-      expect(updatedState.rivals.length).toBe(newStables.length);
-    });
-
-    it('should not exceed target count', () => {
-      const { updatedState } = ExpansionService.processExpansion(
-        state,
-        new SeededRNGService(12345),
-        10
-      );
-
-      expect(updatedState.rivals.length).toBeLessThanOrEqual(10);
     });
   });
 });

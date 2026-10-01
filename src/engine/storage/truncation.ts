@@ -1,6 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
+import { RECRUIT_POOL_PER_STABLE, WORLD_RIVAL_HARD_CAP } from '@/constants/world';
 
 /**
  * Per-array caps applied by {@link truncateState}. Exported so long-running
@@ -31,9 +32,13 @@ export const TRUNCATION_CAPS = {
   coachDismissed: 100,
   restStates: 500,
   hiringPool: 20,
-  recruitPool: 50,
+  // Pool scales with world size (RECRUIT_POOL_PER_STABLE × stables, up to the
+  // hard cap) — the cap carries the same ×3 headroom as POOL_HARD_CAP.
+  recruitPool: Math.ceil(WORLD_RIVAL_HARD_CAP * RECRUIT_POOL_PER_STABLE * 3),
   trainers: 50,
-  rivals: 50,
+  // Live rival stables are deliberately NOT capped — truncating them deletes
+  // world population outright (the living-world model keeps 90–200 stables).
+  // Only their per-stable history arrays are bounded below.
   rivalLedger: 500,
   promoterNotableBouts: 10,
   unacknowledgedDeaths: 100,
@@ -113,25 +118,25 @@ function capWarriors(warriors: Warrior[] | undefined, caps: ResolvedCaps): Warri
  */
 export function truncateState(state: GameState, overrides?: TruncationCaps): GameState {
   const caps = { ...TRUNCATION_CAPS, ...overrides };
-  const arenaHistory = (state.arenaHistory || [])
-    .slice(-caps.arenaHistory)
-    .map((f, i, arr) => {
-      // Keep transcripts only for the last N fights to save memory
-      if (arr.length - i > caps.arenaHistoryTranscripts && f.transcript) {
-        const { transcript: _transcript, ...rest } = f;
-        return rest as FightSummary;
-      }
-      return f;
-    });
+  const arenaHistory = (state.arenaHistory || []).slice(-caps.arenaHistory).map((f, i, arr) => {
+    // Keep transcripts only for the last N fights to save memory
+    if (arr.length - i > caps.arenaHistoryTranscripts && f.transcript) {
+      const { transcript: _transcript, ...rest } = f;
+      return rest as FightSummary;
+    }
+    return f;
+  });
 
   return {
     ...state,
     arenaHistory,
-    newsletter: (state.newsletter || []).slice(-caps.newsletter).map((n) =>
-      (n.items?.length ?? 0) > caps.newsletterItems
-        ? { ...n, items: n.items.slice(-caps.newsletterItems) }
-        : n
-    ),
+    newsletter: (state.newsletter || [])
+      .slice(-caps.newsletter)
+      .map((n) =>
+        (n.items?.length ?? 0) > caps.newsletterItems
+          ? { ...n, items: n.items.slice(-caps.newsletterItems) }
+          : n
+      ),
     ledger: (state.ledger || []).slice(-caps.ledger),
     matchHistory: (state.matchHistory || []).slice(-caps.matchHistory),
     moodHistory: (state.moodHistory || []).slice(-caps.moodHistory),
@@ -154,7 +159,7 @@ export function truncateState(state: GameState, overrides?: TruncationCaps): Gam
     recruitPool: (state.recruitPool || []).slice(-caps.recruitPool),
     trainers: (state.trainers || []).slice(-caps.trainers),
     roster: state.roster ? capWarriors(state.roster, caps) : state.roster,
-    rivals: (state.rivals || []).slice(-caps.rivals).map((r) => ({
+    rivals: (state.rivals || []).map((r) => ({
       ...r,
       roster: capWarriors(r.roster, caps),
       ledger: (r.ledger || []).slice(-caps.rivalLedger),

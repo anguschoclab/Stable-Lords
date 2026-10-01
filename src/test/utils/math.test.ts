@@ -85,7 +85,6 @@ describe('mapRange', () => {
   });
 });
 
-
 describe('addCapped', () => {
   it('adds normally when under cap', () => {
     expect(addCapped(10, 5, 20)).toBe(15);

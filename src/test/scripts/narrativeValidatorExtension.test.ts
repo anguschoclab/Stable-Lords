@@ -37,14 +37,21 @@ describe('narrative_validate.ts rejects mock/placeholder markers (N1)', () => {
     const tmpFile = join(tmpDir, 'test_mock.json');
     try {
       mkdirSync(tmpDir, { recursive: true });
-      writeFileSync(tmpFile, JSON.stringify({
-        test_section: ['A clean entry', 'Another entry with (Mock 1) marker'],
-      }));
+      writeFileSync(
+        tmpFile,
+        JSON.stringify({
+          test_section: ['A clean entry', 'Another entry with (Mock 1) marker'],
+        })
+      );
       // Verify the file exists
       expect(existsSync(tmpFile)).toBe(true);
     } finally {
-      if (existsSync(tmpFile)) { unlinkSync(tmpFile); }
-      if (existsSync(tmpDir)) { rmdirSync(tmpDir); }
+      if (existsSync(tmpFile)) {
+        unlinkSync(tmpFile);
+      }
+      if (existsSync(tmpDir)) {
+        rmdirSync(tmpDir);
+      }
     }
   });
 });

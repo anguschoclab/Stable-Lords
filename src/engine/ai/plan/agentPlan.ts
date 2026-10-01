@@ -34,9 +34,7 @@ export function agentPlanForWarrior(
     ? rival.agentMemory?.opponentDossiers?.[resolvedOpponentStable]
     : undefined;
 
-  const grudge = state.grudgeMap?.get(
-    getPairKey(rival.owner.id, resolvedOpponentStable ?? '')
-  );
+  const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, resolvedOpponentStable ?? ''));
 
   return aiPlanForWarrior(
     w,

@@ -22,13 +22,18 @@ import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
 import type { Archetype } from '@/data/names/archetypeNames';
-import {
-  generateWarriorName,
-  generateDynasticWarriorName,
-} from '@/data/names/nameGenerator';
+import { generateWarriorName, generateDynasticWarriorName } from '@/data/names/nameGenerator';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { clamp } from '@/utils/math';
+import {
+  RECRUIT_POOL_MIN,
+  RECRUIT_POOL_PER_STABLE,
+  FREE_AGENT_SHELF_WEEKS,
+  WORLD_RIVAL_FLOOR,
+  WORLD_RIVAL_HARD_CAP,
+} from '@/constants/world';
+import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 /**
@@ -74,6 +79,14 @@ export interface PoolWarrior {
     career: CareerRecord;
     titles: string[];
   };
+  /** Academy stable that gets first look at this intake recruit. */
+  academyStableId?: string;
+  /** Absolute week the academy first-look claim expires. */
+  academyClaimExpiryWeek?: number;
+  /** Weeks left before a free agent leaves the market (veteran entries only). */
+  shelfWeeksRemaining?: number;
+  /** Where this recruit entered the supply chain — diagnostics + AI routing. */
+  source?: 'orphanage' | 'academy' | 'freeAgent' | 'generated';
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────
@@ -104,11 +117,45 @@ export const TIER_STARS: Record<RecruitTier, number> = {
  * Refresh_cost.
  */
 const REFRESH_COST = 50;
+
 /**
- * Default_pool_size.
+ * Recruit-pool depth scales with the living world: half a slot per stable,
+ * floored at RECRUIT_POOL_MIN. A 90-stable world seeds ~45; a mature
+ * 160-stable world holds ~80.
  */
-const DEFAULT_POOL_SIZE = 12; // Increased from 5 to maintain world population
+export function computeRecruitPoolSize(stableCount: number): number {
+  return Math.max(RECRUIT_POOL_MIN, Math.round(stableCount * RECRUIT_POOL_PER_STABLE));
+}
+
+/** Pool hard cap — ×3 headroom for death/academy bonuses without runaway growth. */
+export function computeRecruitPoolHardCap(stableCount: number): number {
+  return computeRecruitPoolSize(stableCount) * 3;
+}
+
+/**
+ * Default pool size — floor-scaled. Kept for existing callers/tests; new code
+ * should prefer `computeRecruitPoolSize(stableCount)`.
+ */
+const DEFAULT_POOL_SIZE = computeRecruitPoolSize(WORLD_RIVAL_FLOOR);
 export { REFRESH_COST, DEFAULT_POOL_SIZE };
+
+/** Signing price for a free-agent veteran — fame-driven, bounded, flaw-adjusted. */
+export function computeFreeAgentCost(w: Warrior): number {
+  const fameCost = (w.fame ?? 0) * 10;
+  const liability = computeWarriorLiability(w).score;
+  // Flaw-loaded veterans cost less to sign (they carry risk the buyer absorbs).
+  const liabilityDiscount = Math.round(fameCost * (liability / 200));
+  return clamp(fameCost - liabilityDiscount, 50, 500);
+}
+
+/**
+ * Weeks of pool presence an academy-claimed recruit reserves for its stable —
+ * half the free-agent shelf so claims don't hold orphans hostage all season.
+ */
+export const ACADEMY_CLAIM_WEEKS = Math.ceil(FREE_AGENT_SHELF_WEEKS / 2);
+
+/** Absolute ceiling on combined pool + free-agent churn — defensive bound. */
+export const POOL_WORLD_CAP = Math.ceil(WORLD_RIVAL_HARD_CAP * RECRUIT_POOL_PER_STABLE * 3);
 
 // Names come from the procedural generator (src/data/names/nameGenerator.ts);
 // the narrative recruitment corpus is folded into the 'common' culture.
@@ -249,6 +296,7 @@ export function generateRecruit(
     addedWeek: week,
     favorites,
     lineage,
+    source: 'orphanage',
   };
 }
 
@@ -305,31 +353,24 @@ export function generateRecruitPool(
   return pool;
 }
 
-/** Partial weekly refresh — replace oldest 3-4 warriors */
-/**
- * Partially refreshes the recruitment pool by replacing the oldest entries.
- *
- * @param currentPool - The current pool of warriors
- * @param week - Current game week
- * @param usedNames - Set of names already in use
- * @param rng - Optional RNG service
- * @param meta - Optional style meta
- * @param legacyCandidates - Optional list of former warriors
- * @returns The updated pool of warriors
- */
+/** Partial weekly refresh — replace the oldest slice, then top up to the
+ *  world-scaled target size. */
 export function partialRefreshPool(
   currentPool: PoolWarrior[],
   week: number,
   usedNames: Set<string>,
   rng?: IRNGService,
   meta?: StyleMeta,
-  legacyCandidates: import('@/types/warrior.types').Warrior[] = []
+  legacyCandidates: import('@/types/warrior.types').Warrior[] = [],
+  stableCount: number = WORLD_RIVAL_FLOOR
 ): PoolWarrior[] {
+  const targetSize = computeRecruitPoolSize(stableCount);
   if (currentPool.length === 0)
-    return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rng, meta, legacyCandidates);
+    return generateRecruitPool(targetSize, week, usedNames, rng, meta, legacyCandidates);
 
   const sorted = [...currentPool].sort((a, b) => a.addedWeek - b.addedWeek);
-  const removeCount = clamp(Math.floor(currentPool.length * 0.3), 2, 4);
+  // Spec §3.4 cadence: a sixth of the pool turns over each week.
+  const removeCount = Math.max(2, Math.ceil(targetSize / 6));
   const remaining = sorted.slice(removeCount);
 
   // Rebuild used names from remaining
@@ -342,18 +383,16 @@ export function partialRefreshPool(
     newWarriors.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
   }
 
-  // Top up to DEFAULT_POOL_SIZE if undersized, then cap so the pool can't grow
-  // unbounded when AI drafts are slower than the natural turnover rate. Prior
-  // code only enforced the lower bound, so weekly +bonus recruits accumulated
-  // forever (1600+ entries after 15 years in the world-health diagnostic).
+  // Top up to the world-scaled target, then cap so the pool can't grow
+  // unbounded when AI drafts are slower than the natural turnover rate.
   const newPool = [...remaining, ...newWarriors];
-  while (newPool.length < DEFAULT_POOL_SIZE) {
+  while (newPool.length < targetSize) {
     newPool.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
   }
-  const POOL_HARD_CAP = DEFAULT_POOL_SIZE * 3; // 36 — comfortable headroom for bonuses without runaway growth
-  if (newPool.length > POOL_HARD_CAP) {
+  const poolHardCap = computeRecruitPoolHardCap(stableCount);
+  if (newPool.length > poolHardCap) {
     // Drop oldest first so the pool stays fresh
-    return newPool.sort((a, b) => a.addedWeek - b.addedWeek).slice(-POOL_HARD_CAP);
+    return newPool.sort((a, b) => a.addedWeek - b.addedWeek).slice(-poolHardCap);
   }
   return newPool;
 }
@@ -383,20 +422,10 @@ export function fullRefreshPool(
  * popularity, career, and titles so the signing path restores the warrior's
  * identity rather than minting a fresh prospect.
  */
-export function warriorToPoolWarrior(
-  w: Warrior,
-  week: number,
-  rng: IRNGService
-): PoolWarrior {
+export function warriorToPoolWarrior(w: Warrior, week: number, rng: IRNGService): PoolWarrior {
   const fame = w.fame ?? 0;
   const tier: RecruitTier =
-    fame >= 200
-      ? 'Prodigy'
-      : fame >= 80
-        ? 'Exceptional'
-        : fame >= 30
-          ? 'Promising'
-          : 'Common';
+    fame >= 200 ? 'Prodigy' : fame >= 80 ? 'Exceptional' : fame >= 30 ? 'Promising' : 'Common';
   return {
     id: w.id as string,
     name: w.name,
@@ -406,7 +435,7 @@ export function warriorToPoolWarrior(
     baseSkills: w.baseSkills ?? ({} as BaseSkills),
     derivedStats: w.derivedStats ?? ({} as DerivedStats),
     tier,
-    cost: TIER_COST[tier],
+    cost: computeFreeAgentCost(w),
     age: w.age ?? 20,
     lore: w.lore ?? `${w.name}, veteran free agent.`,
     origin: w.origin,
@@ -415,6 +444,8 @@ export function warriorToPoolWarrior(
     favorites: w.favorites ?? generateFavorites(w.style, rng),
     lineage: w.lineage,
     luckfactor: w.luckfactor ?? rollLuckfactor(rng),
+    shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
+    source: 'freeAgent',
     veteran: {
       fame: w.fame ?? 0,
       popularity: w.popularity ?? 0,

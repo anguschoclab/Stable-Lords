@@ -22,11 +22,7 @@ describe('TierProgression', () => {
     } as unknown as IRNGService;
   });
 
-  const createRival = (
-    id: string,
-    tier: RivalStableData['tier'],
-    roster: any[]
-  ): RivalStableData =>
+  const createRival = (id: string, tier: RivalStableData['tier'], roster: any[]): RivalStableData =>
     fixtureRival({
       id: id as StableId,
       owner: { stableName: `Stable ${id}` },

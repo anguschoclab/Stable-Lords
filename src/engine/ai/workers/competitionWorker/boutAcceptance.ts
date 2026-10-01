@@ -6,10 +6,7 @@ import type {
   GameState,
 } from '@/types/state.types';
 import { weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
-import {
-  acceptanceWeatherBlock,
-  offerWeatherDecline,
-} from '@/engine/ai/weatherSuitability';
+import { acceptanceWeatherBlock, offerWeatherDecline } from '@/engine/ai/weatherSuitability';
 import { ARENA_TITLE } from '@/constants/arena';
 import {
   COUNTERED_PURSE_CONDITION,
@@ -106,8 +103,7 @@ export function venueCounterTarget(
     return undefined;
   }
 
-  const ladder =
-    warrior.campaignFocus === 'CROWN_BID' ? rival.strategy?.targetArenaId : undefined;
+  const ladder = warrior.campaignFocus === 'CROWN_BID' ? rival.strategy?.targetArenaId : undefined;
   if (
     ladder &&
     ladder !== offer.arenaId &&
@@ -188,45 +184,45 @@ function resolveTitleBout(
   const isChampion = title?.champion?.warriorId === warrior.id;
 
   if (isChampion && title) {
-      // Declining counts toward stripping — when the next refusal would cost
-      // the crown, the champion fights hurt rather than abdicate by accident.
-      const wouldStrip = title.refusals + 1 >= ARENA_TITLE.REFUSALS_TO_STRIP;
-      if (!wouldStrip && personality !== 'Aggressive') {
-        const hp = fightingCondition(warrior);
-        const fatigue = warrior.fatigue ?? 0;
-        if (hp < 45 || fatigue >= 85) {
-          if (explain) explain.reason = 'title-defense-health';
-          return 'Declined';
-        }
-        if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) {
-          if (explain) explain.reason = 'title-defense-threat';
-          return 'Declined';
-        }
+    // Declining counts toward stripping — when the next refusal would cost
+    // the crown, the champion fights hurt rather than abdicate by accident.
+    const wouldStrip = title.refusals + 1 >= ARENA_TITLE.REFUSALS_TO_STRIP;
+    if (!wouldStrip && personality !== 'Aggressive') {
+      const hp = fightingCondition(warrior);
+      const fatigue = warrior.fatigue ?? 0;
+      if (hp < 45 || fatigue >= 85) {
+        if (explain) explain.reason = 'title-defense-health';
+        return 'Declined';
       }
-      if (explain) explain.reason = 'crown-defense';
-      return 'Accepted';
-    }
-
-    // Challenger side — a declined shot costs only the challenger cooldown,
-    // so a known killer champion is a legitimate pass for calculating stables.
-    if (
-      opponent &&
-      personality !== 'Aggressive' &&
-      (opponent.career?.kills ?? 0) >= 3 &&
-      (warrior.career?.kills ?? 0) === 0
-    ) {
-      if (explain) explain.reason = 'killer-champion';
-      return 'Declined';
-    }
-    if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
-      const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
-      if (edge <= (observedDanger ? -1 : -2)) {
-        if (explain) explain.reason = 'title-shot-mismatch';
+      if ((opponent?.career?.kills ?? 0) >= 3 && hp < 70) {
+        if (explain) explain.reason = 'title-defense-threat';
         return 'Declined';
       }
     }
-    if (explain) explain.reason = 'title-shot';
+    if (explain) explain.reason = 'crown-defense';
     return 'Accepted';
+  }
+
+  // Challenger side — a declined shot costs only the challenger cooldown,
+  // so a known killer champion is a legitimate pass for calculating stables.
+  if (
+    opponent &&
+    personality !== 'Aggressive' &&
+    (opponent.career?.kills ?? 0) >= 3 &&
+    (warrior.career?.kills ?? 0) === 0
+  ) {
+    if (explain) explain.reason = 'killer-champion';
+    return 'Declined';
+  }
+  if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
+    const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
+    if (edge <= (observedDanger ? -1 : -2)) {
+      if (explain) explain.reason = 'title-shot-mismatch';
+      return 'Declined';
+    }
+  }
+  if (explain) explain.reason = 'title-shot';
+  return 'Accepted';
 }
 
 /** RECOVERY risk refusal + sadistic-promoter death-show check. */
@@ -302,11 +298,7 @@ function matchupSkepticism(
     // Methodical camps refuse to feed a dominant player on a coin flip —
     // anything short of a clear edge is a pass.
     const skepticismFloor =
-      personality === 'Methodical' && playerThreat === 'Dominant'
-        ? 0
-        : observedDanger
-          ? -1
-          : -2;
+      personality === 'Methodical' && playerThreat === 'Dominant' ? 0 : observedDanger ? -1 : -2;
     if (edge <= skepticismFloor) {
       return 'Declined';
     }
@@ -333,8 +325,7 @@ function purseCounter(
   ) {
     // Greedy promoters lowball — their fame floor sits closer to asking price.
     // A dominant player's stable can afford to pay up — squeeze harder.
-    const squeeze =
-      promoter?.personality === 'Greedy' || playerThreat === 'Dominant';
+    const squeeze = promoter?.personality === 'Greedy' || playerThreat === 'Dominant';
     const purseFloor = (warrior.fame ?? 0) - (squeeze ? 20 : 50);
     if (purseFloor > 0 && offer.purse < purseFloor) {
       return 'Countered';
@@ -429,7 +420,7 @@ function evaluateNegotiationStage(
   // payout); a PURSE_HUNTER takes volume and never holds out for a marquee.
   if (warrior.campaignFocus === 'CROWN_BID' && offer.arenaId) {
     const venue = warrior.career?.byArena?.[offer.arenaId];
-    if (((venue?.wins ?? 0) + (venue?.losses ?? 0)) > 0) {
+    if ((venue?.wins ?? 0) + (venue?.losses ?? 0) > 0) {
       return 'Accepted';
     }
   }

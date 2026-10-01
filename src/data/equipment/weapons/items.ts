@@ -487,4 +487,3 @@ export const WEAPONS: EquipmentItem[] = [
     restrictedStyles: without(FightingStyle.BashingAttack, FightingStyle.StrikingAttack),
   },
 ];
-

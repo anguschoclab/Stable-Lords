@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  validatePipelinePasses,
-  type WeekPassSpec,
-} from '@/engine/pipeline/pipelineStages';
+import { validatePipelinePasses, type WeekPassSpec } from '@/engine/pipeline/pipelineStages';
 import { WEEK_PIPELINE_PASSES } from '@/engine/pipeline/services/weekPipelineService';
 
 function spec(overrides: Partial<WeekPassSpec> & { id: string }): WeekPassSpec {
@@ -71,14 +68,10 @@ describe('WEEK_PIPELINE_PASSES declarations', () => {
   });
 
   it('keeps player-facing passes in the content stage so headless/stop skips only them', () => {
-    const contentIds = WEEK_PIPELINE_PASSES.filter((p) => p.stage === 'content').map(
-      (p) => p.id
-    );
+    const contentIds = WEEK_PIPELINE_PASSES.filter((p) => p.stage === 'content').map((p) => p.id);
     expect(contentIds).toContain('event');
     expect(contentIds).toContain('narrative');
-    const worldIds = WEEK_PIPELINE_PASSES.filter((p) => p.stage === 'world').map(
-      (p) => p.id
-    );
+    const worldIds = WEEK_PIPELINE_PASSES.filter((p) => p.stage === 'world').map((p) => p.id);
     // The world must keep evolving when the player is stopped.
     expect(worldIds).toContain('world');
     expect(worldIds).toContain('rivalStrategy');

@@ -28,7 +28,10 @@ export function RosterSnapshot() {
       {active.map((w) => {
         return (
           <Link key={w.id} to="/stable/roster" className="block group">
-            <Surface variant="glass" className="p-4 hover:border-primary/20 transition-colors motion-reduce:transition-none">
+            <Surface
+              variant="glass"
+              className="p-4 hover:border-primary/20 transition-colors motion-reduce:transition-none"
+            >
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-none bg-white/5 border border-white/10 flex items-center justify-center shrink-0">

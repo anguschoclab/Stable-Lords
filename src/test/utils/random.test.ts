@@ -74,7 +74,6 @@ describe('randomPick', () => {
   });
 });
 
-
 describe('hashStr', () => {
   it('produces consistent hashes for same string', () => {
     const hash1 = hashStr('test');
@@ -302,7 +301,15 @@ describe('resolveRng', () => {
 describe('entropyRng', () => {
   it('returns a full IRNGService surface', () => {
     const rng = entropyRng();
-    for (const m of ['next', 'pick', 'uuid', 'roll', 'shuffle', 'rollWeighted', 'chance'] as const) {
+    for (const m of [
+      'next',
+      'pick',
+      'uuid',
+      'roll',
+      'shuffle',
+      'rollWeighted',
+      'chance',
+    ] as const) {
       expect(typeof rng[m]).toBe('function');
     }
   });

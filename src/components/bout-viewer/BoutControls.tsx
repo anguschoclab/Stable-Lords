@@ -92,10 +92,7 @@ function TransportControls({
 }
 
 /** 1x / 2x / 3x playback-speed selector. */
-function SpeedSelector({
-  speed,
-  setSpeed,
-}: Pick<BoutControlsProps, 'speed' | 'setSpeed'>) {
+function SpeedSelector({ speed, setSpeed }: Pick<BoutControlsProps, 'speed' | 'setSpeed'>) {
   return (
     <div className="flex items-center bg-black border border-white/5 rounded-none p-1">
       {[1, 2, 3].map((s) => (

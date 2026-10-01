@@ -13,7 +13,11 @@ import {
   verifyBoutAcceptance,
   evaluateBoutOffer,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
-import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makePragmaticRival } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeBoutOffer as fixtureBoutOffer,
+  makePragmaticRival,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

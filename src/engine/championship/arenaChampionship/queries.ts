@@ -1,17 +1,10 @@
-import type {
-  GameState,
-  ArenaTitle,
-  ArenaReignRecord,
-} from '@/types/state.types';
+import type { GameState, ArenaTitle, ArenaReignRecord } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { getAllArenas } from '@/data/arenas';
 import { collectAllWarriors } from '@/engine/core/warriorCollection';
-import {
-  isActive,
-  isFightReady,
-} from '@/engine/warrior/warriorStatus';
+import { isActive, isFightReady } from '@/engine/warrior/warriorStatus';
 import type { ChampionshipDelta } from './core';
 import { titleOf, owningStableOf, CHAMPIONSHIP_EXCLUDED_ARENAS } from './core';
 
@@ -24,9 +17,7 @@ export function getArenaChampion(state: GameState, arenaId: string): ArenaTitle[
 
 /** Warrior currently holds a crown at ANY arena, in any lifecycle state. */
 export function isReigningChampion(state: GameState, warriorId: string): boolean {
-  return Object.values(state.arenaChampions ?? {}).some(
-    (t) => t.champion?.warriorId === warriorId
-  );
+  return Object.values(state.arenaChampions ?? {}).some((t) => t.champion?.warriorId === warriorId);
 }
 
 /** Warrior holds a crown whose title is fully active (choke-point scope). */
@@ -165,11 +156,7 @@ export function selectTitleContender(
  * advisor cards). Unready contenders included: the ladder shows standing,
  * not just this week's bookability.
  */
-export function topContenders(
-  state: GameState,
-  arenaId: string,
-  depth = 3
-): RankedContender[] {
+export function topContenders(state: GameState, arenaId: string, depth = 3): RankedContender[] {
   return rankContenders(state, arenaId, undefined, { includeUnready: true }).slice(0, depth);
 }
 
@@ -194,7 +181,10 @@ export function buildContenderIndex(state: GameState, depth = 5): Map<string, Wa
     if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(arena.id)) continue;
     const ranked = rankContenders(state, arena.id, undefined, { includeUnready: true });
     if (ranked.length === 0) continue;
-    index.set(arena.id, ranked.slice(0, depth).map((r) => r.warrior.id));
+    index.set(
+      arena.id,
+      ranked.slice(0, depth).map((r) => r.warrior.id)
+    );
   }
   return index;
 }

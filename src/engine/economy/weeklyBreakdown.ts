@@ -32,11 +32,7 @@ import {
   WEATHER_ECONOMICS,
   computeFightEconomics,
 } from '@/constants/economy';
-import {
-  AI_PRESTIGE_FREE_TREASURY,
-  AI_PRESTIGE_RATE,
-  AI_PRESTIGE_CAP_RATE,
-} from '@/constants/ai';
+import { AI_PRESTIGE_FREE_TREASURY, AI_PRESTIGE_RATE, AI_PRESTIGE_CAP_RATE } from '@/constants/ai';
 import { getArenaById } from '@/data/arenas';
 
 /**

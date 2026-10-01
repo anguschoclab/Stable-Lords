@@ -154,10 +154,9 @@ export function generatePairings(state: GameState): PairingsResult {
   // which producer created the offer. Pending/dormant champions resolve
   // their signed ordinary offers normally.
   const activeChampionIds = new Set(
-    Object.values(state.arenaChampions ?? {})
-      .flatMap((t) =>
-        t.status === 'active' && t.champion ? [t.champion.warriorId as string] : []
-      )
+    Object.values(state.arenaChampions ?? {}).flatMap((t) =>
+      t.status === 'active' && t.champion ? [t.champion.warriorId as string] : []
+    )
   );
 
   currentOffers.forEach((offer) =>

@@ -28,9 +28,7 @@ describe('AgentReasoningWidget (H.1)', () => {
     });
     mockState.player = { id: 'player-1' as StableId, stableName: 'My Stable' };
     render(<AgentReasoningWidget rival={rival} />);
-    expect(
-      screen.getByText(/player beat this stable twice/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/player beat this stable twice/i)).toBeInTheDocument();
   });
 
   it('renders the season record W-L-K from agentMemory', () => {

@@ -16,8 +16,18 @@ let mockId = '';
 vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({ id: mockId }),
   useNavigate: () => vi.fn(),
-  Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
-    <a href={to} className={className}>{children}</a>
+  Link: ({
+    to,
+    children,
+    className,
+  }: {
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
   ),
 }));
 

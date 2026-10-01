@@ -1,5 +1,3 @@
-
-
 /**
  * FightingStyle enumeration.
  */
@@ -16,8 +14,6 @@ export enum FightingStyle {
   WallOfSteel = 'WALL OF STEEL',
 }
 
-
-
 /**
  * Style_display_names.
  */
@@ -33,8 +29,6 @@ export const STYLE_DISPLAY_NAMES: Record<FightingStyle, string> = {
   [FightingStyle.TotalParry]: 'Total-Parry',
   [FightingStyle.WallOfSteel]: 'Wall of Steel',
 };
-
-
 
 /**
  * Style_abbrev.

@@ -51,9 +51,7 @@ describe('persistNPCPlans — masking', () => {
   it('Tactician stables commit a masked decoy, not the real plan', () => {
     const { npcW, oppW, rival, oppRival, state, offer } = setup('Tactician');
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const written = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const written = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
 
     const real = agentPlanForWarrior(rival, npcW, oppW, state, oppRival.id as string);
     expect(written.planMasked).toBe(true);
@@ -66,9 +64,7 @@ describe('persistNPCPlans — masking', () => {
   it('Pragmatic stables commit the real plan unmasked', () => {
     const { npcW, oppW, rival, oppRival, state, offer } = setup('Pragmatic');
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const written = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const written = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
     const real = agentPlanForWarrior(rival, npcW, oppW, state, oppRival.id as string);
     expect(written.planMasked).toBeFalsy();
     expect(written.plan!.OE).toBe(real.OE);
@@ -95,9 +91,7 @@ describe('scouting — decoy visibility', () => {
   it('Expert scouting reports the masked decoy tendencies', () => {
     const { npcW, oppW, rival, oppRival, state, offer } = setup('Tactician');
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const maskedW = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const maskedW = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
     const real = agentPlanForWarrior(rival, npcW, oppW, state, oppRival.id as string);
 
     const { report } = generateScoutReport(maskedW, 'Expert', 5, new SeededRNGService(7));

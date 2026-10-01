@@ -36,9 +36,7 @@ function StepBadges({
       <Badge variant={step === 'bouts' ? 'default' : 'secondary'}>3. Combat Logs</Badge>
       <Badge variant={step === 'math' ? 'default' : 'secondary'}>4. Simulation Math</Badge>
       {hasDeaths && (
-        <Badge variant={step === 'memorial' ? 'destructive' : 'secondary'}>
-          5. The Graveyard
-        </Badge>
+        <Badge variant={step === 'memorial' ? 'destructive' : 'secondary'}>5. The Graveyard</Badge>
       )}
     </div>
   );

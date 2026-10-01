@@ -11,7 +11,6 @@ import '@/test/_setup/setup';
 
 const makePlan = makeDefaultPlan;
 
-
 function loadState(roster: Warrior[]) {
   const state = createFreshState('test-seed');
   state.roster = roster;

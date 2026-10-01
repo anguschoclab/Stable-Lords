@@ -49,9 +49,7 @@ function FighterAnalysis({
   ];
   return (
     <div className="space-y-4">
-      <h4
-        className={`text-[10px] font-black uppercase tracking-widest ${toneClass} border-b pb-2`}
-      >
+      <h4 className={`text-[10px] font-black uppercase tracking-widest ${toneClass} border-b pb-2`}>
         {label} Analysis
       </h4>
       <div className="grid grid-cols-2 gap-2">
@@ -72,9 +70,7 @@ function ElapsedColumn({ minutesPassed }: { minutesPassed: number }) {
     <div className="flex flex-col items-center justify-center space-y-6">
       <Swords className="h-10 w-10 text-muted-foreground/20" />
       <div className="text-center">
-        <span className="text-2xl font-display font-black text-foreground">
-          {minutesPassed}M
-        </span>
+        <span className="text-2xl font-display font-black text-foreground">{minutesPassed}M</span>
         <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-1">
           ELAPSED TIME
         </p>

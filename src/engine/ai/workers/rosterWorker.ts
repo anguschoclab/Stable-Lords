@@ -66,9 +66,7 @@ function runAITraining(
   let seasonalGrowth: SeasonalGrowth[] = rival.seasonalGrowth ?? [];
 
   const restingIds = new Set(
-    (rival.trainingAssignments ?? [])
-      .filter((a) => a.type === 'recovery')
-      .map((a) => a.warriorId)
+    (rival.trainingAssignments ?? []).filter((a) => a.type === 'recovery').map((a) => a.warriorId)
   );
   const trainingLimit = aiTrainingLimit(rival.treasury);
   const { champions, nonChampions } = rival.roster.reduce(
@@ -110,14 +108,7 @@ function runAITraining(
           warrior,
           seasonalGrowth: nextGrowth,
           chosen,
-        } = performAITraining(
-          trainee,
-          rival,
-          season,
-          seasonalGrowth,
-          rngService,
-          healingBonus
-        );
+        } = performAITraining(trainee, rival, season, seasonalGrowth, rngService, healingBonus);
         seasonalGrowth = nextGrowth;
         rival.roster = updateEntityInList(rival.roster, warrior.id, () => warrior);
         if (chosen) {

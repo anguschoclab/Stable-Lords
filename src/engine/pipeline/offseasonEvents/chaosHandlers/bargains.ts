@@ -49,7 +49,6 @@ export function handleAbyssalBargain(
   });
 }
 
-
 /** Handler for the Fey Trickster offseason event — random boon or bane from a fey visitor. */
 export function handleFeyTrickster(
   state: GameState,
@@ -95,7 +94,6 @@ export function handleFeyTrickster(
     return `They were made a fool of, suffering minor hexes. (Minor Injury)`;
   });
 }
-
 
 /** Handler for the Rogue Alchemist offseason event — offers experimental potions with side effects. */
 export function handleRogueAlchemist(

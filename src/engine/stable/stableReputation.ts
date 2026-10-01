@@ -169,7 +169,7 @@ export function computeStableReputation(state: StableReputationInput): StableRep
   const trainingCount = (state.trainingAssignments ?? []).length;
   const adaptability = Math.min(
     100,
-    Math.round(uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2),
+    Math.round(uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2)
   );
 
   return { fame, notoriety, honor, adaptability };

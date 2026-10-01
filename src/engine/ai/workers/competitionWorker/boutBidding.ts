@@ -9,7 +9,10 @@ import type {
 } from '@/types/state.types';
 import type { BoutOfferId, PromoterId, StableId, WarriorId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/bout/crowdMood';
-import { scorePairwiseMatchup, type PairwiseHeadToHead } from '@/engine/matchmaking/schedulingAssistant';
+import {
+  scorePairwiseMatchup,
+  type PairwiseHeadToHead,
+} from '@/engine/matchmaking/schedulingAssistant';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
 import { weatherBidModifier } from '@/engine/ai/weatherSuitability';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -77,9 +80,10 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
       if (ctx.state && isChampionBookingLocked(ctx.state, opponent.id)) continue;
       const matchupScore = scorePairwiseMatchup(warrior, opponent, {
         aStableId: (warrior.stableId ?? ctx.rivalId) as string,
-        bStableId: ctx.targetIsPlayer && ctx.state
-          ? (ctx.state.player.id as string)
-          : ((opponent.stableId ?? ctx.targetStableId) as string),
+        bStableId:
+          ctx.targetIsPlayer && ctx.state
+            ? (ctx.state.player.id as string)
+            : ((opponent.stableId ?? ctx.targetStableId) as string),
       });
       const score = clamp((matchupScore - 100) / 20, -5, 5);
       matchupModifier = Math.max(matchupModifier, score);
@@ -522,9 +526,7 @@ function buildOffer(
     purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
     hype: Math.max(
       40,
-      Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) +
-        bid.priority * 5 +
-        notorietyHype
+      Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5 + notorietyHype
     ),
     status: 'Proposed',
     responses: {
@@ -571,7 +573,9 @@ export function convertBidsToOffers(
     // Player-bound caps: ≤1 per proposing stable, ≤3 globally.
     if (bidTargetsPlayer) {
       if (cx.playerOfferTotal >= MAX_PLAYER_OFFERS_GLOBAL) continue;
-      if ((cx.playerOffersByStable.get(proposerStable.stableId) ?? 0) >= MAX_PLAYER_OFFERS_PER_RIVAL)
+      if (
+        (cx.playerOffersByStable.get(proposerStable.stableId) ?? 0) >= MAX_PLAYER_OFFERS_PER_RIVAL
+      )
         continue;
     }
 

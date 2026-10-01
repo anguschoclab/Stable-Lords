@@ -33,8 +33,6 @@ describe('WeaponAffinitySection', () => {
     // label must come from WEAPON_SUITABILITY_LABELS, and the hardcoded
     // "+2 ACC / +1 DMG" chrome must be gone.
     expect(screen.queryByText(/\+2 ACC/)).not.toBeInTheDocument();
-    expect(
-      screen.getByText(/Can't Go Wrong|Well Suited|Marginal|Unorthodox/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Can't Go Wrong|Well Suited|Marginal|Unorthodox/)).toBeInTheDocument();
   });
 });

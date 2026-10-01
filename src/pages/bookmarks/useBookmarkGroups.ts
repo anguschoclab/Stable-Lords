@@ -45,14 +45,31 @@ export function useBookmarkGroups() {
     () =>
       groupBookmarks(
         {
-          bookmarks, roster, graveyard, retired, rivals, promoters,
-          trainers, tournaments, boutOffers, scoutReports,
+          bookmarks,
+          roster,
+          graveyard,
+          retired,
+          rivals,
+          promoters,
+          trainers,
+          tournaments,
+          boutOffers,
+          scoutReports,
         },
         navigate
       ),
     [
-      bookmarks, roster, graveyard, retired, rivals, promoters,
-      trainers, tournaments, boutOffers, scoutReports, navigate,
+      bookmarks,
+      roster,
+      graveyard,
+      retired,
+      rivals,
+      promoters,
+      trainers,
+      tournaments,
+      boutOffers,
+      scoutReports,
+      navigate,
     ]
   );
 

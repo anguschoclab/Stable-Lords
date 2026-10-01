@@ -27,7 +27,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // We suppress the native title if we're showing a custom tooltip
     const tooltipContent = tooltip || title;
 
-    const effectiveAriaLabel = ariaLabel || (typeof tooltipContent === 'string' ? tooltipContent : undefined);
+    const effectiveAriaLabel =
+      ariaLabel || (typeof tooltipContent === 'string' ? tooltipContent : undefined);
 
     const button = (
       <Comp

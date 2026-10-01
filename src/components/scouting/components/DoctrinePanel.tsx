@@ -82,8 +82,7 @@ function StyleBarRow({
   barClass: string;
   textAlign: 'left' | 'right';
 }) {
-  const displayName =
-    STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] || style;
+  const displayName = STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] || style;
 
   return (
     <div className="flex items-center gap-3">
@@ -109,9 +108,7 @@ function StyleBarRow({
 
       {textAlign === 'left' && (
         <div className="flex items-center gap-2 flex-1">
-          <span className="text-[9px] text-muted-foreground/60 min-w-[8rem]">
-            {displayName}
-          </span>
+          <span className="text-[9px] text-muted-foreground/60 min-w-[8rem]">{displayName}</span>
           <span className="text-[10px] font-mono font-black text-foreground min-w-[3rem]">
             {count}
           </span>

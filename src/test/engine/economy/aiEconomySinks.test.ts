@@ -6,11 +6,7 @@ import { makeRival, makeWarrior } from '@/test/_fixtures/factories';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import {
-  AI_TRAIT_DEV_COST,
-  AI_TRAIT_DEV_RESERVE,
-  AI_PRESTIGE_FREE_TREASURY,
-} from '@/constants/ai';
+import { AI_TRAIT_DEV_COST, AI_TRAIT_DEV_RESERVE, AI_PRESTIGE_FREE_TREASURY } from '@/constants/ai';
 
 /** Deterministic RNG that always takes the "develop" branch. */
 const alwaysRoll: IRNGService = {
@@ -110,7 +106,10 @@ describe('AI training appetite scales with wealth', () => {
 describe('economy sink integration', () => {
   it('a wealthy idle stable loses more weekly than it earns', () => {
     const state = createFreshState('7');
-    const rich = rivalWith(Array.from({ length: 6 }, () => developable()), 80_000);
+    const rich = rivalWith(
+      Array.from({ length: 6 }, () => developable()),
+      80_000
+    );
     const before = rich.treasury;
     const { updatedRival } = processAIStable(rich, state);
     // No fights booked → no purse income, only upkeep + sinks.

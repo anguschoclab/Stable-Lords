@@ -10,7 +10,10 @@ import { getSalary } from '../hooks/useContractData';
  */
 export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
   return (
-    <TableRow key={t.id} className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none">
+    <TableRow
+      key={t.id}
+      className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none"
+    >
       <TableCell className="pl-8 py-5">
         <div className="flex flex-col">
           <span className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none">

@@ -13,7 +13,9 @@ export const makeStubRng = (over: Record<string, unknown> = {}): IRNGService =>
   }) as unknown as IRNGService;
 
 /** Empty OffseasonEventContext collector for handler tests. */
-export const makeOffseasonCtx = (over: Partial<OffseasonEventContext> = {}): OffseasonEventContext =>
+export const makeOffseasonCtx = (
+  over: Partial<OffseasonEventContext> = {}
+): OffseasonEventContext =>
   ({
     rosterUpdates: new Map(),
     newsletterItems: [],

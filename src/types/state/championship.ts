@@ -2,9 +2,6 @@ import type { FightId, PromoterId, WarriorId } from '../shared.types';
 import type { FightingStyle } from '../warrior.types';
 import type { PromoterPersonality } from './rankings';
 
-
-
-
 /**
  * Lifecycle status of an arena title.
  * - active: champion is locked to title bouts (ordinary offers are suppressed,
@@ -16,22 +13,13 @@ import type { PromoterPersonality } from './rankings';
  */
 export type TitleStatus = 'active' | 'pendingReengagement' | 'dormant';
 
-
-
 /**
  * How a reign ended. `displaced` = the champion's stable folded and the
  * warrior left as a free agent — distinct from `retired`, which means the
  * warrior actually hung up the blade.
  */
 export type ArenaReignEndReason =
-  | 'defeated'
-  | 'died'
-  | 'retired'
-  | 'stripped'
-  | 'relinquished'
-  | 'displaced';
-
-
+  'defeated' | 'died' | 'retired' | 'stripped' | 'relinquished' | 'displaced';
 
 /**
  * The live reign. Only warrior + timing are persisted — the owning stable is
@@ -43,8 +31,6 @@ export interface ArenaTitleReign {
   defenses: number;
   lastActivityWeek: number;
 }
-
-
 
 /** A completed reign — stableName is stamped at end time as a historical fact. */
 export interface ArenaReignRecord {
@@ -58,8 +44,6 @@ export interface ArenaReignRecord {
   endReason: ArenaReignEndReason;
   defenses: number;
 }
-
-
 
 /**
  * Per-arena championship state.
@@ -81,8 +65,6 @@ export interface ArenaTitle {
   declinedContenders: Record<string, number>;
 }
 
-
-
 /** Winner record for the annual champions-only Grand Championship. */
 export interface GrandChampionEntry {
   tournamentId: string;
@@ -93,8 +75,6 @@ export interface GrandChampionEntry {
   warriorEpithet?: string;
   stableName?: string;
 }
-
-
 
 /**
  * Defines the shape of promoter.

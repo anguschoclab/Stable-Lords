@@ -54,8 +54,8 @@ function RelinquishDialog({
       title="Relinquish the Crown?"
       description={
         <>
-          {champName ?? 'Your champion'} will give up the {arenaName} title. The
-          crown falls vacant, and they cannot contend here again for{' '}
+          {champName ?? 'Your champion'} will give up the {arenaName} title. The crown falls vacant,
+          and they cannot contend here again for{' '}
           <span className="text-arena-gold font-black">26 weeks</span>.
         </>
       }
@@ -132,7 +132,10 @@ export default function ArenaDetail() {
         title={arena.name}
         subtitle={`Tier ${arena.tier} · ${arena.size.toUpperCase()} · ${arena.tags.join(' · ')}`}
         actions={
-          <Badge variant="outline" className={cn('text-[9px] font-black tracking-widest', badge.className)}>
+          <Badge
+            variant="outline"
+            className={cn('text-[9px] font-black tracking-widest', badge.className)}
+          >
             {badge.label}
           </Badge>
         }

@@ -153,9 +153,8 @@ function hitAttackLead(
   weapon: string
 ): MinuteEvent[] {
   const showAttack =
-    events.some(
-      (e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE' && e.actor === event.actor
-    ) || !events.some((e) => e.type === 'DEFENSE' && e.actor === event.target);
+    events.some((e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE' && e.actor === event.actor) ||
+    !events.some((e) => e.type === 'DEFENSE' && e.actor === event.target);
   if (!showAttack) return [];
   return [
     {
@@ -329,9 +328,7 @@ const narrateStateChangeEvent: EventNarrator = (event, h, minute) => {
     ];
   }
   if (result === 'DESPERATE') {
-    return [
-      { minute, text: `${actorName} is in dire straits — switching to survival mode.` },
-    ];
+    return [{ minute, text: `${actorName} is in dire straits — switching to survival mode.` }];
   }
   if (result?.startsWith('PSYCH_')) {
     const state = result.replace('PSYCH_', '');

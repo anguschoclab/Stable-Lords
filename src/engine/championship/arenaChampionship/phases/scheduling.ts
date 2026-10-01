@@ -1,24 +1,18 @@
-import type {
-  GameState,
-  BoutOffer,
-} from '@/types/state.types';
-import type {
-  WarriorId,
-  BoutOfferId,
-  PromoterId,
-} from '@/types/shared.types';
+import type { GameState, BoutOffer } from '@/types/state.types';
+import type { WarriorId, BoutOfferId, PromoterId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import {
-  ARENA_TITLE,
-  ARENA_COMMISSION_ID,
-} from '@/constants/arena';
-import {
-  displayWeek,
-  isTournamentWeekOfYear,
-} from '@/engine/core/absoluteWeek';
+import { ARENA_TITLE, ARENA_COMMISSION_ID } from '@/constants/arena';
+import { displayWeek, isTournamentWeekOfYear } from '@/engine/core/absoluteWeek';
 import { collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import type { ChampionshipDelta } from '../core';
-import { titleOf, ensureTitle, effectiveOffers, isOpenOffer, sortedTitleKeys, CHAMPIONSHIP_DEBUG } from '../core';
+import {
+  titleOf,
+  ensureTitle,
+  effectiveOffers,
+  isOpenOffer,
+  sortedTitleKeys,
+  CHAMPIONSHIP_DEBUG,
+} from '../core';
 import { rankContenders, selectTitleContender } from '../queries';
 
 // ─── 6. Scheduling ──────────────────────────────────────────────────────────
@@ -72,7 +66,9 @@ export function scheduleTitleBouts(
         }
         continue;
       }
-      delta.newOffers.push(makeTitleOffer(rng, arenaId, reign.warriorId, contender.id, targetWeek, now));
+      delta.newOffers.push(
+        makeTitleOffer(rng, arenaId, reign.warriorId, contender.id, targetWeek, now)
+      );
       CHAMPIONSHIP_DEBUG.offersCreated++;
       CHAMPIONSHIP_DEBUG.defensesScheduled++;
       liveTitleArenas.add(arenaId);
@@ -88,7 +84,9 @@ export function scheduleTitleBouts(
       }
       const [a, b] = ranked;
       if (!a || !b) continue;
-      delta.newOffers.push(makeTitleOffer(rng, arenaId, a.warrior.id, b.warrior.id, targetWeek, now));
+      delta.newOffers.push(
+        makeTitleOffer(rng, arenaId, a.warrior.id, b.warrior.id, targetWeek, now)
+      );
       CHAMPIONSHIP_DEBUG.offersCreated++;
       liveTitleArenas.add(arenaId);
       bookedNext.add(a.warrior.id);

@@ -11,7 +11,6 @@ import type { GameState } from '@/types/state.types';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
-
 const validate = (state: GameState, week: number) => {
   const violations = validateStateInvariants(state);
   expect(
@@ -30,10 +29,12 @@ describe('state invariants (slow)', () => {
   it('holds over 13 sequential weeks', async () => {
     let state = populateInitialWorld(createFreshState('inv-seq'), 31415);
     for (let w = 0; w < 13; w++) {
-      setMockIdGenerator((() => {
-        let n = 0;
-        return () => `id_${++n}`;
-      })());
+      setMockIdGenerator(
+        (() => {
+          let n = 0;
+          return () => `id_${++n}`;
+        })()
+      );
       state = await advanceWeek(state, { headless: true, mutableInput: true });
       validate(state, w + 1);
     }
@@ -43,10 +44,12 @@ describe('state invariants (slow)', () => {
     const pool = createEnginePool(4, { spawnShardWorker: fakeShardWorker });
     let state = populateInitialWorld(createFreshState('inv-par'), 31415);
     for (let w = 0; w < 13; w++) {
-      setMockIdGenerator((() => {
-        let n = 0;
-        return () => `id_${++n}`;
-      })());
+      setMockIdGenerator(
+        (() => {
+          let n = 0;
+          return () => `id_${++n}`;
+        })()
+      );
       state = await advanceWeek(state, { headless: true, mutableInput: true, pool });
       validate(state, w + 1);
     }

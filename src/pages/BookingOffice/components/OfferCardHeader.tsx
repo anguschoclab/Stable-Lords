@@ -53,10 +53,7 @@ function OfferBadges({
       )}
       {personalityConfig && (
         <span
-          className={cn(
-            'text-[8px] font-black uppercase tracking-widest',
-            personalityConfig.color
-          )}
+          className={cn('text-[8px] font-black uppercase tracking-widest', personalityConfig.color)}
         >
           {personality}
         </span>

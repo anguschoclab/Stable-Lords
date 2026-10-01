@@ -6,12 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { processStaff, preferredTrainerFocus } from '@/engine/ai/workers/staffWorker';
-import {
-  makeAgentMemory,
-  makeGameState,
-  makeRival,
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeAgentMemory, makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { Trainer } from '@/types/shared.types';
 
@@ -99,12 +94,12 @@ describe('staffWorker dossier-driven hiring', () => {
   });
 
   it('preferredTrainerFocus maps the observed field to a counter focus', () => {
-    expect(
-      preferredTrainerFocus([FightingStyle.BashingAttack, FightingStyle.StrikingAttack])
-    ).toBe('Defense');
-    expect(
-      preferredTrainerFocus([FightingStyle.TotalParry, FightingStyle.WallOfSteel])
-    ).toBe('Aggression');
+    expect(preferredTrainerFocus([FightingStyle.BashingAttack, FightingStyle.StrikingAttack])).toBe(
+      'Defense'
+    );
+    expect(preferredTrainerFocus([FightingStyle.TotalParry, FightingStyle.WallOfSteel])).toBe(
+      'Aggression'
+    );
     expect(preferredTrainerFocus([])).toBeNull();
   });
 });

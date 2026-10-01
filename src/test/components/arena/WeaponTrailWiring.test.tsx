@@ -24,8 +24,7 @@ vi.mock('@/hooks/useArenaAnimation', () => ({
 }));
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (sel: (s: Record<string, unknown>) => unknown) =>
-    sel({ season: 'Spring' }),
+  useGameStore: (sel: (s: Record<string, unknown>) => unknown) => sel({ season: 'Spring' }),
   useArenaPreferences: () => ({
     effectsEnabled: true,
     screenShakeIntensity: 'low',
@@ -72,18 +71,14 @@ describe('weaponTrailTypeFor', () => {
 
 describe('ArenaView weapon trail (A5)', () => {
   it('renders a trail on an attack event from side A', () => {
-    const { container } = render(
-      <ArenaView {...baseProps} log={[hitEvent('A')]} />
-    );
+    const { container } = render(<ArenaView {...baseProps} log={[hitEvent('A')]} />);
     const path = container.querySelector('svg path');
     expect(path).not.toBeNull();
     expect(path?.getAttribute('class')).toContain('stroke-slate-300');
   });
 
   it('renders a trail for the defender-side attacker with its weapon class', () => {
-    const { container } = render(
-      <ArenaView {...baseProps} log={[hitEvent('D')]} />
-    );
+    const { container } = render(<ArenaView {...baseProps} log={[hitEvent('D')]} />);
     const path = container.querySelector('svg path');
     expect(path?.getAttribute('class')).toContain('stroke-orange-400');
   });

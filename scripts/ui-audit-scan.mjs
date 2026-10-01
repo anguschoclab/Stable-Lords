@@ -32,10 +32,10 @@ const OUT_FILE = path.join(OUT_DIR, 'ui-audit.json');
 const SCAN_DIRS = ['components', 'pages', 'hooks'];
 // Files/paths where raw literals are legitimately data-driven paint, not tokens.
 const PAINT_ALLOWLIST = [
-  /components\/crest\//,        // heraldic metal/color palette is data
-  /components\/arena\//,        // bout-viewer canvas/SVG paints
+  /components\/crest\//, // heraldic metal/color palette is data
+  /components\/arena\//, // bout-viewer canvas/SVG paints
   /components\/ui\/chart\.tsx/, // recharts internals: hexes are CSS attribute selectors
-  /StaminaCurve/,               // semantic chart colors
+  /StaminaCurve/, // semantic chart colors
   /index\.css|tailwind\.config/,
 ];
 const RNG_ALLOWLIST = [/utils\/random\.ts/, /engine\/core\/rng\//, /AudioManager/];
@@ -73,7 +73,13 @@ const FAKE_CHROME_RE = /\b(SECTOR|SECURE|UPLINK|ENCRYPTED|CLASSIFIED|PROTOCOL)\b
 
 /** Collect classified UI violations. Returns { findings, filesAffected }. */
 export function collectUiAudit() {
-  const findings = { 'token-violation': [], 'screaming-copy': [], 'rng-violation': [], 'motion-violation': [], 'fake-chrome': [] };
+  const findings = {
+    'token-violation': [],
+    'screaming-copy': [],
+    'rng-violation': [],
+    'motion-violation': [],
+    'fake-chrome': [],
+  };
 
   for (const dir of SCAN_DIRS) {
     const base = path.join(SRC, dir);
@@ -89,7 +95,8 @@ export function collectUiAudit() {
         const l = lines[i];
         const n = i + 1;
         const trimmed = l.trim();
-        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue;
+        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*'))
+          continue;
 
         if ((HEX_RE.test(l) || RAW_FN_RE.test(l)) && !paintOk) {
           findings['token-violation'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
@@ -116,7 +123,12 @@ export function collectUiAudit() {
     if (allowlisted(r, RNG_ALLOWLIST)) continue;
     const lines = fs.readFileSync(file, 'utf8').split('\n');
     for (let i = 0; i < lines.length; i++)
-      if (/Math\.random\s*\(/.test(lines[i])) findings['rng-violation'].push({ file: r, line: i + 1, text: lines[i].trim().slice(0, 140) });
+      if (/Math\.random\s*\(/.test(lines[i]))
+        findings['rng-violation'].push({
+          file: r,
+          line: i + 1,
+          text: lines[i].trim().slice(0, 140),
+        });
   }
 
   const byFile = new Map();

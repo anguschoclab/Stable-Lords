@@ -136,8 +136,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
             if (!arenaId) return <span>Targeting: {targetName}</span>;
             return (
               <span>
-                Title campaign:{' '}
-                {getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId}
+                Title campaign: {getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId}
               </span>
             );
           })()}
@@ -184,8 +183,7 @@ function IntentPanel({
           data-testid="season-record"
           className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 tabular-nums"
         >
-          Season {rival.agentMemory.seasonRecord.wins}-
-          {rival.agentMemory.seasonRecord.losses}-
+          Season {rival.agentMemory.seasonRecord.wins}-{rival.agentMemory.seasonRecord.losses}-
           {rival.agentMemory.seasonRecord.kills} W-L-K
         </div>
       )}

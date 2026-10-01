@@ -142,7 +142,16 @@ function useSaveSlots(loadGame: LoadGame) {
     toast.success('Save exported!');
   }, []);
 
-  return { slots, deleteTarget, setDeleteTarget, mostRecent, loadSlot, handleDelete, handleImport, handleExport };
+  return {
+    slots,
+    deleteTarget,
+    setDeleteTarget,
+    mostRecent,
+    loadSlot,
+    handleDelete,
+    handleImport,
+    handleExport,
+  };
 }
 
 /** All title-screen orchestration: save slots, new-game creation, import/export/delete. */

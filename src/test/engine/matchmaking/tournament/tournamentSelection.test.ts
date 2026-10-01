@@ -1,10 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { GameState, TournamentEntry, TournamentBout, Warrior } from '@/types/state.types';
 import type { FightOutcome, FightOutcomeBy } from '@/types/combat.types';
-import {
-  FightingStyle,
-  type TournamentId,
-} from '@/types/shared.types';
+import { FightingStyle, type TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { getPairKey } from '@/utils/keyUtils';
 import {
@@ -654,8 +651,12 @@ describe('applyBoutResults', () => {
   });
 
   it('updates fatigue for both warriors', () => {
-    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, { fatigue: 0 });
-    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, { fatigue: 0 });
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, {
+      fatigue: 0,
+    });
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, {
+      fatigue: 0,
+    });
 
     const state = makeBaseState();
     state.roster = [w1];
@@ -673,8 +674,12 @@ describe('applyBoutResults', () => {
   });
 
   it('skips fatigue when isTournamentWeek is true', () => {
-    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, { fatigue: 10 });
-    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, { fatigue: 10 });
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, {
+      fatigue: 10,
+    });
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID, {
+      fatigue: 10,
+    });
 
     const state = makeBaseState();
     state.isTournamentWeek = true;
@@ -1034,7 +1039,12 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
       const isSlotA = i % 2 === 0;
       const stableId = isSlotA === (aWins === 'player') ? PLAYER_ID : RIVAL_ID;
       ws.push(
-        makeTournamentWarrior(`bw${i}`, `Bracket Warrior ${i}`, FightingStyle.StrikingAttack, stableId)
+        makeTournamentWarrior(
+          `bw${i}`,
+          `Bracket Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          stableId
+        )
       );
     }
     return ws;
@@ -1150,8 +1160,7 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
     expect(tour.completed).toBe(true);
     const bronze = tour.bracket.find((b: TournamentBout) => b.isBronzeMatch);
     expect(bronze).toBeDefined();
-    const bronzeWinner =
-      bronze!.winner === 'A' ? bronze!.warriorIdA : bronze!.warriorIdD;
+    const bronzeWinner = bronze!.winner === 'A' ? bronze!.warriorIdA : bronze!.warriorIdD;
     const podium = state.rivals[0]!.roster.concat(state.roster);
     const third = podium.find((w: Warrior) => w.id === bronzeWinner);
     expect(third?.career.medals?.bronze).toBe(1);
@@ -1178,9 +1187,24 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
     const finals = tour.bracket.find((b: TournamentBout) => b.round === 6 && b.matchIndex === 0);
     const bronze = tour.bracket.find((b: TournamentBout) => b.isBronzeMatch);
     const podium = [
-      { id: finals!.winner === 'A' ? finals!.warriorIdA : finals!.warriorIdD, purse: 5000, fame: 100, medal: 'gold' as const },
-      { id: finals!.winner === 'A' ? finals!.warriorIdD : finals!.warriorIdA, purse: 2500, fame: 50, medal: 'silver' as const },
-      { id: bronze!.winner === 'A' ? bronze!.warriorIdA : bronze!.warriorIdD, purse: 1250, fame: 25, medal: 'bronze' as const },
+      {
+        id: finals!.winner === 'A' ? finals!.warriorIdA : finals!.warriorIdD,
+        purse: 5000,
+        fame: 100,
+        medal: 'gold' as const,
+      },
+      {
+        id: finals!.winner === 'A' ? finals!.warriorIdD : finals!.warriorIdA,
+        purse: 2500,
+        fame: 50,
+        medal: 'silver' as const,
+      },
+      {
+        id: bronze!.winner === 'A' ? bronze!.warriorIdA : bronze!.warriorIdD,
+        purse: 1250,
+        fame: 25,
+        medal: 'bronze' as const,
+      },
     ];
 
     // Purse + fame follow each podium finisher's stable.
@@ -1215,9 +1239,7 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
     const champ = state.rivals[0]!.roster.find((x: Warrior) => x.id === podium[0]!.id)!;
     expect(champ.favorites?.discovered.weapon).toBe(true);
     expect(champ.favorites?.discovered.rhythm).toBe(true);
-    expect(
-      Object.values(champ.attributes).some((v) => v > 10)
-    ).toBe(true);
+    expect(Object.values(champ.attributes).some((v) => v > 10)).toBe(true);
   });
 });
 

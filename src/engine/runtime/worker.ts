@@ -50,8 +50,10 @@ const engine = {
     enqueueSim(TournamentSelectionService.resolveRound.bind(TournamentSelectionService), ...args),
   createFreshState: (...args: Parameters<typeof createFreshState>) =>
     jobs.enqueue(createFreshState, ...args),
-  advanceQuarter: (state: GameState, opts?: Parameters<typeof TickOrchestrator.advanceQuarter>[1]) =>
-    enqueueSim(TickOrchestrator.advanceQuarter, state, { ...opts, mutableInput: true }),
+  advanceQuarter: (
+    state: GameState,
+    opts?: Parameters<typeof TickOrchestrator.advanceQuarter>[1]
+  ) => enqueueSim(TickOrchestrator.advanceQuarter, state, { ...opts, mutableInput: true }),
   advanceYear: (state: GameState, opts?: Parameters<typeof TickOrchestrator.advanceYear>[1]) =>
     enqueueSim(TickOrchestrator.advanceYear, state, { ...opts, mutableInput: true }),
   skipToQuarterEnd: (

@@ -55,13 +55,7 @@ const DIMS: {
 ];
 
 /** One reputation dimension card: value, meter, description, effect. */
-function ReputationCard({
-  dim,
-  val,
-}: {
-  dim: (typeof DIMS)[number];
-  val: number;
-}) {
+function ReputationCard({ dim, val }: { dim: (typeof DIMS)[number]; val: number }) {
   const Icon = dim.icon;
   return (
     <Surface variant="glass" className="p-5 flex flex-col gap-3">

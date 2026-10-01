@@ -8,7 +8,5 @@
     "src/test/engine/combat/equipmentIntegration.test.ts",
     "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts"
   ],
-  "missingJsdomPragma": [
-    "src/test/engine/advisor/tacticsAdvisorBridge.test.ts"
-  ]
+  "missingJsdomPragma": ["src/test/engine/advisor/tacticsAdvisorBridge.test.ts"]
 }

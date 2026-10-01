@@ -18,8 +18,6 @@ import {
   type OffseasonEventContext,
 } from '@/engine/pipeline/offseasonEvents';
 
-
-
 const makeTestState = (): GameState =>
   fixtureGameState({
     roster: [

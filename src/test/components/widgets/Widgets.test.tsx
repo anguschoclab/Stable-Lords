@@ -48,7 +48,7 @@ vi.mock('framer-motion', () => ({
 
 vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,

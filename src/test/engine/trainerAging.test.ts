@@ -5,7 +5,10 @@ import { TRAINER_AGING } from '@/constants/aging';
 import type { GameState, Trainer, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { makeRival as fixtureRival, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeRival as fixtureRival,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

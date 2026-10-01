@@ -39,7 +39,6 @@ export function handleGrandFeast(
  *
  */
 
-
 /**
  *
  */
@@ -86,7 +85,6 @@ export function handleMidnightFeast(
  *
  */
 
-
 /**
  *
  */
@@ -124,7 +122,6 @@ export function handleStreetPerformance(
 /**
  *
  */
-
 
 /**
  *

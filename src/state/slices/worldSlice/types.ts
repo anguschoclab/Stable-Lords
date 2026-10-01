@@ -44,6 +44,10 @@ export interface WorldSlice {
   promoters: Record<PromoterId, Promoter>;
   boutOffers: Record<BoutOfferId, BoutOffer>;
   rivals: RivalStableData[];
+  /** Hall-of-Fame-caliber retirees queued to found rival stables. */
+  legacyFounderQueue: GameState['legacyFounderQueue'];
+  /** Released/displaced veterans on the shared free-agent market. */
+  freeAgents: GameState['freeAgents'];
   gazettes: GazetteStory[];
   scoutReports: ScoutReportData[];
   arenaHistory: FightSummary[];

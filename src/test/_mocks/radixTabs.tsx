@@ -1,4 +1,3 @@
-
 /** Shared flat mock for @/components/ui/tabs — renders all tab contents for easy querying. */
 export const Tabs = ({ children, defaultValue }: any) => (
   <div data-testid="tabs" data-default={defaultValue}>

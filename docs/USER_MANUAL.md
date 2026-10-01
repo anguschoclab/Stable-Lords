@@ -283,11 +283,11 @@ Each week, every warrior can be assigned to **one training mode**. Training cost
 
 ### 6.1 Training Modes
 
-| Mode                   | Effect                                                        | Risk                       |
-| ---------------------- | ------------------------------------------------------------- | -------------------------- |
+| Mode                   | Effect                                                        | Risk                                        |
+| ---------------------- | ------------------------------------------------------------- | ------------------------------------------- |
 | **Attribute Training** | Chance to gain +1 in a chosen attribute (capped by potential) | ~3% base injury chance (hard-capped at 10%) |
-| **Skill Drilling**     | +1 to a chosen combat skill (capped by drill limit)           | Slightly lower injury risk |
-| **Recovery**           | Reduces weeks remaining on an injury                          | No new injury risk         |
+| **Skill Drilling**     | +1 to a chosen combat skill (capped by drill limit)           | Slightly lower injury risk                  |
+| **Recovery**           | Reduces weeks remaining on an injury                          | No new injury risk                          |
 
 **Attribute potential** is hidden — each attribute has a personal ceiling beyond which no further gains are possible. The ceiling is revealed gradually through training attempts.
 
@@ -667,17 +667,17 @@ The **Dashboard** is your command centre. It consists of modular widgets display
 
 ### Core Widgets
 
-| Widget              | Purpose                                                       |
-| ------------------- | ------------------------------------------------------------- |
-| Crowd Mood          | Current arena crowd temperament and momentum                 |
-| Intelligence Hub    | Arena chronicle — recent results and upcoming intelligence   |
-| Next Bout           | Match preview with estimated odds for the next fight         |
-| Medical Audit       | Active injuries and recovery timelines for your roster       |
-| Arena Conditions    | Current weather and its economic/combat effects              |
-| Style Meta          | Fighting style popularity drift and trend direction          |
-| Stable Stats        | Renown, lifetime kills, and win rate at a glance             |
-| Arena Leaderboard   | Global rankings — your position vs rival stables             |
-| Auto-Simulate       | Console for running simulated seasons                        |
+| Widget            | Purpose                                                    |
+| ----------------- | ---------------------------------------------------------- |
+| Crowd Mood        | Current arena crowd temperament and momentum               |
+| Intelligence Hub  | Arena chronicle — recent results and upcoming intelligence |
+| Next Bout         | Match preview with estimated odds for the next fight       |
+| Medical Audit     | Active injuries and recovery timelines for your roster     |
+| Arena Conditions  | Current weather and its economic/combat effects            |
+| Style Meta        | Fighting style popularity drift and trend direction        |
+| Stable Stats      | Renown, lifetime kills, and win rate at a glance           |
+| Arena Leaderboard | Global rankings — your position vs rival stables           |
+| Auto-Simulate     | Console for running simulated seasons                      |
 
 Widgets are displayed in a fixed layout. Focus on the information most relevant to your current stage of the game.
 

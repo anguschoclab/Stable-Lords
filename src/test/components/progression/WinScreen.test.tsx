@@ -14,9 +14,7 @@ const wonState = {
     acknowledgedWin: false,
     wonYear: 1,
     wonWeek: 40,
-    objectives: [
-      { id: 'o1', label: 'Win the crown', description: 'desc', completed: true },
-    ],
+    objectives: [{ id: 'o1', label: 'Win the crown', description: 'desc', completed: true }],
   },
   fame: 500,
   roster: [],

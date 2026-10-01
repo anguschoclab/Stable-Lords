@@ -1,8 +1,6 @@
 // Split from data/arenas.ts — venue data
 import type { ArenaConfig } from '@/types/shared.types';
 
-
-
 // ─── Seed Arenas ─────────────────────────────────────────────────────────────
 
 /**
@@ -20,8 +18,6 @@ export const STANDARD_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const MIST_SHROUDED_RUINS: ArenaConfig = {
   id: 'mist_shrouded_ruins',
   name: 'Mist-Shrouded Ruins',
@@ -33,8 +29,6 @@ export const MIST_SHROUDED_RUINS: ArenaConfig = {
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.0 },
 };
 
-
-
 export const THE_GALLOWS_TREE: ArenaConfig = {
   id: 'the_gallows_tree',
   name: 'The Gallows Tree',
@@ -45,8 +39,6 @@ export const THE_GALLOWS_TREE: ArenaConfig = {
   zoneDef: { Corner: -4 },
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.1 },
 };
-
-
 
 /**
  * Tiny, brutal ring with uneven stones. Penalizes lunging and favors close-quarters brawling.
@@ -64,8 +56,6 @@ export const BRASS_RING: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 /**
  * Dizzying elevated span where low endurance fighters struggle and long weapons are useless.
  */
@@ -82,8 +72,6 @@ export const NARROW_BRIDGE: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const MUDPIT_ARENA: ArenaConfig = {
   id: 'mudpit_arena',
   name: 'The Mudpit',
@@ -95,8 +83,6 @@ export const MUDPIT_ARENA: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: -1 },
   startingZone: 'Center',
 };
-
-
 
 /**
  * The grand arena — fine sand, neutral footing, premium venue.
@@ -118,8 +104,6 @@ export const BLOODSANDS_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 /**
  * Torch-lit subterranean pit with tight quarters.
  */
@@ -135,8 +119,6 @@ export const UNDERPIT_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 export const HIGHPLAIN_ARENA: ArenaConfig = {
   id: 'highplain_arena',
   name: 'The High Plain',
@@ -149,8 +131,6 @@ export const HIGHPLAIN_ARENA: ArenaConfig = {
   surfaceMod: { initiativeMod: 1, enduranceMult: 1.0, riposteMod: 0 },
   startingZone: 'Center',
 };
-
-
 
 // Indoor, standard size — full range ladder, riposte-friendly acoustics.
 export const LANTERN_HALL_ARENA: ArenaConfig = {
@@ -166,8 +146,6 @@ export const LANTERN_HALL_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 // Outdoor, cramped — compact walled courtyard; the only cramped arena without a roof.
 export const WALLED_COURT_ARENA: ArenaConfig = {
   id: 'walled_court_arena',
@@ -182,8 +160,6 @@ export const WALLED_COURT_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
-
-
 // Elevated, outdoor — the only arena using the 'elevated' tag.
 export const CLIFFTOP_ARENA: ArenaConfig = {
   id: 'clifftop_arena',
@@ -197,8 +173,6 @@ export const CLIFFTOP_ARENA: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.05, riposteMod: 0 },
   startingZone: 'Center',
 };
-
-
 
 // Indoor, water, cramped — the most punishing arena in the circuit.
 export const FLOODED_VAULT_ARENA: ArenaConfig = {

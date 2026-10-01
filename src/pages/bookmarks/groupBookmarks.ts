@@ -19,8 +19,16 @@ export type BookmarkGroups = Record<BookmarkEntityType, BookmarkRow[]>;
 type Navigate = ReturnType<typeof useNavigate>;
 type Slice = Pick<
   GameStore,
-  | 'bookmarks' | 'roster' | 'graveyard' | 'retired' | 'rivals'
-  | 'promoters' | 'trainers' | 'tournaments' | 'boutOffers' | 'scoutReports'
+  | 'bookmarks'
+  | 'roster'
+  | 'graveyard'
+  | 'retired'
+  | 'rivals'
+  | 'promoters'
+  | 'trainers'
+  | 'tournaments'
+  | 'boutOffers'
+  | 'scoutReports'
 >;
 
 type LookupMaps = ReturnType<typeof buildLookupMaps>;
@@ -30,7 +38,17 @@ type LookupMaps = ReturnType<typeof buildLookupMaps>;
  * bookmarked — instead of re-scanning arrays inside the row loop.
  */
 function buildLookupMaps(s: Slice) {
-  const { roster, graveyard, retired, rivals, promoters, trainers, tournaments, boutOffers, scoutReports } = s;
+  const {
+    roster,
+    graveyard,
+    retired,
+    rivals,
+    promoters,
+    trainers,
+    tournaments,
+    boutOffers,
+    scoutReports,
+  } = s;
   const typesPresent = new Set(s.bookmarks.map((b) => b.entityType));
 
   const warriorMap = typesPresent.has('warrior')
@@ -83,7 +101,15 @@ function buildLookupMaps(s: Slice) {
     for (const r of scoutReports ?? []) scoutReportMap.set(r.id, r);
   }
 
-  return { warriorMap, rivalMap, promoterMap, trainerMap, tournamentMap, boutOfferMap, scoutReportMap };
+  return {
+    warriorMap,
+    rivalMap,
+    promoterMap,
+    trainerMap,
+    tournamentMap,
+    boutOfferMap,
+    scoutReportMap,
+  };
 }
 
 /** Resolve a single bookmark's display name, subtitle, and navigation. */
@@ -165,10 +191,7 @@ function resolveBookmarkRow(
  * subtitle, and click navigation. Lookup maps are built once per type —
  * only for types actually bookmarked — rather than re-scanning per row.
  */
-export function groupBookmarks(
-  s: Slice,
-  navigate: Navigate
-): BookmarkGroups {
+export function groupBookmarks(s: Slice, navigate: Navigate): BookmarkGroups {
   const groups: BookmarkGroups = {
     warrior: [],
     rival: [],

@@ -15,7 +15,9 @@ import '@/test/_setup/setup';
 vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({}),
   useNavigate: () => vi.fn(),
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
+  ),
 }));
 
 describe('Graveyard page (region pinning)', () => {

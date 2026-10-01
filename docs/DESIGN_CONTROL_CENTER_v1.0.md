@@ -201,11 +201,12 @@ Fill color encodes program type:
 Eyebrow: `LUDUS · TOP RANKS` Title: `Leading Warriors`
 
 Dense ledger table:
-| WARRIOR | RANK | W–L | FORM |
-|---------|------|-----|------|
-| Marcus Varro | #3 | 9–3 | +4 (emerald) |
-| Severa | #14 | 7–4 | +2 |
-| Gaius "The Bull" | #22 | 4–5 | −1 (blood) |
+
+| WARRIOR          | RANK | W–L | FORM         |
+| ---------------- | ---- | --- | ------------ |
+| Marcus Varro     | #3   | 9–3 | +4 (emerald) |
+| Severa           | #14  | 7–4 | +2           |
+| Gaius "The Bull" | #22  | 4–5 | −1 (blood)   |
 
 Header: `text-[9px] font-black uppercase tracking-widest`. Numbers: `font-mono font-black`. Form column color-coded, signed integer. Row click → warrior detail.
 

@@ -6,7 +6,12 @@ import {
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
-import { FightingStyle, type WarriorId, type StableId, type HallEntryId } from '@/types/shared.types';
+import {
+  FightingStyle,
+  type WarriorId,
+  type StableId,
+  type HallEntryId,
+} from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
@@ -67,7 +72,10 @@ function pickBest(
   for (let i = 1; i < eligible.length; i++) {
     const curr = eligible[i];
     if (!curr || !best) continue;
-    if (score(curr) > score(best) || (score(curr) === score(best) && tiebreak(curr) > tiebreak(best))) {
+    if (
+      score(curr) > score(best) ||
+      (score(curr) === score(best) && tiebreak(curr) > tiebreak(best))
+    ) {
       best = curr;
     }
   }
@@ -91,9 +99,7 @@ function recordAward(
   } else if (recipient.w.stableId) {
     const stableId = recipient.w.stableId;
     const currentRoster =
-      ledger.rivalsUpdates.get(stableId)?.roster ||
-      state.rivalMap?.get(stableId)?.roster ||
-      [];
+      ledger.rivalsUpdates.get(stableId)?.roster || state.rivalMap?.get(stableId)?.roster || [];
     const updatedRoster = [...currentRoster];
     const index = updatedRoster.findIndex((w: Warrior) => w.id === recipient.w.id);
     if (index !== -1) {
@@ -167,7 +173,11 @@ function awardTopHonors(
   completedYear: number,
   ledger: AwardLedger
 ): void {
-  const woty = pickBest(eligible, (e) => e.wins, (e) => e.fame);
+  const woty = pickBest(
+    eligible,
+    (e) => e.wins,
+    (e) => e.fame
+  );
   if (woty && woty.wins > 0) {
     recordAward(
       state,
@@ -189,7 +199,11 @@ function awardTopHonors(
     );
   }
 
-  const koty = pickBest(eligible, (e) => e.kills, (e) => e.wins);
+  const koty = pickBest(
+    eligible,
+    (e) => e.kills,
+    (e) => e.wins
+  );
   if (koty && koty.kills > 0) {
     recordAward(
       state,
@@ -221,7 +235,11 @@ function awardClassMvps(
 ): void {
   for (const style of Object.values(FightingStyle)) {
     const styleEligible = eligible.filter((e) => e.w.style === style);
-    const mvp = pickBest(styleEligible, (e) => e.wins, (e) => e.fame);
+    const mvp = pickBest(
+      styleEligible,
+      (e) => e.wins,
+      (e) => e.fame
+    );
     if (mvp && mvp.wins > 0) {
       recordAward(
         state,

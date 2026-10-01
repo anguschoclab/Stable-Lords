@@ -84,7 +84,9 @@ function evaluateObjectives(
   for (const obj of current.objectives) {
     if (obj.completed) continue;
 
-    if (!objectiveMet(obj.id, state, nextWeek, stableStanding, playerWarriorIds, playerWarriorNames))
+    if (
+      !objectiveMet(obj.id, state, nextWeek, stableStanding, playerWarriorIds, playerWarriorNames)
+    )
       continue;
 
     obj.completed = true;

@@ -147,7 +147,14 @@ function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['riv
     }
   }
 
-  return { intentDistribution, vendettaCount, totalDossiers, playerChallenged, offerCount, counteredCount };
+  return {
+    intentDistribution,
+    vendettaCount,
+    totalDossiers,
+    playerChallenged,
+    offerCount,
+    counteredCount,
+  };
 }
 
 /** Championship metrics (Phase-2 megaplan Stage A baselines). */

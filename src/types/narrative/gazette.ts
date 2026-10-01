@@ -1,4 +1,3 @@
-
 /**
  * Defines the shape of gazette fights.
  */
@@ -10,7 +9,6 @@ export interface GazetteFights {
   Draw: string[];
   Default: string[];
 }
-
 
 /**
  * Defines the shape of gazette headlines.
@@ -33,7 +31,6 @@ export interface GazetteHeadlines {
   Graveyard: string[];
 }
 
-
 /**
  * Defines the shape of gazette featured.
  */
@@ -48,7 +45,6 @@ export interface GazetteFeatured {
   Graveyard: string[];
 }
 
-
 /**
  * Defines the shape of season summary.
  */
@@ -56,7 +52,6 @@ export interface SeasonSummary {
   headline: string;
   body: string[];
 }
-
 
 /**
  * Defines the shape of gazette narratives.

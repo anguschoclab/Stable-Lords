@@ -16,7 +16,6 @@ interface TreasurySparklineProps {
   showLabel?: boolean;
 }
 
-
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 interface SparklineLabelProps {

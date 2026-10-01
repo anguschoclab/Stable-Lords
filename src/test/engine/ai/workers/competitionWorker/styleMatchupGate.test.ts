@@ -55,7 +55,11 @@ describe('style matchup gate (F4)', () => {
     // says the opponent's stable brawls high-OE, a calculating stable treats a
     // coin-flip-leaning-bad matchup as a pass.
     const warrior = makeWarrior({ fame: 50, style: FightingStyle.BashingAttack });
-    const opponent = makeWarrior({ id: 'opp_w' as never, fame: 55, style: FightingStyle.AimedBlow });
+    const opponent = makeWarrior({
+      id: 'opp_w' as never,
+      fame: 55,
+      style: FightingStyle.AimedBlow,
+    });
     const oppStable = makeRival({ id: 'opp_stable' as never, roster: [opponent] });
     const rival = makeRival({
       roster: [warrior],

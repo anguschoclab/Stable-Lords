@@ -23,8 +23,7 @@ function makeBout(overrides?: Partial<FightSummary>): FightSummary {
   } as FightSummary;
 }
 
-const makeWarrior = (id: string): Warrior =>
-  fixtureWarrior({ id: id as Warrior['id'], name: id });
+const makeWarrior = (id: string): Warrior => fixtureWarrior({ id: id as Warrior['id'], name: id });
 
 function sumValues(record: Record<string, number>): number {
   return Object.values(record).reduce((a, b) => a + b, 0);
@@ -161,10 +160,10 @@ describe('weekly vs tournament bout split', () => {
   it('splits bouts and kill outcomes by tournamentId', () => {
     const state = createFreshState('tracker-split');
     state.arenaHistory = [
-      makeBout({ by: 'Kill' }),                                     // weekly kill
-      makeBout({ by: 'KO' }),                                       // weekly non-kill
-      makeBout({ by: 'Kill', tournamentId: 't1' as never }),        // tournament kill
-      makeBout({ by: 'Decision', tournamentId: 't1' as never }),    // tournament non-kill
+      makeBout({ by: 'Kill' }), // weekly kill
+      makeBout({ by: 'KO' }), // weekly non-kill
+      makeBout({ by: 'Kill', tournamentId: 't1' as never }), // tournament kill
+      makeBout({ by: 'Decision', tournamentId: 't1' as never }), // tournament non-kill
     ];
 
     const s = createCumulativeTracker(state).snapshot();
@@ -178,9 +177,7 @@ describe('weekly vs tournament bout split', () => {
 
   it('exhaustion draws still count toward the per-class totals', () => {
     const state = createFreshState('tracker-draw');
-    state.arenaHistory = [
-      makeBout({ winner: null, by: 'Exhaustion' as FightSummary['by'] }),
-    ];
+    state.arenaHistory = [makeBout({ winner: null, by: 'Exhaustion' as FightSummary['by'] })];
     const s = createCumulativeTracker(state).snapshot();
     expect(s.weeklyBouts).toBe(1);
     expect(s.weeklyKills).toBe(0);

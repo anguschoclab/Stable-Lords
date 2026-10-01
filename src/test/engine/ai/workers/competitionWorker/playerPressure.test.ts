@@ -53,7 +53,11 @@ describe('dominant-player offer pressure', () => {
     // floor). A calculating camp refuses to feed the dominant stable on a
     // coin flip.
     const warrior = makeWarrior({ fame: 50, style: FightingStyle.BashingAttack });
-    const opponent = makeWarrior({ id: 'pw1' as WarriorId, fame: 55, style: FightingStyle.AimedBlow });
+    const opponent = makeWarrior({
+      id: 'pw1' as WarriorId,
+      fame: 55,
+      style: FightingStyle.AimedBlow,
+    });
     const rival = makeRival({
       roster: [warrior],
       treasury: 5000,
@@ -73,7 +77,11 @@ describe('dominant-player offer pressure', () => {
     // fame 100 vs a 40g purse: a neutral Showman counters for a fair purse —
     // the dominant-player upset spectacle is worth taking the fight raw.
     const warrior = makeWarrior({ fame: 100, style: FightingStyle.StrikingAttack });
-    const opponent = makeWarrior({ id: 'pw1' as WarriorId, fame: 55, style: FightingStyle.StrikingAttack });
+    const opponent = makeWarrior({
+      id: 'pw1' as WarriorId,
+      fame: 55,
+      style: FightingStyle.StrikingAttack,
+    });
     const rival = makeRival({
       roster: [warrior],
       treasury: 5000,
@@ -93,7 +101,11 @@ describe('dominant-player offer pressure', () => {
     // fame 100 vs a 60g purse clears the neutral floor (100-50) but not the
     // squeeze floor (100-20) — the dominant stable can afford to pay up.
     const warrior = makeWarrior({ fame: 100, style: FightingStyle.StrikingAttack });
-    const opponent = makeWarrior({ id: 'pw1' as WarriorId, fame: 55, style: FightingStyle.StrikingAttack });
+    const opponent = makeWarrior({
+      id: 'pw1' as WarriorId,
+      fame: 55,
+      style: FightingStyle.StrikingAttack,
+    });
     const rival = makeRival({
       roster: [warrior],
       treasury: 5000,
@@ -113,7 +125,11 @@ describe('dominant-player offer pressure', () => {
     // Same fixtures but the opponent belongs to a rival stable — no player
     // pressure applies even while the player is dominant.
     const warrior = makeWarrior({ fame: 100, style: FightingStyle.StrikingAttack });
-    const opponent = makeWarrior({ id: 'rw1' as WarriorId, fame: 55, style: FightingStyle.StrikingAttack });
+    const opponent = makeWarrior({
+      id: 'rw1' as WarriorId,
+      fame: 55,
+      style: FightingStyle.StrikingAttack,
+    });
     const rival = makeRival({
       roster: [warrior],
       treasury: 5000,

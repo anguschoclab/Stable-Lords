@@ -7,11 +7,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
 import { computeStableCouncilReport } from '@/engine/advisor/stableCouncilService';
-import {
-  makeWarrior,
-  makeGameState,
-  resetFixtureIds,
-} from '@/test/_fixtures/factories';
+import { makeWarrior, makeGameState, resetFixtureIds } from '@/test/_fixtures/factories';
 import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -98,7 +94,8 @@ describe('advisor crown standing', () => {
       week: 5,
       absoluteWeek: 5,
       roster: [green],
-      arenaChampions: { [ARENA]: titleAt(null) },});
+      arenaChampions: { [ARENA]: titleAt(null) },
+    });
     const report = computeStableCouncilReport(state);
     const card = report.cards.find((c) => c.warriorId === 'w1');
     expect(card?.crownStanding).toBeUndefined();

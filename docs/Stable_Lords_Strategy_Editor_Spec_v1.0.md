@@ -108,11 +108,11 @@ interface PhaseStrategy {
 
 The engine uses **equal exchange thirds** as the canonical phase rule (`src/engine/combat/phase.ts`):
 
-| Phase       | Exchanges (of 30) | Approx. Minutes | Engine Trigger                              |
-| ----------- | ----------------- | --------------- | ------------------------------------------- |
-| **Opening** | 0–9               | 1–3             | `getPhaseByExchange(ex, 30) === 'opening'`  |
-| **Mid**     | 10–19             | 4–7             | `getPhaseByExchange(ex, 30) === 'mid'`      |
-| **Late**    | 20–29             | 8–10            | `getPhaseByExchange(ex, 30) === 'late'`     |
+| Phase       | Exchanges (of 30) | Approx. Minutes | Engine Trigger                             |
+| ----------- | ----------------- | --------------- | ------------------------------------------ |
+| **Opening** | 0–9               | 1–3             | `getPhaseByExchange(ex, 30) === 'opening'` |
+| **Mid**     | 10–19             | 4–7             | `getPhaseByExchange(ex, 30) === 'mid'`     |
+| **Late**    | 20–29             | 8–10            | `getPhaseByExchange(ex, 30) === 'late'`    |
 
 The minute boundaries above are a best-fit approximation derived from `getPhaseByMinute(m, 30, 3)`, which maps each minute to the midpoint exchange of that minute and delegates to the exchange-based rule. The stamina curve preview and UI use this minute mapping; the simulation loop uses the exchange-based rule directly.
 

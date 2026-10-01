@@ -19,7 +19,6 @@ vi.mock('@tanstack/react-router', () => ({
 
 const makePlan = makeDefaultPlan;
 
-
 function renderPlanner(roster: Warrior[]) {
   const state = createFreshState('test-seed');
   state.roster = roster;

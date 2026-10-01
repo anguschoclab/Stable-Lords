@@ -76,7 +76,13 @@ async function dismissBlockingOverlays(page: Page, maxPasses = 12) {
         dismissed = true;
         break;
       } catch (e) {
-        if (!(await btn.first().isVisible().catch(() => false))) continue;
+        if (
+          !(await btn
+            .first()
+            .isVisible()
+            .catch(() => false))
+        )
+          continue;
         const info = await btn
           .first()
           .evaluate((el) => {
@@ -333,21 +339,22 @@ async function snapshotState(page: Page): Promise<StateSnap> {
       useGameStore: { getState: () => RawGameState };
     };
     const s = mod.useGameStore.getState();
-    const snapWarrior = (w: RawWarrior) => [
-      w.id,
-      {
-        id: w.id,
-        stableId: w.stableId,
-        medals: w.career?.medals,
-        discoveredWeapon: w.favorites?.discovered?.weapon,
-        discoveredRhythm: w.favorites?.discovered?.rhythm,
-        att: w.baseSkills?.ATT,
-        attrSum: Object.values(w.attributes ?? {}).reduce<number>(
-          (a, b) => a + (typeof b === 'number' ? b : 0),
-          0
-        ),
-      },
-    ] as const;
+    const snapWarrior = (w: RawWarrior) =>
+      [
+        w.id,
+        {
+          id: w.id,
+          stableId: w.stableId,
+          medals: w.career?.medals,
+          discoveredWeapon: w.favorites?.discovered?.weapon,
+          discoveredRhythm: w.favorites?.discovered?.rhythm,
+          att: w.baseSkills?.ATT,
+          attrSum: Object.values(w.attributes ?? {}).reduce<number>(
+            (a, b) => a + (typeof b === 'number' ? b : 0),
+            0
+          ),
+        },
+      ] as const;
     const warriors: Record<string, WarriorSnap> = {};
     for (const w of s.roster ?? []) warriors[w.id] = snapWarrior(w)[1];
     for (const r of s.rivals ?? []) {
@@ -521,10 +528,7 @@ function verifyPrizePayout(
   for (const [stableId, acc] of rivalExpected) {
     const preRival = preFinalSnap.rivals[stableId];
     const postRival = postSnap.rivals[stableId];
-    expect(
-      postRival,
-      `rival stable ${stableId} should still exist for prize payout`
-    ).toBeDefined();
+    expect(postRival, `rival stable ${stableId} should still exist for prize payout`).toBeDefined();
 
     // Attribute purse gold by ledger label: the snapshot window also covers
     // swept leftover-tier prizes and bout income for the same stable, so the
@@ -660,7 +664,9 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
       await dismissBlockingOverlays(page);
       try {
         if (isMobile) {
-          await page.getByRole('button', { name: 'Open navigation menu' }).click({ timeout: 5_000 });
+          await page
+            .getByRole('button', { name: 'Open navigation menu' })
+            .click({ timeout: 5_000 });
           await page
             .getByRole('dialog')
             .getByRole('link', { name, exact: opts.exact })
@@ -681,11 +687,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     // Final attempt without a catch so the real Playwright error surfaces.
     if (isMobile) {
       await page.getByRole('button', { name: 'Open navigation menu' }).click();
-      await page
-        .getByRole('dialog')
-        .getByRole('link', { name, exact: opts.exact })
-        .first()
-        .click();
+      await page.getByRole('dialog').getByRole('link', { name, exact: opts.exact }).first().click();
     } else {
       await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
     }
@@ -791,9 +793,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
         .toBeGreaterThan(prog.bouts);
     }
 
-    await expect
-      .poll(async () => (await tourneyProgress()).done, { timeout: 60_000 })
-      .toBe(true);
+    await expect.poll(async () => (await tourneyProgress()).done, { timeout: 60_000 }).toBe(true);
 
     // ── Champion + archives verification ──────────────────────────────────
     // The manifest may already show the next tier's tournament, so verify
@@ -900,9 +900,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
         `tournament week ${snap.week} should be ${EXPECTED_SEASON[snap.week]}`
       ).toBe(EXPECTED_SEASON[snap.week]);
       completedTourneys.push(
-        snap.week === CHAMPIONS_WEEK
-          ? await runChampionsWeek(snap)
-          : await runTournamentWeek(snap)
+        snap.week === CHAMPIONS_WEEK ? await runChampionsWeek(snap) : await runTournamentWeek(snap)
       );
       continue;
     }
@@ -944,9 +942,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   const endSnap = await snapshotState(page);
   collectCoverage(cov, endSnap);
   const allIds = endSnap.tournaments.map((t) => t.id);
-  expect(new Set(allIds).size, 'tournament ids must be unique across years').toBe(
-    allIds.length
-  );
+  expect(new Set(allIds).size, 'tournament ids must be unique across years').toBe(allIds.length);
 
   // One played tournament per seasonal week in year 1 plus the week-52
   // champions bracket (when it ran), plus year 2's spring tournament proving
@@ -991,16 +987,14 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
 
   // ── 7. World-systems coverage — arenas, events, mortality, AI, economy ──
   const killRate = cov.peakKills / Math.max(1, cov.peakBouts);
-  const outcomeStr = [...cov.outcomes.entries()]
-    .map(([k, v]) => `${k}:${v}`)
-    .join(' ');
+  const outcomeStr = [...cov.outcomes.entries()].map(([k, v]) => `${k}:${v}`).join(' ');
   const newRosterIds = [...cov.rivalWarriorIds.values()]
     .flatMap((s) => [...s])
     .filter((id) => !cov.baselineRosterIds.has(id));
   const totalRosterNow = [...cov.rivalRosterSize.values()].reduce((a, b) => a + b, 0);
   console.log(
     `[e2e] coverage: bouts=${cov.peakBouts} kills=${cov.peakKills} ` +
-      `(${((killRate * 100).toFixed(1))}%) retirements=${cov.peakRetirements} ` +
+      `(${(killRate * 100).toFixed(1)}%) retirements=${cov.peakRetirements} ` +
       `outcomes=[${outcomeStr}] arenas=${[...cov.arenas.entries()]
         .map(([a, n]) => `${a}:${n}`)
         .join(',')} events=${[...cov.eventTitles].join('|')} ` +
@@ -1015,7 +1009,9 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   // Arena diversity: a full year of bouts must rotate venues, not pin one.
   expect(cov.fightIds.size, 'a full year should produce hundreds of fights').toBeGreaterThan(300);
   expect(cov.fightsMissingArena, 'every fight should record its arena').toBe(0);
-  expect(cov.arenas.size, 'multiple arenas should host bouts over a year').toBeGreaterThanOrEqual(3);
+  expect(cov.arenas.size, 'multiple arenas should host bouts over a year').toBeGreaterThanOrEqual(
+    3
+  );
 
   // Kill rate: deaths happen (permadeath is the game's stake) but stay a
   // rare outcome — not so common the roster churn is cartoonish.
@@ -1026,14 +1022,18 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
 
   // Events: at least the offseason event fires at year rollover; weekly
   // EventPass events also surface as 'event' newsletter items.
-  expect(cov.eventTitles.size, 'seasonal/world events should trigger during the year')
-    .toBeGreaterThanOrEqual(1);
+  expect(
+    cov.eventTitles.size,
+    'seasonal/world events should trigger during the year'
+  ).toBeGreaterThanOrEqual(1);
 
   // Promoters: bout offers are issued during the year and resolve.
-  expect(cov.offerIds.size, 'promoters should offer bouts during the year')
-    .toBeGreaterThanOrEqual(1);
-  expect(cov.offerPromoters.size, 'offers should come from real promoters')
-    .toBeGreaterThanOrEqual(1);
+  expect(cov.offerIds.size, 'promoters should offer bouts during the year').toBeGreaterThanOrEqual(
+    1
+  );
+  expect(cov.offerPromoters.size, 'offers should come from real promoters').toBeGreaterThanOrEqual(
+    1
+  );
 
   // End-of-year awards exist for year 1, and the hall of fame collects
   // fight-of-the-week/tournament entries over the year.
@@ -1041,15 +1041,16 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
     cov.awards.filter((a) => a.year === 1).length,
     'year-1 annual awards should be granted at rollover'
   ).toBeGreaterThanOrEqual(1);
-  expect(cov.hallOfFameCount, 'hall of fame should collect entries over the year')
-    .toBeGreaterThanOrEqual(1);
+  expect(
+    cov.hallOfFameCount,
+    'hall of fame should collect entries over the year'
+  ).toBeGreaterThanOrEqual(1);
 
   // NPC AI exercised every function category, not just the noisy ones.
   for (const t of ['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF', 'BOUT', 'INTEL'] as const) {
-    expect(
-      cov.aiEventTypes.has(t),
-      `NPC AI should produce ${t} events during a full year`
-    ).toBe(true);
+    expect(cov.aiEventTypes.has(t), `NPC AI should produce ${t} events during a full year`).toBe(
+      true
+    );
   }
   // Rival ledgers must carry real economic categories — prizes, upkeep,
   // fight income at minimum.
@@ -1059,8 +1060,10 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
 
   // Replenishment: warriors die/retire but stables restock — new ids appear
   // on rival rosters over the year and no stable's roster collapses to zero.
-  expect(newRosterIds.length, 'rivals should recruit new warriors during the year')
-    .toBeGreaterThanOrEqual(1);
+  expect(
+    newRosterIds.length,
+    'rivals should recruit new warriors during the year'
+  ).toBeGreaterThanOrEqual(1);
   for (const [stableId, size] of cov.rivalRosterSize) {
     expect(size, `rival stable ${stableId} roster should not be empty`).toBeGreaterThan(0);
   }

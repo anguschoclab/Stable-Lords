@@ -52,10 +52,7 @@ export default function EventLog() {
     [roster, graveyard, retired, rivals]
   );
 
-  const allStableNames = useMemo(
-    () => collectStableNames({ player, rivals }),
-    [player, rivals]
-  );
+  const allStableNames = useMemo(() => collectStableNames({ player, rivals }), [player, rivals]);
 
   const events = useMemo(() => collectEvents(state), [state]);
 

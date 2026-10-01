@@ -3,7 +3,10 @@ import { buildActiveWarriorMap as buildWarriorMapRoster } from '@/utils/roster';
 import { buildWarriorMap as buildWarriorMapCollection } from '@/engine/core/warriorCollection';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, name: string, status: Warrior['status'] = 'Active'): Warrior =>
   fixtureWarrior({

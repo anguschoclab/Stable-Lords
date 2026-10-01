@@ -101,8 +101,7 @@ describe('TournamentSelectionCommittee', () => {
     });
 
     it('produces identical selections across runs (golden determinism)', () => {
-      const run = () =>
-        committeeSelection(state, 'Gold', 1, new Set()).warriors.map((w) => w.id);
+      const run = () => committeeSelection(state, 'Gold', 1, new Set()).warriors.map((w) => w.id);
       const first = run();
       const second = run();
       expect(first).toHaveLength(64);

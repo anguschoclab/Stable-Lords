@@ -1,4 +1,3 @@
-
 import { Quote, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
@@ -15,10 +14,6 @@ interface GazetteTabProps {
  */
 export function GazetteTab({ stories }: GazetteTabProps) {
   const { warriorNames, stableNames } = useEntityNames();
-
-  
-
-  
 
   return (
     <ScrollArea className="h-72 px-6">

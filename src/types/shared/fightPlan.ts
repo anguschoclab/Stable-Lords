@@ -3,8 +3,6 @@ import { FightingStyle } from './fightingStyles';
 import type { DistanceRange } from './spatial';
 import type { EquipmentLoadout } from '@/data/equipment';
 
-
-
 /**
  * Defines the shape of weapon.
  */
@@ -19,28 +17,20 @@ import type { EquipmentLoadout } from '@/data/equipment';
 export type AttackTarget =
   'Head' | 'Chest' | 'Abdomen' | 'Right Arm' | 'Left Arm' | 'Right Leg' | 'Left Leg' | 'Any';
 
-
-
 /**
  * Protect target type.
  */
 export type ProtectTarget = 'Head' | 'Body' | 'Arms' | 'Legs' | 'Any';
-
-
 
 /**
  * Offensive tactic type.
  */
 export type OffensiveTactic = 'Lunge' | 'Slash' | 'Bash' | 'Decisiveness' | 'none';
 
-
-
 /**
  * Defensive tactic type.
  */
 export type DefensiveTactic = 'Dodge' | 'Parry' | 'Riposte' | 'Responsiveness' | 'none';
-
-
 
 /**
  * Defines the shape of phase strategy.
@@ -55,8 +45,6 @@ export interface PhaseStrategy {
   aggressionBias?: number; // 0-10
 }
 
-
-
 /**
  * Defines the shape of desperate plan.
  */
@@ -69,8 +57,6 @@ export interface DesperatePlan {
   target?: AttackTarget;
   protect?: ProtectTarget;
 }
-
-
 
 /**
  * Defines the shape of fight plan.

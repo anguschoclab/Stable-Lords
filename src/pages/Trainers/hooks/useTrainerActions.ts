@@ -2,11 +2,7 @@ import { useCallback } from 'react';
 import type { Trainer } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameStore } from '@/state/store.types';
-import {
-  TIER_COST,
-  convertRetiredToTrainer,
-  type TrainerTier,
-} from '@/engine/trainers/trainers';
+import { TIER_COST, convertRetiredToTrainer, type TrainerTier } from '@/engine/trainers/trainers';
 import { toast } from 'sonner';
 
 type SetState = GameStore['setState'];

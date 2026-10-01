@@ -6,10 +6,7 @@ import {
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';
-import {
-  createCumulativeTracker,
-  type CumulativeStats,
-} from '@/engine/stats/cumulativeTracker';
+import { createCumulativeTracker, type CumulativeStats } from '@/engine/stats/cumulativeTracker';
 import { truncateState, type TruncationCaps } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 
@@ -150,10 +147,7 @@ function aggregatePassProfile(passAgg: Map<string, PassProfileRow>): void {
 }
 
 /** Drain deferred bout transcripts into the archive sink, re-queuing failures. */
-async function drainArchive(
-  state: GameState,
-  archiveService?: BoutLogArchive
-): Promise<GameState> {
+async function drainArchive(state: GameState, archiveService?: BoutLogArchive): Promise<GameState> {
   if (!archiveService) return state;
   const logs = drainDeferredBoutLogs(state);
   if (logs.length === 0) return state;

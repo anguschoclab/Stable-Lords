@@ -67,9 +67,7 @@ describe('world liveness — 104 weeks (Stage H)', () => {
     // 4. Grand Championship integrity: every champions-tier tournament that
     //    emitted completed with a recorded winner; cancellations only ever
     //    reflect a genuinely thin field (the metric derives them honestly).
-    const champsT = (s.tournaments ?? []).filter(
-      (t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID
-    );
+    const champsT = (s.tournaments ?? []).filter((t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID);
     expect(champsT.every((t) => t.completed)).toBe(true);
     const lastPulse = pulses[pulses.length - 1]!;
     expect(lastPulse.grandChampCancellations).toBeGreaterThanOrEqual(0);

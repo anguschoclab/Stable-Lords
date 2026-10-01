@@ -93,7 +93,10 @@ describe('updateDossiers — observedTells', () => {
       lastBoutWeek: 5,
     });
     const self = makeRival({ id: 'self-1' as StableId, roster: [mine] });
-    const opp = makeRival({ id: 'opp-1' as StableId, roster: [makeWarrior({ id: 'ow1' as WarriorId })] });
+    const opp = makeRival({
+      id: 'opp-1' as StableId,
+      roster: [makeWarrior({ id: 'ow1' as WarriorId })],
+    });
     const state = makeGameState({
       rivals: [self, opp],
       absoluteWeek: 5,

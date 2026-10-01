@@ -3,19 +3,13 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
+import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from './legacyFounder';
+import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /**
  * SeasonalRetirementService - Handles retirement and legacy founder system.
  * Manages seasonal retirement for all rivals and legacy founders.
  */
-
-interface LegacyCandidate {
-  name: string;
-  stableName: string;
-  parentStableId?: string; // 🛡️ Track parent stable for crest inheritance
-  warriorId?: string; // Lineage breadcrumb — mirrors Trainer.retiredFromWarrior
-  fightingStyle?: import('@/types/shared.types').FightingStyle;
-}
 
 /** Each permanent injury adds this many years of effective aging pressure. */
 const PERMANENT_INJURY_AGE_PRESSURE = 5;
@@ -51,12 +45,9 @@ export const SeasonalRetirementService = {
    * Processes seasonal retirement for all rival stables.
    * Handles legacy founders (retired warriors becoming owners).
    */
-  processSeasonalRetirement(
-    state: GameState,
-    rng: IRNGService
-  ): { updatedState: GameState; legacyCandidates: LegacyCandidate[] } {
+  processSeasonalRetirement(state: GameState, rng: IRNGService): { updatedState: GameState } {
     const updatedState = { ...state };
-    const legacyCandidates: LegacyCandidate[] = [];
+    const founderQueue: Warrior[] = [...(state.legacyFounderQueue ?? [])];
 
     // Reigning champions defer retirement — the crown keeps them fighting.
     const championIds = new Set(
@@ -72,16 +63,10 @@ export const SeasonalRetirementService = {
         const retireChance = retireChanceFor(w, championIds.has(w.id));
 
         if (rng.next() < retireChance) {
-          // Check if warrior could become a legacy founder
-          if (w.fame >= 90 && (w.career?.wins || 0) >= 50 && rng.next() < 0.25) {
-            const newStableName = `${w.name}'s Academy`;
-            legacyCandidates.push({
-              name: w.name,
-              stableName: newStableName,
-              parentStableId: rival.id, // 🛡️ Track parent for crest inheritance
-              warriorId: w.id,
-              fightingStyle: w.style,
-            });
+          // Hall-of-Fame-caliber retirees may found a stable of their own —
+          // the queue is persisted on state (consumed by the expansion pass).
+          if (isLegacyFounderCaliber(w) && rng.next() < LEGACY_FOUND_CHANCE) {
+            founderQueue.push(buildLegacyFounderQueueEntry(w));
           }
           return retireWithHonors(w, state.week);
         }
@@ -94,6 +79,7 @@ export const SeasonalRetirementService = {
       };
     });
 
-    return { updatedState, legacyCandidates };
+    updatedState.legacyFounderQueue = founderQueue;
+    return { updatedState };
   },
 } as const;

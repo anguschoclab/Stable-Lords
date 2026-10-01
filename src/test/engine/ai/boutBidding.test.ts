@@ -6,7 +6,6 @@ import type { Warrior } from '@/types/warrior.types';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { FightingStyle } from '@/types/shared.types';
 
-
 /**
  * Bout bidding integration tests.
  * Covers matchup scoring, weather modifiers, RECOVERY weather gating,

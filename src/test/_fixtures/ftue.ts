@@ -17,8 +17,18 @@ export const makePlanWarrior = (name: string) => ({
   potential: undefined,
 });
 
-export const FTUE_W_A = makeWarrior('w-a' as any, 'Varak', FightingStyle.LungingAttack, FTUE_BASE_ATTRS);
-export const FTUE_W_D = makeWarrior('w-d' as any, 'Dren', FightingStyle.TotalParry, FTUE_BASE_ATTRS);
+export const FTUE_W_A = makeWarrior(
+  'w-a' as any,
+  'Varak',
+  FightingStyle.LungingAttack,
+  FTUE_BASE_ATTRS
+);
+export const FTUE_W_D = makeWarrior(
+  'w-d' as any,
+  'Dren',
+  FightingStyle.TotalParry,
+  FTUE_BASE_ATTRS
+);
 
 /** make Ftue Result. */
 export const makeFtueResult = (
@@ -49,6 +59,10 @@ export const FTUE_MINIMAL_BASE_STATE: Partial<GameState> = makeGameState({
 });
 
 export const FTUE_TWO_WARRIORS = [makePlanWarrior('Varak'), makePlanWarrior('Dren')];
-export const FTUE_THREE_WARRIORS = [makePlanWarrior('Varak'), makePlanWarrior('Dren'), makePlanWarrior('Calix')];
+export const FTUE_THREE_WARRIORS = [
+  makePlanWarrior('Varak'),
+  makePlanWarrior('Dren'),
+  makePlanWarrior('Calix'),
+];
 
 export const FTUE_SEED = 42;

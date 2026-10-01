@@ -1,18 +1,12 @@
-
-
 /**
  * Trainer tier type.
  */
 export type TrainerTier = 'Novice' | 'Seasoned' | 'Master';
 
-
-
 /**
  * Trainer focus type.
  */
 export type TrainerFocus = 'Aggression' | 'Defense' | 'Endurance' | 'Mind' | 'Healing';
-
-
 
 /**
  * Trainer specialty type.

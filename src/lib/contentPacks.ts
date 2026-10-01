@@ -41,9 +41,7 @@ export function getPackArenaLore(
   packs: ContentPack[] | undefined,
   arenaId: string
 ): ArenaLoreEntry[] {
-  return (packs ?? []).flatMap((p) =>
-    (p.arenaLore ?? []).filter((e) => e.arenaId === arenaId)
-  );
+  return (packs ?? []).flatMap((p) => (p.arenaLore ?? []).filter((e) => e.arenaId === arenaId));
 }
 
 /**

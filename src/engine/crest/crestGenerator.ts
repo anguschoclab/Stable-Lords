@@ -340,8 +340,7 @@ export function getChargeDescription(charge: CrestCharge): string {
 export function getCrestDescription(crest: CrestData): string {
   const metalName = crest.metalColor === 'gold' ? 'Or' : 'Argent';
   const fieldDesc = crest.fieldType === 'solid' ? '' : ` ${crest.fieldType}`;
-  const countDesc =
-    crest.charge.count > 1 ? `${crest.charge.count} ` : '';
+  const countDesc = crest.charge.count > 1 ? `${crest.charge.count} ` : '';
   const posture = crest.charge.posture ? ` ${crest.charge.posture}` : '';
 
   return `${metalName}${fieldDesc} with ${countDesc}${crest.charge.name}${posture}`;

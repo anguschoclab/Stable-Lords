@@ -1,4 +1,3 @@
-
 /**
  * Defines the shape of fanfare.
  */

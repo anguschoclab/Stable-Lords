@@ -19,8 +19,7 @@ const makeWarrior = (id: string, name: string, status: string = 'Active'): Warri
     age: 20,
   } as any);
 
-const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
-  makeRivalStable(id, roster);
+const makeRival = (id: string, roster: Warrior[]): RivalStableData => makeRivalStable(id, roster);
 
 describe('AI edgeCaseDecisions', () => {
   it('AI with empty roster does not crash advanceWeek', async () => {

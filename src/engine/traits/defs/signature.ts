@@ -77,4 +77,5 @@ export const SIGNATURE_TRAITS: Record<string, TraitDef> = {
     antiSynergy: ['tank'],
     tier: 'Signature',
     sign: 'positive',
-  },};
+  },
+};

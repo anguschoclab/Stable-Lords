@@ -11,12 +11,7 @@ import {
   processAllRivalsBoutOffers,
 } from '@/engine/ai/workers/competitionWorker';
 import { counterBoutOffer } from '@/engine/bout/mutations/contractMutations';
-import {
-  makeGameState,
-  makeRival,
-  makeWarrior,
-  makeBoutOffer,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 
 function richRivalWith(warrior: ReturnType<typeof makeWarrior>) {

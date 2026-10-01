@@ -87,20 +87,16 @@ function EngagementRow({
 }) {
   const aIsStableA = idsA.has(f.warriorIdA);
   const winnerIsA =
-    (idsA.has(f.warriorIdA) && f.winner === 'A') ||
-    (idsA.has(f.warriorIdD) && f.winner === 'D');
+    (idsA.has(f.warriorIdA) && f.winner === 'A') || (idsA.has(f.warriorIdD) && f.winner === 'D');
   const winnerIsB =
-    (idsB.has(f.warriorIdA) && f.winner === 'A') ||
-    (idsB.has(f.warriorIdD) && f.winner === 'D');
+    (idsB.has(f.warriorIdA) && f.winner === 'A') || (idsB.has(f.warriorIdD) && f.winner === 'D');
 
   const warriorIdLeft = aIsStableA ? f.warriorIdA : f.warriorIdD;
   const warriorIdRight = aIsStableA ? f.warriorIdD : f.warriorIdA;
 
   return (
     <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none motion-reduce:transition-none">
-      <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">
-        W{f.week}
-      </div>
+      <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">W{f.week}</div>
       <div
         className={cn(
           'flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',

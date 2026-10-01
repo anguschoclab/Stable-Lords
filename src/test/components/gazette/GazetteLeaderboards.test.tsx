@@ -21,7 +21,7 @@ vi.mock('@/components/ui/table', () => ({
   TableCell: ({ children }: any) => <td>{children}</td>,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 import {
   GazetteLeaderboard,

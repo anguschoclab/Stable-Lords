@@ -3,10 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeInjury } from '@/engine/injuries/utils';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
-import {
-  TRAITS,
-  type TraitDef,
-} from '@/engine/traits';
+import { TRAITS, type TraitDef } from '@/engine/traits';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
@@ -63,7 +60,6 @@ export function handleShadowTournament(
   }
 }
 
-
 /** Handler for the Chaos Weaver's Game offseason event — gambles warrior traits for rewards. */
 export function handleChaosWeaversGame(
   state: GameState,
@@ -117,7 +113,6 @@ export function handleChaosWeaversGame(
   }
 }
 
-
 /** Handler for the Chaos Weaver Visit offseason event — bestows or removes traits. */
 export function handleChaosWeaverVisit(
   state: GameState,
@@ -150,7 +145,6 @@ export function handleChaosWeaverVisit(
     };
   });
 }
-
 
 /** Handler for the Chaos Weaver's Prophecy offseason event — foretells a warrior's destiny. */
 export function handleChaosWeaversProphecy(

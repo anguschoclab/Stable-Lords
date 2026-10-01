@@ -191,6 +191,8 @@ describe('megaplan: duplication guard', () => {
     const novel = srcPairs
       .map((c: { pair: string[] }) => `${c.pair[0]}|${c.pair[1]}`)
       .filter((p: string) => !KNOWN_SRC_PAIRS.has(p));
-    expect(novel, 'new duplicate pairs introduced — dedupe or extend baseline knowingly').toEqual([]);
+    expect(novel, 'new duplicate pairs introduced — dedupe or extend baseline knowingly').toEqual(
+      []
+    );
   });
 });

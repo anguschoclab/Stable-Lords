@@ -16,7 +16,13 @@ import {
   filterValidOwnerNames,
   filterValidStableNames,
 } from '@/data/names/nameValidation';
-import { OWNER_FIRST, OWNER_LAST, STABLE_PREFIXES, STABLE_SUFFIXES, STABLE_ALT } from '@/data/names';
+import {
+  OWNER_FIRST,
+  OWNER_LAST,
+  STABLE_PREFIXES,
+  STABLE_SUFFIXES,
+  STABLE_ALT,
+} from '@/data/names';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { SeededRNGService } from '@/utils/random';
 
@@ -69,7 +75,7 @@ describe('isValidOwnerFirstName', () => {
   });
 
   it('is case-sensitive (lowercase input rejected)', () => {
-    expect(isValidOwnerFirstName((OWNER_FIRST[0]!).toLowerCase())).toBe(false);
+    expect(isValidOwnerFirstName(OWNER_FIRST[0]!.toLowerCase())).toBe(false);
   });
 });
 

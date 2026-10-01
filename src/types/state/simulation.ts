@@ -1,9 +1,6 @@
 import type { SimulationReportId, StableId, WarriorId } from '../shared.types';
 import type { Attributes, FightingStyle } from '../warrior.types';
 
-
-
-
 /**
  * Defines the shape of simulation report.
  */
@@ -23,15 +20,11 @@ export interface SimulationReport {
   bouts?: import('@/types/combat.types').FightSummary[];
 }
 
-
-
 /**
  * Annual award type type.
  */
 export type AnnualAwardType =
   'WARRIOR_OF_YEAR' | 'KILLER_OF_YEAR' | 'STABLE_OF_YEAR' | 'CLASS_MVP' | 'TOURNAMENT_RANK';
-
-
 
 /**
  * Defines the shape of annual award.
@@ -48,8 +41,6 @@ export interface AnnualAward {
   reason: string;
 }
 
-
-
 /**
  * Identifier for a progression objective.
  */
@@ -63,8 +54,6 @@ export type ObjectiveId =
   | 'CIRCUIT_LORD'
   | 'GRAND_CHAMPION';
 
-
-
 /**
  * Defines the shape of a progression objective.
  */
@@ -77,14 +66,10 @@ export interface ProgressionObjective {
   completedYear?: number;
 }
 
-
-
 /**
  * Status of the overall progression campaign.
  */
 export type ProgressionStatus = 'active' | 'won' | 'continued';
-
-
 
 /**
  * Defines the shape of progression state.
@@ -98,7 +83,6 @@ export interface ProgressionState {
   wonWeek?: number;
   acknowledgedWin?: boolean;
 }
-
 
 /**
  * Defines the shape of deferred bout log.
@@ -114,8 +98,6 @@ export interface DeferredBoutLog {
   transcript: string[];
 }
 
-
-
 /** Player-configurable house rules (non-canonical variants). */
 export interface HouseRules {
   /** Kill-window probability multiplier applied to every bout. 1 = canonical. */
@@ -124,15 +106,11 @@ export interface HouseRules {
   severeInjuryInsteadOfDeath: boolean;
 }
 
-
-
 /** Canonical (full permadeath) house rules — the default game. */
 export const CANONICAL_HOUSE_RULES: HouseRules = {
   deathRateMult: 1,
   severeInjuryInsteadOfDeath: false,
 };
-
-
 
 /**
  * All-time world counters. Unlike `arenaHistory`/`graveyard` (which truncate),

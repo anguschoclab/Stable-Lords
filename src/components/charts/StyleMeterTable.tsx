@@ -94,12 +94,7 @@ function StyleMeterRow({ row }: { row: StyleRow }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <div
-        className={cn(
-          'w-10 text-right font-mono font-black text-[10px] shrink-0',
-          textColor
-        )}
-      >
+      <div className={cn('w-10 text-right font-mono font-black text-[10px] shrink-0', textColor)}>
         {pct}%
       </div>
       <div className="w-12 text-right text-[8px] text-muted-foreground/30 font-mono shrink-0">

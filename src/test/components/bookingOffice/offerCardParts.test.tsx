@@ -111,9 +111,7 @@ describe('OfferCardHeader', () => {
       proposerStableId: 'stable-9' as StableId,
       counterPurseBump: 75,
     });
-    render(
-      <OfferCardHeader offer={offer} promoter={{ name: 'P' }} personalityConfig={null} />
-    );
+    render(<OfferCardHeader offer={offer} promoter={{ name: 'P' }} personalityConfig={null} />);
     expect(screen.getByTestId('rival-challenge-badge')).toBeInTheDocument();
     expect(screen.getByTestId('counter-offer-badge')).toHaveTextContent('Countered +75G');
   });

@@ -109,8 +109,7 @@ export function evaluateBoutIntent(
     hpRatio: f.hp / f.maxHp,
     endRatio: f.endurance / f.maxEndurance,
     opponentHpRatio: opponent.hp / opponent.maxHp,
-    killDesire:
-      f.activePlan.phases?.[phaseKey]?.killDesire ?? f.activePlan.killDesire ?? 5,
+    killDesire: f.activePlan.phases?.[phaseKey]?.killDesire ?? f.activePlan.killDesire ?? 5,
     committed: f.committed,
     desperateActive: !!f.desperate,
     momentum: f.momentum,

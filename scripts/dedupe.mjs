@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const NARRATIVE_DIR = resolve(__dirname, '../src/data/narrative');
 
-const files = readdirSync(NARRATIVE_DIR).filter(f => f.endsWith('.json'));
+const files = readdirSync(NARRATIVE_DIR).filter((f) => f.endsWith('.json'));
 const data = {};
 for (const file of files) {
   const parsed = JSON.parse(readFileSync(resolve(NARRATIVE_DIR, file), 'utf-8'));

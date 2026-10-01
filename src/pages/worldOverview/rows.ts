@@ -8,8 +8,16 @@ export type StableSortField =
   'rank' | 'name' | 'fame' | 'wins' | 'losses' | 'kills' | 'winRate' | 'roster' | 'tier';
 /** Sortable fields on the warrior leaderboard rows. */
 export type WarriorSortField =
-  | 'name' | 'stable' | 'fame' | 'wins' | 'losses' | 'kills'
-  | 'winRate' | 'style' | 'officialRank' | 'compositeScore';
+  | 'name'
+  | 'stable'
+  | 'fame'
+  | 'wins'
+  | 'losses'
+  | 'kills'
+  | 'winRate'
+  | 'style'
+  | 'officialRank'
+  | 'compositeScore';
 type SortDir = 'asc' | 'desc';
 
 interface WorldSlice {

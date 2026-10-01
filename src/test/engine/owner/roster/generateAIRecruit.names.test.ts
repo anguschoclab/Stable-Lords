@@ -23,9 +23,7 @@ describe('generateAIRecruit — naming', () => {
   it('does not collide with existing roster names when given usedNames', () => {
     const usedNames = new Set<string>();
     const rival = makeRival({
-      roster: Array.from({ length: 8 }, (_, i) =>
-        makeWarrior({ name: `EXISTING WARRIOR ${i}` })
-      ),
+      roster: Array.from({ length: 8 }, (_, i) => makeWarrior({ name: `EXISTING WARRIOR ${i}` })),
     });
     // Pre-fill usedNames with the roster (callers pass this set).
     for (const w of rival.roster) usedNames.add(w.name);

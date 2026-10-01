@@ -39,7 +39,9 @@ describe('megaplan: file & function budgets', () => {
   it('no function exceeds the length ceiling', () => {
     const violations = functions.filter((f: { len: number }) => f.len > FN_LINE_CEILING);
     expect(
-      violations.map((v: { file: string; name: string; len: number }) => `${v.file}::${v.name} (${v.len})`),
+      violations.map(
+        (v: { file: string; name: string; len: number }) => `${v.file}::${v.name} (${v.len})`
+      ),
       `functions over ${FN_LINE_CEILING} lines`
     ).toEqual([]);
   });
@@ -49,6 +51,8 @@ describe('megaplan: file & function budgets', () => {
     // The ≤80 target was reached in the residual-decomposition batches —
     // a new 81+ fn must be decomposed or the budget consciously revisited.
     expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(0);
-    expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(2);
+    expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(
+      2
+    );
   });
 });

@@ -1,4 +1,3 @@
-
 /**
  * Defines the shape of event narrative.
  */
@@ -8,7 +7,6 @@ export interface EventNarrative {
   injury_name?: string;
   injury_desc?: string;
 }
-
 
 /**
  * Defines the shape of events.

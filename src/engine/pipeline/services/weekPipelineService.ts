@@ -3,11 +3,12 @@ import { resolveImpacts } from '@/engine/impacts';
 import { getEnginePool, type EnginePool } from '@/engine/pool/enginePool';
 import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
+import { isPipelineProfiling, beginPipelineProfile } from './weekPipeline/profiling';
 import {
-  isPipelineProfiling,
-  beginPipelineProfile,
-} from './weekPipeline/profiling';
-import { prepareWeekContext, createMutableWeekContext, type WeekContext } from './weekPipeline/context';
+  prepareWeekContext,
+  createMutableWeekContext,
+  type WeekContext,
+} from './weekPipeline/context';
 import { assertPipelineLegal } from './weekPipeline/passes';
 import { buildWeekCaches } from './weekPipeline/caches';
 import { runStage, runBoutPhase, collectCoreImpacts } from './weekPipeline/stages';

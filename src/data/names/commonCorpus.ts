@@ -1218,5 +1218,5 @@ export const COMMON_CORPUS = [
   'ZEPHYR',
   'ZEPHYRA',
   'ZOG',
-  'ZOMBIE'
+  'ZOMBIE',
 ];

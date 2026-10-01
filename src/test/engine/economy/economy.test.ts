@@ -698,9 +698,7 @@ describe('Economy Engine', () => {
       ).toBe(true);
       expect(
         positiveEntries
-          .filter(
-            (e) => !e.label.startsWith('Fight purses') && !e.label.startsWith('Win bonuses')
-          )
+          .filter((e) => !e.label.startsWith('Fight purses') && !e.label.startsWith('Win bonuses'))
           .every((e) => e.category === 'other')
       ).toBe(true);
     });

@@ -181,11 +181,15 @@ const MERGED: Record<string, TraitDef> = {
 };
 
 const mergedKeys = new Set(Object.keys(MERGED));
-if (mergedKeys.size !== LEGACY_TRAIT_ORDER.length || LEGACY_TRAIT_ORDER.some((id) => !mergedKeys.has(id))) {
-  throw new Error('TRAITS registry drifted from LEGACY_TRAIT_ORDER — update the order list when adding/removing traits');
+if (
+  mergedKeys.size !== LEGACY_TRAIT_ORDER.length ||
+  LEGACY_TRAIT_ORDER.some((id) => !mergedKeys.has(id))
+) {
+  throw new Error(
+    'TRAITS registry drifted from LEGACY_TRAIT_ORDER — update the order list when adding/removing traits'
+  );
 }
 
 export const TRAITS: Record<string, TraitDef> = Object.fromEntries(
-  LEGACY_TRAIT_ORDER.map((id) => [id, MERGED[id] as TraitDef]),
+  LEGACY_TRAIT_ORDER.map((id) => [id, MERGED[id] as TraitDef])
 );
-

@@ -1,9 +1,6 @@
 import { Crown } from 'lucide-react';
 import { displayWeek } from '@/engine/core/absoluteWeek';
-import {
-  owningStableOf,
-  topContenders,
-} from '@/engine/championship/arenaChampionship';
+import { owningStableOf, topContenders } from '@/engine/championship/arenaChampionship';
 import type { GameState, ArenaTitle } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { Surface } from '@/components/ui/Surface';
@@ -122,9 +119,7 @@ function ContenderLadder({
                 {i + 1}
               </span>
               <WarriorNameTag id={c.warrior.id} name={c.warrior.name} epithet={c.warrior.epithet} />
-              <span className="text-muted-foreground/40 italic">
-                {owner?.stableName ?? '—'}
-              </span>
+              <span className="text-muted-foreground/40 italic">{owner?.stableName ?? '—'}</span>
               <span className="font-mono text-muted-foreground/50 tabular-nums">
                 {c.wins}W {c.losses}L
               </span>

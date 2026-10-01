@@ -72,11 +72,7 @@ export function RivalryWidget() {
       </div>
 
       <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar p-6">
-        <RivalryList
-          rivalries={rivalries}
-          rosterNames={rosterNames}
-          mostWanted={mostWanted}
-        />
+        <RivalryList rivalries={rivalries} rosterNames={rosterNames} mostWanted={mostWanted} />
       </div>
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
@@ -108,9 +104,7 @@ function RivalryList({
   if (rivalries.length === 0) {
     return (
       <div className="py-12 text-center opacity-20 italic">
-        <p className="text-[10px] uppercase tracking-[0.3em]">
-          No significant vendettas detected
-        </p>
+        <p className="text-[10px] uppercase tracking-[0.3em]">No significant vendettas detected</p>
       </div>
     );
   }

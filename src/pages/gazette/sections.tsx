@@ -67,15 +67,7 @@ export function AnalyticsRegistry({ allFights }: { allFights: FightSummary[] }) 
 }
 
 /** A single animated issue entry in the archive feed. */
-function IssueEntry({
-  issue,
-  season,
-  idx,
-}: {
-  issue: GazetteStory;
-  season: string;
-  idx: number;
-}) {
+function IssueEntry({ issue, season, idx }: { issue: GazetteStory; season: string; idx: number }) {
   const paragraphs = issue.body.split('\n\n').filter((p: string) => p.trim().length > 0);
   const mappedIssue = {
     week: issue.week,
@@ -100,13 +92,7 @@ function IssueEntry({
 }
 
 /** Historical Recall pager control at the archive feed's tail. */
-function LoadMoreControl({
-  remaining,
-  onLoadMore,
-}: {
-  remaining: number;
-  onLoadMore: () => void;
-}) {
+function LoadMoreControl({ remaining, onLoadMore }: { remaining: number; onLoadMore: () => void }) {
   return (
     <div className="flex flex-col items-center gap-6 pt-12 relative">
       <div

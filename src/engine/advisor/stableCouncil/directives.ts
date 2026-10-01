@@ -96,7 +96,9 @@ export function buildStableDirectives(
   }
 
   if (stableDirectives.length === 0) {
-    stableDirectives.push('Stable operations are balanced. Review individual warrior profiles below.');
+    stableDirectives.push(
+      'Stable operations are balanced. Review individual warrior profiles below.'
+    );
   }
   return stableDirectives;
 }
@@ -182,4 +184,3 @@ export function collectUnresolvedDirectives(
   }
   return unresolvedDirectives;
 }
-

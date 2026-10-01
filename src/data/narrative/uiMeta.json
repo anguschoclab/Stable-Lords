@@ -11,12 +11,7 @@
     "btn_honor": "Honor the Fallen",
     "btn_planning": "Acknowledge & Begin Planning",
     "btn_next": "Next Report",
-    "armor_intro_verbs": [
-      "steps forth in",
-      "is armored in",
-      "glimmers in",
-      "is wearing"
-    ],
+    "armor_intro_verbs": ["steps forth in", "is armored in", "glimmers in", "is wearing"],
     "weapon_intro_verbs": [
       "prepares to fight with %W",
       "clutches their %W",

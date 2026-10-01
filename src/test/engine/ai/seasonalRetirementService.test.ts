@@ -22,30 +22,19 @@ describe('SeasonalRetirementService', () => {
 
   describe('processSeasonalRetirement', () => {
     it('should process retirement for all rival stables', () => {
-      const { updatedState, legacyCandidates } =
-        SeasonalRetirementService.processSeasonalRetirement(state, rng);
+      const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
       expect(updatedState.rivals.length).toBe(state.rivals.length);
-      expect(Array.isArray(legacyCandidates)).toBe(true);
+      expect(Array.isArray(updatedState.legacyFounderQueue)).toBe(true);
     });
 
     it('should retire warriors based on age', () => {
       // Create a rival with old warriors
       state.rivals[0]!.roster = [
-        makeWarrior(
-          undefined,
-          'Old Warrior',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          { age: 45 }
-        ),
-        makeWarrior(
-          undefined,
-          'Young Warrior',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          { age: 20 }
-        ),
+        makeWarrior(undefined, 'Old Warrior', FightingStyle.StrikingAttack, ATTRS_10, { age: 45 }),
+        makeWarrior(undefined, 'Young Warrior', FightingStyle.StrikingAttack, ATTRS_10, {
+          age: 20,
+        }),
       ];
 
       const rng = new SeededRNGService(12345);
@@ -57,13 +46,9 @@ describe('SeasonalRetirementService', () => {
 
     it('should not retire young warriors', () => {
       state.rivals[0]!.roster = [
-        makeWarrior(
-          undefined,
-          'Young Warrior',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          { age: 20 }
-        ),
+        makeWarrior(undefined, 'Young Warrior', FightingStyle.StrikingAttack, ATTRS_10, {
+          age: 20,
+        }),
       ];
 
       const rng = new SeededRNGService(12345);
@@ -95,41 +80,34 @@ describe('SeasonalRetirementService', () => {
       ];
 
       const rng = new SeededRNGService(12345);
-      const { legacyCandidates } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
+      const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
-      // Legacy candidates may not be returned if conditions aren't met
-      // Just verify the function runs without error and returns an array
-      expect(Array.isArray(legacyCandidates)).toBe(true);
+      // The founder queue may stay empty under the LEGACY_FOUND_CHANCE roll —
+      // verify the queue exists on state and only holds warrior snapshots.
+      expect(Array.isArray(updatedState.legacyFounderQueue)).toBe(true);
+      updatedState.legacyFounderQueue?.forEach((w) => expect(w.career).toBeDefined());
     });
 
     it('should not create legacy candidates for non-legendary warriors', () => {
       state.rivals[0]!.roster = [
-        makeWarrior(
-          undefined,
-          'Average',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          { age: 40, fame: 30, career: { wins: 10, losses: 10, kills: 0 } }
-        ),
+        makeWarrior(undefined, 'Average', FightingStyle.StrikingAttack, ATTRS_10, {
+          age: 40,
+          fame: 30,
+          career: { wins: 10, losses: 10, kills: 0 },
+        }),
       ];
 
       const rng = new SeededRNGService(12345);
-      const { legacyCandidates } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
+      const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
-      // Should not have legacy candidates for average warriors
-      const hasAverage = legacyCandidates.some((c) => c.name === 'Average');
+      // Average warriors never reach the founder queue
+      const hasAverage = (updatedState.legacyFounderQueue ?? []).some((w) => w.name === 'Average');
       expect(hasAverage).toBe(false);
     });
 
     it('should set retiredWeek on retired warriors', () => {
       state.rivals[0]!.roster = [
-        makeWarrior(
-          undefined,
-          'Old Warrior',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          { age: 45 }
-        ),
+        makeWarrior(undefined, 'Old Warrior', FightingStyle.StrikingAttack, ATTRS_10, { age: 45 }),
       ];
 
       const rng = new SeededRNGService(12345);
@@ -145,30 +123,18 @@ describe('SeasonalRetirementService', () => {
     it('should be deterministic with same seed', () => {
       const rng1 = new SeededRNGService(12345);
       const rng2 = new SeededRNGService(12345);
-      const { legacyCandidates: candidates1 } = SeasonalRetirementService.processSeasonalRetirement(
-        state,
-        rng1
-      );
-      const { legacyCandidates: candidates2 } = SeasonalRetirementService.processSeasonalRetirement(
-        state,
-        rng2
-      );
+      const { updatedState: s1 } = SeasonalRetirementService.processSeasonalRetirement(state, rng1);
+      const { updatedState: s2 } = SeasonalRetirementService.processSeasonalRetirement(state, rng2);
 
-      expect(candidates1.length).toBe(candidates2.length);
+      expect((s1.legacyFounderQueue ?? []).length).toBe((s2.legacyFounderQueue ?? []).length);
     });
 
     it('earns a legend epithet when a distinguished career retires', () => {
       state.rivals[0]!.roster = [
-        makeWarrior(
-          undefined,
-          'Legend Warrior',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          {
-            age: 45,
-            career: { wins: 60, losses: 10, kills: 0 },
-          }
-        ),
+        makeWarrior(undefined, 'Legend Warrior', FightingStyle.StrikingAttack, ATTRS_10, {
+          age: 45,
+          career: { wins: 60, losses: 10, kills: 0 },
+        }),
       ];
 
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
@@ -180,13 +146,11 @@ describe('SeasonalRetirementService', () => {
 
     it('leaves journeymen without an epithet on retirement', () => {
       state.rivals[0]!.roster = [
-        makeWarrior(
-          undefined,
-          'Plain Warrior',
-          FightingStyle.StrikingAttack,
-          ATTRS_10,
-          { age: 45, career: { wins: 5, losses: 10, kills: 0 }, fame: 50 }
-        ),
+        makeWarrior(undefined, 'Plain Warrior', FightingStyle.StrikingAttack, ATTRS_10, {
+          age: 45,
+          career: { wins: 5, losses: 10, kills: 0 },
+          fame: 50,
+        }),
       ];
 
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);

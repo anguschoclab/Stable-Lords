@@ -46,9 +46,7 @@ describe('agentCore — createAgentContext', () => {
     expect(ctx.rival.agentMemory!.burnRate).toBe(0);
     // metaAwareness is now populated each tick — an empty arena history
     // yields a neutral (all-zero) perceived meta.
-    expect(Object.values(ctx.rival.agentMemory!.metaAwareness).every((v) => v === 0)).toBe(
-      true
-    );
+    expect(Object.values(ctx.rival.agentMemory!.metaAwareness).every((v) => v === 0)).toBe(true);
     expect(ctx.rival.agentMemory!.currentIntent).toBe('CONSOLIDATION');
     expect(ctx.rival.agentMemory!.opponentDossiers).toBeDefined();
   });

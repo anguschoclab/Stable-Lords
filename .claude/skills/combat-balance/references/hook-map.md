@@ -5,14 +5,14 @@ if a symbol here no longer exists, the engine moved — re-ground before editing
 
 ## The two balance layers
 
-| What                                 | File                             | Symbol                                                                                                                                                                                                                               |
-| ------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Absolute power (per-style level)     | `src/engine/warrior/skillBreakpoints.ts` | `STYLE_PENALTIES` — `[ATT,PAR,DEF,INI,RIP,DEC]` per style; applied in `computeBaseSkills`                                                                                                                                          |
-| Matchup matrix (rock-paper-scissors) | `src/constants/combat/combat.ts` | `MATCHUP_MATRIX`, `getMatchupBonus(att, def)`, `findAntisymmetryViolations(tol)`, `STYLE_ORDER`                                                                                                                                      |
-| World-only level (per-style floor)   | `src/engine/warrior/skillBreakpoints.ts` | `STYLE_SKILL_FLOORS` — `[ATT,PAR,DEF,INI,RIP,DEC]` minimum per style; applied in `computeBaseSkills`' clamp. Does not touch the all-15s fixture.                                                                                 |
-| Kill rate                            | `src/constants/combat/combat/global.ts` | `KILL_WINDOW` — every magnitude of `calculateKillWindow`; `SCALE` is the world dial (applied at the kill roll in `hitExecution.ts`, next to `deathRateMult`)                                                                        |
-| Weapon choice                        | `src/engine/equipment/loadoutFitting.ts` | `fitWeapon` / `getFittedLoadout` / `refitWeapon` — best wieldable weapon for a warrior; canon requirement + suitability data is read, never edited                                                                                  |
-| All tunable magnitudes               | `src/constants/combat/combat.ts` | constants live here (e.g. `ABSOLUTE_POWER_LOW/HIGH`, `MIRROR_MATCH_BAND`, `BA_PARDEGRADE_*`, `SL_BLEED_*`, `ST_*`, `PR_*`, `PS_COUNTERSTRIKE_ATT`, `WS_ATTRITION_FLOOR`, `LU_MOMENTUM_DMG_COEFF`, `CRIT_DAMAGE_MULT`, `KNOCKDOWN_*`) |
+| What                                 | File                                     | Symbol                                                                                                                                                                                                                               |
+| ------------------------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Absolute power (per-style level)     | `src/engine/warrior/skillBreakpoints.ts` | `STYLE_PENALTIES` — `[ATT,PAR,DEF,INI,RIP,DEC]` per style; applied in `computeBaseSkills`                                                                                                                                            |
+| Matchup matrix (rock-paper-scissors) | `src/constants/combat/combat.ts`         | `MATCHUP_MATRIX`, `getMatchupBonus(att, def)`, `findAntisymmetryViolations(tol)`, `STYLE_ORDER`                                                                                                                                      |
+| World-only level (per-style floor)   | `src/engine/warrior/skillBreakpoints.ts` | `STYLE_SKILL_FLOORS` — `[ATT,PAR,DEF,INI,RIP,DEC]` minimum per style; applied in `computeBaseSkills`' clamp. Does not touch the all-15s fixture.                                                                                     |
+| Kill rate                            | `src/constants/combat/combat/global.ts`  | `KILL_WINDOW` — every magnitude of `calculateKillWindow`; `SCALE` is the world dial (applied at the kill roll in `hitExecution.ts`, next to `deathRateMult`)                                                                         |
+| Weapon choice                        | `src/engine/equipment/loadoutFitting.ts` | `fitWeapon` / `getFittedLoadout` / `refitWeapon` — best wieldable weapon for a warrior; canon requirement + suitability data is read, never edited                                                                                   |
+| All tunable magnitudes               | `src/constants/combat/combat.ts`         | constants live here (e.g. `ABSOLUTE_POWER_LOW/HIGH`, `MIRROR_MATCH_BAND`, `BA_PARDEGRADE_*`, `SL_BLEED_*`, `ST_*`, `PR_*`, `PS_COUNTERSTRIKE_ATT`, `WS_ATTRITION_FLOOR`, `LU_MOMENTUM_DMG_COEFF`, `CRIT_DAMAGE_MULT`, `KNOCKDOWN_*`) |
 
 `getMatchupBonus` is also consumed by `src/engine/matchmaking/schedulingAssistant.ts`
 and `src/engine/narrative/fightAnalysis.ts` — changing the matrix can break their
@@ -20,12 +20,12 @@ tests. Run the full suite.
 
 ## The validation harness
 
-| What                                                           | File                                                                                           |
-| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Guardrail tests (antisymmetry, mirror, 40–60% band, kill-rate) | `src/test/engine/economy/balance.slow.test.ts` (fixture), `worldBalance.slow.test.ts` (world) |
+| What                                                           | File                                                                                                    |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Guardrail tests (antisymmetry, mirror, 40–60% band, kill-rate) | `src/test/engine/economy/balance.slow.test.ts` (fixture), `worldBalance.slow.test.ts` (world)           |
 | Lab tooling                                                    | `scripts/balance-lab.ts`, `scripts/style-probe.ts`, `scripts/world-diag.ts`, `scripts/lab-overrides.ts` |
-| Live headless sim                                              | `src/scripts/simulation-harness.ts`, `src/scripts/daily_oracle.ts` → `Daily_Balance_Report.md` |
-| Per-style rollups                                              | `src/engine/stats/styleRollups.ts`, `simulationMetrics.ts`                                     |
+| Live headless sim                                              | `src/scripts/simulation-harness.ts`, `src/scripts/daily_oracle.ts` → `Daily_Balance_Report.md`          |
+| Per-style rollups                                              | `src/engine/stats/styleRollups.ts`, `simulationMetrics.ts`                                              |
 
 The balance test builds `styleWins`/`styleFights`/`matchupWins` once with identical
 `STD_ATTRS`. The mirror cell `matchupWins[s][s]/FIGHTS_PER_MATCHUP` is A-side bias;

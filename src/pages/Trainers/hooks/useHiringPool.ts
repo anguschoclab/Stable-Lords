@@ -11,11 +11,7 @@ type SetState = GameStore['setState'];
  * Hiring-pool lifecycle: seeds a fresh pool when empty (first visit each
  * week) and exposes a manual refresh.
  */
-export function useHiringPool(
-  hiringPool: Trainer[] | undefined,
-  week: number,
-  setState: SetState
-) {
+export function useHiringPool(hiringPool: Trainer[] | undefined, week: number, setState: SetState) {
   const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);
 
   useEffect(() => {

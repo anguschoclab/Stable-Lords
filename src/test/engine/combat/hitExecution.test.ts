@@ -29,8 +29,6 @@ const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
   });
 const makeCtx = makeResolutionContext;
 
-
-
 function getPassive(style: FightingStyle, hp = 100, maxHp = 100, end = 100, maxEnd = 100) {
   return getStylePassive(style, {
     phase: 'OPENING',

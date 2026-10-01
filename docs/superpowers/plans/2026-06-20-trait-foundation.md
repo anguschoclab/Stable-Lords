@@ -401,85 +401,94 @@ export const CLASS_TRAITS: Record<string, TraitDef> = {
 Each row → one `TraitDef` in `CLASS_TRAITS` exactly like the AB template (id, name, description=tooltip, effect, `weight` per tier, tier, `sign: 'positive'`, `styles: [S.<Style>]`). Suggested weights by tier: Common 0.7, Notable 0.6, Exceptional 0.45, Signature 0.3.
 
 **BA — Bashing (`S.BashingAttack`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| heavy_swing | Heavy Swing | Common | `{ dmgBonus: 1 }` | +1 damage — every blow lands with weight. |
-| relentless | Relentless | Notable | `{ attModLate: 1 }` | +1 attack in the late rounds — never lets up. |
-| bonebreaker | Bonebreaker | Notable | `{ dmgBonus: 1, attModLate: 1 }` | +1 damage, +1 late attack — wears the guard down. |
-| juggernaut | Juggernaut | Exceptional | `{ dmgBonus: 1, enduranceMult: 0.95 }` | +1 damage, tireless — an unstoppable advance. |
-| demolisher | Demolisher | Signature | `{ dmgBonus: 2, attModLate: 1 }` | +2 damage, +1 late attack — shatters any defense. |
+
+| id          | name        | tier        | effect                                 | tooltip                                           |
+| ----------- | ----------- | ----------- | -------------------------------------- | ------------------------------------------------- |
+| heavy_swing | Heavy Swing | Common      | `{ dmgBonus: 1 }`                      | +1 damage — every blow lands with weight.         |
+| relentless  | Relentless  | Notable     | `{ attModLate: 1 }`                    | +1 attack in the late rounds — never lets up.     |
+| bonebreaker | Bonebreaker | Notable     | `{ dmgBonus: 1, attModLate: 1 }`       | +1 damage, +1 late attack — wears the guard down. |
+| juggernaut  | Juggernaut  | Exceptional | `{ dmgBonus: 1, enduranceMult: 0.95 }` | +1 damage, tireless — an unstoppable advance.     |
+| demolisher  | Demolisher  | Signature   | `{ dmgBonus: 2, attModLate: 1 }`       | +2 damage, +1 late attack — shatters any defense. |
 
 **LU — Lunging (`S.LungingAttack`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| quickdraw | Quickdraw | Common | `{ iniMod: 1 }` | +1 initiative — first to the strike. |
-| fleet_footed | Fleet-Footed | Notable | `{ iniModFresh: 2 }` | +2 initiative while fresh — explosive early. |
-| lightning_step | Lightning Step | Notable | `{ iniMod: 1, iniModFresh: 1 }` | +1 initiative, +1 more while fresh. |
-| blitz | Blitz | Exceptional | `{ iniMod: 1, attModConsecutiveHits: 1 }` | +1 initiative, +1 attack on a streak — overwhelms. |
-| untouchable | Untouchable | Signature | `{ iniMod: 2, defMod: 1 }` | +2 initiative, +1 defense — too fast to pin. |
+
+| id             | name           | tier        | effect                                    | tooltip                                            |
+| -------------- | -------------- | ----------- | ----------------------------------------- | -------------------------------------------------- |
+| quickdraw      | Quickdraw      | Common      | `{ iniMod: 1 }`                           | +1 initiative — first to the strike.               |
+| fleet_footed   | Fleet-Footed   | Notable     | `{ iniModFresh: 2 }`                      | +2 initiative while fresh — explosive early.       |
+| lightning_step | Lightning Step | Notable     | `{ iniMod: 1, iniModFresh: 1 }`           | +1 initiative, +1 more while fresh.                |
+| blitz          | Blitz          | Exceptional | `{ iniMod: 1, attModConsecutiveHits: 1 }` | +1 initiative, +1 attack on a streak — overwhelms. |
+| untouchable    | Untouchable    | Signature   | `{ iniMod: 2, defMod: 1 }`                | +2 initiative, +1 defense — too fast to pin.       |
 
 **PL — Parry-Lunge (`S.ParryLunge`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| counterlunge | Counterlunge | Common | `{ ripMod: 1 }` | +1 riposte — punishes the over-extension. |
-| fighting_rhythm | Fighting Rhythm | Notable | `{ attModConsecutiveHits: 1 }` | +1 attack on a hit-streak — finds the beat. |
-| riposte_flow | Riposte Flow | Notable | `{ ripMod: 1, attModConsecutiveHits: 1 }` | +1 riposte, +1 streak attack. |
-| duelist | Duelist | Exceptional | `{ ripMod: 1, dmgBonus: 1 }` | +1 riposte, +1 damage — a clinical counter-fighter. |
-| whirlwind | Whirlwind | Signature | `{ ripMod: 2, attModConsecutiveHits: 1 }` | +2 riposte, +1 streak attack — relentless counters. |
+
+| id              | name            | tier        | effect                                    | tooltip                                             |
+| --------------- | --------------- | ----------- | ----------------------------------------- | --------------------------------------------------- |
+| counterlunge    | Counterlunge    | Common      | `{ ripMod: 1 }`                           | +1 riposte — punishes the over-extension.           |
+| fighting_rhythm | Fighting Rhythm | Notable     | `{ attModConsecutiveHits: 1 }`            | +1 attack on a hit-streak — finds the beat.         |
+| riposte_flow    | Riposte Flow    | Notable     | `{ ripMod: 1, attModConsecutiveHits: 1 }` | +1 riposte, +1 streak attack.                       |
+| duelist         | Duelist         | Exceptional | `{ ripMod: 1, dmgBonus: 1 }`              | +1 riposte, +1 damage — a clinical counter-fighter. |
+| whirlwind       | Whirlwind       | Signature   | `{ ripMod: 2, attModConsecutiveHits: 1 }` | +2 riposte, +1 streak attack — relentless counters. |
 
 **PR — Parry-Riposte (`S.ParryRiposte`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| riposte_natural | Natural Riposte | Common | `{ ripMod: 1 }` | +1 riposte — counters come naturally. |
-| vindicator | Vindicator | Notable | `{ ripMod: 1, dmgBonus: 1 }` | +1 riposte, +1 damage — makes them pay. |
-| parry_master | Parry Master | Notable | `{ parMod: 1, ripMod: 1 }` | +1 parry, +1 riposte — a wall that bites back. |
-| nemesis | Nemesis | Exceptional | `{ ripMod: 2, dmgBonus: 1 }` | +2 riposte, +1 damage — the brawler's bane. |
-| retribution | Retribution | Signature | `{ ripMod: 2, dmgBonus: 1, decMod: 1 }` | +2 riposte, +1 damage, +1 decisiveness. |
+
+| id              | name            | tier        | effect                                  | tooltip                                        |
+| --------------- | --------------- | ----------- | --------------------------------------- | ---------------------------------------------- |
+| riposte_natural | Natural Riposte | Common      | `{ ripMod: 1 }`                         | +1 riposte — counters come naturally.          |
+| vindicator      | Vindicator      | Notable     | `{ ripMod: 1, dmgBonus: 1 }`            | +1 riposte, +1 damage — makes them pay.        |
+| parry_master    | Parry Master    | Notable     | `{ parMod: 1, ripMod: 1 }`              | +1 parry, +1 riposte — a wall that bites back. |
+| nemesis         | Nemesis         | Exceptional | `{ ripMod: 2, dmgBonus: 1 }`            | +2 riposte, +1 damage — the brawler's bane.    |
+| retribution     | Retribution     | Signature   | `{ ripMod: 2, dmgBonus: 1, decMod: 1 }` | +2 riposte, +1 damage, +1 decisiveness.        |
 
 **PS — Parry-Strike (`S.ParryStrike`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| counterpuncher | Counterpuncher | Common | `{ attModConsecutiveHits: 1 }` | +1 attack on a hit-streak — builds off the counter. |
-| opportunist | Opportunist | Notable | `{ parModHighHp: 1, attModConsecutiveHits: 1 }` | +1 parry while strong, +1 streak attack. |
-| riposte_strike | Riposte Strike | Notable | `{ ripMod: 1, attModConsecutiveHits: 1 }` | +1 riposte, +1 streak attack. |
-| counter_artist | Counter Artist | Exceptional | `{ parMod: 1, attModConsecutiveHits: 2 }` | +1 parry, +2 streak attack — defend, then punish. |
-| perfect_counter | Perfect Counter | Signature | `{ parMod: 1, ripMod: 1, attModConsecutiveHits: 2 }` | +1 parry, +1 riposte, +2 streak attack. |
+
+| id              | name            | tier        | effect                                               | tooltip                                             |
+| --------------- | --------------- | ----------- | ---------------------------------------------------- | --------------------------------------------------- |
+| counterpuncher  | Counterpuncher  | Common      | `{ attModConsecutiveHits: 1 }`                       | +1 attack on a hit-streak — builds off the counter. |
+| opportunist     | Opportunist     | Notable     | `{ parModHighHp: 1, attModConsecutiveHits: 1 }`      | +1 parry while strong, +1 streak attack.            |
+| riposte_strike  | Riposte Strike  | Notable     | `{ ripMod: 1, attModConsecutiveHits: 1 }`            | +1 riposte, +1 streak attack.                       |
+| counter_artist  | Counter Artist  | Exceptional | `{ parMod: 1, attModConsecutiveHits: 2 }`            | +1 parry, +2 streak attack — defend, then punish.   |
+| perfect_counter | Perfect Counter | Signature   | `{ parMod: 1, ripMod: 1, attModConsecutiveHits: 2 }` | +1 parry, +1 riposte, +2 streak attack.             |
 
 **SL — Slashing (`S.SlashingAttack`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| keen_edge | Keen Edge | Common | `{ dmgBonus: 1 }` | +1 damage — a blade kept razor-sharp. |
-| flurry | Flurry | Notable | `{ attModConsecutiveHits: 1 }` | +1 attack on a streak — a storm of cuts. |
-| lacerate | Lacerate | Notable | `{ dmgBonus: 1, attModConsecutiveHits: 1 }` | +1 damage, +1 streak attack — cuts that keep coming. |
-| hemorrhage | Hemorrhage | Exceptional | `{ dmgBonus: 1, attModConsecutiveHits: 2 }` | +1 damage, +2 streak attack — relentless bleeding. |
-| exsanguinate | Exsanguinate | Signature | `{ dmgBonus: 2, attModConsecutiveHits: 1 }` | +2 damage, +1 streak attack — bleeds them dry. |
+
+| id           | name         | tier        | effect                                      | tooltip                                              |
+| ------------ | ------------ | ----------- | ------------------------------------------- | ---------------------------------------------------- |
+| keen_edge    | Keen Edge    | Common      | `{ dmgBonus: 1 }`                           | +1 damage — a blade kept razor-sharp.                |
+| flurry       | Flurry       | Notable     | `{ attModConsecutiveHits: 1 }`              | +1 attack on a streak — a storm of cuts.             |
+| lacerate     | Lacerate     | Notable     | `{ dmgBonus: 1, attModConsecutiveHits: 1 }` | +1 damage, +1 streak attack — cuts that keep coming. |
+| hemorrhage   | Hemorrhage   | Exceptional | `{ dmgBonus: 1, attModConsecutiveHits: 2 }` | +1 damage, +2 streak attack — relentless bleeding.   |
+| exsanguinate | Exsanguinate | Signature   | `{ dmgBonus: 2, attModConsecutiveHits: 1 }` | +2 damage, +1 streak attack — bleeds them dry.       |
 
 **ST — Striking (`S.StrikingAttack`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| crushing_blow | Crushing Blow | Common | `{ dmgBonus: 1 }` | +1 damage — explosive power behind each strike. |
-| opener | Opener | Notable | `{ attMod: 1 }` | +1 attack — sets a ferocious early pace. |
-| executioner | Executioner | Notable | `{ attModLowHp: 2 }` | +2 attack against a wounded foe — smells blood. |
-| berserker_rush | Berserker Rush | Exceptional | `{ attModLowHp: 2, dmgBonus: 1 }` | +2 attack when they bleed, +1 damage. |
-| annihilator | Annihilator | Signature | `{ attModLowHp: 3, dmgBonus: 1, killWindowBonus: 0.01 }` | +3 attack vs the wounded, +1 damage, faster kills. |
+
+| id             | name           | tier        | effect                                                   | tooltip                                            |
+| -------------- | -------------- | ----------- | -------------------------------------------------------- | -------------------------------------------------- |
+| crushing_blow  | Crushing Blow  | Common      | `{ dmgBonus: 1 }`                                        | +1 damage — explosive power behind each strike.    |
+| opener         | Opener         | Notable     | `{ attMod: 1 }`                                          | +1 attack — sets a ferocious early pace.           |
+| executioner    | Executioner    | Notable     | `{ attModLowHp: 2 }`                                     | +2 attack against a wounded foe — smells blood.    |
+| berserker_rush | Berserker Rush | Exceptional | `{ attModLowHp: 2, dmgBonus: 1 }`                        | +2 attack when they bleed, +1 damage.              |
+| annihilator    | Annihilator    | Signature   | `{ attModLowHp: 3, dmgBonus: 1, killWindowBonus: 0.01 }` | +3 attack vs the wounded, +1 damage, faster kills. |
 
 **TP — Total Parry (`S.TotalParry`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| enduring | Enduring | Common | `{ enduranceMult: 0.92 }` | Tireless — outlasts the aggressor. |
-| stonewall | Stonewall | Notable | `{ defModLate: 2 }` | +2 defense in the late rounds — the wall holds. |
-| war_of_attrition | War of Attrition | Notable | `{ defModLate: 2, enduranceMult: 0.95 }` | +2 late defense, tireless — wins the long fight. |
-| immovable_object | Immovable Object | Exceptional | `{ defModLate: 2, parModLate: 1 }` | +2 late defense, +1 late parry — cannot be moved. |
-| unbreakable | Unbreakable | Signature | `{ defModLate: 2, parModLate: 2, enduranceMult: 0.95 }` | +2 late defense, +2 late parry, tireless. |
+
+| id               | name             | tier        | effect                                                  | tooltip                                           |
+| ---------------- | ---------------- | ----------- | ------------------------------------------------------- | ------------------------------------------------- |
+| enduring         | Enduring         | Common      | `{ enduranceMult: 0.92 }`                               | Tireless — outlasts the aggressor.                |
+| stonewall        | Stonewall        | Notable     | `{ defModLate: 2 }`                                     | +2 defense in the late rounds — the wall holds.   |
+| war_of_attrition | War of Attrition | Notable     | `{ defModLate: 2, enduranceMult: 0.95 }`                | +2 late defense, tireless — wins the long fight.  |
+| immovable_object | Immovable Object | Exceptional | `{ defModLate: 2, parModLate: 1 }`                      | +2 late defense, +1 late parry — cannot be moved. |
+| unbreakable      | Unbreakable      | Signature   | `{ defModLate: 2, parModLate: 2, enduranceMult: 0.95 }` | +2 late defense, +2 late parry, tireless.         |
 
 **WS — Wall of Steel (`S.WallOfSteel`)**
-| id | name | tier | effect | tooltip |
-|---|---|---|---|---|
-| braced | Braced | Common | `{ parMod: 1 }` | +1 parry — set and ready. |
-| bulwark | Bulwark | Notable | `{ parMod: 1, defMod: 1 }` | +1 parry, +1 defense — a living barricade. |
-| anchor | Anchor | Notable | `{ parMod: 2 }` | +2 parry — rooted and unyielding. |
-| fortress | Fortress | Exceptional | `{ parMod: 2, defMod: 1 }` | +2 parry, +1 defense — nothing gets through. |
-| living_wall | Living Wall | Signature | `{ parMod: 2, defMod: 2 }` | +2 parry, +2 defense — the wall that walks. |
+
+| id          | name        | tier        | effect                     | tooltip                                      |
+| ----------- | ----------- | ----------- | -------------------------- | -------------------------------------------- |
+| braced      | Braced      | Common      | `{ parMod: 1 }`            | +1 parry — set and ready.                    |
+| bulwark     | Bulwark     | Notable     | `{ parMod: 1, defMod: 1 }` | +1 parry, +1 defense — a living barricade.   |
+| anchor      | Anchor      | Notable     | `{ parMod: 2 }`            | +2 parry — rooted and unyielding.            |
+| fortress    | Fortress    | Exceptional | `{ parMod: 2, defMod: 1 }` | +2 parry, +1 defense — nothing gets through. |
+| living_wall | Living Wall | Signature   | `{ parMod: 2, defMod: 2 }` | +2 parry, +2 defense — the wall that walks.  |
 
 > Note: `parModHighHp` (used by PS `opportunist`) and `attMod` opening-weighting (`opener`) exist as `TraitEffect` fields — confirm with `grep -n "parModHighHp\|attMod" src/engine/traits.ts`. If `parModHighHp` is missing, substitute `{ parMod: 1, attModConsecutiveHits: 1 }` for `opportunist` (still Notable budget).
 

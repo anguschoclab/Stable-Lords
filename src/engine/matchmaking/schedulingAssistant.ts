@@ -61,11 +61,7 @@ export interface PairwiseMatchupContext {
  * Symmetric matchup scorer — identical math to `scoreMatchup` minus the
  * player challenge/avoid modifiers. Used for AI-vs-AI scoring.
  */
-export function scorePairwiseMatchup(
-  a: Warrior,
-  b: Warrior,
-  ctx: PairwiseMatchupContext
-): number {
+export function scorePairwiseMatchup(a: Warrior, b: Warrior, ctx: PairwiseMatchupContext): number {
   const styleAdvantage = getMatchupBonus(a.style, b.style);
   const fameDiff = a.fame - b.fame;
 
@@ -82,11 +78,9 @@ export function scorePairwiseMatchup(
   }
 
   const aWinRate =
-    (a.career?.wins ?? 0) /
-    Math.max(1, (a.career?.wins ?? 0) + (a.career?.losses ?? 0));
+    (a.career?.wins ?? 0) / Math.max(1, (a.career?.wins ?? 0) + (a.career?.losses ?? 0));
   const bWinRate =
-    (b.career?.wins ?? 0) /
-    Math.max(1, (b.career?.wins ?? 0) + (b.career?.losses ?? 0));
+    (b.career?.wins ?? 0) / Math.max(1, (b.career?.wins ?? 0) + (b.career?.losses ?? 0));
   score += (aWinRate - bWinRate) * 20;
 
   // Rivalry multiplier for grudge matches
@@ -355,8 +349,7 @@ function buildMatchupScore(
     wins: hh.wins,
     losses: hh.losses,
     total: hh.total,
-    lastWinner:
-      hh.lastWinner === 'a' ? 'player' : hh.lastWinner === 'b' ? 'rival' : hh.lastWinner,
+    lastWinner: hh.lastWinner === 'a' ? 'player' : hh.lastWinner === 'b' ? 'rival' : hh.lastWinner,
     lastFightWeek: hh.lastFightWeek,
   };
   return {

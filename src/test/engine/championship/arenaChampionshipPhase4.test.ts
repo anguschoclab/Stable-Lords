@@ -42,7 +42,12 @@ function career(wins: number, losses: number, kills = 0): CareerRecord {
 function title(champId: string | null, status: ArenaTitle['status'] = 'active'): ArenaTitle {
   return {
     champion: champId
-      ? { warriorId: champId as WarriorId, startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 }
+      ? {
+          warriorId: champId as WarriorId,
+          startedAbsoluteWeek: 1,
+          defenses: 0,
+          lastActivityWeek: 1,
+        }
       : null,
     status,
     history: [],
@@ -237,8 +242,16 @@ describe('evaluateBoutOffers — title bout advice', () => {
 
 describe('arena leaderboards — style leaders and stable standings', () => {
   it('returns the best warrior per style at the arena', () => {
-    const striker = makeWarrior({ id: 'w-s' as WarriorId, style: FightingStyle.StrikingAttack, career: career(5, 0) });
-    const basher = makeWarrior({ id: 'w-b' as WarriorId, style: FightingStyle.BashingAttack, career: career(3, 2) });
+    const striker = makeWarrior({
+      id: 'w-s' as WarriorId,
+      style: FightingStyle.StrikingAttack,
+      career: career(5, 0),
+    });
+    const basher = makeWarrior({
+      id: 'w-b' as WarriorId,
+      style: FightingStyle.BashingAttack,
+      career: career(3, 2),
+    });
     const leaders = calculateArenaStyleLeaders(ARENA, [striker, basher], 'Player', []);
     expect(leaders[FightingStyle.StrikingAttack]?.warriorId).toBe('w-s');
     expect(leaders[FightingStyle.BashingAttack]?.warriorId).toBe('w-b');
@@ -313,7 +326,9 @@ describe('progression — arena title objectives', () => {
     const w = makeWarrior({ id: 'w-g' as WarriorId });
     const prog = passWith({
       roster: [w],
-      grandChampions: [{ tournamentId: 't-52', year: 1, warriorId: 'w-g' as WarriorId, warriorName: 'W G' }],
+      grandChampions: [
+        { tournamentId: 't-52', year: 1, warriorId: 'w-g' as WarriorId, warriorName: 'W G' },
+      ],
     });
     expect(prog.objectives.find((o) => o.id === 'GRAND_CHAMPION')?.completed).toBe(true);
   });

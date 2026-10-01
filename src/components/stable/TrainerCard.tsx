@@ -120,9 +120,8 @@ function TrainerFooter({
 /** Impact-bonus readout with the optional style-affinity tooltip. */
 function IntelBlock({ trainer, bonus }: { trainer: TrainerData; bonus: number }) {
   const styleName = trainer.styleBonusStyle
-    ? (STYLE_DISPLAY_NAMES[
-        trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-      ] ?? trainer.styleBonusStyle)
+    ? (STYLE_DISPLAY_NAMES[trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES] ??
+      trainer.styleBonusStyle)
     : null;
   return (
     <div className="flex-1 bg-black/40 rounded-none border border-white/5 p-3 flex items-center justify-between group/intel">

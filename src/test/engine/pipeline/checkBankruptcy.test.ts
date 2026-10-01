@@ -4,8 +4,7 @@ import type { GameState } from '@/types/state.types';
 import type { StateImpact } from '@/engine/impacts';
 import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
-const makeState = (treasury: number): GameState =>
-  fixtureGameState({ treasury });
+const makeState = (treasury: number): GameState => fixtureGameState({ treasury });
 
 describe('checkBankruptcy', () => {
   it('returns false when single treasuryDelta keeps treasury above threshold', () => {

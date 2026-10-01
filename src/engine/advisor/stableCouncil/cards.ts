@@ -114,17 +114,14 @@ function deriveBookingStatus(
     requiresRecovery: campaignFocus === 'REHABILITATION',
   };
 
-  const requiresRecovery =
-    campaignFocus === 'REHABILITATION' || injuryStatus.requiresRecovery;
+  const requiresRecovery = campaignFocus === 'REHABILITATION' || injuryStatus.requiresRecovery;
   const wantsBooking =
     !requiresRecovery &&
     (campaignFocus === 'PURSE_HUNTER' ||
       campaignFocus === 'VETERAN_TWILIGHT' ||
       campaignFocus === 'CROWN_BID' ||
-      (campaignFocus === 'TOURNAMENT_PUSH' &&
-        tournamentAdvice.status === 'QUALIFYING'));
-  const holdsForBooking =
-    fightAdvice.action === 'NO_VIABLE_OFFERS' && wantsBooking;
+      (campaignFocus === 'TOURNAMENT_PUSH' && tournamentAdvice.status === 'QUALIFYING'));
+  const holdsForBooking = fightAdvice.action === 'NO_VIABLE_OFFERS' && wantsBooking;
 
   return { fatigueStatus, injuryStatus, holdsForBooking };
 }
@@ -214,4 +211,3 @@ export function buildWarriorCard(
     actionPayload,
   };
 }
-

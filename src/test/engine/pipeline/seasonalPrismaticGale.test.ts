@@ -2,7 +2,10 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { handlePrismaticGaleExposure } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
 import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/utils/random';
-import type { OffseasonEventNarrative, OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import type {
+  OffseasonEventNarrative,
+  OffseasonEventContext,
+} from '@/engine/pipeline/offseasonEvents/types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import narrativeContent from '@/data/narrative/offseason.json';
@@ -14,7 +17,15 @@ describe('prismatic_gale_exposure offseason event', () => {
 
   beforeEach(() => {
     mockRng = new SeededRNGService(12345);
-    const warrior = makeWarrior('w1' as any, 'Test Warrior', FightingStyle.StrikingAttack, { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 });
+    const warrior = makeWarrior('w1' as any, 'Test Warrior', FightingStyle.StrikingAttack, {
+      ST: 10,
+      CN: 10,
+      SZ: 10,
+      WT: 10,
+      WL: 10,
+      SP: 10,
+      DF: 10,
+    });
     warrior.status = 'Active';
     warrior.injuries = [];
     warrior.xp = 10;

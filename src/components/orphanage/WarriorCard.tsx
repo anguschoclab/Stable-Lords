@@ -72,8 +72,12 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
         background: isSelected
           ? 'linear-gradient(145deg, rgba(var(--blood-glow-rgb), 0.12) 0%, rgba(var(--blood-glow-rgb), 0.06) 100%)'
           : 'linear-gradient(145deg, var(--background) 0%, var(--card) 100%)',
-        border: isSelected ? '1px solid rgba(var(--blood-glow-rgb), 0.5)' : '1px solid rgba(var(--oak-rgb), 0.7)',
-        borderTopColor: isSelected ? 'rgba(var(--blood-soft-rgb), 0.4)' : 'rgba(var(--umber-rgb), 0.35)',
+        border: isSelected
+          ? '1px solid rgba(var(--blood-glow-rgb), 0.5)'
+          : '1px solid rgba(var(--oak-rgb), 0.7)',
+        borderTopColor: isSelected
+          ? 'rgba(var(--blood-soft-rgb), 0.4)'
+          : 'rgba(var(--umber-rgb), 0.35)',
       }}
     >
       {isSelected && (
@@ -106,13 +110,7 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
 }
 
 /** Name, style badge, trait chip, origin/lore blurb, and the HP readout. */
-function CardBody({
-  warrior,
-  hp,
-}: {
-  warrior: WarriorCardProps['warrior'];
-  hp: number;
-}) {
+function CardBody({ warrior, hp }: { warrior: WarriorCardProps['warrior']; hp: number }) {
   return (
     <>
       <div className="flex-1 min-w-0">

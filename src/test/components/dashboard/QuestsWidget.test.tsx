@@ -25,22 +25,20 @@ describe('QuestsWidget (G4)', () => {
   });
 
   it('hides when all quests are complete', () => {
-    useGameStore.setState(
-      {
-        ...makeGameState({
-          absoluteWeek: 3,
-          arenaHistory: [makeFightSummary({ by: 'KO' })],
-          scoutReports: [{} as never],
-          trainingAssignments: [{} as never],
-          roster: [
-            {
-              ...useGameStore.getState().roster[0],
-              equipment: { weapon: 'sword', armor: 'a', shield: 's', helm: 'h' },
-            } as never,
-          ],
-        }),
-      } as never
-    );
+    useGameStore.setState({
+      ...makeGameState({
+        absoluteWeek: 3,
+        arenaHistory: [makeFightSummary({ by: 'KO' })],
+        scoutReports: [{} as never],
+        trainingAssignments: [{} as never],
+        roster: [
+          {
+            ...useGameStore.getState().roster[0],
+            equipment: { weapon: 'sword', armor: 'a', shield: 's', helm: 'h' },
+          } as never,
+        ],
+      }),
+    } as never);
     const { container } = render(<QuestsWidget />);
     expect(container.firstChild).toBeNull();
   });

@@ -2,9 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
 
 const key = (x: unknown): string =>
-  typeof x === 'string'
-    ? x
-    : ((x as { text?: string })?.text ?? JSON.stringify(x));
+  typeof x === 'string' ? x : ((x as { text?: string })?.text ?? JSON.stringify(x));
 
 function leaf(path: string[]): unknown[] {
   let cur: unknown = narrativeContent;
@@ -16,15 +14,13 @@ describe('V7 narrative union — curated merge of PRs #983/#989/#993/#994', () =
   it('pbp.defenses.dodge.confident gains union additions', () => {
     const texts = leaf(['pbp', 'defenses', 'dodge', 'confident']).map(key);
     expect(texts).toContain(
-      "Without breaking eye contact, {{defender}} casually side-steps the incoming blow."
+      'Without breaking eye contact, {{defender}} casually side-steps the incoming blow.'
     );
   });
 
   it('pbp.defenses.dodge.confident drops consensus-removed entry', () => {
     const texts = leaf(['pbp', 'defenses', 'dodge', 'confident']).map(key);
-    expect(texts).not.toContain(
-      "With a bored sigh, {{defender}} leans out of the weapon's reach."
-    );
+    expect(texts).not.toContain("With a bored sigh, {{defender}} leans out of the weapon's reach.");
   });
 
   it('pbp.defenses.parry.grim drops consensus-removed entry', () => {

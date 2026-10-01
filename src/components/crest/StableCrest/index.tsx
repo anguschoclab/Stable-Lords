@@ -176,5 +176,3 @@ export function StableCrest({
     </div>
   );
 }
-
-

@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
-import {
-  rollWeather,
-} from '@/engine/weather/seasonalWeather';
+import { rollWeather } from '@/engine/weather/seasonalWeather';
 import { SeededRNGService } from '@/utils/random';
 
 describe('Locust Swarm Feature', () => {

@@ -63,10 +63,7 @@ describe('AI roster culling — champion protection', () => {
         },
       });
       const state = stateWith(rival, titleReigningOn('champ1'));
-      const { updatedRivals } = processAIRosterManagement(
-        state,
-        new SeededRNGService(1)
-      );
+      const { updatedRivals } = processAIRosterManagement(state, new SeededRNGService(1));
       expect(
         updatedRivals[0]!.roster.map((w) => w.id),
         `personality=${personality} culled a reigning champion`

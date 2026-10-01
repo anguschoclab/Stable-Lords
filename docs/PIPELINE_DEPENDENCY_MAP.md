@@ -32,11 +32,11 @@ main thread persistence
 
 ## Resolution stages (pipelineStages.ts)
 
-| Stage | Passes (order in WEEK_PIPELINE_PASSES) |
-| --- | --- |
-| `core` | boutSimulation, warrior, economy, equipment |
-| `world` | world, recruitment, system, rankings, promoter, promoterLifecycle, trainer, rivalStrategy |
-| `content` | event, narrative, progression (+ seasonal handling) |
+| Stage     | Passes (order in WEEK_PIPELINE_PASSES)                                                    |
+| --------- | ----------------------------------------------------------------------------------------- |
+| `core`    | boutSimulation, warrior, economy, equipment                                               |
+| `world`   | world, recruitment, system, rankings, promoter, promoterLifecycle, trainer, rivalStrategy |
+| `content` | event, narrative, progression (+ seasonal handling)                                       |
 
 Rules enforced by `validatePipelinePasses`:
 

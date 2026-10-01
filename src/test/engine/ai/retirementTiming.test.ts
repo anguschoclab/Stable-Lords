@@ -8,16 +8,8 @@
  */
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  SeasonalRetirementService,
-  retireChanceFor,
-} from '@/engine/ai/seasonalRetirementService';
-import {
-  makeWarrior,
-  makeRival,
-  makeGameState,
-  resetFixtureIds,
-} from '@/test/_fixtures/factories';
+import { SeasonalRetirementService, retireChanceFor } from '@/engine/ai/seasonalRetirementService';
+import { makeWarrior, makeRival, makeGameState, resetFixtureIds } from '@/test/_fixtures/factories';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, InjuryId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';

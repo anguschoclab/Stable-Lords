@@ -46,7 +46,6 @@ export function handleSuspiciousMushroomStew(
   );
 }
 
-
 /** Handler for the Phantom Sparring Partner offseason event — grants XP but adds fatigue. */
 export function handlePhantomSparringPartner(
   state: GameState,
@@ -67,7 +66,6 @@ export function handlePhantomSparringPartner(
     };
   });
 }
-
 
 /** Handler for the Dreamweavers Mist offseason event — grants XP but causes a minor magic burn. */
 export function handleDreamweaversMist(
@@ -96,7 +94,6 @@ export function handleDreamweaversMist(
     };
   });
 }
-
 
 /** Handler for the Prismatic Gale Exposure offseason event. */
 export function handlePrismaticGaleExposure(

@@ -3,18 +3,21 @@ import { evaluateTournamentAdvice } from '@/engine/advisor/tournamentAdvisor';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, TournamentEntry } from '@/types/state.types';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const mkWarrior = (id = 'w1'): Warrior =>
   fixtureWarrior({
-  id: id as any,
-  name: 'Marcus',
-  style: FightingStyle.WallOfSteel,
-  attributes: { ST: 14, CN: 14, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
-  fame: 100,
-  popularity: 50,
-  career: { wins: 10, losses: 2, kills: 0 },
-});
+    id: id as any,
+    name: 'Marcus',
+    style: FightingStyle.WallOfSteel,
+    attributes: { ST: 14, CN: 14, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
+    fame: 100,
+    popularity: 50,
+    career: { wins: 10, losses: 2, kills: 0 },
+  });
 
 const mkState = (overrides: Partial<GameState> = {}): GameState =>
   fixtureGameState({

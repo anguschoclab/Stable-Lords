@@ -24,9 +24,7 @@ describe('PreAdvanceChecklist', () => {
     // A dev prospect with no offers still gets a training recommendation →
     // that IS unresolved. Give them the assignment so the board is clean.
     seed({
-      trainingAssignments: [
-        { warriorId: 'w1' as any, type: 'attribute', attribute: 'DF' },
-      ],
+      trainingAssignments: [{ warriorId: 'w1' as any, type: 'attribute', attribute: 'DF' }],
     });
     render(<PreAdvanceChecklist />);
     expect(screen.getByText(/resolved|clear/i)).toBeDefined();

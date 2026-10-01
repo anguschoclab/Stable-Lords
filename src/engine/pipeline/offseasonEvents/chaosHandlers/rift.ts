@@ -49,7 +49,6 @@ export function handleChaosRift(
   });
 }
 
-
 /** Handler for the Chaotic Spells offseason event — random magical effects on active warriors. */
 export function handleChaoticSpells(
   state: GameState,

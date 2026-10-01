@@ -14,7 +14,8 @@ const REPO_ROOT = path.resolve(SRC_DIR, '..');
 const TEST_FILE_RE = /\.(test|spec)\.(ts|tsx|js|jsx)$/;
 const RTL_RE = /@testing-library\/react|\brender(Hook)?\s*\(/;
 const DOM_GLOBALS_RE = /\b(document|window|HTMLElement|HTMLMediaElement|navigator)\b/;
-const DOM_STUB_LINE_RE = /defineProperty|=\s*(class|function|new|\{)|Mock|prototype\s*=|as\s+typeof/;
+const DOM_STUB_LINE_RE =
+  /defineProperty|=\s*(class|function|new|\{)|Mock|prototype\s*=|as\s+typeof/;
 const LOCAL_FACTORY_RE =
   /(?:function|const)\s+(?:make|mk|create)(?:Test)?(?:Warrior|Fighter|Rival|State|Offer|Owner|Stable)\w*/g;
 // Local names bound to shared builders — `import { makeWarrior as fixtureW }`
@@ -25,7 +26,11 @@ function fixtureAliases(content: string): Set<string> {
     /import\s*(?:type\s*)?\{([^}]+)\}\s*from\s*['"][^'"]*(?:_fixtures\/[\w-]+|engine\/factories\/\w+)['"]/g
   )) {
     for (const part of m[1]!.split(',')) {
-      const alias = part.trim().split(/\s+as\s+/).pop()?.trim();
+      const alias = part
+        .trim()
+        .split(/\s+as\s+/)
+        .pop()
+        ?.trim();
       if (alias) names.add(alias);
     }
   }
@@ -59,7 +64,11 @@ function hasLocalFactory(content: string): boolean {
   return false;
 }
 
-function readDirRecursive(dir: string, pred: (name: string) => boolean, results: string[] = []): string[] {
+function readDirRecursive(
+  dir: string,
+  pred: (name: string) => boolean,
+  results: string[] = []
+): string[] {
   const items = fs.readdirSync(dir, { withFileTypes: true });
   for (const item of items) {
     const fullPath = path.join(dir, item.name);
@@ -220,11 +229,7 @@ describe('testQualityAudit', () => {
     for (const f of allVitestTestFiles()) {
       const content = fs.readFileSync(f, 'utf8');
       const pragma = /@vitest-environment\s+(\w+)/.exec(content)?.[1];
-      if (
-        ISOLATION_SIGNALS.test(content) ||
-        pragma === 'jsdom' ||
-        needsDom(content)
-      ) {
+      if (ISOLATION_SIGNALS.test(content) || pragma === 'jsdom' || needsDom(content)) {
         live.push(rel(f));
       }
     }

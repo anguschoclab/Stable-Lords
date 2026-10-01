@@ -7,10 +7,11 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import { makeAutosimOffer, makeSimmableState } from '@/test/_fixtures/autosimCouncil';
 
-vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({ ...__SHARED_MOCKS.weekPipeline }));
+vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
+  ...__SHARED_MOCKS.weekPipeline,
+}));
 
 const makeOffer = makeAutosimOffer;
-
 
 describe('runAutosim councilAutoPilot', () => {
   beforeEach(() => {
@@ -23,9 +24,7 @@ describe('runAutosim councilAutoPilot', () => {
     const state = makeSimmableState();
     const result = await runAutosim(state, { weeksToSim: 1, councilAutoPilot: true });
 
-    const assigned = new Set(
-      (result.finalState.trainingAssignments ?? []).map((a) => a.warriorId)
-    );
+    const assigned = new Set((result.finalState.trainingAssignments ?? []).map((a) => a.warriorId));
     expect(assigned.has('w1' as WarriorId)).toBe(true);
     expect(assigned.has('w2' as WarriorId)).toBe(true);
   });
@@ -39,9 +38,9 @@ describe('runAutosim councilAutoPilot', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = await runAutosim(state, { weeksToSim: 1, councilAutoPilot: true });
-    expect(result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
-      'Accepted'
-    );
+    expect(
+      result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]
+    ).toBe('Accepted');
   });
 
   it('declines a lethal offer the old heuristic would have accepted', async () => {
@@ -56,9 +55,9 @@ describe('runAutosim councilAutoPilot', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = await runAutosim(state, { weeksToSim: 1, councilAutoPilot: true });
-    expect(result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
-      'Pending'
-    );
+    expect(
+      result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]
+    ).toBe('Pending');
   });
 
   it('patches warrior fight plans with council tactics', async () => {
@@ -79,9 +78,9 @@ describe('runAutosim councilAutoPilot', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = await runAutosim(state, { weeksToSim: 1 });
-    expect(result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
-      'Accepted'
-    );
+    expect(
+      result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]
+    ).toBe('Accepted');
     // No council application → no auto training assignments.
     expect(result.finalState.trainingAssignments ?? []).toHaveLength(0);
   });
@@ -116,9 +115,7 @@ describe('applyWarriorPayload — tactics conditions merge', () => {
     expect(plan.OE).toBe(7);
     expect(plan.conditions).toHaveLength(2);
     expect(plan.conditions!.some((c) => c.label === 'Player-authored survival')).toBe(true);
-    expect(
-      plan.conditions!.some((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')
-    ).toBe(true);
+    expect(plan.conditions!.some((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')).toBe(true);
   });
 
   it('does not duplicate a trigger type the authored plan already covers', () => {
@@ -151,7 +148,9 @@ describe('applyWarriorPayload — tactics conditions merge', () => {
     const types = w.plan!.conditions!.map((c) => c.trigger.type);
     expect(types.filter((t) => t === 'OPPONENT_MOMENTUM_LEAD')).toHaveLength(1);
     // The authored shell is preserved verbatim — not overwritten.
-    expect(w.plan!.conditions!.find((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')!.trigger.value).toBe(3);
+    expect(
+      w.plan!.conditions!.find((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD')!.trigger.value
+    ).toBe(3);
     expect(types).toContain('OPPONENT_HP_BELOW');
   });
 });

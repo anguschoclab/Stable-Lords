@@ -110,9 +110,7 @@ describe('championship lifecycle through advanceWeek', () => {
     const titleOffer = Object.values(state.boutOffers ?? {}).find(
       (o) => o.titleArenaId === ARENA && (o.status === 'Proposed' || o.status === 'Signed')
     );
-    expect(titleOffer?.warriorIds).toEqual(
-      expect.arrayContaining(['w-champ', 'w-cont'])
-    );
+    expect(titleOffer?.warriorIds).toEqual(expect.arrayContaining(['w-champ', 'w-cont']));
   });
 
   it('a booked defense offer resolves into a title bout result', async () => {
@@ -167,9 +165,7 @@ describe('championship lifecycle through advanceWeek', () => {
 
     expect(resolved).toBe(true);
     const title = state.arenaChampions![ARENA]!;
-    expect(
-      title.champion!.defenses + title.history.length
-    ).toBeGreaterThanOrEqual(1);
+    expect(title.champion!.defenses + title.history.length).toBeGreaterThanOrEqual(1);
   });
 
   it('year boundary: the Grand Championship emits at 52, resolves, and records its winner', async () => {
@@ -203,9 +199,7 @@ describe('championship lifecycle through advanceWeek', () => {
     state = await advanceWeek(state);
     drainDeferredBoutLogs(state);
     expect(state.week).toBe(52);
-    const champsT = (state.tournaments ?? []).find(
-      (t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID
-    );
+    const champsT = (state.tournaments ?? []).find((t) => t.tierId === CHAMPIONS_TOURNEY.TIER_ID);
     expect(champsT).toBeDefined();
     expect(champsT!.name).toBe(CHAMPIONS_TOURNEY.NAME);
     expect(champsT!.participants.map((p) => p.id).sort()).toEqual([...ids].sort());
@@ -238,9 +232,7 @@ describe('calendar migration through advanceWeek', () => {
     state.tournaments = [];
     state.rivals = [];
 
-    const field = ['f1', 'f2', 'f3', 'f4'].map((id, i) =>
-      computed(id, `Freelancer ${i}`)
-    );
+    const field = ['f1', 'f2', 'f3', 'f4'].map((id, i) => computed(id, `Freelancer ${i}`));
     const inFlight = TournamentSelectionService.buildTournament(
       'gold',
       'Legacy Bracket',

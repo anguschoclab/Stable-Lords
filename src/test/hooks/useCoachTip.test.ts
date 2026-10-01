@@ -22,7 +22,13 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return makeWarrior({ id: id as WarriorId, name: `Warrior ${id}`, potential: undefined, fatigue: 0, ...overrides });
+  return makeWarrior({
+    id: id as WarriorId,
+    name: `Warrior ${id}`,
+    potential: undefined,
+    fatigue: 0,
+    ...overrides,
+  });
 }
 
 function setStore(overrides: Partial<GameState> = {}) {

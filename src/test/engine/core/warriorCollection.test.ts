@@ -1,9 +1,20 @@
 import { describe, it, expect } from 'vitest';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { collectAllWarriors, collectAllActiveWarriors, collectBookedWarriorIds, collectAllKnownWarriors, buildWarriorMap } from '@/engine/core/warriorCollection';
+import {
+  collectAllWarriors,
+  collectAllActiveWarriors,
+  collectBookedWarriorIds,
+  collectAllKnownWarriors,
+  buildWarriorMap,
+} from '@/engine/core/warriorCollection';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeRival as fixtureRival, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeRival as fixtureRival,
+  makeBoutOffer as fixtureBoutOffer,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, overrides: Partial<Warrior> = {}): Warrior =>
   fixtureWarrior({
@@ -257,7 +268,11 @@ describe('warriorCollection', () => {
         o1: makeOffer('o1', ['p1'], 5, 'Signed'),
         o2: makeOffer('o2', ['p2'], 5, 'Signed'),
       };
-      const state = makeState([makeWarrior('p1'), makeWarrior('p2'), makeWarrior('p3')], [], offers);
+      const state = makeState(
+        [makeWarrior('p1'), makeWarrior('p2'), makeWarrior('p3')],
+        [],
+        offers
+      );
       expect([...collectBookedWarriorIds(state, 5)].sort()).toEqual(['p1', 'p2']);
     });
 
@@ -267,11 +282,14 @@ describe('warriorCollection', () => {
         o2: makeOffer('o2', ['p2'], 5, 'Proposed'),
         o3: makeOffer('o3', ['p3'], 5, 'Rejected'),
       };
-      const state = makeState([makeWarrior('p1'), makeWarrior('p2'), makeWarrior('p3')], [], offers);
+      const state = makeState(
+        [makeWarrior('p1'), makeWarrior('p2'), makeWarrior('p3')],
+        [],
+        offers
+      );
       expect([...collectBookedWarriorIds(state, 5)]).toEqual(['p1']);
     });
   });
-
 });
 
 describe('warriorCollection', () => {

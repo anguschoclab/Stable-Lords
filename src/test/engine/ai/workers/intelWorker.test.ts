@@ -44,7 +44,7 @@ describe('intelWorker', () => {
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
       agentMemory: makeAgentMemory(),
     });
-    const state = makeGameState({ rivals: [scout, dangerous, harmless],});
+    const state = makeGameState({ rivals: [scout, dangerous, harmless] });
     const { updatedRival } = processIntel(scout, state, buildPerceptionSnapshot(state));
     const dossier = updatedRival.agentMemory!.opponentDossiers[dangerous.id];
     expect(dossier!.planIntel).toBeDefined();
@@ -54,10 +54,26 @@ describe('intelWorker', () => {
     const target = makeRival({
       fame: 300,
       roster: [makeWarrior()],
-      owner: { id: 't-owner' as StableId, name: 'T', stableName: 'T', fame: 300, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 't-owner' as StableId,
+        name: 'T',
+        stableName: 'T',
+        fame: 300,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const tactician = makeRival({
-      owner: { id: 's-owner' as StableId, name: 'S', stableName: 'S', fame: 100, renown: 0, titles: 0, personality: 'Tactician' },
+      owner: {
+        id: 's-owner' as StableId,
+        name: 'S',
+        stableName: 'S',
+        fame: 100,
+        renown: 0,
+        titles: 0,
+        personality: 'Tactician',
+      },
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: target.id },
       agentMemory: makeAgentMemory(),
     });
@@ -89,12 +105,28 @@ describe('intelWorker', () => {
     const champStable = makeRival({
       id: 'champ-stable' as never,
       roster: [champWarrior],
-      owner: { id: 'cs-owner' as never, name: 'CS', stableName: 'CS', fame: 50, renown: 0, titles: 0, personality: 'Pragmatic' },
+      owner: {
+        id: 'cs-owner' as never,
+        name: 'CS',
+        stableName: 'CS',
+        fame: 50,
+        renown: 0,
+        titles: 0,
+        personality: 'Pragmatic',
+      },
     });
     const famous = makeRival({
       id: 'famous' as never,
       roster: [makeWarrior()],
-      owner: { id: 'f-owner' as never, name: 'F', stableName: 'F', fame: 999, renown: 0, titles: 0, personality: 'Pragmatic' },
+      owner: {
+        id: 'f-owner' as never,
+        name: 'F',
+        stableName: 'F',
+        fame: 999,
+        renown: 0,
+        titles: 0,
+        personality: 'Pragmatic',
+      },
     });
     const scout = makeRival({
       id: 's1' as never,
@@ -124,10 +156,26 @@ describe('intelWorker', () => {
     const target = makeRival({
       fame: 300,
       roster: [makeWarrior()],
-      owner: { id: 't-owner' as never, name: 'T', stableName: 'T', fame: 300, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 't-owner' as never,
+        name: 'T',
+        stableName: 'T',
+        fame: 300,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const scout = makeRival({
-      owner: { id: 's-owner' as never, name: 'S', stableName: 'S', fame: 100, renown: 0, titles: 0, personality: 'Tactician' },
+      owner: {
+        id: 's-owner' as never,
+        name: 'S',
+        stableName: 'S',
+        fame: 100,
+        renown: 0,
+        titles: 0,
+        personality: 'Tactician',
+      },
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: target.id },
       agentMemory: makeAgentMemory({
         opponentDossiers: {

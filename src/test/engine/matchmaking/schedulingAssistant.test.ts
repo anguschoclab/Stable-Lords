@@ -1276,10 +1276,7 @@ describe('Scheduling Assistant Engine', () => {
     it('is consistent across repeated calls on the same arenaHistory', () => {
       const a = mockWarrior('a1', FightingStyle.TotalParry, 10, 5, 5);
       const b = mockWarrior('b1', FightingStyle.TotalParry, 10, 5, 5);
-      const history = [
-        mockFightBetween('a1', 'b1', 'A', 1),
-        mockFightBetween('a1', 'b1', 'D', 3),
-      ];
+      const history = [mockFightBetween('a1', 'b1', 'A', 1), mockFightBetween('a1', 'b1', 'D', 3)];
       const ctx = { arenaHistory: history, week: 10 };
 
       expect(scorePairwiseMatchup(a, b, ctx)).toBe(scorePairwiseMatchup(a, b, ctx));

@@ -1,8 +1,6 @@
 // Split from data/arenas.ts — venue data
 import type { ArenaConfig } from '@/types/shared.types';
 
-
-
 export const THE_BRAMBLE_RING: ArenaConfig = {
   id: 'the_bramble_ring',
   name: 'The Bramble Ring',
@@ -14,8 +12,6 @@ export const THE_BRAMBLE_RING: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.1 },
 };
-
-
 
 export const THUNDER_PEAK: ArenaConfig = {
   id: 'thunder_peak',
@@ -29,8 +25,6 @@ export const THUNDER_PEAK: ArenaConfig = {
   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.25 },
 };
 
-
-
 export const SUN_BAKED_PLATEAU: ArenaConfig = {
   id: 'sun_baked_plateau',
   name: 'Sun-Baked Plateau',
@@ -43,8 +37,6 @@ export const SUN_BAKED_PLATEAU: ArenaConfig = {
   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.3 },
 };
 
-
-
 export const ANCIENT_AQUEDUCT: ArenaConfig = {
   id: 'ancient_aqueduct',
   name: 'Ancient Aqueduct',
@@ -55,8 +47,6 @@ export const ANCIENT_AQUEDUCT: ArenaConfig = {
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.15 },
 };
-
-
 
 export const FORGOTTEN_CRYPT: ArenaConfig = {
   id: 'forgotten_crypt',
@@ -70,8 +60,6 @@ export const FORGOTTEN_CRYPT: ArenaConfig = {
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.1 },
 };
 
-
-
 export const RUSTED_GORGE: ArenaConfig = {
   id: 'rusted_gorge',
   name: 'Rusted Gorge',
@@ -84,22 +72,17 @@ export const RUSTED_GORGE: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
 };
 
-
-
-
 export const THE_ASYLUM: ArenaConfig = {
   id: 'the_asylum',
   name: 'The Asylum',
   tags: ['indoor', 'cramped', 'cursed'],
   tier: 2,
   size: 'cramped',
-  description: 'A maddening enclosed space echoing with the screams of past victims. Stamina drains quickly.',
+  description:
+    'A maddening enclosed space echoing with the screams of past victims. Stamina drains quickly.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.25 },
 };
-
-
-
 
 export const VOLCANIC_CRATER: ArenaConfig = {
   id: 'volcanic_crater',
@@ -112,8 +95,6 @@ export const VOLCANIC_CRATER: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.35 },
 };
 
-
-
 export const THE_WAILING_CHASM: ArenaConfig = {
   id: 'the_wailing_chasm',
   name: 'The Wailing Chasm',
@@ -124,8 +105,6 @@ export const THE_WAILING_CHASM: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -5 },
   surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.1 },
 };
-
-
 
 export const SHATTERED_MONOLITH: ArenaConfig = {
   id: 'shattered_monolith',
@@ -138,8 +117,6 @@ export const SHATTERED_MONOLITH: ArenaConfig = {
   surfaceMod: { initiativeMod: 0, riposteMod: 1, enduranceMult: 1.0 },
 };
 
-
-
 export const VERDANT_LABYRINTH: ArenaConfig = {
   id: 'verdant_labyrinth',
   name: 'Verdant Labyrinth',
@@ -151,20 +128,17 @@ export const VERDANT_LABYRINTH: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.2 },
 };
 
-
-
 export const THE_SHIFTING_SANDS: ArenaConfig = {
   id: 'the_shifting_sands',
   name: 'The Shifting Sands',
   tags: ['open', 'uneven', 'outdoor'],
   tier: 2,
   size: 'open',
-  description: 'Deep, unstable dunes that constantly shift underfoot, heavily penalizing sudden movements.',
+  description:
+    'Deep, unstable dunes that constantly shift underfoot, heavily penalizing sudden movements.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -3, riposteMod: 0, enduranceMult: 1.25 },
 };
-
-
 
 export const THE_CURSED_SWAMP: ArenaConfig = {
   id: 'the_cursed_swamp',
@@ -172,12 +146,11 @@ export const THE_CURSED_SWAMP: ArenaConfig = {
   tags: ['cramped', 'water', 'cursed'],
   tier: 2,
   size: 'cramped',
-  description: 'A foul, waist-deep quagmire steeped in dark magic. Movement is sluggish and the air breathes despair.',
+  description:
+    'A foul, waist-deep quagmire steeped in dark magic. Movement is sluggish and the air breathes despair.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.4 },
 };
-
-
 
 export const THE_JAGGED_PEAK: ArenaConfig = {
   id: 'the_jagged_peak',
@@ -185,12 +158,11 @@ export const THE_JAGGED_PEAK: ArenaConfig = {
   tags: ['open', 'elevated', 'uneven', 'cursed'],
   tier: 3,
   size: 'open',
-  description: 'A perilous, cursed summit where unpredictable gales and treacherous rocks test even the most skilled combatants.',
+  description:
+    'A perilous, cursed summit where unpredictable gales and treacherous rocks test even the most skilled combatants.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.25 },
 };
-
-
 
 export const THE_MURKY_DEPTHS: ArenaConfig = {
   id: 'the_murky_depths',
@@ -198,12 +170,11 @@ export const THE_MURKY_DEPTHS: ArenaConfig = {
   tags: ['cramped', 'water', 'indoor', 'magical'],
   tier: 2,
   size: 'cramped',
-  description: 'A flooded, arcane cavern that disorients fighters while amplifying magical resonances.',
+  description:
+    'A flooded, arcane cavern that disorients fighters while amplifying magical resonances.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.2 },
 };
-
-
 
 export const THE_SMOLDERING_PITS: ArenaConfig = {
   id: 'the_smoldering_pits',
@@ -211,12 +182,11 @@ export const THE_SMOLDERING_PITS: ArenaConfig = {
   tags: ['open', 'living', 'outdoor', 'ruins'],
   tier: 2,
   size: 'open',
-  description: 'Ancient ruins set ablaze by natural vents, creating a shifting, hazardous battlefield.',
+  description:
+    'Ancient ruins set ablaze by natural vents, creating a shifting, hazardous battlefield.',
   zoneDef: { Edge: -1, Corner: -4 },
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.3 },
 };
-
-
 
 export const THE_CRYSTAL_SPIRE: ArenaConfig = {
   id: 'the_crystal_spire',
@@ -224,12 +194,11 @@ export const THE_CRYSTAL_SPIRE: ArenaConfig = {
   tags: ['cramped', 'elevated', 'magical', 'indoor'],
   tier: 3,
   size: 'cramped',
-  description: 'A towering, enclosed spire of humming crystals. Movements are mirrored and distorted by arcane light.',
+  description:
+    'A towering, enclosed spire of humming crystals. Movements are mirrored and distorted by arcane light.',
   zoneDef: { Edge: -4, Corner: -6 },
   surfaceMod: { initiativeMod: 1, riposteMod: 2, enduranceMult: 1.15 },
 };
-
-
 
 export const THE_IRON_CAGE: ArenaConfig = {
   id: 'the_iron_cage',
@@ -237,7 +206,8 @@ export const THE_IRON_CAGE: ArenaConfig = {
   tags: ['cramped', 'indoor', 'premium'],
   tier: 3,
   size: 'cramped',
-  description: 'An elite, brutal fighting pit enclosed in spiked iron bars, designed for maximum bloodshed and crowd excitement.',
+  description:
+    'An elite, brutal fighting pit enclosed in spiked iron bars, designed for maximum bloodshed and crowd excitement.',
   zoneDef: { Edge: -4, Corner: -6 },
   surfaceMod: { initiativeMod: 1, riposteMod: -1, enduranceMult: 1.1 },
 };

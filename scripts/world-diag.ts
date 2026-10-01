@@ -50,7 +50,12 @@ const snapshots: unknown[] = [];
 // style -> exp bucket -> profile
 const profByExp: Record<string, Record<string, Acc>> = {};
 
-const bump = (t: Record<string, Record<string, [number, number]>>, a: string, b: string, win: boolean) => {
+const bump = (
+  t: Record<string, Record<string, [number, number]>>,
+  a: string,
+  b: string,
+  win: boolean
+) => {
   const cell = ((t[a] ??= {})[b] ??= [0, 0]);
   cell[1]++;
   if (win) cell[0]++;
@@ -92,7 +97,8 @@ function onWeek(state: GameState, week: number) {
   push(state.graveyard);
   push(state.retired);
 
-  const era = week <= 100 ? 'w1-100' : week <= 300 ? 'w101-300' : week <= 600 ? 'w301-600' : 'w601+';
+  const era =
+    week <= 100 ? 'w1-100' : week <= 300 ? 'w101-300' : week <= 600 ? 'w301-600' : 'w601+';
   for (const r of state.rivals)
     for (const w of r.roster) {
       add((pop[w.style] ??= acc()), row(w));
@@ -102,7 +108,11 @@ function onWeek(state: GameState, week: number) {
     for (const r of state.rivals)
       for (const w of r.roster)
         if (w.status === 'Active')
-          snapshots.push({ w: structuredClone(w), personality: r.owner.personality, philosophy: r.philosophy });
+          snapshots.push({
+            w: structuredClone(w),
+            personality: r.owner.personality,
+            philosophy: r.philosophy,
+          });
   }
   for (const b of state.arenaHistory ?? []) {
     if (seen.has(b.id)) continue;
@@ -116,7 +126,8 @@ function onWeek(state: GameState, week: number) {
     ] as const) {
       bump(mm, selfStyle, oppStyle, won);
       bump(byEra, selfStyle, era, won);
-      if (!won) ((lossBy[selfStyle] ??= {})[String(b.by)] = (lossBy[selfStyle]![String(b.by)] ?? 0) + 1);
+      if (!won)
+        (lossBy[selfStyle] ??= {})[String(b.by)] = (lossBy[selfStyle]![String(b.by)] ?? 0) + 1;
       if (won && b.by === 'Kill') killsBy[selfStyle] = (killsBy[selfStyle] ?? 0) + 1;
       if (!self) continue;
       add((atBout[selfStyle] ??= acc()), row(self));
@@ -130,14 +141,21 @@ function onWeek(state: GameState, week: number) {
   }
 }
 
-const pct = (c?: [number, number]) => (c && c[1] ? ((100 * c[0]) / c[1]).toFixed(1).padStart(5) + `(${c[1]})` : '   -   ');
+const pct = (c?: [number, number]) =>
+  c && c[1] ? ((100 * c[0]) / c[1]).toFixed(1).padStart(5) + `(${c[1]})` : '   -   ';
 const avg = (a: Acc, k: string) => ((a.sum[k] ?? 0) / Math.max(1, a.n)).toFixed(1).padStart(6);
 
 const { applyLabOverrides, STYLE_CODE } = await import('./lab-overrides');
 applyLabOverrides();
 const origLog = console.log;
 console.log = () => {};
-const result = await runSimulation({ weeks: WEEKS, seed: SEED, logFrequency: 50, ignoreBankruptcy: true, onWeek });
+const result = await runSimulation({
+  weeks: WEEKS,
+  seed: SEED,
+  logFrequency: 50,
+  ignoreBankruptcy: true,
+  onWeek,
+});
 console.log = origLog;
 
 const styles = Object.keys(mm).sort();
@@ -150,19 +168,43 @@ for (const s of styles) {
   console.log(s.padEnd(18), ((100 * w) / (w + l)).toFixed(2), `n=${w + l}`);
 }
 
-const cols = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF', 'TOT', 'ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC', 'SK', 'drills', 'hp', 'end', 'dmg', 'age', 'fights'];
+const cols = [
+  'ST',
+  'CN',
+  'SZ',
+  'WT',
+  'WL',
+  'SP',
+  'DF',
+  'TOT',
+  'ATT',
+  'PAR',
+  'DEF',
+  'INI',
+  'RIP',
+  'DEC',
+  'SK',
+  'drills',
+  'hp',
+  'end',
+  'dmg',
+  'age',
+  'fights',
+];
 for (const [title, table] of [
   ['Fighter profile AT BOUT TIME (bout-weighted)', atBout],
   ['Living rival population (warrior-week weighted)', pop],
 ] as const) {
   console.log(`\n# ${title}`);
   console.log(''.padEnd(18), cols.map((k) => k.padStart(6)).join(''));
-  for (const s of styles) if (table[s]) console.log(s.padEnd(18), cols.map((k) => avg(table[s]!, k)).join(''));
+  for (const s of styles)
+    if (table[s]) console.log(s.padEnd(18), cols.map((k) => avg(table[s]!, k)).join(''));
 }
 
 console.log('\n# World matchup matrix: row style win% vs column style (n)');
 console.log(''.padEnd(18), styles.map((s) => s.slice(0, 11).padStart(12)).join(''));
-for (const s of styles) console.log(s.padEnd(18), styles.map((o) => pct(mm[s]?.[o]).padStart(12)).join(''));
+for (const s of styles)
+  console.log(s.padEnd(18), styles.map((o) => pct(mm[s]?.[o]).padStart(12)).join(''));
 
 for (const [title, table, keys] of [
   ['Win% by own career fights', byExp, ['0-3', '4-10', '11-25', '26+']],
@@ -171,37 +213,79 @@ for (const [title, table, keys] of [
 ] as const) {
   console.log(`\n# ${title}`);
   console.log(''.padEnd(18), keys.map((k) => k.padStart(14)).join(''));
-  for (const s of styles) console.log(s.padEnd(18), keys.map((k) => pct(table[s]?.[k]).padStart(14)).join(''));
+  for (const s of styles)
+    console.log(s.padEnd(18), keys.map((k) => pct(table[s]?.[k]).padStart(14)).join(''));
 }
 
 console.log('\n# Loss method share');
 for (const s of styles) {
   const t = lossBy[s] ?? {};
   const n = Object.values(t).reduce((x, y) => x + y, 0);
-  console.log(s.padEnd(18), Object.entries(t).sort((x, y) => y[1] - x[1]).map(([k, v]) => `${k} ${((100 * v) / n).toFixed(0)}%`).join('  '));
+  console.log(
+    s.padEnd(18),
+    Object.entries(t)
+      .sort((x, y) => y[1] - x[1])
+      .map(([k, v]) => `${k} ${((100 * v) / n).toFixed(0)}%`)
+      .join('  ')
+  );
 }
 
 console.log('\n# Development at equal experience: TOT / WT / SK / drills / age');
-for (const s of ['WALL OF STEEL', 'TOTAL PARRY', 'BASHING ATTACK', 'STRIKING ATTACK', 'PARRY-LUNGE', 'LUNGING ATTACK']) {
-  console.log(s.padEnd(18), ['0-3', '4-10', '11-25', '26+'].map((k) => {
-    const a = profByExp[s]?.[k];
-    return a ? `${k}: ${avg(a, 'TOT')}${avg(a, 'WT')}${avg(a, 'SK')}${avg(a, 'drills')}${avg(a, 'age')}` : '';
-  }).join(' | '));
+for (const s of [
+  'WALL OF STEEL',
+  'TOTAL PARRY',
+  'BASHING ATTACK',
+  'STRIKING ATTACK',
+  'PARRY-LUNGE',
+  'LUNGING ATTACK',
+]) {
+  console.log(
+    s.padEnd(18),
+    ['0-3', '4-10', '11-25', '26+']
+      .map((k) => {
+        const a = profByExp[s]?.[k];
+        return a
+          ? `${k}: ${avg(a, 'TOT')}${avg(a, 'WT')}${avg(a, 'SK')}${avg(a, 'drills')}${avg(a, 'age')}`
+          : '';
+      })
+      .join(' | ')
+  );
 }
 
 console.log('\n# Population share by era (%) — the emergent meta');
 const eras = ['w1-100', 'w101-300', 'w301-600', 'w601+'];
 console.log(''.padEnd(18), eras.map((k) => k.padStart(10)).join(''));
-for (const s of styles) console.log(s.padEnd(18), eras.map((e) => {
-  const t = Object.values(share[e] ?? {}).reduce((x, y) => x + y, 0);
-  return ((100 * (share[e]?.[s] ?? 0)) / Math.max(1, t)).toFixed(1).padStart(10);
-}).join(''));
+for (const s of styles)
+  console.log(
+    s.padEnd(18),
+    eras
+      .map((e) => {
+        const t = Object.values(share[e] ?? {}).reduce((x, y) => x + y, 0);
+        return ((100 * (share[e]?.[s] ?? 0)) / Math.max(1, t)).toFixed(1).padStart(10);
+      })
+      .join('')
+  );
 const lastPulse = result.pulses[result.pulses.length - 1];
 const living = result.finalState.rivals.reduce((n, r) => n + r.roster.length, 0);
-console.log(`\n# Kills: weekly ${c.weeklyKills}/${c.weeklyBouts} = ${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)}%  tournament ${c.tournamentKills}/${c.tournamentBouts} = ${((100 * c.tournamentKills) / Math.max(1, c.tournamentBouts)).toFixed(2)}%  deaths=${c.deaths} retired=${c.retired} rivals=${result.finalState.rivals.length} living=${living} rivalGoldMean=${lastPulse?.avgRivalTreasury}`);
-console.log('# Kill share of wins by style: ' + styles.map((s) => `${s.slice(0, 9)} ${((100 * (killsBy[s] ?? 0)) / Math.max(1, c.styleWins[s] ?? 0)).toFixed(1)}`).join(' | '));
-const wr = styles.map((s) => (100 * (c.styleWins[s] ?? 0)) / ((c.styleWins[s] ?? 0) + (c.styleLosses[s] ?? 0)));
-console.log(`SUMMARY seed=${SEED} weeks=${WEEKS} kill=${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)} min=${Math.min(...wr).toFixed(1)} max=${Math.max(...wr).toFixed(1)} | ` + styles.map((s, i) => `${STYLE_CODE[s as never]} ${wr[i]!.toFixed(1)}`).join(' '));
+console.log(
+  `\n# Kills: weekly ${c.weeklyKills}/${c.weeklyBouts} = ${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)}%  tournament ${c.tournamentKills}/${c.tournamentBouts} = ${((100 * c.tournamentKills) / Math.max(1, c.tournamentBouts)).toFixed(2)}%  deaths=${c.deaths} retired=${c.retired} rivals=${result.finalState.rivals.length} living=${living} rivalGoldMean=${lastPulse?.avgRivalTreasury}`
+);
+console.log(
+  '# Kill share of wins by style: ' +
+    styles
+      .map(
+        (s) =>
+          `${s.slice(0, 9)} ${((100 * (killsBy[s] ?? 0)) / Math.max(1, c.styleWins[s] ?? 0)).toFixed(1)}`
+      )
+      .join(' | ')
+);
+const wr = styles.map(
+  (s) => (100 * (c.styleWins[s] ?? 0)) / ((c.styleWins[s] ?? 0) + (c.styleLosses[s] ?? 0))
+);
+console.log(
+  `SUMMARY seed=${SEED} weeks=${WEEKS} kill=${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)} min=${Math.min(...wr).toFixed(1)} max=${Math.max(...wr).toFixed(1)} | ` +
+    styles.map((s, i) => `${STYLE_CODE[s as never]} ${wr[i]!.toFixed(1)}`).join(' ')
+);
 if (process.env.SNAP) {
   const fs = await import('fs');
   fs.writeFileSync(process.env.SNAP, JSON.stringify(snapshots));

@@ -32,7 +32,9 @@ export function nextCareerRecord(
   o: { isWinner: boolean; didKill: boolean; arenaId?: string }
 ): CareerRecord {
   const prevByArena = prev?.byArena ?? {};
-  const arenaRecord = o.arenaId ? (prevByArena[o.arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
+  const arenaRecord = o.arenaId
+    ? (prevByArena[o.arenaId] ?? { wins: 0, losses: 0, kills: 0 })
+    : null;
   return {
     ...prev,
     wins: (prev?.wins || 0) + (o.isWinner ? 1 : 0),
@@ -58,7 +60,9 @@ export function boutSeasonPoints(
   isWinner: boolean,
   didKill: boolean
 ): number {
-  return (prev ?? 0) + (isWinner ? SEASON_POINTS.WIN + (didKill ? SEASON_POINTS.KILL_BONUS : 0) : 0);
+  return (
+    (prev ?? 0) + (isWinner ? SEASON_POINTS.WIN + (didKill ? SEASON_POINTS.KILL_BONUS : 0) : 0)
+  );
 }
 
 /** 'Flashy' flair tag earned on a flashy-tagged win; `undefined` when unchanged. */

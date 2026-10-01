@@ -24,11 +24,7 @@ function fightNames(title: string): [string, string] {
 }
 
 /** Fight Log tab — recent fights grouped by week. */
-export function FightLogTab({
-  fightsByWeek,
-}: {
-  fightsByWeek: [number, FightSummary[]][];
-}) {
+export function FightLogTab({ fightsByWeek }: { fightsByWeek: [number, FightSummary[]][] }) {
   if (fightsByWeek.length === 0) {
     return (
       <Card>
@@ -174,20 +170,13 @@ export function StyleStatsTab({ styleStats }: { styleStats: StyleStatRow[] }) {
               {styleStats.map((s) => (
                 <tr key={s.style} className="border-t border-border">
                   <td className="px-4 py-2.5 font-medium">
-                    {STYLE_DISPLAY_NAMES[s.style as keyof typeof STYLE_DISPLAY_NAMES] ??
-                      s.style}
+                    {STYLE_DISPLAY_NAMES[s.style as keyof typeof STYLE_DISPLAY_NAMES] ?? s.style}
                   </td>
                   <td className="px-4 py-2.5 text-right font-mono">{s.fights}</td>
-                  <td className="px-4 py-2.5 text-right font-mono text-arena-pop">
-                    {s.wins}
-                  </td>
-                  <td className="px-4 py-2.5 text-right font-mono text-destructive">
-                    {s.losses}
-                  </td>
+                  <td className="px-4 py-2.5 text-right font-mono text-arena-pop">{s.wins}</td>
+                  <td className="px-4 py-2.5 text-right font-mono text-destructive">{s.losses}</td>
                   <td className="px-4 py-2.5 text-right font-mono">{s.kills}</td>
-                  <td className="px-4 py-2.5 text-right font-mono font-semibold">
-                    {s.winRate}%
-                  </td>
+                  <td className="px-4 py-2.5 text-right font-mono font-semibold">{s.winRate}%</td>
                 </tr>
               ))}
             </tbody>

@@ -1,5 +1,3 @@
-
-
 /**
  * Defines the shape of attributes.
  */
@@ -13,14 +11,10 @@ export interface Attributes {
   DF: number; // Deftness (3-25)
 }
 
-
-
 /**
  * Attribute_keys.
  */
 export const ATTRIBUTE_KEYS: (keyof Attributes)[] = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'];
-
-
 
 /**
  * Attribute_labels.
@@ -35,21 +29,15 @@ export const ATTRIBUTE_LABELS: Record<keyof Attributes, string> = {
   DF: 'Deftness',
 };
 
-
-
 /**
  * Attribute_min.
  */
 export const ATTRIBUTE_MIN = 3;
 
-
-
 /**
  * Attribute_max.
  */
 export const ATTRIBUTE_MAX = 25;
-
-
 
 /**
  * Attribute_total.

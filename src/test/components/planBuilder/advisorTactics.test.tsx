@@ -47,11 +47,7 @@ describe('PlanBuilder Council Tactics (Task 4.4)', () => {
   it('does not render "Apply Council Tactics" button when warrior is undefined', () => {
     render(
       <TooltipProvider>
-        <PlanBuilder
-          plan={basePlan}
-          onPlanChange={vi.fn()}
-          warrior={undefined}
-        />
+        <PlanBuilder plan={basePlan} onPlanChange={vi.fn()} warrior={undefined} />
       </TooltipProvider>
     );
 

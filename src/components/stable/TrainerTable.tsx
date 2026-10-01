@@ -21,8 +21,7 @@ function EmptyAcademy() {
           The Academy is Empty
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-xs mx-auto">
-          No trainers are currently on payroll. Recruit specialists to accelerate warrior
-          evolution.
+          No trainers are currently on payroll. Recruit specialists to accelerate warrior evolution.
         </p>
       </div>
       <Link to="/stable/trainers" className="mt-4">
@@ -38,7 +37,7 @@ function EmptyAcademy() {
   );
 }
 
-type Trainer = (ReturnType<typeof useGameStore.getState>['trainers'])[number];
+type Trainer = ReturnType<typeof useGameStore.getState>['trainers'][number];
 
 /** Row header — name, tier badge, bookmark, weekly salary. */
 function TrainerRowHeader({ t }: { t: Trainer }) {
@@ -90,17 +89,15 @@ function TrainerFocus({ t }: { t: Trainer }) {
               <Zap className="h-3 w-3 text-arena-gold" />
               <span className="text-[9px] font-black uppercase tracking-widest text-arena-gold">
                 Affinity:{' '}
-                {STYLE_DISPLAY_NAMES[
-                  t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-                ] ?? t.styleBonusStyle}
+                {STYLE_DISPLAY_NAMES[t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES] ??
+                  t.styleBonusStyle}
               </span>
             </div>
           </TooltipTrigger>
           <TooltipContent side="right" className="max-w-xs text-[10px]">
             +5% training gain chance for{' '}
-            {STYLE_DISPLAY_NAMES[
-              t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES
-            ] ?? t.styleBonusStyle}{' '}
+            {STYLE_DISPLAY_NAMES[t.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES] ??
+              t.styleBonusStyle}{' '}
             warriors
           </TooltipContent>
         </Tooltip>
@@ -118,10 +115,7 @@ function TenureMeter({ weeksLeft }: { weeksLeft: number }) {
       <div className="flex items-center gap-2 w-full justify-end">
         <Progress
           value={pct}
-          className={cn(
-            'h-1 flex-1',
-            isExpiring ? 'bg-destructive/20' : 'bg-primary/20'
-          )}
+          className={cn('h-1 flex-1', isExpiring ? 'bg-destructive/20' : 'bg-primary/20')}
         />
         <span
           className={cn(

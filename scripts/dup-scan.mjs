@@ -26,7 +26,9 @@ const WINDOW = Number(args[args.indexOf('--window') + 1]) || 8;
 const MIN_BLOCK = Number(args[args.indexOf('--min') + 1]) || WINDOW;
 
 const KEYWORDS = new Set(
-  ('const let var function return if else for while do switch case default break continue try catch finally throw new delete typeof instanceof in of void yield async await class extends super this import export from as static get set public private protected readonly abstract interface type enum namespace declare implements satisfies keyof infer never unknown any string number boolean true false null undefined').split(' ')
+  'const let var function return if else for while do switch case default break continue try catch finally throw new delete typeof instanceof in of void yield async await class extends super this import export from as static get set public private protected readonly abstract interface type enum namespace declare implements satisfies keyof infer never unknown any string number boolean true false null undefined'.split(
+    ' '
+  )
 );
 
 function walk(dir, out = []) {
@@ -41,7 +43,11 @@ function walk(dir, out = []) {
 }
 
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
-const isTest = (r) => r.includes('/test/') || /\.(test|spec)\.tsx?$/.test(r) || r.includes('/_fixtures/') || r.includes('/_setup/');
+const isTest = (r) =>
+  r.includes('/test/') ||
+  /\.(test|spec)\.tsx?$/.test(r) ||
+  r.includes('/_fixtures/') ||
+  r.includes('/_setup/');
 
 /** Strip comments + strings-aware normalization, one file → normalized lines[] with source line refs. */
 function normalize(text, ident) {
@@ -67,26 +73,57 @@ function normalize(text, ident) {
     const c = text[i];
     const n = text[i + 1];
     if (inBlock) {
-      if (c === '*' && n === '/') { inBlock = false; i += 2; continue; }
-      if (c === '\n') { pushLine(true); lineNo++; }
-      i++; continue;
+      if (c === '*' && n === '/') {
+        inBlock = false;
+        i += 2;
+        continue;
+      }
+      if (c === '\n') {
+        pushLine(true);
+        lineNo++;
+      }
+      i++;
+      continue;
     }
-    if (c === '/' && n === '/') { while (i < text.length && text[i] !== '\n') i++; continue; }
-    if (c === '/' && n === '*') { inBlock = true; i += 2; continue; }
+    if (c === '/' && n === '/') {
+      while (i < text.length && text[i] !== '\n') i++;
+      continue;
+    }
+    if (c === '/' && n === '*') {
+      inBlock = true;
+      i += 2;
+      continue;
+    }
     if (c === "'" || c === '"' || c === '`') {
-      const q = c; line += c; i++;
+      const q = c;
+      line += c;
+      i++;
       while (i < text.length) {
         const ch = text[i];
-        line += ch; i++;
-        if (ch === '\\') { line += text[i] ?? ''; i++; continue; }
+        line += ch;
+        i++;
+        if (ch === '\\') {
+          line += text[i] ?? '';
+          i++;
+          continue;
+        }
         if (ch === q) break;
         if (ch === '\n' && q !== '`') break;
-        if (ch === '\n') { pushLine(true); lineNo++; }
+        if (ch === '\n') {
+          pushLine(true);
+          lineNo++;
+        }
       }
       continue;
     }
-    if (c === '\n') { pushLine(true); lineNo++; i++; continue; }
-    line += c; i++;
+    if (c === '\n') {
+      pushLine(true);
+      lineNo++;
+      i++;
+      continue;
+    }
+    line += c;
+    i++;
   }
   pushLine(true);
   return out;
@@ -101,7 +138,12 @@ export function collectDuplicates({ ident = IDENT, window = WINDOW, minBlock = M
     const r = rel(file);
     const lines = normalize(fs.readFileSync(file, 'utf8'), ident);
     for (let i = 0; i + window <= lines.length; i++) {
-      const h = hash(lines.slice(i, i + window).map((x) => x.l).join('\n'));
+      const h = hash(
+        lines
+          .slice(i, i + window)
+          .map((x) => x.l)
+          .join('\n')
+      );
       if (!windows.has(h)) windows.set(h, []);
       windows.get(h).push({ file: r, line: lines[i].line });
     }
@@ -133,7 +175,11 @@ export function collectDuplicates({ ident = IDENT, window = WINDOW, minBlock = M
     const blocks = mergeBlocks(occs, window, minBlock);
     if (blocks.length) {
       const [a, b] = pair.split('|');
-      clusters.push({ pair: [a, b], blocks, totalDupeLines: blocks.reduce((s, x) => s + x.end - x.start + 1, 0) / 2 });
+      clusters.push({
+        pair: [a, b],
+        blocks,
+        totalDupeLines: blocks.reduce((s, x) => s + x.end - x.start + 1, 0) / 2,
+      });
     }
   }
   clusters.sort((a, b) => b.totalDupeLines - a.totalDupeLines);
@@ -144,7 +190,12 @@ export function collectDuplicates({ ident = IDENT, window = WINDOW, minBlock = M
     window,
     ident,
     clusters,
-    counts: { total: clusters.length, srcToSrc: srcPairCount, testToTest: testPairCount, mixed: clusters.length - testPairCount - srcPairCount },
+    counts: {
+      total: clusters.length,
+      srcToSrc: srcPairCount,
+      testToTest: testPairCount,
+      mixed: clusters.length - testPairCount - srcPairCount,
+    },
   };
 }
 
@@ -166,14 +217,22 @@ function mergeBlocks(occs, window, minBlock) {
 }
 
 function main() {
-  const { clusters, counts } = collectDuplicates({ ident: IDENT, window: WINDOW, minBlock: MIN_BLOCK });
+  const { clusters, counts } = collectDuplicates({
+    ident: IDENT,
+    window: WINDOW,
+    minBlock: MIN_BLOCK,
+  });
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const outFile = path.join(OUT_DIR, IDENT ? 'dup-scan-ident.json' : 'dup-scan.json');
   fs.writeFileSync(outFile, JSON.stringify({ window: WINDOW, ident: IDENT, clusters }, null, 2));
 
-  console.log(`mode=${IDENT ? 'identifier-normalized' : 'exact-normalized'} window=${WINDOW} min-block=${MIN_BLOCK}`);
-  console.log(`duplicate pair-clusters: ${counts.total} (src↔src ${counts.srcToSrc} · test↔test ${counts.testToTest} · mixed ${counts.mixed})`);
+  console.log(
+    `mode=${IDENT ? 'identifier-normalized' : 'exact-normalized'} window=${WINDOW} min-block=${MIN_BLOCK}`
+  );
+  console.log(
+    `duplicate pair-clusters: ${counts.total} (src↔src ${counts.srcToSrc} · test↔test ${counts.testToTest} · mixed ${counts.mixed})`
+  );
   console.log('\nTop 30 clusters by duplicated lines:');
   for (const c of clusters.slice(0, 30)) {
     console.log(`  ~${Math.round(c.totalDupeLines)} lines × ${c.blocks.length} block(s)`);

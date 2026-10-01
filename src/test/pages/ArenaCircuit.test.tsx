@@ -14,9 +14,7 @@ import '@/test/_setup/setup';
 const params = { arenaId: STANDARD_ARENA.id };
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ children, ...props }: { children?: React.ReactNode }) => (
-    <a {...props}>{children}</a>
-  ),
+  Link: ({ children, ...props }: { children?: React.ReactNode }) => <a {...props}>{children}</a>,
   useParams: () => params,
 }));
 
@@ -126,7 +124,11 @@ describe('ArenaDetail', () => {
 
   it('renders the unknown-arena guard for a bad id', () => {
     params.arenaId = 'not_a_real_arena';
-    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <ArenaDetail />
+      </TooltipProvider>
+    );
     expect(screen.getByText('Unknown Arena')).toBeInTheDocument();
     expect(screen.getByText(/does not exist in the circuit/)).toBeInTheDocument();
     params.arenaId = STANDARD_ARENA.id;
@@ -156,7 +158,11 @@ describe('ArenaDetail', () => {
         }),
       },
     });
-    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <ArenaDetail />
+      </TooltipProvider>
+    );
     expect(screen.getByText(STANDARD_ARENA.name)).toBeInTheDocument();
     expect(screen.getByText('Arena Champion')).toBeInTheDocument();
     expect(screen.getByText('Aurelia the Bold')).toBeInTheDocument();
@@ -182,7 +188,11 @@ describe('ArenaDetail', () => {
       },
       relinquishArenaTitle: spy,
     });
-    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <ArenaDetail />
+      </TooltipProvider>
+    );
     const btn = screen.getByRole('button', { name: 'Relinquish Crown' });
     fireEvent.click(btn);
     fireEvent.click(screen.getByRole('button', { name: 'Relinquish' }));
@@ -209,7 +219,11 @@ describe('ArenaDetail', () => {
         }),
       },
     });
-    render(<TooltipProvider><ArenaDetail /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <ArenaDetail />
+      </TooltipProvider>
+    );
     expect(screen.getByText('Aurelia the Bold')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Relinquish Crown' })).not.toBeInTheDocument();
   });

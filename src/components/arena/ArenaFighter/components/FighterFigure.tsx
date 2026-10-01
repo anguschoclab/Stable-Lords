@@ -23,7 +23,12 @@ export function FighterFigure({ isDead, weaponCategory, shieldInfo, pose }: Figh
       xmlns="http://www.w3.org/2000/svg"
       className="w-full h-full filter drop-shadow-lg"
     >
-      <g className={cn('transition-transform motion-reduce:transition-none motion-reduce:transform-none duration-200', isDead && 'translate-y-8')}>
+      <g
+        className={cn(
+          'transition-transform motion-reduce:transition-none motion-reduce:transform-none duration-200',
+          isDead && 'translate-y-8'
+        )}
+      >
         <FighterBodyPart part="head" isDead={isDead} />
         <FighterBodyPart part="torso" isDead={isDead} />
         <FighterBodyPart part="abdomen" isDead={isDead} />

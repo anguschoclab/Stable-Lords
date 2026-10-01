@@ -1,4 +1,10 @@
-import type { GameState, Warrior, RivalStableData, Rivalry, OwnerGrudge } from '@/types/state.types';
+import type {
+  GameState,
+  Warrior,
+  RivalStableData,
+  Rivalry,
+  OwnerGrudge,
+} from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { clearWarriorCache } from '@/engine/core/warriorLookup';

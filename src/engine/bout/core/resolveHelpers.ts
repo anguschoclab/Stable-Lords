@@ -139,13 +139,26 @@ export function processContractPayouts(
   const rivalA =
     stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
 
-  impacts.push(...buildPurseImpacts(state, contract, purse, showFee, winnerId, currentWId, currentOId, rivalA != null));
+  impacts.push(
+    ...buildPurseImpacts(
+      state,
+      contract,
+      purse,
+      showFee,
+      winnerId,
+      currentWId,
+      currentOId,
+      rivalA != null
+    )
+  );
 
   if (rivalsUpdates.size > 0) {
     impacts.push({ rivalsUpdates });
   }
 
-  impacts.push({ promoters: updatePromoterHistory(state, contract, purse, currentWId, currentOId) });
+  impacts.push({
+    promoters: updatePromoterHistory(state, contract, purse, currentWId, currentOId),
+  });
 
   // Close the contract
   const { [contract.id]: _removed, ...remainingBoutOffers } = state.boutOffers;

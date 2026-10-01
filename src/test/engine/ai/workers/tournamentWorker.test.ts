@@ -6,11 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
-import {
-  makeAgentMemory,
-  makeRival,
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeAgentMemory, makeRival, makeWarrior } from '@/test/_fixtures/factories';
 
 function campaignRival() {
   return makeRival({

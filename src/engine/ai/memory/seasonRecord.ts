@@ -7,18 +7,13 @@ import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { logAgentAction } from '@/engine/ai/agentCore';
 
-type SeasonRecord = NonNullable<
-  import('@/types/state.types').AIAgentMemory['seasonRecord']
->;
+type SeasonRecord = NonNullable<import('@/types/state.types').AIAgentMemory['seasonRecord']>;
 
 const freshRecord = (rival: RivalStableData): SeasonRecord => ({
   wins: 0,
   losses: 0,
   kills: 0,
-  rosterSizeAtSeasonStart: rival.roster.reduce(
-    (count, w) => (isActive(w) ? count + 1 : count),
-    0
-  ),
+  rosterSizeAtSeasonStart: rival.roster.reduce((count, w) => (isActive(w) ? count + 1 : count), 0),
 });
 
 /** Which side of a fight belongs to this stable, if any. */

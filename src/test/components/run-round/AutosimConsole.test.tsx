@@ -7,9 +7,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { AutosimConsole } from '@/components/run-round/AutosimConsole';
 
 function renderConsole(onStart = vi.fn()) {
-  render(
-    <AutosimConsole isSimulating={false} progress={null} result={null} onStart={onStart} />
-  );
+  render(<AutosimConsole isSimulating={false} progress={null} result={null} onStart={onStart} />);
   return onStart;
 }
 

@@ -11,7 +11,10 @@ import { SeededRNG } from '@/utils/random';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, name: string, stableId?: string): Warrior =>
   fixtureWarrior({

@@ -68,12 +68,7 @@ function emitPhaseHeader(
 }
 
 /** Pushes the "MINUTE n." marker + status line at each minute boundary. */
-function emitMinuteMarker(
-  c: LoopCtx,
-  fA: FighterState,
-  fD: FighterState,
-  min: number
-): void {
+function emitMinuteMarker(c: LoopCtx, fA: FighterState, fD: FighterState, min: number): void {
   if (c.headless) return;
   c.log.push({ minute: min, text: `MINUTE ${min}.` });
   c.log.push({

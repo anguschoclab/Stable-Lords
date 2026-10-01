@@ -119,6 +119,3 @@ export function createBoutSummary(
     rng,
   });
 }
-
-
-

@@ -6,9 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { generateScoutReport } from '@/engine/scouting/scouting';
-import {
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { SeededRNGService } from '@/utils/random';
 
 describe('scout report — masked plan uncertainty', () => {

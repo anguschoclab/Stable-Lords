@@ -43,10 +43,7 @@ export function without(...excluded: FightingStyle[]): FightingStyle[] {
 // ── Repeated preferredStyles groupings (verbatim 2+ times in weapons.ts) ─────
 
 /** Nimble fencing swords (épée, shortsword, longsword): all except bashing & wall-of-steel. */
-export const FENCING_PREFERRED_STYLES: FightingStyle[] = without(
-  S.BashingAttack,
-  S.WallOfSteel
-);
+export const FENCING_PREFERRED_STYLES: FightingStyle[] = without(S.BashingAttack, S.WallOfSteel);
 
 /** Heavy crushing weapons (mace, halberd, maul): only bashing & striking. */
 export const BASHING_STRIKE_STYLES: FightingStyle[] = [S.BashingAttack, S.StrikingAttack];

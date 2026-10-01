@@ -22,9 +22,7 @@ describe('buildExchangeLogEntry — telemetry completeness', () => {
   });
 
   it('surfaces desperate-plan activation', () => {
-    const events: CombatEvent[] = [
-      { type: 'STATE_CHANGE', actor: 'A', result: 'DESPERATE' },
-    ];
+    const events: CombatEvent[] = [{ type: 'STATE_CHANGE', actor: 'A', result: 'DESPERATE' }];
     const entry = buildExchangeLogEntry(4, 2, 'LATE', events);
     expect(entry.reasonCodes).toContain('DESPERATE');
   });

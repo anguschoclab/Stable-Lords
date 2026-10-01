@@ -108,15 +108,11 @@ function TimelineItemFooter() {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1.5">
           <Activity className="h-3 w-3 text-muted-foreground" />
-          <span className="text-[8px] font-black uppercase tracking-widest">
-            Integrity: PASS
-          </span>
+          <span className="text-[8px] font-black uppercase tracking-widest">Integrity: PASS</span>
         </div>
         <div className="flex items-center gap-1.5">
           <ShieldCheck className="h-3 w-3 text-muted-foreground" />
-          <span className="text-[8px] font-black uppercase tracking-widest">
-            Auth_Lvl: ADMIN
-          </span>
+          <span className="text-[8px] font-black uppercase tracking-widest">Auth_Lvl: ADMIN</span>
         </div>
       </div>
       <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground">

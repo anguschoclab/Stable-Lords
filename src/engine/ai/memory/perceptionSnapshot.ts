@@ -61,10 +61,7 @@ export function buildPerceptionSnapshot(state: GameState): PerceptionSnapshot {
       rival.roster.reduce((c, w) => (isActive(w) ? c + 1 : c), 0)
     );
   }
-  const playerActive = (state.roster ?? []).reduce(
-    (c, w) => (isActive(w) ? c + 1 : c),
-    0
-  );
+  const playerActive = (state.roster ?? []).reduce((c, w) => (isActive(w) ? c + 1 : c), 0);
   activeRosterSize.set(state.player.id, playerActive);
 
   for (const fight of weekFights) {

@@ -4,11 +4,7 @@
  * decay toward uncertainty with staleness).
  */
 import { describe, it, expect } from 'vitest';
-import {
-  updateDossiers,
-  decayDossiers,
-  DOSSIER_CAP,
-} from '@/engine/ai/memory/intelDossier';
+import { updateDossiers, decayDossiers, DOSSIER_CAP } from '@/engine/ai/memory/intelDossier';
 import {
   makeRival,
   makeWarrior,
@@ -30,7 +26,10 @@ describe('updateDossiers — fight observation', () => {
   it('writes exact recordVs for fights involving the stable', () => {
     const w1 = makeWarrior({ id: 'rw1' as WarriorId });
     const self = makeRival({ id: 'self-1' as StableId, roster: [w1] });
-    const opp = makeRival({ id: 'opp-1' as StableId, roster: [makeWarrior({ id: 'ow1' as WarriorId })] });
+    const opp = makeRival({
+      id: 'opp-1' as StableId,
+      roster: [makeWarrior({ id: 'ow1' as WarriorId })],
+    });
     const state = makeGameState({
       rivals: [self, opp],
       absoluteWeek: 5,
@@ -59,7 +58,7 @@ describe('updateDossiers — fight observation', () => {
   it('creates decayed estimates for observed-but-unfought stables', () => {
     const self = makeRival({ id: 'self-1' as StableId });
     const opp = makeRival({ id: 'opp-1' as StableId, fame: 250 });
-    const state = makeGameState({ rivals: [self, opp], absoluteWeek: 3,});
+    const state = makeGameState({ rivals: [self, opp], absoluteWeek: 3 });
 
     const out = updateDossiers(self, state);
     const d = out['opp-1']!;
@@ -72,7 +71,7 @@ describe('updateDossiers — fight observation', () => {
 
   it('includes the player stable as an observable opponent', () => {
     const self = makeRival({ id: 'self-1' as StableId });
-    const state = makeGameState({ rivals: [self], absoluteWeek: 2,});
+    const state = makeGameState({ rivals: [self], absoluteWeek: 2 });
     const out = updateDossiers(self, state);
     expect(out[state.player.id]).toBeDefined();
   });
@@ -80,7 +79,7 @@ describe('updateDossiers — fight observation', () => {
   it('is deterministic for the same inputs', () => {
     const self = makeRival({ id: 'self-1' as StableId });
     const opp = makeRival({ id: 'opp-1' as StableId, fame: 300 });
-    const state = makeGameState({ rivals: [self, opp], absoluteWeek: 4,});
+    const state = makeGameState({ rivals: [self, opp], absoluteWeek: 4 });
     expect(updateDossiers(self, state)).toEqual(updateDossiers(self, state));
   });
 });
@@ -108,7 +107,7 @@ describe('updateDossiers — cap', () => {
     for (let i = 0; i < DOSSIER_CAP + 5; i++) {
       rivals.push(makeRival({ id: `opp-${i}` as StableId, fame: i * 10 }));
     }
-    const state = makeGameState({ rivals, absoluteWeek: 2,});
+    const state = makeGameState({ rivals, absoluteWeek: 2 });
     const out = updateDossiers(self, state);
     expect(Object.keys(out).length).toBeLessThanOrEqual(DOSSIER_CAP);
   });

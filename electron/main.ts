@@ -115,16 +115,24 @@ let tray: Tray | null = null;
 /** Test helpers — exported for behavioral unit tests. No runtime behavior change. */
 
 /** Returns the current main BrowserWindow instance (or null). */
-export function _getMainWindow() { return mainWindow; }
+export function _getMainWindow() {
+  return mainWindow;
+}
 
 /** Sets the current main BrowserWindow instance. */
-export function _setMainWindow(win: BrowserWindow | null) { mainWindow = win; }
+export function _setMainWindow(win: BrowserWindow | null) {
+  mainWindow = win;
+}
 
 /** Returns the current Tray instance (or null). */
-export function _getTray() { return tray; }
+export function _getTray() {
+  return tray;
+}
 
 /** Sets the current Tray instance. */
-export function _setTray(t: Tray | null) { tray = t; }
+export function _setTray(t: Tray | null) {
+  tray = t;
+}
 
 // Get platform-specific save directory
 function getSaveDirectory() {
@@ -196,9 +204,12 @@ export function createWindow() {
   }
 
   // Log any loading errors
-  mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
-    console.error('Failed to load:', errorCode, errorDescription, validatedURL);
-  });
+  mainWindow.webContents.on(
+    'did-fail-load',
+    (_event, errorCode, errorDescription, validatedURL) => {
+      console.error('Failed to load:', errorCode, errorDescription, validatedURL);
+    }
+  );
 
   mainWindow.webContents.on('did-finish-load', () => {
     console.log('Page loaded successfully');

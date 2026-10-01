@@ -89,8 +89,8 @@ export function useTournamentState(showBookmarkedOnly: boolean) {
     return allPastTournaments.filter((t) => ids?.has(t.id));
   }, [allPastTournaments, showBookmarkedOnly, bookmarkIds]);
 
-  const bookmarkedCount = allPastTournaments.filter(
-    (t) => bookmarkIds.get('tournament')?.has(t.id)
+  const bookmarkedCount = allPastTournaments.filter((t) =>
+    bookmarkIds.get('tournament')?.has(t.id)
   ).length;
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started

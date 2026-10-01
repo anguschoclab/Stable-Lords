@@ -7,7 +7,11 @@ import type { FightSummary } from '@/types/combat.types';
 
 import { FightingStyle } from '@/types/shared.types';
 import '@/test/_setup/setup';
-import { makeWarrior as fixtureWarrior, makeFightSummary as fixtureFightSummary, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeFightSummary as fixtureFightSummary,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 type RivalryStateSlice = Parameters<typeof useRivalriesList>[0];
 
@@ -38,7 +42,8 @@ const makeState = (overrides: Partial<RivalryStateSlice> = {}): RivalryStateSlic
   fixtureGameState({
     rivals: [],
     week: 10,
-    ...overrides,} as any);
+    ...overrides,
+  } as any);
 
 describe('useRivalriesList', () => {
   it('returns empty array when no arena history', () => {

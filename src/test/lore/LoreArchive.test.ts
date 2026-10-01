@@ -138,11 +138,9 @@ describe('LoreArchive', () => {
       const seeded = Array.from({ length: 150 }, (_, i) => makeFight(`old-${i}`));
       localStorage.setItem(KEY_FIGHTS, JSON.stringify(seeded));
 
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw quotaError();
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw quotaError();
+      });
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       LoreArchive.signalFight(makeFight('new-fight'));
@@ -164,11 +162,9 @@ describe('LoreArchive', () => {
       const seeded = Array.from({ length: 50 }, (_, i) => makeFight(`old-${i}`));
       localStorage.setItem(KEY_FIGHTS, JSON.stringify(seeded));
 
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw quotaError();
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw quotaError();
+      });
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
       LoreArchive.signalFight(makeFight('new-fight'));
@@ -177,20 +173,15 @@ describe('LoreArchive', () => {
     });
 
     it('logs a generic error and does not retry for non-quota failures', () => {
-      const setItemSpy = vi
-        .spyOn(localStorage, 'setItem')
-        .mockImplementationOnce(() => {
-          throw new Error('boom');
-        });
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+        throw new Error('boom');
+      });
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       expect(() => LoreArchive.signalFight(makeFight('f1'))).not.toThrow();
 
       expect(setItemSpy).toHaveBeenCalledTimes(1);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        `Failed to save ${KEY_FIGHTS}`,
-        expect.any(Error)
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(`Failed to save ${KEY_FIGHTS}`, expect.any(Error));
     });
   });
 });

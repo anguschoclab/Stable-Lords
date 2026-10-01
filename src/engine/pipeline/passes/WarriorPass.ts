@@ -6,6 +6,8 @@ import { computeHealthImpact } from '@/engine/warrior/health';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { convertRetiredToTrainer } from '@/engine/trainers/trainers';
+import { isLegacyFounderCaliber } from '@/engine/ai/legacyFounder';
+import { LEGACY_FOUNDER_TRAINER_CHANCE } from '@/constants/world';
 
 /**
  * Stable Lords — Warrior Pipeline Pass
@@ -21,15 +23,22 @@ export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact 
 
   const agingImpact = computeAgingImpact(state, rng);
 
-  // 🧬 Legacy System: Retired warriors with fame > 500 can become trainers
+  // 🧬 Legacy System: founder-caliber retirees either join the founder queue
+  // (decided inside computeAgingImpact) or convert to hiring-pool trainers —
+  // never both. The queue ids are the explicit double-claim guard.
+  const founderClaimed = new Set(
+    [
+      ...(state.legacyFounderQueue ?? []),
+      ...(agingImpact.legacyFounderEnqueue ?? []),
+    ].map((w) => w.id)
+  );
   const newTrainersInPool: Trainer[] = [];
   if (agingImpact.retired && agingImpact.retired.length > 0) {
     agingImpact.retired.forEach((w) => {
-      if (w.fame > 500) {
-        // 10% chance to become a trainer immediately available in the hiring pool
-        if (rng.next() < 0.1) {
-          newTrainersInPool.push(convertRetiredToTrainer(w));
-        }
+      if (founderClaimed.has(w.id)) return;
+      if (!isLegacyFounderCaliber(w)) return;
+      if (rng.next() < LEGACY_FOUNDER_TRAINER_CHANCE) {
+        newTrainersInPool.push(convertRetiredToTrainer(w));
       }
     });
   }

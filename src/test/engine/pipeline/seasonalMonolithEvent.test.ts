@@ -33,8 +33,7 @@ const makeWarrior = (name: string, overrides: Partial<Warrior> = {}): Warrior =>
     ...overrides,
   } as any);
 
-const makeState = (roster: Warrior[] = []): GameState =>
-  makeSeasonalTestState(roster);
+const makeState = (roster: Warrior[] = []): GameState => makeSeasonalTestState(roster);
 
 function makeCtx(): OffseasonEventContext {
   return {

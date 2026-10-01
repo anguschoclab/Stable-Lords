@@ -7,7 +7,6 @@ import '@/test/_setup/setup';
 
 const makePlan = makeDefaultPlan;
 
-
 describe('WarriorSelector (Battle Plans)', () => {
   it('renders warrior names', () => {
     const w1 = makeTestWarrior('w1', 'Alpha');

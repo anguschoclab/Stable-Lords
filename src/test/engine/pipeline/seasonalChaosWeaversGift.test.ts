@@ -22,8 +22,7 @@ const makeWarrior = (name: string): Warrior =>
     derivedStats: { hp: 100 } as any,
   } as any);
 
-const makeState = (roster: Warrior[] = []): GameState =>
-  makeSeasonalTestState(roster);
+const makeState = (roster: Warrior[] = []): GameState => makeSeasonalTestState(roster);
 
 describe('chaos_weavers_gift offseason event', () => {
   it('runSeasonalPass does not throw with empty roster', () => {

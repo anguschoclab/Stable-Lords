@@ -9,11 +9,7 @@ import type { WeatherType } from '@/types/shared.types';
 import type { CrowdMood } from '@/engine/bout/crowdMood';
 
 // Import from split modules
-import {
-  initializeRng,
-  initializeFighters,
-  initializeResolutionContext,
-} from './initialization';
+import { initializeRng, initializeFighters, initializeResolutionContext } from './initialization';
 import { runSimulationLoop } from './simulationLoop';
 import { generateIntroductions } from './narrative';
 import { processPostFight } from './postFight';

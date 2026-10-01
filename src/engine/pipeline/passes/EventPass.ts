@@ -52,7 +52,14 @@ function rollTavernBrawl(state: GameState, events: Events, ctx: EventCtx): void 
   });
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: brawler.name, fame: 5 }, 'event')
+    makeNewsletterItem(
+      ctx.brawlRng,
+      ctx.nextWeek,
+      e.title,
+      e.newsletter,
+      { name: brawler.name, fame: 5 },
+      'event'
+    )
   );
 }
 
@@ -74,7 +81,14 @@ function rollCelestialBlessing(state: GameState, events: Events, ctx: EventCtx):
   });
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 15, xp: 2 }, 'event')
+    makeNewsletterItem(
+      ctx.brawlRng,
+      ctx.nextWeek,
+      e.title,
+      e.newsletter,
+      { name: chosen.name, fame: 15, xp: 2 },
+      'event'
+    )
   );
 }
 
@@ -95,7 +109,14 @@ function rollLostRelic(state: GameState, events: Events, ctx: EventCtx): void {
   });
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 10, xp: 5 }, 'event')
+    makeNewsletterItem(
+      ctx.brawlRng,
+      ctx.nextWeek,
+      e.title,
+      e.newsletter,
+      { name: chosen.name, fame: 10, xp: 5 },
+      'event'
+    )
   );
 }
 
@@ -139,10 +160,19 @@ function rollGoblinMerchant(state: GameState, events: Events, ctx: EventCtx): vo
   });
 
   ctx.treasuryDelta -= 20;
-  ctx.ledgerEntries.push(makeLedgerEntry(ctx.brawlRng, ctx.nextWeek, 'Goblin Merchant', -20, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(ctx.brawlRng, ctx.nextWeek, 'Goblin Merchant', -20, 'other')
+  );
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(ctx.brawlRng, ctx.nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 5 }, 'event')
+    makeNewsletterItem(
+      ctx.brawlRng,
+      ctx.nextWeek,
+      e.title,
+      e.newsletter,
+      { name: chosen.name, xp: 5 },
+      'event'
+    )
   );
 }
 

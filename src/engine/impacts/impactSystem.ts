@@ -71,15 +71,20 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
   }
   if (deferredEpithets.length > 0) impactHandlers.warriorEpithets(state, deferredEpithets);
   if (process.env.EPITHET_DEBUG) {
-    const before = (resolveImpacts as any).__epiCount ?? 0;
+    const dbg = resolveImpacts as typeof resolveImpacts & { __epiCount?: number };
+    const before = dbg.__epiCount ?? 0;
     let count = 0;
-    const scan = (w: { epithet?: string }) => { if (w.epithet) count++; };
+    const scan = (w: { epithet?: string }) => {
+      if (w.epithet) count++;
+    };
     (state.roster ?? []).forEach(scan);
     (state.rivals ?? []).forEach((r) => r.roster.forEach(scan));
     if (count < before) {
-      console.error(`[epithet-drop] wk${state.absoluteWeek}: ${before}→${count} keys=${impacts.flatMap((i) => Object.keys(i ?? {})).join(',')}`);
+      console.error(
+        `[epithet-drop] wk${state.absoluteWeek}: ${before}→${count} keys=${impacts.flatMap((i) => Object.keys(i ?? {})).join(',')}`
+      );
     }
-    (resolveImpacts as any).__epiCount = count;
+    dbg.__epiCount = count;
   }
   return state;
 }
@@ -124,6 +129,11 @@ const MERGE_CONFIG: MergeConfig = {
   rosterAdditions: { strategy: 'append', defaultValue: [] },
   tournaments: { strategy: 'replace', defaultValue: undefined },
   recruitPool: { strategy: 'replace', defaultValue: undefined },
+  legacyFounderQueue: { strategy: 'replace', defaultValue: undefined },
+  legacyFounderEnqueue: { strategy: 'append', defaultValue: [] },
+  freeAgents: { strategy: 'replace', defaultValue: undefined },
+  freeAgentAdditions: { strategy: 'append', defaultValue: [] },
+  freeAgentRemovals: { strategy: 'append', defaultValue: [] },
   realmRankings: { strategy: 'replace', defaultValue: undefined },
   boutOffers: { strategy: 'dictMerge', defaultValue: undefined },
   arenaChampions: { strategy: 'dictMerge', defaultValue: undefined },

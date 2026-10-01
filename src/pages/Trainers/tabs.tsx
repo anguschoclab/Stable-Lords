@@ -19,22 +19,22 @@ import { canTransact } from '@/engine/economy/utils';
 /** Empty-state surface shown when the stable has no trainers. */
 function EmptyStaffState() {
   return (
-          <Surface
-            variant="glass"
-            className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
-          >
-            <ImperialRing size="lg" variant="bronze" className="opacity-20">
-              <GraduationCap className="h-8 w-8" />
-            </ImperialRing>
-            <div className="space-y-2">
-              <h4 className="font-display font-black uppercase tracking-widest text-muted-foreground/60">
-                No Trainers
-              </h4>
-              <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] italic max-w-sm mx-auto">
-                Hire specialists from the hiring pool to begin training your warriors.
-              </p>
-            </div>
-          </Surface>
+    <Surface
+      variant="glass"
+      className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
+    >
+      <ImperialRing size="lg" variant="bronze" className="opacity-20">
+        <GraduationCap className="h-8 w-8" />
+      </ImperialRing>
+      <div className="space-y-2">
+        <h4 className="font-display font-black uppercase tracking-widest text-muted-foreground/60">
+          No Trainers
+        </h4>
+        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] italic max-w-sm mx-auto">
+          Hire specialists from the hiring pool to begin training your warriors.
+        </p>
+      </div>
+    </Surface>
   );
 }
 
@@ -47,9 +47,7 @@ function FocusBonus({ focus, total }: { focus: TrainerFocus; total: number }) {
       </div>
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-1">
-          <span className="text-3xl font-display font-black text-foreground">
-            +{total}
-          </span>
+          <span className="text-3xl font-display font-black text-foreground">+{total}</span>
           <Zap className="h-4 w-4 text-arena-gold animate-pulse motion-reduce:animate-none" />
         </div>
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
@@ -106,9 +104,7 @@ export function CurrentStaffTab({
                   .filter((t) => t.focus === focus && t.contractWeeksLeft > 0)
                   .reduce((sum, t) => sum + (TIER_BONUS[t.tier as TrainerTier] ?? 1), 0);
 
-                return (
-                  total > 0 && <FocusBonus key={focus} focus={focus} total={total} />
-                );
+                return total > 0 && <FocusBonus key={focus} focus={focus} total={total} />;
               })}
             </div>
           </Surface>
@@ -116,10 +112,7 @@ export function CurrentStaffTab({
       )}
 
       {convertableRetired.length > 0 && canHire && (
-        <RetireToCoachCta
-          convertableRetired={convertableRetired}
-          onOpenConvert={onOpenConvert}
-        />
+        <RetireToCoachCta convertableRetired={convertableRetired} onOpenConvert={onOpenConvert} />
       )}
     </>
   );
@@ -183,9 +176,7 @@ function HireAction({
       </div>
 
       <Button
-        disabled={
-          !canHire || !canTransact(treasury, TIER_COST[trainer.tier as TrainerTier] ?? 50)
-        }
+        disabled={!canHire || !canTransact(treasury, TIER_COST[trainer.tier as TrainerTier] ?? 50)}
         onClick={() => onHire(trainer)}
         className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all motion-reduce:transition-none"
       >
@@ -243,12 +234,7 @@ export function HireTab({
             trainer={t}
             owned={false}
             action={
-              <HireAction
-                trainer={t}
-                treasury={treasury}
-                canHire={canHire}
-                onHire={hireTrainer}
-              />
+              <HireAction trainer={t} treasury={treasury} canHire={canHire} onHire={hireTrainer} />
             }
           />
         ))}

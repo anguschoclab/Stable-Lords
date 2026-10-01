@@ -15,7 +15,15 @@ import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 const TAB_TRIGGER_CLASS =
   'flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none';
 
-function HeaderStats({ rosterSize, maxRoster, treasury }: { rosterSize: number; maxRoster: number; treasury: number }) {
+function HeaderStats({
+  rosterSize,
+  maxRoster,
+  treasury,
+}: {
+  rosterSize: number;
+  maxRoster: number;
+  treasury: number;
+}) {
   return (
     <div className="flex items-center gap-6">
       <div className="flex flex-col items-end">
@@ -68,7 +76,10 @@ function CustomWarriorTab({
 }) {
   return (
     <TabsContent value="custom" className="mt-0 space-y-12 focus-visible:outline-none">
-      <Surface variant="glass" className="p-8 border-primary/20 bg-primary/5 flex items-center gap-8">
+      <Surface
+        variant="glass"
+        className="p-8 border-primary/20 bg-primary/5 flex items-center gap-8"
+      >
         <ImperialRing size="md" variant="blood">
           <Hammer className="h-5 w-5 text-primary" />
         </ImperialRing>
@@ -179,11 +190,7 @@ export default function Recruit() {
         title="Recruitment"
         subtitle="STABLE · CONTRACT MARKET"
         actions={
-          <HeaderStats
-            rosterSize={roster.length}
-            maxRoster={MAX_ROSTER}
-            treasury={treasury}
-          />
+          <HeaderStats rosterSize={roster.length} maxRoster={MAX_ROSTER} treasury={treasury} />
         }
       />
 

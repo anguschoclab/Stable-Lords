@@ -328,9 +328,7 @@ describe('convertBidsToOffers', () => {
       id: 'rival-b' as any,
       owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },
       roster: [resting, assigned, free],
-      trainingAssignments: [
-        { warriorId: assigned.id, type: 'attribute', attribute: 'ST' },
-      ] as any,
+      trainingAssignments: [{ warriorId: assigned.id, type: 'attribute', attribute: 'ST' }] as any,
     });
     const state = makeMinimalState([rivalA, rivalB]);
     // targetWeek = absoluteWeek + 1 = 6; resting is out until week 10
@@ -387,7 +385,7 @@ describe('RivalStrategyPass bid integration', () => {
 });
 
 describe('stable notoriety inflates offer hype (F1)', () => {
-  it('a killer stable\'s bid produces more hype than an identical clean stable\'s', () => {
+  it("a killer stable's bid produces more hype than an identical clean stable's", () => {
     const killer = makeWarrior('Butcher', FightingStyle.StrikingAttack);
     killer.career = { wins: 8, losses: 0, kills: 10 }; // notoriety = 80 → +40 hype
     const clean = makeWarrior('Gentle', FightingStyle.StrikingAttack);

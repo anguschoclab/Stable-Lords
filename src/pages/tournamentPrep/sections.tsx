@@ -165,9 +165,9 @@ export function PrepNotice() {
     >
       <AlertTriangle className="h-4 w-4 text-arena-gold shrink-0 mt-0.5" />
       <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 leading-relaxed">
-        Blocking issues bar a warrior from the bracket; advisory issues (injuries, fatigue,
-        weather aversion) are at your risk. Lineups freeze once the first bout resolves —
-        inspect and adjust now.
+        Blocking issues bar a warrior from the bracket; advisory issues (injuries, fatigue, weather
+        aversion) are at your risk. Lineups freeze once the first bout resolves — inspect and adjust
+        now.
       </p>
     </Surface>
   );

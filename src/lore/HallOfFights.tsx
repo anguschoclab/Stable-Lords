@@ -32,15 +32,21 @@ export const HallOfFights: React.FC = () => {
       />
 
       {lifetime && lifetime.bouts > 0 && (
-        <div className="flex flex-wrap gap-6 text-xs text-muted-foreground" data-testid="lifetime-stats">
+        <div
+          className="flex flex-wrap gap-6 text-xs text-muted-foreground"
+          data-testid="lifetime-stats"
+        >
           <span>
-            <span className="font-black text-foreground tabular-nums">{lifetime.bouts}</span> bouts all-time
+            <span className="font-black text-foreground tabular-nums">{lifetime.bouts}</span> bouts
+            all-time
           </span>
           <span>
-            <span className="font-black text-arena-blood tabular-nums">{lifetime.kills}</span> deaths all-time
+            <span className="font-black text-arena-blood tabular-nums">{lifetime.kills}</span>{' '}
+            deaths all-time
           </span>
           <span>
-            <span className="font-black text-foreground tabular-nums">{lifetime.retirements}</span> retirements all-time
+            <span className="font-black text-foreground tabular-nums">{lifetime.retirements}</span>{' '}
+            retirements all-time
           </span>
         </div>
       )}

@@ -28,9 +28,21 @@ const styles = Object.values(FightingStyle) as FightingStyle[];
 const abbr = (s: string) => (STYLE_CODE[s as FightingStyle] ?? s).padEnd(3);
 const pct = (n: number, d: number) => ((100 * n) / Math.max(1, d)).toFixed(1).padStart(5);
 
-type Tally = { w: Record<string, number>; n: Record<string, number>; kills: number; fights: number; by: Record<string, number>; mm: Record<string, Record<string, [number, number]>> };
+type Tally = {
+  w: Record<string, number>;
+  n: Record<string, number>;
+  kills: number;
+  fights: number;
+  by: Record<string, number>;
+  mm: Record<string, Record<string, [number, number]>>;
+};
 const tally = (): Tally => ({ w: {}, n: {}, kills: 0, fights: 0, by: {}, mm: {} });
-function record(t: Tally, a: string, d: string, o: { winner: 'A' | 'D' | null; by: string | null }) {
+function record(
+  t: Tally,
+  a: string,
+  d: string,
+  o: { winner: 'A' | 'D' | null; by: string | null }
+) {
   t.fights++;
   t.n[a] = (t.n[a] ?? 0) + 1;
   t.n[d] = (t.n[d] ?? 0) + 1;
@@ -38,21 +50,49 @@ function record(t: Tally, a: string, d: string, o: { winner: 'A' | 'D' | null; b
   if (o.by === 'Kill') t.kills++;
   const cellA = ((t.mm[a] ??= {})[d] ??= [0, 0]);
   const cellD = ((t.mm[d] ??= {})[a] ??= [0, 0]);
-  if (a !== d) { cellA[1]++; cellD[1]++; }
-  if (o.winner === 'A') { t.w[a] = (t.w[a] ?? 0) + 1; if (a !== d) cellA[0]++; }
-  else if (o.winner === 'D') { t.w[d] = (t.w[d] ?? 0) + 1; if (a !== d) cellD[0]++; }
+  if (a !== d) {
+    cellA[1]++;
+    cellD[1]++;
+  }
+  if (o.winner === 'A') {
+    t.w[a] = (t.w[a] ?? 0) + 1;
+    if (a !== d) cellA[0]++;
+  } else if (o.winner === 'D') {
+    t.w[d] = (t.w[d] ?? 0) + 1;
+    if (a !== d) cellD[0]++;
+  }
 }
 function report(name: string, t: Tally, matrix = false) {
   const rates = styles.map((s) => (100 * (t.w[s] ?? 0)) / Math.max(1, t.n[s] ?? 0));
   console.log(
-    `${name.padEnd(5)} ` + styles.map((s, i) => `${abbr(s)}${rates[i]!.toFixed(1).padStart(5)}`).join('  ') +
+    `${name.padEnd(5)} ` +
+      styles.map((s, i) => `${abbr(s)}${rates[i]!.toFixed(1).padStart(5)}`).join('  ') +
       `  | kill ${pct(t.kills, t.fights)}%  spread ${Math.min(...rates).toFixed(1)}–${Math.max(...rates).toFixed(1)}`
   );
   if (matrix) {
-    console.log('      by: ' + Object.entries(t.by).sort((x, y) => y[1] - x[1]).map(([k, v]) => `${k} ${pct(v, t.fights).trim()}%`).join('  '));
+    console.log(
+      '      by: ' +
+        Object.entries(t.by)
+          .sort((x, y) => y[1] - x[1])
+          .map(([k, v]) => `${k} ${pct(v, t.fights).trim()}%`)
+          .join('  ')
+    );
     console.log('      ' + ''.padEnd(4) + styles.map((s) => abbr(s).padStart(5)).join(''));
     for (const a of styles)
-      console.log('      ' + abbr(a).padEnd(4) + styles.map((d) => (a === d ? '    -' : pct(t.mm[a]?.[d]?.[0] ?? 0, t.mm[a]?.[d]?.[1] ?? 0).slice(0, 5).replace(/\.\d$/, '').padStart(5))).join(''));
+      console.log(
+        '      ' +
+          abbr(a).padEnd(4) +
+          styles
+            .map((d) =>
+              a === d
+                ? '    -'
+                : pct(t.mm[a]?.[d]?.[0] ?? 0, t.mm[a]?.[d]?.[1] ?? 0)
+                    .slice(0, 5)
+                    .replace(/\.\d$/, '')
+                    .padStart(5)
+            )
+            .join('')
+      );
   }
 }
 
@@ -61,7 +101,8 @@ const MATRIX = !!process.env.LAB_MATRIX;
 // ── FLAT ────────────────────────────────────────────────────────────────────
 {
   const STD = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
-  const mk = (style: FightingStyle, id: string) => makeComputedWarrior(STD, style, { id: id as never, name: id, fame: 0, age: 20 });
+  const mk = (style: FightingStyle, id: string) =>
+    makeComputedWarrior(STD, style, { id: id as never, name: id, fame: 0, age: 20 });
   const t = tally();
   const mirror: string[] = [];
   for (const [ia, a] of styles.entries())
@@ -70,7 +111,18 @@ const MATRIX = !!process.env.LAB_MATRIX;
       const wD = mk(d, `D_${d}`);
       let aw = 0;
       for (let i = 0; i < 100; i++) {
-        const o = simulateFight(defaultPlanForWarrior(wA), defaultPlanForWarrior(wD), wA, wD, (ia * 10 + id) * 100000 + i * 7919 + 42, undefined, 'Clear', undefined, undefined, true);
+        const o = simulateFight(
+          defaultPlanForWarrior(wA),
+          defaultPlanForWarrior(wD),
+          wA,
+          wD,
+          (ia * 10 + id) * 100000 + i * 7919 + 42,
+          undefined,
+          'Clear',
+          undefined,
+          undefined,
+          true
+        );
         record(t, a, d, o);
         if (o.winner === 'A') aw++;
       }
@@ -88,7 +140,8 @@ if (files.length) {
   for (const e of pool) {
     Object.assign(e.w, computeWarriorStats(e.w.attributes, e.w.style));
     // LAB_FIT=1: preview requirement-aware weapon fitting on a pre-fit snapshot.
-    if (process.env.LAB_FIT && e.w.equipment) e.w.equipment = refitWeapon(e.w.style, e.w.attributes, e.w.equipment);
+    if (process.env.LAB_FIT && e.w.equipment)
+      e.w.equipment = refitWeapon(e.w.style, e.w.attributes, e.w.equipment);
   }
   const N = Number(process.env.LAB_FIGHTS ?? 30000);
   const rng = new SeededRNGService(99);
@@ -99,7 +152,12 @@ if (files.length) {
     if (A === D || A.w.stableId === D.w.stableId) continue;
     const pA = tweakPlan(aiPlanForWarrior(A.w, A.personality as never, A.philosophy, D.w.style));
     const pD = tweakPlan(aiPlanForWarrior(D.w, D.personality as never, D.philosophy, A.w.style));
-    record(t, A.w.style, D.w.style, simulateFight(pA, pD, A.w, D.w, i * 7919 + 13, undefined, 'Clear', undefined, undefined, true));
+    record(
+      t,
+      A.w.style,
+      D.w.style,
+      simulateFight(pA, pD, A.w, D.w, i * 7919 + 13, undefined, 'Clear', undefined, undefined, true)
+    );
   }
   report('SNAP', t, MATRIX);
 }

@@ -90,13 +90,7 @@ function generatePromoterOffers(
     if (matchedIds.has(warriorA.id)) continue;
 
     const scoreA = scoreOf(warriorA);
-    const opponentB = findBestOpponent(
-      warriorA,
-      scoreA,
-      sortedByScore,
-      sortedScores,
-      searchCtx
-    );
+    const opponentB = findBestOpponent(warriorA, scoreA, sortedByScore, sortedScores, searchCtx);
 
     if (opponentB) {
       matchedIds.add(warriorA.id);

@@ -7,34 +7,37 @@ import { FightingStyle } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
-import { makeWarrior as fixtureWarrior, makeBoutOffer as fixtureBoutOffer, makeGameState as fixtureGameState,
+import {
+  makeWarrior as fixtureWarrior,
+  makeBoutOffer as fixtureBoutOffer,
+  makeGameState as fixtureGameState,
   makeGameState,
 } from '@/test/_fixtures/factories';
 
 const mkWarrior = (id: string, over: Partial<Warrior> = {}): Warrior =>
   fixtureWarrior({
-  id: id as any,
-  name: `Warrior_${id}`,
-  style: FightingStyle.LungingAttack,
-  attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
-  popularity: 20,
-  career: { wins: 4, losses: 1, kills: 0 },
-  ...over,
-});
+    id: id as any,
+    name: `Warrior_${id}`,
+    style: FightingStyle.LungingAttack,
+    attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
+    popularity: 20,
+    career: { wins: 4, losses: 1, kills: 0 },
+    ...over,
+  });
 
 const mkOffer = (id: string, widA: string, widB: string, purse = 200): BoutOffer =>
   fixtureBoutOffer({
-  id: id as any,
-  promoterId: 'p1' as any,
-  warriorIds: [widA as any, widB as any],
-  boutWeek: 6,
-  createdAbsoluteWeek: 5,
-  expirationWeek: 6,
-  purse,
-  hype: 10,
-  status: 'Proposed',
-  responses: { [widA]: 'Pending', [widB]: 'Pending' } as any,
-});
+    id: id as any,
+    promoterId: 'p1' as any,
+    warriorIds: [widA as any, widB as any],
+    boutWeek: 6,
+    createdAbsoluteWeek: 5,
+    expirationWeek: 6,
+    purse,
+    hype: 10,
+    status: 'Proposed',
+    responses: { [widA]: 'Pending', [widB]: 'Pending' } as any,
+  });
 
 describe('buildStableCouncilReport', () => {
   it('aggregates roster into complete council cards and stable summary', () => {
@@ -172,14 +175,14 @@ describe('buildStableCouncilReport', () => {
     const report = buildStableCouncilReport(state);
     expect(report.summary.treasury).toBe(10);
     expect(report.summary.solvencyWarning).toBeDefined();
-    expect(
-      report.summary.stableDirectives.some((d) => /treasury|insolven|afford/i.test(d))
-    ).toBe(true);
+    expect(report.summary.stableDirectives.some((d) => /treasury|insolven|afford/i.test(d))).toBe(
+      true
+    );
   });
 
   describe('unresolvedDirectives — pre-advance checklist', () => {
     const mkBase = (over: Record<string, unknown> = {}): GameState =>
-  fixtureGameState({
+      fixtureGameState({
         week: 5,
         absoluteWeek: 5,
         rivals: [],
@@ -218,9 +221,7 @@ describe('buildStableCouncilReport', () => {
       });
 
       const report = computeStableCouncilReport(state);
-      expect(
-        report.unresolvedDirectives.some((d) => d.kind === 'unsigned-offer')
-      ).toBe(false);
+      expect(report.unresolvedDirectives.some((d) => d.kind === 'unsigned-offer')).toBe(false);
     });
 
     it('flags warriors with a recommended assignment not yet on the board', () => {
@@ -236,9 +237,7 @@ describe('buildStableCouncilReport', () => {
 
       const withAssignment = mkBase({
         roster: [w],
-        trainingAssignments: [
-          { warriorId: 'w2' as any, type: 'attribute', attribute: 'ST' },
-        ],
+        trainingAssignments: [{ warriorId: 'w2' as any, type: 'attribute', attribute: 'ST' }],
       });
       const resolved = computeStableCouncilReport(withAssignment);
       expect(
@@ -263,9 +262,7 @@ describe('buildStableCouncilReport', () => {
       });
 
       const report = computeStableCouncilReport(state);
-      const fighting = report.unresolvedDirectives.filter(
-        (d) => d.kind === 'unapplied-tactics'
-      );
+      const fighting = report.unresolvedDirectives.filter((d) => d.kind === 'unapplied-tactics');
       expect(fighting.some((d) => d.warriorId === 'w1')).toBe(true);
       expect(fighting.some((d) => d.warriorId === 'w3')).toBe(false);
     });

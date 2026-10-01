@@ -1,9 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import {
-  deriveBoutIntent,
-  type BoutIntentInput,
-} from '@/engine/ai/intentStates';
+import { deriveBoutIntent, type BoutIntentInput } from '@/engine/ai/intentStates';
 import { COMMIT_HP_THRESHOLD, COMMIT_KILL_DESIRE } from '@/constants/combat';
 
 const base: BoutIntentInput = {
@@ -34,9 +31,7 @@ describe('deriveBoutIntent — pure mapping', () => {
     });
 
     it('returns Finish when committed regardless of opponent HP', () => {
-      expect(deriveBoutIntent({ ...base, committed: true, opponentHpRatio: 0.9 })).toBe(
-        'Finish'
-      );
+      expect(deriveBoutIntent({ ...base, committed: true, opponentHpRatio: 0.9 })).toBe('Finish');
     });
 
     it('does NOT return Finish when the opponent is above the kill window', () => {
@@ -88,9 +83,7 @@ describe('deriveBoutIntent — pure mapping', () => {
     });
 
     it('returns Survive on Desperate psych driven by low HP', () => {
-      expect(
-        deriveBoutIntent({ ...base, psychState: 'Desperate', hpRatio: 0.25 })
-      ).toBe('Survive');
+      expect(deriveBoutIntent({ ...base, psychState: 'Desperate', hpRatio: 0.25 })).toBe('Survive');
     });
   });
 
@@ -104,9 +97,7 @@ describe('deriveBoutIntent — pure mapping', () => {
     });
 
     it('returns Recover when the desperate plan is engaged', () => {
-      expect(deriveBoutIntent({ ...base, desperateActive: true, endRatio: 0.5 })).toBe(
-        'Recover'
-      );
+      expect(deriveBoutIntent({ ...base, desperateActive: true, endRatio: 0.5 })).toBe('Recover');
     });
 
     it('end-driven Desperate (high endurance floor intact) maps to Recover', () => {
@@ -136,9 +127,7 @@ describe('deriveBoutIntent — pure mapping', () => {
 
     it('psych signal beats raw momentum', () => {
       expect(deriveBoutIntent({ ...base, psychState: 'Rattled', momentum: 2 })).toBe('Hold');
-      expect(deriveBoutIntent({ ...base, psychState: 'InTheZone', momentum: -2 })).toBe(
-        'Press'
-      );
+      expect(deriveBoutIntent({ ...base, psychState: 'InTheZone', momentum: -2 })).toBe('Press');
     });
   });
 
@@ -149,16 +138,12 @@ describe('deriveBoutIntent — pure mapping', () => {
 
     it('Aggressive/Showman press in mid/late neutral', () => {
       expect(deriveBoutIntent({ ...base, personality: 'Aggressive' })).toBe('Press');
-      expect(deriveBoutIntent({ ...base, personality: 'Showman', phase: 'LATE' })).toBe(
-        'Press'
-      );
+      expect(deriveBoutIntent({ ...base, personality: 'Showman', phase: 'LATE' })).toBe('Press');
     });
 
     it('Methodical/Pragmatic hold in mid/late neutral', () => {
       expect(deriveBoutIntent({ ...base, personality: 'Methodical' })).toBe('Hold');
-      expect(deriveBoutIntent({ ...base, personality: 'Pragmatic', phase: 'LATE' })).toBe(
-        'Hold'
-      );
+      expect(deriveBoutIntent({ ...base, personality: 'Pragmatic', phase: 'LATE' })).toBe('Hold');
     });
 
     it('Tactician/undefined keeps probing in neutral', () => {

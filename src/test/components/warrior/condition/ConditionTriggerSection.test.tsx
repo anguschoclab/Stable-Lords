@@ -16,12 +16,7 @@ function cond(trigger: PlanCondition['trigger']): PlanCondition {
 
 function renderSection(c: PlanCondition) {
   return render(
-    <ConditionTriggerSection
-      cond={c}
-      idx={0}
-      onTriggerChange={vi.fn()}
-      onValueChange={vi.fn()}
-    />
+    <ConditionTriggerSection cond={c} idx={0} onTriggerChange={vi.fn()} onValueChange={vi.fn()} />
   );
 }
 

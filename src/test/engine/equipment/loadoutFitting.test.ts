@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { FightingStyle, type Attributes } from '@/types/shared.types';
-import {
-  checkWeaponRequirements,
-  getStyleDefaultLoadout,
-  SHIELD_ITEM_IDS,
-} from '@/data/equipment';
+import { checkWeaponRequirements, getStyleDefaultLoadout, SHIELD_ITEM_IDS } from '@/data/equipment';
 import { getWeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import {
   fitWeapon,

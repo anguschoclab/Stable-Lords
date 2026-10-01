@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { protectCovers, rollHitLocation } from '@/engine/combat/mechanics/hitLocation';
 
-
-
 describe('hitLocation mechanics', () => {
   describe('protectCovers', () => {
     it('returns empty array for no protection or "Any" or none_*', () => {
@@ -247,7 +245,7 @@ describe('Hit Location', () => {
     });
 
     it('returns empty array for unknown protection string', () => {
-        expect(protectCovers('unknown_protect_string')).toEqual([]);
+      expect(protectCovers('unknown_protect_string')).toEqual([]);
     });
   });
 
@@ -267,7 +265,11 @@ describe('Hit Location', () => {
       // 0.5 > 0.3 -> misses target due to cover, falls through to exposed/random logic
       // Next rng call for exposed is < 0.3, so it picks exposed.
       // 'chest' and 'abdomen' are covered by 'leather', leaving 5 exposed parts.
-      const rngMiss = vi.fn().mockReturnValueOnce(0.5).mockReturnValueOnce(0.2).mockReturnValueOnce(0.0);
+      const rngMiss = vi
+        .fn()
+        .mockReturnValueOnce(0.5)
+        .mockReturnValueOnce(0.2)
+        .mockReturnValueOnce(0.0);
       // Exposed array: ['head', 'right arm', 'left arm', 'right leg', 'left leg']
       // Pick index 0 -> 'head'
       expect(rollHitLocation(rngMiss, 'chest', 'leather')).toBe('head');

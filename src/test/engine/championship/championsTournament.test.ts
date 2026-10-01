@@ -17,11 +17,7 @@ import { resolveCompleteTournament } from '@/engine/matchmaking/tournamentSelect
 import { CHAMPIONS_TOURNEY } from '@/constants/arena/arenaChampionship';
 import { EPITHET_TABLES } from '@/data/names/epithets';
 import { SEASONAL_TOURNAMENT_WEEKS, LEGACY_TOURNAMENT_WEEKS } from '@/constants/core/dates';
-import {
-  makeGameState,
-  makeWarrior,
-  makeRival,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeWarrior, makeRival } from '@/test/_fixtures/factories';
 import type { ArenaTitle, GameState, TournamentEntry, Warrior } from '@/types/state.types';
 import type { WarriorId, StableId, TournamentId } from '@/types/shared.types';
 
@@ -56,7 +52,12 @@ function crownedState(n: number, opts: { rivalChamps?: number } = {}): GameState
   const arenaChampions: Record<string, ArenaTitle> = {};
   [...playerIds, ...rivalIds].forEach((id, i) => {
     arenaChampions[arenas[i]!] = title({
-      champion: { warriorId: id as WarriorId, startedAbsoluteWeek: 1, defenses: 0, lastActivityWeek: 1 },
+      champion: {
+        warriorId: id as WarriorId,
+        startedAbsoluteWeek: 1,
+        defenses: 0,
+        lastActivityWeek: 1,
+      },
     });
   });
   return makeGameState({
@@ -70,7 +71,10 @@ function crownedState(n: number, opts: { rivalChamps?: number } = {}): GameState
 }
 
 /** A completed Champions-tier tournament crowned by `winnerId`. */
-function championsTournament(winnerId: string, opts: Partial<TournamentEntry> = {}): TournamentEntry {
+function championsTournament(
+  winnerId: string,
+  opts: Partial<TournamentEntry> = {}
+): TournamentEntry {
   return {
     id: 't-champions-winter-y1-w52' as TournamentId,
     season: 'Winter',
@@ -160,7 +164,10 @@ describe('recordGrandChampions', () => {
     const state = crownedState(5);
     state.tournaments = [
       championsTournament('w0', { tierId: 'Gold' }),
-      championsTournament('w1', { id: 't-champions-other-y1-w52' as TournamentId, completed: false }),
+      championsTournament('w1', {
+        id: 't-champions-other-y1-w52' as TournamentId,
+        completed: false,
+      }),
       championsTournament('w2', { id: 't-champions-winter-y1-w52' as TournamentId }),
     ];
     state.grandChampions = [
@@ -300,7 +307,7 @@ describe('ArenaChampionshipPass grand-champion wiring', () => {
 
 describe('calendar migration', () => {
   it('an unfinished legacy-cadence tournament still resolves at the week boundary', () => {
-    const state = makeGameState({ week: 13,});
+    const state = makeGameState({ week: 13 });
     const old: TournamentEntry = {
       id: 't-gold-spring-y1-w13' as TournamentId,
       season: 'Spring',

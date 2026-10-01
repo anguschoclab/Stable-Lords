@@ -1,4 +1,3 @@
-
 import { Info, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LinkifiedText } from '@/components/ui/LinkifiedText';
@@ -15,10 +14,6 @@ interface BriefingTabProps {
  */
 export function BriefingTab({ reports }: BriefingTabProps) {
   const { warriorNames, stableNames } = useEntityNames();
-
-  
-
-  
 
   return (
     <ScrollArea className="h-72 px-6">

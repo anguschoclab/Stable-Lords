@@ -144,9 +144,7 @@ export function handleGoblinRaid(
   withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
     const goldLost = 20 + Math.floor(rng.next() * 31);
     ctx.treasuryDelta -= goldLost;
-    ctx.ledgerEntries.push(
-      makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other')
-    );
+    ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other'));
 
     const newInjury = makeInjury(rng, {
       name: 'Goblin Scratch',

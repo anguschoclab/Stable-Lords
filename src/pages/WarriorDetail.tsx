@@ -77,9 +77,7 @@ function DetailTabBody({
         />
       )}
 
-      {activeTab === 'chronicle' && (
-        <ChronicleTab warrior={warrior} arenaHistory={arenaHistory} />
-      )}
+      {activeTab === 'chronicle' && <ChronicleTab warrior={warrior} arenaHistory={arenaHistory} />}
     </div>
   );
 }
@@ -195,15 +193,15 @@ function DetailMainColumn({
   onPlanChange: (p: import('@/types/game').FightPlan) => void;
   onEquipmentChange: (l: import('@/data/equipment').EquipmentLoadout) => void;
 } & Pick<
-    ReturnType<typeof useWarriorDetail>,
-    | 'id'
-    | 'isPlayerOwned'
-    | 'insightTokens'
-    | 'arenaCrowns'
-    | 'activeTab'
-    | 'setActiveTab'
-    | 'arenaHistory'
-  >) {
+  ReturnType<typeof useWarriorDetail>,
+  | 'id'
+  | 'isPlayerOwned'
+  | 'insightTokens'
+  | 'arenaCrowns'
+  | 'activeTab'
+  | 'setActiveTab'
+  | 'arenaHistory'
+>) {
   return (
     <div className="lg:col-span-8 space-y-8">
       <WarriorHeroHeader

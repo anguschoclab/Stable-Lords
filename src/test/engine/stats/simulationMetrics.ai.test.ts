@@ -72,7 +72,11 @@ describe('SimPulse AI metrics (I.1)', () => {
   });
 
   it('averages dossier coverage across rivals', () => {
-    const rivals = [rivalWith('EXPANSION', 4), rivalWith('EXPANSION', 2), rivalWith('EXPANSION', 0)];
+    const rivals = [
+      rivalWith('EXPANSION', 4),
+      rivalWith('EXPANSION', 2),
+      rivalWith('EXPANSION', 0),
+    ];
     expect(collectPulse(makeGameState({ rivals })).avgDossierCoverage).toBe(2);
   });
 
@@ -83,7 +87,9 @@ describe('SimPulse AI metrics (I.1)', () => {
       'o-3': offer(['e' as WarriorId, 'f' as WarriorId], { counterPurseBump: 50 }),
       'o-4': offer(['g' as WarriorId, 'h' as WarriorId]),
     };
-    expect(collectPulse(makeGameState({ boutOffers: boutOffers as never })).counterOfferRate).toBe(0.5);
+    expect(collectPulse(makeGameState({ boutOffers: boutOffers as never })).counterOfferRate).toBe(
+      0.5
+    );
     expect(collectPulse(makeGameState({})).counterOfferRate).toBe(0);
   });
 });

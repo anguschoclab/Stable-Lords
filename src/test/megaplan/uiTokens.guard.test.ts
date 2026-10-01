@@ -31,7 +31,10 @@ describe('megaplan: design-token guard', () => {
       const rows = findings[cls] ?? [];
       expect(
         rows.length,
-        `${cls} grew past baseline — ${rows.slice(0, 5).map((r: { file: string; line: number }) => `${r.file}:${r.line}`).join(', ')}`
+        `${cls} grew past baseline — ${rows
+          .slice(0, 5)
+          .map((r: { file: string; line: number }) => `${r.file}:${r.line}`)
+          .join(', ')}`
       ).toBeLessThanOrEqual(ceiling);
     });
   }

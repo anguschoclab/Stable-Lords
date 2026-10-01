@@ -16,7 +16,6 @@ const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
     ...overrides,
   });
 
-
 describe('makeExchangeState', () => {
   it('initialises with zero modifiers', () => {
     const es = makeExchangeState();

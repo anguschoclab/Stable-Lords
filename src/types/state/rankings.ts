@@ -1,8 +1,5 @@
 import type { BoutOfferId, PromoterId, StableId, WarriorId } from '../shared.types';
 
-
-
-
 /**
  * Defines the shape of ranking entry.
  */
@@ -12,21 +9,15 @@ export interface RankingEntry {
   compositeScore: number;
 }
 
-
-
 /**
  * Bout offer status type.
  */
 export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired';
 
-
-
 /**
  * Bout offer response type.
  */
 export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined' | 'Countered';
-
-
 
 /**
  * Defines the shape of bout offer.
@@ -60,8 +51,6 @@ export interface BoutOffer {
    *  the offer card so the player can read rival title decisions. */
   responseNotes?: Record<WarriorId, string>;
 }
-
-
 
 /**
  * Promoter personality type.

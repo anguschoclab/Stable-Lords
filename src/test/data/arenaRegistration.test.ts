@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getArenaById, getAllArenas, ARENA_LORE } from '@/data/arenas';
 
-
-
 describe('arena registration — new arenas from PR #791', () => {
   it('SUN_BAKED_PLATEAU is registered', () => {
     const arena = getArenaById('sun_baked_plateau');
@@ -26,15 +24,13 @@ describe('arena registration — new arenas from PR #791', () => {
 });
 
 describe('arena registration — V7 union (PR #988 arenas + PR #984/#991/#995 lore)', () => {
-  it.each([
-    'the_jagged_peak',
-    'the_murky_depths',
-    'the_smoldering_pits',
-    'the_crystal_spire',
-  ])('arena %s is registered', (id) => {
-    const arena = getArenaById(id);
-    expect(arena.id).toBe(id);
-  });
+  it.each(['the_jagged_peak', 'the_murky_depths', 'the_smoldering_pits', 'the_crystal_spire'])(
+    'arena %s is registered',
+    (id) => {
+      const arena = getArenaById(id);
+      expect(arena.id).toBe(id);
+    }
+  );
 
   it('getAllArenas includes all four new arenas', () => {
     const ids = new Set(getAllArenas().map((a) => a.id));

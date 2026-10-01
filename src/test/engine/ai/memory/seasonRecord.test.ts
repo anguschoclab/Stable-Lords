@@ -4,10 +4,7 @@
  * Also covers the week-1 boundary reset + BOUT event rollup.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  updateSeasonRecord,
-  recordBoutOutcome,
-} from '@/engine/ai/memory/seasonRecord';
+import { updateSeasonRecord, recordBoutOutcome } from '@/engine/ai/memory/seasonRecord';
 import { makeRival, makeWarrior, makeFightSummary } from '@/test/_fixtures/factories';
 import type { WarriorId } from '@/types/shared.types';
 
@@ -35,9 +32,7 @@ describe('updateSeasonRecord', () => {
   it('does not credit kills inflicted ON the rival', () => {
     const w1 = rosterWarrior('rw1');
     const rival = makeRival({ roster: [w1] });
-    const fights = [
-      makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'D', by: 'Kill' }),
-    ];
+    const fights = [makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'D', by: 'Kill' })];
     const out = updateSeasonRecord(rival, fights, 5);
     expect(out.agentMemory!.seasonRecord!.kills).toBe(0);
     expect(out.agentMemory!.seasonRecord!.losses).toBe(1);
@@ -47,7 +42,12 @@ describe('updateSeasonRecord', () => {
     const w1 = rosterWarrior('rw1');
     const rival = makeRival({ roster: [w1] });
     const fights = [
-      makeFightSummary({ warriorIdA: 'other1' as WarriorId, warriorIdD: 'other2' as WarriorId, winner: 'A', by: 'Kill' }),
+      makeFightSummary({
+        warriorIdA: 'other1' as WarriorId,
+        warriorIdD: 'other2' as WarriorId,
+        winner: 'A',
+        by: 'Kill',
+      }),
     ];
     const out = updateSeasonRecord(rival, fights, 5);
     const rec = out.agentMemory!.seasonRecord!;
@@ -67,9 +67,7 @@ describe('updateSeasonRecord', () => {
         seasonRecord: { wins: 7, losses: 3, kills: 2, rosterSizeAtSeasonStart: 4 },
       },
     });
-    const fights = [
-      makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'A', by: 'KO' }),
-    ];
+    const fights = [makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'A', by: 'KO' })];
     const out = updateSeasonRecord(rival, fights, 1);
     const mem = out.agentMemory!;
     expect(mem.lastSeasonRecord).toEqual({
@@ -100,9 +98,7 @@ describe('recordBoutOutcome', () => {
   it('appends a typed BOUT event summarizing the week', () => {
     const w1 = rosterWarrior('rw1');
     const rival = makeRival({ roster: [w1], actionHistory: [] });
-    const fights = [
-      makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'D', by: 'Kill' }),
-    ];
+    const fights = [makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'D', by: 'Kill' })];
     const out = recordBoutOutcome(rival, fights, 5);
     expect(out.actionHistory).toHaveLength(1);
     const ev = out.actionHistory![0]!;

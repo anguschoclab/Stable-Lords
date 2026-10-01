@@ -83,10 +83,7 @@ export function useArenaDetail(arenaId: string) {
   const champStable = reign ? owningStableOf(state, reign.warriorId) : null;
   const isExcluded = CHAMPIONSHIP_EXCLUDED_ARENAS.has(arenaId);
   const badge = statusBadge(title);
-  const effects = useMemo(
-    () => (arena ? describeArenaEffects(arenaId) : []),
-    [arena, arenaId]
-  );
+  const effects = useMemo(() => (arena ? describeArenaEffects(arenaId) : []), [arena, arenaId]);
 
   const { lb, styleLeaders, stableStandings } = useArenaBoards(arena, arenaId, store, state);
 

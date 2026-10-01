@@ -31,7 +31,9 @@ export function applyChampionPerks(state: GameState, delta: ChampionshipDelta): 
       const existing = delta.rosterUpdates.get(id) ?? {};
       delta.rosterUpdates.set(id, {
         ...existing,
-        fame: (existing.fame ?? findWarriorById(state, id)?.fame ?? 0) + ARENA_TITLE.CHAMPION_FAME_PER_WEEK,
+        fame:
+          (existing.fame ?? findWarriorById(state, id)?.fame ?? 0) +
+          ARENA_TITLE.CHAMPION_FAME_PER_WEEK,
         popularity:
           (existing.popularity ?? findWarriorById(state, id)?.popularity ?? 0) +
           ARENA_TITLE.CHAMPION_POPULARITY_PER_WEEK,

@@ -156,8 +156,7 @@ describe('AI_INTENT telemetry (Stage F)', () => {
       );
       const planA: FightPlan = { ...defaultPlanForWarrior(A), killDesire: 10 };
       collectIntentCodes(
-        simulateFight(planA, defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear')
-          .exchangeLog
+        simulateFight(planA, defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear').exchangeLog
       ).forEach((c) => union.add(c));
     }
     expect(union.has('AI_INTENT_FINISH')).toBe(true);

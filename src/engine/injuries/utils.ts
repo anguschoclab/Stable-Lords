@@ -13,7 +13,9 @@ export function countInjuries(w: { injuries?: readonly unknown[] | null }): numb
 }
 
 /** Count injuries by severity level. */
-export function getInjurySeverityCounts(w: { injuries?: readonly unknown[] | null }): Record<string, number> {
+export function getInjurySeverityCounts(w: {
+  injuries?: readonly unknown[] | null;
+}): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const inj of w.injuries ?? []) {
     const severity = (inj as InjuryData).severity ?? 'Unknown';

@@ -83,7 +83,9 @@ function printRun(result: AutosimResult, label: string) {
       `assignments=${(result.finalState.trainingAssignments ?? []).length}`
   );
   for (const o of offers.slice(0, 8)) {
-    console.log(`    offer ${o.id} wk${o.boutWeek} status=${o.status} purse=${o.purse} hype=${o.hype}`);
+    console.log(
+      `    offer ${o.id} wk${o.boutWeek} status=${o.status} purse=${o.purse} hype=${o.hype}`
+    );
   }
   for (const w of result.finalState.roster) {
     console.log(
@@ -160,7 +162,10 @@ issueChallenges(state);
 // LEG 1 — baseline heuristic: challenge offers (purse ~50, hype ~75) never
 // clear hype>100||purse>200, so a fresh stable earns nothing. This is the
 // contrast case proving the council adds real value.
-const leg1 = printRun(await runAutosim(state, { weeksToSim: 6 }), 'LEG 1 — baseline heuristic, 6 weeks');
+const leg1 = printRun(
+  await runAutosim(state, { weeksToSim: 6 }),
+  'LEG 1 — baseline heuristic, 6 weeks'
+);
 state = leg1.finalState;
 
 // ─── 5. Council report on the established stable (offers should exist) ──────

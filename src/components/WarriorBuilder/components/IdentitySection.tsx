@@ -25,7 +25,13 @@ interface IdentitySectionProps {
 /**
  *
  */
-export function IdentitySection({ name, setName, style, setStyle, personality }: IdentitySectionProps) {
+export function IdentitySection({
+  name,
+  setName,
+  style,
+  setStyle,
+  personality,
+}: IdentitySectionProps) {
   return (
     <Card>
       <CardHeader className="pb-3">

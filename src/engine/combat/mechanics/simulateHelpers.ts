@@ -70,6 +70,3 @@ export function getTrainerMods(
     fatiguePenaltyReduction: 0,
   };
 }
-
-
-

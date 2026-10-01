@@ -122,7 +122,9 @@ describe('validateArenaChampions', () => {
 
   it('flags malformed grandChampions entries', () => {
     const state = makeGameState({
-      grandChampions: [{ tournamentId: '', year: Number.NaN, warriorId: '' as WarriorId, warriorName: 'x' }],
+      grandChampions: [
+        { tournamentId: '', year: Number.NaN, warriorId: '' as WarriorId, warriorName: 'x' },
+      ],
     });
     const v = validateArenaChampions(state);
     expect(v.some((x) => x.message.includes('grandChampions'))).toBe(true);
@@ -130,7 +132,9 @@ describe('validateArenaChampions', () => {
 
   it('rival-owned champions count as found', () => {
     const state = makeGameState({
-      rivals: [makeRival({ id: 'r1' as StableId, roster: [makeWarrior({ id: 'w1' as WarriorId })] })],
+      rivals: [
+        makeRival({ id: 'r1' as StableId, roster: [makeWarrior({ id: 'w1' as WarriorId })] }),
+      ],
       arenaChampions: { arena_a: title({ champion: reign('w1') }) },
     });
     expect(validateArenaChampions(state)).toEqual([]);

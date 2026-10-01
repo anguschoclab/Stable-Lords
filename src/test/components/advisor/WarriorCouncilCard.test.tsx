@@ -58,13 +58,7 @@ const mockCard: WarriorAdvisorCard = {
 
 describe('WarriorCouncilCard', () => {
   it('renders warrior name, style, rank, and headline summary', () => {
-    render(
-      <WarriorCouncilCard
-        card={mockCard}
-        onApplyPlan={vi.fn()}
-        onSetFocus={vi.fn()}
-      />
-    );
+    render(<WarriorCouncilCard card={mockCard} onApplyPlan={vi.fn()} onSetFocus={vi.fn()} />);
 
     expect(screen.getByText('Aulus')).toBeDefined();
     expect(screen.getByText('AB')).toBeDefined();
@@ -73,13 +67,7 @@ describe('WarriorCouncilCard', () => {
   });
 
   it('renders combat, training, and tactics panels', () => {
-    render(
-      <WarriorCouncilCard
-        card={mockCard}
-        onApplyPlan={vi.fn()}
-        onSetFocus={vi.fn()}
-      />
-    );
+    render(<WarriorCouncilCard card={mockCard} onApplyPlan={vi.fn()} onSetFocus={vi.fn()} />);
 
     expect(screen.getAllByText(/Train Deftness/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Decisiveness/i).length).toBeGreaterThan(0);
@@ -88,13 +76,7 @@ describe('WarriorCouncilCard', () => {
 
   it('fires onApplyPlan when Apply Plan button is clicked', () => {
     const handleApply = vi.fn();
-    render(
-      <WarriorCouncilCard
-        card={mockCard}
-        onApplyPlan={handleApply}
-        onSetFocus={vi.fn()}
-      />
-    );
+    render(<WarriorCouncilCard card={mockCard} onApplyPlan={handleApply} onSetFocus={vi.fn()} />);
 
     const button = screen.getByRole('button', { name: /Apply Plan for Aulus/i });
     fireEvent.click(button);
@@ -114,9 +96,7 @@ describe('WarriorCouncilCard', () => {
     expect(screen.getByText(/Suggested:/i)).toBeInTheDocument();
     unmount();
 
-    render(
-      <WarriorCouncilCard card={mockCard} onApplyPlan={vi.fn()} onSetFocus={vi.fn()} />
-    );
+    render(<WarriorCouncilCard card={mockCard} onApplyPlan={vi.fn()} onSetFocus={vi.fn()} />);
     expect(screen.queryByText(/Suggested:/i)).not.toBeInTheDocument();
   });
 });

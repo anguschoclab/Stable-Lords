@@ -105,7 +105,8 @@ function DiscoverySummary({ chart }: { chart: FavoritesChart }) {
           <div className="mt-2 font-display font-black text-lg text-foreground">
             {count}
             <span className="text-[10px] text-muted-foreground/40 font-medium">
-              {' '}/ {chart.total}
+              {' '}
+              / {chart.total}
             </span>
           </div>
         </div>

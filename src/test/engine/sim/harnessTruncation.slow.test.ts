@@ -150,9 +150,8 @@ describe('runSimulation — historical array truncation', () => {
 
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const archiveService = {
-      archiveBoutLog: vi.fn(
-        (_year: number, _season: number, _boutId: string, _log: string[]) =>
-          Promise.reject(new Error('disk full'))
+      archiveBoutLog: vi.fn((_year: number, _season: number, _boutId: string, _log: string[]) =>
+        Promise.reject(new Error('disk full'))
       ),
     };
 
@@ -197,9 +196,7 @@ describe('runSimulation — historical array truncation', () => {
   it('uses an injected initialState and counts its history in cumulative totals', async () => {
     const seeded = populateInitialWorld(createFreshState('seeded-init'), 424242);
     seeded.arenaHistory = [makeBout('seed_bout_1'), makeBout('seed_bout_2')];
-    seeded.graveyard = [
-      { id: 'seed_dead_1', name: 'Seed Dead', status: 'Dead' } as any,
-    ];
+    seeded.graveyard = [{ id: 'seed_dead_1', name: 'Seed Dead', status: 'Dead' } as any];
 
     const { finalState, cumulative } = await runSimulation({
       weeks: 2,

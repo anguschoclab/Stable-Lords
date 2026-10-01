@@ -18,9 +18,17 @@ vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }
  */
 
 function stateHash(state: GameState): string {
-  const { warriorMap: _wm, warriorToStableMap: _ws, rivalMap: _rm, rivalryMap: _rv,
-    grudgeMap: _gm, warriorToOfferIds: _wo, cachedMetaDrift: _md,
-    lastWeekBoutDisplay: _bd, ...serializable } = state as unknown as Record<string, unknown>;
+  const {
+    warriorMap: _wm,
+    warriorToStableMap: _ws,
+    rivalMap: _rm,
+    rivalryMap: _rv,
+    grudgeMap: _gm,
+    warriorToOfferIds: _wo,
+    cachedMetaDrift: _md,
+    lastWeekBoutDisplay: _bd,
+    ...serializable
+  } = state as unknown as Record<string, unknown>;
   return createHash('sha256')
     .update(
       JSON.stringify(serializable, (_k, v) =>

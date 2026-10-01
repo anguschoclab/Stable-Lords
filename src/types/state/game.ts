@@ -1,11 +1,24 @@
 import type { FightOutcomeBy } from '../combat.types';
 import type { CrestData } from '../crest.types';
-import type { CrowdMoodType, FightId, GrudgeId, HallEntryId, InsightId, LedgerEntryId, NewsId, RivalryId, ScoutQuality, ScoutReportId, Season, StableId, TournamentId, Trainer, WarriorId } from '../shared.types';
+import type {
+  CrowdMoodType,
+  FightId,
+  GrudgeId,
+  HallEntryId,
+  InsightId,
+  LedgerEntryId,
+  NewsId,
+  RivalryId,
+  ScoutQuality,
+  ScoutReportId,
+  Season,
+  StableId,
+  TournamentId,
+  Trainer,
+  WarriorId,
+} from '../shared.types';
 import type { Attributes, BaseSkills, FightingStyle, Warrior } from '../warrior.types';
 import type { Owner } from './owner';
-
-
-
 
 /**
  * Defines the shape of tournament bout.
@@ -24,8 +37,6 @@ export interface TournamentBout {
   isBronzeMatch?: boolean;
 }
 
-
-
 /**
  * Defines the shape of tournament entry.
  */
@@ -40,8 +51,6 @@ export interface TournamentEntry {
   champion?: string;
   completed: boolean;
 }
-
-
 
 /**
  * Defines the shape of training assignment.
@@ -58,8 +67,6 @@ export interface TrainingAssignment {
   weeksRemaining?: number;
 }
 
-
-
 /**
  * Defines the shape of seasonal growth.
  */
@@ -68,8 +75,6 @@ export interface SeasonalGrowth {
   season: Season;
   gains: Partial<Record<keyof Attributes, number>>;
 }
-
-
 
 /**
  * Defines the shape of ledger entry.
@@ -81,8 +86,6 @@ export interface LedgerEntry {
   amount: number;
   category: 'fight' | 'training' | 'recruit' | 'trainer' | 'upkeep' | 'prize' | 'other';
 }
-
-
 
 /**
  * Ai intent type.
@@ -99,8 +102,6 @@ export type AIIntent =
   | 'TOURNAMENT_CAMPAIGN'
   | 'CROWN_CAMPAIGN';
 
-
-
 /**
  * Defines the shape of ai strategy.
  */
@@ -113,8 +114,6 @@ export interface AIStrategy {
   /** Human-readable explanation of why this intent was chosen (UI-facing). */
   reason?: string;
 }
-
-
 
 // TrainerData was here, now using Trainer from shared.types
 
@@ -133,8 +132,6 @@ export type AIEventCause =
   | 'CROWN_RELINQUISH'
   | 'CROWN_PREP';
 
-
-
 /**
  * Defines the shape of ai event.
  */
@@ -146,8 +143,6 @@ export interface AIEvent {
   riskTier: 'Low' | 'Medium' | 'High';
   cause?: AIEventCause;
 }
-
-
 
 /**
  * What a rival stable believes about another stable. `recordVs` and
@@ -175,8 +170,6 @@ export interface OpponentDossier {
   };
 }
 
-
-
 /**
  * A rival stable's chosen crown target: which warrior is climbing which
  * arena's title ladder, and why. Refreshed each tick by the crown worker;
@@ -188,8 +181,6 @@ export interface CrownAssessment {
   score: number;
   reason: string;
 }
-
-
 
 /**
  * Defines the shape of ai agent memory.
@@ -223,8 +214,6 @@ export interface AIAgentMemory {
   pendingRelinquish?: string;
 }
 
-
-
 /**
  * Defines the shape of rival stable data.
  */
@@ -253,12 +242,13 @@ export interface RivalStableData {
   /** Set by processAIRosterManagement when the roster is below its personality
    *  floor — the unified recruitment path (aiDraftFromPool) acts on it. */
   needsRecruit?: boolean;
+  /** Consecutive weeks spent below aiRosterMin without an affordable recruit —
+   *  reaching STABLE_STARVATION_WEEKS folds the stable. */
+  weeksBelowMin?: number;
   /** Season index of the last poach bid tabled by this stable — enforces the
    *  once-per-season poaching cadence (G.2). */
   lastPoachSeason?: number;
 }
-
-
 
 /**
  * Defines the shape of scout report data.
@@ -280,8 +270,6 @@ export interface ScoutReportData {
   notes: string;
 }
 
-
-
 /**
  * Defines the shape of rest state.
  */
@@ -289,8 +277,6 @@ export interface RestState {
   warriorId: WarriorId;
   restUntilWeek: number;
 }
-
-
 
 /**
  * Defines the shape of rivalry.
@@ -304,8 +290,6 @@ export interface Rivalry {
   startWeek: number;
 }
 
-
-
 /**
  * Defines the shape of match record.
  */
@@ -315,8 +299,6 @@ export interface MatchRecord {
   opponentWarriorId: WarriorId;
   opponentStableId: StableId;
 }
-
-
 
 /**
  * Defines the shape of owner grudge.
@@ -331,8 +313,6 @@ export interface OwnerGrudge {
   lastEscalation: number;
 }
 
-
-
 /**
  * Defines the shape of gazette story.
  */
@@ -345,14 +325,10 @@ export interface GazetteStory {
   week: number;
 }
 
-
-
 /**
  * Insight token type type.
  */
 export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait';
-
-
 
 /**
  * Defines the shape of insight token.
@@ -367,8 +343,6 @@ export interface InsightToken {
   origin?: string;
   discoveredWeek: number;
 }
-
-
 
 /**
  * Defines the shape of hall entry.

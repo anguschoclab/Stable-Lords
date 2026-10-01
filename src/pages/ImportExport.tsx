@@ -34,8 +34,11 @@ export default function ImportExport() {
   const doExport = (format: 'json' | 'yaml') => {
     const state = reconstructGameState(useGameStore.getState());
     const text = exportPack(state, format);
-    download(`stable-lords-w${week}-pack.${format === 'yaml' ? 'yaml' : 'json'}`, text,
-      format === 'yaml' ? 'application/x-yaml' : 'application/json');
+    download(
+      `stable-lords-w${week}-pack.${format === 'yaml' ? 'yaml' : 'json'}`,
+      text,
+      format === 'yaml' ? 'application/x-yaml' : 'application/json'
+    );
     toast.success(`Exported save pack (${format.toUpperCase()}).`);
   };
 
@@ -83,8 +86,8 @@ function ExportSection({ onExport }: { onExport: (format: 'json' | 'yaml') => vo
       <SectionDivider label="Export" variant="gold" />
       <Surface variant="glass" className="p-6 mt-4">
         <p className="text-xs text-muted-foreground mb-4">
-          Export the current save as a Stable Lords pack. Packs embed the full game
-          state and validate on import.
+          Export the current save as a Stable Lords pack. Packs embed the full game state and
+          validate on import.
         </p>
         <div className="flex gap-3">
           <button
@@ -122,9 +125,8 @@ function ImportSection({
       <SectionDivider label="Import" variant="gold" />
       <Surface variant="glass" className="p-6 mt-4">
         <p className="text-xs text-muted-foreground mb-4">
-          Import a Stable Lords pack (.json or .yaml). The embedded state is
-          validated against the save schema before loading. This replaces the
-          current session.
+          Import a Stable Lords pack (.json or .yaml). The embedded state is validated against the
+          save schema before loading. This replaces the current session.
         </p>
         <input
           ref={fileRef}

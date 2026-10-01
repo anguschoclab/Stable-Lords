@@ -35,9 +35,7 @@ const MAX_KNOWN_STYLES = 6;
  * index knownRivals by owner.id — keep that identifier stable.
  */
 export function refreshKnownRivals(rival: RivalStableData, state: GameState): StableId[] {
-  return (state.rivals ?? [])
-    .filter((r) => r.owner.id !== rival.owner.id)
-    .map((r) => r.owner.id);
+  return (state.rivals ?? []).filter((r) => r.owner.id !== rival.owner.id).map((r) => r.owner.id);
 }
 
 /**
@@ -103,9 +101,7 @@ export function decayDossiers(
 }
 
 /** Keep the top-K most threatening/recent dossiers. Deterministic ordering. */
-function pruneDossiers(
-  dossiers: Record<string, OpponentDossier>
-): Record<string, OpponentDossier> {
+function pruneDossiers(dossiers: Record<string, OpponentDossier>): Record<string, OpponentDossier> {
   const entries = Object.entries(dossiers);
   if (entries.length <= DOSSIER_CAP) return dossiers;
   entries.sort(
@@ -146,11 +142,7 @@ function foldFight(
   observeTells(fight.warriorIdD, stableD);
 
   // recordVs only moves when THIS stable fought.
-  const selfSide = selfIds.has(fight.warriorIdA)
-    ? 'A'
-    : selfIds.has(fight.warriorIdD)
-      ? 'D'
-      : null;
+  const selfSide = selfIds.has(fight.warriorIdA) ? 'A' : selfIds.has(fight.warriorIdD) ? 'D' : null;
   if (!selfSide || !fight.winner) return;
   const oppId = selfSide === 'A' ? stableD : stableA;
   if (!oppId || oppId === rival.id) return;
@@ -208,27 +200,20 @@ export function updateDossiers(
   // Witnessed tells: a stable that watched this fight reads the participants'
   // committed plans — persisted as a capped running mean. Masked stables leak
   // their decoy here, which is exactly the counter-intel trade-off.
-  const observeTells = (
-    wid: FightSummary['warriorIdA'],
-    stableId: string | undefined
-  ): void => {
+  const observeTells = (wid: FightSummary['warriorIdA'], stableId: string | undefined): void => {
     if (!stableId || stableId === rival.id) return;
     const fighter = findWarriorById(state, wid);
     if (!fighter) return;
     const oe = fighter.plan?.OE;
     const al = fighter.plan?.AL;
     if (oe == null || al == null) return;
-    if (
-      fighter.lastBoutWeek == null ||
-      week - fighter.lastBoutWeek > TELL_WINDOW_WEEKS
-    ) {
+    if (fighter.lastBoutWeek == null || week - fighter.lastBoutWeek > TELL_WINDOW_WEEKS) {
       return;
     }
     const d = dossiers[stableId] ?? (dossiers[stableId] = blankDossier(week));
     // Copy-on-write like decayDossiers: never mutate a prior observedTells
     // object in place — it may be shared with live GameState.rivals.
-    const prev =
-      d.observedTells ?? { oe: 0, al: 0, samples: 0, lastSeenWeek: week };
+    const prev = d.observedTells ?? { oe: 0, al: 0, samples: 0, lastSeenWeek: week };
     const n = Math.min(prev.samples + 1, TELL_SAMPLE_CAP);
     d.observedTells = {
       oe: prev.oe + (oe / 10 - prev.oe) / n,

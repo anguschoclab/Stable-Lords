@@ -1,9 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-  SEASONAL_WEATHER,
-  rollWeather,
-  getWeatherSeason,
-} from '@/engine/weather/seasonalWeather';
+import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { SeededRNGService } from '@/utils/random';

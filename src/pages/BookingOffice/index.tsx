@@ -81,7 +81,13 @@ export default function BookingOffice() {
             office={office}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            filter={{ showBookmarkedOnly, toggleBookmarked, filteredThisWeek, filteredUpcoming, bookmarkedCount }}
+            filter={{
+              showBookmarkedOnly,
+              toggleBookmarked,
+              filteredThisWeek,
+              filteredUpcoming,
+              bookmarkedCount,
+            }}
             advisorCardMap={advisorCardMap}
           />
         </div>

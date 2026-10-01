@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { isDead, isRetired, isActive, isFightReady, isBookable } from '@/engine/warrior/warriorStatus';
+import {
+  isDead,
+  isRetired,
+  isActive,
+  isFightReady,
+  isBookable,
+} from '@/engine/warrior/warriorStatus';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { WarriorId, InjuryId } from '@/types/shared.types';
 import type { RestState, TrainingAssignment } from '@/types/state.types';
@@ -94,17 +100,17 @@ describe('isFightReady', () => {
     fatigue?: number,
     injuries?: InjuryData[]
   ): Warrior =>
-  fixtureWarrior({
-    id: 'test-warrior' as WarriorId,
-    name: 'Test Warrior',
-    style: FightingStyle.StrikingAttack,
-    baseSkills: {} as any,
-    derivedStats: {} as any,
-    fame: 0,
-    injuries: injuries || [],
-    status,
-    fatigue,
-  });
+    fixtureWarrior({
+      id: 'test-warrior' as WarriorId,
+      name: 'Test Warrior',
+      style: FightingStyle.StrikingAttack,
+      baseSkills: {} as any,
+      derivedStats: {} as any,
+      fame: 0,
+      injuries: injuries || [],
+      status,
+      fatigue,
+    });
 
   describe('status checks', () => {
     it('returns false for dead warriors', () => {

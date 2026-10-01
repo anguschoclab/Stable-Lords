@@ -18,6 +18,8 @@ import { WARRIOR_AGING } from '@/constants/aging';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from '@/engine/ai/legacyFounder';
+import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
 // ~6% per-bout kill rate (lifespan ~0.7y in calendar terms even after lethality
@@ -190,6 +192,10 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   const toRetire: WarriorId[] = [];
   const retiredWarriors: Warrior[] = [];
+  // Founder-caliber retirees enqueue onto the persisted queue — the seasonal
+  // expansion pass mints their stables. WarriorPass excludes these ids from
+  // trainer conversion so one retiree is never claimed twice.
+  const founderEnqueued: Warrior[] = [];
 
   const allWarriors: { w: Warrior; isPlayer: boolean; rivalId?: string }[] = [];
   state.roster.forEach((w) => allWarriors.push({ w, isPlayer: true }));
@@ -224,6 +230,9 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
 
     if (result.retired && result.retiredObj) {
       retiredWarriors.push(result.retiredObj);
+      if (isLegacyFounderCaliber(result.retiredObj) && rng.next() < LEGACY_FOUND_CHANCE) {
+        founderEnqueued.push(buildLegacyFounderQueueEntry(result.retiredObj));
+      }
       if (isPlayer) {
         toRetire.push(w.id);
       }
@@ -251,6 +260,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
     rosterRemovals: toRetire,
     rivalsUpdates,
     retired: retiredWarriors,
+    legacyFounderEnqueue: founderEnqueued.length > 0 ? founderEnqueued : undefined,
     newsletterItems:
       ageEvents.length > 0
         ? [{ id: rng.uuid(), week: state.week, title: 'Aging Report', items: ageEvents }]

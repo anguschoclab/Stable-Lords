@@ -10,6 +10,8 @@ import { isActive, isRetired } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { filterActive } from '@/utils/roster';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { isLegacyFounderCaliber, buildLegacyFounderQueueEntry } from '@/engine/ai/legacyFounder';
+import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
@@ -35,7 +37,8 @@ function cullRivalRoster(
   rngSnapshot: IRNGService,
   gazetteItems: string[],
   retiredWarriors: Warrior[],
-  championIds: Set<string>
+  championIds: Set<string>,
+  founderQueue: Warrior[]
 ): number {
   const personality = r.owner.personality ?? 'Pragmatic';
   let culledThisTick = 0;
@@ -43,6 +46,9 @@ function cullRivalRoster(
   const retire = (w: Warrior) => {
     Object.assign(w, retireWithHonors(w, state.week));
     retiredWarriors.push({ ...w });
+    if (isLegacyFounderCaliber(w) && rngSnapshot.next() < LEGACY_FOUND_CHANCE) {
+      founderQueue.push(buildLegacyFounderQueueEntry(w));
+    }
     culledThisTick++;
   };
 
@@ -67,10 +73,7 @@ function cullRivalRoster(
   if (personality === 'Aggressive') {
     cullWhere(
       r,
-      (w) =>
-        w.career.kills === 0 &&
-        w.career.wins + w.career.losses >= 8 &&
-        (w.age ?? 18) >= 24,
+      (w) => w.career.kills === 0 && w.career.wins + w.career.losses >= 8 && (w.age ?? 18) >= 24,
       isOnWinStreak,
       retire,
       gazetteItems,
@@ -94,11 +97,20 @@ function cullRivalRoster(
     isOnWinStreak,
     retire,
     gazetteItems,
-    (c) => `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`,
+    (c) =>
+      `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`,
     championIds
   );
 
-  retireElderlyWarrior(r, state, rngSnapshot, gazetteItems, retiredWarriors, championIds);
+  retireElderlyWarrior(
+    r,
+    state,
+    rngSnapshot,
+    gazetteItems,
+    retiredWarriors,
+    championIds,
+    founderQueue
+  );
 
   return culledThisTick;
 }
@@ -110,7 +122,8 @@ function retireElderlyWarrior(
   rngSnapshot: IRNGService,
   gazetteItems: string[],
   retiredWarriors: Warrior[],
-  championIds: Set<string>
+  championIds: Set<string>,
+  founderQueue: Warrior[]
 ): void {
   const elderly = r.roster.filter(
     (w) => isActive(w) && !championIds.has(w.id) && (w.age ?? 18) >= 30
@@ -119,6 +132,9 @@ function retireElderlyWarrior(
     if (rngSnapshot.next() < 0.15) {
       Object.assign(old, retireWithHonors(old, state.week));
       retiredWarriors.push({ ...old });
+      if (isLegacyFounderCaliber(old) && rngSnapshot.next() < LEGACY_FOUND_CHANCE) {
+        founderQueue.push(buildLegacyFounderQueueEntry(old));
+      }
       gazetteItems.push(
         `🏠 ${warriorDisplayName(old)} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`
       );
@@ -156,10 +172,16 @@ function cullWhere(
 export function processAIRosterManagement(
   state: GameState,
   rng?: IRNGService
-): { updatedRivals: RivalStableData[]; gazetteItems: string[]; retiredWarriors: Warrior[] } {
+): {
+  updatedRivals: RivalStableData[];
+  gazetteItems: string[];
+  retiredWarriors: Warrior[];
+  legacyFounders: Warrior[];
+} {
   const rngSnapshot = resolveRng(rng, (state.absoluteWeek ?? state.week) * 7919 + 101);
   const gazetteItems: string[] = [];
   const retiredWarriors: Warrior[] = [];
+  const legacyFounders: Warrior[] = [];
 
   // Reigning champions are immune to culling — a stable does not cut its
   // titleholder. (Same deferral rule as agingSystem/seasonalRetirementService.)
@@ -200,7 +222,8 @@ export function processAIRosterManagement(
       rngSnapshot,
       gazetteItems,
       retiredWarriors,
-      championIds
+      championIds,
+      legacyFounders
     );
 
     // 2) Recruitment flag — signing is unified in aiDraftFromPool /
@@ -220,13 +243,24 @@ export function processAIRosterManagement(
     // this, retired warriors silently vanish instead of reaching
     // state.retired.
     const seen = new Set(retiredWarriors.map((w) => w.id));
+    const queued = new Set((state.legacyFounderQueue ?? []).map((w) => w.id));
     for (const w of r.roster) {
-      if (isRetired(w) && !seen.has(w.id)) retiredWarriors.push(w);
+      if (isRetired(w) && !seen.has(w.id)) {
+        retiredWarriors.push(w);
+        if (
+          !queued.has(w.id) &&
+          !legacyFounders.some((f) => f.id === w.id) &&
+          isLegacyFounderCaliber(w) &&
+          rngSnapshot.next() < LEGACY_FOUND_CHANCE
+        ) {
+          legacyFounders.push(buildLegacyFounderQueueEntry(w));
+        }
+      }
     }
 
     r.roster = filterActive(r.roster);
     return r;
   });
 
-  return { updatedRivals, gazetteItems, retiredWarriors };
+  return { updatedRivals, gazetteItems, retiredWarriors, legacyFounders };
 }

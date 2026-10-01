@@ -45,7 +45,8 @@ function SlotRow({
       role="button"
       tabIndex={0}
       aria-label={ariaLabel}
-      className={cn('flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
+      className={cn(
+        'flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
         isChosen
           ? 'bg-primary/10 text-primary font-bold shadow-inner'
           : otherChosen

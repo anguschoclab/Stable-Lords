@@ -8,7 +8,10 @@ import {
   REFRESH_COST,
   veteranSigningPatch,
 } from '@/engine/recruitment/recruitment';
-import { revealRecruitPotential, type PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
+import {
+  revealRecruitPotential,
+  type PotentialScoutReport,
+} from '@/engine/recruitment/recruitScouting';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { FightingStyle, Attributes, WarriorId, Warrior } from '@/types/game';
 import type { LedgerEntry } from '@/types/state.types';

@@ -59,9 +59,7 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
     // champion is checked first (silence = ducking).
     const declinerId =
       offer.status === 'Rejected'
-        ? offer.warriorIds.find(
-            (id) => offer.responses?.[id] === 'Declined' && !isVoidDecline(id)
-          )
+        ? offer.warriorIds.find((id) => offer.responses?.[id] === 'Declined' && !isVoidDecline(id))
         : title.champion &&
             offer.responses?.[title.champion.warriorId] !== 'Accepted' &&
             !isVoidDecline(title.champion.warriorId)
@@ -89,9 +87,13 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
       if (t.refusals >= ARENA_TITLE.REFUSALS_TO_STRIP) {
         const champName = champ ? warriorDisplayName(champ) : declinerId;
         endReign(state, t, 'stripped', now);
-        news(delta, state.week, `Champion Stripped`, [
-          `${champName} is stripped of the crown for refusing to defend.`,
-        ], `stripped-${arenaId}-${now}`);
+        news(
+          delta,
+          state.week,
+          `Champion Stripped`,
+          [`${champName} is stripped of the crown for refusing to defend.`],
+          `stripped-${arenaId}-${now}`
+        );
       }
     } else {
       t.declinedContenders[declinerId] = now + ARENA_TITLE.CHALLENGER_COOLDOWN_WEEKS;

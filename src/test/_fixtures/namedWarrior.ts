@@ -7,20 +7,14 @@ import { ATTRS_10, makePlan } from '@/test/_fixtures/factories';
  * Positional-arg warrior for page/hook tests that call
  * `makeTestWarrior('w1', 'Alpha')` — StrikingAttack, all-10 attributes.
  */
-export function makeTestWarrior(
-  id: string,
-  name: string,
-  overrides?: Partial<Warrior>
-): Warrior {
+export function makeTestWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
   return makeWarrior(id as any, name, FightingStyle.StrikingAttack, ATTRS_10, {
     ...overrides,
   });
 }
 
 /** The repeated planner default plan: StrikingAttack 5/5/5 + Decisiveness. */
-export function makeDefaultPlan(
-  style: FightingStyle = FightingStyle.StrikingAttack
-): FightPlan {
+export function makeDefaultPlan(style: FightingStyle = FightingStyle.StrikingAttack): FightPlan {
   return makePlan({
     style,
     OE: 5,

@@ -20,7 +20,7 @@ vi.mock('@/components/ui/tooltip', () => ({
       {children}
     </div>
   ),
-}))
+}));
 
 function makeRow(overrides: Partial<StableRow> = {}): StableRow {
   return {

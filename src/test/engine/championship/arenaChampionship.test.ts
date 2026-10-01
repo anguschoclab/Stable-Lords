@@ -43,15 +43,33 @@ function career(over: Partial<CareerRecord> = {}): CareerRecord {
   return makeCareerRecord(over);
 }
 
-function warriorAtArena(id: string, arenaId: string, rec: { wins: number; losses: number; kills?: number }) {
-  return makeVenueWarrior(id, { wins: rec.wins, losses: rec.losses, kills: rec.kills ?? 0, arenaId });
+function warriorAtArena(
+  id: string,
+  arenaId: string,
+  rec: { wins: number; losses: number; kills?: number }
+) {
+  return makeVenueWarrior(id, {
+    wins: rec.wins,
+    losses: rec.losses,
+    kills: rec.kills ?? 0,
+    arenaId,
+  });
 }
 
-function makeTitleAt(_arenaId: string, championId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
+function makeTitleAt(
+  _arenaId: string,
+  championId: string | null,
+  over: Partial<ArenaTitle> = {}
+): ArenaTitle {
   return makeArenaTitle(championId, over);
 }
 
-function titleOffer(champId: string, challengerId: string, arenaId: string, over: Partial<BoutOffer> = {}): BoutOffer {
+function titleOffer(
+  champId: string,
+  challengerId: string,
+  arenaId: string,
+  over: Partial<BoutOffer> = {}
+): BoutOffer {
   return makeBoutOffer({
     warriorIds: [champId as WarriorId, challengerId as WarriorId],
     promoterId: ARENA_COMMISSION_ID as BoutOffer['promoterId'],
@@ -63,7 +81,11 @@ function titleOffer(champId: string, challengerId: string, arenaId: string, over
 }
 
 /** Merge a delta's title overlay into a plain lookup for assertions. */
-function effTitle(state: GameState, delta: ChampionshipDelta, arenaId: string): ArenaTitle | undefined {
+function effTitle(
+  state: GameState,
+  delta: ChampionshipDelta,
+  arenaId: string
+): ArenaTitle | undefined {
   return delta.arenaChampions[arenaId] ?? state.arenaChampions?.[arenaId];
 }
 
@@ -629,9 +651,7 @@ describe('sweepTitleRefusals', () => {
     const title = effTitle(s2, d2, arenaId)!;
     expect(title.champion).toBeNull();
     expect(title.history[0]!.endReason).toBe('stripped');
-    expect(title.declinedContenders['w-champ']).toBe(
-      10 + ARENA_TITLE.EX_CHAMPION_COOLDOWN_WEEKS
-    );
+    expect(title.declinedContenders['w-champ']).toBe(10 + ARENA_TITLE.EX_CHAMPION_COOLDOWN_WEEKS);
   });
 
   it('a blocking-injury decline is a postponement, not a refusal', () => {
@@ -696,7 +716,9 @@ describe('sweepTitleRefusals', () => {
       absoluteWeek: 10,
       roster: [champ, cont],
       boutOffers: { [offer.id]: offer },
-      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: ARENA_TITLE.REFUSALS_TO_STRIP - 1 }) },
+      arenaChampions: {
+        [arenaId]: makeTitleAt(arenaId, 'w-champ', { refusals: ARENA_TITLE.REFUSALS_TO_STRIP - 1 }),
+      },
     });
     const delta = createChampionshipDelta();
     sweepTitleRefusals(state, delta);
@@ -942,9 +964,7 @@ describe('scheduleTitleBouts', () => {
     const delta = createChampionshipDelta();
     scheduleTitleBouts(state, delta, rng);
     expect(delta.newOffers).toHaveLength(1);
-    expect(delta.newOffers[0]!.warriorIds).toEqual(
-      expect.arrayContaining(['w-a', 'w-b'])
-    );
+    expect(delta.newOffers[0]!.warriorIds).toEqual(expect.arrayContaining(['w-a', 'w-b']));
   });
 
   it.each([10, 20, 30, 42, 52])('slides defenses during tournament week %i', (week) => {

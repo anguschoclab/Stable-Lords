@@ -91,7 +91,9 @@ export function fitWeapon(
   let best = incumbent ?? classic;
   let bestScore = incumbent ? weaponFitScore(incumbent, style, attrs, loadout) : -Infinity;
   // Classic first so an equal-scoring favorite wins over an arbitrary tie.
-  const ordered = [...candidates].sort((a, b) => Number(b.id === classic) - Number(a.id === classic));
+  const ordered = [...candidates].sort(
+    (a, b) => Number(b.id === classic) - Number(a.id === classic)
+  );
   for (const item of ordered) {
     const score = weaponFitScore(item.id, style, attrs, loadout);
     if (score > bestScore) {

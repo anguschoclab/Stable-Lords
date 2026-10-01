@@ -149,7 +149,8 @@ function BookmarkCell({ row }: { row: WarriorRow }) {
 export function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderboardRowProps) {
   return (
     <TableRow
-      className={cn('border-white/5 transition-colors group motion-reduce:transition-none',
+      className={cn(
+        'border-white/5 transition-colors group motion-reduce:transition-none',
         row.isPlayer ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-white/5'
       )}
     >

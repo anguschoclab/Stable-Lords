@@ -23,8 +23,7 @@ export const EXCEPTIONAL_TRAITS: Record<string, TraitDef> = {
   orphan_vengeance: {
     id: 'orphan_vengeance',
     name: 'Orphan Vengeance',
-    description:
-      'Driven by a dark past. +2 attack in the late stages and +1% kill window.',
+    description: 'Driven by a dark past. +2 attack in the late stages and +1% kill window.',
     effect: { attModLate: 2, killWindowBonus: 0.01 },
     tier: 'Exceptional',
     sign: 'positive',
@@ -209,7 +208,8 @@ export const EXCEPTIONAL_TRAITS: Record<string, TraitDef> = {
   gallows_born: {
     id: 'gallows_born',
     name: 'Gallows Born',
-    description: '+1% kill window bonus — born under a bad sign, they have an uncanny knack for finding the lethal strike.',
+    description:
+      '+1% kill window bonus — born under a bad sign, they have an uncanny knack for finding the lethal strike.',
     effect: { killWindowBonus: 0.01, fightPlanMod: { killDesire: 2 } },
     weight: 0.4,
     synergy: ['cunning'],
@@ -219,9 +219,11 @@ export const EXCEPTIONAL_TRAITS: Record<string, TraitDef> = {
   abyssal_survivor: {
     id: 'abyssal_survivor',
     name: 'Abyssal Survivor',
-    description: 'Survived a fall that should have killed them. Fights with desperate ferocity when cornered.',
+    description:
+      'Survived a fall that should have killed them. Fights with desperate ferocity when cornered.',
     effect: { attModLowHp: 2, defModLate: -1 },
     tier: 'Exceptional',
     sign: 'positive',
     weight: 0.3,
-  },};
+  },
+};

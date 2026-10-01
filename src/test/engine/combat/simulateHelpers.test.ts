@@ -43,5 +43,4 @@ describe('simulateHelpers mechanics', () => {
       expect(mods.riposteDamageMult).toBe(1.3);
     });
   });
-
 });

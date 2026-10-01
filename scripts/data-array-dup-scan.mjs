@@ -30,8 +30,7 @@ function* tsFiles(dir) {
 
 // Matches `export const NAME = [` … `]` and captures the body. Data files
 // only ever use simple top-level arrays for these pools.
-const ARRAY_RE =
-  /export\s+const\s+([A-Za-z0-9_]+)\s*(?::[^=\n]+)?=\s*\[([\s\S]*?)\n\]/g;
+const ARRAY_RE = /export\s+const\s+([A-Za-z0-9_]+)\s*(?::[^=\n]+)?=\s*\[([\s\S]*?)\n\]/g;
 const STRING_RE = /^\s*(['"`])((?:\\.|(?!\1)[^\\])*)\1\s*,?\s*$/;
 
 let anyDupes = false;

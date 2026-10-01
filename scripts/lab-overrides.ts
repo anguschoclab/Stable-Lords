@@ -33,7 +33,9 @@ export const STYLE_KEY: Record<string, FightingStyle> = {
   TP: FightingStyle.TotalParry,
   WS: FightingStyle.WallOfSteel,
 };
-export const STYLE_CODE = Object.fromEntries(Object.entries(STYLE_KEY).map(([k, v]) => [v, k])) as Record<FightingStyle, string>;
+export const STYLE_CODE = Object.fromEntries(
+  Object.entries(STYLE_KEY).map(([k, v]) => [v, k])
+) as Record<FightingStyle, string>;
 
 type Pas = Partial<Record<'att' | 'par' | 'def' | 'rip' | 'dmg' | 'ini' | 'crit', number>>;
 interface Lab {
@@ -52,8 +54,10 @@ interface Lab {
 export function applyLabOverrides(json = process.env.LAB): Lab | null {
   if (!json) return null;
   const lab = JSON.parse(json) as Lab;
-  for (const [k, row] of Object.entries(lab.pen ?? {})) STYLE_PENALTIES[STYLE_KEY[k]!].splice(0, 6, ...row);
-  for (const [k, row] of Object.entries(lab.floor ?? {})) STYLE_SKILL_FLOORS[STYLE_KEY[k]!].splice(0, 6, ...row);
+  for (const [k, row] of Object.entries(lab.pen ?? {}))
+    STYLE_PENALTIES[STYLE_KEY[k]!].splice(0, 6, ...row);
+  for (const [k, row] of Object.entries(lab.floor ?? {}))
+    STYLE_SKILL_FLOORS[STYLE_KEY[k]!].splice(0, 6, ...row);
   for (const [k, row] of Object.entries(lab.penD ?? {})) {
     const cur = STYLE_PENALTIES[STYLE_KEY[k]!];
     row.forEach((d, i) => (cur[i] = cur[i]! + d));
@@ -93,14 +97,37 @@ export function applyLabOverrides(json = process.env.LAB): Lab | null {
 }
 
 /** Apply LAB.plan deltas to a generated fight plan (lab-only what-if for AI effort levels). */
-export function tweakPlan<T extends { style: FightingStyle; OE: number; AL: number; killDesire?: number; phases?: Record<string, { OE: number; AL: number; killDesire?: number } | undefined> }>(plan: T): T {
+export function tweakPlan<
+  T extends {
+    style: FightingStyle;
+    OE: number;
+    AL: number;
+    killDesire?: number;
+    phases?: Record<string, { OE: number; AL: number; killDesire?: number } | undefined>;
+  },
+>(plan: T): T {
   const lab = process.env.LAB ? (JSON.parse(process.env.LAB) as Lab) : null;
   const d = lab?.plan?.[STYLE_CODE[plan.style]];
   if (!d) return plan;
   const c = (v: number) => Math.max(1, Math.min(10, v));
-  const next = { ...plan, OE: c(plan.OE + (d.OE ?? 0)), AL: c(plan.AL + (d.AL ?? 0)), killDesire: c((plan.killDesire ?? 5) + (d.KD ?? 0)) };
+  const next = {
+    ...plan,
+    OE: c(plan.OE + (d.OE ?? 0)),
+    AL: c(plan.AL + (d.AL ?? 0)),
+    killDesire: c((plan.killDesire ?? 5) + (d.KD ?? 0)),
+  };
   if (plan.phases) {
-    next.phases = Object.fromEntries(Object.entries(plan.phases).map(([k, ph]) => [k, ph && { ...ph, OE: c(ph.OE + (d.OE ?? 0)), AL: c(ph.AL + (d.AL ?? 0)), killDesire: c((ph.killDesire ?? 5) + (d.KD ?? 0)) }])) as T['phases'];
+    next.phases = Object.fromEntries(
+      Object.entries(plan.phases).map(([k, ph]) => [
+        k,
+        ph && {
+          ...ph,
+          OE: c(ph.OE + (d.OE ?? 0)),
+          AL: c(ph.AL + (d.AL ?? 0)),
+          killDesire: c((ph.killDesire ?? 5) + (d.KD ?? 0)),
+        },
+      ])
+    ) as T['phases'];
   }
   return next;
 }

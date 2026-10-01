@@ -38,7 +38,9 @@ describe('appShell per-route primary CTA (MEGAPLAN-L1)', () => {
     const { PRIMARY_CTA_BY_ROUTE } = mod! as {
       PRIMARY_CTA_BY_ROUTE: Record<string, { label: unknown }>;
     };
-    expect(PRIMARY_CTA_BY_ROUTE['/']).toMatchObject({ label: expect.stringMatching(/EXECUTE WEEK/i) });
+    expect(PRIMARY_CTA_BY_ROUTE['/']).toMatchObject({
+      label: expect.stringMatching(/EXECUTE WEEK/i),
+    });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/bouts']).toMatchObject({ label: /BEGIN CYCLE/ });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/arena']).toMatchObject({ label: /VIEW CARD/ });
     expect(PRIMARY_CTA_BY_ROUTE['/world/tournaments']).toMatchObject({ label: /ADVANCE BRACKET/ });
@@ -53,7 +55,16 @@ describe('appShell per-route primary CTA (MEGAPLAN-L1)', () => {
     const mod = await loadRegistry();
     expect(mod).not.toBeNull();
     const { resolvePrimaryCta } = mod! as { resolvePrimaryCta: (p: string) => unknown };
-    for (const p of ['/warrior/w1', '/world/stable/s1', '/stable/promoter/p1', '/world/arenas/a1', '/world/chronicle', '/world/graveyard', '/lore/hall-of-fights', '/help'])
+    for (const p of [
+      '/warrior/w1',
+      '/world/stable/s1',
+      '/stable/promoter/p1',
+      '/world/arenas/a1',
+      '/world/chronicle',
+      '/world/graveyard',
+      '/lore/hall-of-fights',
+      '/help',
+    ])
       expect(resolvePrimaryCta(p), `route ${p} should have no primary CTA`).toBeNull();
   });
 });

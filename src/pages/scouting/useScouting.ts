@@ -31,9 +31,7 @@ function purchaseScoutReport(
 
   // Ensure we don't have duplicate reports for the same warrior
   const newReports = [
-    ...(scoutReports ?? []).filter(
-      (r: ScoutReportData) => r.warriorName !== activeWarrior.name
-    ),
+    ...(scoutReports ?? []).filter((r: ScoutReportData) => r.warriorName !== activeWarrior.name),
     report as ScoutReportData,
   ];
 
@@ -58,18 +56,17 @@ function purchaseScoutReport(
  * purchase action for the Scouting page.
  */
 export function useScouting(showBookmarkedOnly: boolean) {
-  const { treasury, week, rivals, scoutReports, roster, setState, bookmarks } =
-    useGameStore(
-      useShallow((s) => ({
-        treasury: s.treasury,
-        week: s.week,
-        rivals: s.rivals,
-        scoutReports: s.scoutReports,
-        roster: s.roster,
-        setState: s.setState,
-        bookmarks: s.bookmarks,
-      }))
-    );
+  const { treasury, week, rivals, scoutReports, roster, setState, bookmarks } = useGameStore(
+    useShallow((s) => ({
+      treasury: s.treasury,
+      week: s.week,
+      rivals: s.rivals,
+      scoutReports: s.scoutReports,
+      roster: s.roster,
+      setState: s.setState,
+      bookmarks: s.bookmarks,
+    }))
+  );
   const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
 
@@ -81,8 +78,8 @@ export function useScouting(showBookmarkedOnly: boolean) {
     return allReports.filter((r) => ids?.has(r.id));
   }, [allReports, showBookmarkedOnly, bookmarkIds]);
 
-  const bookmarkedCount = allReports.filter(
-    (r) => bookmarkIds.get('scoutReport')?.has(r.id)
+  const bookmarkedCount = allReports.filter((r) =>
+    bookmarkIds.get('scoutReport')?.has(r.id)
   ).length;
 
   const rivalMap = useMemo(() => {

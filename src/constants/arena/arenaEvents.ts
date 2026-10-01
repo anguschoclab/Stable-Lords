@@ -184,7 +184,6 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     narrativeText: 'Ghostly screams echo off the walls, fraying the nerves of the fighters!',
   },
 
-
   // ─── Premium Events ────────────────────────────────────────────────────
   crowd_riot: {
     id: 'crowd_riot',
@@ -236,7 +235,8 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['uneven', 'outdoor'],
     triggerCondition: 'heavy_hit',
     triggerValue: ARENA_EVENT_CONSTANTS.SANDS_SHIFT_TRIGGER,
-    narrativeText: 'The impact causes the sandy ground to collapse momentarily, throwing fighters off balance!',
+    narrativeText:
+      'The impact causes the sandy ground to collapse momentarily, throwing fighters off balance!',
   },
 
   swamp_miasma: {
@@ -256,7 +256,8 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['elevated', 'uneven'],
     triggerCondition: 'heavy_hit',
     triggerValue: ARENA_EVENT_CONSTANTS.JAGGED_PEAK_AVALANCHE_TRIGGER,
-    narrativeText: 'The sheer force dislodges rocks from the peak, sending a minor avalanche onto the fighters!',
+    narrativeText:
+      'The sheer force dislodges rocks from the peak, sending a minor avalanche onto the fighters!',
   },
 
   murky_depths_tide: {
@@ -266,7 +267,8 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['water', 'magical'],
     triggerCondition: 'exchange_interval',
     triggerValue: ARENA_EVENT_CONSTANTS.MURKY_DEPTHS_TIDE_TRIGGER,
-    narrativeText: 'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
+    narrativeText:
+      'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
   },
 };
 

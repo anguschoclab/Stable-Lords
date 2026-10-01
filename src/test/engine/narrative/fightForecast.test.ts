@@ -4,15 +4,15 @@ import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 const mkWarrior = (over: Partial<any> = {}) =>
   fixtureWarrior({
-  id: 'w',
-  name: 'Test',
-  style: 'Lunging Attack',
-  attributes: { ST: 15, CN: 12, SZ: 10, WT: 11, WL: 10, SP: 13, DF: 9 },
-  baseSkills: { ATT: 12, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 },
-  equipment: {},
-  injuries: [],
-  ...over,
-} as any);
+    id: 'w',
+    name: 'Test',
+    style: 'Lunging Attack',
+    attributes: { ST: 15, CN: 12, SZ: 10, WT: 11, WL: 10, SP: 13, DF: 9 },
+    baseSkills: { ATT: 12, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 },
+    equipment: {},
+    injuries: [],
+    ...over,
+  } as any);
 
 describe('buildFightForecast', () => {
   it('reports the style matchup edge when the opponent is known', () => {

@@ -24,13 +24,7 @@ const EXPECTED_PREFERRED: Record<string, S[]> = {
     S.StrikingAttack,
     S.TotalParry,
   ],
-  hatchet: [
-    S.ParryRiposte,
-    S.ParryStrike,
-    S.SlashingAttack,
-    S.StrikingAttack,
-    S.TotalParry,
-  ],
+  hatchet: [S.ParryRiposte, S.ParryStrike, S.SlashingAttack, S.StrikingAttack, S.TotalParry],
   short_sword: [
     S.AimedBlow,
     S.LungingAttack,
@@ -59,13 +53,7 @@ const EXPECTED_PREFERRED: Record<string, S[]> = {
     S.ParryStrike,
     S.StrikingAttack,
   ],
-  broadsword: [
-    S.ParryStrike,
-    S.SlashingAttack,
-    S.StrikingAttack,
-    S.TotalParry,
-    S.WallOfSteel,
-  ],
+  broadsword: [S.ParryStrike, S.SlashingAttack, S.StrikingAttack, S.TotalParry, S.WallOfSteel],
   longsword: [
     S.AimedBlow,
     S.LungingAttack,
@@ -101,20 +89,8 @@ const EXPECTED_PREFERRED: Record<string, S[]> = {
     S.WallOfSteel,
   ],
   great_axe: [S.BashingAttack, S.SlashingAttack, S.StrikingAttack, S.WallOfSteel],
-  greatsword: [
-    S.BashingAttack,
-    S.ParryStrike,
-    S.StrikingAttack,
-    S.TotalParry,
-    S.WallOfSteel,
-  ],
-  battle_axe: [
-    S.ParryStrike,
-    S.SlashingAttack,
-    S.StrikingAttack,
-    S.TotalParry,
-    S.WallOfSteel,
-  ],
+  greatsword: [S.BashingAttack, S.ParryStrike, S.StrikingAttack, S.TotalParry, S.WallOfSteel],
+  battle_axe: [S.ParryStrike, S.SlashingAttack, S.StrikingAttack, S.TotalParry, S.WallOfSteel],
   halberd: [S.BashingAttack, S.StrikingAttack],
   maul: [S.BashingAttack, S.StrikingAttack],
 };
@@ -224,7 +200,10 @@ describe('weapons.ts style arrays (characterization — locks current behavior i
   it('every weapon with restrictedStyles has an expected snapshot entry', () => {
     for (const w of WEAPONS) {
       if (w.restrictedStyles) {
-        expect(EXPECTED_RESTRICTED[w.id], `${w.id}: missing from EXPECTED_RESTRICTED`).toBeDefined();
+        expect(
+          EXPECTED_RESTRICTED[w.id],
+          `${w.id}: missing from EXPECTED_RESTRICTED`
+        ).toBeDefined();
       }
     }
   });

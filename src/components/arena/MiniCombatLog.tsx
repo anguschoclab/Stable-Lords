@@ -57,11 +57,7 @@ export default function MiniCombatLog({
         onClose={onClose}
       />
       {isExpanded && (
-        <LogBody
-          visibleCount={visibleCount}
-          recentEvents={recentEvents}
-          logEndRef={logEndRef}
-        />
+        <LogBody visibleCount={visibleCount} recentEvents={recentEvents} logEndRef={logEndRef} />
       )}
     </div>
   );

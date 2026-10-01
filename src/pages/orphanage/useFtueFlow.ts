@@ -117,7 +117,15 @@ function useOrphanSelection() {
     return makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
   }, [selectedWarriors]);
 
-  return { selected, poolSeedValue, orphanPool, rerollPool, toggleWarrior, selectedWarriors, planWarrior };
+  return {
+    selected,
+    poolSeedValue,
+    orphanPool,
+    rerollPool,
+    toggleWarrior,
+    selectedWarriors,
+    planWarrior,
+  };
 }
 
 /** Build the post-FTUE game state, commit it, persist, and enter the Stable hub. */

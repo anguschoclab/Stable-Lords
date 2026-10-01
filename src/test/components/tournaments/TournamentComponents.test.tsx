@@ -45,7 +45,7 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: ({ styleName }: { styleName: string }) => <span>{styleName}</span>,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 

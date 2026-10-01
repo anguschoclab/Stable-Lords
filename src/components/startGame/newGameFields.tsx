@@ -94,13 +94,7 @@ export function NameField({
 }
 
 /** Heraldic crest preview tinted by its primary color, with a randomize control. */
-export function CrestPanel({
-  crest,
-  onRandomize,
-}: {
-  crest: CrestData;
-  onRandomize: () => void;
-}) {
+export function CrestPanel({ crest, onRandomize }: { crest: CrestData; onRandomize: () => void }) {
   return (
     <div className="space-y-3">
       <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 flex items-center gap-2">
@@ -136,9 +130,7 @@ export function CrestPanel({
         </div>
 
         <div className="text-center space-y-1">
-          <p className="text-[10px] text-muted-foreground italic">
-            {getCrestDescription(crest)}
-          </p>
+          <p className="text-[10px] text-muted-foreground italic">{getCrestDescription(crest)}</p>
           <p className="text-[9px] text-accent/60 uppercase tracking-widest">
             {getChargeDescription(crest.charge)}
           </p>

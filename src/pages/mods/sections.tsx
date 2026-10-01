@@ -70,8 +70,7 @@ export function HouseRulesSection({
           </span>
         </div>
         <p className="text-xs text-muted-foreground mb-2">
-          Fatal blows become Critical injuries. No warrior dies; no graveyard
-          entries are created.
+          Fatal blows become Critical injuries. No warrior dies; no graveyard entries are created.
         </p>
         <button
           type="button"
@@ -109,9 +108,8 @@ export function ContentPacksSection({
   return (
     <Surface variant="glass" className="p-6 mt-4">
       <p className="text-xs text-muted-foreground mb-4">
-        Content packs overlay narrative data — arena lore and doctrine
-        quotes — onto the canonical archives. Packs are saved with your
-        game and validated on install.
+        Content packs overlay narrative data — arena lore and doctrine quotes — onto the canonical
+        archives. Packs are saved with your game and validated on install.
       </p>
       <input
         ref={fileRef}
@@ -124,7 +122,10 @@ export function ContentPacksSection({
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
-        className={cn(MODS_BTN, 'border-white/10 text-foreground/80 hover:bg-white/5 flex items-center gap-2')}
+        className={cn(
+          MODS_BTN,
+          'border-white/10 text-foreground/80 hover:bg-white/5 flex items-center gap-2'
+        )}
       >
         <Upload className="h-3.5 w-3.5" />
         Install Pack (JSON)
@@ -140,11 +141,10 @@ export function ContentPacksSection({
               <div className="flex items-center gap-2 min-w-0">
                 <ScrollText className="h-3.5 w-3.5 text-arena-gold shrink-0" />
                 <div className="min-w-0">
-                  <div className="text-xs font-bold text-foreground/90 truncate">
-                    {p.name}
-                  </div>
+                  <div className="text-xs font-bold text-foreground/90 truncate">{p.name}</div>
                   <div className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">
-                    {p.arenaLore?.length ?? 0} lore · {Object.keys(p.recruitQuotes ?? {}).length} quotes
+                    {p.arenaLore?.length ?? 0} lore · {Object.keys(p.recruitQuotes ?? {}).length}{' '}
+                    quotes
                   </div>
                 </div>
               </div>

@@ -1,4 +1,9 @@
-import type { ConditionTriggerType, OffensiveTactic, DefensiveTactic, PsychState } from '@/types/game';
+import type {
+  ConditionTriggerType,
+  OffensiveTactic,
+  DefensiveTactic,
+  PsychState,
+} from '@/types/game';
 
 export const TRIGGER_OPTIONS: {
   label: string;

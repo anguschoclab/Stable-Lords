@@ -14,10 +14,7 @@ interface Props {
  * @param - { warrior }.
  */
 export default function WarriorDossierStats({ warrior }: Props) {
-  const encumbranceClass = computeEncumbranceClass(
-    warrior.attributes.ST,
-    warrior.attributes.CN
-  );
+  const encumbranceClass = computeEncumbranceClass(warrior.attributes.ST, warrior.attributes.CN);
   return (
     <div className="space-y-8">
       <SectionDivider label="Physique" />

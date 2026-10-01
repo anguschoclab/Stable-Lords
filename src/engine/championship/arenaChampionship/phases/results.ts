@@ -2,7 +2,15 @@ import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import type { ChampionshipDelta } from '../core';
-import { ensureTitle, endReign, crown, news, cancelAllOpenOffersInvolving, awardEpithet, CHAMPIONSHIP_DEBUG } from '../core';
+import {
+  ensureTitle,
+  endReign,
+  crown,
+  news,
+  cancelAllOpenOffersInvolving,
+  awardEpithet,
+  CHAMPIONSHIP_DEBUG,
+} from '../core';
 
 // ─── 3. Result resolution ───────────────────────────────────────────────────
 
@@ -23,16 +31,22 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
       if (title.champion) title.champion.lastActivityWeek = now;
       continue;
     }
-    const winnerId = (summary.winner === 'A' ? summary.warriorIdA : summary.warriorIdD) as WarriorId;
+    const winnerId = (
+      summary.winner === 'A' ? summary.warriorIdA : summary.warriorIdD
+    ) as WarriorId;
     const loserId = (summary.winner === 'A' ? summary.warriorIdD : summary.warriorIdA) as WarriorId;
 
     if (champId == null) {
       // Vacant title bout — decisive winner takes the crown.
       crown(title, winnerId, now);
       awardEpithet(state, delta, winnerId, 'arena_champion');
-      news(delta, state.week, `New Champion Crowned`, [
-        `${findWarriorById(state, winnerId)?.name ?? winnerId} claims the vacant crown.`,
-      ], `crown-${arenaId}-${now}`);
+      news(
+        delta,
+        state.week,
+        `New Champion Crowned`,
+        [`${findWarriorById(state, winnerId)?.name ?? winnerId} claims the vacant crown.`],
+        `crown-${arenaId}-${now}`
+      );
       continue;
     }
 
@@ -73,8 +87,12 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
     awardEpithet(state, delta, winnerId, 'arena_champion');
     // Coronation cancels the new champion's unresolved ordinary offers.
     cancelAllOpenOffersInvolving(state, delta, winnerId);
-    news(delta, state.week, `Title Changes Hands`, [
-      `${findWarriorById(state, winnerId)?.name ?? winnerId} takes the crown.`,
-    ], `upset-${arenaId}-${now}`);
+    news(
+      delta,
+      state.week,
+      `Title Changes Hands`,
+      [`${findWarriorById(state, winnerId)?.name ?? winnerId} takes the crown.`],
+      `upset-${arenaId}-${now}`
+    );
   }
 }

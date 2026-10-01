@@ -166,7 +166,7 @@ describe('AudioManager', () => {
     const quotaError = Object.assign(new Error('QuotaExceededError'), {
       name: 'QuotaExceededError',
     });
-vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+    vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
       throw quotaError;
     });
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -183,7 +183,7 @@ vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
 
   it('setMuted logs a generic error for non-quota localStorage failures', async () => {
     const boom = new Error('boom');
-vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+    vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
       throw boom;
     });
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -208,10 +208,7 @@ vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
     await expect(manager.setMuted(true)).resolves.toBeUndefined();
 
     expect(manager.isMuted()).toBe(true);
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to save mute state to electron-store',
-      boom
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to save mute state to electron-store', boom);
   });
 
   it('setMuted called before init completes is not clobbered by loadMuteState', async () => {

@@ -7,11 +7,7 @@ import { titleOf, ensureTitle, endReign, news } from '../core';
 // ─── Relinquish (player/AI action) ──────────────────────────────────────────
 
 /** Voluntarily end a reign — same cooldown consequences as being stripped. */
-export function relinquishCrown(
-  state: GameState,
-  delta: ChampionshipDelta,
-  arenaId: string
-): void {
+export function relinquishCrown(state: GameState, delta: ChampionshipDelta, arenaId: string): void {
   const title = titleOf(state, delta, arenaId);
   if (!title?.champion) return;
   const t = ensureTitle(state, delta, arenaId);
@@ -20,7 +16,13 @@ export function relinquishCrown(
   const name = findWarriorById(state, champId);
   const nameLabel = name ? warriorDisplayName(name) : champId;
   endReign(state, t, 'relinquished', state.absoluteWeek);
-  news(delta, state.week, `Crown Relinquished`, [`${nameLabel} gives up the crown.`], `relinq-${arenaId}-${state.absoluteWeek}`);
+  news(
+    delta,
+    state.week,
+    `Crown Relinquished`,
+    [`${nameLabel} gives up the crown.`],
+    `relinq-${arenaId}-${state.absoluteWeek}`
+  );
 }
 
 /**

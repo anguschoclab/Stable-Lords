@@ -15,7 +15,12 @@ interface TournamentBoutRowProps {
 /**
  *
  */
-export function TournamentBoutRow({ bout, state, round: _round, totalRounds }: TournamentBoutRowProps) {
+export function TournamentBoutRow({
+  bout,
+  state,
+  round: _round,
+  totalRounds,
+}: TournamentBoutRowProps) {
   const isBye = isByeMatch(bout);
   const isResolved = bout.winner !== undefined;
   const bronze = isBronzeMatch(bout, totalRounds);
@@ -91,13 +96,14 @@ function ParticipantLine({
 }) {
   return (
     <div
-      className={cn('flex items-center gap-2', won && 'text-primary font-bold', dimmed && 'opacity-40')}
+      className={cn(
+        'flex items-center gap-2',
+        won && 'text-primary font-bold',
+        dimmed && 'opacity-40'
+      )}
     >
       <div
-        className={cn(
-          'w-1.5 h-1.5 rounded-full',
-          won ? 'bg-primary' : 'bg-muted-foreground/30'
-        )}
+        className={cn('w-1.5 h-1.5 rounded-full', won ? 'bg-primary' : 'bg-muted-foreground/30')}
       />
       <span className="text-sm truncate max-w-32">
         {resolveWarriorName(state, warriorId, 'Unknown')}

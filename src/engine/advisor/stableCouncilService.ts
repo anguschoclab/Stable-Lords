@@ -7,14 +7,19 @@ import type {
 } from './types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { TRAINING_COST } from '@/constants/economy';
-import {
-  deriveAbsoluteWeek,
-  weeksUntilNextSeasonalTournament,
-} from '@/engine/core/absoluteWeek';
+import { deriveAbsoluteWeek, weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 import { buildWarriorCard, type CardBuildContext } from './stableCouncil/cards';
-import { computeCardKpis, buildStableDirectives, collectUnresolvedDirectives } from './stableCouncil/directives';
-import { listFutureCommitments, listRecoveryEtas, listTitleDefenses } from './stableCouncil/lookahead';
+import {
+  computeCardKpis,
+  buildStableDirectives,
+  collectUnresolvedDirectives,
+} from './stableCouncil/directives';
+import {
+  listFutureCommitments,
+  listRecoveryEtas,
+  listTitleDefenses,
+} from './stableCouncil/lookahead';
 
 /** Unassigned-training count, pending-offer count, and solvency warning. */
 function computeSummarySignals(
@@ -22,9 +27,7 @@ function computeSummarySignals(
   activeWarriors: GameState['roster'],
   playerWarriorIds: Set<string>
 ) {
-  const assignedWarriorIds = new Set(
-    (state.trainingAssignments || []).map((a) => a.warriorId)
-  );
+  const assignedWarriorIds = new Set((state.trainingAssignments || []).map((a) => a.warriorId));
   const unassignedTrainingCount = activeWarriors.filter(
     (w) => !assignedWarriorIds.has(w.id)
   ).length;
@@ -69,9 +72,7 @@ function buildLookahead(
     // isTournamentWeek is authoritative (matches evaluateTournamentAdvice) —
     // brackets run day-by-day. The countdown tracks seasonals only: the
     // Grand Championship isn't a bracket most warriors can enter.
-    weeksUntilTournament: state.isTournamentWeek
-      ? 0
-      : weeksUntilNextSeasonalTournament(state.week),
+    weeksUntilTournament: state.isTournamentWeek ? 0 : weeksUntilNextSeasonalTournament(state.week),
     projectedContenders: cards
       .filter((c) => c.tournamentAdvice.qualifiedTier !== null)
       .map((c) => ({

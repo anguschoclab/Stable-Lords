@@ -83,8 +83,7 @@ describe('truncateState — per-warrior historical caps', () => {
 
   it('caps warriors inside graveyard, retired and rival rosters', () => {
     const state = createFreshState('caps-warrior-containers');
-    const fat = () =>
-      makeWarrior({ titles: Array.from({ length: 60 }, (_, i) => `t${i}`) });
+    const fat = () => makeWarrior({ titles: Array.from({ length: 60 }, (_, i) => `t${i}`) });
     state.graveyard = [fat()];
     state.retired = [fat()];
     state.rivals = [{ id: 'r1', roster: [fat()], ledger: [] } as any];

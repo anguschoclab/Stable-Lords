@@ -144,9 +144,7 @@ export function recordGrandChampions(state: GameState, delta: ChampionshipDelta)
         champion: true,
       });
     } else {
-      const rival = (state.rivals ?? []).find((r) =>
-        (r.roster ?? []).some((x) => x.id === w.id)
-      );
+      const rival = (state.rivals ?? []).find((r) => (r.roster ?? []).some((x) => x.id === w.id));
       if (rival) {
         const pending = delta.rivalsUpdates.get(rival.id);
         const baseRoster = pending?.roster ?? rival.roster;

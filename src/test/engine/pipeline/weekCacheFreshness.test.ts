@@ -65,9 +65,7 @@ describe('week cache freshness after impact resolution', () => {
     const newRoster = [{ ...state.rivals[0]!.roster[0]!, fame: 77 } as Warrior];
     const resolved = resolveImpacts(state, [
       {
-        rivalsUpdates: new Map([
-          ['rival-1' as StableId, { roster: newRoster, fame: 5 }],
-        ]),
+        rivalsUpdates: new Map([['rival-1' as StableId, { roster: newRoster, fame: 5 }]]),
       },
     ]);
     buildWeekCaches(resolved);

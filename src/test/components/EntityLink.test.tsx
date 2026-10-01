@@ -44,7 +44,7 @@ vi.mock('@/components/ui/sheet', () => ({
   SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,

@@ -1,6 +1,5 @@
 import type { PersonaDescriptor } from './personas';
 
-
 /**
  * Defines the shape of hit locations.
  */
@@ -14,7 +13,6 @@ export interface HitLocations {
   'left leg': string[];
 }
 
-
 /**
  * Defines the shape of damage severity.
  */
@@ -25,7 +23,6 @@ export interface DamageSeverity {
   glancing: string[];
 }
 
-
 /**
  * Defines the shape of status changes.
  */
@@ -35,7 +32,6 @@ export interface StatusChanges {
   serious: string[];
   panic: string[];
 }
-
 
 /**
  * Defines the shape of defenses.
@@ -50,7 +46,6 @@ export interface DodgeTiers {
   theatrical?: string[];
   grim?: string[];
 }
-
 
 /**
  * Defense narrative strings for counterstrike, dodge, parry, and shield actions.
@@ -69,7 +64,6 @@ export interface Defenses {
   parry_break: string[];
 }
 
-
 /**
  * Defines the shape of pacing.
  */
@@ -78,7 +72,6 @@ export interface Tempo {
   equal: string[];
   movement: string[];
 }
-
 
 /**
  * Pacing narrative strings for stalemate, trading blows, and pressing phases.
@@ -89,7 +82,6 @@ export interface Pacing {
   pressing: string[];
   tempo: Tempo;
 }
-
 
 /**
  * Defines the shape of reactions.
@@ -103,7 +95,6 @@ export interface Reactions {
   boo: string[];
 }
 
-
 /**
  * Defines the shape of taunts.
  */
@@ -113,7 +104,6 @@ export interface Taunts {
   rivalry_winner: string[];
   rivalry_loser: string[];
 }
-
 
 /**
  * Defines the shape of insights.
@@ -127,7 +117,6 @@ export interface Insights {
   CT: string[];
 }
 
-
 /**
  * Defines the shape of pbp narratives.
  */
@@ -138,7 +127,6 @@ export interface Attacks {
   fist: string[];
 }
 
-
 /**
  * Knockdown narrative strings for fall and recovery.
  */
@@ -146,7 +134,6 @@ export interface Knockdown {
   fall: string[];
   recovery: string[];
 }
-
 
 /**
  * Epithet narrative strings by origin, race, and style.
@@ -157,14 +144,12 @@ export interface Epithets {
   style: string[];
 }
 
-
 /**
  * Style matchup narrative strings keyed by style pair.
  */
 export interface StyleMatchups {
   [key: string]: string[];
 }
-
 
 /**
  * Contextual narrative strings for rivalry and fame-based commentary.
@@ -175,7 +160,6 @@ export interface Context {
   fame_unknown: string[];
   style_matchups: StyleMatchups;
 }
-
 
 /**
  * Play-by-play narrative strings for openers, attacks, and fight events.

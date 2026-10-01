@@ -1,7 +1,5 @@
 import type { FightPlan } from './fightPlan';
 
-
-
 /**
  * Condition trigger type type.
  */
@@ -17,8 +15,6 @@ export type ConditionTriggerType =
   | 'OPPONENT_MOMENTUM_LEAD'
   | 'PSYCH_IS';
 
-
-
 /**
  * Defines the shape of plan condition.
  */
@@ -30,8 +26,6 @@ export interface PlanCondition {
   >;
   label?: string;
 }
-
-
 
 /**
  * Psych state type.

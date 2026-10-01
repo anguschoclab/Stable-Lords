@@ -197,7 +197,9 @@ describe('legacy (dynastic) recruit naming', () => {
     expect(recruit.lineage?.parentId).toBe(parent.id);
     expect(recruit.name).not.toBe('KRAGOS');
     expect(
-      /KRAG/i.test(recruit.name) || /( II| III| IV| V)$/.test(recruit.name) || /SON|Younger|Heir/i.test(recruit.name),
+      /KRAG/i.test(recruit.name) ||
+        /( II| III| IV| V)$/.test(recruit.name) ||
+        /SON|Younger|Heir/i.test(recruit.name),
       `name ${recruit.name} doesn't reference parent KRAGOS`
     ).toBe(true);
   });

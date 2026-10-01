@@ -169,10 +169,7 @@ export const CULTURE_SEEDS: Record<NamingCulture, readonly string[]> = {
   ],
   // The full legacy corpus + the recruitment narrative pool — the
   // unflavored baseline every other culture diverges from.
-  common: [
-    ...COMMON_CORPUS,
-    ...(narrativeContent as NarrativeContent).recruitment.names,
-  ],
+  common: [...COMMON_CORPUS, ...(narrativeContent as NarrativeContent).recruitment.names],
   lowborn: [
     // Pit rats, gutter fighters, purchased labor
     'DOB',
@@ -285,19 +282,33 @@ export interface SyllableTable {
 export const SYLLABLE_TABLES: Record<NamingCulture, SyllableTable> = {
   norse: {
     onsets: [
-      'B', 'BR', 'BJ', 'D', 'DR', 'F', 'G', 'GR', 'H', 'K', 'KR', 'M', 'R', 'S', 'SK', 'ST',
-      'TH', 'V', 'W', 'Y',
+      'B',
+      'BR',
+      'BJ',
+      'D',
+      'DR',
+      'F',
+      'G',
+      'GR',
+      'H',
+      'K',
+      'KR',
+      'M',
+      'R',
+      'S',
+      'SK',
+      'ST',
+      'TH',
+      'V',
+      'W',
+      'Y',
     ],
     nuclei: ['A', 'E', 'I', 'O', 'U', 'Y', 'AL', 'AR', 'OR', 'UR'],
-    codas: [
-      'R', 'N', 'K', 'G', 'RN', 'RK', 'LD', 'TH', 'NN', 'TT', 'SON', 'GAR', 'ULF', 'RIK',
-    ],
+    codas: ['R', 'N', 'K', 'G', 'RN', 'RK', 'LD', 'TH', 'NN', 'TT', 'SON', 'GAR', 'ULF', 'RIK'],
     affixes: ['SON', 'GAR', 'ULF', 'RIK', 'HEIM', 'BJORN', 'STEIN', 'VALD', 'BORN', 'HALL'],
   },
   latin: {
-    onsets: [
-      'C', 'L', 'M', 'N', 'P', 'QU', 'S', 'T', 'V', 'AU', 'FL', 'PR', 'COR', 'MAX', 'SEN',
-    ],
+    onsets: ['C', 'L', 'M', 'N', 'P', 'QU', 'S', 'T', 'V', 'AU', 'FL', 'PR', 'COR', 'MAX', 'SEN'],
     nuclei: ['A', 'E', 'I', 'O', 'U', 'AE', 'IA', 'IO'],
     codas: ['S', 'X', 'L', 'R', 'N', 'M', 'US', 'IS', 'AX', 'IX', 'NUS', 'RIUS', 'CIL'],
     affixes: ['IUS', 'US', 'OR', 'IX', 'AX', 'ANUS', 'ICUS', 'ULUS', 'ORIUS'],
@@ -316,8 +327,27 @@ export const SYLLABLE_TABLES: Record<NamingCulture, SyllableTable> = {
   },
   common: {
     onsets: [
-      'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'W',
-      'BR', 'CR', 'ST', 'TR',
+      'B',
+      'C',
+      'D',
+      'F',
+      'G',
+      'H',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'P',
+      'R',
+      'S',
+      'T',
+      'V',
+      'W',
+      'BR',
+      'CR',
+      'ST',
+      'TR',
     ],
     nuclei: ['A', 'E', 'I', 'O', 'U', 'EA', 'OA'],
     codas: ['R', 'N', 'K', 'D', 'L', 'S', 'T', 'RD', 'RT', 'CK', 'SH'],

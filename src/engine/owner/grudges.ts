@@ -17,10 +17,7 @@ interface FightAggregation {
  * re-scanning all recentFights for every rival pair (O(R²·F)) and again for
  * every rival×player pair (O(R·F)).
  */
-function aggregateRecentFights(
-  state: GameState,
-  rivals: GameState['rivals']
-): FightAggregation {
+function aggregateRecentFights(state: GameState, rivals: GameState['rivals']): FightAggregation {
   const recentFights = getRecentFights(state.arenaHistory, state.week - 13);
 
   const warriorToRival = new Map<WarriorId, number>();

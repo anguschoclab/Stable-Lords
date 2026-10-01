@@ -110,8 +110,21 @@ function computeEffectiveSkills(ctx: ModifierContext): {
 } {
   const { skills } = ctx;
   const m = gatherSkillModifiers(ctx);
-  const { trainerMods, mastery, veteranDef, totalShieldDef, totalShieldAtt, weaponReq,
-    encPenalties, armorDefMod, helmDefMod, classicBonus, drills, traitMods, injuryPenalties } = m;
+  const {
+    trainerMods,
+    mastery,
+    veteranDef,
+    totalShieldDef,
+    totalShieldAtt,
+    weaponReq,
+    encPenalties,
+    armorDefMod,
+    helmDefMod,
+    classicBonus,
+    drills,
+    traitMods,
+    injuryPenalties,
+  } = m;
 
   const effSkills: BaseSkills = {
     ATT:

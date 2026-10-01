@@ -87,7 +87,13 @@ function useAssignmentMutations(
     toast('All training assignments cleared.');
   };
 
-  return { handleAssign, handleAssignRecovery, handleAssignTraitTraining, handleClear, handleClearAll };
+  return {
+    handleAssign,
+    handleAssignRecovery,
+    handleAssignTraitTraining,
+    handleClear,
+    handleClearAll,
+  };
 }
 
 /**
@@ -104,9 +110,7 @@ export function useTrainingAssignments() {
   const assignments = state.trainingAssignments ?? [];
 
   const assignedCount = assignments.length;
-  const recoveryCount = assignments.filter(
-    (a: TrainingAssignment) => a.type === 'recovery'
-  ).length;
+  const recoveryCount = assignments.filter((a: TrainingAssignment) => a.type === 'recovery').length;
   const trainingCount = assignedCount - recoveryCount;
 
   return {

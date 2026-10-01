@@ -49,10 +49,7 @@ export function applyVictoryPoses(prev: ArenaState, winner: 'A' | 'D'): ArenaSta
 }
 
 /** Append a speech bubble, assigning it a fresh id. */
-export function appendBubble(
-  prev: ArenaState,
-  bubble: Omit<SpeechBubble, 'id'>
-): ArenaState {
+export function appendBubble(prev: ArenaState, bubble: Omit<SpeechBubble, 'id'>): ArenaState {
   return {
     ...prev,
     bubbles: [...prev.bubbles, { ...bubble, id: `bubble-${crypto.randomUUID()}` }],
@@ -275,4 +272,3 @@ export function processArenaEvent(
 
   return newState;
 }
-

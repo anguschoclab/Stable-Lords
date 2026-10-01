@@ -37,7 +37,12 @@ describe('ExecuteWeekButton', () => {
     // Reset store state back to defaults after async tests may have mutated it.
     // (vi.mock's importOriginal arg does not exist under bun:test — inject
     // state into the real store instead.)
-    useGameStore.setState({ week: 5, isTournamentWeek: false, day: 0, isSimulating: false } as never);
+    useGameStore.setState({
+      week: 5,
+      isTournamentWeek: false,
+      day: 0,
+      isSimulating: false,
+    } as never);
   });
 
   it('renders "EXECUTE WEEK 5" with correct week number', () => {
@@ -46,7 +51,12 @@ describe('ExecuteWeekButton', () => {
   });
 
   it('renders "ADVANCE DAY" label when isTournamentWeek=true', async () => {
-    useGameStore.setState({ week: 5, isTournamentWeek: true, day: 2, isSimulating: false } as never);
+    useGameStore.setState({
+      week: 5,
+      isTournamentWeek: true,
+      day: 2,
+      isSimulating: false,
+    } as never);
     render(<ExecuteWeekButton />);
     expect(screen.getByText(/ADVANCE DAY/i)).toBeTruthy();
   });
@@ -71,7 +81,12 @@ describe('ExecuteWeekButton', () => {
   });
 
   it('button is disabled when isSimulating=true', async () => {
-    useGameStore.setState({ week: 5, isTournamentWeek: false, day: 0, isSimulating: true } as never);
+    useGameStore.setState({
+      week: 5,
+      isTournamentWeek: false,
+      day: 0,
+      isSimulating: true,
+    } as never);
     render(<ExecuteWeekButton />);
     const btn = screen.getByRole('button');
     expect(btn).toBeDisabled();

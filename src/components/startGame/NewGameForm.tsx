@@ -29,10 +29,7 @@ function useRandomizers({
   setStableName,
   setPlayerCrest,
   setBackstoryId,
-}: Pick<
-  NewGameFormProps,
-  'setOwnerName' | 'setStableName' | 'setPlayerCrest' | 'setBackstoryId'
->) {
+}: Pick<NewGameFormProps, 'setOwnerName' | 'setStableName' | 'setPlayerCrest' | 'setBackstoryId'>) {
   const randomizeCrest = () => {
     const newCrest = generateCrest({
       seed: cryptoRandomInt(0, 99999),
@@ -133,7 +130,8 @@ function FormShell({ onBack, children }: { onBack: () => void; children: React.R
         <div
           className="relative p-8 space-y-7"
           style={{
-            background: 'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
+            background:
+              'linear-gradient(145deg, var(--background) 0%, var(--card) 60%, var(--card) 100%)',
             border: '1px solid rgba(var(--oak-rgb), 0.9)',
             borderTopColor: 'rgba(var(--umber-rgb), 0.55)',
             borderLeftColor: 'rgba(var(--sepia-rgb), 0.5)',

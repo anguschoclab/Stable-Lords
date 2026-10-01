@@ -8,11 +8,7 @@ import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { ODDS_THRESHOLDS } from '@/constants/core/ui';
 import { ATTRIBUTE_KEYS } from '@/types/game';
-import {
-  resolveWarriorName,
-  resolveStableName,
-  findWarrior,
-} from '@/engine/core/historyResolver';
+import { resolveWarriorName, resolveStableName, findWarrior } from '@/engine/core/historyResolver';
 import type { GameState } from '@/types/state.types';
 
 interface NextBout {
@@ -86,7 +82,15 @@ function estimateOdds(state: GameState, nextBout: NextBout): number {
   return Math.round((sumA / (sumA + sumD)) * 100);
 }
 
-function BoutCard({ state, nextBout, odds }: { state: GameState; nextBout: NextBout; odds: number }) {
+function BoutCard({
+  state,
+  nextBout,
+  odds,
+}: {
+  state: GameState;
+  nextBout: NextBout;
+  odds: number;
+}) {
   return (
     <div className="space-y-4">
       <div className="p-3 bg-secondary/20 rounded-none border border-border/50">

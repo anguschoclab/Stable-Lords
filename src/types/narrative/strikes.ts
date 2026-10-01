@@ -1,4 +1,3 @@
-
 /**
  * Defines the shape of strike category.
  */
@@ -10,7 +9,6 @@ export interface StrikeCategory {
   critical_supernatural: string[];
   fatal: string[];
 }
-
 
 /**
  * Defines the shape of strikes collection.

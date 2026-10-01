@@ -63,7 +63,8 @@ export function evaluateTournamentAdvice(
       weeksUntilTournament,
       status: 'NONE',
       headline: 'Not Qualified for Seasonal Tournaments',
-      details: 'Current realm ranking is outside the top 256. Win arena bouts to climb rankings before season end.',
+      details:
+        'Current realm ranking is outside the top 256. Win arena bouts to climb rankings before season end.',
     };
   }
 
@@ -110,7 +111,8 @@ function liveTournamentAdvice(
       weeksUntilTournament: 0,
       status: 'ACTIVE_ROUND',
       headline: `🏆 Live Bracket Active: ${currentTournament?.name ?? 'Seasonal Tournament'}`,
-      details: 'Tournament bouts take priority. Tune battle plan tactics for each opponent in the bracket.',
+      details:
+        'Tournament bouts take priority. Tune battle plan tactics for each opponent in the bracket.',
     };
   }
   return {

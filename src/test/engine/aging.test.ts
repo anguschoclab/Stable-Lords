@@ -172,9 +172,7 @@ describe('computeAgingImpact — champion deferral', () => {
       treasury: 0,
       week: 12,
       roster: onRivalRoster ? [] : [w],
-      rivals: onRivalRoster
-        ? [fixtureRival({ id: 'r1' as any, roster: [w] })]
-        : [],
+      rivals: onRivalRoster ? [fixtureRival({ id: 'r1' as any, roster: [w] })] : [],
       arenaChampions: {
         arena_1: {
           champion: {

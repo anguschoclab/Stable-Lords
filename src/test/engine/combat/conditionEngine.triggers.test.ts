@@ -80,12 +80,8 @@ describe('opponent-state triggers', () => {
     });
     const hurt = makeFighter({ hp: 30 });
     const healthy = makeFighter({ hp: 100 });
-    expect(
-      evaluateConditions(fighter, hurt, ctx(), 10).newPlan.killDesire
-    ).toBe(9);
-    expect(
-      evaluateConditions(fighter, healthy, ctx(), 10).newPlan.killDesire
-    ).not.toBe(9);
+    expect(evaluateConditions(fighter, hurt, ctx(), 10).newPlan.killDesire).toBe(9);
+    expect(evaluateConditions(fighter, healthy, ctx(), 10).newPlan.killDesire).not.toBe(9);
   });
 
   it('OPPONENT_ENDURANCE_BELOW fires on a gassed opponent', () => {
@@ -95,9 +91,7 @@ describe('opponent-state triggers', () => {
       ]),
     });
     const gassed = makeFighter({ endurance: 20 });
-    expect(
-      evaluateConditions(fighter, gassed, ctx(), 10).newPlan.OE
-    ).toBe(9);
+    expect(evaluateConditions(fighter, gassed, ctx(), 10).newPlan.OE).toBe(9);
   });
 
   it('OPPONENT_MOMENTUM_LEAD fires when the opponent has tempo', () => {
@@ -107,9 +101,7 @@ describe('opponent-state triggers', () => {
       ]),
     });
     const rolling = makeFighter({ momentum: 2 });
-    expect(
-      evaluateConditions(fighter, rolling, ctx(), 10).newPlan.AL
-    ).toBe(9);
+    expect(evaluateConditions(fighter, rolling, ctx(), 10).newPlan.AL).toBe(9);
   });
 
   it('PSYCH_IS fires on the fighter psych state', () => {

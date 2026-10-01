@@ -12,8 +12,6 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-
-
 describe('WarriorLeaderboard (virtualized)', () => {
   beforeEach(() => {
     vi.clearAllMocks();

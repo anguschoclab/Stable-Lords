@@ -22,8 +22,7 @@ export default function Mods() {
   const setState = useGameStore((s) => s.setState);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const nonCanonical =
-    houseRules.deathRateMult !== 1 || houseRules.severeInjuryInsteadOfDeath;
+  const nonCanonical = houseRules.deathRateMult !== 1 || houseRules.severeInjuryInsteadOfDeath;
 
   const setRules = (patch: Partial<typeof houseRules>) => {
     setState((s) => {

@@ -4,10 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { SeededRNGService } from '@/utils/random';
-import {
-  generateWarriorName,
-  generateDynasticWarriorName,
-} from '@/data/names/nameGenerator';
+import { generateWarriorName, generateDynasticWarriorName } from '@/data/names/nameGenerator';
 import {
   CULTURE_SEEDS,
   cultureForOwner,

@@ -24,7 +24,11 @@ function titleAt(championId: string | null, over: Partial<ArenaTitle> = {}): Are
   return makeArenaTitle(championId, over);
 }
 
-function titleOffer(champId: string, challengerId: string, over: Partial<BoutOffer> = {}): BoutOffer {
+function titleOffer(
+  champId: string,
+  challengerId: string,
+  over: Partial<BoutOffer> = {}
+): BoutOffer {
   return makeBoutOffer({
     warriorIds: [champId as WarriorId, challengerId as WarriorId],
     promoterId: ARENA_COMMISSION_ID as BoutOffer['promoterId'],
@@ -80,7 +84,14 @@ describe('verifyBoutAcceptance — title bout awareness', () => {
 // Three non-blocking knocks: fighting condition 40 — below the champion's
 // health floor without tripping the medical (blocking-injury) gate.
 const HURT = [1, 2, 3].map(
-  (n) => ({ id: `bruise-${n}`, name: 'Bruising', severity: 'Minor', weeksRemaining: 1, penalties: {} }) as never
+  (n) =>
+    ({
+      id: `bruise-${n}`,
+      name: 'Bruising',
+      severity: 'Minor',
+      weeksRemaining: 1,
+      penalties: {},
+    }) as never
 );
 
 describe('evaluateBoutOffer — reign management', () => {
@@ -97,9 +108,9 @@ describe('evaluateBoutOffer — reign management', () => {
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
-    expect(
-      evaluateBoutOffer(offer, rival, champ, 5, 'Clear', killer('k1'), state)
-    ).toBe('Accepted');
+    expect(evaluateBoutOffer(offer, rival, champ, 5, 'Clear', killer('k1'), state)).toBe(
+      'Accepted'
+    );
   });
 
   it('a champion who can still afford a refusal may decline at critical health', () => {
@@ -114,7 +125,15 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(0);
     expect(
-      evaluateBoutOffer(offer, rival, champ, 5, 'Clear', makeWarrior({ id: 'k1' as WarriorId }), state)
+      evaluateBoutOffer(
+        offer,
+        rival,
+        champ,
+        5,
+        'Clear',
+        makeWarrior({ id: 'k1' as WarriorId }),
+        state
+      )
     ).toBe('Declined');
   });
 
@@ -128,9 +147,9 @@ describe('evaluateBoutOffer — reign management', () => {
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
-    expect(
-      evaluateBoutOffer(offer, rival, champ, 5, 'Clear', killer('k1'), state)
-    ).toBe('Declined');
+    expect(evaluateBoutOffer(offer, rival, champ, 5, 'Clear', killer('k1'), state)).toBe(
+      'Declined'
+    );
   });
 
   it('a calculating challenger declines a known killer — the cooldown is cheap', () => {
@@ -141,9 +160,9 @@ describe('evaluateBoutOffer — reign management', () => {
     });
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
-    expect(
-      evaluateBoutOffer(offer, rival, challenger, 5, 'Clear', killer('champ_x'), state)
-    ).toBe('Declined');
+    expect(evaluateBoutOffer(offer, rival, challenger, 5, 'Clear', killer('champ_x'), state)).toBe(
+      'Declined'
+    );
   });
 
   it('an aggressive challenger takes the shot regardless', () => {
@@ -154,9 +173,9 @@ describe('evaluateBoutOffer — reign management', () => {
     });
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
-    expect(
-      evaluateBoutOffer(offer, rival, challenger, 5, 'Clear', killer('champ_x'), state)
-    ).toBe('Accepted');
+    expect(evaluateBoutOffer(offer, rival, challenger, 5, 'Clear', killer('champ_x'), state)).toBe(
+      'Accepted'
+    );
   });
 });
 

@@ -1,9 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
-import {
-  isDead,
-  isRetired,
-} from '@/engine/warrior/warriorStatus';
+import { isDead, isRetired } from '@/engine/warrior/warriorStatus';
 import type { ChampionshipDelta } from '../core';
 import { titleOf, ensureTitle, endReign, sortedTitleKeys } from '../core';
 

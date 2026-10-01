@@ -7,12 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { getNPCPlan } from '@/engine/bout/services/boutResolution';
-import {
-  makeGameState,
-  makeRival,
-  makeWarrior,
-  makeBoutOffer,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
 
 function signedOfferFor(proposerId: string, aId: string, dId: string) {
   return makeBoutOffer({
@@ -33,9 +28,7 @@ describe('NPC plan persistence', () => {
     const offer = signedOfferFor(rival.id as string, npcW.id as string, oppW.id as string);
 
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const written = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const written = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
 
     expect(written.plan).toBeDefined();
     expect(written.planWeek).toBe(state.absoluteWeek ?? state.week);
@@ -51,9 +44,7 @@ describe('NPC plan persistence', () => {
     const offer = signedOfferFor(rival.id as string, npcW.id as string, oppW.id as string);
 
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const persisted = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const persisted = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
 
     const stateWithPersisted = makeGameState({
       rivals: [updated.find((r) => r.id === rival.id)!, oppRival],
@@ -109,9 +100,7 @@ describe('NPC plan persistence', () => {
     });
 
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
-    const written = updated
-      .find((r) => r.id === rival.id)!
-      .roster.find((w) => w.id === npcW.id)!;
+    const written = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
     expect(written.plan).toBeUndefined();
   });
 });

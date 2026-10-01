@@ -121,4 +121,3 @@ export function MobileNav({ className }: MobileNavProps) {
     </div>
   );
 }
-

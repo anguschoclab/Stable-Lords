@@ -1,4 +1,3 @@
-
 /**
  * Defines the shape of persona descriptor.
  */
@@ -7,7 +6,6 @@ export interface PersonaDescriptor {
   text: string;
 }
 
-
 /**
  * Defines the shape of persona skill.
  */
@@ -15,7 +13,6 @@ export interface PersonaSkill {
   high: PersonaDescriptor[];
   low: PersonaDescriptor[];
 }
-
 
 /**
  * Defines the shape of persona good.
@@ -29,7 +26,6 @@ export interface PersonaGood {
   endurance: PersonaSkill;
 }
 
-
 /**
  * Defines the shape of persona bad.
  */
@@ -38,7 +34,6 @@ export interface PersonaBad {
   attack: PersonaSkill;
 }
 
-
 /**
  * Defines the shape of persona descriptors.
  */
@@ -46,7 +41,6 @@ export interface PersonaDescriptors {
   coordination: Record<string, string>;
   activity: Record<string, string>;
 }
-
 
 /**
  * Defines the shape of persona.

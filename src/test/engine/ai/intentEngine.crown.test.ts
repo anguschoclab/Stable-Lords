@@ -149,10 +149,7 @@ describe('intentStillApplies / verifyIntentSkepticism — crown campaign', () =>
 
   it('is disproved when the campaign warrior is no longer active', () => {
     const rival = campaigningRival({
-      roster: [
-        makeWarrior({ id: 'w1' as WarriorId, status: 'Dead' }),
-        ...diverseRoster().slice(1),
-      ],
+      roster: [makeWarrior({ id: 'w1' as WarriorId, status: 'Dead' }), ...diverseRoster().slice(1)],
       agentMemory: makeAgentMemory({ crownAssessment: crownAssessment('arena_a', 'w1') }),
     });
     const state = makeGameState({ week: 5 });

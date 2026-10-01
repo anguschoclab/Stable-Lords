@@ -28,12 +28,9 @@ describe('getStanceAnimationClass', () => {
     expect(getStanceAnimationClass(stance)).toContain(cls);
   });
 
-  it.each(ANIMATED_STANCES)(
-    'carries a prefers-reduced-motion fallback for %s',
-    ({ stance }) => {
-      expect(getStanceAnimationClass(stance)).toContain('motion-reduce:animate-none');
-    }
-  );
+  it.each(ANIMATED_STANCES)('carries a prefers-reduced-motion fallback for %s', ({ stance }) => {
+    expect(getStanceAnimationClass(stance)).toContain('motion-reduce:animate-none');
+  });
 
   it('returns an empty string for an unknown runtime stance', () => {
     // Runtime data can carry values outside the declared union.

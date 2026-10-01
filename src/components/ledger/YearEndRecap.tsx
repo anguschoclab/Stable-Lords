@@ -45,7 +45,13 @@ function RecapCallouts({
   memorials,
 }: {
   topRivalry: { intensity?: number; stableIdA: string; stableIdB: string } | undefined;
-  memorials: { id: string; name: string; epithet?: string; fame?: number; career?: { kills?: number } }[];
+  memorials: {
+    id: string;
+    name: string;
+    epithet?: string;
+    fame?: number;
+    career?: { kills?: number };
+  }[];
 }) {
   return (
     <>
@@ -55,8 +61,7 @@ function RecapCallouts({
             Headline Rivalry
           </div>
           <div className="text-sm">
-            Intensity {topRivalry.intensity ?? 0} — {topRivalry.stableIdA} vs{' '}
-            {topRivalry.stableIdB}
+            Intensity {topRivalry.intensity ?? 0} — {topRivalry.stableIdA} vs {topRivalry.stableIdB}
           </div>
         </Surface>
       )}
@@ -87,7 +92,13 @@ type RecapData = ReturnType<typeof computeRecap>;
 
 /** Fold the year's collections into the headline recap figures. */
 function computeRecap(
-  rosterFameData: { id: string; name: string; epithet?: string; fame: number | undefined; career: Warrior['career'] }[],
+  rosterFameData: {
+    id: string;
+    name: string;
+    epithet?: string;
+    fame: number | undefined;
+    career: Warrior['career'];
+  }[],
   graveyard: Warrior[],
   ledger: { amount: number }[],
   rivalries: Rivalry[] | undefined
@@ -191,7 +202,14 @@ export function YearEndRecap() {
   );
 
   const rosterFameData = useMemo(
-    () => roster.map((w) => ({ id: w.id, name: w.name, epithet: w.epithet, fame: w.fame, career: w.career })),
+    () =>
+      roster.map((w) => ({
+        id: w.id,
+        name: w.name,
+        epithet: w.epithet,
+        fame: w.fame,
+        career: w.career,
+      })),
     [roster]
   );
 

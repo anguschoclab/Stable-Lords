@@ -105,7 +105,9 @@ function OutcomeBanner({ boutResult }: { boutResult: BoutResult }) {
     <div
       className="p-4 text-center"
       style={{
-        background: isKill ? 'rgba(var(--blood-glow-rgb), 0.12)' : 'rgba(var(--gold-glow-rgb), 0.06)',
+        background: isKill
+          ? 'rgba(var(--blood-glow-rgb), 0.12)'
+          : 'rgba(var(--gold-glow-rgb), 0.06)',
         border: `1px solid ${isKill ? 'rgba(var(--blood-glow-rgb), 0.4)' : 'rgba(var(--gold-glow-rgb), 0.25)'}`,
       }}
     >
@@ -120,8 +122,7 @@ function OutcomeBanner({ boutResult }: { boutResult: BoutResult }) {
                 : '0 0 12px hsl(var(--arena-gold)/0.4)',
             }}
           >
-            {boutResult.outcome.winner === 'A' ? boutResult.a.name : boutResult.d.name}{' '}
-            victorious
+            {boutResult.outcome.winner === 'A' ? boutResult.a.name : boutResult.d.name} victorious
           </div>
           <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1">
             by {boutResult.outcome.by ?? 'decision'}

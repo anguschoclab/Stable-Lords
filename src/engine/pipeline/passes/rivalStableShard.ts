@@ -10,6 +10,7 @@ import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import { processCrownPosture, assignCampaignRoles } from '@/engine/ai/workers/crownWorker';
 import { SeededRNGService } from '@/utils/random';
+import { aiRosterMin } from '@/constants/ai';
 import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 
 /**
@@ -147,14 +148,13 @@ export function processRivalStable(
     : { ...rival, strategy };
 
   // 🎂 1.0 Hardening: Handle Aging & Succession
-  const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } =
-    handleOwnerLifecycle(
-      rivalWithStrategy,
-      nextWeek,
-      new SeededRNGService(strategySeed + 123),
-      successorByStable,
-      state.absoluteWeek + 1
-    );
+  const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } = handleOwnerLifecycle(
+    rivalWithStrategy,
+    nextWeek,
+    new SeededRNGService(strategySeed + 123),
+    successorByStable,
+    state.absoluteWeek + 1
+  );
   gazetteItems.push(...lifecycleGazette);
 
   // Crown posture: refresh the title assessment (read by next tick's intent
@@ -163,8 +163,11 @@ export function processRivalStable(
   const crown = processCrownPosture(rivalWithLifecycle, state, perception);
   gazetteItems.push(...crown.gazetteItems);
 
-  const { updatedRival: processedRival, isBankrupt, gazetteItems: stableGazette } =
-    processAIStable(crown.updatedRival, state, perception);
+  const {
+    updatedRival: processedRival,
+    isBankrupt,
+    gazetteItems: stableGazette,
+  } = processAIStable(crown.updatedRival, state, perception);
   gazetteItems.push(...stableGazette);
 
   // D.5 — Intel worker: weekly seeded dossier refresh before planning.
@@ -178,7 +181,19 @@ export function processRivalStable(
   // D.8 — Campaign roles: stamp each warrior's campaignFocus with the shared
   // advisor semantics (incl. CROWN_BID for ladder-ranked contenders) so offer
   // evaluation, training, and bookings all read one role source.
-  const updatedRival = assignCampaignRoles(prep.updatedRival, state, perception);
+  let updatedRival = assignCampaignRoles(prep.updatedRival, state, perception);
+
+  // Starvation bookkeeping: count consecutive weeks below the personality
+  // roster minimum. The fold decision itself happens post-draft in
+  // finishRivalPass (only the draft knows whether a recruit was affordable).
+  const activeNow = updatedRival.roster.filter((w) => w.status === 'Active').length;
+  const belowMin = activeNow < aiRosterMin(updatedRival.owner.personality);
+  if ((updatedRival.weeksBelowMin ?? 0) > 0 || belowMin) {
+    updatedRival = {
+      ...updatedRival,
+      weeksBelowMin: belowMin ? (updatedRival.weeksBelowMin ?? 0) + 1 : 0,
+    };
+  }
 
   if (isBankrupt) {
     const replacement = mintSuccessorStable(state, index);
@@ -206,10 +221,7 @@ function mintSuccessorStable(state: GameState, index: number): RivalStableData |
   for (let attempt = 0; attempt < 8; attempt++) {
     const newStable = generateRivalStables(1, retirementSeed + attempt * 7919, 0, usedNames)[0];
     if (!newStable) return undefined;
-    if (
-      usedStableIds.has(newStable.id) ||
-      newStable.roster.some((w) => usedWarriorIds.has(w.id))
-    ) {
+    if (usedStableIds.has(newStable.id) || newStable.roster.some((w) => usedWarriorIds.has(w.id))) {
       continue;
     }
     return {

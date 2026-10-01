@@ -78,10 +78,7 @@ export function offerWeatherDecline(warrior: WeatherSubject, weather: WeatherTyp
 }
 
 /** Tournament committee entry skepticism (rank-based selection unchanged). */
-export function committeeWeatherSkip(
-  warrior: WeatherSubject,
-  weather: WeatherType
-): boolean {
+export function committeeWeatherSkip(warrior: WeatherSubject, weather: WeatherType): boolean {
   if (weather === 'Rainy' && warrior.style === FightingStyle.LungingAttack) return true;
   if (weather === 'Sweltering' && (warrior.attributes.CN || 0) < 10) return true;
   return false;

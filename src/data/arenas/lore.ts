@@ -1,15 +1,11 @@
 // Split from data/arenas.ts — arena lore entries + accessor
 
-
-
 // ─── Arena Lore ───────────────────────────────────────────────────────────────
 
 /**
  * Arena lore entry type.
  */
 export type ArenaLoreType = 'historical_battle' | 'famous_death' | 'architectural_quirk' | 'hazard';
-
-
 
 /**
  * Defines the shape of arena lore entry.
@@ -21,8 +17,6 @@ export interface ArenaLoreEntry {
   title: string;
   narrative: string;
 }
-
-
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
@@ -709,78 +703,84 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     arenaId: 'the_sunken_vault',
     type: 'historical_battle',
     title: 'The Breathless Duel',
-    narrative: 'A legendary bout where both fighters were dragged underwater, but one simply refused to drown before delivering the killing blow.',
+    narrative:
+      'A legendary bout where both fighters were dragged underwater, but one simply refused to drown before delivering the killing blow.',
   },
   {
     id: 'thunder_peak_the_shattered_helm',
     arenaId: 'thunder_peak',
     type: 'famous_death',
     title: 'The Shattered Helm',
-    narrative: 'A champion\'s heavy iron helm acted as a lightning rod, ending the match in a blinding flash that scarred the spectators\' eyes.',
+    narrative:
+      "A champion's heavy iron helm acted as a lightning rod, ending the match in a blinding flash that scarred the spectators' eyes.",
   },
   {
     id: 'standard_arena_blood_stain',
     arenaId: 'standard_arena',
     type: 'architectural_quirk',
     title: 'The Unwashable Stain',
-    narrative: 'Near the center of the arena lies a dark red stain that scrubbing has never managed to remove. It is said to mark the spot where the first champion fell.',
+    narrative:
+      'Near the center of the arena lies a dark red stain that scrubbing has never managed to remove. It is said to mark the spot where the first champion fell.',
   },
   {
     id: 'mist_shrouded_ruins_phantom_cheers',
     arenaId: 'mist_shrouded_ruins',
     type: 'historical_battle',
     title: 'Phantom Cheers',
-    narrative: 'When the fog rolls in thickest, some fighters swear they hear the roars of a spectral crowd from an empire long crumbled into dust.',
+    narrative:
+      'When the fog rolls in thickest, some fighters swear they hear the roars of a spectral crowd from an empire long crumbled into dust.',
   },
   {
     id: 'the_gallows_tree_hangman_dance',
     arenaId: 'the_gallows_tree',
     type: 'famous_death',
     title: "The Hangman's Dance",
-    narrative: 'A renowned duelist met his end here, not by a blade, but when a stray strike severed a heavy branch that crushed him instantly.',
+    narrative:
+      'A renowned duelist met his end here, not by a blade, but when a stray strike severed a heavy branch that crushed him instantly.',
   },
   {
     id: 'cursed_swamp_the_drowning_grasp',
     arenaId: 'the_cursed_swamp',
     type: 'architectural_quirk',
     title: 'The Drowning Grasp',
-    narrative: 'The thick mud of the swamp often acts like quicksand; fighters who stay still too long find themselves slowly pulled beneath the surface.',
+    narrative:
+      'The thick mud of the swamp often acts like quicksand; fighters who stay still too long find themselves slowly pulled beneath the surface.',
   },
   {
     id: 'iron_cage_the_blood_bars',
     arenaId: 'the_iron_cage',
     type: 'historical_battle',
     title: 'The Blood-Painted Bars',
-    narrative: 'A legendary riot erupted when a fighter was thrown against the iron bars so violently that the crowd was splattered with blood, sparking a frenzy.',
+    narrative:
+      'A legendary riot erupted when a fighter was thrown against the iron bars so violently that the crowd was splattered with blood, sparking a frenzy.',
   },
   {
     id: 'rusted_gorge_madmans_end',
     arenaId: 'rusted_gorge',
     type: 'famous_death',
     title: "The Madman's End",
-    narrative: 'A fighter went entirely feral, ignoring all blows until they succumbed to exhaustion, dying with a terrifying smile on their face.',
+    narrative:
+      'A fighter went entirely feral, ignoring all blows until they succumbed to exhaustion, dying with a terrifying smile on their face.',
   },
   {
     id: 'cursed_swamp_the_sunken_champion',
     arenaId: 'the_cursed_swamp',
     type: 'historical_battle',
     title: 'The Sunken Champion',
-    narrative: 'A heavy-armored champion arrogant in his might slowly sank into the mire, screaming as his lighter opponent casually watched from a dry root.',
+    narrative:
+      'A heavy-armored champion arrogant in his might slowly sank into the mire, screaming as his lighter opponent casually watched from a dry root.',
   },
   {
     id: 'the_iron_cage_the_bloody_bars',
     arenaId: 'the_iron_cage',
     type: 'architectural_quirk',
     title: 'The Bloody Bars',
-    narrative: 'The spiked bars are so thoroughly stained that no amount of scrubbing removes the rust-colored taint of a thousand desperate clashes.',
+    narrative:
+      'The spiked bars are so thoroughly stained that no amount of scrubbing removes the rust-colored taint of a thousand desperate clashes.',
   },
 ];
 
-
-
 const loreIndex = new Map<string, ArenaLoreEntry[]>();
-
-
 
 /**
  * Retrieve arena lore entries for a given arena ID, with caching.

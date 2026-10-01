@@ -30,7 +30,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 vi.mock('@/components/ui/sheet', () => ({ ...__SHARED_MOCKS.sheet }));
 
-vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }))
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 function createFallenWarrior(overrides?: Record<string, any>): Warrior {
   return {

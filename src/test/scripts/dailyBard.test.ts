@@ -1,5 +1,16 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { templateStringSchema, NarrativeSchema, fetch_narrative_deficits, request_bardic_inspiration, validate_with_retry, commit_to_archive, deduplicate_full_archive, isStringArray, resolveNarrativeArray, DRY_RUN } from '@/scripts/daily_bard';
+import {
+  templateStringSchema,
+  NarrativeSchema,
+  fetch_narrative_deficits,
+  request_bardic_inspiration,
+  validate_with_retry,
+  commit_to_archive,
+  deduplicate_full_archive,
+  isStringArray,
+  resolveNarrativeArray,
+  DRY_RUN,
+} from '@/scripts/daily_bard';
 import { promises as fsp, readFileSync, readdirSync, promises as fsPromises } from 'fs';
 import { resolve } from 'path';
 import path from 'path';
@@ -277,12 +288,16 @@ describe('resolveNarrativeArray', () => {
 
   it('throws a descriptive error when an intermediate segment is missing', () => {
     const root: Record<string, unknown> = { strikes: {} };
-    expect(() => resolveNarrativeArray(root, 'strikes.slash.glancing')).toThrow(/strikes\.slash\.glancing/);
+    expect(() => resolveNarrativeArray(root, 'strikes.slash.glancing')).toThrow(
+      /strikes\.slash\.glancing/
+    );
   });
 
   it('throws a descriptive error when an intermediate segment is an array', () => {
     const root: Record<string, unknown> = { strikes: { slash: ['a'] } };
-    expect(() => resolveNarrativeArray(root, 'strikes.slash.glancing')).toThrow(/strikes\.slash\.glancing/);
+    expect(() => resolveNarrativeArray(root, 'strikes.slash.glancing')).toThrow(
+      /strikes\.slash\.glancing/
+    );
   });
 
   it('throws a descriptive error when the leaf is not a string array', () => {

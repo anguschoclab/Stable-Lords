@@ -131,8 +131,13 @@ export const TickOrchestrator = {
       let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
       for (let day = currentDay + 1; day < 7; day++) {
         if (!tour || tour.completed) break;
-        const { updatedState, roundResults, isComplete, updatedTournament } =
-          resolveTournamentDay(currentState, tournamentId, day, true, tour);
+        const { updatedState, roundResults, isComplete, updatedTournament } = resolveTournamentDay(
+          currentState,
+          tournamentId,
+          day,
+          true,
+          tour
+        );
         currentState = updatedState;
         tour = updatedTournament ?? tour;
         if (roundResults.length > 0) {

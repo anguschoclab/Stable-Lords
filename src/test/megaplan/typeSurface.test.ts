@@ -15,52 +15,216 @@ import * as sharedTypes from '@/types/shared.types';
 
 // ─── type-level parity (compile-time) ────────────────────────────────────────
 import type {
-  Warrior, DeathEvent, WeatherType, Season, CrowdMoodType, NewsletterItem,
-  TrainerTier, TrainerFocus, Trainer, ScoutQuality, CrestData, FightSummary,
-  FightOutcomeBy, PoolWarrior, RankingEntry, BoutOfferStatus, BoutOfferResponse,
-  BoutOffer, PromoterPersonality, TitleStatus, ArenaReignEndReason, ArenaTitleReign,
-  ArenaReignRecord, ArenaTitle, GrandChampionEntry, Promoter, OwnerPersonality,
-  MetaAdaptation, Owner, TournamentBout, TournamentEntry, TrainingAssignment,
-  SeasonalGrowth, LedgerEntry, AIIntent, AIStrategy, AIEventCause, AIEvent,
-  OpponentDossier, CrownAssessment, AIAgentMemory, RivalStableData, ScoutReportData,
-  RestState, Rivalry, MatchRecord, OwnerGrudge, GazetteStory, InsightTokenType,
-  InsightToken, HallEntry, SimulationReport, AnnualAwardType, AnnualAward,
-  ObjectiveId, ProgressionObjective, ProgressionStatus, ProgressionState,
-  DeferredBoutLog, HouseRules, LifetimeStats, GameState, UIPrefs,
+  Warrior,
+  DeathEvent,
+  WeatherType,
+  Season,
+  CrowdMoodType,
+  NewsletterItem,
+  TrainerTier,
+  TrainerFocus,
+  Trainer,
+  ScoutQuality,
+  CrestData,
+  FightSummary,
+  FightOutcomeBy,
+  PoolWarrior,
+  RankingEntry,
+  BoutOfferStatus,
+  BoutOfferResponse,
+  BoutOffer,
+  PromoterPersonality,
+  TitleStatus,
+  ArenaReignEndReason,
+  ArenaTitleReign,
+  ArenaReignRecord,
+  ArenaTitle,
+  GrandChampionEntry,
+  Promoter,
+  OwnerPersonality,
+  MetaAdaptation,
+  Owner,
+  TournamentBout,
+  TournamentEntry,
+  TrainingAssignment,
+  SeasonalGrowth,
+  LedgerEntry,
+  AIIntent,
+  AIStrategy,
+  AIEventCause,
+  AIEvent,
+  OpponentDossier,
+  CrownAssessment,
+  AIAgentMemory,
+  RivalStableData,
+  ScoutReportData,
+  RestState,
+  Rivalry,
+  MatchRecord,
+  OwnerGrudge,
+  GazetteStory,
+  InsightTokenType,
+  InsightToken,
+  HallEntry,
+  SimulationReport,
+  AnnualAwardType,
+  AnnualAward,
+  ObjectiveId,
+  ProgressionObjective,
+  ProgressionStatus,
+  ProgressionState,
+  DeferredBoutLog,
+  HouseRules,
+  LifetimeStats,
+  GameState,
+  UIPrefs,
 } from '@/types/state.types';
 import type {
-  Brand, WarriorId, StableId, PromoterId, TrainerId, FightId, TournamentId,
-  BoutOfferId, InjuryId, LedgerEntryId, ScoutReportId, NewsId, GrudgeId, RivalryId,
-  InsightId, HallEntryId, SimulationReportId, Attributes, BaseSkills, DerivedStats,
-  AttackTarget, ProtectTarget, OffensiveTactic, DefensiveTactic, PhaseStrategy,
-  DesperatePlan, FightPlan, ConditionTriggerType, PlanCondition, PsychState,
-  DistanceRange, ArenaZone, CommitLevel, ArenaTag, SurfaceMod, ArenaWeatherMod,
-  ArenaConfig, TrainerSpecialty,
+  Brand,
+  WarriorId,
+  StableId,
+  PromoterId,
+  TrainerId,
+  FightId,
+  TournamentId,
+  BoutOfferId,
+  InjuryId,
+  LedgerEntryId,
+  ScoutReportId,
+  NewsId,
+  GrudgeId,
+  RivalryId,
+  InsightId,
+  HallEntryId,
+  SimulationReportId,
+  Attributes,
+  BaseSkills,
+  DerivedStats,
+  AttackTarget,
+  ProtectTarget,
+  OffensiveTactic,
+  DefensiveTactic,
+  PhaseStrategy,
+  DesperatePlan,
+  FightPlan,
+  ConditionTriggerType,
+  PlanCondition,
+  PsychState,
+  DistanceRange,
+  ArenaZone,
+  CommitLevel,
+  ArenaTag,
+  SurfaceMod,
+  ArenaWeatherMod,
+  ArenaConfig,
+  TrainerSpecialty,
 } from '@/types/shared.types';
 
 /** Referenced so unused-import lint stays quiet and tsc resolves each name. */
 type _StateSurface =
-  | Warrior | DeathEvent | WeatherType | Season | CrowdMoodType | NewsletterItem
-  | TrainerTier | TrainerFocus | Trainer | ScoutQuality | CrestData | FightSummary
-  | FightOutcomeBy | PoolWarrior | RankingEntry | BoutOfferStatus | BoutOfferResponse
-  | BoutOffer | PromoterPersonality | TitleStatus | ArenaReignEndReason | ArenaTitleReign
-  | ArenaReignRecord | ArenaTitle | GrandChampionEntry | Promoter | OwnerPersonality
-  | MetaAdaptation | Owner | TournamentBout | TournamentEntry | TrainingAssignment
-  | SeasonalGrowth | LedgerEntry | AIIntent | AIStrategy | AIEventCause | AIEvent
-  | OpponentDossier | CrownAssessment | AIAgentMemory | RivalStableData | ScoutReportData
-  | RestState | Rivalry | MatchRecord | OwnerGrudge | GazetteStory | InsightTokenType
-  | InsightToken | HallEntry | SimulationReport | AnnualAwardType | AnnualAward
-  | ObjectiveId | ProgressionObjective | ProgressionStatus | ProgressionState
-  | DeferredBoutLog | HouseRules | LifetimeStats | GameState | UIPrefs;
+  | Warrior
+  | DeathEvent
+  | WeatherType
+  | Season
+  | CrowdMoodType
+  | NewsletterItem
+  | TrainerTier
+  | TrainerFocus
+  | Trainer
+  | ScoutQuality
+  | CrestData
+  | FightSummary
+  | FightOutcomeBy
+  | PoolWarrior
+  | RankingEntry
+  | BoutOfferStatus
+  | BoutOfferResponse
+  | BoutOffer
+  | PromoterPersonality
+  | TitleStatus
+  | ArenaReignEndReason
+  | ArenaTitleReign
+  | ArenaReignRecord
+  | ArenaTitle
+  | GrandChampionEntry
+  | Promoter
+  | OwnerPersonality
+  | MetaAdaptation
+  | Owner
+  | TournamentBout
+  | TournamentEntry
+  | TrainingAssignment
+  | SeasonalGrowth
+  | LedgerEntry
+  | AIIntent
+  | AIStrategy
+  | AIEventCause
+  | AIEvent
+  | OpponentDossier
+  | CrownAssessment
+  | AIAgentMemory
+  | RivalStableData
+  | ScoutReportData
+  | RestState
+  | Rivalry
+  | MatchRecord
+  | OwnerGrudge
+  | GazetteStory
+  | InsightTokenType
+  | InsightToken
+  | HallEntry
+  | SimulationReport
+  | AnnualAwardType
+  | AnnualAward
+  | ObjectiveId
+  | ProgressionObjective
+  | ProgressionStatus
+  | ProgressionState
+  | DeferredBoutLog
+  | HouseRules
+  | LifetimeStats
+  | GameState
+  | UIPrefs;
 /** Referenced so unused-import lint stays quiet and tsc resolves each name. */
 type _SharedSurface =
-  | Brand<unknown, string> | WarriorId | StableId | PromoterId | TrainerId | FightId | TournamentId
-  | BoutOfferId | InjuryId | LedgerEntryId | ScoutReportId | NewsId | GrudgeId
-  | RivalryId | InsightId | HallEntryId | SimulationReportId | Attributes | BaseSkills
-  | DerivedStats | AttackTarget | ProtectTarget | OffensiveTactic | DefensiveTactic
-  | PhaseStrategy | DesperatePlan | FightPlan | ConditionTriggerType | PlanCondition
-  | PsychState | DistanceRange | ArenaZone | CommitLevel | ArenaTag | SurfaceMod
-  | ArenaWeatherMod | ArenaConfig | TrainerSpecialty;
+  | Brand<unknown, string>
+  | WarriorId
+  | StableId
+  | PromoterId
+  | TrainerId
+  | FightId
+  | TournamentId
+  | BoutOfferId
+  | InjuryId
+  | LedgerEntryId
+  | ScoutReportId
+  | NewsId
+  | GrudgeId
+  | RivalryId
+  | InsightId
+  | HallEntryId
+  | SimulationReportId
+  | Attributes
+  | BaseSkills
+  | DerivedStats
+  | AttackTarget
+  | ProtectTarget
+  | OffensiveTactic
+  | DefensiveTactic
+  | PhaseStrategy
+  | DesperatePlan
+  | FightPlan
+  | ConditionTriggerType
+  | PlanCondition
+  | PsychState
+  | DistanceRange
+  | ArenaZone
+  | CommitLevel
+  | ArenaTag
+  | SurfaceMod
+  | ArenaWeatherMod
+  | ArenaConfig
+  | TrainerSpecialty;
 export type { _StateSurface, _SharedSurface };
 
 // ─── runtime parity (value exports) ──────────────────────────────────────────

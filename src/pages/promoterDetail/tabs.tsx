@@ -115,10 +115,26 @@ export function OverviewTab({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={<Coins className="h-3 w-3" />} label="Avg Purse" value={formatNumber(stats.avgPurse)} />
-        <StatCard icon={<TrendingUp className="h-3 w-3" />} label="Total Hype" value={formatNumber(stats.totalHype)} />
-        <StatCard icon={<Calendar className="h-3 w-3" />} label="This Week" value={`${stats.thisWeekActive}/${promoter.capacity}`} />
-        <StatCard icon={<Users className="h-3 w-3" />} label="Total Offers" value={stats.totalOffers} />
+        <StatCard
+          icon={<Coins className="h-3 w-3" />}
+          label="Avg Purse"
+          value={formatNumber(stats.avgPurse)}
+        />
+        <StatCard
+          icon={<TrendingUp className="h-3 w-3" />}
+          label="Total Hype"
+          value={formatNumber(stats.totalHype)}
+        />
+        <StatCard
+          icon={<Calendar className="h-3 w-3" />}
+          label="This Week"
+          value={`${stats.thisWeekActive}/${promoter.capacity}`}
+        />
+        <StatCard
+          icon={<Users className="h-3 w-3" />}
+          label="Total Offers"
+          value={stats.totalOffers}
+        />
       </div>
       <CapacityCard promoter={promoter} stats={stats} />
       <PersonalityCard promoter={promoter} personality={personality} />

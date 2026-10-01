@@ -134,7 +134,7 @@ describe('AI liveness invariants over 104 weeks (I.2)', () => {
     expect(latePulses.length).toBeGreaterThan(0);
     const stablesWithRecords = finalState.rivals.filter(
       (r) =>
-        ((r.agentMemory?.seasonRecord?.wins ?? 0) + (r.agentMemory?.seasonRecord?.losses ?? 0)) > 0 ||
+        (r.agentMemory?.seasonRecord?.wins ?? 0) + (r.agentMemory?.seasonRecord?.losses ?? 0) > 0 ||
         (r.agentMemory?.lastSeasonRecord?.wins ?? 0) +
           (r.agentMemory?.lastSeasonRecord?.losses ?? 0) >
           0

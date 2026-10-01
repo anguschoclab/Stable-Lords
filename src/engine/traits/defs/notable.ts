@@ -32,7 +32,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   iron_orphan: {
     id: 'iron_orphan',
     name: 'Iron Orphan',
-    description: 'Forged in the cruelest foundling homes, they fight with a desperate, unyielding survival instinct.',
+    description:
+      'Forged in the cruelest foundling homes, they fight with a desperate, unyielding survival instinct.',
     effect: { defModLowHp: 1, enduranceMult: 0.95 },
     tier: 'Notable',
     sign: 'positive',
@@ -440,7 +441,7 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     id: 'orphan_resilience_two',
     name: 'Orphan Resilience II',
     description: 'A deeply ingrained instinct to survive when pushed to the absolute edge.',
-    effect: { defModLowHp: 2, enduranceMult: 0.90 },
+    effect: { defModLowHp: 2, enduranceMult: 0.9 },
     tier: 'Notable',
     sign: 'positive',
     weight: 0.5,
@@ -448,9 +449,11 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   rust_blooded: {
     id: 'rust_blooded',
     name: 'Rust Blooded',
-    description: 'Accustomed to fighting amidst industrial decay. Immune to minor scrapes and exhaustion.',
-    effect: { enduranceMult: 0.90, defMod: 1 },
+    description:
+      'Accustomed to fighting amidst industrial decay. Immune to minor scrapes and exhaustion.',
+    effect: { enduranceMult: 0.9, defMod: 1 },
     tier: 'Notable',
     sign: 'positive',
     weight: 0.6,
-  },};
+  },
+};

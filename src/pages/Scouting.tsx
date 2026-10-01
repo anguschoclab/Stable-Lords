@@ -22,12 +22,14 @@ function HeaderStats({ reportCount }: { reportCount: number }) {
         <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
           Scout Reports
         </span>
-        <span className="text-sm font-display font-black text-foreground">
-          {reportCount} Filed
-        </span>
+        <span className="text-sm font-display font-black text-foreground">{reportCount} Filed</span>
       </div>
       <div className="flex items-center gap-4 border-l border-white/5 pl-6">
-        <ImperialRing size="xs" variant="blood" className="animate-pulse motion-reduce:animate-none">
+        <ImperialRing
+          size="xs"
+          variant="blood"
+          className="animate-pulse motion-reduce:animate-none"
+        >
           <Radio className="h-3 w-3 text-primary" />
         </ImperialRing>
         <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">

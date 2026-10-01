@@ -111,7 +111,7 @@ function walkStrings(obj: unknown, path: string): void {
 
 try {
   // Read and merge all domain files
-  const files = readdirSync(NARRATIVE_DIR).filter(f => f.endsWith('.json'));
+  const files = readdirSync(NARRATIVE_DIR).filter((f) => f.endsWith('.json'));
   const data: Record<string, unknown> = {};
   for (const file of files) {
     const raw = readFileSync(resolve(NARRATIVE_DIR, file), 'utf-8');

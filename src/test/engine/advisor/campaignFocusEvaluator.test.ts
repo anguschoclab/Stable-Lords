@@ -4,18 +4,21 @@ import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
-import { makeWarrior as fixtureWarrior, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeWarrior as fixtureWarrior,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const mkWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
   fixtureWarrior({
-  id: 'w1' as any,
-  name: 'Marcus',
-  style: FightingStyle.LungingAttack,
-  attributes: { ST: 14, CN: 12, SZ: 11, WT: 12, WL: 10, SP: 14, DF: 10 },
-  popularity: 20,
-  career: { wins: 4, losses: 1, kills: 0 },
-  ...overrides,
-});
+    id: 'w1' as any,
+    name: 'Marcus',
+    style: FightingStyle.LungingAttack,
+    attributes: { ST: 14, CN: 12, SZ: 11, WT: 12, WL: 10, SP: 14, DF: 10 },
+    popularity: 20,
+    career: { wins: 4, losses: 1, kills: 0 },
+    ...overrides,
+  });
 
 const mkState = (overrides: Partial<GameState> = {}): GameState =>
   fixtureGameState({
@@ -65,7 +68,10 @@ describe('evaluateCampaignFocus', () => {
   });
 
   it('assigns TOURNAMENT_PUSH for ranked contenders during seasonal tournament prep', () => {
-    const warrior = mkWarrior({ id: 'contender1' as any, career: { wins: 8, losses: 2, kills: 1 } });
+    const warrior = mkWarrior({
+      id: 'contender1' as any,
+      career: { wins: 8, losses: 2, kills: 1 },
+    });
     const state = mkState({
       week: 8, // inside the prep window for the week-10 seasonal
       realmRankings: {

@@ -11,11 +11,7 @@ import { cn } from '@/lib/utils';
 import type { RivalStableData } from '@/types/game';
 import { StableRosterTab } from '@/components/stable/StableRosterTab';
 import { StableLogsTab } from '@/components/stable/StableLogsTab';
-import {
-  StableNotFound,
-  StableSidebar,
-  StableOverviewTab,
-} from './stableDetail/sections';
+import { StableNotFound, StableSidebar, StableOverviewTab } from './stableDetail/sections';
 import { deriveStableStats } from './stableDetail/deriveStableStats';
 
 type DetailTab = 'OVERVIEW' | 'ROSTER' | 'LOGS';
@@ -42,9 +38,7 @@ function DossierTabs({
           onClick={() => onChange(tab.id)}
           className={cn(
             'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative motion-reduce:transition-none',
-            activeTab === tab.id
-              ? 'text-primary'
-              : 'text-muted-foreground/40 hover:text-foreground'
+            activeTab === tab.id ? 'text-primary' : 'text-muted-foreground/40 hover:text-foreground'
           )}
         >
           <tab.icon className="h-3.5 w-3.5" />
@@ -88,9 +82,7 @@ function HeaderActions({ rival }: { rival: RivalStableData }) {
         <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
           Fame
         </span>
-        <span className="text-xl font-display font-black text-arena-gold">
-          {rival.owner.fame}
-        </span>
+        <span className="text-xl font-display font-black text-arena-gold">{rival.owner.fame}</span>
       </div>
     </div>
   );
@@ -104,8 +96,15 @@ function TabBody({
   activeTab: DetailTab;
   stats: ReturnType<typeof deriveStableStats>;
 }) {
-  const { activeRoster, deadWarriors, totalWins, totalLosses, totalKills, stableWarriorIds, recentBouts } =
-    stats;
+  const {
+    activeRoster,
+    deadWarriors,
+    totalWins,
+    totalLosses,
+    totalKills,
+    stableWarriorIds,
+    recentBouts,
+  } = stats;
   return (
     <div className="pt-4">
       {activeTab === 'OVERVIEW' && (
@@ -169,7 +168,6 @@ export default function StableDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
         <StableSidebar rival={rival} tierCfg={stats.tierCfg} winRate={stats.winRate} />
-
 
         {/* Main Content: Tabbed Analysis */}
         <div className="lg:col-span-8 space-y-8">

@@ -6,7 +6,6 @@ vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreSelector }))
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-
 vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 
 vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));

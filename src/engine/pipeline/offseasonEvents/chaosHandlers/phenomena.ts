@@ -47,7 +47,6 @@ export function handleTemporalAnomaly(
   });
 }
 
-
 /** Handler for the Cursed Treasure Discovery offseason event — gold with a curse side effect. */
 export function handleCursedTreasureDiscovery(
   state: GameState,
@@ -84,7 +83,6 @@ export function handleCursedTreasureDiscovery(
   });
 }
 
-
 /** Handler for the Abyssal Tempest Ritual offseason event — storm ritual granting power at injury risk. */
 export function handleAbyssalTempestRitual(
   state: GameState,
@@ -115,7 +113,6 @@ export function handleAbyssalTempestRitual(
   });
 }
 
-
 /** Handler for the Unexplained Monolith offseason event — grants XP and fame at injury risk. */
 export function handleUnexplainedMonolith(
   state: GameState,
@@ -144,7 +141,9 @@ export function handleUnexplainedMonolith(
     const currentInjuries = existingUpdate.injuries ?? chosen.injuries ?? [];
     const currentTraits = existingUpdate.traits ?? chosen.traits ?? [];
 
-    const newTraits = currentTraits.includes('precise') ? currentTraits : [...currentTraits, 'precise'];
+    const newTraits = currentTraits.includes('precise')
+      ? currentTraits
+      : [...currentTraits, 'precise'];
 
     return {
       updates: {
@@ -158,7 +157,6 @@ export function handleUnexplainedMonolith(
     };
   });
 }
-
 
 /** Handler for the Shattered Skies Ritual offseason event — grants XP but adds fatigue. */
 export function handleShatteredSkiesRitual(
@@ -180,7 +178,6 @@ export function handleShatteredSkiesRitual(
     };
   });
 }
-
 
 /** Handler for the Weeping Skies offseason event — grants XP to a random warrior. */
 export function handleWeepingSkies(

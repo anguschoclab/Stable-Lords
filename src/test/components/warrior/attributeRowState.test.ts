@@ -117,9 +117,7 @@ describe('getAttributeRowState', () => {
 
   it('reports lockReason precedence: ceilingHit beats atCap, atCap beats seasonCapped', () => {
     vi.mocked(canGrow).mockReturnValue(false);
-    const s = getAttributeRowState(
-      baseInput({ atCap: true, seasonalGains: { ST: 3 } })
-    );
+    const s = getAttributeRowState(baseInput({ atCap: true, seasonalGains: { ST: 3 } }));
     expect(s.lockReason).toBe('At potential ceiling');
   });
 

@@ -69,16 +69,15 @@ export const retired = (state: GameState, value: Warrior[]) => {
  * live rosters directly (the findWarriorById cache may hold stale objects
  * after same-tick roster replacements).
  */
-export const warriorEpithets = (
-  state: GameState,
-  value: readonly WarriorEpithetAward[]
-) => {
+export const warriorEpithets = (state: GameState, value: readonly WarriorEpithetAward[]) => {
   for (const { warriorId, epithet } of value) {
     const w =
       state.roster.find((x) => x.id === warriorId) ??
       (state.rivals ?? []).flatMap((r) => r.roster).find((x) => x.id === warriorId) ??
       // Tournament-only warriors (emergency freelancers) can hold titles.
-      (state.tournaments ?? []).flatMap((t) => t.participants ?? []).find((x) => x.id === warriorId);
+      (state.tournaments ?? [])
+        .flatMap((t) => t.participants ?? [])
+        .find((x) => x.id === warriorId);
     if (!w) continue;
     if (epithetRankOf(epithet) > epithetRankOf(w.epithet)) w.epithet = epithet;
   }

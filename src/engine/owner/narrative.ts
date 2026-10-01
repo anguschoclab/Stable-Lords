@@ -104,9 +104,7 @@ function rivalSeasonNarratives(
 
   // Any owner with a dominant season
   if (winRate >= 0.8 && totalFights >= 5) {
-    items.push(
-      `${rival.owner.stableName} dominated ${season} with a record of ${wins}-${losses}!`
-    );
+    items.push(`${rival.owner.stableName} dominated ${season} with a record of ${wins}-${losses}!`);
   }
 
   // Any owner with devastating losses

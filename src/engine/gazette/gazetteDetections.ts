@@ -117,7 +117,13 @@ export function computeFightAnalysis(
     pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
   }
 
-  return { streaks, priorWarriorIds, warriorStats, pairCounts, namesByFightId: buildNamesByFightId(weekFights) };
+  return {
+    streaks,
+    priorWarriorIds,
+    warriorStats,
+    pairCounts,
+    namesByFightId: buildNamesByFightId(weekFights),
+  };
 }
 
 /**

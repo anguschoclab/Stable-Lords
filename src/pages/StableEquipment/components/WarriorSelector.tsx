@@ -38,7 +38,9 @@ export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelec
             <div
               className={cn(
                 'w-1.5 h-1.5 rounded-full shrink-0',
-                selectedId === w.id ? 'bg-primary animate-pulse motion-reduce:animate-none' : 'bg-white/20'
+                selectedId === w.id
+                  ? 'bg-primary animate-pulse motion-reduce:animate-none'
+                  : 'bg-white/20'
               )}
             />
             <div className="flex flex-col items-start min-w-0">

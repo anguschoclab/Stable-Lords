@@ -79,8 +79,16 @@ function buildIntentContext(rival: RivalStableData, state: GameState): IntentCon
     seasonFightsPlayed >= 6 ? (seasonRecord?.wins ?? 0) / seasonFightsPlayed : null;
 
   return {
-    rival, state, personality, activeRoster, injuryCount, lungeCount,
-    isHazardousWeather, meta, metaIsHostile, seasonWinRate,
+    rival,
+    state,
+    personality,
+    activeRoster,
+    injuryCount,
+    lungeCount,
+    isHazardousWeather,
+    meta,
+    metaIsHostile,
+    seasonWinRate,
   };
 }
 
@@ -135,8 +143,7 @@ function crownCampaignPicked(ctx: IntentContext): boolean {
   return (
     !!crownTarget &&
     ctx.rival.treasury >= 400 &&
-    ctx.state.arenaChampions?.[crownTarget.arenaId]?.champion?.warriorId !==
-      crownTarget.warriorId
+    ctx.state.arenaChampions?.[crownTarget.arenaId]?.champion?.warriorId !== crownTarget.warriorId
   );
 }
 
@@ -188,8 +195,7 @@ function rosterDiversityApplies(ctx: IntentContext): boolean {
 
 /** EXPANSION: thin roster — boosted if a known rival has grown recently. */
 function expansionApplies(ctx: IntentContext): boolean {
-  const minSize =
-    ctx.personality === 'Aggressive' ? 8 : ctx.personality === 'Methodical' ? 5 : 6;
+  const minSize = ctx.personality === 'Aggressive' ? 8 : ctx.personality === 'Methodical' ? 5 : 6;
   const knownRivals = ctx.rival.agentMemory?.knownRivals ?? [];
   // ⚡ Bolt Optimization: Using for...of loop instead of .map() to avoid tuple array allocation overhead.
   const rivalsByOwnerId = new Map<string, RivalStableData>();
@@ -399,9 +405,7 @@ export function intentStillApplies(
         perceived && Object.keys(perceived).length > 0
           ? perceived
           : state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
-      return (
-        dominant !== undefined && max / styles.length >= 0.45 && (meta[dominant] ?? 0) <= -2
-      );
+      return dominant !== undefined && max / styles.length >= 0.45 && (meta[dominant] ?? 0) <= -2;
     }
     case 'CONSOLIDATION':
       return true;
@@ -418,9 +422,9 @@ function resolveVendettaTarget(
 ): AIStrategy['targetStableId'] {
   const grudgeTarget = findGrudge(state.grudgeMap, rival.owner.id);
   if (grudgeTarget !== undefined) {
-    return (grudgeTarget.ownerIdA === rival.owner.id
-      ? grudgeTarget.ownerIdB
-      : grudgeTarget.ownerIdA) as AIStrategy['targetStableId'];
+    return (
+      grudgeTarget.ownerIdA === rival.owner.id ? grudgeTarget.ownerIdB : grudgeTarget.ownerIdA
+    ) as AIStrategy['targetStableId'];
   }
   // No grudge target — fall back to dossier intel.
   const dossiers = rival.agentMemory?.opponentDossiers ?? {};

@@ -60,15 +60,15 @@ function applySevereInjuryRule(
     rosterUpdates,
     rivalWarriorPatches,
     newsletterItems: [
-        {
-          id: rng.uuid(),
-          week,
-          title: 'Miraculous Survival',
-          items: [
-            `${warriorDisplayName(spared)} was left for dead by ${warriorDisplayName(outcome.winner === 'A' ? wA : wD)}, but the healers refused to give up. (House rule: severe injury instead of death)`,
-          ],
-        },
-      ],
+      {
+        id: rng.uuid(),
+        week,
+        title: 'Miraculous Survival',
+        items: [
+          `${warriorDisplayName(spared)} was left for dead by ${warriorDisplayName(outcome.winner === 'A' ? wA : wD)}, but the healers refused to give up. (House rule: severe injury instead of death)`,
+        ],
+      },
+    ],
   };
   return {
     impact,
@@ -261,5 +261,10 @@ export function handleDeath(
     fameDelta: isPlayerVictim ? 5 : 0,
   };
 
-  return { impact, death: true, playerDeath: isPlayerVictim, deathNames: [warriorDisplayName(victim)] };
+  return {
+    impact,
+    death: true,
+    playerDeath: isPlayerVictim,
+    deathNames: [warriorDisplayName(victim)],
+  };
 }

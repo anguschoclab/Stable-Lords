@@ -4,12 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { resolveBout, generatePairings } from '@/engine/bout';
 import { FightingStyle } from '@/types/game';
-import {
-  makeWarrior,
-  makeRival,
-  makeBoutOffer,
-  makeGameState,
-} from '@/test/_fixtures/factories';
+import { makeWarrior, makeRival, makeBoutOffer, makeGameState } from '@/test/_fixtures/factories';
 import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
 
 describe('boutProcessor - generatePairings', () => {

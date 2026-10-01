@@ -45,10 +45,7 @@ export function listRecoveryEtas(
 ): CouncilLookahead['recoveryEtas'] {
   return activeWarriors
     .map((w) => {
-      const weeks = Math.max(
-        0,
-        ...(w.injuries || []).map((i) => i.weeksRemaining ?? 0)
-      );
+      const weeks = Math.max(0, ...(w.injuries || []).map((i) => i.weeksRemaining ?? 0));
       return weeks > 0
         ? {
             warriorId: w.id,
@@ -80,12 +77,10 @@ export function listTitleDefenses(
           arenaId,
           warriorId: champ.warriorId,
           warriorName:
-            cards.find((c) => c.warriorId === champ.warriorId)?.warriorName ??
-            champ.warriorId,
+            cards.find((c) => c.warriorId === champ.warriorId)?.warriorName ?? champ.warriorId,
           dueAbsoluteWeek: champ.lastActivityWeek + ARENA_TITLE.DEFENSE_INTERVAL_WEEKS,
         },
       ];
     })
     .sort((a, b) => a.dueAbsoluteWeek - b.dueAbsoluteWeek);
 }
-

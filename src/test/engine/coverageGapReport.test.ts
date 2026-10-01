@@ -3,7 +3,6 @@ import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
-
 describe('coverage gap report', () => {
   const engineDir = path.resolve(__dirname, '../../src/engine');
   const testDir = path.resolve(__dirname, '../engine');

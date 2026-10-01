@@ -12,9 +12,7 @@ import { calculateKillWindow } from '@/engine/combat/mechanics/damageCalc';
 
 describe('killWindowBonus scale', () => {
   it('every trait killWindowBonus stays below the kill-threshold cap scale', () => {
-    const offenders = Object.values(TRAITS).filter(
-      (t) => (t.effect?.killWindowBonus ?? 0) >= 0.05
-    );
+    const offenders = Object.values(TRAITS).filter((t) => (t.effect?.killWindowBonus ?? 0) >= 0.05);
     expect(offenders.map((t) => t.id)).toEqual([]);
   });
 

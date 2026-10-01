@@ -21,14 +21,15 @@ export const BankruptcyService = {
    */
   processBankruptcy(
     state: GameState,
-    _rng: IRNGService
+    _rng: IRNGService,
+    threshold: number = BANKRUPTCY_THRESHOLD
   ): { updatedState: GameState; bankruptStables: string[] } {
     const updatedState = { ...state };
     const bankruptStables: string[] = [];
 
     const now = state.absoluteWeek ?? state.week;
     updatedState.rivals = updatedState.rivals.filter((rival) => {
-      if (rival.treasury < BANKRUPTCY_THRESHOLD) {
+      if (rival.treasury < threshold) {
         // Same grace as the weekly path: a stable younger than
         // BANKRUPTCY_GRACE_WEEKS is still ramping and does not fold. A
         // missing establishment stamp means the stable predates tracking —

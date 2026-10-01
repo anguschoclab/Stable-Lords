@@ -74,31 +74,39 @@ describe('Bookmarks Page', () => {
   });
 
   it('renders bookmark count in header', () => {
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
-      { entityType: 'rival', entityId: 'r1', createdAt: '2026-01-02' },
-    ] });
+    setStore({
+      bookmarks: [
+        { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
+        { entityType: 'rival', entityId: 'r1', createdAt: '2026-01-02' },
+      ],
+    });
     render(<Bookmarks />);
     expect(screen.getByText('2')).toBeInTheDocument();
   });
 
   it('groups bookmarks by entity type', () => {
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
-      { entityType: 'warrior', entityId: 'w2', createdAt: '2026-01-02' },
-      { entityType: 'rival', entityId: 'r1', createdAt: '2026-01-03' },
-    ] });
-    setStore({ roster: [
-      { id: 'w1', name: 'Thorn', style: 'SlashingAttack' },
-      { id: 'w2', name: 'Blade', style: 'AimedBlow' },
-    ] });
-    setStore({ rivals: [
-      {
-        id: 'r1',
-        owner: { id: 'r1', name: 'Rival One', stableName: 'Iron Fang' },
-        roster: [],
-      },
-    ] });
+    setStore({
+      bookmarks: [
+        { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
+        { entityType: 'warrior', entityId: 'w2', createdAt: '2026-01-02' },
+        { entityType: 'rival', entityId: 'r1', createdAt: '2026-01-03' },
+      ],
+    });
+    setStore({
+      roster: [
+        { id: 'w1', name: 'Thorn', style: 'SlashingAttack' },
+        { id: 'w2', name: 'Blade', style: 'AimedBlow' },
+      ],
+    });
+    setStore({
+      rivals: [
+        {
+          id: 'r1',
+          owner: { id: 'r1', name: 'Rival One', stableName: 'Iron Fang' },
+          roster: [],
+        },
+      ],
+    });
     render(<Bookmarks />);
     expect(screen.getByText('Thorn')).toBeInTheDocument();
     expect(screen.getByText('Blade')).toBeInTheDocument();
@@ -106,20 +114,24 @@ describe('Bookmarks Page', () => {
   });
 
   it('shows [Entity Removed] for dangling bookmarks', () => {
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'ghost-id', createdAt: '2026-01-01' },
-      { entityType: 'promoter', entityId: 'ghost-promo', createdAt: '2026-01-02' },
-    ] });
+    setStore({
+      bookmarks: [
+        { entityType: 'warrior', entityId: 'ghost-id', createdAt: '2026-01-01' },
+        { entityType: 'promoter', entityId: 'ghost-promo', createdAt: '2026-01-02' },
+      ],
+    });
     render(<Bookmarks />);
     const removedTexts = screen.getAllByText('[Entity Removed]');
     expect(removedTexts.length).toBeGreaterThanOrEqual(2);
   });
 
   it('looks up warriors from roster, graveyard, and retired', () => {
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'grave1', createdAt: '2026-01-01' },
-      { entityType: 'warrior', entityId: 'ret1', createdAt: '2026-01-02' },
-    ] });
+    setStore({
+      bookmarks: [
+        { entityType: 'warrior', entityId: 'grave1', createdAt: '2026-01-01' },
+        { entityType: 'warrior', entityId: 'ret1', createdAt: '2026-01-02' },
+      ],
+    });
     setStore({ roster: [] });
     setStore({ graveyard: [{ id: 'grave1', name: 'DeadWarrior', style: 'BashingAttack' }] });
     setStore({ retired: [{ id: 'ret1', name: 'RetiredWarrior', style: 'ParryLunge' }] });
@@ -129,86 +141,94 @@ describe('Bookmarks Page', () => {
   });
 
   it('looks up rivals by owner id when stable id differs', () => {
-    setStore({ bookmarks: [
-      { entityType: 'rival', entityId: 'owner-1', createdAt: '2026-01-01' },
-    ] });
-    setStore({ rivals: [
-      {
-        id: 'stable-1',
-        owner: { id: 'owner-1', name: 'Owner One', stableName: 'Split Key Stable' },
-        roster: [],
-      },
-    ] });
+    setStore({
+      bookmarks: [{ entityType: 'rival', entityId: 'owner-1', createdAt: '2026-01-01' }],
+    });
+    setStore({
+      rivals: [
+        {
+          id: 'stable-1',
+          owner: { id: 'owner-1', name: 'Owner One', stableName: 'Split Key Stable' },
+          roster: [],
+        },
+      ],
+    });
     render(<Bookmarks />);
     expect(screen.getByText('Split Key Stable')).toBeInTheDocument();
   });
 
   it('looks up warriors from rival rosters', () => {
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'rival-warrior', createdAt: '2026-01-01' },
-    ] });
-    setStore({ rivals: [
-      {
-        id: 'riv1',
-        owner: { id: 'riv1', name: 'Enemy', stableName: 'Red Clan' },
-        roster: [{ id: 'rival-warrior', name: 'FoeBlade', style: 'LungingAttack' }],
-      },
-    ] });
+    setStore({
+      bookmarks: [{ entityType: 'warrior', entityId: 'rival-warrior', createdAt: '2026-01-01' }],
+    });
+    setStore({
+      rivals: [
+        {
+          id: 'riv1',
+          owner: { id: 'riv1', name: 'Enemy', stableName: 'Red Clan' },
+          roster: [{ id: 'rival-warrior', name: 'FoeBlade', style: 'LungingAttack' }],
+        },
+      ],
+    });
     render(<Bookmarks />);
     expect(screen.getByText('FoeBlade')).toBeInTheDocument();
   });
 
   it('looks up promoters', () => {
-    setStore({ bookmarks: [
-      { entityType: 'promoter', entityId: 'promo1', createdAt: '2026-01-01' },
-    ] });
-    setStore({ promoters: {
-      promo1: { id: 'promo1', name: 'GoldRing', tier: 'Legendary', personality: 'Honorable' },
-    } });
+    setStore({
+      bookmarks: [{ entityType: 'promoter', entityId: 'promo1', createdAt: '2026-01-01' }],
+    });
+    setStore({
+      promoters: {
+        promo1: { id: 'promo1', name: 'GoldRing', tier: 'Legendary', personality: 'Honorable' },
+      },
+    });
     render(<Bookmarks />);
     expect(screen.getByText('GoldRing')).toBeInTheDocument();
   });
 
   it('looks up trainers', () => {
     setStore({ bookmarks: [{ entityType: 'trainer', entityId: 't1', createdAt: '2026-01-01' }] });
-    setStore({ trainers: [
-      { id: 't1', name: 'Coach Steel', tier: 'Expert', focus: 'Strength' },
-    ] });
+    setStore({ trainers: [{ id: 't1', name: 'Coach Steel', tier: 'Expert', focus: 'Strength' }] });
     render(<Bookmarks />);
     expect(screen.getByText('Coach Steel')).toBeInTheDocument();
   });
 
   it('looks up tournaments', () => {
-    setStore({ bookmarks: [
-      { entityType: 'tournament', entityId: 'tr1', createdAt: '2026-01-01' },
-    ] });
+    setStore({
+      bookmarks: [{ entityType: 'tournament', entityId: 'tr1', createdAt: '2026-01-01' }],
+    });
     setStore({ tournaments: [{ id: 'tr1', name: 'Spring Classic', season: 'Spring', week: 5 }] });
     render(<Bookmarks />);
     expect(screen.getByText('Spring Classic')).toBeInTheDocument();
   });
 
   it('looks up bout offers', () => {
-    setStore({ bookmarks: [
-      { entityType: 'boutOffer', entityId: 'bo1', createdAt: '2026-01-01' },
-    ] });
-    setStore({ boutOffers: {
-      bo1: { id: 'bo1', promoterId: 'promo1', purse: 1000 },
-    } });
-    setStore({ promoters: {
-      promo1: { id: 'promo1', name: 'ArenaMaster', tier: 'National', personality: 'Aggressive' },
-    } });
+    setStore({
+      bookmarks: [{ entityType: 'boutOffer', entityId: 'bo1', createdAt: '2026-01-01' }],
+    });
+    setStore({
+      boutOffers: {
+        bo1: { id: 'bo1', promoterId: 'promo1', purse: 1000 },
+      },
+    });
+    setStore({
+      promoters: {
+        promo1: { id: 'promo1', name: 'ArenaMaster', tier: 'National', personality: 'Aggressive' },
+      },
+    });
     render(<Bookmarks />);
     expect(screen.getByText('bo1')).toBeInTheDocument();
     expect(screen.getByText(/ArenaMaster/i)).toBeInTheDocument();
   });
 
   it('looks up scout reports', () => {
-    setStore({ bookmarks: [
-      { entityType: 'scoutReport', entityId: 'sr1', createdAt: '2026-01-01' },
-    ] });
-    setStore({ scoutReports: [
-      { id: 'sr1', warriorName: 'MysteryFighter', quality: 'Expert', week: 3 },
-    ] });
+    setStore({
+      bookmarks: [{ entityType: 'scoutReport', entityId: 'sr1', createdAt: '2026-01-01' }],
+    });
+    setStore({
+      scoutReports: [{ id: 'sr1', warriorName: 'MysteryFighter', quality: 'Expert', week: 3 }],
+    });
     render(<Bookmarks />);
     expect(screen.getByText('MysteryFighter')).toBeInTheDocument();
   });
@@ -229,14 +249,18 @@ describe('Bookmarks Page', () => {
   });
 
   it('sorts warriors alphabetically when sort is set to name', async () => {
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'w2', createdAt: '2026-01-01' },
-      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-02' },
-    ] });
-    setStore({ roster: [
-      { id: 'w1', name: 'Alpha', style: 'AimedBlow' },
-      { id: 'w2', name: 'Zebra', style: 'SlashingAttack' },
-    ] });
+    setStore({
+      bookmarks: [
+        { entityType: 'warrior', entityId: 'w2', createdAt: '2026-01-01' },
+        { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-02' },
+      ],
+    });
+    setStore({
+      roster: [
+        { id: 'w1', name: 'Alpha', style: 'AimedBlow' },
+        { id: 'w2', name: 'Zebra', style: 'SlashingAttack' },
+      ],
+    });
     render(<Bookmarks />);
     const sortButtons = screen.getAllByLabelText(/sort by name/i);
     expect(sortButtons.length).toBeGreaterThanOrEqual(1);
@@ -245,9 +269,9 @@ describe('Bookmarks Page', () => {
   it('displays tracked date for bookmarks', () => {
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 2);
-    setStore({ bookmarks: [
-      { entityType: 'warrior', entityId: 'w1', createdAt: pastDate.toISOString() },
-    ] });
+    setStore({
+      bookmarks: [{ entityType: 'warrior', entityId: 'w1', createdAt: pastDate.toISOString() }],
+    });
     setStore({ roster: [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }] });
     render(<Bookmarks />);
     expect(screen.getByText(/Tracked 2 days ago/i)).toBeInTheDocument();

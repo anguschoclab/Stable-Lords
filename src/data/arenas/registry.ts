@@ -1,22 +1,14 @@
 // Split from data/arenas.ts — arena registry + query helpers
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 
-
-
 const registry = new Map<string, ArenaConfig>();
-
-
 
 // Internal caches for optimized retrieval
 let allCache: ArenaConfig[] | null = null;
 
-
 const tagIndex = new Map<ArenaTag, ArenaConfig[]>();
 
-
 const tierIndex = new Map<number, ArenaConfig[]>();
-
-
 
 /**
  * Register an arena config in the global registry.
@@ -30,8 +22,6 @@ export function registerArena(arena: ArenaConfig): void {
   tagIndex.clear();
   tierIndex.clear();
 }
-
-
 
 /** Fallback arena for unknown ids — injected by index.ts (registry must not
  * import venue data or it would create a module cycle). */
@@ -56,8 +46,6 @@ export function getArenaById(id: string): ArenaConfig {
   return arena;
 }
 
-
-
 /**
  * Get all registered arenas.
  * @returns Array of all ArenaConfig entries.
@@ -68,8 +56,6 @@ export function getAllArenas(): ArenaConfig[] {
   }
   return [...allCache];
 }
-
-
 
 /**
  * Get arenas filtered by a specific tag.
@@ -85,8 +71,6 @@ export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
   return [...results];
 }
 
-
-
 /**
  * Get arenas filtered by tier level.
  * @param tier - Tier level (1, 2, or 3).
@@ -101,13 +85,9 @@ export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
   return [...results];
 }
 
-
-
 // Arena configs are registry-static objects — a WeakMap keyed on the config
 // memoizes one tag Set per arena without mutating ArenaConfig.
 const tagSetCache = new WeakMap<ArenaConfig, Set<ArenaTag>>();
-
-
 
 /**
  * Get a memoized Set of an arena's tags for O(1) membership checks.
@@ -122,8 +102,6 @@ export function arenaTagSet(arena: ArenaConfig): Set<ArenaTag> {
   }
   return s;
 }
-
-
 
 /**
  * Check if an arena is indoors.

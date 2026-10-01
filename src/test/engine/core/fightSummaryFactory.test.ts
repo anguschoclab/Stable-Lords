@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  createFightSummary,
-  createBoutSummary,
-} from '@/engine/core/fightSummaryFactory';
+import { createFightSummary, createBoutSummary } from '@/engine/core/fightSummaryFactory';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { FightingStyle } from '@/types/shared.types';
@@ -339,5 +336,3 @@ describe('createFightSummary absoluteWeek field', () => {
     expect(found[0]!.id).toBe(summary.id);
   });
 });
-
-

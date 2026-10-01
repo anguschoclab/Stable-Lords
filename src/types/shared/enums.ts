@@ -1,18 +1,12 @@
-
-
 /**
  * Season type.
  */
 export type Season = 'Spring' | 'Summer' | 'Fall' | 'Winter';
 
-
-
 /**
  * Crowd mood type type.
  */
 export type CrowdMoodType = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';
-
-
 
 /**
  * Defines the shape of newsletter item.

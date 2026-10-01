@@ -56,9 +56,7 @@ export interface BoutShardContext {
  */
 export function processBoutShard(input: BoutShardInput, ctx: BoutShardContext): BoutImpact {
   const p = input.pairing;
-  const contract = p.contractId
-    ? ctx.state.boutOffers?.[p.contractId as BoutOfferId]
-    : undefined;
+  const contract = p.contractId ? ctx.state.boutOffers?.[p.contractId as BoutOfferId] : undefined;
   return resolveBout(ctx.state, {
     warrior: p.a,
     opponent: p.d,
@@ -108,10 +106,7 @@ function chunk<T>(items: T[], n: number): T[][] {
  */
 export interface EnginePool {
   readonly size: number;
-  mapRivalShards(
-    inputs: RivalShardInput[],
-    ctx: RivalShardContext
-  ): Promise<RivalShardOutput[]>;
+  mapRivalShards(inputs: RivalShardInput[], ctx: RivalShardContext): Promise<RivalShardOutput[]>;
   mapBoutShards(inputs: BoutShardInput[], ctx: BoutShardContext): Promise<BoutShardOutput[]>;
   terminate(): void;
 }
@@ -184,8 +179,11 @@ export function createEnginePool(size = 1, opts?: EnginePoolOptions): EnginePool
       if (!canSpawn || inputs.length <= 1 || terminated) {
         return runRivalShardChunk(inputs, ctx);
       }
-      return distributed(inputs, ctx, (w, c, x) => w.runRivalShardChunk(c, x), (c, x) =>
-        runRivalShardChunk(c, x)
+      return distributed(
+        inputs,
+        ctx,
+        (w, c, x) => w.runRivalShardChunk(c, x),
+        (c, x) => runRivalShardChunk(c, x)
       );
     },
 
@@ -193,8 +191,11 @@ export function createEnginePool(size = 1, opts?: EnginePoolOptions): EnginePool
       if (!canSpawn || inputs.length <= 1 || terminated) {
         return runBoutShardChunk(inputs, ctx);
       }
-      return distributed(inputs, ctx, (w, c, x) => w.runBoutShardChunk(c, x), (c, x) =>
-        runBoutShardChunk(c, x)
+      return distributed(
+        inputs,
+        ctx,
+        (w, c, x) => w.runBoutShardChunk(c, x),
+        (c, x) => runBoutShardChunk(c, x)
       );
     },
 

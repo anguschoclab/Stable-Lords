@@ -6,16 +6,19 @@ import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan
 import { makeFightSummary, makeGameState } from '@/test/_fixtures/factories';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
-const mkWarrior = (style: FightingStyle = FightingStyle.LungingAttack, over: Partial<Warrior> = {}): Warrior =>
+const mkWarrior = (
+  style: FightingStyle = FightingStyle.LungingAttack,
+  over: Partial<Warrior> = {}
+): Warrior =>
   fixtureWarrior({
-  id: 'w1' as any,
-  name: 'Marcus',
-  style,
-  attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
-  popularity: 20,
-  career: { wins: 4, losses: 1, kills: 0 },
-  ...over,
-});
+    id: 'w1' as any,
+    name: 'Marcus',
+    style,
+    attributes: { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 },
+    popularity: 20,
+    career: { wins: 4, losses: 1, kills: 0 },
+    ...over,
+  });
 
 describe('evaluateTacticsAdvice', () => {
   it('selects best offensive and defensive tactics matching tacticAdvisor payoff', () => {
@@ -54,7 +57,11 @@ describe('evaluateTacticsAdvice', () => {
     });
 
     const advice = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');
-    expect(advice.gearNotes.some((n) => n.toLowerCase().includes('encumbrance') || n.toLowerCase().includes('plate'))).toBe(true);
+    expect(
+      advice.gearNotes.some(
+        (n) => n.toLowerCase().includes('encumbrance') || n.toLowerCase().includes('plate')
+      )
+    ).toBe(true);
   });
 
   it('applies rematch patience deltas when warrior holds a losing record vs the opponent', () => {
@@ -208,17 +215,15 @@ describe('suggested conditions (plan triggers)', () => {
 
   it('recommends a survival ramp for REHABILITATION and exhausted fighters', () => {
     const rehab = evaluateTacticsAdvice(mkWarrior(FightingStyle.TotalParry), 'REHABILITATION');
-    expect(
-      rehab.suggestedConditions?.some((c) => c.trigger.type === 'ENDURANCE_BELOW')
-    ).toBe(true);
+    expect(rehab.suggestedConditions?.some((c) => c.trigger.type === 'ENDURANCE_BELOW')).toBe(true);
 
     const exhausted = evaluateTacticsAdvice(
       mkWarrior(FightingStyle.BashingAttack, { fatigue: 45 }),
       'PURSE_HUNTER'
     );
-    expect(
-      exhausted.suggestedConditions?.some((c) => c.trigger.type === 'ENDURANCE_BELOW')
-    ).toBe(true);
+    expect(exhausted.suggestedConditions?.some((c) => c.trigger.type === 'ENDURANCE_BELOW')).toBe(
+      true
+    );
   });
 
   it('recommends a gassed-opponent press when intel reports a passive plan', () => {
@@ -250,9 +255,9 @@ describe('suggested conditions (plan triggers)', () => {
       opponent,
       state: makeGameState({}),
     });
-    expect(
-      advice.suggestedConditions?.some((c) => c.trigger.type === 'OPPONENT_HP_BELOW')
-    ).toBe(true);
+    expect(advice.suggestedConditions?.some((c) => c.trigger.type === 'OPPONENT_HP_BELOW')).toBe(
+      true
+    );
   });
 
   it('suggests no conditions without an opponent context on a healthy warrior', () => {

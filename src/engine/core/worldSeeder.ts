@@ -11,6 +11,8 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, resolveRng } from '@/utils/random';
 
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
+import { WORLD_RIVAL_FLOOR, PROMOTERS_PER_STABLE, PROMOTER_COUNT_MIN } from '@/constants/world';
+import { computeRecruitPoolSize } from '@/engine/recruitment/recruitment';
 
 /**
  * Seed the world with initial rivals, recruits, and a starter player roster.
@@ -20,17 +22,26 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
   const rngService = resolveRng(rng, seed);
   const usedNames = new Set<string>();
 
-  // 1. Generate Rivals (45 stables for the fluid population target)
-  const rivals = generateRivalStables(45, seed + 1);
+  // 1. Generate Rivals — the living-world floor (every arena needs a schedule)
+  const rivals = generateRivalStables(WORLD_RIVAL_FLOOR, seed + 1);
   rivals.forEach((r) => r.roster.forEach((w) => usedNames.add(w.name)));
 
-  // 1.1 Generate Promoters (30 for the tiered system)
-  const promotersArray = generatePromoters(30, seed + 3, rngService);
+  // 1.1 Generate Promoters — scaled to the stable count
+  const promoterCount = Math.max(
+    PROMOTER_COUNT_MIN,
+    Math.round(WORLD_RIVAL_FLOOR * PROMOTERS_PER_STABLE)
+  );
+  const promotersArray = generatePromoters(promoterCount, seed + 3, rngService);
   const promoters: Record<string, Promoter> = {};
   promotersArray.forEach((p) => (promoters[p.id] = p));
 
-  // 2. Generate Initial Recruit Pool
-  const recruitPool = generateRecruitPool(12, 1, usedNames, new SeededRNGService(seed + 2));
+  // 2. Generate Initial Recruit Pool — scaled to the stable count
+  const recruitPool = generateRecruitPool(
+    computeRecruitPoolSize(WORLD_RIVAL_FLOOR),
+    1,
+    usedNames,
+    new SeededRNGService(seed + 2)
+  );
 
   // 3. Generate Player Roster (4 balanced warriors)
   const styles = [

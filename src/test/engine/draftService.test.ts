@@ -11,7 +11,13 @@ import { createDefaultMeta } from '@/engine/analytics/metaDrift';
 function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return makeRival({
     id: 'rival_test' as any,
-    owner: makeOwner({ id: 'owner_test' as any, name: 'Test Owner', stableName: 'Test Stable', fame: 50, renown: 10 }),
+    owner: makeOwner({
+      id: 'owner_test' as any,
+      name: 'Test Owner',
+      stableName: 'Test Stable',
+      fame: 50,
+      renown: 10,
+    }),
     fame: 50,
     tier: 'Established',
     ...overrides,

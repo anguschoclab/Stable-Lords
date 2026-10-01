@@ -16,7 +16,9 @@ function findDupes(arr, label) {
   if (dupes.length > 0) {
     console.log(label + ' (' + arr.length + ' entries):');
     for (const d of dupes) {
-      console.log('  dupe: "' + d.value + '" at index ' + d.dupIndex + ' (first at ' + d.firstIndex + ')');
+      console.log(
+        '  dupe: "' + d.value + '" at index ' + d.dupIndex + ' (first at ' + d.firstIndex + ')'
+      );
     }
   } else {
     console.log(label + ': no dupes (' + arr.length + ' entries)');

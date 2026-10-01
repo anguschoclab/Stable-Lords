@@ -4,7 +4,10 @@ import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import { SeededRNG } from '@/utils/random';
-import { makeFightSummary as fixtureFightSummary, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import {
+  makeFightSummary as fixtureFightSummary,
+  makeGameState as fixtureGameState,
+} from '@/test/_fixtures/factories';
 
 const makeFight = (over: Partial<FightSummary> = {}): FightSummary =>
   fixtureFightSummary({

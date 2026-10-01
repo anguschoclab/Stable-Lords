@@ -5,7 +5,6 @@
 
 export const CHILDHOOD_TRAITS: string[] = [
   'learned to gauge distance by dodging the overseer',
-  'memorized the anatomy of beasts while working the charnel pits',
   'developed an iron grip from clinging to the underside of merchant carts',
   'used to meticulously trace the structural flaws in stone walls',
   'slept soundly only when the city',
@@ -178,4 +177,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed an uncanny ability to read the twitch of a muscle before a strike',
   'spent their formative years dodging the heavy boots of drunken guards',
   'learned that the only way to stop a beating was to break the hand delivering it',
+  'learned to tell the precise weight of an iron cudgel by its whistling sound',
+  'developed an unblinking, unsettling stare that unnerved even the cruelest matrons',
+  'spent nights quietly scratching structural blueprints of the workhouse into the stone walls',
 ];

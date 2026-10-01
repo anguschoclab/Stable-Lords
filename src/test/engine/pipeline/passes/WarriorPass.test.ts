@@ -4,10 +4,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runWarriorPass } from '@/engine/pipeline/passes/WarriorPass';
-import {
-  LEGACY_FOUNDER_FAME_MIN,
-  LEGACY_FOUNDER_TRAINER_CHANCE,
-} from '@/constants/world';
+import { LEGACY_FOUNDER_FAME_MIN, LEGACY_FOUNDER_TRAINER_CHANCE } from '@/constants/world';
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeGameState } from '@/test/_fixtures/factories';

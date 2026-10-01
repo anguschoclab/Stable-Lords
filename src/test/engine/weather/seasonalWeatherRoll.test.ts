@@ -30,7 +30,7 @@ describe('seasonalWeather', () => {
       pick: vi.fn(),
       uuid: vi.fn(),
       roll: vi.fn(),
-      shuffle: <T,>(a: T[]) => a,
+      shuffle: <T>(a: T[]) => a,
       rollWeighted: vi.fn(),
     });
 
@@ -41,7 +41,9 @@ describe('seasonalWeather', () => {
       // High roll -> Spring exclusive weather (end of pool)
       // We know there's a lot of weight in the pool, a roll near 0.99
       // should pick from the end of the Spring pool.
-      expect(rollWeather(mockRng(0.9999), 'Spring')).toBe(SEASONAL_WEATHER.Spring[SEASONAL_WEATHER.Spring.length - 1]);
+      expect(rollWeather(mockRng(0.9999), 'Spring')).toBe(
+        SEASONAL_WEATHER.Spring[SEASONAL_WEATHER.Spring.length - 1]
+      );
     });
 
     it('returns fallback if roll somehow escapes loop (float precision)', () => {

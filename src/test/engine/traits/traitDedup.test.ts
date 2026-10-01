@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 149; // 145 previous + 4 V7 union traits (orphan_street_rat, orphan_pit_fighter, orphan_survivor, iron_orphan)
+const EXPECTED_COUNT = 150; // 149 previous + 1 hollow_born
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

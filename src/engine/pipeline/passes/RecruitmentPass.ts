@@ -16,11 +16,7 @@ import { AI_ACADEMY_BONUS_RECRUITS, WORLD_RIVAL_FLOOR } from '@/constants/world'
  * a small slice of the weekly intake, biased toward the founder's favored
  * styles. Claims rotate each week so one academy can't lock the whole intake.
  */
-function applyAcademyClaims(
-  pool: PoolWarrior[],
-  state: GameState,
-  week: number
-): PoolWarrior[] {
+function applyAcademyClaims(pool: PoolWarrior[], state: GameState, week: number): PoolWarrior[] {
   const academies = (state.rivals ?? [])
     .filter((r) => r.owner.foundedByWarriorId)
     .sort((a, b) => (a.id < b.id ? -1 : 1));

@@ -253,7 +253,10 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
 
     if (result.retired && result.retiredObj) {
       retiredWarriors.push(result.retiredObj);
-      if (isLegacyFounderCaliber(result.retiredObj, crownedIds) && rng.next() < LEGACY_FOUND_CHANCE) {
+      if (
+        isLegacyFounderCaliber(result.retiredObj, crownedIds) &&
+        rng.next() < LEGACY_FOUND_CHANCE
+      ) {
         founderEnqueued.push(buildLegacyFounderQueueEntry(result.retiredObj));
       }
       if (isPlayer) {

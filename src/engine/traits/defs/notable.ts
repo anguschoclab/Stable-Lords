@@ -20,6 +20,16 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.5,
   },
+  hollow_born: {
+    id: 'hollow_born',
+    name: 'Hollow Born',
+    description:
+      'An upbringing so devoid of hope has rendered them chillingly indifferent to pain.',
+    effect: { enduranceMult: 0.95, defModLate: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_survivor: {
     id: 'orphan_survivor',
     name: 'Survivor',

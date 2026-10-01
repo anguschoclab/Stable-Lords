@@ -14,8 +14,7 @@ const pbp = pbpJson as Json;
 function allStrings(node: Json, out: Set<string> = new Set()): Set<string> {
   if (typeof node === 'string') out.add(node);
   else if (Array.isArray(node)) node.forEach((e) => allStrings(e, out));
-  else if (node && typeof node === 'object')
-    Object.values(node).forEach((v) => allStrings(v, out));
+  else if (node && typeof node === 'object') Object.values(node).forEach((v) => allStrings(v, out));
   return out;
 }
 
@@ -66,9 +65,7 @@ describe('narrative union V9 gate', () => {
   it.each([...PR_SIGNATURES.map((s) => [s])])(
     'lands union addition: %s',
     (sig: string | RegExp) => {
-      const hit = [...all].some((s) =>
-        sig instanceof RegExp ? sig.test(s) : s === sig
-      );
+      const hit = [...all].some((s) => (sig instanceof RegExp ? sig.test(s) : s === sig));
       expect(hit, String(sig)).toBe(true);
     }
   );

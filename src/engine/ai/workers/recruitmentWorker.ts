@@ -195,8 +195,7 @@ function draftPoolSignings(
     if (!recruit) break;
 
     const qualityGate = bestScore > 0;
-    const desperation =
-      ctx.needsRecruit || activeCount < ctx.minRoster || ctx.isMajorDraftWeek;
+    const desperation = ctx.needsRecruit || activeCount < ctx.minRoster || ctx.isMajorDraftWeek;
     if (!qualityGate && !desperation) break;
 
     const signed = signPoolRecruit(
@@ -312,9 +311,7 @@ function countActiveRoster(rival: RivalStableData): number {
 function visiblePool(pool: PoolWarrior[], rivalId: string, week: number): PoolWarrior[] {
   return pool.filter(
     (w) =>
-      !w.academyStableId ||
-      w.academyStableId === rivalId ||
-      (w.academyClaimExpiryWeek ?? 0) < week
+      !w.academyStableId || w.academyStableId === rivalId || (w.academyClaimExpiryWeek ?? 0) < week
   );
 }
 
@@ -382,20 +379,9 @@ export function processRecruitment(
   // Generated fallback: only when the pools couldn't serve a stable that
   // declared a need or sits below its minimum — cheap, so poor stables can
   // still refill instead of starving out.
-  if (
-    signings === 0 &&
-    (needsRecruit || activeCount < minRoster) &&
-    intent !== 'RECOVERY'
-  ) {
+  if (signings === 0 && (needsRecruit || activeCount < minRoster) && intent !== 'RECOVERY') {
     // signGeneratedRecruit appends directly into `gazetteItems`.
-    const signed = signGeneratedRecruit(
-      updatedRival,
-      week,
-      meta,
-      gazetteItems,
-      usedNames,
-      usedIds
-    );
+    const signed = signGeneratedRecruit(updatedRival, week, meta, gazetteItems, usedNames, usedIds);
     if (signed) updatedRival = signed.updatedRival;
   }
 

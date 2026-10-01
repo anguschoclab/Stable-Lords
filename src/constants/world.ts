@@ -83,7 +83,7 @@ export const LEGACY_FOUNDER_KILLS_MIN = 4;
 
 /** Chance a qualifying retiree converts to a hiring-pool trainer instead of
  *  (or alongside eligibility for) founding — moved from WarriorPass literal. */
-export const LEGACY_FOUNDER_TRAINER_CHANCE = 0.10;
+export const LEGACY_FOUNDER_TRAINER_CHANCE = 0.1;
 
 // ─── AI recruitment ─────────────────────────────────────────────────────────
 

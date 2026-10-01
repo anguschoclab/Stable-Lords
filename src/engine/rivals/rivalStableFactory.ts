@@ -67,11 +67,7 @@ const STABLE_SUFFIX_RE = / \[[IVXLCDM]+\]$/;
  * `Name [II]`, `[III]`, ... `startAt` shifts the scan origin so same-week
  * mints (each seeded by shard index) land on different suffixes.
  */
-export function uniqueStableName(
-  base: string,
-  used: ReadonlySet<string>,
-  startAt = 2
-): string {
+export function uniqueStableName(base: string, used: ReadonlySet<string>, startAt = 2): string {
   if (!used.has(base)) return base;
   const stem = base.replace(STABLE_SUFFIX_RE, '');
   for (let n = Math.max(2, startAt); ; n++) {
@@ -84,11 +80,7 @@ export function uniqueStableName(
  * First free owner name following the factory's `${name} B` convention for
  * the second living copy (C, D, ...), numerals beyond Z.
  */
-export function uniqueOwnerName(
-  base: string,
-  used: ReadonlySet<string>,
-  startAt = 2
-): string {
+export function uniqueOwnerName(base: string, used: ReadonlySet<string>, startAt = 2): string {
   if (!used.has(base)) return base;
   for (let n = Math.max(2, startAt); ; n++) {
     const candidate = `${base} ${n <= 26 ? String.fromCharCode(64 + n) : toRomanNumeral(n)}`;

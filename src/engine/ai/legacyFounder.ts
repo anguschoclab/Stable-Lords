@@ -72,9 +72,7 @@ export function isLegacyFounderCaliber(w: Warrior, crownedIds?: ReadonlySet<stri
   if ((w.fame ?? 0) >= LEGACY_FOUNDER_FAME_MIN) return true;
   if ((w.career?.wins ?? 0) >= LEGACY_FOUNDER_WINS_MIN) return true;
   if ((w.career?.kills ?? 0) >= LEGACY_FOUNDER_KILLS_MIN) return true;
-  if (
-    (w.awards ?? []).some((a) => a.type === 'WARRIOR_OF_YEAR' || a.type === 'KILLER_OF_YEAR')
-  ) {
+  if ((w.awards ?? []).some((a) => a.type === 'WARRIOR_OF_YEAR' || a.type === 'KILLER_OF_YEAR')) {
     return true;
   }
   return false;
@@ -85,9 +83,7 @@ export function isLegacyFounderCaliber(w: Warrior, crownedIds?: ReadonlySet<stri
  * every historical reign. Arena titles never touch the warrior record, so
  * "any title" caliber must be checked against the championship registry.
  */
-export function collectCrownedWarriorIds(
-  state: Pick<GameState, 'arenaChampions'>
-): Set<string> {
+export function collectCrownedWarriorIds(state: Pick<GameState, 'arenaChampions'>): Set<string> {
   const ids = new Set<string>();
   for (const t of Object.values(state.arenaChampions ?? {})) {
     if (t.champion) ids.add(t.champion.warriorId);
@@ -110,7 +106,10 @@ export function personalityFromCareer(w: Warrior): OwnerPersonality {
   const fights = career.wins + career.losses;
   const winRate = fights > 0 ? career.wins / fights : 0;
 
-  if (career.kills >= LEGACY_FOUNDER_KILLS_MIN || (BRUTAL_FAMILY.has(w.style) && career.kills >= 4)) {
+  if (
+    career.kills >= LEGACY_FOUNDER_KILLS_MIN ||
+    (BRUTAL_FAMILY.has(w.style) && career.kills >= 4)
+  ) {
     return 'Aggressive';
   }
 

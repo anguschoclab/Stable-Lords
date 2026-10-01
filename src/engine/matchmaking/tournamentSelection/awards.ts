@@ -134,10 +134,7 @@ function applyRivalAward(
         draft.baseSkills.ATT = (draft.baseSkills.ATT || 0) + 1;
       } else if (tokenType === 'Attribute') {
         const attrKey = awardRng.pick([...primaries]);
-        draft.attributes[attrKey] = Math.min(
-          ATTRIBUTE_MAX,
-          (draft.attributes[attrKey] || 10) + 1
-        );
+        draft.attributes[attrKey] = Math.min(ATTRIBUTE_MAX, (draft.attributes[attrKey] || 10) + 1);
       }
     });
   }

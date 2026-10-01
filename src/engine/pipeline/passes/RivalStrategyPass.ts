@@ -114,10 +114,7 @@ function buildWeekOffers(
  * deterministic tiebreaker, and both the in-line and pooled shard paths
  * converge here.
  */
-function successorReplacements(
-  shardOutputs: RivalShardOutput[],
-  state: GameState
-): StateImpact[] {
+function successorReplacements(shardOutputs: RivalShardOutput[], state: GameState): StateImpact[] {
   const liveStableNames = new Set((state.rivals ?? []).map((r) => r.owner.stableName));
   const liveOwnerNames = new Set((state.rivals ?? []).map((r) => r.owner.name));
   if (state.player) {
@@ -162,10 +159,7 @@ function collectFreedRecruits(
 }
 
 /** Active warriors of starvation-folded stables re-enter as free agents. */
-function collectStarvedRecruits(
-  folded: RivalStableData[],
-  nextWeek: number
-): PoolWarrior[] {
+function collectStarvedRecruits(folded: RivalStableData[], nextWeek: number): PoolWarrior[] {
   const rng = new SeededRNGService(nextWeek * 131 + 17);
   const freed: PoolWarrior[] = [];
   for (const r of folded) {

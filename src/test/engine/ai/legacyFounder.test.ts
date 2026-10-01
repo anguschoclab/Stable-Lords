@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  isLegacyFounderCaliber,
-  collectCrownedWarriorIds,
-} from '@/engine/ai/legacyFounder';
+import { isLegacyFounderCaliber, collectCrownedWarriorIds } from '@/engine/ai/legacyFounder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
@@ -21,13 +18,15 @@ const journeyman = () =>
     fame: 10,
   });
 
-const titleWithReigns = (
-  championId: string | null,
-  historyIds: string[]
-): ArenaTitle =>
+const titleWithReigns = (championId: string | null, historyIds: string[]): ArenaTitle =>
   ({
     champion: championId
-      ? { warriorId: championId as WarriorId, reignStartWeek: 10, defenses: 0, lastActivityWeek: 10 }
+      ? {
+          warriorId: championId as WarriorId,
+          reignStartWeek: 10,
+          defenses: 0,
+          lastActivityWeek: 10,
+        }
       : null,
     history: historyIds.map((id) => ({
       warriorId: id as WarriorId,
@@ -77,7 +76,14 @@ describe('isLegacyFounderCaliber', () => {
   it('admits headline annual award winners', () => {
     const w = journeyman();
     w.awards = [
-      { year: 1, type: 'WARRIOR_OF_YEAR', warriorId: w.id, warriorName: w.name, value: 20, reason: 'x' },
+      {
+        year: 1,
+        type: 'WARRIOR_OF_YEAR',
+        warriorId: w.id,
+        warriorName: w.name,
+        value: 20,
+        reason: 'x',
+      },
     ];
     expect(isLegacyFounderCaliber(w, new Set())).toBe(true);
   });

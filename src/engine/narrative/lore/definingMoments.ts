@@ -161,4 +161,7 @@ export const DEFINING_MOMENTS: string[] = [
   "until they realized the arena's brutality was just a larger reflection of their childhood",
   'knowing that the iron portcullis of the arena was the only true gate to freedom',
   'understanding that in a world of orphans, only the deadliest are remembered',
+  'realizing that the blood-soaked sands offered the only true justice for the forgotten',
+  'until they shattered an overseer’s jaw and claimed their first taste of actual power',
+  'knowing that their survival depended on weaponizing every ounce of their childhood terror',
 ];

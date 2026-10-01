@@ -26,10 +26,9 @@ export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact 
   // (decided inside computeAgingImpact) or convert to hiring-pool trainers —
   // never both. The queue ids are the explicit double-claim guard.
   const founderClaimed = new Set(
-    [
-      ...(state.legacyFounderQueue ?? []),
-      ...(agingImpact.legacyFounderEnqueue ?? []),
-    ].map((w) => w.id)
+    [...(state.legacyFounderQueue ?? []), ...(agingImpact.legacyFounderEnqueue ?? [])].map(
+      (w) => w.id
+    )
   );
   const newTrainersInPool: Trainer[] = [];
   if (agingImpact.retired && agingImpact.retired.length > 0) {

@@ -46,7 +46,12 @@ interface WarriorLinkProps {
  * @param props.children - Optional custom content for the link trigger
  * @returns A tooltip-wrapped sheet trigger or a plain span if the warrior cannot be resolved
  */
-export const WarriorLink = memo(function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
+export const WarriorLink = memo(function WarriorLink({
+  name,
+  id,
+  className,
+  children,
+}: WarriorLinkProps) {
   // Atomic selector — resolves to a primitive id, so unrelated slice churn
   // (graveyard growth, other-roster edits) can't re-render the link.
   const resolvedId = useGameStore((s) => id ?? findWarrior(s, undefined, name)?.id);

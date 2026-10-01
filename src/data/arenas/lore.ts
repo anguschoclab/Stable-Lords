@@ -778,6 +778,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'The spiked bars are so thoroughly stained that no amount of scrubbing removes the rust-colored taint of a thousand desperate clashes.',
   },
+  {
+    id: 'l_std_blood_sands',
+    arenaId: 'STANDARD_ARENA',
+    type: 'historical_battle',
+    title: 'The Crimson Eclipse',
+    narrative:
+      'A legendary bout where both fighters bled out simultaneously, turning the center sands permanently red as an eclipse shadowed the arena.',
+  },
+  {
+    id: 'l_std_stone_echoes',
+    arenaId: 'STANDARD_ARENA',
+    type: 'architectural_quirk',
+    title: 'The Whispering Stones',
+    narrative:
+      'Due to a flaw in the masonry, the dying breaths of fallen gladiators echo eerily around the inner wall during absolute silence.',
+  },
 ];
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();

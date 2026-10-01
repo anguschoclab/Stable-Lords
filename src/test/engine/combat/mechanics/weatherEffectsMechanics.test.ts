@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { resolveEffectiveWeather, getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
+import {
+  resolveEffectiveWeather,
+  getWeatherEffect,
+} from '@/engine/combat/mechanics/weatherEffects';
 import type { WeatherType } from '@/types/state.types';
 
 describe('weatherEffects', () => {

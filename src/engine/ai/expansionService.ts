@@ -55,10 +55,7 @@ function applyLegacyFounder(
   liveNames: LiveNames
 ): void {
   newStable.owner.name = uniqueOwnerName(founder.name, liveNames.ownerNames);
-  newStable.owner.stableName = uniqueStableName(
-    founderStableName(founder),
-    liveNames.stableNames
-  );
+  newStable.owner.stableName = uniqueStableName(founderStableName(founder), liveNames.stableNames);
   newStable.owner.backstoryId = 'gladiator';
   newStable.owner.foundedByWarriorId = founder.id;
   newStable.owner.foundedByWarriorName = founder.name;
@@ -108,11 +105,7 @@ interface MintCtx {
 }
 
 /** Mint one stable whose ids/names collide with nothing already live. */
-function mintStable(
-  state: GameState,
-  rng: IRNGService,
-  ctx: MintCtx
-): RivalStableData | undefined {
+function mintStable(state: GameState, rng: IRNGService, ctx: MintCtx): RivalStableData | undefined {
   for (let attempt = 0; attempt < EXPANSION_MINT_ATTEMPTS; attempt++) {
     const candidate = generateRivalStables(
       1,

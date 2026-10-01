@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ExpansionService } from '@/engine/ai/expansionService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { ALL_TEMPLATES } from '@/data/templates';
 import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { ATTRS_10 } from '@/test/_fixtures/factories';
@@ -124,6 +125,34 @@ describe('ExpansionService', () => {
       expect(minted.length).toBe(0);
       expect(updatedState.rivals.length).toBe(WORLD_RIVAL_HARD_CAP);
       expect(updatedState.legacyFounderQueue?.some((w) => w.name === 'Waiting Legend')).toBe(true);
+    });
+
+    it('mints unique stable and owner names when template names are all taken', () => {
+      // ~21 templates vs a 90+ stable world — mid-game mints always mint at
+      // template iteration 0, so every refill collides and must suffix.
+      const template = state.rivals[0]!;
+      state.rivals = ALL_TEMPLATES.map((t, i) => ({
+        ...template,
+        id: `rival-${i}` as StableId,
+        owner: { ...template.owner, stableName: t.stableName, name: t.ownerName },
+        roster: [],
+      }));
+
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      expect(minted.length).toBeGreaterThan(0);
+
+      const takenStable = new Set(ALL_TEMPLATES.map((t) => t.stableName));
+      const takenOwner = new Set(ALL_TEMPLATES.map((t) => t.ownerName));
+      const mintedStable = minted.map((m) => m.stable.owner.stableName);
+      const mintedOwner = minted.map((m) => m.stable.owner.name);
+      for (const n of mintedStable) {
+        expect(takenStable.has(n), `bare duplicate: ${n}`).toBe(false);
+      }
+      for (const n of mintedOwner) {
+        expect(takenOwner.has(n), `bare duplicate: ${n}`).toBe(false);
+      }
+      expect(new Set(mintedStable).size).toBe(mintedStable.length);
+      expect(new Set(mintedOwner).size).toBe(mintedOwner.length);
     });
 
     it('generated stables have valid structure', () => {

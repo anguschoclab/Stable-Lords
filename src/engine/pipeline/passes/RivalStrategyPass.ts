@@ -28,6 +28,7 @@ import {
   type RivalShardContext,
   type RivalShardOutput,
 } from './rivalStableShard';
+import { uniqueOwnerName, uniqueStableName } from '@/engine/rivals';
 import type { EnginePool } from '@/engine/pool/enginePool';
 
 // Re-exported for existing importers (tests, docs).
@@ -107,11 +108,33 @@ function buildWeekOffers(
 /**
  * Bankruptcy successors carry a new id, which rivalsUpdates can't reach —
  * swap them in explicitly or the bankrupt stable lingers as a ghost.
+ *
+ * Same-week successors mint against the pre-pass snapshot, so two folds can
+ * debut identical names. Re-suffix at merge time — declaration order is the
+ * deterministic tiebreaker, and both the in-line and pooled shard paths
+ * converge here.
  */
-function successorReplacements(shardOutputs: RivalShardOutput[]): StateImpact[] {
+function successorReplacements(
+  shardOutputs: RivalShardOutput[],
+  state: GameState
+): StateImpact[] {
+  const liveStableNames = new Set((state.rivals ?? []).map((r) => r.owner.stableName));
+  const liveOwnerNames = new Set((state.rivals ?? []).map((r) => r.owner.name));
+  if (state.player) {
+    liveStableNames.add(state.player.stableName);
+    liveOwnerNames.add(state.player.name);
+  }
   const rivalReplacements = new Map<StableId, RivalStableData>();
   for (const o of shardOutputs) {
-    if (o.replacesStableId) rivalReplacements.set(o.replacesStableId, o.rival);
+    if (!o.replacesStableId) continue;
+    const stableName = uniqueStableName(o.rival.owner.stableName, liveStableNames);
+    const ownerName = uniqueOwnerName(o.rival.owner.name, liveOwnerNames);
+    if (stableName !== o.rival.owner.stableName || ownerName !== o.rival.owner.name) {
+      o.rival = { ...o.rival, owner: { ...o.rival.owner, stableName, name: ownerName } };
+    }
+    liveStableNames.add(stableName);
+    liveOwnerNames.add(ownerName);
+    rivalReplacements.set(o.replacesStableId, o.rival);
   }
   return rivalReplacements.size > 0 ? [{ rivalReplacements }] : [];
 }
@@ -252,8 +275,10 @@ function finishRivalPass(
   const globalGazetteItems: string[] = shardOutputs.flatMap((o) => o.gazetteItems);
 
   // 1. Process Individual Rival Stables (Economy/Strategy)
+  // successorReplacements also re-suffixes same-week name collisions on
+  // o.rival — run it before currentRivals snapshots the objects.
+  impacts.push(...successorReplacements(shardOutputs, state));
   let currentRivals = shardOutputs.map((o) => o.rival);
-  impacts.push(...successorReplacements(shardOutputs));
 
   // 1.5–1.7. Matchmaking + bids → offers
   const boutOffersWithWorld = buildWeekOffers(state, currentRivals, rng);
@@ -296,16 +321,30 @@ function finishRivalPass(
   const finalizedRivals = currentRivals;
 
   impacts.push(...resolveRivalOffersAndPlans(state, boutOffersWithWorld, finalizedRivals));
+  impacts.push(...weekEndImpacts(state, nextWeek, rng, headless, globalGazetteItems));
 
-  // 5. Tournament Emission — seasonals at SEASONAL_TOURNAMENT_WEEKS; the
-  // champions-only Grand Championship owns week 52 (no seasonal pools that
-  // week, so a champion can never be double-booked into two brackets).
+  return mergeImpacts(impacts);
+}
+
+/**
+ * Tournament emission + the consolidated gazette newsletter — the closing
+ * writes of the rival pass. Seasonals own SEASONAL_TOURNAMENT_WEEKS; the
+ * champions-only Grand Championship owns week 52 (no seasonal pools that
+ * week, so a champion can never be double-booked into two brackets).
+ */
+function weekEndImpacts(
+  state: GameState,
+  nextWeek: number,
+  rng: IRNGService,
+  headless: boolean | undefined,
+  globalGazetteItems: string[]
+): StateImpact[] {
+  const impacts: StateImpact[] = [];
   if (isSeasonalTournamentWeek(nextWeek)) {
     impacts.push(handleSeasonalTournaments(state, nextWeek, rng, headless));
   } else if (isChampionsTournamentWeek(nextWeek)) {
     impacts.push(buildChampionsTournament(state, nextWeek, rng, headless));
   }
-
   if (globalGazetteItems.length > 0) {
     impacts.push({
       newsletterItems: [
@@ -318,8 +357,7 @@ function finishRivalPass(
       ],
     });
   }
-
-  return mergeImpacts(impacts);
+  return impacts;
 }
 
 /**

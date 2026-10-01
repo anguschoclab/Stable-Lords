@@ -171,7 +171,10 @@ export function processPoachMarket(state: GameState, rivals: RivalStableData[]):
     const bid = computePoachBid(rival, rivals, state, seasonIndex, liabilityCache);
     if (!bid) continue;
 
-    const stamped = { ...rival, lastPoachSeason: seasonIndex };
+    // Read through byId — an earlier sweep step may have already mutated this
+    // stable (e.g. it sold a warrior); stamping the stale `rival` would
+    // resurrect the sold warrior in both rosters.
+    const stamped = { ...(byId.get(rival.id) ?? rival), lastPoachSeason: seasonIndex };
     byId.set(rival.id, stamped);
 
     if (bid.playerBound) {

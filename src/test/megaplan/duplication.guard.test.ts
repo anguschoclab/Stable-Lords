@@ -178,6 +178,10 @@ const KNOWN_SRC_PAIRS = new Set([
   // bookmarks page seam: the hook owns the store slice + navigation, the pure
   // module owns row projection — same thin interface-overlap category.
   'src/pages/bookmarks/groupBookmarks.ts|src/pages/bookmarks/useBookmarkGroups.ts',
+  // shared shadcn Select/search toolbar boilerplate — different option domains
+  // (recruit tier/style vs. rival list sorts), styling, and behavior. Not a
+  // behavioral duplicate.
+  'src/components/scouting/rivalListShell.tsx|src/pages/Recruit/components/RecruitFilters.tsx',
 ]);
 
 describe('megaplan: duplication guard', () => {

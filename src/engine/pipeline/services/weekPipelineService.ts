@@ -78,10 +78,14 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
   for (let i = 0; i < unfinished.length; i++) {
     const tour = unfinished[i];
     if (!tour) continue;
+    // Index stride must exceed the round counter width inside
+    // resolveCompleteTournament (safety < 10): a `+ i` stride made
+    // tournament i's round s+1 share a seed with tournament i+1's round s —
+    // identical RNG streams, identical bout ids and correlated fight draws.
     preState = TournamentSelectionService.resolveCompleteTournament(
       preState,
       tour.id,
-      preState.year * 10000 + preState.week * 100 + 7 + i,
+      preState.year * 10000 + preState.week * 100 + 7 + i * 16,
       headless
     );
   }

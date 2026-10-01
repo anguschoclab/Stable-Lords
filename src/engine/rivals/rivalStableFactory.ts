@@ -32,6 +32,70 @@ export function getStableTemplates(): StableTemplate[] {
   return [...ALL_TEMPLATES];
 }
 
+/** Roman numerals for dynasty suffixes — II, III, ... (unbounded). */
+export function toRomanNumeral(n: number): string {
+  const table: [number, string][] = [
+    [1000, 'M'],
+    [900, 'CM'],
+    [500, 'D'],
+    [400, 'CD'],
+    [100, 'C'],
+    [90, 'XC'],
+    [50, 'L'],
+    [40, 'XL'],
+    [10, 'X'],
+    [9, 'IX'],
+    [5, 'V'],
+    [4, 'IV'],
+    [1, 'I'],
+  ];
+  let out = '';
+  let rest = n;
+  for (const [value, glyph] of table) {
+    while (rest >= value) {
+      out += glyph;
+      rest -= value;
+    }
+  }
+  return out;
+}
+
+const STABLE_SUFFIX_RE = / \[[IVXLCDM]+\]$/;
+
+/**
+ * First free dynasty name for a template stable: the minted copy becomes
+ * `Name [II]`, `[III]`, ... `startAt` shifts the scan origin so same-week
+ * mints (each seeded by shard index) land on different suffixes.
+ */
+export function uniqueStableName(
+  base: string,
+  used: ReadonlySet<string>,
+  startAt = 2
+): string {
+  if (!used.has(base)) return base;
+  const stem = base.replace(STABLE_SUFFIX_RE, '');
+  for (let n = Math.max(2, startAt); ; n++) {
+    const candidate = `${stem} [${toRomanNumeral(n)}]`;
+    if (!used.has(candidate)) return candidate;
+  }
+}
+
+/**
+ * First free owner name following the factory's `${name} B` convention for
+ * the second living copy (C, D, ...), numerals beyond Z.
+ */
+export function uniqueOwnerName(
+  base: string,
+  used: ReadonlySet<string>,
+  startAt = 2
+): string {
+  if (!used.has(base)) return base;
+  for (let n = Math.max(2, startAt); ; n++) {
+    const candidate = `${base} ${n <= 26 ? String.fromCharCode(64 + n) : toRomanNumeral(n)}`;
+    if (!used.has(candidate)) return candidate;
+  }
+}
+
 /**
  * Generate rival stables from templates.
  * Scaling: Provides bonus gold and stats for expansion stables joining mid-game.
@@ -108,10 +172,7 @@ function buildRivalStable(
   const stableId = rng.uuid() as StableId;
 
   // Procedural name variance for duplicates
-  const nameSuffix =
-    iteration > 0
-      ? ` [${iteration === 1 ? 'II' : iteration === 2 ? 'III' : iteration === 3 ? 'IV' : 'V'}]`
-      : '';
+  const nameSuffix = iteration > 0 ? ` [${toRomanNumeral(iteration + 1)}]` : '';
   const stableName = `${tmpl.stableName}${nameSuffix}`;
   const owner = buildOwner(tmpl, stableId, iteration, stableName, rng);
 

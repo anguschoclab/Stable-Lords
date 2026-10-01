@@ -41,11 +41,12 @@ function signGeneratedRecruit(
   week: number,
   meta: StyleMeta | undefined,
   gazetteItems: string[],
-  usedNames?: Set<string>
+  usedNames?: Set<string>,
+  usedIds?: Set<string>
 ): RecruitmentResult | null {
   const budgetReport = checkBudget(updatedRival, AI_GENERATED_RECRUIT_COST, 'ROSTER');
   if (!budgetReport.isAffordable) return null;
-  const generated = generateAIRecruit(updatedRival, week, meta, undefined, usedNames);
+  const generated = generateAIRecruit(updatedRival, week, meta, undefined, usedNames, usedIds);
   if (!generated) return null;
   usedNames?.add(generated.name);
   updatedRival = {
@@ -171,6 +172,7 @@ function draftPoolSignings(
     minRoster: number;
     isMajorDraftWeek: boolean;
     gazetteItems: string[];
+    usedIds?: Set<string>;
   }
 ): { updatedRival: RivalStableData; signings: number } {
   let signings = 0;
@@ -203,7 +205,8 @@ function draftPoolSignings(
       recruit.cost,
       week,
       rng,
-      ctx.gazetteItems
+      ctx.gazetteItems,
+      ctx.usedIds
     );
     if (!signed) {
       // Can't afford the best candidate — remove it and try the next-best
@@ -233,11 +236,18 @@ function signPoolRecruit(
   cost: number,
   week: number,
   rng: IRNGService,
-  gazetteItems: string[]
+  gazetteItems: string[],
+  usedIds?: Set<string>
 ): RivalStableData | null {
   // ⚡ Lead Agent Verification: Check budget before signing
   const budgetReport = checkBudget(updatedRival, cost, 'ROSTER');
   if (!budgetReport.isAffordable) return null;
+
+  // Ids minted from seeded streams can collide across call sites — re-roll
+  // until the fresh id is unique against every known warrior.
+  let warriorId = rng.uuid() as import('@/types/shared.types').WarriorId;
+  while (usedIds?.has(warriorId)) warriorId = rng.uuid() as typeof warriorId;
+  usedIds?.add(warriorId);
 
   updatedRival.treasury -= cost;
   updatedRival.needsRecruit = false;
@@ -251,7 +261,7 @@ function signPoolRecruit(
   });
 
   const newWarrior: Warrior = {
-    id: rng.uuid() as import('@/types/shared.types').WarriorId,
+    id: warriorId,
     name: recruit.name,
     style: recruit.style,
     attributes: { ...recruit.attributes },
@@ -292,6 +302,22 @@ function signPoolRecruit(
   return updatedRival;
 }
 
+/** Active-roster count for capacity checks. */
+function countActiveRoster(rival: RivalStableData): number {
+  return rival.roster.filter((w) => isActive(w)).length;
+}
+
+/** Academy first-look filter — recruits claimed by another stable's academy
+ * are invisible until the claim expires. */
+function visiblePool(pool: PoolWarrior[], rivalId: string, week: number): PoolWarrior[] {
+  return pool.filter(
+    (w) =>
+      !w.academyStableId ||
+      w.academyStableId === rivalId ||
+      (w.academyClaimExpiryWeek ?? 0) < week
+  );
+}
+
 /**
  * RecruitmentWorker: Handles drafting warriors from the pool.
  * Implements "Context Isolation" and "Risk-Tiered Execution".
@@ -303,17 +329,15 @@ export function processRecruitment(
   rng: IRNGService,
   isMajorDraftWeek: boolean,
   meta?: StyleMeta,
-  usedNames?: Set<string>
+  usedNames?: Set<string>,
+  usedIds?: Set<string>
 ): RecruitmentResult {
   let updatedRival = { ...rival };
   const gazetteItems: string[] = [];
   const remainingPool = [...pool];
 
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
-  let activeCount = 0;
-  for (const w of updatedRival.roster) {
-    if (isActive(w)) activeCount++;
-  }
+  let activeCount = countActiveRoster(updatedRival);
 
   // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap
   // is deliberately decoupled from the player's `BASE_ROSTER_CAP` constant.
@@ -329,12 +353,7 @@ export function processRecruitment(
 
   // Academy first-look: recruits claimed by another stable's academy are
   // invisible until the claim expires.
-  const visible = remainingPool.filter(
-    (w) =>
-      !w.academyStableId ||
-      w.academyStableId === updatedRival.id ||
-      (w.academyClaimExpiryWeek ?? 0) < week
-  );
+  const visible = visiblePool(remainingPool, updatedRival.id, week);
 
   const personality = updatedRival.owner.personality ?? 'Pragmatic';
   const minRoster = aiRosterMin(personality);
@@ -354,7 +373,7 @@ export function processRecruitment(
     meta,
     personality,
     favoredStyles,
-    { slotsAvailable, needsRecruit, minRoster, isMajorDraftWeek, gazetteItems }
+    { slotsAvailable, needsRecruit, minRoster, isMajorDraftWeek, gazetteItems, usedIds }
   );
   updatedRival = drafted.updatedRival;
   const signings = drafted.signings;
@@ -369,7 +388,14 @@ export function processRecruitment(
     intent !== 'RECOVERY'
   ) {
     // signGeneratedRecruit appends directly into `gazetteItems`.
-    const signed = signGeneratedRecruit(updatedRival, week, meta, gazetteItems, usedNames);
+    const signed = signGeneratedRecruit(
+      updatedRival,
+      week,
+      meta,
+      gazetteItems,
+      usedNames,
+      usedIds
+    );
     if (signed) updatedRival = signed.updatedRival;
   }
 

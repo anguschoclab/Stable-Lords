@@ -242,6 +242,52 @@ describe('processPoachMarket (G.2)', () => {
     expect(gazetteItems.filter((g) => g.includes('POACH'))).toHaveLength(1);
   });
 
+  it('seller that bids later in the same sweep does not resurrect the sold warrior', () => {
+    // Regression: the sweep used to stamp `{...rival}` from the stale input
+    // array. A stable that sold a warrior to an earlier buyer, then made its
+    // own bid, wrote the pre-sale roster back — the warrior ended up in both
+    // rosters (same id, same career, differing only in stableId).
+    const buyerA = wealthyBuyer({ id: 'buyer-a' as StableId });
+    const sellerBuyer = makeRival({
+      id: 'seller-buyer' as StableId,
+      treasury: 2000,
+      roster: [
+        makeWarrior({
+          id: 'sw-1' as WarriorId,
+          stableId: 'seller-buyer' as StableId,
+          traits: ['glass_jaw', 'brittle', 'steady_hand'],
+          fame: 40,
+          career: { wins: 0, losses: 9, kills: 0 },
+        }),
+        ...Array.from({ length: 3 }, (_, i) =>
+          makeWarrior({ id: `sb-${i}` as WarriorId, stableId: 'seller-buyer' as StableId })
+        ),
+      ],
+      strategy: { intent: 'WEALTH_ACCUMULATION', planWeeksRemaining: 4 },
+    });
+    const seller2 = makeRival({
+      id: 'seller-2' as StableId,
+      treasury: 500,
+      roster: [poachableWarrior('sw-2', 'seller-2')],
+    });
+    const state = makeGameState({
+      rivals: [buyerA, sellerBuyer, seller2],
+      absoluteWeek: 5,
+    });
+
+    const { updatedRivals } = processPoachMarket(state, [buyerA, sellerBuyer, seller2]);
+    const a = updatedRivals.find((r) => r.id === 'buyer-a')!;
+    const sb = updatedRivals.find((r) => r.id === 'seller-buyer')!;
+    const s2 = updatedRivals.find((r) => r.id === 'seller-2')!;
+
+    // sw-1 lives in exactly one roster: the buyer's.
+    expect(a.roster.some((w) => w.id === 'sw-1')).toBe(true);
+    expect(sb.roster.some((w) => w.id === 'sw-1')).toBe(false);
+    // And sellerBuyer's own bid still lands.
+    expect(sb.roster.some((w) => w.id === 'sw-2')).toBe(true);
+    expect(s2.roster.some((w) => w.id === 'sw-2')).toBe(false);
+  });
+
   it('player-bound gazette line resolves the warrior name even without warriorMap', () => {
     const buyer = wealthyBuyer();
     const playerWarrior = poachableWarrior('pw-1', 'player-stable');

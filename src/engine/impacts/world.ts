@@ -71,9 +71,19 @@ export const legacyFounderEnqueue = (
   state.legacyFounderQueue = [...(state.legacyFounderQueue ?? []), ...value];
 };
 
-/** Append displaced veterans to the free-agent shelf. */
+/**
+ * Append displaced veterans to the free-agent shelf. Freed warriors are read
+ * from pre-merge snapshots, so a fold that doesn't actually remove its stable
+ * (a dropped bankruptcy swap) — or a double free across churn paths — would
+ * leave the same warrior rostered AND pooled; signing it then clones it into
+ * a second stable. Skip ids already shelved or still rostered.
+ */
 export const freeAgentAdditions = (state: GameState, value: PoolWarrior[]) => {
-  state.freeAgents = [...(state.freeAgents ?? []), ...value];
+  const live = new Set<string>((state.freeAgents ?? []).map((w) => w.id));
+  for (const r of state.rivals ?? []) for (const w of r.roster) live.add(w.id);
+  for (const w of state.roster ?? []) live.add(w.id);
+  const fresh = value.filter((w) => !live.has(w.id));
+  if (fresh.length > 0) state.freeAgents = [...(state.freeAgents ?? []), ...fresh];
 };
 
 /** Remove signed veterans from the free-agent shelf by id. */

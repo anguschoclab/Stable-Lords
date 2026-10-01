@@ -5,7 +5,7 @@ import { processRecruitment } from '../ai/workers/recruitmentWorker';
 import { computeMetaDrift, type StyleMeta } from '../analytics/metaDrift';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { getStablePairKey } from '@/utils/keyUtils';
-import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
 /**
  * Rivalry counter-meta (moved from processAIRosterManagement, G9): a rival
@@ -64,6 +64,9 @@ export function aiDraftFromPool(
   let currentPool = [...(state.freeAgents ?? []), ...pool];
   const globalGazetteItems: string[] = [];
   const usedNames = collectUsedWarriorNames(state);
+  // Freshly minted warrior ids (draft signings, generated recruits) are
+  // drawn from seeded streams — guard against cross-stream id collisions.
+  const usedIds = collectUsedWarriorIds(state);
 
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
   const rivalryMap = new Map(
@@ -96,7 +99,8 @@ export function aiDraftFromPool(
       rngService,
       isMajorDraftWeek,
       customMeta,
-      usedNames
+      usedNames,
+      usedIds
     );
 
     draftResults[updatedRival.owner.id] = updatedRival;

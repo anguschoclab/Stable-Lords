@@ -293,3 +293,25 @@ describe('world impacts — worldHandlers map', () => {
     expect(state.realmRankings).toEqual({});
   });
 });
+
+describe('world impacts — freeAgentAdditions', () => {
+  it('skips ids already shelved or still rostered (freed-vs-survived dedup)', async () => {
+    const { freeAgentAdditions } = await import('@/engine/impacts/world');
+    const { makePoolWarrior, makeRival, makeWarrior } = await import(
+      '@/test/_fixtures/factories'
+    );
+    const rostered = makeWarrior({ id: 'w-rostered' as never });
+    const state = createMockState({
+      freeAgents: [makePoolWarrior({ id: 'w-shelved' })],
+      rivals: [makeRival({ roster: [rostered] })],
+    });
+
+    freeAgentAdditions(state, [
+      makePoolWarrior({ id: 'w-fresh' }),
+      makePoolWarrior({ id: 'w-shelved' }), // already shelved — double free
+      makePoolWarrior({ id: 'w-rostered' }), // stable survived its fold
+    ]);
+
+    expect(state.freeAgents.map((w) => w.id)).toEqual(['w-shelved', 'w-fresh']);
+  });
+});

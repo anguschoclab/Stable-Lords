@@ -4,7 +4,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateAIStrategy, verifyIntentSkepticism } from '@/engine/ai/intentEngine';
 import { logAgentAction } from '@/engine/ai/agentCore';
 import { processAIStable } from '@/engine/ai/stableManager';
-import { generateRivalStables } from '@/engine/rivals';
+import { generateRivalStables, uniqueOwnerName, uniqueStableName } from '@/engine/rivals';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
@@ -228,6 +228,12 @@ function mintSuccessorStable(state: GameState, index: number): RivalStableData |
   const usedStableIds = new Set((state.rivals ?? []).map((r) => r.id));
   const usedWarriorIds = collectUsedWarriorIds(state);
   const usedNames = collectUsedWarriorNames(state);
+  const usedStableNames = new Set((state.rivals ?? []).map((r) => r.owner.stableName));
+  const usedOwnerNames = new Set((state.rivals ?? []).map((r) => r.owner.name));
+  if (state.player) {
+    usedStableNames.add(state.player.stableName);
+    usedOwnerNames.add(state.player.name);
+  }
   const retirementSeed = state.absoluteWeek + index * 1000;
   for (let attempt = 0; attempt < 8; attempt++) {
     const newStable = generateRivalStables(1, retirementSeed + attempt * 7919, 0, usedNames)[0];
@@ -235,8 +241,16 @@ function mintSuccessorStable(state: GameState, index: number): RivalStableData |
     if (usedStableIds.has(newStable.id) || newStable.roster.some((w) => usedWarriorIds.has(w.id))) {
       continue;
     }
+    // Shards share a pre-pass snapshot — same-week mints can't see each
+    // other, so `index` shifts the suffix scan to spread collisions.
+    const suffixAt = 2 + index;
     return {
       ...newStable,
+      owner: {
+        ...newStable.owner,
+        stableName: uniqueStableName(newStable.owner.stableName, usedStableNames, suffixAt),
+        name: uniqueOwnerName(newStable.owner.name, usedOwnerNames, suffixAt),
+      },
       establishedAbsoluteWeek: state.absoluteWeek,
     } as RivalStableData;
   }

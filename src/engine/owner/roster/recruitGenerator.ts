@@ -2,7 +2,7 @@ import type { RivalStableData, MetaAdaptation } from '@/types/state.types';
 import { ATTRIBUTE_MAX, type Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNGService, hashStr } from '@/utils/random';
 import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { generateTraits, TRAITS } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
@@ -132,6 +132,24 @@ export function generateRecruitAttrs(
   return attrs;
 }
 
+/** Apply personality attrBonus from traits at recruitment time, clamped to
+ * ATTRIBUTE_MAX — development elsewhere respects the cap; recruitment must
+ * not overflow it either. */
+function applyTraitAttrBonuses(
+  attrs: { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number },
+  traits: string[]
+): void {
+  for (const tid of traits) {
+    const traitData = TRAITS[tid];
+    if (traitData?.effect.attrBonus) {
+      for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
+        const k = key as keyof typeof attrs;
+        attrs[k] = Math.min(ATTRIBUTE_MAX, attrs[k] + (bonus as number));
+      }
+    }
+  }
+}
+
 /**
  * Generates a new warrior for an AI owner's roster.
  */
@@ -140,9 +158,13 @@ export function generateAIRecruit(
   week: number,
   meta?: StyleMeta,
   seed?: number,
-  usedNames?: Set<string>
+  usedNames?: Set<string>,
+  usedIds?: Set<string>
 ): Warrior | null {
-  const rng = new SeededRNGService(seed ?? week * 42 + rival.owner.id.length);
+  // `owner.id.length` (~constant) made every stable's same-week fallback
+  // recruit share one RNG stream — identical streams mint identical warrior
+  // ids. Hash the stable id so each stable gets an independent stream.
+  const rng = new SeededRNGService(seed ?? week * 42 + hashStr(rival.id));
   const philosophy = rival.philosophy ?? 'Balanced';
   const adaptation = rival.owner.metaAdaptation ?? 'Opportunist';
   const favoredStyles = rival.owner.favoredStyles ?? [];
@@ -153,17 +175,7 @@ export function generateAIRecruit(
   // Generate archetype-based traits and name (parity with player recruits)
   const archetype = STYLE_ARCHETYPE[style];
   const traits = generateTraits(rng, archetype);
-
-  // Apply personality attrBonus from traits at recruitment time
-  for (const tid of traits) {
-    const traitData = TRAITS[tid];
-    if (traitData?.effect.attrBonus) {
-      for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
-        const k = key as keyof typeof attrs;
-        attrs[k] = Math.min(ATTRIBUTE_MAX, attrs[k] + (bonus as number));
-      }
-    }
-  }
+  applyTraitAttrBonuses(attrs, traits);
 
   // Recompute stats after trait attribute bonuses
   const { baseSkills: finalBaseSkills, derivedStats: finalDerivedStats } = computeWarriorStats(
@@ -186,8 +198,12 @@ export function generateAIRecruit(
   const origin = generateOrigin(rng);
   const lore = generateLore(name, rng);
 
+  let id = rng.uuid('warrior') as import('@/types/shared.types').WarriorId;
+  while (usedIds?.has(id)) id = rng.uuid('warrior') as typeof id;
+  usedIds?.add(id);
+
   return {
-    id: rng.uuid('warrior') as import('@/types/shared.types').WarriorId,
+    id,
     name,
     style,
     attributes: attrs,

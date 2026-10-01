@@ -96,6 +96,7 @@ export function collectUsedWarriorNames(state: {
   retired?: Warrior[];
   rivals?: { roster: Warrior[] }[];
   recruitPool?: { name: string }[];
+  freeAgents?: { name: string }[];
 }): Set<string> {
   const names = new Set<string>();
   for (const w of collectAllKnownWarriors({
@@ -107,6 +108,7 @@ export function collectUsedWarriorNames(state: {
     names.add(w.name);
   }
   for (const w of state.recruitPool ?? []) names.add(w.name);
+  for (const w of state.freeAgents ?? []) names.add(w.name);
   return names;
 }
 
@@ -124,6 +126,7 @@ export function collectUsedWarriorIds(state: {
   retired?: Warrior[];
   rivals?: { roster: Warrior[] }[];
   recruitPool?: { id: string }[];
+  freeAgents?: { id: string }[];
   tournaments?: { participants?: { id: string }[] }[];
 }): Set<string> {
   const ids = new Set<string>();
@@ -136,6 +139,7 @@ export function collectUsedWarriorIds(state: {
     ids.add(w.id);
   }
   for (const w of state.recruitPool ?? []) ids.add(w.id);
+  for (const w of state.freeAgents ?? []) ids.add(w.id);
   for (const t of state.tournaments ?? []) {
     for (const p of t.participants ?? []) ids.add(p.id);
   }

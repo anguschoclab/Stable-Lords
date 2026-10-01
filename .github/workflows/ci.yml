@@ -57,7 +57,10 @@ jobs:
         with:
           bun-version: 1.4.0
       - run: bun install --frozen-lockfile
-      - run: bun run test:bun
+      # --smol keeps the 700+ file suite under the hosted runner's memory
+      # ceiling; --timeout=30000 absorbs sim-heavy specs that exceed bun's
+      # 5s default on a starved 4-core runner (they're ~500ms locally).
+      - run: bun --smol test --isolate --timeout 30000
 
   slow-tests:
     runs-on: ubuntu-latest

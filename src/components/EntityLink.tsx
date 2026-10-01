@@ -2,10 +2,9 @@
  * Entity Links — Warriors and Stables.
  * Now triggers a side-panel <Sheet> (flyout) with full dossiers.
  */
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import {
   Sheet,
@@ -20,7 +19,6 @@ import { WarriorDossier } from '@/components/WarriorDossier';
 import { StableDossier } from '@/components/StableDossier';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, User, Landmark } from 'lucide-react';
-import type { NameResolutionState } from '@/engine/core/historyResolver';
 import { findWarrior, findStableId } from '@/engine/core/historyResolver';
 
 /**
@@ -48,17 +46,10 @@ interface WarriorLinkProps {
  * @param props.children - Optional custom content for the link trigger
  * @returns A tooltip-wrapped sheet trigger or a plain span if the warrior cannot be resolved
  */
-export function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-    }))
-  );
-  const resolvedId = id ?? resolveWarriorId(name, state);
+export const WarriorLink = memo(function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
+  // Atomic selector — resolves to a primitive id, so unrelated slice churn
+  // (graveyard growth, other-roster edits) can't re-render the link.
+  const resolvedId = useGameStore((s) => id ?? findWarrior(s, undefined, name)?.id);
 
   if (!resolvedId) {
     return <span className={className}>{children ?? name}</span>;
@@ -113,20 +104,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
       </SheetContent>
     </Sheet>
   );
-}
-
-/**
- * Resolves a warrior name to an ID using the current game state.
- *
- * @param name - The name of the warrior to resolve
- * @param state - The current game state
- * @returns The resolved warrior ID, or undefined if not found
- */
-function resolveWarriorId(name: string, state: NameResolutionState): string | undefined {
-  if (!state) return undefined;
-  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  return findWarrior(state, undefined, name)?.id;
-}
+});
 
 /**
  * Props for the StableLink component.
@@ -150,18 +128,12 @@ interface StableLinkProps {
  * @param [props.children] - Optional custom content to display inside the link.
  * @returns A clickable sheet trigger or a plain span if ID cannot be resolved.
  */
-export function StableLink({ name, className, children }: StableLinkProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-    }))
-  );
-
-  // Resolve stable name to owner ID
-  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  const resolvedStableId = findStableId(state as unknown as NameResolutionState, name);
-  const isPlayer = resolvedStableId === state.player.id;
+export const StableLink = memo(function StableLink({ name, className, children }: StableLinkProps) {
+  // Atomic selectors — resolve to primitive ids so unrelated store churn
+  // can't re-render the link (name→id is O(1) via the cached lookup).
+  const resolvedStableId = useGameStore((s) => findStableId(s, name));
+  const playerId = useGameStore((s) => s.player.id);
+  const isPlayer = resolvedStableId === playerId;
   const stableId = isPlayer ? 'player' : resolvedStableId;
 
   if (!resolvedStableId) {
@@ -195,33 +167,7 @@ export function StableLink({ name, className, children }: StableLinkProps) {
               <Landmark className="h-5 w-5 text-arena-gold" />
               Stable Records
             </div>
-            {isPlayer ? (
-              <Button
-                asChild
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground"
-                tooltip="View full stable"
-                aria-label="View full stable"
-              >
-                <Link to="/stable/roster">
-                  <ExternalLink className="h-4 w-4" />
-                </Link>
-              </Button>
-            ) : stableId ? (
-              <Button
-                asChild
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground"
-                tooltip="View full stable"
-                aria-label="View full stable"
-              >
-                <Link to="/world/stable/$id" params={{ id: stableId }}>
-                  <ExternalLink className="h-4 w-4" />
-                </Link>
-              </Button>
-            ) : null}
+            <StableFullViewLink isPlayer={isPlayer} stableId={stableId} />
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 h-full">
@@ -229,5 +175,30 @@ export function StableLink({ name, className, children }: StableLinkProps) {
         </div>
       </SheetContent>
     </Sheet>
+  );
+});
+
+/** Header shortcut: full stable page link — roster for the player, world route for rivals. */
+function StableFullViewLink({ isPlayer, stableId }: { isPlayer: boolean; stableId?: string }) {
+  if (!isPlayer && !stableId) return null;
+  return (
+    <Button
+      asChild
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8 text-muted-foreground"
+      tooltip="View full stable"
+      aria-label="View full stable"
+    >
+      {isPlayer ? (
+        <Link to="/stable/roster">
+          <ExternalLink className="h-4 w-4" />
+        </Link>
+      ) : (
+        <Link to="/world/stable/$id" params={{ id: stableId as string }}>
+          <ExternalLink className="h-4 w-4" />
+        </Link>
+      )}
+    </Button>
   );
 }

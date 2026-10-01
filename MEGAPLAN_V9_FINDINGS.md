@@ -139,16 +139,19 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 |---|---|
 | `bun run type-check` | PASS (tsc --build --force clean) |
 | `bun run lint` | PASS (0 errors) |
-| `bun run test` (vitest, 734 files) | PASS — 8443 tests, 2 sanctioned skips |
+| `bun run test` (vitest, 735 files) | PASS — 8447 tests, 2 sanctioned skips |
 | `bun run build` (vite+PWA) | PASS |
 | `bun run electron:compile` | PASS |
 | `bun run narrative-validate` | PASS |
 | `bun run test:slow` | 4 fails → fixed: B2 stripper, B9 bound, traitedShare bound already repinned; perf flake contention |
-| `bun run test:bun` | see ledger (long-running; rerun recorded) |
-| `bunx playwright test --project=chromium` | see ledger |
+| `bun run test:bun` | PASS — 8405 tests / 0 fail / 1 skip (144s local); CI job sharded per-directory after 3 consecutive runner OOM kills |
+| `bunx playwright test --project=chromium` | PASS — 4/4 (seasonal year-sim ~16.5min; CI job timeout raised 15→45min) |
 | megaplan guards (fileBudget/dup/orphan/skip/uiTokens/typeSurface) | all PASS |
 | `git fsck --full` | recorded in ledger |
+| **GitHub CI (run 36930071236 @ `218712fc`)** | **9/9 green** — type-check, build, test, lint, bun-test, slow-tests, coverage, electron, e2e |
+
+CI-only fixes landed during verification: styleArchives wired test now asserts on the tracked route source instead of generated `routeTree.gen.ts` (`3b3050ec`); e2e timeout (`706f6df3`, `218712fc`); bun-test sharding + `--smol`/`--timeout=30s` (`3849091b`, `73617b45`, `13b73482`).
 
 ## 9. Remote disposition log
-- PRs #998–#1009: closed with disposition comments; branches deleted post-integration/rejection. (Executed in Phase 6 — see ledger timestamps.)
-- `wip/living-rival-world`: consumed by main (refined commits); deleted. Tag `pre-megaplan-v9` retained as restore point.
+- PRs #998–#1009: disposition comments posted, all 12 closed, all 12 remote branches deleted (verified `git fetch --prune`).
+- `wip/living-rival-world`: consumed by main (refined commits); remote branch deleted. Tag `pre-megaplan-v9` retained as restore point (`f8577854`).

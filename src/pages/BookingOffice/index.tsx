@@ -64,16 +64,12 @@ export default function BookingOffice() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-        {/* Left Rail Asset Registry */}
-        <aside className="space-y-8">
-          <SectionDivider label="Warrior Roster" />
-          <AssetRegistry
-            roster={roster}
-            boutOffers={boutOffers}
-            selectedWarriorId={selectedWarriorId}
-            onSelect={setSelectedWarriorId}
-          />
-        </aside>
+        <RosterRail
+          roster={roster}
+          boutOffers={boutOffers}
+          selectedWarriorId={selectedWarriorId}
+          onSelect={setSelectedWarriorId}
+        />
 
         {/* Right Rail Viewport */}
         <div className="lg:col-span-3 space-y-8">
@@ -93,6 +89,31 @@ export default function BookingOffice() {
         </div>
       </div>
     </PageFrame>
+  );
+}
+
+/** Left rail: the warrior asset registry. */
+function RosterRail({
+  roster,
+  boutOffers,
+  selectedWarriorId,
+  onSelect,
+}: {
+  roster: ReturnType<typeof useBookingOffice>['roster'];
+  boutOffers: ReturnType<typeof useBookingOffice>['boutOffers'];
+  selectedWarriorId: ReturnType<typeof useBookingOffice>['selectedWarriorId'];
+  onSelect: ReturnType<typeof useBookingOffice>['setSelectedWarriorId'];
+}) {
+  return (
+    <aside className="space-y-8">
+      <SectionDivider label="Warrior Roster" />
+      <AssetRegistry
+        roster={roster}
+        boutOffers={boutOffers}
+        selectedWarriorId={selectedWarriorId}
+        onSelect={onSelect}
+      />
+    </aside>
   );
 }
 

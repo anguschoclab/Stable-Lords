@@ -10,6 +10,7 @@ import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { Swords, ChevronRight } from 'lucide-react';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import type { Warrior } from '@/types/warrior.types';
 
 /**
  *
@@ -25,74 +26,79 @@ export function RosterSnapshot() {
           No Active Warriors
         </div>
       )}
-      {active.map((w) => {
-        return (
-          <Link key={w.id} to="/stable/roster" className="block group">
-            <Surface
-              variant="glass"
-              className="p-4 hover:border-primary/20 transition-colors motion-reduce:transition-none"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-none bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                    <Swords className="h-3.5 w-3.5 text-muted-foreground/60" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-display font-black text-sm uppercase tracking-tight truncate group-hover:text-primary transition-colors motion-reduce:transition-none">
-                      {warriorDisplayName(w)}
-                    </div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
-                      <span>{STYLE_ABBREV[w.style] ?? w.style}</span>
-                      <span className="opacity-30">·</span>
-                      <span className="text-arena-gold">{w.fame} fame</span>
-                    </div>
-                  </div>
+      {active.map((w) => (
+        <SnapshotRow key={w.id} warrior={w} />
+      ))}
+    </div>
+  );
+}
+
+/** One warrior row: name/style chip, record, fatigue readout, form sparkline. */
+function SnapshotRow({ warrior: w }: { warrior: Warrior }) {
+  return (
+    <Link to="/stable/roster" className="block group">
+      <Surface
+        variant="glass"
+        className="p-4 hover:border-primary/20 transition-colors motion-reduce:transition-none"
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-8 h-8 rounded-none bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+              <Swords className="h-3.5 w-3.5 text-muted-foreground/60" />
+            </div>
+            <div className="min-w-0">
+              <div className="font-display font-black text-sm uppercase tracking-tight truncate group-hover:text-primary transition-colors motion-reduce:transition-none">
+                {warriorDisplayName(w)}
+              </div>
+              <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
+                <span>{STYLE_ABBREV[w.style] ?? w.style}</span>
+                <span className="opacity-30">·</span>
+                <span className="text-arena-gold">{w.fame} fame</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="text-right hidden sm:block">
+              <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                Record
+              </div>
+              <div className="font-mono font-black text-xs">
+                <span className="text-primary">{w.career?.wins ?? 0}</span>
+                <span className="text-muted-foreground/30 mx-0.5">-</span>
+                <span className="text-muted-foreground/60">{w.career?.losses ?? 0}</span>
+                {(w.career?.kills ?? 0) > 0 && (
+                  <span className="text-destructive ml-1 text-[9px]">/{w.career.kills}K</span>
+                )}
+              </div>
+            </div>
+
+            {w.fatigue !== undefined && (
+              <div className="text-right hidden md:block">
+                <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                  Fatigue
                 </div>
-
-                <div className="flex items-center gap-4 shrink-0">
-                  <div className="text-right hidden sm:block">
-                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                      Record
-                    </div>
-                    <div className="font-mono font-black text-xs">
-                      <span className="text-primary">{w.career?.wins ?? 0}</span>
-                      <span className="text-muted-foreground/30 mx-0.5">-</span>
-                      <span className="text-muted-foreground/60">{w.career?.losses ?? 0}</span>
-                      {(w.career?.kills ?? 0) > 0 && (
-                        <span className="text-destructive ml-1 text-[9px]">/{w.career.kills}K</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {w.fatigue !== undefined && (
-                    <div className="text-right hidden md:block">
-                      <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                        Fatigue
-                      </div>
-                      <div
-                        className={cn(
-                          'font-mono font-black text-xs',
-                          isExhausted(w.fatigue)
-                            ? 'text-destructive'
-                            : isFatigued(w.fatigue)
-                              ? 'text-arena-gold'
-                              : 'text-primary'
-                        )}
-                      >
-                        {w.fatigue}%
-                      </div>
-                    </div>
+                <div
+                  className={cn(
+                    'font-mono font-black text-xs',
+                    isExhausted(w.fatigue)
+                      ? 'text-destructive'
+                      : isFatigued(w.fatigue)
+                        ? 'text-arena-gold'
+                        : 'text-primary'
                   )}
-
-                  <FormSparkline warriorId={w.id} limit={6} />
-
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors motion-reduce:transition-none" />
+                >
+                  {w.fatigue}%
                 </div>
               </div>
-            </Surface>
-          </Link>
-        );
-      })}
-    </div>
+            )}
+
+            <FormSparkline warriorId={w.id} limit={6} />
+
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors motion-reduce:transition-none" />
+          </div>
+        </div>
+      </Surface>
+    </Link>
   );
 }

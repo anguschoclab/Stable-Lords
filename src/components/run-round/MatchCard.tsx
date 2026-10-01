@@ -24,19 +24,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
       padding="none"
       className="border-white/5 hover:border-primary/40 transition-all motion-reduce:transition-none motion-reduce:transform-none overflow-hidden group"
     >
-      <div className="flex items-center justify-between px-4 py-2 bg-secondary/20 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <Swords className="h-3.5 w-3.5 text-muted-foreground/60" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-            Bout Matchup
-          </span>
-        </div>
-        {isRivalryBout && (
-          <Badge className="bg-destructive/10 text-destructive border-none shadow-[0_0_10px_rgba(239,68,68,0.3)] animate-pulse motion-reduce:animate-none gap-1.5 h-5 px-2 font-black text-[8px] tracking-widest uppercase">
-            <Flame className="h-2.5 w-2.5" /> STABLE VENDETTA
-          </Badge>
-        )}
-      </div>
+      <MatchHeader isRivalryBout={isRivalryBout} />
 
       <div className="p-5 grid grid-cols-[1fr_auto_1fr] items-center gap-8">
         <div className="space-y-3">
@@ -96,5 +84,24 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
         </div>
       </div>
     </Surface>
+  );
+}
+
+/** Card header bar: matchup label + vendetta flare for heated rivalries. */
+function MatchHeader({ isRivalryBout }: { isRivalryBout?: boolean }) {
+  return (
+    <div className="flex items-center justify-between px-4 py-2 bg-secondary/20 border-b border-white/5">
+      <div className="flex items-center gap-3">
+        <Swords className="h-3.5 w-3.5 text-muted-foreground/60" />
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+          Bout Matchup
+        </span>
+      </div>
+      {isRivalryBout && (
+        <Badge className="bg-destructive/10 text-destructive border-none shadow-[0_0_10px_rgba(239,68,68,0.3)] animate-pulse motion-reduce:animate-none gap-1.5 h-5 px-2 font-black text-[8px] tracking-widest uppercase">
+          <Flame className="h-2.5 w-2.5" /> STABLE VENDETTA
+        </Badge>
+      )}
+    </div>
   );
 }

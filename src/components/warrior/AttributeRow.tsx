@@ -110,6 +110,24 @@ interface AttributeRowProps {
   isAdvisorRecommended?: boolean;
 }
 
+/** Visual state → row style: selected glow, disabled dim, advisor gold. */
+function rowButtonClass(
+  isSelected: boolean,
+  disabled: boolean,
+  isAdvisorRecommended?: boolean
+): string {
+  return cn(
+    'group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all motion-reduce:transition-none motion-reduce:transform-none',
+    isSelected
+      ? 'bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]'
+      : disabled
+        ? 'bg-white/[0.02] border-white/5 opacity-40 cursor-not-allowed'
+        : isAdvisorRecommended
+          ? 'bg-arena-gold/5 border-arena-gold/30 hover:border-arena-gold/50 hover:bg-arena-gold/10 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
+          : 'bg-white/[0.03] border-white/5 hover:border-white/20 hover:bg-white/[0.08]'
+  );
+}
+
 /** The assignable row button: label, progress, advisor badge, status, ceiling glow. */
 function RowButton({
   warriorName,
@@ -144,16 +162,7 @@ function RowButton({
     <button
       disabled={disabled}
       onClick={() => onAssign(attrKey)}
-      className={cn(
-        'group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all motion-reduce:transition-none motion-reduce:transform-none',
-        isSelected
-          ? 'bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]'
-          : disabled
-            ? 'bg-white/[0.02] border-white/5 opacity-40 cursor-not-allowed'
-            : isAdvisorRecommended
-              ? 'bg-arena-gold/5 border-arena-gold/30 hover:border-arena-gold/50 hover:bg-arena-gold/10 shadow-[0_0_10px_-4px_rgba(217,119,6,0.3)]'
-              : 'bg-white/[0.03] border-white/5 hover:border-white/20 hover:bg-white/[0.08]'
-      )}
+      className={rowButtonClass(isSelected, disabled, isAdvisorRecommended)}
       aria-label={`Assign ${ATTRIBUTE_LABELS[attrKey]} training for ${warriorName}`}
     >
       {/* Label & Value */}

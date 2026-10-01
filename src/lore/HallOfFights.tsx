@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import { useWorldState } from '@/state/useGameStore';
+import type { LifetimeStats } from '@/types/state/simulation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -31,25 +32,7 @@ export const HallOfFights: React.FC = () => {
         icon={ScrollText}
       />
 
-      {lifetime && lifetime.bouts > 0 && (
-        <div
-          className="flex flex-wrap gap-6 text-xs text-muted-foreground"
-          data-testid="lifetime-stats"
-        >
-          <span>
-            <span className="font-black text-foreground tabular-nums">{lifetime.bouts}</span> bouts
-            all-time
-          </span>
-          <span>
-            <span className="font-black text-arena-blood tabular-nums">{lifetime.kills}</span>{' '}
-            deaths all-time
-          </span>
-          <span>
-            <span className="font-black text-foreground tabular-nums">{lifetime.retirements}</span>{' '}
-            retirements all-time
-          </span>
-        </div>
-      )}
+      {lifetime && lifetime.bouts > 0 && <LifetimeStatsRow lifetime={lifetime} />}
 
       <Tabs defaultValue="history">
         <TabsList>
@@ -98,5 +81,28 @@ export const HallOfFights: React.FC = () => {
     </PageFrame>
   );
 };
+
+/** All-time counter strip: bouts, deaths, retirements. */
+function LifetimeStatsRow({ lifetime }: { lifetime: LifetimeStats }) {
+  return (
+    <div
+      className="flex flex-wrap gap-6 text-xs text-muted-foreground"
+      data-testid="lifetime-stats"
+    >
+      <span>
+        <span className="font-black text-foreground tabular-nums">{lifetime.bouts}</span> bouts
+        all-time
+      </span>
+      <span>
+        <span className="font-black text-arena-blood tabular-nums">{lifetime.kills}</span> deaths
+        all-time
+      </span>
+      <span>
+        <span className="font-black text-foreground tabular-nums">{lifetime.retirements}</span>{' '}
+        retirements all-time
+      </span>
+    </div>
+  );
+}
 
 export default HallOfFights;

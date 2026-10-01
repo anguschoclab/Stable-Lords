@@ -134,23 +134,15 @@ export function WarriorTrainingCard({
         )}
 
         {!isRecovery && (
-          <div className="space-y-1">
-            {ATTRIBUTE_KEYS.map((key) => (
-              <AttributeRow
-                key={key}
-                warrior={warrior}
-                attributeKey={key}
-                assignment={assignment}
-                seasonalGains={seasonalGains}
-                trainers={trainers}
-                atCap={atCap}
-                onAssign={onAssign}
-                isAdvisorRecommended={
-                  advisorAdvice?.mode === 'attribute' && advisorAdvice.targetAttribute === key
-                }
-              />
-            ))}
-          </div>
+          <AttributeRows
+            warrior={warrior}
+            assignment={assignment}
+            seasonalGains={seasonalGains}
+            trainers={trainers}
+            atCap={atCap}
+            onAssign={onAssign}
+            advisorAdvice={advisorAdvice}
+          />
         )}
       </div>
 
@@ -167,5 +159,44 @@ export function WarriorTrainingCard({
         <AssignmentFooter assignment={assignment} isRecovery={isRecovery} onClear={onClear} />
       )}
     </Surface>
+  );
+}
+
+/** The seven assignable attribute rows, advisor-recommendation marked. */
+function AttributeRows({
+  warrior,
+  assignment,
+  seasonalGains,
+  trainers,
+  atCap,
+  onAssign,
+  advisorAdvice,
+}: {
+  warrior: Warrior;
+  assignment?: TrainingAssignment;
+  seasonalGains: Partial<Record<keyof Attributes, number>>;
+  trainers: Trainer[];
+  atCap: boolean;
+  onAssign: (attr: keyof Attributes) => void;
+  advisorAdvice?: WarriorTrainingAdvice;
+}) {
+  return (
+    <div className="space-y-1">
+      {ATTRIBUTE_KEYS.map((key) => (
+        <AttributeRow
+          key={key}
+          warrior={warrior}
+          attributeKey={key}
+          assignment={assignment}
+          seasonalGains={seasonalGains}
+          trainers={trainers}
+          atCap={atCap}
+          onAssign={onAssign}
+          isAdvisorRecommended={
+            advisorAdvice?.mode === 'attribute' && advisorAdvice.targetAttribute === key
+          }
+        />
+      ))}
+    </div>
   );
 }

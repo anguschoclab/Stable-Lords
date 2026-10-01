@@ -48,54 +48,48 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
           strokeWidth="2"
         />
 
-        {/* Torso */}
-        <path
-          d="M35 45H65L70 110H30L35 45Z"
-          className={cn(
-            'transition-colors duration-500 motion-reduce:transition-none',
-            getPartColor('Torso')
-          )}
-          data-testid="body-part-torso"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-
-        {/* Left Arm */}
-        <path
-          d="M30 50L10 100L15 105L35 60"
-          className={cn(
-            'transition-colors duration-500 motion-reduce:transition-none',
-            getPartColor('LeftArm')
-          )}
-          data-testid="body-part-left-arm"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-
-        {/* Right Arm */}
-        <path
-          d="M70 50L90 100L85 105L65 60"
-          className={cn(
-            'transition-colors duration-500 motion-reduce:transition-none',
-            getPartColor('RightArm')
-          )}
-          data-testid="body-part-right-arm"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-
+        <BodyPath d="M35 45H65L70 110H30L35 45Z" part="Torso" getPartColor={getPartColor} />
+        <BodyPath d="M30 50L10 100L15 105L35 60" part="LeftArm" getPartColor={getPartColor} />
+        <BodyPath d="M70 50L90 100L85 105L65 60" part="RightArm" getPartColor={getPartColor} />
         {/* Legs (Simplified as one unit for now, as per Lead Engineer's spec "Legs") */}
-        <path
+        <BodyPath
           d="M35 110L25 180H45L50 130L55 180H75L65 110"
-          className={cn(
-            'transition-colors duration-500 motion-reduce:transition-none',
-            getPartColor('Legs')
-          )}
-          data-testid="body-part-legs"
-          stroke="currentColor"
-          strokeWidth="2"
+          part="Legs"
+          getPartColor={getPartColor}
         />
       </svg>
     </div>
+  );
+}
+
+const BODY_PART_TEST_IDS: Record<BodyPart, string> = {
+  Head: 'body-part-head',
+  Torso: 'body-part-torso',
+  LeftArm: 'body-part-left-arm',
+  RightArm: 'body-part-right-arm',
+  Legs: 'body-part-legs',
+};
+
+/** One limb on the doll — colored by the health map. */
+function BodyPath({
+  d,
+  part,
+  getPartColor,
+}: {
+  d: string;
+  part: BodyPart;
+  getPartColor: (part: BodyPart) => string;
+}) {
+  return (
+    <path
+      d={d}
+      className={cn(
+        'transition-colors duration-500 motion-reduce:transition-none',
+        getPartColor(part)
+      )}
+      data-testid={BODY_PART_TEST_IDS[part]}
+      stroke="currentColor"
+      strokeWidth="2"
+    />
   );
 }

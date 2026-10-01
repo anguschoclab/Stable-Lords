@@ -43,9 +43,15 @@ describe('Style Archives browser (MEGAPLAN-G1)', () => {
     }
   });
 
-  it('is reachable — registered in the route tree', async () => {
-    const { readFileSync } = await import('node:fs');
-    const tree = readFileSync('src/routeTree.gen.ts', 'utf8');
-    expect(tree).toMatch(/style-archives|StyleArchives/i);
+  it('is reachable — file route exists and is nav-linked', async () => {
+    // Assert on source-of-truth, not src/routeTree.gen.ts — the generated file
+    // is gitignored and absent on clean CI checkouts.
+    const { readFileSync, existsSync } = await import('node:fs');
+    expect(
+      existsSync('src/routes/world/style-archives.tsx'),
+      'missing file route src/routes/world/style-archives.tsx'
+    ).toBe(true);
+    const nav = readFileSync('src/components/layout/navigationHubs.ts', 'utf8');
+    expect(nav).toContain('/world/style-archives');
   });
 });

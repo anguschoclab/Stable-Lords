@@ -57,10 +57,20 @@ jobs:
         with:
           bun-version: 1.4.0
       - run: bun install --frozen-lockfile
-      # --smol keeps the 700+ file suite under the hosted runner's memory
-      # ceiling; --timeout=30000 absorbs sim-heavy specs that exceed bun's
-      # 5s default on a starved 4-core runner (they're ~500ms locally).
-      - run: bun --smol test --isolate --timeout 30000
+      # Sharded: one bun process per test dir keeps each invocation under
+      # the hosted runner's memory ceiling (a single 767-file run OOMs the
+      # runner ~5min in). --smol + --timeout=30s absorbs sim-heavy specs
+      # that exceed bun's 5s default on a starved 4-core runner.
+      - name: Run bun test suite (sharded)
+        run: |
+          set -e
+          for d in src/test/engine/*/ src/test/components src/test/config src/test/data src/test/hooks src/test/integration src/test/lib src/test/megaplan src/test/pages src/test/routes src/test/schemas src/test/scripts src/test/state src/test/ui src/test/utils; do
+            echo "=== bun shard: $d"
+            bun --smol test --isolate --timeout 30000 "$d"
+          done
+          shopt -s nullglob
+          root_files=(src/test/*.test.ts src/test/*.test.tsx)
+          [ ${#root_files[@]} -gt 0 ] && bun --smol test --isolate --timeout 30000 "${root_files[@]}"
 
   slow-tests:
     runs-on: ubuntu-latest

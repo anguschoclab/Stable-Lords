@@ -16,6 +16,11 @@ import { processRecovery } from '@/engine/training/trainingGains';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { FightingStyle } from '@/types/shared.types';
 import {
+  AI_GEAR_COST,
+  AI_GEAR_CHAMPION_TREASURY_GATE,
+  AI_GEAR_EXPANSION_TREASURY_GATE,
+} from '@/constants/world';
+import {
   performAITraining,
   performAISkillDrill,
   processTraitDevelopment,
@@ -230,14 +235,17 @@ function applyGearPolicy(
   currentWeek: number,
   rngService: IRNGService
 ): RivalStableData {
-  const GEAR_COST = 150;
+  const GEAR_COST = AI_GEAR_COST;
   let updated = rival;
   const activeForGear = updated.roster.filter((w) => isActive(w));
   const champWarrior = activeForGear.find((w) => w.champion);
-  if (champWarrior && updated.treasury > 800) {
+  if (champWarrior && updated.treasury > AI_GEAR_CHAMPION_TREASURY_GATE) {
     updated = buyGearUpgrade(updated, champWarrior, GEAR_COST, currentWeek, rngService, true);
   }
-  if (intent === 'EXPANSION' || (intent === 'VENDETTA' && updated.treasury > 1000)) {
+  if (
+    intent === 'EXPANSION' ||
+    (intent === 'VENDETTA' && updated.treasury > AI_GEAR_EXPANSION_TREASURY_GATE)
+  ) {
     const gearCandidate =
       champWarrior ??
       activeForGear.find((w) => w.style === FightingStyle.BashingAttack) ??

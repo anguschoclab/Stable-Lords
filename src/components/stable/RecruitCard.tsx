@@ -229,6 +229,43 @@ interface RecruitCardProps {
 /**
  *
  */
+/**
+ * Card header — sigil ring, name, style/age/veteran badges, tier badge.
+ */
+function RecruitCardHeader({ warrior }: { warrior: PoolWarrior }) {
+  const config = TIER_CONFIG[warrior.tier];
+  return (
+    <div className="flex items-start justify-between">
+      <div className="flex items-center gap-6">
+        <ImperialRing size="md" variant={config.ring}>
+          <Sword className={cn('h-5 w-5', config.text)} />
+        </ImperialRing>
+        <div>
+          <h3 className="text-xl font-display font-black uppercase tracking-tight text-foreground leading-none mb-2">
+            {warrior.name}
+          </h3>
+          <div className="flex items-center gap-4">
+            <StatBadge styleName={warrior.style} showFullName />
+            <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
+              Age {warrior.age}
+            </span>
+            {warrior.veteran && (
+              <Badge
+                variant="outline"
+                className="text-[9px] font-black uppercase tracking-widest border-amber-500/30 text-amber-400/80"
+              >
+                Veteran
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+      <TierBadge tier={warrior.tier} />
+    </div>
+  );
+}
+
+/** Recruit card — header, intel panel, vitals, lore, and sign actions. */
 export function RecruitCard({
   warrior,
   canAfford,
@@ -242,8 +279,6 @@ export function RecruitCard({
   selected,
   onSelect,
 }: RecruitCardProps) {
-  const config = TIER_CONFIG[warrior.tier];
-
   return (
     <Surface
       variant="glass"
@@ -256,25 +291,7 @@ export function RecruitCard({
     >
       <div className="p-8 space-y-8">
         {/* Header */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-6">
-            <ImperialRing size="md" variant={config.ring}>
-              <Sword className={cn('h-5 w-5', config.text)} />
-            </ImperialRing>
-            <div>
-              <h3 className="text-xl font-display font-black uppercase tracking-tight text-foreground leading-none mb-2">
-                {warrior.name}
-              </h3>
-              <div className="flex items-center gap-4">
-                <StatBadge styleName={warrior.style} showFullName />
-                <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
-                  Age {warrior.age}
-                </span>
-              </div>
-            </div>
-          </div>
-          <TierBadge tier={warrior.tier} />
-        </div>
+        <RecruitCardHeader warrior={warrior} />
 
         {/* Intelligence Overlay */}
         <IntelPanel

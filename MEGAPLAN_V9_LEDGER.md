@@ -78,3 +78,10 @@ Follow-up noted: traitDedup effectHash is key-order sensitive — sort keys befo
 - `edeb48fd` gutter_wraith trait (lands #1014)
 - `dc51b3b4` Frozen Lake + Acid Bog registered; water/uneven fit penalty (curates #1015)
 - `a5ea12cb` wandering blacksmith offseason event (lands #1016)
+- `0feed447` scoreArenaFitForWarrior decomposed back under budget; tier-3 arena cap 14→15 (Acid Bog legitimately made 15 tier-3 venues)
+- `92b313bd` worldBalance growth assert repinned to peak-vs-floor (seed 777 peaks 94, settles 90); worldLiveness per-test timeout 600s→1200s
+
+## Final CI disposition
+- Run 36982155688 @ `92b313bd`: **9/9 green** — lint, type-check, electron, bun-test (sharded), build, test, coverage (4m20s), slow-tests (16m1s), e2e (24m47s).
+- slow-tests failure on `0feed447` run (36979819323) root-caused and fixed: growth assert measured endpoint-vs-seed instead of peak-vs-floor; liveness spec needed the raised timeout for 3×104 weeks at ~90-160 rivals.
+- All dispositioned PR branches deleted; only `main` remains on the remote.

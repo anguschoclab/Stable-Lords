@@ -151,7 +151,9 @@ describe('AI liveness invariants over 104 weeks (I.2)', () => {
 
     // Rivals challenge the player at least once across the run.
     expect(pulses.some((p) => p.playerChallengedWeeks > 0)).toBe(true);
-  }, 600000);
+    // 3 seeds × 104 weeks at ~90-160 rivals ≈ 8-12min on hosted runners —
+    // the global 10min cap is the flake edge, not the sim.
+  }, 1200000);
 });
 
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {

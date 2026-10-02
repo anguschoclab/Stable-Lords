@@ -4,7 +4,6 @@
  */
 
 export const DEFINING_MOMENTS: string[] = [
-  'discovering that a rusted spoon could be sharpened into a deadly shiv',
   'realizing that mercy in the Undercity was just another word for weakness',
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',
@@ -164,4 +163,7 @@ export const DEFINING_MOMENTS: string[] = [
   'realizing that the blood-soaked sands offered the only true justice for the forgotten',
   'until they shattered an overseer’s jaw and claimed their first taste of actual power',
   'knowing that their survival depended on weaponizing every ounce of their childhood terror',
+  'until they drowned a corrupt warden in the icy waters of the Drowned Bridge',
+  'realizing that the only true authority was the sharp edge of a drawn blade',
+  'knowing that every scar they gained was simply a map to their eventual revenge',
 ];

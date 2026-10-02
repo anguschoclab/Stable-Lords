@@ -794,6 +794,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Due to a flaw in the masonry, the dying breaths of fallen gladiators echo eerily around the inner wall during absolute silence.',
   },
+  {
+    id: 'the_asylum_screams',
+    arenaId: 'the_asylum',
+    type: 'architectural_quirk',
+    title: 'Echoes of the Mad',
+    narrative:
+      'The Asylum acoustics were intentionally designed to amplify the wails of the defeated, echoing them through the subterranean cells to demoralize future challengers.',
+  },
+  {
+    id: 'volcanic_crater_ash',
+    arenaId: 'volcanic_crater',
+    type: 'hazard',
+    title: 'The Ashen Veil',
+    narrative:
+      'During the legendary match of the Obsidian King, the crater erupted in a shower of hot ash, blinding both fighters. The match ended not with a sword strike, but with both combatants stumbling into the magma vents.',
+  },
 ];
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();

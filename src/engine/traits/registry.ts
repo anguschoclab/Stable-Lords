@@ -170,6 +170,7 @@ const LEGACY_TRAIT_ORDER = [
   'fortress',
   'living_wall',
   'gutter_wraith',
+  'orphan_scavenger',
 ];
 
 const MERGED: Record<string, TraitDef> = {

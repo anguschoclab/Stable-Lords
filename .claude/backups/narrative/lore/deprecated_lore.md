@@ -1,0 +1,3 @@
+- Survived the cruel discipline of the Iron Spire Orphanage
+- Raised in the soot-choked rafters of the Grand Foundry
+- discovering that a rusted spoon could be sharpened into a deadly shiv

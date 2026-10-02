@@ -11,6 +11,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.5,
   },
+  orphan_scavenger: {
+    id: 'orphan_scavenger',
+    name: 'Scavenger',
+    description: 'Taught by the streets to never waste an opportunity or a resource.',
+    effect: { enduranceMult: 0.96, iniModFresh: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_pit_fighter: {
     id: 'orphan_pit_fighter',
     name: 'Pit Fighter',

@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 150; // 145 previous + 4 V7 union traits + 1 gutter_wraith
+const EXPECTED_COUNT = 151; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

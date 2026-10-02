@@ -59,6 +59,8 @@ import {
   THE_SMOLDERING_PITS,
   THE_CRYSTAL_SPIRE,
   THE_IRON_CAGE,
+  THE_BATHHOUSE_ARENA,
+  THE_DESOLATE_HEATH,
 } from './venues/late';
 
 // ─── Auto-register ────────────────────────────────────────────────────────────
@@ -113,6 +115,8 @@ import {
   THE_SMOLDERING_PITS,
   THE_CRYSTAL_SPIRE,
   THE_IRON_CAGE,
+  THE_BATHHOUSE_ARENA,
+  THE_DESOLATE_HEATH,
 ].forEach(registerArena);
 
 setDefaultArena(STANDARD_ARENA);

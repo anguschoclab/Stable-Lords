@@ -270,6 +270,26 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     narrativeText:
       'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
   },
+
+  bathhouse_scald: {
+    id: 'bathhouse_scald',
+    name: 'Scalding Steam',
+    description: 'Vents burst with scalding steam',
+    requiredTags: ['water', 'premium', 'indoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.BATHHOUSE_SCALD_TRIGGER,
+    narrativeText: 'Scalding steam erupts from the vents, blinding the fighters and burning the skin!',
+  },
+
+  heath_apparition: {
+    id: 'heath_apparition',
+    name: 'Heath Apparitions',
+    description: 'Ghostly figures rise from the cursed earth',
+    requiredTags: ['cursed', 'outdoor', 'open'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.HEATH_APPARITION_TRIGGER,
+    narrativeText: 'The heavy blow awakens ghostly apparitions that swarm the fighters!',
+  },
 };
 
 // ─── Helper Functions ──────────────────────────────────────────────────────

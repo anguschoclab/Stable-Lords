@@ -211,3 +211,25 @@ export const THE_IRON_CAGE: ArenaConfig = {
   zoneDef: { Edge: -4, Corner: -6 },
   surfaceMod: { initiativeMod: 1, riposteMod: -1, enduranceMult: 1.1 },
 };
+
+export const THE_BATHHOUSE_ARENA: ArenaConfig = {
+  id: 'the_bathhouse_arena',
+  name: 'The Bathhouse',
+  tags: ['indoor', 'premium', 'water', 'cramped'],
+  tier: 3,
+  size: 'cramped',
+  description: 'An ancient, opulent bathhouse. The air is thick with steam and the marble floors are treacherous.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.2 },
+};
+
+export const THE_DESOLATE_HEATH: ArenaConfig = {
+  id: 'the_desolate_heath',
+  name: 'The Desolate Heath',
+  tags: ['outdoor', 'cursed', 'open', 'uneven'],
+  tier: 2,
+  size: 'open',
+  description: 'A sprawling, cursed heath where the dead are said to walk. Uneven ground and a chilling aura sap the strength of all who fight here.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.15 },
+};

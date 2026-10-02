@@ -132,12 +132,24 @@ export default function ArenaDetail() {
         title={arena.name}
         subtitle={`Tier ${arena.tier} · ${arena.size.toUpperCase()} · ${arena.tags.join(' · ')}`}
         actions={
-          <Badge
-            variant="outline"
-            className={cn('text-[9px] font-black tracking-widest', badge.className)}
-          >
-            {badge.label}
-          </Badge>
+          <>
+            {arena.tags.includes('water') && (
+              <Badge variant="outline" className="text-[9px] font-black tracking-widest border-blue-500/30 text-blue-400">
+                WATER HAZARD
+              </Badge>
+            )}
+            {arena.tags.includes('cursed') && (
+              <Badge variant="outline" className="text-[9px] font-black tracking-widest border-purple-500/30 text-purple-400">
+                CURSED GROUND
+              </Badge>
+            )}
+            <Badge
+              variant="outline"
+              className={cn('text-[9px] font-black tracking-widest', badge.className)}
+            >
+              {badge.label}
+            </Badge>
+          </>
         }
       />
 

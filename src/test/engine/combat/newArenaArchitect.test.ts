@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import { getStyleWeatherModifier } from '@/constants/arena/arena';
+import { THE_BATHHOUSE_ARENA, THE_DESOLATE_HEATH } from '@/data/arenas';
 import { getEligibleArenasForTournament } from '@/engine/matchmaking/tournament/tournamentArenaSelection';
 
 describe('Arena Architect Verification', () => {
@@ -52,5 +53,24 @@ describe('Arena Architect Verification', () => {
     ]);
     expect(modJagged.damageMult).toBeLessThan(1.0);
     expect(modJagged.descriptions.some((d) => d.includes('jagged peaks'))).toBe(true);
+  });
+
+  it('should correctly register and retrieve new arenas', () => {
+    expect(THE_BATHHOUSE_ARENA.id).toBe('the_bathhouse_arena');
+    expect(THE_DESOLATE_HEATH.id).toBe('the_desolate_heath');
+    expect(THE_BATHHOUSE_ARENA.tags).toContain('water');
+    expect(THE_DESOLATE_HEATH.tags).toContain('cursed');
+  });
+
+  it('New style-weather modifiers apply properly for new arenas', () => {
+    const modBathhouse = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Dense Fog', [
+      'premium',
+    ]);
+    expect(modBathhouse.riposteMod).toBeGreaterThan(0);
+    expect(modBathhouse.descriptions.some((d) => d.includes('premium steam'))).toBe(true);
+
+    const modHeath = getStyleWeatherModifier(FightingStyle.SlashingAttack, 'Spooky Night', ['cursed']);
+    expect(modHeath.initiativeMod).toBeLessThan(0);
+    expect(modHeath.descriptions.some((d) => d.includes('cursed heath'))).toBe(true);
   });
 });

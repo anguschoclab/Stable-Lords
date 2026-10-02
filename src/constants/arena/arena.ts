@@ -266,6 +266,14 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     initiativeMod: WEATHER_PENALTIES.CRYSTAL_SPIRE_INITIATIVE,
     description: 'The shifting lights of the spire distract and delay even the sharpest reflexes',
   },
+  'premium:Dense Fog': {
+    riposteMod: WEATHER_PENALTIES.BATHHOUSE_STEAM_RIPOSTE,
+    description: 'Thick, premium steam heavily obscures strikes, creating prime counter-attack opportunities.',
+  },
+  'cursed:Spooky Night': {
+    initiativeMod: WEATHER_PENALTIES.HEATH_APPARITION_INITIATIVE,
+    description: 'Ghostly apparitions and chilling winds on the cursed heath paralyze initiative.',
+  },
 };
 
 // ─── Arena Event Constants ─────────────────────────────────────────────────

@@ -41,6 +41,7 @@ import {
   MOMENTUM_FLOOR,
 } from '@/constants/combat';
 import { getStyleWeatherModifier } from '@/constants/arena';
+import { applyWeatherDamageModifiers } from '@/engine/combat/mechanics/combatMath';
 import { accumulateGuardBreak } from '../../guardBreak';
 import { accumulateBleed } from '../../bleed';
 import { getMomentumDamageBonus, getWsAttritionBonus } from '../../tempoMechanics';
@@ -160,8 +161,11 @@ function applyDamageMultipliers(
     ? getStyleWeatherModifier(attacker.style, ctx.weather, ctx.arenaConfig.tags)
     : { damageMult: 1.0 };
 
-  const totalDamageMult = weatherDamageMult * styleWeatherMod.damageMult;
-  rawDamage = Math.round(rawDamage * totalDamageMult);
+  rawDamage = applyWeatherDamageModifiers(
+    rawDamage,
+    weatherDamageMult,
+    styleWeatherMod.damageMult
+  );
 
   if (attacker.committed) {
     rawDamage = Math.round(rawDamage * COMMIT_DAMAGE_MULT);

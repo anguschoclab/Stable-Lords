@@ -18,6 +18,23 @@ export function skillCheck(rng: () => number, skill: number, modifier: number = 
 /**
  * Contest check.
  */
+/**
+ * Applies weather damage modifiers.
+ * @param rawDamage Base damage
+ * @param weatherDamageMult Weather multiplier
+ * @param styleWeatherMult Style-specific weather multiplier
+ */
+export function applyWeatherDamageModifiers(
+  rawDamage: number,
+  weatherDamageMult: number,
+  styleWeatherMult: number
+): number {
+  return Math.round(rawDamage * (weatherDamageMult * styleWeatherMult));
+}
+
+/**
+ * Contest check.
+ */
 export function contestCheck(
   rng: () => number,
   a: number,

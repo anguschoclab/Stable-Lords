@@ -4,7 +4,6 @@
  */
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { WIN_RATE_THRESHOLDS } from '@/constants/core/ui';
@@ -27,7 +26,7 @@ interface StyleRow {
  * @param - { class name }.
  */
 export function StyleMeterTable({ className }: StyleMeterTableProps) {
-  const roster = useGameStore(useShallow((s) => s.roster));
+  const roster = useGameStore((s) => s.roster);
 
   const rows: StyleRow[] = useMemo(() => {
     const map = new Map<string, { wins: number; losses: number }>();

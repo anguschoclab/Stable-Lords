@@ -11,7 +11,6 @@ import { Link } from '@tanstack/react-router';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
 import { StatBox, AlertBox, EmptyDigestState } from './digest';
 
@@ -111,7 +110,7 @@ export function WeeklyDigestWidget({
   boutOffers,
   currentWeek,
 }: WeeklyDigestProps) {
-  const roster = useGameStore(useShallow((s) => s.roster));
+  const roster = useGameStore((s) => s.roster);
   const playerWarriorIds = useMemo(() => new Set<WarriorId>(roster.map((w) => w.id)), [roster]);
 
   const summary = useDigestSummary({

@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import type { RivalStableData } from '@/types/game';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { PERSONALITY_CLASH, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 
 /**
@@ -28,7 +27,7 @@ export function stableStats(rival: RivalStableData) {
 export function useStableComparison(rivals: RivalStableData[]) {
   const [idA, setIdA] = useState<string | null>(null);
   const [idB, setIdB] = useState<string | null>(null);
-  const ownerGrudgesRaw = useGameStore(useShallow((s) => s.ownerGrudges));
+  const ownerGrudgesRaw = useGameStore((s) => s.ownerGrudges);
 
   const rivalMap = useMemo(() => {
     const map = new Map<string, RivalStableData>();

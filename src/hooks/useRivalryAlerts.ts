@@ -5,7 +5,6 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 import { useWorldState, useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import type { WarriorId } from '@/types/shared.types';
 import { toast } from '@/hooks/use-toast';
 import { clamp } from '@/utils/math';
@@ -118,7 +117,7 @@ function triggerScreenShake(intensity: number) {
 export function useRivalryAlerts() {
   const state = useWorldState();
 
-  const rosterRaw = useGameStore(useShallow((s) => s.roster));
+  const rosterRaw = useGameStore((s) => s.roster);
   const rosterIds = useMemo(
     () => new Set<WarriorId>((rosterRaw ?? []).map((w) => w.id)),
     [rosterRaw]

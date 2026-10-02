@@ -313,6 +313,32 @@ describe('useRecruitActions', () => {
     expect(setState).toHaveBeenCalled();
   });
 
+  it('handleRecruit on a free agent removes it from freeAgents, not just recruitPool', () => {
+    const result = renderActionsHook();
+    const w = makePoolWarrior({
+      id: 'fa-1',
+      name: 'Free Vet',
+      cost: 120,
+      source: 'freeAgent',
+      shelfWeeksRemaining: 10,
+    });
+    act(() => result.current.handleRecruit(w, false));
+    expect(setState).toHaveBeenCalled();
+
+    const draft = {
+      week: 1,
+      roster: [] as Warrior[],
+      recruitPool: [] as PoolWarrior[],
+      freeAgents: [w],
+      player: { stableName: 'Test Stable' },
+      newsletter: [] as { id: string; week: number; title: string; items: string[] }[],
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    expect(draft.roster).toHaveLength(1);
+    expect(draft.freeAgents).toHaveLength(0);
+  });
+
   it('handleRecruit preserves identity, fame, and career for veteran free agents', () => {
     const result = renderActionsHook();
     const w = makePoolWarrior({
@@ -491,6 +517,25 @@ describe('useRecruit orchestrator', () => {
     expect(keys).toContain('handleScout');
     expect(keys).toContain('handleRefresh');
     expect(keys).toContain('handleCustomCreate');
+  });
+
+  it('merges freeAgents into the recruit pool the player sees', () => {
+    loadState({
+      freeAgents: [
+        makePoolWarrior({
+          id: 'fa-9',
+          name: 'Displaced Vet',
+          tier: 'Exceptional',
+          cost: 300,
+          source: 'freeAgent',
+          shelfWeeksRemaining: 20,
+        }),
+      ],
+    });
+    const { result } = renderHook(() => useRecruit());
+    const ids = result.current.filteredPool.map((w: PoolWarrior) => w.id);
+    expect(ids).toContain('fa-9');
+    expect(ids).toContain('pw1'); // orphanage pool still present
   });
 
   it('MAX_ROSTER equals BASE_ROSTER_CAP + rosterBonus', () => {

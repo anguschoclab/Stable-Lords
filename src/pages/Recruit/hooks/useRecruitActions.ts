@@ -52,6 +52,8 @@ function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, tot
   }
 
   draft.roster.push(warrior);
+  // Free agents live on a separate shelf — a veteran signing drains it first.
+  draft.freeAgents = (draft.freeAgents ?? []).filter((p: PoolWarrior) => p.id !== w.id);
   draft.recruitPool = (draft.recruitPool ?? []).filter((p: PoolWarrior) => p.id !== w.id);
 
   const items = [
@@ -78,6 +80,7 @@ function applyPoolRefreshDraft(draft: GameStore) {
   draft.graveyard.forEach((w: Warrior) => usedNames.add(w.name));
   draft.retired.forEach((w: Warrior) => usedNames.add(w.name));
   (draft.rivals ?? []).forEach((r) => r.roster.forEach((w: Warrior) => usedNames.add(w.name)));
+  (draft.freeAgents ?? []).forEach((w: PoolWarrior) => usedNames.add(w.name));
 
   const newPool = fullRefreshPool(draft.week, usedNames);
   draft.recruitPool = newPool;

@@ -11,23 +11,30 @@ import { useRecruitActions } from './useRecruitActions';
  *
  */
 export function useRecruit() {
-  const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds, week } = useGameStore(
-    useShallow((s) => ({
-      roster: s.roster,
-      treasury: s.treasury,
-      rosterBonus: s.rosterBonus,
-      recruitPool: s.recruitPool,
-      setState: s.setState,
-      deductFunds: s.deductFunds,
-      week: s.week,
-    }))
-  );
+  const { roster, treasury, rosterBonus, recruitPool, freeAgents, setState, deductFunds, week } =
+    useGameStore(
+      useShallow((s) => ({
+        roster: s.roster,
+        treasury: s.treasury,
+        rosterBonus: s.rosterBonus,
+        recruitPool: s.recruitPool,
+        freeAgents: s.freeAgents,
+        setState: s.setState,
+        deductFunds: s.deductFunds,
+        week: s.week,
+      }))
+    );
   const navigate = useNavigate();
   const MAX_ROSTER = BASE_ROSTER_CAP + (rosterBonus ?? 0);
   const rosterFull = roster.length >= MAX_ROSTER;
   const canRefresh = canTransact(treasury, REFRESH_COST);
 
-  const filters = useRecruitFilters(recruitPool, week);
+  // One market: free-agent veterans and orphanage recruits share the list.
+  const combinedPool = [...(freeAgents ?? []), ...(recruitPool ?? [])].filter(
+    (w, i, all) => all.findIndex((x) => x.id === w.id) === i
+  );
+
+  const filters = useRecruitFilters(combinedPool, week);
   const actions = useRecruitActions({
     rosterFull,
     setState,
@@ -42,7 +49,7 @@ export function useRecruit() {
     MAX_ROSTER,
     rosterFull,
     canRefresh,
-    recruitPool,
+    recruitPool: combinedPool,
     ...filters,
     ...actions,
   };

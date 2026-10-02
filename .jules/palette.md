@@ -1,0 +1,3 @@
+## 2024-10-02 - Scouting button focus rings
+**Learning:** `outline-none` on interactive button elements across the scouting lists aggressively removes focus rings, failing keyboard navigation visibility.
+**Action:** Replace `outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` to preserve keyboard accessibility on selection cards without breaking mouse click visual flow.

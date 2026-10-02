@@ -117,7 +117,7 @@ function StableRow({
           onClick={() => onSelect(r.owner.id === selectedId ? null : r.owner.id)}
           disabled={r.owner.id === otherId}
           className={cn(
-            'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/alpha outline-none',
+            'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/alpha focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
             selectedId === r.owner.id
               ? t.selectedBtn
               : r.owner.id === otherId

@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
+import { getArenaById } from '@/data/arenas';
 
 describe('Promoter Generator', () => {
   it('should generate the exact number of promoters requested', () => {
@@ -81,6 +82,22 @@ describe('Promoter Generator', () => {
         notableBouts: [],
         legacyFame: 0,
       });
+    }
+  });
+
+  it('gives each tier an arenaPool covering the venues it can promote', () => {
+    // Megaplan Phase 4 — promoter pools must span tiers so mid/high venues
+    // have carriers; Local stays grounded in tier-1.
+    const promoters = generatePromoters(30, 555);
+    const tiersOf = (p: (typeof promoters)[number]) =>
+      new Set((p.arenaPool ?? []).map((a) => getArenaById(a)?.tier).filter(Boolean));
+    for (const p of promoters) {
+      const tiers = tiersOf(p);
+      expect(p.arenaPool?.length ?? 0).toBeGreaterThan(0);
+      if (p.tier === 'Local') expect([...tiers]).toEqual([1]);
+      if (p.tier === 'Regional') expect(tiers.has(1) && tiers.has(2)).toBe(true);
+      if (p.tier === 'National') expect(tiers.has(2) || tiers.has(3)).toBe(true);
+      if (p.tier === 'Legendary') expect(tiers.size).toBeGreaterThanOrEqual(3);
     }
   });
 

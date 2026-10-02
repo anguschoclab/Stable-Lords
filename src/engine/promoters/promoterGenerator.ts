@@ -113,9 +113,13 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
       tier,
       capacity: tier === 'Legendary' ? 2 : tier === 'National' ? 4 : tier === 'Regional' ? 6 : 10,
       biases: rngService.shuffle(Object.values(FightingStyle)).slice(0, 2),
-      arenaPool: getArenasByTier(tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3).map(
-        (a) => a.id
-      ),
+      // Promoters book any venue at or below their tier: Local → 1,
+      // Regional → 1–2, National/Legendary → 1–3. Mid/high venues need a
+      // carrier tier, or they sit dark the whole season.
+      arenaPool: [1, 2, 3]
+        .filter((t) => t <= (tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3))
+        .flatMap((t) => getArenasByTier(t as 1 | 2 | 3))
+        .map((a) => a.id),
       history: {
         totalPursePaid: 0,
         notableBouts: [],

@@ -243,8 +243,10 @@ describe('Autosim Integration', () => {
 
       const elapsed = Date.now() - startTime;
 
-      // Should complete in reasonable time (< 10 seconds for 30 weeks)
-      expect(elapsed).toBeLessThan(10000);
+      // Should complete in reasonable time. The living-world floor refills a
+      // fresh state to ~90 rival stables on week 1, so 30 weeks now cost
+      // ~0.4s/week — the old 10s cap assumed the 8-rival fresh world.
+      expect(elapsed).toBeLessThan(20000);
     });
   });
 

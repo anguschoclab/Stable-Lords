@@ -28,7 +28,10 @@ describe('Pipeline Performance Benchmarks', () => {
     const duration = endTime - startTime;
 
     expect(result.weeksCompleted).toBe(13);
-    expect(duration).toBeLessThan(5000); // Should complete within 5 seconds
+    // Fresh states floor-refill to ~90 rivals on week 1; the old 5s cap
+    // assumed the 8-rival fresh world. Generous ceiling — precise bands live
+    // in the scale-band tests below and docs/PIPELINE_BASELINE.md.
+    expect(duration).toBeLessThan(12000);
   });
 
   it('headless mode should be faster than full mode', async () => {
@@ -43,7 +46,7 @@ describe('Pipeline Performance Benchmarks', () => {
 
     // Note: We can't easily compare to full mode since it requires feature flags
     // But we can verify headless completes in reasonable time
-    expect(headlessDuration).toBeLessThan(5000);
+    expect(headlessDuration).toBeLessThan(12000);
   });
 
   it('autosim should handle large week counts', async () => {
@@ -61,7 +64,8 @@ describe('Pipeline Performance Benchmarks', () => {
     const duration = endTime - startTime;
 
     expect(result.weeksSimmed).toBeGreaterThan(0);
-    expect(duration).toBeLessThan(30000); // Should complete within 30 seconds for a year
+    // ~0.4s/week at the 90-rival floor; the old 30s cap assumed 8 rivals.
+    expect(duration).toBeLessThan(45000);
   });
 
   it('should not accumulate excessive memory during batch operations', async () => {

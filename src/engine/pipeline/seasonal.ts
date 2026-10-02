@@ -85,6 +85,7 @@ const EVENT_HANDLERS: Record<
   phantom_sparring: offseason.handlePhantomSparringPartner,
   dreamweavers_mist: offseason.handleDreamweaversMist,
   prismatic_gale_exposure: offseason.handlePrismaticGaleExposure,
+  wandering_blacksmith: offseason.handleWanderingBlacksmith,
 };
 
 /**

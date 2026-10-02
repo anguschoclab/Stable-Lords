@@ -1119,4 +1119,76 @@ describe('runSeasonalPass', () => {
     expect(impact.insightTokens?.length).toBe(1);
     expect(impact.insightTokens?.[0]?.type).toBe('Style');
   });
+
+  it('should trigger the wandering_blacksmith offseason event, awarding XP and deducting gold', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_blacksmith') +
+            0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-blacksmith' as WarriorId;
+    const state = createFreshState('Player');
+    state.treasury = 100;
+    const warrior = {
+      id: warriorId,
+      name: 'Steel Bender',
+      status: 'Active',
+      xp: 0,
+    } as Warrior;
+    state.roster = [warrior];
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    expect(impact.rosterUpdates).toBeDefined();
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update?.xp).toBeGreaterThanOrEqual(20);
+
+    expect(impact.treasuryDelta).toBe(-50);
+    expect(impact.ledgerEntries?.length).toBe(1);
+    expect(impact.ledgerEntries?.[0]?.label).toBe('Wandering Blacksmith');
+    expect(impact.newsletterItems?.[0]?.title).toBe('Wandering Blacksmith');
+  });
+
+  it('should not trigger wandering_blacksmith if treasury is less than 50', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_blacksmith') +
+            0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-blacksmith2' as WarriorId;
+    const state = createFreshState('Player');
+    state.treasury = 40; // Too poor
+    const warrior = {
+      id: warriorId,
+      name: 'Steel Bender',
+      status: 'Active',
+      xp: 0,
+    } as Warrior;
+    state.roster = [warrior];
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    // No effects should happen because they can't afford it
+    expect(impact.rosterUpdates?.size).toBe(0);
+    expect(impact.treasuryDelta).toBeUndefined();
+    expect(impact.newsletterItems?.length).toBe(0);
+  });
 });

@@ -410,6 +410,13 @@
       "newsletter": [
         "{{name}} was caught in a rare Prismatic Gale! The magical winds whispered secrets of movement, but left them dizzy. (+20 XP, Insight Token, Minor Injury)"
       ]
+    },
+    "wandering_blacksmith": {
+      "title": "Wandering Blacksmith",
+      "effectType": "wandering_blacksmith",
+      "newsletter": [
+        "A master blacksmith passed through the stable and took a liking to {{name}}. They spent a week refining their technique and adjusting their weapon grip. (+{{xp}} XP, -50 Gold)"
+      ]
     }
   },
   "events": {

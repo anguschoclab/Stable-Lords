@@ -72,7 +72,8 @@ export interface OffseasonEventNarrative {
     | 'wandering_merchant_strange_brew'
     | 'phantom_sparring'
     | 'dreamweavers_mist'
-    | 'prismatic_gale_exposure';
+    | 'prismatic_gale_exposure'
+    | 'wandering_blacksmith';
   newsletter: string[];
 }
 

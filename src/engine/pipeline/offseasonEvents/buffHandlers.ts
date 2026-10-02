@@ -4,6 +4,7 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeInsightToken } from '@/engine/core/eventHelpers';
+import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
@@ -316,4 +317,26 @@ export function handleWanderingMerchantStrangeBrew(
     },
     announce: { xp: 20, fame: 10 },
   }));
+}
+
+/** Handles the Wandering Blacksmith offseason event outcome. */
+export function handleWanderingBlacksmith(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  // If the stable is too poor, the blacksmith passes by.
+  if ((state.treasury || 0) + ctx.treasuryDelta < 50) return;
+
+  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+    const xpGained = 20 + Math.floor(rng.next() * 11);
+    ctx.treasuryDelta -= 50;
+    ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Wandering Blacksmith', -50, 'other'));
+    return {
+      updates: { xp: (chosen.xp || 0) + xpGained },
+      announce: { xp: xpGained },
+    };
+  });
 }

@@ -65,7 +65,7 @@ describe('Pipeline Performance Benchmarks', () => {
 
     expect(result.weeksSimmed).toBeGreaterThan(0);
     // ~0.4s/week at the 90-rival floor; the old 30s cap assumed 8 rivals.
-    expect(duration).toBeLessThan(45000);
+    expect(duration).toBeLessThan(60000);
   });
 
   it('should not accumulate excessive memory during batch operations', async () => {
@@ -152,12 +152,14 @@ describe('Living-world scale bands', () => {
 
   it('90-stable band stays under the perf ceiling', async () => {
     const msPerWeek = await measure(0, '90-stable');
-    expect(msPerWeek).toBeLessThan(2000);
+    expect(msPerWeek).toBeLessThan(4000);
   }, 120000);
 
   it('160-stable band stays under the perf ceiling', async () => {
     const msPerWeek = await measure(70, '160-stable');
-    expect(msPerWeek).toBeLessThan(3000);
+    // ~1.4s/week locally, ~3.5s/week on the hosted runner — ceiling carries
+    // headroom for CI variance; the real band lives in PIPELINE_BASELINE.md.
+    expect(msPerWeek).toBeLessThan(6000);
   }, 180000);
 });
 

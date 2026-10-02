@@ -780,7 +780,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   },
   {
     id: 'l_std_blood_sands',
-    arenaId: 'STANDARD_ARENA',
+    arenaId: 'standard_arena',
     type: 'historical_battle',
     title: 'The Crimson Eclipse',
     narrative:
@@ -788,7 +788,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   },
   {
     id: 'l_std_stone_echoes',
-    arenaId: 'STANDARD_ARENA',
+    arenaId: 'standard_arena',
     type: 'architectural_quirk',
     title: 'The Whispering Stones',
     narrative:

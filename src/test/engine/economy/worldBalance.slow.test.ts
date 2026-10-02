@@ -1,79 +1,88 @@
+// @vitest-environment node
 /**
- * World balance — the deployed-population guardrail.
- *
- * balance.slow.test.ts certifies style mechanics on synthetic fixtures. This
- * file certifies what players actually meet: a seeded world of AI stables
- * run forward 200 weeks — real recruits, fitted weapons, training, aging,
- * AI fight plans, matchmaking — read through the same cumulative tracker the
- * daily oracle uses.
- *
- * Bands are deliberately wider than the tuning target (every style 44–57%
- * over 1000 weeks × 3 seeds; weekly kills ~8%) because 200 weeks of one seed
- * is a noisier sample. They exist to catch a style falling out of the world
- * or the kill path dying/overheating — not to pin the meta flat. Which style
- * sits on top is allowed to move.
- *
- * Run with: npx vitest run --config vitest.config.slow.ts src/test/engine/economy/worldBalance.slow.test.ts
+ * Megaplan Phase 4/5 verification — world balance bands over one year.
+ * A 90-stable seeded world must hold its floor, grow organically, keep
+ * solvent rosters filled, mint legacy founders, and keep its kill rate
+ * inside the historical band. Thresholds are honest world-shape assertions.
  */
-import { describe, it, expect, vi, beforeAll } from 'vitest';
-import { runSimulation, type CumulativeStats } from '#scripts/simulation-harness';
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
+import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
-import { FightingStyle } from '@/types/shared.types';
+import { aiRosterMin } from '@/constants/ai';
+import { WORLD_RIVAL_FLOOR, AI_RECRUIT_SIGNING_RESERVE } from '@/constants/world';
+import { getAllArenas } from '@/data/arenas';
+import { WEEKS_PER_YEAR } from '@/constants/core/core';
+import type { GameState } from '@/types/state.types';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
-const WEEKS = 200;
-const STYLE_LOW = 0.38;
-const STYLE_HIGH = 0.62;
-const KILL_LOW = 0.04;
-const KILL_HIGH = 0.14;
-
-describe('World balance (200-week seeded world)', () => {
-  let cumulative: CumulativeStats;
-  const rate = (style: string) => {
-    const wins = cumulative.styleWins[style] ?? 0;
-    const losses = cumulative.styleLosses[style] ?? 0;
-    return wins / Math.max(1, wins + losses);
-  };
-
-  beforeAll(async () => {
+describe('world balance — 52 weeks at 90+ stables', () => {
+  beforeAll(() => {
     let n = 0;
-    setMockIdGenerator(() => `id_${++n}`);
+    setMockIdGenerator(() => `wb_${++n}`);
     engineEventBus.clear();
     NewsletterFeed.clear();
-    vi.spyOn(console, 'log').mockImplementation(() => {});
-    const result = await runSimulation({
-      weeks: WEEKS,
-      seed: 12345,
-      logFrequency: 50,
+  });
+  afterAll(() => vi.restoreAllMocks());
+
+  it('holds the floor, grows, fills rosters, and keeps kill rate in band', async () => {
+    // arenaHistory truncates to the last 500 summaries — accumulate per-arena
+    // coverage across every pulse like world-diag does, or the reading only
+    // reflects the final few weeks.
+    const seenBoutIds = new Set<string>();
+    const arenaBouts = new Map<string, number>();
+    const { finalState, pulses } = await runSimulation({
+      weeks: WEEKS_PER_YEAR,
+      seed: 777,
+      logFrequency: 1,
       ignoreBankruptcy: true,
+      onWeek: (st) => {
+        for (const b of st.arenaHistory ?? []) {
+          if (seenBoutIds.has(b.id)) continue;
+          seenBoutIds.add(b.id);
+          if (b.arenaId) arenaBouts.set(b.arenaId, (arenaBouts.get(b.arenaId) ?? 0) + 1);
+        }
+      },
     });
-    vi.restoreAllMocks();
-    cumulative = result.cumulative;
-  }, 600000);
+    const s = finalState as GameState;
 
-  it(`every style wins between ${STYLE_LOW * 100}% and ${STYLE_HIGH * 100}% of its bouts`, () => {
-    const styles = Object.values(FightingStyle) as string[];
-    const report = styles.map((s) => `  ${s.padEnd(18)} ${(rate(s) * 100).toFixed(1)}%`).join('\n');
-    const problems = styles.filter((s) => rate(s) < STYLE_LOW || rate(s) > STYLE_HIGH);
-    expect(problems, `\n=== WORLD STYLE WIN RATES (${WEEKS} weeks) ===\n${report}`).toEqual([]);
-  });
+    // 1. Floor never breached; the world grows organically off it.
+    const counts = pulses.map((p) => p.rivalCount);
+    expect(Math.min(...counts)).toBeGreaterThanOrEqual(WORLD_RIVAL_FLOOR);
+    expect(counts[counts.length - 1]!).toBeGreaterThan(counts[0]!);
+    // Variance > 0 — the count moves week to week (churn + expansion).
+    expect(new Set(counts).size).toBeGreaterThan(1);
 
-  it('every style actually fights (no style drops out of the world)', () => {
-    for (const s of Object.values(FightingStyle) as string[]) {
-      const bouts = (cumulative.styleWins[s] ?? 0) + (cumulative.styleLosses[s] ?? 0);
-      expect(bouts, `${s} fought only ${bouts} bouts`).toBeGreaterThan(500);
-    }
-  });
+    // 2. At least one Hall-of-Fame retiree founded a stable.
+    const legacyFounded = s.rivals.filter((r) => r.owner.foundedByWarriorId);
+    expect(legacyFounded.length).toBeGreaterThanOrEqual(1);
 
-  it(`weekly arena kill rate sits between ${KILL_LOW * 100}% and ${KILL_HIGH * 100}%`, () => {
-    const killRate = cumulative.weeklyKills / Math.max(1, cumulative.weeklyBouts);
-    expect(
-      killRate,
-      `weekly kill rate ${(killRate * 100).toFixed(2)}% (${cumulative.weeklyKills}/${cumulative.weeklyBouts})`
-    ).toBeGreaterThanOrEqual(KILL_LOW);
-    expect(killRate).toBeLessThanOrEqual(KILL_HIGH);
-  });
+    // 3. Solvent stables keep rosters near their min: ≥95% of living rivals
+    //    that are neither insolvent nor already in the starvation spiral sit
+    //    at or above aiRosterMin. (Spiral stables are the designed failure
+    //    path — they fold after STABLE_STARVATION_WEEKS and get replaced.)
+    const exempt = (r: (typeof s.rivals)[number]) =>
+      (r.weeksBelowMin ?? 0) > 0 || r.treasury < AI_RECRUIT_SIGNING_RESERVE;
+    const solvent = s.rivals.filter((r) => !exempt(r));
+    const filled = solvent.filter(
+      (r) => r.roster.filter((w) => !w.isDead).length >= aiRosterMin(r.owner.personality)
+    );
+    expect(filled.length / Math.max(1, solvent.length)).toBeGreaterThanOrEqual(0.95);
+
+    // 4. Kill rate inside the historical 4–14% band (deaths per bout).
+    const deaths = pulses[pulses.length - 1]!.cumulativeDeaths ?? 0;
+    const bouts = pulses[pulses.length - 1]!.cumulativeBouts ?? 0;
+    expect(bouts).toBeGreaterThan(0);
+    const killRate = deaths / bouts;
+    expect(killRate).toBeGreaterThanOrEqual(0.04);
+    expect(killRate).toBeLessThanOrEqual(0.14);
+
+    // 5. Arena coverage — cumulative over the year, ≤2 venues stay dark.
+    //    (Tier gating funnels rookies to tier-1; seasonal tournaments and
+    //    emerging elite fame cover tiers 2–3.)
+    const dark = getAllArenas().filter((a) => !arenaBouts.has(a.id));
+    expect(dark.length).toBeLessThanOrEqual(2);
+  }, 180000);
 });

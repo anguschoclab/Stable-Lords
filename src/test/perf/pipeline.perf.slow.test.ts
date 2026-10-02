@@ -114,6 +114,49 @@ describe('Determinism vs Performance Trade-offs', () => {
   });
 });
 
+// ─── Living-world scale bands (megaplan Phase 5) ─────────────────────────────
+// Time a populated world at the floor (90 stables) and near the soft cap
+// (160 stables). Timings are recorded to the console and gated generously —
+// the assertion is "no pathological regression", sub-ms precision lives in
+// docs/PIPELINE_BASELINE.md.
+describe('Living-world scale bands', () => {
+  const measure = async (extraRivals: number, label: string) => {
+    const { populateInitialWorld } = await import('@/engine/core/worldSeeder');
+    const { generateRivalStables } = await import('@/engine/rivals');
+    const { advanceWeek } = await import('@/engine/pipeline/services/weekPipelineService');
+    const base = createFreshState(`perf-${label}`, '2026-04-28T09:00:00Z');
+    let state = populateInitialWorld(base, 12345);
+    if (extraRivals > 0) {
+      state = {
+        ...state,
+        rivals: [
+          ...state.rivals,
+          ...generateRivalStables(extraRivals, 54321, state.absoluteWeek ?? 0),
+        ],
+      };
+    }
+
+    const weeks = 8;
+    const start = performance.now();
+    for (let i = 0; i < weeks; i++) {
+      state = await advanceWeek(state, { headless: true });
+    }
+    const msPerWeek = (performance.now() - start) / weeks;
+    console.log(`[perf] ${label} (${state.rivals.length} rivals): ${msPerWeek.toFixed(1)} ms/week`);
+    return msPerWeek;
+  };
+
+  it('90-stable band stays under the perf ceiling', async () => {
+    const msPerWeek = await measure(0, '90-stable');
+    expect(msPerWeek).toBeLessThan(2000);
+  }, 120000);
+
+  it('160-stable band stays under the perf ceiling', async () => {
+    const msPerWeek = await measure(70, '160-stable');
+    expect(msPerWeek).toBeLessThan(3000);
+  }, 180000);
+});
+
 // Stress test for long-running simulations
 describe('Long-running Simulation Stress Tests', () => {
   it('should handle long simulation without memory issues', async () => {

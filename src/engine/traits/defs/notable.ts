@@ -20,6 +20,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.5,
   },
+  gutter_wraith: {
+    id: 'gutter_wraith',
+    name: 'Gutter Wraith',
+    description: 'Silent as a shadow, quick to strike the unwary.',
+    effect: { iniModFresh: 1, attModEarly: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_survivor: {
     id: 'orphan_survivor',
     name: 'Survivor',

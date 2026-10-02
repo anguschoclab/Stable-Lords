@@ -116,6 +116,8 @@ function buildWorldBoutOffer(
   const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
   const arenaId = selectArenaForMatchup(entryA.warrior, bestOpponent.warrior, rng, {
     weather: state.weather,
+    arenaHistory: state.arenaHistory,
+    currentWeek: state.absoluteWeek,
   });
   return {
     id: offerId,

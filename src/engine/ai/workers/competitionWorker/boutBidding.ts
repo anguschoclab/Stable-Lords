@@ -491,6 +491,8 @@ function resolveArenaId(
     contenderVenue ??
     selectArenaForMatchup(proposer, opponent, cx.rng, {
       weather: cx.state.weather,
+      arenaHistory: cx.state.arenaHistory,
+      currentWeek: cx.state.absoluteWeek,
     })
   );
 }

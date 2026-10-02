@@ -58,6 +58,23 @@ export const ARENA_SELECTION = {
    *  draw — combined with HOME_VENUE_CHANCE this makes home venues dominant
    *  (~90% of bookings) without being absolute. Scores run ~0–4 pre-shift. */
   HOME_VENUE_FIT_BONUS: 3.0,
+  /** Hard cap on the applied home-venue fit bonus — keeps record-book
+   *  stickiness from drowning out every other fit signal in the draw. */
+  HOME_VENUE_WEIGHT_MAX: 2.0,
+  /** Fame required before a warrior can book tier-2 (prestigious) venues. */
+  TIER_2_FAME_THRESHOLD: 50,
+  /** Fame required before a warrior can book tier-3 (special-event) venues;
+   *  champions and titled warriors bypass it. */
+  TIER_3_FAME_THRESHOLD: 150,
+  /** Max fit bonus granted to venues with little recent booking history —
+   *  nudges coverage toward under-served arenas without overriding fit. */
+  UNDERSERVED_ARENA_WEIGHT: 0.3,
+  /** Lookback (absolute weeks) when counting recent bouts per arena for the
+   *  under-served weighting. */
+  UNDERSERVED_LOOKBACK_WEEKS: 13,
+  /** Venue bouts required before a warrior can contend for that arena's
+   *  title — mirrored from ARENA_TITLE.MIN_BOUTS for matchmaking callers. */
+  MIN_BOUTS_FOR_TITLE_ELIGIBILITY: 3,
   /** Seed offset for deterministic tournament-bout venue selection inside
    *  resolveBout — keeps the arena draw off the combat RNG stream. */
   TOURNAMENT_BOUT_SEED_OFFSET: 7919,

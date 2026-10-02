@@ -248,6 +248,8 @@ export function createBoutOffer(
     planA: favorWarrior.plan ?? undefined,
     planB: otherWarrior.plan ?? undefined,
     weather: ctx.weather,
+    arenaHistory: state.arenaHistory,
+    currentWeek: state.absoluteWeek,
   });
 
   const typedOfferId = offerId as BoutOfferId;

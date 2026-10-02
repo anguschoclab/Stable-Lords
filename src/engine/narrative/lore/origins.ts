@@ -210,7 +210,6 @@ export const ORIGINS: string[] = [
   'Found half-starved clutching a rusted nail in the Cinder Wards',
   'Survived the Long Winter by hiding among the forgotten dead',
   'Sold to the fighting pits to settle a drunkard',
-  'Raised by feral hounds in the ruins of the Old Cathedral',
   'Abandoned at the iron grates of the Silent Brothers',
   'Raised in the lightless cellars of the Blackwood Orphanage',
   'Abandoned outside the fighting pits wrapped in a bloodied tunic',
@@ -317,4 +316,9 @@ export const ORIGINS: string[] = [
   'Found swaddled in discarded bandages behind the Bleeding Heart Asylum',
   'Sold to the fighting pits to clear the debts of the Black-Stone Orphanage',
   'Endured the daily beatings of the Matrons of the Hollow Hand',
+  'Found shivering among the desecrated tombs of the Howling Crypts',
+  'Sold by starving parents to the cruel skin-merchants of the Pale Wards',
+  'Raised in the lightless oubliettes of the Black Iron Workhouse',
+  'Survived the merciless frostbite cullings of the Weeping Stone Slums',
+  'Abandoned to the feral tide pools of the Drowned Quarter',
 ];

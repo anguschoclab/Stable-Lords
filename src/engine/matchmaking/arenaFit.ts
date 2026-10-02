@@ -105,29 +105,42 @@ export function scoreArenaFitForWarrior(
   }
 
   // 5. Tag-based scoring
+  score += tagFitScore(warrior, arena, prefIdx, prefRange);
+
+  return score;
+}
+
+/** Tag-based fit delta: per-tag weights plus specific tag-combination
+ *  synergies (water+cursed drains aggressive styles, water+uneven punishes
+ *  initiative styles). */
+function tagFitScore(
+  warrior: Warrior,
+  arena: ArenaConfig,
+  prefIdx: number,
+  prefRange: FightPlan['rangePreference']
+): number {
+  let delta = 0;
   for (const tag of arena.tags) {
     const tagConfig = ARENA_TAG_WEIGHTS[tag as keyof typeof ARENA_TAG_WEIGHTS];
     if (tagConfig) {
       // Bonus for close-range fighters in cramped arenas
       if (tag === 'cramped' && prefIdx <= 1) {
-        score += ARENA_FIT.CLOSE_RANGE_BONUS * tagConfig.weight;
+        delta += ARENA_FIT.CLOSE_RANGE_BONUS * tagConfig.weight;
       }
       // Bonus for reach fighters in open arenas
       if (tag === 'open' && prefRange === 'Extended') {
-        score += ARENA_FIT.REACH_BONUS * tagConfig.weight;
+        delta += ARENA_FIT.REACH_BONUS * tagConfig.weight;
       }
-      // Penalty for initiative styles in uneven arenas
-
       // Penalty for low-endurance fighters in elevated arenas
       if (tag === 'elevated') {
         const cn = warrior.attributes?.CN ?? 12;
         if (cn < ARENA_FIT.CN_BASELINE) {
-          score -= (ARENA_FIT.CN_BASELINE - cn) * 0.1 * tagConfig.weight;
+          delta -= (ARENA_FIT.CN_BASELINE - cn) * 0.1 * tagConfig.weight;
         }
       }
 
       if (tag === 'uneven' && INITIATIVE_STYLES.has(warrior.style)) {
-        score -= ARENA_FIT.UNEVEN_INITIATIVE_PENALTY * tagConfig.weight;
+        delta -= ARENA_FIT.UNEVEN_INITIATIVE_PENALTY * tagConfig.weight;
       }
     }
   }
@@ -140,18 +153,18 @@ export function scoreArenaFitForWarrior(
   if (hasWater && hasCursed) {
     // Water + Cursed creates an extremely draining environment that punishes high-aggression
     if (HIGH_AGGRESSION_STYLES.has(warrior.style)) {
-      score -= 0.5;
+      delta -= 0.5;
     }
   }
 
   if (hasWater && arenaTags.has('uneven')) {
     // Water + Uneven makes lunging styles prone to slipping
     if (INITIATIVE_STYLES.has(warrior.style)) {
-      score -= 0.4;
+      delta -= 0.4;
     }
   }
 
-  return score;
+  return delta;
 }
 
 /** The arena where the warrior holds the most recorded bouts — their "home"

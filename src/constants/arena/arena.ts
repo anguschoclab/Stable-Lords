@@ -95,7 +95,7 @@ export const TOURNAMENT_ARENA_DEFAULTS = {
  */
 export const ARENA_ROSTER_LIMITS = {
   TOTAL_CAP: 50,
-  TIER_CAPS: { 1: 12, 2: 24, 3: 14 } as Record<1 | 2 | 3, number>,
+  TIER_CAPS: { 1: 12, 2: 24, 3: 15 } as Record<1 | 2 | 3, number>,
 } as const;
 
 // ─── Style-Weather Modifiers ───────────────────────────────────────────────

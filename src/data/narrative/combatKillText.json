@@ -353,7 +353,10 @@
         "{{attacker}} delivers a macabre, finishing slash, leaving {{defender}} to bleed out on the cold stones.",
         "{{attacker}}'s blade finds {{defender}}'s neck, ending the bout in a spray of crimson.",
         "A final, brutal cleave from {{attacker}} splits {{defender}} wide open, dropping them lifeless.",
-        "{{attacker}}'s blade sings a terrible song, separating {{defender}}'s life from their flesh in one fluid, grisly motion."
+        "{{attacker}}'s blade sings a terrible song, separating {{defender}}'s life from their flesh in one fluid, grisly motion.",
+        "A geyser of crimson erupts as {{attacker}}'s final slash severs an artery, dropping {{defender}} instantly.",
+        "{{defender}} stares blankly at the horrifying cross-section of their own torso before collapsing into the red sands.",
+        "The crowd roars as {{attacker}}'s blade takes {{defender}}'s head in a single, fluid decapitation."
       ],
       "piercing": [
         "{{attacker}} drives their point straight through {{defender}}'s heart.",
@@ -452,7 +455,10 @@
         "A final, fatal thrust from {{attacker}} pins {{defender}} lifelessly to the dirt.",
         "Like a pinned insect, {{defender}} goes still as {{attacker}} drives the final, fatal thrust home.",
         "{{defender}} gasps silently as {{attacker}} impales them completely, lifting them off their feet before dropping their corpse.",
-        "A perfect, chilling thrust from {{attacker}} finds the heart, and {{defender}}'s eyes go instantly hollow."
+        "A perfect, chilling thrust from {{attacker}} finds the heart, and {{defender}}'s eyes go instantly hollow.",
+        "{{attacker}} runs {{defender}} completely through, lifting them momentarily off their feet before they die.",
+        "A precision thrust pierces {{defender}}'s heart; they look down in disbelief before the light leaves their eyes.",
+        "{{defender}} chokes on their own blood as {{attacker}} twists the embedded point, guaranteeing a fatal end."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
@@ -553,7 +559,9 @@
         "The arena shudders as {{attacker}} brings down a shattering blow, pulverizing {{defender}}.",
         "{{attacker}} swings with titanic force, turning {{defender}}'s armor and bones to dust.",
         "{{defender}} is utterly reduced to ruin as {{attacker}} brings down the final, bone-obliterating strike, leaving nothing but an unrecognizable heap.",
-        "A sickening crunch echoes through the arena as {{attacker}} permanently caves in {{defender}}'s defenses."
+        "The awful sound of a skull collapsing under {{attacker}}'s final blow signals the end for {{defender}}.",
+        "{{defender}} is driven violently into the earth, their spine shattering with a sickening crack.",
+        "With a merciless downward smash, {{attacker}} turns {{defender}}'s helmet—and what was inside it—into a gory ruin."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
@@ -653,7 +661,10 @@
         "A devastating final blow from {{attacker}} silences {{defender}} for good, ending the bout.",
         "{{attacker}} relentlessly pummels {{defender}} into the dirt until they stop twitching.",
         "A final, devastating uppercut from {{attacker}} shatters {{defender}}'s jaw, killing them instantly.",
-        "With a final, sickening crack of knuckles against skull, {{attacker}} extinguishes the light behind {{defender}}'s eyes forever."
+        "With a final, sickening crack of knuckles against skull, {{attacker}} extinguishes the light behind {{defender}}'s eyes forever.",
+        "A brutal, bare-knuckle uppercut from {{attacker}} snaps {{defender}}'s neck with terrifying finality.",
+        "{{attacker}} rains down unyielding blows until {{defender}} stops twitching, the sand stained a dark, muddy red.",
+        "With a final, desperate hook, {{attacker}} caves in {{defender}}'s larynx, silencing them forever."
       ]
     },
     "default": [

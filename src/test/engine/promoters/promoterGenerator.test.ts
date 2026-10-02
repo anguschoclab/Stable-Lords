@@ -84,6 +84,13 @@ describe('Promoter Generator', () => {
     }
   });
 
+  it('should include the new arenas in promoter arena pools', () => {
+    const promoters = generatePromoters(100, 111);
+    const allPools = new Set(promoters.flatMap((p) => p.arenaPool));
+    expect(allPools).toContain('the_crumbling_spire');
+    expect(allPools).toContain('misty_pit');
+  });
+
   it('should accept and use a custom provided RNG service', () => {
     const customRng = new SeededRNGService(999);
     const mockNext = vi.spyOn(customRng, 'next');

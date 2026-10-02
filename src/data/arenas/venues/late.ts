@@ -241,3 +241,25 @@ export const THE_IRON_CAGE: ArenaConfig = {
   zoneDef: { Edge: -4, Corner: -6 },
   surfaceMod: { initiativeMod: 1, riposteMod: -1, enduranceMult: 1.1 },
 };
+
+export const THE_CRUMBLING_SPIRE: ArenaConfig = {
+  id: 'the_crumbling_spire',
+  name: 'The Crumbling Spire',
+  tags: ['elevated', 'ruins', 'outdoor'],
+  tier: 3,
+  size: 'standard',
+  description: 'An ancient, towering spire. The footing is perilous and debris falls constantly.',
+  zoneDef: { Edge: -4, Corner: -6 },
+  surfaceMod: { initiativeMod: -1, enduranceMult: 1.1, riposteMod: 0 },
+};
+
+export const MISTY_PIT: ArenaConfig = {
+  id: 'misty_pit',
+  name: 'Misty Pit',
+  tags: ['cramped', 'uneven', 'outdoor'],
+  tier: 1,
+  size: 'cramped',
+  description: 'A tight, muddy pit often filled with obscuring mist.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -2, enduranceMult: 1.05, riposteMod: 1 },
+};

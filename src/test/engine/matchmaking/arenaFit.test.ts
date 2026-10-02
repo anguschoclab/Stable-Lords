@@ -1026,6 +1026,8 @@ describe('new arena configs', () => {
     expect(ids).toContain('narrow_bridge');
     expect(ids).toContain('the_meat_grinder');
     expect(ids).toContain('the_abyssal_pit');
+    expect(ids).toContain('the_crumbling_spire');
+    expect(ids).toContain('misty_pit');
   });
 });
 

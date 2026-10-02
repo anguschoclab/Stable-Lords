@@ -268,6 +268,28 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.MURKY_DEPTHS_TIDE_TRIGGER,
     narrativeText: 'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
   },
+
+  crumbling_spire_fall: {
+    id: 'crumbling_spire_fall',
+    name: 'Spire Collapse',
+    description: 'Debris from the elevated ruins crashes down',
+    requiredTags: ['elevated', 'ruins'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.CRUMBLING_SPIRE_FALL_TRIGGER,
+    narrativeText: 'The heavy impact dislodges ancient stonework from the spire!',
+    mechanicalEffect: { type: 'damage', value: 2 },
+  },
+
+  mist_veil: {
+    id: 'mist_veil',
+    name: 'Mist Veil',
+    description: 'Thick mist suddenly obscures the cramped arena',
+    requiredTags: ['cramped', 'outdoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.MIST_VEIL_TRIGGER,
+    narrativeText: 'A sudden, thick veil of mist obscures the tight quarters!',
+    mechanicalEffect: { type: 'initiative_mod', value: -2 },
+  },
 };
 
 // ─── Helper Functions ──────────────────────────────────────────────────────

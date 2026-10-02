@@ -64,3 +64,17 @@ full gate matrix. Zero save/back-compat constraints.
 - `b14ed902` content: arena + backstory lore expansion (curates #1013; hollow_born dup-effect and 0.15→0.14 bound weakening rejected)
 
 Follow-up noted: traitDedup effectHash is key-order sensitive — sort keys before JSON.stringify.
+
+## Third wave commits (PRs #1014–#1016) + living-world batch
+- `d29cc110` arena eligibility (tier/fame gating) + underserved-venue weighting
+- `e1c48cca` title-bout cap scales with arena count (ceil(arenas/4), floor 3)
+- `d88dd221` weekly world-floor refill at the merge seam
+- `4c7e9f38` promoter arena pools cover at-or-below-tier venues
+- `49aec039` free-agent veterans merged into the recruit market
+- `db64d7e6` de-literalized AI gear gates + RecruitCard header extraction
+- `ccd0ef24` slow-suite repins + regenerated baselines + docs
+- `aebd5936` repin autosim/quarter time ceilings for the 90-rival floor
+- `ccb6828e` widen perf ceilings for hosted-runner variance
+- `edeb48fd` gutter_wraith trait (lands #1014)
+- `dc51b3b4` Frozen Lake + Acid Bog registered; water/uneven fit penalty (curates #1015)
+- `a5ea12cb` wandering blacksmith offseason event (lands #1016)

@@ -199,3 +199,35 @@ dispositioned under the same workflow:
 
 ## 11. Remote disposition log (post-V9 wave)
 - PRs #1010–#1013: disposition comments posted, all closed, remote branches deleted.
+
+## 12. Third PR wave (1014–1016) — dispositions
+
+| PR | Subject | Verdict | Landed |
+|---|---|---|---|
+| #1014 | `gutter_wraith` notable trait | **Approved** | `edeb48fd` |
+| #1015 | Two new arenas + water/uneven fit penalty | **Approved — registration gap fixed** | `dc51b3b4` |
+| #1016 | Wandering Blacksmith offseason event | **Approved** | `a5ea12cb` |
+
+### #1014 — approved
+`{iniModFresh:1, attModEarly:1}` is a novel generic-positive combo — unlike
+`hollow_born` it does not clone an existing effect. traitDedup green at 150.
+
+### #1015 — approved with a fix
+- Both venues (`the_frozen_lake`, `the_acid_bog`) were exported but **never
+  registered** in the arena index — dead content. Appended to the built-in
+  registration array (order is pinned and RNG-observable) and repinned the
+  registration-order test.
+- The water+uneven initiative-style fit penalty and the balance smoke test
+  (win-rate ≤0.9, small sample) landed as written.
+
+### #1016 — approved
+Treasury-gated (<50g → passes by) XP award with a −50g ledger entry. Handler,
+union member, narrative entry, and fire/skip tests all correct; `{{xp}}`
+interpolates from the announce payload.
+
+### CI note — perf ceilings for the 90-rival world
+The living-world batch roughly doubled per-week sim cost vs the 8-rival
+calibration (~0.4s/week local, ~2.5× worse on hosted runners). `aebd5936`
+repinned the coarse autosim/pipeline caps and `ccb6828e` widened band/coarse
+ceilings with headroom; authoritative bands are the 90/160-stable tests and
+`docs/PIPELINE_BASELINE.md`.

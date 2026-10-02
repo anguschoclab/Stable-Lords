@@ -11,6 +11,7 @@ import {
 } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { SeededRNG } from '@/utils/random';
 import { resolveImpacts } from '@/engine/impacts';
+import { WORLD_RIVAL_FLOOR } from '@/constants/world';
 import {
   makeWarrior as fixtureWarrior,
   makeRival as fixtureRival,
@@ -487,7 +488,10 @@ describe('runRivalStrategyPass — bankruptcy succession', () => {
 
     const out = resolveImpacts(structuredClone(state), [impact]);
     const ids = out.rivals.map((r) => r.id);
-    expect(ids).toEqual([successor!.id]);
+    // The swap lands: ghost id gone, successor id present. Floor refill may
+    // also mint additions — the world floor never stays breached.
+    expect(ids).not.toContain('rival-1');
+    expect(ids).toContain(successor!.id);
     expect(out.rivals.flatMap((r) => r.roster).some((w) => w.id === 'w_old')).toBe(false);
   });
 
@@ -506,5 +510,60 @@ describe('runRivalStrategyPass — bankruptcy succession', () => {
     const poolIds = (impact.freeAgentAdditions ?? []).map((p) => p.id);
     // The dissolved warrior survives as a free agent — not silently lost.
     expect(poolIds).toContain('w_old');
+  });
+});
+
+// ─── Suite: world-floor refill (megaplan — never remain below the floor) ─────
+
+describe('runRivalStrategyPass — weekly floor refill', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('mints additions the same week when the world sits below WORLD_RIVAL_FLOOR', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const rivals = Array.from({ length: WORLD_RIVAL_FLOOR - 1 }, (_, i) =>
+      makeRival({
+        id: `floor-${i}` as StableId,
+        owner: {
+          ...makeRival().owner,
+          id: `floor-${i}` as StableId,
+          name: `Owner ${i}`,
+          stableName: `Stable ${i}`,
+        },
+      })
+    );
+    const state = makeMinimalState(rivals);
+    state.recruitPool = [];
+
+    const impact = runRivalStrategyPass(state, 6, undefined as any, true);
+
+    expect(impact.rivalsAdditions?.length).toBe(1);
+    const minted = impact.rivalsAdditions![0]!;
+    const liveNames = new Set(rivals.map((r) => r.owner.stableName));
+    const liveOwners = new Set(rivals.map((r) => r.owner.name));
+    expect(liveNames.has(minted.owner.stableName)).toBe(false);
+    expect(liveOwners.has(minted.owner.name)).toBe(false);
+  });
+
+  it('mints nothing when the world is at or above the floor', () => {
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const rivals = Array.from({ length: WORLD_RIVAL_FLOOR }, (_, i) =>
+      makeRival({
+        id: `full-${i}` as StableId,
+        owner: {
+          ...makeRival().owner,
+          id: `full-${i}` as StableId,
+          name: `Owner ${i}`,
+          stableName: `Stable ${i}`,
+        },
+      })
+    );
+    const state = makeMinimalState(rivals);
+    state.recruitPool = [];
+
+    const impact = runRivalStrategyPass(state, 6, undefined as any, true);
+
+    expect(impact.rivalsAdditions ?? []).toHaveLength(0);
   });
 });

@@ -155,3 +155,47 @@ CI-only fixes landed during verification: styleArchives wired test now asserts o
 ## 9. Remote disposition log
 - PRs #998–#1009: disposition comments posted, all 12 closed, all 12 remote branches deleted (verified `git fetch --prune`).
 - `wip/living-rival-world`: consumed by main (refined commits); remote branch deleted. Tag `pre-megaplan-v9` retained as restore point (`f8577854`).
+
+## 10. Post-V9 PR wave (1010–1013) — dispositions
+
+A second wave of four bot PRs opened after the V9 cleanup. Reviewed, curated, and
+dispositioned under the same workflow:
+
+| PR | Subject | Verdict | Landed |
+|---|---|---|---|
+| #1010 | Disabled-state tooltip on ExecuteWeekButton | **Partially approved — implementation disproved** | Corrected in `8ce23368` |
+| #1011 | Combat narrative pool curation | **Approved** | `4a55a1eb` (artifact stripped) |
+| #1012 | `useShallow` on primitive selectors | **Approved (selectors); dep hunk rejected** | `5e9d09fe` |
+| #1013 | Narrative/lore expansion | **Partially approved — hollow_born disproved** | Lore only, `b14ed902` |
+
+### #1010 — corrected, not rejected
+- Intent approved: a disabled "Execute Week" button should explain why.
+- Implementation disproved: `tooltip={disabledReason}` lands on a `Button` that
+  carries `disabled:pointer-events-none`; a disabled element cannot be a Radix
+  pointer target, so the tooltip could never fire. Shipped a wrapper-span trigger
+  instead, with tests for running/simulating/idle states (test-first).
+
+### #1011 — approved
+- +113/−32 across killText/pbp/strikes; JSON valid, `narrative-validate` and the
+  V9 union gate green. `.claude/backups/narrative/audit_log.txt` stripped.
+
+### #1012 — approved minus dependency churn
+- `useShallow` on selectors returning primitives (`s.roster.length`, `s.treasury`)
+  or stable references (`s.roster`) is a no-op — removal is correct.
+- **Rejected**: unrelated `framer-motion` `13.4.0` → `^13.5.0` pin-to-range change;
+  repo convention is pinned deps.
+
+### #1013 — curated; hollow_born disproved
+- **Landed**: 2 arena lore entries + `childhoodTraits`/`definingMoments`/`origins`
+  additions (`b14ed902`).
+- **Rejected**: `hollow_born` — semantically identical effect to existing
+  `orphan_resilience` (`{defModLate:1, enduranceMult:0.95}`); it evades the
+  traitDedup guard only because `JSON.stringify` is key-order sensitive. Also
+  rejected: the `blankShare` 0.15→0.14 slow-test weakening that existed only to
+  accommodate hollow_born's added density, the `.claude/backups` artifact, and
+  ~20 files of stale prettier rewraps of just-landed V9 code.
+- **Guard finding**: `traitDedup`'s `effectHash` should sort keys — two identical
+  effects written in different key order currently pass. Noted for follow-up.
+
+## 11. Remote disposition log (post-V9 wave)
+- PRs #1010–#1013: disposition comments posted, all closed, remote branches deleted.

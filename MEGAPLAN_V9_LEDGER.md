@@ -56,3 +56,11 @@ full gate matrix. Zero save/back-compat constraints.
 - Narrative: 694→721 killText, 3034→3226 pbp, 1042→1089 strikes (unique leaves); 9 consensus removals; 8 WT-overlay carries; 3 cross-leaf dupes dropped.
 - #998: 4 files / 34 specs landed.
 - Closed PRs #968–#997: all map to V7 dispositions — no additional salvage.
+
+## Post-V9 wave commits (PRs #1010–#1013)
+- `8ce23368` feat(ui): ExecuteWeekButton disabled-reason tooltip via span-wrapped trigger (curates #1010, test-first)
+- `5e9d09fe` refactor: drop no-op useShallow on primitive/reference selectors (curates #1012; framer-motion range bump rejected)
+- `4a55a1eb` content: combat narrative pool curation +113/-32 (lands #1011 minus backups artifact)
+- `b14ed902` content: arena + backstory lore expansion (curates #1013; hollow_born dup-effect and 0.15→0.14 bound weakening rejected)
+
+Follow-up noted: traitDedup effectHash is key-order sensitive — sort keys before JSON.stringify.

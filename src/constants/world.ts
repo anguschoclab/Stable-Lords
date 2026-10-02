@@ -83,7 +83,7 @@ export const LEGACY_FOUNDER_KILLS_MIN = 4;
 
 /** Chance a qualifying retiree converts to a hiring-pool trainer instead of
  *  (or alongside eligibility for) founding — moved from WarriorPass literal. */
-export const LEGACY_FOUNDER_TRAINER_CHANCE = 0.10;
+export const LEGACY_FOUNDER_TRAINER_CHANCE = 0.1;
 
 // ─── AI recruitment ─────────────────────────────────────────────────────────
 
@@ -115,6 +115,5 @@ export const AI_GEAR_CHAMPION_TREASURY_GATE = 800;
 export const AI_GEAR_EXPANSION_TREASURY_GATE = 1000;
 
 // ─── Arena titles ───────────────────────────────────────────────────────────
-
-/** Floor on the weekly title-bout cap (cap scales with arena count). */
-export const TITLE_BOUT_MIN_CAP = 3;
+// Weekly title-bout cap lives in ARENA_TITLE (MIN_TITLE_BOUTS_PER_WEEK floor,
+// scaled by arena count in arenaChampionship/phases/scheduling.ts).

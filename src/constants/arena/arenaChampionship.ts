@@ -11,8 +11,10 @@ export const ARENA_TITLE = {
   MIN_BOUTS: 3,
   /** Weeks between scheduled title defenses (~the normal bout cadence). */
   DEFENSE_INTERVAL_WEEKS: 4,
-  /** Cap on title bouts scheduled per week across all arenas. */
-  MAX_TITLE_BOUTS_PER_WEEK: 3,
+  /** Floor on the weekly title-bout cap; the live cap scales with the arena
+   *  roster (ceil(arenaCount / DEFENSE_INTERVAL_WEEKS)) so every venue can
+   *  defend on cadence — see titleBoutsPerWeekCap in phases/scheduling. */
+  MIN_TITLE_BOUTS_PER_WEEK: 3,
   /** Non-medical champion refusals before the crown is stripped. */
   REFUSALS_TO_STRIP: 2,
   /** Weeks a warrior who declined a title shot waits before contending again at that arena. */

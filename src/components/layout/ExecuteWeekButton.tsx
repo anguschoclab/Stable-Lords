@@ -1,5 +1,6 @@
 import { Zap, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import { useGameStore } from '@/state/useGameStore';
@@ -26,6 +27,11 @@ export function ExecuteWeekButton({ ctaLabel }: { ctaLabel?: string }) {
   const pendingCount = unresolvedDirectives.length;
 
   const disabled = running || isSimulating;
+  const disabledReason = running
+    ? 'Resolving bouts in progress'
+    : isSimulating
+      ? 'Simulation running'
+      : undefined;
 
   const label = running
     ? 'Resolving Bouts…'
@@ -35,7 +41,7 @@ export function ExecuteWeekButton({ ctaLabel }: { ctaLabel?: string }) {
         ? `EXECUTE WEEK ${week}`
         : ctaLabel;
 
-  return (
+  const button = (
     <Button
       onClick={executeWeek}
       disabled={disabled}
@@ -57,5 +63,20 @@ export function ExecuteWeekButton({ ctaLabel }: { ctaLabel?: string }) {
         </span>
       )}
     </Button>
+  );
+
+  if (!disabledReason) return button;
+
+  // The button is `disabled` while a reason exists — a disabled element emits
+  // no pointer events, so the tooltip must hang off a wrapper span instead.
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="inline-flex">{button}</span>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{disabledReason}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }

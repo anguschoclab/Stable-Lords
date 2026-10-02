@@ -9,6 +9,8 @@ vi.mock('@/hooks/useWeekExecution', () => ({
   useWeekExecution: vi.fn(),
 }));
 
+vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
+
 import { useGameStore } from '@/state/useGameStore';
 
 import { ExecuteWeekButton } from '@/components/layout/ExecuteWeekButton';
@@ -67,7 +69,7 @@ describe('ExecuteWeekButton', () => {
       running: true,
     });
     render(<ExecuteWeekButton />);
-    expect(screen.getByText(/Resolving/i)).toBeTruthy();
+    expect(screen.getByText(/Resolving Bouts…/i)).toBeTruthy();
   });
 
   it('button is disabled when running=true', () => {
@@ -90,6 +92,32 @@ describe('ExecuteWeekButton', () => {
     render(<ExecuteWeekButton />);
     const btn = screen.getByRole('button');
     expect(btn).toBeDisabled();
+  });
+
+  it('exposes a disabled-reason tooltip while running', () => {
+    vi.mocked(useWeekExecution).mockReturnValue({
+      ...defaultHookValue(),
+      running: true,
+    });
+    render(<ExecuteWeekButton />);
+    expect(screen.getByText(/Resolving bouts in progress/i)).toBeTruthy();
+  });
+
+  it('exposes a disabled-reason tooltip while simulating', () => {
+    useGameStore.setState({
+      week: 5,
+      isTournamentWeek: false,
+      day: 0,
+      isSimulating: true,
+    } as never);
+    render(<ExecuteWeekButton />);
+    expect(screen.getByText(/Simulation running/i)).toBeTruthy();
+  });
+
+  it('shows no disabled-reason tooltip when idle', () => {
+    render(<ExecuteWeekButton />);
+    expect(screen.queryByText(/Resolving bouts in progress/i)).toBeNull();
+    expect(screen.queryByText(/Simulation running/i)).toBeNull();
   });
 
   it('calls executeWeek when clicked', () => {

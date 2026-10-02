@@ -1,0 +1,236 @@
+[
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.slashing.solid",
+    "entry": "{{attacker}} carves a brutal line across {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} carves a brutal, bloody gash into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.slashing.solid",
+    "entry": "{{attacker}} carves a brutal line of crimson into {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} carves a brutal, bloody gash into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.slashing.solid",
+    "entry": "{{attacker}} carves a brutal, bloody gash into {{defender}}.",
+    "reason": "duplicate of {{attacker}} carves a brutal, bloody gash into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.slashing.solid",
+    "entry": "A swift slice from {{attacker}} catches {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of A solid, tearing slash from {{attacker}} catches {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.bashing.solid",
+    "entry": "{{attacker}} delivers a heavy, crushing blow to {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} delivers a heavy, blunt trauma to {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.piercing.solid",
+    "entry": "{{attacker}} drives the point deep into {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} drives their point forward, sinking steel into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.piercing.solid",
+    "entry": "A blindingly fast jab from {{attacker}} punctures {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of A quick stab from {{attacker}} punctuates {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.piercing.solid",
+    "entry": "{{attacker}} finds a gap in the armor, plunging their point into {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} finds a gap, slipping their weapon into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.piercing.solid",
+    "entry": "{{attacker}} lunges forward, sinking their point deep into {{defender}}'s flesh.",
+    "reason": "duplicate of {{attacker}} lunges forward, driving the point into {{defender}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "With bare-knuckle savagery, {{attacker}} pummels {{defender}}.",
+    "reason": "duplicate of With bare-knuckle savagery, {{attacker}} hammers a cross at {{defender}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "A heavy fist connects with {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of The heavy fist connects solidly with {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "{{attacker}} lands a punishing hook directly onto {{defender}}'s {{bodyPart}}, staggering them.",
+    "reason": "duplicate of {{attacker}} lands a punishing blow directly to {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "{{attacker}} drives a harsh knuckle into {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} drives a harsh straight punch into {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "A brutal, bare-knuckle cross from {{attacker}} snaps {{defender}}'s head back.",
+    "reason": "duplicate of A raw, powerful cross from {{attacker}} snaps {{defender}}'s head back."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "{{attacker}} slips the guard and buries a bone-shattering hook into {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} slips the guard and buries a rib-cracking blow in {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatStrikes.json",
+    "path": "strikes.fist.solid",
+    "entry": "{{attacker}} lands a heavy, bruising cross on {{defender}}'s {{bodyPart}}.",
+    "reason": "duplicate of {{attacker}} lands a heavy cross squarely on {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.hit_locations.right arm",
+    "entry": "RIGHT TRICEPS",
+    "reason": "duplicate of RIGHT BICEPS"
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.hit_locations.left arm",
+    "entry": "LEFT TRICEPS",
+    "reason": "duplicate of LEFT BICEPS"
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.dodge.theatrical",
+    "entry": "{{defender}} dances around the strike with exaggerated flair.",
+    "reason": "duplicate of {{defender}} dances around the strike with an exaggerated, mocking bow."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.dodge.grim",
+    "entry": "{{defender}} shifts just enough to survive, expression cold and unreadable.",
+    "reason": "duplicate of {{defender}} shifts just enough to survive, their expression cold and dead."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.dodge.grim",
+    "entry": "{{defender}} steps aside silently, their cold eyes never leaving {{attacker}}.",
+    "reason": "duplicate of {{defender}} steps aside in grim silence, their cold stare never leaving {{attacker}}."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.parry.theatrical",
+    "entry": "With a grand, sweeping motion, {{defender}} parries the blow and strikes a heroic pose for the roaring crowd.",
+    "reason": "duplicate of With a grand, sweeping motion, {{defender}} parries the blow and plays to the roaring crowd."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.parry.theatrical",
+    "entry": "With a grandiose sweep of their weapon, {{defender}} turns a desperate parry into a stunning performance.",
+    "reason": "duplicate of With a grandiose sweep of their weapon, {{defender}} turns the parry into a performance."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.parry.theatrical",
+    "entry": "{{defender}} parries with a resounding flourish, holding the pose for the cheering crowd.",
+    "reason": "duplicate of {{defender}} parries with a dramatic flourish, holding the pose for the crowd."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.parry.grim",
+    "entry": "The weapons clash with a dull, heavy clang; {{defender}} doesn't even bother to blink.",
+    "reason": "duplicate of The weapons clash with a dull clang; {{defender}} doesn't even blink."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.riposte.desperate",
+    "entry": "{{defender}} barely deflects the blow before launching a chaotic, uncoordinated thrust in return.",
+    "reason": "duplicate of {{defender}} barely deflects the blow before launching a frantic, uncoordinated counterattack."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.riposte.confident",
+    "entry": "{{defender}} practically invites the blow, parrying it to set up a devastating, arrogant riposte.",
+    "reason": "duplicate of {{defender}} practically invites the blow, parrying it to set up a flawless riposte."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.riposte.theatrical",
+    "entry": "{{defender}} spins out of the parry, launching a dazzling, crowd-pleasing riposte.",
+    "reason": "duplicate of {{defender}} spins out of the parry, delivering a flashy, crowd-pleasing riposte."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.defenses.riposte.grim",
+    "entry": "A cold deflection is instantly followed by a merciless, mechanical thrust from {{defender}}.",
+    "reason": "duplicate of A cold deflection is instantly followed by a merciless, mechanical thrust."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.knockdown.pacing.recovery_fast",
+    "entry": "{{name}} bounces back up instantly, refusing to stay down.",
+    "reason": "duplicate of {{name}} bounces back up instantly, refusing to show weakness."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.hits.generic",
+    "entry": "The {{weapon}} lands on {{defender}} with a sickening crunch, meeting its mark.",
+    "reason": "duplicate of The {{weapon}} lands with a sickening crunch, meeting its mark."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.hits.generic",
+    "entry": "A devastating strike connects from {{attacker}}, the impact echoing through the arena.",
+    "reason": "duplicate of A devastating strike connects, the impact echoing through the arena."
+  },
+  {
+    "file": "src/data/narrative/combatPbp.json",
+    "path": "pbp.hits.generic",
+    "entry": "The strike from {{attacker}} finds a gap in the defense, delivering punishing force.",
+    "reason": "duplicate of The strike finds a gap in the defense, delivering punishing force."
+  },
+  {
+    "file": "src/data/narrative/combatKillText.json",
+    "path": "kill_text.weapon_specific.slashing",
+    "entry": "{{attacker}}'s blade arcs in a final, brutal sweep, ending {{defender}}'s resistance.",
+    "reason": "duplicate of {{attacker}}'s blade arcs in a final, lethal sweep, severing {{defender}}'s mortal coil."
+  },
+  {
+    "file": "src/data/narrative/combatKillText.json",
+    "path": "kill_text.weapon_specific.piercing",
+    "entry": "{{attacker}} drives their point straight through {{defender}}'s heart, killing them instantly.",
+    "reason": "duplicate of {{attacker}} drives their point straight through {{defender}}'s heart."
+  },
+  {
+    "file": "src/data/narrative/combatKillText.json",
+    "path": "kill_text.weapon_specific.piercing",
+    "entry": "With clinical precision, {{attacker}} pierces {{defender}}'s skull, ending the fight.",
+    "reason": "duplicate of With clinical precision, {{attacker}} punctures {{defender}}'s lung, ending the bout."
+  },
+  {
+    "file": "src/data/narrative/combatKillText.json",
+    "path": "kill_text.weapon_specific.piercing",
+    "entry": "{{defender}} chokes on their own blood as {{attacker}} twists the embedded point, guaranteeing a fatal end.",
+    "reason": "duplicate of {{defender}} chokes on their own blood as {{attacker}} twists the embedded point."
+  },
+  {
+    "file": "src/data/narrative/combatKillText.json",
+    "path": "kill_text.weapon_specific.bashing",
+    "entry": "{{attacker}} brings the weapon down with earth-shattering force, flattening {{defender}}.",
+    "reason": "duplicate of {{attacker}} brings the weapon down with godlike force, flattening {{defender}}."
+  },
+  {
+    "file": "src/data/narrative/combatKillText.json",
+    "path": "kill_text.weapon_specific.bashing",
+    "entry": "{{attacker}} delivers a crushing coup de grace, leaving {{defender}} broken on the sands.",
+    "reason": "duplicate of {{attacker}} delivers a crushing coup de grace, reducing {{defender}} to a broken mess."
+  }
+]

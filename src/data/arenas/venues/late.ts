@@ -211,3 +211,25 @@ export const THE_IRON_CAGE: ArenaConfig = {
   zoneDef: { Edge: -4, Corner: -6 },
   surfaceMod: { initiativeMod: 1, riposteMod: -1, enduranceMult: 1.1 },
 };
+
+export const THE_FROZEN_LAKE: ArenaConfig = {
+  id: 'the_frozen_lake',
+  name: 'The Frozen Lake',
+  tags: ['water', 'outdoor', 'open'],
+  tier: 2,
+  size: 'open',
+  description: 'A frozen lake where footing is treacherous and the cold bites deep.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: -1, enduranceMult: 1.2 },
+};
+
+export const THE_ACID_BOG: ArenaConfig = {
+  id: 'the_acid_bog',
+  name: 'The Acid Bog',
+  tags: ['water', 'cursed', 'uneven'],
+  tier: 3,
+  size: 'cramped',
+  description: 'A bubbling, corrosive swamp steeped in dark magic.',
+  zoneDef: { Edge: -2, Corner: -5 },
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.3 },
+};

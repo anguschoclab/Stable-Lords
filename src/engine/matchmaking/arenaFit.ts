@@ -144,6 +144,13 @@ export function scoreArenaFitForWarrior(
     }
   }
 
+  if (hasWater && arenaTags.has('uneven')) {
+    // Water + Uneven makes lunging styles prone to slipping
+    if (INITIATIVE_STYLES.has(warrior.style)) {
+      score -= 0.4;
+    }
+  }
+
   return score;
 }
 

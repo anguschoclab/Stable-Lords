@@ -101,6 +101,8 @@ describe('Arena Registry', () => {
       'the_smoldering_pits',
       'the_crystal_spire',
       'the_iron_cage',
+      'the_frozen_lake',
+      'the_acid_bog',
     ]);
   });
 

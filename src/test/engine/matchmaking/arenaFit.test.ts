@@ -560,6 +560,24 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
     expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
   });
 
+  it('water + uneven tag combination → penalty for initiative styles', () => {
+    // A Striking style defaults to Striking range (idx 2).
+    // Standard arena start is Striking (idx 2). Distance = 0 -> rangeFitScore = 1.5
+    const w = makeWarrior({
+      style: FightingStyle.LungingAttack,
+      equipment: { weapon: 'broadsword' } as any,
+    });
+    const arena = makeArena({ size: 'standard', tags: ['water', 'uneven'] });
+    const score = scoreArenaFitForWarrior(w, arena);
+    // score = 1.5 - 0.4 (water+uneven synergy) - 0.19 (uneven penalty) = 0.91
+    expect(score).toBeCloseTo(
+      ARENA_FIT.RANGE_FIT_MAX -
+        0.4 -
+        ARENA_FIT.UNEVEN_INITIATIVE_PENALTY * ARENA_TAG_WEIGHTS.uneven.weight,
+      5
+    );
+  });
+
   it('tag not in ARENA_TAG_WEIGHTS → no effect', () => {
     const w = makeWarrior();
     const arena = makeArena({ size: 'standard', tags: ['outdoor' as any] });

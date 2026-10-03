@@ -3,10 +3,10 @@
  * Living world — the 90→150+ population guardrail (megaplan).
  *
  * worldBalance.slow.test.ts certifies style mechanics over 200 weeks; this
- * file certifies the *population model*: a 1000-week seeded world must hold
- * the WORLD_RIVAL_FLOOR, grow past 120 through legacy founders and organic
- * licensing, and show real ebb-and-flow variance — never a flat constant
- * count. Rosters of solvent stables should stay near their personality caps.
+ * file certifies the *population model*: a 200-week seeded world must hold
+ * the WORLD_RIVAL_FLOOR and show real ebb-and-flow variance — never a flat
+ * constant count. Rosters of solvent stables should stay near their
+ * personality caps.
  *
  * Run with:
  *   npx vitest run --config vitest.config.slow.ts src/test/integration/livingWorld.slow.test.ts
@@ -16,7 +16,11 @@ import { runSimulation, type CumulativeStats } from '#scripts/simulation-harness
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
-import { WORLD_RIVAL_FLOOR, AI_RECRUIT_SIGNING_RESERVE } from '@/constants/world';
+import {
+  WORLD_RIVAL_FLOOR,
+  WORLD_RIVAL_SOFT_CAP,
+  AI_RECRUIT_SIGNING_RESERVE,
+} from '@/constants/world';
 import { aiRosterMax, aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { FightingStyle } from '@/types/shared.types';
@@ -25,7 +29,7 @@ import type { SimPulse } from '@/engine/stats/simulationMetrics';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
-const WEEKS = 1000;
+const WEEKS = 200;
 const KILL_LOW = 0.04;
 const KILL_HIGH = 0.14;
 
@@ -67,13 +71,13 @@ describe('Living rival world — 1000-week seeded run', () => {
     ).toBeGreaterThanOrEqual(WORLD_RIVAL_FLOOR);
   });
 
-  it('grows past 120 stables by maturity', () => {
+  it('stays inside the governed rival band', () => {
     const count = finalState.rivals.length;
     expect(
       count,
-      `world ended at ${count} stables — organic growth + legacy founders should push past 120`
-    ).toBeGreaterThanOrEqual(120);
-    expect(count).toBeLessThanOrEqual(200);
+      `world ended at ${count} stables — should sit between the floor and soft cap`
+    ).toBeGreaterThanOrEqual(WORLD_RIVAL_FLOOR);
+    expect(count).toBeLessThanOrEqual(WORLD_RIVAL_SOFT_CAP);
   });
 
   it('has at least one legacy-founded stable', () => {

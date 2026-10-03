@@ -45,4 +45,18 @@ describe('ArenaDetail page (region pinning)', () => {
     // and by data-driven tests in the arenaChampionship suites)
     expect(screen.getByText('Top Warriors')).toBeTruthy();
   });
+
+  it('renders tag-driven WATER HAZARD badge in header actions (V10 #1018)', () => {
+    const arena = getAllArenas().find((a) => a.tags.includes('water'))!;
+    mockArenaId = arena.id;
+    render(<ArenaDetail />);
+    expect(screen.getByText('WATER HAZARD')).toBeTruthy();
+  });
+
+  it('renders tag-driven CURSED GROUND badge in header actions (V10 #1018)', () => {
+    const arena = getAllArenas().find((a) => a.tags.includes('cursed'))!;
+    mockArenaId = arena.id;
+    render(<ArenaDetail />);
+    expect(screen.getByText('CURSED GROUND')).toBeTruthy();
+  });
 });

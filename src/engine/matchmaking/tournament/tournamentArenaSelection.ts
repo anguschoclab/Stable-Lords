@@ -32,8 +32,12 @@ export function getEligibleArenasForTournament(filter: TournamentArenaFilter = {
   } = filter;
 
   const allArenas = getAllArenas();
+  const excluded = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
 
   return allArenas.filter((arena) => {
+    // Special venues are reserved for championships, not seasonal brackets
+    if (excluded.has(arena.id)) return false;
+
     // Tier filter
     if (arena.tier < minTier || arena.tier > maxTier) return false;
 

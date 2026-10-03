@@ -1,4 +1,5 @@
 // Split from data/arenas.ts — arena registry + query helpers
+import { SPECIAL_ARENA_IDS } from '@/constants/arena';
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 
 const registry = new Map<string, ArenaConfig>();
@@ -69,6 +70,14 @@ export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
     tagIndex.set(tag, results);
   }
   return [...results];
+}
+
+/**
+ * Get arenas available for regular matchmaking (excludes special venues).
+ * @returns Array of normal ArenaConfig entries.
+ */
+export function getNormalArenas(): ArenaConfig[] {
+  return getAllArenas().filter((a) => !SPECIAL_ARENA_IDS.includes(a.id));
 }
 
 /**

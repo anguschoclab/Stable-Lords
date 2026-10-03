@@ -48,7 +48,7 @@ export const ARENA_SELECTION = {
   FAVOR_WEIGHT_DEFAULT: 1.2,
   SCORE_SHIFT_BUFFER: 0.1,
   TOURNAMENT_DEFAULT_ARENA: 'bloodsands_arena',
-  EXCLUDED_ARENA_IDS: ['bloodsands_arena'],
+  EXCLUDED_ARENA_IDS: ['bloodsands_arena', 'the_iron_cage'],
   /** Flat chance a bout books the favored warrior's "home" venue (the arena
    *  where they hold the most recorded bouts). Without record-book stickiness
    *  venue draws diffuse across the whole circuit and nobody accumulates the
@@ -87,17 +87,30 @@ export const TOURNAMENT_ARENA_DEFAULTS = {
   LARGE_BRACKET_THRESHOLD: 16, // Brackets >= this size exclude 'cramped' arenas
 } as const;
 
+// ─── Special Arena IDs ────────────────────────────────────────────────────
+/**
+ * Arenas reserved for special events (tournaments, championships) and excluded
+ * from the normal matchmaking circuit, title chase, and promoter pools.
+ */
+export const SPECIAL_ARENA_IDS: readonly string[] = ['bloodsands_arena', 'the_iron_cage'];
+
 // ─── Arena Roster Limits ──────────────────────────────────────────────────
 /**
  * Hard cap on the total arena roster and per-tier distribution targets.
  * The roster may never exceed TOTAL_CAP arenas; each tier has a fixed slot
  * ceiling. Enforced by dataIntegrityArenas tests.
  *
+ * The roster is split into normal arenas (available for regular matchmaking,
+ * circuit titles, and promoter pools) and special arenas (tournament-only /
+ * championship venues). NORMAL_CAP applies to normal arenas only.
+ *
  * Bump history: t3 14→15 (Acid Bog), total 50→54 + t2 24→25 + t3 15→17
  * (V10 union: misty_pit t1, desolate_heath t2, bathhouse + crumbling_spire t3).
+ * Cap revision: total 54→52 + normal 50 + t2 25→21 (arena curation).
  */
 export const ARENA_ROSTER_LIMITS = {
-  TOTAL_CAP: 54,
+  TOTAL_CAP: 52, // 50 normal + 2 special
+  NORMAL_CAP: 50, // arenas available for regular matchmaking / circuit / titles
   TIER_CAPS: { 1: 12, 2: 25, 3: 17 } as Record<1 | 2 | 3, number>,
 } as const;
 
@@ -250,7 +263,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
 
   'cursed:Blizzard': {
-    damageMult: 1 - WEATHER_PENALTIES.WAILING_CHASM_LUNGE_PENALTY,
+    damageMult: 1 - WEATHER_PENALTIES.CURSED_BLIZZARD_LUNGE_PENALTY,
     description: 'The cursed frozen chasm winds suppress lunging momentum',
   },
 

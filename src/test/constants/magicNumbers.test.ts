@@ -42,10 +42,11 @@ describe('world-population constants carry the megaplan values', () => {
     expect(ARENA_TITLE).not.toHaveProperty('MAX_TITLE_BOUTS_PER_WEEK');
   });
 
-  it('arena roster caps reflect the V10 union (+4 venues)', () => {
-    // V10 union lands 4 venues: t1 misty_pit, t2 desolate_heath,
-    // t3 bathhouse + crumbling_spire — raising t2 24→25, t3 15→17, total 50→54.
-    expect(ARENA_ROSTER_LIMITS.TOTAL_CAP).toBe(54);
+  it('arena roster caps reflect the 50-normal + 2-special curation', () => {
+    // Curation removes 1 normal arena and designates 2 special venues —
+    // normal cap 50, total 52, t1 12, t2 25, t3 17.
+    expect(ARENA_ROSTER_LIMITS.TOTAL_CAP).toBe(52);
+    expect(ARENA_ROSTER_LIMITS.NORMAL_CAP).toBe(50);
     expect(ARENA_ROSTER_LIMITS.TIER_CAPS).toEqual({ 1: 12, 2: 25, 3: 17 });
   });
 });

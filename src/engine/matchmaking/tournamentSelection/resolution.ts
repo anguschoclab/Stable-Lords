@@ -41,11 +41,11 @@ function simulateTournamentBout(
   const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
   const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
 
-  // The Grand Championship is always fought at Bloodsands — the realm's
-  // neutral championship ground; seasonals keep the weighted venue draw.
+  // The Grand Championship is always fought at its designated venue — the
+  // realm's climactic champions-only stage; seasonals keep the weighted draw.
   const arenaId =
     resolvedTournament.tierId === CHAMPIONS_TOURNEY.TIER_ID
-      ? 'bloodsands_arena'
+      ? CHAMPIONS_TOURNEY.ARENA_ID
       : selectArenaForTournamentBout(() => rng.next());
   const outcome = simulateFight(
     planA,

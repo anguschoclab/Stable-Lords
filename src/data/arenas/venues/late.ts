@@ -95,17 +95,6 @@ export const VOLCANIC_CRATER: ArenaConfig = {
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.35 },
 };
 
-export const THE_WAILING_CHASM: ArenaConfig = {
-  id: 'the_wailing_chasm',
-  name: 'The Wailing Chasm',
-  tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
-  tier: 2,
-  size: 'cramped',
-  description: 'A cursed, narrow chasm filled with wailing winds that distract the mind.',
-  zoneDef: { Edge: -2, Corner: -5 },
-  surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.1 },
-};
-
 export const SHATTERED_MONOLITH: ArenaConfig = {
   id: 'shattered_monolith',
   name: 'Shattered Monolith',

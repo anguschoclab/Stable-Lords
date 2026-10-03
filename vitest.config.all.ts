@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ['./src/test/_setup/setup.node.ts', './src/test/_setup/setup.dom.ts'],
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
+      '#scripts': path.resolve(import.meta.dirname, './scripts'),
     },
     testTimeout: 120000,
     hookTimeout: 10000,

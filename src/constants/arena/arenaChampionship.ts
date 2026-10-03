@@ -49,6 +49,8 @@ export const CHAMPIONS_TOURNEY = {
   FIELD_CAP: 64,
   /** TournamentEntry.tierId for the champions bracket. */
   TIER_ID: 'Champions',
+  /** Arena where the Grand Championship is staged. */
+  ARENA_ID: 'the_iron_cage',
   NAME: 'The Grand Championship',
   PURSE: 2500,
   WINNER_FAME: 25,

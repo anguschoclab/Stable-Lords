@@ -210,6 +210,14 @@ describe('seedChampions', () => {
     seedChampions(state, delta);
     expect(delta.arenaChampions['bloodsands_arena']?.champion ?? null).toBeNull();
   });
+
+  it('does not crown a champion at the Grand Championship venue', () => {
+    const w = warriorAtArena('w1', 'the_iron_cage', { wins: 10, losses: 0 });
+    const state = makeGameState({ roster: [w] });
+    const delta = createChampionshipDelta();
+    seedChampions(state, delta);
+    expect(delta.arenaChampions['the_iron_cage']?.champion ?? null).toBeNull();
+  });
 });
 
 // ─── Contender selection ────────────────────────────────────────────────────

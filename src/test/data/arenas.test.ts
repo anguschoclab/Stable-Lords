@@ -91,7 +91,6 @@ describe('Arena Registry', () => {
       'rusted_gorge',
       'the_asylum',
       'volcanic_crater',
-      'the_wailing_chasm',
       'shattered_monolith',
       'verdant_labyrinth',
       'the_shifting_sands',

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import { getStyleWeatherModifier } from '@/constants/arena/arena';
 import { getEligibleArenasForTournament } from '@/engine/matchmaking/tournament/tournamentArenaSelection';
+import { getArenaById } from '@/data/arenas';
 
 describe('Arena Architect Verification', () => {
   it('New arenas are discoverable by tournament system appropriately', () => {
@@ -52,5 +53,30 @@ describe('Arena Architect Verification', () => {
     ]);
     expect(modJagged.damageMult).toBeLessThan(1.0);
     expect(modJagged.descriptions.some((d) => d.includes('jagged peaks'))).toBe(true);
+  });
+
+  describe('V10 arena union (#1018 Bathhouse/Heath + #1019 Crumbling Spire/Misty Pit)', () => {
+    it('registers all four new arenas', () => {
+      for (const id of [
+        'the_bathhouse_arena',
+        'the_desolate_heath',
+        'the_crumbling_spire',
+        'misty_pit',
+      ]) {
+        expect(getArenaById(id), `missing arena ${id}`).toBeDefined();
+      }
+    });
+
+    it('Bathhouse: premium+Dense Fog riposte modifier applies', () => {
+      const mod = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Dense Fog', ['premium']);
+      expect(mod.riposteMod).toBeGreaterThan(0);
+      expect(mod.descriptions.some((d) => d.includes('premium steam'))).toBe(true);
+    });
+
+    it('Desolate Heath: cursed+Spooky Night initiative penalty applies', () => {
+      const mod = getStyleWeatherModifier(FightingStyle.SlashingAttack, 'Spooky Night', ['cursed']);
+      expect(mod.initiativeMod).toBeLessThan(0);
+      expect(mod.descriptions.some((d) => d.includes('cursed heath'))).toBe(true);
+    });
   });
 });

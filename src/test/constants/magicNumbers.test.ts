@@ -15,7 +15,7 @@ import {
   LEGACY_FOUND_CHANCE,
   FREE_AGENT_SHELF_WEEKS,
 } from '@/constants/world';
-import { ARENA_TITLE, ARENA_SELECTION } from '@/constants/arena';
+import { ARENA_TITLE, ARENA_SELECTION, ARENA_ROSTER_LIMITS } from '@/constants/arena';
 
 const src = (p: string) => readFileSync(resolve(__dirname, '../../', p), 'utf8');
 
@@ -40,6 +40,13 @@ describe('world-population constants carry the megaplan values', () => {
     expect(ARENA_SELECTION.UNDERSERVED_ARENA_WEIGHT).toBeGreaterThan(0);
     expect(ARENA_TITLE.MIN_TITLE_BOUTS_PER_WEEK).toBe(3);
     expect(ARENA_TITLE).not.toHaveProperty('MAX_TITLE_BOUTS_PER_WEEK');
+  });
+
+  it('arena roster caps reflect the V10 union (+4 venues)', () => {
+    // V10 union lands 4 venues: t1 misty_pit, t2 desolate_heath,
+    // t3 bathhouse + crumbling_spire — raising t2 24→25, t3 15→17, total 50→54.
+    expect(ARENA_ROSTER_LIMITS.TOTAL_CAP).toBe(54);
+    expect(ARENA_ROSTER_LIMITS.TIER_CAPS).toEqual({ 1: 12, 2: 25, 3: 17 });
   });
 });
 

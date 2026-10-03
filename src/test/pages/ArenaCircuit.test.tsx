@@ -117,6 +117,14 @@ describe('ArenaCircuit', () => {
     render(<ArenaCircuit />);
     expect(screen.getByText('RE-ENGAGING')).toBeInTheDocument();
   });
+
+  it('renders tag-driven WATER HAZARD / CURSED GROUND badges (V10 #1018)', () => {
+    render(<ArenaCircuit />);
+    // Badges derive from real arena tags — both exist now that the tagged
+    // venues are registered.
+    expect(screen.getAllByText('WATER HAZARD').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('CURSED GROUND').length).toBeGreaterThan(0);
+  });
 });
 
 describe('ArenaDetail', () => {

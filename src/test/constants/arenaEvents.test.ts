@@ -4,6 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { ARENA_EVENTS } from '@/constants/arena/arenaEvents';
 import { ARENA_EVENT_CONSTANTS } from '@/constants/arenaEvents';
+import { getAllArenas } from '@/data/arenas';
 
 describe('arena events — new entries', () => {
   describe('geyser_eruption', () => {
@@ -68,6 +69,68 @@ describe('arena events — new entries', () => {
 
     it('SHADOW_TENDRIL_DRAIN is 5', () => {
       expect(ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_DRAIN).toBe(5);
+    });
+
+    it('V10 event triggers are defined', () => {
+      expect(ARENA_EVENT_CONSTANTS.BATHHOUSE_SCALD_TRIGGER).toBe(8);
+      expect(ARENA_EVENT_CONSTANTS.HEATH_APPARITION_TRIGGER).toBe(18);
+      expect(ARENA_EVENT_CONSTANTS.CRUMBLING_SPIRE_FALL_TRIGGER).toBeDefined();
+      expect(ARENA_EVENT_CONSTANTS.MIST_VEIL_TRIGGER).toBeDefined();
+    });
+  });
+
+  describe('V10 events (PRs #1018/#1019 union)', () => {
+    it('bathhouse_scald requires water+premium+indoor tags', () => {
+      const e = ARENA_EVENTS.bathhouse_scald;
+      expect(e).toBeDefined();
+      expect(e!.requiredTags).toEqual(['water', 'premium', 'indoor']);
+      expect(e!.triggerCondition).toBe('exchange_interval');
+      expect(e!.triggerValue).toBe(ARENA_EVENT_CONSTANTS.BATHHOUSE_SCALD_TRIGGER);
+    });
+
+    it('heath_apparition requires cursed+outdoor+open tags', () => {
+      const e = ARENA_EVENTS.heath_apparition;
+      expect(e).toBeDefined();
+      expect(e!.requiredTags).toEqual(['cursed', 'outdoor', 'open']);
+      expect(e!.triggerCondition).toBe('heavy_hit');
+    });
+
+    it('crumbling_spire_fall requires elevated+ruins tags', () => {
+      const e = ARENA_EVENTS.crumbling_spire_fall;
+      expect(e).toBeDefined();
+      expect(e!.requiredTags).toEqual(['elevated', 'ruins']);
+      expect(e!.triggerCondition).toBe('heavy_hit');
+      expect(e!.mechanicalEffect).toEqual({ type: 'damage', value: 2 });
+    });
+
+    it('mist_veil requires cramped+outdoor tags', () => {
+      const e = ARENA_EVENTS.mist_veil;
+      expect(e).toBeDefined();
+      expect(e!.requiredTags).toEqual(['cramped', 'outdoor']);
+      expect(e!.triggerCondition).toBe('exchange_interval');
+      expect(e!.mechanicalEffect).toEqual({ type: 'initiative_mod', value: -2 });
+    });
+  });
+
+  describe('no orphan events', () => {
+    it('every event can fire at some registered arena (requiredTags ⊆ a tag union)', () => {
+      const arenas = getAllArenas();
+      const allTags = new Set(arenas.flatMap((a) => a.tags));
+      for (const event of Object.values(ARENA_EVENTS)) {
+        for (const tag of event.requiredTags) {
+          expect(
+            allTags.has(tag),
+            `${event.id} requires tag '${tag}' that no registered arena carries`
+          ).toBe(true);
+        }
+        // Stronger: at least one arena carries ALL of the event's required tags.
+        const hostable = arenas.some((a) =>
+          event.requiredTags.every((t) => a.tags.includes(t))
+        );
+        expect(hostable, `${event.id} can never trigger — no arena has all requiredTags`).toBe(
+          true
+        );
+      }
     });
   });
 });

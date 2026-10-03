@@ -1044,6 +1044,55 @@ describe('new arena configs', () => {
     expect(ids).toContain('narrow_bridge');
     expect(ids).toContain('the_meat_grinder');
     expect(ids).toContain('the_abyssal_pit');
+    expect(ids).toContain('the_crumbling_spire');
+    expect(ids).toContain('misty_pit');
+    expect(ids).toContain('the_bathhouse_arena');
+    expect(ids).toContain('the_desolate_heath');
+  });
+});
+
+describe('V10 tag synergies (PRs #1018/#1019 union)', () => {
+  const closePlan = () => makePlan({ rangePreference: 'Grapple' });
+
+  it('water+indoor (Bathhouse) gives close-range warriors +0.2', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryStrike }); // not initiative/high-agg
+    const waterOnly = makeArena({ tags: ['water'] });
+    const bathhouse = makeArena({ tags: ['water', 'indoor'] });
+    const delta =
+      scoreArenaFitForWarrior(w, bathhouse, closePlan()) -
+      scoreArenaFitForWarrior(w, waterOnly, closePlan());
+    expect(delta).toBeCloseTo(0.2);
+  });
+
+  it('water+indoor bonus does NOT apply to reach warriors (prefIdx > 1)', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryStrike });
+    const waterOnly = makeArena({ tags: ['water'] });
+    const bathhouse = makeArena({ tags: ['water', 'indoor'] });
+    const reachPlan = makePlan({ rangePreference: 'Extended' });
+    const delta =
+      scoreArenaFitForWarrior(w, bathhouse, reachPlan) -
+      scoreArenaFitForWarrior(w, waterOnly, reachPlan);
+    expect(delta).toBe(0);
+  });
+
+  it('cursed+open (Desolate Heath) penalizes initiative styles −0.3', () => {
+    const w = makeWarrior({ style: FightingStyle.StrikingAttack });
+    const cursedOnly = makeArena({ tags: ['cursed'] });
+    const heath = makeArena({ tags: ['cursed', 'open'] });
+    const delta =
+      scoreArenaFitForWarrior(w, heath, closePlan()) -
+      scoreArenaFitForWarrior(w, cursedOnly, closePlan());
+    expect(delta).toBeCloseTo(-0.3);
+  });
+
+  it('cursed+open penalty does NOT apply to non-initiative styles', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryRiposte });
+    const cursedOnly = makeArena({ tags: ['cursed'] });
+    const heath = makeArena({ tags: ['cursed', 'open'] });
+    const delta =
+      scoreArenaFitForWarrior(w, heath, closePlan()) -
+      scoreArenaFitForWarrior(w, cursedOnly, closePlan());
+    expect(delta).toBe(0);
   });
 });
 

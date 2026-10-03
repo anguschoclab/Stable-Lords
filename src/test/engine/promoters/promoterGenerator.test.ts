@@ -85,6 +85,19 @@ describe('Promoter Generator', () => {
     }
   });
 
+  it('V10: promoter pools include the four new venues', () => {
+    const promoters = generatePromoters(100, 111);
+    const allPools = new Set(promoters.flatMap((p) => p.arenaPool));
+    for (const id of [
+      'the_crumbling_spire',
+      'misty_pit',
+      'the_bathhouse_arena',
+      'the_desolate_heath',
+    ]) {
+      expect(allPools, `no promoter can book ${id}`).toContain(id);
+    }
+  });
+
   it('gives each tier an arenaPool covering the venues it can promote', () => {
     // Megaplan Phase 4 — promoter pools must span tiers so mid/high venues
     // have carriers; Local stays grounded in tier-1.

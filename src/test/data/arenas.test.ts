@@ -103,6 +103,10 @@ describe('Arena Registry', () => {
       'the_iron_cage',
       'the_frozen_lake',
       'the_acid_bog',
+      'the_crumbling_spire',
+      'misty_pit',
+      'the_bathhouse_arena',
+      'the_desolate_heath',
     ]);
   });
 

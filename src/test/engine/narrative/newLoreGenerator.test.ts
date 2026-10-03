@@ -58,6 +58,37 @@ describe('new loreGenerator entries', () => {
     }
   });
 
+  describe('V10 entries (PR #1020)', () => {
+    const v10 = [
+      ['origins', origins, 'Found half-frozen among the forgotten catacombs beneath the Iron Spire'],
+      ['origins', origins, 'Sold for a handful of silver to the merciless flesh-peddlers of the Lower Wards'],
+      ['origins', origins, 'Abandoned to the feral dog packs that roam the Ash Quarter'],
+      ['childhood', childhoodTraits, 'developed a habit of whispering to the blades of their enemies'],
+      ['childhood', childhoodTraits, 'would purposefully step on broken glass to harden the soles of their feet'],
+      ['moments', definingMoments, 'until they drowned a corrupt warden in the icy waters of the Drowned Bridge'],
+      ['moments', definingMoments, 'knowing that every scar they gained was simply a map to their eventual revenge'],
+    ] as const;
+    for (const [pool, arr, entry] of v10) {
+      it(`${pool} contains "${entry.substring(0, 50)}..."`, () => {
+        expect(arr).toContain(entry);
+      });
+    }
+
+    it('removes the three verified near-duplicates', () => {
+      expect(origins).not.toContain('Survived the cruel discipline of the Iron Spire Orphanage');
+      expect(origins).not.toContain('Raised in the soot-choked rafters of the Grand Foundry');
+      expect(definingMoments).not.toContain(
+        'discovering that a rusted spoon could be sharpened into a deadly shiv'
+      );
+      // …while the retained near-identical variants survive.
+      expect(origins).toContain('Survived the cruel culling of the Iron Spire Orphanage');
+      expect(origins).toContain('Raised in the soot-choked rafters of the Iron-Gale Foundry');
+      expect(definingMoments).toContain(
+        'discovering that a rusted spoon could be sharpened into a deadly shiv in the dark'
+      );
+    });
+  });
+
   it('ORIGINS array has no duplicate entries', () => {
     const seen = new Set<string>();
     for (const entry of origins) {

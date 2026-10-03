@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 150; // 145 previous + 4 V7 union traits + 1 gutter_wraith
+const EXPECTED_COUNT = 151; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger (V10)
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
@@ -74,6 +74,26 @@ describe('Trait deduplication', () => {
         expect(TRAITS[id]).toBeDefined();
       });
     }
+  });
+
+  describe('V10 trait: orphan_scavenger (PR #1020)', () => {
+    it('is defined in TRAITS', () => {
+      expect(TRAITS.orphan_scavenger).toBeDefined();
+    });
+
+    it('has the curated effect shape and Notable/positive placement', () => {
+      const t = TRAITS.orphan_scavenger!;
+      expect(t.effect).toEqual({ enduranceMult: 0.96, iniModFresh: 1 });
+      expect(t.tier).toBe('Notable');
+      expect(t.sign).toBe('positive');
+    });
+
+    it('does not collide on effect with orphan_survivor', () => {
+      const a = TRAITS.orphan_scavenger?.effect;
+      const b = TRAITS.orphan_survivor?.effect;
+      const stable = (e: any) => JSON.stringify(e, Object.keys(e ?? {}).sort());
+      expect(stable(a)).not.toBe(stable(b));
+    });
   });
 
   describe('iron_vein enduranceMult is fixed', () => {

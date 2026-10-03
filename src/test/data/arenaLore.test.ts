@@ -215,6 +215,29 @@ describe('new arena lore entries', () => {
   });
 });
 
+describe('V10 arena lore entries (PR #1020)', () => {
+  const validArenaIds = new Set(getAllArenas().map((a) => a.id));
+
+  for (const [id, arenaId] of [
+    ['the_asylum_screams', 'the_asylum'],
+    ['volcanic_crater_ash', 'volcanic_crater'],
+  ] as const) {
+    describe(id, () => {
+      const entry = ARENA_LORE.find((e) => e.id === id);
+      it('IS present in ARENA_LORE', () => expect(entry).toBeDefined());
+      it(`references valid arenaId (${arenaId})`, () => {
+        expect(entry!.arenaId).toBe(arenaId);
+        expect(validArenaIds.has(entry!.arenaId)).toBe(true);
+      });
+      it('has valid type, title, and narrative', () => {
+        expect(entry!.type).toBeTruthy();
+        expect(entry!.title.length).toBeGreaterThan(3);
+        expect(entry!.narrative.length).toBeGreaterThan(20);
+      });
+    });
+  }
+});
+
 describe('arena lore dedup', () => {
   it('ARENA_LORE has no duplicate narratives', () => {
     const narratives = ARENA_LORE.map((entry) => entry.narrative);

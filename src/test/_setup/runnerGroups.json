@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-10-02T06:49:32.932Z",
+  "generatedAt": "2026-10-03T08:54:01.707Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
     "src/test/components/AccessibilityPolish.test.tsx",
+    "src/test/components/ArenaHazardBadges.test.tsx",
     "src/test/components/BookmarkButton.test.tsx",
     "src/test/components/BookmarkButtonA11y.test.tsx",
     "src/test/components/BookmarkFilterToggle.test.tsx",
@@ -196,6 +197,7 @@
     "src/test/hooks/useWeekExecution.test.ts",
     "src/test/integration/autosim.slow.test.ts",
     "src/test/integration/autosimCouncil.crown.test.ts",
+    "src/test/integration/livingWorld.slow.test.ts",
     "src/test/integration/worldLiveness.slow.test.ts",
     "src/test/lib/AudioManager.test.ts",
     "src/test/lib/a11yPrefs.test.ts",

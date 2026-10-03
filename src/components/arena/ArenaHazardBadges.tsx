@@ -12,6 +12,7 @@ const sizeClasses: Record<'sm' | 'md', string> = {
   md: 'text-[9px] font-black tracking-widest',
 };
 
+/** Renders WATER HAZARD / CURSED GROUND badges for tagged arenas. */
 export function ArenaHazardBadges({ tags, size = 'md' }: ArenaHazardBadgesProps) {
   return (
     <>

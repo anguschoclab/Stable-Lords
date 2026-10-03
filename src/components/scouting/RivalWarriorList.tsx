@@ -33,7 +33,7 @@ function WarriorListItem({
         <button
           aria-label={`Select rival warrior ${w.name} (${w.career.wins}W/${w.career.losses}L)`}
           className={cn(
-            'w-full text-left group relative outline-none',
+            'w-full text-left group relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
             isSelected ? 'z-10' : 'z-0'
           )}
           onClick={onSelect}

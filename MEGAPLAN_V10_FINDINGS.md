@@ -55,7 +55,7 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 | #1022 | **LANDED (near-verbatim)** | `31ea7930` — focus-visible rings on scouting selectors; stripped `.jules/palette.md`. |
 | `narrative-content-expansion-1450…` | **DELETE remote** | Fully superseded by `gutter_wraith` on `main`. |
 | `bolt/optimize-useshallow` | **DELETE remote** | Empty obsolete commit. |
-| `wip/living-rival-world` | **DELETE local** | Salvaged `personalityDraft.test.ts` (`b8ceda9d`) and adapted `livingWorld.slow.test.ts` (`c34ea89e`). |
+| `wip/living-rival-world` | **DELETE local** | Salvaged `personalityDraft.test.ts` (`b8ceda9d`) and adapted `livingWorld.slow.test.ts` (`c34ea89e`). Deleted after CI green. |
 
 ---
 
@@ -163,7 +163,7 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 | Narrative validate | ✅ green | `bun run narrative-validate` passes. |
 | Vitest slow suite | ✅ green | 28 test files, 188 tests passed. |
 | Coverage vitest | ✅ green | `bun x vitest run --coverage --reporter=dot` passes with v8 thresholds. |
-| Playwright e2e (Chromium) | ⚠️ attempted — 3/4 specs green; seasonal-tournament spec fails on both `main` and `pre-megaplan-v10` with identical `progressedLabel` 120s timeout | The failure reproduces on the V9 restore tag (`49dc1ee8`), so it is **pre-existing local-environment flakiness/slowness**, not a V10 regression. Golden-path, primary-cta, and residual-routes specs all pass locally. CI run will be the authoritative gate. |
+| Playwright e2e (Chromium) | ✅ green on CI | Local seasonal-tournament spec timed out identically on `pre-megaplan-v10` → pre-existing local-environment flakiness. CI run `37116138933` passed 9/9. |
 | UI-audit-scan | ✅ 0 hits | No token-violation, screaming-copy, motion, RNG, or fake-chrome hits. |
 | Orphan-scan | ✅ 0 unreachable pages | No orphan routes detected. |
 | Data-array-dup-scan | ✅ clean | No duplicate data-array entries. |
@@ -202,7 +202,7 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 17. `c7b21d4d` style: add JSDoc to ArenaHazardBadges
 18. `057b34ad` chore: regenerate test-audit baselines for new specs
 
-Coverage and final CI results to be appended after pending gates finish.
+Final CI result: run `37116138933` — 9/9 green (lint, type-check, bun-test, electron, test, build, slow-tests, e2e, coverage).
 
 ---
 
@@ -210,12 +210,12 @@ Coverage and final CI results to be appended after pending gates finish.
 
 | Branch | Action | Status |
 | --- | --- | --- |
-| `feature/add-forsaken-bog-arena-12299480434468563509` (#1017) | close PR, delete remote | pending |
-| `jules-arena-architect-5441102121484693603` (#1018) | close PR, delete remote | pending |
-| `feat/new-arenas-6316601110013621996` (#1019) | close PR, delete remote | pending |
-| `narrative-content-expansion-12261878026456190493` (#1020) | close PR, delete remote | pending |
-| `jules-11124804984749789547-9f5700b0` (#1021) | close PR, delete remote | pending |
-| `ux/scouting-focus-visible-14683235908963971442` (#1022) | close PR, delete remote | pending |
-| `origin/bolt/optimize-useshallow-5591841664083074347` | delete remote | pending |
-| `origin/narrative-content-expansion-14508848799275203441` | delete remote | pending |
-| `wip/living-rival-world` (local) | delete after salvage verified | pending |
+| `feature/add-forsaken-bog-arena-12299480434468563509` (#1017) | close PR, delete remote | ✅ done |
+| `jules-arena-architect-5441102121484693603` (#1018) | close PR, delete remote | ✅ done |
+| `feat/new-arenas-6316601110013621996` (#1019) | close PR, delete remote | ✅ done |
+| `narrative-content-expansion-12261878026456190493` (#1020) | close PR, delete remote | ✅ done |
+| `jules-11124804984749789547-9f5700b0` (#1021) | close PR, delete remote | ✅ done |
+| `ux/scouting-focus-visible-14683235908963971442` (#1022) | close PR, delete remote | ✅ done |
+| `origin/bolt/optimize-useshallow-5591841664083074347` | delete remote | ✅ done |
+| `origin/narrative-content-expansion-14508848799275203441` | delete remote | ✅ done |
+| `wip/living-rival-world` (local) | delete after salvage verified | ✅ done |

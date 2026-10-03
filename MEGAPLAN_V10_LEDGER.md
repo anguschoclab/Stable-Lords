@@ -49,8 +49,8 @@ Pending coverage and e2e runs — see MEGAPLAN_V10_FINDINGS.md §5 for live upda
 | Narrative validate | ✅ | no errors |
 | Vitest slow suite | ✅ | 28 files, 188 tests passed |
 | Coverage vitest | ✅ | `bun x vitest run --coverage --reporter=dot` green |
-| Playwright e2e | ⚠️ | 3/4 local specs green; `seasonal-tournament.spec.ts` fails identically on `pre-megaplan-v10` → pre-existing local flake |
-| CI 9-job matrix | ⏳ | pending after push |
+| Playwright e2e | ✅ | CI `37116138933` green (24m8s); local seasonal-tournament flake reproduces on `pre-megaplan-v10` |
+| CI 9-job matrix | ✅ | `37116138933` all green — lint, type-check, bun-test, electron, test, build, slow-tests, e2e, coverage |
 | UI-audit | ✅ | 0 hits |
 | Orphan-scan | ✅ | 0 unreachable pages |
 | Data-array-dup-scan | ✅ | clean |
@@ -60,10 +60,10 @@ Pending coverage and e2e runs — see MEGAPLAN_V10_FINDINGS.md §5 for live upda
 
 | Branch | Action | Status |
 | --- | --- | --- |
-| #1017–#1022 PR branches | `gh pr close` + `git push origin --delete` | pending |
-| `narrative-content-expansion-1450…` | `git push origin --delete` | pending |
-| `bolt/optimize-useshallow` | `git push origin --delete` | pending |
-| `wip/living-rival-world` | `git branch -D` after salvage verification | pending |
+| #1017–#1022 PR branches | `gh pr close` + `git push origin --delete` | ✅ done |
+| `narrative-content-expansion-1450…` | `git push origin --delete` | ✅ done |
+| `bolt/optimize-useshallow` | `git push origin --delete` | ✅ done |
+| `wip/living-rival-world` | `git branch -D` after salvage verification | ✅ done |
 
 ## Notes
 

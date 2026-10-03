@@ -2,8 +2,7 @@
  * Arena events — verifies new arena event configs and constants.
  */
 import { describe, it, expect } from 'vitest';
-import { ARENA_EVENTS } from '@/constants/arena/arenaEvents';
-import { ARENA_EVENT_CONSTANTS } from '@/constants/arenaEvents';
+import { ARENA_EVENTS, ARENA_EVENT_CONSTANTS } from '@/constants/arenaEvents';
 import { getAllArenas } from '@/data/arenas';
 
 describe('arena events — new entries', () => {

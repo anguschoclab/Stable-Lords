@@ -46,6 +46,14 @@ const RETAINED_IDS = [
 const BASELINE_COUNT = 100;
 const EXPECTED_COUNT = 151; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger (V10)
 
+/** Canonical effect signature: key-order must not change the hash
+ *  (JSON.stringify of an object literal preserves insertion order, so a
+ *  reordered effect would otherwise false-positive/negative the dupe scan). */
+const effectHash = (effect: any) => {
+  const { fightPlanMod, ...core } = effect;
+  return JSON.stringify(core, Object.keys(core).sort());
+};
+
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
     for (const id of REMOVED_IDS) {
@@ -114,11 +122,6 @@ describe('Trait deduplication', () => {
         (t) => t.sign === 'positive' && !t.styles && (t.tier === 'Common' || t.tier === 'Notable')
       );
 
-      const effectHash = (effect: any) => {
-        const { fightPlanMod, ...core } = effect;
-        return JSON.stringify(core);
-      };
-
       const seen = new Map<string, string>();
       for (const t of generic) {
         const hash = effectHash(t.effect);
@@ -129,6 +132,13 @@ describe('Trait deduplication', () => {
       }
 
       expect(seen.size).toBe(generic.length);
+    });
+
+    it('effectHash is key-order insensitive (V9 follow-up)', () => {
+      expect(effectHash({ enduranceMult: 0.96, iniModFresh: 1 })).toBe(
+        effectHash({ iniModFresh: 1, enduranceMult: 0.96 })
+      );
+      expect(effectHash({ a: 1, fightPlanMod: { x: 1 }, b: 2 })).toBe(effectHash({ b: 2, a: 1 }));
     });
   });
 

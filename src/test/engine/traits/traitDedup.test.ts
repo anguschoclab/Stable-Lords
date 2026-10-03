@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 151; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger (V10)
+const EXPECTED_COUNT = 152; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger (V10)
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a

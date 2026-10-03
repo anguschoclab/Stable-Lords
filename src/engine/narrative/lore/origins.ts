@@ -324,4 +324,11 @@ export const ORIGINS: string[] = [
   'Sold for a handful of silver to the merciless flesh-peddlers of the Lower Wards',
   'Survived the terrifying silence of the Black-Briar isolation wards',
   'Abandoned to the feral dog packs that roam the Ash Quarter',
+  'Abandoned at the heavy iron gates of the Cinderstone Orphanage',
+  'Survived the chilling darkness of the Weeping Vaults',
+  'Raised amidst the deafening roar of the Ember Forges',
+  'Found swaddled in soot-stained banners beneath the Shattered Bridge',
+  'Sold by debt-ridden parents to the cruel pit-masters of the Sump',
+  'Raised in the submerged basements of the Drowned Wards',
+  'Found clutching a rusted medallion in the alleys of the Ash Quarter',
 ];

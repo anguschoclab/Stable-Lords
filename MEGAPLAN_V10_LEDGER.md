@@ -50,7 +50,7 @@ Pending coverage and e2e runs — see MEGAPLAN_V10_FINDINGS.md §5 for live upda
 | Vitest slow suite | ✅ | 28 files, 188 tests passed |
 | Coverage vitest | ✅ | `bun x vitest run --coverage --reporter=dot` green |
 | Playwright e2e | ✅ | CI `37116138933` green (24m8s); local seasonal-tournament flake reproduces on `pre-megaplan-v10` |
-| CI 9-job matrix | ✅ | `37116138933` all green — lint, type-check, bun-test, electron, test, build, slow-tests, e2e, coverage |
+| CI 9-job matrix | ✅ | `37116138933` (code) and `37117750323` (docs update) both 9/9 green — lint, type-check, sharded bun-test, electron:compile, vitest default, vite build, slow vitest, playwright e2e (chromium), coverage |
 | UI-audit | ✅ | 0 hits |
 | Orphan-scan | ✅ | 0 unreachable pages |
 | Data-array-dup-scan | ✅ | clean |

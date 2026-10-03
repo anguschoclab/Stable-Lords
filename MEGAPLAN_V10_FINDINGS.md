@@ -202,7 +202,10 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 17. `c7b21d4d` style: add JSDoc to ArenaHazardBadges
 18. `057b34ad` chore: regenerate test-audit baselines for new specs
 
-Final CI result: run `37116138933` — 9/9 green (lint, type-check, bun-test, electron, test, build, slow-tests, e2e, coverage).
+Final CI results:
+- Code push (`7b3cae14`) → run `37116138933` — 9/9 green (~28m).
+- Docs update push (`f1857ac6`) → run `37117750323` — 9/9 green (~25m).
+Jobs: lint, type-check, bun-test (sharded), electron:compile, vitest default, vite build, slow vitest, playwright e2e (chromium), coverage.
 
 ---
 

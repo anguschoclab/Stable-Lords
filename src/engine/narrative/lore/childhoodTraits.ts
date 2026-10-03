@@ -180,4 +180,8 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to tell the precise weight of an iron cudgel by its whistling sound',
   'developed an unblinking, unsettling stare that unnerved even the cruelest matrons',
   'spent nights quietly scratching structural blueprints of the workhouse into the stone walls',
+  'developed a habit of whispering to the blades of their enemies',
+  'would purposefully step on broken glass to harden the soles of their feet',
+  'was notorious for picking pockets in the middle of a brutal street fight',
+  'learned to hold their breath for minutes while hiding in the submerged cisterns',
 ];

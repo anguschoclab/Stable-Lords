@@ -26,3 +26,351 @@ export const ARENA_EVENT_CONSTANTS = {
   CRUMBLING_SPIRE_FALL_TRIGGER: 10,
   MIST_VEIL_TRIGGER: 7,
 } as const;
+import type { ArenaTag } from '@/types/shared.types';
+
+/**
+ *
+ */
+export interface ArenaEventConfig {
+  id: string;
+  name: string;
+  description: string;
+  requiredTags: ArenaTag[];
+  triggerCondition: 'heavy_hit' | 'exchange_interval' | 'weather_combo' | 'random';
+  triggerValue: number;
+  narrativeText: string;
+  mechanicalEffect?: {
+    type: 'damage' | 'initiative_mod' | 'riposte_mod' | 'endurance_drain';
+    value: number;
+  };
+}
+
+export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
+  // ─── Ruins Events ─────────────────────────────────────────────────────────
+  collapsing_pillar: {
+    id: 'collapsing_pillar',
+    name: 'Collapsing Pillar',
+    description: 'Ancient stonework crumbles under the impact of combat',
+    requiredTags: ['ruins'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.COLLAPSING_PILLAR_TRIGGER, // Damage threshold
+    narrativeText: 'A nearby pillar cracks and collapses in a cloud of dust!',
+    // mechanicalEffect deferred to v2
+  },
+
+  falling_debris: {
+    id: 'falling_debris',
+    name: 'Falling Debris',
+    description: 'Ceiling fragments rain down on the fighters',
+    requiredTags: ['ruins', 'cramped'],
+    triggerCondition: 'random',
+    triggerValue: 0.03, // 3% per exchange
+    narrativeText: 'Chunks of stone fall from above, forcing both fighters to dodge!',
+  },
+
+  chasm_collapse: {
+    id: 'chasm_collapse',
+    name: 'Chasm Collapse',
+    description: 'The walls of the chasm cave in during fierce clashes',
+    requiredTags: ['cramped', 'cursed'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.CHASM_COLLAPSE_TRIGGER,
+    narrativeText: 'A heavy impact shatters the cursed chasm walls, raining debris!',
+    mechanicalEffect: {
+      type: 'damage',
+      value: 2,
+    },
+  },
+
+  monolith_pulse: {
+    id: 'monolith_pulse',
+    name: 'Monolith Pulse',
+    description: 'The shattered monolith pulses with arcane energy',
+    requiredTags: ['magical', 'elevated'],
+    triggerCondition: 'random',
+    triggerValue: 0.05,
+    narrativeText: 'The floating monolith releases a blinding magical pulse!',
+    mechanicalEffect: {
+      type: 'initiative_mod',
+      value: -3,
+    },
+  },
+
+  shadow_tendrils: {
+    id: 'shadow_tendrils',
+    name: 'Shadow Tendrils',
+    description: 'Cursed shadows lash out',
+    requiredTags: ['cursed'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_TRIGGER,
+    narrativeText: 'Shadow tendrils lash out from the darkness!',
+    mechanicalEffect: {
+      type: 'endurance_drain',
+      value: ARENA_EVENT_CONSTANTS.SHADOW_TENDRIL_DRAIN,
+    },
+  },
+
+  // ─── Magical Events ─────────────────────────────────────────────────────
+  crystal_resonance: {
+    id: 'crystal_resonance',
+    name: 'Crystal Resonance',
+    description: 'The crystals hum with sympathetic energy',
+    requiredTags: ['magical'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: 5, // Every 5 exchanges
+    narrativeText: 'The crystal walls pulse with light, amplifying every strike!',
+  },
+
+  aether_surge: {
+    id: 'aether_surge',
+    name: 'Aether Surge',
+    description: 'Raw magical energy surges through the arena',
+    requiredTags: ['magical'],
+    triggerCondition: 'weather_combo',
+    triggerValue: 1, // With Mana Surge weather
+    narrativeText: 'Arcane energy crackles through the air, empowering attacks!',
+  },
+
+  // ─── Cursed Events ──────────────────────────────────────────────────────
+  blood_moon_amplification: {
+    id: 'blood_moon_amplification',
+    name: 'Blood Moon Amplification',
+    description: 'The cursed ground drinks in the crimson light',
+    requiredTags: ['cursed'],
+    triggerCondition: 'weather_combo',
+    triggerValue: 1, // With Blood Moon weather
+    narrativeText: 'The blood moon shines brighter here. Violence feels inevitable.',
+  },
+
+  restless_spirits: {
+    id: 'restless_spirits',
+    name: 'Restless Spirits',
+    description: 'The dead beneath the arena stir',
+    requiredTags: ['cursed'],
+    triggerCondition: 'random',
+    triggerValue: 0.05,
+    narrativeText: 'Ghostly hands reach from the ground, grasping at the living!',
+  },
+
+  // ─── Living Events ────────────────────────────────────────────────────
+  thorn_barbs: {
+    id: 'thorn_barbs',
+    name: 'Thorn Barbs',
+    description: 'The flora lashes out at retreating fighters',
+    requiredTags: ['living'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.THORN_BARBS_TRIGGER,
+    narrativeText: 'Thorny vines whip at the fighters as they move!',
+  },
+
+  shifting_roots: {
+    id: 'shifting_roots',
+    name: 'Shifting Roots',
+    description: 'The ground itself seems to move',
+    requiredTags: ['living', 'uneven'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.SHIFTING_ROOTS_TRIGGER,
+    narrativeText: 'Roots writhe beneath the sand, tangling footwork!',
+  },
+
+  // ─── Uneven Events ──────────────────────────────────────────────────────
+  unstable_footing: {
+    id: 'unstable_footing',
+    name: 'Unstable Footing',
+    description: 'Broken flagstones shift under pressure',
+    requiredTags: ['uneven'],
+    triggerCondition: 'random',
+    triggerValue: 0.05,
+    narrativeText: 'The uneven ground shifts, throwing off balance!',
+  },
+
+  // ─── Water Events ───────────────────────────────────────────────────────
+
+  volcanic_eruption: {
+    id: 'volcanic_eruption',
+    name: 'Volcanic Eruption',
+    description: 'The crater spews fire and ash',
+    requiredTags: ['living'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.VOLCANIC_ERUPTION_TRIGGER,
+    narrativeText: 'A vent violently erupts, showering the arena with searing ash!',
+  },
+
+  whispers_of_madness: {
+    id: 'whispers_of_madness',
+    name: 'Whispers of Madness',
+    description: 'The cursed asylum echoes with spectral torment',
+    requiredTags: ['cursed', 'indoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.WHISPERS_OF_MADNESS_TRIGGER,
+    narrativeText: 'Ghostly screams echo off the walls, fraying the nerves of the fighters!',
+  },
+
+  // ─── Premium Events ────────────────────────────────────────────────────
+  crowd_riot: {
+    id: 'crowd_riot',
+    name: 'Crowd Riot',
+    description: 'The wealthy patrons demand blood and throw debris',
+    requiredTags: ['premium'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.CROWD_RIOT_TRIGGER,
+    narrativeText: 'The crowd riots in a frenzy, throwing debris into the arena!',
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.CROWD_RIOT_DAMAGE },
+  },
+
+  // ─── Blood Moon Lighting ─────────────────────────────────────────────
+  blood_moon_lighting: {
+    id: 'blood_moon_lighting',
+    name: 'Blood Moon Lighting',
+    description: 'The cursed ground glows ominously under the blood moon',
+    requiredTags: ['cursed'],
+    triggerCondition: 'weather_combo',
+    triggerValue: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_TRIGGER, // With Blood Moon
+    narrativeText: 'The blood moon illuminates the cursed ground, driving fighters mad!',
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_DAMAGE },
+  },
+
+  geyser_eruption: {
+    id: 'geyser_eruption',
+    name: 'Geyser Eruption',
+    description: 'Scalding water erupts from the ground',
+    requiredTags: ['water', 'uneven'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.GEYSER_ERUPTION_TRIGGER,
+    narrativeText: 'A hidden geyser erupts, blasting scalding water into the air!',
+  },
+
+  deepening_muck: {
+    id: 'deepening_muck',
+    name: 'Deepening Muck',
+    description: 'Waterlogged ground becomes more treacherous',
+    requiredTags: ['water'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.DEEPENING_MUCK_TRIGGER,
+    narrativeText: 'The waterlogged ground sucks at boots, slowing movement!',
+  },
+
+  sands_shift: {
+    id: 'sands_shift',
+    name: 'Shifting Sands',
+    description: 'A sudden shifting of the sand dunes destabilizes footing',
+    requiredTags: ['uneven', 'outdoor'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.SANDS_SHIFT_TRIGGER,
+    narrativeText:
+      'The impact causes the sandy ground to collapse momentarily, throwing fighters off balance!',
+  },
+
+  swamp_miasma: {
+    id: 'swamp_miasma',
+    name: 'Swamp Miasma',
+    description: 'Noxious gas bubbles up from the swamp',
+    requiredTags: ['water', 'cursed'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.SWAMP_MIASMA_TRIGGER,
+    narrativeText: 'A noxious bubble bursts, releasing a choking, cursed miasma into the air!',
+  },
+
+  jagged_peak_avalanche: {
+    id: 'jagged_peak_avalanche',
+    name: 'Rock Avalanche',
+    description: 'Unstable rocks plummet from the jagged peak',
+    requiredTags: ['elevated', 'uneven'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.JAGGED_PEAK_AVALANCHE_TRIGGER,
+    narrativeText:
+      'The sheer force dislodges rocks from the peak, sending a minor avalanche onto the fighters!',
+  },
+
+  murky_depths_tide: {
+    id: 'murky_depths_tide',
+    name: 'Arcane Tide',
+    description: 'A surge of magical water sweeps the floor',
+    requiredTags: ['water', 'magical'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.MURKY_DEPTHS_TIDE_TRIGGER,
+    narrativeText:
+      'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
+  },
+
+  bathhouse_scald: {
+    id: 'bathhouse_scald',
+    name: 'Scalding Steam',
+    description: 'Vents burst with scalding steam',
+    requiredTags: ['water', 'premium', 'indoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.BATHHOUSE_SCALD_TRIGGER,
+    narrativeText: 'Scalding steam erupts from the vents, blinding the fighters and burning the skin!',
+  },
+
+  heath_apparition: {
+    id: 'heath_apparition',
+    name: 'Heath Apparitions',
+    description: 'Ghostly figures rise from the cursed earth',
+    requiredTags: ['cursed', 'outdoor', 'open'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.HEATH_APPARITION_TRIGGER,
+    narrativeText: 'The heavy blow awakens ghostly apparitions that swarm the fighters!',
+  },
+
+  crumbling_spire_fall: {
+    id: 'crumbling_spire_fall',
+    name: 'Spire Collapse',
+    description: 'Debris from the elevated ruins crashes down',
+    requiredTags: ['elevated', 'ruins'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.CRUMBLING_SPIRE_FALL_TRIGGER,
+    narrativeText: 'The heavy impact dislodges ancient stonework from the spire!',
+    mechanicalEffect: { type: 'damage', value: 2 },
+  },
+
+  mist_veil: {
+    id: 'mist_veil',
+    name: 'Mist Veil',
+    description: 'Thick mist suddenly obscures the cramped arena',
+    requiredTags: ['cramped', 'outdoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.MIST_VEIL_TRIGGER,
+    narrativeText: 'A sudden, thick veil of mist obscures the tight quarters!',
+    mechanicalEffect: { type: 'initiative_mod', value: -2 },
+  },
+};
+
+// ─── Helper Functions ──────────────────────────────────────────────────────
+
+/**
+ *
+ */
+export function getEventsForArena(tags: ArenaTag[]): ArenaEventConfig[] {
+  return Object.values(ARENA_EVENTS).filter((event) =>
+    event.requiredTags.every((tag) => tags.includes(tag))
+  );
+}
+
+/**
+ *
+ */
+export function shouldTriggerEvent(
+  event: ArenaEventConfig,
+  exchange: number,
+  damage: number,
+  weather: string,
+  rng: () => number
+): boolean {
+  switch (event.triggerCondition) {
+    case 'heavy_hit':
+      return damage >= event.triggerValue;
+
+    case 'exchange_interval':
+      return exchange > 0 && exchange % event.triggerValue === 0;
+
+    case 'weather_combo':
+      return weather === 'Mana Surge' || weather === 'Blood Moon';
+
+    case 'random':
+      return rng() < event.triggerValue;
+
+    default:
+      return false;
+  }
+}

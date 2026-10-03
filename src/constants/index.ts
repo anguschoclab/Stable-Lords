@@ -11,3 +11,4 @@ export * from './aging';
 export * from './equipment';
 export * from './training';
 export * from './arena';
+export * from './arenaEvents';

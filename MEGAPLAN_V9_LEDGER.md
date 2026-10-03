@@ -9,7 +9,7 @@ full gate matrix. Zero save/back-compat constraints.
 ## Commit ledger (execution order)
 
 | Commit | Content |
-|---|---|
+| --- | --- |
 | `6a5cb087` | wip checkpoint: living-rival-world in-flight continuation → `wip/living-rival-world` |
 | `d7298a97` | chore: delete committed scratch file `scripts/_tmp.ts` (type-check unblock) |
 | `d12016cc` | test: V9 gate — entityLink.perf, ViewModeToggleA11y, narrativeUnionV9, PR #998 tests |
@@ -34,7 +34,7 @@ full gate matrix. Zero save/back-compat constraints.
 ## Gate matrix — final HEAD
 
 | Gate | Result | Notes |
-|---|---|---|
+| --- | --- | --- |
 | type-check | ✅ | tsc --build clean |
 | lint | ✅ | 0 errors |
 | vitest (default) | ✅ | 733–734 files / ~8.4k tests; last failure (WarriorPass) repinned |
@@ -48,16 +48,19 @@ full gate matrix. Zero save/back-compat constraints.
 | megaplan guards | ✅ | fileBudget/dup/orphan/skip/uiTokens/typeSurface all green |
 
 ## Artifact strip list
+
 - `.claude/backups/**` (all narrative PRs) — not landed
 - `.jules/**` — not present on main; not landed
 - `removed.json` / `removed_duplicates.json` manifests — not landed
 
 ## Salvage / union stats
+
 - Narrative: 694→721 killText, 3034→3226 pbp, 1042→1089 strikes (unique leaves); 9 consensus removals; 8 WT-overlay carries; 3 cross-leaf dupes dropped.
 - #998: 4 files / 34 specs landed.
 - Closed PRs #968–#997: all map to V7 dispositions — no additional salvage.
 
 ## Post-V9 wave commits (PRs #1010–#1013)
+
 - `8ce23368` feat(ui): ExecuteWeekButton disabled-reason tooltip via span-wrapped trigger (curates #1010, test-first)
 - `5e9d09fe` refactor: drop no-op useShallow on primitive/reference selectors (curates #1012; framer-motion range bump rejected)
 - `4a55a1eb` content: combat narrative pool curation +113/-32 (lands #1011 minus backups artifact)
@@ -66,6 +69,7 @@ full gate matrix. Zero save/back-compat constraints.
 Follow-up noted: traitDedup effectHash is key-order sensitive — sort keys before JSON.stringify.
 
 ## Third wave commits (PRs #1014–#1016) + living-world batch
+
 - `d29cc110` arena eligibility (tier/fame gating) + underserved-venue weighting
 - `e1c48cca` title-bout cap scales with arena count (ceil(arenas/4), floor 3)
 - `d88dd221` weekly world-floor refill at the merge seam
@@ -82,6 +86,7 @@ Follow-up noted: traitDedup effectHash is key-order sensitive — sort keys befo
 - `92b313bd` worldBalance growth assert repinned to peak-vs-floor (seed 777 peaks 94, settles 90); worldLiveness per-test timeout 600s→1200s
 
 ## Final CI disposition
+
 - Run 36982155688 @ `92b313bd`: **9/9 green** — lint, type-check, electron, bun-test (sharded), build, test, coverage (4m20s), slow-tests (16m1s), e2e (24m47s).
 - slow-tests failure on `0feed447` run (36979819323) root-caused and fixed: growth assert measured endpoint-vs-seed instead of peak-vs-floor; liveness spec needed the raised timeout for 3×104 weeks at ~90-160 rivals.
 - All dispositioned PR branches deleted; only `main` remains on the remote.

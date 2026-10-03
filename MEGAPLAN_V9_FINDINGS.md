@@ -12,7 +12,7 @@ constraints. Verdict vocabulary: **APPROVED** / **CORRECTED** / **DISPROVED** /
 ## 0. Draft-plan validation ledger (claims audited before implementation)
 
 | # | Draft claim | Verdict | Evidence |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | P1 | ~739 modified files in working tree | **CORRECTED** | True residual after upstream commits: ~27–33 changed paths; the living-world feature had partially landed (`beeeea6c` etc.) mid-session |
 | P2 | Main CI green baseline | **DISPROVED** | `type-check`, `test`, `bun-test` red on `f8577854`; dependent jobs skipped. Root causes: committed scratch `scripts/_tmp.ts` (30+ TS2307), stale world-spec expectations, stale guard baselines |
 | P3 | CI has 7 jobs | **CORRECTED** | 9 jobs: type-check, build, test, lint, bun-test, slow-tests, coverage, electron, e2e |
@@ -27,7 +27,7 @@ constraints. Verdict vocabulary: **APPROVED** / **CORRECTED** / **DISPROVED** /
 ## 1. Open-PR disposition table (all 12)
 
 | PR | Branch | Cluster | Verdict | Disposition |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | #998 | chore/expand-weather-coverage-… | tests | **APPROVED** | Extracted wholesale — 4 test files, all 34 specs green (commit `d12016cc`) |
 | #999 | bolt/memoize-entity-links-… | EntityLink | **APPROVED (winner)** | Synthesized: atomic primitive selectors + `React.memo` on WarriorLink/StableLink/LinkifiedText (`2c94f990`) |
 | #1000 | jules-narrative-audit-… | narrative | **PARTIAL** | Narrative adds unioned; `.claude/backups/` stripped; buildConfigIntegrity/env-canary hunks superseded by tsconfig refactor |
@@ -42,6 +42,7 @@ constraints. Verdict vocabulary: **APPROVED** / **CORRECTED** / **DISPROVED** /
 | #1009 | jules-17407150068756957735-… | narrative | **PARTIAL** | Narrative adds + `{{defender}}`→`{{name}}` knockdown fix unioned. REJECTED hunks: `e2e/seasonal-tournament.spec.ts` weakened `toBeGreaterThan(0)` → `toBeGreaterThanOrEqual(0)` (vacuous assertion on NPC podium check); ws-diag/ws-ladder superseded (ws-ladder deleted in `beeeea6c`, ws-diag renamed world-diag); styleArchives early-return anti-pattern rejected |
 
 ### Closed-PR salvage scan (#968–#997)
+
 All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extraction table). No unique salvage value remains. **NOTE** — no action.
 
 ---
@@ -49,11 +50,13 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 ## 2. Synthesis decisions
 
 ### EntityLink (5-PR cluster → one implementation)
+
 - Root cause: `useShallow` over `{player, rivals, roster, graveyard, retired}` re-rendered every link on any slice churn.
 - Landed: `useGameStore((s) => id ?? findWarrior(s, undefined, name)?.id)` / `findStableId(s, name)` + `s.player.id` — primitive selectors, `Object.is` equality shields re-renders; `React.memo` wraps all three exports per #999.
 - Verified by new `src/test/components/entityLink.perf.test.tsx` (real zustand store behind mocked module): 4 tests — churn-stability, id-change rerender, player-stable routing, unresolved fallback.
 
 ### Narrative union (4-PR cluster)
+
 - Merger: union-additions per leaf in PR order (1000→1002→1007→1009), token-fix applied *before* diffing so `{{defender}}`→`{{name}}` churn cancels; dedupe by normalized text; removals only on ≥2-PR consensus (9 removed).
 - Post-pass: cross-leaf template dedupe (keep first occurrence), `pbp.knockdowns` token-normalized (dead pool; `{{defender}}` variants dropped).
 - Overlay: 8 working-tree-only strings carried into their authored leaves.
@@ -61,10 +64,12 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 - Token contract verified: `narrateKnockdown` supplies `{name}`; `narrateRecovery` `{name, attacker}`; kill_text `{attacker, defender, name=loser}` — `{{name}}` in kill pools = victim (correct, kept).
 
 ### Accessibility (#1003/#1005)
+
 - `outline-none` → `focus-visible:outline-none` on ViewModeToggle buttons, TokenCard, WarriorTargetCard; `motion-reduce:animate-none` on accordion/toast.
 - Gate: `ViewModeToggleA11y.test.tsx` — rendered class tokens + source-level contracts.
 
 ### #1009 rejected hunks
+
 - `e2e/seasonal-tournament.spec.ts`: `toBeGreaterThanOrEqual(0)` is vacuous — rejected, kept `toBeGreaterThan(0)`.
 - `ws-diag.ts`/`ws-ladder.ts`: superseded — ws-ladder deleted, ws-diag renamed `world-diag.ts` upstream; scripts moved out of `src/` with `#scripts/*` alias.
 
@@ -73,13 +78,13 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 ## 3. New bugs found & fixed (each with failing evidence first)
 
 | # | Finding | Verdict | Fix |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | B1 | `scripts/_tmp.ts` committed scratch file broke `type-check` (30+ TS2307) | **APPROVED** | Deleted (`d7298a97`) |
 | B2 | `buildConfigIntegrity` JSONC stripper ate `"@/*"` path mappings as comments | **APPROVED** | Replaced regex with string-aware state-machine stripper (both `readJson` copies) |
 | B3 | `WarriorPass.test` trainer specs hard-coded old fame floor (500) — actual `LEGACY_FOUNDER_FAME_MIN=90` | **APPROVED** | Repinned to constants; boundary semantics (`0179da61`) |
 | B4 | Stale world-spec expectations across ~15 test files (population floor 45→90, handler count 7→12, truncation caps, warrior costs) | **APPROVED** | Repinned batch (`3c19f364`) |
 | B5 | `fileBudget` guard: 18 fns >80 lines from landed world work | **APPROVED** | Real decomposition (management.ts, MatchCard, PaperDoll, AttributeRow, WarriorTrainingCard, RosterSnapshot, BookingOffice, HallOfFights, refusals/results, rivalStableShard, finalize, draftService, recruitmentWorker, coreGenerator) |
-| B6 | dup-scan new pair `groupBookmarks|useBookmarkGroups` | **APPROVED** | Registered as extraction-seam pair in `duplication.guard` baseline |
+| B6 | dup-scan new pair `groupBookmarks\|useBookmarkGroups` | **APPROVED** | Registered as extraction-seam pair in `duplication.guard` baseline |
 | B7 | Cross-project test pollution suspicion (WarriorPass CI-only failure) | **DISPROVED** | Not pollution — genuinely stale spec (isolation pass predated constant landing). No global-state leak found |
 | B8 | `pbp.knockdowns` dead pool held `{{defender}}` + duplicate `{{name}}` variants | **APPROVED** | Token-normalized + deduped in union |
 | B9 | `simulation_hardening` death-rate bound 1.0 stale for living world (measured ~1.04) | **APPROVED (repin)** | Bound 1.2 w/ documented justification — density guards prove restock works |
@@ -90,7 +95,7 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 ## 4. Deferred / optional / out-of-scope items — all implemented
 
 | Ticket | Spec | Status |
-|---|---|---|
+| --- | --- | --- |
 | MEGAPLAN-G1 | Style Archives browser | **DONE** — `src/pages/StyleArchives.tsx`, routed `/world/style-archives`, nav-linked; spec green |
 | MEGAPLAN-G2 | Favorites charting toolkit | **DONE** — `FavoritesCharting` surface exists; spec green |
 | MEGAPLAN-G3 | Tournament prep mode | **DONE** — `src/pages/TournamentPrep`, nav `/world/tournament-prep`; spec green |
@@ -102,7 +107,7 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 ## 5. Orphan-route adjudication (7 flagged)
 
 | Route | Verdict | Reason |
-|---|---|---|
+| --- | --- | --- |
 | `/arena-hub` | **EXEMPT** | intentional legacy redirect → `/stable/arena` |
 | `/world/arena-leaderboards` | **EXEMPT** | intentional legacy redirect → `/world/arenas` |
 | `/` | **NOTE** | linked from AppHeader logo |
@@ -122,7 +127,7 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 ## 7. Architectural verdicts
 
 | Choice | Verdict |
-|---|---|
+| --- | --- |
 | `legacyFounderQueue`/`freeAgents` in `GameState` (not module state) | **APPROVED** |
 | Append-delta impacts (`legacyFounderEnqueue`, `freeAgentAdditions/Removals`) over wholesale replacement | **APPROVED** — prevents same-stage snapshot clobbering; covered by impact tests |
 | `findWarrior`/`findStableId` WeakMap caches keyed on state | **APPROVED** — `clearHistoryCaches` keeps test isolation honest |
@@ -136,7 +141,7 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 ## 8. Final gate matrix (recorded at completion)
 
 | Gate | Result |
-|---|---|
+| --- | --- |
 | `bun run type-check` | PASS (tsc --build --force clean) |
 | `bun run lint` | PASS (0 errors) |
 | `bun run test` (vitest, 735 files) | PASS — 8447 tests, 2 sanctioned skips |
@@ -153,6 +158,7 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 CI-only fixes landed during verification: styleArchives wired test now asserts on the tracked route source instead of generated `routeTree.gen.ts` (`3b3050ec`); e2e timeout (`706f6df3`, `218712fc`); bun-test sharding + `--smol`/`--timeout=30s` (`3849091b`, `73617b45`, `13b73482`).
 
 ## 9. Remote disposition log
+
 - PRs #998–#1009: disposition comments posted, all 12 closed, all 12 remote branches deleted (verified `git fetch --prune`).
 - `wip/living-rival-world`: consumed by main (refined commits); remote branch deleted. Tag `pre-megaplan-v9` retained as restore point (`f8577854`).
 
@@ -162,13 +168,14 @@ A second wave of four bot PRs opened after the V9 cleanup. Reviewed, curated, an
 dispositioned under the same workflow:
 
 | PR | Subject | Verdict | Landed |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | #1010 | Disabled-state tooltip on ExecuteWeekButton | **Partially approved — implementation disproved** | Corrected in `8ce23368` |
 | #1011 | Combat narrative pool curation | **Approved** | `4a55a1eb` (artifact stripped) |
 | #1012 | `useShallow` on primitive selectors | **Approved (selectors); dep hunk rejected** | `5e9d09fe` |
 | #1013 | Narrative/lore expansion | **Partially approved — hollow_born disproved** | Lore only, `b14ed902` |
 
 ### #1010 — corrected, not rejected
+
 - Intent approved: a disabled "Execute Week" button should explain why.
 - Implementation disproved: `tooltip={disabledReason}` lands on a `Button` that
   carries `disabled:pointer-events-none`; a disabled element cannot be a Radix
@@ -176,16 +183,19 @@ dispositioned under the same workflow:
   instead, with tests for running/simulating/idle states (test-first).
 
 ### #1011 — approved
+
 - +113/−32 across killText/pbp/strikes; JSON valid, `narrative-validate` and the
   V9 union gate green. `.claude/backups/narrative/audit_log.txt` stripped.
 
 ### #1012 — approved minus dependency churn
+
 - `useShallow` on selectors returning primitives (`s.roster.length`, `s.treasury`)
   or stable references (`s.roster`) is a no-op — removal is correct.
 - **Rejected**: unrelated `framer-motion` `13.4.0` → `^13.5.0` pin-to-range change;
   repo convention is pinned deps.
 
 ### #1013 — curated; hollow_born disproved
+
 - **Landed**: 2 arena lore entries + `childhoodTraits`/`definingMoments`/`origins`
   additions (`b14ed902`).
 - **Rejected**: `hollow_born` — semantically identical effect to existing
@@ -198,21 +208,24 @@ dispositioned under the same workflow:
   effects written in different key order currently pass. Noted for follow-up.
 
 ## 11. Remote disposition log (post-V9 wave)
+
 - PRs #1010–#1013: disposition comments posted, all closed, remote branches deleted.
 
 ## 12. Third PR wave (1014–1016) — dispositions
 
 | PR | Subject | Verdict | Landed |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | #1014 | `gutter_wraith` notable trait | **Approved** | `edeb48fd` |
 | #1015 | Two new arenas + water/uneven fit penalty | **Approved — registration gap fixed** | `dc51b3b4` |
 | #1016 | Wandering Blacksmith offseason event | **Approved** | `a5ea12cb` |
 
 ### #1014 — approved
+
 `{iniModFresh:1, attModEarly:1}` is a novel generic-positive combo — unlike
 `hollow_born` it does not clone an existing effect. traitDedup green at 150.
 
 ### #1015 — approved with a fix
+
 - Both venues (`the_frozen_lake`, `the_acid_bog`) were exported but **never
   registered** in the arena index — dead content. Appended to the built-in
   registration array (order is pinned and RNG-observable) and repinned the
@@ -221,11 +234,13 @@ dispositioned under the same workflow:
   (win-rate ≤0.9, small sample) landed as written.
 
 ### #1016 — approved
+
 Treasury-gated (<50g → passes by) XP award with a −50g ledger entry. Handler,
 union member, narrative entry, and fire/skip tests all correct; `{{xp}}`
 interpolates from the announce payload.
 
 ### CI note — perf ceilings for the 90-rival world
+
 The living-world batch roughly doubled per-week sim cost vs the 8-rival
 calibration (~0.4s/week local, ~2.5× worse on hosted runners). `aebd5936`
 repinned the coarse autosim/pipeline caps and `ccb6828e` widened band/coarse

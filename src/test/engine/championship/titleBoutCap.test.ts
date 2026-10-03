@@ -4,12 +4,14 @@
  */
 import { describe, it, expect } from 'vitest';
 import { titleBoutsPerWeekCap } from '@/engine/championship/arenaChampionship/phases/scheduling';
-import { getAllArenas } from '@/data/arenas';
+import { getNormalArenas } from '@/data/arenas';
 import { ARENA_TITLE } from '@/constants/arena';
 
 describe('titleBoutsPerWeekCap', () => {
   it('equals max(MIN_TITLE_BOUTS_PER_WEEK, ceil(arenaCount / DEFENSE_INTERVAL_WEEKS))', () => {
-    const arenaCount = getAllArenas().length;
+    // Special venues (championship stages) have no weekly titles — the cap
+    // scales with the normal circuit roster only.
+    const arenaCount = getNormalArenas().length;
     const expected = Math.max(
       ARENA_TITLE.MIN_TITLE_BOUTS_PER_WEEK,
       Math.ceil(arenaCount / ARENA_TITLE.DEFENSE_INTERVAL_WEEKS)
@@ -19,7 +21,7 @@ describe('titleBoutsPerWeekCap', () => {
 
   it('keeps pace with a 40+ arena world (a defense can cycle every interval)', () => {
     // Each arena should be able to defend once per DEFENSE_INTERVAL_WEEKS.
-    const arenaCount = getAllArenas().length;
+    const arenaCount = getNormalArenas().length;
     expect(titleBoutsPerWeekCap() * ARENA_TITLE.DEFENSE_INTERVAL_WEEKS).toBeGreaterThanOrEqual(
       arenaCount
     );

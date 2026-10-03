@@ -14,7 +14,10 @@ import { ARENA_TITLE } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { earnEpithet, type EpithetCause } from '@/data/names/epithets';
 
-export const CHAMPIONSHIP_EXCLUDED_ARENAS: ReadonlySet<string> = new Set(['bloodsands_arena']);
+export const CHAMPIONSHIP_EXCLUDED_ARENAS: ReadonlySet<string> = new Set([
+  'bloodsands_arena',
+  'the_iron_cage',
+]);
 
 /** Accumulated championship writes for one tick. */
 export interface ChampionshipDelta {

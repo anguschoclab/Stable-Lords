@@ -2,7 +2,7 @@ import type { GameState, BoutOffer } from '@/types/state.types';
 import type { WarriorId, BoutOfferId, PromoterId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { ARENA_TITLE, ARENA_COMMISSION_ID } from '@/constants/arena';
-import { getAllArenas } from '@/data/arenas';
+import { getNormalArenas } from '@/data/arenas';
 import { displayWeek, isTournamentWeekOfYear } from '@/engine/core/absoluteWeek';
 import { collectBookedWarriorIds } from '@/engine/core/warriorCollection';
 import type { ChampionshipDelta } from '../core';
@@ -19,11 +19,11 @@ import { rankContenders, selectTitleContender } from '../queries';
 // ─── 6. Scheduling ──────────────────────────────────────────────────────────
 
 /**
- * Weekly title-bout cap: scales with the arena roster so every venue can
- * defend on cadence — at 47 arenas and a 4-week interval, ~12 defenses/week.
+ * Weekly title-bout cap: scales with the normal arena roster so every venue can
+ * defend on cadence — at 50 arenas and a 4-week interval, ~13 defenses/week.
  * Floor is MIN_TITLE_BOUTS_PER_WEEK so a tiny roster still schedules bouts.
  */
-export function titleBoutsPerWeekCap(arenaCount = getAllArenas().length): number {
+export function titleBoutsPerWeekCap(arenaCount = getNormalArenas().length): number {
   return Math.max(
     ARENA_TITLE.MIN_TITLE_BOUTS_PER_WEEK,
     Math.ceil(arenaCount / ARENA_TITLE.DEFENSE_INTERVAL_WEEKS)

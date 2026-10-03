@@ -1,5 +1,8 @@
 // Split from data/arenas.ts — arena lore entries + accessor
 
+import { ARENA_LORE_BACKFILL_1 } from './loreBackfill1';
+import { ARENA_LORE_BACKFILL_2 } from './loreBackfill2';
+
 // ─── Arena Lore ───────────────────────────────────────────────────────────────
 
 /**
@@ -810,6 +813,8 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'During the legendary match of the Obsidian King, the crater erupted in a shower of hot ash, blinding both fighters. The match ended not with a sword strike, but with both combatants stumbling into the magma vents.',
   },
+  ...ARENA_LORE_BACKFILL_1,
+  ...ARENA_LORE_BACKFILL_2,
 ];
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();

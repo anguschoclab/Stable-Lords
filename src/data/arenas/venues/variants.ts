@@ -64,7 +64,7 @@ export const CHARNEL_PITS: ArenaConfig = {
   id: 'charnel_pits',
   name: 'The Charnel Pits',
   tags: ['indoor', 'cramped', 'elevated', 'cursed'],
-  tier: 2,
+  tier: 3,
   size: 'cramped',
   description:
     'Arena built over mass graves. Blood stains the ancient stones; violence feels inevitable here, especially under a blood moon.',
@@ -123,7 +123,7 @@ export const GLACIAL_RIFT: ArenaConfig = {
   id: 'glacial_rift',
   name: 'The Glacial Rift',
   tags: ['outdoor', 'cramped', 'uneven'],
-  tier: 2,
+  tier: 1,
   size: 'cramped',
   description: 'A frozen, narrow crevasse where footing is treacherous and space is tight.',
   zoneDef: { Edge: -3, Corner: -5 },

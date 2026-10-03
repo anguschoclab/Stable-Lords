@@ -345,3 +345,59 @@ describe('calendar migration', () => {
     }
   });
 });
+
+// ─── Grand Championship venue ───────────────────────────────────────────────
+
+describe('Grand Championship venue', () => {
+  it('resolves every Champions-tier bout at the designated venue', () => {
+    const fighters = [champ('a'), champ('b'), champ('c'), champ('d')];
+    const state = makeGameState({ week: 52, roster: fighters });
+    const tourney: TournamentEntry = {
+      id: 't-champions-winter-y1-w52' as TournamentId,
+      season: 'Winter',
+      week: 52,
+      tierId: CHAMPIONS_TOURNEY.TIER_ID,
+      name: CHAMPIONS_TOURNEY.NAME,
+      participants: fighters,
+      completed: false,
+      bracket: [
+        { round: 1, matchIndex: 0, warriorIdA: 'a' as WarriorId, warriorIdD: 'b' as WarriorId },
+        { round: 1, matchIndex: 1, warriorIdA: 'c' as WarriorId, warriorIdD: 'd' as WarriorId },
+      ],
+    };
+    state.tournaments = [tourney];
+    const resolved = resolveCompleteTournament(state, tourney.id, 2024, true);
+    const after = resolved.tournaments!.find((t) => t.id === tourney.id)!;
+    expect(after.completed).toBe(true);
+    const summaries = (resolved.arenaHistory ?? []).filter((s) => s.tournamentId === tourney.id);
+    expect(summaries.length).toBeGreaterThan(0);
+    for (const s of summaries) {
+      expect(s.arenaId).toBe(CHAMPIONS_TOURNEY.ARENA_ID);
+    }
+  });
+
+  it('seasonal tournaments never draw the special championship venues', () => {
+    const fighters = [champ('a'), champ('b'), champ('c'), champ('d')];
+    const state = makeGameState({ week: 10, roster: fighters });
+    const tourney: TournamentEntry = {
+      id: 't-gold-spring-y1-w10' as TournamentId,
+      season: 'Spring',
+      week: 10,
+      tierId: 'Gold',
+      name: 'Seasonal Bracket',
+      participants: fighters,
+      completed: false,
+      bracket: [
+        { round: 1, matchIndex: 0, warriorIdA: 'a' as WarriorId, warriorIdD: 'b' as WarriorId },
+        { round: 1, matchIndex: 1, warriorIdA: 'c' as WarriorId, warriorIdD: 'd' as WarriorId },
+      ],
+    };
+    state.tournaments = [tourney];
+    const resolved = resolveCompleteTournament(state, tourney.id, 777, true);
+    const summaries = (resolved.arenaHistory ?? []).filter((s) => s.tournamentId === tourney.id);
+    expect(summaries.length).toBeGreaterThan(0);
+    for (const s of summaries) {
+      expect(s.arenaId).not.toBe(CHAMPIONS_TOURNEY.ARENA_ID);
+    }
+  });
+});

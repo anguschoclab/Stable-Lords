@@ -245,3 +245,30 @@ describe('arena lore dedup', () => {
     expect(uniqueNarratives.size, `Duplicate arena lore narratives found`).toBe(narratives.length);
   });
 });
+
+describe('arena lore minimum coverage', () => {
+  it('every registered arena has at least 5 lore entries', () => {
+    const counts: Record<string, number> = {};
+    for (const e of ARENA_LORE) counts[e.arenaId] = (counts[e.arenaId] || 0) + 1;
+    for (const arena of getAllArenas()) {
+      expect(
+        counts[arena.id] || 0,
+        `${arena.id} has ${counts[arena.id] || 0} lore entries — minimum is 5`
+      ).toBeGreaterThanOrEqual(5);
+    }
+  });
+
+  it('every arena has at least 2 distinct lore entry types', () => {
+    const typeMap: Record<string, Set<string>> = {};
+    for (const e of ARENA_LORE) {
+      (typeMap[e.arenaId] ??= new Set()).add(e.type);
+    }
+    for (const arena of getAllArenas()) {
+      const types = typeMap[arena.id] ?? new Set();
+      expect(
+        types.size,
+        `${arena.id} has only ${types.size} lore type(s) — minimum is 2`
+      ).toBeGreaterThanOrEqual(2);
+    }
+  });
+});

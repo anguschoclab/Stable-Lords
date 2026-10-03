@@ -11,7 +11,7 @@ describe('New Arenas System Integration', () => {
     expect(glacialRift.id).toBe('glacial_rift');
     expect(skyPlatform.id).toBe('sky_platform');
     expect(mistyValley.id).toBe('misty_valley');
-    expect(glacialRift.tier).toBe(2);
+    expect(glacialRift.tier).toBe(1);
     expect(skyPlatform.tier).toBe(3);
     expect(mistyValley.tier).toBe(1);
   });

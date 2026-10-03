@@ -6,13 +6,13 @@ import { getArenaById } from '@/data/arenas';
 
 describe('Arena Architect Verification', () => {
   it('New arenas are discoverable by tournament system appropriately', () => {
-    // Wailing Chasm and Verdant Labyrinth should be excluded from large brackets (cramped)
+    // Meat Grinder and Verdant Labyrinth should be excluded from large brackets (cramped)
     const arenas = getEligibleArenasForTournament({ bracketSize: 16 });
-    const hasWailing = arenas.some((a) => a.id === 'the_wailing_chasm');
+    const hasMeatGrinder = arenas.some((a) => a.id === 'the_meat_grinder');
     const hasShattered = arenas.some((a) => a.id === 'shattered_monolith');
     const hasVerdant = arenas.some((a) => a.id === 'verdant_labyrinth');
 
-    expect(hasWailing).toBe(false); // Excluded due to cramped
+    expect(hasMeatGrinder).toBe(false); // Excluded due to cramped
     expect(hasVerdant).toBe(false); // Excluded due to cramped
     // Shattered Monolith is open size, so it might be included if tier allows
     if (arenas.some((a) => a.tier === 3)) {

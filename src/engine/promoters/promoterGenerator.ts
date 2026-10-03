@@ -1,4 +1,5 @@
 import { getArenasByTier } from '@/data/arenas';
+import { SPECIAL_ARENA_IDS } from '@/constants/arena';
 import { Promoter, PromoterPersonality } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -119,6 +120,7 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
       arenaPool: [1, 2, 3]
         .filter((t) => t <= (tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3))
         .flatMap((t) => getArenasByTier(t as 1 | 2 | 3))
+        .filter((a) => !SPECIAL_ARENA_IDS.includes(a.id))
         .map((a) => a.id),
       history: {
         totalPursePaid: 0,

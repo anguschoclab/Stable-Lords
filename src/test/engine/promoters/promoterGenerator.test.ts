@@ -3,6 +3,7 @@ import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { getArenaById } from '@/data/arenas';
+import { SPECIAL_ARENA_IDS } from '@/constants/arena';
 
 describe('Promoter Generator', () => {
   it('should generate the exact number of promoters requested', () => {
@@ -111,6 +112,18 @@ describe('Promoter Generator', () => {
       if (p.tier === 'Regional') expect(tiers.has(1) && tiers.has(2)).toBe(true);
       if (p.tier === 'National') expect(tiers.has(2) || tiers.has(3)).toBe(true);
       if (p.tier === 'Legendary') expect(tiers.size).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('no generated promoter arenaPool contains a special venue', () => {
+    const promoters = generatePromoters(30, 555);
+    for (const p of promoters) {
+      for (const id of SPECIAL_ARENA_IDS) {
+        expect(
+          p.arenaPool?.includes(id) ?? false,
+          `${p.tier} promoter leaked special arena ${id}`
+        ).toBe(false);
+      }
     }
   });
 

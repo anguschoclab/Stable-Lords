@@ -354,10 +354,8 @@
         "LEFT QUADRICEP",
         "LEFT THIGH",
         "LEFT ANKLE",
-        "LEFT KNEE",
-        "LEFT SHIN",
-        "LEFT CALF",
         "LEFT KNEE JOINT",
+        "LEFT SHIN",
         "LOWER LEFT CALF",
         "UPPER LEFT LEG",
         "LEFT FOOT",
@@ -994,7 +992,7 @@
           "Survival instinct takes over as {{defender}} throws themselves ungracefully into the dirt.",
           "{{defender}} scrambles wildly backward, eyes wide with panic as they barely avoid the strike.",
           "Tripping over their own feet, {{defender}} haphazardly flings themselves out of the way of the blow.",
-          "{{defender}} barely contorts out of the way, panic in their eyes.",
+          "{{defender}} barely scrambles out of the way, panic in their eyes as the weapon flashes past.",
           "Falling backwards, {{defender}} miraculously avoids the strike.",
           "{{defender}} ducks frantically as the weapon sails overhead.",
           "A wild dodge leaves {{defender}} off-balance, but alive.",
@@ -1010,7 +1008,6 @@
           "{{defender}} practically throws themselves into the dirt in a desperate dodge from {{attacker}}.",
           "With eyes squeezed shut in panic, {{defender}} manages a desperate dodge.",
           "Flailing wildly, {{defender}} executes a frantic, desperate dodge against {{attacker}}.",
-          "{{defender}} barely scrambles out of the way, panic in their eyes as the weapon flashes past.",
           "A frantic, uncoordinated lurch backwards saves {{defender}} by a hair's breadth.",
           "{{defender}} flails wildly, somehow contorting their body away from the deadly strike.",
           "Tripping over their own feet, {{defender}} falls backward, narrowly avoiding death.",
@@ -1057,7 +1054,8 @@
           "A frantic dive saves {{defender}} from certain ruin.",
           "{{defender}} flails backward, narrowly escaping the blow by a hair's breadth.",
           "In a burst of sheer terror, {{defender}} hurls themselves away from the strike.",
-          "{{defender}} throws themselves to the dirt in a graceless but lifesaving scramble."
+          "{{defender}} throws themselves to the dirt in a graceless but lifesaving scramble.",
+          "{{defender}} throws themselves awkwardly backward, stumbling as the fatal edge passes mere inches away."
         ],
         "confident": [
           "{{defender}} barely shifts their weight, a masterclass in minimal effort, dodging with absolute certainty.",
@@ -1292,7 +1290,8 @@
           "{{defender}} dramatically bows out of the path of the incoming weapon.",
           "{{defender}} executes a flawless, spinning backhandspring to evade, playing heavily to the cheering crowd.",
           "With a dramatic bow, {{defender}} ducks under the swipe, winking at the front row.",
-          "{{defender}} leaps backwards with a flourish, cape (or imagined cape) billowing heroically."
+          "{{defender}} leaps backwards with a flourish, cape (or imagined cape) billowing heroically.",
+          "{{defender}} executes a flawless, sweeping evasion, winking at the crowd as the strike meets empty air."
         ],
         "grim": [
           "Without blinking, {{defender}} perfectly calculates the distance and stands perfectly still as the blow misses by a hair.",
@@ -1527,7 +1526,6 @@
           "{{defender}} squeezes their eyes shut and blocks, the impact sending shudders down their arms.",
           "{{defender}} barely manages to bring their weapon up in time, arms shaking from the impact.",
           "A frantic, last-second block saves {{defender}} from a lethal blow.",
-          "{{defender}} throws their weapon up in a blind panic, managing to deflect the worst of it.",
           "A desperate, flailing block from {{defender}} barely turns the lethal strike aside.",
           "{{defender}} throws up a panicked, two-handed block, shivering under the force.",
           "A frantic clash of steel! {{defender}} barely manages to turn the killing blow aside.",
@@ -1581,7 +1579,6 @@
           "{{defender}} throws up a frantic, clumsy block, miraculously deflecting {{attacker}}'s blow but stumbling backward.",
           "{{defender}} violently slaps the weapon away, trembling with the effort.",
           "A frantic, last-second parry by {{defender}} prevents a lethal hit.",
-          "{{defender}} wildly throws up their guard, barely deflecting the strike.",
           "With a panicked yell, {{defender}} forces the incoming weapon aside.",
           "{{defender}} desperately knocks the strike off course just in time.",
           "{{defender}} brings their weapon up at the last possible millisecond, shivering from the impact.",
@@ -1694,12 +1691,13 @@
           "With a condescending flick of the wrist, {{defender}} parries the blow.",
           "{{defender}} masterfully redirects the strike with absolute certainty.",
           "A flawless, unbothered block from {{defender}} halts the offense.",
-          "{{defender}} intercepts the weapon perfectly, a confident grin on their face."
+          "{{defender}} intercepts the weapon perfectly, a confident grin on their face.",
+          "{{defender}} barely shifts their stance, intercepting the strike with arrogant ease."
         ],
         "theatrical": [
           "{{defender}} catches the strike with a dramatic flourish, spinning their weapon in defiance!",
           "With a grand, sweeping motion, {{defender}} parries the blow and plays to the roaring crowd.",
-          "The clash of weapons is loud and dramatic as {{defender}} executes a picture-perfect block.",
+          "The clash of weapons is deafening as {{defender}} executes a picture-perfect, dramatic block.",
           "{{defender}} deflects the strike with a dazzling, windmill-like motion that wows the crowd.",
           "{{defender}} intercepts the attack with an operatic stance, fully embracing the spectacle.",
           "With an elegant twirl of steel, {{defender}} turns the blow aside in breathtaking fashion.",
@@ -1753,7 +1751,6 @@
           "{{defender}} deflects the blow into a grand, sweeping arc.",
           "With needless extravagance, {{defender}} stops the attack cold.",
           "{{defender}} catches the strike with a sweeping spin, sending a brilliant shower of sparks into the air.",
-          "The clash of weapons is deafening as {{defender}} executes a picture-perfect, dramatic block.",
           "{{defender}} blocks with a flamboyant arc, drawing a loud cheer from the bloodthirsty spectators.",
           "Flourishing their weapon, {{defender}} catches the strike in a dazzling theatrical parry.",
           "{{defender}} turns the block into a dance, executing a spinning theatrical parry.",
@@ -1803,7 +1800,7 @@
           "With cold, lethal intent, {{defender}} intercepts the strike and readies their counter.",
           "With a chilling calmness, {{defender}} grinds their weapon against the incoming blow.",
           "{{defender}} violently swats the attack aside, their face a mask of quiet rage.",
-          "A bone-jarring block stops the attack dead, as {{defender}} glares murderously.",
+          "A bone-jarring block stops the attack dead, as {{defender}} glares murderously through the crossing blades.",
           "A heavy, joyless block from {{defender}}, a purely mechanical act of survival.",
           "The weapons clash with a dull clang; {{defender}} doesn't even blink.",
           "{{defender}} absorbs the impact with a stoic, unreadable expression.",
@@ -1852,7 +1849,6 @@
           "A violent, heavy block from {{defender}} rattles the attacker's bones.",
           "{{defender}} stops the strike completely, staring dead-eyed through the clash.",
           "Without a word, {{defender}} violently smashes the incoming attack aside.",
-          "A bone-jarring block stops the attack dead, as {{defender}} glares murderously through the crossing blades.",
           "With bone-jarring force, {{defender}} delivers a heavy, grim parry against {{attacker}}.",
           "{{defender}} simply absorbs the impact with a silent, grim parry.",
           "A cold, mechanical motion defines {{defender}}'s perfectly executed grim parry.",
@@ -2040,7 +2036,7 @@
           "{{defender}} strikes back blindly, desperate to create space.",
           "A stumbling, frantic counterattack erupts from {{defender}}.",
           "Off-balance, {{defender}} hurls a wild counter-swing.",
-          "{{defender}} blindly lashes out after blocking!",
+          "{{defender}} blindly lashes out after blocking, hoping to buy space.",
           "Operating purely on adrenaline, {{defender}} blocks and thrashes blindly in return.",
           "{{defender}} barely deflects the blow before launching a frantic, uncoordinated counterattack.",
           "Panic fuels {{defender}}'s sloppy block and immediate wild swing back.",
@@ -2062,7 +2058,6 @@
           "A terrified parry transitions into a sudden, panicked riposte from {{defender}}.",
           "{{defender}} frantically redirects the force and lunges forward, hoping for the best.",
           "With a frantic gasp, {{defender}} turns the attack and strikes back blindly.",
-          "{{defender}} blindly lashes out after blocking, hoping to buy space.",
           "A frantic, unbalanced counterattack follows the hurried block.",
           "Surviving the strike, {{defender}} thrusts wildly in panic.",
           "Flailing wildly to survive, {{defender}} somehow turns a sloppy block into a frantic counter-thrust!",
@@ -2161,7 +2156,6 @@
           "{{defender}} deflects the attack with bored ease and elegantly delivers a punishing reprimand in return.",
           "{{defender}} smirks, turning the deflection into a beautifully executed counterstrike.",
           "With elegant precision, {{defender}} effortlessly retaliates after the block.",
-          "{{defender}} masterfully exploits the opening with a confident riposte.",
           "A smooth, devastating counterblow from {{defender}} punishes the mistake.",
           "{{defender}} comfortably weaves a flawless counterattack into their defense.",
           "{{defender}} calmly bats the weapon aside and delivers a pinpoint counter.",
@@ -2328,7 +2322,8 @@
           "{{defender}} answers the attack with a cold, merciless counterstrike.",
           "{{defender}} methodically punishes the opening with a grim, calculated blow.",
           "Without a word, {{defender}} delivers a devastating, dark riposte.",
-          "{{defender}} executes a terrifying, clinical counterattack."
+          "{{defender}} executes a terrifying, clinical counterattack.",
+          "With cold, calculating precision, {{defender}} redirects the blow and immediately seeks the throat."
         ]
       }
     },
@@ -2500,7 +2495,6 @@
         "{{name}} rolls backward and springs up, refusing to stay down.",
         "With a grimace of pain, {{name}} rolls to one knee and rises.",
         "{{name}} rises slowly, coldly locking eyes with the opponent.",
-        "With surprising agility, {{name}} springs back to their feet.",
         "Shaking their head to clear the daze, {{name}} rises shakily.",
         "Spitting blood into the sand, {{name}} clambers back upright.",
         "With grim determination, {{name}} drags themselves upright.",
@@ -2595,7 +2589,8 @@
           "The crowd's roar fades into a dull buzz as {{name}} painfully crumbles to the blood-stained sands in slow, agonizing motion.",
           "{{name}}'s legs buckle in slow motion, the heavy sand rising to meet their falling body.",
           "A heavy silence falls over the arena as {{name}} crumples, unmoving for a terrifying moment.",
-          "{{name}} hits the dirt with a dead thud, the sheer force of the impact leaving them paralyzed."
+          "{{name}} hits the dirt with a dead thud, the sheer force of the impact leaving them paralyzed.",
+          "{{name}} crashes to the blood-soaked sand, the weight of their injuries pulling them down in agonizing slow motion."
         ],
         "fast": [
           "The fight erupts into a blur of motion, both fighters pushing the pace to a dangerous extreme!",
@@ -2667,7 +2662,8 @@
           "Without warning, {{name}}'s legs are violently swept out from under them, slamming them brutally onto the unforgiving arena floor.",
           "{{name}} is brutally swept off their feet, slamming into the ground with explosive violence.",
           "A sudden, jarring impact sends {{name}} skidding across the blood-soaked grit.",
-          "Before they can even register the hit, {{name}} is hurled violently into the dirt."
+          "Before they can even register the hit, {{name}} is hurled violently into the dirt.",
+          "Before the crowd can blink, {{name}}'s legs buckle, slamming them violently into the arena floor."
         ],
         "recovery_slow": [
           "{{name}} uses their weapon as a crutch, dragging themselves upright with agonizing slowness.",
@@ -2680,7 +2676,7 @@
           "With limbs trembling, {{name}} slowly claws their way back to a standing position.",
           "{{name}} struggles to their feet, gasping for air, every movement an agony.",
           "Slowly, painfully, {{name}} pushes themselves off the blood-stained sand.",
-          "It takes agonizing seconds for {{name}} to find their footing again.",
+          "It takes agonizing seconds for {{name}} to find their footing, swaying dangerously as {{name}} rise.",
           "Shaken to the core, {{name}} wobbles violently as they try to stand.",
           "The crowd jeers as {{name}} slowly, painfully regains their stance.",
           "{{name}} drags themselves upward, movements sluggish and pained.",
@@ -2700,7 +2696,6 @@
           "Staggering heavily, {{name}} struggles to find their footing once more.",
           "With a ragged breath, {{name}} slowly pushes off the blood-soaked sand.",
           "Gasping for breath, {{name}} painfully drags themselves up from the dirt, eyes still glassy.",
-          "It takes agonizing seconds for {{name}} to find their footing, swaying dangerously as {{name}} rise.",
           "{{name}} hits the dirt and stays there for an agonizing moment, gasping for breath.",
           "The arena falls silent as {{name}} struggles weakly to push themselves off the bloody sand.",
           "{{name}} drags themselves upward, every movement heavy with exhaustion and pain.",
@@ -2745,7 +2740,8 @@
           "{{name}} takes a long moment, gathering strength before standing.",
           "Breath rattling, {{name}} slowly pushes up from the blood-stained earth.",
           "{{name}} is slow to recover, limbs trembling under the strain.",
-          "It takes {{name}} an agonizingly long time to find their footing again."
+          "It takes {{name}} an agonizingly long time to find their footing again.",
+          "Groaning against the agony, {{name}} forces themselves onto one knee, finding their footing with excruciating effort."
         ],
         "recovery_fast": [
           "{{name}} bounces off the ground with terrifying speed, immediately raising their guard.",
@@ -2761,7 +2757,7 @@
           "Almost impossibly fast, {{name}} springs off the sand, ready for more.",
           "{{name}} springs back to their feet instantly, refusing to stay down!",
           "{{name}} turns the fall into a tactical retreat, standing up quickly.",
-          "Like a coiled spring, {{name}} snaps back to their feet instantly.",
+          "Like a coiled spring, {{name}} is instantly back on their feet and ready.",
           "{{name}} bounces right back up, rolling with the fall.",
           "A quick roll and {{name}} is standing again, ignoring the pain.",
           "Hardly missing a beat, {{name}} snaps back into a combat stance.",
@@ -2787,7 +2783,6 @@
           "{{name}} snaps back to attention, eyes locked on the opponent with renewed fury.",
           "Like a coiled spring, {{name}} pops back up, utterly unfazed by the knockdown.",
           "{{name}} snaps back upright with supernatural quickness, unfazed.",
-          "Like a coiled spring, {{name}} is instantly back on their feet and ready.",
           "Like a coiled spring, {{name}} bounces right back up, ignoring the impact entirely!",
           "Incredible resilience! {{name}} rolls and springs to their feet in one fluid, lightning-fast motion.",
           "{{name}} hits the dirt and instantly ricochets back to their feet, unphased and furious.",
@@ -2802,13 +2797,12 @@
           "Moving like lightning, {{name}} recovers their footing and squares up once more.",
           "{{name}} hits the sand and ricochets back to their feet in a blur of furious motion.",
           "Refusing to be broken, {{name}} kips up instantly, their eyes burning with renewed hatred.",
-          "{{name}} springs back up, refusing to stay down for even a second.",
+          "Hitting the dirt, {{name}} immediately springs back up in a nimble kip-up, refusing to stay grounded for even a second.",
           "A rapid, explosive kip-up brings {{name}} instantly back into the fight.",
           "{{name}} bounces back up instantly, refusing to show weakness.",
           "With a quick roll, {{name}} is back on their feet in a flash.",
           "{{name}} springs up, eyes burning with sudden fury.",
           "Hitting the ground, {{name}} rolls immediately back up to their feet, ready for more.",
-          "Hitting the dirt, {{name}} immediately springs back up in a nimble kip-up, refusing to stay grounded for even a second.",
           "Instinct takes over as {{name}} scrambles to their feet with desperate, explosive speed, instantly throwing their guard up.",
           "Like a coiled spring, {{name}} kips up instantly, refusing to show a moment of weakness.",
           "{{name}} bounces back to their feet in a blur of motion, sand flying from their armor.",
@@ -2859,7 +2853,6 @@
         "the cunning master",
         "the wild berserker",
         "the precise duelist",
-        "the brutal",
         "the vicious"
       ]
     },
@@ -3249,8 +3242,7 @@
         "A devastating strike connects, the impact echoing through the arena.",
         "The blow lands true, biting deep into flesh and bone.",
         "A brutal impact forces a ragged gasp from the wounded combatant.",
-        "The strike finds a gap in the defense, delivering punishing force.",
-        "A brutal impact forces a ragged gasp from {{defender}}."
+        "The strike finds a gap in the defense, delivering punishing force."
       ]
     },
     "executions": [

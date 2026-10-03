@@ -5,6 +5,7 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { ConfirmDestructiveDialog } from '@/components/ui/ConfirmDestructiveDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/badge';
+import { ArenaHazardBadges } from '@/components/arena/ArenaHazardBadges';
 import { ScrollText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChampionBlock } from './arenaDetail/ChampionBlock';
@@ -133,16 +134,7 @@ export default function ArenaDetail() {
         subtitle={`Tier ${arena.tier} · ${arena.size.toUpperCase()} · ${arena.tags.join(' · ')}`}
         actions={
           <>
-            {arena.tags.includes('water') && (
-              <Badge variant="outline" className="text-[9px] font-black tracking-widest border-blue-500/30 text-blue-400">
-                WATER HAZARD
-              </Badge>
-            )}
-            {arena.tags.includes('cursed') && (
-              <Badge variant="outline" className="text-[9px] font-black tracking-widest border-purple-500/30 text-purple-400">
-                CURSED GROUND
-              </Badge>
-            )}
+            <ArenaHazardBadges tags={arena.tags} size="md" />
             <Badge
               variant="outline"
               className={cn('text-[9px] font-black tracking-widest', badge.className)}

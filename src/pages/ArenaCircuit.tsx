@@ -16,6 +16,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/badge';
 import { Crown, MapPin, Swords } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ArenaHazardBadges } from '@/components/arena/ArenaHazardBadges';
 
 const SIZE_LABELS: Record<string, string> = {
   cramped: 'CRAMPED',
@@ -72,12 +73,7 @@ function ArenaCard({
               </div>
               <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5 flex gap-1">
                 <span>{SIZE_LABELS[arena.size]} · TIER {arena.tier}</span>
-                {arena.tags.includes('water') && (
-                  <Badge variant="outline" className="text-[6px] py-0 px-1 border-blue-500/30 text-blue-400">WATER HAZARD</Badge>
-                )}
-                {arena.tags.includes('cursed') && (
-                  <Badge variant="outline" className="text-[6px] py-0 px-1 border-purple-500/30 text-purple-400">CURSED GROUND</Badge>
-                )}
+                <ArenaHazardBadges tags={arena.tags} size="sm" />
               </div>
             </div>
           </div>

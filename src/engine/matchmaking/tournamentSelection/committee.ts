@@ -5,7 +5,7 @@ import type {
   TournamentBout,
   Season,
 } from '@/types/state.types';
-import { FightingStyle, type TournamentId } from '@/types/shared.types';
+import { FightingStyle, type TournamentId, type WarriorId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import { generateFreelancer } from './utils';
@@ -142,15 +142,18 @@ export function buildTournament(
 
   for (let i = 0; i < shuffled.length && i < 64; i += 2) {
     const wA = shuffled[i];
+    if (!wA) break;
     const wD = shuffled[i + 1];
-    if (!wA || !wD) break;
+    // An odd tail entrant takes a bye — previously they were dropped from the
+    // bracket entirely while still listed in `participants`. The bout stays
+    // unresolved so round resolution advances them like any other winner.
     bracket.push({
       round: 1,
       matchIndex: i / 2,
       warriorIdA: wA.id,
-      warriorIdD: wD.id,
+      warriorIdD: wD ? wD.id : ('bye' as unknown as WarriorId),
       stableIdA: wA.stableId,
-      stableIdD: wD.stableId,
+      stableIdD: wD?.stableId,
     });
   }
 

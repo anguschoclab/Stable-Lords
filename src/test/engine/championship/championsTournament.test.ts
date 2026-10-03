@@ -248,6 +248,25 @@ describe('seasonal tournament calendar', () => {
     expect(impact.isTournamentWeek).toBe(true);
   });
 
+  it('week 52 with an odd field places every champion in the bracket (tail gets a bye)', () => {
+    const state = crownedState(5);
+    const impact = runRivalStrategyPass(state, 52, undefined, true) as {
+      tournaments?: TournamentEntry[];
+    };
+    const tourney = (impact.tournaments ?? [])[0]!;
+    expect(tourney.tierId).toBe(CHAMPIONS_TOURNEY.TIER_ID);
+    expect(tourney.participants).toHaveLength(5);
+
+    const inBouts = new Set(
+      tourney.bracket
+        .flatMap((b) => [b.warriorIdA as string, b.warriorIdD as string])
+        .filter((id) => id !== 'bye')
+    );
+    for (const p of tourney.participants) {
+      expect(inBouts.has(p.id), `champion ${p.id} excluded from bracket`).toBe(true);
+    }
+  });
+
   it('week 52 with fewer than MIN_FIELD champions runs no tournament', () => {
     const state = crownedState(CHAMPIONS_TOURNEY.MIN_FIELD - 1);
     const impact = runRivalStrategyPass(state, 52, undefined, true) as {

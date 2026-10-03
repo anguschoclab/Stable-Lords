@@ -6,6 +6,9 @@ import {
 } from '@/engine/pipeline/tick/timeAdvance';
 import type { GameState } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { makeWarrior } from '@/test/_fixtures/factories';
+import type { TournamentEntry } from '@/types/state.types';
+import type { TournamentId, WarriorId } from '@/types/shared.types';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
 
 describe('TimeAdvanceService - evaluateStopConditions', () => {
@@ -291,6 +294,31 @@ describe('TimeAdvanceService methods', () => {
       expect(result.pendingArchives).toHaveLength(13);
       expect(result.pendingArchives[0]?.boutId).toBe('bout_w1');
       expect(result.state.deferredBoutLogs ?? []).toHaveLength(0);
+    });
+
+    it('resolves an in-flight tournament at quarter end — the batch never returns an unresolved bracket', async () => {
+      // advanceWeek is stubbed: the bracket stays in-flight, exactly like a
+      // quarter whose final week emitted a tournament with no following
+      // week-boundary sweep. The quarter result must still resolve it.
+      const wA = makeWarrior({ id: 'ta' as WarriorId, name: 'Tourney A' });
+      const wB = makeWarrior({ id: 'tb' as WarriorId, name: 'Tourney B' });
+      const pending: TournamentEntry = {
+        id: 't-gold-spring-y1-w10' as TournamentId,
+        season: 'Spring',
+        week: 10,
+        tierId: 'Gold',
+        name: 'Pending Cup',
+        participants: [wA, wB],
+        completed: false,
+        bracket: [
+          { round: 1, matchIndex: 0, warriorIdA: wA.id, warriorIdD: wB.id },
+        ],
+      };
+      mockState.tournaments = [pending];
+
+      const result = await TimeAdvanceService.advanceQuarter(mockState);
+
+      expect(result.state.tournaments!.every((t) => t.completed)).toBe(true);
     });
   });
 

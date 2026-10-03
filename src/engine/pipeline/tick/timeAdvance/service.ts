@@ -4,6 +4,7 @@ import {
   type WeekAdvanceOptions,
 } from '@/engine/pipeline/services/weekPipelineService';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/core/telemetry';
+import { sweepUnfinishedTournaments } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { truncateState } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import type { AdvanceOptions, WeekSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';
@@ -31,6 +32,12 @@ export const TimeAdvanceService = {
     const startYear = state.year;
 
     const finish = (stopReason: string | null, weeksCompleted: number): QuarterAdvanceResult => {
+      // Terminal sweep: a batch ending on a tournament week (Q4's week-52
+      // Grand Championship, or an early stop mid-tournament-week) returns
+      // with no following week-boundary sweep to finish emitted brackets.
+      // Runs BEFORE draining so any bouts it resolves still archive.
+      currentState = sweepUnfinishedTournaments(currentState, opts?.headless);
+
       // Drain transcripts BEFORE truncation — truncateState caps deferredBoutLogs
       // and would silently drop logs that were never handed to an archive sink.
       pendingArchives.push(...drainDeferredBoutLogs(currentState));

@@ -155,6 +155,48 @@ describe('applyRecords', () => {
     expect(updatedD.fatigue).toBe(30); // No change
   });
 
+  it('resumes fatigue accrual once the tournament is completed — the lingering flag only exempts live participants', () => {
+    // isTournamentWeek stays true through the catch-up advance that sweeps
+    // the previous week's brackets. The exemption deliberately gates on
+    // `!t.completed`, so regular bouts after the sweep accrue fatigue
+    // normally — this pins that boundary.
+    const s = createMockState({
+      isTournamentWeek: true,
+      tournaments: [
+        {
+          id: 'tourney-1' as import('@/types/shared.types').TournamentId,
+          name: 'Tournament',
+          season: 'Spring',
+          week: 1,
+          tierId: 'Gold',
+          bracket: [],
+          participants: [
+            {
+              id: 'A' as import('@/types/shared.types').WarriorId,
+              stableId: 'player' as import('@/types/shared.types').StableId,
+            } as any,
+            {
+              id: 'D' as import('@/types/shared.types').WarriorId,
+              stableId: 'rival' as import('@/types/shared.types').StableId,
+            } as any,
+          ],
+          completed: true,
+        },
+      ],
+    });
+    const wA = createMockWarrior('A', { fatigue: 20 });
+    const wD = createMockWarrior('D', { fatigue: 30 });
+    const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
+
+    const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1);
+
+    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
+    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
+
+    expect(updatedA.fatigue).toBe(45); // 20 + 25 — exemption ended with the bracket
+    expect(updatedD.fatigue).toBe(55); // 30 + 25
+  });
+
   it('handles missing fatigue gracefully by initializing it to 0', () => {
     const s = createMockState();
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };

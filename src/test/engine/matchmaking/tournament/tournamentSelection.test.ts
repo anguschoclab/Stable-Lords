@@ -61,8 +61,10 @@ import {
 import {
   resolveRound,
   resolveCompleteTournament,
+  sweepUnfinishedTournaments,
   applyBoutResults,
 } from '@/engine/matchmaking/tournamentSelection/resolution';
+import { buildTournament } from '@/engine/matchmaking/tournamentSelection/committee';
 import { getAIPlan, generateFreelancer } from '@/engine/matchmaking/tournamentSelection/utils';
 import { generateSeasonalTiers } from '@/engine/matchmaking/tournamentSelection/core';
 import { simulateFight } from '@/engine/simulate';
@@ -628,6 +630,234 @@ describe('resolveCompleteTournament', () => {
       expect(b1[i]!.winner).toBe(b2[i]!.winner);
       expect(b1[i]!.by).toBe(b2[i]!.by);
     }
+  });
+});
+
+// ─── Lifecycle hardening: "emitted ⇒ resolved" invariant ───
+
+describe('sweepUnfinishedTournaments', () => {
+  it('resolves every unfinished tournament and leaves completed entries untouched', () => {
+    const wA1 = makeTournamentWarrior('sa1', 'Sweep A1', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wB1 = makeTournamentWarrior('sb1', 'Sweep B1', FightingStyle.StrikingAttack, RIVAL_ID);
+    const wA2 = makeTournamentWarrior('sa2', 'Sweep A2', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wB2 = makeTournamentWarrior('sb2', 'Sweep B2', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [wA1, wA2];
+    state.rivals = [makeTournamentRival([wB1, wB2])];
+
+    const makeOpen = (id: string, a: Warrior, d: Warrior): TournamentEntry => ({
+      id: id as TournamentId,
+      season: 'Spring',
+      week: 1,
+      tierId: 'Gold',
+      name: 'Sweep Cup',
+      bracket: [
+        {
+          round: 1,
+          matchIndex: 0,
+          warriorIdA: a.id,
+          warriorIdD: d.id,
+          stableIdA: a.stableId,
+          stableIdD: d.stableId,
+        },
+      ],
+      participants: [a, d],
+      completed: false,
+    });
+
+    const done = makeCompletedTournament([wA1, wB1, wA2, wB2]);
+    state.tournaments = [
+      done,
+      makeOpen('t-open-1', wA1, wB1),
+      makeOpen('t-open-2', wA2, wB2),
+    ];
+
+    const swept = sweepUnfinishedTournaments(state, true);
+
+    expect(swept.tournaments!.every((t) => t.completed)).toBe(true);
+    for (const t of swept.tournaments!) expect(t.champion).toBeDefined();
+  });
+
+  it('still resolves a duplicated-id tournament — the later entry is not stranded', () => {
+    // Corrupted/legacy saves can carry two entries sharing one id: find-by-id
+    // and update-by-id both target the FIRST match, so the sweep must give
+    // later duplicates a unique id or they could never resolve.
+    const wA1 = makeTournamentWarrior('da1', 'Dup A1', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wB1 = makeTournamentWarrior('db1', 'Dup B1', FightingStyle.StrikingAttack, RIVAL_ID);
+    const wA2 = makeTournamentWarrior('da2', 'Dup A2', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wB2 = makeTournamentWarrior('db2', 'Dup B2', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [wA1, wA2];
+    state.rivals = [makeTournamentRival([wB1, wB2])];
+
+    const mk = (a: Warrior, d: Warrior): TournamentEntry => ({
+      id: 't-shared' as TournamentId,
+      season: 'Spring',
+      week: 1,
+      tierId: 'Gold',
+      name: 'Dup Cup',
+      bracket: [
+        {
+          round: 1,
+          matchIndex: 0,
+          warriorIdA: a.id,
+          warriorIdD: d.id,
+          stableIdA: a.stableId,
+          stableIdD: d.stableId,
+        },
+      ],
+      participants: [a, d],
+      completed: false,
+    });
+    state.tournaments = [mk(wA1, wB1), mk(wA2, wB2)];
+
+    const swept = sweepUnfinishedTournaments(state, true);
+
+    expect(swept.tournaments!.every((t) => t.completed)).toBe(true);
+    // Later duplicate was renamed so resolution could target it.
+    expect(new Set(swept.tournaments!.map((t) => t.id)).size).toBe(2);
+    expect(swept.tournaments![0]!.id).toBe('t-shared');
+  });
+});
+
+describe('resolveCompleteTournament — degenerate brackets seal instead of lingering', () => {
+  it('seals a tournament with an empty bracket', () => {
+    const state = makeBaseState();
+    state.tournaments = [
+      {
+        id: 't-empty' as TournamentId,
+        season: 'Spring',
+        week: 1,
+        tierId: 'Gold',
+        name: 'Empty Cup',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+    ];
+
+    const updated = resolveCompleteTournament(state, 't-empty', 1);
+
+    expect(updated.tournaments![0]!.completed).toBe(true);
+  });
+
+  it('seals a fully-resolved bracket whose completed flag was never set', () => {
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [w1];
+    state.rivals = [makeTournamentRival([w2])];
+    state.tournaments = [
+      {
+        id: 't-unflagged' as TournamentId,
+        season: 'Spring',
+        week: 1,
+        tierId: 'Gold',
+        name: 'Unflagged Cup',
+        bracket: [
+          {
+            round: 1,
+            matchIndex: 0,
+            warriorIdA: w1.id,
+            warriorIdD: w2.id,
+            winner: 'A',
+          },
+        ],
+        participants: [w1, w2],
+        completed: false,
+      },
+    ];
+
+    const updated = resolveCompleteTournament(state, 't-unflagged', 1);
+    const after = updated.tournaments![0]!;
+
+    expect(after.completed).toBe(true);
+    expect(after.champion).toBe('A');
+  });
+});
+
+describe('resolveRound — input immutability', () => {
+  it('does not write winners onto the caller state bout objects', () => {
+    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [w1];
+    state.rivals = [makeTournamentRival([w2])];
+    state.tournaments = [makeTournamentWithR1([w1, w2])];
+
+    const updated = resolveCompleteTournament(state, state.tournaments[0]!.id, 7);
+
+    expect(updated.tournaments[0]!.completed).toBe(true);
+    expect(state.tournaments[0]!.bracket.every((b) => b.winner === undefined)).toBe(true);
+  });
+});
+
+describe('odd-sized fields — the tail entrant gets a real bye', () => {
+  it('buildTournament places every entrant of an odd field into the bracket', () => {
+    const warriors: Warrior[] = [];
+    for (let i = 0; i < 5; i++) {
+      warriors.push(
+        makeTournamentWarrior(
+          `ow${i}`,
+          `Odd ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
+      );
+    }
+
+    const tourney = buildTournament('Gold', 'Gold Cup', warriors, 10, 'Spring', new SeededRNG(7), 1);
+
+    const inBouts = new Set(
+      tourney.bracket
+        .flatMap((b) => [b.warriorIdA as string, b.warriorIdD as string])
+        .filter((id) => id !== 'bye')
+    );
+    for (const w of warriors) {
+      expect(inBouts.has(w.id), `entrant ${w.id} dropped from bracket`).toBe(true);
+    }
+    // The bye must resolve during the round — a preset winner is skipped by
+    // findCurrentRoundBouts and its recipient never reaches the next winners list.
+    const bye = tourney.bracket.find((b) => (b.warriorIdD as string) === 'bye');
+    expect(bye).toBeDefined();
+    expect(bye!.winner).toBeUndefined();
+  });
+
+  it('a mid-bracket bye recipient actually advances to the next round', () => {
+    // 6-man bracket: R1 leaves 3 winners → R2 = 1 real bout + 1 bye →
+    // the bye recipient must meet the real-bout winner in the R3 final.
+    const warriors: Warrior[] = [];
+    for (let i = 0; i < 6; i++) {
+      warriors.push(
+        makeTournamentWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
+      );
+    }
+
+    const state = makeBaseState();
+    state.roster = warriors.filter((_, i) => i % 2 === 0);
+    state.rivals = [makeTournamentRival(warriors.filter((_, i) => i % 2 === 1))];
+    const tournament = makeTournamentWithR1(warriors);
+    state.tournaments = [tournament];
+
+    const updated = resolveCompleteTournament(state, tournament.id, 99);
+    const after = updated.tournaments![0]!;
+
+    expect(after.completed).toBe(true);
+    // simulateFight mock always resolves 'A': R1 winners are w0, w2, w4;
+    // w4 takes the R2 bye and must reach the R3 final against w0.
+    const finals = after.bracket.find((b) => b.round === 3 && !b.isBronzeMatch);
+    expect(finals).toBeDefined();
+    expect([finals!.warriorIdA, finals!.warriorIdD]).toContain('w4');
+    expect(after.champion).toBe('Warrior 0');
   });
 });
 

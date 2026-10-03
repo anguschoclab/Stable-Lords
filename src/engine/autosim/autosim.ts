@@ -1,6 +1,7 @@
 import { type GameState } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import { sweepUnfinishedTournaments } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from '../impacts';
 import { truncateState } from '@/engine/storage/truncation';
@@ -178,6 +179,20 @@ export async function runAutosim(
   let weeksSimmed = 0;
   const weekSummaries: AutosimWeekSummary[] = [];
 
+  // Terminal sweep: a sim whose final week emitted a bracket (or stopped
+  // mid-tournament-week) would otherwise return with it unresolved — no
+  // following week-boundary sweep ever runs. Seed-identical to that sweep.
+  const finish = (
+    stopReason: AutosimResult['stopReason'],
+    stopDetail: string
+  ): AutosimResult => ({
+    finalState: truncateState(sweepUnfinishedTournaments(state, true)),
+    weeksSimmed,
+    stopReason,
+    stopDetail,
+    weekSummaries,
+  });
+
   for (let i = 0; i < weeksToSim; i++) {
     // 1. Advance week headless. Week 1 clones the caller-owned input; weeks
     // after that run on the state advanceWeek itself returned — exclusively
@@ -217,30 +232,12 @@ export async function runAutosim(
     // custom), then the autosim-specific bankruptcy gate.
     const stop = evaluateStopConditions(state, stopConditions);
     if (stop.shouldStop) {
-      return {
-        finalState: truncateState(state),
-        weeksSimmed,
-        stopReason: mapStopReason(stop.reason),
-        stopDetail: `Stopped: ${stop.reason}`,
-        weekSummaries,
-      };
+      return finish(mapStopReason(stop.reason), `Stopped: ${stop.reason}`);
     }
     if (checkBankruptcy(state)) {
-      return {
-        finalState: truncateState(state),
-        weeksSimmed,
-        stopReason: 'bankrupt',
-        stopDetail: 'Stable ran out of treasury',
-        weekSummaries,
-      };
+      return finish('bankrupt', 'Stable ran out of treasury');
     }
   }
 
-  return {
-    finalState: truncateState(state),
-    weeksSimmed,
-    stopReason: 'max_weeks',
-    stopDetail: 'Reached maximum simulation weeks',
-    weekSummaries,
-  };
+  return finish('max_weeks', 'Reached maximum simulation weeks');
 }

@@ -5,7 +5,7 @@ import type {
   TournamentEntry,
   FightSummary,
 } from '@/types/state.types';
-import type { FightId, WarriorId, StableId } from '@/types/shared.types';
+import type { FightId, WarriorId, StableId, TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
 import { findWarriorById } from '@/engine/core/warriorLookup';
@@ -213,12 +213,14 @@ function seedNextRound(
         stableIdD: wD.stableId,
       });
     } else {
+      // The bye stays unresolved until its round runs — a preset winner is
+      // skipped by findCurrentRoundBouts, so the recipient never entered the
+      // next winners list and was silently eliminated instead of advancing.
       bracket.push({
         round: nextRound,
         matchIndex: i / 2,
         warriorIdA: wA.id,
         warriorIdD: 'bye' as unknown as WarriorId,
-        winner: 'A',
       });
     }
   }
@@ -268,23 +270,31 @@ export function resolveRound(
   if (!resolvedTournament || resolvedTournament.completed)
     return { updatedState, roundResults: [], isComplete: false };
 
-  const bracket = [...resolvedTournament.bracket];
+  // Clone the bout objects: resolution writes `winner`/`by`/`fightId` in
+  // place, and a shared shallow copy would leak those writes back into the
+  // caller's state (manufacturing torn all-resolved-but-unflagged brackets).
+  const bracket = resolvedTournament.bracket.map((b) => ({ ...b }));
   const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
-  if (currentRound === null) return { updatedState, roundResults: [], isComplete: false };
   const winners: BracketWarrior[] = [];
   const losers: BracketWarrior[] = [];
 
-  updatedState = resolveRoundBouts(
-    updatedState,
-    resolvedTournament,
-    roundBouts,
-    rng,
-    headless,
-    winners,
-    losers
-  );
+  // A null currentRound means no unresolved bouts remain — an emitted-empty
+  // or fully-resolved-but-unflagged bracket. Seal it below instead of
+  // returning isComplete:false, which left such entries unfinished and
+  // re-scanned at every week boundary forever.
+  if (currentRound !== null) {
+    updatedState = resolveRoundBouts(
+      updatedState,
+      resolvedTournament,
+      roundBouts,
+      rng,
+      headless,
+      winners,
+      losers
+    );
 
-  seedNextRound(bracket, currentRound, winners, losers);
+    seedNextRound(bracket, currentRound, winners, losers);
+  }
 
   // 🏆 6-round tournament: R1(32) → R2(16) → R3(8) → QF(4) → SF(2) → Finals+3rd(2).
   // Six rounds map onto the six playable days of a tournament week — the
@@ -376,6 +386,64 @@ export function resolveCompleteTournament(
     tour = result.updatedTournament;
     if (result.isComplete) break;
     safety++;
+  }
+  return current;
+}
+
+/**
+ * Resolve every unfinished tournament in state — the shared "emitted ⇒
+ * resolved" guarantee. Runs at each week boundary (advanceWeek) and inside
+ * terminal batch results (autosim, quarter/year advance) where no following
+ * week boundary is guaranteed to run.
+ *
+ * The index stride exceeds the round counter inside resolveCompleteTournament
+ * (safety < 10): a `+ i` stride would make tournament i's round s+1 share a
+ * seed with tournament i+1's round s — identical RNG streams, identical bout
+ * ids and correlated fight draws.
+ */
+export function sweepUnfinishedTournaments(
+  state: GameState,
+  headless?: boolean
+): GameState {
+  const list = state.tournaments ?? [];
+  let current = state;
+
+  // Corrupted/legacy saves can carry two entries sharing one id — resolution
+  // and write-back both target the FIRST id match, which would strand every
+  // later duplicate unfinished forever. Rename later occurrences so each
+  // becomes individually resolvable. The first occurrence keeps the canonical
+  // id (and any activeTournamentId reference).
+  const seenIds = new Set<string>();
+  let hasDuplicateId = false;
+  for (const t of list) {
+    if (seenIds.has(t.id)) {
+      hasDuplicateId = true;
+      break;
+    }
+    seenIds.add(t.id);
+  }
+  if (hasDuplicateId) {
+    const taken = new Set<string>();
+    current = {
+      ...current,
+      tournaments: list.map((t, i) => {
+        if (taken.has(t.id)) return { ...t, id: `${t.id}-dup${i}` as TournamentId };
+        taken.add(t.id);
+        return t;
+      }),
+    };
+  }
+
+  const unfinished = (current.tournaments ?? []).filter((t) => !t.completed);
+  for (let i = 0; i < unfinished.length; i++) {
+    const tour = unfinished[i];
+    if (!tour) continue;
+    current = resolveCompleteTournament(
+      current,
+      tour.id,
+      current.year * 10000 + current.week * 100 + 7 + i * 16,
+      headless
+    );
   }
   return current;
 }

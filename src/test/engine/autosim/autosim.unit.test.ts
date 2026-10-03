@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processPlayerOffers, extractWeekSummary, runAutosim } from '@/engine/autosim/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
-import type { GameState, BoutOffer } from '@/types/state.types';
-import type { BoutOfferId, WarriorId } from '@/types/shared.types';
+import type { GameState, BoutOffer, TournamentEntry } from '@/types/state.types';
+import type { BoutOfferId, TournamentId, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 import {
@@ -440,5 +440,33 @@ describe('runAutosim', () => {
 
     expect(result.weeksSimmed).toBe(1);
     expect(result.stopReason).toBe('custom');
+  });
+
+  it('resolves an in-flight tournament in the terminal state — an emitted bracket can never linger', async () => {
+    // advanceWeek is stubbed: the bracket stays in-flight, exactly like a sim
+    // whose final week emitted a tournament and never reached the next
+    // week-boundary sweep. The terminal result must still resolve it.
+    const spy = vi.mocked(advanceWeek);
+    spy.mockImplementation(async (state: GameState) => state);
+
+    const wA = makeAutosimWarrior('ta', 'Tourney A');
+    const wB = makeAutosimWarrior('tb', 'Tourney B');
+    const pending: TournamentEntry = {
+      id: 't-gold-spring-y1-w10' as TournamentId,
+      season: 'Spring',
+      week: 10,
+      tierId: 'Gold',
+      name: 'Terminal Cup',
+      participants: [wA, wB],
+      completed: false,
+      bracket: [
+        { round: 1, matchIndex: 0, warriorIdA: wA.id, warriorIdD: wB.id },
+      ],
+    };
+    const state = makeSimmableState({ tournaments: [pending] });
+
+    const result = await runAutosim(state, { weeksToSim: 1 });
+
+    expect(result.finalState.tournaments!.every((t) => t.completed)).toBe(true);
   });
 });

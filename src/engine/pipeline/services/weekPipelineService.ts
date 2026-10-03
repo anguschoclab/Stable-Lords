@@ -73,22 +73,7 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
   // non-headline seasonal tiers are never day-resolved interactively, and
   // headless batch advances skip the day ticks entirely — every bracket must
   // complete here or it lingers as a stale incomplete tournament forever.
-  let preState = state;
-  const unfinished = (state.tournaments ?? []).filter((t) => !t.completed);
-  for (let i = 0; i < unfinished.length; i++) {
-    const tour = unfinished[i];
-    if (!tour) continue;
-    // Index stride must exceed the round counter width inside
-    // resolveCompleteTournament (safety < 10): a `+ i` stride made
-    // tournament i's round s+1 share a seed with tournament i+1's round s —
-    // identical RNG streams, identical bout ids and correlated fight draws.
-    preState = TournamentSelectionService.resolveCompleteTournament(
-      preState,
-      tour.id,
-      preState.year * 10000 + preState.week * 100 + 7 + i * 16,
-      headless
-    );
-  }
+  const preState = TournamentSelectionService.sweepUnfinishedTournaments(state, headless);
 
   const mutableState = createMutableWeekContext(preState, opts?.mutableInput);
   const ctx: WeekContext = { ...prepareWeekContext(mutableState, headless), pool };

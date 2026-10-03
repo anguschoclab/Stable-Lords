@@ -1,4 +1,4 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState, TournamentEntry } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { RECRUIT_POOL_PER_STABLE, WORLD_RIVAL_HARD_CAP } from '@/constants/world';
@@ -96,6 +96,21 @@ function capWarriorHistory(w: Warrior, caps: ResolvedCaps): Warrior {
 }
 
 /**
+ * Caps completed tournament history while never evicting in-flight entries:
+ * an unfinished tournament is live state, not history — dropping it strands
+ * a bracket that can never resolve. Pending entries keep their positions;
+ * the cap bounds only the completed tail.
+ */
+function capCompletedTournaments(
+  tournaments: TournamentEntry[],
+  cap: number
+): TournamentEntry[] {
+  if (tournaments.length <= cap) return tournaments;
+  const completedTail = new Set(tournaments.filter((t) => t.completed).slice(-cap));
+  return tournaments.filter((t) => !t.completed || completedTail.has(t));
+}
+
+/**
  * Caps historical arrays on each warrior; returns the original array
  * (same reference) when no warrior exceeded the caps.
  */
@@ -142,7 +157,7 @@ export function truncateState(state: GameState, overrides?: TruncationCaps): Gam
     moodHistory: (state.moodHistory || []).slice(-caps.moodHistory),
     graveyard: capWarriors((state.graveyard || []).slice(-caps.graveyard), caps),
     retired: capWarriors((state.retired || []).slice(-caps.retired), caps),
-    tournaments: (state.tournaments || []).slice(-caps.tournaments),
+    tournaments: capCompletedTournaments(state.tournaments || [], caps.tournaments),
     scoutReports: (state.scoutReports || []).slice(-caps.scoutReports),
     hallOfFame: (state.hallOfFame || []).slice(-caps.hallOfFame),
     rivalries: (state.rivalries || []).slice(-caps.rivalries),

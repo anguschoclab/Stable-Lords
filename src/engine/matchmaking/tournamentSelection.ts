@@ -3,6 +3,7 @@ import { committeeSelection, buildTournament } from './tournamentSelection/commi
 import { awardTournamentPrizes, modifyWarrior } from './tournamentSelection/awards';
 import {
   resolveCompleteTournament,
+  sweepUnfinishedTournaments,
   resolveRound,
   applyBoutResults,
 } from './tournamentSelection/resolution';
@@ -22,6 +23,7 @@ export const TournamentSelectionService = {
   awardTournamentPrizes,
   modifyWarrior,
   resolveCompleteTournament,
+  sweepUnfinishedTournaments,
   findWarriorById,
   getAIPlan,
   applyBoutResults,

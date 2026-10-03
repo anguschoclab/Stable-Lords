@@ -31,7 +31,9 @@ describe('truncateState', () => {
       moodHistory: makeArray(55) as any,
       graveyard: makeArray(205) as any,
       retired: makeArray(205) as any,
-      tournaments: makeArray(105) as any,
+      // Entries carry `completed` — unfinished tournaments are exempt from the
+      // cap (an evicted in-flight bracket could never resolve).
+      tournaments: makeArray(105).map((t) => ({ ...t, completed: true })) as any,
       scoutReports: makeArray(105) as any,
       hallOfFame: makeArray(105) as any,
       rivalries: makeArray(105) as any,
@@ -120,5 +122,31 @@ describe('truncateState', () => {
     // It should keep the *last* 100 items, so ids 5 to 104
     expect(truncated.newsletter[0]).toMatchObject({ id: 5 });
     expect(truncated.newsletter[99]).toMatchObject({ id: 104 });
+  });
+
+  it('never evicts an unfinished tournament — the cap applies to the completed tail', () => {
+    // In-flight bracket pinned at the head of a >cap history: a plain
+    // slice(-100) would drop it and the bracket could never resolve.
+    const pending = [
+      { id: 't-old-in-flight', completed: false },
+      { id: 't-new-in-flight', completed: false },
+    ];
+    const completed = Array.from({ length: 105 }, (_, i) => ({
+      id: `t-done-${i}`,
+      completed: true,
+    }));
+    const state = createMockState({
+      tournaments: [pending[0], ...completed, pending[1]] as any,
+    });
+
+    const truncated = truncateState(state);
+
+    const keptIds = truncated.tournaments!.map((t) => t.id);
+    expect(keptIds).toContain('t-old-in-flight');
+    expect(keptIds).toContain('t-new-in-flight');
+    expect(truncated.tournaments!.filter((t) => t.completed)).toHaveLength(100);
+    // Order preserved — pending entries keep their positions, not re-sorted.
+    expect(keptIds[0]).toBe('t-old-in-flight');
+    expect(keptIds[keptIds.length - 1]).toBe('t-new-in-flight');
   });
 });

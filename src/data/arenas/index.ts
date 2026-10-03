@@ -61,6 +61,10 @@ import {
   THE_IRON_CAGE,
   THE_FROZEN_LAKE,
   THE_ACID_BOG,
+  THE_CRUMBLING_SPIRE,
+  MISTY_PIT,
+  THE_BATHHOUSE_ARENA,
+  THE_DESOLATE_HEATH,
 } from './venues/late';
 
 // ─── Auto-register ────────────────────────────────────────────────────────────
@@ -117,6 +121,10 @@ import {
   THE_IRON_CAGE,
   THE_FROZEN_LAKE,
   THE_ACID_BOG,
+  THE_CRUMBLING_SPIRE,
+  MISTY_PIT,
+  THE_BATHHOUSE_ARENA,
+  THE_DESOLATE_HEATH,
 ].forEach(registerArena);
 
 setDefaultArena(STANDARD_ARENA);

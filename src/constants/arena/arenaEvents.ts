@@ -40,7 +40,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     id: 'falling_debris',
     name: 'Falling Debris',
     description: 'Ceiling fragments rain down on the fighters',
-    requiredTags: ['ruins', 'indoor'],
+    requiredTags: ['ruins', 'cramped'],
     triggerCondition: 'random',
     triggerValue: 0.03, // 3% per exchange
     narrativeText: 'Chunks of stone fall from above, forcing both fighters to dodge!',
@@ -269,6 +269,48 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.MURKY_DEPTHS_TIDE_TRIGGER,
     narrativeText:
       'A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!',
+  },
+
+  bathhouse_scald: {
+    id: 'bathhouse_scald',
+    name: 'Scalding Steam',
+    description: 'Vents burst with scalding steam',
+    requiredTags: ['water', 'premium', 'indoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.BATHHOUSE_SCALD_TRIGGER,
+    narrativeText: 'Scalding steam erupts from the vents, blinding the fighters and burning the skin!',
+  },
+
+  heath_apparition: {
+    id: 'heath_apparition',
+    name: 'Heath Apparitions',
+    description: 'Ghostly figures rise from the cursed earth',
+    requiredTags: ['cursed', 'outdoor', 'open'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.HEATH_APPARITION_TRIGGER,
+    narrativeText: 'The heavy blow awakens ghostly apparitions that swarm the fighters!',
+  },
+
+  crumbling_spire_fall: {
+    id: 'crumbling_spire_fall',
+    name: 'Spire Collapse',
+    description: 'Debris from the elevated ruins crashes down',
+    requiredTags: ['elevated', 'ruins'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: ARENA_EVENT_CONSTANTS.CRUMBLING_SPIRE_FALL_TRIGGER,
+    narrativeText: 'The heavy impact dislodges ancient stonework from the spire!',
+    mechanicalEffect: { type: 'damage', value: 2 },
+  },
+
+  mist_veil: {
+    id: 'mist_veil',
+    name: 'Mist Veil',
+    description: 'Thick mist suddenly obscures the cramped arena',
+    requiredTags: ['cramped', 'outdoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.MIST_VEIL_TRIGGER,
+    narrativeText: 'A sudden, thick veil of mist obscures the tight quarters!',
+    mechanicalEffect: { type: 'initiative_mod', value: -2 },
   },
 };
 

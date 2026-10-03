@@ -90,12 +90,15 @@ export const TOURNAMENT_ARENA_DEFAULTS = {
 // ─── Arena Roster Limits ──────────────────────────────────────────────────
 /**
  * Hard cap on the total arena roster and per-tier distribution targets.
- * The roster may never exceed 50 arenas; each tier has a fixed slot ceiling.
- * Enforced by dataIntegrityArenas tests.
+ * The roster may never exceed TOTAL_CAP arenas; each tier has a fixed slot
+ * ceiling. Enforced by dataIntegrityArenas tests.
+ *
+ * Bump history: t3 14→15 (Acid Bog), total 50→54 + t2 24→25 + t3 15→17
+ * (V10 union: misty_pit t1, desolate_heath t2, bathhouse + crumbling_spire t3).
  */
 export const ARENA_ROSTER_LIMITS = {
-  TOTAL_CAP: 50,
-  TIER_CAPS: { 1: 12, 2: 24, 3: 15 } as Record<1 | 2 | 3, number>,
+  TOTAL_CAP: 54,
+  TIER_CAPS: { 1: 12, 2: 25, 3: 17 } as Record<1 | 2 | 3, number>,
 } as const;
 
 // ─── Style-Weather Modifiers ───────────────────────────────────────────────
@@ -282,6 +285,14 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   'elevated:Aurora Borealis': {
     initiativeMod: WEATHER_PENALTIES.CRYSTAL_SPIRE_INITIATIVE,
     description: 'The shifting lights of the spire distract and delay even the sharpest reflexes',
+  },
+  'premium:Dense Fog': {
+    riposteMod: WEATHER_PENALTIES.BATHHOUSE_STEAM_RIPOSTE,
+    description: 'Thick, premium steam heavily obscures strikes, creating prime counter-attack opportunities.',
+  },
+  'cursed:Spooky Night': {
+    initiativeMod: WEATHER_PENALTIES.HEATH_APPARITION_INITIATIVE,
+    description: 'Ghostly apparitions and chilling winds on the cursed heath paralyze initiative.',
   },
 };
 

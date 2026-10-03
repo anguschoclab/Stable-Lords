@@ -70,8 +70,14 @@ function ArenaCard({
               <div className="text-sm font-display font-black uppercase text-foreground truncate">
                 {arena.name}
               </div>
-              <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5">
-                {SIZE_LABELS[arena.size]} · TIER {arena.tier}
+              <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5 flex gap-1">
+                <span>{SIZE_LABELS[arena.size]} · TIER {arena.tier}</span>
+                {arena.tags.includes('water') && (
+                  <Badge variant="outline" className="text-[6px] py-0 px-1 border-blue-500/30 text-blue-400">WATER HAZARD</Badge>
+                )}
+                {arena.tags.includes('cursed') && (
+                  <Badge variant="outline" className="text-[6px] py-0 px-1 border-purple-500/30 text-purple-400">CURSED GROUND</Badge>
+                )}
               </div>
             </div>
           </div>

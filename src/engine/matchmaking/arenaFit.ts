@@ -149,6 +149,8 @@ function tagFitScore(
   const arenaTags = arenaTagSet(arena);
   const hasWater = arenaTags.has('water');
   const hasCursed = arenaTags.has('cursed');
+  const hasIndoor = arenaTags.has('indoor');
+  const hasOpen = arenaTags.has('open');
 
   if (hasWater && hasCursed) {
     // Water + Cursed creates an extremely draining environment that punishes high-aggression
@@ -161,6 +163,20 @@ function tagFitScore(
     // Water + Uneven makes lunging styles prone to slipping
     if (INITIATIVE_STYLES.has(warrior.style)) {
       delta -= 0.4;
+    }
+  }
+
+  if (hasWater && hasIndoor) {
+    // Water + Indoor (Bathhouse) creates a humid environment that hinders ranged/striking but aids close up
+    if (prefIdx <= 1) {
+      delta += 0.2; // slight bonus for close combat in the water
+    }
+  }
+
+  if (hasCursed && hasOpen) {
+    // Cursed + Open (Desolate Heath) makes evasion difficult due to chilling aura
+    if (INITIATIVE_STYLES.has(warrior.style)) {
+      delta -= 0.3; // penalty to initiative reliant styles
     }
   }
 

@@ -14,7 +14,7 @@ describe('generateAIRecruit — naming', () => {
   it('produces arena-format names', () => {
     const rival = makeRival();
     for (let seed = 0; seed < 30; seed++) {
-      const w = generateAIRecruit(rival, seed + 1, undefined, seed);
+      const w = generateAIRecruit({ rival: rival, week: seed + 1, meta: undefined, seed: seed });
       expect(w).not.toBeNull();
       expect(w!.name, `bad format: ${w!.name}`).toMatch(NAME_RE);
     }
@@ -30,7 +30,7 @@ describe('generateAIRecruit — naming', () => {
 
     const seen = new Set<string>();
     for (let seed = 0; seed < 40; seed++) {
-      const w = generateAIRecruit(rival, seed + 1, undefined, seed, usedNames);
+      const w = generateAIRecruit({ rival: rival, week: seed + 1, meta: undefined, seed: seed, usedNames: usedNames });
       expect(w).not.toBeNull();
       expect(usedNames.has(w!.name), `collision: ${w!.name}`).toBe(false);
       expect(seen.has(w!.name), `repeat in run: ${w!.name}`).toBe(false);
@@ -41,8 +41,8 @@ describe('generateAIRecruit — naming', () => {
 
   it('is deterministic for a seed', () => {
     const rival = makeRival();
-    const a = generateAIRecruit(rival, 10, undefined, 42) as Warrior;
-    const b = generateAIRecruit(rival, 10, undefined, 42) as Warrior;
+    const a = generateAIRecruit({ rival: rival, week: 10, meta: undefined, seed: 42 }) as Warrior;
+    const b = generateAIRecruit({ rival: rival, week: 10, meta: undefined, seed: 42 }) as Warrior;
     expect(a.name).toBe(b.name);
   });
 });

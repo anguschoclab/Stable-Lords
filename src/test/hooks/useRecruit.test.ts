@@ -45,7 +45,7 @@ const makePoolWarrior = (overrides: Partial<PoolWarrior> = {}): PoolWarrior =>
   } as any);
 
 function makeTestWarrior(id: string, name: string): Warrior {
-  return makeWarrior(id as any, name, FightingStyle.StrikingAttack, baseAttrs);
+  return makeWarrior({ id: id as any, name: name, style: FightingStyle.StrikingAttack, attrs: baseAttrs });
 }
 
 function loadState(partial?: Partial<GameState>) {

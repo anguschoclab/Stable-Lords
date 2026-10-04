@@ -116,18 +116,9 @@ function SpeedSelector({ speed, setSpeed }: Pick<BoutControlsProps, 'speed' | 's
 }
 
 /** Bout controls: view-mode toggle, transport cluster, speed, entry counter. */
-export default function BoutControls({
-  viewMode,
-  onViewModeChange,
-  isPlaying,
-  speed,
-  setSpeed,
-  visibleCount,
-  totalEvents,
-  onReset,
-  onTogglePlay,
-  onSkipToEnd,
-}: BoutControlsProps) {
+export default function BoutControls(props: BoutControlsProps) {
+  const { viewMode, onViewModeChange, isPlaying, speed, setSpeed } = props;
+  const { visibleCount, totalEvents, onReset, onTogglePlay, onSkipToEnd } = props;
   return (
     <div className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-neutral-900/60 backdrop-blur-xl">
       <div className="flex items-center gap-4">

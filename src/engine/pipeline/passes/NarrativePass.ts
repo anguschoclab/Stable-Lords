@@ -24,12 +24,7 @@ export function runNarrativePass(
   // 1. Gazette generation
   const weekFights = getFightsForWeek(state.arenaHistory, state.absoluteWeek);
   const story = generateWeeklyGazette(
-    weekFights,
-    state.crowdMood,
-    state.absoluteWeek,
-    state.graveyard,
-    state.arenaHistory,
-    rng
+    { fights: weekFights, mood: state.crowdMood, week: state.absoluteWeek, graveyard: state.graveyard, allFights: state.arenaHistory, rng: rng }
   );
   const gazettes = [...(state.gazettes || []), { ...story, week: state.absoluteWeek }];
 

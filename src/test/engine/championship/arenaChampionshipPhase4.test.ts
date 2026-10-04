@@ -81,7 +81,7 @@ describe('evaluateBoutOffer — title bouts', () => {
     const opp = makeWarrior({ id: 'w2' as WarriorId, fame: 500 });
     const offer = titleOffer('w1', 'w2', { purse: 50 });
     // 500 fame → ordinary offer would Counter; a crown shot accepts.
-    expect(evaluateBoutOffer(offer, rival, w, 10, 'Clear', opp)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: w, currentWeek: 10, weather: 'Clear', opponent: opp })).toBe('Accepted');
   });
 
   it('still declines on a blocking injury (medical postponement)', () => {
@@ -91,14 +91,14 @@ describe('evaluateBoutOffer — title bouts', () => {
     });
     const opp = makeWarrior({ id: 'w2' as WarriorId });
     const offer = titleOffer('w1', 'w2');
-    expect(evaluateBoutOffer(offer, rival, w, 10, 'Clear', opp)).toBe('Declined');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: w, currentWeek: 10, weather: 'Clear', opponent: opp })).toBe('Declined');
   });
 
   it('never returns Countered for a title offer', () => {
     const w = makeWarrior({ id: 'w1' as WarriorId, fame: 2000 });
     const opp = makeWarrior({ id: 'w2' as WarriorId, fame: 2000 });
     const offer = titleOffer('w1', 'w2', { purse: 10 });
-    const verdict = evaluateBoutOffer(offer, rival, w, 10, 'Clear', opp);
+    const verdict = evaluateBoutOffer({ offer: offer, rival: rival, warrior: w, currentWeek: 10, weather: 'Clear', opponent: opp });
     expect(verdict).not.toBe('Countered');
   });
 });

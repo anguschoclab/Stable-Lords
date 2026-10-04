@@ -47,71 +47,95 @@ export interface CumulativeTracker {
  * counts toward all-time totals.
  */
 export function createCumulativeTracker(initialState: GameState): CumulativeTracker {
-  const seenBoutIds = new Set<FightSummary['id']>();
-  const seenDeadIds = new Set<Warrior['id']>();
-  const seenRetiredIds = new Set<Warrior['id']>();
-  const styleWins: Record<string, number> = {};
-  const styleLosses: Record<string, number> = {};
-  let weeklyBouts = 0;
-  let weeklyKills = 0;
-  let tournamentBouts = 0;
-  let tournamentKills = 0;
+  const acc = new StatsAccumulator();
+  acc.ingest(initialState);
+  return {
+    recordWeek: (state) => acc.ingest(state),
+    snapshot: () => acc.snapshot(),
+  };
+}
 
-  const recordBout = (bout: FightSummary): void => {
-    if (seenBoutIds.has(bout.id)) return;
-    seenBoutIds.add(bout.id);
+/**
+ * Internal bookkeeping for the tracker — a class so each counter routine
+ * stays a small standalone unit while sharing the seen-sets.
+ */
+class StatsAccumulator {
+  private readonly seenBoutIds = new Set<FightSummary['id']>();
+  private readonly seenKillEventIds = new Set<string>();
+  private readonly seenDeadIds = new Set<Warrior['id']>();
+  private readonly seenRetiredIds = new Set<Warrior['id']>();
+  private readonly styleWins: Record<string, number> = {};
+  private readonly styleLosses: Record<string, number> = {};
+  private weeklyBouts = 0;
+  private weeklyKills = 0;
+  private tournamentBouts = 0;
+  private tournamentKills = 0;
 
-    const isTournament = bout.tournamentId != null;
-    if (isTournament) {
-      tournamentBouts++;
-      if (bout.by === 'Kill') tournamentKills++;
+  private recordBout(bout: FightSummary): void {
+    if (this.seenBoutIds.has(bout.id)) return;
+    this.seenBoutIds.add(bout.id);
+
+    if (bout.tournamentId != null) {
+      this.tournamentBouts++;
     } else {
-      weeklyBouts++;
-      if (bout.by === 'Kill') weeklyKills++;
+      this.weeklyBouts++;
     }
 
     // Seed both styles' keys so winless styles still appear in reports.
     const aStyle = bout.styleA || 'Unknown';
     const dStyle = bout.styleD || 'Unknown';
-    styleWins[aStyle] ??= 0;
-    styleLosses[aStyle] ??= 0;
-    styleWins[dStyle] ??= 0;
-    styleLosses[dStyle] ??= 0;
+    this.styleWins[aStyle] ??= 0;
+    this.styleLosses[aStyle] ??= 0;
+    this.styleWins[dStyle] ??= 0;
+    this.styleLosses[dStyle] ??= 0;
 
     if (bout.winner === 'A') {
-      styleWins[aStyle]++;
-      styleLosses[dStyle]++;
+      this.styleWins[aStyle]++;
+      this.styleLosses[dStyle]++;
     } else if (bout.winner === 'D') {
-      styleWins[dStyle]++;
-      styleLosses[aStyle]++;
+      this.styleWins[dStyle]++;
+      this.styleLosses[aStyle]++;
     }
     // winner === null (Exhaustion draw): counted in totalBouts, no W/L.
-  };
+  }
 
-  const recordWarriors = (warriors: readonly Warrior[] | undefined, seen: Set<Warrior['id']>) => {
+  // Kills are counted from the resolution-time kill event ledger — NOT from
+  // `arenaHistory` summaries, which are a retention-capped display window.
+  // A kill whose summary has aged out still counts here; a repeat kill of an
+  // already-dead warrior counts again (that asymmetry vs unique deaths is
+  // the oracle's corruption tripwire).
+  private recordKillEvents(state: GameState): void {
+    for (const e of state.killEvents ?? []) {
+      if (this.seenKillEventIds.has(e.id)) continue;
+      this.seenKillEventIds.add(e.id);
+      if (e.tournamentId != null) this.tournamentKills++;
+      else this.weeklyKills++;
+    }
+  }
+
+  private recordWarriors(warriors: readonly Warrior[] | undefined, seen: Set<Warrior['id']>) {
     for (const w of warriors ?? []) seen.add(w.id);
-  };
+  }
 
-  const ingest = (state: GameState): void => {
-    for (const bout of state.arenaHistory ?? []) recordBout(bout);
-    recordWarriors(state.graveyard, seenDeadIds);
-    recordWarriors(state.retired, seenRetiredIds);
-  };
+  ingest(state: GameState): void {
+    for (const bout of state.arenaHistory ?? []) this.recordBout(bout);
+    this.recordKillEvents(state);
+    for (const id of state.deadWarriorIds ?? []) this.seenDeadIds.add(id);
+    this.recordWarriors(state.graveyard, this.seenDeadIds);
+    this.recordWarriors(state.retired, this.seenRetiredIds);
+  }
 
-  ingest(initialState);
-
-  return {
-    recordWeek: ingest,
-    snapshot: () => ({
-      totalBouts: seenBoutIds.size,
-      weeklyBouts,
-      weeklyKills,
-      tournamentBouts,
-      tournamentKills,
-      deaths: seenDeadIds.size,
-      retired: seenRetiredIds.size,
-      styleWins: { ...styleWins },
-      styleLosses: { ...styleLosses },
-    }),
-  };
+  snapshot(): CumulativeStats {
+    return {
+      totalBouts: this.seenBoutIds.size,
+      weeklyBouts: this.weeklyBouts,
+      weeklyKills: this.weeklyKills,
+      tournamentBouts: this.tournamentBouts,
+      tournamentKills: this.tournamentKills,
+      deaths: this.seenDeadIds.size,
+      retired: this.seenRetiredIds.size,
+      styleWins: { ...this.styleWins },
+      styleLosses: { ...this.styleLosses },
+    };
+  }
 }

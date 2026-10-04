@@ -28,7 +28,7 @@ describe('player-directed bids', () => {
   it('VENDETTA target=player emits a bid on the player stable', () => {
     const state = makeGameState({ roster: playerRoster() });
     const rival = vendettaRivalTargeting(state.player.id);
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], state);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival], state: state });
     expect(bids.length).toBeGreaterThan(0);
     expect(bids.every((b) => b.targetStableId === state.player.id)).toBe(true);
   });
@@ -36,7 +36,7 @@ describe('player-directed bids', () => {
   it('player-bound bids convert into offers pairing rival + player warriors', () => {
     const state = makeGameState({ roster: playerRoster() });
     const rival = vendettaRivalTargeting(state.player.id);
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], state);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival], state: state });
     const offers = convertBidsToOffers(
       bids.map((bid) => ({ bid, rivalId: rival.id as string })),
       [rival],
@@ -56,7 +56,7 @@ describe('player-directed bids', () => {
     const rival = vendettaRivalTargeting(stateWithAvoids.player.id);
     // Player avoids BOTH rival warriors → no player-bound bid possible
     stateWithAvoids.playerAvoids = rival.roster.map((w) => w.id);
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], stateWithAvoids);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival], state: stateWithAvoids });
     expect(bids.filter((b) => b.targetStableId === stateWithAvoids.player.id)).toHaveLength(0);
   });
 
@@ -67,7 +67,7 @@ describe('player-directed bids', () => {
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
     });
     const state = makeGameState({ playerChallenges: [marked.id] });
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], state);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival], state: state });
     const playerBid = bids.find((b) => b.targetStableId === state.player.id);
     expect(playerBid).toBeDefined();
     expect(playerBid!.proposingWarriorId).toBe(marked.id);
@@ -79,7 +79,7 @@ describe('player-directed bids', () => {
     const allBids: { bid: ReturnType<typeof generateBoutBids>['bids'][number]; rivalId: string }[] =
       [];
     for (const rival of rivals) {
-      const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', rivals, state);
+      const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: rivals, state: state });
       for (const bid of bids) allBids.push({ bid, rivalId: rival.id as string });
     }
     const offers = convertBidsToOffers(allBids, rivals, state, new SeededRNGService(7), new Set());
@@ -106,7 +106,7 @@ describe('player-directed bids', () => {
       trainingAssignments: [{ warriorId: playerTarget.id, type: 'attribute', attribute: 'ST' }],
     });
     rival.strategy!.targetStableId = stateWithTraining.player.id;
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], stateWithTraining);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival], state: stateWithTraining });
     const offers = convertBidsToOffers(
       bids.map((bid) => ({ bid, rivalId: rival.id as string })),
       [rival],
@@ -128,7 +128,7 @@ describe('player-directed bids', () => {
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
     });
     const state = makeGameState({ rivals: [rival] });
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival], state);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival], state: state });
     expect(bids.every((b) => b.proposingWarriorId !== resting.id)).toBe(true);
     expect(bids.some((b) => b.proposingWarriorId === available.id)).toBe(true);
   });

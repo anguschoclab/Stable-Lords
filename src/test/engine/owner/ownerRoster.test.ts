@@ -210,7 +210,7 @@ describe('Owner Roster Worker', () => {
         poolCandidate('pool-bash', FightingStyle.BashingAttack),
         poolCandidate('pool-pl', FightingStyle.ParryLunge),
       ];
-      const { updatedRivals } = aiDraftFromPool(pool, [r1], 10, mockState);
+      const { updatedRivals } = aiDraftFromPool({ pool: pool, rivals: [r1], week: 10, state: mockState });
       const signed = updatedRivals[0]!.roster[1];
       expect(signed).toBeDefined();
       expect(signed!.style).toBe(FightingStyle.BashingAttack);
@@ -291,7 +291,7 @@ describe('Owner Roster Worker', () => {
         poolCandidate('pool-bash', FightingStyle.BashingAttack),
         poolCandidate('pool-pl', FightingStyle.ParryLunge),
       ];
-      const { updatedRivals } = aiDraftFromPool(pool, [r1], 10, mockState);
+      const { updatedRivals } = aiDraftFromPool({ pool: pool, rivals: [r1], week: 10, state: mockState });
       const signed = updatedRivals[0]!.roster[1];
       expect(signed).toBeDefined();
       expect(signed!.style).toBe(FightingStyle.BashingAttack);

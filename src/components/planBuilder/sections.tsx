@@ -127,15 +127,7 @@ const PRESET_BTN =
   'text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors motion-reduce:transition-none';
 
 /** Footer: style presets, targeting biases, targeting summary. */
-export function PresetBar({
-  plan,
-  warrior,
-  stylePresets,
-  onApplyPreset,
-  onRestoreDefault,
-  onApplyCouncilTactics,
-  onApplyBias,
-}: {
+export function PresetBar(props: {
   plan: FightPlan;
   warrior?: Warrior;
   stylePresets: StylePreset[];
@@ -144,6 +136,8 @@ export function PresetBar({
   onApplyCouncilTactics: () => void;
   onApplyBias: (bias: Bias) => void;
 }) {
+  const { plan, warrior, stylePresets, onApplyPreset, onRestoreDefault } = props;
+  const { onApplyCouncilTactics, onApplyBias } = props;
   return (
     <div className="pt-6 border-t border-white/5 space-y-4">
       <div className="flex items-center gap-2 flex-wrap">

@@ -94,15 +94,7 @@ describe('applyBoutResults — arena attribution', () => {
 
     const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;
     const result = applyBoutResults(
-      state,
-      wA,
-      wD,
-      outcome,
-      't1',
-      'Gold Cup',
-      new SeededRNG(12345),
-      true,
-      'sundered_coliseum'
+      { state: state, wA: wA, wD: wD, outcome: outcome, tId: 't1', tName: 'Gold Cup', rng: new SeededRNG(12345), skipFatigue: true, arenaId: 'sundered_coliseum' }
     );
 
     const summary = result.arenaHistory[result.arenaHistory.length - 1];
@@ -118,15 +110,7 @@ describe('applyBoutResults — career.byArena accounting', () => {
 
     const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;
     const result = applyBoutResults(
-      state,
-      wA,
-      wD,
-      outcome,
-      't1',
-      'Gold Cup',
-      new SeededRNG(12345),
-      true,
-      'sundered_coliseum'
+      { state: state, wA: wA, wD: wD, outcome: outcome, tId: 't1', tName: 'Gold Cup', rng: new SeededRNG(12345), skipFatigue: true, arenaId: 'sundered_coliseum' }
     );
 
     expect(result.roster[0]?.career.byArena?.sundered_coliseum).toEqual({
@@ -158,15 +142,7 @@ describe('applyBoutResults — career.byArena accounting', () => {
 
     const outcome = { winner: 'A', by: 'Kill', log: [] } as unknown as FightOutcome;
     const result = applyBoutResults(
-      state,
-      wA,
-      wD,
-      outcome,
-      't1',
-      'Gold Cup',
-      new SeededRNG(12345),
-      true,
-      'sundered_coliseum'
+      { state: state, wA: wA, wD: wD, outcome: outcome, tId: 't1', tName: 'Gold Cup', rng: new SeededRNG(12345), skipFatigue: true, arenaId: 'sundered_coliseum' }
     );
 
     const winner = result.roster.find((w) => w.id === 'wA');

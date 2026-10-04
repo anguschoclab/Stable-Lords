@@ -13,14 +13,7 @@ import {
 import { Swords, ScrollText, Volume2, Sparkles, Activity } from 'lucide-react';
 import type { ArenaPreferences } from '@/state/slices/worldSlice/types';
 
-function SettingRow({
-  id,
-  icon: Icon,
-  label,
-  description,
-  stacked = false,
-  children,
-}: {
+function SettingRow(props: {
   id: string;
   icon: React.ElementType;
   label: string;
@@ -29,6 +22,8 @@ function SettingRow({
   stacked?: boolean;
   children: React.ReactNode;
 }) {
+  const { id, icon: Icon, label, description, stacked = false } = props;
+  const { children } = props;
   const labelEl = (
     <Label
       htmlFor={id}

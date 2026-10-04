@@ -26,7 +26,7 @@ export function handleWinterChill(
   ctx.ledgerEntries.push(
     makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other')
   );
-  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold: cost });
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold: cost } });
 }
 
 /**
@@ -42,7 +42,7 @@ export function handleMerchantBlessing(
   const gold = 200 + Math.floor(rng.next() * 200);
   ctx.treasuryDelta += gold;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Offseason Sponsorship', gold, 'other'));
-  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold });
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold } });
 }
 
 /**
@@ -61,10 +61,10 @@ export function handleBlackMarketRaid(
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Black Market Fines', -goldLost, 'other'));
 
   const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
-  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
     name: chosen ? chosen.name : 'Someone',
     gold: goldLost,
-  });
+  } });
 }
 
 /**
@@ -84,9 +84,9 @@ export function handleMysteriousPatron(
     makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other')
   );
 
-  announceOffseasonEvent(ctx, rng, nextWeek, e, {
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
     gold: goldGained,
-  });
+  } });
 }
 
 /**
@@ -102,5 +102,5 @@ export function handleBountifulHarvest(
   const gold = 200;
   ctx.treasuryDelta += gold;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bountiful Harvest', gold, 'other'));
-  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold });
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold } });
 }

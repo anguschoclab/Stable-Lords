@@ -49,12 +49,7 @@ export function processTournamentPrep(
     trainingAssignments: [...rival.trainingAssignments, ...newAssignments],
   };
   updatedRival = logAgentAction(
-    updatedRival,
-    'ROSTER',
-    `Resting ${newAssignments.length} contender(s) for the tournament bracket.`,
-    'Low',
-    week,
-    'TOURNAMENT_PREP'
+    { rival: updatedRival, type: 'ROSTER', description: `Resting ${newAssignments.length} contender(s) for the tournament bracket.`, riskTier: 'Low', week: week, cause: 'TOURNAMENT_PREP' }
   );
   gazetteItems.push(
     `🏆 ${updatedRival.owner.stableName} rests its top contenders ahead of the tournament.`

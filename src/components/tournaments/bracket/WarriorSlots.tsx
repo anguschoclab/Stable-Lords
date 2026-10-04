@@ -17,17 +17,7 @@ interface WarriorSlotsProps {
 }
 
 /** One warrior slot row — accent bar, name, bye icon, champion trophy. */
-function SlotRow({
-  label,
-  isChosen,
-  otherChosen,
-  championship,
-  isBye,
-  byeClass,
-  showByeIcon = false,
-  ariaLabel,
-  onClick,
-}: {
+function SlotRow(props: {
   label: string;
   isChosen: boolean;
   otherChosen: boolean;
@@ -40,6 +30,8 @@ function SlotRow({
   ariaLabel: string;
   onClick: () => void;
 }) {
+  const { label, isChosen, otherChosen, championship, isBye } = props;
+  const { byeClass, showByeIcon = false, ariaLabel, onClick } = props;
   return (
     <div
       role="button"
@@ -86,17 +78,9 @@ function SlotRow({
 /**
  *
  */
-export function WarriorSlots({
-  bout,
-  boutKey,
-  totalRounds,
-  isAChosen,
-  isDChosen,
-  isBye,
-  gameState,
-  onToggleExpand,
-  isExpanded,
-}: WarriorSlotsProps) {
+export function WarriorSlots(props: WarriorSlotsProps) {
+  const { bout, boutKey, totalRounds, isAChosen, isDChosen } = props;
+  const { isBye, gameState, onToggleExpand, isExpanded } = props;
   const bronze = isBronzeMatch(bout, totalRounds);
   const championship = isChampionshipFinal(bout, totalRounds);
 

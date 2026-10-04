@@ -182,14 +182,7 @@ interface LedgerStreamItem {
 }
 
 /** Titled list of income/expense line items with an empty state. */
-function LedgerStream({
-  icon,
-  title,
-  items,
-  emptyLabel,
-  amountClass,
-  amountPrefix,
-}: {
+function LedgerStream(props: {
   icon: React.ReactNode;
   title: string;
   items: LedgerStreamItem[];
@@ -197,6 +190,8 @@ function LedgerStream({
   amountClass: string;
   amountPrefix: string;
 }) {
+  const { icon, title, items, emptyLabel, amountClass } = props;
+  const { amountPrefix } = props;
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">

@@ -23,14 +23,9 @@ interface YearAwardsSectionProps {
 /**
  *
  */
-export function YearAwardsSection({
-  year,
-  awards,
-  warriorById,
-  player,
-  yearFights,
-  yearUpsets,
-}: YearAwardsSectionProps) {
+export function YearAwardsSection(props: YearAwardsSectionProps) {
+  const { year, awards, warriorById, player, yearFights } = props;
+  const { yearUpsets } = props;
   return (
     <article className="space-y-6">
       <div className="flex items-end gap-3 border-b-2 border-accent/30 pb-2">

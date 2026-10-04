@@ -155,16 +155,9 @@ function ItemOptions({
 /**
  *
  */
-export function SlotSelector({
-  slot,
-  label,
-  icon,
-  selectedId,
-  style,
-  disabled,
-  warriorAttrs,
-  onChange,
-}: SlotSelectorProps) {
+export function SlotSelector(props: SlotSelectorProps) {
+  const { slot, label, icon, selectedId, style } = props;
+  const { disabled, warriorAttrs, onChange } = props;
   const items = getAvailableItems(slot, style);
   const selected = getItemById(selectedId);
   const isPreferred = selected && slot === 'weapon' && isPreferredWeapon(selected, style);

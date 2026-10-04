@@ -15,6 +15,8 @@ export const defaultRosterState: Omit<
   roster: [],
   graveyard: [],
   retired: [],
+  deadWarriorIds: [],
+  killEvents: [],
   recruitPool: [],
   insightTokens: [],
   trainers: [],

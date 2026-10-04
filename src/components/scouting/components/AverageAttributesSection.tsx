@@ -34,11 +34,9 @@ export function AverageAttributesSection({
           <ComparisonBar
             key={key}
             label={key}
-            valA={statsA.avgAttributes[key] ?? 0}
-            valB={statsB.avgAttributes[key] ?? 0}
             maxVal={maxAttr}
-            colorA="bg-primary"
-            colorB="bg-accent"
+            sideA={{ value: statsA.avgAttributes[key] ?? 0, color: 'bg-primary' }}
+            sideB={{ value: statsB.avgAttributes[key] ?? 0, color: 'bg-accent' }}
           />
         ))}
       </div>

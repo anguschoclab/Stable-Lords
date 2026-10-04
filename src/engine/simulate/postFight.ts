@@ -43,18 +43,25 @@ export function generateOutcomeTags(
 }
 
 /**
+ *
+ */
+export interface BuildPostFightStatsArgs {
+  winner: 'A' | 'D' | null;
+  by: FightOutcomeBy | null;
+  fA: FighterState;
+  fD: FighterState;
+  tags: string[];
+  causeBucket?: DeathCauseBucket;
+  fatalHitLocation?: string;
+  fatalExchangeIndex?: number;
+}
+
+/**
  * Build post-fight statistics.
  */
-export function buildPostFightStats(
-  winner: 'A' | 'D' | null,
-  by: FightOutcomeBy | null,
-  fA: FighterState,
-  fD: FighterState,
-  tags: string[],
-  causeBucket?: DeathCauseBucket,
-  fatalHitLocation?: string,
-  fatalExchangeIndex?: number
-) {
+export function buildPostFightStats(args: BuildPostFightStatsArgs) {
+  const { winner, by, fA, fD, tags } = args;
+  const { causeBucket, fatalHitLocation, fatalExchangeIndex } = args;
   return {
     xpA: winner === 'A' ? WIN_XP : LOSS_XP,
     xpD: winner === 'D' ? WIN_XP : LOSS_XP,
@@ -70,17 +77,24 @@ export function buildPostFightStats(
 }
 
 /**
+ *
+ */
+export interface HandleTimeLimitArgs {
+  fA: FighterState;
+  fD: FighterState;
+  nameA: string;
+  nameD: string;
+  rng: () => number;
+  log: MinuteEvent[];
+  headless?: boolean;
+}
+
+/**
  * Handle decision logic if time limit reached.
  */
-export function handleTimeLimit(
-  fA: FighterState,
-  fD: FighterState,
-  nameA: string,
-  nameD: string,
-  rng: () => number,
-  log: MinuteEvent[],
-  headless?: boolean
-): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
+export function handleTimeLimit(args: HandleTimeLimitArgs): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
+  const { fA, fD, nameA, nameD, rng } = args;
+  const { log, headless } = args;
   const finalOutcome = resolveDecision(fA, fD, nameA, nameD, rng);
   if (!headless) {
     log.push({
@@ -92,34 +106,42 @@ export function handleTimeLimit(
 }
 
 /**
+ *
+ */
+export interface ProcessPostFightArgs {
+  winner: 'A' | 'D' | null;
+  by: FightOutcomeBy | null;
+  fA: FighterState;
+  fD: FighterState;
+  nameA: string;
+  nameD: string;
+  rng: () => number;
+  log: MinuteEvent[];
+  exchangeLog: import('@/types/combat.types').ExchangeLogEntry[];
+  headless: boolean;
+  fightMinutes: number;
+  causeBucket?: DeathCauseBucket;
+  fatalHitLocation?: string;
+  fatalExchangeIndex?: number;
+}
+
+/**
  * Process post-fight: generate tags, build stats, and assemble the final FightOutcome.
  *
  * This handles both cases:
  * - A winner was determined during the simulation loop.
  * - The time limit was reached and a decision is needed.
  */
-export function processPostFight(
-  winner: 'A' | 'D' | null,
-  by: FightOutcomeBy | null,
-  fA: FighterState,
-  fD: FighterState,
-  nameA: string,
-  nameD: string,
-  rng: () => number,
-  log: MinuteEvent[],
-  exchangeLog: import('@/types/combat.types').ExchangeLogEntry[],
-  headless: boolean,
-  fightMinutes: number,
-  causeBucket?: DeathCauseBucket,
-  fatalHitLocation?: string,
-  fatalExchangeIndex?: number
-): FightOutcome {
+export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
+  const { winner, by, fA, fD, nameA } = args;
+  const { nameD, rng, log, exchangeLog, headless } = args;
+  const { fightMinutes, causeBucket, fatalHitLocation, fatalExchangeIndex } = args;
   // Run judges only when the loop timed out without a terminal outcome.
   // A real terminal outcome with winner === null (mutual-collapse Exhaustion,
   // Draw) must be surfaced as-is — re-judging it would silently convert every
   // draw into a Decision and fabricate a winner.
   if (by === null) {
-    const timeLimitResult = handleTimeLimit(fA, fD, nameA, nameD, rng, log, headless);
+    const timeLimitResult = handleTimeLimit({ fA: fA, fD: fD, nameA: nameA, nameD: nameD, rng: rng, log: log, headless: headless });
     const finalMinutes = fightMinutes;
 
     return {
@@ -129,11 +151,7 @@ export function processPostFight(
       log,
       exchangeLog,
       post: buildPostFightStats(
-        timeLimitResult.winner,
-        timeLimitResult.by,
-        fA,
-        fD,
-        generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes)
+        { winner: timeLimitResult.winner, by: timeLimitResult.by, fA: fA, fD: fD, tags: generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes) }
       ),
     };
   }
@@ -149,14 +167,7 @@ export function processPostFight(
     log,
     exchangeLog,
     post: buildPostFightStats(
-      winner,
-      by,
-      fA,
-      fD,
-      tags,
-      causeBucket,
-      fatalHitLocation,
-      fatalExchangeIndex
+      { winner: winner, by: by, fA: fA, fD: fD, tags: tags, causeBucket: causeBucket, fatalHitLocation: fatalHitLocation, fatalExchangeIndex: fatalExchangeIndex }
     ),
   };
 }

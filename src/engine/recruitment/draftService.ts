@@ -3,7 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { processRecruitment } from '../ai/workers/recruitmentWorker';
 import { computeMetaDrift, type StyleMeta } from '../analytics/metaDrift';
-import { isActive } from '@/engine/warrior/warriorStatus';
+import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
 import { getStablePairKey } from '@/utils/keyUtils';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
@@ -37,31 +37,60 @@ function rivalDraftMeta(
 }
 
 /**
+ * 🐍 Snake Draft Priority: rotate the order by week so the same stables
+ * don't always pick first, then need-sort (stable sort keeps the rotation
+ * inside each need tier — fewest active warriors still pick first).
+ */
+function orderRivalsForSnakeDraft(rivals: RivalStableData[], week: number): RivalStableData[] {
+  const rotated = [...rivals];
+  if (rotated.length > 0) {
+    const rot = week % rotated.length;
+    rotated.push(...rotated.splice(0, rot));
+  }
+  return rotated.sort((a, b) => {
+    const aActive = a.roster.filter((w) => isActive(w)).length;
+    const bActive = b.roster.filter((w) => isActive(w)).length;
+    if (aActive !== bActive) return aActive - bActive;
+    return a.treasury - b.treasury;
+  });
+}
+
+/**
+ *
+ */
+export interface AiDraftFromPoolArgs {
+  pool: PoolWarrior[];
+  rivals: RivalStableData[];
+  week: number;
+  state: GameState;
+  seed?: number;
+  rng?: IRNGService;
+}
+
+/**
  * AI Draft Service
  * Refactored to delegate to isolated RecruitmentWorkers.
  * Implements "Context Isolation" and "Risk-Tiered Execution".
  * Sole recruitment path for AI stables (G9) — processAIRosterManagement
  * only flags `needsRecruit`.
  */
-export function aiDraftFromPool(
-  pool: PoolWarrior[],
-  rivals: RivalStableData[],
-  week: number,
-  state: GameState,
-  seed?: number,
-  rng?: IRNGService
-): {
+export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
   updatedPool: PoolWarrior[];
   updatedFreeAgents: PoolWarrior[];
   updatedRivals: RivalStableData[];
   gazetteItems: string[];
 } {
+  const { pool, rivals, week, state, seed } = args;
+  const { rng } = args;
   const rngService = resolveRng(rng, seed ?? (state.absoluteWeek ?? week) * 7919 + 101);
   const isMajorDraftWeek = week % 4 === 0;
 
   // One supply chain: free agents and the orphanage pool share the draft.
   // `source` tags survive the merge so the caller can split them back out.
-  let currentPool = [...(state.freeAgents ?? []), ...pool];
+  // Registered-dead ids can sit in either shelf as stale 'Active' snapshots —
+  // they are filtered at intake so a dead identity is never re-drafted.
+  const deadIds = deadIdSet(state);
+  let currentPool = [...(state.freeAgents ?? []), ...pool].filter((w) => !deadIds.has(w.id));
   const globalGazetteItems: string[] = [];
   const usedNames = collectUsedWarriorNames(state);
   // Freshly minted warrior ids (draft signings, generated recruits) are
@@ -73,34 +102,14 @@ export function aiDraftFromPool(
     (state.rivalries || []).map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
   );
 
-  // 🐍 Snake Draft Priority: rotate the order by week so the same stables
-  // don't always pick first, then need-sort (stable sort keeps the rotation
-  // inside each need tier — fewest active warriors still pick first).
-  const rotated = [...rivals];
-  if (rotated.length > 0) {
-    const rot = week % rotated.length;
-    rotated.push(...rotated.splice(0, rot));
-  }
-  const sortedRivals = rotated.sort((a, b) => {
-    const aActive = a.roster.filter((w) => isActive(w)).length;
-    const bActive = b.roster.filter((w) => isActive(w)).length;
-    if (aActive !== bActive) return aActive - bActive;
-    return a.treasury - b.treasury;
-  });
+  const sortedRivals = orderRivalsForSnakeDraft(rivals, week);
 
   const draftResults: Record<string, RivalStableData> = {};
 
   for (const rival of sortedRivals) {
     const customMeta = rivalDraftMeta(rival, state, meta, rivalryMap);
     const { updatedRival, updatedPool, gazetteItems } = processRecruitment(
-      rival,
-      currentPool,
-      week,
-      rngService,
-      isMajorDraftWeek,
-      customMeta,
-      usedNames,
-      usedIds
+      { rival: rival, pool: currentPool, week: week, rng: rngService, isMajorDraftWeek: isMajorDraftWeek, meta: customMeta, usedNames: usedNames, usedIds: usedIds }
     );
 
     draftResults[updatedRival.owner.id] = updatedRival;

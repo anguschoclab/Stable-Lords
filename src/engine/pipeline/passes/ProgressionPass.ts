@@ -15,15 +15,19 @@ interface StableEntry {
   titles: number;
 }
 
+interface ObjectiveMetArgs {
+  id: string;
+  state: GameState;
+  nextWeek: number;
+  stableStanding: number;
+  playerWarriorIds: Set<string>;
+  playerWarriorNames: Set<string>;
+}
+
 /** Per-objective completion predicate. */
-function objectiveMet(
-  id: string,
-  state: GameState,
-  nextWeek: number,
-  stableStanding: number,
-  playerWarriorIds: Set<string>,
-  playerWarriorNames: Set<string>
-): boolean {
+function objectiveMet(args: ObjectiveMetArgs): boolean {
+  const { id, state, nextWeek, stableStanding, playerWarriorIds } = args;
+  const { playerWarriorNames } = args;
   switch (id) {
     case 'TOP_10_STABLE':
       return stableStanding <= 10;
@@ -65,18 +69,22 @@ function objectiveMet(
   return false;
 }
 
+interface EvaluateObjectivesArgs {
+  current: ProgressionState;
+  state: GameState;
+  nextWeek: number;
+  stableStanding: number;
+  newsletterItems: NewsletterItem[];
+  gazettes: GazetteStory[];
+}
+
 /**
  * Evaluate all uncompleted objectives; marks completions on `current` and
  * appends newsletter/gazette items. Returns true if REALM_CHAMPION completed.
  */
-function evaluateObjectives(
-  current: ProgressionState,
-  state: GameState,
-  nextWeek: number,
-  stableStanding: number,
-  newsletterItems: NewsletterItem[],
-  gazettes: GazetteStory[]
-): boolean {
+function evaluateObjectives(args: EvaluateObjectivesArgs): boolean {
+  const { current, state, nextWeek, stableStanding, newsletterItems } = args;
+  const { gazettes } = args;
   const playerWarriorIds = new Set(state.roster.map((w) => w.id));
   const playerWarriorNames = new Set(state.roster.map((w) => w.name));
   let realmChampionCompleted = false;
@@ -85,7 +93,7 @@ function evaluateObjectives(
     if (obj.completed) continue;
 
     if (
-      !objectiveMet(obj.id, state, nextWeek, stableStanding, playerWarriorIds, playerWarriorNames)
+      !objectiveMet({ id: obj.id, state: state, nextWeek: nextWeek, stableStanding: stableStanding, playerWarriorIds: playerWarriorIds, playerWarriorNames: playerWarriorNames })
     )
       continue;
 
@@ -162,12 +170,7 @@ export function runProgressionPass(
   const gazettes: GazetteStory[] = [];
 
   const realmChampionCompleted = evaluateObjectives(
-    current,
-    state,
-    nextWeek,
-    stableStanding,
-    newsletterItems,
-    gazettes
+    { current: current, state: state, nextWeek: nextWeek, stableStanding: stableStanding, newsletterItems: newsletterItems, gazettes: gazettes }
   );
 
   if (realmChampionCompleted && current.status !== 'continued') {

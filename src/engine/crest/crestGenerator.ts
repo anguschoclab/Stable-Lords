@@ -143,18 +143,22 @@ function selectFieldType(
   return rng.rollWeighted(weights);
 }
 
+interface SelectColorsArgs {
+  rng: IRNGService;
+  philosophy: string;
+  fieldType: FieldType;
+  parentPrimaryColor?: string;
+  parentSecondaryColor?: string;
+  parentMetalColor?: MetalColor;
+  generation?: number;
+}
+
 /**
  * Select colors for the crest
  */
-function selectColors(
-  rng: IRNGService,
-  philosophy: string,
-  fieldType: FieldType,
-  parentPrimaryColor?: string,
-  parentSecondaryColor?: string,
-  parentMetalColor?: MetalColor,
-  generation: number = 0
-): { primaryColor: string; secondaryColor?: string; metalColor: MetalColor } {
+function selectColors(args: SelectColorsArgs): { primaryColor: string; secondaryColor?: string; metalColor: MetalColor } {
+  const { rng, philosophy, fieldType, parentPrimaryColor, parentSecondaryColor } = args;
+  const { parentMetalColor, generation = 0 } = args;
   const config = getInheritanceConfig(generation);
 
   // Determine primary color
@@ -283,13 +287,7 @@ export function generateCrest(config: StableCrestConfig): CrestData {
 
   // Select colors
   const { primaryColor, secondaryColor, metalColor } = selectColors(
-    rng,
-    philosophy,
-    fieldType,
-    parentCrest?.primaryColor,
-    parentCrest?.secondaryColor,
-    parentCrest?.metalColor,
-    generation
+    { rng: rng, philosophy: philosophy, fieldType: fieldType, parentPrimaryColor: parentCrest?.primaryColor, parentSecondaryColor: parentCrest?.secondaryColor, parentMetalColor: parentCrest?.metalColor, generation: generation }
   );
 
   // Select charge

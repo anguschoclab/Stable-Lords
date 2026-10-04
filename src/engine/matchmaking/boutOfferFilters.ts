@@ -37,17 +37,24 @@ function bestByPromoter(offers: BoutOffer[]): BoutOffer[] {
 }
 
 /**
+ *
+ */
+export interface FilterAndSortOffersArgs {
+  boutOffers: Record<BoutOfferId, BoutOffer>;
+  roster: Warrior[];
+  week: number;
+  promoters: Record<string, Promoter>;
+  signedOfferIds: Set<string>;
+  selectedWarriorId: string | null;
+}
+
+/**
  * Filters and sorts bout offers for the booking office.
  * Returns this week's offers, upcoming offers, idle warriors, and highest purse.
  */
-export function filterAndSortOffers(
-  boutOffers: Record<BoutOfferId, BoutOffer>,
-  roster: Warrior[],
-  week: number,
-  promoters: Record<string, Promoter>,
-  signedOfferIds: Set<string>,
-  selectedWarriorId: string | null
-): FilteredOffersResult {
+export function filterAndSortOffers(args: FilterAndSortOffersArgs): FilteredOffersResult {
+  const { boutOffers, roster, week, promoters, signedOfferIds } = args;
+  const { selectedWarriorId } = args;
   const playerIds = new Set<string>(roster.map((w) => w.id as string));
   // Filter offers that involve player warriors
   const playerOffers = Object.values(boutOffers).filter(

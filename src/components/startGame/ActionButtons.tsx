@@ -14,7 +14,7 @@ interface ActionButtonsProps {
 
 /**
  * Action buttons.
- * @param  - {
+ * @param  props - {
   most recent,
   slots,
   max save slots,
@@ -23,14 +23,9 @@ interface ActionButtonsProps {
   on import,
 }.
  */
-export default function ActionButtons({
-  mostRecent,
-  slots,
-  maxSaveSlots,
-  onContinue,
-  onNewGame,
-  onImport,
-}: ActionButtonsProps) {
+export default function ActionButtons(props: ActionButtonsProps) {
+  const { mostRecent, slots, maxSaveSlots, onContinue, onNewGame } = props;
+  const { onImport } = props;
   const importRef = useRef<HTMLInputElement>(null);
   return (
     <div className="space-y-2.5">

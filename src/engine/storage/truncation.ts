@@ -18,6 +18,12 @@ export const TRUNCATION_CAPS = {
   moodHistory: 50,
   graveyard: 200,
   retired: 200,
+  /**
+   * Kill-event audit log. Capped like arenaHistory — but `deadWarriorIds`
+   * deliberately has NO entry here: it is the liveness authority and must
+   * persist for the life of the save.
+   */
+  killEvents: 500,
   tournaments: 100,
   scoutReports: 100,
   hallOfFame: 100,
@@ -156,6 +162,7 @@ export function truncateState(state: GameState, overrides?: TruncationCaps): Gam
     matchHistory: (state.matchHistory || []).slice(-caps.matchHistory),
     moodHistory: (state.moodHistory || []).slice(-caps.moodHistory),
     graveyard: capWarriors((state.graveyard || []).slice(-caps.graveyard), caps),
+    killEvents: (state.killEvents || []).slice(-caps.killEvents),
     retired: capWarriors((state.retired || []).slice(-caps.retired), caps),
     tournaments: capCompletedTournaments(state.tournaments || [], caps.tournaments),
     scoutReports: (state.scoutReports || []).slice(-caps.scoutReports),

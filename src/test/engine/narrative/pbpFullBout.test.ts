@@ -15,27 +15,17 @@ describe('PBP full-bout regression — no raw {{token}} leaks', () => {
       const rng = new SeededRNGService(seed * 31 + 7);
 
       const warriorA = makeWarrior(
-        undefined,
-        'Garath',
-        FightingStyle.StrikingAttack,
-        { ST: 14, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 14, DF: 12 },
-        { origin: 'Kolact' },
-        rng
+        { id: undefined, name: 'Garath', style: FightingStyle.StrikingAttack, attrs: { ST: 14, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 14, DF: 12 }, overrides: { origin: 'Kolact' }, rng: rng }
       );
 
       const warriorD = makeWarrior(
-        undefined,
-        'Vellis',
-        FightingStyle.TotalParry,
-        { ST: 10, CN: 14, SZ: 10, WT: 12, WL: 14, SP: 16, DF: 14 },
-        { origin: 'Andor' },
-        rng
+        { id: undefined, name: 'Vellis', style: FightingStyle.TotalParry, attrs: { ST: 10, CN: 14, SZ: 10, WT: 12, WL: 14, SP: 16, DF: 14 }, overrides: { origin: 'Andor' }, rng: rng }
       );
 
       const planA = defaultPlanForWarrior(warriorA);
       const planD = defaultPlanForWarrior(warriorD);
 
-      const out = simulateFight(planA, planD, warriorA, warriorD, seed);
+      const out = simulateFight({ planA: planA, planD: planD, warriorA: warriorA, warriorD: warriorD, providedRng: seed });
 
       for (const entry of out.log) {
         if (!noRawTokens(entry.text)) {

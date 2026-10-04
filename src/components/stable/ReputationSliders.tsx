@@ -11,40 +11,35 @@ const REP_LABELS: {
   key: keyof ReturnType<typeof computeStableReputation>;
   label: string;
   icon: React.ElementType;
-  color: string;
-  glow: string;
+  style: { color: string; glow: string };
   desc: string;
 }[] = [
   {
     key: 'fame',
     label: 'Fame',
     icon: Star,
-    color: 'text-arena-gold',
-    glow: 'bg-arena-gold',
+    style: { color: 'text-arena-gold', glow: 'bg-arena-gold' },
     desc: 'Public acclaim derived from victories and showmanship. Higher fame attracts wealthier patrons and more talented recruits.',
   },
   {
     key: 'notoriety',
     label: 'Notoriety',
     icon: Skull,
-    color: 'text-destructive',
-    glow: 'bg-destructive',
+    style: { color: 'text-destructive', glow: 'bg-destructive' },
     desc: 'A feared reputation built on fatalities and ruthless rivalries. High notoriety intimidates opponents but may unsettle certain sponsors.',
   },
   {
     key: 'honor',
     label: 'Honor',
     icon: Shield,
-    color: 'text-primary',
-    glow: 'bg-primary',
+    style: { color: 'text-primary', glow: 'bg-primary' },
     desc: 'Moral standing and respect from the arena elite. Honorable stables are often favored in governance decisions.',
   },
   {
     key: 'adaptability',
     label: 'Adaptability',
     icon: Sparkles,
-    color: 'text-arena-pop',
-    glow: 'bg-arena-pop',
+    style: { color: 'text-arena-pop', glow: 'bg-arena-pop' },
     desc: 'How well your stable adapts to the shifting combat meta. High adaptability lets warriors capitalize on style matchups.',
   },
 ];
@@ -75,14 +70,14 @@ export function ReputationSliders() {
       </div>
 
       <div className="grid gap-8">
-        {REP_LABELS.map(({ key, label, icon: Icon, color, glow, desc }) => (
+        {REP_LABELS.map(({ key, label, icon: Icon, style, desc }) => (
           <div key={key} className="space-y-3 group">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Icon
                   className={cn(
                     'h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none',
-                    color
+                    style.color
                   )}
                 />
                 <span className="text-xs font-display font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
@@ -96,7 +91,7 @@ export function ReputationSliders() {
                     value={rep[key]}
                     max={100}
                     labelValue={`${rep[key]}%`}
-                    colorClass={glow}
+                    colorClass={style.glow}
                   />
                 </div>
                 <Tooltip>

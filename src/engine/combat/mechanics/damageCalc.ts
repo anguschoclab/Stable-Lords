@@ -27,20 +27,28 @@ export function computeHitDamage(
 /**
  *
  */
-export function calculateKillWindow(
-  hpRatio: number,
-  enduranceRatio: number,
-  location: HitLocation,
-  killDesire: number,
-  phaseLevel: number,
-  attOE: number = 5,
-  attAL: number = 5,
-  matchupBonus: number = 0,
-  decSkill: number = 10,
-  momentum: number = 0,
-  specialtyBonus: number = 0,
-  crowdKillBonus: number = 0
-): number {
+export interface CalculateKillWindowArgs {
+  hpRatio: number;
+  enduranceRatio: number;
+  location: HitLocation;
+  killDesire: number;
+  phaseLevel: number;
+  attOE?: number;
+  attAL?: number;
+  matchupBonus?: number;
+  decSkill?: number;
+  momentum?: number;
+  specialtyBonus?: number;
+  crowdKillBonus?: number;
+}
+
+/**
+ *
+ */
+export function calculateKillWindow(args: CalculateKillWindowArgs): number {
+  const { hpRatio, enduranceRatio, location, killDesire, phaseLevel } = args;
+  const { attOE = 5, attAL = 5, matchupBonus = 0, decSkill = 10, momentum = 0 } = args;
+  const { specialtyBonus = 0, crowdKillBonus = 0 } = args;
   if (momentum < 0) return 0;
   const K = KILL_WINDOW;
 

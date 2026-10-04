@@ -230,6 +230,20 @@ export const GameStateSchema = z
     roster: z.array(WarriorSchema),
     graveyard: z.array(WarriorSchema),
     retired: z.array(WarriorSchema),
+    /** Persistent registry of every warrior id that has ever died. */
+    deadWarriorIds: z.array(z.string()).default([]),
+    /** Every kill recorded at resolution time. */
+    killEvents: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          victimId: z.string(),
+          killerId: z.string(),
+          week: z.number(),
+          tournamentId: z.string().nullish(),
+        })
+      )
+      .default([]),
     arenaHistory: z.array(FightSummarySchema),
     newsletter: z.array(NewsletterItemSchema),
     gazettes: z.array(GazetteStorySchema),

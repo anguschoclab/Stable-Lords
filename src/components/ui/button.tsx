@@ -18,7 +18,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
  * Button.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, tooltip, tooltipSide = 'top', ...props }, ref) => {
+  (_props, ref) => {
+    const { className, variant, size, asChild = false, tooltip } = _props;
+    const { tooltipSide = 'top', ...props } = _props;
     const Comp = asChild ? Slot : 'button';
     const title = props.title;
     const ariaLabel = props['aria-label'];

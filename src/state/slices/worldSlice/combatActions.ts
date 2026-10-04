@@ -4,6 +4,18 @@ import type { WarriorId, StableId } from '@/types/shared.types';
 import { truncateArray, updateEntityInList } from '@/utils/stateUtils';
 
 /**
+ *
+ */
+export interface UpdateWarriorStatusArgs {
+  warriorId: WarriorId;
+  won: boolean;
+  killed: boolean;
+  fameDelta: number;
+  popDelta: number;
+  rivalStableId?: StableId;
+}
+
+/**
  * Creates the combat actions for the world slice: recording fight
  * summaries in arena history and applying post-fight stat/career
  * updates to player or rival warriors.
@@ -25,14 +37,9 @@ export function createCombatActions(set: (fn: (state: GameStore) => Partial<Game
       });
     },
 
-    updateWarriorStatus: (
-      warriorId: WarriorId,
-      won: boolean,
-      killed: boolean,
-      fameDelta: number,
-      popDelta: number,
-      rivalStableId?: StableId
-    ) => {
+    updateWarriorStatus: (args: UpdateWarriorStatusArgs) => {
+      const { warriorId, won, killed, fameDelta, popDelta } = args;
+      const { rivalStableId } = args;
       set((state: GameStore) => {
         if (rivalStableId) {
           const rIndex = state.rivals.findIndex((r) => r.owner.id === rivalStableId);

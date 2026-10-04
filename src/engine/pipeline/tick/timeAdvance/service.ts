@@ -11,6 +11,64 @@ import type { AdvanceOptions, WeekSummary, QuarterAdvanceResult, YearAdvanceResu
 import { evaluateStopConditions } from './stopConditions';
 import { extractWeekSummary, buildQuarterSummary, buildAnnualSummary } from './summaries';
 
+/**
+ * Quarter teardown: terminal tournament sweep (a batch ending on a
+ * tournament week returns with no following week-boundary sweep to finish
+ * emitted brackets — runs BEFORE draining so any bouts it resolves still
+ * archive), transcript drain BEFORE truncation (truncateState caps
+ * deferredBoutLogs and would silently drop logs never handed to an archive
+ * sink), then truncate, time, and report.
+ */
+function finishQuarterRun(ctx: {
+  state: GameState;
+  opts?: AdvanceOptions;
+  startTime: number;
+  startTreasury: number;
+  startWeek: number;
+  startYear: number;
+  weekSummaries: WeekSummary[];
+  pendingArchives: DeferredBoutLog[];
+  stopReason: string | null;
+  weeksCompleted: number;
+}): { state: GameState; result: QuarterAdvanceResult } {
+  let currentState = sweepUnfinishedTournaments(ctx.state, ctx.opts?.headless);
+  ctx.pendingArchives.push(...drainDeferredBoutLogs(currentState));
+  currentState = truncateState(currentState);
+
+  const duration = performance.now() - ctx.startTime;
+  const tags = {
+    [TelemetryTags.HEADLESS]: String(!!ctx.opts?.headless),
+    [TelemetryTags.WEEKS_COMPLETED]: String(ctx.weeksCompleted),
+    ...(ctx.stopReason ? { [TelemetryTags.STOP_REASON]: ctx.stopReason } : {}),
+  };
+  telemetry.timing(TelemetryEvents.ADVANCE_QUARTER, duration, tags);
+  if (ctx.stopReason) {
+    telemetry.increment(TelemetryEvents.STOP_CONDITION_TRIGGERED, { reason: ctx.stopReason });
+  } else {
+    telemetry.increment(TelemetryEvents.ADVANCE_QUARTER_SUCCESS, {
+      [TelemetryTags.HEADLESS]: String(!!ctx.opts?.headless),
+    });
+  }
+
+  return {
+    state: currentState,
+    result: {
+      state: currentState,
+      summaries: ctx.weekSummaries,
+      quarterSummary: buildQuarterSummary(
+        currentState,
+        ctx.startWeek,
+        ctx.startYear,
+        ctx.startTreasury,
+        ctx.weekSummaries
+      ),
+      stopReason: ctx.stopReason,
+      weeksCompleted: ctx.weeksCompleted,
+      pendingArchives: ctx.pendingArchives,
+    },
+  };
+}
+
 export const TimeAdvanceService = {
   async advanceWeek(state: GameState, opts?: AdvanceOptions): Promise<GameState> {
     const weekOpts: WeekAdvanceOptions = {
@@ -32,46 +90,20 @@ export const TimeAdvanceService = {
     const startYear = state.year;
 
     const finish = (stopReason: string | null, weeksCompleted: number): QuarterAdvanceResult => {
-      // Terminal sweep: a batch ending on a tournament week (Q4's week-52
-      // Grand Championship, or an early stop mid-tournament-week) returns
-      // with no following week-boundary sweep to finish emitted brackets.
-      // Runs BEFORE draining so any bouts it resolves still archive.
-      currentState = sweepUnfinishedTournaments(currentState, opts?.headless);
-
-      // Drain transcripts BEFORE truncation — truncateState caps deferredBoutLogs
-      // and would silently drop logs that were never handed to an archive sink.
-      pendingArchives.push(...drainDeferredBoutLogs(currentState));
-      currentState = truncateState(currentState);
-
-      const duration = performance.now() - startTime;
-      const tags = {
-        [TelemetryTags.HEADLESS]: String(!!opts?.headless),
-        [TelemetryTags.WEEKS_COMPLETED]: String(weeksCompleted),
-        ...(stopReason ? { [TelemetryTags.STOP_REASON]: stopReason } : {}),
-      };
-      telemetry.timing(TelemetryEvents.ADVANCE_QUARTER, duration, tags);
-      if (stopReason) {
-        telemetry.increment(TelemetryEvents.STOP_CONDITION_TRIGGERED, { reason: stopReason });
-      } else {
-        telemetry.increment(TelemetryEvents.ADVANCE_QUARTER_SUCCESS, {
-          [TelemetryTags.HEADLESS]: String(!!opts?.headless),
-        });
-      }
-
-      return {
+      const wrapped = finishQuarterRun({
         state: currentState,
-        summaries: weekSummaries,
-        quarterSummary: buildQuarterSummary(
-          currentState,
-          startWeek,
-          startYear,
-          startTreasury,
-          weekSummaries
-        ),
+        opts,
+        startTime,
+        startTreasury,
+        startWeek,
+        startYear,
+        weekSummaries,
+        pendingArchives,
         stopReason,
         weeksCompleted,
-        pendingArchives,
-      };
+      });
+      currentState = wrapped.state;
+      return wrapped.result;
     };
 
     for (let i = 0; i < 13; i++) {

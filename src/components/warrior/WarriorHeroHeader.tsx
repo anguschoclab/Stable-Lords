@@ -35,7 +35,7 @@ interface WarriorHeroHeaderProps {
 
 /**
  * Render the WarriorHeroHeader component.
- * @param  - {
+ * @param  props - {
   warrior,
   record,
   streak label,
@@ -45,16 +45,9 @@ interface WarriorHeroHeaderProps {
   insight tokens,
 }.
  */
-export function WarriorHeroHeader({
-  warrior,
-  record,
-  streakLabel: _streakLabel,
-  streakVal: _streakVal,
-  id,
-  isPlayerOwned,
-  insightTokens,
-  arenaCrowns,
-}: WarriorHeroHeaderProps) {
+export function WarriorHeroHeader(props: WarriorHeroHeaderProps) {
+  const { warrior, record, streakLabel: _streakLabel, streakVal: _streakVal, id } = props;
+  const { isPlayerOwned, insightTokens, arenaCrowns } = props;
   const renameWarrior = useGameStore((s) => s.renameWarrior);
   const warriorInsightTokens = insightTokens?.filter((token) => token.warriorId === id) || [];
 

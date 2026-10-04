@@ -4,28 +4,10 @@ import type { Warrior } from '@/types/warrior.types';
 /** Run one fight twice: narrated and headless, to compare determinism of the two paths. */
 export function runNarratedVsHeadless(A: Warrior, D: Warrior, seed: number) {
   const narrated = simulateFight(
-    defaultPlanForWarrior(A),
-    defaultPlanForWarrior(D),
-    A,
-    D,
-    seed,
-    undefined,
-    'Clear',
-    'standard_arena',
-    undefined,
-    false
+    { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: false }
   );
   const headless = simulateFight(
-    defaultPlanForWarrior(A),
-    defaultPlanForWarrior(D),
-    A,
-    D,
-    seed,
-    undefined,
-    'Clear',
-    'standard_arena',
-    undefined,
-    true
+    { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: true }
   );
   return { narrated, headless };
 }

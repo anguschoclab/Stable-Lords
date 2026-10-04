@@ -46,7 +46,7 @@ function crownRival(warriorId = 'w1', arenaId = 'arena_a') {
 describe('generateBoutBids — CROWN_CAMPAIGN', () => {
   it('pins the campaign warrior\u2019s bid to the target arena', () => {
     const rival = crownRival();
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
     const bid = bids.find((b) => b.proposingWarriorId === 'w1');
     expect(bid?.arenaId).toBe('arena_a');
   });
@@ -60,7 +60,7 @@ describe('generateBoutBids — CROWN_CAMPAIGN', () => {
       absoluteWeek: 5,
       rivals: [rival, otherStable],
     });
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherStable], state);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [otherStable], state: state });
     const offers = convertBidsToOffers(
       bids.map((bid) => ({ bid, rivalId: rival.id as string })),
       [rival, otherStable],
@@ -90,7 +90,7 @@ describe('generateBoutBids — signed-offer exclusion', () => {
       rivals: [rival],
       boutOffers: { [existing.id]: existing },
     });
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [], state);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [], state: state });
     expect(bids.find((b) => b.proposingWarriorId === 'w1')).toBeUndefined();
   });
 });

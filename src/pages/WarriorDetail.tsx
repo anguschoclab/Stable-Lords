@@ -42,16 +42,7 @@ function UnknownWarrior() {
 }
 
 /** Active-tab body: biometrics / war plan / chronicle. */
-function DetailTabBody({
-  activeTab,
-  warrior,
-  displayWarrior,
-  arenaHistory,
-  currentPlan,
-  currentLoadout,
-  onPlanChange,
-  onEquipmentChange,
-}: {
+function DetailTabBody(props: {
   activeTab: string;
   warrior: import('@/types/game').Warrior;
   displayWarrior: import('@/lib/obfuscation').ObfuscatedWarrior;
@@ -61,6 +52,8 @@ function DetailTabBody({
   onPlanChange: (p: import('@/types/game').FightPlan) => void;
   onEquipmentChange: (l: import('@/data/equipment').EquipmentLoadout) => void;
 }) {
+  const { activeTab, warrior, displayWarrior, arenaHistory, currentPlan } = props;
+  const { currentLoadout, onPlanChange, onEquipmentChange } = props;
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none">
       {activeTab === 'biometrics' && (
@@ -165,24 +158,7 @@ export default function WarriorDetail() {
 }
 
 /** Main column: hero header, tab strip, and the active tab body. */
-function DetailMainColumn({
-  warrior,
-  displayWarrior,
-  record,
-  streakLabel,
-  streakVal,
-  id,
-  isPlayerOwned,
-  insightTokens,
-  arenaCrowns,
-  activeTab,
-  setActiveTab,
-  arenaHistory,
-  currentPlan,
-  currentLoadout,
-  onPlanChange,
-  onEquipmentChange,
-}: {
+function DetailMainColumn(props: {
   warrior: NonNullable<ReturnType<typeof useWarriorDetail>['warrior']>;
   displayWarrior: NonNullable<ReturnType<typeof useWarriorDetail>['displayWarrior']>;
   record: string;
@@ -202,6 +178,10 @@ function DetailMainColumn({
   | 'setActiveTab'
   | 'arenaHistory'
 >) {
+  const { warrior, displayWarrior, record, streakLabel, streakVal } = props;
+  const { id, isPlayerOwned, insightTokens, arenaCrowns, activeTab } = props;
+  const { setActiveTab, arenaHistory, currentPlan, currentLoadout, onPlanChange } = props;
+  const { onEquipmentChange } = props;
   return (
     <div className="lg:col-span-8 space-y-8">
       <WarriorHeroHeader

@@ -10,24 +10,30 @@ import { getStylePassive } from '@/engine/stylePassives';
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 
 /**
+ *
+ */
+export interface PerformAttackCheckArgs {
+  rng: () => number;
+  att: FighterState;
+  curAttOE: number;
+  matchup: number;
+  fat: number;
+  curOffMods: ReturnType<typeof getOffensiveTacticMods>;
+  curPass: ReturnType<typeof getStylePassive>;
+  curAntiSyn: ReturnType<typeof getStyleAntiSynergy>;
+  curBiasAtt: number;
+  overAtt: number;
+  _curAttWepReq: { attPenalty: number };
+  extraBonus?: number;
+}
+
+/**
  * Perform attack check.
  */
-export function performAttackCheck(
-  rng: () => number,
-  att: FighterState,
-  curAttOE: number,
-  matchup: number,
-  fat: number,
-  curOffMods: ReturnType<typeof getOffensiveTacticMods>,
-  curPass: ReturnType<typeof getStylePassive>,
-  curAntiSyn: ReturnType<typeof getStyleAntiSynergy>,
-  curBiasAtt: number,
-  overAtt: number,
-  // Weapon-requirement ATT penalty is already folded into att.skills.ATT by
-  // createFighterState; adding it here again doubled it to −4 per deficit point.
-  _curAttWepReq: { attPenalty: number },
-  extraBonus: number = 0
-) {
+export function performAttackCheck(args: PerformAttackCheckArgs) {
+  const { rng, att, curAttOE, matchup, fat } = args;
+  const { curOffMods, curPass, curAntiSyn, curBiasAtt, overAtt } = args;
+  const {extraBonus = 0 } = args;
   // Commit mode: attacker throws caution aside — +10 ATT bonus but defender gets compensating bonus in defense
   const commitBonus = att.committed ? 10 : 0;
   return skillCheck(

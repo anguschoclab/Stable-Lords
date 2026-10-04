@@ -51,15 +51,22 @@ export function createAttributeInsights(
   }));
 }
 
+/**
+ *
+ */
+export interface CreateTacticInsightArgs {
+  warrior: Warrior;
+  quality: ScoutQuality;
+  suspectedOE: string | undefined;
+  suspectedAL: string | undefined;
+  week: number;
+  rng: IRNGService;
+}
+
 /** Create a tactic insight token for Expert scouting (null if not Expert or no plan). */
-export function createTacticInsight(
-  warrior: Warrior,
-  quality: ScoutQuality,
-  suspectedOE: string | undefined,
-  suspectedAL: string | undefined,
-  week: number,
-  rng: IRNGService
-): InsightToken | null {
+export function createTacticInsight(args: CreateTacticInsightArgs): InsightToken | null {
+  const { warrior, quality, suspectedOE, suspectedAL, week } = args;
+  const { rng } = args;
   if (quality !== 'Expert' || !warrior.plan) return null;
 
   return {
@@ -90,28 +97,35 @@ export function createTraitInsights(
 }
 
 /**
+ *
+ */
+export interface GenerateScoutInsightsArgs {
+  warrior: Warrior;
+  quality: ScoutQuality;
+  week: number;
+  rng: IRNGService;
+  styleName: string;
+  suspectedOE?: string;
+  suspectedAL?: string;
+  suspectedTraits?: string[];
+}
+
+/**
  * Generate insight tokens discovered during scouting.
- * @param warrior - The warrior being scouted.
- * @param quality - Scout quality level (Basic/Detailed/Expert).
- * @param week - Current game week.
- * @param rng - RNG service.
- * @param styleName - Display name of the warrior's fighting style.
- * @param suspectedOE - Suspected offensive eagerness level.
- * @param suspectedAL - Suspected activity level.
- * @param suspectedTraits - Traits discovered during expert scouting.
+ * @param args.warrior - The warrior being scouted.
+ * @param args.quality - Scout quality level (Basic/Detailed/Expert).
+ * @param args.week - Current game week.
+ * @param args.rng - RNG service.
+ * @param args.styleName - Display name of the warrior's fighting style.
+ * @param args.suspectedOE - Suspected offensive eagerness level.
+ * @param args.suspectedAL - Suspected activity level.
+ * @param args.suspectedTraits - Traits discovered during expert scouting.
  * @returns Array of new insight tokens.
  */
-export function generateScoutInsights(
-  warrior: Warrior,
-  quality: ScoutQuality,
-  week: number,
-  rng: IRNGService,
-  styleName: string,
-  suspectedOE?: string,
-  suspectedAL?: string,
-  suspectedTraits?: string[]
-): InsightToken[] {
-  const tactic = createTacticInsight(warrior, quality, suspectedOE, suspectedAL, week, rng);
+export function generateScoutInsights(args: GenerateScoutInsightsArgs): InsightToken[] {
+  const { warrior, quality, week, rng, styleName } = args;
+  const { suspectedOE, suspectedAL, suspectedTraits } = args;
+  const tactic = createTacticInsight({ warrior: warrior, quality: quality, suspectedOE: suspectedOE, suspectedAL: suspectedAL, week: week, rng: rng });
   return [
     createStyleInsight(warrior, styleName, week, rng),
     ...createAttributeInsights(warrior, quality, week, rng),

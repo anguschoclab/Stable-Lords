@@ -58,15 +58,9 @@ interface FighterPanelProps {
   victorClass: string;
 }
 
-function FighterPanel({
-  label,
-  name,
-  style,
-  isWinner,
-  isLoser,
-  accentClass,
-  victorClass,
-}: FighterPanelProps) {
+function FighterPanel(props: FighterPanelProps) {
+  const { label, name, style, isWinner, isLoser } = props;
+  const { accentClass, victorClass } = props;
   return (
     <div className="text-center flex-1 space-y-4">
       <div className="space-y-1">
@@ -177,7 +171,7 @@ function ProgressTimeline({ minutes, totalEvents, visibleCount }: ProgressTimeli
 
 /**
  * Bout header.
- * @param  - {
+ * @param  props - {
   name a,
   name d,
   style a,
@@ -191,19 +185,10 @@ function ProgressTimeline({ minutes, totalEvents, visibleCount }: ProgressTimeli
   on toggle expanded,
 }.
  */
-export default function BoutHeader({
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  winner,
-  isRivalry,
-  minutes,
-  totalEvents,
-  visibleCount,
-  expanded,
-  onToggleExpanded,
-}: BoutHeaderProps) {
+export default function BoutHeader(props: BoutHeaderProps) {
+  const { nameA, nameD, styleA, styleD, winner } = props;
+  const { isRivalry, minutes, totalEvents, visibleCount, expanded } = props;
+  const { onToggleExpanded } = props;
   return (
     <div className="relative p-8 border-b border-white/5 bg-neutral-900/40 backdrop-blur-md">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none" />

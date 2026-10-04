@@ -104,16 +104,23 @@ export function crowdReaction(
 }
 
 /**
+ *
+ */
+export interface MinuteStatusLineArgs {
+  rng: IRNGService;
+  _minute: number;
+  nameA: string;
+  nameD: string;
+  hitsA: number;
+  hitsD: number;
+}
+
+/**
  * Generates minute status line.
  */
-export function minuteStatusLine(
-  rng: IRNGService,
-  _minute: number,
-  nameA: string,
-  nameD: string,
-  hitsA: number,
-  hitsD: number
-): string {
+export function minuteStatusLine(args: MinuteStatusLineArgs): string {
+  const { rng, nameA, nameD, hitsA } = args;
+  const { hitsD } = args;
   if (hitsA > hitsD + 3) return `${nameA} is beating his opponent!`;
   if (hitsD > hitsA + 3) return `${nameD} is beating his opponent!`;
   return getFromArchive(rng, ['pbp', 'pacing', 'stalemate']);

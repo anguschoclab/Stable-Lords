@@ -266,19 +266,10 @@ function RecruitCardHeader({ warrior }: { warrior: PoolWarrior }) {
 }
 
 /** Recruit card — header, intel panel, vitals, lore, and sign actions. */
-export function RecruitCard({
-  warrior,
-  canAfford,
-  rosterFull,
-  onRecruit,
-  isScouted,
-  onScout,
-  canAffordScout,
-  canAffordBonus,
-  scoutReport,
-  selected,
-  onSelect,
-}: RecruitCardProps) {
+export function RecruitCard(props: RecruitCardProps) {
+  const { warrior, canAfford, rosterFull, onRecruit, isScouted } = props;
+  const { onScout, canAffordScout, canAffordBonus, scoutReport, selected } = props;
+  const { onSelect } = props;
   return (
     <Surface
       variant="glass"

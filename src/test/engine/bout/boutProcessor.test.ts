@@ -237,6 +237,120 @@ describe('boutProcessor - generatePairings', () => {
     expect(pairings[0]!.rivalStableId).toBe('s2');
   });
 
+  it('should void a signed offer whose side-D warrior is dead on the roster', () => {
+    // Dead-status warriors stay indexed in warriorMap (buildActiveWarriorMap
+    // maps every roster entry regardless of status), so pairing-time liveness
+    // must catch them — otherwise the dead warrior is booked and fights.
+    const deadD = {
+      id: 'w2',
+      name: 'W2',
+      status: 'Dead',
+      stableId: 'r1',
+      style: FightingStyle.TotalParry,
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      fame: 0,
+    };
+    const state: any = makeGameState({
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [
+        {
+          id: 'w1',
+          status: 'Active',
+          stableId: 'p1',
+          style: FightingStyle.BashingAttack,
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          fame: 0,
+        },
+      ],
+      rivals: [{ owner: { id: 'r1', stableName: 'Stab' }, roster: [deadD] }],
+      boutOffers: {
+        offer1: {
+          id: 'offer1',
+          status: 'Signed',
+          boutWeek: 1,
+          warriorIds: ['w1', 'w2'],
+          hype: 100,
+          purse: 100,
+        },
+      },
+    });
+    const { pairings, voidedOffers } = generatePairings(state);
+    expect(pairings).toHaveLength(0);
+    expect(voidedOffers.map((o) => o.id)).toEqual(['offer1']);
+  });
+
+  it('should void a signed offer naming a warrior missing from every roster', () => {
+    // A warrior who left the world entirely after signing (death-time roster
+    // removal) must cancel the contract — a silent drop leaves a 'Signed'
+    // offer that can never resolve or pay out.
+    const state: any = makeGameState({
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [
+        {
+          id: 'w1',
+          status: 'Active',
+          stableId: 'p1',
+          style: FightingStyle.BashingAttack,
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          fame: 0,
+        },
+      ],
+      rivals: [{ owner: { id: 'r1', stableName: 'Stab' }, roster: [] }],
+      boutOffers: {
+        offer1: {
+          id: 'offer1',
+          status: 'Signed',
+          boutWeek: 1,
+          warriorIds: ['w1', 'w-gone'],
+          hype: 100,
+          purse: 100,
+        },
+      },
+    });
+    const { pairings, voidedOffers } = generatePairings(state);
+    expect(pairings).toHaveLength(0);
+    expect(voidedOffers.map((o) => o.id)).toEqual(['offer1']);
+  });
+
+  it('should void a signed offer whose side-A warrior is dead', () => {
+    const deadA = {
+      id: 'w1',
+      name: 'W1',
+      status: 'Dead',
+      stableId: 'p1',
+      style: FightingStyle.BashingAttack,
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      fame: 0,
+    };
+    const liveD = {
+      id: 'w2',
+      name: 'W2',
+      status: 'Active',
+      stableId: 'r1',
+      style: FightingStyle.TotalParry,
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      fame: 0,
+    };
+    const state: any = makeGameState({
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [deadA],
+      rivals: [{ owner: { id: 'r1', stableName: 'Stab' }, roster: [liveD] }],
+      boutOffers: {
+        offer1: {
+          id: 'offer1',
+          status: 'Signed',
+          boutWeek: 1,
+          warriorIds: ['w1', 'w2'],
+          hype: 100,
+          purse: 100,
+        },
+      },
+    });
+    const { pairings, voidedOffers } = generatePairings(state);
+    expect(pairings).toHaveLength(0);
+    expect(voidedOffers.map((o) => o.id)).toEqual(['offer1']);
+  });
+
   it('should skip tournament pairings when warrior IDs are missing from warriorMap', () => {
     const state: any = {
       week: 1,
@@ -309,7 +423,72 @@ describe('boutProcessor - resolveBout', () => {
     const { impact, result } = resolveBout(mockState, ctx);
     // The engine no longer mutates state directly in resolveBout, it returns a StateImpact
 
-    expect(result.outcome.winner).toBeDefined();
+    expect(result?.outcome.winner).toBeDefined();
     expect(impact.arenaHistory).toHaveLength(1);
+  });
+
+  it('skips a bout whose side-D combatant is dead and returns the contract for voiding', () => {
+    // A dead warrior lingering on a roster stays in warriorMap — resolution
+    // must refuse the bout, emit no phantom result, and hand the contract back
+    // so the caller can cancel it rather than leave a 'Signed' ghost.
+    const deadOpponent = { ...mockOpponent, status: 'Dead' };
+    const contract: any = {
+      id: 'offer-dead',
+      status: 'Signed',
+      boutWeek: 1,
+      warriorIds: ['w1', 'w2'],
+      purse: 100,
+    };
+    const state: any = {
+      ...mockState,
+      deadWarriorIds: ['w2'],
+      boutOffers: { 'offer-dead': contract },
+    };
+    const ctx: any = {
+      warriorMap: new Map([
+        ['w1', mockWarrior],
+        ['w2', deadOpponent],
+      ]),
+      warrior: mockWarrior,
+      opponent: deadOpponent,
+      isRivalry: false,
+      moodMods: { fameMultiplier: 1, popMultiplier: 1 },
+      week: 1,
+      playerId: 'p1',
+      contract,
+    };
+
+    const res = resolveBout(state, ctx);
+
+    expect(res.result).toBeNull();
+    expect(res.voidedOffer?.id).toBe('offer-dead');
+    expect(res.impact.arenaHistory ?? []).toHaveLength(0);
+    expect(res.impact.graveyard ?? []).toHaveLength(0);
+  });
+
+  it('skips a bout whose combatant is missing from warriorMap', () => {
+    const contract: any = {
+      id: 'offer-gone',
+      status: 'Signed',
+      boutWeek: 1,
+      warriorIds: ['w1', 'w2'],
+      purse: 100,
+    };
+    const state: any = { ...mockState, boutOffers: { 'offer-gone': contract } };
+    const ctx: any = {
+      warriorMap: new Map([['w1', mockWarrior]]),
+      warrior: mockWarrior,
+      opponent: mockOpponent,
+      isRivalry: false,
+      moodMods: { fameMultiplier: 1, popMultiplier: 1 },
+      week: 1,
+      playerId: 'p1',
+      contract,
+    };
+
+    const res = resolveBout(state, ctx);
+
+    expect(res.result).toBeNull();
+    expect(res.voidedOffer?.id).toBe('offer-gone');
   });
 });

@@ -7,14 +7,7 @@ import { getAllArenas } from '@/data/arenas';
 const arenaName = (id: string): string => getAllArenas().find((a) => a.id === id)?.name ?? id;
 
 /** One horizon column: icon + label, then items or an empty-state line. */
-function HorizonColumn<T>({
-  icon,
-  label,
-  items,
-  emptyText,
-  renderItem,
-  itemKey,
-}: {
+function HorizonColumn<T>(props: {
   icon: React.ReactNode;
   label: string;
   items: T[];
@@ -22,6 +15,8 @@ function HorizonColumn<T>({
   renderItem: (item: T) => React.ReactNode;
   itemKey: (item: T) => string;
 }) {
+  const { icon, label, items, emptyText, renderItem } = props;
+  const { itemKey } = props;
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">

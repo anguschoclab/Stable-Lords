@@ -17,20 +17,27 @@ import { MOMENTUM_CAP, MOMENTUM_FLOOR } from '@/constants/combat';
 import { addCapped } from '@/utils/math';
 
 /**
+ *
+ */
+export interface ExecuteRiposteArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  defTactics: ReturnType<typeof resolveEffectiveTactics>;
+  defPassive: ReturnType<typeof getStylePassive>;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+  specialtyRiposteMult?: number;
+  extraDmg?: number;
+}
+
+/**
  * Execute riposte.
  */
-export function executeRiposte(
-  events: CombatEvent[],
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  defTactics: ReturnType<typeof resolveEffectiveTactics>,
-  defPassive: ReturnType<typeof getStylePassive>,
-  attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D',
-  specialtyRiposteMult: number = 1.0,
-  extraDmg: number = 0
-) {
+export function executeRiposte(args: ExecuteRiposteArgs) {
+  const { events, rng, attacker, defender, defTactics } = args;
+  const { defPassive, attLabel, defLabel, specialtyRiposteMult = 1.0, extraDmg = 0 } = args;
   const ripLoc = rollHitLocation(rng, defTactics.target, attacker.activePlan.protect);
   let ripDmgRaw = computeHitDamage(
     rng,

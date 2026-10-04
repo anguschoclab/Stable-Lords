@@ -13,7 +13,7 @@ beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
 });
 
-const warrior = makeWarrior('w1' as any, 'Varak', FightingStyle.LungingAttack, {
+const warrior = makeWarrior({ id: 'w1' as any, name: 'Varak', style: FightingStyle.LungingAttack, attrs: {
   ST: 12,
   CN: 10,
   SZ: 10,
@@ -21,7 +21,7 @@ const warrior = makeWarrior('w1' as any, 'Varak', FightingStyle.LungingAttack, {
   WL: 12,
   SP: 12,
   DF: 10,
-});
+} });
 
 const plan: FightPlan = {
   ...defaultPlanForWarrior(warrior),

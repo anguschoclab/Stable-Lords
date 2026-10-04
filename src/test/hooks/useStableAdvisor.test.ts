@@ -14,9 +14,9 @@ import { makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 
 function makeTestWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
-  return makeWarrior(id as any, name, FightingStyle.AimedBlow, baseAttrs, {
+  return makeWarrior({ id: id as any, name: name, style: FightingStyle.AimedBlow, attrs: baseAttrs, overrides: {
     ...overrides,
-  });
+  } });
 }
 
 const makeOffer = (id: string, widA: string, widB: string, purse = 250): BoutOffer =>

@@ -220,18 +220,25 @@ export interface OfferBuildContext {
 }
 
 /**
+ *
+ */
+export interface CreateBoutOfferArgs {
+  warriorA: Warrior;
+  opponentB: Warrior;
+  promoter: Promoter;
+  state: GameState;
+  rngService: IRNGService;
+  ctx: OfferBuildContext;
+}
+
+/**
  * Constructs a Proposed bout offer for a matched pair: hype, purse
  * (tier-scaled, personality-adjusted), player-favored arena selection, and
  * pending responses. Consumes rngService.uuid() then selectArenaForMatchup.
  */
-export function createBoutOffer(
-  warriorA: Warrior,
-  opponentB: Warrior,
-  promoter: Promoter,
-  state: GameState,
-  rngService: IRNGService,
-  ctx: OfferBuildContext
-): BoutOffer {
+export function createBoutOffer(args: CreateBoutOfferArgs): BoutOffer {
+  const { warriorA, opponentB, promoter, state, rngService } = args;
+  const { ctx } = args;
   const offerId = rngService.uuid();
   const hype = calculateHype(warriorA, opponentB, promoter);
   const basePurse = FIGHT_PURSE * TIER_MULTIPLIERS[promoter.tier];

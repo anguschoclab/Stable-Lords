@@ -62,8 +62,20 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
       continue;
     }
 
-    transferCrown(state, delta, title, arenaId, champId, winnerId, loserId, summary, now);
+    transferCrown({ state: state, delta: delta, title: title, arenaId: arenaId, champId: champId, winnerId: winnerId, loserId: loserId, summary: summary, now: now });
   }
+}
+
+interface TransferCrownArgs {
+  state: GameState;
+  delta: ChampionshipDelta;
+  title: ReturnType<typeof ensureTitle>;
+  arenaId: string;
+  champId: WarriorId | null;
+  winnerId: WarriorId;
+  loserId: WarriorId;
+  summary: FightSummary;
+  now: number;
 }
 
 /**
@@ -72,17 +84,9 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
  * are relinquished (single-crown enforcement), and coronation cancels their
  * unresolved ordinary offers.
  */
-function transferCrown(
-  state: GameState,
-  delta: ChampionshipDelta,
-  title: ReturnType<typeof ensureTitle>,
-  arenaId: string,
-  champId: WarriorId | null,
-  winnerId: WarriorId,
-  loserId: WarriorId,
-  summary: FightSummary,
-  now: number
-): void {
+function transferCrown(args: TransferCrownArgs): void {
+  const { state, delta, title, arenaId, champId } = args;
+  const { winnerId, loserId, summary, now } = args;
   // Did the champion die? A 'Kill' outcome means the loser was killed;
   // deathEventData.killerId confirms who dealt it.
   const champDied =

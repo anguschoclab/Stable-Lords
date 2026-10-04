@@ -113,19 +113,23 @@ function pruneDossiers(dossiers: Record<string, OpponentDossier>): Record<string
   return Object.fromEntries(entries.slice(0, DOSSIER_CAP));
 }
 
+interface FoldFightArgs {
+  dossiers: Record<string, OpponentDossier>;
+  fight: FightSummary;
+  rival: RivalStableData;
+  selfIds: Set<string>;
+  stableOf: (wid: FightSummary['warriorIdA']) => string | undefined;
+  observeTells: (wid: FightSummary['warriorIdA'], stableId: string | undefined) => void;
+  week: number;
+}
+
 /**
  * Fold one witnessed fight into the dossier map: observed styles + witnessed
  * tells for both sides, and recordVs when this stable fought.
  */
-function foldFight(
-  dossiers: Record<string, OpponentDossier>,
-  fight: FightSummary,
-  rival: RivalStableData,
-  selfIds: Set<string>,
-  stableOf: (wid: FightSummary['warriorIdA']) => string | undefined,
-  observeTells: (wid: FightSummary['warriorIdA'], stableId: string | undefined) => void,
-  week: number
-): void {
+function foldFight(args: FoldFightArgs): void {
+  const { dossiers, fight, rival, selfIds, stableOf } = args;
+  const { observeTells, week } = args;
   const stableA = stableOf(fight.warriorIdA);
   const stableD = stableOf(fight.warriorIdD);
   if (stableA && stableA !== rival.id) {
@@ -224,7 +228,7 @@ export function updateDossiers(
   };
 
   for (const fight of fights) {
-    foldFight(dossiers, fight, rival, selfIds, stableOf, observeTells, week);
+    foldFight({ dossiers: dossiers, fight: fight, rival: rival, selfIds: selfIds, stableOf: stableOf, observeTells: observeTells, week: week });
   }
 
   return pruneDossiers(dossiers);

@@ -37,17 +37,7 @@ const COLUMN_TONES = {
 } as const;
 
 /** One selector column (prime or challenger) — lists rivals, marks selection. */
-function StableColumn({
-  rivals,
-  title,
-  ariaRole,
-  tooltip,
-  selectedId,
-  otherId,
-  onSelect,
-  tone,
-  rightAlign = false,
-}: {
+function StableColumn(props: {
   rivals: RivalStableData[];
   title: string;
   ariaRole: string;
@@ -58,6 +48,8 @@ function StableColumn({
   tone: keyof typeof COLUMN_TONES;
   rightAlign?: boolean;
 }) {
+  const { rivals, title, ariaRole, tooltip, selectedId } = props;
+  const { otherId, onSelect, tone, rightAlign = false } = props;
   const t = COLUMN_TONES[tone];
   return (
     <div className="space-y-4">
@@ -90,16 +82,7 @@ function StableColumn({
 }
 
 /** One selectable rival row inside a selector column. */
-function StableRow({
-  rival: r,
-  ariaRole,
-  tooltip,
-  selectedId,
-  otherId,
-  onSelect,
-  toneClasses: t,
-  rightAlign,
-}: {
+function StableRow(props: {
   rival: RivalStableData;
   ariaRole: string;
   tooltip: string;
@@ -109,6 +92,8 @@ function StableRow({
   toneClasses: (typeof COLUMN_TONES)[keyof typeof COLUMN_TONES];
   rightAlign: boolean;
 }) {
+  const { rival: r, ariaRole, tooltip, selectedId, otherId } = props;
+  const { onSelect, toneClasses: t, rightAlign } = props;
   return (
     <Tooltip>
       <TooltipTrigger asChild>

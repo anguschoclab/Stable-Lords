@@ -21,7 +21,7 @@ const KILLER_DOSSIER: OpponentDossier = {
 describe('aiPlanForWarrior — condition emission from real state', () => {
   it('VENDETTA stables emit a blood-scent kill switch', () => {
     const w = makeWarrior();
-    const plan = aiPlanForWarrior(w, 'Aggressive', 'Opportunist', undefined, 'VENDETTA');
+    const plan = aiPlanForWarrior({ w: w, personality: 'Aggressive', philosophy: 'Opportunist', opponentStyle: undefined, intent: 'VENDETTA' });
     const blood = plan.conditions?.find((c) => c.trigger.type === 'OPPONENT_HP_BELOW');
     expect(blood).toBeDefined();
     // KD bump clamps at 10 for hot personalities — the emitted intent is
@@ -32,7 +32,7 @@ describe('aiPlanForWarrior — condition emission from real state', () => {
 
   it('RECOVERY stables shell up when the opponent builds tempo', () => {
     const w = makeWarrior();
-    const plan = aiPlanForWarrior(w, 'Pragmatic', 'Opportunist', undefined, 'RECOVERY');
+    const plan = aiPlanForWarrior({ w: w, personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: undefined, intent: 'RECOVERY' });
     const shell = plan.conditions?.find((c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD');
     expect(shell).toBeDefined();
     expect((shell!.override.OE ?? 99) < plan.OE!).toBe(true);
@@ -41,14 +41,7 @@ describe('aiPlanForWarrior — condition emission from real state', () => {
   it('a dossier on a known killer emits a defensive counter-condition', () => {
     const w = makeWarrior();
     const plan = aiPlanForWarrior(
-      w,
-      'Pragmatic',
-      'Opportunist',
-      FightingStyle.BashingAttack,
-      undefined,
-      0,
-      KILLER_DOSSIER,
-      10
+      { w: w, personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack, intent: undefined, grudgeIntensity: 0, dossier: KILLER_DOSSIER, now: 10 }
     );
     const shell = plan.conditions?.find(
       (c) => c.trigger.type === 'OPPONENT_MOMENTUM_LEAD' || c.trigger.type === 'PSYCH_IS'
@@ -60,7 +53,7 @@ describe('aiPlanForWarrior — condition emission from real state', () => {
   it('Tactician/Methodical stables press when the opponent gases out', () => {
     const w = makeWarrior();
     for (const personality of ['Tactician', 'Methodical'] as const) {
-      const plan = aiPlanForWarrior(w, personality, 'Opportunist');
+      const plan = aiPlanForWarrior({ w: w, personality: personality, philosophy: 'Opportunist' });
       const press = plan.conditions?.find((c) => c.trigger.type === 'OPPONENT_ENDURANCE_BELOW');
       expect(press, personality).toBeDefined();
       expect((press!.override.OE ?? 0) > plan.OE!).toBe(true);

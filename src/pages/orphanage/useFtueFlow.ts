@@ -32,22 +32,17 @@ function simulateTutorialBout(
   const poolA = selectedWarriors[0];
   const poolB = selectedWarriors[1];
   if (!poolA || !poolB) return null;
-  const wA = makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
-  const wB = makeWarrior(poolB.id as WarriorId, poolB.name, poolB.style, poolB.attrs);
+  const wA = makeWarrior({ id: poolA.id as WarriorId, name: poolA.name, style: poolA.style, attrs: poolA.attrs });
+  const wB = makeWarrior({ id: poolB.id as WarriorId, name: poolB.name, style: poolB.style, attrs: poolB.attrs });
   const planA = playerPlan ?? defaultPlanForWarrior(wA);
   const planB = defaultPlanForWarrior(wB);
-  const outcome = simulateFight(planA, planB, wA, wB, boutSeed);
+  const outcome = simulateFight({ planA: planA, planD: planB, warriorA: wA, warriorD: wB, providedRng: boutSeed });
   const tags = outcome.post?.tags ?? [];
 
   const summary = createBoutSummary(
-    wA,
-    wB,
-    outcome,
-    1,
-    {
+    { warriorA: wA, warriorD: wB, outcome: outcome, week: 1, rng: {
       uuid: () => generateId(undefined, 'ftue'),
-    },
-    'standard_arena' // simulateFight defaults to the standard arena
+    }, arenaId: 'standard_arena' } // simulateFight defaults to the standard arena
   );
   summary.flashyTags = tags;
   summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;
@@ -114,7 +109,7 @@ function useOrphanSelection() {
     if (selectedWarriors.length < 1) return null;
     const poolA = selectedWarriors[0];
     if (!poolA) return null;
-    return makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
+    return makeWarrior({ id: poolA.id as WarriorId, name: poolA.name, style: poolA.style, attrs: poolA.attrs });
   }, [selectedWarriors]);
 
   return {
@@ -129,16 +124,7 @@ function useOrphanSelection() {
 }
 
 /** Build the post-FTUE game state, commit it, persist, and enter the Stable hub. */
-function commitFtue({
-  state,
-  selectedWarriors,
-  boutResult,
-  poolSeedValue,
-  playerPlan,
-  setState,
-  saveCurrentState,
-  navigate,
-}: {
+function commitFtue(props: {
   state: Pick<GameStore, 'player' | 'graveyard' | 'ftueComplete'>;
   selectedWarriors: Parameters<typeof buildFTUEInitialState>[1];
   boutResult: BoutResult | null;
@@ -148,6 +134,8 @@ function commitFtue({
   saveCurrentState: () => void;
   navigate: ReturnType<typeof useNavigate>;
 }) {
+  const { state, selectedWarriors, boutResult, poolSeedValue, playerPlan } = props;
+  const { setState, saveCurrentState, navigate } = props;
   if (state.ftueComplete) {
     navigate({ to: '/stable' });
     return;

@@ -120,7 +120,7 @@ describe('selectTrainingFocus', () => {
       { potential: { ST: 11 } as Warrior['potential'] }
     );
     const stable = makeRivalStable({ roster: [w] });
-    const { chosen } = performAITraining(w, stable, 'Fall', [], alwaysTrainRng);
+    const { chosen } = performAITraining({ w: w, stable: stable, season: 'Fall', seasonalGrowth: [], rng: alwaysTrainRng });
     expect(chosen).toBe('CN');
   });
 
@@ -132,7 +132,7 @@ describe('selectTrainingFocus', () => {
     );
     const stable = makeRivalStable({ roster: [w] });
     // Spring → CN, but CN is capped → fall back to lowest non-capped (DF=12)
-    const { chosen } = performAITraining(w, stable, 'Spring', [], alwaysTrainRng);
+    const { chosen } = performAITraining({ w: w, stable: stable, season: 'Spring', seasonalGrowth: [], rng: alwaysTrainRng });
     expect(chosen).toBe('DF');
   });
 });

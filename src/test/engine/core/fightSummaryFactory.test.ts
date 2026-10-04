@@ -284,11 +284,7 @@ describe('createFightSummary field mapping', () => {
 describe('createBoutSummary', () => {
   it('creates a valid FightSummary with correct fields', () => {
     const summary = createBoutSummary(
-      makeWarriorA(),
-      makeWarriorD(),
-      makeOutcome({ winner: 'A', by: 'Kill' }),
-      3,
-      { uuid: () => 'bout-id' }
+      { warriorA: makeWarriorA(), warriorD: makeWarriorD(), outcome: makeOutcome({ winner: 'A', by: 'Kill' }), week: 3, rng: { uuid: () => 'bout-id' } }
     );
     expect(summary.id).toBe('bout-id' as any);
     expect(summary.week).toBe(3);
@@ -299,9 +295,9 @@ describe('createBoutSummary', () => {
   });
 
   it('does not set tournamentId (non-tournament bout)', () => {
-    const summary = createBoutSummary(makeWarriorA(), makeWarriorD(), makeOutcome(), 1, {
+    const summary = createBoutSummary({ warriorA: makeWarriorA(), warriorD: makeWarriorD(), outcome: makeOutcome(), week: 1, rng: {
       uuid: () => 'bout-id',
-    });
+    } });
     expect(summary.tournamentId).toBeUndefined();
   });
 });

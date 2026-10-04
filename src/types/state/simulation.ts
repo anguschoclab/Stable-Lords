@@ -1,4 +1,4 @@
-import type { SimulationReportId, StableId, WarriorId } from '../shared.types';
+import type { SimulationReportId, StableId, TournamentId, WarriorId } from '../shared.types';
 import type { Attributes, FightingStyle } from '../warrior.types';
 
 /**
@@ -121,4 +121,20 @@ export interface LifetimeStats {
   bouts: number;
   kills: number;
   retirements: number;
+}
+
+/**
+ * A kill recorded at bout resolution time. Unlike `arenaHistory` summaries —
+ * which are retention-capped and may drop out of `state` — each Kill outcome
+ * leaves exactly one of these, so all-time kill accounting is truncation-proof.
+ */
+export interface KillEvent {
+  id: string;
+  /** The warrior who died. */
+  victimId: WarriorId;
+  /** The warrior credited with the kill. */
+  killerId: WarriorId;
+  week: number;
+  /** Present when the kill happened inside a tournament bout. */
+  tournamentId?: TournamentId | null;
 }

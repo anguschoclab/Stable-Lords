@@ -511,6 +511,25 @@ describe('runRivalStrategyPass — bankruptcy succession', () => {
     // The dissolved warrior survives as a free agent — not silently lost.
     expect(poolIds).toContain('w_old');
   });
+
+  it('never frees a registered-dead warrior when its stable dissolves', () => {
+    // collectFreedRecruits filters on status === 'Active', but a stale roster
+    // object can claim Active post-death — deadWarriorIds is the authority.
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
+    const deadVet = makeWarrior('w_dead', 'Dead Weight', {
+      stableId: 'rival-1' as StableId,
+      status: 'Active', // stale snapshot — the registry knows better
+    });
+    const bankrupt = makeRival({ treasury: -100_000, roster: [deadVet] });
+    const state = makeMinimalState([bankrupt]);
+    state.recruitPool = [];
+    (state as any).deadWarriorIds = ['w_dead'];
+
+    const impact = runRivalStrategyPass(state, 6, undefined as any, true);
+
+    const poolIds = (impact.freeAgentAdditions ?? []).map((p) => p.id);
+    expect(poolIds).not.toContain('w_dead');
+  });
 });
 
 // ─── Suite: world-floor refill (megaplan — never remain below the floor) ─────

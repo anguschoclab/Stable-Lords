@@ -66,10 +66,10 @@ describe('dominant-player offer pressure', () => {
     const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 400, hype: 80 });
 
     expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, playerState(opponent, true))
+      evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: playerState(opponent, true) })
     ).toBe('Declined');
     expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, playerState(opponent, false))
+      evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: playerState(opponent, false) })
     ).toBe('Accepted');
   });
 
@@ -90,10 +90,10 @@ describe('dominant-player offer pressure', () => {
     const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 40, hype: 90 });
 
     expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, playerState(opponent, true))
+      evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: playerState(opponent, true) })
     ).toBe('Accepted');
     expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, playerState(opponent, false))
+      evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: playerState(opponent, false) })
     ).toBe('Countered');
   });
 
@@ -114,10 +114,10 @@ describe('dominant-player offer pressure', () => {
     const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 60, hype: 80 });
 
     expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, playerState(opponent, true))
+      evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: playerState(opponent, true) })
     ).toBe('Countered');
     expect(
-      evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, playerState(opponent, false))
+      evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: playerState(opponent, false) })
     ).toBe('Accepted');
   });
 
@@ -145,6 +145,6 @@ describe('dominant-player offer pressure', () => {
       rivals: [rival, oppStable],
       realmRankings: dominantRankings('pw1'),
     });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe('Accepted');
   });
 });

@@ -68,8 +68,17 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
               (id) => offer.responses?.[id] !== 'Accepted' && !isVoidDecline(id)
             );
     if (!declinerId) continue;
-    applyDecline(state, delta, arenaId, title.champion?.warriorId, declinerId, now);
+    applyDecline({ state: state, delta: delta, arenaId: arenaId, championId: title.champion?.warriorId, declinerId: declinerId, now: now });
   }
+}
+
+interface ApplyDeclineArgs {
+  state: GameState;
+  delta: ChampionshipDelta;
+  arenaId: string;
+  championId: WarriorId | undefined;
+  declinerId: WarriorId;
+  now: number;
 }
 
 /**
@@ -77,14 +86,9 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
  * deferral for blocking injuries, with a strip at REFUSALS_TO_STRIP;
  * challenger decline → CHALLENGER_COOLDOWN.
  */
-function applyDecline(
-  state: GameState,
-  delta: ChampionshipDelta,
-  arenaId: string,
-  championId: WarriorId | undefined,
-  declinerId: WarriorId,
-  now: number
-): void {
+function applyDecline(args: ApplyDeclineArgs): void {
+  const { state, delta, arenaId, championId, declinerId } = args;
+  const { now } = args;
   const t = ensureTitle(state, delta, arenaId);
   if (declinerId !== championId) {
     t.declinedContenders[declinerId] = now + ARENA_TITLE.CHALLENGER_COOLDOWN_WEEKS;

@@ -73,7 +73,7 @@ function emitMinuteMarker(c: LoopCtx, fA: FighterState, fD: FighterState, min: n
   c.log.push({ minute: min, text: `MINUTE ${min}.` });
   c.log.push({
     minute: min,
-    text: minuteStatusLine(c.flavorRng, min, c.nameA, c.nameD, fA.hitsLanded, fD.hitsLanded),
+    text: minuteStatusLine({ rng: c.flavorRng, _minute: min, nameA: c.nameA, nameD: c.nameD, hitsA: fA.hitsLanded, hitsD: fD.hitsLanded }),
   });
 }
 
@@ -106,27 +106,31 @@ function checkYieldOutcome(
     const narWinner = yields === 'A' ? c.nameD : c.nameA;
     const narLoser = yields === 'A' ? c.nameA : c.nameD;
     const winnerWeapon = yields === 'A' ? c.weaponD : c.weaponA;
-    const boutEndLines = narrateBoutEnd(c.flavorRng, 'Yield', narWinner, narLoser, winnerWeapon, {
+    const boutEndLines = narrateBoutEnd({ rng: c.flavorRng, by: 'Yield', winnerName: narWinner, loserName: narLoser, weaponId: winnerWeapon, ctx: {
       mood: c.crowdMood,
-    });
+    } });
     boutEndLines.forEach((line) => c.log.push({ minute: min, text: line, emphasis: true }));
   }
   return { winner, by: 'Yield' };
+}
+
+interface NarrateExchangeEventsArgs {
+  c: LoopCtx;
+  fA: FighterState;
+  fD: FighterState;
+  events: CombatEvent[];
+  min: number;
+  prevHpRatioA: number;
+  prevHpRatioD: number;
 }
 
 /**
  * Resolves narration for one exchange (drama layer): post-exchange HP ratios,
  * event narration, and tactic-streak commentary. Returns updated ratios.
  */
-function narrateExchangeEvents(
-  c: LoopCtx,
-  fA: FighterState,
-  fD: FighterState,
-  events: CombatEvent[],
-  min: number,
-  prevHpRatioA: number,
-  prevHpRatioD: number
-): { prevHpRatioA: number; prevHpRatioD: number } {
+function narrateExchangeEvents(args: NarrateExchangeEventsArgs): { prevHpRatioA: number; prevHpRatioD: number } {
+  const { c, fA, fD, events, min } = args;
+  const { prevHpRatioA, prevHpRatioD } = args;
   // Use authoritative post-mitigation HP ratios from the engine state.
   // These are already correct — resolveExchange mutated fA.hp and fD.hp
   // with the real (post-shield, post-protect) damage figure.
@@ -222,32 +226,31 @@ function resolveBoutEnd(c: LoopCtx, boutEnd: CombatEvent, ex: number, min: numbe
         ? c.weaponD
         : c.weaponA;
     const boutEndLines = narrateBoutEnd(
-      c.flavorRng,
-      by as string,
-      narWinner,
-      narLoser,
-      winnerWeapon,
-      {
+      { rng: c.flavorRng, by: by as string, winnerName: narWinner, loserName: narLoser, weaponId: winnerWeapon, ctx: {
         cause: causeBucket,
         style: winnerStyle,
         mood: c.crowdMood,
-      }
+      } }
     );
     boutEndLines.forEach((line) => c.log.push({ minute: min, text: line, emphasis: true }));
   }
   return { by, winner, causeBucket, fatalHitLocation, fatalExchangeIndex: ex };
 }
 
+interface EmitProgressMarkersArgs {
+  c: LoopCtx;
+  fA: FighterState;
+  fD: FighterState;
+  phase: Phase;
+  min: number;
+  lastPhase: string | null;
+  lastMinuteMarker: number;
+}
+
 /** Emits phase-header and minute-marker beats; returns updated markers. */
-function emitProgressMarkers(
-  c: LoopCtx,
-  fA: FighterState,
-  fD: FighterState,
-  phase: Phase,
-  min: number,
-  lastPhase: string | null,
-  lastMinuteMarker: number
-): { lastPhase: string | null; lastMinuteMarker: number } {
+function emitProgressMarkers(args: EmitProgressMarkersArgs): { lastPhase: string | null; lastMinuteMarker: number } {
+  const { c, fA, fD, phase, min } = args;
+  let { lastPhase, lastMinuteMarker } = args;
   if (phase !== lastPhase) {
     lastPhase = phase;
     emitPhaseHeader(c, fA, fD, phase, min);
@@ -285,18 +288,22 @@ interface LoopRun {
   fatalExchangeIndex: number | undefined;
 }
 
+interface RunExchangeArgs {
+  c: LoopCtx;
+  run: LoopRun;
+  fA: FighterState;
+  fD: FighterState;
+  ex: number;
+  telemetry: boolean;
+}
+
 /**
  * One exchange of the bout: markers → yield check → resolve → narrate → end
  * check. Returns true when the bout has ended and the loop should break.
  */
-function runExchange(
-  c: LoopCtx,
-  run: LoopRun,
-  fA: FighterState,
-  fD: FighterState,
-  ex: number,
-  telemetry: boolean
-): boolean {
+function runExchange(args: RunExchangeArgs): boolean {
+  const { c, run, fA, fD, ex } = args;
+  const { telemetry } = args;
   const { resCtx, headless } = c;
   const min = Math.floor(ex / EXCHANGES_PER_MINUTE) + 1;
   run.currentMinute = min;
@@ -308,13 +315,7 @@ function runExchange(
   resCtx.cornerAdvice = phase !== run.lastPhase;
 
   ({ lastPhase: run.lastPhase, lastMinuteMarker: run.lastMinuteMarker } = emitProgressMarkers(
-    c,
-    fA,
-    fD,
-    phase,
-    min,
-    run.lastPhase,
-    run.lastMinuteMarker
+    { c: c, fA: fA, fD: fD, phase: phase, min: min, lastPhase: run.lastPhase, lastMinuteMarker: run.lastMinuteMarker }
   ));
 
   const yielded = checkYieldOutcome(c, fA, fD, min);
@@ -333,13 +334,7 @@ function runExchange(
   // B. Resolve Narration (Drama)
   if (!headless) {
     ({ prevHpRatioA: run.prevHpRatioA, prevHpRatioD: run.prevHpRatioD } = narrateExchangeEvents(
-      c,
-      fA,
-      fD,
-      events,
-      min,
-      run.prevHpRatioA,
-      run.prevHpRatioD
+      { c: c, fA: fA, fD: fD, events: events, min: min, prevHpRatioA: run.prevHpRatioA, prevHpRatioD: run.prevHpRatioD }
     ));
   }
 
@@ -358,24 +353,29 @@ function runExchange(
 }
 
 /**
+ *
+ */
+export interface RunSimulationLoopArgs {
+  fA: FighterState;
+  fD: FighterState;
+  resCtx: ResolutionContext;
+  nameA: string;
+  nameD: string;
+  weaponA: string;
+  weaponD: string;
+  warriorA: Warrior | undefined;
+  warriorD: Warrior | undefined;
+  planA: FightPlan | undefined;
+  planD: FightPlan | undefined;
+  crowdMood: string | undefined;
+  headless: boolean;
+  narRng: IRNGService;
+}
+
+/**
  * Run the main simulation loop.
  */
-export function runSimulationLoop(
-  fA: FighterState,
-  fD: FighterState,
-  resCtx: ResolutionContext,
-  nameA: string,
-  nameD: string,
-  weaponA: string,
-  weaponD: string,
-  warriorA: Warrior | undefined,
-  warriorD: Warrior | undefined,
-  planA: FightPlan | undefined,
-  planD: FightPlan | undefined,
-  crowdMood: string | undefined,
-  headless: boolean,
-  narRng: IRNGService
-): {
+export function runSimulationLoop(args: RunSimulationLoopArgs): {
   log: MinuteEvent[];
   exchangeLog: ExchangeLogEntry[];
   winner: 'A' | 'D' | null;
@@ -385,6 +385,9 @@ export function runSimulationLoop(
   fatalExchangeIndex: number | undefined;
   fightMinutes: number;
 } {
+  const { fA, fD, resCtx, nameA, nameD } = args;
+  const { weaponA, weaponD, warriorA, warriorD, planA } = args;
+  const { planD, crowdMood, headless, narRng } = args;
   // Stage F: AI_INTENT telemetry + exchangeLog surface when narrated, or when
   // the __AI_DEBUG escape hatch is set (headless debugging without narration).
   const telemetry = !headless || isAIDebugEnabled();
@@ -419,7 +422,7 @@ export function runSimulationLoop(
   };
 
   for (let ex = 0; ex < MAX_EXCHANGES; ex++) {
-    if (runExchange(c, run, fA, fD, ex, telemetry)) break;
+    if (runExchange({ c: c, run: run, fA: fA, fD: fD, ex: ex, telemetry: telemetry })) break;
   }
 
   return {

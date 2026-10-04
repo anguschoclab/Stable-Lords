@@ -8,44 +8,53 @@ import { resolveRng } from '@/utils/random';
 import { weekToTimestamp } from '@/constants';
 
 /**
- * Handle reporting.
- * @param wA -
- * @param wD -
- * @param outcome -
- * @param tags -
- * @param fA -
- * @param pA -
- * @param fD -
- * @param pD -
- * @param week -
- * @param _rivalStableId -
- * @param isRivalry -
- * @param _day -
- * @param rng -
- * @param arenaId -
- * @param weather -
- * @param absoluteWeek -
- * @param contractId -
+ *
  */
-export function handleReporting(
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  tags: string[],
-  fA: number,
-  pA: number,
-  fD: number,
-  pD: number,
-  week: number,
-  _rivalStableId?: string,
-  isRivalry?: boolean,
-  _day: number = 0,
-  rng?: IRNGService,
-  arenaId?: string,
-  weather?: import('@/types/shared.types').WeatherType,
-  absoluteWeek?: number,
-  contractId?: string
-) {
+export interface HandleReportingArgs {
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  tags: string[];
+  fA: number;
+  pA: number;
+  fD: number;
+  pD: number;
+  week: number;
+  _rivalStableId?: string;
+  isRivalry?: boolean;
+  _day?: number;
+  rng?: IRNGService;
+  arenaId?: string;
+  weather?: import('@/types/shared.types').WeatherType;
+  absoluteWeek?: number;
+  contractId?: string;
+}
+
+/**
+ * Handle reporting.
+ * @param args.wA -
+ * @param args.wD -
+ * @param args.outcome -
+ * @param args.tags -
+ * @param args.fA -
+ * @param args.pA -
+ * @param args.fD -
+ * @param args.pD -
+ * @param args.week -
+ * @param args._rivalStableId -
+ * @param args.isRivalry -
+ * @param args._day -
+ * @param args.rng -
+ * @param args.arenaId -
+ * @param args.weather -
+ * @param args.absoluteWeek -
+ * @param args.contractId -
+ */
+export function handleReporting(args: HandleReportingArgs) {
+  const { wA, wD, outcome, tags, fA } = args;
+  const { pA, fD, pD, week } = args;
+  const { isRivalry, rng, arenaId, weather } = args;
+  const { absoluteWeek, contractId } = args;
   const safeRng = rng;
   const boutId = (safeRng ? safeRng.uuid() : generateId(undefined, 'bout')) as FightId;
   const summary: FightSummary = {

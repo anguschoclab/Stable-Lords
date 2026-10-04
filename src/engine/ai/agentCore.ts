@@ -102,18 +102,25 @@ const isAIIntent = (cause: AIEventCause): cause is AIIntent =>
   (AI_INTENTS as readonly string[]).includes(cause);
 
 /**
+ *
+ */
+export interface LogAgentActionArgs {
+  rival: RivalStableData;
+  type: AIEvent['type'];
+  description: string;
+  riskTier: AIEvent['riskTier'];
+  week: number;
+  cause?: AIEventCause;
+}
+
+/**
  * Logs an event to the agent's action history, maintaining "Daemon Limits" (pruning old logs).
  * `cause` is the typed reason for the action; when it is an AIIntent it also
  * updates agentMemory.currentIntent (no more description substring matching).
  */
-export function logAgentAction(
-  rival: RivalStableData,
-  type: AIEvent['type'],
-  description: string,
-  riskTier: AIEvent['riskTier'],
-  week: number,
-  cause?: AIEventCause
-): RivalStableData {
+export function logAgentAction(args: LogAgentActionArgs): RivalStableData {
+  const { rival, type, description, riskTier, week } = args;
+  const { cause } = args;
   const eventIndex = (rival.actionHistory || []).length;
   const eventId = `event-${hashStr(`${rival.owner.id}|${week}|${type}|${description}|${eventIndex}`).toString(16)}`;
   const newEvent: AIEvent = {
@@ -168,12 +175,7 @@ export function logFinanceEvent(
     ledger: [...(rival.ledger ?? []), entry].slice(-500),
   };
   return logAgentAction(
-    withLedger,
-    'FINANCE',
-    opts.description ?? opts.label,
-    opts.riskTier ?? 'Low',
-    opts.week,
-    'MAINTENANCE'
+    { rival: withLedger, type: 'FINANCE', description: opts.description ?? opts.label, riskTier: opts.riskTier ?? 'Low', week: opts.week, cause: 'MAINTENANCE' }
   );
 }
 

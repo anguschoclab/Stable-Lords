@@ -43,7 +43,7 @@ describe('applyRecords', () => {
     const wD = createMockWarrior('D');
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
 
-    const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1);
+    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], fameA: 5, popA: 2, fameD: 1, popD: 1 });
 
     const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
     const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
@@ -70,7 +70,7 @@ describe('applyRecords', () => {
     const wD = createMockWarrior('D');
     const outcome: FightOutcome = { winner: 'D', by: 'Kill', minutes: 5, log: [] };
 
-    const impact = applyRecords(s, wA, wD, outcome, ['Flashy'], 1, 1, 5, 2);
+    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: ['Flashy'], fameA: 1, popA: 1, fameD: 5, popD: 2 });
 
     const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
     const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
@@ -100,7 +100,7 @@ describe('applyRecords', () => {
     const s = createMockState({ player: { id: 'player-1' } as never, roster: [] });
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
 
-    const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1, 'rival-1');
+    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], fameA: 5, popA: 2, fameD: 1, popD: 1, _rivalStableId: 'rival-1' });
 
     // Neither side touches the player roster, and no whole-roster rival write.
     expect(impact.rosterUpdates?.size ?? 0).toBe(0);
@@ -146,7 +146,7 @@ describe('applyRecords', () => {
     const wD = createMockWarrior('D', { fatigue: 30 });
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
 
-    const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1);
+    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], fameA: 5, popA: 2, fameD: 1, popD: 1 });
 
     const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
     const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
@@ -188,7 +188,7 @@ describe('applyRecords', () => {
     const wD = createMockWarrior('D', { fatigue: 30 });
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
 
-    const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1);
+    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], fameA: 5, popA: 2, fameD: 1, popD: 1 });
 
     const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
     const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
@@ -203,7 +203,7 @@ describe('applyRecords', () => {
 
     const wA2 = createMockWarrior('A', { fatigue: undefined });
     const wD2 = createMockWarrior('D', { fatigue: undefined });
-    const impact = applyRecords(s, wA2, wD2, outcome, [], 0, 0, 0, 0);
+    const impact = applyRecords({ s: s, wA: wA2, wD: wD2, outcome: outcome, tags: [], fameA: 0, popA: 0, fameD: 0, popD: 0 });
 
     const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
     const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;

@@ -23,7 +23,7 @@ describe('desperation gate', () => {
     const warrior = makeWarrior({ fame: 50 });
     const rival = makeRival({ roster: [warrior], treasury: 300 });
     const offer = makeBoutOffer({ warriorIds: [warrior.id], purse: 150, hype: 80 });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear')).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' })).toBe('Accepted');
   });
 
   it('RECOVERY stable with low treasury still declines a killer opponent', () => {
@@ -39,7 +39,7 @@ describe('desperation gate', () => {
       purse: 400,
       hype: 120,
     });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', killer)).toBe('Declined');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: killer })).toBe('Declined');
   });
 
   it('RECOVERY stable with low treasury still declines a huge fame mismatch', () => {
@@ -55,14 +55,14 @@ describe('desperation gate', () => {
       purse: 400,
       hype: 120,
     });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', superstar)).toBe('Declined');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: superstar })).toBe('Declined');
   });
 
   it('blocking injuries decline regardless of treasury', () => {
     const warrior = makeWarrior({ fame: 50, injuries: [severeInjury] });
     const rival = makeRival({ roster: [warrior], treasury: 100 });
     const offer = makeBoutOffer({ warriorIds: [warrior.id], purse: 400, hype: 120 });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear')).toBe('Declined');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' })).toBe('Declined');
   });
 
   it('blocking injuries decline even for Aggressive stables', () => {
@@ -81,6 +81,6 @@ describe('desperation gate', () => {
       },
     });
     const offer = makeBoutOffer({ warriorIds: [warrior.id], purse: 400, hype: 120 });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear')).toBe('Declined');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' })).toBe('Declined');
   });
 });

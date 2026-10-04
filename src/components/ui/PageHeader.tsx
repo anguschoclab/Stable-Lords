@@ -16,7 +16,9 @@ interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'ti
  * Page header.
  */
 const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
-  ({ className, title, subtitle, eyebrow, actions, icon: Icon, ...props }, ref) => {
+  (_props, ref) => {
+    const { className, title, subtitle, eyebrow, actions } = _props;
+    const { icon: Icon, ...props } = _props;
     return (
       <div ref={ref} className={cn('relative space-y-6 pb-6', className)} {...props}>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">

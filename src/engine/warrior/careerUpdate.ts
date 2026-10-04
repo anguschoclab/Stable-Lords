@@ -182,17 +182,24 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
 }
 
 /**
+ *
+ */
+export interface UpdateWarriorAfterBoutArgs {
+  warrior: Warrior;
+  fameDelta: number;
+  popularityDelta: number;
+  isWinner: boolean;
+  wasKilled: boolean;
+  tags: string[];
+}
+
+/**
  * Legacy-compatible function for bout record handling
  * Matches the signature of the original updateWarriorAfterBout
  */
-export function updateWarriorAfterBout(
-  warrior: Warrior,
-  fameDelta: number,
-  popularityDelta: number,
-  isWinner: boolean,
-  wasKilled: boolean,
-  tags: string[]
-): Warrior {
+export function updateWarriorAfterBout(args: UpdateWarriorAfterBoutArgs): Warrior {
+  const { warrior, fameDelta, popularityDelta, isWinner, wasKilled } = args;
+  const { tags } = args;
   const input: CareerUpdateInput = {
     isWinner,
     isKill: wasKilled,
@@ -211,19 +218,24 @@ export function updateWarriorAfterBout(
 }
 
 /**
+ *
+ */
+export interface UpdateWarriorFromBoutOutcomeArgs {
+  warrior: Warrior;
+  isAttacker: boolean;
+  winnerSide: 'A' | 'D' | null;
+  isKill: boolean;
+  skipFatigue?: boolean;
+  arenaId?: string;
+}
+
+/**
  * Convenience function for tournament resolution
  * Combines calculation and application in one step
  */
-export function updateWarriorFromBoutOutcome(
-  warrior: Warrior,
-  isAttacker: boolean,
-  winnerSide: 'A' | 'D' | null,
-  isKill: boolean,
-  /** If true, skip fatigue accrual (for tournament participants during tournament week) */
-  skipFatigue?: boolean,
-  /** Arena where the bout took place — used to maintain the per-arena career breakdown */
-  arenaId?: string
-): Warrior {
+export function updateWarriorFromBoutOutcome(args: UpdateWarriorFromBoutOutcomeArgs): Warrior {
+  const { warrior, isAttacker, winnerSide, isKill, skipFatigue } = args;
+  const { arenaId } = args;
   const isWinner = (isAttacker && winnerSide === 'A') || (!isAttacker && winnerSide === 'D');
   const isVictim = !isWinner && isKill;
 

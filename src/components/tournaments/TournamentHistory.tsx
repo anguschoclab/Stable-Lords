@@ -80,16 +80,7 @@ function TournamentEntryRow({
 }
 
 /** One season column: archive entries or the empty-season placeholder. */
-function SeasonCard({
-  season,
-  tournaments,
-  seasonIcons,
-  seasonNames,
-  isCurrent,
-  arenaHistory,
-  expandedId,
-  onToggleEntry,
-}: {
+function SeasonCard(props: {
   season: string;
   tournaments: TournamentEntry[];
   seasonIcons: Record<string, string>;
@@ -99,6 +90,8 @@ function SeasonCard({
   expandedId: string | null;
   onToggleEntry: (id: string) => void;
 }) {
+  const { season, tournaments, seasonIcons, seasonNames, isCurrent } = props;
+  const { arenaHistory, expandedId, onToggleEntry } = props;
   return (
     <Surface
       variant={isCurrent ? 'gold' : 'glass'}

@@ -4,7 +4,7 @@
  * Import these instead of checking `.status === "Dead"` manually.
  */
 import type { Warrior, InjuryData } from '@/types/warrior.types';
-import type { RestState, TrainingAssignment } from '@/types/state.types';
+import type { GameState, RestState, TrainingAssignment } from '@/types/state.types';
 import { isTooInjuredToFight } from '@/engine/injuries';
 import { isExhausted } from '@/engine/core/fatigueUtils';
 
@@ -21,6 +21,20 @@ export function isRetired(w: Pick<Warrior, 'status'>): boolean {
 /** Whether a warrior is on the active roster (not dead or retired) */
 export function isActive(w: Pick<Warrior, 'status'>): boolean {
   return w.status === 'Active';
+}
+
+/**
+ * Every warrior id that has ever died under `state` — the persistent
+ * `deadWarriorIds` registry ∪ the (truncating) `graveyard`. Stale snapshots
+ * (tournament participants, cached maps) keep their selection-time 'Active'
+ * status forever, so set membership is the liveness authority wherever a
+ * warrior object might be stale.
+ */
+export function deadIdSet(state: GameState): Set<string> {
+  return new Set<string>([
+    ...(state.deadWarriorIds ?? []),
+    ...(state.graveyard ?? []).map((w) => w.id as string),
+  ]);
 }
 
 /**

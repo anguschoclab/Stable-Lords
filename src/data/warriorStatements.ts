@@ -37,14 +37,18 @@ function pickFromArchive(entries: StatementEntry[] | undefined, witValue: number
   return last?.text ?? '';
 }
 
-function getStatement(
-  skillKey: string,
-  baseValue: number,
-  highThreshold: number,
-  isGoodWit: boolean,
-  wt: number,
-  personaData: Persona
-): string {
+interface GetStatementArgs {
+  skillKey: string;
+  baseValue: number;
+  highThreshold: number;
+  isGoodWit: boolean;
+  wt: number;
+  personaData: Persona;
+}
+
+function getStatement(args: GetStatementArgs): string {
+  const { skillKey, baseValue, highThreshold, isGoodWit, wt } = args;
+  const { personaData } = args;
   const witKey = isGoodWit ? 'good' : 'bad';
   const orderKey = baseValue >= highThreshold ? 'high' : 'low';
   const category = (
@@ -127,12 +131,12 @@ export function generateWarriorStatements(
   const isGoodWit = wt > 7;
   const p = persona;
 
-  const initiative = getStatement('initiative', skills.INI, 13, isGoodWit, wt, p);
-  const riposte = getStatement('riposte', skills.RIP, 13, isGoodWit, wt, p);
-  const attack = getStatement('attack', skills.ATT, 10, isGoodWit, wt, p);
-  const parry = getStatement('parry', skills.PAR, 10, isGoodWit, wt, p);
-  const defense = getStatement('defense', skills.DEF, 7, isGoodWit, wt, p);
-  const endurance = getStatement('endurance', skills.DEC, 10, isGoodWit, wt, p);
+  const initiative = getStatement({ skillKey: 'initiative', baseValue: skills.INI, highThreshold: 13, isGoodWit: isGoodWit, wt: wt, personaData: p });
+  const riposte = getStatement({ skillKey: 'riposte', baseValue: skills.RIP, highThreshold: 13, isGoodWit: isGoodWit, wt: wt, personaData: p });
+  const attack = getStatement({ skillKey: 'attack', baseValue: skills.ATT, highThreshold: 10, isGoodWit: isGoodWit, wt: wt, personaData: p });
+  const parry = getStatement({ skillKey: 'parry', baseValue: skills.PAR, highThreshold: 10, isGoodWit: isGoodWit, wt: wt, personaData: p });
+  const defense = getStatement({ skillKey: 'defense', baseValue: skills.DEF, highThreshold: 7, isGoodWit: isGoodWit, wt: wt, personaData: p });
+  const endurance = getStatement({ skillKey: 'endurance', baseValue: skills.DEC, highThreshold: 10, isGoodWit: isGoodWit, wt: wt, personaData: p });
 
   // Descriptors
   const coordRating = computeCoordination(sp, df);

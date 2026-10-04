@@ -37,14 +37,7 @@ export function agentPlanForWarrior(
   const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, resolvedOpponentStable ?? ''));
 
   return aiPlanForWarrior(
-    w,
-    rival.owner.personality ?? 'Pragmatic',
-    rival.philosophy ?? 'Opportunist',
-    opponent.style,
-    rival.strategy?.intent,
-    grudge?.intensity ?? 0,
-    dossier,
-    state.absoluteWeek ?? state.week
+    { w: w, personality: rival.owner.personality ?? 'Pragmatic', philosophy: rival.philosophy ?? 'Opportunist', opponentStyle: opponent.style, intent: rival.strategy?.intent, grudgeIntensity: grudge?.intensity ?? 0, dossier: dossier, now: state.absoluteWeek ?? state.week }
   );
 }
 

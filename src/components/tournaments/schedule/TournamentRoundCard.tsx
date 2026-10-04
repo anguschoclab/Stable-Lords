@@ -22,16 +22,9 @@ interface TournamentRoundCardProps {
 /**
  *
  */
-export function TournamentRoundCard({
-  round,
-  bouts,
-  isExpanded,
-  tournamentWeek,
-  currentWeek,
-  totalRounds,
-  toggleRound,
-  state,
-}: TournamentRoundCardProps) {
+export function TournamentRoundCard(props: TournamentRoundCardProps) {
+  const { round, bouts, isExpanded, tournamentWeek, currentWeek } = props;
+  const { totalRounds, toggleRound, state } = props;
   const estimatedWeek = getEstimatedWeek(tournamentWeek, round);
   const isPast = estimatedWeek < currentWeek;
   const isCurrent = estimatedWeek === currentWeek;
@@ -101,14 +94,7 @@ export function TournamentRoundCard({
 }
 
 /** Round number chip + name + estimated-week status line. */
-function RoundIdentity({
-  round,
-  totalRounds,
-  estimatedWeek,
-  isComplete,
-  isCurrent,
-  isPast,
-}: {
+function RoundIdentity(props: {
   round: number;
   totalRounds: number;
   estimatedWeek: number;
@@ -116,6 +102,8 @@ function RoundIdentity({
   isCurrent: boolean;
   isPast: boolean;
 }) {
+  const { round, totalRounds, estimatedWeek, isComplete, isCurrent } = props;
+  const { isPast } = props;
   return (
     <div className="flex items-center gap-3">
       <div

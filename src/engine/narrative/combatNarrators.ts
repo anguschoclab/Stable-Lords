@@ -14,16 +14,23 @@ import { audioManager } from '@/lib/AudioManager';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
+ *
+ */
+export interface NarrateAttackArgs {
+  rng: IRNGService;
+  attackerName: string;
+  weaponId?: string;
+  _isMastery?: boolean;
+  defenderName?: string;
+  style?: FightingStyle;
+}
+
+/**
  * Narrates an attack with weapon-type-specific verbs.
  */
-export function narrateAttack(
-  rng: IRNGService,
-  attackerName: string,
-  weaponId?: string,
-  _isMastery?: boolean,
-  defenderName?: string,
-  style?: FightingStyle
-): string {
+export function narrateAttack(args: NarrateAttackArgs): string {
+  const { rng, attackerName, weaponId, defenderName } = args;
+  const { style } = args;
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId, style);
 
@@ -261,34 +268,37 @@ export function narrateCounterstrike(
 }
 
 /**
+ *
+ */
+export interface NarrateHitArgs {
+  rng: IRNGService;
+  defenderName: string;
+  location: string;
+  _isMastery?: boolean;
+  isSuperFlashy?: boolean;
+  attackerName?: string;
+  weaponId?: string;
+  damage?: number;
+  maxHp?: number;
+  isFatal?: boolean;
+  attackerFame?: number;
+  isFavorite?: boolean;
+  style?: FightingStyle;
+}
+
+/**
  * Narrates a hit with severity-based flavor.
  */
-export function narrateHit(
-  rng: IRNGService,
-  defenderName: string,
-  location: string,
-  _isMastery?: boolean,
-  isSuperFlashy?: boolean,
-  attackerName?: string,
-  weaponId?: string,
-  damage?: number,
-  maxHp?: number,
-  isFatal?: boolean,
-  attackerFame?: number,
-  isFavorite?: boolean,
-  style?: FightingStyle
-): string {
+export function narrateHit(args: NarrateHitArgs): string {
+  const { rng, defenderName, location, isSuperFlashy } = args;
+  const { attackerName, weaponId, damage, maxHp, isFatal } = args;
+  const { attackerFame, isFavorite, style } = args;
   const richLoc = richHitLocation(rng, location);
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId, style);
 
   const severity = getStrikeSeverity(
-    damage || 0,
-    maxHp || 100,
-    isFatal || false,
-    isSuperFlashy || false,
-    isFavorite || false,
-    attackerFame || 0
+    { damage: damage || 0, maxHp: maxHp || 100, isFatal: isFatal || false, isCrit: isSuperFlashy || false, isFavorite: isFavorite || false, fame: attackerFame || 0 }
   );
 
   if (severity === 'critical_human' || severity === 'critical_supernatural') {

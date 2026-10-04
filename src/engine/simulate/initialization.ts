@@ -52,21 +52,28 @@ export function initializeRng(providedRng?: IRNGService | number): {
 }
 
 /**
+ *
+ */
+export interface InitializeFightersArgs {
+  planA: FightPlan;
+  planD: FightPlan;
+  warriorA?: Warrior;
+  warriorD?: Warrior;
+  trainers?: Trainer[];
+  weather?: WeatherType;
+  arenaId?: string;
+}
+
+/**
  * Initialize fighter states with weather effects.
  */
-export function initializeFighters(
-  planA: FightPlan,
-  planD: FightPlan,
-  warriorA?: Warrior,
-  warriorD?: Warrior,
-  trainers?: Trainer[],
-  weather: WeatherType = 'Clear',
-  arenaId: string = 'standard_arena'
-): {
+export function initializeFighters(args: InitializeFightersArgs): {
   fA: ReturnType<typeof createFighterState>;
   fD: ReturnType<typeof createFighterState>;
   effectiveWeather: WeatherType;
 } {
+  const { planA, planD, warriorA, warriorD, trainers } = args;
+  const { weather = 'Clear', arenaId = 'standard_arena' } = args;
   const arena = getArenaById(arenaId);
   const effectiveWeather = resolveEffectiveWeather(weather, arena.tags);
 
@@ -82,19 +89,26 @@ export function initializeFighters(
 }
 
 /**
+ *
+ */
+export interface InitializeResolutionContextArgs {
+  planA: FightPlan;
+  planD: FightPlan;
+  effectiveWeather: WeatherType;
+  warriorA?: Warrior;
+  warriorD?: Warrior;
+  trainers?: Trainer[];
+  arenaId?: string;
+  crowdMood?: CrowdMood;
+  deathRateMult?: number;
+}
+
+/**
  * Initialize resolution context with all modifiers.
  */
-export function initializeResolutionContext(
-  planA: FightPlan,
-  planD: FightPlan,
-  effectiveWeather: WeatherType,
-  warriorA?: Warrior,
-  warriorD?: Warrior,
-  trainers?: Trainer[],
-  arenaId: string = 'standard_arena',
-  crowdMood?: CrowdMood,
-  deathRateMult?: number
-): ResolutionContext {
+export function initializeResolutionContext(args: InitializeResolutionContextArgs): ResolutionContext {
+  const { planA, planD, effectiveWeather, warriorA, warriorD } = args;
+  const { trainers, arenaId = 'standard_arena', crowdMood, deathRateMult } = args;
   const weaponA = (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon;
   const weaponD = (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon;
 

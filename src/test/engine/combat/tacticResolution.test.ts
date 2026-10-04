@@ -212,15 +212,15 @@ describe('tacticResolution', () => {
     };
 
     it('returns base OE/AL when no modifiers apply', () => {
-      const [finalOE, finalAL] = calculateFinalOEAL(5, 5, basePlan, 100, 100, 100, 100, 5);
+      const [finalOE, finalAL] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: basePlan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 5 });
       expect(finalOE).toBe(5);
       expect(finalAL).toBe(5);
     });
 
     it('applies Aggressive openingMove bonus in early exchanges', () => {
       const plan: FightPlan = { ...basePlan, openingMove: 'Aggressive' };
-      const [oe1, al1] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 1);
-      const [oe2, al2] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 2);
+      const [oe1, al1] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 1 });
+      const [oe2, al2] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 2 });
       expect(oe1).toBe(6); // +1 for Aggressive
       expect(al1).toBe(6);
       expect(oe2).toBe(6); // Still early exchange
@@ -229,49 +229,49 @@ describe('tacticResolution', () => {
 
     it('does not apply openingMove after exchange 3', () => {
       const plan: FightPlan = { ...basePlan, openingMove: 'Aggressive' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 3);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 3 });
       expect(oe).toBe(5); // No bonus
       expect(al).toBe(5);
     });
 
     it('applies Safe openingMove penalty in early exchanges', () => {
       const plan: FightPlan = { ...basePlan, openingMove: 'Safe' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 1);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 1 });
       expect(oe).toBe(4); // -1 for Safe
       expect(al).toBe(4);
     });
 
     it('applies FLEE fallback when HP < 30%', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'FLEE' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 25, 100, 100, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 25, maxHp: 100, end: 100, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(2); // 5 - 3 = 2
       expect(al).toBe(2);
     });
 
     it('does not apply FLEE fallback when HP >= 30%', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'FLEE' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 30, 100, 100, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 30, maxHp: 100, end: 100, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(5);
       expect(al).toBe(5);
     });
 
     it('applies TURTLE fallback when endurance < 30%', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'TURTLE' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 100, 100, 25, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 25, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(1); // 5 - 4 = 1
       expect(al).toBe(7); // 5 + 2 = 7
     });
 
     it('applies BERZERK fallback when HP < 30%', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'BERZERK' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 25, 100, 100, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 25, maxHp: 100, end: 100, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(9); // 5 + 4 = 9
       expect(al).toBe(3); // 5 - 2 = 3
     });
 
     it('clamps final OE/AL between 1 and 10', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'BERZERK' };
-      const [oe, al] = calculateFinalOEAL(8, 1, plan, 25, 100, 100, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 8, effAL: 1, plan: plan, hp: 25, maxHp: 100, end: 100, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(10); // 8 + 4 = 12, clamped to 10
       expect(al).toBe(1); // 1 - 2 = -1, clamped to 1
     });
@@ -282,7 +282,7 @@ describe('tacticResolution', () => {
         openingMove: 'Aggressive',
         fallbackCondition: 'FLEE',
       };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 25, 100, 100, 100, 1);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 25, maxHp: 100, end: 100, maxEnd: 100, exchange: 1 });
       // Aggressive: +1, FLEE: -3 = net -2
       expect(oe).toBe(3);
       expect(al).toBe(3);
@@ -290,7 +290,7 @@ describe('tacticResolution', () => {
 
     it('uses effective OE/AL as base, not plan values', () => {
       const plan: FightPlan = { ...basePlan, OE: 7, AL: 3 };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 5 });
       // Uses effOE=5, effAL=5, not plan.OE=7, plan.AL=3
       expect(oe).toBe(5);
       expect(al).toBe(5);
@@ -385,21 +385,21 @@ describe('tacticResolution', () => {
 
     it('Measured openingMove applies no modifier', () => {
       const plan: FightPlan = { ...basePlan, openingMove: 'Measured' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 1);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 100, maxHp: 100, end: 100, maxEnd: 100, exchange: 1 });
       expect(oe).toBe(5);
       expect(al).toBe(5);
     });
 
     it('None fallbackCondition applies no fallback', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'None' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 10, 100, 10, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 10, maxHp: 100, end: 10, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(5);
       expect(al).toBe(5);
     });
 
     it('YIELD fallbackCondition applies no OE/AL modification', () => {
       const plan: FightPlan = { ...basePlan, fallbackCondition: 'YIELD' };
-      const [oe, al] = calculateFinalOEAL(5, 5, plan, 10, 100, 10, 100, 5);
+      const [oe, al] = calculateFinalOEAL({ effOE: 5, effAL: 5, plan: plan, hp: 10, maxHp: 100, end: 10, maxEnd: 100, exchange: 5 });
       expect(oe).toBe(5);
       expect(al).toBe(5);
     });

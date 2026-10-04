@@ -14,7 +14,7 @@ describe('partialRefreshPool', () => {
   it('returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool', () => {
     const usedNames = new Set<string>();
     const rng = new SeededRNGService(12345);
-    const pool = partialRefreshPool([], 1, usedNames, rng);
+    const pool = partialRefreshPool({ currentPool: [], week: 1, usedNames: usedNames, rng: rng });
     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
     expect(pool.every((w) => w.addedWeek === 1)).toBe(true);
   });
@@ -22,7 +22,7 @@ describe('partialRefreshPool', () => {
   it('removes the oldest warriors and replaces them, ensuring DEFAULT_POOL_SIZE', () => {
     const usedNames = new Set<string>();
     const rng = new SeededRNGService(12345);
-    const week1Pool = generateRecruitPool(DEFAULT_POOL_SIZE, 1, usedNames, rng);
+    const week1Pool = generateRecruitPool({ count: DEFAULT_POOL_SIZE, week: 1, usedNames: usedNames, rng: rng });
 
     // Simulate some time passing and an older pool. Let's make 2 of them older.
     const pool = [...week1Pool];
@@ -36,7 +36,7 @@ describe('partialRefreshPool', () => {
 
     const nextWeek = 4;
 
-    const refreshedPool = partialRefreshPool(pool, nextWeek, usedNames);
+    const refreshedPool = partialRefreshPool({ currentPool: pool, week: nextWeek, usedNames: usedNames });
 
     expect(refreshedPool.length).toBe(DEFAULT_POOL_SIZE);
 
@@ -56,14 +56,14 @@ describe('partialRefreshPool', () => {
     const turnover = Math.max(2, Math.ceil(DEFAULT_POOL_SIZE / 6));
 
     // Small pool: turnover exceeds the pool, so every entry is replaced.
-    let smallPool = generateRecruitPool(5, 1, usedNames);
-    smallPool = partialRefreshPool(smallPool, 2, usedNames);
+    let smallPool = generateRecruitPool({ count: 5, week: 1, usedNames: usedNames });
+    smallPool = partialRefreshPool({ currentPool: smallPool, week: 2, usedNames: usedNames });
     expect(smallPool.length).toBe(DEFAULT_POOL_SIZE);
     expect(smallPool.every((w) => w.addedWeek === 2)).toBe(true);
 
     // Larger pool: 8 oldest removed, the rest survive, topped back to target.
-    const largePool = generateRecruitPool(20, 1, usedNames);
-    const refreshedLarge = partialRefreshPool(largePool, 2, usedNames);
+    const largePool = generateRecruitPool({ count: 20, week: 1, usedNames: usedNames });
+    const refreshedLarge = partialRefreshPool({ currentPool: largePool, week: 2, usedNames: usedNames });
     expect(refreshedLarge.length).toBe(DEFAULT_POOL_SIZE);
     const survivors = refreshedLarge.filter((w) => w.addedWeek === 1);
     expect(survivors.length).toBe(20 - turnover);
@@ -72,7 +72,7 @@ describe('partialRefreshPool', () => {
   it('avoids reusing names that are in the remaining pool or previously used', () => {
     const usedNames = new Set<string>();
     const rng = new SeededRNGService(12345);
-    const pool = generateRecruitPool(10, 1, usedNames, rng);
+    const pool = generateRecruitPool({ count: 10, week: 1, usedNames: usedNames, rng: rng });
 
     // Add all names from pool to usedNames, except maybe the ones being removed?
     // Actually generateRecruitPool already adds them to usedNames.
@@ -80,7 +80,7 @@ describe('partialRefreshPool', () => {
     // We add an external name to usedNames
     usedNames.add('EXTERNAL_NAME');
 
-    const refreshedPool = partialRefreshPool(pool, 2, usedNames, rng);
+    const refreshedPool = partialRefreshPool({ currentPool: pool, week: 2, usedNames: usedNames, rng: rng });
 
     // Make sure EXTERNAL_NAME is not in the refreshed pool unless it was somehow already there
     // But NAME_POOL doesn't have "EXTERNAL_NAME", so this is just to verify it works without error.
@@ -135,7 +135,7 @@ describe('fullRefreshPool', () => {
 
   it('ignores existing pool state (full refresh)', () => {
     const usedNames = new Set<string>();
-    const oldPool = generateRecruitPool(DEFAULT_POOL_SIZE, 1, usedNames);
+    const oldPool = generateRecruitPool({ count: DEFAULT_POOL_SIZE, week: 1, usedNames: usedNames });
     const newPool = fullRefreshPool(2, usedNames);
     // New pool should have completely different warriors
     const oldIds = new Set(oldPool.map((w) => w.id));
@@ -182,7 +182,7 @@ describe('legacy (dynastic) recruit naming', () => {
   it('gives legacy recruits a name referencing their parent', () => {
     const parent = makeWarrior({ name: 'KRAGOS' });
     const usedNames = new Set<string>();
-    const recruit = generateRecruit(legacyRng(), usedNames, 1, undefined, undefined, [parent]);
+    const recruit = generateRecruit({ rng: legacyRng(), usedNames: usedNames, week: 1, forceTier: undefined, meta: undefined, legacyCandidates: [parent] });
     expect(recruit.lineage?.parentId).toBe(parent.id);
     expect(recruit.name).not.toBe('KRAGOS');
     expect(
@@ -195,7 +195,7 @@ describe('legacy (dynastic) recruit naming', () => {
 
   it('keeps generated pool names unique and arena-format', () => {
     const usedNames = new Set<string>();
-    const pool = generateRecruitPool(30, 1, usedNames, new SeededRNGService(31));
+    const pool = generateRecruitPool({ count: 30, week: 1, usedNames: usedNames, rng: new SeededRNGService(31) });
     const names = pool.map((w) => w.name);
     expect(new Set(names).size).toBe(names.length);
     for (const n of names) {

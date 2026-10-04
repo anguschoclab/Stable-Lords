@@ -38,17 +38,7 @@ export function GoldDivider({ faint = false }: { faint?: boolean }) {
 }
 
 /** Labeled text input with an adjacent dice button that fills a random value. */
-export function NameField({
-  id,
-  label,
-  placeholder,
-  value,
-  onChange,
-  maxLength,
-  autoFocus,
-  onRandomize,
-  randomizeLabel,
-}: {
+export function NameField(props: {
   id: string;
   label: string;
   placeholder: string;
@@ -59,6 +49,8 @@ export function NameField({
   onRandomize: () => void;
   randomizeLabel: string;
 }) {
+  const { id, label, placeholder, value, onChange } = props;
+  const { maxLength, autoFocus, onRandomize, randomizeLabel } = props;
   return (
     <div className="space-y-2">
       <label

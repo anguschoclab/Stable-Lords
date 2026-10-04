@@ -13,20 +13,10 @@ function collectIntentCodes(entries: ExchangeLogEntry[] | undefined): string[] {
 
 function makeFighters(seed: number) {
   const A = makeWarrior(
-    undefined,
-    'A',
-    FightingStyle.LungingAttack,
-    { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
-    undefined,
-    new SeededRNGService(seed)
+    { id: undefined, name: 'A', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNGService(seed) }
   );
   const D = makeWarrior(
-    undefined,
-    'D',
-    FightingStyle.TotalParry,
-    { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
-    undefined,
-    new SeededRNGService(seed + 100)
+    { id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNGService(seed + 100) }
   );
   return { A, D };
 }
@@ -39,16 +29,7 @@ describe('AI_INTENT telemetry (Stage F)', () => {
   it('emits AI_INTENT_* reason codes in non-headless mode', () => {
     const { A, D } = makeFighters(7);
     const out = simulateFight(
-      defaultPlanForWarrior(A),
-      defaultPlanForWarrior(D),
-      A,
-      D,
-      7,
-      undefined,
-      'Clear',
-      'standard_arena',
-      undefined,
-      false
+      { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: 7, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: false }
     );
     const codes = collectIntentCodes(out.exchangeLog);
     expect(codes.length).toBeGreaterThan(0);
@@ -57,16 +38,7 @@ describe('AI_INTENT telemetry (Stage F)', () => {
   it('emits an intent for both fighters on the opening exchange', () => {
     const { A, D } = makeFighters(7);
     const out = simulateFight(
-      defaultPlanForWarrior(A),
-      defaultPlanForWarrior(D),
-      A,
-      D,
-      7,
-      undefined,
-      'Clear',
-      'standard_arena',
-      undefined,
-      false
+      { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: 7, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: false }
     );
     const first = out.exchangeLog?.[0];
     const codes = (first?.reasonCodes ?? []).filter((c) => c.startsWith('AI_INTENT_'));
@@ -78,16 +50,7 @@ describe('AI_INTENT telemetry (Stage F)', () => {
       const { A, D } = makeFighters(11);
       return collectIntentCodes(
         simulateFight(
-          defaultPlanForWarrior(A),
-          defaultPlanForWarrior(D),
-          A,
-          D,
-          11,
-          undefined,
-          'Clear',
-          'standard_arena',
-          undefined,
-          false
+          { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: 11, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: false }
         ).exchangeLog
       );
     };
@@ -100,16 +63,7 @@ describe('AI_INTENT telemetry (Stage F)', () => {
   it('emits no intent telemetry in headless mode', () => {
     const { A, D } = makeFighters(7);
     const out = simulateFight(
-      defaultPlanForWarrior(A),
-      defaultPlanForWarrior(D),
-      A,
-      D,
-      7,
-      undefined,
-      'Clear',
-      'standard_arena',
-      undefined,
-      true
+      { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: 7, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: true }
     );
     expect(collectIntentCodes(out.exchangeLog)).toHaveLength(0);
   });
@@ -118,16 +72,7 @@ describe('AI_INTENT telemetry (Stage F)', () => {
     (globalThis as { __AI_DEBUG?: boolean }).__AI_DEBUG = true;
     const { A, D } = makeFighters(7);
     const out = simulateFight(
-      defaultPlanForWarrior(A),
-      defaultPlanForWarrior(D),
-      A,
-      D,
-      7,
-      undefined,
-      'Clear',
-      'standard_arena',
-      undefined,
-      true
+      { planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: 7, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: true }
     );
     expect(collectIntentCodes(out.exchangeLog).length).toBeGreaterThan(0);
   });
@@ -139,24 +84,14 @@ describe('AI_INTENT telemetry (Stage F)', () => {
     const union = new Set<string>();
     for (let seed = 1; seed <= 12; seed++) {
       const A = makeWarrior(
-        undefined,
-        'KILLER',
-        FightingStyle.LungingAttack,
-        { ST: 21, CN: 15, SZ: 15, WT: 15, WL: 21, SP: 15, DF: 15 },
-        undefined,
-        new SeededRNGService(3)
+        { id: undefined, name: 'KILLER', style: FightingStyle.LungingAttack, attrs: { ST: 21, CN: 15, SZ: 15, WT: 15, WL: 21, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNGService(3) }
       );
       const D = makeWarrior(
-        undefined,
-        'PREY',
-        FightingStyle.TotalParry,
-        { ST: 5, CN: 5, SZ: 5, WT: 5, WL: 5, SP: 5, DF: 5 },
-        undefined,
-        new SeededRNGService(4)
+        { id: undefined, name: 'PREY', style: FightingStyle.TotalParry, attrs: { ST: 5, CN: 5, SZ: 5, WT: 5, WL: 5, SP: 5, DF: 5 }, overrides: undefined, rng: new SeededRNGService(4) }
       );
       const planA: FightPlan = { ...defaultPlanForWarrior(A), killDesire: 10 };
       collectIntentCodes(
-        simulateFight(planA, defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear').exchangeLog
+        simulateFight({ planA: planA, planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed, trainers: undefined, weather: 'Clear' }).exchangeLog
       ).forEach((c) => union.add(c));
     }
     expect(union.has('AI_INTENT_FINISH')).toBe(true);

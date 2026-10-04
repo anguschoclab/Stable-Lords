@@ -26,11 +26,9 @@ export function AttributeComparison({ warriorA, warriorB }: AttributeComparisonP
           <ComparisonBar
             key={key}
             label={key}
-            valA={warriorA.attributes[key] ?? 0}
-            valB={warriorB.attributes[key] ?? 0}
             maxVal={25}
-            colorA="bg-primary"
-            colorB="bg-accent"
+            sideA={{ value: warriorA.attributes[key] ?? 0, color: 'bg-primary' }}
+            sideB={{ value: warriorB.attributes[key] ?? 0, color: 'bg-accent' }}
           />
         ))}
       </div>

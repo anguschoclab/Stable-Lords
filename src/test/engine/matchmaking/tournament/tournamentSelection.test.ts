@@ -720,6 +720,233 @@ describe('sweepUnfinishedTournaments', () => {
     expect(new Set(swept.tournaments!.map((t) => t.id)).size).toBe(2);
     expect(swept.tournaments![0]!.id).toBe('t-shared');
   });
+
+  it('forfeits a dead participant instead of re-killing a stale snapshot', () => {
+    // The kill/death divergence: a warrior killed last week stays 'Active'
+    // inside tournaments[].participants. findWarriorById checks participants
+    // first, so the sweep resolves the stale snapshot and re-kills them —
+    // a second kill outcome with no new graveyard entry.
+    const wAlive = makeTournamentWarrior('z-alive', 'Alive', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wDead = makeTournamentWarrior('z-dead', 'Zombie', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [wAlive];
+    state.rivals = [makeTournamentRival([])];
+    // The stale participant snapshot claims 'Active'; the dead registry says otherwise.
+    state.deadWarriorIds = [wDead.id];
+    state.tournaments = [
+      {
+        id: 't-zombie' as TournamentId,
+        season: 'Spring',
+        week: 1,
+        tierId: 'Gold',
+        name: 'Zombie Cup',
+        bracket: [
+          {
+            round: 1,
+            matchIndex: 0,
+            warriorIdA: wAlive.id,
+            warriorIdD: wDead.id,
+            stableIdA: wAlive.stableId,
+            stableIdD: wDead.stableId,
+          },
+        ],
+        participants: [wAlive, wDead],
+        completed: false,
+      },
+    ];
+
+    const killsBefore = (state.arenaHistory ?? []).filter((b) => b.by === 'Kill').length;
+    vi.mocked(simulateFight).mockClear();
+    const swept = sweepUnfinishedTournaments(state, true);
+
+    const bout = swept.tournaments![0]!.bracket[0]!;
+    expect(bout.winner).toBe('A'); // live side advances by forfeit
+    // The dead participant is never simulated — forfeit, not a fight.
+    expect(simulateFight).not.toHaveBeenCalled();
+    // No bout was simulated: no summary, no graveyard append, no kill event.
+    const killsAfter = (swept.arenaHistory ?? []).filter((b) => b.by === 'Kill').length;
+    expect(killsAfter).toBe(killsBefore);
+    expect((swept.arenaHistory ?? []).filter((b) => b.tournamentId === 't-zombie')).toHaveLength(0);
+    expect(swept.graveyard ?? []).toHaveLength(0);
+    expect(swept.killEvents ?? []).toHaveLength(0);
+  });
+
+  it('forfeits a participant who retired after selection', () => {
+    // Retirement between selection and resolution is a real window — the
+    // participant snapshot stays 'Active' while the live warrior retired.
+    const wAlive = makeTournamentWarrior('r-alive', 'Alive', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wRetired = makeTournamentWarrior('r-ret', 'Retired', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [wAlive];
+    state.rivals = [makeTournamentRival([])];
+    state.retired = [{ ...wRetired, status: 'Retired' } as Warrior];
+    state.tournaments = [
+      {
+        id: 't-retired' as TournamentId,
+        season: 'Spring',
+        week: 1,
+        tierId: 'Gold',
+        name: 'Pensioner Cup',
+        bracket: [
+          {
+            round: 1,
+            matchIndex: 0,
+            warriorIdA: wAlive.id,
+            warriorIdD: wRetired.id,
+            stableIdA: wAlive.stableId,
+            stableIdD: wRetired.stableId,
+          },
+        ],
+        participants: [wAlive, wRetired],
+        completed: false,
+      },
+    ];
+
+    vi.mocked(simulateFight).mockClear();
+    const swept = sweepUnfinishedTournaments(state, true);
+    const bout = swept.tournaments![0]!.bracket[0]!;
+    expect(bout.winner).toBe('A');
+    expect(simulateFight).not.toHaveBeenCalled();
+    expect((swept.arenaHistory ?? []).filter((b) => b.tournamentId === 't-retired')).toHaveLength(0);
+    expect(swept.graveyard ?? []).toHaveLength(0);
+  });
+
+  it('never seeds a killed semifinalist into the bronze match', () => {
+    // Same-week double-kill path: semifinal loser is dead, yet the bronze
+    // playoff still resolves their stale participant snapshot.
+    const w1 = makeTournamentWarrior('b1', 'B1', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTournamentWarrior('b2', 'B2', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w3 = makeTournamentWarrior('b3', 'B3', FightingStyle.StrikingAttack, RIVAL_ID);
+    const w4 = makeTournamentWarrior('b4', 'B4', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [w1];
+    state.rivals = [makeTournamentRival([w2, w3, w4])];
+    const tournament = makeTournamentWithR1([w1, w2, w3, w4]);
+    state.tournaments = [tournament];
+
+    // Semifinal 1 kills its loser (w2); every other bout is a clean stoppage.
+    vi.mocked(simulateFight)
+      .mockReturnValueOnce({
+        winner: 'A',
+        by: 'Kill',
+        minutes: 1,
+        log: [],
+        exchangeLog: [],
+        post: { tags: [] },
+      } as unknown as ReturnType<typeof simulateFight>)
+      .mockReturnValue({
+        winner: 'A',
+        by: 'Stoppage',
+        minutes: 1,
+        log: [],
+        exchangeLog: [],
+        post: { tags: [] },
+      } as unknown as ReturnType<typeof simulateFight>);
+
+    const swept = sweepUnfinishedTournaments(state, true);
+
+    const tour = swept.tournaments![0]!;
+    const bronze = tour.bracket.find((b) => b.isBronzeMatch);
+    // w2 died in the semis — the bronze bout must not simulate them again.
+    expect(bronze).toBeDefined();
+    expect(bronze!.winner).toBe('D'); // w4 takes third by forfeit
+    // Exactly one death happened; nobody was killed twice.
+    expect((swept.graveyard ?? []).filter((g) => g.id === 'b2')).toHaveLength(1);
+    expect((swept.killEvents ?? []).filter((e) => e.victimId === 'b2')).toHaveLength(1);
+    expect((swept.killEvents ?? []).filter((e) => e.victimId === 'b4')).toHaveLength(0);
+    // Summaries: 2 semifinals + final. The bronze forfeit emits nothing.
+    expect((swept.arenaHistory ?? []).filter((b) => b.tournamentId === tour.id)).toHaveLength(3);
+    expect(tour.completed).toBe(true);
+  });
+});
+
+describe('applyBoutResults — kill lifecycle bookkeeping', () => {
+  it('records the death once: graveyard entry, dead registry, kill event, participant stamp', () => {
+    const wA = makeTournamentWarrior('k1', 'Killer', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wD = makeTournamentWarrior('k2', 'Victim', FightingStyle.StrikingAttack, RIVAL_ID);
+    const tournament = makeTournamentWithR1([wA, wD]);
+
+    const state = makeBaseState();
+    state.roster = [wA];
+    state.rivals = [makeTournamentRival([wD])];
+    state.tournaments = [tournament];
+
+    const rng = new SeededRNG(7);
+    const next = applyBoutResults(
+      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Kill'), tId: tournament.id, tName: tournament.name, rng: rng }
+    );
+
+    // Unique death recorded exactly once per store.
+    expect((next.graveyard ?? []).filter((g) => g.id === 'k2')).toHaveLength(1);
+    expect((next.deadWarriorIds ?? []).filter((id) => id === 'k2')).toHaveLength(1);
+    expect(next.killEvents ?? []).toHaveLength(1);
+    expect(next.killEvents![0]).toMatchObject({ victimId: 'k2', tournamentId: tournament.id });
+    // The victim's participant snapshot is stamped dead — self-describing.
+    const stamped = next.tournaments![0]!.participants.find((p) => p.id === 'k2');
+    expect(stamped!.status).toBe('Dead');
+    // And off every live roster.
+    expect(next.rivals[0]!.roster.find((w) => w.id === 'k2')).toBeUndefined();
+  });
+
+  it('does not append a duplicate graveyard entry when a dead id is killed again', () => {
+    const wA = makeTournamentWarrior('k3', 'Killer', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wD = makeTournamentWarrior('k4', 'Already Dead', FightingStyle.StrikingAttack, RIVAL_ID);
+    const tournament = makeTournamentWithR1([wA, wD]);
+
+    const state = makeBaseState();
+    state.roster = [wA];
+    state.rivals = [makeTournamentRival([])];
+    state.tournaments = [tournament];
+    // Victim already registered dead (e.g. a stale snapshot slipped through).
+    state.deadWarriorIds = [wD.id];
+    state.graveyard = [{ ...wD, status: 'Dead', isDead: true } as Warrior];
+
+    const rng = new SeededRNG(9);
+    const next = applyBoutResults(
+      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Kill'), tId: tournament.id, tName: tournament.name, rng: rng }
+    );
+
+    // The repeat outcome still surfaces as a kill event — the oracle's
+    // divergence tripwire depends on seeing it — but the graveyard does not
+    // grow a duplicate entry for the same warrior id.
+    expect((next.graveyard ?? []).filter((g) => g.id === 'k4')).toHaveLength(1);
+    expect(next.killEvents).toHaveLength(1);
+    expect((next.deadWarriorIds ?? []).filter((id) => id === 'k4')).toHaveLength(1);
+  });
+
+  it('does not inline-cap arenaHistory — truncateState owns the retention policy', () => {
+    const wA = makeTournamentWarrior('h1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wD = makeTournamentWarrior('h2', 'D', FightingStyle.StrikingAttack, RIVAL_ID);
+    const tournament = makeTournamentWithR1([wA, wD]);
+
+    const state = makeBaseState();
+    state.roster = [wA];
+    state.rivals = [makeTournamentRival([wD])];
+    state.tournaments = [tournament];
+    state.arenaHistory = Array.from({ length: 500 }, (_, i) => ({
+      id: `old-${i}`,
+      week: 1,
+      warriorIdA: 'x',
+      warriorIdD: 'y',
+      winner: 'A',
+      by: 'KO',
+      styleA: 'S',
+      styleD: 'S',
+      createdAt: '',
+    })) as never;
+
+    const rng = new SeededRNG(3);
+    const next = applyBoutResults(
+      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Stoppage'), tId: tournament.id, tName: tournament.name, rng: rng }
+    );
+
+    // Mid-week appends must not drop head entries — the cumulative tracker
+    // dedups by bout id but can only see entries that still exist.
+    expect(next.arenaHistory).toHaveLength(501);
+  });
 });
 
 describe('resolveCompleteTournament — degenerate brackets seal instead of lingering', () => {
@@ -810,7 +1037,7 @@ describe('odd-sized fields — the tail entrant gets a real bye', () => {
       );
     }
 
-    const tourney = buildTournament('Gold', 'Gold Cup', warriors, 10, 'Spring', new SeededRNG(7), 1);
+    const tourney = buildTournament({ tierId: 'Gold', tierName: 'Gold Cup', warriors: warriors, week: 10, season: 'Spring', rng: new SeededRNG(7), year: 1 });
 
     const inBouts = new Set(
       tourney.bracket
@@ -874,7 +1101,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't-gold-spring-1', 'Test Cup', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't-gold-spring-1', tName: 'Test Cup', rng: rng });
 
     expect(updated.arenaHistory.length).toBeGreaterThan(0);
     expect(updated.arenaHistory[0]!.tournamentId).toBe('t-gold-spring-1');
@@ -894,7 +1121,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -918,7 +1145,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -937,7 +1164,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     expect(updated.graveyard.length).toBe(1);
     expect(updated.graveyard[0]!.id).toBe('w2');
@@ -956,7 +1183,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1253,7 +1480,7 @@ describe('applyBoutResults — deathWeek at year boundary', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     expect(updated.graveyard.length).toBe(1);
     expect(updated.graveyard[0]!.deathWeek).toBe(53);

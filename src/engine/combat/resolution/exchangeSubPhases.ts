@@ -45,26 +45,33 @@ export function makeExchangeState(): ExchangeState {
   };
 }
 
+/**
+ *
+ */
+export interface RunApproachArgs {
+  rng: () => number;
+  fA: FighterState;
+  fD: FighterState;
+  OE_A: number;
+  OE_D: number;
+  ctx: ResolutionContext & { range: import('@/types/shared.types').DistanceRange };
+  es: ExchangeState;
+}
+
 // ─── Approach Sub-Phase ───────────────────────────────────────────────────────
 
 /**
  * Run approach.
  */
-export function runApproach(
-  rng: () => number,
-  fA: FighterState,
-  fD: FighterState,
-  OE_A: number,
-  OE_D: number,
-  ctx: ResolutionContext & { range: import('@/types/shared.types').DistanceRange },
-  es: ExchangeState
-): void {
+export function runApproach(args: RunApproachArgs): void {
+  const { rng, fA, fD, OE_A, OE_D } = args;
+  const { ctx, es } = args;
   const sizeProfile = {
     startRange: ARENA_SIZE_PROFILES[ctx.arenaConfig.size].startRange,
     maxRange: ctx.maxRange,
     zoneStepBias: ctx.zoneStepBias,
   };
-  const result = contestDistance(rng, fA, fD, OE_A, OE_D, ctx.range, sizeProfile);
+  const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: OE_A, OE_D: OE_D, currentRange: ctx.range, sizeProfile: sizeProfile });
   // rangeModA/D are intentionally 0: the contest winner shifts the range (which
   // matters for weapon range mods), but does NOT grant a flat ATT bonus. A flat
   // bonus is correlated with OE and double-stacks with commit level, breaking balance.
@@ -158,6 +165,22 @@ export function runCommit(fighter: FighterState, OE: number): CommitResult {
   return { level: 'Standard', attBonus: 0, defPenalty: 0, debtToWrite: 0 };
 }
 
+/**
+ *
+ */
+export interface RunRecoveryArgs {
+  fA: FighterState;
+  fD: FighterState;
+  debtToWriteA: number;
+  debtToWriteD: number;
+  events: CombatEvent[];
+  ctx?: ResolutionContext & {
+    range?: import('@/types/shared.types').DistanceRange;
+    zone?: import('@/types/shared.types').ArenaZone;
+    pushedFighter?: 'A' | 'D';
+  };
+}
+
 // ─── Recovery Sub-Phase ───────────────────────────────────────────────────────
 
 /**
@@ -166,18 +189,9 @@ export function runCommit(fighter: FighterState, OE: number): CommitResult {
  * Zone rule: fighter that took a hit gets pushed back one zone.
  * If no hit landed, zone drifts back toward Center.
  */
-export function runRecovery(
-  fA: FighterState,
-  fD: FighterState,
-  debtToWriteA: number,
-  debtToWriteD: number,
-  events: CombatEvent[],
-  ctx?: ResolutionContext & {
-    range?: import('@/types/shared.types').DistanceRange;
-    zone?: import('@/types/shared.types').ArenaZone;
-    pushedFighter?: 'A' | 'D';
-  }
-): void {
+export function runRecovery(args: RunRecoveryArgs): void {
+  const { fA, fD, debtToWriteA, debtToWriteD, events } = args;
+  const { ctx } = args;
   // Write recovery debt
   if (debtToWriteA > 0) {
     fA.recoveryDebt = clamp(debtToWriteA, fA.recoveryDebt, 3);

@@ -14,14 +14,9 @@ interface SummaryCardProps {
 /**
  *
  */
-export function SummaryCard({
-  icon: Icon,
-  iconClass,
-  borderClass,
-  label,
-  value,
-  sublabel,
-}: SummaryCardProps) {
+export function SummaryCard(props: SummaryCardProps) {
+  const { icon: Icon, iconClass, borderClass, label, value } = props;
+  const { sublabel } = props;
   return (
     <Surface
       variant="glass"

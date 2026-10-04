@@ -49,19 +49,19 @@ describe('promoter-aware rival evaluation', () => {
   it('a Methodical stable declines a Sadistic promoter booking against a killer', () => {
     const { warrior, killer, offer, state, rival } = setup({ personality: 'Sadistic' });
     rival.owner.personality = 'Methodical';
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', killer, state)).toBe('Declined');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: killer, state: state })).toBe('Declined');
   });
 
   it('the same booking from an Honorable promoter is accepted', () => {
     const { warrior, killer, offer, state, rival } = setup({ personality: 'Honorable' });
     rival.owner.personality = 'Methodical';
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', killer, state)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: killer, state: state })).toBe('Accepted');
   });
 
   it('Aggressive stables still take the Sadistic booking — blood sells', () => {
     const { warrior, killer, offer, state, rival } = setup({ personality: 'Sadistic' });
     rival.owner.personality = 'Aggressive';
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', killer, state)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: killer, state: state })).toBe('Accepted');
   });
 
   it('a Greedy promoter gets countered where an Honorable one clears the fame floor', () => {
@@ -88,10 +88,10 @@ describe('promoter-aware rival evaluation', () => {
       purse: 360,
       hype: 90,
     });
-    expect(evaluateBoutOffer(honestOffer, rival, warrior, 5, 'Clear', opponent, state)).toBe(
+    expect(evaluateBoutOffer({ offer: honestOffer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe(
       'Accepted'
     );
-    expect(evaluateBoutOffer(greedyOffer, rival, warrior, 5, 'Clear', opponent, state)).toBe(
+    expect(evaluateBoutOffer({ offer: greedyOffer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe(
       'Countered'
     );
   });

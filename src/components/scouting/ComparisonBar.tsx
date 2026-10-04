@@ -1,20 +1,27 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+interface ComparisonSide {
+  value: number;
+  color: string;
+}
+
 interface ComparisonBarProps {
   label: string;
-  valA: number;
-  valB: number;
   maxVal: number;
-  colorA: string;
-  colorB: string;
+  sideA: ComparisonSide;
+  sideB: ComparisonSide;
 }
 
 /**
  * Comparison bar.
- * @param - { label, val a, val b, max val, color a, color b }.
+ * @param - { label, max val, side a, side b }.
  */
-export function ComparisonBar({ label, valA, valB, maxVal, colorA, colorB }: ComparisonBarProps) {
+export function ComparisonBar({ label, maxVal, sideA, sideB }: ComparisonBarProps) {
+  const valA = sideA.value;
+  const valB = sideB.value;
+  const colorA = sideA.color;
+  const colorB = sideB.color;
   const pctA = maxVal > 0 ? (valA / maxVal) * 100 : 0;
   const pctB = maxVal > 0 ? (valB / maxVal) * 100 : 0;
   const aWins = valA > valB;

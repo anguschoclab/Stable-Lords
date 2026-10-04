@@ -1,18 +1,23 @@
 import { cn } from '@/lib/utils';
 
+interface GearRowStatus {
+  error?: boolean;
+  blocked?: boolean;
+}
+
 interface GearRowProps {
   icon: React.ElementType;
   name: string;
   weight: number;
-  error?: boolean;
-  blocked?: boolean;
   high?: boolean;
+  status?: GearRowStatus;
 }
 
 /**
  *
  */
-export function GearRow({ icon: Icon, name, weight, error, blocked, high }: GearRowProps) {
+export function GearRow({ icon: Icon, name, weight, high, status }: GearRowProps) {
+  const { error, blocked } = status ?? {};
   return (
     <div
       className={cn(

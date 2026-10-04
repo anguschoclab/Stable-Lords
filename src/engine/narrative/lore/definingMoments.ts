@@ -38,7 +38,6 @@ export const DEFINING_MOMENTS: string[] = [
   'survived a brutal ambush by playing dead among the corpses for three days',
   'stole a broken sword from a fallen gladiator and taught themselves to kill',
   'until the day they dragged their abuser into the light and left them broken',
-  'realizing that mercy in the undercity is just an invitation to be killed',
   'waiting for the moment the gates would close and the true test would begin',
   'realizing that the only true law of the streets was written in blood',
   'waiting for the moment the arena doors would open and swallow their past',
@@ -168,4 +167,8 @@ export const DEFINING_MOMENTS: string[] = [
   'knowing that every scar they gained was simply a map to their eventual revenge',
   'realizing that mercy in the undercity is just an invitation for an early grave',
   'until they strangled a corrupt overseer with their own rusted chains',
+  'knowing the shadows hold no fear for those born in them',
+  'until they watched their shadow detach and strike first',
+  'realizing the only light in the world comes from a sparked blade',
+  'waiting for the moment the crowd falls entirely silent in fear',
   ];

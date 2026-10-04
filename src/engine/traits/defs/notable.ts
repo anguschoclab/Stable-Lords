@@ -483,4 +483,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.6,
   },
+  orphan_of_the_abyss: {
+    id: 'orphan_of_the_abyss',
+    name: 'Orphan of the Abyss',
+    description: '+1 Initiative in OPENING phase, +1 Damage — raised in the pitch black, they strike unseen and hit hard.',
+    effect: { iniModEarly: 1, dmgBonus: 1, fightPlanMod: { AL: 2 } },
+    weight: 0.6,
+    synergy: ['cunning', 'brutal'],
+    antiSynergy: ['tank'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };

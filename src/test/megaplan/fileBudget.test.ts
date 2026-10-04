@@ -46,7 +46,7 @@ describe('megaplan: file & function budgets', () => {
     ).toEqual([]);
   });
 
-  it('counts stay non-decreasingly-better than baseline (0 fns >80, 2 files >800)', () => {
+  it('counts stay non-decreasingly-better than baseline (2 fns >80, 2 files >800)', () => {
     // Ratchet: ceilings only ever tighten. Update numbers DOWN as phases land.
     // The ≤80 target was reached in the residual-decomposition batches —
     // a new 81+ fn must be decomposed or the budget consciously revisited.

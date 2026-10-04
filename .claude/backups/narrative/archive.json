@@ -1,0 +1,107 @@
+[
+  {
+    "path": "strikes.slashing.glancing",
+    "removed": "{{attacker}}'s blade grazes {{defender}}'s armor, leaving a shallow scratch.",
+    "kept": "{{attacker}}'s blade grazes {{defender}}'s {{bodyPart}}, leaving a superficial scratch."
+  },
+  {
+    "path": "strikes.slashing.solid",
+    "removed": "A sweeping slash catches {{defender}} off balance.",
+    "kept": "A silvery arc of death! {{attacker}} delivers a wide, sweeping slash that catches {{defender}} off balance."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "removed": "The sickening thud of {{attacker}}'s weapon connects solidly with {{defender}}.",
+    "kept": "The dull, horrifying thud of {{attacker}}'s weapon connects solidly with {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "removed": "A precise thrust punctures {{defender}}'s {{bodyPart}}.",
+    "kept": "A precise, clinical thrust from {{attacker}} punctures {{defender}}'s {{bodyPart}}."
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "removed": "LEFT KNEE",
+    "kept": "LEFT KNEE JOINT"
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "removed": "LEFT CALF",
+    "kept": "LOWER LEFT CALF"
+  },
+  {
+    "path": "pbp.defenses.dodge.desperate",
+    "removed": "{{defender}} barely contorts out of the way, panic in their eyes.",
+    "kept": "{{defender}} barely scrambles out of the way, panic in their eyes as the weapon flashes past."
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "removed": "{{defender}} throws their weapon up in a blind panic, managing to deflect the worst of it.",
+    "kept": "{{defender}} throws up their weapon in a blind panic, somehow managing to deflect the blow!"
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "removed": "{{defender}} wildly throws up their guard, barely deflecting the strike.",
+    "kept": "{{defender}} throws their guard up in a panic, barely deflecting the strike."
+  },
+  {
+    "path": "pbp.defenses.parry.theatrical",
+    "removed": "The clash of weapons is loud and dramatic as {{defender}} executes a picture-perfect block.",
+    "kept": "The clash of weapons is deafening as {{defender}} executes a picture-perfect, dramatic block."
+  },
+  {
+    "path": "pbp.defenses.parry.grim",
+    "removed": "A bone-jarring block stops the attack dead, as {{defender}} glares murderously.",
+    "kept": "A bone-jarring block stops the attack dead, as {{defender}} glares murderously through the crossing blades."
+  },
+  {
+    "path": "pbp.defenses.riposte.desperate",
+    "removed": "{{defender}} blindly lashes out after blocking!",
+    "kept": "{{defender}} blindly lashes out after blocking, hoping to buy space."
+  },
+  {
+    "path": "pbp.defenses.riposte.confident",
+    "removed": "{{defender}} masterfully exploits the opening with a confident riposte.",
+    "kept": "{{defender}} casually exploits the opening with a perfectly timed, confident riposte."
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "With surprising agility, {{name}} springs back to their feet.",
+    "kept": "{{name}} springs back to their feet with surprising agility, immediately adopting a defensive guard."
+  },
+  {
+    "path": "pbp.knockdown.pacing.recovery_slow",
+    "removed": "It takes agonizing seconds for {{name}} to find their footing again.",
+    "kept": "It takes agonizing seconds for {{name}} to find their footing, swaying dangerously as {{name}} rise."
+  },
+  {
+    "path": "pbp.knockdown.pacing.recovery_fast",
+    "removed": "Like a coiled spring, {{name}} snaps back to their feet instantly.",
+    "kept": "Like a coiled spring, {{name}} is instantly back on their feet and ready."
+  },
+  {
+    "path": "pbp.knockdown.pacing.recovery_fast",
+    "removed": "{{name}} springs back up, refusing to stay down for even a second.",
+    "kept": "Hitting the dirt, {{name}} immediately springs back up in a nimble kip-up, refusing to stay grounded for even a second."
+  },
+  {
+    "path": "pbp.epithets.style",
+    "removed": "the brutal",
+    "kept": "the brutal brawler"
+  },
+  {
+    "path": "pbp.hits.generic",
+    "removed": "A brutal impact forces a ragged gasp from {{defender}}.",
+    "kept": "A brutal impact forces a ragged gasp from the wounded combatant."
+  },
+  {
+    "path": "kill_text.weapon_specific.piercing",
+    "removed": "{{attacker}} drives their point straight through {{defender}}'s heart.",
+    "kept": "{{attacker}} drives the point of their {{weapon}} straight through {{defender}}'s skull."
+  },
+  {
+    "path": "kill_text.weapon_specific.bashing",
+    "removed": "A crushing blow from {{attacker}} caves in {{defender}}'s ribcage.",
+    "kept": "{{defender}}'s ribcage caves in with a horrific crunch from {{attacker}}'s crushing blow."
+  }
+]

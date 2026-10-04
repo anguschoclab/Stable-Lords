@@ -250,7 +250,8 @@
       "{{attacker}} inflicts catastrophic damage, immediately ending {{defender}}'s life.",
       "A horrifying spray of vital fluids marks the instant {{defender}}'s body fails completely.",
       "{{defender}}'s form is utterly broken by {{attacker}}'s devastating, lethal attack.",
-      "The fatal impact tears through bone and organ, leaving {{defender}} lifeless in the dirt."
+      "The fatal impact tears through bone and organ, leaving {{defender}} lifeless in the dirt.",
+      "The light in {{defender}}'s eyes extinguishes instantly as {{attacker}} delivers the ultimate, devastating blow."
     ],
     "weapon_specific": {
       "slashing": [
@@ -355,10 +356,11 @@
         "{{attacker}}'s blade sings a terrible song, separating {{defender}}'s life from their flesh in one fluid, grisly motion.",
         "A geyser of crimson erupts as {{attacker}}'s final slash severs an artery, dropping {{defender}} instantly.",
         "{{defender}} stares blankly at the horrifying cross-section of their own torso before collapsing into the red sands.",
-        "The crowd roars as {{attacker}}'s blade takes {{defender}}'s head in a single, fluid decapitation."
+        "The crowd roars as {{attacker}}'s blade takes {{defender}}'s head in a single, fluid decapitation.",
+        "With a final, desperate heave, {{attacker}} sweeps their blade through {{defender}}, ending the rivalry in a spray of crimson."
       ],
       "piercing": [
-        "{{attacker}} drives their point straight through {{defender}}'s heart.",
+        "{{attacker}} drives the point of their {{weapon}} straight through {{defender}}'s skull.",
         "A surgical thrust from {{attacker}} drops {{defender}} before they even realize they're dead.",
         "{{attacker}}'s point slips past the guard, puncturing a vital organ.",
         "With a sickening crunch, {{attacker}} impales {{defender}} through the chest.",
@@ -384,7 +386,6 @@
         "A lethal thrust from {{attacker}} finds the softest point, snuffing out {{defender}}'s life.",
         "{{defender}} is pinned by a fatal lunge from {{attacker}}, their eyes going dull.",
         "{{attacker}} delivers a flawless, fatal stab that cleanly severs {{defender}} from this world.",
-        "{{attacker}} drives the point of their {{weapon}} straight through {{defender}}'s skull.",
         "A lightning-fast lunge from {{attacker}} impales {{defender}} squarely through the chest.",
         "With clinical precision, {{attacker}} skewers {{defender}}, pinning them to the very air.",
         "{{defender}} gasps as {{attacker}}'s {{weapon}} punches through their back, a fatal puncture.",
@@ -467,7 +468,7 @@
         "{{attacker}} caves in {{defender}}'s chest with an unstoppable, heavy swing.",
         "With a roar, {{attacker}} turns {{defender}} into a crumpled, lifeless heap.",
         "The impact shakes the arena floor as {{attacker}} delivers the deathblow.",
-        "A crushing blow from {{attacker}} caves in {{defender}}'s ribcage.",
+        "{{defender}}'s ribcage caves in with a horrific crunch from {{attacker}}'s crushing blow.",
         "{{attacker}} brings down a world-shattering smash that instantly kills {{defender}}.",
         "With a sickening crunch, {{attacker}} obliterates {{defender}}'s skull.",
         "{{defender}} is flattened by a thunderous, fatal bash from {{attacker}}.",
@@ -499,7 +500,6 @@
         "{{attacker}} swings with brutal power, completely shattering {{defender}}'s defense and life.",
         "The arena shakes as {{attacker}} drops {{defender}} with a massive, crushing strike.",
         "A thunderous crack echoes as {{attacker}} crushes {{defender}}'s skull like a melon.",
-        "{{defender}}'s ribcage caves in with a horrific crunch from {{attacker}}'s crushing blow.",
         "{{attacker}} unleashes a blunt force trauma so severe {{defender}}'s body simply gives out.",
         "The sheer impact shatters {{defender}}'s spine, ending the bout in brutal fashion.",
         "{{defender}} is pounded into the bloody dirt, pulverized beyond recognition.",

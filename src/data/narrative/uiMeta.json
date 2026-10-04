@@ -11,7 +11,12 @@
     "btn_honor": "Honor the Fallen",
     "btn_planning": "Acknowledge & Begin Planning",
     "btn_next": "Next Report",
-    "armor_intro_verbs": ["steps forth in", "is armored in", "glimmers in", "is wearing"],
+    "armor_intro_verbs": [
+      "steps forth in",
+      "is armored in",
+      "glimmers in",
+      "is wearing"
+    ],
     "weapon_intro_verbs": [
       "prepares to fight with %W",
       "clutches their %W",
@@ -303,12 +308,44 @@
       "parry": {
         "high": [
           {
+            "min": 30,
+            "text": "Their guard is an absolute fortress, effortlessly batting away strikes"
+          },
+          {
+            "min": 28,
+            "text": "A master of deflection, neutralizing assaults with contemptuous ease"
+          },
+          {
+            "min": 26,
+            "text": "Predicts the angle of attack flawlessly, turning force against itself"
+          },
+          {
             "min": 23,
             "text": "An impenetrable wall of iron, turning aside the deadliest steel"
           },
           {
-            "min": 14,
-            "text": "Parrys very intelligently"
+            "min": 21,
+            "text": "Meets steel with steel, maintaining perfect defensive posture"
+          },
+          {
+            "min": 18,
+            "text": "Deflects incoming blows with sharp, deliberate precision"
+          },
+          {
+            "min": 15,
+            "text": "Possesses a very calculated and tight guard"
+          },
+          {
+            "min": 12,
+            "text": "Parrys very intelligently and rarely gives ground"
+          },
+          {
+            "min": 9,
+            "text": "A solid defensive tactician when blades clash"
+          },
+          {
+            "min": 5,
+            "text": "Shows a strong natural instinct for blocking"
           },
           {
             "min": 0,
@@ -317,16 +354,48 @@
         ],
         "low": [
           {
+            "min": 30,
+            "text": "An immovable bulwark, shrugging off the heaviest assaults"
+          },
+          {
+            "min": 28,
+            "text": "Weathered and hardened, barely flinching when turning blades"
+          },
+          {
+            "min": 25,
+            "text": "Deflects with a brutal, unyielding strength"
+          },
+          {
             "min": 21,
             "text": "Denies the killing stroke with grim, practiced resolve"
           },
           {
-            "min": 14,
-            "text": "Rarely makes mistakes"
+            "min": 18,
+            "text": "Stubbornly rejects incoming attacks with solid technique"
+          },
+          {
+            "min": 15,
+            "text": "Shows a seasoned, stoic resilience in their parries"
+          },
+          {
+            "min": 12,
+            "text": "Rarely makes mistakes when crossing blades"
+          },
+          {
+            "min": 9,
+            "text": "Maintains a sturdy and reliable guard"
+          },
+          {
+            "min": 6,
+            "text": "Capable of turning aside most typical strikes"
+          },
+          {
+            "min": 3,
+            "text": "Parrys intelligently"
           },
           {
             "min": 0,
-            "text": "Parrys intelligently"
+            "text": "Has a fundamentally sound defense"
           }
         ]
       },

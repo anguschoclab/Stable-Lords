@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-04T13:00:08.427Z",
+  "generatedAt": "2026-10-04T13:51:06.171Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -149,7 +149,6 @@
     "src/test/engine/deathNotifier.test.ts",
     "src/test/engine/economy/worldBalance.slow.test.ts",
     "src/test/engine/history/arenaHistory.test.ts",
-    "src/test/engine/matchmaking/arenaFit.test.ts",
     "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts",
     "src/test/engine/metaDrift.test.ts",
     "src/test/engine/owner/ownerGrudges.test.ts",

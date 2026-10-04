@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -11,22 +11,24 @@ import {
 } from '@/engine/matchmaking/arenaFit';
 import { ARENA_FIT, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 import * as arenasModule from '@/data/arenas';
+import { ARENA_SIZE_PROFILES } from '@/engine/combat/mechanics/distanceResolution';
+import type { ArenaSizeProfile } from '@/engine/combat/mechanics/distanceResolution';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 
 // Test-only fourth arena size — a "pit" tight enough that even Striking range
 // is unreachable (maxRange=Tight, idx1). No real profile caps below Striking,
 // so overshoot=2 is otherwise impossible for Extended-preference fighters.
-// File-scoped: spreads the real module so every other export stays real.
-vi.mock('@/engine/combat/mechanics/distanceResolution', async (importOriginal) => {
-  const orig =
-    await importOriginal<typeof import('@/engine/combat/mechanics/distanceResolution')>();
-  return {
-    ...orig,
-    ARENA_SIZE_PROFILES: {
-      ...orig.ARENA_SIZE_PROFILES,
-      pit: { startRange: 'Tight', maxRange: 'Tight', zoneStepBias: 1 },
-    },
+// Added for this file's run and deleted in afterAll so sibling files sharing a
+// worker (isolate:false) never see it.
+beforeAll(() => {
+  (ARENA_SIZE_PROFILES as Record<string, ArenaSizeProfile>).pit = {
+    startRange: 'Tight',
+    maxRange: 'Tight',
+    zoneStepBias: 1,
   };
+});
+afterAll(() => {
+  delete (ARENA_SIZE_PROFILES as Record<string, ArenaSizeProfile>).pit;
 });
 
 // ─── Factory Helpers ──────────────────────────────────────────────────────────
@@ -56,9 +58,8 @@ function makeArena(overrides: Partial<ArenaConfig> = {}): ArenaConfig {
   };
 }
 
-// 'pit' exists only inside this file's mocked ARENA_SIZE_PROFILES (added by the
-// vi.mock block below). Without the mock, ARENA_SIZE_PROFILES['pit'] is
-// undefined and lookups throw.
+// 'pit' resolves only while this file's beforeAll-installed profile is present
+// (see top of file); without it, ARENA_SIZE_PROFILES['pit'] is undefined.
 function makePitArena(overrides: Partial<ArenaConfig> = {}): ArenaConfig {
   return makeArena({ id: 'test_pit', size: 'pit' as any, ...overrides });
 }

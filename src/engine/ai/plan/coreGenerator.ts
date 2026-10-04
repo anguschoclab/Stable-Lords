@@ -172,19 +172,23 @@ function rematchModifiers(dossier: OpponentDossier | undefined) {
   return { rematchOE, rematchAL, rematchKD, changeTactics };
 }
 
+interface ApplyStrategicLayerArgs {
+  plan: FightPlan;
+  w: Warrior;
+  personality: OwnerPersonality;
+  intent: AIIntent | undefined;
+  dossier: OpponentDossier | undefined;
+  mods: PlanModifiers;
+}
+
 /**
  * Applies the strategic layer after core axes validate: tactic overrides for
  * rematch losers, target/protect/aggression/opening/range levers, phase
  * curves, desperate plan, fallback condition, and WIT-gated conditions.
  */
-function applyStrategicLayer(
-  plan: FightPlan,
-  w: Warrior,
-  personality: OwnerPersonality,
-  intent: AIIntent | undefined,
-  dossier: OpponentDossier | undefined,
-  mods: PlanModifiers
-): void {
+function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
+  const { plan, w, personality, intent, dossier } = args;
+  const { mods } = args;
   // Offensive/defensive tactics come from the base plan (defaultPlanForWarrior →
   // getAITactics), which assigns each style its canonical Duel II Favorite Tactics.
   // We intentionally do NOT override them here: some styles canonically run a
@@ -253,17 +257,24 @@ function applyStrategicLayer(
   plan.conditions = allConditions.slice(0, conditionCap);
 }
 
+/**
+ *
+ */
+export interface AiPlanForWarriorArgs {
+  w: Warrior;
+  personality: OwnerPersonality;
+  philosophy: string;
+  opponentStyle?: FightingStyle;
+  intent?: AIIntent;
+  grudgeIntensity?: number;
+  dossier?: OpponentDossier;
+  now?: number;
+}
+
 /** Generates a full weekly plan for one AI warrior given owner personality. */
-export function aiPlanForWarrior(
-  w: Warrior,
-  personality: OwnerPersonality,
-  philosophy: string,
-  opponentStyle?: FightingStyle,
-  intent?: AIIntent,
-  grudgeIntensity: number = 0,
-  dossier?: OpponentDossier,
-  now?: number
-): FightPlan {
+export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
+  const { w, personality, philosophy, opponentStyle, intent } = args;
+  const { grudgeIntensity = 0, dossier, now } = args;
   const base = defaultPlanForWarrior(w);
   const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
   const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
@@ -323,7 +334,7 @@ export function aiPlanForWarrior(
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
 
-  applyStrategicLayer(plan, w, personality, intent, dossier, mods);
+  applyStrategicLayer({ plan: plan, w: w, personality: personality, intent: intent, dossier: dossier, mods: mods });
 
   // Reconcile two-handed weapon + shield conflict
   if (w.equipment) {

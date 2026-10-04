@@ -55,36 +55,20 @@ export function resolveExchange(
   const es = makeExchangeState();
 
   // Sub-phase 1: Approach — contest distance, update ctx.range
-  runApproach(rng, fA, fD, s.OE_A, s.OE_D, ctx, es);
+  runApproach({ rng: rng, fA: fA, fD: fD, OE_A: s.OE_A, OE_D: s.OE_D, ctx: ctx, es: es });
   events.push(...es.events.splice(0));
 
   // 2. Initiative Phase
   const { aGoesFirst, event: iniEvent } = resolveInitiativePhase(
-    ctx,
-    fA,
-    fD,
-    s.OE_A,
-    s.AL_A,
-    s.OE_D,
-    s.AL_D,
-    s.fatA,
-    s.fatD,
-    s.defModsA,
-    s.defModsD,
-    s.passA,
-    s.passD,
-    s.psychA,
-    s.psychD,
-    s.dynTraitsA,
-    s.dynTraitsD
+    { ctx: ctx, fA: fA, fD: fD, OE_A: s.OE_A, AL_A: s.AL_A, OE_D: s.OE_D, AL_D: s.AL_D, fatA: s.fatA, fatD: s.fatD, defModsA: s.defModsA, defModsD: s.defModsD, passA: s.passA, passD: s.passD, psychA: s.psychA, psychD: s.psychD, dynTraitsA: s.dynTraitsA, dynTraitsD: s.dynTraitsD }
   );
   events.push(iniEvent);
 
   // Sub-phases 2–4: Feint → Commit → Attack/Defense → Endurance costs
-  runAttackExchange(ctx, fA, fD, s, es, aGoesFirst, phaseKey, events);
+  runAttackExchange({ ctx: ctx, fA: fA, fD: fD, s: s, es: es, aGoesFirst: aGoesFirst, phaseKey: phaseKey, events: events });
 
   // Sub-phase 5: Recovery — write debt, handle zone transitions
-  runRecovery(fA, fD, es.recoveryDebtToWriteA, es.recoveryDebtToWriteD, events, ctx);
+  runRecovery({ fA: fA, fD: fD, debtToWriteA: es.recoveryDebtToWriteA, debtToWriteD: es.recoveryDebtToWriteD, events: events, ctx: ctx });
 
   updateTacticStreaks(ctx, s.tactA.offTactic, s.tactD.offTactic);
   tickBleedOnFighters(fA, fD, events);
@@ -92,20 +76,24 @@ export function resolveExchange(
   return events;
 }
 
+interface RunAttackExchangeArgs {
+  ctx: ResolutionContext;
+  fA: FighterState;
+  fD: FighterState;
+  s: ExchangeSetup;
+  es: ExchangeState;
+  aGoesFirst: boolean;
+  phaseKey: 'opening' | 'mid' | 'late';
+  events: CombatEvent[];
+}
+
 /**
  * Sub-phases 2–4: attacker feint, commit levels, offense/defense check, and
  * endurance costs. Writes recovery debt into `es` for the recovery sub-phase.
  */
-function runAttackExchange(
-  ctx: ResolutionContext,
-  fA: FighterState,
-  fD: FighterState,
-  s: ExchangeSetup,
-  es: ExchangeState,
-  aGoesFirst: boolean,
-  phaseKey: 'opening' | 'mid' | 'late',
-  events: CombatEvent[]
-): void {
+function runAttackExchange(args: RunAttackExchangeArgs): void {
+  const { ctx, fA, fD, s, es } = args;
+  const { aGoesFirst, phaseKey, events } = args;
   const att = aGoesFirst ? fA : fD;
   const def = aGoesFirst ? fD : fA;
 
@@ -123,73 +111,32 @@ function runAttackExchange(
 
   // Sub-phase 4: Attack & Defense Check
   resolveCombatOffenseDefense(
-    ctx,
-    fA,
-    fD,
-    aGoesFirst,
-    s.OE_A,
-    s.AL_A,
-    s.OE_D,
-    s.AL_D,
-    s.fatA,
-    s.fatD,
-    s.offModsA,
-    s.offModsD,
-    s.defModsA,
-    s.defModsD,
-    s.passA,
-    s.passD,
-    s.biasAttA,
-    s.biasDefA,
-    s.biasAttD,
-    s.biasDefD,
-    s.tactA,
-    s.tactD,
-    s.psychA,
-    s.psychD,
-    s.dynTraitsA,
-    s.dynTraitsD,
-    feintAttBonus,
-    feintDefBonus,
-    attCommit,
-    defCommit,
-    es,
-    phaseKey,
-    ctx.phase as StylePhase,
-    events
+    { ctx: ctx, fA: fA, fD: fD, aGoesFirst: aGoesFirst, OE_A: s.OE_A, AL_A: s.AL_A, OE_D: s.OE_D, AL_D: s.AL_D, fatA: s.fatA, fatD: s.fatD, offModsA: s.offModsA, offModsD: s.offModsD, defModsA: s.defModsA, defModsD: s.defModsD, passA: s.passA, passD: s.passD, biasAttA: s.biasAttA, biasDefA: s.biasDefA, biasAttD: s.biasAttD, biasDefD: s.biasDefD, tactA: s.tactA, tactD: s.tactD, psychA: s.psychA, psychD: s.psychD, dynTraitsA: s.dynTraitsA, dynTraitsD: s.dynTraitsD, feintAttBonus: feintAttBonus, feintDefBonus: feintDefBonus, attCommit: attCommit, defCommit: defCommit, es: es, phaseKey: phaseKey, stylePhase: ctx.phase as StylePhase, events: events }
   );
 
-  applyExchangeEndurance(events, ctx, fA, fD, s, aGoesFirst);
+  applyExchangeEndurance({ events: events, ctx: ctx, fA: fA, fD: fD, s: s, aGoesFirst: aGoesFirst });
+}
+
+interface ApplyExchangeEnduranceArgs {
+  events: CombatEvent[];
+  ctx: ResolutionContext;
+  fA: FighterState;
+  fD: FighterState;
+  s: ExchangeSetup;
+  aGoesFirst: boolean;
 }
 
 /** Sub-phase 4b: endurance costs for the attack exchange (att/def-derived OE/AL/weapon reqs). */
-function applyExchangeEndurance(
-  events: CombatEvent[],
-  ctx: ResolutionContext,
-  fA: FighterState,
-  fD: FighterState,
-  s: ExchangeSetup,
-  aGoesFirst: boolean
-): void {
+function applyExchangeEndurance(args: ApplyExchangeEnduranceArgs): void {
+  const { events, ctx, fA, fD, s } = args;
+  const { aGoesFirst } = args;
   const curAttOE = aGoesFirst ? s.OE_A : s.OE_D;
   const curAttAL = aGoesFirst ? s.AL_A : s.AL_D;
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
   const curDefWepReq = aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA;
 
   applyEnduranceCosts(
-    events,
-    ctx,
-    fA,
-    fD,
-    aGoesFirst,
-    curAttOE,
-    curAttAL,
-    curAttWepReq,
-    curDefWepReq,
-    s.OE_D,
-    s.AL_D,
-    s.OE_A,
-    s.AL_A
+    { events: events, ctx: ctx, fA: fA, fD: fD, aGoesFirst: aGoesFirst, curAttOE: curAttOE, curAttAL: curAttAL, curAttWepReq: curAttWepReq, curDefWepReq: curDefWepReq, OE_D: s.OE_D, AL_D: s.AL_D, OE_A: s.OE_A, AL_A: s.AL_A }
   );
 }
 

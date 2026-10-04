@@ -55,6 +55,17 @@ export function calculateBoutFame(
   };
 }
 
+interface BuildPurseImpactsArgs {
+  state: GameState;
+  contract: BoutOffer;
+  purse: number;
+  showFee: number;
+  winnerId: string | null;
+  currentWId: string;
+  currentOId: string;
+  isRivalBout: boolean;
+}
+
 /**
  * Player-side purse/show-fee impacts.
  *
@@ -64,16 +75,9 @@ export function calculateBoutFame(
  * to balloon into the millions, so when the winner fights for a rival stable
  * these impacts are skipped entirely.
  */
-function buildPurseImpacts(
-  state: GameState,
-  contract: BoutOffer,
-  purse: number,
-  showFee: number,
-  winnerId: string | null,
-  currentWId: string,
-  currentOId: string,
-  isRivalBout: boolean
-): StateImpact[] {
+function buildPurseImpacts(args: BuildPurseImpactsArgs): StateImpact[] {
+  const { state, contract, purse, showFee, winnerId } = args;
+  const { currentWId, currentOId, isRivalBout } = args;
   if (isRivalBout) return [];
   const ledgerEntry = (label: string, amount: number) => ({
     id: generateId(undefined, 'ledger') as LedgerEntryId,
@@ -152,14 +156,7 @@ export function processContractPayouts(
 
   impacts.push(
     ...buildPurseImpacts(
-      state,
-      contract,
-      purse,
-      showFee,
-      winnerId,
-      currentWId,
-      currentOId,
-      rivalA != null
+      { state: state, contract: contract, purse: purse, showFee: showFee, winnerId: winnerId, currentWId: currentWId, currentOId: currentOId, isRivalBout: rivalA != null }
     )
   );
 

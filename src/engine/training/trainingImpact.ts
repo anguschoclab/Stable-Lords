@@ -46,19 +46,23 @@ function processRecoveryAssignment(
   return currentRoster;
 }
 
+interface ProcessSkillDrillAssignmentArgs {
+  assignment: TrainingAssignment;
+  warrior: Warrior;
+  healingBonus: number;
+  currentRoster: Map<WarriorId, Warrior>;
+  results: TrainingResult[];
+  state: GameState;
+  rng: IRNGService;
+  weather: import('@/types/shared.types').WeatherType;
+}
+
 /**
  * Helper to process the skill drilling training assignment.
  */
-function processSkillDrillAssignment(
-  assignment: TrainingAssignment,
-  warrior: Warrior,
-  healingBonus: number,
-  currentRoster: Map<WarriorId, Warrior>,
-  results: TrainingResult[],
-  state: GameState,
-  rng: IRNGService,
-  weather: import('@/types/shared.types').WeatherType
-): Map<WarriorId, Warrior> {
+function processSkillDrillAssignment(args: ProcessSkillDrillAssignmentArgs): Map<WarriorId, Warrior> {
+  const { assignment, warrior, healingBonus, currentRoster, results } = args;
+  const { state, rng, weather } = args;
   if (!assignment.skill) return currentRoster;
   const { updatedWarrior, result, hardCapped } = processSkillDrillTraining(
     warrior,
@@ -88,20 +92,24 @@ function processSkillDrillAssignment(
   return currentRoster;
 }
 
+interface ProcessAttributeAssignmentArgs {
+  assignment: TrainingAssignment;
+  warrior: Warrior;
+  healingBonus: number;
+  currentRoster: Map<WarriorId, Warrior>;
+  results: TrainingResult[];
+  state: GameState;
+  seasonalGrowth: SeasonalGrowth[];
+  rng: IRNGService;
+  weather: import('@/types/shared.types').WeatherType;
+}
+
 /**
  * Helper to process the attribute training assignment.
  */
-function processAttributeAssignment(
-  assignment: TrainingAssignment,
-  warrior: Warrior,
-  healingBonus: number,
-  currentRoster: Map<WarriorId, Warrior>,
-  results: TrainingResult[],
-  state: GameState,
-  seasonalGrowth: SeasonalGrowth[],
-  rng: IRNGService,
-  weather: import('@/types/shared.types').WeatherType
-): { currentRoster: Map<WarriorId, Warrior>; seasonalGrowth: SeasonalGrowth[] } {
+function processAttributeAssignment(args: ProcessAttributeAssignmentArgs): { currentRoster: Map<WarriorId, Warrior>; seasonalGrowth: SeasonalGrowth[] } {
+  const { assignment, warrior, healingBonus, currentRoster, results } = args;
+  const { state, seasonalGrowth, rng, weather } = args;
   const attr = assignment.attribute;
   if (!attr) return { currentRoster, seasonalGrowth };
 
@@ -190,35 +198,20 @@ export function computeTrainingImpact(
     // ── Skill Drilling ──
     if (assignment.type === 'skillDrill') {
       currentRoster = processSkillDrillAssignment(
-        assignment,
-        warrior,
-        healingBonus,
-        currentRoster,
-        results,
-        state,
-        rng,
-        weather
+        { assignment: assignment, warrior: warrior, healingBonus: healingBonus, currentRoster: currentRoster, results: results, state: state, rng: rng, weather: weather }
       );
       continue;
     }
 
     // ── Trait Training (multi-week) ──
     if (assignment.type === 'trait') {
-      processTraitAssignment(assignment, warrior, state, rng, currentRoster, results);
+      processTraitAssignment({ assignment: assignment, warrior: warrior, state: state, rng: rng, currentRoster: currentRoster, results: results });
       continue;
     }
 
     // ── Attribute Training ──
     const outcome = processAttributeAssignment(
-      assignment,
-      warrior,
-      healingBonus,
-      currentRoster,
-      results,
-      state,
-      seasonalGrowth,
-      rng,
-      weather
+      { assignment: assignment, warrior: warrior, healingBonus: healingBonus, currentRoster: currentRoster, results: results, state: state, seasonalGrowth: seasonalGrowth, rng: rng, weather: weather }
     );
     currentRoster = outcome.currentRoster;
     seasonalGrowth = outcome.seasonalGrowth;
@@ -231,18 +224,22 @@ export function computeTrainingImpact(
   };
 }
 
+interface ProcessTraitAssignmentArgs {
+  assignment: TrainingAssignment;
+  warrior: Warrior;
+  state: GameState;
+  rng: IRNGService;
+  currentRoster: Map<WarriorId, Warrior>;
+  results: TrainingResult[];
+}
+
 /**
  * Resolve a multi-week trait-training assignment for one warrior. No-ops while
  * weeks remain (the assignment survives finalizeState) or if the trainer is gone.
  */
-function processTraitAssignment(
-  assignment: TrainingAssignment,
-  warrior: Warrior,
-  state: GameState,
-  rng: IRNGService,
-  currentRoster: Map<WarriorId, Warrior>,
-  results: TrainingResult[]
-): void {
+function processTraitAssignment(args: ProcessTraitAssignmentArgs): void {
+  const { assignment, warrior, state, rng, currentRoster } = args;
+  const { results } = args;
   const remaining = (assignment.weeksRemaining ?? 1) - 1;
   if (remaining > 0) return; // still training; survives finalizeState
   const trainer = (state.trainers ?? []).find((t) => t.id === assignment.trainerId);

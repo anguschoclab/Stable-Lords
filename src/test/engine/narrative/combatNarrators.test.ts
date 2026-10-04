@@ -30,12 +30,7 @@ describe('combatNarrators', () => {
     it('produces no-raw-token text', () => {
       const rng = new SeededRNG(1);
       const result = narrateAttack(
-        rng,
-        'Rex',
-        'longsword',
-        false,
-        'Vellis',
-        FightingStyle.SlashingAttack
+        { rng: rng, attackerName: 'Rex', weaponId: 'longsword', _isMastery: false, defenderName: 'Vellis', style: FightingStyle.SlashingAttack }
       );
       expect(noRawTokens(result)).toBe(true);
     });
@@ -44,8 +39,8 @@ describe('combatNarrators', () => {
       const r1 = new SeededRNG(42);
       const r2 = new SeededRNG(42);
       expect(
-        narrateAttack(r1, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack)
-      ).toBe(narrateAttack(r2, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack));
+        narrateAttack({ rng: r1, attackerName: 'Rex', weaponId: 'longsword', _isMastery: false, defenderName: 'Vellis', style: FightingStyle.SlashingAttack })
+      ).toBe(narrateAttack({ rng: r2, attackerName: 'Rex', weaponId: 'longsword', _isMastery: false, defenderName: 'Vellis', style: FightingStyle.SlashingAttack }));
     });
   });
 
@@ -120,19 +115,7 @@ describe('combatNarrators', () => {
     it('produces no-raw-token text for non-fatal hit', () => {
       const rng = new SeededRNG(1);
       const result = narrateHit(
-        rng,
-        'Vellis',
-        'chest',
-        false,
-        false,
-        'Rex',
-        'longsword',
-        10,
-        100,
-        false,
-        50,
-        false,
-        FightingStyle.SlashingAttack
+        { rng: rng, defenderName: 'Vellis', location: 'chest', _isMastery: false, isSuperFlashy: false, attackerName: 'Rex', weaponId: 'longsword', damage: 10, maxHp: 100, isFatal: false, attackerFame: 50, isFavorite: false, style: FightingStyle.SlashingAttack }
       );
       expect(noRawTokens(result)).toBe(true);
     });
@@ -140,19 +123,7 @@ describe('combatNarrators', () => {
     it('produces no-raw-token text for fatal hit', () => {
       const rng = new SeededRNG(1);
       const result = narrateHit(
-        rng,
-        'Vellis',
-        'head',
-        false,
-        false,
-        'Rex',
-        'longsword',
-        100,
-        100,
-        true,
-        50,
-        false,
-        FightingStyle.SlashingAttack
+        { rng: rng, defenderName: 'Vellis', location: 'head', _isMastery: false, isSuperFlashy: false, attackerName: 'Rex', weaponId: 'longsword', damage: 100, maxHp: 100, isFatal: true, attackerFame: 50, isFavorite: false, style: FightingStyle.SlashingAttack }
       );
       expect(noRawTokens(result)).toBe(true);
     });

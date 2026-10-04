@@ -119,11 +119,7 @@ function tryHireTrainer(pass: StaffPass, intent: string, week: number): void {
     riskTier: budgetReport.riskTier,
   });
   pass.rival = logAgentAction(
-    pass.rival,
-    'STAFF',
-    `Hired trainer ${best.name} (${best.tier}).`,
-    budgetReport.riskTier,
-    week
+    { rival: pass.rival, type: 'STAFF', description: `Hired trainer ${best.name} (${best.tier}).`, riskTier: budgetReport.riskTier, week: week }
   );
   pass.gazetteItems.push(
     `👔 STAFF: ${pass.rival.owner.stableName} hired ${best.name} (${best.tier}) to lead their training camp.`
@@ -149,11 +145,7 @@ function maybeFireTrainer(pass: StaffPass, intent: string, state: GameState, wee
       ? 'stormy weather risks'
       : 'budget constraints';
   pass.rival = logAgentAction(
-    pass.rival,
-    'STAFF',
-    `Released trainer ${fired.name} due to ${riskReason}.`,
-    'Low',
-    week
+    { rival: pass.rival, type: 'STAFF', description: `Released trainer ${fired.name} due to ${riskReason}.`, riskTier: 'Low', week: week }
   );
   pass.gazetteItems.push(
     `📉 DOWNSIZING: ${pass.rival.owner.stableName} has released trainer ${fired.name} due to ${riskReason}.`

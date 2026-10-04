@@ -15,11 +15,11 @@ import {
 } from '@/constants/world';
 
 function makeFounder(name: string): Warrior {
-  return makeWarrior(undefined, name, FightingStyle.StrikingAttack, ATTRS_10, {
+  return makeWarrior({ id: undefined, name: name, style: FightingStyle.StrikingAttack, attrs: ATTRS_10, overrides: {
     age: 45,
     fame: 1600,
     career: { wins: 60, losses: 12, kills: 4 },
-  });
+  } });
 }
 
 /** Clone a template stable `count` times with distinct branded ids/names. */

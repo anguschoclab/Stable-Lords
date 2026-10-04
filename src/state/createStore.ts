@@ -136,19 +136,23 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.lastSavedAt = new Date().toISOString();
 }
 
+interface RunEngineJobArgs {
+  set: (fn: (draft: GameStore) => void) => void;
+  get: () => GameStore;
+  cleanState: GameState;
+  currentWeek: number;
+  job: () => Promise<GameState>;
+  opName: string;
+}
+
 /**
  * Shared engine worker runner for doAdvanceWeek/doAdvanceDay —
  * serialization, 15s timeout, epoch-guarded commit, telemetry, and
  * the isSimulating lifecycle were previously duplicated inline.
  */
-async function runEngineJob(
-  set: (fn: (draft: GameStore) => void) => void,
-  get: () => GameStore,
-  cleanState: GameState,
-  currentWeek: number,
-  job: () => Promise<GameState>,
-  opName: string
-) {
+async function runEngineJob(args: RunEngineJobArgs) {
+  const { set, get, cleanState, currentWeek, job } = args;
+  const { opName } = args;
   const store = get();
   set((draft) => {
     draft.isSimulating = true;
@@ -271,15 +275,10 @@ function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreAc
       const cleanState = stripNonSerializable(raw) as GameState;
       const currentWeek = cleanState.week;
       await runEngineJob(
-        set,
-        get,
-        cleanState,
-        currentWeek,
-        () =>
+        { set: set, get: get, cleanState: cleanState, currentWeek: currentWeek, job: () =>
           cleanState.isTournamentWeek
             ? engineProxy.skipToWeekEnd(cleanState)
-            : engineProxy.advanceWeek(cleanState),
-        cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek'
+            : engineProxy.advanceWeek(cleanState), opName: cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek' }
       );
     },
 
@@ -290,12 +289,7 @@ function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreAc
       const cleanState = stripNonSerializable(raw) as GameState;
       const currentWeek = cleanState.week;
       await runEngineJob(
-        set,
-        get,
-        cleanState,
-        currentWeek,
-        () => engineProxy.advanceDay(cleanState),
-        'advanceDay'
+        { set: set, get: get, cleanState: cleanState, currentWeek: currentWeek, job: () => engineProxy.advanceDay(cleanState), opName: 'advanceDay' }
       );
     },
 

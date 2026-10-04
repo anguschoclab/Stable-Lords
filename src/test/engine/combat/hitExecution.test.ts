@@ -87,23 +87,7 @@ function callExecuteHit(opts: CallOpts = {}): {
   );
 
   executeHit(
-    events,
-    rng,
-    attacker,
-    defender,
-    tactA,
-    offModsA,
-    passA,
-    opts.attLabel ?? 'A',
-    opts.defLabel ?? 'D',
-    opts.stylePhase ?? 'OPENING',
-    opts.phase ?? 'OPENING',
-    opts.attKD ?? attacker.activePlan.killDesire ?? 5,
-    opts.attOE ?? 5,
-    opts.attAL ?? 5,
-    opts.attMatchup ?? 0,
-    ctx,
-    passD
+    { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: tactA, attOffMods: offModsA, attPassive: passA, attLabel: opts.attLabel ?? 'A', defLabel: opts.defLabel ?? 'D', stylePhase: opts.stylePhase ?? 'OPENING', phase: opts.phase ?? 'OPENING', attKD: opts.attKD ?? attacker.activePlan.killDesire ?? 5, attOE: opts.attOE ?? 5, attAL: opts.attAL ?? 5, attMatchup: opts.attMatchup ?? 0, ctx: ctx, defPassive: passD }
   );
 
   return { events, attacker, defender, ctx };
@@ -271,23 +255,7 @@ describe('executeHit — hit counters', () => {
     const attacker = makeFighter({ style: FightingStyle.StrikingAttack });
     for (let i = 0; i < 20; i++) {
       executeHit(
-        events,
-        rng,
-        { ...attacker, hitsLanded: i, consecutiveHits: 0 },
-        defender,
-        tactA,
-        offModsA,
-        passA,
-        'A',
-        'D',
-        'OPENING',
-        'OPENING',
-        5,
-        5,
-        5,
-        0,
-        ctx,
-        passD
+        { events: events, rng: rng, attacker: { ...attacker, hitsLanded: i, consecutiveHits: 0 }, defender: defender, attTactics: tactA, attOffMods: offModsA, attPassive: passA, attLabel: 'A', defLabel: 'D', stylePhase: 'OPENING', phase: 'OPENING', attKD: 5, attOE: 5, attAL: 5, attMatchup: 0, ctx: ctx, defPassive: passD }
       );
       if (defender.armHits > 0) break;
     }
@@ -474,23 +442,7 @@ describe('executeHit — no crash without ctx', () => {
     const passD = getPassive(defender.style);
 
     executeHit(
-      events,
-      rng,
-      attacker,
-      defender,
-      tactA,
-      offModsA,
-      passA,
-      'A',
-      'D',
-      'OPENING',
-      'OPENING',
-      5,
-      5,
-      5,
-      0,
-      undefined,
-      passD
+      { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: tactA, attOffMods: offModsA, attPassive: passA, attLabel: 'A', defLabel: 'D', stylePhase: 'OPENING', phase: 'OPENING', attKD: 5, attOE: 5, attAL: 5, attMatchup: 0, ctx: undefined, defPassive: passD }
     );
     expect(events.length).toBeGreaterThan(0);
   });

@@ -100,16 +100,23 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
 }
 
 /**
+ *
+ */
+export interface CreateBoutSummaryArgs {
+  warriorA: Warrior;
+  warriorD: Warrior;
+  outcome: FightOutcome;
+  week: number;
+  rng: { uuid: (prefix?: string) => string } | IRNGService;
+  arenaId?: string;
+}
+
+/**
  * Convenience function for non-tournament bouts
  */
-export function createBoutSummary(
-  warriorA: Warrior,
-  warriorD: Warrior,
-  outcome: FightOutcome,
-  week: number,
-  rng: { uuid: (prefix?: string) => string } | IRNGService,
-  arenaId?: string
-): FightSummary {
+export function createBoutSummary(args: CreateBoutSummaryArgs): FightSummary {
+  const { warriorA, warriorD, outcome, week, rng } = args;
+  const { arenaId } = args;
   return createFightSummary({
     warriorA,
     warriorD,

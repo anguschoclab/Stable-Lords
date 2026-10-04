@@ -57,15 +57,19 @@ function computeSummarySignals(
   };
 }
 
+interface BuildLookaheadArgs {
+  state: GameState;
+  cards: WarriorAdvisorCard[];
+  activeWarriors: GameState['roster'];
+  playerWarriorIds: Set<string>;
+  currentAbsWeek: number;
+  upcomingAbsWeek: number;
+}
+
 /** Multi-week lookahead: commitments, recoveries, tournament countdown, defenses. */
-function buildLookahead(
-  state: GameState,
-  cards: WarriorAdvisorCard[],
-  activeWarriors: GameState['roster'],
-  playerWarriorIds: Set<string>,
-  currentAbsWeek: number,
-  upcomingAbsWeek: number
-): CouncilLookahead {
+function buildLookahead(args: BuildLookaheadArgs): CouncilLookahead {
+  const { state, cards, activeWarriors, playerWarriorIds, currentAbsWeek } = args;
+  const { upcomingAbsWeek } = args;
   return {
     futureCommitments: listFutureCommitments(state, cards, playerWarriorIds, upcomingAbsWeek),
     recoveryEtas: listRecoveryEtas(activeWarriors, currentAbsWeek),
@@ -120,15 +124,7 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   } = computeSummarySignals(state, activeWarriors, playerWarriorIds);
 
   const { stableDirectives, unresolvedDirectives, lookahead } = buildCouncilSections(
-    state,
-    cards,
-    kpis,
-    activeWarriors,
-    playerWarriorIds,
-    assignedWarriorIds,
-    unassignedTrainingCount,
-    projectedTrainingCost,
-    treasury
+    { state: state, cards: cards, kpis: kpis, activeWarriors: activeWarriors, playerWarriorIds: playerWarriorIds, assignedWarriorIds: assignedWarriorIds, unassignedTrainingCount: unassignedTrainingCount, projectedTrainingCost: projectedTrainingCost, treasury: treasury }
   );
 
   const allActionPayloads = cards.map((c) => c.actionPayload);
@@ -156,53 +152,42 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
   };
 }
 
+interface BuildCouncilSectionsArgs {
+  state: GameState;
+  cards: WarriorAdvisorCard[];
+  kpis: ReturnType<typeof computeCardKpis>;
+  activeWarriors: GameState['roster'];
+  playerWarriorIds: Set<string>;
+  assignedWarriorIds: Set<string>;
+  unassignedTrainingCount: number;
+  projectedTrainingCost: number;
+  treasury: number;
+}
+
 /** Stable directives, unresolved directive queue, and the multi-week lookahead. */
-function buildCouncilSections(
-  state: GameState,
-  cards: WarriorAdvisorCard[],
-  kpis: ReturnType<typeof computeCardKpis>,
-  activeWarriors: GameState['roster'],
-  playerWarriorIds: Set<string>,
-  assignedWarriorIds: Set<string>,
-  unassignedTrainingCount: number,
-  projectedTrainingCost: number,
-  treasury: number
-): {
+function buildCouncilSections(args: BuildCouncilSectionsArgs): {
   stableDirectives: ReturnType<typeof buildStableDirectives>;
   unresolvedDirectives: ReturnType<typeof collectUnresolvedDirectives>;
   lookahead: ReturnType<typeof buildLookahead>;
 } {
+  const { state, cards, kpis, activeWarriors, playerWarriorIds } = args;
+  const { assignedWarriorIds, unassignedTrainingCount, projectedTrainingCost, treasury } = args;
   const stableDirectives = buildStableDirectives(
-    state,
-    cards,
-    kpis,
-    unassignedTrainingCount,
-    projectedTrainingCost,
-    treasury
+    { state: state, cards: cards, kpis: kpis, unassignedTrainingCount: unassignedTrainingCount, projectedTrainingCost: projectedTrainingCost, treasury: treasury }
   );
 
   const currentAbsWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
   const upcomingAbsWeek = currentAbsWeek + 1;
 
   const unresolvedDirectives = collectUnresolvedDirectives(
-    state,
-    cards,
-    activeWarriors,
-    playerWarriorIds,
-    assignedWarriorIds,
-    upcomingAbsWeek
+    { state: state, cards: cards, activeWarriors: activeWarriors, playerWarriorIds: playerWarriorIds, assignedWarriorIds: assignedWarriorIds, upcomingAbsWeek: upcomingAbsWeek }
   );
 
   return {
     stableDirectives,
     unresolvedDirectives,
     lookahead: buildLookahead(
-      state,
-      cards,
-      activeWarriors,
-      playerWarriorIds,
-      currentAbsWeek,
-      upcomingAbsWeek
+      { state: state, cards: cards, activeWarriors: activeWarriors, playerWarriorIds: playerWarriorIds, currentAbsWeek: currentAbsWeek, upcomingAbsWeek: upcomingAbsWeek }
     ),
   };
 }

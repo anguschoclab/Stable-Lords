@@ -52,12 +52,7 @@ export function finalizeWeekSideEffectsToImpact(
   const gazetteRng = new SeededRNGService(state.absoluteWeek * 9973 + 123);
   impact.gazettes = [
     generateWeeklyGazette(
-      weekFights,
-      newMood,
-      state.absoluteWeek,
-      state.graveyard,
-      state.arenaHistory,
-      gazetteRng
+      { fights: weekFights, mood: newMood, week: state.absoluteWeek, graveyard: state.graveyard, allFights: state.arenaHistory, rng: gazetteRng }
     ),
   ];
   const rng = new SeededRNGService(state.absoluteWeek * 13);

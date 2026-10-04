@@ -16,7 +16,7 @@ describe('ownerAI - aiPlanForWarrior', () => {
 
   it('should apply personality and philosophy modifiers', () => {
     // Aggressive owner, Brute Force philosophy
-    const plan = aiPlanForWarrior(mockWarrior, 'Aggressive', 'Brute Force');
+    const plan = aiPlanForWarrior({ w: mockWarrior, personality: 'Aggressive', philosophy: 'Brute Force' });
 
     // Expected: 8 (base) + 2 (Aggressive) + 2 (Brute Force) = 12 -> Clamped to 10
     expect(plan.OE).toBe(10);
@@ -26,10 +26,7 @@ describe('ownerAI - aiPlanForWarrior', () => {
 
   it('should clamp values between 1 and 10', () => {
     const plan = aiPlanForWarrior(
-      mockWarrior,
-      'Aggressive',
-      'Brute Force',
-      FightingStyle.WallOfSteel
+      { w: mockWarrior, personality: 'Aggressive', philosophy: 'Brute Force', opponentStyle: FightingStyle.WallOfSteel }
     );
     // WallOfSteel vs StrikingAttack gives my OE +2
     // Total OE: 8 (base) + 2 (Aggressive) + 2 (Brute Force) + 2 (Matchup) = 14 -> Clamped to 10

@@ -43,17 +43,24 @@ function routeUpdate(
 }
 
 /**
+ *
+ */
+export interface HandleProgressionsArgs {
+  s: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  tags: string[];
+  week: number;
+  rng?: IRNGService;
+}
+
+/**
  * Compute per-bout progressions for both warriors and rival stables after a fight resolves.
  */
-export function handleProgressions(
-  s: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  tags: string[],
-  week: number,
-  rng?: IRNGService
-): StateImpact {
+export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
+  const { s, wA, wD, outcome, tags } = args;
+  const { week, rng } = args;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];

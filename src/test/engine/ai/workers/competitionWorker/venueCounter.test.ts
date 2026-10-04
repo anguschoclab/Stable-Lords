@@ -46,7 +46,7 @@ describe('venue counter', () => {
       hype: 90,
     });
     const state = makeGameState({ rivals: [rival] });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe(
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe(
       'CounteredVenue'
     );
   });
@@ -62,7 +62,7 @@ describe('venue counter', () => {
       hype: 90,
     });
     const state = makeGameState({ rivals: [rival] });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe('Accepted');
   });
 
   it('counterBoutVenue swaps the arena, tags the offer, and re-pends the other side', () => {
@@ -134,7 +134,7 @@ describe('venue counter', () => {
       hype: 90,
     });
     const state = makeGameState({ rivals: [rival] });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe(
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe(
       'CounteredVenue'
     );
   });
@@ -154,7 +154,7 @@ describe('venue counter', () => {
       conditions: [COUNTERED_VENUE_CONDITION],
     });
     const state = makeGameState({ rivals: [rival] });
-    const verdict = evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state);
+    const verdict = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state });
     expect(verdict).not.toBe('CounteredVenue');
     expect(verdict).not.toBe('Countered');
   });
@@ -174,6 +174,6 @@ describe('venue counter', () => {
       hype: 90,
     });
     const state = makeGameState({ rivals: [rival] });
-    expect(evaluateBoutOffer(offer, rival, warrior, 5, 'Clear', opponent, state)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe('Accepted');
   });
 });

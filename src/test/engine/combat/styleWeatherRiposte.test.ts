@@ -93,22 +93,10 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
 
     for (const seed of seeds) {
       const fogOutcome = simulateFight(
-        planA,
-        planD,
-        attacker,
-        defender,
-        seed,
-        undefined,
-        'Dense Fog'
+        { planA: planA, planD: planD, warriorA: attacker, warriorD: defender, providedRng: seed, trainers: undefined, weather: 'Dense Fog' }
       );
       const clearOutcome = simulateFight(
-        planA,
-        planD,
-        attacker,
-        defender,
-        seed,
-        undefined,
-        'Clear'
+        { planA: planA, planD: planD, warriorA: attacker, warriorD: defender, providedRng: seed, trainers: undefined, weather: 'Clear' }
       );
 
       fogRipostes += countRipostes(fogOutcome);
@@ -146,22 +134,10 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
 
     for (const seed of seeds) {
       const fogOutcome = simulateFight(
-        planA,
-        planD,
-        attacker,
-        defender,
-        seed,
-        undefined,
-        'Dense Fog'
+        { planA: planA, planD: planD, warriorA: attacker, warriorD: defender, providedRng: seed, trainers: undefined, weather: 'Dense Fog' }
       );
       const clearOutcome = simulateFight(
-        planA,
-        planD,
-        attacker,
-        defender,
-        seed,
-        undefined,
-        'Clear'
+        { planA: planA, planD: planD, warriorA: attacker, warriorD: defender, providedRng: seed, trainers: undefined, weather: 'Clear' }
       );
 
       fogRipostes += countRipostes(fogOutcome);
@@ -199,22 +175,10 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
 
     for (const seed of seeds) {
       const fogOutcome = simulateFight(
-        planA,
-        planD,
-        attacker,
-        defender,
-        seed,
-        undefined,
-        'Dense Fog'
+        { planA: planA, planD: planD, warriorA: attacker, warriorD: defender, providedRng: seed, trainers: undefined, weather: 'Dense Fog' }
       );
       const overcastOutcome = simulateFight(
-        planA,
-        planD,
-        attacker,
-        defender,
-        seed,
-        undefined,
-        'Overcast'
+        { planA: planA, planD: planD, warriorA: attacker, warriorD: defender, providedRng: seed, trainers: undefined, weather: 'Overcast' }
       );
 
       fogRipostes += countRipostes(fogOutcome);

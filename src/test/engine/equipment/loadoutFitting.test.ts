@@ -101,22 +101,22 @@ describe('refitWeapon / getFittedLoadout', () => {
 
 describe('fitted loadouts at the creation and roster seams', () => {
   it('makeWarrior equips a weapon fitted to the warrior, not the bare style default', () => {
-    const w = makeWarrior(undefined, 'Recruit', FightingStyle.WallOfSteel, TANK_RECRUIT);
+    const w = makeWarrior({ id: undefined, name: 'Recruit', style: FightingStyle.WallOfSteel, attrs: TANK_RECRUIT });
     expect(w.equipment?.weapon).toBe(fitWeapon(FightingStyle.WallOfSteel, TANK_RECRUIT));
   });
 
   it('makeWarrior still honours an explicit equipment override', () => {
     const equipment = getStyleDefaultLoadout(FightingStyle.WallOfSteel);
-    const w = makeWarrior(undefined, 'Recruit', FightingStyle.WallOfSteel, TANK_RECRUIT, {
+    const w = makeWarrior({ id: undefined, name: 'Recruit', style: FightingStyle.WallOfSteel, attrs: TANK_RECRUIT, overrides: {
       equipment,
-    });
+    } });
     expect(w.equipment).toBe(equipment);
   });
 
   it('refitRosterWeapons re-arms active warriors and leaves the rest alone', () => {
-    const misarmed = makeWarrior(undefined, 'A', FightingStyle.WallOfSteel, TANK_RECRUIT, {
+    const misarmed = makeWarrior({ id: undefined, name: 'A', style: FightingStyle.WallOfSteel, attrs: TANK_RECRUIT, overrides: {
       equipment: getStyleDefaultLoadout(FightingStyle.WallOfSteel),
-    });
+    } });
     const retired = { ...misarmed, id: 'r' as never, status: 'Retired' as const };
     const roster = [misarmed, retired];
     const next = refitRosterWeapons(roster);
@@ -125,7 +125,7 @@ describe('fitted loadouts at the creation and roster seams', () => {
   });
 
   it('refitRosterWeapons returns the same array when nothing changes', () => {
-    const roster = [makeWarrior(undefined, 'A', FightingStyle.WallOfSteel, TANK_RECRUIT)];
+    const roster = [makeWarrior({ id: undefined, name: 'A', style: FightingStyle.WallOfSteel, attrs: TANK_RECRUIT })];
     expect(refitRosterWeapons(roster)).toBe(roster);
   });
 });

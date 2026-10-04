@@ -39,19 +39,23 @@ interface BracketWarrior {
   stableId?: StableId;
 }
 
+interface SimulateTournamentBoutArgs {
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  wA: Warrior;
+  wD: Warrior;
+  rng: SeededRNG;
+  headless: boolean | undefined;
+}
+
 /**
  * Simulate one live bracket bout: pick plans, draw the venue, run the fight,
  * force a winner via sudden-death overtime on draws (tournament bouts cannot
  * end drawn).
  */
-function simulateTournamentBout(
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  wA: Warrior,
-  wD: Warrior,
-  rng: SeededRNG,
-  headless: boolean | undefined
-): { outcome: FightOutcome; arenaId: string } {
+function simulateTournamentBout(args: SimulateTournamentBoutArgs): { outcome: FightOutcome; arenaId: string } {
+  const { updatedState, resolvedTournament, wA, wD, rng } = args;
+  const { headless } = args;
   const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
   const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
 
@@ -62,17 +66,7 @@ function simulateTournamentBout(
       ? CHAMPIONS_TOURNEY.ARENA_ID
       : selectArenaForTournamentBout(() => rng.next());
   const outcome = simulateFight(
-    planA,
-    planD,
-    wA,
-    wD,
-    rng.roll(0, 1000000),
-    updatedState.trainers,
-    updatedState.weather ?? 'Clear',
-    arenaId,
-    updatedState.crowdMood,
-    headless,
-    updatedState.houseRules?.deathRateMult
+    { planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: rng.roll(0, 1000000), trainers: updatedState.trainers, weather: updatedState.weather ?? 'Clear', arenaId: arenaId, crowdMood: updatedState.crowdMood, headless: headless, deathRateMult: updatedState.houseRules?.deathRateMult }
   );
 
   // Tournament bouts cannot end in a draw — the bracket needs a winner.
@@ -88,19 +82,23 @@ function simulateTournamentBout(
   return { outcome, arenaId };
 }
 
+interface ResolveBoutArgs {
+  bout: TournamentBout;
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  rng: SeededRNG;
+  headless: boolean | undefined;
+  winners: BracketWarrior[];
+  losers: BracketWarrior[];
+}
+
 /**
  * Resolve one bracket bout: bye/forfeit short-circuits, live simulate with
  * sudden-death overtime for draws, then apply results into state.
  */
-function resolveBout(
-  bout: TournamentBout,
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  rng: SeededRNG,
-  headless: boolean | undefined,
-  winners: BracketWarrior[],
-  losers: BracketWarrior[]
-): GameState {
+function resolveBout(args: ResolveBoutArgs): GameState {
+  const { bout, updatedState, resolvedTournament, rng, headless } = args;
+  const { winners, losers } = args;
   // The third-place playoff is terminal: its winner medals but does not
   // feed the next round's pairings.
   const advancesWinner = !bout.isBronzeMatch;
@@ -142,12 +140,7 @@ function resolveBout(
   const cD = liveD;
 
   const { outcome, arenaId } = simulateTournamentBout(
-    updatedState,
-    resolvedTournament,
-    cA,
-    cD,
-    rng,
-    headless
+    { updatedState: updatedState, resolvedTournament: resolvedTournament, wA: cA, wD: cD, rng: rng, headless: headless }
   );
 
   bout.winner = outcome.winner;
@@ -158,15 +151,7 @@ function resolveBout(
     recordAdvancement(outcome, cA, cD, winners, losers);
   }
   return applyBoutResults(
-    updatedState,
-    cA,
-    cD,
-    outcome,
-    resolvedTournament.id,
-    resolvedTournament.name,
-    rng,
-    undefined,
-    arenaId
+    { state: updatedState, wA: cA, wD: cD, outcome: outcome, tId: resolvedTournament.id, tName: resolvedTournament.name, rng: rng, skipFatigue: undefined, arenaId: arenaId }
   );
 }
 
@@ -192,30 +177,29 @@ function recordAdvancement(
   );
 }
 
+interface ResolveRoundBoutsArgs {
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  roundBouts: TournamentBout[];
+  rng: SeededRNG;
+  headless: boolean | undefined;
+  winners: BracketWarrior[];
+  losers: BracketWarrior[];
+}
+
 /**
  * Resolves every bout in the current round: byes advance, missing warriors
  * forfeit, live bouts simulate (with sudden-death overtime for draws —
  * tournament bouts cannot end drawn), and results apply into state.
  * Bronze-match winners medal but do not advance.
  */
-function resolveRoundBouts(
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  roundBouts: TournamentBout[],
-  rng: SeededRNG,
-  headless: boolean | undefined,
-  winners: BracketWarrior[],
-  losers: BracketWarrior[]
-): GameState {
+function resolveRoundBouts(args: ResolveRoundBoutsArgs): GameState {
+  const { resolvedTournament, roundBouts, rng, headless } = args;
+  let { updatedState } = args;
+  const { winners, losers } = args;
   for (const bout of roundBouts) {
     updatedState = resolveBout(
-      bout,
-      updatedState,
-      resolvedTournament,
-      rng,
-      headless,
-      winners,
-      losers
+      { bout: bout, updatedState: updatedState, resolvedTournament: resolvedTournament, rng: rng, headless: headless, winners: winners, losers: losers }
     );
   }
   return updatedState;
@@ -321,13 +305,7 @@ export function resolveRound(
   // re-scanned at every week boundary forever.
   if (currentRound !== null) {
     updatedState = resolveRoundBouts(
-      updatedState,
-      resolvedTournament,
-      roundBouts,
-      rng,
-      headless,
-      winners,
-      losers
+      { updatedState: updatedState, resolvedTournament: resolvedTournament, roundBouts: roundBouts, rng: rng, headless: headless, winners: winners, losers: losers }
     );
 
     seedNextRound(bracket, currentRound, winners, losers);
@@ -347,13 +325,17 @@ export function resolveRound(
   );
 
   return finalizeRound(
-    updatedState,
-    resolvedTournament,
-    tournamentId,
-    bracket,
-    isComplete,
-    championWarrior
+    { updatedState: updatedState, resolvedTournament: resolvedTournament, tournamentId: tournamentId, bracket: bracket, isComplete: isComplete, championWarrior: championWarrior }
   );
+}
+
+interface FinalizeRoundArgs {
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  tournamentId: string;
+  bracket: TournamentBout[];
+  isComplete: boolean;
+  championWarrior: { name: string; epithet?: string } | undefined;
 }
 
 /**
@@ -362,19 +344,15 @@ export function resolveRound(
  * purse/fame/accolade is awarded by ArenaChampionshipPass.recordGrandChampions
  * — the single award home), and emit the champion banner.
  */
-function finalizeRound(
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  tournamentId: string,
-  bracket: TournamentBout[],
-  isComplete: boolean,
-  championWarrior: { name: string; epithet?: string } | undefined
-): {
+function finalizeRound(args: FinalizeRoundArgs): {
   updatedState: GameState;
   roundResults: string[];
   isComplete: boolean;
   updatedTournament?: TournamentEntry;
 } {
+  const { resolvedTournament, tournamentId, bracket, isComplete } = args;
+  let { updatedState } = args;
+  const { championWarrior } = args;
   const champion = championWarrior?.name;
 
   let updatedTournament: TournamentEntry | undefined;
@@ -513,29 +491,34 @@ export function sweepUnfinishedTournaments(
 }
 
 /**
- * Apply bout results.
- * @param state -
- * @param wA -
- * @param wD -
- * @param outcome -
- * @param tId -
- * @param tName -
- * @param rng -
- * @param skipFatigue - If true, skip fatigue accrual (tournament bouts during tournament week)
+ *
  */
-export function applyBoutResults(
-  state: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  tId: string,
-  tName: string,
-  rng: SeededRNG,
-  /** If true, skip fatigue accrual (tournament bouts during tournament week) */
-  skipFatigue?: boolean,
-  /** The venue the bout was simulated in — recorded on the summary. */
-  arenaId?: string
-): GameState {
+export interface ApplyBoutResultsArgs {
+  state: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  tId: string;
+  tName: string;
+  rng: SeededRNG;
+  skipFatigue?: boolean;
+  arenaId?: string;
+}
+
+/**
+ * Apply bout results.
+ * @param args.state -
+ * @param args.wA -
+ * @param args.wD -
+ * @param args.outcome -
+ * @param args.tId -
+ * @param args.tName -
+ * @param args.rng -
+ * @param args.skipFatigue - If true, skip fatigue accrual (tournament bouts during tournament week)
+ */
+export function applyBoutResults(args: ApplyBoutResultsArgs): GameState {
+  const { state, wA, wD, outcome, tId } = args;
+  const { tName, rng, skipFatigue, arenaId } = args;
   const isKill = outcome.by === 'Kill';
   const winnerSide = outcome.winner;
   const updatedState = { ...state };
@@ -561,10 +544,10 @@ export function applyBoutResults(
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
   updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
-    updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue, arenaId)
+    updateWarriorFromBoutOutcome({ warrior: w, isAttacker: true, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
   );
   updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
-    updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue, arenaId)
+    updateWarriorFromBoutOutcome({ warrior: w, isAttacker: false, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
   );
 
   if (wA.stableId || wD.stableId) {
@@ -572,11 +555,11 @@ export function applyBoutResults(
       let rRoster = r.roster;
       if (r.id === wA.stableId)
         rRoster = updateEntityInList(rRoster, wA.id, (w) =>
-          updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue, arenaId)
+          updateWarriorFromBoutOutcome({ warrior: w, isAttacker: true, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
         );
       if (r.id === wD.stableId)
         rRoster = updateEntityInList(rRoster, wD.id, (w) =>
-          updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue, arenaId)
+          updateWarriorFromBoutOutcome({ warrior: w, isAttacker: false, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
         );
       return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
     });

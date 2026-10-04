@@ -17,12 +17,7 @@ export function handleSuspiciousMushroomStew(
   ctx: OffseasonEventContext
 ) {
   withChosenWarrior(
-    state,
-    nextWeek,
-    e,
-    rng,
-    ctx,
-    (chosen) => {
+    { state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
       const xpGained = 20 + Math.floor(rng.next() * 16);
 
       const newInjury = makeInjury(rng, {
@@ -41,8 +36,7 @@ export function handleSuspiciousMushroomStew(
         },
         announce: { xp: xpGained },
       };
-    },
-    true
+    }, healthyOnly: true }
   );
 }
 
@@ -54,7 +48,7 @@ export function handlePhantomSparringPartner(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const xpGained = 40;
     const fatigueGained = 10;
     return {
@@ -64,7 +58,7 @@ export function handlePhantomSparringPartner(
       },
       announce: {},
     };
-  });
+  } });
 }
 
 /** Handler for the Dreamweavers Mist offseason event — grants XP but causes a minor magic burn. */
@@ -75,7 +69,7 @@ export function handleDreamweaversMist(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const xpGained = 15;
     const newInjury = makeInjury(rng, {
       name: 'Magic Burn',
@@ -92,7 +86,7 @@ export function handleDreamweaversMist(
       },
       announce: {},
     };
-  });
+  } });
 }
 
 /** Handler for the Prismatic Gale Exposure offseason event. */
@@ -103,7 +97,7 @@ export function handlePrismaticGaleExposure(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const xpGained = 20;
 
     const newInjury = makeInjury(rng, {
@@ -133,5 +127,5 @@ export function handlePrismaticGaleExposure(
       },
       announce: {},
     };
-  });
+  } });
 }

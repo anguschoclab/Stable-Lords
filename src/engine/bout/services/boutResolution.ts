@@ -95,14 +95,7 @@ export function getNPCPlan(
   }
 
   return aiPlanForWarrior(
-    w,
-    rival.owner.personality || 'Pragmatic',
-    rival.philosophy || 'Opportunist',
-    opponentStyle,
-    rival.strategy?.intent,
-    grudgeIntensity,
-    opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined,
-    week
+    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity, dossier: opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined, now: week }
   );
 }
 
@@ -140,17 +133,7 @@ function runBoutSimulation(
     : getDefaultPlan(validCO, defaultPlanForWarrior);
 
   return simulateFight(
-    planA,
-    planD,
-    validCW,
-    validCO,
-    boutSeed,
-    state.trainers,
-    weather,
-    arenaId,
-    state.crowdMood,
-    _ctx.headless,
-    state.houseRules?.deathRateMult
+    { planA: planA, planD: planD, warriorA: validCW, warriorD: validCO, providedRng: boutSeed, trainers: state.trainers, weather: weather, arenaId: arenaId, crowdMood: state.crowdMood, headless: _ctx.headless, deathRateMult: state.houseRules?.deathRateMult }
   );
 }
 
@@ -177,14 +160,18 @@ function rosterUpdateImpacts(
   return [{ rosterUpdates, rivalWarriorPatches }];
 }
 
-function collectBoutImpacts(
-  state: GameState,
-  ctx: BoutContext,
-  validCW: Warrior,
-  validCO: Warrior,
-  outcome: FightOutcome,
-  boutSeed: number
-) {
+interface CollectBoutImpactsArgs {
+  state: GameState;
+  ctx: BoutContext;
+  validCW: Warrior;
+  validCO: Warrior;
+  outcome: FightOutcome;
+  boutSeed: number;
+}
+
+function collectBoutImpacts(args: CollectBoutImpactsArgs) {
+  const { state, ctx, validCW, validCO, outcome } = args;
+  const { boutSeed } = args;
   const tags = outcome.post?.tags ?? [];
   const rng = new SeededRNGService(boutSeed);
   const { fameA, popA, fameD, popD } = calculateBoutFame(
@@ -204,127 +191,78 @@ function collectBoutImpacts(
   const boutArenaId = resolveBoutArenaId(ctx, boutSeed);
   impacts.push(
     applyRecords(
-      state,
-      validCW,
-      validCO,
-      outcome,
-      tags,
-      fameA,
-      popA,
-      fameD,
-      popD,
-      ctx.rivalStableId,
-      boutArenaId
+      { s: state, wA: validCW, wD: validCO, outcome: outcome, tags: tags, fameA: fameA, popA: popA, fameD: fameD, popD: popD, _rivalStableId: ctx.rivalStableId, arenaId: boutArenaId }
     )
   );
 
   const { deathRes, injuryRes } = postResolutionImpacts(
-    state,
-    ctx,
-    validCW,
-    validCO,
-    outcome,
-    tags,
-    rng,
-    boutSeed,
-    impacts
+    { state: state, ctx: ctx, validCW: validCW, validCO: validCO, outcome: outcome, tags: tags, rng: rng, boutSeed: boutSeed, impacts: impacts }
   );
 
   const { summary, announcement } = reportBout(
-    state,
-    ctx,
-    validCW,
-    validCO,
-    outcome,
-    tags,
-    { fameA, popA, fameD, popD },
-    rng,
-    boutSeed,
-    impacts
+    { state: state, ctx: ctx, validCW: validCW, validCO: validCO, outcome: outcome, tags: tags, fame: { fameA, popA, fameD, popD }, rng: rng, boutSeed: boutSeed, impacts: impacts }
   );
 
   return { impacts, deathRes, injuryRes, announcement, summary };
+}
+
+interface PostResolutionImpactsArgs {
+  state: GameState;
+  ctx: BoutContext;
+  validCW: Warrior;
+  validCO: Warrior;
+  outcome: FightOutcome;
+  tags: string[];
+  rng: IRNGService;
+  boutSeed: number;
+  impacts: StateImpact[];
 }
 
 /**
  * Death, injury, and progression resolution plus roster-update impacts.
  * RNG draw order (death pass → injury pass → progressions) is load-bearing.
  */
-function postResolutionImpacts(
-  state: GameState,
-  ctx: BoutContext,
-  validCW: Warrior,
-  validCO: Warrior,
-  outcome: FightOutcome,
-  tags: string[],
-  rng: IRNGService,
-  boutSeed: number,
-  impacts: StateImpact[]
-): { deathRes: ReturnType<typeof handleDeath>; injuryRes: ReturnType<typeof handleInjuries> } {
+function postResolutionImpacts(args: PostResolutionImpactsArgs): { deathRes: ReturnType<typeof handleDeath>; injuryRes: ReturnType<typeof handleInjuries> } {
+  const { state, ctx, validCW, validCO, outcome } = args;
+  const { tags, rng, boutSeed, impacts } = args;
   const deathRes = handleDeath(
-    state,
-    validCW,
-    validCO,
-    outcome,
-    ctx.week,
-    tags,
-    ctx.rivalStableId,
-    rng,
-    ctx.tournamentId
+    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, tags: tags, rivalStableId: ctx.rivalStableId, rng: rng, tournamentId: ctx.tournamentId }
   );
   const injuryRes = handleInjuries(
-    state,
-    validCW,
-    validCO,
-    outcome,
-    ctx.week,
-    ctx.rivalStableId,
-    boutSeed
+    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, _rivalStableId: ctx.rivalStableId, seed: boutSeed }
   );
   impacts.push(
     deathRes.impact,
     injuryRes.impact,
-    handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, rng),
+    handleProgressions({ s: state, wA: validCW, wD: validCO, outcome: outcome, tags: tags, week: ctx.week, rng: rng }),
     ...rosterUpdateImpacts(state, validCW, validCO, ctx.week)
   );
   return { deathRes, injuryRes };
+}
+
+interface ReportBoutArgs {
+  state: GameState;
+  ctx: BoutContext;
+  validCW: Warrior;
+  validCO: Warrior;
+  outcome: FightOutcome;
+  tags: string[];
+  fame: { fameA: number; popA: number; fameD: number; popD: number };
+  rng: IRNGService;
+  boutSeed: number;
+  impacts: StateImpact[];
 }
 
 /**
  * Build the fight summary + announcement, stamp the title-bout channel, push
  * the arenaHistory impact, and emit BOUT_COMPLETED when headed.
  */
-function reportBout(
-  state: GameState,
-  ctx: BoutContext,
-  validCW: Warrior,
-  validCO: Warrior,
-  outcome: FightOutcome,
-  tags: string[],
-  fame: { fameA: number; popA: number; fameD: number; popD: number },
-  rng: IRNGService,
-  boutSeed: number,
-  impacts: StateImpact[]
-): { summary: FightSummary; announcement: string } {
+function reportBout(args: ReportBoutArgs): { summary: FightSummary; announcement: string } {
+  const { state, ctx, validCW, validCO, outcome } = args;
+  const { tags, fame, rng, boutSeed, impacts } = args;
   const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
   const { summary, announcement } = handleReporting(
-    validCW,
-    validCO,
-    outcome,
-    tags,
-    fame.fameA,
-    fame.popA,
-    fame.fameD,
-    fame.popD,
-    ctx.displayWeek ?? ctx.week,
-    ctx.rivalStableId,
-    ctx.isRivalry,
-    0,
-    rng,
-    resolvedArenaId,
-    state.weather,
-    ctx.week,
-    ctx.contract?.id
+    { wA: validCW, wD: validCO, outcome: outcome, tags: tags, fA: fame.fameA, pA: fame.popA, fD: fame.fameD, pD: fame.popD, week: ctx.displayWeek ?? ctx.week, _rivalStableId: ctx.rivalStableId, isRivalry: ctx.isRivalry, _day: 0, rng: rng, arenaId: resolvedArenaId, weather: state.weather, absoluteWeek: ctx.week, contractId: ctx.contract?.id }
   );
   // Stamp the title-bout channel — ArenaChampionshipPass resolves reigns off
   // this flag, and the UI badges the bout as a defense.
@@ -353,12 +291,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
 
   const outcome = runBoutSimulation(state, ctx, cW, cO, boutSeed);
   const { impacts, deathRes, injuryRes, announcement } = collectBoutImpacts(
-    state,
-    ctx,
-    cW,
-    cO,
-    outcome,
-    boutSeed
+    { state: state, ctx: ctx, validCW: cW, validCO: cO, outcome: outcome, boutSeed: boutSeed }
   );
 
   return {

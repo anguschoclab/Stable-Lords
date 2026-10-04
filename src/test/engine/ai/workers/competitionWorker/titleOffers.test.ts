@@ -108,7 +108,7 @@ describe('evaluateBoutOffer — reign management', () => {
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
-    expect(evaluateBoutOffer(offer, rival, champ, 5, 'Clear', killer('k1'), state)).toBe(
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: champ, currentWeek: 5, weather: 'Clear', opponent: killer('k1'), state: state })).toBe(
       'Accepted'
     );
   });
@@ -126,13 +126,7 @@ describe('evaluateBoutOffer — reign management', () => {
     const state = stateWithTitle(0);
     expect(
       evaluateBoutOffer(
-        offer,
-        rival,
-        champ,
-        5,
-        'Clear',
-        makeWarrior({ id: 'k1' as WarriorId }),
-        state
+        { offer: offer, rival: rival, warrior: champ, currentWeek: 5, weather: 'Clear', opponent: makeWarrior({ id: 'k1' as WarriorId }), state: state }
       )
     ).toBe('Declined');
   });
@@ -147,7 +141,7 @@ describe('evaluateBoutOffer — reign management', () => {
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
-    expect(evaluateBoutOffer(offer, rival, champ, 5, 'Clear', killer('k1'), state)).toBe(
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: champ, currentWeek: 5, weather: 'Clear', opponent: killer('k1'), state: state })).toBe(
       'Declined'
     );
   });
@@ -160,7 +154,7 @@ describe('evaluateBoutOffer — reign management', () => {
     });
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
-    expect(evaluateBoutOffer(offer, rival, challenger, 5, 'Clear', killer('champ_x'), state)).toBe(
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: challenger, currentWeek: 5, weather: 'Clear', opponent: killer('champ_x'), state: state })).toBe(
       'Declined'
     );
   });
@@ -173,7 +167,7 @@ describe('evaluateBoutOffer — reign management', () => {
     });
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
-    expect(evaluateBoutOffer(offer, rival, challenger, 5, 'Clear', killer('champ_x'), state)).toBe(
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: challenger, currentWeek: 5, weather: 'Clear', opponent: killer('champ_x'), state: state })).toBe(
       'Accepted'
     );
   });

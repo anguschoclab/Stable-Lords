@@ -229,16 +229,11 @@ function materializeFloorRecruit(
   const style = rng.pick(Object.values(FightingStyle));
   const attrs = generateArchetypeAttrs(style, rng);
   const warrior = makeWarrior(
-    rng.uuid() as WarriorId,
-    generateWarriorName({
+    { id: rng.uuid() as WarriorId, name: generateWarriorName({
       rng,
       archetype: STYLE_ARCHETYPE[style],
       usedNames: collectUsedWarriorNames(state),
-    }),
-    style,
-    attrs,
-    {},
-    rng
+    }), style: style, attrs: attrs, overrides: {}, rng: rng }
   );
   return { warrior };
 }

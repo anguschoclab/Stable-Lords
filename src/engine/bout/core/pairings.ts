@@ -89,17 +89,21 @@ function collectTournamentPairings(
   return tournamentPairings;
 }
 
+interface ResolveContractOfferArgs {
+  offer: BoutOffer;
+  state: GameState;
+  warriorMap: Map<string, Warrior>;
+  committedWarriors: Set<string>;
+  activeChampionIds: Set<string>;
+  deadIds: ReadonlySet<string>;
+  pairings: BoutPairing[];
+  voidedOffers: BoutOffer[];
+}
+
 /** Resolve a signed offer into a pairing — or void it (champion choke point / double-booking). */
-function resolveContractOffer(
-  offer: BoutOffer,
-  state: GameState,
-  warriorMap: Map<string, Warrior>,
-  committedWarriors: Set<string>,
-  activeChampionIds: Set<string>,
-  deadIds: ReadonlySet<string>,
-  pairings: BoutPairing[],
-  voidedOffers: BoutOffer[]
-): void {
+function resolveContractOffer(args: ResolveContractOfferArgs): void {
+  const { offer, state, warriorMap, committedWarriors, activeChampionIds } = args;
+  const { deadIds, pairings, voidedOffers } = args;
   const idA = offer.warriorIds[0];
   const idD = offer.warriorIds[1];
   if (
@@ -193,14 +197,7 @@ export function generatePairings(state: GameState): PairingsResult {
 
   currentOffers.forEach((offer) =>
     resolveContractOffer(
-      offer,
-      state,
-      warriorMap,
-      committedWarriors,
-      activeChampionIds,
-      deadIds,
-      pairings,
-      voidedOffers
+      { offer: offer, state: state, warriorMap: warriorMap, committedWarriors: committedWarriors, activeChampionIds: activeChampionIds, deadIds: deadIds, pairings: pairings, voidedOffers: voidedOffers }
     )
   );
 

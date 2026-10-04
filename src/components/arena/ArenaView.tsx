@@ -114,14 +114,7 @@ interface ArenaViewProps {
 function useArenaScene(p: ArenaViewProps & { isComplete: boolean; weather: WeatherType }) {
   const { log, visibleCount, maxHpA, maxHpD, winner, isComplete, nameA, nameD } = p;
   const anim = useArenaAnimation(
-    log,
-    visibleCount,
-    maxHpA ?? DEFAULT_MAX_HP,
-    maxHpD ?? DEFAULT_MAX_HP,
-    winner,
-    isComplete,
-    nameA,
-    nameD
+    { log: log, visibleCount: visibleCount, maxHpA: maxHpA ?? DEFAULT_MAX_HP, maxHpD: maxHpD ?? DEFAULT_MAX_HP, winner: winner, isComplete: isComplete, fighterNameA: nameA, fighterNameD: nameD }
   );
 
   // Event tracking and crowd state

@@ -15,32 +15,40 @@ function isTournamentParticipant(state: GameState, warriorId: string): boolean {
 }
 
 /**
- * Apply records.
- * @param s -
- * @param wA -
- * @param wD -
- * @param outcome -
- * @param tags -
- * @param fameA -
- * @param popA -
- * @param fameD -
- * @param popD -
- * @param _rivalStableId - unused; ownership is resolved per warrior
- * @param arenaId -
+ *
  */
-export function applyRecords(
-  s: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  tags: string[],
-  fameA: number,
-  popA: number,
-  fameD: number,
-  popD: number,
-  _rivalStableId?: string,
-  arenaId?: string
-): StateImpact {
+export interface ApplyRecordsArgs {
+  s: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  tags: string[];
+  fameA: number;
+  popA: number;
+  fameD: number;
+  popD: number;
+  _rivalStableId?: string;
+  arenaId?: string;
+}
+
+/**
+ * Apply records.
+ * @param args.s -
+ * @param args.wA -
+ * @param args.wD -
+ * @param args.outcome -
+ * @param args.tags -
+ * @param args.fameA -
+ * @param args.popA -
+ * @param args.fameD -
+ * @param args.popD -
+ * @param args._rivalStableId - unused; ownership is resolved per warrior
+ * @param args.arenaId -
+ */
+export function applyRecords(args: ApplyRecordsArgs): StateImpact {
+  const { s, wA, wD, outcome, tags } = args;
+  const { fameA, popA, fameD, popD } = args;
+  const { arenaId } = args;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
   const epithetAwards: WarriorEpithetAward[] = [];
@@ -66,28 +74,14 @@ export function applyRecords(
     const isKill = side.won && outcome.by === 'Kill';
     if (isPlayerOwned(s, side.w)) {
       const updated = updateWarriorAfterBout(
-        side.w,
-        side.fame,
-        side.pop,
-        side.won,
-        isKill,
-        tags,
-        side.skip,
-        arenaId
+        { warrior: side.w, fameDelta: side.fame, popularityDelta: side.pop, isWinner: side.won, wasKilled: isKill, tags: tags, skipFatigue: side.skip, arenaId: arenaId }
       );
       queueEpithet(side.w, updated);
       rosterUpdates.set(side.w.id, updated);
     } else {
       // Rivals track no popularity from bouts (unchanged from the prior D-side path).
       const updated = updateWarriorAfterBout(
-        side.w,
-        side.fame,
-        0,
-        side.won,
-        isKill,
-        tags,
-        side.skip,
-        arenaId
+        { warrior: side.w, fameDelta: side.fame, popularityDelta: 0, isWinner: side.won, wasKilled: isKill, tags: tags, skipFatigue: side.skip, arenaId: arenaId }
       );
       queueEpithet(side.w, updated);
       patchRivalWarrior(rivalWarriorPatches, side.w, updated);

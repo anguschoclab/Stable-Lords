@@ -82,15 +82,19 @@ function aggregateRecentFights(state: GameState, rivals: GameState['rivals']): F
 const ownerPairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
 const rivalIdxKey = (i: number, j: number) => (i < j ? `${i}|${j}` : `${j}|${i}`);
 
+interface ProcessRivalPairsArgs {
+  state: GameState;
+  rivals: GameState['rivals'];
+  agg: FightAggregation;
+  grudges: OwnerGrudge[];
+  grudgeByPair: Map<string, OwnerGrudge>;
+  gazetteItems: string[];
+}
+
 /** Rival×rival pairs: personality clashes escalate into grudges on kills. */
-function processRivalPairs(
-  state: GameState,
-  rivals: GameState['rivals'],
-  agg: FightAggregation,
-  grudges: OwnerGrudge[],
-  grudgeByPair: Map<string, OwnerGrudge>,
-  gazetteItems: string[]
-): void {
+function processRivalPairs(args: ProcessRivalPairsArgs): void {
+  const { state, rivals, agg, grudges, grudgeByPair } = args;
+  const { gazetteItems } = args;
   for (let i = 0; i < rivals.length; i++) {
     const rA = rivals[i];
     if (!rA) continue;
@@ -147,20 +151,24 @@ function processRivalPairs(
   }
 }
 
+interface ProcessPlayerPairsArgs {
+  state: GameState;
+  rivals: GameState['rivals'];
+  agg: FightAggregation;
+  playerWarriorCount: number;
+  grudges: OwnerGrudge[];
+  grudgeByPair: Map<string, OwnerGrudge>;
+  gazetteItems: string[];
+}
+
 /**
  * Player × rival pairs (G5b): kills/upsets against the player's roster
  * create real grudges. Unlike rival×rival pairs these need no personality
  * clash — bloodshed is reason enough.
  */
-function processPlayerPairs(
-  state: GameState,
-  rivals: GameState['rivals'],
-  agg: FightAggregation,
-  playerWarriorCount: number,
-  grudges: OwnerGrudge[],
-  grudgeByPair: Map<string, OwnerGrudge>,
-  gazetteItems: string[]
-): void {
+function processPlayerPairs(args: ProcessPlayerPairsArgs): void {
+  const { state, rivals, agg, playerWarriorCount, grudges } = args;
+  const { grudgeByPair, gazetteItems } = args;
   if (playerWarriorCount === 0) return;
 
   for (let idx = 0; idx < rivals.length; idx++) {
@@ -225,15 +233,9 @@ export function processOwnerGrudges(
     if (!grudgeByPair.has(k)) grudgeByPair.set(k, g);
   }
 
-  processRivalPairs(state, rivals, agg, grudges, grudgeByPair, gazetteItems);
+  processRivalPairs({ state: state, rivals: rivals, agg: agg, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems });
   processPlayerPairs(
-    state,
-    rivals,
-    agg,
-    (state.roster || []).length,
-    grudges,
-    grudgeByPair,
-    gazetteItems
+    { state: state, rivals: rivals, agg: agg, playerWarriorCount: (state.roster || []).length, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems }
   );
 
   // Decay old grudges — after 4 consecutive weeks with no cross-stable fight the

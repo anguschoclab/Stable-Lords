@@ -104,19 +104,26 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
 }
 
 /**
+ *
+ */
+export interface GenerateBoutBidsArgs {
+  rival: RivalStableData;
+  _currentWeek: number;
+  weather?: WeatherType;
+  crowdMood?: CrowdMood;
+  rivals?: RivalStableData[];
+  state?: GameState;
+}
+
+/**
  * Generate bout bids for a rival stable. When `state` is supplied the agent is
  * player-aware: vendettas may target the player roster, the player's
  * challenge/avoid marks steer contact, and per-stable training assignments
  * suppress bids.
  */
-export function generateBoutBids(
-  rival: RivalStableData,
-  _currentWeek: number,
-  weather: WeatherType = 'Clear',
-  crowdMood: CrowdMood = 'Calm',
-  rivals: RivalStableData[] = [],
-  state?: GameState
-): { bids: BoutBid[]; updatedRival: RivalStableData } {
+export function generateBoutBids(args: GenerateBoutBidsArgs): { bids: BoutBid[]; updatedRival: RivalStableData } {
+  const { rival, weather = 'Clear', crowdMood = 'Calm', rivals = [] } = args;
+  const { state } = args;
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const activeRoster = bookableRoster(rival, state);
   const bids: BoutBid[] = [];
@@ -497,15 +504,19 @@ function resolveArenaId(
   );
 }
 
+interface BuildOfferArgs {
+  bid: BoutBid;
+  proposer: Warrior;
+  opponent: Warrior;
+  proposerStable: { stableId: string; isPlayer: boolean };
+  arenaId: string | undefined;
+  cx: BidConversionCtx;
+}
+
 /** Builds the BoutOffer record for a matched bid pair. */
-function buildOffer(
-  bid: BoutBid,
-  proposer: Warrior,
-  opponent: Warrior,
-  proposerStable: { stableId: string; isPlayer: boolean },
-  arenaId: string | undefined,
-  cx: BidConversionCtx
-): BoutOffer {
+function buildOffer(args: BuildOfferArgs): BoutOffer {
+  const { bid, proposer, opponent, proposerStable, arenaId } = args;
+  const { cx } = args;
   const { state, rng } = cx;
   const offerId = `bid_${rng.uuid()}` as BoutOfferId;
 
@@ -592,7 +603,7 @@ export function convertBidsToOffers(
     const opponent = bestCandidate.warrior;
 
     const arenaId = resolveArenaId(bid, proposer, opponent, cx);
-    const offer = buildOffer(bid, proposer, opponent, proposerStable, arenaId, cx);
+    const offer = buildOffer({ bid: bid, proposer: proposer, opponent: opponent, proposerStable: proposerStable, arenaId: arenaId, cx: cx });
 
     offers.push(offer);
     cx.paired.add(bid.proposingWarriorId);

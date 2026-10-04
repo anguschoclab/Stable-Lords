@@ -72,12 +72,7 @@ const narrateAttackEvent: EventNarrator = (event, h, minute) => {
     {
       minute,
       text: narrateAttack(
-        h.rng,
-        h.displayName(event.actor),
-        h.getWeapon(event.actor),
-        false,
-        h.getOpponentName(event.actor),
-        h.getStyle(event.actor)
+        { rng: h.rng, attackerName: h.displayName(event.actor), weaponId: h.getWeapon(event.actor), _isMastery: false, defenderName: h.getOpponentName(event.actor), style: h.getStyle(event.actor) }
       ),
     },
     {
@@ -117,12 +112,7 @@ const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
       {
         minute,
         text: narrateAttack(
-          h.rng,
-          h.getOpponentName(event.actor),
-          h.getWeapon(event.actor === 'A' ? 'D' : 'A'),
-          false,
-          actorName,
-          h.getStyle(event.actor === 'A' ? 'D' : 'A')
+          { rng: h.rng, attackerName: h.getOpponentName(event.actor), weaponId: h.getWeapon(event.actor === 'A' ? 'D' : 'A'), _isMastery: false, defenderName: actorName, style: h.getStyle(event.actor === 'A' ? 'D' : 'A') }
         ),
       },
       { minute, text: narrateParry(h.rng, actorName, weapon, opponentName) },
@@ -142,16 +132,20 @@ const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
   return [];
 };
 
+interface HitAttackLeadArgs {
+  event: Parameters<EventNarrator>[0];
+  h: Parameters<EventNarrator>[1];
+  minute: number;
+  events: Parameters<EventNarrator>[3];
+  isMastery: boolean;
+  opponentName: string;
+  weapon: string;
+}
+
 /** Lead-in attack line — emitted when the hit follows a riposte or an undefended blow. */
-function hitAttackLead(
-  event: Parameters<EventNarrator>[0],
-  h: Parameters<EventNarrator>[1],
-  minute: number,
-  events: Parameters<EventNarrator>[3],
-  isMastery: boolean,
-  opponentName: string,
-  weapon: string
-): MinuteEvent[] {
+function hitAttackLead(args: HitAttackLeadArgs): MinuteEvent[] {
+  const { event, h, minute, events, isMastery } = args;
+  const { opponentName, weapon } = args;
   const showAttack =
     events.some((e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE' && e.actor === event.actor) ||
     !events.some((e) => e.type === 'DEFENSE' && e.actor === event.target);
@@ -160,12 +154,7 @@ function hitAttackLead(
     {
       minute,
       text: narrateAttack(
-        h.rng,
-        h.displayName(event.actor),
-        weapon,
-        isMastery,
-        opponentName,
-        h.getStyle(event.actor)
+        { rng: h.rng, attackerName: h.displayName(event.actor), weaponId: weapon, _isMastery: isMastery, defenderName: opponentName, style: h.getStyle(event.actor) }
       ),
     },
   ];
@@ -211,7 +200,7 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
       events.some((e) => e.type === 'BOUT_END'));
 
   const out: MinuteEvent[] = [
-    ...hitAttackLead(event, h, minute, events, isMastery, opponentName, weapon),
+    ...hitAttackLead({ event: event, h: h, minute: minute, events: events, isMastery: isMastery, opponentName: opponentName, weapon: weapon }),
   ];
 
   const isFatal = !!event.metadata?.lethal;
@@ -224,19 +213,7 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
   out.push({
     minute,
     text: narrateHit(
-      rng,
-      opponentName,
-      event.location,
-      isMastery,
-      isSuperFlashy,
-      actorName,
-      weapon,
-      event.value,
-      h.getMaxHp(event.target as 'A' | 'D'),
-      isFatal,
-      h.getFame(event.actor as 'A' | 'D'),
-      h.getIsFavorite(event.actor as 'A' | 'D'),
-      h.getStyle(event.actor as 'A' | 'D')
+      { rng: rng, defenderName: opponentName, location: event.location, _isMastery: isMastery, isSuperFlashy: isSuperFlashy, attackerName: actorName, weaponId: weapon, damage: event.value, maxHp: h.getMaxHp(event.target as 'A' | 'D'), isFatal: isFatal, attackerFame: h.getFame(event.actor as 'A' | 'D'), isFavorite: h.getIsFavorite(event.actor as 'A' | 'D'), style: h.getStyle(event.actor as 'A' | 'D') }
     ),
     emphasis: isHeavyHit,
   });

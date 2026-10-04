@@ -876,13 +876,7 @@ describe('applyBoutResults — kill lifecycle bookkeeping', () => {
 
     const rng = new SeededRNG(7);
     const next = applyBoutResults(
-      state,
-      wA,
-      wD,
-      makeFightOutcome('A', 'Kill'),
-      tournament.id,
-      tournament.name,
-      rng
+      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Kill'), tId: tournament.id, tName: tournament.name, rng: rng }
     );
 
     // Unique death recorded exactly once per store.
@@ -912,13 +906,7 @@ describe('applyBoutResults — kill lifecycle bookkeeping', () => {
 
     const rng = new SeededRNG(9);
     const next = applyBoutResults(
-      state,
-      wA,
-      wD,
-      makeFightOutcome('A', 'Kill'),
-      tournament.id,
-      tournament.name,
-      rng
+      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Kill'), tId: tournament.id, tName: tournament.name, rng: rng }
     );
 
     // The repeat outcome still surfaces as a kill event — the oracle's
@@ -952,13 +940,7 @@ describe('applyBoutResults — kill lifecycle bookkeeping', () => {
 
     const rng = new SeededRNG(3);
     const next = applyBoutResults(
-      state,
-      wA,
-      wD,
-      makeFightOutcome('A', 'Stoppage'),
-      tournament.id,
-      tournament.name,
-      rng
+      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Stoppage'), tId: tournament.id, tName: tournament.name, rng: rng }
     );
 
     // Mid-week appends must not drop head entries — the cumulative tracker
@@ -1055,7 +1037,7 @@ describe('odd-sized fields — the tail entrant gets a real bye', () => {
       );
     }
 
-    const tourney = buildTournament('Gold', 'Gold Cup', warriors, 10, 'Spring', new SeededRNG(7), 1);
+    const tourney = buildTournament({ tierId: 'Gold', tierName: 'Gold Cup', warriors: warriors, week: 10, season: 'Spring', rng: new SeededRNG(7), year: 1 });
 
     const inBouts = new Set(
       tourney.bracket
@@ -1119,7 +1101,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't-gold-spring-1', 'Test Cup', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't-gold-spring-1', tName: 'Test Cup', rng: rng });
 
     expect(updated.arenaHistory.length).toBeGreaterThan(0);
     expect(updated.arenaHistory[0]!.tournamentId).toBe('t-gold-spring-1');
@@ -1139,7 +1121,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1163,7 +1145,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1182,7 +1164,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     expect(updated.graveyard.length).toBe(1);
     expect(updated.graveyard[0]!.id).toBe('w2');
@@ -1201,7 +1183,7 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1498,7 +1480,7 @@ describe('applyBoutResults — deathWeek at year boundary', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
-    const updated = applyBoutResults(state, w1, w2, outcome, 't1', 'Test', rng);
+    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
 
     expect(updated.graveyard.length).toBe(1);
     expect(updated.graveyard[0]!.deathWeek).toBe(53);

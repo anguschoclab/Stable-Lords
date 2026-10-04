@@ -38,12 +38,7 @@ const MIRROR_STYLE = FightingStyle.StrikingAttack; // Balanced mid-tier style
 function buildWarrior(traits: string[] = [], style = MIRROR_STYLE) {
   const rng = new SeededRNGService(42);
   return makeWarrior(
-    rng.uuid() as WarriorId,
-    traits.length ? `Traited_${traits[0]}` : 'Baseline',
-    style,
-    { ...MIRROR_ATTRS },
-    { traits, age: 20 },
-    rng
+    { id: rng.uuid() as WarriorId, name: traits.length ? `Traited_${traits[0]}` : 'Baseline', style: style, attrs: { ...MIRROR_ATTRS }, overrides: { traits, age: 20 }, rng: rng }
   );
 }
 
@@ -72,8 +67,8 @@ function runMirrorBouts(
     // Alternate sides to neutralise first-mover bias
     const aIsTraited = i % 2 === 0;
     const outcome = aIsTraited
-      ? simulateFight(planA, planB, wA, wB, i * 31337)
-      : simulateFight(planB, planA, wB, wA, i * 31337);
+      ? simulateFight({ planA: planA, planD: planB, warriorA: wA, warriorD: wB, providedRng: i * 31337 })
+      : simulateFight({ planA: planB, planD: planA, warriorA: wB, warriorD: wA, providedRng: i * 31337 });
 
     const traitedSide = aIsTraited ? 'A' : 'D';
     const baselineSide = aIsTraited ? 'D' : 'A';
@@ -261,7 +256,7 @@ describe('Combat Balance: Trait System', () => {
       const usedNames = new Set<string>();
 
       for (let i = 0; i < 50; i++) {
-        const recruit = generateRecruit(rng, usedNames, 1);
+        const recruit = generateRecruit({ rng: rng, usedNames: usedNames, week: 1 });
         for (const traitId of recruit.traits) {
           const def = TRAITS[traitId];
           expect(def).toBeDefined();

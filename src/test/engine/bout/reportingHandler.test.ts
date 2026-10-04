@@ -32,7 +32,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome();
 
-      const result = handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
 
       expect(result).toHaveProperty('summary');
       expect(result.summary).toBeDefined();
@@ -43,7 +43,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome();
 
-      const result = handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
 
       expect(result).toHaveProperty('announcement');
       expect(typeof result.announcement).toBe('string');
@@ -58,7 +58,7 @@ describe('reportingHandler', () => {
 
       for (const by of outcomes) {
         const outcome = createMockOutcome({ by });
-        expect(() => handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1)).not.toThrow();
+        expect(() => handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 })).not.toThrow();
       }
     });
 
@@ -67,7 +67,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Rival Warrior' });
       const outcome = createMockOutcome();
 
-      const result = handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1, 'rival-1', true);
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1, _rivalStableId: 'rival-1', isRivalry: true });
 
       expect(result).toBeDefined();
       expect(result.summary).toBeDefined();
@@ -87,7 +87,7 @@ describe('reportingHandler', () => {
       };
 
       expect(() =>
-        handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1, undefined, false, 1, rng as any)
+        handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1, _rivalStableId: undefined, isRivalry: false, _day: 1, rng: rng as any })
       ).not.toThrow();
     });
 
@@ -96,7 +96,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome({ by: 'Kill' });
 
-      const result = handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
 
       expect(result).toHaveProperty('summary');
       expect(result).toHaveProperty('announcement');
@@ -107,7 +107,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome({ winner: null, by: 'Draw' });
 
-      const result = handleReporting(wA, wD, outcome, [], 10, 5, 10, 5, 1);
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 10, pD: 5, week: 1 });
 
       expect(result).toBeDefined();
       expect(result.summary).toBeDefined();
@@ -118,7 +118,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Famous D', fame: 60 });
       const outcome = createMockOutcome();
 
-      const result = handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
 
       // Summary should reflect the fighters involved
       expect(result.summary).toBeDefined();
@@ -132,7 +132,7 @@ describe('reportingHandler', () => {
       const outcome = createMockOutcome();
 
       const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
-      handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
       const arenaHistoryWrites = setItemSpy.mock.calls.filter(([key]) => key === 'sl.arenaHistory');
       expect(arenaHistoryWrites).toHaveLength(0);
       setItemSpy.mockRestore();
@@ -144,7 +144,7 @@ describe('reportingHandler', () => {
       const outcome = createMockOutcome();
 
       const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
-      handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
       const styleRollupWrites = setItemSpy.mock.calls.filter(
         ([key]) => typeof key === 'string' && key.startsWith('sl.styleRollups')
       );
@@ -158,7 +158,7 @@ describe('reportingHandler', () => {
       const outcome = createMockOutcome();
 
       const setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
-      handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1);
+      handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1 });
       const loreWrites = setItemSpy.mock.calls.filter(
         ([key]) => typeof key === 'string' && key.startsWith('sl.lore')
       );

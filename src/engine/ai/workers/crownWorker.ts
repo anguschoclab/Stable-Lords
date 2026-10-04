@@ -267,12 +267,7 @@ function markCrownsForRelinquish(
     if ((declining || permanentlyHurt) && memory.pendingRelinquish == null) {
       memory.pendingRelinquish = arenaId;
       updatedRival = logAgentAction(
-        updatedRival,
-        'STRATEGY',
-        `Signals intent to vacate the ${arenaId} crown — ${warriorDisplayName(champ)} is past defending it.`,
-        'Medium',
-        week,
-        'CROWN_RELINQUISH'
+        { rival: updatedRival, type: 'STRATEGY', description: `Signals intent to vacate the ${arenaId} crown — ${warriorDisplayName(champ)} is past defending it.`, riskTier: 'Medium', week: week, cause: 'CROWN_RELINQUISH' }
       );
       gazetteItems.push(
         `👑 ${updatedRival.owner.stableName} prepares to vacate the ${arenaId} crown.`
@@ -304,22 +299,12 @@ function applyProtectionRests(
     if (signed.has(w.id)) {
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
       updatedRival = logAgentAction(
-        updatedRival,
-        'STRATEGY',
-        `${warriorDisplayName(w)} rests ahead of a signed title bout.`,
-        'Low',
-        week,
-        'CROWN_DEFENSE'
+        { rival: updatedRival, type: 'STRATEGY', description: `${warriorDisplayName(w)} rests ahead of a signed title bout.`, riskTier: 'Low', week: week, cause: 'CROWN_DEFENSE' }
       );
     } else if (holdsCrown && inGrandChampPrep) {
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
       updatedRival = logAgentAction(
-        updatedRival,
-        'STRATEGY',
-        `${warriorDisplayName(w)} rests for the Grand Championship bracket.`,
-        'Low',
-        week,
-        'CROWN_PREP'
+        { rival: updatedRival, type: 'STRATEGY', description: `${warriorDisplayName(w)} rests for the Grand Championship bracket.`, riskTier: 'Low', week: week, cause: 'CROWN_PREP' }
       );
     }
   }

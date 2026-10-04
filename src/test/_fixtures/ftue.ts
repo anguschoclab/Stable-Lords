@@ -18,16 +18,10 @@ export const makePlanWarrior = (name: string) => ({
 });
 
 export const FTUE_W_A = makeWarrior(
-  'w-a' as any,
-  'Varak',
-  FightingStyle.LungingAttack,
-  FTUE_BASE_ATTRS
+  { id: 'w-a' as any, name: 'Varak', style: FightingStyle.LungingAttack, attrs: FTUE_BASE_ATTRS }
 );
 export const FTUE_W_D = makeWarrior(
-  'w-d' as any,
-  'Dren',
-  FightingStyle.TotalParry,
-  FTUE_BASE_ATTRS
+  { id: 'w-d' as any, name: 'Dren', style: FightingStyle.TotalParry, attrs: FTUE_BASE_ATTRS }
 );
 
 /** make Ftue Result. */

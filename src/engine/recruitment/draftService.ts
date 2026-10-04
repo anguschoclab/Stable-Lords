@@ -56,25 +56,32 @@ function orderRivalsForSnakeDraft(rivals: RivalStableData[], week: number): Riva
 }
 
 /**
+ *
+ */
+export interface AiDraftFromPoolArgs {
+  pool: PoolWarrior[];
+  rivals: RivalStableData[];
+  week: number;
+  state: GameState;
+  seed?: number;
+  rng?: IRNGService;
+}
+
+/**
  * AI Draft Service
  * Refactored to delegate to isolated RecruitmentWorkers.
  * Implements "Context Isolation" and "Risk-Tiered Execution".
  * Sole recruitment path for AI stables (G9) — processAIRosterManagement
  * only flags `needsRecruit`.
  */
-export function aiDraftFromPool(
-  pool: PoolWarrior[],
-  rivals: RivalStableData[],
-  week: number,
-  state: GameState,
-  seed?: number,
-  rng?: IRNGService
-): {
+export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
   updatedPool: PoolWarrior[];
   updatedFreeAgents: PoolWarrior[];
   updatedRivals: RivalStableData[];
   gazetteItems: string[];
 } {
+  const { pool, rivals, week, state, seed } = args;
+  const { rng } = args;
   const rngService = resolveRng(rng, seed ?? (state.absoluteWeek ?? week) * 7919 + 101);
   const isMajorDraftWeek = week % 4 === 0;
 
@@ -102,14 +109,7 @@ export function aiDraftFromPool(
   for (const rival of sortedRivals) {
     const customMeta = rivalDraftMeta(rival, state, meta, rivalryMap);
     const { updatedRival, updatedPool, gazetteItems } = processRecruitment(
-      rival,
-      currentPool,
-      week,
-      rngService,
-      isMajorDraftWeek,
-      customMeta,
-      usedNames,
-      usedIds
+      { rival: rival, pool: currentPool, week: week, rng: rngService, isMajorDraftWeek: isMajorDraftWeek, meta: customMeta, usedNames: usedNames, usedIds: usedIds }
     );
 
     draftResults[updatedRival.owner.id] = updatedRival;

@@ -14,23 +14,30 @@ import { entropyRng } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
+ *
+ */
+export interface MakeWarriorArgs {
+  id: WarriorId | undefined;
+  name: string;
+  style: FightingStyle;
+  attrs: { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number };
+  overrides?: Partial<Warrior>;
+  rng?: IRNGService;
+}
+
+/**
  * Creates a new warrior with calculated stats and favorites.
  *
- * @param id - Optional ID (if not provided, one will be generated)
- * @param name - Warrior name
- * @param style - Fighting style
- * @param attrs - Base attributes
- * @param overrides - Partial warrior properties to override defaults
- * @param rng - Optional SeededRNG for deterministic generation
+ * @param args.id - Optional ID (if not provided, one will be generated)
+ * @param args.name - Warrior name
+ * @param args.style - Fighting style
+ * @param args.attrs - Base attributes
+ * @param args.overrides - Partial warrior properties to override defaults
+ * @param args.rng - Optional SeededRNG for deterministic generation
  */
-export function makeWarrior(
-  id: WarriorId | undefined,
-  name: string,
-  style: FightingStyle,
-  attrs: { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number },
-  overrides?: Partial<Warrior>,
-  rng?: IRNGService
-): Warrior {
+export function makeWarrior(args: MakeWarriorArgs): Warrior {
+  const { id, name, style, attrs, overrides } = args;
+  const { rng } = args;
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   const favorites = generateFavorites(style, rng ?? entropyRng());
   // Traits are now consumed in combat (see src/engine/traits.ts) — generate

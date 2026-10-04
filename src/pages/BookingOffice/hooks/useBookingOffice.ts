@@ -177,12 +177,7 @@ export function useBookingOffice() {
   const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(
     () =>
       filterAndSortOffers(
-        boutOffers,
-        roster,
-        absoluteWeek,
-        promoters,
-        signedOfferIds,
-        selectedWarriorId
+        { boutOffers: boutOffers, roster: roster, week: absoluteWeek, promoters: promoters, signedOfferIds: signedOfferIds, selectedWarriorId: selectedWarriorId }
       ),
     [boutOffers, roster, absoluteWeek, promoters, signedOfferIds, selectedWarriorId]
   );

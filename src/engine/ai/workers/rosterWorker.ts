@@ -113,7 +113,7 @@ function runAITraining(
           warrior,
           seasonalGrowth: nextGrowth,
           chosen,
-        } = performAITraining(trainee, rival, season, seasonalGrowth, rngService, healingBonus);
+        } = performAITraining({ w: trainee, stable: rival, season: season, seasonalGrowth: seasonalGrowth, rng: rngService, healingBonus: healingBonus });
         seasonalGrowth = nextGrowth;
         rival.roster = updateEntityInList(rival.roster, warrior.id, () => warrior);
         if (chosen) {
@@ -128,15 +128,19 @@ function runAITraining(
   rival.seasonalGrowth = seasonalGrowth;
 }
 
+interface BuyGearUpgradeArgs {
+  rival: RivalStableData;
+  warrior: RivalStableData['roster'][number];
+  gearCost: number;
+  currentWeek: number;
+  rngService: IRNGService;
+  isChampion: boolean;
+}
+
 /** Purchase a gear upgrade for one warrior: deduct cost, apply, log both books. */
-function buyGearUpgrade(
-  rival: RivalStableData,
-  warrior: RivalStableData['roster'][number],
-  gearCost: number,
-  currentWeek: number,
-  rngService: IRNGService,
-  isChampion: boolean
-): RivalStableData {
+function buyGearUpgrade(args: BuyGearUpgradeArgs): RivalStableData {
+  const { rival, warrior, gearCost, currentWeek, rngService } = args;
+  const { isChampion } = args;
   const budgetReport = checkBudget(rival, gearCost, 'ROSTER');
   if (!budgetReport.isAffordable) return rival;
 
@@ -153,11 +157,7 @@ function buyGearUpgrade(
     riskTier: budgetReport.riskTier,
   });
   updated = logAgentAction(
-    updated,
-    'ROSTER',
-    `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warriorDisplayName(warrior)}.`,
-    budgetReport.riskTier,
-    currentWeek
+    { rival: updated, type: 'ROSTER', description: `Invested ${gearCost}g in gear for ${isChampion ? 'champion ' : ''}${warriorDisplayName(warrior)}.`, riskTier: budgetReport.riskTier, week: currentWeek }
   );
   return updated;
 }
@@ -240,7 +240,7 @@ function applyGearPolicy(
   const activeForGear = updated.roster.filter((w) => isActive(w));
   const champWarrior = activeForGear.find((w) => w.champion);
   if (champWarrior && updated.treasury > AI_GEAR_CHAMPION_TREASURY_GATE) {
-    updated = buyGearUpgrade(updated, champWarrior, GEAR_COST, currentWeek, rngService, true);
+    updated = buyGearUpgrade({ rival: updated, warrior: champWarrior, gearCost: GEAR_COST, currentWeek: currentWeek, rngService: rngService, isChampion: true });
   }
   if (
     intent === 'EXPANSION' ||
@@ -252,7 +252,7 @@ function applyGearPolicy(
       (activeForGear.length > 0 ? rngService.pick(activeForGear) : undefined);
 
     if (gearCandidate) {
-      updated = buyGearUpgrade(updated, gearCandidate, GEAR_COST, currentWeek, rngService, false);
+      updated = buyGearUpgrade({ rival: updated, warrior: gearCandidate, gearCost: GEAR_COST, currentWeek: currentWeek, rngService: rngService, isChampion: false });
     }
   }
   return updated;

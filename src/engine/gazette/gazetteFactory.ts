@@ -23,16 +23,23 @@ import {
 import { generateGazetteHeadline, generateGazetteBody } from './gazetteNarrative';
 
 /**
+ *
+ */
+export interface GenerateWeeklyGazetteArgs {
+  fights: FightSummary[];
+  mood: CrowdMoodType;
+  week: number;
+  graveyard: Warrior[];
+  allFights?: FightSummary[];
+  rng?: IRNGService;
+}
+
+/**
  * Generates a weekly gazette from fight data.
  */
-export function generateWeeklyGazette(
-  fights: FightSummary[],
-  mood: CrowdMoodType,
-  week: number,
-  graveyard: Warrior[],
-  allFights?: FightSummary[],
-  rng?: IRNGService
-): GazetteStory {
+export function generateWeeklyGazette(args: GenerateWeeklyGazetteArgs): GazetteStory {
+  const { fights, mood, week, graveyard, allFights } = args;
+  const { rng } = args;
   const rngService = resolveRng(rng, week * 7919 + 55);
   const storyId = rngService.uuid();
   const moodKey = mood && MOOD_TONE[mood] ? mood : 'Calm';
@@ -59,8 +66,8 @@ export function generateWeeklyGazette(
   detections.tags = detectGazetteTags(fights, detections);
 
   // Generate headline and body using helper functions
-  const headline = generateGazetteHeadline(detections, fights, week, mood, rngService, tone);
-  const body = generateGazetteBody(detections, fights, mood, week, graveyard, rngService, tone);
+  const headline = generateGazetteHeadline({ detections: detections, fights: fights, week: week, _mood: mood, rngService: rngService, tone: tone });
+  const body = generateGazetteBody({ detections: detections, fights: fights, mood: mood, week: week, graveyard: graveyard, rngService: rngService, tone: tone });
 
   return {
     id: storyId as import('@/types/shared.types').NewsId,

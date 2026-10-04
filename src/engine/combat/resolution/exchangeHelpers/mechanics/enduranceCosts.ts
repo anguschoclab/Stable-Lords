@@ -11,23 +11,31 @@ import { DEFENDER_ENDURANCE_DISCOUNT, EXHAUSTION_STOP_HP_RATIO } from '@/constan
 import { getItemById } from '@/data/equipment/equipment.utils';
 
 /**
+ *
+ */
+export interface ApplyEnduranceCostsArgs {
+  events: CombatEvent[];
+  ctx: ResolutionContext;
+  fA: FighterState;
+  fD: FighterState;
+  aGoesFirst: boolean;
+  curAttOE: number;
+  curAttAL: number;
+  curAttWepReq: { endurancePenalty: number };
+  curDefWepReq: { endurancePenalty: number };
+  OE_D: number;
+  AL_D: number;
+  OE_A: number;
+  AL_A: number;
+}
+
+/**
  * Apply endurance costs.
  */
-export function applyEnduranceCosts(
-  events: CombatEvent[],
-  ctx: ResolutionContext,
-  fA: FighterState,
-  fD: FighterState,
-  aGoesFirst: boolean,
-  curAttOE: number,
-  curAttAL: number,
-  curAttWepReq: { endurancePenalty: number },
-  curDefWepReq: { endurancePenalty: number },
-  OE_D: number,
-  AL_D: number,
-  OE_A: number,
-  AL_A: number
-) {
+export function applyEnduranceCosts(args: ApplyEnduranceCostsArgs) {
+  const { events, ctx, fA, fD, aGoesFirst } = args;
+  const { curAttOE, curAttAL, curAttWepReq, curDefWepReq, OE_D } = args;
+  const { AL_D, OE_A, AL_A } = args;
   const att = aGoesFirst ? fA : fD;
   const def = aGoesFirst ? fD : fA;
 

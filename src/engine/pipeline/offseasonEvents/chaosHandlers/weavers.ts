@@ -121,7 +121,7 @@ export function handleChaosWeaverVisit(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const positiveTraits = Object.values(TRAITS).filter(
       (td): td is TraitDef => td !== undefined && td.sign === 'positive'
     );
@@ -143,7 +143,7 @@ export function handleChaosWeaverVisit(
       updates: { traits: [...(chosen.traits || []), grantedTrait.id] },
       announce: { trait: grantedTrait.name },
     };
-  });
+  } });
 }
 
 /** Handler for the Chaos Weaver's Prophecy offseason event — foretells a warrior's destiny. */

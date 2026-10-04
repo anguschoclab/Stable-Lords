@@ -11,12 +11,7 @@ describe('trait training (integration)', () => {
     let state = createFreshState('train-int');
     const rng = new SeededRNGService(42);
     const w = makeWarrior(
-      rng.uuid() as any,
-      'Tyro',
-      FightingStyle.WallOfSteel,
-      { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 14, SP: 12, DF: 12 },
-      { traits: [], age: 20 },
-      rng
+      { id: rng.uuid() as any, name: 'Tyro', style: FightingStyle.WallOfSteel, attrs: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 14, SP: 12, DF: 12 }, overrides: { traits: [], age: 20 }, rng: rng }
     );
     state.roster = [w];
     state.trainers = [

@@ -27,15 +27,22 @@ export function computeCardKpis(cards: WarriorAdvisorCard[]): {
   return { combatReadyCount, rehabCount, tournamentContenderCount, projectedPurseGold };
 }
 
+/**
+ *
+ */
+export interface BuildStableDirectivesArgs {
+  state: GameState;
+  cards: WarriorAdvisorCard[];
+  kpis: ReturnType<typeof computeCardKpis>;
+  unassignedTrainingCount: number;
+  projectedTrainingCost: number;
+  treasury: number;
+}
+
 /** Synthesize high-priority stable directives from KPIs and card signals. */
-export function buildStableDirectives(
-  state: GameState,
-  cards: WarriorAdvisorCard[],
-  kpis: ReturnType<typeof computeCardKpis>,
-  unassignedTrainingCount: number,
-  projectedTrainingCost: number,
-  treasury: number
-): string[] {
+export function buildStableDirectives(args: BuildStableDirectivesArgs): string[] {
+  const { state, cards, kpis, unassignedTrainingCount, projectedTrainingCost } = args;
+  const { treasury } = args;
   const { combatReadyCount, rehabCount } = kpis;
   const stableDirectives: string[] = [];
   if (treasury < 0) {
@@ -104,18 +111,25 @@ export function buildStableDirectives(
 }
 
 /**
+ *
+ */
+export interface CollectUnresolvedDirectivesArgs {
+  state: GameState;
+  cards: WarriorAdvisorCard[];
+  activeWarriors: GameState['roster'];
+  playerWarriorIds: Set<string>;
+  assignedWarriorIds: Set<string>;
+  upcomingAbsWeek: number;
+}
+
+/**
  * Pre-advance checklist: council recommendations not yet reflected in live
  * state — unsigned bout offers, missing training assignments, and diverged
  * tactics plans for warriors fighting next week.
  */
-export function collectUnresolvedDirectives(
-  state: GameState,
-  cards: WarriorAdvisorCard[],
-  activeWarriors: GameState['roster'],
-  playerWarriorIds: Set<string>,
-  assignedWarriorIds: Set<string>,
-  upcomingAbsWeek: number
-): CouncilDirective[] {
+export function collectUnresolvedDirectives(args: CollectUnresolvedDirectivesArgs): CouncilDirective[] {
+  const { state, cards, activeWarriors, playerWarriorIds, assignedWarriorIds } = args;
+  const { upcomingAbsWeek } = args;
   const fightingIds = new Set(
     cards.filter((c) => c.fightAdvice.action === 'ACCEPT_OFFER').map((c) => c.warriorId)
   );

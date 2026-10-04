@@ -260,14 +260,7 @@ export function generateScoutReport(
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
 
   const newInsights = generateScoutInsights(
-    warrior,
-    quality,
-    week,
-    rng,
-    styleName,
-    suspectedOE,
-    suspectedAL,
-    suspectedTraits
+    { warrior: warrior, quality: quality, week: week, rng: rng, styleName: styleName, suspectedOE: suspectedOE, suspectedAL: suspectedAL, suspectedTraits: suspectedTraits }
   );
 
   return {

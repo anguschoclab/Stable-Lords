@@ -53,16 +53,20 @@ import {
   getExecuteBonus,
 } from '../../strikingAttack';
 
-function handleSurvivalStrike(
-  events: CombatEvent[],
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  defPassive: ReturnType<typeof getStylePassive> | undefined,
-  attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D'
-): boolean {
+interface HandleSurvivalStrikeArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  attTactics: ReturnType<typeof resolveEffectiveTactics>;
+  defPassive: ReturnType<typeof getStylePassive> | undefined;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+}
+
+function handleSurvivalStrike(args: HandleSurvivalStrikeArgs): boolean {
+  const { events, rng, attacker, defender, attTactics } = args;
+  const { defPassive, attLabel, defLabel } = args;
   if (!defender.survivalStrike) return false;
   defender.survivalStrike = false;
   const freeRipLoc = rollHitLocation(rng, attTactics.target, attacker.activePlan.protect);
@@ -98,14 +102,18 @@ function handleSurvivalStrike(
   return true;
 }
 
-function computePreArmorDamage(
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  attOffMods: ReturnType<typeof getOffensiveTacticMods>,
-  attPassive: ReturnType<typeof getStylePassive>
-): { hitLoc: HitLocation; preArmor: number } {
+interface ComputePreArmorDamageArgs {
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  attTactics: ReturnType<typeof resolveEffectiveTactics>;
+  attOffMods: ReturnType<typeof getOffensiveTacticMods>;
+  attPassive: ReturnType<typeof getStylePassive>;
+}
+
+function computePreArmorDamage(args: ComputePreArmorDamageArgs): { hitLoc: HitLocation; preArmor: number } {
+  const { rng, attacker, defender, attTactics, attOffMods } = args;
+  const { attPassive } = args;
   let hitLoc: HitLocation = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
 
   if (attacker.style === FightingStyle.AimedBlow) {
@@ -181,17 +189,22 @@ function applyDamageMultipliers(
   return rawDamage;
 }
 
-function applyHitAndCounters(
-  events: CombatEvent[],
-  rng: () => number,
-  rawDamage: number,
-  hitLoc: HitLocation,
-  attacker: FighterState,
-  defender: FighterState,
-  attPassive: ReturnType<typeof getStylePassive>,
-  attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D'
-): { damage: number; isCrit: boolean; rawDamage: number } {
+interface ApplyHitAndCountersArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  rawDamage: number;
+  hitLoc: HitLocation;
+  attacker: FighterState;
+  defender: FighterState;
+  attPassive: ReturnType<typeof getStylePassive>;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+}
+
+function applyHitAndCounters(args: ApplyHitAndCountersArgs): { damage: number; isCrit: boolean; rawDamage: number } {
+  const { events, rng, hitLoc, attacker } = args;
+  let { rawDamage } = args;
+  const { defender, attPassive, attLabel, defLabel } = args;
   const effectiveCritChance = attPassive.critChance + getStCritChanceBonus(attacker.style);
   const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
   if (isCrit) {
@@ -277,23 +290,28 @@ function applyMomentumShift(
   }
 }
 
-function checkKillWindow(
-  events: CombatEvent[],
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  ctx: ResolutionContext | undefined,
-  hitLoc: HitLocation,
-  rawDamage: number,
-  attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  attLabel: 'A' | 'D',
-  stylePhase: StylePhase,
-  phase: string,
-  attKD: number,
-  attOE: number,
-  attAL: number,
-  attMatchup: number
-): void {
+interface CheckKillWindowArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  ctx: ResolutionContext | undefined;
+  hitLoc: HitLocation;
+  rawDamage: number;
+  attTactics: ReturnType<typeof resolveEffectiveTactics>;
+  attLabel: 'A' | 'D';
+  stylePhase: StylePhase;
+  phase: string;
+  attKD: number;
+  attOE: number;
+  attAL: number;
+  attMatchup: number;
+}
+
+function checkKillWindow(args: CheckKillWindowArgs): void {
+  const { events, rng, attacker, defender, ctx } = args;
+  const { hitLoc, rawDamage, attTactics, attLabel, stylePhase } = args;
+  const { phase, attKD, attOE, attAL, attMatchup } = args;
   const killMech = getKillMechanic(attacker.style, {
     phase: stylePhase,
     hitsLanded: attacker.hitsLanded,
@@ -307,16 +325,7 @@ function checkKillWindow(
 
   if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
     const killThreshold = gatherKillThreshold(
-      attacker,
-      defender,
-      ctx,
-      hitLoc,
-      killMech,
-      phase,
-      attKD,
-      attOE,
-      attAL,
-      attMatchup
+      { attacker: attacker, defender: defender, ctx: ctx, hitLoc: hitLoc, killMech: killMech, phase: phase, attKD: attKD, attOE: attOE, attAL: attAL, attMatchup: attMatchup }
     );
     if (rng() < killThreshold * KILL_WINDOW.SCALE * (ctx?.deathRateMult ?? 1)) {
       defender.hp = 0;
@@ -349,19 +358,23 @@ function checkKillWindow(
   }
 }
 
+interface GatherKillThresholdArgs {
+  attacker: FighterState;
+  defender: FighterState;
+  ctx: ResolutionContext | undefined;
+  hitLoc: HitLocation;
+  killMech: ReturnType<typeof getKillMechanic>;
+  phase: string;
+  attKD: number;
+  attOE: number;
+  attAL: number;
+  attMatchup: number;
+}
+
 /** Gather all modifiers feeding `calculateKillWindow` — pure math, no RNG. */
-function gatherKillThreshold(
-  attacker: FighterState,
-  defender: FighterState,
-  ctx: ResolutionContext | undefined,
-  hitLoc: HitLocation,
-  killMech: ReturnType<typeof getKillMechanic>,
-  phase: string,
-  attKD: number,
-  attOE: number,
-  attAL: number,
-  attMatchup: number
-): number {
+function gatherKillThreshold(args: GatherKillThresholdArgs): number {
+  const { attacker, defender, ctx, hitLoc, killMech } = args;
+  const { phase, attKD, attOE, attAL, attMatchup } = args;
   const killPos = phase === 'LATE' ? 2 : phase === 'MID' ? 1 : 0;
   const effectiveDec = attacker.skills.DEC + killMech.decBonus;
   const specKillBonus = ctx
@@ -379,44 +392,39 @@ function gatherKillThreshold(
     : 0;
   const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
   return calculateKillWindow(
-    defender.hp / defender.maxHp,
-    defender.endurance / defender.maxEndurance,
-    hitLoc,
-    attKD + killMech.killBonus,
-    killPos,
-    attOE,
-    attAL,
-    attMatchup,
-    effectiveDec,
-    attacker.momentum,
-    specKillBonus + attackerTraitKill,
-    crowdKillBonus
+    { hpRatio: defender.hp / defender.maxHp, enduranceRatio: defender.endurance / defender.maxEndurance, location: hitLoc, killDesire: attKD + killMech.killBonus, phaseLevel: killPos, attOE: attOE, attAL: attAL, matchupBonus: attMatchup, decSkill: effectiveDec, momentum: attacker.momentum, specialtyBonus: specKillBonus + attackerTraitKill, crowdKillBonus: crowdKillBonus }
   );
+}
+
+interface AfterHitEventsArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  hitLoc: HitLocation;
+  damage: number;
+  rawDamage: number;
+  attTactics: ReturnType<typeof resolveEffectiveTactics>;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+  stylePhase: StylePhase;
+  phase: string;
+  attKD: number;
+  attOE: number;
+  attAL: number;
+  attMatchup: number;
+  ctx?: ResolutionContext;
 }
 
 /**
  * Post-damage event chain: knockdown, momentum, survival-strike counter arm,
  * insight roll, and kill-window check — in that exact RNG order.
  */
-function afterHitEvents(
-  events: CombatEvent[],
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  hitLoc: HitLocation,
-  damage: number,
-  rawDamage: number,
-  attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D',
-  stylePhase: StylePhase,
-  phase: string,
-  attKD: number,
-  attOE: number,
-  attAL: number,
-  attMatchup: number,
-  ctx?: ResolutionContext
-) {
+function afterHitEvents(args: AfterHitEventsArgs) {
+  const { events, rng, attacker, defender, hitLoc } = args;
+  const { damage, rawDamage, attTactics, attLabel, defLabel } = args;
+  const { stylePhase, phase, attKD, attOE, attAL } = args;
+  const { attMatchup, ctx } = args;
   checkKnockdown(events, rng, defender, damage, defLabel);
   applyMomentumShift(events, attacker, defender, attLabel, defLabel);
 
@@ -436,22 +444,20 @@ function afterHitEvents(
   }
 
   checkKillWindow(
-    events,
-    rng,
-    attacker,
-    defender,
-    ctx,
-    hitLoc,
-    rawDamage,
-    attTactics,
-    attLabel,
-    stylePhase,
-    phase,
-    attKD,
-    attOE,
-    attAL,
-    attMatchup
+    { events: events, rng: rng, attacker: attacker, defender: defender, ctx: ctx, hitLoc: hitLoc, rawDamage: rawDamage, attTactics: attTactics, attLabel: attLabel, stylePhase: stylePhase, phase: phase, attKD: attKD, attOE: attOE, attAL: attAL, attMatchup: attMatchup }
   );
+}
+
+interface PreHitResolvedArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  attTactics: ReturnType<typeof resolveEffectiveTactics>;
+  defPassive: ReturnType<typeof getStylePassive> | undefined;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+  attKD: number;
 }
 
 /**
@@ -459,27 +465,12 @@ function afterHitEvents(
  * commit mechanic fires (attacker at low HP with high kill desire commits).
  * Returns true when the exchange is fully resolved and the caller must return.
  */
-function preHitResolved(
-  events: CombatEvent[],
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  defPassive: ReturnType<typeof getStylePassive> | undefined,
-  attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D',
-  attKD: number
-): boolean {
+function preHitResolved(args: PreHitResolvedArgs): boolean {
+  const { events, rng, attacker, defender, attTactics } = args;
+  const { defPassive, attLabel, defLabel, attKD } = args;
   if (
     handleSurvivalStrike(
-      events,
-      rng,
-      attacker,
-      defender,
-      attTactics,
-      defPassive,
-      attLabel,
-      defLabel
+      { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: attTactics, defPassive: defPassive, attLabel: attLabel, defLabel: defLabel }
     )
   ) {
     return true;
@@ -495,81 +486,53 @@ function preHitResolved(
 }
 
 /**
+ *
+ */
+export interface ExecuteHitArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  attTactics: ReturnType<typeof resolveEffectiveTactics>;
+  attOffMods: ReturnType<typeof getOffensiveTacticMods>;
+  attPassive: ReturnType<typeof getStylePassive>;
+  attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
+  stylePhase: StylePhase;
+  phase: string;
+  attKD: number;
+  attOE: number;
+  attAL: number;
+  attMatchup: number;
+  ctx?: ResolutionContext;
+  defPassive?: ReturnType<typeof getStylePassive>;
+}
+
+/**
  * Execute hit.
  */
-export function executeHit(
-  events: CombatEvent[],
-  rng: () => number,
-  attacker: FighterState,
-  defender: FighterState,
-  attTactics: ReturnType<typeof resolveEffectiveTactics>,
-  attOffMods: ReturnType<typeof getOffensiveTacticMods>,
-  attPassive: ReturnType<typeof getStylePassive>,
-  attLabel: 'A' | 'D',
-  defLabel: 'A' | 'D',
-  stylePhase: StylePhase,
-  phase: string,
-  attKD: number,
-  attOE: number,
-  attAL: number,
-  attMatchup: number,
-  ctx?: ResolutionContext,
-  defPassive?: ReturnType<typeof getStylePassive>
-) {
+export function executeHit(args: ExecuteHitArgs) {
+  const { events, rng, attacker, defender, attTactics } = args;
+  const { attOffMods, attPassive, attLabel, defLabel, stylePhase } = args;
+  const { phase, attKD, attOE, attAL, attMatchup } = args;
+  const { ctx, defPassive } = args;
   if (
     preHitResolved(
-      events,
-      rng,
-      attacker,
-      defender,
-      attTactics,
-      defPassive,
-      attLabel,
-      defLabel,
-      attKD
+      { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: attTactics, defPassive: defPassive, attLabel: attLabel, defLabel: defLabel, attKD: attKD }
     )
   ) {
     return;
   }
 
   const { hitLoc, preArmor } = computePreArmorDamage(
-    rng,
-    attacker,
-    defender,
-    attTactics,
-    attOffMods,
-    attPassive
+    { rng: rng, attacker: attacker, defender: defender, attTactics: attTactics, attOffMods: attOffMods, attPassive: attPassive }
   );
   const rawDamagePreCrit = applyDamageMultipliers(preArmor, attacker, defender, ctx);
   const { damage, rawDamage } = applyHitAndCounters(
-    events,
-    rng,
-    rawDamagePreCrit,
-    hitLoc,
-    attacker,
-    defender,
-    attPassive,
-    attLabel,
-    defLabel
+    { events: events, rng: rng, rawDamage: rawDamagePreCrit, hitLoc: hitLoc, attacker: attacker, defender: defender, attPassive: attPassive, attLabel: attLabel, defLabel: defLabel }
   );
 
   afterHitEvents(
-    events,
-    rng,
-    attacker,
-    defender,
-    hitLoc,
-    damage,
-    rawDamage,
-    attTactics,
-    attLabel,
-    defLabel,
-    stylePhase,
-    phase,
-    attKD,
-    attOE,
-    attAL,
-    attMatchup,
-    ctx
+    { events: events, rng: rng, attacker: attacker, defender: defender, hitLoc: hitLoc, damage: damage, rawDamage: rawDamage, attTactics: attTactics, attLabel: attLabel, defLabel: defLabel, stylePhase: stylePhase, phase: phase, attKD: attKD, attOE: attOE, attAL: attAL, attMatchup: attMatchup, ctx: ctx }
   );
 }

@@ -8,24 +8,31 @@ import { patchRivalWarrior } from './warriorRouting';
 import { StateImpact } from '@/engine/impacts';
 
 /**
- * Handle injuries.
- * @param s -
- * @param wA -
- * @param wD -
- * @param outcome -
- * @param week -
- * @param _rivalStableId - unused; ownership is resolved per warrior
- * @param seed -
+ *
  */
-export function handleInjuries(
-  s: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  week: number,
-  _rivalStableId?: string,
-  seed?: number
-) {
+export interface HandleInjuriesArgs {
+  s: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  week: number;
+  _rivalStableId?: string;
+  seed?: number;
+}
+
+/**
+ * Handle injuries.
+ * @param args.s -
+ * @param args.wA -
+ * @param args.wD -
+ * @param args.outcome -
+ * @param args.week -
+ * @param args._rivalStableId - unused; ownership is resolved per warrior
+ * @param args.seed -
+ */
+export function handleInjuries(args: HandleInjuriesArgs) {
+  const { s, wA, wD, outcome, week } = args;
+  const {seed } = args;
   let injured = false;
   const names: string[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();

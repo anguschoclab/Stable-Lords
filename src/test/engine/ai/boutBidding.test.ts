@@ -77,7 +77,7 @@ describe('matchup scoring evaluates all opponents, not just first', () => {
     } as any;
 
     const rival = makeRival({ roster: [warrior] });
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [otherRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     // The favorable BashingAttack matchup yields a positive modifier,
@@ -119,7 +119,7 @@ describe('matchup scoring excludes own stablemates', () => {
     } as any;
 
     // Mimic production: rivals array includes the bidding rival itself
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival, otherRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival, otherRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     const bid = bids.find((b) => b.proposingWarriorId === warrior.id);
@@ -152,7 +152,7 @@ describe('matchupModifier goes negative for unfavorable matchups', () => {
       trainingAssignments: [],
     } as any;
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [otherRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.priority).toBeLessThan(4);
@@ -162,7 +162,7 @@ describe('matchupModifier goes negative for unfavorable matchups', () => {
     const warrior = makeWarrior('Loner', FightingStyle.StrikingAttack);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBeGreaterThan(0);
     // No opponents → modifier defaults to 0 → priority = 4
@@ -178,7 +178,7 @@ describe('VENDETTA without targetStableId', () => {
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4 } as any,
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBe(0);
   });
@@ -216,7 +216,7 @@ describe('VENDETTA bid description reflects matchup against target stable', () =
       trainingAssignments: [],
     } as any;
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [targetRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [targetRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.description).toContain('Favorable matchup');
@@ -228,8 +228,8 @@ describe('weather modifiers cover all significant weather types', () => {
     const warrior = makeWarrior('Striker', FightingStyle.StrikingAttack);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids: galeBids } = generateBoutBids(rival, 5, 'Gale', 'Calm', []);
-    const { bids: clearBids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids: galeBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Gale', crowdMood: 'Calm', rivals: [] });
+    const { bids: clearBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(galeBids.length).toBeGreaterThan(0);
     expect(clearBids.length).toBeGreaterThan(0);
@@ -242,8 +242,8 @@ describe('weather modifiers cover all significant weather types', () => {
     const warrior = makeWarrior('Aimer', FightingStyle.AimedBlow);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids: sandBids } = generateBoutBids(rival, 5, 'Sandstorm', 'Calm', []);
-    const { bids: clearBids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids: sandBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Sandstorm', crowdMood: 'Calm', rivals: [] });
+    const { bids: clearBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(sandBids.length).toBeGreaterThan(0);
     // Sandstorm penalizes AimedBlow (initiative -4 from style-weather)
@@ -254,8 +254,8 @@ describe('weather modifiers cover all significant weather types', () => {
     const warrior = makeWarrior('Striker', FightingStyle.StrikingAttack);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids: tornadoBids } = generateBoutBids(rival, 5, 'Tornado', 'Calm', []);
-    const { bids: clearBids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids: tornadoBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Tornado', crowdMood: 'Calm', rivals: [] });
+    const { bids: clearBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(tornadoBids.length).toBeGreaterThan(0);
     // Tornado is severe (initiative -6, damage 0.8) — should penalize
@@ -266,8 +266,8 @@ describe('weather modifiers cover all significant weather types', () => {
     const warrior = makeWarrior('Basher', FightingStyle.BashingAttack);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids: bloodBids } = generateBoutBids(rival, 5, 'Blood Moon', 'Calm', []);
-    const { bids: clearBids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids: bloodBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Blood Moon', crowdMood: 'Calm', rivals: [] });
+    const { bids: clearBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bloodBids.length).toBeGreaterThan(0);
     // Blood Moon boosts aggressive styles (damageMult 1.1+ for BashingAttack)
@@ -278,8 +278,8 @@ describe('weather modifiers cover all significant weather types', () => {
     const warrior = makeWarrior('Striker', FightingStyle.StrikingAttack, 8);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids: hailBids } = generateBoutBids(rival, 5, 'Hailstorm', 'Calm', []);
-    const { bids: clearBids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids: hailBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Hailstorm', crowdMood: 'Calm', rivals: [] });
+    const { bids: clearBids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(hailBids.length).toBeGreaterThan(0);
     // Hailstorm is penalizing (stamina 1.2, initiative -4, damage 0.95)
@@ -296,7 +296,7 @@ describe('RECOVERY intent skips bids when weather modifier is severe', () => {
     });
 
     // Rainy gives LungingAttack weatherModifier = -3, which is < -2 threshold
-    const { bids } = generateBoutBids(rival, 5, 'Rainy', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Rainy', crowdMood: 'Calm', rivals: [] });
 
     // Should be empty — warrior skipped due to severe weather penalty
     expect(bids.length).toBe(0);
@@ -309,7 +309,7 @@ describe('RECOVERY intent skips bids when weather modifier is severe', () => {
       strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 },
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBeGreaterThan(0);
   });
@@ -380,7 +380,7 @@ describe('boutBidding optimization — VENDETTA', () => {
       roster: [target],
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [targetRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [targetRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     for (const bid of bids) {
@@ -399,7 +399,7 @@ describe('boutBidding optimization — VENDETTA', () => {
       },
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('nonexistent');
@@ -414,7 +414,7 @@ describe('boutBidding optimization — VENDETTA', () => {
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4 } as any,
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBe(0);
   });
@@ -432,7 +432,7 @@ describe('boutBidding optimization — non-VENDETTA', () => {
       roster: [neutralOpp, favorOpp],
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [otherRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     // Favorable matchup (ParryLunge vs BashingAttack: matrix +1 → score 125 → mod +1.25)
@@ -454,7 +454,7 @@ describe('boutBidding optimization — non-VENDETTA', () => {
       roster: [neutralOpp],
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival, otherRival]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival, otherRival] });
 
     expect(bids.length).toBeGreaterThan(0);
     const bid = bids.find((b) => b.proposingWarriorId === warrior.id);
@@ -473,7 +473,7 @@ describe('boutBidding optimization — RECOVERY', () => {
     });
 
     // Rainy gives LungingAttack weatherModifier = -3 (< -2 threshold)
-    const { bids } = generateBoutBids(rival, 5, 'Rainy', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Rainy', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBe(0);
   });
@@ -485,7 +485,7 @@ describe('boutBidding optimization — RECOVERY', () => {
       strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 },
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.maxFame).toBe(50);
@@ -500,7 +500,7 @@ describe('boutBidding optimization — EXPANSION', () => {
       strategy: { intent: 'EXPANSION', planWeeksRemaining: 4 },
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.minFame).toBe(100);
@@ -512,7 +512,7 @@ describe('boutBidding optimization — CONSOLIDATION', () => {
     const warrior = makeWarrior('Standard', FightingStyle.StrikingAttack);
     const rival = makeRival({ roster: [warrior] });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBeGreaterThan(0);
     // Base 4 + weather 0 + mood 0 + matchup 0 = 4
@@ -527,7 +527,7 @@ describe('boutBidding optimization — edge cases', () => {
     injured.status = 'Dead';
     const rival = makeRival({ roster: [injured] });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
 
     expect(bids.length).toBe(0);
   });
@@ -553,7 +553,7 @@ describe('boutBidding optimization — edge cases', () => {
       roster: [aimer],
     });
 
-    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival1, otherRival2]);
+    const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [otherRival1, otherRival2] });
 
     expect(bids.length).toBe(2);
     const bid1 = bids.find((b) => b.proposingWarriorId === w1.id);
@@ -579,7 +579,7 @@ describe('boutBidding VENDETTA targeting', () => {
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: 'rival-2' as any },
     });
 
-    const { bids } = generateBoutBids(vendettaRival, 5, 'Clear', 'Calm', [targetRival]);
+    const { bids } = generateBoutBids({ rival: vendettaRival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [targetRival] });
     // VENDETTA should generate bids targeting the rival's stable
     expect(bids.length).toBeGreaterThan(0);
     // All bids should target the vendetta target stable
@@ -592,7 +592,7 @@ describe('boutBidding VENDETTA targeting', () => {
     const vendettaRival = makePerfRival({
       strategy: { intent: 'VENDETTA', planWeeksRemaining: 4, targetStableId: 'nonexistent' as any },
     });
-    const { bids } = generateBoutBids(vendettaRival, 5, 'Clear', 'Calm', []);
+    const { bids } = generateBoutBids({ rival: vendettaRival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [] });
     // Pre-existing behavior: VENDETTA with truthy targetStableId still pushes bids
     // even when the target rival is not found in the rivals array
     expect(bids.length).toBeGreaterThan(0);
@@ -604,7 +604,7 @@ describe('boutBidding VENDETTA targeting', () => {
     const rival = makePerfRival({
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
     });
-    generateBoutBids(rival, 5, 'Clear', 'Calm', [rival]);
+    generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival] });
     expect(spy).not.toHaveBeenCalled();
     spy.mockRestore();
   });
@@ -621,7 +621,7 @@ describe('boutBidding VENDETTA targeting', () => {
       owner: { ...makePerfRival().owner, id: 'owner-b' as any },
       roster: [makePerfWarrior('B1', FightingStyle.SlashingAttack, 300)],
     });
-    const { bids } = generateBoutBids(rival1, 5, 'Clear', 'Calm', [rival2]);
+    const { bids } = generateBoutBids({ rival: rival1, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rival2] });
     // CONSOLIDATION should still evaluate matchups against all rivals
     expect(bids.length).toBeGreaterThan(0);
   });

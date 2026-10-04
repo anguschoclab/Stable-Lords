@@ -17,7 +17,7 @@ describe('narrativePostBout', () => {
   describe('narrateBoutEnd', () => {
     it('returns 2 lines for Kill category', () => {
       const rng = new SeededRNG(1);
-      const result = narrateBoutEnd(rng, 'Kill', 'Winner', 'Loser', 'longsword');
+      const result = narrateBoutEnd({ rng: rng, by: 'Kill', winnerName: 'Winner', loserName: 'Loser', weaponId: 'longsword' });
       expect(result).toHaveLength(2);
       for (const line of result) {
         expect(noRawTokens(line)).toBe(true);
@@ -26,7 +26,7 @@ describe('narrativePostBout', () => {
 
     it('returns 1 line for non-Kill categories', () => {
       const rng = new SeededRNG(1);
-      const result = narrateBoutEnd(rng, 'KO', 'Winner', 'Loser', 'longsword');
+      const result = narrateBoutEnd({ rng: rng, by: 'KO', winnerName: 'Winner', loserName: 'Loser', weaponId: 'longsword' });
       expect(result).toHaveLength(1);
       expect(noRawTokens(result[0]!)).toBe(true);
     });
@@ -35,7 +35,7 @@ describe('narrativePostBout', () => {
       const categories = ['Kill', 'KO', 'Stoppage', 'Exhaustion', 'Decision', 'Yield'];
       for (const cat of categories) {
         const rng = new SeededRNG(1);
-        const result = narrateBoutEnd(rng, cat, 'Winner', 'Loser', 'longsword');
+        const result = narrateBoutEnd({ rng: rng, by: cat, winnerName: 'Winner', loserName: 'Loser', weaponId: 'longsword' });
         expect(result.length).toBeGreaterThanOrEqual(1);
         for (const line of result) {
           expect(noRawTokens(line)).toBe(true);
@@ -50,7 +50,7 @@ describe('narrativePostBout', () => {
         mood: 'Calm',
       };
       const rng = new SeededRNG(1);
-      const result = narrateBoutEnd(rng, 'Kill', 'Winner', 'Loser', 'epee', ctx);
+      const result = narrateBoutEnd({ rng: rng, by: 'Kill', winnerName: 'Winner', loserName: 'Loser', weaponId: 'epee', ctx: ctx });
       expect(result).toHaveLength(2);
       for (const line of result) {
         expect(noRawTokens(line)).toBe(true);
@@ -60,15 +60,15 @@ describe('narrativePostBout', () => {
     it('falls back gracefully for unknown cause', () => {
       const ctx: BoutEndContext = { cause: 'UNKNOWN_CAUSE' };
       const rng = new SeededRNG(1);
-      const result = narrateBoutEnd(rng, 'Kill', 'Winner', 'Loser', 'longsword', ctx);
+      const result = narrateBoutEnd({ rng: rng, by: 'Kill', winnerName: 'Winner', loserName: 'Loser', weaponId: 'longsword', ctx: ctx });
       expect(result).toHaveLength(2);
     });
 
     it('is deterministic with same seed', () => {
       const r1 = new SeededRNG(42);
       const r2 = new SeededRNG(42);
-      expect(narrateBoutEnd(r1, 'Kill', 'W', 'L', 'longsword')).toEqual(
-        narrateBoutEnd(r2, 'Kill', 'W', 'L', 'longsword')
+      expect(narrateBoutEnd({ rng: r1, by: 'Kill', winnerName: 'W', loserName: 'L', weaponId: 'longsword' })).toEqual(
+        narrateBoutEnd({ rng: r2, by: 'Kill', winnerName: 'W', loserName: 'L', weaponId: 'longsword' })
       );
     });
   });

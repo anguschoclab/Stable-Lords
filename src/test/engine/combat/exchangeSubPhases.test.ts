@@ -160,35 +160,35 @@ describe('runRecovery', () => {
   it('writes recoveryDebt, taking max of existing and new, capped at 3', () => {
     const fA = makeFighter({ recoveryDebt: 1 });
     const fD = makeFighter({ recoveryDebt: 0 });
-    runRecovery(fA, fD, 3, 0, []);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 3, debtToWriteD: 0, events: [] });
     expect(fA.recoveryDebt).toBe(3);
   });
 
   it('decays recoveryDebt by 1 per exchange when toWrite is 0', () => {
     const fA = makeFighter({ recoveryDebt: 2 });
     const fD = makeFighter({ recoveryDebt: 0 });
-    runRecovery(fA, fD, 0, 0, []);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: [] });
     expect(fA.recoveryDebt).toBe(1);
   });
 
   it('does not decay below 0', () => {
     const fA = makeFighter({ recoveryDebt: 0 });
     const fD = makeFighter({ recoveryDebt: 0 });
-    runRecovery(fA, fD, 0, 0, []);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: [] });
     expect(fA.recoveryDebt).toBe(0);
   });
 
   it('writes recoveryDebt for fD correctly', () => {
     const fA = makeFighter({ recoveryDebt: 0 });
     const fD = makeFighter({ recoveryDebt: 1 });
-    runRecovery(fA, fD, 0, 2, []);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 2, events: [] });
     expect(fD.recoveryDebt).toBe(2);
   });
 
   it('does not stack: max(existing, written) — writing 1 over existing 2 stays at 2', () => {
     const fA = makeFighter({ recoveryDebt: 2 });
     const fD = makeFighter({ recoveryDebt: 0 });
-    runRecovery(fA, fD, 1, 0, []);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 1, debtToWriteD: 0, events: [] });
     expect(fA.recoveryDebt).toBe(2);
   });
 });
@@ -199,7 +199,7 @@ describe('runRecovery — zone transitions', () => {
     const fD = makeFighter();
     const ctx: any = { zone: 'Center', pushedFighter: undefined };
     const events: any[] = [{ type: 'HIT', actor: 'D', target: 'A', location: 'torso', value: 10 }];
-    runRecovery(fA, fD, 0, 0, events, ctx);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: events, ctx: ctx });
     expect(ctx.zone).toBe('Edge');
     expect(ctx.pushedFighter).toBe('A');
     expect(events.some((e: any) => e.type === 'ZONE_SHIFT')).toBe(true);
@@ -210,7 +210,7 @@ describe('runRecovery — zone transitions', () => {
     const fD = makeFighter();
     const ctx: any = { zone: 'Edge', pushedFighter: 'A' };
     const events: any[] = [{ type: 'HIT', actor: 'D', target: 'A', location: 'torso', value: 10 }];
-    runRecovery(fA, fD, 0, 0, events, ctx);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: events, ctx: ctx });
     expect(ctx.zone).toBe('Corner');
   });
 
@@ -219,7 +219,7 @@ describe('runRecovery — zone transitions', () => {
     const fD = makeFighter();
     const ctx: any = { zone: 'Corner', pushedFighter: 'A' };
     const events: any[] = [{ type: 'HIT', actor: 'D', target: 'A', location: 'torso', value: 10 }];
-    runRecovery(fA, fD, 0, 0, events, ctx);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: events, ctx: ctx });
     expect(ctx.zone).toBe('Corner');
     // No ZONE_SHIFT emitted since zone didn't change
     expect(events.filter((e: any) => e.type === 'ZONE_SHIFT').length).toBe(0);
@@ -229,7 +229,7 @@ describe('runRecovery — zone transitions', () => {
     const fA = makeFighter();
     const fD = makeFighter();
     const ctx: any = { zone: 'Edge', pushedFighter: 'A' };
-    runRecovery(fA, fD, 0, 0, [], ctx);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: [], ctx: ctx });
     expect(ctx.zone).toBe('Center');
   });
 
@@ -237,7 +237,7 @@ describe('runRecovery — zone transitions', () => {
     const fA = makeFighter();
     const fD = makeFighter();
     const ctx: any = { zone: 'Center', pushedFighter: undefined };
-    runRecovery(fA, fD, 0, 0, [], ctx);
+    runRecovery({ fA: fA, fD: fD, debtToWriteA: 0, debtToWriteD: 0, events: [], ctx: ctx });
     expect(ctx.zone).toBe('Center');
   });
 });

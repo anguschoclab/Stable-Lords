@@ -51,7 +51,7 @@ describe('progressionHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome();
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       expect(result.rosterUpdates).toBeDefined();
     });
@@ -62,7 +62,7 @@ describe('progressionHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome();
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       expect(result.rosterUpdates?.has('warrior-a' as WarriorId)).toBe(true);
     });
@@ -81,7 +81,7 @@ describe('progressionHandler', () => {
 
       const outcome = createMockOutcome({ winner: 'A' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       expect(result.rivalWarriorPatches?.has(warriorId)).toBe(true);
       // Never a whole-roster write: those clobber other bouts' updates.
@@ -94,7 +94,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome({ winner: 'A' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
       if (aUpdate?.flair) {
@@ -108,7 +108,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome({ winner: 'A' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
       if (aUpdate?.flair) {
@@ -127,7 +127,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome({ winner: 'A' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
       if (aUpdate?.flair) {
@@ -141,7 +141,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome({ winner: 'A' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
       if (aUpdate?.flair) {
@@ -179,7 +179,7 @@ describe('progressionHandler', () => {
         chance: () => false,
       };
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1, rng);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1, rng: rng });
 
       // Result should have impact structure
       expect(result).toHaveProperty('rosterUpdates');
@@ -192,7 +192,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome();
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       // Returns proper StateImpact
       expect(result).toHaveProperty('rosterUpdates');
@@ -206,7 +206,7 @@ describe('progressionHandler', () => {
       const outcome = createMockOutcome();
 
       // Should not throw without rivalStableId
-      expect(() => handleProgressions(s, wA, wD, outcome, [], 1)).not.toThrow();
+      expect(() => handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 })).not.toThrow();
     });
 
     it('handles Draw outcome', () => {
@@ -215,7 +215,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome({ winner: null, by: 'Draw' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       expect(result).toHaveProperty('rosterUpdates');
       expect(result).toHaveProperty('rivalWarriorPatches');
@@ -227,7 +227,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome({ by: 'Kill' });
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       expect(result).toHaveProperty('rosterUpdates');
       expect(result).toHaveProperty('rivalWarriorPatches');
@@ -239,7 +239,7 @@ describe('progressionHandler', () => {
       const s = createMockState();
       const outcome = createMockOutcome();
 
-      const result = handleProgressions(s, wA, wD, outcome, [], 1);
+      const result = handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 });
 
       expect(result).toBeDefined();
       expect(typeof result).toBe('object');

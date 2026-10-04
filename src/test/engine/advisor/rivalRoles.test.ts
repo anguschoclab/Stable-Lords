@@ -69,7 +69,7 @@ describe('rival roles — evaluateBoutOffer parity', () => {
       responses: { w1: 'Pending', opp: 'Accepted' } as never,
     });
     const opponent = makeWarrior({ id: 'opp' as WarriorId, fame: 60 });
-    expect(evaluateBoutOffer(offer, rival, hunter, 5, 'Clear', opponent)).toBe('Accepted');
+    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: hunter, currentWeek: 5, weather: 'Clear', opponent: opponent })).toBe('Accepted');
   });
 
   it('rival and advisor paths agree on a clean favorable offer', () => {
@@ -91,7 +91,7 @@ describe('rival roles — evaluateBoutOffer parity', () => {
       rivals: [makeRival({ id: 'r2' as never, roster: [opp] })],
       boutOffers: { [offer.id]: offer },
     });
-    const rivalVerdict = evaluateBoutOffer(offer, rival, w, 5, 'Clear', opp, state);
+    const rivalVerdict = evaluateBoutOffer({ offer: offer, rival: rival, warrior: w, currentWeek: 5, weather: 'Clear', opponent: opp, state: state });
     const advisorVerdict = evaluateBoutOffers(w, state, 'PURSE_HUNTER');
     expect(rivalVerdict).toBe('Accepted');
     expect(advisorVerdict.action).toBe('ACCEPT_OFFER');

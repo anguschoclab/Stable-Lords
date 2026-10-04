@@ -32,7 +32,7 @@ describe('coreGenerator', () => {
       // total OE = 7+2+0+0 + 1 = 10
       // total AL = 5+1+0+0 + 0 = 6
       // total KD = 7+3+0+0 = 10
-      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Balanced' });
 
       expect(plan.OE).toBe(10);
       expect(plan.AL).toBe(6);
@@ -50,11 +50,7 @@ describe('coreGenerator', () => {
       // total AL = 5+0+0-1 + 0 = 4
       // total KD = 7+0+0-2 = 5
       const plan = aiPlanForWarrior(
-        w,
-        'Pragmatic' as OwnerPersonality,
-        'Balanced',
-        undefined,
-        'RECOVERY'
+        { w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: undefined, intent: 'RECOVERY' }
       );
 
       expect(plan.OE).toBe(6);
@@ -69,11 +65,7 @@ describe('coreGenerator', () => {
       // total AL = 5+2 = 7
       // total KD = 7+2 = 9
       const plan = aiPlanForWarrior(
-        w,
-        'Pragmatic' as OwnerPersonality,
-        'Balanced',
-        undefined,
-        'VENDETTA'
+        { w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: undefined, intent: 'VENDETTA' }
       );
 
       expect(plan.AL).toBe(7);
@@ -87,12 +79,7 @@ describe('coreGenerator', () => {
       // total AL = 5+1 = 6
       // total KD = 7+3 = 10
       const plan = aiPlanForWarrior(
-        w,
-        'Pragmatic' as OwnerPersonality,
-        'Balanced',
-        undefined,
-        undefined,
-        3
+        { w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: undefined, intent: undefined, grudgeIntensity: 3 }
       );
 
       expect(plan.AL).toBe(6);
@@ -107,10 +94,7 @@ describe('coreGenerator', () => {
       // total OE = 7+2+1 = 10
       // total KD = 7+1 = 8
       const plan = aiPlanForWarrior(
-        w,
-        'Pragmatic' as OwnerPersonality,
-        'Balanced',
-        FightingStyle.WallOfSteel
+        { w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: FightingStyle.WallOfSteel }
       );
 
       expect(plan.OE).toBe(10);
@@ -120,12 +104,7 @@ describe('coreGenerator', () => {
     it('clamps values correctly and integrates phase/desperate sub-plans', () => {
       const w = createMockWarrior();
       const plan = aiPlanForWarrior(
-        w,
-        'Aggressive' as OwnerPersonality,
-        'Brute Force',
-        undefined,
-        'VENDETTA',
-        10
+        { w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Brute Force', opponentStyle: undefined, intent: 'VENDETTA', grudgeIntensity: 10 }
       );
 
       expect(plan.OE).toBeLessThanOrEqual(10);
@@ -153,7 +132,7 @@ describe('coreGenerator', () => {
           helm: 'none_helm' as any,
         },
       });
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.equipment?.shield).toBe('none_shield');
     });
 
@@ -166,7 +145,7 @@ describe('coreGenerator', () => {
           helm: 'none_helm' as any,
         },
       });
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced' });
       // reconcileGearTwoHanded only overrides equipment when there's a conflict;
       // with a one-handed weapon, no override happens so plan.equipment stays undefined
       expect(plan.equipment?.shield).not.toBe('none_shield');
@@ -174,49 +153,45 @@ describe('coreGenerator', () => {
 
     it('does not crash when warrior has no equipment', () => {
       const w = createMockWarrior();
-      expect(() => aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced')).not.toThrow();
+      expect(() => aiPlanForWarrior({ w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced' })).not.toThrow();
     });
   });
 
   describe('fallbackCondition wiring', () => {
     it('Aggressive personality, no intent → fallbackCondition BERZERK', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBe('BERZERK');
     });
 
     it('Methodical personality, no intent → fallbackCondition TURTLE', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Methodical' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Methodical' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBe('TURTLE');
     });
 
     it('Pragmatic personality, no intent → fallbackCondition FLEE', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Pragmatic' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBe('FLEE');
     });
 
     it('Showman personality, no intent → fallbackCondition None', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Showman' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Showman' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBe('None');
     });
 
     it('Tactician personality, no intent → fallbackCondition TURTLE', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Tactician' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Tactician' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBe('TURTLE');
     });
 
     it('RECOVERY intent overrides personality → fallbackCondition YIELD', () => {
       const w = createMockWarrior();
       const plan = aiPlanForWarrior(
-        w,
-        'Aggressive' as OwnerPersonality,
-        'Balanced',
-        undefined,
-        'RECOVERY'
+        { w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: undefined, intent: 'RECOVERY' }
       );
       expect(plan.fallbackCondition).toBe('YIELD');
     });
@@ -224,29 +199,21 @@ describe('coreGenerator', () => {
     it('VENDETTA intent overrides personality → fallbackCondition BERZERK', () => {
       const w = createMockWarrior();
       const plan = aiPlanForWarrior(
-        w,
-        'Methodical' as OwnerPersonality,
-        'Balanced',
-        undefined,
-        'VENDETTA'
+        { w: w, personality: 'Methodical' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: undefined, intent: 'VENDETTA' }
       );
       expect(plan.fallbackCondition).toBe('BERZERK');
     });
 
     it('defensive style (TotalParry) with Showman → fallbackCondition TURTLE', () => {
       const w = createMockWarrior({ style: FightingStyle.TotalParry });
-      const plan = aiPlanForWarrior(w, 'Showman' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Showman' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBe('TURTLE');
     });
 
     it('EXPANSION intent with Aggressive → fallbackCondition BERZERK (falls through to personality)', () => {
       const w = createMockWarrior();
       const plan = aiPlanForWarrior(
-        w,
-        'Aggressive' as OwnerPersonality,
-        'Balanced',
-        undefined,
-        'EXPANSION'
+        { w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Balanced', opponentStyle: undefined, intent: 'EXPANSION' }
       );
       expect(plan.fallbackCondition).toBe('BERZERK');
     });
@@ -254,14 +221,14 @@ describe('coreGenerator', () => {
     it('fallbackCondition is always set (not undefined) on AI-generated plans', () => {
       const w = createMockWarrior();
       for (const p of ['Aggressive', 'Methodical', 'Showman', 'Pragmatic', 'Tactician'] as const) {
-        const plan = aiPlanForWarrior(w, p as OwnerPersonality, 'Balanced');
+        const plan = aiPlanForWarrior({ w: w, personality: p as OwnerPersonality, philosophy: 'Balanced' });
         expect(plan.fallbackCondition).toBeDefined();
       }
     });
 
     it('fallbackCondition coexists with desperatePlan — both are defined on the same plan', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Balanced' });
       expect(plan.fallbackCondition).toBeDefined();
       expect(plan.desperatePlan).toBeDefined();
     });
@@ -270,7 +237,7 @@ describe('coreGenerator', () => {
   describe('fallbackCondition + desperatePlan coexistence', () => {
     it('fallbackCondition is preserved through handleDesperateState spread pattern', () => {
       const w = createMockWarrior();
-      const plan = aiPlanForWarrior(w, 'Aggressive' as OwnerPersonality, 'Balanced');
+      const plan = aiPlanForWarrior({ w: w, personality: 'Aggressive' as OwnerPersonality, philosophy: 'Balanced' });
 
       expect(plan.fallbackCondition).toBe('BERZERK');
       expect(plan.desperatePlan).toBeDefined();

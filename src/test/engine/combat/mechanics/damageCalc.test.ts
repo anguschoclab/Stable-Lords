@@ -38,125 +38,103 @@ describe('damageCalc mechanics', () => {
 
   describe('calculateKillWindow', () => {
     it('returns 0 if momentum < 0', () => {
-      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 1, 5, 5, 0, 10, -1, 0, 0)).toBe(0);
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 1, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: -1, specialtyBonus: 0, crowdKillBonus: 0 })).toBe(0);
     });
 
     it('returns 0 if threshold evaluates to < 0', () => {
-      expect(calculateKillWindow(1.0, 1.0, 'left arm', 0, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(0);
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 0, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBe(0);
     });
 
     it('adds hpRatio modifiers', () => {
-      expect(calculateKillWindow(0.2, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeGreaterThan(
-        calculateKillWindow(0.4, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)
+      expect(calculateKillWindow({ hpRatio: 0.2, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeGreaterThan(
+        calculateKillWindow({ hpRatio: 0.4, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })
       );
 
-      expect(calculateKillWindow(0.4, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeGreaterThan(
-        calculateKillWindow(0.6, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)
+      expect(calculateKillWindow({ hpRatio: 0.4, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeGreaterThan(
+        calculateKillWindow({ hpRatio: 0.6, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })
       );
     });
 
     it('adds enduranceRatio modifiers', () => {
-      expect(calculateKillWindow(1.0, 0.1, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeGreaterThan(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 0.1, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeGreaterThan(
         calculateKillWindow(
-          1.0,
-          KILL_WINDOW_ENDURANCE - 0.01,
-          'left arm',
-          5,
-          0,
-          5,
-          5,
-          0,
-          10,
-          0,
-          0,
-          0
+          { hpRatio: 1.0, enduranceRatio: KILL_WINDOW_ENDURANCE - 0.01, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 }
         )
       );
 
       expect(
         calculateKillWindow(
-          1.0,
-          KILL_WINDOW_ENDURANCE - 0.01,
-          'left arm',
-          5,
-          0,
-          5,
-          5,
-          0,
-          10,
-          0,
-          0,
-          0
+          { hpRatio: 1.0, enduranceRatio: KILL_WINDOW_ENDURANCE - 0.01, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 }
         )
-      ).toBeGreaterThan(calculateKillWindow(1.0, 0.5, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0));
+      ).toBeGreaterThan(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 0.5, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 }));
     });
 
     it('incorporates various bonuses (killDesire, momentum, specialtyBonus)', () => {
-      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 2, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 2, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.0052,
         5
       );
 
-      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 3, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 3, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.0087,
         5
       );
     });
 
     it('incorporates attOE, attAL, matchupBonus, decSkill, phaseLevel', () => {
-      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 10, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 10, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.00245,
         5
       );
 
-      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 5, 10, 0, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 5, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.0062,
         5
       );
     });
 
     it('falls back to 1.0 locMult if location missing in LOCATION_KILL_MULT', () => {
-      expect(calculateKillWindow(1.0, 1.0, 'unknown' as any, 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'unknown' as any, killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBe(
         0.012
       );
     });
 
     it('leaves a clean head shot below the cap so situational modifiers register', () => {
       // 0.012 * 6.0 = 0.072 — under the 0.12 cap
-      const win = calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'head', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       expect(win).toBeCloseTo(0.072, 5);
       expect(win).toBeLessThan(KILL_WINDOW.CAP);
     });
 
     it('raises the head-shot threshold for an exhausted, critically hurt defender', () => {
-      const fresh = calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0);
-      const spent = calculateKillWindow(0.2, 0.1, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const fresh = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'head', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
+      const spent = calculateKillWindow({ hpRatio: 0.2, enduranceRatio: 0.1, location: 'head', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       expect(spent).toBeGreaterThan(fresh);
     });
 
     it('raises the head-shot threshold with kill desire', () => {
-      const low = calculateKillWindow(1.0, 1.0, 'head', 1, 0, 5, 5, 0, 10, 0, 0, 0);
-      const high = calculateKillWindow(1.0, 1.0, 'head', 10, 0, 5, 5, 0, 10, 0, 0, 0);
+      const low = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'head', killDesire: 1, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
+      const high = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'head', killDesire: 10, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       expect(high).toBeGreaterThan(low);
     });
 
     it('applies modifiers and boundary thresholds correctly', () => {
-      const win = calculateKillWindow(0.2, 0.1, 'head', 10, 2, 10, 10, 2, 15, 3);
+      const win = calculateKillWindow({ hpRatio: 0.2, enduranceRatio: 0.1, location: 'head', killDesire: 10, phaseLevel: 2, attOE: 10, attAL: 10, matchupBonus: 2, decSkill: 15, momentum: 3 });
       expect(win).toBe(KILL_WINDOW.CAP);
     });
 
     it('calculates properly for lower boundary cases without hitting max clamp', () => {
-      const win = calculateKillWindow(0.8, 0.8, 'left arm', 5, 1, 5, 5, 0, 10, 0);
+      const win = calculateKillWindow({ hpRatio: 0.8, enduranceRatio: 0.8, location: 'left arm', killDesire: 5, phaseLevel: 1, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0 });
       expect(win).toBeCloseTo(0.0027, 4);
     });
 
     it('applies specialty and crowd kill bonuses', () => {
-      const win = calculateKillWindow(0.8, 0.8, 'left arm', 5, 1, 5, 5, 0, 10, 0, 0.01, 0.01);
+      const win = calculateKillWindow({ hpRatio: 0.8, enduranceRatio: 0.8, location: 'left arm', killDesire: 5, phaseLevel: 1, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0.01, crowdKillBonus: 0.01 });
       expect(win).toBeCloseTo(0.0227, 4);
     });
 
     it('handles negative thresholds by clamping to 0', () => {
-      const win = calculateKillWindow(0.8, 0.8, 'left arm', 1, 0, 1, 1, 0, 10, 0);
+      const win = calculateKillWindow({ hpRatio: 0.8, enduranceRatio: 0.8, location: 'left arm', killDesire: 1, phaseLevel: 0, attOE: 1, attAL: 1, matchupBonus: 0, decSkill: 10, momentum: 0 });
       expect(win).toBe(0);
     });
   });
@@ -197,79 +175,79 @@ describe('damageCalc mechanics', () => {
 
   describe('calculateKillWindow edge cases', () => {
     it('does not add momentum tier bonus when momentum = 0', () => {
-      const base = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const base = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // momentum = 0: no tier bonus, threshold = 0.012 * 0.1 = 0.0012
       expect(base).toBeCloseTo(0.0012, 5);
     });
 
     it('does not add momentum tier bonus when momentum = 1 (below tier 2)', () => {
-      const win = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 1, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 1, specialtyBonus: 0, crowdKillBonus: 0 });
       // momentum = 1: no tier bonus (tier 2 starts at momentum >= 2)
       expect(win).toBeCloseTo(0.0012, 5);
     });
 
     it('adds tier 2 bonus when momentum = 2', () => {
-      const win = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 2, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 2, specialtyBonus: 0, crowdKillBonus: 0 });
       // momentum = 2: +0.004 → 0.0012 + 0.004 = 0.0052
       expect(win).toBeCloseTo(0.0052, 5);
     });
 
     it('adds tier 3 bonus when momentum = 3', () => {
-      const win = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 3, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 3, specialtyBonus: 0, crowdKillBonus: 0 });
       // momentum = 3: +0.0075 → 0.0012 + 0.0075 = 0.0087
       expect(win).toBeCloseTo(0.0087, 5);
     });
 
     it('tests hpRatio at exact 0.3 boundary (not < 0.3, falls to < 0.5 tier)', () => {
-      const win = calculateKillWindow(0.3, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 0.3, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // hpRatio = 0.3: not < 0.3, but < 0.5 → +0.001
       // threshold = (0.012 + 0.001) * 0.1 = 0.0013
       expect(win).toBeCloseTo(0.0013, 5);
     });
 
     it('tests hpRatio at exact 0.5 boundary (not < 0.5, no hp bonus)', () => {
-      const win = calculateKillWindow(0.5, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 0.5, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // hpRatio = 0.5: not < 0.3, not < 0.5 → no hp bonus
       // threshold = 0.012 * 0.1 = 0.0012
       expect(win).toBeCloseTo(0.0012, 5);
     });
 
     it('tests enduranceRatio at exact 0.2 boundary (not < 0.2, falls to < KILL_WINDOW_ENDURANCE tier)', () => {
-      const win = calculateKillWindow(1.0, 0.2, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 0.2, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // enduranceRatio = 0.2: not < 0.2, but < 0.4 (KILL_WINDOW_ENDURANCE) → +0.006
       // threshold = (0.012 + 0.006) * 0.1 = 0.0018
       expect(win).toBeCloseTo(0.0018, 5);
     });
 
     it('tests enduranceRatio at exact KILL_WINDOW_ENDURANCE (0.4) boundary', () => {
-      const win = calculateKillWindow(1.0, 0.4, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 0.4, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // enduranceRatio = 0.4: not < 0.2, not < 0.4, but < 0.6 → +0.001
       // threshold = (0.012 + 0.001) * 0.1 = 0.0013
       expect(win).toBeCloseTo(0.0013, 5);
     });
 
     it('tests enduranceRatio at exact 0.6 boundary (not < 0.6, no endurance bonus)', () => {
-      const win = calculateKillWindow(1.0, 0.6, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 0.6, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // enduranceRatio = 0.6: no endurance bonus
       // threshold = 0.012 * 0.1 = 0.0012
       expect(win).toBeCloseTo(0.0012, 5);
     });
 
     it('applies chest kill multiplier (3.5)', () => {
-      const win = calculateKillWindow(1.0, 1.0, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'chest', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // threshold = 0.012 * 3.5 = 0.042 (below the 0.12 cap)
       expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('applies abdomen kill multiplier (3.5)', () => {
-      const win = calculateKillWindow(1.0, 1.0, 'abdomen', 5, 0, 5, 5, 0, 10, 0, 0, 0);
+      const win = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'abdomen', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
       // threshold = 0.012 * 3.5 = 0.042 (below the 0.12 cap)
       expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('applies crowdKillBonus in isolation', () => {
-      const base = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0);
-      const withCrowd = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0.005);
+      const base = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 });
+      const withCrowd = calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'left arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0.005 });
       expect(withCrowd - base).toBeCloseTo(0.005, 5);
     });
   });
@@ -314,7 +292,7 @@ describe('Damage Calculation', () => {
 
   describe('calculateKillWindow', () => {
     it('returns 0 if momentum is negative', () => {
-      expect(calculateKillWindow(1, 1, 'chest', 5, 1, 5, 5, 0, 10, -1)).toBe(0);
+      expect(calculateKillWindow({ hpRatio: 1, enduranceRatio: 1, location: 'chest', killDesire: 5, phaseLevel: 1, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: -1 })).toBe(0);
     });
 
     it('calculates threshold correctly with various modifiers', () => {
@@ -333,7 +311,7 @@ describe('Damage Calculation', () => {
       // crowdKillBonus = 0.001
       // Expected pre-clamp: 0.126 + 0.00125 + 0.002 + 0.009 + 0.0015 + 0.003 + 0.004 + 0.005 + 0.001 = 0.15275
       // Clamped to the cap
-      expect(calculateKillWindow(0.2, 0.5, 'head', 8, 2, 8, 7, 2, 15, 2, 0.005, 0.001)).toBe(
+      expect(calculateKillWindow({ hpRatio: 0.2, enduranceRatio: 0.5, location: 'head', killDesire: 8, phaseLevel: 2, attOE: 8, attAL: 7, matchupBonus: 2, decSkill: 15, momentum: 2, specialtyBonus: 0.005, crowdKillBonus: 0.001 })).toBe(
         KILL_WINDOW.CAP
       );
     });
@@ -345,7 +323,7 @@ describe('Damage Calculation', () => {
       // locMult (chest): 3.5
       // current threshold: (0.012 + 0.001 + 0.012) * 3.5 = 0.025 * 3.5 = 0.0875
       // The rest are default -> 0 additions; below the cap.
-      expect(calculateKillWindow(0.4, 0.1, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 0.4, enduranceRatio: 0.1, location: 'chest', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.0875,
         5
       );
@@ -357,7 +335,7 @@ describe('Damage Calculation', () => {
       // endRatio: 0.25 (assuming < KILL_WINDOW_ENDURANCE) -> +0.006
       // locMult (chest): 3.5
       // threshold: (0.012 + 0.006) * 3.5 = 0.063 (below the cap)
-      expect(calculateKillWindow(1.0, 0.25, 'chest', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 0.25, location: 'chest', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.063,
         5
       );
@@ -369,7 +347,7 @@ describe('Damage Calculation', () => {
       // threshold: 0.012 * 0.1 = 0.0012
       // momentum: 3 -> +0.0075
       // total = 0.0087
-      expect(calculateKillWindow(1.0, 1.0, 'right arm', 5, 0, 5, 5, 0, 10, 3, 0, 0)).toBeCloseTo(
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'right arm', killDesire: 5, phaseLevel: 0, attOE: 5, attAL: 5, matchupBonus: 0, decSkill: 10, momentum: 3, specialtyBonus: 0, crowdKillBonus: 0 })).toBeCloseTo(
         0.0087,
         4
       );
@@ -377,7 +355,7 @@ describe('Damage Calculation', () => {
 
     it('clamps minimum threshold to 0', () => {
       // negative bonuses to push below 0
-      expect(calculateKillWindow(1.0, 1.0, 'right arm', 0, 0, 0, 0, -50, 0, 0, 0, 0)).toBe(0);
+      expect(calculateKillWindow({ hpRatio: 1.0, enduranceRatio: 1.0, location: 'right arm', killDesire: 0, phaseLevel: 0, attOE: 0, attAL: 0, matchupBonus: -50, decSkill: 0, momentum: 0, specialtyBonus: 0, crowdKillBonus: 0 })).toBe(0);
     });
   });
 });

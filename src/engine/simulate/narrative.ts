@@ -20,20 +20,27 @@ export interface ArenaConfig {
 }
 
 /**
+ *
+ */
+export interface GenerateIntroductionsArgs {
+  rng: IRNGService;
+  nameA: string;
+  nameD: string;
+  planA: FightPlan;
+  planD: FightPlan;
+  warriorA?: Warrior;
+  warriorD?: Warrior;
+  weather?: WeatherType;
+  arenaId?: string;
+  arenaConfig?: ArenaConfig;
+}
+
+/**
  * Generate introduction narrative for both fighters.
  */
-export function generateIntroductions(
-  rng: IRNGService,
-  nameA: string,
-  nameD: string,
-  planA: FightPlan,
-  planD: FightPlan,
-  warriorA?: Warrior,
-  warriorD?: Warrior,
-  weather: WeatherType = 'Clear',
-  arenaId: string = 'standard_arena',
-  arenaConfig?: ArenaConfig
-): MinuteEvent[] {
+export function generateIntroductions(args: GenerateIntroductionsArgs): MinuteEvent[] {
+  const { rng, nameA, nameD, planA, planD } = args;
+  const { warriorA, warriorD, weather = 'Clear', arenaId = 'standard_arena', arenaConfig } = args;
   const log: MinuteEvent[] = [];
 
   const weaponA = (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon;

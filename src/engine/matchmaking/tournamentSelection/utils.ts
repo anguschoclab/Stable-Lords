@@ -37,12 +37,7 @@ export function getAIPlan(
   }
 
   return aiPlanForWarrior(
-    w,
-    rival.owner.personality || 'Pragmatic',
-    rival.philosophy || 'Opportunist',
-    opponentStyle,
-    rival.strategy?.intent,
-    grudgeIntensity
+    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity }
   );
 }
 
@@ -72,5 +67,5 @@ export function generateFreelancer(
     }
   }
   const name = generateWarriorName({ rng, culture: 'lowborn', usedNames });
-  return makeWarrior(undefined, name, style, attrs, {}, rng);
+  return makeWarrior({ id: undefined, name: name, style: style, attrs: attrs, overrides: {}, rng: rng });
 }

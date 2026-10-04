@@ -36,11 +36,7 @@ interface UseRecruitActionsParams {
 function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, totalCost: number) {
   const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
   const warrior = makeWarrior(
-    recruitRng.uuid('warrior') as WarriorId,
-    w.name,
-    w.style,
-    w.attributes,
-    { age: w.age, potential: w.potential }
+    { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
   );
   // Displaced veterans keep identity, fame, and career through signing.
   Object.assign(warrior, veteranSigningPatch(w));
@@ -95,7 +91,7 @@ function applyCustomCreateDraft(
 ) {
   const rng = new SeededRNGService(draft.week + hashStr(data.name));
   const id = rng.uuid('warrior') as WarriorId;
-  const warrior = makeWarrior(id, data.name, data.style, data.attributes);
+  const warrior = makeWarrior({ id: id, name: data.name, style: data.style, attrs: data.attributes });
 
   draft.roster.push(warrior);
 

@@ -122,17 +122,24 @@ function addStyleChampions(
 }
 
 /**
+ *
+ */
+export interface BuildTournamentArgs {
+  tierId: string;
+  tierName: string;
+  warriors: Warrior[];
+  week: number;
+  season: Season;
+  rng: SeededRNG;
+  year?: number;
+}
+
+/**
  * Build tournament.
  */
-export function buildTournament(
-  tierId: string,
-  tierName: string,
-  warriors: Warrior[],
-  week: number,
-  season: Season,
-  rng: SeededRNG,
-  year = 1
-): TournamentEntry {
+export function buildTournament(args: BuildTournamentArgs): TournamentEntry {
+  const { tierId, tierName, warriors, week, season } = args;
+  const { rng, year = 1 } = args;
   // The year must be in the id: the same season+week recurs annually, and a
   // year-2 tournament sharing an id with a completed year-1 entry makes every
   // find-by-id resolution target the stale one.

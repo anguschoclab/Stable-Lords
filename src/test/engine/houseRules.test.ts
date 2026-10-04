@@ -47,11 +47,7 @@ describe('house rules — death rate multiplier', () => {
     let kills = 0;
     for (let i = 0; i < 40; i++) {
       const o = simulateFight(
-        defaultPlanForWarrior(killer),
-        defaultPlanForWarrior(victim),
-        killer,
-        victim,
-        1000 + i * 7919
+        { planA: defaultPlanForWarrior(killer), planD: defaultPlanForWarrior(victim), warriorA: killer, warriorD: victim, providedRng: 1000 + i * 7919 }
       );
       if (o.by === 'Kill') kills++;
     }
@@ -62,17 +58,7 @@ describe('house rules — death rate multiplier', () => {
     let kills = 0;
     for (let i = 0; i < 40; i++) {
       const o = simulateFight(
-        defaultPlanForWarrior(killer),
-        defaultPlanForWarrior(victim),
-        killer,
-        victim,
-        1000 + i * 7919,
-        undefined,
-        'Clear',
-        'standard_arena',
-        undefined,
-        true,
-        0
+        { planA: defaultPlanForWarrior(killer), planD: defaultPlanForWarrior(victim), warriorA: killer, warriorD: victim, providedRng: 1000 + i * 7919, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: true, deathRateMult: 0 }
       );
       if (o.by === 'Kill') kills++;
     }
@@ -105,7 +91,7 @@ describe('house rules — severe injury instead of death', () => {
       houseRules: { deathRateMult: 1, severeInjuryInsteadOfDeath: true },
     } as unknown as GameState;
 
-    const res = handleDeath(s, wA, wD, outcome, 1, []);
+    const res = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });
 
     expect(res.death).toBe(false);
     expect(res.playerDeath).toBe(false);
@@ -138,7 +124,7 @@ describe('house rules — severe injury instead of death', () => {
       rivalries: [],
     } as unknown as GameState;
 
-    const res = handleDeath(s, wA, wD, outcome, 1, []);
+    const res = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });
     expect(res.death).toBe(true);
   });
 });

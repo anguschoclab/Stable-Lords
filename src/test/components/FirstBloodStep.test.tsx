@@ -13,7 +13,7 @@ beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
 });
 
-const warriorA: Warrior = makeWarrior('w1' as any, 'Aulus', FightingStyle.LungingAttack, {
+const warriorA: Warrior = makeWarrior({ id: 'w1' as any, name: 'Aulus', style: FightingStyle.LungingAttack, attrs: {
   ST: 12,
   CN: 10,
   SZ: 8,
@@ -21,9 +21,9 @@ const warriorA: Warrior = makeWarrior('w1' as any, 'Aulus', FightingStyle.Lungin
   WL: 12,
   SP: 15,
   DF: 11,
-});
+} });
 
-const warriorD: Warrior = makeWarrior('w2' as any, 'Bran', FightingStyle.TotalParry, {
+const warriorD: Warrior = makeWarrior({ id: 'w2' as any, name: 'Bran', style: FightingStyle.TotalParry, attrs: {
   ST: 10,
   CN: 14,
   SZ: 12,
@@ -31,7 +31,7 @@ const warriorD: Warrior = makeWarrior('w2' as any, 'Bran', FightingStyle.TotalPa
   WL: 16,
   SP: 8,
   DF: 14,
-});
+} });
 
 const mockOutcome: FightOutcome = {
   winner: 'A',

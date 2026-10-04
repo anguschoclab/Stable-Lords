@@ -16,10 +16,10 @@ import {
 import type { ArenaTitle } from '@/types/state.types';
 
 const journeyman = () =>
-  makeWarrior(undefined, 'Journeyman', FightingStyle.StrikingAttack, ATTRS_10, {
+  makeWarrior({ id: undefined, name: 'Journeyman', style: FightingStyle.StrikingAttack, attrs: ATTRS_10, overrides: {
     career: { wins: 8, losses: 12, kills: 0 },
     fame: 10,
-  });
+  } });
 
 const titleWithReigns = (
   championId: string | null,

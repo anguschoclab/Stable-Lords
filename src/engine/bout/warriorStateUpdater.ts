@@ -3,6 +3,20 @@ import { milestoneEpithet } from '@/data/names/epithets';
 import { boutSeasonPoints, flashyFlair, nextCareerRecord } from '@/engine/warrior/careerUpdate';
 
 /**
+ *
+ */
+export interface UpdateWarriorAfterBoutArgs {
+  warrior: Warrior;
+  fameDelta: number;
+  popularityDelta: number;
+  isWinner: boolean;
+  wasKilled: boolean;
+  tags: string[];
+  skipFatigue?: boolean;
+  arenaId?: string;
+}
+
+/**
  * Update a warrior's state after a bout.
  *
  * Shares career/season-points/flair arithmetic with
@@ -11,18 +25,9 @@ import { boutSeasonPoints, flashyFlair, nextCareerRecord } from '@/engine/warrio
  * applied by `mortalityHandler`), fame deltas arrive tag-computed from
  * the caller, and a killing winner's fatigue resets.
  */
-export function updateWarriorAfterBout(
-  warrior: Warrior,
-  fameDelta: number,
-  popularityDelta: number,
-  isWinner: boolean,
-  wasKilled: boolean,
-  tags: string[],
-  /** If true, skip fatigue accrual (for tournament participants during tournament week) */
-  skipFatigue?: boolean,
-  /** Arena where the bout took place — used to maintain per-arena career breakdown */
-  arenaId?: string
-): Warrior {
+export function updateWarriorAfterBout(args: UpdateWarriorAfterBoutArgs): Warrior {
+  const { warrior, fameDelta, popularityDelta, isWinner, wasKilled } = args;
+  const { tags, skipFatigue, arenaId } = args;
   // Calculate fatigue: reset to 0 on a kill, otherwise +25 (capped at 100)
   // 🔒 Skip fatigue accrual for tournament participants during tournament week
   const fatigue = wasKilled

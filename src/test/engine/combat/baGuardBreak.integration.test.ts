@@ -11,11 +11,7 @@ describe('BA guard-break (integration)', () => {
     const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
-        defaultPlanForWarrior(ba),
-        defaultPlanForWarrior(tp),
-        ba,
-        tp,
-        i * 6151 + 23
+        { planA: defaultPlanForWarrior(ba), planD: defaultPlanForWarrior(tp), warriorA: ba, warriorD: tp, providedRng: i * 6151 + 23 }
       );
       if (o.winner === 'A') wins++;
     }

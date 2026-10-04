@@ -41,7 +41,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 1);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result.injured).toBe(false);
       expect(result.injuredNames).toHaveLength(0);
@@ -62,7 +62,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 1);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result.impact.restStates?.length).toBeGreaterThan(0);
     });
@@ -81,7 +81,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 5);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 5 });
 
       // D should get rest state
       const restStates = result.impact.restStates || [];
@@ -103,7 +103,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 3);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 3 });
 
       // A should get rest state
       const restStates = result.impact.restStates || [];
@@ -125,7 +125,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 1);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result).toHaveProperty('impact');
       expect(result).toHaveProperty('injured');
@@ -149,7 +149,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 1);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result.injured).toBe(false);
       expect(result.injuredNames).toHaveLength(0);
@@ -169,7 +169,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 1);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       // Exhaustion may or may not generate injuries depending on implementation
       expect(result).toHaveProperty('injured');
@@ -190,7 +190,7 @@ describe('injuryHandler', () => {
         log: [],
       };
 
-      const result = handleInjuries(s, wA, wD, outcome, 1);
+      const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result).toHaveProperty('injured');
       expect(result).toHaveProperty('injuredNames');
@@ -211,7 +211,7 @@ describe('injuryHandler', () => {
       };
 
       // Should not throw when seed is provided
-      expect(() => handleInjuries(s, wA, wD, outcome, 1, undefined, 12345)).not.toThrow();
+      expect(() => handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, _rivalStableId: undefined, seed: 12345 })).not.toThrow();
     });
   });
 });

@@ -7,18 +7,22 @@ import { findWarriorById } from '@/engine/core/warriorLookup';
 import { logFinanceEvent } from '@/engine/ai/agentCore';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
+interface ProcessTournamentPlaceAwardArgs {
+  state: GameState;
+  warriorId: string;
+  place: 1 | 2 | 3;
+  awardRng: SeededRNG;
+  basePurse: number;
+  tier: 'GOLD' | 'SILVER' | 'BRONZE' | 'IRON';
+  tournament: TournamentEntry;
+}
+
 /**
  * Standalone helper to process and apply tournament rewards for a specific place finish.
  */
-function processTournamentPlaceAward(
-  state: GameState,
-  warriorId: string,
-  place: 1 | 2 | 3,
-  awardRng: SeededRNG,
-  basePurse: number,
-  tier: 'GOLD' | 'SILVER' | 'BRONZE' | 'IRON',
-  tournament: TournamentEntry
-): GameState {
+function processTournamentPlaceAward(args: ProcessTournamentPlaceAwardArgs): GameState {
+  const { state, warriorId, place, awardRng, basePurse } = args;
+  const { tier, tournament } = args;
   let updatedState = { ...state };
   const w = findWarriorById(updatedState, warriorId, tournament);
   if (!w) return updatedState;
@@ -74,34 +78,31 @@ function processTournamentPlaceAward(
     }
   } else {
     updatedState = applyRivalAward(
-      updatedState,
-      w,
-      place,
-      prizeGold,
-      prizeFame,
-      tokens,
-      awardRng,
-      tournament
+      { state: updatedState, w: w, place: place, prizeGold: prizeGold, prizeFame: prizeFame, tokens: tokens, awardRng: awardRng, tournament: tournament }
     );
   }
 
   return updatedState;
 }
 
+interface ApplyRivalAwardArgs {
+  state: GameState;
+  w: Warrior;
+  place: 1 | 2 | 3;
+  prizeGold: number;
+  prizeFame: number;
+  tokens: string[];
+  awardRng: SeededRNG;
+  tournament: TournamentEntry;
+}
+
 /**
  * Pay a rival stable's placement: treasury/fame ledger entry, then apply the
  * token effects directly to the warrior (rivals don't manage a token pool).
  */
-function applyRivalAward(
-  state: GameState,
-  w: Warrior,
-  place: 1 | 2 | 3,
-  prizeGold: number,
-  prizeFame: number,
-  tokens: string[],
-  awardRng: SeededRNG,
-  tournament: TournamentEntry
-): GameState {
+function applyRivalAward(args: ApplyRivalAwardArgs): GameState {
+  const { state, w, place, prizeGold, prizeFame } = args;
+  const { tokens, awardRng, tournament } = args;
   let updatedState = { ...state };
   // warrior.stableId is rival.id (StableId), not owner.id
   // ⚡ Bolt Optimization: Replace O(N) array mapping with updateEntityInList for targeted update.
@@ -194,32 +195,14 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
   );
 
   updatedState = processTournamentPlaceAward(
-    updatedState,
-    first,
-    1,
-    awardRng,
-    basePurse,
-    tier,
-    tournament
+    { state: updatedState, warriorId: first, place: 1, awardRng: awardRng, basePurse: basePurse, tier: tier, tournament: tournament }
   );
   updatedState = processTournamentPlaceAward(
-    updatedState,
-    second,
-    2,
-    awardRng,
-    basePurse,
-    tier,
-    tournament
+    { state: updatedState, warriorId: second, place: 2, awardRng: awardRng, basePurse: basePurse, tier: tier, tournament: tournament }
   );
   if (third) {
     updatedState = processTournamentPlaceAward(
-      updatedState,
-      third,
-      3,
-      awardRng,
-      basePurse,
-      tier,
-      tournament
+      { state: updatedState, warriorId: third, place: 3, awardRng: awardRng, basePurse: basePurse, tier: tier, tournament: tournament }
     );
   }
 

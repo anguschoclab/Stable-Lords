@@ -231,9 +231,10 @@ export function news(
 export function cancelUnsignedOffersInvolving(
   state: GameState,
   delta: ChampionshipDelta,
-  warriorId: WarriorId
+  warriorId: WarriorId,
+  offers: BoutOffer[] = effectiveOffers(state, delta)
 ): void {
-  for (const o of effectiveOffers(state, delta)) {
+  for (const o of offers) {
     if (o.titleArenaId) continue;
     if (o.status !== 'Proposed') continue;
     if (!o.warriorIds.includes(warriorId)) continue;
@@ -245,9 +246,10 @@ export function cancelUnsignedOffersInvolving(
 export function cancelAllOpenOffersInvolving(
   state: GameState,
   delta: ChampionshipDelta,
-  warriorId: WarriorId
+  warriorId: WarriorId,
+  offers: BoutOffer[] = effectiveOffers(state, delta)
 ): void {
-  for (const o of effectiveOffers(state, delta)) {
+  for (const o of offers) {
     if (o.titleArenaId) continue;
     if (!isOpenOffer(o)) continue;
     if (!o.warriorIds.includes(warriorId)) continue;

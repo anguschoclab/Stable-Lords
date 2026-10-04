@@ -1,4 +1,5 @@
 import type { GameState } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import type { ChampionshipDelta } from '../core';
 import {
@@ -25,6 +26,17 @@ import { selectTitleContender } from '../queries';
  */
 export function applyLifecycleTransitions(state: GameState, delta: ChampionshipDelta): void {
   const now = state.absoluteWeek;
+  // Offer snapshot shared across the arena loop: this phase never creates
+  // offers (that belongs to scheduling), and the only mid-loop offer write —
+  // cancelUnsignedOffersInvolving — touches Proposed offers, which neither
+  // consumer below consults (re-cancelling an already-canceled Proposed offer
+  // just rewrites the identical record in delta.canceledOffers).
+  const offers = effectiveOffers(state, delta);
+  const signedOrdinaryWarriorIds = new Set<WarriorId>();
+  for (const o of offers) {
+    if (o.titleArenaId || o.status !== 'Signed') continue;
+    for (const wid of o.warriorIds) signedOrdinaryWarriorIds.add(wid);
+  }
   for (const arenaId of sortedTitleKeys(state, delta)) {
     const base = titleOf(state, delta, arenaId);
     if (!base?.champion) continue; // vacant titles have no dormancy lifecycle
@@ -61,7 +73,7 @@ export function applyLifecycleTransitions(state: GameState, delta: ChampionshipD
           t.status = 'pendingReengagement';
           t.noContenderStreak = 0;
           // Cancel unsigned ordinary offers now so the drain bound is real.
-          cancelUnsignedOffersInvolving(state, delta, champId);
+          cancelUnsignedOffersInvolving(state, delta, champId, offers);
           news(
             delta,
             state.week,
@@ -81,9 +93,7 @@ export function applyLifecycleTransitions(state: GameState, delta: ChampionshipD
           t.noContenderStreak = 1;
           break;
         }
-        const hasSignedOrdinary = effectiveOffers(state, delta).some(
-          (o) => !o.titleArenaId && o.status === 'Signed' && o.warriorIds.includes(champId)
-        );
+        const hasSignedOrdinary = signedOrdinaryWarriorIds.has(champId);
         if (hasSignedOrdinary) {
           t.deferrals += 1;
         } else {

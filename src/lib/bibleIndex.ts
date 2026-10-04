@@ -90,6 +90,29 @@ function makeSnippet(body: string, needle: string): string {
   return prefix + body.slice(start, end).replace(/\s+/g, ' ').trim() + suffix;
 }
 
+interface IndexedSection {
+  docId: string;
+  docTitle: string;
+  heading: string;
+  body: string;
+  lower: string;
+}
+
+/**
+ * Sections split and lowercased once at module load — the corpus is static
+ * (eager glob), so search never re-parses or re-lowercases per keystroke.
+ * Doc × section order matches the original nested loops.
+ */
+const BIBLE_SECTIONS: IndexedSection[] = BIBLE_DOCS.flatMap((doc) =>
+  splitSections(doc.content).map((section) => ({
+    docId: doc.id,
+    docTitle: doc.title,
+    heading: section.heading,
+    body: section.body,
+    lower: section.body.toLowerCase(),
+  }))
+);
+
 /**
  * Search bible docs.
  */
@@ -97,19 +120,16 @@ export function searchBibleDocs(query: string, maxResults = 20): BibleHit[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
   const hits: BibleHit[] = [];
-  for (const doc of BIBLE_DOCS) {
-    for (const section of splitSections(doc.content)) {
-      const lower = section.body.toLowerCase();
-      if (!lower.includes(q)) continue;
-      const score = lower.split(q).length - 1;
-      hits.push({
-        docId: doc.id,
-        docTitle: doc.title,
-        heading: section.heading,
-        snippet: makeSnippet(section.body, q),
-        score,
-      });
-    }
+  for (const section of BIBLE_SECTIONS) {
+    if (!section.lower.includes(q)) continue;
+    const score = section.lower.split(q).length - 1;
+    hits.push({
+      docId: section.docId,
+      docTitle: section.docTitle,
+      heading: section.heading,
+      snippet: makeSnippet(section.body, q),
+      score,
+    });
   }
   return hits.sort((a, b) => b.score - a.score).slice(0, maxResults);
 }

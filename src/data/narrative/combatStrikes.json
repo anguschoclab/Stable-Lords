@@ -473,7 +473,8 @@
         "{{attacker}} drops a heavy, unyielding blow onto {{defender}}'s guard.",
         "A colossal swing from {{attacker}} sends shockwaves through {{defender}}.",
         "{{defender}}'s bones rattle under the tremendous impact of {{attacker}}'s strike.",
-        "The horrific crunch of fractured bone resonates as {{attacker}} smashes into {{defender}}'s {{bodyPart}}."
+        "The horrific crunch of fractured bone resonates as {{attacker}} smashes into {{defender}}'s {{bodyPart}}.",
+        "A heavy, sickening impact reverberates as {{attacker}} smashes into {{defender}}."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",

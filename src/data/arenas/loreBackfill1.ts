@@ -1,4 +1,4 @@
-import type { ArenaLoreEntry } from '@/types/shared/arena';
+import type { ArenaLoreEntry } from './lore';
 
 export const ARENA_LORE_BACKFILL_1: ArenaLoreEntry[] = [
   {

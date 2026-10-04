@@ -12,7 +12,7 @@ interface WeaponTrailProps {
 
 /**
  * Weapon trail.
- * @param  - {
+ * @param  props - {
   trigger,
   weapon type,
   direction,
@@ -21,14 +21,9 @@ interface WeaponTrailProps {
   class name,
 }.
  */
-export default function WeaponTrail({
-  trigger,
-  weaponType,
-  direction,
-  sourceX,
-  sourceY,
-  className,
-}: WeaponTrailProps) {
+export default function WeaponTrail(props: WeaponTrailProps) {
+  const { trigger, weaponType, direction, sourceX, sourceY } = props;
+  const { className } = props;
   const [showTrail, setShowTrail] = useState(false);
 
   useEffect(() => {

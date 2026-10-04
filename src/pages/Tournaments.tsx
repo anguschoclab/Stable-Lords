@@ -68,14 +68,7 @@ function usePrepDialog(isTournamentReadyToStart: boolean, hasAlreadyStarted: boo
 }
 
 /** Campaign archives section: bookmark filter + history list. */
-function CampaignArchives({
-  showBookmarkedOnly,
-  onToggleBookmarked,
-  bookmarkedCount,
-  pastTournaments,
-  season,
-  arenaHistory,
-}: {
+function CampaignArchives(props: {
   showBookmarkedOnly: boolean;
   onToggleBookmarked: () => void;
   bookmarkedCount: number;
@@ -83,6 +76,8 @@ function CampaignArchives({
   season: Parameters<typeof TournamentHistory>[0]['currentSeason'];
   arenaHistory: Parameters<typeof TournamentHistory>[0]['arenaHistory'];
 }) {
+  const { showBookmarkedOnly, onToggleBookmarked, bookmarkedCount, pastTournaments, season } = props;
+  const { arenaHistory } = props;
   return (
     <div className="space-y-6 pt-12">
       <div className="flex items-center justify-between">
@@ -105,16 +100,7 @@ function CampaignArchives({
 }
 
 /** Readiness banner, live manifest, and campaign archives. */
-function TournamentBody({
-  tournamentState,
-  expandedBout,
-  onToggleExpand,
-  isSimulating,
-  onExecuteRound,
-  onOpenPrep,
-  showBookmarkedOnly,
-  onToggleBookmarked,
-}: {
+function TournamentBody(props: {
   tournamentState: ReturnType<typeof useTournamentState>;
   expandedBout: string | null;
   onToggleExpand: (id: string | null) => void;
@@ -124,6 +110,8 @@ function TournamentBody({
   showBookmarkedOnly: boolean;
   onToggleBookmarked: () => void;
 }) {
+  const { tournamentState, expandedBout, onToggleExpand, isSimulating, onExecuteRound } = props;
+  const { onOpenPrep, showBookmarkedOnly, onToggleBookmarked } = props;
   const {
     season,
     week,

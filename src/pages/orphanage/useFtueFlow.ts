@@ -129,16 +129,7 @@ function useOrphanSelection() {
 }
 
 /** Build the post-FTUE game state, commit it, persist, and enter the Stable hub. */
-function commitFtue({
-  state,
-  selectedWarriors,
-  boutResult,
-  poolSeedValue,
-  playerPlan,
-  setState,
-  saveCurrentState,
-  navigate,
-}: {
+function commitFtue(props: {
   state: Pick<GameStore, 'player' | 'graveyard' | 'ftueComplete'>;
   selectedWarriors: Parameters<typeof buildFTUEInitialState>[1];
   boutResult: BoutResult | null;
@@ -148,6 +139,8 @@ function commitFtue({
   saveCurrentState: () => void;
   navigate: ReturnType<typeof useNavigate>;
 }) {
+  const { state, selectedWarriors, boutResult, poolSeedValue, playerPlan } = props;
+  const { setState, saveCurrentState, navigate } = props;
   if (state.ftueComplete) {
     navigate({ to: '/stable' });
     return;

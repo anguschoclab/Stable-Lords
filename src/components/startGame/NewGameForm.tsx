@@ -57,17 +57,12 @@ function useRandomizers({
 }
 
 /** Name + crest field cluster. */
-function IdentityFields({
-  ownerName,
-  setOwnerName,
-  stableName,
-  setStableName,
-  playerCrest,
-  onRandomizeCrest,
-}: Pick<
+function IdentityFields(props: Pick<
   NewGameFormProps,
   'ownerName' | 'setOwnerName' | 'stableName' | 'setStableName' | 'playerCrest'
 > & { onRandomizeCrest: () => void }) {
+  const { ownerName, setOwnerName, stableName, setStableName, playerCrest } = props;
+  const { onRandomizeCrest } = props;
   return (
     <div className="space-y-5">
       <NameField
@@ -152,19 +147,10 @@ function FormShell({ onBack, children }: { onBack: () => void; children: React.R
 }
 
 /** New-game form: owner/stable identity, crest, and world seed fields. */
-export default function NewGameForm({
-  ownerName,
-  setOwnerName,
-  stableName,
-  setStableName,
-  playerCrest,
-  setPlayerCrest,
-  backstoryId,
-  setBackstoryId,
-  onBack,
-  onSubmit,
-  canCreate,
-}: NewGameFormProps) {
+export default function NewGameForm(props: NewGameFormProps) {
+  const { ownerName, setOwnerName, stableName, setStableName, playerCrest } = props;
+  const { setPlayerCrest, backstoryId, setBackstoryId, onBack, onSubmit } = props;
+  const { canCreate } = props;
   const { randomizeAll, randomizeCrest, randomizeBackstory } = useRandomizers({
     setOwnerName,
     setStableName,

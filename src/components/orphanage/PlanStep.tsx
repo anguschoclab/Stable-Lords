@@ -16,15 +16,7 @@ const PLAN_TACTICS = [
   { id: 'Responsiveness', type: 'defensive' as const, label: 'RESP', icon: Clock },
 ];
 
-function PlanSlider({
-  id,
-  label,
-  value,
-  onChange,
-  lowLabel,
-  highLabel,
-  colorClass,
-}: {
+function PlanSlider(props: {
   id: string;
   label: string;
   value: number;
@@ -33,6 +25,8 @@ function PlanSlider({
   highLabel: string;
   colorClass: string;
 }) {
+  const { id, label, value, onChange, lowLabel } = props;
+  const { highLabel, colorClass } = props;
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">

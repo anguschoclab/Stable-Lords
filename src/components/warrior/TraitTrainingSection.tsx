@@ -22,14 +22,9 @@ interface TraitTrainingSectionProps {
 /**
  *
  */
-export function TraitTrainingSection({
-  warrior,
-  assignment,
-  isRecovery,
-  trainers,
-  onAssignTraitTraining,
-  onClear,
-}: TraitTrainingSectionProps) {
+export function TraitTrainingSection(props: TraitTrainingSectionProps) {
+  const { warrior, assignment, isRecovery, trainers, onAssignTraitTraining } = props;
+  const { onClear } = props;
   const [selectedTrainerId, setSelectedTrainerId] = useState<string | null>(null);
   const isTraitTraining = assignment?.type === 'trait';
   const traitCount = warrior.traits?.length ?? 0;
@@ -80,14 +75,7 @@ export function TraitTrainingSection({
 }
 
 /** Trainer select + reachable-trait pool + begin button. */
-function TrainerPicker({
-  trainers,
-  pool,
-  selectedTrainerId,
-  setSelectedTrainerId,
-  selectedTrainer,
-  onAssign,
-}: {
+function TrainerPicker(props: {
   trainers: Trainer[];
   pool: ReturnType<typeof traitTrainingPool>;
   selectedTrainerId: string | null;
@@ -95,6 +83,8 @@ function TrainerPicker({
   selectedTrainer: Trainer | null;
   onAssign: (trainerId: string) => void;
 }) {
+  const { trainers, pool, selectedTrainerId, setSelectedTrainerId, selectedTrainer } = props;
+  const { onAssign } = props;
   return (
     <>
       <select

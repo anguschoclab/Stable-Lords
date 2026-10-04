@@ -102,19 +102,14 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
 }
 
 /** The sortable, virtualized leaderboard table (plain row map as fallback). */
-function LeaderboardTable({
-  sort,
-  onSort,
-  filtered,
-  isFiltered,
-  virtualizer,
-  useFallback,
-}: Pick<WarriorLeaderboardProps, 'sort' | 'onSort'> & {
+function LeaderboardTable(props: Pick<WarriorLeaderboardProps, 'sort' | 'onSort'> & {
   filtered: WarriorRow[];
   isFiltered: boolean;
   virtualizer: ReturnType<typeof useVirtualizer<HTMLDivElement, Element>>;
   useFallback: boolean;
 }) {
+  const { sort, onSort, filtered, isFiltered, virtualizer } = props;
+  const { useFallback } = props;
   const items = virtualizer.getVirtualItems();
   return (
     <table className="w-full caption-bottom text-sm" aria-rowcount={filtered.length}>

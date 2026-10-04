@@ -42,14 +42,9 @@ export interface AttributeRowState {
 /**
  * Derives a row's trainability state from the warrior and assignment context.
  */
-export function getAttributeRowState({
-  warrior,
-  key,
-  assignment,
-  seasonalGains,
-  trainers,
-  atCap,
-}: AttributeRowInput): AttributeRowState {
+export function getAttributeRowState(props: AttributeRowInput): AttributeRowState {
+  const { warrior, key, assignment, seasonalGains, trainers } = props;
+  const { atCap } = props;
   const val = warrior.attributes[key];
   const isSelected = assignment?.type === 'attribute' && assignment?.attribute === key;
   const maxed = val >= ATTRIBUTE_TRAINING.MAX_VALUE;

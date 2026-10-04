@@ -18,16 +18,9 @@ interface KeyMetricsSectionProps {
 /**
  *
  */
-export function KeyMetricsSection({
-  rivalA,
-  rivalB,
-  statsA,
-  statsB,
-  maxWins,
-  maxKills,
-  maxFame,
-  maxActive,
-}: KeyMetricsSectionProps) {
+export function KeyMetricsSection(props: KeyMetricsSectionProps) {
+  const { rivalA, rivalB, statsA, statsB, maxWins } = props;
+  const { maxKills, maxFame, maxActive } = props;
   return (
     <Surface variant="glass" className="border-border/40 overflow-hidden">
       <div className="p-4 border-b border-white/5 bg-neutral-900/60 flex items-center gap-3">

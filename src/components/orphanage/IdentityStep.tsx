@@ -11,7 +11,7 @@ interface IdentityStepProps {
 
 /**
  * Identity step.
- * @param  - {
+ * @param  props - {
   owner input,
   set owner input,
   stable input,
@@ -20,14 +20,9 @@ interface IdentityStepProps {
   on submit,
 }.
  */
-export default function IdentityStep({
-  ownerInput,
-  setOwnerInput,
-  stableInput,
-  setStableInput,
-  onBack,
-  onSubmit,
-}: IdentityStepProps) {
+export default function IdentityStep(props: IdentityStepProps) {
+  const { ownerInput, setOwnerInput, stableInput, setStableInput, onBack } = props;
+  const { onSubmit } = props;
   return (
     <div
       className="p-7 space-y-6"
@@ -76,14 +71,7 @@ export default function IdentityStep({
 }
 
 /** Labelled identity text input (owner name / stable name). */
-function IdentityField({
-  id,
-  label,
-  maxLength,
-  value,
-  onChange,
-  placeholder,
-}: {
+function IdentityField(props: {
   id: string;
   label: string;
   maxLength: number;
@@ -91,6 +79,8 @@ function IdentityField({
   onChange: (value: string) => void;
   placeholder: string;
 }) {
+  const { id, label, maxLength, value, onChange } = props;
+  const { placeholder } = props;
   return (
     <div className="space-y-1.5">
       <label

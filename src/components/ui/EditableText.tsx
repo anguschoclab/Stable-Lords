@@ -13,15 +13,7 @@ interface EditableTextProps {
 }
 
 /** Input + confirm/cancel buttons shown while editing. */
-function EditingView({
-  tempValue,
-  setTempValue,
-  onSave,
-  onCancel,
-  className,
-  inputClassName,
-  inputRef,
-}: {
+function EditingView(props: {
   tempValue: string;
   setTempValue: (v: string) => void;
   onSave: () => void;
@@ -30,6 +22,8 @@ function EditingView({
   inputClassName?: string;
   inputRef: React.RefObject<HTMLInputElement | null>;
 }) {
+  const { tempValue, setTempValue, onSave, onCancel, className } = props;
+  const { inputClassName, inputRef } = props;
   return (
     <div
       className={cn(

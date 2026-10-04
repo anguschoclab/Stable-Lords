@@ -30,16 +30,9 @@ interface OfferCardProps {
 /**
  *
  */
-export function OfferCard({
-  offer,
-  promoters,
-  roster,
-  rivalWarriorMap,
-  signedOfferIds,
-  onResponse,
-  isCouncilPick,
-  councilWarning,
-}: OfferCardProps) {
+export function OfferCard(props: OfferCardProps) {
+  const { offer, promoters, roster, rivalWarriorMap, signedOfferIds } = props;
+  const { onResponse, isCouncilPick, councilWarning } = props;
   const promoter = promoters[offer.promoterId];
   const playerWarrior = roster.find((w) => offer.warriorIds.includes(w.id));
   const playerWarriorId = playerWarrior?.id;

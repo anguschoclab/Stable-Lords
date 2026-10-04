@@ -44,14 +44,7 @@ function heraldicDescription(crest: CrestData): string {
 }
 
 /** Shield SVG: field pattern, outline, mantling, helmet, charge. */
-function CrestSvg({
-  crest,
-  pixelSize,
-  shieldPath,
-  metalColor,
-  shouldShowMantling,
-  shouldShowHelmet,
-}: {
+function CrestSvg(props: {
   crest: CrestData;
   pixelSize: number;
   shieldPath: string;
@@ -59,6 +52,8 @@ function CrestSvg({
   shouldShowMantling: boolean;
   shouldShowHelmet: boolean;
 }) {
+  const { crest, pixelSize, shieldPath, metalColor, shouldShowMantling } = props;
+  const { shouldShowHelmet } = props;
   return (
     <svg
       viewBox="0 0 100 100"
@@ -103,17 +98,9 @@ function CrestSvg({
 }
 
 /** Heraldic crest renderer — SVG shield + optional generation badge. */
-export function StableCrest({
-  crest,
-  size = 'md',
-  showMantling,
-  showHelmet,
-  animate = false,
-  className = '',
-  selected = false,
-  showTooltip = true,
-  showGenerationBadge = true,
-}: StableCrestProps): React.ReactElement {
+export function StableCrest(props: StableCrestProps): React.ReactElement {
+  const { crest, size = 'md', showMantling, showHelmet, animate = false } = props;
+  const { className = '', selected = false, showTooltip = true, showGenerationBadge = true } = props;
   const pixelSize = typeof size === 'number' ? size : SIZE_MAP[size];
   const shieldPath = SHIELD_PATHS[crest.shieldShape] || SHIELD_PATHS.heater;
   const metalColor = crest.metalColor === 'gold' ? '#D4AF37' : '#C0C0C0';

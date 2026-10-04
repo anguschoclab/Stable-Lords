@@ -10,7 +10,7 @@ import { collectParamCounts } from '../../../scripts/param-count.mjs';
  * reality and ratchets DOWN per batch — never up. Final target: 0.
  * (fileBudget.test.ts precedent: ceilings only ever tighten.)
  */
-const PARAM_VIOLATION_CEILING = 242;
+const PARAM_VIOLATION_CEILING = 142;
 
 interface ParamViolation {
   file: string;

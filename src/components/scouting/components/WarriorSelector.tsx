@@ -15,14 +15,9 @@ interface WarriorSelectorProps {
 /**
  *
  */
-export function WarriorSelector({
-  warriors,
-  selectedId,
-  otherId,
-  onSelect,
-  label,
-  colorVariant,
-}: WarriorSelectorProps) {
+export function WarriorSelector(props: WarriorSelectorProps) {
+  const { warriors, selectedId, otherId, onSelect, label } = props;
+  const { colorVariant } = props;
   const colorClasses = {
     primary: {
       bg: 'bg-primary/10',
@@ -84,14 +79,9 @@ interface WarriorSelectionCardProps {
   colorVariant: 'primary' | 'accent';
 }
 
-function WarriorSelectionCard({
-  warrior,
-  stable,
-  isSelected,
-  isDisabled,
-  onSelect,
-  colorVariant,
-}: WarriorSelectionCardProps) {
+function WarriorSelectionCard(props: WarriorSelectionCardProps) {
+  const { warrior, stable, isSelected, isDisabled, onSelect } = props;
+  const { colorVariant } = props;
   const colorClasses = {
     primary: {
       bg: 'bg-primary/10',

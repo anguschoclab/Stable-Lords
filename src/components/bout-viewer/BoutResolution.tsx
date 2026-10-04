@@ -132,15 +132,9 @@ function AnnouncementOverlay({ announcement }: { announcement: string }) {
 }
 
 /** Post-bout resolution overlay: victory banner, draw banner, and comms line. */
-export default function BoutResolution({
-  isComplete,
-  winner,
-  winnerName,
-  by,
-  minutes,
-  totalEvents,
-  announcement,
-}: BoutResolutionProps) {
+export default function BoutResolution(props: BoutResolutionProps) {
+  const { isComplete, winner, winnerName, by, minutes } = props;
+  const { totalEvents, announcement } = props;
   if (!isComplete) return null;
 
   return (

@@ -12,7 +12,7 @@ interface SavedGamesSectionProps {
 
 /**
  * Saved games section.
- * @param  - {
+ * @param  props - {
   slots,
   max save slots,
   on load,
@@ -21,14 +21,9 @@ interface SavedGamesSectionProps {
   format date,
 }.
  */
-export default function SavedGamesSection({
-  slots,
-  maxSaveSlots,
-  onLoad,
-  onExport,
-  onDelete,
-  formatDate,
-}: SavedGamesSectionProps) {
+export default function SavedGamesSection(props: SavedGamesSectionProps) {
+  const { slots, maxSaveSlots, onLoad, onExport, onDelete } = props;
+  const { formatDate } = props;
   if (slots.length === 0) return null;
 
   return (

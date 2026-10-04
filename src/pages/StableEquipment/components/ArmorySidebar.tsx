@@ -88,15 +88,7 @@ function TipsBlock({ tips }: { tips: string[] }) {
 }
 
 /** Left rail — style select, tips list, and per-style champion picker. */
-export function ArmorySidebar({
-  selectedStyle,
-  styleEntries,
-  tips,
-  onStyleChange,
-  championWarriors,
-  targetWarriorId,
-  onSelectWarrior,
-}: {
+export function ArmorySidebar(props: {
   selectedStyle: FightingStyle;
   styleEntries: [string, string][];
   tips: string[];
@@ -105,6 +97,8 @@ export function ArmorySidebar({
   targetWarriorId: string;
   onSelectWarrior: (id: string) => void;
 }) {
+  const { selectedStyle, styleEntries, tips, onStyleChange, championWarriors } = props;
+  const { targetWarriorId, onSelectWarrior } = props;
   return (
     <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
       <Surface variant="glass" className="space-y-6">

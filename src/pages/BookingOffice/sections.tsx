@@ -121,17 +121,7 @@ function EmptyOffers({ title, hint }: { title: string; hint: string }) {
 }
 
 /** Offer grid for one tab — cards flagged with council pick / warning state. */
-export function OfferGrid({
-  offers,
-  emptyTitle,
-  emptyHint,
-  roster,
-  promoters,
-  rivalWarriorMap,
-  signedOfferIds,
-  advisorCardMap,
-  onResponse,
-}: {
+export function OfferGrid(props: {
   offers: BoutOffer[];
   emptyTitle: string;
   emptyHint: string;
@@ -146,6 +136,8 @@ export function OfferGrid({
     response: 'Accepted' | 'Declined'
   ) => void;
 }) {
+  const { offers, emptyTitle, emptyHint, roster, promoters } = props;
+  const { rivalWarriorMap, signedOfferIds, advisorCardMap, onResponse } = props;
   if (offers.length === 0) {
     return <EmptyOffers title={emptyTitle} hint={emptyHint} />;
   }
@@ -182,21 +174,7 @@ export function OfferGrid({
 }
 
 /** This-week / upcoming offer tabs with bookmark filtering. */
-export function OfferTabs({
-  activeTab,
-  onTabChange,
-  thisWeekOffers,
-  upcomingOffers,
-  showBookmarkedOnly,
-  onToggleBookmarked,
-  bookmarkedCount,
-  roster,
-  promoters,
-  rivalWarriorMap,
-  signedOfferIds,
-  advisorCardMap,
-  onResponse,
-}: {
+export function OfferTabs(props: {
   activeTab: string;
   onTabChange: (tab: string) => void;
   thisWeekOffers: BoutOffer[];
@@ -215,6 +193,9 @@ export function OfferTabs({
     response: 'Accepted' | 'Declined'
   ) => void;
 }) {
+  const { activeTab, onTabChange, thisWeekOffers, upcomingOffers, showBookmarkedOnly } = props;
+  const { onToggleBookmarked, bookmarkedCount, roster, promoters, rivalWarriorMap } = props;
+  const { signedOfferIds, advisorCardMap, onResponse } = props;
   const gridProps = {
     roster,
     promoters,

@@ -48,14 +48,7 @@ type NameResolutionState = {
   retired: ReturnType<typeof useGameStore.getState>['retired'];
 };
 
-function FightRow({
-  fight,
-  warriorId,
-  record,
-  isExpanded,
-  onToggle,
-  nameResolutionState,
-}: {
+function FightRow(props: {
   fight: FightSummary;
   warriorId: string;
   record?: H2HRecord;
@@ -63,6 +56,8 @@ function FightRow({
   onToggle: () => void;
   nameResolutionState: NameResolutionState;
 }) {
+  const { fight, warriorId, record, isExpanded, onToggle } = props;
+  const { nameResolutionState } = props;
   const f = fight;
   const n = getNamesFromTitle(f.title);
   const isA = f.warriorIdA === warriorId;

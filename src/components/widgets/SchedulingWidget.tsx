@@ -91,14 +91,7 @@ function MatchupDetails({ matchup, isGood }: { matchup: MatchupScore; isGood: bo
 }
 
 /** Priority score readout + challenge/avoid toggles. */
-function CardFooter({
-  score,
-  isGood,
-  isChallenged,
-  isAvoided,
-  onToggleChallenge,
-  onToggleAvoid,
-}: {
+function CardFooter(props: {
   score: number;
   isGood: boolean;
   isChallenged: boolean;
@@ -106,6 +99,8 @@ function CardFooter({
   onToggleChallenge: () => void;
   onToggleAvoid: () => void;
 }) {
+  const { score, isGood, isChallenged, isAvoided, onToggleChallenge } = props;
+  const { onToggleAvoid } = props;
   return (
     <>
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
@@ -144,14 +139,9 @@ function CardFooter({
   );
 }
 
-function MatchupCard({
-  matchup,
-  type,
-  isChallenged,
-  isAvoided,
-  onToggleChallenge,
-  onToggleAvoid,
-}: MatchupCardProps) {
+function MatchupCard(props: MatchupCardProps) {
+  const { matchup, type, isChallenged, isAvoided, onToggleChallenge } = props;
+  const { onToggleAvoid } = props;
   const isGood = type === 'recommend';
 
   return (
@@ -190,14 +180,7 @@ type MatchupFlags = {
 };
 
 /** One matchup column: divider label, cards, or an empty-state notice. */
-function MatchupColumn({
-  label,
-  variant,
-  matchups,
-  type,
-  emptyText,
-  flags,
-}: {
+function MatchupColumn(props: {
   label: string;
   variant?: 'blood';
   matchups: Matchup[];
@@ -205,6 +188,8 @@ function MatchupColumn({
   emptyText: string;
   flags: MatchupFlags;
 }) {
+  const { label, variant, matchups, type, emptyText } = props;
+  const { flags } = props;
   return (
     <div className="space-y-6">
       <SectionDivider label={label} variant={variant} />

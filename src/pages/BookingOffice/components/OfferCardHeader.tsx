@@ -85,14 +85,9 @@ function OfferBadges({
  * Offer card header: promoter identity + badges (rival challenge, counter,
  * personality, council pick/warning), bookmark toggle, and the fight purse.
  */
-export function OfferCardHeader({
-  offer,
-  promoter,
-  personality,
-  personalityConfig,
-  isCouncilPick,
-  councilWarning,
-}: OfferCardHeaderProps) {
+export function OfferCardHeader(props: OfferCardHeaderProps) {
+  const { offer, promoter, personality, personalityConfig, isCouncilPick } = props;
+  const { councilWarning } = props;
   return (
     <div className="p-6 border-b border-white/5 flex items-start justify-between bg-white/[0.01]">
       <div className="flex items-center gap-4">

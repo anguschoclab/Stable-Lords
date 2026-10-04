@@ -85,14 +85,7 @@ function getEventColor(type: ReturnType<typeof classifyEvent>) {
 // ensures that previously rendered log events do not re-render unnecessarily.
 // This changes rendering per tick from O(N) to O(1) during long simulated battles.
 const TacticalLogEntry = memo(
-  ({
-    event,
-    index,
-    isLatest,
-    type,
-    isHighlighted,
-    entryRef,
-  }: {
+  (props: {
     event: MinuteEvent;
     index: number;
     isLatest: boolean;
@@ -100,6 +93,8 @@ const TacticalLogEntry = memo(
     isHighlighted?: boolean;
     entryRef?: (el: HTMLDivElement | null) => void;
   }) => {
+    const { event, index, isLatest, type, isHighlighted } = props;
+    const { entryRef } = props;
     return (
       <div
         key={index}
@@ -249,16 +244,11 @@ function useLogScroll(
 
 /**
  * Tactical log view.
- * @param - { log, visible count, class name }.
+ * @param props - { log, visible count, class name }.
  */
-export default function TacticalLogView({
-  log,
-  visibleCount,
-  className,
-  highlightIndex,
-  onHighlightChange,
-  showStepControls,
-}: TacticalLogViewProps) {
+export default function TacticalLogView(props: TacticalLogViewProps) {
+  const { log, visibleCount, className, highlightIndex, onHighlightChange } = props;
+  const { showStepControls } = props;
   const entryRefs = useRef<(HTMLDivElement | null)[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T15:50:24.797Z",
+  "generatedAt": "2026-10-04T13:00:08.427Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -59,6 +59,7 @@
     "src/test/components/dashboard/WeeklyDigestMini.test.tsx",
     "src/test/components/entityLink.perf.test.tsx",
     "src/test/components/equipment/EncumbranceBar.test.tsx",
+    "src/test/components/equipment/GearRow.test.tsx",
     "src/test/components/equipment/SlotSelector.test.tsx",
     "src/test/components/eventLog/EventLog.test.tsx",
     "src/test/components/fallen/KillAnalyticsPanel.test.tsx",
@@ -86,6 +87,7 @@
     "src/test/components/resolutionReveal/ResolutionReveal.test.tsx",
     "src/test/components/run-round/AutosimConsole.test.tsx",
     "src/test/components/run-round/RunRound.test.tsx",
+    "src/test/components/scouting/ComparisonBar.test.tsx",
     "src/test/components/scouting/ComparisonHeader.test.tsx",
     "src/test/components/scouting/DoctrineIntelligenceSection.test.tsx",
     "src/test/components/scouting/RivalListShell.test.tsx",
@@ -147,6 +149,7 @@
     "src/test/engine/deathNotifier.test.ts",
     "src/test/engine/economy/worldBalance.slow.test.ts",
     "src/test/engine/history/arenaHistory.test.ts",
+    "src/test/engine/matchmaking/arenaFit.test.ts",
     "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts",
     "src/test/engine/metaDrift.test.ts",
     "src/test/engine/owner/ownerGrudges.test.ts",

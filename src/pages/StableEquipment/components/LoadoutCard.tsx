@@ -212,14 +212,9 @@ function ApplyFooter({
 /**
  *
  */
-export function LoadoutCard({
-  rec,
-  index,
-  carryCap,
-  targetWarrior,
-  onApply,
-  disabled,
-}: LoadoutCardProps) {
+export function LoadoutCard(props: LoadoutCardProps) {
+  const { rec, index, carryCap, targetWarrior, onApply } = props;
+  const { disabled } = props;
   const isTop = index === 0;
   const reqCheck =
     targetWarrior && rec.loadout.weapon

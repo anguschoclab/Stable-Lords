@@ -3,6 +3,7 @@ import {
   PoolWarrior,
   DeathEvent,
   InsightToken,
+  KillEvent,
   Trainer,
   TrainingAssignment,
   SeasonalGrowth,
@@ -17,6 +18,8 @@ export interface RosterSlice {
   roster: Warrior[];
   graveyard: Warrior[];
   retired: Warrior[];
+  deadWarriorIds: WarriorId[];
+  killEvents: KillEvent[];
   recruitPool: PoolWarrior[];
   insightTokens: InsightToken[];
   trainers: Trainer[];

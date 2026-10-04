@@ -160,4 +160,31 @@ describe('gameStateSchema — GameStateSchema', () => {
     expect(parsedRival.owner.generation).toBe(2);
     expect(parsedRival.weeksBelowMin).toBe(3);
   });
+
+  it('death-registry fields survive a JSON save/load round-trip', async () => {
+    // deadWarriorIds is append-only and must NEVER be dropped by the schema —
+    // it is the liveness authority once the graveyard truncates at 200.
+    const { createFreshState } = await import('@/engine/factories/gameStateFactory');
+    const state = createFreshState('rt-death-seed');
+    state.deadWarriorIds = ['w-dead-1' as never, 'w-dead-2' as never];
+    state.killEvents = [
+      {
+        id: 'ke-1',
+        week: 10,
+        victimId: 'w-dead-1' as never,
+        killerId: 'w-killer' as never,
+        tournamentId: 't-3' as never,
+      },
+    ];
+
+    const parsed = GameStateSchema.parse(JSON.parse(JSON.stringify(state)));
+
+    expect(parsed.deadWarriorIds).toEqual(['w-dead-1', 'w-dead-2']);
+    expect(parsed.killEvents).toHaveLength(1);
+    expect(parsed.killEvents[0]).toMatchObject({
+      victimId: 'w-dead-1',
+      killerId: 'w-killer',
+      tournamentId: 't-3',
+    });
+  });
 });

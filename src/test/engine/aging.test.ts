@@ -120,6 +120,22 @@ describe('computeAgingImpact — forced retirement', () => {
     vi.restoreAllMocks();
   });
 
+  it('never retires a dead warrior — a corpse cannot age out', () => {
+    // Dead warriors must leave the roster at death, but any that linger
+    // (legacy state, a missed removal) must not be posthumously "retired" —
+    // that would push their id into state.retired while it sits in the
+    // graveyard, corrupting the retired pool and founder succession.
+    const w = { ...makeWarrior('ghost', 33), status: 'Dead' as const, isDead: true };
+    const state = makeGameState(10, [w]);
+    const rng = new SeededRNGService(state.week * 997 + 3);
+    const impact = computeAgingImpact(state, rng);
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.retired.filter((r) => r.id === 'ghost')).toHaveLength(0);
+    // Not swept, not patched — just left alone pending whatever moved it off.
+    expect(impact.rosterRemovals ?? []).not.toContain('ghost');
+  });
+
   // Retirement window 2026-04: FORCED_RETIRE_MIN=26, FORCED_RETIRE_MAX=32.
   it('guarantees retirement for a warrior at FORCED_RETIRE_MAX (32+)', () => {
     const w = makeWarrior('w1', 32);

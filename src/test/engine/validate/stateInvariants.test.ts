@@ -171,3 +171,137 @@ describe('graveyard ↔ roster disjointness', () => {
     expect(v.filter((x) => x.id === 'graveyard-roster-disjoint')).toEqual([]);
   });
 });
+
+describe('dead-registry coverage — deadWarriorIds ∪ graveyard', () => {
+  it('flags a registered-dead id sitting on the player roster', () => {
+    const w = makeWarrior({ id: 'dx-1' as WarriorId });
+    const state = makeGameState({ deadWarriorIds: [w.id], roster: [w] });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
+  });
+
+  it('flags a registered-dead id on a rival roster', () => {
+    const w = makeWarrior({ id: 'dx-2' as WarriorId });
+    const state = makeGameState({
+      deadWarriorIds: [w.id],
+      rivals: [makeRival({ id: 'r1' as StableId, roster: [w] })],
+    });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
+  });
+
+  it('flags a registered-dead id in the free-agent pool', () => {
+    const w = makeWarrior({ id: 'dx-3' as WarriorId });
+    const state = makeGameState({ deadWarriorIds: [w.id], freeAgents: [w as never] });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
+  });
+
+  it('flags a registered-dead id in the recruit pool', () => {
+    const w = makeWarrior({ id: 'dx-4' as WarriorId });
+    const state = makeGameState({ deadWarriorIds: [w.id], recruitPool: [w as never] });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
+  });
+
+  it('flags a registered-dead id queued as a legacy founder', () => {
+    const w = makeWarrior({ id: 'dx-5' as WarriorId });
+    const state = makeGameState({
+      deadWarriorIds: [w.id],
+      legacyFounderQueue: [w],
+    });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
+  });
+
+  it('flags a registered-dead id inside tournament participants', () => {
+    const w = makeWarrior({ id: 'dx-6' as WarriorId });
+    const state = makeGameState({
+      deadWarriorIds: [w.id],
+      tournaments: [
+        { id: 't1', participants: [w], completed: false, bracket: [] } as never,
+      ],
+    });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
+  });
+
+  it('does not flag dead ids that are only in the graveyard or stamped Dead', () => {
+    const w = makeWarrior({ id: 'dx-7' as WarriorId, status: 'Dead' as never });
+    const state = makeGameState({
+      deadWarriorIds: [w.id],
+      graveyard: [w],
+      tournaments: [
+        {
+          id: 't1',
+          participants: [{ ...w, status: 'Dead' } as never],
+          completed: true,
+          bracket: [],
+        } as never,
+      ],
+    });
+    const v = validateStateInvariants(state);
+    expect(v.filter((x) => x.id === 'dead-id-in-active-store')).toEqual([]);
+  });
+});
+
+describe('graveyard uniqueness and retired overlap', () => {
+  it('flags duplicate warrior ids inside the graveyard', () => {
+    const w = makeWarrior({ id: 'dup-1' as WarriorId });
+    const state = makeGameState({ graveyard: [w, { ...w }] });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'graveyard-unique-ids')).toBe(true);
+  });
+
+  it('flags an id present in both graveyard and retired pools', () => {
+    const w = makeWarrior({ id: 'ov-1' as WarriorId });
+    const state = makeGameState({
+      graveyard: [w],
+      retired: [{ ...w, status: 'Retired' as never }],
+      deadWarriorIds: [w.id],
+    });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'dead-retired-overlap')).toBe(true);
+  });
+});
+
+describe('stale signed offers', () => {
+  it('flags a Signed offer that references a dead warrior', () => {
+    const dead = makeWarrior({ id: 'off-dead' as WarriorId });
+    const alive = makeWarrior({ id: 'off-alive' as WarriorId });
+    const state = makeGameState({
+      roster: [alive],
+      graveyard: [dead],
+      deadWarriorIds: [dead.id],
+      boutOffers: {
+        o1: {
+          id: 'o1',
+          status: 'Signed',
+          warriorIds: [alive.id, dead.id],
+          boutWeek: 5,
+        } as never,
+      },
+    });
+    const v = validateStateInvariants(state);
+    expect(v.some((x) => x.id === 'stale-signed-offer')).toBe(true);
+  });
+
+  it('ignores signed offers whose warriors are all alive and rostered', () => {
+    const a = makeWarrior({ id: 'off-a' as WarriorId });
+    const b = makeWarrior({ id: 'off-b' as WarriorId });
+    const state = makeGameState({
+      roster: [a],
+      rivals: [makeRival({ id: 'r1' as StableId, roster: [b] })],
+      boutOffers: {
+        o1: {
+          id: 'o1',
+          status: 'Signed',
+          warriorIds: [a.id, b.id],
+          boutWeek: 5,
+        } as never,
+      },
+    });
+    const v = validateStateInvariants(state);
+    expect(v.filter((x) => x.id === 'stale-signed-offer')).toEqual([]);
+  });
+});

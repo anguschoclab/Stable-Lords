@@ -78,6 +78,14 @@ describe('createFreshState', () => {
       expect(state.coachDismissed).toEqual([]);
     });
 
+    it('sets deadWarriorIds to empty array', () => {
+      expect(state.deadWarriorIds).toEqual([]);
+    });
+
+    it('sets killEvents to empty array', () => {
+      expect(state.killEvents).toEqual([]);
+    });
+
     it('sets player.id to "stable-player"', () => {
       expect(state.player.id).toBe('stable-player');
     });

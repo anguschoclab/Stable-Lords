@@ -145,8 +145,8 @@ describe('bout shard chunking', () => {
       const input = inputs[i];
       expect(input).toBeDefined();
       if (!input) return;
-      expect(o.bout.result.a.id).toBe(input.pairing.a.id);
-      expect(o.bout.result.d.id).toBe(input.pairing.d.id);
+      expect(o.bout.result?.a.id).toBe(input.pairing.a.id);
+      expect(o.bout.result?.d.id).toBe(input.pairing.d.id);
     });
   });
 });

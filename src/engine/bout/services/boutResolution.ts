@@ -24,35 +24,39 @@ import {
 import { applyRecords } from '../recordHandler';
 import { handleDeath } from '../mortalityHandler';
 import { isPlayerOwned } from '../warriorRouting';
+import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import { handleInjuries } from '../injuryHandler';
 import { handleProgressions } from '../progressionHandler';
 import { handleReporting } from '../reportingHandler';
 import { getPairKey } from '@/utils/keyUtils';
 import type { BoutContext, BoutImpact } from './boutProcessorTypes';
 
-function getValidatedCombatants(ctx: BoutContext): { cW: Warrior; cO: Warrior } | null {
+function getValidatedCombatants(
+  state: GameState,
+  ctx: BoutContext
+): { cW: Warrior; cO: Warrior } | null {
   const cW = ctx.warriorMap.get(ctx.warrior.id);
   const cO = ctx.warriorMap.get(ctx.opponent.id);
   if (!cW || !cO) {
     return null;
   }
-  if (!validateBoutCombatants(cW, cO)) {
+  const deadIds = deadIdSet(state);
+  if (!validateBoutCombatants(cW, cO, deadIds)) {
     return null;
   }
   return { cW, cO };
 }
 
+/**
+ * An invalid bout is skipped — no phantom Draw summary, no payout, and the
+ * associated contract is returned for cancellation (a Signed offer left
+ * dangling would never resolve, pay out, or penalize).
+ */
 function handleInvalidBout(ctx: BoutContext): BoutImpact {
   return {
     impact: {},
-    result: {
-      a: ctx.warrior,
-      d: ctx.opponent,
-      outcome: { winner: null, by: 'Draw', minutes: 0, log: [] } as FightOutcome,
-      isRivalry: ctx.isRivalry,
-      rivalStable: ctx.rivalStable,
-      contractId: ctx.contract?.id,
-    },
+    result: null,
+    voidedOffer: ctx.contract,
     stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] },
   };
 }
@@ -265,7 +269,8 @@ function postResolutionImpacts(
     ctx.week,
     tags,
     ctx.rivalStableId,
-    rng
+    rng,
+    ctx.tournamentId
   );
   const injuryRes = handleInjuries(
     state,
@@ -340,7 +345,7 @@ function reportBout(
  * Resolve bout.
  */
 export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
-  const combatants = getValidatedCombatants(ctx);
+  const combatants = getValidatedCombatants(state, ctx);
   if (!combatants) return handleInvalidBout(ctx);
 
   const { cW, cO } = combatants;

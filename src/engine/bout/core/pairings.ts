@@ -1,5 +1,6 @@
 import { BoutOffer, GameState, Warrior } from '@/types/state.types';
 import { buildActiveWarriorMap } from '@/utils/roster';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /**
@@ -12,6 +13,16 @@ export interface BoutPairing {
   rivalStable?: string;
   rivalStableId?: string;
   contractId?: string;
+}
+
+/** Extract the owning tournament id from a synthetic `tour_*` contractId. */
+export function tournamentIdFromContractId(contractId?: string): string | undefined {
+  if (!contractId?.startsWith('tour_')) return undefined;
+  const parts = contractId.split('_');
+  // tour_<tournamentId>_<round>_<matchIndex> — tournamentId may itself
+  // contain underscores, so drop the fixed prefix + two trailing segments.
+  if (parts.length < 4) return undefined;
+  return parts.slice(1, -2).join('_');
 }
 
 /**
@@ -85,6 +96,7 @@ function resolveContractOffer(
   warriorMap: Map<string, Warrior>,
   committedWarriors: Set<string>,
   activeChampionIds: Set<string>,
+  deadIds: ReadonlySet<string>,
   pairings: BoutPairing[],
   voidedOffers: BoutOffer[]
 ): void {
@@ -100,30 +112,43 @@ function resolveContractOffer(
   const wA = idA ? warriorMap.get(idA) : undefined;
   const wD = idD ? warriorMap.get(idD) : undefined;
 
-  if (wA && wD) {
-    // A warrior can only fight once per week — later contracts are voided
-    // by the caller so no ghost Signed offer is left dangling.
-    if (committedWarriors.has(wA.id) || committedWarriors.has(wD.id)) {
-      voidedOffers.push(offer);
-      return;
-    }
-    committedWarriors.add(wA.id);
-    committedWarriors.add(wD.id);
-
-    // Find which stable wD belongs to using O(1) map lookup
-    const stableInfo = state.warriorToStableMap?.get(wD.id);
-    const rivalStable =
-      stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
-
-    pairings.push({
-      a: wA,
-      d: wD,
-      isRivalry: (offer.hype || 0) > 150, // Use hype as a proxy for rivalry
-      rivalStable: rivalStable?.owner.stableName,
-      rivalStableId: rivalStable?.id,
-      contractId: offer.id,
-    });
+  // A signed offer that can no longer field both combatants is voided rather
+  // than silently dropped — an un-voided Signed offer lingers as a ghost that
+  // never resolves, never pays out, and never penalizes.
+  if (
+    !wA ||
+    !wD ||
+    !isActive(wA) ||
+    !isActive(wD) ||
+    deadIds.has(wA.id) ||
+    deadIds.has(wD.id)
+  ) {
+    voidedOffers.push(offer);
+    return;
   }
+
+  // A warrior can only fight once per week — later contracts are voided
+  // by the caller so no ghost Signed offer is left dangling.
+  if (committedWarriors.has(wA.id) || committedWarriors.has(wD.id)) {
+    voidedOffers.push(offer);
+    return;
+  }
+  committedWarriors.add(wA.id);
+  committedWarriors.add(wD.id);
+
+  // Find which stable wD belongs to using O(1) map lookup
+  const stableInfo = state.warriorToStableMap?.get(wD.id);
+  const rivalStable =
+    stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
+
+  pairings.push({
+    a: wA,
+    d: wD,
+    isRivalry: (offer.hype || 0) > 150, // Use hype as a proxy for rivalry
+    rivalStable: rivalStable?.owner.stableName,
+    rivalStableId: rivalStable?.id,
+    contractId: offer.id,
+  });
 }
 
 /**
@@ -142,6 +167,13 @@ export function generatePairings(state: GameState): PairingsResult {
   const committedWarriors = new Set<string>();
 
   const tournamentPairings = collectTournamentPairings(state, warriorMap, committedWarriors);
+
+  // The persistent death registry (never truncated) plus the graveyard — a
+  // stale 'Active' snapshot of a dead warrior cannot satisfy a contract.
+  const deadIds = new Set<string>([
+    ...(state.deadWarriorIds ?? []),
+    ...(state.graveyard ?? []).map((w) => w.id as string),
+  ]);
 
   // Derive pairings from Signed Contracts for this week
   const allOffers = Object.values(state.boutOffers || {});
@@ -166,6 +198,7 @@ export function generatePairings(state: GameState): PairingsResult {
       warriorMap,
       committedWarriors,
       activeChampionIds,
+      deadIds,
       pairings,
       voidedOffers
     )

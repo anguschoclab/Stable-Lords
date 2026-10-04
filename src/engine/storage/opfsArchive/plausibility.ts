@@ -60,6 +60,8 @@ export function isPlausibleGameState(value: unknown): value is GameState {
   if (!Array.isArray(v.roster)) return false;
   if (!Array.isArray(v.graveyard)) return false;
   if (!Array.isArray(v.retired)) return false;
+  if (!Array.isArray(v.deadWarriorIds)) return false;
+  if (!Array.isArray(v.killEvents)) return false;
   if (!Array.isArray(v.arenaHistory)) return false;
   if (!Array.isArray(v.newsletter)) return false;
   if (!Array.isArray(v.gazettes)) return false;

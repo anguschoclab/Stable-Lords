@@ -49,6 +49,8 @@ function baseFreshState(createdAt: string): GameState {
     roster: [],
     graveyard: [],
     retired: [],
+    deadWarriorIds: [],
+    killEvents: [],
     arenaHistory: [],
     newsletter: [],
     gazettes: [],

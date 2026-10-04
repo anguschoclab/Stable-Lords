@@ -19,6 +19,20 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { findCurrentRoundBouts } from '../tournament/bracketUtils';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { selectArenaForTournamentBout } from '../tournament/tournamentArenaSelection';
+import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
+
+/**
+ * Ids that can never fight again: the persistent death registry, the
+ * (truncating) graveyard, and retirees. Participant snapshots inside
+ * `tournaments[].participants` keep their selection-time 'Active' status
+ * forever — membership in this set is the liveness authority, not the
+ * snapshot's status field.
+ */
+function inactiveIdSet(state: GameState): Set<string> {
+  const ids = deadIdSet(state);
+  for (const w of state.retired ?? []) ids.add(w.id as string);
+  return ids;
+}
 interface BracketWarrior {
   id: WarriorId;
   name: string;
@@ -106,22 +120,32 @@ function resolveBout(
   const wA = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
   const wD = findWarriorById(updatedState, bout.warriorIdD, resolvedTournament);
 
-  if (!wA || !wD) {
-    bout.winner = wA ? 'A' : 'D';
-    const winnerObj = wA
-      ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-      : wD
-        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
+  // Liveness: a stale 'Active' participant snapshot of a dead/retired
+  // warrior forfeits to the live side instead of being simulated — the kill
+  // that produces a re-kill divergence used to fire exactly here.
+  const inactive = inactiveIdSet(updatedState);
+  const liveA = wA && isActive(wA) && !inactive.has(wA.id) ? wA : undefined;
+  const liveD = wD && isActive(wD) && !inactive.has(wD.id) ? wD : undefined;
+
+  if (!liveA || !liveD) {
+    bout.winner = liveA ? 'A' : 'D';
+    const winnerObj = liveA
+      ? { id: liveA.id, name: liveA.name, stableId: liveA.stableId }
+      : liveD
+        ? { id: liveD.id, name: liveD.name, stableId: liveD.stableId }
         : undefined;
     if (winnerObj && advancesWinner) winners.push(winnerObj);
     return updatedState;
   }
 
+  const cA = liveA;
+  const cD = liveD;
+
   const { outcome, arenaId } = simulateTournamentBout(
     updatedState,
     resolvedTournament,
-    wA,
-    wD,
+    cA,
+    cD,
     rng,
     headless
   );
@@ -131,27 +155,40 @@ function resolveBout(
   bout.fightId = rng.uuid('bout') as FightId;
 
   if (advancesWinner) {
-    winners.push(
-      outcome.winner === 'A'
-        ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-        : { id: wD.id, name: wD.name, stableId: wD.stableId }
-    );
-    losers.push(
-      outcome.winner === 'A'
-        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
-        : { id: wA.id, name: wA.name, stableId: wA.stableId }
-    );
+    recordAdvancement(outcome, cA, cD, winners, losers);
   }
   return applyBoutResults(
     updatedState,
-    wA,
-    wD,
+    cA,
+    cD,
     outcome,
     resolvedTournament.id,
     resolvedTournament.name,
     rng,
     undefined,
     arenaId
+  );
+}
+
+/**
+ * Push the bout's winner/loser onto the next-round seeding lists.
+ */
+function recordAdvancement(
+  outcome: FightOutcome,
+  cA: Warrior,
+  cD: Warrior,
+  winners: BracketWarrior[],
+  losers: BracketWarrior[]
+): void {
+  winners.push(
+    outcome.winner === 'A'
+      ? { id: cA.id, name: cA.name, stableId: cA.stableId }
+      : { id: cD.id, name: cD.name, stableId: cD.stableId }
+  );
+  losers.push(
+    outcome.winner === 'A'
+      ? { id: cD.id, name: cD.name, stableId: cD.stableId }
+      : { id: cA.id, name: cA.name, stableId: cA.stableId }
   );
 }
 
@@ -308,6 +345,36 @@ export function resolveRound(
     updatedState,
     resolvedTournament
   );
+
+  return finalizeRound(
+    updatedState,
+    resolvedTournament,
+    tournamentId,
+    bracket,
+    isComplete,
+    championWarrior
+  );
+}
+
+/**
+ * Seal a resolved round: stamp the bracket/champion onto the tournament
+ * entry, award placement prizes (except the 'Champions' tier, whose
+ * purse/fame/accolade is awarded by ArenaChampionshipPass.recordGrandChampions
+ * — the single award home), and emit the champion banner.
+ */
+function finalizeRound(
+  updatedState: GameState,
+  resolvedTournament: TournamentEntry,
+  tournamentId: string,
+  bracket: TournamentBout[],
+  isComplete: boolean,
+  championWarrior: { name: string; epithet?: string } | undefined
+): {
+  updatedState: GameState;
+  roundResults: string[];
+  isComplete: boolean;
+  updatedTournament?: TournamentEntry;
+} {
   const champion = championWarrior?.name;
 
   let updatedTournament: TournamentEntry | undefined;
@@ -320,9 +387,6 @@ export function resolveRound(
     }
   );
 
-  // The 'Champions' tier's purse/fame/accolade is awarded by
-  // ArenaChampionshipPass.recordGrandChampions — the single award home —
-  // so the generic placement machinery skips it here.
   if (isComplete && champion && resolvedTournament.tierId !== CHAMPIONS_TOURNEY.TIER_ID) {
     updatedState = awardTournamentPrizes(updatedTournament ?? resolvedTournament, updatedState);
   }
@@ -488,7 +552,10 @@ export function applyBoutResults(
     rng,
   });
 
-  updatedState.arenaHistory = [...(updatedState.arenaHistory || []), summary].slice(-500);
+  // Mid-tick appends never truncate — truncateState owns arenaHistory
+  // retention. The old inline .slice(-500) dropped bout summaries before the
+  // cumulative tracker could see them.
+  updatedState.arenaHistory = [...(updatedState.arenaHistory || []), summary];
 
   // 🔒 Tournament fatigue exemption: No fatigue accrual for tournament participants during tournament week
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
@@ -517,16 +584,62 @@ export function applyBoutResults(
 
   if (isKill) {
     const victim = winnerSide === 'D' ? wA : wD;
-    updatedState.graveyard = [
-      ...(updatedState.graveyard || []),
-      { ...victim, status: 'Dead', deathWeek: state.absoluteWeek ?? state.week },
-    ];
-    updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
-    updatedState.rivals = updatedState.rivals.map((r) => ({
-      ...r,
-      roster: r.roster.filter((w) => w.id !== victim.id),
-    }));
+    const killer = winnerSide === 'D' ? wD : wA;
+    applyTournamentKill(updatedState, victim, killer, tId);
   }
 
   return updatedState;
+}
+
+/**
+ * Record a tournament kill: graveyard + persistent registry (each deduped —
+ * a repeat outcome against an already-dead id never doubles the entry), one
+ * kill event per outcome (the oracle's divergence tripwire sees repeats),
+ * roster purge, and a 'Dead' stamp on the victim's participant snapshot so
+ * the bracket record stays self-describing after the roster entry is gone.
+ */
+function applyTournamentKill(
+  updatedState: GameState,
+  victim: Warrior,
+  killer: Warrior,
+  tId: string
+): void {
+  const week = updatedState.absoluteWeek ?? updatedState.week;
+  const alreadyDead =
+    (updatedState.deadWarriorIds ?? []).includes(victim.id) ||
+    (updatedState.graveyard ?? []).some((g) => g.id === victim.id);
+
+  if (!alreadyDead) {
+    updatedState.graveyard = [
+      ...(updatedState.graveyard || []),
+      { ...victim, status: 'Dead', isDead: true, deathWeek: week },
+    ];
+    updatedState.deadWarriorIds = [...(updatedState.deadWarriorIds ?? []), victim.id];
+  }
+  const killEventId = `kill_${week}_${victim.id}_${tId}`;
+  if (!(updatedState.killEvents ?? []).some((e) => e.id === killEventId)) {
+    updatedState.killEvents = [
+      ...(updatedState.killEvents ?? []),
+      {
+        id: killEventId,
+        victimId: victim.id,
+        killerId: killer.id,
+        week,
+        tournamentId: tId as TournamentId,
+      },
+    ];
+  }
+
+  updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
+  updatedState.rivals = updatedState.rivals.map((r) => ({
+    ...r,
+    roster: r.roster.filter((w) => w.id !== victim.id),
+  }));
+
+  updatedState.tournaments = (updatedState.tournaments || []).map((t) => ({
+    ...t,
+    participants: (t.participants || []).map((p) =>
+      p.id === victim.id && p.status !== 'Dead' ? { ...p, status: 'Dead' as const, isDead: true } : p
+    ),
+  }));
 }

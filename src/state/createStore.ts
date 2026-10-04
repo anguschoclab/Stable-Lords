@@ -71,6 +71,8 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.roster = state.roster;
   draft.graveyard = state.graveyard;
   draft.retired = state.retired;
+  draft.deadWarriorIds = state.deadWarriorIds ?? [];
+  draft.killEvents = state.killEvents ?? [];
   draft.recruitPool = state.recruitPool;
   draft.insightTokens = state.insightTokens;
   draft.arenaHistory = state.arenaHistory;

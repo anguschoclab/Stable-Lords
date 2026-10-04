@@ -189,6 +189,66 @@ describe('mortalityHandler', () => {
       expect(result.impact?.rosterUpdates?.size).toBeGreaterThan(0);
     });
 
+    it('emits a roster removal for a player victim — dead warriors never stay bookable', () => {
+      // The store-side retireToGraveyard already filters the roster; the engine
+      // must match. A 'Dead'-marked warrior left on state.roster stays in
+      // warriorMap, remains pairable on side D, and violates
+      // graveyard-roster-disjoint.
+      const warrior = createMockWarrior({ id: 'player-warrior' as WarriorId });
+      const s = createMockState({ roster: [warrior], graveyard: [] });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
+      const outcome: FightOutcome = { winner: 'D', by: 'Kill', minutes: 5, log: [] };
+
+      const result = handleDeath(s, warrior, wD, outcome, 1, []);
+
+      expect(result.impact?.rosterRemovals).toContain('player-warrior');
+    });
+
+    it('records a resolution-time kill event and registers the dead id (player victim)', () => {
+      const warrior = createMockWarrior({ id: 'player-warrior' as WarriorId });
+      const s = createMockState({ roster: [warrior], graveyard: [] });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
+      const outcome: FightOutcome = { winner: 'D', by: 'Kill', minutes: 5, log: [] };
+
+      const result = handleDeath(s, warrior, wD, outcome, 7, []);
+
+      expect(result.impact?.killEvents).toHaveLength(1);
+      expect(result.impact?.killEvents?.[0]).toMatchObject({
+        victimId: 'player-warrior',
+        killerId: 'warrior-d',
+      });
+      expect(result.impact?.deadWarriorIds).toContain('player-warrior');
+    });
+
+    it('records a kill event and dead id for a rival victim (no rosterRemovals)', () => {
+      const s = createMockState({ roster: [] });
+      const wA = createMockWarrior();
+      const wD = createMockWarrior({
+        id: 'rival-warrior' as WarriorId,
+        name: 'Rival Warrior',
+        stableId: 'rival-1' as StableId,
+      });
+      const outcome = createMockOutcome({ by: 'Kill', winner: 'A' });
+
+      const result = handleDeath(s, wA, wD, outcome, 3, []);
+
+      expect(result.impact?.rosterRemovals ?? []).not.toContain('rival-warrior');
+      expect(result.impact?.rivalRosterRemovals).toContain('rival-warrior');
+      expect(result.impact?.killEvents?.[0]).toMatchObject({
+        victimId: 'rival-warrior',
+        killerId: 'warrior-a',
+      });
+      expect(result.impact?.deadWarriorIds).toContain('rival-warrior');
+    });
+
     it('handles both warriors dying (extremely rare)', () => {
       // Not a realistic scenario but test the structure
       const s = createMockState({ roster: [], graveyard: [] });

@@ -5,7 +5,12 @@ import { SeededRNGService } from '@/utils/random';
 import { FightingStyle, type StableId, type FightId } from '@/types/shared.types';
 import type { RivalStableData, GameState } from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
-import { makeTestRecruit, makeRival, makeOwner } from '@/test/_fixtures/factories';
+import {
+  makeTestRecruit,
+  makeRival,
+  makeOwner,
+  makeWarrior as makeWarriorFixture,
+} from '@/test/_fixtures/factories';
 import { createDefaultMeta } from '@/engine/analytics/metaDrift';
 
 function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
@@ -499,6 +504,51 @@ describe('aiDraftFromPool', () => {
 
       const totalRecruits = result.updatedRivals.reduce((sum, r) => sum + r.roster.length, 0);
       expect(totalRecruits).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  // 10b. Dead-identity exclusion
+
+  describe('Dead-identity exclusion', () => {
+    it('never drafts a free agent whose id is registered dead', () => {
+      // warriorToPoolWarrior drops `status` entirely, so a stale 'Active'
+      // snapshot of a dead warrior would sail through the status filter.
+      // deadWarriorIds is the authority — such entries never recirculate.
+      const deadVeteran = makePoolWarrior({
+        id: 'dead-vet',
+        name: 'Dead Vet',
+        source: 'freeAgent',
+        veteran: true,
+      } as any);
+      const st = makeMinimalGameState({
+        deadWarriorIds: ['dead-vet' as any],
+        freeAgents: [deadVeteran],
+      });
+      const richRival = makeMinimalRival({ treasury: 10_000 });
+
+      const result = aiDraftFromPool([], [richRival], 4, st);
+
+      expect(result.updatedRivals.flatMap((r) => r.roster).some((w) => w.id === 'dead-vet')).toBe(
+        false
+      );
+      // …and the corpse doesn't sit on the free-agent shelf either.
+      expect(result.updatedFreeAgents.some((w) => w.id === 'dead-vet')).toBe(false);
+    });
+
+    it('never drafts a recruit-pool warrior whose id is in the graveyard', () => {
+      const graveWarrior = makeWarriorFixture({ id: 'grave-pool' as any, name: 'Grave Pool' });
+      const st = makeMinimalGameState({
+        graveyard: [graveWarrior],
+      });
+      const deadRecruit = makePoolWarrior({ id: 'grave-pool', name: 'Grave Pool' });
+      const richRival = makeMinimalRival({ treasury: 10_000 });
+
+      const result = aiDraftFromPool([deadRecruit], [richRival], 4, st);
+
+      expect(
+        result.updatedRivals.flatMap((r) => r.roster).some((w) => w.id === 'grave-pool')
+      ).toBe(false);
+      expect(result.updatedPool.some((w) => w.id === 'grave-pool')).toBe(false);
     });
   });
 

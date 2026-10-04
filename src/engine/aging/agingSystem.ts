@@ -17,6 +17,7 @@ import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { WARRIOR_AGING } from '@/constants/aging';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import { retireWithHonors } from '@/engine/warrior/retirement';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import {
   isLegacyFounderCaliber,
@@ -237,6 +238,10 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   const crownedIds = collectCrownedWarriorIds(state);
 
   for (const { w, isPlayer, rivalId } of allWarriors) {
+    // Dead warriors do not age and are never "retired" posthumously — a
+    // lingering dead entry would otherwise land in `retired` on top of its
+    // graveyard record (the graveyard∩retired overlap the invariants flag).
+    if (!isActive(w)) continue;
     const result = processWarriorAging(
       w,
       isPlayer,

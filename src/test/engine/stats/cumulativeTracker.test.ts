@@ -131,7 +131,7 @@ describe('createCumulativeTracker', () => {
     state.retired = [makeWarrior('r1')];
     const tracker = createCumulativeTracker(state);
 
-    // g1 aged out of the retained window; g3 died this week.
+    // g1 aged out of retained history; g3 died this week.
     state.graveyard = [makeWarrior('g2'), makeWarrior('g3')];
     state.retired = [makeWarrior('r1'), makeWarrior('r2')];
     tracker.recordWeek(state);
@@ -165,6 +165,10 @@ describe('weekly vs tournament bout split', () => {
       makeBout({ by: 'Kill', tournamentId: 't1' as never }), // tournament kill
       makeBout({ by: 'Decision', tournamentId: 't1' as never }), // tournament non-kill
     ];
+    state.killEvents = [
+      { id: 'ke1', week: 1, victimId: 'v1' as never, killerId: 'wA' as never },
+      { id: 'ke2', week: 1, victimId: 'v2' as never, killerId: 'wA' as never, tournamentId: 't1' as never },
+    ];
 
     const s = createCumulativeTracker(state).snapshot();
 
@@ -173,6 +177,42 @@ describe('weekly vs tournament bout split', () => {
     expect(s.weeklyKills).toBe(1);
     expect(s.tournamentBouts).toBe(2);
     expect(s.tournamentKills).toBe(1);
+  });
+
+  it('counts kills from killEvents even when their summaries have aged out', () => {
+    // arenaHistory is a 500-entry retention cap; a kill whose summary aged
+    // out must still count — killEvents is the resolution-time ledger,
+    // history is display chrome.
+    const state = createFreshState('tracker-event-ledger');
+    state.killEvents = [
+      { id: 'ke1', week: 1, victimId: 'v1' as never, killerId: 'wA' as never },
+      { id: 'ke2', week: 2, victimId: 'v2' as never, killerId: 'wA' as never, tournamentId: 't9' as never },
+    ];
+    const tracker = createCumulativeTracker(state);
+
+    expect(tracker.snapshot().weeklyKills).toBe(1);
+    expect(tracker.snapshot().tournamentKills).toBe(1);
+
+    // New event lands without any corresponding arenaHistory entry.
+    state.killEvents = [
+      ...state.killEvents,
+      { id: 'ke3', week: 3, victimId: 'v3' as never, killerId: 'wD' as never },
+    ];
+    tracker.recordWeek(state);
+
+    const s = tracker.snapshot();
+    expect(s.weeklyKills).toBe(2);
+    expect(s.tournamentKills).toBe(1);
+    expect(s.weeklyKills + s.tournamentKills).toBe(3);
+  });
+
+  it('does not double-count a kill whose summary is still in history', () => {
+    const state = createFreshState('tracker-no-double');
+    state.arenaHistory = [makeBout({ by: 'Kill' })];
+    state.killEvents = [{ id: 'ke1', week: 1, victimId: 'v1' as never, killerId: 'wA' as never }];
+
+    const s = createCumulativeTracker(state).snapshot();
+    expect(s.weeklyKills).toBe(1); // event-ledger is the source of truth
   });
 
   it('exhaustion draws still count toward the per-class totals', () => {

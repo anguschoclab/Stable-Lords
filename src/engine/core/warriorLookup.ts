@@ -4,6 +4,7 @@
  * Consolidated from tournamentSelection/utils.ts and tournament/tournamentStateMutator.ts
  */
 import type { GameState, TournamentEntry, Warrior } from '@/types/state.types';
+import { isDead, deadIdSet } from '@/engine/warrior/warriorStatus';
 
 let warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
 
@@ -31,8 +32,16 @@ export function findWarriorById(
 ): Warrior | undefined {
   // Check tournament first if provided (optimized order from tournamentStateMutator.ts)
   if (tournament) {
+    const deadIds = deadIdSet(state);
     for (const participant of tournament.participants) {
-      if (participant.id === warriorId && participant.attributes) {
+      // A dead-stamped or registry-listed snapshot never resolves — fall
+      // through to a live roster entry of the same id if one exists.
+      if (
+        participant.id === warriorId &&
+        participant.attributes &&
+        !isDead(participant) &&
+        !deadIds.has(participant.id)
+      ) {
         return participant;
       }
     }

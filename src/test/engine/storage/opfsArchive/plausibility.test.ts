@@ -286,4 +286,23 @@ describe('isPlausibleGameState', () => {
     delete (state as Record<string, unknown>).crowdMood;
     expect(isPlausibleGameState(state)).toBe(false);
   });
+
+  // ── Death-registry arrays (kill/death divergence fix) ─────────────────
+  it('46. Missing deadWarriorIds → false', () => {
+    const state = makeMinimalGameState();
+    delete (state as Record<string, unknown>).deadWarriorIds;
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
+
+  it('47. deadWarriorIds not an array → false', () => {
+    const state = makeMinimalGameState();
+    state.deadWarriorIds = 'dead-1';
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
+
+  it('48. Missing killEvents → false', () => {
+    const state = makeMinimalGameState();
+    delete (state as Record<string, unknown>).killEvents;
+    expect(isPlausibleGameState(state)).toBe(false);
+  });
 });

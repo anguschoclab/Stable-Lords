@@ -30,6 +30,7 @@ import type {
   ProgressionState,
   ArenaTitle,
   GrandChampionEntry,
+  KillEvent,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
@@ -68,6 +69,14 @@ export interface StateImpact {
   rosterAdditions?: Warrior[];
   graveyard?: Warrior[];
   retired?: Warrior[];
+  /**
+   * Delta additions to `state.deadWarriorIds` (append, id-deduped). Written
+   * at every death site so the registry never depends on the truncated
+   * `graveyard` list.
+   */
+  deadWarriorIds?: WarriorId[];
+  /** Delta additions to `state.killEvents` (append, id-deduped). */
+  killEvents?: KillEvent[];
 
   // Rivals
   rivalsUpdates?: Map<StableId, Partial<RivalStableData>>;

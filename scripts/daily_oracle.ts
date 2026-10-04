@@ -37,10 +37,13 @@ export function computeMetrics(result: Awaited<ReturnType<typeof runSimulation>>
   // excluded: their geometry and stakes are not the weekly arena baseline.
   const killRate = weeklyBouts > 0 ? weeklyKills / weeklyBouts : 0;
   const mortalityRate = killRate;
-  // Unique deaths must track kill outcomes ~1:1. When the roster-removal bug
-  // was live, kill victims stayed on rival rosters and were "killed" again,
-  // while the graveyard id-dedup hid the repeats — kills >> deaths signals
-  // that corruption class resurfacing.
+  // Unique deaths must track kill outcomes ~1:1. Kills are counted from
+  // `state.killEvents` — the resolution-time ledger, immune to arenaHistory
+  // truncation — and deaths from the never-truncated `deadWarriorIds`
+  // registry. A repeat kill of an already-dead warrior (stale tournament
+  // participant, lingering roster entry) records a second kill event with no
+  // new death, so kills >> deaths means a re-kill class is live; kills <
+  // deaths means a death site forgot to emit a kill event.
   const killOutcomes = weeklyKills + tournamentKills;
   const killDeathDivergence = killOutcomes - deaths;
 

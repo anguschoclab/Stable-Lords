@@ -1,7 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
-import { isActive } from '@/engine/warrior/warriorStatus';
+import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import {
   isLegacyFounderCaliber,
@@ -61,10 +61,11 @@ export const SeasonalRetirementService = {
     );
     // Past or present crown-holders are founder caliber when they retire.
     const crownedIds = collectCrownedWarriorIds(state);
+    const deadIds = deadIdSet(state);
 
     updatedState.rivals = (updatedState.rivals || []).map((rival) => {
       const updatedRoster = rival.roster.map((w) => {
-        if (!isActive(w)) return w;
+        if (!isActive(w) || deadIds.has(w.id)) return w;
 
         const retireChance = retireChanceFor(w, championIds.has(w.id));
 

@@ -27,6 +27,7 @@ import {
   EXPANSION_MINT_ATTEMPTS,
 } from '@/constants/world';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import {
   buildSuccessorIndex,
   runRivalShardChunk,
@@ -152,24 +153,32 @@ function collectFreedRecruits(
   nextWeek: number
 ): PoolWarrior[] {
   const rng = new SeededRNGService(state.absoluteWeek * 31 + 101);
+  const deadIds = deadIdSet(state);
   const freed: PoolWarrior[] = [];
   for (const o of shardOutputs) {
     if (!o.replacesStableId) continue;
     const dissolved = (state.rivals ?? []).find((r) => r.id === o.replacesStableId);
     for (const w of dissolved?.roster ?? []) {
-      if (w.status === 'Active') freed.push(warriorToPoolWarrior(w, nextWeek, rng));
+      if (w.status === 'Active' && !deadIds.has(w.id))
+        freed.push(warriorToPoolWarrior(w, nextWeek, rng));
     }
   }
   return freed;
 }
 
 /** Active warriors of starvation-folded stables re-enter as free agents. */
-function collectStarvedRecruits(folded: RivalStableData[], nextWeek: number): PoolWarrior[] {
+function collectStarvedRecruits(
+  folded: RivalStableData[],
+  nextWeek: number,
+  state: GameState
+): PoolWarrior[] {
   const rng = new SeededRNGService(nextWeek * 131 + 17);
+  const deadIds = deadIdSet(state);
   const freed: PoolWarrior[] = [];
   for (const r of folded) {
     for (const w of r.roster) {
-      if (w.status === 'Active') freed.push(warriorToPoolWarrior(w, nextWeek, rng));
+      if (w.status === 'Active' && !deadIds.has(w.id))
+        freed.push(warriorToPoolWarrior(w, nextWeek, rng));
     }
   }
   return freed;
@@ -252,7 +261,7 @@ function runStarvationAndFreeAgents(
   if (draftedOut.length > 0) impacts.push({ freeAgentRemovals: draftedOut });
   const freed = [
     ...collectFreedRecruits(shardOutputs, state, nextWeek),
-    ...collectStarvedRecruits(folded, nextWeek),
+    ...collectStarvedRecruits(folded, nextWeek, state),
   ];
   if (freed.length > 0) impacts.push({ freeAgentAdditions: freed });
   return currentRivals;

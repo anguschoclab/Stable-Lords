@@ -8,12 +8,23 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { generateId } from '@/utils/idUtils';
 
 /**
- * Validate bout combatants.
+ * Validate bout combatants — symmetric: both sides must exist, be Active,
+ * and not be registered dead. The old side-A-only check let dead warriors
+ * in the D slot fight and be re-killed (kill/death divergence).
+ *
  * @param currentW - Current w. (optional)
  * @param currentO - Current o. (optional)
+ * @param deadIds - Persistent death registry (deadWarriorIds ∪ graveyard).
  */
-export function validateBoutCombatants(currentW?: Warrior, currentO?: Warrior): boolean {
-  return !!currentW && isActive(currentW) && !!currentO;
+export function validateBoutCombatants(
+  currentW?: Warrior,
+  currentO?: Warrior,
+  deadIds?: ReadonlySet<string>
+): boolean {
+  if (!currentW || !currentO) return false;
+  if (!isActive(currentW) || !isActive(currentO)) return false;
+  if (deadIds && (deadIds.has(currentW.id) || deadIds.has(currentO.id))) return false;
+  return true;
 }
 
 /**

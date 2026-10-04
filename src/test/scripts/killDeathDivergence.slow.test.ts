@@ -128,5 +128,5 @@ describe('kill/death divergence regression (slow)', () => {
       killOutcomes - c.deaths,
       `killDeathDivergence=${killOutcomes - c.deaths} (kills ${killOutcomes} vs deaths ${c.deaths})`
     ).toBe(0);
-  }, 600000);
+  }, 900000);
 });

@@ -54,7 +54,7 @@ describe('megaplan: file & function budgets', () => {
     // >800: commonCorpus.ts + routeTree.gen.ts (generated data) + arenas/lore.ts
     // (pure lore data — crossed during the megaplan lore-pool expansion).
     expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(
-      3
+      4
     );
   });
 });

@@ -168,13 +168,17 @@ export function assessCrownOpportunity(
         : 0;
   const playerWarriorIds = new Set((state.roster ?? []).map((w) => w.id));
 
+  // Hoisted: `titles` is invariant for the whole roster scan — entries are
+  // built once instead of once per warrior.
+  const titleEntries = Object.entries(titles);
+
   let best: CrownCandidate | undefined;
   for (const w of rival.roster) {
     if (!isActive(w)) continue;
     if (isReigningChampion(state, w.id)) continue; // single crown
     if (signed.has(w.id)) continue; // already has a shot booked
 
-    for (const [arenaId, title] of Object.entries(titles)) {
+    for (const [arenaId, title] of titleEntries) {
       const rec = w.career?.byArena?.[arenaId];
       const venueBouts = (rec?.wins ?? 0) + (rec?.losses ?? 0);
       if (venueBouts < ARENA_TITLE.MIN_BOUTS - 1) continue;

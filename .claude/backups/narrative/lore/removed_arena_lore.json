@@ -1,0 +1,842 @@
+[
+  {
+    "id": "walled_court_arena_historical_battle_0",
+    "arenaId": "walled_court_arena",
+    "type": "historical_battle",
+    "title": "The Walled Court War",
+    "narrative": "The Walled Court spring games saw a farmer's boy break a champion's ribs with a gate hinge."
+  },
+  {
+    "id": "clifftop_arena_architectural_quirk_2",
+    "arenaId": "clifftop_arena",
+    "type": "architectural_quirk",
+    "title": "The Clifftop Feature",
+    "narrative": "A hidden bell inside Clifftop rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "flooded_vault_arena_historical_battle_0",
+    "arenaId": "flooded_vault_arena",
+    "type": "historical_battle",
+    "title": "The Flooded Vault War",
+    "narrative": "The Flooded Vault record books list a bout where both fighters died on the same count; the coin flipped."
+  },
+  {
+    "id": "sunken_temple_historical_battle_0",
+    "arenaId": "sunken_temple",
+    "type": "historical_battle",
+    "title": "The Sunken Temple War",
+    "narrative": "The Sunken Temple record books list a bout where both fighters died on the same count; the coin flipped."
+  },
+  {
+    "id": "crystal_cavern_famous_death_1",
+    "arenaId": "crystal_cavern",
+    "type": "famous_death",
+    "title": "The Death at Crystal Cavern",
+    "narrative": "A Crystal Cavern legend says the ghost of the first loser still fights in the back row of the crowd."
+  },
+  {
+    "id": "crystal_cavern_architectural_quirk_2",
+    "arenaId": "crystal_cavern",
+    "type": "architectural_quirk",
+    "title": "The Crystal Cavern Feature",
+    "narrative": "A hidden bell inside Crystal Cavern rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "whispering_grove_famous_death_1",
+    "arenaId": "whispering_grove",
+    "type": "famous_death",
+    "title": "The Death at Whispering Grove",
+    "narrative": "A Whispering Grove rookie died kneeling on a dropped shield; the veterans still call that spot the rookie's grave."
+  },
+  {
+    "id": "whispering_grove_architectural_quirk_2",
+    "arenaId": "whispering_grove",
+    "type": "architectural_quirk",
+    "title": "The Whispering Grove Feature",
+    "narrative": "A hidden bell inside Whispering Grove rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "gutter_pit_historical_battle_0",
+    "arenaId": "gutter_pit",
+    "type": "historical_battle",
+    "title": "The Gutter Pit War",
+    "narrative": "A Gutter Pit promoter staged a chariot duel there — the wheels cut three fighters before the axle snapped."
+  },
+  {
+    "id": "stormtop_terrace_famous_death_1",
+    "arenaId": "stormtop_terrace",
+    "type": "famous_death",
+    "title": "The Death at Stormtop Terrace",
+    "narrative": "A Stormtop Terrace rookie died kneeling on a dropped shield; the veterans still call that spot the rookie's grave."
+  },
+  {
+    "id": "stormtop_terrace_architectural_quirk_2",
+    "arenaId": "stormtop_terrace",
+    "type": "architectural_quirk",
+    "title": "The Stormtop Terrace Feature",
+    "narrative": "A hidden bell inside Stormtop Terrace rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "glacial_rift_famous_death_1",
+    "arenaId": "glacial_rift",
+    "type": "famous_death",
+    "title": "The Death at Glacial Rift",
+    "narrative": "The Glacial Rift executioner fell to his own blade; the crowd said the arena itself claimed him."
+  },
+  {
+    "id": "sky_platform_architectural_quirk_4",
+    "arenaId": "sky_platform",
+    "type": "architectural_quirk",
+    "title": "The Sky Platform Secret",
+    "narrative": "A hidden bell inside Sky Platform rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "misty_valley_historical_battle_0",
+    "arenaId": "misty_valley",
+    "type": "historical_battle",
+    "title": "The Misty Valley War",
+    "narrative": "The Misty Valley spring games saw a farmer's boy break a champion's ribs with a gate hinge."
+  },
+  {
+    "id": "brass_ring_historical_battle_0",
+    "arenaId": "brass_ring",
+    "type": "historical_battle",
+    "title": "The Brass Ring War",
+    "narrative": "The Brass Ring record books list a bout where both fighters died on the same count; the coin flipped."
+  },
+  {
+    "id": "brass_ring_famous_death_1",
+    "arenaId": "brass_ring",
+    "type": "famous_death",
+    "title": "The Death at Brass Ring",
+    "narrative": "The last Brass Ring champion died defending a corner that gave way beneath them; the section was never rebuilt."
+  },
+  {
+    "id": "brass_ring_architectural_quirk_2",
+    "arenaId": "brass_ring",
+    "type": "architectural_quirk",
+    "title": "The Brass Ring Feature",
+    "narrative": "A narrow service gate under Brass Ring lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "narrow_bridge_famous_death_1",
+    "arenaId": "narrow_bridge",
+    "type": "famous_death",
+    "title": "The Death at Narrow Bridge",
+    "narrative": "The last Narrow Bridge champion died defending a corner that gave way beneath them; the section was never rebuilt."
+  },
+  {
+    "id": "narrow_bridge_architectural_quirk_2",
+    "arenaId": "narrow_bridge",
+    "type": "architectural_quirk",
+    "title": "The Narrow Bridge Feature",
+    "narrative": "The Narrow Bridge stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "the_meat_grinder_historical_battle_0",
+    "arenaId": "the_meat_grinder",
+    "type": "historical_battle",
+    "title": "The Meat Grinder War",
+    "narrative": "A Meat Grinder legend says the first winner there was buried under the center; the sand is still red."
+  },
+  {
+    "id": "the_meat_grinder_hazard_3",
+    "arenaId": "the_meat_grinder",
+    "type": "hazard",
+    "title": "The Meat Grinder Trap",
+    "narrative": "A Meat Grinder hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout."
+  },
+  {
+    "id": "jungle_ruins_historical_battle_0",
+    "arenaId": "jungle_ruins",
+    "type": "historical_battle",
+    "title": "The Jungle Ruins War",
+    "narrative": "A Jungle Ruins promoter staged a chariot duel there — the wheels cut three fighters before the axle snapped."
+  },
+  {
+    "id": "jungle_ruins_architectural_quirk_4",
+    "arenaId": "jungle_ruins",
+    "type": "architectural_quirk",
+    "title": "The Jungle Ruins Secret",
+    "narrative": "A hidden bell inside Jungle Ruins rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "the_bramble_ring_historical_battle_0",
+    "arenaId": "the_bramble_ring",
+    "type": "historical_battle",
+    "title": "The Bramble Ring War",
+    "narrative": "The Bramble Ring crowd once burned the seats after a judges' call; the promoter rebuilt them in stone."
+  },
+  {
+    "id": "the_bramble_ring_architectural_quirk_2",
+    "arenaId": "the_bramble_ring",
+    "type": "architectural_quirk",
+    "title": "The Bramble Ring Feature",
+    "narrative": "The Bramble Ring stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "the_bramble_ring_hazard_3",
+    "arenaId": "the_bramble_ring",
+    "type": "hazard",
+    "title": "The Bramble Ring Trap",
+    "narrative": "A Bramble Ring hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout."
+  },
+  {
+    "id": "the_bramble_ring_architectural_quirk_4",
+    "arenaId": "the_bramble_ring",
+    "type": "architectural_quirk",
+    "title": "The Bramble Ring Secret",
+    "narrative": "Bramble Ring has no roof over the corners — the fighters there call it the sky's mercy."
+  },
+  {
+    "id": "thunder_peak_historical_battle_0",
+    "arenaId": "thunder_peak",
+    "type": "historical_battle",
+    "title": "The Thunder Peak War",
+    "narrative": "The Thunder Peak crowd once burned the seats after a judges' call; the promoter rebuilt them in stone."
+  },
+  {
+    "id": "thunder_peak_famous_death_1",
+    "arenaId": "thunder_peak",
+    "type": "famous_death",
+    "title": "The Death at Thunder Peak",
+    "narrative": "A Thunder Peak legend says the ghost of the first loser still fights in the back row of the crowd."
+  },
+  {
+    "id": "thunder_peak_architectural_quirk_2",
+    "arenaId": "thunder_peak",
+    "type": "architectural_quirk",
+    "title": "The Thunder Peak Feature",
+    "narrative": "A hidden bell inside Thunder Peak rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "thunder_peak_hazard_3",
+    "arenaId": "thunder_peak",
+    "type": "hazard",
+    "title": "The Thunder Peak Trap",
+    "narrative": "The Thunder Peak rail was added after three fighters were blown off in one afternoon; the wind still hums through it."
+  },
+  {
+    "id": "sun_baked_plateau_architectural_quirk_2",
+    "arenaId": "sun_baked_plateau",
+    "type": "architectural_quirk",
+    "title": "The Sun-Baked Plateau Feature",
+    "narrative": "The sand in Sun-Baked Plateau is imported black grit that hides blood until it pools; the attendants rake it between every bout."
+  },
+  {
+    "id": "ancient_aqueduct_famous_death_1",
+    "arenaId": "ancient_aqueduct",
+    "type": "famous_death",
+    "title": "The Death at Ancient Aqueduct",
+    "narrative": "A Ancient Aqueduct rookie died kneeling on a dropped shield; the veterans still call that spot the rookie's grave."
+  },
+  {
+    "id": "ancient_aqueduct_architectural_quirk_2",
+    "arenaId": "ancient_aqueduct",
+    "type": "architectural_quirk",
+    "title": "The Ancient Aqueduct Feature",
+    "narrative": "Ancient Aqueduct is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp."
+  },
+  {
+    "id": "ancient_aqueduct_hazard_3",
+    "arenaId": "ancient_aqueduct",
+    "type": "hazard",
+    "title": "The Ancient Aqueduct Trap",
+    "narrative": "The Ancient Aqueduct floor gives way when rain soaks it; the promoters post a groundskeeper with a broom who doubles as a bodyguard."
+  },
+  {
+    "id": "the_sunken_vault_historical_battle_0",
+    "arenaId": "the_sunken_vault",
+    "type": "historical_battle",
+    "title": "The Sunken Vault War",
+    "narrative": "The Sunken Vault crowd once burned the seats after a judges' call; the promoter rebuilt them in stone."
+  },
+  {
+    "id": "the_sunken_vault_architectural_quirk_2",
+    "arenaId": "the_sunken_vault",
+    "type": "architectural_quirk",
+    "title": "The Sunken Vault Feature",
+    "narrative": "A hidden bell inside Sunken Vault rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "iron_forge_hazard_3",
+    "arenaId": "iron_forge",
+    "type": "hazard",
+    "title": "The Iron Forge Trap",
+    "narrative": "A Iron Forge hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout."
+  },
+  {
+    "id": "mist_shrouded_ruins_famous_death_1",
+    "arenaId": "mist_shrouded_ruins",
+    "type": "famous_death",
+    "title": "The Death at Mist-Shrouded Ruins",
+    "narrative": "A Mist-Shrouded Ruins fighter died of a broken heart after the crowd turned on them; the attendants said the arena took the rest."
+  },
+  {
+    "id": "the_gallows_tree_famous_death_1",
+    "arenaId": "the_gallows_tree",
+    "type": "famous_death",
+    "title": "The Death at Gallows Tree",
+    "narrative": "A Gallows Tree fighter was stoned to death by the crowd for throwing the bout; the promoter never paid the purse."
+  },
+  {
+    "id": "the_gallows_tree_architectural_quirk_2",
+    "arenaId": "the_gallows_tree",
+    "type": "architectural_quirk",
+    "title": "The Gallows Tree Feature",
+    "narrative": "A narrow service gate under Gallows Tree lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "forgotten_crypt_historical_battle_0",
+    "arenaId": "forgotten_crypt",
+    "type": "historical_battle",
+    "title": "The Forgotten Crypt War",
+    "narrative": "The Forgotten Crypt crowd once rioted when a fighter refused to bleed on the cursed soil; they killed him themselves."
+  },
+  {
+    "id": "forgotten_crypt_architectural_quirk_2",
+    "arenaId": "forgotten_crypt",
+    "type": "architectural_quirk",
+    "title": "The Forgotten Crypt Feature",
+    "narrative": "Forgotten Crypt is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp."
+  },
+  {
+    "id": "forgotten_crypt_hazard_3",
+    "arenaId": "forgotten_crypt",
+    "type": "hazard",
+    "title": "The Forgotten Crypt Trap",
+    "narrative": "Forgotten Crypt claims a few fighters each season to the whispering darkness — the attendants have stopped counting."
+  },
+  {
+    "id": "rusted_gorge_historical_battle_0",
+    "arenaId": "rusted_gorge",
+    "type": "historical_battle",
+    "title": "The Rusted Gorge War",
+    "narrative": "The Rusted Gorge record books list a bout where both fighters died on the same count; the coin flipped."
+  },
+  {
+    "id": "rusted_gorge_famous_death_1",
+    "arenaId": "rusted_gorge",
+    "type": "famous_death",
+    "title": "The Death at Rusted Gorge",
+    "narrative": "The Rusted Gorge champion was poisoned between rounds; the attendants swept the cup but kept the stain."
+  },
+  {
+    "id": "rusted_gorge_architectural_quirk_2",
+    "arenaId": "rusted_gorge",
+    "type": "architectural_quirk",
+    "title": "The Rusted Gorge Feature",
+    "narrative": "The Rusted Gorge stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "the_asylum_famous_death_1",
+    "arenaId": "the_asylum",
+    "type": "famous_death",
+    "title": "The Death at Asylum",
+    "narrative": "The last Asylum champion died defending a corner that gave way beneath them; the section was never rebuilt."
+  },
+  {
+    "id": "the_asylum_architectural_quirk_2",
+    "arenaId": "the_asylum",
+    "type": "architectural_quirk",
+    "title": "The Asylum Feature",
+    "narrative": "The Asylum stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "volcanic_crater_historical_battle_0",
+    "arenaId": "volcanic_crater",
+    "type": "historical_battle",
+    "title": "The Volcanic Crater War",
+    "narrative": "A Volcanic Crater promoter staged a chariot duel there — the wheels cut three fighters before the axle snapped."
+  },
+  {
+    "id": "volcanic_crater_architectural_quirk_2",
+    "arenaId": "volcanic_crater",
+    "type": "architectural_quirk",
+    "title": "The Volcanic Crater Feature",
+    "narrative": "A narrow service gate under Volcanic Crater lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "volcanic_crater_hazard_3",
+    "arenaId": "volcanic_crater",
+    "type": "hazard",
+    "title": "The Volcanic Crater Trap",
+    "narrative": "The Volcanic Crater floor gives way when rain soaks it; the promoters post a groundskeeper with a broom who doubles as a bodyguard."
+  },
+  {
+    "id": "shattered_monolith_famous_death_1",
+    "arenaId": "shattered_monolith",
+    "type": "famous_death",
+    "title": "The Death at Shattered Monolith",
+    "narrative": "The Shattered Monolith champion fell from the highest point and was buried where they landed; the crowd built a cairn."
+  },
+  {
+    "id": "shattered_monolith_architectural_quirk_2",
+    "arenaId": "shattered_monolith",
+    "type": "architectural_quirk",
+    "title": "The Shattered Monolith Feature",
+    "narrative": "A narrow service gate under Shattered Monolith lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "shattered_monolith_hazard_3",
+    "arenaId": "shattered_monolith",
+    "type": "hazard",
+    "title": "The Shattered Monolith Trap",
+    "narrative": "A Shattered Monolith hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout."
+  },
+  {
+    "id": "verdant_labyrinth_historical_battle_0",
+    "arenaId": "verdant_labyrinth",
+    "type": "historical_battle",
+    "title": "The Verdant Labyrinth War",
+    "narrative": "The Verdant Labyrinth record books list a bout where both fighters died on the same count; the coin flipped."
+  },
+  {
+    "id": "verdant_labyrinth_famous_death_1",
+    "arenaId": "verdant_labyrinth",
+    "type": "famous_death",
+    "title": "The Death at Verdant Labyrinth",
+    "narrative": "A Verdant Labyrinth fighter died of a broken heart after the crowd turned on them; the attendants said the arena took the rest."
+  },
+  {
+    "id": "verdant_labyrinth_hazard_3",
+    "arenaId": "verdant_labyrinth",
+    "type": "hazard",
+    "title": "The Verdant Labyrinth Trap",
+    "narrative": "The Verdant Labyrinth crowd throws debris at fighters who retreat — the attendants sweep the sand but never remove the stains."
+  },
+  {
+    "id": "verdant_labyrinth_architectural_quirk_4",
+    "arenaId": "verdant_labyrinth",
+    "type": "architectural_quirk",
+    "title": "The Verdant Labyrinth Secret",
+    "narrative": "The Verdant Labyrinth stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "the_shifting_sands_famous_death_1",
+    "arenaId": "the_shifting_sands",
+    "type": "famous_death",
+    "title": "The Death at Shifting Sands",
+    "narrative": "A Shifting Sands legend says the ghost of the first loser still fights in the back row of the crowd."
+  },
+  {
+    "id": "the_shifting_sands_architectural_quirk_2",
+    "arenaId": "the_shifting_sands",
+    "type": "architectural_quirk",
+    "title": "The Shifting Sands Feature",
+    "narrative": "The sand in Shifting Sands is imported black grit that hides blood until it pools; the attendants rake it between every bout."
+  },
+  {
+    "id": "the_shifting_sands_architectural_quirk_4",
+    "arenaId": "the_shifting_sands",
+    "type": "architectural_quirk",
+    "title": "The Shifting Sands Secret",
+    "narrative": "Shifting Sands is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp."
+  },
+  {
+    "id": "the_cursed_swamp_famous_death_1",
+    "arenaId": "the_cursed_swamp",
+    "type": "famous_death",
+    "title": "The Death at Cursed Swamp",
+    "narrative": "The Cursed Swamp executioner fell to his own blade; the crowd said the arena itself claimed him."
+  },
+  {
+    "id": "the_cursed_swamp_architectural_quirk_2",
+    "arenaId": "the_cursed_swamp",
+    "type": "architectural_quirk",
+    "title": "The Cursed Swamp Feature",
+    "narrative": "The Cursed Swamp floor is laid over a mass grave; the attendants say the bones shift underfoot."
+  },
+  {
+    "id": "the_jagged_peak_famous_death_1",
+    "arenaId": "the_jagged_peak",
+    "type": "famous_death",
+    "title": "The Death at Jagged Peak",
+    "narrative": "A Jagged Peak fighter died of a broken heart after the crowd turned on them; the attendants said the arena took the rest."
+  },
+  {
+    "id": "the_jagged_peak_hazard_3",
+    "arenaId": "the_jagged_peak",
+    "type": "hazard",
+    "title": "The Jagged Peak Trap",
+    "narrative": "A Jagged Peak hazard the crowds cheer for: the open ground that exposes a retreat."
+  },
+  {
+    "id": "the_jagged_peak_architectural_quirk_4",
+    "arenaId": "the_jagged_peak",
+    "type": "architectural_quirk",
+    "title": "The Jagged Peak Secret",
+    "narrative": "A hidden bell inside Jagged Peak rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "the_murky_depths_famous_death_1",
+    "arenaId": "the_murky_depths",
+    "type": "famous_death",
+    "title": "The Death at Murky Depths",
+    "narrative": "The last Murky Depths champion died defending a corner that gave way beneath them; the section was never rebuilt."
+  },
+  {
+    "id": "the_murky_depths_architectural_quirk_2",
+    "arenaId": "the_murky_depths",
+    "type": "architectural_quirk",
+    "title": "The Murky Depths Feature",
+    "narrative": "The Murky Depths pumps are older than the arena; the attendants say they still run on a drowned engine."
+  },
+  {
+    "id": "the_murky_depths_hazard_3",
+    "arenaId": "the_murky_depths",
+    "type": "hazard",
+    "title": "The Murky Depths Trap",
+    "narrative": "The Murky Depths crowd throws debris at fighters who retreat — the attendants sweep the sand but never remove the stains."
+  },
+  {
+    "id": "the_murky_depths_architectural_quirk_4",
+    "arenaId": "the_murky_depths",
+    "type": "architectural_quirk",
+    "title": "The Murky Depths Secret",
+    "narrative": "The Murky Depths stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "the_smoldering_pits_historical_battle_0",
+    "arenaId": "the_smoldering_pits",
+    "type": "historical_battle",
+    "title": "The Smoldering Pits War",
+    "narrative": "A Smoldering Pits legend says the first winner there was buried under the center; the sand is still red."
+  },
+  {
+    "id": "the_smoldering_pits_famous_death_1",
+    "arenaId": "the_smoldering_pits",
+    "type": "famous_death",
+    "title": "The Death at Smoldering Pits",
+    "narrative": "A Smoldering Pits fighter was stoned to death by the crowd for throwing the bout; the promoter never paid the purse."
+  },
+  {
+    "id": "the_smoldering_pits_architectural_quirk_2",
+    "arenaId": "the_smoldering_pits",
+    "type": "architectural_quirk",
+    "title": "The Smoldering Pits Feature",
+    "narrative": "Smoldering Pits is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp."
+  },
+  {
+    "id": "the_smoldering_pits_hazard_3",
+    "arenaId": "the_smoldering_pits",
+    "type": "hazard",
+    "title": "The Smoldering Pits Trap",
+    "narrative": "The Smoldering Pits floor gives way when rain soaks it; the promoters post a groundskeeper with a broom who doubles as a bodyguard."
+  },
+  {
+    "id": "the_smoldering_pits_architectural_quirk_4",
+    "arenaId": "the_smoldering_pits",
+    "type": "architectural_quirk",
+    "title": "The Smoldering Pits Secret",
+    "narrative": "A hidden bell inside Smoldering Pits rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "the_crystal_spire_historical_battle_0",
+    "arenaId": "the_crystal_spire",
+    "type": "historical_battle",
+    "title": "The Crystal Spire War",
+    "narrative": "A Crystal Spire stable once fielded a dwarf and a giant in the same week; the dwarf won by stooping."
+  },
+  {
+    "id": "the_crystal_spire_famous_death_1",
+    "arenaId": "the_crystal_spire",
+    "type": "famous_death",
+    "title": "The Death at Crystal Spire",
+    "narrative": "The Crystal Spire champion fell from the highest point and was buried where they landed; the crowd built a cairn."
+  },
+  {
+    "id": "the_crystal_spire_architectural_quirk_2",
+    "arenaId": "the_crystal_spire",
+    "type": "architectural_quirk",
+    "title": "The Crystal Spire Feature",
+    "narrative": "A narrow service gate under Crystal Spire lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "the_crystal_spire_hazard_3",
+    "arenaId": "the_crystal_spire",
+    "type": "hazard",
+    "title": "The Crystal Spire Trap",
+    "narrative": "Crystal Spire claims a few fighters each season to the weight of its own violence — the attendants have stopped counting."
+  },
+  {
+    "id": "the_crystal_spire_architectural_quirk_4",
+    "arenaId": "the_crystal_spire",
+    "type": "architectural_quirk",
+    "title": "The Crystal Spire Secret",
+    "narrative": "Crystal Spire has no roof over the corners — the fighters there call it the echo's mercy."
+  },
+  {
+    "id": "the_iron_cage_historical_battle_0",
+    "arenaId": "the_iron_cage",
+    "type": "historical_battle",
+    "title": "The Iron Cage War",
+    "narrative": "The Iron Cage spring games saw a farmer's boy break a champion's ribs with a gate hinge."
+  },
+  {
+    "id": "the_iron_cage_famous_death_1",
+    "arenaId": "the_iron_cage",
+    "type": "famous_death",
+    "title": "The Death at Iron Cage",
+    "narrative": "The last Iron Cage champion died defending a corner that gave way beneath them; the section was never rebuilt."
+  },
+  {
+    "id": "the_iron_cage_architectural_quirk_2",
+    "arenaId": "the_iron_cage",
+    "type": "architectural_quirk",
+    "title": "The Iron Cage Feature",
+    "narrative": "Iron Cage has no roof over the corners — the fighters there call it the echo's mercy."
+  },
+  {
+    "id": "the_frozen_lake_historical_battle_0",
+    "arenaId": "the_frozen_lake",
+    "type": "historical_battle",
+    "title": "The Frozen Lake War",
+    "narrative": "A Frozen Lake legend says the first winner there was buried under the center; the sand is still red."
+  },
+  {
+    "id": "the_frozen_lake_hazard_3",
+    "arenaId": "the_frozen_lake",
+    "type": "hazard",
+    "title": "The Frozen Lake Trap",
+    "narrative": "Frozen Lake claims a few fighters each season to the weight of its own violence — the attendants have stopped counting."
+  },
+  {
+    "id": "the_frozen_lake_architectural_quirk_4",
+    "arenaId": "the_frozen_lake",
+    "type": "architectural_quirk",
+    "title": "The Frozen Lake Secret",
+    "narrative": "A hidden bell inside Frozen Lake rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "the_acid_bog_historical_battle_0",
+    "arenaId": "the_acid_bog",
+    "type": "historical_battle",
+    "title": "The Acid Bog War",
+    "narrative": "In the Acid Bog night games, the shadows moved before the fighters did — the priests closed the arena for a season."
+  },
+  {
+    "id": "the_acid_bog_famous_death_1",
+    "arenaId": "the_acid_bog",
+    "type": "famous_death",
+    "title": "The Death at Acid Bog",
+    "narrative": "The Acid Bog champion was poisoned between rounds; the attendants swept the cup but kept the stain."
+  },
+  {
+    "id": "the_acid_bog_architectural_quirk_2",
+    "arenaId": "the_acid_bog",
+    "type": "architectural_quirk",
+    "title": "The Acid Bog Feature",
+    "narrative": "A narrow service gate under Acid Bog lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "the_acid_bog_hazard_3",
+    "arenaId": "the_acid_bog",
+    "type": "hazard",
+    "title": "The Acid Bog Trap",
+    "narrative": "The Acid Bog crowd throws debris at fighters who retreat — the attendants sweep the sand but never remove the stains."
+  },
+  {
+    "id": "the_acid_bog_architectural_quirk_4",
+    "arenaId": "the_acid_bog",
+    "type": "architectural_quirk",
+    "title": "The Acid Bog Secret",
+    "narrative": "Acid Bog has no roof over the corners — the fighters there call it the echo's mercy."
+  },
+  {
+    "id": "the_crumbling_spire_historical_battle_0",
+    "arenaId": "the_crumbling_spire",
+    "type": "historical_battle",
+    "title": "The Crumbling Spire War",
+    "narrative": "The Crumbling Spire stands sway in a hard wind; a fighter who stumbles is said to have lost to the sky."
+  },
+  {
+    "id": "the_crumbling_spire_famous_death_1",
+    "arenaId": "the_crumbling_spire",
+    "type": "famous_death",
+    "title": "The Death at Crumbling Spire",
+    "narrative": "A Crumbling Spire fighter died of a broken heart after the crowd turned on them; the attendants said the arena took the rest."
+  },
+  {
+    "id": "the_crumbling_spire_architectural_quirk_2",
+    "arenaId": "the_crumbling_spire",
+    "type": "architectural_quirk",
+    "title": "The Crumbling Spire Feature",
+    "narrative": "The Crumbling Spire walls carry the scars of a hundred years of impacts — no mason will repair them."
+  },
+  {
+    "id": "the_crumbling_spire_hazard_3",
+    "arenaId": "the_crumbling_spire",
+    "type": "hazard",
+    "title": "The Crumbling Spire Trap",
+    "narrative": "A Crumbling Spire hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout."
+  },
+  {
+    "id": "the_crumbling_spire_architectural_quirk_4",
+    "arenaId": "the_crumbling_spire",
+    "type": "architectural_quirk",
+    "title": "The Crumbling Spire Secret",
+    "narrative": "A hidden bell inside Crumbling Spire rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "misty_pit_famous_death_1",
+    "arenaId": "misty_pit",
+    "type": "famous_death",
+    "title": "The Death at Misty Pit",
+    "narrative": "A Misty Pit fighter was stoned to death by the crowd for throwing the bout; the promoter never paid the purse."
+  },
+  {
+    "id": "misty_pit_architectural_quirk_2",
+    "arenaId": "misty_pit",
+    "type": "architectural_quirk",
+    "title": "The Misty Pit Feature",
+    "narrative": "Misty Pit is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp."
+  },
+  {
+    "id": "misty_pit_architectural_quirk_4",
+    "arenaId": "misty_pit",
+    "type": "architectural_quirk",
+    "title": "The Misty Pit Secret",
+    "narrative": "A hidden bell inside Misty Pit rings when the crowd reaches a fever pitch; the fighters call it the kill-call."
+  },
+  {
+    "id": "the_bathhouse_arena_famous_death_1",
+    "arenaId": "the_bathhouse_arena",
+    "type": "famous_death",
+    "title": "The Death at Bathhouse",
+    "narrative": "A Bathhouse fighter was stoned to death by the crowd for throwing the bout; the promoter never paid the purse."
+  },
+  {
+    "id": "the_bathhouse_arena_architectural_quirk_2",
+    "arenaId": "the_bathhouse_arena",
+    "type": "architectural_quirk",
+    "title": "The Bathhouse Feature",
+    "narrative": "A narrow service gate under Bathhouse lets the wounded exit unseen; a fighter who uses it is never allowed to return."
+  },
+  {
+    "id": "the_bathhouse_arena_hazard_3",
+    "arenaId": "the_bathhouse_arena",
+    "type": "hazard",
+    "title": "The Bathhouse Trap",
+    "narrative": "A Bathhouse hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout."
+  },
+  {
+    "id": "the_bathhouse_arena_architectural_quirk_4",
+    "arenaId": "the_bathhouse_arena",
+    "type": "architectural_quirk",
+    "title": "The Bathhouse Secret",
+    "narrative": "Bathhouse has no roof over the corners — the fighters there call it the echo's mercy."
+  },
+  {
+    "id": "the_desolate_heath_historical_battle_0",
+    "arenaId": "the_desolate_heath",
+    "type": "historical_battle",
+    "title": "The Desolate Heath War",
+    "narrative": "The Desolate Heath priests record every death in a black book chained to the gate; the pages have turned brown."
+  },
+  {
+    "id": "the_desolate_heath_architectural_quirk_2",
+    "arenaId": "the_desolate_heath",
+    "type": "architectural_quirk",
+    "title": "The Desolate Heath Feature",
+    "narrative": "The Desolate Heath stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd."
+  },
+  {
+    "id": "the_desolate_heath_hazard_3",
+    "arenaId": "the_desolate_heath",
+    "type": "hazard",
+    "title": "The Desolate Heath Trap",
+    "narrative": "Desolate Heath is prone to unstable footing — a veteran learns to read the cracks before they widen."
+  },
+  {
+    "id": "the_desolate_heath_architectural_quirk_4",
+    "arenaId": "the_desolate_heath",
+    "type": "architectural_quirk",
+    "title": "The Desolate Heath Secret",
+    "narrative": "The Desolate Heath floor slopes imperceptibly toward Edge; fighters who don't adjust their stance end up fighting downhill."
+  },
+  {
+    "id": "the_bramble_ring_extra_0",
+    "arenaId": "the_bramble_ring",
+    "type": "architectural_quirk",
+    "title": "The Bramble Ring Chronicle",
+    "narrative": "The Bramble Ring crowd throws pebbles at losers — the attendants sweep them into a mass grave for the unremembered."
+  },
+  {
+    "id": "the_shifting_sands_extra_0",
+    "arenaId": "the_shifting_sands",
+    "type": "architectural_quirk",
+    "title": "The Shifting Sands Chronicle",
+    "narrative": "Shifting Sands keeps a bell that rings only when a fighter takes their first real beating; veterans call it the baptism."
+  },
+  {
+    "id": "the_jagged_peak_extra_0",
+    "arenaId": "the_jagged_peak",
+    "type": "architectural_quirk",
+    "title": "The Jagged Peak Chronicle",
+    "narrative": "The Jagged Peak crowd throws pebbles at losers — the attendants sweep them into a mass grave for the unremembered."
+  },
+  {
+    "id": "the_murky_depths_extra_0",
+    "arenaId": "the_murky_depths",
+    "type": "architectural_quirk",
+    "title": "The Murky Depths Chronicle",
+    "narrative": "A Murky Depths legend says the drowned champion whispers advice to those who kneel before the flood line."
+  },
+  {
+    "id": "the_smoldering_pits_extra_0",
+    "arenaId": "the_smoldering_pits",
+    "type": "architectural_quirk",
+    "title": "The Smoldering Pits Chronicle",
+    "narrative": "A Smoldering Pits legend says the first champion whispers advice to those who kneel before the floor."
+  },
+  {
+    "id": "the_crystal_spire_extra_0",
+    "arenaId": "the_crystal_spire",
+    "type": "architectural_quirk",
+    "title": "The Crystal Spire Chronicle",
+    "narrative": "The Crystal Spire attendants never speak above a whisper; the rumor is the first one to raise their voice in a century was found hanging from the rafters."
+  },
+  {
+    "id": "the_frozen_lake_extra_0",
+    "arenaId": "the_frozen_lake",
+    "type": "architectural_quirk",
+    "title": "The Frozen Lake Chronicle",
+    "narrative": "Frozen Lake keeps a bell that rings only when a fighter takes their first real beating; veterans call it the baptism."
+  },
+  {
+    "id": "the_acid_bog_extra_0",
+    "arenaId": "the_acid_bog",
+    "type": "architectural_quirk",
+    "title": "The Acid Bog Chronicle",
+    "narrative": "The Acid Bog priests record every death in a black book chained to the gate; the pages have turned brown."
+  },
+  {
+    "id": "the_crumbling_spire_extra_0",
+    "arenaId": "the_crumbling_spire",
+    "type": "architectural_quirk",
+    "title": "The Crumbling Spire Chronicle",
+    "narrative": "Crumbling Spire keeps a bell that rings only when a fighter takes their first real beating; veterans call it the baptism."
+  },
+  {
+    "id": "misty_pit_extra_0",
+    "arenaId": "misty_pit",
+    "type": "architectural_quirk",
+    "title": "The Misty Pit Chronicle",
+    "narrative": "The Misty Pit attendants never speak above a whisper; the rumor is the first one to raise their voice in a century was found hanging from the rafters."
+  },
+  {
+    "id": "the_bathhouse_arena_extra_0",
+    "arenaId": "the_bathhouse_arena",
+    "type": "architectural_quirk",
+    "title": "The Bathhouse Chronicle",
+    "narrative": "The Bathhouse attendants never speak above a whisper; the rumor is the first one to raise their voice in a century was found hanging from the rafters."
+  },
+  {
+    "id": "the_desolate_heath_extra_0",
+    "arenaId": "the_desolate_heath",
+    "type": "architectural_quirk",
+    "title": "The Desolate Heath Chronicle",
+    "narrative": "The Desolate Heath crowd throws pebbles at losers — the attendants sweep them into a mass grave for the unremembered."
+  }
+]

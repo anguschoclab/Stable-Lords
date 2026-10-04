@@ -3,12 +3,12 @@ import type { Warrior } from '@/types/warrior.types';
 import { type Attributes, type TrainerFocus } from '@/types/shared.types';
 import { TIER_BONUS } from '@/engine/trainers/trainers';
 
-export const FOCUS_ATTR_MAP: Record<TrainerFocus, (keyof Attributes)[]> = {
-  Aggression: ['ST', 'SP'],
-  Defense: ['CN', 'WL'],
-  Endurance: ['CN', 'WL', 'ST'],
-  Mind: ['WT', 'DF'],
-  Healing: [],
+export const FOCUS_ATTR_MAP: Record<TrainerFocus, ReadonlySet<keyof Attributes>> = {
+  Aggression: new Set(['ST', 'SP']),
+  Defense: new Set(['CN', 'WL']),
+  Endurance: new Set(['CN', 'WL', 'ST']),
+  Mind: new Set(['WT', 'DF']),
+  Healing: new Set(),
 };
 
 /**
@@ -23,8 +23,7 @@ export function computeTrainerBonus(
   for (const t of trainers) {
     if (t.contractWeeksLeft <= 0) continue;
     const focus = t.focus as TrainerFocus;
-    const relevantAttrs = FOCUS_ATTR_MAP[focus] ?? [];
-    if (relevantAttrs.includes(attribute)) {
+    if (FOCUS_ATTR_MAP[focus]?.has(attribute)) {
       bonus += TIER_BONUS[t.tier as keyof typeof TIER_BONUS] ?? 0;
     }
     // Style affinity bonus

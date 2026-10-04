@@ -34,4 +34,27 @@ describe('generateTraits (sparse, tier-aware)', () => {
     expect(flawed, `flaw rate ${(flawed * 100).toFixed(1)}%`).toBeGreaterThan(0.03);
     expect(flawed).toBeLessThan(0.12);
   });
+
+  it('biases the positive pick toward archetype synergy and away from anti-synergy', () => {
+    const share = (archetype: 'brutal' | 'agile', pred: (id: string) => boolean) => {
+      const rng = new SeededRNGService(777);
+      let hit = 0;
+      let nonBlank = 0;
+      for (let i = 0; i < 4000; i++) {
+        const rolled = generateTraits(rng, archetype);
+        if (rolled.length === 0) continue;
+        nonBlank++;
+        if (rolled.some(pred)) hit++;
+      }
+      return hit / nonBlank;
+    };
+    // Birth-eligible Notables with synergy:['brutal'] — ashen_lungs,
+    // pit_fighter, iron_vein — should be picked more often for 'brutal'.
+    const brutalSynergy = (id: string) => (TRAITS[id]!.synergy ?? []).includes('brutal');
+    // silent_one / cold_eyed carry antiSynergy:['brutal'] — suppressed under 'brutal'.
+    const brutalAnti = (id: string) => (TRAITS[id]!.antiSynergy ?? []).includes('brutal');
+
+    expect(share('brutal', brutalSynergy)).toBeGreaterThan(share('agile', brutalSynergy));
+    expect(share('brutal', brutalAnti)).toBeLessThan(share('agile', brutalAnti));
+  });
 });

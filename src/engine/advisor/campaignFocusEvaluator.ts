@@ -12,6 +12,25 @@ import type { CampaignFocus } from './types';
 const REHAB_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
 
 /**
+ * Flattened contender-id sets keyed on the index Map instance. The same
+ * per-tick index is shared by every warrior evaluation (perception snapshot,
+ * council report), so membership flattens once per index, not once per warrior.
+ */
+const contenderSetCache = new WeakMap<Map<string, WarriorId[]>, Set<WarriorId>>();
+
+function contenderIds(index: Map<string, WarriorId[]>): Set<WarriorId> {
+  let set = contenderSetCache.get(index);
+  if (!set) {
+    set = new Set<WarriorId>();
+    for (const ids of index.values()) {
+      for (const id of ids) set.add(id);
+    }
+    contenderSetCache.set(index, set);
+  }
+  return set;
+}
+
+/**
  * Determine or retrieve the campaign focus archetype for a warrior.
  * `contenderIndex` — the once-per-tick per-arena top-N ladder — avoids a
  * re-rank per warrior; built on demand when omitted.
@@ -49,9 +68,7 @@ export function evaluateCampaignFocus(
 
   // 5. Ranked Venue Contender -> CROWN_BID
   const index = contenderIndex ?? buildContenderIndex(state);
-  for (const ids of index.values()) {
-    if (ids.includes(warrior.id)) return 'CROWN_BID';
-  }
+  if (contenderIds(index).has(warrior.id)) return 'CROWN_BID';
 
   // 6. Young Developing Fighter -> PROSPECT_DEV
   if (totalBouts < 5 && (warrior.age ?? 18) <= 22) {

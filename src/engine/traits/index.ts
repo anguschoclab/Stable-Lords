@@ -28,6 +28,7 @@ export { CLASS_TRAITS } from './defs/classTraits';
 export { traitsForStyle, traitsByTier, generateTraits } from './generation';
 
 export {
+  applyTraitAttrBonuses,
   getStaticTraitMods,
   getDynamicTraitMods,
   getTraitFightPlanMods,

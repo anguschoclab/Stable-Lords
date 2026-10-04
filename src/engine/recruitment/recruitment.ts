@@ -7,7 +7,6 @@ import {
 } from '@/types/shared.types';
 import { type StyleMeta } from '../analytics/metaDrift';
 import {
-  ATTRIBUTE_MAX,
   type AttributePotential,
   type CareerRecord,
   type WarriorFavorites,
@@ -21,7 +20,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
-import { TRAITS, generateTraits } from '@/engine/traits';
+import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import type { Archetype } from '@/data/names/archetypeNames';
 import { generateWarriorName, generateDynasticWarriorName } from '@/data/names/nameGenerator';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
@@ -268,15 +267,7 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
   const traits = generateTraits(rng, archetype);
 
   // Apply personality attrBonus from traits at recruitment time
-  for (const tid of traits) {
-    const tdef = TRAITS[tid];
-    if (tdef?.effect.attrBonus) {
-      for (const [key, bonus] of Object.entries(tdef.effect.attrBonus)) {
-        const k = key as keyof Attributes;
-        attributes[k] = Math.min(ATTRIBUTE_MAX, attributes[k] + (bonus as number));
-      }
-    }
-  }
+  applyTraitAttrBonuses(attributes, traits);
 
   // Pick unique name based on Archetype — legacy recruits take dynastic names
   const name = pickRecruitName(rng, archetype, usedNames, lineage);

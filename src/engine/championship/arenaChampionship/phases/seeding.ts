@@ -1,4 +1,5 @@
 import type { GameState } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import { getAllArenas } from '@/data/arenas';
 import type { ChampionshipDelta } from '../core';
 import { titleOf, ensureTitle, crown, awardEpithet, CHAMPIONSHIP_EXCLUDED_ARENAS } from '../core';
@@ -48,20 +49,23 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
   }
 
   // Pass 2: fill arenas whose top contender was claimed at a higher-margin
-  // venue, using the next eligible warrior.
+  // venue, using the next eligible warrior. A warrior can only be claimed at
+  // the arena where they led pass 1's ranking, so arenaId → claimed warrior
+  // inverts `claimed` in one pass instead of a per-arena rows.find.
+  const claimedByArena = new Map<string, WarriorId>();
+  for (const [warriorId, c] of claimed) {
+    claimedByArena.set(c.arenaId, warriorId as WarriorId);
+  }
   for (const arenaId of arenas) {
     const title = titleOf(state, delta, arenaId);
     if (title?.champion) continue;
     const rows = rankedByArena.get(arenaId) ?? [];
-    const pick =
-      rows.find((r) => claimed.get(r.warrior.id)?.arenaId === arenaId) ??
-      rows.find((r) => {
-        const c = claimed.get(r.warrior.id);
-        return !c; // unclaimed warrior
-      });
-    if (!pick) continue;
+    const pickId =
+      claimedByArena.get(arenaId) ??
+      rows.find((r) => !claimed.has(r.warrior.id))?.warrior.id;
+    if (!pickId) continue;
     const t = ensureTitle(state, delta, arenaId);
-    crown(t, pick.warrior.id, state.absoluteWeek);
-    awardEpithet(state, delta, pick.warrior.id, 'arena_champion');
+    crown(t, pickId, state.absoluteWeek);
+    awardEpithet(state, delta, pickId, 'arena_champion');
   }
 }

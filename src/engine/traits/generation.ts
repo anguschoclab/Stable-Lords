@@ -31,6 +31,29 @@ export type TraitId = keyof typeof TRAITS;
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
 /**
+ * Archetype → trait-id indexes, built once from the static registry so the
+ * birth-roll weighting loop never scans each def's synergy arrays.
+ */
+const ARCHETYPE_INDEXES = (() => {
+  const synergy = new Map<Archetype, Set<TraitId>>();
+  const antiSynergy = new Map<Archetype, Set<TraitId>>();
+  for (const id of TRAIT_IDS) {
+    const t = TRAITS[id];
+    for (const a of t?.synergy ?? []) {
+      let s = synergy.get(a);
+      if (!s) synergy.set(a, (s = new Set()));
+      s.add(id);
+    }
+    for (const a of t?.antiSynergy ?? []) {
+      let s = antiSynergy.get(a);
+      if (!s) antiSynergy.set(a, (s = new Set()));
+      s.add(id);
+    }
+  }
+  return { synergy, antiSynergy };
+})();
+
+/**
  * Roll birth traits for a newly created warrior.
  *
  * Sparse distribution: ~68% blank, ~7% a single Flaw, ~25% one generic
@@ -66,8 +89,8 @@ export function generateTraits(rng: IRNGService, archetype?: Archetype): string[
     if (!t) continue;
     let w = t.weight;
     if (archetype) {
-      if (t.synergy?.includes(archetype)) w *= TRAIT_SYNERGY_MULTIPLIER;
-      if (t.antiSynergy?.includes(archetype)) w *= TRAIT_ANTI_SYNERGY_MULTIPLIER;
+      if (ARCHETYPE_INDEXES.synergy.get(archetype)?.has(id)) w *= TRAIT_SYNERGY_MULTIPLIER;
+      if (ARCHETYPE_INDEXES.antiSynergy.get(archetype)?.has(id)) w *= TRAIT_ANTI_SYNERGY_MULTIPLIER;
     }
     weights.push({ id, w });
     total += w;

@@ -16,7 +16,6 @@ export interface HandleInjuriesArgs {
   wD: Warrior;
   outcome: FightOutcome;
   week: number;
-  _rivalStableId?: string;
   seed?: number;
 }
 
@@ -27,7 +26,6 @@ export interface HandleInjuriesArgs {
  * @param args.wD -
  * @param args.outcome -
  * @param args.week -
- * @param args._rivalStableId - unused; ownership is resolved per warrior
  * @param args.seed -
  */
 export function handleInjuries(args: HandleInjuriesArgs) {

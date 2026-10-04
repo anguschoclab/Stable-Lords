@@ -100,7 +100,7 @@ describe('applyRecords', () => {
     const s = createMockState({ player: { id: 'player-1' } as never, roster: [] });
     const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };
 
-    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], fameA: 5, popA: 2, fameD: 1, popD: 1, _rivalStableId: 'rival-1' });
+    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], fameA: 5, popA: 2, fameD: 1, popD: 1 });
 
     // Neither side touches the player roster, and no whole-roster rival write.
     expect(impact.rosterUpdates?.size ?? 0).toBe(0);

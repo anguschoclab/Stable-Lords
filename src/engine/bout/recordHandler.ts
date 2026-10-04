@@ -27,7 +27,6 @@ export interface ApplyRecordsArgs {
   popA: number;
   fameD: number;
   popD: number;
-  _rivalStableId?: string;
   arenaId?: string;
 }
 
@@ -42,7 +41,6 @@ export interface ApplyRecordsArgs {
  * @param args.popA -
  * @param args.fameD -
  * @param args.popD -
- * @param args._rivalStableId - unused; ownership is resolved per warrior
  * @param args.arenaId -
  */
 export function applyRecords(args: ApplyRecordsArgs): StateImpact {

@@ -147,10 +147,11 @@ function collectFreedRecruits(
 ): PoolWarrior[] {
   const rng = new SeededRNGService(state.absoluteWeek * 31 + 101);
   const deadIds = deadIdSet(state);
+  const rivalsById = new Map((state.rivals ?? []).map((r) => [r.id, r] as const));
   const freed: PoolWarrior[] = [];
   for (const o of shardOutputs) {
     if (!o.replacesStableId) continue;
-    const dissolved = (state.rivals ?? []).find((r) => r.id === o.replacesStableId);
+    const dissolved = rivalsById.get(o.replacesStableId);
     for (const w of dissolved?.roster ?? []) {
       if (w.status === 'Active' && !deadIds.has(w.id))
         freed.push(warriorToPoolWarrior(w, nextWeek, rng));

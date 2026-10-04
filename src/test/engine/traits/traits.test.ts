@@ -5,13 +5,14 @@
 import { describe, it, expect } from 'vitest';
 import {
   TRAITS,
+  applyTraitAttrBonuses,
   generateTraits,
   getStaticTraitMods,
   getDynamicTraitMods,
   getTraitFightPlanMods,
 } from '@/engine/traits';
 import { SeededRNGService } from '@/utils/random';
-import type { Warrior } from '@/types/warrior.types';
+import { ATTRIBUTE_MAX, type Attributes, type Warrior } from '@/types/warrior.types';
 
 function mockWarrior(traits: string[]): Warrior {
   return { traits } as any as Warrior;
@@ -194,6 +195,51 @@ describe('Warrior Traits', () => {
       expect(mods.feintTendency).toBe(10);
       expect(mods.AL).toBe(2);
       expect(mods.killDesire).toBe(-2);
+    });
+  });
+
+  describe('applyTraitAttrBonuses', () => {
+    const baseAttrs = (): Attributes => ({
+      ST: 3,
+      CN: 3,
+      SZ: 3,
+      WT: 3,
+      WL: 3,
+      SP: 3,
+      DF: 3,
+    });
+
+    it("applies a trait's attrBonus — feral grants +1 ST / +1 SP", () => {
+      const attrs = baseAttrs();
+      applyTraitAttrBonuses(attrs, ['feral']);
+      expect(attrs.ST).toBe(4);
+      expect(attrs.SP).toBe(4);
+      expect(attrs.CN).toBe(3);
+    });
+
+    it('stacks bonuses across traits — feral + brutal = +3 ST', () => {
+      const attrs = baseAttrs();
+      applyTraitAttrBonuses(attrs, ['feral', 'brutal']);
+      expect(attrs.ST).toBe(6);
+      expect(attrs.SP).toBe(4);
+    });
+
+    it('clamps at ATTRIBUTE_MAX', () => {
+      const attrs = { ...baseAttrs(), ST: ATTRIBUTE_MAX };
+      applyTraitAttrBonuses(attrs, ['feral']);
+      expect(attrs.ST).toBe(ATTRIBUTE_MAX);
+    });
+
+    it('ignores unknown trait ids and traits without attrBonus', () => {
+      const attrs = baseAttrs();
+      applyTraitAttrBonuses(attrs, ['no_such_trait', 'quick']);
+      expect(attrs).toEqual(baseAttrs());
+    });
+
+    it('no-ops on an empty trait list', () => {
+      const attrs = baseAttrs();
+      applyTraitAttrBonuses(attrs, []);
+      expect(attrs).toEqual(baseAttrs());
     });
   });
 

@@ -18,7 +18,6 @@ interface ApplySevereInjuryRuleArgs {
   wD: Warrior;
   outcome: FightOutcome;
   week: number;
-  rivalStableId: string | undefined;
   rng: IRNGService;
 }
 
@@ -30,7 +29,6 @@ interface ApplySevereInjuryRuleArgs {
  * @param outcome -
  * @param week -
  * @param tags -
- * @param rivalStableId -
  * @param rng -
  */
 /**
@@ -40,7 +38,7 @@ interface ApplySevereInjuryRuleArgs {
  */
 function applySevereInjuryRule(args: ApplySevereInjuryRuleArgs) {
   const { s, wA, wD, outcome, week } = args;
-  const { rivalStableId, rng } = args;
+  const { rng } = args;
   const spared = outcome.winner === 'A' ? wD : wA;
   const injury: InjuryData = {
     id: rng.uuid() as InjuryId,
@@ -59,7 +57,6 @@ function applySevereInjuryRule(args: ApplySevereInjuryRuleArgs) {
   if (!s.roster.some((w) => w.id === spared.id)) {
     patchRivalWarrior(rivalWarriorPatches, spared, { injuries: [...spared.injuries, injury] });
   }
-  void rivalStableId;
   const impact: StateImpact = {
     rosterUpdates,
     rivalWarriorPatches,
@@ -122,7 +119,6 @@ interface BuildDeathArtifactsArgs {
  * @param outcome -
  * @param week -
  * @param tags -
- * @param rivalStableId -
  * @param rng -
  */
 /**
@@ -191,7 +187,6 @@ export interface HandleDeathArgs {
   outcome: FightOutcome;
   week: number;
   tags: string[];
-  rivalStableId?: string;
   rng?: IRNGService;
   tournamentId?: string;
 }
@@ -204,17 +199,16 @@ export interface HandleDeathArgs {
  * @param args.outcome -
  * @param args.week -
  * @param args.tags -
- * @param args.rivalStableId -
  * @param args.rng -
  */
 export function handleDeath(args: HandleDeathArgs) {
   const { s, wA, wD, outcome, week } = args;
-  const { tags, rivalStableId, rng = new SeededRNGService(week * 9973 + 123), tournamentId } = args;
+  const { tags, rng = new SeededRNGService(week * 9973 + 123), tournamentId } = args;
   if (outcome.by !== 'Kill')
     return { impact: {}, death: false, playerDeath: false, deathNames: [] };
 
   if (s.houseRules?.severeInjuryInsteadOfDeath) {
-    return applySevereInjuryRule({ s: s, wA: wA, wD: wD, outcome: outcome, week: week, rivalStableId: rivalStableId, rng: rng });
+    return applySevereInjuryRule({ s: s, wA: wA, wD: wD, outcome: outcome, week: week, rng: rng });
   }
 
   // A Kill outcome with no winner is malformed — there is no killer and no
@@ -226,7 +220,7 @@ export function handleDeath(args: HandleDeathArgs) {
   const victim = outcome.winner === 'A' ? wD : wA;
   const killer = outcome.winner === 'A' ? wA : wD;
   // Ownership, not side: the victim may sit on either side of the pairing and
-  // `rivalStableId` only ever names the D-side stable. AI-vs-AI deaths granted
+  // the old `rivalStableId` param only ever named the D-side stable. AI-vs-AI deaths granted
   // the player +5 fame, and player victims on the D side never flagged.
   const isPlayerVictim = isPlayerOwned(s, victim);
 

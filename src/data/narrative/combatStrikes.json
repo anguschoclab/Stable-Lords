@@ -198,7 +198,8 @@
         "{{attacker}} executes a flawless, debilitating slice across {{defender}}'s torso.",
         "A masterclass in bloodshed: {{attacker}} leaves {{defender}} reeling with a perfect slash.",
         "With flawless edge alignment, {{attacker}} executes a breathtakingly smooth slice against {{defender}}.",
-        "A masterclass in swordsmanship! {{attacker}} threads a beautiful, devastating arc through {{defender}}'s defense."
+        "A masterclass in swordsmanship! {{attacker}} threads a beautiful, devastating arc through {{defender}}'s defense.",
+        "With absolute mastery, {{attacker}} guides the slashing blade perfectly into {{defender}}'s {{bodyPart}}."
       ],
       "critical_human": [
         "A horrifying display of speed as {{attacker}} carves a deep path through {{defender}}'s {{bodyPart}} with {{possessive}} {{weapon}}!",
@@ -218,7 +219,9 @@
         "The sheer force of the cut nearly dismembers {{defender}}!",
         "Blood sprays wildly as the slash hits a major artery!",
         "{{attacker}}'s blade shears through muscle and bone with devastating ease, severely maiming {{defender}}.",
-        "A grotesque gash opens up on {{defender}}'s body as {{attacker}} lands a truly horrific cut."
+        "A grotesque gash opens up on {{defender}}'s body as {{attacker}} lands a truly horrific cut.",
+        "A devastating, critically placed slash from {{attacker}} lays {{defender}}'s {{bodyPart}} open.",
+        "{{attacker}} finds the perfect angle, delivering a savage cut to {{defender}}'s {{bodyPart}}."
       ],
       "critical_supernatural": [
         "The air shudders as {{attacker}}'s {{weapon}} hums with a spectral light, cleaving through {{defender}}'s {{bodyPart}} and the very air itself.",
@@ -237,7 +240,10 @@
         "A spectral howl echoes as the preternatural cut defies physical armor!",
         "A phantom howl follows the glowing blade as it rends {{defender}}.",
         "The blade ignores mortal physics entirely, passing through {{defender}}'s guard to inflict a supernatural wound.",
-        "Dark magic hums as {{attacker}}'s cut rends not just flesh, but {{defender}}'s very soul."
+        "Dark magic hums as {{attacker}}'s cut rends not just flesh, but {{defender}}'s very soul.",
+        "Pulsing with dark energy, {{attacker}}'s supernatural slash obliterates {{defender}}'s {{bodyPart}}.",
+        "An unearthly wail accompanies {{attacker}}'s blade as it tears through {{defender}}'s {{bodyPart}}.",
+        "Reality seems to warp as {{attacker}}'s mystical slash connects with {{defender}}'s {{bodyPart}}."
       ],
       "fatal": [
         "{{attacker}} hooks {{defender}}'s guard away, then delivers a spinning strike to the {{bodyPart}} that silences the arena for a split second before the roar.",
@@ -315,7 +321,6 @@
         "{{attacker}}'s {{weapon}} bounces off the {{bodyPart}} with a hollow clang.",
         "{{attacker}}'s heavy swing loses momentum, merely bruising {{defender}}.",
         "{{weapon}} thuds dully against {{defender}}'s guard, lacking power.",
-        "The bash slides off {{defender}}'s armor with a hollow clang.",
         "{{weapon}} delivers a glancing knock to {{defender}}'s side.",
         "The blunt force slides off {{defender}}'s evasive pivot.",
         "{{defender}} absorbs the weak bash with barely a flinch.",
@@ -455,7 +460,6 @@
         "A crushing strike leaves a crater of bruised flesh and shattered cartilage.",
         "The hammer-blow lands with absolute finality, rattling {{defender}}'s spine.",
         "{{attacker}} brings the full weight of their {{weapon}} down on {{defender}}.",
-        "The sickening crunch of bone echoes as {{attacker}} smashes {{defender}}.",
         "{{defender}} staggers back as {{attacker}} hammers them with a heavy blow.",
         "A brutal pommel strike from {{attacker}} catches {{defender}} off-guard.",
         "{{attacker}} drives their {{weapon}} into {{defender}} with bone-jarring force.",
@@ -489,7 +493,9 @@
         "The bash is delivered with terrifying, calculated leverage.",
         "{{attacker}} delivers a crushing strike that visibly buckles {{defender}}.",
         "Using perfect leverage, {{attacker}} lands an unbelievably precise and crushing blow on {{defender}}.",
-        "{{attacker}} flows effortlessly into a ruinous, perfectly timed smash against {{defender}}."
+        "{{attacker}} flows effortlessly into a ruinous, perfectly timed smash against {{defender}}.",
+        "With brutal perfection, {{attacker}} brings the bludgeon down on {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} measures the distance perfectly, landing a crushing blow on {{defender}}."
       ],
       "critical_human": [
         "The arena trembles as {{attacker}} unleashes a terrifying overhead smash, crushing the {{bodyPart}}!",
@@ -509,7 +515,9 @@
         "A horrifying crunch echoes across the arena as the bash lands!",
         "Bones snap like twigs under the immense pressure of the bash!",
         "A sickening, audible crunch echoes as {{attacker}}'s brutal swing caves in {{defender}}'s defenses.",
-        "{{defender}}'s bones splinter under the sheer concussive force of {{attacker}}'s mighty blow."
+        "{{defender}}'s bones splinter under the sheer concussive force of {{attacker}}'s mighty blow.",
+        "A terrifyingly accurate smash from {{attacker}} caves in {{defender}}'s {{bodyPart}}.",
+        "Bones shatter audibly as {{attacker}}'s precision bash strikes {{defender}}'s {{bodyPart}}."
       ],
       "critical_supernatural": [
         "Gravity itself seems to bow to {{attacker}}'s {{weapon}}, creating a localized shockwave on the {{bodyPart}}.",
@@ -528,7 +536,10 @@
         "The ground itself shudders beneath the supernaturally heavy blow.",
         "Corrupted energy violently bursts from the brutal impact.",
         "With unnatural momentum, {{attacker}}'s strike hits with the force of a falling meteor, crushing {{defender}}.",
-        "Eldritch shockwaves ripple from the impact as {{attacker}} brutally pummels {{defender}}."
+        "Eldritch shockwaves ripple from the impact as {{attacker}} brutally pummels {{defender}}.",
+        "A shockwave of dark force erupts as {{attacker}}'s enchanted bash strikes {{defender}}'s {{bodyPart}}.",
+        "Crackling with otherworldly power, {{attacker}} smashes {{defender}}'s {{bodyPart}}.",
+        "The ground trembles as {{attacker}} delivers a supernatural bash to {{defender}}'s {{bodyPart}}."
       ],
       "fatal": [
         "With terrifying momentum, {{attacker}} sweeps {{possessive}} {{weapon}} into {{defender}}'s {{bodyPart}}, delivering a crushing blow that ends the fight instantly.",
@@ -793,7 +804,9 @@
         "{{defender}} gasps in agony as the deep stab collapses a lung!",
         "The brutal lunge punches straight through bone and sinew!",
         "{{attacker}}'s thrust violently impales {{defender}}, leaving a gaping, horrific wound.",
-        "A surgical, terrifyingly deep stab from {{attacker}} finds a major artery, spewing crimson."
+        "A surgical, terrifyingly deep stab from {{attacker}} finds a major artery, spewing crimson.",
+        "A lethal, pinpoint thrust from {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} drives the point home with critical, devastating force into {{defender}}'s {{bodyPart}}."
       ],
       "critical_supernatural": [
         "{{possessive}} {{weapon}} hums a low, deathly note, bypassing reality to hit the {{bodyPart}} with cold light.",
@@ -812,7 +825,10 @@
         "Spectral vines erupt from the wound as the {{weapon}} finds its mark.",
         "Ethereal frost spreads rapidly from the impossibly deep stab wound!",
         "The point phases through armor like smoke, sinking impossibly deep into {{defender}}'s essence.",
-        "A ghastly piercing blow from {{attacker}} leaves a wound that refuses to bleed, only seeps cold light."
+        "A ghastly piercing blow from {{attacker}} leaves a wound that refuses to bleed, only seeps cold light.",
+        "A spear of pure malice from {{attacker}} pierces straight through {{defender}}'s {{bodyPart}}.",
+        "Eerie light spills from the wound as {{attacker}}'s supernatural thrust connects.",
+        "{{attacker}}'s weapon, glowing with dark power, effortlessly impales {{defender}}'s {{bodyPart}}."
       ],
       "fatal": [
         "{{attacker}} lunges forward, sinking {{possessive}} {{weapon}} so deeply into {{defender}}'s {{bodyPart}} that it requires leverage to pull it free.",
@@ -918,7 +934,6 @@
         "{{attacker}}'s wild swing deflects off {{defender}}'s guard.",
         "{{attacker}}'s knuckles graze across {{defender}}'s {{bodyPart}}.",
         "A wild swing from {{attacker}} barely catches {{defender}}'s guard.",
-        "{{attacker}}'s fist slides harmlessly off {{defender}}'s shoulder.",
         "A glancing blow from {{attacker}} fails to stagger {{defender}}.",
         "{{attacker}}'s jab deflects off {{defender}}'s {{bodyPart}} with little impact.",
         "{{defender}} easily shrugs off a glancing blow from {{attacker}}'s fist.",
@@ -1060,7 +1075,8 @@
         "{{attacker}} threads the needle, catching {{defender}} flush with a staggering blow.",
         "A picture-perfect combination from {{attacker}} leaves {{defender}} disoriented.",
         "Using spectacular technique, {{attacker}} slips the guard and lands a flawless, devastating strike on {{defender}}.",
-        "{{attacker}} exploits a tiny opening with a breathtakingly precise and powerful combination against {{defender}}."
+        "{{attacker}} exploits a tiny opening with a breathtakingly precise and powerful combination against {{defender}}.",
+        "A masterclass in unarmed combat: {{attacker}} strikes {{defender}}'s {{bodyPart}} perfectly."
       ],
       "critical_human": [
         "{{attacker}} throws a rock-fisted PUNCH of incredible felling power into the {{bodyPart}}!",
@@ -1079,7 +1095,10 @@
         "{{attacker}} delivers a sickening, jaw-cracking hook to {{defender}}!",
         "A devastating overhand right caves in {{defender}}'s orbital bone!",
         "{{attacker}} delivers a bare-knuckle haymaker so vicious it shatters {{defender}}'s jaw instantly.",
-        "A concussive, brutal flurry of punches from {{attacker}} completely overwhelms {{defender}}'s guard."
+        "A concussive, brutal flurry of punches from {{attacker}} completely overwhelms {{defender}}'s guard.",
+        "A bone-breaking, critical punch from {{attacker}} devastates {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} puts their entire weight behind a massive, critical fist to {{defender}}'s {{bodyPart}}.",
+        "A perfectly timed haymaker from {{attacker}} catches {{defender}} flush on the {{bodyPart}}."
       ],
       "critical_supernatural": [
         "A golden light follows {{attacker}}'s strike, shattering the air as the {{bodyPart}} is struck by 'The Enlightened Hand'.",
@@ -1098,7 +1117,10 @@
         "The very fabric of reality ripples as the supercharged punch lands.",
         "{{attacker}} strikes with the strength of a possessed titan.",
         "{{attacker}}'s fist strikes with the thunderous impact of a titan, violently launching {{defender}} backward.",
-        "Unholy strength fuels {{attacker}}'s punch, hitting so hard it momentarily warps the air around {{defender}}."
+        "Unholy strength fuels {{attacker}}'s punch, hitting so hard it momentarily warps the air around {{defender}}.",
+        "A blow glowing with unearthly power from {{attacker}} crumples {{defender}}'s {{bodyPart}}.",
+        "{{attacker}}'s fist strikes with the force of a demon, shattering {{defender}}'s {{bodyPart}}.",
+        "Dark energy explodes on impact as {{attacker}} punches {{defender}}'s {{bodyPart}}."
       ],
       "fatal": [
         "With an explosive surge of strength, {{attacker}} drives their fist into {{defender}}'s {{bodyPart}}, delivering a final, lethal strike.",

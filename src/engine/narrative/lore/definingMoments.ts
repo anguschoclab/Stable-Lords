@@ -166,4 +166,6 @@ export const DEFINING_MOMENTS: string[] = [
   'until they drowned a corrupt warden in the icy waters of the Drowned Bridge',
   'realizing that the only true authority was the sharp edge of a drawn blade',
   'knowing that every scar they gained was simply a map to their eventual revenge',
-];
+  'realizing that mercy in the undercity is just an invitation for an early grave',
+  'until they strangled a corrupt overseer with their own rusted chains',
+  ];

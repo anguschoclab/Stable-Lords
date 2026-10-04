@@ -184,4 +184,8 @@ export const CHILDHOOD_TRAITS: string[] = [
   'would purposefully step on broken glass to harden the soles of their feet',
   'was notorious for picking pockets in the middle of a brutal street fight',
   'learned to hold their breath for minutes while hiding in the submerged cisterns',
+  'learned to parry blows using shattered chair legs',
+  'developed a terrifying stillness before engaging in brawls',
+  'would endlessly practice footwork on crumbling parapets',
+  'learned to gauge distance by dodging the overseer’s whip',
 ];

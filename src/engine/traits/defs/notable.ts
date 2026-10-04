@@ -1,6 +1,15 @@
 import type { TraitDef } from '../types';
 
 export const NOTABLE_TRAITS: Record<string, TraitDef> = {
+  orphan_vengeance_seeker: {
+    id: 'orphan_vengeance_seeker',
+    name: 'Vengeance Seeker',
+    description: 'Driven by a dark vow sworn in the slums, fueled by rage.',
+    effect: { attModLate: 1, iniModFresh: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   // New Narrative Traits
   orphan_street_rat: {
     id: 'orphan_street_rat',
